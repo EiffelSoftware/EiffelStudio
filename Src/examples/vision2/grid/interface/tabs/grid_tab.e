@@ -1476,21 +1476,49 @@ feature {NONE} -- Implementation
 --			grid.set_dynamic_content_function (agent compute_item2)
 
 			-- Test 23
-			grid.enable_tree
-			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Expand Me"))
-			grid.row (1).ensure_expandable
-			grid.row (1).expand_actions.extend (agent expand_row3)
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Expand Me"))
+--			grid.row (1).ensure_expandable
+--			grid.row (1).expand_actions.extend (agent expand_row3)
+
+--			-- Test 24
+--			misc_button_selected
+--			create timer.make_with_interval (2000)
+--			timer.actions.extend (agent timer_fired)
+
+			grid.enable_partial_dynamic_content
+			grid.set_column_count_to (3)
+			grid.set_row_count_to (1)
+			grid.column (2).set_width (0)
+			grid.set_dynamic_content_function (agent add_item)
 		end
-	
+		
+	add_item (a_column, a_row: INTEGER): EV_GRID_ITEM is
+			--
+		do
+			create {EV_GRID_LABEL_ITEM} Result.make_with_text ("1")
+		end
+		
+	timer_fired is
+			--
+		do
+			timer.destroy
+			grid.disable_tree
+			grid.enable_tree
+		end
+		
+	timer: EV_TIMEOUT
+
+
 	expand_row3 is
 			--
 		do
 			if grid.row (1).is_expanded then
-				
+
 			end
 		end
-		
-		
+
+
 	compute_item2 (a_column, a_row: INTEGER): EV_GRID_ITEM is
 			--
 		do
@@ -2552,6 +2580,12 @@ feature {NONE} -- Implementation
 			Result.draw_pixmap (texture_width, 0, marble)
 			Result.draw_pixmap (0, texture_height, marble)
 			Result.draw_pixmap (texture_width, texture_height, marble)
+		end
+		
+	wipe_out_grid_button_selected is
+			-- Called by `select_actions' of `wipe_out_grid_button'.
+		do
+			grid.wipe_out
 		end
 
 	texture_width: INTEGER is 256

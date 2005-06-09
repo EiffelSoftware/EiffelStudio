@@ -232,9 +232,10 @@ feature -- Evaluation
 			running_and_stopped: Application.is_running and Application.is_stopped
 		deferred
 		ensure
-			error_message_if_failed: ((final_result_value = Void) implies (error_occurred)) and
-									 ((final_result_static_type = Void) implies (error_occurred)) and
-									 ((final_result_type = Void) implies (error_occurred))
+			error_message_if_failed: (final_result_value = Void 
+										and	final_result_static_type = Void
+										and final_result_type = Void)
+									implies (error_occurred)
 		end
 		
 

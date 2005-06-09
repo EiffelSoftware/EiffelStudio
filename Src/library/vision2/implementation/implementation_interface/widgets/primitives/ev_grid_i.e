@@ -41,7 +41,7 @@ feature -- Access
 			a_row_positive: a_row > 0
 			a_row_not_greater_than_row_count: a_row <= row_count
 		do
-			Result := row_internal (a_row).interface
+			Result := (rows @ a_row).interface
 		ensure
 			row_not_void: Result /= Void
 			row_count_enlarged_if_needed: a_row > old row_count implies row_count = a_row
@@ -53,7 +53,7 @@ feature -- Access
 			a_column_positive: a_column > 0
 			a_column_not_greater_than_column_count: a_column <= column_count
 		do
-			Result := column_internal (a_column).interface
+			Result := (columns @ a_column).interface
 		ensure
 			column_not_void: Result /= Void
 			column_count_enlarged_if_needed: a_column > old column_count implies column_count = a_column
@@ -65,7 +65,6 @@ feature -- Access
 			i_positive: i > 0
 			i_column_not_greater_than_visible_column_count: i <= visible_column_count
 		local
-			a_col_i: EV_GRID_COLUMN_I
 			visible_counter, counter: INTEGER
 		do
 			from
@@ -73,13 +72,12 @@ feature -- Access
 			until
 				visible_counter = i
 			loop
-				a_col_i := column_internal (counter)
-				if a_col_i.is_displayed then
+				if (columns @ counter).is_displayed then
 					visible_counter := visible_counter + 1
 				end
 				counter := counter + 1
 			end
-			Result := a_col_i.interface
+			Result := (columns @ counter).interface
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -157,7 +155,7 @@ feature -- Access
 				until
 					i > a_count
 				loop
-					a_row := row_internal (i)
+					a_row := rows @ i
 					if a_row.is_selected then
 						Result.extend (a_row.interface)
 					end
@@ -729,7 +727,7 @@ feature -- Status setting
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column_internal (a_column)
+			a_col_i := columns @ a_column
 			if not a_col_i.is_displayed then
 				a_col_i.set_is_displayed (True)
 				visible_column_count := visible_column_count + 1
@@ -752,7 +750,7 @@ feature -- Status setting
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column_internal (a_column)
+			a_col_i := columns @ a_column
 			if a_col_i.is_displayed then
 				a_col_i.set_is_displayed (False)
 				visible_column_count := visible_column_count - 1
@@ -773,7 +771,7 @@ feature -- Status setting
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
 			column_displayed: column_displayed (a_column)
 		do
-			column_internal (a_column).enable_select
+			(columns @ a_column).enable_select
 		ensure
 			column_selected: column (a_column).is_selected
 		end
@@ -783,7 +781,7 @@ feature -- Status setting
 		require
 			a_row_within_bounds: a_row > 0 and a_row <= row_count
 		do
-			row_internal (a_row).enable_select
+			(rows @ a_row).enable_select
 		ensure
 			row_selected: row (a_row).is_selected
 		end
@@ -1105,24 +1103,25 @@ feature -- Status setting
 	set_column_count_to (a_column_count: INTEGER) is
 			-- Resize `Current' to have `a_column_count' columns.
 		require
-			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
-			a_column_count_positive: a_column_count >= 1
+			a_column_count_not_negative: a_column_count >= 0
 		local
 			add_columns: BOOLEAN
+			temp_column_count: INTEGER
+			a_columns: like columns
 		do
-				-- If `Current' currently has no columns, then `column_count' is 0
-				-- so we ensure that we pass at least 1.
-			set_horizontal_computation_required (column_count.max (1))
 			from
 				add_columns := a_column_count > columns.count
+				a_columns := columns
+				temp_column_count := a_columns.count
 			until
-				columns.count = a_column_count
+				temp_column_count = a_column_count
 			loop
 				if add_columns then
-					add_column_at (columns.count + 1, True)
+					add_column_at (temp_column_count + 1, True)
 				else
-					remove_column (columns.count)
+					remove_column (temp_column_count)
 				end
+				temp_column_count := a_columns.count
 			end
 		ensure
 			column_count_set: column_count = a_column_count
@@ -1131,12 +1130,26 @@ feature -- Status setting
 	set_row_count_to (a_row_count: INTEGER) is
 			-- Resize `Current' to have `a_row_count' columns.
 		require
-			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
-			a_row_count_positive: a_row_count >= 1
+			a_row_count_not_negative: a_row_count >= 0
+		local
+			add_rows: BOOLEAN
+			temp_row_count: INTEGER
+			a_rows: like rows
 		do
-			resize_row_lists (a_row_count)
-			set_vertical_computation_required (1)
-			redraw_client_area
+			from
+				add_rows := a_row_count > rows.count
+				a_rows := rows
+				temp_row_count := a_rows.count
+			until
+				temp_row_count = a_row_count
+			loop
+				if add_rows then
+					add_row_at (temp_row_count + 1, True)
+				else
+					remove_row (temp_row_count)
+				end
+				temp_row_count := a_rows.count
+			end
 		ensure
 			row_count_set: row_count = a_row_count
 		end
@@ -1409,11 +1422,8 @@ feature -- Status report
 			-- A value of True does not signify that column `a_column' is visible on screen at that particular time.
 		require
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
-		local
-			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column (a_column).implementation
-			Result := a_col_i.is_displayed
+			Result := (columns @ a_column).is_displayed
 		end
 
 	is_row_selection_enabled: BOOLEAN is
@@ -1611,7 +1621,7 @@ feature -- Element change
 		do
 			if a_index > column_count then
 					-- If `a_index' is greater than existing count than we just query the column
-				a_column := column_internal (a_index)
+				a_column := columns @ a_index
 			else
 				add_column_at (a_index, False)
 			end
@@ -1640,8 +1650,52 @@ feature -- Element change
 			end
 		end
 
+	move_columns (i, j, n: INTEGER) is
+			-- Move `n' columns at index `i' to index `j'.
+		require
+			i_positive: i > 0
+			j_positive: j > 0
+			i_less_than_column_count: i <= column_count
+			j_less_than_column_count: j <= column_count
+		local
+			a_col: EV_GRID_COLUMN_I
+			header_item: EV_HEADER_ITEM
+			a_counter: INTEGER
+			min_index: INTEGER
+		do
+				-- Retrieve column at position `i' and remove from list
+			a_col := columns @ i
+			columns.go_i_th (i)
+			columns.remove
+
+			min_index := i.min (j)
+			
+				-- Insert retrieved column at position `j'
+			columns.go_i_th (j)
+			columns.put_left (a_col)
+
+			update_grid_column_indices (min_index)
+
+				-- Flag `physical_column_indexes' for recalculation
+			physical_column_indexes_dirty := True
+
+			update_index_of_first_item_dirty_row_flags (min_index)
+			
+			set_horizontal_computation_required (min_index)
+			redraw_client_area
+			
+				-- Now actually move the header items.
+			header.go_i_th (i)
+			header_item := header.item
+			header.remove
+			header.go_i_th (j)
+			header.put_left (header_item)
+		ensure
+			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
+		end
+
 	move_column (i, j: INTEGER) is
-			-- Move row at index `i' to index `j'.
+			-- Move column at index `i' to index `j'.
 		require
 			i_positive: i > 0
 			j_positive: j > 0
@@ -1652,7 +1706,7 @@ feature -- Element change
 			header_item: EV_HEADER_ITEM
 		do
 				--Retrieve column at position `i' and remove from list
-			a_col := column_internal (i)
+			a_col := columns @ i
 			columns.go_i_th (i)
 			columns.remove
 			
@@ -1667,7 +1721,7 @@ feature -- Element change
 
 			update_index_of_first_item_dirty_row_flags (i.min (j))
 			
-			set_horizontal_computation_required (i)
+			set_horizontal_computation_required (i.min (j))
 			redraw_client_area
 			
 				-- Now actually move the header items.
@@ -1687,7 +1741,7 @@ feature -- Element change
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
 			a_item_not_parented: a_item /= Void implies a_item.parent = Void
-			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
+			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and then a_row <= row_count and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
 			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")
 		do
 			internal_set_item (a_column, a_row, a_item)
@@ -1705,7 +1759,7 @@ feature -- Removal
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column_internal (a_column)
+			a_col_i := columns @ a_column
 			a_col_i.disable_select
 
 				-- Column needs to be cleared otherwise data will remain as long as the corresponding rows do.
@@ -1751,7 +1805,7 @@ feature -- Removal
 			l_row_index: INTEGER
 		do
 				-- Retrieve row from the grid
-			a_row_i := row_internal (a_row)
+			a_row_i := rows @ a_row
 
 				-- Firstly handle subnode removal recursively
 			subrow_count_recursive := a_row_i.subrow_count_recursive
@@ -1774,7 +1828,7 @@ feature -- Removal
 		ensure
 			row_count_updated: row_count = old row_count - (old row (a_row).subrow_count_recursive + 1)
 			old_row_removed: (old row (a_row)).parent = Void
-			node_counts_correct_in_parent: old (row_internal (a_row).parent_row_i) /= Void implies (old row_internal (a_row).parent_row_i).node_counts_correct
+			node_counts_correct_in_parent: old ((rows @ a_row).parent_row_i) /= Void implies (old (rows @ a_row).parent_row_i).node_counts_correct
 			to_implement_assertion ("EV_GRID.remove_row		All old recursive subrows removed.")
 		end
 		
@@ -1827,19 +1881,8 @@ feature -- Removal
 		require
 			is_parented: parent /= Void
 		do
-			fixme ("Optimize EV_GRID_I.wipe_out to reset values immediately if possible%N")
-			from
-			until
-				row_count = 0
-			loop
-				remove_row (1)
-			end
-			from
-			until
-				column_count = 0
-			loop
-				remove_column (1)
-			end
+			set_row_count_to (0)
+			set_column_count_to (0)
 		ensure
 			columns_removed: column_count = 0
 			rows_removed: row_count = 0
@@ -1908,7 +1951,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				until
 					i > col_count
 				loop
-					a_col := column_internal (i)
+					a_col := columns @ i
 					Result.put (a_col.physical_index, i - 1)
 							-- SPECIAL is zero based
 					i := i + 1
@@ -1931,15 +1974,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		local
 			i: INTEGER
 			found: BOOLEAN
-			a_column: EV_GRID_COLUMN
 		do
 			from
 				i := a_index - 1
 			until
 				found or else i = 0
 			loop
-				a_column := column (i)
-				found := a_column.implementation.is_displayed
+				found := (columns @ i).is_displayed
 				if not found then
 					i := i - 1
 				end
@@ -2114,7 +2155,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						-- We only find the parent row when `Current' is
 						-- not empty.
 					from
-						l_parent_row_i := row_internal (an_index)
+						l_parent_row_i := rows @ an_index
 					until
 						l_parent_row_i.parent_row_i = Void
 					loop
@@ -2931,7 +2972,7 @@ feature {NONE} -- Drawing implementation
 			if is_column_resize_immediate then
 				header_index := header.index_of (header_item, 1)
 				set_horizontal_computation_required (header_index)
-				redraw_from_column_to_end (column (header_index).implementation)
+				redraw_from_column_to_end (columns @ header_index)
 			else	
 				if is_resizing_divider_enabled then
 						-- Draw a resizing line if enabled.
@@ -3937,48 +3978,6 @@ feature {NONE} -- Event handling
 				mouse_wheel_actions_internal.call ([a_value])
 			end
 		end
-		
-feature {EV_GRID_DRAWER_I} -- Implementation
-
-	row_internal (a_row: INTEGER): EV_GRID_ROW_I is
-			-- Row `a_row', creates a new one if it doesn't exist.
-		require
-			a_row_positive: a_row > 0
-		local
-			temp_rows: like rows
-		do
-			temp_rows := rows
-			if a_row <= temp_rows.count then
-				Result := temp_rows @ a_row
-			end
-			if Result = Void then
-				add_row_at (a_row, True)
-				Result := temp_rows @ a_row
-			end
-		ensure
-			row_not_void: Result /= Void
-		end
-
-	column_internal (a_column: INTEGER): EV_GRID_COLUMN_I is
-			-- Column number `a_column', returns a new column if it doesn't exist.
-		require
-			a_column_positive: a_column > 0
-		local
-			temp_columns: like columns
-		do
-			temp_columns := columns
-			if a_column > temp_columns.count then
-				from
-				until
-					temp_columns.count = a_column
-				loop
-					add_column_at (temp_columns.count + 1, True)
-				end
-			end
-			Result := temp_columns @ a_column
-		ensure
-			column_not_void: Result /= Void
-		end
 
 feature {EV_GRID_ROW_I} -- Implementation
 
@@ -4023,9 +4022,6 @@ feature {EV_GRID_ROW_I} -- Implementation
 					-- Update the index of `row_i' and subsequent rows in `rows'
 				update_grid_row_indices (a_index)
 			end
-
-
-
 			set_vertical_computation_required (a_index)
 		end
 
@@ -4276,8 +4272,17 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			a_existing_item: EV_GRID_ITEM_I
 			col_index: INTEGER
 		do
-			a_grid_col_i := column_internal (a_column)
-			a_grid_row_i := row_internal (a_row)
+			if a_column > column_count then
+					-- Create new columns needed.
+				set_column_count_to (a_column)
+			end
+			a_grid_col_i := columns @ (a_column)
+
+			if a_row > row_count then
+					-- Create new rows needed.
+				set_row_count_to (a_row)
+			end
+			a_grid_row_i := rows @ a_row
 			a_row_data := internal_row_data @ a_row
 			col_index := a_grid_col_i.physical_index
 			if a_row_data.count < col_index + 1 then
@@ -4334,17 +4339,11 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
 		local
-			grid_row_i: EV_GRID_ROW_I
 			row_data: SPECIAL [EV_GRID_ITEM_I]
-			a_grid_column_i: EV_GRID_COLUMN_I
 			col_index: INTEGER
 		do
 				-- Retrieve column from grid
-			a_grid_column_i := column_internal (a_column)
-			col_index := a_grid_column_i.physical_index
-			
-				-- Retrieve row to ensure that the row exists.
-			grid_row_i := row_internal (a_row)
+			col_index := (columns @ a_column).physical_index
 
 				-- Gain access to the internal row data
 				-- for retrieval of item.

@@ -133,15 +133,21 @@ feature -- Status report
 			min_upper_bound: upper_bound >= -1
 			max_upper_bound: upper_bound < count
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_array: like internal_native_array
 			t: T
 		do
 			from
 				Result := True
+				l_array := internal_native_array
+				nb := upper_bound + 1
 			until
-				i > upper_bound or else not Result
+				i = nb
 			loop
-				Result := item (i) = t
+				if l_array.item (i) /= t then
+					Result := False
+					i := nb - 1
+				end
 				i := i + 1
 			end
 		ensure
@@ -157,14 +163,21 @@ feature -- Status report
 			other_not_void: other /= Void
 			other_has_enough_items: upper_bound < other.count
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_array, l_other_array: like internal_native_array
 		do
 			from
 				Result := True
+				l_array := internal_native_array
+				l_other_array := other.internal_native_array
+				nb := upper_bound + 1
 			until
-				i > upper_bound or else not Result
+				i = nb
 			loop
-				Result := item (i) = other.item (i)
+				if l_array.item (i) /= l_other_array.item (i) then
+					Result := False
+					i := nb - 1 -- Jump out of loop
+				end
 				i := i + 1
 			end
 		ensure
@@ -208,14 +221,16 @@ feature -- Element change
 			end_index_valid: end_index < count
 		local
 			i, nb: INTEGER
+			l_array: like native_array
 		do
 			from
+				l_array := internal_native_array
 				i := start_index
 				nb := end_index + 1
 			until
 				i = nb
 			loop
-				put (v, i)
+				l_array.put (i, v)
 				i := i + 1
 			end
 		end
@@ -230,24 +245,8 @@ feature -- Element change
 			n_non_negative: n >= 0
 			n_is_small_enough_for_source: source_index + n <= other.count
 			n_is_small_enough_for_destination: destination_index + n <= count
-		local
-			i, j, nb: INTEGER
 		do
-			if other = Current then
-				move_data (source_index, destination_index, n)
-			else
-				from
-					i := source_index
-					j := destination_index
-					nb := source_index + n
-				until
-					i = nb
-				loop
-					put (other.item (i), j)
-					i := i + 1
-					j := j + 1
-				end
-			end
+			{SYSTEM_ARRAY}.copy (other.internal_native_array, source_index, internal_native_array, destination_index, n)
 		end
 
 	frozen move_data (source_index, destination_index, n: INTEGER) is
@@ -259,21 +258,11 @@ feature -- Element change
 			n_non_negative: n >= 0
 			n_is_small_enough_for_source: source_index + n <= count
 			n_is_small_enough_for_destination: destination_index + n <= count
+		local
+			l_array: like internal_native_array
 		do
-			if source_index = destination_index then
-			elseif source_index > destination_index then
-				if destination_index + n < source_index then
-					non_overlapping_move (source_index, destination_index, n)
-				else
-					overlapping_move (source_index, destination_index, n)
-				end
-			else
-				if source_index + n < destination_index then
-					non_overlapping_move (source_index, destination_index, n)
-				else
-					overlapping_move (source_index, destination_index, n)
-				end
-			end
+			l_array := internal_native_array
+			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
 		end
 
 	frozen overlapping_move (source_index, destination_index, n: INTEGER) is
@@ -287,41 +276,10 @@ feature -- Element change
 			n_is_small_enough_for_source: source_index + n <= count
 			n_is_small_enough_for_destination: destination_index + n <= count
 		local
-			i, nb: INTEGER
-			l_offset: INTEGER
+			l_array: like internal_native_array
 		do
-			if source_index < destination_index then
-					-- We shift from left to right starting from the end
-					-- due to possible overlapping.
-				from
-					i := source_index + n - 1
-					nb := source_index - 1
-					l_offset := destination_index - source_index
-					check
-						l_offset_positive: l_offset > 0
-					end
-				until
-					i = nb
-				loop
-					put (item (i), i + l_offset)
-					i := i - 1
-				end
-			else
-					-- We shift from right to left.
-				from
-					i := source_index
-					nb := source_index + n
-					l_offset := source_index - destination_index
-					check
-						l_offset_positive: l_offset > 0
-					end
-				until
-					i = nb
-				loop
-					put (item (i), i - l_offset)
-					i := i + 1
-				end
-			end
+			l_array := internal_native_array
+			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
 		end
 
 	frozen non_overlapping_move (source_index, destination_index, n: INTEGER) is
@@ -338,19 +296,10 @@ feature -- Element change
 			n_is_small_enough_for_source: source_index + n <= count
 			n_is_small_enough_for_destination: destination_index + n <= count
 		local
-			i, nb: INTEGER
-			l_offset: INTEGER
+			l_array: like internal_native_array
 		do
-			from
-				i := source_index
-				nb := source_index + n
-				l_offset := destination_index - source_index
-			until
-				i = nb
-			loop
-				put (item (i), i + l_offset)
-				i := i + 1
-			end
+			l_array := internal_native_array
+			{SYSTEM_ARRAY}.copy (l_array, source_index, l_array, destination_index, n)
 		end
 
 feature -- Duplication
@@ -379,21 +328,11 @@ feature -- Resizing
 		require
 			valid_new_count: n > count
 		local
-			i, nb: INTEGER
+			l_array: like internal_native_array
 		do
 			create Result.make (n)
-			from
-				nb := count
-			invariant
-				i >= 0 and i <= nb
-			variant
-				nb - i
-			until
-				i = nb
-			loop
-				Result.put (item (i), i)
-				i := i + 1
-			end
+			l_array := internal_native_array
+			{SYSTEM_ARRAY}.copy (l_array, Result.internal_native_array, l_array.count)
 		ensure
 			Result_not_void: Result /= Void
 			Result_different_from_current: Result /= Current
@@ -412,23 +351,17 @@ feature -- Resizing
 			new_count: Result.count = n
 		end
 
-
 	frozen aliased_resized_area_and_keep (n, j, k: INTEGER): like Current is
 			-- Try to resize `Current' with a count of `n', if not
 			-- possible a new copy.
 		require
 			valid_new_count: n > count
-		local
-			i: INTEGER
+			j_positive: j >= 0
+			k_positive: k >= 0
+			k_valid: k <= count
 		do
 			create Result.make (n)
-			from
-			until
-				i = k
-			loop
-				Result.put (item (i), i + j)
-				i := i + 1
-			end
+			{SYSTEM_ARRAY}.copy (internal_native_array, 0, Result.internal_native_array, j, k)
 		ensure
 			Result_not_void: Result /= Void
 			new_count: Result.count = n
@@ -439,21 +372,10 @@ feature -- Removal
 	frozen clear_all is
 			-- Reset all items to default values.
 		local
-			v: T
-			i, nb: INTEGER
+			l_array: like internal_native_array
 		do
-			from
-				nb := count
-			invariant
-				i >= 0 and i <= nb
-			variant
-				nb - i
-			until
-				i = nb
-			loop
-				put (v, i)
-				i := i + 1
-			end
+			l_array := internal_native_array
+			{SYSTEM_ARRAY}.clear (l_array, 0, l_array.count)
 		end
 
 feature {SPECIAL} -- Implementation: Access

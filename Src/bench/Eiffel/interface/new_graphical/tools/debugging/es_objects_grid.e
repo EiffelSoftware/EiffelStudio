@@ -121,7 +121,6 @@ feature {NONE} -- Actions implementation
 		local
 			div_index: INTEGER
 			col: EV_GRID_COLUMN
-			m: INTEGER
 		do
 			div_index := header.pointed_divider_index
 			if div_index > 0 then

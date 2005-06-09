@@ -10,8 +10,7 @@ class
 inherit
 	EV_GRID_EDITABLE_ITEM
 		redefine
-			activate_action,
-			deactivate
+			activate_action
 		end
 
 create
@@ -26,15 +25,6 @@ feature -- Query
 			Precursor (popup_window)
 			text_field.select_all
 			text_field.disable_edit
-		end
-
-	deactivate is
-		local
-			old_text: STRING
-		do
-			old_text := text
-			Precursor
-			set_text (old_text)
 		end
 		
 end

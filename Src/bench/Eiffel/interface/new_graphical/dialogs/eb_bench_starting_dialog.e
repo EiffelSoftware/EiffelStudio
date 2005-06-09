@@ -458,12 +458,16 @@ feature {NONE} -- Execution
 				open_project_cmd.execute_with_file (li.text)
 				set_pointer_style (Pixmaps.standard_cursor)
 
-					-- Hiding dialog after project has been loaded
-				hide
-				if Eiffel_project.initialized then
-					destroy
-				else
-					show_modal_to_window (parent_window)
+					-- Dialog could be closed if user close it manually
+					-- while compiler was converting an existing project.
+				if not is_destroyed then
+						-- Hiding dialog after project has been loaded
+					hide
+					if Eiffel_project.initialized then
+						destroy
+					else
+						show_modal_to_window (parent_window)
+					end
 				end
 			else
 				create wd.make_with_text (Warning_messages.w_Select_project_to_load)

@@ -1662,7 +1662,6 @@ feature -- Element change
 		local
 			a_col: EV_GRID_COLUMN_I
 			header_item: EV_HEADER_ITEM
-			a_counter: INTEGER
 			min_index: INTEGER
 		do
 				-- Retrieve column at position `i' and remove from list
@@ -2183,7 +2182,18 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					i := row_offsets @ (index)
 					rows.go_i_th (index)
 					if index > 1 then
-						visible_count := row_indexes_to_visible_indexes.i_th (index)
+						if index < row_count then
+							visible_count := row_indexes_to_visible_indexes.i_th (index)
+						else
+							check
+								index_is_row_count: index = row_count
+							end
+								-- In this situation, we are adding a new row that has not already
+								-- been computed. Now we set the visible count to the previous (and last)
+								-- item and add one. Without this, we are unable to determine the
+								-- visible row count.
+							visible_count := row_indexes_to_visible_indexes.i_th (index - 1) + 1
+						end
 					else
 							-- In this case, the feature has already been called when there are
 							-- no rows in the grid. So, we reset these attributes to the start.

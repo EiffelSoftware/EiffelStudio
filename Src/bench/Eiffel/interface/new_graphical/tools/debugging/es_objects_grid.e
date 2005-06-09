@@ -10,6 +10,11 @@ class
 inherit
 	EV_GRID
 
+	EV_SHARED_APPLICATION
+		undefine
+			default_create, copy
+		end
+	
 	EV_GRID_HELPER
 		undefine
 			default_create, copy
@@ -121,8 +126,11 @@ feature {NONE} -- Actions implementation
 			div_index := header.pointed_divider_index
 			if div_index > 0 then
 				col := column (div_index)
-				m := maximum_width_of_column (col)
-				col.set_width (m + 5)
+				if ev_application.shift_pressed then
+					col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index))
+				else
+					col.resize_to_content
+				end
 			end			
 		end
 
@@ -207,30 +215,6 @@ end
 		end
 
 feature -- Grid helpers
-
-	maximum_width_of_column (col: EV_GRID_COLUMN): INTEGER is
-			-- Maximum column's width for column `col'.
-		require
-			col /= Void
-		local
-			i: INTEGER
-			ait: EV_GRID_LABEL_ITEM
-		do
-			fixme ("provide better maximum width computing not based on Label")
-			if col.count > 0 then
-				from
-					i := 1
-				until
-					i > col.count
-				loop
-					ait ?= col.item (i)
-					if ait /= Void then
-						Result := Result.max (ait.horizontal_indent + ait.text_width)
-					end
-					i := i + 1
-				end
-			end
-		end
 
 	front_new_row: EV_GRID_ROW is
 		do

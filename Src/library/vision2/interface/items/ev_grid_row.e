@@ -130,7 +130,10 @@ feature -- Access
 		do
 			Result := implementation.is_expanded
 		ensure
-			not_expanded_when_empty: (subrow_count = 0) implies not Result
+			-- not_expanded_when_empty: (subrow_count = 0) implies not Result
+			-- This does not hold if you `query' is expanded while
+			-- within the `expand_actions' with a row that is ensured exandable
+			-- and add no items.
 		end
 		
 	height: INTEGER is

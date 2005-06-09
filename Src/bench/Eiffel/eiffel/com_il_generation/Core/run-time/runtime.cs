@@ -427,18 +427,27 @@ feature -- Status report
 		// classes do not conform even if their interfaces do.
 	{
 		object [] l_attributes;
+		Type result;
 
 		#if ASSERTIONS
 			ASSERTIONS.REQUIRE ("a_type not null", a_type != null);
 		#endif
 
-		l_attributes = a_type.GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false);
-		if (l_attributes != null && l_attributes.Length > 0) {
-			return ((INTERFACE_TYPE_ATTRIBUTE) l_attributes [0]).class_type;
-		} else {
-			return a_type;
+		result = interface_type_mapping [a_type] as Type;
+		if (result == null) {
+			l_attributes = a_type.GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false);
+			if (l_attributes != null && l_attributes.Length > 0) {
+				result = ((INTERFACE_TYPE_ATTRIBUTE) l_attributes [0]).class_type;
+			} else {
+				result = a_type;
+			}
+			interface_type_mapping [a_type] = result;
 		}
+		return result;
 	}
+
+	private static Hashtable interface_type_mapping = new Hashtable (100);
+		// Mapping between implementation types and interface types.
 
 	public static RT_GENERIC_TYPE generic_type (object an_obj)
 		// Given an Eiffel object `an_obj' retrieves its associated type if any.
@@ -478,8 +487,6 @@ feature -- Status report
 		// at position `pos'.
 	{
 		EIFFEL_TYPE_INFO l_object = an_obj as EIFFEL_TYPE_INFO;
-		INTERFACE_TYPE_ATTRIBUTE generic_type;
-		object[] l_attributes;
 		RT_GENERIC_TYPE l_gen_type;
 		RT_CLASS_TYPE cl_type;
 		Type Result = null;
@@ -495,16 +502,7 @@ feature -- Status report
 			cl_type = (RT_CLASS_TYPE) l_gen_type.generics [pos - 1];
 			if (!cl_type.is_basic ()) {
 				if (cl_type.type.Value != (System.IntPtr) 0) {
-					Result = Type.GetTypeFromHandle (cl_type.type);
-					l_attributes = Result.GetCustomAttributes (
-						typeof (INTERFACE_TYPE_ATTRIBUTE), false);
-					#if ASSERTIONS
-						ASSERTIONS.CHECK ("l_attributes not null", l_attributes != null);
-					#endif
-					if (l_attributes.Length > 0) {
-						generic_type = (INTERFACE_TYPE_ATTRIBUTE) l_attributes [0];
-						Result = generic_type.class_type;
-					}
+					Result = interface_type (Type.GetTypeFromHandle (cl_type.type));
 				} else {
 						/* Generic parameter is of type NONE, so we return an instance
 						 * of RT_NONE_TYPE as associated type. It is mostly there to fix

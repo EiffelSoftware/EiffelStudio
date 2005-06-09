@@ -831,57 +831,61 @@ feature {NONE} -- Stack objects grid Implementation
 			row: EV_GRID_ROW
 			exception_row: EV_GRID_ROW
 			glab: EV_GRID_LABEL_ITEM
-			es_glab: EV_GRID_LABEL_ITEM
+			es_glab: ES_OBJECTS_GRID_CELL
 			l_exception_module_detail: STRING
 			l_exception_tag, l_exception_message: STRING
 		do
 			if application.is_dotnet and then application.imp_dotnet.exception_occurred then
 				l_exception_module_detail := application.imp_dotnet.exception_module_name
 				if l_exception_module_detail /= Void then
+						--| Details
 					exception_row := a_target_grid.extended_new_row
 					glab := folder_label_item (Cst_exception_raised_text)
 					a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_green_tick)
-					
 					exception_row.set_item (1, glab)
 					create glab
 					if application.imp_dotnet.exception_handled then
-						glab.set_text (Cst_exception_first_chance_text)
+						a_target_grid.grid_cell_set_text (glab, Cst_exception_first_chance_text)
 					else
-						glab.set_text (Cst_exception_unhandled_text)
+						a_target_grid.grid_cell_set_text (glab, Cst_exception_unhandled_text)
 					end
 					exception_row.set_item (2, glab)
+
+						--| Tag
 					l_exception_tag := application.imp_dotnet.exception_message
 					if l_exception_tag /= Void then
 						row := a_target_grid.extended_new_subrow (exception_row)
 						glab := name_label_item ("Tag")
 						a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_exception)
 						row.set_item (1, glab)
-						create glab
-						glab.set_text (l_exception_tag)
-						glab.set_data (l_exception_tag)
-						row.set_item (2, glab)
+						create es_glab
+						es_glab.set_data (l_exception_tag)
+						a_target_grid.grid_cell_set_text (es_glab, l_exception_tag)
+						row.set_item (2, es_glab)
 					end
+
+						--| Module
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := name_label_item ("Module")
 					a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_exception)
-
 					row.set_item (1, glab)
-					create glab
-					glab.set_text (l_exception_module_detail)
-					glab.set_data (l_exception_module_detail)
-					row.set_item (2, glab)
+					create es_glab
+					es_glab.set_data (l_exception_module_detail)
+					a_target_grid.grid_cell_set_text (es_glab, l_exception_module_detail)
+					row.set_item (2, es_glab)
+
+						--| Nota/Message
 					l_exception_message := application.imp_dotnet.exception_to_string
-					if l_exception_message /= Void then
+					if l_exception_message /= Void and then not l_exception_message.is_empty then
 						row := a_target_grid.extended_new_subrow (exception_row)
 						glab := name_label_item ("Nota")
 						a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_exception)
-						
 						row.set_item (1, glab)
-						create glab
-						a_target_grid.grid_cell_set_text (glab, cst_exception_double_click_text)
-						glab.set_data (l_exception_message)
-						a_target_grid.grid_cell_set_tooltip (glab, l_exception_message)
-						glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
+						create es_glab
+						es_glab.set_data (l_exception_message)
+						a_target_grid.grid_cell_set_text (es_glab, cst_exception_double_click_text)
+						a_target_grid.grid_cell_set_tooltip (es_glab, l_exception_message)
+						es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
 						row.set_item (2, es_glab)
 					end
 				end

@@ -884,7 +884,6 @@ feature {NONE} -- Stack objects grid Implementation
 						glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
 						row.set_item (2, es_glab)
 					end
-					exception_row.expand
 				end
 			end
 		end

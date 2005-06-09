@@ -712,6 +712,8 @@ feature -- Status setting
 		
 	disable_tree is
 			-- Disable tree functionality for `Current'.
+			-- All subrows of rows contained are unparented,
+			-- which flattens the tree structure.
 		require
 			not_destroyed: not is_destroyed
 		do

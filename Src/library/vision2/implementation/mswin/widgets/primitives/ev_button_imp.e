@@ -629,7 +629,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			else
 				color_imp ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
 			end
-			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, color_imp)
+			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, wel_text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, color_imp)
 			
 				-- If we have a pixmap set on `Current', then we must draw it.
 			if internal_pixmap_state /= Void then

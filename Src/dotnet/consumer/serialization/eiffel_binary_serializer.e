@@ -23,7 +23,7 @@ feature -- Basic Operation
 			l_bin_path: STRING
 		do
 			if not retried then
-				feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Serializing '{0}' in binary form.", path)
+				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Serializing '{0}' in binary form.", path))
 				l_bin_path := path.substring (1, path.count - 4)
 				l_bin_path.append (".bin")
 				create f.make_open_write (l_bin_path)
@@ -31,7 +31,7 @@ feature -- Basic Operation
 				f.close
 			end
 		rescue
-			feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Binary serialization failed for '{0}'.", path)
+			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Binary serialization failed for '{0}'.", path))
 			retried := True
 			if f /= Void then
 				f.close

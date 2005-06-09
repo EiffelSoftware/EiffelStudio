@@ -49,7 +49,7 @@ feature -- Basic Operations
 			l_so: SYSTEM_OBJECT
 		do
 			if not retried then
-				feature {SYSTEM_DLL_TRACE}.write_line_string_string ("Deserializing XML file '{0}'.", path)
+				feature {SYSTEM_DLL_TRACE}.write_line ({SYSTEM_STRING}.format ("Deserializing XML file '{0}'.", path))
 				if a_use_bin_if_avail then
 					create bin_des
 					bin_des.deserialize (path)
@@ -78,7 +78,7 @@ feature -- Basic Operations
 										ser.serialize (deserialized_object, path)
 									end
 									if deserialized_object = Void then
-										feature {SYSTEM_DLL_TRACE}.write_line_string ("Could not retried object from XML deserialization process.")
+										feature {SYSTEM_DLL_TRACE}.write_string ("Could not retried object from XML deserialization process.")
 									end
 								else
 									feature {SYSTEM_DLL_TRACE}.write_line_string ("XML file version is incompatible, deserialization cannot continue.")
@@ -101,7 +101,7 @@ feature -- Basic Operations
 			deserialized_object_set_if_no_error: successful implies deserialized_object /= Void
 		rescue
 			if not retried then
-				feature {SYSTEM_DLL_TRACE}.write_line_string_string ("XML deserialization for {0} failed.", path)
+				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("XML deserialization for {0} failed.", path))
 				last_error := Generic_error
 				if xml_reader /= Void then
 					last_error_context := "At line " + xml_reader.line_number.out

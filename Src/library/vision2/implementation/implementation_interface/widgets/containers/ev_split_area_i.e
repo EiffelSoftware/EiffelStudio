@@ -165,12 +165,14 @@ feature -- Status setting
 
 	enable_flat_separator is
 			-- Set the separator to be "flat"
-		deferred
+		obsolete "All split areas are now flat by default."
+		do
 		end
 
 	disable_flat_separator is
 			-- Set the separator to be "raised"
-		deferred
+		obsolete "All split areas are now flat by default."
+		do
 		end
 
 feature -- Element change
@@ -253,9 +255,6 @@ feature {EV_SPLIT_AREA} -- Implementation
 			-- Offset of the splitter from the left or top.
 		deferred
 		end
-
-	flat_separator: BOOLEAN
-			-- Does `Current' have a flat separator?
 
 	first_expandable: BOOLEAN
 			-- Is `first' expandable?

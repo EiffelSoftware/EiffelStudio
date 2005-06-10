@@ -129,20 +129,6 @@ feature -- Access
 			internal_set_split_position (a_split_position)
 		end
 
-	enable_flat_separator is
-			-- Set the separator to be "flat".
-		do
-			flat_separator := True
-			--| Do nothing (Win32 Implementation only)
-		end
-
-	disable_flat_separator is
-			-- Set the separator to be "raised"
-		do
-			flat_separator := False
-			--| Do nothing (Win32 Implementation only)
-		end
-
 feature {NONE} -- Implementation
 
 	internal_set_split_position (a_split_position: INTEGER) is

@@ -1668,82 +1668,61 @@ feature -- Element change
 		require
 			i_positive: i > 0
 			j_positive: j > 0
-			i_less_than_column_count: i <= column_count
-			j_less_than_column_count: j <= column_count
+			i_not_greater_than_column_count: i <= column_count
+			j_not_greater_than_column_count: j <= column_count
+			n_valid: i + n <= row_count + 1
 		local
-			a_col: EV_GRID_COLUMN_I
 			header_item: EV_HEADER_ITEM
 			min_index: INTEGER
+			a_duplicate: ARRAYED_LIST [EV_HEADER_ITEM]
+			a_counter: INTEGER
+			a_insertion_index: INTEGER
 		do
-				-- Retrieve column at position `i' and remove from list
-			a_col := columns @ i
-			columns.go_i_th (i)
-			columns.remove
+			if j < i or else j >= i + n then
+				columns.move_items (i, j, n)
+					-- Move items within header control.
+				from
+					create a_duplicate.make (n)
+					a_counter := 1
+					header.go_i_th (i)
+				until
+					a_counter > n
+				loop
+					header_item := header.item
+					a_duplicate.put_front (header_item)
+					header.remove
+					a_counter := a_counter + 1
+				end
+				
+				from
+					if j > (i + n - 1) then
+						a_insertion_index := j - n
+					else
+						a_insertion_index := j - 1
+					end
+					header.go_i_th (a_insertion_index)
+					a_duplicate.start
+				until
+					a_duplicate.after
+				loop
+					header.put_right (a_duplicate.item)
+					a_duplicate.forth
+				end
 
-			min_index := i.min (j)
-			
-				-- Insert retrieved column at position `j'
-			columns.go_i_th (j)
-			columns.put_left (a_col)
-
-			update_grid_column_indices (min_index)
-
-				-- Flag `physical_column_indexes' for recalculation
-			physical_column_indexes_dirty := True
-
-			update_index_of_first_item_dirty_row_flags (min_index)
-			
-			set_horizontal_computation_required (min_index)
-			redraw_client_area
-			
-				-- Now actually move the header items.
-			header.go_i_th (i)
-			header_item := header.item
-			header.remove
-			header.go_i_th (j)
-			header.put_left (header_item)
+				min_index := i.min (j)
+				update_grid_column_indices (min_index)
+	
+					-- Flag `physical_column_indexes' for recalculation
+				physical_column_indexes_dirty := True
+	
+				update_index_of_first_item_dirty_row_flags (min_index)
+				
+				set_horizontal_computation_required (min_index)
+				redraw_client_area			
+			end
 		ensure
-			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
-		end
-
-	move_column (i, j: INTEGER) is
-			-- Move column at index `i' to index `j'.
-		require
-			i_positive: i > 0
-			j_positive: j > 0
-			i_less_than_column_count: i <= column_count
-			j_less_than_column_count: j <= column_count
-		local
-			a_col: EV_GRID_COLUMN_I
-			header_item: EV_HEADER_ITEM
-		do
-				--Retrieve column at position `i' and remove from list
-			a_col := columns @ i
-			columns.go_i_th (i)
-			columns.remove
-			
-				-- Insert retrieved column at position `j'
-			columns.go_i_th (j)
-			columns.put_left (a_col)
-
-			update_grid_column_indices (i.min (j))
-
-				-- Flag `physical_column_indexes' for recalculation
-			physical_column_indexes_dirty := True
-
-			update_index_of_first_item_dirty_row_flags (i.min (j))
-			
-			set_horizontal_computation_required (i.min (j))
-			redraw_client_area
-			
-				-- Now actually move the header items.
-			header.go_i_th (i)
-			header_item := header.item
-			header.remove
-			header.go_i_th (j)
-			header.put_left (header_item)
-		ensure
-			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
+			columns_moved: (j < i implies column (j) = old column (i) and then column (j + n - 1) = old column (i + n - 1)) or (j >= i + n implies column (j - n + 1) = old column (i) and then column (j - n + n) = old column (i + n - 1))
+			column_count_unchanged: column_count = old column_count
 		end
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
@@ -1833,7 +1812,7 @@ feature -- Removal
 			internal_remove_row (a_row_i)
 			
 				-- Note that we must tell the computation to start from the 
-				-- pervious row as if we are removing the final item then
+				-- previous row as if we are removing the final item then
 				-- the index is invalid.
 			set_vertical_computation_required ((a_row - 1).max (1))
 			redraw_client_area

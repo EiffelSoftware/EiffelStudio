@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 			else
 				current_move_to_row_index := 0
 			end
-			swap_row_button.set_text ("Move Row " + current_row_index.out + " past Row " + current_past_row)
+			update_swap_row_button_text
 		end
 
 	current_move_to_row_index: INTEGER
@@ -132,7 +132,7 @@ feature {NONE} -- Implementation
 			else
 				row_properties_frame.disable_sensitive
 				row_operations_frame.disable_sensitive
-				swap_row_button.set_text ("Move Row ? past Row " + current_past_row)
+				update_swap_row_button_text
 			end
 		end
 		
@@ -177,8 +177,11 @@ feature {NONE} -- Implementation
 		
 	swap_row_button_selected is
 			-- Called by `select_actions' of `swap_row_button'.
+		local
+			l_rows_to_move: INTEGER
 		do
-			grid.move_row (current_row_index, current_move_to_row_index)
+			l_rows_to_move := (current_row_index + rows_to_move_button.value).min (grid.row_count) - current_row_index
+			grid.move_rows (current_row_index, current_move_to_row_index, l_rows_to_move)
 		end
 		
 	remove_row_button_selected is
@@ -233,6 +236,21 @@ feature {NONE} -- Implementation
 	rows_to_move_button_selected (a_value: INTEGER) is
 			-- Called by `change_actions' of `rows_to_move_button'.
 		do
+			update_swap_row_button_text
+		end
+
+	update_swap_row_button_text is
+			-- Update the text of swap_row_button to match user values.
+		local
+			l_text: STRING
+		do
+			if rows_to_move_button.value = 1 then
+				l_text := "Move Row " + current_row_index.out
+			else
+				l_text := "Move Rows " + current_row_index.out + " to " + ((current_row_index + rows_to_move_button.value - 1).min (grid.row_count)).out
+			end
+			l_text := l_text + " past Row " + current_past_row
+			swap_row_button.set_text (l_text)
 		end
 
 end -- class ROW_TAB

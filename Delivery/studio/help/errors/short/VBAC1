@@ -1,0 +1,2 @@
+Error: source type of assigner call is not compatible with target type.
+What to do: ensure that source type is compatible with target type.

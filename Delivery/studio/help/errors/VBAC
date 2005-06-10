@@ -1,0 +1,14 @@
+VBAC, section 8.22.11
+
+     Assigner Call Validity rule
+
+     An Assigner_call of the form
+        target := source
+     where target and source are expressions, is valid if
+     and only if it satisfies the following conditions:
+
+        1 source is compatible with target.
+
+        2 The Equivalent Dot Form of target is a qualified
+          Object_call whose feature has an assigner
+          command.

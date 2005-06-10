@@ -77,7 +77,6 @@ feature -- Update
 	send is
 			-- Send inpect request to application.
 		local
-			count: INTEGER
 			address: POINTER
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do

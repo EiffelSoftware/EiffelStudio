@@ -88,7 +88,11 @@ feature -- Output
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
-			Result := Special_value
+			if is_null then
+				Result := Void_value
+			else
+				Result := Special_value
+			end
 		end
 
 feature -- Output

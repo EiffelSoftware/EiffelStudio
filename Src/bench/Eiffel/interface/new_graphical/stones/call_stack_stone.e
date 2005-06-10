@@ -55,7 +55,6 @@ feature {NONE} -- Initialization
 			elem: EIFFEL_CALL_STACK_ELEMENT
 			prev_feat: E_FEATURE
 			cur_feat: E_FEATURE
-			l_class: CLASS_C
 			curr_cs: EIFFEL_CALL_STACK
 		do
 			level_number := level_num
@@ -70,10 +69,7 @@ feature {NONE} -- Initialization
 					check
 						prev_feat_not_void: prev_feat /= Void
 					end
-					l_class := elem.written_class
-					if l_class /= Void and then l_class.has_feature_table then
-						cur_feat := l_class.feature_with_feature_id (prev_feat.written_feature_id)
-					end
+					cur_feat := prev_feat.written_feature
 					if cur_feat = Void then
 							-- We are in a Precursor.
 						cur_feat := prev_feat

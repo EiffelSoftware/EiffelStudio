@@ -103,8 +103,8 @@ feature -- Access
 		local
 			f: E_FEATURE
 		do
-			if e_feature /= Void and then e_feature.written_class.has_feature_table then
-				f := e_feature.written_class.feature_with_feature_id (e_feature.written_feature_id)
+			if e_feature /= Void then 
+				f := e_feature.written_feature
 				if f /= Void then
 					Result := f.name
 				else

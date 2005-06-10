@@ -704,9 +704,7 @@ feature {NONE} -- Execution
 				if output_line /= Void then
 					output_line.remove_text
 				end
-				if current_feature.written_class.has_feature_table then
-					f := current_feature.written_class.feature_with_feature_id (current_feature.written_feature_id)
-				end
+				f := current_feature.written_feature
 				if f /= Void then
 					parent.advanced_set_stone (create {FEATURE_STONE}.make (f))
 				else

@@ -3938,6 +3938,20 @@ feature -- Access
 			end
 		end
 
+	feature_with_body_index (a_body_index: INTEGER): E_FEATURE is
+			-- Feature whose body index is `a_body_index'.
+		require
+			a_body_index_non_negative: a_body_index >= 0
+			has_feature_table: has_feature_table
+		local
+			l_feat: FEATURE_I
+		do
+			l_feat := feature_table.feature_of_body_index (a_body_index)
+			if l_feat /= Void then
+				Result := l_feat.api_feature (class_id)
+			end
+		end
+
 	feature_with_feature_id (a_feature_id: INTEGER): E_FEATURE is
 			-- Feature whose feature id `a_feature_id.
 		require

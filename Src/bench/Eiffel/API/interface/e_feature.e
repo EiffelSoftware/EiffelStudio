@@ -224,6 +224,23 @@ feature -- Properties
 
 feature -- Access
 
+	written_feature: E_FEATURE is
+			-- Associated feature of Current in the context of the class in which
+			-- current feature is written.
+		local
+			l_class: like written_class
+		do
+			l_class := written_class
+			if l_class /= Void and then l_class.has_feature_table then
+				if body_index /= 0 then
+					Result := l_class.feature_with_body_index (body_index)
+				elseif written_feature_id /= 0 then
+						-- Most likely a pure external routine without body index.
+					Result := l_class.feature_with_feature_id (written_feature_id)
+				end
+			end
+		end
+		
 	ancestor_version (an_ancestor: CLASS_C): E_FEATURE is
 			-- Feature in `an_ancestor' of which `Current' is derived.
 			-- `Void' if not present in that class.

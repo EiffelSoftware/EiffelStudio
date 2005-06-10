@@ -1525,7 +1525,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			i_positive: a_index > 0
-			to_implement_assertion ("Add preconditions for subnode handling")
+			new_column_insertable: a_index <= column_count implies column ((a_index - 1).max (1)).all_items_may_be_set
 		do
 			implementation.insert_new_column (a_index)
 		ensure
@@ -1538,7 +1538,7 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			j_positive: j > 0
-			i_less_than_row_count: i <= row_count
+			i_not_greater_than_row_count: i <= row_count
 			j_valid: j <= row_count
 			row_at_i_not_a_subnode: row (i).parent_row = Void
 			row_after_i_not_a_subnode: i < row_count implies row (i + 1).parent_row = Void
@@ -1551,13 +1551,13 @@ feature -- Element change
 
 	move_rows (i, j, n: INTEGER) is
 			-- Move `n' rows starting at index `i' to index `j'.
-			-- Rows will not move if (`j' > `i' and `j' < `i' + `n').
+			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			j_positive: j > 0
 			n_positive: n > 0
-			i_less_than_row_count: i <= row_count
+			i_not_greater_than_row_count: i <= row_count
 			j_valid: j <= row_count
 			n_valid: i + n <= row_count + 1
 			row_at_i_not_a_subnode: row (i).parent_row = Void
@@ -1570,19 +1570,39 @@ feature -- Element change
 		end
 
 	move_column (i, j: INTEGER) is
-			-- Move row at index `i' to index `j'.
+			-- Move column at index `i' to index `j'.
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			j_positive: j > 0
-			i_less_than_column_count: i <= column_count
-			j_less_than_column_count: j <= column_count
+			i_not_greater_than_column_count: i <= column_count
+			j_not_greater_than_column_count: j <= column_count
 			column_i_moveable: column (i).all_items_may_be_removed
-			column_j_settable: column (j).all_items_may_be_set
+			column_j_settable: column ((j - 1).max (1)).all_items_may_be_set
 		do
-			implementation.move_column (i, j)
+			implementation.move_columns (i, j, 1)
 		ensure
 			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
+			column_count_unchanged: column_count = old column_count
+		end
+
+	move_columns (i, j, n: INTEGER) is
+			-- Move `n' columns at index `i' to index `j'.
+			-- Columns will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
+		require
+			not_destroyed: not is_destroyed
+			i_positive: i > 0
+			j_positive: j > 0
+			n_positive: n > 0
+			i_not_greater_than_column_count: i <= column_count
+			j_not_greater_than_column_count: j <= column_count
+			n_valid: i + n <= column_count + 1
+			columns_removable: are_columns_removable (i, n)
+			column_j_settable: column ((j - 1).max (1)).all_items_may_be_set
+		do
+			implementation.move_columns (i, j, n)
+		ensure
+			columns_moved: (j < i implies column (j) = old column (i) and then column (j + n - 1) = old column (i + n - 1)) or (j >= i + n implies column (j - n + 1) = old column (i) and then column (j - n + n) = old column (i + n - 1))
 			column_count_unchanged: column_count = old column_count
 		end	
 
@@ -1646,6 +1666,7 @@ feature -- Removal
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
+			column_may_be_removed: column (a_column).all_items_may_be_removed
 		do
 			implementation.remove_column (a_column)
 		ensure
@@ -1711,6 +1732,29 @@ feature -- Measurements
 			Result := implementation.tree_node_spacing
 		ensure
 			result_positive: Result >= 1
+		end
+
+feature -- Contract support
+
+	are_columns_removable (a_index, n: INTEGER): BOOLEAN is
+			-- Are `n' columns starting at column index `a_index' removable from `Current'?
+		require
+			a_index_positive: a_index > 0
+			n_positive: n > 0
+			a_index_not_greater_than_column_count: a_index <= column_count
+			n_valid: a_index + n <= column_count + 1
+		local
+			a_counter: INTEGER
+		do
+			from
+				Result := True
+				a_counter := a_index
+			until
+				a_counter = a_index + n or else not Result
+			loop
+				Result := column (a_counter).all_items_may_be_removed
+				a_counter := a_counter + 1
+			end
 		end
 
 feature {NONE} -- Contract support

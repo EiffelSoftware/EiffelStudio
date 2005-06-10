@@ -50,6 +50,11 @@ inherit
 			real_update, update
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
 create 
 	make
 
@@ -75,6 +80,8 @@ feature {NONE} -- Initialization
 			esgrid.column (col_type_index).set_width (100)
 			esgrid.column (col_context_index).set_title (col_titles @ col_context_index)
 			esgrid.column (col_context_index).set_width (200)
+			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
+			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
 
 			esgrid.row_select_actions.extend (agent on_item_selected)
 			esgrid.row_deselect_actions.extend (agent on_item_deselected)

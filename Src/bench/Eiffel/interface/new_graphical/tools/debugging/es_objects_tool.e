@@ -99,11 +99,14 @@ feature {NONE} -- Initialization
 			esgrid.column (col_value_index).set_width (150)
 			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
 			esgrid.column (col_type_index).set_width (200)
+			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
+			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
 
 			esgrid.set_item_veto_pebble_function (agent on_stacks_veto_pebble_function)
 			esgrid.item_drop_actions.extend (agent on_drop_stack_element)
 			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
 			esgrid.row_select_actions.extend (agent on_stack_objects_row_selected)
+			
 
 			stack_objects_grid := esgrid
 
@@ -118,6 +121,8 @@ feature {NONE} -- Initialization
 			esgrid.column (col_value_index).set_width (150)
 			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
 			esgrid.column (col_type_index).set_width (200)
+			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
+			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
 
 			esgrid.set_item_veto_pebble_function (agent on_debugged_objects_veto_pebble_function)
 			esgrid.item_drop_actions.extend (agent on_add_debugged_object)
@@ -125,7 +130,7 @@ feature {NONE} -- Initialization
 			esgrid.key_press_actions.extend (agent debug_value_key_action (esgrid, ?))
 			esgrid.row_select_actions.extend (agent on_debugged_objects_row_selected)
 			esgrid.row_deselect_actions.extend (agent on_debugged_objects_row_deselected)
-
+			
 			debugged_objects_grid := esgrid
 
 			create split

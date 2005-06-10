@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
+			mouse_wheel_scroll_size := 3 --| By default, can be overwritten
 			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
 		end
 
@@ -54,6 +55,24 @@ feature -- properties
 
 	name: STRING
 			-- associated name to identify the related grid.
+			
+	mouse_wheel_scroll_size: INTEGER
+	
+	mouse_wheel_scroll_full_page: BOOLEAN
+	
+feature -- Change
+
+	set_mouse_wheel_scroll_full_page (v: BOOLEAN) is
+			-- Set the mouse wheel scroll page mode
+		do
+			mouse_wheel_scroll_full_page	:= v
+		end
+
+	set_mouse_wheel_scroll_size (v: like mouse_wheel_scroll_size) is
+			-- Set the mouse wheel scroll size
+		do
+			mouse_wheel_scroll_size	:= v
+		end
 
 feature {NONE} -- Actions implementation
 
@@ -61,8 +80,14 @@ feature {NONE} -- Actions implementation
 		local
 			vy: INTEGER
 		do
-			vy := virtual_y_position - 4 * a_step --| 4 is to speed up the scrolling ...
-			fixme ("jfiat: check if there is any preference for the scrolling speed ")
+			if 
+				mouse_wheel_scroll_full_page
+				or ev_application.ctrl_pressed
+			then
+				vy := virtual_y_position - viewable_height * a_step
+			else
+				vy := virtual_y_position - mouse_wheel_scroll_size * a_step
+			end
 			if vy < 0 then
 				vy := 0
 			else

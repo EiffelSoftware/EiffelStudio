@@ -60,8 +60,6 @@ feature {NONE} -- Initialization
 			Precursor {EV_CONTAINER_IMP}
 			first_expandable := True
 			second_expandable := True
-				-- Default look is the standard separator i.e. not flat.
-			flat_separator := False
 				-- The splitter is not displayed until `Current' contains
 				-- two widgets, so setting the width to 0 hides it.
 			internal_splitter_width := 0
@@ -113,24 +111,6 @@ feature {NONE} -- Implementation
 		-- For a vertical split area, the position is the top of the splitter.
 		-- For a horizontal split area, the position is the left
 		-- of the splitter.
-
-	enable_flat_separator is
-			-- Change appearence of `Current' to display the separator
-			-- as flat.
-		do
-			flat_separator := True
-			internal_splitter_width := splitter_width
-			layout_widgets (True)
-		end
-
-	disable_flat_separator is
-			-- Change appearence of `Current' to display the separator
-			-- as raised.
-		do
-			flat_separator := False
-			internal_splitter_width := splitter_width
-			layout_widgets (True)
-		end
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
 			-- Is the control of handle `hwnd_control'
@@ -355,18 +335,11 @@ feature {NONE} -- Implementation
 			-- if not `flat_separator' then `Result' is
 			-- `normal_separator_width'.
 		do
-			if flat_separator then	
-				Result := flat_separator_width
-			else
-				Result := normal_separator_width
-			end
+			Result := normal_separator_width
 		end
 
-	flat_separator_width: INTEGER is 4
-		-- Width of flat separator
-
-	normal_separator_width: INTEGER is 6
-		-- Width of normal separator. (The one used after creation).
+	normal_separator_width: INTEGER is 4
+		-- Width of normal separator.
 
 	click_relative_position: INTEGER
 		-- Mouse coordinate relative to start of splitter when splitter

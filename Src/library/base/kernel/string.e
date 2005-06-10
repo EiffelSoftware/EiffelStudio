@@ -1832,7 +1832,7 @@ feature -- Conversion
 					i := i + 1
 				end
 					-- Restore `count'
-				count := nb + 1
+				count := nb
 				internal_hash_code := 0
 			end
 		end

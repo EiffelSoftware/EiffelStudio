@@ -563,8 +563,6 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 		
 	number_of_lines_displayed_from_text: INTEGER is
 			-- Number of lines currently displayed on the screen, excluding the white space visible below the actual text.	
-		local
-			l_num: INTEGER
 		do
 			Result := number_of_lines_displayed
 			if (first_line_displayed + Result) > text_displayed.number_of_lines then

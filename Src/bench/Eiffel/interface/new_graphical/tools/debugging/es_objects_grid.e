@@ -35,7 +35,8 @@ feature {NONE} -- Initialization
 			set_dynamic_content_function (agent compute_grid_item)
 			enable_single_row_selection
 			enable_solid_resizing_divider
-			set_separator_color (create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
+			set_separator_color (color_separator)
+			set_tree_node_connector_color (color_tree_node_connector)
 
 			pre_draw_overlay_actions.extend (agent on_draw_borders)
 
@@ -50,6 +51,16 @@ feature {NONE} -- Initialization
 			mouse_wheel_scroll_size := 3 --| By default, can be overwritten
 			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
 		end
+		
+	color_separator: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (210, 210, 210)
+		end
+		
+	color_tree_node_connector: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (0, 0, 0)
+		end		
 
 feature -- properties
 
@@ -172,9 +183,9 @@ feature {NONE} -- Actions implementation
 			if div_index > 0 then
 				col := column (div_index)
 				if ev_application.shift_pressed then
-					col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index))
+					col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3)
 				else
-					col.resize_to_content
+					col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + 3)
 				end
 			end			
 		end

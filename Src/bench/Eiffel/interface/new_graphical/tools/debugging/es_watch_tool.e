@@ -396,6 +396,8 @@ feature {NONE} -- add new expression from the grid
 			then
 				new_expression_row := watches_grid.extended_new_row
 				create glab.make_with_text ("...")
+				grid_cell_set_tooltip (glab, "Click here to add a new expression")
+				
 				new_expression_row.set_item (1, glab)
 				glab.pointer_double_press_actions.force_extend (agent glab.activate)
 				glab.apply_actions.extend (agent add_new_expression_for_context)
@@ -546,6 +548,7 @@ feature {NONE} -- Event handling
 					end
 				end
 				move_processing := False
+				ensure_last_row_is_new_expression_row				
 			end
 		end
 		

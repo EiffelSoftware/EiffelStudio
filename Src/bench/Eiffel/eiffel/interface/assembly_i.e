@@ -283,33 +283,34 @@ feature -- Initialization
 				end
 			end
 			
-			from
-				i := l_types.eiffel_names.lower
-				nb := l_types.eiffel_names.upper
-				create classes.make (nb - i)
-				create dotnet_classes.make (nb - i)
-			until
-				i > nb
-			loop
-				l_class_name := l_types.eiffel_names.item (i)
-				if l_class_name /= Void then
-					if prefix_name /= Void then
-						l_class_name.prepend (prefix_name)
+			if l_types.eiffel_names /= Void then
+				from
+					i := l_types.eiffel_names.lower
+					nb := l_types.eiffel_names.upper
+					create classes.make (nb - i)
+					create dotnet_classes.make (nb - i)
+				until	
+					i > nb
+				loop
+					l_class_name := l_types.eiffel_names.item (i)
+					if l_class_name /= Void then
+						if prefix_name /= Void then
+							l_class_name.prepend (prefix_name)
+						end
+						l_external_name := l_types.dotnet_names.item (i)
+						create l_path.make (10)
+						l_path.append_integer (i)
+						l_path.append (xml_extension)
+						create l_class.make (Current, l_class_name, l_external_name, l_path)
+						if not l_class.exists then
+							Error_handler.insert_error (create {VD62}.make (Current, l_class))
+						end
+						classes.put (l_class, l_class_name)
+						dotnet_classes.put (l_class, l_external_name)
 					end
-					l_external_name := l_types.dotnet_names.item (i)
-					create l_path.make (10)
-					l_path.append_integer (i)
-					l_path.append (xml_extension)
-					create l_class.make (Current, l_class_name, l_external_name, l_path)
-					if not l_class.exists then
-						Error_handler.insert_error (create {VD62}.make (Current, l_class))
-					end
-					classes.put (l_class, l_class_name)
-					dotnet_classes.put (l_class, l_external_name)
+					i := i + 1
 				end
-				i := i + 1
 			end
-			
 				-- Then we get list of referenced assemblies from this assembly.
 				-- We raise a VD60 error when assembly is not found in surrounding
 				-- universe.

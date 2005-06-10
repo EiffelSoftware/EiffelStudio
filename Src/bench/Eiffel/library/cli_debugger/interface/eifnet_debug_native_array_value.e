@@ -133,10 +133,14 @@ feature -- Output
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
 		do
-			if is_static then
-				Result := Static_reference_value
+			if is_null then
+				Result := Void_value
 			else
-				Result := Special_value
+				if is_static then
+					Result := Static_reference_value
+				else
+					Result := Special_value
+				end
 			end
 		end
 		

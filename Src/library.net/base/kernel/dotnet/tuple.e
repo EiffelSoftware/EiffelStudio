@@ -23,7 +23,7 @@ feature -- Creation
 		local
 			l_count: INTEGER
 		do
-			l_count := feature {ISE_RUNTIME}.generic_parameter_count (Current)
+			l_count := {ISE_RUNTIME}.generic_parameter_count (Current)
 			create native_array.make (l_count)
 		ensure then
 			non_void_native_array: native_array /= Void
@@ -231,7 +231,7 @@ feature -- Duplication
 				standard_copy (other)
 				nb := other.native_array.count
 				create native_array.make (nb)
-				feature {SYSTEM_ARRAY}.copy (other.native_array, native_array, nb)
+				{SYSTEM_ARRAY}.copy (other.native_array, native_array, nb)
 			end
 		end
 
@@ -1058,7 +1058,7 @@ feature {NONE} -- Implementation
 					else
 						type := Void
 					end
-					Result := feature {SYSTEM_OBJECT}.equals_object_object (first_type, type)
+					Result := {SYSTEM_OBJECT}.equals_object_object (first_type, type)
 					i := i + 1
 				end
 			end
@@ -1077,7 +1077,7 @@ feature {NONE} -- Implementation
 					-- Void element we need to retrieve type from actual generic
 					-- parameter.
 				l_item := reverse_lookup.item (
-					feature {ISE_RUNTIME}.type_of_generic_parameter (Current, pos + 1))
+					 {ISE_RUNTIME}.type_of_generic_parameter (Current, pos + 1))
 			end
 			if l_item /= Void then
 				Result ?= l_item

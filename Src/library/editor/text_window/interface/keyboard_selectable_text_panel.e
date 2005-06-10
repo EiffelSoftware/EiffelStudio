@@ -323,7 +323,9 @@ feature -- Observation
 	add_selection_observer (txt_observer: TEXT_OBSERVER) is
 			-- Add observer of `text_displayed' for selection changes.
 		do
-			text_displayed.add_selection_observer (txt_observer)
+			if not text_displayed.is_notifying then
+				text_displayed.add_selection_observer (txt_observer)
+			end
 		end
 	
 	add_cursor_observer (txt_observer: TEXT_OBSERVER) is
@@ -381,7 +383,9 @@ feature {NONE} -- Process Vision2 events
 			show_cursor := True
 			invalidate_cursor_rect (True)
 			if has_selection then
-				disable_selection
+				sel_start := text_displayed.selection_start.y_in_lines
+				sel_end := text_displayed.selection_end.y_in_lines
+				invalidate_block (sel_start, sel_end, True)
 			end
 		end
 

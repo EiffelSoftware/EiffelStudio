@@ -178,6 +178,7 @@
 					<item>
 						<bold>EV_FONT_DIALOG</bold> - Fixed bug where `name' of `font' returned was incorrect.
 					</item>
+					<item><bold>EV_SPLIT_AREA</bold> - Split areas now have a completely flat appearance.</item>
 				</list>
 			</item>
 			<item>

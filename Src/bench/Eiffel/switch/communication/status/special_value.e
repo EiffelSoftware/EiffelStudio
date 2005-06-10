@@ -30,9 +30,29 @@ inherit
 
 create {DEBUG_VALUE_EXPORTER}
 
+	make_set_ref,
 	make_attribute
 
 feature {NONE} -- Initialization
+
+	make_set_ref (a_reference: POINTER; id: INTEGER) is
+			-- Create Current as a standalone object
+			-- i.e: not an attribute
+			-- nevertheless at this point we don't have the `capacity'
+			-- value, so we'll fetch this value when needed
+		do
+			is_attribute := False;
+			if a_reference /= Default_pointer then
+				address := a_reference.out
+			end
+			if address = Void then
+				is_null := True
+				capacity := 0
+			else
+				set_sp_bounds (min_slice_ref.item, max_slice_ref.item)
+				capacity := -1;
+			end
+		end
 
 	make_attribute (attr_name: like name; a_class: like e_class; 
 						addr: like address; cap: like capacity) is
@@ -58,7 +78,7 @@ feature -- Access
 	dynamic_class: CLASS_C is
 		once
 			Result := Eiffel_system.special_class.compiled_class
-		end;
+		end
 
 	string_value: STRING is
 			-- If `Current' represents a string then return its value.
@@ -250,6 +270,7 @@ feature -- Items
 			create rqst.make (address)
 			rqst.set_sp_bounds (sp_lower, sp_upper)
 			rqst.send
+			capacity := rqst.capacity
 			items.append_last (rqst.attributes)
 			items_computed := True
 		end
@@ -279,8 +300,23 @@ feature {NONE} -- Implementation
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
 		do
-			address := hector_addr (address);
+			if address /= Void then
+				address := hector_addr (address);
+			end
 			is_null := (address = Void)
+
+				--| When created as local (for instance)
+				--| we don't set the capacity right away
+				--| so let's compute it when needed
+			get_capacity
+		end
+		
+	get_capacity is
+			-- Get SPECIAL capacity value
+		do
+			if capacity < 0 then
+				capacity := debugged_object_manager.special_object_capacity_at_address (address)
+			end
 		end
 
 invariant

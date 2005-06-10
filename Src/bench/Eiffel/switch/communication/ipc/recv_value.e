@@ -13,6 +13,10 @@ inherit
 	
 	REFACTORING_HELPER
 	
+	SHARED_EIFFEL_PROJECT
+	
+	COMPILER_EXPORTER	
+	
 	SK_CONST
 		
 feature	{} -- Initialization of the C/Eiffel interface
@@ -113,8 +117,29 @@ feature	{} -- Initialization of the C/Eiffel interface
 	
 	set_ref (ref: POINTER; type: INTEGER) is
 			-- Receive a reference value.
+		local
+			cl: CLASS_C
 		do
-			create {REFERENCE_VALUE} item.make (ref, type + 1)
+			fixme ("[
+				Maybe we should modified the runtime, to add the 'SPECIAL' case
+				and send at the same time the capacity.
+				For now, this looks like a hack, but this is working.
+				]")
+
+			if Eiffel_system.valid_dynamic_id (type + 1) then
+				cl := Eiffel_system.class_of_dynamic_id (type + 1)
+				if 
+					cl /= Void
+					and then cl.is_special
+				then
+					create {SPECIAL_VALUE} item.make_set_ref (ref, type + 1)
+				else
+					create {REFERENCE_VALUE} item.make (ref, type + 1)
+				end
+			else
+				check False end
+				create {REFERENCE_VALUE} item.make (ref, type + 1)
+			end
 		end
 
 	set_point (v: POINTER) is

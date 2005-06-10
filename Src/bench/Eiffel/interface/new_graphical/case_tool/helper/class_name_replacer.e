@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 							end
 						end
 						if s /= Void and then s.is_equal (a_search_string) then
-							ctm.replace_code (a_replace_string, click_item.start_position + cur_disp, click_item.end_position - 1 + cur_disp)
+							ctm.replace_code (a_replace_string, click_item.start_position + cur_disp, click_item.end_position + cur_disp)
 							cur_disp := cur_disp - disp
 							is_occurrence_found := True
 						end

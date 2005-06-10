@@ -144,12 +144,34 @@ feature -- Change
 			error_message := mesg
 		end
 	
-feature -- Error code
+feature {NONE} -- Error code
 
 	cst_error_evaluation: INTEGER is -1
 	cst_error_expression: INTEGER is -2
 	cst_error_exception: INTEGER is -3
 	cst_error_not_implemented: INTEGER is -9
+	
+feature {NONE} -- Error message values
+	
+	Cst_error_call_on_void_target: STRING is "Error: Call on void target "
+
+	Cst_error_context_corrupted_or_not_found:STRING is "Context corrupted or not found"
+
+	Cst_error_during_expression_analyse: STRING is "Error during expression analyse"
+
+	Cst_error_type_checking_failed : STRING is "Type checking failed"
+
+	Cst_error_evaluation_failed_with_exception: STRING is "Evaluation failed with an exception"
+
+	Cst_error_not_yet_ready: STRING is " : sorry not yet ready"
+
+	Cst_error_report_to_support: STRING is " => ERROR : please report to support"
+
+	Cst_error_other_than_func_cst_once_not_available: STRING is " => ERROR : other than function, constant and once : not available"
+
+	Cst_error_during_evaluation_of_external_call: STRING is " => ERROR during evaluation of external call : "
+
+	Cst_error_evaluating_parameter: STRING is " => Error evaluating parameter"
 
 feature -- Access
 

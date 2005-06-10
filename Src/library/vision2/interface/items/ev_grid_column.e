@@ -400,9 +400,6 @@ feature {NONE} -- Implementation
 			create {EV_GRID_COLUMN_I} implementation.make (Current)
 		end
 
-invariant
-	is_selected_implies_selected_items_count_equals_count: is_selected implies selected_items.count = count
-
 end
 
 --|----------------------------------------------------------------

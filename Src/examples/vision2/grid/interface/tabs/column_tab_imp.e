@@ -61,10 +61,14 @@ feature {NONE}-- Initialization
 			create swap_column_button
 			create l_ev_cell_2
 			create move_to_column_finder
+			create l_ev_vertical_box_4
+			create l_ev_cell_3
+			create columns_to_move_button
+			create l_ev_cell_4
 			create l_ev_table_2
 			create clear_column_button
 			create remove_column_button
-			create l_ev_cell_3
+			create l_ev_cell_5
 			
 				-- Build_widget_structure.
 			extend (l_ev_horizontal_box_1)
@@ -89,6 +93,10 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.extend (swap_column_button)
 			l_ev_vertical_box_3.extend (l_ev_cell_2)
 			l_ev_horizontal_box_5.extend (move_to_column_finder)
+			l_ev_horizontal_box_5.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (l_ev_cell_3)
+			l_ev_vertical_box_4.extend (columns_to_move_button)
+			l_ev_vertical_box_4.extend (l_ev_cell_4)
 			l_ev_vertical_box_2.extend (l_ev_table_2)
 			
 			column_properties_frame.disable_sensitive
@@ -136,6 +144,10 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_5.disable_item_expand (move_to_column_finder)
 			l_ev_vertical_box_3.disable_item_expand (swap_column_button)
 			swap_column_button.set_text ("Move Column ? past Column ?")
+			l_ev_vertical_box_4.disable_item_expand (columns_to_move_button)
+			columns_to_move_button.set_text ("1")
+			columns_to_move_button.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 100))
+			columns_to_move_button.set_value (1)
 			l_ev_table_2.resize (3, 1)
 			l_ev_table_2.set_row_spacing (box_padding)
 			l_ev_table_2.set_column_spacing (box_padding)
@@ -143,7 +155,7 @@ feature {NONE}-- Initialization
 				-- Insert and position all children of `l_ev_table_2'.
 			l_ev_table_2.put_at_position (clear_column_button, 1, 1, 1, 1)
 			l_ev_table_2.put_at_position (remove_column_button, 2, 1, 1, 1)
-			l_ev_table_2.put_at_position (l_ev_cell_3, 3, 1, 1, 1)
+			l_ev_table_2.put_at_position (l_ev_cell_5, 3, 1, 1, 1)
 			clear_column_button.set_text ("Clear Column")
 			remove_column_button.set_text ("Remove Column")
 			set_padding_width (box_padding)
@@ -162,6 +174,7 @@ feature {NONE}-- Initialization
 			column_selected_button.select_actions.extend (agent column_selected_button_selected)
 			column_visible_button.select_actions.extend (agent column_visible_button_selected)
 			swap_column_button.select_actions.extend (agent swap_column_button_selected)
+			columns_to_move_button.change_actions.extend (agent column_to_move_button_selected (?))
 			clear_column_button.select_actions.extend (agent clear_column_button_selected)
 			remove_column_button.select_actions.extend (agent remove_column_button_selected)
 				-- Close the application when an interface close
@@ -176,9 +189,9 @@ feature -- Access
 	column_pixmap_combo, foreground_color_combo, background_color_combo: EV_COMBO_BOX
 	column_finder,
 	move_to_column_finder: GRID_ITEM_FINDER
-	column_index, column_width: EV_SPIN_BUTTON
-	swap_column_button, clear_column_button,
-	remove_column_button: EV_BUTTON
+	column_index, column_width, columns_to_move_button: EV_SPIN_BUTTON
+	swap_column_button,
+	clear_column_button, remove_column_button: EV_BUTTON
 	column_selected_button, column_visible_button: EV_CHECK_BUTTON
 	column_title_entry: EV_TEXT_FIELD
 	column_properties_frame,
@@ -186,14 +199,14 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3: EV_CELL
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5: EV_CELL
 	l_ev_table_1, l_ev_table_2: EV_TABLE
 	l_ev_horizontal_box_1,
 	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1,
-	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3,
-	l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
+	l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_label_1, l_ev_label_2,
+	l_ev_label_3, l_ev_label_4, l_ev_label_5, l_ev_label_6: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -252,6 +265,11 @@ feature {NONE} -- Implementation
 	
 	swap_column_button_selected is
 			-- Called by `select_actions' of `swap_column_button'.
+		deferred
+		end
+	
+	column_to_move_button_selected (a_value: INTEGER) is
+			-- Called by `change_actions' of `columns_to_move_button'.
 		deferred
 		end
 	

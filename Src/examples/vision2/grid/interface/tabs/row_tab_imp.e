@@ -57,6 +57,10 @@ feature {NONE}-- Initialization
 			create swap_row_button
 			create l_ev_cell_2
 			create move_to_row_finder
+			create l_ev_vertical_box_4
+			create l_ev_cell_3
+			create rows_to_move_button
+			create l_ev_cell_4
 			create l_ev_table_2
 			create remove_row_button
 			create unparent_row_button
@@ -85,6 +89,10 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_3.extend (swap_row_button)
 			l_ev_vertical_box_3.extend (l_ev_cell_2)
 			l_ev_horizontal_box_6.extend (move_to_row_finder)
+			l_ev_horizontal_box_6.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (l_ev_cell_3)
+			l_ev_vertical_box_4.extend (rows_to_move_button)
+			l_ev_vertical_box_4.extend (l_ev_cell_4)
 			l_ev_vertical_box_2.extend (l_ev_table_2)
 			
 			row_properties_frame.disable_sensitive
@@ -125,6 +133,10 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_6.disable_item_expand (move_to_row_finder)
 			l_ev_vertical_box_3.disable_item_expand (swap_row_button)
 			swap_row_button.set_text ("Move Row ? past Row ?")
+			l_ev_vertical_box_4.disable_item_expand (rows_to_move_button)
+			rows_to_move_button.set_text ("1")
+			rows_to_move_button.value_range.adapt (create {INTEGER_INTERVAL}.make (1, 100))
+			rows_to_move_button.set_value (1)
 			l_ev_table_2.resize (3, 2)
 			l_ev_table_2.set_row_spacing (box_padding)
 			l_ev_table_2.set_column_spacing (box_padding)
@@ -147,6 +159,7 @@ feature {NONE}-- Initialization
 			background_color_combo.select_actions.extend (agent background_color_combo_selected)
 			row_selected_button.select_actions.extend (agent row_selected_button_selected)
 			swap_row_button.select_actions.extend (agent swap_row_button_selected)
+			rows_to_move_button.change_actions.extend (agent rows_to_move_button_selected (?))
 			remove_row_button.select_actions.extend (agent remove_row_button_selected)
 			unparent_row_button.select_actions.extend (agent unparent_row_button_selected)
 			clear_row_button.select_actions.extend (agent clear_row_button_selected)
@@ -162,22 +175,22 @@ feature -- Access
 	foreground_color_combo, background_color_combo: EV_COMBO_BOX
 	row_finder, move_to_row_finder: GRID_ITEM_FINDER
 	row_index_entry,
-	row_height_entry: EV_SPIN_BUTTON
-	swap_row_button, remove_row_button, unparent_row_button, clear_row_button: EV_BUTTON
+	row_height_entry, rows_to_move_button: EV_SPIN_BUTTON
+	swap_row_button, remove_row_button, unparent_row_button,
+	clear_row_button: EV_BUTTON
 	row_selected_button: EV_CHECK_BUTTON
-	row_properties_frame,
-	row_operations_frame: EV_FRAME
+	row_properties_frame, row_operations_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
 	l_ev_table_1, l_ev_table_2: EV_TABLE
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
-	l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1,
-	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
-	l_ev_label_1, l_ev_label_2, l_ev_label_3,
-	l_ev_label_4: EV_LABEL
+	l_ev_horizontal_box_1,
+	l_ev_horizontal_box_2, l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5,
+	l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3,
+	l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_label_1, l_ev_label_2, l_ev_label_3, l_ev_label_4: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -221,6 +234,11 @@ feature {NONE} -- Implementation
 	
 	swap_row_button_selected is
 			-- Called by `select_actions' of `swap_row_button'.
+		deferred
+		end
+	
+	rows_to_move_button_selected (a_value: INTEGER) is
+			-- Called by `change_actions' of `rows_to_move_button'.
 		deferred
 		end
 	

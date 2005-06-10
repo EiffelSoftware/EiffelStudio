@@ -606,7 +606,7 @@ feature {NONE} -- Implementation
 				replace_field.show
 				replace_check_button.set_text (Interface_names.l_Replace_with)
 				replace_all_button.enable_sensitive
-				if keyword_field.text /= Void and then keyword_field.text.count > 0 then 
+				if search_is_possible then
 					replace_button.enable_sensitive
 				end
 			end

@@ -25,6 +25,13 @@ inherit
 			default_create
 		end
 		
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+		
 feature {NONE} -- Initialization
 
 	default_create is
@@ -194,31 +201,33 @@ feature {NONE} -- Implementation
 			cf: EIFFEL_CLASS_FIGURE
 			l_selected: LIST [EG_FIGURE]
 		do
-			if world.selected_figures.count < 2 or else not world.selected_figures.has (Current) then
-				if model.is_compiled then
-					create {CLASSC_FIGURE_STONE} Result.make (Current)
-				else
-					create {CLASSI_FIGURE_STONE} Result.make (Current)
-				end
-				set_accept_cursor (Cursors.cur_Class)
-				set_deny_cursor (Cursors.cur_X_class)
-			else
-				l_selected := world.selected_figures
-				create class_list.make (l_selected.count)
-				from
-					l_selected.start
-				until
-					l_selected.after
-				loop
-					cf ?= l_selected.item
-					if cf /= Void then
-						class_list.extend (cf)
+			if not workbench.is_compiling then
+				if world.selected_figures.count < 2 or else not world.selected_figures.has (Current) then
+					if model.is_compiled then
+						create {CLASSC_FIGURE_STONE} Result.make (Current)
+					else
+						create {CLASSI_FIGURE_STONE} Result.make (Current)
 					end
-					l_selected.forth
+					set_accept_cursor (Cursors.cur_Class)
+					set_deny_cursor (Cursors.cur_X_class)
+				else
+					l_selected := world.selected_figures
+					create class_list.make (l_selected.count)
+					from
+						l_selected.start
+					until
+						l_selected.after
+					loop
+						cf ?= l_selected.item
+						if cf /= Void then
+							class_list.extend (cf)
+						end
+						l_selected.forth
+					end
+					create {CLASS_FIGURE_LIST_STONE} Result.make_with_list (class_list)
+					set_accept_cursor (cursors.cur_class_list)
+					set_deny_cursor (cursors.cur_x_class_list)
 				end
-				create {CLASS_FIGURE_LIST_STONE} Result.make_with_list (class_list)
-				set_accept_cursor (cursors.cur_class_list)
-				set_deny_cursor (cursors.cur_x_class_list)
 			end
 		end
 		

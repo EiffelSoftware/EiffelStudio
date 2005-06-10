@@ -182,6 +182,7 @@ feature {NONE} -- EXPR_B evaluation
 			l_void_b: VOID_B
 
 			l_value_i: VALUE_I
+			l_routine_creation_b: ROUTINE_CREATION_B
 		do
 			debug ("debugger_evaluator")
 				print (generator + ".evaluate_expr_b (" + a_expr_b.generator + ")%N")
@@ -221,7 +222,12 @@ feature {NONE} -- EXPR_B evaluation
 								if l_void_b /= Void then
 									evaluate_void_b (l_void_b)
 								else
-									evaluate_manifest_value (a_expr_b)								
+									l_routine_creation_b ?= a_expr_b
+									if l_routine_creation_b /= Void then
+										evaluate_routine_creation_b (l_routine_creation_b)
+									else
+										evaluate_manifest_value (a_expr_b)
+									end
 								end
 							end
 						end
@@ -472,6 +478,12 @@ feature {NONE} -- EXPR_B evaluation
 			tmp_target := l_tmp_target_backup
 		end
 		
+	evaluate_routine_creation_b (a_routine_creation_b: ROUTINE_CREATION_B) is
+		local
+		do
+			set_error_not_implemented (a_routine_creation_b.generator + " = agent creation " + Cst_error_not_yet_ready)
+		end
+		
 	evaluate_creation_expr_b (a_creation_expr_b: CREATION_EXPR_B) is
 		local
 			retried: BOOLEAN
@@ -481,21 +493,28 @@ feature {NONE} -- EXPR_B evaluation
 			l_p_b: PARAMETER_B
 			l_e_b: EXPR_B
 			l_v_i: VALUE_I
+			l_supported: BOOLEAN
 			l_has_error: BOOLEAN
 		do
+			l_type_to_create := a_creation_expr_b.info.type_to_create
 			if not retried then
 				-- FIXME JFIAT: 2004/03/18 for now just process basic type ...
-				l_f_b ?= a_creation_expr_b.call
-				if l_f_b /= Void and then l_f_b.parameters /= Void then
-					l_p_b ?= l_f_b.parameters.first
-					if l_p_b /= Void then
-						l_e_b ?= l_p_b.expression
-						if l_e_b /= Void then
-							l_v_i := l_e_b.evaluate
-							if l_v_i /= Void then
-								evaluate_value_i (l_v_i)
+				if l_type_to_create /= Void and then l_type_to_create.is_basic then
+					l_f_b ?= a_creation_expr_b.call
+					if l_f_b /= Void and then l_f_b.parameters /= Void then
+						if l_f_b.parameters.count = 1 then
+							l_p_b ?= l_f_b.parameters.first
+							if l_p_b /= Void then
+								l_e_b ?= l_p_b.expression
+								if l_e_b /= Void then
+									l_v_i := l_e_b.evaluate
+									if l_v_i /= Void then
+										l_supported	:= True
+										evaluate_value_i (l_v_i)
+									end
+								end
 							end
-						end							
+						end
 					end
 				else
 					l_has_error := True
@@ -503,7 +522,7 @@ feature {NONE} -- EXPR_B evaluation
 			else
 				l_has_error := True
 			end
-			if l_has_error then
+			if l_has_error and not l_supported then
 				set_error_not_implemented (a_creation_expr_b.generator + " = CREATION_EXPR_B" + Cst_error_not_yet_ready)
 				l_type_to_create := a_creation_expr_b.info.type_to_create
 				if l_type_to_create /= Void then
@@ -1120,6 +1139,7 @@ feature {NONE} -- Implementation
 			l_byte_code: BYTE_CODE
 			l_ta: CL_TYPE_A
 			bak_byte_code: BYTE_CODE
+			bak_cc: CLASS_C
 		do
 			if not retried then
 				if internal_expression_byte_node = Void then
@@ -1152,6 +1172,9 @@ feature {NONE} -- Implementation
 						ast_context.initialize (context_class, l_ta, context_class.feature_table)
 						Inst_context.set_cluster (context_class.cluster)
 
+						bak_cc := System.current_class
+						System.set_current_class (context_class)
+
 						bak_byte_code := Byte_context.byte_code
 			
 						if on_context and then context_feature /= Void then
@@ -1170,6 +1193,9 @@ feature {NONE} -- Implementation
 							--| Compute and get `expression_byte_node'
 						internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)
 							--| Reset Compiler context
+						if bak_cc /= Void then
+							System.set_current_class (bak_cc)
+						end
 						if bak_byte_code /= Void then
 							Byte_context.set_byte_code (bak_byte_code)
 						end

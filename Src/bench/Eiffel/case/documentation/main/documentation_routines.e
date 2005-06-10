@@ -414,15 +414,13 @@ feature -- Routines
 			Result.append ("`")
 			Result.append (f.name)
 			Result.append ("' ")
-			wc := f.written_class
-			if wc.has_feature_table then
-				anc := wc.feature_with_feature_id (f.written_feature_id)
-			end
+			anc := f.written_feature
 			if anc /= Void then
 				real_name := anc.name
 			else
 				real_name := f.name
 			end
+			wc := f.written_class
 			if wc = current_class then
 				Result.append ("is declared in `Current'")
 			else

@@ -85,9 +85,7 @@ feature -- Access
 
 			to_row := grid.row (to_index)
 			to_p := to_row.parent_row
-			check
-				parent_row = Void or else (to_p = Void or else parent_row = to_p)
-			end
+
 			if parent_row /= Void then
 				to_p := parent_row
 			end

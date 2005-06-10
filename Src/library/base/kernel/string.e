@@ -1191,9 +1191,12 @@ feature -- Element change
 			-- do nothing if `n' >= `count'.
 		require
 			non_negative_argument: n >= 0
+		local
+			nb: like count
 		do
-			if n < count then
-				area.overlapping_move (count - n, 0, n)
+			nb := count
+			if n < nb then
+				area.overlapping_move (nb - n, 0, n)
 				count := n
 				internal_hash_code := 0
 			end

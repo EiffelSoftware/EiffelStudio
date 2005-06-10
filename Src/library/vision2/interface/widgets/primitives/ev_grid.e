@@ -5,9 +5,6 @@ indexing
 		Item Insertion:
 		--------------------------------------------------------------------------------
 
-		Appearance:
-		--------------------------------------------------------------------------------
-
 		Dynamic Modes:
 		--------------------------------------------------------------------------------
 
@@ -38,9 +35,6 @@ indexing
 		virtual position explicitly via calls to `set_virtual_x' and `set_virtual_y'.
 
 		You may query the virtual position of an item within the virtual area of
-		if  then
-
-		end
 		`Current' via `virtual_x_position' and `virtual_y_position' directly on the
 		item. You may also query the dimensions of an item via `width' and `height'. It
 		is important to note that for an item that is part of a tree structure, the
@@ -100,6 +94,58 @@ indexing
 		The re-drawing of `Current' is performed on idle, so if you are performing heavy
 		computation and the grid is not updating, call `process_events' from
 		EV_APPLICATION in order to force a re-draw.
+		--------------------------------------------------------------------------------
+		Appearance:
+
+		Each of the items contained within the grid are sized based on the column and
+		row that they occupy. If `is_row_height_fixed' is `True' then the height of the
+		rows is dependent on `row_height' of `Current', otherwise it is dependent on
+		`height' of the row and each row may occupy a different height. For the first
+		non-`Void' item of each row, the position of the item is `item.horizontal_indent'
+		pixels greater than the column in which it is contained. The appearance of each
+		item is dependent on the actual type of the item, but there are a number of
+		ways in which you may modify this at the grid level.
+
+		`post_draw_overlay_function' is available, which permits you to draw directly on
+		top of items immediately after they are dwan by the implementation. This is
+		useful for adding custom borders to your items.
+		`pre_draw_overlay_function' is available, which permits you to draw on top of the
+		background of items, but before any features of that item have been drawn. For
+		example, for grid label items, the background is cleared, then the function is
+		called and then the `text' and `pixmap' are drawn. Note that for drawable items,
+		which do not re-draw their background automatically, nothing is drawn before the
+		`pre_draw_overlay_function' is called.
+
+		When items are selected in a focused grid, they become highlighted in
+		`focused_selection_color' and if the grid does not have the focus,
+		`non_focused_selection_color' is used instead. It is recommended that you use
+		these colors for your own drawable items to maintain consistency within the grid.
+		The selection colors may be modified via `set_focused_selection_color' and
+		`set_non_focused_selection_color'.
+
+		Seperators between items may be enabled on the grid via `enable_column_separators'
+		and `enable_row_separators' which ensure a single line is drawn between each row
+		and column in `separator_color'. Use `set_separator_color' to modify this color.
+
+		The tree structure of `Current' is drawn using `expand_node_pixmap' and
+		`collapse_node_pixmap' to illustrate the expanded state of rows with subrows. You
+		may use your own pixmaps by calling `set_expand_node_pixmap' and
+		`set_collapse_node_pixmap'. The indent applied to each subrow is based on the
+		current width of the node pixmaps + `subrow_indent'. You may increase this indent
+		by calling `set_subrow_indent'. The nodes in the tree are connected via lines drawn
+		in the color `tree_node_connector_color' which may be modified via
+		`set_tree_node_connector_color'. These connecting lines may also be hidden via a
+		call to `hide_tree_node_connectors'.
+
+		During a column resize in `Current', the contents of the grid are immediately
+		refreshed. This behavior may be disabled via a call to `disable_column_resize_immedite'
+		and may be necessary if running the grid on older systems as it is less processor
+		intensive. When not `is_column_resize_immediate', the column resizing is only performed
+		when the user completes the resize, but a divider may be shown in `Current' which indicates
+		its new width during the resizing, by calling `enable_resizing_divider'. This divider
+		may be solid or dashed, based on the state of `is_resizing_divider_solid', settable via
+		`enable_resizing_divider_solid' or `disable_resizing_divider_solid'.
+
 		--------------------------------------------------------------------------------
 
 		Selection:

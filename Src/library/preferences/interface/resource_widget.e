@@ -13,7 +13,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create			
 		do
-			create change_actions.make
+			create change_actions
 		end		
 
 	make_with_resource (a_resource: PREFERENCE) is

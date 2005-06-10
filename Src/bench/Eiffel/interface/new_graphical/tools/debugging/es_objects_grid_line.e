@@ -754,7 +754,7 @@ feature {NONE} -- Filling
 					end
 					if
 						0 <= object_spec_upper and then
-						object_spec_upper <= object_spec_capacity
+						object_spec_upper < object_spec_capacity - 1
 					then
 						es_glab := slice_label_item (Interface_names.l_More_items)
 						es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)

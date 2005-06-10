@@ -1826,7 +1826,6 @@ feature -- Conversion
 					-- `left_adjust' did remove some characters, so we need to add
 					-- some white spaces at the end of the string.
 				from
-					i := i - 1
 					l_area := area
 				until
 					i = nb

@@ -551,7 +551,9 @@ feature {NONE} -- EXPR_B evaluation
 			end
 			
 			if cl = Void then
-				set_error_evaluation (Cst_error_call_on_void_target + a_feature_b.feature_name)
+				set_error_evaluation (Cst_error_call_on_void_target + 
+						Cst_feature_name_left_limit + a_feature_b.feature_name + Cst_feature_name_right_limit
+					)
 			else
 				if a_feature_b.precursor_type /= Void then
 					cl := a_feature_b.precursor_type.base_class
@@ -612,7 +614,9 @@ feature {NONE} -- EXPR_B evaluation
 			end
 			
 			if cl = Void then
-				set_error_evaluation (Cst_error_call_on_void_target + a_external_b.feature_name)
+				set_error_evaluation (Cst_error_call_on_void_target + 
+						Cst_feature_name_left_limit + a_external_b.feature_name + Cst_feature_name_right_limit
+					)
 			else
 				ef := cl.feature_with_name (a_external_b.feature_name)
 				if ef = Void then
@@ -901,7 +905,9 @@ feature {NONE} -- Concrete evaluation
 			-- Evaluate attribute feature
 		do
 			if a_target /= Void and then a_target.is_void then
-				set_error_evaluation (Cst_error_call_on_void_target + f.name)
+				set_error_evaluation (Cst_error_call_on_void_target + 
+						Cst_feature_name_left_limit + f.name + Cst_feature_name_right_limit
+					)
 			else
 				prepare_evaluation
 				Dbg_evaluator.evaluate_attribute (a_addr, a_target, f)
@@ -915,7 +921,9 @@ feature {NONE} -- Concrete evaluation
 			f_is_not_attribute: not f.is_attribute
 		do
 			if a_target /= Void and then a_target.is_void then
-				set_error_evaluation (Cst_error_call_on_void_target + f.name)
+				set_error_evaluation (Cst_error_call_on_void_target + 
+						Cst_feature_name_left_limit + f.name + Cst_feature_name_right_limit
+					)
 			else
 				prepare_evaluation
 				Dbg_evaluator.evaluate_function (a_addr, a_target, cl, f, params)

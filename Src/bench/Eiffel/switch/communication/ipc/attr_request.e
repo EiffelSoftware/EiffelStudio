@@ -119,7 +119,7 @@ feature -- Update
 					-- the address and the count of the special to be consistent
 					-- with the way we retrieve a special object in recv_attributes.
 				address := to_pointer (c_tread)
-				count := to_integer (c_tread)
+				capacity := to_integer (c_tread)
 				recv_attributes (attributes, Void)
 				debug ("DEBUG_RECV")
 					io.error.put_string ("And being back again in `send'.%N")

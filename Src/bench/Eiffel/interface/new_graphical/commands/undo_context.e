@@ -209,7 +209,7 @@ feature -- Implementation
 			i: INTERNAL
 		do
 			create i
-			if type.substring_index ("PROCEDURE", 0) > 0 then
+			if type.substring_index ("PROCEDURE", 1) > 0 then
 				Result := True
 			else
 				Result := i.type_conforms_to (

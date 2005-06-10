@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			if stone_as.generics_end_position > 0 then
 				ep := stone_as.generics_end_position
 			else
-				ep := click_ast.end_position - 1
+				ep := click_ast.end_position
 			end
 			text.replace_substring (new_name, sp, ep)
 			if not new_generics.is_empty then

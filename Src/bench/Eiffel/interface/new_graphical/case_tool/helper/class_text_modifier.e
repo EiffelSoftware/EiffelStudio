@@ -227,7 +227,7 @@ feature -- Element change
 	remove_code (start_pos, end_pos: INTEGER) is
 			-- Remove code between `start_pos' and `end_pos'.
 		require
-			start_pos_smaller_than_end_pos: start_pos < end_pos
+			start_pos_smaller_than_end_pos: start_pos <= end_pos
 			text_managed: text_managed
 		do
 			last_removed_code.put_front ([text.substring (start_pos, end_pos), start_pos])
@@ -240,7 +240,7 @@ feature -- Element change
 	replace_code (new_code: STRING; start_pos, end_pos: INTEGER) is
 			-- Replace code between `start_pos' and `end_pos' with `new_code'.
 		require
-			start_pos_smaller_than_end_pos: start_pos < end_pos
+			start_pos_smaller_than_end_pos: start_pos <= end_pos
 			text_managed: text_managed
 			new_code_not_void: new_code /= Void
 		do
@@ -253,7 +253,7 @@ feature -- Element change
 	code (start_pos, end_pos: INTEGER): STRING is
 			-- Code between `start_pos' and `end_pos'.
 		require
-			start_pos_smaller_than_end_pos: start_pos < end_pos
+			start_pos_smaller_than_end_pos: start_pos <= end_pos
 			text_managed: text_managed
 		do
 			Result := text.substring (start_pos, end_pos)
@@ -874,7 +874,7 @@ feature -- Modification (Change class name)
 			if class_as.generics_end_position > 0 then
 				ep := class_as.generics_end_position
 			else
-				ep := click_ast.end_position - 1
+				ep := click_ast.end_position
 			end
 
 			remove_code (sp, ep)
@@ -955,7 +955,7 @@ feature {NONE} -- Implementation
 			not_modified: not is_modified
 		do
 			if f /= Void then
-				remove_code (f.start_position, f.end_position - 1)
+				remove_code (f.start_position, f.end_position)
 				reparse
 			end
 		end

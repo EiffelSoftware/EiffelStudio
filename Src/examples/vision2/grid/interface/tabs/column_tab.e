@@ -257,5 +257,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	column_to_move_button_selected (a_value: INTEGER) is
+			-- Called by `change_actions' of `columns_to_move_button'.
+		do
+		end
+
 end -- class COLUMN_TAB
 

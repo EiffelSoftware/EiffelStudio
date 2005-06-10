@@ -230,5 +230,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	rows_to_move_button_selected (a_value: INTEGER) is
+			-- Called by `change_actions' of `rows_to_move_button'.
+		do
+		end
+
 end -- class ROW_TAB
 

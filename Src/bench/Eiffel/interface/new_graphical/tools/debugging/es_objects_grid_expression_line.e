@@ -49,6 +49,7 @@ feature {NONE} -- Initialization
 						object_address := Void
 					end
 					object_dynamic_class := expression_evaluator.final_result_type
+					object_is_special_value := object_dynamic_class.is_special
 				end
 			end
 		end

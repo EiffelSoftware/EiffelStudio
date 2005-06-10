@@ -30,7 +30,7 @@ feature {NONE}
 		do
 			make (ot)
 			object_dynamic_class := dtype
-			object_is_special_value := object_dynamic_class.is_special or object_dynamic_class.is_tuple
+			object_is_special_value := object_dynamic_class.is_special
 			set_object_address (add)
 		end
 

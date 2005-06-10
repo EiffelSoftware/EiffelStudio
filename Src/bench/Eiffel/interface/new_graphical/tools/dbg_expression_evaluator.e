@@ -153,7 +153,7 @@ feature {NONE} -- Error code
 	
 feature {NONE} -- Error message values
 	
-	Cst_error_call_on_void_target: STRING is "Error: Call on void target "
+	Cst_error_call_on_void_target: STRING is "Error: Call on void target for "
 
 	Cst_error_context_corrupted_or_not_found:STRING is "Context corrupted or not found"
 
@@ -172,6 +172,9 @@ feature {NONE} -- Error message values
 	Cst_error_during_evaluation_of_external_call: STRING is " => ERROR during evaluation of external call : "
 
 	Cst_error_evaluating_parameter: STRING is " => Error evaluating parameter"
+	
+	Cst_feature_name_left_limit: STRING is "`"
+	Cst_feature_name_right_limit: STRING is "'"
 
 feature -- Access
 

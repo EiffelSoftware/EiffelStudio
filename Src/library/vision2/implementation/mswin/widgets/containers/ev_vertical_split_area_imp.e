@@ -22,7 +22,6 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			on_size,
-			on_wm_paint,
 			class_cursor,
 			on_mouse_move
 		end
@@ -347,37 +346,6 @@ feature {NONE} -- Implementation
 				splitter_brush.delete
 				splitter_brush := Void
 			end
-		end
-
-	on_wm_paint (wparam: POINTER) is
-			-- Wm_paint message handling
-			-- A WEL_DC and WEL_PAINT_STRUCT are created and
-			-- passed to the `on_paint' routine.
-		local
-			paint_dc: WEL_PAINT_DC
-			bk_pen: WEL_PEN
-			pen: WEL_PEN
-		do
-			create paint_dc.make_by_pointer (Current, wparam)
-			paint_dc.get
-
-			if not flat_separator and count = 2 then
-				create bk_pen.make_solid (1, wel_background_color)
-					-- We draw here the splitter. Add your code here to improve
-					-- the look of the splitter
-				draw_horizontal_line (paint_dc, bk_pen, split_position)
-				pen := highlight_pen
-				draw_horizontal_line (paint_dc, pen, split_position + 1)
-				pen.delete
-				draw_horizontal_line (paint_dc, bk_pen, split_position + 2)
-				draw_horizontal_line (paint_dc, bk_pen, split_position + 3)
-				pen := shadow_pen
-				draw_horizontal_line (paint_dc, pen, split_position + 4)
-				pen.delete
-				draw_horizontal_line (paint_dc, Black_pen, split_position + 5)
-				bk_pen.delete
-			end
-			paint_dc.release
 		end
 
 	draw_horizontal_line

@@ -43,11 +43,9 @@ feature {NONE} -- Initialization
 	make (a_reference: POINTER; id: like dynamic_type_id) is
 			-- Set `address' to `a_reference' address
 			-- and `dynamic_type_id' to `id'.
-		local
-			void_pointer: POINTER
 		do
 			set_default_name;
-			if a_reference /= Void_pointer then
+			if a_reference /= Default_pointer then
 				address := a_reference.out
 				is_null := (address = Void)
 				dynamic_type_id := id;

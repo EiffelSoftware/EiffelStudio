@@ -156,15 +156,6 @@ feature -- debugged object creation
 
 				Result := last_debugged_object
 				if last_sp_lower < sp_lower or last_sp_upper > sp_upper then
---					debug ("debugger_caching")
---						print (generator + " : new debugged_object %N")
---					end
---					if is_dotnet then
---						create {DEBUGGED_OBJECT_DOTNET} Result.make (addr, sp_lower, sp_upper)
---					else
---						create {DEBUGGED_OBJECT_CLASSIC} Result.make (addr, sp_lower, sp_upper)
---					end
-
 					debug ("debugger_caching")
 						print (generator + " : but with slices ")
 						print ("[" + sp_lower.out + ", " + sp_upper.out + "]" )

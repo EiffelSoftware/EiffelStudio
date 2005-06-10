@@ -40,9 +40,9 @@ feature -- Status Setting
 			-- Set the resource.
 		require else
 			resource_is_choice: new_resource.is_choice
-		local
-			l_values: ARRAY [STRING]
-			cnt: INTEGER
+--		local
+--			l_values: ARRAY [STRING]
+--			cnt: INTEGER
 		do
 			Precursor (new_resource)
 			check

@@ -62,8 +62,23 @@ feature {NONE} -- Implementation
 			else
 				current_move_to_column_index := 0
 			end
-			swap_column_button.set_text ("Move Column " + current_column_index.out + " past Column " + current_past_column)
+			update_swap_column_button_text
 		end
+
+	update_swap_column_button_text is
+			-- Update the text of swap_column_button to match user values.
+		local
+			l_text: STRING
+		do
+			if columns_to_move_button.value = 1 then
+				l_text := "Move Column " + current_column_index.out 
+			else
+				l_text := "Move Columns " + current_column_index.out + " to " + ((current_column_index + columns_to_move_button.value - 1).min (grid.column_count)).out
+			end
+			l_text := l_text + " past Column " + current_past_column
+			swap_column_button.set_text (l_text)
+		end
+		
 
 	current_move_to_column_index: INTEGER
 			-- Currently selected column index for the move column button.
@@ -104,7 +119,7 @@ feature {NONE} -- Implementation
 					column_visible_button.disable_select
 				end
 				column_visible_button.select_actions.resume
-				swap_column_button.set_text ("Move Column " + l_column.index.out + " past Column " + current_past_column)
+				update_swap_column_button_text
 				background_color_combo.select_actions.block
 				if l_column.background_color /= Void then
 					from
@@ -144,7 +159,7 @@ feature {NONE} -- Implementation
 			else
 				column_properties_frame.disable_sensitive
 				column_operations_frame.disable_sensitive
-				swap_column_button.set_text ("Move Column ? past Column " + current_past_column)
+				update_swap_column_button_text
 			end
 		end
 
@@ -179,8 +194,11 @@ feature {NONE} -- Implementation
 		
 	swap_column_button_selected is
 			-- Called by `select_actions' of `swap_column_button'.
+		local
+			l_columns_to_move: INTEGER
 		do
-			grid.move_column (current_column_index, current_move_to_column_index)
+			l_columns_to_move := (current_column_index + columns_to_move_button.value).min (grid.column_count) - current_column_index
+			grid.move_columns (current_column_index, current_move_to_column_index, l_columns_to_move)
 		end
 		
 	column_visible_button_selected is
@@ -260,6 +278,7 @@ feature {NONE} -- Implementation
 	column_to_move_button_selected (a_value: INTEGER) is
 			-- Called by `change_actions' of `columns_to_move_button'.
 		do
+			update_swap_column_button_text
 		end
 
 end -- class COLUMN_TAB

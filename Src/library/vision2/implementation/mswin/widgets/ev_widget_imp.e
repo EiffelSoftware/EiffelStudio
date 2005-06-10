@@ -906,12 +906,13 @@ feature {NONE} -- Implementation
 
 	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousewheel received.
-		do			
+		do
 			if mouse_wheel_actions_internal /= Void then
 				mouse_wheel_actions_internal.call ([delta // 120])
-					-- Only return True if the mouse wheel actions are not empty,
+					-- Only return 0 if the mouse wheel actions are not empty,
 					-- as this overrides intellipoint software if installed.
-				set_message_return_value (to_lresult (1))
+				set_message_return_value (to_lresult (0))
+				disable_default_processing
 			end
 		end
 

@@ -76,24 +76,45 @@ feature -- Change
 
 feature {NONE} -- Actions implementation
 
+	last_page_mouse_wheel_event: DOUBLE
+			-- time used to delay the full page scrolling
+			-- cf: on_mouse_wheel_action
+
 	on_mouse_wheel_action (a_step: INTEGER) is
 		local
-			vy: INTEGER
+			vy_now, vy: INTEGER
+			t: DOUBLE
 		do
+			vy_now := virtual_y_position
 			if 
 				mouse_wheel_scroll_full_page
 				or ev_application.ctrl_pressed
 			then
-				vy := virtual_y_position - viewable_height * a_step
+					--| For the full page scrolling,
+					--| we add a kind of delay to avoid moving several
+					--| pages at a time
+				t := (create {TIME}.make_now).fine_second
+				if 
+					last_page_mouse_wheel_event = 0
+					or (t - last_page_mouse_wheel_event).abs > 0.05
+				then
+					last_page_mouse_wheel_event := t
+					vy := vy_now - viewable_height * a_step
+				else
+					vy := vy_now
+				end
 			else
-				vy := virtual_y_position - mouse_wheel_scroll_size * a_step
+				last_page_mouse_wheel_event := 0
+				vy := vy_now - mouse_wheel_scroll_size * a_step
 			end
-			if vy < 0 then
-				vy := 0
-			else
-				vy := vy.min (virtual_height - viewable_height)
+			if vy_now /= vy then			
+				if vy < 0 then
+					vy := 0
+				else
+					vy := vy.min (virtual_height - viewable_height)
+				end
+				set_virtual_position (virtual_x_position, vy)
 			end
-			set_virtual_position (virtual_x_position, vy)
 		end
 
 	on_pebble_function (a_item: EV_GRID_ITEM): ANY is

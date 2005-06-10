@@ -355,7 +355,7 @@ feature {NONE}-- Clickable/Editable implementation
 						end
 					end
 					click_pos := clickable_position_list @ index_min
-					if a_position < click_pos.stop then
+					if a_position <= click_pos.stop then
 						if click_pos.is_feature then
 							class_i := Universe.class_named (click_pos.class_name, Universe.cluster_of_name (cluster_name))
 							if class_i /= Void and then class_i.compiled and then class_i.compiled_class.has_feature_table then

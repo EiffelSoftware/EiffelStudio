@@ -618,12 +618,13 @@ feature -- Basic operations
 								end
 								current_column_index := visible_column_indexes.item
 								current_column := grid.columns @ current_column_index
+								current_column_width := column_offsets @ (current_column_index + 1) - column_offsets @ (current_column_index)
 
 									-- If the current column has a width of 0, then there is no need to
 									-- perform any drawing. This is especially beneficial to dynamic content
 									-- in the grid as the dynamic content function is not called until
 									-- the width of the column necessitates this.
-								if current_column.width > 0 then
+								if current_column_width > 0 then
 									current_physical_column_index := physical_column_indexes.item (visible_column_indexes.item - 1)
 									
 									
@@ -648,7 +649,6 @@ feature -- Basic operations
 									end
 				
 									current_item_x_position  := (column_offsets @ (current_column_index)) - (internal_client_x - horizontal_buffer_offset)
-									current_column_width := column_offsets @ (current_column_index + 1) - column_offsets @ (current_column_index)
 									
 									if (is_content_partially_dynamic or is_content_completely_dynamic) and then not grid_item_exists and dynamic_content_function /= Void then
 											-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
@@ -1021,16 +1021,30 @@ feature -- Basic operations
 			-- of `current_column_width' and `current_row_height'.
 		local
 			drawable: EV_DRAWING_AREA
+			all_remaining_columns_minimized: BOOLEAN
+			i: INTEGER
 		do
 			drawable := grid.drawable
-			fixme ("implement correctly as soon as interface is finished")							
+			fixme ("implement correctly as soon as interface is finished")
 			item_buffer_pixmap.set_foreground_color (grid.separator_color)
 			if grid.are_column_separators_enabled then
-				
 				if current_column.index > 1 then
 					item_buffer_pixmap.draw_segment (0, 0, 0, current_row_height - 1)
 				end
-				if current_column.index = grid.column_count then
+				if current_column.index < grid.column_count then
+					from
+						all_remaining_columns_minimized := True
+						i := current_column.index + 1
+					until
+						i > grid.column_count
+					loop
+						if grid.column (i).width /= 0 then
+							all_remaining_columns_minimized := False
+						end
+						i := i + 1
+					end
+				end
+				if current_column.index = grid.column_count or all_remaining_columns_minimized then
 					item_buffer_pixmap.draw_segment (current_column_width - 1, 0,  current_column_width - 1, current_row_height - 1)
 				end
 			end

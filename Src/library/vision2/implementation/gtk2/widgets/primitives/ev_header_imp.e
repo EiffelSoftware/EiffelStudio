@@ -59,6 +59,8 @@ feature -- Initialization
 		local
 			dummy_imp: EV_HEADER_ITEM_IMP
 		do
+				-- We don't want the header to steal focus.
+			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (visual_widget, True)
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
@@ -120,8 +122,8 @@ feature
 			item_imp ?= v.implementation
 			child_array.go_i_th (i)
 			child_array.put_left (v)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
 			item_imp.set_parent_imp (Current)
-			 {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (visual_widget, item_imp.c_object, i - 1)
 		end
 
 	remove_i_th (a_position: INTEGER) is

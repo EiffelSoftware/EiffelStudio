@@ -33,8 +33,7 @@ inherit
 
 	EV_SENSITIVE_IMP
 		redefine
-			interface,
-			sensitive_widget
+			interface
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -187,14 +186,6 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 		do
 			create Result
 			real_signal_connect (c_object, "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
-		end
-
-feature {NONE} -- Implmentation
-
-	sensitive_widget: POINTER is
-			-- Widget used for enabling/disabling event sensitivity of `Current'
-		do
-			Result := c_object
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -56,8 +56,7 @@ feature -- Initialization
 			
 			pixmapable_imp_initialize
 			textable_imp_initialize
-			
-			
+
 			box := {EV_GTK_EXTERNALS}.gtk_event_box_new
 			{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (box, False)
 
@@ -71,13 +70,13 @@ feature -- Initialization
 
 			{EV_GTK_EXTERNALS}.gtk_container_add (box, hbox)
 
+			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
+
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 
 				-- Set the default width to 80 pixels wide
 			set_width (80)
-
 			align_text_left
-
 			set_is_initialized (True)
 		end
 
@@ -87,11 +86,12 @@ feature -- Initialization
 			a_width: INTEGER
 		do
 			a_width := width_internal
+					-- Always make sure that the event box is the same size as the header item.
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
 			if a_width /= width then
 				width := a_width
 				if parent_imp /= Void then
 					parent_imp.on_resize (interface)
-					{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, 16)
 				end
 			end
 		end
@@ -192,7 +192,9 @@ feature -- PND
 feature {EV_HEADER_IMP} -- Implementation
 
 	set_parent_imp (par_imp: like parent_imp) is
-			-- Set `parent_imp' to `par_imp'
+			-- Set `parent_imp' to `par_imp'.
+		local
+			a_button: POINTER
 		do
 			parent_imp := par_imp
 			if par_imp /= Void then
@@ -200,6 +202,10 @@ feature {EV_HEADER_IMP} -- Implementation
 				if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box) = default_pointer then
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 				end
+				a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
+					-- We don't want the button stealing focus.
+				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
+				-- FIXME Connect events to button.
 			else
 				{EV_GTK_EXTERNALS}.object_ref (box)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer))

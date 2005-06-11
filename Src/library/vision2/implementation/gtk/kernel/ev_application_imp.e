@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
 			
 			create locale_str.make_from_c ({EV_GTK_EXTERNALS}.gtk_set_locale)
-			
+
 			gtk_is_launchable := gtk_init_check
 			if
 				gtk_is_launchable
@@ -81,40 +81,28 @@ feature {NONE} -- Initialization
 	main_loop is
 			-- Our main loop		
 		local
-			main_running: BOOLEAN
-			gdk_event: POINTER
 			post_launch_actions_called: BOOLEAN
-			events_pending: INTEGER
+			events_pending: BOOLEAN
 		do
 			from
 			until 
 				is_destroyed
 			loop
-				events_pending := {EV_GTK_EXTERNALS}.gtk_events_pending
-				gdk_event := {EV_GTK_EXTERNALS}.gdk_event_get
-				if gdk_event /= default_pointer or else events_pending > 0 then
-					if gdk_event /= default_pointer then
-						--print ("Gdk event type = " + feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event).out + "%N")
-						{EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
-						{EV_GTK_EXTERNALS}.gdk_event_free (gdk_event)
-					else
-						main_running := {EV_GTK_EXTERNALS}.g_main_iteration (False)
-					end
-				else
+				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then		
 						-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
 						-- All pending resizing has been performed at this point.
-					if not post_launch_actions_called and then events_pending = 0 then
+					if not post_launch_actions_called then
 						interface.post_launch_actions.call (Void)
 						post_launch_actions_called := True
 					end
 					if internal_idle_actions.count > 0 or else
-						(idle_actions_internal /= Void and idle_actions_internal.count > 0) then
+						(idle_actions_internal /= Void and then idle_actions_internal.count > 0) then
 							call_idle_actions
 					else
 								-- Block loop by running a gmain loop iteration with blocking enabled.
-						main_running := {EV_GTK_EXTERNALS}.g_main_iteration (True)
+						events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
 					end
-				end				
+				end
 			end
 		end
 		
@@ -465,14 +453,14 @@ feature {NONE} -- External implementation
 		external
 			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""
 		alias
-    			"gtk_init (&eif_argc, &eif_argv)"
+    		"gtk_init (&eif_argc, &eif_argv)"
 		end
 
 	gtk_init_check: BOOLEAN is
 		external
 			"C [macro <gtk/gtk.h>] | %"eif_argv.h%""
 		alias
-    			"gtk_init_check (&eif_argc, &eif_argv)"
+    		"gtk_init_check (&eif_argc, &eif_argv)"
 		end
 
 invariant

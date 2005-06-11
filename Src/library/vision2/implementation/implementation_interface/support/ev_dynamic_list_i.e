@@ -430,15 +430,21 @@ feature -- Removal
 
 	wipe_out is
 			-- Remove all items.
+		local
+			l_index: INTEGER
+			l_interface: like interface
 		do
 			from
-				interface.start
+				l_interface := interface
+				l_index := l_interface.count
 			until
-				interface.is_empty
+				l_index = 0
 			loop
-				interface.remove
+				l_interface.go_i_th (l_index)
+				l_interface.remove
+				l_index := l_index - 1
 			end
-			interface.back
+			l_interface.go_i_th (l_index)
 		end
 
 feature {NONE} -- Implementation

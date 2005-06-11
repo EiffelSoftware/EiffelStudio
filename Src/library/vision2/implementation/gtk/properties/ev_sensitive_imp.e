@@ -31,7 +31,7 @@ feature -- Status report
 			-- Shift to put bit in least significant place then take mod 2
 			if not is_destroyed then
 				Result := (
-					({EV_GTK_EXTERNALS}.gtk_object_struct_flags (sensitive_widget)
+					({EV_GTK_EXTERNALS}.gtk_object_struct_flags (c_object)
 					// {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) \\ 2
 				) = 1				
 			end
@@ -42,13 +42,13 @@ feature -- Status setting
 	enable_sensitive is
 			-- Allow the object to be sensitive to user input.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (sensitive_widget, True)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
 		end
 
 	disable_sensitive is
 			-- Set the object to ignore all user input.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (sensitive_widget, False)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -72,12 +72,6 @@ feature {EV_ANY_I} -- Implementation
 			if sensitive_parent /= Void then
 				Result := sensitive_parent.is_sensitive
 			end
-		end
-
-	sensitive_widget: POINTER is
-			-- Widget used for sensitivity, redefined by descendants to avoid ugly disabling drawing for containers
-		do
-			Result := event_widget
 		end
 
 	event_widget: POINTER is

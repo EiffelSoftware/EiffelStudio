@@ -1019,6 +1019,8 @@ feature {NONE} -- Stack objects grid Implementation
 	debug_value_key_action (grid: ES_OBJECTS_GRID; k: EV_KEY) is
 			-- Actions performed when a key is pressed on a debug_value.
 			-- Handle `Ctrl+C'.
+		local
+			ost: OBJECT_STONE
 		do
 			inspect
 				k.code
@@ -1029,6 +1031,17 @@ feature {NONE} -- Stack objects grid Implementation
 					and then not ev_application.shift_pressed
 				then
 					update_clipboard_string_with_selection (grid)
+				end
+			when {EV_KEY_CONSTANTS}.key_e then
+				if
+					ev_application.ctrl_pressed
+					and then not ev_application.alt_pressed
+					and then not ev_application.shift_pressed
+				then
+					if grid.selected_rows.count > 0 then
+						ost ?= grid.grid_pebble_from_row (grid.selected_rows.first)
+						pretty_print_cmd.set_stone (ost)
+					end
 				end
 			when {EV_KEY_CONSTANTS}.key_right then
 				expand_selected_rows (grid)

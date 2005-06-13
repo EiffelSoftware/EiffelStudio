@@ -857,79 +857,79 @@ feature -- Basic operations
 											end
 										end
 									end
-								end
-								if grid_item_exists then
-									if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
-										if current_column_index = node_index then
-											grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, current_subrow_indent, item_buffer_pixmap)
-										else
-											grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, 0, item_buffer_pixmap)
-										end
-									end
-									first_item_in_row_drawn := True
-								else
-
-									translated_parent_x_indent_position := (parent_x_indent_position + grid.subrow_indent - 1)
-								
-									if parent_node_index < current_column_index then
-										translated_parent_x_indent_position := 0
-									end
-
-								item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
-									if drawing_subrow and ((current_column_index = current_row.index_of_first_item)) then
-											-- Here we must extend the line drawn from the horizontal offsets of the parent to the start of this item.
-											-- As the item is `Void', we set the end to the right hand edge of the column.
-										l_x_end := current_column_width
-										if parent_node_index /= current_column_index then
-												-- In this case, there is no parent node connection from within this cell, so we
-												-- set the left edge for drawing to the very left edge of the column.
-											l_x_start := 0
-										end
-										item_buffer_pixmap.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
-									end
-									if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index /= node_index and current_column_index >= parent_node_index then
-
-											-- We must now draw the lines for the tree structure, as although there is no item
-											-- at this location in the grid, a tree line may cross it horizontally.
-										if current_column_index < node_index then
-
-											item_buffer_pixmap.draw_segment (translated_parent_x_indent_position.min (current_column_width), row_vertical_center, current_column_width, row_vertical_center)
-												-- The background area for the tree node must always be refreshed, even if the node is not visible.
-												-- We draw no wider than `current_column_width' to ensure this.
-										end
-										if (parent_node_index = current_column_index) and (translated_parent_x_indent_position < current_column_width) then
-												-- If the grid column being drawn matches that in which the
-												-- node of `parent_row_i' is contained, then vertical lines must be drawn
-												-- to connect the lines.
-
-											if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
-													-- In this case, there are more subrows of `parent_row_i' to be drawn,
-													-- so the vertical line is drawn to span the complete height of the current row.
-												item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, 0)
-
-											else
-													-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
-													-- from the start of the current row to the center only.
-												item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, 0)
-											end
-
-										end
-									end
-								end
-									-- Now draw the border for `grid_item'.
-								draw_item_border (current_column, current_row, grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
-
-									-- Now call the post draw overlay actions on the grid, permitting overdraw as required.
-								if grid.post_draw_overlay_actions_internal /= Void then
 									if grid_item_exists then
-										grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, grid_item.interface, current_column_index, current_row_index])
+										if current_tree_adjusted_item_x_position - current_item_x_position < current_column_width then
+											if current_column_index = node_index then
+												grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, current_subrow_indent, item_buffer_pixmap)
+											else
+												grid_item.perform_redraw (current_tree_adjusted_item_x_position, current_item_y_position, current_tree_adjusted_column_width, current_row_height, 0, item_buffer_pixmap)
+											end
+										end
+										first_item_in_row_drawn := True
 									else
-										grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
+	
+										translated_parent_x_indent_position := (parent_x_indent_position + grid.subrow_indent - 1)
+	
+										if parent_node_index < current_column_index then
+											translated_parent_x_indent_position := 0
+										end
+	
+									item_buffer_pixmap.set_foreground_color (tree_node_connector_color)
+										if drawing_subrow and ((current_column_index = current_row.index_of_first_item)) then
+												-- Here we must extend the line drawn from the horizontal offsets of the parent to the start of this item.
+												-- As the item is `Void', we set the end to the right hand edge of the column.
+											l_x_end := current_column_width
+											if parent_node_index /= current_column_index then
+													-- In this case, there is no parent node connection from within this cell, so we
+													-- set the left edge for drawing to the very left edge of the column.
+												l_x_start := 0
+											end
+											item_buffer_pixmap.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
+										end
+										if are_tree_node_connectors_shown and (drawing_subrow or drawing_parentrow) and current_column_index /= node_index and current_column_index >= parent_node_index then
+	
+												-- We must now draw the lines for the tree structure, as although there is no item
+												-- at this location in the grid, a tree line may cross it horizontally.
+											if current_column_index < node_index then
+	
+												item_buffer_pixmap.draw_segment (translated_parent_x_indent_position.min (current_column_width), row_vertical_center, current_column_width, row_vertical_center)
+													-- The background area for the tree node must always be refreshed, even if the node is not visible.
+													-- We draw no wider than `current_column_width' to ensure this.
+											end
+											if (parent_node_index = current_column_index) and (translated_parent_x_indent_position < current_column_width) then
+													-- If the grid column being drawn matches that in which the
+													-- node of `parent_row_i' is contained, then vertical lines must be drawn
+													-- to connect the lines.
+	
+												if parent_row_i.subrow_count > (current_row.index - parent_row_i.index) then
+														-- In this case, there are more subrows of `parent_row_i' to be drawn,
+														-- so the vertical line is drawn to span the complete height of the current row.
+													item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_bottom, translated_parent_x_indent_position, 0)
+	
+												else
+														-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
+														-- from the start of the current row to the center only.
+													item_buffer_pixmap.draw_segment (translated_parent_x_indent_position, row_vertical_center, translated_parent_x_indent_position, 0)
+												end
+	
+											end
+										end
 									end
+										-- Now draw the border for `grid_item'.
+									draw_item_border (current_column, current_row, grid_item, current_item_x_position, current_item_y_position, current_column_width, current_row_height)
+	
+										-- Now call the post draw overlay actions on the grid, permitting overdraw as required.
+									if grid.post_draw_overlay_actions_internal /= Void then
+										if grid_item_exists then
+											grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, grid_item.interface, current_column_index, current_row_index])
+										else
+											grid.post_draw_overlay_actions_internal.call ([item_buffer_pixmap, Void, current_column_index, current_row_index])
+										end
+									end
+	
+										-- Now blit the buffered drawing for the item to `drawable'.
+									drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, current_column_width, current_row_height))
 								end
-
-									-- Now blit the buffered drawing for the item to `drawable'.
-								drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, current_column_width, current_row_height))
 								visible_column_indexes.forth
 							end
 							visible_row_indexes.forth
@@ -1019,29 +1019,23 @@ feature -- Basic operations
 	draw_item_border (current_column: EV_GRID_COLUMN_I; current_row: EV_GRID_ROW_I; current_item: EV_GRID_ITEM_I; current_item_x_position, current_item_y_position, current_column_width, current_row_height: INTEGER) is
 			-- Draw a border for `current_item' with a position at `current_item_x_position', `current_item_y_position' and dimensions
 			-- of `current_column_width' and `current_row_height'.
+		require
+			current_column_not_void: current_column /= Void
+			current_row_not_void: current_row /= Void
+			current_column_width_greater_than_zero: current_column_width > 0
 		local
 			drawable: EV_DRAWING_AREA
 			all_remaining_columns_minimized: BOOLEAN
-			i: INTEGER
 		do
 			drawable := grid.drawable
-			fixme ("implement correctly as soon as interface is finished")
 			item_buffer_pixmap.set_foreground_color (grid.separator_color)
 			if grid.are_column_separators_enabled then
 				if current_column.index > 1 then
 					item_buffer_pixmap.draw_segment (0, 0, 0, current_row_height - 1)
 				end
 				if current_column.index < grid.column_count then
-					from
+					if grid.column_offsets.i_th (current_column.index + 1) = grid.column_offsets.i_th (grid.column_count + 1) then
 						all_remaining_columns_minimized := True
-						i := current_column.index + 1
-					until
-						i > grid.column_count
-					loop
-						if grid.column (i).width /= 0 then
-							all_remaining_columns_minimized := False
-						end
-						i := i + 1
 					end
 				end
 				if current_column.index = grid.column_count or all_remaining_columns_minimized then

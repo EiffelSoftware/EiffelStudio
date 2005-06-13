@@ -28,7 +28,7 @@ feature -- Access
 
 	change_item_widget: EV_GRID_COMBO_ITEM
 
-feature {NONE} -- Implementation
+feature -- Status Setting
 
 	update_changes is
 			-- Update the changes made in `change_item_widget' to `resource'.
@@ -36,6 +36,8 @@ feature {NONE} -- Implementation
 			resource.set_value_from_string (change_item_widget.text)
 			Precursor {PREFERENCE_WIDGET}
 		end
+
+feature {NONE} -- Implementation
 		
 	update_resource is
 			-- 
@@ -55,7 +57,7 @@ feature {NONE} -- Implementation
 	activate_combo is
 			-- 
 		do
-			change_item_widget.activate			
+			change_item_widget.activate
 			change_item_widget.combo_box.focus_out_actions.block
 			change_item_widget.combo_box.disable_edit
 			change_item_widget.combo_box.focus_out_actions.resume

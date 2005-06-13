@@ -2974,15 +2974,50 @@ feature {NONE} -- Drawing implementation
 			if is_column_resize_immediate then
 				header_index := header.index_of (header_item, 1)
 				set_horizontal_computation_required (header_index)
-				redraw_from_column_to_end (columns @ header_index)
+				if are_column_separators_enabled and (last_width_of_header_during_resize = 0 and header_item.width > 0) or
+					last_width_of_header_during_resize_internal > 0 and header_item.width = 0 then
+						-- In this situation, we must draw the first column to the left of the one being
+						-- resized that has a width greater than 0 as the column border must be updated
+						-- in this column.
+					if header_index > 1 then
+						from
+							header_index := header_index - 1
+						until
+							header_index = 1 or column (header_index).width > 0
+						loop
+							header_index := header_index - 1
+						end
+					end
+					redraw_from_column_to_end (columns @ (header_index))
+				else
+					redraw_from_column_to_end (columns @ header_index)
+				end
 			else	
 				if is_resizing_divider_enabled then
 						-- Draw a resizing line if enabled.
 					draw_resizing_line (header.item_x_offset (header_item) + header_item.width)
 				end
 			end
+			last_width_of_header_during_resize_internal := header_item.width
+		end
+
+	last_width_of_header_during_resize: INTEGER is
+		-- The last width of the header item that is currently being
+		-- resized. Used to determine if we must refresh the column to
+		-- the left of the current one as it could cause the border to
+		-- need to be drawn on the previous column if it is the final
+		-- column that current has a width greater than 0.
+		require
+			is_header_item_resizing: is_header_item_resizing
+		do
+			Result := last_width_of_header_during_resize_internal
+		ensure
+			result_non_negative: Result >= 0
 		end
 		
+	last_width_of_header_during_resize_internal: INTEGER
+		-- Storage for `last_width_of_header_during_resize'.
+
 	total_header_width: INTEGER is
 			-- `Result' is total width of all header items contained within `header'.
 		do
@@ -2998,7 +3033,7 @@ feature {NONE} -- Drawing implementation
 		require
 			header_item_not_void: header_item /= Void
 		do
-			is_header_item_resizing := True	
+			is_header_item_resizing := True
 		end
 		
 		

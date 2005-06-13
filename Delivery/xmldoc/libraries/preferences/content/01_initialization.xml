@@ -22,7 +22,7 @@
 				<feature_name>make</feature_name>) will create a 
 				<class_name>PREFERENCE</class_name> object for you with no specific underlying datastore location, and no default preference values.  In this scenario an underlying data store location will be created for you automatically based on the current system settings.  For example, if you are using the Windows Registry as your data store, and your program is is called 
 				<italic>my_program.exe</italic>, then a registry key will be created in 
-				<italic>HKEY_CURRENT_USER\Software\myprogram.exe</italic>.  In between user sessions the preference name-value pairs will be stored in this key location.  This particular method of creating preferences is deal if you are not particularly concerned where the values are stored, and if you do not need to specify any default values for the preferences.  You may think of it as the "it just works" mode, and it is ideal for development and simple use.
+				<italic>HKEY_CURRENT_USER\Software\myprogram.exe</italic>.  In between user sessions the preference name-value pairs will be stored in this key location.  This particular method of creating preferences is ideal if you are not particularly concerned where the values are stored, and if you do not need to specify any default values for the preferences.  You may think of it as the "it just works" mode, and it is ideal for development and simple use.
 			</paragraph>
 			<paragraph>The second option (
 				<feature_name>make_with_location</feature_name>) will take a location value to use for the underlying data store.  Values will be stored to and retrieved from this location between sessions.  As with 

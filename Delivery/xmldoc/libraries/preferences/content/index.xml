@@ -14,13 +14,7 @@
 					<url>01_initialization.xml</url>
 					<label>Initialization</label>
 				</link>
-			</item>
-			<item>
-				<link>
-					<url>02_managers.xml</url>
-					<label>Managers</label>
-				</link>
-			</item>
+			</item>		
 			<item>
 				<link>
 					<url>03_graphical.xml</url>

@@ -3337,7 +3337,7 @@ feature {NONE} -- Event handling
 				pointer_button_press_item_actions_internal.call ([client_x_to_virtual_x(a_x), client_y_to_virtual_y (a_y), a_button, pointed_item_interface])
 			end
 			if pointed_item /= Void and then pointed_item.pointer_button_press_actions_internal /= Void and then not pointed_item.pointer_button_press_actions_internal.is_empty then
-				pointed_item.pointer_button_press_actions_internal.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, a_button, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
+				pointed_item.pointer_button_press_actions_internal.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, a_button, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
 			end
 
 

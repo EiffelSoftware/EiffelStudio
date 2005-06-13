@@ -310,15 +310,17 @@ feature {NONE} -- Implementation
 				else
 					sep_imp ?= item_imp
 					if sep_imp.radio_group /= Void then
-						-- Merge `rgroup' with the one from `sep_imp'.
-						from
-							sep_imp.radio_group.last.enable_select
-							sep_imp.radio_group.start
-						until
-							sep_imp.radio_group.is_empty
-						loop
-							uncheck_item (sep_imp.radio_group.item.id)
-							sep_imp.radio_group.item.set_radio_group (rgroup)
+						if not sep_imp.radio_group.is_empty then
+							-- Merge `rgroup' with the one from `sep_imp'.
+							from
+								sep_imp.radio_group.last.enable_select
+								sep_imp.radio_group.start
+							until
+								sep_imp.radio_group.is_empty
+							loop
+								uncheck_item (sep_imp.radio_group.item.id)
+								sep_imp.radio_group.item.set_radio_group (rgroup)
+							end
 						end
 						sep_imp.remove_radio_group
 					end

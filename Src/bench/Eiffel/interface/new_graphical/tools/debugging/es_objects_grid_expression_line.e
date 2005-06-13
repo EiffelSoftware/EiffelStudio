@@ -219,6 +219,7 @@ feature -- Graphical changes
 				create gedit
 				grid_cell_set_text (gedit, v)
 				gedit.pointer_double_press_actions.force_extend (agent gedit.activate)
+				gedit.pointer_button_press_actions.force_extend (agent grid_activate_item_if_row_selected (gedit))
 				apply_cell_expression_text_properties_on (gedit)
 				gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))
 				row.set_item (Col_expression_index, gedit)

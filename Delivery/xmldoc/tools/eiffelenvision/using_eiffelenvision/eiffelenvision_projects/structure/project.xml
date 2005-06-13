@@ -1,0 +1,135 @@
+<document output="envision" title="EiffelEnvision Project Strucutre">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Project Structure</envision_title>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+			<xml>
+				<xmlkeyword>
+					<index>K</index>
+					<term>EiffelEnvision, Projects</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Projects, EiffelEnvision</term>
+				</xmlkeyword>
+			</xml>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			EiffelEnvision projects are like most Visual Studio .NET language-base projects, such as Visual C#, Visual Basic .NET and Visual J#, but with a flair of <bold>Eiffel</bold>. Just 
+			like those formentioned languages, EiffelEnvision projects, predominatly, <help_link>
+				<keywords>vxconFolder-BasedReference-BasedProjects</keywords>
+				<tab_index>0</tab_index>
+				manage files
+			</help_link>, and directly reflect and underlying file system. However, there are fundamental differences between 
+			EiffelEnvision projects and other language projects, even those that <help_link>
+				<keywords>vxconFolder-BasedReference-BasedProjects</keywords>
+				<tab_index>0</tab_index>
+				manage files
+			</help_link>.
+		</paragraph>
+		
+		<anchor>basics</anchor>
+		<heading>
+			<size>2</size>
+			<content>Project Structure Basics</content>
+		</heading>
+		<paragraph>
+			EiffelEnvision projects, denoted by the <image>
+				<url>../../../images/icons/project.ico</url>
+			</image> icon in the <help_link>
+				<keywords>vxurfSolutionExplorerDialog</keywords>
+				<tab_index>0</tab_index>
+				Solution Explorer
+			</help_link>, are segregated into four very disinct segments, sectioned beneath the EiffelEnvision project node.
+			<list ordered="false">
+				<item><image>
+					<url>../../../images/icons/references.ico</url>
+				</image> <link><url>project.xml</url><anchor_name>references</anchor_name><label>References</label></link></item>
+				<item><image>
+					<url>../../../images/icons/project_items.ico</url>
+				</image> <link><url>project.xml</url><anchor_name>project_items</anchor_name><label>Project Items</label></link></item>
+				<item><image>
+					<url>../../../images/icons/eiffel_libraries.ico</url>
+				</image> <link><url>project.xml</url><anchor_name>eiffel_libraries</anchor_name><label>Eiffel Libraries</label></link></item>
+				<item><image>
+					<url>../../../images/icons/folder.ico</url>
+				</image> <link><url>project.xml</url><anchor_name>other_files</anchor_name><label>Other Files</label></link></item>
+			</list>
+			Each section is disparate from each other. Only the <link><url>project.xml</url><anchor_name>project_items</anchor_name><label>Project Items</label></link> and <link><url>project.xml</url><anchor_name>eiffel_libraries</anchor_name><label>Eiffel Libraries</label></link> nodes 
+			base any resemblence to one another.
+		</paragraph>
+		
+		<anchor>references</anchor>
+		<heading>
+			<size>2</size>
+			<content>References</content>
+		</heading>
+		<paragraph>
+			The <bold>References</bold> of an EiffelEnvision project contains all of the project's component references, added to a project when a project is created using one of the 
+			<link><url>url</url><label>EiffelEnvision Project Templates</label></link> or when explicitly <help_link>
+				<keywords>vxtskAddingRemovingProjectReferences</keywords>
+				<tab_index>0</tab_index>
+				Adding References
+			</help_link>. For more information about the <bold>References</bold> section of an EiffelEnvision project, see <link><url>reference_node.xml</url><label>References Nodes</label></link>.
+		</paragraph>
+		
+		<anchor>project_items</anchor>
+		<heading>
+			<size>2</size>
+			<content>Project Items</content>
+		</heading>
+		<paragraph>
+		</paragraph>
+		
+		<anchor>eiffel_libraries</anchor>
+		<heading>
+			<size>2</size>
+			<content>Eiffel Libraries</content>
+		</heading>
+		<paragraph>
+		</paragraph>
+		
+		<anchor>other_files</anchor>
+		<heading>
+			<size>2</size>
+			<content>Other Files</content>
+		</heading>
+		<paragraph>
+		</paragraph>
+		
+		<anchor>clean_separation</anchor>
+		<heading>
+			<size>2</size>
+			<content>Clean Separation</content>
+		</heading>
+		<paragraph>
+			Eiffel's principle system of reuse is through source code reuse, unlike the .NET Framework's binary reuse through <bold>assemblies</bold>. <link><url>url</url><label>*Eiffel for .NET</label></link> still maintains 
+			reuse through source code, as Eiffel does, but also permits binary reuse through assemblies and <link><url>url</url><label>*Precompiled Libraries</label></link>. EiffelEnvision supports all of these concepts, but unlike 
+			other environments, used in conjunction with Eiffel or Eiffel for .NET, there is no implicit, clean separation is made between project files/source code and reused Eiffel libraries source code. In <link><url>url</url><label>*Eiffel for .NET</label></link> further 
+			separation is required between source code reuse and binary reuse, using assemblies.
+		</paragraph>
+		<paragraph>
+			EiffelEnvision remedies this integral issue with a very distinct and clean separartion between component (assembly) referencs, project files, where it be a <bold>bitmap</bold> resource or Eiffel <link><url>url</url><label>*class</label></link> source file, and 
+			Eiffel source libraries. As forementioned, EiffelEnvision includes a <link><url>project.xml</url><anchor_name>references</anchor_name><label>References</label></link> section for each of it's projects. Contained within this section are 
+			all component and <link><url>url</url><label>*Precompiled Library</label></link> references for that project. <link><url>url</url><label>*Project Items</label></link> and <link><url>url</url><label>*Eiffel Libraries</label></link> support the separation of 
+			project-specific Eiffel <link><url>url</url><label>*classes</label></link> and files and Eiffel library <link><url>url</url><label>*class</label></link> source files, respectivley. Although the separation between <link><url>url</url><label>*Project Items</label></link> and 
+			<link><url>url</url><label>*Eiffel Libraries</label></link> is not strictly enforce by EiffelEnvision, for other tool compatablity reasons, it is recommended that all EiffelEnvision projects adhear to this convention. Clean separation will assist in 
+			the future maintainance or adoption of your projects, by other developers. Because Eiffel source files are include using <link><url>url</url><label>*clusters</label></link>, there will be no confusion as to what files are project files and 
+			what files are Eiffel library sources.
+		</paragraph>
+		
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See Also:</bold>
+			<line_break/>
+		</seealso>
+	</paragraph>
+</document>

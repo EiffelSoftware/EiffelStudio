@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_title>Automatic Enumeration</envision_title>
-				<envision_pseudo_name>00</envision_pseudo_name>
+				<envision_pseudo_name>100</envision_pseudo_name>
 			</toc>
 			<xml>
 				<xmlkeyword>
@@ -18,7 +18,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-	<link><url>url</url><label>*</label></link>
 		<paragraph>
 			One of the major ways <link><url>url</url><label>*Eiffel for .NET</label></link> and EiffelEnvision differs from other .NET languages is a directory-based compiler, and not a file-based compiler.
 			The Eiffel for .NET compiler, in EiffelEnvision, will 

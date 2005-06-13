@@ -661,6 +661,8 @@ feature {NONE} -- Event handling
 
 	key_pressed (k: EV_KEY) is
 			-- A key was pressed in `ev_list'.
+		local
+			ost: OBJECT_STONE
 		do
 			if k /= Void then
 				inspect k.code
@@ -675,6 +677,17 @@ feature {NONE} -- Event handling
 						and then not ev_application.shift_pressed
 					then
 						update_clipboard_string_with_selection (watches_grid)
+					end
+				when {EV_KEY_CONSTANTS}.key_e then
+					if
+						ev_application.ctrl_pressed
+						and then not ev_application.alt_pressed
+						and then not ev_application.shift_pressed
+					then
+						if watches_grid.selected_rows.count > 0 then
+							ost ?= watches_grid.grid_pebble_from_row (watches_grid.selected_rows.first)
+							pretty_print_cmd.set_stone (ost)
+						end
 					end
 				when {EV_KEY_CONSTANTS}.key_page_up then
 					if

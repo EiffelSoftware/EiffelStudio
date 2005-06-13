@@ -76,17 +76,18 @@ create
 %token		TE_STR_IMPLIES TE_STR_OR TE_STR_OR_ELSE TE_STR_XOR
 %token		TE_STR_NOT TE_STR_FREE TE_STR_BRACKET
 
-%type <ACCESS_AS>			Creation_target A_feature
+%type <ACCESS_AS>			A_feature Creation_target
 %type <ACCESS_FEAT_AS>		Feature_access
 %type <ACCESS_INV_AS>		Creation_call
 %type <ARRAY_AS>			Manifest_array
 %type <ASSIGN_AS>			Assignment
+%type <ASSIGNER_CALL_AS>		Assigner_call
 %type <ATOMIC_AS>			Index_value Manifest_constant Expression_constant
-%type <BINARY_AS>		Qualified_expression
+%type <BINARY_AS>		Qualified_binary_expression
 %type <BIT_CONST_AS>		Bit_constant
 %type <BODY_AS>				Declaration_body
 %type <BOOL_AS>				Boolean_constant
-%type <CALL_AS>				Remote_call Expression_feature_call Qualified_call
+%type <CALL_AS>				Call Remote_call Expression_feature_call Qualified_call
 %type <CASE_AS>				When_part
 %type <CHAR_AS>				Character_constant
 %type <CHECK_AS>			Check
@@ -100,7 +101,7 @@ create
 %type <ELSIF_AS>			Elseif_part
 %type <ENSURE_AS>			Postcondition
 %type <EXPORT_ITEM_AS>		New_export_item
-%type <EXPR_AS>				Bracket_target Expression Factor Qualified_factor Typed_expression
+%type <EXPR_AS>				Bracket_target Expression Factor Qualified_expression Qualified_factor Typed_expression
 %type <EXTERNAL_AS>			External
 %type <EXTERNAL_LANG_AS>	External_language
 %type <FEATURE_AS>			Feature_declaration
@@ -112,7 +113,6 @@ create
 %type <IF_AS>				Conditional
 %type <INDEX_AS>			Index_clause Index_clause_impl
 %type <INSPECT_AS>			Multi_branch
-%type <INSTR_CALL_AS>		Call
 %type <INSTRUCTION_AS>		Instruction Instruction_impl
 %type <INTEGER_AS>	Integer_constant Signed_integer Nosigned_integer Typed_integer Typed_nosigned_integer Typed_signed_integer
 %type <INTERNAL_AS>			Internal
@@ -1085,6 +1085,8 @@ Optional_semicolons: -- Empty
 Instruction_impl: Creation
 			{ $$ := $1 }
 	|	Call
+			{ $$ := ast_factory.new_instr_call_as ($1) }
+	|	Assigner_call
 			{ $$ := $1 }
 	|	Assignment
 			{ $$ := $1 }
@@ -1589,17 +1591,31 @@ Rescue: -- Empty
 			}
 	;
 
+Qualified_expression:
+-- FIXME: find a way to allow binary, unary and bracket expressions
+--        to be used on the left side of Assigner_call
+--		Qualified_binary_expression | Qualified_factor
+--			{ $$ := $1 }
+--	|	
+	Qualified_call
+			{ $$ := ast_factory.new_expr_call_as ($1) }
+	;
+
+Assigner_call: Qualified_expression TE_ASSIGNMENT Expression
+			{ $$ := ast_factory.new_assigner_call_as ($1, $3) }
+	;
+
 Assignment: Identifier_as_lower TE_ASSIGNMENT Expression
 			{ $$ := ast_factory.new_assign_as (ast_factory.new_access_id_as ($1, Void), $3) }
 	|	TE_RESULT TE_ASSIGNMENT Expression
 			{ $$ := ast_factory.new_assign_as ($1, $3) }
-    ;
+	;
 
 Reverse_assignment: Identifier_as_lower TE_ACCEPT Expression
 			{ $$ := ast_factory.new_reverse_as (ast_factory.new_access_id_as ($1, Void), $3) }
 	|	TE_RESULT TE_ACCEPT Expression
 			{ $$ := ast_factory.new_reverse_as ($1, $3) }
-    ;
+	;
 
 Creators: -- Empty
 			-- { $$ := Void }
@@ -1817,13 +1833,13 @@ Creation_call: -- Empty
 
  
 Call: A_feature
-			{ $$ := ast_factory.new_instr_call_as ($1) }
+			{ $$ := $1 }
 	|	A_precursor
-			{ $$ := ast_factory.new_instr_call_as ($1) }
+			{ $$ := $1 }
 	|	A_static_call
-			{ $$ := ast_factory.new_instr_call_as ($1) }
+			{ $$ := $1 }
 	|	Qualified_call
-			{ $$ := ast_factory.new_instr_call_as ($1) }
+			{ $$ := $1 }
 	;
 
 Check: TE_CHECK Assertion TE_END
@@ -1850,11 +1866,11 @@ Expression:
 			{ $$ := ast_factory.new_bin_eq_as ($1, $3) }
 	|	Expression TE_NE Expression
 			{ $$ := ast_factory.new_bin_ne_as ($1, $3) }
-	|	Qualified_expression
+	|	Qualified_binary_expression
 			{ $$ := $1 }
 	;
 
-Qualified_expression:
+Qualified_binary_expression:
 		Expression TE_PLUS Expression
 			{ $$ := ast_factory.new_bin_plus_as ($1, $3) }
 	|	Expression TE_MINUS Expression
@@ -1957,13 +1973,7 @@ Expression_feature_call:
 			{ $$ := $1 }
 	|	TE_RESULT
 			{ $$ := $1 }
-	|	A_feature
-			{ $$ := $1 }
-	|	A_precursor
-			{ $$ := $1 }
-	|	A_static_call
-			{ $$ := $1 }
-	|	Qualified_call
+	|	Call
 			{ $$ := $1 }
 	|	Creation_expression
 			{ $$ := $1 }

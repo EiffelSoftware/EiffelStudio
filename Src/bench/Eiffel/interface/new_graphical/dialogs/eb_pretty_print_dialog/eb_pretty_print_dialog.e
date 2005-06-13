@@ -106,6 +106,7 @@ feature {NONE} -- Initialization
 			create Result
 			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			Result.set_font (Preferences.editor_data.font)
 		end
 
 	Limits_format: EV_CHARACTER_FORMAT is
@@ -113,11 +114,13 @@ feature {NONE} -- Initialization
 			create Result
 			Result.set_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			Result.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
+			Result.set_font (Preferences.editor_data.font)
 		end
 		
 	No_text_background_color: EV_COLOR is
-		once
-			create Result.make_with_8_bit_rgb (180, 180, 180)
+		do
+--			create Result.make_with_8_bit_rgb (255, 255, 255)
+			Result := Preferences.debug_tool_data.expanded_display_bgcolor
 		end
 
 feature -- Slice limits

@@ -350,7 +350,9 @@ feature {NONE} -- Implementation dotnet
 	new_value_object_dotnet: ICOR_DEBUG_OBJECT_VALUE is
 			-- Dotnet value as an ICorDebugObjectValue interface
 		do
-			Result := icd_value_info.interface_debug_object_value
+			if icd_value_info /= Void then
+				Result := icd_value_info.interface_debug_object_value
+			end
 		end
 
 	icd_value_info: EIFNET_DEBUG_VALUE_INFO
@@ -429,15 +431,26 @@ feature -- Status report
 			-- or conform to DEBUG_OUTPUT
 		local
 			dc: CLASS_C
+			string_c, system_string_c: CLASS_I
 		do
 			if type = Type_string then
 				Result := True
 			elseif type = Type_string_dotnet then
 				Result := not is_void
 			elseif is_type_object and not is_void then
-				if dynamic_class /= Void and then Eiffel_system.string_class.is_compiled then
+				if dynamic_class /= Void then
+					string_c := Eiffel_system.system.string_class
+					system_string_c := eiffel_system.system.system_string_class
 					if
-						dynamic_class.simple_conform_to (Eiffel_system.string_class.compiled_class) 
+						string_c /= Void
+						and then string_c.is_compiled 
+						and then dynamic_class.simple_conform_to (string_c.compiled_class) 
+					then
+						Result := True
+					elseif
+						system_string_c /= Void
+						and then system_string_c.is_compiled
+						and then dynamic_class.simple_conform_to (system_string_c.compiled_class)
 					then
 						Result := True
 					elseif preferences.debug_tool_data.debug_output_evaluation_enabled then
@@ -669,14 +682,17 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			is_dotnet_system
 		local
 			sc: CLASS_C
-			l_conform_to_string: BOOLEAN
+			si: CLASS_I
+			l_conformed_to_sc: BOOLEAN
 			l_eifnet_debugger: EIFNET_DEBUGGER
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
+			l_size: INTEGER
 		do
-			sc := Eiffel_system.string_class.compiled_class
-			l_conform_to_string := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
 			l_eifnet_debugger := Application.imp_dotnet.eifnet_debugger
-			if dynamic_class = sc or l_conform_to_string then
+
+			sc := Eiffel_system.system.string_class.compiled_class
+			l_conformed_to_sc := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
+			if dynamic_class = sc or l_conformed_to_sc then
 				l_icdov := new_value_object_dotnet
 				if l_icdov = Void then
 					Result := "Void"
@@ -686,9 +702,30 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					l_icdov.clean_on_dispose
 				end					
 			else
-				Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
+				si := Eiffel_system.system.system_string_class
+				if si /= Void and then si.is_compiled then
+					sc := si.compiled_class
+					l_conformed_to_sc := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
+					if dynamic_class = sc or l_conformed_to_sc then
+						if value_string /= Void then
+							Result := value_string
+							last_string_representation_length := value_string.count
+							if max < 0 then
+								l_size := last_string_representation_length
+							else
+								l_size := (max + 1).min (last_string_representation_length)								
+							end
+							Result := Result.substring ((min + 1).max (1), l_size)
+						elseif value_string_dotnet /= Void then
+							Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
+							last_string_representation_length := l_eifnet_debugger.last_string_value_length
+						end
+					end
+				else
+					Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
+				end
 			end
-		end		
+		end
 
 	dotnet_debug_output_evaluated_string (a_dbg: EIFNET_DEBUGGER; min, max: INTEGER): STRING is
 			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current
@@ -698,9 +735,11 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
 			l_icdov := new_value_object_dotnet
-			Result := a_dbg.debug_output_value_from_object_value (value_frame_dotnet, value_dotnet, l_icdov, dynamic_class_type, min, max)
-			last_string_representation_length := a_dbg.last_string_value_length
-			l_icdov.clean_on_dispose
+			if l_icdov /= Void then
+				Result := a_dbg.debug_output_value_from_object_value (value_frame_dotnet, value_dotnet, l_icdov, dynamic_class_type, min, max)
+				last_string_representation_length := a_dbg.last_string_value_length
+				l_icdov.clean_on_dispose
+			end
 		end
 
 	classic_debug_output_evaluated_string (min, max: INTEGER): STRING is

@@ -8,10 +8,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	PREFERENCES_GRID_WINDOW
+	PREFERENCES_WINDOW
 
 inherit
-	PREFERENCES_GRID_WINDOW_IMP
+	PREFERENCES_WINDOW_IMP
 		redefine
 			destroy
 		end
@@ -44,19 +44,21 @@ feature {NONE} -- Initialization
 			set_title ("Preferences")
 			fill_list
 			create grid
-			grid.enable_row_height_fixed
+			default_row_height := grid.row_height
+			grid.disable_row_height_fixed
 			grid.enable_single_row_selection
 			grid_container.extend (grid)
 			grid.set_item (4, 1, Void)
 			grid.column (1).set_title (l_name)
-			grid.column (1).set_width (220)
 			grid.column (2).set_title (l_type)
 			grid.column (3).set_title (l_status)
 			grid.column (4).set_title (l_literal_value)
-			grid.resize_actions.force_extend (agent autosize_list_columns)
+			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
 			close_button.select_actions.extend (agent on_close)
+			close_request_actions.extend (agent on_close)
+			set_default_cancel_button (close_button)
 			restore_button.select_actions.extend (agent on_restore)
-			l_ev_vertical_split_area_1.set_split_position (250)
+			l_ev_vertical_split_area_1.set_split_position (450)
 			show			
 		end
 
@@ -107,14 +109,20 @@ feature {NONE} -- Events
 			-- Set the resource value to the newly entered value in the edit item.
 		local						
 			l_default_item: EV_GRID_LABEL_ITEM
+			l_font_pref: FONT_PREFERENCE
 		do
+			l_font_pref ?= a_pref
+			if l_font_pref /= VOid then
+				grid.selected_rows.first.set_height (l_font_pref.value.height)
+			end
+			
 			l_default_item ?= grid.selected_rows.first.item (3)
 			if a_pref.is_default_value then
-				l_default_item.set_text ("default")
-				l_default_item.row.set_foreground_color (default_color)
+				l_default_item.set_text (default_value)
+				l_default_item.set_font (default_font)				
 			else	
-				l_default_item.set_text ("user set")
-				l_default_item.row.set_foreground_color (non_default_color)
+				l_default_item.set_text (user_value)
+				l_default_item.set_font (non_default_font)	
 			end
 		end	
 
@@ -128,8 +136,8 @@ feature {NONE} -- Events
 			l_font: FONT_PREFERENCE
 		do
 			a_pref.reset
-			a_item.set_text ("default")
-			a_item.row.set_foreground_color (default_color)
+			a_item.set_text (default_value)
+			a_item.set_font (default_font)
 
 			l_text_item ?= a_item.row.item (4)
 			if l_text_item /= Void then
@@ -196,18 +204,25 @@ feature {NONE} -- Events
 			end
 		end
 
-	autosize_list_columns is
-			-- Autosize the last column in the list to fit to the size of the list
+	on_grid_item_double_pressed (a_x, a_y, a_button: INTEGER; a_item: EV_GRID_ITEM) is
+			-- An item was double pressed
 		local
-			l_width: INTEGER
+			l_col_index: INTEGER
+			l_bool_preference: BOOLEAN_PREFERENCE
+			l_combo_widget: EV_GRID_COMBO_ITEM
 		do
-			if grid.column_count > 0 then
-				l_width := grid.column (1).width + grid.column (2).width + grid.column (3).width
-				if grid.width - l_width > 0 then
-			  		grid.column (4).set_width (grid.width - l_width)
+			if a_item /= Void then
+				l_col_index := a_item.column.index
+				if l_col_index = 1 or l_col_index = 2 or l_col_index = 3 then
+					l_bool_preference ?= a_item.row.data
+					if l_bool_preference /= Void then
+						l_combo_widget ?= a_item.row.item (4)
+						l_combo_widget.set_text ((not l_bool_preference.value).out)
+						l_combo_widget.deactivate_actions.call ([])
+					end					
 				end
 			end
-		end
+		end		
 
 feature {NONE} -- Implementation
 
@@ -338,6 +353,8 @@ feature {NONE} -- Implementation
 			l_resource: PREFERENCE
 			curr_row: INTEGER
 		do
+			grid.enable_row_height_fixed
+			grid.disable_row_height_fixed
 			selected_resource_name := a_pref_name
 				-- Retrieve known preferences
 			create l_names.make
@@ -347,6 +364,11 @@ feature {NONE} -- Implementation
 			from
 				l_names.start
 				grid.wipe_out
+				grid.set_item (4, 1, Void)
+				grid.column (1).set_title (l_name)
+				grid.column (2).set_title (l_type)
+				grid.column (3).set_title (l_status)
+				grid.column (4).set_title (l_literal_value)
 				description_text.set_text ("")
 				curr_row := 1
 			until
@@ -381,10 +403,10 @@ feature {NONE} -- Implementation
 						grid.set_item (3, curr_row, grid_default_item)
 						if l_resource.is_default_value then
 							grid_default_item.set_text (default_value)
-							grid_default_item.row.set_foreground_color (default_color)
+							grid_default_item.set_font (default_font)	
 						else
 							grid_default_item.set_text (user_value)
-							grid_default_item.row.set_foreground_color (non_default_color)
+							grid_default_item.set_font (non_default_font)
 						end
 						create grid_type_item
 						grid_type_item.set_text (l_resource.string_type)
@@ -396,6 +418,7 @@ feature {NONE} -- Implementation
 			end
 			if grid.row_count > 0 then
 				grid.row (1).enable_select
+				grid.column (1).resize_to_content
 				l_resource ?= grid.row (1).data
 				if l_resource /= Void then
 					show_resource_description (l_resource)
@@ -453,7 +476,7 @@ feature {NONE} -- Implementation
 		end		
 
 	add_resource_change_item (l_resource: PREFERENCE; row_index: INTEGER) is
-			-- Add the correct resource change widget item at `row_index' of `grid'
+			-- Add the correct resource change widget item at `row_index' of `grid'.
 		local
 			l_bool: BOOLEAN_PREFERENCE
 			l_font: FONT_PREFERENCE
@@ -471,7 +494,7 @@ feature {NONE} -- Implementation
 					-- Boolean
 				create l_bool_widget.make_with_resource (l_resource)
 				l_bool_widget.change_actions.extend (agent on_preference_changed)
-				grid.set_item (4, row_index, l_bool_widget.change_item_widget)			
+				grid.set_item (4, row_index, l_bool_widget.change_item_widget)				
 			else
 				if l_resource.generating_resource_type.is_equal ("TEXT") then
 						-- Text
@@ -494,6 +517,7 @@ feature {NONE} -- Implementation
 						l_font_widget.change_actions.extend (agent on_preference_changed)
 						l_font_widget.set_caller (Current)
 						grid.set_item (4, row_index, l_font_widget.change_item_widget)
+						grid.row (row_index).set_height (l_font.value.height.max (default_row_height))
 					else
 						l_color ?= l_resource
 						if l_color /= Void then
@@ -545,20 +569,23 @@ feature {NONE} -- Private attributes
 	
 	folder_icon: EV_PIXMAP
 	
-	default_color: EV_COLOR is
-			-- Color for row when value is a default value
+	default_font: EV_FONT is
+			-- Font for row when value is a default value
 		once
-			Result := (create {EV_STOCK_COLORS}).black
+			create Result
 		end
 	
-	non_default_color: EV_COLOR is
-			-- Color for row when value is not a default value
+	non_default_font: EV_FONT is
+			-- Font for row when value is not a default value
 		once
-			Result := (create {EV_STOCK_COLORS}).dark_green
+			create Result
+			Result.set_weight ((create {EV_FONT_CONSTANTS}).weight_bold)
 		end
 
 	grid: EV_GRID
 		-- Grid
+
+	default_row_height: INTEGER
 
 invariant
 	has_preferences: preferences /= Void

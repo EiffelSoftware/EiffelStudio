@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	PREFERENCES_GRID_WINDOW_IMP
+	PREFERENCES_WINDOW_IMP
 
 inherit
 	EV_DIALOG
@@ -30,9 +30,11 @@ feature {NONE}-- Initialization
 			create left_list
 			create l_ev_vertical_box_2
 			create l_ev_vertical_split_area_1
+			create l_ev_frame_1
+			create l_ev_vertical_box_3
 			create grid_container
 			create preference_frame
-			create l_ev_vertical_box_3
+			create l_ev_vertical_box_4
 			create description_text
 			create l_ev_horizontal_separator_1
 			create l_ev_horizontal_box_1
@@ -46,10 +48,12 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_split_area_1.extend (left_list)
 			l_ev_horizontal_split_area_1.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (l_ev_vertical_split_area_1)
-			l_ev_vertical_split_area_1.extend (grid_container)
+			l_ev_vertical_split_area_1.extend (l_ev_frame_1)
+			l_ev_frame_1.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (grid_container)
 			l_ev_vertical_split_area_1.extend (preference_frame)
-			preference_frame.extend (l_ev_vertical_box_3)
-			l_ev_vertical_box_3.extend (description_text)
+			preference_frame.extend (l_ev_vertical_box_4)
+			l_ev_vertical_box_4.extend (description_text)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_separator_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (restore_button)
@@ -62,9 +66,10 @@ feature {NONE}-- Initialization
 			left_list.set_minimum_width (200)
 			l_ev_vertical_box_2.set_padding_width (5)
 			l_ev_vertical_box_2.set_border_width (5)
+			l_ev_vertical_box_3.set_minimum_height (300)
 			preference_frame.set_text ("Details")
-			l_ev_vertical_box_3.set_padding_width (5)
-			l_ev_vertical_box_3.set_border_width (5)
+			l_ev_vertical_box_4.set_padding_width (5)
+			l_ev_vertical_box_4.set_border_width (5)
 			description_text.set_minimum_height (50)
 			description_text.disable_edit
 			l_ev_horizontal_box_1.set_padding_width (5)
@@ -75,6 +80,8 @@ feature {NONE}-- Initialization
 			restore_button.set_minimum_width (90)
 			close_button.set_text ("Close")
 			close_button.set_minimum_width (80)
+			set_minimum_width (640)
+			set_minimum_height (480)
 			set_title ("Display window")
 			
 				--Connect events.
@@ -101,7 +108,8 @@ feature {NONE} -- Implementation
 	l_ev_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1,
-	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
+	l_ev_frame_1: EV_FRAME
 
 feature {NONE} -- Implementation
 
@@ -118,4 +126,4 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
-end -- class PREFERENCES_GRID_WINDOW_IMP
+end -- class PREFERENCES_WINDOW_IMP

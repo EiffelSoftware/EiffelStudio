@@ -25,6 +25,46 @@
 		</heading>
 		<paragraph>
 			<link>
+				<url>project_configuration/index.xml</url>
+				<label>Configuring Projects</label>
+			</link>
+			<line_break/>
+			Documentation of the various configuration property aspects of an EiffelEnvision project.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>adding_references/index.xml</url>
+				<label>Project References</label>
+			</link>
+			<line_break/>
+			The documentation on adding, removing and configuring EiffelEnvision project component references.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>adding_items/index.xml</url>
+				<label>Adding New and Existing Items</label>
+			</link>
+			<line_break/>
+			Documentation on how to add new and existing file and folder items to an EiffelEnvision project.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>removing_items.xml</url>
+				<label>Removing Items</label>
+			</link>
+			<line_break/>
+			Information on what and how project items can be removed.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>item_exclusion.xml</url>
+				<label>Including and Excluding Items</label>
+			</link>
+			<line_break/>
+			Information on including and excluding Eiffel source files from a <link><url>../../../compiling_projects/index.xml</url><label>Build</label></link>.
+		</paragraph>
+		<paragraph>
+			<link>
 				<url>environment_variables.xml</url>
 				<label>Using Environment Variables</label>
 			</link>

@@ -22,7 +22,7 @@ indexing
 			3. 	Location and default specified.  The same as in option 2, but a location of a default file is provided in addition
 				to the data store location.  This file is an XML file which contains the default values to use in a preference
 				if it is not already defined in the data store.  It is a convenient way to initialize your application with all the default
-				values required `out of the box' for correct or preferred functioning.  This file also contains additional attributes for
+				values required "out of the box" for correct or preferred functioning.  This file also contains additional attributes for
 				preference configuration such a more detailed description of the preference, or whether it should be hidden by default.
 					
 			Once preferences they may be modified programmatically or through an user interface conforming to PREFERENCE_VIEW.  A default 
@@ -221,7 +221,7 @@ feature -- Resource
 	save_resource (a_resource: PREFERENCE) is
 			-- Save `a_resource' to underlying data store.
 		require
-			resource_not_void: a_resource /= Void
+			resource_not_void: a_resource /= Void	
 		do
 			if save_defaults_to_store then
 				resource_structure.save_resource (a_resource)
@@ -237,7 +237,10 @@ feature -- Resource
 	save_resources is
 			-- Commit all changes by saving the underlying data store.  Only save resources 
 			-- which are not using the default value.
+		local
+			l_linear: ARRAYED_LIST [PREFERENCE]
 		do
+			l_linear := resources.linear_representation
 			from
 				resources.start
 			until

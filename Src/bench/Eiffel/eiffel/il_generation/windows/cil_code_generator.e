@@ -2110,6 +2110,7 @@ feature -- Features info
 			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
 			l_naming_convention: BOOLEAN
 			l_name_ca: MD_CUSTOM_ATTRIBUTE
+			l_is_attribute_generated_as_field: BOOLEAN
 		do
 			l_is_attribute := feat.is_attribute
 			l_is_c_external := feat.is_c_external
@@ -2119,7 +2120,9 @@ feature -- Features info
 			l_signature.compare_references
 
 			l_return_type := result_type (feat)
-			if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
+			l_is_attribute_generated_as_field := ((is_single_class and not is_override_or_c_external) or
+				(not in_interface and is_static)) and l_is_attribute
+			if l_is_attribute_generated_as_field then
 				l_field_sig := field_sig
 				l_field_sig.reset
 				set_signature_type (l_field_sig, l_return_type)
@@ -2200,7 +2203,7 @@ feature -- Features info
 
 			uni_string.set_string (l_name)
 
-			if (is_single_class or (not in_interface and is_static)) and l_is_attribute then
+			if l_is_attribute_generated_as_field then
 				l_field_attr := {MD_FIELD_ATTRIBUTES}.Public
 
 				l_meth_token := md_emit.define_field (uni_string, current_class_token,
@@ -2968,6 +2971,14 @@ feature -- IL Generation
 	 				end
 	 			end
 			end
+			if not Result then
+					-- When we handle an attribute defined in an inherited Eiffel class in a class now
+					-- generated as `is_single_class' we have to generate a MethodImpl, because
+					-- in the interface it is defined as a function, thus the generated MethodImpl will actually implement
+					-- the function to retrieve the attribute field.
+				Result := is_single_class and then feat.is_attribute and then feat.written_in /= current_class.class_id and then
+					not feat.written_class.is_external
+			end
 		end
 
 	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I) is
@@ -2994,8 +3005,10 @@ feature -- IL Generation
 			l_parent_type_id := parent_type.static_type_id
 			l_cur_sig := signatures (current_type_id, cur_feat.feature_id)
 			l_inh_sig := signatures (l_parent_type_id, inh_feat.feature_id)
-
-			l_same_signature := l_cur_sig.is_equal (l_inh_sig)
+			
+				-- Notion of same signature depends on wether or not we handle an attribute which is directly implemented
+				-- as a field rather than a function when it occurs in class generated as `is_single_class'.
+			l_same_signature := l_cur_sig.is_equal (l_inh_sig) and (not is_single_class or else not cur_feat.is_attribute)
 
 			if l_same_signature then
 				md_emit.define_method_impl (current_class_token, feature_token (current_type_id,
@@ -3038,8 +3051,16 @@ feature -- IL Generation
 					end
 					i := i + 1
 				end
-				method_body.put_call ({MD_OPCODES}.Callvirt, feature_token (current_type_id,
-					cur_feat.feature_id), nb, cur_feat.has_return_value)
+
+				if cur_feat.is_attribute and is_single_class then
+						-- Attribute was already generated as a field, we simply generate a routine to
+						-- perform the MethodImpl.
+					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, attribute_token (current_type_id,
+						cur_feat.feature_id))
+				else
+					method_body.put_call ({MD_OPCODES}.Callvirt, feature_token (current_type_id,
+						cur_feat.feature_id), nb, cur_feat.has_return_value)
+				end
 
 				if cur_feat.has_return_value then
 					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
@@ -3082,9 +3103,16 @@ feature -- IL Generation
 					end
 						-- Hard coded `1' for number of arguments since there is one,
 						-- we cannot use `nb' as it is `0' for attributes.
-					method_body.put_call ({MD_OPCODES}.Callvirt,
-						setter_token (current_type_id, cur_feat.feature_id),
-						1, cur_feat.has_return_value)
+					if is_single_class then
+							-- Attribute was already generated as a field, we simply generate a routine to
+							-- perform the MethodImpl on the setter.
+						method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, attribute_token (current_type_id,
+							cur_feat.feature_id))
+					else
+						method_body.put_call ({MD_OPCODES}.Callvirt,
+							setter_token (current_type_id, cur_feat.feature_id),
+							1, cur_feat.has_return_value)
+					end
 
 					generate_return (cur_feat.has_return_value)
 					method_writer.write_current_body
@@ -4724,10 +4752,11 @@ feature -- Array manipulation
 		do
 			a_formal.generate_gen_type_il (Current, True)
 			method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+			put_type_token (any_type.implementation_id)
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_conformance_class_name,
 				"create_array", Static_type, <<integer_32_class_name, type_class_name,
-				type_info_class_name>>, system_object_class_name,
+				type_info_class_name, type_handle_class_name>>, system_object_class_name,
 				False)
 		end
 

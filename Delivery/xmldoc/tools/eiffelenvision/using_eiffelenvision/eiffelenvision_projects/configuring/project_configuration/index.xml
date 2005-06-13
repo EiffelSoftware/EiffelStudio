@@ -121,6 +121,15 @@
 			<line_break/>
 			Information on targeting alternative versions of the .NET Framework and <bold>Common Language Runtime</bold> (CLR).
 		</paragraph>
+		
+		<paragraph>
+			<link>
+				<url>item_configuration/index.xml</url>
+				<label>Other Configuration Properties</label>
+			</link>
+			<line_break/>
+			Configuration properties for all other aspects of EiffelEnvision such as the item and folder properties.
+		</paragraph>
 				
 		<anchor>also_see</anchor>
 		<heading>

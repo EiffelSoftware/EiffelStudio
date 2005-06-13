@@ -7,7 +7,7 @@ class
 	EB_PREFERENCES_WINDOW
 
 inherit
-	PREFERENCES_GRID_WINDOW
+	PREFERENCES_WINDOW
 		rename
 			preferences as view_preferences
 		redefine
@@ -15,7 +15,8 @@ inherit
 			hide,
 			on_close,
 			add_resource_change_item,
-			set_resource_to_default
+			set_resource_to_default,
+			on_preference_changed
 		end
 
 	EB_SHARED_PIXMAPS
@@ -43,7 +44,7 @@ feature -- Access
 		do			
 			set_root_icon (icon_preference_root)
 			set_folder_icon (icon_preference_folder)
-			Precursor {PREFERENCES_GRID_WINDOW} (a_preferences, a_parent_window)
+			Precursor {PREFERENCES_WINDOW} (a_preferences, a_parent_window)
 			set_icon_pixmap (icon_preference_window)
 			register_resource_widget (create {IDENTIFIED_FONT_PREFERENCE_WIDGET}.make)
 			close_request_actions.extend (agent on_close)
@@ -61,8 +62,9 @@ feature -- Access
 				l_font_widget.set_caller (Current)
 				l_font_widget.change_actions.extend (agent on_preference_changed (l_resource))
 				grid.set_item (4, row_index, l_font_widget.change_item_widget)
+				grid.row (row_index).set_height (l_id_font.value.font.height.max (default_row_height))
 			else
-				Precursor {PREFERENCES_GRID_WINDOW} (l_resource, row_index)
+				Precursor {PREFERENCES_WINDOW} (l_resource, row_index)
 			end
 		end
 
@@ -75,17 +77,29 @@ feature -- Access
 			l_font ?= a_pref
 			if l_font /= Void then
 				a_pref.reset
-				a_item.set_text ("default")
-				a_item.row.set_foreground_color (default_color)
+				a_item.set_text (default_value)
+				a_item.set_font (default_font)
 				l_label_item ?= a_item.row.item (1)
 				if l_label_item /= Void then
 						-- Font label item
 					l_label_item.set_font (l_font.value.font)
 				end
 			else
-				Precursor {PREFERENCES_GRID_WINDOW} (a_item, a_pref)
+				Precursor {PREFERENCES_WINDOW} (a_item, a_pref)
 			end
 		end	
+
+	on_preference_changed (a_pref: PREFERENCE) is
+			-- Preference was changed
+		local						
+			l_id_font_pref: IDENTIFIED_FONT_PREFERENCE
+		do
+			l_id_font_pref ?= a_pref
+			if l_id_font_pref /= Void then
+				grid.selected_rows.first.set_height (l_id_font_pref.value.font.height)			
+			end						
+			Precursor {PREFERENCES_WINDOW} (a_pref)
+		end		
 
 	on_close is
 			-- Window was closed

@@ -29,7 +29,7 @@
 				<item>Select the <bold>References</bold> folder in your EiffelEnvision <link><url>url</url><label>*Project</label></link>.</item>
 				<item>Choose <bold>View</bold>, <bold>Properties</bold> menu.</item>
 			</list>
-			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut or by choosing <bold>Properties</bold> from the <bold>References</bold> folder context menu.
+			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut.
 		</paragraph>
 		
 		<heading>

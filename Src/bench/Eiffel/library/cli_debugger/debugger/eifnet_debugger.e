@@ -1752,27 +1752,38 @@ feature -- Specific function evaluation
 			-- STRING value for `icd_string_instance' with limits `min, max'
 		local
 			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
+		do
+			last_string_value_length := 0
+			if icd_string_instance = Void then
+				Result := Void
+			else
+				l_icd_string_value := icd_string_value_from_string_class_value (icd_string_instance_ref, icd_string_instance)
+				if l_icd_string_value /= Void then
+					Result := string_value_from_system_string_class_value (l_icd_string_value, min, max)
+					l_icd_string_value.clean_on_dispose
+				end
+			end
+		end
+		
+	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING is
+			-- STRING value for `icd_string_instance' with limits `min, max'
+		local
+			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
 			l_size: INTEGER
 			last_string_length: INTEGER
 		do
 			last_string_value_length := 0
-			if icd_string_instance = Void then
-				Result := "Void"
-			else
-				l_icd_string_value := icd_string_value_from_string_class_value (icd_string_instance_ref, icd_string_instance)
-				if l_icd_string_value /= Void then
-					last_string_length := l_icd_string_value.get_length
-					last_string_value_length := last_string_length
-						--| Be careful, in this context min,max correspond to string starting at position '0'
-					if max < 0 then
-						l_size := last_string_length
-					else
-						l_size := (max + 1).min (last_string_length)
-					end
-					Result := l_icd_string_value.get_string (l_size)
-					Result := Result.substring ((min + 1).max (1), l_size)
-					l_icd_string_value.clean_on_dispose
+			if icd_string_value /= Void then
+				last_string_length := icd_string_value.get_length
+				last_string_value_length := last_string_length
+					--| Be careful, in this context min,max correspond to string starting at position '0'
+				if max < 0 then
+					l_size := last_string_length
+				else
+					l_size := (max + 1).min (last_string_length)
 				end
+				Result := icd_string_value.get_string (l_size)
+				Result := Result.substring ((min + 1).max (1), l_size)
 			end
 		end
 

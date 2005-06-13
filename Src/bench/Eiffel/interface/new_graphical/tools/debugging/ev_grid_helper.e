@@ -50,16 +50,6 @@ feature -- Access
 			end
 		end
 		
-	grid_activate_item_if_row_selected (a_item: EV_GRID_ITEM) is
-		local
-			row: EV_GRID_ROW
-		do
-			row := a_item.row
-			if row /= Void and then row.is_selected then
-				a_item.activate
-			end
-		end
-
 	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
 		require
 			grid /= Void

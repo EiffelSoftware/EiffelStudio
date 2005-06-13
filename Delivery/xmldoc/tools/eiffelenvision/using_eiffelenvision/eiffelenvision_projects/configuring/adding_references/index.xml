@@ -45,14 +45,6 @@
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>configuring_components.xml</url>
-				<label>Configuring References</label>
-			</link>
-			<line_break/>
-			Details the project configurable aspects of project references in EiffelEnvision projects.
-		</paragraph>
-		<paragraph>
-			<link>
 				<url>precompiled_libraries.xml</url>
 				<label>Precompiled Libraries</label>
 			</link>
@@ -69,6 +61,11 @@
 			<bold>See also</bold>:
 			<line_break/>
 <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxtskaddingremovingprojectreferences.htm</url><label>Adding and Removing Project References</label></link>
+			<line_break/>
+			<link>
+				<url>../project_configuration/item_configuration/reference.xml</url>
+				<label>Reference Item Properties</label>
+			</link>
 			<line_break/>
 			<link><url>url</url><label>*References Node</label></link>
 			<line_break/>

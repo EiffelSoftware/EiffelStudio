@@ -335,6 +335,12 @@ feature {NONE} -- Implementation: State
 	old_expressions: LINKED_LIST [UN_OLD_B]
 			-- List of old expressions found during feature type checking
 
+	is_type_compatible: BOOLEAN
+			-- Is `last_type' compatible with type passed to `process_type_compatibility'?
+
+	last_assigner_command: FEATURE_I
+			-- Last assigner command associated with a feature
+
 feature {NONE} -- Implementation: Access
 
 	last_access_writable: BOOLEAN
@@ -360,6 +366,8 @@ feature -- Settings
 			depend_unit_level := 0
 			last_access_writable := False
 			last_feature_name := Void
+			is_type_compatible := False
+			last_assigner_command := Void
 		end
 
 	reset_types is
@@ -557,6 +565,7 @@ feature -- Implementation
 			l_cl_type_i: CL_TYPE_I
 			l_parameter: PARAMETER_B
 			l_parameter_list: BYTE_LIST [PARAMETER_B]
+			l_assigner_name: STRING
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -569,6 +578,9 @@ feature -- Implementation
 			l_is_target_of_creation_instruction := is_target_of_creation_instruction
 			is_in_creation_expression := False
 			is_target_of_creation_instruction := False
+
+				-- Reset assigner command
+			last_assigner_command := Void
 
 			l_feature_name := a_name
 
@@ -629,6 +641,12 @@ feature -- Implementation
 					end
 				else
 					l_feature := l_last_class.feature_table.item (l_feature_name)
+				end
+			end
+			if l_feature /= Void then
+				l_assigner_name := l_feature.assigner_name
+				if l_assigner_name /= Void then
+					last_assigner_command := l_feature.written_class.feature_named (l_assigner_name)
 				end
 			end
 			if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
@@ -774,7 +792,7 @@ feature -- Implementation
 									-- generation level to properly handle the generic case.
 									-- If not done at the code generation, we would need the
 									-- following lines.
-								l_expr ?= l_arg_nodes.i_th (i)
+--								l_expr ?= l_arg_nodes.i_th (i)
 --								l_arg_nodes.put_i_th ((create {BOX_CONVERSION_INFO}.make (l_arg_type)).
 --									byte_node (l_expr), i)
 							else
@@ -2744,7 +2762,6 @@ feature -- Implementation
 			l_source_type, l_target_type: TYPE_A
 			l_vjar: VJAR
 			l_vncb: VNCB
-			l_conv_info: CONVERSION_INFO
 		do
 				-- Init type stack
 			reset_for_unqualified_call_checking
@@ -2774,64 +2791,120 @@ feature -- Implementation
 				-- Type check the source
 			l_as.source.process (Current)
 			l_source_type := last_type
-			if is_byte_node_enabled then
-				l_source_expr ?= last_byte_node
-				create l_assign
-				l_assign.set_target (l_target_node)
-				l_assign.set_line_number (l_as.target.start_location.line)
-			end
 
 				-- Type checking
-				--| If `l_source_type' is of type NONE_A and if `l_target_type' does
-				--| not conform to NONE, we generate in all the cases a VJAR error,
-				--| we do not try to specify what kind of error, i.e.
-				--| 1- if target was a basic or an expanded type, we should generate
-				--|    a VNCE error.
-				--| 2- if target was a BIT type, we should generate a VNCB error.
-			if not l_source_type.conform_to (l_target_type) then
-				if l_source_type.convert_to (context.current_class, l_target_type) then
-					l_conv_info := context.last_conversion_info
-					if l_conv_info.has_depend_unit then
-						context.supplier_ids.extend (l_conv_info.depend_unit)
-					end
-					if is_byte_node_enabled then
-						l_source_expr := l_conv_info.byte_node (l_source_expr)
-					end
-				elseif
-					l_source_type.is_expanded and then l_target_type.is_external and then
-					l_source_type.is_conformant_to (l_target_type)
-				then
-						-- No need for conversion, this is currently done at the code
-						-- generation level to properly handle the generic case.
-						-- If not done at the code generation, we would need the following
-						-- line.
-					-- create {BOX_CONVERSION_INFO} l_conv_info.make (l_source_type)
+			process_type_compatibility (l_target_type)
+			if not is_type_compatible then
+				if l_source_type.is_bits then
+					create l_vncb
+					context.init_error (l_vncb)
+					l_vncb.set_target_name (l_as.target.access_name)
+					l_vncb.set_source_type (l_source_type)
+					l_vncb.set_target_type (l_target_type)
+					l_vncb.set_location (l_as.start_location)
+					error_handler.insert_error (l_vncb)
 				else
-						-- Type does not convert neither, so we raise an error
-						-- about non-conforming types.
-					if l_source_type.is_bits then
-						create l_vncb
-						context.init_error (l_vncb)
-						l_vncb.set_target_name (l_as.target.access_name)
-						l_vncb.set_source_type (l_source_type)
-						l_vncb.set_target_type (l_target_type)
-						l_vncb.set_location (l_as.start_location)
-						error_handler.insert_error (l_vncb)
-					else
-						create l_vjar
-						context.init_error (l_vjar)
-						l_vjar.set_source_type (l_source_type)
-						l_vjar.set_target_type (l_target_type)
-						l_vjar.set_target_name (l_as.target.access_name)
-						l_vjar.set_location (l_as.start_location)
-						error_handler.insert_error (l_vjar)
-					end
+					create l_vjar
+					context.init_error (l_vjar)
+					l_vjar.set_source_type (l_source_type)
+					l_vjar.set_target_type (l_target_type)
+					l_vjar.set_target_name (l_as.target.access_name)
+					l_vjar.set_location (l_as.start_location)
+					error_handler.insert_error (l_vjar)
 				end
 			end
 
 			if is_byte_node_enabled then
+				create l_assign
+				l_assign.set_target (l_target_node)
+				l_assign.set_line_number (l_as.target.start_location.line)
+				l_source_expr ?= last_byte_node
 				l_assign.set_source (l_source_expr)
 				last_byte_node := l_assign
+			end
+		end
+
+	process_assigner_call_as (l_as: ASSIGNER_CALL_AS) is
+		local
+			target_byte_node: like last_byte_node
+			target_type: like last_type
+			target_assigner: like last_assigner_command
+			source_byte_node: EXPR_B
+			source_type: like last_type
+			vbac1: VBAC1
+			vbac2: VBAC2
+			outer_nested_b: NESTED_B
+			inner_nested_b: NESTED_B
+			access_b: ACCESS_B
+			arguments: BYTE_LIST [PARAMETER_B]
+			assigner_argument: PARAMETER_B
+			assigner_arguments: BYTE_LIST [PARAMETER_B]
+		do
+			l_as.target.process (Current)
+			target_byte_node := last_byte_node
+			target_type := last_type
+			target_assigner := last_assigner_command
+			l_as.source.process (Current)
+			process_type_compatibility (target_type)
+			source_type := last_type
+			if not is_type_compatible then
+				create vbac1
+				context.init_error (vbac1)
+				vbac1.set_source_type (source_type)
+				vbac1.set_target_type (target_type)
+				vbac1.set_location (l_as.start_location)
+				error_handler.insert_error (vbac1)
+			elseif target_assigner = Void then
+				create vbac2
+				context.init_error (vbac2)
+				vbac2.set_location (l_as.start_location)
+				error_handler.insert_error (vbac2)
+			end
+			if is_byte_node_enabled then
+					-- Make sure all byte node is correct
+				error_handler.checksum
+					-- Preserve source byte node
+				source_byte_node ?= last_byte_node
+					-- Find end of call chain
+				from
+				outer_nested_b ?= target_byte_node
+					check
+						outer_nested_b_not_void: outer_nested_b /= Void
+					end
+					inner_nested_b ?= outer_nested_b.message
+				until
+					inner_nested_b = Void
+				loop
+					outer_nested_b := inner_nested_b
+					inner_nested_b ?= outer_nested_b.message
+				end
+					-- Evaluate assigner command arguments:
+					--   first is a source of an assigner command
+					--   next are those from target call
+				access_b ?= outer_nested_b.message
+				check
+					access_b_not_void: access_b /= Void
+				end
+				arguments := access_b.parameters
+				if arguments = Void then
+					create assigner_arguments.make (1)
+				else
+					create assigner_arguments.make (arguments.count + 1)
+				end
+				create assigner_argument
+				assigner_argument.set_expression (source_byte_node)
+				assigner_argument.set_attachment_type (target_type.type_i)
+				assigner_arguments.extend (assigner_argument)
+				if arguments /= Void then
+					assigner_arguments.append (arguments)
+				end
+					-- Evaluate assigner command byte node
+				access_b := target_assigner.access (void_type.type_i)
+				access_b.set_parameters (assigner_arguments)
+					-- Replace end of call chain with an assigner command
+				access_b.set_parent (outer_nested_b)
+				outer_nested_b.set_message (access_b)
+				last_byte_node := target_byte_node
 			end
 		end
 
@@ -4350,6 +4423,59 @@ feature {NONE} -- Implementation
 			l_vuar2.set_formal_type (a_formal_type)
 			l_vuar2.set_location (a_params.i_th (a_pos).start_location)
 			error_handler.insert_error (l_vuar2)
+		end
+
+	process_type_compatibility (l_target_type: like last_type) is
+			-- Test if `last_type' is compatible with `l_target_type' and
+			-- make the result available in `is_type_compatible'.
+			-- Adjust `last_byte_node' to reflect conversion if required.
+		require
+			last_type_not_void: last_type /= Void
+			last_byte_node_not_void: is_byte_node_enabled implies last_byte_node /= Void
+		local
+			l_source_type: like last_type
+			l_source_expr: EXPR_B
+			l_conv_info: CONVERSION_INFO
+		do
+			is_type_compatible := True
+			l_source_type := last_type
+				--| If `l_source_type' is of type NONE_A and if `l_target_type' does
+				--| not conform to NONE, we generate in all the cases a VJAR error,
+				--| we do not try to specify what kind of error, i.e.
+				--| 1- if target was a basic or an expanded type, we should generate
+				--|    a VNCE error.
+				--| 2- if target was a BIT type, we should generate a VNCB error.
+			if not l_source_type.conform_to (l_target_type) then
+				if l_source_type.convert_to (context.current_class, l_target_type) then
+					l_conv_info := context.last_conversion_info
+					if l_conv_info.has_depend_unit then
+						context.supplier_ids.extend (l_conv_info.depend_unit)
+					end
+					if is_byte_node_enabled then
+						l_source_expr ?= last_byte_node
+						check
+							l_source_expr_not_void: l_source_expr /= Void
+						end
+						last_byte_node := l_conv_info.byte_node (l_source_expr)
+					end
+				elseif
+					l_source_type.is_expanded and then l_target_type.is_external and then
+					l_source_type.is_conformant_to (l_target_type)
+				then
+						-- No need for conversion, this is currently done at the code
+						-- generation level to properly handle the generic case.
+						-- If not done at the code generation, we would need the following
+						-- line.
+					-- create {BOX_CONVERSION_INFO} l_conv_info.make (l_source_type)
+				else
+						-- Type does not convert neither, so we raise an error
+						-- about non-conforming types.
+					is_type_compatible := False
+				end
+			end
+		ensure
+			last_type_unchanged: last_type = old last_type
+			last_byte_node_not_void: is_byte_node_enabled implies last_byte_node /= Void
 		end
 
 feature {NONE} -- Implementation: overloading

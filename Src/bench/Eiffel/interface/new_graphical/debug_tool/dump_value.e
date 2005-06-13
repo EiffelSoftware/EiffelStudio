@@ -720,6 +720,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 							Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
 							last_string_representation_length := l_eifnet_debugger.last_string_value_length
 						end
+					else
+						Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
 					end
 				else
 					Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)

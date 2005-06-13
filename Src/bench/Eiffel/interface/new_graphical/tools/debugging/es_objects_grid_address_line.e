@@ -157,9 +157,9 @@ feature -- Graphical changes
 				else
 					set_name (title)
 				end
+				set_value (object_value)
 				set_type (object_type_representation)
 				set_address (object_address)				
-				set_value (object_value)
 				set_pixmap (Pixmaps.Icon_object_symbol)
 				row.ensure_expandable
 				expand_actions.extend (agent on_row_expand)

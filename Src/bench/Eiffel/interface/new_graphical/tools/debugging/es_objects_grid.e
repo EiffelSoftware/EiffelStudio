@@ -95,6 +95,21 @@ feature -- Grid item Activation
 			a_item.activate
 		end
 		
+feature -- Query
+		
+	grid_pebble_from_row (a_row: EV_GRID_ROW): ANY is
+			-- Return pebble which may be contained in `a_row'
+		local
+			ctler: ES_GRID_ROW_CONTROLLER
+		do
+			if a_row /= Void then
+				ctler ?= a_row.data
+				if ctler /= Void then
+					Result := ctler.pebble
+				end
+			end
+		end
+
 feature {NONE} -- Actions implementation
 
 	on_mouse_wheel_action (a_step: INTEGER) is
@@ -121,17 +136,12 @@ feature {NONE} -- Actions implementation
 		end
 
 	on_pebble_function (a_item: EV_GRID_ITEM): ANY is
-		local
-			ctler: ES_GRID_ROW_CONTROLLER
 		do
 			if 
 				not ev_application.ctrl_pressed
 				and a_item /= Void 
 			then
-				ctler ?= a_item.row.data
-				if ctler /= Void then
-					Result := ctler.pebble
-				end
+				Result := grid_pebble_from_row (a_item.row)
 			end
 		end
 

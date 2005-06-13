@@ -122,16 +122,16 @@ feature -- Graphical changes
 					last_dump_value := Void
 					dmdv ?= dv
 					set_name (dv.name)
+					set_value (dmdv.display_message)
 					set_type (Interface_names.l_Dummy)
 					set_address (Void)
-					set_value (dmdv.display_message)
 					set_pixmap (Icons @ (dv.kind))
 				else
 					last_dump_value := dv.dump_value
 					set_name (dv.name)
+					set_value (last_dump_value.output_for_debugger)
 					set_type (last_dump_value.generating_type_representation)
 					set_address (dv.address)
-					set_value (last_dump_value.output_for_debugger)
 					set_pixmap (Icons @ (dv.kind))
 
 					if dv.expandable then

@@ -33,6 +33,8 @@ MKDIR = $mkdir -p
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
+.c.o:
+	\$(CC) -c \$(CFLAGS) \$<
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'

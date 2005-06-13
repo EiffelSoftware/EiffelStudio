@@ -111,12 +111,14 @@ feature {NONE} -- Initialization
 			location_not_void: a_location /= Void
 			location_not_empty: not a_location.is_empty
 		do
-			defaults_file_name := a_defaults_file_name
-			extract_default_values
+			defaults_file_name := a_defaults_file_name			
 			create resource_structure.make_with_location (Current, a_location)	
 			session_values := resource_structure.session_values
 			create managers.make (2)
 			managers.compare_objects
+			create resources.make (2)
+			create default_values.make (2)
+			extract_default_values
 		ensure
 			has_session_values: session_values /= Void
 			has_resource_structure: resource_structure /= Void

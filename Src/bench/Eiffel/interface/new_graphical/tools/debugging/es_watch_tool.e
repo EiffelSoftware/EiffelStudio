@@ -82,9 +82,8 @@ feature {NONE} -- Initialization
 			esgrid.column (col_context_index).set_width (200)
 			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
 			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
-
-			esgrid.row_select_actions.extend (agent on_item_selected)
-			esgrid.row_deselect_actions.extend (agent on_item_deselected)
+			esgrid.row_select_actions.extend (agent on_row_selected)
+			esgrid.row_deselect_actions.extend (agent on_row_deselected)
 			esgrid.drop_actions.extend (agent on_element_drop)
 			esgrid.key_press_actions.extend (agent key_pressed)
 			esgrid.key_press_string_actions.extend (agent string_key_pressed)
@@ -521,7 +520,7 @@ feature {NONE} -- Event handling
 				if watches_grid.row_count >= sel_index then
 					watches_grid.row (sel_index).enable_select
 				else
-					on_item_deselected (Void)
+					on_row_deselected (Void)
 				end
 			end
 		end
@@ -591,7 +590,7 @@ feature {NONE} -- Event handling
 				if watches_grid.row_count >= sel_index then
 					watches_grid.row (sel_index).enable_select
 				else
-					on_item_deselected (Void)
+					on_row_deselected (Void)
 				end
 			end
 		end
@@ -624,7 +623,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_item_selected (row: EV_GRID_ROW) is
+	on_row_selected (row: EV_GRID_ROW) is
 			-- An item in the list of expression was selected.
 		do
 			if row.parent_row = Void then
@@ -642,7 +641,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	on_item_deselected (row: EV_GRID_ROW) is
+	on_row_deselected (row: EV_GRID_ROW) is
 			-- An item in the list of expression was selected.
 		do
 			if row /= Void and then row.parent_row = Void then

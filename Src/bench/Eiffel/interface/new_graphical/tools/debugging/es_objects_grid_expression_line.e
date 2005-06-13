@@ -219,7 +219,7 @@ feature -- Graphical changes
 				create gedit
 				grid_cell_set_text (gedit, v)
 				gedit.pointer_double_press_actions.force_extend (agent gedit.activate)
-				gedit.pointer_button_press_actions.force_extend (agent grid_activate_item_if_row_selected (gedit))
+				gedit.pointer_button_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, ?,?,?,?,?,?,?,?))
 				apply_cell_expression_text_properties_on (gedit)
 				gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))
 				row.set_item (Col_expression_index, gedit)
@@ -277,6 +277,27 @@ feature -- Graphical changes
 			create w_dlg.make_with_text (txt)
 			w_dlg.show_modal_to_window (parent_window_from (row.parent.parent))
 		end
+		
+	grid_activate_item_if_row_selected (a_item: EV_GRID_ITEM; 
+				ax, ay, abutton: INTEGER; 
+				ax_tilt, ay_tilt, apressure: DOUBLE;
+				ascreen_x, ascreen_y: INTEGER
+			) is
+		require
+			item_not_void: a_item /= Void
+		local
+			r: EV_GRID_ROW
+		do
+			if abutton = 1 then
+				r := a_item.row
+				if 	
+					r /= Void 
+					and then r.is_selected
+				then
+					a_item.activate
+				end
+			end
+		end
 
 	compute_grid_display is
 		local
@@ -310,7 +331,6 @@ feature -- Graphical changes
 						l_tooltip.append_string ("--< EXPRESSION >--%N  " + expression.expression + "%N%N")
 					end
 
-					set_context (expression.context)
 					if expression.evaluation_disabled then
 						set_expression_info ("Disabled")
 						set_expression_result_address (Void)					
@@ -372,6 +392,7 @@ feature -- Graphical changes
 							set_expression_pixmap (Pixmaps.Icon_green_tick)
 						end
 					end
+					set_context (expression.context)
 					grid_cell_set_tooltip (row.item (Col_expression_index), l_tooltip)
 					if display and row.is_expandable then
 						row.expand

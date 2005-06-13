@@ -46,13 +46,6 @@ feature -- Status Setting
 			end
 			
 			tmpstr := new_resource.string_value
---			change_item_widget.change_actions.block
---			if tmpstr /= Void and then not tmpstr.is_empty then
---				change_item_widget.set_text (tmpstr)
---			else
---				change_item_widget.remove_text
---			end
---			change_item_widget.change_actions.resume
 		end
 
 feature {NONE} -- Command

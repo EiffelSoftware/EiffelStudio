@@ -61,10 +61,17 @@ feature {NONE} -- Initialization
 			-- application preferences.
 		do	
 			create resource_structure.make_empty (Current)
-			session_values := resource_structure.session_values
+			session_values := resource_structure.session_values			
+			create managers.make (2)
+			managers.compare_objects
+			create resources.make (2)
+			create default_values.make (2)
 		ensure
 			has_session_values: session_values /= Void
 			has_resource_structure: resource_structure /= Void
+			managers_not_void: managers /= Void
+			resource_not_void: resources /= Void
+			default_values_not_void: default_values /= Void
 		end	
 
 	make_with_location (a_location: STRING) is
@@ -79,9 +86,16 @@ feature {NONE} -- Initialization
 		do				
 			create resource_structure.make_with_location (Current, a_location)
 			session_values := resource_structure.session_values
+			create managers.make (2)
+			managers.compare_objects
+			create resources.make (2)
+			create default_values.make (2)
 		ensure
 			has_session_values: session_values /= Void
 			has_resource_structure: resource_structure /= Void
+			managers_not_void: managers /= Void
+			resource_not_void: resources /= Void
+			default_values_not_void: default_values /= Void
 		end		
 
 	make_with_default_values_and_location (a_defaults_file_name: STRING; a_location: STRING) is
@@ -101,9 +115,14 @@ feature {NONE} -- Initialization
 			extract_default_values
 			create resource_structure.make_with_location (Current, a_location)	
 			session_values := resource_structure.session_values
+			create managers.make (2)
+			managers.compare_objects
 		ensure
 			has_session_values: session_values /= Void
 			has_resource_structure: resource_structure /= Void
+			managers_not_void: managers /= Void
+			resource_not_void: resources /= Void
+			default_values_not_void: default_values /= Void
 		end
 
 feature -- Access
@@ -274,39 +293,23 @@ feature -- Resource
 		
 feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCE_STRUCTURE_IMP} -- Implementation
 
-	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN], STRING] is
+	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN], STRING]
 			-- Hash table of known preference default values.  [[Description, Value, Hidden], Name].
-		once
-			create Result.make (2)
-		ensure
-			default_values_not_void: Result /= Void
-		end	
 		
 	session_values: HASH_TABLE [STRING, STRING]
 			-- Hash table of user-defined values retrieved from the underlying data store.
 			-- Depending upon the chosen implementation this will be the Windows registry or an XML file.
 		
-	resources: HASH_TABLE [PREFERENCE, STRING] is
+	resources: HASH_TABLE [PREFERENCE, STRING]
 			-- Resources part of Current.
-		once
-			create Result.make (2)
-		ensure
-			resource_not_void: Result /= Void
-		end
 		
 feature {NONE} -- Implementation
 
 	defaults_file_name: STRING
 			-- File containing default values, if any.
 
-	managers: HASH_TABLE [PREFERENCE_MANAGER, STRING] is
-			-- Managers.
-		once
-			create Result.make (2)
-			Result.compare_objects
-		ensure
-			managers_not_void: Result /= Void
-		end
+	managers: HASH_TABLE [PREFERENCE_MANAGER, STRING]
+			-- Managers.		
 	
 	resource_structure: PREFERENCE_STRUCTURE	
 			-- Underlying resource structure.

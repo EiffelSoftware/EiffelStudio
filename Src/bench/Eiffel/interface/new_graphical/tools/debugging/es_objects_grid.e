@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
-			mouse_wheel_scroll_size := 3 --| By default, can be overwritten
+			mouse_wheel_scroll_size := 3 --| default value
 			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
 		end
 		
@@ -85,37 +85,29 @@ feature -- Change
 			mouse_wheel_scroll_size	:= v
 		end
 
-feature {NONE} -- Actions implementation
 
-	last_page_mouse_wheel_event: DOUBLE
-			-- time used to delay the full page scrolling
-			-- cf: on_mouse_wheel_action
+feature -- Grid item Activation
+	
+	grid_activate (a_item: EV_GRID_ITEM) is
+		require
+			a_item /= Void
+		do
+			a_item.activate
+		end
+		
+feature {NONE} -- Actions implementation
 
 	on_mouse_wheel_action (a_step: INTEGER) is
 		local
 			vy_now, vy: INTEGER
-			t: DOUBLE
 		do
 			vy_now := virtual_y_position
 			if 
 				mouse_wheel_scroll_full_page
 				or ev_application.ctrl_pressed
 			then
-					--| For the full page scrolling,
-					--| we add a kind of delay to avoid moving several
-					--| pages at a time
-				t := (create {TIME}.make_now).fine_second
-				if 
-					last_page_mouse_wheel_event = 0
-					or (t - last_page_mouse_wheel_event).abs > 0.05
-				then
-					last_page_mouse_wheel_event := t
-					vy := vy_now - viewable_height * a_step
-				else
-					vy := vy_now
-				end
+				vy := vy_now - viewable_height * a_step
 			else
-				last_page_mouse_wheel_event := 0
 				vy := vy_now - mouse_wheel_scroll_size * a_step
 			end
 			if vy_now /= vy then			
@@ -132,7 +124,10 @@ feature {NONE} -- Actions implementation
 		local
 			ctler: ES_GRID_ROW_CONTROLLER
 		do
-			if a_item /= Void then
+			if 
+				not ev_application.ctrl_pressed
+				and a_item /= Void 
+			then
 				ctler ?= a_item.row.data
 				if ctler /= Void then
 					Result := ctler.pebble
@@ -170,7 +165,7 @@ feature {NONE} -- Actions implementation
 		do
 			ei ?= a_item
 			if ei /= Void then
-				ei.activate
+				grid_activate (ei)
 			end
 		end
 

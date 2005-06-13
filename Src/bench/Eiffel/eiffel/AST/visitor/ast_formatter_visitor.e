@@ -1241,6 +1241,18 @@ feature {NONE} -- Implementation
 			l_as.source.process (Current)
 		end
 
+	process_assigner_call_as (l_as: ASSIGNER_CALL_AS) is
+		do
+			ctxt.put_breakable
+			ctxt.new_expression
+			l_as.target.process (Current)
+			ctxt.put_space
+			ctxt.put_text_item_without_tabs (ti_assign)
+			ctxt.put_space
+			ctxt.new_expression
+			l_as.source.process (Current)
+		end
+
 	process_reverse_as (l_as: REVERSE_AS) is
 		do
 			ctxt.put_breakable

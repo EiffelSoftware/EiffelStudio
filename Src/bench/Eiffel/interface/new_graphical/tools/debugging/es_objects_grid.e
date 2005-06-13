@@ -255,10 +255,10 @@ end
 					else
 							--| line already computed .. but still missing cells
 							--| then we fill with empty cells
-						create {EV_GRID_LABEL_ITEM} Result
+						create Result
 					end
 				else
-					create {EV_GRID_LABEL_ITEM} Result
+					create Result
 				end
 			end
 		ensure

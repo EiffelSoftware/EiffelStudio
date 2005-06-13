@@ -24,20 +24,19 @@
 			<size>2</size>Running
 		</heading>
 		<paragraph> After launching the application, you will see a window displayed with 2 buttons.  When clicked each will display a window showing the preferences, one is the default view provided with the library, the other is a custom view for purposes of example.</paragraph>
-		<paragraph> In each dialog you can select the preferences and alter the values.  When exiting the dialogs clicking OK will save your changes to the data store, clicking Cancel will not.  If you then reload again the preference values will reflect the changes made in the previous session.
+		<paragraph> In each dialog you can select the preferences and alter the values.
 			<heading>
 				<size>2</size>Under the Hood
 			</heading>
 			<paragraph>
-				This example shows you how to acheive the following tasks:
+				This example shows you how to achieve the following tasks:
 				
 			</paragraph>
 <paragraph>
 <list ordered="false"><item>Create preferences using the library supplied preference types and associated views</item>
 <item>Use the default widget for viewing preferences and manipulating their values</item>
-<item>Create a custom preference type (a preference for storing correctly formatted directory path names)</item>
+<item>Create a custom preference (a preference for storing correctly formatted directory path names)</item>
 <item>Create a widget to view and change the custom preference type value</item>
-<item>Create a custom view for an existing preference type (a check view for BOOLEAN_PREFERENCE rather than a combo box)</item>
 <item>Create a custom manager to register custom types to the system</item>
 <item>Create a custom dialog for viewing all the preferences</item>
 </list></paragraph>

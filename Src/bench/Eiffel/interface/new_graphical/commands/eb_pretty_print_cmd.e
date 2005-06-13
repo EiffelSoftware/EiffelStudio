@@ -91,11 +91,20 @@ feature {EB_PRETTY_PRINT_DIALOG} -- Status report
 		local
 			dv: DUMP_VALUE
 		do
-			create dv.make_object (st.object_address, st.dynamic_class)
-			Result := dv.has_formatted_output
+			if st /= Void then
+				create dv.make_object (st.object_address, st.dynamic_class)
+				Result := dv.has_formatted_output
+			end
 		end
 
 feature -- Basic operations
+
+	set_stone (st: OBJECT_STONE) is
+		do
+			if accepts_stone (st) then
+				on_stone_dropped (st)
+			end
+		end
 
 	execute is
 			-- Launch `Current' as a command.

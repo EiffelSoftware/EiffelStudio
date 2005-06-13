@@ -309,6 +309,10 @@ feature -- Implementation
 		do
 		end
 
+	process_assigner_call_as (l_as: ASSIGNER_CALL_AS) is
+		do
+		end
+
 	process_reverse_as (l_as: REVERSE_AS) is
 		do
 		end

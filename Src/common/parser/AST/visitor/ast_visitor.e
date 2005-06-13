@@ -700,6 +700,13 @@ feature {AST_EIFFEL} -- Instructions visitors
 		deferred
 		end
 
+	process_assigner_call_as (l_as: ASSIGNER_CALL_AS) is
+			-- Process `l_as'.
+		require
+			non_void_as: l_as /= Void
+		deferred
+		end
+
 	process_case_as (l_as: CASE_AS) is
 			-- Process `l_as'.
 		require

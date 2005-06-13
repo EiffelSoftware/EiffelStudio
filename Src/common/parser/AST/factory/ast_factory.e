@@ -87,6 +87,14 @@ feature -- Access
 			end
 		end
 
+	new_assigner_call_as (t: EXPR_AS; s: EXPR_AS): ASSIGNER_CALL_AS is
+			-- New ASSIGNER CALL AST node
+		do
+			if t /= Void and s /= Void then
+				create Result.initialize (t, s)
+			end
+		end
+
 	new_bin_and_as (l, r: EXPR_AS): BIN_AND_AS is
 			-- New binary and AST node
 		do

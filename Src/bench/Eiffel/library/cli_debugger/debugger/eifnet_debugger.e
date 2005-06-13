@@ -1768,7 +1768,6 @@ feature -- Specific function evaluation
 	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING is
 			-- STRING value for `icd_string_instance' with limits `min, max'
 		local
-			l_icd_string_value: ICOR_DEBUG_STRING_VALUE
 			l_size: INTEGER
 			last_string_length: INTEGER
 		do

@@ -211,7 +211,6 @@ feature {NONE} -- tab selection
 			-- Open menu related to the pointed tool
 		local
 			m: EV_MENU
-			mi: EV_MENU_ITEM
 			mci: EV_CHECK_MENU_ITEM
 			ni: ES_NOTEBOOK_ITEM
 		do

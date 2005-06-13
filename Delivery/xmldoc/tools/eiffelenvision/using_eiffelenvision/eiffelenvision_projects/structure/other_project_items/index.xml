@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_title>Other Project Items</envision_title>
-				<envision_pseudo_name>10</envision_pseudo_name>
+				<envision_pseudo_name>50</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
@@ -25,6 +25,14 @@
 		</paragraph>
 		<paragraph>
 			<link>
+				<url>context_menu.xml</url>
+				<label>Other Project Items Folder Context Menu</label>
+			</link>
+			<line_break/>
+			An overview of the <bold>Other Project Items</bold> folder context menu.
+		</paragraph>
+		<paragraph>
+			<link>
 				<url>virtual_folders.xml</url>
 				<label>Virtual Folders</label>
 			</link>
@@ -42,7 +50,7 @@
 			<line_break/>
 			<link><url>../index.xml</url><label>EiffelEnvision Projects</label></link>
 			<line_break/>
-<link><url>ms-help://MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
+<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
 			<line_break/>
 			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>
 			<line_break/>

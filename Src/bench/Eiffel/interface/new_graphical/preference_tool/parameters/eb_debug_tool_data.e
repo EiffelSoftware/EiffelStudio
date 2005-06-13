@@ -96,7 +96,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			--
 		do
 			Result := max_stack_depth_preference.value
-		end	
+		end
+		
+	expanded_display_bgcolor: EV_COLOR is
+		do
+			Result := expanded_display_bgcolor_preference.value
+		end
 		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -113,7 +118,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	local_vs_object_proportion_preference: STRING_PREFERENCE		
 	left_debug_layout_preference: ARRAY_PREFERENCE		
 	right_debug_layout_preference: ARRAY_PREFERENCE		
-	max_stack_depth_preference: INTEGER_PREFERENCE	
+	max_stack_depth_preference: INTEGER_PREFERENCE
+	expanded_display_bgcolor_preference: COLOR_PREFERENCE
 	
 feature -- Preference Strings
 
@@ -130,7 +136,8 @@ feature -- Preference Strings
 	local_vs_object_proportion_string: STRING is "debugger.proportion"					
 	max_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"	
 	left_debug_layout_string: STRING is "debugger.left_debug_layout"	
-	right_debug_layout_string: STRING is "debugger.right_debug_layout"	
+	right_debug_layout_string: STRING is "debugger.right_debug_layout"
+	expanded_display_bgcolor_string: STRING is "debugger.expanded_display_background_color"
 
 feature {NONE} -- Implementation
 
@@ -154,7 +161,8 @@ feature {NONE} -- Implementation
 			local_vs_object_proportion_preference := l_manager.new_string_resource_value (l_manager, local_vs_object_proportion_string, "0.5")					
 			max_stack_depth_preference := l_manager.new_integer_resource_value (l_manager, max_stack_depth_string, 100)
 			left_debug_layout_preference := l_manager.new_array_resource_value (l_manager, left_debug_layout_string, <<>>)
-			right_debug_layout_preference := l_manager.new_array_resource_value (l_manager, right_debug_layout_string, <<>>)			
+			right_debug_layout_preference := l_manager.new_array_resource_value (l_manager, right_debug_layout_string, <<>>)
+			expanded_display_bgcolor_preference := l_manager.new_color_resource_value (l_manager, expanded_display_bgcolor_string, create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
 		end
 	
 	preferences: PREFERENCES
@@ -175,5 +183,6 @@ invariant
 	left_debug_layout_preference_not_void: left_debug_layout_preference /= Void
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void
 	max_stack_depth_preference_not_void: max_stack_depth_preference /= Void	
+	expanded_display_bgcolor_preference_not_void: expanded_display_bgcolor_preference /= Void		
 
 end -- class EB_DEBUG_TOOL_DATA

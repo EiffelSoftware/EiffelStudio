@@ -1123,6 +1123,7 @@ feature -- Implementation
 							l_type_a := l_element_type
 						else
 								-- Cannot find a common type
+							l_has_error := True
 							i := nb + 1 -- Exit the loop
 						end
 						i := i + 1

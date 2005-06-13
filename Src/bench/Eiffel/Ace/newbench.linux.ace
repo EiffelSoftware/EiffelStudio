@@ -182,7 +182,7 @@ cluster
 
 	io_watcher (communications):		"$/spec/gtk"
 
-	all lex:		"$ISE_EIFFEL/library/lex"
+	all lex:		"$EIFFEL_SRC/library/lex"
 
 	all interface:		"$EIFFEL_SRC/Eiffel/interface"
 		exclude

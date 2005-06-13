@@ -43,7 +43,7 @@
 			</image>). To learn how to add new folders or existing items, see the respective <link><url>url</url><label>Adding New Folders</label></link> and/or <link><url>url</url><label>Adding Existing Items</label></link> documentation.
 		</paragraph>
 		<paragraph>
-			Existing items and new folder can also be added through the <bold>Other Project Items</bold> or any sub-folder context menu.
+			Existing items and new folder can also be added through the <bold>Other Project Items</bold> or any sub-folder <link><url>context_menu.xml</url><label>context menu</label></link>.
 		</paragraph>
 		
 		<anchor>also_see</anchor>
@@ -56,7 +56,7 @@
 			<line_break/>
 			<link><url>index.xml</url><label>Other Project Items</label></link>
 			<line_break/>
-<link><url>ms-help://MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
+<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
 			<line_break/>
 			<link><url>virtual_folders.xml</url><label>Virtual Folders</label></link>
 			<line_break/>

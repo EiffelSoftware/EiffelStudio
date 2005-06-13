@@ -27,6 +27,12 @@ feature -- Status Report
 		return false;
 	}
 
+	public virtual bool is_none ()
+		// Does `Current' represent a NONE type?
+	{
+		return false;
+	}
+
 	public virtual bool has_formal ()
 		// Does `Current' have a formal generic parameter?
 	{

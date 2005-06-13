@@ -18,6 +18,12 @@ sealed public class RT_NONE_TYPE: RT_CLASS_TYPE {
 	{
 		return "NONE";
 	}
+
+	public override bool is_none ()
+		// Current represents NONE
+	{
+		return true;
+	}
 }
 
 }

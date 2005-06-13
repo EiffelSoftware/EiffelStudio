@@ -20,7 +20,6 @@ CC = $cc
 CTAGS = ctags
 INCLUDE = -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
 CFLAGS = $optimize $ccflags $large -g `pkg-config gtk+-2.0 --cflags` \$(INCLUDE)
-MTCFLAGS = $optimize $mtccflags $large -g `pkg-config gtk+-2.0  --cflags` \$(INCLUDE)
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
 LN = $ln
@@ -38,19 +37,17 @@ MKDIR = $mkdir -p
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
-MT_OBJECTS = MTgtk_eiffel.o
 OBJECTS = gtk_eiffel.o 
 
-ALL_OBJECTS = $(OBJECTS) #$(MT_OBJECTS)
+ALL_OBJECTS = $(OBJECTS)
 
 all: $(ALL_OBJECTS)
 	$(MKDIR) ../../../spec/$(ISE_PLATFORM)/lib
 	$(MV) $? ../../../spec/$(ISE_PLATFORM)/lib
 	make clobber
 
-gtk_eiffel.o: ev_any_imp.c ev_c_util.c ev_gtk_callback_marshal.c 
-#MTgtk_eiffel.o: ev_any_imp.c ev_c_util.c ev_gtk_callback_marshal.c 
-	$(CC) -c $(MTCFLAGS) $? -o $@
+gtk_eiffel.o: ev_any_imp.o ev_c_util.o ev_gtk_callback_marshal.o 
+	$(LD) -r $? -o $@	
 
 local_realclean::
 	$(RM) $(ALL_OBJECTS)

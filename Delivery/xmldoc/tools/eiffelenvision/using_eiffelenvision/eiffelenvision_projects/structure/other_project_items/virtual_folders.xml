@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_title>Virutal Folders</envision_title>
-				<envision_pseudo_name>20</envision_pseudo_name>
+				<envision_pseudo_name>30</envision_pseudo_name>
 			</toc>
 			<xml>
 				<xmlkeyword>
@@ -37,7 +37,7 @@
 			<line_break/>
 			<link><url>index.xml</url><label>Other Project Items</label></link>
 			<line_break/>
-			<link><url>ms-help://MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
+			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
 			<line_break/>
 			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>
 			<line_break/>

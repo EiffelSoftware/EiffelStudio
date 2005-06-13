@@ -1,0 +1,69 @@
+<document output="envision" title="EiffelEnvision Project Structure">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Project Structure</envision_title>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			This section of the documentation outlines the structure of EiffelEnvision projects and their presence in the <link><url>url</url><label>*Solution Explorer</label></link>.
+		</paragraph>
+		
+		<anchor>in_this_section</anchor>
+		<heading>
+			<size>2</size>
+			<content>In This Section</content>
+		</heading>
+		<paragraph>
+			<link>
+				<url>project.xml</url>
+				<label>EiffelEnvision Project Structure</label>
+			</link>
+			<line_break/>
+			An overview of an EiffelEnvision project structure and why projects are structured the way they are.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>references/index.xml</url>
+				<label>Project References</label>
+			</link>
+			<line_break/>
+			Detailed infomration on the <bold>References</bold> folder in EiffelEnvision projects.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>project_items/index.xml</url>
+				<label>EiffelEnvision Project Structure</label>
+			</link>
+			<line_break/>
+			Detailed infomration on the <bold>Project Items</bold> folder in EiffelEnvision projects.
+		</paragraph>
+				<paragraph>
+			<link>
+				<url>eiffel_libraries/index.xml</url>
+				<label>Eiffel Libraries</label>
+			</link>
+			<line_break/>
+			Detailed infomration on the <bold>Eiffel Libraries</bold> folder in EiffelEnvision projects.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>other_project_items/index.xml</url>
+				<label>Other Project Items</label>
+			</link>
+			<line_break/>
+			Detailed infomration on the <bold>Other Project Items</bold> folder in EiffelEnvision projects.
+		</paragraph>
+		<paragraph>
+			<link>
+				<url>known_folders.xml</url>
+				<label>Known EiffelEnvision Folders</label>
+			</link>
+			<line_break/>
+			Infomation on the physical folders used by EiffelEnvision projects.
+		</paragraph>
+	</paragraph>
+</document>

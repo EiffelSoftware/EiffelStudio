@@ -33,8 +33,8 @@ feature -- Access
 			callable: callable
 		do
 			set_operands (args)
+			last_result := Void
 			Result ?= rout_disp.invoke (target_object, internal_operands)
-			last_result := Result
 			if is_cleanup_needed then
 				remove_gc_reference
 			end

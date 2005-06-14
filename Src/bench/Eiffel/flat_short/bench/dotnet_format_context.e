@@ -59,21 +59,8 @@ feature -- Status Setting
 
 	set_assembly_name is
 			-- Set the assembly from which the consumed_type was generated.
-		local
-			l_reader: EIFFEL_XML_DESERIALIZER
-			l_file_name: STRING
-			l_char_index: INTEGER
-			l_c_assembly: CONSUMED_ASSEMBLY_MAPPING
 		do
-			create l_reader
-			create l_file_name.make_from_string (class_i.file_name)
-			l_char_index := l_file_name.last_index_of ('\', l_file_name.count)
-			l_file_name := l_file_name.substring (1, l_char_index - 1)
-			l_char_index := l_file_name.last_index_of ('\', l_file_name.count)
-			l_file_name := l_file_name.substring (1, l_char_index - 1)
-			l_file_name.append ("\referenced_assemblies.xml")
-			l_c_assembly ?= l_reader.new_object_from_file (l_file_name)		
-			assembly_name := l_c_assembly.assemblies.item (1).name
+			assembly_name := class_i.assembly.assembly_name
 		end
 
 feature {NONE} -- Implementation

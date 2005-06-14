@@ -73,12 +73,11 @@ feature {NONE} -- Implementation
 					-- in current system.
 				l_new_dtype := l_int.dynamic_type_from_string (l_deser.read_string_8)
 				if l_new_dtype = -1 then
-					has_error := True
+					set_has_error
 					i := nb - 1 -- Jump out of loop
 				else
 					if not l_table.valid_index (l_old_dtype) then
 						l_table := l_table.resized_area ((l_old_dtype + 1).max (l_table.count * 2))
-						attributes_mapping := attributes_mapping.resized_area (l_table.count)
 					end
 					l_table.put (l_new_dtype, l_old_dtype)
 				end
@@ -101,12 +100,11 @@ feature {NONE} -- Implementation
 						-- in current system.
 					l_new_dtype := l_int.dynamic_type_from_string (l_deser.read_string_8)
 					if l_new_dtype = -1 then
-						has_error := True
+						set_has_error
 						i := nb - 1 -- Jump out of loop
 					else
 						if not l_table.valid_index (l_old_dtype) then
 							l_table := l_table.resized_area ((l_old_dtype + 1).max (l_table.count * 2))
-							attributes_mapping := attributes_mapping.resized_area (l_table.count)
 						end
 						l_table.put (l_new_dtype, l_old_dtype)
 					end
@@ -177,18 +175,22 @@ feature {NONE} -- Implementation
 				l_map.search (l_name)
 				if l_map.found then
 					if l_map.found_item.integer_32_item (2) /= l_dtype then
-						has_error := True
+						set_has_error
 						i := nb - 1 -- Jump out of loop
 					else
 						l_mapping.put (l_map.found_item.integer_32_item (1), i)
 					end
 				else
-					has_error := True
+					set_has_error
 					i := nb	- 1 -- Jump out of loop
 				end
 				i := i + 1
 			end
 			if not has_error then
+				if not attributes_mapping.valid_index (a_dtype) then
+					attributes_mapping := attributes_mapping.resized_area ((a_dtype + 1).max (
+						attributes_mapping.count * 2))
+				end
 				attributes_mapping.put (l_mapping, a_dtype)
 			end
 		end

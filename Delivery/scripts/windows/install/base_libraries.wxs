@@ -744,7 +744,11 @@
 						<Directory Id="kernel" Name="kernel">
 							<Component Id="kernel" Guid="2FEF5439-326D-499C-9E2C-44EA40A4F414">
 								<File Id="abstract_special_e" Name="ABSTRA~1.E" LongName="abstract_special.e" />
+								<File Id="array.e" Name="array.e" />
+								<File Id="boolean_ref_e" Name="BOOLEA~1.E" LongName="boolean_ref.e" />
+								<File Id="character_ref_e" Name="CHARAC~2.E" LongName="character_ref.e" />
 								<File Id="comparable.e" Name="COMPAR~1.E" LongName="comparable.e" />
+								<File Id="declarator.e" Name="DECLAR~1.E" LongName="declarator.e" />
 								<File Id="excep_const.e" Name="EXCEP_~1.E" LongName="excep_const.e" />
 								<File Id="hashable.e" Name="hashable.e" />
 								<File Id="integer_8.e" Name="INTEGE~1.E" LongName="integer_8.e" />
@@ -770,7 +774,9 @@
 								<File Id="part_comparable.e" Name="PART_C~1.E" LongName="part_comparable.e" />
 								<File Id="seq_string.e" Name="SEQ_ST~1.E" LongName="seq_string.e" />
 								<File Id="std_files.e" Name="STD_FI~1.E" LongName="std_files.e" />
+								<File Id="string.e" Name="string.e" />
 								<File Id="string_handler.e" Name="STRING~1.E" LongName="string_handler.e" />
+								<File Id="string_searcher_e" Name="STRING~2.E" LongName="string_searcher.e" />
 								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
 								<File Id="typed_pointer_e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
 							</Component>
@@ -786,8 +792,6 @@
 									<File Id="plain_text_file.e" Name="PLAIN_~1.E" LongName="plain_text_file.e" />
 									<File Id="pointer.e" Name="pointer.e" />
 									<File Id="function.e" Name="function.e" />
-									<File Id="character_ref.e" Name="CHARAC~2.E" LongName="character_ref.e" />
-									<File Id="boolean_ref.e" Name="BOOLEA~1.E" LongName="boolean_ref.e" />
 									<File Id="arguments.e" Name="ARGUME~1.E" LongName="arguments.e" />
 									<File Id="tuple.e" Name="tuple.e" />
 									<File Id="memory.e" Name="memory.e" />
@@ -796,18 +800,15 @@
 									<File Id="console.e" Name="console.e" />
 									<File Id="stream.e" Name="stream.e" />
 									<File Id="double.e" Name="double.e" />
-									<File Id="declarator.e" Name="DECLAR~1.E" LongName="declarator.e" />
 									<File Id="bit_ref.e" Name="bit_ref.e" />
 									<File Id="wide_character_ref.e" Name="WIDE_C~2.E" LongName="wide_character_ref.e" />
 									<File Id="directory_name.e" Name="DIRECT~2.E" LongName="directory_name.e" />
-									<File Id="string.e" Name="string.e" />
 									<File Id="storable.e" Name="storable.e" />
 									<File Id="mem_info.e" Name="mem_info.e" />
 									<File Id="file.e" Name="file.e" />
 									<File Id="character.e" Name="CHARAC~1.E" LongName="character.e" />
 									<File Id="boolean.e" Name="boolean.e" />
 									<File Id="basic_routines.e" Name="BASIC_~1.E" LongName="basic_routines.e" />
-									<File Id="array.e" Name="array.e" />
 									<File Id="real_ref.e" Name="real_ref.e" />
 									<File Id="wide_character.e" Name="WIDE_C~1.E" LongName="wide_character.e" />
 									<File Id="unix_file_info.e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
@@ -825,6 +826,8 @@
 									<File Id="routine.e" Name="routine.e" />
 									<File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
 									<File Id="type_e" Name="type.e" />
+									<File Id="native_array_e" Name="NATIVE~1.E" LongName="native_array.e" />
+									<File Id="system_string_e" Name="SYSTEM~1.E" LongName="system_string.e" />
 								</Component>
 							</Directory>
 						</Directory>

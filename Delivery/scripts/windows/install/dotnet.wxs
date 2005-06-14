@@ -106,10 +106,8 @@
 									<File Id="file_name.e" Name="FILE_N~1.E" LongName="file_name.e" />
 									<File Id="storable.e" Name="storable.e" />
 									<File Id="native_array.e" Name="NATIVE~1.E" LongName="native_array.e" />
-									<File Id="array.e" Name="array.e" />
 									<File Id="real_ref.e" Name="real_ref.e" />
 									<File Id="pointer.e" Name="pointer.e" />
-									<File Id="declarator.e" Name="DECLAR~1.E" LongName="declarator.e" />
 									<File Id="console.e" Name="console.e" />
 									<File Id="unix_signals.e" Name="UNIX_S~1.E" LongName="unix_signals.e" />
 									<File Id="plain_text_file.e" Name="PLAIN_~1.E" LongName="plain_text_file.e" />
@@ -126,7 +124,6 @@
 									<File Id="pointer_ref.e" Name="POINTE~1.E" LongName="pointer_ref.e" />
 									<File Id="cli_cell.e" Name="cli_cell.e" />
 									<File Id="special.e" Name="special.e" />
-									<File Id="character_ref.e" Name="CHARAC~2.E" LongName="character_ref.e" />
 									<File Id="basic_routines.e" Name="BASIC_~1.E" LongName="basic_routines.e" />
 									<File Id="unix_file_info.e" Name="UNIX_F~1.E" LongName="unix_file_info.e" />
 									<File Id="stream.e" Name="stream.e" />
@@ -134,10 +131,8 @@
 									<File Id="function.e" Name="function.e" />
 									<File Id="character.e" Name="CHARAC~1.E" LongName="character.e" />
 									<File Id="tuple.e" Name="tuple.e" />
-									<File Id="boolean_ref.e" Name="BOOLEA~1.E" LongName="boolean_ref.e" />
 									<File Id="any.e" Name="any.e" />
 									<File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
-									<File Id="string.e1" Name="string.e" />
 									<File Id="dotnet_pointer.e" Name="DO5684~1.E" LongName="dotnet_pointer.e" />
 									<File Id="dotnet_integer_8.e" Name="DO0D19~1.E" LongName="dotnet_integer_8.e" />
 									<File Id="dotnet_integer_16.e" Name="DOAC1F~1.E" LongName="dotnet_integer_16.e" />

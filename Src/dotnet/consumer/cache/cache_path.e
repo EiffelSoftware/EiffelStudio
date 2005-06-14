@@ -76,40 +76,34 @@ feature {CACHE_READER} -- Access
 			non_void_path: Result /= Void
 		end
 
-	relative_type_path (a_assembly: CONSUMED_ASSEMBLY; a_type_index: INTEGER): STRING is
+	relative_type_path (a_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
 			-- Always return a value even if `a_type' in not in EAC
 		require
 			a_assembly_not_void: a_assembly /= Void
-			a_type_index_positive: a_type_index > 0
 		local
 			l_path: STRING
-			l_type: STRING
 		do
 			l_path := relative_assembly_path_from_consumed_assembly (a_assembly)
-			l_type := a_type_index.out
-			create Result.make (l_path.count + classes_path.count + l_type.count + 4)
+			create Result.make (l_path.count + classes_file_name.count)
 			Result.append (l_path)
-			Result.append (classes_path)
-			Result.append (l_type)
-			Result.append (".xml")
+			Result.append (classes_file_name)
 		ensure
 			non_void_path: Result /= Void
 			ends_with_xml_extension: Result.substring_index (".xml", Result.count - 4) = Result.count - 3
 		end
 
-	absolute_type_path (a_assembly: CONSUMED_ASSEMBLY; a_type_index: INTEGER): STRING is
+	absolute_type_path (a_assembly: CONSUMED_ASSEMBLY): STRING is
 			-- Path to file describing `a_type' from `a_assembly' relative to `Eac_path'
 			-- Always return a value even if `a_type' in not in EAC
 		require
 			a_assembly_not_void: a_assembly /= Void
-			a_type_index_positive: a_type_index > 0
 			clr_version_not_void: clr_version /= Void
 			not_clr_version_empty: not clr_version.is_empty
 		local
 			relative_path: STRING
 		do
-			relative_path := relative_type_path (a_assembly, a_type_index)
+			relative_path := relative_type_path (a_assembly)
 			create Result.make (eiffel_assembly_cache_path.count + relative_path.count + 1)
 			Result.append (eiffel_assembly_cache_path)
 			Result.append (relative_path)
@@ -118,7 +112,7 @@ feature {CACHE_READER} -- Access
 			ends_with_xml_extension: Result.substring_index (".xml", Result.count - 4) = Result.count - 3
 		end
 
-	info_path: STRING is "info.xml"
+	eac_info_file_name: STRING is "eac.info"
 			-- Path to EAC info file relative to `Eac_path'.
 
 	eiffel_assembly_cache_path: STRING is
@@ -192,10 +186,10 @@ feature {CACHE_READER} -- Access
 		require
 			non_void_clr_version: clr_version /= Void
 		once
-			create Result.make (eiffel_assembly_cache_path.count + info_path.count + 1)
+			create Result.make (eiffel_assembly_cache_path.count + eac_info_file_name.count + 1)
 			Result.append (eiffel_assembly_cache_path)
 			Result.append (relative_executing_env_path)
-			Result.append (info_path)
+			Result.append (eac_info_file_name)
 		ensure
 			non_void_result: Result /= Void
 			valid_result: not Result.is_empty

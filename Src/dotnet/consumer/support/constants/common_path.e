@@ -8,13 +8,13 @@ class
 
 feature -- Access
 
-	Classes_path: STRING is "classes\"
+	Classes_file_name: STRING is "classes.info"
 			-- Path to XML files from assembly directory
 
-	Assembly_types_file_name: STRING is "types.xml"
+	Assembly_types_file_name: STRING is "types.info"
 			-- File which lists all types in assembly
 
-	Assembly_mapping_file_name: STRING is "referenced_assemblies.xml"
+	Assembly_mapping_file_name: STRING is "referenced_assemblies.info"
 			-- File which lists referenced assemblies with corresponding ids
 
 end -- class COMMON_PATH

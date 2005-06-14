@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			dotnet_name: STRING
 			parent_name: SYSTEM_STRING
 			inter: NATIVE_ARRAY [SYSTEM_TYPE]
-			interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
+			interfaces: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE]
 			parent: CONSUMED_REFERENCED_TYPE
 			i, nb, count: INTEGER
 			parent_type: SYSTEM_TYPE
@@ -49,27 +49,16 @@ feature {NONE} -- Initialization
 				inter := t.get_interfaces
 				i := 0
 				nb := inter.count - 1
-				create interfaces.make (1, nb + 1)
+				create interfaces.make (nb + 1)
 		 	until
 				i > nb
 			loop
 				parent_type := inter.item (i)
 				if is_consumed_type (parent_type) then
 					count := count + 1
-					interfaces.force (referenced_type_from_type (parent_type), count)
+					interfaces.extend (referenced_type_from_type (parent_type))
 				end
 				i := i + 1
-			end
-
-			if count <= nb then
-					-- Resize array only if needed. To ensure that it contains
-					-- no void element in case no interfaces were added to it
-					-- in the above loop.
-				if count > 0 then
-					interfaces := interfaces.subarray (1, count)
-				else
-					create interfaces.make (1, 0)
-				end
 			end
 
 			if t.is_nested_public or t.is_nested_family or t.is_nested_fam_or_assem then
@@ -556,7 +545,7 @@ feature {NONE} -- Implementation
 		end
 		
 	solved_constructors (
-			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAY [CONSUMED_CONSTRUCTOR]
+			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 		is
 			-- Initialize `constructors' from `tc'.
 		require
@@ -567,14 +556,14 @@ feature {NONE} -- Implementation
 			args: ARRAY [CONSUMED_ARGUMENT]
 			l_reserved: like reserved_names
 		do
-			create Result.make (1, tc.count)
+			create Result.make (tc.count)
 			if tc.count > 0 then
 				tc.start
 				if tc.count = 1 then
 						-- When there is only one constructor, let's call it make
 						-- to avoid confusion.
 					tc.item.set_name (Creation_routine_name)
-					Result.put (tc.item.consumed_constructor, 1)
+					Result.extend (tc.item.consumed_constructor)
 				else
 						-- Compute all possible names for constructor.
 					from
@@ -583,7 +572,7 @@ feature {NONE} -- Implementation
 						args := tc.item.arguments
 						if args.count = 0 then
 							tc.item.set_name (Creation_routine_name)
-							Result.put (tc.item.consumed_constructor, 1)
+							Result.extend (tc.item.consumed_constructor)
 							j := 2
 							tc.forth
 						else
@@ -609,7 +598,7 @@ feature {NONE} -- Implementation
 						end
 						name := unique_feature_name (name)
 						tc.item.set_name (name)
-						Result.put (tc.item.consumed_constructor, j)
+						Result.extend (tc.item.consumed_constructor)
 						j := j + 1
 						tc.forth
 					end
@@ -636,7 +625,7 @@ feature {NONE} -- Implementation
 						end
 						name := unique_feature_name (name)
 						tc.item.set_name (name)
-						Result.put (tc.item.consumed_constructor, j)
+						Result.extend (tc.item.consumed_constructor)
 						j := j + 1
 						tc.forth
 					end

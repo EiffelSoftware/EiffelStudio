@@ -76,10 +76,10 @@ feature -- Access
 			non_void_assembly: a_assembly /= Void
 			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
 		local
-			des: EIFFEL_XML_DESERIALIZER
+			des: EIFFEL_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + assembly_types_file_name, True)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + assembly_types_file_name, 0)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void
@@ -93,15 +93,15 @@ feature -- Access
 			a_type_not_void: a_type /= Void
 			not_a_type_empty: not a_type.is_empty
 		local
-			l_des: EIFFEL_XML_DESERIALIZER
+			l_des: EIFFEL_DESERIALIZER
 			l_type_path: STRING
-			i: INTEGER
+			l_pos: INTEGER
 		do
-			i := type_index_from_type_name (a_assembly, a_type)
-			if i > 0 then
+			l_pos := type_position_from_type_name (a_assembly, a_type)
+			if l_pos >= 0 then
 				create l_des
-				l_type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_path + i.out + ".xml"			
-				l_des.deserialize (l_type_path, True)
+				l_type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_file_name			
+				l_des.deserialize (l_type_path, l_pos)
 				Result ?= l_des.deserialized_object
 			end
 		ensure
@@ -138,10 +138,10 @@ feature -- Access
 			non_void_assembly: a_assembly /= Void
 			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
 		local
-			des: EIFFEL_XML_DESERIALIZER
+			des: EIFFEL_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name, True)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name, 0)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void
@@ -153,16 +153,16 @@ feature -- Access
 			a_type_not_void: a_type /= Void
 			a_type_is_in_cache: is_type_in_cache (a_type)
 		local
-			l_des: EIFFEL_XML_DESERIALIZER
+			l_des: EIFFEL_DESERIALIZER
 			l_ca: CONSUMED_ASSEMBLY
-			i: INTEGER
+			l_pos: INTEGER
 		do
-			i := type_index_from_type (a_type)
-			if i > 0 then
+			l_pos := type_position_from_type (a_type)
+			if l_pos >= 0 then
 				l_ca := consumed_assembly_from_path (a_type.assembly.location)
 				if l_ca /= Void then
 					create l_des
-					l_des.deserialize (absolute_type_path (l_ca, i), True)
+					l_des.deserialize (absolute_type_path (l_ca), l_pos)
 					Result ?= l_des.deserialized_object					
 				end				
 			end
@@ -223,13 +223,13 @@ feature -- Status Report
 		local
 			l_ca: CONSUMED_ASSEMBLY
 			l_type_path: STRING
-			i: INTEGER			
+			l_pos: INTEGER			
 		do
-			i := type_index_from_type (a_type)
-			if i > 0 then
+			l_pos := type_position_from_type (a_type)
+			if l_pos >= 0 then
 				l_ca := consumed_assembly_from_path (a_type.assembly.location)
 				if l_ca /= Void then
-					l_type_path := absolute_type_path (l_ca, i)
+					l_type_path := absolute_type_path (l_ca)
 					if l_type_path /= Void and not l_type_path.is_empty then
 						Result := (create {RAW_FILE}.make (l_type_path)).exists	
 					end			
@@ -244,14 +244,14 @@ feature {CACHE_WRITER} -- Implementation
 		require
 			non_void_clr_version: clr_version /= Void
 		local
-			des: EIFFEL_XML_DESERIALIZER
+			des: EIFFEL_DESERIALIZER
 			l_ci: CACHE_INFO
 		do
 			guard.lock
 			if internal_info.item = Void then
 				if is_initialized then
 					create des
-					des.deserialize (Absolute_info_path, True)
+					des.deserialize (Absolute_info_path, 0)
 					if des.successful then
 						l_ci ?= des.deserialized_object
 						if l_ci /= Void then
@@ -262,7 +262,7 @@ feature {CACHE_WRITER} -- Implementation
 				if internal_info.item = Void then
 						-- cache info is not initalized or is outdated
 					internal_info.put (create {CACHE_INFO}.make)
-					(create {EIFFEL_XML_SERIALIZER}).serialize (internal_info.item, absolute_info_path)
+					(create {EIFFEL_SERIALIZER}).serialize (internal_info.item, absolute_info_path, False)
 				end
 			end
 			Result := internal_info.item
@@ -279,8 +279,9 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-	type_index_from_type (a_type: SYSTEM_TYPE): INTEGER is
-			-- retrieve type index from `a_type' in `a_assembly'
+	type_position_from_type (a_type: SYSTEM_TYPE): INTEGER is
+			-- retrieve type position from `a_type' in `a_assembly'.
+			-- `-1' if not found.
 		require
 			a_type_not_void: a_type /= Void
 		local
@@ -288,14 +289,17 @@ feature {NONE} -- Implementation
 		do
 			l_ca := consumed_assembly_from_path (a_type.assembly.location)
 			if l_ca /= Void then
-				Result := type_index_from_type_name	(l_ca, a_type.full_name)
+				Result := type_position_from_type_name (l_ca, a_type.full_name)
+			else
+				Result := -1
 			end
 		ensure
-			result_is_positive: Result > 0
+			valid_result: Result =-1 or Result >= 0
 		end
 
-	type_index_from_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): INTEGER is
-			-- retrieve type index from `a_type' in `a_assembly'
+	type_position_from_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): INTEGER is
+			-- retrieve type position from `a_type' in `a_assembly'.
+			-- `-1' if not found.
 		require
 			a_assembly_not_void: a_assembly /= Void
 			a_type_not_void: a_type /= Void
@@ -305,23 +309,24 @@ feature {NONE} -- Implementation
 			i: INTEGER
 		do
 			l_types := assembly_types (a_assembly)
+			Result := -1
 			if l_types /= Void then
 				from
 					i := 1
 				until
-					i > l_types.index
-					or else Result > 0
+					i > l_types.count
+					or else Result >= 0
 					or else l_types.dotnet_names @ i = Void
 				loop
 					if (l_types.dotnet_names @ i).is_equal (a_type) then
-						Result := i
+						Result := l_types.positions.item (i)
 					else
 						i := i + 1
 					end
 				end
 			end
 		ensure
-			result_is_positive: Result > 0
+			valid_result: Result =-1 or Result >= 0
 		end
 
 end -- class CACHE_READER

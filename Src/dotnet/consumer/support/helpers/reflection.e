@@ -100,6 +100,9 @@ feature -- Status Report
 					Result := is_cls_compliant_type (l_mi.return_type)
 				end					
 			end
+			if Result then
+				Result := is_cls_compliant_type (m.declaring_type)
+			end
 		end
 
 	is_consumed_field (f: FIELD_INFO): BOOLEAN is
@@ -131,6 +134,9 @@ feature -- Status Report
 					end
 				end
 			end
+			if Result then
+				Result := is_cls_compliant_type (f.declaring_type)
+			end
 		end
 		
 	is_valid_literal_field (f: FIELD_INFO): BOOLEAN is
@@ -149,7 +155,6 @@ feature -- Status Report
 		local
 			l_cls: like cls_compliant_status
 			l_obj: SYSTEM_OBJECT
-			l_name: SYSTEM_STRING
 		do
 			l_cls := cls_compliant_status
 			l_obj := l_cls.item (a_type)
@@ -161,21 +166,25 @@ feature -- Status Report
 						Result := is_cls_compliant_type (a_type.get_element_type)
 					else
 							-- Compliant if is has the custom attribute set to True, or none.
-						Result := is_cls_compliant (a_type)
-						if Result then
-								-- Let's check now that it has a valid name and that it does not
-								-- contain `[' which is specific to generic types which we don't
-								-- support yet.
-							l_name := a_type.to_string
-							Result := l_name /= Void and then l_name.length > 0 and then
-								l_name.index_of ('[') = -1
-						end
+						Result := is_cls_compliant (a_type) and not is_cls_generic_type (a_type)
 					end
 				end
 				l_cls.set_item (a_type, Result)
 			end
 		end
 
+	is_cls_generic_type (a_type: SYSTEM_TYPE): BOOLEAN is
+			--
+		local
+			l_name: SYSTEM_STRING
+		do
+				-- If `a_type.full_name' is Void, it means it is a formal generic parameter.
+				-- We consider this case and the case where the string contains ``'
+				-- as generic type.
+			l_name := a_type.full_name
+			Result := l_name = Void or else l_name.index_of ('`') >= 0
+		end
+		
 	is_cls_compliant (member: MEMBER_INFO): BOOLEAN is
 			-- 	Is `member' CLS compliant?
 		local
@@ -207,4 +216,5 @@ feature {NONE} -- Implementation
 		ensure
 			cls_compliant_status_not_void: Result /= Void
 		end
+
 end -- class REFLECTION

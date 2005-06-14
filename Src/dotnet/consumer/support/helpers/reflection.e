@@ -166,7 +166,7 @@ feature -- Status Report
 								-- Let's check now that it has a valid name and that it does not
 								-- contain `[' which is specific to generic types which we don't
 								-- support yet.
-							l_name := a_type.full_name
+							l_name := a_type.to_string
 							Result := l_name /= Void and then l_name.length > 0 and then
 								l_name.index_of ('[') = -1
 						end

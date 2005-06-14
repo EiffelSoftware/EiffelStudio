@@ -887,8 +887,8 @@ feature {EV_ANY_I} -- Implementation
 							-- perform the pebble query the first time, before the
 							-- transport has started.
 						if application_imp.pick_and_drop_source = Void then
-						widget_imp.call_pebble_function (wel_point.x - widget_imp.screen_x,
-							wel_point.y - widget_imp.screen_y, wel_point.x, wel_point.y)
+							widget_imp.call_pebble_function (wel_point.x - widget_imp.screen_x,
+								wel_point.y - widget_imp.screen_y, wel_point.x, wel_point.y)
 						end
 						if widget_imp.pebble /= Void then
 							Result := widget_imp

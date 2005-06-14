@@ -226,6 +226,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			font_imp: EV_FONT_IMP
 			theme_drawer: EV_THEME_DRAWER_IMP
 			bk_brush: WEL_BRUSH
+			color_imp: EV_COLOR_IMP
 		do
 			theme_drawer := application_imp.theme_drawer
 			create bk_brush.make_solid (wel_background_color)
@@ -271,9 +272,11 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 				
 					-- Draw the text
 				draw_dc.select_font (draw_font)
+				color_imp ?= foreground_color.implementation
+				draw_dc.set_text_color (color_imp)
 				if not is_sensitive then
 					-- Label is disabled
-					draw_dc.draw_disabled_text (internal_text, draw_rect, 
+					draw_dc.draw_disabled_text (internal_text, draw_rect,
 						draw_flags)
 				else
 					-- Label is NOT disabled

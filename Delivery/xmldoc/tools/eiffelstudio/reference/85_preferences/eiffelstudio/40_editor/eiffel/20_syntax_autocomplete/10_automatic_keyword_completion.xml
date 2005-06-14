@@ -6,7 +6,7 @@
 		<heading>
 			<size>2</size>Description
 		</heading>
-		<paragraph>Keywords completion preferences can be found in the subdirectories of "Automatic completion" (located in "Tools" -&gt;"Editor"). Keywords are located in subdirectories as described below :</paragraph>
+		<paragraph>Keywords completion preferences can be found in the subdirectories of "Automatic completion" (located in "Editor" -&gt;"Eiffel"). Keywords are located in subdirectories as described below :</paragraph>
 		<list ordered="false">
 			<item>Class structure keywords:
 				<list ordered="false">

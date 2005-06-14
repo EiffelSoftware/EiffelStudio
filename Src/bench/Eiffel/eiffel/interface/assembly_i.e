@@ -237,7 +237,7 @@ feature -- Initialization
 			-- Given current assembly description, found all
 			-- available classes and initializes `classes'.
 		local
-			l_reader: EIFFEL_XML_DESERIALIZER
+			l_reader: EIFFEL_DESERIALIZER
 			l_env: EIFFEL_ENV
 			l_assembly_location: PATH_NAME
 			l_path: STRING
@@ -259,11 +259,13 @@ feature -- Initialization
 				-- we raise an error.
 			create l_types_file.make_from_string (path)
 			l_types_file.set_file_name (type_list_file_name)
-			l_types ?= l_reader.new_object_from_file (l_types_file)
+			l_reader.deserialize (l_types_file, 0)
+			l_types ?= l_reader.deserialized_object
 
 			create l_reference_file.make_from_string (path)
 			l_reference_file.set_file_name (referenced_assemblies_file_name)
-			l_referenced_assemblies ?= l_reader.new_object_from_file (l_reference_file)
+			l_reader.deserialize (l_reference_file, 0)
+			l_referenced_assemblies ?= l_reader.deserialized_object
 
 			if l_types = Void or l_referenced_assemblies = Void then
 					-- Raise an error and stop processing as we cannot continue
@@ -274,8 +276,10 @@ feature -- Initialization
 				else
 						-- Let's try to import it and see if it works this time
 					initialize_from_assembly
-					l_types ?= l_reader.new_object_from_file (l_types_file)
-					l_referenced_assemblies ?= l_reader.new_object_from_file (l_reference_file)
+					l_reader.deserialize (l_types_file, 0)
+					l_types ?= l_reader.deserialized_object
+					l_reader.deserialize (l_reference_file, 0)
+					l_referenced_assemblies ?= l_reader.deserialized_object
 					if l_types = Void or l_referenced_assemblies = Void then
 						Error_handler.insert_error (create {VD61}.make (Current))	
 						Error_handler.raise_error
@@ -298,10 +302,7 @@ feature -- Initialization
 							l_class_name.prepend (prefix_name)
 						end
 						l_external_name := l_types.dotnet_names.item (i)
-						create l_path.make (10)
-						l_path.append_integer (i)
-						l_path.append (xml_extension)
-						create l_class.make (Current, l_class_name, l_external_name, l_path)
+						create l_class.make (Current, l_class_name, l_external_name, l_types.positions.item (i))
 						if not l_class.exists then
 							Error_handler.insert_error (create {VD62}.make (Current, l_class))
 						end
@@ -532,11 +533,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	type_list_file_name: STRING is "types.xml"
-	xml_extension: STRING is ".xml"
-	neutral_string: STRING is "neutral"
+	type_list_file_name: STRING is "types.info"
 	null_key_string: STRING is "null"
-	referenced_assemblies_file_name: STRING is "referenced_assemblies.xml"
+	referenced_assemblies_file_name: STRING is "referenced_assemblies.info"
 			-- String constants specific to layout of EAC.
 
 feature {NONE} -- Type anchors

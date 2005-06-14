@@ -39,7 +39,7 @@ feature -- Commands
 	show_preferences_window (a_window: EV_WINDOW) is
 			-- 
 		local
-			window: PREFERENCES_GRID_WINDOW
+			window: PREFERENCES_WINDOW
 		do
 			create window.make (preferences, application_window)
 			window.show

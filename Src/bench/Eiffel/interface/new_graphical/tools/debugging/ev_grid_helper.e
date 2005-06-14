@@ -224,13 +224,16 @@ feature -- Access
 			r: EV_GRID_ROW
 			g: EV_GRID
 		do
-			from
-				g := a_row.parent
-			until
-				a_row.subrow_count = 0
-			loop
-				r := a_row.subrow (1)
-				g.remove_row (r.index)
+			g := a_row.parent
+			if g /= Void then
+				from
+	
+				until
+					a_row.subrow_count = 0
+				loop
+					r := a_row.subrow (1)
+					g.remove_row (r.index)
+				end				
 			end
 		ensure
 			a_row.subrow_count = 0
@@ -241,15 +244,16 @@ feature -- Access
 		require
 			g /= Void
 		do
+			g.remove_selection
 			from
 			until
 				g.row_count = 0
 			loop
 				g.remove_row (1)
 			end
---			g.set_virtual_position (0,0)
 		ensure
 			g.row_count = 0
+			g.selected_rows.count = 0
 		end
 
 

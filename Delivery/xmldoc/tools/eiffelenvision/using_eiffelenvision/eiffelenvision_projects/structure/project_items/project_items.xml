@@ -16,7 +16,7 @@
 	<paragraph>
 		<paragraph>
 			The <bold>Project Items</bold> folder (<image>
-				<url>../../../images/icons/project_items.ico</url>
+				<url>../../../../images/icons/project_items.ico</url>
 			</image>) represents your project and all of it's project files, nothing more. It's purpose is to contain all project specific file items under one group, just as the <link><url>../eiffel_libraries/index.xml</url><label>Eiffel Libraries</label></link> folder purpose is to contain Eiffel libraries you would like to reuse from your project. 
 		</paragraph>
 		<paragraph>

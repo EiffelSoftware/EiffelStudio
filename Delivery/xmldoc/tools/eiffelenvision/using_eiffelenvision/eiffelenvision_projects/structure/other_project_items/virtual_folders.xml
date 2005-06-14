@@ -37,6 +37,8 @@
 			<line_break/>
 			<link><url>index.xml</url><label>Other Project Items</label></link>
 			<line_break/>
+			<link><url>../../configuring/project_configuration/item_configuration/other_project_items.xml</url><label>Other Project Items Properties</label></link>
+			<line_break/>
 			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
 			<line_break/>
 			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>

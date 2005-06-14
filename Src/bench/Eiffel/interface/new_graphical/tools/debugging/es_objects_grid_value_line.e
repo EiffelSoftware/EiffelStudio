@@ -15,7 +15,8 @@ inherit
 			set_data as set_object
 		redefine
 			object,
-			reset_special_attributes_values
+			reset_special_attributes_values,
+			recycle
 		end
 
 create
@@ -47,6 +48,16 @@ feature {NONE}
 			set_object (dv)
 		end
 
+feature -- Recycling
+
+	recycle is
+			-- Recycle data
+			-- in order to free special data (for instance dotnet references)
+		do
+			Precursor
+			object := Void
+		end
+		
 feature -- Properties
 
 	object: ABSTRACT_DEBUG_VALUE

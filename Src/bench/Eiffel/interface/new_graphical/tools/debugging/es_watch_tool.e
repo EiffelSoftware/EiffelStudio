@@ -361,6 +361,8 @@ feature -- Memory management
 				explorer_bar_item.recycle
 			end
 			recycle_expressions
+			watches_grid.remove_all_rows
+			watches_grid.clear
 		end
 
 	recycle_expressions is
@@ -372,7 +374,7 @@ feature -- Memory management
 				watched_items.after
 			loop
 				check watched_items.item.expression /= Void	end
-				watched_items.item.expression.recycle
+				watched_items.item.recycle
 				watched_items.forth
 			end
 		end

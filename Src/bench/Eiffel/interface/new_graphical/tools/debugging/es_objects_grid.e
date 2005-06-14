@@ -257,7 +257,7 @@ end
 				obj_item ?= a_row.data
 				if obj_item /= Void then
 					if not obj_item.compute_grid_display_done then
-						obj_item.compute_grid_display
+						Result := obj_item.computed_grid_item (c)
 -- We don't return the item, since they have already been added to the grid ...
 --						if 0 < c and c <= a_row.count then
 --							Result := a_row.item (c)

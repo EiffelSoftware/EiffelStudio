@@ -57,6 +57,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	DEBUG_OUTPUT
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -71,6 +76,42 @@ feature {NONE} -- Initialization
 			set_object_spec_slices (min_slice_ref.item, max_slice_ref.item)
 
 			tool := ot
+		end
+		
+feature -- Recycling
+
+	debug_output: STRING is
+		do
+			Result := generating_type
+			if object_name /= Void then
+				Result.append_string (" name=[" + object_name + "] ")
+			end
+		end
+
+	recycle is
+			-- Recycle data
+			-- in order to free special data (for instance dotnet references)
+		do
+			unattach
+			if attributes_row /= Void then
+				attributes_row.set_data (Void)
+				if attributes_row.parent /= Void then
+					attributes_row.clear
+				end
+				attributes_row := Void
+			end
+			if onces_row /= Void then
+				onces_row.set_data (Void)
+				if onces_row.parent /= Void then
+					onces_row.clear
+				end
+				onces_row := Void
+			end
+			
+			last_dump_value := Void
+			internal_object_stone := Void
+			internal_object_stone_accept_cursor := Void
+			internal_object_stone_deny_cursor := Void
 		end
 
 feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
@@ -362,6 +403,18 @@ feature -- Graphical changes
 			-- Reset value of `compute_grid_display_done'
 		do
 			compute_grid_display_done := False
+		end
+		
+	computed_grid_item (c: INTEGER): EV_GRID_ITEM is
+		do
+			if not compute_grid_display_done then
+				compute_grid_display
+			end
+			if row /= Void and then c <= row.count then
+				Result := row.item (c)
+			end
+		ensure
+			Result /= Void
 		end
 
 	compute_grid_display is

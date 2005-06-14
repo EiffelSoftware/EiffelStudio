@@ -14,7 +14,8 @@ inherit
 			data as object_address,
 			set_data as set_object_address
 		redefine
-			object_address
+			object_address,
+			recycle
 		end
 
 create
@@ -53,8 +54,15 @@ feature {NONE}
 			make_with_address (dumpvalue.address, dumpvalue.dynamic_class, ot)
 		end
 
-feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
+feature -- Recycling
 
+	recycle is
+			-- Recycle data
+			-- in order to free special data (for instance dotnet references)
+		do
+			Precursor
+			internal_associated_debug_value := Void
+		end
 
 feature -- Properties
 

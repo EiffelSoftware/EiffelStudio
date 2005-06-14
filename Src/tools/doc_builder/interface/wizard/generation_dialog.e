@@ -324,7 +324,7 @@ feature {NONE} -- Implementation
 					l_html_dir.create_dir
 					
 						-- For [HTML -> Help] put Help into intermediate directory					
-					create l_toc_dir.make (shared_constants.application_constants.temporary_help_directory)
+					create l_toc_dir.make (shared_constants.application_constants.temporary_html_directory)
 					if l_toc_dir.exists then
 						l_toc_dir.recursive_delete
 					end

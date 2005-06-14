@@ -461,16 +461,17 @@ feature {NONE} -- Implementation
 		require
 			is_escaped: is_escaped (a_char)
 		do
-			if a_char = lt_char.code then
-				Result := lt_entity
-			elseif a_char = gt_char.code then
-				Result := gt_entity
-			elseif a_char = amp_char.code then
-				Result := amp_entity
-			elseif a_char = quot_char.code then
-				Result := quot_entity
+			if a_char = Lt_char.code then
+				Result := Lt_entity
+			elseif a_char = Gt_char.code then
+				Result := Gt_entity
+			elseif a_char = Amp_char.code then
+				Result := Amp_entity
+			elseif a_char = Quot_char.code then
+				Result := Quot_entity
 			else
-				Result := "&#" + a_char.out + ";"
+				Result := STRING_.concat ("&#", a_char.out)
+				Result := STRING_.concat (Result, ";")
 			end
 		end
 
@@ -478,6 +479,14 @@ feature {NONE} -- Implementation
 			-- Formatter for pretty XML
 		once
 			create Result
+		end
+
+	STRING_: KL_STRING_ROUTINES is
+			-- Routines that ought to be in class STRING
+		once
+			create Result
+		ensure
+			string_routines_not_void: Result /= Void
 		end
 
 end -- class XML_ROUTINES

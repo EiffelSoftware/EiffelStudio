@@ -56,9 +56,22 @@ feature {NONE} -- Implementation
 
 	okay is
 			-- Okay pressed
+		local
+			l_qdlg: EV_QUESTION_DIALOG
 		do
-			hide
-			sort_toc			
+			create l_qdlg.make_with_text ("To ensure accurate toc generation all project files%Nmust be both XML and schema valid.%N%
+				%Would you like to validate the project files first?")
+			l_qdlg.show_modal_to_window (application_window)
+			if l_qdlg.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_yes) then
+				shared_project.validate_files
+				if not shared_project.has_invalid_files then
+					hide
+					sort_toc
+				end
+			else
+				hide
+				sort_toc
+			end
 		end		
 
 	sort_toc is

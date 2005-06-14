@@ -32,22 +32,13 @@ feature -- Actions
 --			shared_document_editor.text_displayed.highlight_line (a_line_no)
 --			shared_document_editor.set_focus
 		end
-		
+
 	load_file_in_editor (a_filename: STRING) is
 			-- Load file in editor
 		require
 			filename_not_void: a_filename /= Void
 		do
 			Shared_document_manager.load_document_from_file (a_filename)
-		end
-
-	search_for_error_text (a_text: STRING) is
-			-- Search for error text
-		require
-			text_not_void: a_text /= Void
-		do
-			shared_dialogs.search_dialog.search_text.set_text (a_text)
-			shared_dialogs.search_dialog.search
 		end
 
 end -- class ERROR_ACTIONS

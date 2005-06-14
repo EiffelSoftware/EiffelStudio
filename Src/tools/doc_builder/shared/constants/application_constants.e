@@ -274,6 +274,12 @@ feature -- Table of Contents Preferences
 			create Result.make (10)
 			Result.compare_objects
 			Result.extend ("base")
+			Result.extend ("lex")
+			Result.extend ("net")
+			Result.extend ("parse")
+			Result.extend ("store")
+			Result.extend ("thread")
+			Result.extend ("time")
 			Result.extend ("wel")
 			Result.extend ("vision2")
 		end	
@@ -367,6 +373,7 @@ feature -- Access
 			Result.extend ("jpg")
 			Result.extend ("css")
 			Result.extend ("js")
+			Result.extend ("ico")
 			Result.extend ("bmp")
 		end	
 

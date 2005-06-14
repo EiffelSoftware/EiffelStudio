@@ -47,23 +47,10 @@ feature {NONE} -- Initialization
 			-- can be added here.	
 		do			
 				-- Browser
-			setup_browser
-			
-				-- Events
-			address_bar.key_press_actions.extend (agent address_key_pressed (?))
-			address_bar.select_actions.extend (agent lookup_url (?))
-		end	
-
-	setup_browser is
-			-- Setup the browser
-		do
 			create browser_winform_container
 			browser_winform_container.extend (Internal_browser)
 			browser_container.extend (browser_winform_container)
-			
-					-- Events
-			refresh_button.select_actions.extend (agent refresh)			
-		end	
+		end
 
 feature -- Commands
 
@@ -72,18 +59,14 @@ feature -- Commands
 		local
 			l_ptr: SYSTEM_OBJECT
 		do			
-			Internal_browser.navigate (a_url, $l_ptr, $l_ptr, $l_ptr, $l_ptr)
-			if not urls.has (a_url) then
-				add_url (a_url)
-			end
+			Internal_browser.navigate (a_url, $l_ptr, $l_ptr, $l_ptr, $l_ptr)			
 		end		
 	
 	refresh is
 			-- Reload the HTML based upon changes made to `document'.  If there is no
 			-- document then simply refresh the loaded url.
 		do
-			if document /= Void then
-				--document.set_text (document.widget.internal_edit_widget.text)
+			if document /= Void then				
 				shared_document_manager.save_document
 				load_url (generated_document)
 			else
@@ -99,56 +82,17 @@ feature -- Status Setting
 			doc_not_void: a_doc /= Void
 		local			
 			l_util: UTILITY_FUNCTIONS
-			l_filename: FILE_NAME
-			l_target_dir: DIRECTORY
 			l_name: STRING
 		do
 			document := a_doc
 			create l_util
 			l_name := document.name
 			l_name.replace_substring_all ("\", "/")
-			if document_hash.has (l_name) then				
-				create l_filename.make_from_string (document_hash.item (l_name).name)
-				l_filename.extend (l_util.short_name (l_util.file_no_extension (l_name)))
-				l_filename.add_extension ("html")
-				load_url (l_filename.string)
-			elseif l_util.file_type (l_name).is_equal ("xml") or l_util.file_type (l_name).is_equal ("html") then
-				create l_target_dir.make (l_util.temporary_html_location (l_name, False))
-				document_hash.extend (l_target_dir, l_name)
+			if l_util.file_type (l_name).is_equal ("xml") or l_util.file_type (l_name).is_equal ("html") then							
 				load_url (generated_document)
 			end
 		ensure
 			is_set: document = a_doc
-		end	
-	
-feature {NONE} -- Status Setting
-
-	add_url (a_url: STRING) is
-			-- Add url to list
-		require
-			url_not_void: a_url /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			if not urls.has (a_url) then
-				urls.extend (a_url)
-				create l_item.make_with_text (a_url)
-				address_bar.select_actions.block
-				address_bar.extend (l_item)
-				l_item.enable_select
-				address_bar.select_actions.resume	
-			end					
-		end			
-	
-feature {NONE} -- Events
-		
-	address_key_pressed (key: EV_KEY) is
-			-- A key was pressed in the address bar
-		do
-			if key.code = feature {EV_KEY_CONSTANTS}.Key_enter then
-				load_url (address_bar.text)
-				add_url (address_bar.text)
-			end
 		end
 	
 feature {NONE} -- Implementation	
@@ -156,57 +100,26 @@ feature {NONE} -- Implementation
 	browser_winform_container: EV_WINFORM_CONTAINER
 		-- Vision 2 Winforms container	
 
-	lookup_url (a_item: EV_LIST_ITEM) is
-			-- Lookup url and load
-		local
-			l_url: STRING
-		do
-			l_url := a_item.text
-			if l_url /= Void then
-				load_url (l_url)	
-			end			
-		end		
-
 	internal_browser: AX_WEB_BROWSER is
 			-- Web browser control
 		once
 			create Result.make
 		end
 
-	urls: ARRAYED_LIST [STRING] is
-			-- Urls
-		once
-			create Result.make (10)
-			Result.compare_objects
-		end				
-
-	document_hash: HASH_TABLE [DIRECTORY, STRING] is
-			-- Documents hashed by location of HTML or XML file and name
-		once
-			create Result.make (5)
-			Result.compare_objects
-		end		
-
 	document: DOCUMENT
-			-- Document
-
-	history_stack: ARRAYED_STACK [INTEGER] is
-			-- History stack
-		once
-			create Result.make (1)	
-		end		
+			-- Document	
 
 	generated_document: STRING is
 			-- Generated `document' content
-		require
-			document_known: document_hash.has (document.name)
 		local
 			l_generator: HTML_GENERATOR
+			l_util: UTILITY_FUNCTIONS
 		do
 			create Result.make_empty
 			if document.is_persisted then
 				create l_generator			
-				l_generator.generate_file (document, document_hash.item (document.name))
+				create l_util
+				l_generator.generate_file (document, create {DIRECTORY}.make (l_util.temporary_html_location (document.name, False)))
 				Result.append (l_generator.last_generated_file.name.string)
 				Result.replace_substring_all ("\", "/")
 			end			

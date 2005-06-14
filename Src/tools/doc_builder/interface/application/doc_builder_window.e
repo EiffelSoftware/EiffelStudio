@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 			toolbar_save.select_actions.extend 				(agent Shared_document_manager.save_document)
 			toolbar_validate.select_actions.extend 			(agent Shared_document_editor_commands.validate_document)
 			toolbar_link_check.select_actions.extend		(agent Shared_document_editor_commands.validate_document_links)
-			toolbar_html_generator.select_actions.extend 	(agent shared_document_manager.on_document_selected)
+			toolbar_html_generator.select_actions.extend 	(agent shared_web_browser.refresh)
 			toolbar_properties.select_actions.extend 		(agent open_document_properties_dialog)
 			output_combo.select_actions.extend 				(agent update_output_filter)
 											

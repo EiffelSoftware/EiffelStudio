@@ -27,7 +27,7 @@ feature -- Creation
 			create toc.make_empty
 			create parent_stack.make (10)
 			parent_stack.compare_objects
-			parent_stack.extend (toc)
+			parent_stack.extend (toc, 0)
 			make_formatter
 		end		
 
@@ -43,7 +43,14 @@ feature -- Access
 			l_icon: STRING
 		do			
 			if not e.name.is_equal (root_string) then
-				l_parent ?= parent_stack.item
+				if e.parent_element /= Void then
+					if e.parent_element.name.is_equal (root_string) then
+						l_id := 0
+					else
+						l_id := e.parent_element.attribute_by_name (Id_string).value.to_integer
+					end
+					l_parent := parent_stack.item (l_id)
+				end
 				if e.has_attribute_by_name (Id_string) then
 					l_id := e.attribute_by_name (Id_string).value.to_integer
 				end			
@@ -61,19 +68,19 @@ feature -- Access
 				l_parent.add_node (l_node)
 				if not e.elements.is_empty then
 						-- This is parent node so add it to stack for children to access
-					parent_stack.extend (l_node)
+					parent_stack.extend (l_node, l_id)
 				end	
 			end			
 			Precursor (e)
-			if parent_stack.has (l_node) then
-				parent_stack.remove
-			end
+--			if parent_stack.has (l_node) then
+--				parent_stack.remove
+--			end
 		end
 
 	toc: TABLE_OF_CONTENTS
 			-- Tree widget
 			
-	parent_stack: ARRAYED_STACK [TABLE_OF_CONTENTS_NODE]
+	parent_stack: HASH_TABLE [TABLE_OF_CONTENTS_NODE, INTEGER]
 			-- Parent stack
 
 end -- class TABLE_OF_CONTENTS_CONVERTER

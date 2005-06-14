@@ -15,7 +15,8 @@ inherit
 	XML_ROUTINES
 		undefine
 			copy,
-			is_equal
+			is_equal,
+			string_
 		end
 	
 create

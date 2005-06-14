@@ -25,6 +25,7 @@ feature -- File
 			create_files_file
 			create_collection_file
 			create_stylesheet_file
+			create_hxk_files
 		end		
 
 feature {NONE}  -- File
@@ -47,12 +48,15 @@ feature {NONE}  -- File
 		local
 			template: PLAIN_TEXT_TEMPLATE_FILE
 			template_file: FILE_NAME
+			l_files_string: STRING
 		do
 			create template_file.make_from_string (Shared_constants.Application_constants.Templates_path)
 			template_file.extend ("HelpProjectTemplate.hwproj")
 			create template.make (template_file)
 			template.add_symbol ("project_name", name)
-			template.add_symbol ("files", retrieve_files (Help_directory, False, True))
+			l_files_string := retrieve_files (Help_directory, False, True)
+			l_files_string.append ("%T<File Url=%"NamedUrl.HxK%" />%N%T<File Url=%"FIndex.HxK%" />%N%T<File Url=%"KIndex.HxK%" />%N")
+			template.add_symbol ("files", l_files_string)
 			template.add_symbol ("directories", retrieve_files (Help_directory, True, True))
 			template.save_file (project_file_name)
 			create project_file.make (template.template_filename)
@@ -85,6 +89,28 @@ feature {NONE}  -- File
 			template.save_file (Help_directory.name + "\" + name + ".HxC")
 			create collection_file.make (template.template_filename)
 		end
+		
+	create_hxk_files is
+			-- Create the projects hxk files
+		local
+			template: PLAIN_TEXT_TEMPLATE_FILE
+			l_file_name: FILE_NAME
+		do
+			create l_file_name.make_from_string (Shared_constants.Application_constants.templates_path)
+			l_file_name.extend ("NamedURL.HxK")
+			create template.make (l_file_name.string)
+			template.save_file (Help_directory.name + "\" + "NamedURL.HxK")
+
+			create l_file_name.make_from_string (Shared_constants.Application_constants.templates_path)
+			l_file_name.extend ("KIndex.HxK")
+			create template.make (l_file_name.string)
+			template.save_file (Help_directory.name + "\" + "KIndex.HxK")
+
+			create l_file_name.make_from_string (Shared_constants.Application_constants.templates_path)
+			l_file_name.extend ("FIndex.HxK")
+			create template.make (l_file_name.string)
+			template.save_file (Help_directory.name + "\" + "FIndex.HxK")			
+		end
 
 	create_stylesheet_file is
 			-- Create the stylesheet
@@ -100,6 +126,12 @@ feature {NONE}  -- File
 		
 	collection_file: PLAIN_TEXT_FILE
 			-- Table of Contents File
+
+	named_url_file: PLAIN_TEXT_FILE
+
+	kindex_file: PLAIN_TEXT_FILE
+
+	findex_file: PLAIN_TEXT_FILE
 
 feature -- Commands
 
@@ -147,6 +179,8 @@ feature {NONE} -- Project
 							l_url := l_util.toc_friendly_url (a_dir.name.twin)			
 							Result.append ("<Dir ")
 							Result.append ("Url=%"" + l_url + "%"")
+							Result.replace_substring_all ("/", "\")
+							Result.replace_substring_all (shared_constants.application_constants.temporary_html_directory.string + "\", "")
 							Result.append ("/>%N")
 						end
 						Result.append (retrieve_files (l_folder, get_dirs, tags))
@@ -154,7 +188,8 @@ feature {NONE} -- Project
 						if not get_dirs and then (create {RAW_FILE}.make (l_name.string)).exists then
 							l_url := l_util.toc_friendly_url (l_name.string)
 							Result.append ("%T<File Url=%"" + l_url + "%"")
-							Result.replace_substring_all (shared_constants.application_constants.temporary_help_directory, "")
+							Result.replace_substring_all ("/", "\")
+							Result.replace_substring_all (shared_constants.application_constants.temporary_html_directory.string + "\", "")
 							Result.append ("/>%N")
 						end						
 					end
@@ -202,7 +237,7 @@ feature {NONE} -- Project
 						if l_file /= Void and then image_file_types.has (file_type (l_file.name)) then				
 							l_url := l_util.toc_friendly_url (l_file.name)
 							Result.append ("%T<File Url=%"" + l_url + "%"")
-							Result.replace_substring_all (shared_constants.application_constants.temporary_help_directory, "")
+							Result.replace_substring_all (shared_constants.application_constants.temporary_html_directory, "")
 							Result.append ("/>%N")
 						end
 					end

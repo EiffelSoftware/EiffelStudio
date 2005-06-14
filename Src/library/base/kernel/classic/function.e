@@ -30,9 +30,11 @@ feature -- Access
 		require
 			valid_operands: valid_operands (args)
 			callable: callable
+		local
+			l_result: like last_result
 		do
 			set_operands (args)
-			last_result := Void
+			last_result := l_result
 			Result := rout_obj_call_function (rout_disp, $internal_operands)
 			if is_cleanup_needed then
 				remove_gc_reference

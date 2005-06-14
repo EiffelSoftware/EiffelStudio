@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 					row_selected_button.disable_select
 				end
 				row_selected_button.select_actions.resume
-				swap_row_button.set_text ("Move Row " + l_row.index.out + " past Row " + current_past_row)
+				update_swap_row_button_text
 				if l_row.parent_row /= Void and l_row.index + l_row.subrow_count_recursive = l_row.parent_row_root.index + l_row.parent_row_root.subrow_count_recursive then
 						-- We check that the row may actually be removed. Note the you may not unparent a row within the
 						-- middle of a tree structure.

@@ -125,7 +125,7 @@ feature -- Status setting
 			-- Associate `Current' with class contained in `new_stone'.
 		local
 			a_stone: CLASSC_STONE
-			l_reader: EIFFEL_XML_DESERIALIZER
+			l_ext_class: EXTERNAL_CLASS_I
 		do
 			if new_stone /= Void and new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
@@ -138,8 +138,11 @@ feature -- Status setting
 					if consumed_types.has (a_stone.class_i.name) then
 						consumed_type := consumed_types.item (a_stone.class_i.name)
 					else
-						create l_reader
-						consumed_type ?= l_reader.new_object_from_file (a_stone.class_i.file_name)
+						l_ext_class ?= a_stone.class_i
+						check
+							l_ext_class_not_void: l_ext_class /= Void
+						end
+						consumed_type := l_ext_class.external_consumed_type
 						if consumed_type /= Void then
 							consumed_types.put (consumed_type, a_stone.class_i.name)	
 						end
@@ -147,9 +150,11 @@ feature -- Status setting
 					set_class (a_stone.e_class)
 					class_i := Void
 				else
-					-- Is a non-compiled .NET type
-					create l_reader
-					consumed_type ?= l_reader.new_object_from_file (new_stone.file_name)
+					l_ext_class ?= new_stone.class_i
+					check
+						l_ext_class_not_void: l_ext_class /= Void
+					end
+					consumed_type := l_ext_class.external_consumed_type
 					set_classi (new_stone.class_i)					
 					associated_class := Void
 				end

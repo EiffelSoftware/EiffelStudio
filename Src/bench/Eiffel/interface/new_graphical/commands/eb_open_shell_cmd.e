@@ -49,7 +49,7 @@ feature -- Basic operations
 		do
 			Result := Precursor (display_text, use_gray_icons)
 			Result.drop_actions.extend (agent drop (?))
-			Result.drop_actions.set_veto_pebble_function (agent is_storable)
+			Result.drop_actions.set_veto_pebble_function (agent is_droppable)
 		end
 
 feature {NONE} -- Update
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation properties
 	menu_name: STRING is
 			-- Name as it appears in the menu (with & symbol).
 		do
-			Result := Interface_names.m_External_editor
+			Result := Interface_names.m_external_editor
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is
@@ -227,32 +227,46 @@ feature {NONE} -- Implementation properties
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := Interface_names.e_Shell
+			Result := Interface_names.e_shell
 		end
 
 	tooltext: STRING is
 			-- Textp for the toolbar button.
 		do
-			Result := Interface_names.b_Shell
+			Result := Interface_names.b_shell
 		end
 
 	description: STRING is
 			-- Description for this command.
 		do
-			Result := Interface_names.e_Shell
+			Result := Interface_names.e_shell
 		end
 
 	name: STRING is "Open_shell"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	is_storable (st: ANY): BOOLEAN is
+	is_droppable (st: ANY): BOOLEAN is
 			-- Can `st' be dropped?
 		local
 			conv_st: STONE
+			l_ex: CLASSI_STONE
+			l_ex_c: CLASSC_STONE
 		do
 			conv_st ?= st
 			Result := conv_st /= Void and then conv_st.is_storable
+			if Result then
+					-- If it is an external class, then we cannot drop.
+				l_ex ?= st
+				if l_ex /= Void then
+					Result := not l_ex.class_i.is_external_class
+				else
+					l_ex_c ?= st
+					if l_ex_c /= Void then
+						Result := not l_ex_c.e_class.is_true_external
+					end
+				end
+			end
 		end
 
 end -- class EB_OPEN_SHELL_CMD

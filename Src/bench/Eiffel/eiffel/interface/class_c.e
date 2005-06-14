@@ -3231,8 +3231,8 @@ end
 			-- Update `types' with `data'.
 		require
 			good_argument: data /= Void
-			good_context: not data.has_formal
 			consistency: data.base_class = Current
+			good_context: data.base_class.lace_class /= system.native_array_class implies not data.has_formal
 		local
 			filter: CL_TYPE_I
 			l_gen_type: GEN_TYPE_I

@@ -653,15 +653,30 @@ feature -- Basic operations
 									if (is_content_partially_dynamic or is_content_completely_dynamic) and then not grid_item_exists and dynamic_content_function /= Void then
 											-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
 											-- the grid, then we execute this code.
-											
+
 										grid_item_interface := dynamic_content_function.item ([current_column_index, current_row_index])
-										if grid_item_interface /= Void then
-											grid_item := grid_item_interface.implementation
-												-- Note that the item is added to the grid in both partial and complete dynamic modes.
-											grid.set_item (visible_column_indexes.item, visible_row_indexes.item, grid_item.interface)
-											grid_item_exists := True
+
+												-- We now check that the set item is the same as the one returned. If you both
+												-- set an item and return a different item from the dynamic function, this is invalid
+												-- so the following check prevents this:
+										check
+											item_set_implies_set_item_is_returned_item: grid.item_internal (visible_column_indexes.item, visible_row_indexes.item) /= Void
+												implies grid.item_internal (visible_column_indexes.item, visible_row_indexes.item) = grid_item
 										end
 										
+										if grid_item_interface /= Void then
+											grid_item := grid_item_interface.implementation
+
+												-- Note that the item is added to the grid in both partial and complete dynamic modes.
+												-- It is possible that a user called `set_item' with the returned item, as well
+												-- as returning it, so in this case, we only call `set_item' if it was not set.
+											if grid.item (visible_column_indexes.item, visible_row_indexes.item) = Void then
+												grid.set_item (visible_column_indexes.item, visible_row_indexes.item, grid_item.interface)
+											end
+
+											grid_item_exists := True
+										end
+
 										
 											-- We now recompute settings that are dependent on the items in the
 											-- row. As we are in dynamic mode, we perform certain recomputation

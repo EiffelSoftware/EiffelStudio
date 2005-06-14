@@ -2401,7 +2401,6 @@ feature {NONE} -- Implementation
 			test_stone: CLASSI_STONE
 			conv_ace: ACE_SYNTAX_STONE
 			externali: EXTERNAL_CLASS_I
-			l_reader: EIFFEL_XML_DESERIALIZER
 			external_cons: CONSUMED_TYPE
 			str: STRING
 			dotnet_class: BOOLEAN
@@ -2516,9 +2515,11 @@ feature {NONE} -- Implementation
 							-- has been dropped, check to see if a .NET class.
 						if class_text_exists then
 							if new_class_stone.class_i.is_external_class then
-								create l_reader
 								externali ?= new_class_stone.class_i
-								external_cons ?= l_reader.new_object_from_file (externali.file_name)
+								check
+									externali_not_void: externali /= Void
+								end
+								external_cons := externali.external_consumed_type
 								if external_cons /= Void then
 									-- A .NET class.
 									dotnet_class := True

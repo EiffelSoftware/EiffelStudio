@@ -62,8 +62,7 @@ feature -- Basic operations
 							veto_pebble_function /= Void and then
 							veto_pebble_function.valid_operands (a_pebble_tuple)
 						then
-							veto_pebble_function.call (a_pebble_tuple)
-							if veto_pebble_function.last_result then
+							if veto_pebble_function.item (a_pebble_tuple) then
 								snapshot.item.call (a_pebble_tuple)
 							end
 						else
@@ -115,8 +114,7 @@ feature -- Status report
 					veto_pebble_function /= Void and then
 					veto_pebble_function.valid_operands (a_tuple)
 				then
-					veto_pebble_function.call (a_tuple)
-					Result := Result and then veto_pebble_function.last_result
+					Result := Result and then veto_pebble_function.item (a_tuple)
 				end
 				forth
 			end

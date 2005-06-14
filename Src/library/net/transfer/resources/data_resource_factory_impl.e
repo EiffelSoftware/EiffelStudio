@@ -90,8 +90,7 @@ feature -- Status setting
 							-- Because we know that the requested service is
 							-- supported.
 					end
-				url_function.call(Void)
-				url := url_function.last_result
+				url := url_function.item (Void)
 			else
 				address := Void
 				service := Void

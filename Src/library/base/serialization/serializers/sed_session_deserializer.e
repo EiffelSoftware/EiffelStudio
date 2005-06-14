@@ -946,6 +946,7 @@ feature {NONE} -- Implementation
 							l_tuple.integer_32_item (2))
 						l_tuple_stack.extend (l_tuple)
 						l_list.remove
+						l_list.finish
 					end
 				end
 				l_list_stack := list_stack

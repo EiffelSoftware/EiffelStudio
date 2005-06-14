@@ -5,6 +5,7 @@
 	<paragraph>
 		<paragraph>The preferences below are for general editor preference settings such as font and tab size.</paragraph>
 		<table>
+			<border>1</border>
 			<row>
 				<cell>left_margin_width</cell>
 				<cell>Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor.</cell>

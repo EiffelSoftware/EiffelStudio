@@ -108,8 +108,7 @@ feature {NONE} -- Implementation
 				not Result or i = count + 1
 			loop
 				select_transaction (i)
-				q.call (Void)
-				Result := Result and q.last_result
+				Result := Result and q.item (Void)
 				i := i + 1
 			end
 			select_transaction (idx)

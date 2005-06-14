@@ -415,8 +415,7 @@ feature -- Pick and Drop
 						item_veto_pebble_function /= Void and then
 						item_veto_pebble_function.valid_operands (a_tuple)
 					then
-						item_veto_pebble_function.call (a_tuple)
-						Result := Result and then item_veto_pebble_function.last_result
+						Result := Result and then item_veto_pebble_function.item (a_tuple)
 					end
 					a_action.forth
 				end

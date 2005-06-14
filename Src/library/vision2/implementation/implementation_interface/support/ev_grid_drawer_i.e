@@ -654,8 +654,7 @@ feature -- Basic operations
 											-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
 											-- the grid, then we execute this code.
 											
-										dynamic_content_function.call ([current_column_index, current_row_index])
-										grid_item_interface := dynamic_content_function.last_result
+										grid_item_interface := dynamic_content_function.item ([current_column_index, current_row_index])
 										if grid_item_interface /= Void then
 											grid_item := grid_item_interface.implementation
 												-- Note that the item is added to the grid in both partial and complete dynamic modes.

@@ -511,8 +511,7 @@ feature {NONE} -- Implementation
 			function_exists: f /= Void
 		do
 			if not s.has (r.location) then
-				f.call (Void)
-				Result := f.last_result
+				Result := f.item (Void)
 				if Result then s.extend (r.location) end
 			else
 				Result := True

@@ -399,8 +399,7 @@ feature {NONE} -- Events
 					new_y := new_y.min (maximum_y).max (minimum_y)
 					
 					if real_position_agent /= Void then
-						real_position_agent.call ([new_x, new_y])
-						t := real_position_agent.last_result
+						t := real_position_agent.item ([new_x, new_y])
 						new_x := t.integer_item (1)
 						new_y := t.integer_item (2)
 					else

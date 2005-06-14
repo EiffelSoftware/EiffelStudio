@@ -447,14 +447,14 @@ feature -- Basic Operations
 			non_void_info: a_info /= Void
 		local
 			l_absolute_xml_info_path: STRING
-			serializer: EIFFEL_XML_SERIALIZER
+			serializer: EIFFEL_SERIALIZER
 		do
 			guard.lock
 			if a_info.is_dirty then
 				a_info.set_is_dirty (False)
 				l_absolute_xml_info_path := cache_reader.Absolute_info_path
 				create serializer
-				serializer.serialize (a_info, l_absolute_xml_info_path)
+				serializer.serialize (a_info, l_absolute_xml_info_path, False)
 			end
 			guard.unlock
 		ensure
@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 			is_consumed: a_assembly.is_consumed
 		local
 			l_mappings: CONSUMED_ASSEMBLY_MAPPING
-			l_serializer: EIFFEL_XML_SERIALIZER
+			l_serializer: EIFFEL_SERIALIZER
 			l_ref_ca: like consumed_assembly_from_path
 			i: INTEGER
 		do
@@ -625,7 +625,7 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-			l_serializer.serialize (l_mappings, cache_reader.absolute_assembly_mapping_path_from_consumed_assembly (a_assembly))
+			l_serializer.serialize (l_mappings, cache_reader.absolute_assembly_mapping_path_from_consumed_assembly (a_assembly), False)
 			guard.unlock
 		end
 

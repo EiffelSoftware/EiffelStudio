@@ -56,7 +56,7 @@ feature -- Basic Exportations
 			create implementation.make_with_path (a_path)
 			create cr
 			if not cr.is_initialized then
-				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.absolute_info_path)
+				(create {EIFFEL_SERIALIZER}).serialize (create {CACHE_INFO}.make, cr.absolute_info_path, False)
 			end
 			is_initialized := True
 		ensure

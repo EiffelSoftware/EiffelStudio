@@ -86,12 +86,9 @@ feature -- Access
 		do
 			create Result.make (10)
 			Result.append_integer (i) 
-			Result.append_string (Xml_extension)
+			Result.append_string (once ".info")
 		end
 		
-	Xml_extension: STRING is ".xml"
-			-- XML file extension
-
 	destination_path: STRING
 			-- Path where XML files are generated
 			
@@ -272,8 +269,8 @@ feature {NONE} -- Implementation
 			-- Build `consumed_types'.
 		local
 			type_consumer: TYPE_CONSUMER
-			serializer: EIFFEL_XML_SERIALIZER
-			s, fn: STRING
+			serializer: EIFFEL_SERIALIZER
+			s: STRING
 			done: BOOLEAN
 			type: CONSUMED_TYPE
 			parent: CONSUMED_REFERENCED_TYPE
@@ -282,6 +279,7 @@ feature {NONE} -- Implementation
 			l_string_tuple: like string_tuple
 			l_empty_tuple: like empty_tuple
 			l_is_delegate, l_is_value_type: BOOLEAN
+			l_file_position: INTEGER
 		do
 			create_consumed_assembly_folders
 			
@@ -315,17 +313,16 @@ feature {NONE} -- Implementation
 					end
 						-- do not add base types in types.xml
 					if not is_base_type (type.dotnet_name) then
-						types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type)
-						fn := file_name (types.index)
 							-- Delete constructor of System.Object for compiler
 						if type.dotnet_name.is_equal ("System.Object") then
-							type.set_constructors (create {ARRAY [CONSUMED_CONSTRUCTOR]}.make (1, 0))
+							type.set_constructors (create {ARRAYED_LIST [CONSUMED_CONSTRUCTOR]}.make (0))
 						end
-						create s.make (fn.count + destination_path.count + Classes_path.count)
+						create s.make (destination_path.count + classes_file_name.count)
 						s.append (destination_path)
-						s.append (Classes_path)
-						s.append (fn)
-						serializer.serialize (type, s)
+						s.append (classes_file_name)
+						types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type, l_file_position)
+						serializer.serialize (type, s, True)
+						l_file_position := serializer.last_file_position
 						if not serializer.successful and error_printer /= Void then
 							set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
 							l_string_tuple.put (error_message, 1)
@@ -344,8 +341,8 @@ feature {NONE} -- Implementation
 				end
 			end		
 			create mapping.make (assembly_ids)
-			serializer.serialize (types, destination_path + Assembly_types_file_name)
-			serializer.serialize (mapping, destination_path + Assembly_mapping_file_name)
+			serializer.serialize (types, destination_path + Assembly_types_file_name, False)
+			serializer.serialize (mapping, destination_path + Assembly_mapping_file_name, False)
 		end
 		
 	create_consumed_assembly_folders is
@@ -361,11 +358,6 @@ feature {NONE} -- Implementation
 			if not l_dir.exists then
 				l_dir.create_dir	
 			end
-			create l_dir.make (destination_path + Classes_path)
-			if not l_dir.exists then
-				l_dir.create_dir	
-			end
-			
 		end		
 
 	type_consumers: HASH_TABLE [TYPE_CONSUMER, STRING]

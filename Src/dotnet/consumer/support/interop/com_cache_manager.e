@@ -65,9 +65,9 @@ feature -- Basic Exportations
 			create cr
 			cr.set_internal_eiffel_cache_path (eac_path)
 			if not cr.is_initialized then
-				(create {EIFFEL_BINARY_SERIALIZER}).serialize (
-				create {CACHE_INFO}.make,
-				cr.absolute_info_path)
+				(create {EIFFEL_SERIALIZER}).serialize (
+					create {CACHE_INFO}.make,
+					cr.absolute_info_path, False)
 			end
 			is_initialized := True
 		end

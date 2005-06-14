@@ -26,10 +26,10 @@
 		<paragraph>
 			<link>
 				<url>context_menu.xml</url>
-				<label>Other Project Items Folder Context Menu</label>
+				<label>Other Project Items Context Menu</label>
 			</link>
 			<line_break/>
-			An overview of the <bold>Other Project Items</bold> folder context menu.
+			The <bold>Other Project Items</bold> folder context menu.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -39,6 +39,14 @@
 			<line_break/>
 			A brief overview of the Virtual Folder found under <bold>Other Project Items</bold>.
 		</paragraph>
+		<paragraph>
+			<link>
+				<url>generic_file_items.xml</url>
+				<label>Generic File Items</label>
+			</link>
+			<line_break/>
+			A overview of the generic file items found under <bold>Other Project Items</bold>.
+		</paragraph>		
 		
 		<anchor>also_see</anchor>
 		<heading>

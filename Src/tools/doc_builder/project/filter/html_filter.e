@@ -62,9 +62,9 @@ feature -- Tag
 		do
 			if conc_content /= Void then
 				if 
-					a_local_part.is_equal ("url")
+					a_local_part.is_equal (url_string)
 				then
-					if Previous_elements.linear_representation.i_th (2).has_substring ("image") then
+					if Previous_elements.linear_representation.i_th (2).has_substring (image_string) then
 						conc_content := image_link_convert (conc_content)
 					else
 						conc_content := link_convert (conc_content)
@@ -74,7 +74,9 @@ feature -- Tag
 				if in_attribute then
 					output_string.insert_string ("%"" + conc_content + "%"", content_write_position)
 				else
-					output_string.insert_string (conc_content, content_write_position)
+					if not a_local_part.is_equal (anchor_name_string) then						
+						output_string.insert_string (conc_content, content_write_position)	
+					end
 				end
 				conc_content := Void
 			end
@@ -83,7 +85,7 @@ feature -- Tag
 			elseif element_element_mappings.has (a_local_part) then
 				write_element (a_local_part, False, False)
 			elseif style_elements.has (a_local_part) then
-				write_element ("span", False, False)
+				write_element (span_string, False, False)
 			elseif Bufferable.has (a_local_part) then
 				if not Buffered_tags.is_empty then
 					output_string.append (Buffered_tags.item)
@@ -114,7 +116,6 @@ feature -- Tag
 				write := True
 				l_prev := Previous_elements.item
 				l_content := cleaned_content (a_content)
---				l_content := a_content.twin
 					-- Headings
 				if l_prev.is_equal ("size") then
 					l_tag := ""
@@ -136,7 +137,13 @@ feature -- Tag
 					if conc_content = Void then
 						conc_content := ""
 					end
-					conc_content.append (a_content)
+					conc_content.append (a_content)					
+					if l_prev.is_equal (anchor_name_string) then
+						anchor_content := conc_content.twin
+					end
+					if l_prev.is_equal (url_string) then
+						url_anchor_write_position := attribute_value_write_position + a_content.count + 2
+					end
 					write := False
 				end				
 				if not l_content.is_equal (Empty_tag) and not l_content.is_empty and write then					
@@ -144,7 +151,7 @@ feature -- Tag
 						if restore_attribute_value > 0 then
 							attribute_value_write_position := restore_attribute_value
 						end
-						output_string.insert_string ("%"" + l_content + "%"", content_write_position)												
+						output_string.insert_string ("%"" + l_content + "%"", content_write_position)
 					else
 						output_string.insert_string (l_content, content_write_position)
 					end
@@ -171,7 +178,6 @@ feature {NONE} -- Processing
 		local
 			l_previous,
 			l_name: STRING
-			l_util: UTILITY_FUNCTIONS
 		do
 			if not previous_elements.is_empty then				
 				l_previous := Previous_elements.item	
@@ -182,90 +188,115 @@ feature {NONE} -- Processing
 				complex_stack.extend (e)
 				
 						-- Paragraph
-				if e.is_equal ("paragraph") then
-					if l_previous.is_equal ("document") then
-						write_element ("document_paragraph", is_start, True)
+				if e.is_equal (paragraph_string) then
+					if l_previous.is_equal (document_string) then
+						write_element (document_paragraph_string, is_start, True)
 					else
 						write_element (e, is_start, True)
 					end
+				elseif e.is_equal (link_string) then
+					write_element (e, True, False)
+					
 						-- Url				
-				elseif e.is_equal ("url") then
+				elseif e.is_equal (url_string) then
 					Attribute_stack.extend (e)					
-					if l_previous.is_equal ("image") then
-						write_attribute ("image_url", False)
+					if l_previous.is_equal (image_string) then
+						write_attribute (image_url_string, False)
 					else
 						write_attribute (e, False)
+						url_anchor_write_position := attribute_value_write_position + 6
 					end
-						-- Anchor Url
-				elseif e.is_equal ("anchor_name") then
-					Attribute_stack.extend (e)
-					write_attribute (e, False)
-					create l_util
-					if conc_content = Void then
-						conc_content := ""
-					end
-					l_name := l_util.short_name (filename)
-					l_name.replace_substring_all (".xml", ".html")
-					conc_content.append (l_name + "#")
+					in_url := True
+					
+					-- Anchor
+				elseif e.is_equal (anchor_name_string) then	
+					in_url_anchor := True
+					
 						-- Stylesheet
-				elseif e.is_equal ("stylesheet") then
+				elseif e.is_equal (stylesheet_string) then
 					write_element (e, True, True)
-					write_attribute ("rel", False)
+					write_attribute (rel_string, False)
 					output_string.insert_string ("%"stylesheet%"", attribute_value_write_position)
-					process_attribute_element ("url")
+					process_attribute_element (url_string)
+					
 						-- Anchor
-				elseif e.is_equal ("anchor") then
+				elseif e.is_equal (anchor_string) then
 					write_element (e, True, True)
-					process_attribute_element ("anchor")
+					process_attribute_element (anchor_string)
+				elseif e.is_equal (xml_string) then
+					write_element (e, is_start, True)
+					output_string.append ("<MSHelp:Attr Name=%"DocSet%" Value=%"EiffelEnvision Help%"/>")
 				else
 					write_element (e, is_start, True)
-				end					
+				end
 			else
 					-- Complex end tag
 				check
 					Complex_stack.item.is_equal (e)
 				end
-				if e.is_equal ("paragraph") then
+				if e.is_equal (paragraph_string) then
 						-- Paragraph
-					if l_previous.is_equal ("document") then
-						l_name := "document_paragraph"
+					if l_previous.is_equal (document_string) then
+						l_name := document_paragraph_string
 					else
 						l_name :=  e
 					end	
-				elseif e.is_equal ("document") then
+				elseif e.is_equal (link_string) then
+					 in_url := False
+					 in_url_anchor := False
+				elseif e.is_equal (document_string) then
 						-- Document
 					l_name := e
 					output_string.remove_tail (4)
 					output_string.append ("</body>")
-				elseif e.is_equal ("meta_data") then
+				elseif e.is_equal (meta_data_string) then
 						-- Meta Data
 					if title /= Void then
 						output_string.append ("<title>" + title + "</title>")
 					end
-				elseif e.is_equal ("list")then
+				elseif e.is_equal (list_string)then
 						-- List					
 					if list_type_stack.item then						
-						l_name := "list_ordered"
+						l_name := list_ordered_string
 					else
-						l_name := "list_unordered"					
+						l_name := list_unordered_string
 					end				
-				elseif e.is_equal ("start") then
+				elseif e.is_equal (start_string) then
 						-- Start
 					output_string.insert_string ("<table><tr><td class=%"tagged_text_bottom%">..end text for " + type_value + " version</td></tr></table>", content_write_position)
-					l_name := "start_end"
+					l_name := start_end_string
+				elseif e.is_equal (url_string) then
+					if in_url_anchor then
+						output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
+						in_url_anchor := False
+						in_url := False
+						anchor_content := ""					
+					end
+				elseif e.is_equal (anchor_name_string) then
+					if in_url then
+						output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
+						in_url_anchor := False
+						in_url := False
+						anchor_content := ""
+						conc_content := ""
+					else
+						in_url_anchor := True
+					end					
 				elseif 
 						-- Block elements
-					e.is_equal ("warning") or
-					e.is_equal ("note") or
-					e.is_equal ("tip") or
-					e.is_equal ("seealso") or
-					e.is_equal ("sample") or
-					e.is_equal ("info")
+					e.is_equal (warning_string) or
+					e.is_equal (note_string) or
+					e.is_equal (tip_string) or
+					e.is_equal (seealso_string) or
+					e.is_equal (sample_string) or
+					e.is_equal (info_string)
 				then
-					l_name := "paragraph_end"
-				elseif e.is_equal ("anchor") then
+					l_name := paragraph_end_string
+				elseif e.is_equal (anchor_string) then
 						-- Anchor
 					output_string.append ("</a>")
+				elseif e.is_equal (stylesheet_string) then
+					output_string.append ("</link>")
 				end
 
 				if l_name = Void then
@@ -323,26 +354,26 @@ feature {NONE} -- Processing
 					l_att := " " + a_name + "=%"" + a_value + "%""
 				end				
 										
-				if l_prev_element.is_equal ("document") and then a_name.is_equal ("title") then
+				if l_prev_element.is_equal (document_string) and then a_name.is_equal (title_string) then
 						-- Document
 					title := a_value
-				elseif l_prev_element.is_equal ("list") then
+				elseif l_prev_element.is_equal (list_string) then
 						-- List
 					if a_value.is_equal ("true") then
-						write_element ("list_ordered", True, True)
+						write_element (list_ordered_string, True, True)
 						list_type_stack.extend (True)
 					elseif a_value.is_equal ("false") then						
-						write_element ("list_unordered", True, True)
+						write_element (list_unordered_string, True, True)
 						list_type_stack.extend (False)
 					end						
-				elseif l_prev_element.is_equal ("output") then
+				elseif l_prev_element.is_equal (output_string) then
 						-- Output
-					if a_name.is_equal ("output") then
+					if a_name.is_equal (output_string) then
 						l_att := " id=%"" + a_value + "%""
 						output_string.insert_string (l_att, attribute_write_position)
 						attribute_write_position := output_string.count
 					end		
-				elseif l_prev_element.is_equal ("start") then
+				elseif l_prev_element.is_equal (start_string) then
 						-- Start
 					if a_name.is_equal ("type") then
 						type_value := a_value						
@@ -397,7 +428,7 @@ feature {NONE} -- Query
 						-- Convert to relative links
 					Result := l_link.relative_url
 						-- If link is an XML link, convert it to HTML (otherwise leave it as is)
-					if l_util.file_type (a_url).is_equal ("xml") then
+					if l_util.file_type (a_url).is_equal (xml_string) then
 						create l_filename.make_from_string (l_util.file_no_extension (Result))
 						if not l_filename.is_empty then
 							l_filename.add_extension ("html")
@@ -411,8 +442,11 @@ feature {NONE} -- Query
 			else
 					-- A external link
 				Result := a_url			
-			end		
-		end	
+			end
+			if Result.has_substring ("ms-help//") then
+				Result.replace_substring_all ("ms-help//", "ms-help://")
+			end
+		end
 		
 	image_link_convert (a_url: STRING): STRING is
 			-- Converts `a_url' image file link to relative link
@@ -452,6 +486,13 @@ feature {NONE} -- Access
 	attribute_write_position,
 	attribute_value_write_position: INTEGER
 			-- Position to write attribute and attribute value
+	
+	url_anchor_write_position: INTEGER
+	
+	in_url,
+	in_url_anchor: BOOLEAN
+	
+	anchor_content: STRING
 	
 	content_offset: INTEGER
 			-- Content offset
@@ -522,7 +563,7 @@ feature {NONE} -- Output
 			l_att: STRING
 		do			
 			if is_class then
-				write_element ("span", True, False)
+				write_element (span_string, True, False)
 				if in_pre_tag then					
 					l_att := " class=%"block_" + e + "%""
 				else					
@@ -617,15 +658,14 @@ feature {NONE} -- Implementation
 				Result.prune_all_leading ('%N')
 				Result.prune_all_leading ('%T')
 				Result.prune_all_trailing ('%T')
-			--	Result.replace_substring_all ("amp;", "")
 			end
-			--Result := rt_output_escaped (Result)
+			Result := rt_output_escaped (Result)
 		end
 
 	in_pre_tag: BOOLEAN is
 			-- Are we inside a tag which should be treated as a pre tag?
 		do
-			Result := Previous_elements.has ("code_block") or previous_elements.has ("code")
+			Result := Previous_elements.has (code_block_string) or previous_elements.has (code_string)
 		end
 
 	restore_attribute_value: INTEGER

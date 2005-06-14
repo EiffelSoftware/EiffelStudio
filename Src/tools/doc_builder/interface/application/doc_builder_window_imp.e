@@ -397,16 +397,16 @@ feature {NONE}-- Initialization
 			toolbar_open.set_tooltip ("Open File")
 			toolbar_open.set_pixmap (icon_open_file_ico)
 			toolbar_save.disable_sensitive
-			toolbar_save.set_tooltip ("Save")
+			toolbar_save.set_tooltip ("Save (Ctrl+S)")
 			toolbar_save.set_pixmap (icon_save_ico)
 			toolbar_cut.disable_sensitive
-			toolbar_cut.set_tooltip ("Cut")
+			toolbar_cut.set_tooltip ("Cut (Ctrl+X)")
 			toolbar_cut.set_pixmap (icon_cut_color_ico)
 			toolbar_copy.disable_sensitive
-			toolbar_copy.set_tooltip ("Copy")
+			toolbar_copy.set_tooltip ("Copy (Ctrl+C)")
 			toolbar_copy.set_pixmap (icon_copy_color_ico)
 			toolbar_paste.disable_sensitive
-			toolbar_paste.set_tooltip ("Paste")
+			toolbar_paste.set_tooltip ("Paste (Ctrl+V)")
 			toolbar_paste.set_pixmap (icon_paste_ico)
 			toolbar_xml_format.disable_sensitive
 			toolbar_xml_format.set_tooltip ("Pretty XML")
@@ -415,7 +415,7 @@ feature {NONE}-- Initialization
 			toolbar_code_format.set_tooltip ("Pretty code format")
 			toolbar_code_format.set_pixmap (icon_code_format_ico)
 			toolbar_validate.disable_sensitive
-			toolbar_validate.set_tooltip ("Validate document against schema")
+			toolbar_validate.set_tooltip ("Validate to XML/Schema (Ctrl+D)")
 			toolbar_validate.set_pixmap (icon_validate_ico)
 			toolbar_properties.disable_sensitive
 			toolbar_properties.set_tooltip ("Document Properties")
@@ -424,7 +424,7 @@ feature {NONE}-- Initialization
 			toolbar_link_check.set_tooltip ("Validate Document Links")
 			toolbar_link_check.set_pixmap (icon_link_check_ico_ico)
 			toolbar_html_generator.disable_sensitive
-			toolbar_html_generator.set_tooltip ("Generate HTMl from open document XML")
+			toolbar_html_generator.set_tooltip ("Refresh Output View (Ctrl+R)")
 			toolbar_html_generator.set_pixmap (icon_ie_ico)
 			l_ev_label_1.set_text ("Filter ")
 			l_ev_label_1.align_text_left

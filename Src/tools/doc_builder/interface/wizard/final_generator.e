@@ -193,7 +193,7 @@ feature {NONE} -- Implmentation
 		do
 			create l_target.make (generation_data.generated_file_location)
 			if generation_data.is_html_to_help_convert then
-				create l_src.make (shared_constants.application_constants.temporary_help_directory.string)				
+				create l_src.make (shared_constants.application_constants.temporary_html_directory.string)				
 			elseif generation_data.is_html_convert then
 				create l_src.make (shared_constants.application_constants.temporary_html_directory.string)	
 			end

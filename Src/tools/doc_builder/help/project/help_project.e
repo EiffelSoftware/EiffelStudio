@@ -153,6 +153,7 @@ feature {HELP_PROJECT_SETTINGS_FILE} -- Implementation
 			Result.extend ("gif")
 			Result.extend ("jpg")
 			Result.extend ("bmp")
+			Result.extend ("ico")
 			Result.extend ("css")
 		end		
 

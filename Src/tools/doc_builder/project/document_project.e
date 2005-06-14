@@ -139,7 +139,7 @@ feature -- Commands
 			retrieve_documents (create {DIRECTORY}.make (root_directory))	
 		end		
 
-feature {VALIDATOR_TOOL_DIALOG} -- Validation
+feature {VALIDATOR_TOOL_DIALOG, TOC_DIALOG} -- Validation
 
 	validate_files_xml is
 			-- Validate files in Current to XML.
@@ -452,10 +452,10 @@ feature {ARGUMENTS_PARSER} -- Retrieval
 			create preferences.make (Current)
 			preferences.read
 			initialize
-			if shared_constants.application_constants.is_gui_mode and then preferences.is_valid then
-					-- Write back in case there were changes during loading
-				preferences.write	
-			end
+--			if shared_constants.application_constants.is_gui_mode and then preferences.is_valid then
+--					-- Write back in case there were changes during loading
+--				preferences.write	
+--			end
 		end
 
 end -- class DOCUMENT_PROJECT

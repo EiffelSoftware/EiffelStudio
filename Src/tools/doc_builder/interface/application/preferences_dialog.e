@@ -221,7 +221,7 @@ feature {NONE} -- Initialization
 				if Shared_document_manager.has_schema then
 					schema_loc_text.set_text (l_schema_file)
 							-- Update project
-					Shared_project.preferences.write			
+					--Shared_project.preferences.write			
 				end	
 			end
 		end
@@ -235,7 +235,7 @@ feature {NONE} -- Initialization
 			if l_stylesheet_file /= Void then			
 				Shared_document_manager.initialize_stylesheet (l_stylesheet_file)
 				css_loc_text.set_text (l_stylesheet_file)
-				Shared_project.preferences.write
+				--Shared_project.preferences.write
 				copy_stylesheet (Shared_constants.Application_constants.Temporary_html_directory)
 			end
 		end

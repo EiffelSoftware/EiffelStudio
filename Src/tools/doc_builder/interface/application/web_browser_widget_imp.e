@@ -31,45 +31,14 @@ feature {NONE}-- Initialization
 			initialize_constants
 			
 				-- Create all widgets.
-			create toolbar_box
-			create l_ev_horizontal_box_1
-			create toolbar
-			create back_button
-			create forward_button
-			create refresh_button
-			create l_ev_label_1
-			create address_bar
 			create browser_container
 			
 				-- Build_widget_structure.
-			extend (toolbar_box)
-			toolbar_box.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (toolbar)
-			toolbar.extend (back_button)
-			toolbar.extend (forward_button)
-			toolbar.extend (refresh_button)
-			l_ev_horizontal_box_1.extend (l_ev_label_1)
-			l_ev_horizontal_box_1.extend (address_bar)
 			extend (browser_container)
 			
-			toolbar_box.set_padding_width (5)
-			toolbar_box.set_border_width (2)
-			l_ev_horizontal_box_1.set_padding_width (5)
-			l_ev_horizontal_box_1.set_border_width (2)
-			l_ev_horizontal_box_1.disable_item_expand (toolbar)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
-			back_button.set_tooltip ("Previous")
-			back_button.set_pixmap (icon_back_color_ico)
-			forward_button.set_tooltip ("Forward")
-			forward_button.set_pixmap (icon_forth_color_ico)
-			refresh_button.set_tooltip ("Refresh")
-			refresh_button.set_pixmap (icon_refresh_ico)
-			l_ev_label_1.set_text ("Address")
-			l_ev_label_1.align_text_left
 			browser_container.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 255))
 			set_padding_width (5)
 			set_border_width (2)
-			disable_item_expand (toolbar_box)
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -81,15 +50,7 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	address_bar: EV_COMBO_BOX
-	toolbar: EV_TOOL_BAR
-	back_button: EV_TOOL_BAR_BUTTON
-	forward_button: EV_TOOL_BAR_BUTTON
-	refresh_button: EV_TOOL_BAR_BUTTON
-	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	toolbar_box: EV_VERTICAL_BOX
 	browser_container: EV_VERTICAL_BOX
-	l_ev_label_1: EV_LABEL
 
 feature {NONE} -- Implementation
 

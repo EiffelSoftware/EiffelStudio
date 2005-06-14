@@ -13,7 +13,8 @@ inherit
 		rename
 			output_escaped as rt_output_escaped,
 			is_escaped as rt_is_escaped,
-			escaped_char as rt_escaped_char
+			escaped_char as rt_escaped_char,
+			string_ as rt_string_
 		end
 
 feature

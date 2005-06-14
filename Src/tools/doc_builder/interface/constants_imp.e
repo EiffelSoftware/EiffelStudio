@@ -391,13 +391,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_undo_ico: EV_PIXMAP is
+	icon_new_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_undo.ico")
+			a_file_name.set_file_name ("icon_new.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -457,13 +457,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_studio_ico: EV_PIXMAP is
+	icon_undo_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_studio.ico")
+			a_file_name.set_file_name ("icon_undo.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -611,16 +611,6 @@ feature -- Access
 			-- `Result' is STRING constant named `button_add_text'.
 		once
 			Result := "Add"
-		end
-
-	icon_new_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_new.ico")
-			set_with_named_file (Result, a_file_name)
 		end
 
 	button_ok_text: STRING is
@@ -781,6 +771,16 @@ feature -- Access
 			-- `Result' is STRING constant named `button_create_text'.
 		once
 			Result := "Create"
+		end
+
+	icon_studio_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_studio.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	icon_highlight_png: EV_PIXMAP is

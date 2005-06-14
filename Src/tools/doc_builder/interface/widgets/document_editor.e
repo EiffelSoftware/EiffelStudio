@@ -11,6 +11,7 @@ inherit
 	EDITABLE_TEXT_PANEL		
 		redefine
 			on_mouse_button_up,
+			handle_extended_key,
 			handle_extended_ctrled_key
 		end
 	
@@ -51,6 +52,25 @@ feature -- Initialization
 			add_edition_observer (application_window)			
 		end
 		
+	handle_extended_key (ev_key: EV_KEY) is
+ 			-- Process the push on an extended key.
+		local			
+			l_cursor: TEXT_CURSOR
+		do
+			l_cursor := text_displayed.cursor
+
+			inspect	ev_key.code
+			when key_comma then
+				if shifted_key then
+					--build_tag_menu_popup
+					--tag_menu.show_at (application_window, calculate_menu_popup_x_position, calculate_menu_popup_y_position)
+				end
+			else
+					-- Key not handled
+				Precursor {EDITABLE_TEXT_PANEL} (ev_key)
+			end
+		end
+
 	handle_extended_ctrled_key (ev_key: EV_KEY) is
  			-- Process the push on Ctrl + an extended key.
 		do
@@ -60,10 +80,16 @@ feature -- Initialization
 			when Key_s then
 					-- Ctrl-S (save)
 				shared_document_manager.save_document
-
 			when Key_f then
 					-- Ctrl-F (search)
 				open_search_dialog
+			when Key_r then
+					-- Ctrl-R (refresh web browser)
+				shared_document_manager.save_document	
+				shared_web_browser.refresh
+			when Key_d then
+					-- Ctrl-D (validate to XML/Schema)
+				shared_document_editor_commands.validate_document
 			else
 				Precursor (ev_key)
 			end			
@@ -144,7 +170,6 @@ feature -- Commands
 			l_manager: LINK_MANAGER
 			l_links: ARRAYED_LIST [DOCUMENT_LINK]
 			l_error: ERROR
-			l_error_report: ERROR_REPORT
 		do			
 			if current_document /= Void then
 				if not current_document.is_valid_xml (text) then
@@ -163,12 +188,11 @@ feature -- Commands
 						until
 							l_links.after
 						loop
-							create l_error.make (l_links.item.url)	
-							l_error.set_action (agent (l_error_report.actions).search_for_error_text (l_links.item.url))
-							l_error_report.set_error (l_error)
+							create l_error.make (l_links.item.url)
+							shared_error_reporter.set_error (l_error)
 							l_links.forth
 						end
-						l_error_report.show
+						shared_error_reporter.show
 					end
 				end
 				if l_has_error and then Shared_constants.Application_constants.is_gui_mode then
@@ -235,12 +259,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
---	documents: HASH_TABLE [DOCUMENT, INTEGER] is
---			-- Opened documents
---		once
---			create Result.make (2)
---		end		
-
 	xml_class: DOCUMENT_CLASS is
 			--
 			-- (export status {NONE})
@@ -291,35 +309,12 @@ feature {NONE} -- Events
 
 	pointer_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Pointer was pressed, catch right-click
-		local
-			l_popup: EV_MENU
-			l_menu_item: EV_MENU_ITEM			
-			menu_children: SORTED_TWO_WAY_LIST [STRING]
-			l_parent: STRING
 		do
 			if Shared_document_manager.has_schema then
-					-- Determine element parent based on cursor position
-				l_parent := xml_parent
-				if l_parent /= Void and then not l_parent.is_empty then				
-							-- Retrieve element list and build popup menu
-					menu_children ?= sub_element_list (l_parent)
-					if a_button = 3 then							
-						if menu_children /= Void and then not menu_children.is_empty then
-							create l_popup
-							from
-								menu_children.start
-							until
-								menu_children.after
-							loop
-								create l_menu_item.make_with_text (menu_children.item)
-								l_menu_item.select_actions.extend (agent tag_selection (menu_children.item))
-								l_popup.extend (l_menu_item)
-								menu_children.forth
-							end				
-							l_popup.show_at (application_window, a_x, a_y)
-						end				
-					end		
-				end		
+				if a_button = 3 then
+					build_tag_menu_popup
+					tag_menu.show_at (application_window, a_screen_x - application_window.x_position, a_screen_y - application_window.y_position - a_y)
+				end
 			end				
 		end
 
@@ -450,5 +445,66 @@ feature {NONE} -- Events
 				select_region (l_start_pos, l_end_pos)
 			end
 		end		
+
+	build_tag_menu_popup is
+			-- Build `tag_menu'
+		local
+			l_menu_item: EV_MENU_ITEM
+			menu_children: SORTED_TWO_WAY_LIST [STRING]
+			l_parent: STRING
+		do
+			l_parent := xml_parent
+			if l_parent /= Void and then not l_parent.is_empty then
+						-- Retrieve element list and build popup menu
+				menu_children ?= sub_element_list (l_parent)
+				if menu_children /= Void and then not menu_children.is_empty then
+					from
+						create tag_menu
+						menu_children.start
+					until
+						menu_children.after
+					loop
+						create l_menu_item.make_with_text (menu_children.item)
+						l_menu_item.select_actions.extend (agent tag_selection (menu_children.item))
+						tag_menu.extend (l_menu_item)
+						menu_children.forth
+					end
+				end
+			end
+				-- Add closing tag for convenience
+			create l_menu_item.make_with_text (l_parent)
+			l_menu_item.select_actions.extend (agent tag_selection (menu_children.item))
+			tag_menu.extend (l_menu_item)
+		end
+
+	tag_menu: EV_MENU
+
+	calculate_menu_popup_x_position: INTEGER is
+			-- Determine the x position to display the popup
+		local
+			tok: EDITOR_TOKEN
+			cursor: EDITOR_CURSOR
+		do
+				-- Get current x position of cursor
+			cursor := text_displayed.cursor
+			tok := cursor.token
+			tok.update_position
+			Result := tok.position + tok.get_substring_width (cursor.pos_in_token) + widget.screen_x + left_margin_width - offset
+		end		
+		
+	calculate_menu_popup_y_position: INTEGER is
+			-- Determine the y position to display the completion list
+		local
+			cursor: EDITOR_CURSOR
+			screen: EV_SCREEN			
+			show_below: BOOLEAN
+		do
+				-- Get y pos of cursor
+			create screen
+			cursor := text_displayed.cursor			
+			show_below := True
+			Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)		
+			Result := Result + line_height + 5
+		end
 
 end -- class DOCUMENT_EDITOR

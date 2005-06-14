@@ -91,7 +91,8 @@ feature -- TOC Management
 				xml ?= deserialize_document (create {FILE_NAME}.make_from_string (a_name))
 				if xml /= Void then
 					create xml_toc_converter.make
-					xml_toc_converter.process_document (xml)
+					xml.process_children_recursive (xml_toc_converter)
+--					xml_toc_converter.process_document (xml)
 					loaded_toc := xml_toc_converter.toc
 					loaded_toc.set_name (a_name)
 					add_toc (loaded_toc)

@@ -156,7 +156,7 @@ feature -- Access
 			l_formatter: XM_LINK_FORMATTER
 		do
 			create l_formatter.make_with_document (a_doc)
-			l_formatter.process_document (a_doc.xml)
+			a_doc.xml.process_children_recursive (l_formatter)
 			Result := l_formatter.links
 		ensure
 			has_result: Result /= Void

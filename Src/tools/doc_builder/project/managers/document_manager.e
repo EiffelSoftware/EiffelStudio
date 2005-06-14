@@ -154,15 +154,19 @@ feature -- Document Manipulation
 				if (create {EV_ENVIRONMENT}).supported_image_formats.has (l_file_type) then
 					load_image_document (a_filename)
 				else				
-					load_text_document (a_filename)	
+					load_text_document (l_name)
+					on_document_selected
 				end
 			else
-				load_text_document (a_filename)	
+				load_text_document (l_name)
+				on_document_selected
 			end
 		end
 
 	load_text_document (a_filename: STRING) is
 			-- Load document as plain text file
+		require
+			no_forward_slash: not a_filename.has ('\')
 		local
 			document: DOCUMENT
 			file: PLAIN_TEXT_FILE
@@ -270,9 +274,13 @@ feature {DOCUMENT_PROJECT, XML_TABLE_OF_CONTENTS, DOCUMENT_EDITOR, TABLE_OF_CONT
 			-- Remove document
 		require
 			a_doc_not_void: a_doc /= Void
+		local
+			l_name: STRING
 		do
-			if documents.has (a_doc.name) then
-				documents.remove (a_doc.name)
+			l_name := a_doc.name.twin
+			l_name.replace_substring_all ("\", "/")
+			if documents.has (l_name) then
+				documents.remove (l_name)
 			end
 		end		
 	
@@ -310,9 +318,13 @@ feature -- Query
 			-- Retrieve document with 'a_name', Void otherwise?  
 		require
 			a_name_not_void: a_name /= Void
+		local
+			l_name: STRING
 		do
-			if documents.has (a_name) then
-				Result := documents.item (a_name)
+			l_name := a_name.twin
+			l_name.replace_substring_all ("\", "/")
+			if documents.has (l_name) then
+				Result := documents.item (l_name)
 			end
 		end	
 

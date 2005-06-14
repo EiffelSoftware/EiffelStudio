@@ -10,6 +10,7 @@ default
 	assertion (ensure)
 	disabled_debug (yes)
 	disabled_debug ("_jfiat")
+	disabled_debug ("_use_new_dbg_tools_")
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
 	disabled_debug ("anchored_features")
@@ -36,6 +37,7 @@ default
 	disabled_debug ("debug_recv")
 	disabled_debug ("debugger")
 	disabled_debug ("debugger_bp_trace")
+	disabled_debug ("debugger_caching")
 	disabled_debug ("debugger_eifnet_data")
 	disabled_debug ("debugger_eifnet_data_extra")
 	disabled_debug ("debugger_eifnet_synchro")
@@ -255,11 +257,11 @@ cluster
 
 	all cli_debugger:		"$EIFFEL_SRC\Eiffel\library\cli_debugger"
 
-	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
-
 	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
+	all eac_serialization:		"$EIFFEL_SRC\dotnet\consumer\serialization"
 
 	eac_documentation:		"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
 

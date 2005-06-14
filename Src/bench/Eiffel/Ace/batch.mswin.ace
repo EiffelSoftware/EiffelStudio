@@ -9,9 +9,7 @@ default
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
-	assertion (check)
-	assertion (require)
-	assertion (ensure)
+	assertion (no)
 	disabled_debug (yes)
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
@@ -28,16 +26,18 @@ default
 	disabled_debug ("cecil")
 	disabled_debug ("check_expanded")
 	disabled_debug ("class_of_id")
+	disabled_debug ("com_object")
 	disabled_debug ("comments")
 	disabled_debug ("count")
 	disabled_debug ("dead_code")
 	disabled_debug ("dead_code_removal")
 	disabled_debug ("debbugger_hook")
 	disabled_debug ("debugger_hook")
+	disabled_debug ("debugger_il_info_trace")
+	disabled_debug ("debugger_il_info_trace_extra")
 	disabled_debug ("disable_assertions")
 	disabled_debug ("dle topo")
 	disabled_debug ("document")
-	disabled_debug ("documentation")
 	disabled_debug ("dollar")
 	disabled_debug ("filters")
 	disabled_debug ("fixme")
@@ -48,7 +48,9 @@ default
 	disabled_debug ("genericity")
 	disabled_debug ("geyacc")
 	disabled_debug ("has_calls")
+	disabled_debug ("il_info_trace")
 	disabled_debug ("local_feat_adaptation")
+	disabled_debug ("md out-of-order")
 	disabled_debug ("optimization")
 	disabled_debug ("options")
 	disabled_debug ("parse")
@@ -56,14 +58,11 @@ default
 	disabled_debug ("refactor_fixme")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
-	disabled_debug ("resource_validate")
-	disabled_debug ("sep_debug")
 	disabled_debug ("server")
 	disabled_debug ("show_prof_query")
 	disabled_debug ("timing")
 	disabled_debug ("trace_table")
 	disabled_debug ("transfer")
-	disabled_debug ("type_check")
 	disabled_debug ("verbose")
 	disabled_debug ("xml_input_stream")
 	disabled_debug ("xml_parser")
@@ -110,7 +109,7 @@ cluster
 
 	all common:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
-			"CVS"; "external"; "compiler_override"; "error"; "types";
+			"CVS"; "external"; "compiler_override"; "error"; "types"; 
 		end
 
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
@@ -137,17 +136,17 @@ cluster
 
 	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
 		exclude
-			"CVS"; "structured_text"; "eb_preference_manager.e";
-		end
-		
-	all eiffel_structured_text: 		"$EIFFEL_SRC\Eiffel\API\structured_text"
-		exclude
-			"CVS"; "common"
+			"CVS"; "structured_text"; "eb_preference_manager.e"; 
 		end
 
-	all common_structured_text: 		"$EIFFEL_SRC\library\editor\text_window\text\structure\structured_text\common"
+	all eiffel_structured_text:		"$EIFFEL_SRC\Eiffel\API\structured_text"
 		exclude
-			"CVS"; "text_formatter.e"; "structured_text.e";
+			"CVS"; "common"; 
+		end
+
+	all common_structured_text:		"$EIFFEL_SRC\library\editor\text_window\text\structure\structured_text\common"
+		exclude
+			"CVS"; "text_formatter.e"; "structured_text.e"; 
 		end
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
@@ -174,11 +173,11 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
-	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
-
 	dotnet_helpers:		"$EIFFEL_SRC/dotnet/helpers"
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+
+	all eac_serialization:		"$EIFFEL_SRC\dotnet\consumer\serialization"
 
 	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
 		exclude
@@ -190,10 +189,10 @@ cluster
 			"eiffel_envision_10"; "unix"; "CVS"; "EIFGEN"; 
 		end
 
-	all preferences:	"$EIFFEL_SRC\library\preferences"
+	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
 			"xml_implementation"; "graphical"; 
-		end		
+		end
 
 external
 

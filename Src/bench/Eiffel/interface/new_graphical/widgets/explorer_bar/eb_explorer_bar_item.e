@@ -396,7 +396,6 @@ feature -- Status Setting
 					selectable_command.disable_selected
 				end
 				parent.prune_item (Current)
-				mini_toolbar_holder.wipe_out
 				
 					-- In EiffelStudio, the `parent' of `Current'
 					-- does not have to contain `Current', as it may

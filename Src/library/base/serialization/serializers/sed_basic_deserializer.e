@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 				l_old_dtype := l_deser.read_compressed_natural_32.to_integer_32
 				l_new_dtype := l_int.dynamic_type_from_string (l_deser.read_string_8)
 				if l_new_dtype = -1 then
-					has_error := True
+					set_has_error
 					i := nb - 1 -- Jump out of loop
 				else
 					if not l_table.valid_index (l_old_dtype) then

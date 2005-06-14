@@ -107,6 +107,16 @@ feature {NONE} -- Implementation: Access
 	is_for_fast_retrieval: BOOLEAN
 			-- Was current data stored for fast retrieval?
 
+feature {NONE} -- Implementation: Settings
+
+	set_has_error is
+			-- Set `has_error' to True.
+		do
+			has_error := True
+		ensure
+			has_error_set: has_error
+		end
+
 feature {NONE} -- Cleaning
 
 	clear_internal_data is

@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 			-- `t', type of actual CLASS_C as used in Eiffel code.
 		require
 			good_argument: t /= Void
-			not_formal: not t.has_formal
+			not_formal: t.base_class.lace_class /= system.native_array_class implies not t.has_formal
 		do
 			type := t.generic_derivation
 			is_changed := True

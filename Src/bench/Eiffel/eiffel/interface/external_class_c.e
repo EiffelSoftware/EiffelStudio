@@ -883,7 +883,9 @@ feature {NONE} -- Initialization
 				if l_feat.written_in = class_id then
 						-- Only do it for feature written in current class, inherited
 						-- one have already been processed.
+					set_changed (True)
 					l_feat.update_instantiator2 (Current)
+					set_changed (False)
 				end
 
 				l_name := l_member.dotnet_eiffel_name

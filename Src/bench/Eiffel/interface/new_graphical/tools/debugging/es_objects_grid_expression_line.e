@@ -25,6 +25,7 @@ inherit
 			set_expression_text,
 			expression,
 			apply_cell_expression_text_properties_on,
+			recycle,
 			refresh
 		end
 
@@ -55,6 +56,20 @@ feature {NONE} -- Initialization
 				end
 			end
 		end
+		
+feature -- Recycling
+
+	recycle is
+			-- Recycle data
+			-- in order to free special data (for instance dotnet references)
+		do
+			Precursor
+			internal_associated_debug_value := Void
+			expression_evaluator := Void
+			if expression /= Void then
+				expression.recycle
+			end
+		end		
 
 feature -- Refresh management
 

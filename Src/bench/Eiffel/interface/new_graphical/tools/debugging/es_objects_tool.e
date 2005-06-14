@@ -586,8 +586,11 @@ feature -- Memory management
 				display_first := current_object.display
 				display_first_attributes := current_object.display_attributes
 				display_first_onces := current_object.display_onces
+				current_object.recycle
 				current_object := Void
 			end
+			clean_stack_objects_grid
+			clean_debugged_objects_grid
 		end
 	
 feature {NONE} -- Layout Implementation
@@ -595,13 +598,36 @@ feature {NONE} -- Layout Implementation
 	clean_stack_objects_grid is
 		do
 			record_stack_layout
+			if internal_locals_row /= Void then
+				if internal_locals_row.parent /= Void then
+					grid_remove_subrows_from (internal_locals_row)
+					internal_locals_row.clear
+				end
+				internal_locals_row := Void
+			end
+			if internal_arguments_row /= Void then
+				if internal_arguments_row.parent /= Void then			
+					grid_remove_subrows_from (internal_arguments_row)
+					internal_arguments_row.clear
+				end
+				internal_arguments_row := Void
+			end
+			if internal_result_row /= Void then
+				if internal_result_row.parent /= Void then						
+					grid_remove_subrows_from (internal_result_row)
+					internal_result_row.clear
+				end
+				internal_result_row := Void
+			end
 			stack_objects_grid.remove_all_rows
+			stack_objects_grid.clear
 		end
 
 	clean_debugged_objects_grid is
 		do
 			record_objects_layout
 			debugged_objects_grid.remove_all_rows
+			debugged_objects_grid.clear
 		end
 
 	record_objects_layout is

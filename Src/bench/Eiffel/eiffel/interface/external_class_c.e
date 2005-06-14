@@ -37,14 +37,12 @@ feature -- Initialization
 		require
 			not_built: not is_built
 		local
-			l_reader: EIFFEL_XML_DESERIALIZER
 			l_ast: CLASS_AS
 		do
 				-- Initialize `external_class' which will be used later by
 				-- `initialize_from_xml_data', then it is discarded to save
 				-- some memory as we do not use it anymore.
-			create l_reader
-			external_class ?= l_reader.new_object_from_file (lace_class.file_name)
+			external_class := lace_class.external_consumed_type
 
 			if external_class = Void then
 					-- For some reasons, the XML file could not be retried.
@@ -131,7 +129,7 @@ feature -- Initialization
 			nb: INTEGER
 			l_feat_tbl: like feature_table
 			l_orig_tbl: SELECT_TABLE
-			l_fields, l_constructors, l_procedures, l_functions: ARRAY [CONSUMED_ENTITY]
+			l_fields, l_constructors, l_procedures, l_functions: ARRAYED_LIST [CONSUMED_ENTITY]
 		do
 				-- Create data structures to hold features information.
 			l_fields := external_class.fields
@@ -380,18 +378,13 @@ feature -- Query
 			a_feat_is_function: a_feat.is_function
 			a_feat_is_external: a_feat.is_external
 		local
-			l_reader: EIFFEL_XML_DESERIALIZER
 			l_consumed_type: CONSUMED_TYPE
 			l_properties: ARRAY [CONSUMED_PROPERTY]
 			l_prop: CONSUMED_PROPERTY
 			i, nb: INTEGER
 			done: BOOLEAN
 		do
-				-- Initialize `external_class' which will be used later by
-				-- `initialize_from_xml_data', then it is discarded to save
-				-- some memory as we do not use it anymore.
-			create l_reader
-			l_consumed_type ?= l_reader.new_object_from_file (lace_class.file_name)
+			l_consumed_type := lace_class.external_consumed_type
 			
 				-- It should not be Void, since we were able to parse it before, but it
 				-- is possible that someone might remove the file or other external
@@ -427,7 +420,7 @@ feature {NONE} -- Initialization
 			parent_type: CL_TYPE_A
 			parent_class: CLASS_C
 			l_ext_class: CONSUMED_REFERENCED_TYPE
-			i, nb: INTEGER
+			nb: INTEGER
 		do
 			nb := 1
 			if external_class.interfaces /= Void then
@@ -461,12 +454,11 @@ feature {NONE} -- Initialization
 
 			if external_class.interfaces /= Void and not external_class.interfaces.is_empty then
 				from
-					i := external_class.interfaces.lower
-					nb := external_class.interfaces.upper
+					external_class.interfaces.start
 				until
-					i > nb
+					external_class.interfaces.after
 				loop
-					l_ext_class := external_class.interfaces.item (i)
+					l_ext_class := external_class.interfaces.item
 					if l_ext_class /= Void then
 						parent_type := internal_type_from_consumed_type (True, l_ext_class)
 						parent_class := parent_type.associated_class
@@ -475,7 +467,7 @@ feature {NONE} -- Initialization
 						parent_class.add_descendant (Current)
 						add_syntactical_supplier (parent_type)
 					end
-					i := i + 1
+					external_class.interfaces.forth
 				end
 			end
 			
@@ -499,23 +491,22 @@ feature {NONE} -- Initialization
 					implies parents_classes.count > 0
 		end
 
-	process_syntax_features (a_features: ARRAY [CONSUMED_ENTITY]) is
+	process_syntax_features (a_features: ARRAYED_LIST [CONSUMED_ENTITY]) is
 			-- Get all features and make sure all referenced types are in system.
 		require
 			a_features_not_void: a_features /= Void
 		local
 			l_member: CONSUMED_ENTITY
 			l_args: ARRAY [CONSUMED_ARGUMENT]
-			i, j, k, l, nb: INTEGER
+			j, k, l: INTEGER
 			l_external_type: CL_TYPE_A
 		do
 			from
-				i := a_features.lower
-				nb := a_features.upper
+				a_features.start
 			until
-				i > nb
+				a_features.after
 			loop
-				l_member := a_features.item (i)
+				l_member := a_features.item
 
 				if l_member.has_return_value then
 					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
@@ -538,8 +529,7 @@ feature {NONE} -- Initialization
 						j := j + 1
 					end
 				end
-
-				i := i + 1
+				a_features.forth
 			end
 		end
 
@@ -628,7 +618,7 @@ feature {NONE} -- Initialization
 			l_orig_tbl.put (a_feat, a_feat.rout_id_set.first)
 		end
 
-	process_features (a_feat_tbl: like feature_table; a_features: ARRAY [CONSUMED_ENTITY]) is
+	process_features (a_feat_tbl: like feature_table; a_features: ARRAYED_LIST [CONSUMED_ENTITY]) is
 			-- Get all features and make sure all referenced types are in system.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
@@ -641,7 +631,7 @@ feature {NONE} -- Initialization
 			l_args: ARRAY [CONSUMED_ARGUMENT]
 			l_arg: CONSUMED_ARGUMENT
 			l_arg_ids: ARRAY [INTEGER]
-			i, j, k, l, m, nb, l_record_pos, l_id: INTEGER
+			j, k, l, m, l_record_pos, l_id: INTEGER
 			l_creators: like creators
 			l_external_type, l_written_type: CL_TYPE_A
 			l_feat: FEATURE_I
@@ -661,20 +651,20 @@ feature {NONE} -- Initialization
 			l_name_id: INTEGER
 		do
 			from
-				i := a_features.lower
-				nb := a_features.upper
+				a_features.start
 				l_creators := creators
 				l_names_heap := Names_heap
 				create l_all_export
 				create l_none_export
 			until
-				i > nb
+				a_features.after
 			loop
 				l_deferred := Void
 				l_external := Void
 				l_constant := Void
 
-				l_member := a_features.item (i)
+				l_member := a_features.item
+				a_features.forth
 
 				create l_ext
 
@@ -908,8 +898,6 @@ feature {NONE} -- Initialization
 					l_list.extend (l_feat.feature_name_id)
 					overloaded_names.put (l_list, l_id)
 				end
-
-				i := i + 1
 			end
 		end
 

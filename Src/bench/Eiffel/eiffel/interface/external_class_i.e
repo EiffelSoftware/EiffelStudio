@@ -16,7 +16,7 @@ inherit
 			make as old_make,
 			cluster as assembly
 		redefine
-			external_name, file_name, is_external_class, assembly
+			external_name, is_external_class, assembly
 		end
 
 create
@@ -24,24 +24,25 @@ create
 
 feature {NONE} -- Initialization
 
-	make (an_assembly: like assembly; a_name, an_external_name: STRING; a_file_location: like base_name) is
+	make (an_assembly: like assembly; a_name, an_external_name: STRING; a_pos: like file_position) is
 			-- Create new instance of Current.
 		require
 			a_name_not_void: a_name /= Void
 			an_external_name_not_void: an_external_name /= Void
-			a_file_location_not_void: a_file_location /= Void
+			a_pos_non_negative: a_pos >= 0
 		do
 				-- Initialize Current with passed information and
 				-- compute file date on `file_name'.
 			assembly := an_assembly
 			name := a_name
 			external_name := an_external_name
-			base_name := a_file_location
+			base_name := classes_file_name
+			file_position := a_pos
 			set_date
 		ensure
 			name_set: name = a_name
 			external_name_set: external_name = an_external_name
-			base_name_set: base_name = a_file_location
+			file_position_set: file_position = a_pos
 		end
 
 feature -- Access
@@ -51,15 +52,15 @@ feature -- Access
 			
 	assembly: ASSEMBLY_I
 			-- Cluster is an assembly.
-
-	file_name: FILE_NAME is
-			-- Full file name of the class
+			
+	external_consumed_type: CONSUMED_TYPE is
+			-- Associated CONSUMED_TYPE instance of Current
+		local
+			l_reader: like consumed_type_deserializer
 		do
-			create Result.make_from_string (assembly.path)
-			Result.extend (classes_directory)
-			Result.set_file_name (base_name)
-		ensure then
-			file_name_not_void: Result /= Void
+			l_reader := consumed_type_deserializer
+			l_reader.deserialize (file_name, file_position)
+			Result ?= l_reader.deserialized_object
 		end
 
 feature -- Status Report
@@ -131,8 +132,19 @@ feature {EXTERNAL_CLASS_C} -- Mapping
 
 feature {NONE} -- Implementation
 
-	classes_directory: STRING is "classes"
+	classes_file_name: STRING is "classes.info"
 			-- Directory from Assembly location where classes are located.
+
+	file_position: INTEGER
+			-- Position of class description in `file_name'
+
+	consumed_type_deserializer: EIFFEL_DESERIALIZER is
+			-- Deserializer engine
+		once
+			create Result
+		ensure
+			consumed_type_deserializer_not_void: Result /= Void
+		end
 
 invariant
 	name_not_void: name /= Void

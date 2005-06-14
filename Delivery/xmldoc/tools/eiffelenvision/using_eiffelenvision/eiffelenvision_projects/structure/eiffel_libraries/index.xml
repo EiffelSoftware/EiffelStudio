@@ -1,15 +1,15 @@
-<document output="envision" title="EiffelEnvision Project Structure">
+<document output="envision" title="Eiffel Libraries">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Project Structure</envision_title>
+				<envision_title>Eiffel Libraries</envision_title>
 				<envision_pseudo_name>10</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			This section of the documentation outlines the structure of EiffelEnvision projects and their presence in the <link><url>url</url><label>*Solution Explorer</label></link>.
+			The <bold>Eiffel Libraries</bold> folder in an EiffelEnvision <link><url>../project.xml</url><label>Project</label></link> is designed to store arbitary project related items, that are not specific to the project itself.
 		</paragraph>
 		
 		<anchor>in_this_section</anchor>
@@ -19,51 +19,42 @@
 		</heading>
 		<paragraph>
 			<link>
-				<url>project.xml</url>
-				<label>EiffelEnvision Project Structure</label>
+				<url>eiffel_libraries.xml</url>
+				<label>Eiffel Libraries Folder</label>
 			</link>
 			<line_break/>
-			An overview of an EiffelEnvision project structure and why projects are structured the way they are.
+			An explaination of the <bold>Eiffel Libraries</bold> folder and its function within an EiffelEnvision project.
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>references/index.xml</url>
-				<label>Project References</label>
+				<url>context_menu.xml</url>
+				<label>Eiffel Libraries Context Menu</label>
 			</link>
 			<line_break/>
-			Detailed infomration on the <bold>References</bold> folder in EiffelEnvision projects.
+			The <bold>Eiffel Libraries</bold> folder context menu.
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>project_items/index.xml</url>
-				<label>EiffelEnvision Project Structure</label>
+				<url>explicit_clusters.xml</url>
+				<label>Explicit Cluster Folders</label>
 			</link>
 			<line_break/>
-			Detailed infomration on the <bold>Project Items</bold> folder in EiffelEnvision projects.
+			An overview of the explicit cluster folders that will be found under the <bold>Eiffel Libraries</bold> folder.
 		</paragraph>
-				<paragraph>
-			<link>
-				<url>eiffel_libraries/index.xml</url>
-				<label>Eiffel Libraries</label>
-			</link>
+
+		<anchor>also_see</anchor>
+		<heading>
+			<size>2</size>
+			<content>Related Sections</content>
+		</heading>
+		<seealso>
+			<bold>See Also:</bold>
 			<line_break/>
-			Detailed infomration on the <bold>Eiffel Libraries</bold> folder in EiffelEnvision projects.
-		</paragraph>
-		<paragraph>
-			<link>
-				<url>other_project_items/index.xml</url>
-				<label>Other Project Items</label>
-			</link>
+			<link><url>../index.xml</url><label>EiffelEnvision Projects</label></link>
 			<line_break/>
-			Detailed infomration on the <bold>Other Project Items</bold> folder in EiffelEnvision projects.
-		</paragraph>
-		<paragraph>
-			<link>
-				<url>known_folders.xml</url>
-				<label>Known EiffelEnvision Folders</label>
-			</link>
+<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
 			<line_break/>
-			Infomation on the physical folders used by EiffelEnvision projects.
-		</paragraph>
+			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>
+		</seealso>
 	</paragraph>
 </document>

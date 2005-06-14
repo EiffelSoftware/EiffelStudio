@@ -1,0 +1,15 @@
+<document output="envision" title="Explicit Cluster Folders">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Explicit Cluster Folders</envision_title>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>
+			For the full documentation on explicit cluster folders under the <bold>Eiffel Libraries</bold> folder in EiffelEnvision projects, see <link><url>../project_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link>.
+		</paragraph>
+	</paragraph>
+</document>

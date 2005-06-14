@@ -333,8 +333,8 @@ feature -- Click list update
 							invariant
 								token /= Void
 							until
-								is_string (token)
-							loop
+								is_string (token) or token = Void
+							loop								
 								if token.next /= Void then
 									pos_in_file := token.length + pos_in_file
 									token := token.next
@@ -374,7 +374,7 @@ feature -- Click list update
 						end
 					end
 				end
-				if token.next /= Void then
+				if token /= Void and then token.next /= Void then
 					pos_in_file := token.length + pos_in_file
 					token := token.next
 				elseif line.next /= Void then
@@ -388,7 +388,7 @@ feature -- Click list update
 					token := Void
 				end
 			end							
-		end
+		end		
 
 feature {NONE} -- Private Access : indexes
 
@@ -401,7 +401,7 @@ feature {NONE} -- Private Access : indexes
 feature {NONE} -- Private Access
 
 	split_string: BOOLEAN
-			-- is processed token part of a split string ?
+			-- is processed token part of a split string?
 
 feature -- Basic Operations
 
@@ -466,7 +466,7 @@ feature -- Basic Operations
 						if externals /= Void then
 							from
 								externals.start
-							until
+							 until
 								externals.after
 							loop
 							feat := externals.item

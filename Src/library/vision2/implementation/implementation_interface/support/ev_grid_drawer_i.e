@@ -661,7 +661,7 @@ feature -- Basic operations
 												-- so the following check prevents this:
 										check
 											item_set_implies_set_item_is_returned_item: grid.item_internal (visible_column_indexes.item, visible_row_indexes.item) /= Void
-												implies grid.item_internal (visible_column_indexes.item, visible_row_indexes.item) = grid_item
+												implies grid.item_internal (visible_column_indexes.item, visible_row_indexes.item) = grid_item_interface.implementation
 										end
 										
 										if grid_item_interface /= Void then

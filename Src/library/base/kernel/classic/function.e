@@ -32,8 +32,8 @@ feature -- Access
 			callable: callable
 		do
 			set_operands (args)
+			last_result := Void
 			Result := rout_obj_call_function (rout_disp, $internal_operands)
-			last_result := Result
 			if is_cleanup_needed then
 				remove_gc_reference
 			end

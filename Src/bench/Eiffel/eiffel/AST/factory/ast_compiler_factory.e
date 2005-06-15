@@ -133,7 +133,7 @@ feature -- Access
 			end
 		end
 
-	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS): FEATURE_AS is
+	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; next_pos: INTEGER): FEATURE_AS is
 			-- New FEATURE AST node
 		local
 			feature_name: FEATURE_NAME
@@ -203,7 +203,7 @@ feature -- Access
 					end
 					f.forth
 				end
-				create Result.initialize (f, b, i, system.feature_as_counter.next_id)
+				create Result.initialize (f, b, i, system.feature_as_counter.next_id, next_pos)
 				if b.is_unique then
 					check
 						system_initialized: system.current_class /= Void

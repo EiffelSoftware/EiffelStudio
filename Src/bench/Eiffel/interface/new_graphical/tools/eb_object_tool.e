@@ -89,10 +89,8 @@ feature {NONE} -- Initialization
 			objects_tree.key_press_actions.extend (agent debug_value_key_action (objects_tree, ?))
 
 			create split
-			split.disable_flat_separator
 			split.set_first (stack_objects_tree)
 			split.set_second (objects_tree)
-			split.enable_flat_separator
 
 			expand_result := True
 			expand_args := True
@@ -611,7 +609,7 @@ feature {NONE} -- Implementation
 	hex_format_cmd: EB_HEX_FORMAT_CMD
 			-- Command that is used to switch hex/dec formatting for numerical values
 
-	split: EB_HORIZONTAL_SPLIT_AREA
+	split: EV_HORIZONTAL_SPLIT_AREA
 			-- Split area that contains both `stack_objects_tree' and `objects_tree'.
 			
 	real_update (dbg_was_stopped: BOOLEAN) is

@@ -134,10 +134,8 @@ feature {NONE} -- Initialization
 			debugged_objects_grid := esgrid
 
 			create split
-			split.disable_flat_separator
 			split.set_first (stack_objects_grid)
 			split.set_second (debugged_objects_grid)
-			split.enable_flat_separator
 			expand_result := True
 			expand_args := True
 			expand_locals := True
@@ -674,7 +672,7 @@ feature {NONE} -- Implementation
 			Result := application.status.current_call_stack_element
 		end
 
-	split: EB_HORIZONTAL_SPLIT_AREA
+	split: EV_HORIZONTAL_SPLIT_AREA
 			-- Split area that contains both `stack_objects_grid' and `debugged_objects_grid'.
 
 	real_update (dbg_was_stopped: BOOLEAN) is

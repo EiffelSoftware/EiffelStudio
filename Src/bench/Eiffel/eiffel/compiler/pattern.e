@@ -13,10 +13,6 @@ inherit
 		redefine
 			is_equal
 		end;
-	SHARED_CODE_FILES
-		redefine
-			is_equal
-		end;
 
 create
 

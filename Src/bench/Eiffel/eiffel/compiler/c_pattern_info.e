@@ -12,13 +12,6 @@ inherit
 			is_equal
 		end
 
-	SHARED_CODE_FILES
-		export
-			{NONE} all
-		redefine
-			is_equal
-		end
-
 create
 	make
 

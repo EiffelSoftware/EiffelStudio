@@ -8,11 +8,6 @@ deferred class CECIL_TABLE [T]
 inherit
 	ANY
 
-	SHARED_CODE_FILES
-		export
-			{NONE} ALL
-		end
-
 	SHARED_WORKBENCH
 		export
 			{NONE} ALL

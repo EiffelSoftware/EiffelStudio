@@ -35,8 +35,6 @@ inherit
 			context as byte_context
 		end
 
-	SHARED_CODE_FILES
-
 	SHARED_PATTERN_TABLE
 
 	SHARED_INST_CONTEXT

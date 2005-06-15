@@ -40,6 +40,30 @@ feature -- Status report
 			positive: Result > 0
 		end
 
+	virtual_width: INTEGER is
+			-- Virtual width of screen
+		do
+			Result := width
+		end
+
+	virtual_height: INTEGER is
+			-- Virtual height of screen
+		do
+			Result := height
+		end
+
+	virtual_x: INTEGER is
+			-- X position of virtual screen in main display coordinates
+		do
+			Result := 0
+		end
+
+	virtual_y: INTEGER is
+			-- Y position of virtual screen in main display coordinates
+		do
+			Result := 0
+		end
+
 feature -- Basic operation
 
 	set_pointer_position (a_x, a_y: INTEGER) is

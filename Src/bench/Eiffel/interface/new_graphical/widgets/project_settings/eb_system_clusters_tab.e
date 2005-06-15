@@ -770,7 +770,7 @@ feature {NONE} -- Initialization
 	make (top: like system_window) is
 			-- Create widget corresponding to `General' tab in notebook.
 		local
-			split: EB_HORIZONTAL_SPLIT_AREA
+			split: EV_HORIZONTAL_SPLIT_AREA
 			vbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
 			label: EV_LABEL
@@ -813,7 +813,6 @@ feature {NONE} -- Initialization
 			vbox.extend (cluster_tree)
 
 			split.set_first (vbox)
-			split.enable_flat_separator
 			
 			create vbox
 			vbox.set_border_width (5)

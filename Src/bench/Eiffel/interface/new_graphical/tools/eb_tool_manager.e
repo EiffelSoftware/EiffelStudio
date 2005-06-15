@@ -116,8 +116,6 @@ feature {EB_TOOL_MANAGER} -- Initialization
 				panel.extend (right_panel)
 			end
 			update_expanded_state_of_panel
-			
-			panel.enable_flat_separator
 
 				-- Create the status bar.
 			create status_bar.make
@@ -410,7 +408,7 @@ feature {EB_DEBUGGER_MANAGER} -- Explorer bars
 			-- The right panel is always displayed and is therefore never Void
 			-- (see invariant).
 
-	panel: EB_HORIZONTAL_SPLIT_AREA
+	panel: EV_HORIZONTAL_SPLIT_AREA
 			-- Main panel. It can be either a EV_HORIZONTAL_SPLIT_AREA or an EV_CELL.
 			-- It depends whether the left explorer bar is displayed or not.
 			--

@@ -2074,21 +2074,16 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		require
 			for_context_tool: mode
 		local
-			start_x: INTEGER
 			window: EV_WINDOW
 			a_screen: EV_SCREEN
 		do
-			start_x := header_info.screen_x
 			window := parent_window (header_info)
 			if address_dialog.is_show_requested then
 				address_dialog.hide
 			end
 			create a_screen
-			--address_dialog.set_position (start_x.max (0).min (a_screen.width - address_dialog.minimum_width), header_info.screen_y.max (0).min (a_screen.height - address_dialog.height))
-				--| FIXME IEK Previous line is not multi-display friendly
-			address_dialog.set_position (start_x.max (0), header_info.screen_y.max (0))
-			
-			address_dialog.set_width ((start_x + header_info.width).min (a_screen.width) - start_x.max(0))
+			address_dialog.set_position (header_info.screen_x, header_info.screen_y)
+			address_dialog.set_width (header_info.width)
 			address_dialog.set_height (header_info.height)
 			address_dialog.show
 			if output_line /= Void then

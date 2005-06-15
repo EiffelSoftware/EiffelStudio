@@ -2117,7 +2117,7 @@ feature -- Conversion
 			i, nb, l_state: INTEGER;
 			l_natural_part, l_fractional_part, l_fractional_divider: DOUBLE;
 			l_exponent: INTEGER
-			l_is_negative, l_has_negative_exponent: BOOLEAN
+			l_is_negative, l_has_negative_exponent, l_has_fractional_part: BOOLEAN
 		do
 			-- l_state = 0: waiting sign or double value.
 			-- l_state = 1: sign read, waiting double value.
@@ -2178,6 +2178,7 @@ feature -- Conversion
 						l_state := 7
 					else
 						check l_c.is_digit end
+						l_has_fractional_part := True
 						l_fractional_part := l_c.code - 48
 						l_fractional_divider := 10.0
 						l_state := 4
@@ -2223,7 +2224,9 @@ feature -- Conversion
 			if l_has_negative_exponent then
 				l_exponent := -l_exponent
 			end
-			l_natural_part := l_natural_part + l_fractional_part / l_fractional_divider
+			if l_has_fractional_part then
+				l_natural_part := l_natural_part + l_fractional_part / l_fractional_divider
+			end
 			if l_is_negative then
 				Result := -l_natural_part * (10.0 ^ l_exponent)
 			else

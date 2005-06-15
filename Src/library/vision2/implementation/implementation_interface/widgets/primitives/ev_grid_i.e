@@ -2051,9 +2051,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if vertical_redraw_triggered_by_viewport_resize then
 					recompute_vertical_scroll_bar
 				end
-				if row_count > 0 then
-						-- Do nothing if `Current' is empty.
-					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar)
+				if row_count > 0 and not vertical_computation_added_to_once_idle_actions then
+						-- Do nothing if `Current' is empty or the agent is already contained
+						-- in the do once on idle actions.
+					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar_from_once_idle_actions)
+					vertical_computation_added_to_once_idle_actions := True
 				end
 				vertical_redraw_triggered_by_viewport_resize := False
 			end
@@ -2074,11 +2076,40 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if horizontal_redraw_triggered_by_viewport_resize then
 					recompute_horizontal_scroll_bar
 				end
-				if column_count > 0 then
-					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar)
+				if column_count > 0 and not horizontal_computation_added_to_once_idle_actions then
+						-- Do nothing if `Current' is empty or the agent is already contained
+						-- in the do once on idle actions.
+					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar_from_once_idle_actions)
+					horizontal_computation_added_to_once_idle_actions := True
 				end
 				horizontal_redraw_triggered_by_viewport_resize := False
 			end
+		end
+
+	horizontal_computation_added_to_once_idle_actions: BOOLEAN
+		-- Is an agent contained in the idle actions which recomputes the horizontal scroll bar?
+
+	vertical_computation_added_to_once_idle_actions: BOOLEAN
+		-- Is an agent contained in the idle actions which recomputes the vertical scroll bar?
+
+	recompute_vertical_scroll_bar_from_once_idle_actions is
+			-- A wrapper for the idle actions to call `recompute_vertical_scroll_bar'
+			-- and reset `vertical_computation_added_to_once_idle_actions'.
+		do
+			recompute_vertical_scroll_bar
+			vertical_computation_added_to_once_idle_actions := False
+		ensure
+			reset: vertical_computation_added_to_once_idle_actions = False
+		end
+
+	recompute_horizontal_scroll_bar_from_once_idle_actions is
+			-- A wrapper for the idle actions to call `recompute_horizontal_scroll_bar'
+			-- and reset `horizontal_computation_added_to_once_idle_actions'.
+		do
+			recompute_horizontal_scroll_bar
+			horizontal_computation_added_to_once_idle_actions := False
+		ensure
+			reset: horizontal_computation_added_to_once_idle_actions = False
 		end
 
 	recompute_column_offsets (an_index: INTEGER) is

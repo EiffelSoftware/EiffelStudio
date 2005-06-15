@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 			restore_button.select_actions.extend (agent on_restore)			
 			create grid
 			main_preference_box.extend (grid)
+			grid.set_item (2, 1, Void)
 			show						
 		end
 
@@ -64,6 +65,8 @@ feature {NONE} -- Implementation
 			l_root_pixmap: EV_PIXMAP
 			l_hbox: EV_HORIZONTAL_BOX
 			l_row_index: INTEGER
+			l_exec: EXECUTION_ENVIRONMENT
+			l_filename: FILE_NAME
 		do
 				-- Retrieve known preferences
 			l_known_pref_hash := preferences.resources
@@ -74,6 +77,7 @@ feature {NONE} -- Implementation
 				from
 					l_known_pref_hash.start
 					l_row_index := 1
+					create l_exec
 				until
 					l_known_pref_hash.after
 				loop
@@ -84,7 +88,10 @@ feature {NONE} -- Implementation
 						if not l_pref_hash.has (l_pref_parent_short_name) then
 							create l_root_pixmap
 							create l_hbox
-							l_root_pixmap.set_with_named_file ("C:\MyProjects\Eiffel\new_preferences\" + l_pref_parent_short_name + ".bmp")
+							create l_filename.make_from_string (l_exec.current_working_directory)
+							l_filename.extend (l_pref_parent_short_name)
+							l_filename.add_extension ("png")
+							l_root_pixmap.set_with_named_file (l_filename.string)
 							l_root_pixmap.pointer_button_press_actions.force_extend (agent fill_container (l_pref_parent_short_name))
 							l_hbox.extend (l_root_pixmap)
 							l_hbox.set_minimum_size (120, 120)
@@ -109,6 +116,7 @@ feature {NONE} -- Implementation
 			l_row_index: INTEGER
 		do
 			grid.wipe_out
+			grid.set_item (2, 1, Void)
 			parent_title_label.set_text (parent_resource)
 				-- Retrieve known preferences
 			l_resources := preferences.resources
@@ -141,13 +149,20 @@ feature {NONE} -- Implementation
 				l_cr ?= a_resource
 				if l_cr /= Void then
 					create {COLOR_PREFERENCE_WIDGET} l_resource_widget.make_with_resource (l_cr)						
+					l_resource_widget.set_caller (Current)
+					grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_resource.name))
+					grid.set_item (2, a_row_index, l_resource_widget.change_item_widget)
 				end
 			else
 				create {DIRECTORY_RESOURCE_WIDGET} l_resource_widget.make_with_resource (l_dr)
-			end			
+				l_resource_widget.set_caller (Current)
+				grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_resource.name))
+				grid.set_item (2, a_row_index, l_resource_widget.change_item_widget)
+			end									
 			
-			l_resource_widget.set_caller (Current)
-			grid.set_item (1, a_row_index, l_resource_widget.change_item_widget)
+			grid.column (1).set_title ("Preference Name")
+			grid.column (2).set_title ("Value")
+			grid.column (1).resize_to_content
 		end	
 
 feature {NONE} -- Events

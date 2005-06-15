@@ -188,13 +188,13 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation / Constants
 
-	Window_title: STRING is "new_preferences"
+	Window_title: STRING is "EiffelPreference Example"
 			-- Title of the window.
 
-	Window_width: INTEGER is 400
+	Window_width: INTEGER is 100
 			-- Initial width for this window.
 
-	Window_height: INTEGER is 400
+	Window_height: INTEGER is 100
 			-- Initial height for this window.
 
 end -- class MAIN_WINDOW

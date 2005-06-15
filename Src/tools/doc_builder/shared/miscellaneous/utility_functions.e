@@ -437,7 +437,7 @@ feature -- Document
 			l_name := a_doc.name
 			l_name.replace_substring_all ("\", "/")
 			if l_name.has_substring (l_lib_name) then
-				Result := l_name.has_substring ("reference")
+				Result := l_name.has_substring ("/reference/")
 			end
 		end
 

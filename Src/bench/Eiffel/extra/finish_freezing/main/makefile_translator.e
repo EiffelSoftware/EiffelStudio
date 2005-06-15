@@ -1079,6 +1079,7 @@ feature {NONE} -- Translation
 			end
 
 			lastline.replace_substring_all ("$appl", appl)
+			subst_objects_redirection (lastline)
 
 			if options.has ("sharedlibs") then
 				lastline.replace_substring_all ("$sharedlibs", options.get_string ("sharedlibs", Void))	
@@ -1386,6 +1387,51 @@ feature {NONE}	-- substitutions
 			if eiffel_dir /= Void and then not eiffel_dir.is_empty then
 				line.replace_substring_all ("$(ISE_EIFFEL)", eiffel_dir)
 				line.replace_substring_all ("$(EIFFEL4)", eiffel_dir)
+			end
+		end
+
+	subst_objects_redirection (line: STRING) is
+			-- Replace all occurences of $objects_redirection with list of objects
+		local
+			l_string, l_dir: STRING
+			l_int: STRING
+			i: INTEGER
+			l_new_line_inserted: BOOLEAN
+		do
+			if line.substring_index ("$objects_redirection", 1) > 0 then
+				from
+					create l_string.make (dependent_directories.count * 10)
+					l_int := options.get_string ("intermediate_file_ext", Void)
+					dependent_directories.start
+					i := 0
+				until
+					dependent_directories.after
+				loop
+					if i \\ 5 = 0 then
+						l_string.append_string ("%Techo ")
+						l_new_line_inserted := True
+					end
+					l_dir := dependent_directories.item
+					l_string.append (l_dir)
+					l_string.append (directory_separator)
+					l_string.append_character (l_dir.item (1))
+					l_string.append ("obj")
+					l_string.append (l_dir.substring (2, l_dir.count))
+					l_string.append_character ('.')
+					l_string.append_string (l_int)
+					l_string.append_character (' ')
+					if (i + 1) \\ 5 = 0 then
+						l_string.append (" >> $@ %N")
+						l_new_line_inserted := False
+					end
+
+					dependent_directories.forth
+					i := i + 1
+				end
+				if l_new_line_inserted then
+					l_string.append (" >> $@ %N")
+				end
+				line.replace_substring_all ("$objects_redirection", l_string)
 			end
 		end
 

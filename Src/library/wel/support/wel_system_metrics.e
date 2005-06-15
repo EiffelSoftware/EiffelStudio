@@ -179,6 +179,30 @@ feature -- Status report
 			Result := cwin_get_system_metrics (Sm_cyscreen)
 		end
 
+	virtual_screen_x: INTEGER is
+			-- Screen width
+		do
+			Result := cwin_get_system_metrics (Sm_xvirtualscreen)
+		end
+
+	virtual_screen_y: INTEGER is
+			-- Screen height
+		do
+			Result := cwin_get_system_metrics (Sm_yvirtualscreen)
+		end
+
+	virtual_screen_width: INTEGER is
+			-- Screen width
+		do
+			Result := cwin_get_system_metrics (Sm_cxvirtualscreen)
+		end
+
+	virtual_screen_height: INTEGER is
+			-- Screen height
+		do
+			Result := cwin_get_system_metrics (Sm_cyvirtualscreen)
+		end
+
 	title_bar_width: INTEGER is
 			-- Width of bitmaps contained in title bar
 		do

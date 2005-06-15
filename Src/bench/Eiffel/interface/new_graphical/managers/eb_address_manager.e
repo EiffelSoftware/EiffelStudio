@@ -797,10 +797,12 @@ feature {NONE} -- Implementation
 			cluster_list_not_void: cluster_list /= Void
 		local
 			cluster_names: ARRAYED_LIST [STRING]
+			cluster_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 			clusteri: CLUSTER_I
 			cname: STRING
 		do
 			create cluster_names.make (cluster_list.count)
+			create cluster_pixmaps.make (cluster_list.count)
 			from
 				cluster_list.start
 			until
@@ -809,6 +811,7 @@ feature {NONE} -- Implementation
 				clusteri := cluster_list.item
 				cname := clusteri.cluster_name.twin
 				cluster_names.extend (cname)
+				cluster_pixmaps.extend (pixmap_from_cluster_i (clusteri))
 				cluster_list.forth
 			end
 			if not cluster_names.is_empty then
@@ -820,7 +823,7 @@ feature {NONE} -- Implementation
 				else
 					create choice.make_default (agent process_cluster_callback (?))
 					choice.set_title (Interface_names.t_Select_cluster)
-					choice.set_list (cluster_names)
+					choice.set_list (cluster_names, cluster_pixmaps)
 					choice.set_position (cluster_address.screen_x, cluster_address.screen_y + cluster_address.height)
 					choice.set_width (cluster_address.width)
 					must_show_choice := True
@@ -841,11 +844,13 @@ feature {NONE} -- Implementation
 			class_list_not_void: class_list /= Void
 		local
 			class_names: ARRAYED_LIST [STRING]
+			class_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 			classi, last_class: CLASS_I
 			cname, last_name: STRING
 			first_ambiguous: BOOLEAN
 		do
 			create class_names.make (class_list.count)
+			create class_pixmaps.make (class_list.count)
 			from class_list.start until class_list.after loop
 				classi := class_list.item
 				cname := classi.name.twin
@@ -865,6 +870,7 @@ feature {NONE} -- Implementation
 					first_ambiguous := False
 				end
 				class_names.extend (cname)
+				class_pixmaps.extend (pixmap_from_class_i (classi))
 				last_class := classi
 				class_list.forth
 			end
@@ -877,7 +883,7 @@ feature {NONE} -- Implementation
 				else
 					create choice.make_default (agent process_class_callback (?))
 					choice.set_title (Interface_names.t_Select_class)
-					choice.set_list (class_names)
+					choice.set_list (class_names, class_pixmaps)
 					choice.set_position (class_address.screen_x, class_address.screen_y + class_address.height)
 					choice.set_width (class_address.width)
 					must_show_choice := True
@@ -902,14 +908,17 @@ feature {NONE} -- Implementation
 			feature_list_not_void: feature_list /= Void
 		local
 			feature_names: ARRAYED_LIST [STRING]
+			feature_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 		do
 			create feature_names.make (feature_list.count)
+			create feature_pixmaps.make (feature_list.count)
 			from
 				feature_list.start
 			until
 				feature_list.after
 			loop
 				feature_names.extend (feature_list.item.name)
+				feature_pixmaps.extend (pixmap_from_e_feature (feature_list.item))
 				feature_list.forth
 			end
 			if not feature_names.is_empty then
@@ -918,7 +927,7 @@ feature {NONE} -- Implementation
 				else
 					create choice.make_default (agent process_feature_callback (?))
 					choice.set_title (Interface_names.t_Select_feature)
-					choice.set_list (feature_names)
+					choice.set_list (feature_names, feature_pixmaps)
 					choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
 					choice.set_width (feature_address.width)
 					must_show_choice := True

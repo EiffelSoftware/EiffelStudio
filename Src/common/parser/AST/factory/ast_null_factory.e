@@ -463,7 +463,7 @@ feature -- Access
 		do
 		end
 
-	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS): FEATURE_AS is
+	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; next_pos: INTEGER): FEATURE_AS is
 			-- New FEATURE AST node
 		do
 		end
@@ -666,7 +666,7 @@ feature -- Access
 
 	new_routine_as (o: STRING_AS; pr: REQUIRE_AS;
 			l: EIFFEL_LIST [TYPE_DEC_AS]; b: ROUT_BODY_AS; po: ENSURE_AS;
-			r: EIFFEL_LIST [INSTRUCTION_AS]; p: INTEGER; end_loc: LOCATION_AS;
+			r: EIFFEL_LIST [INSTRUCTION_AS]; end_loc: LOCATION_AS;
 			oms_count: INTEGER): ROUTINE_AS
 		is
 			-- New ROUTINE AST node

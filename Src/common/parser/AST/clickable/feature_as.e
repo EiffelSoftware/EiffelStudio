@@ -30,23 +30,26 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like feature_names; b: like body; i: like indexes; an_id: like id) is
+	initialize (f: like feature_names; b: like body; i: like indexes; an_id: like id; a_pos: like next_position) is
 			-- Create a new FEATURE AST node.
 		require
 			f_not_void: f /= Void
 			f_not_empty: not f.is_empty
 			b_not_void: b /= Void
 			can_have_indexes: i /= Void implies f.count = 1
+			a_pos_non_negative: a_pos >= 0
 		do
 			feature_names := f
 			body := b
 			indexes := i
 			id := an_id
+			next_position := a_pos
 		ensure
 			feature_names_set: feature_names = f
 			body_set: body = b
 			indexes_set: indexes = i
 			id_set: id = an_id
+			next_position_set: next_position = a_pos
 		end
 
 feature -- Visitor
@@ -94,6 +97,10 @@ feature -- Location
 				Result := feature_names.end_location
 			end
 		end
+		
+	next_position: INTEGER
+			-- Position for the following construct after current.
+			-- Useful to extract comments of an attribute
 		
 feature -- Property
 
@@ -327,5 +334,6 @@ invariant
 	feature_names_not_empty: not feature_names.is_empty
 	body_not_void: body /= Void
 	can_have_indexing_clause: indexes /= Void implies feature_names.count = 1
+	next_position_non_negative: next_position >= 0
 
 end -- class FEATURE_AS

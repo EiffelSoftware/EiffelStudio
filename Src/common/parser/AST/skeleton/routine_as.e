@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 	initialize (o: like obsolete_message; pr: like precondition;
 		l: like locals; b: like routine_body; po: like postcondition;
-		r: like rescue_clause; p: INTEGER; ek: like end_keyword;
+		r: like rescue_clause; ek: like end_keyword;
 		oms_count: like once_manifest_string_count) is
 			-- Create a new ROUTINE AST node.
 		require
@@ -38,7 +38,6 @@ feature {NONE} -- Initialization
 			routine_body := b
 			postcondition := po
 			rescue_clause := r
-			body_start_position := p
 			end_keyword := ek
 			once_manifest_string_count := oms_count
 		ensure
@@ -48,7 +47,6 @@ feature {NONE} -- Initialization
 			routine_body_set: routine_body = b
 			postcondition_set: postcondition = po
 			rescue_clause_set: rescue_clause = r
-			body_start_position_set: body_start_position = p
 			end_keyword_set: end_keyword = ek
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
 		end
@@ -63,9 +61,6 @@ feature -- Visitor
 
 feature -- Attributes
 
-	body_start_position: INTEGER
-			-- Position at the start of the main body (after the comments)
-			
 	obsolete_message: STRING_AS
 			-- Obsolete clause message
 			-- (Void if was not present)
@@ -103,11 +98,14 @@ feature -- Location
 				Result := precondition.start_location
 			elseif locals /= Void then
 				Result := locals.start_location
-			else
+			elseif not routine_body.start_location.is_null then
 				Result := routine_body.start_location
-				if Result.is_null then
-					Result := end_keyword
-				end
+			elseif postcondition /= Void then
+				Result := postcondition.start_location
+			elseif rescue_clause /= Void then
+				Result := rescue_clause.start_location
+			else
+				Result := end_keyword
 			end
 		end
 		
@@ -117,6 +115,24 @@ feature -- Location
 			Result := end_keyword
 		end
 
+	body_start_position: INTEGER is
+			-- Position at the start of the main body (after the comments and obsolete clause)
+		do
+			if precondition /= Void then
+				Result := precondition.start_location.position
+			elseif locals /= Void then
+				Result := locals.start_location.position
+			elseif not routine_body.start_location.is_null then
+				Result := routine_body.start_location.position
+			elseif postcondition /= Void then
+				Result := postcondition.start_location.position
+			elseif rescue_clause /= Void then
+				Result := rescue_clause.start_location.position
+			else
+				Result := end_keyword.position
+			end
+		end
+		
 feature -- Properties
 
 	is_require_else: BOOLEAN is

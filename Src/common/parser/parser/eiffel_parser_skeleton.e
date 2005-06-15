@@ -307,9 +307,6 @@ feature {NONE} -- Implementation
 	fclause_pos: LOCATION_AS
 			-- To memorize the beginning of a feature clause
 
-	fbody_pos: INTEGER
-			-- To memorize the beginning of a feature body
-
 	feature_indexes: INDEXING_CLAUSE_AS
 			-- Indexing clause for an Eiffel feature.
 			-- IL only

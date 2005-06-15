@@ -416,7 +416,7 @@ feature -- Access
 				create l_feature_names.make (1)
 				l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (
 					create {ID_AS}.initialize (name), is_frozen))
-				create Result.initialize (l_feature_names, create {BODY_AS}.initialize (Void, Void, Void, Void), Void, 0)
+				create Result.initialize (l_feature_names, create {BODY_AS}.initialize (Void, Void, Void, Void), Void, 0, 0)
 			end
 		end;
 

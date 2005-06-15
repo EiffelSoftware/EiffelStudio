@@ -37,11 +37,11 @@
 				Solution Explorer
 			</help_link>. Expanding a node that represents an EiffelEnvision project, represented by the <image>
 				<url>../images/project.ico</url> 
-			</image> icon, will display a tree of <link><url>url</url><label>*clusters</label></link>.
+			</image> icon, will display a tree of <link><url>clusters.xml</url><label>clusters</label></link>.
 			
 			<note>
 				<bold>Note</bold>: Expanding an EiffelEnvision project that has not been compiled, or has not compiled information available, will display 
-				a the message "System needs to be fully compiled for browsing." EiffelEnvision projects require a project be <link><url>url</url><label>*Built</label></link> 
+				a the message "System needs to be fully compiled for browsing." EiffelEnvision projects require a project be <link><url>../../compiling_projects/compiling_projects.xml</url><label>Built</label></link> 
 				before browsing the information contained within the <help_link>
 					<keywords>vxurfClassViewWindow</keywords>
 					<tab_index>0</tab_index>
@@ -83,8 +83,8 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*EiffelEnvision Projects</label>
+				<url>../../eiffelenvision_projects/index.xml</url>
+				<label>EiffelEnvision Projects</label>
 			</link>
 			<line_break/>
 			<link>

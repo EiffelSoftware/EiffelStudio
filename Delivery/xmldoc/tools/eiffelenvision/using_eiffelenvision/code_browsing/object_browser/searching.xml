@@ -72,19 +72,17 @@
 				<label>Navigating and Browsing Code</label>
 			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxoriBrowsingCodeComponents</keywords>
-				<tab_index>0</tab_index>
-				Browsing Code and Components	
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoribrowsingcodecomponents.htm</url>
+				<label>Browsing Code and Components</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfObjectBrowserS</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Object Browser
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url>
+				<label>Visual Studio .NET Object Browser</label>
+			</link>
 			<line_break/>
-			<link><url>../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link>
+			<link><url>../../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link>
 		</seealso>
 	</paragraph>
 </document>

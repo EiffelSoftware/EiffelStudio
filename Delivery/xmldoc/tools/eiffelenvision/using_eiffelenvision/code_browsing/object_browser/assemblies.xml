@@ -17,7 +17,7 @@
 		<paragraph>
 			Assembly nodes, depicted by the common <image>
 				<url>../images/assembly/assembly.ico</url>
-			</image> icon, match the <link><url>url</url><label>*Component References</label></link> compiled into a project when last <link><url>../../compiling_projects/index.xml</url><label>Built</label></link>. EiffelEnvision only will show the references from the last build because of the task of performing <link><url>url</url><label>*Referenced Assembly Type and Feature Name Conversion</label></link>, done as compilation-time.
+			</image> icon, match the <link><url>../../eiffelenvision_projects/structure/references/references_folder.xml</url><label>Component References</label></link> compiled into a project when last <link><url>../../compiling_projects/index.xml</url><label>Built</label></link>. EiffelEnvision only will show the references from the last build because of the task of performing <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url><label>Referenced Assembly Type and Feature Name Conversion</label></link>, done as compilation-time.
 		</paragraph>
 		<paragraph>
 			Expanding each assembly nodes will yield a flat list of namespaces found in the corresponding assembly. Namespace, just like in the <help_link>
@@ -47,31 +47,27 @@
 				Add Reference dialog box
 			</help_link>
 			<line_break/>
-			<help_link>
-				<keywords>vxgrfClassViewIcons</keywords>
-				<tab_index>0</tab_index>
-				Class View and Object Browser Icons
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxgrfclassviewicons.htm</url>
+				<label>Visual Studio .NET Class View and Object Browser Icons</label>
+			</link>
 			<line_break/>
 			<link><url>../index.xml</url><label>Code Browsing and Navigation</label></link>
 			<line_break/>
-			<help_link>
-				<keywords>vxoriBrowsingCodeComponents</keywords>
-				<tab_index>0</tab_index>
-				Browsing Code and Components	
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoribrowsingcodecomponents.htm</url>
+				<label>Browsing Code and Components</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfObjectBrowserS</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Object Browser
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfclassviewwindow.htm</url>
+				<label>Visual Studio .NET Class View</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfClassViewWindow</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Class View
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url>
+				<label>Visual Studio .NET Object Browser</label>
+			</link>
 		</seealso>
 	</paragraph>
 </document>

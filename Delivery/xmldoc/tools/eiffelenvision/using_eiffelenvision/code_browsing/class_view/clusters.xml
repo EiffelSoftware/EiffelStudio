@@ -32,10 +32,10 @@
 				<url>../images/cluster/cluster.ico</url>
 			</image>) or library cluster (<image>
 				<url>../images/cluster/cluster_library.ico</url>
-			</image>) based on the set cluster's <link><url>url</url><label>*Library Property</label></link> for the corresponding <link><url>url</url><label>cluster</label></link>.
+			</image>) based on the set cluster's <link><url>../../eiffelenvision_projects/configuring/project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library Property</label></link> for the corresponding <link><url>../../eiffelenvision_projects/structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>cluster</label></link>.
 		</paragraph>
 		<paragraph>
-			Cluster nodes, like <link><url>url</url><label>*clusters</label></link>, can be nested. Expanding cluster nodes will show subclusters and any <link><url>classes.xml</url><label>classes</label></link> found 
+			Cluster nodes, like <link><url>../../eiffelenvision_projects/structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>clusters</label></link>, can be nested. Expanding cluster nodes will show subclusters and any <link><url>classes.xml</url><label>classes</label></link> found 
 			at that expanded cluster's level.
 		</paragraph>
 
@@ -53,8 +53,8 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*EiffelEnvision Projects</label>
+				<url>../../eiffelenvision_projects/structure/project.xml</url>
+				<label>EiffelEnvision Projects</label>
 			</link>
 			<line_break/>
 			<help_link>
@@ -64,8 +64,8 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url>t</url>
-				<label>*Cluster Properties</label>
+				<url>../../eiffelenvision_projects/configuring/project_configuration/item_configuration/clusters.xml</url>
+				<label>Explicit Cluster Properties</label>
 			</link>
 		</seealso>
 	</paragraph>

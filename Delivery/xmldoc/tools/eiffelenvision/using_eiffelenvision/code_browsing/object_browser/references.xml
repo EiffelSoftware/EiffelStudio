@@ -19,7 +19,7 @@
 				<keywords>vxurfObjectBrowserS</keywords>
 				<tab_index>0</tab_index>
 				Object Browser
-			</help_link> window project references are consolidated and displayed along side the projects, in the <bold>Objects</bold> pane. EiffelEnvision projects and the <link><url>url</url><label>*Eiffel for .NET</label></link> compiler work with <link><url>url</url><label>*Component References</label></link> differently and require an alternative means to display them. In order to work with Eiffel for .NET, assemblies must be "consumed" by the Eiffel for .NET compiler. When consumed, assembly types and features are formatted into Eiffel-case. The formatting/conversion process is detailed in <link><url>url</url><label>*Referenced Assembly Type and Feature Name Conversion</label></link>. In addition, class name <link><url>url</url><label>*prefixes</label></link> may also be set for any <link><url>url</url><label>*Component Reference</label></link> in an EiffelEnvision Project. With such conversion and customization, EiffelEnvision's <link><url>url</url><label>*Component References</label></link> cannot be consolidated with other project references. Class name <link><url>url</url><label>*Prefixes</label></link> further prevent consolidation as they are project-specific. As a result, EiffelEnvision project's in the <help_link>
+			</help_link> window project references are consolidated and displayed along side the projects, in the <bold>Objects</bold> pane. EiffelEnvision projects and the <link><url>../../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET</label></link> compiler work with <link><url>../../eiffelenvision_projects/structure/references/index.xml</url><label>Component References</label></link> differently and require an alternative means to display them. In order to work with Eiffel for .NET, assemblies must be "consumed" by the Eiffel for .NET compiler. When consumed, assembly types and features are formatted into Eiffel-case. The formatting/conversion process is detailed in <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url><label>Referenced Assembly Type and Feature Name Conversion</label></link>. In addition, <link><url>../../eiffelenvision_projects/configuring/project_configuration/item_configuration/reference.xml</url><anchor_name>class_name_prefix</anchor_name><label>Class Name Prefixes</label></link> may also be set for any <link><url>../../eiffelenvision_projects/structure/references/index.xml</url><label>Component Reference</label></link> in an EiffelEnvision Project. With such conversion and customization, EiffelEnvision's <link><url>../../eiffelenvision_projects/structure/references/index.xml</url><label>Component References</label></link> cannot be consolidated with other project references. <link><url>../../eiffelenvision_projects/configuring/project_configuration/item_configuration/reference.xml</url><anchor_name>class_name_prefix</anchor_name><label>Class Name Prefixes</label></link> further prevent consolidation as they are project-specific. As a result, EiffelEnvision project's in the <help_link>
 				<keywords>vxurfObjectBrowserS</keywords>
 				<tab_index>0</tab_index>
 				Object Browser
@@ -28,7 +28,7 @@
 			</image>) section.
 		</paragraph>
 		<paragraph>
-			Expanding the <bold>References</bold> node will yield a list of <link><url>assemblies.xml</url><label>Assembly Nodes</label></link>, representing the <link><url>url</url><label>*Component References</label></link> in your project.
+			Expanding the <bold>References</bold> node will yield a list of <link><url>assemblies.xml</url><label>Assembly Nodes</label></link>, representing the <link><url>../../eiffelenvision_projects/structure/references/index.xml</url><label>Component References</label></link> in your project.
 		</paragraph>
 		
 		<anchor>also_see</anchor>
@@ -47,31 +47,27 @@
 				Add Reference dialog box
 			</help_link>
 			<line_break/>
-			<help_link>
-				<keywords>vxgrfClassViewIcons</keywords>
-				<tab_index>0</tab_index>
-				Class View and Object Browser Icons
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxgrfclassviewicons.htm</url>
+				<label>Visual Studio .NET Class View and Object Browser Icons</label>
+			</link>
 			<line_break/>
 			<link><url>../index.xml</url><label>Code Browsing and Navigation</label></link>
 			<line_break/>
-			<help_link>
-				<keywords>vxoriBrowsingCodeComponents</keywords>
-				<tab_index>0</tab_index>
-				Browsing Code and Components	
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoribrowsingcodecomponents.htm</url>
+				<label>Browsing Code and Components</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfObjectBrowserS</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Object Browser
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfclassviewwindow.htm</url>
+				<label>Visual Studio .NET Class View</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfClassViewWindow</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Class View
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url>
+				<label>Visual Studio .NET Object Browser</label>
+			</link>
 		</seealso>
 	</paragraph>
 </document>

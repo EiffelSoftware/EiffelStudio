@@ -24,11 +24,11 @@
 	<paragraph>	
 		<paragraph>
 			Feature nodes are visible from expanding a <link><url>classes.xml</url><label>Class Node</label></link> or expanding one of the subnodes under an expanded feature node. 
-			There are many different types of <link><url>url</url><label>*feature</label></link> in Eiffel; for a full glossary of the features and their associated icon representation 
-			in the <link><url>index.xml</url><label>Class View</label></link> and <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> please refer to the <link><url>eiffel_icons.xml</url><label>Class View and Object Browser Icons</label></link> documentation.
+			There are many different types of <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>feature</label></link> in Eiffel; for a full glossary of the features and their associated icon representation 
+			in the <link><url>index.xml</url><label>Class View</label></link> and <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> please refer to the <link><url>../icon_glossary.xml</url><label>Class View and Object Browser Icons</label></link> documentation.
 		</paragraph>
 		<paragraph>
-			If you do not already know what a <link><url>url</url><label>*feature</label></link> is in Eiffel, please refer to the <link><url>url</url><label>*Eiffel for .NET Language</label></link> documentation.
+			If you do not already know what a <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>feature</label></link> is in Eiffel, please refer to the <link><url>../../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET Language</label></link> documentation.
 		</paragraph>
 		
 		<paragraph>
@@ -70,10 +70,10 @@
 		</heading>
 		<paragraph>
 			If you need to direct the <link><url>../../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link> to any feature found in the <link><url>index.xml</url><label>Class View</label></link>, 
-			a double-left mouse click on a corresponding feature node will open the <link><url>url</url><label>*Eiffel class</label></link> in the editor and move the feature into view.
+			a double-left mouse click on a corresponding feature node will open the <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url><label>Eiffel class</label></link> in the editor and move the feature into view.
 			<note>
 				<bold>Note</bold>: The <link><url>index.xml</url><label>Class View</label></link> will show .NET types when using the facilities to browse <link><url>classes.xml</url><label>class</label></link> and feature 
-				<link><url>url</url><label>*ancestors</label></link>, <link><url>url</url><label>*decendents</label></link>, etc. Attempts to locate the related source will instead open the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> 
+				<link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>ancestors</label></link>, <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>decendents</label></link>, etc. Attempts to locate the related source will instead open the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link> 
 				and locate the appropriate node given the assembly, type and feature.
 			</note>
 		</paragraph>
@@ -84,7 +84,7 @@
 			<content>Description</content>
 		</heading>
 		<paragraph>
-			When using the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link>, the <bold>Description</bold> pane will show the description, if available, for the highlight feature in the <bold>Memebers</bold> pane. The description will also show any <bold>obsolete</bold> messages and any <bold>preconditions</bold> and <bold>postconditions</bold> applied to the <link><url>url</url><label>*feature</label></link>.
+			When using the <link><url>../object_browser/index.xml</url><label>Object Browser</label></link>, the <bold>Description</bold> pane will show the description, if available, for the highlight feature in the <bold>Memebers</bold> pane. The description will also show any <bold>obsolete</bold> messages and any <bold>preconditions</bold> and <bold>postconditions</bold> applied to the <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>feature</label></link>.
 		</paragraph>		
 		
 		<anchor>also_see</anchor>
@@ -101,8 +101,8 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*EiffelEnvision Projects</label>
+				<url>../../eiffelenvision_projects/structure/project.xml</url>
+				<label>EiffelEnvision Projects</label>
 			</link>
 			<line_break/>
 			<help_link>

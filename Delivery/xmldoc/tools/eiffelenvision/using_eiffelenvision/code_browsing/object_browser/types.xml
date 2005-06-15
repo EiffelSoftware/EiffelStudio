@@ -26,7 +26,7 @@
 			</help_link> documentation. 
 		</paragraph>
 		<paragraph>
-			The type name displayed is predominantly the actual .NET type name, how it appears in the assembly manifest. Concatenated is the converted Eiffel-case class name, in upper-case and between <code><symbol>{</symbol>...<symbol>}</symbol></code>. The Eiffel-casing is a product of the <link><url>url</url><label>*Referenced Assembly Type and Feature Name Conversion</label></link> performed when a project is <link><url>../../compiling_projects/index.xml</url><label>Built</label></link>. The Eiffel name will also be prefixed with an specified <link><url>url</url><label>*Class Name Prefix</label></link> yielding the actual class name that is usable from your project, when using <link><url>../../eiffel_editor/intellisense.xml</url><label>*Intellisense Features</label></link> in the editor and the like.
+			The type name displayed is predominantly the actual .NET type name, how it appears in the assembly manifest. Concatenated is the converted Eiffel-case class name, in upper-case and between <code><symbol>{</symbol>...<symbol>}</symbol></code>. The Eiffel-casing is a product of the <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url><label>Referenced Assembly Type and Feature Name Conversion</label></link> performed when a project is <link><url>../../compiling_projects/index.xml</url><label>Built</label></link>. The Eiffel name will also be prefixed with an specified <link><url>../../eiffelenvision_projects/configuring/project_configuration/item_configuration/reference.xml</url><anchor_name>class_name_prefix</anchor_name><label>Class Name Prefix</label></link> yielding the actual class name that is usable from your project, when using <link><url>../../eiffel_editor/intellisense.xml</url><label>*Intellisense Features</label></link> in the editor and the like.
 		</paragraph>
 		<paragraph>
 			Highlighting the .NET type, by clicking on it, will populate the <bold>Members</bold> section of the <help_link>
@@ -64,7 +64,7 @@
 				<url>../images/feature/hier_feature_creators.ico</url>
 			</image>
 			<line_break/>
-			Available only when an instance of the .NET type can be created. This node populates the <bold>Members</bold> pane, when highlighted, with the Eiffel <link><url>url</url><label>*creation routines</label></link>.
+			Available only when an instance of the .NET type can be created. This node populates the <bold>Members</bold> pane, when highlighted, with the Eiffel <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>creation routines</label></link>.
 		</paragraph>		
 	
 		<anchor>inherited_features</anchor>
@@ -91,7 +91,7 @@
 			<content>Description</content>
 		</heading>
 		<paragraph>
-			The descriptions for .NET types will be shown using Eiffel-casing for class names, as per the <link><url>url</url><label>*Referenced Assembly Type and Feature Name Conversion</label></link>. Descriptions will only be present when the <help_link>
+			The descriptions for .NET types will be shown using Eiffel-casing for class names, as per the <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url><label>Referenced Assembly Type and Feature Name Conversion</label></link>. Descriptions will only be present when the <help_link>
 				<keywords>vxconCommentingCode</keywords>
 				<tab_index>0</tab_index>
 				XML documentation
@@ -116,31 +116,27 @@
 				Add Reference dialog box
 			</help_link>
 			<line_break/>
-			<help_link>
-				<keywords>vxgrfClassViewIcons</keywords>
-				<tab_index>0</tab_index>
-				Class View and Object Browser Icons
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxgrfclassviewicons.htm</url>
+				<label>Visual Studio .NET Class View and Object Browser Icons</label>
+			</link>
 			<line_break/>
 			<link><url>../index.xml</url><label>Code Browsing and Navigation</label></link>
 			<line_break/>
-			<help_link>
-				<keywords>vxoriBrowsingCodeComponents</keywords>
-				<tab_index>0</tab_index>
-				Browsing Code and Components	
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoribrowsingcodecomponents.htm</url>
+				<label>Browsing Code and Components</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfObjectBrowserS</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Object Browser
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfclassviewwindow.htm</url>
+				<label>Visual Studio .NET Class View</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfClassViewWindow</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Class View
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url>
+				<label>Visual Studio .NET Object Browser</label>
+			</link>
 		</seealso>
 	</paragraph>
 </document>

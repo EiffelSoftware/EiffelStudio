@@ -554,7 +554,7 @@ Feature_declaration: { add_counter } New_feature_list { remove_counter } Declara
 				then
 					raise_error
 				end
-				$$ := ast_factory.new_feature_as ($2, $4, feature_indexes)
+				$$ := ast_factory.new_feature_as ($2, $4, feature_indexes, position)
 				feature_indexes := Void
 			}
 	;
@@ -992,7 +992,6 @@ Strip_identifier_list: -- Empty
 
 Routine:
 		Obsolete
-			{ fbody_pos := position } 
 		Precondition
 		Local_declarations
 		Routine_body
@@ -1000,8 +999,7 @@ Routine:
 		Rescue
 		TE_END
 			{
-				$$ := ast_factory.new_routine_as ($1, $3, $4, $5, $6, $7, fbody_pos,
-					$8, once_manifest_string_count)
+				$$ := ast_factory.new_routine_as ($1, $2, $3, $4, $5, $6, $7, once_manifest_string_count)
 				once_manifest_string_count := 0
 			}
 	;

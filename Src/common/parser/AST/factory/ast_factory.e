@@ -731,14 +731,14 @@ feature -- Access
 			end
 		end
 
-	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS): FEATURE_AS is
+	new_feature_as (f: EIFFEL_LIST [FEATURE_NAME]; b: BODY_AS; i: INDEXING_CLAUSE_AS; next_pos: INTEGER): FEATURE_AS is
 			-- New FEATURE AST node
 		do
 			if
 				(f /= Void and then not f.is_empty) and b /= Void and
 				(i = Void or else f.count = 1)
 			then
-				create Result.initialize (f, b, i, 0)
+				create Result.initialize (f, b, i, 0, next_pos)
 			end
 		end
 
@@ -1056,7 +1056,7 @@ feature -- Access
 
 	new_routine_as (o: STRING_AS; pr: REQUIRE_AS;
 			l: EIFFEL_LIST [TYPE_DEC_AS]; b: ROUT_BODY_AS; po: ENSURE_AS;
-			r: EIFFEL_LIST [INSTRUCTION_AS]; p: INTEGER; end_loc: LOCATION_AS;
+			r: EIFFEL_LIST [INSTRUCTION_AS]; end_loc: LOCATION_AS;
 			oms_count: INTEGER): ROUTINE_AS
 		is
 			-- New ROUTINE AST node
@@ -1064,7 +1064,7 @@ feature -- Access
 			valid_oms_count: oms_count >= 0
 		do
 			if b /= Void and end_loc /= Void then
-				create Result.initialize (o, pr, l, b, po, r, p, end_loc, oms_count)
+				create Result.initialize (o, pr, l, b, po, r, end_loc, oms_count)
 			end
 		end
 

@@ -73,7 +73,6 @@ feature -- Execution
 				else
 					source_feat := target_feat
 				end;
-				rout_as ?= f_ast.body.content;
 				start_pos := f_ast.start_position;
 				if written_in_class.is_precompiled then
 					if Class_comments_server.has (written_in_class.class_id) then
@@ -83,16 +82,15 @@ feature -- Execution
 				else
 					create file.make (written_in_class.file_name);
 					if file.exists then
+						rout_as ?= f_ast.body.content
 						if rout_as /= Void then
-							end_pos := rout_as.body_start_position;
-							create eiffel_file.make_with_positions (file.name, start_pos, end_pos);
-							eiffel_file.set_current_feature (f_ast);
-							feature_comments := eiffel_file.current_feature_comments;
+							end_pos := rout_as.body_start_position
 						elseif f_ast.is_attribute then
-							create eiffel_file.make_with_positions (file.name, f_ast.start_position, f_ast.end_position);
-							eiffel_file.set_current_feature (f_ast);
-							feature_comments := eiffel_file.current_feature_comments;
+							end_pos := f_ast.next_position
 						end
+						create eiffel_file.make_with_positions (file.name, start_pos, end_pos)
+						eiffel_file.set_current_feature (f_ast)
+						feature_comments := eiffel_file.current_feature_comments
 					end;
 				end;
 				create assert_server.make_for_feature (target_feat, f_ast);

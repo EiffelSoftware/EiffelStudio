@@ -267,14 +267,24 @@ feature {NONE} -- Processing
 					l_name := start_end_string
 				elseif e.is_equal (url_string) then
 					if in_url_anchor then
-						output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
+						if not anchor_content.is_equal ("") then 
+							if url_anchor_write_position < output_string.count then
+								output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
+							else
+								output_string.insert_string ("#" + anchor_content, output_string.count - 1)
+							end
+						end						
 						in_url_anchor := False
 						in_url := False
 						anchor_content := ""					
 					end
 				elseif e.is_equal (anchor_name_string) then
 					if in_url then
-						output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
+						if url_anchor_write_position < output_string.count then
+							output_string.insert_string ("#" + anchor_content, url_anchor_write_position)
+						else
+							output_string.insert_string ("#" + anchor_content, output_string.count - 1)
+						end						
 						in_url_anchor := False
 						in_url := False
 						anchor_content := ""

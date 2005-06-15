@@ -44,8 +44,6 @@ inherit
 		redefine
 			append,
 			force_i_th,
-			force,
-			extend,
 			replace,
 			insert,
 			prune_all,
@@ -507,17 +505,6 @@ feature -- List change
 		ensure then
 			fig_in_lookup_table: fig /= Void implies lookup_table.has (fig.id)
 			fig_in_group: fig /= Void implies fig.group = Current
-		end
-
-	force, extend (v: like item) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-		local
-			i: INTEGER
-		do
-			i := count + 1
-			set_count (i)
-			force_i_th (v, i)
 		end
 
 	force_i_th (fig: like item; i: INTEGER) is

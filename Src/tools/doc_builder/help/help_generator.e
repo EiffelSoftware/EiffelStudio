@@ -106,7 +106,7 @@ feature -- Generation
 						-- Execute HTML Help compiler
 				system (l_command)
 				if return_code /= 0 then
-					io.putstring ("It failed somehow, return code is " + return_code.out + ".")
+					io.putstring ("Complete.  HTML Help return code is " + return_code.out + ".")
 				end
 				
 				change_working_directory (old_path)

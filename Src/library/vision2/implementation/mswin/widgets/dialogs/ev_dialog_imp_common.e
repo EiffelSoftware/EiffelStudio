@@ -492,24 +492,17 @@ feature {NONE} -- Implementation
 			parent_not_void: parent_window /= Void
 		local
 			x_pos, y_pos: INTEGER
-			a_screen: EV_SCREEN
-			rescued: INTEGER
+			l_screen: EV_SCREEN
 		do
-			if rescued = 0 then
+			if parent_window /= Void then
 				x_pos := parent_window.x_position + (parent_window.width - width) // 2
 				y_pos := parent_window.y_position + (parent_window.height - height) // 2
+			else
+				create l_screen
+				x_pos := (l_screen.width - width) // 2
+				y_pos := (l_screen.height - height) // 2
 			end
-			if (x_pos < 0 or y_pos < 0) or (rescued = 1) then
-				create a_screen
-				x_pos := (a_screen.width - width) // 2
-				y_pos := (a_screen.height - height) // 2
-			end
-			if (rescued < 2) then
-				set_position (x_pos, y_pos)
-			end
-		rescue
-			rescued := rescued + 1
-			retry
+			set_position (x_pos, y_pos)
 		end
 		
 	on_wm_command (wparam, lparam: POINTER) is

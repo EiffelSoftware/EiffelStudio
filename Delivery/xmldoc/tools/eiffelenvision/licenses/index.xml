@@ -32,7 +32,7 @@
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>iffel.xml</url>
+				<url>../../../general/licenses/iffel.xml</url>
 				<label>ISE Free Eiffel Library License (IFFEL)</label>
 			</link>
 			<line_break/>The license describing the terms applicable to the open-source EiffelBase libraries.

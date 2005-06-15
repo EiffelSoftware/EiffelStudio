@@ -28,20 +28,20 @@
 	<paragraph>
 		<paragraph>Throughout EiffelEnvision, the icons described in this document are used to indicate specific language factions of Eiffel. You will find these icons in aspects of the 
 			<link>
-				<url>t</url>
-				<label>*Eiffel Editor</label>
+				<url>../eiffel_editor/index.xml</url>
+				<label>Eiffel Editor</label>
 			</link>, 
 			<link>
-				<url>overview.xml</url>
+				<url>class_view/index.xml</url>
 				<label>Class View</label>
 			</link> and the 
 			<link>
-				<url>t</url>
-				<label>*Object Browser</label>
+				<url>object_browser/index.xml</url>
+				<label>Object Browser</label>
 			</link>. Becoming familiar with these icons and with what they represent in 
 			<link>
-				<url>t</url>
-				<label>*Eiffel</label>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url>
+				<label>Eiffel</label>
 			</link> and EiffelEnvision will assist you in further understanding the abilities of existing code, used by your EiffelEnvision project(s).
 		</paragraph>
 		<anchor>standard_icons</anchor>
@@ -379,10 +379,9 @@
 			<line_break/>
 			<link><url>object_browser/index.xml</url><label>Object Browser</label></link>
 			<line_break/>
-			<help_link>
-				<keywords>vxgrfClassViewIcons</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Class View and Object Browser Icons
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxgrfclassviewicons.htm</url>
+				<label>Visual Studio .NET Class View and Object Browser Icons</label>
+			</link>
 		</seealso>
 	</paragraph></document>

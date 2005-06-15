@@ -41,13 +41,13 @@
 				<label>Object Browser</label>
 			</link>
 			<line_break/>
-			EiffelEnvision also plugs into the Object Browser in Visual Studio .NET. EiffelEnvision brings with it the additions required to facilitate <link><url>url</url><label>Eiffel for .NET</label></link> developers 
+			EiffelEnvision also plugs into the Object Browser in Visual Studio .NET. EiffelEnvision brings with it the additions required to facilitate <link><url>../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET</label></link> developers 
 			with the tools they may need.
 		</paragraph>
 		
 		<paragraph>
 			<link>
-				<url>eiffel_icons.xml</url>
+				<url>icon_glossary.xml</url>
 				<label>Class View and Object Browser Icons</label>
 			</link>
 			<line_break/>
@@ -62,23 +62,20 @@
 		<seealso>
 			<bold>See Also:</bold>
 			<line_break/>
-			<help_link>
-				<keywords>vxoriBrowsingCodeComponents</keywords>
-				<tab_index>0</tab_index>
-				Browsing Code and Components	
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoribrowsingcodecomponents.htm</url>
+				<label>Browsing Code and Components</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfClassViewWindow</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Class View
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfclassviewwindow.htm</url>
+				<label>Visual Studio .NET Class View</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfObjectBrowserS</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Object Browser
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url>
+				<label>Visual Studio .NET Object Browser</label>
+			</link>
 			<line_break/>
 			<link><url>../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link>
 		</seealso>

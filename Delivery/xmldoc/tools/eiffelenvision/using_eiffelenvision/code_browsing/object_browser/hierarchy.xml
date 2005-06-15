@@ -45,7 +45,7 @@
 		<paragraph>
 			Expanding a node that represents an EiffelEnvision project, represented by the <image>
 				<url>../images/project.ico</url> 
-			</image> icon, will always display two child nodes, <link><url>eiffel_cluster.xml</url><label>Eiffel Clusters</label></link> (<image>
+			</image> icon, will always display two child nodes, <link><url>eiffel_clusters.xml</url><label>Eiffel Clusters</label></link> (<image>
 				<url>../images/cluster/hier_cluster_all.ico</url>
 			</image>) and <link><url>references.xml</url><label>References</label></link> (<image>
 				<url>../images/assembly/hier_reference_all.ico</url>
@@ -53,7 +53,7 @@
 				<keywords>vxurfObjectBrowserS</keywords>
 				<tab_index>0</tab_index>
 				Object Browser
-			</help_link>, as are require due to the way <link><url></url><label>*Component References</label></link> are dealt with in EiffelEnvision and the <link><url></url><label>*Eiffel for .NET</label></link> language.
+			</help_link>, as are require due to the way <link><url>../../eiffelenvision_projects/configuring/adding_references/index.xml</url><label>Component References</label></link> are dealt with in EiffelEnvision and the <link><url>../../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET</label></link> language.
 			<note>
 				<bold>Note</bold>: Expanding an EiffelEnvision project that has not been compiled, or has not compiled information available, will display 
 				a the message "System needs to be fully compiled for browsing." EiffelEnvision projects require a project be <link><url>../../compiling_projects/index.xml</url><label>Built</label></link> 
@@ -77,23 +77,20 @@
 			<line_break/>
 			<link><url>../index.xml</url><label>Code Browsing and Navigation</label></link>
 			<line_break/>
-			<help_link>
-				<keywords>vxoriBrowsingCodeComponents</keywords>
-				<tab_index>0</tab_index>
-				Browsing Code and Components	
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoribrowsingcodecomponents.htm</url>
+				<label>Browsing Code and Components</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfObjectBrowserS</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Object Browser
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfclassviewwindow.htm</url>
+				<label>Visual Studio .NET Class View</label>
+			</link>
 			<line_break/>
-			<help_link>
-				<keywords>vxurfClassViewWindow</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Class View
-			</help_link>
+			<link>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url>
+				<label>Visual Studio .NET Object Browser</label>
+			</link>
 		</seealso>
 	</paragraph>
 </document>

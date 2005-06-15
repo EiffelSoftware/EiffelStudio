@@ -87,7 +87,7 @@ feature {NONE} -- Implementation
 	display_first_visible_column is
 			--
 		local
-			l_column: EV_GRID_column
+			l_column: EV_GRID_COLUMN
 		do
 			l_column := grid.first_visible_column
 			if l_column /= Void then
@@ -100,7 +100,7 @@ feature {NONE} -- Implementation
 	display_last_visible_column is
 			--
 		local
-			l_column: EV_GRID_column
+			l_column: EV_GRID_COLUMN
 		do
 			l_column := grid.last_visible_column
 			if l_column /= Void then

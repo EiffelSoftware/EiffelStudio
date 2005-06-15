@@ -40,13 +40,6 @@ inherit
 			copy, is_equal
 		end
 
-	SHARED_CODE_FILES
-		export
-			{NONE} all
-		undefine
-			copy, is_equal
-		end
-
 	SHARED_ARRAY_BYTE
 		export
 			{NONE} all

@@ -16,11 +16,6 @@ inherit
 			make as array_make
 		end
 
-	SHARED_CODE_FILES
-		undefine
-			copy, is_equal
-		end
-
 create
 	make
 

@@ -13,11 +13,6 @@ inherit
 			final_table_size, tmp_poly_table
 		end;
 
-	SHARED_CODE_FILES
-		undefine
-			copy, is_equal
-		end
-
 	SHARED_GENERATOR
 		undefine
 			copy, is_equal

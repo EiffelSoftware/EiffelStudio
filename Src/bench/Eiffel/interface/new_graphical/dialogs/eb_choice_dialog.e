@@ -68,10 +68,11 @@ feature
 			Result := list.selected_item.first
 		end
 
-	set_list (name_list: LIST [STRING]) is
-			-- Fill the choice window with `name_list'
+	set_list (name_list: LIST [STRING]; pixmap_list: LIST [EV_PIXMAP]) is
+			-- Fill the choice window with `name_list' using `pixmap_list' if applicable.
 		require
 			valid_args: name_list /= Void
+			pixmap_list_valid: pixmap_list /= Void implies pixmap_list.count = name_list.count
 		local
 			lr: EV_MULTI_COLUMN_LIST_ROW
 			new_width: INTEGER
@@ -91,7 +92,11 @@ feature
 				name_list.after
 			loop
 				create lr
+				if pixmap_list /= Void then
+					lr.set_pixmap (pixmap_list @ name_list.index)
+				end
 				lr.extend (name_list.item)
+
 				list.extend (lr)
 				new_width := new_width.max (name_list.item.count)
 				name_list.forth

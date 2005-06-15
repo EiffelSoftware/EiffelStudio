@@ -75,6 +75,12 @@ sed -e "s/^.*implementation.*$//g" index.xml >> new_index.xml
 move new_index.xml index.xml
 gvim.exe -c "set ff=dos" -c "wq" index.xml
 
+cd ..\..\preferences
+fullrd registry_implementation
+sed -e "s/^.*registry_implementation.*$//g" index.xml >> new_index.xml
+move new_index.xml index.xml
+gvim.exe -c "set ff=dos" -c "wq" index.xml
+
 cdd %EIFFEL_SRC\tools\doc_builder\resources\xml\Documentation
 
 move /s base %DOCUMENT_DIR\xmldoc\libraries\base\reference

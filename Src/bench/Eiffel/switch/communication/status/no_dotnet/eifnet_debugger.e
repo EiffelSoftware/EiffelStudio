@@ -16,6 +16,10 @@ feature -- Access
 		do
 		end
 
+	string_value_from_system_string_class_value (icd_string_value: ICOR_DEBUG_STRING_VALUE; min, max: INTEGER): STRING is
+		do
+		end
+
 	debug_output_value_from_object_value (
 				a_frame: ICOR_DEBUG_FRAME; a_icd: ICOR_DEBUG_VALUE; 
  				a_icd_obj: ICOR_DEBUG_OBJECT_VALUE; a_class_type: CLASS_TYPE;

@@ -20,7 +20,7 @@
 	<paragraph>
 		<paragraph>
 			The <bold>2.5</bold> release of <bold>EiffelEnvision</bold> brings with it a wealth of improvements and enhancements to features present in previous releases of Eiffel ENViSioN! as well as a number of additions. 
-			The items mention here are only some of the major additions and improvements made to EiffelEnvision. For a complete taxonomy of changes in EiffelEnvision, please review the <link><url>url</url><label>*EiffelEnvision 2.5 Version History</label></link> document.
+			The items mention here are only some of the major additions and improvements made to EiffelEnvision. For a complete taxonomy of changes in EiffelEnvision, please review the <link><url>history/versions/eiffelenvision_25.xml</url><label>EiffelEnvision 2.5 Version History</label></link> document.
 		</paragraph>
 		
 		<anchor>name_change</anchor>
@@ -39,14 +39,14 @@
 		</heading>
 		<paragraph>
 			One of the biggest changes in EiffelEnvision 2.5 is a change in the way projects, and their files, are managed and configured. Projects are now subdiveded into 4 logical sections creating a clear distinction between <bold>project component reference</bold>, <bold>project files and items</bold>, <bold>Eiffel libraries</bold> and a <bold>group of miscellane items</bold>. 
-			In addition, project <link><url>url</url><label>*Cluster</label></link> management, used to manage <link><url>url</url><label>*Eiffel Class</label></link> source files, has been integrated directly into the <link><url>url</url><label>*Solution Explorer</label></link>, providing the simpliest and most direct means possible of file management.
+			In addition, project <link><url>../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/30_type_organization.xml</url><label>Cluster</label></link> management, used to manage <link><url>../../../technologies/dotnet/eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url><label>Eiffel Class</label></link> source files, has been integrated directly into the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>, providing the simpliest and most direct means possible of file management.
 		</paragraph>
 		<paragraph>
 			The way projects are configured has also changed. EiffelEnvision 2.5 abstracts a number of <bold>Project Configuration Properties</bold> to create a set of <bold>Common Properties</bold> in order to faciliate users in configuring projects faster and with less errors when changing between <help_link>
 				<keywords>vxconBuildConfigurations</keywords>
 				<tab_index>0</tab_index>
 				Build Configurations
-			</help_link>. In addition to this abstraction, a number of project Configuration Properties have been added, such as Eiffel <link><url>url</url><label>*Debug Clauses</label></link> and advanced properties to tweak compilation.
+			</help_link>. In addition to this abstraction, a number of project Configuration Properties have been added, such as Eiffel <link><url>../using_eiffelenvision/compiling_projects/debug_clauses.xml</url><label>Debug Clauses</label></link> and advanced properties to tweak compilation.
 		</paragraph>
 		
 		<anchor>compilation</anchor>
@@ -55,8 +55,8 @@
 			<content>Compilation</content>
 		</heading>
 		<paragraph>
-			EiffelEnvision has had many improvements and optimizations made to the <link><url>url</url><label>*Build/Compilation</label></link> process. EiffelEnvision projects build faster than ever before. Not only has the Eiffel compiler been enhanced to 
-			compile your Eiffel for .NET source files, but EiffelEnvision has a new <bold>build-as-needed</bold> mechanism. EiffelEnvision projects are now compiled as required, allowing <link><url>url</url><label>*Eiffel Class Library</label></link> projects to be added 
+			EiffelEnvision has had many improvements and optimizations made to the <link><url>../using_eiffelenvision/compiling_projects/compiling_projects.xml</url><label>Build/Compilation</label></link> process. EiffelEnvision projects build faster than ever before. Not only has the Eiffel compiler been enhanced to 
+			compile your Eiffel for .NET source files, but EiffelEnvision has a new <bold>build-as-needed</bold> mechanism. EiffelEnvision projects are now compiled as required, allowing <link><url>../using_eiffelenvision/eiffelenvision_projects/adding_projects/projects.xml</url><label>Eiffel Class Library</label></link> projects to be added 
 			to your <help_link>
 				<keywords>vxurfSolutionExplorerDialog</keywords>
 				<tab_index>0</tab_index>
@@ -64,7 +64,7 @@
 			</help_link> without penalty. Regular projects also benefit from being built-as-needed; compilations are smaller and require less overall compilation time or sometimes require no compilation at all.
 		</paragraph>
 		<paragraph>
-			For changes to the Eiffel compiler, please see <link><url>url</url><label>*Eiffel Compiler Version History</label></link>
+			For changes to the Eiffel compiler, please see <link><url>../../eiffelstudio/reference/30_compiler/60_version_history/index.xml</url><label>Eiffel Compiler Version History</label></link>
 		</paragraph>
 		
 		<anchor>editor</anchor>
@@ -73,12 +73,12 @@
 			<content>Eiffel Editor</content>
 		</heading>
 		<paragraph>
-			The <link><url>url</url><label>*Eiffel Editor</label></link> has been vastly improved and enhanced over previous versions of Eiffel ENViSioN!. The editor is now an <help_link>
+			The <link><url>../using_eiffelenvision/eiffel_editor/index.xml</url><label>Eiffel Editor</label></link> has been vastly improved and enhanced over previous versions of Eiffel ENViSioN!. The editor is now an <help_link>
 				<keywords>vcovrAutomaticStatementCompletion</keywords>
 				<tab_index>0</tab_index>
 				Intellisense
-			</help_link> feature complete editor, and comes complete with a <link><url>url</url><label>*Feature Index List</label></link> and fully automatic <link><url>url</url><label>*Source Code Outlining</label></link>. 
-			In addition to these new features, the ability to <link><url>url</url><label>*Synchronize Class View</label></link> has been added and <link><url>url</url><label>*Go To Defintion</label></link> and <link><url>url</url><label>*Completion</label></link> 
+			</help_link> feature complete editor, and comes complete with a <link><url>../using_eiffelenvision/eiffel_editor/browse_and_navigation.xml</url><anchor_name>feature_list</anchor_name><label>Feature Index List</label></link> and fully automatic <link><url>../using_eiffelenvision/eiffel_editor/browse_and_navigation.xml</url><anchor_name>outlining_code</anchor_name><label>Source Code Outlining</label></link>. 
+			In addition to these new features, the ability to <link><url>../using_eiffelenvision/eiffel_editor/browse_and_navigation.xml</url><anchor_name>sync_class_view</anchor_name><label>Synchronize Class View</label></link> has been added and <link><url>../using_eiffelenvision/eiffel_editor/browse_and_navigation.xml</url><anchor_name>go_to_definition</anchor_name><label>Go To Defintion</label></link> and <link><url>../using_eiffelenvision/eiffel_editor/intellisense.xml</url><label>Completion</label></link> 
 			have been greatly improved to produce better results.
 		</paragraph>
 		
@@ -110,7 +110,7 @@
 				<keywords>DALGProjects</keywords>
 				<tab_index>0</tab_index>
 				Setup and Deployment Projects
-			</help_link>. With better dependency evaluation and more deployment options available, <link><url>url</url><label>*deploying projects created using EiffelEnvision</label></link> is now simpler than ever.
+			</help_link>. With better dependency evaluation and more deployment options available, <link><url>../using_eiffelenvision/deploying_projects/index.xml</url><label>deploying projects created using EiffelEnvision</label></link> is now simpler than ever.
 		</paragraph>
 		
 		<anchor>new_tools</anchor>
@@ -119,7 +119,7 @@
 			<content>New Tools</content>
 		</heading>
 		<paragraph>
-			New to EiffelEnvision 2.5 is the <link><url>url</url><label>*EiffelStudio to EiffelEnvision Project Conversion Tool</label></link>. The tool replaces the <bold>Import from EiffelStudio</bold> project in previous versions 
+			New to EiffelEnvision 2.5 is the <link><url>../using_eiffelenvision/eiffelenvision_for_eiffelstudio_developers/conversion_tool/index.xml</url><label>EiffelStudio to EiffelEnvision Project Conversion Tool</label></link>. The tool replaces the <bold>Import from EiffelStudio</bold> project in previous versions 
 			of Eiffel ENViSion!. The tool integrates into the Windows shell providing conversion directly from Windows Explorer. The tool is also much more feature rich than it predecessor, allowing both classic Eiffel and Eiffel for .NET 
 			projects to be converted/imported into EiffelEnvision with the push of a button.
 		</paragraph>
@@ -131,9 +131,9 @@
 		</heading>
 		<paragraph>
 			There are many, many more additions, enhancements and improvements in EiffelEnvision 2.5, which through reading this documentation, or using EiffelEnvision, you will discover. 
-			EiffelEnvision will be intuitive for those who have used Visual Studio .NET before and have a knowledge of the <link><url>url</url><label>*Eiffel Langauge</label></link>. For those who have 
+			EiffelEnvision will be intuitive for those who have used Visual Studio .NET before and have a knowledge of the <link><url>../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url><label>Eiffel Langauge</label></link>. For those who have 
 			not used Visual Studio .NET before should become accustomed to the plethora of features it provides, which EiffelEnvision integrates into and expands upon.Those who have not yet used 
-			Eiffel and this is your introduction to it, then it is recommended you become familar with the <link><url>url</url><label>*Eiffel Langauge</label></link> and read <link><url>url</url><label>*An Invitation to Eiffel</label></link>.
+			Eiffel and this is your introduction to it, then it is recommended you become familar with the <link><url>../../../technologies/dotnet/eiffel_dotnet_language/20_language/index.xml</url><label>Eiffel Langauge</label></link> and read <link><url>../../../general/guided_tour/language/invitation-00.xml</url><label>An Invitation to Eiffel</label></link>.
 		</paragraph>
 		
 		<paragraph>

@@ -75,7 +75,7 @@
 		</heading>
 		<paragraph>
 			<list ordered="false">
-			<item>Due to the introduction of a new EiffelEnvision <link><url/><label>*Solution Explorer</label></link> and configuration 
+			<item>Due to the introduction of a new EiffelEnvision <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link> and configuration 
 			changes, older Eiffel ENViSioN! 2.01 or less cannot be opened in EiffelEnvision.</item>
 			</list>
 		</paragraph>
@@ -101,7 +101,7 @@
 		<seealso>
 			<bold>See also</bold>:
 			<line_break/>
-			<link><url>history.xml</url><label>Version History</label></link>
+			<link><url>versions/index.xml</url><label>Version History</label></link>
 			<line_break/><help_link>
 				<keywords>vxurfSolutionExplorerDialog</keywords>
 				<tab_index>0</tab_index>

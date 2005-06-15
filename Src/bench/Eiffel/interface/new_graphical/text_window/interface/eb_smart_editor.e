@@ -587,7 +587,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 	calculate_completion_list_x_position: INTEGER is
 			-- Determine the x position to display the completion list
 		local
-			screen: EV_SCREEN
+			screen: EB_STUDIO_SCREEN
 			tok: EDITOR_TOKEN
 			cursor: EDITOR_CURSOR
 			right_space,
@@ -602,7 +602,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			Result := tok.position + tok.get_substring_width (cursor.pos_in_token) + widget.screen_x + left_margin_width - offset	
 					
 				-- Determine how much room there is free on the right of the screen from the cursor position
-			right_space := screen.width - Result - completion_border_size
+			right_space := screen.virtual_right - Result - completion_border_size
 					
 			list_width := calculate_completion_list_width			
 					
@@ -623,7 +623,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			-- Determine the y position to display the completion list
 		local
 			cursor: EDITOR_CURSOR
-			screen: EV_SCREEN
+			screen: EB_STUDIO_SCREEN
 			preferred_height,
 			upper_space,
 			lower_space: INTEGER
@@ -635,7 +635,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			show_below := True
 			Result := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)		
 			
-			if Result < ((screen.height / 3) * 2) then
+			if Result < ((screen.virtual_height / 3) * 2) then
 					-- Cursor in upper two thirds of screen
 				show_below := True
 			else
@@ -644,7 +644,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			end	
 			
 			upper_space := Result - completion_border_size
-			lower_space := screen.height - Result - completion_border_size
+			lower_space := screen.virtual_bottom - Result - completion_border_size
 			
 			if preferences.development_window_data.remember_completion_list_size then
 				preferred_height := preferences.development_window_data.completion_list_height
@@ -686,7 +686,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			upper_space,
 			lower_space,
 			y_pos: INTEGER
-			screen: EV_SCREEN
+			screen: EB_STUDIO_SCREEN
 			cursor: EDITOR_CURSOR
 			show_below: BOOLEAN
 			tok: EDITOR_TOKEN
@@ -699,7 +699,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			show_below := True
 			y_pos := widget.screen_y + ((cursor.y_in_lines - first_line_displayed) * line_height)		
 			
-			if y_pos < ((screen.height / 3) * 2) then
+			if y_pos < ((screen.virtual_height / 3) * 2) then
 					-- Cursor in upper two thirds of screen
 				show_below := True
 			else
@@ -708,7 +708,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			end	
 			
 			upper_space := y_pos - completion_border_size
-			lower_space := screen.height - y_pos - completion_border_size
+			lower_space := screen.virtual_bottom - y_pos - completion_border_size
 			
 			if preferences.development_window_data.remember_completion_list_size then
 				Result := preferences.development_window_data.completion_list_height				

@@ -413,7 +413,7 @@ feature {NONE} -- Implementation (adding relations)
 		require
 			client_not_void: client /= Void
 		local
-			screen: EV_SCREEN
+			screen: EB_STUDIO_SCREEN
 			x_pos, y_pos, screen_w, screen_h: INTEGER
 			cg: CLASS_TEXT_MODIFIER
 			added_code: LIST [TUPLE [STRING, INTEGER]]
@@ -424,8 +424,8 @@ feature {NONE} -- Implementation (adding relations)
 			if world.model.has_node (client.model) then
 				-- Call wizard.
 				create screen
-				screen_w := screen.width
-				screen_h := screen.height
+				screen_w := screen.virtual_right
+				screen_h := screen.virtual_bottom
 				x_pos := client.port_x + world.context_editor.widget.screen_x
 				y_pos := client.port_y + world.context_editor.widget.screen_y
 				client_model := client.model

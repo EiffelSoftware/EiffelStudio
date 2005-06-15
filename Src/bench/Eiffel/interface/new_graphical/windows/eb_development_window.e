@@ -196,15 +196,24 @@ feature {NONE} -- Initialization
 	init_size_and_position is
 			-- Initialize window size.
 		local
-			screen: EV_SCREEN
+			screen: EB_STUDIO_SCREEN
+			l_x, l_y: INTEGER
 		do
 			create screen
 			window.set_size (
 				preferences.development_window_data.width.min (screen.width),
 				preferences.development_window_data.height.min (screen.height))
-			window.set_position (
-				preferences.development_window_data.x_position,
-				preferences.development_window_data.y_position)
+			l_x := preferences.development_window_data.x_position
+			if l_x < screen.virtual_left or l_x > screen.virtual_right then
+					-- Somehow screens have changed, reset it to 0
+				l_x := 0
+			end
+			l_y := preferences.development_window_data.y_position
+			if l_y < screen.virtual_top or l_y > screen.virtual_bottom then
+					-- Somehow screens have changed, reset it to 0
+				l_y := 0
+			end
+			window.set_position (l_x, l_y)
 		end
 
 	window_displayed is

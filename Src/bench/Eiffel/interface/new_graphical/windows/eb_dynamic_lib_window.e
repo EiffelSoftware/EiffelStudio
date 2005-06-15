@@ -26,6 +26,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+
 	PLATFORM_CONSTANTS
 	
 	EB_FILE_DIALOG_CONSTANTS
@@ -843,14 +845,17 @@ feature {NONE} -- Implementation: Creation routine selection
 		local
 			choice: EB_CHOICE_DIALOG
 			feature_names: ARRAYED_LIST [STRING]
+			feature_pixmaps: ARRAYED_LIST [EV_PIXMAP]
 		do
 			create feature_names.make (creation_routine_list.count)
+			create feature_pixmaps.make (creation_routine_list.count)
 			from
 				creation_routine_list.start
 			until
 				creation_routine_list.after
 			loop
 				feature_names.extend (creation_routine_list.item.name)
+				feature_pixmaps.extend (pixmap_from_e_feature (creation_routine_list.item))
 				creation_routine_list.forth
 			end
 			if not feature_names.is_empty then
@@ -859,7 +864,7 @@ feature {NONE} -- Implementation: Creation routine selection
 				else
 					create choice.make_default (agent process_creation_routine_callback (?))
 					choice.set_title (Interface_names.t_Select_feature)
-					choice.set_list (feature_names)
+					choice.set_list (feature_names, feature_pixmaps)
 					choice.set_position (window.screen_x + window.width // 3, window.screen_y + window.height // 3)
 					choice.show
 				end

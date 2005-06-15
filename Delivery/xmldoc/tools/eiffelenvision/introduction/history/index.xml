@@ -22,7 +22,7 @@
 		</heading>
 		<paragraph>
 			<link>
-				<url>history.xml</url>
+				<url>versions/index.xml</url>
 				<label>Version History</label>
 			</link>
 			<line_break/>
@@ -30,7 +30,7 @@
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>issues.xml</url>
+				<url>known_bugs.xml</url>
 				<label>Known Bugs and Other Issues</label>
 			</link>
 			<line_break/>
@@ -50,8 +50,8 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Eiffel Compiler Version History</label>
+				<url>../../../eiffelstudio/reference/30_compiler/60_version_history/index.xml</url>
+				<label>Eiffel Compiler Version History</label>
 			</link>
 		</seealso>
 	</paragraph>

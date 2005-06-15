@@ -30,8 +30,8 @@
 		<paragraph>
 			<list ordered="false">
 				<item>Completely revised <link>
-						<url>url</url>
-						<label>*Solution Explorer</label>
+						<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url>
+						<label>Solution Explorer</label>
 					</link> that includes the addition of a Eiffel Project Items and Eiffel Libraries node.</item>
 				<item>Precompiled library assemblies and runtime assemblies are shown under the References node.</item>
 				<item>COM references correctly use a Primary Interop Assembly (PIA) when available.</item>
@@ -53,8 +53,8 @@
 			<list ordered="false">
 				<item>Added concept of application project items.</item>
 				<item>The Eiffel Graphical Application project does not show the EiffelVision2 graphical builder in the wizard any more. The builder is launched after a project has been compiled. See <link>
-						<url>url</url>
-						<label>*EiffelBuild</label>
+						<url>../../../../eiffelbuild/index.xml</url>
+						<label>EiffelBuild</label>
 					</link> for version history.</item>
 				<item>Removed HTML Report project due to integration with Project System.</item>
 				<item>Post creation of new project, a build is performed displaying all build related output to the user.</item>
@@ -148,16 +148,16 @@
 		<paragraph>
 			<list ordered="false">
 				<item>Generates better and consistent .NET type and feature names. See <link>
-						<url>url</url>
-						<label>*Eiffel Type and Feature Name Formatting</label>
+						<url>../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url>
+						<label>Eiffel Type and Feature Name Formatting</label>
 					</link>.
 				</item>
 				<item>
 					<class_name>NATIVE_ARRAY</class_name> permits use of expanded types.</item>
 				<item>.NET <class_name>System.Real</class_name> and <class_name>System.Double</class_name> constants are imported, at compiled-time, and expressed correctly at run-time.</item>
 				<item>For all other improvements see <link>
-						<url>url</url>
-						<label>*Eiffel Compiler Version History</label>
+						<url>../../../../eiffelstudio/reference/30_compiler/60_version_history/index.xml</url>
+						<label>Eiffel Compiler Version History</label>
 					</link>.</item>
 			</list>
 		</paragraph>

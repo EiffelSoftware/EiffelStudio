@@ -29,7 +29,7 @@
 			
 		<note>
 			<bold>Note</bold>: 
-			Please be aware while you enjoy the free edition that its use is permitted for educational, non-commercial development or for an evaluation in considering the Enterprise Edition. Please see the <link><url>url</url><label>Licenses</label></link> 
+			Please be aware while you enjoy the free edition that its use is permitted for educational, non-commercial development or for an evaluation in considering the Enterprise Edition. Please see the <link><url>../licenses/index.xml</url><label>Licenses</label></link> 
 			section of this documentation for more information on terms of use.
 		</note>
 		
@@ -267,9 +267,7 @@
 		<seealso>
 			<bold>See Also</bold>:
 			<line_break/>
-			<link><url>url</url><label>*IFFEL</label></link>
-			<line_break/>
-			<link><url>url</url><label>*End-User License Agreement</label></link>
+			<link><url>../../../general/licenses/iffel.xml</url><label>IFFEL</label></link>
 			<line_break/>
 			<link><url>../using_eiffelenvision/deploying_projects/redistributions.xml</url><label>Redistributing the Eiffel for .NET Rutime</label></link>
 		</seealso>

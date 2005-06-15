@@ -29,12 +29,12 @@
 		
 		<paragraph>	
 			EiffelEnvision integrates itself more tightly than ever into Visual Studio .NET, making use of Visual Studio .NET environment to the fullest. All of the features you would come to expect of any language, present in Visual Studio .NET, are readily available for use with EiffelEnvision: project file management through 
-			the <link><url>url</url><label>*Solution Explorer</label></link>, code browsing facilities, and component reference browsing through the <link><url>url</url><label>*Class View</label></link> and <link><url>url</url><label>*Object Browser</label></link>. EiffelEnvision also has a feature complete <link><url>url</url><label>*Eiffel Editor</label></link> 
+			the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>, code browsing facilities, and component reference browsing through the <link><url>../using_eiffelenvision/code_browsing/class_view/index.xml</url><label>Class View</label></link> and <link><url>../using_eiffelenvision/code_browsing/object_browser/index.xml</url><label>Object Browser</label></link>. EiffelEnvision also has a feature complete <link><url>../using_eiffelenvision/eiffel_editor/index.xml</url><label>Eiffel Editor</label></link> 
 			with <help_link>
 				<keywords>A</keywords>
 				<tab_index>0</tab_index>
 				*Intellisense
-			</help_link>, is fully compatible with <link><url>url</url><label>*Source Code Control</label></link>. and much, much more. Developers approaching EiffelEnvision from <bold>Visual C#</bold> or <bold>Visual Basic .NET</bold> should find learning the fundamentals of Eiffel for .NET and EiffelEnvision as simple, if not simpler, as they did when approaching Visual C#/Visual Basic .NET for the first time. 
+			</help_link>, is fully compatible with <link><url>../using_eiffelenvision/source_code_control.xml</url><label>Source Code Control</label></link>. and much, much more. Developers approaching EiffelEnvision from <bold>Visual C#</bold> or <bold>Visual Basic .NET</bold> should find learning the fundamentals of Eiffel for .NET and EiffelEnvision as simple, if not simpler, as they did when approaching Visual C#/Visual Basic .NET for the first time. 
 		</paragraph>
 	
 		<paragraph>
@@ -45,9 +45,9 @@
 			Of course, Eiffel for .NET is different from C# and VB.NET with capabilities not present in other .NET languages. So depending upon your experience, you may have four things to learn.
 			<list ordered="false">
 				<item>The mechanics of using EiffelEnvision to support the creation of Eiffel for .NET software.</item>
-				<item>The Eiffel method and language and how they work with Microsoft .NET, found in <link><url>url</url><label>*Eiffel, The Language</label></link>.</item>
-				<item>Eiffel for .NET and EiffelEnvision support many concepts not present in version 1.0 and 1.1 of the .NET framework, such as <link><url>url</url><label>*Mulitple Inheritance</label></link>, <link><url>url</url><label>*Generics</label></link> and <link><url>url</url><label>*Design by Contract</label></link>.</item>
-				<item>The .NET type and method name in Eiffel for .NET have been converted to a convention that is consistent and true to the Eiffel language. See <link><url>url</url><label>*Eiffel Name Formatting</label></link>.</item>
+				<item>The Eiffel method and language and how they work with Microsoft .NET, found in <link><url>../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url><label>Eiffel, The Language</label></link>.</item>
+				<item>Eiffel for .NET and EiffelEnvision support many concepts not present in version 1.0 and 1.1 of the .NET framework, such as <link><url>../../../technologies/dotnet/eiffel_dotnet_language/20_language/30_inheritance.xml</url><label>Mulitple Inheritance</label></link>, <link><url>../../../technologies/dotnet/eiffel_dotnet_language/20_language/40_genericity.xml</url><label>Generics</label></link> and <link><url>../../../technologies/dotnet/eiffel_dotnet_language/20_language/50_design_by_contract.xml</url><label>Design by Contract</label></link>.</item>
+				<item>The .NET type and method name in Eiffel for .NET have been converted to a convention that is consistent and true to the Eiffel language. See <link><url>../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url><label>Eiffel Name Formatting</label></link>.</item>
 			</list>	
 		</paragraph>
 		
@@ -60,18 +60,18 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url>d</url>
-				<label>*Eiffel for .NET</label>
+				<url>../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url>
+				<label>Eiffel the Language</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>d</url>
-				<label>*Using EiffelEnvision</label>
+				<url>../using_eiffelenvision/index.xml</url>
+				<label>Using EiffelEnvision</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>d</url>
-				<label>*Samples and Walkthroughs</label>
+				<url>../examples/index.xml</url>
+				<label>Samples and Walkthroughs</label>
 			</link>
 		</seealso>
 	</paragraph>

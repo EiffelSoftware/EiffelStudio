@@ -83,18 +83,18 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url>d</url>
-				<label>*Eiffel the Language</label>
+				<url>../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url>
+				<label>Eiffel the Language</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>d</url>
-				<label>*Using EiffelEnvision</label>
+				<url>../using_eiffelenvision/index.xml</url>
+				<label>Using EiffelEnvision</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>d</url>
-				<label>*Samples and Walkthroughs</label>
+				<url>../examples/index.xml</url>
+				<label>Samples and Walkthroughs</label>
 			</link>
 		</seealso>
 	</paragraph>

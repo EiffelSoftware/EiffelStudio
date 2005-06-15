@@ -10,7 +10,7 @@ class
 inherit
 	EV_SCREEN_I
 		redefine
-			interface
+			interface, virtual_width, virtual_height, virtual_x, virtual_y
 		end
 
 	EV_DRAWABLE_IMP
@@ -177,6 +177,42 @@ feature -- Measurement
 			-- Height of `Current'.
 		do
 			Result := dc.height
+		end
+		
+	virtual_width: INTEGER is
+			-- Virtual width of `Current'
+		local
+			l_metrics: WEL_SYSTEM_METRICS
+		do
+			create l_metrics
+			Result := l_metrics.virtual_screen_width
+		end
+		
+	virtual_height: INTEGER is
+			-- Virtual height of `Current'
+		local
+			l_metrics: WEL_SYSTEM_METRICS
+		do
+			create l_metrics
+			Result := l_metrics.virtual_screen_height
+		end
+
+	virtual_x: INTEGER is
+			-- X position of virtual screen in main display coordinates
+		local
+			l_metrics: WEL_SYSTEM_METRICS
+		do
+			create l_metrics
+			Result := l_metrics.virtual_screen_x
+		end
+		
+	virtual_y: INTEGER is
+			-- Y position of virtual screen in main display coordinates
+		local
+			l_metrics: WEL_SYSTEM_METRICS
+		do
+			create l_metrics
+			Result := l_metrics.virtual_screen_y
 		end
 		
 	vertical_resolution: INTEGER is

@@ -2303,6 +2303,16 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			virtual_x_position_valid: virtual_x_position <= virtual_width - viewable_width
 		end
 		
+	total_column_width: INTEGER is
+			-- `Result' is total width of all columns contained in `Current'.
+		do
+			if column_count > 0 then
+				Result := column_offsets.i_th (column_count + 1)
+			end
+		ensure
+			result_positive: result >= 0
+		end
+		
 	total_row_height: INTEGER is
 			-- `Result' is total height of all rows contained in `Current'.
 		do
@@ -2745,20 +2755,20 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 	recompute_horizontal_scroll_bar is
 			-- Recompute horizontal scroll bar positioning.
 		local
-			l_total_header_width: INTEGER
+			l_total_column_width: INTEGER
 			l_client_width: INTEGER
 			average_column_width: INTEGER
 			previous_scroll_bar_value: INTEGER
 		do
 				-- Retrieve the 
-			l_total_header_width := total_header_width
+			l_total_column_width := total_column_width
 			
 			l_client_width := viewable_width
 				-- Note that `width' was not used as we want it to represent only the width of
 				-- the "client area" which is `viewport'.
 			
 				
-			if l_total_header_width > l_client_width then
+			if l_total_column_width > l_client_width then
 					-- The headers are wider than the visible client area.
 				if not horizontal_scroll_bar.is_show_requested then
 						-- Show `horizontal_scroll_bar' if not already shown.
@@ -2766,14 +2776,14 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 					update_scroll_bar_spacer
 				end
 					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
-					-- `l_total_header_width' and `l_client_width'. Note that the behavior depends on the state of
+					-- `l_total_column_width' and `l_client_width'. Note that the behavior depends on the state of
 					-- `is_horizontal_scrolling_per_item'.
 				if has_horizontal_scrolling_per_item_just_changed then
 					previous_scroll_bar_value := horizontal_scroll_bar.value
 				end
 				if is_horizontal_scrolling_per_item then					
 					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_count - 1))
-					average_column_width := (l_total_header_width // column_count)
+					average_column_width := (l_total_column_width // column_count)
 					horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per pixel to per item horizontal
@@ -2781,7 +2791,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 						horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
 					end
 				else
-					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
+					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_column_width - l_client_width))
 					horizontal_scroll_bar.set_leap (width)
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per item to per pixel horizontal
@@ -2807,15 +2817,15 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				end
 			end
 			
-			if viewport_x_offset > 0 and (l_total_header_width - viewport_x_offset < viewable_width) then
+			if viewport_x_offset > 0 and (l_total_column_width - viewport_x_offset < viewable_width) then
 					-- If `header' and `drawable' currently have a position that starts before the client area of
 					-- `viewport' and the total header width is small enough so that at the current position, `header' and
 					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
 					-- so that they do reach the very left-hand edge of `viewport'
-				viewport_x_offset := (l_total_header_width - viewable_width).max (0)
+				viewport_x_offset := (l_total_column_width - viewable_width).max (0)
 				viewport.set_x_offset (viewport_x_offset)
 				
-				header_viewport.set_x_offset ((l_total_header_width - viewable_width).max (0))
+				header_viewport.set_x_offset ((l_total_column_width - viewable_width).max (0))
 			end
 		end
 
@@ -3047,16 +3057,6 @@ feature {NONE} -- Drawing implementation
 		
 	last_width_of_header_during_resize_internal: INTEGER
 		-- Storage for `last_width_of_header_during_resize'.
-
-	total_header_width: INTEGER is
-			-- `Result' is total width of all header items contained within `header'.
-		do
-			if column_count >= 1 then
-				Result := header.item_x_offset (header.last) + header.last.width
-			end
-		ensure
-			result_non_negative: Result >= 0
-		end
 
 	header_item_resize_started (header_item: EV_HEADER_ITEM) is
 			-- Resizing has started on `header_item'.

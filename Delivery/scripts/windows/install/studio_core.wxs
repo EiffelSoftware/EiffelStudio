@@ -411,6 +411,7 @@
 								<File Id="icon_set_stack_depth_color.png" Name="IC8468~1.PNG" LongName="icon_set_stack_depth_color.png" />
 								<File Id="icon_slice_limits_vsmall_color.png" Name="IC0E02~1.PNG" LongName="icon_slice_limits_vsmall_color.png" />
 								<File Id="icon_toggle_alias_vsmall_color_png" Name="ICON_T~3.PNG" LongName="icon_toggle_alias_vsmall_color.png" />
+								<File Id="icon_toggle_assigner_vsmall_color_png" Name="ICON_T~5.PNG" LongName="icon_toggle_assigner_vsmall_color.png" />
 								<File Id="icon_toggle_force_color.png" Name="ICON_T~1.PNG" LongName="icon_toggle_force_color.png" />
 								<File Id="icon_toggle_quality_color.png" Name="IC5026~1.PNG" LongName="icon_toggle_quality_color.png" />
 								<File Id="icon_toggle_signature.png1" Name="ICON_T~4.PNG" LongName="icon_toggle_signature_vsmall_color.png" />
@@ -468,6 +469,7 @@
 								<File Id="VAOL" Name="VAOL" />
 								<File Id="VAPE" Name="VAPE" />
 								<File Id="VAVE" Name="VAVE" />
+								<File Id="VBAC" Name="VBAC" />
 								<File Id="VBAR" Name="VBAR" />
 								<File Id="VBGV" Name="VBGV" />
 								<File Id="VCCH" Name="VCCH" />
@@ -483,6 +485,7 @@
 								<File Id="VDUC" Name="VDUC" />
 								<File Id="VDUS" Name="VDUS" />
 								<File Id="VEEN" Name="VEEN" />
+								<File Id="VFAC" Name="VFAC" />
 								<File Id="VFAV" Name="VFAV" />
 								<File Id="VFFD" Name="VFFD" />
 								<File Id="VGCC" Name="VGCC" />
@@ -585,6 +588,8 @@
 									<File Id="VAOL2" Name="VAOL2" />
 									<File Id="VAPE58" Name="VAPE" />
 									<File Id="VAVE2" Name="VAVE" />
+									<File Id="VBAC1" Name="VBAC1" />
+									<File Id="VBAC2" Name="VBAC2" />
 									<File Id="VBAR2" Name="VBAR" />
 									<File Id="VBGV2" Name="VBGV" />
 									<File Id="VCCH1" Name="VCCH1" />
@@ -673,6 +678,12 @@
 									<File Id="VEEN21" Name="VEEN21" />
 									<File Id="VEEN22" Name="VEEN22" />
 									<File Id="VE06" Name="VE06" />
+									<File Id="VE08" Name="VE08" />
+									<File Id="VE09" Name="VE09" />
+									<File Id="VFAC2" Name="VFAC2" />
+									<File Id="VFAC3" Name="VFAC3" />
+									<File Id="VFAC4" Name="VFAC4" />
+									<File Id="VFAC5" Name="VFAC5" />
 									<File Id="VFAV1" Name="VFAV1" />
 									<File Id="VFAV2" Name="VFAV2" />
 									<File Id="VFAV3" Name="VFAV3" />

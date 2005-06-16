@@ -157,6 +157,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
 				row.clear
 			end
 			row.set_data (Void)
+			reset_row_actions
 			row := Void
 		ensure
 			is_not_attached_to_row: not is_attached_to_row
@@ -182,13 +183,11 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
 			attributes_row := Void
 			onces_row := Void
 
-			if compute_grid_display_done then
-				compute_grid_display_done := False
-				compute_grid_display
-			end
+			compute_grid_display_done := False
+			compute_grid_display
 		ensure
 			is_attached_to_row: is_attached_to_row
-			grid_display_recomputed: compute_grid_display_done implies old compute_grid_display_done
+			grid_display_recomputed: compute_grid_display_done --| implies old compute_grid_display_done
 		end
 
 feature -- Status
@@ -422,6 +421,8 @@ feature -- Graphical changes
 		require
 			not_computed: not compute_grid_display_done
 		deferred
+		ensure
+			compute_grid_display_done
 		end
 
 	title: STRING

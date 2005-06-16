@@ -406,7 +406,6 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			end
 				--| Consume Callback data (stored on the C side in struct)
 			consume_managed_callback_info (cb_id)
-
 			if dbgsync_cb_without_stopping then
 				execution_stopped := continue_on_cb (cb_id) -- False
 			elseif is_inside_function_evaluation then
@@ -471,6 +470,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			debug ("debugger_trace_callback")
 				context_output_message ("Callback :: " + managed_callback_name (cb_id))
 			end
+
 			check dbg_cb_info_get_callback_id = cb_id end				
 			
 			inspect cb_id
@@ -706,6 +706,8 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			else
 				check False end
 			end
+			
+			dbg_clear_cb_info
 		end
 
 feature {EIFNET_EXPORTER} -- Callback access

@@ -1492,13 +1492,12 @@ delete_after_cursor is
 				s.prepend (t.image)
 				t := t.previous
 			end
-			lexer.set_tab_size (editor_preferences.tabulation_spaces)				
-			lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
+			lexer.set_tab_size (editor_preferences.tabulation_spaces)
 			if s.is_empty then
 				ln.make_empty_line					
 			else
 				lexer.execute (s)						
-				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)						
+				ln.rebuild_from_lexer (lexer, lexer.in_verbatim_string)						
 			end
 			on_line_modified (cursor.y_in_lines)
 

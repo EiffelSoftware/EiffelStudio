@@ -23,16 +23,16 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			EiffelEnvision <link><url>url</url><label>*Projects</label></link> managed files, as described in <help_link>
+			EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> managed files, as described in <help_link>
 				<keywords>vxconFolder-BasedReference-BasedProjects</keywords>
 				<tab_index>0</tab_index>
 				Item Management in Projects
-			</help_link>. EiffelEnvision also manages linked project items, via the <link><url>url</url><label>*Other Files</label></link> hierarchy, but only to support referencing existing items related to the project. 
+			</help_link>. EiffelEnvision also manages linked project items, via the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> hierarchy, but only to support referencing existing items related to the project. 
 		</paragraph>
 			
 		<paragraph>
-			Adding new project items to an EiffelEnvision project is context-sensitive. Because EiffelEnvision <link><url>url</url><label>*Projects</label></link> manage direct links to files, adding a file to a 
-			folder node (<link><url>url</url><label>*cluster</label></link>) or the <link><url>url</url><label>*project</label></link> node will cause the file to be created in that folder's <link><url>url</url><label>*Path</label></link>. 
+			Adding new project items to an EiffelEnvision project is context-sensitive. Because EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> manage direct links to files, adding a file to a 
+			folder (<link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link>) or the <link><url>../../structure/project.xml</url><label>project</label></link> node will cause the file to be created in that folder's <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>. 
 			Supporting this, when adding new items to a project, no <bold>Location</bold> for the new item can be specified in the <help_link>
 					<keywords>vxurfAddNewItemDialogBox</keywords>
 					<tab_index>0</tab_index>
@@ -47,18 +47,18 @@
 		</heading>
 		<paragraph>
 			There are numerous ways to add new project item to your project. First select the folder where you would like the new project item to be created. If you select the 
-			<link><url>url</url><label>*Project Node</label></link>, EiffelEnvision will do exactly the same as if you were to add new item via the <link><url>url</url><label>*Project Items Node</label></link>. This 
-			is because the <link><url>url</url><label>*Project</label></link> and <link><url>url</url><label>*Project Item</label></link> nodes have the same <link><url>url</url><label>*Path</label></link>. After selecting the 
-			appropriate node, either use the <bold>Project</bold>, <bold>Add New Item...</bold> (CTRL+SHIFT+A) or use the <bold>Add</bold>, <bold>Add New Item...</bold> context menu. Once selected the <help_link>
+			<link><url>../../structure/project.xml</url><label>Project Node</label></link>, EiffelEnvision will do exactly the same as if you were to add new item via the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items Folder</label></link>. This 
+			is because the <link><url>../../structure/project.xml</url><label>Project</label></link> and <link><url>../../structure/project_items/project_items.xml</url><label>Project Item</label></link> folders have the same <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>. After selecting the 
+			appropriate folder, either use the <bold>Project</bold>, <bold>Add New Item...</bold> (CTRL+SHIFT+A) or use the <bold>Add</bold>, <bold>Add New Item...</bold> context menu. Once selected the <help_link>
 				<keywords>vxurfAddNewItemDialogBox</keywords>
 				<tab_index>0</tab_index>
 				Add New Item
 			</help_link> dialog box will appear.
 			<note>
 				<bold>Note</bold>: 
-				<bold>UI</bold> and <bold>Code</bold> <link><url>project_items.xml</url><label>New Project Item Templates</label></link> can be added to all folders in EiffelEnvision <link><url>url</url><label>*Projects</label></link>, with the 
-				exception to the <link><url>url</url><label>*Other Files</label></link> folder. <bold>Data</bold> and <bold>Resource</bold> items may only be added to the <link><url>url</url><label>*Project Items</label></link> node and any of it subfolders/subclusters. This is further maintain the separation between 
-				project-specific items and <link><url>url</url><label>*Eiffel Libraries</label></link>.
+				<bold>UI</bold> and <bold>Code</bold> <link><url>project_items.xml</url><label>New Project Item Templates</label></link> can be added to all folders in EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link>, with the 
+				exception to the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Files</label></link> folder. <bold>Data</bold> and <bold>Resource</bold> items may only be added to the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link> folder and any of it subfolders/subclusters. This is further maintain the separation between 
+				project-specific items and <link><url>../../structure/eiffel_libraries/eiffel_libraries.xml</url><label>Eiffel Libraries</label></link>.
 			</note>
 		</paragraph>
 		
@@ -77,7 +77,7 @@
 		</paragraph>
 		<paragraph>
 			New project item names should also not conflict with any file name or folder presently at the associated folder (which the file will be added to.) The file name should be unique as not to overwrite or 
-			conflict with any other file, folder or <link><url>url</url><label>*Cluster Node</label></link> at the chosen folder <link><url>url</url><label>*Path</label></link>.
+			conflict with any other file, folder or <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link> at the chosen folder <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>.
 		</paragraph>
 		
 		<anchor>special_items</anchor>
@@ -138,7 +138,7 @@
 			<line_break/>
 			<link><url>adding_folders.xml</url><label>Adding New Folders</label></link>
 			<line_break/>
-			<link><url>adding_existing_items.xml</url><label>Add Existing Items</label></link>
+			<link><url>adding_existings_items.xml</url><label>Add Existing Items</label></link>
 			<line_break/>
 			<link><url>adding_clusters.xml</url><label>Add New Clusters</label></link>
 			<line_break/>

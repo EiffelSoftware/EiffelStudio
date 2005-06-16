@@ -61,16 +61,16 @@
 				</row>
 				<row>
 					<cell>Eiffel Graphical Application Template</cell>
-					<cell>A stand-alone Windows application using the <link><url>url</url><label>*EiffelVision 2</label></link> platform independent graphical library. Project are also ready to be designed using the 
-					<link><url>url</url><label>*EiffelVision 2 graphical builder</label></link>.</cell>
+					<cell>A stand-alone Windows application using the <link><url>../../../../../libraries/vision2/index.xml</url><label>EiffelVision 2</label></link> platform independent graphical library. Project are also ready to be designed using the 
+					<link><url>../../../../../libraries/vision2/index.xml</url><label>EiffelVision 2 graphical builder</label></link>.</cell>
 				</row>
 				<row>
 					<cell><link><url>wizards/blank_eiffel_graphical_application.xml</url><label>Blank Eiffel Graphical Application Template</label></link></cell>
-					<cell>A stand-alone Windows application using the <link><url>url</url><label>*EiffelVision 2</label></link> platform independent graphical library.</cell>
+					<cell>A stand-alone Windows application using the <link><url>../../../../../libraries/vision2/index.xml</url><label>EiffelVision 2</label></link> platform independent graphical library.</cell>
 				</row>
 				<row>
 					<cell><link><url>wizards/windows_eiffel_application.xml</url><label>Windows Eiffel Application Template</label></link></cell>
-					<cell>A standalone Windows application using the <link><url>url</url><label>*Windows Eiffel Library</label></link> (<bold>WEL</bold>).</cell>
+					<cell>A standalone Windows application using the <link><url>../../../../../libraries/wel/index.xml</url><label>Windows Eiffel Library</label></link> (<bold>WEL</bold>).</cell>
 				</row>
 				<row>
 					<cell>Class Library Template</cell>

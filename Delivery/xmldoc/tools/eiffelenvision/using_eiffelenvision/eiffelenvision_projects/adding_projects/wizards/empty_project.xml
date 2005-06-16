@@ -62,13 +62,13 @@ Project Type - The type of project to generate.
 		<paragraph>
 			<bold>Root Class</bold>
 			<line_break/>
-			This options corresponds to the <link><url>../../../configuration/build.xml</url><anchor_name>root_class</anchor_name><label>Root Class</label></link> property from the <link><url>../../../configuration/build.xml</url><label>Build Project Properties</label></link>. The <link><url>url</url><anchor_name>class</anchor_name><label>class</label></link> name specified must be a valid Eiffel class name. This field is a required field and may not be left empty of contain any illegal characters
+			This options corresponds to the <link><url>../../configuring/project_configuration/build.xml</url><anchor_name>root_class</anchor_name><label>Root Class</label></link> property from the <link><url>../../configuring/project_configuration/build.xml</url><label>Build Project Properties</label></link>. The <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>class</anchor_name><label>class</label></link> name specified must be a valid Eiffel class name. This field is a required field and may not be left empty of contain any illegal characters
 		</paragraph>
 				
 		<paragraph>
 			<bold>Creation Routine</bold>
 			<line_break/>
-			This options corresponds to the <link><url>../../../configuration/build.xml</url><anchor_name>creation_routine</anchor_name><label>Creation Routine</label></link> property from the <link><url>../../../configuration/build.xml</url><label>Build Project Properties</label></link>. The <link><url>url</url><anchor_name>feature</anchor_name><label>feature</label></link> name specified must be a valid Eiffel feature name. This field is a required field and may not be left empty of contain any illegal characters
+			This options corresponds to the <link><url>../../configuring/project_configuration/build.xml</url><anchor_name>creation_routine</anchor_name><label>Creation Routine</label></link> property from the <link><url>../../configuring/project_configuration/build.xml</url><label>Build Project Properties</label></link>. The <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>feature</anchor_name><label>feature</label></link> name specified must be a valid Eiffel feature name. This field is a required field and may not be left empty of contain any illegal characters
 		</paragraph>
 		
 		<paragraph>
@@ -83,8 +83,8 @@ Project Type - The type of project to generate.
 			<content>Completing the Wizard</content>
 		</heading>
 		<paragraph>
-			Once you have set the appropriate settings for the new project, clicking <bold>Finish</bold> will create a new EiffelEnvision <link><url>../../../structure/index.xml</url><label>Project</label></link>
-		</paragraph> containing a single class with the name specified in the <bold>Root Class</bold> option. The class will contain a <link><url>url</url><anchor_name>creation</anchor_name><label>creation routine</label></link> with the name specified in the <bold>Creation Routine</bold> option.
+			Once you have set the appropriate settings for the new project, clicking <bold>Finish</bold> will create a new EiffelEnvision <link><url>../../structure/index.xml</url><label>Project</label></link>
+		</paragraph> containing a single class with the name specified in the <bold>Root Class</bold> option. The class will contain a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>creation</anchor_name><label>creation routine</label></link> with the name specified in the <bold>Creation Routine</bold> option.
 		</paragraph>
 				
 		<anchor>also_see</anchor>

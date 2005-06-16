@@ -92,7 +92,7 @@
 			<content>Completing the Wizard</content>
 		</heading>
 		<paragraph>
-			Once you have set the appropriate settings for the new project, clicking <bold>Finish</bold> will create a new EiffelEnvision <link><url>../../../structure/index.xml</url><label>Project</label></link> with the specified settings.
+			Once you have set the appropriate settings for the new project, clicking <bold>Finish</bold> will create a new EiffelEnvision <link><url>../../structure/index.xml</url><label>Project</label></link> with the specified settings.
 		</paragraph>
 				
 		<anchor>also_see</anchor>

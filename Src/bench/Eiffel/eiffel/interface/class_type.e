@@ -572,7 +572,9 @@ feature -- Generation
 				tmp.put_string ("%N */%N%N")
 					-- Includes wanted
 				tmp.put_string ("#include %"eif_eiffel.h%"%N")
-				tmp.put_string ("#include %"../E1/")
+				tmp.put_string ("#include %"../")
+				tmp.put_string (packet_name (system_object_prefix, 1))
+				tmp.put_character ('/')
 				tmp.put_string (estructure)
 				tmp.put_string (".h%"%N%N")
 
@@ -705,7 +707,7 @@ feature -- Generation
 			previous_file_name: STRING
 			previous_file: PLAIN_TEXT_FILE
 		do
-			l_file_name := file_name (C_prefix)
+			l_file_name := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
 			if byte_context.final_mode then
 					-- In final mode we do not check about status changes
 					-- since we delete the content of the F_code directory.
@@ -745,7 +747,7 @@ feature -- Generation
 		local
 			l_file_name: STRING
 		do
-			l_file_name := file_name (C_prefix)
+			l_file_name := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
 			l_file_name.append_character (Descriptor_file_suffix)
 			l_file_name.append (Dot_c)
 			create Result.make_c_code_file (l_file_name)
@@ -754,7 +756,7 @@ feature -- Generation
 	extern_declaration_filename: STRING is
 			-- File name for external declarations in final mode
 		do
-			Result := file_name (C_prefix)
+			Result := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
 			Result.append (Dot_h)
 		end
 
@@ -769,8 +771,7 @@ feature -- Generation
 			s.append_character ('.')
 			s.append_character ('.')
 			s.append_character ('/')
-			s.append_character (C_prefix)
-			s.append_integer (packet_number)
+			s.append_string (packet_name (C_prefix, packet_number))
 			s.append_character ('/')
 			s.append (base_file_name)
 			s.append (Dot_h)
@@ -785,20 +786,10 @@ feature -- Generation
 		do
 			create Result.make (14)
 			Result.append_character ('_')
-			Result.append_character (C_prefix)
-			Result.append_integer (packet_number)
+			Result.append_string (packet_name (C_prefix, packet_number))
 			Result.append_character ('_')
 			Result.append (base_file_name)
 			Result.append_character ('_')
-		end
-
-	file_name (sub_dir_prefix: CHARACTER): STRING is
-			-- Generated file name prefix
-			-- Side effect: Create the corresponding subdirectory if it
-			-- doesnot exist yet.
-		do
-			Result := full_file_name (System.in_final_mode, sub_dir_prefix,
-				base_file_name, Void, packet_number)
 		end
 
 	base_file_name: STRING is
@@ -825,11 +816,7 @@ feature -- Generation
 			temp: STRING
 		do
 				-- Subdirectory
-			create temp.make (10)
-			temp.append_character (C_prefix)
-			temp.append_integer (packet_number)
-
-			create f_name.make_from_string (temp)
+			create f_name.make_from_string (packet_name (C_prefix, packet_number))
 
 				-- File name
 			temp := base_file_name

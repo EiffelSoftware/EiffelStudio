@@ -214,7 +214,9 @@ feature -- Cecil
 			make_file.put_character (continuation)
 			make_file.put_new_line
 			generate_other_objects
-			make_file.put_string ("%T%TE1/emain.o")
+			make_file.put_string ("%T%T")
+			make_file.put_string (packet_name (system_object_prefix, 1))
+			make_file.put_string ("/emain.o")
 			make_file.put_new_line
 			make_file.put_string ("SHAREDFLAGS = $(LDSHAREDFLAGS) $(SHARED_CECIL) %N");
 			make_file.put_string ("$(SHARED_CECIL): $(SHARED_CECIL_OBJECT) %N")
@@ -239,34 +241,28 @@ feature -- Generate Dynamic Library
 
 			-- Generate "E1/egc_dynlib.o"
 			make_file.put_string ("%N")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/egc_dynlib.o: Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
 			make_file.put_string (egc_dynlib_file)
 			make_file.put_string ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
 			make_file.put_string (egc_dynlib_file)
 			make_file.put_string (" ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/egc_dynlib.c") 
 
 			make_file.put_string ("%N%Tcd ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string (" ; $(MAKE) egc_dynlib.o")
 			make_file.put_string (" ; cd ..")
 
 			-- Generate "E1/edynlib.o"
 			make_file.put_string ("%N")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/edynlib.o: Makefile ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/edynlib.c ")
 			make_file.put_string ("%N%Tcd ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string (" ; $(MAKE) edynlib.o")
 			make_file.put_string (" ; cd ..%N")
 
@@ -275,7 +271,11 @@ feature -- Generate Dynamic Library
 			make_file.put_character (continuation)
 			make_file.put_new_line
 			generate_other_objects
-			make_file.put_string ("%T%TE1/edynlib.o E1/egc_dynlib.o ")
+			make_file.put_string ("%T%T")
+			make_file.put_string (packet_name (system_object_prefix, 1))
+			make_file.put_string ("/edynlib.o ")
+			make_file.put_string (packet_name (system_object_prefix, 1))
+			make_file.put_string ("/egc_dynlib.o ")
 			make_file.put_string ("%NDYNLIBSHAREDFLAGS = $(LDSHAREDFLAGS) $(SYSTEM_IN_DYNAMIC_LIB) %N");
 			make_file.put_string ("$(SYSTEM_IN_DYNAMIC_LIB): $(SYSTEM_IN_DYNAMIC_LIB_OBJ) %N")
 			make_file.put_string ("%T$(RM) $(SYSTEM_IN_DYNAMIC_LIB) %N")
@@ -304,7 +304,7 @@ feature -- Actual generation
 
 				-- Generate makefile in subdirectories.
 			generate_sub_makefiles (C_prefix, object_baskets)
-			generate_sub_makefiles (System_object_prefix, system_baskets)
+			generate_sub_makefiles (system_object_prefix, system_baskets)
 
 			make_file := make_f (system.in_final_mode)
 			make_file.open_write
@@ -409,10 +409,7 @@ feature -- Sub makefile generation
 					else
 						create f_name.make_from_string (Workbench_generation_path)
 					end
-					create subdir_name.make (5)
-					subdir_name.append_character (sub_dir)
-					subdir_name.append_integer (i)
-					f_name.extend (subdir_name)
+					f_name.extend (packet_name (sub_dir, i))
 					f_name.set_file_name (Makefile_SH)
 					create new_makefile.make (f_name)
 					make_file  := new_makefile
@@ -803,8 +800,7 @@ feature -- Generation (Linking rules)
 			make_file.put_string (": ")
 			make_file.put_string ("$(OBJECTS) ")
 			make_file.put_character (' ')
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/emain.o Makefile%N%T$(RM) ") 
 			make_file.put_string (system_name)
 			make_file.put_new_line
@@ -825,8 +821,7 @@ feature -- Generation (Linking rules)
 			end
 			make_file.put_string ("FLAGS) $(LDFLAGS) ")
 			make_file.put_string (" $(OBJECTS) ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/emain.o ") 
 			make_file.put_character (Continuation)
 			make_file.put_new_line
@@ -855,7 +850,7 @@ feature -- Generation (Linking rules)
 			-- (dependencies for final executable).
 		do
 				-- System object files.
-			generate_basket_objects (System_baskets, System_object_prefix)
+			generate_basket_objects (System_baskets, system_object_prefix)
 		end
 
 	generate_objects_macros is
@@ -891,8 +886,7 @@ feature -- Generation (Linking rules)
 					else
 						not_first := True
 					end
-					make_file.put_character (C_prefix)
-					make_file.put_integer (i)
+					make_file.put_string (packet_name (C_prefix, i))
 				end
 				i := i + 1
 			end
@@ -905,8 +899,7 @@ feature -- Generation (Linking rules)
 			loop
 				if not system_baskets.item (i).is_empty then
 					make_file.put_character (' ')
-					make_file.put_character (System_object_prefix)
-					make_file.put_integer (i)
+					make_file.put_string (packet_name (system_object_prefix, i))
 				end
 				i := i + 1
 			end
@@ -948,47 +941,42 @@ feature -- Generation (Linking rules)
 			emain_file := "emain.template"
 
 				-- Generate the dependence rule for E1/Makefile
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/Makefile: ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/Makefile.SH")
 			make_file.put_string ("%N%Tcd ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string (" ; $(SHELL) Makefile.SH%N%N")
 
 				-- Generate the dependence rule for E1/emain.o
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/emain.o: Makefile ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/Makefile $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
 			make_file.put_string (emain_file)
 			make_file.put_string ("%N%T$(CP) $(ISE_EIFFEL)/studio/config/$(ISE_PLATFORM)/templates/")
 			make_file.put_string (emain_file)
 			make_file.put_character (' ')
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/emain.c")
 			make_file.put_string ("%N%Tcd ")
-			make_file.put_character (System_object_prefix)
-			make_file.put_integer (1)
+			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string (" ; $(MAKE) emain.o ; $(RM) emain.c%N%N")
 
 			if System.in_final_mode then
 					-- Generate dependence rule for E1/estructure.h in final mode
-				make_file.putchar (System_object_prefix)
-				make_file.putint (1)
-				make_file.putstring ("/estructure.h: ")
-				make_file.putchar (System_object_prefix)
-				make_file.putint (1)
-				make_file.putstring ("/estructure.x")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/estructure.h: ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/estructure.x")
 				make_file.new_line
 				make_file.indent
-				make_file.putstring ("$(X2C) E1/estructure.x E1/estructure.h")
+				make_file.put_string ("$(X2C) ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/estructure.x ")
+				make_file.put_string (packet_name (system_object_prefix, 1))
+				make_file.put_string ("/estructure.h")
 				make_file.new_line
 				make_file.exdent
 				make_file.new_line
@@ -1000,28 +988,25 @@ feature -- Generation (Linking rules)
 			until
 				i > nb
 			loop
-				make_file.put_character (System_object_prefix)
-				make_file.put_integer (i)
+				make_file.put_string (packet_name (system_object_prefix, i))
 				make_file.put_character ('/')
-				make_file.put_character (System_object_prefix)
+				make_file.put_character (system_object_prefix)
 				make_file.put_string ("obj")
 				make_file.put_integer (i)
 				if i = 1 then
 					make_file.put_string (".o: Makefile ")
-					make_file.put_character (System_object_prefix)
-					make_file.put_integer (i)
+					make_file.put_string (packet_name (system_object_prefix, i))
 					make_file.put_string ("/Makefile%N%Tcd ")
 				else
 					make_file.put_string (".o: Makefile%N%Tcd ")
 				end
-				make_file.put_character (System_object_prefix)
-				make_file.put_integer (i)
+				make_file.put_string (packet_name (system_object_prefix, i))
 				if i = 1 then
 					make_file.put_string (" ; $(START_TEST) $(MAKE) ")
 				else
 					make_file.put_string (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
 				end
-				make_file.put_character (System_object_prefix)
+				make_file.put_character (system_object_prefix)
 				make_file.put_string ("obj")
 				make_file.put_integer (i)
 				make_file.put_string (".o $(END_TEST)%N%N")
@@ -1042,15 +1027,15 @@ feature -- Generation (Linking rules)
 				i > nb
 			loop
 				if not object_baskets.item (i).is_empty then
-					make_file.put_character (C_prefix)
-					make_file.put_integer (i)
+					make_file.put_string (packet_name (C_prefix, i))
 					make_file.put_character ('/')
 					make_file.put_character (C_prefix)
 					make_file.put_string ("obj")
 					make_file.put_integer (i)
-					make_file.put_string (".o: Makefile E1/estructure.h%N%Tcd ")
-					make_file.put_character (C_prefix)
-					make_file.put_integer (i)
+					make_file.put_string (".o: Makefile ")
+					make_file.put_string (packet_name (system_object_prefix, 1))
+					make_file.put_string ("/estructure.h%N%Tcd ")
+					make_file.put_string (packet_name (C_prefix, i))
 					make_file.put_string (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
 					make_file.put_new_line
 					make_file.put_new_line
@@ -1139,8 +1124,7 @@ feature {NONE} -- Implementation
 					else
 						not_first := True
 					end
-					make_file.put_character (dir_prefix)
-					make_file.put_integer (i)
+					make_file.put_string (packet_name (dir_prefix, i))
 					make_file.put_character ('/')
 					make_file.put_character (dir_prefix)
 					make_file.put_string ("obj")

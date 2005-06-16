@@ -216,7 +216,7 @@ feature -- Code generation
 			header_buffer.end_c_specific_code
 
 			create header_file.make_open_write (
-				full_file_name (final_mode, '%U', "lib" + System.name, Dot_h, 0))
+				full_file_name (final_mode, Void, "lib" + System.name, Dot_h))
 			extern_declarations.generate_header_files (header_buffer)
 			header_buffer.put_in_file (header_file)
 			header_file.close
@@ -228,7 +228,7 @@ feature -- Code generation
 			end
 			
 			create external_file.make_open_write (
-				full_file_name (final_mode, '%U', "lib" + System.name, l_extension, 0))
+				full_file_name (final_mode, Void, "lib" + System.name, l_extension))
 			buffer.put_in_file (external_file)
 			external_file.close
 			

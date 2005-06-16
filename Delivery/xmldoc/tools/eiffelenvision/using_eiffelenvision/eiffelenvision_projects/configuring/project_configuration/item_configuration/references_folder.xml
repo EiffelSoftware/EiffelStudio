@@ -26,7 +26,7 @@
 			</link>. To view the properties window:
 			
 			<list ordered="true">
-				<item>Select the <bold>References</bold> folder in your EiffelEnvision <link><url>url</url><label>*Project</label></link>.</item>
+				<item>Select the <bold>References</bold> folder in your EiffelEnvision <link><url>../../../structure/project.xml</url><label>Project</label></link>.</item>
 				<item>Choose <bold>View</bold>, <bold>Properties</bold> menu.</item>
 			</list>
 			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut.
@@ -71,12 +71,12 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>../../adding_references/adding_references.xml</url>
+				<url>../../adding_references/adding_components.xml</url>
 				<label>Adding Component References</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>../../adding_references/removing_references.xml</url>
+				<url>../../adding_references/removing_components.xml</url>
 				<label>Removing Component References</label>
 			</link>
 		</seealso>

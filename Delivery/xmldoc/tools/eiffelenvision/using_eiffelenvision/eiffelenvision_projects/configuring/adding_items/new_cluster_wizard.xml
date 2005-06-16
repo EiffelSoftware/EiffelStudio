@@ -136,7 +136,7 @@
 			<content>Completing the Wizard</content>
 		</heading>
 		<paragraph>
-			Once you have set the appropriate settings for the new <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>*luster</label></link>, clicking <bold>Finish</bold> will add the cluster to the project.
+			Once you have set the appropriate settings for the new <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>luster</label></link>, clicking <bold>Finish</bold> will add the cluster to the project.
 		</paragraph>
 				
 		<anchor>also_see</anchor>

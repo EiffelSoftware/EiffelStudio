@@ -8,11 +8,11 @@
 			<xml>
 				<xmlkeyword>
 					<index>K</index>
-					<term>Projects, Overview</term>
+					<term>Projects, EiffelEnvision Projects</term>
 				</xmlkeyword>
 				<xmlkeyword>
 					<index>K</index>
-					<term>Eiffel Editor</term>
+					<term>EiffelEnvision Projects</term>
 				</xmlkeyword>
 			</xml>
 		</help>
@@ -70,8 +70,6 @@
 				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfNewProjectDialog.htm</url>
 				<label>New Project Dialog Box</label>
 			</link>
-			
-			
 		</seealso>
 	</paragraph>
 </document>

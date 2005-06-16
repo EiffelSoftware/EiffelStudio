@@ -52,22 +52,22 @@
 		<paragraph>
 			<bold>Remove Only</bold>
 			<line_break/>
-			Remove only operations will only remove the select project item(s) from the <link><url>url</url><label>*Project</label></link>. If the item is associated with a file, on disk, the representation on disk <bold>will not be</bold> deleted. Remove only is applicable to references under the <link><url>url</url><label>*References</label></link>, files and folders found under the <link><url>url</url><label>*Other Project Items</label></link> section of an EiffelEnvision project, as well as to any <link><url>url</url><label>*Cluster</label></link> under the <link><url>url</url><label>*Project Items</label></link> or <link><url>url</url><label>*Eiffel Libraries</label></link> nodes.
+			Remove only operations will only remove the select project item(s) from the <link><url>../index.xml</url><label>Project</label></link>. If the item is associated with a file, on disk, the representation on disk <bold>will not be</bold> deleted. Remove only is applicable to references under the <link><url>../structure/references/references_folder.xml</url><label>References</label></link>, files and folders found under the <link><url>../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> section of an EiffelEnvision project, as well as to any <link><url>../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Cluster</label></link> under the <link><url>../structure/project_items/project_items.xml</url><label>Project Items</label></link> or <link><url>../structure/eiffel_libraries/eiffel_libraries.xml</url><label>Eiffel Libraries</label></link> nodes.
 		</paragraph>
 		
 		<anchor>delete_only</anchor>
 		<paragraph>
 			<bold>Delete Only</bold>
 			<line_break/>
-			Delete only operations can only be performed on EiffelEnvision project items, such as <link><url>url</url><label>*files</label></link> or <link><url>url</url><label>*folders</label></link>, that directly map to an element on disk, and have been included in the project 
-			<link><url>../structure/cluster_enumeration.xml</url><label>automatically</label></link> when the project is loaded. Delete only will remove both the file or folder on disk and subsequently remove the item from the project. The only items that have forced deletion are Eiffel source files (*.e) and folders located under the <link><url>url</url><label>*Project Items</label></link> or <link><url>url</url><label>*Eiffel Libraries</label></link> nodes, or any of their subnodes.
+			Delete only operations can only be performed on EiffelEnvision project items, such as <link><url>../structure/project_items/clusters_and_items/items/file_items.xml</url><label>files</label></link> or <link><url>../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>folders</label></link>, that directly map to an element on disk, and have been included in the project 
+			<link><url>../structure/project_items/clusters_and_items/cluster_enumeration.xml</url><label>automatically</label></link> when the project is loaded. Delete only will remove both the file or folder on disk and subsequently remove the item from the project. The only items that have forced deletion are Eiffel source files (*.e) and folders located under the <link><url>../structure/project_items/project_items.xml</url><label>Project Items</label></link> or <link><url>../structure/eiffel_libraries/eiffel_libraries.xml</url><label>Eiffel Libraries</label></link> nodes, or any of their subnodes.
 		</paragraph>
 		
 		<anchor>remove_or_delete</anchor>
 		<paragraph>
 			<bold>Remove or Delete</bold>
 			<line_break/>
-			Remove or delete is available on project file items that have been explicitly added to the project, and represent a file on disk. In EiffelEnvision projects, this type of item are all items under the <link><url>url</url><label>*Project Items</label></link> node that are not Eiffel source file (*.e). When selecting <bold>Remove</bold> from the <bold>Edit</bold> menu, a Remove or Delete dialog box will appear. Choosing <bold>Remove</bold> will only remove the item from the project. Choosing <bold>Delete</bold> will delete the item from disk and subsequently remove the item from the project.
+			Remove or delete is available on project file items that have been explicitly added to the project, and represent a file on disk. In EiffelEnvision projects, this type of item are all items under the <link><url>../structure/project_items/project_items.xml</url><label>Project Items</label></link> node that are not Eiffel source file (*.e). When selecting <bold>Remove</bold> from the <bold>Edit</bold> menu, a Remove or Delete dialog box will appear. Choosing <bold>Remove</bold> will only remove the item from the project. Choosing <bold>Delete</bold> will delete the item from disk and subsequently remove the item from the project.
 		</paragraph>
 				
 		<anchor>excluding_items</anchor>
@@ -76,7 +76,7 @@
 			<content>Excluding Items</content>
 		</heading>
 		<paragraph>
-			Remove and/or Delete may not be the operation you are after if you merely want to exclude Eiffel source file (*.e) from a <link><url>../../compiling_projects/index.xml</url><label>Build</label></link>. For information on how to exclude and include items from a build, see <link><url>../item_exclusion.xml</url><label>Including and Excluding Items</label></link>.
+			Remove and/or Delete may not be the operation you are after if you merely want to exclude Eiffel source file (*.e) from a <link><url>../../compiling_projects/index.xml</url><label>Build</label></link>. For information on how to exclude and include items from a build, see <link><url>item_exclusion.xml</url><label>Including and Excluding Items</label></link>.
 		</paragraph>
 		
 		<anchor>also_see</anchor>
@@ -91,7 +91,7 @@
 			<line_break/>
 			<link><url>../structure/index.xml</url><label>Project Structure</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Eiffel the Language</label></link>
+			<link><url>../../../eiffel_for_dotnet/index.xml</url><label>Eiffel the Language</label></link>
 		</seealso>
 	</paragraph>
 </document>

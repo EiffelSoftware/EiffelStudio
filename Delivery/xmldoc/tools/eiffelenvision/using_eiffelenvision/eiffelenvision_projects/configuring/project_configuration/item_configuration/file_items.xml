@@ -26,7 +26,7 @@
 			</link>. To view the properties window:
 			
 			<list ordered="true">
-				<item>Select a file item in your EiffelEnvision <link><url>url</url><label>*Project</label></link>.</item>
+				<item>Select a file item in your EiffelEnvision <link><url>../../../structure/project.xml</url><label>Project</label></link>.</item>
 				<item>Choose <bold>View</bold>, <bold>Properties</bold> menu.</item>
 			</list>
 			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut or by choosing <bold>Properties</bold> from a file item's context menu.
@@ -88,8 +88,8 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*File Items</label>
+				<url>../../../structure/project_items/clusters_and_items/items/file_items.xml</url>
+				<label>File Items</label>
 			</link>
 		</seealso>
 	</paragraph>

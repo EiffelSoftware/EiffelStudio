@@ -94,7 +94,7 @@
 				Default and Custom Build
 			</help_link>
 			<line_break/>
-			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<link><url>../../index.xml</url><label>EiffelEnvision Projects</label></link>
 		</seealso>
 	</paragraph>
 </document>

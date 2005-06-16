@@ -90,7 +90,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>../../structure/project.xml</url>
+				<url>../../../structure/project.xml</url>
 				<label>EiffelEnvision Projects</label>
 			</link>
 		</seealso>

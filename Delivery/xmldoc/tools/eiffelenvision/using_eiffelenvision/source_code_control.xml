@@ -46,23 +46,20 @@
 				SCC
 			</help_link> is bound to a project's physical location. For EiffelEnvision projects, this means, 
 			<link>
-				<url>url</url>
-				<label>*Eiffel Libraries</label> 
+				<url>eiffelenvision_projects/structure/eiffel_libraries/eiffel_libraries.xml</url>
+				<label>Eiffel Libraries</label> 
 			</link> will not be integrated using SCC. This is because most <link>
-				<url>url</url>
-				<label>*Eiffel Libraries</label> 
-			</link> are not located in the project's <link>
-				<url>url</url>
-				<label>*Path</label> 
-			</link> but are instead located in some arbitrary location outside of the project. Well formed <link>
-				<url>url</url>
-				<label>*Projects</label> 
+				<url>eiffelenvision_projects/structure/eiffel_libraries/eiffel_libraries.xml</url>
+				<label>Eiffel Libraries</label> 
+			</link> are not located in the project's location but are instead located in some arbitrary location outside of the project. Well formed <link>
+				<url>eiffelenvision_projects/structure/project.xml</url>
+				<label>Projects</label> 
 			</link> will have all of their <link>
-				<url>url</url>
-				<label>*Project Items</label> 
+				<url>eiffelenvision_projects/structure/project_items/clusters_and_items/items/index.xml</url>
+				<label>Project Items</label> 
 			</link> integrated into a SCC repository and none of the <link>
-				<url>url</url>
-				<label>*Eiffel Libraries</label> 
+				<url>eiffelenvision_projects/structure/eiffel_libraries/eiffel_libraries.xml</url>
+				<label>Eiffel Libraries</label> 
 			</link>.
 		</paragraph>
 		<paragraph>

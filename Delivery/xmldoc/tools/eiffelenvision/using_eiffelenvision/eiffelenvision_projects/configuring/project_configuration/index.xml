@@ -19,7 +19,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			Project configuration, is the act to configuring a project configuration for <link><url>url</url><label>*Builds</label></link>. Project configurations related to a <help_link>
+			Project configuration, is the act to configuring a project configuration for <link><url>../../../compiling_projects/index.xml</url><label>Builds</label></link>. Project configurations related to a <help_link>
 				<keywords>vxconVisualStudioSolutionsProjects</keywords>
 				<tab_index>0</tab_index>
 				Solutions
@@ -62,7 +62,7 @@
 				<label>General Properties</label>
 			</link>
 			<line_break/>
-			General <link><url>url</url><label>*Build</label></link> related common build configuration properties.
+			General <link><url>../../../compiling_projects/index.xml</url><label>Build</label></link> related common build configuration properties.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -95,7 +95,7 @@
 				<label>Assertion Properties</label>
 			</link>
 			<line_break/>
-			<link><url>url</url><label>*Eiffel for .NET</label></link> project-level <link><url>url</url><label>*assertion</label></link> properties, for <link><url>url</url><label>*contracts</label></link>.
+			<link><url>../../../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET</label></link> project-level <link><url>assertions.xml</url><label>assertion</label></link> properties, for <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/50_design_by_contract.xml</url><label>contracts</label></link>.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -111,7 +111,7 @@
 				<label>External Properties</label>
 			</link>
 			<line_break/>
-			External <bold>object files</bold> and <bold>include paths</bold> for use with the <link><url>url</url><label>*Unmanaged Compilation</label></link> or a project <link><url>url</url><label>*Build</label></link>.
+			External <bold>object files</bold> and <bold>include paths</bold> for use with the <link><url>../../../compiling_projects/unmanaged_code.xml</url><label>Unmanaged Compilation</label></link> or a project <link><url>../../../compiling_projects/index.xml</url><label>Build</label></link>.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -151,11 +151,11 @@
 				Configuration Manager
 			</help_link>
 			<line_break/>
-			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<link><url>../../index.xml</url><label>EiffelEnvision Projects</label></link>
 			<line_break/>
 			<link><url>../../../compiling_projects/index.xml</url><label>Compiling Projects</label></link>
 			<line_break/>
-			<link><url>../../debugging/index.xml</url><label>Debugging</label></link>
+			<link><url>../../../debugging/index.xml</url><label>Debugging</label></link>
 		</seealso>
 	</paragraph>
 </document>

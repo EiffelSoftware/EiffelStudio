@@ -25,7 +25,7 @@
 		</heading>
 		<paragraph>
 			<link>
-				<url>../../technologies/dotnet/eiffel_dotnet_language/index.xml</url>
+				<url>../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url>
 				<label>Eiffel for .NET Language</label>
 			</link>
 			<line_break/>
@@ -47,7 +47,7 @@
 			<line_break/>
 			<link>
 				<url>../examples/index.xml</url>
-				<label>*Samples and Walkthroughs</label>
+				<label>Samples and Walkthroughs</label>
 			</link>
 		</seealso>
 	</paragraph>

@@ -68,7 +68,7 @@
 			<line_break/>
 			<link><url>index.xml</url><label>Configuring EiffelEnvision Projects</label></link>
 			<line_break/>
-			<link><url>assertion.xml</url><label>Assertion Properties</label></link>
+			<link><url>assertions.xml</url><label>Assertion Properties</label></link>
 			<line_break/>
 			<link><url>externals.xml</url><label>Externals Properties</label></link>
 			<line_break/>
@@ -80,7 +80,7 @@
 				Default and Custom Build
 			</help_link>
 			<line_break/>
-			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<link><url>../../index.xml</url><label>EiffelEnvision Projects</label></link>
 		</seealso>
 	</paragraph>
 </document>

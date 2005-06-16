@@ -41,8 +41,8 @@
 			generated in the compiled assembly, by the Eiffel for .NET compiler, will be different from those interfaces generated in the documentation.
 			<line_break/>
 			When referencing an EiffelEnvision project as a <link>
-					<url>precompiled</url>
-					<label>*precompiled project</label>
+					<url>eiffelenvision_projects/configuring/adding_references/precompiled_libraries.xml</url>
+					<label>precompiled project</label>
 				</link> from another EiffelEnvision 
 			project, the documented interfaces will match the interfaces provided in the precompiled library.
 			</note>
@@ -66,21 +66,26 @@
 		</paragraph>
 		<paragraph>
 			The HTML documentation generator will generate documentation only for project-specific source files that are reachable from the project's <link>
-				<url>test</url>
-				<label>*Root Class</label>
+				<url>eiffelenvision_projects/configuring/project_configuration/build.xml</url>
+				<anchor_name>root_class</anchor_name>
+				<label>Root Class</label>
 			</link> and <link>
-				<url>test</url>
-				<label>*Creation Routine</label>
+				<url>eiffelenvision_projects/configuring/project_configuration/build.xml</url>
+				<anchor_name>creation_routine</anchor_name>
+				<label>Creation Routine</label>
 			</link>. 
 			If the specified <link>
-				<url>test</url>
-				<label>*Output Type</label>
+				<url>eiffelenvision_projects/configuring/project_configuration/general.xml</url>
+				<anchor_name>output_type</anchor_name>
+				<label>Output Type</label>
 			</link> for the project does not require a <link>
-				<url>test</url>
-				<label>*Root Class</label>
+				<url>eiffelenvision_projects/configuring/project_configuration/build.xml</url>
+				<anchor_name>root_class</anchor_name>
+				<label>Root Class</label>
 			</link> or a <link>
-				<url>test</url>
-				<label>*Creation Routine</label>
+				<url>eiffelenvision_projects/configuring/project_configuration/build.xml</url>
+				<anchor_name>creation_routine</anchor_name>
+				<label>Creation Routine</label>
 			</link>, then documentation will 
 			be generated for all project-specific Eiffel classes.
 			<note>
@@ -104,23 +109,23 @@
 			<bold>See Also:</bold>
 			<line_break/>
 			<link>
-				<url>t</url>
-				<label>*Precompiled Libraries</label>
+				<url>eiffelenvision_projects/configuring/adding_references/precompiled_libraries.xml</url>
+				<label>Precompiled Libraries</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>t</url>
-				<label>*Configuring Projects</label>
+				<url>eiffelenvision_projects/configuring/project_configuration/index.xml</url>
+				<label>Configuring Projects</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>t</url>
-				<label>*Build Property Page</label>
+				<url>eiffelenvision_projects/configuring/project_configuration/build.xml</url>
+				<label>Build Property Page</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>t</url>
-				<label>*Precompiled Property Page</label>
+				<url>eiffelenvision_projects/configuring/project_configuration/precompiled.xml</url>
+				<label>Precompiled Property Page</label>
 			</link>
 		</seealso>
 	</paragraph>

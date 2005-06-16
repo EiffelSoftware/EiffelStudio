@@ -31,31 +31,31 @@
 		<paragraph>
 			<bold>Evaluate Preconditions</bold>
 			<line_break/>
-			Indicates require assertions will be evaluated for all classes whose clusters <link><url>cluster_properties.xml</url><anchor_name>use_default_assertions</anchor_name><label>*Use Default Assertions</label></link>.
+			Indicates require assertions will be evaluated for all classes whose clusters <link><url>item_configuration/clusters.xml</url><anchor_name>use_default_assertions</anchor_name><label>Use Default Assertions</label></link>.
 		</paragraph>
 		<anchor>evaluate_preconditions</anchor>
 		<paragraph>
 			<bold>Evaluate Postconditions</bold>
 			<line_break/>
-			Indicates ensure assertions will be evaluated for all classes whose clusters <link><url>cluster_properties.xml</url><anchor_name>use_default_assertions</anchor_name><label>*Use Default Assertions</label></link>.
+			Indicates ensure assertions will be evaluated for all classes whose clusters <link><url>item_configuration/clusters.xml</url><anchor_name>use_default_assertions</anchor_name><label>Use Default Assertions</label></link>.
 		</paragraph>
 		<anchor>evaluate_checks</anchor>
 		<paragraph>
 			<bold>Evaluate Checks</bold>
 			<line_break/>
-			Indicates check assertions will be evaluated for all classes whose clusters <link><url>cluster_properties.xml</url><anchor_name>use_default_assertions</anchor_name><label>*Use Default Assertions</label></link>.
+			Indicates check assertions will be evaluated for all classes whose clusters <link><url>item_configuration/clusters.xml</url><anchor_name>use_default_assertions</anchor_name><label>Use Default Assertions</label></link>.
 		</paragraph>
 		<anchor>evaluate_loops</anchor>
 		<paragraph>
 			<bold>Evaluate Loops</bold>
 			<line_break/>
-			Indicates loop assertions will be evaluated for all classes whose clusters <link><url>cluster_properties.xml</url><anchor_name>use_default_assertions</anchor_name><label>*Use Default Assertions</label></link>.
+			Indicates loop assertions will be evaluated for all classes whose clusters <link><url>item_configuration/clusters.xml</url><anchor_name>use_default_assertions</anchor_name><label>Use Default Assertions</label></link>.
 		</paragraph>
 		<anchor>evaluate_invariants</anchor>
 		<paragraph>
 			<bold>Evaluate Invariants</bold>
 			<line_break/>
-			Indicates class invariants assertions will be evaluated for all classes whose clusters <link><url>cluster_properties.xml</url><anchor_name>use_default_assertions</anchor_name><label>*Use Default Assertions</label></link>.
+			Indicates class invariants assertions will be evaluated for all classes whose clusters <link><url>item_configuration/clusters.xml</url><anchor_name>use_default_assertions</anchor_name><label>Use Default Assertions</label></link>.
 		</paragraph>
 				
 		<anchor>also_see</anchor>
@@ -72,7 +72,7 @@
 			<line_break/>
 			<link><url>debugging.xml</url><label>Debugging Properties</label></link>
 			<line_break/>
-			<link><url>design_by_contract.xml</url><label>*Design by Contract</label></link>
+			<link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/50_design_by_contract.xml</url><label>Design by Contract</label></link>
 			<line_break/>
 			<help_link>
 				<keywords>vxconProjectBuilds</keywords>
@@ -80,7 +80,7 @@
 				Default and Custom Build
 			</help_link>
 			<line_break/>
-			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<link><url>../../index.xml</url><label>EiffelEnvision Projects</label></link>
 		</seealso>
 	</paragraph>
 </document>

@@ -48,10 +48,10 @@
 				<item><bold>Console Application</bold>: Permits usage of the Microsoft Windows command-line interface.</item>
 				<item><bold>Windows Application</bold>: An application that makes use of either the Windows GUI or .NET Windows Form GUI.</item>
 				<item><bold>Class Library</bold>: A library of all classes contained within the project. </item>
-				<item><bold>Precompiled Library</bold>: The same output as Class Library but includes additional compiler information that can be used by other EiffelEnvision projects through the <link><url>url</url><label>*Precompiled Library</label></link> property.</item>
+				<item><bold>Precompiled Library</bold>: The same output as Class Library but includes additional compiler information that can be used by other EiffelEnvision projects through the <link><url>precompiled.xml</url><anchor_name>precompiled_library</anchor_name><label>Precompiled Library</label></link> property.</item>
 			</list>
 			<note>
-				<bold>Note</bold>: Due to the complexities of resolving non-.NET specific language enhancements such as <link><url>url</url><label>*Multiple Inheritance</label></link> and <link><url>url</url><label>*Generics</label></link>, EiffelEnvision projects can only reference Precompiled Library projects through the <link><url>precompiled.xml</url><anchor_name>precompiled_library</anchor_name><label>Precompiled Library</label></link> property.
+				<bold>Note</bold>: Due to the complexities of resolving non-.NET specific language enhancements such as <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/30_inheritance.xml</url><label>Multiple Inheritance</label></link> and <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/40_genericity.xml</url><label>Generics</label></link>, EiffelEnvision projects can only reference Precompiled Library projects through the <link><url>precompiled.xml</url><anchor_name>precompiled_library</anchor_name><label>Precompiled Library</label></link> property.
 			</note>
 		</paragraph>
 		<anchor>include_all_classes</anchor>
@@ -79,7 +79,7 @@
 		<paragraph>
 			<bold>Cluster Namespace Format</bold>
 			<line_break/>
-			EiffelEnvision supports the generation of assembly type namespaces through its <link><url>url</url><anchor_name>cluster</anchor_name><label>*cluster</label></link> mechanism. There are three available options:
+			EiffelEnvision supports the generation of assembly type namespaces through its <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>cluster</anchor_name><label>cluster</label></link> mechanism. There are three available options:
 			<list ordered="false">
 				<item>None: Will not generate any namespaces in the assembly.</item>
 				<item>Cluster Name: Generates namespace for defined project clusters only.</item>
@@ -155,7 +155,7 @@
 				Default and Custom Build
 			</help_link>
 			<line_break/>
-			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<link><url>../../index.xml</url><label>EiffelEnvision Projects</label></link>
 		</seealso>
 	</paragraph>
 </document>

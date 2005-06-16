@@ -61,8 +61,12 @@ feature -- Status setting
 				current_editor.remove_observer (Current)
 			end
 			current_editor := ed
-			current_editor.add_edition_observer (Current)
-			current_editor.add_selection_observer (Current)
+			if current_editor.text_displayed.is_notifying then
+				current_editor.text_displayed.post_notify_actions.extend (agent add_observers)
+			else
+				current_editor.add_edition_observer (Current)
+				current_editor.add_selection_observer (Current)	
+			end		
 					-- Since the current editor has changed,
 					-- it may be in a different state than the current state,
 					-- and we have to update the state and send events accordingly....*sigh*
@@ -268,6 +272,13 @@ feature {NONE} -- Event handling
 		end
 
 feature {NONE} -- Implementation
+
+	add_observers is
+			-- 
+		do
+			current_editor.add_edition_observer (Current)
+			current_editor.add_selection_observer (Current)
+		end		
 
 	current_editor: EB_EDITOR
 			-- Currently observed editor.

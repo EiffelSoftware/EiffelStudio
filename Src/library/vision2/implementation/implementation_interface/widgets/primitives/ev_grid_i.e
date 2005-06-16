@@ -36,7 +36,7 @@ feature -- Access
 		end
 
 	row (a_row: INTEGER): EV_GRID_ROW is
-			-- Row `a_row'.
+			-- Row at index `a_row'.
 		require
 			a_row_positive: a_row > 0
 			a_row_not_greater_than_row_count: a_row <= row_count
@@ -44,11 +44,10 @@ feature -- Access
 			Result := (rows @ a_row).interface
 		ensure
 			row_not_void: Result /= Void
-			row_count_enlarged_if_needed: a_row > old row_count implies row_count = a_row
 		end
 
 	column (a_column: INTEGER): EV_GRID_COLUMN is
-			-- Column number `a_column'.
+			-- Column at index `a_column'.
 		require
 			a_column_positive: a_column > 0
 			a_column_not_greater_than_column_count: a_column <= column_count
@@ -56,7 +55,6 @@ feature -- Access
 			Result := (columns @ a_column).interface
 		ensure
 			column_not_void: Result /= Void
-			column_count_enlarged_if_needed: a_column > old column_count implies column_count = a_column
 		end
 
 	visible_column (i: INTEGER): EV_GRID_COLUMN is

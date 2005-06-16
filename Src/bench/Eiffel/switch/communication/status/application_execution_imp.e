@@ -35,6 +35,7 @@ feature -- recycling data
 
 	recycle is
 		do
+			Debugged_object_manager.reset			
 		end
 
 feature -- Properties

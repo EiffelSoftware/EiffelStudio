@@ -74,6 +74,7 @@ feature -- recycling data
 
 	recycle is
 		do
+			Precursor
 			Debug_value_keeper.recycle
 		end
 

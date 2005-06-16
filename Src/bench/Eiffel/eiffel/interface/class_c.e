@@ -296,8 +296,7 @@ feature -- Action
 				if not is_precompiled then
 					create c_file_name.make_from_string (generation_dir)
 					create object_name.make (5)
-					object_name.append_character (C_prefix)
-					object_name.append_integer (packet_number)
+					object_name.append_string (packet_name (C_prefix, packet_number))
 					c_file_name.extend (object_name)
 					finished_file_name := c_file_name.twin
 					create object_name.make (12)
@@ -1502,8 +1501,7 @@ feature
 			end
 
 			create subdirectory.make (5)
-			subdirectory.append_character (C_prefix)
-			subdirectory.append_integer (packet_number)
+			subdirectory.append_string (packet_name (C_prefix, packet_number))
 
 			dir_name.extend (subdirectory)
 			create dir.make (dir_name)

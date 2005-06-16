@@ -35,7 +35,7 @@ feature -- C code generation
 		require
 			base_name_not_void: base_name /= Void
 		do
-			Result := full_file_name (final_mode, System_object_prefix, base_name, Dot_c, 1)
+			Result := full_file_name (final_mode, packet_name (system_object_prefix, 1), base_name, Dot_c)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -47,9 +47,9 @@ feature -- C code generation
 			base_name_not_void: base_name /= Void
 		do
 			if final_mode then
-				Result := full_file_name (final_mode, System_object_prefix, base_name, Dot_x, 1)
+				Result := full_file_name (final_mode, packet_name (system_object_prefix, 1), base_name, Dot_x)
 			else
-				Result := full_file_name (final_mode, System_object_prefix, base_name, Dot_c, 1)
+				Result := full_file_name (final_mode, packet_name (system_object_prefix, 1), base_name, Dot_c)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -63,7 +63,7 @@ feature -- C code generation
 			extension_not_void: extension /= Void
 			positive_n: n >= 1
 		do
-			Result := full_file_name (True, system_object_prefix, base_name, extension, n)
+			Result := full_file_name (True, packet_name (system_object_prefix, n), base_name, extension)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -76,22 +76,19 @@ feature -- C code generation
 			extension_not_void: extension /= Void
 			n_positive: n > 0
 		do
-			Result := full_file_name (False, system_object_prefix, base_name, extension, n)
+			Result := full_file_name (False, packet_name (system_object_prefix, n), base_name, extension)
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	full_file_name (final_mode: BOOLEAN; sub_dir_prefix: CHARACTER; file_name, extension: STRING; packet: INTEGER): STRING is
+	full_file_name (final_mode: BOOLEAN; sub_dir: STRING; file_name, extension: STRING): STRING is
 			-- Generated file name for `final_mode' creating a subdirectory
-			-- if `sub_dir_prefix' is not the null character using
-			-- `file_name'+`extension' as filename.
+			-- if `sub_dir' is not Void or empty, using `file_name'+`extension' as filename.
 			-- Side effect: Create the corresponding subdirectory if it
 			-- does not exist yet.
 		require
 			file_name_not_void: file_name /= Void
-			packet_positive: sub_dir_prefix /= '%U' implies packet > 0
 		local
-			subdirectory: STRING
 			dir: DIRECTORY
 			f_name: FILE_NAME
 			dir_name: DIRECTORY_NAME
@@ -106,11 +103,8 @@ feature -- C code generation
 			end
 			create dir_name.make_from_string (Result)
 
-			if sub_dir_prefix /= '%U' then
-				create subdirectory.make (7)
-				subdirectory.append_character (sub_dir_prefix)
-				subdirectory.append_integer (packet)
-				dir_name.extend (subdirectory)
+			if sub_dir /= Void and then not sub_dir.is_empty then
+				dir_name.extend (sub_dir)
 			end
 
 				-- Side effect here, we create a new subdirectory if it does
@@ -143,4 +137,16 @@ feature -- C code generation
 			result_not_void: Result /= Void
 		end
 
+	packet_name (sub_dir_prefix: CHARACTER; a_packet_number: INTEGER): STRING is
+			-- Name of subdirectory.
+		require
+			a_packet_number_non_negative: a_packet_number >= 0
+		do
+			create Result.make (6)
+			Result.append_character (sub_dir_prefix)
+			Result.append_integer (a_packet_number)
+		ensure
+			packet_name_not_void: Result /= Void
+		end
+		
 end -- end class SHARED_CODE_FILES

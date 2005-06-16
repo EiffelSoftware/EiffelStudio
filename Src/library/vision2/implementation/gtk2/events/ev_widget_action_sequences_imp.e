@@ -23,8 +23,8 @@ feature -- Event handling
 			create Result
 			real_signal_connect (
 					event_widget,
-					"motion-notify-event",
-					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
+					App_implementation.motion_notify_event_string,
+					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (object_id, ?, ?, ?, ?, ?, ?, ?),
 					App_implementation.default_translate
 				)
 		end
@@ -61,7 +61,7 @@ feature -- Event handling
 			create Result
 			real_signal_connect (
 				event_widget,
-				"enter-notify-event", 
+				App_implementation.enter_notify_event_string, 
 				agent (App_implementation.gtk_marshal).pointer_enter_actions_intermediary (c_object),
 				App_implementation.default_translate
 			)
@@ -74,7 +74,7 @@ feature -- Event handling
 			create Result
 			real_signal_connect (
 				event_widget,
-				"leave-notify-event",
+				App_implementation.leave_notify_event_string,
 				agent (App_implementation.gtk_marshal).pointer_leave_action_intermediary (c_object),
 				App_implementation.default_translate
 			)
@@ -117,7 +117,8 @@ feature -- Event handling
 		do
 			create Result
 			if is_parentable then
-				real_signal_connect (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
+					-- Window resize events are connected separately
+				real_signal_connect (c_object, App_implementation.size_allocate_event_string, agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
 			end
 		end
 

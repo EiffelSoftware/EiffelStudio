@@ -23,7 +23,9 @@ struct CorDbgCallbackInfo {
 };
 extern struct CorDbgCallbackInfo * dbg_cb_info;
 extern void clear_dbg_cb_info();
+extern void reset_dbg_cb_info();
 #define CLEAR_DBG_CB_INFO clear_dbg_cb_info();
+#define RESET_DBG_CB_INFO reset_dbg_cb_info();
 #define SET_DBG_CB_INFO_CALLBACK_ID(v) dbg_cb_info->callback_id = v;
 #define SET_DBG_CB_INFO_POINTER(index,v) dbg_cb_info->items[index - 1].itu_ptr = v;
 #define SET_DBG_CB_INFO_INTEGER(index,v) dbg_cb_info->items[index - 1].itu_int = v;
@@ -31,7 +33,6 @@ extern void clear_dbg_cb_info();
 #define SET_DBG_CB_INFO_BOOL(index,v) dbg_cb_info->items[index - 1].itu_int = v;
 #define DBG_CB_INFO_POINTER_ITEM(index) dbg_cb_info->items[index - 1].itu_ptr
 #define DBG_CB_INFO_INTEGER_ITEM(index) dbg_cb_info->items[index - 1].itu_int
-
 
 extern EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** );
 

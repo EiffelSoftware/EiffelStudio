@@ -31,11 +31,9 @@ feature -- Access
 		require
 			valid_operands: valid_operands (args)
 			callable: callable
-		local
-			l_result: like last_result
 		do
 			set_operands (args)
-			last_result := l_result
+			clear_last_result
 			Result ?= rout_disp.invoke (target_object, internal_operands)
 			if is_cleanup_needed then
 				remove_gc_reference
@@ -82,6 +80,16 @@ feature -- Obsolete
 			Result := item (args)
 		end
 
+feature -- Removal
+
+	clear_last_result is
+			-- Reset content of `last_result' to its default value
+		local
+			l_result: RESULT_TYPE
+		do
+			last_result := l_result
+		end
+		
 indexing
 
 	library: "[

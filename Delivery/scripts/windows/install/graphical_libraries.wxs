@@ -780,8 +780,7 @@
 								<File Id="eg_simple_link.e" Name="EG_SIM~3.E" LongName="eg_simple_link.e" />
 								<File Id="eg_simple_node.e" Name="EG_SIM~4.E" LongName="eg_simple_node.e" />
 								<File Id="eg_xml_storable.e" Name="EG_XML~1.E" LongName="eg_xml_storable.e" />
-								<File Id="shared_xml_routines.e" Name="SHARED~1.E" LongName="shared_xml_routines.e" />
-								<File Id="xml_routines.e" Name="XML_RO~1.E" LongName="xml_routines.e" />
+								<File Id="xml_graph_routines.e" Name="XML_GR~1.E" LongName="xml_graph_routines.e" />
 							</Component>
 						</Directory>
 					</Directory>

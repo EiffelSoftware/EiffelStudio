@@ -24,7 +24,13 @@ feature {NONE} -- Initialization
 			create collapse_actions
 		end
 
-feature -- Status
+feature -- Change
+
+	reset_row_actions is
+		do
+			expand_actions.wipe_out
+			collapse_actions.wipe_out
+		end
 
 feature -- Access
 

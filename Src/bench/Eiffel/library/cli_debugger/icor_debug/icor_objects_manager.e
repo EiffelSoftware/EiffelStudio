@@ -112,7 +112,6 @@ feature {ICOR_EXPORTER} -- Access
 				create Result.make_by_pointer (p)
 				Result.add_ref
 				classes.force (Result, p)
-				Result := classes.item (p)
 			end
 			if Result.item = Default_pointer then
 				Result.update_item (p)

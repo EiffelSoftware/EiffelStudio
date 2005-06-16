@@ -166,6 +166,12 @@ feature -- Evaluation
 		
 feature -- Access to dbg data
 
+	dbg_clear_cb_info is
+			-- Callback id from stored callback datas
+		do
+			c_dbg_clear_cb_info
+		end
+
 	dbg_cb_info_get_callback_id: INTEGER is
 			-- Callback id from stored callback datas
 		do
@@ -266,6 +272,13 @@ feature {NONE} -- External Dbg Sync routine
 		alias
 			"dbg_notify_from_estudio"
 		end
+		
+	c_dbg_clear_cb_info is
+		external
+			"C inline use %"cli_debugger.h%""
+		alias
+			"CLEAR_DBG_CB_INFO"
+		end	
 		
 	c_dbg_cb_info_get_callback_id: INTEGER is
 			-- Access `callback_id' data member of `dbg_cb_info' struct.

@@ -41,7 +41,7 @@
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>generic_file_items.xml</url>
+				<url>file_items.xml</url>
 				<label>Generic File Items</label>
 			</link>
 			<line_break/>
@@ -62,9 +62,9 @@
 			<line_break/>
 			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Adding Existing Items</label></link>
+			<link><url>../../configuring/adding_items/adding_existings_items.xml</url><label>Adding Existing Items</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Adding New Folders</label></link>
+			<link><url>../../configuring/adding_items/adding_folders.xml</url><label>Adding New Folders</label></link>
 		</seealso>	
 	</paragraph>
 </document>

@@ -26,12 +26,12 @@
 		<paragraph>
 			<bold>Add</bold>, <bold>Add Existing Item...</bold>
 			<line_break/>
-			Adds an existing project item under the <bold>Other Project Items</bold> folder. For more information on adding existing items, See <link><url>../../configuring/adding_items/adding_existing_items.xml</url><label>Adding Existing Items</label></link>.
+			Adds an existing project item under the <bold>Other Project Items</bold> folder. For more information on adding existing items, See <link><url>../../configuring/adding_items/adding_existings_items.xml</url><label>Adding Existing Items</label></link>.
 		</paragraph>
 		<paragraph>
 			<bold>Add</bold>, <bold>Add New Folder...</bold>
 			<line_break/>
-			Adds a new <link><url>virutal_folder.xml</url><label>Virtual Folder</label></link> under the <bold>Other Project Items</bold> folder. For more information on adding new folder, See <link><url>../../configuring/adding_items/adding_folders.xml</url><label>Adding New Folders</label></link>.
+			Adds a new <link><url>virtual_folders.xml</url><label>Virtual Folder</label></link> under the <bold>Other Project Items</bold> folder. For more information on adding new folder, See <link><url>../../configuring/adding_items/adding_folders.xml</url><label>Adding New Folders</label></link>.
 		</paragraph>
 		<paragraph>
 			<bold>Delete</bold>

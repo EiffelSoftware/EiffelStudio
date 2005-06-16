@@ -42,36 +42,23 @@ feature -- Initialization
 		end
 
 	initialize is
-			-- Initialize the header item
-		local
-			hbox: POINTER
+			-- Initialize the header item.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (c_object, True)
 			
 				-- Allow the column to be shrank to nothing
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
-
+			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
 			real_signal_connect (c_object, "notify::width", agent handle_resize, Void)
 			
 			pixmapable_imp_initialize
 			textable_imp_initialize
 
-			box := {EV_GTK_EXTERNALS}.gtk_event_box_new
-			{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (box, False)
-
+			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
-
-			hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
-
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (hbox, pixmap_box, False, False, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_end (hbox, text_label, True, True, 0)
-
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, hbox)
-
-			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
-
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, False, 0)
+			{EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 
 				-- Set the default width to 80 pixels wide
@@ -107,7 +94,7 @@ feature -- Status setting
 			-- Assign `a_width' to `width'.
 		do
 			width := a_width
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width.max (1))
 			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, 16)
 		end
 		
@@ -115,7 +102,15 @@ feature -- Status setting
 			-- Resize `Current' to fully display both `pixmap' and `text'.
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
+		local
+			a_req_struct: POINTER
+			a_width, a_height: INTEGER
 		do
+			{EV_GTK_EXTERNALS}.gtk_widget_size_request (box, default_pointer)
+			a_req_struct := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (box)
+			a_height := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (a_req_struct)
+			a_width := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (a_req_struct)
+			set_width (a_width)
 		end
 
 feature -- PND
@@ -189,6 +184,53 @@ feature -- PND
 			end
 		end
 
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
+
+	process_event (n_args: INTEGER; args: POINTER) is
+			-- Process gtk events using raw marshal data.
+		local
+			gdk_event: POINTER
+			event_type: INTEGER
+			a_button: POINTER
+		do
+			a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
+					-- We don't want the button stealing focus.
+			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
+			if n_args > 0 then
+				gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
+				if gdk_event /= NULL then
+					event_type := {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event)
+					if event_type = {EV_GTK_ENUMS}.gdk_motion_notify_enum then
+						if pointer_motion_actions_internal /= Void then
+							pointer_motion_actions_internal.call (
+								app_implementation.gtk_marshal.motion_tuple (
+									{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
+									{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
+									0.5,
+									0.5,
+									0.5,
+									{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+									{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+									)
+							)
+						end	
+					elseif
+						event_type = {EV_GTK_ENUMS}.gdk_button_press_enum
+					then
+						if pointer_button_press_actions_internal /= Void then
+							pointer_button_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])	
+						end
+					elseif
+						event_type = {EV_GTK_ENUMS}.gdk_2button_press_enum
+					then
+						if pointer_double_press_actions_internal /= Void then
+							pointer_double_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])	
+						end
+					end					
+				end
+			end
+		end
+		
 feature {EV_HEADER_IMP} -- Implementation
 
 	set_parent_imp (par_imp: like parent_imp) is
@@ -202,10 +244,11 @@ feature {EV_HEADER_IMP} -- Implementation
 				if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box) = default_pointer then
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 				end
+					-- The button gets recreated everytime it is parented so the events need to be hooked up to the new button.
 				a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
 					-- We don't want the button stealing focus.
 				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
-				-- FIXME Connect events to button.
+				real_signal_connect (a_button, "event", agent (App_implementation.gtk_marshal).header_item_event_dispatcher (internal_id, ? , ?), Void)
 			else
 				{EV_GTK_EXTERNALS}.object_ref (box)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer))
@@ -228,8 +271,9 @@ feature {NONE} -- Implementation
 		-- Box to hold column text and pixmap.
 	
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
-			-- Create a drop action sequence.
 		do
+			create Result
+			interface.init_drop_actions (Result)
 		end
 
 feature {NONE} -- Redundant implementation
@@ -241,7 +285,13 @@ feature {NONE} -- Redundant implementation
 
 feature {NONE} -- Implementation
 
-	destroy is do end
+	destroy is
+			-- Destroy `c_object'.
+		do
+			{EV_GTK_EXTERNALS}.object_unref (c_object)
+			c_object := default_pointer
+			set_is_destroyed (True)
+		end
 
 	interface: EV_HEADER_ITEM
 

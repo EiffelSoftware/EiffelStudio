@@ -263,67 +263,63 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
  		do
 			switch_auto_point := auto_point
 			if is_editable then
-				if has_selection then
-					Precursor (c)
-				else
-					Precursor (c)
-					look_for_keyword := True
-					if c = ' ' then
-						if latest_typed_word_is_keyword then
-								-- case: keyword (is, do, end, etc.)
-							cur := text_displayed.cursor.twin
-							cur.go_left_char
-							token := cur.token
-							if token /= Void then
-								t ?= token.previous
-								if t /= Void and then keyword_image(t).is_equal (previous_token_image) then
-									text_displayed.back_delete_char
-									text_displayed.complete_syntax (previous_token_image, True, False)
-									syntax_completed := text_displayed.syntax_completed
-									look_for_keyword := False
-									latest_typed_word_is_keyword := False
-								end
-							end
-						else
-							token := text_displayed.cursor.token
-							if text_displayed.cursor.line.eol_token = token then
-									-- case: keyword|space|eol
-								if token.previous /= Void and then token.previous.length = 1 then
-									t ?= token.previous.previous
-								end
-							elseif token /= Void then
-									-- case: keyword|space|space|...
-								if text_displayed.cursor.pos_in_token = 2 then
-									t ?= token.previous
-								end
-							end
-							if t /= Void then
+				Precursor (c)
+				look_for_keyword := True
+				if c = ' ' then
+					if latest_typed_word_is_keyword then
+							-- case: keyword (is, do, end, etc.)
+						cur := text_displayed.cursor.twin
+						cur.go_left_char
+						token := cur.token
+						if token /= Void then
+							t ?= token.previous
+							if t /= Void and then keyword_image(t).is_equal (previous_token_image) then
 								text_displayed.back_delete_char
-								look_for_keyword := False
-								text_displayed.complete_syntax (keyword_image (t), False, False)
+								text_displayed.complete_syntax (previous_token_image, True, False)
 								syntax_completed := text_displayed.syntax_completed
 								look_for_keyword := False
+								latest_typed_word_is_keyword := False
 							end
 						end
-						if syntax_completed then
-							refresh
-						end
 					else
-						insert := complementary_character (c)
-						if insert /= '%U' then
-							text_displayed.insert_char (insert)
-							text_displayed.cursor.go_left_char
-							invalidate_cursor_rect (True)
+						token := text_displayed.cursor.token
+						if text_displayed.cursor.line.eol_token = token then
+								-- case: keyword|space|eol
+							if token.previous /= Void and then token.previous.length = 1 then
+								t ?= token.previous.previous
+							end
+						elseif token /= Void then
+								-- case: keyword|space|space|...
+							if text_displayed.cursor.pos_in_token = 2 then
+								t ?= token.previous
+							end
+						end
+						if t /= Void then
+							text_displayed.back_delete_char
+							look_for_keyword := False
+							text_displayed.complete_syntax (keyword_image (t), False, False)
+							syntax_completed := text_displayed.syntax_completed
+							look_for_keyword := False
 						end
 					end
-					if look_for_keyword then
-						if text_displayed.cursor.token /= Void then
-							t ?= text_displayed.cursor.token.previous
-						end
-						latest_typed_word_is_keyword := (t /= Void) and then text_displayed.cursor.pos_in_token = 1
-						if latest_typed_word_is_keyword then
-							previous_token_image := keyword_image (t)
-						end
+					if syntax_completed then
+						refresh
+					end
+				else
+					insert := complementary_character (c)
+					if insert /= '%U' then
+						text_displayed.insert_char (insert)
+						text_displayed.cursor.go_left_char
+						invalidate_cursor_rect (True)
+					end
+				end
+				if look_for_keyword then
+					if text_displayed.cursor.token /= Void then
+						t ?= text_displayed.cursor.token.previous
+					end
+					latest_typed_word_is_keyword := (t /= Void) and then text_displayed.cursor.pos_in_token = 1
+					if latest_typed_word_is_keyword then
+						previous_token_image := keyword_image (t)
 					end
 				end
 			else

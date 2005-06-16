@@ -17,6 +17,8 @@ inherit
 		
 	EV_GTK_DEPENDENT_APPLICATION_IMP
 
+	EV_GTK_EVENT_STRINGS
+
 create 
 	make
 	

@@ -45,13 +45,17 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_text)
-			{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
-				app_implementation.tooltips,
-				visual_widget,
-				a_cs.item,
-				NULL
-			)
+			if not a_text.is_empty then
+				create a_cs.make (a_text)
+				{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
+					app_implementation.tooltips,
+					visual_widget,
+					a_cs.item,
+					NULL
+				)				
+			else
+				remove_tooltip
+			end
 		end
 
 	remove_tooltip is

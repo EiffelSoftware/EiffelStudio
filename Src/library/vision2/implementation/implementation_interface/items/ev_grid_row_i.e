@@ -1126,7 +1126,17 @@ feature {EV_ANY_I} -- Contract support
 			if parent_i.is_tree_enabled then
 				Result := Result and parent_i.hidden_node_count <= parent_i.row_count - 1
 			end
-		end	
+		end
+		
+feature {EV_GRID_I} -- Implementation
+
+	unparent is
+			-- Sets` parent_i' to `Void'.
+		do
+			parent_i := Void
+		ensure
+			parent_void: parent = Void
+		end
 	
 feature {NONE} -- Implementation
 

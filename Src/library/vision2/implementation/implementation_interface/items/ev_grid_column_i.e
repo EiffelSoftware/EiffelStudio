@@ -562,6 +562,16 @@ feature {NONE} -- Implementation
 			end
 			parent_i.redraw_column (Current)
 		end
+		
+feature {EV_GRID_I} -- Implementation
+
+	unparent is
+			-- Sets` parent_i' to `Void'.
+		do
+			parent_i := Void
+		ensure
+			parent_void: parent = Void
+		end
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_ROW_I} -- Implementation
 

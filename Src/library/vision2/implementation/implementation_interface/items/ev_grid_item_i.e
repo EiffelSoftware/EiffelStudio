@@ -464,6 +464,16 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	row_i: EV_GRID_ROW_I
 		-- Grid row that `Current' resides in if any.
 		
+feature {EV_GRID_I} -- Implementation
+
+	unparent is
+			-- Sets` parent_i' to `Void'.
+		do
+			parent_i := Void
+		ensure
+			parent_void: parent = Void
+		end
+		
 feature {NONE} -- Implementation
 
 	destroy is

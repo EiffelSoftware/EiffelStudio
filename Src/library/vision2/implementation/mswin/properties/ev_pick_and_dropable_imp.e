@@ -441,6 +441,7 @@ feature {EV_ANY_I} -- Implementation
 				-- Assign `Void' to `last_pointed_target'.
 			press_action := Ev_pnd_start_transport
 			if pebble_function /= Void then
+				pebble_function.clear_last_result
 				pebble := Void
 			end
 		ensure then

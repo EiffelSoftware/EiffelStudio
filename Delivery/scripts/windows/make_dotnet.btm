@@ -18,6 +18,7 @@ iff not exist EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll then
 	CANCEL
 endiff
 copy EIFGEN\F_code\EiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
+copy EIFGEN\F_code\libEiffelSoftware.MetadataConsumer.dll %INSTALL_DIR\dotnet_binaries
 cdd %INSTALL_DIR\dotnet\assemblies
 fullrf build.bat
 fullrf System.Object.xml

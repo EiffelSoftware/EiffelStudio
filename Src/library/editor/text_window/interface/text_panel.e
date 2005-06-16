@@ -211,7 +211,7 @@ feature -- Status Setting
 			set_editor_width (editor_width)
 			update_horizontal_scrollbar						
 			refresh_now
-			margin.setup_margin
+			margin.setup_margin			
 		end	
 		
 	on_focus is
@@ -1170,8 +1170,11 @@ feature {NONE} -- Text loading
 			set_editor_width (editor_width)
 			vertical_scrollbar.enable_sensitive
 			update_vertical_scrollbar
-			update_horizontal_scrollbar
+			update_horizontal_scrollbar		
 			editor_drawing_area.enable_sensitive
+			if editor_drawing_area.is_sensitive then
+				set_focus
+			end			
 		end
 
 	on_text_block_loaded (was_first_block: BOOLEAN) is
@@ -1182,7 +1185,7 @@ feature {NONE} -- Text loading
 
 	file_loading_setup is
 			-- Setup before file loading
-		do			
+		do		
 		end		
 
 feature {MARGIN} -- Implementation

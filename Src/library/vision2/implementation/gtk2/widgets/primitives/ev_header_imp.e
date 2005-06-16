@@ -80,7 +80,6 @@ feature -- Initialization
 			pointer_button_release_actions.call (Void)			
 
 			set_is_initialized (True)
-
 		end
 
 	dummy_item: EV_HEADER_ITEM

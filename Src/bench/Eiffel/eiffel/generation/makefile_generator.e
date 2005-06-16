@@ -971,14 +971,12 @@ feature -- Generation (Linking rules)
 				make_file.put_string (packet_name (system_object_prefix, 1))
 				make_file.put_string ("/estructure.x")
 				make_file.new_line
-				make_file.indent
-				make_file.put_string ("$(X2C) ")
+				make_file.put_string ("%T$(X2C) ")
 				make_file.put_string (packet_name (system_object_prefix, 1))
 				make_file.put_string ("/estructure.x ")
 				make_file.put_string (packet_name (system_object_prefix, 1))
 				make_file.put_string ("/estructure.h")
 				make_file.new_line
-				make_file.exdent
 				make_file.new_line
 			end
 

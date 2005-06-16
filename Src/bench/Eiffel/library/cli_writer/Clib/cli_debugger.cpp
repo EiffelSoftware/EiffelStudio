@@ -300,14 +300,15 @@ rt_private UINT once_enter_ec_cb;
 /// Synchro info                               ///
 //////////////////////////////////////////////////
 */
-rt_private HWND dbg_hWnd_for_timer;
 
+rt_private HWND dbg_hWnd_for_timer;
 rt_public struct CorDbgCallbackInfo * dbg_cb_info;
 
 rt_public void clear_dbg_cb_info() {
 	DBGTRACE("[CB] clear Cb Info ");
 
 	dbg_cb_info->callback_id = (Callback_ids) 0;
+
 	dbg_cb_info->items[0].itu_ptr = NULL;
 	dbg_cb_info->items[1].itu_ptr = NULL;
 	dbg_cb_info->items[2].itu_ptr = NULL;
@@ -339,7 +340,7 @@ rt_public void dbg_init_estudio_thread_handle () {
 	HANDLE pseudo_th_hdl;
 	BOOL fSuccess;
 
-	reset_dbg_cb_info();
+	RESET_DBG_CB_INFO;
 
 	pseudo_th_hdl = GetCurrentThread();
 	estudio_thread_id = GetCurrentThreadId();

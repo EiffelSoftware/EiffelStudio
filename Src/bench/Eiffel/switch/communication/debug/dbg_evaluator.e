@@ -79,6 +79,8 @@ feature {SHARED_DBG_EVALUATOR} -- Init
 			if is_dotnet_system then
 				dotnet_parameters_reset
 			end
+			last_result_value := Void
+			last_result_static_type := Void
 		end
 
 feature {SHARED_DBG_EVALUATOR} -- Variables

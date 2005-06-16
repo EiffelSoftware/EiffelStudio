@@ -717,18 +717,6 @@ feature -- Window Properties
 			Result := Pixmaps.Icon_development_window
 		end
 
-	preference_tool_is_hidden: BOOLEAN
-			-- Is the preference tool hidden?
-
-	profile_tool_is_hidden: BOOLEAN
-			-- Is the profile tool hidden?
-
-	has_argument_dialog: BOOLEAN is
-			-- Does Current have an associted arguments dialog?
-		do
-			Result := arguments_dialog /= Void
-		end
-
 feature -- Pulldown Menus
 
 	metric_menu: EV_MENU
@@ -2959,13 +2947,9 @@ feature {NONE} -- Implementation
 			if context_tool_has_focus then
 				if context_tool.history_manager.is_forth_possible then
 					context_tool.history_manager.forth_command.execute
-					editor_tool.text_area.editor_viewport.enable_sensitive
-					editor_tool.text_area.set_focus
 				end
 			elseif history_manager.is_forth_possible then
-				history_manager.forth_command.execute
-				editor_tool.text_area.editor_viewport.enable_sensitive
-				editor_tool.text_area.set_focus
+				history_manager.forth_command.execute								
 			end
 		end
 

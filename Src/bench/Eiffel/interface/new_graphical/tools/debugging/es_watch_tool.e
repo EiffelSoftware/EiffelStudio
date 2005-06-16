@@ -367,15 +367,22 @@ feature -- Memory management
 
 	recycle_expressions is
 			-- Recycle
+		local
+			witem: ES_OBJECTS_GRID_EXPRESSION_LINE
 		do
 			from
 				watched_items.start
 			until
 				watched_items.after
 			loop
-				check watched_items.item.expression /= Void	end
-				watched_items.item.recycle
-				watched_items.forth
+				witem := watched_items.item
+				witem.recycle
+				check witem.expression /= Void	end
+				if not witem.expression.is_still_valid then
+					watched_items.remove
+				else
+					watched_items.forth
+				end
 			end
 		end
 

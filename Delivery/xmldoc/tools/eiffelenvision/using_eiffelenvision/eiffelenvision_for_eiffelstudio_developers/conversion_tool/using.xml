@@ -41,7 +41,7 @@
 		<paragraph>For information on how to access the 
 			<bold>EiffelStudio Project Conversion Tool</bold>, please refer to the 
 			<link>
-				<url>accessing.xml</url>
+				<url>accesssing.xml</url>
 				<label>Accessing the EiffelStudio Project Conversion Tool</label>
 			</link> section of this documentation.
 		</paragraph>
@@ -49,7 +49,8 @@
 			<bold>Next</bold> and 
 			<bold>Back</bold> buttons. Starting the tool by any of the appropriate means will display the tool with the 
 			<link>
-				<url>#project_settings</url>
+				<url>using.xml</url>
+				<anchor_name>project_settings</anchor_name>
 				<label>Project Settings</label>
 			</link> tab page active. To exit the tool at any time, click the 
 			<bold>Exit</bold> button.
@@ -63,16 +64,17 @@
 		<paragraph>EiffelEnvision handles the location of unmanaged resources very differently than EiffelStudio. EiffelStudio takes Resource Scripts (*.rc) from the project compilation location, whereas EiffelEnvision introduces the 
 			<bold>resource</bold> folder. Please see the 
 			<link>
-				<url/>
-				<label>*Unamanged Code</label>
+				<url>../../compiling_projects/unmanaged_code.xml</url>
+				<label>Compiling Unamanged Code</label>
 			</link> section of this documentation for more information on the resource folder. The conversion tool does not modify or move any of the original EiffelStudio project files, ensuring the project can still be compiled in EiffelStudio after the conversion process. Because of this, using unmanaged resources in EiffelEnvision requires you to create the 
 			<bold>resource</bold> folder and add all relevant resources into it prior to converting the project. These resources include the project resource script, header files (*.h) and any referenced resource in the resource script. You may optionally rename the resource script to 
 			<bold>app.rc</bold> from 
 			<italic>system_name</italic>.rc, where 
 			<italic>system_name</italic> is the system name given to your EiffelStudio project. Changing the name will ensure that once you change the 
 			<link>
-				<url/>
-				<label>*Assembly Name</label>
+				<url>../../eiffelenvision_projects/configuring/project_configuration/general.xml</url>
+				<anchor_name>assembly_name</anchor_name>
+				<label>Assembly Name</label>
 			</link> property in EiffelEnvision, the unmanaged resources will still be available without having to rename the resource script to the new assembly 
 			<bold>name</bold>.
 		</paragraph>
@@ -85,12 +87,13 @@
 		<paragraph>
 			Entry errors in the tool are indicated by highlighting the problematic section. Any errors in any of the tab pages will prevent a conversion from taking place until they have been adjusted. Below shows an example of a specified ace file in the 
 			<link>
-				<url>#project_settings</url>
+				<url>using.xml</url>
+				<anchor_name>project_settings</anchor_name>
 				<label>Project Settings</label>
 			</link> tab page that does not exist.
 			<paragraph>
 				<image>
-					<url>/03_eiffelstudio_developers\10_eiffelstudio_conversion_tool\images\aceimp_error.png</url>
+					<url>images\aceimp_error.png</url>
 				</image>
 			</paragraph>
 			Entering a file which does not exist in the 'Project ace file' indicates that there is problem with the specified file name.
@@ -103,7 +106,7 @@
 		</heading>
 		<paragraph>The first of the tool conversion configuration pages displayed is the Project Settings page. From here you'll be able to specify the EiffelStudio project ace file to import into EiffelEnvision and optionally specify a project source location.</paragraph>
 		<image>
-			<url>/03_eiffelstudio_developers\10_eiffelstudio_conversion_tool\images\aceimp_settings.png</url>
+			<url>images\aceimp_settings.png</url>
 		</image>
 		<paragraph>If you opted to run the tool from the Start Menu you will need to specify an ace file manually, otherwise the ace file and its location will be used to automatically populate the 
 			<bold>Project ace file</bold> and 'Root source path' fields.
@@ -119,7 +122,8 @@
 			<paragraph/>Clicking the 
 			<bold>Next</bold> button will take you to the 
 			<link>
-				<url>#environment</url>
+				<url>using.xml</url>
+				<anchor_name>environment</anchor_name>
 				<label>Environment</label>
 			</link> tab page.
 		</paragraph>
@@ -134,7 +138,7 @@
 		</paragraph>
 		<paragraph>
 			<image>
-				<url>/03_eiffelstudio_developers\10_eiffelstudio_conversion_tool\images\aceimp_environment.png</url>
+				<url>images\aceimp_environment.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The drop-down list contains only those versions of EiffelStudio present, and correctly installed, on your system. If you are unsure of the version of EiffelStudio used, leaving the option as 
@@ -143,7 +147,8 @@
 		<paragraph>Clicking the 
 			<bold>Next</bold> button will take you to the 
 			<link>
-				<url>#sta</url>
+				<url>using.xml</url>
+				<anchor_name>sta</anchor_name>
 				<label>Single Threaded Apartment</label>
 			</link> tab page.
 		</paragraph>
@@ -157,7 +162,8 @@
 		<note>
 			<bold>Note: </bold>If your project already starts execution within a STA, there is no need to generate an STA root class. If this is the case, skip to the final 
 			<link>
-				<url>#output</url>
+				<url>using.xml</url>
+				<anchor_name>output</anchor_name>
 				<label>Output</label>
 			</link> tab page.
 		</note>
@@ -172,7 +178,7 @@
 		</note>
 		<paragraph>
 			<image>
-				<url>/03_eiffelstudio_developers\10_eiffelstudio_conversion_tool\images\aceimp_sta.png</url>
+				<url>images\aceimp_sta.png</url>
 			</image>
 		</paragraph>
 		<paragraph>Selecting the option 
@@ -186,7 +192,8 @@
 		<paragraph>Clicking the 
 			<bold>Next</bold> button will take you to the final 
 			<link>
-				<url>#output</url>
+				<url>using.xml</url>
+				<anchor_name>output</anchor_name>
 				<label>Output</label>
 			</link> tab page.
 		</paragraph>
@@ -201,7 +208,7 @@
 		</paragraph>
 		<paragraph>
 			<image>
-				<url>/03_eiffelstudio_developers\10_eiffelstudio_conversion_tool\images\aceimp_output.png</url>
+				<url>images\aceimp_output.png</url>
 			</image>
 		</paragraph>
 		<paragraph>By default the 
@@ -212,7 +219,7 @@
 			<bold>Output</bold> box will be populated with the report indicating what environment variables are being used, the file(s) that are being generated and the final success or failure of the conversion process. Failures will always be accompanied by a reason for the failure.
 		</paragraph>
 		<paragraph>
-			On a successful conversion, the generated EiffelEnvision project file can be located in the specified <link><url></url><label>Root source path</label></link> location in the <link><url></url><label>Project Settings</label></link> tab page. If no root source path was specified, the generated project file will be located in the same location as the specified EiffelStudio project ace file.
+			On a successful conversion, the generated EiffelEnvision project file can be located in the specified <link><url>using.xml</url><anchor_name>project_settings</anchor_name><label>Root source path</label></link> location in the <link><url>using.xml</url><anchor_name>project_settings</anchor_name><label>Project Settings</label></link> tab page. If no root source path was specified, the generated project file will be located in the same location as the specified EiffelStudio project ace file.
 		</paragraph>
 
 		<anchor>tool_produce</anchor>
@@ -241,13 +248,13 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>acessing.xml</url>
+				<url>accesssing.xml</url>
 				<label>Accessing the EiffelStudio Project Conversion Tool</label>
 			</link>
 			<line_break/>
 			<link>
-				<url></url>
-				<label>*Configuring an EiffelEnvisio Project</label>
+				<url>../../eiffelenvision_projects/configuring/index.xml</url>
+				<label>Configuring an EiffelEnvision Project</label>
 			</link>
 		</seealso>
 	</paragraph></document>

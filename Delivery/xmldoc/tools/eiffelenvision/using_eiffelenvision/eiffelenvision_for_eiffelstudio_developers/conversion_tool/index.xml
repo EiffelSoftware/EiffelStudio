@@ -36,7 +36,7 @@
 		</heading>
 		<paragraph>
 			<link>
-				<url>accessing.xml</url>
+				<url>accesssing.xml</url>
 				<label>Access the EiffelStudio Project Conversion Tool</label>
 			</link>
 			<line_break/>Highlights the number of ways the <bold>EiffelStudio Project Conversion Tool</bold> can be launched.

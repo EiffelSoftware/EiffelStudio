@@ -137,16 +137,17 @@ feature {NONE} -- Implementation
 	block is
 			-- Wait until window is closed by the user.
 		local
-			dummy: INTEGER
+			events_pending: BOOLEAN
 		do
 			from
 			until
 				is_destroyed or else selected_button /= Void
 			loop
-				if {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
-					App_implementation.call_idle_actions
+				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then
+						-- There are not more events left
+					app_implementation.call_idle_actions
+					events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
 				end
-				dummy := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 			end
 		end
 		

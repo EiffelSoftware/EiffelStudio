@@ -1287,7 +1287,7 @@ feature {NONE} -- open new class
 						lost_focus_action_enabled := False
 						choice.show
 						lost_focus_action_enabled := True
-					end
+					end					
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
@@ -1306,7 +1306,7 @@ feature {NONE} -- open new class
 						lost_focus_action_enabled := False
 						choice.show
 						lost_focus_action_enabled := True
-					end
+					end					
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
@@ -1326,6 +1326,7 @@ feature {NONE} -- open new class
 						choice.show
 						lost_focus_action_enabled := True
 					end
+					window_manager.last_focused_development_window.editor_tool.text_area.set_focus
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
@@ -1395,7 +1396,7 @@ feature {NONE} -- open new class
 					execute_with_feature
 					if feature_address.text_length > 0 then
 						feature_address.select_all
-					end
+					end										
 				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then

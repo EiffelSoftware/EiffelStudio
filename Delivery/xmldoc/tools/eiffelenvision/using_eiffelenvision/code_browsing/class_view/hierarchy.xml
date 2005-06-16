@@ -1,103 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <document output="envision" title="An Overview of the Class View Hierarchy">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_title>An Overview of the Class View Hierarchy</envision_title>
-				<envision_pseudo_name>10</envision_pseudo_name>
-			</toc>
-			<xml>
-				<xmlkeyword>
-					<index>K</index>
-					<term>Class View, Hierarchy overview</term>
-				</xmlkeyword>
-				<xmlkeyword>
-					<index>K</index>
-					<term>Overview of the EiffelEnvision Class View</term>
-				</xmlkeyword>
-			</xml>
-		</help>
-	</meta_data>
-	<paragraph>
-		<paragraph>
-			The <help_link>
-				<keywords>vxurfClassViewWindow</keywords>
-				<tab_index>0</tab_index>
-				Class View
-			</help_link> window, like the <help_link>
-				<keywords>vxurfSolutionExplorerDialog</keywords>
-				<tab_index>0</tab_index>
-				Solution Explorer 
-			</help_link> window, contains projects, at the top-level. The number of EiffelEnvision projects in the <help_link>
-				<keywords>vxurfClassViewWindow</keywords>
-				<tab_index>0</tab_index>
-				Class View
-			</help_link> is directly representative of the number of the same projects contained in the <help_link>
-				<keywords>vxurfSolutionExplorerDialog</keywords>
-				<tab_index>0</tab_index>
-				Solution Explorer
-			</help_link>. Expanding a node that represents an EiffelEnvision project, represented by the <image>
-				<url>../images/project.ico</url> 
-			</image> icon, will display a tree of <link><url>clusters.xml</url><label>clusters</label></link>.
+  <meta_data>
+    <help>
+      <toc>
+        <envision_title>An Overview of the Class View Hierarchy</envision_title>
+        <envision_pseudo_name>10</envision_pseudo_name>
+      </toc>
+      <xml>
+        <xmlkeyword>
+          <index>K</index>
+          <term>Class View, Hierarchy overview</term>
+        </xmlkeyword>
+        <xmlkeyword>
+          <index>K</index>
+          <term>Overview of the EiffelEnvision Class View</term>
+        </xmlkeyword>
+      </xml>
+    </help>
+  </meta_data>
+  <paragraph>
+    <paragraph>
+			The <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfClassViewWindow.htm</url><label>Class View</label></link> window, like the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link> window, contains projects, at the top-level. The number of EiffelEnvision projects in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfClassViewWindow.htm</url><label>Class View</label></link> is directly representative of the number of the same projects contained in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>. Expanding a node that represents an EiffelEnvision project, represented by the <image><url>../images/project.ico</url></image> icon, will display a tree of <link><url>clusters.xml</url><label>clusters</label></link>.
 			
-			<note>
-				<bold>Note</bold>: Expanding an EiffelEnvision project that has not been compiled, or has not compiled information available, will display 
+			<note><bold>Note</bold>: Expanding an EiffelEnvision project that has not been compiled, or has not compiled information available, will display 
 				a the message "System needs to be fully compiled for browsing." EiffelEnvision projects require a project be <link><url>../../compiling_projects/compiling_projects.xml</url><label>Built</label></link> 
-				before browsing the information contained within the <help_link>
-					<keywords>vxurfClassViewWindow</keywords>
-					<tab_index>0</tab_index>
-					Class View
-				</help_link>.
-			</note>
-		</paragraph>	
-			
-		<anchor>structure</anchor>
-		<heading>
-			<size>2</size>
-			<content>Class View Project Structure</content>
-		</heading>
-		<paragraph>
-			The structure of an EiffelEnvision project in the <link><url>index.xml</url><label>Class View</label></link> adhears to the following hierarchy convention:
+				before browsing the information contained within the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfClassViewWindow.htm</url><label>Class View</label></link>.
+			</note></paragraph>
+    <anchor>structure</anchor>
+    <heading>
+      <size>2</size>
+      <content>Class View Project Structure</content>
+    </heading>
+    <paragraph>
+			The structure of an EiffelEnvision project in the <link><url>index.xml</url><label>Class View</label></link> adheres to the following hierarchy convention:
 		</paragraph>
-		<paragraph>
+    <paragraph>
 			Once a project node has been expanded, it will display a tree of <link><url>index.xml</url><label>Cluster Nodes</label></link>. Within cluster nodes, subcluster nodes and 
 			<link><url>classes.xml</url><label>Class Nodes</label></link> will be presented in a list merging the two. Expanding a subcluster will show more subclusters and <link><url>classes.xml</url><label>Class Nodes</label></link> 
 			for the given cluster context. If a class has been compiled in a project, denoted by a blue icon, that <link><url>classes.xml</url><label>Class Nodes</label></link> can then 
 			in turn be expanded to reveal its <link><url>features.xml</url><label>Feature Nodes</label></link>.
-			<note>
-				<bold>Note</bold>: <link><url>classes.xml</url><label>Class Nodes</label></link> and <link><url>features.xml</url><label>Feature Nodes</label></link> also show statuary information 
+			<note><bold>Note</bold>: <link><url>classes.xml</url><label>Class Nodes</label></link> and <link><url>features.xml</url><label>Feature Nodes</label></link> also show statuary information 
 				regarding their respective status and usage from within the project. Please refer to the respective documentation on each for more information.
-			</note>
-		</paragraph>
-		
-		<anchor>also_see</anchor>
-		<heading>
-			<size>2</size>
-			<content>Related Sections</content>
-		</heading>
-		<seealso>
-			<bold>See Also:</bold>
-			<line_break/>
-			<link>
-				<url>index.xml</url>
-				<label>Class View</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>../../eiffelenvision_projects/index.xml</url>
-				<label>EiffelEnvision Projects</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>../icon_glossary.xml</url>
-				<label>Class View and Object Browser Icons</label>
-			</link>
-			<line_break/>
-			<help_link>
-				<keywords>vxurfClassViewWindow</keywords>
-				<tab_index>0</tab_index>
-				Visual Studio .NET Class View
-			</help_link>
-		</seealso>		
-		
-	</paragraph>
+			</note></paragraph>
+    <anchor>also_see</anchor>
+    <heading>
+      <size>2</size>
+      <content>Related Sections</content>
+    </heading>
+    <seealso>
+      <bold>See Also:</bold>
+      <line_break />
+      <link>
+        <url>index.xml</url>
+        <label>Class View</label>
+      </link>
+      <line_break />
+      <link>
+        <url>../../eiffelenvision_projects/index.xml</url>
+        <label>EiffelEnvision Projects</label>
+      </link>
+      <line_break />
+      <link>
+        <url>../icon_glossary.xml</url>
+        <label>Class View and Object Browser Icons</label>
+      </link>
+      <line_break />
+      <link>
+        <url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfClassViewWindow.htm</url>
+        <label>Visual Studio .NET Class View</label>
+      </link>
+    </seealso>
+  </paragraph>
 </document>

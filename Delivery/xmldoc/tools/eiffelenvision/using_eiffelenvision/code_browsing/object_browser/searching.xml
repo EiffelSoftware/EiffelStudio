@@ -1,88 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <document output="envision" title="Searching in the Object Browser">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_title>Searching in the Object Browser</envision_title>
-				<envision_pseudo_name>70</envision_pseudo_name>
-			</toc>
-			<xml>
-				<xmlkeyword>
-					<index>K</index>
-					<term>Object Browser, Searching</term>
-				</xmlkeyword>
-				<xmlkeyword>
-					<index>K</index>
-					<term>Searching in the Object Browser</term>
-				</xmlkeyword>
-			</xml>
-		</help>
-	</meta_data>
-	<paragraph>
-		<paragraph>
-			The search facilities provided by Visual Studio .NET's <help_link>
-				<keywords>vxurfObjectBrowserS</keywords>
-				<tab_index>0</tab_index>
-				Object Browser
-			</help_link> are fully supported by EiffelEnvision projects. Searching for "objects" in the <help_link>
-				<keywords>vxurfObjectBrowserS</keywords>
-				<tab_index>0</tab_index>
-				Object Browser 
-			</help_link> is done via the <help_link>
-				<keywords>vxurfFindObjectDialogBoxS</keywords>
-				<tab_index>0</tab_index>
-				Find Symbols
-			</help_link> dialog. For more information on searching the<help_link>
-					<keywords>vxurfObjectBrowserS</keywords>
-					<tab_index>0</tab_index>
-					Object Browser
-				</help_link>, see <help_link>
-				<keywords>vxtskSearchingObjectsS</keywords>
-				<tab_index>0</tab_index>
-				Searching for Symbols: Objects, Definitions and References
-			</help_link>
-		</paragraph>	
-
-		<anchor>search_results</anchor>
-		<heading>
-			<size>2</size>
-			<content>Search Results</content>
-		</heading>
-		<paragraph>
-			After performing a search the <help_link>
-				<keywords>vxurfFindObjectResultsWindowS</keywords>
-				<tab_index>0</tab_index>
-				Find Symbol Results Window
-			</help_link> will be opened, if not already so. The results window will contain will show the complete results of a performed search based on your specified search options and parameters. To navigate to a corresponding symbol, double-left click on the item in the <help_link>
-				<keywords>vxurfFindObjectResultsWindowS</keywords>
-				<tab_index>0</tab_index>
-				Find Symbol Results Window
-			</help_link>. The <link><url>index.xml</url><label>Object Browser</label></link> or a corresponding document will be opened, in the editor, at the appropriate location.
+  <meta_data>
+    <help>
+      <toc>
+        <envision_title>Searching in the Object Browser</envision_title>
+        <envision_pseudo_name>70</envision_pseudo_name>
+      </toc>
+      <xml>
+        <xmlkeyword>
+          <index>K</index>
+          <term>Object Browser, Searching</term>
+        </xmlkeyword>
+        <xmlkeyword>
+          <index>K</index>
+          <term>Searching in the Object Browser</term>
+        </xmlkeyword>
+      </xml>
+    </help>
+  </meta_data>
+  <paragraph>
+    <paragraph>
+			The search facilities provided by Visual Studio .NET's <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url><label>Object Browser</label></link> are fully supported by EiffelEnvision projects. Searching for "objects" in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url><label>Object Browser</label></link> is done via the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfFindObjectDialogBoxS.htm</url><label>Find Symbols</label></link> dialog. For more information on searching the<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url><label>Object Browser</label></link>, see <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxtskSearchingObjectsS.htm</url><label>Searching for Symbols: Objects, Definitions and References</label></link></paragraph>
+    <anchor>search_results</anchor>
+    <heading>
+      <size>2</size>
+      <content>Search Results</content>
+    </heading>
+    <paragraph>
+			After performing a search the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfFindObjectResultsWindowS.htm</url><label>Find Symbol Results Window</label></link> will be opened, if not already so. The results window will contain will show the complete results of a performed search based on your specified search options and parameters. To navigate to a corresponding symbol, double-left click on the item in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfFindObjectResultsWindowS.htm</url><label>Find Symbol Results Window</label></link>. The <link><url>index.xml</url><label>Object Browser</label></link> or a corresponding document will be opened, in the editor, at the appropriate location.
 		</paragraph>
-
-		<anchor>also_see</anchor>
-		<heading>
-			<size>2</size>
-			<content>Related Sections</content>
-		</heading>
-		<seealso>
-			<bold>See Also:</bold>
-			<line_break/>
-			<link>
-				<url>../index.xml</url>
-				<label>Navigating and Browsing Code</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoribrowsingcodecomponents.htm</url>
-				<label>Browsing Code and Components</label>
-			</link>
-			<line_break/>
-			<link>
-				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url>
-				<label>Visual Studio .NET Object Browser</label>
-			</link>
-			<line_break/>
-			<link><url>../../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link>
-		</seealso>
-	</paragraph>
+    <anchor>also_see</anchor>
+    <heading>
+      <size>2</size>
+      <content>Related Sections</content>
+    </heading>
+    <seealso>
+      <bold>See Also:</bold>
+      <line_break />
+      <link>
+        <url>../index.xml</url>
+        <label>Navigating and Browsing Code</label>
+      </link>
+      <line_break />
+      <link>
+        <url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoribrowsingcodecomponents.htm</url>
+        <label>Browsing Code and Components</label>
+      </link>
+      <line_break />
+      <link>
+        <url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url>
+        <label>Visual Studio .NET Object Browser</label>
+      </link>
+      <line_break />
+      <link>
+        <url>../../eiffel_editor/index.xml</url>
+        <label>Eiffel Editor</label>
+      </link>
+    </seealso>
+  </paragraph>
 </document>

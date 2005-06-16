@@ -1,63 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <document output="envision" title="Configuring the Eiffel Editor">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_title>Configuring the Eiffel Editor</envision_title>
-				<envision_pseudo_name>20</envision_pseudo_name>
-			</toc>
-			<xml>
-				<xmlkeyword>
-					<index>A</index>
-					<term>eeEditorConfiguration</term>
-				</xmlkeyword>
-				<xmlkeyword>
-					<index>K</index>
-					<term>Editor, Configuration</term>
-				</xmlkeyword>
-				<xmlkeyword>
-					<index>K</index>
-					<term>Eiffel Editor, Configuration</term>
-				</xmlkeyword>
-			</xml>
-		</help>
-	</meta_data>
-	<paragraph>
-		<paragraph>
-			The EiffelEnvision Eiffel Editor exposes a number of configurable properties, configurable through the use of the Visual Studio .NET <help_link>
-				<keywords>vxoriOptions</keywords>
-				<tab_index>0</tab_index>
-				Options Dialog Box
-			</help_link>. You can access the options pages 
+  <meta_data>
+    <help>
+      <toc>
+        <envision_title>Configuring the Eiffel Editor</envision_title>
+        <envision_pseudo_name>20</envision_pseudo_name>
+      </toc>
+      <xml>
+        <xmlkeyword>
+          <index>A</index>
+          <term>eeEditorConfiguration</term>
+        </xmlkeyword>
+        <xmlkeyword>
+          <index>K</index>
+          <term>Editor, Configuration</term>
+        </xmlkeyword>
+        <xmlkeyword>
+          <index>K</index>
+          <term>Eiffel Editor, Configuration</term>
+        </xmlkeyword>
+      </xml>
+    </help>
+  </meta_data>
+  <paragraph>
+    <paragraph>
+			The EiffelEnvision Eiffel Editor exposes a number of configurable properties, configurable through the use of the Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxoriOptions.htm</url><label>Options Dialog Box</label></link>. You can access the options pages 
 			using <bold>Tools</bold>, <bold>Options</bold> menu.
 		</paragraph>
-		<paragraph>
+    <paragraph>
 			The Eiffel editor has a total of three configuration pages to configure various aspects of the editor and the way it behaves. Please see each 
 			section for more information on configuration.
-			<list ordered="false">
-				<item><link><url>options_font_and_colors.xml</url><label>Editor Fonts and Colors Options</label></link></item>
-				<item><link><url>options_general.xml</url><label>Editor General Options</label></link></item>
-				<item><link><url>options_tab.xml</url><label>Editor Tabs Options</label></link></item>
-			</list>
-		</paragraph>
-
-		<anchor>see_also</anchor>
-		<heading>
-			<size>2</size>
-			<content>Related Section</content>
-		</heading>
-		<seealso>
-			<bold>See also</bold>:
-			<line_break/>
-			<help_link>
-				<keywords>vxurfFontsColorsEnvironmentOptionsDialogBox</keywords>
-				<tab_index>0</tab_index>
-				Fonts and Colors, Environment, Options Dialog Box
-			</help_link>
-			<line_break/>
-			<link>
-				<url>../index.xml</url>
-				<label>Eiffel Editor</label>
-			</link>
-		</seealso>
-	</paragraph>
+			<list ordered="false"><item><link><url>options_font_and_colors.xml</url><label>Editor Fonts and Colors Options</label></link></item><item><link><url>options_general.xml</url><label>Editor General Options</label></link></item><item><link><url>options_tab.xml</url><label>Editor Tabs Options</label></link></item></list></paragraph>
+    <anchor>see_also</anchor>
+    <heading>
+      <size>2</size>
+      <content>Related Section</content>
+    </heading>
+    <seealso>
+      <bold>See also</bold>:
+			<line_break /><link><url>ms-help//MS.VSCC.2003/dexplore/html/dxurffontscolorsenvironmentoptionsdialogbox.htm</url><label>Fonts and Colors, Environment, Options Dialog Box</label></link><line_break /><link><url>../index.xml</url><label>Eiffel Editor</label></link></seealso>
+  </paragraph>
 </document>

@@ -98,7 +98,7 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%T@echo $sharedlibs >> $@%N%
 %$precompile_libs_command%
 %%T@echo $appl.res >> $@%N%
-%%Tfor %%i in ($(OBJECTS)) do @echo %%i >> $@%N%
+%$objects_redirection%N%
 %"
 
 -- precompilation
@@ -127,7 +127,7 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Techo e1\emain.obj >> $@%N%
 %%Techo $sharedlibs >> $@%N%
 %$precompile_libs_command%
-%%Tfor %%i in ($(OBJECTS)) do @echo %%i >> $@%N%
+%$objects_redirection%N%
 %%Techo $(EXTERNALS) $(EIFLIB) >> $@%N%
 %%Techo driver.res >> $@"
 

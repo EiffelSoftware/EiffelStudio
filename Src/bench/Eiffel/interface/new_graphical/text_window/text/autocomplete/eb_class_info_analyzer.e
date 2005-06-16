@@ -271,10 +271,6 @@ feature {NONE} -- Click ast exploration
 					pos := pos + 1
 					prov_list.forth
 				end
-				check
-					clickable_position_list_is_sorted: is_sorted (clickable_position_list)
-						-- because `ast_list' is already sorted
-				end
 			end
 		end
 
@@ -813,14 +809,16 @@ feature {NONE}-- Implementation
 									exp.forth
 								end
 							end
-							if token_image_is_in_array (exp.item, feature_call_separators) then
-								sub_exp.extend (exp.item)
-								exp.forth
-								if exp.after then
-									error := True
+							if not exp.after then
+								if token_image_is_in_array (exp.item, feature_call_separators) then
+									sub_exp.extend (exp.item)
+									exp.forth
+									if exp.after then
+										error := True
+									end
+								else
+									stop := True
 								end
-							else
-								stop := True
 							end
 						end
 					end
@@ -1086,7 +1084,9 @@ feature {NONE}-- Implementation
 						Result := feat.type
 						if Result.is_formal then
 							formal ?= Result
-							Result := current_class_i.compiled_class.constraint (formal.position)
+							if formal /= Void and then a_type.has_generics and then a_type.generics.valid_index (formal.position) then
+								Result := a_type.generics @ (formal.position)							
+							end
 						end
 					end
 				end

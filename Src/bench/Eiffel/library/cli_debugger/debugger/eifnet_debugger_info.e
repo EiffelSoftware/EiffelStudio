@@ -685,19 +685,8 @@ feature -- JIT info
 				
 				--| Modules
 			if not loaded_modules.is_empty then
-				from
-					loaded_modules.start
-				until
-					loaded_modules.after
-				loop
-					l_module := loaded_modules.item_for_iteration
-					debug ("com_object")
-						io.error.put_string ("Release ICorDebugModule : " + l_module.module_name 
-								+ " " + l_module.item.out
-								+ "%N")
-					end
-					loaded_modules.forth
-				end
+					--| No need to clean or release the ICorDebugModule
+					--| since they are cached and managed globally
 				Loaded_modules.wipe_out
 			end
 				--| Mscorlib_module is already cleaned
@@ -853,7 +842,6 @@ feature -- JIT Module
 			end
 			
 			l_module_key_name := resolved_module_key (a_module.get_name)
-			a_module.add_ref
 			loaded_modules.put (a_module, l_module_key_name)
 			
 			if not loaded_modules.inserted then

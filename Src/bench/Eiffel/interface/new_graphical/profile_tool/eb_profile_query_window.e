@@ -94,6 +94,8 @@ feature {NONE} -- Initialization
 			reactivate_button: EV_BUTTON		-- Button to reactivate one or more subqueries
 			inactivate_button: EV_BUTTON		-- Button to inactivate one or more subqueries
 		do
+			close_request_actions.extend (agent close)
+			
 				--| Create the Active & Inactive list
 			create active_query_window
 			active_query_window.enable_multiple_selection

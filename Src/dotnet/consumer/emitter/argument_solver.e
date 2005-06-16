@@ -33,10 +33,15 @@ feature -- Access
 				i >= count
 			loop
 				p := params.item (i)
-				dn := p.name
-				en := formatted_argument_name (dn, i + 1)
-				if dn = Void or dn.is_empty then
+				if p.name = Void then
+					en := formatted_argument_name ("", i + 1)
 					dn := en.twin
+				else
+					dn := p.name
+					en := formatted_argument_name (dn, i + 1)
+					if dn.is_empty then
+						dn := en.twin
+					end
 				end
 				t := p.parameter_type
 				Result.put (create {CONSUMED_ARGUMENT}.make (dn, en,

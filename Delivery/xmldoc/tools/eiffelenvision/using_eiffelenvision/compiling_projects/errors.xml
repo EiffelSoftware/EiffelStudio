@@ -27,7 +27,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			From time to time, as a result to modifications to a project, a <link><url>compiling_project.xml</url><label>compilation</label></link> will fail as a direct effect of modification to the project as the project evolves. 
+			From time to time, as a result to modifications to a project, a <link><url>compiling_projects.xml</url><label>compilation</label></link> will fail as a direct effect of modification to the project as the project evolves. 
 			The Eiffel compiler will report any such failure with a detailed error message in the <help_link>
 				<keywords>vxurfOutputWindow</keywords>
 				<tab_index>0</tab_index>
@@ -50,8 +50,8 @@
 				<tab_index>0</tab_index>
 				Task List
 			</help_link>. To locate the source, find the error in the list and double left mouse click on it. If the error is associated with a file in the project, the file will be opened in the <link>
-				<url>url</url>
-				<label>*Eiffel Editor</label>
+				<url>../eiffel_editor/index.xml</url>
+				<label>Eiffel Editor</label>
 			</link> and the line number, if available, highlighted in the editor. Correcting the error may not remove the error from the <help_link><keywords>vxurfTaskListS</keywords>
 				<tab_index>0</tab_index>
 				Task List
@@ -62,10 +62,10 @@
 			<keywords>vxconProjectBuilds</keywords>
 			<tab_index>0</tab_index>
 			build
-			</help_link> process. Many more steps than those mentioned in the simple <link><url>url</url>
-			<label>*Eiffel for .NET</label>
-			</link> take place during a build. Some errors have no files associated with them; these types or errors are the result of misconfiguring your project's <link><url>url</url>
-				<label>*properties</label>
+			</help_link> process. Many more steps than those mentioned in the simple <link><url>../../../../technologies/dotnet/index.xml</url>
+			<label>Eiffel for .NET</label>
+			</link> take place during a build. Some errors have no files associated with them; these types or errors are the result of misconfiguring your project's <link><url>../eiffelenvision_projects/configuring/project_configuration/index.xml</url>
+				<label>properties</label>
 			</link> or are due to events external to Visual Studio .NET. In any respect, these errors are reported and you must facilitate their correction before compilation can continue.
 		</paragraph>
 		
@@ -83,8 +83,8 @@
 			same as errors are. Each warning has its own entry in the <help_link><keywords>vxurfTaskListS</keywords>
 				<tab_index>0</tab_index>
 				Task List
-			</help_link> and may be navigated to in the same way. The Eiffel <link><url>compiling_project.xml</url><label>compilation</label></link> warnings may be suppressed 
-			by setting the <link><url>url</url><label>*Show Compiler Warnings</label></link> in the configuration specific <link><url>url</url><label>*Build Project Properties</label></link> to <bold>No</bold>.
+			</help_link> and may be navigated to in the same way. The Eiffel <link><url>compiling_projects.xml</url><label>compilation</label></link> warnings may be suppressed 
+			by setting the <link><url>../eiffelenvision_projects/configuring/project_configuration/build.xml</url><anchor_name>show_compiler_warnings</anchor_name><label>Show Compiler Warnings</label></link> in the configuration specific <link><url>../eiffelenvision_projects/configuring/project_configuration/build.xml</url><label>Build Project Properties</label></link> to <bold>No</bold>.
 		</paragraph>
 		
 		<anchor>also_see</anchor>

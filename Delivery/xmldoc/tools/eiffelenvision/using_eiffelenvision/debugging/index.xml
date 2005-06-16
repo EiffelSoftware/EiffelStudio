@@ -68,7 +68,7 @@
 				<label>Not "this"</label>
 			</link>
 			<line_break/>
-			The predominant use of <bold>this</bold> in Visual Studio .NET and how it does not conform with <link><url>url</url><label>Eiffel for .NET</label></link>'s <code><reserved_word>Current</reserved_word></code> equivalent.
+			The predominant use of <bold>this</bold> in Visual Studio .NET and how it does not conform with <link><url>../../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url><label>Eiffel for .NET</label></link>'s <code><reserved_word>Current</reserved_word></code> equivalent.
 		</paragraph>		
 		
 		<anchor>also_see</anchor>
@@ -98,8 +98,8 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Eiffel Keywords</label>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/60_reserved_keywords.xml</url>
+				<label>Eiffel Keywords</label>
 			</link>
 		</seealso>
 	</paragraph>

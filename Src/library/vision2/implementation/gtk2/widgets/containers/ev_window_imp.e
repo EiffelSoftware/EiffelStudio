@@ -29,14 +29,14 @@ inherit
 			minimum_height,
 			width,
 			height,
-			is_parentable
+			is_parentable,
+			show
 		redefine
 			interface,
 			initialize,
 			make,
 			on_key_event,
 			on_size_allocate,
-			show,
 			hide,
 			internal_set_minimum_size,
 			on_widget_mapped,
@@ -48,13 +48,12 @@ inherit
 		undefine
 			initialize,
 			destroy,
-			show,
 			parent_imp
 		redefine
 			interface,
 			on_key_event,
 			has_focus,
-			set_size
+			show
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -118,16 +117,17 @@ feature -- Status setting
 	block is
 			-- Wait until window is closed by the user.
 		local
-			dummy: INTEGER
+			events_pending: BOOLEAN
 		do
 			from
 			until
 				is_destroyed or else not is_show_requested
 			loop
-				if {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
+				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then
+						-- There are no more events pending.
 					App_implementation.call_idle_actions
+					events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
 				end
-				dummy := {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 			end
 		end
 
@@ -145,7 +145,7 @@ feature -- Status setting
 				if not (is_positioned or positioned_by_user) then
 					{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, {EV_GTK_EXTERNALS}.Gtk_win_pos_center_enum)
 				end
-				Precursor {EV_CONTAINER_IMP}
+				Precursor {EV_GTK_WINDOW_IMP}
 				is_positioned := True
 			end
 			if blocking_window /= Void then
@@ -193,15 +193,6 @@ feature -- Element change
 				on_new_item (w)
 			end
 			item := v
-		end
-
-	set_size (a_width, a_height: INTEGER) is
-			-- Set the horizontal size to `a_width'.
-			-- Set the vertical size to `a_height'.
-		do
-			default_width := a_width
-			default_height := a_height
-			{EV_GTK_EXTERNALS}.gtk_window_resize (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
 
 	set_maximum_width (max_width: INTEGER) is
@@ -306,7 +297,6 @@ feature {NONE} -- Implementation
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, -1, -1)
 			Precursor {EV_CONTAINER_IMP} (a_minimum_width, a_minimum_height)
-			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, a_minimum_width, a_minimum_height)
 		end
 
 	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
@@ -340,8 +330,7 @@ feature {NONE} -- Implementation
 				user_x_position := a_x_pos
 				user_y_position := a_y_pos
 				if move_actions_internal /= Void then
-					app_implementation.gtk_marshal.set_dimension_tuple (user_x_position, user_y_position, a_width, a_height)
-					move_actions_internal.call (App_implementation.gtk_marshal.dimension_tuple)
+					move_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (user_x_position, user_y_position, a_width, a_height))
 				end	
 			end
 		end
@@ -354,28 +343,16 @@ feature {NONE} -- Implementation
 					-- Used to disable certain key behavior such as Tab focus.
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, key_press_event_string.item)
+						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, App_implementation.key_press_event_string.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, key_release_event_string.item)
+						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, App_implementation.key_release_event_string.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end	
 			end
-		end
-
-	key_press_event_string: EV_GTK_C_STRING is
-			-- key-press-event string constant
-		once
-			Result := "key-press-event"
-		end
-
-	key_release_event_string: EV_GTK_C_STRING is
-			-- key-release-event string constant
-		once
-			Result := "key-release-event"
 		end
 
 	initialize is

@@ -254,32 +254,35 @@ feature {ES_NOTEBOOK_ITEM} -- exported Dock item action
 
 	dock_it_out (nbi: ES_NOTEBOOK_ITEM) is
 		local
-			wbox: EV_BOX
-			tbox: EV_CELL
+			tcell: EV_CELL
+			par: EV_CONTAINER
 		do
-			wbox ?= docking_box
-			check wbox /= Void end
-			tbox ?= nbi.tab_widget
-			check tbox /= Void end
+			tcell ?= nbi.tab_widget
+			check tcell /= Void end
 			
-			notebook.prune (tbox)
-			docking_box.extend (tbox)
-			docking_box.disable_item_expand (tbox)
-			tbox.docked_actions.force_extend (agent nbi.on_dock_back (nbi))
+			notebook.prune (tcell)
+			docking_box.extend (tcell)
+			if nbi.mini_toolbar /= Void then
+				par := nbi.mini_toolbar.parent
+				if par /= Void then
+					par.prune_all (nbi.mini_toolbar)
+				end
+			end
+			tcell.docked_actions.force_extend (agent nbi.on_dock_back (nbi))
 		end
 		
 	dock_it_back (nbi: ES_NOTEBOOK_ITEM) is
 		local
 			wbox: EV_BOX
-			tbox: EV_CELL
+			tcell: EV_CELL
 		do
 			wbox ?= docking_box
 			check wbox /= Void end
-			tbox ?= nbi.tab_widget
-			check tbox /= Void end
+			tcell ?= nbi.tab_widget
+			check tcell /= Void end
 
-			wbox.prune (tbox)
-			tbox.docked_actions.wipe_out
+			wbox.prune (tcell)
+			tcell.docked_actions.wipe_out
 			extend (nbi)
 			nbi.tab.enable_select
 		end

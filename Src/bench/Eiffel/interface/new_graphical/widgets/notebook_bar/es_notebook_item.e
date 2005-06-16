@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			a_title_not_void: a_title /= Void
 		local
 			hb: EV_HORIZONTAL_BOX
+			content_box: EV_VERTICAL_BOX
 			tab_cell: EV_CELL
 			left_handle: EV_LABEL
 		do
@@ -67,7 +68,9 @@ feature {NONE} -- Initialization
 			left_handle.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
 			hb.extend (left_handle)
 			hb.disable_item_expand (left_handle)
-			hb.extend (widget)
+			create content_box
+			content_box.extend (widget)
+			hb.extend (content_box)
 
 			tab_cell.extend (hb)
 
@@ -151,6 +154,7 @@ feature {NONE} -- Docking
 		local
 			ddlg: EV_DOCKABLE_DIALOG
 			lw, lh: INTEGER
+			content_box: EV_BOX
 		do
 			ddlg := parent_dockable_dialog (widget)
 			if ddlg /= Void then
@@ -167,6 +171,15 @@ feature {NONE} -- Docking
 				ddlg.set_size (lw, lh)
 				ddlg.resize_actions.extend (agent dock_resized)
 
+				if mini_toolbar /= Void then
+						--| here we suppose the generic_make always add the content_box the way it is now
+						--| and when we dock this item back to other place ..
+						--| it will remove and put the minitoolbar somewhere else
+					content_box ?= widget.parent
+					content_box.put_front (mini_toolbar)
+					content_box.disable_item_expand (mini_toolbar)					
+				end
+				
 				show_docking_handle (False)
 				docking_handle.disable_dockable
 			end

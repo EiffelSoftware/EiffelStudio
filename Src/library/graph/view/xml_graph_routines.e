@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	XML_ROUTINES
+	XML_GRAPH_ROUTINES
 
 inherit
 	EXCEPTIONS
@@ -24,7 +24,7 @@ inherit
 			default_create
 		end
 
-create {SHARED_XML_ROUTINES}
+create {EG_XML_STORABLE}
 	make, default_create
 
 feature {NONE} -- Initialization
@@ -51,7 +51,7 @@ feature {NONE} -- Access
 	relative_window: EV_WINDOW
 			-- relative window
 
-feature {SHARED_XML_ROUTINES} -- Access
+feature {EG_XML_STORABLE} -- Access
 			
 	number_of_tags (node: XM_ELEMENT): INTEGER is
 			-- Number of tags in node and all childrens of node.
@@ -81,14 +81,14 @@ feature {SHARED_XML_ROUTINES} -- Access
 			end
 		end
 
-feature {SHARED_XML_ROUTINES} -- Status report
+feature {EG_XML_STORABLE} -- Status report
 
 	valid_tags: INTEGER
 			-- Number of valid tags read.
 	
 	valid_tag_read_actions: EV_NOTIFY_ACTION_SEQUENCE
 
-feature {SHARED_XML_ROUTINES} -- Status setting
+feature {EG_XML_STORABLE} -- Status setting
 	
 	reset_valid_tags is
 			-- Reset `valid_tags'.
@@ -107,7 +107,7 @@ feature {SHARED_XML_ROUTINES} -- Status setting
 			valid_tags_incremented: valid_tags = old valid_tags + 1
 		end
 
-feature {SHARED_XML_ROUTINES} -- Processing
+feature {EG_XML_STORABLE} -- Processing
 
 	xml_integer (elem: XM_ELEMENT; a_name: STRING): INTEGER is
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.

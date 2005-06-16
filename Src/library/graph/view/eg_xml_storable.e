@@ -8,8 +8,13 @@ deferred class
 	EG_XML_STORABLE
 	
 inherit
-	SHARED_XML_ROUTINES
-	
+	ANY
+
+	XM_CALLBACKS_FILTER_FACTORY
+		export
+			{NONE} all
+		end
+
 feature -- Access
 	
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
@@ -44,6 +49,14 @@ feature {NONE} -- Implementation
 		once
 			create Result.make_default
 		end
+
+	Xml_routines: XML_GRAPH_ROUTINES is
+			-- Access the common xml routines.
+		once
+			create Result.default_create
+		ensure
+			non_void_Xml_routines: Xml_routines /= Void
+		end	
 
 end -- class EG_XML_STORABLE
 

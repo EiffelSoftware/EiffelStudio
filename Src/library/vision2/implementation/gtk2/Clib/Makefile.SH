@@ -41,6 +41,8 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 
 OBJECTS = gtk_eiffel.o 
 
+VISION_OBJECTS = ev_any_imp.o ev_c_util.o ev_gtk_callback_marshal.o 
+
 ALL_OBJECTS = $(OBJECTS)
 
 all: $(ALL_OBJECTS)
@@ -48,8 +50,8 @@ all: $(ALL_OBJECTS)
 	$(MV) $? ../../../spec/$(ISE_PLATFORM)/lib
 	make clobber
 
-gtk_eiffel.o: ev_any_imp.o ev_c_util.o ev_gtk_callback_marshal.o 
-	$(LD) -r $? -o $@	
+gtk_eiffel.o: $(VISION_OBJECTS)
+	$(LD) $(LDFLAGS) -r -o $@ $(VISION_OBJECTS)
 
 local_realclean::
 	$(RM) $(ALL_OBJECTS)

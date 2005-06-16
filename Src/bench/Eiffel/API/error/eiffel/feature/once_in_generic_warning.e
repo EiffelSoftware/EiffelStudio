@@ -8,7 +8,8 @@ class ONCE_IN_GENERIC_WARNING
 inherit
 	EIFFEL_WARNING
 		redefine
-			build_explain
+			build_explain,
+			help_file_name
 		end
 	
 	SHARED_NAMES_HEAP
@@ -38,11 +39,11 @@ feature -- Properties
 	associated_feature: E_FEATURE
 			-- Once feature
 
-	code: STRING is
+	code: STRING is "Once in generic"
 			-- Error code
-		do
-			Result := "once_in_generic_warning"
-		end
+
+	help_file_name: STRING is "once_in_generic_warning"
+			-- Name of file with error description
 
 feature -- Output
 

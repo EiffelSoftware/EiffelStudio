@@ -27,11 +27,11 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			Adding Eiffel <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>*clusters</label></link> to <link><url>../index.xml</url><label>Projects</label></link> is a similar process to <link><url>adding_items.xml</url><label>Add New Project Items</label></link> or <link><url>adding_folders.xml</url><label>Add New Project Folders</label></link>, in EiffelEnvision. For more information about the notion of a cluster, see <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/index.xml</url><label>Conventions</label></link>.
+			Adding Eiffel <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> to <link><url>../index.xml</url><label>Projects</label></link> is a similar process to <link><url>adding_items.xml</url><label>Add New Project Items</label></link> or <link><url>adding_folders.xml</url><label>Add New Project Folders</label></link>, in EiffelEnvision. For more information about the notion of a cluster, see <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/index.xml</url><label>Conventions</label></link>.
 		</paragraph>
 		
 		<paragraph>
-			<link><url>../../structure/eiffel_libraries/explicit_clusters.xml</url><label>Clusters</label></link> are different from other <link><url>../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>Folders</label></link> in an EiffelEnvision <link><url>index.xml</url><label>Project</label></link>, in that <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>*clusters</label></link> cannot be added just anywhere. <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link> can only appear directly under the following:
+			<link><url>../../structure/eiffel_libraries/explicit_clusters.xml</url><label>Clusters</label></link> are different from other <link><url>../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>Folders</label></link> in an EiffelEnvision <link><url>index.xml</url><label>Project</label></link>, in that <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> cannot be added just anywhere. <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link> can only appear directly under the following:
 			<list ordered="false">
 				<item><link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link>.</item>
 				<item><link><url>../../structure/eiffel_libraries/eiffel_libraries.xml</url><label>Eiffel Libraries</label></link>.</item>
@@ -45,9 +45,9 @@
 			<content>Adding a Cluster</content>
 		</heading>
 		<paragraph>
-			To add a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>*clusters</label></link> to anyone of these nodes, select the node in the <link><url>../index.xml</url><label>Project</label></link>, then select <bold>Project</bold>, <bold>Add New Cluster</bold> from the main menu.
+			To add a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> to anyone of these nodes, select the node in the <link><url>../index.xml</url><label>Project</label></link>, then select <bold>Project</bold>, <bold>Add New Cluster</bold> from the main menu.
 			<list ordered="true">
-				<item>Select a node you would like to add a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>*clusters</label></link> under.</item>
+				<item>Select a node you would like to add a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> under.</item>
 				<item>From the <bold>Project</bold> menu select <bold>Add New Cluster</bold></item>
 				<item>
 					A folder dialog will appear requesting you choose a location for the new cluster. Select a folder and click <bold>Ok</bold>.
@@ -73,10 +73,10 @@
 			<list ordered="true">
 				<item>The <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link> of the <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link> is a first level child to the parent <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>'s <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>.</item>
 				<item>The <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link> does not contain any child <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>'s of it's own</item>
-				<item>The parent <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>'s <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>include_subdirectories</anchor_name><label>*Include Subdirectories</label></link> or <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library</label></link> property is set to <bold>Yes</bold>.</item>
+				<item>The parent <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>'s <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>include_subdirectories</anchor_name><label>Include Subdirectories</label></link> or <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library</label></link> property is set to <bold>Yes</bold>.</item>
 			</list>
 			
-			Selecting <bold>Revert to Folder</bold> will demote the chosen <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link> to a <link><url>../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>*Cluster Folder</label></link>, discarding all set properties.
+			Selecting <bold>Revert to Folder</bold> will demote the chosen <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link> to a <link><url>../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>Cluster Folder</label></link>, discarding all set properties.
 		</paragraph>
 		
 		

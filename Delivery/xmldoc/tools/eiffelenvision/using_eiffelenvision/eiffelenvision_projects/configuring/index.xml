@@ -61,7 +61,7 @@
 				<label>Including and Excluding Items</label>
 			</link>
 			<line_break/>
-			Information on including and excluding Eiffel source files from a <link><url>../../../compiling_projects/index.xml</url><label>Build</label></link>.
+			Information on including and excluding Eiffel source files from a <link><url>../../compiling_projects/index.xml</url><label>Build</label></link>.
 		</paragraph>
 		<paragraph>
 			<link>

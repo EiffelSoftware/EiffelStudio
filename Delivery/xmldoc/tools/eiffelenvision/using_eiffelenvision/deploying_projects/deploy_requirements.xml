@@ -77,7 +77,7 @@
 		<paragraph>
 		</paragraph>
 			When deploying projects for distribution, it is recommended to configure your project to <link><url>../eiffelenvision_projects/configuring/project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>optimizing the compilation</label></link> as this will create a 
-			single deployment module resulting in faster load and execution times. It is also recommended to disable generation of a project's <link><url>../eiffelenvision_projects/configuring/project_configuration/debugging.xml</url><anchor_name>generate_debug_information</anchor_name><label>*debug 
+			single deployment module resulting in faster load and execution times. It is also recommended to disable generation of a project's <link><url>../eiffelenvision_projects/configuring/project_configuration/debugging.xml</url><anchor_name>generate_debug_information</anchor_name><label>debug 
 			information</label></link>. This will dramatically reduce file size because the debug information will not be included in the deployment project automatically.
 		</paragraph>
 		

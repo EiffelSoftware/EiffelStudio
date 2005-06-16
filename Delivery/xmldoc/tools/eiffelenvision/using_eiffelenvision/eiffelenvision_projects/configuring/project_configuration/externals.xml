@@ -74,7 +74,7 @@ The externals property page is split vertically into two sections. The top secti
 			<line_break/>
 			<link><url>index.xml</url><label>Configuring EiffelEnvision Projects</label></link>
 			<line_break/>
-			<link><url>debugger.xml</url><label>Debugger Properties</label></link>
+			<link><url>debugging.xml</url><label>Debugger Properties</label></link>
 			<line_break/>
 			<link><url>../../../compiling_projects/unmanaged_code.xml</url><label>Unmanaged Code</label></link>
 			<line_break/>
@@ -84,7 +84,7 @@ The externals property page is split vertically into two sections. The top secti
 				Default and Custom Build
 			</help_link>
 			<line_break/>
-			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<link><url>../../index.xml</url><label>EiffelEnvision Projects</label></link>
 		</seealso>
 	</paragraph>
 </document>

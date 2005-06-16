@@ -26,7 +26,7 @@
 			</link>. To view the properties window:
 			
 			<list ordered="true">
-				<item>Select the reference item in your EiffelEnvision <link><url>url</url><label>*Project</label></link>.</item>
+				<item>Select the reference item in your EiffelEnvision <link><url>../../../structure/project.xml</url><label>Project</label></link>.</item>
 				<item>Choose <bold>View</bold>, <bold>Properties</bold> menu.</item>
 			</list>
 			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut or by choosing <bold>Properties</bold> from the reference item's context menu.
@@ -48,10 +48,10 @@
 		<paragraph>
 			<bold>Class Name Prefix</bold>
 			<line_break/>
-			An optional class name prefix to disambiguate the class consumed when a project is <link><url>../../compiling_project/index.xml</url><label>Built</label></link>. For more information on class name prefixes and their relevance, see <link><url></url><label>*Assembly Type and Method Formatting</label></link>.
+			An optional class name prefix to disambiguate the class consumed when a project is <link><url>../../../../compiling_projects/compiling_projects.xml</url><label>Built</label></link>. For more information on class name prefixes and their relevance, see <link><url>../../../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url><label>Referenced Assembly Type and Feature Name Conversion</label></link>.
 			
 			<warning>
-				<bold>Warning</bold>: Changing a prefix after the reference has been compiled into a project will require a clean <link><url>../../compiling_project/index.xml</url><label>Rebuilt</label></link> to be performed.
+				<bold>Warning</bold>: Changing a prefix after the reference has been compiled into a project will require a clean <link><url>../../../../compiling_projects/index.xml</url><label>Rebuilt</label></link> to be performed.
 			</warning>
 			
 			Some class name prefixes cannot be modified for a number of assembly references. This is because the prefixed specified, if any, are reserved by Eiffel Software and are used throughout the provided class libraries.
@@ -74,7 +74,7 @@
 		<paragraph>
 			<bold>Copy Local</bold>
 			<line_break/>
-			When set to <bold>Yes</bold>, the assembly will be copied to the compilation folder when <link><url>../../compiling_project/index.xml</url><label>building</label></link> a project to prevent locks being place on the existing assembly.
+			When set to <bold>Yes</bold>, the assembly will be copied to the compilation folder when <link><url>../../../../compiling_projects/index.xml</url><label>building</label></link> a project to prevent locks being place on the existing assembly.
 		</paragraph>
 		<paragraph>
 			Not applicable for <bold>Static References</bold>.
@@ -143,11 +143,11 @@
 				<label>Other Configuration Properties</label>
 			</link>
 			<line_break/>
-			<link><url>../../adding_reference/index.xml</url><label>Project References</label></link>
+			<link><url>../../adding_references/index.xml</url><label>Project References</label></link>
 			<line_break/>
 			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxtskaddingremovingprojectreferences.htm</url><label>Adding and Removing Project References</label></link>
 			<line_break/>
-			<link><url>url</url><label>*References Node</label></link>
+			<link><url>../../../structure/references/references_folder.xml</url><label>References Folder</label></link>
 			<line_break/>
 			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/cpguide/html/cpconassemblymanifest.htm</url><label>Assembly Manifests</label></link>
 			<line_break/>

@@ -33,7 +33,7 @@
 			with <help_link>
 				<keywords>A</keywords>
 				<tab_index>0</tab_index>
-				*Intellisense
+				Intellisense
 			</help_link>, is fully compatible with <link><url>../using_eiffelenvision/source_code_control.xml</url><label>Source Code Control</label></link>. and much, much more. Developers approaching EiffelEnvision from <bold>Visual C#</bold> or <bold>Visual Basic .NET</bold> should find learning the fundamentals of Eiffel for .NET and EiffelEnvision as simple, if not simpler, as they did when approaching Visual C#/Visual Basic .NET for the first time. 
 		</paragraph>
 	

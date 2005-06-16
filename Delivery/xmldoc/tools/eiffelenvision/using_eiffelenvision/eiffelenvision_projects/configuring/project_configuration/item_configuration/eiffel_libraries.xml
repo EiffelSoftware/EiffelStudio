@@ -26,7 +26,7 @@
 			</link>. To view the properties window:
 			
 			<list ordered="true">
-				<item>Select the <bold>Eiffel Libraries</bold> folder in your EiffelEnvision <link><url>url</url><label>*Project</label></link>.</item>
+				<item>Select the <bold>Eiffel Libraries</bold> folder in your EiffelEnvision <link><url>../../../structure/project.xml</url><label>Project</label></link>.</item>
 				<item>Choose <bold>View</bold>, <bold>Properties</bold> menu.</item>
 			</list>
 			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut or by choosing <bold>Properties</bold> from the <bold>Eiffel Libraries</bold> folder context menu.
@@ -42,8 +42,8 @@
 			<bold>Cluster Count</bold>
 			<line_break/>
 			Indicates the number of top-level <link>
-				<url>url</url>
-				<label>*Explicit Clusters</label>
+				<url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url>
+				<label>Explicit Clusters</label>
 			</link> under the <bold>Eiffel Libraries</bold> folder.
 		</paragraph>
 		<paragraph>	
@@ -55,11 +55,11 @@
 			<bold>Total Cluster Count</bold>
 			<line_break/>
 			Indicates the number of <link>
-				<url>url</url>
-				<label>*Explicit Clusters</label>
+				<url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url>
+				<label>Explicit Clusters</label>
 			</link> under the <bold>Eiffel Libraries</bold> folder and any their sub-<link>
-				<url>url</url>
-				<label>*Explicit Clusters</label>
+				<url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url>
+				<label>Explicit Clusters</label>
 			</link> folders.
 		</paragraph>
 		<paragraph>	
@@ -80,7 +80,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>../../../structure/sss/clusters.xml</url>
+				<url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url>
 				<label>Cluster Folders</label>
 			</link>
 		</seealso>

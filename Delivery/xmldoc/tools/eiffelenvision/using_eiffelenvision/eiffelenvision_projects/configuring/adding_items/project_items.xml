@@ -161,7 +161,7 @@
 		<seealso>
 			<bold>See also</bold>
 			<line_break/>		
-			<link><url>index.xml</url><label>*index file</label></link>
+			<link><url>index.xml</url><label>index file</label></link>
 			<line_break/>
 			<help_link>
 				<keywords>vxtskCreatingReferencesToFilesInSolutionExplorer</keywords>

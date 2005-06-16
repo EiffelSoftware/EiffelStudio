@@ -26,7 +26,7 @@
 			</link>. To view the properties window:
 			
 			<list ordered="true">
-				<item>Select a cluster folder in your EiffelEnvision <link><url>url</url><label>*Project</label></link>.</item>
+				<item>Select a cluster folder in your EiffelEnvision <link><url>../../../structure/project.xml</url><label>Project</label></link>.</item>
 				<item>Choose <bold>View</bold>, <bold>Properties</bold> menu.</item>
 			</list>
 			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut or by choosing <bold>Properties</bold> from a explicit cluster folder's context menu.
@@ -62,12 +62,12 @@
 			<line_break/>
 			A semi-colon (';') delimited list of excluded project items. These will typically be 
 			<link>
-				<url>url</url>
-				<label>*Eiffel Class Items</label>
+				<url>../../../structure/project_items/clusters_and_items/items/eiffel_classes.xml</url>
+				<label>Eiffel Class File Items</label>
 			</link> and 
 			<link>
-				<url>url</url>
-				<label>*Cluster Folders</label>
+				<url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url>
+				<label>Cluster Folders</label>
 			</link>.
 			<tip>
 				<bold>Recommended</bold>: It is recommended that you excluded items via the item itself. For information on how to achieve this, see <link>
@@ -88,12 +88,12 @@
 			<bold>Include Subdirectories</bold>
 			<line_break/>
 			Indicates if all subdirectories located under the cluster's <link><anchor_name>path</anchor_name><label>Path</label></link> should be included when <link>
-				<url>url</url>
+				<url>../../../structure/project_items/clusters_and_items/cluster_enumeration.xml</url>
 				<label>enumerating</label>
 			</link> the cluster at compilation time. Setting this property to <bold>No</bold> will only include the <link>
-				<url>url</url>
+				<url>../../../structure/project_items/clusters_and_items/items/eiffel_classes.xml</url>
 				<label>Eiffel classes</label></link> found directly under the cluster's <link><anchor_name>path</anchor_name><label>Path</label></link>. Setting to <bold>Yes</bold> will include all <link>
-					<url>url</url>
+					<url>../../../structure/project_items/clusters_and_items/items/eiffel_classes.xml</url>
 					<label>Eiffel classes</label>
 				</link> and subdirectories.
 		</paragraph>
@@ -109,8 +109,8 @@
 			<bold>Library Cluster</bold>
 			<line_break/>
 			Indicates if the cluster is a library cluster for compile-time optimizations. When set to <bold>Yes</bold> the Eiffel for .NET compiler will examine the cluster only once, unless a <link>
-				<url>url</url>
-				<label>*Rebuild</label>
+				<url>../../../../compiling_projects/compiling_projects.xml</url>
+				<label>Rebuild</label>
 			</link> is performed. Any future modifications will be ignored by the compiler. In addition, a number of other explicit cluster properties will become disabled to indicate that the changes will not be effective.
 			<note>
 				<bold>Note</bold>: Due to the nature of library marked clusters, when set to <bold>Yes</bold> the cluster will act as if 
@@ -126,9 +126,9 @@
 			<bold>Override</bold>
 			<line_break/>
 			This property is to resolve class name conflicts when including multiple clusters. It specifies that the Eiffel compiler should give priority to any contained Eiffel <link>
-					<url>url</url>
+					<url>../../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
 					<anchor_name>class</anchor_name>
-					<label>*classes</label>
+					<label>classes</label>
  				</link> over any other clusters classes with conflicting class names.
 		</paragraph>
 		<paragraph>	
@@ -143,12 +143,12 @@
 			<bold>Path</bold>
 			<line_break/>
 			The path to a folder on disk that contains Eiffel <link>
-					<url>url</url>
+					<url>../../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
 					<anchor_name>class</anchor_name>
-					<label>*class</label>
+					<label>class</label>
  				</link> source files you would like to include in your project. <link>
-					<url>url</url>
-					<label>*Environment Variables</label>
+					<url>../../environment_variables.xml</url>
+					<label>Environment Variables</label>
  				</link> may be used in paths to promote portability.
 		</paragraph>
 		<paragraph>	
@@ -168,8 +168,8 @@
 			<bold>Full Namespace</bold>
 			<line_break/>
 			The namespace that will be used to qualify all contained Eiffel <link>
-				<url>url</url>
-				<label>*classes</label>
+				<url>../../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
+				<label>classes</label>
 			</link>. This property is based on the <link>
 				<url>../general.xml</url>
 				<anchor_name>cluster_namespace_format</anchor_name>
@@ -195,11 +195,11 @@
 			</link> property to generate namespace for explicit clusters.
 			<note>
 				<bold>Note</bold>: When specifying and alternative namespace <link>
-					<url>url</url>
-					<label>*Explicit Cluster Folders</label>
+					<url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url>
+					<label>Explicit Cluster Folders</label>
 				</link> that are subclusters of another <link>
-					<url>url</url>
-					<label>*Explicit Cluster Folder</label>
+					<url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url>
+					<label>Explicit Cluster Folder</label>
 				</link> will not compound the parent cluster's namespace to the specified namespace.
 			</note>
 		</paragraph>
@@ -246,7 +246,7 @@
 		<paragraph>
 			<bold>Evaluate Checks</bold>
 			<line_break/>
-			Indicates check assertions will be evaluated for all classes located under the explicit cluster and any <link><url>url</url><label>*subcluster folders</label></link>.
+			Indicates check assertions will be evaluated for all classes located under the explicit cluster and any <link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>subcluster folders</label></link>.
 		</paragraph>
 		<paragraph>	
 			This property is <italic>read-only</italic> when <link>
@@ -259,7 +259,7 @@
 		<paragraph>
 			<bold>Evaluate Invariants</bold>
 			<line_break/>
-			Indicates class invariants assertions will be evaluated for all classes located under the explicit cluster and any <link><url>url</url><label>*subcluster folders</label></link>.
+			Indicates class invariants assertions will be evaluated for all classes located under the explicit cluster and any <link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>subcluster folders</label></link>.
 		</paragraph>			
 		<paragraph>	
 			This property is <italic>read-only</italic> when <link>
@@ -272,7 +272,7 @@
 		<paragraph>
 			<bold>Evaluate Loops</bold>
 			<line_break/>
-			Indicates loop assertions will be evaluated for all classes located under the explicit cluster and any <link><url>url</url><label>*subcluster folders</label></link>.
+			Indicates loop assertions will be evaluated for all classes located under the explicit cluster and any <link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>subcluster folders</label></link>.
 		</paragraph>
 		<paragraph>	
 			This property is <italic>read-only</italic> when <link>
@@ -285,7 +285,7 @@
 		<paragraph>
 			<bold>Evaluate Postconditions</bold>
 			<line_break/>
-			Indicates ensure assertions will be evaluated for all classes located under the explicit cluster and any <link><url>url</url><label>*subcluster folders</label></link>.
+			Indicates ensure assertions will be evaluated for all classes located under the explicit cluster and any <link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>subcluster folders</label></link>.
 		</paragraph>
 		<paragraph>	
 			This property is <italic>read-only</italic> when <link>
@@ -298,7 +298,7 @@
 		<paragraph>
 			<bold>Evaluate Preconditions</bold>
 			<line_break/>
-			Indicates require assertions will be evaluated for all classes located under the explicit cluster and any <link><url>url</url><label>*subcluster folders</label></link>.
+			Indicates require assertions will be evaluated for all classes located under the explicit cluster and any <link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>subcluster folders</label></link>.
 		</paragraph>		
 		<paragraph>	
 			This property is <italic>read-only</italic> when <link>
@@ -321,18 +321,18 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Explicit Cluster Folders</label>
+				<url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url>
+				<label>Explicit Cluster Folders</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Automatic Cluster Enumeration</label>
+				<url>../../../structure/project_items/clusters_and_items/cluster_enumeration.xml</url>
+				<label>Automatic Cluster Enumeration</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Compiling EiffelEnvision Projects</label>
+				<url>../../../../compiling_projects/index.xml</url>
+				<label>Compiling EiffelEnvision Projects</label>
 			</link>
 		</seealso>
 	</paragraph>

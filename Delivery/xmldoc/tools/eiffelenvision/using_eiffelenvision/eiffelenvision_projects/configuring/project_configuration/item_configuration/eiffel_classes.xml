@@ -26,7 +26,7 @@
 			</link>. To view the properties window:
 			
 			<list ordered="true">
-				<item>Select an Eiffel class item in your EiffelEnvision <link><url>url</url><label>*Project</label></link>.</item>
+				<item>Select an Eiffel class item in your EiffelEnvision <link><url>../../../structure/project.xml</url><label>Project</label></link>.</item>
 				<item>Choose <bold>View</bold>, <bold>Properties</bold> menu.</item>
 			</list>
 			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut or by choosing <bold>Properties</bold> from a Eiffel class item's context menu.
@@ -43,7 +43,7 @@
 			<line_break/>
 			Indicates if the Eiffel class has been excluded from compilation.
 			<note>
-				<bold>Note</bold>: This property is read-only when the Eiffel class item has not been excluded explicitly, but is excluded because a parent <link><url>url</url><label>*Cluster Folder</label></link> has been excluded from a <link><url>url</url><label>*Explicit Cluster Folder</label></link>.
+				<bold>Note</bold>: This property is read-only when the Eiffel class item has not been excluded explicitly, but is excluded because a parent <link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>Cluster Folder</label></link> has been excluded from a <link><url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>.
 			</note>
 		</paragraph>
 		
@@ -98,13 +98,13 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Eiffel Class Items</label>
+				<url>../../../structure/project_items/clusters_and_items/items/eiffel_classes.xml</url>
+				<label>Eiffel Class File Items</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Automatic Cluster Enumeration</label>
+				<url>../../../structure/project_items/clusters_and_items/cluster_enumeration.xml</url>
+				<label>Automatic Cluster Enumeration</label>
 			</link>
 		</seealso>
 	</paragraph>

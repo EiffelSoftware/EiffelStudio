@@ -69,7 +69,7 @@
 				<label>Explicit Cluster Folder Properties</label>
 			</link>
 			<line_break/>
-			The properties related to explicitly added cluster folders. See <link><url>url</url><label>*Explicit Cluster Folders</label></link> for more information on explicitly added cluster folders.
+			The properties related to explicitly added cluster folders. See <link><url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link> for more information on explicitly added cluster folders.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -77,7 +77,7 @@
 				<label>Cluster Folder Properties</label>
 			</link>
 			<line_break/>
-			The properties related to cluster folders included under a recursive cluster. See <link><url>url</url><label>*Cluster Folders</label></link> for more information on implicitly added cluster folders.
+			The properties related to cluster folders included under a recursive cluster. See <link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>Cluster Folders</label></link> for more information on implicitly added cluster folders.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -85,7 +85,7 @@
 				<label>Eiffel Class Item Properties</label>
 			</link>
 			<line_break/>
-			The properties related to the <link><url>url</url><label>*automatically added</label></link> Eiffel class source files.
+			The properties related to the <link><url>../../../structure/project_items/clusters_and_items/cluster_enumeration.xml</url><label>automatically added</label></link> Eiffel class source files.
 		</paragraph>
 		<paragraph>
 			<link>

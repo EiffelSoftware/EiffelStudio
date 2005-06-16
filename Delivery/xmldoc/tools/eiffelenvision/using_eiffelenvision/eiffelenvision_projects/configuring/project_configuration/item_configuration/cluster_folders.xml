@@ -26,7 +26,7 @@
 			</link>. To view the properties window:
 			
 			<list ordered="true">
-				<item>Select a cluster folder in your EiffelEnvision <link><url>url</url><label>*Project</label></link>.</item>
+				<item>Select a cluster folder in your EiffelEnvision <link><url>../../../structure/project.xml</url><label>Project</label></link>.</item>
 				<item>Choose <bold>View</bold>, <bold>Properties</bold> menu.</item>
 			</list>
 			The properties window may also been shown for any selected item by pressing the <bold>F4</bold> keyboard shortcut or by choosing <bold>Properties</bold> from a cluster folder's context menu.
@@ -43,10 +43,10 @@
 			<line_break/>
 			Indicates if the cluster folder and <bold>all</bold> contained Eiffel class and cluster folders should be excluded from compilation.
 			<note>
-				<bold>Note</bold>: This property is read-only when the cluster folder has not been excluded explicitly, but has been excluded because a parent <link><url>url</url><label>*Cluster Folder</label></link> has been excluded from a <link><url>url</url><label>*Explicit Cluster Folder</label></link>.
+				<bold>Note</bold>: This property is read-only when the cluster folder has not been excluded explicitly, but has been excluded because a parent <link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>Cluster Folder</label></link> has been excluded from a <link><url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>.
 			</note>
 			<note>
-				<bold>Note</bold>: This property will also be read-only when a parent <link><url>url</url><label>*Explicit Cluster Folder</label></link>'s <link><url>cluster.xml</url><anchor_name>library</anchor_name><label>Library Cluster</label></link> property is set to <bold>Yes</bold>, because changes are ignored by the Eiffel for .NET compiler for library marked clusters.
+				<bold>Note</bold>: This property will also be read-only when a parent <link><url>../../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>'s <link><url>clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library Cluster</label></link> property is set to <bold>Yes</bold>, because changes are ignored by the Eiffel for .NET compiler for library marked clusters.
 			</note>
 		</paragraph>
 		
@@ -80,8 +80,8 @@
 			<bold>Cluster Namespace</bold>
 			<line_break/>
 			The namespace that will be used to qualify all contained Eiffel <link>
-				<url>url</url>
-				<label>*classes</label>
+				<url>../../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
+				<label>classes</label>
 			</link>. This property is based on the <link>
 				<url>../general.xml</url>
 				<anchor_name>cluster_namespace_format</anchor_name>
@@ -110,13 +110,13 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Cluster Folders</label>
+				<url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url>
+				<label>Cluster Folders</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Automatic Cluster Enumeration</label>
+				<url>../../../structure/project_items/clusters_and_items/cluster_enumeration.xml</url>
+				<label>Automatic Cluster Enumeration</label>
 			</link>
 		</seealso>
 	</paragraph>

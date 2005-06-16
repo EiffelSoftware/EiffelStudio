@@ -77,7 +77,7 @@
 			<line_break/>
 			<link><url>../structure/index.xml</url><label>Project Structure</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Eiffel the Language</label></link>
+			<link><url>../../../eiffel_for_dotnet/index.xml</url><label>Eiffel the Language</label></link>
 		</seealso>
 	</paragraph>
 </document>

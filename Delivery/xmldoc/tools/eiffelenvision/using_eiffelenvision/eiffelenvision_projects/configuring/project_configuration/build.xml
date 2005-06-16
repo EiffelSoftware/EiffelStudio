@@ -45,14 +45,14 @@
 		<paragraph>
 			<bold>Debug Clauses</bold>
 			<line_break/>
-			A semi-colon (;) delimited list of <link><url>url</url><label>*Debug Clauses</label></link> to conditional compile sections of code with your project.
+			A semi-colon (;) delimited list of <link><url>../../../compiling_projects/debug_clauses.xml</url><label>Debug Clauses</label></link> to conditional compile sections of code with your project.
 		</paragraph>
 
 		<anchor>optimize_code</anchor>
 		<paragraph>
 			<bold>Optimize Code</bold>
 			<line_break/>
-			Instructs the compiler to discard incremental compilation information and generate a single assembly module. Based on other property settings <link><url>assertion.xml</url><label>Assertion Properties</label></link> may be discarded and code size reduced.
+			Instructs the compiler to discard incremental compilation information and generate a single assembly module. Based on other property settings <link><url>assertions.xml</url><label>Assertion Properties</label></link> may be discarded and code size reduced.
 		</paragraph>
 
 		<anchor>generate_cls_compliant_code</anchor>
@@ -125,7 +125,7 @@
 			<line_break/>
 			<link><url>precompiled.xml</url><label>Precompiled Properties</label></link>
 			<line_break/>
-			<link><url>assertion.xml</url><label>Assertion Properties</label></link>
+			<link><url>assertions.xml</url><label>Assertion Properties</label></link>
 			<line_break/>
 			<help_link>
 				<keywords>vxconProjectBuilds</keywords>
@@ -133,7 +133,7 @@
 				Default and Custom Build
 			</help_link>
 			<line_break/>
-			<link><url>../structure/index.xml</url><label>EiffelEnvision Projects</label></link>
+			<link><url>../../index.xml</url><label>EiffelEnvision Projects</label></link>
 		</seealso>
 	</paragraph>
 </document>

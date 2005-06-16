@@ -32,15 +32,15 @@
 				<label>Blank Eiffel Graphical Application</label>
 			</link>
 			<line_break/>
-			A standalone Windows application using the <link><url>url</url><label>*EiffelVision 2</label></link> platform independent graphical library.
+			A standalone Windows application using the <link><url>../../../../../../libraries/wel/index.xml</url><label>EiffelVision 2</label></link> platform independent graphical library.
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>eiffel_windows_application.xml</url>
+				<url>windows_eiffel_application.xml</url>
 				<label>Eiffel Windows Application</label>
 			</link>
 			<line_break/>
-			A standalone Windows application using the <link><url>url</url><label>*Windows Eiffel Library</label></link> (<bold>WEL</bold>).
+			A standalone Windows application using the <link><url>../../../../../../libraries/wel/index.xml</url><label>Windows Eiffel Library</label></link> (<bold>WEL</bold>).
 		</paragraph>
 		<paragraph>
 			<link>

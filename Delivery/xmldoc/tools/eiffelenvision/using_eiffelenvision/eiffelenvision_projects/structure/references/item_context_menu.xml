@@ -38,14 +38,14 @@
 		</paragraph>
 		<paragraph>
 			For <link>
-				<url>reference_folder.xml</url>
+				<url>references_folder.xml</url>
 				<anchor_name>com</anchor_name>
 				<label>COM References</label>
 			</link> any generated interop assembly will be removed from the <italic>obj</italic> folder once the assembly has been removed.
 		</paragraph>
 		<paragraph>
 			For <link>
-				<url>reference_folder.xml</url>
+				<url>references_folder.xml</url>
 				<anchor_name>static</anchor_name>
 				<label>Static Assembly References</label>
 			</link> <bold>Remove</bold> will be unavailable because EiffelEnvision handles the adding and removing of these types of references.
@@ -54,7 +54,7 @@
 			<bold>Properties</bold>
 			<line_break/>
 			Displays the properties window for the selected reference <link>
-				<url>../../configuring/adding_references/configuring_references.xml</url>
+				<url>../../configuring/project_configuration/item_configuration/reference.xml</url>
 				<label>Properties</label>
 			</link>.
 		</paragraph>
@@ -78,7 +78,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>../../configuring/adding_references/configuring_references.xml</url>
+				<url>../../configuring/project_configuration/item_configuration/reference.xml</url>
 				<label>Configuring Component References</label>
 			</link>
 			<line_break/>

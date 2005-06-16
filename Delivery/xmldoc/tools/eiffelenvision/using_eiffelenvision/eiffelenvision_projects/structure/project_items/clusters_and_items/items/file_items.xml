@@ -15,11 +15,11 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			Generic file items are all other file items that are not <link><url>eiffel_classes.xml</url><label>Eiffel Class File Items</label></link>. These types of items will only be found anywhere under the <link><url>../project_items/index.xml</url><label>Project Items</label></link> folder or any of it's subfolder/clusters or under the <link><url>../other_projec_items/index.xml</url><label>Other Project Items</label></link> folder and it's subfolders.
+			Generic file items are all other file items that are not <link><url>eiffel_classes.xml</url><label>Eiffel Class File Items</label></link>. These types of items will only be found anywhere under the <link><url>../../index.xml</url><label>Project Items</label></link> folder or any of it's subfolder/clusters or under the <link><url>../../../other_project_items/index.xml</url><label>Other Project Items</label></link> folder and it's subfolders.
 		</paragraph>
 		<paragraph>
 			Generic file items have many different icon representations. For the most part the icon used to represent the file item will be the same icon used by Windows Explorer. The exception to this rule is when the file, on disk corresponding to the file item, is missing. For this case the file item will be show using the missing file <image>
-				<url>../../../images/file_missing.ico</url>
+				<url>../../../../../../images/icons/file_missing.ico</url>
 			</image> icon.
 		</paragraph>
 
@@ -36,7 +36,7 @@
 			</list>
 			<note>
 				<bold>Note</bold>: File that are missing (<image>
-				<url>../../../images/file_missing.ico</url>
+				<url>../../../../../../images/icons/file_missing.ico</url>
 			</image>) cannot be opened.
 			</note>
 		</paragraph>
@@ -47,7 +47,7 @@
 			<content>Adding Items</content>
 		</heading>
 		<paragraph>
-			For information on how to add one of the many generic file item templates or to add exiting files to your EiffelEnvision project , see <link><url>../../adding_items/index.xml</url><label>Adding New and Existing Items</label></link>.
+			For information on how to add one of the many generic file item templates or to add exiting files to your EiffelEnvision project , see <link><url>../../../../configuring/adding_items/adding_items.xml</url><label>Adding New and Existing Items</label></link>.
 		</paragraph>
 		
 		<anchor>context_menu</anchor>
@@ -71,7 +71,7 @@
 		<paragraph>
 			<bold>Remove</bold>
 			<line_break/>
-			Selecting this menu item will remove the file item from the project. See <link><url>../../removing_items.xml</url><label>Removing Items</label></link> for more information.
+			Selecting this menu item will remove the file item from the project. See <link><url>../../../../configuring/removing_items.xml</url><label>Removing Items</label></link> for more information.
 		</paragraph>
 		<paragraph>
 			<bold>Rename</bold>
@@ -81,7 +81,7 @@
 		<paragraph>
 			<bold>Properties</bold>
 			<line_break/>
-			Will display the <link><url>../../project_configuration/item_configuration/file_items.xml</url><label>File Item Properties</label></link>.
+			Will display the <link><url>../../../../configuring/project_configuration/item_configuration/file_items.xml</url><label>File Item Properties</label></link>.
 		</paragraph>
 		
 		<anchor>also_see</anchor>
@@ -94,11 +94,11 @@
 			<line_break/>
 			<link><url>index.xml</url><label>Item and Folders</label></link>
 			<line_break/>
-			<link><url>../../configuring/project_configuration/item_configuration/file_items.xml</url><label>File Items Properties</label></link>
+			<link><url>../../../../configuring/project_configuration/item_configuration/file_items.xml</url><label>File Items Properties</label></link>
 			<line_break/>
 			<link><url>eiffel_classes.xml</url><label>Eiffel Class File Items</label></link>
 			<line_break/>
-			<link><url>project.xml</url><label>Eiffel Envision Projects</label></link>
+			<link><url>../../index.xml</url><label>Eiffel Envision Projects</label></link>
 			<line_break/>
 <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
 		</seealso>	

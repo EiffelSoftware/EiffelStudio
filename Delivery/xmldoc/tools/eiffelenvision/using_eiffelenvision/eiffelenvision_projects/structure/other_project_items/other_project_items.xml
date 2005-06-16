@@ -17,7 +17,7 @@
 		<paragraph>
 			The <bold>Other Project Items</bold> folder (<image>
 				<url>../../../../images/icons/folder.ico</url>
-			</image>) is the fourth top-level folder of an EiffelEnvision <link><url>project.xml</url><label>Project</label></link>. Like all other top-level folders, <bold>Other Project Items</bold> cannot be removed from a project. 
+			</image>) is the fourth top-level folder of an EiffelEnvision <link><url>../project.xml</url><label>Project</label></link>. Like all other top-level folders, <bold>Other Project Items</bold> cannot be removed from a project. 
 		</paragraph>
 		<paragraph>
 			<bold>Other Project Items</bold> is designed to hold all related, not project-specific project items. Typically the items will be located outside of a project's root location (where the EiffelEnvision project file (*.eifp) is found.)
@@ -29,7 +29,7 @@
 			<content>Virtual Workspace</content>
 		</heading>
 		<paragraph>
-			Unlike the rest of EiffelEnvision's project item related nodes, <bold>Other Project Items</bold> uses virtual "links" to files, just as Visual C++ does with it's project files. This means a hierarchy of <link><url>virutal_folders.xml</url><label>Virtual Folders</label></link> can be created without a representation on disk, and files items placed in arbitrary folders not corresponding to any folder location on disk. For more information on "links" to files, see <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>.
+			Unlike the rest of EiffelEnvision's project item related nodes, <bold>Other Project Items</bold> uses virtual "links" to files, just as Visual C++ does with it's project files. This means a hierarchy of <link><url>virtual_folders.xml</url><label>Virtual Folders</label></link> can be created without a representation on disk, and files items placed in arbitrary folders not corresponding to any folder location on disk. For more information on "links" to files, see <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>.
 		</paragraph>
 		
 		<anchor>adding_item</anchor>
@@ -40,7 +40,7 @@
 		<paragraph>
 			<bold>Other Project Files</bold> only allows <bold>New Folders</bold> and <bold>Existing Items</bold> to be added to it, or any of it's sub-folders (<image>
 				<url>../../../../images/icons/folder.ico</url>
-			</image>). To learn how to add new folders or existing items, see the respective <link><url>url</url><label>Adding New Folders</label></link> and/or <link><url>url</url><label>Adding Existing Items</label></link> documentation.
+			</image>). To learn how to add new folders or existing items, see the respective <link><url>../../configuring/adding_items/adding_folders.xml</url><label>Adding New Folders</label></link> and/or <link><url>../../configuring/adding_items/adding_existings_items.xml</url><label>Adding Existing Items</label></link> documentation.
 		</paragraph>
 		<paragraph>
 			Existing items and new folder can also be added through the <bold>Other Project Items</bold> or any sub-folder <link><url>context_menu.xml</url><label>context menu</label></link>.
@@ -62,11 +62,11 @@
 			<line_break/>
 			<link><url>virtual_folders.xml</url><label>Virtual Folders</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Adding Existing Items</label></link>
+			<link><url>../../configuring/adding_items/adding_existings_items.xml</url><label>Adding Existing Items</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Adding New Folders</label></link>
+			<link><url>../../configuring/adding_items/adding_folders.xml</url><label>Adding New Folders</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Removing Items</label></link>
+			<link><url>../../configuring/removing_items.xml</url><label>Removing Items</label></link>
 		</seealso>	
 	</paragraph>
 </document>

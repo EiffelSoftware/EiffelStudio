@@ -20,11 +20,11 @@
 			</image>) represents your project and all of it's project files, nothing more. It's purpose is to contain all project specific file items under one group, just as the <link><url>../eiffel_libraries/index.xml</url><label>Eiffel Libraries</label></link> folder purpose is to contain Eiffel libraries you would like to reuse from your project. 
 		</paragraph>
 		<paragraph>
-			The <bold>Project Items</bold> folder is actually nothing more than a special <link><url>explicit_cluster.xml</url><label>Explicit Cluster Folder</label></link> and shares all of it's attributes and features. The difference between the <bold>Project Items</bold> folder and <link><url>explicit_cluster.xml</url><label>Explicit Cluster Folders</label></link> are:
+			The <bold>Project Items</bold> folder is actually nothing more than a special <link><url>clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link> and shares all of it's attributes and features. The difference between the <bold>Project Items</bold> folder and <link><url>clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link> are:
 			<list ordered="false">
 				<item>The <bold>Project Items</bold> cannot be remove, just like all top-level folders in an EiffelEnvision <link><url>.../project.xml</url><label>Project</label></link>.</item>
-				<item><bold>Project Items</bold> is not the name of the cluster. To change the <bold>Project Items</bold> folder cluster name, use the <link><url>.../../project_configuration/item_configuration/explicit_clusters.xml</url><anchor_name>cluster_name</anchor_name><label>Cluster Name</label></link> property.</item>
-				<item>The <bold>Project Items</bold> cluster <link><url>.../../project_configuration/item_configuration/explicit_clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link> property cannot be changed.</item>
+				<item><bold>Project Items</bold> is not the name of the cluster. To change the <bold>Project Items</bold> folder cluster name, use the <link><url>../../configuring/project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_name</anchor_name><label>Cluster Name</label></link> property.</item>
+				<item>The <bold>Project Items</bold> cluster <link><url>../../configuring/project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link> property cannot be changed.</item>
 			</list>
 		</paragraph>
 		
@@ -65,11 +65,11 @@
 			<line_break/>
 			<link><url>../eiffel_libraries/index.xml</url><label>Eiffel Libraries</label></link>
 			<line_break/>
-			<link><url>project.xml</url><label>Eiffel Envision Projects</label></link>
+			<link><url>../project.xml</url><label>Eiffel Envision Projects</label></link>
 			<line_break/>
 <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>
 			<line_break/>
-			<link><url>../../configuration/project_configuration/item_exclusion.xml</url><label>Including and Excluding Items</label></link>
+			<link><url>../../configuring/item_exclusion.xml</url><label>Including and Excluding Items</label></link>
 		</seealso>	
 	</paragraph>
 </document>

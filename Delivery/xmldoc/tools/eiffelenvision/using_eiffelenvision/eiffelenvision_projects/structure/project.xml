@@ -70,11 +70,11 @@
 		</heading>
 		<paragraph>
 			The <bold>References</bold> of an EiffelEnvision project contains all of the project's component references, added to a project when a project is created using one of the 
-			<link><url>url</url><label>EiffelEnvision Project Templates</label></link> or when explicitly <help_link>
+			<link><url>../adding_projects/projects.xml</url><label>EiffelEnvision Project Templates</label></link> or when explicitly <help_link>
 				<keywords>vxtskAddingRemovingProjectReferences</keywords>
 				<tab_index>0</tab_index>
 				Adding References
-			</help_link>. For more information about the <bold>References</bold> section of an EiffelEnvision project, see <link><url>reference_node.xml</url><label>References Nodes</label></link>.
+			</help_link>. For more information about the <bold>References</bold> section of an EiffelEnvision project, see <link><url>references/references_folder.xml</url><label>References Folder</label></link>.
 		</paragraph>
 		
 		<anchor>project_items</anchor>
@@ -107,18 +107,18 @@
 			<content>Clean Separation</content>
 		</heading>
 		<paragraph>
-			Eiffel's principle system of reuse is through source code reuse, unlike the .NET Framework's binary reuse through <bold>assemblies</bold>. <link><url>url</url><label>*Eiffel for .NET</label></link> still maintains 
-			reuse through source code, as Eiffel does, but also permits binary reuse through assemblies and <link><url>url</url><label>*Precompiled Libraries</label></link>. EiffelEnvision supports all of these concepts, but unlike 
-			other environments, used in conjunction with Eiffel or Eiffel for .NET, there is no implicit, clean separation is made between project files/source code and reused Eiffel libraries source code. In <link><url>url</url><label>*Eiffel for .NET</label></link> further 
+			Eiffel's principle system of reuse is through source code reuse, unlike the .NET Framework's binary reuse through <bold>assemblies</bold>. <link><url>../../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET</label></link> still maintains 
+			reuse through source code, as Eiffel does, but also permits binary reuse through assemblies and <link><url>../configuring/adding_references/precompiled_libraries.xml</url><label>Precompiled Libraries</label></link>. EiffelEnvision supports all of these concepts, but unlike 
+			other environments, used in conjunction with Eiffel or Eiffel for .NET, there is no implicit, clean separation is made between project files/source code and reused Eiffel libraries source code. In <link><url>../../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET</label></link> further 
 			separation is required between source code reuse and binary reuse, using assemblies.
 		</paragraph>
 		<paragraph>
-			EiffelEnvision remedies this integral issue with a very distinct and clean separartion between component (assembly) referencs, project files, where it be a <bold>bitmap</bold> resource or Eiffel <link><url>url</url><label>*class</label></link> source file, and 
+			EiffelEnvision remedies this integral issue with a very distinct and clean separartion between component (assembly) referencs, project files, where it be a <bold>bitmap</bold> resource or Eiffel <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url><label>class</label></link> source file, and 
 			Eiffel source libraries. As forementioned, EiffelEnvision includes a <link><url>project.xml</url><anchor_name>references</anchor_name><label>References</label></link> section for each of it's projects. Contained within this section are 
-			all component and <link><url>url</url><label>*Precompiled Library</label></link> references for that project. <link><url>url</url><label>*Project Items</label></link> and <link><url>url</url><label>*Eiffel Libraries</label></link> support the separation of 
-			project-specific Eiffel <link><url>url</url><label>*classes</label></link> and files and Eiffel library <link><url>url</url><label>*class</label></link> source files, respectivley. Although the separation between <link><url>url</url><label>*Project Items</label></link> and 
-			<link><url>url</url><label>*Eiffel Libraries</label></link> is not strictly enforce by EiffelEnvision, for other tool compatablity reasons, it is recommended that all EiffelEnvision projects adhear to this convention. Clean separation will assist in 
-			the future maintainance or adoption of your projects, by other developers. Because Eiffel source files are include using <link><url>url</url><label>*clusters</label></link>, there will be no confusion as to what files are project files and 
+			all component and <link><url>../configuring/adding_references/precompiled_libraries.xml</url><label>Precompiled Library</label></link> references for that project. <link><url>project_items/project_items.xml</url><label>Project Items</label></link> and <link><url>eiffel_libraries/eiffel_libraries.xml</url><label>Eiffel Libraries</label></link> support the separation of 
+			project-specific Eiffel <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>classes</label></link> and files and Eiffel library <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>class</label></link> source files, respectivley. Although the separation between <link><url>project_items/project_items.xml</url><label>Project Items</label></link> and 
+			<link><url>eiffel_libraries/eiffel_libraries.xml</url><label>Eiffel Libraries</label></link> is not strictly enforce by EiffelEnvision, for other tool compatablity reasons, it is recommended that all EiffelEnvision projects adhear to this convention. Clean separation will assist in 
+			the future maintainance or adoption of your projects, by other developers. Because Eiffel source files are include using <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link>, there will be no confusion as to what files are project files and 
 			what files are Eiffel library sources.
 		</paragraph>
 		

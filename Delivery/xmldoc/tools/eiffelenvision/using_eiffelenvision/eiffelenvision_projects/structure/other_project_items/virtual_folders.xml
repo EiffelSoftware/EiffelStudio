@@ -17,10 +17,10 @@
 		<paragraph>
 			Virtual Folder(<image>
 				<url>../../../../images/icons/folder.ico</url>
-			</image>), in EiffelEnvision, will only be located directly under the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> top-level folder or below another virtual folder. Virtual folder, unlike other non-top-level folders in EiffelEnvision <link><url>projects.xml</url><label>Projects</label></link>, do not have an underlying disk representation. They merley represent a way to arrange project file items into a preferable hierarchy. 
+			</image>), in EiffelEnvision, will only be located directly under the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> top-level folder or below another virtual folder. Virtual folder, unlike other non-top-level folders in EiffelEnvision <link><url>../project.xml</url><label>Projects</label></link>, do not have an underlying disk representation. They merley represent a way to arrange project file items into a preferable hierarchy. 
 		</paragraph>
 		<paragraph>
-			All virtual folders are equivical in functionality to the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> folder, with the exception to removal. Virtual folders, unlike the <bold>Other Project Items</bold> can be <link><url>removing_items.xml</url><label>removed</label></link>.
+			All virtual folders are equivical in functionality to the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> folder, with the exception to removal. Virtual folders, unlike the <bold>Other Project Items</bold> can be <link><url>../../configuring/removing_items.xml</url><label>removed</label></link>.
 		</paragraph>
 		
 		<paragraph>
@@ -43,11 +43,11 @@
 			<line_break/>
 			<link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Adding Existing Items</label></link>
+			<link><url>../../configuring/adding_items/adding_existings_items.xml</url><label>Adding Existing Items</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Adding New Folders</label></link>
+			<link><url>../../configuring/adding_items/adding_folders.xml</url><label>Adding New Folders</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Removing Items</label></link>
+			<link><url>../../configuring/removing_items.xml</url><label>Removing Items</label></link>
 		</seealso>		
 	</paragraph>
 </document>

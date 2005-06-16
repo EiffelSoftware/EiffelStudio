@@ -13,8 +13,8 @@
 				<url>../project.xml</url>
 				<label>Project</label>
 			</link> node in the <link>
-				<url>url</url>
-				<label>*Solution Explorer</label>
+				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url>
+				<label>Solution Explorer</label>
 			</link>, where it fits in and why EiffelEnvision projects have it.
 		</paragraph>
 		

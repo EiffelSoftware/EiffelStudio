@@ -75,12 +75,10 @@ feature -- Dispose
 			
 				--| ICorDebugClass value
 			if once_value_icd_class /= Void then
-				once_value_icd_class.release
 				once_value_icd_class := Void
 			end
 				--| ICorDebugModule value
 			if once_value_icd_module /= Void then
-				once_value_icd_module.release
 				once_value_icd_module := Void
 			end
 
@@ -236,7 +234,6 @@ feature -- Queries
 			Result := once_value_icd_class
 			if Result = Void then
 				Result := interface_debug_object_value.get_class
-				Result.add_ref
 				once_value_icd_class := Result
 				interface_debug_object_value.clean_on_dispose
 			end
@@ -358,7 +355,6 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			Result := once_value_icd_module
 			if Result = Void then
 				Result := value_icd_class.get_module
-				Result.add_ref
 				once_value_icd_module := Result
 			end
 		end

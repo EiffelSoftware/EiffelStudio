@@ -12,7 +12,8 @@ inherit
 		redefine
 			width,
 			height,
-			is_parentable
+			is_parentable,
+			show
 		end
 
 feature {NONE} -- Implementation
@@ -93,6 +94,7 @@ feature {NONE} -- Implementation
 			update_request_size
 			default_width := a_width
 			default_height := a_height
+				-- Both resizes are needed otherwise the original position gets reset on show.
 			{EV_GTK_EXTERNALS}.gdk_window_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), default_width.max (minimum_width), default_height.max (minimum_height))
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, default_width.max (minimum_width), default_height.max (minimum_height))
 		end
@@ -131,7 +133,7 @@ feature {NONE} -- Implementation
 		do
 			user_x_position := a_x
 			user_y_position := a_y
-			{EV_GTK_EXTERNALS}.gtk_widget_set_uposition (c_object, a_x, a_y)
+			{EV_GTK_EXTERNALS}.gtk_window_move (c_object, a_x, a_y)
 			positioned_by_user := True
 		end
 
@@ -194,6 +196,12 @@ feature {NONE} -- Implementation
 			-- (export status {NONE})
 		do
 			Result := False
+		end
+
+	show is
+			-- Request that `Current' be displayed when its parent is.
+		do
+			{EV_GTK_EXTERNALS}.gtk_widget_show_now (c_object)
 		end
 
 feature {EV_ANY_I} -- Implementation

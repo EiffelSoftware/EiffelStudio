@@ -65,6 +65,9 @@
 									<File Id="EiffelSoftware.Runtime.dll" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.Runtime.dll" />
 									<Registry Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\[ProductName]" Value="[$EiffelSoftware.Runtime.dll]" Id="registry2" Type="string" />
 								</Component>
+								<Component Id="libEiffelSoftware.MetadataConsumer.dll" Guid="F7618715-F9FB-46d5-94A3-556A24349F23">
+									<File Id="libEiffelSoftware.MetadataConsumer.dll" Name="LIBEIF~1.DLL" LongName="libEiffelSoftware.MetadataConsumer.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\libEiffelSoftware.MetadataConsumer.dll" />
+								</Component>
 								<Component Id="EiffelSoftware.MetadataConsumer.dll" Guid="269EF7C6-ABD2-4422-AA8D-4599F96CF4F3">
 									<File Id="EiffelSoftware.MetadataConsumer.dll" Name="EIFFEL~2.DLL" LongName="EiffelSoftware.MetadataConsumer.dll" KeyPath="yes" Assembly=".net" AssemblyRegisterComInterop="yes" AssemblyApplication="EiffelSoftware.MetadataConsumer.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.MetadataConsumer.dll" />
 								</Component>

@@ -47,7 +47,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (cancel_button)
 			
 			set_minimum_width (250)
-			set_minimum_height (150)
+			set_minimum_height (120)
 			disable_user_resize
 			set_title ("Go To Line")
 			l_ev_vertical_box_1.set_padding_width (10)
@@ -72,7 +72,7 @@ feature {NONE}-- Initialization
 feature -- Access
 
 	line_number_label: EV_LABEL
-	line_number_text: EV_TEXT_FIELD
+	line_number_text: EV_SPIN_BUTTON
 	go_button, cancel_button: EV_BUTTON
 
 feature {NONE} -- Implementation

@@ -19,9 +19,9 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			The <link><url>url</url><label>Eiffel for .NET Language</label></link> does not use the <code><reserved_word>this</reserved_word></code> keyword/reserved word used by other languages such as Visual C# and Visual C++. Instead 
+			The <link><url>../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET Language</label></link> does not use the <code><reserved_word>this</reserved_word></code> keyword/reserved word used by other languages such as Visual C# and Visual C++. Instead 
 			<code><reserved_word>Current</reserved_word></code> is used to self-reference a runtime instance of a class, also know as an object. Because <code><reserved_word>this</reserved_word></code> is not used by 
-			the <link><url>url</url><label>Eiffel for .NET Language</label></link>, the <help_link>
+			the <link><url>../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET Language</label></link>, the <help_link>
 				<keywords>vcurfThisWindow</keywords>
 				<tab_index>0</tab_index>
 				This (Me) Window
@@ -54,8 +54,8 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Eiffel Keywords</label>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/60_reserved_keywords.xml</url>
+				<label>Eiffel Keywords</label>
 			</link>
 		</seealso>
 	</paragraph>

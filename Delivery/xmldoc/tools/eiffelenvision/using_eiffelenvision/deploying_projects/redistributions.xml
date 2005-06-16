@@ -48,8 +48,8 @@
 		
 		<warning>
 		<bold>Important</bold>: Please review the <link>
-				<url>url</url>
-				<label>*End-User License Agreement</label>
+				<url>../../licenses/index.xml</url>
+				<label>End-User License Agreement</label>
 			</link> (EULA) to know your rights regarding distributing <italic>EiffelSoftware.Runtime.dll</italic> for the <link>
 				<url>../../introduction/editions.xml</url>
 				<label>Edition</label>
@@ -82,8 +82,8 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url>i</url>
-				<label>*EiffelEnvision Known Folders</label>
+				<url>../eiffelenvision_projects/structure/known_folders.xml</url>
+				<label>EiffelEnvision Known Folders</label>
 			</link>
 			<line_break/>
 			<link>

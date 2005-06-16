@@ -105,21 +105,23 @@ feature {EV_ANY_I} -- Implementation
 		local
 			a_x, a_y: INTEGER
 			gdkwin, gtkwid: POINTER
+			a_wid: EV_ANY_IMP
 		do
 			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
 			if gdkwin /= null then
 				from
 					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
 				until
-					Result /= Void or else gtkwid = null
+					a_wid /= Void or else gtkwid = null
 				loop
-					Result ?= eif_object_from_c (gtkwid)
+					a_wid := eif_object_from_c (gtkwid)
 					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 				end
 			end
-			if Result /= Void and then Result.is_destroyed then
-				Result := Void
+			if a_wid /= Void and then a_wid.is_destroyed then
+				a_wid := Void
 			end
+			Result ?= a_wid
 		end
 
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
@@ -131,8 +133,10 @@ feature {EV_ANY_I} -- Implementation
 	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
 		do
-			pointer_style := a_cursor.twin
-			internal_set_pointer_style (a_cursor)
+			if a_cursor /= pointer_style then
+				pointer_style := a_cursor
+				internal_set_pointer_style (a_cursor)				
+			end
 		end
 
 	set_focus is
@@ -219,7 +223,7 @@ feature {EV_ANY_I} -- Implementation
 	update_request_size is
 			-- Force the requisition struct to be updated.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object))
+			{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, default_pointer)
 		end
 
 	aux_info_struct: POINTER is

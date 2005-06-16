@@ -1717,7 +1717,7 @@ feature -- Implementation
 			l_as.expr.process (Current)
 
 				-- Check if the type of the expression is boolean
-			if not last_type.is_boolean then
+			if not last_type.actual_type.is_boolean then
 				create l_vwbe3
 				context.init_error (l_vwbe3)
 				l_vwbe3.set_type (last_type)
@@ -3452,7 +3452,7 @@ feature -- Implementation
 			end
 	
 				-- Check conformance to boolean
-			if not last_type.is_boolean then
+			if not last_type.actual_type.is_boolean then
 				create l_vwbe1
 				context.init_error (l_vwbe1)
 				l_vwbe1.set_type (last_type)
@@ -3621,7 +3621,7 @@ feature -- Implementation
 			l_as.stop.process (Current)
 
 				-- Check if if is a boolean expression
-			if not last_type.is_boolean then
+			if not last_type.actual_type.is_boolean then
 				create l_vwbe4
 				context.init_error (l_vwbe4)
 				l_vwbe4.set_type (last_type)
@@ -3850,7 +3850,7 @@ feature -- Implementation
 			l_as.expr.process (Current)
 
 				-- Check conformance to boolean
-			if not last_type.is_boolean then
+			if not last_type.actual_type.is_boolean then
 				create l_vwbe2
 				context.init_error (l_vwbe2)
 				l_vwbe2.set_type (last_type)
@@ -3871,7 +3871,8 @@ feature -- Implementation
 				end
 			end
 		
-			if l_needs_byte_node then
+			if l_needs_byte_node and l_elsif /= Void then
+					-- `l_elsif' can be Void if a VWBE2 error was found.
 				l_elsif.set_line_number (l_as.expr.start_location.line)
 				last_byte_node := l_elsif
 			end

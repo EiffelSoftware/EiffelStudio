@@ -27,7 +27,7 @@ create
 					update_token_list
 					}
 [\t]+				{
-					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count, tab_size_cell)
+					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
 					update_token_list
 					}
 \n+				{
@@ -38,7 +38,7 @@ create
 					end
 					}
 [^\n\t\r ]+			{
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					update_token_list
 					}
 

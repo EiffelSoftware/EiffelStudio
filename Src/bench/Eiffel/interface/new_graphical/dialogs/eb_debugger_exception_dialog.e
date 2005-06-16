@@ -100,6 +100,9 @@ feature -- Details
 			if message /= Void then
 				s.append_string (message)				
 			end
+			if s.occurrences ('%R') > 0 then
+				s.prune_all ('%R')
+			end
 			message_text.set_text (s)
 			message_text.disable_edit
 			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)			
@@ -107,8 +110,14 @@ feature -- Details
 
 	set_details (d: STRING) is
 			-- Add additional details
+		local
+			s: STRING
 		do
-			details_text.set_text (d)
+			s := d.twin
+			if s.occurrences ('%R') > 0 then
+				s.prune_all ('%R')
+			end
+			details_text.set_text (s)
 			details_box.show
 		end
 

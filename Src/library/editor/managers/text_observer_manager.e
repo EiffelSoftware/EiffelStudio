@@ -19,6 +19,7 @@ feature -- Initialization
 			create cursor_observer_list.make (10)
 			create selection_observer_list.make (10)
 			create lines_observer_list.make (10)
+			create post_notify_actions.make (2)
 		end
 
 feature -- Status report
@@ -137,6 +138,21 @@ feature -- Operations
 			end
 		end
 
+	post_notify_actions: ARRAYED_LIST [ROUTINE [ANY, TUPLE]]
+			-- Actions to call after other notifications
+
+	execute_post_notify_actions is
+			-- Execute actions in `post_notify_acions'
+		do
+			from
+				post_notify_actions.start
+			until
+				post_notify_actions.after
+			loop
+				post_notify_actions.item.call ([Current])
+				post_notify_actions.forth
+			end
+		end		
 
 feature {NONE} -- Updates
 
@@ -189,6 +205,7 @@ feature {NONE} -- Updates
 			end
 			edition_observer_list.go_to (l_cur)
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_cursor_moved is
@@ -233,6 +250,7 @@ feature {NONE} -- Updates
 			end
 			edition_observer_list.go_to (l_cur)
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_text_loaded is
@@ -254,6 +272,7 @@ feature {NONE} -- Updates
 			end
 			edition_observer_list.go_to (l_cur)
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_text_fully_loaded is
@@ -276,6 +295,7 @@ feature {NONE} -- Updates
 			end
 			edition_observer_list.go_to (cur)
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 
@@ -293,6 +313,7 @@ feature {NONE} -- Updates
 				lines_observer_list.forth
 			end
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_selection_begun is
@@ -308,6 +329,7 @@ feature {NONE} -- Updates
 				selection_observer_list.forth
 			end
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_selection_finished is
@@ -323,6 +345,7 @@ feature {NONE} -- Updates
 				selection_observer_list.forth
 			end
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_line_modified (l_num: INTEGER) is
@@ -338,6 +361,7 @@ feature {NONE} -- Updates
 				lines_observer_list.forth
 			end
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_line_removed (l_num: INTEGER) is
@@ -353,6 +377,7 @@ feature {NONE} -- Updates
 				lines_observer_list.forth
 			end
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_block_removed is
@@ -368,6 +393,7 @@ feature {NONE} -- Updates
 				lines_observer_list.forth
 			end
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 	on_line_inserted (l_num: INTEGER) is
@@ -383,6 +409,7 @@ feature {NONE} -- Updates
 				lines_observer_list.forth
 			end
 			is_notifying := False
+			execute_post_notify_actions
 		end
 
 feature -- Memory management

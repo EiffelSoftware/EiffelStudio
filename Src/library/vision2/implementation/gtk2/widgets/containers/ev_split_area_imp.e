@@ -135,11 +135,11 @@ feature {NONE} -- Implementation
 			-- Set the position of the splitter.
 		do
 			if is_displayed then
-				{EV_GTK_EXTERNALS}.gtk_paned_set_position (container_widget, a_split_position)
 				user_split_position := -1
 			else
 				user_split_position := a_split_position
 			end
+			{EV_GTK_EXTERNALS}.gtk_paned_set_position (container_widget, a_split_position)
 		end
 
 	user_split_position: INTEGER

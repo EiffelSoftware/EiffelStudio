@@ -588,10 +588,11 @@ invariant
 			integer_8_mask | integer_16_mask | integer_32_mask | integer_64_mask |
 			natural_8_mask | natural_16_mask | natural_32_mask | natural_64_mask
 		).bit_not = 0
-	integer_priority: 
-		(has_integer (8) or has_integer (16) or has_integer (32) or has_integer (64)) implies
+	integer_priority: has_constant_type or else
+		((has_integer (8) or has_integer (16) or has_integer (32) or has_integer (64)) implies
 		(default_type = integer_mask (8) or default_type = integer_mask (16) or
-		default_type = integer_mask (32) or default_type = integer_mask (64))
+		default_type = integer_mask (32) or default_type = integer_mask (64) or
+		default_type = natural_mask (64)))
 	non_negative_natural: (has_natural (8) or has_natural (16) or has_natural (32) or has_natural (64)) implies not has_minus
 
 end

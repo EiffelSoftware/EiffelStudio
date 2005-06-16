@@ -111,8 +111,6 @@ feature -- Transformation
 		do
 			lexer.set_in_verbatim_string (in_v_string)
 			make_from_lexer (lexer)
-				-- Set lexer back
-			lexer.set_in_verbatim_string (False)
 		end
 
 feature -- Status Report					

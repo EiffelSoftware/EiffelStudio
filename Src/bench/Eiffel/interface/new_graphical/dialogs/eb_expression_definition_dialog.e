@@ -400,9 +400,7 @@ feature {NONE} -- Event handling
 		do
 			set_expression_mode
 			class_field.enable_sensitive
-			if class_field.is_displayed then
-				class_field.set_focus
-			end
+			set_focus (class_field)
 			address_field.disable_sensitive
 		end
 
@@ -413,12 +411,10 @@ feature {NONE} -- Event handling
 			class_field.disable_sensitive
 			expression_field.enable_sensitive
 			if stick_with_current_object then
-				expression_field.set_focus
+				set_focus (expression_field)
 			else
 				address_field.enable_sensitive
-				if address_field.is_displayed then
-					address_field.set_focus
-				end
+				set_focus (address_field)
 			end
 		end
 
@@ -429,12 +425,10 @@ feature {NONE} -- Event handling
 			class_field.disable_sensitive
 			expression_field.disable_sensitive
 			if stick_with_current_object then
-				object_name_field.set_focus
+				set_focus (object_name_field)
 			else
 				address_field.enable_sensitive
-				if address_field.is_displayed then
-					address_field.set_focus
-				end
+				set_focus (address_field)
 			end
 		end
 
@@ -445,9 +439,7 @@ feature {NONE} -- Event handling
 			address_field.disable_sensitive
 			class_field.disable_sensitive
 			expression_field.enable_sensitive
-			if expression_field.is_displayed then
-				expression_field.set_focus
-			end
+			set_focus (expression_field)
 		end
 		
 	on_object_name_changed is
@@ -500,17 +492,17 @@ feature {NONE} -- Event handling
 								--| Now we have the class, create the expression.
 							create new_expression.make_with_class (cl, expression_field.text)
 							if new_expression.syntax_error_occurred then
-								expression_field.set_focus
+								set_focus (expression_field)
 								create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 								wd.show_modal_to_window (dialog)
 							end
 						else
-							class_field.set_focus
+							set_focus (class_field)
 							create wd.make_with_text (Warning_messages.w_Not_a_compiled_class (t))
 							wd.show_modal_to_window (dialog)
 						end
 					else
-						class_field.set_focus
+						set_focus (class_field)
 						create wd.make_with_text (Warning_messages.w_Cannot_find_class (t))
 						wd.show_modal_to_window (dialog)
 					end
@@ -538,21 +530,21 @@ feature {NONE} -- Event handling
 							create new_expression.make_with_object (o, expression_field.text)
 						end
 						if new_expression.syntax_error_occurred then
-							expression_field.set_focus
+							set_focus (expression_field)
 							create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 							wd.show_modal_to_window (dialog)
 						else
 							Debugger_manager.keep_object (t)
 						end
 					else
-						address_field.set_focus
+						set_focus (address_field)
 						create wd.make_with_text (Warning_messages.w_Invalid_address (t))
 						wd.show_modal_to_window (dialog)
 					end
 				else
 					create new_expression.make_for_context (expression_field.text)
 					if new_expression.syntax_error_occurred then
-						expression_field.set_focus
+						set_focus (expression_field)
 						create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 						wd.show_modal_to_window (dialog)
 					end
@@ -573,7 +565,7 @@ feature {NONE} -- Event handling
 					if modified_expression.syntax_error_occurred then
 							-- Restore the previous expression, since the new one is broken.
 						modified_expression.set_expression (oe)
-						expression_field.set_focus
+						set_focus (expression_field)
 						create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 						wd.show_modal_to_window (dialog)
 						do_not_close_dialog := True
@@ -596,7 +588,7 @@ feature {NONE} -- Event handling
 	on_shown is
 			-- The dialog has just been displayed.
 		do
-			focused_widget.set_focus
+			set_focus (focused_widget)
 		end
 
 feature {NONE} -- Widgets
@@ -640,6 +632,16 @@ feature {NONE} -- Widgets
 			-- "OK" button.
 
 feature {NONE} -- Implementation
+
+	set_focus (w: EV_WIDGET) is
+		require
+			w /= Void
+		do
+			if w.is_displayed then
+				w.set_focus
+			end
+		end
+		
 
 	modified_expression: EB_EXPRESSION
 			-- Expression that is being edited, if any.

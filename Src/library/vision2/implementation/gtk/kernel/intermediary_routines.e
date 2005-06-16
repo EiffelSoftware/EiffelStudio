@@ -323,14 +323,14 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 
 feature {EV_ANY_IMP} -- Pointer intermediary agent routines	
 
-	pointer_motion_action_intermediary (a_c_object: POINTER; a_x, a_y: INTEGER;
+	pointer_motion_action_intermediary (a_object_id: INTEGER; a_x, a_y: INTEGER;
 		a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Pointer motion
 		local
 			widget: EV_WIDGET_IMP
 			p: POINTER
 		do
-			widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			widget ?= eif_id_object (a_object_id)
 			if widget /= Void then
 				widget.pointer_motion_actions_internal.call 
 					([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])

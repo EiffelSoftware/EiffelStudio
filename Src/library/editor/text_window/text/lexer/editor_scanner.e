@@ -50,6 +50,11 @@ feature -- Start Job / Reinitialization
 		require
 			string_not_empty: not a_string.is_empty
 		do
+			if leave_verbatim_string then
+				in_verbatim_string := False
+				leave_verbatim_string := False
+			end
+			current_start_condition := start_condition
 			reset
 			set_input_buffer (new_string_buffer(a_string))
 			scan
@@ -58,11 +63,13 @@ feature -- Start Job / Reinitialization
 	reset is
 			-- Reset scanner before scanning next input.
 		do
+			
 			reset_compressed_scanner_skeleton
 			eif_buffer.wipe_out
 			end_token := Void
 			first_token := Void
-			in_comments := False
+			in_comments := False	
+			set_start_condition (current_start_condition)		
 		end
 
 feature -- Access
@@ -90,6 +97,10 @@ feature -- Query
 	
 	in_verbatim_string: BOOLEAN
 			-- Are we inside a verbatim string?
+		
+	leave_verbatim_string: BOOLEAN
+			-- On next line scan should we leave the verbatim state?  Means we found
+			-- and verbatim end marker on the previous execution
 		
 feature -- Status Setting
 
@@ -130,6 +141,8 @@ feature {NONE} -- Constants
 
 	in_comments: BOOLEAN
 			-- Are we inside a comment?
+
+	current_start_condition: INTEGER
 
 feature {NONE} -- Implementation
 

@@ -74,12 +74,8 @@ feature -- Basic Operation
 			choice_box.extend (create {EV_CELL})
 
 				-- Update controls to reflect `information'
-			if information.generate_execution_profile then
-				generate_execution_profile.enable_select
-				execution_profile_text_field.disable_sensitive
-			else
-				use_existing_execution_profile.enable_select
-			end
+			generate_execution_profile.enable_select
+			execution_profile_text_field.disable_sensitive
 			if information.existing_profile /= Void then
 				execution_profile_text_field.set_text (information.existing_profile)
 			end

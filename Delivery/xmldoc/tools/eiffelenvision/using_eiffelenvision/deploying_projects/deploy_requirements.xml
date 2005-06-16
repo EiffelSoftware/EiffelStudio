@@ -71,13 +71,13 @@
 				output
 			</help_link>. EiffelEnvision projects are different from 
 			C#, VB.NET and other such projects. EiffelEnvision's compiler is incremental and produces many additional assembly modules 
-			when not <link><url/><label>*optimizing code</label></link>, which can only be evaluated and included into the deployment 
+			when not <link><url>../eiffelenvision_projects/configuring/project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>Optimizing Code</label></link>, which can only be evaluated and included into the deployment 
 			project once built. If you choose not to build the EiffelEnvision project before adding its output to the deployment project, 
 			all newly generated files will be added automatically to the deployment project when built.
 		<paragraph>
 		</paragraph>
-			When deploying projects for distribution, it is recommended to configure your project to <link><url/><label>*optimizing the compilation</label></link> as this will create a 
-			single deployment module resulting in faster load and execution times. It is also recommended to disable generation of a project's <link><url/><label>*debug 
+			When deploying projects for distribution, it is recommended to configure your project to <link><url>../eiffelenvision_projects/configuring/project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>optimizing the compilation</label></link> as this will create a 
+			single deployment module resulting in faster load and execution times. It is also recommended to disable generation of a project's <link><url>../eiffelenvision_projects/configuring/project_configuration/debugging.xml</url><anchor_name>generate_debug_information</anchor_name><label>*debug 
 			information</label></link>. This will dramatically reduce file size because the debug information will not be included in the deployment project automatically.
 		</paragraph>
 		

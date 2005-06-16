@@ -66,7 +66,7 @@
 			To deploy a project, simply take the contents of the <bold>bin</bold>\<bold>configuration_name</bold> folder. 
 			<note>
 			<bold>Note:</bold> 
-			You should be aware that the <bold>bin</bold> folder will also contain any <link><url>sd</url><label>debugging information</label></link> if the corresponding project configuration is set to <link><url>sd</url><label>generate debug information</label></link>.
+			You should be aware that the <bold>bin</bold> folder will also contain any debugging information if the corresponding project configuration is set to <link><url>../eiffelenvision_projects/configuring/project_configuration/debugging.xml</url><anchor_name>generate_debug_information</anchor_name><label>Generate Debug Information</label></link>.
 			</note>
 			<warning>
 			<bold>Warning:</bold> 
@@ -85,7 +85,7 @@
 		</heading>
 		<paragraph>
 			If you require to deploy your project source files, you will simply need to include all of the files and subfolders located in the project folder, with the exception of the <bold>bin</bold> and <bold>obj</bold> folders. 
-			All paths stored in an EiffelEnvision project file are relative to the project location, making the project portable. EiffelEnvision also permits the use of <link><url>tt</url><label>environment variables</label></link> in all paths 
+			All paths stored in an EiffelEnvision project file are relative to the project location, making the project portable. EiffelEnvision also permits the use of <link><url>../eiffelenvision_projects/configuring/environment_variables.xml</url><label>Environment Variables</label></link> in all paths 
 			making the project even more portable than projects created for other languages in Visual Studio .NET.
 		</paragraph>
 		
@@ -108,8 +108,8 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url>i</url>
-				<label>*Building Projects</label>
+				<url>../compiling_projects/compiling_projects.xml</url>
+				<label>Compiling Projects</label>
 			</link>
 			<line_break/>
 			<help_link>
@@ -118,9 +118,9 @@
 				Project Properties
 			</help_link>
 			<line_break/>
-			<link><url>i</url><label>*EiffelEnvision Known Folders</label></link>
+			<link><url>../eiffelenvision_projects/structure/known_folders.xml</url><label>EiffelEnvision Known Folders</label></link>
 			<line_break/>
-			<link><url>i</url><label>*Using Environment Variables</label></link>
+			<link><url>../eiffelenvision_projects/configuring/environment_variables.xml</url><label>Using Environment Variables</label></link>
 		</seealso>
 	</paragraph>
 </document>

@@ -16,7 +16,8 @@ inherit
 			line_height
 		redefine
 			handle_extended_ctrled_key,
-			display_not_editable_warning_message
+			display_not_editable_warning_message,
+			load_file
 		end
 
 	EB_SHARED_MANAGERS
@@ -115,6 +116,35 @@ feature -- Access
 	
 	dev_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window
+
+feature -- Text Loading
+
+	load_file (a_filename: STRING) is
+	        -- Load contents of `a_filename'
+		local
+		    test_file, test_file_2: RAW_FILE
+		    l_filename: FILE_NAME
+  	   	do	
+  	   		reset
+  	   		load_file_error := False
+  	   		
+  	   		create l_filename.make_from_string (a_filename)
+			create test_file.make (l_filename.string.twin)
+			l_filename.add_extension ("swp")
+			create test_file_2.make (l_filename)
+			if test_file_2.exists and then test_file_2.is_readable and then ((not test_file.exists) or else test_file.date < test_file_2.date) then
+				ask_if_opens_backup
+				if not open_backup then
+					test_file_2.delete
+						-- Use original file
+					create l_filename.make_from_string (a_filename)
+				end
+				Precursor (l_filename)
+			else
+				create l_filename.make_from_string (a_filename)
+				Precursor (l_filename)
+			end
+  	  	end
 
 feature {NONE} -- Handle keystokes
 

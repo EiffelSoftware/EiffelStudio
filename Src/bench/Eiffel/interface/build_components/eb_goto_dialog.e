@@ -36,18 +36,24 @@ feature {NONE} -- Initialization
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
 			-- can be added here.
-		do			
+		do
+			close_request_actions.extend (agent destroy)
 			cancel_button.select_actions.extend (agent destroy)
+			set_default_cancel_button (cancel_button)
 			go_button.select_actions.extend (agent goto_line)
 			line_number_text.key_press_actions.extend (agent on_key_pressed)
-			line_number_text.change_actions.extend (agent on_text_changed)
+			line_number_text.change_actions.extend (agent on_value_changed (?))
 		end
 
 	initialize_line_number_label_text is
 			-- Set line number label text
+		local
+			l_line_count: INTEGER
 		do
-			if editor.number_of_lines > 0 then				
+			l_line_count := editor.number_of_lines
+			if l_line_count > 0 then
 				line_number_label.set_text ("Line number (1 - " + editor.number_of_lines.out + ")")	
+				line_number_text.value_range.resize_exactly (1, l_line_count)
 			end	
 		end		
 
@@ -62,12 +68,13 @@ feature {NONE} -- Implementation
 			l_line: INTEGER
 		do
 			if line_number_text.text.is_integer then
-				if line_number_text.text.to_integer > editor.number_of_lines then
-					l_line := editor.number_of_lines				
-				else
-					l_line := line_number_text.text.to_integer
+				l_line := line_number_text.text.to_integer
+				if l_line > editor.number_of_lines then
+					l_line := editor.number_of_lines
+				elseif l_line < 1 then
+					l_line := 1
 				end
-				editor.set_first_line_displayed (l_line, True)
+				editor.set_first_line_displayed (l_line.min (editor.vertical_scrollbar.value_range.upper), True)
 				editor.text_displayed.cursor.set_y_in_lines (l_line)
 			end			
 		end		
@@ -81,7 +88,7 @@ feature {NONE} -- Implementation
 			end
 		end		
 	
-	on_text_changed is
+	on_value_changed (a_value: INTEGER) is
 			-- Text field changed
 		do	
 			if line_number_text.text.is_integer then

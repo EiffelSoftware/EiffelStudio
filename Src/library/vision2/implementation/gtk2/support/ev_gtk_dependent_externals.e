@@ -8,6 +8,16 @@ class
 
 feature -- Externals
 
+	frozen gtk_window_move (a_window: POINTER; a_x, a_y: INTEGER) is
+		external
+			"C signature (GtkWindow*, gint, gint) use <gtk/gtk.h>"
+		end
+
+	frozen gdk_threads_init is
+		external
+			"C use <gtk/gtk.h>"
+		end
+
 	frozen gtk_widget_is_focus (a_widget: POINTER): BOOLEAN is
 		external
 			"C inline use <gtk/gtk.h>"

@@ -108,13 +108,13 @@ feature {EV_ANY_I} -- Event handling
 			a_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
 				c_object,
 				a_cs.item,
-				agent (App_implementation.gtk_marshal).translate_and_call (an_agent, l_translate, ?, ?)
+				agent (App_implementation.gtk_marshal).translate_and_call (an_agent, l_translate)
 			)
 		end
 
 	real_signal_connect (
 		a_c_object: like c_object;
-		a_signal_name: STRING;
+		a_signal_name: EV_GTK_C_STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
@@ -125,7 +125,7 @@ feature {EV_ANY_I} -- Event handling
 
 	real_signal_connect_after (
 		a_c_object: like c_object;
-		a_signal_name: STRING;
+		a_signal_name: EV_GTK_C_STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
@@ -137,7 +137,7 @@ feature {EV_ANY_I} -- Event handling
 
 	internal_real_signal_connect (
 		a_c_object: like c_object;
-		a_signal_name: STRING;
+		a_signal_name: EV_GTK_C_STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		invoke_after_handler: BOOLEAN
@@ -148,22 +148,26 @@ feature {EV_ANY_I} -- Event handling
 		require
 			a_c_object_not_void: a_c_object /= NULL
 			a_signal_name_not_void: a_signal_name /= Void
-			a_signal_name_not_empty: not a_signal_name.is_empty
+			a_signal_name_not_empty: not a_signal_name.string.is_empty
 			an_agent_not_void: an_agent /= Void
 		local
 			a_cs: EV_GTK_C_STRING
-			l_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+			app_imp: like app_implementation
+			l_agent: PROCEDURE [ANY, TUPLE]
 		do
 			a_cs := a_signal_name
+			app_imp := app_implementation
 			if translate = Void then
-				l_translate := app_implementation.default_translate
+					-- If we have no translate agent then we call the agent directly.
+				l_agent := an_agent
 			else
-				l_translate := translate
+				l_agent := agent (App_imp.gtk_marshal).translate_and_call (an_agent, translate)
 			end
+
 			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 				a_c_object,
 				a_cs.item,
-				agent (App_implementation.gtk_marshal).translate_and_call (an_agent, l_translate, ?, ?),
+				l_agent,
 				invoke_after_handler
 			)
 		ensure

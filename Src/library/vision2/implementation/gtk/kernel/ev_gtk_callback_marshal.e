@@ -56,11 +56,8 @@ feature {EV_ANY_IMP} -- Access
 	translate_and_call (
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
-		n_args: INTEGER;
-		args: POINTER
 	) is
 			-- Call `an_agent' using `translate' to convert `args' and `n_args'
-			-- from raw GTK+ event data to a TUPLE.
 		require
 			an_agent_not_void: an_agent /= Void
 			translate_not_void: translate /= Void
@@ -68,35 +65,27 @@ feature {EV_ANY_IMP} -- Access
 			an_agent.call (translate.item (integer_pointer_tuple))
 		end
 		
-	motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
-			-- 
-		once
-			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
-		end
-		
-	set_motion_tuple (a_1, a_2: INTEGER; a_3, a_4, a_5: DOUBLE; a_6, a_7: INTEGER) is
+	motion_tuple (a_1, a_2: INTEGER; a_3, a_4, a_5: DOUBLE; a_6, a_7: INTEGER):like internal_motion_tuple is
+			-- Return a motion tuple from given arguments.
 		do
-			motion_tuple.put (a_1, 1)
-			motion_tuple.put (a_2, 2)
-			motion_tuple.put (a_3, 3)
-			motion_tuple.put (a_4, 4)
-			motion_tuple.put (a_5, 5)
-			motion_tuple.put (a_6, 6)
-			motion_tuple.put (a_7, 7)
+			Result := internal_motion_tuple
+			Result.put_integer (a_1, 1)
+			Result.put_integer (a_2, 2)
+			Result.put_double (a_3, 3)
+			Result.put_double (a_4, 4)
+			Result.put_double (a_5, 5)
+			Result.put_integer (a_6, 6)
+			Result.put_integer (a_7, 7)
 		end
 		
-	dimension_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
-			-- 
-		once
-			Result := [0, 0, 0, 0]
-		end
-		
-	set_dimension_tuple (a_1, a_2, a_3, a_4: INTEGER) is
+	dimension_tuple (a_1, a_2, a_3, a_4: INTEGER):like internal_dimension_tuple is
+			-- Return a dimension tuple from given arguments.
 		do
-			dimension_tuple.put (a_1, 1)
-			dimension_tuple.put (a_2, 2)
-			dimension_tuple.put (a_3, 3)
-			dimension_tuple.put (a_4, 4)	
+			Result := internal_dimension_tuple
+			Result.put_integer (a_1, 1)
+			Result.put_integer (a_2, 2)
+			Result.put_integer (a_3, 3)
+			Result.put_integer (a_4, 4)	
 		end
 		
 feature {EV_ANY_IMP, EV_APPLICATION_IMP}
@@ -111,7 +100,6 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 			keyval: NATURAL_32
 			key: EV_KEY
 		do
-
 			if n_args > 0 then
 					-- If no arguments are available then a Void tuple is returned
 				gdk_event := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
@@ -119,24 +107,22 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 	
 				if event_type = {EV_GTK_ENUMS}.Gdk_motion_notify_enum
 				then
-					set_motion_tuple (
+					Result := motion_tuple (
 						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
 						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
-						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_xtilt (gdk_event),
-						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_ytilt (gdk_event),
-						0.5,--feature {EV_GTK_EXTERNALS}.gdk_event_motion_struct_pressure (gdk_event),
+						0.5,
+						0.5,
+						0.5,
 						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
 						{EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
 					)
-					Result := motion_tuple
 				elseif event_type = {EV_GTK_ENUMS}.Gdk_configure_enum then
-					set_dimension_tuple (
+					Result := dimension_tuple	 (
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_event),
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_event),
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_event),
 						{EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_event)
 					)
-					Result := dimension_tuple	
 	--			when
 	--				Gdk_nothing_enum,
 	--				Gdk_delete_enum,
@@ -154,13 +140,12 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 				elseif event_type = {EV_GTK_ENUMS}.Gdk_expose_enum
 				then
 					p := {EV_GTK_EXTERNALS}.gdk_event_expose_struct_area (gdk_event)
-					set_dimension_tuple (
+					Result := dimension_tuple (
 						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_x (p),
 						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_y (p),
 						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_width (p),
 						{EV_GTK_EXTERNALS}.gdk_rectangle_struct_height (p)
 					)
-					Result := dimension_tuple
 				elseif (event_type = {EV_GTK_ENUMS}.Gdk_button_press_enum or else event_type = {EV_GTK_ENUMS}.Gdk_2button_press_enum or else event_type = {EV_GTK_ENUMS}.Gdk_3button_press_enum)
 				then
 					Result := [
@@ -197,9 +182,9 @@ feature {EV_ANY_IMP, EV_APPLICATION_IMP}
 					Result := [key]
 				end
 			end
-			if Result = Void then
-				Result := integer_pointer_tuple
-			end
+--			if Result = Void then
+--				Result := integer_pointer_tuple
+--			end
 		end
 
 feature {EV_ANY_IMP}
@@ -233,13 +218,12 @@ feature {EV_ANY_IMP}
 			gtk_alloc: POINTER
 		do
 			gtk_alloc := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
-			set_dimension_tuple (
+			Result := dimension_tuple (
 				{EV_GTK_EXTERNALS}.gtk_allocation_struct_x (gtk_alloc),
 				{EV_GTK_EXTERNALS}.gtk_allocation_struct_y (gtk_alloc),
 				{EV_GTK_EXTERNALS}.gtk_allocation_struct_width (gtk_alloc),
 				{EV_GTK_EXTERNALS}.gtk_allocation_struct_height (gtk_alloc)
 			)
-			Result := dimension_tuple
 		end
 
 	configure_translate (n: INTEGER; p: POINTER): TUPLE is
@@ -248,13 +232,12 @@ feature {EV_ANY_IMP}
 			gdk_configure: POINTER
 		do
 			gdk_configure := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
-			set_dimension_tuple (
+			Result := dimension_tuple (
 				{EV_GTK_EXTERNALS}.gdk_event_configure_struct_x (gdk_configure),
 				{EV_GTK_EXTERNALS}.gdk_event_configure_struct_y (gdk_configure),
 				{EV_GTK_EXTERNALS}.gdk_event_configure_struct_width (gdk_configure),
 				{EV_GTK_EXTERNALS}.gdk_event_configure_struct_height (gdk_configure)
 			)
-			Result := dimension_tuple
 		end
 
 feature {EV_ANY_IMP} -- Agent implementation routines
@@ -262,7 +245,7 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			integer_tuple.put ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args), 1)
+			integer_tuple.put_integer ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_int (args), 1)
 			Result := integer_tuple
 		end
 
@@ -302,9 +285,9 @@ feature {NONE} -- Implementation
 			l_exception: EXCEPTION
 		do
 			if not retried then
-					integer_pointer_tuple.put (n_args, 1)
-					integer_pointer_tuple.put (args, 2)
-					action.call (integer_pointer_tuple)
+				integer_pointer_tuple.put_integer (n_args, 1)
+				integer_pointer_tuple.put_pointer (args, 2)
+				action.call (integer_pointer_tuple)
 			elseif not uncaught_exception_actions_called then
 				create l_exception.make_with_tag_and_trace (tag_name, exception_trace)
 				uncaught_exception_actions_called := True
@@ -320,7 +303,21 @@ feature {NONE} -- Implementation
 		-- Are the `uncaught_exceptions_actions' currently being called?
 		-- This is used to prevent infinite looping should an exception be raised as part of calling `uncaught_exception_actions'.
 
-feature {EV_ANY_IMP} -- Tuple optimizations.
+feature {NONE} -- Tuple optimizations.
+
+	internal_dimension_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- Once function used for global access of motion tuple.
+		once
+			Result := [0, 0, 0, 0]
+		end
+
+	internal_motion_tuple: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER] is
+			-- 
+		once
+			Result := [0, 0, 0.0, 0.0, 0.0, 0, 0]
+		end
+
+feature {EV_ANY_IMP} -- Tuple optimizations
 
 	pointer_tuple: TUPLE [POINTER] is
 			-- 
@@ -341,7 +338,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			pointer_tuple.put ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args), 1)
+			pointer_tuple.put_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args), 1)
 			Result := pointer_tuple
 		end
 

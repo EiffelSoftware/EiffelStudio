@@ -1868,9 +1868,71 @@ feature -- Removal
 			-- Remove all columns and rows from `Current'.
 		require
 			is_parented: parent /= Void
+		local
+			current_row_data: SPECIAL [EV_GRID_ITEM_I]
+			current_item: EV_GRID_ITEM_I
+			current_row: EV_GRID_ROW_I
+			current_column: EV_GRID_COLUMN_I
+			i, j: INTEGER
+			l_row_count, l_column_count: INTEGER
+			current_column_count: INTEGER
 		do
-			set_row_count_to (0)
-			set_column_count_to (0)
+			from
+				i := 1
+				l_row_count := row_count
+				l_column_count := column_count
+			until
+				i > l_row_count
+			loop
+				current_row_data := internal_row_data.i_th (i)
+				from
+					j := 0
+					current_column_count := current_row_data.count
+				until
+					j = current_column_count
+				loop
+					current_item := current_row_data.item (j)
+					if current_item /= Void then
+						if current_item.internal_is_selected then
+							current_item.disable_select_internal
+						end
+						current_item.unparent
+					end
+					j := j + 1
+				end
+				i := i + 1
+			end
+			from
+				i := 1
+			until
+				i > l_row_count
+			loop
+				current_row := rows.i_th (i)
+				current_row.unparent
+				i := i + 1
+			end
+			from
+				i := 1
+			until
+				i > l_column_count
+			loop
+				current_column := columns.i_th (i)
+					
+					-- Now remove associated header item
+				header.go_i_th (1)
+				header.remove
+				current_column.unparent
+				i := i + 1
+			end
+			internal_row_data.wipe_out
+			rows.wipe_out
+			columns.wipe_out
+			set_vertical_computation_required (1)
+			set_horizontal_computation_required (1)
+			recompute_vertical_scroll_bar
+			recompute_horizontal_scroll_bar
+			redraw_client_area
+			create physical_column_indexes_internal.make (0)
 		ensure
 			columns_removed: column_count = 0
 			rows_removed: row_count = 0

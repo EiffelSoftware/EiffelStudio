@@ -30,28 +30,12 @@ void c_ev_gtk_callback_marshal_init (
 void c_ev_gtk_callback_marshal_destroy (Void)
 		// Disconnect marshal from the eiffel system.
 {
-        eif_wean (ev_gtk_callback_marshal_object);
+       /* eif_wean (ev_gtk_callback_marshal_object);
         ev_gtk_callback_marshal_object = NULL;
-        ev_gtk_callback_marshal = NULL;
+        ev_gtk_callback_marshal = NULL;*/
 }
 
 void c_ev_gtk_callback_marshal (
-    GtkObject* object, EIF_OBJECT agent, guint n_args, GtkArg* args
-)
-        // Called by GTK when an `object' emits a signal,
-        // Call an `agent' with `n_args' `args'.
-{
-			if (ev_gtk_callback_marshal != NULL) {
-				ev_gtk_callback_marshal (
-					eif_access (ev_gtk_callback_marshal_object),
-					eif_access (agent),
-					(EIF_INTEGER) n_args,
-					(EIF_POINTER) args 
-				);
-			}
-}
-
-void c_ev_gtk_new_callback_marshal (
     GClosure *closure, GValue *return_value, guint n_param_values, const GValue *param_values, gpointer invocation_hint, gpointer marshal_data
 )
         // Called by GTK when an `object' emits a signal,
@@ -66,21 +50,22 @@ void c_ev_gtk_new_callback_marshal (
 
 
 	printf ("Type of GValue %s", G_VALUE_TYPE_NAME(param_values));*/
-	if (ev_gtk_callback_marshal != NULL && closure != NULL)
-	{
+	/*if (ev_gtk_callback_marshal != NULL && closure != NULL)
+	{*/
 		ev_gtk_callback_marshal (
 			eif_access (ev_gtk_callback_marshal_object),
 			eif_access ((EIF_OBJECT) closure->data),
 			(EIF_INTEGER) n_param_values - 1,
 			(EIF_POINTER) ((GValue*)param_values + 1)
        		 );
-	}
+//	}
 }
 
 
 void dummy_callback (void)
 {
 	// Do nothing
+	printf ("This should not be called\n");
 }
 
 guint c_ev_gtk_callback_marshal_signal_connect (
@@ -107,7 +92,7 @@ guint c_ev_gtk_callback_marshal_signal_connect (
             );*/
 	GClosure *closure;
 	closure = g_cclosure_new (dummy_callback, eif_adopt (agent), (GClosureNotify)eif_wean);
-	g_closure_set_marshal (closure, c_ev_gtk_new_callback_marshal);
+	g_closure_set_marshal (closure, c_ev_gtk_callback_marshal);
 	connection_id = g_signal_connect_closure (c_object, signal, closure, invoke_after_handler);
 	return connection_id;
 }

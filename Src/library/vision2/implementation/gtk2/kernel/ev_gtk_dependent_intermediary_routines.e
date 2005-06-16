@@ -243,6 +243,15 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+	header_item_event_dispatcher (a_object_id: INTEGER; n_args: INTEGER; args: POINTER) is
+			-- Intermediary agent for header item events.
+		local
+			a_header_item: EV_HEADER_ITEM_IMP
+		do
+			a_header_item ?= eif_id_object (a_object_id)
+			a_header_item.process_event (n_args, args)
+		end
+
 feature {EV_ANY_I} -- Externals
 
 	frozen c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is

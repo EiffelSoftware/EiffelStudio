@@ -67,7 +67,7 @@
 				<label>Reference Item Properties</label>
 			</link>
 			<line_break/>
-			<link><url>url</url><label>*References Node</label></link>
+			<link><url>../../structure/references/references_folder.xml</url><label>References Folder</label></link>
 			<line_break/>
 			<link><url>../index.xml</url><label>Managing Projects</label></link>
 		</seealso>

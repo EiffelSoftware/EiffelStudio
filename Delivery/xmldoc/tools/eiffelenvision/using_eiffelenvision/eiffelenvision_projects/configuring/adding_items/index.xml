@@ -23,7 +23,7 @@
 	</meta_data>
 	<paragraph>
 		Adding new project items to EiffelEnvision projects is based heavily on the context that are added in. Before reading the documentation linked to from this document, 
-		you should be aware of how projects are <link><url>url</url><label>*structured</label></link> and the concepts and notations used in the <link><url>url</url><label>*Eiffel for .NET language</label></link>. 
+		you should be aware of how projects are structured and the concepts and notations used in the <link><url>../../../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET language</label></link>. 
 		
 		<anchor>in_this_section</anchor>
 		<heading>
@@ -40,7 +40,7 @@
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>adding_item.xml</url>
+				<url>adding_items.xml</url>
 				<label>Adding New Project Items</label>
 			</link>
 			<line_break/>
@@ -56,7 +56,7 @@
 		</paragraph>
 		<paragraph>
 			<link>
-				<url>adding_existing_items.xml</url>
+				<url>adding_existings_items.xml</url>
 				<label>Adding Existing Items to Projects</label>
 			</link>
 			<line_break/>
@@ -68,7 +68,7 @@
 				<label>Adding Clusters to Projects</label>
 			</link>
 			<line_break/>
-			Explains how to Eiffel <link><url>url</url><label>*clusters</label></link> to EiffelEnvision projects.
+			Explains how to Eiffel <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> to EiffelEnvision projects.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -84,7 +84,7 @@
 				<label>Adding Cluster Guidelines</label>
 			</link>
 			<line_break/>
-			Guidelines to be aware of when adding new <link><url>url</url><label>*clusters</label></link> to EiffelEnvision projects.
+			Guidelines to be aware of when adding new <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> to EiffelEnvision projects.
 		</paragraph>
 				
 		<anchor>also_see</anchor>

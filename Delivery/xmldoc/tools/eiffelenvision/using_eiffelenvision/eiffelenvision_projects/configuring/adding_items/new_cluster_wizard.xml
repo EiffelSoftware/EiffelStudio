@@ -23,7 +23,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			The <bold>New Cluster Wizard</bold> allow you to add a new <link><url>url</url><label>*cluster</label></link> to an EiffelEnvision project. For information on how to add <link><url>url</url><label>*clusters</label></link> to projects, see <link><url>adding_clusters.xml</url><label>Adding New Clusters</label></link>.
+			The <bold>New Cluster Wizard</bold> allow you to add a new <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link> to an EiffelEnvision project. For information on how to add <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> to projects, see <link><url>adding_clusters.xml</url><label>Adding New Clusters</label></link>.
 		</paragraph>
 		
 		<paragraph>
@@ -36,7 +36,7 @@
 			<content>Basic Settings</content>
 		</heading>
 		<paragraph>
-			The <bold>Basic Settings</bold> page presents the most basic of any new <link><url>url</url><label>*Cluster Properties</label></link>. 
+			The <bold>Basic Settings</bold> page presents the most basic of any new <link><url>../project_configuration/item_configuration/clusters.xml</url><label>Explicit Cluster Folder Properties</label></link>. 
 		</paragraph>
 		
 		<paragraph>
@@ -64,19 +64,19 @@
 		<paragraph>
 			<bold>Include Subdirectories</bold>
 			<line_break/>
-			This option relates to the <link><url>url</url><label>*Include Subdirectories</label></link> property of a <link><url>url</url><label>*Cluster Node</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
+			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>include_subdirectories</anchor_name><label>Include Subdirectories</label></link> property of a <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explict Cluster Folder</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
 		</paragraph>
 		
 		<paragraph>
 			<bold>Library</bold>
 			<line_break/>
-			This option relates to the <link><url>url</url><label>*Library</label></link> property of a <link><url>url</url><label>*Cluster Node</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
+			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library</label></link> property of a <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Exlicit Cluster Folder</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
 		</paragraph>
 		
 		<paragraph>
 			<bold>Override</bold>
 			<line_break/>
-			This option relates to the <link><url>url</url><label>*Override</label></link> property of a <link><url>url</url><label>*Cluster Node</label></link>. Selecting this option will ensure the clusters classes will be taken over any other project classes that have the same name.
+			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>override</anchor_name><label>Override</label></link> property of a <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>. Selecting this option will ensure the clusters classes will be taken over any other project classes that have the same name.
 		</paragraph>
 				
 		<anchor>assertions</anchor>
@@ -85,7 +85,7 @@
 			<content>Assertions</content>
 		</heading>
 		<paragraph>
-			The <bold>Assertions</bold> page contains a number of optional options related to finer grained control over how project's <link><url>url</url><label>*contracts</label></link> are evaluated at runtime. Create a cluster and ignoring this page will use the <link><url>../project_configuration/assertions.xml</url><label>Assertion Properties</label></link> set in the <link><url>../project_configuration/index.xml</url><label>Project Properties</label></link>.
+			The <bold>Assertions</bold> page contains a number of optional options related to finer grained control over how project's <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/50_design_by_contract.xml</url><label>contracts</label></link> are evaluated at runtime. Create a cluster and ignoring this page will use the <link><url>../project_configuration/assertions.xml</url><label>Assertion Properties</label></link> set in the <link><url>../project_configuration/index.xml</url><label>Project Properties</label></link>.
 		</paragraph>
 		
 		<paragraph>
@@ -136,7 +136,7 @@
 			<content>Completing the Wizard</content>
 		</heading>
 		<paragraph>
-			Once you have set the appropriate settings for the new <link><url>url</url><label>*cluster</label></link>, clicking <bold>Finish</bold> will add the cluster to the project.
+			Once you have set the appropriate settings for the new <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>*luster</label></link>, clicking <bold>Finish</bold> will add the cluster to the project.
 		</paragraph>
 				
 		<anchor>also_see</anchor>
@@ -151,9 +151,9 @@
 			<line_break/>
 			<link><url>adding_clusters.xml</url><label>Add New Project Clusters</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Cluster Nodes</label></link>
+			<link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link>
 			<line_break/>
-			<link><url>url</url><label>*Cluster Properties</label></link>
+			<link><url>../project_configuration/item_configuration/clusters.xml</url><label>Explicit Cluster Folder Properties</label></link>
 			<line_break/>
 		</seealso>
 	</paragraph>

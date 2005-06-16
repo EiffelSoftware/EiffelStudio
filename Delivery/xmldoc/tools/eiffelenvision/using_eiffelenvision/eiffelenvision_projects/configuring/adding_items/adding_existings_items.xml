@@ -23,9 +23,9 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			EiffelEnvision project's file system is build from enumerating the contents of a <link><url>url</url><label>*cluster</label></link> location. The enumeration process finds and adds all located 
+			EiffelEnvision project's file system is build from enumerating the contents of a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link> location. The enumeration process finds and adds all located 
 			Eiffel source file (*.e) and adds them to a project based on their discovered location. No other files are added to the project unless they have been explicitly added at some point in the project's
-			life. For more information, see <link><url>url</url><label>*Cluster Nodes</label></link>
+			life. For more information, see <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link>
 		</paragraph>
 		
 		<anchor>adding_existing</anchor>
@@ -34,25 +34,25 @@
 			<content>Adding Existing Items</content>
 		</heading>
 		<paragraph>
-			To add existing file(s), select a folder node in your EiffelEnvision project. Now select <bold>Project</bold>, <bold>Add Existing File...</bold> (SHIFT+ALT+A). Alternatively select the <bold>Add</bold>, <bold>Add Existing File...</bold> from the 
-			folder node context menu. Once selected a file browser dialog will be displayed. Located and select the file you would like to add to the project and clikc <bold>Ok</bold>, <bold>Cancel</bold> will close the file dialog and 
+			To add existing file(s), select a folder in your EiffelEnvision project. Now select <bold>Project</bold>, <bold>Add Existing File...</bold> (SHIFT+ALT+A). Alternatively select the <bold>Add</bold>, <bold>Add Existing File...</bold> from the 
+			folder context menu. Once selected a file browser dialog will be displayed. Located and select the file you would like to add to the project and clikc <bold>Ok</bold>, <bold>Cancel</bold> will close the file dialog and 
 			no file will be added to the project.
 		<paragraph>
 		</paragraph>	
-			If the <link><url>url</url><label>*Project Node</label></link> is selected when adding an existing file, the file will be added under the <link><url>url</url><label>*Project Items</label></link> 
-			section of your project, because they share the same <link><url>url</url><label>*Path</label></link>. Adding non-Eiffel source file (*.e) existing files may only be done using the <link><url>url</url><label>*Project Items Node</label></link> and it's subfolders and <link><url>url</url><label>*clusters</label></link>, 
-			as well the <link><url>url</url><label>*Other Project Items Node</label></link> and its subfolders. Any existing Eiffel source file may be added to any one of the folders in an EiffelEnvision project. For more information on this restriction, see <link><url>url</url><label>*Project Items Node</label></link>.
+			If the <link><url>../../structure/project.xml</url><label>Project Node</label></link> is selected when adding an existing file, the file will be added under the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link> 
+			section of your project, because they share the same <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>. Adding non-Eiffel source file (*.e) existing files may only be done using the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items Folder</label></link> and it's subfolders and <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link>, 
+			as well the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items Folder</label></link> and its subfolders. Any existing Eiffel source file may be added to any one of the folders in an EiffelEnvision project. For more information on this restriction, see <link><url>../../structure/project_items/project_items.xml</url><label>Project Items Folder</label></link>.
 		</paragraph>
 		<paragraph>
-			Because EiffelEnvision <link><url>url</url><label>*Projects</label></link> directly reflect an underlying file system, adding existing files to folders whose <link><url>url</url><label>*Path</label></link> is not the same as 
-			the location of the file being added to the project, the added file will be copied to the folder <link><url>url</url><label>*Path</label></link> and then added. This is exactly how other Visual Studio .NET langauges that <help_link>
+			Because EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> directly reflect an underlying file system, adding existing files to folders whose <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link> is not the same as 
+			the location of the file being added to the project, the added file will be copied to the folder <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link> and then added. This is exactly how other Visual Studio .NET langauges that <help_link>
 				<keywords>vxconFolder-BasedReference-BasedProjects</keywords>
 				<tab_index>0</tab_index>
 				managed project using files
 			</help_link> act.
 		</paragraph>		
 		<paragraph>
-			For the <link><url>url</url><label>*Other Files Node</label></link> and it's subfolders, adding existing files will not be copied. This is because <link><url>url</url><label>*Other Files</label></link> <help_link>
+			For the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items Folder</label></link> and it's subfolders, adding existing files will not be copied. This is because <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> <help_link>
 				<keywords>vxconFolder-BasedReference-BasedProjects</keywords>
 				<tab_index>0</tab_index>
 				link to files

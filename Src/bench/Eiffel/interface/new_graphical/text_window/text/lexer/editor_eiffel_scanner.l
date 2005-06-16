@@ -17,6 +17,7 @@ create
 	make
 %}
 
+%x VERBATIM_STR1
 %option outfile="editor_eiffel_scanner.e"
 
 H		([0-9A-Fa-f])
@@ -48,10 +49,14 @@ H		([0-9A-Fa-f])
 
 "--"				{ 
 						-- comments
-					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-					update_token_list
-					in_comments := True
-					}
+					if not in_verbatim_string then
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						in_comments := True
+					else
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					end					
+					update_token_list					
+				}
 
 ----------/** Eiffel symbols **/------------------------------------------------
 
@@ -338,6 +343,7 @@ H		([0-9A-Fa-f])
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
 				update_token_list
 				in_verbatim_string := True
+				set_start_condition (VERBATIM_STR1)
 			}
 
 \"[^\n"%]*\{/[ \t\r]*	{
@@ -345,23 +351,50 @@ H		([0-9A-Fa-f])
 				create {EDITOR_TOKEN_STRING} curr_token.make(text)
 				update_token_list
 				in_verbatim_string := True
+				set_start_condition (VERBATIM_STR1)
 			}
 
-			
-[ \t\r]*\][^%\n"]*\" 	{
-					-- Verbatim string closer, possibly.
-				create {EDITOR_TOKEN_STRING} curr_token.make(text)
-				update_token_list	
-				in_verbatim_string := False				
-			}
-
-[ \t\r]*\}[^%\n"]*\" 	{
-					-- Verbatim string closer, possibly.
-				create {EDITOR_TOKEN_STRING} curr_token.make(text)
-				update_token_list
-				in_verbatim_string := False
-}
-
+<VERBATIM_STR1>{
+	[\r]+					-- Ignore carriage return
+	[ \t\r]*\][^%\n"]*\" 	{
+							-- Verbatim string closer, possibly.
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+						update_token_list	
+						leave_verbatim_string := True
+						set_start_condition (INITIAL)
+					}
+	
+	[ \t\r]*\}[^%\n"]*\" 	{
+							-- Verbatim string closer, possibly.
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+						update_token_list
+						leave_verbatim_string := True
+						set_start_condition (INITIAL)
+					}	
+	
+	[ ]+				{
+						create {EDITOR_TOKEN_SPACE} curr_token.make(text_count)
+						update_token_list						
+					}
+					
+	[\t]+				{
+						create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
+						update_token_list						
+					}
+					
+	\n+				{
+						from i_ := 1 until i_ > text_count loop
+							create {EDITOR_TOKEN_EOL} curr_token.make
+							update_token_list
+							i_ := i_ + 1
+						end						
+					}
+					
+	[^\n\ \t]*			{
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+						update_token_list
+					}
+	}
 
 [%\"]([^\n\"]|%\")*(\"|%)	|
 [%\"]([^\n\"\%]|%\"|%A|%B|%C\%D|%F|%H|%L|%N|%Q|%R|%S|%T|%U|%V|%%|%\'|%\(|%\)|%<|%>|%\/[0-9]{1,3}\/)*		{

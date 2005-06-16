@@ -101,11 +101,9 @@ feature {NONE} -- Initialization
 			a_selected_item: EV_LIST_ITEM
 			a_selected_item_imp: EV_LIST_ITEM_IMP
 		do
-			{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
 			a_selected_item := selected_item
-			
+			{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
 			if a_selected_item /= Void then
-				set_text (a_selected_item.text)
 				a_selected_item_imp ?= a_selected_item.implementation
 				if a_selected_item_imp.select_actions_internal /= Void then
 					a_selected_item_imp.select_actions_internal.call (Void)
@@ -142,8 +140,6 @@ feature {NONE} -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_combo_box_entry_set_text_column (container_widget, 1)
 
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_clear (container_widget)
-
-
 
 			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_pack_start (container_widget, a_cell_renderer, True)

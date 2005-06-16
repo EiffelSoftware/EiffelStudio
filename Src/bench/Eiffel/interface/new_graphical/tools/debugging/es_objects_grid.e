@@ -39,6 +39,7 @@ feature {NONE} -- Initialization
 			set_tree_node_connector_color (color_tree_node_connector)
 
 			pre_draw_overlay_actions.extend (agent on_draw_borders)
+			header.item_resize_actions.extend (agent invalidate_for_border)
 
 			row_expand_actions.extend (agent on_row_expand)
 			row_collapse_actions.extend (agent on_row_collapse)
@@ -224,6 +225,7 @@ feature {NONE} -- Actions implementation
 	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
 		local
 			current_column_width, current_row_height: INTEGER
+			all_remaining_columns_minimized: BOOLEAN
 		do
 			drawable.set_foreground_color (separator_color)
 			current_column_width := column (a_column_index).width
@@ -235,12 +237,58 @@ feature {NONE} -- Actions implementation
 			if a_column_index > 1 then
 				drawable.draw_segment (0, 0, 0, current_row_height - 1)
 			end
-			if a_column_index = column_count then
-				drawable.draw_segment (current_column_width - 1, 0,  current_column_width - 1, current_row_height - 1)
+			if a_column_index < column_count then
+				if column (a_column_index + 1).virtual_x_position = column (column_count).virtual_x_position + column (column_count).width then
+					all_remaining_columns_minimized := True
+				end
+			end
+			if a_column_index = column_count or all_remaining_columns_minimized then
+				drawable.draw_segment (current_column_width - 1, 0, current_column_width - 1, current_row_height - 1)
 			end
 			drawable.draw_segment (0, current_row_height - 1, current_column_width, current_row_height - 1)
 		end
- 
+
+	invalidate_for_border (header_item: EV_HEADER_ITEM) is
+			-- resized that has a width greater than 0 as the column border must be updated
+			-- in this column.
+			-- (export status {NONE})
+		local
+			header_index: INTEGER
+			old_header_index: INTEGER
+		do
+			header_index := header_item.parent.index_of (header_item, 1)
+			old_header_index := header_index
+			if (last_width_of_header_during_resize = 0 and header_item.width > 0) or last_width_of_header_during_resize_internal > 0 and header_item.width = 0 then
+				if header_index > 1 then
+					from
+						header_index := header_index - 1
+					until
+						header_index = 1 or column (header_index).width > 0
+					loop
+						header_index := header_index - 1
+					end
+				end
+				if header_index < old_header_index then
+					column (header_index).redraw
+				end
+			end
+		end
+
+	last_width_of_header_during_resize: INTEGER is
+                        -- The last width of the header item that is currently being
+                        -- resized. Used to determine if we must refresh the column to
+                        -- the left of the current one as it could cause the border to
+                        -- need to be drawn on the previous column if it is the final
+                        -- column that current has a width greater than 0.
+		do
+			Result := last_width_of_header_during_resize_internal
+		ensure
+			result_non_negative: Result >= 0
+		end
+
+	last_width_of_header_during_resize_internal: INTEGER
+   			-- Storage for `last_width_of_header_during_resize'.
+
 	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM is
 		local
 			a_row: EV_GRID_ROW

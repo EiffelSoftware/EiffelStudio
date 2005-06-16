@@ -29,7 +29,7 @@
 		</paragraph>
 		
 		<tip>
-			<bold>Recommended</bold>: It is recommended that EiffelStudio developers review the <link><url>url</url><label>EiffelEnvision User Interface</label></link> section of this documentation 
+			<bold>Recommended</bold>: It is recommended that EiffelStudio developers review the <link><url>../eiffelenvision_projects/structure/index.xml</url><label>EiffelEnvision Project Structure</label></link> section of this documentation 
 			to become accustomed to how the Visual Studio .NET and EiffelEnvision UIs are presented and used.
 		</tip>
 		
@@ -64,7 +64,7 @@
 			<bold>See also</bold>:
 			<line_break/>
 			<link>
-				<url>overview.xml</url>
+				<url>../../introduction/index.xml</url>
 				<label>Introducing EiffelEnvision</label>
 			</link>
 			<line_break/>

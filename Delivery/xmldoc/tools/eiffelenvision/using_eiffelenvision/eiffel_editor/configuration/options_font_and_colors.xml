@@ -75,8 +75,8 @@
 			<bold>Eiffel Class</bold>:
 			<line_break/>
 			Eiffel <link>
-				<url>url</url>
-				<label>*class</label>
+				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
+				<label>class</label>
 			</link> declarations,  in the upper-case form <class_name>EIFFEL_CLASS_NAME</class_name>.
 		</paragraph>
 		<paragraph>
@@ -88,14 +88,14 @@
 			<bold>Eiffel Identifier</bold>:
 			<line_break/>
 			All Eiffel <link>
-				<url>url</url>
-				<label>*feature</label>
+				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
+				<label>feature</label>
 			</link> names, local variables and <link>
-				<url>url</url>
-				<label>*feature</label>
+				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
+				<label>feature</label>
 			</link> argument names within the body of a <link>
-				<url>url</url>
-				<label>*feature</label>
+				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
+				<label>feature</label>
 			</link>'s code.
 		</paragraph>
 		<paragraph>
@@ -107,8 +107,8 @@
 			<bold>Eiffel Number</bold>:
 			<line_break/>
 			Numerical constants declared with an Eiffel <link>
-				<url>url</url>
-				<label>*class</label>
+				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
+				<label>class</label>
 			</link>.
 		</paragraph>
 		<paragraph>
@@ -136,8 +136,8 @@
 			<bold>See also</bold>:
 			<line_break/>
 			<link>
-				<url>url</url>
-				<label>*Eiffel Reserved Words</label>
+				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/60_reserved_keywords.xml</url>
+				<label>Eiffel Reserved Words</label>
 			</link>
 			<line_break/>
 			<help_link>
@@ -157,7 +157,7 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>options_tabs.xml</url>
+				<url>options_tab.xml</url>
 				<label>Editor Tabs Options</label>
 			</link>
 		</seealso>

@@ -20,13 +20,13 @@
 	<paragraph>
 		<paragraph>The Eiffel editor allows you to edit and manage multiple Eiffel 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/index.xml</url>
 				<anchor_name>classes</anchor_name>
-				<label>*classes</label>
+				<label>classes</label>
 			</link> from within Visual Studio .NET.
 		</paragraph>
 		<paragraph>
-			The editor comes complete with a host of features common to Visual Studio .NET and other existing languages. For a full list of details of editor features, please see <link><url>url</url><label>Editor Features</label></link>.
+			The editor comes complete with a host of features common to Visual Studio .NET and other existing languages. For a full list of details of editor features, please see <link><url>browse_and_navigation.xml</url><label>Code Browsing and Navigation</label></link> and <link><url>intellisense.xml</url><label>Intellisense</label></link>.
 		</paragraph>	
 		<paragraph>
 			The editor has two modes for editing:
@@ -40,23 +40,23 @@
 		<bold>Project associated editing</bold>:
 		<line_break/>
 			This mode of editing refers to <link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/index.xml</url>
 				<anchor_name>classes</anchor_name>
-				<label>*Eiffel classes</label>
+				<label>Eiffel classes</label>
 			</link> opened and edited from an EiffelEnvision project. Opening Eiffel classes in this way extends the editor's feature set. You will have access to <help_link>
 				<keywords>vcovrAutomaticStatementCompletion</keywords>
 				<tab_index>0</tab_index>
 				intellisense
-			</help_link> and code browsing tools such as <link><url>url</url><label>Go to Definition</label></link>.
+			</help_link> and code browsing tools such as <link><url>browse_and_navigation.xml</url><anchor_name>go_to_definition</anchor_name><label>Go to Definition</label></link>.
 		</paragraph>
 		<paragraph>
 		<anchor>standalone_editing</anchor>
 		<bold>Standalone editing</bold>:
 		<line_break/>
 			This mode of editing refers to <link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/index.xml</url>
 				<anchor_name>classes</anchor_name>
-				<label>*Eiffel classes</label>
+				<label>Eiffel classes</label>
 			</link> opened from other projects, such as C# or VB.NET, through Windows Explorer or via the <bold>File</bold>, <bold>Open</bold> menu in Visual Studio .NET. 
 			When editing documents in this mode, a number of editor context items may be hidden or grayed out because of their dependency on an EiffelEnvision project. Documents
 			 opened using the <bold>project associated editing</bold> may actually be in <bold>standalone editing</bold> mode. This can happen when an EiffelEnvision project
@@ -78,13 +78,18 @@
 			</link>
 			<line_break/>
 			<link>
-				<url/>
-				<label>*Eiffel Keywords</label>
+				<url>../../eiffel_for_dotnet/index.xml</url>
+				<label>Eiffel for .NET</label>
 			</link>
 			<line_break/>
 			<link>
-				<url/>
-				<label>*Eiffel Conventions</label>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/60_reserved_keywords.xml</url>
+				<label>Eiffel Keywords</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/index.xml</url>
+				<label>Eiffel Conventions</label>
 			</link>
 			<line_break/>
 			<help_link>

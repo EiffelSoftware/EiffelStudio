@@ -24,13 +24,13 @@
 	<paragraph>
 		<paragraph>The Eiffel editor allows you to edit and manage multiple Eiffel 
 			<link>
-				<url>/20_Language/10_Eiffel_NET/10_Conventions/index.xml</url>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/index.xml</url>
 				<anchor_name>classes</anchor_name>
-				<label>*classes</label>
+				<label>classes</label>
 			</link> from within Visual Studio .NET.
 		</paragraph>
 		<paragraph>
-			EiffelEnvision's Eiffel editor is specifically designed to edit Eiffel <link><url>url</url><label>*classes</label></link> using Visual Studio .NET.  
+			EiffelEnvision's Eiffel editor is specifically designed to edit Eiffel <link><url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>classes</label></link> using Visual Studio .NET.  
 			The Eiffel editor integrates directly into the Visual Studio .NET <help_link>
 				<keywords>vxurfCodeTextEditorWindow</keywords>
 				<tab_index>0</tab_index>
@@ -81,13 +81,18 @@
 			</help_link>
 			<line_break/>
 			<link>
-				<url/>
-				<label>*Eiffel Keywords</label>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/20_language/index.xml</url>
+				<label>Eiffel for .NET</label>
 			</link>
 			<line_break/>
 			<link>
-				<url/>
-				<label>*Eiffel Conventions</label>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/60_reserved_keywords.xml</url>
+				<label>Eiffel Keywords</label>
+			</link>
+			<line_break/>
+			<link>
+				<url>../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/index.xml</url>
+				<label>Eiffel Conventions</label>
 			</link>
 			<line_break/>
 		</seealso>

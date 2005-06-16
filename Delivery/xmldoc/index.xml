@@ -183,20 +183,13 @@
 			</paragraph>
 		</output>
 		<output output="envision">
-			<paragraph>Congratulations for installing Eiffel ENViSioN!</paragraph>
-			<paragraph>ENViSioN! is a product of Eiffel Software Inc.</paragraph>
-			<paragraph>ENViSioN! is 
-				<bold>E</bold>iffel for .
-				<bold>N</bold>ET for 
-				<bold>V</bold>isual 
-				<bold>S</bold>tudio .
-				<bold>N</bold>ET.
-			</paragraph>
-			<paragraph>ENViSioN! gives software developers the ability to create software using the Eiffel method and language in combination with the with Microsoft Visual Studio .NET IDE.</paragraph>
+			<paragraph>Congratulations for installing EiffelEnvision</paragraph>
+			<paragraph>EiffelEnvision is a product of Eiffel Software Inc.</paragraph>
+			<paragraph>EiffelEnvision gives software developers the ability to create software using the Eiffel method and language in combination with the with Microsoft Visual Studio .NET IDE.</paragraph>
 			<paragraph>As you read this documentation, you will find that Eiffel provides capabilities that make it unique among the many .NET compatible languages.</paragraph>
 			<paragraph>Eiffel is a full-lifecycle methodology and language for quality software development, based on the most advanced version of object technology and the concepts of Design by Contract.</paragraph>
 			<paragraph>Eiffel Software's Eiffel is available on many platforms and is one of the first development environments to take advantage of the Microsoft .NET framework.</paragraph>
-			<paragraph> ENViSioN! comes with extensive online documentation. Please take the time to read the documentation included with ENViSioN! so that you can make the best possible use of the language, methodology, and environment.</paragraph>
+			<paragraph> EiffelEnvision comes with extensive online documentation. Please take the time to read the documentation included with EiffelEnvision so that you can make the best possible use of the language, methodology, and environment.</paragraph>
 			<paragraph>Here is your road map to Eiffel documentation.</paragraph>
 			<heading>
 				<size>2</size>General documentation

@@ -245,7 +245,6 @@ feature -- Access
 		local
 			rc: INTEGER
 		do
-			g.remove_selection
 			from
 				rc := g.row_count
 			until

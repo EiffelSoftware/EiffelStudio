@@ -36,7 +36,11 @@ feature -- Parsing
 					io.error.put_string (p.error_message + "%N")
 				end
 				syntax_error := True
-				error_message := p.error_message
+				if p.error_message = Void or else p.error_message.is_empty  then
+					error_message := Cst_syntax_error
+				else
+					error_message := p.error_message
+				end
 			end
 		rescue
 			retried := True
@@ -46,5 +50,7 @@ feature -- Parsing
 feature -- properties
 
 	expression_ast: EXPR_AS
+	
+	cst_syntax_error: STRING is "Syntax error"
 
 end

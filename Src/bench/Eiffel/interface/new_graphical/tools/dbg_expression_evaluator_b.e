@@ -103,6 +103,7 @@ feature -- Evaluation
 					set_error_expression (Cst_error_during_expression_analyse)
 				else
 						--| Compute and get `expression_byte_node'
+					reset_expression_byte_node
 					get_expression_byte_node
 				end
 	
@@ -1126,6 +1127,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	local_table_for (a_feat_i: FEATURE_I; a_feat_as: FEATURE_AS): HASH_TABLE [LOCAL_INFO, STRING] is
+		require
+			--| make sure all the context had been set
+			a_feat_i /= Void
+			a_feat_as /= Void
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := locals_builder.local_table (a_feat_i, a_feat_as)
+			else
+					--| Should not occur ... but
+				Result := Void
+			end
+		rescue
+			retried := True
+			retry
+		end
+
 	get_expression_byte_node is
 			-- get expression byte node depending of the context
 		require
@@ -1143,6 +1163,8 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				if internal_expression_byte_node = Void then
+					error_handler.wipe_out
+
 					debug ("debugger_trace_eval_data")
 						print (generator + ".get_expression_byte_node from ["+dbg_expression.expression+"]%N")
 						print ("%T%T on_context: " + on_context.out +"%N")					
@@ -1188,7 +1210,10 @@ feature {NONE} -- Implementation
 							Byte_context.set_byte_code (l_byte_code)
 							
 							l_ct_locals := locals_builder.local_table (context_feature, f_as)
-							Ast_context.set_locals (l_ct_locals)
+							if l_ct_locals /= Void then
+									--| if it failed .. let's continue anyway for now
+								Ast_context.set_locals (l_ct_locals)
+							end
 						end
 							--| Compute and get `expression_byte_node'
 						internal_expression_byte_node := expression_byte_node_from_ast (dbg_expression.expression_ast)
@@ -1207,6 +1232,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				set_error_expression (Cst_error_during_expression_analyse)
+				error_handler.wipe_out
 			end
 		rescue
 			retried := True

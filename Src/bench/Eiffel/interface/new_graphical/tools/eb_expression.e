@@ -292,10 +292,12 @@ feature -- Basic operations
 
 	evaluate is
 			-- Evaluate `dbg_expression' with `expression_evaluator'
-		require
-			valid_syntax: not syntax_error_occurred
 		do
-			expression_evaluator.evaluate
+			if syntax_error_occurred then
+				expression_evaluator.set_error_syntax (dbg_expression.error_message)
+			else
+				expression_evaluator.evaluate
+			end
 			is_evaluated := True
 		end
 

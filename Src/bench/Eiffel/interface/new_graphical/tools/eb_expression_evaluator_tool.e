@@ -570,7 +570,7 @@ feature {NONE} -- Implementation
 				Result.pointer_double_press_actions.extend (agent show_text_in_popup (l_error_message, ?,?,?,?,?,?,?,?))
 				if evaluator.is_error_exception then
 					Result.set_pixmap (Icon_exception)
-				elseif evaluator.is_error_expression then
+				elseif evaluator.is_error_expression or evaluator.is_error_syntax then
 					Result.set_pixmap (icon_compilation_failed)
 				elseif evaluator.is_error_evaluation then
 					Result.set_pixmap (Icon_exception)

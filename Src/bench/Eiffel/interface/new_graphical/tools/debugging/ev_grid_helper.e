@@ -49,6 +49,7 @@ feature -- Access
 				end
 			end
 		end
+
 		
 	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
 		require
@@ -155,18 +156,16 @@ feature -- Access
 			row_index > 0 and then row_index <= grid.row_count
 		local
 			j,k: INTEGER
-			l_step: INTEGER
 			r: EV_GRID_ROW
 		do
 			from
-				l_step := offset.sign
 				j := 1
 				k := row_index
 				r := grid.row (row_index)
 			until
 				(j > offset.abs) or not (k > 0 and k <= grid.row_count)
 			loop
-				if l_step < 0 then
+				if offset < 0 then
 					k := k - 1
 				else
 					k := k + r.subrow_count_recursive + 1
@@ -243,13 +242,17 @@ feature -- Access
 	grid_remove_all_rows (g: EV_GRID) is
 		require
 			g /= Void
+		local
+			rc: INTEGER
 		do
 			g.remove_selection
 			from
+				rc := g.row_count
 			until
-				g.row_count = 0
+				rc = 0
 			loop
-				g.remove_row (1)
+				g.remove_row (rc)
+				rc := g.row_count				
 			end
 		ensure
 			g.row_count = 0

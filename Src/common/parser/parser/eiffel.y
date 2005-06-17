@@ -21,6 +21,7 @@ create
 
 %start		Eiffel_parser
 
+%nonassoc	TE_ASSIGNMENT
 %nonassoc	TE_DOTDOT
 %left		TE_IMPLIES
 %left		TE_OR
@@ -87,7 +88,7 @@ create
 %type <BIT_CONST_AS>		Bit_constant
 %type <BODY_AS>				Declaration_body
 %type <BOOL_AS>				Boolean_constant
-%type <CALL_AS>				Call Remote_call Expression_feature_call Qualified_call
+%type <CALL_AS>				Call Remote_call Qualified_call
 %type <CASE_AS>				When_part
 %type <CHAR_AS>				Character_constant
 %type <CHECK_AS>			Check
@@ -135,7 +136,7 @@ create
 %type <STRING_AS>			Obsolete Manifest_string External_name Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias Alias_name
 %type <TAGGED_AS>			Assertion_clause
 %type <TUPLE_AS>			Manifest_tuple
-%type <TYPE_AS>				Type Class_type Creation_type Non_class_type Typed
+%type <TYPE_AS>				Type Class_type Non_class_type Typed
 %type <TYPE_DEC_AS>			Entity_declaration_group
 %type <VARIANT_AS>			Variant
 %type <FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
@@ -170,7 +171,7 @@ create
 
 %type <PAIR [TYPE_AS, EIFFEL_LIST [FEATURE_NAME]]>	Constraint
 
-%expect 101
+%expect 119
 
 %%
 
@@ -1082,8 +1083,12 @@ Optional_semicolons: -- Empty
 
 Instruction_impl: Creation
 			{ $$ := $1 }
-	|	Call
-			{ $$ := ast_factory.new_instr_call_as ($1) }
+	|	Expression
+			{
+					-- Call production should be used instead,
+					-- but this complicates the grammar.
+				$$ := new_call_instruction_from_expression ($1)
+			}
 	|	Assigner_call
 			{ $$ := $1 }
 	|	Assignment
@@ -1590,12 +1595,11 @@ Rescue: -- Empty
 	;
 
 Qualified_expression:
--- FIXME: find a way to allow binary, unary and bracket expressions
---        to be used on the left side of Assigner_call
---		Qualified_binary_expression | Qualified_factor
---			{ $$ := $1 }
---	|	
-	Qualified_call
+		Qualified_binary_expression
+			{ $$ := $1 }
+	|	Qualified_factor
+			{ $$ := $1 }
+	|	Qualified_call
 			{ $$ := ast_factory.new_expr_call_as ($1) }
 	;
 
@@ -1780,7 +1784,16 @@ Delayed_actual: TE_QUESTION
 			{ $$ := ast_factory.new_operand_as (Void, Void, $1) }
 	;
 
-Creation: TE_BANG Creation_type TE_BANG Creation_target Creation_call
+Creation: TE_BANG TE_BANG Creation_target Creation_call
+			{
+				$$ := ast_factory.new_creation_as (Void, $3, $4)
+				if has_syntax_warning and $3 /= Void then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($3.start_location.line,
+						$3.start_location.column, filename, "Use keyword `create' instead."))
+				end
+			}
+	|	TE_BANG Type TE_BANG Creation_target Creation_call
 			{
 				$$ := ast_factory.new_creation_as ($2, $4, $5)
 				if has_syntax_warning and $4 /= Void then
@@ -1806,12 +1819,6 @@ Creation_expression: TE_CREATE Typed Creation_call
 						$2.start_location.column, filename, "Use keyword `create' instead."))
 				end
 			}
-	;
-
-Creation_type: -- Empty
-			-- { $$ := Void }
-	|	Type
-			{ $$ := $1 }
 	;
 
 Creation_target: Identifier_as_lower
@@ -1966,16 +1973,6 @@ Free_operator: TE_FREE
 
 
 -- Expression call
-Expression_feature_call:
-		TE_CURRENT
-			{ $$ := $1 }
-	|	TE_RESULT
-			{ $$ := $1 }
-	|	Call
-			{ $$ := $1 }
-	|	Creation_expression
-			{ $$ := $1 }
-	;
 
 Qualified_call:
 		TE_CURRENT TE_DOT Remote_call
@@ -2071,7 +2068,13 @@ Bracket_target:
 			{ $$ := $1 }
 	|	Manifest_tuple
 			{ $$ := $1 }
-	|	Expression_feature_call
+	|	TE_CURRENT
+			{ $$ := ast_factory.new_expr_call_as ($1) }
+	|	TE_RESULT
+			{ $$ := ast_factory.new_expr_call_as ($1) }
+	|	Call
+			{ $$ := ast_factory.new_expr_call_as ($1) }
+	|	Creation_expression
 			{ $$ := ast_factory.new_expr_call_as ($1) }
 	|	TE_LPARAN Expression TE_RPARAN
 			{ $$ := ast_factory.new_paran_as ($2) }

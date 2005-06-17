@@ -178,6 +178,9 @@ feature -- Change
 				if par /= Void then
 					par.prune_all (mtb)
 				end
+				check
+					mtb.parent = Void
+				end
 				explorer_bar_item.update_mini_toolbar (mtb)
 			end
 		end

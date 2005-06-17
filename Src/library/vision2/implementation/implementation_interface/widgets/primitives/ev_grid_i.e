@@ -4397,13 +4397,16 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			a_grid_row_i: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 			a_existing_item: EV_GRID_ITEM_I
-			col_index: INTEGER
+			column_physical_index: INTEGER
+			item_implementation: EV_GRID_ITEM_I
+			grid_row_parent_i: EV_GRID_ROW_I
 		do
 			if a_column > column_count then
 					-- Create new columns needed.
 				set_column_count_to (a_column)
 			end
 			a_grid_col_i := columns @ (a_column)
+			column_physical_index := a_grid_col_i.physical_index
 
 			if a_row > row_count then
 					-- Create new rows needed.
@@ -4411,12 +4414,12 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			end
 			a_grid_row_i := rows @ a_row
 			a_row_data := internal_row_data @ a_row
-			col_index := a_grid_col_i.physical_index
-			if a_row_data.count < col_index + 1 then
-				enlarge_row (a_row, a_grid_col_i.physical_index + 1)
+			
+			if a_row_data.count < column_physical_index + 1 then
+				enlarge_row (a_row, column_physical_index + 1)
 			else
 					-- There is an item already present, if non void then mark it as removed from grid
-				a_existing_item := a_row_data @ col_index
+				a_existing_item := a_row_data @ column_physical_index
 				if a_existing_item /= Void then
 					a_existing_item.disable_select_internal
 					a_existing_item.update_for_removal
@@ -4424,37 +4427,35 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			end
 
 			if a_item /= Void then
-				a_item.implementation.set_parents (Current, a_grid_col_i, a_grid_row_i, item_counter)
+				item_implementation := a_item.implementation
+				item_implementation.set_parents (Current, a_grid_col_i, a_grid_row_i, item_counter)
 					-- Increase item counter
 				item_counter := item_counter + 1
-				internal_row_data.i_th (a_row).put (a_item.implementation, a_grid_col_i.physical_index)
+				internal_row_data.i_th (a_row).put (item_implementation, column_physical_index)
 				a_grid_row_i.flag_index_of_first_item_dirty_if_needed (a_column)
-				if a_grid_row_i.parent_row_i /= Void then
+				grid_row_parent_i := a_grid_row_i.parent_row_i
+				if grid_row_parent_i /= Void then
 						-- The row in which we are setting an item is already a subrow of another
 						-- row, so we must update the internal settings for the tree.
 						 fixme ("EV_GRID_I.internal_set_item Should refactor `internal_set_parent_row' so that the parent row is not set and only the calculations are performed.")
-					a_grid_row_i.internal_set_parent_row (a_grid_row_i.parent_row_i)
+					a_grid_row_i.internal_set_parent_row (grid_row_parent_i)
 				end
+				redraw_item (item_implementation)
 			else
 					-- Set `last_pointed_item' to `Void' if it is being removed from `Current'
 					-- to prevent memory leaks.
 				if last_pointed_item /= Void and then last_pointed_item = item_internal (a_column, a_row) then
 					last_pointed_item := Void
 				end
-				internal_row_data.i_th (a_row).put (Void, a_grid_col_i.physical_index)
+				internal_row_data.i_th (a_row).put (Void, column_physical_index)
 				a_grid_row_i.flag_index_of_first_item_dirty_if_needed (a_column)
 					-- Update the row for the removal.
 				a_grid_row_i.update_for_item_removal (a_column)
-			end
-
-			fixme ("EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
-
-			if a_item /= Void then
-				redraw_item (a_item.implementation)
-			else
 					-- We no longer have access to the item so we calculate the redraw area based on the rows and columns.
 				drawable.redraw_rectangle (a_grid_col_i.virtual_x_position - (internal_client_x - viewport_x_offset), a_grid_row_i.virtual_y_position - (internal_client_y - viewport_y_offset), a_grid_col_i.width, a_grid_row_i.height)
 			end
+
+			fixme ("EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
 		end
 
 	item_counter: INTEGER

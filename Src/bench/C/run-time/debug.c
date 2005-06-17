@@ -216,8 +216,8 @@ rt_private int should_be_interrupted(void);
 rt_public struct dcall *dpush(register struct dcall *val);			/* Push value on stack */
 rt_public struct dcall *dpop(void);			/* Pop value off stack */
 rt_public struct dcall *dtop(void);			/* Current top value */
-rt_private struct dcall *stack_allocate(register int size);	/* Allocate first chunk */
-rt_private int stack_extend(register int size);				/* Extend stack size */
+rt_private struct dcall *dbstack_allocate(register int size);	/* Allocate first chunk */
+rt_private int dbstack_extend(register int size);				/* Extend stack size */
 rt_private void npop(register int nb_items);					/* Pop 'n' items */
 rt_private int nb_calls(void);					/* Number of calls registered */
 
@@ -1095,7 +1095,7 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
  * Context stack handling.
  */
 
-rt_private struct dcall *stack_allocate(register int size)
+rt_private struct dcall *dbstack_allocate(register int size)
                    					/* Initial size */
 {
 	/* The debugging stack is created, with size 'size'.
@@ -1128,6 +1128,26 @@ rt_private struct dcall *stack_allocate(register int size)
 	return arena;			/* Stack allocated */
 }
 
+rt_shared void dbstack_reset(struct dbstack *stk)
+{
+	/* Reset the stack 'stk' to its minimal state and disgard all its
+	 * contents. Walking through the list of chunks, we free them and
+	 * clear the 'stk' structure.
+	 */
+
+	struct stdchunk *k;	/* To walk through the list */
+	struct stdchunk *n;	/* Save next before freeing chunk */
+
+	for (k = stk->st_hd; k; k = n) {
+		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
+		eif_rt_xfree((EIF_REFERENCE) k);
+	}
+
+	memset (stk, 0, sizeof(struct dbstack));
+}
+
+
+
 /* Stack handling routine. The following code has been cut/paste from the one
  * found in garcol.c and local.c as of this day. Hence the similarities and the
  * possible differences. What changes basically is that instead of storing
@@ -1153,7 +1173,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 		 */
 		SIGBLOCK;
 		if (db_stack.st_cur == db_stack.st_tl) {	/* Reached last chunk */
-			if (-1 == stack_extend(eif_stack_chunk))
+			if (-1 == dbstack_extend(eif_stack_chunk))
 				enomem();
 			top = db_stack.st_top;					/* New top */
 		} else {
@@ -1177,7 +1197,7 @@ rt_public struct dcall *dpush(register struct dcall *val)
 	return top;				/* Address of allocated item */
 }
 
-rt_private int stack_extend(register int size)
+rt_private int dbstack_extend(register int size)
                    					/* Size of new chunk to be added */
 {
 	/* The debugging stack is extended and the stack structure is updated.
@@ -1347,7 +1367,7 @@ rt_public void initdb(void)
 	struct dcall *top;			/* Arena for first stack chunk */
 	BODY_INDEX *list_arena;			/* Arena for first list chunk */
 
-	top = stack_allocate(eif_stack_chunk);		/* Create one */
+	top = dbstack_allocate(eif_stack_chunk);		/* Create one */
 	if (top == (struct dcall *) 0)	 		/* Could not create stack */
 		fatal_error("can't create debugger stack");
 
@@ -1609,6 +1629,24 @@ rt_private BODY_INDEX *list_allocate(register int size)
 	SIGRESUME;
 
 	return arena;			/* List allocated */
+}
+
+rt_shared void once_list_reset (struct id_list *stk)
+{
+	/* Reset the stack 'stk' to its minimal state and disgard all its
+	 * contents. Walking through the list of chunks, we free them and
+	 * clear the 'stk' structure.
+	 */
+
+	struct idlchunk *k;	/* To walk through the list */
+	struct idlchunk *n;	/* Save next before freeing chunk */
+
+	for (k = stk->idl_hd; k; k = n) {
+		n = k->idl_next;		/* This is not necessary given current eif_rt_xfree() */
+		eif_rt_xfree((EIF_REFERENCE) k);
+	}
+
+	memset (stk, 0, sizeof(struct id_list));
 }
 
 rt_public BODY_INDEX *onceadd(BODY_INDEX id)

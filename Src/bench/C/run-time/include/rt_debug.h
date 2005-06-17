@@ -41,6 +41,9 @@ extern struct id_list once_list;	/* Calling context once_list */
 extern void dbreak_create_table(void);
 extern void dbreak_free_table(void);
 
+extern void dbstack_reset(struct dbstack *stk);
+extern void once_list_reset (struct id_list *stk);
+
 #ifdef __cplusplus
 }
 #endif

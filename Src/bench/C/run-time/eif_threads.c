@@ -46,6 +46,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_traverse.h"
 #include "rt_object_id.h"
 #include "rt_cecil.h"
+#include "rt_debug.h"
 
 #include <string.h>
 
@@ -451,6 +452,7 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 		/* gen_conf.c */
 	eif_gen_conf_thread_cleanup ();
 
+		/* First free content of `eif_globals'. */
 #ifdef EIF_WINDOWS
 		/* WEL data if any */
 	if (eif_globals->wel_per_thread_data) {
@@ -459,23 +461,52 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 #endif
 
 		/* Free array of once manifest strings */
-	FREE_OMS (eif_globals->EIF_oms_cx);
+	FREE_OMS (EIF_oms);
 
 		/* Free once values. */
-	eif_free (eif_globals->EIF_once_values_cx);
+	eif_free (EIF_once_values);
+	EIF_once_values = NULL;
+
+		/* Free allocated stacks in eif_globals. */
+#ifdef ISE_GC
+	st_reset (&loc_stack);
+	st_reset (&loc_set);
+	st_reset (&hec_stack);
+#endif
+	st_reset (&once_set);
+	st_reset (&oms_set);
+	if (prof_stack) {
+		st_reset (prof_stack);
+	}
+	xstack_reset (&eif_stack);
+#ifdef WORKBENCH
+	opstack_reset (&cop_stack);
+#endif
+
+		/* Free public per thread data */
+	eif_free (eif_globals);
+	rt_globals->eif_globals = NULL;
+
+		/* Free allocated stacks in rt_globals. */
+	xstack_reset (&eif_trace);
+#ifdef ISE_GC
+	st_reset (&hec_saved);
+	st_reset (&free_stack);
+#endif
+#ifdef WORKBENCH
+	opstack_reset (&op_stack);
+	dbstack_reset (&db_stack);
+	once_list_reset (&once_list);
+	if (iregs) {
+		eif_rt_xfree (iregs);
+	}
+#endif
 
 		/* Context data if any */
 	if (eif_thr_context) {
 		eif_free (eif_thr_context->tid); /* Free id of the current thread */
 		eif_free (eif_thr_context);		/* Thread context passed by parent */
 	}
-
-		/* Free allocated stacks. */
-	/* FIXME: add routines to free all allocated stacks per thread, otherwise
-	 * we might quicly ran out of memory. */
-
-		/* Free public per thread data */
-	eif_free (eif_globals);
 
 		/* Free private per thread data */
 	eif_free (rt_globals);

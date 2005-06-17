@@ -213,7 +213,7 @@ rt_private char eedefined(long ex);		  /* Is exception code valid? */
 rt_public void expop(struct xstack *stk);				/* Pops an execution vector off */
 rt_private void expop_helper(struct xstack *stk, int is_truncated);
 rt_private void stack_truncate(struct xstack *stk);		/* Truncate stack if necessary */
-rt_private void wipe_out(register struct stxchunk *chunk);			/* Remove unneeded chunk from stack */
+rt_private void stack_wipe_out(register struct stxchunk *chunk);			/* Remove unneeded chunk from stack */
 rt_shared struct ex_vect *exget(struct xstack *stk);		/* Get a new vector on stack */
 rt_private int stack_extend(struct xstack *stk, rt_uint_ptr size);			/* Extends size of stack */
 rt_private struct ex_vect *stack_allocate(struct xstack *stk, int size);	/* Creates an empty stack */
@@ -2891,17 +2891,17 @@ rt_private void stack_truncate(struct xstack *stk)
 	top = stk->st_top;						/* The first free location */
 	if (stk->st_end - top > MIN_FREE) {		/* Enough locations left */
 		stk->st_tl = stk->st_cur;			/* Last chunk from now on */
-		wipe_out(stk->st_cur->sk_next);		/* Free starting at next chunk */
+		stack_wipe_out(stk->st_cur->sk_next);		/* Free starting at next chunk */
 	} else {								/* Current chunk is nearly full */
 		next = stk->st_cur->sk_next;		/* We are followed by 'next' */
 		if (next != (struct stxchunk *) 0) {/* There is indeed a next chunk */
 			stk->st_tl = next;				/* New tail chunk */
-			wipe_out(next->sk_next);		/* Skip it, wipe out remainder */
+			stack_wipe_out(next->sk_next);		/* Skip it, wipe out remainder */
 		}
 	}
 }
 
-rt_private void wipe_out(register struct stxchunk *chunk)
+rt_private void stack_wipe_out(register struct stxchunk *chunk)
 		/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
@@ -2920,6 +2920,25 @@ rt_private void wipe_out(register struct stxchunk *chunk)
 	)
 		eif_rt_xfree((char *) chunk);
 }
+
+rt_shared void xstack_reset(struct xstack *stk)
+{
+	/* Reset the stack 'stk' to its minimal state and disgard all its
+	 * contents. Walking through the list of chunks, we free them and
+	 * clear the 'stk' structure.
+	 */
+
+	struct stxchunk *k;	/* To walk through the list */
+	struct stxchunk *n;	/* Save next before freeing chunk */
+
+	for (k = stk->st_hd; k; k = n) {
+		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
+		eif_rt_xfree((EIF_REFERENCE) k);
+	}
+
+	memset (stk, 0, sizeof(struct xstack));
+}
+
 
 /*
 doc:	<routine name="expop" export="public">

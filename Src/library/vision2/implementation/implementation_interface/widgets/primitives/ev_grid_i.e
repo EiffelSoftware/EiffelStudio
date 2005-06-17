@@ -2307,7 +2307,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					if current_item /= Void and then current_item.subrow_count > 0 and not current_item.is_expanded then
 						from
 							j := row_index + 1
-							k := j + current_item.subnode_count_recursive
+							k := j + current_item.subrow_count_recursive
 						until
 							j = k
 						loop

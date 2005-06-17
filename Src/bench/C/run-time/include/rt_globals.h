@@ -133,10 +133,6 @@ typedef struct tag_rt_globals
 	size_t tagged_max_cx;					/* Actual maximum size of `tagged_out' */
 	size_t tagged_len_cx;					/* Actual length of `tagged_out' */
 
-		/* pattern.c */
-	uint32 eif_delta_cx[ASIZE];			/* Records shifting deltas */
-	uint32 **darray_cx;					/* Pointer to array recording shifting tables */
-
 		/* plug.c */
 	char *inv_mark_tablep_cx;			/* Marking table to avoid checking the same invariant
 										   several times */
@@ -212,9 +208,6 @@ typedef struct tag_rt_globals
 	size_t store_stream_buffer_position_cx;
 	size_t store_stream_buffer_size_cx;
 	EIF_BOOLEAN eif_is_new_recoverable_format_cx;
-
-		/* string.c */
-	EIF_CHARACTER eif_string_buffer_cx [MAX_NUM_LEN + 1]; /* Where string is built. */
 
 		/* hector.c */
 #ifdef ISE_GC
@@ -360,10 +353,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define tagged_max			(rt_globals->tagged_max_cx)	/* rt_private */
 #define tagged_len			(rt_globals->tagged_len_cx)	/* rt_private */
 
-	/* pattern.c */
-#define eif_delta			(rt_globals->eif_delta_cx)		/* rt_private */
-#define darray				(rt_globals->darray_cx)		/* rt_private */
-
 	/* plug.c */
 #define inv_mark_tablep		(rt_globals->inv_mark_tablep_cx)	/* rt_private */
 
@@ -439,9 +428,6 @@ rt_private rt_global_context_t * rt_thr_getspecific (RT_TSD_TYPE global_key) {
 #define store_stream_buffer_position	(rt_globals->store_stream_buffer_position_cx)
 #define store_stream_buffer_size		(rt_globals->store_stream_buffer_size_cx)
 #define eif_is_new_recoverable_format	(rt_globals->eif_is_new_recoverable_format_cx)
-
-	/* string.c */
-#define eif_string_buffer	(rt_globals->eif_string_buffer_cx)	/* N/A */
 
 #ifdef ISE_GC
 	/* hector.c */

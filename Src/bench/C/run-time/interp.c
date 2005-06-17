@@ -5276,6 +5276,24 @@ rt_private void wipe_out(register struct stochunk *chunk)
 		eif_rt_xfree((EIF_REFERENCE) chunk);
 	}
 
+rt_shared void opstack_reset(struct opstack *stk)
+{
+	/* Reset the stack 'stk' to its minimal state and disgard all its
+	 * contents. Walking through the list of chunks, we free them and
+	 * clear the 'stk' structure.
+	 */
+
+	struct stochunk *k;	/* To walk through the list */
+	struct stochunk *n;	/* Save next before freeing chunk */
+
+	for (k = stk->st_hd; k; k = n) {
+		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
+		eif_rt_xfree((EIF_REFERENCE) k);
+	}
+
+	memset (stk, 0, sizeof(struct opstack));
+}
+
 /*
  * For debugger: getting values of locals, arguments, Result and Current.
  */

@@ -260,6 +260,7 @@ extern struct item *ivalue(int code, uint32 num, uint32 start);	/* Value request
 extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);		/* Resynchronize registers on routine */
 
 extern void idump(FILE *fd, char *start);
+extern void opstack_reset(struct opstack *stk);
 
 #ifdef __cplusplus
 }

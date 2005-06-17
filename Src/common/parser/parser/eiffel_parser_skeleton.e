@@ -641,7 +641,40 @@ feature {NONE} -- Basic type factory
 			Result := ast_factory.new_real_as (a_type, buffer)
 			Result.set_position (line, column, position, buffer.count)
 		end
-		
+
+feature {NONE} -- Instruction factory
+
+	new_call_instruction_from_expression (e: EXPR_AS): INSTR_CALL_AS is
+			-- Check if expression `e' represents a call
+			-- and create a call instruction from it if this is the case.
+			-- Report syntax error otherwise.
+		local
+			expr_call: EXPR_CALL_AS
+			call: CALL_AS
+			leaf: LEAF_AS
+			creation_expr: CREATION_EXPR_AS
+		do
+			expr_call ?= e
+			if expr_call /= Void then
+					-- This is a call. Let's check if it is a normal feature call.
+				call ?= expr_call.call
+				leaf ?= call
+				creation_expr ?= call
+				if leaf /= Void or else creation_expr /= Void then
+						-- This is not a normal feature call.
+					call := Void
+				end
+			end
+			if call = Void then
+					-- Report error.
+				Error_handler.insert_error (create {SYNTAX_ERROR}.make (line, column, filename, "Expression cannot be used as an instruction", False))
+				Error_handler.raise_error
+			else
+					-- Make a call instruction.
+				Result := ast_factory.new_instr_call_as (call)
+			end
+		end
+
 feature {NONE} -- Error handling
 
 	report_basic_generic_type_error is

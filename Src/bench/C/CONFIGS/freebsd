@@ -32,6 +32,7 @@ shared_rt_suffix='.so'
 shared_prefix='lib'
 sharedlibversion='.1.0'
 wkeiflib='wkbench'
+boehmgclib='gc'
 
 command_makefile='make -f'
 make='make'

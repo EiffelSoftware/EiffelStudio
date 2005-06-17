@@ -463,6 +463,7 @@ feature -- Basic operations
 			v_y: INTEGER
 
 		do
+			grid.reset_redraw_item_counter
 				-- Although this feature is connected to the `expose_actions' of a drawing area,
 				-- there is currently a bug/feature on Windows where it is possible for the Wm_paint
 				-- message to be generated even though there is no invalid area (width and height are 0).

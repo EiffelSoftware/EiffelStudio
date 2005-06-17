@@ -246,6 +246,8 @@ feature
 			if not System.has_dynamic_runtime then
 				Result.append ("$suffix")
 			end
+
+			Result.append (boehm_library)
 		end;
 
 	generate_other_objects is

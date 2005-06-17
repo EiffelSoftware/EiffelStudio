@@ -392,7 +392,6 @@ feature -- Sub makefile generation
 			new_makefile, old_makefile: INDENT_FILE
 			nb, i: INTEGER
 			f_name: FILE_NAME
-			subdir_name: STRING
 			basket: LINKED_LIST [STRING]
 		do
 			old_makefile := make_file
@@ -1141,8 +1140,28 @@ feature {NONE} -- Constants
 			if System.uses_ise_gc_runtime then
 				Result := "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib/"
 			else
-				Result := "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/other-lib/"
+				Result := "\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib-"
+				Result.append (System.external_runtime)
+				Result.append_character ('/')
 			end
+		ensure
+			lib_location_not_void: Result /= Void
 		end
 
+	boehm_library: STRING is
+			-- Addition library if boehm is selected
+		do
+			if not system.uses_ise_gc_runtime and then system.external_runtime.as_lower.is_equal ("boehm") then
+				Result := " \$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/lib-boehm/"
+				Result.append ("$prefix")
+				Result.append ("$boehmgclib")
+				Result.append ("$suffix")
+			else
+				Result := ""
+			end
+		ensure
+			boehm_library_not_void: Result /= Void
+			boehm_library_has_space_if_not_empty: not Result.is_empty implies Result.item (1) = ' '
+		end
+		
 end

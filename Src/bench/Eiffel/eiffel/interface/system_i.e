@@ -4192,7 +4192,7 @@ feature -- Conveniences
 			set_do_not_check_vape (False)
 			allow_address_expression (False)
 			set_dynamic_def_file (Void)
-			set_ise_gc_runtime (True)
+			set_external_runtime (Void)
 			set_il_verifiable (True)
 			set_msil_key_file_name (Void)
 			set_msil_generation_type ("exe")

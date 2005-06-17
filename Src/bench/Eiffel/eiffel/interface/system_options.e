@@ -67,8 +67,16 @@ feature -- Access
 			--| ie on Windows the application will run with a DLL and on UNIX it
 			-- |will be a .so file.
 
-	uses_ise_gc_runtime: BOOLEAN
-			-- Does generated application uses ISE's GC.
+	external_runtime: STRING
+			-- Name of run-time to use for linking.
+			
+	uses_ise_gc_runtime: BOOLEAN is
+			-- Does current use the ISE GC runtime?
+		do
+			Result := external_runtime = Void or else external_runtime.is_empty
+		ensure
+			uses_ise_gc_runtime: Result implies (external_runtime /= Void and then not external_runtime.is_empty)
+		end
 
 	full_type_checking: BOOLEAN
 			-- Does compiler checks inherited feature as well as local feature.
@@ -462,12 +470,12 @@ feature -- Update
 			has_dynamic_runtime: has_dynamic_runtime = b
 		end
 
-	set_ise_gc_runtime (b: BOOLEAN) is
-			-- Set `is_console_application' to `b'
+	set_external_runtime (v: STRING) is
+			-- Set `external_runtime' to `v'
 		do
-			uses_ise_gc_runtime := b	
+			external_runtime := v
 		ensure
-			ise_gc_runtime_set: uses_ise_gc_runtime = b
+			external_runtime_set: external_runtime = v
 		end
 
 	set_dynamic_def_file (f: STRING) is

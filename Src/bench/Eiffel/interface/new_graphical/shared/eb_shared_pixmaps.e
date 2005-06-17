@@ -274,6 +274,11 @@ feature -- Icons
 			Result := build_classic_pixmap ("dotnet_import")
 		end
 
+	Icon_small_open_menu: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("watch_menu_small")
+		end
+
 	Icon_expanded_object: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_expanded_object")

@@ -26,7 +26,7 @@
 			<url>../index.xml</url>
 			<label>Cluster Folders</label>
 		</link> and <link>
-			<url>../../../other_project_files/index.xml</url>
+			<url>../../../other_project_items/index.xml</url>
 			<label>Other Project Items</label>
 		</link>.
 
@@ -42,7 +42,7 @@
 			</link>
 			<line_break/>
 			The Eiffel source code files that are implicitly added to EiffelEnvision projects when <link>
-				<url>url</url>
+				<url>../../../../configuring/adding_items/adding_clusters.xml</url>
 				<label>Adding New Clusters</label>
 			</link> to projects. These types of file items will only be found under <link>
 				<url>../index.xml</url>
@@ -59,7 +59,7 @@
 			</link>
 			<line_break/>
 			The basic, generic, file item that represents all non-Eiffel source code files in an <link>
-				<url>url</url>
+				<url>../../../index.xml</url>
 				<label>EiffelEnvision Project</label>
 			</link>.
 		</paragraph>
@@ -83,12 +83,12 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
+				<url>../../../../configuring/adding_items/adding_items.xml</url>
 				<label>Adding New Items</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
+				<url>../../../../configuring/adding_items/adding_clusters.xml</url>
 				<label>Adding New Clusters</label>
 			</link>
 			<line_break/>

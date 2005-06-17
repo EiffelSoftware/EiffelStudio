@@ -235,11 +235,11 @@
 			</link>
 			<line_break/>
 			<link>
-				<url>url</url>
+				<url>../configuring/adding_references/adding_components.xml</url>
 				<label>Adding References</label>
 			</link>
 			<link>
-				<url>url</url>
+				<url>../configuring/adding_items/index.xml</url>
 				<label>Adding New and Existing Items</label>
 			</link>
 			<line_break />
@@ -254,7 +254,7 @@
 			</link>
 			<line_break />
 			<link>
-				<url>url</url>
+				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
 				<label>Eiffel Terminology</label>
 			</link>
 		</seealso>

@@ -2484,16 +2484,47 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			a1, a2: INTEGER
 			item_height: INTEGER
 		do
-			fixme ("Do we need to check if item is visible? There may be no effect to simply invalidate the area...")
-			a1 := an_item.virtual_x_position - (internal_client_x - viewport_x_offset)
-			a2 := an_item.virtual_y_position - (internal_client_y - viewport_y_offset)
-			if is_row_height_fixed then
-				item_height := row_height
-			else
-				item_height := an_item.row.height
+				-- Increase the number of times that `redraw_item' has been called
+				-- since the last refresh.
+			redraw_item_counter := redraw_item_counter + 1
+			if redraw_item_counter < maximum_items_redrawn_between_refresh then
+					-- Only perform the exact item calculation if our threshold
+					-- for individual item redrawing has not been met.
+				
+				fixme ("Executing this code causes `item_indent' to be called twice. Can we optimize this?")
+				a1 := an_item.virtual_x_position - (internal_client_x - viewport_x_offset)
+				a2 := an_item.virtual_y_position - (internal_client_y - viewport_y_offset)
+				if is_row_height_fixed then
+					item_height := row_height
+				else
+					item_height := an_item.row.height
+				end
+				drawable.redraw_rectangle (a1, a2, an_item.column.width - item_indent (an_item), item_height)
+			elseif redraw_item_counter = maximum_items_redrawn_between_refresh then
+					-- The threshold has been met, so invalidate the complete client area.
+					
+				redraw_client_area
 			end
-			drawable.redraw_rectangle (a1, a2, an_item.column.width - item_indent (an_item) , item_height)
 		end
+		
+	maximum_items_redrawn_between_refresh: INTEGER is 500
+		-- The maximum number of items for which `redraw_item' works on an individual item
+		-- basis, before the complete client area is invalidated. By performing this, the
+		-- calculation of the items exact position may be by-passed, ensuring large performance
+		-- gains while adding many items.
+		
+	redraw_item_counter: INTEGER
+		-- A counter to hold the number of times `redraw_item' has been called
+		-- since the last redraw.
+	
+	reset_redraw_item_counter is
+			-- Reset `redraw_item_counter' to 0.
+		do
+			redraw_item_counter := 0
+		ensure
+			redraw_item_counter_zero: redraw_item_counter = 0
+		end
+		
 
 	redraw_client_area is
 			-- Redraw complete visible client area of `Current'.

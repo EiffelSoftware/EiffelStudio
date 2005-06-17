@@ -667,8 +667,6 @@ feature -- JIT info
 
 	reset_jit_info is
 			-- Reset JustInTime information.
-		local
-			l_module: ICOR_DEBUG_MODULE
 		do
 				--| Threads
 			if not loaded_managed_threads.is_empty then

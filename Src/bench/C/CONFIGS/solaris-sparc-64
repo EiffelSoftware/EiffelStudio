@@ -166,6 +166,7 @@ wkoptimize="-O0 $binary_format $platform_arch"
 
 #Makefiles
 ar='ar'
+boehmgclib='gc'
 command_makefile='make -f'
 concurrent_prefix='c'
 cp='/bin/cp'

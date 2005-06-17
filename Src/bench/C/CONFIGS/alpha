@@ -17,6 +17,7 @@ mt_prefix='mt'
 concurrent_prefix='c'
 eiflib='finalized'
 wkeiflib='wkbench'
+boehmgclib='gc'
 suffix='.a'
 
 warning_level=''

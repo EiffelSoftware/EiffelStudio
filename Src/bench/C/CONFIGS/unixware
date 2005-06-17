@@ -317,6 +317,7 @@ mt_prefix='mt'
 prefix='lib'
 eiflib='finalized'
 wkeiflib='wkbench'
+boehmgclib='gc'
 suffix='.a'
 prefixexp='/opt'
 

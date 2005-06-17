@@ -15,6 +15,7 @@ prefix='lib'
 concurrent_prefix='c'
 eiflib='finalized'
 wkeiflib='wkbench'
+boehmgclib='gc'
 command_makefile='make -f'
 
 ccflags='-D_HPUX_SOURCE'

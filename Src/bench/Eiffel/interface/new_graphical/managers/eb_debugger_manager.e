@@ -61,6 +61,10 @@ feature {NONE} -- Initialization
 
 			objects_split_position := 300
 			object_split_position := 300
+			
+			if new_debugging_tool_enabled then
+				create watch_tool_list.make
+			end
 
 			create observers.make (10)
 			create kept_objects.make
@@ -91,7 +95,7 @@ feature -- Access
 	object_tool: EB_OBJECT_TOOL
 			-- A tool that represents the current call stack element and an object in a graphical display.
 
-	watch_tool: ES_WATCH_TOOL
+	watch_tool_list: LINKED_SET [ES_WATCH_TOOL]
 
 	evaluator_tool: EB_EXPRESSION_EVALUATOR_TOOL
 			-- A tool that evaluates expressions.
@@ -230,6 +234,35 @@ feature -- Access
 --| 3) edit feature, feature evaluation
 		end
 
+	create_new_watch_tool_inside_notebook (manager: EB_TOOL_MANAGER; nb: ES_NOTEBOOK) is
+		require
+			manager /= Void
+		local
+			l_watch_tool: ES_WATCH_TOOL
+		do
+			create l_watch_tool.make_with_title (manager, interface_names.t_watch_tool + " #" + new_watch_tool_number.out)
+			l_watch_tool.attach_to_notebook (nb)
+			watch_tool_list.extend (l_watch_tool)
+		end
+
+	close_watch_tool (wt: ES_WATCH_TOOL) is
+		require
+			wt /= Void
+		do
+			wt.close
+			watch_tool_list.prune_all (wt)
+		end
+
+feature {NONE} -- watch tool numbering
+
+	new_watch_tool_number: INTEGER is
+		do
+			last_watch_tool_number := last_watch_tool_number + 1
+			Result := last_watch_tool_number
+		end
+
+	last_watch_tool_number: INTEGER
+
 feature -- Status report
 
 	debugging_window: EB_DEVELOPMENT_WINDOW
@@ -336,6 +369,7 @@ feature -- Status setting
 			split: EV_SPLIT_AREA
 			i: INTEGER
 			rl, rr: ARRAY_PREFERENCE
+			l_watch_tool: ES_WATCH_TOOL
 		do
 			disable_debugging_commands (False)
 			initialize_debugging_window
@@ -397,18 +431,29 @@ feature -- Status setting
 				objects_tool.update
 
 					--| Watches tool
-				if watch_tool = Void then
-					create watch_tool.make (debugging_window)
-					watch_tool.attach_to_notebook (debugging_tools)
+				if watch_tool_list.count < Preferences.debugger_data.number_of_watch_tools  then
+					from
+					until
+						watch_tool_list.count >= Preferences.debugger_data.number_of_watch_tools
+					loop
+						create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
+					end
 				else
-					watch_tool.set_manager (debugging_window)
-					watch_tool.change_attach_notebook (debugging_tools)
+					from
+						watch_tool_list.start
+					until
+						watch_tool_list.after
+					loop
+						l_watch_tool := watch_tool_list.item
+						if l_watch_tool /= Void then
+							l_watch_tool.set_manager (debugging_window)
+							l_watch_tool.change_attach_notebook (debugging_tools)
+						end
+						watch_tool_list.forth
+					end
 				end
-				debug ("debugger_interface")
-					io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
-				end
-				watch_tool.prepare_for_debug
-				watch_tool.update
+				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
+				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 			end
 
 				--| Call Stack Tool
@@ -613,7 +658,7 @@ end
 			call_stack_tool.recycle
 			if new_debugging_tool_enabled then
 				objects_tool.recycle
-				watch_tool.recycle
+				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.recycle)				
 			end
 			if object_tool_enabled then
 				object_tool.recycle
@@ -636,7 +681,7 @@ end
 				call_stack_tool.set_stone (st)
 				if new_debugging_tool_enabled then
 					objects_tool.set_stone (st)
-					watch_tool.set_stone (st)
+					watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
 				end
 				if object_tool_enabled then
 					object_tool.set_stone (st)
@@ -751,7 +796,7 @@ feature -- Debugging events
 
 			if new_debugging_tool_enabled then
 				objects_tool.disable_refresh
-				watch_tool.disable_refresh
+				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
 			end
 
 			if object_tool_enabled then
@@ -766,7 +811,7 @@ feature -- Debugging events
 			end
 			if new_debugging_tool_enabled then
 				objects_tool.enable_refresh
-				watch_tool.enable_refresh
+				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)				
 			end
 			if object_tool_enabled then
 				object_tool.enable_refresh
@@ -781,7 +826,7 @@ feature -- Debugging events
 					-- Fill in the objects tool.
 				objects_tool.update
 					-- Update Watch tool
-				watch_tool.update
+				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 			end
 
 			if object_tool_enabled then
@@ -845,7 +890,7 @@ feature -- Debugging events
 					-- Fill in the objects tool.
 				objects_tool.update
 					-- Update Watch tool
-				watch_tool.update
+				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 			end
 			if object_tool_enabled then
 					-- Fill in the object tool.

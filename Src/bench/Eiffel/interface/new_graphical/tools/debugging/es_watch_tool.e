@@ -17,7 +17,8 @@ inherit
 	EB_TOOL
 		redefine
 			menu_name,
-			pixmap
+			pixmap, 
+			close
 		end
 
 	EB_CONSTANTS
@@ -56,9 +57,19 @@ inherit
 		end
 
 create 
-	make
+	make_with_title
 
 feature {NONE} -- Initialization
+
+	make_with_title (a_manager: like manager; a_title: like title) is
+		do
+			if a_title = Void or else a_title.is_empty then
+				set_title (interface_names.t_Watch_tool)
+			else
+				set_title (a_title)
+			end
+			make (a_manager)
+		end
 
 	build_interface is
 			-- Build all the tool's widgets.
@@ -97,24 +108,34 @@ feature {NONE} -- Initialization
 			-- Build associated tool bar
 		local
 			tbb: EV_TOOL_BAR_BUTTON
+			scmd: EB_STANDARD_CMD
 		do
 			create mini_toolbar
+			
+			create scmd.make
+			scmd.set_mini_pixmaps (Pixmaps.Icon_small_open_menu)
+			scmd.set_tooltip ("Open Watch tool menu")
+			scmd.add_agent (agent open_watch_menu)
+			scmd.enable_sensitive
+			mini_toolbar.extend (scmd.new_mini_toolbar_item)
+			
+			
 			create create_expression_cmd.make
-			create_expression_cmd.set_mini_pixmaps (pixmaps.icon_new_expression)
+			create_expression_cmd.set_mini_pixmaps (Pixmaps.icon_new_expression)
 			create_expression_cmd.set_tooltip (interface_names.e_new_expression)
 			create_expression_cmd.add_agent (agent define_new_expression)
 			create_expression_cmd.enable_sensitive
 			mini_toolbar.extend (create_expression_cmd.new_mini_toolbar_item)
 
 			create edit_expression_cmd.make
-			edit_expression_cmd.set_mini_pixmaps (pixmaps.icon_edit_expression)
+			edit_expression_cmd.set_mini_pixmaps (Pixmaps.icon_edit_expression)
 			edit_expression_cmd.set_tooltip (interface_names.e_edit_expression)
 			edit_expression_cmd.add_agent (agent edit_expression)
 			tbb := edit_expression_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)
 
 			create toggle_state_of_expression_cmd.make
-			toggle_state_of_expression_cmd.set_mini_pixmaps (pixmaps.icon_toggle_state_very_small)
+			toggle_state_of_expression_cmd.set_mini_pixmaps (Pixmaps.icon_toggle_state_very_small)
 			toggle_state_of_expression_cmd.set_tooltip (interface_names.e_toggle_state_of_expressions)
 			toggle_state_of_expression_cmd.add_agent (agent toggle_state_of_selected)
 			tbb := toggle_state_of_expression_cmd.new_mini_toolbar_item
@@ -133,7 +154,7 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (pretty_print_cmd.new_mini_toolbar_item)
 
 			create delete_expression_cmd.make
-			delete_expression_cmd.set_mini_pixmaps (pixmaps.icon_delete_very_small)
+			delete_expression_cmd.set_mini_pixmaps (Pixmaps.icon_delete_very_small)
 			delete_expression_cmd.set_tooltip (interface_names.e_remove_expressions)
 			delete_expression_cmd.add_agent (agent remove_selected)
 			tbb := delete_expression_cmd.new_mini_toolbar_item
@@ -142,14 +163,14 @@ feature {NONE} -- Initialization
 			mini_toolbar.extend (tbb)
 
 			create move_up_cmd.make
-			move_up_cmd.set_mini_pixmaps (pixmaps.icon_mini_up)
+			move_up_cmd.set_mini_pixmaps (Pixmaps.icon_mini_up)
 			move_up_cmd.set_tooltip ("Move item up")
 			move_up_cmd.add_agent (agent move_selected (watches_grid, -1))
 			tbb := move_up_cmd.new_mini_toolbar_item
 			mini_toolbar.extend (tbb)			
 			
 			create move_down_cmd.make
-			move_down_cmd.set_mini_pixmaps (pixmaps.icon_mini_down)
+			move_down_cmd.set_mini_pixmaps (Pixmaps.icon_mini_down)
 			move_down_cmd.set_tooltip ("Move item down")
 			move_down_cmd.add_agent (agent move_selected (watches_grid, +1))
 			tbb := move_down_cmd.new_mini_toolbar_item
@@ -183,6 +204,16 @@ feature {NONE} -- Initialization
 			notebook_item.drop_actions.extend (agent on_element_drop)
 			nb.extend (notebook_item)
 		end
+		
+feature {EB_DEBUGGER_MANAGER} -- Closing
+		
+	close is
+		do
+			Precursor
+			if notebook_item /= Void then
+				unattach_from_notebook
+			end
+		end
 	
 feature -- Access
 
@@ -195,11 +226,8 @@ feature -- Access
 			Result := watches_grid
 		end
 
-	title: STRING is
+	title: STRING
 			-- Title of the tool.
-		do
-			Result := interface_names.t_Watch_tool
-		end
 
 	menu_name: STRING is
 			-- Name as it may appear in a menu.
@@ -214,6 +242,17 @@ feature -- Access
 
 	can_refresh: BOOLEAN
 			-- Should we display data when a stone is set?
+			
+feature -- Change
+
+	set_title (a_title: like title) is
+		require
+			title_valid: a_title /= Void and then not a_title.is_empty
+		do
+			title := a_title
+		ensure
+			title_set: title.is_equal (a_title)
+		end
 
 feature -- Properties setting
 
@@ -446,6 +485,24 @@ feature {NONE} -- add new expression from the grid
 		end
 
 feature {NONE} -- Event handling
+
+	open_watch_menu is
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+		do
+			if notebook_item /= Void then
+				create m
+				create mi.make_with_text_and_action ("Create new watch", agent debugger_manager.create_new_watch_tool_inside_notebook (manager, notebook_item.parent))
+				m.extend (mi)
+				if debugger_manager.watch_tool_list.count > 1 then
+					create mi.make_with_text_and_action ("Close current watch", agent debugger_manager.close_watch_tool (Current))
+					m.extend (mi)
+				end
+
+				m.show_at (mini_toolbar, 1, 1)
+			end
+		end
 
 	define_new_expression is
 			-- Create a new expression.

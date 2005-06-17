@@ -324,9 +324,8 @@ RT_LNK int fcount;
 #define RTLR(x,y)
 #define RTXI(x)
 #define RTXE 
-#define RTYL
-#define RTXL \
-	EIF_REFERENCE l
+#define RTYL  EIF_REFERENCE lt
+#define RTXL  EIF_REFERENCE l
 #define RTLXD
 #define RTLXL
 #define RTLXE

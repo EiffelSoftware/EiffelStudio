@@ -29,7 +29,7 @@ feature -- Attachement
 		require
 			attached: explorer_bar_item /= Void
 		do
-			if explorer_bar_item.is_visible then
+			if explorer_bar_item.is_closeable then
 				explorer_bar_item.close
 			end
 			explorer_bar_item.recycle

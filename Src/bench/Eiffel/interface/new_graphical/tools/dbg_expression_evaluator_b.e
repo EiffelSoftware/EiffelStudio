@@ -10,7 +10,7 @@ class
 inherit
 	DBG_EXPRESSION_EVALUATOR
 		redefine
-			dbg_expression
+			dbg_expression, reset_error
 		end
 
 	SHARED_WORKBENCH
@@ -103,7 +103,6 @@ feature -- Evaluation
 					set_error_expression (Cst_error_during_expression_analyse)
 				else
 						--| Compute and get `expression_byte_node'
-					reset_expression_byte_node
 					get_expression_byte_node
 				end
 	
@@ -144,6 +143,12 @@ feature -- Evaluation
 					final_result_static_type := Void
 				end
 			end
+		end
+		
+	reset_error is
+		do
+			Precursor
+			error_handler.wipe_out
 		end
 		
 	clean_temp_data is

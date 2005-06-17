@@ -41,8 +41,8 @@ feature {NONE} -- Initialization
 				-- internal_height is set when the row is parented.
 			depth_in_tree := 1
 			indent_depth_in_tree := 1
-			subnode_count_recursive := 0
-			expanded_subnode_count_recursive := 0
+			subrow_count_recursive := 0
+			expanded_subrow_count_recursive := 0
 			is_expanded := False
 			hash_code := -1
 			set_is_initialized (True)
@@ -360,16 +360,8 @@ feature -- Status report
 			subrow_count_in_range: subrow_count <= (parent.row_count - index)
 		end
 		
-	subrow_count_recursive: INTEGER is
+	subrow_count_recursive: INTEGER
 			-- Number of child rows and their child rows recursively.
-		require
-			is_parented: parent /= Void
-		do
-			Result := subnode_count_recursive
-		ensure
-			subrow_count_recursive_greater_or_equal_to_subrow_count: subrow_count_recursive >= subrow_count
-			subrow_count_recursive_in_range: subrow_count_recursive <= (parent.row_count - index)
-		end
 
 	index: INTEGER
 			-- Position of Current in `parent'.
@@ -764,16 +756,16 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 
 				-- Decrease the node count for `Current' and all parents by 1 + the node count
 				-- for the added subrow as this may also be a tree structure.
-			update_parent_node_counts_recursively (- (row_imp.subnode_count_recursive + 1))
+			update_parent_node_counts_recursively (- (row_imp.subrow_count_recursive + 1))
 			
 				-- If `Current' is expanded then we must also decrease the expanded node count by
 				-- 1 + the node count of the added subrow as this may also be a tree structure.
 			if is_expanded then
-				update_parent_expanded_node_counts_recursively ( - (row_imp.expanded_subnode_count_recursive + 1))
+				update_parent_expanded_node_counts_recursively ( - (row_imp.expanded_subrow_count_recursive + 1))
 			end
 			
 				-- Update the hidden node count in the parent grid.
-			parent_i.adjust_hidden_node_count ( - ((row_imp.subnode_count_recursive + 1) - row_imp.expanded_subnode_count_recursive))
+			parent_i.adjust_hidden_node_count ( - ((row_imp.subrow_count_recursive + 1) - row_imp.expanded_subrow_count_recursive))
 			
 			parent_i.set_vertical_computation_required (index)
 			parent_i.redraw_client_area
@@ -812,16 +804,16 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			
 				-- Increase the node count for `Current' and all parents by 1 + the node count
 				-- for the added subrow as this may also be a tree structure.
-			update_parent_node_counts_recursively (row_imp.subnode_count_recursive + 1)
+			update_parent_node_counts_recursively (row_imp.subrow_count_recursive + 1)
 			
 				-- If `Current' is expanded then we must also update the expanded node count by
 				-- 1 + the node count of the added subrow as this may also be a tree structure.
 			if is_expanded then
-				update_parent_expanded_node_counts_recursively (row_imp.expanded_subnode_count_recursive + 1)
+				update_parent_expanded_node_counts_recursively (row_imp.expanded_subrow_count_recursive + 1)
 			end
 			
 				-- Update the hidden node count in the parent grid.
-			parent_i.adjust_hidden_node_count ((row_imp.subnode_count_recursive + 1) - row_imp.expanded_subnode_count_recursive)
+			parent_i.adjust_hidden_node_count ((row_imp.subrow_count_recursive + 1) - row_imp.expanded_subrow_count_recursive)
 			
 			parent_i.set_vertical_computation_required (index)
 			parent_i.redraw_client_area
@@ -1015,31 +1007,28 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 		
 	indent_depth_in_tree: INTEGER
 		
-	set_subnode_count_recursive (a_count: INTEGER) is
-			-- Assign `a_count' to `subnode_count_recursive'.
+	set_subrow_count_recursive (a_count: INTEGER) is
+			-- Assign `a_count' to `subrow_count_recursive'.
 		require
 			a_count_non_negative: a_count >= 0
 		do
-			subnode_count_recursive := a_count
+			subrow_count_recursive := a_count
 		ensure
-			subnode_count_set: subnode_count_recursive = a_count
+			subnode_count_set: subrow_count_recursive = a_count
 		end
 		
-	set_expanded_subnode_count_recursive (a_count: INTEGER) is
-			-- Assign `a_count' to `expanded_subnode_count_recursive'.
+	set_expanded_subrow_count_recursive (a_count: INTEGER) is
+			-- Assign `a_count' to `expanded_subrow_count_recursive'.
 		require
 			a_count_non_negative: a_count >= 0
 		do
-			expanded_subnode_count_recursive := a_count
+			expanded_subrow_count_recursive := a_count
 		ensure
-			expanded_subnode_count_set: expanded_subnode_count_recursive = a_count
+			expanded_subrow_count_set: expanded_subrow_count_recursive = a_count
 		end
-	
-	subnode_count_recursive: INTEGER
-		-- Number of subnodes contained within `Current' recursively.
 		
-	expanded_subnode_count_recursive: INTEGER
-		-- Number of expanded subnodes contained within `Current' recursively.
+	expanded_subrow_count_recursive: INTEGER
+		-- Number of expanded subrows contained within `Current' recursively.
 		
 	update_parent_node_counts_recursively (adjustment_value: INTEGER) is
 			-- For `Current' and all parent nodes of `Current' recursively, update their
@@ -1054,7 +1043,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			until
 				parent_row_imp = Void
 			loop
-				parent_row_imp.set_subnode_count_recursive (parent_row_imp.subnode_count_recursive + adjustment_value)
+				parent_row_imp.set_subrow_count_recursive (parent_row_imp.subrow_count_recursive + adjustment_value)
 				parent_row_imp := parent_row_imp.parent_row_i
 			end
 		end
@@ -1072,7 +1061,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 			until
 				(parent_row_imp = Void) or (parent_row_imp /= Current and not parent_row_imp.is_expanded)
 			loop
-				parent_row_imp.set_expanded_subnode_count_recursive (parent_row_imp.expanded_subnode_count_recursive + adjustment_value)
+				parent_row_imp.set_expanded_subrow_count_recursive (parent_row_imp.expanded_subrow_count_recursive + adjustment_value)
 				parent_row_imp := parent_row_imp.parent_row_i
 			end
 			if parent_row_imp = Void then
@@ -1091,8 +1080,8 @@ feature {EV_GRID_I} -- Implementation
 			subrows.wipe_out
 			depth_in_tree := 1
 			indent_depth_in_tree := 1
-			subnode_count_recursive := 0
-			expanded_subnode_count_recursive := 0
+			subrow_count_recursive := 0
+			expanded_subrow_count_recursive := 0
 			is_expanded := False
 			parent_row_i := Void
 		end
@@ -1108,21 +1097,21 @@ feature {EV_ANY_I} -- Contract support
 		do
 			Result := True
 			if is_initialized and then subrows.count = 0 then
-				Result := subnode_count_recursive = 0
+				Result := subrow_count_recursive = 0
 			end
 			if is_initialized and then subrows.count = 0 then
-				Result := Result and expanded_subnode_count_recursive = 0
+				Result := Result and expanded_subrow_count_recursive = 0
 			end
 			if is_initialized and then subrow_count > 0 then
-				Result := Result and subnode_count_recursive >= subrow_count
+				Result := Result and subrow_count_recursive >= subrow_count
 			end
 			if is_initialized and then subrow_count > 0 and then is_expanded then
-				Result := Result and expanded_subnode_count_recursive >= subrow_count
+				Result := Result and expanded_subrow_count_recursive >= subrow_count
 			end
 			if is_initialized and then subrow_count > 0 and then not is_expanded then
-				Result := Result and expanded_subnode_count_recursive >= 0
+				Result := Result and expanded_subrow_count_recursive >= 0
 			end
-			Result := Result and expanded_subnode_count_recursive <= subnode_count_recursive
+			Result := Result and expanded_subrow_count_recursive <= subrow_count_recursive
 			if parent_i.is_tree_enabled then
 				Result := Result and parent_i.hidden_node_count <= parent_i.row_count - 1
 			end
@@ -1159,7 +1148,7 @@ feature {NONE} -- Implementation
 				Result := Result + 1
 					-- Add one for the current row which is now hidden.
 					
-				Result := Result + subrows.i_th (subrow_index).expanded_subnode_count_recursive
+				Result := Result + subrows.i_th (subrow_index).expanded_subrow_count_recursive
 					-- Add the number of expanded items for that row.
 					
 				subrow_index := subrow_index + 1

@@ -116,6 +116,7 @@ feature -- Properties
 	override_cluster,
 	profile,
 	product,
+	external_runtime,
 	server_file_size,
 	shared_library_definition,
 	syntax_warning,
@@ -220,6 +221,7 @@ feature {NONE} -- Codes and names.
 			Result.force (override_cluster, "override_cluster")
 			Result.force (product, "product")
 			Result.force (profile, "profile")
+			Result.force (external_runtime, "external_runtime")
 			Result.force (server_file_size, "server_file_size")
 			Result.force (shared_library_definition, "shared_library_definition")
 			Result.force (syntax_warning, "syntax_warning")
@@ -563,10 +565,11 @@ feature {COMPILER_EXPORTER}
 					end
 
 				when ise_gc_runtime then
-					if value.is_no then
-						System.set_ise_gc_runtime (False)
-					elseif value.is_yes or else value.is_all then
-						System.set_ise_gc_runtime (True)
+						-- Obsolete, use `external_runtime' instead
+
+				when external_runtime then
+					if value.is_name then
+						System.set_external_runtime (value.value)
 					else
 						error_found := True
 					end

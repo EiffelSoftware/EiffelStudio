@@ -42,6 +42,7 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (line_number_label)
 			l_ev_vertical_box_1.extend (line_number_text)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			l_ev_vertical_box_1.set_padding_width (10)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
 			l_ev_horizontal_box_1.extend (go_button)
 			l_ev_horizontal_box_1.extend (cancel_button)

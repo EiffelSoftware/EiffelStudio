@@ -1143,7 +1143,6 @@ rt_shared void eif_unsynchronize_gc (rt_global_context_t *rt_globals)
 #endif
 	}
 }
-#endif
 
 /*
 doc:	<routine name="eif_terminate_all_other_threads" return_type="void" export="shared">
@@ -1237,6 +1236,8 @@ rt_shared void eif_terminate_all_other_threads (void) {
 	}
 	EIF_EXIT_C;
 }
+
+#endif /* ISE_GC */
 
 #ifndef EIF_WINDOWS
 /*

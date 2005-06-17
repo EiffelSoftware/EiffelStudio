@@ -43,7 +43,9 @@ extern int eif_is_synchronized (void);
 #endif
 
 /* Killing threads */
+#ifdef ISE_GC
 extern void eif_terminate_all_other_threads(void);
+#endif
 
 /*---------------------------------------*/
 /*---  In multi-threaded environment  ---*/

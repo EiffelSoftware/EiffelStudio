@@ -78,6 +78,7 @@ rt_private EIF_INTEGER max_object_id = 0;
 
 rt_public EIF_INTEGER eif_object_id (EIF_OBJECT object)
 {
+#ifdef ISE_GC
 	EIF_INTEGER id;
 
   		/* Make sure object is not already in Object ID stack,
@@ -91,20 +92,28 @@ rt_public EIF_INTEGER eif_object_id (EIF_OBJECT object)
 	EIF_OBJECT_ID_UNLOCK;
 
 	return id;
+#else
+	return (EIF_INTEGER) object;
+#endif
 }
  
 rt_public EIF_INTEGER eif_general_object_id(EIF_OBJECT object)
 {
+#ifdef ISE_GC
 	EIF_INTEGER id;
 	EIF_OBJECT_ID_LOCK;
 	id = private_general_object_id(eif_access(object), &object_id_stack, &max_object_id, EIF_FALSE);
 	EIF_OBJECT_ID_UNLOCK;
 	return id;
+#else
+	return (EIF_INTEGER) object;
+#endif
 }
  
 rt_public EIF_REFERENCE eif_id_object(EIF_INTEGER id)
 	/* Returns the object associated with `id' */
 {
+#ifdef ISE_GC
 	EIF_REFERENCE ref;
 	
 	EIF_OBJECT_ID_LOCK;
@@ -114,6 +123,9 @@ rt_public EIF_REFERENCE eif_id_object(EIF_INTEGER id)
   	ENSURE ("Object found", (!ref) || (ref && has_object(&object_id_stack, ref)));
 
 	return ref;
+#else
+	return (EIF_REFERENCE) id;
+#endif
 }
  
 rt_public void eif_object_id_free(EIF_INTEGER id)
@@ -123,12 +135,14 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 	REQUIRE ("Not null", ref);
 #endif
 
+#ifdef ISE_GC
 	EIF_OBJECT_ID_LOCK;
 	private_object_id_free(id, &object_id_stack, max_object_id);
 	EIF_OBJECT_ID_UNLOCK;
 
 	ENSURE ("Object of id must be free", eif_id_object(id) == NULL);
 	ENSURE ("Object of id is not in Object ID stack", !has_object(&object_id_stack, ref));
+#endif
 }
 
 
@@ -137,6 +151,7 @@ rt_public void eif_object_id_free(EIF_INTEGER id)
 rt_public EIF_INTEGER eif_object_id_stack_size (void)
 	/* returns the number of chunks allocated in `object_id_stack' */
 {
+#ifdef ISE_GC
 	EIF_INTEGER result = 0;
 	struct stack *st = &object_id_stack;
 	struct stchunk *c, *cn;
@@ -149,11 +164,15 @@ rt_public EIF_INTEGER eif_object_id_stack_size (void)
 	}
 	EIF_OBJECT_ID_UNLOCK;
 	return result;
+#else
+	return 0;
+#endif
 }
 
 rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 	/* extends of `nb_chunks the size of `object_id_stack' */
 {
+#ifdef ISE_GC
 	RT_GET_CONTEXT
 	struct stack *st = &object_id_stack;
 	char **top;
@@ -187,7 +206,10 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 	SIGRESUME;		/* End of critical section */
 
 	EIF_OBJECT_ID_UNLOCK;
+#endif
 }
+
+#ifdef ISE_GC
 
 #define STACK_SIZE (eif_stack_chunk - (sizeof(struct stchunk)/sizeof(char*)))
 
@@ -343,6 +365,7 @@ rt_private void private_object_id_free(EIF_INTEGER id, struct stack *st, EIF_INT
 
 }
 
+
 #ifdef EIF_ASSERTIONS
 rt_shared EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
 {
@@ -371,6 +394,8 @@ rt_shared EIF_BOOLEAN has_object (struct stack *st, EIF_REFERENCE object)
 	return Result;
 }
 #endif
+
+#endif /* ISE_GC */
 
 /*
 doc:</file>

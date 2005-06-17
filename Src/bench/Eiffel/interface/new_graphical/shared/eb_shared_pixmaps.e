@@ -276,7 +276,7 @@ feature -- Icons
 
 	Icon_small_open_menu: ARRAY [EV_PIXMAP] is
 		once
-			Result := build_classic_pixmap ("watch_menu_small")
+			Result := build_classic_pixmap ("open_menu_small")
 		end
 
 	Icon_expanded_object: EV_PIXMAP is

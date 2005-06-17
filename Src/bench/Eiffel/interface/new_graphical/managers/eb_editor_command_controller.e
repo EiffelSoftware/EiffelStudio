@@ -278,6 +278,7 @@ feature {NONE} -- Implementation
 		do
 			current_editor.add_edition_observer (Current)
 			current_editor.add_selection_observer (Current)
+			post_notify_actions.wipe_out
 		end		
 
 	current_editor: EB_EDITOR

@@ -80,16 +80,19 @@ indexing
 		affect a virtual position of an item, the grid must recompute the virtual
 		positions again as required. Therefore, for your code to be optimal, it may be
 		necessary to take this into account. The worst possible case scenario is if you
-		are to repeatedly modify the state of a row or item at the start of the grid and
-		then query a virtual position of an object in the grid. In this situation, it is
-		recommended that you perform a two-pass operation. First perform all of the
+		are to iterate from the start of the grid to the end of the grid and modify the
+		state of each item or row during the iteration before querying a virtual position
+		of an object in the grid past the current iteration position. In this situation,
+		it is recommended that you perform a two-pass operation. First perform all of the
 		modifications to the items and then perform all of the queries to virtual
 		positions. The grid is optimized for additions in order so if you are repeatedly
 		adding items and querying their virtual positions, then the performance is far
 		better than if you are continuously inserting items at the start of the grid and
 		querying their virtual positions. Although it is important to be aware of this
 		behavior, you will find that in almost all cases, you have do perform no special
-		optimizations to get good performance within `Current'.
+		optimizations to get good performance within `Current'. This also aplies to
+		removal of rows. If you have many rows to remove, start with the final rows and
+		iterate towards the first for increased performance.
 
 		The re-drawing of `Current' is performed on idle, so if you are performing heavy
 		computation and the grid is not updating, call `process_events' from

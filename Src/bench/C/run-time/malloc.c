@@ -2574,13 +2574,13 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, size_t nbytes
 /*
 doc:	<routine name="eif_rt_xfree" export="public">
 doc:		<summary>Frees the memory block which starts at 'ptr'. This has to be a pointer returned by eif_rt_xmalloc, otherwise impredictable results will follow... The contents of the block are preserved, though one should not rely on this as it may change without notice.</summary>
-doc:		<param name="ptr" type="EIF_REFERENCE">Address of memory to be freed.</param>
+doc:		<param name="ptr" type="void *">Address of memory to be freed.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</routine>
 */
 
-rt_public void eif_rt_xfree(register EIF_REFERENCE ptr)
+rt_public void eif_rt_xfree(register void * ptr)
 {
 #ifdef ISE_GC
 	rt_uint_ptr r;					/* For shifting purposes */

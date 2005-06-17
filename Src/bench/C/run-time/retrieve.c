@@ -1389,9 +1389,11 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
+#ifdef ISE_GC
 		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
 										 * code below, we need to make sure to restore the status
 										 * to what it originally was. */
+#endif
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1514,9 +1516,11 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
+#ifdef ISE_GC
 		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
 										 * code below, we need to make sure to restore the status
 										 * to what it originally was. */
+#endif
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1696,9 +1700,11 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
+#ifdef ISE_GC
 		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
 										 * code below, we need to make sure to restore the status
 										 * to what it originally was. */
+#endif
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -1956,9 +1962,11 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 	if (setjmp (exenv)) {
 		rt_clean ();			/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
+#ifdef ISE_GC
 		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
 										 * code below, we need to make sure to restore the status
 										 * to what it originally was. */
+#endif
 		ereturn (MTC_NOARG);	/* Propagate exception */
 	}
 

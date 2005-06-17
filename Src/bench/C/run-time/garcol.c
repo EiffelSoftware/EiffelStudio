@@ -1245,7 +1245,9 @@ rt_public void reclaim(void)
 
 	DISCARD_BREAKPOINTS;
 
+#ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_terminate_all_other_threads());
+#endif
 
 		/* Mark final collection */
 	eif_is_in_final_collect = EIF_TRUE;

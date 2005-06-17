@@ -94,11 +94,11 @@ typedef struct tag_rt_globals
 #ifdef ISE_GC
 		/* Synchronizations for GC*/
 	int volatile gc_thread_status_cx;
+	int gc_stop_thread_request_cx;		/* Did GC required stopping current thread. */
 	int gc_thread_collection_count_cx;
 	int thread_can_launch_gc_cx;		/* Can we launch additional GC cycle? */
-	int gc_stop_thread_request_cx;		/* Did GC required stopping current thread. */
-	int thread_exiting_cx;			/* Has current thread already called eif_thr_exit? */
 #endif
+	int thread_exiting_cx;			/* Has current thread already called eif_thr_exit? */
 
 		/* except.c */
 	struct xstack eif_trace_cx;			/* Unsolved exception trace */

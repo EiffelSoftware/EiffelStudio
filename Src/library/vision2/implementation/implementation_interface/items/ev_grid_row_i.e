@@ -225,7 +225,7 @@ feature -- Access
 			is_parented: parent /= Void
 		do
 			Result := internal_height
-			fixme ("Needs to be properly computed")
+			fixme (Once "Needs to be properly computed")
 		ensure
 			result_not_negative: Result >= 0
 		end
@@ -944,7 +944,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 					-- The previous call to `update_parent_expanded_node_counts_recursively'
 					-- updates the hidden node count in parent. However, as the row has
 					-- actually been removed, we must undo this now.
-				fixme ("EV_GRID_ROW_I.update_for_subrow_removal Removed the need for the above mentioned work around.")
+				fixme (Once "EV_GRID_ROW_I.update_for_subrow_removal Removed the need for the above mentioned work around.")
 				parent_i.adjust_hidden_node_count ( -1)
 			else
 				parent_i.adjust_hidden_node_count ( -1)

@@ -47,9 +47,9 @@ feature -- Basic operations
 			i: INTEGER
 			internal_client_width: INTEGER
 		do
-			fixme ("Handle hidden columns and columns that have had their position moved.")
-			fixme ("Use a binary search to find the positions if possible.")
-			fixme ("Handle dynamic items in per item scrolling mode")
+			fixme (Once "Handle hidden columns and columns that have had their position moved.")
+			fixme (Once "Use a binary search to find the positions if possible.")
+			fixme (Once "Handle dynamic items in per item scrolling mode")
 			create Result.make (20)
 			
 			physical_column_indexes := grid.physical_column_indexes
@@ -135,7 +135,7 @@ feature -- Basic operations
 			found: BOOLEAN
 			grid_row_count: INTEGER
 		do
-			fixme ("Implement the dynamic mode for items when in per item scrolling")
+			fixme (Once "Implement the dynamic mode for items when in per item scrolling")
 			dynamic_content_function := grid.dynamic_content_function
 			create Result.make (20)
 			grid_row_count := grid.row_count
@@ -731,7 +731,7 @@ feature -- Basic operations
 	
 									item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
 										-- Now draw the complete background area for the cell in the grid that is currently being drawn.
-										fixme ("For drawable grid items, there is no need to do this, preventing overdraw.")
+										fixme (Once "For drawable grid items, there is no need to do this, preventing overdraw.")
 									item_buffer_pixmap.fill_rectangle (0, 0, current_column_width, current_row_height)
 	
 										-- Fire the `pre_draw_overlay_actions' which enable a user to draw on top of the background
@@ -762,7 +762,7 @@ feature -- Basic operations
 													l_pixmap := expand_pixmap
 												end
 													-- Now check if we must clip the pixmap vertically
-												fixme ("Add horizontal clipping for pixmaps.")
+												fixme (Once "Add horizontal clipping for pixmaps.")
 												if horizontal_node_pixmap_left_offset < current_column_width then
 													if node_pixmap_height > current_row_height then
 															-- In this situation, the height of the expand image is greater than the current row height,

@@ -1117,7 +1117,7 @@ feature -- Status setting
 			temp_column_count: INTEGER
 			a_columns: like columns
 		do
-			fixme ("Optimize for a_column_count = zero to blank columns without iteration if possible for wipeout")
+			fixme (Once "Optimize for a_column_count = zero to blank columns without iteration if possible for wipeout")
 			from
 				add_columns := a_column_count > columns.count
 				a_columns := columns
@@ -1145,7 +1145,7 @@ feature -- Status setting
 			temp_row_count: INTEGER
 			a_rows: like rows
 		do
-			fixme ("Optimize for a_row_count = zero to blank rows without iteration if possible")
+			--fixme (Once "Optimize for a_row_count = zero to blank rows without iteration if possible")
 			from
 				add_rows := a_row_count > rows.count
 				a_rows := rows
@@ -1261,7 +1261,7 @@ feature -- Status setting
 				vertical_scroll_bar.change_actions.resume
 			end
 			if is_horizontal_scrolling_per_item then
-				fixme ("Implement")
+				fixme (Once "Implement")
 			else
 				horizontal_scroll_bar.change_actions.block
 				horizontal_scroll_bar.set_value (virtual_x)
@@ -1656,7 +1656,7 @@ feature -- Element change
 					-- Update the changed indexes.
 				update_grid_row_indices (i.min (j))
 				redraw_client_area
-				fixme ("EV_GRID_I: move_rows redraw")
+				fixme (Once "EV_GRID_I: move_rows redraw")
 			end
 		end
 
@@ -2491,7 +2491,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					-- Only perform the exact item calculation if our threshold
 					-- for individual item redrawing has not been met.
 				
-				fixme ("Executing this code causes `item_indent' to be called twice. Can we optimize this?")
+				fixme (Once "Executing this code causes `item_indent' to be called twice. Can we optimize this?")
 				a1 := an_item.virtual_x_position - (internal_client_x - viewport_x_offset)
 				a2 := an_item.virtual_y_position - (internal_client_y - viewport_y_offset)
 				if is_row_height_fixed then
@@ -2773,7 +2773,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 		do
 				-- Retrieve the final row offset as this is the virtual height required for all rows.
 			if row_offsets = Void and not is_row_height_fixed then
-				fixme ("Ensure that `row_offsets' does not need special `Void' handling.")
+				fixme (Once "Ensure that `row_offsets' does not need special `Void' handling.")
 				l_total_row_height := 0
 			else
 				l_total_row_height := total_row_height
@@ -2897,7 +2897,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			else
 					-- The headers are not as wide as the visible client area.
 				if horizontal_scroll_bar.is_show_requested then
-				fixme ("Must reset the viewport x offset")
+				fixme (Once "Must reset the viewport x offset")
 --						-- Hide `horizontal_scroll_bar' as it is not required.
 --					if viewport.x_offset /= 0 then
 --						viewport.set_x_offset (0)
@@ -3167,7 +3167,7 @@ feature {NONE} -- Drawing implementation
 			if is_resizing_divider_enabled then
 				remove_resizing_line
 			end
-			fixme ("Only invalidate to the right hand side of the resized header item")
+			fixme (Once "Only invalidate to the right hand side of the resized header item")
 			set_horizontal_computation_required (header.index_of (header_item, 1))
 			redraw_client_area
 		end
@@ -3199,7 +3199,7 @@ feature {NONE} -- Drawing implementation
 	remove_resizing_line is
 			-- Remove resizing line drawn on `drawable'.
 		do
-			fixme ("Must remove resizing line if the area in which it was previously drawn has been re-drawn by `Current'")
+			fixme (Once "Must remove resizing line if the area in which it was previously drawn has been re-drawn by `Current'")
 				-- Remove line representing position in current divider style.
 			if is_resizing_divider_solid then
 				drawable.disable_dashed_line_style
@@ -3368,7 +3368,7 @@ feature {NONE} -- Drawing implementation
 			viewable_width := a_width
 			viewable_height := a_height
 
-			fixme ("[
+			fixme (Once "[
 				Is there a better way to respond to the resizing without setting the invalid row and column indexes to 1?]
 				I think it should be possible to simply update the scroll bar without modifying the indexes. Julian
 				]")
@@ -3568,7 +3568,7 @@ feature {NONE} -- Event handling
 			pointed_item: EV_GRID_ITEM_I
 			pointed_item_interface: EV_GRID_ITEM
 		do
-			fixme ("Item leave events are not connected when you leave the grid completely.")
+			fixme (Once "Item leave events are not connected when you leave the grid completely.")
 			if a_x >= 0 and then a_y >= 0 then
 				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 			end
@@ -4468,7 +4468,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				if grid_row_parent_i /= Void then
 						-- The row in which we are setting an item is already a subrow of another
 						-- row, so we must update the internal settings for the tree.
-						 fixme ("EV_GRID_I.internal_set_item Should refactor `internal_set_parent_row' so that the parent row is not set and only the calculations are performed.")
+						 fixme (Once "EV_GRID_I.internal_set_item Should refactor `internal_set_parent_row' so that the parent row is not set and only the calculations are performed.")
 					a_grid_row_i.internal_set_parent_row (grid_row_parent_i)
 				end
 				redraw_item (item_implementation)
@@ -4486,7 +4486,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				drawable.redraw_rectangle (a_grid_col_i.virtual_x_position - (internal_client_x - viewport_x_offset), a_grid_row_i.virtual_y_position - (internal_client_y - viewport_y_offset), a_grid_col_i.width, a_grid_row_i.height)
 			end
 
-			fixme ("EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
+			fixme (Once "EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")
 		end
 
 	item_counter: INTEGER

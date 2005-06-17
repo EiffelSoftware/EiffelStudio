@@ -137,6 +137,12 @@ feature -- Change
 			error := cst_error_expression
 			error_message := mesg
 		end
+		
+	set_error_syntax (mesg: STRING) is
+		do
+			error := cst_error_syntax
+			error_message := mesg
+		end		
 
 	set_error_not_implemented (mesg: STRING) is
 		do
@@ -149,6 +155,7 @@ feature {NONE} -- Error code
 	cst_error_evaluation: INTEGER is -1
 	cst_error_expression: INTEGER is -2
 	cst_error_exception: INTEGER is -3
+	cst_error_syntax: INTEGER is - 4
 	cst_error_not_implemented: INTEGER is -9
 	
 feature {NONE} -- Error message values
@@ -192,6 +199,11 @@ feature -- Access
 		do
 			Result := error = cst_error_exception
 		end
+		
+	is_error_syntax: BOOLEAN is
+		do
+			Result := error = cst_error_syntax
+		end		
 
 	is_error_not_implemented: BOOLEAN is
 		do

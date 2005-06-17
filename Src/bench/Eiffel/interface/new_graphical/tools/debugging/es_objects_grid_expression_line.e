@@ -380,7 +380,8 @@ feature -- Graphical changes
 
 							if expression_evaluator.is_error_exception then
 								set_error_pixmap (Pixmaps.Icon_exception)
-							elseif expression_evaluator.is_error_expression then
+							elseif expression_evaluator.is_error_expression 
+								or expression_evaluator.is_error_syntax then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
 							elseif expression_evaluator.is_error_evaluation then
 								set_error_pixmap (Pixmaps.Icon_exception)

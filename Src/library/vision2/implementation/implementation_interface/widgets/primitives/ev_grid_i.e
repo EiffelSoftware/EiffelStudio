@@ -2546,10 +2546,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		require
 			a_row_not_void: a_row /= Void
 		local
-			a2: INTEGER
+			row_virtual_y_position: INTEGER
 		do
-			a2 := a_row.virtual_y_position - (internal_client_y - viewport_y_offset)
-			drawable.redraw_rectangle (viewport_x_offset, a2, viewable_width, viewable_height + internal_client_y - a_row.virtual_y_position)
+			row_virtual_y_position := a_row.virtual_y_position
+			drawable.redraw_rectangle (viewport_x_offset, row_virtual_y_position - (internal_client_y - viewport_y_offset), viewable_width, viewable_height + internal_client_y - row_virtual_y_position)
 		end
 
 

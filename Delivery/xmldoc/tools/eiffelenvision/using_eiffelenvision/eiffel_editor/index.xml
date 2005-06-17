@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <document output="envision" title="Eiffel Editor">
   <meta_data>
     <help>
@@ -10,6 +10,10 @@
         <xmlkeyword>
           <index>A</index>
           <term>eeEiffelEditor</term>
+        </xmlkeyword>
+        <xmlkeyword>
+          <index>K</index>
+          <term>Editor</term>
         </xmlkeyword>
         <xmlkeyword>
           <index>K</index>

@@ -341,6 +341,9 @@ feature {NONE} -- Implementation: State
 	last_assigner_command: FEATURE_I
 			-- Last assigner command associated with a feature
 
+	is_assigner_call: BOOLEAN
+			-- Is an assigner call being processed?
+
 feature {NONE} -- Implementation: Access
 
 	last_access_writable: BOOLEAN
@@ -565,7 +568,7 @@ feature -- Implementation
 			l_cl_type_i: CL_TYPE_I
 			l_parameter: PARAMETER_B
 			l_parameter_list: BYTE_LIST [PARAMETER_B]
-			l_assigner_name: STRING
+			l_is_assigner_call: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
 
@@ -579,8 +582,9 @@ feature -- Implementation
 			is_in_creation_expression := False
 			is_target_of_creation_instruction := False
 
-				-- Reset assigner command
-			last_assigner_command := Void
+				-- Reset assigner call flag
+			l_is_assigner_call := is_assigner_call
+			is_assigner_call := False
 
 			l_feature_name := a_name
 
@@ -641,12 +645,6 @@ feature -- Implementation
 					end
 				else
 					l_feature := l_last_class.feature_table.item (l_feature_name)
-				end
-			end
-			if l_feature /= Void then
-				l_assigner_name := l_feature.assigner_name
-				if l_assigner_name /= Void then
-					last_assigner_command := l_feature.written_class.feature_named (l_assigner_name)
 				end
 			end
 			if l_feature /= Void and then (not is_static or else l_feature.has_static_access) then
@@ -915,7 +913,11 @@ feature -- Implementation
 					create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
 				end
 				context.supplier_ids.extend (l_depend_unit)
-	
+
+				if l_is_assigner_call then
+					process_assigner_command (l_last_id, l_feature)
+				end
+
 				if l_needs_byte_node then
 					if not is_static then
 						if is_precursor then
@@ -1528,7 +1530,11 @@ feature -- Implementation
 			l_target_access: ACCESS_B
 			l_call: CALL_B
 			l_nested: NESTED_B
+			l_is_assigner_call: BOOLEAN
 		do
+				-- Mask out assigner call flag for target of the call
+			l_is_assigner_call := is_assigner_call
+			is_assigner_call := False
 				-- Type check the target
 			l_as.target.process (Current)
 			if not is_byte_node_enabled then
@@ -1537,6 +1543,8 @@ feature -- Implementation
 			else
 				l_target_access ?= last_byte_node
 
+					-- Restore assigner call flag for nested call
+				is_assigner_call := l_is_assigner_call
 					-- Type check the message
 				l_as.message.process (Current)
 
@@ -2138,8 +2146,13 @@ feature -- Implementation
 			l_expr: EXPR_B
 			l_access: ACCESS_B
 			l_unary: UNARY_B
+			l_is_assigner_call: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
+
+				-- Reset assigner call flag
+			l_is_assigner_call := is_assigner_call
+			is_assigner_call := False
 
 				-- Check operand
 			l_as.expr.process (Current)
@@ -2186,7 +2199,7 @@ feature -- Implementation
 
 			if
 				not System.do_not_check_vape and then is_checking_precondition and then
-				not current_feature.export_status.is_subset (l_prefix_feature.export_status) 
+				not current_feature.export_status.is_subset (l_prefix_feature.export_status)
 			then
 					-- In precondition and checking for vape
 				create l_vape
@@ -2234,6 +2247,9 @@ feature -- Implementation
 					l_prefix_feature_type := l_prefix_feature_type.instantiation_in
 									(last_type, l_last_class.class_id).actual_type
 				end
+			end
+			if l_is_assigner_call then
+				process_assigner_command (l_last_class.class_id, l_prefix_feature)
 			end
 
 			if l_needs_byte_node then
@@ -2349,8 +2365,13 @@ feature -- Implementation
 			l_needs_byte_node: BOOLEAN
 			l_binary: BINARY_B
 			l_call_access: CALL_ACCESS_B
+			l_is_assigner_call: BOOLEAN
 		do
 			l_needs_byte_node := is_byte_node_enabled
+
+				-- Reset assigner call
+			l_is_assigner_call := is_assigner_call
+			is_assigner_call := False
 
 				-- First type check the left operand
 			l_as.left.process (Current)
@@ -2438,6 +2459,10 @@ feature -- Implementation
 				else
 						-- Usual case
 					l_infix_type := l_infix_type.instantiation_in (l_target_type, l_left_id).actual_type
+				end
+
+				if l_is_assigner_call then
+					process_assigner_command (l_left_id, last_infix_feature)
 				end
 
 				if l_needs_byte_node then
@@ -2652,16 +2677,24 @@ feature -- Implementation
 
 	process_bracket_as (l_as: BRACKET_AS) is
 		local
+			was_assigner_call: BOOLEAN
 			target_type: TYPE_A
 			constrained_target_type: TYPE_A
 			target_expr: EXPR_B
+			target_access: ACCESS_EXPR_B
 			target_class: CLASS_C
 			bracket_feature: FEATURE_I
 			id_feature_name: ID_AS
 			location: LOCATION_AS
+			call_b: CALL_B
+			nested_b: NESTED_B
 			vuex: VUEX
 			vwbr: VWBR
 		do
+				-- Clean assigner call flag for bracket target
+			was_assigner_call := is_assigner_call
+			is_assigner_call := False
+
 				-- Check target
 			l_as.target.process (Current)
 			target_type := last_type.actual_type
@@ -2696,8 +2729,25 @@ feature -- Implementation
 			create id_feature_name.initialize (bracket_feature.feature_name)
 			location := l_as.left_bracket_location
 			id_feature_name.set_position (location.line, location.column, location.position, location.location_count)
+				-- Restore assigner call flag
+			is_assigner_call := was_assigner_call
+				-- Process call to bracket feature
 			process_call (last_type, Void, id_feature_name, bracket_feature, l_as.operands, False, False, True, False)
 			error_handler.checksum
+			if is_byte_node_enabled then
+				create nested_b
+				create target_access
+				target_access.set_expr (target_expr)
+				target_access.set_parent (nested_b)
+				call_b ?= last_byte_node
+				check
+					call_b_not_void: call_b /= Void
+				end
+				call_b.set_parent (nested_b)
+				nested_b.set_message (call_b)
+				nested_b.set_target (target_access)
+				last_byte_node := nested_b
+			end
 		end
 
 	process_external_lang_as (l_as: EXTERNAL_LANG_AS) is
@@ -2837,11 +2887,19 @@ feature -- Implementation
 			outer_nested_b: NESTED_B
 			inner_nested_b: NESTED_B
 			access_b: ACCESS_B
+			binary_b: BINARY_B
+			unary_b: UNARY_B
+			call_b: CALL_B
 			arguments: BYTE_LIST [PARAMETER_B]
-			assigner_argument: PARAMETER_B
+			argument: PARAMETER_B
 			assigner_arguments: BYTE_LIST [PARAMETER_B]
 		do
+				-- Set assigner call flag for target expression
+			is_assigner_call := True
 			l_as.target.process (Current)
+			check
+				assigner_command_computed: not is_assigner_call
+			end
 			target_byte_node := last_byte_node
 			target_type := last_type
 			target_assigner := last_assigner_command
@@ -2866,36 +2924,60 @@ feature -- Implementation
 				error_handler.checksum
 					-- Preserve source byte node
 				source_byte_node ?= last_byte_node
-					-- Find end of call chain
-				from
+					-- Discriminate over expression kind:
+					-- it should be either a qualified call,
+					-- a binary or an unary
 				outer_nested_b ?= target_byte_node
-					check
-						outer_nested_b_not_void: outer_nested_b /= Void
+				binary_b ?= target_byte_node
+				unary_b ?= target_byte_node
+				if outer_nested_b /= Void then
+					call_b := outer_nested_b
+						-- Find end of call chain
+					from
+						inner_nested_b ?= outer_nested_b.message
+					until
+						inner_nested_b = Void
+					loop
+						outer_nested_b := inner_nested_b
+						inner_nested_b ?= outer_nested_b.message
 					end
-					inner_nested_b ?= outer_nested_b.message
-				until
-					inner_nested_b = Void
-				loop
-					outer_nested_b := inner_nested_b
-					inner_nested_b ?= outer_nested_b.message
+						-- Evaluate assigner command arguments
+					access_b ?= outer_nested_b.message
+					check
+						access_b_not_void: access_b /= Void
+					end
+					arguments := access_b.parameters
+				elseif binary_b /= Void then
+						-- Create call chain
+					outer_nested_b := binary_b.nested_b
+					call_b := outer_nested_b
+						-- Evaluate assigner command arguments
+					create arguments.make (1)
+					create argument
+					argument.set_expression (binary_b.right)
+					argument.set_attachment_type (binary_b.attachment)
+					arguments.extend (argument)
+				else
+					check
+						unary_b_not_void: unary_b /= Void
+					end
+						-- Create call chain
+					outer_nested_b := unary_b.nested_b
+					call_b := outer_nested_b
+						-- There are no arguments in unary expression
 				end
 					-- Evaluate assigner command arguments:
 					--   first is a source of an assigner command
 					--   next are those from target call
-				access_b ?= outer_nested_b.message
-				check
-					access_b_not_void: access_b /= Void
-				end
-				arguments := access_b.parameters
 				if arguments = Void then
 					create assigner_arguments.make (1)
 				else
 					create assigner_arguments.make (arguments.count + 1)
 				end
-				create assigner_argument
-				assigner_argument.set_expression (source_byte_node)
-				assigner_argument.set_attachment_type (target_type.type_i)
-				assigner_arguments.extend (assigner_argument)
+				create argument
+				argument.set_expression (source_byte_node)
+				argument.set_attachment_type (target_type.type_i)
+				assigner_arguments.extend (argument)
 				if arguments /= Void then
 					assigner_arguments.append (arguments)
 				end
@@ -2905,7 +2987,7 @@ feature -- Implementation
 					-- Replace end of call chain with an assigner command
 				access_b.set_parent (outer_nested_b)
 				outer_nested_b.set_message (access_b)
-				last_byte_node := target_byte_node
+				create {INSTR_CALL_B} last_byte_node.make (call_b, l_as.start_location.line)
 			end
 		end
 
@@ -4478,6 +4560,34 @@ feature {NONE} -- Implementation
 		ensure
 			last_type_unchanged: last_type = old last_type
 			last_byte_node_not_void: is_byte_node_enabled implies last_byte_node /= Void
+		end
+
+	process_assigner_command (target_class_id: INTEGER; target_query: FEATURE_I) is
+			-- Attempt to calculate an assigner call associated with `target_query'
+			-- called on type of `target_class_id'. Make the result available in
+			-- `last_assigner_command'. Register client dependance on the target
+			-- command.
+		require
+			target_query_not_void: target_query /= Void
+		local
+			assigner_name: STRING
+			assigner_command: FEATURE_I
+		do
+			assigner_name := target_query.assigner_name
+			if assigner_name = Void then
+				last_assigner_command := Void
+			else
+				assigner_command := target_query.written_class.feature_named (assigner_name)
+				if assigner_command /= Void then
+						-- Evaluate assigner command in context of target type
+					assigner_command := system.class_of_id (target_class_id).feature_of_rout_id
+						(assigner_command.rout_id_set.first)
+						-- Suppliers update
+					context.supplier_ids.extend (create {DEPEND_UNIT}.make_with_level
+						(target_class_id, assigner_command, depend_unit_level))
+				end
+				last_assigner_command := assigner_command
+			end
 		end
 
 feature {NONE} -- Implementation: overloading

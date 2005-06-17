@@ -296,9 +296,9 @@ feature -- Basic operations
 										-- is possible that the current row may not exist.
 									if current_row.subrow_count > 0 and not current_row.is_expanded then
 										if not first_row_index_set then
-											skipped_rows := skipped_rows + current_row.subnode_count_recursive	
+											skipped_rows := skipped_rows + current_row.subrow_count_recursive	
 										end
-										row_counter := row_counter + current_row.subnode_count_recursive
+										row_counter := row_counter + current_row.subrow_count_recursive
 									end
 								end
 								row_counter := row_counter + 1
@@ -814,7 +814,7 @@ feature -- Basic operations
 														if current_horizontal_pos < column_offsets @ (node_index + 1) then
 																-- Draw the vertical line at the node, connecting the top and bottom
 																-- of the tree row.
-															if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
+															if parent_row_i.subrow_count_recursive > ((current_row.index + current_row.subrow_count_recursive) - parent_row_i.index) then
 																	-- In this case we are not the final row in the parents structure, so we must draw from the top of
 																	-- the row to the bottom.
 																if current_row.is_expandable then
@@ -853,7 +853,7 @@ feature -- Basic operations
 																	-- edge of the item. In this case, we simply do not draw it. This reduces flicker and time spent
 																	-- drawing.
 	
-																if loop_parent_row.subnode_count_recursive > ((loop_current_row.index + loop_current_row.subnode_count_recursive) - loop_parent_row.index) then
+																if loop_parent_row.subrow_count_recursive > ((loop_current_row.index + loop_current_row.subrow_count_recursive) - loop_parent_row.index) then
 																		-- If the current item is the last one contained within the parent then a line must be drawn. As this is
 																		-- computed in a nested fashion, the subnode count is used recursively.
 	

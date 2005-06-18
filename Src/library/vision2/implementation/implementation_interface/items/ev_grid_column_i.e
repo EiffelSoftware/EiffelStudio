@@ -474,15 +474,15 @@ feature -- Element change
 
 feature {EV_GRID_I} -- Implementation
 
-	remove_parent_i is
-			-- Set `parent_i' to Void.
+	update_for_removal is
+			-- Update settings in `Current' to reflect the fact that
+			-- it is being removed from `parent_i'.
 		require
 			is_parented: parent /= Void
 		do
 			clear
 			disable_select
 			parent_i := Void
-			internal_is_selected := False
 		ensure
 			parent_i_unset: parent_i = Void
 		end

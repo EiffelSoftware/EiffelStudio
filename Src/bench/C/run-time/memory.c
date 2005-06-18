@@ -91,6 +91,8 @@ rt_public void mem_free(EIF_REFERENCE object)
 #else
 #ifdef BOEHM_GC
 	GC_free(zone);
+#elif defined(NO_GC)
+	free(zone);
 #endif
 #endif
 }

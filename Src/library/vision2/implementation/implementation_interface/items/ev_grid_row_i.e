@@ -37,8 +37,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create subrows
-			internal_height := parent_i.row_height
-				-- internal_height is set when the row is parented.
+			internal_height := default_row_height
 			depth_in_tree := 1
 			indent_depth_in_tree := 1
 			subrow_count_recursive := 0
@@ -1175,6 +1174,15 @@ feature {NONE} -- Implementation
 				l_parent := l_parent.parent_row_i
 			end
 		end
+		
+	default_row_height: INTEGER is
+			-- Default height of a row, based on the height of the default font.
+		once
+			Result := (create {EV_LABEL}).minimum_height + 3	
+		ensure
+			result_positive: result > 0
+		end
+		
 		
 feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 

@@ -1037,7 +1037,7 @@ feature -- Status setting
 		
 	set_row_height (a_row_height: INTEGER) is
 			-- Set height of all rows within `Current' to `a_row_height
-			-- If not `is_row_height_fixed' then set the height individually per row instead.
+			-- If not `is_row_height_fixed' then use the height individually per row instead.
 		require
 			is_row_height_fixed: is_row_height_fixed
 			a_row_height_positive: a_row_height >= 1
@@ -1872,7 +1872,22 @@ feature -- Removal
 			i, j: INTEGER
 			l_row_count, l_column_count: INTEGER
 			current_column_count: INTEGER
+			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
+			if is_row_selection_enabled then
+					-- In this case, it is possible that an empty row is selected
+					-- so just by iterating the items, the row is not unselected
+					-- correctly.
+				l_selected_rows := selected_rows
+				from
+					l_selected_rows.start
+				until
+					l_selected_rows.after
+				loop
+					l_selected_rows.item.disable_select
+					l_selected_rows.forth
+				end
+			end
 			from
 				i := 1
 				l_row_count := row_count

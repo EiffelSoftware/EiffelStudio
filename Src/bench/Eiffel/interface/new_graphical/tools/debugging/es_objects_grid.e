@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			enable_tree
 			enable_partial_dynamic_content
+			enable_row_height_fixed
 			set_dynamic_content_function (agent compute_grid_item)
 			enable_single_row_selection
 			enable_solid_resizing_divider
@@ -124,7 +125,7 @@ feature {NONE} -- Actions implementation
 			then
 				vy := vy_now - viewable_height * a_step
 			else
-				vy := vy_now - mouse_wheel_scroll_size * a_step
+				vy := vy_now - mouse_wheel_scroll_size * a_step * row_height
 			end
 			if vy_now /= vy then			
 				if vy < 0 then

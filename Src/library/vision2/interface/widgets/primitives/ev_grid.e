@@ -1043,7 +1043,7 @@ feature -- Status setting
 		
 	set_row_height (a_row_height: INTEGER) is
 			-- Set height of all rows within `Current' to `a_row_height
-			-- If not `is_row_height_fixed' then set the height individually per row instead.
+			-- If not `is_row_height_fixed' then use the height individually per row instead.
 		require
 			not_destroyed: not is_destroyed
 			is_row_height_fixed: is_row_height_fixed

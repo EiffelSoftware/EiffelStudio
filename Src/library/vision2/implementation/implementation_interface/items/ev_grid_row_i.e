@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			create subrows
-			internal_height := 0
+			internal_height := 16
 				-- internal_height is set when the row is parented.
 			depth_in_tree := 1
 			indent_depth_in_tree := 1
@@ -89,7 +89,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 			parent_i := a_grid_i
 			hash_code := a_row_id
 				-- Set the default height to be that of `a_grid_i'.
-			internal_height := a_grid_i.row_height
+			--internal_height := a_grid_i.row_height
 		ensure
 			parent_set: parent_i = a_grid_i
 			row_id_set: hash_code = a_row_id
@@ -891,7 +891,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				i := i + 1
 			end
 		ensure
-			to_implement_assertion ("EV_GRID_ROW_I.clear - All items positions return `Void'.")
+			cleared: index_of_first_item = 0
 		end
 
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
@@ -914,6 +914,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		require
 			is_parented: parent /= Void
 		do
+			clear
 				-- Make sure row is unselected from grid before removal
 			disable_select
 			if parent_row_i /= Void then

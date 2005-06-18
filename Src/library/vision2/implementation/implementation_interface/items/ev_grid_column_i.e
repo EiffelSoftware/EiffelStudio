@@ -479,6 +479,8 @@ feature {EV_GRID_I} -- Implementation
 		require
 			is_parented: parent /= Void
 		do
+			clear
+			disable_select
 			parent_i := Void
 			internal_is_selected := False
 		ensure

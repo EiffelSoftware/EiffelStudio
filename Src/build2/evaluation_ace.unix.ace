@@ -70,7 +70,7 @@ cluster
 
 	all preferences:		"$EIFFEL_SRC/library/preferences"
 		exclude
-			"registry"; 
+			"registry_implementation"; 
 		end
 		
 	all eifp_reader: "$EIFFEL_SRC/dotnet/VisualStudio/tools/eifp_reader"

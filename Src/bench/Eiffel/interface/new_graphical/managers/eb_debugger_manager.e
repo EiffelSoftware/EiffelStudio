@@ -36,19 +36,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			if preferences.debugger_data.use_grid_debugging_tools then
-				new_debugging_tool_enabled := True
-				object_tool_enabled := False
-			else
-				new_debugging_tool_enabled := False
-				object_tool_enabled := True
-			end
-
-			debug ("_use_new_dbg_tools_")
-				new_debugging_tool_enabled := True
-				object_tool_enabled := False
-			end
-
 			Application_notification_controller.on_launched_actions.extend (agent on_application_launched)
 			Application_notification_controller.on_before_stopped_actions.extend (agent on_application_before_stopped)
 			Application_notification_controller.on_after_stopped_actions.extend (agent on_application_just_stopped)
@@ -60,11 +47,8 @@ feature {NONE} -- Initialization
 			init_commands
 
 			objects_split_position := 300
-			object_split_position := 300
 			
-			if new_debugging_tool_enabled then
-				create watch_tool_list.make
-			end
+			create watch_tool_list.make
 
 			create observers.make (10)
 			create kept_objects.make
@@ -72,11 +56,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	new_debugging_tool_enabled: BOOLEAN
-			-- FIXME: JFIAT: Remove this when first integrated
-
-	object_tool_enabled: BOOLEAN
 
 	debug_run_cmd: EB_DEBUG_RUN_COMMAND
 		-- Command to run the project under debugger.
@@ -92,13 +71,7 @@ feature -- Access
 
 	objects_tool: ES_OBJECTS_TOOL
 
-	object_tool: EB_OBJECT_TOOL
-			-- A tool that represents the current call stack element and an object in a graphical display.
-
 	watch_tool_list: LINKED_SET [ES_WATCH_TOOL]
-
-	evaluator_tool: EB_EXPRESSION_EVALUATOR_TOOL
-			-- A tool that evaluates expressions.
 
 	kept_objects: LINKED_SET [STRING]
 			-- Objects represented by their address that should be kept during the execution.
@@ -404,57 +377,53 @@ feature -- Status setting
 			debugging_window.context_tool.feature_view.pop_feature_flat
 
 				--| Create tools. |--
-			if new_debugging_tool_enabled then
-					--| ES debugging tools |--
-				if debugging_tools = Void then
-					create debugging_tools.make (
-							interface_names.t_Object_tool,
-							interface_names.m_Object_tools,
-							Void
-						)
--- FIXME jfiat [2005/06/07] : when we decide to replace the current tool by the grid tool
---					create debugging_tools.make (interface_names.t_Debugging_tool)
-					debugging_tools.attach_to_explorer_bar (debugging_window.right_panel)
-				else
-					debugging_tools.change_attach_explorer (debugging_window.right_panel)
-				end
-
-					--| Grid Objects Tool
-				if objects_tool = Void then
-					create objects_tool.make (debugging_window)
-					objects_tool.attach_to_notebook (debugging_tools)
-				else
-					objects_tool.set_manager (debugging_window)
-					objects_tool.change_attach_notebook (debugging_tools)
-				end
-				objects_tool.set_debugger_manager (Current)
-				objects_tool.update
-
-					--| Watches tool
-				if watch_tool_list.count < Preferences.debugger_data.number_of_watch_tools  then
-					from
-					until
-						watch_tool_list.count >= Preferences.debugger_data.number_of_watch_tools
-					loop
-						create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
-					end
-				else
-					from
-						watch_tool_list.start
-					until
-						watch_tool_list.after
-					loop
-						l_watch_tool := watch_tool_list.item
-						if l_watch_tool /= Void then
-							l_watch_tool.set_manager (debugging_window)
-							l_watch_tool.change_attach_notebook (debugging_tools)
-						end
-						watch_tool_list.forth
-					end
-				end
-				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
-				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
+				--| ES debugging tools |--
+			if debugging_tools = Void then
+				create debugging_tools.make (
+						interface_names.t_Debugging_tool,
+						interface_names.m_Debugging_tool,
+						Void
+					)
+				debugging_tools.attach_to_explorer_bar (debugging_window.right_panel)
+			else
+				debugging_tools.change_attach_explorer (debugging_window.right_panel)
 			end
+
+				--| Grid Objects Tool
+			if objects_tool = Void then
+				create objects_tool.make (debugging_window)
+				objects_tool.attach_to_notebook (debugging_tools)
+			else
+				objects_tool.set_manager (debugging_window)
+				objects_tool.change_attach_notebook (debugging_tools)
+			end
+			objects_tool.set_debugger_manager (Current)
+			objects_tool.update
+
+				--| Watches tool
+			if watch_tool_list.count < Preferences.debugger_data.number_of_watch_tools  then
+				from
+				until
+					watch_tool_list.count >= Preferences.debugger_data.number_of_watch_tools
+				loop
+					create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
+				end
+			else
+				from
+					watch_tool_list.start
+				until
+					watch_tool_list.after
+				loop
+					l_watch_tool := watch_tool_list.item
+					if l_watch_tool /= Void then
+						l_watch_tool.set_manager (debugging_window)
+						l_watch_tool.change_attach_notebook (debugging_tools)
+					end
+					watch_tool_list.forth
+				end
+			end
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 
 				--| Call Stack Tool
 			if call_stack_tool = Void then
@@ -464,43 +433,6 @@ feature -- Status setting
 				call_stack_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
 			end
 			call_stack_tool.update
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
-			end
-
-if object_tool_enabled then
-				--| Object Tool
-			if object_tool = Void then
-				create object_tool.make (debugging_window)
-				object_tool.attach_to_explorer_bar (debugging_window.right_panel)
-			else
-				object_tool.set_manager (debugging_window)
-				object_tool.change_attach_explorer (debugging_window.right_panel)
-			end
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
-			end
-
-			object_tool.set_debugger_manager (Current)
-			object_tool.update
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
-			end
-end
-
-				--| Expression Evaluator Tool
-			if evaluator_tool = Void then
-				create evaluator_tool.make (debugging_window)
-				evaluator_tool.attach_to_explorer_bar (debugging_window.left_panel)
-			else
-				evaluator_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
-			end
-			debug ("DEBUGGER_INTERFACE")
-				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
-			end
-
-			evaluator_tool.prepare_for_debug
-			evaluator_tool.update
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -529,23 +461,13 @@ end
 				debugging_window.right_panel.load_from_resource (debug_right_layout)
 			end
 
-			if new_debugging_tool_enabled then
-					--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
-				split ?= objects_tool.widget
-				if split /= Void then
-					split.set_split_position (objects_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
-					split := Void
-				end
+				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
+			split ?= objects_tool.widget
+			if split /= Void then
+				split.set_split_position (objects_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
+				split := Void
 			end
 
-			if object_tool_enabled then
-					--| Set the Object tool split position to 200 which is the default size of the local tree.
-				split ?= object_tool.widget
-				if split /= Void then
-					split.set_split_position (object_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
-					split := Void
-				end
-			end
 			if debugging_window.panel.full then
 				debugging_window.panel.set_split_position (debug_splitter_position.
 						max (debugging_window.panel.minimum_split_position))
@@ -579,17 +501,9 @@ end
 			debug_left_layout := debugging_window.left_panel.save_to_resource
 			debug_right_layout := debugging_window.right_panel.save_to_resource
 			debug_splitter_position := debugging_window.panel.split_position
-			if new_debugging_tool_enabled then
-				split ?= objects_tool.widget
-				if split /= Void then
-					objects_split_position := split.split_position
-				end
-			end
-			if object_tool_enabled then
-				split ?= object_tool.widget
-				if split /= Void then
-					object_split_position := split.split_position
-				end
+			split ?= objects_tool.widget
+			if split /= Void then
+				objects_split_position := split.split_position
 			end
 			preferences.debug_tool_data.left_debug_layout_preference.set_value (debug_left_layout)
 			preferences.debug_tool_data.right_debug_layout_preference.set_value (debug_right_layout)
@@ -656,14 +570,8 @@ end
 			-- Recycle tools to free unused data
 		do
 			call_stack_tool.recycle
-			if new_debugging_tool_enabled then
-				objects_tool.recycle
-				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.recycle)				
-			end
-			if object_tool_enabled then
-				object_tool.recycle
-			end
-			evaluator_tool.recycle
+			objects_tool.recycle
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.recycle)				
 			application.recycle
 		end
 
@@ -679,14 +587,8 @@ end
 				end
 			
 				call_stack_tool.set_stone (st)
-				if new_debugging_tool_enabled then
-					objects_tool.set_stone (st)
-					watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
-				end
-				if object_tool_enabled then
-					object_tool.set_stone (st)
-				end
-				evaluator_tool.set_stone (st)
+				objects_tool.set_stone (st)
+				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
 			end
 		end
 
@@ -794,47 +696,26 @@ feature -- Debugging events
 				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
 
-			if new_debugging_tool_enabled then
-				objects_tool.disable_refresh
-				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
-			end
-
-			if object_tool_enabled then
-				object_tool.disable_refresh
-			end
-			evaluator_tool.disable_refresh
+			objects_tool.disable_refresh
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
 			if not Application.current_call_stack_is_empty then
 				st := first_valid_call_stack_stone
 				if st /= Void then
 					launch_stone (st)
 				end
 			end
-			if new_debugging_tool_enabled then
-				objects_tool.enable_refresh
-				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)				
-			end
-			if object_tool_enabled then
-				object_tool.enable_refresh
-			end
-			evaluator_tool.enable_refresh
+			objects_tool.enable_refresh
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)				
 
 			window_manager.quick_refresh_all
 
 				-- Fill in the stack tool.
 			call_stack_tool.update
-			if new_debugging_tool_enabled then
-					-- Fill in the objects tool.
-				objects_tool.update
-					-- Update Watch tool
-				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
-			end
+				-- Fill in the objects tool.
+			objects_tool.update
+				-- Update Watch tool
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 
-			if object_tool_enabled then
-					-- Fill in the object tool.
-				object_tool.update
-			end
-				-- Update Evaluator tool
-			evaluator_tool.update
 			create stt.make
 			stt.add_string ("Application stopped")
 			stt.add_new_line
@@ -886,18 +767,11 @@ feature -- Debugging events
 
 				-- Fill in the stack tool.
 			call_stack_tool.update
-			if new_debugging_tool_enabled then
-					-- Fill in the objects tool.
-				objects_tool.update
-					-- Update Watch tool
-				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
-			end
-			if object_tool_enabled then
-					-- Fill in the object tool.
-				object_tool.update
-			end
-				-- Update Evaluator tool
-			evaluator_tool.update
+				-- Fill in the objects tool.
+			objects_tool.update
+				-- Update Watch tool
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
+
 			create stt.make
 			stt.add_string ("Application is running")
 			stt.add_new_line

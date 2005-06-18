@@ -1748,13 +1748,9 @@ feature -- Removal
 			a_col_i: EV_GRID_COLUMN_I
 		do
 			a_col_i := columns @ a_column
-			a_col_i.disable_select
-
-				-- Column needs to be cleared otherwise data will remain as long as the corresponding rows do.
-			a_col_i.clear
 			
 				-- Remove association of column with `Current'
-			a_col_i.remove_parent_i
+			a_col_i.update_for_removal
 			
 			columns.go_i_th (a_column)
 			columns.remove
@@ -4214,7 +4210,7 @@ feature {NONE} -- Implementation
 			if replace_existing_item then
 				replaced_column := columns.item
 				if replaced_column /= Void then
-					replaced_column.remove_parent_i
+					replaced_column.update_for_removal
 				end
 				columns.replace (a_column_i)
 				a_column_i.set_index (a_index)

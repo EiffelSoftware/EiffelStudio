@@ -99,7 +99,9 @@ feature -- Formatting
 						editor.process_text (formatted_text)
 						if app_stopped then
 							selected_line := stel.break_index
-							editor.display_breakpoint_number_when_ready (selected_line)
+							if selected_line > 0 then
+								editor.display_breakpoint_number_when_ready (selected_line)
+							end
 						end
 					else
 							-- We remove the arrow.
@@ -110,7 +112,9 @@ feature -- Formatting
 							selected_line := stel.break_index
 								-- We put an arrow back.
 							editor.invalidate_line (selected_line, True)
-							editor.display_breakpoint_number_when_ready (selected_line)
+							if selected_line > 0 then
+								editor.display_breakpoint_number_when_ready (selected_line)
+							end
 						else
 							selected_line := 1
 						end

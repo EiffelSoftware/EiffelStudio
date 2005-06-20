@@ -20,6 +20,7 @@ create
 %x VERBATIM_STR1
 %option outfile="editor_eiffel_scanner.e"
 
+D		([0-9])
 H		([0-9A-Fa-f])
 
 %%
@@ -426,10 +427,8 @@ H		([0-9A-Fa-f])
 						
 ----------/** Eiffel integers **/-----------------------------------------------
 
-[0-9]+					|
-[0-9]{1,3}(_[0-9]{3})+			|
-0[xX]{H}				|
-0[xX]{H}({H}|_)*{H}	{
+{D}(({D}|_)*{D})?			|
+0[xX]{H}(({H}|_)*{H})?	{
 						-- Eiffel Integer
 						if not in_comments then
 							if not in_verbatim_string then

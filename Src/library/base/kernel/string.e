@@ -142,10 +142,15 @@ feature -- Initialization
 		local
 			l_count: INTEGER
 		do
-			l_count := a_system_string.length
-			make (l_count)
-			count := l_count
-			a_system_string.copy_to (0, area.native_array, 0, l_count)
+			if a_system_string /= Void then
+				l_count := a_system_string.length
+				make_area (l_count + 1)
+				count := l_count
+				internal_hash_code := 0
+				a_system_string.copy_to (0, area.native_array, 0, l_count)
+			else
+				make (0)
+			end
 		end
 		
 	from_c (c_string: POINTER) is

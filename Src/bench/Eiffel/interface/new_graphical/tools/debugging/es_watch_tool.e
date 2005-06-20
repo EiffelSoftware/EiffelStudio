@@ -455,27 +455,6 @@ feature {NONE} -- add new expression from the grid
 			new_expression_row.index = watches_grid.row_count
 		end
 
-	string_key_pressed (s: STRING) is
-			-- A key was pressed in `watches_grid'.
-		local
-			row: EV_GRID_ROW
-			rows: ARRAYED_LIST [EV_GRID_ROW]
-			empty_expression_cell: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
-		do
-			rows := watches_grid.selected_rows
-			if not rows.is_empty then
-				row := rows.first
-				if 
-					col_name_index <= row.count
-				then
-					empty_expression_cell ?= row.item (col_name_index)
-					if empty_expression_cell /= Void then
-						empty_expression_cell.activate_with_string (s)
-					end
-				end
-			end
-		end		
-
 	add_new_expression_for_context (s: STRING) is
 		local
 			expr: EB_EXPRESSION
@@ -493,7 +472,7 @@ feature {NONE} -- Event handling
 		do
 			if notebook_item /= Void then
 				create m
-				create mi.make_with_text_and_action ("Create new watch", agent debugger_manager.create_new_watch_tool_inside_notebook (manager, notebook_item.parent))
+				create mi.make_with_text_and_action ("Create new watch", agent open_new_created_watch_tool)
 				m.extend (mi)
 				if debugger_manager.watch_tool_list.count > 1 then
 					create mi.make_with_text_and_action ("Close current watch", agent debugger_manager.close_watch_tool (Current))
@@ -501,6 +480,25 @@ feature {NONE} -- Event handling
 				end
 
 				m.show_at (mini_toolbar, 1, 1)
+			end
+		end
+	
+	open_new_created_watch_tool is
+		local
+			wt: like Current
+		do
+			if notebook_item /= Void then
+				debugger_manager.create_new_watch_tool_inside_notebook (manager, notebook_item.parent)
+				wt := debugger_manager.watch_tool_list.last
+				if wt /= Void then
+					if 
+						wt.notebook_item /= Void 
+						and then wt.notebook_item.tab /= Void
+					then
+						wt.notebook_item.tab.enable_select
+					end
+				end
+				wt.update
 			end
 		end
 
@@ -729,6 +727,7 @@ feature {NONE} -- Event handling
 			-- A key was pressed in `ev_list'.
 		local
 			ost: OBJECT_STONE
+			expression_cell: ES_OBJECTS_GRID_EXPRESSION_CELL			
 		do
 			if k /= Void then
 				inspect k.code
@@ -739,16 +738,16 @@ feature {NONE} -- Event handling
 				when {EV_KEY_CONSTANTS}.key_c , {EV_KEY_CONSTANTS}.key_insert then
 					if
 						ev_application.ctrl_pressed
-						and then not ev_application.alt_pressed
-						and then not ev_application.shift_pressed
+						and not ev_application.alt_pressed
+						and not ev_application.shift_pressed
 					then
 						update_clipboard_string_with_selection (watches_grid)
 					end
 				when {EV_KEY_CONSTANTS}.key_e then
 					if
 						ev_application.ctrl_pressed
-						and then not ev_application.alt_pressed
-						and then not ev_application.shift_pressed
+						and not ev_application.alt_pressed
+						and not ev_application.shift_pressed
 					then
 						if watches_grid.selected_rows.count > 0 then
 							ost ?= watches_grid.grid_pebble_from_row (watches_grid.selected_rows.first)
@@ -758,16 +757,16 @@ feature {NONE} -- Event handling
 				when {EV_KEY_CONSTANTS}.key_page_up then
 					if
 						ev_application.ctrl_pressed
-						and then not ev_application.alt_pressed
-						and then not ev_application.shift_pressed
+						and not ev_application.alt_pressed
+						and not ev_application.shift_pressed
 					then
 						move_selected (watches_grid, -1)
 					end
 				when {EV_KEY_CONSTANTS}.key_page_down then
 					if
 						ev_application.ctrl_pressed
-						and then not ev_application.alt_pressed
-						and then not ev_application.shift_pressed
+						and not ev_application.alt_pressed
+						and not ev_application.shift_pressed
 					then
 						move_selected (watches_grid, +1)
 					end
@@ -775,10 +774,72 @@ feature {NONE} -- Event handling
 					expand_selected_rows (watches_grid)
 				when {EV_KEY_CONSTANTS}.key_left then
 					collapse_selected_rows (watches_grid)
+				when {EV_KEY_CONSTANTS}.key_enter then					
+					if
+						not ev_application.ctrl_pressed
+						and not ev_application.alt_pressed
+						and not ev_application.shift_pressed
+					then
+						enter_key_pressed (watches_grid)
+					end
 				else
 				end
 			end
 		end
+		
+	string_key_pressed (s: STRING) is
+			-- A key was pressed in `watches_grid'.
+		local
+			row: EV_GRID_ROW
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			empty_expression_cell: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
+		do
+			if
+				not ev_application.ctrl_pressed
+				and not ev_application.alt_pressed
+				and not ev_application.shift_pressed
+			then			
+				rows := watches_grid.selected_rows
+				if not rows.is_empty then
+					row := rows.first
+					if 
+						col_name_index <= row.count
+					then
+						empty_expression_cell ?= row.item (col_name_index)
+						if empty_expression_cell /= Void then
+							empty_expression_cell.activate_with_string (s)
+						end
+					end
+				end
+			end
+		end
+		
+	enter_key_pressed (a_grid: ES_OBJECTS_GRID) is
+			-- A [enter] key was pressed in `watches_grid'.
+		local
+			row: EV_GRID_ROW
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			expression_cell: ES_OBJECTS_GRID_EXPRESSION_CELL
+		do
+			if
+				not ev_application.ctrl_pressed
+				and not ev_application.alt_pressed
+				and not ev_application.shift_pressed
+			then					
+				rows := a_grid.selected_rows
+				if not rows.is_empty then
+					row := rows.first
+					if 
+						col_name_index <= row.count
+					then
+						expression_cell ?= row.item (col_name_index)
+						if expression_cell /= Void then
+							expression_cell.activate
+						end
+					end					
+				end
+			end
+		end		
 
 	add_expression_with_dialog (dlg: EB_EXPRESSION_DEFINITION_DIALOG) is
 			-- Add a new expression defined by `dlg'.

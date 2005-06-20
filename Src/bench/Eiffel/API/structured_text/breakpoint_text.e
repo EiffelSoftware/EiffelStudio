@@ -22,11 +22,14 @@ create
 
 feature -- Initialization
 
-    make (f: like e_feature; indx: INTEGER) is
+    make (f: like e_feature; indx: INTEGER; has_cond: BOOLEAN) is
             -- Initialize Current with feature `f'
             -- and image `t'.
         do
         	image := indx.out
+        	if has_cond then
+        		image.append_string ("*")
+        	end
 			e_feature := f
 			index := indx
         ensure

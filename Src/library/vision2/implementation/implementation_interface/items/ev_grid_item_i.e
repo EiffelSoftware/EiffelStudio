@@ -503,9 +503,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 				else
 					drawable.set_foreground_color (parent_i.non_focused_selection_color)
 				end
-				fixme (Once "EV_GRID_LABEL.perform_redraw - For now, perform no inversion of selection.")
---				drawable.set_and_mode
-
+		
 				drawable.fill_rectangle (0 + an_indent, 0, a_width, a_height)
 				if focused then
 					drawable.set_foreground_color (parent_i.focused_selection_text_color)

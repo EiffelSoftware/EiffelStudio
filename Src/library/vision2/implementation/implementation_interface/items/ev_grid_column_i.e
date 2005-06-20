@@ -295,7 +295,7 @@ feature -- Status setting
 					if grid_item_i /= Void then
 						Result := Result.max (grid_item_i.interface.required_width + parent_i.item_indent (grid_item_i))
 					end
-					row := parent_i.rows @ item_counter
+					row := parent_i.row_internal (item_counter)
 					if row.subrow_count > 0 and not row.is_expanded then
 						item_counter := item_counter + row.subrow_count_recursive
 					end

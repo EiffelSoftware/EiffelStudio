@@ -28,7 +28,21 @@ feature -- Query
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			Precursor (popup_window)
+			text_field.key_press_actions.extend (agent on_key_pressed)
 			text_field.select_all
+		end
+		
+feature {NONE} -- Actions Impl
+
+	on_key_pressed (k: EV_KEY) is
+		do
+			if 
+				k /= Void 
+				and then k.code = {EV_KEY_CONSTANTS}.Key_escape
+			then
+				text_field.set_text (text)
+				deactivate
+			end
 		end
 
 end

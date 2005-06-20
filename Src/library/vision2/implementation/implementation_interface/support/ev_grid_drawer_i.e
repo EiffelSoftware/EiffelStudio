@@ -541,7 +541,7 @@ feature -- Basic operations
 						loop						
 							current_row_index := visible_row_indexes.item
 								-- Retrieve information regarding the rows that we must draw.
-							current_row := grid.rows @ current_row_index
+							current_row := grid.row_internal (current_row_index)
 							current_row_list := grid_rows_data_list @ (current_row_index)
 					
 							if grid.is_row_height_fixed and not is_tree_enabled then
@@ -618,7 +618,7 @@ feature -- Basic operations
 									lists_valid_lengths: physical_column_indexes.count >= visible_column_indexes.count
 								end
 								current_column_index := visible_column_indexes.item
-								current_column := grid.columns @ current_column_index
+								current_column := grid.column_internal (current_column_index)
 								current_column_width := column_offsets @ (current_column_index + 1) - column_offsets @ (current_column_index)
 
 									-- If the current column has a width of 0, then there is no need to

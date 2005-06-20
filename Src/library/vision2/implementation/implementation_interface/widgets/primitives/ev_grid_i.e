@@ -1124,7 +1124,6 @@ feature -- Status setting
 			temp_column_count: INTEGER
 			a_columns: like columns
 		do
-			fixme (Once "Optimize for a_column_count = zero to blank columns without iteration if possible for wipeout")
 			from
 				add_columns := a_column_count > columns.count
 				a_columns := columns
@@ -1148,7 +1147,6 @@ feature -- Status setting
 		require
 			a_row_count_positive: a_row_count >= 1
 		do
-			--fixme (Once "Optimize for a_row_count = zero to blank rows without iteration if possible")
 			resize_row_lists (a_row_count)
 			set_vertical_computation_required (1)
 			redraw_client_area
@@ -2784,7 +2782,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 		do
 				-- Retrieve the final row offset as this is the virtual height required for all rows.
 			if row_offsets = Void and not is_row_height_fixed then
-				fixme (Once "Ensure that `row_offsets' does not need special `Void' handling.")
 				l_total_row_height := 0
 			else
 				l_total_row_height := total_row_height
@@ -2908,12 +2905,10 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			else
 					-- The headers are not as wide as the visible client area.
 				if horizontal_scroll_bar.is_show_requested then
-				fixme (Once "Must reset the viewport x offset")
---						-- Hide `horizontal_scroll_bar' as it is not required.
---					if viewport.x_offset /= 0 then
---						viewport.set_x_offset (0)
---						viewport_x_offset := 0
---					end
+					fixme (Once "Must reset the viewport x offset")
+					check
+						viewport_x_position_is_zero: viewport_x_offset = 0
+					end
 					horizontal_scroll_bar.hide
 					update_scroll_bar_spacer
 				end
@@ -3168,19 +3163,20 @@ feature {NONE} -- Drawing implementation
 			is_header_item_resizing := True
 		end
 		
-		
 	header_item_resize_ended (header_item: EV_HEADER_ITEM) is
 			-- Resizing has completed on `header_item'.
 		require
 			header_item_not_void: header_item /= Void
+		local
+			header_index: INTEGER
 		do
+			header_index := header.index_of (header_item, 1)
 			is_header_item_resizing := False
 			if is_resizing_divider_enabled then
 				remove_resizing_line
 			end
-			fixme (Once "Only invalidate to the right hand side of the resized header item")
-			set_horizontal_computation_required (header.index_of (header_item, 1))
-			redraw_client_area
+			set_horizontal_computation_required (header_index)
+			redraw_from_column_to_end (column_internal (header_index))
 		end
 				
 	draw_resizing_line (position: INTEGER) is

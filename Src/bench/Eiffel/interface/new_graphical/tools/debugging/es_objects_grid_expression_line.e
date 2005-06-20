@@ -237,8 +237,9 @@ feature -- Graphical changes
 				grid_cell_set_text (gedit, v)
 				gedit.pointer_double_press_actions.force_extend (agent gedit.activate)
 				gedit.pointer_button_press_actions.extend (agent grid_activate_item_if_row_selected (gedit, ?,?,?,?,?,?,?,?))
-				apply_cell_expression_text_properties_on (gedit)
 				gedit.deactivate_actions.extend (agent update_expression_on_deactivate (gedit))
+				apply_cell_expression_text_properties_on (gedit)
+
 				row.set_item (Col_expression_index, gedit)
 			end
 			gedit.set_text (v)
@@ -249,7 +250,10 @@ feature -- Graphical changes
 			a_item /= Void
 		local
 			new_text: STRING
+			r: EV_GRID_ROW
 		do
+			r := a_item.row
+			
 			new_text := a_item.new_text
 			if expression.as_object then
 					--| i.e: we just change the "title" of the expression
@@ -263,6 +267,9 @@ feature -- Graphical changes
 					request_evaluation (True)
 					refresh
 				end
+			end
+			if r /= Void and then r.parent /= Void then
+				r.enable_select
 			end
 		end
 

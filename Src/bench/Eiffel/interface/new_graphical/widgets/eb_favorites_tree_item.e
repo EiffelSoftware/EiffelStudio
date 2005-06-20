@@ -13,7 +13,7 @@ inherit
 			data
 		end
 
-	EB_CONSTANTS
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
 		undefine
 			default_create, is_equal, copy
 		end
@@ -44,8 +44,8 @@ feature {NONE} -- Initialization
 					-- ...or a class.
 				conv_class ?= an_item
 				set_pebble (conv_class.associated_class_stone)
-				if conv_class.associated_class_c /= Void then
-					set_pixmap (Pixmaps.Icon_class_symbol_color)
+				if conv_class.associated_class_i /= Void then
+					set_pixmap (pixmap_from_class_i (conv_class.associated_class_i))
 				else
 					set_pixmap (Pixmaps.Icon_class_symbol_gray)
 				end
@@ -64,19 +64,9 @@ feature {NONE} -- Initialization
 					-- ...or a feature.
 				conv_feat ?= an_item
 				set_pebble (conv_feat.associated_feature_stone)
-				
-				if conv_feat.is_deferred then
-					set_pixmap (Pixmaps.icon_deferred_feature)
-				elseif conv_feat.is_once or conv_feat.is_constant then
-					set_pixmap (Pixmaps.icon_once_objects)
-				elseif conv_feat.is_attribute then
-					set_pixmap (Pixmaps.icon_attributes)
-				elseif conv_feat.is_external then
-					set_pixmap (Pixmaps.icon_external_feature)
-				else
-					set_pixmap (Pixmaps.icon_feature @ 1)
+				if conv_feat.associated_e_feature /= Void then
+					set_pixmap (pixmap_from_e_feature (conv_feat.associated_e_feature))				
 				end
-				
 				drop_actions.extend (agent drop_feature_stone_after)
 			end
 			set_accept_cursor (an_item.mouse_cursor)
@@ -135,6 +125,7 @@ feature -- Status setting
 			-- delete `Current' if the class was removed,...
 		local
 			cl: EB_FAVORITES_CLASS
+			ff: EB_FAVORITES_FEATURE
 			child: EB_FAVORITES_TREE_ITEM
 		do
 			from
@@ -151,10 +142,18 @@ feature -- Status setting
 			cl ?= data
 			if cl /= Void then
 				set_pebble (cl.associated_class_stone)
-				if cl.associated_class_c /= Void then
-					set_pixmap (Pixmaps.Icon_class_symbol_color)
+				if cl.associated_class_i /= Void then
+					set_pixmap (pixmap_from_class_i (cl.associated_class_i))
 				else
 					set_pixmap (Pixmaps.Icon_class_symbol_gray)
+				end
+			else
+				ff ?= data
+				if ff /= Void then
+					set_pebble (ff.associated_feature_stone)
+					if ff.associated_e_feature /= Void then
+						set_pixmap (pixmap_from_e_feature (ff.associated_e_feature))
+					end
 				end
 			end
 		end

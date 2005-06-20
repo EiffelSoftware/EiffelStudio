@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 
 			mouse_wheel_scroll_size := 3 --| default value
 			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
+			key_press_actions.extend (agent on_key_pressed)
 		end
 		
 	color_separator: EV_COLOR is
@@ -112,16 +113,15 @@ feature -- Query
 			end
 		end
 
-feature {NONE} -- Actions implementation
+feature -- Scrolling
 
-	on_mouse_wheel_action (a_step: INTEGER) is
+	scroll_rows (a_step: INTEGER; is_full_page_scrolling: BOOLEAN) is
 		local
 			vy_now, vy: INTEGER
 		do
 			vy_now := virtual_y_position
 			if 
-				mouse_wheel_scroll_full_page
-				or ev_application.ctrl_pressed
+				is_full_page_scrolling
 			then
 				vy := vy_now - viewable_height * a_step
 			else
@@ -135,8 +135,39 @@ feature {NONE} -- Actions implementation
 				end
 				set_virtual_position (virtual_x_position, vy)
 			end
-		end
+		end		
 
+feature {NONE} -- Actions implementation
+
+	on_key_pressed (k: EV_KEY) is
+		do
+			if 
+				not ev_application.ctrl_pressed
+				and not ev_application.shift_pressed
+				and not ev_application.alt_pressed
+			then
+				inspect k.code
+				when {EV_KEY_CONSTANTS}.key_page_up then
+					scroll_rows (+1, True)
+				when {EV_KEY_CONSTANTS}.key_page_down then
+					scroll_rows (-1, True)
+				else
+				end
+			end
+		end
+		
+	on_mouse_wheel_action (a_step: INTEGER) is
+		do
+			if 
+				mouse_wheel_scroll_full_page
+				or ev_application.ctrl_pressed
+			then
+				scroll_rows (a_step, True)
+			else
+				scroll_rows (a_step, False)
+			end
+		end
+		
 	on_pebble_function (a_item: EV_GRID_ITEM): ANY is
 		do
 			if 

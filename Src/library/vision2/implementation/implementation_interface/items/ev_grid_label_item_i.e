@@ -227,8 +227,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				else
 					drawable.set_foreground_color (parent_i.non_focused_selection_color)
 				end
-				fixme (Once "EV_GRID_LABEL_ITEM.perform_redraw - For now, perform no inversion of selection.")
---				drawable.set_and_mode
 
 					-- Calculate the area that must be selected in `Current'.
 				if interface.is_full_select_enabled then

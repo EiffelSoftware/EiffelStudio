@@ -222,7 +222,6 @@ feature -- Access
 			is_parented: parent /= Void
 		do
 			Result := internal_height
-			fixme (Once "Needs to be properly computed")
 		ensure
 			result_not_negative: Result >= 0
 		end

@@ -3580,7 +3580,6 @@ feature {NONE} -- Event handling
 			pointed_item: EV_GRID_ITEM_I
 			pointed_item_interface: EV_GRID_ITEM
 		do
-			fixme (Once "Item leave events are not connected when you leave the grid completely.")
 			if a_x >= 0 and then a_y >= 0 then
 				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 			end
@@ -4520,8 +4519,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				if grid_row_parent_i /= Void then
 						-- The row in which we are setting an item is already a subrow of another
 						-- row, so we must update the internal settings for the tree.
-						 fixme (Once "EV_GRID_I.internal_set_item Should refactor `internal_set_parent_row' so that the parent row is not set and only the calculations are performed.")
-					a_grid_row_i.internal_set_parent_row (grid_row_parent_i)
+					a_grid_row_i.update_depths_in_tree
 				end
 				redraw_item (item_implementation)
 			else

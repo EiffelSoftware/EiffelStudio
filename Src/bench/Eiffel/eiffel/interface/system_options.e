@@ -75,7 +75,7 @@ feature -- Access
 		do
 			Result := external_runtime = Void or else external_runtime.is_empty
 		ensure
-			uses_ise_gc_runtime: Result implies (external_runtime /= Void and then not external_runtime.is_empty)
+			uses_ise_gc_runtime: Result implies (external_runtime = Void or else external_runtime.is_empty)
 		end
 
 	full_type_checking: BOOLEAN

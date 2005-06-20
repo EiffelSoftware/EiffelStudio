@@ -1563,13 +1563,13 @@ feature -- Status report
 			if are_columns_drawn_above_rows then
 				Result := column_internal (a_column).background_color
 				if Result = Void then
-					Result := row (a_row).background_color
+					Result := row_internal (a_row).background_color
 					if result = Void then
 						Result := background_color
 					end
 				end
 			else
-				Result := row (a_row).background_color
+				Result := row_internal (a_row).background_color
 				if Result = Void then
 					Result := column_internal (a_column).background_color
 					if result = Void then
@@ -1788,7 +1788,7 @@ feature -- Removal
 			until
 				l_row_index = a_row
 			loop
-				internal_remove_row (row (l_row_index).implementation)
+				internal_remove_row (row_internal (l_row_index))
 				l_row_index := l_row_index - 1
 			end
 
@@ -2425,7 +2425,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			last_current_row: EV_GRID_ROW_I
 		do
 			if is_tree_enabled then
-				pointed_row_i := row (row_index).implementation
+				pointed_row_i := row_internal (row_index)
 				index_of_first_item := pointed_row_i.index_of_first_item
 				node_index := column_index.min (index_of_first_item)
 				if index_of_first_item /= column_index and index_of_first_item /= 0 then

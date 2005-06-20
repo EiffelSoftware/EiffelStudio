@@ -919,17 +919,21 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 	fflush (NULL);
 #endif
 
+#ifdef ISE_GC
 		/* It makes performance of retrieval bad in a MT system as only one can occurs
 		 * and blocks all other threads, but I don't see yet a way to achieve that without
 		 * simple mutexes and dead locks. */
 	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
+#endif
 
 	/* Reset nb_recorded */
 	nb_recorded = 0;
 
 	/* Read the kind of stored hierachy */
 	if (char_read_function(&rt_type, sizeof (char)) < sizeof (char)) {
+#ifdef ISE_GC
 		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+#endif
 		eise_io("Retrieve: unable to read type of storable.");
 	}
 
@@ -1072,7 +1076,9 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 	fflush (stdout);
 #endif
 	
+#ifdef ISE_GC
 	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+#endif
 	return retrieved;
 }
 

@@ -1005,10 +1005,12 @@ feature {NONE} -- Display functions
 			first_line_valid: first >= 1
 			last_line_valie: last >= 1
 		local
- 			y_pos: INTEGER
+ 			y_pos,
+ 			l_line_height: INTEGER
 		do
-			y_pos := (first - 1) * line_height
-			editor_drawing_area.redraw_rectangle (0, y_pos, buffered_line.width, (last - first + 1) * line_height)
+			l_line_height := line_height
+			y_pos := (first - first_line_displayed) * l_line_height
+			editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, (last - first + 1) * l_line_height)
 			if flush_screen then
 				editor_drawing_area.flush
 			end
@@ -1271,7 +1273,7 @@ feature -- Implementation
 
 	buffered_drawable_width: INTEGER is 32000
 
-	buffered_drawable_height: INTEGER is 32000
+	buffered_drawable_height: INTEGER is 1000
 		-- Default size of `drawable' used for scrolling purposes.
 		
 	last_vertical_scroll_bar_value: INTEGER

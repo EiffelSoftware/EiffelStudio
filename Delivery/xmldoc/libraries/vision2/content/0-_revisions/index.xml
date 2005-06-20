@@ -67,6 +67,7 @@
 					<item>
 						<bold>EV_ANY</bold> - Added protection for multiple calls of `destroy' which previously caused crashes in some situations, now `destroy' calls a `safe_destroy' intermediary which checks if the implementation has not already been destroyed
 					</item>
+					<item><bold>EV_GAUGE</bold> - Fixed bug in `make_with_value_range' which did not adjust `value' to `lower', thereby putting the gauge in an invalid state.</item>
 				</list>
 			</item>
 			<item>

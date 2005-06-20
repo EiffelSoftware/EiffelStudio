@@ -1550,8 +1550,7 @@ feature -- Element change
 		do
 			implementation.insert_new_row (i)
 		ensure
-			row_count_increased: row_count = old row_count + 1
-			row_count_set: (i > old row_count implies row_count = i)
+			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (row_count = i)
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
@@ -1579,8 +1578,7 @@ feature -- Element change
 		do
 			implementation.insert_new_column (a_index)
 		ensure
-			column_count_increased: column_count = old column_count + 1
-			column_count_set: (a_index > old column_count implies a_index = column_count)
+			column_count_set: (a_index <= old column_count implies column_count = old column_count + 1) or (column_count = a_index)
 		end
 
 	move_row (i, j: INTEGER) is

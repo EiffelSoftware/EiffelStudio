@@ -102,7 +102,9 @@ feature {NONE} -- Initialization
 			a_selected_item_imp: EV_LIST_ITEM_IMP
 		do
 			a_selected_item := selected_item
-			{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
+			if in_popup_action then
+				{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
+			end
 			if a_selected_item /= Void then
 				a_selected_item_imp ?= a_selected_item.implementation
 				if a_selected_item_imp.select_actions_internal /= Void then

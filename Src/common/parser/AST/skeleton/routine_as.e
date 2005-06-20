@@ -117,20 +117,31 @@ feature -- Location
 
 	body_start_position: INTEGER is
 			-- Position at the start of the main body (after the comments and obsolete clause)
+		local
+			body_start_location: LOCATION_AS
 		do
 			if precondition /= Void then
-				Result := precondition.start_location.position
-			elseif locals /= Void then
-				Result := locals.start_location.position
-			elseif not routine_body.start_location.is_null then
-				Result := routine_body.start_location.position
-			elseif postcondition /= Void then
-				Result := postcondition.start_location.position
-			elseif rescue_clause /= Void then
-				Result := rescue_clause.start_location.position
-			else
-				Result := end_keyword.position
+				body_start_location := precondition.start_location
 			end
+			if (body_start_location = Void or else body_start_location.is_null) and then locals /= Void then
+				body_start_location := locals.start_location
+			end
+			if body_start_location = Void or else body_start_location.is_null then
+				body_start_location := routine_body.start_location
+			end
+			if (body_start_location = Void or else body_start_location.is_null) and then postcondition /= Void then
+				body_start_location := postcondition.start_location
+			end
+			if (body_start_location = Void or else body_start_location.is_null) and then rescue_clause /= Void then
+				body_start_location := rescue_clause.start_location
+			end
+			if body_start_location = Void or else body_start_location.is_null then
+				body_start_location := end_keyword
+			end
+			check
+				body_start_location_not_void: body_start_location /= Void
+			end
+			Result := body_start_location.position
 		end
 		
 feature -- Properties

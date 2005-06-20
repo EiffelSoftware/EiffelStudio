@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 			a_value_range_not_empty: not a_value_range.is_empty
 		do
 			default_create
+			value_range.resize_exactly (value_range.lower, a_value_range.upper)
+			set_value (a_value_range.lower)
 			value_range.resize_exactly (a_value_range.lower, a_value_range.upper)
 		end
 

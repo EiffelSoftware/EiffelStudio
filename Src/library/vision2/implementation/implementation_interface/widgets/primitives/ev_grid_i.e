@@ -1644,7 +1644,6 @@ feature -- Element change
 					-- Update the changed indexes.
 				update_grid_row_indices (i.min (j))
 				redraw_client_area
-				fixme (Once "EV_GRID_I: move_rows redraw")
 			end
 		end
 
@@ -2492,6 +2491,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		local
 			a1, a2: INTEGER
 			item_height: INTEGER
+			row_i: EV_GRID_ROW_I
+			column_i: EV_GRID_COLUMN_I
+			l_indent: INTEGER
 		do
 				-- Increase the number of times that `redraw_item' has been called
 				-- since the last refresh.
@@ -2499,16 +2501,22 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			if redraw_item_counter < maximum_items_redrawn_between_refresh then
 					-- Only perform the exact item calculation if our threshold
 					-- for individual item redrawing has not been met.
-				
-				fixme (Once "Executing this code causes `item_indent' to be called twice. Can we optimize this?")
-				a1 := an_item.virtual_x_position - (internal_client_x - viewport_x_offset)
-				a2 := an_item.virtual_y_position - (internal_client_y - viewport_y_offset)
+					
+				row_i := an_item.row_i
+				column_i := an_item.column_i
+				if row_i.parent_row_i /= Void then
+					l_indent := item_cell_indent (column_i.index, row_i.index)
+				end
 				if is_row_height_fixed then
 					item_height := row_height
 				else
 					item_height := an_item.row.height
 				end
-				drawable.redraw_rectangle (a1, a2, an_item.column.width - item_indent (an_item), item_height)
+				
+					-- Note that we calculate the virtual x offset of the item ourselves, which
+					-- prevents `item_indent' being called twice, once in the virtual x offset calculation
+					-- and once for calculating the width of the item to draw.
+				drawable.redraw_rectangle (column_i.virtual_x_position + l_indent - (internal_client_x - viewport_x_offset), an_item.virtual_y_position - (internal_client_y - viewport_y_offset), column_i.width - l_indent, item_height)
 			elseif redraw_item_counter = maximum_items_redrawn_between_refresh then
 					-- The threshold has been met, so invalidate the complete client area.
 					
@@ -2905,7 +2913,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			else
 					-- The headers are not as wide as the visible client area.
 				if horizontal_scroll_bar.is_show_requested then
-					fixme (Once "Must reset the viewport x offset")
 					check
 						viewport_x_position_is_zero: viewport_x_offset = 0
 					end

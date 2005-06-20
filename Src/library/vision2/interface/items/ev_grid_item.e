@@ -303,7 +303,7 @@ invariant
 	parented_and_parent_has_no_tree_implies_width_equals_column_width:
 		parent /= Void and then not parent.is_tree_enabled implies width = column.width
 	parented_and_row_is_subrow_implies_width_equals_column_width_less_indent:
-		parent /= Void and row.parent_row /= Void implies width = column.width - horizontal_indent
+		parent /= Void and row.parent_row /= Void implies width = (column.width - horizontal_indent).max (0)
 
 end
 

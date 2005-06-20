@@ -380,8 +380,18 @@ rt_public void once_init (void)
 {
 	EIF_GET_CONTEXT
 
+#if !defined(WORKBENCH) && !defined (EIF_THREADS)
+	int32 old_egc_prof_enabled = egc_prof_enabled; /* Save profiler status */
+	egc_prof_enabled = 0;	/* Disable profiler as it is not initialized yet. */
+#endif
+
 	ALLOC_ONCE_INDEXES; 	/* Allocate array of once indexes. */
 	egc_system_mod_init (); /* Assign once indexes. */
+
+#if !defined(WORKBENCH) && !defined (EIF_THREADS)
+	egc_prof_enabled = old_egc_prof_enabled; /* Restore profiler status. */
+#endif
+
 	if (!debug_mode) {
 			/* Once indexes could be used by debugger,
 			 * but we are not under debugger at the moment. */

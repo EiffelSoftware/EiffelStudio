@@ -22,6 +22,7 @@ create
 %option line position nodefault outfile="eiffel_scanner.e"
 
 D		[0-9]
+I		{D}(({D}|_)*{D})?
 H		([0-9]|[A-F]|[a-f])
 O		[0-7]
 E		(((e|E)[+-]?{D}+)?)
@@ -434,20 +435,14 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Integers
 
-{D}+		|
-{D}+/".."	{		-- This a trick to avoid having:
+{I}		|
+{I}/".."	{		-- This a trick to avoid having:
 					--     when 1..2 then
 					-- to be be erroneously recognized as:
 					--     `when' `1.' `.2' `then'
 					-- instead of:
 					--     `when' `1' `..' `2' `then'
 
-				token_buffer.clear_all
-				append_text_to_string (token_buffer)
-				last_token := TE_INTEGER
-			}
-
-({U}(_{T})*)	{
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
 				last_token := TE_INTEGER

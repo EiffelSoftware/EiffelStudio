@@ -447,15 +447,12 @@ feature {NONE} -- Implementation
 								bp_list.after
 							loop
 								i := bp_list.item
-								if Application.has_conditional_stop (f, i) then
-									st.add_string ("*")
-								end
 								if not first_bp then
 									st.add_string (", ")
 								else
 									first_bp := False
 								end
-								st.add_breakpoint_index (f, i)
+								st.add_breakpoint_index (f, i, Application.has_conditional_stop (f, i))
 								bp_list.forth
 							end
 							st.add_string ("]")

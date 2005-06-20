@@ -154,6 +154,11 @@ feature -- Basic operations
 					create item.make_with_text (Interface_names.m_Edit_condition)
 					item.select_actions.extend (agent edit_condition (routine, index))
 					menu.extend (item)
+
+						-- "Remove condition"
+					create item.make_with_text (Interface_names.m_Remove_condition)
+					item.select_actions.extend (agent remove_condition_from_breakpoint (routine, index))
+					menu.extend (item)
 				end
 			end
 			create item.make_with_text (Interface_names.m_Run_to_this_point)
@@ -272,13 +277,20 @@ feature -- Basic operations
 			
 				-- Set up actions
 			okb.select_actions.extend (agent create_conditional_breakpoint (f, pos, d, tf, lab))
-			removeb.select_actions.extend (agent Application.remove_condition (f, pos))
+			removeb.select_actions.extend (agent remove_condition_from_breakpoint (f, pos))
 			removeb.select_actions.extend (agent d.destroy)
 			cancelb.select_actions.extend (agent d.destroy)
 			d.set_default_push_button (okb)
 			d.set_default_cancel_button (cancelb)
 			d.show_actions.extend (agent tf.set_focus)
 			d.show_modal_to_window (Window_manager.last_focused_window.window)
+		end
+
+	remove_condition_from_breakpoint (f: E_FEATURE; pos: INTEGER) is
+		do
+			Application.remove_condition (f, pos)
+			Output_manager.display_stop_points
+			window_manager.quick_refresh_all
 		end
 
 	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG; a_input, a_output: EV_TEXTABLE) is

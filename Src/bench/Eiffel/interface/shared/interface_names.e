@@ -407,6 +407,7 @@ feature -- Menu mnenomics
 	m_Raise_all_unsaved: STRING is		"Raise &unsaved windows"
 	m_Remove_class_cluster: STRING is	"&Remove current item"
 	m_Remove_exported_feature: STRING is	"&Remove"
+	m_Remove_condition: STRING is		"Remove condition"
 	m_Remove_this_bkpt: STRING is		"&Remove this breakpoint"
 	m_Run_to_this_point: STRING is		"&Run to this point"
 	m_Send_stone_to_context: STRING is	"S&ynchronize context tool"

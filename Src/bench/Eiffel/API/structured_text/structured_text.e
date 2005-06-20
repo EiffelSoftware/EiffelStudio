@@ -373,13 +373,13 @@ feature -- Element change
 			add (l_item)
 		end
 
-	add_breakpoint_index (feat: E_FEATURE; indx: INTEGER) is
+	add_breakpoint_index (feat: E_FEATURE; indx: INTEGER; has_cond: BOOLEAN) is
 			-- Put `index'-th breakpoint of feature `feat' with integer 
 			-- representation `index' at current position.
 		local
 			l_item: like item
 		do
-			create {BREAKPOINT_TEXT} l_item.make (feat, indx)
+			create {BREAKPOINT_TEXT} l_item.make (feat, indx, has_cond)
 			add (l_item)
 		end
 

@@ -314,174 +314,6 @@ feature {NONE} -- Row actions
 		do
 			remove_debugged_object_cmd.disable_sensitive
 		end
-		
-feature -- Debugged objects grid specifics
-
-	debugged_object_key_action (k: EV_KEY) is
-			-- Actions performed when a key is pressed on a top-level object.
-			-- Handle `Del'.
-		do
-			inspect
-				k.code
-			when {EV_KEY_CONSTANTS}.key_delete then
-				remove_debugged_object_cmd.execute
-			else
-
-			end
-		end
-
-	on_debugged_objects_veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
-		local
-			st: OBJECT_STONE
-		do
-			st ?= a_pebble
-			Result := st /= Void
-		end
-
-	on_add_debugged_object (a_item: EV_GRID_ITEM; st: OBJECT_STONE) is
-		do
-			add_debugged_object (st)
-		end
-
-	add_debugged_object (a_stone: OBJECT_STONE) is
-			-- Add the object represented by `a_stone' to the managed objects.
-		local
-			n_obj: ES_OBJECTS_GRID_LINE
-			conv_spec: SPECIAL_VALUE
-			abstract_value: ABSTRACT_DEBUG_VALUE
-			exists: BOOLEAN
-			l_item: EV_ANY
-		do
-			debug ("debug_recv")
-				print (generator + ".add_object%N")
-			end
-			from
-				displayed_objects.start
-			until
-				displayed_objects.after or else exists
-			loop
-				n_obj := displayed_objects.item
-				check
-					n_obj.object_address /= Void
-				end
-				exists := n_obj.object_address.is_equal (a_stone.object_address)
-				displayed_objects.forth
-			end
-			n_obj := Void
-			if not exists then
-				l_item := a_stone.ev_item
-				if application.is_dotnet then
-					abstract_value ?= grid_data_from_widget (l_item)
---| FIXME jfiat : check if it is safe to use a Value ?
---					if abstract_value /= Void then
---						create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (abstract_value, Current)
---					else
-						create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, Current)
---					end
-				else
-					if l_item /= Void then
-						conv_spec ?= grid_data_from_widget (l_item)
-						if conv_spec /= Void then
-							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (conv_spec, Current)
-						end
-					end
-					if n_obj = Void then
-						create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, Current)
-					end
-				end
-				n_obj.set_title (a_stone.name + Left_address_delim + a_stone.object_address + Right_address_delim)
-				debugger_manager.keep_object (a_stone.object_address)
-				displayed_objects.extend (n_obj)
-				debugged_objects_grid.insert_new_row (debugged_objects_grid.row_count + 1)
-				n_obj.attach_to_row (debugged_objects_grid.row (debugged_objects_grid.row_count))
-				n_obj.row.ensure_visible
-				n_obj.row.enable_select
-			end
-		end
-		
-	remove_dropped_debugged_object (ost: OBJECT_STONE) is
-		local
-			row: EV_GRID_ROW
-			gline: ES_OBJECTS_GRID_LINE
-		do
-			row ?= ost.ev_item
-			if row /= Void then
-				gline ?= row.data
-				if gline /= Void then
-					remove_debugged_object_line (gline)
-				end
-			end
-		end
-
-	remove_selected_debugged_objects is
-		local
-			glines: LIST [ES_OBJECTS_GRID_LINE]
-		do
-			glines := selected_debugged_object_lines
-			if glines /= Void then
-				from
-					glines.start
-				until
-					glines.after
-				loop
-					check glines.item /= Void end
-					remove_debugged_object_line (glines.item)
-					glines.forth
-				end
-
-			end
-		end
-
-	remove_debugged_object_line (gline: ES_OBJECTS_GRID_LINE) is
-		local
-			row: EV_GRID_ROW
-		do
-			row := gline.row
-			displayed_objects.prune_all (gline)
-			debugged_objects_grid.remove_row (row.index)
-		end
-
-	selected_debugged_object_lines: LINKED_LIST [ES_OBJECTS_GRID_LINE] is
-		local
-			row: EV_GRID_ROW
-			rows: ARRAYED_LIST [EV_GRID_ROW]
-			gline: ES_OBJECTS_GRID_LINE
-		do
-			rows := debugged_objects_grid.selected_rows
-			if not rows.is_empty then
-				from
-					rows.start
-					create Result.make
-				until
-					rows.after
-				loop
-					row := rows.item
-					if row.parent_row /= Void then
-						row := row.parent_row_root
-					end
-					gline ?= row.data
-					if gline /= Void then
-						Result.extend (gline)
-					end
-					rows.forth
-				end
-			end
-		end
-
-	is_removable_debugged_object (ost: OBJECT_STONE): BOOLEAN is
-		local
-			addr: STRING
-		do
-			addr := ost.object_address
-			from
-				displayed_objects.start
-			until
-				displayed_objects.after or else Result
-			loop
-				Result := displayed_objects.item.object_address.is_equal (addr)
-				displayed_objects.forth
-			end
-		end		
 
 feature -- Change
 
@@ -771,8 +603,177 @@ feature {NONE} -- Current objects grid Implementation
 				displayed_objects.forth
 			end
 		end
+		
+		
+feature {NONE} -- Impl : Debugged objects grid specifics
+
+	debugged_object_key_action (k: EV_KEY) is
+			-- Actions performed when a key is pressed on a top-level object.
+			-- Handle `Del'.
+		do
+			inspect
+				k.code
+			when {EV_KEY_CONSTANTS}.key_delete then
+				remove_debugged_object_cmd.execute
+			else
+
+			end
+		end
+
+	on_debugged_objects_veto_pebble_function (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
+		local
+			st: OBJECT_STONE
+		do
+			st ?= a_pebble
+			Result := st /= Void
+		end
+
+	on_add_debugged_object (a_item: EV_GRID_ITEM; st: OBJECT_STONE) is
+		do
+			add_debugged_object (st)
+		end
+
+	add_debugged_object (a_stone: OBJECT_STONE) is
+			-- Add the object represented by `a_stone' to the managed objects.
+		local
+			n_obj: ES_OBJECTS_GRID_LINE
+			conv_spec: SPECIAL_VALUE
+			abstract_value: ABSTRACT_DEBUG_VALUE
+			exists: BOOLEAN
+			l_item: EV_ANY
+		do
+			debug ("debug_recv")
+				print (generator + ".add_object%N")
+			end
+			from
+				displayed_objects.start
+			until
+				displayed_objects.after or else exists
+			loop
+				n_obj := displayed_objects.item
+				check
+					n_obj.object_address /= Void
+				end
+				exists := n_obj.object_address.is_equal (a_stone.object_address)
+				displayed_objects.forth
+			end
+			n_obj := Void
+			if not exists then
+				l_item := a_stone.ev_item
+				if application.is_dotnet then
+					abstract_value ?= grid_data_from_widget (l_item)
+--| FIXME jfiat : check if it is safe to use a Value ?
+--					if abstract_value /= Void then
+--						create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (abstract_value, Current)
+--					else
+						create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, Current)
+--					end
+				else
+					if l_item /= Void then
+						conv_spec ?= grid_data_from_widget (l_item)
+						if conv_spec /= Void then
+							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (conv_spec, Current)
+						end
+					end
+					if n_obj = Void then
+						create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, Current)
+					end
+				end
+				n_obj.set_title (a_stone.name + Left_address_delim + a_stone.object_address + Right_address_delim)
+				debugger_manager.keep_object (a_stone.object_address)
+				displayed_objects.extend (n_obj)
+				debugged_objects_grid.insert_new_row (debugged_objects_grid.row_count + 1)
+				n_obj.attach_to_row (debugged_objects_grid.row (debugged_objects_grid.row_count))
+				n_obj.row.ensure_visible
+				n_obj.row.enable_select
+			end
+		end
+		
+	remove_dropped_debugged_object (ost: OBJECT_STONE) is
+		local
+			row: EV_GRID_ROW
+			gline: ES_OBJECTS_GRID_LINE
+		do
+			row ?= ost.ev_item
+			if row /= Void then
+				gline ?= row.data
+				if gline /= Void then
+					remove_debugged_object_line (gline)
+				end
+			end
+		end
+
+	remove_selected_debugged_objects is
+		local
+			glines: LIST [ES_OBJECTS_GRID_LINE]
+		do
+			glines := selected_debugged_object_lines
+			if glines /= Void then
+				from
+					glines.start
+				until
+					glines.after
+				loop
+					check glines.item /= Void end
+					remove_debugged_object_line (glines.item)
+					glines.forth
+				end
+
+			end
+		end
+
+	remove_debugged_object_line (gline: ES_OBJECTS_GRID_LINE) is
+		local
+			row: EV_GRID_ROW
+		do
+			row := gline.row
+			displayed_objects.prune_all (gline)
+			debugged_objects_grid.remove_row (row.index)
+		end
+
+	selected_debugged_object_lines: LINKED_LIST [ES_OBJECTS_GRID_LINE] is
+		local
+			row: EV_GRID_ROW
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			gline: ES_OBJECTS_GRID_LINE
+		do
+			rows := debugged_objects_grid.selected_rows
+			if not rows.is_empty then
+				from
+					rows.start
+					create Result.make
+				until
+					rows.after
+				loop
+					row := rows.item
+					if row.parent_row /= Void then
+						row := row.parent_row_root
+					end
+					gline ?= row.data
+					if gline /= Void then
+						Result.extend (gline)
+					end
+					rows.forth
+				end
+			end
+		end
+
+	is_removable_debugged_object (ost: OBJECT_STONE): BOOLEAN is
+		local
+			addr: STRING
+		do
+			addr := ost.object_address
+			from
+				displayed_objects.start
+			until
+				displayed_objects.after or else Result
+			loop
+				Result := displayed_objects.item.object_address.is_equal (addr)
+				displayed_objects.forth
+			end
+		end			
 	
-feature {NONE} -- Stack objects grid Implementation
+feature {NONE} -- Impl : Stack objects grid
 
 	stack_objects_grid: ES_OBJECTS_GRID
 			-- Graphical GRID displaying local variables, arguments and the result.
@@ -1074,6 +1075,8 @@ feature {NONE} -- Stack objects grid Implementation
 			else
 			end
 		end
+		
+feature {NONE} -- Debugged objects grid Implementation
 
 	current_object: ES_OBJECTS_GRID_LINE
 			--EB_OBJECT_DISPLAY_PARAMETERS

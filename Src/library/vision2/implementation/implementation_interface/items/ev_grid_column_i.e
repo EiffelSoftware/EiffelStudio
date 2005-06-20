@@ -168,7 +168,7 @@ feature -- Access
 		end
 		
 	virtual_x_position: INTEGER is
-			-- Vertical offset of `Current' in relation to the
+			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
 			-- `Result' is 0 if `parent' is `Void'.
 		do

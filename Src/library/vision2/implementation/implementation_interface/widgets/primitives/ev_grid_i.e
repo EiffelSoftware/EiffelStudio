@@ -1427,7 +1427,7 @@ feature -- Status report
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column (a_column).implementation
+			a_col_i := column_internal (a_column)
 			Result := a_col_i.is_displayed
 		end
 
@@ -1561,7 +1561,7 @@ feature -- Status report
 			valid_row: a_row >= 1 and a_row <= row_count
 		do
 			if are_columns_drawn_above_rows then
-				Result := column (a_column).background_color
+				Result := column_internal (a_column).background_color
 				if Result = Void then
 					Result := row (a_row).background_color
 					if result = Void then
@@ -1571,7 +1571,7 @@ feature -- Status report
 			else
 				Result := row (a_row).background_color
 				if Result = Void then
-					Result := column (a_column).background_color
+					Result := column_internal (a_column).background_color
 					if result = Void then
 						Result := background_color
 					end
@@ -2033,15 +2033,15 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		local
 			i: INTEGER
 			found: BOOLEAN
-			a_column: EV_GRID_COLUMN
+			a_column: EV_GRID_COLUMN_I
 		do
 			from
 				i := a_index - 1
 			until
 				found or else i = 0
 			loop
-				a_column := column (i)
-				found := a_column.implementation.is_displayed
+				a_column := column_internal (i)
+				found := a_column.is_displayed
 				if not found then
 					i := i - 1
 				end
@@ -3125,14 +3125,14 @@ feature {NONE} -- Drawing implementation
 						from
 							header_index := header_index - 1
 						until
-							header_index = 1 or column (header_index).width > 0
+							header_index = 1 or column_internal (header_index).width > 0
 						loop
 							header_index := header_index - 1
 						end
 					end
-					redraw_from_column_to_end (column (header_index).implementation)
+					redraw_from_column_to_end (column_internal (header_index))
 				else
-					redraw_from_column_to_end (column (header_index).implementation)
+					redraw_from_column_to_end (column_internal (header_index))
 				end
 			else	
 				if is_resizing_divider_enabled then
@@ -3997,7 +3997,7 @@ feature {NONE} -- Event handling
 					else
 						items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
 						if not items_spanning.is_empty then
-							column (items_spanning @ 1).ensure_visible
+							column_internal (items_spanning @ 1).ensure_visible
 						end
 					end
 				when {EV_KEY_CONSTANTS}.Key_left then
@@ -4013,7 +4013,7 @@ feature {NONE} -- Event handling
 						if virtual_x_position > 0 then
 							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
 							if not items_spanning.is_empty then
-								column (items_spanning @ 1).ensure_visible
+								column_internal (items_spanning @ 1).ensure_visible
 							end
 						end
 					end

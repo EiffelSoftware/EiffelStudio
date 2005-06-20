@@ -134,6 +134,7 @@ feature {NONE} -- Initialization
 			create tb_exception
 			create tb_but_exception
 			tb_but_exception.set_pixmap (pixmaps.icon_pretty_print)
+			tb_but_exception.set_tooltip ("Open exception dialog for more details")			
 			tb_but_exception.pointer_button_press_actions.extend (agent show_call_stack_message)
 			tb_exception.extend (tb_but_exception)
 			box_exception.extend (tb_exception)
@@ -560,7 +561,11 @@ feature {NONE} -- Implementation
 			-- Text corresponding to the current exception.
 		do
 			if application.is_dotnet then
-				Result := application.imp_dotnet.exception_to_string
+				if application.imp_dotnet.exception_occurred then
+					Result := application.imp_dotnet.exception_to_string
+				else
+					Result := "No exception occurred"
+				end
 			end
 			if Result = Void then
 				Result := ""

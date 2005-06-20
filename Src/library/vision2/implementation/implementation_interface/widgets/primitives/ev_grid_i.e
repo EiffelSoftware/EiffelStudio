@@ -3213,7 +3213,6 @@ feature {NONE} -- Drawing implementation
 	remove_resizing_line is
 			-- Remove resizing line drawn on `drawable'.
 		do
-			fixme (Once "Must remove resizing line if the area in which it was previously drawn has been re-drawn by `Current'")
 				-- Remove line representing position in current divider style.
 			if is_resizing_divider_solid then
 				drawable.disable_dashed_line_style
@@ -3382,16 +3381,15 @@ feature {NONE} -- Drawing implementation
 			viewable_width := a_width
 			viewable_height := a_height
 
-			fixme (Once "[
-				Is there a better way to respond to the resizing without setting the invalid row and column indexes to 1?]
-				I think it should be possible to simply update the scroll bar without modifying the indexes. Julian
-				]")
+
+				-- We set the computation required to the final column and row as this
+				-- triggers re-computation of the scroll bars, with the minimal recompute performed.
 			if not header.is_empty then
 					-- Update horizontal scroll bar size and position.
-				set_horizontal_computation_required (1)
+				set_horizontal_computation_required (column_count)
 			end
 			if row_count /= 0 then
-				set_vertical_computation_required (1)
+				set_vertical_computation_required (row_count)
 			end
 				-- Flag that we have triggered a recompute/redraw as the result of
 				-- the viewport resizing. In this situation, extra procssing is performed

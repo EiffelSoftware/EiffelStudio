@@ -47,9 +47,6 @@ feature -- Basic operations
 			i: INTEGER
 			internal_client_width: INTEGER
 		do
-			fixme (Once "Handle hidden columns and columns that have had their position moved.")
-			fixme (Once "Use a binary search to find the positions if possible.")
-			fixme (Once "Handle dynamic items in per item scrolling mode")
 			create Result.make (20)
 			
 			physical_column_indexes := grid.physical_column_indexes
@@ -135,7 +132,6 @@ feature -- Basic operations
 			found: BOOLEAN
 			grid_row_count: INTEGER
 		do
-			fixme (Once "Implement the dynamic mode for items when in per item scrolling")
 			dynamic_content_function := grid.dynamic_content_function
 			create Result.make (20)
 			grid_row_count := grid.row_count

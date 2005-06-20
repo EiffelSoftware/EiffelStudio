@@ -27,7 +27,9 @@ feature -- Query
 	   		l_type.to_lower
 			Result := registered_document_types.has (l_type)
 			if not Result then
-				print ("unknown document type")
+				debug ("editor")
+					print ("unknown document type")
+				end				
 			end
 	   	end		
 

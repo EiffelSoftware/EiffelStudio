@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 				sfd.show_modal_to_window (window)
 				if not sfd.file_name.is_empty then
 					create text_file.make_open_write (sfd.file_name)
-					text_file.put_string (message)
+					text_file.put_string (message_text.text)
 					text_file.close
 				end
 			end

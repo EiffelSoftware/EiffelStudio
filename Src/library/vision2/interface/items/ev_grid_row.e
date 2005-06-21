@@ -29,13 +29,16 @@ create
 
 feature -- Access
 
-	is_tree_node: BOOLEAN is
-			-- Is `Current' a node in a tree structure?
+	is_part_of_tree_structure: BOOLEAN is
+			-- Is `Current' part of a tree structure within `parent_i'?
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void		
 		do
 			Result := parent_row /= Void or else subrow_count > 0
+		ensure
+			result_true_implies_current_part_of_tree_structure: Result implies parent_row /= Void or else subrow_count > 0
+			result_false_implies_current_not_in_tree_structure: not Result implies parent_row = Void and then subrow_count = 0
 		end
 
 	subrow (i: INTEGER): EV_GRID_ROW is
@@ -376,8 +379,8 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			is_parented: parent /= Void
-			is_index_valid_for_item_insertion_if_subrow: a_item /= Void and then is_tree_node implies is_index_valid_for_item_setting_if_tree_node (i)
-			is_index_valid_for_item_removal_if_subrow: a_item = Void and then is_tree_node implies is_index_valid_for_item_removal_if_tree_node (i)
+			is_index_valid_for_item_insertion_if_subrow: a_item /= Void and then is_part_of_tree_structure implies is_index_valid_for_item_setting_if_tree_node (i)
+			is_index_valid_for_item_removal_if_subrow: a_item = Void and then is_part_of_tree_structure implies is_index_valid_for_item_removal_if_tree_node (i)
 		do
 			implementation.set_item (i, a_item)
 		ensure
@@ -459,7 +462,7 @@ feature -- Contract support
 	is_index_valid_for_item_setting_if_tree_node (a_index: INTEGER): BOOLEAN is
 			-- May an item be set in `Current' at index `a_index' if `Current' is a tree node.
 		require
-			is_tree_node: is_tree_node
+			is_part_of_tree_structure: is_part_of_tree_structure
 			index_valid: a_index > 0
 		local
 			a_ancestor_index_of_first_item, a_subrow_index_of_first_item, i: INTEGER
@@ -501,7 +504,7 @@ feature -- Contract support
 	is_index_valid_for_item_removal_if_tree_node (a_index: INTEGER): BOOLEAN is
 			-- May an item be removed from `Current' at index `a_index' if `Current' is a tree node.
 		require
-			is_tree_node: is_tree_node
+			is_part_of_tree_structure: is_part_of_tree_structure
 			index_valid: a_index > 0 and then a_index <= count
 		local
 			a_index_of_next_item, i, a_subnode_first_item_index: INTEGER

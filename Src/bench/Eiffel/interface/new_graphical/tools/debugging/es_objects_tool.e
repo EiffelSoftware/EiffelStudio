@@ -214,13 +214,13 @@ feature -- Access
 	title: STRING is
 			-- Title of the tool.
 		do
-			Result := "ObjectsTool"
+			Result := interface_names.t_object_tool
 		end
 
 	menu_name: STRING is
 			-- Name as it may appear in a menu.
 		do
-			Result := "ObjectsTool"
+			Result := interface_names.m_object_tools
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is

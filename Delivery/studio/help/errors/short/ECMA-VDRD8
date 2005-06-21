@@ -1,0 +1,4 @@
+Error: assigner command of a redeclaration is not a version of the
+  precursor's assigner command.
+What to do: remove assigner mark or replace it with a version of a
+  precursor's assigner command.

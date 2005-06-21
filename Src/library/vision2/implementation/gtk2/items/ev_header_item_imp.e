@@ -50,7 +50,7 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
 			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
-			real_signal_connect (c_object, "notify::width", agent handle_resize, Void)
+			real_signal_connect (c_object, once "notify::width", agent handle_resize, Void)
 			
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -248,7 +248,7 @@ feature {EV_HEADER_IMP} -- Implementation
 				a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
 					-- We don't want the button stealing focus.
 				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
-				real_signal_connect (a_button, "event", agent (App_implementation.gtk_marshal).header_item_event_dispatcher (internal_id, ? , ?), Void)
+				real_signal_connect (a_button, once "event", agent (App_implementation.gtk_marshal).header_item_event_dispatcher (internal_id, ? , ?), Void)
 			else
 				{EV_GTK_EXTERNALS}.object_ref (box)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer))

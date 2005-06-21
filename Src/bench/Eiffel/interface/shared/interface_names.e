@@ -588,6 +588,7 @@ feature -- Label texts
 	l_System_name: STRING is			"System name: "
 	l_System_properties: STRING is		"System properties"
 	l_System_running: STRING is			"System running"
+	l_System_not_running: STRING is		"System not running"
 	l_Tab_output: STRING is 			"Output"
 	l_Tab_class_info: STRING is 		"Class"
 	l_Tab_feature_info: STRING is 		"Feature"

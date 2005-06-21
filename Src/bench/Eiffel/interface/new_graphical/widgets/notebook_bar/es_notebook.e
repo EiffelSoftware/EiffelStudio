@@ -50,8 +50,9 @@ feature {NONE} -- Initialization
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		do
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make (
-				explorer_bar, widget, title, False
+			create header_box
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_info (
+				explorer_bar, widget, title, False, header_box, Void
 			)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
@@ -67,10 +68,13 @@ feature -- Access
 	menu_name: STRING
 
 	pixmap: ARRAY [EV_PIXMAP]
+	
+	header_box: EV_HORIZONTAL_BOX
 
 	selected_item: ES_NOTEBOOK_ITEM
 	
 	pointed_item: ES_NOTEBOOK_ITEM is
+			-- Pointer notebook item.
 		local
 			i: INTEGER
 			w: EV_WIDGET
@@ -85,18 +89,25 @@ feature -- Access
 		end
 
 	item_by_tab (tab: EV_NOTEBOOK_TAB): ES_NOTEBOOK_ITEM is
+			-- Notebook item corresponding to `tab'.
 		require
-			tab /= Void
+			tab_not_void: tab /= Void
+			tab_not_destroyed: not tab.is_destroyed
 		local
 			cursor: DS_HASH_TABLE_CURSOR [EV_NOTEBOOK_TAB, ES_NOTEBOOK_ITEM]
+			tabw: EV_WIDGET
 		do
+			tabw := tab.widget
 			from
 				cursor := items.new_cursor
 				cursor.start
 			until
 				cursor.after or Result /= Void
 			loop
-				if cursor.item.widget = tab.widget then
+				if 
+					not cursor.item.is_destroyed
+					and then cursor.item.widget = tabw
+				then
 					Result := cursor.key
 				end
 				cursor.forth
@@ -152,7 +163,10 @@ feature -- Change
 	update is
 		do
 			update_selected_item
-			update_mini_toolbar
+			if selected_item /= Void then
+				update_header_box
+				update_mini_toolbar
+			end
 		end
 		
 	update_selected_item is
@@ -166,8 +180,31 @@ feature -- Change
 				selected_item := Void
 			end
 		end
+
+	update_header_box is
+		require
+			selected_item /= Void
+		local
+			par: EV_CONTAINER
+			hbox: EV_HORIZONTAL_BOX	
+		do
+			header_box.wipe_out
+			hbox := selected_item.header_box
+			if explorer_bar_item /= Void and then hbox /= Void then
+				par := hbox.parent
+				if par /= Void then
+					par.prune_all (hbox)
+				end
+				check
+					hbox.parent = Void
+				end
+				header_box.extend (hbox)
+			end			
+		end
 		
 	update_mini_toolbar	is
+		require
+			selected_item /= Void
 		local
 			par: EV_CONTAINER
 			mtb: EV_TOOL_BAR
@@ -184,7 +221,7 @@ feature -- Change
 				explorer_bar_item.update_mini_toolbar (mtb)
 			end
 		end
-	
+
 	change_attach_explorer (an_explorer_bar: EB_EXPLORER_BAR) is
 			-- Change the window and explorer bar `Current' is in.
 		do
@@ -269,6 +306,12 @@ feature {ES_NOTEBOOK_ITEM} -- exported Dock item action
 				par := nbi.mini_toolbar.parent
 				if par /= Void then
 					par.prune_all (nbi.mini_toolbar)
+				end
+			end
+			if nbi.header_box /= Void then
+				par := nbi.header_box.parent
+				if par /= Void then
+					par.prune_all (nbi.header_box)
 				end
 			end
 			tcell.docked_actions.force_extend (agent nbi.on_dock_back (nbi))

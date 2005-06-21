@@ -62,7 +62,6 @@ feature {NONE} -- Initialization
 			widget_not_void: a_widget /= Void
 			title_not_void: a_title /= Void
 			info_not_void: info /= Void
-			mini_toolbar_not_void: a_mini_toolbar /= Void
 		do
 			mini_toolbar := a_mini_toolbar
 			header_addon := info

@@ -12,14 +12,14 @@ inherit
 
 feature {EB_KERNEL} -- Initialization
 
-	initialize_preferences (a_preferences: PREFERENCES) is
+	initialize_preferences (a_preferences: PREFERENCES; gui_mode: BOOLEAN) is
 		require
 			preferences_not_void: a_preferences /= Void
 			not_initialized: not preferences_initialized
 		local
 			l_prefs: like preferences
 		once
-			create l_prefs.make (a_preferences)
+			create l_prefs.make (a_preferences, gui_mode)
 			preferences_cell.put (l_prefs)
 		ensure
 			preferences_not_void: preferences /= Void

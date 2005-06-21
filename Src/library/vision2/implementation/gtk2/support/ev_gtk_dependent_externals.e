@@ -8,6 +8,16 @@ class
 
 feature -- Externals
 
+	frozen gtk_window_get_position (a_window: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is
+		external
+			"C signature (GtkWindow*, gint*, gint*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_window_set_decorated (a_window: POINTER; a_decor: BOOLEAN) is
+		external
+			"C signature (GtkWindow*, gboolean) use <gtk/gtk.h>"
+		end
+
 	frozen gtk_window_move (a_window: POINTER; a_x, a_y: INTEGER) is
 		external
 			"C signature (GtkWindow*, gint, gint) use <gtk/gtk.h>"

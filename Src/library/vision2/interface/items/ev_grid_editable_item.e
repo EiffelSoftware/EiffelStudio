@@ -13,7 +13,7 @@ indexing
 			EV_GRID).
 
 			By default, `text_field' is Void unless the item is being activated, this prevents the need for a persistent text_field
-			widget for each EV_GRID_EDITABLE_ITEM.
+			widget for each EV_GRID_EDITABLE_ITEM. `text_field' must not be unparented during activation.
 		]"
 	author: ""
 	date: "$Date$"

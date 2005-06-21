@@ -15,7 +15,7 @@ indexing
 			EV_GRID).
 
 			By default, `combo_box' is Void unless the item is being activated, this prevents the need for a persistent combo box
-			widget for each EV_GRID_COMBO_ITEM.
+			widget for each EV_GRID_COMBO_ITEM. `combo_box' must not be unparented during activation.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

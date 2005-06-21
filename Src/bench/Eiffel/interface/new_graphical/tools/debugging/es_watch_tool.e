@@ -541,16 +541,24 @@ feature {NONE} -- Event handling
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			l_item: like watched_item_from
 		do
-			rows := watches_grid.selected_rows
+			rows := grid_selected_top_rows (watches_grid)
 			if not rows.is_empty then
-				sel := rows.first
-
-				l_item := watched_item_from (sel)
-				expr := l_item.expression
-				check expr /= Void end
-				create dlg.make_with_expression (expr)
-				dlg.set_callback (agent refresh_expression (expr))
-				dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+				from
+					rows.start
+				until
+					rows.after
+				loop
+					sel := rows.item
+					l_item := watched_item_from (sel)
+					if l_item /= Void then
+						expr := l_item.expression
+						check expr /= Void end
+						create dlg.make_with_expression (expr)
+						dlg.set_callback (agent refresh_expression (expr))
+						dlg.show_modal_to_window (debugger_manager.debugging_window.window)
+					end
+					rows.forth
+				end
 			end
 		end
 
@@ -562,7 +570,7 @@ feature {NONE} -- Event handling
 			sel_index: INTEGER
 			l_item: like watched_item_from
 		do
-			rows := watches_grid.selected_rows
+			rows := grid_selected_top_rows (watches_grid)
 			if not rows.is_empty then
 				sel_index := rows.first.index
 			end
@@ -571,7 +579,7 @@ feature {NONE} -- Event handling
 			until
 				rows.after
 			loop
-				if rows.item.parent_row = Void then
+				if rows.item.parent /= Void and then rows.item.parent_row = Void then
 					l_item := watched_item_from (rows.item)
 					if l_item = Void then
 						check False end
@@ -607,7 +615,7 @@ feature {NONE} -- Event handling
 		do
 			if not move_processing then
 				move_processing := True --| To avoid concurrent move
-				sel_rows := grid.selected_rows
+				sel_rows := grid_selected_top_rows (watches_grid)
 				if not sel_rows.is_empty then
 					sel := sel_rows.first
 					if sel.parent_row = Void then
@@ -639,7 +647,7 @@ feature {NONE} -- Event handling
 			sel_index: INTEGER
 			l_item: like watched_item_from
 		do
-			rows := watches_grid.selected_rows
+			rows := grid_selected_top_rows (watches_grid)
 			if not rows.is_empty then
 				sel_index := rows.first.index
 			end
@@ -741,7 +749,6 @@ feature {NONE} -- Event handling
 			-- A key was pressed in `ev_list'.
 		local
 			ost: OBJECT_STONE
-			expression_cell: ES_OBJECTS_GRID_EXPRESSION_CELL			
 		do
 			if k /= Void then
 				inspect k.code
@@ -813,7 +820,7 @@ feature {NONE} -- Event handling
 				and not ev_application.alt_pressed
 				and not ev_application.shift_pressed
 			then			
-				rows := watches_grid.selected_rows
+				rows := grid_selected_top_rows (watches_grid)
 				if not rows.is_empty then
 					row := rows.first
 					if 
@@ -840,7 +847,7 @@ feature {NONE} -- Event handling
 				and not ev_application.alt_pressed
 				and not ev_application.shift_pressed
 			then					
-				rows := a_grid.selected_rows
+				rows := grid_selected_top_rows (watches_grid)
 				if not rows.is_empty then
 					row := rows.first
 					if 

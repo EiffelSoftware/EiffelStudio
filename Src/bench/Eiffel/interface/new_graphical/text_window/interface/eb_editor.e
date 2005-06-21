@@ -17,7 +17,10 @@ inherit
 		redefine
 			handle_extended_ctrled_key,
 			display_not_editable_warning_message,
-			load_file
+			load_file,
+			load_text,
+			initialize_editor_context,
+			reference_window
 		end
 
 	EB_SHARED_MANAGERS
@@ -145,6 +148,13 @@ feature -- Text Loading
 				Precursor (l_filename)
 			end
   	  	end
+
+	load_text (s: STRING) is
+			-- Load text
+		do			
+			set_current_document_class (get_class_from_type (once "e"))
+			Precursor {EDITABLE_TEXT_PANEL} (s)
+		end		
 
 feature {NONE} -- Handle keystokes
 

@@ -49,7 +49,6 @@ feature -- Access
 				end
 			end
 		end
-
 		
 	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
 		require
@@ -182,6 +181,29 @@ feature -- Access
 			else
 				Result := row_index
 			end
+		end
+
+	grid_selected_top_rows (a_grid: EV_GRID): ARRAYED_LIST [EV_GRID_ROW] is
+			-- Return the selected_rows filtered to keep only top rows
+		require
+			a_grid /= Void
+		local
+			r: EV_GRID_ROW
+		do
+			Result := a_grid.selected_rows
+			from
+				Result.start
+			until
+				Result.after
+			loop
+				r := Result.item
+				if r = Void or else r.parent = Void or else r.parent_row /= Void then
+					Result.remove
+				end
+				Result.forth
+			end
+		ensure
+			Result /= Void
 		end
 
 	grid_front_new_row (a_grid: EV_GRID): EV_GRID_ROW is

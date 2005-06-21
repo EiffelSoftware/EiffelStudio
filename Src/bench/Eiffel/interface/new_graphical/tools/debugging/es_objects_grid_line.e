@@ -1060,8 +1060,6 @@ feature {NONE} -- Implementation
 		end
 
 	cell_text_updated (v: STRING; c: INTEGER): ES_OBJECTS_GRID_CELL is
-		local
-			l_item: EV_GRID_ITEM
 		do
 			Result := es_cell (c)
 			if v /= Void then

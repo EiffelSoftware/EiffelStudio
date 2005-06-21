@@ -72,7 +72,7 @@ feature -- Checking
 					elseif not feature_with_assigner.is_same_assigner (old_feat, feat_tbl) then
 							-- Report that assigner commands are not the same.
 						Error_handler.insert_error
-							(create {VE09}.make (system.current_class, feature_with_assigner, old_feat))
+							(create {VDJR3_NEW}.make (system.current_class, feature_with_assigner, old_feat))
 					end
 				end
 

@@ -4,11 +4,13 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class VE06
-	obsolete "Not defined in the standard"
+class VMFN2_NEW
 
 inherit
 	FEATURE_CONFLICT_ERROR
+		redefine
+			subcode
+		end
 
 create {COMPILER_EXPORTER}
 
@@ -16,7 +18,10 @@ create {COMPILER_EXPORTER}
 
 feature -- Access
 
-	code: STRING is "VE06"
+	code: STRING is "ECMA-VMFN"
 			-- Error code
+
+	subcode: INTEGER is 2
+			-- Error subcode
 
 end

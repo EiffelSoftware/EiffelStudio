@@ -369,8 +369,8 @@ feature -- Element change
 			i_positive: i > 0
 			is_parented: parent /= Void
 			valid_tree_structure_on_insertion: a_item /= Void and parent.is_tree_enabled and parent.row (i).parent_row /= Void implies index >= parent.row (i).parent_row.index_of_first_item
-			item_may_be_added_to_tree_node: a_item /= Void and parent.row (i).is_tree_node implies parent.row (i).is_index_valid_for_item_setting_if_tree_node (index)
-			item_may_be_removed_from_tree_node: a_item = Void and then parent.row (i).is_tree_node implies parent.row (i).is_index_valid_for_item_removal_if_tree_node (index)
+			item_may_be_added_to_tree_node: a_item /= Void and parent.row (i).is_part_of_tree_structure implies parent.row (i).is_index_valid_for_item_setting_if_tree_node (index)
+			item_may_be_removed_from_tree_node: a_item = Void and then parent.row (i).is_part_of_tree_structure implies parent.row (i).is_index_valid_for_item_removal_if_tree_node (index)
 		do
 			parent_i.set_item (index, i, a_item)
 		ensure

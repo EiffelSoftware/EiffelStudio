@@ -1720,7 +1720,8 @@ feature -- Element change
 			a_row_positive: a_row > 0
 			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and then a_row <= row_count and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
-			to_implement_assertion	("Add preconditions for subnode handling of `Void' items.")
+			item_may_be_added_if_row_is_a_subrow: a_item /= Void and then a_row <= row_count and then row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_setting_if_tree_node (a_column)
+			item_may_be_removed_if_row_is_a_subrow: a_item = Void and then a_row <= row_count and then row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
 		do
 			internal_set_item (a_column, a_row, a_item)
 		ensure

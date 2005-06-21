@@ -312,7 +312,12 @@ feature -- Graphical changes
 		local
 			r: EV_GRID_ROW
 		do
-			if abutton = 1 then
+			if 
+				abutton = 1
+				and not ev_application.ctrl_pressed
+				and not ev_application.shift_pressed
+				and not ev_application.alt_pressed
+			then
 				r := a_item.row
 				if 	
 					r /= Void 

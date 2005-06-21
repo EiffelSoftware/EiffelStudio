@@ -255,7 +255,9 @@ feature {EB_EXPRESSION_DEFINITION_DIALOG, ES_OBJECTS_GRID_EXPRESSION_LINE} -- Re
 		require
 			expr /= Void
 		do
-			if not expr.is_equal (dbg_expression.expression) then
+			if dbg_expression = Void then
+				create_expression (expr)
+			elseif not expr.is_equal (dbg_expression.expression) then
 				dbg_expression.set_expression (expr)
 				reset_expression_evaluator
 			end

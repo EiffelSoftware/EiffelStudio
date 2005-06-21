@@ -1649,6 +1649,7 @@ feature -- Element change
 				internal_row_data.move_items (i, j, n)
 					-- Update the changed indexes.
 				update_grid_row_indices (i.min (j))
+				set_vertical_computation_required (i.min (j))
 				redraw_client_area
 			end
 		end

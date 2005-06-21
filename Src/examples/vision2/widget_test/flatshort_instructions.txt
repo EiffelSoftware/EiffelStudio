@@ -18,6 +18,18 @@ Y
 ev_frame_flatshort.rtf
 
 I
+EV_GRID
+RTF
+Y
+ev_grid_flatshort.rtf
+
+I
+EV_HEADER
+RTF
+Y
+ev_header_flatshort.rtf
+
+I
 EV_HORIZONTAL_BOX
 RTF
 Y

@@ -32,6 +32,8 @@ XCOPY /Y %TEMP%\Vision2_precompile\ev_checkable_list_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_checkable_tree_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_combo_box_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_drawing_area_flatshort.rtf .\flatshort
+XCOPY /Y %TEMP%\Vision2_precompile\ev_grid_flatshort.rtf .\flatshort
+XCOPY /Y %TEMP%\Vision2_precompile\ev_header_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_horizontal_progress_bar_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_horizontal_range_flatshort.rtf .\flatshort
 XCOPY /Y %TEMP%\Vision2_precompile\ev_horizontal_scroll_bar_flatshort.rtf .\flatshort

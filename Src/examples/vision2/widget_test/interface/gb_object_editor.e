@@ -213,7 +213,11 @@ feature {NONE} -- Implementation
 					"SEPARATOR">>)
 				attribute_editor_box.extend (tool_bar_extendible_controls)
 			end
-			if is_instance_of (widget, dynamic_type_from_string ("EV_CONTAINER")) then
+			if is_instance_of (widget, dynamic_type_from_string ("EV_CONTAINER"))
+				and not is_instance_of (widget, dynamic_type_from_string ("EV_GRID")) then
+					-- Special case handling for EV_GRID as we do not wish to display the
+					-- container properties for the grid.
+					
 				container ?= widget
 				check
 					widget_is_container: container /= Void

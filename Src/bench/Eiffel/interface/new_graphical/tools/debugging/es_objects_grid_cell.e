@@ -23,7 +23,9 @@ feature -- Query
 			-- `Current' has been requested to be updated via `popup_window'.
 		do
 			Precursor (popup_window)
-			text_field.select_all
+			if text_field.text_length > 0 then
+				text_field.select_all
+			end
 			text_field.disable_edit
 		end
 		

@@ -942,8 +942,11 @@ feature -- Status setting
 	set_first_visible_row (a_row: INTEGER) is
 			-- Set `a_row' as the first row visible in `Current' as long
 			-- as there are enough rows after `a_row' to fill the remainder of `Current'.
+		require
+			valid_row_index: a_row >= 1 and a_row <= row_count			
 		do
-			to_implement ("EV_GRID_I.set_first_visible_row")
+			set_virtual_position (virtual_x_position, (row (a_row).virtual_y_position).min (virtual_height - viewable_height))
+			redraw_client_area
 		ensure
 			-- Enough following rows implies `first_visible_row' = a_row.
 			-- Can be calculated from `height' of `Current' and row heights.

@@ -24,13 +24,13 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> managed files, as described in <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>. EiffelEnvision also manages linked project items, via the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> hierarchy, but only to support referencing existing items related to the project. 
+			EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> manages files, as described in <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>. EiffelEnvision also manages linked project items, via the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> hierarchy, but only to support referencing existing items related to the project. 
 		</paragraph>
     <paragraph>
-			All aspects of an EiffelEnvision <link><url>../../structure/project.xml</url><label>Project</label></link> are hierarchal providing you with the facilities to structure and organize your projects 
+			All aspects of an EiffelEnvision <link><url>../../structure/project.xml</url><label>Project</label></link> are hierarchal, providing you with the facilities to structure and organize your projects 
 			as such. To facilitate the creation of file and folder hierarchies, <bold>New Folders</bold> can be created under every type of folder. The type of folder added will depend 
-			on the section of the project you are adding a new folder to. For the most part EiffelEnvision managed files. The exception is the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> 
-			section of a <link><url>../../structure/project.xml</url><label>Project</label></link>. This is manages links to files. For more information, see <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>.
+			on the section of the project you are adding a new folder to. For the most part EiffelEnvision manages files. The exception is the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> 
+			section of a <link><url>../../structure/project.xml</url><label>Project</label></link>. This manages links to files. For more information, see <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>.
 		</paragraph>
     <anchor>adding_folders</anchor>
     <heading>
@@ -38,12 +38,12 @@
       <content>Adding Folders</content>
     </heading>
     <paragraph>
-			To add a folder, select a folder in your EiffelEnvision project. Now select <bold>Project</bold>, <bold>New Folder</bold>. Alternatively select the <bold>Add</bold>, <bold>New Folder</bold> from the 
-			folder context menu. If the <link><url>../../structure/project.xml</url><label>Project Node</label></link> is selected when adding a new folder, the resulting folder will be added to the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link> 
+			To add a folder, select a folder in your EiffelEnvision project. Now select <bold>Project</bold>, <bold>New Folder</bold>. Alternatively, select the <bold>Add</bold>, <bold>New Folder</bold> from the 
+			folder context menu. If the <link><url>../../structure/project.xml</url><label>Project Folder</label></link> is selected when adding a new folder, the resulting folder will be added to the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link> 
 			section of your project, because they have the same <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>.
 		</paragraph>
     <paragraph>
-			Once selecting to add a new folder, a new folder will appear under the folder you selected when adding it. The new folder will automatically be ready for a new name, overriding the default <italic>new_folder_ith</italic>. 
+			Once you have selected to add a new folder, a new folder will appear under the folder you selected when adding it. The new folder will automatically be ready for a new name, overriding the default <italic>new_folder_ith</italic>. 
 			When choosing a name for the folder, it must contain only those characters legally excepted for Windows folder names.
 		</paragraph>
     <anchor>also_see</anchor>

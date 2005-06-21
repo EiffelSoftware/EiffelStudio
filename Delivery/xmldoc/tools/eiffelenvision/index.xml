@@ -24,16 +24,16 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			EiffelEnvision is a completed language plug-in, also known as a package, for Visual Studio .NET 2003. It facilitates developers with the ease in which existing languages, such as 
-			<bold>Visual C#</bold> and <bold>Visual Basic .NET</bold>, provide to create an manage project but with the power of Eiffel and <link><url>eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET</label></link>. 
-			EiffelEnvision integrates the Eiffel languages into Visual Studio .NET seamlessly, exploiting the rich tool set found in Visual Studio .NET.
+			EiffelEnvision is a complete language plug-in, also known as a package, for Visual Studio .NET 2003. It facilitates developers with the ease in which existing languages, such as 
+			<bold>Visual C#</bold> and <bold>Visual Basic .NET</bold> provide, to create and manage projects, but with the power of Eiffel and <link><url>eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET</label></link>. 
+			EiffelEnvision integrates the Eiffel language into Visual Studio .NET seamlessly, exploiting the rich tool set found in Visual Studio .NET.
  		</paragraph>
     <paragraph>
 			Because EiffelEnvision integrates with the Visual Studio .NET IDE, Eiffel for .NET programmers can use Visual Studio .NET designers to create XML Web services and Windows Forms applications. In 
 			addition, Eiffel Software's library suit is also available allowing developers to create windows application using the EiffelVision 2 multi-platform library.
  		</paragraph>
     <paragraph>
-			Many new feature additions and enhancements have been made in this release of EiffelEnvision making it an incompatible rival to previous releases.
+			Many new features, additions and enhancements have been made in this release of EiffelEnvision making it an incompatible rival to previous releases.
 		</paragraph>
     <anchor>in_this_section</anchor>
     <heading>
@@ -46,7 +46,7 @@
         <label>Introduction to EiffelEnvision</label>
       </link>
       <line_break />
-			Introduces EiffelEnvision, what new, and what it can do for developers like you.
+			Introduces EiffelEnvision, what's new, and what it can do for developers like you.
 		</paragraph>
     <paragraph>
       <link>
@@ -54,7 +54,7 @@
         <label>Getting Started</label>
       </link>
       <line_break />
-			The first stepping stone to getting on your way with creating, configuring and managing EiffelEnvision projects.
+			The first stepping stone to getting on your way to creating, configuring and managing EiffelEnvision projects.
 		</paragraph>
     <anchor>see_also</anchor>
     <heading>

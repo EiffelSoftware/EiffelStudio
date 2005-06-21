@@ -17,7 +17,7 @@
 	<paragraph>
 		
 		<paragraph>
-			In this section of the documentation all of the concepts, feature and structural aspects of EiffelEnvision projects are explained. This is a good starting place to become 
+			In this section of the documentation all of the concepts, features and structural aspects of EiffelEnvision projects are explained. This is a good starting place to become 
 			familiar with EiffelEnvision and aspects of Visual Studio .NET.
 		</paragraph>
 		
@@ -40,7 +40,7 @@
 				<label>EiffelEnvision for EiffelStudio Developers</label>
 			</link>
 			<line_break/>
-			A brief introduction and starting point guides for <bold>EiffelStudio</bold> developers. This section of the documentation also covers the means to convert/import EiffelStudio projects into EiffelEnvision.
+			A brief introduction and starting point guide for <bold>EiffelStudio</bold> developers. This section of the documentation also covers the means to convert/import EiffelStudio projects into EiffelEnvision.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -56,7 +56,7 @@
 				<label>Navigation and Code Browsing</label>
 			</link>
 			<line_break/>
-			The various aspects the EiffelEnvision project exploit to provide rich code browsing and navigation facilities.
+			The various aspects that EiffelEnvision projects exploit to provide rich code browsing and navigation facilities.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -64,7 +64,7 @@
 				<label>Compiling Projects</label>
 			</link>
 			<line_break/>
-			Explains how to compile EiffelEnvision projects. A process which is referred to as building, in Visual Studio .NET
+			Explains how to compile EiffelEnvision projects. A process which is referred to as building, in Visual Studio .NET.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -80,7 +80,7 @@
 				<label>Deploying Projects</label>
 			</link>
 			<line_break/>
-			The requirements and the steps to deploy EiffelEnvision projects both inside and outside of Visual Studio .NET. The documentation in this section also covers your rights to distribute the Eiffel Software runtime and source code.
+			The requirements and steps to deploy EiffelEnvision projects both inside and outside of Visual Studio .NET. The documentation in this section also covers your rights to distribute the Eiffel Software runtime and source code.
 		</paragraph>
 		<paragraph>
 			<link>

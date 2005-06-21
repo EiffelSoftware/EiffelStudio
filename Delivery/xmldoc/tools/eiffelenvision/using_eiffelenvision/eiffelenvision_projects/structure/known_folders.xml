@@ -25,7 +25,7 @@
 			EiffelEnvision has intended them. This is for future protection of your project and its content.
 		</paragraph>
     <paragraph>
-			Currently, EiffelEnvision reserves three names for folders located in the projects root location. That is to say, the location when the EiffelEnvision project file (*.eifp) is located.
+			Currently, EiffelEnvision reserves three names for folders located in the projects root location. That is to say, the location where the EiffelEnvision project file (*.eifp) is located.
 			<list ordered="false"><item><link><url>known_folders.xml</url><anchor_name>bin_folder</anchor_name><label>bin</label></link></item><item><link><url>known_folders.xml</url><anchor_name>obj_folder</anchor_name><label>obj</label></link></item><item><link><url>known_folders.xml</url><anchor_name>resources_folder</anchor_name><label>resources</label></link></item></list></paragraph>
     <anchor>bin_folder</anchor>
     <heading>
@@ -41,7 +41,7 @@
       <content>obj</content>
     </heading>
     <paragraph>
-			Originally short of <bold>Object Files</bold>, EiffelEnvision retains the name that veteran Visual Studio developers are accustomed to, as do other languages such as <bold>Visual C#</bold> and <bold>Visual Basic .NET</bold>. This folder contains all of the intermediate compilation information used by the Eiffel for .NET compiler and EiffelEnvision's <link><url>../index.xml</url><label>projects</label></link>.
+			Originally short for <bold>Object Files</bold>, EiffelEnvision retains the name that veteran Visual Studio developers are accustomed to, as do other languages such as <bold>Visual C#</bold> and <bold>Visual Basic .NET</bold>. This folder contains all of the intermediate compilation information used by the Eiffel for .NET compiler and EiffelEnvision's <link><url>../index.xml</url><label>projects</label></link>.
 		</paragraph>
     <anchor>resources_folder</anchor>
     <heading>

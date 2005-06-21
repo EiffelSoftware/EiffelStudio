@@ -52,7 +52,7 @@
     <paragraph>
       <bold>Generate a Frame-base System</bold>
       <line_break />
-			Selecting this option will cause the wizard to generate a frame based application. This uses a main window or "frame", which can have menus, sub windows etc.
+			Selecting this option will cause the wizard to generate a frame based application. This uses a main window or "frame", which can have menus, sub windows, etc.
 		</paragraph>
     <paragraph>
       <bold>Generate a Dialog-base System</bold>
@@ -67,7 +67,7 @@
     <paragraph>
 			Once you have set the appropriate settings for the new project, clicking <bold>Finish</bold> will create a new EiffelEnvision <link><url>../../structure/index.xml</url><label>Project</label></link> with the specified settings. Upon completion the following classes will be generated:
 			
-			<list ordered="false"><item><class_name>ROOT_CLASS</class_name>: The root class of the system which inherits <class_name>WEL_APPLICATION</class_name>. There is a  single feature, <feature_name>main_window</feature_name>, which returns the main window of the system  (class <class_name>MAIN_WINDOW</class_name>) which will be displayed when the application is launched.
+			<list ordered="false"><item><class_name>ROOT_CLASS</class_name>: The root class of the system which inherits <class_name>WEL_APPLICATION</class_name>. There is a  single feature, <feature_name>main_window</feature_name>, which returns the main window of the system  (class <class_name>MAIN_WINDOW</class_name>), which will be displayed when the application is launched.
 				</item><item><class_name>MAIN_WINDOW</class_name>: The main window of the system.
 				</item><item><class_name>APPLICATION_IDS</class_name>: Contains application constants.
 				</item></list>

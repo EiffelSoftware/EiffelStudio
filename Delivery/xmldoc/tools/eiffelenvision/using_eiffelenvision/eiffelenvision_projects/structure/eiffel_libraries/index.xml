@@ -10,7 +10,7 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			The <bold>Eiffel Libraries</bold> folder in an EiffelEnvision <link><url>../project.xml</url><label>Project</label></link> is designed to store project related class libraries, that are not specific to the project itself.
+			The <bold>Eiffel Libraries</bold> folder in an EiffelEnvision <link><url>../project.xml</url><label>Project</label></link> is designed to store project related class libraries that are not specific to the project itself.
 		</paragraph>
     <anchor>in_this_section</anchor>
     <heading>

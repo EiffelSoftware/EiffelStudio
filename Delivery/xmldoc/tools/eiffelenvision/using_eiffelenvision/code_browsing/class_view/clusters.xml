@@ -29,10 +29,10 @@
       <content>Clusters</content>
     </heading>
     <paragraph>
-			There are two types of clusters that will be shown when expanding a project node. The icon will either show a cluster (<image><url>../images/cluster/cluster.ico</url></image>) or library cluster (<image><url>../images/cluster/cluster_library.ico</url></image>) based on the set cluster's <link><url>../../eiffelenvision_projects/configuring/project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library Property</label></link> for the corresponding <link><url>../../eiffelenvision_projects/structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>cluster</label></link>.
+			There are two types of clusters that will be shown when expanding a project folder. The icon will either show a cluster (<image><url>../images/cluster/cluster.ico</url></image>) or library cluster (<image><url>../images/cluster/cluster_library.ico</url></image>) based on the set cluster's <link><url>../../eiffelenvision_projects/configuring/project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library Property</label></link> for the corresponding <link><url>../../eiffelenvision_projects/structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>cluster</label></link>.
 		</paragraph>
     <paragraph>
-			Cluster nodes, like <link><url>../../eiffelenvision_projects/structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>clusters</label></link>, can be nested. Expanding cluster nodes will show subclusters and any <link><url>classes.xml</url><label>classes</label></link> found 
+			Cluster folders, like <link><url>../../eiffelenvision_projects/structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>clusters</label></link>, can be nested. Expanding cluster folders will show subclusters and any <link><url>classes.xml</url><label>classes</label></link> found 
 			at that expanded cluster's level.
 		</paragraph>
     <anchor>also_see</anchor>

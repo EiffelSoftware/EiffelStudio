@@ -16,10 +16,10 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			Virtual Folder(<image><url>../../../../images/icons/folder.ico</url></image>), in EiffelEnvision, will only be located directly under the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> top-level folder or below another virtual folder. Virtual folder, unlike other non-top-level folders in EiffelEnvision <link><url>../project.xml</url><label>Projects</label></link>, do not have an underlying disk representation. They merely represent a way to arrange project file items into a preferable hierarchy. 
+			Virtual Folders (<image><url>../../../../images/icons/folder.ico</url></image>), in EiffelEnvision, will only be located directly under the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> top-level folder or below another virtual folder. Virtual folders, unlike other non-top-level folders in EiffelEnvision <link><url>../project.xml</url><label>Projects</label></link>, do not have an underlying disk representation. They merely represent a way to arrange project file items into a preferable hierarchy. 
 		</paragraph>
     <paragraph>
-			All virtual folders are equivocal in functionality to the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> folder, with the exception to removal. Virtual folders, unlike the <bold>Other Project Items</bold> can be <link><url>../../configuring/removing_items.xml</url><label>removed</label></link>.
+			All virtual folders are equivalent in functionality to the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> folder, with the exception of removal. Virtual folders, unlike the <bold>Other Project Items</bold>, can be <link><url>../../configuring/removing_items.xml</url><label>removed</label></link>.
 		</paragraph>
     <paragraph>
 			For more information on virtual folders and their functionality, see the <link><url>other_project_items.xml</url><label>Other Project Items</label></link> documentation.

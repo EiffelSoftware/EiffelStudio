@@ -24,10 +24,10 @@
 		<anchor>in_this_section</anchor><heading><size>2</size><content>In This Section</content></heading><paragraph><link><url>hierarchy.xml</url><label>An Overview of the Class View Hierarchy</label></link><line_break />
 			An overview of the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfClassViewWindow.htm</url><label>Class View</label></link> window, augmenting the Visual Studio .NET documentation.
 		</paragraph><paragraph><link><url>clusters.xml</url><label>Class View and Object Browser Clusters</label></link><line_break />
-			Documentation on the Class View and Object Browser cluster nodes.
+			Documentation on the Class View and Object Browser cluster folders.
 		</paragraph><paragraph><link><url>classes.xml</url><label>Class View and Object Browser Classes</label></link><line_break />
-			Documentation on the Class View and Object Browser class nodes.
+			Documentation on the Class View and Object Browser class folders.
 		</paragraph><paragraph><link><url>features.xml</url><label>Class View and Object Browser Features</label></link><line_break />
-			Documentation on the Class View and Object Browser feature nodes.
+			Documentation on the Class View and Object Browser feature folders.
 		</paragraph><anchor>also_see</anchor><heading><size>2</size><content>Related Sections</content></heading><seealso><bold>See Also:</bold><line_break /><link><url>../object_browser/index.xml</url><label>Object Browser</label></link><line_break /><link><url>../icon_glossary.xml</url><label>Class View and Object Browser Icons</label></link></seealso></paragraph>
 </document>

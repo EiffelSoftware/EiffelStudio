@@ -21,7 +21,7 @@
   <paragraph>
 		Most of Visual Studio .NET language packages provide facilities to browse component references and code written in the language; EiffelEnvision is no exception. 
 		EiffelEnvision plugs directly into Visual Studio .NET's code browsing facilities and even extends the stock behavior to enhance code navigation. This section of 
-		the documentation provides the information on the extension and facilities exploited by EiffelEnvision.
+		the documentation provides information on the extension and facilities exploited by EiffelEnvision.
 		
 		<anchor>in_this_section</anchor><heading><size>2</size><content>In This Section</content></heading><paragraph><link><url>class_view/index.xml</url><label>Class View</label></link><line_break />
 			EiffelEnvision plugs into and extends the Class View in Visual Studio .NET to enhance the default code browsing facilities offered by Visual Studio .NET.

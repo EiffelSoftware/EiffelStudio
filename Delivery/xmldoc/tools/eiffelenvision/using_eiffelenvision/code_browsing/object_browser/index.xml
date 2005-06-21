@@ -40,42 +40,42 @@
     <paragraph>
       <link>
         <url>eiffel_clusters.xml</url>
-        <label>Object Browser Eiffel Clusters Node</label>
+        <label>Object Browser Eiffel Clusters Folders</label>
       </link>
       <line_break />
-			Documentation on the Object Browser <bold>Eiffel Cluster</bold> nodes.
+			Documentation on the Object Browser <bold>Eiffel Cluster</bold> folders.
 		</paragraph>
     <paragraph>
       <link>
         <url>references.xml</url>
-        <label>Object Browser References Node</label>
+        <label>Object Browser References Folders</label>
       </link>
       <line_break />
-			Documentation on the Object Browser <bold>References</bold> nodes.
+			Documentation on the Object Browser <bold>References</bold> folders.
 		</paragraph>
     <paragraph>
       <link>
         <url>assemblies.xml</url>
-        <label>Object Browser Assembly Nodes</label>
+        <label>Object Browser Assembly Folders</label>
       </link>
       <line_break />
-			Documentation on the Object Browser assembly nodes.
+			Documentation on the Object Browser assembly folders.
 		</paragraph>
     <paragraph>
       <link>
         <url>types.xml</url>
-        <label>Object Browser .NET Types Nodes</label>
+        <label>Object Browser .NET Types Folders</label>
       </link>
       <line_break />
-			Documentation on the Object Browser type nodes.
+			Documentation on the Object Browser type folders.
 		</paragraph>
     <paragraph>
       <link>
         <url>members.xml</url>
-        <label>Object Browser .NET Members Nodes</label>
+        <label>Object Browser .NET Members Folders</label>
       </link>
       <line_break />
-			Documentation on the Object Browser member nodes.
+			Documentation on the Object Browser member folders.
 		</paragraph>
     <paragraph>
       <link>

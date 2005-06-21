@@ -28,7 +28,7 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			The <bold>Blank Eiffel Graphical Application Wizard</bold> creates a new simple <bold>EiffelVision 2</bold><link><url>../../structure/index.xml</url><label>Project</label></link>. The project will be added to an active or new Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconvisualstudiosolutionsprojects.htm</url><label>Solution</label></link>.
+			The <bold>Blank Eiffel Graphical Application Wizard</bold> creates a new simple <bold>EiffelVision 2</bold> <link><url>../../structure/index.xml</url><label>Project</label></link>. The project will be added to an active or new Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconvisualstudiosolutionsprojects.htm</url><label>Solution</label></link>.
 		</paragraph>
     <paragraph>
 			The wizard is separated into two pages. <bold>Overview</bold> and <bold>System Settings</bold>. You may switch between the pages by clicking on the name of the page, located in the wizard's left pane.

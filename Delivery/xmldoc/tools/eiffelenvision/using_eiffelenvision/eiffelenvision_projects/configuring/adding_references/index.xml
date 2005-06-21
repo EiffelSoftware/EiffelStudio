@@ -20,7 +20,7 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			Adding and removing project references is no different from adding references in other languages such as Visual C# and Visual Basic .NET. EiffelEnvision does however introduce a new type of reference, which is described in this section of the documentation.
+			Adding and removing project references is no different from adding and removing references in other languages such as Visual C# and Visual Basic .NET. EiffelEnvision does however introduce a new type of reference, which is described in this section of the documentation.
 		</paragraph>
     <anchor>in_this_section</anchor>
     <heading>
@@ -49,7 +49,7 @@
         <label>Precompiled Libraries</label>
       </link>
       <line_break />
-			The precompiled library mechanism for binary reused within EiffelEnvision.
+			The precompiled library mechanism for binary reuse within EiffelEnvision.
 		</paragraph>
     <anchor>see_also</anchor>
     <heading>

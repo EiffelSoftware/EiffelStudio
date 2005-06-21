@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document output="envision" title="EiffelEnvision Project Strucutre">
+<document output="envision" title="EiffelEnvision Project Structure">
 	<meta_data>
 		<help>
 			<toc>
@@ -21,10 +21,10 @@
 	<paragraph>
 		<paragraph>
 			EiffelEnvision projects are like most Visual Studio .NET language-base projects, such as Visual C#, Visual Basic .NET and Visual J#, but with a flair of <bold>Eiffel</bold>. Just 
-			like those aforementioned languages, EiffelEnvision projects, predominately, <link>
+			like those aforementioned languages, EiffelEnvision projects predominately <link>
 				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url>
 				<label>manage files</label>
-			</link>, and directly reflect and underlying file system. However, there are fundamental differences between 
+			</link> and directly reflect an underlying file system. However, there are fundamental differences between 
 			EiffelEnvision projects and other language projects, even those that <link>
 				<url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url>
 				<label>manage files</label>
@@ -126,7 +126,7 @@
 				<url>project.xml</url>
 				<anchor_name>clean_separation</anchor_name>
 				<label>Clean Separation</label>
-			</link> between project files and other source libraries, only those files store under the project's location should be included here. 
+			</link> between project files and other source libraries, only those files stored under the project's location should be included here. 
 		For more information on <bold>Project Items</bold>, see <link>
 				<url>project_items/index.xml</url>
 				<label>Project Items</label>
@@ -138,7 +138,7 @@
 			<content>Eiffel Libraries</content>
 		</heading>
 		<paragraph>
-		The <bold>Eiffel Libraries</bold> folder is specifically use to reference any Eiffel source libraries you want to reuse from an <link>
+		The <bold>Eiffel Libraries</bold> folder is specifically used to reference any Eiffel source libraries you want to reuse from an <link>
 				<url>../index.xml</url>
 				<label>EiffelEnvision Project</label>
 			</link>. For more information on this folder, see <link>
@@ -155,8 +155,8 @@
 			It may be necessary to reference files that reside outside of any <link>
 				<url>../index.xml</url>
 				<label>EiffelEnvision Project</label>
-			</link> and with the <bold>Other Project Items</bold> folder this is possible. Unlike any of the folders under the <bold>Project Items</bold> or <bold>Eiffel Libraries</bold> folders, 
-			<bold>Other Project Items</bold> folder and file items do not have to map directly to a location on disk, instead a virtual hierarchy of folder and file item reference can be created. For more information see <link>
+			</link> and with the <bold>Other Project Items</bold> folder this is possible. Unlike any of the folders under the <bold>Project Items</bold> or <bold>Eiffel Libraries</bold> folders, the 
+			<bold>Other Project Items</bold> folder and file items do not have to map directly to a location on a disk, instead a virtual hierarchy of folder and file item reference can be created. For more information see <link>
 				<url>other_project_items/index.xml</url>
 				<label>Other Project Items</label>
 			</link>.
@@ -175,7 +175,7 @@
 				<url>../configuring/adding_references/precompiled_libraries.xml</url>
 				<label>Precompiled Libraries</label>
 			</link>. EiffelEnvision supports all of these concepts, but unlike 
-			other environments, used in conjunction with Eiffel or Eiffel for .NET, there is no implicit, clean separation is made between project files/source code and reused Eiffel libraries source code. In <link>
+			other environments, used in conjunction with Eiffel or Eiffel for .NET, there is no implicit, clean separation made between project files/source code and reused Eiffel libraries source code. In <link>
 				<url>../../../eiffel_for_dotnet/index.xml</url>
 				<label>Eiffel for .NET</label>
 			</link> further 
@@ -186,7 +186,7 @@
 				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/index.xml</url>
 				<label>class</label>
 			</link> source file, and 
-			Eiffel source libraries. As aforementioned, EiffelEnvision includes a <link>
+			Eiffel source libraries. As previously mentioned, EiffelEnvision includes a <link>
 				<url>project.xml</url>
 				<anchor_name>references</anchor_name>
 				<label>References</label>
@@ -214,8 +214,8 @@
 			<link>
 				<url>eiffel_libraries/eiffel_libraries.xml</url>
 				<label>Eiffel Libraries</label>
-			</link> is not strictly enforce by EiffelEnvision, for other tool compatibility reasons, it is recommended that all EiffelEnvision projects adhere to this convention. Clean separation will assist in 
-			the future maintenance or adoption of your projects, by other developers. Because Eiffel source files are include using <link>
+			</link> is not strictly enforced by EiffelEnvision, for other tool compatibility reasons, it is recommended that all EiffelEnvision projects adhere to this convention. Clean separation will assist in 
+			the future maintenance or adoption of your projects, by other developers. Because Eiffel source files are included using <link>
 				<url>../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url>
 				<label>clusters</label>
 			</link>, there will be no confusion as to what files are project files and 

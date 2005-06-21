@@ -26,7 +26,7 @@
     <paragraph>
       <bold>Add</bold>
       <line_break />
-			This menu item is another submenu. See the below section on <link><url>cluster_context_menu.xml</url><anchor_name>add_submenu</anchor_name><label>Add Submenu</label></link></paragraph>
+			This menu item is another submenu. See the below section on <link><url>cluster_context_menu.xml</url><anchor_name>add_submenu</anchor_name><label>Add Submenu</label></link>.</paragraph>
     <paragraph>
       <bold>Revert to Folder</bold>
       <line_break />
@@ -35,7 +35,7 @@
     <paragraph>
       <bold>Remove</bold>
       <line_break />
-			Removes the cluster and all of it's subcluster folders and files from the project. For any <link><url>cluster_folders.xml</url><label>Cluster Folders</label></link> that were <link><url>cluster_folders.xml</url><anchor_name>premoting</anchor_name><label>promoted</label></link>, their original folder will be returned to the project, as it existing on disk.
+			Removes the cluster and all of its subcluster folder's and files from the project. For any <link><url>cluster_folders.xml</url><label>Cluster Folders</label></link> that were <link><url>cluster_folders.xml</url><anchor_name>premoting</anchor_name><label>promoted</label></link>, their original folder will be returned to the project, as it exists on disk.
 		</paragraph>
     <paragraph>
       <bold>Rename</bold>

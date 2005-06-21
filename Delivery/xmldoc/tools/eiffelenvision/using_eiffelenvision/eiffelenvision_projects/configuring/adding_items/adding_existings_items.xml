@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document output="envision" title="Adding Exising Items">
+<document output="envision" title="Adding Existing Items">
   <meta_data>
     <help>
       <toc>
@@ -24,9 +24,9 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			EiffelEnvision project's file system is build from enumerating the contents of a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link> location. The enumeration process finds and adds all located 
-			Eiffel source file (*.e) and adds them to a project based on their discovered location. No other files are added to the project unless they have been explicitly added at some point in the project's
-			life. For more information, see <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link></paragraph>
+			EiffelEnvision project's file system is built from enumerating the contents of a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link> location. The enumeration process finds and adds all located 
+			Eiffel source files (*.e) and adds them to a project based on their discovered location. No other files are added to the project unless they have been explicitly added at some point in the project's 
+			life. For more information, see <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link>.</paragraph>
     <anchor>adding_existing</anchor>
     <heading>
       <size>2</size>
@@ -34,19 +34,19 @@
     </heading>
     <paragraph>
 			To add existing file(s), select a folder in your EiffelEnvision project. Now select <bold>Project</bold>, <bold>Add Existing File...</bold> (SHIFT+ALT+A). Alternatively select the <bold>Add</bold>, <bold>Add Existing File...</bold> from the 
-			folder context menu. Once selected a file browser dialog will be displayed. Located and select the file you would like to add to the project and click <bold>Ok</bold>, <bold>Cancel</bold> will close the file dialog and 
+			folder context menu. Once selected a file browser dialog will be displayed. Locate and select the file you would like to add to the project and click <bold>Ok</bold>. <bold>Cancel</bold> will close the file dialog and 
 			no file will be added to the project.
 		<paragraph />	
-			If the <link><url>../../structure/project.xml</url><label>Project Node</label></link> is selected when adding an existing file, the file will be added under the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link> 
-			section of your project, because they share the same <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>. Adding non-Eiffel source file (*.e) existing files may only be done using the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items Folder</label></link> and it's subfolders and <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link>, 
+			If the <link><url>../../structure/project.xml</url><label>Project Folder</label></link> is selected when adding an existing file, the file will be added under the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link> 
+			section of your project, because they share the same <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>. Adding existing non-Eiffel source files (*.e) may only be done using the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items Folder</label></link> and it's subfolders and <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link>, 
 			as well the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items Folder</label></link> and its subfolders. Any existing Eiffel source file may be added to any one of the folders in an EiffelEnvision project. For more information on this restriction, see <link><url>../../structure/project_items/project_items.xml</url><label>Project Items Folder</label></link>.
 		</paragraph>
     <paragraph>
 			Because EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> directly reflect an underlying file system, adding existing files to folders whose <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link> is not the same as 
-			the location of the file being added to the project, the added file will be copied to the folder <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link> and then added. This is exactly how other Visual Studio .NET languages that <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>managed project using files</label></link> act.
+			the location of the file being added to the project will result in the added file being copied to the folder <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link> and then added. This is exactly how other Visual Studio .NET languages that <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>manage project using files</label></link> act.
 		</paragraph>
     <paragraph>
-			For the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items Folder</label></link> and it's subfolders, adding existing files will not be copied. This is because <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link><link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>link to files</label></link> and does not have a direct representation of them, base on the underlying file system.
+			For the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items Folder</label></link> and it's subfolders, existing files that are added will not be copied. This is because <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link><link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label></label></link> link to files and does not have a direct representation of them, base on the underlying file system.
 		</paragraph>
     <anchor>also_see</anchor>
     <heading>

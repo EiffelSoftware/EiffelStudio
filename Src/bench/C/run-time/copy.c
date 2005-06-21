@@ -373,9 +373,7 @@ rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, rt_ui
 		clone = *hash_search(&hclone, source);
 		*(EIF_REFERENCE *) (enclosing + offset) = clone;
 		CHECK ("Not forwarded", !(HEADER (enclosing)->ov_size & B_FWD));
-#ifdef ISE_GC
 		RTAR(enclosing, clone);
-#endif /* ISE_GC */
 		return;
 	}
 

@@ -120,7 +120,11 @@ feature {NONE} -- Implementation
 					else
 						line_token ?= curr_token
 						if line_token /= Void and then line_numbers_visible then
-							line_token.display (y, margin_area, text_panel)
+							if not hidden_breakpoints then
+								line_token.display_with_offset (a_line.breakpoint_token.width, y, margin_area, text_panel)
+							else	
+								line_token.display (y, margin_area, text_panel)	
+							end							
 						elseif line_token /= Void then
 							line_token.hide
 						end

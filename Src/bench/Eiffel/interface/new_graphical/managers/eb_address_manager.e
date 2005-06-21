@@ -173,6 +173,16 @@ feature -- Access
 			-- Name of the feature as it appears in the combo box.
 			-- Void if none.
 
+	parent_widget: EB_DEVELOPMENT_WINDOW is
+			-- 
+		require
+			not_context_mode: not mode
+		do
+			Result ?= parent
+		ensure	
+			result_not_void: Result /= Void
+		end		
+
 feature -- Element change
 
 	set_format_name (a_name: STRING) is
@@ -673,7 +683,7 @@ feature {NONE} -- Execution
 				else
 					parent.advanced_set_stone (create {CLASSC_STONE}.make (current_class))
 				end
-			end
+			end			
 		end
 
 	process_feature_feature is
@@ -780,7 +790,7 @@ feature {NONE} -- Implementation
 		end
 
 	drop_feature (fst: FEATURE_STONE) is
-			-- Attempt to drop a class into the address bar.
+			-- Attempt to drop a feature into the address bar.
 		do
 			parent.advanced_set_stone (fst)
 		end
@@ -967,6 +977,9 @@ feature {NONE} -- Implementation
 		do
 --			set_format_name (format_selector.text)
 		end
+
+	give_parent_widget_focus: BOOLEAN
+			-- Should editor get focus after selection chahnce in choice?
 
 feature {NONE} -- open new class
 	
@@ -1262,6 +1275,9 @@ feature {NONE} -- open new class
 				conv_int ?= item.data
 				parent.history_manager.go_i_th (conv_int.item)
 			end
+			if not mode and then give_parent_widget_focus then
+				parent_widget.editor_tool.text_area.set_focus
+			end
 		end
 
 	change_hist_to_cluster is
@@ -1322,11 +1338,14 @@ feature {NONE} -- open new class
 			if k /= Void then
 				if k.code = Key_csts.key_enter then
 					if must_show_choice and choice /= Void and then not choice.is_destroyed then
-						lost_focus_action_enabled := False
+						lost_focus_action_enabled := False						
 						choice.show
 						lost_focus_action_enabled := True
-					end
-					window_manager.last_focused_development_window.editor_tool.text_area.set_focus
+					else						
+						if not mode then
+							parent_widget.editor_tool.text_area.set_focus
+						end
+					end										
 				elseif k.code = Key_csts.Key_escape then
 					if mode then
 						address_dialog.hide
@@ -1395,8 +1414,9 @@ feature {NONE} -- open new class
 				if k.code = Key_csts.key_enter then
 					execute_with_feature
 					if feature_address.text_length > 0 then
-						feature_address.select_all
-					end										
+						feature_address.select_all						
+					end								
+					give_parent_widget_focus := True		
 				elseif k.code = Key_csts.Key_delete then
 					last_key_was_delete := True
 				elseif k.code = Key_csts.Key_back_space then
@@ -1406,6 +1426,8 @@ feature {NONE} -- open new class
 					else
 						feature_had_selection := False
 					end
+				elseif k.code = key_csts.key_up or  k.code = key_csts.key_down then					
+					give_parent_widget_focus := False
 				end
 			end
 		end

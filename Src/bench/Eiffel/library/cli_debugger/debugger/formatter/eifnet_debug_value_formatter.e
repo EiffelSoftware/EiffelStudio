@@ -149,7 +149,6 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 		local
 			l_mp: MANAGED_POINTER
 		do
-			fixme ("Use NATURAL_xxx when ready")			
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_natural_8 (0)
 		end
@@ -158,7 +157,6 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 		local
 			l_mp: MANAGED_POINTER
 		do
-			fixme ("Use NATURAL_xxx when ready")			
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_natural_16 (0)
 		end
@@ -167,7 +165,6 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 		local
 			l_mp: MANAGED_POINTER
 		do
-			fixme ("Use NATURAL_xxx when ready")			
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_natural_32 (0)
 		end		
@@ -176,7 +173,6 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 		local
 			l_mp: MANAGED_POINTER
 		do
-			fixme ("Use NATURAL_xxx when ready")			
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_natural_64 (0)
 		end			

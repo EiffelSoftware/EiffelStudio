@@ -858,14 +858,14 @@ feature -- Icons
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
-			Result := build_classic_pixmap ("mini_back")
+			Result := build_classic_pixmap ("mini_up")
 		end
 
 	Icon_mini_down: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
-			Result := build_classic_pixmap ("mini_forth")
+			Result := build_classic_pixmap ("mini_down")
 		end		
 
 	Icon_class_symbol: ARRAY [EV_PIXMAP] is

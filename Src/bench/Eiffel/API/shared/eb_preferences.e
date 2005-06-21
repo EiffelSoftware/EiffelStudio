@@ -8,13 +8,13 @@ class
 	
 inherit
 	EC_PREFERENCES
-		redefine
-			make
+		rename
+			make as make_batch
 		end
 	
 	EB_GUI_PREFERENCES
-		redefine
-			make
+		rename
+			make as make_gui
 		end
 	
 create
@@ -22,11 +22,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_preferences: PREFERENCES) is
+	make (a_preferences: PREFERENCES; gui_mode: BOOLEAN) is
 			-- Create `Current' using `a_preferences'
 		do
-			Precursor {EC_PREFERENCES} (a_preferences)
-			Precursor {EB_GUI_PREFERENCES} (a_preferences)
+			make_batch (a_preferences)
+			if gui_mode then
+				make_gui (a_preferences)
+			end						
 			preferences := a_preferences
 		end
 		

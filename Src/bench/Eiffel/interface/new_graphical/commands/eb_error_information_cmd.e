@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 	current_dialog: EV_DIALOG
 			-- Dialog used to display the error explanations.
 
-	current_editor: EB_CLICKABLE_EDITOR
+	current_editor: SELECTABLE_TEXT_PANEL
 			-- Editor in which the explanation texts are put.
 
 	execute_with_text (a_text: STRING) is
@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 			
 			create but.make_with_text (Interface_names.b_Close)
 			Layout_constants.set_default_size_for_button (but)
-			create current_editor.make (Void)
+			create current_editor
 			current_editor.set_reference_window (current_dialog)
 			current_editor.widget.set_minimum_size (150, 100)
 			
@@ -144,7 +144,6 @@ feature {NONE} -- Implementation
 			current_dialog.set_default_cancel_button (but)
 			but.select_actions.extend (agent current_dialog.destroy)
 			current_editor.drop_actions.extend (agent set_stone (current_editor, ?))
-			current_editor.set_read_only (True)
 			create scr
 				--| + 1 to make sure there is enough room.
 			ft := (create {SHARED_EDITOR_FONT}).font
@@ -159,7 +158,7 @@ feature {NONE} -- Implementation
 			valid_editor: current_editor /= Void
 		end
 
-	set_stone (editor: EB_EDITOR; st: ERROR_STONE) is
+	set_stone (editor: KEYBOARD_SELECTABLE_TEXT_PANEL; st: ERROR_STONE) is
 			-- Display the help text associated with `st' in `editor'.
 		require
 			valid_stone: st /= Void

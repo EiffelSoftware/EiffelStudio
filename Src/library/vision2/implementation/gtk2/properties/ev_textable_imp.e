@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := ""
+			a_cs := once ""
 			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)

@@ -41,7 +41,7 @@ feature -- Initialization
 feature -- Access
 
 	pebble: BREAKABLE_STONE
-			-- pebble to de picked when user right-clicks
+			-- pebble to be picked when user right-clicks
 			-- on this token
 
 feature -- Width & height

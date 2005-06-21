@@ -11,6 +11,11 @@ inherit
 		redefine
 			default_create
 		end
+		
+	EV_SHARED_APPLICATION
+		undefine
+			copy, default_create
+		end
 
 create
 	default_create

@@ -12,7 +12,8 @@ inherit
 
 create
 	make,
-	make_with_mini_toolbar
+	make_with_mini_toolbar,
+	make_with_info
 
 feature {NONE} -- Initialization
 
@@ -39,6 +40,21 @@ feature {NONE} -- Initialization
 			mini_toolbar := a_mini_toolbar
 			make (a_parent, a_widget, a_title)
 		end
+		
+	make_with_info (
+		a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET;
+				a_title: STRING; info: EV_HORIZONTAL_BOX; a_mini_toolbar: EV_TOOL_BAR) is
+			-- Initialization
+		require else
+			parent_not_void: a_parent /= Void
+			widget_not_void: a_widget /= Void
+			title_not_void: a_title /= Void
+			header_not_void: info /= Void
+		do
+			mini_toolbar := a_mini_toolbar
+			header_box   := info
+			make (a_parent, a_widget, a_title)
+		end
 
 	generic_make (a_parent: ES_NOTEBOOK; a_widget: EV_WIDGET; a_title: STRING) is
 			-- Generic Initialization
@@ -52,6 +68,7 @@ feature {NONE} -- Initialization
 			tab_cell: EV_CELL
 			left_handle: EV_LABEL
 		do
+			create selection_actions
 			create drop_actions
 
 				--| Set the attributes
@@ -94,16 +111,25 @@ feature -- Access
 	title: STRING
 
 	mini_toolbar: EV_TOOL_BAR
+	
+	header_box: EV_HORIZONTAL_BOX
 
 	parent: ES_NOTEBOOK
 
 	tab: EV_NOTEBOOK_TAB
+	
+	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
 
 	docking_handle_visible: BOOLEAN is
 		do
 			Result := docking_handle /= Void and then docking_handle.is_show_requested
+		end
+		
+	is_selected: BOOLEAN is
+		do
+			Result := parent.selected_item = Current
 		end
 
 feature -- Change
@@ -155,6 +181,8 @@ feature {NONE} -- Docking
 			ddlg: EV_DOCKABLE_DIALOG
 			lw, lh: INTEGER
 			content_box: EV_BOX
+			hb: EV_HORIZONTAL_BOX
+			lab: EV_LABEL
 		do
 			ddlg := parent_dockable_dialog (widget)
 			if ddlg /= Void then
@@ -171,15 +199,32 @@ feature {NONE} -- Docking
 				ddlg.set_size (lw, lh)
 				ddlg.resize_actions.extend (agent dock_resized)
 
-				if mini_toolbar /= Void then
-						--| here we suppose the generic_make always add the content_box the way it is now
-						--| and when we dock this item back to other place ..
-						--| it will remove and put the minitoolbar somewhere else
-					content_box ?= widget.parent
-					content_box.put_front (mini_toolbar)
-					content_box.disable_item_expand (mini_toolbar)					
+				create hb
+				content_box ?= widget.parent
+				if content_box /= Void then
+					content_box.put_front (hb)
+					content_box.disable_item_expand (hb)
+					hb.set_padding (2)
+					hb.set_border_width (2)
+
+					create lab.make_with_text (title)
+					hb.extend (lab)
+					hb.disable_item_expand (lab)					
+					
+					if mini_toolbar /= Void then
+							--| here we suppose the generic_make always add the content_box the way it is now
+							--| and when we dock this item back to other place ..
+							--| it will remove and put the minitoolbar somewhere else
+						hb.extend (mini_toolbar)
+						hb.disable_item_expand (mini_toolbar)					
+					end
+					if header_box /= Void then
+							--| here we suppose the generic_make always add the content_box the way it is now
+							--| and when we dock this item back to other place ..
+							--| it will remove and put the header_box somewhere else
+						hb.extend (header_box)
+					end
 				end
-				
 				show_docking_handle (False)
 				docking_handle.disable_dockable
 			end

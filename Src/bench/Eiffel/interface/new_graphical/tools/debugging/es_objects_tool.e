@@ -184,7 +184,10 @@ feature {NONE} -- Initialization
 			if mini_toolbar = Void then
 				build_mini_toolbar
 			end
-			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_mini_toolbar (explorer_bar, widget, title, False, mini_toolbar)
+			if header_box = Void then
+				build_header_box
+			end			
+			create {EB_EXPLORER_BAR_ITEM} explorer_bar_item.make_with_info (explorer_bar, widget, title, False, header_box, mini_toolbar)
 			explorer_bar_item.set_menu_name (menu_name)
 			if pixmap /= Void then
 				explorer_bar_item.set_pixmap (pixmap)
@@ -197,7 +200,10 @@ feature {NONE} -- Initialization
 			if mini_toolbar = Void then
 				build_mini_toolbar
 			end
-			create notebook_item.make_with_mini_toolbar (nb, widget, title, mini_toolbar)
+			if header_box = Void then
+				build_header_box
+			end
+			create notebook_item.make_with_info (nb, widget, title, header_box, mini_toolbar)
 			nb.extend (notebook_item)
 			notebook_item.drop_actions.extend (agent add_debugged_object)
 			notebook_item.drop_actions.extend (agent drop_stack_element)			
@@ -207,6 +213,9 @@ feature -- Access
 
 	mini_toolbar: EV_TOOL_BAR
 			-- Associated mini tool bar.
+			
+	header_box: EV_HORIZONTAL_BOX
+			-- Associated header box
 
 	widget: EV_WIDGET
 			-- Widget representing Current.
@@ -230,7 +239,84 @@ feature -- Access
 
 	debugger_manager: EB_DEBUGGER_MANAGER
 			-- Manager in charge of all debugging operations.
-	
+
+feature {NONE} -- Notebook item's behavior
+
+	clean_header_box is
+		do
+			if header_box /= Void then
+				header_box.wipe_out
+			end
+		ensure
+			header_box /= Void implies header_box.is_empty
+		end
+		
+	build_header_box is
+		do
+			create header_box
+		ensure
+			header_box /= Void
+		end
+		
+	update_header_box (dbg_stopped: BOOLEAN) is
+		require
+			header_box /= Void
+		local
+			ecse: EIFFEL_CALL_STACK_ELEMENT
+			lab, flab, clab: EV_LABEL
+			hbox: EV_BOX
+			sep: EV_CELL
+		do
+			clean_header_box
+			hbox := header_box
+			create sep
+			sep.set_minimum_width (30)
+			hbox.extend (sep)
+			hbox.disable_item_expand (sep)
+			if 
+				Application.is_running
+			then
+				if Application.is_stopped and then dbg_stopped then
+					if not Application.current_call_stack_is_empty then
+						ecse ?= current_stack_element
+						if ecse /= Void then
+							create lab.make_with_text (" { ")
+							hbox.extend (lab)
+							hbox.disable_item_expand (lab)
+							
+							create clab.make_with_text (ecse.dynamic_class.name_in_upper)
+							clab.set_pebble (create {CLASSC_STONE}.make (ecse.dynamic_class))
+							hbox.extend (clab)
+							hbox.disable_item_expand (clab)
+							
+							create lab.make_with_text (" } . ")
+							hbox.extend (lab)
+							hbox.disable_item_expand (lab)
+							
+							create flab.make_with_text (ecse.routine_name)
+							flab.set_pebble (create {FEATURE_STONE}.make (ecse.routine))
+							hbox.extend (flab)
+							hbox.disable_item_expand (flab)
+						end
+					else
+						create lab
+						hbox.extend (lab)
+						hbox.disable_item_expand (lab)
+					end
+				else
+					create lab.make_with_text (Interface_names.l_System_running)
+					hbox.extend (lab)
+					hbox.disable_item_expand (lab)
+				end
+			else
+				create lab.make_with_text (Interface_names.l_System_not_running)
+				hbox.extend (lab)
+				hbox.disable_item_expand (lab)
+			end
+			
+			hbox.extend (create {EV_CELL})
+		end
+		
 feature {ES_OBJECTS_GRID_SLICES_CMD} -- Query
 
 	get_object_display_item (addr: STRING): ES_OBJECTS_GRID_LINE is
@@ -335,6 +421,9 @@ feature -- Change
 						build_debugged_objects_grid
 					end
 				end
+				if header_box /= Void then
+					update_header_box (True)
+				end
 			end
 		end
 
@@ -421,6 +510,7 @@ feature -- Memory management
 			end
 			clean_stack_objects_grid
 			clean_debugged_objects_grid
+			clean_header_box
 		end
 	
 feature {NONE} -- Layout Implementation
@@ -530,6 +620,9 @@ feature {NONE} -- Implementation
 						display_first_onces := current_object.display_onces
 					end
 				end
+			end
+			if header_box /= Void then
+				update_header_box (dbg_was_stopped)
 			end
 		end
 	
@@ -792,8 +885,7 @@ feature {NONE} -- Impl : Stack objects grid
 			build_stack_objects (stack_objects_grid)
 			if stack_objects_grid.row_count > 0 then
 				row := stack_objects_grid.row (1)
-				stack_objects_grid.row (1).enable_select
-				stack_objects_grid.row (1).disable_select
+				row.ensure_visible
 			end
 		end
 
@@ -810,25 +902,11 @@ feature {NONE} -- Impl : Stack objects grid
 	build_stack_objects (a_target_grid: ES_OBJECTS_GRID) is
 			-- Create the tree that contains locals (Result) and parameters.
 		local
-			glab: EV_GRID_LABEL_ITEM
 			cse: EIFFEL_CALL_STACK_ELEMENT
-			lrow: EV_GRID_ROW
 		do
 			if not Application.current_call_stack_is_empty then
 				cse ?= current_stack_element
 				if cse /= Void then
-						--| Top row to show the current feature
-					lrow := a_target_grid.front_new_row
-					glab := folder_label_item ("Call stack")
-					a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.icon_arrow_empty)
-					lrow.set_item (1, glab)
-					create glab
-					a_target_grid.grid_cell_set_text (glab, cse.dynamic_class.name_in_upper)
-					lrow.set_item (2, glab)
-					create glab
-					a_target_grid.grid_cell_set_text (glab, cse.routine_name)
-					lrow.set_item (3, glab)
-
 						--| Build other stack part
 					build_arguments_row (a_target_grid, cse)
 					if internal_arguments_row /= Void and expand_args then

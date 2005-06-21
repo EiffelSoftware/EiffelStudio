@@ -41,6 +41,20 @@
 #endif
 
 /* Are we using ISE GC? By default, yes. */
+/* DEFINE_BOEHM_GC */
+/* DEFINE_NO_GC */
+
+#ifdef BOEHM_GC 
+#define NO_ISE_GC
+#if defined(EIF_THREADS) && defined(EIF_WINDOWS)
+#define GC_DLL
+#endif
+#endif
+
+#ifdef NO_GC
+#define NO_ISE_GC
+#endif
+
 #ifndef NO_ISE_GC
 #define ISE_GC
 #endif

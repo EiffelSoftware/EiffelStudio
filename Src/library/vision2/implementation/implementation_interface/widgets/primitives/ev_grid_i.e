@@ -2496,7 +2496,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		require
 			an_item_not_void: an_item /= Void
 		local
-			a1, a2: INTEGER
 			item_height: INTEGER
 			row_i: EV_GRID_ROW_I
 			column_i: EV_GRID_COLUMN_I

@@ -459,8 +459,15 @@ feature {NONE} -- add new expression from the grid
 		local
 			expr: EB_EXPRESSION
 		do
-			create expr.make_for_context (s)
-			add_expression (expr)
+			if valid_expression_text (s) then
+				create expr.make_for_context (s)
+				add_expression (expr)
+			end
+		end
+
+	valid_expression_text (s: STRING): BOOLEAN is
+		do
+			Result := s /= Void and then not s.has ('%R') and not s.has ('%N')
 		end
 
 feature {NONE} -- Event handling
@@ -697,6 +704,13 @@ feature {NONE} -- Event handling
 				move_up_cmd.enable_sensitive
 				move_down_cmd.enable_sensitive
 			else
+				delete_expression_cmd.disable_sensitive
+				edit_expression_cmd.disable_sensitive
+				toggle_state_of_expression_cmd.disable_sensitive
+				move_up_cmd.disable_sensitive
+				move_down_cmd.disable_sensitive
+			end
+			if row = new_expression_row then
 				delete_expression_cmd.disable_sensitive
 				edit_expression_cmd.disable_sensitive
 				toggle_state_of_expression_cmd.disable_sensitive
@@ -1148,7 +1162,7 @@ feature {NONE} -- Grid related Constants
 			Result.put ("Address", Col_address_index)
 			Result.put ("Value", Col_value_index)
 			Result.put ("Type", Col_type_index)
-			Result.put ("Context ...", Col_context_index)
+			Result.put ("Context", Col_context_index)
 		end	
 
 invariant

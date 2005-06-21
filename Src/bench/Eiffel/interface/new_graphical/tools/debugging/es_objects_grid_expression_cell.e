@@ -29,7 +29,9 @@ feature -- Query
 		do
 			Precursor (popup_window)
 			text_field.key_press_actions.extend (agent on_key_pressed)
-			text_field.select_all
+			if text_field.text_length > 0 then
+				text_field.select_all				
+			end
 		end
 		
 feature {NONE} -- Actions Impl

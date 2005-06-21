@@ -725,7 +725,11 @@ feature -- Basic operations
 									current_tree_adjusted_item_x_position := current_item_x_position
 									current_tree_adjusted_column_width := current_column_width
 	
-									item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
+									if grid_item_exists then
+										item_buffer_pixmap.set_foreground_color (grid_item.displayed_background_color)
+									else
+										item_buffer_pixmap.set_foreground_color (grid.displayed_background_color (current_column_index, current_row_index))
+									end
 										-- Now draw the complete background area for the cell in the grid that is currently being drawn.
 										fixme (Once "For drawable grid items, there is no need to do this, preventing overdraw.")
 									item_buffer_pixmap.fill_rectangle (0, 0, current_column_width, current_row_height)

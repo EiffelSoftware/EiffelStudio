@@ -1,0 +1,13 @@
+VMFN, section
+
+     Feature Name Validity rule
+
+     It is valid for a feature f of a class C to have a
+     certain final name if and only if it satisfies the
+     following conditions:
+
+        1 No other feature of C has that same feature name.
+
+        2 If f is shared under repeated inheritance, its
+          precursors all have either no Alias or the same
+          alias.

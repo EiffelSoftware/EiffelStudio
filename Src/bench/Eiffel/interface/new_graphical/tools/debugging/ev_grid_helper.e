@@ -49,7 +49,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
 		require
 			grid /= Void
@@ -60,93 +60,9 @@ feature -- Access
 		do
 			to_index := grid_next_top_row (grid, row_index, offset)
 			if to_index /= row_index then
-				grid_move_row_node_to (grid, row_index, to_index, Void)
+				grid.move_rows (row_index, to_index, 1 + grid.row (row_index).subrow_count_recursive)
 			end
 			Result := to_index
-		end
-
-	grid_move_row_node_to (grid: EV_GRID; from_index, to_index: INTEGER; parent_row: EV_GRID_ROW) is
-			-- Move row (and subrows) at index `from_index' to row index `to_index'
-			-- then if `parent_row' is not Void, make the moved row a child of `parent_row'
-		require
-			indexes_not_equal: from_index /= to_index
-			valid_from_index: from_index > 0 and from_index <= grid.row_count
-			valid_to_index: to_index > 0 and to_index <= grid.row_count
-		local
-			from_row, to_row: EV_GRID_ROW
-			real_to_index: INTEGER
-			go_up: BOOLEAN
-			from_p, to_p: EV_GRID_ROW
-			r: EV_GRID_ROW
-			subrows: LINKED_LIST [EV_GRID_ROW]
-		do
-			from_row := grid.row (from_index)
-			from_p := from_row.parent_row
-
-			to_row := grid.row (to_index)
-			to_p := to_row.parent_row
-
-			if parent_row /= Void then
-				to_p := parent_row
-			end
-
-			go_up := from_index > to_index
-
-				--| Move top row
-			if from_p /= Void then
-				from_p.remove_subrow (from_row)
-			end
-			if from_row.subrow_count > 0 then
-				create subrows.make
-				from
-				until
-					from_row.subrow_count = 0
-				loop
-					r := from_row.subrow (from_row.subrow_count)
-					check
-						r.parent_row= from_row
-					end
-					from_row.remove_subrow (r)
-					subrows.put_front (r)
-				end
-			end
-			check
-				from_row.subrow_count = 0
-			end
-			if to_row.subrow_count > 0 and not go_up then
-				real_to_index := to_row.index + to_row.subrow_count_recursive
-			else
-				real_to_index := to_index
-			end
-			grid.move_row (from_index, real_to_index)
-			check
-				from_row.index = real_to_index
-			end
-			if to_p /= Void then
-				to_p.add_subrow (from_row)
-			end
-			check
-				from_row.parent_row = to_p
-			end
-
-			if subrows /= Void then
-				from
-					subrows.start
-				until
-					subrows.after
-				loop
-					r := subrows.item
-					if from_row.subrow_count > 0 and not go_up then
-						real_to_index := from_row.index + from_row.subrow_count_recursive
-					elseif go_up then
-						real_to_index := from_row.index + from_row.subrow_count_recursive + 1
-					else
-						real_to_index := from_row.index
-					end
-					grid_move_row_node_to (grid, r.index, real_to_index, from_row)
-					subrows.forth
-				end
-			end
 		end
 
 	grid_next_top_row (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
@@ -173,6 +89,10 @@ feature -- Access
 					r := grid.row (k)
 					r := r.parent_row_root
 					k := r.index
+					if offset > 0 then
+						k := k + r.subrow_count_recursive
+						r := grid.row (k)
+					end
 				end
 				j := j + 1
 			end

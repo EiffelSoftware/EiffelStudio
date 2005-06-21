@@ -460,6 +460,7 @@ feature -- Pick and Drop
 			-- A PND drop has occured on a grid item.
 		local
 			a_item: EV_GRID_ITEM
+			l_drop_actions_internal: EV_PND_ACTION_SEQUENCE
 		do
 			a_item := item_target
 
@@ -473,8 +474,9 @@ feature -- Pick and Drop
 			end
 
 			if a_item /= Void then
-				if a_item.implementation.drop_actions_internal /= Void and then a_item.implementation.drop_actions_internal.accepts_pebble (a_pebble) then
-					a_item.implementation.drop_actions_internal.call ([a_pebble])
+				l_drop_actions_internal := a_item.implementation.drop_actions_internal
+				if l_drop_actions_internal /= Void and then l_drop_actions_internal.accepts_pebble (a_pebble) then
+					l_drop_actions_internal.call ([a_pebble])
 				end
 			end
 		end

@@ -280,7 +280,7 @@ feature {NONE} -- Notebook item's behavior
 					if not Application.current_call_stack_is_empty then
 						ecse ?= current_stack_element
 						if ecse /= Void then
-							create lab.make_with_text (" { ")
+							create lab.make_with_text ("{")
 							hbox.extend (lab)
 							hbox.disable_item_expand (lab)
 							
@@ -289,7 +289,7 @@ feature {NONE} -- Notebook item's behavior
 							hbox.extend (clab)
 							hbox.disable_item_expand (clab)
 							
-							create lab.make_with_text (" } . ")
+							create lab.make_with_text ("}.")
 							hbox.extend (lab)
 							hbox.disable_item_expand (lab)
 							

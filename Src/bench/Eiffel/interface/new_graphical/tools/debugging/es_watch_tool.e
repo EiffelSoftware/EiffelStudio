@@ -818,7 +818,6 @@ feature {NONE} -- Event handling
 			if
 				not ev_application.ctrl_pressed
 				and not ev_application.alt_pressed
-				and not ev_application.shift_pressed
 			then			
 				rows := grid_selected_top_rows (watches_grid)
 				if not rows.is_empty then

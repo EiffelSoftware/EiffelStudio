@@ -63,6 +63,7 @@ feature {NONE} -- Initialization
 			fn: FILE_NAME	
 			preference_access: PREFERENCES
 			l_app: EV_APPLICATION
+			l_is_gui: BOOLEAN
 			--| uncomment the following line when profiling 
 			--prof_setting: PROFILING_SETTING
 		do
@@ -90,23 +91,24 @@ feature {NONE} -- Initialization
 			pref_strs.Pixmaps_path_cell.put (fn)
 
 
-				-- Create EV_APPLICATION object even if running in batch mode as it is required
-				-- for preference initialization
-			create l_app
+			l_is_gui := argument_count > 0 and then
+				(argument (1).is_equal ("-bench") or else argument (1).is_equal ("-from_bench"))			
+					
+			if l_is_gui then
+					-- Create EV_APPLICATION object even if running in batch mode as it is required
+					-- for preference initialization
+				create l_app
+			end			
 
 				-- Initialization of compiler resources.
 			create preference_access.make_with_default_values_and_location (system_general, eiffel_preferences)
-			initialize_preferences (preference_access)
+			initialize_preferences (preference_access, l_is_gui)
 
-			create new_resources.initialize
+			create new_resources.initialize			
 			if not new_resources.error_occurred then
-					-- Read the resource files
-				if argument_count > 0 and then
-					(argument (1).is_equal ("-bench") or
-					else argument (1).is_equal ("-from_bench"))
-				then
-					Eiffel_project.set_batch_mode (False)
-
+				Eiffel_project.set_batch_mode (not l_is_gui)
+				if l_is_gui then
+					
 						-- Initialize debugger communication
 					if argument (1).is_equal ("-bench") then
 							-- True is for binary
@@ -120,8 +122,7 @@ feature {NONE} -- Initialization
 
 						-- Launch graphical compiler
 					l_app.launch
-				else
-					Eiffel_project.set_batch_mode (True)
+				else					
 					if
 						(argument_count > 1 and then 
 						argument (1).is_equal ("-precompile") and then

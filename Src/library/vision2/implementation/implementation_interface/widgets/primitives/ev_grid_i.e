@@ -52,7 +52,7 @@ feature -- Access
 			a_column_positive: a_column > 0
 			a_column_not_greater_than_column_count: a_column <= column_count
 		do
-			Result := column_internal (a_column).interface
+			Result := (columns @ (a_column)).interface
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -71,7 +71,7 @@ feature -- Access
 			until
 				visible_counter = i
 			loop
-				a_col_i := column_internal (counter)
+				a_col_i := columns @ (counter)
 				if a_col_i.is_displayed then
 					visible_counter := visible_counter + 1
 				end
@@ -303,11 +303,11 @@ feature -- Access
 	virtual_width: INTEGER is
 			-- Width of virtual area in pixels.
 		do
-			if column_count > 0 then
+			if columns.count > 0 then
 				perform_horizontal_computation
 				Result := column_offsets.last.max (viewable_width)
 				if is_horizontal_scrolling_per_item then
-					Result := Result + viewable_width - columns.i_th (column_count).width
+					Result := Result + viewable_width - columns.i_th (columns.count).width
 				end
 			else
 				Result := viewable_width
@@ -744,7 +744,7 @@ feature -- Status setting
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column_internal (a_column)
+			a_col_i := columns @ (a_column)
 			if not a_col_i.is_displayed then
 				a_col_i.set_is_displayed (True)
 				visible_column_count := visible_column_count + 1
@@ -767,7 +767,7 @@ feature -- Status setting
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column_internal (a_column)
+			a_col_i := columns @ (a_column)
 			if a_col_i.is_displayed then
 				a_col_i.set_is_displayed (False)
 				visible_column_count := visible_column_count - 1
@@ -788,7 +788,7 @@ feature -- Status setting
 			a_column_within_bounds: a_column > 0 and a_column <= column_count
 			column_displayed: column_displayed (a_column)
 		do
-			column_internal (a_column).enable_select
+			(columns @ (a_column)).enable_select
 		ensure
 			column_selected: column (a_column).is_selected
 		end
@@ -1431,7 +1431,7 @@ feature -- Status report
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := column_internal (a_column)
+			a_col_i := columns @ (a_column)
 			Result := a_col_i.is_displayed
 		end
 
@@ -1490,7 +1490,7 @@ feature -- Status report
 		do
 			l_visible_column_indexes := visible_column_indexes
 			if l_visible_column_indexes /= Void and then l_visible_column_indexes.count > 0 then
-				Result := column_internal (visible_column_indexes.first).interface
+				Result := (columns @ (visible_column_indexes.first)).interface
 			end
 		ensure
 			has_columns_implies_result_not_void: column_count > 0 implies result /= Void
@@ -1524,7 +1524,7 @@ feature -- Status report
 		do
 			l_visible_column_indexes := visible_column_indexes
 			if l_visible_column_indexes /= Void and then l_visible_column_indexes.count > 0 then
-				Result := column_internal (visible_column_indexes.last).interface
+				Result := (columns @ (visible_column_indexes.last)).interface
 			end
 		ensure
 			has_columns_implies_result_not_void: column_count > 0 implies result /= Void
@@ -1565,7 +1565,7 @@ feature -- Status report
 			valid_row: a_row >= 1 and a_row <= row_count
 		do
 			if are_columns_drawn_above_rows then
-				Result := column_internal (a_column).background_color
+				Result := (columns @ (a_column)).background_color
 				if Result = Void then
 					Result := row_internal (a_row).background_color
 					if result = Void then
@@ -1575,7 +1575,7 @@ feature -- Status report
 			else
 				Result := row_internal (a_row).background_color
 				if Result = Void then
-					Result := column_internal (a_column).background_color
+					Result := (columns @ (a_column)).background_color
 					if result = Void then
 						Result := background_color
 					end
@@ -1724,8 +1724,8 @@ feature -- Element change
 			a_row_positive: a_row > 0
 			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			valid_tree_structure_on_item_insertion: a_item /= Void and is_tree_enabled and then a_row <= row_count and row (a_row).parent_row /= Void implies a_column >= row (a_row).parent_row.index_of_first_item
-			item_may_be_added_if_row_is_a_subrow: a_item /= Void and then a_row <= row_count and then row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_setting_if_tree_node (a_column)
-			item_may_be_removed_if_row_is_a_subrow: a_item = Void and then a_row <= row_count and then row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
+			item_may_be_added_if_row_is_a_subrow: a_item /= Void and then a_row <= row_count and then row (a_row).is_part_of_tree_structure implies row (a_row).is_index_valid_for_item_setting_if_tree_node (a_column)
+			item_may_be_removed_if_row_is_a_subrow: a_item = Void and then a_row <= row_count and then row (a_row).is_part_of_tree_structure implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
 		do
 			internal_set_item (a_column, a_row, a_item)
 		ensure
@@ -1890,7 +1890,7 @@ feature -- Removal
 			from
 				i := 1
 				l_row_count := row_count
-				l_column_count := column_count
+				l_column_count := columns.count
 			until
 				i > l_row_count
 			loop
@@ -1960,17 +1960,13 @@ feature -- Measurements
 	column_count: INTEGER is
 			-- Number of columns in Current.
 		do
-			if columns /= Void then
-				Result := columns.count
-			end
+			Result := columns.count
 		end
 
 	row_count: INTEGER is
 			-- Number of rows in Current.
 		do
-			if internal_row_data /= Void then
-				Result := internal_row_data.count
-			end
+			Result := internal_row_data.count
 		end
 		
 	visible_row_count: INTEGER is
@@ -2008,14 +2004,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		do
 			if physical_column_indexes_dirty then
 					-- `Result' needs to be recalculated
-				col_count := column_count
+				col_count := columns.count
 				create Result.make (col_count)
 				from
 					i := 1
 				until
 					i > col_count
 				loop
-					a_col := column_internal (i)
+					a_col := columns @ i
 					Result.put (a_col.physical_index, i - 1)
 							-- SPECIAL is zero based
 					i := i + 1
@@ -2045,7 +2041,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			until
 				found or else i = 0
 			loop
-				a_column := column_internal (i)
+				a_column := columns @ i
 				found := a_column.is_displayed
 				if not found then
 					i := i - 1
@@ -2152,7 +2148,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if horizontal_redraw_triggered_by_viewport_resize then
 					recompute_horizontal_scroll_bar
 				end
-				if column_count > 0 and not horizontal_computation_added_to_once_idle_actions then
+				if columns.count > 0 and not horizontal_computation_added_to_once_idle_actions then
 						-- Do nothing if `Current' is empty or the agent is already contained
 						-- in the do once on idle actions.
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar_from_once_idle_actions)
@@ -2382,8 +2378,8 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	total_column_width: INTEGER is
 			-- `Result' is total width of all columns contained in `Current'.
 		do
-			if column_count > 0 then
-				Result := column_offsets.i_th (column_count + 1)
+			if columns.count > 0 then
+				Result := column_offsets.i_th (columns.count + 1)
 			end
 		ensure
 			result_positive: result >= 0
@@ -2896,8 +2892,8 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 					previous_scroll_bar_value := horizontal_scroll_bar.value
 				end
 				if is_horizontal_scrolling_per_item then					
-					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_count - 1))
-					average_column_width := (l_total_column_width // column_count)
+					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, columns.count - 1))
+					average_column_width := (l_total_column_width // columns.count)
 					horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per pixel to per item horizontal
@@ -3134,14 +3130,14 @@ feature {NONE} -- Drawing implementation
 						from
 							header_index := header_index - 1
 						until
-							header_index = 1 or column_internal (header_index).width > 0
+							header_index = 1 or (columns @ (header_index)).width > 0
 						loop
 							header_index := header_index - 1
 						end
 					end
-					redraw_from_column_to_end (column_internal (header_index))
+					redraw_from_column_to_end (columns @ (header_index))
 				else
-					redraw_from_column_to_end (column_internal (header_index))
+					redraw_from_column_to_end (columns @ (header_index))
 				end
 			else	
 				if is_resizing_divider_enabled then
@@ -3190,7 +3186,7 @@ feature {NONE} -- Drawing implementation
 				remove_resizing_line
 			end
 			set_horizontal_computation_required (header_index)
-			redraw_from_column_to_end (column_internal (header_index))
+			redraw_from_column_to_end (columns @ header_index)
 		end
 				
 	draw_resizing_line (position: INTEGER) is
@@ -3393,7 +3389,7 @@ feature {NONE} -- Drawing implementation
 				-- triggers re-computation of the scroll bars, with the minimal recompute performed.
 			if not header.is_empty then
 					-- Update horizontal scroll bar size and position.
-				set_horizontal_computation_required (column_count)
+				set_horizontal_computation_required (columns.count)
 			end
 			if row_count /= 0 then
 				set_vertical_computation_required (row_count)
@@ -4004,7 +4000,7 @@ feature {NONE} -- Event handling
 					else
 						items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
 						if not items_spanning.is_empty then
-							column_internal (items_spanning @ 1).ensure_visible
+							(columns @ (items_spanning @ 1)).ensure_visible
 						end
 					end
 				when {EV_KEY_CONSTANTS}.Key_left then
@@ -4020,7 +4016,7 @@ feature {NONE} -- Event handling
 						if virtual_x_position > 0 then
 							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
 							if not items_spanning.is_empty then
-								column_internal (items_spanning @ 1).ensure_visible
+								(columns @ (items_spanning @ 1)).ensure_visible
 							end
 						end
 					end
@@ -4218,27 +4214,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			end
 		ensure
 			row_not_void: Result /= Void
-		end
-
-	column_internal (a_column: INTEGER): EV_GRID_COLUMN_I is
-			-- Column number `a_column', returns a new column if it doesn't exist.
-		require
-			a_column_positive: a_column > 0
-		local
-			temp_columns: like columns
-		do
-			temp_columns := columns
-			if a_column > temp_columns.count then
-				from
-				until
-					temp_columns.count = a_column
-				loop
-					add_column_at (temp_columns.count + 1, True)
-				end
-			end
-			Result := temp_columns @ a_column
-		ensure
-			column_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -4490,11 +4465,11 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			item_implementation: EV_GRID_ITEM_I
 			grid_row_parent_i: EV_GRID_ROW_I
 		do
-			if a_column > column_count then
+			if a_column > columns.count then
 					-- Create new columns needed.
 				set_column_count_to (a_column)
 			end
-			a_grid_col_i := column_internal (a_column)
+			a_grid_col_i := columns @ (a_column)
 			column_physical_index := a_grid_col_i.physical_index
 
 			if a_row > row_count then
@@ -4566,7 +4541,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			col_index: INTEGER
 		do
 				-- Retrieve column from grid
-			a_grid_column_i := column_internal (a_column)
+			a_grid_column_i := columns @ (a_column)
 			col_index := a_grid_column_i.physical_index
 			
 				-- Retrieve row to ensure that the row exists.
@@ -4600,11 +4575,11 @@ invariant
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
-	visible_column_count_not_greater_than_column_count: visible_column_count <= column_count
+	visible_column_count_not_greater_than_column_count: is_initialized implies visible_column_count <= column_count
 	hidden_node_count_zero_when_tree_disabled: not is_tree_enabled implies hidden_node_count = 0
 	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0
-	hidden_node_count_no_greated_than_rows_less_one: is_tree_enabled and row_count > 0 implies hidden_node_count <= row_count - 1
-	tree_disabled_implies_visible_rows_equal_hidden_rows: not is_tree_enabled implies row_count = visible_row_count
+	hidden_node_count_no_greated_than_rows_less_one: is_initialized and then is_tree_enabled and row_count > 0 implies hidden_node_count <= row_count - 1
+	tree_disabled_implies_visible_rows_equal_hidden_rows: is_initialized and then not is_tree_enabled implies row_count = visible_row_count
 	internal_viewport_positions_equal_to_viewports: is_initialized implies (viewport.x_offset = viewport_x_offset and viewport.y_offset = viewport_y_offset)
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 end

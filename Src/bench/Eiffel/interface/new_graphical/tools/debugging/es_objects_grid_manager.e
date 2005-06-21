@@ -136,6 +136,12 @@ feature -- numerical related processing
 
 feature -- Graphical look
 
+	Title_font: EV_FONT is
+		once
+			create Result
+			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
+		end
+
 	folder_label_item (s: STRING): EV_GRID_LABEL_ITEM is
 		do
 			create Result

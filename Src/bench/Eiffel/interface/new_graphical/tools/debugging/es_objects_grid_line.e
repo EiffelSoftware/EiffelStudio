@@ -429,10 +429,16 @@ feature -- Graphical changes
 			-- `title' value overwrite name's value.
 
 	set_title (v: STRING) is
+		local
+			cell:EV_GRID_LABEL_ITEM
 		do
 			title := v
 			if row /= Void then
-				set_name ("%"" + title + "%"")
+				set_name (title)
+				cell ?= row.item (Col_name_index)
+				if cell /= Void then
+					apply_cell_title_properties_on (cell)
+				end
 			end
 		end
 
@@ -484,7 +490,14 @@ feature -- Graphical changes
 			glab := cell_text_updated (v, Col_context_index)
 			apply_cell_context_properties_on (glab)
 		end
-
+		
+	apply_cell_title_properties_on (a_item: EV_GRID_LABEL_ITEM) is
+		require
+			a_item_not_void: a_item /= Void
+		do
+			a_item.set_font (Title_font)
+		end
+		
 	apply_cell_name_properties_on (a_item: EV_GRID_LABEL_ITEM) is
 		require
 			a_item_not_void: a_item /= Void
@@ -998,6 +1011,11 @@ feature {NONE} -- Filling
 		end
 
 feature {NONE} -- Implementation
+		
+	title_font: EV_FONT is
+		once
+			Result := tool.Title_font
+		end		
 
 	folder_label_item (s: STRING): EV_GRID_LABEL_ITEM is
 		do
@@ -1022,7 +1040,7 @@ feature {NONE} -- Implementation
 			grid_cell_set_text (Result, s)
 		end
 
-	cell_text_updated (v: STRING; c: INTEGER): ES_OBJECTS_GRID_CELL is
+	es_cell (c: INTEGER): ES_OBJECTS_GRID_CELL is
 		local
 			l_item: EV_GRID_ITEM
 		do
@@ -1034,16 +1052,22 @@ feature {NONE} -- Implementation
 			else
 				Result ?= l_item
 			end
-			check
-				Result /= Void
+			if l_item = Void then
+				row.set_item (c, Result)
 			end
+		ensure
+			Result /= Void
+		end
+
+	cell_text_updated (v: STRING; c: INTEGER): ES_OBJECTS_GRID_CELL is
+		local
+			l_item: EV_GRID_ITEM
+		do
+			Result := es_cell (c)
 			if v /= Void then
 				grid_cell_set_text (Result, v)
 			else
 				grid_cell_set_text (Result, "")
-			end
-			if l_item = Void then
-				row.set_item (c, Result)
 			end
 		ensure
 			Result /= Void			

@@ -366,7 +366,7 @@ feature -- Status report
 			-- Number of items in current.
 		do
 			if parent_i /= Void then
-				Result := parent_i.column_count
+				Result := parent_i.columns.count
 			end
 		ensure
 			count_not_negative: count >= 0
@@ -650,8 +650,8 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			i_positive: i > 0
 			is_parented: parent /= Void
 			valid_tree_structure: a_item /= Void and parent.is_tree_enabled and parent_row /= Void implies i >= parent_row.index_of_first_item
-			is_index_valid_for_item_insertion_if_subrow: a_item /= Void and then interface.is_tree_node implies interface.is_index_valid_for_item_setting_if_tree_node (i)
-			is_index_valid_for_item_removal_if_subrow: a_item = Void and then interface.is_tree_node implies interface.is_index_valid_for_item_removal_if_tree_node (i)
+			is_index_valid_for_item_insertion_if_subrow: a_item /= Void and then interface.is_part_of_tree_structure implies interface.is_index_valid_for_item_setting_if_tree_node (i)
+			is_index_valid_for_item_removal_if_subrow: a_item = Void and then interface.is_part_of_tree_structure implies interface.is_index_valid_for_item_removal_if_tree_node (i)
 		do
 			parent_i.set_item (i, index, a_item)
 		ensure

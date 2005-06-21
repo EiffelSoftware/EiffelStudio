@@ -61,7 +61,8 @@ feature -- Query
 			set_text (empty_text)
 		end
 		
-	apply_actions: EV_NOTIFY_ACTION_SEQUENCE		
+	apply_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Action to perform when applying the changes
 
 
 end

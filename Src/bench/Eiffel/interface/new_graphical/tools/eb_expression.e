@@ -243,7 +243,9 @@ feature -- Bridge to dbg_expression
 	expression: STRING is
 			-- Expression text
 		do
-			Result := dbg_expression.expression
+			if dbg_expression /= Void then
+				Result := dbg_expression.expression
+			end
 		end
 
 feature {EB_EXPRESSION_DEFINITION_DIALOG, ES_OBJECTS_GRID_EXPRESSION_LINE} -- Restricted Bridge to dbg_expression

@@ -504,7 +504,10 @@ feature {EV_GRID_I} -- Implementation
 	destroy is
 			-- Destroy `Current'.
 		do
-			to_implement ("EV_GRID_COLUMN_I.destroy")
+			if parent_i /= Void then
+				parent_i.remove_column (index)
+			end
+			set_is_destroyed (True)
 		end
 
 	set_is_displayed (a_displayed: BOOLEAN) is

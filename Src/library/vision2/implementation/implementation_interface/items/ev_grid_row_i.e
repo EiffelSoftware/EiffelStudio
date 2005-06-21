@@ -862,7 +862,10 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 	destroy is
 			-- Destroy `Current'.
 		do
-			to_implement ("EV_GRID_ROW_I.destroy")
+			if parent_i /= Void then
+				parent_i.remove_row (index)
+			end
+			set_is_destroyed (True)
 		end
 
 	clear is

@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			restart_button: EV_BUTTON
 			exception_frame: EV_FRAME
 			pixmap_box: EV_VERTICAL_BOX
-			exception_text: EB_EDITOR
+			exception_text: SELECTABLE_TEXT_PANEL
 			save_button: EV_BUTTON
 		do
 			trace := a_trace
@@ -65,7 +65,7 @@ feature {NONE} -- Initialization
 			Layout_constants.set_default_size_for_button (restart_button)
 			Layout_constants.set_default_size_for_button (save_button)
 
-			create exception_text.make
+			create exception_text
 			exception_text.widget.set_minimum_height (Layout_constants.dialog_unit_to_pixels (60))
 			exception_text.load_text (trace)
 			

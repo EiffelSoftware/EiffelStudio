@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			build_window_y_position_preference := l_manager.new_integer_resource_value (l_manager, build_window_y_position_string, 50)
 			main_split_position_preference := l_manager.new_integer_resource_value (l_manager, main_split_position_string, 250)
 			tip_of_day_index_preference := l_manager.new_integer_resource_value (l_manager, tip_of_day_index_string, 1)
-			tool_order_preference := l_manager.new_array_resource_value (l_manager, tool_order_string, <<"">>)
+			tool_order_preference := l_manager.new_array_resource_value (l_manager, tool_order_string, <<"typeselector_normal_100_100","componentselector_normal_100_100","windowselector_normal_100_100">>)
 			external_tool_order_preference := l_manager.new_array_resource_value (l_manager, external_tool_order_string, <<"">>)
 			recent_projects_string_preference := l_manager.new_array_resource_value (l_manager, recent_projects_string_string, <<"">>)
 			tools_on_top_preference := l_manager.new_boolean_resource_value (l_manager, tools_on_top_string, True)

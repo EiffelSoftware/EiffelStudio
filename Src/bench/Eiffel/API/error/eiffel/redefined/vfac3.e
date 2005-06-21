@@ -1,6 +1,6 @@
 indexing
 
-	description: "Assigner command argument number error.";
+	description: "Assigner command first argument type error.";
 	date: "$Date$";
 	revision: "$Revision$"
 

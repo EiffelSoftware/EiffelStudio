@@ -1,10 +1,10 @@
 indexing
 
-	description: "Assigner command query argument types error.";
+	description: "Assigner command name error.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class VFAC5
+class VFAC1
 
 inherit
 	VFAC
@@ -15,7 +15,7 @@ create {COMPILER_EXPORTER}
 
 feature -- Properties
 
-	subcode: INTEGER is 5
+	subcode: INTEGER is 1
 			-- Error subcode
 
 end

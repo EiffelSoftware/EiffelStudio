@@ -24,7 +24,7 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			The <bold>New Cluster Wizard</bold> allow you to add a new <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link> to an EiffelEnvision project. For information on how to add <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> to projects, see <link><url>adding_clusters.xml</url><label>Adding New Clusters</label></link>.
+			The <bold>New Cluster Wizard</bold> allows you to add a new <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link> to an EiffelEnvision project. For information on how to add <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>clusters</label></link> to projects, see <link><url>adding_clusters.xml</url><label>Adding New Clusters</label></link>.
 		</paragraph>
     <paragraph>
 			The wizard is separated into two pages. <bold>Basic Settings</bold> and <bold>Assertions</bold>. You may switch between the pages by clicking on the name of the page, located in the wizard's left pane.
@@ -55,17 +55,17 @@
     <paragraph>
       <bold>Include Subdirectories</bold>
       <line_break />
-			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>include_subdirectories</anchor_name><label>Include Subdirectories</label></link> property of a <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
+			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>include_subdirectories</anchor_name><label>Include Subdirectories</label></link> property of an <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
 		</paragraph>
     <paragraph>
       <bold>Library</bold>
       <line_break />
-			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library</label></link> property of a <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
+			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>cluster_library</anchor_name><label>Cluster Library</label></link> property of an <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>. Selecting this option will include all subdirectories in the specified <bold>Path</bold>.
 		</paragraph>
     <paragraph>
       <bold>Override</bold>
       <line_break />
-			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>override</anchor_name><label>Override</label></link> property of a <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>. Selecting this option will ensure the clusters classes will be taken over any other project classes that have the same name.
+			This option relates to the <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>override</anchor_name><label>Override</label></link> property of an <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folder</label></link>. Selecting this option will ensure the clusters classes will be taken over any other project classes that have the same name.
 		</paragraph>
     <anchor>assertions</anchor>
     <heading>
@@ -73,17 +73,17 @@
       <content>Assertions</content>
     </heading>
     <paragraph>
-			The <bold>Assertions</bold> page contains a number of optional options related to finer grained control over how project's <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/50_design_by_contract.xml</url><label>contracts</label></link> are evaluated at runtime. Create a cluster and ignoring this page will use the <link><url>../project_configuration/assertions.xml</url><label>Assertion Properties</label></link> set in the <link><url>../project_configuration/index.xml</url><label>Project Properties</label></link>.
+			The <bold>Assertions</bold> page contains a number of optional options related to finer grained control over how a project's <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/50_design_by_contract.xml</url><label>contracts</label></link> are evaluated at runtime. Creating a cluster and ignoring this page will use the <link><url>../project_configuration/assertions.xml</url><label>Assertion Properties</label></link> set in the <link><url>../project_configuration/index.xml</url><label>Project Properties</label></link>.
 		</paragraph>
     <paragraph>
       <bold>Discard Assertions When Optimizing</bold>
       <line_break />
-			Set by default, having this option select will discard all assertion options when the <link><url>../project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>Optimize Code</label></link> property, in the <link><url>../project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>Build Project Properties</label></link>, is set to <bold>Yes</bold>. The has the same effect as turning off all assertions (detailed below) for the cluster, when optimizing code.
+			Set by default, having this option selected will discard all assertion options when the <link><url>../project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>Optimize Code</label></link> property, in the <link><url>../project_configuration/build.xml</url><anchor_name>optimize_code</anchor_name><label>Build Project Properties</label></link>, is set to <bold>Yes</bold>. This has the same effect as turning off all assertions (detailed below) for the cluster, when optimizing code.
 		</paragraph>
     <paragraph>
       <bold>Use Default Assertions</bold>
       <line_break />
-			Set by default, having this option select will use the <link><url>../project_configuration/assertions.xml</url><label>Assertion Properties</label></link> set in the <link><url>../project_configuration/index.xml</url><label>Project Properties</label></link>.
+			Set by default, having this option selected will use the <link><url>../project_configuration/assertions.xml</url><label>Assertion Properties</label></link> set in the <link><url>../project_configuration/index.xml</url><label>Project Properties</label></link>.
 		</paragraph>
     <paragraph>
       <bold>Evaluate Preconditions</bold>

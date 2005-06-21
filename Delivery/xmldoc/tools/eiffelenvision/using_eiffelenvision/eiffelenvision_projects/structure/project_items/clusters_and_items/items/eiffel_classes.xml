@@ -16,10 +16,10 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			Eiffel class file items represent Eiffel <link><url>../../../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>class</label></link> source files (*.e) in an EiffelEnvision project. Eiffel class file items are represented in by two different icons. <image><url>../../../../../../images/icons/file_class_blue.ico</url></image> for regular classes and <image><url>../../../../../../images/icons/file_class_winform.ico</url></image> for Eiffel classes that will open in the Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/dturfWinFormsDesigner.htm</url><label>Windows Forms Designer</label></link>.
+			Eiffel class file items represent Eiffel <link><url>../../../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>class</label></link> source files (*.e) in an EiffelEnvision project. Eiffel class file items are represented by two different icons. <image><url>../../../../../../images/icons/file_class_blue.ico</url></image> for regular classes and <image><url>../../../../../../images/icons/file_class_winform.ico</url></image> for Eiffel classes that will open in the Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/dturfWinFormsDesigner.htm</url><label>Windows Forms Designer</label></link>.
 		</paragraph>
     <paragraph>
-			Eiffel class file items are located and included automatically into an EiffelEnvision projects, they do not need to be added explicitly. You will only find Eiffel class file items under the <link><url>../../../project_items/index.xml</url><label>Project Items</label></link> folder, <link><url>../explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link> and <link><url>../cluster_folders.xml</url><label>Cluster Folders</label></link>. Any changes that occur outside of Visual Studio .NET to the physical file corresponding to the Eiffel class file item, will be updated in your EiffelEnvision project in real time. For more information on the automatic inclusion on Eiffel class file items, see <link><url>../cluster_enumeration.xml</url><label>Automatic Enumeration</label></link>.
+			Eiffel class file items are located and included automatically into an EiffelEnvision project, they do not need to be added explicitly. You will only find Eiffel class file items under the <link><url>../../../project_items/index.xml</url><label>Project Items</label></link> folder, <link><url>../explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link> and <link><url>../cluster_folders.xml</url><label>Cluster Folders</label></link>. Any changes that occur outside of Visual Studio .NET to the physical file corresponding to the Eiffel class file item will be updated in your EiffelEnvision project in real time. For more information on the automatic inclusion of Eiffel class file items, see <link><url>../cluster_enumeration.xml</url><label>Automatic Enumeration</label></link>.
 		</paragraph>
     <anchor>opening</anchor>
     <heading>
@@ -28,8 +28,8 @@
     </heading>
     <paragraph>
 			To open an Eiffel class file item in the default editor:
-			<list ordered="true"><item>Select the Eiffel class file item you want to open from your EiffelEnvision project.</item><item>From the <bold>View</bold> menu, select <bold>Open</bold></item></list>
-			By default, if the Eiffel class item is represented by the <image><url>../../../../../../images/icons/file_class_blue.ico</url></image> icon the <link><url>../../../../../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link> (Code View) will open. If the Eiffel class item is represented by the <image><url>../../../../../../images/icons/file_class_winform.ico</url></image> icon then the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/dturfWinFormsDesigner.htm</url><label>Windows Forms Designer</label></link> (Design View) will be opened.
+			<list ordered="true"><item>Select the Eiffel class file item you want to open from your EiffelEnvision project.</item><item>From the <bold>View</bold> menu, select <bold>Open</bold></item>.</list>
+			By default, if the Eiffel class item is represented by the <image><url>../../../../../../images/icons/file_class_blue.ico</url></image> icon, then the <link><url>../../../../../eiffel_editor/index.xml</url><label>Eiffel Editor</label></link> (Code View) will open. If the Eiffel class item is represented by the <image><url>../../../../../../images/icons/file_class_winform.ico</url></image> icon, then the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/dturfWinFormsDesigner.htm</url><label>Windows Forms Designer</label></link> (Design View) will open.
 		</paragraph>
     <paragraph>
 			You may force an Eiffel class item to open in <bold>Design View</bold> or <bold>Code View</bold> by selecting <bold>Designer</bold> or <bold>Code</bold>, respectively, from the <bold>View</bold> menu.
@@ -48,12 +48,12 @@
       <content>Context Menu</content>
     </heading>
     <paragraph>
-			Eiffel class file item have their own context menu. Below discusses each available option.
+			Eiffel class file items have their own context menu. The following section discusses each available option.
 		</paragraph>
     <paragraph>
       <bold>Open</bold>
       <line_break />
-			Opens the selected Eiffel class file item in the default editor (see above.)
+			Opens the selected Eiffel class file item in the default editor (see above).
 		</paragraph>
     <paragraph>
       <bold>Open With...</bold>
@@ -68,7 +68,7 @@
     <paragraph>
       <bold>View Designer</bold>
       <line_break />
-			Opens the Eiffel class file item in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/dturfWinFormsDesigner.htm</url><label>Windows Forms Designer</label></link></paragraph>
+			Opens the Eiffel class file item in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/dturfWinFormsDesigner.htm</url><label>Windows Forms Designer</label></link>.</paragraph>
     <paragraph>
       <bold>Include in/Exclude from Project</bold>
       <line_break />

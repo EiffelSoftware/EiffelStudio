@@ -1,8 +1,8 @@
-<document output="envision" title="Other Files Items">
+<document output="envision" title="Other File Items">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Other Files Items</envision_title>
+				<envision_title>Other File Items</envision_title>
 				<envision_pseudo_name>60</envision_pseudo_name>
 			</toc>
 			<xml>
@@ -58,7 +58,7 @@
 				<label>Generic File Items</label>
 			</link>
 			<line_break/>
-			The basic, generic, file item that represents all non-Eiffel source code files in an <link>
+			The basic, generic file item that represents all non-Eiffel source code files in an <link>
 				<url>../../../index.xml</url>
 				<label>EiffelEnvision Project</label>
 			</link>.

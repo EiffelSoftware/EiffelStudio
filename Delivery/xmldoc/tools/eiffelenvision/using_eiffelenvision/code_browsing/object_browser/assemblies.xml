@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<document output="envision" title="Object Browser Assembly Nodes">
+<document output="envision" title="Object Browser Assembly Folders">
   <meta_data>
     <help>
       <toc>
@@ -9,17 +9,17 @@
       <xml>
         <xmlkeyword>
           <index>K</index>
-          <term>Object Browser, Assembly Nodes</term>
+          <term>Object Browser, Assembly Folders</term>
         </xmlkeyword>
       </xml>
     </help>
   </meta_data>
   <paragraph>
     <paragraph>
-			Assembly nodes, depicted by the common <image><url>../images/assembly/assembly.ico</url></image> icon, match the <link><url>../../eiffelenvision_projects/structure/references/references_folder.xml</url><label>Component References</label></link> compiled into a project when last <link><url>../../compiling_projects/index.xml</url><label>Built</label></link>. EiffelEnvision only will show the references from the last build because of the task of performing <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url><label>Referenced Assembly Type and Feature Name Conversion</label></link>, done as compilation-time.
+			Assembly folders, depicted by the common <image><url>../images/assembly/assembly.ico</url></image> icon, match the <link><url>../../eiffelenvision_projects/structure/references/references_folder.xml</url><label>Component References</label></link> compiled into a project when last <link><url>../../compiling_projects/index.xml</url><label>Built</label></link>. EiffelEnvision only will show the references from the last build because of the task of performing <link><url>../../../../../technologies/dotnet/eiffel_dotnet_language/20_language/90_assembly_formatting.xml</url><label>Referenced Assembly Type and Feature Name Conversion</label></link>, done at compilation-time.
 		</paragraph>
     <paragraph>
-			Expanding each assembly nodes will yield a flat list of namespaces found in the corresponding assembly. Namespace, just like in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url><label>Visual Studio .NET Object Browser</label></link>, are denoted by the <image><url>../images/assembly/namespace.ico</url></image> icon. In turn, expanding a namespace node will yield a list of <link><url>types.xml</url><label>.NET Type Nodes</label></link> contained within the corresponding namespace.
+			Expanding each assembly folders will yield a flat list of namespaces found in the corresponding assembly. Namespace, just like in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfObjectBrowserS.htm</url><label>Visual Studio .NET Object Browser</label></link>, are denoted by the <image><url>../images/assembly/namespace.ico</url></image> icon. In turn, expanding a namespace folder will yield a list of <link><url>types.xml</url><label>.NET Type Folder</label></link> contained within the corresponding namespace.
 		</paragraph>
     <anchor>also_see</anchor>
     <heading>

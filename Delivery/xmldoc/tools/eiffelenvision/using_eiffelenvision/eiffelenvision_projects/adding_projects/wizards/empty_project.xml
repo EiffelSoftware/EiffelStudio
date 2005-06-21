@@ -28,7 +28,7 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			The <bold>Empty Project Wizard</bold> allow you to add a new "empty" EiffelEnvision Project to an active or new Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconvisualstudiosolutionsprojects.htm</url><label>Solution</label></link></paragraph>
+			The <bold>Empty Project Wizard</bold> allow you to add a new "empty" EiffelEnvision Project to an active or new Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconvisualstudiosolutionsprojects.htm</url><label>Solution</label></link>.</paragraph>
     <paragraph>
 			The wizard is separated into two pages. <bold>Overview</bold> and <bold>System Settings</bold>. You may switch between the pages by clicking on the name of the page, located in the wizard's left pane.
 		</paragraph>
@@ -46,20 +46,22 @@
       <content>System Settings</content>
     </heading>
     <paragraph>
-			The <bold>System Settings</bold> page allows you to modify the settings for the system created when the wizard is completed. The following settings may be modified:
+			The <bold>System Settings</bold> page allows you to modify the settings for the system created when the wizard is completed. The following settings may be modified: 
 			
-Root Class - Root class of the Eiffel system. A class of this name will be generated for inclusion in the system
-Root Feature - Root feature of the Eiffel system. A feature of this name will be generated in the class Root Class. The root feature is the feature executed when the system is launched.
+Root Class - Root class of the Eiffel system. A class of this name will be generated for inclusion in the system. 
+Root Feature - Root feature of the Eiffel system. A feature of this name will be generated in the class Root Class. The root feature is the feature executed when the system is launched. 
 Project Type - The type of project to generate. 
+		</paragraph>
 
 		<paragraph><bold>Root Class</bold><line_break />
-			This options corresponds to the <link><url>../../configuring/project_configuration/build.xml</url><anchor_name>root_class</anchor_name><label>Root Class</label></link> property from the <link><url>../../configuring/project_configuration/build.xml</url><label>Build Project Properties</label></link>. The <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>class</anchor_name><label>class</label></link> name specified must be a valid Eiffel class name. This field is a required field and may not be left empty of contain any illegal characters
+			This option corresponds to the <link><url>../../configuring/project_configuration/build.xml</url><anchor_name>root_class</anchor_name><label>Root Class</label></link> property from the <link><url>../../configuring/project_configuration/build.xml</url><label>Build Project Properties</label></link>. The <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>class</anchor_name><label>class</label></link> name specified must be a valid Eiffel class name. This field is a required field and may not be left empty or contain any illegal characters.
 		</paragraph><paragraph><bold>Creation Routine</bold><line_break />
-			This options corresponds to the <link><url>../../configuring/project_configuration/build.xml</url><anchor_name>creation_routine</anchor_name><label>Creation Routine</label></link> property from the <link><url>../../configuring/project_configuration/build.xml</url><label>Build Project Properties</label></link>. The <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>feature</anchor_name><label>feature</label></link> name specified must be a valid Eiffel feature name. This field is a required field and may not be left empty of contain any illegal characters
+			This option corresponds to the <link><url>../../configuring/project_configuration/build.xml</url><anchor_name>creation_routine</anchor_name><label>Creation Routine</label></link> property from the <link><url>../../configuring/project_configuration/build.xml</url><label>Build Project Properties</label></link>. The <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>feature</anchor_name><label>feature</label></link> name specified must be a valid Eiffel feature name. This field is a required field and may not be left empty or contain any illegal characters.
 		</paragraph><paragraph><bold>Project Type</bold><line_break />
 			This setting is to dictate the type of project to create. <bold>Application (.exe)</bold> will generate a project that can be executed, <bold>Library (.dll)</bold> will create a project that is destined to be reused by one or more applications or other libraries.
-		</paragraph><anchor>completing</anchor><heading><size>2</size><content>Completing the Wizard</content></heading><paragraph>
-			Once you have set the appropriate settings for the new project, clicking <bold>Finish</bold> will create a new EiffelEnvision <link><url>../../structure/index.xml</url><label>Project</label></link></paragraph> containing a single class with the name specified in the <bold>Root Class</bold> option. The class will contain a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>creation</anchor_name><label>creation routine</label></link> with the name specified in the <bold>Creation Routine</bold> option.
+		</paragraph><anchor>completing</anchor><heading><size>2</size><content>Completing the Wizard</content></heading>
+		<paragraph>
+			Once you have set the appropriate settings for the new project, clicking <bold>Finish</bold> will create a new EiffelEnvision <link><url>../../structure/index.xml</url><label>Project</label></link> containing a single class with the name specified in the <bold>Root Class</bold> option. The class will contain a <link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><anchor_name>creation</anchor_name><label>creation routine</label></link> with the name specified in the <bold>Creation Routine</bold> option.
 		</paragraph>
     <anchor>also_see</anchor>
     <heading>

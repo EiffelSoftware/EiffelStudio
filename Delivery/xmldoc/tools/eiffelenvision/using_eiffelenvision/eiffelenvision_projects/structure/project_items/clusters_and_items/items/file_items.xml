@@ -16,10 +16,10 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			Generic file items are all other file items that are not <link><url>eiffel_classes.xml</url><label>Eiffel Class File Items</label></link>. These types of items will only be found anywhere under the <link><url>../../index.xml</url><label>Project Items</label></link> folder or any of it's subfolder/clusters or under the <link><url>../../../other_project_items/index.xml</url><label>Other Project Items</label></link> folder and it's subfolders.
+			Generic file items are all other file items that are not <link><url>eiffel_classes.xml</url><label>Eiffel Class File Items</label></link>. These types of items will only be found anywhere under the <link><url>../../index.xml</url><label>Project Items</label></link> folder or any of its subfolder/clusters or under the <link><url>../../../other_project_items/index.xml</url><label>Other Project Items</label></link> folder and its subfolders.
 		</paragraph>
     <paragraph>
-			Generic file items have many different icon representations. For the most part the icon used to represent the file item will be the same icon used by Windows Explorer. The exception to this rule is when the file, on disk corresponding to the file item, is missing. For this case the file item will be show using the missing file <image><url>../../../../../../images/icons/file_missing.ico</url></image> icon.
+			Generic file items have many different icon representations. For the most part the icon used to represent the file item will be the same icon used by Windows Explorer. The exception to this rule is when the file on disk corresponding to the file item is missing. In this case the file item will be shown using the missing file <image><url>../../../../../../images/icons/file_missing.ico</url></image> icon.
 		</paragraph>
     <anchor>opening</anchor>
     <heading>
@@ -28,7 +28,7 @@
     </heading>
     <paragraph>
 			To open a file item in the default editor:
-			<list ordered="true"><item>Select the file item you want to open from your EiffelEnvision project.</item><item>From the <bold>View</bold> menu, select <bold>Open</bold></item></list><note><bold>Note</bold>: File that are missing (<image><url>../../../../../../images/icons/file_missing.ico</url></image>) cannot be opened.
+			<list ordered="true"><item>Select the file item you want to open from your EiffelEnvision project.</item><item>From the <bold>View</bold> menu, select <bold>Open</bold></item>.</list><note><bold>Note</bold>: Files that are missing (<image><url>../../../../../../images/icons/file_missing.ico</url></image>) cannot be opened.
 			</note></paragraph>
     <anchor>adding_item</anchor>
     <heading>
@@ -36,7 +36,7 @@
       <content>Adding Items</content>
     </heading>
     <paragraph>
-			For information on how to add one of the many generic file item templates or to add exiting files to your EiffelEnvision project , see <link><url>../../../../configuring/adding_items/adding_items.xml</url><label>Adding New and Existing Items</label></link>.
+			For information on how to add one of the many generic file item templates or to add exiting files to your EiffelEnvision project, see <link><url>../../../../configuring/adding_items/adding_items.xml</url><label>Adding New and Existing Items</label></link>.
 		</paragraph>
     <anchor>context_menu</anchor>
     <heading>
@@ -44,7 +44,7 @@
       <content>Context Menu</content>
     </heading>
     <paragraph>
-			Generic file item have their own context menu. Below discusses each available option.
+			Generic file items have their own context menu. The following section discusses each available option.
 		</paragraph>
     <paragraph>
       <bold>Open</bold>
@@ -64,12 +64,12 @@
     <paragraph>
       <bold>Rename</bold>
       <line_break />
-			Will display an editable box permitting the renaming of the file item both on disk and in the project.
+			Displays an editable box permitting the renaming of the file item both on disk and in the project.
 		</paragraph>
     <paragraph>
       <bold>Properties</bold>
       <line_break />
-			Will display the <link><url>../../../../configuring/project_configuration/item_configuration/file_items.xml</url><label>File Item Properties</label></link>.
+			Displays the <link><url>../../../../configuring/project_configuration/item_configuration/file_items.xml</url><label>File Item Properties</label></link>.
 		</paragraph>
     <anchor>also_see</anchor>
     <heading>

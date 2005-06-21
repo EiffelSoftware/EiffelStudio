@@ -16,7 +16,7 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			This section of the documentation covers aspects of managing your EiffelEnvision projects. Management ranges from the simple <bold>Project Configuration</bold> after <link><url>../adding_projects/index.xml</url><label>Adding New Projects</label></link> to managing your project's items and contents.
+			This section of the documentation covers aspects of managing your EiffelEnvision project. Management ranges from the simple <bold>Project Configuration</bold> after <link><url>../adding_projects/index.xml</url><label>Adding New Projects</label></link>, to managing your project's items and contents.
 		</paragraph>
     <anchor>in_this_section</anchor>
     <heading>
@@ -29,7 +29,7 @@
         <label>Configuring Projects</label>
       </link>
       <line_break />
-			Documentation of the various configuration property aspects of an EiffelEnvision project.
+			Documentation on the various configuration property aspects of an EiffelEnvision project.
 		</paragraph>
     <paragraph>
       <link>
@@ -37,7 +37,7 @@
         <label>Project References</label>
       </link>
       <line_break />
-			The documentation on adding, removing and configuring EiffelEnvision project component references.
+			Documentation on adding, removing and configuring EiffelEnvision project component references.
 		</paragraph>
     <paragraph>
       <link>

@@ -20,8 +20,8 @@
   </meta_data>
   <paragraph>
     <paragraph>
-		Adding project references to EiffelEnvision project is done in the same manner as adding references to any Visual Studio .NET project. To add an <bold>Assembly</bold>, <bold>COM</bold> or <bold>Project</bold> reference to an EiffelEnvision project:
-			<list ordered="true"><item>Highlight the project you want to add reference(s) to, in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>.</item><item>Select the <bold>Project</bold>, <bold>Add Reference</bold> from the main menu</item><item>The Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/urfAddReferenceDialogBox.htm</url><label>Add Reference Dialog Box</label></link> will then appear.</item><item>Add the appropriate references and click <bold>Ok</bold>.</item></list>
+		Adding project references to EiffelEnvision projects is done in the same manner as adding references to any Visual Studio .NET project. To add an <bold>Assembly</bold>, <bold>COM</bold> or <bold>Project</bold> reference to an EiffelEnvision project:
+			<list ordered="true"><item>Highlight the project you want to add reference(s) to in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfSolutionExplorerDialog.htm</url><label>Solution Explorer</label></link>.</item><item>Select the <bold>Project</bold>, <bold>Add Reference</bold> from the main menu.</item><item>The Visual Studio .NET <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/urfAddReferenceDialogBox.htm</url><label>Add Reference Dialog Box</label></link> will then appear.</item><item>Add the appropriate references and click <bold>Ok</bold>.</item></list>
 			For more information about the common way of adding references in Visual Studio .NET, see <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vbcon/html/vbtskAddingRemovingReferences.htm</url><label>Adding and Removing References</label></link>.
 		</paragraph>
     <anchor>precompiled_references</anchor>

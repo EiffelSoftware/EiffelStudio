@@ -24,11 +24,11 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> managed files, as described in <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>. EiffelEnvision also manages linked project items, via the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> hierarchy, but only to support referencing existing items related to the project. 
+			EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> manages files, as described in <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxconFolder-BasedReference-BasedProjects.htm</url><label>Item Management in Projects</label></link>. EiffelEnvision also manages linked project items, via the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Items</label></link> hierarchy, but only to support referencing existing items related to the project. 
 		</paragraph>
     <paragraph>
 			Adding new project items to an EiffelEnvision project is context-sensitive. Because EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link> manage direct links to files, adding a file to a 
-			folder (<link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link>) or the <link><url>../../structure/project.xml</url><label>project</label></link> node will cause the file to be created in that folder's <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>. 
+			folder (<link><url>../../../../../../technologies/dotnet/eiffel_dotnet_language/10_conventions/10_terminology.xml</url><label>cluster</label></link>) or the <link><url>../../structure/project.xml</url><label>project</label></link> folder will cause the file to be created in that folder's <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>. 
 			Supporting this, when adding new items to a project, no <bold>Location</bold> for the new item can be specified in the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfAddNewItemDialogBox.htm</url><label>Add New Item</label></link> dialog box.
 		</paragraph>
     <anchor>adding_items</anchor>
@@ -37,13 +37,13 @@
       <content>Adding New Items</content>
     </heading>
     <paragraph>
-			There are numerous ways to add new project item to your project. First select the folder where you would like the new project item to be created. If you select the 
-			<link><url>../../structure/project.xml</url><label>Project Node</label></link>, EiffelEnvision will do exactly the same as if you were to add new item via the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items Folder</label></link>. This 
+			There are numerous ways to add new project items to your project. First select the folder where you would like the new project item to be created. If you select the 
+			<link><url>../../structure/project.xml</url><label>Project Folder</label></link>, EiffelEnvision will do exactly the same as if you were to add a new item via the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items Folder</label></link>. This 
 			is because the <link><url>../../structure/project.xml</url><label>Project</label></link> and <link><url>../../structure/project_items/project_items.xml</url><label>Project Item</label></link> folders have the same <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>. After selecting the 
-			appropriate folder, either use the <bold>Project</bold>, <bold>Add New Item...</bold> (CTRL+SHIFT+A) or use the <bold>Add</bold>, <bold>Add New Item...</bold> context menu. Once selected the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfAddNewItemDialogBox.htm</url><label>Add New Item</label></link> dialog box will appear.
+			appropriate folder, use either the <bold>Project</bold>, <bold>Add New Item...</bold> (CTRL+SHIFT+A) or use the <bold>Add</bold>, <bold>Add New Item...</bold> context menu. Once selected the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsintro7/html/vxurfAddNewItemDialogBox.htm</url><label>Add New Item</label></link> dialog box will appear.
 			<note><bold>Note</bold>: 
-				<bold>UI</bold> and <bold>Code</bold><link><url>project_items.xml</url><label>New Project Item Templates</label></link> can be added to all folders in EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link>, with the 
-				exception to the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Files</label></link> folder. <bold>Data</bold> and <bold>Resource</bold> items may only be added to the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link> folder and any of it subfolders/subclusters. This is further maintain the separation between 
+				<bold>UI</bold> and <bold>Code</bold> <link><url>project_items.xml</url><label>New Project Item Templates</label></link> can be added to all folders in EiffelEnvision <link><url>../../structure/project.xml</url><label>Projects</label></link>, with the 
+				exception of the <link><url>../../structure/other_project_items/other_project_items.xml</url><label>Other Project Files</label></link> folder. <bold>Data</bold> and <bold>Resource</bold> items may only be added to the <link><url>../../structure/project_items/project_items.xml</url><label>Project Items</label></link> folder and any of its subfolders/subclusters. This is to further maintain the separation between 
 				project-specific items and <link><url>../../structure/eiffel_libraries/eiffel_libraries.xml</url><label>Eiffel Libraries</label></link>.
 			</note></paragraph>
     <anchor>naming_items</anchor>
@@ -56,7 +56,7 @@
 			error message. You will not be able to proceed unless the <bold>Name</bold> field contains a valid file name.
 		</paragraph>
     <paragraph>
-			New project item names should also not conflict with any file name or folder presently at the associated folder (which the file will be added to.) The file name should be unique as not to overwrite or 
+			New project item names should also not conflict with any file name or folder presently at the associated folder (which the file will be added to). The file name should be unique as not to overwrite or 
 			conflict with any other file, folder or <link><url>../../structure/project_items/clusters_and_items/explicit_clusters.xml</url><label>Explicit Cluster Folders</label></link> at the chosen folder <link><url>../project_configuration/item_configuration/clusters.xml</url><anchor_name>path</anchor_name><label>Path</label></link>.
 		</paragraph>
     <anchor>special_items</anchor>
@@ -65,10 +65,10 @@
       <content>Special Items</content>
     </heading>
     <paragraph>
-			On inspecting the <bold>Project</bold> menu or the <bold>Add</bold> context menu, there are a number of special "shortcut" new items. 
+			On inspecting the <bold>Project</bold> menu or the <bold>Add</bold> context menu, there are a number of new special "shortcut" items. 
 		</paragraph>
     <paragraph>
-			The following table shows a list, as laid out in the menu, of the shortcut new items.
+			The following table shows a list, as laid out in the menu, of the new shortcut items.
 			
 			<table><width>650</width><padding>6</padding><legend>Project Items</legend><row><cell><bold>Menu Item</bold></cell><cell><bold>Description</bold></cell></row><row><cell>Add Windows Form...</cell><cell>Adds a form for Windows applications to your project.</cell></row><row><cell>Add User Control...</cell><cell>Adds a class for creating a Windows Form control using the visual designer.</cell></row><row><cell>Add Web Service...</cell><cell>Adds a class for creating Web Services to use from other applications.</cell></row><row><cell>Add Component...</cell><cell>Adds a class for creating components using the visual designer.</cell></row><row><cell>Add Class...</cell><cell>Adds an empty class declaration.</cell></row><row><cell>Add Resource...</cell><cell>Adds a .NET resource file.</cell></row></table></paragraph>
     <anchor>also_see</anchor>

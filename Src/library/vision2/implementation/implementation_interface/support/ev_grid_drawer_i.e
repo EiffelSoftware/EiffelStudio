@@ -614,7 +614,7 @@ feature -- Basic operations
 									lists_valid_lengths: physical_column_indexes.count >= visible_column_indexes.count
 								end
 								current_column_index := visible_column_indexes.item
-								current_column := grid.column_internal (current_column_index)
+								current_column := grid.columns @ current_column_index
 								current_column_width := column_offsets @ (current_column_index + 1) - column_offsets @ (current_column_index)
 
 									-- If the current column has a width of 0, then there is no need to

@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	combo_box_parented: combo_box /= Void implies combo_box.parent /= Void
+	combo_box_parented_during_activation: combo_box /= Void implies combo_box.parent /= Void
 
 end
 

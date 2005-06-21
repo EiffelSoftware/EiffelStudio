@@ -141,8 +141,6 @@ feature {NONE} -- Implementation
 	
 	check_selected_item is
 			-- Check selected item within `test_tree'.
-		local
-			tree_item: EV_TREE_NODE
 		do
 			if test_tree.selected_item /= Void then
 				test_tree.check_item (test_tree.selected_item)

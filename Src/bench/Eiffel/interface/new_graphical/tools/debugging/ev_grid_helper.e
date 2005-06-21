@@ -199,8 +199,9 @@ feature -- Access
 				r := Result.item
 				if r = Void or else r.parent = Void or else r.parent_row /= Void then
 					Result.remove
+				else
+					Result.forth
 				end
-				Result.forth
 			end
 		ensure
 			Result /= Void

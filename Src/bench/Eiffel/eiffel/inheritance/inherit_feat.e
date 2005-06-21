@@ -385,7 +385,7 @@ feature
 				Result := body_id = current_feature.code_id
 					-- Check that aliases are the same
 				if not first_feature.is_same_alias (current_feature) then
-					error_handler.insert_error (create {VE06}.make (system.current_class, first_feature, current_feature))
+					error_handler.insert_error (create {VMFN2_NEW}.make (system.current_class, first_feature, current_feature))
 				end
 				features.forth
 			end

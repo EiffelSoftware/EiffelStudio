@@ -4,11 +4,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class VE09
-	obsolete "Not defined in the standard"
+class VDJR3_NEW
 
 inherit
-	FEATURE_CONFLICT_ERROR
+	VDJR_NEW
 
 create {COMPILER_EXPORTER}
 
@@ -16,7 +15,7 @@ create {COMPILER_EXPORTER}
 
 feature -- Access
 
-	code: STRING is "VE09"
-			-- Error code
+	subcode: INTEGER is 3
+			-- Error subcode
 
 end

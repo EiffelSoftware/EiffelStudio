@@ -7,11 +7,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class VE08
-	obsolete "Not defined in the standard"
+class VDRD8_NEW
 
 inherit
-	FEATURE_CONFLICT_ERROR
+	VDRD_NEW
 
 create {COMPILER_EXPORTER}
 
@@ -19,7 +18,7 @@ create {COMPILER_EXPORTER}
 
 feature -- Access
 
-	code: STRING is "VE08"
-			-- Error code
+	subcode: INTEGER is 8
+			-- Error subcode
 
 end

@@ -55,7 +55,6 @@ feature -- Element change
 			-- Actions to be performed when an area needs to be redrawn.
 			-- See description at top of class to determine how to draw into the drawable.
 		do
-			fixme ("Should be moved into an action sequence class.")
 			Result := implementation.expose_actions
 		ensure
 			not_void: Result /= Void

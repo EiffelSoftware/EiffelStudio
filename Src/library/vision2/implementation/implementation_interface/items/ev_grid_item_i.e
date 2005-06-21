@@ -479,7 +479,10 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Destroy `Current'.
 		do
-			to_implement ("EV_GRID_ITEM_I.destroy")
+			if parent_i /= Void then
+				parent_i.internal_set_item (column_i.index, row_i.index, Void)
+			end
+			set_is_destroyed (True)
 		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation

@@ -1136,10 +1136,11 @@ feature -- Status setting
 			loop
 				if add_columns then
 					add_column_at (temp_column_count + 1, True)
+					temp_column_count := temp_column_count + 1
 				else
 					remove_column (temp_column_count)
+					temp_column_count := temp_column_count - 1
 				end
-				temp_column_count := a_columns.count
 			end
 		ensure
 			column_count_set: column_count = a_column_count

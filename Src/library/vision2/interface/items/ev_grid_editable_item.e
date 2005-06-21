@@ -11,6 +11,9 @@ indexing
 				
 			The default behavior of the activation may be overriden using `activate_actions' or `item_activate_actions' (from
 			EV_GRID).
+
+			By default, `text_field' is Void unless the item is being activated, this prevents the need for a persistent text_field
+			widget for each EV_GRID_EDITABLE_ITEM.
 		]"
 	author: ""
 	date: "$Date$"
@@ -46,10 +49,11 @@ feature -- Access
 	validation_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 		-- Agent used to validate `text_field' text.
 
-feature {NONE} -- Implementation
-		
 	text_field: EV_TEXT_FIELD
 		-- Text field used to edit `Current' on `activate'.
+		-- Void when `Current' isn't being activated.
+
+feature {NONE} -- Implementation
 
 	update_popup_dimensions (a_popup: EV_POPUP_WINDOW) is
 			-- Update dimensions and positioning for `a_popup'.
@@ -129,11 +133,14 @@ feature {NONE} -- Implementation
 				if not user_cancelled_activation and then (validation_agent = Void or else validation_agent.item ([text_field.text])) then
 					set_text (text_field.text)
 				end
-				Precursor {EV_GRID_LABEL_ITEM}
 				text_field.destroy
 				text_field := Void
+				Precursor {EV_GRID_LABEL_ITEM}
 			end
 		end
+
+invariant
+	text_field_parented_during_activation: text_field /= Void implies text_field.parent /= Void
 
 end
 

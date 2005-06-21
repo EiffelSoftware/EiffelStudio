@@ -223,7 +223,8 @@ inherit
 	EV_CELL
 		rename
 			item as cell_item,
-			wipe_out as cell_wipe_out
+			wipe_out as cell_wipe_out,
+			count as cell_count
 		redefine
 			implementation,
 			create_implementation,
@@ -253,7 +254,7 @@ inherit
 feature -- Access
 
 	row (a_row: INTEGER): EV_GRID_ROW is
-			-- Row `a_row'.
+			-- Row at index `a_row'.
 		require
 			not_destroyed: not is_destroyed
 			a_row_positive: a_row > 0
@@ -262,7 +263,6 @@ feature -- Access
 			Result := implementation.row (a_row)
 		ensure
 			row_not_void: Result /= Void
-			row_count_enlarged_if_needed: a_row > old row_count implies row_count = a_row
 		end
 
 	visible_column (i: INTEGER): EV_GRID_COLUMN is
@@ -278,7 +278,7 @@ feature -- Access
 		end
 
 	column (a_column: INTEGER): EV_GRID_COLUMN is
-			-- Column number `a_column'.
+			-- Column at index `a_column'.
 		require
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
@@ -287,7 +287,6 @@ feature -- Access
 			Result := implementation.column (a_column)
 		ensure
 			column_not_void: Result /= Void
-			column_count_enlarged_if_needed: a_column > old column_count implies column_count = a_column
 		end
 
 	item (a_column: INTEGER; a_row: INTEGER): EV_GRID_ITEM is
@@ -1664,8 +1663,8 @@ feature -- Element change
 			a_item_not_parented: a_item /= Void implies a_item.parent = Void
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
-			item_may_be_added_if_row_is_a_subrow: a_item /= Void and then a_row <= row_count and then row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_setting_if_tree_node (a_column)
-			item_may_be_removed_if_row_is_a_subrow: a_item = Void and then a_row <= row_count and then row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
+			item_may_be_added_if_row_is_a_subrow: a_item /= Void and then a_row <= row_count and then row (a_row).is_part_of_tree_structure implies row (a_row).is_index_valid_for_item_setting_if_tree_node (a_column)
+			item_may_be_removed_if_row_is_a_subrow: a_item = Void and then a_row <= row_count and then row (a_row).is_part_of_tree_structure implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
 		do
 			implementation.set_item (a_column, a_row, a_item)
 		ensure
@@ -1678,7 +1677,7 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			a_column_positive: a_column > 0
 			a_row_positive: a_row > 0
-			item_may_be_removed_if_row_is_a_subrow: row (a_row).is_tree_node implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
+			item_may_be_removed_if_row_is_a_subrow: row (a_row).is_part_of_tree_structure implies row (a_row).is_index_valid_for_item_removal_if_tree_node (a_column)
 		do
 			set_item (a_column, a_row, Void)
 		ensure

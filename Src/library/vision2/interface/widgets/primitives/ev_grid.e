@@ -953,6 +953,7 @@ feature -- Status setting
 			-- as there are enough rows after `a_row' to fill the remainder of `Current'.
 		require
 			not_destroyed: not is_destroyed
+			valid_row_index: a_row >= 1 and a_row <= row_count
 		do
 			implementation.set_first_visible_row (a_row)
 		ensure

@@ -299,7 +299,7 @@ feature -- Comparison
 				end
 				if assigner_command = Void then
 						-- Assigner command is not found
-					error_handler.insert_error (create {VFAC2}.make (system.current_class, Current))
+					error_handler.insert_error (create {VFAC1}.make (system.current_class, Current))
 				else
 					assigner_command := origin_table.item (assigner_command.rout_id_set.first)
 					if other.written_in = system.current_class.class_id then
@@ -1709,7 +1709,7 @@ end
 				-- Check assigner procedure
 			if not is_same_assigner (old_feature, tbl) then
 					-- Report that assigner commands are not the same
-				Error_handler.insert_error (create {VE08}.make (system.current_class, Current, old_feature))
+				Error_handler.insert_error (create {VDRD8_NEW}.make (system.current_class, Current, old_feature))
 			end
 		end
 
@@ -1916,11 +1916,11 @@ end
 					(written_class.feature_named (assigner_name).rout_id_set.first)
 			end
 			if assigner = Void or else assigner.has_return_value then
-				create {VFAC2} vfac.make (system.current_class, Current)
+				create {VFAC1} vfac.make (system.current_class, Current)
 			elseif assigner.argument_count /= argument_count + 1 then
-				create {VFAC3} vfac.make (system.current_class, Current)
+				create {VFAC2} vfac.make (system.current_class, Current)
 			elseif not assigner.arguments.first.same_as (type) then
-				create {VFAC4} vfac.make (system.current_class, Current)
+				create {VFAC3} vfac.make (system.current_class, Current)
 			elseif argument_count > 0 then
 				assigner_arguments := assigner.arguments
 				query_arguments := arguments
@@ -1933,7 +1933,7 @@ end
 					assigner_arguments.after
 				loop
 					if not assigner_arguments.item.same_as (query_arguments.item) then
-						create {VFAC5} vfac.make (system.current_class, Current)
+						create {VFAC4} vfac.make (system.current_class, Current)
 						assigner_arguments.finish
 						query_arguments.finish
 					end

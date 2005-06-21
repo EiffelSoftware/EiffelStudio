@@ -761,6 +761,9 @@ rt_shared void initsig(void)
 		osig_ign[sig] = sig_ign[sig];
 
 #if defined(HAS_SIGALTSTACK) && defined(SIGSEGV)
+#ifdef EIF_THREADS
+	if (eif_thr_is_root()) {
+#endif
 		/* To make sure that stack overflow are properly handled, we allocate
 		 * a stack for signal handling where handler will be executed when
 		 * receiving a SIGSEGV. */
@@ -777,6 +780,9 @@ rt_shared void initsig(void)
 		action.sa_flags = SA_ONSTACK;
 		sigaction (SIGSEGV, &action, NULL);
 	}
+#ifdef EIF_THREADS
+	}
+#endif
 #endif
 }
 

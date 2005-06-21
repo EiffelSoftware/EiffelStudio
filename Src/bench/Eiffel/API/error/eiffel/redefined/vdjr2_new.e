@@ -7,11 +7,7 @@ indexing
 class VDJR2_NEW
 
 inherit
-	FEATURE_CONFLICT_ERROR
-		redefine
-			help_file_name,
-			subcode
-		end
+	VDJR_NEW
 
 create {COMPILER_EXPORTER}
 
@@ -19,13 +15,7 @@ create {COMPILER_EXPORTER}
 
 feature -- Access
 
-	code: STRING is "VDJR2 (ECMA)"
-			-- Error code
-
 	subcode: INTEGER is 2
 			-- Error subcode
-
-	help_file_name: STRING is "VDJR_ECMA"
-			-- Associated file name where error explanation is located
 
 end

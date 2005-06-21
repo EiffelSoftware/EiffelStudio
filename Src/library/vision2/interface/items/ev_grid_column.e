@@ -23,7 +23,7 @@ inherit
 		redefine
 			implementation
 		end
-		
+
 create
 	{EV_GRID} default_create
 
@@ -241,8 +241,8 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
 			is_parented: parent /= Void
-			item_may_be_added_to_tree_node: a_item /= Void and parent.row (i).is_tree_node implies parent.row (i).is_index_valid_for_item_setting_if_tree_node (index)
-			item_may_be_removed_from_tree_node: a_item = Void and then parent.row (i).is_tree_node implies parent.row (i).is_index_valid_for_item_removal_if_tree_node (index)
+			item_may_be_added_to_tree_node: a_item /= Void and parent.row (i).is_part_of_tree_structure implies parent.row (i).is_index_valid_for_item_setting_if_tree_node (index)
+			item_may_be_removed_from_tree_node: a_item = Void and then parent.row (i).is_part_of_tree_structure implies parent.row (i).is_index_valid_for_item_removal_if_tree_node (index)
 		do
 			implementation.set_item (i, a_item)
 		ensure
@@ -355,7 +355,7 @@ feature -- Contract support
 				i > a_count or not Result
 			loop
 				a_row := parent.row (i)
-				if a_row.is_tree_node then
+				if a_row.is_part_of_tree_structure then
 					Result := a_row.is_index_valid_for_item_removal_if_tree_node (a_index)
 				end
 				i := i + 1
@@ -380,7 +380,7 @@ feature -- Contract support
 				i > a_count or not Result
 			loop
 				a_row := parent.row (i)
-				if a_row.is_tree_node then
+				if a_row.is_part_of_tree_structure then
 					Result := a_row.is_index_valid_for_item_setting_if_tree_node (a_index)
 				end
 				i := i + 1

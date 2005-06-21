@@ -16,6 +16,9 @@ VFAV, section 8.5.25
           least one argument, and no other feature of C has
           a Bracket alias.
 
-        3 If it lists one of the "semistrict" operators
+        3 If it includes a convert mark: it lists an
+          Operator and f has one argument.
+
+        4 If it lists one of the "semistrict" operators
           "and then", "or else" and "implies": C is the
           Kernel Library class BOOLEAN.

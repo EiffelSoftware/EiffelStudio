@@ -318,10 +318,8 @@ feature {NONE} -- Events handling
 	on_lose_focus is
 			-- close window
 		do
-			print ("lost focus...")
 			if (not (is_destroyed or else has_focus or else choice_list.has_focus)) and is_displayed then
-				exit			
-				print ("exited%N")	
+				exit					
 			end
 		end
 

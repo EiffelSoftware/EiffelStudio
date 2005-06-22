@@ -58,7 +58,8 @@ feature {NONE} -- Initialization
 			close_request_actions.extend (agent on_close)
 			set_default_cancel_button (close_button)
 			restore_button.select_actions.extend (agent on_restore)
-			l_ev_vertical_split_area_1.set_split_position (450)
+			split_area.enable_item_expand (grid_container)
+			split_area.disable_item_expand (description_frame)
 			show			
 		end
 
@@ -113,7 +114,7 @@ feature {NONE} -- Events
 		do
 			l_font_pref ?= a_pref
 			if l_font_pref /= Void then
-				grid.selected_rows.first.set_height (l_font_pref.value.height)
+				grid.selected_rows.first.set_height (l_font_pref.value.height.max (default_row_height))
 			end
 			
 			l_default_item ?= grid.selected_rows.first.item (3)
@@ -184,7 +185,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_default_item_selected (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE; a_x: INTEGER; a_button: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_default_item_selected (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		local
 			l_popup_menu: EV_MENU
@@ -194,7 +195,7 @@ feature {NONE} -- Events
 			if not a_pref.is_default_value and then a_button = 3 and not grid.selected_rows.is_empty then
 				l_pref ?= grid.selected_rows.first.data
 				if l_pref /= Void and then l_pref = a_pref and then l_pref.has_default_value then					
-						-- The right clicked preference matches the selecion in the grid
+						-- The right clicked preference matches the selection in the grid
 					create l_popup_menu
 					create l_menu_item.make_with_text ("Restore Default")
 					l_menu_item.select_actions.extend (agent set_resource_to_default (a_item, a_pref))
@@ -419,6 +420,9 @@ feature {NONE} -- Implementation
 			if grid.row_count > 0 then
 				grid.row (1).enable_select
 				grid.column (1).resize_to_content
+				grid.column (4).resize_to_content
+				grid.column (1).set_width (grid.column (1).width.max (80))
+				grid.column (4).set_width (grid.column (4).width.max (80))
 				l_resource ?= grid.row (1).data
 				if l_resource /= Void then
 					show_resource_description (l_resource)

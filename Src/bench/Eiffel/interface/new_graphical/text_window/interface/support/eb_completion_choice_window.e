@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			create choice_list
 			choice_list.enable_single_row_selection
 			choice_list.key_press_string_actions.extend (agent on_char)	
+			choice_list.key_press_actions.extend (agent on_key_down)
 			choice_list.key_release_actions.extend (agent on_key_released)
 			choice_list.pointer_double_press_actions.extend (agent mouse_selection)
 			choice_list.hide_header
@@ -62,6 +63,7 @@ feature {NONE} -- Initialization
 			extend (vbox)
 			enable_user_resize
 			choice_list.focus_out_actions.extend (agent on_lose_focus)
+			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
 			focus_out_actions.extend (agent on_lose_focus)			
 			resize_actions.force_extend (agent resize_column_to_window_width)
 		end		
@@ -105,6 +107,7 @@ feature -- Initialization
 			is_closing := False
 			
 			build_displayed_list (before_complete)
+			is_first_show := True
 
 			if not choice_list.is_empty then
 					-- If there is only one possibility, we insert it without displaying the window
@@ -123,7 +126,7 @@ feature -- Access
 	editor: EB_SMART_EDITOR
 			-- associated window
 
-	choice_list: EB_COMPLETION_CHOICE_LIST
+	choice_list: EV_GRID
 			-- list displaying possible feature signatures
 
 	sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
@@ -167,13 +170,16 @@ feature -- Query
 
 	longest_text_width_in_pixels: INTEGER is
 			-- Width in pixels of `longest_text_value'
-		local
-			a_font: EV_FONT
-		do			
-			a_font := (create {EV_LABEL}).font
-			if longest_text_value /= Void then		
-				Result := a_font.string_width (longest_text_value)
+		do		
+			if longest_text_value /= Void then
+				Result := default_font.string_width (longest_text_value)
 			end
+		end		
+		
+	default_font: EV_FONT is
+			-- Default font
+		once
+			create Result	
 		end		
 
 	should_show: BOOLEAN is
@@ -230,6 +236,74 @@ feature {NONE} -- Events handling
 						end
 						choice_list.selected_rows.first.ensure_visible	
 					end
+--				when Key_page_up then
+--						-- Go up 10 items
+--					if not choice_list.is_empty then
+--						if not choice_list.selected_items.is_empty then
+--							ix:= choice_list.selected_rows.first.index
+--							if ix <= 10 then
+--								if prev_item_index = 1 then
+--									choice_list.remove_selection
+--									choice_list.row (choice_list.row_count).enable_select
+--								else
+--									choice_list.remove_selection
+--									choice_list.row (1).enable_select
+--								end								
+--							else
+--								choice_list.remove_selection
+--								choice_list.row (ix - 10).enable_select
+--							end
+--						end
+--						choice_list.selected_rows.first.ensure_visible	
+--					end
+--				when Key_page_down then
+--						-- Go down 10 items
+--					if not choice_list.is_empty then
+--						if not choice_list.selected_items.is_empty then
+--							ix:= choice_list.selected_rows.first.index
+--							if ix > choice_list.row_count - 10 then
+--								if prev_item_index = choice_list.row_count then
+--									choice_list.remove_selection
+--									choice_list.row (1).enable_select
+--								else
+--									choice_list.remove_selection
+--									choice_list.row (choice_list.row_count).enable_select
+--								end								
+--							else
+--								choice_list.remove_selection
+--								choice_list.row (ix + 10).enable_select
+--							end
+--						end
+--						choice_list.selected_rows.first.ensure_visible	
+--					end
+				when key_back_space then
+					editor.handle_extended_key (ev_key)					
+					if not buffered_input.is_empty then				
+						buffered_input := buffered_input.substring (1, buffered_input.count - 1)											
+					else
+						exit
+					end
+					select_closest_match					
+				else
+					-- Do nothing
+				end
+				
+				if not choice_list.selected_rows.is_empty then
+					prev_item_index := choice_list.selected_rows.first.index
+				else	
+					prev_item_index := 0			
+				end				
+			end			
+		end
+		
+	on_key_down (ev_key: EV_KEY) is
+			-- process user input in `choice_list'	
+		local
+			ix: INTEGER
+		do			
+			if ev_key /= Void then
+				inspect
+					ev_key.code				
 				when Key_page_up then
 						-- Go up 10 items
 					if not choice_list.is_empty then
@@ -269,15 +343,7 @@ feature {NONE} -- Events handling
 							end
 						end
 						choice_list.selected_rows.first.ensure_visible	
-					end
-				when key_back_space then
-					editor.handle_extended_key (ev_key)					
-					if not buffered_input.is_empty then				
-						buffered_input := buffered_input.substring (1, buffered_input.count - 1)											
-					else
-						exit
-					end
-					select_closest_match					
+					end									
 				else
 					-- Do nothing
 				end
@@ -323,6 +389,14 @@ feature {NONE} -- Events handling
 			end
 		end
 
+	on_mouse_wheel (a: INTEGER) is
+			-- Mouse wheel scrolled up or down
+		do		
+			if choice_list.virtual_height > choice_list.viewable_height then
+				choice_list.set_virtual_position (choice_list.virtual_x_position, ((choice_list.virtual_y_position + (choice_list.row_height * -a)).max (0)).min (choice_list.virtual_height - choice_list.viewable_height))
+			end
+		end		
+
 feature {NONE} -- Implementation
 
 	buffered_input: STRING
@@ -349,9 +423,9 @@ feature {NONE} -- Implementation
 			list_row: EV_GRID_LABEL_ITEM
 			match_item: EB_NAME_FOR_COMPLETION
 			l_minimum_width,
-			row_index: INTEGER			
+			row_index: INTEGER		
+			l_upper: INTEGER	
 		do			
-			lock_update
 			choice_list.wipe_out
 			longest_text_value := ""
 			matches := matches_based_on_name (name)
@@ -363,9 +437,10 @@ feature {NONE} -- Implementation
 			end
 			from
 				l_count := matches.lower
+				l_upper := matches.upper
 				row_index := 1
 			until
-				l_count > matches.upper
+				l_count > l_upper
 			loop
 				match_item := matches.item (l_count)
 				if match_item /= Void then
@@ -376,7 +451,7 @@ feature {NONE} -- Implementation
 							list_row.set_tooltip (match_item.tooltip_text)
 									-- TODO: neilc.  auto activating the tooltip works but only based on mouse x/y, 
 									-- whereas we need selected_item x/y.
-								--list_row.select_actions.extend (agent activate_tooltip)
+								--list_row.select_actions.extend (agent activate_tooltip)								
 						end
 					end
 					choice_list.set_item (1, row_index, list_row)
@@ -387,7 +462,6 @@ feature {NONE} -- Implementation
 				l_count := l_count + 1
 				row_index := row_index + 1
 			end
-			unlock_update
 		end
 
 	longest_text_value: STRING
@@ -438,7 +512,7 @@ feature {NONE} -- Implementation
 			ix: INTEGER
 		do
 			if not choice_list.selected_rows.is_empty then
-				ix:= choice_list.selected_rows.first.index  --index_of (choice_list.selected_item, 1) + index_offset
+				ix:= choice_list.selected_rows.first.index + index_offset
 				editor.complete_class_from_window (sorted_names.item (ix), '%U', remainder)
 			else
 				if not buffered_input.is_empty then
@@ -506,10 +580,13 @@ feature {NONE} -- Implementation
 			l_larger: INTEGER
 		do
 			if choice_list.column_count > 0 then				
-				l_larger := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count).max (choice_list.width)
+				l_larger := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count).max (choice_list.viewable_width)
+--				l_larger := longest_text_width_in_pixels.max (choice_list.viewable_width)
 				choice_list.column (1).set_width (l_larger)	
 			end
 		end		
+
+	is_first_show: BOOLEAN
 
 feature {NONE} -- String matching
 
@@ -593,20 +670,21 @@ feature {NONE} -- String matching
 				Result := 1
 			elseif buffered_input_count > last_best_match_index - 1 then
 				Result := -1
-			end
-		ensure
-			valid_result: Result > 0
+			end		
 		end		
 
 	select_closest_match is
 			-- Select the closest match in the list
 		do
-			if rebuild_list_during_matching then
-				build_displayed_list (buffered_input)
-				resize_column_to_window_width
-			else				
-				current_index := index_of_closest_match
+			if not is_first_show then
+				if rebuild_list_during_matching then
+					build_displayed_list (buffered_input)
+					resize_column_to_window_width
+				else									
+					current_index := index_of_closest_match				
+				end
 			end
+			
 			if is_displayed then
 				if current_index > 0 and then not choice_list.is_empty then
 					choice_list.remove_selection
@@ -618,6 +696,7 @@ feature {NONE} -- String matching
 					end
 				end
 			end
+			is_first_show := False
 		end	
 
 	match_names_until_done (a_name, a_name2: STRING): INTEGER is

@@ -50,16 +50,20 @@ feature {NONE} -- Initialization
 			vbox: EV_VERTICAL_BOX
 		do
 			create choice_list
-			choice_list.disable_default_key_processing
+			choice_list.enable_single_row_selection
+			choice_list.key_press_string_actions.extend (agent on_char)	
+			choice_list.key_release_actions.extend (agent on_key_released)
+			choice_list.pointer_double_press_actions.extend (agent mouse_selection)
+			choice_list.hide_header
+
 			make_with_title (Interface_names.t_Autocomplete_window)
 			create vbox
 			vbox.extend (choice_list)
 			extend (vbox)
-			choice_list.key_press_string_actions.extend (agent on_char)	
-			choice_list.key_release_actions.extend (agent on_key_released)
 			enable_user_resize
-			focus_out_actions.extend (agent on_lose_focus)
-			choice_list.pointer_double_press_actions.extend (agent mouse_selection)
+			choice_list.focus_out_actions.extend (agent on_lose_focus)
+			focus_out_actions.extend (agent on_lose_focus)			
+			resize_actions.force_extend (agent resize_column_to_window_width)
 		end		
 
 feature -- Initialization
@@ -104,10 +108,12 @@ feature -- Initialization
 
 			if not choice_list.is_empty then
 					-- If there is only one possibility, we insert it without displaying the window
-				show_needed := choice_list.count > 1
+				show_needed := choice_list.row_count > 1
 				if not show_needed then
-					choice_list.first.enable_select
-					close_and_complete
+					if choice_list.row_count > 0 then							
+						choice_list.select_row (1)	
+					end
+					close_and_complete					
 				end
 			end
 		end
@@ -148,6 +154,7 @@ feature -- Status Setting
 			Precursor {EV_WINDOW}
 			choice_list.set_focus
 			select_closest_match
+			resize_column_to_window_width
 		end		
 
 feature -- Query
@@ -172,16 +179,7 @@ feature -- Query
 	should_show: BOOLEAN is
 			-- Should show in current state?
 		do
-			if choice_list /= Void then
-				from
-					choice_list.start
-				until
-					choice_list.after or Result
-				loop
-					Result := choice_list.item /= Void
-					choice_list.forth
-				end
-			end			
+			Result := not choice_list.is_empty
 		end
 
 feature {NONE} -- Events handling
@@ -189,7 +187,7 @@ feature {NONE} -- Events handling
 	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
 			-- process mouse click in the list
 		do
-			if button = 1 and choice_list.selected_item /= Void	then
+			if button = 1 and not choice_list.selected_items.is_empty then
 				close_and_complete				
 			end
 		end
@@ -209,60 +207,68 @@ feature {NONE} -- Events handling
 					close_and_complete
 				when Key_escape then
 					exit
-					editor.set_focus		
+					editor.set_focus	
 				when Key_up then
 					if not choice_list.is_empty then
-						if choice_list.selected_item /= Void then
-							ix := choice_list.index_of (choice_list.selected_item, 1)
+						if not choice_list.selected_items.is_empty then
+							ix := choice_list.selected_rows.first.index
 							if ix <= 1 and prev_item_index = 1 then
-								choice_list.last.enable_select
+								choice_list.remove_selection
+								choice_list.row (choice_list.row_count).enable_select
 							end
-						end						
-						choice_list.ensure_item_visible (choice_list.i_th (choice_list.index_of (choice_list.selected_item, 1)))
+						end			
+						choice_list.selected_rows.first.ensure_visible	
 					end
 				when Key_down then
 					if not choice_list.is_empty then
-						if choice_list.selected_item /= Void then
-							ix := choice_list.index_of (choice_list.selected_item, 1)
-							if ix >= choice_list.count and prev_item_index = choice_list.count then
-								choice_list.first.enable_select
+						if not choice_list.selected_items.is_empty then
+							ix := choice_list.selected_rows.first.index
+							if ix >= choice_list.row_count and prev_item_index = choice_list.row_count then
+								choice_list.remove_selection
+								choice_list.row (1).enable_select
 							end
 						end
-						choice_list.ensure_item_visible (choice_list.i_th (choice_list.index_of (choice_list.selected_item, 1)))
+						choice_list.selected_rows.first.ensure_visible	
 					end
 				when Key_page_up then
 						-- Go up 10 items
 					if not choice_list.is_empty then
-						if choice_list.selected_item /= Void then
-							ix:= choice_list.index_of (choice_list.selected_item, 1)
+						if not choice_list.selected_items.is_empty then
+							ix:= choice_list.selected_rows.first.index
 							if ix <= 10 then
 								if prev_item_index = 1 then
-									choice_list.last.enable_select
+									choice_list.remove_selection
+									choice_list.row (choice_list.row_count).enable_select
 								else
-									choice_list.first.enable_select
+									choice_list.remove_selection
+									choice_list.row (1).enable_select
 								end								
 							else
-								choice_list.i_th (ix - 10).enable_select
+								choice_list.remove_selection
+								choice_list.row (ix - 10).enable_select
 							end
 						end
-						choice_list.ensure_item_visible (choice_list.i_th (choice_list.index_of (choice_list.selected_item, 1)))
+						choice_list.selected_rows.first.ensure_visible	
 					end
 				when Key_page_down then
 						-- Go down 10 items
 					if not choice_list.is_empty then
-						if choice_list.selected_item /= Void then
-							ix:= choice_list.index_of (choice_list.selected_item,1)
-							if ix > choice_list.count - 10 then
-								if prev_item_index = choice_list.count then
-									choice_list.first.enable_select
+						if not choice_list.selected_items.is_empty then
+							ix:= choice_list.selected_rows.first.index
+							if ix > choice_list.row_count - 10 then
+								if prev_item_index = choice_list.row_count then
+									choice_list.remove_selection
+									choice_list.row (1).enable_select
 								else
-									choice_list.last.enable_select
+									choice_list.remove_selection
+									choice_list.row (choice_list.row_count).enable_select
 								end								
 							else
-								choice_list.i_th (ix + 10).enable_select
+								choice_list.remove_selection
+								choice_list.row (ix + 10).enable_select
 							end
 						end
-						choice_list.ensure_item_visible (choice_list.i_th (choice_list.index_of (choice_list.selected_item, 1)))
+						choice_list.selected_rows.first.ensure_visible	
 					end
 				when key_back_space then
 					editor.handle_extended_key (ev_key)					
@@ -271,11 +277,16 @@ feature {NONE} -- Events handling
 					else
 						exit
 					end
-					select_closest_match
+					select_closest_match					
 				else
 					-- Do nothing
 				end
-				prev_item_index := choice_list.index_of (choice_list.selected_item, 1)
+				
+				if not choice_list.selected_rows.is_empty then
+					prev_item_index := choice_list.selected_rows.first.index
+				else	
+					prev_item_index := 0			
+				end				
 			end			
 		end
 		
@@ -292,9 +303,9 @@ feature {NONE} -- Events handling
 					editor.handle_character (c)					
 					create c_name.make_with_name (buffered_input)
 					select_closest_match
+					--resize_column_to_window_width					
 				elseif not editor.unwanted_characters.has (c) then					
 					close_and_complete
-					--if not preferences.editor_data.show_completion_signature then
 					if not editor.has_selection then
 							-- Don't want to add character over first argument
 						editor.handle_character (c)						
@@ -307,8 +318,10 @@ feature {NONE} -- Events handling
 	on_lose_focus is
 			-- close window
 		do
+			print ("lost focus...")
 			if (not (is_destroyed or else has_focus or else choice_list.has_focus)) and is_displayed then
-				exit				
+				exit			
+				print ("exited%N")	
 			end
 		end
 
@@ -335,10 +348,12 @@ feature {NONE} -- Implementation
 		local
 			l_count: INTEGER
 			matches: ARRAY [EB_NAME_FOR_COMPLETION]
-			list_row: EV_LIST_ITEM
+			list_row: EV_GRID_LABEL_ITEM
 			match_item: EB_NAME_FOR_COMPLETION
-			l_minimum_width: INTEGER			
+			l_minimum_width,
+			row_index: INTEGER			
 		do			
+			lock_update
 			choice_list.wipe_out
 			longest_text_value := ""
 			matches := matches_based_on_name (name)
@@ -350,6 +365,7 @@ feature {NONE} -- Implementation
 			end
 			from
 				l_count := matches.lower
+				row_index := 1
 			until
 				l_count > matches.upper
 			loop
@@ -365,13 +381,15 @@ feature {NONE} -- Implementation
 								--list_row.select_actions.extend (agent activate_tooltip)
 						end
 					end
-					choice_list.extend (list_row)					
+					choice_list.set_item (1, row_index, list_row)
 					if match_item.count > longest_text_value.count then
 						longest_text_value := match_item
 					end
 				end
 				l_count := l_count + 1
+				row_index := row_index + 1
 			end
+			unlock_update
 		end
 
 	longest_text_value: STRING
@@ -380,7 +398,7 @@ feature {NONE} -- Implementation
 	close_and_complete is
 			-- close the window and perform completion with selected item
 		do
-			if choice_list.selected_item /= Void then
+			if not choice_list.selected_rows.is_empty then
 					-- Delete current token so it is later replaced by the completion text
 				if not buffered_input.is_empty then
 					remove_characters_entered_since_display					
@@ -392,7 +410,9 @@ feature {NONE} -- Implementation
 				end
 			end
 			exit
+			editor.editor_drawing_area.focus_in_actions.block
 			editor.set_focus
+			editor.editor_drawing_area.focus_in_actions.resume
 		end
 
 	complete_feature is
@@ -400,11 +420,11 @@ feature {NONE} -- Implementation
 		local
 			ix: INTEGER
 		do
-			if choice_list.selected_item /= Void then
+			if not choice_list.selected_rows.is_empty then
 				if character_to_append = '(' then
 					character_to_append := '%U'
 				end
-				ix := choice_list.index_of (choice_list.selected_item,1) + index_offset
+				ix := choice_list.selected_rows.first.index + index_offset
 				if sorted_names.item (ix).has_dot then
 					editor.complete_feature_from_window (sorted_names.item (ix).full_insert_name, True, character_to_append, remainder)
 				else
@@ -419,8 +439,8 @@ feature {NONE} -- Implementation
 		local
 			ix: INTEGER
 		do
-			if choice_list.selected_item /= Void then
-				ix:= choice_list.index_of (choice_list.selected_item, 1) + index_offset
+			if not choice_list.selected_rows.is_empty then
+				ix:= choice_list.selected_rows.first.index  --index_of (choice_list.selected_item, 1) + index_offset
 				editor.complete_class_from_window (sorted_names.item (ix), '%U', remainder)
 			else
 				if not buffered_input.is_empty then
@@ -459,7 +479,7 @@ feature {NONE} -- Implementation
 	activate_tooltip is
 			-- Activate selected item tooltip in list
 		do
-			choice_list.selected_item.pointer_motion_actions.call ([1,1,1.0,1.0,1.0,1,1])
+--			choice_list.selected_items.first. selected_item.pointer_motion_actions.call ([1,1,1.0,1.0,1.0,1,1])
 		end				
 
 	remove_characters_entered_since_display is
@@ -481,6 +501,17 @@ feature {NONE} -- Implementation
 
 	last_completed_feature_had_arguments: BOOLEAN
 			-- Did the last inserted completed feature name contain arguments?
+
+	resize_column_to_window_width is
+			-- Resize the column width to the width of the window
+		local
+			l_larger: INTEGER
+		do
+			if choice_list.column_count > 0 then				
+				l_larger := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count).max (choice_list.width)
+				choice_list.column (1).set_width (l_larger)	
+			end
+		end		
 
 feature {NONE} -- String matching
 
@@ -574,16 +605,18 @@ feature {NONE} -- String matching
 		do
 			if rebuild_list_during_matching then
 				build_displayed_list (buffered_input)
+				resize_column_to_window_width
 			else				
 				current_index := index_of_closest_match
 			end
 			if is_displayed then
 				if current_index > 0 and then not choice_list.is_empty then
-					choice_list.i_th (current_index).enable_select
-					choice_list.ensure_item_visible (choice_list.selected_item)
+					choice_list.remove_selection
+					choice_list.row (current_index).enable_select
+					choice_list.selected_rows.first.ensure_visible	
 				else
-					if choice_list.selected_item /= Void then
-						choice_list.selected_item.disable_select
+					if not choice_list.selected_rows.is_empty then
+						choice_list.selected_rows.first.disable_select
 					end
 				end
 			end

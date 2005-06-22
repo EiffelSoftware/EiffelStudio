@@ -62,6 +62,8 @@ feature {NONE} -- Implementation
 
 	update_popup_dimensions (a_popup: EV_POPUP_WINDOW) is
 			-- Update dimensions and positioning for `a_popup'.
+		require
+			a_popup_not_void: a_popup /= Void
 		local
 			x_offset: INTEGER
 			a_width: INTEGER
@@ -81,7 +83,7 @@ feature {NONE} -- Implementation
 
 			a_x_position := a_popup.x_position + x_offset
 				-- Align combo box to y position of text in `Current'.
-			a_y_position := a_popup.y_position + ((a_popup.height - top_border - bottom_border - a_widget.minimum_height) // 2) + 1
+			a_y_position := a_popup.y_position + top_border + ((a_popup.height - top_border - bottom_border - a_widget.minimum_height) // 2) + 1
 			
 			a_popup.set_size (a_width, a_widget.minimum_height)
 			a_popup.set_position (a_x_position, a_y_position)			
@@ -89,8 +91,10 @@ feature {NONE} -- Implementation
 
 	handle_key (a_key: EV_KEY) is
 			-- Handle the Escape key for cancelling activation.
+		require
+			a_key_not_void: a_key /= Void
 		do
-			if a_key.code = (create{EV_KEY_CONSTANTS}).key_escape then
+			if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
 				user_cancelled_activation := True
 				deactivate
 			end
@@ -119,9 +123,6 @@ feature {NONE} -- Implementation
 			combo_box.set_text (text)
 
 			update_popup_dimensions (popup_window)
-
-				-- No items should be selected.
-			combo_box.remove_selection
 		
 				-- Initialize action sequences when `Current' is shown.
 			popup_window.show_actions.extend (agent initialize_actions)
@@ -130,6 +131,7 @@ feature {NONE} -- Implementation
 	initialize_actions is
 			-- Setup the action sequences when the item is shown.
 		do
+			combo_box.set_focus
 			combo_box.select_actions.extend (agent deactivate)
 			combo_box.return_actions.extend (agent deactivate)
 			combo_box.focus_out_actions.extend (agent deactivate)

@@ -36,8 +36,24 @@ feature -- //**** Common Language Runtime Debugging Services errors
 			--	Indicates a bad cast condition
 
 	cordbg_s_func_eval_aborted: INTEGER is 0x1319 -- CORDBG_S_FUNC_EVAL_ABORTED
+	
+	cordbg_e_object_neutered: INTEGER is 0x134F -- CORDBG_E_OBJECT_NEUTERED
+	
+feature -- Query
+
+	error_code_is_CORDBG_E_OBJECT_NEUTERED (c: INTEGER): BOOLEAN is
+		do
+			Result := error_code_to_id (c) = cordbg_e_object_neutered
+		end
 
 feature -- Access
+
+	error_code_to_id (a_error_code: INTEGER): INTEGER is
+			-- Convert `last_call_success' to hex and keep the last word
+
+		do
+			Result := a_error_code & 0xFFFF
+		end
 
 	error_code_to_string (a_error_code: INTEGER): STRING is
 		local
@@ -68,13 +84,7 @@ feature -- Access
 			Result.put ("[COR_E_INVALIDCAST  E_NOINTERFACE] Indicates a bad cast condition", cor_e_invalidcast_e_nointerface)
 			Result.put ("[COR_E_ARGUMENT|E_INVALIDARG] An argument does not meet the contract of the method", 0x0057)
 			Result.put ("[CORDBG_S_FUNC_EVAL_ABORTED] The func eval completed, but was aborted", cordbg_s_func_eval_aborted)
-		end
-
-	error_code_to_id (a_error_code: INTEGER): INTEGER is
-			-- Convert `last_call_success' to hex and keep the last word
-
-		do
-			Result := a_error_code & 0xFFFF
+			Result.put ("[CORDBG_E_OBJECT_NEUTERED] Object has been neutered (it's in a zombie state).", cordbg_e_object_neutered)
 		end
 
 end -- class EIFNET_API_ERROR_CODE_FORMATTER

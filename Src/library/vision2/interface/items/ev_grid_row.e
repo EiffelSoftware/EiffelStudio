@@ -37,8 +37,7 @@ feature -- Access
 		do
 			Result := parent_row /= Void or else subrow_count > 0
 		ensure
-			result_true_implies_current_part_of_tree_structure: Result implies parent_row /= Void or else subrow_count > 0
-			result_false_implies_current_not_in_tree_structure: not Result implies parent_row = Void and then subrow_count = 0
+			result_valid: Result = (parent_row /= Void or else subrow_count > 0)
 		end
 
 	subrow (i: INTEGER): EV_GRID_ROW is

@@ -18,7 +18,10 @@ inherit
 			implementation,
 			is_in_default_state
 		end
-		
+
+create
+	default_create, make_with_text
+
 feature -- Access
 
 	width: INTEGER is

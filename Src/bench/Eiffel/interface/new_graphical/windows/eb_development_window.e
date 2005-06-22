@@ -1674,9 +1674,6 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			tools_menu.extend (command_menu_item)
 
-				-- Separator -------------------------------------------------
-			tools_menu.extend (create {EV_MENU_SEPARATOR})
-
 			rebuild_tools_menu
 		end
 
@@ -1960,6 +1957,7 @@ feature -- Resource Update
 			-- Refresh the list of external commands.
 		local
 			ms: LIST [EB_COMMAND_MENU_ITEM]
+			l_sep: EV_MENU_SEPARATOR
 		do
 				-- Remove all the external commands, which are at the end of the menu.
 			from
@@ -1971,6 +1969,16 @@ feature -- Resource Update
 			end
 			ms := Edit_external_commands_cmd.menus
 			number_of_displayed_external_commands := ms.count
+			
+			if not ms.is_empty and not tools_menu.is_empty then
+				l_sep ?= tools_menu.last
+				if l_sep = Void then
+					create l_sep
+					tools_menu.extend (l_sep)
+					number_of_displayed_external_commands := number_of_displayed_external_commands + 1
+				end
+			end
+
 			from
 				ms.start
 			until

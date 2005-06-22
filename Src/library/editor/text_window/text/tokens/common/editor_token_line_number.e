@@ -109,7 +109,15 @@ feature -- Miscellaneous
 	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
 		do
-			-- Do nothing
+			update_width
+			if panel.text_is_fully_loaded then
+				display_with_colors_offset (x_offset, d_y, text_color, background_color, device)
+			else
+				display_with_colors_offset (x_offset, d_y, gray_text_color, background_color, device)
+			end
+			device.set_background_color (separator_color)
+			device.clear_rectangle (x_offset + position + (width - separator_width) + 1, d_y, separator_width, height)
+			device.set_background_color (background_color)
 		end
 
 	hide is
@@ -161,6 +169,31 @@ feature {MARGIN_WIDGET} -- Implementation
 			device.set_foreground_color (text_color)			
 			
 			l_pos := position + width - font.string_width (text_to_be_drawn) - separator_width - 1
+			
+ 				-- Display the text.
+ 			draw_text_top_left (l_pos, d_y, text_to_be_drawn, device)			
+		end
+		
+	display_with_colors_offset (x_offset, d_y: INTEGER; a_text_color: EV_COLOR; a_background_color: EV_COLOR; device: EV_DRAWABLE) is
+			-- Display token with coloring
+		local
+			text_to_be_drawn: like image
+			l_pos: INTEGER
+		do						
+ 				-- Change drawing style here.
+			if a_background_color /= Void then
+				device.set_background_color (a_background_color)
+				device.clear_rectangle (x_offset, d_y, get_substring_width (internal_image.count), height)
+			end			
+			
+			text_to_be_drawn := internal_image.twin
+			text_to_be_drawn.prune_all_leading ('0')
+
+ 				-- Change drawing style here.
+ 			device.set_font (font)			
+			device.set_foreground_color (text_color)			
+			
+			l_pos := x_offset + width - font.string_width (text_to_be_drawn) - separator_width - 1
 			
  				-- Display the text.
  			draw_text_top_left (l_pos, d_y, text_to_be_drawn, device)			

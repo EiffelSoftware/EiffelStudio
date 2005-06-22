@@ -254,7 +254,7 @@ feature -- Graphical changes
 		do
 			r := a_item.row
 			
-			new_text := a_item.new_text
+			new_text := a_item.text
 			if expression.as_object then
 					--| i.e: we just change the "title" of the expression
 				if not new_text.is_equal (expression.name) then

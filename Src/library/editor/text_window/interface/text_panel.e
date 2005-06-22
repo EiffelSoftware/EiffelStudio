@@ -28,7 +28,8 @@ inherit
 			default_create
 		redefine
 			on_text_loaded,
-			on_text_block_loaded		
+			on_text_block_loaded,
+			on_text_fully_loaded	
 		end
 
 	EV_FONT_CONSTANTS		
@@ -390,8 +391,10 @@ feature -- Status setting
 	set_focus is
 			-- Give the focus to the editor area.
 		do
-			if editor_drawing_area.is_displayed then
+			if not editor_drawing_area.is_destroyed and then editor_drawing_area.is_sensitive and then editor_drawing_area.is_sensitive then
 				editor_drawing_area.set_focus
+			else
+				internal_focus_requested := True
 			end
 		end
 	
@@ -1185,6 +1188,14 @@ feature {NONE} -- Text loading
 			update_vertical_scrollbar
 		end	
 
+	on_text_fully_loaded is
+			-- Text has been fully loaded
+		do
+			if internal_focus_requested then				
+				set_focus
+			end
+		end		
+
 	file_loading_setup is
 			-- Setup before file loading
 		do		
@@ -1295,6 +1306,9 @@ feature -- Implementation
 		end
 
 	on_paint: BOOLEAN
+
+	internal_focus_requested: BOOLEAN
+		-- Should give focus after text has been fully loaded?
 
 invariant
 	offset_view: editor_viewport.y_offset >= 0

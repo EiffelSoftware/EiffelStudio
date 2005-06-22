@@ -288,7 +288,7 @@ feature -- Figure drawing
 				translate_to (0, 0)
 				add_ps ("1 1 scale")
 				add_ps (text_figure.foreground_color.out + " setrgbcolor")
-				font_name := font.name.twin
+				font_name := text_figure.font.name.twin
 				font_name.put (font_name.item (1).as_upper, 1)
 				font_style := ""
 				if text_figure.font.weight = 8 then

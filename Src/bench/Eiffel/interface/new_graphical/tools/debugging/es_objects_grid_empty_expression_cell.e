@@ -50,6 +50,7 @@ feature -- Query
 				text_field.set_caret_position (use_text.count + 1)
 			end
 			use_text := Void
+			text_field.set_focus
 		end
 
 	deactivate is

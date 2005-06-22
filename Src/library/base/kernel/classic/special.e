@@ -381,7 +381,10 @@ feature -- Resizing
 			-- Try to resize `Current' with a count of `n' and keeping the old
 			-- content between indices `j', `k'. If not possible a new copy.
 		require
-			valid_new_count: n > count
+			n_non_negative: n >= 0
+			j_non_negative: j >= 0
+			k_non_negative: k >= 0
+			k_valid: k <= count
 		do
 			Result := sparycpy ($Current, n, j, k)
 		ensure

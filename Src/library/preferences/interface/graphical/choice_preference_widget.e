@@ -113,11 +113,7 @@ feature {NONE} -- Implementation
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
-		do
---			create change_item_widget
---			change_item_widget.disable_edit
---			change_item_widget.select_actions.extend (agent update_changes)				
-			
+		do		
 			create change_item_widget			
 			change_item_widget.set_item_strings (resource.value)
 			change_item_widget.set_text (resource.selected_value)

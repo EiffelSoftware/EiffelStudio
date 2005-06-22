@@ -29,12 +29,10 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_split_area_1
 			create left_list
 			create l_ev_vertical_box_2
-			create l_ev_vertical_split_area_1
-			create l_ev_frame_1
-			create l_ev_vertical_box_3
+			create split_area
 			create grid_container
-			create preference_frame
-			create l_ev_vertical_box_4
+			create description_frame
+			create l_ev_vertical_box_3
 			create description_text
 			create l_ev_horizontal_separator_1
 			create l_ev_horizontal_box_1
@@ -47,13 +45,11 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_horizontal_split_area_1)
 			l_ev_horizontal_split_area_1.extend (left_list)
 			l_ev_horizontal_split_area_1.extend (l_ev_vertical_box_2)
-			l_ev_vertical_box_2.extend (l_ev_vertical_split_area_1)
-			l_ev_vertical_split_area_1.extend (l_ev_frame_1)
-			l_ev_frame_1.extend (l_ev_vertical_box_3)
-			l_ev_vertical_box_3.extend (grid_container)
-			l_ev_vertical_split_area_1.extend (preference_frame)
-			preference_frame.extend (l_ev_vertical_box_4)
-			l_ev_vertical_box_4.extend (description_text)
+			l_ev_vertical_box_2.extend (split_area)
+			split_area.extend (grid_container)
+			split_area.extend (description_frame)
+			description_frame.extend (l_ev_vertical_box_3)
+			l_ev_vertical_box_3.extend (description_text)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_separator_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (restore_button)
@@ -66,10 +62,10 @@ feature {NONE}-- Initialization
 			left_list.set_minimum_width (200)
 			l_ev_vertical_box_2.set_padding_width (5)
 			l_ev_vertical_box_2.set_border_width (5)
-			l_ev_vertical_box_3.set_minimum_height (300)
-			preference_frame.set_text ("Details")
-			l_ev_vertical_box_4.set_padding_width (5)
-			l_ev_vertical_box_4.set_border_width (5)
+			grid_container.set_minimum_width (350)
+			description_frame.set_text ("Details")
+			l_ev_vertical_box_3.set_padding_width (5)
+			l_ev_vertical_box_3.set_border_width (5)
 			description_text.set_minimum_height (50)
 			description_text.disable_edit
 			l_ev_horizontal_box_1.set_padding_width (5)
@@ -96,20 +92,19 @@ feature -- Access
 
 	restore_button, close_button: EV_BUTTON
 	description_text: EV_TEXT
-	grid_container: EV_HORIZONTAL_BOX
+	split_area: EV_VERTICAL_SPLIT_AREA
+	grid_container: EV_VERTICAL_BOX
 	left_list: EV_TREE
-	preference_frame: EV_FRAME
+	description_frame: EV_FRAME
 
 feature {NONE} -- Implementation
 
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 	l_ev_cell_1: EV_CELL
 	l_ev_horizontal_split_area_1: EV_HORIZONTAL_SPLIT_AREA
-	l_ev_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1,
-	l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4: EV_VERTICAL_BOX
-	l_ev_frame_1: EV_FRAME
+	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

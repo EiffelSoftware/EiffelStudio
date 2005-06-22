@@ -264,6 +264,8 @@ feature {NONE} -- Notebook item's behavior
 		local
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			lab, flab, clab: EV_LABEL
+			l_fstone: FEATURE_STONE
+			l_cstone: CLASSC_STONE
 			hbox: EV_BOX
 			sep: EV_CELL
 		do
@@ -285,7 +287,11 @@ feature {NONE} -- Notebook item's behavior
 							hbox.disable_item_expand (lab)
 							
 							create clab.make_with_text (ecse.dynamic_class.name_in_upper)
-							clab.set_pebble (create {CLASSC_STONE}.make (ecse.dynamic_class))
+							create l_cstone.make (ecse.dynamic_class)
+							clab.set_pebble (l_cstone)
+							clab.set_accept_cursor (l_cstone.stone_cursor)
+							clab.set_deny_cursor (l_cstone.x_stone_cursor)
+							clab.set_foreground_color (preferences.editor_data.class_text_color)
 							hbox.extend (clab)
 							hbox.disable_item_expand (clab)
 							
@@ -294,7 +300,11 @@ feature {NONE} -- Notebook item's behavior
 							hbox.disable_item_expand (lab)
 							
 							create flab.make_with_text (ecse.routine_name)
-							flab.set_pebble (create {FEATURE_STONE}.make (ecse.routine))
+							create l_fstone.make (ecse.routine)
+							flab.set_pebble (l_fstone)
+							flab.set_accept_cursor (l_fstone.stone_cursor)
+							flab.set_deny_cursor (l_fstone.x_stone_cursor)
+							flab.set_foreground_color (preferences.editor_data.feature_text_color)
 							hbox.extend (flab)
 							hbox.disable_item_expand (flab)
 						end

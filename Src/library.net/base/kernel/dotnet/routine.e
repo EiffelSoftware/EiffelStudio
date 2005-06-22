@@ -45,10 +45,10 @@ feature -- Access
 			l_item: SYSTEM_OBJECT
 			l_internal: like internal_operands
 		do
-			create Result
 			l_open_map := open_map
 			if l_open_map /= Void then
 				from
+					create Result
 					i := 0
 					nb := l_open_map.count - 1
 					l_internal := internal_operands
@@ -95,6 +95,14 @@ feature -- Access
 			--| FIXME compiler support needed!
 		end
 
+	empty_operands: OPEN_ARGS is
+			-- Empty tuple matching open operands
+		do
+			create Result
+		ensure
+			empty_operands_not_void: Result /= Void
+		end
+		
 feature -- Status report
 
 	callable: BOOLEAN is

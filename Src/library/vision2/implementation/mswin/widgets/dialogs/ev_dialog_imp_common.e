@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 			x_pos, y_pos: INTEGER
 			l_screen: EV_SCREEN
 		do
-			if parent_window /= Void then
+			if parent_window /= Void and then parent_window.is_displayed then
 				x_pos := parent_window.x_position + (parent_window.width - width) // 2
 				y_pos := parent_window.y_position + (parent_window.height - height) // 2
 			else

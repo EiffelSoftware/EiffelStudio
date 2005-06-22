@@ -31,6 +31,8 @@ feature -- Basic operation
 			button: EV_BUTTON
 			check_button: EV_CHECK_BUTTON
 			combo_box: EV_COMBO_BOX
+			grid: EV_GRID
+			header: EV_HEADER
 			horizontal_progress_bar: EV_HORIZONTAL_PROGRESS_BAR
 			horizontal_range: EV_HORIZONTAL_RANGE
 			horizontal_separator: EV_HORIZONTAL_SEPARATOR

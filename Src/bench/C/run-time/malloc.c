@@ -1433,7 +1433,7 @@ rt_public EIF_REFERENCE cmalloc(size_t nbytes)
 
 	return arena;
 #else
-	return (EIF_REFERENCE) malloc (nbytes);
+	return (EIF_REFERENCE) eif_malloc (nbytes);
 #endif
 }
 
@@ -1609,7 +1609,7 @@ rt_shared EIF_REFERENCE eif_rt_xmalloc(size_t nbytes, int type, int gc_flag)
 	ENSURE ("Allocated size big enough", !result || (old_nbytes <= (HEADER(result)->ov_size & B_SIZE)));
 	return result;	/* Pointer to free data space or null if out of memory */
 #else
-	return (EIF_REFERENCE) malloc (nbytes);
+	return (EIF_REFERENCE) eif_malloc (nbytes);
 #endif
 }
 
@@ -2648,7 +2648,7 @@ rt_public void eif_rt_xfree(register void * ptr)
 		ptr, zone->ov_size & B_SIZE);
 #endif
 #else
-	free(ptr);
+	eif_free(ptr);
 #endif
 }
 
@@ -2678,7 +2678,7 @@ rt_shared EIF_REFERENCE eif_rt_xcalloc(size_t nelem, size_t elsize)
 
 	return allocated;		/* Pointer to new zero-filled zone */
 #else
-	return (EIF_REFERENCE) calloc(nelem, elsize);
+	return (EIF_REFERENCE) eif_calloc(nelem, elsize);
 #endif
 }
 
@@ -2748,7 +2748,7 @@ rt_shared EIF_REFERENCE crealloc(EIF_REFERENCE ptr, size_t nbytes)
 #ifdef ISE_GC
 	return xrealloc(ptr, nbytes, GC_ON);
 #else
-	return (EIF_REFERENCE) realloc(ptr, nbytes);
+	return (EIF_REFERENCE) eif_realloc(ptr, nbytes);
 #endif
 }
 
@@ -2995,7 +2995,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 
 	return (EIF_REFERENCE) zone;		/* Pointer to new arena or 0 if failed */
 #else
-	return (EIF_REFERENCE) realloc(ptr, nbytes);
+	return (EIF_REFERENCE) eif_realloc(ptr, nbytes);
 #endif
 }
 

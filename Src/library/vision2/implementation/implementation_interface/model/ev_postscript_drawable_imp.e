@@ -394,17 +394,8 @@ feature -- Drawing operations
 		do
 			add_ps ("gsave")
 			translate_to (0, 0)
-			if font.name.is_equal ("times") then
-				font_name := "Times"
-			elseif font.name.is_equal ("helvetica") then
-				font_name := "Helvetica"
-			elseif font.name.is_equal ("courier") then
-				font_name := "Courier"
-			elseif font.name.is_equal ("system") then
-				font_name := "System"
-			else
-				font_name := "Times"
-			end
+			font_name := font.name.twin
+			font_name.put (font_name.item (1).as_upper, 1)
 			font_style := ""
 			if font.weight = 8 then
 				font_style.append ("Bold")

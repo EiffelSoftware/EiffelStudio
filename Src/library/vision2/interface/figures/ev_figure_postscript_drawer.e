@@ -288,17 +288,8 @@ feature -- Figure drawing
 				translate_to (0, 0)
 				add_ps ("1 1 scale")
 				add_ps (text_figure.foreground_color.out + " setrgbcolor")
-				if text_figure.font.name.is_equal ("times") then
-					font_name := "Times"
-				elseif text_figure.font.name.is_equal ("helvetica") then
-					font_name := "Helvetica"
-				elseif text_figure.font.name.is_equal ("courier") then
-					font_name := "Courier"
-				elseif text_figure.font.name.is_equal ("system") then
-					font_name := "System"
-				else
-					font_name := "Times"
-				end
+				font_name := font.name.twin
+				font_name.put (font_name.item (1).as_upper, 1)
 				font_style := ""
 				if text_figure.font.weight = 8 then
 					font_style.append ("Bold")

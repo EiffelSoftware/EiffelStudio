@@ -97,18 +97,13 @@ feature {NONE} -- Implementation
 		end
 
 	process_static_access_as (l_as: STATIC_ACCESS_AS) is
-		local
-			dummy_call: ACCESS_INV_AS
-			dummy_name: ID_AS
 		do
 			ctxt.begin
 
 			ctxt.put_text_item (ti_l_curly)
 			l_as.class_type.process (Current)
+			ctxt.put_text_item (ti_r_curly)
 			
-			create dummy_name.initialize (ti_r_curly.image)
-			create dummy_call.initialize (dummy_name, Void)
-			dummy_call.process (Current)
 			ctxt.set_type_creation (l_as.class_type)
 			ctxt.need_dot
 			ctxt.prepare_for_feature (l_as.feature_name, l_as.parameters)
@@ -445,40 +440,16 @@ feature {NONE} -- Implementation
 		end
 
 	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
-		local
-			dummy_call: ACCESS_INV_AS
-			dummy_name: ID_AS
 		do
 			ctxt.put_text_item (ti_create_keyword)
 			ctxt.put_space
 			ctxt.put_text_item (ti_l_curly)
 			l_as.type.process (Current)
+			ctxt.put_text_item (ti_r_curly)
 			if l_as.call /= Void then
-					--| We have to create a dummy call because the current formating
-					--| algorithm which makes the assumption that a feature call is
-					--| either on Current or on something else.
-					--| In the case of creation expression there is no current or no
-					--| something else, so we create a dummy call which only goal is
-					--| to set some properties of FORMAT_CONTEXT and LOCAL_FEAT_ADAPTATION
-					--| to their correct value and then pass them to the real call, that
-					--| way `call' is correctly formatted thanks to the information provided
-					--| by the call to `dummy_call.format'.
-					--| GB 12/13/2000: Changed dummy_name from " " to "}" to avoid
-					--| useless space.
-				create dummy_name.initialize (ti_r_curly.image)
-				create dummy_call.initialize (dummy_name, Void)
-				dummy_call.process (Current)
 				ctxt.set_type_creation (l_as.type)
 				ctxt.need_dot
 				l_as.call.process (Current)
-			else
-					--| Simply calling put_text_item doesn't work:
-					--| the context local_adapt must change.
-					--| Yeah yeah I know it's not really clean,
-					--| but if you want to redo completely the text generation, go on.
-				create dummy_name.initialize (ti_r_curly.image)
-				create dummy_call.initialize (dummy_name, Void)
-				dummy_call.process (Current)
 			end
 			ctxt.set_type_creation (l_as.type)
 		end

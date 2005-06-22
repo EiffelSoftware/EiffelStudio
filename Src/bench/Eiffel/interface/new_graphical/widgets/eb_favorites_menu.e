@@ -118,8 +118,10 @@ feature {NONE} -- Initialization Implementation
 			extend (menu_item)
 
 				-- Add the separator
-			create menu_sep
-			extend (menu_sep)
+			if not a_favorites.is_empty then
+				create menu_sep
+				extend (menu_sep)				
+			end
 
 				-- Add the favorites
 			from
@@ -237,23 +239,28 @@ feature -- Observer pattern
 			l_item_data: EB_FAVORITES_ITEM
 			l_menu: EV_MENU
 			menu_item: EV_MENU_ITEM
+			menu_sep: EV_MENU_SEPARATOR
 		do
 				-- Create a new entry for `a_item' in the menu.
 			menu_item := favorite_to_immediate_menu_item (a_item)
-				
 			l_item := get_menu_item_from_path (Current, a_path)
 			l_menu ?= l_item
-			if l_menu /= Void then
-				l_menu.extend (menu_item)
-			elseif l_item /= Void then
+			if l_menu = Void and then l_item /= Void then
 				l_item_data ?= l_item.data
 				if l_item_data.is_class then
 					l_menu ?= favorite_to_immediate_menu_item (l_item_data)
 					replace_class_menu_item_by (l_item, l_menu)
-					if l_menu /= Void then
-						l_menu.extend (menu_item)			
-					end
 				end
+			end
+			if l_menu /= Void then
+				if not l_menu.is_empty then
+					menu_sep ?= l_menu.last	
+				end
+				if menu_sep = Void then
+					create menu_sep
+					l_menu.extend (menu_sep)
+				end
+				l_menu.extend (menu_item)
 			end
 		end
 
@@ -268,6 +275,7 @@ feature -- Observer pattern
 			a_class_item: EB_FAVORITES_CLASS
 			parent_menu: EV_MENU
 			l_new_item: EV_MENU_ITEM
+			l_sep: EV_MENU_SEPARATOR
 		do
 				-- Remove the menu item that match `a_item' from the menu.
 			item_list ?= get_menu_item_from_path (Current, a_path)
@@ -284,6 +292,14 @@ feature -- Observer pattern
 						replace_class_menu_item_by (parent_menu, l_new_item)
 					end
 				end
+				if not item_list.is_empty then
+					l_sep ?= item_list.last
+					if l_sep /= Void then
+						item_list.go_i_th (item_list.count)
+						item_list.remove
+					end	
+				end
+				
 			end
 		end
 		

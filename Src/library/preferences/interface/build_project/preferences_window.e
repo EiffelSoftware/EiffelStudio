@@ -112,7 +112,7 @@ feature {NONE} -- Events
 			l_font_pref: FONT_PREFERENCE
 		do
 			l_font_pref ?= a_pref
-			if l_font_pref /= VOid then
+			if l_font_pref /= Void then
 				grid.selected_rows.first.set_height (l_font_pref.value.height)
 			end
 			
@@ -352,7 +352,7 @@ feature {NONE} -- Implementation
 			grid_type_item: EV_GRID_LABEL_ITEM			
 			l_resource: PREFERENCE
 			curr_row: INTEGER
-		do
+		do			
 			grid.enable_row_height_fixed
 			grid.disable_row_height_fixed
 			selected_resource_name := a_pref_name

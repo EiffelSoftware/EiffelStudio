@@ -118,6 +118,9 @@ feature {NONE} -- Implementation
 			drawing_area_clipped_test: DRAWING_AREA_CLIPPED_TEST
 			checkable_tree_basic_test: CHECKABLE_TREE_BASIC_TEST
 			checkable_tree_advanced_test: CHECKABLE_TREE_ADVANCED_TEST
+			header_basic_test: HEADER_BASIC_TEST
+			header_resizing_test: HEADER_RESIZING_TEST
+			header_resize_to_content_test: HEADER_RESIZE_TO_CONTENT_TEST
 		do
 		end
 

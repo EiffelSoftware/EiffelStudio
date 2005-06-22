@@ -34,48 +34,48 @@ feature -- Button texts
 	b_Apply: STRING is							"Apply"
 	b_Browse: STRING is							"Browse..."
 	b_Cancel: STRING is							"Cancel"
-	b_C_functions: STRING is					"C functions"
+	b_C_functions: STRING is					"C Functions"
 	b_Close: STRING is							"Close"
-	b_Continue_anyway: STRING is				"Continue anyway"
+	b_Continue_anyway: STRING is				"Continue Anyway"
 	b_Create: STRING is							"Create"
 	b_Create_folder: STRING is					"Create Folder..."
 	b_Delete_command: STRING is					"Delete"
-	b_Descendant_time: STRING is				"Descendant time"
-	b_Discard_assertions: STRING is				"Discard assertions"
-	b_Display_Exception_Trace: STRING is		"Display exception trace"
+	b_Descendant_time: STRING is				"Descendant Time"
+	b_Discard_assertions: STRING is				"Discard Assertions"
+	b_Display_Exception_Trace: STRING is		"Display Exception Trace"
 	b_Down_text: STRING is 						"Down"
 	b_Edit_ace: STRING is						"Edit"
 	b_Edit_command: STRING is					"Edit..."
-	b_Eiffel_features: STRING is				"Eiffel features"
-	b_Feature_name: STRING is					"Feature name"
+	b_Eiffel_features: STRING is				"Eiffel Features"
+	b_Feature_name: STRING is					"Feature Name"
 	b_Finish: STRING is							"Finish"
-	b_Function_time: STRING is					"Function time"
-	b_Keep_assertions: STRING is				"Keep assertions"
-	b_Load_ace: STRING is						"Load from..."
+	b_Function_time: STRING is					"Function Time"
+	b_Keep_assertions: STRING is				"Keep Assertions"
+	b_Load_ace: STRING is						"Load From..."
 	b_Move_to_folder: STRING is					"Move to Folder..."
 	b_New_ace: STRING is						"Reset"
 	b_New_command: STRING is					"Add..."
 	b_New_favorite_class: STRING is				"New Favorite Class..."
 	b_Next: STRING is							"Next"
-	b_Number_of_calls: STRING is				"Number of calls"
+	b_Number_of_calls: STRING is				"Number of Calls"
 	b_Ok: STRING is								"OK"
-	b_Open_original: STRING is					"Open original file"
-	b_Open_backup: STRING is					"Open backup file"
+	b_Open_original: STRING is					"Open Original File"
+	b_Open_backup: STRING is					"Open Backup File"
 	b_Or: STRING is								"Or"
 	b_Percentage: STRING is						"Percentage"
 	b_Replace: STRING is						"Replace"
-	b_Recursive_functions: STRING is			"Recursive functions"
+	b_Recursive_functions: STRING is			"Recursive Functions"
 	b_Reload: STRING is							"Reload"
 	b_Remove: STRING is							"Remove"
 	b_Remove_text: STRING is 					"<- Remove"
 	b_Retry: STRING is							"Retry"
 	b_Search: STRING is							"Search"
 	b_Save: STRING is							"Save"
-	b_Total_time: STRING is						"Total time"
+	b_Total_time: STRING is						"Total Time"
 	b_Up_text: STRING is 						"Up"
 	b_Update: STRING is 						"Update"
 	b_Compile: STRING is						"Compile"
-	b_Launch: STRING is							"Launch"
+	b_Launch: STRING is							"Run and Debug"
 	b_Continue: STRING is						"Continue"
 	b_Finalize: STRING is						"Finalize"
 	b_Freeze: STRING is							"Freeze"
@@ -105,23 +105,23 @@ feature -- Button texts
 	b_Bkpt_disable: STRING is					"Disable Breakpoints"
 	b_Bkpt_remove: STRING is					"Remove Breakpoints"
 	b_Bkpt_stop_in_hole: STRING is				"Pause"
-	b_Exec_kill: STRING is						"Kill debugged application"
-	b_Exec_into: STRING is						"Step into"
-	b_Exec_no_stop: STRING is					"Launch without stopping"
-	b_Exec_out: STRING is						"Step out"
+	b_Exec_kill: STRING is						"Kill Debugged Application"
+	b_Exec_into: STRING is						"Step Into"
+	b_Exec_no_stop: STRING is					"Launch Without Stopping"
+	b_Exec_out: STRING is						"Step Out"
 	b_Exec_step: STRING is						"Step"
 	b_Exec_stop: STRING is						"Pause"
-	b_Run_finalized: STRING is					"Run finalized"
+	b_Run_finalized: STRING is					"Run Finalized"
 	b_Toggle_stone_management: STRING is 		"Link Context"
 	b_Raise_all: STRING is						"Raise Windows"
-	b_Remove_class_cluster: STRING is			"Remove class/cluster"
-	b_Minimize_all: STRING is					"Minimize all"
+	b_Remove_class_cluster: STRING is			"Remove Class/CLuster"
+	b_Minimize_all: STRING is					"Minimize All"
 	
 	
 feature -- Graphical degree output
 
-	d_Classes_to_go: STRING is					"Classes to go:"
-	d_Clusters_to_go: STRING is					"Clusters to go:"
+	d_Classes_to_go: STRING is					"Classes to Go:"
+	d_Clusters_to_go: STRING is					"Clusters to Go:"
 	d_Compilation_class: STRING is				"Class:"
 	d_Compilation_cluster: STRING is			"Cluster:"
 	d_Compilation_progress: STRING is			"Compilation Progress for "
@@ -130,10 +130,10 @@ feature -- Graphical degree output
 	d_Features_processed: STRING is				"Completed: "
 	d_Features_to_go: STRING is					"Remaining: "
 	d_Generating: STRING is						"Generating: "
-	d_Resynchronizing_breakpoints: STRING is 	"Resynchronizing breakpoints"
-	d_Resynchronizing_tools: STRING is			"Resynchronizing tools"
+	d_Resynchronizing_breakpoints: STRING is 	"Resynchronizing Breakpoints"
+	d_Resynchronizing_tools: STRING is			"Resynchronizing Tools"
 	d_Reverse_engineering: STRING is			"Reverse Engineering Project"
-	d_Finished_removing_dead_code: STRING is	"Dead code removal completed"
+	d_Finished_removing_dead_code: STRING is	"Dead Code Removal Completed"
 
 feature -- Help text
 
@@ -147,43 +147,43 @@ feature -- Accelerator, focus label and menu name
 
 	m_About: STRING is
 		once
-			Result := "&About ISE " + Workbench_name + "..."
+			Result := "&About Eiffel Software " + Workbench_name + "..."
 		end
 	m_Advanced: STRING is				"Ad&vanced"
-	m_Add_to_favorites: STRING is		"&Add to favorites"
+	m_Add_to_favorites: STRING is		"&Add to Favorites"
 	m_Address_toolbar: STRING is		"&Address Bar"
 	m_Apply: STRING is					"&Apply"
 	f_Clear_breakpoints: STRING is		"Remove all breakpoints"
-	m_Clear_breakpoints: STRING is		"Re&move all breakpoints"
+	m_Clear_breakpoints: STRING is		"Re&move All Breakpoints"
 	m_Comment: STRING is				"&Comment%TCtrl+K"
-	m_Compilation_C_Workbench: STRING is	"Compile W&orkbench C code"
-	m_Compilation_C_Final: STRING is	"Compile F&inalized C code"
+	m_Compilation_C_Workbench: STRING is	"Compile W&orkbench C Code"
+	m_Compilation_C_Final: STRING is	"Compile F&inalized C Code"
 	m_Contents: STRING is				"&Contents"
-	m_Customize_general: STRING is		"&Customize standard toolbar..."
-	m_Customize_project: STRING is		"Customize p&roject toolbar..."
+	m_Customize_general: STRING is		"&Customize Standard Toolbar..."
+	m_Customize_project: STRING is		"Customize P&roject Toolbar..."
 	m_Cut: STRING is					"Cu&t%TCtrl+X"
 	f_Cut: STRING is					"Cut (Ctrl+X)"
 	m_Call_stack_tool: STRING is		"Call stack"
 	m_Cluster_tool: STRING is			"&Clusters"
-	m_Complete_word: STRING is			"Complete &word"
-	m_Complete_class_name: STRING is	"Complete class &name"
+	m_Complete_word: STRING is			"Complete &Word"
+	m_Complete_class_name: STRING is	"Complete Class &Name"
 	m_Context_tool: STRING is			"Conte&xt"
 	m_Copy: STRING is					"&Copy%TCtrl+C"
 	f_Copy: STRING is					"Copy (Ctrl+C)"
-	m_Close: STRING is					"&Close window%TAlt+F4"
+	m_Close: STRING is					"&Close Window%TAlt+F4"
 	m_Close_short: STRING is			"&Close"
 	f_Create_new_cluster: STRING is		"Create a new cluster"
 	f_Create_new_class: STRING is		"Create a new class"
 	f_Create_new_feature: STRING is		"Create a new feature"
-	m_Debug_interrupt_new: STRING is	"I&nterrupt application"
+	m_Debug_interrupt_new: STRING is	"I&nterrupt Application"
 	f_Debug_edit_object: STRING is		"Edit Object content"
-	m_Debug_edit_object: STRING is		"Edit Object content"
+	m_Debug_edit_object: STRING is		"Edit Object Content"
 	f_Debug_dynamic_eval: STRING is		"Dynamic feature evaluation"
-	m_Debug_dynamic_eval: STRING is		"Dynamic feature evaluation"
+	m_Debug_dynamic_eval: STRING is		"Dynamic Feature Evaluation"
 	m_Debug_kill: STRING is				"&Kill application"
 	f_Debug_run: STRING is				"Run"
 	m_Debug_run: STRING is				"&Run%TCtrl+R"
-	m_Debug_run_new: STRING is			"&Run and debug"
+	m_Debug_run_new: STRING is			"&Run and Debug"
 	f_diagram_delete: STRING is			"Delete"
 	l_diagram_delete: STRING is			"Delete graphical items, remove code from system"
 	f_diagram_crop: STRING is			"Crop diagram"
@@ -191,15 +191,15 @@ feature -- Accelerator, focus label and menu name
 	f_diagram_zoom_out: STRING is		"Zoom out"
 	f_diagram_put_right_angles: STRING is		"Force right angles"
 	f_diagram_remove_right_angles: STRING is	"Remove right angles"
-	m_diagram_link_tool: STRING is		"&Put right angles"
+	m_diagram_link_tool: STRING is		"&Put Right Angles"
 	f_diagram_to_png: STRING is			"Export diagram to PNG"
-	m_diagram_to_png: STRING is			"&Export diagram to PNG"
+	m_diagram_to_png: STRING is			"&Export Diagram to PNG"
 	f_diagram_context_depth: STRING is  "Select depth of relations"
-	m_diagram_context_depth: STRING is  "&Select depth of relations"
+	m_diagram_context_depth: STRING is  "&Select Depth of Relations"
 	f_diagram_delete_view: STRING is	"Delete current view"
 	f_diagram_reset_view: STRING is 	"Reset current view"
-	m_diagram_delete_view: STRING is	"&Delete current view"
-	m_diagram_reset_view: STRING is		"&Reset current view"
+	m_diagram_delete_view: STRING is	"&Delete Current View"
+	m_diagram_reset_view: STRING is		"&Reset Current View"
 	f_diagram_zoom_in: STRING is		"Zoom in"
 	f_diagram_fit_to_screen: STRING is	"Fit to screen"
 	f_diagram_undo: STRING is			"Undo last action"
@@ -243,39 +243,39 @@ feature -- Accelerator, focus label and menu name
 	f_diagram_force_directed_off: STRING is	"Turn off physics"
 	f_diagram_force_settings: STRING is	"Show physics settings dialog"
 	f_Disable_stop_points: STRING is	"Disable all breakpoints"
-	m_Disable_stop_points: STRING is	"&Disable all breakpoints"
-	m_Debug_block: STRING is			"E&mbed in %"debug...%"%TCtrl+D"
+	m_Disable_stop_points: STRING is	"&Disable All Breakpoints"
+	m_Debug_block: STRING is			"E&mbed in %"Debug...%"%TCtrl+D"
 	m_Editor: STRING is					"&Editor"
 	m_Eiffel_introduction: STRING is	"&Introduction to Eiffel"
 	f_Enable_stop_points: STRING is		"Enable all breakpoints"
 	m_Enable_stop_points: STRING is		"&Enable all breakpoints"
-	m_Exec_last: STRING is				"&Out of routine"
-	m_Exec_nostop: STRING is			"&Ignore breakpoints"
-	m_Exec_step: STRING is				"&Step-by-step"
-	m_Exec_into: STRING is				"Step in&to"
+	m_Exec_last: STRING is				"&Out of Routine"
+	m_Exec_nostop: STRING is			"&Ignore Breakpoints"
+	m_Exec_step: STRING is				"&Step-by-Step"
+	m_Exec_into: STRING is				"Step In&to"
 	m_Exit_project: STRING is			"E&xit"
 	m_Explorer_bar: STRING is			"&Tools"
-	m_Export_to: STRING is				"Save cop&y as..."
+	m_Export_to: STRING is				"Save Cop&y As..."
 	m_Export_XMI: STRING is 			"E&xport XMI..."
-	m_Expression_evaluation: STRING is	"Expression evaluation"
-	m_External_editor: STRING is		"&External editor"
+	m_Expression_evaluation: STRING is	"Expression Evaluation"
+	m_External_editor: STRING is		"&External Editor"
 	m_Favorites_tool: STRING is			"F&avorites"
 	m_Features_tool: STRING is			"&Features"
 	f_Finalize: STRING is				"Finalize..."
 	m_Finalize_new: STRING is			"Finali&ze..."
 	m_Find: STRING is					"&Search"
-	m_Find_next: STRING is				"Find &next"
-	m_Find_previous: STRING is			"Find &previous"
-	m_Find_selection: STRING is			"Find &selection"
+	m_Find_next: STRING is				"Find &Next"
+	m_Find_previous: STRING is			"Find &Previous"
+	m_Find_selection: STRING is			"Find &Selection"
 	f_Freeze: STRING is					"Freeze..."
 	m_Freeze_new: STRING is				"&Freeze..."
-	m_General_toolbar: STRING is		"&Standard buttons"
-	m_Generate_documentation: STRING is "Generate &documentation..."
+	m_General_toolbar: STRING is		"&Standard Buttons"
+	m_Generate_documentation: STRING is "Generate &Documentation..."
 	m_Go_to: STRING is					"&Go to..."
 	m_Guided_tour: STRING is			"&Guided Tour"
 	m_Help: STRING is					"&Help"
-	m_Hide_favorites: STRING is			"&Hide favorites"
-	m_Hide_formatting_marks: STRING is	"&Hide formatting marks"
+	m_Hide_favorites: STRING is			"&Hide Favorites"
+	m_Hide_formatting_marks: STRING is	"&Hide Formatting Marks"
 	m_History_forth: STRING is			"&Forward"
 	m_History_back: STRING is			"&Back"
 	f_History_forth: STRING is			"Go forth"
@@ -285,17 +285,17 @@ feature -- Accelerator, focus label and menu name
 	m_Indent: STRING is					"&Indent selection%TTab"
 	m_Line_numbers: STRING is			"&Line numbers%TCtrl+L"
 	f_Melt: STRING is					"Compile current project"
-	m_Melt_new: STRING is				"&Melt"
+	m_Melt_new: STRING is				"&Compile"
 	m_New: STRING is					"&New"
 	f_New_window: STRING is				"Create a new window"
-	m_New_window: STRING is				"New &window"
+	m_New_window: STRING is				"New &Window"
 	m_New_dynamic_lib: STRING is		"&Dynamic Library Builder..."
 	m_New_project: STRING is			"&New Project..."
 	m_Ok: STRING is						"&OK"
 	m_Open: STRING is					"&Open...%TCtrl+O"
 	m_Open_new: STRING is				"Op&en..."
 	m_Open_project: STRING is			"&Open Project..."
-	m_Organize_favorites: STRING is		"&Organize favorites..."
+	m_Organize_favorites: STRING is		"&Organize Favorites..."
 	m_Output: STRING is					"&Output"
 	f_Paste: STRING is					"Paste (Ctrl+V)"
 	m_Paste: STRING is					"&Paste%TCtrl+V"
@@ -312,19 +312,19 @@ feature -- Accelerator, focus label and menu name
 	m_Replace: STRING is				"&Replace..."
 	f_Retarget_diagram: STRING is		"Target to cluster or class"
 	f_Run_finalized: STRING is			"Run finalized system"
-	m_Run_finalized: STRING is			"&Run finalized system"
+	m_Run_finalized: STRING is			"&Run Finalized System"
 	f_Save: STRING is					"Save"
 	m_Save_new: STRING is				"&Save"
-	m_Save_As: STRING is				"S&ave as..."
+	m_Save_As: STRING is				"S&ave As..."
 	m_Search: STRING is					"&Find..."
 	m_Search_tool: STRING is			"&Search"
 	m_Select_all: STRING is				"Select &All%TCtrl+A"
 	m_Send_to: STRING is				"Sen&d to"
 	m_show_assigners: STRING is			"A&ssigners"
-	m_Show_class_cluster: STRING is		"Find in cluster tree"
+	m_Show_class_cluster: STRING is		"Find in Cluster Tree"
 	m_show_creators: STRING is			"C&reators"
-	m_Show_favorites: STRING is			"&Show favorites"
-	m_Show_formatting_marks: STRING is		"&Show formatting marks"
+	m_Show_favorites: STRING is			"&Show Favorites"
+	m_Show_formatting_marks: STRING is		"&Show Formatting Marks"
 	m_Showancestors: STRING is			"&Ancestors"
 	m_Showattributes: STRING is			"A&ttributes"
 	m_Showcallers: STRING is			"&Callers"
@@ -336,54 +336,54 @@ feature -- Accelerator, focus label and menu name
 	m_Showexternals: STRING is			"E&xternals"
 	m_Showflat: STRING is				"&Flat"
 	m_Showfs: STRING is					"&Interface"
-	m_Showfuture: STRING is				"&Descendant versions"
+	m_Showfuture: STRING is				"&Descendant Versions"
 	m_Showhistory: STRING is			"&Implementers"
 	m_Showindexing: STRING is			"&Indexing clauses"
 	m_Showonces: STRING is				"O&nce/Constants"
-	m_Showpast: STRING is				"&Ancestor versions"
+	m_Showpast: STRING is				"&Ancestor Versions"
 	m_Showroutines: STRING is			"&Routines"
 	m_Showshort: STRING is				"C&ontract"
 	m_Showhomonyms: STRING is			"&Homonyms"
 	m_Showsuppliers: STRING is			"S&uppliers"
 	m_Showtext_new: STRING is			"Te&xt"
-	m_System_new: STRING is				"Project &settings..."
+	m_System_new: STRING is				"Project &Settings..."
 	m_Toolbars: STRING is				"Tool&bars"
-	m_To_lower: STRING is				"Set to &lowercase%TCtrl+Shift+U"
-	m_To_upper: STRING is				"Set to u&ppercase%TCtrl+U"
+	m_To_lower: STRING is				"Set to &Lowercase%TCtrl+Shift+U"
+	m_To_upper: STRING is				"Set to U&ppercase%TCtrl+U"
 	m_Uncomment: STRING is				"U&ncomment%TCtrl+Shift+K"
 	f_Uncomment: STRING is				"Uncomment selected lines"
 	m_Undo: STRING is					"&Undo%TCtrl+Z"
 	f_Undo: STRING is					"Undo (Ctrl+Z)"
-	m_Unindent: STRING is				"&Unindent selection%TShift+Tab"
+	m_Unindent: STRING is				"&Unindent Selection%TShift+Tab"
 	m_Windows_tool: STRING is			"&Windows"
-	m_Watch_tool: STRING is				"Watch tool"
+	m_Watch_tool: STRING is				"Watch Tool"
 	m_Wizard_precompile: STRING is 		"Precompilation &Wizard..."
 	f_Wizard_precompile: STRING is		"Wizard to precompile libraries"
 
 feature -- Menu mnenomics
 
 	m_Add_exported_feature: STRING is	"&Add..."
-	m_Bkpt_info: STRING is				"Brea&kpoint information"
-	m_Class_info: STRING is				"Cla&ss views"
-	m_Check_exports: STRING is			"Chec&k export clauses"
-	m_Create_new_cluster: STRING is		"New c&luster..."
-	m_Create_new_class: STRING is		"&New class..."
-	m_Create_new_feature: STRING is		"New fea&ture..."
-	m_Showhide_signature: STRING is		"Show/hide signature"
-	m_Showhide_alias: STRING is		"Show/hide alias name"
+	m_Bkpt_info: STRING is				"Brea&kpoint Information"
+	m_Class_info: STRING is				"Cla&ss Views"
+	m_Check_exports: STRING is			"Chec&k Export Clauses"
+	m_Create_new_cluster: STRING is		"New C&luster..."
+	m_Create_new_class: STRING is		"&New Class..."
+	m_Create_new_feature: STRING is		"New Fea&ture..."
+	m_Showhide_signature: STRING is		"Show/Hide Signature"
+	m_Showhide_alias: STRING is		"Show/Hide Alias Name"
 	m_Showhide_assigner: STRING is		"Show/hide assigner command name"
 	m_Debug: STRING is					"&Debug"
-	m_Debugging_tool: STRING is			"&Debugging tools"
-	m_Disable_this_bkpt: STRING is		"&Disable this breakpoint"
-	m_Display_error_help: STRING is		"Compilation error &wizard..."
-	m_Display_system_info: STRING is	"S&ystem info"
+	m_Debugging_tool: STRING is			"&Debugging Tools"
+	m_Disable_this_bkpt: STRING is		"&Disable This Breakpoint"
+	m_Display_error_help: STRING is		"Compilation Error &Wizard..."
+	m_Display_system_info: STRING is	"S&ystem Info"
 	m_Edit: STRING is					"&Edit"
-	m_Edit_condition: STRING is			"E&dit condition"
+	m_Edit_condition: STRING is			"E&dit Condition"
 	m_Edit_exported_feature: STRING is	"&Edit..."
-	m_Edit_external_commands: STRING is	"&External commands..."
-	m_Enable_this_bkpt: STRING is		"&Enable this breakpoint"
+	m_Edit_external_commands: STRING is	"&External Commands..."
+	m_Enable_this_bkpt: STRING is		"&Enable This Breakpoint"
 	m_Favorites: STRING is				"Fav&orites"
-	m_Feature_info: STRING is			"Feat&ure views"
+	m_Feature_info: STRING is			"Feat&ure Views"
 	m_File: STRING is					"&File"
 	m_Formats: STRING is				"F&ormat"
 	m_Formatter_separators: ARRAY [STRING] is
@@ -394,30 +394,30 @@ feature -- Menu mnenomics
 	m_Maximize: STRING is				"Ma&ximize"
 	m_Minimize: STRING is				"Mi&nimize"
 	m_Minimize_all: STRING is			"&Minimize all"
-	m_New_editor: STRING is				"New ed&itor window"
-	m_New_context_tool: STRING is		"New con&text window"
+	m_New_editor: STRING is				"New Ed&itor Window"
+	m_New_context_tool: STRING is		"New Con&text Window"
 	m_Object: STRING is					"&Object"
-	m_Object_tools: STRING is			"&Object tools"
+	m_Object_tools: STRING is			"&Object Tools"
 	m_Open_eac_browser: STRING is		"EAC Browser"
-	m_Pretty_print: STRING is			"Expand an object"
+	m_Pretty_print: STRING is			"Expand an Object"
 	m_Project: STRING is				"&Project"
-	m_Quick_compile: STRING is			"&Quick compile"
+	m_Quick_compile: STRING is			"&Quick Compile"
 	m_Raise: STRING is					"&Raise"
-	m_Raise_all: STRING is				"&Raise all"
-	m_Raise_all_unsaved: STRING is		"Raise &unsaved windows"
-	m_Remove_class_cluster: STRING is	"&Remove current item"
+	m_Raise_all: STRING is				"&Raise All"
+	m_Raise_all_unsaved: STRING is		"Raise &Unsaved Windows"
+	m_Remove_class_cluster: STRING is	"&Remove Current Item"
 	m_Remove_exported_feature: STRING is	"&Remove"
-	m_Remove_condition: STRING is		"Remove condition"
-	m_Remove_this_bkpt: STRING is		"&Remove this breakpoint"
-	m_Run_to_this_point: STRING is		"&Run to this point"
-	m_Send_stone_to_context: STRING is	"S&ynchronize context tool"
-	m_Set_conditional_breakpoint: STRING is "Set &conditional breakpoint"
-	m_Set_critical_stack_depth: STRING is "Overflow &prevention..."
+	m_Remove_condition: STRING is		"Remove Condition"
+	m_Remove_this_bkpt: STRING is		"&Remove This Breakpoint"
+	m_Run_to_this_point: STRING is		"&Run to This Point"
+	m_Send_stone_to_context: STRING is	"S&ynchronize Context Tool"
+	m_Set_conditional_breakpoint: STRING is "Set &Conditional Breakpoint"
+	m_Set_critical_stack_depth: STRING is "Overflow &Prevention..."
 	m_Set_slice_size: STRING is			"&Alter size"
 	m_Special: STRING is				"&Special"
-	m_Separate_stone: STRING is			"Unlin&k context tool"
+	m_Separate_stone: STRING is			"Unlin&k Context Tool"
 	m_Tools: STRING is					"&Tools"
-	m_Unify_stone: STRING is			"Lin&k context tool"
+	m_Unify_stone: STRING is			"Lin&k Context Tool"
 	m_View: STRING is					"&View"
 	m_Window: STRING is					"&Window"
 
@@ -626,207 +626,207 @@ feature -- Title part
 
 	t_About: STRING is
 		once
-			Result := "About ISE " + Workbench_name
+			Result := "About Eiffel Software " + Workbench_name
 		end
 	t_Alias: STRING is							"Alias"
-	t_Call_stack_tool: STRING is				"Call stack"
-	t_Calling_convention: STRING is				"Calling convention"
-	t_Choose_ace_file: STRING is 				"Choose an ace file"
-	t_Choose_ace_and_directory: STRING is		"Choose your ace file and directory"
-	t_Choose_class: STRING is					"Choose a class"
-	t_Choose_directory: STRING is 				"Choose your directory"
-	t_Choose_folder_name: STRING is				"Choose a folder name"
-	t_Choose_project_and_directory: STRING is 	"Choose your project name and directory"
+	t_Call_stack_tool: STRING is				"Call Stack"
+	t_Calling_convention: STRING is				"Calling Convention"
+	t_Choose_ace_file: STRING is 				"Choose an Ace File"
+	t_Choose_ace_and_directory: STRING is		"Choose Your Ace File and Directory"
+	t_Choose_class: STRING is					"Choose a Class"
+	t_Choose_directory: STRING is 				"Choose Your Directory"
+	t_Choose_folder_name: STRING is				"Choose a Folder Name"
+	t_Choose_project_and_directory: STRING is 	"Choose Your Project Name and Directory"
 	t_Class: STRING is							"Class"
-	t_Clients_of: STRING is						"Clients of class "
+	t_Clients_of: STRING is						"Clients of Class "
 	t_Cluster_tool: STRING is					"Clusters"
 	t_Context_tool: STRING is					"Context"
-	t_Creation_routine: STRING is				"Creation procedure"
-	t_Customize_toolbar_text: STRING is 		"Customize toolbar"
+	t_Creation_routine: STRING is				"Creation Procedure"
+	t_Customize_toolbar_text: STRING is 		"Customize Toolbar"
 	t_Debugging_tool: STRING is					"Debugging"
 	t_Default_print_job_name: STRING is
 		once
 			Result := "From " + Workbench_name
 		end
-	t_Deleting_files: STRING is					"Deleting files"
+	t_Deleting_files: STRING is					"Deleting Files"
 	t_Dummy: STRING is							"Dummy"
 	t_Dynamic_lib_window: STRING is 			"Dynamic Library Builder"
-	t_Dynamic_type: STRING is					"In class"
+	t_Dynamic_type: STRING is					"In Class"
 	t_Editor: STRING is							"Editor"
-	t_Enter_condition: STRING is				"Enter condition"
+	t_Enter_condition: STRING is				"Enter Condition"
 	t_Exported_feature: STRING is				"Feature"
 	t_Expression_evaluation: STRING is			"Evaluation"
-	t_Extended_explanation: STRING is			"Compilation error wizard"
-	t_external_command: STRING is				"External command"
-	t_external_commands: STRING is				"External commands"
-	t_External_edition: STRING is				"External edition"
+	t_Extended_explanation: STRING is			"Compilation Error Wizard"
+	t_external_command: STRING is				"External Command"
+	t_external_commands: STRING is				"External Commands"
+	t_External_edition: STRING is				"External Edition"
 	t_Favorites_tool: STRING is					"Favorites"
-	t_Feature: STRING is						"In feature"
-	t_Feature_properties: STRING is				"Feature properties"
-	t_File_selection: STRING is					"File selection"
+	t_Feature: STRING is						"In Feature"
+	t_Feature_properties: STRING is				"Feature Properties"
+	t_File_selection: STRING is					"File Selection"
 	t_Find: STRING is							"Find"
 	t_Index: STRING is							"Index"
-	t_New_class: STRING is						"New class"
-	t_New_cluster: STRING is					"New cluster"
-	t_New_expression: STRING is					"New expression"
-	t_New_project: STRING is					"New project"
+	t_New_class: STRING is						"New Class"
+	t_New_cluster: STRING is					"New Cluster"
+	t_New_expression: STRING is					"New Expression"
+	t_New_project: STRING is					"New Project"
 	t_Object_tool: STRING is					"Objects"
-	t_Open_backup: STRING is					"Backup found"
-	t_Organize_favorites: STRING is				"Organize favorites"
-	t_Profile_query_window: STRING is			"Profile query window"
+	t_Open_backup: STRING is					"Backup Found"
+	t_Organize_favorites: STRING is				"Organize Favorites"
+	t_Profile_query_window: STRING is			"Profile Query Window"
 	t_Profiler_wizard: STRING is				"Profiler Wizard"
 	t_Project: STRING is
 		once
-			Result := "ISE "+Workbench_name
+			Result := "Eiffel Software "+Workbench_name
 		end
 	t_Preference_window: STRING is				"Preferences"
-	t_Select_class: STRING is					"Select class"
-	t_Select_cluster: STRING is					"Select cluster"
-	t_Select_feature: STRING is					"Select feature"
-	t_Select_location: STRING is				"Select location"
+	t_Select_class: STRING is					"Select Class"
+	t_Select_cluster: STRING is					"Select Cluster"
+	t_Select_feature: STRING is					"Select Feature"
+	t_Select_location: STRING is				"Select Location"
 	t_Search_tool: STRING is					"Search"
-	t_Select_a_file: STRING is					"Select a file"
-	t_Select_a_directory: STRING is				"Select a directory"
-	t_Set_stack_depth: STRING is				"Maximum call stack depth"
-	t_Set_critical_stack_depth: STRING is		"Overflow prevention"
-	t_Static_type: STRING is					"From class"
+	t_Select_a_file: STRING is					"Select a File"
+	t_Select_a_directory: STRING is				"Select a Directory"
+	t_Set_stack_depth: STRING is				"Maximum Call Stack Depth"
+	t_Set_critical_stack_depth: STRING is		"Overflow Prevention"
+	t_Static_type: STRING is					"From Class"
 	t_Starting_dialog: STRING is
 		once
 			Result := Workbench_name
 		end
-	t_Slice_limits: STRING is					"Choose new slice limits for special objects"
-	t_System: STRING is							"Project settings"
+	t_Slice_limits: STRING is					"Choose New Slice Limits for Special Objects"
+	t_System: STRING is							"Project Settings"
 	t_Windows_tool: STRING is					"Windows"
 	t_Watch_tool: STRING is						"Watch"
 	t_Features_tool: STRING is					"Features"
-	t_Empty_development_window: STRING is 		"Empty development tool"
-	t_Autocomplete_window: STRING is			"Auto-complete"
-	t_Diagram_class_header: STRING is			"Class header"
-	t_Diagram_set_center_class: STRING is		"Set center class"
-	t_Diagram_context_depth: STRING is			"Select depths"
-	t_Diagram_link_tool: STRING is				"Link tool"
-	t_Diagram_delete_client_link: STRING is 	"Choose feature(s) to delete"
-	t_Diagram_history_tool: STRING is			"History tool"
+	t_Empty_development_window: STRING is 		"Empty Development Tool"
+	t_Autocomplete_window: STRING is			"Auto-Complete"
+	t_Diagram_class_header: STRING is			"Class Header"
+	t_Diagram_set_center_class: STRING is		"Set Center Class"
+	t_Diagram_context_depth: STRING is			"Select Depths"
+	t_Diagram_link_tool: STRING is				"Link Tool"
+	t_Diagram_delete_client_link: STRING is 	"Choose Feature(s) to Delete"
+	t_Diagram_history_tool: STRING is			"History Tool"
 	
 	t_Diagram_move_class_cmd (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
-			Result := "Move class " + a_name
+			Result := "Move Class '" + a_name + "'"
 		end
 	
 	t_Diagram_move_cluster_cmd (a_name: STRING): STRING is	
 		require
 			exists: a_name /= Void	
 		do
-			Result := "Move cluster " + a_name
+			Result := "Move Cluster '" + a_name + "'"
 		end
 		
-	t_Diagram_move_midpoint_cmd: STRING is		"Move midpoint"
+	t_Diagram_move_midpoint_cmd: STRING is		"Move Midpoint"
 	
 	t_Diagram_add_cs_link_cmd (client_name, supplier_name: STRING): STRING is	
 		require
 			exists: client_name /= Void	and supplier_name /= Void
 		do
-			Result := "Add client-supplier relation between " + client_name + " and " + supplier_name
+			Result := "Add Client-Supplier Relation Between '" + client_name + "' and '" + supplier_name  + "'"
 		end
 	
 	t_Diagram_add_inh_link_cmd (ancestor_name, descendant_name: STRING): STRING is
 		require
 			exists: ancestor_name /= Void and descendant_name /= Void
 		do
-			Result := "Add inheritance relation between " + ancestor_name + " and " + descendant_name
+			Result := "Add Inheritance Relation Between '" + ancestor_name + "' and '" + descendant_name + "'"
 		end
 		
 	t_Diagram_include_class_cmd (a_name: STRING): STRING is		
 		require
 			exists: a_name /= Void
 		do
-			Result := "Include class " + a_name
+			Result := "Include Class '" + a_name + "'"
 		end
 		
 	t_Diagram_include_cluster_cmd (a_name: STRING): STRING is	
 		require
 			exists: a_name /= Void
 		do
-			Result := "Include cluster " + a_name
+			Result := "Include Cluster '" + a_name + "'"
 		end
 		
-	t_Diagram_insert_midpoint_cmd: STRING is	"Insert midpoint"
-	t_Diagram_change_color_cmd: STRING is		"Change class color"
+	t_Diagram_insert_midpoint_cmd: STRING is	"Insert Midpoint"
+	t_Diagram_change_color_cmd: STRING is		"Change Class Color"
 	
 	t_Diagram_rename_class_locally_cmd (old_name, new_name: STRING): STRING is 	
 		require
 			exists: old_name /= Void and new_name /= Void
 		do
-			Result := "Rename class " + old_name + " locally to " + new_name
+			Result := "Rename Class '" + old_name + "' Locally to '" + new_name + "'"
 		end
 		
 	t_Diagram_rename_class_globally_cmd (old_name, new_name: STRING): STRING is 
 		require
 			exists: old_name /= Void and new_name /= Void	
 		do
-			Result := "Rename class " + old_name + " globally to " + new_name
+			Result := "Rename Class '" + old_name + "' Globally to '" + new_name + "'"
 		end
 		
 	t_Diagram_delete_client_link_cmd (a_name: STRING): STRING is 	
 		require
 			exists: a_name /= Void	
 		do
-			Result := "Delete client link " + a_name
+			Result := "Delete Client Link '" + a_name + "'"
 		end
 		
 	t_Diagram_delete_inheritance_link_cmd (an_ancestor, a_descendant: STRING): STRING is
 		require
 			exists: an_ancestor /= Void and a_descendant /= Void
 		do
-			Result := "Delete inheritance link between " + an_ancestor + " and " + a_descendant
+			Result := "Delete Inheritance Link Between '" + an_ancestor + "' and '" + a_descendant + "'"
 		end
 		
 	t_Diagram_erase_cluster_cmd (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
-			Result := "Erase cluster " + a_name
+			Result := "Erase Cluster '" + a_name + "'"
 		end
 		
-	t_Diagram_delete_midpoint_cmd: STRING is	"Erase midpoint"
+	t_Diagram_delete_midpoint_cmd: STRING is	"Erase Midpoint"
 	
 	t_Diagram_erase_class_cmd (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
-			Result := "Erase class " + a_name
+			Result := "Erase Class '" + a_name + "'"
 		end
 		
-	t_Diagram_erase_classes_cmd: STRING is		"Erase classes"
-	t_Diagram_put_right_angles_cmd: STRING is	"Put right angles"
-	t_Diagram_remove_right_angles_cmd: STRING is	"Remove right angles"
-	t_Diagram_put_one_handle_left_cmd: STRING is	"Put handle left"
-	t_Diagram_put_one_handle_right_cmd: STRING is	"Put handle right"
-	t_Diagram_put_two_handles_left_cmd: STRING is	"Put two handles left"
-	t_Diagram_put_two_handles_right_cmd: STRING is	"Put two handles right"
-	t_Diagram_remove_handles_cmd: STRING is		"Remove handles"
-	t_Diagram_zoom_in_cmd: STRING is			"Zoom in"
-	t_Diagram_zoom_out_cmd: STRING is			"Zoom out"
+	t_Diagram_erase_classes_cmd: STRING is		"Erase Classes"
+	t_Diagram_put_right_angles_cmd: STRING is	"Put Right Angles"
+	t_Diagram_remove_right_angles_cmd: STRING is	"Remove Right Angles"
+	t_Diagram_put_one_handle_left_cmd: STRING is	"Put Handle Left"
+	t_Diagram_put_one_handle_right_cmd: STRING is	"Put Handle Right"
+	t_Diagram_put_two_handles_left_cmd: STRING is	"Put Two Handles Left"
+	t_Diagram_put_two_handles_right_cmd: STRING is	"Put Two Handles Right"
+	t_Diagram_remove_handles_cmd: STRING is		"Remove Handles"
+	t_Diagram_zoom_in_cmd: STRING is			"Zoom In"
+	t_Diagram_zoom_out_cmd: STRING is			"Zoom Out"
 	t_Diagram_zoom_cmd: STRING is				"Zoom"
 	
 	t_Diagram_cluster_expand (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
-			Result := "Expand cluster " + a_name
+			Result := "Expand cluster '" + a_name + "'"
 		end
 	
 	t_Diagram_cluster_collapse (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
-			Result := "Collapse cluster " + a_name
+			Result := "Collapse Cluster '" + a_name + "'"
 		end
 		
-	t_Diagram_disable_high_quality: STRING is	"Disable high quality"
-	t_Diagram_enable_high_quality: STRING is	"Enable high quality"
+	t_Diagram_disable_high_quality: STRING is	"Disable High Quality"
+	t_Diagram_enable_high_quality: STRING is	"Enable High Quality"
 
 feature -- Description texts
 

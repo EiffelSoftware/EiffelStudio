@@ -67,7 +67,7 @@ feature -- Query
 	line_numbers_visible: BOOLEAN is
 			-- Are line numbers hidden?
 		do
-		    Result := Precursor --and text_panel. allow_edition
+		    Result := Precursor
 		end
 		
 feature {NONE} -- Implementation

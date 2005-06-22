@@ -26,7 +26,8 @@ inherit
 			text_displayed,
 			copy_selection,			
 			recycle,
-			margin
+			margin,
+			toggle_line_number_display
 		end
 
 	EB_FORMATTED_TEXT
@@ -615,6 +616,20 @@ feature {NONE} -- Text Loading
 			end
 			after_reading_text_actions.wipe_out
 		end
+
+	toggle_line_number_display is
+	        -- Toggle line number display in Current and update display
+	   	do
+	   	 	line_numbers_visible := not line_numbers_visible
+	   	 	if (line_numbers_visible or not hidden_breakpoints) and then margin_container.is_empty then
+	   	 			-- One of line numbers or breakpoints must be visible
+	   	 		margin_container.put (margin.widget)
+	   	 	elseif not line_numbers_visible and then hidden_breakpoints and then margin_container.is_empty then	   	 		
+	   	 			-- Nothing needs displaying so just prune
+	   	 		margin_container.prune (margin.widget)	   	 		
+	   	 	end
+	   	 	refresh_now	   	
+	   	end	
 
 feature {EB_EDITOR_TOOL} -- Update
 

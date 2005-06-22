@@ -25,6 +25,9 @@ doc:<file name="lmalloc.c" header="rt_lmalloc.h" version="$Id$" summary="Malloc 
 #include <stdio.h>
 #endif	/* LMALLOC_CHECK or LMALLOC_DEBUG */
 #include "rt_assert.h"
+#ifdef BOEHM_GC
+#include "rt_boehm.h"
+#endif
 
 #include <string.h>		/* For memset(), bzero() */
 
@@ -294,7 +297,11 @@ rt_public Malloc_t eiffel_malloc (size_t nbytes)
 #endif
 	return ret;
 #else	/* LMALLOC_CHECK */
+#ifdef BOEHM_GC
+	return (Malloc_t) GC_malloc (nbytes);
+#else
 	return (Malloc_t) malloc (nbytes);
+#endif
 #endif	/* LMALLOC_CHECK */
 }
 
@@ -318,7 +325,14 @@ rt_public Malloc_t eiffel_calloc (size_t nelem, size_t elsize)
 #endif
 	return ret;
 #else	/* LMALLOC_CHECK */
+#ifdef BOEHM_GC
+	Malloc_t allocated;
+	allocated = (Malloc_t) GC_malloc (nelem * elsize);
+	memset(allocated, 0, nelem * elsize);
+	return allocated;
+#else
 	return (Malloc_t) calloc (nelem, elsize);
+#endif
 #endif	/* LMALLOC_CHECK */
 }
 
@@ -347,7 +361,11 @@ rt_public Malloc_t eiffel_realloc (void *ptr, size_t nbytes)
 #endif	/* LMALLOC_DEBUG */
 	return ret;
 #else	/* LMALLOC_CHECK */
+#ifdef BOEHM_GC
+	return (Malloc_t) GC_realloc (ptr, nbytes);
+#else
 	return (Malloc_t) realloc (ptr, nbytes);
+#endif
 #endif	/* LMALLOC_CHECK */
 }
 
@@ -371,8 +389,13 @@ void eiffel_free(void *ptr)
 #endif	/* EIF_THREADS */
 #endif
 #else	/* LMALLOC_CHECK */
-	if (ptr)
+	if (ptr) {
+#ifdef BOEHM_GC
+		GC_free (ptr);
+#else
 		free (ptr);
+#endif
+	}
 #endif	/* LMALLOC_CHECK */
 }
 

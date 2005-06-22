@@ -141,6 +141,7 @@ feature -- Access
 			argument_count: INTEGER
 			alias_name: STRING_AS
 			operator: STRING
+			arguments: EIFFEL_LIST [TYPE_DEC_AS]
 			vfav: VFAV_SYNTAX
 		do
 			if
@@ -149,9 +150,6 @@ feature -- Access
 			then
 					-- Check if there are any operator names that violate VFAV rules
 				is_query := b.type /= Void
-				if b.arguments /= Void then
-					argument_count := b.arguments.count
-				end
 				from
 					f.start
 				until
@@ -164,6 +162,21 @@ feature -- Access
 					elseif alias_name /= Void then
 						vfav := Void
 						operator := alias_name.value
+						arguments := b.arguments
+						if arguments /= Void then
+								-- It's possible to calculate the value of `argument_count' once
+								-- before loop, but from the other hand it is required only for
+								-- features with aliases, so it makes sense to put it here.
+							from
+								argument_count := 0
+								arguments.start
+							until
+								arguments.after
+							loop
+								argument_count := argument_count + arguments.item.id_list.count
+								arguments.forth
+							end
+						end
 						if feature_name.is_bracket then
 							if not is_query or else argument_count < 1 then
 									-- Invalid bracket alias

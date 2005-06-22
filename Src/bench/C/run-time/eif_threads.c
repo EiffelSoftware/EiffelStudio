@@ -47,6 +47,9 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_object_id.h"
 #include "rt_cecil.h"
 #include "rt_debug.h"
+#ifdef BOEHM_GC
+#include "rt_boehm.h"
+#endif
 
 #include <string.h>
 
@@ -386,7 +389,14 @@ rt_private rt_global_context_t *eif_new_context (void)
 	eif_global_context_t *eif_globals;
 
 		/* Create and initialize private context */
+#ifdef BOEHM_GC
+		/* Because Boehm GC is not able to access per thread data for marking data that might
+		 * be references from there, we use the Boehm special allocator `GC_malloc_uncollectable'
+		 * which will make `rt_globals' one of the root for the GC mark and sweep. */
+	rt_globals = (rt_global_context_t *) GC_malloc_uncollectable (sizeof(rt_global_context_t));
+#else
 	rt_globals = (rt_global_context_t *) eif_malloc(sizeof(rt_global_context_t));
+#endif
 	if (!rt_globals) {
 		eif_thr_panic("No more memory for thread context");
 	}

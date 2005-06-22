@@ -109,7 +109,7 @@ feature {NONE} -- Initialization
 	initialize_editor_context is
 			-- Here initialize editor contextual settings.  For example, set location of cursor
 			-- pixmaps.
-		deferred
+		do
 		end		
 
 feature -- Access
@@ -533,7 +533,7 @@ feature -- Graphical interface
 
 	reference_window: EV_WINDOW is
 			-- Window which error dialogs will be shown relative to.		
-		deferred
+		do
 		end
 
 	show_warning_message (a_message: STRING) is

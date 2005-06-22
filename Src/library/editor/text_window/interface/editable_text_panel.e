@@ -9,7 +9,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EDITABLE_TEXT_PANEL
 
 inherit

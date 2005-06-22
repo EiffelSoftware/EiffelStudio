@@ -9,7 +9,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	KEYBOARD_SELECTABLE_TEXT_PANEL
 
 inherit

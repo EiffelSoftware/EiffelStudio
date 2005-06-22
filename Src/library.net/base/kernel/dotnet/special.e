@@ -352,12 +352,12 @@ feature -- Resizing
 		end
 
 	frozen aliased_resized_area_and_keep (n, j, k: INTEGER): like Current is
-			-- Try to resize `Current' with a count of `n', if not
-			-- possible a new copy.
+			-- Try to resize `Current' with a count of `n' and keeping the old
+			-- content between indices `j', `k'. If not possible a new copy.
 		require
-			valid_new_count: n > count
-			j_positive: j >= 0
-			k_positive: k >= 0
+			n_non_negative: n >= 0
+			j_non_negative: j >= 0
+			k_non_negative: k >= 0
 			k_valid: k <= count
 		do
 			create Result.make (n)

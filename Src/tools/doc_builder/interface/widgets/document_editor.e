@@ -12,7 +12,9 @@ inherit
 		redefine
 			on_mouse_button_up,
 			handle_extended_key,
-			handle_extended_ctrled_key
+			handle_extended_ctrled_key,
+			reference_window,
+			initialize_editor_context
 		end
 	
 	SHARED_OBJECTS

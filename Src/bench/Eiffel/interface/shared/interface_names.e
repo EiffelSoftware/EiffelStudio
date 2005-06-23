@@ -248,7 +248,7 @@ feature -- Accelerator, focus label and menu name
 	m_Editor: STRING is					"&Editor"
 	m_Eiffel_introduction: STRING is	"&Introduction to Eiffel"
 	f_Enable_stop_points: STRING is		"Enable all breakpoints"
-	m_Enable_stop_points: STRING is		"&Enable all breakpoints"
+	m_Enable_stop_points: STRING is		"&Enable All breakpoints"
 	m_Exec_last: STRING is				"&Out of Routine"
 	m_Exec_nostop: STRING is			"&Ignore Breakpoints"
 	m_Exec_step: STRING is				"&Step-by-Step"
@@ -388,12 +388,12 @@ feature -- Menu mnenomics
 	m_Formats: STRING is				"F&ormat"
 	m_Formatter_separators: ARRAY [STRING] is
 		once
-			Result := <<"Text generators", "Class relations", "Restrictors", "Main editor views">>
+			Result := <<"Text Generators", "Class Relations", "Restrictors", "Main Editor Views">>
 		end
 	m_History: STRING is				"&Go to"
 	m_Maximize: STRING is				"Ma&ximize"
 	m_Minimize: STRING is				"Mi&nimize"
-	m_Minimize_all: STRING is			"&Minimize all"
+	m_Minimize_all: STRING is			"&Minimize All"
 	m_New_editor: STRING is				"New Ed&itor Window"
 	m_New_context_tool: STRING is		"New Con&text Window"
 	m_Object: STRING is					"&Object"

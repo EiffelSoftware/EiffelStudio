@@ -122,14 +122,16 @@ feature -- Status setting
 				enable_dotnet_formatters (False)
 			end
 
-				-- Set the stones.
-			from
-				managed_formatters.start
-			until
-				managed_formatters.after
-			loop
-				managed_formatters.item.set_stone (cst)
-				managed_formatters.forth
+			if cst = Void or else internal_stone = Void or else not internal_stone.same_as (cst) then
+					-- Set the stones.
+				from
+					managed_formatters.start
+				until
+					managed_formatters.after
+				loop
+					managed_formatters.item.set_stone (cst)
+					managed_formatters.forth
+				end
 			end
 			internal_stone := cst
 		end
@@ -198,10 +200,16 @@ feature -- Status setting
 			end
 		end
 
-	quick_refresh is
+	quick_refresh_editor is
 			-- Refresh the editor.
 		do
 			shared_editor.refresh
+		end
+
+	quick_refresh_margin is
+			-- Refresh the editor's margin.
+		do
+			shared_editor.margin.refresh
 		end
 
 	set_parent_notebook (a_notebook: EV_NOTEBOOK) is

@@ -135,12 +135,11 @@ feature {NONE} -- Special childrens
 			
 			if l_object_value /= Void then
 				l_icd_class := l_object_value.get_class
-				l_icd_frame := Eifnet_debugger.current_stack_icor_debug_frame
-				check
-					l_icd_frame /= Void
-				end
-				
 				if l_icd_class /= Void then
+					l_icd_frame := Eifnet_debugger.current_stack_icor_debug_frame
+					check
+						l_icd_frame /= Void
+					end
 					l_class_token := l_icd_class.get_token
 					l_icd_module := l_icd_class.get_module
 					l_md_import := l_icd_module.interface_md_import

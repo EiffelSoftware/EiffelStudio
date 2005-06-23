@@ -355,7 +355,7 @@ feature -- Status setting
 			l_expr: EB_EXPRESSION
 			witem: like watched_item_from
 		do
-			watches_grid.remove_all_rows
+			watches_grid.remove_and_clear_all_rows
 			from
 				watched_items.start
 			until
@@ -400,8 +400,7 @@ feature -- Memory management
 				explorer_bar_item.recycle
 			end
 			recycle_expressions
-			watches_grid.remove_all_rows
-			watches_grid.clear
+			watches_grid.remove_and_clear_all_rows
 		end
 
 	recycle_expressions is
@@ -989,7 +988,7 @@ feature {NONE} -- Implementation
 			end
 			watches_grid.remove_selection
 			if watched_items.is_empty and watches_grid.row_count > 0 then
-				watches_grid.remove_all_rows
+				watches_grid.remove_and_clear_all_rows
 			end
 			from
 				watched_items.start

@@ -528,36 +528,16 @@ feature {NONE} -- Layout Implementation
 	clean_stack_objects_grid is
 		do
 			record_stack_layout
-			if internal_locals_row /= Void then
-				if internal_locals_row.parent /= Void then
-					grid_remove_subrows_from (internal_locals_row)
-					internal_locals_row.clear
-				end
-				internal_locals_row := Void
-			end
-			if internal_arguments_row /= Void then
-				if internal_arguments_row.parent /= Void then			
-					grid_remove_subrows_from (internal_arguments_row)
-					internal_arguments_row.clear
-				end
-				internal_arguments_row := Void
-			end
-			if internal_result_row /= Void then
-				if internal_result_row.parent /= Void then						
-					grid_remove_subrows_from (internal_result_row)
-					internal_result_row.clear
-				end
-				internal_result_row := Void
-			end
-			stack_objects_grid.remove_all_rows
-			stack_objects_grid.clear
+			internal_locals_row := Void
+			internal_arguments_row := Void
+			internal_result_row := Void
+			stack_objects_grid.remove_and_clear_all_rows
 		end
 
 	clean_debugged_objects_grid is
 		do
 			record_objects_layout
-			debugged_objects_grid.remove_all_rows
-			debugged_objects_grid.clear
+			debugged_objects_grid.remove_and_clear_all_rows
 		end
 
 	record_objects_layout is

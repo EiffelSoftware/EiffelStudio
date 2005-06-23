@@ -22,9 +22,9 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (op: STRING_AS; b: BOOLEAN; inf: BOOLEAN) is
+	initialize (op: STRING_AS; b: BOOLEAN; inf: BOOLEAN; l: LOCATION_AS) is
 			-- Create a new INFIX AST node.
-			-- `b' is `is_frozen', `inf' is `is_infix'.
+			-- `b' is `is_frozen', `inf' is `is_infix', `l' is a start location.
 		require
 			op_not_void: op /= Void
 		do
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			is_frozen := b
 			alias_name := op
 			create internal_name.initialize (get_internal_alias_name)
-			internal_name.set_position (op.line, op.column, op.position, op.location_count)
+			internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count)
 		ensure
 			is_frozen_set: is_frozen = b
 		end

@@ -521,7 +521,7 @@ feature -- Access
 		do
 		end
 
-	new_infix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is
+	new_infix_as (op: STRING_AS; b: BOOLEAN; l: LOCATION_AS): INFIX_PREFIX_AS is
 			-- New INFIX AST node
 		do
 		end
@@ -624,7 +624,7 @@ feature -- Access
 		do
 		end
 
-	new_prefix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is
+	new_prefix_as (op: STRING_AS; b: BOOLEAN; l: LOCATION_AS): INFIX_PREFIX_AS is
 			-- New PREFIX AST node
 		do
 		end

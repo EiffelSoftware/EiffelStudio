@@ -5057,11 +5057,11 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval71 := ast_factory.new_infix_as (yyvs65.item (yyvsp65), is_frozen) 
+yyval71 := ast_factory.new_infix_as (yyvs65.item (yyvsp65), is_frozen, yyvs3.item (yyvsp3)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp71 := yyvsp71 + 1
-	yyvsp1 := yyvsp1 -1
+	yyvsp3 := yyvsp3 -1
 	yyvsp65 := yyvsp65 -1
 	if yyvsp71 >= yyvsc71 then
 		if yyvs71 = Void then
@@ -5093,11 +5093,11 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval71 := ast_factory.new_prefix_as (yyvs65.item (yyvsp65), is_frozen) 
+yyval71 := ast_factory.new_prefix_as (yyvs65.item (yyvsp65), is_frozen, yyvs3.item (yyvsp3)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp71 := yyvsp71 + 1
-	yyvsp1 := yyvsp1 -1
+	yyvsp3 := yyvsp3 -1
 	yyvsp65 := yyvsp65 -1
 	if yyvsp71 >= yyvsc71 then
 		if yyvs71 = Void then
@@ -20898,8 +20898,8 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    2,    2,   86,    1,    1,
 			   86,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,   10,    1,    1,    1,    1,    7,    1,    1,    3,
-			    1,    1,    1,    5,    1,    4,    4,    1,    1,    1,
+			    1,   10,    1,    1,    1,    1,    7,    3,    1,    3,
+			    1,    3,    1,    5,    1,    4,    4,    1,    1,    1,
 			    1,    1,    1,    1,    2,    1,    1,    1,    1,    1,
 			    1,    1,    1,    2,    1,    1,   11,   14,   17,   18,
 			   19,    4,   21,   21,   23,   30,   35,   35,   35,   35,
@@ -21001,9 +21001,9 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    3,    1,    1,    1,    1,    1,    1,
 			    1,    1,    4,    4,    1,    1,    1,    1,    1,    1,
 			    1,    5,    1,    6,    1,    1,    1,    3,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    1,    1,    1,    1,    3,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    3,    1,
-			    1,    1,    1,    1,    1,    1,    7,    8,    1,    1,
+			    3,    1,    1,    1,    1,    1,    7,    8,    1,    1,
 
 			    1,    1,    9,    1,    1,    1,    1,    1,    1,    1,
 			    1,   10,    1,    1,    1,    1,    1,    1,    1,    1,

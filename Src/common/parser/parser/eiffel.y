@@ -57,11 +57,13 @@ create
 %token <LOCATION_AS> TE_END
 %token		TE_ENSURE TE_EXPANDED TE_EXPORT
 %token		TE_EXTERNAL TE_FEATURE TE_FROM TE_FROZEN TE_IF TE_INDEXING
-%token		TE_INFIX TE_INHERIT TE_INSPECT TE_INVARIANT TE_IS
+%token <LOCATION_AS> TE_INFIX
+%token		TE_INHERIT TE_INSPECT TE_INVARIANT TE_IS
 %token		TE_LIKE TE_LOCAL TE_LOOP TE_OBSOLETE TE_ONCE TE_ONCE_STRING
 %token <LOCATION_AS> TE_PRECURSOR
 %token		TE_AGENT
-%token		TE_PREFIX TE_REDEFINE TE_REFERENCE TE_RENAME TE_REQUIRE TE_RESCUE
+%token <LOCATION_AS> TE_PREFIX
+%token		TE_REDEFINE TE_REFERENCE TE_RENAME TE_REQUIRE TE_RESCUE
 %token <RESULT_AS>	TE_RESULT
 %token <RETRY_AS>	TE_RETRY
 %token		TE_SELECT TE_SEPARATE TE_THEN TE_UNDEFINE
@@ -601,12 +603,12 @@ Feature_name: Identifier_as_lower
 	;
 
 Infix: TE_INFIX Infix_operator
-			{ $$ := ast_factory.new_infix_as ($2, is_frozen) }
+			{ $$ := ast_factory.new_infix_as ($2, is_frozen, $1) }
 	;
 
 
 Prefix: TE_PREFIX Prefix_operator
-			{ $$ := ast_factory.new_prefix_as ($2, is_frozen) }
+			{ $$ := ast_factory.new_prefix_as ($2, is_frozen, $1) }
 	;
 
 Alias: TE_ALIAS Alias_name Alias_mark

@@ -736,7 +736,10 @@ feature {NONE} -- Implementation
 				ln := ln.next
 			end
 			if bp_count = bp_number then
-				display_line_with_context (line_index)
+					-- Only scroll when necessary
+				if first_line_displayed > line_index or first_line_displayed + number_of_lines_displayed <= line_index then
+					display_line_with_context (line_index)					
+				end
 			else
 				debug ("EDITOR")
 					io.error.put_string ("%N Editor Warning : Unable to scroll to Breakpoint number "+ bp_number.out + "%N")

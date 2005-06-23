@@ -831,6 +831,29 @@ feature -- Element change
 			arguments := operands
 		end
 
+	prepare_for_creation_expression_or_static_access (a_type: TYPE_AS; a_name: STRING; args: EIFFEL_LIST [EXPR_AS]) is
+			-- Prepare for feature in creation expression or a static access.
+		require
+			a_type_not_void: a_type /= Void
+			a_name_not_void: a_name /= Void
+		local
+			l_type: TYPE_A
+		do
+			if is_for_case then
+				name_of_current_feature := a_name
+			else
+				l_type := a_type.actual_type
+				local_adapt := unnested_local_adapt.adapt_feature ("", global_adapt)
+				local_adapt.set_source_type (l_type)
+				local_adapt.set_target_type (l_type)
+				local_adapt.set_evaluated_type
+				last_class_printed := Void
+				local_adapt := local_adapt.adapt_nested_feature (a_name, global_adapt)
+			end
+			was_infix_arguments := False
+			arguments := args
+		end
+
 feature -- Output
 
 	register_ancestors_invariants is

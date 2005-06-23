@@ -1557,8 +1557,10 @@ feature -- Function Evaluation
 --					l_icd_obj_val := icdv.query_interface_icor_debug_object_value
 					if l_icd_obj_val /= Void then
 						l_icd_class := l_icd_obj_val.get_class
-						l_icd_module := l_icd_class.get_module
-						l_feat_name := a_feat.external_name
+						if l_icd_class /= Void then
+							l_icd_module := l_icd_class.get_module
+							l_feat_name := a_feat.external_name
+						end
 						l_icd_obj_val.clean_on_dispose
 					end
 					l_prepared_icdv.clean_on_dispose
@@ -1706,10 +1708,12 @@ feature -- Specific function evaluation
 			if l_feat_count /= Void then
 				l_feat_count_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_count)
 				l_class := icd_string_instance.get_class
-				l_icd_value := icd_string_instance.get_field_value (l_class, l_feat_count_token)
-				if l_icd_value /= Void then
-					Result := edv_formatter.icor_debug_value_to_integer (l_icd_value)
-					l_icd_value.clean_on_dispose
+				if l_class /= Void then
+					l_icd_value := icd_string_instance.get_field_value (l_class, l_feat_count_token)
+					if l_icd_value /= Void then
+						Result := edv_formatter.icor_debug_value_to_integer (l_icd_value)
+						l_icd_value.clean_on_dispose
+					end
 				end
 			end
 		end			
@@ -1736,13 +1740,15 @@ feature -- Specific function evaluation
 			if l_feat_to_cil /= Void then
 				l_feat_to_cil_token := Il_debug_info_recorder.feature_token_for_non_generic (l_feat_to_cil)
 				l_class := icd_string_instance.get_class
-				l_module := l_class.get_module
-				l_function_to_cil := l_module.get_function_from_token (l_feat_to_cil_token)
-				l_icd_value := eifnet_dbg_evaluator.function_evaluation (Void, l_function_to_cil, <<icd_string_instance_ref>>)
-					--| l_icd_value represents the `System.String' value
-				if l_icd_value /= Void then
-					Result := edv_formatter.icor_debug_string_value (l_icd_value)
-					l_icd_value.clean_on_dispose
+				if l_class /= Void then
+					l_module := l_class.get_module
+					l_function_to_cil := l_module.get_function_from_token (l_feat_to_cil_token)
+					l_icd_value := eifnet_dbg_evaluator.function_evaluation (Void, l_function_to_cil, <<icd_string_instance_ref>>)
+						--| l_icd_value represents the `System.String' value
+					if l_icd_value /= Void then
+						Result := edv_formatter.icor_debug_string_value (l_icd_value)
+						l_icd_value.clean_on_dispose
+					end
 				end
 			end
 		end	
@@ -1816,9 +1822,11 @@ feature -- Specific function evaluation
 			l_class_type := a_class_type
 
 			l_icd_class := a_icd_obj.get_class
-			l_icd_module := l_icd_class.get_module
-			l_feature_token := l_icd_module.md_feature_token (l_icd_class.get_token, a_feat.feature_name) -- resolved {ANY}.generating_type
-			l_func := l_icd_module.get_function_from_token (l_feature_token)
+			if l_icd_class /= Void then
+				l_icd_module := l_icd_class.get_module
+				l_feature_token := l_icd_module.md_feature_token (l_icd_class.get_token, a_feat.feature_name) -- resolved {ANY}.generating_type
+				l_func := l_icd_module.get_function_from_token (l_feature_token)
+			end
 
 			if l_func /= Void then
 				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
@@ -1873,31 +1881,31 @@ feature -- Specific function evaluation
 				print ("<start> "+ generator + ".debug_output_value_from_object_value %N")
 			end
 
-
 			l_class_type := a_class_type
 			l_feat := debug_output_feature_i (l_class_type.associated_class)
 			if l_feat /= Void then
 				l_icd_class := a_icd_obj.get_class
-				l_icd_module := l_icd_class.get_module
-			
-				l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat, l_class_type)
-				if l_feat.is_attribute then
-					l_icd := a_icd_obj.get_field_value (l_icd_class, l_feature_token)
-				else
-					if l_feature_token = 0 then
-						l_func := icd_function_by_name (l_class_type, l_feat.feature_name)
-					else				
-						l_func := l_icd_module.get_function_from_token (l_feature_token)
-					end
-					if l_func /= Void then
-						l_icd_frame := a_frame
-						l_icd := eifnet_dbg_evaluator.function_evaluation (l_icd_frame, l_func, <<a_icd>>)
-					else						
-						debug ("DEBUGGER_TRACE_EVAL")
-							print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
-							print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
-							print ("                                :: module_name   = %"" + l_icd_module.get_name + "%"%N")
-							print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
+				if l_icd_class /= Void then
+					l_icd_module := l_icd_class.get_module
+					l_feature_token := Il_debug_info_recorder.feature_token_for_feat_and_class_type (l_feat, l_class_type)
+					if l_feat.is_attribute then
+						l_icd := a_icd_obj.get_field_value (l_icd_class, l_feature_token)
+					else
+						if l_feature_token = 0 then
+							l_func := icd_function_by_name (l_class_type, l_feat.feature_name)
+						else				
+							l_func := l_icd_module.get_function_from_token (l_feature_token)
+						end
+						if l_func /= Void then
+							l_icd_frame := a_frame
+							l_icd := eifnet_dbg_evaluator.function_evaluation (l_icd_frame, l_func, <<a_icd>>)
+						else						
+							debug ("DEBUGGER_TRACE_EVAL")
+								print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
+								print ("                                :: class name    = [" + l_class_type.full_il_type_name + "]%N")
+								print ("                                :: module_name   = %"" + l_icd_module.get_name + "%"%N")
+								print ("                                :: feature_token = 0x" + l_feature_token.to_hex_string + " %N")
+							end
 						end
 					end
 				end
@@ -1945,26 +1953,30 @@ feature -- Specific function evaluation
 -- FIXME jfiat [2004/07/20] : why do we use a_icd as l_icd if failed ?
 --			l_icd := a_icd
 			l_icd_class := a_icd_obj.get_class
-			l_icd_module := l_icd_class.get_module
-			l_module_name := l_icd_module.get_name
+			if l_icd_class /= Void then
+				l_icd_module := l_icd_class.get_module
+				l_module_name := l_icd_module.get_name
 
-			l_feature_token := Edv_external_formatter.token_Exception_ToString
-			l_func := l_icd_module.get_function_from_token (l_feature_token)
+				l_feature_token := Edv_external_formatter.token_Exception_ToString
+				l_func := l_icd_module.get_function_from_token (l_feature_token)
 
-			if l_func /= Void then
-				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
-				if l_icd /= Void then
-						--| We should get a System.String
-					create l_debug_info.make (l_icd)
-					l_icdov := l_debug_info.interface_debug_object_value
-					Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
-					l_icdov.clean_on_dispose
-					l_debug_info.icd_prepared_value.clean_on_dispose
-					l_debug_info.clean
-					l_icd.clean_on_dispose
-				else
-					Result := Void -- "WARNING: Could not evaluate output"	
+				if l_func /= Void then
+					l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
+					if l_icd /= Void then
+							--| We should get a System.String
+						create l_debug_info.make (l_icd)
+						l_icdov := l_debug_info.interface_debug_object_value
+						Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
+						l_icdov.clean_on_dispose
+						l_debug_info.icd_prepared_value.clean_on_dispose
+						l_debug_info.clean
+						l_icd.clean_on_dispose
+--					else
+--						Result := Void -- "WARNING: Could not evaluate output"	
+					end
 				end
+--			else
+--				Result := Void -- "WARNING: Could not evaluate output"	
 			end
 
 			debug ("debugger_trace_eval")

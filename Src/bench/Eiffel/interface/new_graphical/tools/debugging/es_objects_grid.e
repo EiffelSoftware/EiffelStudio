@@ -375,17 +375,17 @@ feature -- Grid helpers
 			Result := grid_extended_new_subrow (a_row)
 		end	
 
-	remove_subrows_from (a_row: EV_GRID_ROW) is
+	remove_and_clear_subrows_from (a_row: EV_GRID_ROW) is
 		require
 			a_row /= Void
 			row_related_to_current: a_row.parent = Current
 		do
-			grid_remove_subrows_from (a_row)
+			grid_remove_and_clear_subrows_from (a_row)
 		end
 
-	remove_all_rows is
+	remove_and_clear_all_rows is
 		do
-			grid_remove_all_rows (Current)
+			grid_remove_and_clear_all_rows (Current)
 		end
 
 end

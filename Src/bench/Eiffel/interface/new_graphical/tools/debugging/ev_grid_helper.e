@@ -159,7 +159,10 @@ feature -- Access
 			Result := g.row (r)
 		end	
 
-	grid_remove_subrows_from (a_row: EV_GRID_ROW) is
+	grid_remove_and_clear_subrows_from (a_row: EV_GRID_ROW) is
+			-- Remove all subrows of `a_row' and clear the subrows
+			-- as much as possible
+			-- but do not clear `a_row'
 		require
 			a_row /= Void
 		local
@@ -169,20 +172,21 @@ feature -- Access
 			g := a_row.parent
 			if g /= Void then
 				from
-	
 				until
 					a_row.subrow_count = 0
 				loop
-					r := a_row.subrow (1)
+					r := a_row.subrow (a_row.subrow_count)
+					grid_remove_and_clear_subrows_from (r)
+					grid_clear_row (r)
 					g.remove_row (r.index)
-				end				
+				end
 			end
 		ensure
 			a_row.subrow_count = 0
 			a_row.subrow_count_recursive = 0
 		end
 
-	grid_remove_all_rows (g: EV_GRID) is
+	grid_remove_and_clear_all_rows (g: EV_GRID) is
 		require
 			g /= Void
 		local
@@ -193,13 +197,21 @@ feature -- Access
 			until
 				rc = 0
 			loop
+				grid_clear_row (g.row (rc))
 				g.remove_row (rc)
 				rc := g.row_count				
 			end
+			g.clear
 		ensure
 			g.row_count = 0
 			g.selected_rows.count = 0
 		end
 
+	grid_clear_row (row: EV_GRID_ROW) is
+			-- Clear the row
+		do
+			row.set_data (Void)
+			row.clear
+		end
 
 end

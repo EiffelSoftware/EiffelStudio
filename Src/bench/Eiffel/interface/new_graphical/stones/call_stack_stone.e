@@ -63,18 +63,7 @@ feature {NONE} -- Initialization
 				elem ?= curr_cs.i_th (level_num)
 				if elem /= Void then
 					obj_make (elem.object_address, " ", elem.dynamic_class)
-						--| We try to give the feature relative to the dynamic class.
-						--| However, in case of a Precursor, we fall back to the feature in its static context.
-					prev_feat := elem.routine
-					check
-						prev_feat_not_void: prev_feat /= Void
-					end
-					cur_feat := prev_feat.written_feature
-					if cur_feat = Void then
-							-- We are in a Precursor.
-						cur_feat := prev_feat
-					end
-					feature_make (cur_feat)
+					feature_make (elem.routine)
 				end
 			end
 		end

@@ -72,6 +72,8 @@ feature -- Filling
 			a_dyn_type: CLASS_TYPE;
 			a_feature: FEATURE_I; 
 			a_il_offset: INTEGER; a_line_number: INTEGER) is
+		local
+			l_routine: E_FEATURE
 		do
 			icd_chain := a_chain
 			icd_chain.add_ref
@@ -104,7 +106,17 @@ feature -- Filling
 
 			is_melted := melted
 			routine_name := a_feature.feature_name
+
+				-- Get E_FEATURE from `a_feature'.
 			routine := a_feature.e_feature
+				-- Adapt `routine' to `dynamic_class' and handles precursor case.
+			if dynamic_class /= written_class then
+				l_routine := dynamic_class.feature_with_rout_id (a_feature.rout_id_set.first)
+				if l_routine.written_in = written_class.class_id then
+						-- Not the precursor case.
+					routine := l_routine
+				end
+			end
 			private_body_index := -1
 		end
 		

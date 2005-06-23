@@ -124,7 +124,7 @@ feature -- Access
 			create Result.make
 			Result.add_lines_observer (Current)
 			Result.add_edition_observer (Current)
-			Result.set_first_read_block_size (number_of_lines_displayed)
+			Result.set_first_read_block_size (number_of_lines_in_block)
 		ensure
 			new_text_not_void: Result /= Void
 		end
@@ -494,7 +494,7 @@ feature -- Basic Operations
 			file_loading_setup
 
 				-- Read and parse the file.
-			text_displayed.set_first_read_block_size (number_of_lines_displayed)
+			text_displayed.set_first_read_block_size (number_of_lines_in_block)
 			text_displayed.load_string (s)
 
 				-- Setup the editor to load first page
@@ -576,6 +576,14 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 			end			
 		end
 
+	number_of_lines_in_block: INTEGER is
+			-- Default number of lines read when loading a text in editor.
+		do
+			Result := 4 * number_of_lines_displayed
+		ensure
+			number_of_lines_computed_non_negative: Result >= 0
+		end
+		
 	editor_width: INTEGER
 			-- Width of the text. (i.e. minimum width of the panel
 			-- for which no scroll bar is needed)

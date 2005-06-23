@@ -153,7 +153,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
 			is_attached_to_row: is_attached_to_row
 		do
 			if row.parent /= Void then
-				grid_remove_subrows_from (row)
+				grid_remove_and_clear_subrows_from (row)
 				row.clear
 			end
 			row.set_data (Void)
@@ -168,7 +168,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
 			is_attached_to_row: is_attached_to_row
 		do
 			if row.parent /= Void then
-				grid_remove_subrows_from (row)
+				grid_remove_and_clear_subrows_from (row)
 				row.ensure_non_expandable
 				row.clear
 			end
@@ -715,7 +715,7 @@ feature {NONE} -- Filling
 			glab: EV_GRID_LABEL_ITEM
 		do
 			row_items_filled := True		
-			grid_remove_subrows_from (a_row)
+			grid_remove_and_clear_subrows_from (a_row)
 			grid := a_row.parent
 			if has_attributes_values then
 				glab := folder_label_item (Interface_names.l_Object_attributes)
@@ -791,7 +791,7 @@ feature {NONE} -- Filling
 		do
 			row_attributes_filled := True
 				-- We remove the dummy item.
-			grid_remove_subrows_from (a_row)
+			grid_remove_and_clear_subrows_from (a_row)
 			vlist := sorted_attributes_values
 			if vlist /= Void and then not vlist.is_empty then
 					--| better being sure it won't happen |--
@@ -847,7 +847,7 @@ feature {NONE} -- Filling
 			row_onces_filled := True
 
 			-- We remove the dummy item.
-			grid_remove_subrows_from (a_row)
+			grid_remove_and_clear_subrows_from (a_row)
 			flist := sorted_once_functions
 			check
 				flist /= Void and then not flist.is_empty
@@ -973,32 +973,34 @@ feature {NONE} -- Filling
 			if l_dotnet_ref_value /= Void and not flist.is_empty then
 					--| Eiffel dotnet |--
 				l_dotnet_ref_value.get_object_value
-				from
-					flist.start
-				until
-					flist.after
-				loop
-					l_feat := flist.item
-					if dv /= Void then
-						odv := l_dotnet_ref_value.once_function_value (l_feat)
+				if l_dotnet_ref_value.object_value /= Void then
+					from
+						flist.start
+					until
+						flist.after
+					loop
+						l_feat := flist.item
+						if dv /= Void then
+							odv := l_dotnet_ref_value.once_function_value (l_feat)
+						end
+						if odv /= Void then
+							add_debug_value_to_grid_row (a_row, odv)
+						else
+							grid.insert_new_row_parented (r, a_row)
+	
+							glab := name_label_item (l_feat.name)
+							grid.set_item (Col_name_index, r, glab)
+	
+							glab := type_label_item (Interface_names.l_Not_yet_called)
+							grid.set_item (Col_type_index, r, glab)
+	
+							grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.Icon_void_object)
+						end
+						r := r + 1
+						flist.forth
 					end
-					if odv /= Void then
-						add_debug_value_to_grid_row (a_row, odv)
-					else
-						grid.insert_new_row_parented (r, a_row)
-
-						glab := name_label_item (l_feat.name)
-						grid.set_item (Col_name_index, r, glab)
-
-						glab := type_label_item (Interface_names.l_Not_yet_called)
-						grid.set_item (Col_type_index, r, glab)
-
-						grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.Icon_void_object)
-					end
-					r := r + 1
-					flist.forth
+					l_dotnet_ref_value.release_object_value				
 				end
-				l_dotnet_ref_value.release_object_value				
 			end
 		end
 

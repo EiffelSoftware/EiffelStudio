@@ -661,7 +661,6 @@ feature -- Output
 				if a /= Void then
 					st.add_space
 					st.add (Ti_alias_keyword)
-					st.add_space
 					create ot.make (Current, extract_alias_name (a))
 				end
 			end

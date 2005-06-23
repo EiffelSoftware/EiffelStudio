@@ -95,23 +95,30 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	recompute_text_dimensions is
 			-- Recompute `internal_text_width' and `internal_text_height'.
 		local
-			dimensions: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
+			l_internal_text_width, l_internal_text_height: INTEGER
 		do
 			if must_recompute_text_dimensions then
 				if interface.font /= Void then
-					dimensions := interface.font.string_size (interface.text)
+					parent_i.string_size (interface.text, interface.font, text_dimensions)
 				else
-					dimensions := internal_default_font.string_size (interface.text)
+					parent_i.string_size (interface.text, internal_default_font, text_dimensions)
 				end
-				internal_text_width := dimensions.integer_item (1) - dimensions.integer_item (3) + dimensions.integer_item (4)
-				internal_text_height := dimensions.integer_item (2)
-				internal_text_width := internal_text_width + dimensions.integer_item (3)
+				internal_text_width := text_dimensions.integer_item (1)
+				internal_text_height := text_dimensions.integer_item (2)
 			end
 			must_recompute_text_dimensions := False
 		ensure	
 			dimensions_recomputed: must_recompute_text_dimensions = False
 		end
 		
+	text_dimensions: TUPLE [INTEGER, INTEGER] is
+			-- A once tuple for use within `recompute_text_dimensions' to
+			-- prevent the need for always creating new tuples.
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
 		
 	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP) is
 			-- Redraw `Current'.

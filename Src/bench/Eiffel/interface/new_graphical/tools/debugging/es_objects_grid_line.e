@@ -973,7 +973,7 @@ feature {NONE} -- Filling
 			if l_dotnet_ref_value /= Void and not flist.is_empty then
 					--| Eiffel dotnet |--
 				l_dotnet_ref_value.get_object_value
-				if l_dotnet_ref_value.object_value /= Void then
+				if l_dotnet_ref_value.has_object_value then
 					from
 						flist.start
 					until

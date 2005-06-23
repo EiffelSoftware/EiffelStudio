@@ -2389,6 +2389,7 @@
 								<File Id="wel_atom.e" Name="wel_atom.e" />
 								<File Id="wel_window_manager.e" Name="WEL_WI~A.E" LongName="wel_window_manager.e" />
 								<File Id="wel_shared_memory_string.e" Name="WEL_SH~2.E" LongName="wel_shared_memory_string.e" />
+								<File Id="wel_shared_temporary_objects_e" Name="WEL_SH~3.E" LongName="wel_shared_temporary_objects.e" />
 								<File Id="wel_clipboard.e" Name="WEL_CL~2.E" LongName="wel_clipboard.e" />
 								<File Id="wel_version.e" Name="WEL_VE~1.E" LongName="wel_version.e" />
 								<File Id="wel_input_event.e" Name="WEL_IN~5.E" LongName="wel_input_event.e" />

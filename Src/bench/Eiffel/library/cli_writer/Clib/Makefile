@@ -33,6 +33,9 @@ cli_writer.obj: cli_writer.cpp metadata_consumer.idl cli_writer.h Makefile
 cli_debugger.obj: cli_debugger.cpp  cli_debugger.h Makefile
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger.cpp 
 
+cli_debugger_utils.obj:  cli_debugger_utils.cpp cli_debugger_utils.h Makefile
+	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger_utils.cpp
+
 cli_debugger_callback.obj:  cli_debugger_callback.cpp cli_debugger_callback.h Makefile
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger_callback.cpp
 
@@ -40,7 +43,7 @@ cli_debugger_callback_id.obj:  cli_debugger_callback_id.cpp cli_debugger_callbac
 	$(CC) $(CFLAGS) $(OPT_CFLAGS) -c cli_debugger_callback_id.cpp
 
 OBJ_WRITER = cli_writer.obj ise_vs_fusion_support.obj metadata_consumer.obj
-OBJ_DEBUGGER = cli_debugger.obj cli_debugger_callback.obj cli_debugger_callback_id.obj
+OBJ_DEBUGGER = cli_debugger.obj cli_debugger_callback.obj cli_debugger_callback_id.obj cli_debugger_utils.obj
 
 cli_writer.lib: $(OBJ_WRITER)
 	if exist $@ del $@

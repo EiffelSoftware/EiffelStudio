@@ -57,7 +57,7 @@ feature {ICOR_OBJECTS_MANAGER} -- Special feature for ICOR_OBJECTS_MANAGER
 			item := p
 		ensure
 			item_set: item = p
-		end		
+		end
 
 feature -- dispose
 
@@ -216,14 +216,25 @@ feature -- Access status
 				--| HRESULT .. < 0 if error ...
 		end
 
+	last_error_code: INTEGER is
+			-- Convert `last_call_success' to hex and keep the last word
+		do
+			Result := Api_error_code_formatter.error_code_to_id (last_call_success)
+		end
+		
 	last_error_code_id: STRING is
 			-- Convert `last_call_success' to hex and keep the last word
 		do
-			Result := last_call_success.to_hex_string
+			Result := last_error_code.to_hex_string
 			Result.keep_tail (4)
 		end
 
 feature {ICOR_EXPORTER} -- Implementation
+
+	Api_error_code_formatter: EIFNET_API_ERROR_CODE_FORMATTER is
+		once
+			Create Result
+		end
 
 	frozen cwin_close_handle (a_hdl: POINTER): INTEGER is
 				-- CloseHandle (HANDLE)

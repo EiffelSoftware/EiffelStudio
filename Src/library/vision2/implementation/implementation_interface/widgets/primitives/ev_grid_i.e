@@ -2797,69 +2797,66 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			else
 				l_total_row_height := total_row_height
 			end
-			if l_total_row_height /= last_computed_row_height or has_vertical_scrolling_per_item_just_changed then
-				l_client_height := viewable_height
-					-- Note that `height' was not used as we want it to represent only the height of
-					-- the "client area" which is `viewport'.
+			l_client_height := viewable_height
+				-- Note that `height' was not used as we want it to represent only the height of
+				-- the "client area" which is `viewport'.
+			
 				
-					
-				if l_total_row_height > l_client_height then
-						-- The rows are higher than the visible client area.
-					if not vertical_scroll_bar.is_show_requested then
-							-- Show `vertical_scroll_bar' if not already shown.
-						vertical_scroll_bar.show
-						update_scroll_bar_spacer
+			if l_total_row_height > l_client_height then
+					-- The rows are higher than the visible client area.
+				if not vertical_scroll_bar.is_show_requested then
+						-- Show `vertical_scroll_bar' if not already shown.
+					vertical_scroll_bar.show
+					update_scroll_bar_spacer
+				end
+					-- Update the range and leap of `vertical_scroll_bar' to reflect the relationship between
+					-- `l_total_row_height' and `l_client_height'. Note that the behavior depends on the state of
+					-- `is_vertical_scrolling_per_item'.
+				if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
+					previous_scroll_bar_value := vertical_scroll_bar.value
+				end
+				if is_vertical_scrolling_per_item then					
+					vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, visible_row_count - 1))
+					average_row_height := (l_total_row_height // visible_row_count)
+					vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
+					if has_vertical_scrolling_per_item_just_changed then
+							-- If we are just switching from per pixel to per item vertical
+							-- scrolling, we must approximate the previous position of the scroll bar.
+						vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
 					end
-						-- Update the range and leap of `vertical_scroll_bar' to reflect the relationship between
-						-- `l_total_row_height' and `l_client_height'. Note that the behavior depends on the state of
-						-- `is_vertical_scrolling_per_item'.
-					if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
-						previous_scroll_bar_value := vertical_scroll_bar.value
-					end
-					if is_vertical_scrolling_per_item then					
-						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, visible_row_count - 1))
-						average_row_height := (l_total_row_height // visible_row_count)
-						vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
-						if has_vertical_scrolling_per_item_just_changed then
-								-- If we are just switching from per pixel to per item vertical
-								-- scrolling, we must approximate the previous position of the scroll bar.
-							vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
+					if is_item_height_changing then
+							-- The `value' of the scroll bar should not have changed.
+						check
+							scroll_bar_not_moved: vertical_scroll_bar.value = previous_scroll_bar_value
 						end
-						if is_item_height_changing then
-								-- The `value' of the scroll bar should not have changed.
-							check
-								scroll_bar_not_moved: vertical_scroll_bar.value = previous_scroll_bar_value
-							end
-								-- We call the change actions explicitly, so that it behaves as if the value had just
-								-- changed, which ensures that the currently scrolled to item is still displayed at the top.
-							vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
-						end
-					else
-						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_row_height - l_client_height))
-						vertical_scroll_bar.set_leap (height)
-						if has_vertical_scrolling_per_item_just_changed then
-								-- If we are just switching from per item to per pixel vertical
-								-- scrolling, we can set the position of the scroll bar exactly to match it's
-								-- previous position.
-							if is_tree_enabled or not is_row_height_fixed then
-								vertical_scroll_bar.set_value ((row_offsets @ (previous_scroll_bar_value + 1)).min (vertical_scroll_bar.value_range.upper))
-							else
-									-- Must restrict to the maximum permitted value, as the virtual area
-									-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
-								vertical_scroll_bar.set_value ((previous_scroll_bar_value * row_height).min (vertical_scroll_bar.value_range.upper))
-							end
-						end
+							-- We call the change actions explicitly, so that it behaves as if the value had just
+							-- changed, which ensures that the currently scrolled to item is still displayed at the top.
+						vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
 					end
 				else
-						-- The rows are not as high as the visible client area.
-					if vertical_scroll_bar.is_show_requested then
-							-- Hide `vertical_scroll_bar' as it is not required.
-						vertical_scroll_bar.hide
-						update_scroll_bar_spacer
+					vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_row_height - l_client_height))
+					vertical_scroll_bar.set_leap (height)
+					if has_vertical_scrolling_per_item_just_changed then
+							-- If we are just switching from per item to per pixel vertical
+							-- scrolling, we can set the position of the scroll bar exactly to match it's
+							-- previous position.
+						if is_tree_enabled or not is_row_height_fixed then
+							vertical_scroll_bar.set_value ((row_offsets @ (previous_scroll_bar_value + 1)).min (vertical_scroll_bar.value_range.upper))
+						else
+								-- Must restrict to the maximum permitted value, as the virtual area
+								-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
+							vertical_scroll_bar.set_value ((previous_scroll_bar_value * row_height).min (vertical_scroll_bar.value_range.upper))
+						end
 					end
 				end
+			else
+					-- The rows are not as high as the visible client area.
+				if vertical_scroll_bar.is_show_requested then
+						-- Hide `vertical_scroll_bar' as it is not required.
+					vertical_scroll_bar.hide
+					update_scroll_bar_spacer
+				end
 			end
-			last_computed_row_height := l_total_row_height
 		end
 		
 	recompute_horizontal_scroll_bar is
@@ -3232,8 +3229,6 @@ feature {NONE} -- Drawing implementation
 		
 	last_dashed_line_position: INTEGER
 		-- Last horizontal coordinate of dashed line drawn when slider is moved.
-	
-	last_computed_row_height: INTEGER
 		
 	vertical_scroll_bar_changed (a_value: INTEGER) is
 			-- Respond to a change in value from `vertical_scroll_bar'.
@@ -4449,6 +4444,19 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			end
 		ensure
 			item_removed: not internal_selected_items.has (a_item)
+		end
+		
+	string_size (s: STRING; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER]) is
+			-- `Result' contains width and height required to
+			-- fully display string `s' in font `f'.
+			-- This should be used instead of `string_size' from EV_FONT
+			-- as we can perform an optimized implementation which does
+			-- not include the horizontal overhang or underhang. This can
+			-- make quite a difference on certain platforms.
+		require
+			s_not_void: s /= Void
+			f_not_void: f /= Void
+		deferred
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- Implementation

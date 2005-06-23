@@ -99,7 +99,7 @@ feature {NONE} -- Internal Initialisation
 		do
 			if not error_occurred then
 				referenced_address := icd_referenced_value.get_address
-				object_address := icd_prepared_value.get_address					
+				object_address := icd_prepared_value.get_address
 				
 --				if referenced_address = 0 then
 -- FIXME jfiat: 20040316 : null address for non null object : Check this
@@ -229,7 +229,6 @@ feature -- Queries
 			-- ICOR_DEBUG_CLASS related to this Current value
 		require
 			has_object_interface: has_object_interface	
-		local
 		do
 			Result := once_value_icd_class
 			if Result = Void then
@@ -383,8 +382,39 @@ feature -- Interface Access
 			-- ICorDebugObjectValue interface
 		require
 			valid_object_type: is_reference_type or else is_class or else is_object or else is_valuetype
+		local
+			l_heap: ICOR_DEBUG_HEAP_VALUE
+			l_strong: ICOR_DEBUG_HANDLE_VALUE
+			l_ref: ICOR_DEBUG_REFERENCE_VALUE
+			l_icdv: ICOR_DEBUG_VALUE
 		do
 			Result := icd_prepared_value.query_interface_icor_debug_object_value
+			if Result /= Void then
+				l_heap := Result.query_interface_icor_debug_heap_value
+				if l_heap /= Void then
+					if not l_heap.is_valid then
+							--| Get the value from the Strong reference
+						if icd_prepared_value /= Void then
+							l_strong := icd_prepared_value.strong_reference_value
+							if l_strong /= Void then
+								l_ref := l_strong.query_interface_icor_debug_reference_value
+								if l_ref /= Void then
+									l_icdv := l_ref.dereference
+									if l_icdv /= Void then
+										Result := l_icdv.query_interface_icor_debug_object_value
+										l_icdv.clean_on_dispose
+									end
+									l_ref.clean_on_dispose
+								end
+									--| do not clean l_strong, since it is an attribute
+									--| and can be resused later
+--								l_strong.clean_on_dispose
+							end
+						end
+					end
+					l_heap.clean_on_dispose
+				end
+			end
 		end
 		
 -- NOTA jfiat [2004/07/20] : not used for now

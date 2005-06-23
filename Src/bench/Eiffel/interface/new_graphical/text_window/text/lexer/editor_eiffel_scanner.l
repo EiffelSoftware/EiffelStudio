@@ -153,6 +153,7 @@ H		([0-9A-Fa-f])
 [iI][fF]								|
 [iI][mM][pP][lL][iI][eE][sS]			|
 [iI][nN][dD][eE][xX][iI][nN][gG]		|
+[iI][nN][fF][iI][xX]				|
 [iI][nN][hH][eE][rR][iI][tT]			|
 [iI][nN][sS][pP][eE][cC][tT]			|
 [iI][nN][vV][aA][rR][iI][aA][nN][tT]	|
@@ -166,6 +167,7 @@ H		([0-9A-Fa-f])
 [oO][nN][cC][eE]						|
 [oO][rR]								|
 [pP][rR][eE][cC][uU][rR][sS][oO][rR]	|
+[pP][rR][eE][fF][iI][xX]		|
 [rR][eE][fF][eE][rR][eE][nN][cC][eE]	|
 [rR][eE][dD][eE][fF][iI][nN][eE]		|
 [rR][eE][nN][aA][mM][eE]				|

@@ -608,7 +608,6 @@ end;
 			inherited_info: INHERIT_INFO;
 			feature_i: FEATURE_I;
 			def: DEFINITION;
-			has_convert_mark: BOOLEAN
 		do
 			from
 					-- Iteration on the structure
@@ -630,9 +629,7 @@ end;
 						-- parent.
 					feature_i := inherited_info.a_feature;
 						-- Feature name
-					has_convert_mark := feature_i.has_convert_mark
 					feature_i.set_feature_name_id (feature_name_id, feature_i.alias_name_id)
-					feature_i.set_has_convert_mark (has_convert_mark)
 						-- initialization of an inherited feature
 					init_inherited_feature (feature_i, inherit_feat);
 						-- Insertion in the origin table
@@ -1241,7 +1238,6 @@ end;
 			feature_name_id: INTEGER;
 			join: JOIN;
 			vdrs4: VDRS4;
-			has_convert_mark: BOOLEAN
 		do
 			from
 				start
@@ -1266,9 +1262,7 @@ end;
 						deferred_info := inherit_feat.deferred_features.first;
 							-- New inherited feature
 						inherited_feature := deferred_info.a_feature
-						has_convert_mark := inherited_feature.has_convert_mark
 						inherited_feature.set_feature_name_id (feature_name_id, inherited_feature.alias_name_id)
-						inherited_feature.set_has_convert_mark (has_convert_mark)
 							-- Initialization of an inherited feature
 						init_inherited_feature (inherited_feature, inherit_feat);
 							-- Insertion in the origin table

@@ -150,6 +150,7 @@ feature -- Constants
 	move_data_name_id: INTEGER is 140
 	overlapping_move_name_id: INTEGER is 141
 	non_overlapping_move_name_id: INTEGER is 142
+	bracket_symbol_id: INTEGER is 143
 			-- Predefined name IDs constants
 
 feature -- Classification

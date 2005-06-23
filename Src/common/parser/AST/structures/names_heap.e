@@ -307,6 +307,7 @@ feature {NONE} -- Implementation: access
 			put ("move_data") check found_item = move_data_name_id end
 			put ("overlapping_move") check found_item = overlapping_move_name_id end
 			put ("non_overlapping_move") check found_item = non_overlapping_move_name_id end
+			put ("[]") check found_item = bracket_symbol_id end
 		end
 		
 invariant

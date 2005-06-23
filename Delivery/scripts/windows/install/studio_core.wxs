@@ -388,7 +388,9 @@
 								<File Id="icon_maximize_color.png" Name="ICON_M~1.PNG" LongName="icon_maximize_color.png" />
 								<File Id="icon_minimize_color.png" Name="ICD00A~1.PNG" LongName="icon_minimize_color.png" />
 								<File Id="icon_mini_back_color.png" Name="ICON_M~2.PNG" LongName="icon_mini_back_color.png" />
-								<File Id="icon_mini_forth_color.png" Name="ICON_M~3.PNG" LongName="icon_mini_forth_color.png" />
+								<File Id="icon_mini_down_color_png" Name="ICON_M~3.PNG" LongName="icon_mini_down_color.png" />
+								<File Id="icon_mini_forth_color.png" Name="ICON_M~4.PNG" LongName="icon_mini_forth_color.png" />
+								<File Id="icon_mini_up_color.png" Name="IC4783~1.PNG" LongName="icon_mini_up_color.png" />
 								<File Id="icon_new_class_small_color.png" Name="ICON_N~4.PNG" LongName="icon_new_class_small_color.png" />
 								<File Id="icon_new_cluster_small_color.png" Name="IC359A~1.PNG" LongName="icon_new_cluster_small_color.png" />
 								<File Id="icon_new_expression_color.png" Name="IC9FFA~1.PNG" LongName="icon_new_expression_color.png" />
@@ -397,6 +399,7 @@
 								<File Id="icon_nothing.png" Name="IC9C4B~1.PNG" LongName="icon_nothing.png" />
 								<File Id="icon_numeric_format.png1" Name="IC5D1C~1.PNG" LongName="icon_numeric_format_very_small_color.png" />
 								<File Id="icon_on_off_very_small_color.png" Name="ICA322~1.PNG" LongName="icon_on_off_very_small_color.png" />
+								<File Id="icon_open_menu_small_color_png" Name="ICON_O~2.PNG" LongName="icon_open_menu_small_color.png" />
 								<File Id="icon_open_project.png" Name="ICON_O~4.PNG" LongName="icon_open_project.png" />
 								<File Id="icon_pin_closed_color.png" Name="ICON_P~1.PNG" LongName="icon_pin_closed_color.png" />
 								<File Id="icon_pin_open_color.png" Name="ICCD2F~1.PNG" LongName="icon_pin_open_color.png" />
@@ -463,7 +466,10 @@
 					<Directory Id="help" Name="help">
 						<Directory Id="errors" Name="errors">
 							<Component Id="errors" Guid="50FB8C41-7003-411B-8E28-947E877DA5B6">
-								<File Id="COMP_INT" Name="COMP_INT" KeyPath="yes"/>
+								<File Id="COMP_INT" Name="COMP_INT" />
+								<File Id="ECMA-VDJR" Name="ECMA-V~1" LongName="ECMA-VDJR" />
+								<File Id="ECMA-VDRD" Name="ECMA-V~2" LongName="ECMA-VDRD" />
+								<File Id="ECMA-VMFN" Name="ECMA-V~3" LongName="ECMA-VMFN" />
 								<File Id="NO_LICENSE" Name="NO_LIC~1" LongName="NO_LICENSE" />
 								<File Id="RE_INT" Name="RE_INT" />
 								<File Id="VAOL" Name="VAOL" />
@@ -477,10 +483,8 @@
 								<File Id="VCRN" Name="VCRN" />
 								<File Id="VDCN" Name="VDCN" />
 								<File Id="VDJR" Name="VDJR" />
-								<File Id="VDJR_ECMA" Name="VDJR_E~1" LongName="VDJR_ECMA" />
 								<File Id="VDOC" Name="VDOC" />
 								<File Id="VDRD" Name="VDRD" />
-								<File Id="VDRD_ECMA" Name="VDRD_E~1" LongName="VDRD_ECMA" />
 								<File Id="VDRS" Name="VDRS" />
 								<File Id="VDUC" Name="VDUC" />
 								<File Id="VDUS" Name="VDUS" />
@@ -553,6 +557,11 @@
 							<Directory Id="short" Name="short">
 								<Component Id="short" Guid="F22C41E6-52CB-40F8-A6A5-FE7DCD426D3B">
 									<File Id="COMP_INT2" Name="COMP_INT" />
+									<File Id="ECMA-VDJR2" Name="ECMA-V~1" LongName="ECMA-VDJR2" />
+									<File Id="ECMA-VDJR3" Name="ECMA-V~2" LongName="ECMA-VDJR3" />
+									<File Id="ECMA-VDRD7" Name="ECMA-V~3" LongName="ECMA-VDRD7" />
+									<File Id="ECMA-VDRD8" Name="ECMA-V~4" LongName="ECMA-VDRD8" />
+									<File Id="ECMA-VMFN2" Name="EC62ED~1" LongName="ECMA-VMFN2" />
 									<File Id="EXT_CPP" Name="EXT_CPP" />
 									<File Id="EXT_DLL_ALIAS" Name="EXT_DL~1" LongName="EXT_DLL_ALIAS" />
 									<File Id="EXT_DLL_SIGN" Name="EXT_DL~2" LongName="EXT_DLL_SIGN" />
@@ -654,7 +663,6 @@
 									<File Id="VD67" Name="VD67" />
 									<File Id="VDCN94" Name="VDCN" />
 									<File Id="VDJR71" Name="VDJR" />
-									<File Id="VDJR_ECMA2" Name="VDJR_E~1" LongName="VDJR_ECMA2" />
 									<File Id="VDOC65" Name="VDOC" />
 									<File Id="VDRD1" Name="VDRD1" />
 									<File Id="VDRD2" Name="VDRD2" />
@@ -663,7 +671,6 @@
 									<File Id="VDRD5" Name="VDRD5" />
 									<File Id="VDRD6" Name="VDRD6" />
 									<File Id="VDRD8" Name="VDRD8" />
-									<File Id="VDRD_ECMA7" Name="VDRD_E~1" LongName="VDRD_ECMA7" />
 									<File Id="VDRS1" Name="VDRS1" />
 									<File Id="VDRS2" Name="VDRS2" />
 									<File Id="VDRS3" Name="VDRS3" />
@@ -677,13 +684,10 @@
 									<File Id="VEEN2" Name="VEEN2" />
 									<File Id="VEEN21" Name="VEEN21" />
 									<File Id="VEEN22" Name="VEEN22" />
-									<File Id="VE06" Name="VE06" />
-									<File Id="VE08" Name="VE08" />
-									<File Id="VE09" Name="VE09" />
+									<File Id="VFAC1" Name="VFAC1" />
 									<File Id="VFAC2" Name="VFAC2" />
 									<File Id="VFAC3" Name="VFAC3" />
 									<File Id="VFAC4" Name="VFAC4" />
-									<File Id="VFAC5" Name="VFAC5" />
 									<File Id="VFAV1" Name="VFAV1" />
 									<File Id="VFAV2" Name="VFAV2" />
 									<File Id="VFAV3" Name="VFAV3" />

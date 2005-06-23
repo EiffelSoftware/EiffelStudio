@@ -15,6 +15,8 @@ inherit
 	SHARED_WORKBENCH
 	
 	EB_SHARED_PREFERENCES
+	
+	E_FEATURE_COMPARER
 
 create
 	make_with_tool
@@ -28,6 +30,8 @@ feature {NONE} -- Initialization
 		local
 			formatters: like managed_formatters
 			conv_ft: EB_FEATURE_TEXT_FORMATTER
+			l_flat_formatter: EB_ROUTINE_FLAT_FORMATTER
+			l_formatter: EB_FEATURE_INFO_FORMATTER
 		do
 			context := a_context
 			formatters := a_tool.managed_feature_formatters
@@ -39,11 +43,16 @@ feature {NONE} -- Initialization
 			until
 				formatters.after
 			loop
-				conv_ft ?= formatters.item
+				l_formatter := formatters.item
+				conv_ft ?= l_formatter
 				if conv_ft /= Void then
 					conv_ft.set_editor (shared_editor)
+					l_flat_formatter ?= l_formatter
+					if l_flat_formatter /= Void then
+						flat_formatter := l_flat_formatter
+					end
 				end
-				managed_formatters.extend (formatters.item)
+				managed_formatters.extend (l_formatter)
 				formatters.forth
 			end
 			fill_in
@@ -60,6 +69,10 @@ feature -- Access
 	parent_notebook: EV_NOTEBOOK
 			-- Needed to pop up when corresponding menus are selected.
 			--| Not in implementation because it is used in a precondition.
+
+	flat_formatter: EB_ROUTINE_FLAT_FORMATTER
+			-- Special handle to flat formatters of routine. Required to properly update
+			-- breakpoint positions during debugging.
 
 	stone: STONE is
 			-- Currently managed stone.
@@ -116,9 +129,9 @@ feature -- Status setting
 				end
 				internal_stone := Void
 			elseif
-				internal_stone /= Void and then
-				internal_stone.e_feature /= fst.e_feature or else
-				internal_stone = Void then
+				internal_stone = Void or else
+				(internal_stone /= Void and then not same_feature (internal_stone.e_feature, fst.e_feature))
+			then
 				from
 					managed_formatters.start
 				until
@@ -129,6 +142,7 @@ feature -- Status setting
 				end
 				internal_stone := fst				
 			end
+			flat_formatter.show_debugged_line
 		end
 
 	drop_stone (st: CLASSI_STONE) is
@@ -239,10 +253,16 @@ feature -- Status setting
 			end
 		end
 
-	quick_refresh is
+	quick_refresh_editor is
 			-- Refresh the editor.
 		do
 			shared_editor.refresh
+		end
+
+	quick_refresh_margin is
+			-- Refresh the editor's margin.
+		do
+			shared_editor.margin.refresh
 		end
 
 	set_parent_notebook (a_notebook: EV_NOTEBOOK) is
@@ -472,6 +492,9 @@ feature {NONE} -- Implementation
 
 	explorer_parent: EB_EXPLORER_BAR_ITEM
 			-- Explorer bar item that contains `Current'.
+
+invariant
+	flat_formatter_not_void: flat_formatter /= Void
 
 end -- class EB_FEATURES_VIEW
 

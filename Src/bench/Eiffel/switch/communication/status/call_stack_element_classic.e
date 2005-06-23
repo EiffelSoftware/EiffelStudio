@@ -102,9 +102,20 @@ feature -- Properties
 	routine: E_FEATURE is
 			-- Routine being called
 			-- Note from Arnaud: Computation has been deferred for optimisation purpose
+		local
+			l_routine: like private_routine
 		do
 			if private_routine = Void then
+					-- Get routine in `written_class'.
 				private_routine := written_class.feature_with_name (routine_name)
+					-- Adapt `private_routine' to `dynamic_class' and handles precursor case.
+				if dynamic_class /= written_class then
+					l_routine := dynamic_class.feature_with_rout_id (private_routine.rout_id_set.first)
+					if l_routine.written_in = written_class.class_id then
+							-- Not the precursor case.
+						private_routine := l_routine
+					end
+				end
 			end
 			Result := private_routine
 		end

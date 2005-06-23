@@ -13,6 +13,11 @@ inherit
 	SHARED_EXPORT_STATUS
 	COMPILER_EXPORTER
 
+	PREFIX_INFIX_NAMES
+		export
+			{NONE} all
+		end
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -155,12 +160,12 @@ feature
 			extended_feature_name: RENAMING
 			new_name_id: INTEGER
 			new_alias_name_id: INTEGER
-			l_names_heap: like Names_heap
-				-- Replicated feature in case of repeated inheritance
+			names: like Names_heap
+			new_name: STRING
 		do
 			from
 				feat.start
-				l_names_heap := Names_heap
+				names := Names_heap
 			until
 				feat.after
 			loop
@@ -184,6 +189,45 @@ feature
 							-- 'new_name'.
 						replication.set_renamed_name_id (new_name_id, new_alias_name_id)
 						replication.set_has_convert_mark (extended_feature_name.has_convert_mark)
+							-- Update feature flags
+						new_name := names.item (new_name_id)
+						if is_mangled_name (new_name) then
+							if replication.argument_count = 0 then
+									-- Prefix feature
+								replication.set_is_infix (False)
+								replication.set_is_prefix (True)
+							else
+									-- Infix feature
+								replication.set_is_infix (False)
+								replication.set_is_prefix (True)
+							end
+						else
+								-- Identifier feature
+							replication.set_is_infix (False)
+							replication.set_is_prefix (False)
+						end
+						if new_alias_name_id > 0 then
+							if new_alias_name_id = bracket_symbol_id then
+									-- Bracket alias
+								replication.set_is_binary (False)
+								replication.set_is_bracket (True)
+								replication.set_is_unary (False)
+							elseif replication.argument_count = 0 then
+									-- Unary operator
+								replication.set_is_binary (False)
+								replication.set_is_bracket (False)
+								replication.set_is_unary (True)
+							else
+									-- Binary operator
+								replication.set_is_binary (True)
+								replication.set_is_bracket (False)
+								replication.set_is_unary (False)
+							end
+						else
+							replication.set_is_binary (False)
+							replication.set_is_bracket (False)
+							replication.set_is_unary (False)
+						end
 						next.set_a_feature (replication)
 						Inherit_table.add_inherited_feature (next, new_name_id)
 							-- Remove the information

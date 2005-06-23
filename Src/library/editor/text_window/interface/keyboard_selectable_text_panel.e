@@ -323,7 +323,7 @@ feature -- Observation
 	add_selection_observer (txt_observer: TEXT_OBSERVER) is
 			-- Add observer of `text_displayed' for selection changes.
 		do
-			if not text_displayed.is_notifying then
+			if text_displayed /= Void and then not text_displayed.is_notifying then
 				text_displayed.add_selection_observer (txt_observer)
 			end
 		end

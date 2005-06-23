@@ -94,8 +94,8 @@ feature -- Element change
 	set_position (a_position: INTEGER) is
 			-- Set `position' with `new_position'.
 		do
-			cwin_send_message (item, Udm_setpos, to_wparam (0),
-				cwin_make_long (a_position, 0))
+			cwin_send_message (item, udm_setpos32, to_wparam (0),
+				to_lparam (a_position))
 		end
 
 	set_range (a_minimum, a_maximum: INTEGER) is

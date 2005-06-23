@@ -145,14 +145,13 @@ feature -- Content Change
 				local_str_text.add (create {BASIC_TEXT}.make (""))
 			end
 				-- Read and parse the text.
-			text_displayed.set_first_read_block_size (number_of_lines_displayed)
+			text_displayed.set_first_read_block_size (number_of_lines_in_block)
 			text_displayed.load_structured_text (local_str_text)
 
 				-- Setup the editor (scrollbar, ...)
 			setup_editor (1)
 
 			editor_viewport.enable_sensitive
-
 		end
 
 feature -- Status setting

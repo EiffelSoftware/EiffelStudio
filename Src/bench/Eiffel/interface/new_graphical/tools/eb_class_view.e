@@ -198,6 +198,7 @@ feature -- Status setting
 				managed_formatters.item.invalidate
 				managed_formatters.forth
 			end
+			internal_stone := Void
 		end
 
 	quick_refresh_editor is

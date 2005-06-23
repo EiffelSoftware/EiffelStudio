@@ -23,9 +23,10 @@ feature {ICOR_EXPORTER} -- Access
 			l_result: INTEGER
 		do
 			last_call_success := cpp_is_valid (item, $l_result)
-			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0
+			Result := (l_result /= 0) --| TRUE = 1 , FALSE = 0
+				and not error_code_is_object_neutered (last_call_success)
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 feature {NONE} -- Implementation

@@ -19,7 +19,7 @@ feature {ICOR_EXPORTER} -- Access
 			arg_not_void: a_result /= default_pointer
 		deferred
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 end -- class ICOR_DEBUG_VALUE

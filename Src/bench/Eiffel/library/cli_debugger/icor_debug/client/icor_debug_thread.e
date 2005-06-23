@@ -107,7 +107,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_current_exception (item, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				create Result.make_value_by_pointer (p)
 			end
 		end
 
@@ -190,7 +190,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_object (item, $p)
 			if last_call_succeed and then p /= default_pointer then
-				create Result.make_by_pointer (p)
+				create Result.make_value_by_pointer (p)
 			end
 		end
 

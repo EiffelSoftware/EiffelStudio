@@ -44,7 +44,7 @@ feature {ICOR_EXPORTER} -- Access
 				Result := Icor_objects_manager.icd_class (p)
 			end
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_field_value (a_class: ICOR_DEBUG_CLASS; a_mdfield_def: INTEGER): ICOR_DEBUG_VALUE is
@@ -56,7 +56,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_field_value (item, a_class.item, a_mdfield_def, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				create Result.make_value_by_pointer (p)
 			end
 		end
 
@@ -67,7 +67,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_is_value_class (item, $l_result)
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0			
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_managed_copy: POINTER is
@@ -76,9 +76,10 @@ feature {ICOR_EXPORTER} -- Access
 			-- get info about the object, like calling System.Object::ToString
 			-- on it.
 		do
-			last_call_success := cpp_get_managed_copy (item, $Result)
-		ensure
-			success: last_call_success = 0
+			check Not_implemented: False end
+--			last_call_success := cpp_get_managed_copy (item, $Result)
+--		ensure
+--			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	set_from_managed_copy (p: POINTER) is
@@ -86,9 +87,10 @@ feature {ICOR_EXPORTER} -- Access
 			-- managed copy of the object. This can be used after using
 			-- GetManagedCopy to update an object with a changed version.
 		do
-			last_call_success := cpp_set_from_managed_copy (item, p)
-		ensure
-			success: last_call_success = 0
+			check Not_implemented: False end
+--			last_call_success := cpp_set_from_managed_copy (item, p)
+--		ensure
+--			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 feature {NONE} -- Implementation

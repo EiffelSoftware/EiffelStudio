@@ -96,10 +96,10 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_local_variable (item, a_index, $l_p)
 			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+				create Result.make_value_by_pointer (l_p)
 			end
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed
 		end
 
 	enumerate_arguments: ICOR_DEBUG_VALUE_ENUM is
@@ -111,7 +111,7 @@ feature {ICOR_EXPORTER} -- Access
 				create Result.make_by_pointer (l_p)
 			end
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed
 		end
 
 	get_argument (a_index: INTEGER): ICOR_DEBUG_VALUE is
@@ -120,7 +120,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_argument (item, a_index, $l_p)
 			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+				create Result.make_value_by_pointer (l_p)
 			end
 		end
 

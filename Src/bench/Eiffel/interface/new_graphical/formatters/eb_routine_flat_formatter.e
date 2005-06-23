@@ -14,7 +14,6 @@ inherit
 			feature_cmd,
 			generate_text,
 			formatted_text,
-			format,
 			set_stone,
 			is_dotnet_formatter
 		end
@@ -67,67 +66,22 @@ feature -- Status setting
 
 feature -- Formatting
 
-	format is
-			-- Refresh `widget'.
+	show_debugged_line is
+			-- Update arrows in formatter and ensure that arrows is visible. 
 		local
-			app_stopped: BOOLEAN
 			stel: EIFFEL_CALL_STACK_ELEMENT
+			l_line: INTEGER
 		do
-			if
-				displayed and then
-				selected and then
-				feature_cmd /= Void
-			then
-				editor.disable_feature_click
-				if must_format then
-					display_temp_header
-					selected_line := 1
-					generate_text
-				end
-				if not last_was_error then
-					app_stopped := Application.is_running and then Application.is_stopped
-					if app_stopped then
-						stel ?= Application.status.current_call_stack_element
-						if stel /= Void then
-							app_stopped := stel.routine.body_index = associated_feature.body_index
-						else
-							app_stopped := False
+			if displayed and selected and not must_format then
+				if Application.is_running and then Application.is_stopped then
+					stel  ?= Application.status.current_call_stack_element
+					if stel /= Void and then stel.routine.body_index = associated_feature.body_index then
+						l_line := stel.break_index
+						if l_line > 0 then
+							editor.display_breakpoint_number_when_ready (l_line)
 						end
 					end
-					if editor.current_text /= formatted_text then
-						editor.enable_has_breakable_slots
-						editor.process_text (formatted_text)
-						if app_stopped then
-							selected_line := stel.break_index
-							if selected_line > 0 then
-								editor.display_breakpoint_number_when_ready (selected_line)
-							end
-						end
-					else
-							-- We remove the arrow.
-						editor.invalidate_line (selected_line, True)
-						if
-							app_stopped
-						then
-							selected_line := stel.break_index
-								-- We put an arrow back.
-							editor.invalidate_line (selected_line, True)
-							if selected_line > 0 then
-								editor.display_breakpoint_number_when_ready (selected_line)
-							end
-						else
-							selected_line := 1
-						end
-						editor.refresh
-					end
-					editor.set_read_only (not editable)
-				else
-						-- An error occurred while generating the text.
-					editor.clear_window
-					editor.display_message (Warning_messages.w_Formatter_failed)
 				end
-				display_header
-				must_format := last_was_error
 			end
 		end
 
@@ -171,9 +125,6 @@ feature {NONE} -- Properties
  		end
 	
 feature {NONE} -- Implementation
-
-	selected_line: INTEGER
-			-- Line in the editor in front of which there is an arrowed breakpoint.
 
 	on_breakable_drop (st: BREAKABLE_STONE) is
 			-- Launch `st' to the manager.

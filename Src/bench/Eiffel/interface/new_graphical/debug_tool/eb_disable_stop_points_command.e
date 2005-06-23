@@ -52,7 +52,7 @@ feature -- Access
 			Result.drop_actions.set_veto_pebble_function (agent can_drop)
 --			Result.drop_actions.extend (~quick_refresh_on_class_drop)
 --			Result.drop_actions.extend (~quick_refresh_on_brk_drop)
---			Result.select_actions.extend (window_manager~quick_refresh_all)
+--			Result.select_actions.extend (window_manager~quick_refresh_all_margins)
 		end
 
 	menu_name: STRING is
@@ -86,7 +86,7 @@ feature -- Execution
 				end
 					-- Update output tools
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all
+				Window_manager.quick_refresh_all_margins
 			end
 		end
 
@@ -112,7 +112,7 @@ feature -- Update
 				end
 					-- Update output tools
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all
+				Window_manager.quick_refresh_all_margins
 			end
 		end
 
@@ -132,20 +132,20 @@ feature -- Update
 				end
 					-- Update output tools
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all
+				Window_manager.quick_refresh_all_margins
 			end
 		end
 
 	quick_refresh_on_class_drop (unused: CLASSC_STONE) is
 			-- Quick refresh all windows.
 		do
-			window_manager.quick_refresh_all
+			window_manager.quick_refresh_all_margins
 		end
 
 	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE) is
 			-- Quick refresh all windows.
 		do
-			window_manager.quick_refresh_all
+			window_manager.quick_refresh_all_margins
 		end
 
 	drop_class (cs: CLASSC_STONE) is
@@ -164,7 +164,7 @@ feature -- Update
 				end
 					-- Update output tools
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all
+				Window_manager.quick_refresh_all_margins
 			end
 		end
 

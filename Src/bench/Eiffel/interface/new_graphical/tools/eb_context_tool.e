@@ -250,12 +250,21 @@ feature -- Status setting
 			feature_view.refresh
 		end
 
-	quick_refresh is
-			-- Class has changed in `development_window'.
+	quick_refresh_editors is
+			-- Update content of all editors.
 		do
-			output_view.quick_refresh
-			class_view.quick_refresh
-			feature_view.quick_refresh
+			output_view.quick_refresh_editor
+			class_view.quick_refresh_editor
+			feature_view.quick_refresh_editor
+			address_manager.refresh
+		end
+
+	quick_refresh_margins is
+			-- Update margins of all editors.
+		do
+			output_view.quick_refresh_margin
+			class_view.quick_refresh_margin
+			feature_view.quick_refresh_margin
 			address_manager.refresh
 		end
 

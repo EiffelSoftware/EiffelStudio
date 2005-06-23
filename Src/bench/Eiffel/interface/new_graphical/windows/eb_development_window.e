@@ -1862,11 +1862,18 @@ feature -- Stone process
 	--			context_tool.refresh
 		end
 
-	quick_refresh is
-			-- Redraw the main editor's drawing area.
+	quick_refresh_editors is
+			-- Redraw editors' drawing area.
 		do
 			editor_tool.text_area.refresh
-			context_tool.quick_refresh
+			context_tool.quick_refresh_editors
+		end
+
+	quick_refresh_margins is
+			-- Redraw the main editor's drawing area.
+		do
+			editor_tool.text_area.margin.refresh
+			context_tool.quick_refresh_margins
 		end
 
 	set_default_format is
@@ -2435,7 +2442,7 @@ feature {NONE} -- Implementation
 					Application.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
 				output_manager.display_stop_points
-				window_manager.quick_refresh_all
+				window_manager.quick_refresh_all_margins
 			elseif conv_errst /= Void then
 				display_error_help_cmd.execute_with_stone (conv_errst)
 			elseif conv_ace /= Void then
@@ -2998,18 +3005,6 @@ feature {NONE} -- Implementation
 		do
 			conv_ace ?= st
 			Result := conv_ace = Void
-		end
-
-	quick_refresh_on_class_drop (unused: CLASSI_STONE) is
-			-- Quick refresh all windows.
-		do
-			window_manager.quick_refresh_all
-		end
-
-	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE) is
-			-- Quick refresh all windows.
-		do
-			window_manager.quick_refresh_all
 		end
 
 	send_stone_to_context is

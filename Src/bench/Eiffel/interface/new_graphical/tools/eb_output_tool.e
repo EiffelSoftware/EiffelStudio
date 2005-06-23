@@ -149,10 +149,16 @@ feature -- Access
 
 feature -- Basic operation
 
-	quick_refresh is
+	quick_refresh_editor is
 			-- Refresh the editor.
 		do
 			text_area.refresh
+		end
+
+	quick_refresh_margin is
+			-- Refresh the editor's margin.
+		do
+			text_area.margin.refresh
 		end
 
 	clear is

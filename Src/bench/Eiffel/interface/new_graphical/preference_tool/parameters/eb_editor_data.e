@@ -359,7 +359,7 @@ feature -- Update
 	update is
 			-- The preferences have changed.
 		do
-			window_manager.quick_refresh_all
+			window_manager.quick_refresh_all_editors
 		end
 
 feature {NONE} -- Initialization

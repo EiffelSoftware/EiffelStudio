@@ -112,10 +112,8 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_result (item, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				create Result.make_value_by_pointer (p)
 			end
---		ensure
---			success: last_call_success = 0
 		end
 
 	create_value (a_cor_element_type: INTEGER; a_class: ICOR_DEBUG_CLASS): ICOR_DEBUG_VALUE is
@@ -145,10 +143,8 @@ feature {ICOR_EXPORTER} -- Access
 			end
 			last_call_success := cpp_create_value (item, a_cor_element_type, l_class_p , $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				create Result.make_value_by_pointer (p)
 			end
---		ensure
---			success: last_call_success = 0
 		end		
 
 	new_string (str: STRING) is

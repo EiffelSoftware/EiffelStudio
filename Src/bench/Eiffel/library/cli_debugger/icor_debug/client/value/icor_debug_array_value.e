@@ -22,7 +22,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_element_type (item, $Result)
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_rank: INTEGER is
@@ -30,7 +30,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_rank (item, $Result)
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_count: INTEGER is
@@ -39,7 +39,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_count (item, $Result)
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_dimensions (a_indicies_count: INTEGER): ARRAY [INTEGER] is
@@ -68,7 +68,6 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
-
 	has_base_indicies: BOOLEAN is
 			-- HasBaseIndicies returns whether or not the array has base indicies.
      		-- If the answer is no, then all dimensions have a base index of 0.
@@ -78,7 +77,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_has_base_indicies (item, $l_result)
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0			
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_base_indicies (a_indicies_count: INTEGER): ARRAY [INTEGER] is
@@ -130,10 +129,10 @@ feature {ICOR_EXPORTER} -- Access
 			end		
 			last_call_success := cpp_get_element (item, a_indexes.count, l_mp_indexes.item, $l_p)
 			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+				create Result.make_value_by_pointer (l_p)
 			end
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_element_at_position (a_position: INTEGER): ICOR_DEBUG_VALUE is
@@ -145,10 +144,10 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_element_at_position (item, a_position, $l_p)
 			if l_p /= default_pointer then
-				create Result.make_by_pointer (l_p)
+				create Result.make_value_by_pointer (l_p)
 			end
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 feature {NONE} -- Implementation

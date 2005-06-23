@@ -14,7 +14,7 @@ inherit
 
 create 
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	is_null: BOOLEAN is
@@ -25,7 +25,7 @@ feature {ICOR_EXPORTER} -- Access
 			last_call_success := cpp_is_null (item, $l_result)
 			Result := l_result /= 0 --| TRUE = 1 , FALSE = 0			
 		ensure
-			success: last_call_success = 0
+			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
 		end
 
 	get_value (a_result_64: POINTER) is
@@ -51,7 +51,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_dereference (item, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				create Result.make_value_by_pointer (p)
 			end
 		end
 		
@@ -65,7 +65,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_dereference_strong (item, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				create Result.make_value_by_pointer (p)
 			end
 		end		
 

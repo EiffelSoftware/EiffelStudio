@@ -40,8 +40,6 @@ feature {ICOR_EXPORTER} -- Access
 			-- GetLength
 		do
 			last_call_success := cpp_get_length (item, $Result)
-		ensure
---			success: last_call_success = 0
 		end
 
 	get_string (a_len: INTEGER): STRING is
@@ -56,8 +54,6 @@ feature {ICOR_EXPORTER} -- Access
 			if mp_name.item /= default_pointer then
 				Result := (create {UNI_STRING}.make_by_pointer_and_count (mp_name.item, a_len)).string_with_count (a_len)
 			end
-		ensure
---			success: last_call_success = 0
 		end
 
 feature {NONE} -- Implementation

@@ -72,6 +72,11 @@ inherit
 			{ANY} valid_rop2_constant
 		end
 		
+	WEL_SHARED_TEMPORARY_OBJECTS
+		export
+			{NONE} all
+		end
+		
 feature -- Access
 
 	pen: WEL_PEN
@@ -269,7 +274,7 @@ feature -- Status report
 		local
 			a_wel_string: WEL_STRING
 		do
-			create a_wel_string.make (s)
+			a_wel_string := wel_string_from_string (s)
 			create Result.make (0, 0)
 			cwin_get_text_extend_point (item, a_wel_string.item, s.count,
 				Result.item)
@@ -324,7 +329,7 @@ feature -- Status report
 			size: INTEGER
 			a_default_pointer: POINTER
 		do
-			create a_wel_string.make (text)
+			a_wel_string := wel_string_from_string (text)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
 				text.count, 0, a_default_pointer)
 			create Result.make (size & 0x0000FFFF, ((size |>> 16) & 0x0000FFFF))
@@ -369,7 +374,7 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			size: INTEGER
 		do
-			create a_wel_string.make (text)
+			a_wel_string := wel_string_from_string (text)
 			create a.make (tabulations)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
 				text.count, tabulations.count, a.item)
@@ -1000,7 +1005,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			create a_wel_string.make (string)
+			a_wel_string := wel_string_from_string (string)
 			cwin_text_out (item, x, y, a_wel_string.item, string.count)
 		end
 
@@ -1049,12 +1054,12 @@ feature -- Basic operations
 			rect_not_void: rect /= Void
 		local
 			a_wel_string: WEL_STRING
-		do
-			create a_wel_string.make (string)
+		do			
+			a_wel_string := wel_string_from_string (string)
 			Result := cwin_draw_text (item, a_wel_string.item,
 				string.count, rect.item, format)
 		end
-
+		
 	draw_disabled_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
 			-- Draw the text `string' in disabled mode inside 
 			-- the `rect' using `format'
@@ -1065,8 +1070,8 @@ feature -- Basic operations
 			rect_not_void: rect /= Void
 		local
 			a_wel_string: WEL_STRING
-		do
-			create a_wel_string.make (string)
+		do			
+			a_wel_string := wel_string_from_string (string)
 			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
 		end
 
@@ -1085,7 +1090,7 @@ feature -- Basic operations
 			null: POINTER -- default pointer
 			success: INTEGER
 		do
-			create a_wel_string.make (string)
+			a_wel_string := wel_string_from_string (string)
 			if a_brush /= Void then
 				a_brush_ptr := a_brush.item
 			end

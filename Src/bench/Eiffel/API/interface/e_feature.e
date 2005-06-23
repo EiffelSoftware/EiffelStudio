@@ -535,7 +535,19 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 		do
 			Result := name < other.name
-		end;
+		end
+		
+	same_as (other: E_FEATURE): BOOLEAN is
+		require
+			other_not_void: other /= Void
+		do
+				-- We say two features are the same if they are defined from the same location.
+			Result := associated_class_id = other.associated_class_id and
+				body_index = other.body_index and
+				feature_id = other.feature_id and
+				written_in = other.written_in and
+				written_feature_id = other.written_feature_id
+		end
 
 feature -- Output
 
@@ -735,7 +747,7 @@ feature -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {E_FEATURE} -- Implementation
 
 	associated_class_id: INTEGER
             -- Class id where the feature was evaluated in

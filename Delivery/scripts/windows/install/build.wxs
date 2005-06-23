@@ -163,6 +163,8 @@
 								<File Id="icon_recycle_bin_color.png" Name="ICON_R~3.PNG" LongName="icon_recycle_bin_color.png" />
 								<File Id="icon_show_hide_directory_color.png" Name="ICON_S~4.PNG" LongName="icon_show_hide_directory_color.png" />
 								<File Id="propagate.png" Name="PROPAG~1.PNG" LongName="propagate.png" />
+								<File Id="ev_grid_png" Name="ev_grid.png" />
+								<File Id="ev_header_png" Name="EV_HEA~1.PNG" LongName="ev_header.png" />
 							</Component>
 						</Directory>
 						<Directory Id="ico" Name="ico" />

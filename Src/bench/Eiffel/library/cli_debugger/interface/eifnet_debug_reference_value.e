@@ -89,6 +89,8 @@ feature -- Get
 		
 	release_object_value is
 			-- Release `object_value'
+		require
+			object_value /= Void
 		do
 			object_value.clean_on_dispose
 			object_value := Void
@@ -244,10 +246,8 @@ feature {NONE} -- Children implementation
 						end
 					end
 				end
+				release_object_value
 			end
-			release_object_value
-		ensure then
-			Result /= Void
 		end
 
 	attribute_value (a_obj_value: ICOR_DEBUG_OBJECT_VALUE; a_icd_class: ICOR_DEBUG_CLASS; f: FEATURE_I): ABSTRACT_DEBUG_VALUE is

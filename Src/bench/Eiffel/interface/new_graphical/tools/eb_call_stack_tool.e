@@ -124,7 +124,8 @@ feature {NONE} -- Initialization
 			box_stop_cause.set_foreground_color (special_label_col)
 			
 			create stop_cause
-			stop_cause.align_text_left			
+			stop_cause.align_text_left
+			stop_cause.set_minimum_width (stop_cause.font.string_width (interface_names.l_explicit_exception_pending))
 			box_stop_cause.extend (stop_cause)
 			
 				--| Exception message

@@ -114,7 +114,7 @@ feature -- Basic operations
 			create item.make_with_text (Interface_names.m_Enable_this_bkpt)
 			item.select_actions.extend (agent Application.enable_breakpoint (routine, index))
 			item.select_actions.extend (agent Output_manager.display_stop_points)
-			item.select_actions.extend (agent window_manager.quick_refresh_all)
+			item.select_actions.extend (agent window_manager.quick_refresh_all_margins)
 			if Application.is_breakpoint_enabled (routine, index) then
 				item.disable_sensitive
 			end
@@ -123,7 +123,7 @@ feature -- Basic operations
 			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
 			item.select_actions.extend (agent Application.disable_breakpoint (routine, index))
 			item.select_actions.extend (agent Output_manager.display_stop_points)
-			item.select_actions.extend (agent window_manager.quick_refresh_all)
+			item.select_actions.extend (agent window_manager.quick_refresh_all_margins)
 			if Application.is_breakpoint_disabled (routine, index) then
 				item.disable_sensitive
 			end
@@ -132,7 +132,7 @@ feature -- Basic operations
 			create item.make_with_text (Interface_names.m_Remove_this_bkpt)
 			item.select_actions.extend (agent Application.remove_breakpoint (routine, index))
 			item.select_actions.extend (agent Output_manager.display_stop_points)
-			item.select_actions.extend (agent window_manager.quick_refresh_all)
+			item.select_actions.extend (agent window_manager.quick_refresh_all_margins)
 			if not Application.is_breakpoint_set (routine, index) then
 				item.disable_sensitive
 			end
@@ -290,7 +290,7 @@ feature -- Basic operations
 		do
 			Application.remove_condition (f, pos)
 			Output_manager.display_stop_points
-			window_manager.quick_refresh_all
+			window_manager.quick_refresh_all_margins
 		end
 
 	create_conditional_breakpoint (f: E_FEATURE; pos: INTEGER; d: EV_DIALOG; a_input, a_output: EV_TEXTABLE) is
@@ -306,7 +306,7 @@ feature -- Basic operations
 					end
 					Application.set_condition (f, pos, expr)
 					Output_manager.display_stop_points
-					window_manager.quick_refresh_all
+					window_manager.quick_refresh_all_margins
 					d.destroy
 				else
 					a_output.set_text (Warning_messages.w_not_a_condition (a_input.text))
@@ -326,7 +326,7 @@ feature -- Basic operations
 				Application.enable_breakpoint (routine, index)
 			end
 			Output_manager.display_stop_points
-			window_manager.quick_refresh_all
+			window_manager.quick_refresh_all_margins
 		end
 
 end -- class BREAKABLE_STONE

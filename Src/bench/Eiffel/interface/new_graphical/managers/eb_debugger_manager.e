@@ -144,7 +144,7 @@ feature -- Access
 --| FIXME XR: Preferences  should be used and updated
 --			b := exec_cmd.new_toolbar_item (False)
 --			tb.extend (b)
---			b.select_actions.extend (window_manager~quick_refresh_all)
+--			b.select_actions.extend (window_manager~quick_refresh_all_margins)
 
 		end
 
@@ -707,7 +707,7 @@ feature -- Debugging events
 			objects_tool.enable_refresh
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)				
 
-			window_manager.quick_refresh_all
+			window_manager.quick_refresh_all_margins
 
 				-- Fill in the stack tool.
 			call_stack_tool.update
@@ -776,7 +776,7 @@ feature -- Debugging events
 			stt.add_string ("Application is running")
 			stt.add_new_line
 			output_manager.process_text (stt)
-			window_manager.quick_refresh_all
+			window_manager.quick_refresh_all_margins
 			if dialog /= Void and then not dialog.is_destroyed then
 				close_dialog
 			end
@@ -804,7 +804,7 @@ feature -- Debugging events
 					raised := False
 				end
 					-- Modify the debugging window display.
-				window_manager.quick_refresh_all
+				window_manager.quick_refresh_all_margins
 				debugging_window := Void
 				output_manager.display_system_info
 				kept_objects.wipe_out

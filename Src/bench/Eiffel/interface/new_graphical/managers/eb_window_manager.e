@@ -506,7 +506,13 @@ feature -- Actions on all windows
 			for_all (agent enable_action)
 		end
 
-	quick_refresh_all is
+	quick_refresh_all_margins is
+			-- Redraws the margins of all the editor windows.
+		do
+			for_all (agent quick_refresh_margin_action)
+		end
+		
+	quick_refresh_all_editors is
 			-- Redraws the editors of all the windows.
 		do
 			for_all (agent quick_refresh_action)
@@ -920,13 +926,24 @@ feature {NONE} -- Implementation
 		end
 
 	quick_refresh_action (a_window: EB_WINDOW)  is
-			-- Action to be performed on `a_window' in `quick_refresh'.
+			-- Action to be performed on `a_window' in `quich_refresh_all_editors'.
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			conv_dev ?= a_window
 			if conv_dev /= Void then
-				conv_dev.quick_refresh
+				conv_dev.quick_refresh_editors
+			end
+		end
+
+	quick_refresh_margin_action (a_window: EB_WINDOW)  is
+			-- Action to be performed on `a_window' in `quick_refresh_all_margins'.
+		local
+			conv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			conv_dev ?= a_window
+			if conv_dev /= Void then
+				conv_dev.quick_refresh_margins
 			end
 		end
 

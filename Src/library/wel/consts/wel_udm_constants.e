@@ -112,6 +112,9 @@ feature -- Access
 		
 	Udm_getpos32: INTEGER is 1138
 			-- Retrieves the current position of an up-down control.
+			
+	Udm_setpos32: INTEGER is 1137
+			-- Sets the current position of an up-down control.
 
 end -- class WEL_UDM_CONSTANTS
 

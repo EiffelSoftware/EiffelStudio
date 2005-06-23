@@ -79,10 +79,15 @@ feature {NONE} -- Initialization
 
 feature -- Get 
 
+	has_object_value: BOOLEAN is
+		do
+			Result := object_value /= Void
+		end
+
 	get_object_value is
 			-- Get `object_value' value
 		require
-			object_value_void: object_value = Void
+			object_value_void: not has_object_value
 		do
 			object_value := icd_value_info.interface_debug_object_value
 		end
@@ -90,7 +95,7 @@ feature -- Get
 	release_object_value is
 			-- Release `object_value'
 		require
-			object_value /= Void
+			has_object_value: has_object_value
 		do
 			object_value.clean_on_dispose
 			object_value := Void

@@ -18,6 +18,8 @@ inherit
 
 feature -- get
 
+	has_object_value: BOOLEAN is True
+
 	get_object_value is
 			-- Get `object_value' value
 		do

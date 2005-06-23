@@ -18,6 +18,11 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	E_FEATURE_COMPARER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -132,10 +137,7 @@ feature -- Access
 			fns: FEATURE_STONE
 		do
 			fns ?= other
-			Result := fns /= Void and then e_feature = fns.e_feature and then
-					(e_feature = Void or else (
-						e_feature.feature_id = fns.e_feature.feature_id and then
-						e_feature.associated_class = fns.e_feature.associated_class))
+			Result := fns /= Void and then same_feature (e_feature, fns.e_feature)
 		end
 
 feature -- dragging

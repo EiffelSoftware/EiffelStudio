@@ -53,8 +53,6 @@ feature {NONE} -- Initialization
 			level_num: level_num > 0
 		local
 			elem: EIFFEL_CALL_STACK_ELEMENT
-			prev_feat: E_FEATURE
-			cur_feat: E_FEATURE
 			curr_cs: EIFFEL_CALL_STACK
 		do
 			level_number := level_num

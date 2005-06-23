@@ -508,6 +508,8 @@ feature {NONE} -- Initialization
 			loop
 				l_member := a_features.item
 
+				l_external_type := internal_type_from_consumed_type (True, l_member.declared_type)
+
 				if l_member.has_return_value then
 					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
 					add_syntactical_supplier (l_external_type)

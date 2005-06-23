@@ -172,7 +172,9 @@ feature -- Indirect observer / manager pattern.
 	add_edition_observer (txt_observer: TEXT_OBSERVER) is
 			-- Add observer of `text_displayed' for global content changes.
 		do
-			text_displayed.add_edition_observer (txt_observer)
+			if text_displayed /= Void then
+				text_displayed.add_edition_observer (txt_observer)
+			end
 		end
 
 	add_history_observer (history_observer: UNDO_REDO_OBSERVER) is

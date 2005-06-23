@@ -264,6 +264,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 					l_result_string := get_string_value (l_string)
 					l_found_value := True
 					l_string.clean_on_dispose
+					l_string := Void
 				end
 			end
 
@@ -276,6 +277,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 					l_result_string.append_string (" count=" + l_array.get_count.out)
 					l_found_value := True
 					l_array.clean_on_dispose
+					l_array := Void
 				end
 			end
 
@@ -285,10 +287,15 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 				if a_data.last_call_succeed then
 					l_result_string.append_string ("<<OBJECT>>")
 					l_icd_class := l_object.get_class
-					l_result_string.append_string (" class token = 0x" + l_icd_class.get_token.to_hex_string)
+					if l_icd_class /= Void then
+						l_result_string.append_string (" class token = 0x" + l_icd_class.get_token.to_hex_string)
+					else
+						l_result_string.append_string (" neutred (no class info) ")
+					end
 					
 					l_found_value := True
 					l_object.clean_on_dispose
+					l_object := Void
 				else
 					l_result_string.append_string ("<<OBJECT-ERROR:" + a_data.last_error_code_id + ">>")
 				end
@@ -306,6 +313,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 						l_result_string := " IsNull"
 						l_found_value := True
 						l_reference.clean_on_dispose
+						l_reference := Void
 					end
 				end
 			end

@@ -598,7 +598,7 @@ feature {NONE} -- COM Object
 						last_icd_exception := Void
 					end
 				else
-					create last_icd_exception.make_by_pointer (last_p_icd_exception)
+					create last_icd_exception.make_value_by_pointer (last_p_icd_exception)
 					n := {CLI_COM}.add_ref (last_p_icd_exception)					
 				end
 				last_icd_exception_updated := True

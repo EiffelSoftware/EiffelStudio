@@ -13,6 +13,15 @@ inherit
 
 feature -- Queries
 
+	is_mangled_name (name: STRING): BOOLEAN is
+			-- Is `name' a mangled name that does not match an original name?
+			-- (Does it need special decoding? Cannot it be used as an identifier?)
+		require
+			name_not_void: name /= Void
+		do
+			Result := name.has ('"')
+		end
+
 	is_mangled_alias_name (alias_name: STRING): BOOLEAN is
 			-- Does `alias_name' represent a valid mangled alias name?
 		require
@@ -33,6 +42,26 @@ feature -- Queries
 				)
 			then
 				Result := True
+			end
+		end
+
+	is_mangled_infix (name: STRING): BOOLEAN is
+			-- Does `name' represent an internal name of an infix feature?
+		require
+			name_not_void: name /= Void
+		do
+			if name.count > Infix_str.count then
+				Result := name.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1
+			end
+		end
+
+	is_mangled_prefix (name: STRING): BOOLEAN is
+			-- Does `name' represent an internal name of a prefix feature?
+		require
+			name_not_void: name /= Void
+		do
+			if name.count > Prefix_str.count then
+				Result := name.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1
 			end
 		end
 

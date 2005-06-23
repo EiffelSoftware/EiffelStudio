@@ -187,7 +187,7 @@ feature
 						vhrc1.set_parent (parent)
 						vhrc1.set_feature_name (old_name)
 						Error_handler.insert_error (vhrc1)
-					elseif is_infix (new_name) then
+					elseif is_mangled_infix (new_name) then
 						f := parent_table.item (old_name)
 						if
 							(f.argument_count /= 1)
@@ -200,7 +200,7 @@ feature
 							vhrc5.set_feature_name (old_name)
 							Error_handler.insert_error (vhrc5)
 						end;
-					elseif is_prefix (new_name) then
+					elseif is_mangled_prefix (new_name) then
 						f := parent_table.item (old_name)
 						if
 							(f.argument_count /= 0)
@@ -235,15 +235,17 @@ feature
 								names_heap.put (infix_feature_name_with_symbol (alias_name))
 								local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
 								if is_semi_strict_id (names_heap.found_item) and then system.current_class.lace_class /= system.boolean_class then
+										-- Semi-strick operators cannot appear in classes other than BOOLEAN
 									create {VFAV4_VHRC} vfav
 								end
-							elseif feature_renaming.has_convert_mark then
-									-- Non-binary operator cannot have convert mark
-								create {VFAV3_VHRC} vfav
 							else
 									-- Ensure the alias name is in unary form.
 								names_heap.put (prefix_feature_name_with_symbol (alias_name))
 								local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
+								if feature_renaming.has_convert_mark then
+										-- Unary operator cannot have convert mark
+									create {VFAV3_VHRC} vfav
+								end
 							end
 						else
 								-- Report wrong argument number or return type for operator alias.
@@ -260,22 +262,6 @@ feature
 				end
 			end
 		end
-
-	is_infix (s: STRING): BOOLEAN is
-			-- Is `s' the internal name of an infix feature ?
-		do
-			if s.count > Infix_str.count then
-				Result := s.substring_index_in_bounds (Infix_str, 1, Infix_str.count) = 1
-			end;
-		end;
-
-	is_prefix (s: STRING): BOOLEAN is
-			-- Is `s' the internal name of a prefix feature ?
-		do
-			if s.count > Prefix_str.count then
-				Result := s.substring_index_in_bounds (Prefix_str, 1, Prefix_str.count) = 1
-			end;
-		end;
 
 	check_validity2 is
 			-- Check validity of the redefine clause and select clause.

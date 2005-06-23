@@ -1762,7 +1762,7 @@ feature -- Stone process
 						-- except if it is during a resynchronization, in which case we do not scroll at all.
 					if editor_tool.text_area.text_is_fully_loaded then
 						if not during_synchronization then
-							editor_tool.text_area.find_feature_named (feature_stone.feature_name)
+							editor_tool.text_area.find_feature_named (feature_stone.origin_name)
 							feature_stone_already_processed := editor_tool.text_area.found_feature
 						else
 							feature_stone_already_processed := True

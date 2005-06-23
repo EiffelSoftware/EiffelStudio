@@ -391,7 +391,10 @@ feature -- Status setting
 	set_focus is
 			-- Give the focus to the editor area.
 		do
-			if not editor_drawing_area.is_destroyed and then editor_drawing_area.is_sensitive and then editor_drawing_area.is_sensitive then
+			if
+				not editor_drawing_area.is_destroyed and then editor_drawing_area.is_displayed and then
+				editor_drawing_area.is_sensitive
+			then
 				editor_drawing_area.set_focus
 			else
 				internal_focus_requested := True

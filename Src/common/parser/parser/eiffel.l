@@ -266,6 +266,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [iI][nN][fF][iI][xX]	{
 				last_token := TE_INFIX
+				last_location_as_value := ast_factory.new_location_as (line, column, position, 5)
 			}
 [iI][nN][hH][eE][rR][iI][tT]	{
 				last_token := TE_INHERIT
@@ -348,6 +349,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [pP][rR][eE][fF][iI][xX]	{
 				last_token := TE_PREFIX
+				last_location_as_value := ast_factory.new_location_as (line, column, position, 6)
 			}
 [rR][eE][dD][eE][fF][iI][nN][eE]	{
 				last_token := TE_REDEFINE

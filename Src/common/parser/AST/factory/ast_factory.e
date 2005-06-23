@@ -829,11 +829,11 @@ feature -- Access
 			end
 		end
 
-	new_infix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is
+	new_infix_as (op: STRING_AS; b: BOOLEAN; l: LOCATION_AS): INFIX_PREFIX_AS is
 			-- New INFIX AST node
 		do
 			if op /= Void then
-				create Result.initialize (op, b, True)
+				create Result.initialize (op, b, True, l)
 			end
 		end
 
@@ -988,11 +988,11 @@ feature -- Access
 			end
 		end
 
-	new_prefix_as (op: STRING_AS; b: BOOLEAN): INFIX_PREFIX_AS is
+	new_prefix_as (op: STRING_AS; b: BOOLEAN; l: LOCATION_AS): INFIX_PREFIX_AS is
 			-- New PREFIX AST node
 		do
 			if op /= Void then
-				create Result.initialize (op, b, False)
+				create Result.initialize (op, b, False, l)
 			end
 		end
 

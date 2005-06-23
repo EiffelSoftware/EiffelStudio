@@ -98,20 +98,23 @@ feature {NONE} -- Implementation
 
 	process_static_access_as (l_as: STATIC_ACCESS_AS) is
 		do
-			ctxt.begin
+			if not is_simple_formatting then
+				ctxt.begin
+			end
 
 			ctxt.put_text_item (ti_l_curly)
 			l_as.class_type.process (Current)
 			ctxt.put_text_item (ti_r_curly)
 			
-			ctxt.set_type_creation (l_as.class_type)
-			ctxt.need_dot
-			ctxt.prepare_for_feature (l_as.feature_name, l_as.parameters)
+			ctxt.put_text_item (ti_dot)
+			ctxt.prepare_for_creation_expression_or_static_access (l_as.class_type, l_as.feature_name, l_as.parameters)
 			ctxt.put_current_feature
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
+			if not is_simple_formatting then
+				if ctxt.last_was_printed then
+					ctxt.commit
+				else
+					ctxt.rollback
+				end
 			end
 		end
 
@@ -447,9 +450,19 @@ feature {NONE} -- Implementation
 			l_as.type.process (Current)
 			ctxt.put_text_item (ti_r_curly)
 			if l_as.call /= Void then
-				ctxt.set_type_creation (l_as.type)
-				ctxt.need_dot
-				l_as.call.process (Current)
+				ctxt.put_text_item (ti_dot)
+				if not is_simple_formatting then
+					ctxt.begin
+				end
+				ctxt.prepare_for_creation_expression_or_static_access (l_as.type, l_as.call.feature_name, l_as.call.parameters)
+				ctxt.put_current_feature
+				if not is_simple_formatting then
+					if ctxt.last_was_printed then
+						ctxt.commit
+					else
+						ctxt.rollback
+					end
+				end
 			end
 			ctxt.set_type_creation (l_as.type)
 		end
@@ -1998,7 +2011,7 @@ feature {NONE} -- Implementation
 			ctxt.put_text_item (ti_when_keyword)
 			ctxt.put_space
 			ctxt.set_separator (ti_comma)
-			ctxt.set_no_new_line_between_tokens
+			ctxt.set_space_between_tokens			
 			l_as.interval.process (Current)
 			ctxt.put_space
 			ctxt.put_text_item_without_tabs (ti_then_keyword)

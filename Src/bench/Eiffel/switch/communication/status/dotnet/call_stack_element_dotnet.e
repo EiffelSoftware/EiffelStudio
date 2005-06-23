@@ -435,10 +435,12 @@ feature {NONE} -- Implementation
 							l_dotnet_ref_value ?= private_current_object
 							if l_dotnet_ref_value /= Void then
 								l_dotnet_ref_value.get_object_value
-								private_result := l_dotnet_ref_value.once_function_value (rout)
-								l_dotnet_ref_value.release_object_value
-								if private_result /= Void then
-									private_result.set_name ("Result")
+								if l_dotnet_ref_value.object_value /= Void then
+									private_result := l_dotnet_ref_value.once_function_value (rout)
+									l_dotnet_ref_value.release_object_value
+									if private_result /= Void then
+										private_result.set_name ("Result")
+									end
 								end
 							end
 						else -- not once

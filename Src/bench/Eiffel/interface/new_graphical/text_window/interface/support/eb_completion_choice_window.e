@@ -166,15 +166,7 @@ feature -- Query
 			-- Number of matches based on `a_name' using `buffered_input' value.
 		do
 			Result := not matches_based_on_name (buffered_input).is_empty
-		end		
-
-	longest_text_width_in_pixels: INTEGER is
-			-- Width in pixels of `longest_text_value'
-		do		
-			if longest_text_value /= Void then
-				Result := default_font.string_width (longest_text_value)
-			end
-		end		
+		end			
 		
 	default_font: EV_FONT is
 			-- Default font
@@ -236,46 +228,6 @@ feature {NONE} -- Events handling
 						end
 						choice_list.selected_rows.first.ensure_visible	
 					end
---				when Key_page_up then
---						-- Go up 10 items
---					if not choice_list.is_empty then
---						if not choice_list.selected_items.is_empty then
---							ix:= choice_list.selected_rows.first.index
---							if ix <= 10 then
---								if prev_item_index = 1 then
---									choice_list.remove_selection
---									choice_list.row (choice_list.row_count).enable_select
---								else
---									choice_list.remove_selection
---									choice_list.row (1).enable_select
---								end								
---							else
---								choice_list.remove_selection
---								choice_list.row (ix - 10).enable_select
---							end
---						end
---						choice_list.selected_rows.first.ensure_visible	
---					end
---				when Key_page_down then
---						-- Go down 10 items
---					if not choice_list.is_empty then
---						if not choice_list.selected_items.is_empty then
---							ix:= choice_list.selected_rows.first.index
---							if ix > choice_list.row_count - 10 then
---								if prev_item_index = choice_list.row_count then
---									choice_list.remove_selection
---									choice_list.row (1).enable_select
---								else
---									choice_list.remove_selection
---									choice_list.row (choice_list.row_count).enable_select
---								end								
---							else
---								choice_list.remove_selection
---								choice_list.row (ix + 10).enable_select
---							end
---						end
---						choice_list.selected_rows.first.ensure_visible	
---					end
 				when key_back_space then
 					editor.handle_extended_key (ev_key)					
 					if not buffered_input.is_empty then				
@@ -368,8 +320,7 @@ feature {NONE} -- Events handling
 					buffered_input.append_character (c)					
 					editor.handle_character (c)					
 					create c_name.make_with_name (buffered_input)
-					select_closest_match
-					--resize_column_to_window_width					
+					select_closest_match					
 				elseif not editor.unwanted_characters.has (c) then					
 					close_and_complete
 					if not editor.has_selection then
@@ -427,7 +378,6 @@ feature {NONE} -- Implementation
 			l_upper: INTEGER	
 		do			
 			choice_list.wipe_out
-			longest_text_value := ""
 			matches := matches_based_on_name (name)
 			l_minimum_width := 60
 			if matches.is_empty then
@@ -454,18 +404,12 @@ feature {NONE} -- Implementation
 								--list_row.select_actions.extend (agent activate_tooltip)								
 						end
 					end
-					choice_list.set_item (1, row_index, list_row)
-					if match_item.count > longest_text_value.count then
-						longest_text_value := match_item
-					end
+					choice_list.set_item (1, row_index, list_row)				
 				end
 				l_count := l_count + 1
 				row_index := row_index + 1
 			end
 		end
-
-	longest_text_value: STRING
-			-- Longest string in completion list
 
 	close_and_complete is
 			-- close the window and perform completion with selected item
@@ -576,13 +520,9 @@ feature {NONE} -- Implementation
 
 	resize_column_to_window_width is
 			-- Resize the column width to the width of the window
-		local
-			l_larger: INTEGER
 		do
 			if choice_list.column_count > 0 then				
-				l_larger := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count).max (choice_list.viewable_width)
---				l_larger := longest_text_width_in_pixels.max (choice_list.viewable_width)
-				choice_list.column (1).set_width (l_larger)	
+				choice_list.column (1).set_width (choice_list.viewable_width.max (choice_list.width))	
 			end
 		end		
 

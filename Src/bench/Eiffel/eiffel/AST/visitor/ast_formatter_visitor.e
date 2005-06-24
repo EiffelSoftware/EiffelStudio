@@ -263,9 +263,9 @@ feature {NONE} -- Implementation
 			end
 			ctxt.put_string_item ("%"" + l_as.verbatim_marker)
 			if l_as.is_indentable then
-				ctxt.text.add_char ('[')
+				ctxt.put_string_item ("[")
 			else
-				ctxt.text.add_char ('{')
+				ctxt.put_string_item ("{")
 			end
 			ctxt.put_new_line
 			if not l_as.value.is_empty then
@@ -668,7 +668,17 @@ feature {NONE} -- Implementation
 
 	process_indexing_clause_as (l_as: INDEXING_CLAUSE_AS) is
 		do
+			ctxt.put_text_item (ti_before_indexing)
+			ctxt.put_text_item (ti_indexing_keyword)
+			ctxt.indent
+			ctxt.put_new_line
+			ctxt.set_separator (Void)
+			ctxt.set_new_line_between_tokens
 			process_eiffel_list (l_as)
+			ctxt.put_text_item (ti_after_indexing)
+			ctxt.exdent
+			ctxt.put_new_line
+			ctxt.put_new_line
 		end
 
 	process_operand_as (l_as: OPERAND_AS) is
@@ -1509,7 +1519,7 @@ feature {NONE} -- Implementation
 			l_feat: FEATURE_I
 		do
 			if is_simple_formatting then
-				format_indexes (l_as.top_indexes)
+				safe_process (l_as.top_indexes)
 				if l_as.is_expanded then
 					ctxt.put_text_item (ti_expanded_keyword)
 					ctxt.put_space
@@ -1574,14 +1584,14 @@ feature {NONE} -- Implementation
 					ctxt.put_new_line
 				end
 				safe_process (l_as.invariant_part)
-				format_indexes (l_as.bottom_indexes)
+				safe_process (l_as.bottom_indexes)
 				ctxt.put_text_item (ti_end_keyword)
 				ctxt.put_new_line
 			else
 				ctxt.put_front_text_item (ti_before_class_declaration)
 				ctxt.prepare_class_text
 				ctxt.set_classes (ctxt.class_c, ctxt.class_c)
-				format_indexes (l_as.top_indexes)
+				safe_process (l_as.top_indexes)
 				ctxt.set_classes (Void, Void)
 				format_header (l_as)
 				if ctxt.is_clickable_format and l_as.obsolete_message /= Void then
@@ -1639,7 +1649,7 @@ feature {NONE} -- Implementation
 				format_convert_clause (l_as.convertors)
 				ctxt.format_categories
 				ctxt.format_invariants
-				format_indexes (l_as.bottom_indexes)
+				safe_process (l_as.bottom_indexes)
 				ctxt.put_text_item (ti_before_class_end)
 				ctxt.put_text_item (ti_end_keyword)
 				ctxt.end_class_text
@@ -2250,24 +2260,6 @@ feature {NONE} -- Implementation: helpers
 				ctxt.set_separator (ti_comma)
 				l_as.process (Current)
 				ctxt.set_separator (ti_empty)
-				ctxt.exdent
-				ctxt.put_new_line
-				ctxt.put_new_line
-			end
-		end
-
-	format_indexes (i: EIFFEL_LIST [INDEX_AS]) is
-			-- Format `i'.
-		do
-			if i /= Void and not i.is_empty then
-				ctxt.put_text_item (ti_before_indexing)
-				ctxt.put_text_item (ti_indexing_keyword)
-				ctxt.indent
-				ctxt.put_new_line
-				ctxt.set_separator (Void)
-				ctxt.set_new_line_between_tokens
-				i.process (Current)
-				ctxt.put_text_item (ti_after_indexing)
 				ctxt.exdent
 				ctxt.put_new_line
 				ctxt.put_new_line

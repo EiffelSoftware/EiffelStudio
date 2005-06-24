@@ -4,14 +4,13 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class VE07
-	obsolete "Not defined in the standard"
+class VFAV4_VHPR
 
 inherit
 	
 	EIFFEL_ERROR
 		redefine
-			build_explain, help_file_name, is_defined
+			build_explain, is_defined, subcode
 		end
 
 create
@@ -43,11 +42,11 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	code: STRING is "VE07"
+	code: STRING is "VFAV"
 			-- Error code
 
-	help_file_name: STRING is "VFAV4"
-			-- Associated file name where error explanation is located
+	subcode: INTEGER is 4
+			-- Error subcode
 
 feature -- Status report
 

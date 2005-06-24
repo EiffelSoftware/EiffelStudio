@@ -243,7 +243,7 @@ feature
 							system.current_class.lace_class /= system.boolean_class
 						then
 								-- Semistrict operator alias in a class other than BOOLEAN
-							error_handler.insert_error (create {VE07}.make (system.current_class, feature_i, next.parent.parent))
+							error_handler.insert_error (create {VFAV4_VHPR}.make (system.current_class, feature_i, next.parent.parent))
 						end
 						feat.forth
 					end

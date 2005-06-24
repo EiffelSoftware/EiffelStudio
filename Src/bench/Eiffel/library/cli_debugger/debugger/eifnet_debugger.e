@@ -580,15 +580,20 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				p := dbg_cb_info_pointer_item (2) -- p_thread
 				set_last_thread_by_pointer (p)
 				i := dbg_cb_info_integer_item (3) -- unhandled
-				set_last_exception_handled (i /= 1)
 					--| unhandled == 1 --> TRUE
 					--| unhandled /= 1 --> FALSE
 				p := dbg_cb_info_pointer_item (4) -- pExceptionValue
-				set_last_exception_by_pointer (p)
-				if eifnet_debugger_info.last_exception_is_handled then
-					context_output_message ("First chance exception occurred")
-				else					
-					context_output_message ("Unhandled exception occurred")
+				
+				if not is_inside_function_evaluation then
+					set_last_exception_handled (i /= 1)
+					set_last_exception_by_pointer (p)
+					if eifnet_debugger_info.last_exception_is_handled then
+						context_output_message ("First chance exception occurred")
+					else					
+						context_output_message ("Unhandled exception occurred")
+					end
+				else
+					set_last_evaluation_exception_by_pointer (p)
 				end
 			when Cst_managed_cb_exit_app_domain then
 					--| p_process, p_app_domain
@@ -1347,6 +1352,11 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 
 feature -- Exception
 
+	reset_evaluation_exception is
+		do
+			eifnet_debugger_info.reset_last_evaluation_icd_exception
+		end
+
 	reset_exception_info is
 		do
 			exception_info_retrieved   := False
@@ -1421,7 +1431,6 @@ feature -- Exception
 					l_exception_info.clean
 					l_icd_exception.clean_on_dispose
 				end
-			else
 			end
 			exception_info_retrieved := True
 		ensure

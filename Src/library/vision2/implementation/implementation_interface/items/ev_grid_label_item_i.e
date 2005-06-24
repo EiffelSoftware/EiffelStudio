@@ -94,8 +94,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 	recompute_text_dimensions is
 			-- Recompute `internal_text_width' and `internal_text_height'.
-		local
-			l_internal_text_width, l_internal_text_height: INTEGER
 		do
 			if must_recompute_text_dimensions then
 				if interface.font /= Void then

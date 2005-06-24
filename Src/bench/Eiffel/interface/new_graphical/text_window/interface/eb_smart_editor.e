@@ -741,7 +741,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 				Result := preferences.development_window_data.completion_list_width				
 			else
 					-- Calculate correct size to fit
-				Result := choices.longest_text_width_in_pixels + completion_border_size
+				Result := choices.choice_list.column (1).required_width_of_item_span (1, choices.choice_list.row_count) + completion_border_size
 			end
 		end
 

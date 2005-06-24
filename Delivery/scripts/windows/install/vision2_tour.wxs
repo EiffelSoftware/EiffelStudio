@@ -66,6 +66,8 @@
 							<File Id="ev_multi_column_list_flatshort.rtf" Name="EV_MUL~1.RTF" LongName="ev_multi_column_list_flatshort.rtf" />
 							<File Id="ev_fixed_flatshort.rtf" Name="EV_FIX~1.RTF" LongName="ev_fixed_flatshort.rtf" />
 							<File Id="ev_rich_text_flatshort.rtf" Name="EV_RIC~1.RTF" LongName="ev_rich_text_flatshort.rtf" />
+							<File Id="ev_grid_flatshort_rtf" Name="EV_GRI~1.RTF" LongName="ev_grid_flatshort.rtf" />
+							<File Id="ev_header_flatshort_rtf" Name="EV_HEA~1.RTF" LongName="ev_header_flatshort.rtf" />
 						</Component>
 					</Directory>
 					<Directory Id="templates" Name="TEMPLA~1" LongName="templates">
@@ -473,6 +475,13 @@
 						<Directory Id="horizontal_separator" Name="HORIZO~6" LongName="horizontal_separator">
 							<Component Id="horizontal_separator" Guid="84D0E60A-A247-457E-9184-B9EC49F3C098">
 								<File Id="horizontal_separator_basic_test.e" Name="HORIZO~1.E" LongName="horizontal_separator_basic_test.e" KeyPath="yes" />
+							</Component>
+						</Directory>
+						<Directory Id="header" Name="header">
+							<Component Id="header" Guid="C9A7CF72-F21D-4e8a-8733-D1D0D42F020C">
+								<File Id="header_basic_test_e" Name="HEADER~1.E" LongName="header_basic_test.e" />
+								<File Id="header_resize_to_content_test_e" Name="HEADER~2.E" LongName="header_resize_to_content_test.e" />
+								<File Id="header_resizing_test_e" Name="HEADER~3.E" LongName="header_resizing_test.e" />
 							</Component>
 						</Directory>
 					</Directory>

@@ -26,7 +26,7 @@ feature -- Query
 			if text_field.text_length > 0 then
 				text_field.select_all				
 			end
-			text_field.set_focus
+			popup_window.show_actions.extend_kamikaze (agent text_field.set_focus)
 		end
 		
 end

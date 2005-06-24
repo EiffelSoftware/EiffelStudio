@@ -7,7 +7,7 @@
 				<label>BON</label>
 			</link> (Business Object Notation) to represent Eiffel systems. This article will give a summary of all components of an EiffelStudio diagram. For detailed information on BON, please read 
 			<link>
-				<url>http://www.eiffel.com/doc/#soosa</url>
+				<url>http://bon-method.com/book.htm</url>
 				<label>Seamless Object-Oriented Software Architecture</label>
 			</link> by Kim Wald&amp;eacute;n and Jean-MarcNerson, Prentice Hall 1994.
 		</paragraph>

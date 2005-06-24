@@ -124,9 +124,17 @@ feature -- Access
 feature -- Change
 
 	close is
+		local
+			ddlg: ES_DOCKABLE_DIALOG
 		do
-			parent.prune (Current)
-			tab := Void
+			ddlg := parent_dockable_dialog (widget)
+			if ddlg /= Void then
+				ddlg.destroy
+			else
+				parent.prune (Current)
+				tab := Void
+			end
+			
 		end	
 
 feature {ES_NOTEBOOK} -- Implementation
@@ -168,7 +176,7 @@ feature {ES_DOCKABLE_NOTEBOOK} -- Docking
 
 	on_docking_ended is
 		local
-			ddlg: EV_DIALOG -- EV_DOCKABLE_DIALOG
+			ddlg: ES_DOCKABLE_DIALOG
 			lw, lh: INTEGER
 			hb: EV_HORIZONTAL_BOX
 			lab: EV_LABEL

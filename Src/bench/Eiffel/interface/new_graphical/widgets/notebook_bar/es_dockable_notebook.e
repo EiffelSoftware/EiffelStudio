@@ -48,15 +48,33 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+		do
+			debug ("es_dockable_notebook")
+				print ("motion_received %N")
+			end
+			if awaiting_movement then
+				if (a_screen_x - initial_x).abs > 3 or (a_screen_y - initial_y).abs > 3 then
+					debug ("es_dockable_notebook")
+						print ("starting dock")
+					end
+					awaiting_movement := False
+					dock_executing := True
+					notebook.enable_capture
+					update_pointer_style
+				end
+			end
+		end		
+		
 	release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 		local
-			pointed_widget: EV_WIDGET
 			pointed_tab_index: INTEGER
 			dock_source_index: INTEGER
 			dock_source_text: STRING
 			
 			dock_source_item: ES_NOTEBOOK_ITEM
 			l_tab: EV_NOTEBOOK_TAB
+			l_win: EV_WINDOW
 		do
 			notebook.disable_capture
 			debug ("es_dockable_notebook")
@@ -88,8 +106,13 @@ feature {NONE} -- Implementation
 						dockable_dialog.enable_closeable
 						dockable_dialog.close_request_actions.extend (agent close_dockable_dialog (dockable_dialog))
 						dockable_dialog.set_position (a_screen_x, a_screen_y)
-
-						dockable_dialog.show
+						l_win := parent_window (notebook)
+						if l_win /= Void then
+							dockable_dialog.show_relative_to_window (l_win)
+--							modal_to_window (l_win)
+						else
+							dockable_dialog.show
+						end
 						dockable_dialog := Void
 					else
 						if dock_source_index /= pointed_tab_index then --and dock_source_index /= pointed_tab_index - 1 then
@@ -119,24 +142,6 @@ feature {NONE} -- Implementation
 			if dock_executing then 
 				dock_executing := False
 				update_pointer_style
-			end
-	end
-	
-	motion_received (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-		do
-			debug ("es_dockable_notebook")
-				print ("motion_received %N")
-			end
-			if awaiting_movement then
-				if (a_screen_x - initial_x).abs > 3 or (a_screen_y - initial_y).abs > 3 then
-					debug ("es_dockable_notebook")
-						print ("starting dock")
-					end
-					awaiting_movement := False
-					dock_executing := True
-					notebook.enable_capture
-					update_pointer_style
-				end
 			end
 		end
 		

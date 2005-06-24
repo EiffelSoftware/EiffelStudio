@@ -63,6 +63,9 @@ feature -- Reset
 			reset_last_icd_process
 				--| Exception |--			
 			reset_last_icd_exception
+				--| Evaluation Exception |--			
+			reset_last_evaluation_icd_exception
+
 
 				--| StepComplete |--
 			last_step_complete_reason   := 0
@@ -300,6 +303,13 @@ feature {EIFNET_EXPORTER} -- Access
 			-- last_exception_handled is False, this is an unhandled exception which will
 			-- terminate the process.			
 
+	evaluation_icd_exception: ICOR_DEBUG_VALUE is
+			-- Last ICOR_DEBUG_VALUE's exception object
+		do
+			update_evaluation_icd_exception
+			Result := last_evaluation_icd_exception
+		end
+
 feature -- Debugger error
 
 	debugger_error_occurred: BOOLEAN
@@ -487,6 +497,39 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Change
 			last_exception_is_handled := val
 		end
 		
+	set_last_evaluation_icd_exception (p: POINTER) is 
+			-- Set `last_evaluation_icd_exception' to `p'
+		local
+			n: INTEGER
+		do
+			if not p.is_equal (last_p_evaluation_icd_exception) then
+				reset_last_evaluation_icd_exception
+				last_p_evaluation_icd_exception := p
+				last_evaluation_icd_exception_updated := False
+				if last_p_evaluation_icd_exception /= Default_pointer then
+					n := {CLI_COM}.add_ref (last_p_evaluation_icd_exception)
+				end
+				debug ("DEBUGGER_EIFNET_DATA")
+					io.error.put_string ("/// EIFNET_DEBUGGER_INFO:: EvaluationException changed%N")
+				end
+			end
+		end
+
+	reset_last_evaluation_icd_exception is
+		local
+			n: INTEGER
+		do
+			if last_evaluation_icd_exception /= Void then
+				last_evaluation_icd_exception.clean_on_dispose
+				last_evaluation_icd_exception := Void
+			end
+			if last_p_evaluation_icd_exception /= Default_pointer then
+				n := {CLI_COM}.release (last_p_evaluation_icd_exception)
+				last_p_evaluation_icd_exception := Default_pointer
+			end
+			last_evaluation_icd_exception_updated := True
+		end
+
 feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Pointers to COM Objects
 
 	last_p_icd_controller: POINTER --|ICOR_DEBUG_CONTROLLER
@@ -500,6 +543,9 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Pointers to COM Objects
 
 	last_p_icd_exception: POINTER --|ICOR_DEBUG_VALUE
 			-- Last Exception object
+
+	last_p_evaluation_icd_exception: POINTER --|ICOR_DEBUG_VALUE
+			-- Last Evaluation Exception object
 
 feature {NONE} -- Pointers to COM Objects
 
@@ -518,6 +564,10 @@ feature {NONE} -- Pointers to COM Objects
 	last_icd_exception_updated: BOOLEAN
 	last_icd_exception: ICOR_DEBUG_VALUE
 			-- Last Exception object
+			
+	last_evaluation_icd_exception_updated: BOOLEAN
+	last_evaluation_icd_exception: ICOR_DEBUG_VALUE
+			-- Last Evaluation Exception object			
 
 feature {NONE} -- COM Object
 
@@ -604,6 +654,27 @@ feature {NONE} -- COM Object
 				last_icd_exception_updated := True
 			end
 		end
+		
+	update_evaluation_icd_exception is
+			-- Last Evaluation Exception object
+		local
+			n: INTEGER
+		do
+			if not last_evaluation_icd_exception_updated then
+				if 
+					last_p_evaluation_icd_exception = Default_pointer 
+				then
+					if last_evaluation_icd_exception /= Void then
+						last_evaluation_icd_exception.clean_on_dispose
+						last_evaluation_icd_exception := Void
+					end
+				else
+					create last_evaluation_icd_exception.make_value_by_pointer (last_p_evaluation_icd_exception)
+					n := {CLI_COM}.add_ref (last_p_evaluation_icd_exception)					
+				end
+				last_evaluation_icd_exception_updated := True
+			end
+		end		
 
 feature -- Debuggee Session Parameters
 

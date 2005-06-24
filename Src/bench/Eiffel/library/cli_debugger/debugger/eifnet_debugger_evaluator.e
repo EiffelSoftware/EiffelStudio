@@ -372,6 +372,7 @@ feature {NONE}
 			end
 			
 			l_status := application.imp_dotnet.status
+			Eifnet_debugger.reset_evaluation_exception
 			l_status.set_is_evaluating (True)
 				--| Let use the evaluating mecanism instead of the normal one
 				--| then let's disable the timer for ec callback
@@ -393,6 +394,7 @@ feature {NONE}
 			l_status: APPLICATION_STATUS_DOTNET
 		do
 			l_status := last_app_status
+			Eifnet_debugger.reset_evaluation_exception
 			l_status.set_is_evaluating (False)
 			if restart_timer_required then
 				if eifnet_debugger.callback_notification_processing then

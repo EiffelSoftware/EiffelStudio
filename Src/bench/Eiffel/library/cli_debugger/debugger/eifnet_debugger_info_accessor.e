@@ -168,6 +168,11 @@ feature -- Access
 		do
 			Result := Eifnet_debugger_info.runtime_module
 		end
+		
+	evaluation_icor_debug_exception: ICOR_DEBUG_VALUE is
+		do
+			Result := Eifnet_debugger_info.evaluation_icd_exception
+		end		
 
 feature -- Callstack related
 
@@ -232,6 +237,11 @@ feature {NONE} -- Change by pointer
 		do
 			eifnet_debugger_info.set_last_icd_exception (p)
 		end
+		
+	set_last_evaluation_exception_by_pointer (p: POINTER) is
+		do
+			eifnet_debugger_info.set_last_evaluation_icd_exception (p)
+		end		
 
 	set_last_breakpoint_by_pointer (p: POINTER) is
 		do

@@ -1,24 +1,20 @@
 # vision2.lib - Makefile for Microsoft C
 
 CC = cl
-# Debug version
-#CFLAGS = -c -Zi -W4 \
-#	-I..\spec\include \
-#	-I$(VISION_PRERELEASE)\libpng \
-#	-I$(VISION_PRERELEASE)\zlib \
-#	-I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
-
-# Release version
-CFLAGS = -c -Ox -W3 \
-	-I..\spec\include \
+CFLAGS = -c -Ox -MT -W3
+MTCFLAGS = $(CFLAGS) -DEIF_THREADS
+INCLUDE_PATH = -I..\spec\include \
 	-I..\..\..\C_library\libpng \
 	-I..\..\..\C_library\zlib \
 	-I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 .c.obj:
-	$(CC) $(CFLAGS) $<
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $<
 
 OBJ = load_pixmap.obj
+MT_OBJ = MTload_pixmap.obj
+
+all:: vision2.lib mtvision2.lib
 
 vision2.lib: $(OBJ)
 	if exist $@ del $@
@@ -28,3 +24,16 @@ vision2.lib: $(OBJ)
 	copy $@ ..\spec\msc\lib
 	del $@
 	del *.obj
+
+mtvision2.lib: $(MT_OBJ)
+	if exist $@ del $@
+	lib /OUT:$@ $(MT_OBJ)
+	if not exist ..\spec\msc mkdir ..\spec\msc
+	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
+	copy $@ ..\spec\msc\lib
+	del $@
+	del *.obj
+
+MTload_pixmap.obj: load_pixmap.c
+	$(CC) $(MTCFLAGS) $(INCLUDE_PATH) -Fo$@ -c $?
+

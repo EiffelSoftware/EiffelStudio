@@ -1,6 +1,6 @@
 CC = cl
-CFLAGS = -c -Ox -W3 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
-IL_CFLAGS = -c -Ox -DEIF_IL_DLL -W3 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
+CFLAGS = -c -Ox -MT -W3 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
+IL_CFLAGS = -c -Ox -MT -DEIF_IL_DLL -W3 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 OBJ = odbc.obj
 IL_OBJ = il_odbc.obj
 

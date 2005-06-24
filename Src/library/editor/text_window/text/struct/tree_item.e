@@ -95,6 +95,8 @@ feature -- Basic Operations
 
 	add_right (other: like Current) is
 			-- add `other' to the right of Current
+		require
+			other_not_void: other /= Void
 		local
 			ti: like key
 		do

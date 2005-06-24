@@ -96,7 +96,7 @@ feature -- Access
 		do
 			l_id_font_pref ?= a_pref
 			if l_id_font_pref /= Void then
-				grid.selected_rows.first.set_height (l_id_font_pref.value.font.height)			
+				grid.selected_rows.first.set_height (l_id_font_pref.value.font.height.max (default_row_height))			
 			end						
 			Precursor {PREFERENCES_WINDOW} (a_pref)
 		end		

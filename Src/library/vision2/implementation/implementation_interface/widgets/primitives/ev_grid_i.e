@@ -17,7 +17,14 @@ inherit
 			interface,
 			drop_actions,
 			has_focus,
-			set_focus
+			set_focus,
+			set_pebble,
+			set_pebble_function,
+			conforming_pick_actions,
+			pick_actions,
+			pick_ended_actions,
+			set_accept_cursor,
+			set_deny_cursor
 		end
 
 	EV_GRID_ACTION_SEQUENCES_I
@@ -33,6 +40,26 @@ feature -- Access
 				create drop_actions_internal
 			end
 			Result := drop_actions_internal
+		end
+
+	conforming_pick_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when a pebble that fits here is picked.
+		do
+			Result := drawable.conforming_pick_actions
+		end
+
+	pick_actions: EV_PND_START_ACTION_SEQUENCE is
+			-- Actions to be performed when `pebble' is picked up.
+		do
+			Result := drawable.pick_actions
+		end
+
+	pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE is
+			-- Actions to be performed when a transport from `Current' ends.
+			-- If transport completed successfully, then event data
+			-- is target. If cancelled, then event data is Void.
+		do
+			Result := drawable.pick_ended_actions
 		end
 
 	row (a_row: INTEGER): EV_GRID_ROW is
@@ -119,7 +146,7 @@ feature -- Access
 			temp_columns: like columns
 		do
 			from
-				create Result.make (0)
+				create Result.make (10)
 				temp_columns := columns
 				temp_columns.start
 			until
@@ -148,7 +175,7 @@ feature -- Access
 					Result.extend (last_selected_row.interface)
 				end
 			else
-				create Result.make (0)	
+				create Result.make (10)	
 				from
 					i := 1
 					a_count := row_count
@@ -174,7 +201,7 @@ feature -- Access
 			a_count: INTEGER
 		do
 			if is_row_selection_enabled then
-				create Result.make (0)
+				create Result.make (10)
 				from
 					sel_rows := selected_rows
 					a_count := sel_rows.count
@@ -506,6 +533,22 @@ feature -- Pick and Drop
 				(item_drop_actions_internal /= Void and then item_accepts_pebble (item_target, a_pebble))
 		end
 
+	set_accept_cursor (a_cursor: EV_CURSOR) is
+			-- Set `a_cursor' to be displayed when the screen pointer is over a
+			-- target that accepts `pebble' during pick and drop.
+		do
+			Precursor {EV_CELL_I} (a_cursor)
+			drawable.set_accept_cursor (a_cursor)
+		end
+
+	set_deny_cursor (a_cursor: EV_CURSOR) is
+			-- Set `a_cursor' to be displayed when the screen pointer is over a
+			-- target that doesn't accept `pebble' during pick and drop.
+		do
+			Precursor {EV_CELL_I} (a_cursor)
+			drawable.set_deny_cursor (a_cursor)
+		end
+
 	set_item_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]) is
 			-- Set `a_function' to compute `pebble'.
 			-- It will be called once each time a pick on the item area of the grid occurs, the result
@@ -589,7 +632,7 @@ feature -- Status setting
 		do
 			if currently_active_item /= Void and then currently_active_item.parent = interface then
 					-- If an item is currently active and present in the grid then deactivate it.
-				deactivate_item (currently_active_item)
+				currently_active_item.deactivate
 			end
 			currently_active_item := a_item
 			create activate_window
@@ -642,7 +685,7 @@ feature -- Status setting
 		end
 
 	deactivate_item (a_item: EV_GRID_ITEM) is
-			-- Cleanup from previous call to `activate'
+			-- Cleanup from previous call to `activate'.
 		require
 			a_item_not_void: a_item /= Void
 		do
@@ -1369,6 +1412,20 @@ feature -- Status setting
 			-- Grab keyboard focus.
 		do
 			drawable.set_focus
+		end
+
+	set_pebble (a_pebble: like pebble) is
+			-- Assign `a_pebble' to `pebble'.
+		do
+			Precursor {EV_CELL_I} (a_pebble)
+			drawable.set_pebble (a_pebble)
+		end
+
+	set_pebble_function (a_function: FUNCTION [ANY, TUPLE, ANY]) is
+			-- Assign `a_function' to `pebble_function'.
+		do
+			Precursor {EV_CELL_I} (a_function)
+			drawable.set_pebble_function (a_function)
 		end
 		
 	set_focused_selection_color (a_color: EV_COLOR) is

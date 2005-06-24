@@ -1,4 +1,4 @@
-<document title="Release notes of EiffelStudio 5.6" output="studio">
+<document title="Release notes for EiffelStudio 5.6" output="studio">
 	<meta_data>
 		<help></help>
 	</meta_data>
@@ -9,7 +9,7 @@
 				<item>New implementation of the diagram tool with enhanced performance and functionalities
 					<list ordered="false">
 						<item>Support for UML view.</item>
-						<item>Auto-arrange of classes using force directed graph.</item>
+						<item>Physics: auto-arrangement of classes using force directed graph.</item>
 						<item>Multiple selection of classes.</item>
 						<item>Improved speed/behavior of drawing/scrolling operations especially on large diagram.</item>
 					</list>
@@ -20,6 +20,7 @@
 				<item>Improved keyboard navigation in EiffelStudio windows/dialogs.</item>
 				<item>Full support for 64 bits operating systems such as Windows, Linux, Solaris, Irix, VMS,...</item>
 				<item>Features tree is also available for classes which are part of the universe, but not yet compiled.</item>
+				<item>New EiffelCOM wizard. Click <link><url>../../../../wizards/com/index.xml</url><label>here</label></link> for more details.</item>
 			</list>
 			<heading><size>3</size>Changes</heading>
 			<list ordered="false">
@@ -79,7 +80,9 @@
 					<item>Added implementation query <feature_name>new_string</feature_name>. Descendants of <class_name>STRING</class_name> may need to update their inheritance clause.</item>
 					<item>Fixed a bug in .NET implementation of feature <code><feature_name>replace_substring</feature_name></code> that might produce incorrect result when argument and target of the call is the same object.</item>
 					<item>Merged .NET and classic implementation of STRING so that all features of STRING are now properly implemented for both platforms.</item>
+					<item>Fixed <feature_name>center_justify</feature_name> that would corrupt memory on classic.</item>
 					<item>Changed <feature_name>character_justify</feature_name>, <feature_name>left_justify</feature_name>, <feature_name>right_justify</feature_name> and <feature_name>center_justify</feature_name> so that justification is now done on <feature_name>count</feature_name> instead of <feature_name>capacity</feature_name>. You might expect different results after upgrading, thus check all callers of those routines.</item>
+					<item>Added <feature_name>is_case_insenstive_equal</feature_name> to compare two strings regardless of their case.</item>
 				</list>
 			</item>
 			<item><class_name>ARRAYED_LIST</class_name>:
@@ -90,11 +93,16 @@
 <keyword>create</keyword> list.<feature_name>make</feature_name> (5)
 list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 					<item>Added implementation query <feature_name>new_filled_list</feature_name> in <class_name>ARRAYED_LIST</class_name>. Descendants of <class_name>ARRAYED_LIST</class_name> may need to update their inheritance clause.</item>
-					<item>Improved speed of insertion by changing the implementation of <feature_name>force</feature_name> and <feature_name>extend</feature_name>. As a consequence descendants of <class_name>ARRAYED_LIST</class_name> redefining <feature_name>put_i_th</feature_name> should also redefine <feature_name>force</feature_name> and <feature_name>extend</feature_name>.</item>
 				</list>
 			</item>
+			<item><class_name>HASH_TABLE</class_name>:
+				<list ordered="false">
+					<item>Added <feature_name>merge</feature_name> to <class_name>HASH_TABLE</class_name>.</item>
+					<item>Now <feature_name>remove</feature_name> will reset <feature_name>found_item</feature_name> when an element is removed.</item>
+				</list>
+			</item>
+			<item>Changed behavior of <feature_name>item</feature_name> and <feature_name>eval</feature_name> in <class_name>FUNCTION</class_name>. They will not set <feature_name>last_result</feature_name> with their result. If you want to use <feature_name>last_result</feature_name> you should use <feature_name>call</feature_name> instead.</item>
 			<item>Added new set of classes <class_name>NATURAL_8</class_name>, <class_name>NATURAL_16</class_name>, <class_name>NATURAL_32</class_name> and <class_name>NATURAL_64</class_name> to perform unsigned integer operations.</item>
-			<item>Added <feature_name>merge</feature_name> to <class_name>HASH_TABLE</class_name>.</item>
 			<item>Made implementations of <feature_name>cursor</feature_name> in descendants of <class_name>CURSOR_STRUCTURE</class_name> return a precise <class_name>CURSOR</class_name> type.</item>
 			<item>Reduced feature exportation of routines also used as creation procedures of <class_name>CURSOR</class_name> descendants to <class_name>NONE</class_name></item>
 			<item>Removed <feature_name>make_sublist</feature_name> from <class_name>TWO_WAY_LIST</class_name> public creation procedures.</item>

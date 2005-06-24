@@ -102,6 +102,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := expanded_display_bgcolor_preference.value
 		end
+
+	number_of_watch_tools: INTEGER is
+		do
+			Result := number_of_watch_tools_preference.value
+		end
 		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -120,6 +125,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	right_debug_layout_preference: ARRAY_PREFERENCE		
 	max_stack_depth_preference: INTEGER_PREFERENCE
 	expanded_display_bgcolor_preference: COLOR_PREFERENCE
+	number_of_watch_tools_preference: INTEGER_PREFERENCE
 	
 feature -- Preference Strings
 
@@ -138,6 +144,7 @@ feature -- Preference Strings
 	left_debug_layout_string: STRING is "debugger.left_debug_layout"	
 	right_debug_layout_string: STRING is "debugger.right_debug_layout"
 	expanded_display_bgcolor_string: STRING is "debugger.expanded_display_background_color"
+	number_of_watch_tools_string: STRING is "debugger.number_of_watch_tools"
 
 feature {NONE} -- Implementation
 
@@ -163,6 +170,8 @@ feature {NONE} -- Implementation
 			left_debug_layout_preference := l_manager.new_array_resource_value (l_manager, left_debug_layout_string, <<>>)
 			right_debug_layout_preference := l_manager.new_array_resource_value (l_manager, right_debug_layout_string, <<>>)
 			expanded_display_bgcolor_preference := l_manager.new_color_resource_value (l_manager, expanded_display_bgcolor_string, create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
+			number_of_watch_tools_preference := l_manager.new_integer_resource_value (l_manager, number_of_watch_tools_string, 2)					
+
 		end
 	
 	preferences: PREFERENCES
@@ -184,5 +193,6 @@ invariant
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void
 	max_stack_depth_preference_not_void: max_stack_depth_preference /= Void	
 	expanded_display_bgcolor_preference_not_void: expanded_display_bgcolor_preference /= Void		
+	number_of_watch_tools_preference_not_void: number_of_watch_tools_preference /= Void	
 
 end -- class EB_DEBUG_TOOL_DATA

@@ -483,7 +483,7 @@ feature {EV_GRID_I} -- Implementation
 		do
 			clear
 			disable_select
-			parent_i := Void
+			unparent
 		ensure
 			parent_i_unset: parent_i = Void
 		end

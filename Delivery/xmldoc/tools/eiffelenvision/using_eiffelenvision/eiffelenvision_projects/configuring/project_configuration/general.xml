@@ -50,7 +50,7 @@
     <paragraph>
       <bold>Include All Classes</bold>
       <line_break />
-			Indicates to the Eiffel for .NET compiler if all classes present in the project should be included in the compiled assembly. When <bold>No</bold>, only those classes reachable from the <link><url>build.xml</url><anchor_name>root_class</anchor_name><label>Root Class</label></link>.
+			Indicates to the Eiffel for .NET compiler if all classes present in the project should be included in the compiled assembly. When <bold>No</bold>, only those classes reachable from the <link><url>build.xml</url><anchor_name>root_class</anchor_name><label>Root Class</label></link> will be compiled into the project's assembly.
 		</paragraph>
     <anchor>target_clr_version</anchor>
     <paragraph>

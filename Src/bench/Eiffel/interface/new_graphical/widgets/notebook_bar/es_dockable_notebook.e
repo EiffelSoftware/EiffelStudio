@@ -1,6 +1,8 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "[
+			Objects that represent a notebook containing tools.
+			including docking mecanism on notebook's tab
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

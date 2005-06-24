@@ -4,7 +4,7 @@ indexing
 	date        : "$Date$"
 	revision    : "$Revision$"
 
-class
+deferred class
 	ES_NOTEBOOK
 	
 inherit
@@ -12,9 +12,6 @@ inherit
 		redefine
 			change_attach_explorer
 		end
-
-create
-	make
 
 feature {NONE} -- Initialization
 

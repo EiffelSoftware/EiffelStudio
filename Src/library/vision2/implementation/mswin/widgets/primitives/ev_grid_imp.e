@@ -19,7 +19,14 @@ inherit
 		undefine
 			drop_actions,
 			has_focus,
-			set_focus
+			set_focus,
+			set_pebble,
+			set_pebble_function,
+			conforming_pick_actions,
+			pick_actions,
+			pick_ended_actions,
+			set_accept_cursor,
+			set_deny_cursor
 		redefine
 			initialize,
 			destroy,

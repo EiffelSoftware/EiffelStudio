@@ -401,10 +401,10 @@ feature -- Status setting
 			objects_tool.update
 
 				--| Watches tool
-			if watch_tool_list.count < Preferences.debugger_data.number_of_watch_tools  then
+			if watch_tool_list.count < Preferences.debug_tool_data.number_of_watch_tools  then
 				from
 				until
-					watch_tool_list.count >= Preferences.debugger_data.number_of_watch_tools
+					watch_tool_list.count >= Preferences.debug_tool_data.number_of_watch_tools
 				loop
 					create_new_watch_tool_inside_notebook (debugging_window, debugging_tools)
 				end
@@ -508,6 +508,7 @@ feature -- Status setting
 			preferences.debug_tool_data.left_debug_layout_preference.set_value (debug_left_layout)
 			preferences.debug_tool_data.right_debug_layout_preference.set_value (debug_right_layout)
 			preferences.debug_tool_data.main_splitter_position_preference.set_value (debug_splitter_position)
+			
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("Right debug layout: %N")
 	 			from

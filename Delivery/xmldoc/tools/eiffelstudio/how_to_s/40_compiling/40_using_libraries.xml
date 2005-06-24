@@ -22,7 +22,7 @@
 			<item>Open the 
 				<link>
 					<url>/tools/eiffelstudio/reference/25_project_settings/10_general.xml</url>
-					<label>System Settings</label>
+					<label>Project Settings</label>
 				</link> dialog.
 			</item>
 			<item>In the 
@@ -48,7 +48,7 @@
 			<item>Open the 
 				<link>
 					<url>/tools/eiffelstudio/reference/25_project_settings/50_externals.xml</url>
-					<label>System Settings</label>
+					<label>Project Settings</label>
 				</link> dialog.
 			</item>
 			<item>In the 

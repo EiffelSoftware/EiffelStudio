@@ -41,11 +41,11 @@ finish_freezing &amp;gt; $output_file</code_block>
 		</heading>In a file called `launched_ec.bat' you can have the following:
 		<paragraph>
 			<code_block>
-#Launch Eiffel compilation
+rem Launch Eiffel compilation
 ec -batch -ace Ace.ace -finalize -c_compile &amp;gt; c:\output_path\OUTPUT
 
-#Since only C compilation for finalized code is done
-#Launch C compilation for frozen code
+rem Since only C compilation for finalized code is done
+rem Launch C compilation for frozen code
 cd EIFGEN\W_code
 finish_freezing &amp;gt; c:\output_path\OUTPUT</code_block>
 		</paragraph>

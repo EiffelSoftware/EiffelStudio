@@ -102,8 +102,7 @@ feature -- Status setting
 			-- 
 		do			
  			margin_viewport.set_y_offset (text_panel.editor_viewport.y_offset)
- 			flip_count := text_panel.flip_count
- 			last_vertical_scroll_bar_value := text_panel.last_vertical_scroll_bar_value 			
+ 			flip_count := text_panel.flip_count 						
 		end
 		
 feature -- Graphical Interface
@@ -213,10 +212,6 @@ feature {NONE} -- Implementation
 			-- Is line updating?
 
 	in_scroll: BOOLEAN
-
-	last_vertical_scroll_bar_value: INTEGER
-		-- Last value of `vertical_scroll_bar' used within `vertical_scroll_bar_changed'. See
-		-- comment of `last_horizontal_scroll_bar_value' for details of it's use.
 
 	flip_count: INTEGER
 

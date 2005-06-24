@@ -58,8 +58,8 @@ feature -- Access: environment variable
 		local
 			fname: FILE_NAME
 		once
-			if Eiffel_platform.as_lower.is_equal ("windows") then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel56\build"
+			if platform_constants.is_windows then
+				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel56\build\Preferences"
 			else
 				create fname.make_from_string (Execution_environment.home_directory_name)
 				fname.set_file_name (".buildrc")
@@ -78,9 +78,8 @@ feature -- Access: environment variable
 	
 	short_build_name: STRING is "build"
 			-- Short version of Build name.
-
+			
 feature -- Access: file name
-
 
 	Templates_path: FILE_NAME is
 			-- Location of templates.
@@ -206,5 +205,15 @@ feature -- Version limitation
 
 	has_dll_generation: BOOLEAN is True
 			-- Does this version have the DLL generation?
+
+feature {NONE} -- Implementation
+
+	platform_constants: PLATFORM is
+			-- To get on what kind of computer we are running.
+		once
+			create Result
+		ensure
+			platform_constants_not_void: Result /= Void
+		end
 
 end -- class EIFFEL_ENV

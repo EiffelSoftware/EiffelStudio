@@ -319,6 +319,12 @@ feature -- Query
 			Result := text_displayed.changed
 		end
 
+	line_modulo: INTEGER is
+			-- Number of pixels of bottom displayed line that are out of view.
+ 		do		
+ 			Result := line_height - (viewable_height \\ line_height)
+ 		end	
+
 feature -- Pick and Drop
 
 	drop_actions: EV_PND_ACTION_SEQUENCE is
@@ -621,7 +627,7 @@ feature -- Status Setting
 			l_old_width: INTEGER
 		do
 			l_old_width := editor_width
-			editor_width := a_width.max (editor_width) + right_buffer_width
+			editor_width := a_width.max (editor_width)
 			if editor_width > l_old_width then				
 				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset, viewable_width, viewable_height)
 				update_horizontal_scrollbar
@@ -815,42 +821,54 @@ feature {NONE} -- Scroll bars Management
  		local
  			l_bottom_line_y,
  			l_top_line_y,
- 			l_diff: INTEGER
- 		do 				 		 			
+ 			l_diff,
+ 			view_y_offset,
+ 			l_line_height,
+ 			l_buff_height: INTEGER
+ 		do
  			in_scroll := True
  			l_diff := vscroll_pos - last_vertical_scroll_bar_value
  			first_line_displayed := (vscroll_pos.min (text_displayed.number_of_lines)).max (1)
+ 			view_y_offset := editor_viewport.y_offset
+ 			l_line_height := line_height
+ 			l_buff_height := buffered_drawable_height
  			
  			if l_diff < 0 then
  					-- Scroll up
- 				l_top_line_y := l_diff * line_height
- 				if l_top_line_y.abs > editor_viewport.y_offset then
- 					editor_viewport.set_y_offset (buffered_drawable_height - viewable_height)
+ 				l_top_line_y := vscroll_pos * l_line_height -- pixel y offset of NEW vertical scrollbar value 				
+ 				if (view_y_offset + (l_diff * l_line_height)) < 0 then
+ 						-- The newly anticipated y_offset (taking into account where we are moving to) is
+ 						-- above the drawing area, so flip to the bottom
+ 					editor_viewport.set_y_offset (l_buff_height - viewable_height - ((l_buff_height - viewable_height) \\ l_line_height))
  					flip_count := flip_count - 1
 					margin.synch_with_panel
- 					refresh_now
+ 					refresh_now 					
  				else
- 					editor_viewport.set_y_offset (editor_viewport.y_offset + l_top_line_y)
+ 					editor_viewport.set_y_offset (view_y_offset + (l_diff * l_line_height))
+ 					check
+ 						not_negative: editor_viewport.y_offset >= 0
+ 					end
 					margin.synch_with_panel
  				end
- 			elseif l_diff > 0 then 				
+ 			elseif l_diff > 0 then
  					-- Scroll down
- 				l_bottom_line_y := editor_viewport.y_offset + ((number_of_lines_displayed + l_diff) * line_height)
- 				if l_bottom_line_y > buffered_drawable_height then
- 					editor_viewport.set_y_offset (0)
+ 				l_bottom_line_y := viewable_height + view_y_offset + (l_diff * l_line_height)
+ 				if l_bottom_line_y > l_buff_height then
+ 					editor_viewport.set_y_offset (0) 				
  					flip_count := flip_count + 1
 					margin.synch_with_panel
  					refresh_now
  				else
- 					editor_viewport.set_y_offset (editor_viewport.y_offset + (l_diff * line_height))
+ 					editor_viewport.set_y_offset (view_y_offset + (l_diff * l_line_height))
 					margin.synch_with_panel
  				end
  			end 			
-				
-			check
-				offset_view: editor_viewport.y_offset >= 0
-			end
 			last_vertical_scroll_bar_value := vscroll_pos
+			
+			check
+ 				not_too_high: editor_viewport.y_offset >= 0
+ 				not_too_low: (editor_viewport.y_offset + viewable_height) <= buffered_drawable_height
+ 			end
  		end
 
  	on_horizontal_scroll (scroll_pos: INTEGER) is
@@ -922,8 +940,22 @@ feature {NONE} -- Display functions
 				end
 				update_vertical_scrollbar
 				update_horizontal_scrollbar
+				update_viewport_after_resize
+				last_viewport_height := a_height
 			end
 		end
+
+	last_viewport_height: INTEGER
+
+	update_viewport_after_resize is
+			-- 
+		do
+			if editor_viewport.y_offset + viewable_height > buffered_drawable_height then
+					-- The viewport needs to be moved up because it is too low down to display 
+				editor_viewport.set_y_offset (editor_viewport.y_offset - (editor_viewport.height - last_viewport_height))
+				margin.margin_viewport.set_y_offset (editor_viewport.y_offset)
+			end	
+		end		
 
 	update_area (x_pos, top, a_width, bottom: INTEGER; x: INTEGER; buffered: BOOLEAN) is
  			-- Update drawing area between `top' and `bottom' and `x' and `a_width'.  If `buffered' then draw to `buffered_line'
@@ -940,8 +972,8 @@ feature {NONE} -- Display functions
  			view_y_offset := editor_viewport.y_offset
 
  				-- Draw all lines
- 			first_line_to_draw := (first_line_displayed + (top - view_y_offset) // line_height)--.max (1)
- 			last_line_to_draw := ((first_line_displayed + (bottom - view_y_offset) // line_height).min (text_displayed.number_of_lines))--.max (1)
+ 			first_line_to_draw := (first_line_displayed + (top - view_y_offset) // line_height).max (1)
+ 			last_line_to_draw := ((first_line_displayed + (bottom - view_y_offset) // line_height).min (text_displayed.number_of_lines))
 
 			check 
 				not_too_many_lines: (bottom = top) implies first_line_to_draw = last_line_to_draw
@@ -984,29 +1016,31 @@ feature {NONE} -- Display functions
 		do
 			updating_line := True
 			l_text := text_displayed
-			l_text.go_i_th (first)
-
-			if buffered then
-				buffered_line.set_background_color (editor_preferences.normal_background_color)
-			end		
-			
-			from
- 				curr_line := first
- 			until
- 				curr_line > last or else l_text.after
- 			loop
- 				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * line_height)
-
+			if not l_text.is_empty then
+				l_text.go_i_th (first)
+				
 				if buffered then
- 		--			draw_line_to_buffered_line (curr_line, l_text.current_line)
-		--			draw_buffered_line_to_screen (0, y_offset)
-				else
-					draw_line_to_screen (start_pos, end_pos, y_offset, l_text.line (curr_line))
-				end
- 				curr_line := curr_line + 1
-				y_offset := y_offset + line_height
- 				l_text.forth
- 			end
+					buffered_line.set_background_color (editor_preferences.normal_background_color)
+				end		
+				
+				from
+	 				curr_line := first
+	 			until
+	 				curr_line > last or else l_text.after
+	 			loop
+	 				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * line_height)
+	
+					if buffered then
+	 		--			draw_line_to_buffered_line (curr_line, l_text.current_line)
+			--			draw_buffered_line_to_screen (0, y_offset)
+					else
+						draw_line_to_screen (start_pos, end_pos, y_offset, l_text.line (curr_line))
+					end
+	 				curr_line := curr_line + 1
+					y_offset := y_offset + line_height
+	 				l_text.forth
+	 			end
+			end
 			
  			updating_line := False
 		end
@@ -1188,6 +1222,7 @@ feature {NONE} -- Text loading
 			update_vertical_scrollbar
 			update_horizontal_scrollbar		
 			editor_drawing_area.enable_sensitive
+			refresh
 			if editor_drawing_area.is_sensitive then
 				set_focus
 			end			
@@ -1295,7 +1330,7 @@ feature -- Implementation
 
 	buffered_drawable_width: INTEGER is 32000
 
-	buffered_drawable_height: INTEGER is 1000
+	buffered_drawable_height: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 		
 	last_vertical_scroll_bar_value: INTEGER

@@ -1,6 +1,6 @@
 CC=cl 
 AR=lib
-CFLAGS=-Ox
+CFLAGS=-Ox -MT
 LIBS= gd.lib
 
 all: gd.lib

@@ -1,7 +1,7 @@
 INCLUDE_PATH = -I. -Id:\eiffel43\bench\spec\$(ISE_PLATFORM)\include -Id:\Eiffel43\library\GIF\Clib\gd_lib
 CC = cl
 CPP = cl
-CFLAGS = -Ox -YX -nologo $(INCLUDE_PATH)
+CFLAGS = -Ox -MT -YX -nologo $(INCLUDE_PATH)
 MAKE = nmake
 MKDEP =   --
 MV = copy

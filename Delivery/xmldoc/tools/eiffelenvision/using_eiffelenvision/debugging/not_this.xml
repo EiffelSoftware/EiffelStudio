@@ -22,7 +22,7 @@
     <paragraph>
 			The <link><url>../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET Language</label></link> does not use the <code><reserved_word>this</reserved_word></code> keyword/reserved word used by other languages such as Visual C# and Visual C++. Instead 
 			<code><reserved_word>Current</reserved_word></code> is used to self-reference a runtime instance of a class, also know as an object. Because <code><reserved_word>this</reserved_word></code> is not used by 
-			the <link><url>../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET Language</label></link>, the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsdebug/html/vcurfThisWindow.htm</url><label>This (Me) Window</label></link> is not used by EiffelEnvision when debugging projects.
+			the <link><url>../../eiffel_for_dotnet/index.xml</url><label>Eiffel for .NET Language</label></link>, the <link><url>ms-help//MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/vsdebug/html/vcurfThisWindow.htm</url><label>This (Me) Window</label></link> will display <bold>Current</bold> instead of <code><reserved_word>this</reserved_word></code>.
 		</paragraph>
     <anchor>also_see</anchor>
     <heading>

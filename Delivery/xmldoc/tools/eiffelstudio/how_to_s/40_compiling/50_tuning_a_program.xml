@@ -24,7 +24,7 @@
 			<link>
 				<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
 				<label>Project Settings dialog advanced tab</label>
-			</link>, try experimenting the 
+			</link>, try experimenting with the 
 			<bold>Inlining</bold> option, and setting the maximum size of features that should be inlined. Only Eiffel features are inlined by this option, to see how to inline the C functions you may be using in your program, please refer to your C compiler documentation.
 		</paragraph>
 		<paragraph>In the 

@@ -966,8 +966,7 @@ feature {NONE} -- Implementation
  			l_has_data: BOOLEAN
 		do
 			updating_line := True
-			l_text := text_displayed
-			l_text.go_i_th (first)
+			l_text := text_displayed		
 			l_line_height := line_height
 			l_x_offset := x_offset
 			l_margin_width := left_margin_width
@@ -976,52 +975,56 @@ feature {NONE} -- Implementation
 				buffered_line.set_background_color (editor_preferences.normal_background_color)
 			end
 
-			from
- 				curr_line := first
- 			until
- 				curr_line > last or else l_text.after
- 			loop
- 				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * l_line_height)
-				l_x_offset := x_offset
-				l_has_data := line_has_cursor_or_selection (curr_line)
-				l_line_width := l_text.line (curr_line).width
-
-				if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
-						-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
-						-- Lines with cursor or selection in them ALWAYS need redrawing.
-					if l_has_data then
-	 					draw_line_to_buffered_line (curr_line, l_text.current_line)
-						draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width, l_x_offset, y_offset)
-					else
-						draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.line (curr_line))
-					end
-					l_x_offset := l_x_offset + viewable_width
-				end
-
-				if l_x_offset >= (l_line_width + l_margin_width) and not l_has_data then
-						-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
-						-- the line to the edge of the viewport in the background color.
-					if (l_line_width + l_margin_width) <= offset then
-							-- There is no part of the line visible so draw all blank
-						l_start_clear := offset
-					else
-							-- Some of the line is visible so only draw blank from the end of the visible area to the edge of the viewable area
-						l_start_clear := l_line_width + l_margin_width
-					end
-
-					if l_line_width < x_offset or (l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width)) then
-						debug ("editor")
-							draw_flash (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height, False)
+			if not l_text.is_empty then				
+		
+				from
+		 				curr_line := first
+		 				l_text.go_i_th (first)
+		 			until
+		 				curr_line > last or else l_text.after
+		 			loop
+		 				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * l_line_height)
+					l_x_offset := x_offset
+					l_has_data := line_has_cursor_or_selection (curr_line)
+					l_line_width := l_text.line (curr_line).width
+		
+					if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
+							-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
+							-- Lines with cursor or selection in them ALWAYS need redrawing.
+						if l_has_data then
+		 					draw_line_to_buffered_line (curr_line, l_text.current_line)
+							draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width, l_x_offset, y_offset)
+						else
+							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.line (curr_line))
 						end
-						editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
-						editor_drawing_area.clear_rectangle (l_start_clear, y_offset, (x_offset + a_width - l_start_clear).max (0), l_line_height)
+						l_x_offset := l_x_offset + viewable_width
 					end
-				end
-
- 				curr_line := curr_line + 1
-				y_offset := y_offset + l_line_height
- 				l_text.forth
- 			end
+		
+					if l_x_offset >= (l_line_width + l_margin_width) and not l_has_data then
+							-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
+							-- the line to the edge of the viewport in the background color.
+						if (l_line_width + l_margin_width) <= offset then
+								-- There is no part of the line visible so draw all blank
+							l_start_clear := offset
+						else
+								-- Some of the line is visible so only draw blank from the end of the visible area to the edge of the viewable area
+							l_start_clear := l_line_width + l_margin_width
+						end
+		
+						if l_line_width < x_offset or (l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width)) then
+							debug ("editor")
+								draw_flash (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height, False)
+							end
+							editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
+							editor_drawing_area.clear_rectangle (l_start_clear, y_offset, (x_offset + a_width - l_start_clear).max (0), l_line_height)
+						end
+					end
+		
+		 				curr_line := curr_line + 1
+					y_offset := y_offset + l_line_height
+		 				l_text.forth
+		 		end
+		 	end
 			
  			updating_line := False
 		end

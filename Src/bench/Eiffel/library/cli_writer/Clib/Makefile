@@ -1,14 +1,14 @@
 # Finalized Version
 
-#CFLAGS = -nologo -Ox -W4 \ # -Zi \
+#CFLAGS = -nologo -Ox -MT -W4 \ # -Zi \
 #		 -I$(EIFFEL_SRC)\C \
 #		 -I$(EIFFEL_SRC)\C\bench \
 #		 -I$(EIFFEL_SRC)\C\console \
 #		 -I$(EIFFEL_SRC)\C\platform \
 #		 -I$(EIFFEL_SRC)\C\run-time
 
-CFLAGS = -nologo -Ox -W4 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
-#CFLAGS = -nologo -W4 -Zi -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
+CFLAGS = -nologo -Ox -MT -W4 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
+#CFLAGS = -nologo -MT -W4 -Zi -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 OPT_CFLAGS =
 #OPT_CFLAGS = -DASSERTIONS 

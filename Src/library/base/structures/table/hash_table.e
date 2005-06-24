@@ -779,8 +779,10 @@ feature -- Removal
 			-- removed (i.e. `key' was present);
 			-- if so, set `position' to index of removed element.
 			-- If not, set `not_found'.
+			-- Reset `found_item' to its default value if `removed'.
 		local
 			default_key: H
+			default_value: G
 		do
 			internal_search (key)
 			if found then
@@ -791,6 +793,7 @@ feature -- Removal
 				end
 				count := count - 1
 				set_removed
+				found_item := default_value
 			end
 		ensure
 			removed_or_not_found: removed or not_found

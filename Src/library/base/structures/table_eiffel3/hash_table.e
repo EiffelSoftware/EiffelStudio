@@ -484,6 +484,7 @@ feature -- Removal
 			-- Remove item associated with `key', if present.
 			-- Make `removed' true if and only if an item has been
 			-- removed (i.e. `key' was not present).
+			-- Reset `found_item' to its default value if `removed'.
 		require
 			valid_key: valid_key (key)
 		local
@@ -497,6 +498,7 @@ feature -- Removal
 				deleted_marks.put (True, position)
 				control := Removed_constant
 				count := count - 1
+				found_item := dead_item
 			end
 		ensure
 			removed: not has (key)

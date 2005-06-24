@@ -2,27 +2,23 @@
 
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32.exe
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib.exe
-# Debug version
-#CFLAGS = -c -Zi -W4 \
-#	-I..\spec\include \
-#	-I$(VISION_PRERELEASE)\libpng \
-#	-I$(VISION_PRERELEASE)\zlib \
-#	-I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include \
-#	-I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
-
 
 # Release version
-CFLAGS = -c -O1 \
-	-I..\spec\include \
+CFLAGS = -c -O1
+MTCFLAGS = $(CFLAGS) -DEIF_THREADS
+INCLUDE_PATH = -I..\spec\include \
 	-I..\..\..\C_library\libpng \
 	-I..\..\..\C_library\zlib \
 	-I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include \
 	-I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib 
 
 .c.obj:
-	$(CC) $(CFLAGS) $<
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) $<
 
 OBJ = load_pixmap.obj
+MT_OBJ = MTload_pixmap.obj
+
+all:: vision2.lib mtvision2.lib
 
 vision2.lib: $(OBJ)
 	if exist $@ -del $@
@@ -32,3 +28,15 @@ vision2.lib: $(OBJ)
 	copy $@ ..\spec\bcb\lib
 	-del $@
 	-del *.obj
+
+mtvision2.lib: $(MT_OBJ)
+	if exist $@ -del $@
+	$(AR) $@ +$(MT_OBJ)
+	if not exist ..\spec\bcb mkdir ..\spec\bcb
+	if not exist ..\spec\bcb\lib mkdir ..\spec\bcb\lib
+	copy $@ ..\spec\bcb\lib
+	-del $@
+	-del *.obj
+
+MTload_pixmap.obj: load_pixmap.c
+	$(CC) $(MTCFLAGS) $(INCLUDE_PATH) -o$@ -c $?

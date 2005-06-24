@@ -1,7 +1,7 @@
 # wel.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -Ox -W3 -I. -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
+CFLAGS = -Ox -MT -W3 -I. -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 MTCFLAGS = -DEIF_THREADS -MT -Ox -W3 -I. -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 .c.obj:

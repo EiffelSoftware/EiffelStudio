@@ -81,11 +81,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := project_toolbar_layout_preference.value
 		end
 
-	number_of_watch_tools: INTEGER is
-		do
-			Result := number_of_watch_tools_preference.value
-		end
-
 feature -- Preference
 
 	stack_element_width_preference: INTEGER_PREFERENCE
@@ -96,7 +91,6 @@ feature -- Preference
 	show_all_text_in_project_toolbar_preference: BOOLEAN_PREFERENCE
 	project_toolbar_layout_preference: ARRAY_PREFERENCE
 	dotnet_debugger_preference: ARRAY_PREFERENCE
-	number_of_watch_tools_preference: INTEGER_PREFERENCE
 
 feature -- Toolbar Convenience
 
@@ -133,7 +127,6 @@ feature {NONE} -- Preference Strings
 	stack_element_width_string: STRING is "debugger.stack_element_width"
 	default_maximum_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"
 	dotnet_debugger_string: STRING is "debugger.dotnet_debugger"
-	number_of_watch_tools_string: STRING is "debugger.number_of_watch_tools"
 
 feature {NONE} -- Implementation
 
@@ -152,7 +145,6 @@ feature {NONE} -- Implementation
 			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_all_text_in_project_toolbar_string, True)				
 			project_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
 			dotnet_debugger_preference := l_manager.new_array_resource_value (l_manager, dotnet_debugger_string, <<"EiffelStudio Dbg", "cordbg", "DbgCLR">>)
-			number_of_watch_tools_preference := l_manager.new_integer_resource_value (l_manager, number_of_watch_tools_string, 2)					
 		end
 	
 	preferences: PREFERENCES
@@ -167,6 +159,5 @@ invariant
 	show_text_in_project_toolbar_preference_not_void: show_text_in_project_toolbar_preference /= Void
 	show_all_text_in_project_toolbar_preference_not_void: show_all_text_in_project_toolbar_preference /= Void	
 	project_toolbar_layout_preference_not_void: project_toolbar_layout_preference /= Void
-	number_of_watch_tools_preference_not_void: number_of_watch_tools_preference /= Void	
 
 end -- class EB_DEBUGGER_DATA

@@ -17,19 +17,13 @@ lib='lib'
 #
 # Standard runtime:
 #------------------
-ccflags='$warning_level $debug -nologo'
+ccflags='$warning_level $debug -nologo -MT'
 mtccflags='$warning_level $debug -nologo -MT -DEIF_THREADS'
 output_libraries='standard mtstandard'
 #
-# Standard runtime with Boehm GC:
-#--------------------------------
-#ccflags='$warning_level $debug -nologo -DNO_ISE_GC -DBOEHM_GC -DGC_DLL'
-#mtccflags='$warning_level $debug -nologo -MT -DEIF_THREADS -DNO_ISE_GC -DBOEHM_GC -DGC_DLL'
-#output_libraries='standard mtstandard'
-#
 #-- DLL:
 #--------
-#ccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug'
+#ccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT'
 #mtccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT -DEIF_THREADS'
 #output_libraries='dll mtdll'
 #
@@ -46,7 +40,7 @@ debug=''
 
 link_flags=''
 warning_level='-W3 -Wp64 -D_CRT_SECURE_NO_DEPRECATE'
-dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
+dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no -nodefaultlib:libc'
 #
 cc='cl'
 link32='link'

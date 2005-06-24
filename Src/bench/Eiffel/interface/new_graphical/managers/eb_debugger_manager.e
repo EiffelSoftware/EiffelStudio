@@ -66,7 +66,7 @@ feature -- Access
 	call_stack_tool: EB_CALL_STACK_TOOL
 			-- A tool that represents the call stack in a graphical display.
 
-	debugging_tools: ES_NOTEBOOK
+	debugging_tools: ES_DOCKABLE_NOTEBOOK
 			-- A tool that represents the call stack in a graphical display.
 
 	objects_tool: ES_OBJECTS_TOOL

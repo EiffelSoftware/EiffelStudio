@@ -63,13 +63,12 @@ feature {NONE} -- Initialization
 			a_widget_not_void: a_widget /= Void
 			a_title_not_void: a_title /= Void
 		local
-			hb: EV_HORIZONTAL_BOX
-			content_box: EV_VERTICAL_BOX
+			vb: EV_VERTICAL_BOX
 			tab_cell: EV_CELL
-			left_handle: EV_LABEL
 		do
 			create selection_actions
 			create drop_actions
+			create pointer_button_pressed_actions
 
 				--| Set the attributes
 			parent := a_parent
@@ -77,28 +76,16 @@ feature {NONE} -- Initialization
 			title := a_title
 			
 			create tab_cell
-			tab_widget := tab_cell
-
-			create hb
-			create left_handle
-			left_handle.set_minimum_width (15)
-			left_handle.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
-			hb.extend (left_handle)
-			hb.disable_item_expand (left_handle)
-			create content_box
-			content_box.extend (widget)
-			hb.extend (content_box)
-
-			tab_cell.extend (hb)
-
-			left_handle.set_tooltip ("Use me to dock this tool out")
-			docking_handle := left_handle
-			docking_handle.enable_dockable
-			docking_handle.dock_started_actions.extend (agent dock_start (Current))
-			docking_handle.dock_ended_actions.extend (agent dock_end (Current))
-			docking_handle.set_real_source (hb)
+			create vb
+			create inside_toolbar_box
+			vb.extend (inside_toolbar_box)
+			vb.disable_item_expand (inside_toolbar_box)
+			inside_toolbar_box.hide
 			
-			show_docking_handle (False) --| by default don't show the docking grid
+			vb.extend (widget)
+			tab_cell.extend (vb)
+			
+			tab_widget := tab_cell
 		end
 		
 feature -- Access
@@ -119,29 +106,22 @@ feature -- Access
 	tab: EV_NOTEBOOK_TAB
 	
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
+	
+	pointer_button_pressed_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 	drop_actions: EV_PND_ACTION_SEQUENCE
 
-	docking_handle_visible: BOOLEAN is
-		do
-			Result := docking_handle /= Void and then docking_handle.is_show_requested
-		end
-		
 	is_selected: BOOLEAN is
 		do
 			Result := parent.selected_item = Current
 		end
 
-feature -- Change
-
-	show_docking_handle (v: BOOLEAN) is
+	is_destroyed: BOOLEAN is
 		do
-			if v then
-				docking_handle.show
-			else
-				docking_handle.hide
-			end
+			Result := tab_widget.is_destroyed	
 		end
+		
+feature -- Change
 
 	close is
 		do
@@ -151,15 +131,13 @@ feature -- Change
 
 feature {ES_NOTEBOOK} -- Implementation
 
-	docking_handle: EV_WIDGET
+	inside_toolbar_box: EV_HORIZONTAL_BOX
 
 	widget: EV_WIDGET
 
 	tab_widget: EV_CELL
 
-feature {NONE} -- Docking
-
-	docked_handle_visible: BOOLEAN
+feature {ES_DOCKABLE_NOTEBOOK} -- Docking
 
 	docked_in_witdh: INTEGER
 	docked_in_height: INTEGER
@@ -167,20 +145,31 @@ feature {NONE} -- Docking
 	docked_out_witdh: INTEGER
 	docked_out_height: INTEGER
 
-	dock_start (nbi: ES_NOTEBOOK_ITEM) is
+	on_docking_started is
+		local
+			par: EV_CONTAINER
 		do
-			docked_handle_visible := docking_handle_visible
 			docked_in_witdh := tab_widget.width
 			docked_in_height := tab_widget.height
 
-			nbi.parent.dock_it_out (nbi)
+			if mini_toolbar /= Void then
+				par := mini_toolbar.parent
+				if par /= Void then
+					par.prune_all (mini_toolbar)
+				end
+			end
+			if header_box /= Void then
+				par := header_box.parent
+				if par /= Void then
+					par.prune_all (header_box)
+				end
+			end			
 		end
 
-	dock_end (nbi: ES_NOTEBOOK_ITEM) is
+	on_docking_ended is
 		local
-			ddlg: EV_DOCKABLE_DIALOG
+			ddlg: EV_DIALOG -- EV_DOCKABLE_DIALOG
 			lw, lh: INTEGER
-			content_box: EV_BOX
 			hb: EV_HORIZONTAL_BOX
 			lab: EV_LABEL
 		do
@@ -197,13 +186,11 @@ feature {NONE} -- Docking
 					lh := docked_out_height
 				end
 				ddlg.set_size (lw, lh)
-				ddlg.resize_actions.extend (agent dock_resized)
+				ddlg.resize_actions.extend (agent on_docking_dialog_resized)
 
-				create hb
-				content_box ?= widget.parent
-				if content_box /= Void then
-					content_box.put_front (hb)
-					content_box.disable_item_expand (hb)
+				hb := inside_toolbar_box
+				if hb /= Void then
+					hb.wipe_out
 					hb.set_padding (2)
 					hb.set_border_width (2)
 
@@ -224,28 +211,15 @@ feature {NONE} -- Docking
 							--| it will remove and put the header_box somewhere else
 						hb.extend (header_box)
 					end
+					hb.show
 				end
-				show_docking_handle (False)
-				docking_handle.disable_dockable
 			end
 		end
 
-	dock_resized (ax, ay, awidth, aheight: INTEGER) is
+	on_docking_dialog_resized (ax, ay, awidth, aheight: INTEGER) is
 		do
 			docked_out_witdh := awidth
 			docked_out_height := aheight
-			show_docking_handle (False)
-		end
-
-feature {ES_NOTEBOOK} -- Docking
-
-	on_dock_back (nbi: ES_NOTEBOOK_ITEM) is
-		do
-			tab_widget.docked_actions.wipe_out
-			nbi.parent.dock_it_back (nbi)
-			
-			docking_handle.enable_dockable
-			show_docking_handle (docked_handle_visible)
 		end
 
 feature {ES_NOTEBOOK} -- Restricted access
@@ -257,13 +231,13 @@ feature {ES_NOTEBOOK} -- Restricted access
 	
 feature {NONE} -- Implementation
 
-	parent_dockable_dialog (w: EV_WIDGET): EV_DOCKABLE_DIALOG is
+	parent_dockable_dialog (w: EV_WIDGET): ES_DOCKABLE_DIALOG is
 			-- `Result' is dialog parent of `widget'.
 			-- `Void' if none.
 		require
 			widget_not_void: w /= Void
 		local
-			dialog: EV_DOCKABLE_DIALOG
+			dialog: ES_DOCKABLE_DIALOG
 		do
 			dialog ?= w.parent
 			if dialog = Void then

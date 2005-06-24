@@ -176,21 +176,13 @@ feature -- Basic Operations
 			filename_exists: filename /= Void
 			valid_filename: not filename.is_empty
 		local
-			l_result, key_size: INTEGER
-			public_key: POINTER
-			file: RAW_FILE
+			l_gen: IL_KEY_GENERATOR
 		do
-			l_result := feature {MD_STRONG_NAME}.strong_name_key_gen (default_pointer, 0, $public_key, $key_size)
-			if l_result = 1 then
-				create file.make (filename)
-				if not file.exists then
-					file.open_write ()
-					file.put_data (public_key, key_size)
-					file.close
-				end
-				feature {MD_STRONG_NAME}.strong_name_free_buffer (public_key)	
+			create l_gen
+			l_gen.generate_key (filename)
+			if not l_gen.successful then
+				raise (l_gen.error_message)
 			end
-
 		end
 		
 	freezing_occurred: BOOLEAN is

@@ -922,7 +922,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			end
 			
 			hash_code := -1
-			parent_i := Void
+			unparent
 			parent_row_i := Void
 			index := 0
 		ensure

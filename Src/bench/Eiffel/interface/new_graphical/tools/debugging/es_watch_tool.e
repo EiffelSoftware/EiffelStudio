@@ -115,10 +115,9 @@ feature {NONE} -- Initialization
 			create scmd.make
 			scmd.set_mini_pixmaps (Pixmaps.Icon_small_open_menu)
 			scmd.set_tooltip ("Open Watch tool menu")
-			scmd.add_agent (agent open_watch_menu)
+			scmd.add_agent (agent open_watch_menu (mini_toolbar, 0, 0))
 			scmd.enable_sensitive
 			mini_toolbar.extend (scmd.new_mini_toolbar_item)
-			
 			
 			create create_expression_cmd.make
 			create_expression_cmd.set_mini_pixmaps (Pixmaps.icon_new_expression)
@@ -202,9 +201,10 @@ feature {NONE} -- Initialization
 			end
 			create notebook_item.make_with_mini_toolbar (nb, widget, title, mini_toolbar)
 			notebook_item.drop_actions.extend (agent on_element_drop)
+			notebook_item.pointer_button_pressed_actions.extend (agent on_notebook_item_pointer_button_pressed)
 			nb.extend (notebook_item)
 		end
-		
+
 feature {EB_DEBUGGER_MANAGER} -- Closing
 		
 	close is
@@ -471,7 +471,7 @@ feature {NONE} -- add new expression from the grid
 
 feature {NONE} -- Event handling
 
-	open_watch_menu is
+	open_watch_menu (w: EV_WIDGET; ax, ay: INTEGER) is
 		local
 			m: EV_MENU
 			mi: EV_MENU_ITEM
@@ -481,11 +481,11 @@ feature {NONE} -- Event handling
 				create mi.make_with_text_and_action ("Create new watch", agent open_new_created_watch_tool)
 				m.extend (mi)
 				if debugger_manager.watch_tool_list.count > 1 then
-					create mi.make_with_text_and_action ("Close current watch", agent debugger_manager.close_watch_tool (Current))
+					create mi.make_with_text_and_action ("Close " + title, agent debugger_manager.close_watch_tool (Current))
 					m.extend (mi)
 				end
 
-				m.show_at (mini_toolbar, 1, 1)
+				m.show_at (w, ax, ay)
 			end
 		end
 	
@@ -498,7 +498,7 @@ feature {NONE} -- Event handling
 				wt := debugger_manager.watch_tool_list.last
 				if wt /= Void then
 					if 
-						wt.notebook_item /= Void 
+						wt.notebook_item /= Void
 						and then wt.notebook_item.tab /= Void
 					then
 						wt.notebook_item.tab.enable_select
@@ -902,6 +902,17 @@ feature {NONE} -- Event handling
 				watches_grid.remove_selection
 				expr_item.row.ensure_visible
 				expr_item.row.enable_select
+			end
+		end
+		
+feature {NONE} -- Event handling on notebook item
+
+	on_notebook_item_pointer_button_pressed (ax, ay, ab: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
+		require
+			notebook_item /= Void
+		do
+			if ab = 3 then
+				open_watch_menu (notebook_item.parent.widget, ax, ay)
 			end
 		end
 

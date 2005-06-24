@@ -39,11 +39,6 @@ feature {NONE} -- Initialization
 			notebook.selection_actions.extend (agent on_tab_selected)
 			notebook.drop_actions.extend (agent on_dropped_stone)
 			notebook.pointer_button_press_actions.extend (agent on_pointer_button_press)
-			create {EV_VERTICAL_BOX} docking_box
-			box.extend (docking_box)
-			box.disable_item_expand (docking_box)
-			docking_box.hide
-			docking_box.docked_actions.extend (agent on_docked_event)
 		end
 
 	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
@@ -83,21 +78,20 @@ feature -- Access
 			if i /= 0 then
 				w := notebook.i_th (i)
 				if w /= Void then
-					Result := item_by_tab (notebook.item_tab (w))
+					Result := item_by_widget (w)
 				end
 			end
 		end
 
-	item_by_tab (tab: EV_NOTEBOOK_TAB): ES_NOTEBOOK_ITEM is
-			-- Notebook item corresponding to `tab'.
+	item_by_widget (w: EV_WIDGET): ES_NOTEBOOK_ITEM is
+			-- Notebook item corresponding to `w'.
 		require
-			tab_not_void: tab /= Void
-			tab_not_destroyed: not tab.is_destroyed
+			valid_item_widget (w)
 		local
-			cursor: DS_HASH_TABLE_CURSOR [EV_NOTEBOOK_TAB, ES_NOTEBOOK_ITEM]
+			cursor: DS_HASH_TABLE_CURSOR [EV_WIDGET, ES_NOTEBOOK_ITEM]
 			tabw: EV_WIDGET
 		do
-			tabw := tab.widget
+			tabw := w
 			from
 				cursor := items.new_cursor
 				cursor.start
@@ -106,7 +100,7 @@ feature -- Access
 			loop
 				if 
 					not cursor.item.is_destroyed
-					and then cursor.item.widget = tabw
+					and then cursor.item = tabw
 				then
 					Result := cursor.key
 				end
@@ -114,11 +108,40 @@ feature -- Access
 			end
 		end
 
+	item_by_index (i: INTEGER): ES_NOTEBOOK_ITEM is
+			-- Notebook item corresponding to index `i'.
+		require
+			valid_notebook_index (i)
+		local
+			tabw: EV_WIDGET
+		do
+			if valid_notebook_index (i) then
+				tabw := notebook.i_th (i)
+				if valid_item_widget (tabw) then
+					Result := item_by_widget (tabw)
+				end
+			end
+		end		
+
+	item_by_tab (tab: EV_NOTEBOOK_TAB): ES_NOTEBOOK_ITEM is
+			-- Notebook item corresponding to `tab'.
+		require
+			tab_not_void: tab /= Void
+			tab_not_destroyed: not tab.is_destroyed
+		local
+			tabw: EV_WIDGET
+		do
+			tabw := tab.widget
+			if valid_item_widget (tabw) then
+				Result := item_by_widget (tabw)			
+			end
+		end
+
 	item_by_title (t: STRING): ES_NOTEBOOK_ITEM is
 		require
 			title_valid: t /= Void
 		local
-			cursor: DS_HASH_TABLE_CURSOR [EV_NOTEBOOK_TAB, ES_NOTEBOOK_ITEM]
+			cursor: DS_HASH_TABLE_CURSOR [EV_WIDGET, ES_NOTEBOOK_ITEM]
 		do
 			from
 				cursor := items.new_cursor
@@ -137,6 +160,18 @@ feature -- Access
 		end
 
 	widget: EV_WIDGET
+	
+feature -- Status
+
+	valid_notebook_index (i: INTEGER): BOOLEAN is
+		do
+			Result := notebook.valid_index (i)
+		end
+		
+	valid_item_widget (w: EV_WIDGET): BOOLEAN is
+		do
+			Result := items.has_item (w)
+		end		
 
 feature -- Change
 
@@ -150,7 +185,7 @@ feature -- Change
 			tab := notebook.item_tab (tw)
 			tab.set_text (t.title)
 			t.set_tab (tab)
-			items.force (tab, t)
+			items.force (tw, t)
 			update
 		end
 
@@ -175,7 +210,7 @@ feature -- Change
 		do
 			w := notebook.selected_item
 			if w /= Void then
-				selected_item := item_by_tab (notebook.item_tab (w))
+				selected_item := item_by_widget (w)
 			else
 				selected_item := Void
 			end
@@ -241,32 +276,15 @@ feature {NONE} -- tab selection
 		end
 
 	on_pointer_button_press (ax, ay, ab: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-		do
-			if ab = 3 then --| Right click
-				open_notebook_menu
-			end
-		end
-		
-	open_notebook_menu is
-			-- Open menu related to the pointed tool
 		local
-			m: EV_MENU
-			mci: EV_CHECK_MENU_ITEM
 			ni: ES_NOTEBOOK_ITEM
 		do
-			create m.make_with_text (title)
 			ni := pointed_item
 			if ni /= Void then
-				create mci.make_with_text ("Display docking grip on " + ni.title)
-				if ni.docking_handle_visible then
-					mci.enable_select
-				end
-				mci.select_actions.extend (agent ni.show_docking_handle (not ni.docking_handle_visible))
-				m.extend (mci)
+				ni.pointer_button_pressed_actions.call ([ax, ay, ab, x_tilt, y_tilt, pressure, screen_x, screen_y])
 			end
-			m.show
 		end
-	
+
 feature {NONE} -- Drop action
 
 	on_dropped_stone (a_data: ANY) is
@@ -279,66 +297,17 @@ feature {NONE} -- Drop action
 			if notebook.valid_index (i) then
 				pointed_w := notebook.i_th (i)
 				notebook.item_tab (pointed_w).enable_select
-				t := item_by_tab (notebook.item_tab (pointed_w))
+				t := item_by_widget (pointed_w)
 				t.drop_actions.call ([a_data])
 			end
 		end
 
-feature {NONE} -- Dock item action
-
-	on_docked_event (s: EV_DOCKABLE_SOURCE) is
-		do
-		end
-		
-feature {ES_NOTEBOOK_ITEM} -- exported Dock item action
-
-	dock_it_out (nbi: ES_NOTEBOOK_ITEM) is
-		local
-			tcell: EV_CELL
-			par: EV_CONTAINER
-		do
-			tcell ?= nbi.tab_widget
-			check tcell /= Void end
-			
-			notebook.prune (tcell)
-			docking_box.extend (tcell)
-			if nbi.mini_toolbar /= Void then
-				par := nbi.mini_toolbar.parent
-				if par /= Void then
-					par.prune_all (nbi.mini_toolbar)
-				end
-			end
-			if nbi.header_box /= Void then
-				par := nbi.header_box.parent
-				if par /= Void then
-					par.prune_all (nbi.header_box)
-				end
-			end
-			tcell.docked_actions.force_extend (agent nbi.on_dock_back (nbi))
-		end
-		
-	dock_it_back (nbi: ES_NOTEBOOK_ITEM) is
-		local
-			wbox: EV_BOX
-			tcell: EV_CELL
-		do
-			wbox ?= docking_box
-			check wbox /= Void end
-			tcell ?= nbi.tab_widget
-			check tcell /= Void end
-
-			wbox.prune (tcell)
-			tcell.docked_actions.wipe_out
-			extend (nbi)
-			nbi.tab.enable_select
-		end
 
 feature {NONE} -- Implementation
 
-	items: DS_HASH_TABLE [EV_NOTEBOOK_TAB, ES_NOTEBOOK_ITEM]
+	items: DS_HASH_TABLE [EV_WIDGET, ES_NOTEBOOK_ITEM]
+			-- [notebook item -> tab widget] 
 
 	notebook: EV_NOTEBOOK
-	
-	docking_box: EV_BOX
 	
 end

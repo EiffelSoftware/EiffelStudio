@@ -27,7 +27,7 @@ feature -- Attachement
 		require
 			attached: notebook_item /= Void
 		do
-			if not notebook_item.tab.is_destroyed then
+			if not notebook_item.is_destroyed then
 				notebook_item.close
 			end
 			notebook_item := Void

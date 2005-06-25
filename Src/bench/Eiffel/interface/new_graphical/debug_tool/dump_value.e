@@ -330,7 +330,7 @@ feature -- Access
 
 	value_string_dotnet: ICOR_DEBUG_STRING_VALUE
 			-- ICorDebugStringValue for the dotnet String
-	
+
 	value_frame_dotnet: ICOR_DEBUG_FRAME is
 			-- ICorDebugFrame in this DUMP_VALUE context
 		do
@@ -483,7 +483,7 @@ feature -- Status report
 					io.put_string ("Finding output value of constant string")
 				end
 				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""
-			elseif type = Type_string_dotnet then
+			elseif type = Type_string_dotnet and value_string_dotnet = Void then
 				Result := "%"" + Character_routines.eiffel_string (value_string) + "%""			
 			else
 				l_max := Application.displayed_string_size
@@ -707,7 +707,10 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					sc := si.compiled_class
 					l_conformed_to_sc := dynamic_class /= Void and then dynamic_class /= sc and then dynamic_class.simple_conform_to (sc)
 					if dynamic_class = sc or l_conformed_to_sc then
-						if value_string /= Void then
+						if value_string_dotnet /= Void then
+							Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
+							last_string_representation_length := l_eifnet_debugger.last_string_value_length
+						elseif value_string /= Void then
 							Result := value_string
 							last_string_representation_length := value_string.count
 							if max < 0 then
@@ -716,9 +719,6 @@ feature {DUMP_VALUE} -- string_representation Implementation
 								l_size := (max + 1).min (last_string_representation_length)								
 							end
 							Result := Result.substring ((min + 1).max (1), l_size)
-						elseif value_string_dotnet /= Void then
-							Result := l_eifnet_debugger.string_value_from_system_string_class_value (value_string_dotnet, min, max)
-							last_string_representation_length := l_eifnet_debugger.last_string_value_length
 						end
 					else
 						Result := dotnet_debug_output_evaluated_string (l_eifnet_debugger, min, max)
@@ -824,7 +824,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					end
 				else
 					Init_recv_c
-					send_value
+					classic_send_value
 					if a_feat.is_external then
 						par := par + 1
 					end
@@ -849,8 +849,10 @@ feature {DUMP_VALUE} -- string_representation Implementation
 
 feature -- Action
 	
-	send_value is
+	classic_send_value is
 			-- send the value the application
+		require
+			is_classic_system
 		local
 			value_string_c: ANY
 		do

@@ -454,7 +454,7 @@ feature {NONE} -- Implementation classic
 				if dmp.is_basic then
 					par := par + 4
 				end
-				dmp.send_value
+				dmp.classic_send_value
 			end
 				-- Send the final request.
 			if f.is_external then
@@ -526,7 +526,7 @@ feature {NONE} -- Implementation
 				dotnet_parameters_index := dotnet_parameters_index + 1
 				dotnet_parameters.put (dmp, dotnet_parameters_index)
 			else
-				dmp.send_value
+				dmp.classic_send_value
 			end
 		end
 
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 				debug ("debugger_trace_eval_data")
 					print (generating_type + ".parameters_push_and_metamorphose :: Send Metamorphose request ... %N")
 				end
-				dmp.send_value
+				dmp.classic_send_value
 				send_rqst_0 (Rqst_metamorphose)
 			end
 		end

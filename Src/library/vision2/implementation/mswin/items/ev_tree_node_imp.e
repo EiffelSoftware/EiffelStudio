@@ -169,6 +169,9 @@ feature {EV_ANY_I}-- Access
 					end
 					image_list := top_parent_imp.image_list
 					image_icon := image_list.get_icon (image_index, Ild_normal)
+					-- We now set the brivate bitmap id as we want to ensure when it is placed back in
+						-- the image list, the icon already contained is used.
+					pix_imp.set_private_bitmap_id (image_list.image_id_to_bitmap_id_index.item (image_index))
 					image_icon.enable_reference_tracking
 					pix_imp.set_with_resource (image_icon)
 					image_icon.decrement_reference

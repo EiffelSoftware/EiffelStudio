@@ -79,13 +79,11 @@ feature -- Status report
 
 feature -- Basic operations
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-			repaint: BOOLEAN) is
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
-			cwin_move_window (item, a_x, a_y,
-				a_width, a_height, repaint)
+			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint)
 		end
 
 	move (a_x, a_y: INTEGER) is

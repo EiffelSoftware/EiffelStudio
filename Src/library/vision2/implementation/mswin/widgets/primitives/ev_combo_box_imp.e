@@ -918,19 +918,6 @@ feature {NONE} -- WEL Implementation
 			end
 		end
 
-   	move_and_resize (
-   		a_x, 
-   		a_y, 
-   		a_width, 
-   		a_height: INTEGER; 
-   		repaint: BOOLEAN
-   	) is
-	   		-- Resize Message for the combo-box.
-   		do
-	   			-- We must not resize the height of the combo-box.
-  			cwin_move_window (wel_item, a_x, a_y, a_width, height, repaint)
-  		end
-
 	set_selection (start_pos, end_pos: INTEGER) is
 			-- Hilight the text between `start_pos' and `end_pos'. 
 			-- Both `start_pos' and `end_pos' are selected.

@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			create image_list_info.make (4)
 			create filenames_index.make (4)
 			create bitmap_ids_index.make (4)
+			create image_id_to_bitmap_id_index.make (4)
 		end
 
 	add_transparent_pixmap is
@@ -87,10 +88,10 @@ feature -- Status report
 				   filenames_index.has (pixmap_filename)
 				then
 					last_position := filenames_index.item (pixmap_filename)
-				elseif pixmap_imp.private_bitmap /= Void and then
-					bitmap_ids_index.has (pixmap_imp.private_bitmap.object_id)
+				elseif pixmap_imp.private_bitmap_id >= 0 and then
+					bitmap_ids_index.has (pixmap_imp.private_bitmap_id)
 				then
-					last_position := bitmap_ids_index.item (pixmap_imp.private_bitmap.object_id)
+					last_position := bitmap_ids_index.item (pixmap_imp.private_bitmap_id)
 				end
 			end
 
@@ -125,19 +126,21 @@ feature -- Element change
 						else
 							internal_add_pixmap (a_pixmap)
 							bitmap_ids_index.put (last_position, l_id)
+							image_id_to_bitmap_id_index.put (l_id, last_position)
 							filenames_index.put (last_position, pixmap_filename)
 						end
 					else
 						internal_add_pixmap (a_pixmap)
 						filenames_index.put (last_position, pixmap_filename)
 					end
-				elseif pixmap_imp.private_bitmap /= Void then
-					l_id := pixmap_imp.private_bitmap.object_id
+				elseif pixmap_imp.private_bitmap_id >= 0 then
+					l_id := pixmap_imp.private_bitmap_id
 					if bitmap_ids_index.has (l_id) then
 						last_position := bitmap_ids_index.item (l_id)
 					else
 						internal_add_pixmap (a_pixmap)
 						bitmap_ids_index.put (last_position, l_id)
+						image_id_to_bitmap_id_index.put (l_id, last_position)
 					end
 				end
 			else
@@ -165,6 +168,7 @@ feature -- Element change
 				filenames_index.put (last_position, pixmap_filename)
 			elseif pixmap_imp /= Void and then pixmap_imp.private_bitmap /= Void then
 				bitmap_ids_index.put (last_position, pixmap_imp.private_bitmap.object_id)
+				image_id_to_bitmap_id_index.put (pixmap_imp.private_bitmap.object_id, last_position)
 			end
 		end
 
@@ -335,6 +339,17 @@ feature {NONE} -- Implementation (Private features)
 				resized_pixmap := Void
 			end
 		end
+		
+feature {EV_ANY_I} -- Implementation
+
+	filenames_index: HASH_TABLE [INTEGER, STRING]
+			-- Table indexing image indexes in imagelist with the image name.
+
+	bitmap_ids_index: HASH_TABLE [INTEGER, INTEGER]
+			-- Table indexing image indexes in images list to bitmap object id
+			
+	image_id_to_bitmap_id_index: HASH_TABLE [INTEGER, INTEGER]
+			-- Table indexing image bitmap object ids to indexes in images list.
 
 feature {NONE} -- Implementation (Attributes, Constants, ...)
 
@@ -342,12 +357,6 @@ feature {NONE} -- Implementation (Attributes, Constants, ...)
 			-- A list of all items in the image list and their positions.
 			-- [[position in image list, number of items pointing to this
 			-- image], windows pointer].
-
-	filenames_index: HASH_TABLE [INTEGER, STRING]
-			-- Table indexing image indexes in imagelist with the image name.
-
-	bitmap_ids_index: HASH_TABLE [INTEGER, INTEGER]
-			-- Table indexing image indexes in images list to bitmap object id
 
 	raster_constants: WEL_RASTER_OPERATIONS_CONSTANTS is
 			-- Raster operations constants.

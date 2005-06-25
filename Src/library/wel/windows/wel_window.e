@@ -910,15 +910,13 @@ feature -- Basic operations
 			cwin_show_window (item, cmd_show)
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
-			repaint: BOOLEAN) is
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		require
 			exists: exists
 		do
-			cwin_move_window (item, a_x, a_y,
-				a_width, a_height, repaint)
+			move_and_resize_internal (a_x, a_y, a_width, a_height, repaint)
 		end
 
 	move (a_x, a_y: INTEGER) is
@@ -1732,6 +1730,9 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 			when Wm_setcursor then
 				on_set_cursor (cwin_lo_word (lparam))
 			when Wm_size then
+					-- Set `internal_wm_size_called' for optimizing `move_and_resize_internal'
+					-- by removing the need to send an additional WM_SIZE message when not needed.
+				internal_wm_size_called := True
 				on_size (wparam.to_integer_32,
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
@@ -1962,6 +1963,44 @@ feature {NONE} -- Removal
 			Result := cwin_track_mouse_event (info.item)
 		end
 
+feature {NONE} -- Windows bug workaround
+
+	frozen move_and_resize_internal (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+			-- This wrapper around `cwin_move_window' is required to solve an issue with
+			-- Windows not sending a WM_SIZE message when setting the size of a deeply nested window.
+			-- Experiment shows it is happening when the window is at a 32 level deep on 32 bits,
+			-- and 16 level deep on 64 bits.
+		require
+			exists: exists
+		local
+			l_diff: BOOLEAN
+		do
+				-- Reset `internal_wm_size_called'. It is set to True in `process_message'
+				-- when receiving a WM_SIZE message.
+			internal_wm_size_called := False
+			
+				-- Find out if a size change was requested.
+			l_diff := a_width /= width or a_height /= height
+			
+				-- Perform call to `MoveWindow'.
+			cwin_move_window (item, a_x, a_y, a_width, a_height, repaint)
+			
+			if not internal_wm_size_called and l_diff then
+					-- Bug showed up as we should had receive a WM_SIZE message but did not and
+					-- the previous size was different from the requested size, thus we are sending 
+					-- the WM message ourself to `item'.
+					-- Thanks to `l_diff' we are able to catch cases where a WM_SIZE message
+					-- was not sent because it did not need to.
+				cwin_send_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
+			end
+		end
+		
+	internal_wm_size_called: BOOLEAN
+			-- Was `WM_SIZE' message received just after a call to `MoveWindow'?
+			-- See comments on `move_and_resize_internal' for more details.
+
 feature {NONE} -- Constants
 
 	Wel_gcl_constants: WEL_GCL_CONSTANTS is
@@ -1986,7 +2025,8 @@ feature {NONE} -- Externals
 		end
 
 	cwin_set_parent (hwmd_child, hwmd_parent: POINTER) is
-			-- Change the parent of the given child
+			-- Change the parent of the given child and return handle to
+			-- previous parent, or NULL otherwise.
 		external
 			"C [macro <winuser.h>] (HWND, HWND)"
 		alias

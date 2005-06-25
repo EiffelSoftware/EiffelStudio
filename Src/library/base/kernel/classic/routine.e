@@ -44,6 +44,7 @@ feature -- Access
 		local
 			i, nb: INTEGER
 			l_open_map: like open_map
+			l_internal: like internal_operands
 		do
 			l_open_map := open_map
 			if l_open_map /= Void then
@@ -51,10 +52,11 @@ feature -- Access
 					create Result
 					i := 0
 					nb := l_open_map.count - 1
+					l_internal := internal_operands
 				until
 					i > nb
 				loop
-					Result.put (internal_operands.item (l_open_map.item (i)), i + 1)
+					Result.put (l_internal.item (l_open_map.item (i)), i + 1)
 					i := i + 1
 				end
 			end

@@ -397,7 +397,7 @@ feature -- Basic operations
 			else
 				create point.make (a_x, a_y)
 				point.client_to_screen (parent)
-				cwin_move_window (item, point.x, point.y, a_width, a_height, repaint)
+				move_and_resize_internal (point.x, point.y, a_width, a_height, repaint)
 			end
 		end
 

@@ -71,8 +71,8 @@ feature {NONE} -- Initialization of resource categories
 		local
 			l_prefs: PREFERENCES
 		do
-			create l_prefs.make_with_default_values_and_location (system_general, eiffel_preferences)			
-			initialize_preferences (l_prefs)						
+			create l_prefs.make_with_default_values_and_location (system_general, eiffel_preferences)
+			initialize_preferences (l_prefs, False)
 		end		
 
 end -- class TTY_RESOURCES

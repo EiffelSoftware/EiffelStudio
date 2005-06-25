@@ -118,6 +118,9 @@ feature -- Access
 						pix_imp /= Void
 					end
 					image_icon := parent_imp.image_list.get_icon (image_index, Ild_normal)
+						-- We now set the brivate bitmap id as we want to ensure when it is placed back in
+						-- the image list, the icon already contained is used.
+					pix_imp.set_private_bitmap_id (parent_imp.image_list.image_id_to_bitmap_id_index.item (image_index))
 					image_icon.enable_reference_tracking
 					pix_imp.set_with_resource (image_icon)
 					image_icon.decrement_reference
@@ -183,11 +186,7 @@ feature {EV_ANY_I} -- Access
 	set_parent_imp (par_imp: like parent_imp) is
 			-- Assign 'par_imp' to `parent_imp'.
 		do
-			if par_imp /= Void then
-				parent_imp := par_imp
-			else
-				parent_imp := Void
-			end
+			parent_imp := par_imp	
 		end
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation.
@@ -329,7 +328,7 @@ feature {EV_ITEM_LIST_I} -- Implementation
 			-- `Current' has just been orphaned.
 		do
 				-- Retrieve the pixmap from the imagelist.
-			if has_pixmap and then private_pixmap /= Void then
+			if has_pixmap and then private_pixmap = Void then
 				private_pixmap := pixmap
 			end
 		end

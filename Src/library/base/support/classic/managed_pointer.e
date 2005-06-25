@@ -946,7 +946,7 @@ feature -- Resizing
 		do
 			if n > count then
 					-- Reallocate.
-				check n_positive: n > 1 end
+				check n_positive: n > 0 end
 				item := item.memory_realloc (n)
 				if item = default_pointer then
 					(create {EXCEPTIONS}).raise ("No more memory")

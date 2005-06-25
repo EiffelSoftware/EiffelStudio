@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 		do
 			private_width := 1
 			private_height := 1
-
+			private_bitmap_id := -1
 			set_is_initialized (True)
 		end
 
@@ -194,6 +194,7 @@ feature -- Access
 				if private_bitmap = Void then
 						-- No bitmap defined, create a new & empty bitmap.
 					private_bitmap := new_empty_bitmap
+					private_bitmap_id := private_bitmap.object_id
 				end
 			end
 			check
@@ -1129,6 +1130,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 				private_bitmap := other_simple_imp.private_bitmap
 				if private_bitmap /= Void then
 					private_bitmap.increment_reference
+					private_bitmap_id := private_bitmap.object_id
 				end
 				private_mask_bitmap := other_simple_imp.private_mask_bitmap
 				if private_mask_bitmap /= Void then
@@ -1150,6 +1152,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 			else
 				other_imp ?= other_interface.implementation
 				private_bitmap := other_imp.get_bitmap
+				private_bitmap_id := private_bitmap.object_id
 				if other_imp.has_mask then
 					private_mask_bitmap := other_imp.get_mask_bitmap
 				end
@@ -1181,6 +1184,12 @@ feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP_DRAWABLE} -- Pixmap Sta
 	private_bitmap: WEL_BITMAP
 			-- Current bitmap used. Void if not initialized or if
 			-- `update_needed' is set.
+		
+	private_bitmap_id: INTEGER
+			-- `object_id' of first `private_bitmap' set to `Current'. If you add an item
+			-- pixmap to an image list, `private_bitmap' is cleared and then reset upon removal.
+			-- As we wish to ensure that placing `Current' back in the image list uses the already
+			-- cached version, we have to keep the original private_bitmap id.
 
 	private_mask_bitmap: WEL_BITMAP
 			-- Monochrome bitmap used as mask. Void if none.
@@ -1193,6 +1202,16 @@ feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP_DRAWABLE} -- Pixmap Sta
 
 	private_palette: WEL_PALETTE
 			-- Palette for bitmap. Void if none.
+			
+feature {EV_ANY_I} -- Implementation
+
+	set_private_bitmap_id (a_value: INTEGER) is
+			-- Assign `a_vaule' to `private_bitmap_id'.
+		do
+			private_bitmap_id := a_value
+		ensure
+			private_bitmap_id_set: private_bitmap_id = a_value
+		end
 
 feature {NONE} -- Implementation
 
@@ -1228,6 +1247,7 @@ feature {NONE} -- Implementation
 
 				when Loadpixmap_hbitmap then
 					create private_bitmap.make_by_pointer (rgb_data)
+					private_bitmap_id := private_bitmap.object_id
 					private_bitmap.set_unshared
 					private_bitmap.enable_reference_tracking
 
@@ -1252,6 +1272,7 @@ feature {NONE} -- Implementation
 						dib, 
 						Dib_colors_constants.Dib_rgb_colors
 						)
+					private_bitmap_id := private_bitmap.object_id
 					private_bitmap.enable_reference_tracking
 					s_dc.release
 
@@ -1552,6 +1573,7 @@ feature {NONE} -- Implementation
 					-- Associate `mem2_dc' with `bitmap'.
 				create mem2_dc.make_by_dc (s_dc)
 				create private_bitmap.make_compatible (mem2_dc, new_width, new_height)
+				private_bitmap_id := private_bitmap.object_id
 				private_bitmap.enable_reference_tracking
 
 				a_wel_bitmap := get_bitmap
@@ -1588,6 +1610,7 @@ feature {NONE} -- Implementation
 			else
 					-- Everything went ok, replace the bitmaps
 				private_bitmap := icon_info.color_bitmap
+				private_bitmap_id := private_bitmap.object_id
 				private_bitmap.increment_reference
 				private_mask_bitmap := icon_info.mask_bitmap
 				private_mask_bitmap.increment_reference
@@ -1670,6 +1693,7 @@ feature {EV_PIXMAP_IMP_DRAWABLE} -- Implementation
 			a_bitmap_height_valid: a_bitmap_height > 0
 		do
 			private_bitmap := a_bitmap
+			private_bitmap_id := a_bitmap.object_id
 			private_bitmap.enable_reference_tracking
 			if a_mask /= Void then
 				private_mask_bitmap := a_mask

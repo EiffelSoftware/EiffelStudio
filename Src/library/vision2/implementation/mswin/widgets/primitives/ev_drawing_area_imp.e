@@ -233,8 +233,6 @@ feature {NONE} -- Implementation
 	clear_and_redraw_rectangle (x1, y1, a_width, a_height: INTEGER) is
 			-- Redraw the rectangle at (`x1',`y1') with width `a_width' and
 			-- height `a_height'.
-		local
-			wel_rect: WEL_RECT
 		do
 				-- Set the rectangle to be cleared.
 			to_be_cleared := True
@@ -242,8 +240,8 @@ feature {NONE} -- Implementation
 				-- Ask windows to redraw the rectangle
 				-- Windows will then call on_background_erase and
 				-- then on_paint.
-			create wel_rect.make(x1, y1, x1 + a_width, y1 + a_height)
-			invalidate_rect(wel_rect, True)
+			wel_rect.set_rect (x1, y1, x1 + a_width, y1 + a_height)
+			invalidate_rect (wel_rect, True)
 		end
 
 	clear_and_redraw is
@@ -261,12 +259,10 @@ feature {NONE} -- Implementation
 	redraw_rectangle (x1, y1, a_width, a_height: INTEGER) is
 			-- Redraw the rectangle at (`x1',`y1') with width
 			-- `a_width' and height and `a_height'.
-		local
-			wel_rect: WEL_RECT
 		do
 				-- Ask windows to redraw the rectangle
 				-- Windows will then call on_paint.
-			create wel_rect.make(x1, y1, x1 + a_width, y1 + a_height)
+			wel_rect.set_rect (x1, y1, x1 + a_width, y1 + a_height)
 			invalidate_rect(wel_rect, False)
 		end
 

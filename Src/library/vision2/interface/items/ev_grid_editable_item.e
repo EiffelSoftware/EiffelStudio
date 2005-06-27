@@ -125,6 +125,7 @@ feature {NONE} -- Implementation
 		do
 			text_field.return_actions.extend (agent deactivate)
 			text_field.focus_out_actions.extend (agent deactivate)
+			text_field.set_focus
 			user_cancelled_activation := False
 			text_field.key_press_actions.extend (agent handle_key)
 		end

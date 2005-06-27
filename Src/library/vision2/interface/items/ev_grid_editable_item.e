@@ -57,6 +57,8 @@ feature {NONE} -- Implementation
 
 	update_popup_dimensions (a_popup: EV_POPUP_WINDOW) is
 			-- Update dimensions and positioning for `a_popup'.
+		require
+			a_popup_not_void: a_popup /= Void
 		local
 			x_offset: INTEGER
 			a_width: INTEGER
@@ -82,9 +84,11 @@ feature {NONE} -- Implementation
 		end
 
 	handle_key (a_key: EV_KEY) is
-			-- Handle the Escape key for cancelling activation
+			-- Handle the Escape key for cancelling activation.
+		require
+			a_key_not_void: a_key /= Void
 		do
-			if a_key.code = (create{EV_KEY_CONSTANTS}).key_escape then
+			if a_key.code = {EV_KEY_CONSTANTS}.key_escape then
 				user_cancelled_activation := True
 				deactivate
 			end

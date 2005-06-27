@@ -59,7 +59,7 @@ feature -- Status Setting
 	set_is_choice (a_flag: BOOLEAN) is
 			-- Set `is_choice' to`a_flag'.
 		do
-			is_choice := a_flag
+			is_choice := a_flag			
 		end
 
 	set_selected_index (a_index: INTEGER) is
@@ -76,32 +76,29 @@ feature -- Status Setting
 	set_value_from_string (a_value: STRING) is
 			-- Parse the string value `a_value' and set `value'.
 		local
-			start_pos, end_pos, cnt: INTEGER			
+			char_cnt, cnt: INTEGER			
 			l_value: STRING
+			values: LIST [STRING]
 		do
 			create value.make (1, 0)
-			if not a_value.is_empty then
+			values := a_value.split (';')
+			if not values.is_empty then
 				from 
-					cnt := 1
-					start_pos := 1
-					end_pos := a_value.index_of (';', start_pos)
+					values.start
+					cnt := 1					
 				until
-					end_pos = 0 or start_pos = a_value.count
+					values.after --or (values.index > char_cnt)
 				loop
-					l_value := a_value.substring (start_pos, end_pos - 1)
-					if l_value.item (1) = '[' and then l_value.item (l_value.count) = ']' then
+					l_value := values.item
+					if not l_value.is_empty and then l_value.item (1) = '[' and then l_value.item (l_value.count) = ']' then
 						l_value := l_value.substring (2, l_value.count - 1)
 						is_choice := True
 						selected_index := cnt
 					end
-					value.force (l_value , value.count + 1)
-					start_pos := end_pos + 1
-					end_pos := a_value.index_of (';', start_pos)
+					value.force (l_value, cnt)					
+					values.forth
 					cnt := cnt + 1
-				end
-				if start_pos <= a_value.count then
-					value.force (a_value.substring (start_pos, a_value.count), value.count + 1)
-				end
+				end				
 			end
 			set_value (value)
 		end	

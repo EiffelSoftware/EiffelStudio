@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 		
+	WEL_SHARED_TEMPORARY_OBJECTS
+		export
+			{NONE} all
+		end
+		
 create 
 	make,
 	make_indirect,
@@ -208,7 +213,6 @@ feature -- Access
 		local
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
-			wel_string: WEL_STRING
 			counter: INTEGER
 			count: INTEGER
 			greatest_a, greatest_c: INTEGER
@@ -234,7 +238,7 @@ feature -- Access
 				cur_width := 0
 				cur_height := 0
 			else
-				create wel_string.make (a_string)
+				wel_string.set_string (a_string)
 				area := a_string.area
 				pointer := wel_string.item
 				create screen_dc
@@ -339,20 +343,20 @@ feature -- Access
 		local
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
-			bounding_rect: WEL_RECT
 		do
 			if a_string.is_empty then
 				cur_width := 0
 				cur_height := 0
 			else
-				create bounding_rect.make (0, 0, 32767, 32767)
+			
+				wel_rect.set_rect (0, 0, 32767, 32767)
 				create screen_dc
 				screen_dc.get
 				screen_dc.select_font (Current)
 
-				screen_dc.draw_text (a_string, bounding_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
-				cur_width := bounding_rect.width
-				cur_height := bounding_rect.height
+				screen_dc.draw_text (a_string, wel_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
+				cur_width := wel_rect.width
+				cur_height := wel_rect.height
 				
 				screen_dc.unselect_font
 				screen_dc.quick_release

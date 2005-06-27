@@ -995,6 +995,7 @@ feature {NONE} -- Implementation
  			l_has_data: BOOLEAN
  			l_editor_viewport_y_offset: INTEGER
  			l_offset: INTEGER
+ 			l_viewable_width: INTEGER
 		do
 			updating_line := True
 			l_text := text_displayed		
@@ -1003,6 +1004,7 @@ feature {NONE} -- Implementation
 			l_margin_width := left_margin_width
 			l_editor_viewport_y_offset := editor_viewport.y_offset
 			l_offset := offset
+			l_viewable_width := viewable_width
 
 			if buffered then
 				buffered_line.set_background_color (editor_preferences.normal_background_color)
@@ -1030,13 +1032,13 @@ feature {NONE} -- Implementation
 						else
 							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.current_line)
 						end
-						l_x_offset := l_x_offset + viewable_width
+						l_x_offset := l_x_offset + l_viewable_width
 					end
 		
 					if l_x_offset >= (l_line_width + l_margin_width) and not l_has_data then
 							-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
 							-- the line to the edge of the viewport in the background color.
-						if (l_line_width + l_margin_width) <= offset then
+						if (l_line_width + l_margin_width) <= l_offset then
 								-- There is no part of the line visible so draw all blank
 							l_start_clear := l_offset
 						else

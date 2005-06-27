@@ -523,7 +523,6 @@ feature {NONE} -- Private Implementation
 			old_width	: INTEGER
 			old_height	: INTEGER
 			s_dc		: WEL_SCREEN_DC
-			wel_rect	: WEL_RECT
 		do
 				-- Get a screen dc to create our temporary DCs
 			create s_dc
@@ -547,7 +546,7 @@ feature {NONE} -- Private Implementation
 
 			if new_width > old_width or new_height > old_height then
 				-- Set the "new" pixels to the background color
-				create wel_rect.make(0, 0, new_width, new_height)
+				wel_rect.set_rect (0, 0, new_width, new_height)
 				new_dc.fill_rect(wel_rect, a_brush)
 			end
 

@@ -475,7 +475,6 @@ feature {NONE} -- Implementation
 	paint_bitmap (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Paint the bitmap onto the screen (i.e. the display_dc).
 		local
-			wel_rect: WEL_RECT
 			bitmap_top, bitmap_left: INTEGER
 				-- Coordinates of the top-left corner of the 
 				-- bitmap inside the drawn area
@@ -526,7 +525,7 @@ feature {NONE} -- Implementation
 
 					-- Erase the background (otherwise we cannot apply 
 					-- the mask).
-				create wel_rect.make (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
+				wel_rect.set_rect (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
 				display_dc.fill_rect(wel_rect, container_background_brush)
 
 					-- Paint the bitmap using mask.
@@ -561,7 +560,7 @@ feature {NONE} -- Implementation
 				--|  X                             X
 				--|  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
-			create wel_rect.make (0, 0, 0, 0)
+			wel_rect.set_rect (0, 0, 0, 0)
 				-- fill AREA 1
 			if bitmap_top > 0 then
 				wel_rect.set_rect (0, 0, window_width, bitmap_top)

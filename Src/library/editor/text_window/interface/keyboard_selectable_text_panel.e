@@ -1019,7 +1019,7 @@ feature {NONE} -- Implementation
 		 				y_offset := l_editor_viewport_y_offset + ((curr_line - first_line_displayed) * l_line_height)
 					l_x_offset := x_offset
 					l_has_data := line_has_cursor_or_selection (curr_line)
-					l_line_width := l_text.line (curr_line).width
+					l_line_width := l_text.current_line.width
 		
 					if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
 							-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
@@ -1028,7 +1028,7 @@ feature {NONE} -- Implementation
 		 					draw_line_to_buffered_line (curr_line, l_text.current_line)
 							draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width, l_x_offset, y_offset)
 						else
-							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.line (curr_line))
+							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.current_line)
 						end
 						l_x_offset := l_x_offset + viewable_width
 					end

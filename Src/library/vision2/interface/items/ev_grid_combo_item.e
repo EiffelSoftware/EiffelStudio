@@ -132,8 +132,7 @@ feature {NONE} -- Implementation
 			-- Setup the action sequences when the item is shown.
 		do
 			combo_box.set_focus
-			combo_box.select_actions.extend (agent deactivate)
-			combo_box.return_actions.extend (agent deactivate)
+			combo_box.key_press_actions.extend (agent on_key_pressed)	
 			combo_box.focus_out_actions.extend (agent deactivate)
 			user_cancelled_activation := False
 			combo_box.key_press_actions.extend (agent handle_key)
@@ -151,6 +150,14 @@ feature {NONE} -- Implementation
 				Precursor {EV_GRID_LABEL_ITEM}
 			end
 		end
+
+	on_key_pressed (a_key: EV_KEY) is	
+			-- Key was pressed
+		do
+			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
+				deactivate
+			end	
+		end			
 
 invariant
 	combo_box_parented_during_activation: combo_box /= Void implies combo_box.parent /= Void

@@ -1034,7 +1034,7 @@ feature {NONE} -- Display functions
 	 		--			draw_line_to_buffered_line (curr_line, l_text.current_line)
 			--			draw_buffered_line_to_screen (0, y_offset)
 					else
-						draw_line_to_screen (start_pos, end_pos, y_offset, l_text.line (curr_line))
+						draw_line_to_screen (start_pos, end_pos, y_offset, l_text.current_line)
 					end
 	 				curr_line := curr_line + 1
 					y_offset := y_offset + line_height
@@ -1225,7 +1225,7 @@ feature {NONE} -- Text loading
 			refresh
 			if editor_drawing_area.is_sensitive then
 				set_focus
-			end			
+			end
 		end
 
 	on_text_block_loaded (was_first_block: BOOLEAN) is

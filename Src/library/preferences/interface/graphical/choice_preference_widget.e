@@ -40,28 +40,17 @@ feature -- Status Setting
 			-- Set the resource.
 		require else
 			resource_is_choice: new_resource.is_choice
---		local
---			l_values: ARRAY [STRING]
---			cnt: INTEGER
 		do
 			Precursor (new_resource)
 			check
 				change_item_widget_created: change_item_widget /= Void
 			end
+		end
 
---			change_item_widget.wipe_out
---			change_item_widget.select_actions.block
---			from
---				l_values := resource.value
---				cnt := 1
---			until
---				cnt > l_values.count
---			loop
---				change_item_widget.extend (create {EV_LIST_ITEM}.make_with_text (l_values.item (cnt)))
---				cnt := cnt + 1
---			end
---			change_item_widget.i_th (new_resource.selected_index).enable_select
---			change_item_widget.select_actions.resume	
+	show is
+			-- Show the widget in its editable state
+		do
+			activate_combo
 		end
 
 feature {NONE} -- Command
@@ -69,26 +58,27 @@ feature {NONE} -- Command
 	update_changes is
 			-- Update the changes made in `change_item_widget' to `resource'.
 		local
-			l_value: STRING
+			l_value,
+			l_item: STRING
+			l_cnt: INTEGER
 		do
 			from
 				create l_value.make_empty
-				change_item_widget.combo_box.start
+				l_cnt := 1
 			until
-				change_item_widget.combo_box.after
+				l_cnt > resource.value.count
 			loop
-				if change_item_widget.combo_box.item = change_item_widget.combo_box.selected_item then
+				l_item := resource.value.item (l_cnt)
+				if change_item_widget.text.is_equal (l_item) then
 					l_value.append_character ('[')
-					l_value.append (change_item_widget.combo_box.item.text)
+					l_value.append (l_item)
 					l_value.append_character (']')
-					resource.set_selected_index (change_item_widget.combo_box.index)
+					resource.set_selected_index (l_cnt)
 				else
-					l_value.append (change_item_widget.combo_box.item.text)
+					l_value.append (l_item)
 				end
-				change_item_widget.combo_box.forth
-				if not change_item_widget.combo_box.after then
-					l_value.append_character (';')
-				end
+				l_cnt := l_cnt + 1				
+				l_value.append_character (';')
 			end
 			resource.set_value_from_string (l_value)			
 			Precursor {PREFERENCE_WIDGET}
@@ -117,8 +107,22 @@ feature {NONE} -- Implementation
 			create change_item_widget			
 			change_item_widget.set_item_strings (resource.value)
 			change_item_widget.set_text (resource.selected_value)
-			change_item_widget.pointer_button_press_actions.force_extend (agent change_item_widget.activate)		
+			change_item_widget.pointer_button_press_actions.force_extend (agent activate_combo)		
 			change_item_widget.deactivate_actions.extend (agent update_changes)
+		end
+
+	activate_combo is
+			-- 
+		do
+			if resource.selected_index > 0 then
+				change_item_widget.activate	
+				change_item_widget.combo_box.focus_out_actions.block
+				change_item_widget.combo_box.disable_edit
+				change_item_widget.combo_box.focus_out_actions.resume
+				change_item_widget.combo_box.select_actions.block
+				change_item_widget.combo_box.i_th (resource.selected_index).enable_select					
+				change_item_widget.combo_box.select_actions.resume
+			end
 		end
 
 end -- class CHOICE_PREFERENCE_WIDGET

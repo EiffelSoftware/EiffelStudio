@@ -26,8 +26,8 @@ feature
 					a_column := a_coord.integer_32_item (2)
 					a_row := a_coord.integer_32_item (1)
 					a_icon_matrix ?= image_matrix.implementation
-					a_x_offset := (a_column - 1) * (1 + pixmap_width) + 1
-					a_y_offset := (a_row - 1) * (1 + pixmap_height) + 1
+					a_x_offset := (a_column - 1) * (1 + pixmap_width)
+					a_y_offset := (a_row - 1) * (1 + pixmap_height)
 					Result := a_icon_matrix.sub_pixmap (create {EV_RECTANGLE}.make (a_x_offset, a_y_offset, pixmap_width, pixmap_height))
 				else
 						-- Initialize the pathname & load the file
@@ -54,32 +54,46 @@ feature {NONE} -- Implementation
 	pixmap_width: INTEGER is
 			-- Width in pixels of the created factory image
 		deferred
+		ensure
+			result_positive: Result > 0
 		end
 
 	pixmap_height: INTEGER is
 			-- Height in pixels of the created factory image
 		deferred
+		ensure
+			result_positive: Result > 0
 		end	
 
 	Pixmap_suffix: STRING is
 			-- Suffix for pixmaps.
 		do
 			Result := "png"
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	pixmap_path: DIRECTORY_NAME is
 			-- Path containing all of the Studio pixmaps
 		deferred
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
 		end
 
 	image_matrix: EV_PIXMAP is
 			-- Matrix pixmap containing all of the present icons
 		deferred
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
 			-- Lookup hash table for Studio pixmapped images
 		deferred
+		ensure
+			result_not_void: Result /= Void
+			result_compares_objects: Result.object_comparison
 		end
 
 end -- class EB_SHARED_PIXMAP_FACTORY

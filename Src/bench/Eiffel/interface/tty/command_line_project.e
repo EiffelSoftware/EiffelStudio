@@ -273,11 +273,7 @@ feature -- Project retrieval
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				if is_loop then
-					if Ace_name /= Void then
-						check_ace_file (Ace_name);
-					end; 
-				elseif Ace_name = Void then
+				if not is_loop and then Ace_name = Void then
 					create path.make_from_string (Execution_environment.current_working_directory)
 					path.set_file_name ("Ace.ace")	
 					create file.make (path)
@@ -288,8 +284,10 @@ feature -- Project retrieval
 						path.set_file_name ("Ace")	
 						Ace_name := path
 					end
-					check_ace_file (Ace_name);
-				end;
+				end
+				if Ace_name /= Void then
+					check_ace_file (Ace_name)
+				end
 				Eiffel_project.make_new (project_dir, True, Void, Void)
 				check
 					Project_initialized: Eiffel_project.initialized

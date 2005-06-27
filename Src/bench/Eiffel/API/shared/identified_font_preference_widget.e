@@ -68,7 +68,12 @@ feature {NONE} -- Commands
 	update_changes is
 			-- Commit the result of Font Tool.
 		do
-			last_selected_value := font_factory.registered_font (font_tool.font)
+			last_selected_value := font_factory.registered_font (font_tool.font)		
+			if last_selected_value /= Void then
+				resource.set_value (last_selected_value)
+				change_item_widget.set_font (last_selected_value.font)
+				change_item_widget.set_text (resource.string_value)
+			end
 			Precursor {PREFERENCE_WIDGET}
 		end
 		

@@ -962,51 +962,6 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_progress_dialog")
 		end
 
-	Icon_bpslot: ARRAY [EV_PIXMAP] is
-		once
-				-- Read the pixmaps 
-			create Result.make (1,3)
-			Result.put (pixmap_file_content ("icon_bpslot"), 1)
-			Result.put (pixmap_file_content ("icon_bpslot_stopped"), 2)
-			Result.put (pixmap_file_content ("icon_bpslot_top"), 3)
-		end
-
-	Icon_bpenabled: ARRAY [EV_PIXMAP] is
-		once
-				-- Read the pixmaps 
-			create Result.make (1,3)
-			Result.put (pixmap_file_content ("icon_bpenabled"), 1)
-			Result.put (pixmap_file_content ("icon_bpenabled_stopped"), 2)
-			Result.put (pixmap_file_content ("icon_bpenabled_top"), 3)
-		end
-
-	Icon_bpdisabled: ARRAY [EV_PIXMAP] is
-		once
-				-- Read the pixmaps 
-			create Result.make (1,3)
-			Result.put (pixmap_file_content ("icon_bpdisabled"), 1)
-			Result.put (pixmap_file_content ("icon_bpdisabled_stopped"), 2)
-			Result.put (pixmap_file_content ("icon_bpdisabled_top"), 3)
-		end
-
-	Icon_bpenabled_condition: ARRAY [EV_PIXMAP] is
-		once
-				-- Read the pixmaps 
-			create Result.make (1,3)
-			Result.put (pixmap_file_content ("icon_bpenabled_condition"), 1)
-			Result.put (pixmap_file_content ("icon_bpenabled_stopped"), 2)
-			Result.put (pixmap_file_content ("icon_bpenabled_top"), 3)
-		end
-
-	Icon_bpdisabled_condition: ARRAY [EV_PIXMAP] is
-		once
-				-- Read the pixmaps 
-			create Result.make (1,3)
-			Result.put (pixmap_file_content ("icon_bpdisabled_condition"), 1)
-			Result.put (pixmap_file_content ("icon_bpdisabled_stopped"), 2)
-			Result.put (pixmap_file_content ("icon_bpdisabled_top"), 3)
-		end
-
 	Icon_enable_bkpt: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("enable_bkpt")

@@ -80,7 +80,7 @@ feature {ICOR_EXPORTER} -- References Properties
 			is_null_reference := v
 		end
 	
-feature {NONE} -- helpers
+feature {ICOR_EXPORTER} -- helpers
 
 	error_code_is_object_neutered (lcs: INTEGER): BOOLEAN is
 			-- `lcs' is `cordbg_e_object_neutered' error value

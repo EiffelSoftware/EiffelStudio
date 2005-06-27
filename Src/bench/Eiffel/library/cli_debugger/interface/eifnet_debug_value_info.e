@@ -376,70 +376,93 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			end
 		end
 
-feature -- Interface Access
+feature {NONE} -- Interface Access : Impl
+
+	icd_strong_prepared_value_from (a_icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_VALUE is
+		require
+			a_icd /= Void
+		local
+			l_heap: ICOR_DEBUG_HEAP_VALUE
+			l_strong: ICOR_DEBUG_HANDLE_VALUE
+			l_ref: ICOR_DEBUG_REFERENCE_VALUE
+		do
+			l_heap := a_icd.query_interface_icor_debug_heap_value
+			if l_heap /= Void then
+				if not l_heap.is_valid then
+						--| Get the value from the Strong reference
+					if a_icd /= Void then
+						l_strong := a_icd.strong_reference_value
+						if l_strong /= Void then
+							l_ref := l_strong.query_interface_icor_debug_reference_value
+							if l_ref /= Void then
+								Result := l_ref.dereference
+								l_ref.clean_on_dispose
+							end
+						end
+					end
+				end
+				l_heap.clean_on_dispose
+			end
+		end
+
+	interface_debug_object_value_from (a_icd: ICOR_DEBUG_VALUE): ICOR_DEBUG_OBJECT_VALUE is
+		require
+			a_icd /= Void
+		local
+			l_icdv: ICOR_DEBUG_VALUE
+		do
+			Result := a_icd.query_interface_icor_debug_object_value
+			if Result /= Void then
+				l_icdv := icd_strong_prepared_value_from (a_icd)
+				if l_icdv /= Void then
+					Result := l_icdv.query_interface_icor_debug_object_value
+					l_icdv.clean_on_dispose
+				end
+			end
+		end
+
+feature -- IUnknown Interfaces
 
 	interface_debug_object_value: ICOR_DEBUG_OBJECT_VALUE is
 			-- ICorDebugObjectValue interface
 		require
 			valid_object_type: is_reference_type or else is_class or else is_object or else is_valuetype
-		local
-			l_heap: ICOR_DEBUG_HEAP_VALUE
-			l_strong: ICOR_DEBUG_HANDLE_VALUE
-			l_ref: ICOR_DEBUG_REFERENCE_VALUE
-			l_icdv: ICOR_DEBUG_VALUE
 		do
-			Result := icd_prepared_value.query_interface_icor_debug_object_value
-			if Result /= Void then
-				l_heap := Result.query_interface_icor_debug_heap_value
-				if l_heap /= Void then
-					if not l_heap.is_valid then
-							--| Get the value from the Strong reference
-						if icd_prepared_value /= Void then
-							l_strong := icd_prepared_value.strong_reference_value
-							if l_strong /= Void then
-								l_ref := l_strong.query_interface_icor_debug_reference_value
-								if l_ref /= Void then
-									l_icdv := l_ref.dereference
-									if l_icdv /= Void then
-										Result := l_icdv.query_interface_icor_debug_object_value
-										l_icdv.clean_on_dispose
-									end
-									l_ref.clean_on_dispose
-								end
-									--| do not clean l_strong, since it is an attribute
-									--| and can be resused later
---								l_strong.clean_on_dispose
-							end
-						end
-					end
-					l_heap.clean_on_dispose
-				end
-			end
+			Result := interface_debug_object_value_from (icd_prepared_value)
 		end
 		
--- NOTA jfiat [2004/07/20] : not used for now
---	interface_debug_reference_value: like once_interface_debug_reference_value is
---			-- ICorDebugReferenceValue interface
---		require
---			is_reference_type 
---		do
---			Result := icd_prepared_value.query_interface_icor_debug_reference_value
---		end
-
 	interface_debug_array_value: ICOR_DEBUG_ARRAY_VALUE is
 			-- ICorDebugArrayValue interface
 		require
 			is_array_type 
+		local
+			l_icdv: ICOR_DEBUG_VALUE
 		do
 			Result := icd_prepared_value.query_interface_icor_debug_array_value
+			if Result /= Void then
+				l_icdv := icd_strong_prepared_value_from (icd_prepared_value)
+				if l_icdv /= Void then
+					Result := l_icdv.query_interface_icor_debug_array_value
+					l_icdv.clean_on_dispose
+				end
+			end
 		end
 
 	interface_debug_string_value: ICOR_DEBUG_STRING_VALUE is
 			-- ICorDebugStringValue interface
 		require
 			is_string_type 
+		local
+			l_icdv: ICOR_DEBUG_VALUE
 		do
 			Result := icd_prepared_value.query_interface_icor_debug_string_value
+			if Result /= Void then
+				l_icdv := icd_strong_prepared_value_from (icd_prepared_value)
+				if l_icdv /= Void then
+					Result := l_icdv.query_interface_icor_debug_string_value
+					l_icdv.clean_on_dispose
+				end
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -10,7 +10,8 @@ class
 inherit
 	EDITOR_TOKEN_MARGIN
 		rename
-			cursors as editor_editor_cursors
+			cursors as editor_editor_cursors,
+			icons as editor_icons
 		redefine
 			pebble,
 			update_position,
@@ -123,15 +124,15 @@ feature -- Miscellaneous
 							--  1 = not stopped version
 							--  2 = stopped version.
 		do
-			status := Application.status
+			status := application.status
 			pebble_routine := pebble.routine
 			pebble_index := pebble.index
 
 			if status /= Void and then status.is_stopped then
 				if status.is_top (pebble_routine.body_index, pebble_index) then
-					index := 3
-				elseif status.is_at (pebble_routine.body_index, pebble_index) then
 					index := 2
+				elseif status.is_at (pebble_routine.body_index, pebble_index) then
+					index := 3
 				else
 					index := 1
 				end
@@ -141,15 +142,15 @@ feature -- Miscellaneous
 
 			inspect Application.breakpoint_status (pebble_routine, pebble_index)
 			when 0 then 
-				pixmaps := Shared_pixmaps.Icon_bpslot
+				pixmaps := icons.icon_group_bp_slot
 			when 1 then
-				pixmaps := Shared_pixmaps.Icon_bpenabled
+				pixmaps := icons.icon_group_bp_enabled
 			when -1 then
-				pixmaps := Shared_pixmaps.Icon_bpdisabled
+				pixmaps := icons.icon_group_bp_disabled
 			when 2 then
-				pixmaps := Shared_pixmaps.Icon_bpenabled_condition
+				pixmaps := icons.icon_group_bp_enabled_condition
 			when -2 then
-				pixmaps := Shared_pixmaps.Icon_bpdisabled_condition
+				pixmaps := icons.icon_group_bp_disabled_condition
 			end
 
 			Result := pixmaps @ index
@@ -165,6 +166,17 @@ feature -- Miscellaneous
 		once
 			Result ?= editor_preferences_cell.item
 		end
+
+feature {NONE} -- Implementation
+
+	icons: EB_SHARED_BREAKPOINT_ICONS is
+			-- Breakpoint icon resources
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 
 invariant
 		breakpoint_is_first: previous = Void

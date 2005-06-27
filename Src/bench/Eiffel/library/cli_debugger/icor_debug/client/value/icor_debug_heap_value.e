@@ -24,9 +24,12 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_is_valid (item, $l_result)
 			Result := (l_result /= 0) --| TRUE = 1 , FALSE = 0
-				and not error_code_is_object_neutered (last_call_success)
-		ensure
-			success: last_call_succeed or error_code_is_object_neutered (last_call_success)
+		end
+		
+	last_error_was_object_neutered: BOOLEAN is
+			-- last call returned an Object_neutered error code ?
+		do
+			Result := error_code_is_object_neutered (last_call_success)
 		end
 
 feature {NONE} -- Implementation

@@ -388,7 +388,7 @@ feature {NONE} -- Interface Access : Impl
 		do
 			l_heap := a_icd.query_interface_icor_debug_heap_value
 			if l_heap /= Void then
-				if not l_heap.is_valid then
+				if not l_heap.is_valid or else l_heap.last_error_was_object_neutered then
 						--| Get the value from the Strong reference
 					if a_icd /= Void then
 						l_strong := a_icd.strong_reference_value

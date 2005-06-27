@@ -31,17 +31,11 @@ feature -- Access
 
 	hash_code: INTEGER is
 			-- Hash code value.
-		local
-			color_hash_value: REAL
 		do
-			color_hash_value :=
-				262144.0 * color_red +
-				4096.0 *color_green +
-				64.0 * color_blue
-			Result := color_hash_value.abs.floor
+			Result := (color_red |<< 16) | (color_green |<< 8) | color_blue
 
 			if pattern /= Void then
-				Result := Result + pattern.item.hash_code
+				Result := Result | pattern.item.hash_code
 			end
 		end
 

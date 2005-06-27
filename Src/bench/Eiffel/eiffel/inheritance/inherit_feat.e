@@ -198,8 +198,8 @@ feature
 								replication.set_is_prefix (True)
 							else
 									-- Infix feature
-								replication.set_is_infix (False)
-								replication.set_is_prefix (True)
+								replication.set_is_infix (True)
+								replication.set_is_prefix (False)
 							end
 						else
 								-- Identifier feature

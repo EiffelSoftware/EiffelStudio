@@ -34,6 +34,8 @@ feature {NONE} -- Initialization
 			editor_drawing_area.pointer_double_press_actions.extend (agent on_double_click)
 			editor_drawing_area.pointer_button_release_actions.extend (agent on_mouse_button_up)
 			editor_drawing_area.pointer_motion_actions.extend (agent on_mouse_move)
+			
+			clipboard := ev_application.clipboard
 
 			create click_delay.make_with_interval (0)
 			click_delay.actions.wipe_out

@@ -295,6 +295,23 @@ feature -- Text Selection
 			select_region (l_first_char, l_last_char)
 		end		
 
+	copy_selection is
+			-- Copy current selection to clipboard.
+		require
+			text_is_not_empty: number_of_lines /= 0
+		local
+			copied_text: STRING
+		do
+			if has_selection then
+				if not text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
+					copied_text := text_displayed.selected_string
+					if not copied_text.is_empty then
+						clipboard.set_text (copied_text)
+					end
+				end
+			end
+		end
+
 feature -- Status Setting
 
 	set_first_line_displayed (fld: INTEGER; refresh_if_necessary: BOOLEAN) is
@@ -446,9 +463,11 @@ feature {NONE} -- Handle keystrokes
  			-- Process the push on Ctrl + an extended key.
 		local
 			l_cursor: TEXT_CURSOR
-			other_keys: BOOLEAN
+			other_keys,
+			scroll_to_cursor: BOOLEAN
 		do
 			l_cursor := text_displayed.cursor
+			scroll_to_cursor := True
 			inspect
 				ev_key.code
 
@@ -478,13 +497,23 @@ feature {NONE} -- Handle keystrokes
 				basic_cursor_move (agent l_cursor.set_y_in_lines (number_of_lines))
 				basic_cursor_move (agent l_cursor.go_end_line)
 
+			when Key_c then
+					-- Ctrl-C (copy)
+				copy_selection
+				scroll_to_cursor := False
+								
+			when Key_a then
+					-- Ctrl-A (select all)
+				select_all
+				scroll_to_cursor := False			
+
 			else
 					-- Key not handled
 
 				other_keys := True
 			end
 
-			if not other_keys then
+			if not other_keys and then scroll_to_cursor then
 				check_cursor_position
 				invalidate_cursor_rect (True)
 			end
@@ -1049,6 +1078,11 @@ feature {NONE} -- Implementation
 	 			end	
 	 		end
 		end		
+
+feature -- Clipboard
+
+	clipboard: EV_CLIPBOARD
+			-- Clipboard.
 
 feature {NONE} -- Scroll bars management
 

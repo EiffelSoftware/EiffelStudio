@@ -48,8 +48,7 @@ feature {NONE} -- Initialization
 		do
 				-- Set default mode
 			overwrite_mode := False
-			enable_editable
-			clipboard := ev_application.clipboard
+			enable_editable			
 			
 			Precursor {SELECTABLE_TEXT_PANEL}
 			editor_drawing_area.key_press_string_actions.extend (agent on_char)
@@ -551,23 +550,6 @@ feature -- Edition Operations on text
 			end
 		end
 
-	copy_selection is
-			-- Copy current selection to clipboard.
-		require
-			text_is_not_empty: number_of_lines /= 0
-		local
-			copied_text: STRING
-		do
-			if has_selection then
-				if not text_displayed.cursor.is_equal (text_displayed.selection_cursor) then
-					copied_text := text_displayed.selected_string
-					if not copied_text.is_empty then
-						clipboard.set_text (copied_text)
-					end
-				end
-			end
-		end
-
 	paste is
 			-- Paste clipboard at cursor position.
 		require
@@ -952,11 +934,6 @@ feature {NONE} -- Implementation
 				Result := Precursor {SELECTABLE_TEXT_PANEL}
 			end
 		end 
-
-feature -- Clipboard
-
-	clipboard: EV_CLIPBOARD
-			-- Clipboard.
 
 feature {NONE} -- Private Constants
 

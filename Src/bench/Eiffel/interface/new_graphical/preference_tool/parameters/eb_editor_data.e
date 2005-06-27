@@ -324,10 +324,10 @@ feature {NONE} -- Preference Strings
 			-- Should '_' be considered a word separator (used for word by word
 			-- moves and selection)
 
-	autocomplete_brackets_and_parenthesis_string: STRING is "editor.eiffel.autocomplete_brackets_and_parenthesis" 
+	autocomplete_brackets_and_parenthesis_string: STRING is "editor.eiffel.auto-complete_brackets_and_parenthesis" 
 			-- Should we close the brackets and parenthesis automatically?
 
-	autocomplete_quotes_string: STRING is "editor.eiffel.autocomplete_quotes" 
+	autocomplete_quotes_string: STRING is "editor.eiffel.auto-complete_quotes" 
 			-- Should we close the quotes automatically?
 
 	show_any_features_string: STRING is "editor.eiffel.show_any_features" 

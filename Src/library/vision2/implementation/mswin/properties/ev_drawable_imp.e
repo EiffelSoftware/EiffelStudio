@@ -40,6 +40,11 @@ inherit
 	WEL_RASTER_OPERATIONS_CONSTANTS export {NONE} all end
 	WEL_HS_CONSTANTS 				export {NONE} all end
 	WEL_DT_CONSTANTS				export {NONE} all end
+	
+	WEL_SHARED_TEMPORARY_OBJECTS
+		export
+			{NONE} all
+		end
 
 feature {NONE} -- Initialization
 
@@ -281,12 +286,10 @@ feature -- Clearing and drawing operations
 	clear_rectangle (x1, y1, a_width, a_height: INTEGER) is
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height' in `background_color'.
-		local
-			a_rect: WEL_RECT
 		do
-			create a_rect.make (x1, y1, x1 + a_width, y1 + a_height)
+			wel_rect.set_rect (x1, y1, x1 + a_width, y1 + a_height)
 			get_dc
-			dc.fill_rect (a_rect, our_background_brush)
+			dc.fill_rect (wel_rect, our_background_brush)
 			release_dc
 		end
 
@@ -322,8 +325,9 @@ feature -- Drawing operations
 				dc.select_font (wel_font)
 				internal_initialized_font := True
 			end
+			wel_rect.set_rect (x, y, 10, 10)
 				-- Note that the size of the rectange does not matter as we use the `dt_noclip' flag.
-			dc.draw_text (a_text, create {WEL_RECT}.make (x, y, 10, 10), Dt_expandtabs | dt_noclip | Dt_noprefix)
+			dc.draw_text (a_text, wel_rect, Dt_expandtabs | dt_noclip | Dt_noprefix)
 			release_dc
 		end
 		
@@ -350,8 +354,10 @@ feature -- Drawing operations
 				dc.select_font (wel_font)
 				internal_initialized_font := True
 			end
+			
+			wel_rect.set_rect (x, y, x + clipping_width, 10)
 				-- Note that the size of the rectange does not matter as we use the `dt_noclip' flag.
-			dc.draw_text (a_text, create {WEL_RECT}.make (x, y, x + clipping_width, 10), Dt_word_ellipsis | Dt_noprefix | dt_noclip)
+			dc.draw_text (a_text, wel_rect, Dt_word_ellipsis | Dt_noprefix | dt_noclip)
 			release_dc	
 		end
 

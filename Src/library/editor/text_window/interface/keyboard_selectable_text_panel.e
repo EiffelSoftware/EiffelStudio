@@ -993,12 +993,16 @@ feature {NONE} -- Implementation
  			l_text: TEXT
  			l_buffered,
  			l_has_data: BOOLEAN
+ 			l_editor_viewport_y_offset: INTEGER
+ 			l_offset: INTEGER
 		do
 			updating_line := True
 			l_text := text_displayed		
 			l_line_height := line_height
 			l_x_offset := x_offset
 			l_margin_width := left_margin_width
+			l_editor_viewport_y_offset := editor_viewport.y_offset
+			l_offset := offset
 
 			if buffered then
 				buffered_line.set_background_color (editor_preferences.normal_background_color)
@@ -1012,7 +1016,7 @@ feature {NONE} -- Implementation
 		 			until
 		 				curr_line > last or else l_text.after
 		 			loop
-		 				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * l_line_height)
+		 				y_offset := l_editor_viewport_y_offset + ((curr_line - first_line_displayed) * l_line_height)
 					l_x_offset := x_offset
 					l_has_data := line_has_cursor_or_selection (curr_line)
 					l_line_width := l_text.line (curr_line).width
@@ -1034,7 +1038,7 @@ feature {NONE} -- Implementation
 							-- the line to the edge of the viewport in the background color.
 						if (l_line_width + l_margin_width) <= offset then
 								-- There is no part of the line visible so draw all blank
-							l_start_clear := offset
+							l_start_clear := l_offset
 						else
 								-- Some of the line is visible so only draw blank from the end of the visible area to the edge of the viewable area
 							l_start_clear := l_line_width + l_margin_width

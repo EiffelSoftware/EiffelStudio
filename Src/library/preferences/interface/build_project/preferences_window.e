@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			grid.column (3).set_title (l_status)
 			grid.column (4).set_title (l_literal_value)
 			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
+			grid.key_press_actions.extend (agent on_grid_key_pressed)			
 			close_button.select_actions.extend (agent on_close)
 			close_request_actions.extend (agent on_close)
 			set_default_cancel_button (close_button)
@@ -223,6 +224,24 @@ feature {NONE} -- Events
 					end					
 				end
 			end
+		end		
+
+	on_grid_key_pressed (k: EV_KEY) is
+			-- An key was pressed
+		local
+			l_row: EV_GRID_ROW
+			l_preference_widget: PREFERENCE_WIDGET			
+		do
+			if k /= Void then
+				if k.code = {EV_KEY_CONSTANTS}.key_enter then
+					if not grid.selected_rows.is_empty then 
+						l_preference_widget ?= grid.selected_rows.first.item (4).data
+						if l_preference_widget /= Void then
+							l_preference_widget.show
+						end
+					end
+				end
+			end			
 		end		
 
 feature {NONE} -- Implementation
@@ -411,7 +430,7 @@ feature {NONE} -- Implementation
 						end
 						create grid_type_item
 						grid_type_item.set_text (l_resource.string_type)
-						grid.set_item (2, curr_row, grid_type_item)
+						grid.set_item (2, curr_row, grid_type_item)						
 						curr_row := curr_row + 1
 					end
 				end
@@ -499,12 +518,14 @@ feature {NONE} -- Implementation
 				create l_bool_widget.make_with_resource (l_resource)
 				l_bool_widget.change_actions.extend (agent on_preference_changed)
 				grid.set_item (4, row_index, l_bool_widget.change_item_widget)				
+				grid.item (4, row_index).set_data (l_bool_widget)
 			else
 				if l_resource.generating_resource_type.is_equal ("TEXT") then
 						-- Text
 					create l_edit_widget.make_with_resource (l_resource)
 					l_edit_widget.change_actions.extend (agent on_preference_changed)
 					grid.set_item (4, row_index, l_edit_widget.change_item_widget)				
+					grid.item (4, row_index).set_data (l_edit_widget)
 				elseif l_resource.generating_resource_type.is_equal ("COMBO") then
 					l_array ?= l_resource
 					if l_array /= Void then
@@ -512,6 +533,7 @@ feature {NONE} -- Implementation
 						create l_choice_widget.make_with_resource (l_resource)
 						l_choice_widget.change_actions.extend (agent on_preference_changed)
 						grid.set_item (4, row_index, l_choice_widget.change_item_widget)
+						grid.item (4, row_index).set_data (l_choice_widget)
 					end
 				else
 					l_font ?= l_resource
@@ -521,6 +543,7 @@ feature {NONE} -- Implementation
 						l_font_widget.change_actions.extend (agent on_preference_changed)
 						l_font_widget.set_caller (Current)
 						grid.set_item (4, row_index, l_font_widget.change_item_widget)
+						grid.item (4, row_index).set_data (l_font_widget)
 						grid.row (row_index).set_height (l_font.value.height.max (default_row_height))
 					else
 						l_color ?= l_resource
@@ -530,6 +553,7 @@ feature {NONE} -- Implementation
 							l_color_widget.change_actions.extend (agent on_preference_changed)
 							l_color_widget.set_caller (Current)
 							grid.set_item (4, row_index, l_color_widget.change_item_widget)
+							grid.item (4, row_index).set_data (l_color_widget)
 						end
 					end
 				end

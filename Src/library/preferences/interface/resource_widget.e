@@ -95,6 +95,11 @@ feature -- Basic operations
 				reset
 			end
 		end		
+	
+	show is
+			-- Show the widget in its editable state
+		deferred			
+		end		
 		
 feature -- Actions
 

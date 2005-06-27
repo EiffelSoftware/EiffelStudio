@@ -91,6 +91,12 @@ feature {NONE} -- Commands
 			end
 		end		
 
+	show is
+			-- Show the widget in its editable state
+		do			
+			show_change_item_widget
+		end
+
 feature {NONE} -- Implementation
 
 	build_change_item_widget is

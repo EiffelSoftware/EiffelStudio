@@ -48,6 +48,12 @@ feature -- Status Setting
 			tmpstr := new_resource.string_value
 		end
 
+	show is
+			-- Show the widget in its editable state
+		do			
+			activate
+		end
+
 feature {NONE} -- Command
 
 	update_changes is

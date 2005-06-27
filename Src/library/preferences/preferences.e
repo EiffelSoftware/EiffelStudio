@@ -263,12 +263,12 @@ feature -- Resource
 		do
 			l_linear := resources.linear_representation
 			from
-				resources.start
+				l_linear.start
 			until
-				resources.after
+				l_linear.after
 			loop
-				save_resource (resources.item_for_iteration)
-				resources.forth
+				save_resource (l_linear.item)
+				l_linear.forth
 			end
 		end
 		

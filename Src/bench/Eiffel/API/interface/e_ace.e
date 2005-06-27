@@ -90,14 +90,12 @@ feature -- Setting
 
 	set_file_name (f_name: STRING) is
 			-- Set lace_file_name to `f_name'.
-		require
-			valid_f_name_if_not_void: f_name /= Void implies valid_file_name (f_name)
 		do
 			if f_name /= Void then
 				Lace.set_file_name (f_name)
 			end
 		ensure
-			file_name_set: equal (f_name, file_name)
+			file_name_set: f_name /= Void implies equal (f_name, file_name)
 		end
 
 end -- class E_ACE

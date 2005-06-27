@@ -144,9 +144,9 @@
 	<PREF NAME="editor.general.remove_trailing_white_space" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.automatic_update" DESCRIPTION="Automatic update when the file has not been modified."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
-	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font"><FONT>Courier New-r-bold-8-typewriter</FONT></PREF>
-	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font. (Requires restart)"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font. (Requires restart)"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font (Requires restart)"><FONT>Courier New-r-bold-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font. (Requires restart)" HIDDEN="True"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
 	<PREF NAME="editor.general.tab_step" DESCRIPTION="Tabulation size in characters."><INTEGER>4</INTEGER></PREF>
 	<PREF NAME="editor.general.colors.normal_text_color" DESCRIPTION="Color for normal text."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="editor.general.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
@@ -207,8 +207,8 @@
 	<PREF NAME="editor.eiffel.colors.object_background_color" DESCRIPTION="Background color for objects."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Complete once and constants with a first upper case character?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.underscore_is_separator" DESCRIPTION="Underscore '_' is a word separator?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete_brackets_and_parenthesis" DESCRIPTION="Brackets and parentheses are closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.autocomplete_quotes" DESCRIPTION="Quotes are closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parentheses" DESCRIPTION="Brackets and parentheses are closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Quotes are closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.show_any_features" DESCRIPTION="ANY features appear in the feature call complete window?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.auto_auto_complete" DESCRIPTION="Auto complete appears automatically?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Completion list entries are filtered based on matches?"><BOOLEAN>True</BOOLEAN></PREF>

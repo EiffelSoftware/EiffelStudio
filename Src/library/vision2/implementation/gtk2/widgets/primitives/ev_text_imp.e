@@ -231,6 +231,7 @@ feature -- Basic operation
 			a_text := clip_imp.text
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, index - 1)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_text.item, -1)
+			a_text.set_with_eiffel_string (once "")
 		end
 
 feature -- Access
@@ -247,6 +248,7 @@ feature -- Access
 			temp_text := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
 			create a_cs.make_from_pointer (temp_text)
 			Result := a_cs.string
+			a_cs.set_with_eiffel_string (once "")
 		end
 
 	line (a_line: INTEGER): STRING is
@@ -270,6 +272,7 @@ feature -- Access
 			
 			create a_cs.make_from_pointer (text_ptr)
 			Result := a_cs.string
+			a_cs.set_with_eiffel_string (once "")
 		end
 		
 	first_position_from_line_number (a_line: INTEGER): INTEGER is

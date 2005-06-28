@@ -50,13 +50,15 @@
 			<Directory Id="Application" Name=".">
 				<Directory Id="eifinit" Name="eifinit">
 					<Directory Id="studio" Name="studio">
+						<Component Id="studio" Guid="F6D23A19-818B-4799-90A5-BFFFEAA01973" >
+							<File Id="default_xml" Name="default.xml" />
+							<File Id="general.cfg" Name="general.cfg" />
+						</Component>
 						<Directory Id="spec" Name="spec">
 							<Directory Id="windows_dir" Name="windows">
 								<Component Id="windows_comp" Guid="2FEFF63A-7841-4A85-AABF-5A093566E8C4">
 									<File Id="culture" Name="culture" KeyPath="yes" />
-									<File Id="default.xml" Name="default.xml" />
-									<File Id="general" Name="general" />
-									<File Id="general.cfg" Name="general.cfg" />
+									<File Id="default_xml2" Name="default.xml" />
 								</Component>
 							</Directory>
 						</Directory>
@@ -333,6 +335,7 @@
 						<Directory Id="png" Name="png">
 							<Component Id="png" Guid="4D7056EF-5B56-496D-B220-A0908F975A18">
 								<File Id="activation.png" Name="ACTIVA~1.PNG" LongName="activation.png" />
+								<File Id="breakpoint_icon_matrix_png" Name="BREAKP~1.PNG" LongName="breakpoint_icon_matrix.png" />
 								<File Id="bm_About.png" Name="bm_About.png" />
 								<File Id="bm_wizard_blue.png" Name="BM_WIZ~1.PNG" LongName="bm_wizard_blue.png" />
 								<File Id="bm_wizard_profiler_icon.png" Name="BM_WIZ~2.PNG" LongName="bm_wizard_profiler_icon.png" />
@@ -348,19 +351,6 @@
 								<File Id="icon_bon_effective.png" Name="ICON_B~4.PNG" LongName="icon_bon_effective.png" />
 								<File Id="icon_bon_interfaced.png" Name="IC1294~1.PNG" LongName="icon_bon_interfaced.png" />
 								<File Id="icon_bon_persistent.png" Name="ICF704~1.PNG" LongName="icon_bon_persistent.png" />
-								<File Id="icon_bparrow.png" Name="ICC562~1.PNG" LongName="icon_bparrow.png" />
-								<File Id="icon_bparrow_color.png" Name="IC6795~1.PNG" LongName="icon_bparrow_color.png" />
-								<File Id="icon_bpdisabled.png" Name="IC5D88~1.PNG" LongName="icon_bpdisabled.png" />
-								<File Id="icon_bpdisabled_condition.png" Name="IC5D40~1.PNG" LongName="icon_bpdisabled_condition.png" />
-								<File Id="icon_bpdisabled_stopped.png" Name="ICC7B6~1.PNG" LongName="icon_bpdisabled_stopped.png" />
-								<File Id="icon_bpdisabled_top.png" Name="ICB34D~1.PNG" LongName="icon_bpdisabled_top.png" />
-								<File Id="icon_bpenabled.png" Name="IC47DD~1.PNG" LongName="icon_bpenabled.png" />
-								<File Id="icon_bpenabled_condition.png" Name="IC50E6~1.PNG" LongName="icon_bpenabled_condition.png" />
-								<File Id="icon_bpenabled_stopped.png" Name="IC5CC6~1.PNG" LongName="icon_bpenabled_stopped.png" />
-								<File Id="icon_bpenabled_top.png" Name="ICE536~1.PNG" LongName="icon_bpenabled_top.png" />
-								<File Id="icon_bpslot.png" Name="IC360C~1.PNG" LongName="icon_bpslot.png" />
-								<File Id="icon_bpslot_stopped.png" Name="IC5FE8~1.PNG" LongName="icon_bpslot_stopped.png" />
-								<File Id="icon_bpslot_top.png" Name="ICE12E~1.PNG" LongName="icon_bpslot_top.png" />
 								<File Id="icon_close_color.png" Name="ICE840~1.PNG" LongName="icon_close_color.png" />
 								<File Id="icon_dbg_error_png" Name="ICON_D~3.PNG" LongName="icon_dbg_error.png" />
 								<File Id="icon_degree_minus_1.png" Name="ICF329~1.PNG" LongName="icon_degree-1.png" />

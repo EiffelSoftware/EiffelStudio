@@ -62,6 +62,7 @@ feature -- Access
 				l_font_widget.set_caller (Current)
 				l_font_widget.change_actions.extend (agent on_preference_changed (l_resource))
 				grid.set_item (4, row_index, l_font_widget.change_item_widget)
+				grid.item (4, row_index).set_data (l_font_widget)
 				grid.row (row_index).set_height (l_id_font.value.font.height.max (default_row_height))
 			else
 				Precursor {PREFERENCES_WINDOW} (l_resource, row_index)

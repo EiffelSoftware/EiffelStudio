@@ -188,11 +188,13 @@ feature -- Initialization
 			exit_process_occurred := False
 			
 			il_debug_info_recorder.reset_debugging_live_data
-			debug_value_keeper.terminate		
+			debug_value_keeper.terminate
 				-- not required
 			last_dbg_call_success := 0
 			last_string_value_length := 0
 			context_output_tool := Void
+		ensure
+			not is_inside_function_evaluation
 		end
 		
 	initialize_debugger_session (dbgw: EB_DEVELOPMENT_WINDOW) is

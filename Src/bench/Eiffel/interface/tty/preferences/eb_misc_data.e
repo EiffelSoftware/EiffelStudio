@@ -75,11 +75,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := general_shell_command_preference.value
 		end
 
-	browsing_facilities: BOOLEAN is
-		do
-			Result := browsing_facilities_preference.value
-		end
-	
 	external_command_0: STRING is
 			-- 
 		do
@@ -199,7 +194,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	text_mode_is_windows_preference: BOOLEAN_PREFERENCE
 	internet_browser_preference: STRING_PREFERENCE
 	general_shell_command_preference: STRING_PREFERENCE
-	browsing_facilities_preference: BOOLEAN_PREFERENCE	
 	dyn_lib_window_width_preference: INTEGER_PREFERENCE	
 	dyn_lib_window_height_preference: INTEGER_PREFERENCE
 	preference_window_width_preference: INTEGER_PREFERENCE	
@@ -224,7 +218,6 @@ feature {NONE} -- Preference Strings
 	text_mode_is_windows_string: STRING is "editor.eiffel.text_mode_is_windows"
 	internet_browser_string: STRING is "general.internet_browser"
 	general_shell_command_string: STRING is "general.shell_command"
-	browsing_facilities_string: STRING is "general.highlight clickable areas"
 	editor_left_side_string: STRING is "interface.development_window.editor_left_side"
 	dyn_lib_window_width_string: STRING is "general.dynamic_library_window_width"
 	dyn_lib_window_height_string: STRING is "general.dynamic_library_window_height"
@@ -266,7 +259,6 @@ feature {NONE} -- Implementation
 			acrobat_reader_preference := l_manager.new_string_resource_value (l_manager, acrobat_reader_string, "acrobat")
 			text_mode_is_windows_preference := l_manager.new_boolean_resource_value (l_manager, text_mode_is_windows_string, (create {PLATFORM_CONSTANTS}).is_windows)									internet_browser_preference := l_manager.new_string_resource_value (l_manager, internet_browser_string, "netscape $url")
 			general_shell_command_preference := l_manager.new_string_resource_value (l_manager, general_shell_command_string, "xterm -geometry 80x40 -e vi +$line $target")			
-			browsing_facilities_preference:= l_manager.new_boolean_resource_value (l_manager, browsing_facilities_string, True)						
 			editor_left_side_preference := l_manager.new_boolean_resource_value (l_manager, editor_left_side_string, False)
 			dyn_lib_window_height_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_width_string, 400)	
@@ -294,7 +286,6 @@ invariant
 	acrobat_reader_preference_not_void: acrobat_reader_preference /= Void
 	text_mode_is_windows_preference_not_void: text_mode_is_windows_preference /= Void	
 	general_shell_command_preference_not_void: general_shell_command_preference /= Void
-	browsing_facilities_preference_not_void: browsing_facilities_preference /= Void		
 	dyn_lib_window_width_preference_not_void: dyn_lib_window_width_preference /= Void
 	dyn_lib_window_height_preference_not_void: dyn_lib_window_height_preference /= Void
 	preference_window_width_preference_not_void: preference_window_width_preference /= Void

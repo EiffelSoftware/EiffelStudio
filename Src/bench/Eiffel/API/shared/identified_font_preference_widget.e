@@ -47,6 +47,14 @@ feature -- Access
 
 	change_item_widget: EV_GRID_LABEL_ITEM
 
+feature -- Commands
+
+	show is
+			-- Show the widget in its editable state
+		do
+			show_change_item_widget
+		end
+
 feature {PREFERENCE_VIEW} -- Commands
 
 	change is

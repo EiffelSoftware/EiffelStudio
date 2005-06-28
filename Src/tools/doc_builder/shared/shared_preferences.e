@@ -23,7 +23,7 @@ feature -- Access
 				print ("default file: " + l_loc.string + "%N")
 				print ("registry location: HKEY_CURRENT_USER\EiffelDoc%N")
 			end			
-			create preferences.make_with_default_values_and_location (l_loc.string, "HKEY_CURRENT_USER\EiffelDoc")
+			create preferences.make_with_defaults_and_location (<<l_loc.string>>, "HKEY_CURRENT_USER\EiffelDoc")
 			create editor_data.make (preferences)
 			create tool_data.make (preferences)
 		end		

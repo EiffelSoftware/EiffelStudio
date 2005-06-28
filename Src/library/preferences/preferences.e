@@ -1,35 +1,41 @@
 indexing
 	description: "[
-			Preferences.  This class should be used for creating a preference system for an application.
-			Briefly, preferences and their related attributes and values are stored at run-time in an appropriate
-			PREFERENCE object.  They must be created through the helper class PREFERENCE_MANAGER.
+			Preferences. This class should be used for creating a preference system for an application.
+			Briefly, preferences and their related attributes and values are stored at run-time in an
+			appropriate PREFERENCE object. They must be created through the helper class PREFERENCE_MANAGER.
 			
-			In between sessions
-			the preference will be saved in an underlying data store.  To such data store implementation are provided by default,
-			one for saving to the Windows Registry and one for saving to an XML file on disk.  To use a different store, such as 
-			a database one must create a new class which implements the methods in PREFERENCE_STRUCTURE_I.  
+			In between sessions the preference will be saved in an underlying data store. To such data
+			store implementation are provided by default, one for saving to the Windows Registry and
+			one for saving to an XML file on disk. To use a different store, such as a database one
+			must create a new class which implements the methods in PREFERENCE_STRUCTURE_I.
 			
-			Regardless of the underlying data store used the preferences are managed in the same way.  There are 3 levels of control
-			provided for such management:
+			Regardless of the underlying data store used the preferences are managed in the same way.
+			There are 3 levels of control provided for such management:
 			
-			1.  Development use.  Use `make' to create preferences.  No underlying datastore location is provided.  No default
-				preference values are provided.  A data store location is created automatically and modified preference values
-				are tranparently retrieved between sessions.
+			1. Development use. Use `make' to create preferences. No underlying datastore location is
+			   provided. No default preference values are provided. A data store location is created
+			   automatically and modified preference values are tranparently retrieved between sessions.
+			
+			2. Location specified. Use `make_with_location'. A location for the underlying data store
+			   is provided. Values are retrieved from this location between sessions. This location must
+			   exist.
 				
-			2.	Location specified.  Use `make_with_location'.  A location for the underlying data store is provided.  Values are
-				retrieved from this location between sessions.  This location must exist.
-				
-			3. 	Location and default specified.  The same as in option 2, but a location of a default file is provided in addition
-				to the data store location.  This file is an XML file which contains the default values to use in a preference
-				if it is not already defined in the data store.  It is a convenient way to initialize your application with all the default
-				values required "out of the box" for correct or preferred functioning.  This file also contains additional attributes for
-				preference configuration such a more detailed description of the preference, or whether it should be hidden by default.
+			3. Location and defaults specified. The same as in option 2, but a location of one or more default
+			   files is provided in addition to the data store location. Those files are XML files which
+			   contain the default values to use in a preference if it is not already defined in the data
+			   store. It is a convenient way to initialize your application with all the default values
+			   required "out of the box" for correct or preferred functioning. This file also contains
+			   additional attributes for preference configuration such a more detailed description of the
+			   preference, or whether it should be hidden by default. If two files list the same preference,
+			   the last one to mention it takes precedence.
 					
-			Once preferences they may be modified programmatically or through an user interface conforming to PREFERENCE_VIEW.  A default 
-			interface is provided in PREFERENCES_TREE_WINDOW.  You may implement your own style interface by implementing PREFERENCE_VIEW.
+			Once preferences they may be modified programmatically or through an user interface conforming
+			to PREFERENCE_VIEW. A default interface is provided in PREFERENCES_TREE_WINDOW. You may implement
+			your own style interface by implementing PREFERENCE_VIEW.
 			
-			You may also add your own application specific resources by implementing PREFERENCE, and may provide a graphical widget to view or
-			edit this resource by implementing PREFERENCE_WIDGET and then registering this widget to the PREFERENCES through the
+			You may also add your own application specific resources by implementing PREFERENCE, and may
+			provide a graphical widget to view or edit this resource by implementing PREFERENCE_WIDGET
+			and then registering this widget to the PREFERENCES through the
 			`register_resource_widget' procedure.
 		]"
 	author: ""
@@ -48,7 +54,7 @@ inherit
 create
 	make,
 	make_with_location,
-	make_with_default_values_and_location
+	make_with_defaults_and_location
 
 feature {NONE} -- Initialization
 
@@ -98,27 +104,40 @@ feature {NONE} -- Initialization
 			default_values_not_void: default_values /= Void
 		end		
 
-	make_with_default_values_and_location (a_defaults_file_name: STRING; a_location: STRING) is
-			-- Create preferences and initialize values from those in `default_file_name',
-			-- which is the path of the file that contains the default values.  Preferences will be
-			-- stored in `a_location' between sessions, which is the path to either:
+	make_with_defaults_and_location (a_defaults: ARRAY [STRING]; a_location: STRING) is
+			-- Create preferences and initialize values from those in `a_defaults',
+			-- which is the path of one or more files that contain the default values.
+			-- Preferences will be stored in `a_location' between sessions, which is the
+			-- path to either:
 			--		* the root registry key where preferences are stored,
 			--		* or the file where preferences are stored,
 			-- depending on which implementation is chosen (registry or xml).
 		require
-			default_not_void: a_defaults_file_name /= Void
-			default_not_empty: not a_defaults_file_name.is_empty
+			default_not_void: a_defaults /= Void
 			location_not_void: a_location /= Void
 			location_not_empty: not a_location.is_empty
+		local
+			i, nb: INTEGER
+			l_default: STRING
 		do
-			defaults_file_name := a_defaults_file_name			
 			create resource_structure.make_with_location (Current, a_location)	
 			session_values := resource_structure.session_values
 			create managers.make (2)
 			managers.compare_objects
 			create resources.make (2)
 			create default_values.make (2)
-			extract_default_values
+			from
+				i := a_defaults.lower
+				nb := a_defaults.upper + 1
+			until
+				i = nb
+			loop
+				l_default := a_defaults.item (i)
+				if l_default /= Void and then not l_default.is_empty then
+					extract_default_values (l_default)
+				end
+				i := i + 1
+			end
 		ensure
 			has_session_values: session_values /= Void
 			has_resource_structure: resource_structure /= Void
@@ -307,22 +326,19 @@ feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCE_STR
 		
 feature {NONE} -- Implementation
 
-	defaults_file_name: STRING
-			-- File containing default values, if any.
-
 	managers: HASH_TABLE [PREFERENCE_MANAGER, STRING]
 			-- Managers.		
 	
 	resource_structure: PREFERENCE_STRUCTURE	
 			-- Underlying resource structure.
 		
-	extract_default_values is
+	extract_default_values (a_default_file_name: STRING) is
 			-- Extract from the default file the default values.  If a resource however exists in `resources'
 			-- (i.e. saved in a previous session), then take this one instead.  Therefore the resulting list of
 			-- known resources is a combination of defaults and user defined values.
 		require
-			default_file_name_not_void: defaults_file_name /= Void			
-			default_file_name_not_empty: not defaults_file_name.is_empty
+			default_file_name_not_void: a_default_file_name /= Void			
+			default_file_name_not_empty: not a_default_file_name.is_empty
 		local
 			parser: XM_EIFFEL_PARSER
 			l_file: KL_TEXT_INPUT_FILE
@@ -336,7 +352,7 @@ feature {NONE} -- Implementation
 			create l_concat_filter.make_null
 			parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, l_tree_pipe.start>>))
 			
-			create l_file.make (defaults_file_name)
+			create l_file.make (a_default_file_name)
 			l_file.open_read
 			if l_file.is_open_read then				
 				parser.parse_from_stream (l_file)
@@ -346,9 +362,9 @@ feature {NONE} -- Implementation
 			end
 		
     		if has_error then
-    			error_message := "%"" + defaults_file_name + "%" does not exist."	
+    			error_message := "%"" + a_default_file_name + "%" does not exist."	
     		elseif l_tree_pipe.error.has_error then
-    			error_message := defaults_file_name + "is not a valid preference file%N"    			
+    			error_message := a_default_file_name + "is not a valid preference file%N"    			
     		else
     			xml_data := l_tree_pipe.document.root_element
     			load_default_attributes (xml_data)
@@ -402,7 +418,7 @@ feature {NONE} -- Implementation
 									if sub_node /= Void then
 										-- Found preference default value								
 										pref_value := sub_node.text									
-										default_values.put ([pref_description, pref_value, pref_hidden], pref_name)
+										default_values.force ([pref_description, pref_value, pref_hidden], pref_name)
 									end
 								end
 							end

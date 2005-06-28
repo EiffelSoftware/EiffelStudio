@@ -134,7 +134,7 @@ feature -- Graphical changes
 					dmdv ?= dv
 					set_name (dv.name)
 					set_value (dmdv.display_message)
-					set_type (Interface_names.l_Dummy)
+					set_type (once "invalid data")
 					set_address (Void)
 					set_pixmap (Icons @ (dv.kind))
 				else

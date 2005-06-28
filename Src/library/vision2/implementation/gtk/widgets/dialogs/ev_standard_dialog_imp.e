@@ -114,7 +114,7 @@ feature -- Status setting
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_title)
+			a_cs := a_title
 			{EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
 		end
 

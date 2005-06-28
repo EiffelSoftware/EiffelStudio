@@ -113,14 +113,16 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			a_pango_layout: POINTER
 			a_cs: EV_GTK_C_STRING
 			a_width, a_height: INTEGER
+			l_app_imp: like app_implementation
 		do
 			if s.is_empty then
 				tuple.put_integer (0, 1)
 				tuple.put_integer (0, 2)
 			else
 				a_font_imp ?= f.implementation
-				a_pango_layout := app_implementation.pango_layout
-				a_cs := s
+				l_app_imp := app_implementation
+				a_pango_layout := l_app_imp.pango_layout
+				a_cs := l_app_imp.c_string_from_eiffel_string (s)
 				{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, a_font_imp.font_description)
 				{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (a_pango_layout, $a_width, $a_height)

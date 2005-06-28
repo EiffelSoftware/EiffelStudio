@@ -970,20 +970,22 @@ feature -- Resizing
 			-- Reallocate `item' to hold `n' bytes.
 			-- If `n' smaller than `count', does nothing.
 		require
+			n_non_negative: n >= 0
 			not_shared: not is_shared
 		do
-			if n > count then
-					-- Reallocate.
-				check n_positive: n > 1 end
-				item := item.memory_realloc (n)
+				-- Reallocate.
+			if n /= count then
+				item := item.memory_realloc (n.max (1))
 				if item = default_pointer then
 					(create {EXCEPTIONS}).raise ("No more memory")
 				end
-				
+			end
+			
+			if n > count then
 					-- Reset newly allocated memory to `0'.
 				(item + count).memory_set (0, n - count)
-				count := n
 			end
+			count := n
 		end
 
 feature {NONE} -- Disposal

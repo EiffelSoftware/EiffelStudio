@@ -195,18 +195,85 @@ feature -- Status setting
 
 	enable_select is
 			-- Set `is_selected' `True'.
+		local
+			l_selected: BOOLEAN
+			l_parent_i: like parent_i
+			l_row: like row
+			l_column: like column
 		do
+			l_selected := is_selected
+			l_parent_i := parent_i
+			l_row := row
+			l_column := column
 			enable_select_internal
+			
+			if not l_selected then
+				if
+					not l_parent_i.is_row_selection_enabled and then
+					l_parent_i.row_select_actions_internal /= Void and then
+					not l_parent_i.row_select_actions_internal.is_empty and then
+					l_row.is_selected
+				then
+							-- Call row actions if selecting `Current' selects `row'.
+					l_parent_i.row_select_actions_internal.call ([l_row])
+				end
+				if
+					l_parent_i.column_select_actions_internal /= Void and then
+					not l_parent_i.column_select_actions_internal.is_empty and then
+					l_column.is_selected
+				then
+						-- Call column actions if selecting `Current' selects `column'.
+					l_parent_i.column_select_actions_internal.call ([l_column])
+				end
+			end
+			
 				-- Request that `Current' be redrawn
-			parent_i.redraw_item (Current)
+			l_parent_i.redraw_item (Current)
 		end
 
 	disable_select is
 			-- Set `is_selected' `False'.
+		local
+			l_selected: BOOLEAN
+			l_call_row_actions, l_call_column_actions: BOOLEAN
+			l_parent_i: like parent_i
+			l_row: like row
+			l_column: like column
 		do
+			l_selected := is_selected
+			l_parent_i := parent_i
+			l_row := row
+			l_column := column
+			
+			if l_selected then
+					-- Check if row deselect actions need calling
+				if
+					not l_parent_i.is_row_selection_enabled and then
+					l_parent_i.row_deselect_actions_internal /= Void and then
+					not l_parent_i.row_deselect_actions_internal.is_empty and then
+					l_row.is_selected then
+							-- Call row deselect actions if deselecting `Current' deselects `row'
+						l_call_row_actions := True
+				end
+				if
+					l_parent_i.column_deselect_actions_internal /= Void and then
+					not l_parent_i.column_deselect_actions_internal.is_empty and then
+					l_column.is_selected then
+						l_call_column_actions := True
+				end
+			end
+	
 			disable_select_internal
+			
+			if l_call_row_actions then
+				l_parent_i.row_deselect_actions_internal.call ([l_row])
+			end
+			if l_call_column_actions then
+				l_parent_i.column_deselect_actions_internal.call ([l_column])
+			end
+
 				-- Request that `Current' be redrawn
-			parent_i.redraw_item (Current)
+			l_parent_i.redraw_item (Current)
 		end
 		
 	ensure_visible is

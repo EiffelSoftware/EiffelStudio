@@ -114,7 +114,7 @@ feature {EV_ANY_I} -- Event handling
 
 	real_signal_connect (
 		a_c_object: like c_object;
-		a_signal_name: EV_GTK_C_STRING;
+		a_signal_name: STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
@@ -125,7 +125,7 @@ feature {EV_ANY_I} -- Event handling
 
 	real_signal_connect_after (
 		a_c_object: like c_object;
-		a_signal_name: EV_GTK_C_STRING;
+		a_signal_name: STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
@@ -137,7 +137,7 @@ feature {EV_ANY_I} -- Event handling
 
 	internal_real_signal_connect (
 		a_c_object: like c_object;
-		a_signal_name: EV_GTK_C_STRING;
+		a_signal_name: STRING;
 		an_agent: PROCEDURE [ANY, TUPLE];
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		invoke_after_handler: BOOLEAN
@@ -155,8 +155,8 @@ feature {EV_ANY_I} -- Event handling
 			app_imp: like app_implementation
 			l_agent: PROCEDURE [ANY, TUPLE]
 		do
-			a_cs := a_signal_name
 			app_imp := app_implementation
+			a_cs := app_imp.c_string_from_eiffel_string (a_signal_name)
 			if translate = Void then
 					-- If we have no translate agent then we call the agent directly.
 				l_agent := an_agent

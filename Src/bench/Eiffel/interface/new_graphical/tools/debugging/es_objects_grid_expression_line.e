@@ -255,17 +255,24 @@ feature -- Graphical changes
 			r := a_item.row
 			
 			new_text := a_item.text
-			if expression.as_object then
-					--| i.e: we just change the "title" of the expression
-				if not new_text.is_equal (expression.name) then
-					expression.set_name (new_text)
-					set_title (expression.name)
-				end
-			else
-				if not new_text.is_equal (expression.expression) then
-					expression.set_expression (new_text)
-					request_evaluation (True)
-					refresh
+			if new_text /= Void then
+				new_text.left_adjust
+				if expression.as_object then
+						--| i.e: we just change the "title" of the expression
+					if not new_text.is_equal (expression.name) then
+						expression.set_name (new_text)
+						set_title (expression.name)
+					end
+				else
+					if 
+						new_text.is_empty
+					then
+						a_item.set_text (expression.expression)
+					elseif not new_text.is_equal (expression.expression) then
+						expression.set_expression (new_text)
+						request_evaluation (True)
+						refresh
+					end
 				end
 			end
 			if r /= Void and then r.parent /= Void then

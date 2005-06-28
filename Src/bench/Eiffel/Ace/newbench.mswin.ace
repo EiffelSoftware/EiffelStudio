@@ -10,7 +10,6 @@ default
 	assertion (ensure)
 	disabled_debug (yes)
 	disabled_debug ("_jfiat")
-	disabled_debug ("_use_new_dbg_tools_")
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
 	disabled_debug ("anchored_features")
@@ -61,7 +60,6 @@ default
 	disabled_debug ("debugger_trace_operation")
 	disabled_debug ("debugger_trace_stepping")
 	disabled_debug ("debugger_trace_synchro")
-	disabled_debug ("disable_assertions")
 	disabled_debug ("display_exception_trace")
 	disabled_debug ("dle topo")
 	disabled_debug ("dlg_dispatcher")
@@ -70,6 +68,7 @@ default
 	disabled_debug ("editor")
 	disabled_debug ("eiffelnet")
 	disabled_debug ("eifnet_debugger")
+	disabled_debug ("es_dockable_notebook")
 	disabled_debug ("filters")
 	disabled_debug ("fixme")
 	disabled_debug ("flat_short")
@@ -240,15 +239,13 @@ cluster
 
 	all interface:		"$EIFFEL_SRC\Eiffel\interface"
 		exclude
-			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "new_tty"; "xml_implementation"; "preferences"; "no_dotnet"; 
+			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "xml_implementation"; "preferences"; "no_dotnet"; 
 		end
 
 	all tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
 		exclude
-			"output_window.e"; "tty_resources.e"; "eb_diagram_html_generator.e"; "eb_gui_preferences.e"; 
+			"eb_diagram_html_generator.e"; "eb_gui_preferences.e"; 
 		end
-
-	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 		exclude

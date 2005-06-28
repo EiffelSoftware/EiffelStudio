@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			box: POINTER
 		do
 			Precursor {EV_ITEM_IMP}
-			real_signal_connect_after (visual_widget, "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
+			real_signal_connect_after (visual_widget, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
 
 			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
@@ -77,10 +77,8 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			temp_string: STRING
 --			tab_mod: INTEGER
 		do
-			temp_string := a_text.twin
 --			tab_mod := temp_string.count \\ 8
 --			if tab_mod < 4 then
 --				temp_string.replace_substring_all ("%T", "%T%T%T")

@@ -74,11 +74,6 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	event_widget: POINTER is
-			-- Pointer to the widget used for connecting events
-		deferred
-		end
-
 	interface: EV_SENSITIVE
 			-- Interface object for implementation
 

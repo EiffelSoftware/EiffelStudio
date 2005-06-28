@@ -644,7 +644,6 @@ feature {NONE} -- Event handling
 		local
 			rows: LIST [EV_GRID_ROW]
 			sel_index: INTEGER
-			l_item: like watched_item_from
 		do
 			rows := grid_selected_top_rows (watches_grid)
 			if not rows.is_empty then
@@ -656,10 +655,7 @@ feature {NONE} -- Event handling
 				rows.after
 			loop
 				if rows.item.parent_row = Void then
-					l_item ?= watched_item_from (rows.item)
-					watched_items.prune_all (l_item)
-					watches_grid.row (rows.item.index).clear
-					watches_grid.remove_row (rows.item.index)
+					remove_expression_row (rows.item)
 				end
 				rows.forth
 			end
@@ -671,6 +667,16 @@ feature {NONE} -- Event handling
 					on_row_deselected (Void)
 				end
 			end
+		end
+		
+	remove_expression_row (row: EV_GRID_ROW) is		
+		local
+			l_item: like watched_item_from			
+		do
+			l_item ?= watched_item_from (row)
+			watched_items.prune_all (l_item)
+			watches_grid.row (row.index).clear
+			watches_grid.remove_row (row.index)
 		end
 
 	on_element_drop (s: CLASSC_STONE) is

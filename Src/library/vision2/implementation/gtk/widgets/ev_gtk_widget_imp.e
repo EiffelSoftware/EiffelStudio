@@ -118,10 +118,9 @@ feature {EV_ANY_I} -- Implementation
 					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 				end
 			end
-			if a_wid /= Void and then a_wid.is_destroyed then
-				a_wid := Void
+			if a_wid /= Void and then not a_wid.is_destroyed then
+				Result ?= a_wid
 			end
-			Result ?= a_wid
 		end
 
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is

@@ -113,18 +113,21 @@ feature {NONE} -- Events
 			l_default_item: EV_GRID_LABEL_ITEM
 			l_font_pref: FONT_PREFERENCE
 		do
-			l_font_pref ?= a_pref
-			if l_font_pref /= Void then
-				grid.selected_rows.first.set_height (l_font_pref.value.height.max (default_row_height))
-			end
+			if not grid.selected_rows.is_empty then				
+				l_font_pref ?= a_pref
+				if l_font_pref /= Void then
+					grid.selected_rows.first.set_height (l_font_pref.value.height.max (default_row_height))
+				end
+				
+				l_default_item ?= grid.selected_rows.first.item (3)
 			
-			l_default_item ?= grid.selected_rows.first.item (3)
-			if a_pref.is_default_value then
-				l_default_item.set_text (default_value)
-				l_default_item.set_font (default_font)				
-			else	
-				l_default_item.set_text (user_value)
-				l_default_item.set_font (non_default_font)	
+				if a_pref.is_default_value then
+					l_default_item.set_text (default_value)
+					l_default_item.set_font (default_font)				
+				else	
+					l_default_item.set_text (user_value)
+					l_default_item.set_font (non_default_font)	
+				end
 			end
 		end	
 

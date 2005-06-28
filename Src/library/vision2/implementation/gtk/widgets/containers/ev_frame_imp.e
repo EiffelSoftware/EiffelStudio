@@ -157,7 +157,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			internal_text := a_text.twin
-			create a_cs.make (a_text)
+			a_cs := a_text
 			{EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, a_cs.item)
 		end
 

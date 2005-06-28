@@ -101,7 +101,8 @@ feature {NONE} -- Initialization
 			end			
 
 				-- Initialization of compiler resources.
-			create preference_access.make_with_default_values_and_location (system_general, eiffel_preferences)
+			create preference_access.make_with_defaults_and_location (
+				<<general_preferences, platform_preferences>>, eiffel_preferences)
 			initialize_preferences (preference_access, l_is_gui)
 
 			create new_resources.initialize			

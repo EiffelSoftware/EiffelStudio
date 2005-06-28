@@ -44,9 +44,11 @@ feature -- Element change
 			-- Set `tooltip' to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
+			l_app_imp: like app_implementation
 		do
 			if not a_text.is_empty then
-				create a_cs.make (a_text)
+				l_app_imp := app_implementation
+				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
 				{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
 					app_implementation.tooltips,
 					visual_widget,

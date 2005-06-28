@@ -23,9 +23,6 @@ create
 	make
 	
 feature {NONE} -- Initialization
-
-	gtk_is_launchable: BOOLEAN
-		-- Is Gtk launchable?
 	
 	make (an_interface: like interface) is
 			-- Set up the callback marshal and initialize GTK+.
@@ -43,18 +40,18 @@ feature {NONE} -- Initialization
 			if
 				gtk_is_launchable
 			then
-				gtk_dependent_initialize
-				
-				enable_ev_gtk_log (0)
+				enable_ev_gtk_log (1)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
-				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
+				{EV_GTK_EXTERNALS}.gdk_set_show_events (True)
 			
 				{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_default_visual ({EV_GTK_EXTERNALS}.gdk_rgb_get_visual)
+				
+				gtk_dependent_initialize
+				create window_oids.make
 	
 				tooltips := {EV_GTK_EXTERNALS}.gtk_tooltips_new
 				set_tooltip_delay (500)
-				create window_oids.make
 				
 					-- Initialize the marshal object.
 				create gtk_marshal
@@ -74,10 +71,12 @@ feature {NONE} -- Initialization
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
-			gtk_dependent_launch_initialize
-			main_loop			
-				-- Unhook marshal object.
-			gtk_marshal.destroy				
+			if gtk_is_launchable then
+				gtk_dependent_launch_initialize
+				main_loop			
+					-- Unhook marshal object.
+				gtk_marshal.destroy				
+			end
 		end	
 		
 	main_loop is
@@ -344,6 +343,9 @@ feature -- Implementation
 		
 feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
+	gtk_is_launchable: BOOLEAN
+		-- Is Gtk launchable?
+
 	default_gtk_window: POINTER is
 			-- Pointer to a default GtkWindow.
 		once
@@ -429,7 +431,32 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
 		end
 
+	c_string_from_eiffel_string (a_string: STRING): EV_GTK_C_STRING is
+			-- Return a EV_GTK_C_STRING from`a_string'
+			-- `Item' of result must not be freed by gtk.
+			-- Result must only be used for temporary setting and should not be persistent.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			if a_string.count > default_c_string_size then
+					-- Create a new gtk C string to conserve memory.
+				Result := a_string
+			else
+				Result := reusable_gtk_c_string
+				Result.set_with_eiffel_string (a_string)
+			end
+		end
+
+	reusable_gtk_c_string: EV_GTK_C_STRING is
+			-- Persistent EV_GTK_C_STRING.
+		once
+			create Result.set_with_eiffel_string ("")
+		end
+
 feature {NONE} -- External implementation
+
+	default_c_string_size: INTEGER is 1000
+		-- Default size to set the reusable gtk C string.
 
 	set_debug_mode (a_mode: INTEGER) is
 			-- Set the value of run time value `debug_mode' to turn Eiffel debugger on or off

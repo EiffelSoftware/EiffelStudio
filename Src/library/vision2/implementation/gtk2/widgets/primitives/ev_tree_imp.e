@@ -142,12 +142,12 @@ feature {NONE} -- Initialization
 
 			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)
-			create a_gtk_c_str.make ("text")
+			a_gtk_c_str := "text"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
 
 			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
-			create a_gtk_c_str.make ("pixbuf")
+			a_gtk_c_str := "pixbuf"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
 			
 
@@ -190,9 +190,9 @@ feature {NONE} -- Initialization
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 
-			create a_property.make ("expander-size")
+			a_property := "expander-size"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_expander_size)
-			create a_property.make ("horizontal-separator")
+			a_property := "horizontal-separator"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_horizontal_separator)
 
 			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, a_x, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
@@ -649,7 +649,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			if a_string /= default_pointer then
 				create Result.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct))
 			else
-				Result := ""
+				Result := once ""
 			end
 		end
 
@@ -659,7 +659,8 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			a_cs: EV_GTK_C_STRING
 			str_value: POINTER
 		do
-			create a_cs.make_shared (a_text)
+			a_cs := App_implementation.reusable_gtk_c_string
+			a_cs.share_with_eiffel_string (a_text)
 			str_value := g_value_string_struct
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_take_string (str_value, a_cs.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, a_tree_node_imp.list_iter.item, 1, str_value)

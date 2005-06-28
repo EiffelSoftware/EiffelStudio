@@ -276,7 +276,7 @@ feature -- Element change
 			a_event_box, a_hbox, a_label: POINTER
 		do
 			item_imp ?= an_item.implementation
-			create a_cs.make (a_text)
+			a_cs := a_text
 			
 			a_event_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
 			{EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
-			create a_cs.make ("Select file")
+			a_cs := "Select file"
 			set_c_object
 				({EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, file_chooser_action))
 			create filters.make (0)
@@ -164,18 +164,18 @@ feature -- Element change
 			
 			if not a_filter.is_equal ("*.*") then
 				a_filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
-				create a_cs.make (a_filter)
+				a_cs :=  (a_filter)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
-				create a_cs.make (filter_name)
+				a_cs :=  (filter_name)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)				
 			end
 
-			create a_cs.make ("*")
+			a_cs :=  ("*")
 					-- File filter uses a globbing pattern so this is the only filter that can show all files
 			a_filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (a_filter_ptr, a_cs.item)
-			create a_cs.make ("All files *.*")
+			a_cs :=  ("All files *.*")
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (a_filter_ptr, a_cs.item)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_add_filter (c_object, a_filter_ptr)
 		end
@@ -185,7 +185,7 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_name)
+			a_cs := a_name
 			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (c_object, a_cs.item)
 		end
 
@@ -195,7 +195,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			start_directory := a_path.twin
-			create a_cs.make (start_directory + "/")
+			a_cs := start_directory + "/"
 			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_current_folder (
 				c_object,
 				a_cs.item
@@ -269,7 +269,7 @@ feature {NONE} -- Implementation
 					filter_string_list := current_filter_string.split (';')
 					if current_filter_description /= Void then
 						filter_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_new
-						create a_cs.make (current_filter_description)
+						a_cs := current_filter_description
 						{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_set_name (filter_ptr, a_cs.item)
 						from
 							filter_string_list.start
@@ -277,9 +277,9 @@ feature {NONE} -- Implementation
 							filter_string_list.off
 						loop
 							if filter_string_list.item.is_equal ("*.*") then
-								create a_cs.make ("*")
+								a_cs := "*"
 							else
-								create a_cs.make (filter_string_list.item)
+								a_cs := filter_string_list.item
 							end
 							{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_filter_add_pattern (filter_ptr, a_cs.item)
 							filter_string_list.forth

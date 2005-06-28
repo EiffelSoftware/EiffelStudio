@@ -107,8 +107,8 @@ feature -- Implementation
 			loop
 				pixbuf_format := {EV_GTK_EXTERNALS}.g_slist_nth_data (formats, i)				
 				create format_name.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_get_name (pixbuf_format))
-				if format_name.is_equal ("jpeg") then
-					format_name := "jpg"
+				if format_name.is_equal (once "jpeg") then
+					format_name := once "jpg"
 				end
 				if a_writeable then
 					if {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_is_writable (pixbuf_format) then
@@ -152,17 +152,17 @@ feature -- Implementation
 			split_values.compare_objects
 			default_font_point_height_internal := split_values.last.to_integer
 			
-			if split_values.has ("italic") or else split_values.has ("oblique") then
+			if split_values.has (once "italic") or else split_values.has (once "oblique") then
 				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_italic
 			else
 				default_font_style_internal := {EV_FONT_CONSTANTS}.shape_regular
 			end
 			
-			if split_values.has ("bold") then
+			if split_values.has (once "bold") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_bold
-			elseif split_values.has ("light") then
+			elseif split_values.has (once "light") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_thin
-			elseif split_values.has ("superbold") then
+			elseif split_values.has (once "superbold") then
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_black
 			else
 				default_font_weight_internal := {EV_FONT_CONSTANTS}.weight_regular
@@ -239,9 +239,8 @@ feature -- Implementation
 			a_cs: EV_GTK_C_STRING
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
-			create a_cs.make_from_pointer (font_name_ptr)
+			create a_cs.share_from_pointer (font_name_ptr)
 			Result := a_cs.string
-			{EV_GTK_EXTERNALS}.g_free (font_name_ptr)
 		end
 
 	gtk_font_name_setting: EV_GTK_C_STRING is
@@ -270,7 +269,7 @@ feature -- Implementation
 			until
 				i > n_array_elements
 			loop
-				create utf8_string.make_from_pointer (gchar_array_i_th (a_name_array, i))
+				create utf8_string.share_from_pointer (gchar_array_i_th (a_name_array, i))
 				Result.put_i_th (utf8_string.string, i)
 				i := i + 1
 			end
@@ -293,7 +292,7 @@ feature -- Implementation
 			until
 				i > n_array_elements
 			loop
-				create utf8_string.make_from_pointer (gchar_array_i_th (a_name_array, i))
+				create utf8_string.share_from_pointer (gchar_array_i_th (a_name_array, i))
 				i_th_item := utf8_string.string
 				i_th_item.to_lower
 				Result.put_i_th (i_th_item, i)

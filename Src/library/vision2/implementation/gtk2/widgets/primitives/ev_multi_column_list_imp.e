@@ -697,7 +697,7 @@ feature -- Element change
 			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
 			from
 				i := 0
-				create a_gtk_c_str.make ("xalign")
+				a_gtk_c_str := "xalign"
 			until
 				i = {EV_GTK_EXTERNALS}.g_list_length (a_cell_rend_list)
 			loop
@@ -722,10 +722,10 @@ feature -- Element change
 			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
 			
 				-- Row height setting has to take the vertical spacing of the tree view in to account
-			create a_gtk_c_str.make ("vertical-separator")
+			a_gtk_c_str := "vertical-separator"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
 			
-			create a_gtk_c_str.make ("height")
+			a_gtk_c_str := "height"
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
 			{EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
 		end
@@ -806,7 +806,7 @@ feature -- Implementation
 				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 			end
 			real_signal_connect (visual_widget,
-				"button-press-event", 
+				once "button-press-event", 
 				agent (App_implementation.gtk_marshal).mcl_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id

@@ -117,7 +117,7 @@ feature -- Status report
 				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 			end
 			real_signal_connect (visual_widget,
-				"button-press-event", 
+				once "button-press-event", 
 				agent (App_implementation.gtk_marshal).pnd_deferred_parent_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id
@@ -232,9 +232,10 @@ feature -- Insertion
 			str_value: POINTER
 			a_list_item_imp: EV_LIST_ITEM_IMP
 		do
-			a_cs := a_text
+			a_cs := App_implementation.reusable_gtk_c_string
+			a_cs.share_with_eiffel_string (a_text)
 			str_value := g_value_string_struct
-			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_take_string (str_value, a_cs.item)
 			a_list_item_imp ?= child_array.i_th (a_row).implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_item_imp.list_iter.item, 1, str_value)
 		end

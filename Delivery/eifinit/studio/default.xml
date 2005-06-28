@@ -1,28 +1,28 @@
 <EIFFEL_DOCUMENT>		
-
-	<PREF NAME="debugger.width" DESCRIPTION="Width of debug tool."><INTEGER>214</INTEGER></PREF>
-	<PREF NAME="debugger.height" DESCRIPTION="Height of debug tool."><INTEGER>214</INTEGER></PREF>	
-	<PREF NAME="debugger.last_saved_stack_path" DESCRIPTION="Disk location of last saved stack path information."><STRING>C:\</STRING></PREF>
-	<PREF NAME="debugger.interrupt_every_n_instructions" DESCRIPTION=""><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="debugger.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output value."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display ANY.generating_type value."><BOOLEAN>True</BOOLEAN></PREF>	
-	<PREF NAME="debugger.min_slice" DESCRIPTION="Smallest number of items displayed in list data."><INTEGER>0</INTEGER></PREF>
-	<PREF NAME="debugger.max_slice" DESCRIPTION="Largest number of items displayed in list data."><INTEGER>50</INTEGER></PREF>
-	<PREF NAME="debugger.main_splitter_position" DESCRIPTION="Position of main horizontal splitter bar."><INTEGER>250</INTEGER></PREF>
-	<PREF NAME="debugger.proportion"  DESCRIPTION="Proportion of left side of debug tool."><INTEGER>0.5</INTEGER></PREF>
-	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default size of maximum stack depth."><INTEGER>100</INTEGER></PREF>
-	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default size of string (in characters) displayed in debug mode."><INTEGER>50</INTEGER></PREF>	
-	<PREF NAME="debugger.left_debug_layout" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0;Call Stack;visible;0;0;0;38</LIST></PREF>	
-	<PREF NAME="debugger.right_debug_layout" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Debugging;visible;0;0;0;218</LIST></PREF>
-	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch."><LIST>EiffelStudio Dbg;cordbg;DbgCLR</LIST></PREF>
-	<PREF NAME="debugger.project_toolbar_layout" DESCRIPTION="Debug toolbar items and layout information."><LIST>System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST></PREF>
-	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Depth of stack at which execution paused and a confirmation is asked to continue."><INTEGER>1000</INTEGER></PREF>
-	<PREF NAME="debugger.show_text_in_project_toolbar" DESCRIPTION="Should text be shown alongside toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="debugger.show_all_text_in_project_toolbar" DESCRIPTION="Show all selected text in the project toolbar?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="debugger.display_dotnet_cmd" DESCRIPTION="Should we display the .NET command?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Expanded view: default display size."><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)."><INTEGER>1000</INTEGER></PREF>
+	<PREF NAME="debugger.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default number of displayed characters of a STRING (increasing this value might slow down debugging)."><INTEGER>50</INTEGER></PREF>	
+	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default number of call stack elements shown in Call Stack tool (-1 to show all of them)."><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."><LIST>[EiffelStudio Dbg];cordbg;DbgCLR</LIST></PREF>
+	<PREF NAME="debugger.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white spaces in displayed text)."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="debugger.generating_type_evaluation"  DESCRIPTION="Display the base type of an object if enabled, otherwise just the base class (disabling it might speed up debugging)."><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="debugger.height" HIDDEN="true" DESCRIPTION="Height of debug tool."><INTEGER>214</INTEGER></PREF>	
+	<PREF NAME="debugger.interrupt_every_n_instructions" DESCRIPTION="Number of instructions that will be executed before interrupting the execution."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="debugger.last_saved_stack_path" HIDDEN="true" DESCRIPTION="Disk location of last saved stack path information."><STRING></STRING></PREF>
+	<PREF NAME="debugger.left_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown in navigation layout when in debug mode."><LIST>Features;closed;0;0;0;0;Clusters;closed;0;0;0;0;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0;Call Stack;visible;0;0;0;38</LIST></PREF>	
+	<PREF NAME="debugger.main_splitter_position" HIDDEN="true" DESCRIPTION="Position of main horizontal splitter bar."><INTEGER>250</INTEGER></PREF>
+	<PREF NAME="debugger.max_evaluation_duration" DESCRIPTION="Number of seconds to wait before cancelling an evaluation."><INTEGER>5</INTEGER></PREF>
+	<PREF NAME="debugger.max_slice" HIDDEN="true" DESCRIPTION="Largest number of items displayed in list data."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="debugger.min_slice" HIDDEN="true" DESCRIPTION="Smallest number of items displayed in list data."><INTEGER>0</INTEGER></PREF>
+	<PREF NAME="debugger.number_of_watch_tools" DESCRIPTION="Default number of watch tool."><INTEGER>2</INTEGER></PREF>
+	<PREF NAME="debugger.project_toolbar_layout" HIDDEN="true" DESCRIPTION="Debug toolbar items and layout information."><LIST>System_tool__visible;Melt_project__visible;Quick_compile__visible;Open_help_tool__visible;System_info__visible;Separator;Enable_bkpt__visible;Disable_bkpt__visible;Clear_bkpt__visible;Bkpt_info__visible;Separator;Exec_step__visible;Exec_into__visible;Exec_out__visible;Exec_no_stop__visible;Exec_debug__visible;Separator;Exec_stop__visible;Exec_quit__visible;Run_final__hidden;Freeze_project__hidden;Finalize_project__hidden</LIST></PREF>
+	<PREF NAME="debugger.proportion"  DESCRIPTION="Proportion of the local/arguments part of the `Objects' tab in the Debugging tool."><INTEGER>0.5</INTEGER></PREF>
+	<PREF NAME="debugger.right_debug_layout" HIDDEN="true" DESCRIPTION="Items/tools shown on editor side when in debug mode."><LIST>Editor;minimized;0;0;0;0;Context;visible;0;0;0;171;Debugging;visible;0;0;0;218</LIST></PREF>
+	<PREF NAME="debugger.show_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside preselected toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="debugger.show_all_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside all toolbar items?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="debugger.stack_element_width" DESCRIPTION="Width of stack element."><INTEGER>1000</INTEGER></PREF>
-	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Maximum stack depth."><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="debugger.width" HIDDEN="true" DESCRIPTION="Width of debug tool."><INTEGER>214</INTEGER></PREF>
 	
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-16-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>0;0;160</COLOR></PREF>

@@ -519,7 +519,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i > count
 				loop
 					gen_type_generics.put
-					  (instantiate (gen_type_generics.item (i).actual_type), i)
+					  (instantiate (gen_type_generics.item (i)), i)
 					i := i + 1
 				end
 			else

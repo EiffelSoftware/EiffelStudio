@@ -564,7 +564,10 @@ feature {NONE} -- Graphic interface
 			if lastdir = Void or else lastdir.is_empty then
 				lastdir := last_browsed_directory
 			end
-			if not lastdir.is_empty and then (create {DIRECTORY}.make (lastdir)).exists then
+			if
+				lastdir /= Void and then not lastdir.is_empty and then
+				(create {DIRECTORY}.make (lastdir)).exists
+			then
 				bd.set_start_directory (lastdir)
 			end
 			bd.show_modal_to_window (target.window)

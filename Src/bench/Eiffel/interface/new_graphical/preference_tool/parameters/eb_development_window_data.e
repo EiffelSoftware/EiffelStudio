@@ -179,11 +179,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := last_browsed_cluster_directory_preference.value
 		end
 
-	raise_on_error: BOOLEAN is
-		do
-			Result := raise_on_error_preference.value
-		end
-
 	context_unified_stone: BOOLEAN is
 		do
 			Result := context_unified_stone_preference.value
@@ -261,8 +256,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	dock_tracking_preference: BOOLEAN_PREFERENCE
 
 	last_browsed_cluster_directory_preference: STRING_PREFERENCE	
-
-	raise_on_error_preference: BOOLEAN_PREFERENCE
 
 	context_unified_stone_preference: BOOLEAN_PREFERENCE
 
@@ -375,7 +368,6 @@ feature {NONE} -- Preference Strings
 	class_completion_string: STRING is "interface.development_window.class_completion"
 	dock_tracking_string: STRING is "interface.development_window.dock_tracking"
 	last_browsed_cluster_directory_string: STRING is "interface.development_window.last_browsed_cluster_directory"
-	raise_on_error_string: STRING is "interface.development_window.raise_on_error"
 	context_unified_stone_string: STRING is "interface.development_window.unified_stone"
 	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"	
 
@@ -414,7 +406,6 @@ feature {NONE} -- Implementation
 			class_completion_preference := l_manager.new_boolean_resource_value (l_manager, class_completion_string, True)
 			dock_tracking_preference := l_manager.new_boolean_resource_value (l_manager, dock_tracking_string, True)
 			last_browsed_cluster_directory_preference := l_manager.new_string_resource_value (l_manager, last_browsed_cluster_directory_string, "")
-			raise_on_error_preference := l_manager.new_boolean_resource_value (l_manager, raise_on_error_string, True)
 			context_unified_stone_preference := l_manager.new_boolean_resource_value (l_manager, context_unified_stone_string, False)
 			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)			
 		end

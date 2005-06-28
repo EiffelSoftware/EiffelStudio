@@ -134,7 +134,7 @@
 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
 
-	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parenthesis" DESCRIPTION="Are brackets and parenthesis closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parentheses" DESCRIPTION="Are brackets and parentheses closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Are quotes closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.auto_auto_complete" DESCRIPTION="Should completion window appear automatically after typing a `.'?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."><STRING></STRING></PREF>

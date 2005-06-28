@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 			-- for an opening one for instance.
 		do
 			Result := '%U'
-			if preferences.editor_data.autocomplete_brackets_and_parenthesis then
+			if preferences.editor_data.autocomplete_brackets_and_parentheses then
 				inspect
 					c
 				when '%<' then

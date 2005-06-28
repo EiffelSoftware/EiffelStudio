@@ -159,10 +159,10 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			Result := underscore_is_separator_preference.value
 		end
 
-	autocomplete_brackets_and_parenthesis: BOOLEAN is
-			-- Should we close the brackets and parenthesis automatically?
+	autocomplete_brackets_and_parentheses: BOOLEAN is
+			-- Should we close the brackets and parentheses automatically?
 		do
-			Result := autocomplete_brackets_and_parenthesis_preference.value
+			Result := autocomplete_brackets_and_parentheses_preference.value
 		end
 
 	autocomplete_quotes: BOOLEAN is
@@ -263,8 +263,8 @@ feature {NONE} -- Preference
 			-- Should '_' be considered a word separator (used for word by word
 			-- moves and selection)
 
-	autocomplete_brackets_and_parenthesis_preference: BOOLEAN_PREFERENCE
-			-- Should we close the brackets and parenthesis automatically?
+	autocomplete_brackets_and_parentheses_preference: BOOLEAN_PREFERENCE
+			-- Should we close the brackets and parentheses automatically?
 
 	autocomplete_quotes_preference: BOOLEAN_PREFERENCE
 			-- Should we close the quotes automatically?
@@ -324,8 +324,8 @@ feature {NONE} -- Preference Strings
 			-- Should '_' be considered a word separator (used for word by word
 			-- moves and selection)
 
-	autocomplete_brackets_and_parenthesis_string: STRING is "editor.eiffel.auto-complete_brackets_and_parenthesis" 
-			-- Should we close the brackets and parenthesis automatically?
+	autocomplete_brackets_and_parentheses_string: STRING is "editor.eiffel.auto-complete_brackets_and_parentheses" 
+			-- Should we close the brackets and parentheses automatically?
 
 	autocomplete_quotes_string: STRING is "editor.eiffel.auto-complete_quotes" 
 			-- Should we close the quotes automatically?
@@ -398,7 +398,7 @@ feature {NONE} -- Initialization
 				-- Booleans			
 			underscore_is_separator_preference := l_manager.new_boolean_resource_value (l_manager, underscore_is_separator_string, False)
 			once_and_constant_in_upper_preference := l_manager.new_boolean_resource_value (l_manager, once_and_constant_in_upper_string, False)
-			autocomplete_brackets_and_parenthesis_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_brackets_and_parenthesis_string, False)
+			autocomplete_brackets_and_parentheses_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_brackets_and_parentheses_string, False)
 			autocomplete_quotes_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_quotes_string, False)
 			show_any_features_preference := l_manager.new_boolean_resource_value (l_manager, show_any_features_string, False)
 			syntax_complete_enabled_preference := l_manager.new_boolean_resource_value (l_manager, syntax_complete_enabled_string, True)			
@@ -454,7 +454,7 @@ feature {NONE} -- Initialization
 			smart_identation_preference.change_actions.extend (agent update)
 			underscore_is_separator_preference.change_actions.extend (agent update)
 			once_and_constant_in_upper_preference.change_actions.extend (agent update)
-			autocomplete_brackets_and_parenthesis_preference.change_actions.extend (agent update)
+			autocomplete_brackets_and_parentheses_preference.change_actions.extend (agent update)
 			autocomplete_quotes_preference.change_actions.extend (agent update)
 			show_any_features_preference.change_actions.extend (agent update)
 			syntax_complete_enabled_preference.change_actions.extend (agent update)
@@ -915,7 +915,7 @@ invariant
 	object_background_color_preference_not_void: object_background_color_preference /= Void
 	once_and_constant_in_upper_preference_not_void: once_and_constant_in_upper_preference /= Void
 	underscore_is_separator_preference_not_void: underscore_is_separator_preference /= Void
-	autocomplete_brackets_and_parenthesis_preference_not_void: autocomplete_brackets_and_parenthesis_preference /= Void
+	autocomplete_brackets_and_parentheses_preference_not_void: autocomplete_brackets_and_parentheses_preference /= Void
 	autocomplete_quotes_preference_not_void: autocomplete_quotes_preference /= Void
 	show_any_features_preference_not_void: show_any_features_preference /= Void
 	auto_auto_complete_preference_not_void: auto_auto_complete_preference /= Void

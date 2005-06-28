@@ -100,7 +100,7 @@ feature {NONE} -- Initialization
 					-- available, otherwise we must display a fatal error message.
 				
 					-- Initialization of preferences.
-				create preference_access.make_with_default_values_and_location (default_xml_file, eiffel_preferences)
+				create preference_access.make_with_defaults_and_location (<<default_xml_file>>, eiffel_preferences)
 				initialize_preferences (preference_access)
 			
 				if command_line.argument_array.count = 1 then

@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'
 		do
-			internal_text := ""
+			internal_text := once ""
 			set_is_initialized (True)
 		end
 

@@ -147,7 +147,11 @@ feature {NONE} -- Compilation implementation
 			clear_format_tables
 
 				-- Resynchronize windows
-			progress_dialog.disable_cancel
+			if progress_dialog /= Void then
+					-- FIXME: maybe this call should be encapsulated in DEGREE_OUTPUT, so
+					-- that we don't need to test against Void.
+				progress_dialog.disable_cancel
+			end
 			Degree_output.put_string (Interface_names.d_Resynchronizing_tools)
 			window_manager.synchronize_all
 			if Workbench.successful then

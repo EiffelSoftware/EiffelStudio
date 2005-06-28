@@ -190,9 +190,9 @@ feature -- Initialization
 		require
 			c_d_valid: compact_date_valid (c_d)
 		do
-			set_internal_compact_date (c_d)
+			set_private_internal_compact_date (c_d)
 		ensure
-			compact_date_set: compact_date = c_d
+			compact_date_set: year | (month |<< 16) | (day |<< 24) = c_d
 		end
 
 	make_by_ordered_compact_date (c_d: INTEGER) is

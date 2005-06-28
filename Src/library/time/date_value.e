@@ -108,12 +108,9 @@ feature -- Element change
 			%since `compact_date' and `ordered_compact_date' do not have the same %
 			%encoding."
 		do
-			set_date (
-				a_compact_date & 0x000FFFF,
-				(a_compact_date & 0x00FF0000) |>> 16,
-				((a_compact_date & 0xFF000000) |>> 24) & 0x000000FF)
+			set_private_internal_compact_date (a_compact_date)
 		ensure
-			compact_date_set: compact_date = a_compact_date
+			compact_date_set: year | (month |<< 16) | (day |<< 24) = a_compact_date
 		end
 
 	set_internal_ordered_compact_date (a_ordered_compact_date: like ordered_compact_date) is
@@ -136,7 +133,7 @@ feature -- Correction
 				-- and we need to convert its value to `ordered_compact_date'.
 			l_compact_date ?= Mismatch_information.item (compact_date_attribute_name)
 			if l_compact_date /= Void then
-				set_internal_compact_date (l_compact_date.item)
+				set_private_internal_compact_date (l_compact_date.item)
 			else
 					-- Does not seem to be the old version, we raise an exception
 				Precursor {MISMATCH_CORRECTOR}
@@ -157,6 +154,17 @@ feature {NONE} -- Implementation
 
 	compact_date_attribute_name: STRING is "compact_date"
 			-- Name of `compacte_date' attribute in 5.3 and older version.
+
+	set_private_internal_compact_date (a_compact_date: like compact_date) is
+			-- Set `a_compact_date' to `compact_date'.
+		do
+			set_date (
+				a_compact_date & 0x000FFFF,
+				(a_compact_date & 0x00FF0000) |>> 16,
+				((a_compact_date & 0xFF000000) |>> 24) & 0x000000FF)
+		ensure
+			compact_date_set: year | (month |<< 16) | (day |<< 24) = a_compact_date
+		end
 
 end -- class DATE_VALUE
 

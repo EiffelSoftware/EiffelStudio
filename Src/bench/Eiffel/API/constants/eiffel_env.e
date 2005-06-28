@@ -270,35 +270,44 @@ feature -- Access: file name
 
 	last_opened_projects_resource_name: STRING is "studio_recent_files"
 
-	default_file_name: FILE_NAME is
-			-- Default recent project file name
+	general_preferences: FILE_NAME is
+			-- Platform independent preferences.
 		do
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			if Platform_constants.is_windows then
-				Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "windows">>)
-			else
-				Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "gtk">>)
-			end
-			Result.set_file_name ("default_recent_projects")
-			Result.add_extension ("xml")
-		ensure
-			Result_not_empty: Result /= Void
-		end
-
-	system_general: FILE_NAME is
-			-- General system level resource specification file
-			-- ($ISE_EIFFEL/eifinit/application_name/general)
-		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			if Platform_constants.is_windows then
-				Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "windows">>)
-			else
-				Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "gtk">>)
-			end
+			Result.extend_from_array (<<"eifinit", short_studio_name>>)
 			Result.set_file_name ("default")
 			Result.add_extension ("xml")
 		ensure
-			Result_not_empty: Result /= Void
+			general_preferences_not_void: Result /= Void
+			general_preferences_not_empty: not Result.is_empty
+		end
+
+	platform_preferences: FILE_NAME is
+			-- Platform specific preferences.
+		do
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<"eifinit", short_studio_name, "spec", Platform_abstraction>>)
+			Result.set_file_name ("default")
+			Result.add_extension ("xml")
+		ensure
+			platform_preferences_not_void: Result /= Void
+			platform_preferences_not_empty: not Result.is_empty
+		end
+
+	compiler_configuration: FILE_NAME is
+			-- Platform specific system level resource specification file
+			-- ($ISE_EIFFEL/eifinit/application_name/spec/$ISE_PLATFORM)
+		require
+			Eiffel_installation_dir_name_not_void: Eiffel_installation_dir_name /= Void
+			Eiffel_platform: Eiffel_platform /= Void
+		do
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<"eifinit", short_studio_name>>)
+			Result.set_file_name ("general")
+			Result.add_extension ("cfg")
+		ensure
+			compiler_configuration_not_void: Result /= Void
+			compiler_configuration_not_empty: not Result.is_empty
 		end
 
 	msil_culture_name: FILE_NAME is
@@ -307,7 +316,7 @@ feature -- Access: file name
 			is_windows: Platform_constants.is_windows
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"eifinit", short_studio_name, "spec", "windows">>)
+			Result.extend_from_array (<<"eifinit", short_studio_name, "spec", Platform_abstraction>>)
 			Result.set_file_name ("culture")
 		end
 

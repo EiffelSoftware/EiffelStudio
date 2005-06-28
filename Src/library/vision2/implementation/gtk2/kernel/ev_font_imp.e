@@ -1,8 +1,5 @@
 indexing
 	description: "Eiffel Vision font. GTK implementation."
-	note:
-		"Does not inherit from EV_ANY_IMP because c_object is not a %N%
-		%GTK object. (type is PangoFontDescription)"
 	status: "See notice at end of class"
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"
@@ -93,7 +90,7 @@ feature -- Element change
 		do
 			name := a_face
 			--create propvalue.make (a_face)
-			propvalue := a_face
+			propvalue := app_implementation.c_string_from_eiffel_string (a_face)
 				-- Change this code back when we get UTF16 support
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)	
 			calculate_font_metrics
@@ -170,7 +167,7 @@ feature -- Status report
 			a_baseline, a_height: INTEGER
 		do
 			if not ignore_font_metric_calculation then
-				a_str_size := string_size ("Ag")
+				a_str_size := string_size (once "Ag")
 				a_baseline := a_str_size.integer_32_item (5)
 				a_height := a_str_size.integer_32_item (2)
 				ascent := a_baseline
@@ -187,19 +184,19 @@ feature -- Status report
 	width: INTEGER is
 			-- Character width of current fixed-width font.
 		do
-			Result := string_width ("x")
+			Result := string_width (once "x")
 		end
 
 	minimum_width: INTEGER is
 			-- Width of the smallest character in the font.
 		do
-			Result := string_width ("l")
+			Result := string_width (once "l")
 		end
 
 	maximum_width: INTEGER is
 			-- Width of the biggest character in the font.
 		do
-			Result := string_width ("W")
+			Result := string_width (once "W")
 		end
 
 	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
@@ -210,19 +207,21 @@ feature -- Status report
 			a_pango_layout, a_pango_iter,  ink_rect, log_rect: POINTER
 			log_x, log_y, log_width, log_height, ink_x, ink_y,  ink_width, ink_height, a_width, a_height, left_off, right_off: INTEGER
 			a_baseline: INTEGER
+			l_app_imp: like app_implementation
 		do
-			a_cs := a_string
-				-- Change this code when we have UTF16 support
+				
+			l_app_imp := app_implementation
+			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
 			
-			a_pango_layout := App_implementation.pango_layout
+			a_pango_layout := l_app_imp.pango_layout
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
 			
 			ink_rect := {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
-			log_rect := {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
+			log_rect := reusable_pango_rectangle_struct
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, ink_rect, log_rect)
 			
-			a_pango_iter := app_implementation.pango_iter
+			a_pango_iter := l_app_imp.pango_iter
 			a_baseline := {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (a_pango_iter) // {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_free (a_pango_iter)
 			
@@ -243,25 +242,38 @@ feature -- Status report
 				left_off := ink_x
 				right_off := ink_width - log_width
 			end
-			Result := [a_width.max (1), a_height.max (1), left_off, right_off, a_baseline]
+			
+			Result := reusable_string_size_tuple
+			Result.put_integer (a_width.max (1), 1)
+			Result.put_integer (a_height.max (1), 2)
+			Result.put_integer (left_off, 3)
+			Result.put_integer (right_off, 4)
+			Result.put_integer (a_baseline, 5)
+
 			ink_rect.memory_free
-			log_rect.memory_free
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+		end
+
+	reusable_string_size_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- Reusable tuple for `string_size'.
+		once
+			create Result
 		end
 
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		local
-			a_pango_layout, log_rect: POINTER
+			a_pango_layout: POINTER
 			a_cs: EV_GTK_C_STRING
+			temp_height: INTEGER
+			l_app_imp: like App_implementation
 		do
-			a_cs := a_string
-			a_pango_layout := App_implementation.pango_layout
+			l_app_imp := App_implementation
+			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
+			a_pango_layout := l_app_imp.pango_layout
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
-			log_rect := reusable_pango_rectangle_struct
-			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, default_pointer, log_rect)
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (log_rect)
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (a_pango_layout, $Result, $temp_height)
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
 		end
 
@@ -404,7 +416,6 @@ feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
 	font_description: POINTER
 		-- Pointer to the PangoFontDescription struct
 
-
 feature {EV_ANY_I} -- Implementation
 
 	frozen pango_weight_ultra_light: INTEGER is 200
@@ -440,8 +451,7 @@ feature {EV_ANY_I} -- Implementation
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, default_pointer)	
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (font_description)
 		end
-		
-	
+
 end -- class EV_FONT_IMP
 
 --|----------------------------------------------------------------

@@ -13,7 +13,8 @@ inherit
 	ICOR_OBJECT
 		redefine
 			init_icor, make_by_pointer,
-			clean_on_dispose
+			clean_on_dispose, 
+			copy
 		end
 
 create 
@@ -43,6 +44,19 @@ feature {NONE} -- Initialization
 			size := get_size
 			address_as_string := get_address.to_integer.to_hex_string	
 		end
+		
+	copy (other: like Current) is
+			-- Update current object using fields of object attached
+			-- to `other', so as to yield equal objects.
+			-- (from ANY)
+		do
+			Precursor (other)
+			add_ref
+			if strong_reference_value /= Void then
+				strong_reference_value := strong_reference_value.twin
+			end
+		end		
+		
 			
 feature {ICOR_EXPORTER} -- Properties
 
@@ -131,7 +145,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_generic_value: ICOR_DEBUG_GENERIC_VALUE is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -143,7 +157,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_reference_value: ICOR_DEBUG_REFERENCE_VALUE is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -155,7 +169,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_handle_value: ICOR_DEBUG_HANDLE_VALUE is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -167,7 +181,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_heap_value: ICOR_DEBUG_HEAP_VALUE is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -179,7 +193,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 		
 	query_interface_icor_debug_heap_value2: ICOR_DEBUG_HEAP_VALUE2 is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -191,7 +205,7 @@ feature {ICOR_EXPORTER} -- QueryInterface
 
 	query_interface_icor_debug_object_value: ICOR_DEBUG_OBJECT_VALUE is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -205,7 +219,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 
 	query_interface_icor_debug_box_value: ICOR_DEBUG_BOX_VALUE is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -217,7 +231,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 
 	query_interface_icor_debug_string_value: ICOR_DEBUG_STRING_VALUE is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -229,7 +243,7 @@ feature {ICOR_EXPORTER} -- QueryInterface HEAP
 
 	query_interface_icor_debug_array_value: ICOR_DEBUG_ARRAY_VALUE is
 		require
-			item_not_null
+			item_not_null: item_not_null
 		local
 			p: POINTER
 		do
@@ -244,7 +258,7 @@ feature {ICOR_EXPORTER} -- Access
 	get_type: INTEGER is
 			-- GetType  
 		require
-			item_not_null
+			item_not_null: item_not_null
 		do
 			last_call_success := cpp_get_type (item, $Result)
 		ensure
@@ -254,7 +268,7 @@ feature {ICOR_EXPORTER} -- Access
 	get_size: INTEGER is
 			-- GetSize returns the size in bytes 
 		require
-			item_not_null
+			item_not_null: item_not_null
 		do
 			last_call_success := cpp_get_size (item, $Result)
 		ensure
@@ -267,7 +281,7 @@ feature {ICOR_EXPORTER} -- Access
 			-- show.
 	 		-- * If the value is at least partly in registers, 0 is returned.
 		require
-			item_not_null
+			item_not_null: item_not_null
 		do
 			last_call_success := cpp_get_address (item, $Result)
 		ensure

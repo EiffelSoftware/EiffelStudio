@@ -24,7 +24,7 @@ inherit
 		
 	ICOR_DEBUG_HANDLE_TYPE
 		undefine
-			out
+			out, copy
 		end
 
 create 

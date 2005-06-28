@@ -121,7 +121,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			end	
 			if a_capture_widget_imp /= Void then
 				a_capture_widget_imp.end_transport (0, 0, 0, 0, 0 ,0 ,0 ,0)
-			else
+			elseif has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) or else has_struct_flag (event_widget, {EV_GTK_EXTERNALS}.gtk_has_grab_enum) then
+					-- We make sure that only the widget with either the focus or the keyboard capture receives key events
 				if a_key_press then
 						-- The event is a key press event.
 					if a_key /= Void and then key_press_actions_internal /= Void then
@@ -135,11 +136,11 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 								inspect
 									a_key.code
 								when {EV_KEY_CONSTANTS}.Key_space then
-									temp_key_string := " "
+									temp_key_string := once  " "
 								when {EV_KEY_CONSTANTS}.Key_enter then
-									temp_key_string := "%N"
+									temp_key_string := once "%N"
 								when {EV_KEY_CONSTANTS}.Key_tab then
-									temp_key_string := "%T"
+									temp_key_string := once "%T"
 								else
 										-- The action key pressed has no printable value
 									temp_key_string := Void

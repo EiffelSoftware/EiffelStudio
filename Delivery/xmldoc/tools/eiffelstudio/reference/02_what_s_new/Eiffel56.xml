@@ -24,7 +24,10 @@
 			</list>
 			<heading><size>3</size>Changes</heading>
 			<list ordered="false">
-				<item></item>
+				<item>
+					Changed the default C compilation flags on Windows when using Visual Studio as a back-end C compiler. It will now compile C code using the -MT option. 
+					It may cause some linking problems if you are using C libraries compiled against the static C library. To solve those issues recompile your C code using the -MT option.
+				</item>
 			</list>
 			<heading><size>3</size>Bug fixes</heading>
 			<list ordered="false">
@@ -111,14 +114,6 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 			<item>Changed type of feature <feature_name>sign</feature_name> in classes <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> to <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> respectively.</item>
 			<item>Added a subcluster <cluster_name>refactoring</cluster_name> with classes that can be helpful for performing code refactoring.</item>
 			<item>Added precondition to <feature_name>set_reference_field</feature_name> from <class_name>INTERNAL</class_name> to ensure validity of reattachement to attributes.</item>
-		</list>
-		<heading><size>3</size>EiffelNet</heading>
-		<list ordered="false">
-			<item></item>
-		</list>
-		<heading><size>3</size>EiffelTime</heading>
-		<list ordered="false">
-			<item></item>
 		</list>
 		<heading><size>3</size>EiffelThread</heading>
 		<list ordered="false">

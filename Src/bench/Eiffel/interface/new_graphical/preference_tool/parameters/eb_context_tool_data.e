@@ -111,15 +111,15 @@ feature {NONE} -- Preference
 
 feature {NONE} -- Preference Strings
 
-	diagram_toolbar_layout_string: STRING is "tools.context_tool.diagram_toolbar_layout"
-	subcluster_depth_string: STRING is "tools.context_tool.subcluster_depth"
-	supercluster_depth_string: STRING is "tools.context_tool.supercluster_depth"
-	client_depth_string: STRING is "tools.context_tool.client_depth"
-	supplier_depth_string: STRING is "tools.context_tool.supplier_depth"
-	ancestor_depth_string: STRING is "tools.context_tool.ancestor_depth"
-	descendant_depth_string: STRING is "tools.context_tool.descendant_depth"
-	ignore_excluded_class_figures_string: STRING is "tools.context_tool.ignore_excluded_class_figures"		
-	excluded_class_figures_string: STRING is "tools.context_tool.excluded_class_figures"
+	diagram_toolbar_layout_string: STRING is "tools.diagram_tool.diagram_toolbar_layout"
+	subcluster_depth_string: STRING is "tools.diagram_tool.subcluster_depth"
+	supercluster_depth_string: STRING is "tools.diagram_tool.supercluster_depth"
+	client_depth_string: STRING is "tools.diagram_tool.client_depth"
+	supplier_depth_string: STRING is "tools.diagram_tool.supplier_depth"
+	ancestor_depth_string: STRING is "tools.diagram_tool.ancestor_depth"
+	descendant_depth_string: STRING is "tools.diagram_tool.descendant_depth"
+	ignore_excluded_class_figures_string: STRING is "tools.diagram_tool.ignore_excluded_class_figures"		
+	excluded_class_figures_string: STRING is "tools.diagram_tool.excluded_class_figures"
 
 feature {NONE} -- Implementation
 
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 		local
 			l_manager: EB_PREFERENCE_MANAGER	
 		do		
-			create l_manager.make (preferences, "context_tool")		
+			create l_manager.make (preferences, "diagram_tool")		
 							
 			diagram_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, diagram_toolbar_layout_string, <<"Clear_bkpt__visible">>)					
 			subcluster_depth_preference := l_manager.new_integer_resource_value (l_manager, subcluster_depth_string, 1)

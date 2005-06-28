@@ -3,7 +3,7 @@ indexing
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
-
+ 
 class
 	MARGIN_WIDGET
 
@@ -281,7 +281,7 @@ feature {TEXT_PANEL} -- Display functions
  			in_scroll := False
  		end
 
-	update_lines (first, last: INTEGER; buffered: BOOLEAN) is
+		update_lines (first, last: INTEGER; buffered: BOOLEAN) is
 			-- Update the lines from `first' to `last'.  If `buffered' then draw to `buffered_line'
  			-- before drawing to screen, otherwise draw straight to screen.
 		require
@@ -290,25 +290,29 @@ feature {TEXT_PANEL} -- Display functions
 			last_line_valie: last >= 1
 		local
  			curr_line,
- 			y_offset: INTEGER
+ 			y_offset,
+ 			l_line_height: INTEGER
+ 			l_text_displayed: TEXT
 		do  	
 			updating_line := True
-			text_panel.text_displayed.go_i_th (first)
+			l_text_displayed := text_panel.text_displayed
+			l_text_displayed.go_i_th (first)
+			l_line_height := text_panel.line_height
 			
 			from
  				curr_line := first
+ 				y_offset := margin_viewport.y_offset + ((curr_line - first_line_displayed) * l_line_height)
  			until
- 				curr_line > last or else text_panel.text_displayed.after
- 			loop
- 				y_offset := margin_viewport.y_offset + ((curr_line - first_line_displayed) * text_panel.line_height)
+ 				curr_line > last or else l_text_displayed.after
+ 			loop				
  				if buffered then 	
  					-- We do not currently buffer for the margin
 				else
-					draw_line_to_screen (0, y_offset, text_panel.text_displayed.line (curr_line), curr_line)
+					draw_line_to_screen (0, y_offset, l_text_displayed.line (curr_line), curr_line)
 				end			
  				curr_line := curr_line + 1
-				y_offset := y_offset + text_panel.line_height
- 				text_panel.text_displayed.forth
+				y_offset := y_offset + l_line_height
+ 				l_text_displayed.forth
  			end
 			
  			updating_line := False

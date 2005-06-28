@@ -79,6 +79,11 @@ feature -- Formatting
 						l_line := stel.break_index
 						if l_line > 0 then
 							editor.display_breakpoint_number_when_ready (l_line)
+								-- Refresh is needed on the margin because if we are showing the same
+								-- feature but from a different CALL_STACK_ELEMENT (case of recursive call)
+								-- we need to refresh it to show/hide the green arrow representing
+								-- where the execution is in the call stack history.
+							editor.margin.refresh
 						end
 					end
 				end

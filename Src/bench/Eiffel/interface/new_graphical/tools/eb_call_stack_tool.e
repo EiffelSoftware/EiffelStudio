@@ -739,7 +739,7 @@ feature {NONE} -- Implementation
 		do
 				--| Get last path from the preferences.
 			last_path := preferences.debug_tool_data.last_saved_stack_path
-			if last_path = Void then
+			if last_path = Void or else last_path.is_empty then
 					--| The first time, start in the project directory.
 				create standard_path.make
 				standard_path.extend (Eiffel_project.project_directory.name)

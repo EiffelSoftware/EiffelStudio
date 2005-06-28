@@ -87,11 +87,11 @@ feature -- Preconditions
 			y, m, d: INTEGER
 		do
 			l_cd := ordered_compact_date
-			set_internal_compact_date (c_d)
+			set_private_internal_compact_date (c_d)
 			d := day
 			m := month
 			y := year
-			set_internal_compact_date (l_cd)
+			ordered_compact_date := l_cd
 			Result := (m >= 1 and m <= Months_in_year and
 				d >= 1 and d <= days_in_i_th_month (m, y) and
 				y <= 65535)

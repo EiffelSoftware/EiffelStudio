@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			-- Create the tree item.
 		do
 			base_make (an_interface)
-			internal_text := ""
+			internal_text := once ""
 		end
 		
 	dispose is

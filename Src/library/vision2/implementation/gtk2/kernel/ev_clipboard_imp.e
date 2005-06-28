@@ -35,11 +35,11 @@ feature {NONE}-- Initialization
 		local
 			cs: EV_GTK_C_STRING
 		do
-			cs := "CLIPBOARD"
+			cs := once "CLIPBOARD"
 			clipboard := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
 							{EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
 			)
-			cs := "PRIMARY"
+			cs := once "PRIMARY"
 			primary := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
 							{EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
 			)
@@ -63,8 +63,9 @@ feature -- Access
 			text_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard)
 			if text_ptr /= Default_pointer then
 				create utf8_string.make_from_pointer (text_ptr)
-				{EV_GTK_EXTERNALS}.g_free (text_ptr)
 				Result := utf8_string.string
+					-- Free existing text by resetting with a new string
+				utf8_string.set_with_eiffel_string (once "")
 			else
 				Result := ""
 					-- We return an empty string if there is nothing present in the clipboard.
@@ -78,10 +79,13 @@ feature -- Status Setting
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_text)
+			a_cs := a_text
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, a_cs.string_length)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (primary, a_cs.item, a_cs.string_length)
 				-- We also set the primary selection as there is no windows equivalent.
+			
+				-- Free existing string by resetting with a new string.
+			a_cs.set_with_eiffel_string (once "")
 		end
 		
 feature {EV_TEXT_COMPONENT_IMP} -- Implementation

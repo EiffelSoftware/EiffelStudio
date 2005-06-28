@@ -39,7 +39,7 @@ feature -- Initialisation
 feature -- Miscellaneous
 
 	width: INTEGER
-			-- Width in pixel of the entire token.	
+			-- Width in pixel of the entire token.
 
 	get_substring_width (n: INTEGER): INTEGER is
 			-- Compute the width in pixels of the first
@@ -377,6 +377,7 @@ feature {NONE} -- Implementation
 		end
 
 	gray_text_color: EV_COLOR is
+			-- Gray color
 		local
 			lightness: REAL
 		do

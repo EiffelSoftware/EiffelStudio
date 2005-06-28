@@ -973,6 +973,7 @@ feature {NONE} -- Implementation
 		do
 			if syntax_error_dialog = Void or else syntax_error_dialog.is_destroyed then
 				create syntax_error_dialog.make_with_text (Warning_messages.w_Syntax_error)
+				syntax_error_dialog.default_push_button.select_actions.extend (agent set_focus)
 				syntax_error_dialog.show_relative_to_window (reference_window)
 			end
 		end

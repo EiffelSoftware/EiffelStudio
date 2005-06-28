@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 		
 			width_preference := l_manager.new_integer_resource_value (l_manager, width_string, 214)
 			height_preference := l_manager.new_integer_resource_value (l_manager, height_string, 214)			
-			last_saved_stack_path_preference := l_manager.new_string_resource_value (l_manager, last_saved_stack_path_string, Void)
+			last_saved_stack_path_preference := l_manager.new_string_resource_value (l_manager, last_saved_stack_path_string, "")
 			interrupt_every_n_instructions_preference := l_manager.new_integer_resource_value (l_manager, interrupt_every_n_instructions_string, 1)
 			debug_output_evaluation_enabled_preference := l_manager.new_boolean_resource_value (l_manager, debug_output_evaluation_enabled_string, True)
 			generating_type_evaluation_enabled_preference := l_manager.new_boolean_resource_value (l_manager, generating_type_evaluation_enabled_string, True)

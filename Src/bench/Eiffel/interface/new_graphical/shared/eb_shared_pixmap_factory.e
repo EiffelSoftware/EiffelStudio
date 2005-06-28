@@ -26,8 +26,8 @@ feature
 					a_column := a_coord.integer_32_item (2)
 					a_row := a_coord.integer_32_item (1)
 					a_icon_matrix ?= image_matrix.implementation
-					a_x_offset := (a_column - 1) * (1 + pixmap_width)
-					a_y_offset := (a_row - 1) * (1 + pixmap_height)
+					a_x_offset := (a_column - 1) * (1 + pixmap_width) + 1
+					a_y_offset := (a_row - 1) * (1 + pixmap_height) + 1
 					Result := a_icon_matrix.sub_pixmap (create {EV_RECTANGLE}.make (a_x_offset, a_y_offset, pixmap_width, pixmap_height))
 				else
 						-- Initialize the pathname & load the file

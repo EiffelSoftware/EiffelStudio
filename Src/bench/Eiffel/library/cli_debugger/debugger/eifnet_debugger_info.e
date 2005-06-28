@@ -86,6 +86,9 @@ feature -- Reset
 			
 			last_control_mode := 0
 			
+				--| outside of any evaluation |--
+			set_is_evaluating (False)
+			
 				--| Ancestors |--
 			reset_jit_info
 			Precursor {EIFNET_DEBUGGER_BREAKPOINT_INFO}

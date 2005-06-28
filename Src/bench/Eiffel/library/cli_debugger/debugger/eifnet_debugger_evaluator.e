@@ -48,6 +48,12 @@ feature -- Status
 
 	last_eval_aborted: BOOLEAN
 			-- last eval had been Aborted
+			
+	last_call_succeed: BOOLEAN is
+		do
+			Result := return_code_is_call_succeed (last_call_success)
+		end
+		
 
 feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 
@@ -69,6 +75,10 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 			debug ("debugger_trace_eval")
 				print ("End : " + generator + ".function_evaluation ... %N")
 			end
+		rescue
+			if eifnet_debugger.is_inside_function_evaluation then
+				evaluation_termination (True)
+			end
 		end
 
 	method_evaluation (a_frame: ICOR_DEBUG_FRAME; a_meth: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
@@ -78,8 +88,14 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 			meth_not_void: a_meth /= Void
 		do
 			prepare_evaluation (a_frame, True)
-			last_icor_debug_eval.call_function (a_meth, a_args)
+			if last_icor_debug_eval /= Void then
+				last_icor_debug_eval.call_function (a_meth, a_args)
+			end
 			complete_method_evaluation
+		rescue
+			if eifnet_debugger.is_inside_function_evaluation then
+				evaluation_termination (True)
+			end
 		end		
 		
 	new_string_evaluation (a_frame: ICOR_DEBUG_FRAME; a_string: STRING): ICOR_DEBUG_VALUE is
@@ -273,7 +289,6 @@ feature {DBG_EVALUATOR_DOTNET} -- Class construction facilities
 			prepare_evaluation (a_frame, True)
 			last_icor_debug_eval.new_object_no_constructor (eiffel_string_icd_class)
 			Result := complete_function_evaluation
-			
 			method_evaluation (a_frame, eiffel_string_make_from_cil_constructor, <<Result, a_sys_string>>)
 		end	
 		
@@ -351,6 +366,8 @@ feature {NONE}
 	prepare_evaluation (a_useless_frame: ICOR_DEBUG_FRAME; stop_timer_required: BOOLEAN) is
 			-- Prepare data for evaluation.
 			--| FIXME jfiat [2005/06/07] : get rid of `a_useless_frame' if really useless
+		require
+			not Eifnet_debugger.is_inside_function_evaluation
 		local
 			l_icd_thread: ICOR_DEBUG_THREAD
 			l_icd_eval: ICOR_DEBUG_EVAL
@@ -407,6 +424,8 @@ feature {NONE}
 			end
 			restore_state_info
 			clean_temp_data
+		ensure
+			not Eifnet_debugger.is_inside_function_evaluation
 		end		
 
 	end_evaluation is
@@ -420,8 +439,9 @@ feature {NONE}
 			l_icd_eval: ICOR_DEBUG_EVAL
 		do
 			l_icd_eval := last_icor_debug_eval
-			last_call_success := l_icd_eval.last_call_success
-
+			if l_icd_eval /= Void then
+				last_call_success := l_icd_eval.last_call_success
+			end
 			evaluation_termination (False)
 		end
 
@@ -446,7 +466,7 @@ feature {NONE}
 			if l_icd_eval /= Void then
 				last_call_success := l_icd_eval.last_call_success
 			end
-			if not last_call_succeed (last_call_success) then
+			if not return_code_is_call_succeed (last_call_success) then
 				debug ("DEBUGGER_TRACE_EVAL")
 					print (generator + ".complete_method_evaluation %N")
 					print ("  => last call success of Eval = " + last_call_success.to_hex_string + "%N")
@@ -489,7 +509,7 @@ feature {NONE}
 			if l_icd_eval /= Void then
 				last_call_success := l_icd_eval.last_call_success
 			end
-			if l_icd_eval = Void or else not last_call_succeed (last_call_success) then
+			if l_icd_eval = Void or else not return_code_is_call_succeed (last_call_success) then
 				debug ("DEBUGGER_TRACE_EVAL")
 					print (generator + "complete_function_evaluation %N")
 					print ("  => last call success of Eval = " + last_call_success.to_hex_string + "%N")
@@ -750,7 +770,7 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 
 feature {NONE} -- Helper Impl
 
-	last_call_succeed (lcs: INTEGER): BOOLEAN is
+	return_code_is_call_succeed (lcs: INTEGER): BOOLEAN is
 			-- Is last call `lcs' a success ?
 		do
 			Result := lcs = 0 or lcs = 1 -- S_OK or S_FALSE

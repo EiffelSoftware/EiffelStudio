@@ -76,7 +76,7 @@ feature -- Status Setting
 	set_value_from_string (a_value: STRING) is
 			-- Parse the string value `a_value' and set `value'.
 		local
-			char_cnt, cnt: INTEGER			
+			cnt: INTEGER			
 			l_value: STRING
 			values: LIST [STRING]
 		do

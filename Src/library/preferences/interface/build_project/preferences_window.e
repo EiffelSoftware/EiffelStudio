@@ -232,7 +232,6 @@ feature {NONE} -- Events
 	on_grid_key_pressed (k: EV_KEY) is
 			-- An key was pressed
 		local
-			l_row: EV_GRID_ROW
 			l_preference_widget: PREFERENCE_WIDGET			
 		do
 			if k /= Void then

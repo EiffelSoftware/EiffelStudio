@@ -144,7 +144,8 @@ feature {NONE} -- Implementation
 			show_text_in_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_text_in_project_toolbar_string, True)		
 			show_all_text_in_project_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_all_text_in_project_toolbar_string, True)				
 			project_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, project_toolbar_layout_string, <<"Clear_bkpt__visible">>)
-			dotnet_debugger_preference := l_manager.new_array_resource_value (l_manager, dotnet_debugger_string, <<"EiffelStudio Dbg", "cordbg", "DbgCLR">>)
+			dotnet_debugger_preference := l_manager.new_array_resource_value (l_manager, dotnet_debugger_string, <<"[EiffelStudio Dbg];cordbg;DbgCLR">>)
+			dotnet_debugger_preference.set_is_choice (True)
 		end
 	
 	preferences: PREFERENCES

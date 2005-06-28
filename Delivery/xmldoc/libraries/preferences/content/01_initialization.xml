@@ -15,7 +15,7 @@
 					<feature_name>make_with_location</feature_name>
 				</item>
 				<item>
-					<feature_name>make_with_default_values_and_location</feature_name>
+					<feature_name>make_with_defaults_and_location</feature_name>
 				</item>
 			</list>
 			<paragraph>The first and most simple option (
@@ -29,8 +29,9 @@
 				<feature_name>make</feature_name> no defaults values are provided.
 			</paragraph>
 			<paragraph>The final option 
-				<feature_name>make_with_default_values_and_location</feature_name> is similar to 
-				<feature_name>make_with_location</feature_name> except an additional parameter is given to retrieve a default file location.  This will be an XML file on disk containing the default values to use for some or all of your preferences.  It is a convenient way to initialize your application with all the default values required `out of the box' for correct or preferred functioning.  This file also contains additional attributes for preference configuration such a more detailed description of the preference.  Please read the section below for details of the format of this default file.
+				<feature_name>make_with_defaults_and_location</feature_name> is similar to 
+				<feature_name>make_with_location</feature_name> except an additional parameter is given to retrieve one or more default file locations. This will be one or more XML files on disk containing the default values to use for some or all of your preferences.  It is a convenient way to initialize your application with all the default values required `out of the box' for correct or preferred functioning.  Those files also contain additional attributes for preference configuration such a more detailed description of the preference. If two files list the same preference,
+			   the last one to mention it takes precedence. Please read the section below for details of the format of this default file.
 			</paragraph>
 			<heading>
 				<size>2</size>Managers

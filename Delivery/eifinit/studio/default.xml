@@ -24,63 +24,61 @@
 	<PREF NAME="debugger.stack_element_width" DESCRIPTION="Width of stack element."><INTEGER>1000</INTEGER></PREF>
 	<PREF NAME="debugger.width" HIDDEN="true" DESCRIPTION="Width of debug tool."><INTEGER>214</INTEGER></PREF>
 	
-	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-16-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>0;0;160</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_fill_color" DESCRIPTION="Color for BON class figures."><COLOR>145;255;145</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_uncompiled_fill_color" DESCRIPTION="Color for uncompiled BON class figures."><COLOR>180;180;180</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures."><FONT>Arial-r-bold-15-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures."><FONT>Arial-r-bold-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_color" DESCRIPTION="Color for generics in BON class figures."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_client_label_font" DESCRIPTION="Font for feature names on BON client supplier links."><FONT>Arial-r-regular-14-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_client_label_font" DESCRIPTION="Font for feature names on BON client supplier links."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_client_label_color" DESCRIPTION="Color for feature names on BON client supplier links."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_client_color" DESCRIPTION="Color for BON client supplier links."><COLOR>0;128;64</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_client_line_width" DESCRIPTION="Line width for BON client supplier links."><INTEGER>5</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_line_color" DESCRIPTION="Color for BON cluster line."><COLOR>0;128;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_iconified_fill_color" DESCRIPTION="Iconified BON Cluster fill color."><COLOR>183;255;201</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_area_color" DESCRIPTION="BON cluster name area fill color."><COLOR>215;255;255</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_area_color" DESCRIPTION="BON cluster name area fill color."><COLOR>210;255;255</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_color" DESCRIPTION="BON cluster name color."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_font" DESCRIPTION="BON cluster name font."><FONT>Arial-r-bold-15-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_font" DESCRIPTION="BON cluster name font."><FONT>Arial-r-bold-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_inheritance_color" DESCRIPTION="Color for BON inheritance links."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_inheritance_line_width" DESCRIPTION="Line width for BON inheritance links."><INTEGER>2</INTEGER></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_name_font" DESCRIPTION="Font for class names in UML class figures."><FONT>Arial-r-regular-16-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_deferred_font" DESCRIPTION="Font for names of deferred classes in UML class figures."><FONT>Arial-i-regular-16-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_properties_font" DESCRIPTION="Font for class properties in UML class figures."><FONT>Arial-i-regular-14-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_name_font" DESCRIPTION="Font for class names in UML class figures."><FONT>Arial-r-regular-10-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_deferred_font" DESCRIPTION="Font for names of deferred classes in UML class figures."><FONT>Arial-i-regular-10-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_properties_font" DESCRIPTION="Font for class properties in UML class figures."><FONT>Arial-i-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_class_properties_color" DESCRIPTION="Color for class properties in UML class figures."><COLOR>127;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_class_name_color" DESCRIPTION="Color for class names in UML class figures."><COLOR>0;25;127</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_class_fill_color" DESCRIPTION="Color for UML class figures."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_generics_font" DESCRIPTION="Font for generics in UML class figures."><FONT>Arial-r-bold-15-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_generics_font" DESCRIPTION="Font for generics in UML class figures."><FONT>Arial-r-bold-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_generics_color" DESCRIPTION="Color for generics in UML class figures."><COLOR>180;0;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_features_font" DESCRIPTION="Font for class features in UML class figures."><FONT>Arial-r-regular-14-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_features_font" DESCRIPTION="Font for class features in UML class figures."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_class_features_color" DESCRIPTION="Color for class features in UML class figures."><COLOR>0;127;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures."><FONT>Arial-r-bold-14-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures."><FONT>Arial-r-bold-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_color" DESCRIPTION="Color for class feature sections in UML class figures."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_client_line_width" DESCRIPTION="Line width for UML client supplier links."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_client_color" DESCRIPTION="Color for UML client supplier links."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_client_label_color" DESCRIPTION="Color for feature names on UML client supplier links."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_client_label_font" DESCRIPTION="Font for feature names on UML client supplier links."><FONT>Arial-r-regular-15-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_client_label_font" DESCRIPTION="Font for feature names on UML client supplier links."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_cluster_line_color" DESCRIPTION="Color for UML cluster line."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_cluster_iconified_fill_color" DESCRIPTION="Iconified UML Cluster fill color."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_cluster_name_area_color" DESCRIPTION="UML cluster name area fill color."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_cluster_name_color" DESCRIPTION="UML cluster name color."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_cluster_name_font" DESCRIPTION="UML cluster name font."><FONT>Arial-r-regular-14-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_cluster_name_font" DESCRIPTION="UML cluster name font."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_inheritance_line_width" DESCRIPTION="Line width for UML inheritance links."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_inheritance_color" DESCRIPTION="Color for UML inheritance links."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Color for UML inheritance links."><INTEGER>50</INTEGER></PREF>
 	
+	<PREF NAME="tools.diagram_tool.ancestor_depth" DESCRIPTION="Show ancestors of a class up to a level of preference value."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="tools.diagram_tool.autoscroll_speed" DESCRIPTION="Speed for scrolling when dragging figures from diagram nead the edge of the diagram tool (a valid value is between 0 and 100)."><INTEGER>50</INTEGER></PREF>
+	<PREF NAME="tools.diagram_tool.client_depth" DESCRIPTION="Show clients of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
+	<PREF NAME="tools.diagram_tool.descendant_depth" DESCRIPTION="Show descendants of a class down to a level of preference value."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="tools.diagram_tool.diagram_toolbar_layout" HIDDEN="true" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;Create_class__visible;New_links__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Class_header_hole__visible;Separator;Force_directed__visible;Force_settings__visible;UML_visibility__visible;Context_depth__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Zoom_out__visible;Fit_to_screen__visible;Zoom_in__visible;Link_tool__hidden;Color__hidden;High_quality__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;Delete_item__hidden;Diagram_to_png__hidden;Cluster_filling__hidden</LIST></PREF>
+	<PREF NAME="tools.diagram_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams."><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
+	<PREF NAME="tools.diagram_tool.ignore_excluded_class_figures" DESCRIPTION="Show ALL classes in the diagram (ignore the following list)?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.diagram_tool.subcluster_depth" DESCRIPTION="Show subclusters of a cluster down to a level of preference value."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="tools.diagram_tool.supercluster_depth" DESCRIPTION="Show superclusters of a cluster up to a level of preference value."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="tools.diagram_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
+
 	<PREF NAME="tools.context_tool.show_all_callers" DESCRIPTION="Show all callers (as opposed to local callers) in `callers' form."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="tools.context_tool.diagram_toolbar_layout" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Color__visible;Class_header_hole__visible;Separator;Cluster_filling__visible;Context_depth__visible;Separator;Zoom_out__visible;Fit_to_screen__visible;Zoom_in__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Diagram_to_png__visible;Link_tool__hidden;High_quality__hidden;Force_directed__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;UML_visibility__hidden;Force_settings__hidden;Delete_item__hidden</LIST></PREF>
-	<PREF NAME="tools.context_tool.subcluster_depth" DESCRIPTION="Show subclusters of a cluster down to a level of preference value."><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="tools.context_tool.supercluster_depth" DESCRIPTION="Show superclusters of a cluster up to a level of preference value."><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="tools.context_tool.client_depth" DESCRIPTION="Show clients of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
-	<PREF NAME="tools.context_tool.supplier_depth" DESCRIPTION="Show suppliers of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
-	<PREF NAME="tools.context_tool.ancestor_depth" DESCRIPTION="Show ancestors of a class up to a level of preference value."><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="tools.context_tool.descendant_depth" DESCRIPTION="Show descendants of a class down to a level of preference value."><INTEGER>1</INTEGER></PREF>
-	<PREF NAME="tools.context_tool.ignore_excluded_class_figures" DESCRIPTION="Show ALL classes in the diagram (ignore the following list)?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="tools.context_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams."><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
 	<PREF NAME="tools.context_tool.excluded_indexing_items" DESCRIPTION="Indexing items that need not be included in formatted texts."><LIST>revision;date;status</LIST></PREF>
 	
-	<PREF NAME="interface.development_window.raise_on_error" DESCRIPTION=""><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_on_exit" DESCRIPTION="Display confirmation dialog on exit."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_finalize" DESCRIPTION="Display confirmation dialog for C compilation on finalize operation."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_freeze" DESCRIPTION="Display confirmation dialog for C compilation on freeze operation."><BOOLEAN>True</BOOLEAN></PREF>
@@ -99,75 +97,60 @@
 	<PREF NAME="interface.dialogs.already_editing_class" DESCRIPTION="Display dialog when editing the same class in two development windows."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.executing_command" DESCRIPTION="Display dialog while running an external command."><BOOLEAN>True</BOOLEAN></PREF>
 	
+	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_window];editor;context;new_editor;new_context;external</LIST></PREF>
+	<PREF NAME="interface.development_window.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left? (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.expand_feature_tree" DESCRIPTION="Automatically expand the feature tree."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
+	<PREF NAME="interface.development_window.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.is_maximized" HIDDEN="true" DESCRIPTION="Is window maximized?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.last_browsed_cluster_directory" HIDDEN="true" DESCRIPTION="Directory of last browsed cluster."><STRING></STRING></PREF>
+	<PREF NAME="interface.development_window.left_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for navigation panel."><LIST>Features;visible;0;0;0;266;Clusters;visible;0;0;0;250;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0</LIST></PREF>
+	<PREF NAME="interface.development_window.left_panel_use_explorer_style" DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time. (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes."><INTEGER>20</INTEGER></PREF>
+	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.right_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for editor panel."><LIST>Editor;visible;0;0;0;266;Context;visible;0;0;0;250</LIST></PREF>	
+	<PREF NAME="interface.development_window.search_tool_show_options" DESCRIPTION="Should search options be shown in search tool?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION="Is text of toolbar items displayed?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST></PREF>
+	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
+
+	<PREF NAME="interface.development_window.window_left_panel_width" HIDDEN="true" DESCRIPTION="Width of navigation panel"><INTEGER>100</INTEGER></PREF>
 	<PREF NAME="interface.development_window.default_class_formatter_index" DESCRIPTION="Class format that is selected by default." HIDDEN="True"><INTEGER>5</INTEGER></PREF>
 	<PREF NAME="interface.development_window.default_feature_formatter_index" DESCRIPTION="Feature format that is selected by default." HIDDEN="True"><INTEGER>2</INTEGER></PREF>	
-	<PREF NAME="interface.development_window.width" DESCRIPTION="Width of development window." HIDDEN="true"><INTEGER>800</INTEGER></PREF>
-	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>600</INTEGER></PREF>
+	<PREF NAME="interface.development_window.width" DESCRIPTION="Width of development window." HIDDEN="true"><INTEGER>950</INTEGER></PREF>
+	<PREF NAME="interface.development_window.height" DESCRIPTION="Height of development window." HIDDEN="true"><INTEGER>700</INTEGER></PREF>
 	<PREF NAME="interface.development_window.x_position" DESCRIPTION="Screen x position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
 	<PREF NAME="interface.development_window.y_position" DESCRIPTION="Screen y position of development window." HIDDEN="true"><INTEGER>50</INTEGER></PREF>
-	<PREF NAME="interface.development_window.is_maximized" DESCRIPTION="Is window maximized?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.left_panel_use_explorer_style" DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time.  (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.window_left_panel_width" DESCRIPTION="Width of navigation panel"><INTEGER>100</INTEGER></PREF>
-	<PREF NAME="interface.development_window.left_panel_layout" DESCRIPTION="Items/tools information for navigation panel."><LIST>Features;visible;0;0;0;190;Clusters;visible;0;0;0;250;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0</LIST></PREF>
-	<PREF NAME="interface.development_window.right_panel_layout" DESCRIPTION="Items/tools information for editor panel."><LIST>Editor;visible;0;0;0;190;Context;visible;0;0;0;178</LIST></PREF>	
-	<PREF NAME="interface.development_window.show_general_toolbar" DESCRIPTION="Should general toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should text be shown in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_all_text_in_general_toolbar" DESCRIPTION=""><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_address_toolbar" DESCRIPTION="Should address toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.show_project_toolbar" DESCRIPTION="Should project toolbar be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.search_tool_show_options" DESCRIPTION="Should search tool be shown?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.general_toolbar_layout" DESCRIPTION="Items shown in general toolbar."><LIST>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST></PREF>
-	<PREF NAME="interface.development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes."><INTEGER>10</INTEGER></PREF>
-	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.completion_list_height" DESCRIPTION="Height of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>320</INTEGER></PREF>
 	<PREF NAME="interface.development_window.completion_list_width" DESCRIPTION="Width of completion list.  Used if 'remember_completion_list_size' is set to True." HIDDEN="true"><INTEGER>240</INTEGER></PREF>
-	<PREF NAME="interface.development_window.expand_feature_tree" DESCRIPTION="Automatically expand the feature tree."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left? (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_window];editor;context;new_editor;new_context;external</LIST></PREF>
-	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.history_size" DESCRIPTION="Browsing history size."><INTEGER>10</INTEGER></PREF>
-	<PREF NAME="interface.development_window.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.last_browsed_cluster_directory" DESCRIPTION="Directory of last browsed cluster."><STRING>C:\</STRING></PREF>
 	
 	<PREF NAME="recent_projects.last_opened_projects" DESCRIPTION="List of recently opened projects."><LIST></LIST></PREF>
 	<PREF NAME="recent_projects.keep_n_projects" DESCRIPTION="Number of recent projects to keep in the list."><INTEGER>10</INTEGER></PREF>
 
-	<PREF NAME="editor.general.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."><INTEGER>8</INTEGER></PREF>
-	<PREF NAME="editor.general.colors.margin_background_color" DESCRIPTION="Background color of line number margin."><COLOR>212;208;200</COLOR></PREF>
-	<PREF NAME="editor.general.colors.margin_separator_color" DESCRIPTION="Color of separator between line number margin and editor."><COLOR>192;192;192</COLOR></PREF>
-	<PREF NAME="editor.general.colors.line_number_text_color" DESCRIPTION="Color of line number text."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.general.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.mouse_wheel_scroll_full_page" DESCRIPTION="Mouse wheel scroll full page?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.general.mouse_wheel_scroll_size" DESCRIPTION="Mouse wheel scroll size."><INTEGER>3</INTEGER></PREF>
-	<PREF NAME="editor.general.remove_trailing_white_space" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.automatic_update" DESCRIPTION="Automatic update when the file has not been modified."><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font. (Requires restart)"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
-	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font (Requires restart)"><FONT>Courier New-r-bold-8-typewriter</FONT></PREF>
-	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font. (Requires restart)" HIDDEN="True"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
-	<PREF NAME="editor.general.tab_step" DESCRIPTION="Tabulation size in characters."><INTEGER>4</INTEGER></PREF>
-	<PREF NAME="editor.general.colors.normal_text_color" DESCRIPTION="Color for normal text."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.general.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.general.colors.selection_text_color" DESCRIPTION="Color of selected text."><COLOR>255;255;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.selection_background_color" DESCRIPTION="Background color of selected text."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;0;0</COLOR></PREF>	
-	<PREF NAME="editor.general.colors.string_background_color" DESCRIPTION="Background color of string text."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.general.colors.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>255;255;255</COLOR></PREF>	
-	<PREF NAME="editor.general.colors.spaces_text_color" DESCRIPTION="Color of space characters."><COLOR>128;128;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.spaces_background_color" DESCRIPTION="Background color of space characters."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.general.colors.comments_text_color" DESCRIPTION="Color of comments text."><COLOR>128;0;0</COLOR></PREF>
-	<PREF NAME="editor.general.colors.comments_background_color" DESCRIPTION="Background color of coments text."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.general.colors.operator_text_color" DESCRIPTION="Color of operator text."><COLOR>255;0;0</COLOR></PREF>
-	<PREF NAME="editor.general.colors.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
-	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.general.smart_identation" DESCRIPTION="Should the editor auto-indent?"><BOOLEAN>True</BOOLEAN></PREF>	
-	<PREF NAME="editor.general.quadruple_click_enabled" DESCRIPTION="Quadruple click selects all?"><BOOLEAN>True</BOOLEAN></PREF>
-	
-	<PREF NAME="editor.eiffel.formatters_history_size" DESCRIPTION="Size of formatter history."><INTEGER>60</INTEGER></PREF>
+	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parenthesis" DESCRIPTION="Are brackets and parenthesis closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Are quotes closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.auto_auto_complete" DESCRIPTION="Should completion window appear automatically after typing a `.'?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.customized_string_2" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 2."><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.customized_string_3" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3."><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Should non-matching entries from completion list be hidden while completing? If not, all entries are shown and selection in completion list will change to the closest matching entry while completing."><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.formatters_history_size" HIDDEN="true" DESCRIPTION="Number of cached formatted text in history."><INTEGER>60</INTEGER></PREF>
+	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Does completion changes the first character of onces and constants with an upper case character?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.show_any_features" DESCRIPTION="Do features of class ANY appear in the feature call complete window?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Does completion list show feature signatures?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Does completion list show query return type?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Is completion of keywords enabled? The completion of keywords can be changed in Editor->Eiffel->Autocomplete."><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="editor.eiffel.editor" DESCRIPTION="Command to open an external editor."><STRING>notepad</STRING></PREF>
+	<PREF NAME="editor.eiffel.underscore_is_separator" DESCRIPTION="Is underscore `_' used as a word separator?"><BOOLEAN>False</BOOLEAN></PREF>
+
 	<PREF NAME="editor.eiffel.colors.normal_text_color" DESCRIPTION="Foreground color for normal text."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.selection_text_color" DESCRIPTION="Foreground color for selected text."><COLOR>255;255;128</COLOR></PREF>
@@ -205,22 +188,7 @@
 	<PREF NAME="editor.eiffel.colors.error_background_color" DESCRIPTION="Background color for errors."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.object_text_color" DESCRIPTION="Foreground color for objects."><COLOR>0;0;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.object_background_color" DESCRIPTION="Background color for objects."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.once_and_constant_in_upper" DESCRIPTION="Complete once and constants with a first upper case character?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.underscore_is_separator" DESCRIPTION="Underscore '_' is a word separator?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.auto-complete_brackets_and_parentheses" DESCRIPTION="Brackets and parentheses are closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Quotes are closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.show_any_features" DESCRIPTION="ANY features appear in the feature call complete window?"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.auto_auto_complete" DESCRIPTION="Auto complete appears automatically?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.filter_completion_list" DESCRIPTION="Completion list entries are filtered based on matches?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.show_completion_signature" DESCRIPTION="Completion list shows feature signatures?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.show_completion_type" DESCRIPTION="Completion list shows return type?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.syntax_complete_enabled" DESCRIPTION="Enable syntax autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>	
-	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION="User customized string."><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.customized_string_2" DESCRIPTION="User customized string."><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.customized_string_3" DESCRIPTION="User customized string."><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Text files format: True = Windows / False = UNIX."><BOOLEAN>True</BOOLEAN></PREF>	
-	<PREF NAME="editor.eiffel.editor" DESCRIPTION="Command to open an external editor."><STRING>notepad</STRING></PREF>
-
+	
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.use_default_indexing" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.custom_indexing_space" DESCRIPTION="Customized autocomplete (Space after keyword was typed)"><STRING> $cursor$</STRING></PREF>
@@ -547,6 +515,42 @@
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
 	
+
+	<PREF NAME="editor.general.automatic_update" DESCRIPTION="Should we reload the content of a file automatically if no change has been made here and that the file has been modified by an external editor?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.general.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font. (Requires restart)"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font. (Requires restart)" HIDDEN="True"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font (Requires restart)"><FONT>Courier New-r-bold-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."><INTEGER>8</INTEGER></PREF>
+	<PREF NAME="editor.general.mouse_wheel_scroll_full_page" DESCRIPTION="Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="editor.general.mouse_wheel_scroll_size" DESCRIPTION="Number of lines scrolled using the mouse wheel."><INTEGER>3</INTEGER></PREF>
+	<PREF NAME="editor.general.quadruple_click_enabled" DESCRIPTION="Does a quadruple click select the entire document?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.general.remove_trailing_white_space" HIDDEN="true" DESCRIPTION="Automatically remove trailing white space from lines?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.general.smart_identation" DESCRIPTION="Should editor perform auto-indenting?"><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="editor.general.tab_step" DESCRIPTION="Number of spaces that a tabulation character represents."><INTEGER>4</INTEGER></PREF>
+	<PREF NAME="editor.general.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.general.colors.margin_background_color" DESCRIPTION="Background color of line number margin."><COLOR>212;208;200</COLOR></PREF>
+	<PREF NAME="editor.general.colors.margin_separator_color" DESCRIPTION="Color of separator between line number margin and editor."><COLOR>192;192;192</COLOR></PREF>
+	<PREF NAME="editor.general.colors.line_number_text_color" DESCRIPTION="Color of line number text."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.general.colors.cursor_line_highlight_color" HIDDEN="true" DESCRIPTION="Background color used to highlight line with cursor in it."><COLOR>255;128;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.highlight_color" HIDDEN="true" DESCRIPTION="Background color used to highlight lines."><COLOR>255;255;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.normal_text_color" DESCRIPTION="Color for normal text."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.general.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.selection_text_color" DESCRIPTION="Color of selected text."><COLOR>255;255;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.selection_background_color" DESCRIPTION="Background color of selected text."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;0;0</COLOR></PREF>	
+	<PREF NAME="editor.general.colors.string_background_color" DESCRIPTION="Background color of string text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>255;255;255</COLOR></PREF>	
+	<PREF NAME="editor.general.colors.spaces_text_color" DESCRIPTION="Color of space characters."><COLOR>128;128;128</COLOR></PREF>
+	<PREF NAME="editor.general.colors.spaces_background_color" DESCRIPTION="Background color of space characters."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.comments_text_color" DESCRIPTION="Color of comments text."><COLOR>128;0;0</COLOR></PREF>
+	<PREF NAME="editor.general.colors.comments_background_color" DESCRIPTION="Background color of coments text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.operator_text_color" DESCRIPTION="Color of operator text."><COLOR>255;0;0</COLOR></PREF>
+	<PREF NAME="editor.general.colors.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>255;255;255</COLOR></PREF>
+	
 	<PREF NAME="general.external_command_0" DESCRIPTION="First external command." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="general.external_command_1" DESCRIPTION="Second external command." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="general.external_command_2" DESCRIPTION="Third external command." HIDDEN="True"><STRING></STRING></PREF>
@@ -557,19 +561,15 @@
 	<PREF NAME="general.external_command_7" DESCRIPTION="Eighth external command." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="general.external_command_8" DESCRIPTION="Ninth external command." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="general.external_command_9" DESCRIPTION="Tenth external command." HIDDEN="True"><STRING></STRING></PREF>
+
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acrobat</STRING></PREF>	
+	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>iexplore.exe $url</STRING></PREF>
 	<PREF NAME="general.shell_command" DESCRIPTION="Command used to launch an external editor."><STRING>notepad $target</STRING></PREF>
-	<PREF NAME="general.filter_name" DESCRIPTION=""><STRING>PostScript</STRING></PREF>
-	<PREF NAME="general.filter_command" DESCRIPTION=""><STRING>none</STRING></PREF>
-	<PREF NAME="general.filter_directory" DESCRIPTION=""><STRING></STRING></PREF>
-	<PREF NAME="general.profile_directory" DESCRIPTION=""><STRING></STRING></PREF>
-	<PREF NAME="general.temporary_directory" DESCRIPTION="Temporary directory location."><STRING></STRING></PREF>
-	<PREF NAME="general.highlight clickable areas" DESCRIPTION="Highlight clickable areas?"><BOOLEAN>True</BOOLEAN></PREF>	
+
 	<PREF NAME="general.dynamic_library_window_width" DESCRIPTION="Height of dynamic library window." HIDDEN="True"><INTEGER>450</INTEGER></PREF>
 	<PREF NAME="general.dynamic_library_window_height" DESCRIPTION="Width of dynamic library window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 	<PREF NAME="general.preference_window_width" DESCRIPTION="Height of preferences window." HIDDEN="True"><INTEGER>450</INTEGER></PREF>
 	<PREF NAME="general.preference_window_height" DESCRIPTION="Width of preferences window." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 	<PREF NAME="general.show_hidden_preferences" DESCRIPTION="Show hidden preferences in preference window?" HIDDEN="True"><BOOLEAN>False</BOOLEAN></PREF>	
-	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>netscape $url</STRING></PREF>
 
 </EIFFEL_DOCUMENT>

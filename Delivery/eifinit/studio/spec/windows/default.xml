@@ -1,3 +1,3 @@
 <EIFFEL_DOCUMENT>		
-	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Text files format: True = Windows / False = UNIX."><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="editor.eiffel.text_mode_is_windows" DESCRIPTION="Format to use when saving class text. True means using Windows text format, False means using Unix text format."><BOOLEAN>True</BOOLEAN></PREF>	
 </EIFFEL_DOCUMENT>

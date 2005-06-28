@@ -1330,7 +1330,7 @@ feature -- Implementation
 
 	buffered_drawable_width: INTEGER is 32000
 
-	buffered_drawable_height: INTEGER is 2000
+	buffered_drawable_height: INTEGER is 32000
 		-- Default size of `drawable' used for scrolling purposes.
 		
 	last_vertical_scroll_bar_value: INTEGER

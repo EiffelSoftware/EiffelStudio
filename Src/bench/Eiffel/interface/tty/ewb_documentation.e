@@ -6,8 +6,6 @@ indexing
 class EWB_DOCUMENTATION 
 
 inherit
-	TTY_CONSTANTS
-
 	EWB_FILTER_SYSTEM
 		redefine
 			execute, loop_action

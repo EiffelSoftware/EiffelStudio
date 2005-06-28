@@ -1,10 +1,6 @@
 <document title="Preferences Sample">
 	<meta_data/>
-	<paragraph>
-		<image> 
-			<url>preferences_example.png</url> 
-			<alt_text>preferences_example</alt_text>
-		</image>
+	<paragraph>		
 		<line_break/>
 		<line_break/>
 		<heading>
@@ -23,7 +19,22 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph> After launching the application, you will see a window displayed with 2 buttons.  When clicked each will display a window showing the preferences, one is the default view provided with the library, the other is a custom view for purposes of example.</paragraph>
+		<paragraph> After launching the application, you will see a window displayed with 2 buttons.  When clicked each will display a window showing the preferences, one is the default view provided with the library, the other is a custom view for purposes of example.  The default view looks like:</paragraph>
+		<paragraph>
+			<image> 
+				<url>normal.png</url> 
+				<alt_text>preferences_example_normal_view</alt_text>
+			</image>
+		</paragraph>
+		<paragraph>
+			The custom view looks like:			
+		</paragraph>
+		<paragraph>
+			<image> 
+				<url>custom.png</url> 
+				<alt_text>preferences_example_normal_view</alt_text>
+			</image>
+		</paragraph>
 		<paragraph> In each dialog you can select the preferences and alter the values.
 			<heading>
 				<size>2</size>Under the Hood

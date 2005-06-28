@@ -77,7 +77,7 @@ feature -- Access
 			font_imp ?= Result.implementation
 			
 			a_utf8_ptr := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_get_font_name (c_object)
-			create a_cs.make_from_pointer (a_utf8_ptr)
+			create a_cs.share_from_pointer (a_utf8_ptr)
 			font_desc := a_cs.string.as_lower
 			font_names := App_implementation.font_names_on_system
 			
@@ -131,9 +131,8 @@ feature -- Element change
 			a_font_des_str := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_to_string (font_imp.font_description)
 			if a_font_des_str /= default_pointer then
 				create a_cs.make_from_pointer (a_font_des_str)
-				{EV_GTK_EXTERNALS}.g_free (a_font_des_str)
 			else
-				create a_cs.make (font_imp.name + " " + font_imp.height_in_points.out)
+				a_cs := font_imp.name + " " + font_imp.height_in_points.out
 			end
 			a_success_flag := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
 							c_object,

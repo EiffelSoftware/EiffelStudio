@@ -26,11 +26,8 @@ feature {NONE} -- Initialization
 	
 	textable_imp_initialize is
 			-- Create a GtkLabel to display the text.
-		local
-			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := once ""
-			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
+			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 		end
@@ -38,12 +35,19 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING is
-			-- Text of the label
+			-- Text of the label.
+		local
+			a_str: POINTER
 		do
 			if real_text /= Void then
-				Result := real_text.twin
+				Result := real_text.string
 			else
-				Result := ""
+				a_str :={EV_GTK_EXTERNALS}.gtk_label_get_label (text_label)
+				if a_str /= default_pointer then
+					Result := (create{EV_GTK_C_STRING}.share_from_pointer (a_str)).string
+				else
+					Result := ""
+				end
 			end
 		end
 
@@ -94,12 +98,13 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			real_text := a_text.twin
 			if accelerators_enabled then
-				create a_cs.make (u_lined_filter (a_text))
+				real_text := a_text
+				a_cs := App_implementation.c_string_from_eiffel_string (u_lined_filter (a_text))
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_label_set_text_with_mnemonic (text_label, a_cs.item)
 			else
-				create a_cs.make (a_text)
+				a_cs := App_implementation.c_string_from_eiffel_string (a_text)
+				real_text := Void
 				{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			end
 		end
@@ -115,7 +120,7 @@ feature {EV_ANY_IMP} -- Implementation
 			Result := False
 		end
 
-	real_text: STRING
+	real_text: EV_GTK_C_STRING
 			-- Internal `text'. (with ampersands)
 
 	filter_ampersand (s: STRING; char: CHARACTER) is
@@ -141,7 +146,7 @@ feature {EV_ANY_IMP} -- Implementation
 				end					
 				i := i + 1
 			end
-			s.replace_substring_all ("&&", "&")
+			s.replace_substring_all (once "&&", once "&")
 		end
 
 	u_lined_filter (s: STRING): STRING is
@@ -151,7 +156,7 @@ feature {EV_ANY_IMP} -- Implementation
 			s_not_void: s /= Void
 		do
 			Result := s.twin
-			Result.replace_substring_all ("_", "__")
+			Result.replace_substring_all (once  "_", once  "__")
 			if s.has ('&') then
 				filter_ampersand (Result, '_')
 			end

@@ -247,7 +247,6 @@ feature -- Access
 			temp_text := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
 			create a_cs.make_from_pointer (temp_text)
 			Result := a_cs.string
-			{EV_GTK_EXTERNALS}.g_free (temp_text)
 		end
 
 	line (a_line: INTEGER): STRING is
@@ -388,7 +387,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			create a_cs.make (a_text)
+			a_cs := a_text
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
@@ -404,7 +403,7 @@ feature -- Status setting
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_text)
+			a_cs := a_text
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
 		end
 		
@@ -420,7 +419,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			create a_cs.make (a_text)
+			a_cs := a_text
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
@@ -548,7 +547,7 @@ feature {NONE} -- Implementation
 			a_car_pos: INTEGER
 		do
 			a_car_pos := caret_position
-			create a_cs.make (a_text)
+			a_cs := a_text
 			create a_iter.make
 			-- Initialize out iter with the current caret/insert position.
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (a_text_buffer, a_iter.item)

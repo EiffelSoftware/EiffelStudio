@@ -184,12 +184,12 @@ feature -- Status setting
 			{EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_NORMAL_ENUM, color)
 			{EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_ACTIVE_ENUM, color)
 			{EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_PRELIGHT_ENUM, color)
-			{EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_SELECTED_ENUM, default_pointer)
+			--{EV_GTK_EXTERNALS}.gtk_widget_modify_fg (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_SELECTED_ENUM, default_pointer)
 
 			{EV_GTK_EXTERNALS}.gtk_widget_modify_text (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_NORMAL_ENUM, color)
 			{EV_GTK_EXTERNALS}.gtk_widget_modify_text (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_ACTIVE_ENUM, color)
 			{EV_GTK_EXTERNALS}.gtk_widget_modify_text (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_PRELIGHT_ENUM, color)
-			{EV_GTK_EXTERNALS}.gtk_widget_modify_text (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_SELECTED_ENUM, default_pointer)
+			--{EV_GTK_EXTERNALS}.gtk_widget_modify_text (a_c_object, {EV_GTK_EXTERNALS}.GTK_STATE_SELECTED_ENUM, default_pointer)
 			
 			if color /= NULL  then
 				color.memory_free

@@ -376,8 +376,9 @@ feature -- Drawing operations
 		local
 			a_cs: EV_GTK_C_STRING
 			a_pango_layout: POINTER
-			a_y, a_text_count: INTEGER
+			a_y: INTEGER
 			a_clip_area: EV_RECTANGLE
+			l_app_imp: like App_implementation
 		do
 			if drawable /= default_pointer then
 				if draw_from_baseline then
@@ -389,10 +390,10 @@ feature -- Drawing operations
 				else
 					a_y := y
 				end
-				a_cs := a_text
+				l_app_imp := App_implementation
+				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
 					-- Replace when we have UTF16 support
-				a_pango_layout := App_implementation.pango_layout
-				a_text_count := a_text.count				
+				a_pango_layout := l_app_imp.pango_layout				
 
 				{EV_GTK_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
 				if internal_font_imp /= Void then

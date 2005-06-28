@@ -100,7 +100,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			start_directory := a_path.twin
-			create a_cs.make (start_directory + "/.")
+			a_cs := start_directory + "/."
 			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (
 				c_object,
 				a_cs.item

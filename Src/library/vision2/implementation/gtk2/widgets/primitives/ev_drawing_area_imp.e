@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			if not is_tabable_to then
 				{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			end
-			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then not has_focus then
+			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then not has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) then
 					-- As a button has been pressed on the drawing area then 
 				set_focus
 			end

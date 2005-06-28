@@ -228,11 +228,11 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			a_title := new_title
-			if a_title.is_equal ("") then
+			if a_title.is_equal (once "") then
 				-- Some window managers do not like empty strings as titles and show it as an error.
 				a_title := "%T"
 			end
-			create a_cs.make (a_title)
+			a_cs := a_title
 			{EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
 		end
 
@@ -326,29 +326,38 @@ feature {NONE} -- Implementation
 			default_height := -1
 			positioned_by_user := False
 			Precursor (a_x_pos, a_y_pos, a_width, a_height)
-			if a_x_pos  /= user_x_position or a_y_pos /= user_y_position then
-				user_x_position := a_x_pos
-				user_y_position := a_y_pos
+			if a_x_pos  /= previous_x_position or a_y_pos /= previous_y_position then
+				previous_x_position := a_x_pos
+				previous_y_position := a_y_pos
 				if move_actions_internal /= Void then
-					move_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (user_x_position, user_y_position, a_width, a_height))
+					move_actions_internal.call (app_implementation.gtk_marshal.dimension_tuple (previous_x_position, previous_y_position, a_width, a_height))
 				end	
 			end
 		end
 
+	previous_x_position, previous_y_position: INTEGER
+		-- Positions of previously set x and y coordinates of `Current'.
+
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
+		local
+			a_cs: EV_GTK_C_STRING
+			l_app_imp: like app_implementation
 		do
 			Precursor {EV_CONTAINER_IMP} (a_key, a_key_string, a_key_press)
-			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then
+			if focus_widget /= Void and then a_key /= Void and has_struct_flag (focus_widget.visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) then
 					-- Used to disable certain key behavior such as Tab focus.
+				l_app_imp := app_implementation
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, App_implementation.key_press_event_string.item)
+						a_cs := l_app_imp.c_string_from_eiffel_string (l_app_imp.key_press_event_string)
+						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, App_implementation.key_release_event_string.item)
+						a_cs := l_app_imp.c_string_from_eiffel_string (l_app_imp.key_press_event_string)
+						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end	
@@ -372,7 +381,7 @@ feature {NONE} -- Implementation
 			maximum_width := 32000
 			maximum_height := 32000
 			
-			signal_connect_true ("delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
+			signal_connect_true (once "delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			initialize_client_area
 
 					-- Set appropriate WM decorations
@@ -387,7 +396,7 @@ feature {NONE} -- Implementation
 			default_height := -1
 			default_width := -1
 
-			real_signal_connect (c_object, "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
+			real_signal_connect (c_object, once "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
 			
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, 1, 1)
 			set_is_initialized (True)

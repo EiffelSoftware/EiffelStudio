@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
 				--| Minimum sizes need to be similar on both platforms
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
-			set_text ("")
+			set_text (once "")
 		end
 
 feature -- Access
@@ -68,7 +68,7 @@ feature -- Access
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make_from_pointer ({EV_GTK_EXTERNALS}.gtk_entry_get_text (entry_widget))
+			create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_entry_get_text (entry_widget))
 			Result := a_cs.string
 		end
 
@@ -85,7 +85,7 @@ feature -- Status setting
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_text)
+			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
 			{EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
 		end
 
@@ -94,7 +94,7 @@ feature -- Status setting
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (txt)
+			a_cs := App_implementation.c_string_from_eiffel_string (txt)
 			{EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
 		end
 	
@@ -103,7 +103,7 @@ feature -- Status setting
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (txt)
+			a_cs := App_implementation.c_string_from_eiffel_string (txt)
 			{EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
 		end
 		
@@ -136,7 +136,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			real_signal_connect_after (entry_widget, "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
+			real_signal_connect_after (entry_widget, once "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
 		end
 		
 feature -- Status report
@@ -217,7 +217,7 @@ feature -- Basic operation
 			pos: INTEGER
 		do
 			pos := a_pos - 1
-			create a_cs.make (txt)
+			a_cs := txt
 			{EV_GTK_EXTERNALS}.gtk_editable_insert_text (
 				entry_widget,
 				a_cs.item,
@@ -319,7 +319,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			real_signal_connect_after  (entry_widget, "changed", agent  (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
+			real_signal_connect_after  (entry_widget, once "changed", agent  (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
 
 	stored_text: STRING

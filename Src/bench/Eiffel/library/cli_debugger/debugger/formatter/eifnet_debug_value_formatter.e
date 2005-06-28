@@ -22,6 +22,7 @@ feature -- Access
 			-- strip_reference an unboxed value
 		require
 			arg_value_not_void: icd /= Void
+			arg_value_item_not_null: icd.item_not_null
 		do
 			Result := icd
 			Result := strip_references (Result)
@@ -31,8 +32,16 @@ feature -- Access
 -- but we should check this
 -- especially on whidbey
 			Result := unbox_debug_value (Result)
+			
+			if Result = icd then
+					--| Make sure Result is not the icd object
+					--| otherwise we may clean it by hasard
+				Result := icd.twin
+			end
 		ensure
+			result_not_icd: Result /= icd
 			Result_not_void: Result /= Void
+			Result_not_void: Result /= Void implies Result.item_not_null
 		end
 
 	icor_debug_string_value (a_data: ICOR_DEBUG_VALUE): ICOR_DEBUG_STRING_VALUE is
@@ -591,7 +600,7 @@ feature {NONE} -- Implementation
 			l_mp: MANAGED_POINTER
 		do
 			l_icd_with_value := a_icdvalue.query_interface_icor_debug_generic_value
-			if not a_icdvalue.last_call_succeed then
+			if l_icd_with_value = Void then
 				l_icd_with_value := a_icdvalue.query_interface_icor_debug_reference_value
 			end
 			if l_icd_with_value /= Void and then a_icdvalue.last_call_succeed then

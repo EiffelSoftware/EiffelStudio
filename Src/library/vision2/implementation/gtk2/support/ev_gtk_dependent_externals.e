@@ -8,6 +8,11 @@ class
 
 feature -- Externals
 
+	frozen gtk_label_get_label (a_label: POINTER): POINTER is
+		external
+			"C signature (GtkLabel*): gchar* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_window_get_position (a_window: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is
 		external
 			"C signature (GtkWindow*, gint*, gint*) use <gtk/gtk.h>"
@@ -606,6 +611,11 @@ feature -- Externals
 	frozen pango_layout_get_pixel_extents (a_layout: POINTER; ink_rect, logical_rect: POINTER) is
 		external
 			"C signature (PangoLayout*, PangoRectangle*, PangoRectangle*) use <gtk/gtk.h>"
+		end
+
+	frozen pango_layout_get_size (a_layout: POINTER; a_width, a_height: TYPED_POINTER [INTEGER]) is
+		external
+			"C signature (PangoLayout*, gint*, gint*) use <gtk/gtk.h>"
 		end
 
 	frozen pango_layout_context_changed (a_layout: POINTER) is

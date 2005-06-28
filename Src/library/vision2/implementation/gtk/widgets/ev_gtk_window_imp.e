@@ -76,14 +76,12 @@ feature {NONE} -- Implementation
 	set_width (a_width: INTEGER) is
 			-- Set the horizontal size to `a_width'.
 		do
-			update_request_size
 			set_size (a_width, height)
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set the vertical size to `a_height'.
 		do
-			update_request_size
 			set_size (width, a_height)
 		end
 
@@ -91,7 +89,6 @@ feature {NONE} -- Implementation
 			-- Set the horizontal size to `a_width'.
 			-- Set the vertical size to `a_height'.
 		do
-			update_request_size
 			default_width := a_width
 			default_height := a_height
 				-- Both resizes are needed otherwise the original position gets reset on show.
@@ -131,14 +128,9 @@ feature {NONE} -- Implementation
 			-- Set horizontal offset to parent to `a_x'.
 			-- Set vertical offset to parent to `a_y'.
 		do
-			user_x_position := a_x
-			user_y_position := a_y
 			{EV_GTK_EXTERNALS}.gtk_window_move (c_object, a_x, a_y)
 			positioned_by_user := True
 		end
-
-	user_x_position, user_y_position: INTEGER
-			-- Used to store user x and y positions whilst Window is off screen.
 
 	positioned_by_user: BOOLEAN
 		-- Has `Current' been positioned by the user?
@@ -146,49 +138,17 @@ feature {NONE} -- Implementation
 	screen_x: INTEGER is
 			-- Horizontal position of the window on screen,
 		local
-			a_aux_info: POINTER
-			i: INTEGER
+			temp_y: INTEGER
 		do
-			if positioned_by_user then
-				Result := user_x_position
-			else
-				if is_displayed then
-					if has_wm_decorations then
-						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $Result, null)
-					else
-						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), $Result, null)
-					end
-				else
-					a_aux_info := aux_info_struct
-					if a_aux_info /= null then
-						Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
-					end
-				end
-			end
+			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $Result, $temp_y)
 		end
 
 	screen_y: INTEGER is
 			-- Vertical position of the window on screen,
 		local
-			a_aux_info: POINTER
-			i: INTEGER
+			temp_x: INTEGER
 		do
-			if positioned_by_user then
-				Result := user_y_position
-			else
-				if is_displayed then
-					if has_wm_decorations then
-						{EV_GTK_EXTERNALS}.gdk_window_get_root_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $Result)
-					else
-						i := {EV_GTK_EXTERNALS}.gdk_window_get_origin ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), null, $Result)
-					end
-				else
-					a_aux_info := aux_info_struct
-					if a_aux_info /= null then
-						Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
-					end
-				end
-			end
+			{EV_GTK_EXTERNALS}.gtk_window_get_position (c_object, $temp_x, $Result)
 		end
 
 	has_wm_decorations: BOOLEAN is
@@ -201,7 +161,7 @@ feature {NONE} -- Implementation
 	show is
 			-- Request that `Current' be displayed when its parent is.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_show_now (c_object)
+			{EV_GTK_EXTERNALS}.gtk_window_present (c_object)
 		end
 
 feature {EV_ANY_I} -- Implementation

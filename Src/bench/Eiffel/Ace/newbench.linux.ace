@@ -186,7 +186,7 @@ cluster
 
 	all interface:		"$EIFFEL_SRC/Eiffel/interface"
 		exclude
-			"CVS"; "graphical"; "win32"; "mswin"; "new_tty"; 
+			"CVS"; "graphical"; "win32"; "mswin";
 			"tty"; "Not_in_System"; "registry"; "preferences"; "dotnet"
 		end
 
@@ -197,10 +197,8 @@ cluster
 
 	all tty (interface):		"$/tty"
 		exclude
-			"output_window.e"; "tty_resources.e"; "eb_diagram_html_generator.e"; "eb_gui_preferences.e"
+			"eb_diagram_html_generator.e"; "eb_gui_preferences.e"
 		end
-
-	new_tty (interface):		"$/new_tty"
 
 	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
 		exclude

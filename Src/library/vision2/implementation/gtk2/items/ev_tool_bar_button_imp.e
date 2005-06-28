@@ -33,7 +33,8 @@ inherit
 
 	EV_SENSITIVE_IMP
 		redefine
-			interface
+			interface,
+			enable_sensitive
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -91,7 +92,7 @@ feature -- Access
 		do
 			a_txt := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_get_label (visual_widget)
 			if a_txt /= Default_pointer then
-				create a_cs.make_from_pointer (a_txt)
+				create a_cs.share_from_pointer (a_txt)
 				Result := a_cs.string				
 			else
 				Result := ""
@@ -112,7 +113,7 @@ feature -- Element change
 			a_parent_imp: EV_TOOL_BAR_IMP
 			a_cs: EV_GTK_C_STRING
 		do
-			a_cs := a_text
+			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_button_set_label (visual_widget, a_cs.item)
 			a_parent_imp ?= parent_imp
 			if a_parent_imp /= Void and then a_parent_imp.parent_imp /= Void then
@@ -138,7 +139,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			tooltip := a_text.twin
-			a_cs := a_text
+			a_cs := App_implementation.c_string_from_eiffel_string (a_text)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_tooltip (
 				visual_widget,
 				app_implementation.tooltips,
@@ -159,6 +160,24 @@ feature -- Element change
 		do
 			gray_pixmap := Void
 			--| FIXME IEK Needs proper implementation
+		end
+
+	enable_sensitive is
+			-- 
+		local			
+			l_pointer_over_widget: BOOLEAN
+			a_pointer_position: EV_COORDINATE
+		do
+			Precursor {EV_SENSITIVE_IMP}		
+			--| This is a hack for gtk 2.6.x that renders the button unusable if the mouse pointer is over `Current' when `enable_sensitive' is called.
+			if is_displayed then
+				l_pointer_over_widget := Current = gtk_widget_imp_at_pointer_position
+				if l_pointer_over_widget then
+					a_pointer_position := pnd_screen.pointer_position
+					pnd_screen.set_pointer_position (a_pointer_position.x + width + 10, a_pointer_position.y + height + 10)
+					pnd_screen.set_pointer_position (a_pointer_position.x, a_pointer_position.y)
+				end				
+			end
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
@@ -185,7 +204,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 			-- Attach to GTK "clicked" signal.
 		do
 			create Result
-			real_signal_connect (c_object, "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
+			real_signal_connect (c_object, once "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {EV_ANY_I} -- Implementation

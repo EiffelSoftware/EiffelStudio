@@ -8,15 +8,10 @@ indexing
 class TTY_RESOURCES
 
 inherit
-	TTY_CONSTANTS
-
 	SHARED_CONFIGURE_RESOURCES
-
 	SHARED_EIFFEL_PROJECT
-	
+	TTY_CONSTANTS
 	EIFFEL_ENV
-	
-	EB_SHARED_PREFERENCES
 
 create 
 	initialize
@@ -24,55 +19,48 @@ create
 feature {NONE} -- Initialization
 
 	initialize is
-			-- Initialize the resource table.
+			-- Initialize resource table
 		do
 			internal_initialize
 		end
-		
+
 	internal_initialize is
 			-- Initialize the resource table.
 			-- (By default, resources will be looked the `eifinit'
 			-- directory in $ISE_EIFFEL, $HOME, and $ISE_DEFAULTS looking
 			-- for file general and for platform specific files).
 		local
-			resource_table: RESOURCE_TABLE;
-			resource_files_parser: RESOURCE_FILES_PARSER;
+			resource_parser: RESOURCE_PARSER
+			test_file: RAW_FILE
+			retried: BOOLEAN
+			error_msg: STRING
 		once
-			create resource_table.make (20)
-			create resource_files_parser.make (Short_studio_name)
-			setup_preferences
-				
-				-- Read `general' file
-			resource_files_parser.parse_files (resource_table)
-			initialize_resources (resource_table)
-
-				-- Read `general.cfg' file
-			resource_files_parser.set_extension ("cfg")
-			resource_files_parser.parse_files (Configure_resources)
+			if retried then
+				error_msg := warning_messages.w_cannot_read_file (compiler_configuration)
+			else
+				create test_file.make (compiler_configuration)
+				if test_file.exists and test_file.is_readable then
+					create resource_parser
+					resource_parser.parse_file (compiler_configuration, configure_resources)
+				else
+					error_msg := compiler_configuration.twin
+					error_msg.append (Warning_messages.w_file_does_not_exist_execution_impossible)
+				end
+			end
+			if error_msg /= Void then
+				io.error.put_string (error_msg)
+				error_occurred := True
+			else
+				error_occurred := False
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Status report
 
 	error_occurred: BOOLEAN
 			-- Did an error occur while reading the default preferences file ?
-	
-feature {NONE} -- Initialization of resource categories
-
-	initialize_resources (a_table: RESOURCE_TABLE) is
-			-- Initialize all resources valid for the tty interface.
-		do
---			General_resources.initialize (a_table)
---			Class_resources.initialize (a_table)
---			Feature_resources.initialize (a_table)
-		end
-		
-	setup_preferences is
-			-- Setup the preferences
-		local
-			l_prefs: PREFERENCES
-		do
-			create l_prefs.make_with_default_values_and_location (system_general, eiffel_preferences)
-			initialize_preferences (l_prefs, False)
-		end		
-
+			
 end -- class TTY_RESOURCES

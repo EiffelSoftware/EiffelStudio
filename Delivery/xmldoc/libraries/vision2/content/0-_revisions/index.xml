@@ -101,6 +101,7 @@
 							<item>Fixed call on Void target when calling `set_foreground_color' on a displayed combo box which is not editable.</item>
 							<item>Fixed invariant violation with a non editable combo box.</item>
 							<item>Fixed `caret_position' which was failing if you attempted to set a caret position to a value greater than approx 65,000.</item>
+							<item>Fixed `set_focus' which failed if the combo box was non-editable.</item>
 						</list>
 					</item>
 					<item>

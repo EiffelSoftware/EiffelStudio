@@ -146,8 +146,8 @@ feature {NONE} -- Implementation
 				if not user_cancelled_activation then
 					set_text (combo_box.text)				
 				end
-				combo_box := Void
 				Precursor {EV_GRID_LABEL_ITEM}
+				combo_box := Void
 			end
 		end
 

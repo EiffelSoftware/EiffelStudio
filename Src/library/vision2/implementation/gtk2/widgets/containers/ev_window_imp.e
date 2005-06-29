@@ -118,15 +118,20 @@ feature -- Status setting
 			-- Wait until window is closed by the user.
 		local
 			events_pending: BOOLEAN
+			l_app_imp: like app_implementation
 		do
 			from
+				l_app_imp := app_implementation
 			until
 				is_destroyed or else not is_show_requested
 			loop
 				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then
 						-- There are no more events pending.
-					App_implementation.call_idle_actions
-					events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
+					if l_app_imp.idle_actions_pending then
+						l_app_imp.call_idle_actions
+					else
+						events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
+					end
 				end
 			end
 		end

@@ -55,6 +55,9 @@ cluster
 		end
 
 	interface_app (interface):		"$/application"
+		exclude
+			"web_browser_widget.e";
+		end
 
 	interface_wizard (interface):		"$/wizard"
 
@@ -97,7 +100,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC/library/vision2"
 		exclude
-			"mswin"; "gtk2"; "ev_checkable_tree.e";
+			"mswin"; "gtk2";
 		end
 
 	all time:		"$EIFFEL_SRC/library/time"
@@ -114,7 +117,7 @@ cluster
 
 	all preferences:		"$EIFFEL_SRC/library/preferences"
 		exclude
-			"CVS"; 
+			"CVS"; "registry_implementation";
 		end
 
 	all env:		"$EIFFEL_SRC/Eiffel/lace/env"
@@ -126,6 +129,13 @@ cluster
 		exclude
 			"CVS"; 
 		end
+
+	all editor:		"$EIFFEL_SRC\library\editor"
+		exclude
+			"constants.e"; "constants_imp.e"; 
+		end
+		
+	all lex:		"$ISE_EIFFEL\library\lex"
 
 external
 

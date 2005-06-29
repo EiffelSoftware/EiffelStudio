@@ -51,7 +51,7 @@ feature -- Width & Height
 			Result := (((position // l_tab_width) + 1 ) * l_tab_width) - position
 
 				-- Handle next tabulations.
-			Result := Result + l_tab_width * (length - 1)
+			Result := Result + (l_tab_width * (length - 1))
 		end
 
 	get_substring_width (n: INTEGER): INTEGER is

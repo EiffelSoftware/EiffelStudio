@@ -550,6 +550,7 @@
 	<PREF NAME="editor.general.colors.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.use_buffered_line" DESCRIPTION="Indicates if editor display drawing is first buffered and then drawn, or just drawn directly to the screen.  If true scrolling will be smoother, but performance will be slower and may cause minor flickering."><BOOLEAN>True</BOOLEAN></PREF>
 	
 	<PREF NAME="general.external_command_0" DESCRIPTION="First external command." HIDDEN="True"><STRING></STRING></PREF>
 	<PREF NAME="general.external_command_1" DESCRIPTION="Second external command." HIDDEN="True"><STRING></STRING></PREF>

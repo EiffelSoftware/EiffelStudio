@@ -262,6 +262,12 @@ feature -- Value
 			Result := quadruple_click_enabled_preference.value
 		end
 
+	use_buffered_line: BOOLEAN is
+			-- 
+		do
+			Result := use_buffered_line_preference.value	
+		end		
+
 feature {NONE} -- Preferences
 
 	editor_font_preference: FONT_PREFERENCE
@@ -367,6 +373,9 @@ feature {NONE} -- Preferences
 	quadruple_click_enabled_preference: BOOLEAN_PREFERENCE
 			-- is quadruple click (select all) enabled ?
 
+	use_buffered_line_preference: BOOLEAN_PREFERENCE
+			-- Use buffered line when drawing?
+
 feature -- Misc	
 
 	plain_white: EV_COLOR is
@@ -460,6 +469,8 @@ feature {NONE} -- Preference Strings
 	quadruple_click_enabled_string: STRING is "editor.general.quadruple_click_enabled"
 			-- is quadruple click (select all) enabled ?
 
+	use_buffered_line_string: STRING is "editor.general.use_buffered_line"
+
 feature {NONE} -- Implementation
 
 	initialize_preferences is
@@ -511,6 +522,7 @@ feature {NONE} -- Implementation
 			highlight_color_preference := l_manager.new_color_resource_value (l_manager, highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 128))
 			cursor_line_highlight_color_preference := l_manager.new_color_resource_value (l_manager, cursor_line_highlight_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 128, 128))
 			quadruple_click_enabled_preference := l_manager.new_boolean_resource_value (l_manager, quadruple_click_enabled_string, True)
+			use_buffered_line_preference := l_manager.new_boolean_resource_value (l_manager, use_buffered_line_string, True)
 			
 			tabulation_spaces_preference.change_actions.extend (agent update)
 			left_margin_width_preference.change_actions.extend (agent update)

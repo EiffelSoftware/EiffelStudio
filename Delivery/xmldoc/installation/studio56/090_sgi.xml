@@ -26,18 +26,18 @@ tar xvfz /tmp/Eiffel56.tgz</code_block>
 		<paragraph>Once this is done, you should define the following environment variables in order to run EiffelStudio:
 			<list ordered="false">
 				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel56</item>
-				<item><bold>ISE_PLATFORM</bold> to iris-mips</item>
+				<item><bold>ISE_PLATFORM</bold> to irix-mips</item>
 			</list>
 		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
 		</paragraph>
 		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
 export ISE_EIFFEL=/usr/local/Eiffel56
-export ISE_PLATFORM=iris-mips
+export ISE_PLATFORM=irix-mips
 export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
 		</paragraph>
 		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
 setenv ISE_EIFFEL /usr/local/Eiffel56
-setenv ISE_PLATFORM iris-mips
+setenv ISE_PLATFORM irix-mips
 set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
 		</paragraph>
 		<paragraph>Once this is done you can jump to the "Using EiffelStudio" section at the end of this document.</paragraph>
@@ -51,18 +51,18 @@ cp -r /mnt/cdrom/Eiffel56 .</code_block>
 		<paragraph>Once this is done, you should define the following environment variables in order to run EiffelStudio:
 			<list ordered="false">
 				<item><bold>ISE_EIFFEL</bold> to /usr/local/Eiffel56</item>
-				<item><bold>ISE_PLATFORM</bold> to iris-mips</item>
+				<item><bold>ISE_PLATFORM</bold> to irix-mips</item>
 			</list>
 		and add $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin to your <bold>PATH</bold> environment variable.
 		</paragraph>
 		<paragraph>Using sh or bash as a shell, it suffices to type the following commands:<code_block>
 export ISE_EIFFEL=/usr/local/Eiffel56
-export ISE_PLATFORM=iris-mips
+export ISE_PLATFORM=irix-mips
 export PATH=$PATH:$<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin</code_block>
 		</paragraph>
 		<paragraph>Using csh or tcsh as a shell, it suffices to type the following commands:<code_block>
 setenv ISE_EIFFEL /usr/local/Eiffel56
-setenv ISE_PLATFORM iris-mips
+setenv ISE_PLATFORM irix-mips
 set path = ($path $<bold>ISE_EIFFEL</bold>/studio/spec/$<bold>ISE_PLATFORM</bold>/bin)</code_block>
 		<paragraph>Once the files are copied and once the environment variables are properly set, you need to register EiffelStudio. To do so type the following commands:</paragraph>
 		<code_block>cd $ISE_EIFFEL

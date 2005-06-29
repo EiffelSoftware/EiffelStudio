@@ -45,29 +45,47 @@ feature -- Miscellaneous
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		local
-			i: INTEGER
+			i,
+			l_font_width,
+			l_tab_position: INTEGER
 			l_string: STRING
+			l_is_fixed: BOOLEAN
 		do
 			if n = 0 then
 				Result := 0
 			else
+				l_font_width := font_width
+				l_is_fixed := is_fixed_width
 				if image.has ('%T') then
+					if previous /= Void then
+						l_tab_position := previous.position + previous.width
+					end
 					from
 						i := 1
-						create l_string.make_filled (' ', 1)
+						if l_is_fixed then
+							create l_string.make_filled (' ', 1)						
+						end
 					until
 						i > n or else i > image.count
 					loop
 						if image @ i = '%T' then
-							Result := ((((position + Result) // tabulation_width) + 1 ) * tabulation_width ) - position
-						else
-							l_string.put (image.item (i), 1)
-							Result := Result + font.string_width (l_string)
+							Result := ((((l_tab_position + Result) // tabulation_width) + 1 ) * tabulation_width ) - l_tab_position
+						else							
+							if l_is_fixed then
+								Result := Result + l_font_width
+							else								
+								l_string.put (image.item (i), 1)
+								Result := Result + font.string_width (l_string)
+							end
 						end
 						i := i + 1
 					end
 				else
-					Result := font.string_width (image.substring (1, n.min (image.count)))
+					if l_is_fixed then
+						Result := Result + (n.min (image.count) * l_font_width)
+					else
+						Result := font.string_width (image.substring (1, n.min (image.count)))
+					end
 				end
 			end
 		end

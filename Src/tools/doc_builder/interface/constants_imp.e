@@ -638,7 +638,7 @@ feature -- Access
 	envision_filtered_text: STRING is
 			-- `Result' is STRING constant named `envision_filtered_text'.
 		once
-			Result := "ENViSioN! Filtered"
+			Result := "EiffelEnvision Filtered"
 		end
 
 	icon_save_ico: EV_PIXMAP is

@@ -244,6 +244,12 @@ feature -- Status Setting
 			editor_drawing_area.focus_in_actions.resume
 		end		
 
+	set_internal_focus (a_flag: BOOLEAN) is
+			-- 
+		do
+			internal_focus_requested := a_flag
+		end		
+
 feature -- Query
 
 	editor_x: INTEGER is
@@ -397,10 +403,7 @@ feature -- Status setting
 	set_focus is
 			-- Give the focus to the editor area.
 		do
-			if
-				not editor_drawing_area.is_destroyed and then editor_drawing_area.is_displayed and then
-				editor_drawing_area.is_sensitive
-			then
+			if not editor_drawing_area.is_destroyed and then editor_drawing_area.is_displayed and then editor_drawing_area.is_sensitive then
 				editor_drawing_area.set_focus
 			else
 				internal_focus_requested := True
@@ -1199,7 +1202,7 @@ feature {NONE} -- Text loading
 	reload is
 			-- Reload the opened file from disk.
 		do
-			if file_name /= Void and then not file_name.is_empty then
+			if file_name /= Void and then not file_name.is_empty then				
 				load_file (file_name.string)
 			end
 		end
@@ -1223,9 +1226,6 @@ feature {NONE} -- Text loading
 			update_horizontal_scrollbar		
 			editor_drawing_area.enable_sensitive
 			refresh
-			if editor_drawing_area.is_sensitive then
-				set_focus
-			end
 		end
 
 	on_text_block_loaded (was_first_block: BOOLEAN) is
@@ -1239,6 +1239,7 @@ feature {NONE} -- Text loading
 		do
 			if internal_focus_requested then				
 				set_focus
+				internal_focus_requested := False
 			end
 		end		
 

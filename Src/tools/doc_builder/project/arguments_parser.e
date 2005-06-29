@@ -154,7 +154,7 @@ feature -- Commands
 			io.putstring ("	-o [/studio /env /all] 	Output content options%N")
 			io.putstring ("		Types of conversion output:%N")
 			io.putstring ("			/studio 	EiffelStudio specific content%N")
-			io.putstring ("			/envision	ENViSioN! specific content%N")
+			io.putstring ("			/envision	EiffelEnvision specific content%N")
 			io.putstring ("			/all 		Unfiltered content (default)%N")
 			io.putstring ("	-t [/web_tree /web_simple /mshtml /vsip]%N")
 			io.putstring ("		Types of Help generation:%N")

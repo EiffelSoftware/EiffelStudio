@@ -54,15 +54,16 @@ feature -- Implementation
 	create_gtk_dialog: POINTER is
 			-- Create and initialize a gtk dialog
 		do
-			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_new
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_has_separator (Result, False)
-			{EV_GTK_EXTERNALS}.gtk_widget_hide ({EV_GTK_EXTERNALS}.gtk_dialog_struct_action_area (Result))
+--			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_new
+--			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_has_separator (Result, False)
+--			{EV_GTK_EXTERNALS}.gtk_widget_hide ({EV_GTK_EXTERNALS}.gtk_dialog_struct_action_area (Result))
+			Result := {EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum)
 		end
 
 	client_area_from_c_object (a_c_object: POINTER): POINTER is
 			-- 
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_dialog_struct_vbox (a_c_object)
+			Result := a_c_object--{EV_GTK_EXTERNALS}.gtk_dialog_struct_vbox (a_c_object)
 		end
 
 	horizontal_resolution_internal: INTEGER is

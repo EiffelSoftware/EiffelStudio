@@ -502,11 +502,23 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_type: GEN_TYPE_A
 			gen_type_generics: like generics
 			formal_type: FORMAL_A
+			l_like_type: LIKE_TYPE_A
 		do
 			formal_type ?= type
 			if formal_type /= Void then
 					-- Instantiation of a formal generic
 				Result := generics.item (formal_type.position).actual_type
+			elseif type.is_like then
+					-- We do not want to loose the fact that it is an anchor
+					-- as otherwise we would break eweasel test exec206, but we
+					-- still need to adapt its actual_type to the current context
+					-- otherwise we would break valid168.
+				l_like_type ?= type
+				check
+					l_like_type_not_void: l_like_type /= Void
+				end
+				l_like_type.set_actual_type (instantiate (l_like_type.actual_type))
+				Result := l_like_type
 			elseif type.has_generics then
 					-- Instantiation of the generic parameter of `type'
 				gen_type ?= type

@@ -86,7 +86,6 @@ feature -- Status Setting
 			doc_not_void: a_doc /= Void
 		local			
 			l_util: UTILITY_FUNCTIONS
-			l_filename: FILE_NAME
 			l_target_dir: DIRECTORY
 			l_name: STRING
 		do
@@ -94,11 +93,6 @@ feature -- Status Setting
 			create l_util
 			l_name := document.name
 			l_name.replace_substring_all ("\", "/")
---			if document_hash.has (l_name) then				
---				create l_filename.make_from_string (document_hash.item (l_name).name)
---				l_filename.extend (l_util.short_name (l_util.file_no_extension (l_name)))
---				l_filename.add_extension ("html")
---				load_url (l_filename.string)
 			if l_util.file_type (l_name).is_equal ("xml") or l_util.file_type (l_name).is_equal ("html") then
 				create l_target_dir.make (l_util.temporary_html_location (l_name, False))
 				document_hash.extend (l_target_dir, l_name)

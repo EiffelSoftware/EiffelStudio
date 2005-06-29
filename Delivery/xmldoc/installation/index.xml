@@ -2,6 +2,7 @@
 	<meta_data></meta_data>	
 	<paragraph>			
 		<paragraph>For detailed installation instructions please follow the link for the product your are installing.</paragraph>					
+		<link><url>studio56/index.xml</url><label><heading><size>2</size>EiffelStudio 5.6</heading></label></link>			
 		<link><url>studio55/index.xml</url><label><heading><size>2</size>EiffelStudio 5.5</heading></label></link>			
 	</paragraph>
 </document>

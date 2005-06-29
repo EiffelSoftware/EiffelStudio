@@ -32,7 +32,6 @@ feature -- Initialize
 		local
 			a_settings: POINTER
 		do
-			previous_font_description := ""
 			a_settings := default_gtk_settings
 		end
 
@@ -54,13 +53,15 @@ feature -- Implementation
 	pixel_value_from_point_value (a_point_value: INTEGER): INTEGER is
 			-- Returns the number of screen pixels represented by `a_point_value'
 		do
-			Result := (a_point_value / 72 * 96).rounded
+			--Result := (a_point_value / 72 * 96).rounded
+			Result := ((a_point_value / 3 * 4) + 0.5).truncated_to_integer
 		end
 
 	point_value_from_pixel_value (a_pixel_value: INTEGER): INTEGER is
 			-- Returns the number of points represented by `a_pixel_value' screen pixels value
 		do
-			Result := (a_pixel_value / 96 * 72).rounded
+			--Result := (a_pixel_value / 96 * 72).rounded
+			Result := ((a_pixel_value / 4 * 3) + 0.5).truncated_to_integer
 		end
 
 	pango_layout: POINTER is

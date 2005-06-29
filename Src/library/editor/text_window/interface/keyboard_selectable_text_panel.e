@@ -21,7 +21,9 @@ inherit
 			user_initialization, 
 			set_first_line_displayed,
 			recycle,
-			on_vertical_scroll
+			on_vertical_scroll,
+			reload,
+			on_text_loaded
 		end
 
 	EV_KEY_CONSTANTS
@@ -357,6 +359,36 @@ feature -- Observation
 			text_displayed.remove_observer (txt_observer)
 		end
 
+	on_text_loaded is
+			-- Finish the panel setup as the entire text has been loaded.
+		local
+			l_cursor: TEXT_CURSOR
+		do
+			Precursor {TEXT_PANEL}
+			if restore_cursor then	
+				l_cursor := text_displayed.cursor
+				if number_of_lines >= stored_cursor_line then
+					text_displayed.cursor.set_y_in_lines (stored_cursor_line)
+					set_first_line_displayed (stored_first_line, True)
+					if text_displayed.line (stored_cursor_line).image.count >= stored_cursor_char then
+						text_displayed.cursor.set_x_in_characters (stored_cursor_char)
+					end
+					invalidate_cursor_rect (True)
+				end						
+				restore_cursor := False
+			end
+		end		
+
+	reload is
+			-- Reload the opened file from disk.
+		do
+			restore_cursor := True
+			stored_cursor_line := text_displayed.cursor.y_in_lines
+			stored_cursor_char := text_displayed.cursor.x_in_characters
+			stored_first_line := first_line_displayed
+			Precursor {TEXT_PANEL}	
+		end
+
 feature {NONE} -- Process Vision2 events
 
 	on_key_down (ev_key: EV_KEY) is
@@ -398,7 +430,7 @@ feature {NONE} -- Process Vision2 events
 		do
 				-- Redraw the line where the cursor is (we will add the cursor)
 			show_cursor := True
-			invalidate_cursor_rect (True)
+--			invalidate_cursor_rect (True)
 			if has_selection then
 				sel_start := text_displayed.selection_start.y_in_lines
 				sel_end := text_displayed.selection_end.y_in_lines
@@ -751,6 +783,18 @@ feature {NONE} -- Cursor Management
 			positive_position: Result >= 0
 		end
 
+	restore_cursor: BOOLEAN
+			-- Should attempt to restore old cursor position after loading?
+			
+	stored_cursor_line: INTEGER
+			-- Line of old cursor position
+			
+	stored_cursor_char: INTEGER
+			-- Character position of old cursor
+
+	stored_first_line: INTEGER
+			-- Stored `first_line_displayed'
+
 feature {NONE} -- Implementation
 
 	shifted_key: BOOLEAN is
@@ -992,7 +1036,8 @@ feature {NONE} -- Implementation
  			l_margin_width: INTEGER
  			l_text: TEXT
  			l_buffered,
- 			l_has_data: BOOLEAN
+ 			l_has_data,
+ 			use_buffered: BOOLEAN
  			l_editor_viewport_y_offset: INTEGER
  			l_offset: INTEGER
  			l_viewable_width: INTEGER
@@ -1005,6 +1050,7 @@ feature {NONE} -- Implementation
 			l_editor_viewport_y_offset := editor_viewport.y_offset
 			l_offset := offset
 			l_viewable_width := viewable_width
+			use_buffered := editor_preferences.use_buffered_line
 
 			if buffered then
 				buffered_line.set_background_color (editor_preferences.normal_background_color)
@@ -1013,12 +1059,12 @@ feature {NONE} -- Implementation
 			if not l_text.is_empty then				
 		
 				from
-		 				curr_line := first
-		 				l_text.go_i_th (first)
-		 			until
-		 				curr_line > last or else l_text.after
-		 			loop
-		 				y_offset := l_editor_viewport_y_offset + ((curr_line - first_line_displayed) * l_line_height)
+	 				curr_line := first
+	 				l_text.go_i_th (first)
+	 			until
+	 				curr_line > last or else l_text.after
+	 			loop
+	 				y_offset := l_editor_viewport_y_offset + ((curr_line - first_line_displayed) * l_line_height)
 					l_x_offset := x_offset
 					l_has_data := line_has_cursor_or_selection (curr_line)
 					l_line_width := l_text.current_line.width
@@ -1026,15 +1072,15 @@ feature {NONE} -- Implementation
 					if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
 							-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
 							-- Lines with cursor or selection in them ALWAYS need redrawing.
-						if l_has_data then
+						if use_buffered or l_has_data then
 		 					draw_line_to_buffered_line (curr_line, l_text.current_line)
-							draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width, l_x_offset, y_offset)
+							draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width + left_margin_width, l_x_offset, y_offset)
 						else
-							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width - l_margin_width, y_offset, l_text.current_line)
+							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width, y_offset, l_text.current_line)
 						end
 						l_x_offset := l_x_offset + l_viewable_width
 					end
-		
+	
 					if l_x_offset >= (l_line_width + l_margin_width) and not l_has_data then
 							-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
 							-- the line to the edge of the viewport in the background color.
@@ -1048,16 +1094,16 @@ feature {NONE} -- Implementation
 		
 						if l_line_width < x_offset or (l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width)) then
 							debug ("editor")
-								draw_flash (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height, False)
+								draw_flash (l_start_clear, y_offset, x_offset + a_width - l_start_clear, l_line_height, False)							
 							end
 							editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
 							editor_drawing_area.clear_rectangle (l_start_clear, y_offset, (x_offset + a_width - l_start_clear).max (0), l_line_height)
 						end
-					end
-		
-		 				curr_line := curr_line + 1
+					end	
+			 		curr_line := curr_line + 1
 					y_offset := y_offset + l_line_height
-		 				l_text.forth
+			 		l_text.forth
+		 		
 		 		end
 		 	end
 			

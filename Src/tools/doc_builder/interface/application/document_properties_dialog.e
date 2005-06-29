@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			
-					-- ENViSioN! Override
+					-- Envision Override
 			if override_20_check.is_selected then
 				if not toc_20_title_text.text.is_empty then
 					document.set_element (xm_document, l_toc_array, "envision_title", toc_20_title_text.text)

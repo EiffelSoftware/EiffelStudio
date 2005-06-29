@@ -124,7 +124,7 @@ feature {NONE} -- Implmentation
 						create l_sub_dir.make (l_code_dir_name.string)
 						if l_sub_dir.exists then
 							l_generate := 
-								(shared_project.filter_manager.filter.description.has_substring ("ENViSioN!") and 
+								(shared_project.filter_manager.filter.description.has_substring ("EiffelEnvision") and 
 								shared_constants.application_constants.envision_libraries.has (l_curr_dir)) or
 								(shared_project.filter_manager.filter.description.has_substring ("EiffelStudio") and 
 								shared_constants.application_constants.studio_libraries.has (l_curr_dir))

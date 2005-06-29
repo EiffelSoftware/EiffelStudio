@@ -780,7 +780,7 @@ feature {NONE} -- Sorting
 	move_nodes is
 			-- Move nodes in `move_nodes_list' to appropriate location.
 			-- Note: This index sorting assumes that any index node which requires moving
-			-- will be moved to unique location in respect to other index nodex which need
+			-- will be moved to unique location in respect to other index nodes which need
 			-- moving.  If 2 nodes attempt to move to the same location, only one will be
 			-- in the resulting TOC, and which one is not guaranteed.
 		local
@@ -888,6 +888,7 @@ feature {NONE} -- Sorting
 			l_doc: DOCUMENT
 			l_filtered_doc: FILTERED_DOCUMENT
 			l_cnt: INTEGER
+			l_file: PLAIN_TEXT_FILE
 		do
 			if a_node /= Void and then a_node.has_child and then not Sort_excluded.has (a_node.id) then								
 						-- Extract name information from sub-nodes
@@ -907,14 +908,17 @@ feature {NONE} -- Sorting
 					if l_node.url /= Void then
 						if Pseudo_overrides then
 									-- Try for pseudo name
-							create l_doc.make_from_file (create {PLAIN_TEXT_FILE}.make (l_node.url))
-							if l_doc /= Void then
-								if l_doc.is_valid_xml (l_doc.text) then
-									l_filtered_doc := Manager.Shared_project.filter_manager.filtered_document (l_doc)
-									l_name := l_filtered_doc.pseudo_name
-								end																															
-							end
-						end						
+							create l_file.make (l_node.url)
+							if l_file.exists and then not l_file.is_directory then
+								create l_doc.make_from_file (l_file)
+								if l_doc /= Void then
+									if l_doc.is_valid_xml (l_doc.text) then
+										l_filtered_doc := Manager.Shared_project.filter_manager.filtered_document (l_doc)
+										l_name := l_filtered_doc.pseudo_name
+									end																															
+								end	
+							end							
+						end					
 					end	
 					
 					if l_name = Void then						
@@ -1010,7 +1014,7 @@ feature {NONE} -- Sorting
 				l_filter := manager.shared_project.filter_manager.filter
 			end			
 			
-			if l_filter.description.has_substring ("ENViSioN!") then
+			if l_filter.description.has_substring ("EiffelEnvision") then
 				l_library_names := manager.shared_constants.application_constants.envision_libraries
 			elseif l_filter.description.has_substring ("EiffelStudio") then
 				l_library_names := manager.shared_constants.application_constants.studio_libraries

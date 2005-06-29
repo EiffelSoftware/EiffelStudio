@@ -136,7 +136,8 @@ inherit
 			default_style,
 			has_focus,
 			on_set_focus,
-			on_kill_focus
+			on_kill_focus,
+			set_focus
 		end
 
 	WEL_EM_CONSTANTS
@@ -292,6 +293,16 @@ feature -- Status report
 		end
 
 feature -- Status setting
+		
+	set_focus is
+			-- Set the focus to `Current'
+		do
+			if is_editable then
+				Precursor {WEL_DROP_DOWN_COMBO_BOX_EX}
+			else
+				combo.set_focus
+			end
+		end
 
 	select_item (an_index: INTEGER) is
 			-- Select the item at the one-based index `an_index'.

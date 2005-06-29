@@ -96,8 +96,8 @@ feature {NONE} -- Initialization
 						interface.post_launch_actions.call (Void)
 						post_launch_actions_called := True
 					end
-					if internal_idle_actions.count > 0 or else
-						(idle_actions_internal /= Void and then idle_actions_internal.count > 0) then
+					
+					if idle_actions_pending then
 							call_idle_actions
 					else
 								-- Block loop by running a gmain loop iteration with blocking enabled.
@@ -108,6 +108,13 @@ feature {NONE} -- Initialization
 		end
 		
 feature {EV_ANY_IMP} -- Access
+
+	idle_actions_pending: BOOLEAN is
+			-- Are there any idle actions pending?
+		do
+			Result := internal_idle_actions.count > 0 or else
+						(idle_actions_internal /= Void and then idle_actions_internal.count > 0)
+		end
 		
 	gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		-- Marshal object for all gtk signal emission event handling.
@@ -118,7 +125,7 @@ feature {EV_ANY_IMP} -- Access
 	call_idle_actions is
 			-- Execute idle actions
 		do
-				-- Call the opo idle actions first, when the list is empty we call the normal idle actions
+				-- Call the opo idle actions first.
 			internal_idle_actions.call (Void)
 			if idle_actions_internal /= Void then
 				idle_actions_internal.call (Void)

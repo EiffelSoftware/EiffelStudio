@@ -689,16 +689,19 @@ feature -- Status setting
 		require
 			a_item_not_void: a_item /= Void
 		do
-			if activate_window /= Void and then not activate_window.is_destroyed then
-				activate_window.destroy
-			end
+				-- Call deactivation events.
 			if item_deactivate_actions_internal /= Void then
 				item_deactivate_actions_internal.call ([a_item])
 			end
-
 			if a_item.implementation.deactivate_actions_internal /= Void then
 				a_item.implementation.deactivate_actions_internal.call (Void)
 			end
+			
+				-- Destroy `activate_window'
+			if activate_window /= Void and then not activate_window.is_destroyed then
+				activate_window.destroy
+			end
+
 			if a_item.parent = interface then
 					-- Redraw item if still existant in Current
 				a_item.redraw

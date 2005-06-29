@@ -181,7 +181,7 @@ feature {NONE} -- Project
 							Result.append ("Url=%"" + l_url + "%"")
 							Result.replace_substring_all ("/", "\")
 							Result.replace_substring_all (shared_constants.application_constants.temporary_html_directory.string + "\", "")
-							Result.append ("/>%N")
+							Result.append (" />%N")
 						end
 						Result.append (retrieve_files (l_folder, get_dirs, tags))
 					else
@@ -190,12 +190,13 @@ feature {NONE} -- Project
 							Result.append ("%T<File Url=%"" + l_url + "%"")
 							Result.replace_substring_all ("/", "\")
 							Result.replace_substring_all (shared_constants.application_constants.temporary_html_directory.string + "\", "")
-							Result.append ("/>%N")
+							Result.append (" />%N")
 						end						
 					end
 				end				
 				l_cnt := l_cnt + 1
 			end
+			Result.replace_substring_all (" \>", " />")
 		ensure
 			non_void_result: Result /= Void
 		end

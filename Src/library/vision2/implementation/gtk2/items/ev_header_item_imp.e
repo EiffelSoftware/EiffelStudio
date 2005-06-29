@@ -72,16 +72,23 @@ feature -- Initialization
 		local
 			a_width: INTEGER
 		do
-			a_width := width_internal
-					-- Always make sure that the event box is the same size as the header item.
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
-			if a_width /= width then
-				width := a_width
-				if parent_imp /= Void then
-					parent_imp.on_resize (interface)
+			if not ignore_resize then
+				a_width := width_internal
+						-- Always make sure that the event box is the same size as the header item.
+				ignore_resize := True
+				{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
+				if a_width /= width then
+					width := a_width
+					if parent_imp /= Void then
+						parent_imp.on_resize (interface)
+					end
 				end
+				ignore_resize := False		
 			end
 		end
+
+	ignore_resize: BOOLEAN
+		-- Should item resize be ignored?
 
 feature -- Access
 

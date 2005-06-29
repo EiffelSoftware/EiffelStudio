@@ -555,9 +555,6 @@ feature {NONE} -- Implementation
 				end
 				counter := counter + 1
 			end
-			if profile_cell.item then
-				stop_profiling
-			end
 
 			grid.column (1).set_pixmap (image1)
 			grid.column (2).set_pixmap (image2)
@@ -569,6 +566,9 @@ feature {NONE} -- Implementation
 			grid.column (3).header_item.pointer_double_press_actions.extend (agent resize_column (?, ?, ?, ?, ?, ?, ?, ?, 3))
 			grid.column (4).header_item.pointer_double_press_actions.extend (agent resize_column (?, ?, ?, ?, ?, ?, ?, ?, 4))
 			grid.column (5).header_item.pointer_double_press_actions.extend (agent resize_column (?, ?, ?, ?, ?, ?, ?, ?, 5))
+			if profile_cell.item then
+				stop_profiling
+			end
 		end
 		
 	resize_column (an_x, a_y, a_button: INTEGER; d1, d2, d3: DOUBLE; i1, i2, a_column_index: INTEGER) is
@@ -1128,7 +1128,12 @@ feature {NONE} -- Implementation
 		local
 			counter: INTEGER
 			current_row: EV_GRID_ROW
+			time1, time2: DATE_TIME	
 		do
+			create time1.make_now
+			if profile_cell.item then
+				start_profiling
+			end
 			from
 				counter := 1
 			until
@@ -1140,6 +1145,11 @@ feature {NONE} -- Implementation
 				end
 				counter := counter + 1
 			end
+			if profile_cell.item then
+				stop_profiling
+			end
+			create time2.make_now
+			set_status_message (("Expanded all in : " + ((time2.fine_second - time1.fine_second).out)))
 		end
 	
 	collapse_all_button_selected is
@@ -1176,11 +1186,13 @@ feature {NONE} -- Implementation
 		local
 --			l_item: EV_GRID_ITEM
 --			r, row: EV_GRID_ROW
---			grid_label_item: EV_GRID_LABEL_ITEM
---			counter, counter2: INTEGER
+			grid_label_item: EV_GRID_LABEL_ITEM
+			counter, counter2: INTEGER
+			items: EV_GRID_ARRAYED_LIST [EV_GRID_ITEM]
+			time1, time2: DATE_TIME
 --			i: INTEGER
 		do
-			reset_grid
+--			reset_grid
 --			l_item := grid.item_at_virtual_position (200, 16)
 --			misc_button_selected
 --			grid.column (3).set_width (200)
@@ -1486,14 +1498,224 @@ feature {NONE} -- Implementation
 --			misc_button_selected
 --			create timer.make_with_interval (2000)
 --			timer.actions.extend (agent timer_fired)
+--
+--			grid.enable_partial_dynamic_content
+--			grid.set_column_count_to (3)
+--			grid.set_row_count_to (1)
+--			grid.column (2).set_width (0)
+--			grid.set_dynamic_content_function (agent add_item)
 
-			grid.enable_partial_dynamic_content
-			grid.set_column_count_to (3)
-			grid.set_row_count_to (1)
-			grid.column (2).set_width (0)
-			grid.set_dynamic_content_function (agent add_item)
+			-- Test 25
+--			add_items (50, 50)
+--			grid.resize_actions.force_extend (agent show_viewable_width)
+--			add_items (5, 5)
+--			grid.column (4).set_width (2000)
+--			create timer.make_with_interval (1000)
+--			timer.actions.extend (agent timer_fired2)
+
+
+--			add_items (5, 5)
+--			grid.pre_draw_overlay_actions.extend (agent draw_borders2)
+--			grid.header.item_resize_actions.extend (agent invalidate_for_border)
+
+--			add_items (5, 5)
+--			grid.pointer_button_press_actions.force_extend (agent grid.clear)
+
+-- 			Test 26 Profiling insertion
+--			create items
+--			from
+--				counter := 1
+--			until
+--				counter > 200000
+--			loop
+--				items.extend (create {EV_GRID_LABEL_ITEM}.make_with_text ("An item"))
+--				counter := counter + 1
+--			end
+--			items.start
+--			create time1.make_now
+--			if profile_cell.item then
+--				start_profiling
+--			end
+--			from
+--				counter2 := 1
+--			until
+--				counter2 > 20000
+--			loop
+--				from
+--					counter := 1
+--				until
+--					counter > 10
+--				loop
+--					grid.set_item (counter, counter2, items.item)
+--					items.forth
+--					counter := counter + 1
+--				end
+--				counter2 := counter2 + 1
+--			end
+--			if profile_cell.item then
+--				stop_profiling
+--			end
+--			create time2.make_now
+--			set_status_message (("Added in : " + ((time2.fine_second - time1.fine_second).out)))
+
+--			grid.enable_partial_dynamic_content
+--			grid.set_column_count_to (3)
+--			grid.set_row_count_to (1000000)
+--			GRID.set_row_height (80)
+--			grid.set_dynamic_content_function (agent compute_items)
+
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("One"))
+--			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("Two"))
+--			grid.row (1).add_subrow (grid.row (2))
+--			grid.row (1).expand
+--			grid_label_item ?= grid.item (1, 2)
+--			create time1.make_now
+--			from
+--				counter := 1
+--			until
+--				counter > 500000
+--			loop
+--				grid_label_item.redraw
+--				counter := counter + 1
+--			end
+--			create time2.make_now
+--			set_status_message (("Redraw in : " + ((time2.fine_second - time1.fine_second).out)))
+--			grid.pointer_button_press_item_actions.extend (agent button_pressed)
+			
+			create time1.make_now
+			if profile_cell.item then
+				start_profiling
+			end
+			grid.column (1).resize_to_content
+			if profile_cell.item then
+				stop_profiling
+			end
+			create time2.make_now
+			set_status_message (("Redrawn in : " + ((time2.fine_second - time1.fine_second).out)))
 		end
 		
+	button_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		do
+			if an_item /= Void then
+				grid.set_first_visible_row (an_item.row.index)
+			end
+		end
+		
+		
+	compute_items (a_column, a_row: INTEGER): EV_GRID_ITEM is
+			--
+		local	
+			drawable_item: EV_GRID_DRAWABLE_ITEM
+			label_item: EV_GRID_LABEL_ITEM
+			counter: INTEGER
+		do
+			create label_item
+			label_item.set_text ("A text" + a_column.out + ", " + a_row.out)
+			Result := label_item
+		end
+		
+		
+	draw_borders2 (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
+			--
+			-- (export status {NONE})
+		local
+			current_column_width, current_row_height: INTEGER
+			all_remaining_columns_minimized: BOOLEAN
+		do
+			drawable.set_foreground_color (black)
+			current_column_width := grid.column (a_column_index).width
+			if grid.is_row_height_fixed then
+				current_row_height := grid.row_height
+			else
+				current_row_height := grid.row (a_row_index).height
+			end
+			if a_column_index > 1 then
+				drawable.draw_segment (0, 0, 0, current_row_height - 1)
+			end
+			if a_column_index < grid.column_count then
+				if grid.column (a_column_index + 1).virtual_x_position = grid.column (grid.column_count).virtual_x_position + grid.column (grid.column_count).width then
+					all_remaining_columns_minimized := True
+				end
+			end
+			if a_column_index = grid.column_count or all_remaining_columns_minimized then
+				drawable.draw_segment (current_column_width - 1, 0,  current_column_width - 1, current_row_height - 1)
+			end
+			drawable.draw_segment (0, current_row_height - 1, current_column_width, current_row_height - 1)
+		end
+		
+	invalidate_for_border (header_item: EV_HEADER_ITEM) is
+			--
+		local
+			header_index: INTEGER
+			old_header_index: INTEGER
+		do
+			header_index := header_item.parent.index_of (header_item, 1)
+			old_header_index := header_index
+				if (last_width_of_header_during_resize = 0 and header_item.width > 0) or
+					last_width_of_header_during_resize_internal > 0 and header_item.width = 0 then
+						-- In this situation, we must draw the first column to the left of the one being
+						-- resized that has a width greater than 0 as the column border must be updated
+						-- in this column.
+					if header_index > 1 then
+						from
+							header_index := header_index - 1
+						until
+							header_index = 1 or grid.column (header_index).width > 0
+						loop
+							header_index := header_index - 1
+						end
+					end
+					if header_index < old_header_index then
+						grid.column (header_index).redraw
+					end
+				end
+		end
+		
+		
+	last_width_of_header_during_resize: INTEGER is
+		-- The last width of the header item that is currently being
+		-- resized. Used to determine if we must refresh the column to
+		-- the left of the current one as it could cause the border to
+		-- need to be drawn on the previous column if it is the final
+		-- column that current has a width greater than 0.
+		do
+			Result := last_width_of_header_during_resize_internal
+		ensure
+			result_non_negative: Result >= 0
+		end
+		
+	last_width_of_header_during_resize_internal: INTEGER
+		-- Storage for `last_width_of_header_during_resize'.
+
+
+	move_column is
+			--
+		do
+			grid.column (1).set_width (80 + timer.count)
+			if timer.count = 200 then
+				timer.destroy;
+				((create {EV_ENVIRONMENT}).application).destroy
+			end
+		end
+
+
+	timer_fired2 is
+			--
+		do
+			grid.set_virtual_position (grid.virtual_width - grid.viewable_width, grid.virtual_y_position)
+			timer.destroy
+		end
+		
+
+	show_viewable_width is
+			--
+		do
+			print (grid.viewable_width.out)
+		end
+
+
 	add_item (a_column, a_row: INTEGER): EV_GRID_ITEM is
 			--
 		do
@@ -2330,7 +2552,6 @@ feature {NONE} -- Implementation
 			grid.column (1).set_width (200)
 			grid.column (2).set_width (150)
 			grid.disable_row_height_fixed
-			grid.row (1).set_height (32)
 			from
 				counter := 5
 			until
@@ -2341,22 +2562,27 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 			grid.pointer_button_press_item_actions.extend (agent grid_pressed)
-			create combo_item.make_with_text ("Texture applied to : None")
-			combo_item.activate_actions.extend (agent build_combo_box1 (?, combo_item))
+			create combo_item.make_with_text ("Texture applied to : Background")
+			combo_item.activate_actions.extend (agent fill_texture_combo (?, combo_item))
+			combo_item.deactivate_actions.extend (agent reset_combo_text ("Texture applied to : ", combo_item))
 
 			grid.set_item (1, 1, combo_item)
 			create combo_item.make_with_text ("Scroll Texture : True")
-			combo_item.activate_actions.extend (agent build_combo_box2 (?, combo_item))
+			combo_item.activate_actions.extend (agent fill_scroll_combo (?, combo_item))
+			combo_item.deactivate_actions.extend (agent reset_combo_text ("Scroll Texture : ", combo_item))
 			grid.set_item (2, 1, combo_item)
 			grid.pre_draw_overlay_actions.extend (agent draw_texture)
 			grid.post_draw_overlay_actions.extend (agent draw_borders)
 			grid.fill_background_actions.extend (agent draw_background)
-			texture_style := 1
+			texture_style := 2
 			scroll_style := 1
 		end
-
-	build_combo_box1 (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM) is
-			--
+		
+	fill_texture_combo (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM) is
+			-- Fill `combo' with items  for selecting the texture style.
+		require
+			window_not_void: window /= Void
+			combo_not_void: combo /= Void
 		local
 			list_item: EV_LIST_ITEM
 		do
@@ -2372,12 +2598,15 @@ feature {NONE} -- Implementation
 			elseif texture_style = 3 then
 				combo.combo_box.i_th (3).enable_select
 			end
-			combo.combo_box.select_actions.extend (agent combo_item_selected (combo.combo_box))
+			combo.combo_box.select_actions.extend (agent combo_texture_item_selected (combo.combo_box))
 			combo.combo_box.select_actions.resume
 		end
 
-	build_combo_box2 (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM) is
-			--
+	fill_scroll_combo (window: EV_POPUP_WINDOW; combo: EV_GRID_COMBO_ITEM) is
+			-- Fill `combo' with items  for selecting the texture scrolling style.
+		require
+			window_not_void: window /= Void
+			combo_not_void: combo /= Void
 		local
 			list_item: EV_LIST_ITEM
 		do
@@ -2393,8 +2622,10 @@ feature {NONE} -- Implementation
 			combo.combo_box.select_actions.resume
 		end
 
-	combo_item_selected (a_combo_box: EV_COMBO_BOX) is
-			--
+	combo_texture_item_selected (a_combo_box: EV_COMBO_BOX) is
+			-- An item has been selected from `a_combo_box' signifying
+			-- the texturing to be applied. Update internal
+			-- values to reflect this.
 		require
 			a_combo_box_not_void: a_combo_box /= Void
 		local
@@ -2418,7 +2649,9 @@ feature {NONE} -- Implementation
 		end
 		
 	combo_scroll_item_selected (a_combo_box: EV_COMBO_BOX) is
-			--
+			-- An item has been selected from `a_combo_box' signifying
+			-- the texture scroll style to be applied. Update internal
+			-- values to reflect this.
 		require
 			a_combo_box_not_void: a_combo_box /= Void
 		local
@@ -2440,49 +2673,19 @@ feature {NONE} -- Implementation
 			grid.redraw
 		end
 		
-	scroll_style: INTEGER
-
-	texture_style: INTEGER		
-
-	grid_pressed (an_x, a_y, a_button: INTEGER; grid_item: EV_GRID_ITEM) is
-			--
+	reset_combo_text (s: STRING; combo_item: EV_GRID_COMBO_ITEM) is
+			-- Restore text of `combo_item' to `s' + selected item text of `combo_item'.
+		require
+			s_not_void: s /= Void
+			combo_item_not_void: combo_item /= Void
 		do
-			if grid_item /= Void and then a_button = 1 then
-				if grid_item.column.index <= 2 and grid_item.row.index = 1 then
-					grid_item.activate
-				end
-			end
+			combo_item.set_text (s + combo_item.combo_box.selected_item.text)
 		end
 		
-	draw_background (drawable: EV_DRAWABLE; a_virtual_x, a_virtual_y, a_width, a_height: INTEGER) is
-			--
-		local
-			an_x, a_y: INTEGER
-			virtual_x, virtual_y: INTEGER
-		do
-			if texture_style > 1 then
-				virtual_x := a_virtual_x
-				if scroll_style = 2 then
-					virtual_x := virtual_x - grid.virtual_x_position
-				end
-				an_x := (virtual_x \\ texture_width)
-				virtual_y := a_virtual_y
-				if scroll_style = 2 then
-					virtual_y := virtual_y - grid.virtual_y_position
-				end
-				a_y := (virtual_y \\ texture_height)
-				if (texture_style = 2) or texture_style = 3 then
-					internal_draw_texture (drawable, an_x, a_y, a_width, a_height)
-				end
-			else
-				drawable.set_foreground_color (grid.background_color)
-				drawable.fill_rectangle (0, 0, a_width, a_height)
-			end
-		end
-
-
 	draw_texture (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
-			--
+			-- Draw applied texture for item `grid_item' onto `drawable'.
+		require
+			drawable_not_void: drawable /= Void
 		local
 			an_x, a_y: INTEGER
 			virtual_x, virtual_y: INTEGER
@@ -2520,7 +2723,10 @@ feature {NONE} -- Implementation
 		end
 		
 	internal_draw_texture (drawable: EV_DRAWABLE; texture_x, texture_y, a_width, a_height: INTEGER) is
-			--
+			-- Draw `marble' texture onto `drawable' offset by `texture_x' and `texture_y' with
+			-- dimensions of `a_width' and `a_height'.
+		require
+			drawable_not_void: drawable /= Void
 		local
 			an_x, a_y: INTEGER
 			last_x_segment, last_y_segment: INTEGER
@@ -2550,28 +2756,79 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-
 	draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
-			--
+			-- Draw a border around cells 1,1 and 2,1 with a width of `grid_border_width'.
+		require
+			drawable_not_void: drawable /= Void
+			a_column_index_positive: a_column_index >= 1
+			a_row_index_positive: a_row_index >= 1
 		do
-
 			if a_row_index = 1 then
 				if grid_item /= Void then
-					drawable.set_foreground_color (black)
-					drawable.fill_rectangle (0, grid_item.height - 4, grid.column (a_column_index).width, grid_item.height)
-					drawable.set_foreground_color (black)
-					drawable.fill_rectangle (0, 0, grid.column (a_column_index).width, 4)
+					drawable.set_foreground_color (stock_colors.black)
+					drawable.fill_rectangle (0, grid_item.height - grid_border_width, grid.column (a_column_index).width, grid_item.height)
+					drawable.set_foreground_color (stock_colors.black)
+					drawable.fill_rectangle (0, 0, grid.column (a_column_index).width, grid_border_width)
 				end
 				if a_column_index = 1 then
-					drawable.set_foreground_color (black)
-					drawable.fill_rectangle (0, 0, 4, grid_item.height - 4)
+					drawable.set_foreground_color (stock_colors.black)
+					drawable.fill_rectangle (0, 0, grid_border_width, grid_item.height - grid_border_width)
 				elseif a_column_index = 2 then
-					drawable.set_foreground_color (black)
-					drawable.fill_rectangle (grid.column (a_column_index).width - 4, 0, grid.column (a_column_index).width - 4, grid_item.height - 4)
+					drawable.set_foreground_color (stock_colors.black)
+					drawable.fill_rectangle (grid.column (a_column_index).width - grid_border_width, 0, grid.column (a_column_index).width - grid_border_width, grid_item.height - grid_border_width)
 				end
 			end
 		end
+		
+	grid_border_width: INTEGER is 1
+		-- Wdith of borders around control items.
+		
+	draw_background (drawable: EV_DRAWABLE; a_virtual_x, a_virtual_y, a_width, a_height: INTEGER) is
+			-- Draw `marble' texture onto `drawable' offset by `texture_x' and `texture_y' with
+			-- dimensions of `a_width' and `a_height'.
+		require
+			drawable_not_void: drawable /= Void
+		local
+			an_x, a_y: INTEGER
+			virtual_x, virtual_y: INTEGER
+		do
+			if texture_style > 1 then
+				virtual_x := a_virtual_x
+				if scroll_style = 2 then
+					virtual_x := virtual_x - grid.virtual_x_position
+				end
+				an_x := (virtual_x \\ texture_width)
+				virtual_y := a_virtual_y
+				if scroll_style = 2 then
+					virtual_y := virtual_y - grid.virtual_y_position
+				end
+				a_y := (virtual_y \\ texture_height)
+				if (texture_style = 2) or texture_style = 3 then
+					internal_draw_texture (drawable, an_x, a_y, a_width, a_height)
+				end
+			else
+				drawable.set_foreground_color (grid.background_color)
+				drawable.fill_rectangle (0, 0, a_width, a_height)
+			end
+		end
+		
+	scroll_style: INTEGER
+		-- Scrolling style applied to texture.
 
+	texture_style: INTEGER
+		-- Applied texture style.
+	
+	grid_pressed (an_x, a_y, a_button: INTEGER; grid_item: EV_GRID_ITEM) is
+			-- Respond to a button press in the grid. If the left button is
+			-- pressed on the combo item, activate that item.
+		do
+			if grid_item /= Void and then a_button = 1 then
+				if grid_item.column.index <= 2 and grid_item.row.index = 1 then
+					grid_item.activate
+				end
+			end
+		end
+		
 	bubbles_pixmap: EV_PIXMAP is
 			--
 		once
@@ -2585,8 +2842,19 @@ feature {NONE} -- Implementation
 		
 	wipe_out_grid_button_selected is
 			-- Called by `select_actions' of `wipe_out_grid_button'.
+		local
+			time1, time2: DATE_TIME
 		do
+			create time1.make_now
+			if profile_cell.item then
+				start_profiling
+			end
 			grid.wipe_out
+			if profile_cell.item then
+				stop_profiling
+			end
+			create time2.make_now
+			set_status_message (("Wiped out in : " + ((time2.fine_second - time1.fine_second).out)))
 		end
 
 	texture_width: INTEGER is 256

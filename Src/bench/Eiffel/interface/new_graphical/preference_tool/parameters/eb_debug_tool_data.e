@@ -24,16 +24,6 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES} -- Value
 
-	width: INTEGER is
-		do
-			Result := width_preference.value
-		end
-
-	height: INTEGER is
-		do
-			Result := height_preference.value
-		end
-
 	last_saved_stack_path: STRING is
 		do
 			Result := last_saved_stack_path_preference.value
@@ -92,12 +82,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			end
 		end
 
-	max_stack_depth: INTEGER is
-			--
+	set_local_vs_object_proportion (r: REAL) is
 		do
-			Result := max_stack_depth_preference.value
+			local_vs_object_proportion_preference.set_value (r.out)
 		end
-		
+
 	expanded_display_bgcolor: EV_COLOR is
 		do
 			Result := expanded_display_bgcolor_preference.value
@@ -110,8 +99,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
-	width_preference: INTEGER_PREFERENCE
-	height_preference: INTEGER_PREFERENCE
 	last_saved_stack_path_preference: STRING_PREFERENCE
 	interrupt_every_n_instructions_preference: INTEGER_PREFERENCE
 	debug_output_evaluation_enabled_preference: BOOLEAN_PREFERENCE
@@ -123,14 +110,11 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	local_vs_object_proportion_preference: STRING_PREFERENCE		
 	left_debug_layout_preference: ARRAY_PREFERENCE		
 	right_debug_layout_preference: ARRAY_PREFERENCE		
-	max_stack_depth_preference: INTEGER_PREFERENCE
 	expanded_display_bgcolor_preference: COLOR_PREFERENCE
 	number_of_watch_tools_preference: INTEGER_PREFERENCE
 	
 feature -- Preference Strings
 
-	width_string: STRING is "debugger.width"
-	height_string: STRING is "debugger.height"
 	last_saved_stack_path_string: STRING is "debugger.last_saved_stack_path"
 	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_n_instructions"
 	debug_output_evaluation_enabled_string: STRING is "debugger.debug_output_evaluation"	
@@ -140,7 +124,6 @@ feature -- Preference Strings
 	max_evaluation_duration_preference_string: STRING is "debugger.max_evaluation_duration"
 	main_splitter_position_string: STRING is "debugger.main_splitter_position"
 	local_vs_object_proportion_string: STRING is "debugger.proportion"					
-	max_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"	
 	left_debug_layout_string: STRING is "debugger.left_debug_layout"	
 	right_debug_layout_string: STRING is "debugger.right_debug_layout"
 	expanded_display_bgcolor_string: STRING is "debugger.expanded_display_background_color"
@@ -155,8 +138,6 @@ feature {NONE} -- Implementation
 		do		
 			create l_manager.make (preferences, "debug_tool")	
 		
-			width_preference := l_manager.new_integer_resource_value (l_manager, width_string, 214)
-			height_preference := l_manager.new_integer_resource_value (l_manager, height_string, 214)			
 			last_saved_stack_path_preference := l_manager.new_string_resource_value (l_manager, last_saved_stack_path_string, "")
 			interrupt_every_n_instructions_preference := l_manager.new_integer_resource_value (l_manager, interrupt_every_n_instructions_string, 1)
 			debug_output_evaluation_enabled_preference := l_manager.new_boolean_resource_value (l_manager, debug_output_evaluation_enabled_string, True)
@@ -166,12 +147,10 @@ feature {NONE} -- Implementation
 			max_evaluation_duration_preference := l_manager.new_integer_resource_value (l_manager, max_evaluation_duration_preference_string, 5)
 			main_splitter_position_preference := l_manager.new_integer_resource_value (l_manager, main_splitter_position_string, 250)
 			local_vs_object_proportion_preference := l_manager.new_string_resource_value (l_manager, local_vs_object_proportion_string, "0.5")					
-			max_stack_depth_preference := l_manager.new_integer_resource_value (l_manager, max_stack_depth_string, 100)
 			left_debug_layout_preference := l_manager.new_array_resource_value (l_manager, left_debug_layout_string, <<>>)
 			right_debug_layout_preference := l_manager.new_array_resource_value (l_manager, right_debug_layout_string, <<>>)
 			expanded_display_bgcolor_preference := l_manager.new_color_resource_value (l_manager, expanded_display_bgcolor_string, create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
 			number_of_watch_tools_preference := l_manager.new_integer_resource_value (l_manager, number_of_watch_tools_string, 2)					
-
 		end
 	
 	preferences: PREFERENCES
@@ -179,8 +158,6 @@ feature {NONE} -- Implementation
 
 invariant
 	preferences_not_void: preferences /= Void
-	width_preference_not_void: width_preference /= Void
-	height_preference_not_void: height_preference /= Void	
 	last_saved_stack_path_preference_not_void: last_saved_stack_path_preference /= Void
 	interrupt_every_n_instructions_preference_not_void: interrupt_every_n_instructions_preference /= Void
 	debug_output_evaluation_enabled_preference_not_void: debug_output_evaluation_enabled_preference /= Void
@@ -191,7 +168,6 @@ invariant
 	local_vs_object_proportion_preference_not_void: local_vs_object_proportion_preference /= Void
 	left_debug_layout_preference_not_void: left_debug_layout_preference /= Void
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void
-	max_stack_depth_preference_not_void: max_stack_depth_preference /= Void	
 	expanded_display_bgcolor_preference_not_void: expanded_display_bgcolor_preference /= Void		
 	number_of_watch_tools_preference_not_void: number_of_watch_tools_preference /= Void	
 

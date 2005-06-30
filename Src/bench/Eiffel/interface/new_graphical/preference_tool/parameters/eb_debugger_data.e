@@ -27,12 +27,6 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature {EB_SHARED_PREFERENCES} -- Value
 
-	stack_element_width: INTEGER is
-			--
-		do
-			Result := stack_element_width_preference.value
-		end
-
 	default_maximum_stack_depth: INTEGER is
 			-- 		
 		do
@@ -83,7 +77,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 
 feature -- Preference
 
-	stack_element_width_preference: INTEGER_PREFERENCE
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE
 	critical_stack_depth_preference: INTEGER_PREFERENCE		
 	default_expanded_view_size_preference: INTEGER_PREFERENCE
@@ -124,7 +117,6 @@ feature {NONE} -- Preference Strings
 	show_text_in_project_toolbar_string: STRING is "debugger.show_text_in_project_toolbar"	
 	show_all_text_in_project_toolbar_string: STRING is "debugger.show_all_text_in_project_toolbar"
 	default_expanded_view_size_string: STRING is "debugger.default_expanded_view_size"
-	stack_element_width_string: STRING is "debugger.stack_element_width"
 	default_maximum_stack_depth_string: STRING is "debugger.default_maximum_stack_depth"
 	dotnet_debugger_string: STRING is "debugger.dotnet_debugger"
 
@@ -137,7 +129,6 @@ feature {NONE} -- Implementation
 		do		
 			create l_manager.make (preferences, "debugger")			
 							
-			stack_element_width_preference := l_manager.new_integer_resource_value (l_manager, stack_element_width_string, 1000)		
 			default_maximum_stack_depth_preference := l_manager.new_integer_resource_value (l_manager, default_maximum_stack_depth_string, 500)		
 			critical_stack_depth_preference := l_manager.new_integer_resource_value (l_manager, critical_stack_depth_string, 500)			
 			default_expanded_view_size_preference := l_manager.new_integer_resource_value (l_manager, default_expanded_view_size_string, 50)	
@@ -153,7 +144,6 @@ feature {NONE} -- Implementation
 
 invariant
 	preferences_not_void: preferences /= Void
-	stack_element_width_preference_not_void: stack_element_width_preference /= Void
 	default_maximum_stack_depth_preference_not_void: default_maximum_stack_depth_preference /= Void
 	critical_stack_depth_preference_not_void: critical_stack_depth_preference /= Void
 	default_expanded_view_size_preference_not_void: default_expanded_view_size_preference /= Void

@@ -218,6 +218,13 @@ Eiffel_parser:
 				end
 				indexing_node := $1
 			}
+	|	TE_LOCAL
+			{
+				if not entity_declaration_parser or type_parser or expression_parser or indexing_parser then
+					raise_error
+				end
+				entity_declaration_node := Void
+			}
 	|	TE_LOCAL { add_counter } Entity_declaration_list
 			{
 				if not entity_declaration_parser or type_parser or expression_parser or indexing_parser then

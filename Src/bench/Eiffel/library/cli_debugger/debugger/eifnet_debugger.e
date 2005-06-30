@@ -1442,6 +1442,56 @@ feature -- Exception
 			retry		
 		end
 
+	exception_text_from (icdv: ICOR_DEBUG_VALUE): STRING is
+			-- Get `exception_info_to_string' and `exception_info_message'
+		local
+			retried: BOOLEAN
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
+			l_class_name, l_module_name: STRING
+			l_to_string, l_message: STRING
+		do
+			if not retried then
+				if 
+					icdv /= Void 
+					and then icdv.item /= Default_pointer
+				then
+					icdv.add_ref
+					create l_exception_info.make (icdv)
+					l_class_name := l_exception_info.value_class_name
+					l_module_name := l_exception_info.value_module_file_name
+
+					l_icdov := l_exception_info.interface_debug_object_value
+					if l_icdov /= Void then
+						l_to_string := to_string_value_from_exception_object_value (Void, 
+							icdv,
+							l_icdov
+						)
+						l_message := get_message_value_from_exception_object_value (Void, 
+							icdv, 
+							l_icdov
+						)
+						l_icdov.clean_on_dispose
+
+						if l_message = Void then
+							--| This could means the prog did exit_process
+							--| or .. anything else
+							l_message := l_class_name
+						end
+						Result := l_message.twin
+						if l_to_string /= Void then
+							Result.append_string ("%N" + l_to_string)
+						end
+					end
+					l_exception_info.icd_prepared_value.clean_on_dispose
+					l_exception_info.clean
+				end
+			end
+		rescue
+			retried := True
+			retry		
+		end
+
 	exception_occurred: BOOLEAN is
 			-- Last callback is about exception ?
 		do
@@ -1460,7 +1510,7 @@ feature -- Exception
 		do
 			Result := active_exception_value
 			if Result /= Void then
-				Result := Result.twin
+				Result := Result.duplicated_object
 			end
 			if Result = Void or else Result.item = Default_pointer then
 				l_last_thread := icor_debug_thread
@@ -1551,21 +1601,18 @@ feature -- Function Evaluation
 			-- ICorDebugFunction for `ct'.`a_feat' 
 			-- and optionally on object `icdv'
 		local
-			l_prepared_icdv: ICOR_DEBUG_VALUE
 			l_feat_tok: INTEGER
 			l_feat_name: STRING
 			l_icd_class: ICOR_DEBUG_CLASS			
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_class_module_name: STRING
 			l_icd_obj_val: ICOR_DEBUG_OBJECT_VALUE
+			l_info: EIFNET_DEBUG_VALUE_INFO
 		do
 			if icdv /= Void and ct.is_external then
-				l_prepared_icdv := edv_formatter.prepared_debug_value (icdv)
-				if l_prepared_icdv /= Void then
-					l_icd_obj_val := l_prepared_icdv.query_interface_icor_debug_object_value
--- FIXME jfiat [2004/08/25] : in one day we ensure we have a prepared icdv
--- we'll get rid of the previous lines
---					l_icd_obj_val := icdv.query_interface_icor_debug_object_value
+				create l_info.make (icdv)
+				if l_info.has_object_interface then
+					l_icd_obj_val := l_info.interface_debug_object_value
 					if l_icd_obj_val /= Void then
 						l_icd_class := l_icd_obj_val.get_class
 						if l_icd_class /= Void then
@@ -1574,8 +1621,9 @@ feature -- Function Evaluation
 						end
 						l_icd_obj_val.clean_on_dispose
 					end
-					l_prepared_icdv.clean_on_dispose
 				end
+				l_info.icd_prepared_value.clean_on_dispose
+				l_info.clean
 			else
 					--| This should be an true Eiffel type
 				l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)
@@ -1755,6 +1803,9 @@ feature -- Specific function evaluation
 					l_module := l_class.get_module
 					l_function_to_cil := l_module.get_function_from_token (l_feat_to_cil_token)
 					l_icd_value := eifnet_dbg_evaluator.function_evaluation (Void, l_function_to_cil, <<icd_string_instance_ref>>)
+					if eifnet_dbg_evaluator.last_eval_is_exception then
+						l_icd_value := Void
+					end					
 						--| l_icd_value represents the `System.String' value
 					if l_icd_value /= Void then
 						Result := edv_formatter.icor_debug_string_value (l_icd_value)
@@ -1841,6 +1892,9 @@ feature -- Specific function evaluation
 
 			if l_func /= Void then
 				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
+				if eifnet_dbg_evaluator.last_eval_is_exception then
+					l_icd := Void
+				end
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
 					l_icdov := l_value_info.interface_debug_object_value
@@ -1910,6 +1964,9 @@ feature -- Specific function evaluation
 						if l_func /= Void then
 							l_icd_frame := a_frame
 							l_icd := eifnet_dbg_evaluator.function_evaluation (l_icd_frame, l_func, <<a_icd>>)
+							if eifnet_dbg_evaluator.last_eval_is_exception then
+								l_icd := Void
+							end
 						else						
 							debug ("DEBUGGER_TRACE_EVAL")
 								print ("EIFNET_DEBUGGER.debug_output_.. :: Unable to retrieve ICorDebugFunction %N")
@@ -1973,6 +2030,9 @@ feature -- Specific function evaluation
 
 				if l_func /= Void then
 					l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
+					if eifnet_dbg_evaluator.last_eval_is_exception then
+						l_icd := Void
+					end					
 					if l_icd /= Void then
 							--| We should get a System.String
 						create l_debug_info.make (l_icd)
@@ -2015,6 +2075,9 @@ feature -- Specific function evaluation
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 			if l_func /= Void then
 				l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
+				if eifnet_dbg_evaluator.last_eval_is_exception then
+					l_icd := Void
+				end				
 				if l_icd /= Void then
 						--| We should get a System.String
 					create l_debug_info.make (l_icd)

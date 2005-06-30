@@ -43,6 +43,7 @@ feature -- Initialize
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
 				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + {EV_GTK_EXTERNALS}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
+			previous_font_description := ""
 			
 				-- Initialize the default font values
 			if font_settings_changed then
@@ -227,11 +228,7 @@ feature -- Implementation
 			a_settings: STRING
 		do
 			a_settings := default_font_description
-			if previous_font_description /= Void then
-				Result := not previous_font_description.is_equal (a_settings)
-			else
-				Result := True
-			end
+			Result := previous_font_description = Void or else previous_font_description.is_equal (a_settings)
 			previous_font_description := a_settings
 		end
 
@@ -245,8 +242,9 @@ feature -- Implementation
 			if font_name_ptr /= default_pointer then
 				create a_cs.share_from_pointer (font_name_ptr)
 				Result := a_cs.string
-			else
+			end
 					-- Sometimes when gtk isn't setup correctly the 'gtk-font-name' setting cannot be found, so the default is used instead.
+			if Result = Void or else Result.is_empty then
 				Result := once "Sans 10"
 			end
 		end

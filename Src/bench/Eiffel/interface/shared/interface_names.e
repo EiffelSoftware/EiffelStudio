@@ -147,7 +147,7 @@ feature -- Accelerator, focus label and menu name
 
 	m_About: STRING is
 		once
-			Result := "&About Eiffel Software " + Workbench_name + "..."
+			Result := "&About " + Workbench_name + "..."
 		end
 	m_Advanced: STRING is				"Ad&vanced"
 	m_Add_to_favorites: STRING is		"&Add to Favorites"
@@ -626,7 +626,7 @@ feature -- Title part
 
 	t_About: STRING is
 		once
-			Result := "About Eiffel Software " + Workbench_name
+			Result := "About " + Workbench_name
 		end
 	t_Alias: STRING is							"Alias"
 	t_Call_stack_tool: STRING is				"Call Stack"
@@ -677,7 +677,7 @@ feature -- Title part
 	t_Profiler_wizard: STRING is				"Profiler Wizard"
 	t_Project: STRING is
 		once
-			Result := "Eiffel Software "+Workbench_name
+			Result := Workbench_name
 		end
 	t_Preference_window: STRING is				"Preferences"
 	t_Select_class: STRING is					"Select Class"

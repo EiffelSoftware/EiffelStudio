@@ -100,7 +100,7 @@ feature -- Evaluation
 					(on_context and context_feature = Void)
 					or (on_class and context_class = Void)
 				then
-					set_error_expression (Cst_error_during_expression_analyse)
+					notify_error_expression (Cst_error_during_expression_analyse)
 				else
 						--| Compute and get `expression_byte_node'
 					get_expression_byte_node
@@ -168,7 +168,7 @@ feature {NONE} -- EXPR_B evaluation
 			if not retried then
 				evaluate_expr_b (a_expr_b)
 			else
-				set_error_exception (Cst_error_evaluation_failed_with_exception)
+				notify_error_exception (Cst_error_evaluation_failed_with_exception)
 			end
 		rescue
 			retried := True
@@ -288,7 +288,7 @@ feature {NONE} -- EXPR_B evaluation
 				tmp_result_value := string_to_dump_value (l_string_b.value)
 			else
 					--| NotYetReady |--
-				set_error_not_implemented (a_expr_b.generator + Cst_error_not_yet_ready)
+				notify_error_not_implemented (a_expr_b.generator + Cst_error_not_yet_ready)
 			end
 		end		
 
@@ -323,7 +323,7 @@ feature {NONE} -- EXPR_B evaluation
 				tmp_result_value := double_to_dump_value (l_real.real_64_value)				
 --			elseif a_value_i.is_bit			then
 			else
-				set_error_not_implemented (a_value_i.generator + Cst_error_not_yet_ready)
+				notify_error_not_implemented (a_value_i.generator + Cst_error_not_yet_ready)
 			end
 		end
 
@@ -339,7 +339,7 @@ feature {NONE} -- EXPR_B evaluation
 				l_nested_b := a_binary_b.nested_b
 				evaluate_nested_b (l_nested_b)
 			else
-				set_error_not_implemented (a_binary_b.generator + "/BINARY_B" + Cst_error_not_yet_ready)
+				notify_error_not_implemented (a_binary_b.generator + "/BINARY_B" + Cst_error_not_yet_ready)
 			end
 		end
 
@@ -373,7 +373,7 @@ feature {NONE} -- EXPR_B evaluation
 				end
 			end
 			if not error_occurred and tmp_result_value = Void then
-				set_error_not_implemented (a_bin_equal_b.generator + "/BINARY_B" + Cst_error_not_yet_ready)
+				notify_error_not_implemented (a_bin_equal_b.generator + "/BINARY_B" + Cst_error_not_yet_ready)
 			end
 		end
 
@@ -396,7 +396,7 @@ feature {NONE} -- EXPR_B evaluation
 					if l_un_plus_b /= Void then
 						evaluate_nested_b (l_un_plus_b.nested_b)				
 					else
-						set_error_not_implemented (a_unary_b.generator + " = UNARY_B" + Cst_error_not_yet_ready)
+						notify_error_not_implemented (a_unary_b.generator + " = UNARY_B" + Cst_error_not_yet_ready)
 					end
 				end				
 			end
@@ -448,7 +448,7 @@ feature {NONE} -- EXPR_B evaluation
 	--									if l_constant_b /= Void then
 	--					--					l_constant_b.evaluate
 	--									else
-											set_error_not_implemented (a_access_b.generator + " = ACCESS_B" + Cst_error_not_yet_ready)
+											notify_error_not_implemented (a_access_b.generator + " = ACCESS_B" + Cst_error_not_yet_ready)
 	--									end	
 									end
 								end		
@@ -487,7 +487,7 @@ feature {NONE} -- EXPR_B evaluation
 	evaluate_routine_creation_b (a_routine_creation_b: ROUTINE_CREATION_B) is
 		local
 		do
-			set_error_not_implemented (a_routine_creation_b.generator + " = agent creation " + Cst_error_not_yet_ready)
+			notify_error_not_implemented (a_routine_creation_b.generator + " = agent creation " + Cst_error_not_yet_ready)
 		end
 		
 	evaluate_creation_expr_b (a_creation_expr_b: CREATION_EXPR_B) is
@@ -529,10 +529,12 @@ feature {NONE} -- EXPR_B evaluation
 				l_has_error := True
 			end
 			if l_has_error and not l_supported then
-				set_error_not_implemented (a_creation_expr_b.generator + " = CREATION_EXPR_B" + Cst_error_not_yet_ready)
 				l_type_to_create := a_creation_expr_b.info.type_to_create
-				if l_type_to_create /= Void then
-					error_message.append_string (" for " + l_type_to_create.name )					
+				if l_type_to_create = Void then
+					notify_error_not_implemented (a_creation_expr_b.generator + " = CREATION_EXPR_B" + Cst_error_not_yet_ready)
+				else
+					notify_error_not_implemented (a_creation_expr_b.generator + " = CREATION_EXPR_B" + Cst_error_not_yet_ready
+						+ " for " + l_type_to_create.name )					
 				end
 			end
 		rescue
@@ -556,7 +558,7 @@ feature {NONE} -- EXPR_B evaluation
 				l_external_b ?= a_call_access_b
 				evaluate_external_b (l_external_b)				
 			else
-				set_error_not_implemented (a_call_access_b.generator + " = CALL_ACCESS_B"+ Cst_error_not_yet_ready)
+				notify_error_not_implemented (a_call_access_b.generator + " = CALL_ACCESS_B"+ Cst_error_not_yet_ready)
 			end
 		end
 	
@@ -576,7 +578,7 @@ feature {NONE} -- EXPR_B evaluation
 			end
 			
 			if cl = Void then
-				set_error_evaluation (Cst_error_call_on_void_target + 
+				notify_error_evaluation (Cst_error_call_on_void_target + 
 						Cst_feature_name_left_limit + a_feature_b.feature_name + Cst_feature_name_right_limit
 					)
 			else
@@ -614,10 +616,10 @@ feature {NONE} -- EXPR_B evaluation
 							evaluate_attribute (context_address, Void, ef)
 						end							
 					else
-						set_error_not_implemented (a_feature_b.generator +  Cst_error_other_than_func_cst_once_not_available)
+						notify_error_not_implemented (a_feature_b.generator +  Cst_error_other_than_func_cst_once_not_available)
 					end
 				else
-					set_error_evaluation (a_feature_b.generator + Cst_error_report_to_support)
+					notify_error_evaluation (a_feature_b.generator + Cst_error_report_to_support)
 				end
 			end
 		end
@@ -639,7 +641,7 @@ feature {NONE} -- EXPR_B evaluation
 			end
 			
 			if cl = Void then
-				set_error_evaluation (Cst_error_call_on_void_target + 
+				notify_error_evaluation (Cst_error_call_on_void_target + 
 						Cst_feature_name_left_limit + a_external_b.feature_name + Cst_feature_name_right_limit
 					)
 			else
@@ -655,7 +657,7 @@ feature {NONE} -- EXPR_B evaluation
 						dotnet_evaluate_function_with_name (l_addr, tmp_target, a_external_b.feature_name, a_external_b.external_name, params)
 							-- FIXME: What about static ? check ...
 					else
-						set_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
+						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
 					end
 				else
 					fi := ef.associated_feature_i
@@ -674,9 +676,9 @@ feature {NONE} -- EXPR_B evaluation
 							evaluate_attribute (tmp_target.value_address, tmp_target, ef)
 						else
 							evaluate_attribute (context_address, tmp_target, ef)
-						end				
+						end
 					else
-						set_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
+						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
 					end					
 				end
 			end
@@ -718,7 +720,7 @@ feature {NONE} -- EXPR_B evaluation
 			end
 
 			if cl = Void then
-				set_error_evaluation (Cst_error_call_on_void_target)
+				notify_error_evaluation (Cst_error_call_on_void_target)
 			else
 				ef := cl.feature_with_name (a_attribute_b.attribute_name)
 	
@@ -726,7 +728,7 @@ feature {NONE} -- EXPR_B evaluation
 					evaluate_attribute (tmp_target.value_address, tmp_target, ef)
 				else
 					evaluate_attribute (context_address, Void, ef)
-				end				
+				end
 			end
 		end
 		
@@ -753,7 +755,7 @@ feature {NONE} -- EXPR_B evaluation
 			tmp_target := l_tmp_target_backup			
 
 			if Result = Void then
-				set_error_evaluation (a_expr_b.generator + Cst_error_evaluating_parameter)
+				notify_error_evaluation (a_expr_b.generator + Cst_error_evaluating_parameter)
 			end
 		end		
 
@@ -879,10 +881,10 @@ feature {NONE} -- Concrete evaluation
 			tmp_result_value       := Dbg_evaluator.last_result_value
 			tmp_result_static_type := Dbg_evaluator.last_result_static_type			
 			if Dbg_evaluator.error_evaluation_message /= Void then
-				set_error_evaluation (Dbg_evaluator.error_evaluation_message)
+				notify_error_evaluation (Dbg_evaluator.error_evaluation_message)
 			end
 			if Dbg_evaluator.error_exception_message /= Void then
-				set_error_evaluation (Dbg_evaluator.error_exception_message)
+				notify_error_evaluation (Dbg_evaluator.error_exception_message)
 			end
 		end
 
@@ -930,7 +932,7 @@ feature {NONE} -- Concrete evaluation
 			-- Evaluate attribute feature
 		do
 			if a_target /= Void and then a_target.is_void then
-				set_error_evaluation (Cst_error_call_on_void_target + 
+				notify_error_evaluation (Cst_error_call_on_void_target + 
 						Cst_feature_name_left_limit + f.name + Cst_feature_name_right_limit
 					)
 			else
@@ -946,7 +948,7 @@ feature {NONE} -- Concrete evaluation
 			f_is_not_attribute: not f.is_attribute
 		do
 			if a_target /= Void and then a_target.is_void then
-				set_error_evaluation (Cst_error_call_on_void_target + 
+				notify_error_evaluation (Cst_error_call_on_void_target + 
 						Cst_feature_name_left_limit + f.name + Cst_feature_name_right_limit
 					)
 			else
@@ -1231,12 +1233,12 @@ feature {NONE} -- Implementation
 						end
 						Ast_context.clear_all
 					else
-						set_error_expression_and_tag (Cst_error_context_corrupted_or_not_found, Void)
+						notify_error_expression_and_tag (Cst_error_context_corrupted_or_not_found, Void)
 						Ast_context.clear_all
 					end
 				end
 			else
-				set_error_expression (Cst_error_during_expression_analyse)
+				notify_error_expression (Cst_error_during_expression_analyse)
 				error_handler.wipe_out
 			end
 		rescue
@@ -1265,22 +1267,22 @@ feature {NONE} -- Implementation
 				if error_handler.has_error then
 					type_check_succeed := True
 					l_error := error_handler.error_list.first
-					set_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
+					notify_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
 					Result := Void
 				else
 					Result ?= feature_checker.last_byte_node
 				end
 			else
 				if not type_check_succeed then
-					set_error_expression (Cst_error_type_checking_failed)
+					notify_error_expression (Cst_error_type_checking_failed)
 				end
 				if error_handler.has_error then
 					l_error := error_handler.error_list.first
-					set_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
+					notify_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
 					error_handler.wipe_out
 				else
 					if not error_occurred then
-						set_error_expression ("Error!")
+						notify_error_expression ("Error!")
 					end
 				end
 				Result := Void

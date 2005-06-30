@@ -208,20 +208,9 @@ feature -- Bridge to dbg_expression_evaluator
 
 	error_occurred: BOOLEAN is
 		do
-			Result := evaluation_error_code < 0 or syntax_error_occurred
+			Result := evaluation_error_code /= 0 or syntax_error_occurred
 		end		
 
-	evaluation_error_message: STRING is
-			-- Error message text if any error occurred
-		local
-			l_evaluator: DBG_EXPRESSION_EVALUATOR
-		do
-			l_evaluator := expression_evaluator
-			if l_evaluator /= Void then
-				Result := l_evaluator.error_message
-			end
-		end
-		
 	evaluation_error_code: INTEGER is
 		local
 			l_evaluator: DBG_EXPRESSION_EVALUATOR
@@ -298,7 +287,7 @@ feature -- Basic operations
 			-- Evaluate `dbg_expression' with `expression_evaluator'
 		do
 			if syntax_error_occurred then
-				expression_evaluator.set_error_syntax (dbg_expression.error_message)
+				expression_evaluator.notify_error_syntax (dbg_expression.error_message)
 			else
 				expression_evaluator.evaluate
 			end

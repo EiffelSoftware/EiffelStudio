@@ -67,7 +67,9 @@
 					<item>
 						<bold>EV_ANY</bold> - Added protection for multiple calls of `destroy' which previously caused crashes in some situations, now `destroy' calls a `safe_destroy' intermediary which checks if the implementation has not already been destroyed
 					</item>
-					<item><bold>EV_GAUGE</bold> - Fixed bug in `make_with_value_range' which did not adjust `value' to `lower', thereby putting the gauge in an invalid state.</item>
+					<item>
+						<bold>EV_GAUGE</bold> - Fixed bug in `make_with_value_range' which did not adjust `value' to `lower', thereby putting the gauge in an invalid state.
+					</item>
 				</list>
 			</item>
 			<item>
@@ -102,12 +104,13 @@
 							<item>Fixed invariant violation with a non editable combo box.</item>
 							<item>Fixed `caret_position' which was failing if you attempted to set a caret position to a value greater than approx 65,000.</item>
 							<item>Fixed `set_focus' which failed if the combo box was non-editable.</item>
+							<item>Fixed handling of escape and enter keys while list was dropped down. If the combo box was contained within a dialog, the default cancel and default push button actions were fired as a result of pressing these keys. These keys are no longer propagated to the dialog in this fashion.</item>
 						</list>
 					</item>
 					<item>
 						<bold>EV_MULTI_COLUMN_LIST</bold> - Calling `column_width' after calling `resize_column_to_content' did not return the correct result but instead the previously set column width.
 					</item>
-					<item>
+					<item> 
 						<bold>EV_NOTEBOOK</bold>
 						<list ordered="false">
 							<item>Fixed resizing issue of notebook when it is included in a hidden pane of another notebook, resulting in an assertion violation in the resizing code.</item>
@@ -127,7 +130,7 @@
 						<bold>EV_TREE_NODE</bold> - Fixed bug which caused a crash if you performed the following: pruned a node from it's parent, pruned an empty node from this just pruned node and then attempted to insert a node within the empty node.
 					</item>
 					<item>
-						<bold>EV_DIRECTORY_DIALOG</bold> - Fixed bug in which the dialog always reported that "ok" has been selected even if the "cancel" button had been selected. This occurred if the dialog  had been shown more than once with "ok" already selected.
+						<bold>EV_DIRECTORY_DIALOG</bold> - Fixed bug in which the dialog always reported that &quot;ok&quot; has been selected even if the &quot;cancel&quot; button had been selected. This occurred if the dialog  had been shown more than once with &quot;ok&quot; already selected.
 					</item>
 					<item>
 						<bold>EV_PIXMAP</bold>
@@ -153,9 +156,9 @@
 					<item>
 						<bold>EV_RICH_TEXT</bold>
 						<list ordered="false">
-						<item>Fixed bug in `buffered_format' which corrupted the current text upon calling `flush_buffer' if the text contained any RTF reserved characters such as '/', '{' or '}'.</item>
-						<item>Fixed `set_background_color' which was not changing the background color</item>
-						<item>Fixed bug in `disable_word_wrapping' which had a side effect that limited the maximum number of characters to 64000.</item>
+							<item>Fixed bug in `buffered_format' which corrupted the current text upon calling `flush_buffer' if the text contained any RTF reserved characters such as '/', '{' or '}'.</item>
+							<item>Fixed `set_background_color' which was not changing the background color</item>
+							<item>Fixed bug in `disable_word_wrapping' which had a side effect that limited the maximum number of characters to 64000.</item>
 						</list>
 					</item>
 					<item>
@@ -170,7 +173,7 @@
 					<item>
 						<bold>EV_WIDGET</bold> 
 						<list ordered="false">
-							<item>Fixed two bugs with `key_press_string_actions'. The first was that the action sequence was fired when Escape or Backspace was pressed. As these are not displayable characters, the `key_press_string_actions' are no longer fired for these keys. The second is that pressing Enter was passing the the string "%R" which is the Windows specific newline character. We now pass "%N" when the Enter key is pressed.</item>
+							<item>Fixed two bugs with `key_press_string_actions'. The first was that the action sequence was fired when Escape or Backspace was pressed. As these are not displayable characters, the `key_press_string_actions' are no longer fired for these keys. The second is that pressing Enter was passing the the string &quot;%R&quot; which is the Windows specific newline character. We now pass &quot;%N&quot; when the Enter key is pressed.</item>
 							<item>Fixed bug in `pointer_motion_actions'. In some uncommon situations, it was possible to receive the motion event multiple times with the same position.</item>
 						</list>
 					</item>
@@ -180,7 +183,9 @@
 					<item>
 						<bold>EV_FONT_DIALOG</bold> - Fixed bug where `name' of `font' returned was incorrect.
 					</item>
-					<item><bold>EV_SPLIT_AREA</bold> - Split areas now have a completely flat appearance.</item>
+					<item>
+						<bold>EV_SPLIT_AREA</bold> - Split areas now have a completely flat appearance.
+					</item>
 				</list>
 			</item>
 			<item>
@@ -276,7 +281,7 @@
 				</list>
 			</item>
 			<item>
-				<bold>EV_ACTIVE_LIST</bold> - New class added which replaces all occurrences of ACTIVE_LIST within the interface. This prevents the EiffelVision implementation from being "unhooked" by user modification through the interface. The class is completely backwards compatible, and does not require any modifications to your code. Classes such as EV_ACCELERATOR_LIST and EV_FONT incorporate this change.
+				<bold>EV_ACTIVE_LIST</bold> - New class added which replaces all occurrences of ACTIVE_LIST within the interface. This prevents the EiffelVision implementation from being &quot;unhooked&quot; by user modification through the interface. The class is completely backwards compatible, and does not require any modifications to your code. Classes such as EV_ACCELERATOR_LIST and EV_FONT incorporate this change.
 			</item>
 			<item>
 				<bold>EV_DOCKABLE_SOURCE</bold> - Added features `is_external_docking_relative', `enable_external_docking_relative' and `disable_external_docking_relative'. This permits you to dock a source to an EV_DOCKABLE_DIALOG that is not displayed relative to the original top window.
@@ -439,7 +444,7 @@
 				<bold>EV_TREE_ITEM</bold> - Strengthened `is_expandable' so that it checks `parent_tree' is not Void, this brings it into line with the preconditions of `expand'.
 			</item>
 			<item>
-				<bold>EV_DYNAMIC_TREE_ITEM</bold> - Strengthened `is_expandable' to check `parent_tree', in line with preconditions of `expand'. Added "valid_operands" precondition to `set_subtree_function' which ensures that you only pass a function with valid operands.
+				<bold>EV_DYNAMIC_TREE_ITEM</bold> - Strengthened `is_expandable' to check `parent_tree', in line with preconditions of `expand'. Added &quot;valid_operands&quot; precondition to `set_subtree_function' which ensures that you only pass a function with valid operands.
 			</item>
 			<item>
 				<bold>EV_TREE_NODE_CONTAINER</bold> - Now obsolete, you should use EV_TREE_NODE_LIST instead.
@@ -614,7 +619,7 @@
 						</list>
 					</item>
 					<item>
-						<bold>EV_PRINT_DIALOG</bold> - Querying `print_context' from a print dialog if a user selected "Cancel"  would previously crash.
+						<bold>EV_PRINT_DIALOG</bold> - Querying `print_context' from a print dialog if a user selected &quot;Cancel&quot;  would previously crash.
 					</item>
 					<item>
 						<bold>EV_TREE</bold> and 
@@ -769,7 +774,7 @@
 				<bold>EV_TEXT</bold> - `line_count' now returns the number of lines actually displayed, and not just the newline characters, as an EV_TEXT will wrap the text when necessary. The postcondition of `linecount' has been updated to reflect this change.
 			</item>
 			<item>
-				<bold>EV_FILE_DIALOG</bold> Added "valid_file_name" precondition to `set_file_name'  and a new feature `valid_file_name' which checks that a file name is valid on  the current platform.
+				<bold>EV_FILE_DIALOG</bold> Added &quot;valid_file_name&quot; precondition to `set_file_name'  and a new feature `valid_file_name' which checks that a file name is valid on  the current platform.
 			</item>
 		</list>
 		<paragraph>
@@ -844,7 +849,7 @@
 					<item>
 						<bold>EV_TOOL_BAR</bold>
 						<list ordered="false">
-							<item>  Items that were disabled would sometimes become enabled when other properties  of the item were set. For example, performing  "my_tool_bar_button.disable_sensitive" followed by "my_tool_bar_button.set_text  ("Disabled")" while the button was parented, would result in a sensitive tool  bar button. This is now fixed.</item>
+							<item>  Items that were disabled would sometimes become enabled when other properties  of the item were set. For example, performing  &quot;my_tool_bar_button.disable_sensitive&quot; followed by &quot;my_tool_bar_button.set_text  (&quot;Disabled&quot;)&quot; while the button was parented, would result in a sensitive tool  bar button. This is now fixed.</item>
 							<item>  If you changed the `text' of a tool bar toggle button during the firing of the   `select_actions' of the toggle button, the button would become unchecked as a   result. This is now fixed, and changing the text will not stop the button from   becoming selected.</item>
 						</list>
 					</item>
@@ -974,7 +979,7 @@
 				<bold>EV_TREE</bold> - `ensure_item_visible' and `has_recursively' now take an EV_TREE_NODE as arguments, instead of an EV_TREE_ITEM.
 			</item>
 			<item>
-				<bold>EV_TEXT</bold> - `put_new_line' is now obsolete. Use `set_text ("%N") instead."
+				<bold>EV_TEXT</bold> - `put_new_line' is now obsolete. Use `set_text (&quot;%N&quot;) instead.&quot;
 			</item>
 			<item>
 				<bold>EV_APPLICATION_ACTION_SEQUENCES</bold> - Added `cancel_actions', fired when a pick and drop is canceled, and `pnd_motion_actions' fired while the pointer moves during a pick and drop.
@@ -1053,7 +1058,7 @@
 							<bold>EV_TREE_ITEM</bold>  - calling `set_pixmap' twice successively with the same EV_PIXMAP caused a  postcondition failure.
 						</item>
 						<item>
-							<bold>EV_TEXT</bold>  - Fixed `put_new_line', although it has been made obsolete, as you should just  use `append_text ("%N") instead.
+							<bold>EV_TEXT</bold>  - Fixed `put_new_line', although it has been made obsolete, as you should just  use `append_text (&quot;%N&quot;) instead.
 						</item>
 						<item>
 							<bold>EV_SPLIT_AREA</bold>  - Fixed crash reproducable by inserting an EV_PIXMAP directly into the split  area.
@@ -1217,10 +1222,10 @@
 					<bold>EV_MESSAGE_DIALOG</bold> - `text' no longer returns `Void' when empty.
 				</item>
 				<item>
-					<bold>EV_FILE_DIALOG</bold> - `file_name' no longer returns `Void' when the "Cancel" button was pressed, `Result' is empty instead.
+					<bold>EV_FILE_DIALOG</bold> - `file_name' no longer returns `Void' when the &quot;Cancel&quot; button was pressed, `Result' is empty instead.
 				</item>
 				<item>
-					<bold>EV_DIRECTORY_DIALOG</bold> - `directory' no longer returns `Void when the "Cancel" button was pressed, `Result' is empty instead.
+					<bold>EV_DIRECTORY_DIALOG</bold> - `directory' no longer returns `Void when the &quot;Cancel&quot; button was pressed, `Result' is empty instead.
 				</item>
 				<item>
 					<bold>EV_CONTAINER</bold> - has three new features `set_background_pixmap', `background_pixmap' and `remove_background_pixmap'. `background_pixmap' will be tessellated to cover complete background area.
@@ -1232,7 +1237,7 @@
 					<bold>EV_STANDARD_DIALOGS</bold>
 					<list ordered="false">
 						<item> `ok_actions' have been renamed in descendents where appropriate. e.g. in  EV_PRINT_DIALOG, they are renamed to `print_actions' to match the texts of the  associated buttons. Where renamed, `ok_actions' are still available but  obsolete.</item>
-						<item>  Selected button now also returns the correct text of the button (Previously it  was always "Ok").</item>
+						<item>  Selected button now also returns the correct text of the button (Previously it  was always &quot;Ok&quot;).</item>
 					</list>
 				</item>
 				<item>

@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- initialize `Current'.
 		do
 			create found_entities.make (2)
-			create found_locals.make (2)
+			create found_locals_list.make (2)
 			create found_arguments_list.make (2)
 		end
 
@@ -44,86 +44,27 @@ feature -- Basic Operations
 			-- Build list of locals and argument types (`found_entities') corresponding to a position 
 			-- in a text defined by `line' and `token'.		
 		do
+			reset
 			build_local_entities_list (line, token)
 			build_argument_entities_list (line, token)
-			found_entities := found_locals
+			found_entities := found_locals_list
 			found_entities.append (found_arguments_list)
 		end	
-		
-	build_local_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
-			-- Build list of local types corresponding to a position a text defined by `line' and `token'.
-			-- Resulting local nodes will be put in `found_locals'.
-		local
-			l_local_string: STRING
-			retried: BOOLEAN
-		do
-			if not retried then
-				internal_token := token.previous
-				internal_line := line
-				create found_locals.make (2)
-				search_for_local_clause
-				if found_local_keyword then
-					look_for_locals := True
-					l_local_string := local_string
-					if not l_local_string.is_empty then						
-						entity_declaration_parser.parse_from_string (l_local_string)	
-					end
-					found_locals := entity_declaration_parser.entity_declaration_node
-				else
-					internal_token := token.previous
-					internal_line := line
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end	
-		
-	build_argument_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
-			-- Build list of argument types corresponding to a position a text defined by `line' and `token'.
-			-- Resulting local nodes will be put in `found_locals'.
-		local
-			l_arguments_string: STRING
-			retried: BOOLEAN
-		do
-			if not retried then
-				internal_token := token.previous
-				internal_line := line
-				create found_arguments_list.make (2)
-				search_for_arguments
-				if found_arguments then
-					look_for_locals := False
-					l_arguments_string := arguments_string
-					if not l_arguments_string.is_empty then
-						entity_declaration_parser.parse_from_string (l_arguments_string)	
-					end					
-					found_arguments_list := entity_declaration_parser.entity_declaration_node
-				else
-					internal_token := token.previous
-					internal_line := line
-				end
-			end
-		rescue
-			retried := True
-			retry
-		end	
-		
+
 	reset is
 			-- Wipe lists out .
 		do
 			found_entities.wipe_out
-			found_locals.wipe_out
+			found_locals_list.wipe_out
 			found_arguments_list.wipe_out
+		ensure
+			found_entities_empty: found_entities.is_empty
+			found_locals_list_empty: found_locals_list.is_empty
+			found_arguments_list_empty: found_arguments_list.is_empty
 		end
 
-feature -- Access	
-			
-	found_entities: EIFFEL_LIST [TYPE_DEC_AS]	
-			
-	found_locals: EIFFEL_LIST [TYPE_DEC_AS]
-	
-	found_arguments_list: EIFFEL_LIST [TYPE_DEC_AS]
-			
+feature -- Access
+
 	found_names: LINKED_LIST [STRING] is
 			-- List of found entity names.
 		local
@@ -148,7 +89,88 @@ feature -- Access
 					found_entities.forth
 				end
 			end
+		ensure
+			found_names_not_void: Result /= Void
 		end
+
+	found_locals_list: EIFFEL_LIST [TYPE_DEC_AS]
+			-- List of found locals for current routine
+
+feature {NONE} -- Implementation
+
+	build_local_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+			-- Build list of local types corresponding to a position a text defined by `line' and `token'.
+			-- Resulting local nodes will be put in `found_locals_list'.
+		require
+			found_locals_list_empty: found_locals_list.is_empty
+		local
+			l_local_string: STRING
+			retried: BOOLEAN
+			l_found_locals: like found_locals_list
+		do
+			if not retried then
+				internal_token := token.previous
+				internal_line := line
+				search_for_local_clause
+				if found_local_keyword then
+					look_for_locals := True
+					l_local_string := local_string
+					if not l_local_string.is_empty then						
+						entity_declaration_parser.parse_from_string (l_local_string)	
+					end
+					l_found_locals := entity_declaration_parser.entity_declaration_node
+				else
+					internal_token := token.previous
+					internal_line := line
+				end
+			end
+			if l_found_locals /= Void then
+				found_locals_list := l_found_locals
+			end
+		rescue
+			retried := True
+			retry
+		end	
+		
+	build_argument_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+			-- Build list of argument types corresponding to a position a text defined by `line' and `token'.
+			-- Resulting local nodes will be put in `found_arguments_list'.
+		require
+			found_arguments_list_empty: found_arguments_list.is_empty
+		local
+			l_arguments_string: STRING
+			retried: BOOLEAN
+			l_found_args: like found_arguments_list
+		do
+			if not retried then
+				internal_token := token.previous
+				internal_line := line
+				search_for_arguments
+				if found_arguments then
+					look_for_locals := False
+					l_arguments_string := arguments_string
+					if not l_arguments_string.is_empty then
+						entity_declaration_parser.parse_from_string (l_arguments_string)
+					end					
+					l_found_args := entity_declaration_parser.entity_declaration_node
+				else
+					internal_token := token.previous
+					internal_line := line
+				end
+			end
+			if l_found_args /= Void then
+				found_arguments_list := l_found_args
+			end
+		rescue
+			retried := True
+			retry
+		end	
+		
+feature {NONE} -- Implementation: Access	
+			
+	found_entities: EIFFEL_LIST [TYPE_DEC_AS]	
+	
+	found_arguments_list: EIFFEL_LIST [TYPE_DEC_AS]
 			
 feature {NONE} -- Implementation
 
@@ -505,5 +527,9 @@ feature {NONE} -- Implementation
 			Result := is_blank (a_token) or else is_comment (a_token)
 		end
 		
+invariant
+	found_locals_list_not_void: found_locals_list /= Void
+	found_entities_not_void: found_entities /= Void
+	found_arguments_list_not_void: found_arguments_list /= Void
 
 end -- class EB_LOCAL_ANALYZER

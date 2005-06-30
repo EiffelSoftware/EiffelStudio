@@ -266,10 +266,7 @@ feature {NONE} -- Handle keystokes
 			when Key_a then
 					-- Ctrl-A (select all)
 				select_all
-				scroll_to_cursor := False
-			when key_l then
-					-- Ctrl-L (line number toggle)
-				toggle_line_number_display
+				scroll_to_cursor := False		
 			when key_y then
 					-- Ctrl-Y (Redo)
 				if text_displayed.redo_is_possible then

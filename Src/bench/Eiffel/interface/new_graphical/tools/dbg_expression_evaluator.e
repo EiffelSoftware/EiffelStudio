@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 
 	make_as_object (addr: like context_address) is
 		do
+			generic_make
+			reset_dbg_evaluator
 			set_context_address (addr)
 			set_as_object  (True)
 			set_on_object  (True)
@@ -37,7 +39,14 @@ feature {NONE} -- Initialization
 		require
 			expr_not_void: expr /= Void
 		do
+			generic_make
 			dbg_expression := expr
+		end
+		
+	generic_make is
+		do
+			error := 0
+			create error_messages.make
 		end
 
 feature -- change
@@ -109,54 +118,55 @@ feature -- Change
 	reset_error is
 		do
 			error := 0
-			error_message := Void
-			error_tag := Void
+			error_messages.wipe_out
 		end
 
-	set_error_evaluation (mesg: STRING) is
+	notify_error (a_code: INTEGER; a_tag, a_msg: STRING) is
+		require
+			valid_code: a_code /= 0
+			valid_message: a_msg /= Void
 		do
-			error := cst_error_evaluation
-			error_message := mesg
-		end
-
-	set_error_exception (mesg: STRING) is
-		do
-			error := cst_error_exception
-			error_message := mesg
-		end
-
-	set_error_expression_and_tag (mesg: STRING; t: STRING) is
-		do
-			error := cst_error_expression
-			error_message := mesg
-			error_tag := t
-		end
-
-	set_error_expression (mesg: STRING) is
-		do
-			error := cst_error_expression
-			error_message := mesg
+			error := error | a_code
+			error_messages.extend ([a_code, a_tag, a_msg])
 		end
 		
-	set_error_syntax (mesg: STRING) is
+	notify_error_evaluation (mesg: STRING) is
 		do
-			error := cst_error_syntax
-			error_message := mesg
+			notify_error (cst_error_evaluation, Void, mesg)
+		end
+
+	notify_error_exception (mesg: STRING) is
+		do
+			notify_error (cst_error_exception, Void, mesg)
+		end
+
+	notify_error_expression_and_tag (mesg: STRING; t: STRING) is
+		do
+			notify_error (cst_error_expression, t, mesg)
+		end
+
+	notify_error_expression (mesg: STRING) is
+		do
+			notify_error (cst_error_expression, Void, mesg)
+		end
+		
+	notify_error_syntax (mesg: STRING) is
+		do
+			notify_error (cst_error_syntax, Void, mesg)
 		end		
 
-	set_error_not_implemented (mesg: STRING) is
+	notify_error_not_implemented (mesg: STRING) is
 		do
-			error := cst_error_not_implemented
-			error_message := mesg
+			notify_error (cst_error_not_implemented, Void, mesg)
 		end
 	
 feature {NONE} -- Error code
 
-	cst_error_evaluation: INTEGER is -1
-	cst_error_expression: INTEGER is -2
-	cst_error_exception: INTEGER is -3
-	cst_error_syntax: INTEGER is - 4
-	cst_error_not_implemented: INTEGER is -9
+	cst_error_evaluation: INTEGER is 		0x01 		--|  0b00000001 -> 0x01
+	cst_error_expression: INTEGER is 		0x02 		--|  0b00000010 -> 0x02
+	cst_error_exception: INTEGER is  		0x04		--|  0b00000100 -> 0x04
+	cst_error_syntax: INTEGER is     		0x08		--|  0b00001000 -> 0x08
+	cst_error_not_implemented: INTEGER is 	0x10		--|  0b00010000 -> 0x10
 	
 feature {NONE} -- Error message values
 	
@@ -185,43 +195,78 @@ feature {NONE} -- Error message values
 
 feature -- Access
 
-	is_error_evaluation: BOOLEAN is
+	has_error_evaluation: BOOLEAN is
 		do
-			Result := error = cst_error_evaluation
+			Result := error & cst_error_evaluation > 0
 		end
 
-	is_error_expression: BOOLEAN is
+	has_error_expression: BOOLEAN is
 		do
-			Result := error = cst_error_expression
+			Result := error & cst_error_expression > 0
 		end
 
-	is_error_exception: BOOLEAN is
+	has_error_exception: BOOLEAN is
 		do
-			Result := error = cst_error_exception
+			Result := error & cst_error_exception > 0
 		end
 		
-	is_error_syntax: BOOLEAN is
+	has_error_syntax: BOOLEAN is
 		do
-			Result := error = cst_error_syntax
+			Result := error & cst_error_syntax > 0
 		end		
 
-	is_error_not_implemented: BOOLEAN is
+	has_error_not_implemented: BOOLEAN is
 		do
-			Result := error = cst_error_not_implemented
+			Result := error & cst_error_not_implemented > 0
 		end
 
 	error: INTEGER
-	
-	error_tag: STRING
-			-- Short error message if needed
 
-	error_message: STRING
+	error_messages: LINKED_LIST [TUPLE [INTEGER, STRING, STRING]]
+			-- List of [Code, Tag, Message]
 			-- Error's message if any otherwise Void
+			
+	short_text_from_error_messages: STRING is
+		local
+			details: TUPLE [INTEGER, STRING, STRING]
+		do
+			if not error_messages.is_empty then
+				details := error_messages.first
+				Result ?= details.reference_item (2)
+			end
+		end
+		
+	text_from_error_messages: STRING is
+		local
+			details: TUPLE [INTEGER, STRING, STRING]
+			l_code: INTEGER
+			l_tag, l_msg: STRING
+		do
+			create Result.make (0)
+			from
+				error_messages.start
+			until
+				error_messages.after
+			loop
+				details := error_messages.item
+				l_code := details.integer_32_item (1)
+				l_tag ?= details.reference_item (2)
+				l_msg ?= details.reference_item (3)
+				if l_tag /= Void then
+					Result.append_string ("[" + l_tag + "] ")
+				end
+				Result.append_string (l_msg)
+				error_messages.forth
+				if not error_messages.after then
+					Result.append_string (once "%N-----------------------------------%N")
+				end
+			end
+		end
 	
 	error_occurred: BOOLEAN is
 			-- Did an error occurred ?
 		do
-			Result := error < 0
+			Result := error /= 0
 		end		
 	
 	is_condition (f: FEATURE_I): BOOLEAN is
@@ -275,5 +320,8 @@ feature -- Evaluation
 									implies (error_occurred)
 		end
 		
+invariant
+	
+	error_messages_not_void: error_messages /= Void
 
 end -- class DBG_EXPRESSION_EVALUATOR

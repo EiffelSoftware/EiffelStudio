@@ -77,7 +77,7 @@ feature -- Initialization
 			if a_width /= width then
 					if parent_imp.call_item_resize_start_actions or else parent_imp.item_resize_tuple /= Void then
 						-- Always make sure that the event box is the same size as the header item.
-						{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
+						{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, default_box_height)
 						width := a_width
 						parent_imp.on_resize (interface)						
 					end
@@ -96,7 +96,7 @@ feature -- Status setting
 		do
 			width := a_width
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (c_object, a_width.max (1))
-			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, 16)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, default_box_height)
 		end
 		
 	resize_to_content is
@@ -267,6 +267,12 @@ feature {EV_HEADER_IMP} -- Implementation
 		-- Parent of `Current'
 
 feature {NONE} -- Implementation
+
+	default_box_height: INTEGER is
+			-- Default height of the box.
+		once
+			Result := (create {EV_LABEL}).minimum_height + 3
+		end
 
 	width_internal: INTEGER is
 			-- `Result' is width of `Current' used

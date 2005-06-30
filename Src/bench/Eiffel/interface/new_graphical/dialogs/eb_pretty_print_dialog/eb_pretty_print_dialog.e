@@ -244,6 +244,7 @@ feature -- Status setting
 			l_endpos: INTEGER
 		do
 			editor.remove_text
+			editor.enable_edit
 			if Application.status.is_stopped then
 				if has_object then
 					retrieve_dump_value
@@ -279,6 +280,7 @@ feature -- Status setting
 					end
 				end
 			end
+			editor.disable_edit
 		end
 
 	destroy is

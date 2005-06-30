@@ -36,7 +36,7 @@ feature -- Access
 			if Result = icd then
 					--| Make sure Result is not the icd object
 					--| otherwise we may clean it by hasard
-				Result := icd.twin
+				Result := icd.duplicated_object
 			end
 		ensure
 			result_not_icd: Result /= icd
@@ -570,8 +570,7 @@ feature {NONE} -- preparing
 
 	            --| If we have a boxed object then unbox the little fella... |--
 			l_box := Result.query_interface_icor_debug_box_value
-			if Result.last_call_succeed then
-
+			if Result.last_call_succeed and l_box /= Void then
                 --| Replace the current value with the unboxed object.
 				Result := l_box.get_object
 				check

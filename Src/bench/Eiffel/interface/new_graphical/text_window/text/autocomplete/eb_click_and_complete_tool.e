@@ -434,7 +434,7 @@ feature -- Basic Operations
 					cls_c := class_c_to_complete_from (token, cursor, l_current_class_c, False, False)
 					if exploring_current_class then
 						local_analyzer.build_entities_list (cursor.line, token)
-						add_names_to_completion_list (Local_analyzer.found_names)
+						add_names_to_completion_list (Local_analyzer, l_current_class_c)
 						local_analyzer.reset
 					end
 				end				
@@ -659,7 +659,8 @@ feature -- Class names completion
 			classes				: HASH_TABLE [CLASS_I, STRING]
 			token				: EDITOR_TOKEN
 			show_all	: BOOLEAN
-			class_name			: EB_NAME_FOR_COMPLETION
+			class_name			: EB_CLASS_FOR_COMPLETION
+			name_name			: EB_NAME_FOR_COMPLETION
 			cnt, i				: INTEGER
 		do			
 			create insertion
@@ -693,7 +694,7 @@ feature -- Class names completion
 						until
 							classes.after
 						loop
-							create class_name.make_with_name_and_class (classes.key_for_iteration, classes.item_for_iteration)
+							create class_name.make (classes.item_for_iteration)
 						 	class_list.extend (class_name)
 							classes.forth
 						end
@@ -705,7 +706,7 @@ feature -- Class names completion
 							classes.after
 						loop
 							if matches (classes.key_for_iteration, cname) then
-								create class_name.make_with_name_and_class (classes.key_for_iteration, classes.item_for_iteration)
+								create class_name.make (classes.item_for_iteration)
 							 	class_list.extend (class_name)
 							end
 							classes.forth
@@ -722,8 +723,8 @@ feature -- Class names completion
 					until
 						current_class_as.generics.after
 					loop
-						create class_name.make_with_name (current_class_as.generics.item.name)
-						class_list.put_front (class_name)
+						create name_name.make_with_name (current_class_as.generics.item.name)
+						class_list.put_front (name_name)
 						current_class_as.generics.forth
 					end
 				end								
@@ -1013,19 +1014,37 @@ feature {NONE} -- Completion implementation
 			end			
 		end		
 
-	add_names_to_completion_list (name_list: LIST [STRING]) is
-			-- 
+	add_names_to_completion_list (a_analyser: EB_LOCAL_ENTITIES_FINDER; a_current: CLASS_C) is
+			-- Adds locals and arguments to completion list and adds 'Current' based on `a_current'
+		require
+			a_analyser_not_void: a_analyser /= Void
 		local
-			name: EB_NAME_FOR_COMPLETION
+			l_basic: EB_NAME_FOR_COMPLETION
+			l_names: DYNAMIC_LIST [STRING]
 		do
-			from
-				name_list.start
-			until
-				name_list.after
-			loop
-				create name.make_with_name (name_list.item)
-				insert_in_completion_possibilities (name)
-				name_list.forth
+			create l_basic.make_with_name ("Current")
+			insert_in_completion_possibilities (l_basic)
+			if a_analyser.has_return_type then
+				create l_basic.make_with_name ("Result")
+				insert_in_completion_possibilities (l_basic)					
+			end
+			if preferences.editor_data.show_any_features then
+				create l_basic.make_with_name ("Void")
+				insert_in_completion_possibilities (l_basic)
+			end
+			
+			l_names := a_analyser.found_names
+			if l_names /= Void and then not l_names.is_empty then
+				from	
+					l_names.start
+				until
+					l_names.after
+				loop
+					create l_basic.make_with_name (l_names.item)
+					insert_in_completion_possibilities (l_basic)
+					
+					l_names.forth
+				end
 			end
 		end
 
@@ -1035,18 +1054,18 @@ feature {NONE} -- Completion implementation
 			completion_possibilities_not_void: completion_possibilities /= Void
 			feat_is_not_void: feat /= Void
 		local
-			name: EB_NAME_FOR_COMPLETION
+			l_feature: EB_FEATURE_FOR_COMPLETION
 		do
 			if feat.is_infix then
-				create name.make_with_name_and_feature (extract_symbol_from_infix (feat.name), feat)
-				name.set_has_dot (False)
-				insert_in_completion_possibilities (name)
+				create l_feature.make (feat)
+				l_feature.set_has_dot (False)
+				insert_in_completion_possibilities (l_feature)
 			elseif not feat.is_prefix then
-				create name.make_with_name_and_feature (feat.name, feat)
+				create l_feature.make (feat)
 				if (feat.is_once or feat.is_constant) and preferences.editor_data.once_and_constant_in_upper then
-					name.put ((name @ 1).upper, 1)
+					l_feature.put ((l_feature @ 1).upper, 1)
 				end
-				insert_in_completion_possibilities (name)
+				insert_in_completion_possibilities (l_feature)
 			end			
 		end
 

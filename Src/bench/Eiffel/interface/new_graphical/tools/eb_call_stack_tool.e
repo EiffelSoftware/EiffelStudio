@@ -880,6 +880,7 @@ feature {NONE} -- Implementation: set stack depth command
 				element_nb.set_value (500)
 			elseif Debugger_manager.maximum_stack_depth = -1 then
 				element_nb.set_value (50)
+				show_all_radio.enable_select
 			else
 				element_nb.set_value (Debugger_manager.maximum_stack_depth)
 			end
@@ -958,7 +959,7 @@ feature {NONE} -- Implementation: set stack depth command
 				nb := element_nb.value
 			end
 			if set_as_default.is_selected then
-				preferences.debug_tool_data.max_stack_depth_preference.set_value (nb)
+				preferences.debugger_data.default_maximum_stack_depth_preference.set_value (nb)
 			end
 			close_dialog
 			debugger_manager.set_maximum_stack_depth (nb)

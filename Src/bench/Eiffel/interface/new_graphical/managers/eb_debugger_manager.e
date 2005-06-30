@@ -46,7 +46,8 @@ feature {NONE} -- Initialization
 			maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
 			init_commands
 
-			objects_split_position := 300
+			objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
+			debug_splitter_position := preferences.debug_tool_data.main_splitter_position
 			
 			create watch_tool_list.make
 
@@ -464,7 +465,7 @@ feature -- Status setting
 				--| Set the Grid Objects tool split position to 200 which is the default size of the local tree.
 			split ?= objects_tool.widget
 			if split /= Void then
-				split.set_split_position (objects_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
+				split.set_proportion (objects_split_proportion)
 				split := Void
 			end
 
@@ -501,13 +502,15 @@ feature -- Status setting
 			debug_left_layout := debugging_window.left_panel.save_to_resource
 			debug_right_layout := debugging_window.right_panel.save_to_resource
 			debug_splitter_position := debugging_window.panel.split_position
+			
 			split ?= objects_tool.widget
 			if split /= Void then
-				objects_split_position := split.split_position
+				objects_split_proportion := split.split_position / split.width
 			end
 			preferences.debug_tool_data.left_debug_layout_preference.set_value (debug_left_layout)
 			preferences.debug_tool_data.right_debug_layout_preference.set_value (debug_right_layout)
 			preferences.debug_tool_data.main_splitter_position_preference.set_value (debug_splitter_position)
+			preferences.debug_tool_data.set_local_vs_object_proportion (objects_split_proportion)
 			
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("Right debug layout: %N")
@@ -925,10 +928,7 @@ feature {NONE} -- Implementation
 	debug_splitter_position, normal_splitter_position: INTEGER
 			-- Used to save the position of the main splitter of the debugging window.
 
-	objects_split_position: INTEGER
-			-- Position of the splitter inside the object tool.
-
-	object_split_position: INTEGER
+	objects_split_proportion: REAL
 			-- Position of the splitter inside the object tool.
 
 	normal_right_layout, normal_left_layout: ARRAY [STRING]

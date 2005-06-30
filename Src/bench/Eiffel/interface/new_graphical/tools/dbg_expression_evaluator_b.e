@@ -845,6 +845,7 @@ feature {NONE} -- EXPR_B evaluation
 			cse: EIFFEL_CALL_STACK_ELEMENT
 			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
 			l_addr: STRING
+			l_curr_obj : ABSTRACT_DEBUG_VALUE
 		do
 			if on_object then
 					--| If the context is on object
@@ -859,7 +860,12 @@ feature {NONE} -- EXPR_B evaluation
 				l_addr := cse.object_address
 				if application.is_dotnet then
 					cse_dotnet ?= cse
-					tmp_result_value := cse_dotnet.current_object.dump_value
+					l_curr_obj := cse_dotnet.current_object
+					if l_curr_obj /= Void then
+						tmp_result_value := l_curr_obj.dump_value
+					else
+						notify_error_evaluation ("Unable to get Current object")
+					end
 				else
 					create tmp_result_value.make_object (l_addr, cse.dynamic_class)
 				end

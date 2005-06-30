@@ -252,7 +252,6 @@ feature {NONE} -- Implementation
 					--| String display size
 				create tf_disp_str_size.make_with_text (application.displayed_string_size.out)
 				tf_disp_str_size.set_minimum_width (Cst_field_label_width)
-				tf_disp_str_size.return_actions.extend (agent tf_minf.set_focus)
 	
 				create hbox
 				create label.make_with_text (Interface_names.l_Max_displayed_string_size)
@@ -289,6 +288,10 @@ feature {NONE} -- Implementation
 			tf_minf.return_actions.extend (agent tf_maxf.set_focus)
 			tf_minf.return_actions.extend (agent tf_maxf.select_all)
 			tf_maxf.return_actions.extend (agent check_and_get_limits_from_fields (tf_disp_str_size, tf_minf, tf_maxf, dial))
+
+			if tf_disp_str_size /= Void then
+				tf_disp_str_size.return_actions.extend (agent tf_minf.set_focus)
+			end			
 
 				--| Buttons.
 			create okb.make_with_text (Interface_names.b_Ok)

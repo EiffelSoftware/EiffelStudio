@@ -128,8 +128,14 @@ feature -- Graphical changes
 			if row /= Void and not compute_grid_display_done then
 				compute_grid_display_done := True
 				dv := object
-				check dv /= Void end
-				if dv.is_dummy_value then
+				if dv = Void then
+					last_dump_value := Void
+					set_name ("No object")
+					set_value (Void)
+					set_type (Void)
+					set_address (Void)
+					set_pixmap (Icons @ (Void_value))
+				elseif dv.is_dummy_value then
 					last_dump_value := Void
 					dmdv ?= dv
 					set_name (dv.name)

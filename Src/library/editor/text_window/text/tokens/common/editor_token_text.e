@@ -62,7 +62,7 @@ feature -- Miscellaneous
 					end
 					from
 						i := 1
-						if l_is_fixed then
+						if not l_is_fixed then
 							create l_string.make_filled (' ', 1)						
 						end
 					until

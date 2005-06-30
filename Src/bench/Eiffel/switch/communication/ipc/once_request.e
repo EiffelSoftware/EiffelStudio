@@ -100,51 +100,60 @@ end
 		do
 			fixme ("JFIAT: update the runtime to avoid evaluate the once")
 			debug ("debugger_trace_eval")
-				print (generator + ".once_eval_result (" + a_addr.out + ", " + f.name + ", " + dclass.name_in_upper + ")%N")
-			end
-			l_dynclass := dclass
-			if l_dynclass /= Void and then l_dynclass.is_basic then
-				l_dyntype := associated_reference_class_type (l_dynclass)
-			elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
 				if a_addr /= Void then
-						-- The type has generic derivations: we need to find the precise type.
-					l_dyntype := debugged_object_manager.class_type_at_address (a_addr)
-					if l_dyntype = Void then
-					elseif l_dynclass = Void then
-						l_dynclass := l_dyntype.associated_class						
+					print (generator + ".once_eval_result (" + a_addr.out + ", " + f.name + ", " + dclass.name_in_upper + ")%N")
+				else					
+					print (generator + ".once_eval_result (Void, " + f.name + ", " + dclass.name_in_upper + ")%N")
+					
+				end
+			end
+			if a_addr = Void then
+				fixme ("JFIAT: for expanded value, we can not evaluate the once, so we use the old way")
+				Result := once_result (f)
+			else
+				l_dynclass := dclass
+				if l_dynclass /= Void and then l_dynclass.is_basic then
+					l_dyntype := associated_reference_class_type (l_dynclass)
+				elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
+					if a_addr /= Void then
+							-- The type has generic derivations: we need to find the precise type.
+						l_dyntype := debugged_object_manager.class_type_at_address (a_addr)
+						if l_dyntype = Void then
+						elseif l_dynclass = Void then
+							l_dynclass := l_dyntype.associated_class						
+						end
+					else
+						--| Shouldn't happen: basic types are not generic.
 					end
 				else
-					--| Shouldn't happen: basic types are not generic.
+					l_dyntype := l_dynclass.types.first
 				end
-			else
-				l_dyntype := l_dynclass.types.first
+				
+				send_ref_value (hex_to_pointer (a_addr))
+	
+				if f.is_external then
+					par := par + 1
+				end
+				if f.written_class.is_precompiled then
+					par := par + 2
+					rout_info := System.rout_info_table.item (f.rout_id_set.first)
+					send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+				else
+					send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, l_dyntype.static_type_id - 1, par)
+				end
+				c_recv_value (Current)
+				Result := item
+				if Result /= Void then
+					Result.set_name (f.name)
+						-- Convert the physical addresses received from 
+						-- the application to hector addresses.
+					Result.set_hector_addr
+				else
+						--| FIXME XR: This shouldn't happen, but happens anyway.
+						--| It's better to display a dummy once instead of crashing...
+					create {REFERENCE_VALUE} Result.make (default_pointer, 1)
+				end
 			end
-			
-			send_ref_value (hex_to_pointer (a_addr))
-
-			if f.is_external then
-				par := par + 1
-			end
-			if f.written_class.is_precompiled then
-				par := par + 2
-				rout_info := System.rout_info_table.item (f.rout_id_set.first)
-				send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
-			else
-				send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, l_dyntype.static_type_id - 1, par)
-			end
-			c_recv_value (Current)
-			Result := item
-			if Result /= Void then
-				Result.set_name (f.name)
-					-- Convert the physical addresses received from 
-					-- the application to hector addresses.
-				Result.set_hector_addr
-			else
-					--| FIXME XR: This shouldn't happen, but happens anyway.
-					--| It's better to display a dummy once instead of crashing...
-				create {REFERENCE_VALUE} Result.make (default_pointer, 1)
-			end
-			
 		end
 
 feature -- Impl

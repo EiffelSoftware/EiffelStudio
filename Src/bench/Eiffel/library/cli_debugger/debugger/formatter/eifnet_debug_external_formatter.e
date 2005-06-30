@@ -93,7 +93,6 @@ feature {NONE} -- get member data
 		do
 			l_icd_value := v
 			create l_value_info.make (l_icd_value)
-
 			l_icd_obj_value := l_value_info.interface_debug_object_value
 			if l_icd_obj_value /= Void then
 				l_icd_class := l_icd_obj_value.get_class
@@ -107,6 +106,7 @@ feature {NONE} -- get member data
 					end
 				end
 				l_icd_obj_value.clean_on_dispose
+				l_value_info.icd_prepared_value.clean_on_dispose
 				l_value_info.clean
 			end	
 		end

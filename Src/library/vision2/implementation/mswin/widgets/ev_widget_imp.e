@@ -816,15 +816,17 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 				
-					-- Windows does not seem to generate any messages when a key is
-					-- pressed in a modal or modeless dialog, so if `Current' is parented
-					-- in one of these, we must force the calling of the key_press_actions.
-					-- We also handle the case where `Current' is a dialog, as the escape key
-					-- is fired and we need to ignore it, to avoid the actions being called twice.
-				common_dialog_imp ?= top_level_window_imp
-				l_current := Current
-				if common_dialog_imp /= Void and then common_dialog_imp /= l_current then
-					common_dialog_imp.key_press_actions.call ([key])
+				if propagate_key_to_dialog (True) then
+						-- Windows does not seem to generate any messages when a key is
+						-- pressed in a modal or modeless dialog, so if `Current' is parented
+						-- in one of these, we must force the calling of the key_press_actions.
+						-- We also handle the case where `Current' is a dialog, as the escape key
+						-- is fired and we need to ignore it, to avoid the actions being called twice.
+					common_dialog_imp ?= top_level_window_imp
+					l_current := Current
+					if common_dialog_imp /= Void and then common_dialog_imp /= l_current then
+						common_dialog_imp.key_press_actions.call ([key])
+					end
 				end
 				if key_press_actions_internal /= Void then
 					key_press_actions_internal.call ([key])
@@ -836,22 +838,35 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- Process key release represented by `virtual_key'.
 		local
 			key: EV_KEY
-			common_dialog_imp: EV_DIALOG_IMP_COMMON
+			common_dialog_imp: EV_DIALOG_I
+			l_current: EV_WIDGET_I
 		do
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
 				
-					-- Windows does not seem to generate any messages when a key is
-					-- pressed in a modal or modeless dialog, so if `Current' is parented
-					-- in one of these, we must force the calling of the key_press_actions.
-				common_dialog_imp ?= top_level_window_imp
-				if common_dialog_imp /= Void then
-					common_dialog_imp.key_release_actions.call ([key])
-				end							
+				if propagate_key_to_dialog (False) then
+						-- Windows does not seem to generate any messages when a key is
+						-- pressed in a modal or modeless dialog, so if `Current' is parented
+						-- in one of these, we must force the calling of the key_release_actions.
+						-- We also handle the case where `Current' is a dialog, as the escape key
+						-- is fired and we need to ignore it, to avoid the actions being called twice.
+					common_dialog_imp ?= top_level_window_imp
+					l_current := Current
+					if common_dialog_imp /= Void and common_dialog_imp /= l_current then
+						common_dialog_imp.key_release_actions.call ([key])
+					end
+				end
 				if key_release_actions_internal /= Void then
 					key_release_actions_internal.call ([key])
 				end
 			end
+		end
+
+	propagate_key_to_dialog (is_pressed: BOOLEAN): BOOLEAN is
+			-- Should we propagate a key event if `Current' is parented in a dialog?
+			-- If `is_pressed', then it is a key_press event, otherwise a key_release event.
+		do
+			Result := True
 		end
 
 feature {NONE} -- Implementation

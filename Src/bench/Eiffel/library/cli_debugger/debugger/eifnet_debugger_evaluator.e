@@ -534,6 +534,7 @@ feature {NONE}
 				elseif eifnet_debugger.managed_callback_is_eval_exception (lmcb) then
 					Result := Void
 					last_eval_is_exception := True
+					Result := l_icd_eval.get_result					
 				elseif eifnet_debugger.managed_callback_is_exit_process (lmcb) then
 					eifnet_debugger.notify_exit_process_occurred
 					Result := Void

@@ -355,7 +355,7 @@ feature -- Status setting
 			l_expr: EB_EXPRESSION
 			witem: like watched_item_from
 		do
-			watches_grid.remove_and_clear_all_rows
+			clean_watched_grid
 			from
 				watched_items.start
 			until
@@ -400,7 +400,7 @@ feature -- Memory management
 				explorer_bar_item.recycle
 			end
 			recycle_expressions
-			watches_grid.remove_and_clear_all_rows
+			clean_watched_grid
 		end
 
 	recycle_expressions is
@@ -949,7 +949,19 @@ feature {NONE} -- Implementation: internal data
 	watched_items: ARRAYED_LIST [like watched_item_from]
 			-- List of items that are displayed
 			-- ie: mostly ES_OBJECTS_GRID_EXPRESSION_LINE
+
+feature -- Grid management
+
+	watches_grid_empty: BOOLEAN
 	
+	clean_watched_grid is	
+		do
+			if not watches_grid_empty then
+				watches_grid.remove_and_clear_all_rows
+				watches_grid_empty := True
+			end
+		end
+		
 feature -- Access
 
 	refresh_watched_item (a_item: like watched_item_from) is
@@ -1005,7 +1017,7 @@ feature {NONE} -- Implementation
 			end
 			watches_grid.remove_selection
 			if watched_items.is_empty and watches_grid.row_count > 0 then
-				watches_grid.remove_and_clear_all_rows
+				clean_watched_grid
 			end
 			from
 				watched_items.start

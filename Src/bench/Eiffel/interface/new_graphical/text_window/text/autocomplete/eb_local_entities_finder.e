@@ -49,11 +49,13 @@ feature -- Basic Operations
 			build_argument_entities_list (line, token)
 			found_entities := found_locals_list
 			found_entities.append (found_arguments_list)
+			search_for_return_type
 		end	
 
 	reset is
 			-- Wipe lists out .
 		do
+			has_return_type := False
 			found_entities.wipe_out
 			found_locals_list.wipe_out
 			found_arguments_list.wipe_out
@@ -95,6 +97,9 @@ feature -- Access
 
 	found_locals_list: EIFFEL_LIST [TYPE_DEC_AS]
 			-- List of found locals for current routine
+			
+	has_return_type: BOOLEAN
+			-- Does feature have a return type?
 
 feature {NONE} -- Implementation
 
@@ -160,6 +165,22 @@ feature {NONE} -- Implementation
 			end
 			if l_found_args /= Void then
 				found_arguments_list := l_found_args
+			end
+		rescue
+			retried := True
+			retry
+		end	
+		
+	build_return_type (line: EDITOR_LINE; token: EDITOR_TOKEN) is
+			-- Attempts to locate a return type for the feature where `token' resides
+		local
+			l_arguments_string: STRING
+			retried: BOOLEAN
+		do
+			if not retried then
+				internal_token := token.previous
+				internal_line := line
+				search_for_return_type
 			end
 		rescue
 			retried := True
@@ -317,6 +338,45 @@ feature {NONE} -- Implementation
 										stop := True
 									end
 								end -- loop
+							end
+						end
+					end
+					internal_token := internal_token.previous
+				end
+			end			
+		end
+
+	search_for_return_type is
+			-- Examines the editor tokens to attempt to infer if the feature 
+		local
+			stop: BOOLEAN
+			kw: EDITOR_TOKEN_KEYWORD
+			cls: EDITOR_TOKEN_CLASS
+			lgth: INTEGER
+		do
+			has_return_type := False
+			from
+			until
+				stop or has_return_type
+			loop
+				if internal_token = Void then
+					internal_line := internal_line.previous
+					if internal_line /= Void then
+						internal_token := internal_line.eol_token
+					else
+						stop := True
+					end
+				else
+					kw ?= internal_token
+					if
+						kw /= Void
+					then
+						lgth := kw.length
+						if lgth = 2 and then token_image_is_same_as_word (kw, is_word) then
+							go_to_previous_non_blank_token
+							if internal_token /= Void then
+								cls ?= internal_token
+								has_return_type := cls /= Void
 							end
 						end
 					end

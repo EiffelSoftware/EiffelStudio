@@ -107,9 +107,8 @@ feature -- Code generation
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
 		do
-			buffer.put_string ("RTMS_EX_H(%"")
-			buffer.escape_string (string_value)
-			buffer.put_character('"')
+			buffer.put_string ("RTMS_EX_H(")
+			buffer.put_string_literal (string_value)
 			buffer.put_character(',')
 			buffer.put_integer(string_value.count)
 			buffer.put_character(',')

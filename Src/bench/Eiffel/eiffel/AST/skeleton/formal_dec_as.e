@@ -291,8 +291,6 @@ feature -- Output
 
 	constraint_string: STRING is
 			-- Produce a STRING version of the CONSTRAINT
-		local
-			feature_name: FEAT_NAME_ID_AS
 		do
 			create Result.make (50)
 			if is_reference then
@@ -308,15 +306,13 @@ feature -- Output
 					from
 						creation_feature_list.start
 						Result.append (" create ")
-						feature_name ?= creation_feature_list.item
-						Result.append (feature_name.feature_name)
+						Result.append (creation_feature_list.item.internal_name)
 						creation_feature_list.forth
 					until
 						creation_feature_list.after
 					loop
 						Result.append (", ")
-						feature_name ?= creation_feature_list.item
-						Result.append (feature_name.feature_name)
+						Result.append (creation_feature_list.item.internal_name)
 						creation_feature_list.forth
 					end
 					Result.append (" end")

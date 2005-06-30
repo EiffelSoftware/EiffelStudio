@@ -627,13 +627,16 @@ feature {NONE} -- Implementation
 
 	get_truncated_string_value (icd: ICOR_DEBUG_STRING_VALUE; a_size: INTEGER): STRING is
 		require
-			a_size > 0
+			a_size = -1 or a_size > 0
 		local
 			l_length: INTEGER
 		do
 			l_length := icd.get_length
 			if icd.last_call_succeed then
-				Result := icd.get_string (a_size.min (l_length))
+				if a_size /= -1 then
+					l_length := a_size.min (l_length)
+				end
+				Result := icd.get_string (l_length)
 			end
 		end
 

@@ -395,14 +395,12 @@ feature {NONE} -- Implementation
 				match_item := matches.item (l_count)
 				if match_item /= Void then
 					create list_row.make_with_text (match_item.out)
-					if match_item.has_data then
-						list_row.set_pixmap (match_item.icon)						
-						if not match_item.show_signature or not match_item.show_type then
-							list_row.set_tooltip (match_item.tooltip_text)
-									-- TODO: neilc.  auto activating the tooltip works but only based on mouse x/y, 
-									-- whereas we need selected_item x/y.
-								--list_row.select_actions.extend (agent activate_tooltip)								
-						end
+					list_row.set_pixmap (match_item.icon)
+					if not match_item.show_signature or not match_item.show_type then
+						list_row.set_tooltip (match_item.tooltip_text)
+								-- TODO: neilc.  auto activating the tooltip works but only based on mouse x/y, 
+								-- whereas we need selected_item x/y.
+							--list_row.select_actions.extend (agent activate_tooltip)								
 					end
 					choice_list.set_item (1, row_index, list_row)				
 				end
@@ -435,6 +433,7 @@ feature {NONE} -- Implementation
 			-- Complete feature name
 		local
 			ix: INTEGER
+			l_feature: EB_FEATURE_FOR_COMPLETION
 		do
 			if not choice_list.selected_rows.is_empty then
 				if character_to_append = '(' then
@@ -446,7 +445,13 @@ feature {NONE} -- Implementation
 				else
 					editor.complete_feature_from_window (" " + sorted_names.item (ix).full_insert_name, True, character_to_append, remainder)
 				end
-				last_completed_feature_had_arguments := sorted_names.item (ix).has_arguments
+				l_feature ?= sorted_names.item (ix)
+				if l_feature /= Void then
+					last_completed_feature_had_arguments := l_feature.has_arguments
+				else	
+					last_completed_feature_had_arguments := False
+				end
+				
 			end
 		end
 

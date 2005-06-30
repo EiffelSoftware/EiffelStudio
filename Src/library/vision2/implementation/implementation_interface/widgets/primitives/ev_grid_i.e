@@ -3026,7 +3026,7 @@ feature {NONE} -- Drawing implementation
 			is_vertical_scrolling_per_item := True
 			is_column_resize_immediate := True
 			is_header_displayed := True
-			row_height := (create {EV_LABEL}).minimum_height + 3
+			row_height := default_row_height
 			is_row_height_fixed := True
 			subrow_indent := 0
 			viewport_x_offset := 0
@@ -4431,6 +4431,20 @@ feature {NONE} -- Implementation
 
 	physical_column_indexes_internal: SPECIAL [INTEGER]
 		-- Internal storage for `physical_column_indexes' to avoid unnecessary recalculation on each query.
+
+	default_row_height: INTEGER is
+			-- Default height of a row, based on the height of the default font.
+		once
+			Result := (create {EV_LABEL}).minimum_height
+			if (create {PLATFORM}).is_windows then
+				Result := Result + 3
+			else
+					-- This matches the gtk default row height used for all GtkTreeView variants.
+				Result := Result + 6
+			end
+		ensure
+			result_positive: result > 0
+		end
 
 feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 

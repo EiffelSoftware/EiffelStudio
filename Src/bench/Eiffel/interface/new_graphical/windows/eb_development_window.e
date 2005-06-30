@@ -3113,13 +3113,8 @@ feature {NONE} -- Implementation: Editor commands
 
 	toggle_line_number_display is
 			-- Toggle line number display on/off in editor
-		local
-			ed: EB_EDITOR
 		do
-			ed ?= current_editor
-			if ed /= Void then
-				ed.toggle_line_number_display
-			end
+			preferences.editor_data.show_line_numbers_preference.set_value (not preferences.editor_data.show_line_numbers)
 		end
 
 	find_next is

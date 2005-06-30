@@ -74,7 +74,7 @@ feature -- Status
 
 feature {SHARED_DBG_EVALUATOR} -- Init
 
-	init is
+	reset is
 		do
 			if is_dotnet_system then
 				dotnet_parameters_reset
@@ -108,14 +108,22 @@ feature {SHARED_DBG_EVALUATOR} -- Variables preparation
 			last_result_static_type := trs
 		end
 
-	set_error_evaluation (mesg: STRING) is
+	notify_error_evaluation (mesg: STRING) is
 		do
-			error_evaluation_message := mesg
+			if error_evaluation_message /= Void then
+				error_evaluation_message.append_string ("%N" + mesg)
+			else
+				error_evaluation_message := mesg
+			end
 		end
 
-	set_error_exception (mesg: STRING) is
+	notify_error_exception (mesg: STRING) is
 		do
-			error_exception_message := mesg
+			if error_exception_message /= Void then
+				error_exception_message.append_string ("%N" + mesg)
+			else
+				error_exception_message := mesg
+			end
 		end
 
 feature -- Concrete evaluation
@@ -141,7 +149,7 @@ feature -- Concrete evaluation
 			else
 			end
 			if last_result_value = Void then
-				set_error_evaluation ("Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name)
+				notify_error_evaluation ("Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name)
 			end
 		end
 
@@ -156,17 +164,17 @@ feature -- Concrete evaluation
 				f_is_once: f.associated_feature_i.is_once
 			end
 			if f.written_class.types.count > 1 then
-				set_error_evaluation ("Once evaluation on generic classes not available")
+				notify_error_evaluation ("Once evaluation on generic classes not available")
 			else
 				if is_dotnet_system then
 						--| Dotnet
 					last_result_value := dotnet_impl.dotnet_evaluate_once_function (a_addr, a_target, f, params)
 					if not dotnet_impl.last_once_available then
-						set_error_evaluation ("Once feature " + f.name + ": could not get information")
+						notify_error_evaluation ("Once feature " + f.name + ": could not get information")
 					elseif dotnet_impl.last_once_failed then
-						set_error_evaluation ("Once feature " + f.name + ": an exception occurred")
+						notify_error_evaluation ("Once feature " + f.name + ": an exception occurred")
 					elseif last_result_value = Void then
-						set_error_evaluation ("Once feature " + f.name + ": not yet called")
+						notify_error_evaluation ("Once feature " + f.name + ": not yet called")
 					end
 					last_result_static_type := f.type.associated_class
 					
@@ -179,10 +187,10 @@ feature -- Concrete evaluation
 --						last_result_value := once_r.once_result (f).dump_value
 --						last_result_static_type := f.type.associated_class
 						if last_result_value = Void then
-							set_error_evaluation ("Once feature " + f.name + ": an exception occurred")
+							notify_error_evaluation ("Once feature " + f.name + ": an exception occurred")
 						end
 					else
-						set_error_evaluation ("Once feature " + f.name + ": not yet called")
+						notify_error_evaluation ("Once feature " + f.name + ": not yet called")
 					end				
 				end
 			end			
@@ -212,10 +220,10 @@ feature -- Concrete evaluation
 				elseif last_result_static_type.conform_to (system.character_class.compiled_class) then
 					 create last_result_value.make_character (val.item (1), last_result_static_type);			
 				else				
-					set_error_evaluation ("Unknown constant type for " + cv_cst.name)
+					notify_error_evaluation ("Unknown constant type for " + cv_cst.name)
 				end
 			else
-				set_error_evaluation ("Unknown constant type for " + f.name)
+				notify_error_evaluation ("Unknown constant type for " + f.name)
 			end				
 		end
 
@@ -246,7 +254,7 @@ feature -- Concrete evaluation
 					if f.name.is_equal ("Void") then
 						create last_result_value.make_void
 					else
-						set_error_evaluation ("Could not find attribute value for " + f.name)
+						notify_error_evaluation ("Could not find attribute value for " + f.name)
 					end
 				else
 					last_result_value := dv.dump_value
@@ -255,7 +263,7 @@ feature -- Concrete evaluation
 --				result_object := a_target
 --				result_static_type := a_target.dynamic_class
 			else
-				set_error_evaluation ("Cannot evaluate an attribute ["+ f.name+"] of a manifest value")
+				notify_error_evaluation ("Cannot evaluate an attribute ["+ f.name+"] of a manifest value")
 			end
 		end
 
@@ -297,13 +305,13 @@ feature -- Concrete evaluation
 						-- The type has generic derivations: we need to find the precise type.
 					l_dyntype := class_type_from_object_relative_to (a_addr, l_dynclass)
 					if l_dyntype = Void then
-						set_error_evaluation ("Error occurred: unable to find the context object <" + a_addr + ">")
+						notify_error_evaluation ("Error occurred: unable to find the context object <" + a_addr + ">")
 					elseif l_dynclass = Void then
 						l_dynclass := l_dyntype.associated_class						
 					end
 				else
 						--| Shouldn't happen: basic types are not generic.
-					set_error_evaluation ("Cannot find complete dynamic type of a basic type")
+					notify_error_evaluation ("Cannot find complete dynamic type of a basic type")
 				end
 			else
 				l_dyntype := l_dynclass.types.first
@@ -328,9 +336,10 @@ feature -- Concrete evaluation
 
 				last_result_value := effective_evaluate_function (a_addr, a_target, f, realf, l_dyntype, params)
 				if last_result_value = Void then
-					set_error_evaluation ("Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name)
-					if a_addr /= Void then
-						error_evaluation_message.append_string (" on <" + a_addr + ">")
+					if a_addr = Void then
+						notify_error_evaluation ("Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name)
+					else
+						notify_error_evaluation ("Unable to evaluate {" + l_dyntype.associated_class.name_in_upper + "}." + f.name + " on <" + a_addr + ">")
 					end
 				end
 				
@@ -406,11 +415,11 @@ feature {DBG_EXPRESSION_EVALUATOR_B} -- Restricted dotnet
 				dotnet_parameters_reset
 			end			
 			last_result_value := dotnet_impl.dotnet_evaluate_function_with_name (a_addr, a_target, a_feature_name, a_external_name, l_params)
-			
 			if last_result_value = Void then
-				set_error_evaluation ("Unable to evaluate : " + a_external_name)
-				if a_addr /= Void then
-					error_evaluation_message.append_string (" on <" + a_addr + ">")
+				if a_addr = Void then
+					notify_error_evaluation ("Unable to evaluate : " + a_external_name)
+				else
+					notify_error_evaluation ("Unable to evaluate : " + a_external_name + " on <" + a_addr + ">")
 				end
 			end
 			
@@ -468,7 +477,7 @@ feature {NONE} -- Implementation classic
 			elseif f.written_class.is_expanded then
 				print ("Error: can not evaluate on expanded value !!%N")
 			else
-				fixme ("it seems the runtime/debug is not deisgned to call precursor ...")
+				fixme ("it seems the runtime/debug is not designed to call precursor ...")
 				send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, ctype.static_type_id - 1, par)
 			end
 				-- Receive the Result.
@@ -487,6 +496,7 @@ feature {NONE} -- Implementation dotnet
 			is_dotnet_system: is_dotnet_system
 		local
 			l_params: ARRAY [DUMP_VALUE]
+			l_error_message: STRING
 		do
 			if params /= Void and then not params.is_empty then
 				prepare_parameters (ctype, realf, params)
@@ -494,8 +504,16 @@ feature {NONE} -- Implementation dotnet
 				dotnet_parameters_reset
 			end
 			Result := dotnet_impl.dotnet_evaluate_function (a_addr, a_target, realf.associated_feature_i, ctype, l_params)
-			if dotnet_impl.evaluation_aborted then
-				set_error_evaluation ("Evaluation aborted")
+			if dotnet_impl.error_occurred then 
+				l_error_message := "%"" + realf.name + "%" : "
+				if dotnet_impl.evaluation_aborted then
+					l_error_message.append_string ("Evaluation aborted")
+				elseif dotnet_impl.error_occurred then
+					l_error_message.append_string (dotnet_impl.error_message)
+				else
+					l_error_message.append_string (" error occurred")
+				end
+				notify_error_evaluation (l_error_message)
 			end
 		end
 

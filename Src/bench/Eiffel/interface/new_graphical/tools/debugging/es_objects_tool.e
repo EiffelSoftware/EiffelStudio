@@ -677,8 +677,9 @@ feature {NONE} -- Current objects grid Implementation
 			end
 			add_displayed_objects_to_grid (debugged_objects_grid)
 			if debugged_objects_grid.row_count > 0 then
-				debugged_objects_grid.row (1).enable_select
-				debugged_objects_grid.row (1).disable_select
+					--| be sure the grid is redrawn, and the first row is visible
+				debugged_objects_grid.row (1).ensure_visible
+				debugged_objects_grid.row (1).redraw				
 			end
 		end
 
@@ -692,6 +693,9 @@ feature {NONE} -- Current objects grid Implementation
 				displayed_objects.after
 			loop
 				item := displayed_objects.item
+				if item.is_attached_to_row then
+					item.unattach
+				end
 				item.attach_to_row (a_target_grid.extended_new_row)
 				displayed_objects.forth
 			end

@@ -537,8 +537,11 @@ feature {NONE} -- Handle keystrokes
 			when Key_a then
 					-- Ctrl-A (select all)
 				select_all
-				scroll_to_cursor := False			
-
+				scroll_to_cursor := False		
+					
+			when key_l then
+					-- Ctrl-L (line number toggle)
+				editor_preferences.show_line_numbers_preference.set_value (not line_numbers_visible)
 			else
 					-- Key not handled
 

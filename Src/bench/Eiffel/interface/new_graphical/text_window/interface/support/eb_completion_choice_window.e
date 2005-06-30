@@ -295,7 +295,19 @@ feature {NONE} -- Events handling
 							end
 						end
 						choice_list.selected_rows.first.ensure_visible	
-					end									
+					end								
+				when key_home then
+					if ev_application.ctrl_pressed and then not choice_list.is_empty then
+							-- Go to top
+						choice_list.remove_selection
+						choice_list.select_row (1)
+					end
+				when key_end then
+					if ev_application.ctrl_pressed and then not choice_list.is_empty then
+							-- Go to bottom
+						choice_list.remove_selection
+						choice_list.select_row (choice_list.row_count)
+					end
 				else
 					-- Do nothing
 				end

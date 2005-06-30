@@ -12,6 +12,8 @@ inherit
 feature {NONE}
 
 	hex_to_integer_32 (s: STRING): INTEGER is
+		require
+			s_not_void: s /= Void
 		local
 			i, nb: INTEGER;
 			temp: STRING;
@@ -42,6 +44,8 @@ feature {NONE}
 		end
 
 	hex_to_integer_64 (s: STRING): INTEGER_64 is
+		require
+			s_not_void: s /= Void
 		local
 			i, nb: INTEGER;
 			temp: STRING;
@@ -72,6 +76,8 @@ feature {NONE}
 		end
 		
 	hex_to_pointer (s: STRING): POINTER is
+		require
+			s_not_void: s /= Void
 		local
 			val_32: INTEGER
 			val_64: INTEGER_64

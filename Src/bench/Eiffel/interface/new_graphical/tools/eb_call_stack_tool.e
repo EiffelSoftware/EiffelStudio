@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 			m: STRING
 		do
 			if not Application.is_running then
-				stop_cause.remove_text
+				stop_cause.set_text (Interface_names.l_System_launched)
 				exception.remove_text
 				exception.remove_tooltip
 			elseif not arg_is_stopped then

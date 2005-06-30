@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'
 		do
-			Precursor {EV_CELL_IMP}
+			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			initialize_grid
 			set_focused_selection_color (create {EV_COLOR}.make_with_8_bit_rgb (83, 85, 161))
 			

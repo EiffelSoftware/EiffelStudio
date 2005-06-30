@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 			restore_button.select_actions.extend (agent on_restore)
 			split_area.enable_item_expand (grid_container)
 			split_area.disable_item_expand (description_frame)
+			description_text.key_press_actions.extend (agent on_description_key_pressed)
 			show			
 		end
 
@@ -245,6 +246,18 @@ feature {NONE} -- Events
 				end
 			end			
 		end		
+
+	on_description_key_pressed (a_key: EV_KEY) is
+			-- Description text area was key pressed
+		do	
+			if a_key.code = {EV_KEY_CONSTANTS}.key_tab then
+				if application.shift_pressed then
+					grid.set_focus
+				else
+					restore_button.set_focus
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -616,6 +629,12 @@ feature {NONE} -- Private attributes
 		-- Grid
 
 	default_row_height: INTEGER
+
+	application: EV_APPLICATION is 
+			-- 
+		once
+			Result := (create {EV_ENVIRONMENT}).application
+		end
 
 invariant
 	has_preferences: preferences /= Void

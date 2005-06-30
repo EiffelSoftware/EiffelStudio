@@ -109,7 +109,10 @@ feature {NONE} -- Internal Initialisation
 --         the address value is 0
 --				end
 				
-				l_type := icd_prepared_value.get_type		
+				l_type := icd_prepared_value.get_type
+				if icd_prepared_value.error_code_is_object_neutered (icd_prepared_value.last_call_success) then
+					is_object := True
+				end		
 
 				is_reference_type := True			
 				inspect l_type

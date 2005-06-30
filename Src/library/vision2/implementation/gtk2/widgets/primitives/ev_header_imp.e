@@ -143,19 +143,35 @@ feature {EV_HEADER_ITEM_IMP} -- Implemnentation
 	item_resize_tuple: TUPLE [EV_HEADER_ITEM]
 		-- Reusable item resize tuple.
 
+	set_call_item_resize_start_actions (a_flag: BOOLEAN) is
+			-- Set `call_item_resize_start_actions' to `a_flag'.
+		do
+			call_item_resize_start_actions := a_flag
+		end
+
+	item_has_resized is
+			-- The item has finished resizing so call `item_resize_end_actions'.
+		do
+			item_resize_end_actions.call (item_resize_tuple)
+			call_item_resize_end_actions := False
+		end
+
 	on_resize (a_item: EV_HEADER_ITEM) is
 			-- `a_item' has resized.
 		require
 			a_item_not_void: a_item /= Void
 		do
-			item_resize_tuple := [a_item]
 			if call_item_resize_start_actions then
-				call_item_resize_start_actions := False
+				item_resize_tuple := [a_item]
 				item_resize_start_actions.call (item_resize_tuple)
-				call_item_resize_end_actions := True
+				set_call_item_resize_start_actions (False)
 			end
-			item_resize_actions.call (item_resize_tuple)
-		end	
+			if item_resize_tuple /= Void then
+					-- We should only call resize actions after the start actions have been called.
+				call_item_resize_end_actions := True
+				item_resize_actions.call (item_resize_tuple)				
+			end
+		end
 
 	call_item_resize_start_actions: BOOLEAN
 	call_item_resize_end_actions: BOOLEAN
@@ -196,10 +212,10 @@ feature {NONE} -- Implementation
 		local
 			a_pointed_divider_index: INTEGER
 		do
-			call_item_resize_start_actions := False
+			set_call_item_resize_start_actions (False)
 			a_pointed_divider_index := pointed_divider_index
 			if a_pointed_divider_index > 0 then
-				call_item_resize_start_actions := True
+				set_call_item_resize_start_actions (True)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
@@ -208,9 +224,8 @@ feature {NONE} -- Implementation
 			-- Used for pointer button release events
 		do
 			if call_item_resize_end_actions then
-				item_resize_end_actions.call (item_resize_tuple)	
+				item_has_resized
 				item_resize_tuple := Void
-				call_item_resize_end_actions := False
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end

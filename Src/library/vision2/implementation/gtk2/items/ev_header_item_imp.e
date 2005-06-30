@@ -192,10 +192,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			gdk_event: POINTER
 			event_type: INTEGER
 			a_button: POINTER
-		do
-				-- Handle any potential resize.
-			handle_resize
-			
+		do	
 			a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
 					-- We don't want the button stealing focus.
 			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
@@ -229,6 +226,9 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						if pointer_double_press_actions_internal /= Void then
 							pointer_double_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])	
 						end
+					else
+								-- Handle any potential resize.
+							handle_resize
 					end					
 				end
 			end
@@ -242,6 +242,7 @@ feature {EV_HEADER_IMP} -- Implementation
 			a_button: POINTER
 		do
 			parent_imp := par_imp
+			
 			if par_imp /= Void then
 					-- If this is the first time it is parented then there is no need to set the column widget.
 				if {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (box) = default_pointer then

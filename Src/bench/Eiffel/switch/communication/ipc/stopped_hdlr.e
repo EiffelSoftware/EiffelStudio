@@ -47,6 +47,7 @@ feature
 			cse: CALL_STACK_ELEMENT_CLASSIC
 			expr: EB_EXPRESSION
 			need_to_stop: BOOLEAN
+			need_to_resend_bp: BOOLEAN
 			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			if not retry_clause then
@@ -121,7 +122,9 @@ feature
 						Application.set_current_execution_stack_number (1)
 							-- Test if the breakpoint is conditional, and if so, its condition.
 						cse := l_status.current_call_stack.i_th (1)
-						expr := Application.condition (cse.routine, cse.break_index)
+						if application.is_breakpoint_set (cse.routine, cse.break_index) then
+							expr := Application.condition (cse.routine, cse.break_index)
+						end
 						if expr /= Void then
 							expr.evaluate
 							evaluator := expr.expression_evaluator
@@ -130,6 +133,7 @@ feature
 							else
 								need_to_stop := evaluator.final_result_is_true_boolean_value
 							end
+							need_to_resend_bp := need_to_stop
 						end
 					end
 					if need_to_stop then
@@ -146,7 +150,13 @@ feature
 					else
 							-- Relaunch the application.
 						keep_objects (debugger_manager.kept_objects)
-						Cont_request.send_breakpoints
+						if need_to_resend_bp then
+								--| if we stopped on cond bp
+								--| in case we don't really stop
+								--| we won't send again the breakpoints
+								--| since they didn't changed, and a "go to this point" may be enabled
+							Cont_request.send_breakpoints
+						end
 						l_status.set_is_stopped (False)
 						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 					end

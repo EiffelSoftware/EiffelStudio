@@ -13,8 +13,7 @@ inherit
 	ICOR_OBJECT
 		redefine
 			init_icor, make_by_pointer,
-			clean_on_dispose, 
-			copy
+			clean_on_dispose
 		end
 
 create 
@@ -45,18 +44,17 @@ feature {NONE} -- Initialization
 			address_as_string := get_address.to_integer.to_hex_string	
 		end
 		
-	copy (other: like Current) is
-			-- Update current object using fields of object attached
-			-- to `other', so as to yield equal objects.
-			-- (from ANY)
-		do
-			Precursor (other)
-			add_ref
-			if strong_reference_value /= Void then
-				strong_reference_value := strong_reference_value.twin
-			end
-		end		
+feature {ICOR_EXPORTER} -- Pseudo twin
 		
+	duplicated_object: like Current is
+	
+		do
+			Result := twin
+			Result.add_ref
+			if Result.strong_reference_value /= Void then
+				Result.update_strong_reference_value (strong_reference_value.duplicated_object)
+			end
+		end
 			
 feature {ICOR_EXPORTER} -- Properties
 
@@ -72,15 +70,33 @@ feature {ICOR_EXPORTER} -- Query
 
 	get_strong_reference_value is
 		local
+			l_icd: ICOR_DEBUG_VALUE
+			l_ref: ICOR_DEBUG_REFERENCE_VALUE
 			l_icd_heap2: ICOR_DEBUG_HEAP_VALUE2
 		do
-			l_icd_heap2 := query_interface_icor_debug_heap_value2
+				--| in specific case, the value can be under reference
+			l_ref := query_interface_icor_debug_reference_value
+			if l_ref /= Void then
+				l_icd := l_ref.dereference
+				l_ref.clean_on_dispose
+			end
+				--| If previous operation didn't lead to valid data
+				--| let's use Current
+			if l_icd = Void then
+				l_icd := Current
+			end
+			l_icd_heap2 := l_icd.query_interface_icor_debug_heap_value2
 			if l_icd_heap2 /= Void then
 				strong_reference_value := l_icd_heap2.create_strong_handle
 				l_icd_heap2.clean_on_dispose
 			else
 				strong_reference_value := query_interface_icor_debug_handle_value
 			end
+		end
+		
+	update_strong_reference_value (v: like strong_reference_value) is
+		do
+			strong_reference_value := v
 		end
 
 feature {ICOR_EXPORTER} -- References Properties
@@ -450,30 +466,30 @@ feature -- only for test purpose (evaluation in debugger)
 						"Heap", i_hea ,
 						"Heap2", i_hea2
 						]
-			if i_obj /= Void then
-				i_obj.clean_on_dispose
-			end
-			if i_ref /= Void then
-				i_ref.clean_on_dispose
-			end
-			if i_hdl /= Void then
-				i_hdl.clean_on_dispose
-			end
-			if i_str /= Void then
-				i_str.clean_on_dispose
-			end
-			if i_gen /= Void then
-				i_gen.clean_on_dispose
-			end
-			if i_arr /= Void then
-				i_arr.clean_on_dispose
-			end
-			if i_hea /= Void then
-				i_hea.clean_on_dispose
-			end
-			if i_hea2 /= Void then
-				i_hea2.clean_on_dispose
-			end
+--			if i_obj /= Void then
+--				i_obj.clean_on_dispose
+--			end
+--			if i_ref /= Void then
+--				i_ref.clean_on_dispose
+--			end
+--			if i_hdl /= Void then
+--				i_hdl.clean_on_dispose
+--			end
+--			if i_str /= Void then
+--				i_str.clean_on_dispose
+--			end
+--			if i_gen /= Void then
+--				i_gen.clean_on_dispose
+--			end
+--			if i_arr /= Void then
+--				i_arr.clean_on_dispose
+--			end
+--			if i_hea /= Void then
+--				i_hea.clean_on_dispose
+--			end
+--			if i_hea2 /= Void then
+--				i_hea2.clean_on_dispose
+--			end
 		end
 --		
 --	to_string: STRING is

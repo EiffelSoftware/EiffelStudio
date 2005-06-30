@@ -263,6 +263,11 @@ feature -- Icons
 		once
 			Result := pixmap_file_content ("icon_external_obsolete_feature")
 		end
+		
+	Icon_other_feature: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_other_feature")
+		end
 
 	Icon_void_object: EV_PIXMAP is
 		once
@@ -739,7 +744,7 @@ feature -- Icons
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
-			Result := build_classic_pixmap ("restore_all")
+			Result := build_classic_pixmap ("restore_all_unsaved")
 		end
 
 	Icon_add_exported_feature: ARRAY [EV_PIXMAP] is
@@ -1498,7 +1503,7 @@ feature {NONE} -- Implementation
 			Result.put ([8, 1], "icon_progress_dialog")
 			Result.put ([8, 2], "icon_quick_compile_color")
 			Result.put ([8, 3], "icon_restore_all_color")
-			Result.put ([8, 4], "icon_restore_all_color")
+			Result.put ([8, 4], "icon_restore_all_unsaved_color")
 			Result.put ([8, 5], "icon_light_class_color")
 			Result.put ([8, 6], "icon_light_class_gray")
 			Result.put ([8, 7], "icon_light_cluster_color")
@@ -1568,6 +1573,7 @@ feature {NONE} -- Implementation
 			Result.put ([12,7], "icon_format_creators_color")
 			Result.put ([12,8], "icon_preference_root")
 			Result.put ([12,9], "icon_preference_folder")
+			Result.put ([12,10], "icon_other_feature")
 			Result.compare_objects
 		end
 

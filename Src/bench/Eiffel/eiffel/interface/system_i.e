@@ -454,6 +454,15 @@ feature -- Properties
 				arguments_class.compiled_class.record_precompiled_class_in_system
 				system_type_class.compiled_class.record_precompiled_class_in_system
 			end
+
+				-- The root class could be part of the precompiled library, so
+				-- we need to make sure that its `is_in_system' flag is set.
+			if
+				root_class /= Void and then root_class.is_compiled and then
+				root_class.compiled_class.is_precompiled
+			then
+				root_class.compiled_class.record_precompiled_class_in_system
+			end
 		end
 
 	add_visible_classes is

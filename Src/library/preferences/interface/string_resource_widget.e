@@ -108,6 +108,7 @@ feature {NONE} -- Implementation
 			-- Activate the text
 		do
 			change_item_widget.activate
+			change_item_widget.text_field.select_all
 		end		
 
 end -- class STRING_PREFERENCE_WIDGET

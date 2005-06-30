@@ -106,22 +106,27 @@ feature {NONE} -- Implementation
 		do		
 			create change_item_widget			
 			change_item_widget.set_item_strings (resource.value)
-			change_item_widget.set_text (resource.selected_value)
+			change_item_widget.set_text (resource.selected_value)			
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate_combo)		
 			change_item_widget.deactivate_actions.extend (agent update_changes)
 		end
 
 	activate_combo is
-			-- 
+			-- Activate the combo
 		do
 			if resource.selected_index > 0 then
-				change_item_widget.activate	
+				change_item_widget.activate
 				change_item_widget.combo_box.focus_out_actions.block
 				change_item_widget.combo_box.disable_edit
 				change_item_widget.combo_box.focus_out_actions.resume
-				change_item_widget.combo_box.select_actions.block
-				change_item_widget.combo_box.i_th (resource.selected_index).enable_select					
-				change_item_widget.combo_box.select_actions.resume
+--				change_item_widget.combo_box.select_actions.block
+--				if resource.value then
+--					change_item_widget.combo_box.i_th (1).enable_select		
+--				else
+--					change_item_widget.combo_box.i_th (2).enable_select	
+--				end			
+--				change_item_widget.combo_box.select_actions.resume
+				change_item_widget.combo_box.set_focus
 			end
 		end
 

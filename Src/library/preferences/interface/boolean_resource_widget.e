@@ -61,19 +61,20 @@ feature {NONE} -- Implementation
 		end
 
 	activate_combo is
-			-- 
+			-- Activate the combo
 		do
 			change_item_widget.activate		
---			change_item_widget.combo_box.focus_out_actions.block
---			change_item_widget.combo_box.disable_edit
---			change_item_widget.combo_box.focus_out_actions.resume
---			change_item_widget.combo_box.select_actions.block
---			if resource.value then
---				change_item_widget.combo_box.i_th (1).enable_select		
---			else
---				change_item_widget.combo_box.i_th (2).enable_select	
---			end			
---			change_item_widget.combo_box.select_actions.resume
+			change_item_widget.combo_box.focus_out_actions.block
+			change_item_widget.combo_box.disable_edit
+			change_item_widget.combo_box.focus_out_actions.resume
+			change_item_widget.combo_box.select_actions.block
+			if resource.value then
+				change_item_widget.combo_box.i_th (1).enable_select		
+			else
+				change_item_widget.combo_box.i_th (2).enable_select	
+			end			
+			change_item_widget.combo_box.select_actions.resume
+			change_item_widget.combo_box.set_focus
 		end
 
 	resource: BOOLEAN_PREFERENCE

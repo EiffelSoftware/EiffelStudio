@@ -382,8 +382,8 @@ feature -- Graphical changes
 							expression_evaluator /= Void
 						end
 						if expression_evaluator.error_occurred then
-							l_error_message := expression_evaluator.error_message
-							l_error_tag := expression_evaluator.error_tag
+							l_error_message := expression_evaluator.text_from_error_messages
+							l_error_tag := expression_evaluator.short_text_from_error_messages
 							l_tooltip.prepend_string ("Error occurred : %N" + l_error_message + "%N%N")
 							if l_error_tag /= Void then
 								l_error_tag := "[" + l_error_tag + "] "
@@ -397,14 +397,14 @@ feature -- Graphical changes
 							glab.pointer_double_press_actions.force_extend (agent show_text_in_popup (l_error_message))
 							row.set_item (Col_expression_result_index, glab)
 
-							if expression_evaluator.is_error_exception then
+							if expression_evaluator.has_error_exception then
 								set_error_pixmap (Pixmaps.Icon_exception)
-							elseif expression_evaluator.is_error_expression 
-								or expression_evaluator.is_error_syntax then
+							elseif expression_evaluator.has_error_expression 
+								or expression_evaluator.has_error_syntax then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
-							elseif expression_evaluator.is_error_evaluation then
+							elseif expression_evaluator.has_error_evaluation then
 								set_error_pixmap (Pixmaps.Icon_exception)
-							elseif expression_evaluator.is_error_not_implemented then
+							elseif expression_evaluator.has_error_not_implemented then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
 							end
 						else

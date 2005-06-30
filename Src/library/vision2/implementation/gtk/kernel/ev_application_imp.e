@@ -40,9 +40,9 @@ feature {NONE} -- Initialization
 			if
 				gtk_is_launchable
 			then
-				enable_ev_gtk_log (1)
+				enable_ev_gtk_log (0)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
-				{EV_GTK_EXTERNALS}.gdk_set_show_events (True)
+				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 			
 				{EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_default_visual ({EV_GTK_EXTERNALS}.gdk_rgb_get_visual)

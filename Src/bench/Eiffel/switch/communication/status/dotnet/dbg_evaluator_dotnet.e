@@ -39,6 +39,7 @@ feature -- Concrete initialization
 			eifnet_debugger := Application.imp_dotnet.eifnet_debugger
 			il_debug_info_recorder := eifnet_debugger.il_debug_info_recorder
 			eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
+			create error_messages.make
 		end
 
 feature {NONE} -- Properties
@@ -58,14 +59,94 @@ feature {NONE} -- Properties
 			Result := eifnet_debugger.current_stack_icor_debug_frame
 		end
 		
+feature -- Change
+
+	reset_error is
+		do
+			error := 0
+			error_messages.wipe_out
+		end
+
 feature -- Status
 
-	error_occurred: BOOLEAN
+	error: INTEGER
+			-- Error code in case of evaluation error
+
+	error_occurred: BOOLEAN is
 			-- Did an error occurred during processing ?
+		do
+			Result := error /= 0
+		end
 
-	evaluation_aborted: BOOLEAN
+	evaluation_aborted: BOOLEAN is
 			-- Did the evaluation aborted ?
+		do
+			Result := error & cst_error_evaluation_aborted /= 0
+		end
+			
+	error_message: STRING is
+		local
+			details: TUPLE [INTEGER, STRING]
+			l_msg: STRING
+			l_code: INTEGER
+		do
+			if error /= 0 and not error_messages.is_empty then
+				from
+					create Result.make (10)
+					error_messages.start
+				until
+					error_messages.after
+				loop
+					details := error_messages.item
+					l_code := details.integer_32_item (1)
+					l_msg ?= details.item (2)
+					if l_msg = Void and l_code /= 0 then
+						l_msg := cst_error_messages.item (l_code)
+					end
+					if l_msg /= Void then
+						Result.append_string (l_msg)
+					end
+					error_messages.forth
+					if not error_messages.after then
+						Result.append_String (once "%N--------------------------%N")
+					end
+				end
+				Result := Cst_error_messages @ error
+			end
+		end
 
+	error_messages: LINKED_LIST [TUPLE [INTEGER, STRING]]
+			-- List of [Code, Tag, Message]
+			-- Error's message if any otherwise Void
+			
+	notify_error (a_code: INTEGER; a_msg: STRING) is
+		require
+			a_code /= 0
+		do
+			error := error | a_code
+			error_messages.extend ([a_code, a_msg])
+		end
+
+feature {NONE} -- Error code id
+
+	Cst_error_occurred: INTEGER is 0x1
+	Cst_error_evaluation_aborted: INTEGER is 0x2
+	Cst_error_exception_during_evaluation: INTEGER is 0x4
+	Cst_error_unable_to_get_target_object: INTEGER is 0x8
+	Cst_error_unable_to_get_icd_function: INTEGER is 0x10
+	Cst_error_occurred_during_parameters_preparation: INTEGER is 0x20
+
+	Cst_error_messages: HASH_TABLE [STRING, INTEGER] is
+		once
+			create Result.make (6)
+			Result.put ("Evaluation aborted", Cst_error_evaluation_aborted)
+			Result.put ("Exception occurred during evaluation", Cst_error_exception_during_evaluation)
+			Result.put ("Error occurred", Cst_error_occurred)
+			Result.put ("Unable to get target object", Cst_error_unable_to_get_target_object)
+			Result.put ("Unable to get ICorDebugFunction", Cst_error_unable_to_get_icd_function)
+			Result.put ("Error during parameters preparation", Cst_error_occurred_during_parameters_preparation)
+		end
+	
 feature -- Bridge
 
 	new_active_icd_frame: ICOR_DEBUG_FRAME is
@@ -165,8 +246,9 @@ feature -- Access
 				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
-			error_occurred := False
-			evaluation_aborted := False
+				--| Reset error status
+			reset_error
+
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f)
 			l_icdv_args := prepared_parameters (a_params, False)
@@ -185,10 +267,15 @@ feature -- Access
 				end
 				
 				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_fun, l_icdv_args)
-				evaluation_aborted := eifnet_evaluator.last_eval_aborted
-				error_occurred := (eifnet_evaluator.last_call_success /= 0)
-					or (eifnet_evaluator.last_eval_is_exception)
-					or (evaluation_aborted)
+
+				if eifnet_evaluator.last_eval_aborted then
+					notify_error (Cst_error_evaluation_aborted, Void)
+				elseif eifnet_evaluator.last_eval_is_exception then
+					l_result := Void
+					notify_error (Cst_error_exception_during_evaluation, Void)
+				elseif not eifnet_evaluator.last_call_succeed then
+					notify_error (Cst_error_occurred, Void)
+				end
 				if not error_occurred then
 					l_adv := debug_value_from_icdv (l_result)
 					Result := l_adv.dump_value
@@ -211,8 +298,8 @@ feature -- Access
 				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
-			error_occurred := False
-			evaluation_aborted := False
+				--| Reset error status
+			reset_error
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f)
 			
@@ -220,14 +307,14 @@ feature -- Access
 			l_icdv_obj := target_icor_debug_value (addr, dvalue)
 
 			if l_icdv_obj = Void then
-				error_occurred := True
+				notify_error (Cst_error_unable_to_get_target_object, Void)
 			else
 					--| Get the ICorDebugFunction to call.
 				l_icd_function := eifnet_debugger.icd_function_by_feature (l_icdv_obj, l_ctype, f)
 
 					--| And then let's process the following ...
 				if l_icd_function = Void then
-					error_occurred := True
+					notify_error (Cst_error_unable_to_get_icd_function, Void)
 				else
 					Result := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, a_params)
 				end
@@ -245,7 +332,7 @@ feature -- Access
 				--| Get the target object : `l_icdv_obj'
 			l_icdv_obj := target_icor_debug_value (addr, dvalue)
 			if l_icdv_obj = Void then
-				error_occurred := True
+				notify_error (Cst_error_unable_to_get_target_object, Void)
 			else
 					--| Get the ICorDebugFunction to call.
 				create edvi.make (l_icdv_obj)
@@ -257,7 +344,7 @@ feature -- Access
 
 					--| And then let's process the following ...
 				if l_icd_function = Void then
-					error_occurred := True
+					notify_error (Cst_error_unable_to_get_icd_function, Void)
 				else
 					Result := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, a_params)
 				end
@@ -298,11 +385,16 @@ feature {NONE} -- Implementation
 				end
 
 				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, func, l_icdv_args)
-				evaluation_aborted := eifnet_evaluator.last_eval_aborted
-				error_occurred := (eifnet_evaluator.last_call_success /= 0) 
-						or (eifnet_evaluator.last_eval_is_exception)
-						or (evaluation_aborted)
+				if eifnet_evaluator.last_eval_aborted then
+					notify_error (Cst_error_evaluation_aborted, Void)
+				elseif eifnet_evaluator.last_eval_is_exception then
 
+--					print (eifnet_debugger.exception_text_from (l_result))
+					l_result := Void
+					notify_error (Cst_error_exception_during_evaluation, Void)
+				elseif not eifnet_evaluator.last_call_succeed then
+					notify_error (Cst_error_occurred, Void)
+				end
 				if not error_occurred then
 					l_adv := debug_value_from_icdv (l_result)
 					Result := l_adv.dump_value
@@ -333,6 +425,8 @@ feature {NONE} -- Implementation
 					Result := dump_value_to_reference_icdv (dvalue)
 				end
 			end
+		ensure
+			valid_result: Result /= Void implies Result.item_not_null
 		end
 
 	prepared_parameters (a_params: ARRAY [DUMP_VALUE]; with_first_empty_element: BOOLEAN): ARRAY [ICOR_DEBUG_VALUE] is
@@ -362,7 +456,9 @@ feature {NONE} -- Implementation
 							print (generating_type + ".prepared_parameters: creating dotnet value from DUMP_VALUE %N")
 						end
 						l_icdv_param := dump_value_to_icdv (l_dumpvalue_param)
-						error_occurred := (eifnet_evaluator.last_call_success /= 0)
+						if not eifnet_evaluator.last_call_succeed then
+							notify_error (Cst_error_occurred_during_parameters_preparation, Void)
+						end
 					end
 					debug ("debugger_trace_eval_data")
 						print (generating_type + ".prepared_parameters: param ... %N")
@@ -403,7 +499,9 @@ feature {NONE} -- Implementation
 				else					
 				end
 
-				error_occurred := (eifnet_evaluator.last_call_success /= 0)
+				if not eifnet_evaluator.last_call_succeed then
+					notify_error (Cst_error_occurred, Void)
+				end
 			end
 		end
 
@@ -453,7 +551,9 @@ feature {NONE} -- Implementation
 					else					
 					end
 				end
-				error_occurred := (eifnet_evaluator.last_call_success /= 0)
+				if not eifnet_evaluator.last_call_succeed then
+					notify_error (Cst_error_occurred, Void)
+				end
 			end
 		end
 

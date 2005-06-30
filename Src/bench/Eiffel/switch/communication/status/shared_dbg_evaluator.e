@@ -21,7 +21,7 @@ feature {NONE} -- shared dbg_evaluator
 			-- needed to be done for each new debugging session
 		do
 			if dbg_evaluator /= Void then
-				dbg_evaluator.init
+				dbg_evaluator.reset
 			end
 		end		
 

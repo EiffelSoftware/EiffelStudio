@@ -751,7 +751,7 @@ feature -- Setting
 	set_displayed_string_size (i: like displayed_string_size) is
 			-- Set `displayed_string_size' to `i'.
 		require
-			positive_i: i > 0
+			positive_i_or_all_string: i > 0 or i = -1
 		do
 			displayed_string_size := i
 		ensure

@@ -648,13 +648,13 @@ feature {NONE} -- Current objects grid Implementation
 				display_first_attributes := current_object.display_attributes
 				display_first_onces		 := current_object.display_onces
 			end
+			current_object := Void
 			if Application.is_dotnet then
 				if not Application.current_call_stack_is_empty then
 					value := application.imp_dotnet.status.current_call_stack_element_dotnet.current_object
-					check
-						value_not_void: value /= Void
+					if value /= Void then
+						create {ES_OBJECTS_GRID_VALUE_LINE} current_object.make_with_value (value, Current)
 					end
-					create {ES_OBJECTS_GRID_VALUE_LINE} current_object.make_with_value (value, Current)
 				end
 			else
 				cse ?= current_stack_element

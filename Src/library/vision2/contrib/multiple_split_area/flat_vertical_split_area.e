@@ -6,24 +6,14 @@ indexing
 
 class
 	GB_VERTICAL_SPLIT_AREA
+
+obsolete
+	"Use EV_VERTICAL_SPLIT_AREA"
 	
 inherit
 	EV_VERTICAL_SPLIT_AREA
-		redefine
-			initialize
-		end
 		
-feature {NONE} -- Initialization
-
-	initialize is
-			-- Initialize `Current'.
-			-- Set flat mode.
-		do
-			Precursor {EV_VERTICAL_SPLIT_AREA}
-			implementation.enable_flat_separator
-		end
-
-end -- class GB_SPLIT_AREA
+end
 
 --|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.

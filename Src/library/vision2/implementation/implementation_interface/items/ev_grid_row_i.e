@@ -1181,12 +1181,17 @@ feature {NONE} -- Implementation
 	default_row_height: INTEGER is
 			-- Default height of a row, based on the height of the default font.
 		once
-			Result := (create {EV_LABEL}).minimum_height + 3	
+			Result := (create {EV_LABEL}).minimum_height
+			if (create {PLATFORM}).is_windows then
+				Result := Result + 3
+			else
+					-- This matches the gtk default row height used for all GtkTreeView variants.
+				Result := Result + 6
+			end
 		ensure
 			result_positive: result > 0
 		end
-		
-		
+
 feature {EV_ANY_I, EV_GRID_ROW} -- Implementation
 
 	interface: EV_GRID_ROW

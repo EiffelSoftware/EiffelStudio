@@ -452,39 +452,44 @@ feature {NONE} -- Implementation classic
 			par: INTEGER
 			rout_info: ROUT_INFO
 		do
-			if params /= Void and then not params.is_empty then
-				prepare_parameters (ctype, realf, params)
-			end
-				-- Send the target object.
-			if a_target = Void then
-				send_ref_value (hex_to_pointer (a_addr))
+			if a_target /= Void and then a_target.dynamic_class.is_expanded then
+				fixme ("must change the runtime to allow expression evaluation on expanded object !")
+				notify_error_evaluation ("Current restriction: unable to evaluate expression on expanded object")
 			else
-				dmp := a_target
-				if dmp.is_basic then
-					par := par + 4
+				if params /= Void and then not params.is_empty then
+					prepare_parameters (ctype, realf, params)
 				end
-				dmp.classic_send_value
-			end
-				-- Send the final request.
-			if f.is_external then
-				par := par + 1
-			end
-			
-			if f.written_class.is_precompiled then
-				par := par + 2
-				rout_info := System.rout_info_table.item (f.rout_id_set.first)
-				send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
-			elseif f.written_class.is_expanded then
-				print ("Error: can not evaluate on expanded value !!%N")
-			else
-				fixme ("it seems the runtime/debug is not designed to call precursor ...")
-				send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, ctype.static_type_id - 1, par)
-			end
-				-- Receive the Result.
-			c_recv_value (Current)
-			if item /= Void then
-				item.set_hector_addr
-				Result := item.dump_value
+					-- Send the target object.
+				if a_target = Void then
+					send_ref_value (hex_to_pointer (a_addr))
+				else
+					dmp := a_target
+					if dmp.is_basic then
+						par := par + 4
+					end
+					dmp.classic_send_value
+				end
+					-- Send the final request.
+				if f.is_external then
+					par := par + 1
+				end
+				
+				if f.written_class.is_precompiled then
+					par := par + 2
+					rout_info := System.rout_info_table.item (f.rout_id_set.first)
+					send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+				elseif f.written_class.is_expanded then
+					print ("Error: can not evaluate on expanded value !!%N")
+				else
+					fixme ("it seems the runtime/debug is not designed to call precursor ...")
+					send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, ctype.static_type_id - 1, par)
+				end
+					-- Receive the Result.
+				c_recv_value (Current)
+				if item /= Void then
+					item.set_hector_addr
+					Result := item.dump_value
+				end
 			end
 		end
 

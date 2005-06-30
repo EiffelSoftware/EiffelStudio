@@ -1226,6 +1226,9 @@ feature {NONE} -- Text loading
 			update_horizontal_scrollbar		
 			editor_drawing_area.enable_sensitive
 			refresh
+			 if editor_drawing_area.is_sensitive then	 
+				set_focus	 
+			end
 		end
 
 	on_text_block_loaded (was_first_block: BOOLEAN) is

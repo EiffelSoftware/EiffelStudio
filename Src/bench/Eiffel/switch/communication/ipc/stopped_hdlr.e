@@ -129,7 +129,7 @@ feature
 							expr.evaluate
 							evaluator := expr.expression_evaluator
 							if evaluator.error_occurred then
-								need_to_stop := False
+								need_to_stop := True
 							else
 								need_to_stop := evaluator.final_result_is_true_boolean_value
 							end

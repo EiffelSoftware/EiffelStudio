@@ -105,6 +105,9 @@ feature {NONE} -- Initialization
 
 				-- Set up the screen.
 			buffered_line.set_background_color (editor_preferences.normal_background_color)	
+			
+			refresh_line_number_display
+			editor_preferences.show_line_numbers_preference.change_actions.extend (agent refresh_line_number_display)
 		end
 
 	initialize_editor_context is
@@ -282,8 +285,11 @@ feature -- Query
 			Result := text_displayed.reading_text_finished
 		end
 
-	line_numbers_visible: BOOLEAN
+	line_numbers_visible: BOOLEAN is
 			-- Are line numbers currently visible
+		do
+			Result := editor_preferences.show_line_numbers
+		end
 		
 	view_invisible_symbols: BOOLEAN
 			-- Are the spaces, the tabulations and the end_of_line characters visible?			
@@ -377,10 +383,9 @@ feature -- File Properties
 
 feature -- Status setting
 		
-	toggle_line_number_display is
+	refresh_line_number_display is
 	        -- Toggle line number display in Current and update display
 	   	do
-	   	 	line_numbers_visible := not line_numbers_visible
 	   	 	if line_numbers_visible and then margin_container.is_empty then
 	   	 		margin_container.put (margin.widget)
 	   	 	elseif not line_numbers_visible and then not margin_container.is_empty then	   	 		

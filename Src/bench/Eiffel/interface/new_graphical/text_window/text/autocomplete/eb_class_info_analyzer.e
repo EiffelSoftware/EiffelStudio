@@ -1120,7 +1120,7 @@ feature {NONE}-- Implementation
 					if current_feature /= Void then								
 						if current_token /= Void and then current_line /= Void then
 							Local_analyzer.build_entities_list (current_line, current_token)
-							entities_list := local_analyzer.found_locals													
+							entities_list := local_analyzer.found_locals_list													
 							
 							name_id := Names_heap.id_of (name)
 							if name_id > 0 and not entities_list.is_empty then

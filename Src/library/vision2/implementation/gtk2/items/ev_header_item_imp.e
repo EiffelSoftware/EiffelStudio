@@ -50,7 +50,6 @@ feature -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (c_object, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
 			{EV_GTK_EXTERNALS}.gtk_tree_view_column_set_clickable (c_object, True)
-			real_signal_connect (c_object, once "notify::width", agent handle_resize, Void)
 			
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -63,6 +62,7 @@ feature -- Initialization
 
 				-- Set the default width to 80 pixels wide
 			set_width (80)
+			
 			align_text_left
 			set_is_initialized (True)
 		end
@@ -72,23 +72,16 @@ feature -- Initialization
 		local
 			a_width: INTEGER
 		do
-			if not ignore_resize then
-				a_width := width_internal
-						-- Always make sure that the event box is the same size as the header item.
-				ignore_resize := True
+			a_width := width_internal
+					-- Always make sure that the event box is the same size as the header item.
+			if a_width /= width then
 				{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
-				if a_width /= width then
-					width := a_width
-					if parent_imp /= Void then
-						parent_imp.on_resize (interface)
-					end
+				width := a_width
+				if parent_imp /= Void then
+					parent_imp.on_resize (interface)
 				end
-				ignore_resize := False		
 			end
 		end
-
-	ignore_resize: BOOLEAN
-		-- Should item resize be ignored?
 
 feature -- Access
 
@@ -200,6 +193,9 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			event_type: INTEGER
 			a_button: POINTER
 		do
+				-- Handle any potential resize.
+			handle_resize
+			
 			a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
 					-- We don't want the button stealing focus.
 			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)

@@ -516,7 +516,7 @@ feature -- Label texts
 	l_Min_index: STRING is				"Minimum index displayed"
 	l_Match_case: STRING is				"Match case"
 	l_Max_index: STRING is				"Maximum index displayed"
-	l_Max_displayed_string_size: STRING is "Maximum Displayed string size"
+	l_Max_displayed_string_size: STRING is "Maximum displayed string size"
 	l_More_items: STRING is				"Display limit reached"
 	l_Name: STRING is					"Name:"
 	l_New_breakpoint: STRING is			"New breakpoint(s) to commit"

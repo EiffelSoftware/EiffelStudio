@@ -259,6 +259,51 @@ feature -- Basic element change
 			append (",Result);")
 		end
 
+	put_string_literal (s: STRING) is
+			-- Append string literal `s'.
+		require
+			s_not_void: s /= Void
+		local
+			i: INTEGER
+			j: INTEGER
+			n: INTEGER
+		do
+			i := s.count
+			if i > maximum_string_literal_count then
+					-- Put string in several chunks
+				indent
+				from
+					j := 1
+				invariant
+					i >= 0
+					i + j = s.count + 1
+				variant
+					i + 1
+				until
+					i = 0
+				loop
+					if i > maximum_string_literal_count then
+						n := maximum_string_literal_count
+					else
+						n := i
+					end
+					put_new_line
+					emit_tabs
+					put_character ('"')
+					string_converter.escape_substring (current_buffer, s, j, j + n - 1)
+					put_character ('"')
+					i := i - n
+					j := j + n
+				end
+				exdent
+			else
+					-- Put string in one chunk
+				put_character ('"')
+				escape_string (s)
+				put_character ('"')
+			end
+		end
+
 	escape_string (s: STRING) is
 			-- Append escaped version of `s'.
 		require
@@ -437,6 +482,10 @@ feature {NONE} -- Implementation: Status report
 		ensure
 			count_nonnegative: Result >= 0
 		end
+
+	maximum_string_literal_count: INTEGER is 512
+			-- Maximum length of C string literal
+			-- (CL limit is 2048 - see CL error C2026)
 
 feature {NONE} -- Implementation: Access
 

@@ -173,7 +173,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Cursor displayed when the pointer is over this widget.
 			-- Position retrieval.
 
-	has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
+	frozen has_struct_flag (a_gtk_object: POINTER; a_flag: INTEGER): BOOLEAN is
 			-- Has this widget the flag `a_flag' set in struct_flags?
 		external
 			"C inline use <gtk/gtk.h>"

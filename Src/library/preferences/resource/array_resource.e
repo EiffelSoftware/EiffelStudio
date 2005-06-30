@@ -59,7 +59,10 @@ feature -- Status Setting
 	set_is_choice (a_flag: BOOLEAN) is
 			-- Set `is_choice' to`a_flag'.
 		do
-			is_choice := a_flag			
+			is_choice := a_flag
+			if selected_index = 0 then
+				selected_index := 1
+			end		
 		end
 
 	set_selected_index (a_index: INTEGER) is
@@ -93,7 +96,7 @@ feature -- Status Setting
 					if not l_value.is_empty and then l_value.item (1) = '[' and then l_value.item (l_value.count) = ']' then
 						l_value := l_value.substring (2, l_value.count - 1)
 						is_choice := True
-						selected_index := cnt
+						set_selected_index (cnt)
 					end
 					value.force (l_value, cnt)					
 					values.forth

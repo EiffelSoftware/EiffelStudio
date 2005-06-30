@@ -525,19 +525,27 @@ feature -- Memory management
 	
 feature {NONE} -- Layout Implementation
 
+	stack_objects_grid_empty: BOOLEAN
 	clean_stack_objects_grid is
 		do
 			record_stack_layout
 			internal_locals_row := Void
 			internal_arguments_row := Void
 			internal_result_row := Void
-			stack_objects_grid.remove_and_clear_all_rows
+			if not stack_objects_grid_empty then
+				stack_objects_grid.remove_and_clear_all_rows
+				stack_objects_grid_empty := True
+			end
 		end
 
+	debugged_objects_grid_empty: BOOLEAN
 	clean_debugged_objects_grid is
 		do
 			record_objects_layout
-			debugged_objects_grid.remove_and_clear_all_rows
+			if not debugged_objects_grid_empty then
+				debugged_objects_grid.remove_and_clear_all_rows
+				debugged_objects_grid_empty := True
+			end
 		end
 
 	record_objects_layout is
@@ -630,6 +638,8 @@ feature {NONE} -- Current objects grid Implementation
 			cse: EIFFEL_CALL_STACK_ELEMENT
 			item: ES_OBJECTS_GRID_LINE
 		do
+			debugged_objects_grid_empty := False
+
 			debug ("debug_recv")
 				print (generator + ".build_object_grid%N")
 			end
@@ -871,6 +881,7 @@ feature {NONE} -- Impl : Stack objects grid
 		local
 			row: EV_GRID_ROW
 		do
+			stack_objects_grid_empty := False
 			build_stack_info (stack_objects_grid)
 			build_stack_objects (stack_objects_grid)
 			if stack_objects_grid.row_count > 0 then

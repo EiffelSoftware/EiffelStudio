@@ -67,7 +67,8 @@ inherit
 			set_foreground_color,
 			set_background_color,
 			tooltip_window,
-			destroy
+			destroy,
+			propagate_key_to_dialog
 		end
 		
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -551,6 +552,13 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 		end
 		
 feature {NONE} -- Implementation
+
+	propagate_key_to_dialog (is_pressed: BOOLEAN): BOOLEAN is
+			-- Should we propagate a key event if `Current' is parented in a dialog?
+			-- If `is_pressed', then it is a key_press event, otherwise a key_release event.
+		do
+			Result := not list_shown
+		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate 

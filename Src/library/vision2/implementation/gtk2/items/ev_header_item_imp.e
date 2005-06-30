@@ -59,6 +59,7 @@ feature -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, False, 0)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
+			
 
 				-- Set the default width to 80 pixels wide
 			set_width (80)
@@ -72,14 +73,14 @@ feature -- Initialization
 		local
 			a_width: INTEGER
 		do
-			a_width := width_internal
-					-- Always make sure that the event box is the same size as the header item.
+			a_width := width_internal			
 			if a_width /= width then
-				{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
-				width := a_width
-				if parent_imp /= Void then
-					parent_imp.on_resize (interface)
-				end
+					if parent_imp.call_item_resize_start_actions or else parent_imp.item_resize_tuple /= Void then
+						-- Always make sure that the event box is the same size as the header item.
+						{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, -1)
+						width := a_width
+						parent_imp.on_resize (interface)						
+					end
 			end
 		end
 
@@ -220,6 +221,9 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						if pointer_button_press_actions_internal /= Void then
 							pointer_button_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])	
 						end
+					elseif
+						event_type = {EV_GTK_ENUMS}.gdk_button_release_enum
+					then
 					elseif
 						event_type = {EV_GTK_ENUMS}.gdk_2button_press_enum
 					then

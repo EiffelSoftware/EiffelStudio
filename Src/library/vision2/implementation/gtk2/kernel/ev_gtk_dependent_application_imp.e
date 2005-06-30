@@ -33,6 +33,8 @@ feature -- Initialize
 			a_settings: POINTER
 		do
 			a_settings := default_gtk_settings
+			default_font_name_internal := "Sans"
+			default_font_point_height_internal := 10
 		end
 
 	gtk_dependent_launch_initialize is
@@ -245,7 +247,7 @@ feature -- Implementation
 				Result := a_cs.string
 			else
 					-- Sometimes when gtk isn't setup correctly the 'gtk-font-name' setting cannot be found, so the default is used instead.
-				Result := once "Sans 12"
+				Result := once "Sans 10"
 			end
 		end
 

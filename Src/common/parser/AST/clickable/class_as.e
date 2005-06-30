@@ -197,7 +197,7 @@ feature -- Attributes
 			-- clause if any, otherwise before the indexing or end keyword).
 		do
 			if invariant_part /= Void then
-				Result := invariant_part.end_location.final_position
+				Result := invariant_part.end_location.final_position + 1
 			elseif bottom_indexes /= Void then
 				Result := bottom_indexes.start_position
 			else

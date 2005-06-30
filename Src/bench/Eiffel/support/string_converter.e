@@ -24,20 +24,29 @@ feature -- Commands
 			-- Append `buffer' with the escaped version of `s'
 		require
 			valid_arguments: s /= Void and then buffer /= Void
+		do
+			escape_substring (buffer, s, 1, s.count)
+		end
+
+	escape_substring (buffer: STRING; s: STRING; start_index, end_index: INTEGER) is
+			-- Append escaped version of `s.substring (start_index, end_index)' to `buffer'.
+		require
+			buffer_not_void: buffer /= Void
+			s_not_void: s /= Void
+			valid_start_index: 1 <= start_index
+			valid_end_index: end_index <= s.count
+			valid_indexes: start_index <= end_index + 1
 		local
-			i, nb: INTEGER
+			i: INTEGER
 		do
 			from
-				i := 1
-				nb := s.count
-			invariant
-				s.count = nb
+				i := start_index
 			variant
-				nb - i + 1
+				end_index - i + 2
 			until
-				i > nb
+				i > end_index
 			loop
-				escape_char(buffer,s.item (i))
+				escape_char (buffer, s.item (i))
 				i := i + 1
 			end
 		end

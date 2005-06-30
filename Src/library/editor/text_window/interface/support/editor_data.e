@@ -135,6 +135,13 @@ feature -- Value
 		do
 			Result := line_number_text_color_preference.value
 		end
+		
+	show_line_numbers: BOOLEAN is
+			-- Indicates if the editor should display the line numbers
+		do
+			Result := show_line_numbers_preference.value
+		end
+		
 	
 	blinking_cursor: BOOLEAN is
 			-- Indicates if editor cursor should blick
@@ -266,9 +273,9 @@ feature -- Value
 			-- 
 		do
 			Result := use_buffered_line_preference.value	
-		end		
+		end	
 
-feature {NONE} -- Preferences
+feature {ANY} -- Preferences
 
 	editor_font_preference: FONT_PREFERENCE
 			-- Current text font.
@@ -309,6 +316,9 @@ feature {NONE} -- Preferences
 	
 	line_number_text_color_preference: COLOR_PREFERENCE
 			-- Color for line number text
+	
+	show_line_numbers_preference: BOOLEAN_PREFERENCE
+			-- Indicates if line numbers should be shown in the editor
 	
 	blinking_cursor_preference: BOOLEAN_PREFERENCE
 			-- Indicates if editor cursor should blick
@@ -400,6 +410,7 @@ feature {NONE} -- Preference Strings
 	margin_background_color_string: STRING is "editor.general.colors.margin_background_color"
 	margin_separator_color_string: STRING is "editor.general.colors.margin_separator_color"
 	line_number_text_color_string: STRING is "editor.general.colors.line_number_text_color"
+	show_line_numbers_string: STRING is "editor.general.show_line_numbers"
 	use_tab_for_indentation_string: STRING is "editor.general.use_tab_for_indentation"
 	mouse_wheel_scroll_full_page_string: STRING is "editor.general.mouse_wheel_scroll_full_page"
 	mouse_wheel_scroll_size_string: STRING is "editor.general.mouse_wheel_scroll_size"
@@ -494,6 +505,7 @@ feature {NONE} -- Implementation
 			remove_trailing_white_space_preference := l_manager.new_boolean_resource_value (l_manager, remove_trailing_white_space_string, False)
 			blinking_cursor_preference := l_manager.new_boolean_resource_value (l_manager, blinking_cursor_string, False)
 			automatic_update_preference := l_manager.new_boolean_resource_value (l_manager, automatic_update_string, True)	
+			show_line_numbers_preference := l_manager.new_boolean_resource_value (l_manager, show_line_numbers_string, False)
 			
 			editor_font_preference := l_manager.new_font_resource_value (l_manager, editor_font_string, create {EV_FONT})	
 			font_cell.put (editor_font_preference)		
@@ -526,6 +538,7 @@ feature {NONE} -- Implementation
 			
 			tabulation_spaces_preference.change_actions.extend (agent update)
 			left_margin_width_preference.change_actions.extend (agent update)
+			show_line_numbers_preference.change_actions.extend (agent update)
 			margin_background_color_preference.change_actions.extend (agent update)
 			margin_separator_color_preference.change_actions.extend (agent update)
 			line_number_text_color_preference.change_actions.extend (agent update)

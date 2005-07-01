@@ -322,8 +322,13 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			-- Dotnet class token for this ICorDebugObjectValue value
 		require
 			has_object_interface
+		local
+			lcl: like value_icd_class
 		do
-			Result := value_icd_class.get_token
+			lcl := value_icd_class
+			if lcl /= Void then
+				Result := lcl.get_token
+			end
 		end
 
 	value_class_name: STRING is
@@ -334,10 +339,12 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			l_ct: INTEGER			
 		do
 			l_ct := value_class_token
-			if il_debug_info_recorder.has_class_info_about_module_class_token (value_module_file_name, l_ct) then
-				Result := Il_debug_info_recorder.class_name_for_class_token_and_module (l_ct, value_module_file_name)			
-			else
-				Result := value_icd_module.md_type_name (l_ct)
+			if l_ct > 0 then
+				if il_debug_info_recorder.has_class_info_about_module_class_token (value_module_file_name, l_ct) then
+					Result := Il_debug_info_recorder.class_name_for_class_token_and_module (l_ct, value_module_file_name)			
+				else
+					Result := value_icd_module.md_type_name (l_ct)
+				end
 			end
 		end
 
@@ -374,8 +381,12 @@ feature -- Queries on ICOR_DEBUG_OBJECT_VALUE
 			icdm := value_icd_module
 			if icdm /= Void then
 				classtok := value_class_token
-				feattok := icdm.md_member_token (classtok, f_name)
-				Result := icdm.get_function_from_token (feattok)
+				if classtok > 0 then
+					feattok := icdm.md_member_token (classtok, f_name)
+					if feattok > 0 then
+						Result := icdm.get_function_from_token (feattok)
+					end
+				end
 			end
 		end
 

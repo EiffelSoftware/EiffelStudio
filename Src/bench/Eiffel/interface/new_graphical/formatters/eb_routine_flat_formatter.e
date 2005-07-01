@@ -73,17 +73,22 @@ feature -- Formatting
 			l_line: INTEGER
 		do
 			if displayed and selected and not must_format then
-				if Application.is_running and then Application.is_stopped then
-					stel  ?= Application.status.current_call_stack_element
-					if stel /= Void and then stel.routine.body_index = associated_feature.body_index then
-						l_line := stel.break_index
-						if l_line > 0 then
-							editor.display_breakpoint_number_when_ready (l_line)
-								-- Refresh is needed on the margin because if we are showing the same
-								-- feature but from a different CALL_STACK_ELEMENT (case of recursive call)
-								-- we need to refresh it to show/hide the green arrow representing
-								-- where the execution is in the call stack history.
-							editor.margin.refresh
+				if associated_feature /= Void then
+					if Application.is_running and then Application.is_stopped then
+						stel  ?= Application.status.current_call_stack_element
+						if 
+							stel /= Void and then stel.routine /= Void 
+							and then stel.routine.body_index = associated_feature.body_index 
+						then
+							l_line := stel.break_index
+							if l_line > 0 then
+								editor.display_breakpoint_number_when_ready (l_line)
+									-- Refresh is needed on the margin because if we are showing the same
+									-- feature but from a different CALL_STACK_ELEMENT (case of recursive call)
+									-- we need to refresh it to show/hide the green arrow representing
+									-- where the execution is in the call stack history.
+								editor.margin.refresh
+							end
 						end
 					end
 				end

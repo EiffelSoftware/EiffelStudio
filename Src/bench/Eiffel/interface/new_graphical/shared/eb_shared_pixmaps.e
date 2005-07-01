@@ -11,11 +11,6 @@ inherit
 	
 	EB_SHARED_PIXMAP_FACTORY
 
-	EIFFEL_ENV
-		export
-			{NONE} all
-		end
-
 feature -- Pngs
 
 	bm_About: EV_PIXMAP is

@@ -48,12 +48,13 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is False
+		-- Needs to be set to True so that `screen_x' and `screen_y' give correct values.
 
 	make (an_interface: like interface) is
 			-- Create grid
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0))
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 		end
 
 	initialize is

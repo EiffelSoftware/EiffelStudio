@@ -76,6 +76,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	SHARED_INST_CONTEXT
+		undefine
+			default_create
+		end
 	
 create
 	make_with_tool,
@@ -297,8 +302,6 @@ feature -- Modification (Add/Remove feature)
 			a_name_not_void: a_name /= Void
 		local
 			p: PARENT_AS
-			pl: EIFFEL_LIST [PARENT_AS]
-			ip: INTEGER
 			class_file: PLAIN_TEXT_FILE
 		do
 			create class_file.make (class_i.file_name)
@@ -312,32 +315,21 @@ feature -- Modification (Add/Remove feature)
 			if valid_syntax then
 				p := class_as.parent_with_name (a_name)
 				if p /= Void then
-					pl := class_as.parents
-					pl.start
-					pl.search (p)
-					if pl.islast then
-						ip := class_as.inherit_clause_insert_position
-					else
-						pl.forth
-						ip := pl.item.start_position - 1
-					end
-					if (position_before_inherit + 7) = p.start_position then
-						remove_code (p.start_position + 1, ip)
-					else
-						remove_code (p.start_position, ip)
-					end			
+					remove_code (p.start_position, p.end_position)
 					reparse
-				end
-				if valid_syntax then
-					if class_as.parents /= Void and then class_as.parents.is_empty then
-						remove_code (
-							position_before_inherit,
-							class_as.inherit_clause_insert_position)
-						reparse
+					if valid_syntax then
+						if class_as.parents = Void or else class_as.parents.is_empty then
+							remove_code (
+								position_before_inherit,
+								class_as.inherit_clause_insert_position - 1)
+							reparse
+						end
+					end
+					if valid_syntax then
+						commit_modification
+						reset_date
 					end
 				end
-				commit_modification
-				reset_date
 			end
 		end
 
@@ -357,7 +349,7 @@ feature -- Modification (Add/Remove feature)
 			end
 			prepare_for_modification
 			if valid_syntax then
-				insertion_position := class_as.inherit_clause_insert_position + 1
+				insertion_position := class_as.inherit_clause_insert_position
 				if class_as.parents = Void then
 					insert_code ("inherit%N")
 				end
@@ -937,6 +929,7 @@ feature {NONE} -- Implementation
 			if retried then
 				class_as := Void
 			else
+				inst_context.set_cluster (class_i.cluster)
 				Eiffel_parser.parse_from_string (text)
 				class_as := Eiffel_parser.root_node
 				is_modified := False

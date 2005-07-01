@@ -150,9 +150,20 @@ feature {NONE} -- Implementation
 			is_occurrence_found: BOOLEAN
 			pr_type_as: PRECURSOR_AS
 			st, en: INTEGER
-			
+			l_es_class: ES_CLASS
 		do
-			create ctm.make (a_class)
+				-- Even though we could have more than one development window open with a diagram in it,
+				-- we assume there is actually only one doing the diagraming. If there were more than one,
+				-- and that `a_class' is in the two window, then the undo/redo might not work properly
+				-- since we would have 2 CLASS_TEXT_MODIFIER instance.
+			if window_manager.a_development_window /= Void then
+				l_es_class := window_manager.a_development_window.context_tool.editor.world.model.class_from_interface (a_class)
+			end
+			if l_es_class /= Void then
+				ctm := l_es_class.code_generator
+			else
+				create ctm.make (a_class)
+			end
 			ctm.prepare_for_modification
 			if ctm.valid_syntax then
 				click_list := ctm.class_as.click_list

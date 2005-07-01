@@ -54,6 +54,7 @@ H		([0-9A-Fa-f])
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						in_comments := True
 					else
+						in_verbatim_string := False
 						create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					end					
 					update_token_list					
@@ -342,19 +343,29 @@ H		([0-9A-Fa-f])
 --     them in the second expression.
 
  \"[^\n"%]*\[/[ \t\r]*	{
-					-- Verbatim string opener.
-				create {EDITOR_TOKEN_STRING} curr_token.make(text)
-				update_token_list
-				in_verbatim_string := True
-				set_start_condition (VERBATIM_STR1)
+ 				if not in_comments then
+						-- Verbatim string opener.
+					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					update_token_list
+					in_verbatim_string := True
+					set_start_condition (VERBATIM_STR1)
+				else
+					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					update_token_list
+				end
 			}
 
 \"[^\n"%]*\{/[ \t\r]*	{
-					-- Verbatim string opener.
-				create {EDITOR_TOKEN_STRING} curr_token.make(text)
-				update_token_list
-				in_verbatim_string := True
-				set_start_condition (VERBATIM_STR1)
+				if not in_comments then
+						-- Verbatim string opener.
+					create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					update_token_list
+					in_verbatim_string := True
+					set_start_condition (VERBATIM_STR1)
+				else
+					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					update_token_list
+				end				
 			}
 
 <VERBATIM_STR1>{
@@ -363,7 +374,8 @@ H		([0-9A-Fa-f])
 							-- Verbatim string closer, possibly.
 						create {EDITOR_TOKEN_STRING} curr_token.make(text)
 						update_token_list	
-						leave_verbatim_string := True
+						end_of_verbatim_string := True
+						in_verbatim_string := False
 						set_start_condition (INITIAL)
 					}
 	
@@ -371,7 +383,8 @@ H		([0-9A-Fa-f])
 							-- Verbatim string closer, possibly.
 						create {EDITOR_TOKEN_STRING} curr_token.make(text)
 						update_token_list
-						leave_verbatim_string := True
+						end_of_verbatim_string := True
+						in_verbatim_string := False
 						set_start_condition (INITIAL)
 					}	
 	

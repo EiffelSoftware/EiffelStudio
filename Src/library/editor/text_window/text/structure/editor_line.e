@@ -109,7 +109,9 @@ feature -- Transformation
 			-- Rebuild Current using token from `lexer'.  If lexer is scanning a line that is part of
 			-- a verbatim string then `in_v_string' should be True.
 		do
-			lexer.set_in_verbatim_string (in_v_string)
+			if previous /= Void and then previous.part_of_verbatim_string and then not previous.end_of_verbatim_string then
+				lexer.set_in_verbatim_string (True)
+			end		
 			make_from_lexer (lexer)
 		end
 
@@ -183,6 +185,9 @@ feature -- Status Report
 			-- Is Current part of a verbatim string, i.e part of a string which covers more than one line?
 			-- Redefine this and have the lexer set this flag so you can tell if indeed this is the case.
 			-- Required because gobo lexer works line by line.  Defult: False
+	
+	end_of_verbatim_string: BOOLEAN
+			-- Is current the end of a verbatim string?
 			
 feature -- Status Setting
 
@@ -200,6 +205,14 @@ feature -- Status Setting
 			part_of_verbatim_string := a_flag
 		ensure
 			value_set: part_of_verbatim_string = a_flag
+		end
+		
+	set_end_of_verbatim_string (a_flag: BOOLEAN) is
+			-- Set `end_of_verbatim_string' to `a_flag'
+		do
+			end_of_verbatim_string := a_flag
+		ensure
+			value_set: end_of_verbatim_string = a_flag
 		end
 
 end -- class EDITOR_LINE

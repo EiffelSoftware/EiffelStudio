@@ -380,7 +380,6 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 	on_estudio_callback_just_arrived (cb_id: INTEGER) is
 		do
 			set_last_managed_callback (cb_id)
-			
 		end
 	
 	estudio_callback_event_processing: BOOLEAN
@@ -468,14 +467,17 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			i: INTEGER
 			r: INTEGER
 			l_module: ICOR_DEBUG_MODULE
+			l_callback_id: INTEGER
 		do
-			debug ("debugger_trace_callback")
-				context_output_message ("Callback :: " + managed_callback_name (cb_id))
-			end
+			l_callback_id := dbg_cb_info_get_callback_id
+			set_last_managed_callback (l_callback_id)
+			check l_callback_id = cb_id end
 
-			check dbg_cb_info_get_callback_id = cb_id end				
+			debug ("debugger_trace_callback")
+				context_output_message ("Callback :: " + managed_callback_name (l_callback_id))
+			end
 			
-			inspect cb_id
+			inspect l_callback_id
 			when Cst_managed_cb_break then
 					--| p_app_domain, p_thread
 				p := dbg_cb_info_pointer_item (1) -- p_app_domain

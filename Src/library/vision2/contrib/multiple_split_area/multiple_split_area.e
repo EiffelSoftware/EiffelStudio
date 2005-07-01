@@ -8,7 +8,7 @@ class
 	MULTIPLE_SPLIT_AREA
 	
 inherit
-	GB_VERTICAL_SPLIT_AREA
+	EV_VERTICAL_SPLIT_AREA
 		rename
 			extend as cell_extend,
 			count as cell_count,
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
-			Precursor {GB_VERTICAL_SPLIT_AREA}
+			Precursor {EV_VERTICAL_SPLIT_AREA}
 			create linear_representation.make (4)
 			create external_representation.make (4)
 			create all_holders.make (4)
@@ -633,6 +633,8 @@ feature -- Status setting
 			-- Adjust heights of contents based on `heights' as a guide,
 			-- but ensure that `Current' is not resized unless the
 			-- minimum sizes of each widget force it to be so.
+		require
+			heights_not_void: heights /= Void
 		local
 			desired_height: INTEGER
 			excess_space: INTEGER
@@ -647,9 +649,10 @@ feature -- Status setting
 			loop
 				if all_holders.item.is_minimized then
 					desired_height := desired_height + holder_tool_height
+				elseif all_holders.item.is_external then
 				else
 					non_minimized_count := non_minimized_count + 1
-					desired_height := desired_height + holder_tool_height + heights @ (all_holders.index)
+					desired_height := desired_height + holder_tool_height + heights.i_th (non_minimized_count)
 				end
 				all_holders.forth
 			end
@@ -689,6 +692,8 @@ feature -- Status setting
 		
 	set_heights (heights: ARRAYED_LIST [INTEGER]) is
 			-- Adjust heights of contents based on `heights'.
+		require
+			heights_not_void: heights /= Void
 		local
 			locked_in_here: BOOLEAN
 		do
@@ -759,7 +764,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 	rebuild is
 			-- Rebuild complete widget structure of `Current'.
 		local
-			split_area: GB_VERTICAL_SPLIT_AREA
+			split_area: EV_VERTICAL_SPLIT_AREA
 			current_split_area: EV_SPLIT_AREA
 			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			cursor: CURSOR

@@ -133,9 +133,8 @@ feature -- Access
 			Result := internal_dynamic_class_type
 			if Result = Void then
 				if not is_null then
-					if icd_value_info.has_object_interface then
+					if icd_value_info.has_object_interface and then value_class_token > 0 then
 						Result := icd_value_info.value_class_type						
-					
 						if Result = Void then
 								--| This means we are dealing with an external type (dotnet)
 							internal_dynamic_class := icd_value_info.value_class_c

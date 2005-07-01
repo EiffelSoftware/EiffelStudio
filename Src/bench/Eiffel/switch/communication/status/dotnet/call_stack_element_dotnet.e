@@ -293,18 +293,24 @@ feature {NONE} -- Implementation
 		end
 
 	initialize_stack_for_current_object is
+		local
+			cobj: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
 			if application.imp_dotnet.exit_process_occurred then
 				debug ("debugger_trace_callstack_data") 
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
 				initialized_current_object := True
-			else
+			elseif not initialized_current_object then
 				debug ("debugger_trace_callstack_data") 
 					io.put_string ("<start> " + generator + ".initialize_stack_for_current_object %N")
 				end
-				--| Current and Arguments |--
-				set_private_current_object (internal_current_object)
+					--| Current and Arguments |--
+				cobj := internal_current_object
+				if cobj= Void and private_current_object /= Void then
+					cobj := private_current_object
+				end
+				set_private_current_object (cobj)
 				if private_current_object /= Void then
 					private_current_object.set_name ("Current")
 					object_address := private_current_object.address
@@ -333,7 +339,7 @@ feature {NONE} -- Implementation
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
 				initialized_arguments := True
-			else
+			elseif not initialized_arguments then
 				debug ("debugger_trace_callstack_data") 
 					io.put_string ("<start> " + generator + ".initialize_stack_for_arguments"
 						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")
@@ -414,7 +420,7 @@ feature {NONE} -- Implementation
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
 				initialized_locals := True
-			else
+			elseif not initialized_locals then
 				debug ("debugger_trace_callstack_data") 
 					io.put_string ("<start> " + generator + ".initialize_stack_for_locals"
 						+ " {" + dynamic_class.name_in_upper + "}." + routine_name	+ "%N")

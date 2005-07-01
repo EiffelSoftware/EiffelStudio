@@ -106,12 +106,14 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 			cl := universe.cluster_of_name (cccn)
 			cc := universe.class_named (ccn, cl)
 			
-			esc := model.class_from_interface (cc)
-			if esc = Void then
-				create esc.make (cc)
-				model.add_node (esc)
+			if cc /= Void then
+				esc := model.class_from_interface (cc)
+				if esc = Void then
+					create esc.make (cc)
+					model.add_node (esc)
+				end
+				model.set_center_class (esc)
 			end
-			model.set_center_class (esc)
 		end
 		
 feature {NONE} -- Implementation
@@ -135,10 +137,12 @@ feature {NONE} -- Implementation
 					else
 						cm.enable_needed_on_diagram
 						enable_all_links (cm)
-						model.add_ancestor_relations (cm)
-						model.add_descendant_relations (cm)
-						model.add_client_relations (cm)
-						model.add_supplier_relations (cm)
+						if a_stone.class_i.is_compiled then
+							model.add_ancestor_relations (cm)
+							model.add_descendant_relations (cm)
+							model.add_client_relations (cm)
+							model.add_supplier_relations (cm)
+						end
 					end
 					cf ?= figure_from_model (cm)
 					check
@@ -214,10 +218,12 @@ feature {NONE} -- Implementation
 				else
 					es_class.enable_needed_on_diagram
 					enable_all_links (es_class)
-					model.add_ancestor_relations (es_class)
-					model.add_descendant_relations (es_class)
-					model.add_client_relations (es_class)
-					model.add_supplier_relations (es_class)
+					if a_class.is_compiled then
+						model.add_ancestor_relations (es_class)
+						model.add_descendant_relations (es_class)
+						model.add_client_relations (es_class)
+						model.add_supplier_relations (es_class)
+					end
 				end
 				cf ?= figure_from_model (es_class)
 				check cf_not_void: cf /= Void end

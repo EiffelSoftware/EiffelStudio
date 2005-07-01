@@ -450,6 +450,7 @@ feature {NONE} -- add new expression from the grid
 			elseif new_expression_row.index < watches_grid.row_count then
 				watches_grid.move_row (new_expression_row.index, watches_grid.row_count)
 			end
+			watches_grid_empty := False
 		ensure
 			new_expression_row.index = watches_grid.row_count
 		end
@@ -1033,7 +1034,6 @@ feature {NONE} -- Implementation
 				else
 					if eval then
 						l_item.request_evaluation (True)
---						l_expr.evaluate
 					else
 						l_expr.set_unevaluated
 					end

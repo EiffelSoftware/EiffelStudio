@@ -40,12 +40,7 @@ feature {NONE} -- Initialization
 				loop
 					s := preferences.misc_data.i_th_external_preference_value (i)
 					if not s.is_empty and not s.is_equal (" ") then
-						create c.make_from_string 
-						(
-							preferences.misc_data.i_th_external_preference_value (i), 
-							i,
-							preferences.misc_data.i_th_external_preference_string (i)
-						)						
+						create c.make_from_string (s)
 					end
 					i := i + 1
 				end
@@ -218,6 +213,11 @@ feature {NONE} -- Implementation
 			loop
 				if commands @ i /= Void then
 					preferences.misc_data.i_th_external_preference (i).set_value ((commands @ i).resource)
+				else
+						-- We use an empty string as value, because this is how the
+						-- preferences are initialized. That way, the entry is actually
+						-- removed from the preferences.
+					preferences.misc_data.i_th_external_preference (i).set_value ("")
 				end
 				i := i + 1
 			end
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 		local
 			new_command: EB_EXTERNAL_COMMAND
 		do
-			new_command := create {EB_EXTERNAL_COMMAND}.make (dialog)
+			create new_command.make (dialog)
 			refresh_list
 			if not commands.has (Void) then
 				add_button.disable_sensitive

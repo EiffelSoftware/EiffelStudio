@@ -181,7 +181,7 @@ feature -- Basic operations
 	dialog_key_press_action (a_key: EV_KEY) is
 			-- The action performed to process default push and cancel
 			-- buttons. This is inserted in `key_press_actions' and
-			-- behaves is follows:
+			-- behaves as follows:
 			-- If escape is pressed at any time then
 				-- If there is a `default_cancel_button' then
 					-- If it is sensitive, call its `select_actions',

@@ -366,17 +366,21 @@ feature -- Element change
 				class_i := cwn.first
 			end
 			if not universe.classes_with_name (class_i.name).has (class_i) then
-				-- class was renamed, eather outside Eiffel Studio
-				-- or without the renaming tool. The result is a new
-				-- class_i object. Since we have no idea what the new
-				-- class name is we can't find the new class_i.
-				graph.remove_links (links)
-				graph.remove_node (Current)
+				if graph /= Void then
+						-- class was renamed, eather outside Eiffel Studio
+						-- or without the renaming tool. The result is a new
+						-- class_i object. Since we have no idea what the new
+						-- class name is we can't find the new class_i.
+					graph.remove_links (links)
+					graph.remove_node (Current)
+				end
 			elseif cluster /= Void and then cluster.cluster_i /= class_i.cluster then
-				-- This class was moved to another cluster without
-				-- using Eiffel Studio.
-				graph.remove_links (links)
-				graph.remove_node (Current)
+				if graph /= Void then
+						-- This class was moved to another cluster without
+						-- using Eiffel Studio.
+					graph.remove_links (links)
+					graph.remove_node (Current)
+				end
 			else
 				if not class_i.name_in_upper.is_equal (name) then
 					-- should never happen (see above)

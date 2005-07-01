@@ -452,7 +452,11 @@ feature {NONE} -- Implementation classic
 			par: INTEGER
 			rout_info: ROUT_INFO
 		do
-			if a_target /= Void and then a_target.dynamic_class.is_expanded then
+			if 
+				a_target /= Void 
+				and then not a_target.dynamic_class.is_basic
+				and then a_target.dynamic_class.is_expanded 
+			then
 				fixme ("must change the runtime to allow expression evaluation on expanded object !")
 				notify_error_evaluation ("Current restriction: unable to evaluate expression on expanded object")
 			else

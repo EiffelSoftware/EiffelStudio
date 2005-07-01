@@ -50,9 +50,8 @@ feature -- Start Job / Reinitialization
 		require
 			string_not_empty: not a_string.is_empty
 		do
-			if leave_verbatim_string then
-				in_verbatim_string := False
-				leave_verbatim_string := False
+			if end_of_verbatim_string then
+				end_of_verbatim_string := False
 			end
 			current_start_condition := start_condition
 			reset
@@ -98,9 +97,8 @@ feature -- Query
 	in_verbatim_string: BOOLEAN
 			-- Are we inside a verbatim string?
 		
-	leave_verbatim_string: BOOLEAN
-			-- On next line scan should we leave the verbatim state?  Means we found
-			-- and verbatim end marker on the previous execution
+	end_of_verbatim_string: BOOLEAN
+			-- Was end of verbatim string found?
 		
 feature -- Status Setting
 

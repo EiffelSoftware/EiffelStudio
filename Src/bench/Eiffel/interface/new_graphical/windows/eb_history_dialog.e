@@ -357,9 +357,12 @@ feature {NONE} -- Events
 					end
 					previously_selected_item := action_list.selected_item
 			
+						-- We process the undo stack, however some undo operations might
+						-- discard the full history (case where something else outside
+						-- EiffelStudio did modify some code).
 					from
 					until
-						to_undo <= 0
+						to_undo <= 0 or undo_list.is_empty
 					loop
 						undo
 						to_undo := to_undo - 1

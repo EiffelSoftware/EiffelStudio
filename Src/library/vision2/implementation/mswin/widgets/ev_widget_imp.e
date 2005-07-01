@@ -199,29 +199,46 @@ feature -- Access
 	screen_x: INTEGER is
 			-- Horizontal offset of `Current' relative to screen
 		local
-			wind: EV_WINDOW_IMP
+			l_wind: EV_WINDOW_IMP
+			l_parent: like parent_imp
 		do
-			wind ?= Current
-			if wind /= Void then
-				Result := x_position + wind.frame_width + wind.border_width - 1
-			elseif parent_imp /= Void
-				then Result := x_position + parent_imp.screen_x
+			l_parent := parent_imp
+			if l_parent /= Void then
+				Result := x_position + l_parent.screen_x
+				l_wind := top_level_window_imp
+				if l_parent = l_wind then
+						-- Parent is a window, since `screen_y' for a window gives
+						-- the coordinate of the top left corner of the window within
+						-- the screen, we need to add the the frame and the border
+						-- to get the right screen coordinates for Current.
+						-- The `-1' value was added by empiric experience to get right results.
+					Result := Result + l_wind.frame_width + l_wind.border_width - 1
+				end
 			end
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset of `Current' relative to screen. 
 		local 
-			wind: EV_WINDOW_IMP
-		do 
-			wind ?= Current
-			if wind /= Void then
-				Result := y_position + wind.title_height + wind.frame_height + 1
-				if wind.has_menu then
-					Result := Result + wind.menu_bar_height
+			l_wind: EV_WINDOW_IMP
+			l_parent: like parent_imp
+		do
+			l_parent := parent_imp
+			if l_parent /= Void then
+				Result := y_position + l_parent.screen_y
+				l_wind := top_level_window_imp
+				if l_parent = l_wind then
+						-- Parent is a window, since `screen_y' for a window gives
+						-- the coordinate of the top left corner of the window within
+						-- the screen, we need to add the title bar if any, the frame,
+						-- and the menu bar if any to get the right screen coordinates
+						-- for Current.
+						-- The `+1' value was added by empiric experience to get right results.
+					Result := Result + l_wind.title_height + l_wind.frame_height + 1
+					if l_wind.has_menu then
+						Result := Result + l_wind.menu_bar_height
+					end
 				end
-			elseif parent_imp /= Void then
-				Result := y_position + parent_imp.screen_y
 			end
 		end
 

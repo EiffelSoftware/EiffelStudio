@@ -40,6 +40,7 @@ inherit
 			initialize,
 			on_size,
 			insert,
+			screen_x, screen_y,
 			default_process_message
 		end
 
@@ -185,6 +186,18 @@ feature -- Access
 				Result := Result - interface.lower_bar.minimum_height - 1
 			end
 			Result := Result.max (0)
+		end
+
+	screen_x: INTEGER is
+			-- Horizontal offset of `Current' relative to screen
+		do
+			Result := x_position
+		end
+
+	screen_y: INTEGER is
+			-- Vertical offset of `Current' relative to screen
+		do
+			Result := y_position
 		end
 
 	maximum_height: INTEGER
@@ -731,7 +744,7 @@ feature {EV_ANY_I} -- Implementation
    			-- `y_pos' specifies the y-coordinate of the upper-left
    			-- corner of the client area of the window.
    		do
-			interface.move_actions.call ([x_pos, y_pos, ev_width, ev_height])
+			interface.move_actions.call ([x_position, y_position, ev_width, ev_height])
  		end
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is

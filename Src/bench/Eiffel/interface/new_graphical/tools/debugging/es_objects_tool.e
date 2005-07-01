@@ -80,6 +80,8 @@ feature {NONE} -- Initialization
 			display_first_onces := False
 			display_first_special := True
 			display_first := True
+			debugged_objects_grid_empty := True
+			stack_objects_grid_empty := True
 		end
 
 	build_interface is
@@ -449,14 +451,15 @@ feature -- Change
 			can_refresh := False
 		end
 
-	refresh is
-			-- Class has changed in `development_window'.
-		do
-			clean_stack_objects_grid
-			build_stack_objects_grid
-			clean_debugged_objects_grid
-			build_debugged_objects_grid
-		end
+--| Not used for now, check if this was needed before ?
+--	refresh is
+--			-- Class has changed in `development_window'.
+--		do
+--			clean_stack_objects_grid
+--			build_stack_objects_grid
+--			clean_debugged_objects_grid
+--			build_debugged_objects_grid
+--		end
 
 	update is
 			-- Display current execution status.
@@ -464,8 +467,6 @@ feature -- Change
 			l_status: APPLICATION_STATUS
 		do
 			cancel_process_real_update_on_idle
-			clean_stack_objects_grid
-			clean_debugged_objects_grid
 			l_status := application.status
 			if l_status /= Void then
 				process_real_update_on_idle (l_status.is_stopped)
@@ -525,9 +526,18 @@ feature -- Memory management
 	
 feature {NONE} -- Layout Implementation
 
+	cleaning_timer_delay: INTEGER is 500
+		-- Number of milliseconds waited before clearing debug output.
+		-- By waiting for a short period of time, the flicker is removed
+		-- for normal debug usage as it is only cleared immediately before
+		-- being rebuilt, unless the timer period has been exceeded.
+		
 	stack_objects_grid_empty: BOOLEAN
+
 	clean_stack_objects_grid is
 		do
+			cancel_delayed_clean_stack_objects_grid
+
 			record_stack_layout
 			internal_locals_row := Void
 			internal_arguments_row := Void
@@ -536,16 +546,73 @@ feature {NONE} -- Layout Implementation
 				stack_objects_grid.remove_and_clear_all_rows
 				stack_objects_grid_empty := True
 			end
+		ensure
+			stack_objects_grid_cleaned: stack_objects_grid_empty
+			stack_objects_grid_clear_timer_destroyed: stack_objects_grid_clear_timer = Void			
+		end
+
+	stack_objects_grid_clear_timer: EV_TIMEOUT
+
+	cancel_delayed_clean_stack_objects_grid is
+		do
+			if stack_objects_grid_clear_timer /= Void then
+				stack_objects_grid.enable_sensitive
+				stack_objects_grid_clear_timer.actions.wipe_out
+				stack_objects_grid_clear_timer.destroy
+				stack_objects_grid_clear_timer := Void
+			end
+		ensure
+			stack_objects_grid_clear_timer_destroyed: stack_objects_grid_clear_timer = Void			
+		end
+		
+	request_delayed_clean_stack_objects_grid is
+		do
+			if stack_objects_grid_clear_timer = Void then
+				stack_objects_grid.disable_sensitive
+				create stack_objects_grid_clear_timer.make_with_interval (cleaning_timer_delay)
+				stack_objects_grid_clear_timer.actions.extend (agent clean_stack_objects_grid)
+			end
+		ensure
+			stack_objects_grid_clear_timer_created: stack_objects_grid_clear_timer /= Void
 		end
 
 	debugged_objects_grid_empty: BOOLEAN
 	clean_debugged_objects_grid is
 		do
+			cancel_delayed_clean_debugged_objects_grid
+			
 			record_objects_layout
 			if not debugged_objects_grid_empty then
 				debugged_objects_grid.remove_and_clear_all_rows
 				debugged_objects_grid_empty := True
 			end
+		ensure
+			debugged_objects_grid_cleaned: debugged_objects_grid_empty	
+			stack_objects_grid_clear_timer_destroyed: stack_objects_grid_clear_timer = Void
+		end
+
+	debugged_objects_grid_clear_timer: EV_TIMEOUT
+
+	cancel_delayed_clean_debugged_objects_grid is
+		do
+			if debugged_objects_grid_clear_timer /= Void then
+				debugged_objects_grid_clear_timer.actions.wipe_out
+				debugged_objects_grid_clear_timer.destroy
+				debugged_objects_grid_clear_timer := Void
+			end
+		ensure
+			debugged_objects_grid_clear_timer_destroyed: debugged_objects_grid_clear_timer = Void
+		end
+
+	request_delayed_clean_debugged_objects_grid is
+		do
+			if debugged_objects_grid_clear_timer = Void then
+				debugged_objects_grid.disable_sensitive
+				create debugged_objects_grid_clear_timer.make_with_interval (cleaning_timer_delay)
+				debugged_objects_grid_clear_timer.actions.extend (agent clean_debugged_objects_grid)
+			end
+		ensure
+			debugged_objects_grid_clear_timer_created: debugged_objects_grid_clear_timer /= Void
 		end
 
 	record_objects_layout is
@@ -604,10 +671,15 @@ feature {NONE} -- Implementation
 			l_status := application.status
 			if l_status /= Void then
 				pretty_print_cmd.refresh
-				clean_stack_objects_grid
-				clean_debugged_objects_grid
+				stack_objects_grid.disable_sensitive
+				debugged_objects_grid.disable_sensitive
+				
+				request_delayed_clean_stack_objects_grid
+				request_delayed_clean_debugged_objects_grid
 				if l_status.is_stopped and dbg_was_stopped then
 					if l_status.has_valid_call_stack and then l_status.has_valid_current_eiffel_call_stack_element then
+						clean_stack_objects_grid
+						clean_debugged_objects_grid
 						build_stack_objects_grid
 						build_debugged_objects_grid
 					end
@@ -633,6 +705,8 @@ feature {NONE} -- Current objects grid Implementation
 
 	build_debugged_objects_grid is
 			-- Create the rows that contains object information.
+		require
+			debugged_objects_grid_empty: debugged_objects_grid_empty
 		local
 			value: ABSTRACT_DEBUG_VALUE
 			cse: EIFFEL_CALL_STACK_ELEMENT
@@ -882,6 +956,8 @@ feature {NONE} -- Impl : Stack objects grid
 	internal_result_row: EV_GRID_ROW
 
 	build_stack_objects_grid is
+		require
+			stack_objects_grid_empty: stack_objects_grid_empty
 		local
 			row: EV_GRID_ROW
 		do

@@ -3175,6 +3175,8 @@ feature -- Implementation
 					l_formal_dec.has_creation_constraint
 				then
 					l_is_formal_creation := True
+						-- Ensure to update `has_default_create' from `l_formal_dec'
+					l_formal_dec.constraint_creation_list.do_nothing
 				else
 						-- An entity of type a formal generic parameter cannot be
 						-- created here because there is no creation routine constraints

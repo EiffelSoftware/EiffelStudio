@@ -595,9 +595,11 @@ feature {NONE} -- Implementation
 			a_project_filename: FILE_NAME
 			a_project_file: RAW_FILE
 		do
-			create a_project_filename.make_from_string (a_project_path)
-			create a_project_file.make (a_project_filename)
-			Result := a_project_file.exists and then a_project_file.is_readable
+			if a_project_path /= Void and then not a_project_path.is_empty then
+				create a_project_filename.make_from_string (a_project_path)
+				create a_project_file.make (a_project_filename)
+				Result := a_project_file.exists and then a_project_file.is_readable
+			end
 		end
 
 	fill_list_with_available_wizards is

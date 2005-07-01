@@ -356,12 +356,12 @@ feature -- Access
 				-- call stack were docked out while the bugger execution is fixed. Therefore, this problem should be fixed
 				-- but the protection has been added in case something occurs. We should not rely on this code, but
 				-- fix the problem at the source when it can be found. Julian.
-			create temp_layout.make (a_layout.lower, a_layout.lower)
+			create temp_layout.make (a_layout.lower, a_layout.lower - 1)
 			from
 				i := a_layout.lower
 				j := i
 			until
-				i >= a_layout.upper + 1
+				i > a_layout.upper
 			loop
 				if i \\ 6 = 1 then
 					curr_item := items_by_name.item (a_layout.item(i))
@@ -395,7 +395,7 @@ feature -- Access
 			from
 				i := temp_layout.lower
 			until
-				i >= temp_layout.upper
+				i > temp_layout.upper
 			loop
 				item_list.extend (items_by_name.item (temp_layout.item(i)))
 				item_state := temp_layout.item(i + 1)
@@ -411,7 +411,7 @@ feature -- Access
 			from
 				i := temp_layout.lower
 			until
-				i >= temp_layout.upper
+				i > temp_layout.upper
 			loop
 				curr_item := items_by_name.item (temp_layout.item(i))
 				check
@@ -429,25 +429,25 @@ feature -- Access
 			from
 				i := temp_layout.lower
 			until
-				i >= temp_layout.upper
+				i > temp_layout.upper
 			loop
 				item_state := temp_layout.item(i + 1)
-				 item_height := temp_layout.item(i + 5)
-				 check
-				 	item_height_is_integer: item_height.is_integer
-				 end
-				 a_height := item_height.to_integer
-				 check
-				 	item_height_is_integer: item_height.is_integer
-				 end
-				 a_height := item_height.to_integer
-				 if not item_state.is_equal ("closed") and not item_state.is_equal ("external") then
-					 all_heights.extend (a_height) 	
-				 end
-				 curr_item := items_by_name.item (temp_layout.item(i))
-					check
-						curr_item_not_void: curr_item /= Void
-					end
+				item_height := temp_layout.item(i + 5)
+				check
+					item_height_is_integer: item_height.is_integer
+				end
+				a_height := item_height.to_integer
+				check
+					item_height_is_integer: item_height.is_integer
+				end
+				a_height := item_height.to_integer
+				if not item_state.is_equal ("closed") and not item_state.is_equal ("external") then
+					all_heights.extend (a_height) 	
+				end
+				curr_item := items_by_name.item (temp_layout.item(i))
+				check
+					curr_item_not_void: curr_item /= Void
+				end
 				if item_state.is_equal ("minimized") then
 					if not curr_item.is_visible then
 							--| FIXME, this is a major hack to stop large widgets
@@ -468,24 +468,24 @@ feature -- Access
 			from
 				i := temp_layout.lower
 			until
-				i >= temp_layout.upper
+				i > temp_layout.upper
 			loop
 				curr_item := items_by_name.item (temp_layout.item(i))
 				check
 					curr_item_not_void: curr_item /= Void
 				end
 				item_state := temp_layout.item(i + 1)
-				 item_height := temp_layout.item(i + 5)
-				 check
-				 	item_height_is_integer: item_height.is_integer
-				 end
-				 a_height := item_height.to_integer
-				 
-				 	-- The protection here is for the case where we have switched from
-				 	-- show multiple tools to show a single tool mode. We must ignore minimization
-				 	-- and maximization for any tools that are not actually contained in `Current'.
-				 	-- There may be a better way to perform this, such as preprocessing the data
-				 	-- and removing invalid entries. Julian.
+				item_height := temp_layout.item(i + 5)
+				check
+					item_height_is_integer: item_height.is_integer
+				end
+				a_height := item_height.to_integer
+				
+					-- The protection here is for the case where we have switched from
+					-- show multiple tools to show a single tool mode. We must ignore minimization
+					-- and maximization for any tools that are not actually contained in `Current'.
+					-- There may be a better way to perform this, such as preprocessing the data
+					-- and removing invalid entries. Julian.
 				if linear_representation.has (curr_item.widget) then
 					if item_state.is_equal ("minimized") and not has_maximized_tool then
 						minimized_count := minimized_count + 1
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 				-- If `a_widget' was not, then `remove_tool_window' does nothing.
 			development_window ?= explorer_bar_manager
 			development_window.remove_tool_window (a_widget)
-			 
+
 			clone_item_list := item_list.twin
 			create new_order.make (item_list.count)
 			item_list.wipe_out

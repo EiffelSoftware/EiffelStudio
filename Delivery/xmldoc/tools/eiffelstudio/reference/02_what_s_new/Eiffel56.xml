@@ -21,6 +21,7 @@
 				<item>Full support for 64 bits operating systems such as Windows, Linux, Solaris, Irix, VMS,...</item>
 				<item>Features tree is also available for classes which are part of the universe, but not yet compiled.</item>
 				<item>New EiffelCOM wizard. Click <link><url>../../../../wizards/com/index.xml</url><label>here</label></link> for more details.</item>
+				<item>Improved speed of class completion for large system.</item>
 			</list>
 			<heading><size>3</size>Changes</heading>
 			<list ordered="false">
@@ -33,6 +34,8 @@
 			<list ordered="false">
 				<item>Fixed infinite loop in finish_freezing which could use all the available memory.</item>
 				<item>Fixed some issues with formatting of agent using expressions as target, and display of character and string constants in context tool.</item>
+				<item>Fixed issue where tools that have been externally docked were not properly restored when reopening EiffelStudio.</item>
+				<item>Fixed issue where one could not remove entries added to the list of external commands.</LI>
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">

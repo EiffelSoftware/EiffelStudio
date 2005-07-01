@@ -607,7 +607,7 @@ rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER ti
 	/* process evaluation on icdeval */
 
 	/*** Local  ***/
-	Callback_ids cb_id;
+	Callback_ids cb_id, old_cb_id;
     HRESULT hr = S_OK;
 	BOOL eval_callback_proceed;
 	BOOL has_queued_callbacks;
@@ -640,6 +640,7 @@ rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER ti
 	 * at begining we don't care about past */
 	eval_callback_proceed = false;
 
+	old_cb_id = (Callback_ids) LOCKED_DBG_CB_ID_VALUE;
 	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 
 	/* Process the evaluation : */
@@ -648,6 +649,7 @@ rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER ti
 	hr = dbg_icdc_continue (icdc, false);
 	if (hr < 0) { 
 		eval_callback_proceed = true; 
+		LOCKED_DBG_CB_ID_SET_VALUE(old_cb_id);
 #ifdef DBG_EVALUATION_WITH_MAXIMUM_DURATION
 	} else {
 		dbg_set_eval_start_time();
@@ -721,6 +723,10 @@ rt_public void dbg_process_evaluation (void *icdeval, void* icdc, EIF_INTEGER ti
 		DBG_SUSPEND_ESTUDIO_THREAD;
 
 		/* EC's thread has been suspended And resumed by dbg's thread */
+		if (cb_id == CB_NONE) {
+			cb_id = old_cb_id;
+			LOCKED_DBG_CB_ID_SET_VALUE(cb_id);
+		}
 		DBG_NOTIFY_ESTUDIO(cb_id);
 
 		DBGTRACE("[ES::Eval] call back finished");

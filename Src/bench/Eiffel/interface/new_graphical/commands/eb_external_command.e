@@ -68,14 +68,24 @@ feature {NONE} -- Initialization
 			enable_sensitive
 		end
 
-	make_from_string (a_command: STRING; a_index: INTEGER; a_name: STRING) is
+	make_from_string (a_command: STRING) is
 			-- Create with `a_command'
 		require
 			command_not_void: a_command /= Void
+		local
+			tok: STRING
+			i, i1: INTEGER
 		do
-			name := a_name
-			index := a_index
-			external_command := a_command
+			i := a_command.index_of (separator, 1)
+			name := a_command.substring (1, i - 1)
+			i1 := a_command.index_of (separator, i + 1)
+			tok := a_command.substring (i + 1, i1 - 1)
+			if tok.is_integer then
+				index := tok.to_integer
+			else
+				index := -1
+			end
+			external_command := a_command.substring (i1 + 1, a_command.count)
 			
 				-- Check validity before inserting.
 				-- This is a bit redundant with the precondition, but

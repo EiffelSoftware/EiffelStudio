@@ -174,7 +174,6 @@ feature {NONE} -- Implementation
 	build_return_type (line: EDITOR_LINE; token: EDITOR_TOKEN) is
 			-- Attempts to locate a return type for the feature where `token' resides
 		local
-			l_arguments_string: STRING
 			retried: BOOLEAN
 		do
 			if not retried then

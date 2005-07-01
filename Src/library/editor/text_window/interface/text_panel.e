@@ -276,13 +276,13 @@ feature -- Query
 	is_empty: BOOLEAN is
 			-- Is the text panel blank?
 		do
-			Result := text_displayed.is_empty
+			Result := text_displayed /= Void and then text_displayed.is_empty
 		end
 
 	text_is_fully_loaded: BOOLEAN is
 			-- Is current text still being loaded?
 		do
-			Result := text_displayed.reading_text_finished
+			Result := text_displayed /= Void and then text_displayed.reading_text_finished
 		end
 
 	line_numbers_visible: BOOLEAN is
@@ -673,7 +673,7 @@ feature {NONE} -- Scroll bars Management
 			w: INTEGER
 		do
 			w := editor_viewport.width
-			if editor_width > w and then text_displayed /= Void and then w > 0 then
+			if editor_width > w and w > 0 and then not is_empty then
 				horizontal_scrollbar.value_range.resize_exactly (0, editor_width - w)
 				horizontal_scrollbar.set_leap (w)
 				if horizontal_scrollbar.is_show_requested then 

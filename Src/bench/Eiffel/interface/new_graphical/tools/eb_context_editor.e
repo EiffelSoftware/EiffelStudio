@@ -749,7 +749,9 @@ feature -- Element change
 					layout.layout
 				end
 				cf ?= world.figure_from_model (class_graph.center_class)
-				cf.set_is_fixed (True)
+				if cf /= Void then
+					cf.set_is_fixed (True)
+				end
 				
 				projector.enable_painting
 				world_cell.enable_resize

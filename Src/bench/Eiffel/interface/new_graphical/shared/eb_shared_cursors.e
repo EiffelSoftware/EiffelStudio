@@ -207,6 +207,8 @@ feature {NONE} -- Implementation
 			Result.put ([2, 4], "class_list")
 			Result.put ([2, 5], "closed_hand")
 			Result.put ([2, 6], "open_hand")
+			Result.put ([2, 7], "Xinheritlnk")
+			Result.put ([2, 8], "Xclientlnk")
 
 			Result.compare_objects
 		end

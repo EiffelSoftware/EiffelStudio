@@ -169,7 +169,7 @@ feature -- Miscellaneous
 
 feature {NONE} -- Implementation
 
-	icons: EB_SHARED_BREAKPOINT_ICONS is
+	icons: EB_SHARED_PIXMAPS_12 is
 			-- Breakpoint icon resources
 		once
 			create Result

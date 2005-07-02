@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
-			Result := pixmaps.small_pixmaps.icon_mini_back
+			Result := pixmaps.icon_back
 		end
 
 	tooltip: STRING is

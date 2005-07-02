@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		do
 			create show_current_class_cluster_cmd.make
 			show_current_class_cluster_cmd.set_tooltip (Interface_names.e_Show_class_cluster)
-			show_current_class_cluster_cmd.set_mini_pixmaps (Pixmaps.Icon_view_small)
+			show_current_class_cluster_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_view)
 			show_current_class_cluster_cmd.set_name ("Show_class_cluster")
 			show_current_class_cluster_cmd.add_agent (agent show_current_class_cluster)
 			show_current_class_cluster_cmd.set_menu_name (Interface_names.m_Show_class_cluster)

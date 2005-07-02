@@ -28,7 +28,7 @@ feature -- Access
 			-- Mini pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
-			Result := Pixmaps.Icon_mini_back
+			Result := pixmaps.small_pixmaps.icon_mini_back
 		end
 
 feature {NONE} -- Implementation
@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
-			Result := Pixmaps.Icon_back
+			Result := pixmaps.small_pixmaps.icon_mini_back
 		end
 
 	tooltip: STRING is

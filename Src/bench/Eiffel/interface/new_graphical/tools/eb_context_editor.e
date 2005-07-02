@@ -285,7 +285,7 @@ feature {NONE} -- Initialization
 				view_menu.disable_item_expand (view_selector)
 			
 				create view_menu_button
-				view_menu_button.set_pixmap (pixmaps.icon_down_triangle)
+				view_menu_button.set_pixmap (pixmaps.small_pixmaps.icon_down_triangle @ 1)
 				view_menu_button.set_minimum_size (15, 20)
 				view_menu.extend (view_menu_button)
 				view_menu.disable_item_expand (view_menu_button)

@@ -134,7 +134,7 @@ feature {NONE} -- Initialization
 			box_exception.extend (exception)
 			create tb_exception
 			create tb_but_exception
-			tb_but_exception.set_pixmap (pixmaps.icon_pretty_print)
+			tb_but_exception.set_pixmap (pixmaps.small_pixmaps.icon_nothing)
 			tb_but_exception.set_tooltip ("Open exception dialog for more details")			
 			tb_but_exception.pointer_button_press_actions.extend (agent show_call_stack_message)
 			tb_exception.extend (tb_but_exception)
@@ -180,12 +180,12 @@ feature {NONE} -- Initialization
 		do
 			create mini_toolbar
 			create save_call_stack_cmd.make
-			save_call_stack_cmd.set_mini_pixmaps (Pixmaps.Icon_save_call_stack)
+			save_call_stack_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_save_call_stack)
 			save_call_stack_cmd.set_tooltip (Interface_names.e_Save_call_stack)
 			save_call_stack_cmd.add_agent (agent save_call_stack)
 			mini_toolbar.extend (save_call_stack_cmd.new_mini_toolbar_item)
 			create set_stack_depth_cmd.make
-			set_stack_depth_cmd.set_mini_pixmaps (Pixmaps.Icon_set_stack_depth)
+			set_stack_depth_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_set_stack_depth)
 			set_stack_depth_cmd.set_tooltip (Interface_names.e_Set_stack_depth)
 			set_stack_depth_cmd.add_agent (agent set_stack_depth)
 			set_stack_depth_cmd.enable_sensitive

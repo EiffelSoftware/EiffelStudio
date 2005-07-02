@@ -67,7 +67,7 @@ feature -- Access
 	mini_pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command for mini toolbars.
 		do
-			Result := Pixmaps.Icon_slice_limits_vsmall
+			Result := pixmaps.small_pixmaps.icon_slice_limits
 		end
 
 	tooltip: STRING is

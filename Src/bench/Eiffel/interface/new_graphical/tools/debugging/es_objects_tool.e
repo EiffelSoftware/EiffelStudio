@@ -596,6 +596,7 @@ feature {NONE} -- Layout Implementation
 	cancel_delayed_clean_debugged_objects_grid is
 		do
 			if debugged_objects_grid_clear_timer /= Void then
+				debugged_objects_grid.enable_sensitive				
 				debugged_objects_grid_clear_timer.actions.wipe_out
 				debugged_objects_grid_clear_timer.destroy
 				debugged_objects_grid_clear_timer := Void

@@ -211,7 +211,7 @@ rt_public void eif_extend_object_id_stack (EIF_INTEGER nb_chunks)
 
 #ifdef ISE_GC
 
-#define STACK_SIZE (eif_stack_chunk - (sizeof(struct stchunk)/sizeof(char*)))
+#define STACK_SIZE eif_stack_chunk
 
 rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *st, EIF_INTEGER *max_value_ptr)
 {

@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 			scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrolled_window, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (scrolled_window)
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, scrolled_window)
 			text_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new

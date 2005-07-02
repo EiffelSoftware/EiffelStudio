@@ -74,6 +74,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
 			set_c_object (scrollable_area)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				scrollable_area,

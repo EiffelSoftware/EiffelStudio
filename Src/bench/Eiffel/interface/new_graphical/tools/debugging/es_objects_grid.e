@@ -29,6 +29,9 @@ feature {NONE} -- Initialization
 			-- Create current with a_name and a_tool
 		do
 			default_create
+			create auto_resized_columns.make
+			auto_resized_columns.compare_objects
+			
 			name := a_name
 			enable_tree
 			enable_partial_dynamic_content
@@ -48,6 +51,7 @@ feature {NONE} -- Initialization
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)
 			set_item_deny_cursor_function (agent on_pnd_deny_cursor_function)
 			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
+			header.pointer_button_press_actions.extend (agent on_header_clicked)
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
 			mouse_wheel_scroll_size := 3 --| default value
@@ -135,6 +139,7 @@ feature -- Scrolling
 				end
 				set_virtual_position (virtual_x_position, vy)
 			end
+			request_columns_auto_resizing			
 		end		
 
 feature {NONE} -- Actions implementation
@@ -211,6 +216,54 @@ feature {NONE} -- Actions implementation
 				grid_activate (ei)
 			end
 		end
+		
+	on_header_clicked (ax, ay, abutton: INTEGER; ax_tilt, ay_tilt, apressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
+		local
+			m: EV_MENU
+			mi: EV_MENU_ITEM
+			mci: EV_CHECK_MENU_ITEM
+			hi: EV_HEADER_ITEM
+			col: EV_GRID_COLUMN
+			c: INTEGER
+		do
+			if abutton = 3 then
+					--| Find the column whom header is clicked
+				from
+					c := 1
+				until
+					c > column_count or col /= Void
+				loop
+					col := column (c)
+					hi := col.header_item
+					if header.item_x_offset (hi) > ax and c > 1 then
+						col := column (c - 1)
+					elseif c = column_count then
+						-- keep loop's col value
+					else
+						col := Void
+					end
+					c := c + 1
+				end
+					--| Col is the pointed header
+				hi := col.header_item
+				create m
+				create mi.make_with_text (hi.text)
+				m.extend (mi)
+				
+				m.extend (create {EV_MENU_SEPARATOR})
+				
+				create mci.make_with_text ("auto resize")
+				if column_has_auto_resizing (col.index) then
+					mci.enable_select
+					mci.select_actions.extend (agent set_auto_resizing_column (col.index, False))
+				else
+					mci.disable_select
+					mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
+				end
+				m.extend (mci)
+				m.show_at (header, ax, ay)
+			end
+		end
 
 	on_header_auto_width_resize is
 		local
@@ -238,7 +291,9 @@ feature {NONE} -- Actions implementation
 			ctler ?= a_row.data
 			if ctler /= Void then
 				ctler.call_expand_actions (a_row)
+				process_columns_auto_resizing
 			end
+			request_columns_auto_resizing			
 		end
 
 	on_row_collapse (a_row: EV_GRID_ROW) is
@@ -252,6 +307,7 @@ feature {NONE} -- Actions implementation
 			if ctler /= Void then
 				ctler.call_collapse_actions (a_row)
 			end
+			request_columns_auto_resizing
 		end
 
 	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
@@ -351,9 +407,81 @@ end
 					create Result
 				end
 			end
+			request_columns_auto_resizing
 		ensure
 			item_computed: Result /= Void or else item (c, r) /= Void
 		end
+
+feature {NONE} -- column resizing
+		
+	set_auto_resizing_column (c: INTEGER; auto: BOOLEAN) is
+		do
+			if column_has_auto_resizing (c) then
+				if not auto then
+					auto_resized_columns.prune_all (c)
+				end
+			elseif auto then
+				auto_resized_columns.extend (c)
+			end
+			request_columns_auto_resizing			
+		end
+
+	timer_columns_auto_resizing: EV_TIMEOUT
+
+	request_columns_auto_resizing is
+		do
+			if not auto_resized_columns.is_empty then
+				if timer_columns_auto_resizing = Void then
+					create timer_columns_auto_resizing.make_with_interval (500)
+					timer_columns_auto_resizing.actions.extend (agent process_columns_auto_resizing)
+				else
+					timer_columns_auto_resizing.set_interval (500)
+				end
+			end
+		end
+		
+	cancel_timer_columns_auto_resizing is
+		do
+			if timer_columns_auto_resizing /= Void then
+				timer_columns_auto_resizing.actions.wipe_out
+				timer_columns_auto_resizing.destroy
+				timer_columns_auto_resizing := Void
+			end
+		end
+
+	process_columns_auto_resizing is
+		local
+			col: EV_GRID_COLUMN
+			c: INTEGER
+			w: INTEGER
+		do
+			cancel_timer_columns_auto_resizing
+			
+			from
+				auto_resized_columns.start
+			until
+				auto_resized_columns.after
+			loop
+				c:= auto_resized_columns.item
+				if c > 0 and c <= column_count then
+					col := column (c)
+					w := col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3
+					if w > 5 then
+						col.set_width (w)
+					end
+-- Let's see what should be the behavior ...
+--					col.resize_to_content
+				end
+				auto_resized_columns.forth
+			end
+		end
+		
+	column_has_auto_resizing (c: INTEGER): BOOLEAN is
+		do
+			Result := auto_resized_columns.has (c)
+		end
+	
+	auto_resized_columns: LINKED_LIST [INTEGER]
 
 feature -- Grid helpers
 

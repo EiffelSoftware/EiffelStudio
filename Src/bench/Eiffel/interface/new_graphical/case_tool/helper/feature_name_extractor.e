@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			a_type_not_void: a_type /= Void
 		local
 			ct: CLASS_TYPE_AS
-			g: EIFFEL_LIST [TYPE_AS]
+			g: TYPE_LIST_AS
 		do
 			Result := ""
 			ct ?= a_type

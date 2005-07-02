@@ -663,6 +663,9 @@ feature {NONE} -- Event handling
 			ensure_last_row_is_new_expression_row
 			if not rows.is_empty then
 				if watches_grid.row_count >= sel_index then
+					if sel_index > 1 and sel_index = new_expression_row.index then
+						sel_index := sel_index - 1
+					end
 					watches_grid.row (sel_index).enable_select
 				else
 					on_row_deselected (Void)

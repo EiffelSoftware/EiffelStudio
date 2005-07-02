@@ -39,6 +39,7 @@ feature -- Initialize
 		do
 			base_make (an_interface)
 			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
 			set_c_object (scrollable_area)
 
 			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new

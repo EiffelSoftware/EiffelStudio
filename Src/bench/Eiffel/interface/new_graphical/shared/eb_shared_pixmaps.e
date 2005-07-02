@@ -725,6 +725,20 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("no_stop")
 		end	
+		
+	Icon_back: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("back")
+		end
+
+	Icon_forth: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("forth")
+		end
 
 	Icon_class_symbol: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap

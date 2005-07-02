@@ -40,7 +40,7 @@ feature -- Access
 	mini_pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command for mini toolbars.
 		do
-			Result := Pixmaps.Icon_numeric_format_very_small
+			Result := pixmaps.small_pixmaps.icon_numeric_format
 		end
 
 	tooltip: STRING is

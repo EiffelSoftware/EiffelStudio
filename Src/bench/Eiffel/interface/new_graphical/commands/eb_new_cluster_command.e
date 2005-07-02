@@ -50,7 +50,7 @@ feature -- Access
 	mini_pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command for mini toolbars.
 		do
-			Result := Pixmaps.Icon_new_cluster_small
+			Result := pixmaps.small_pixmaps.icon_new_cluster
 		end
 
 feature {NONE} -- Implementation
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
-			Result := Pixmaps.Icon_new_cluster
+			Result := pixmaps.small_pixmaps.icon_new_cluster
 		end
 
 	tooltip: STRING is

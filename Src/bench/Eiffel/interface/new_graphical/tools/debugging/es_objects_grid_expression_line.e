@@ -398,12 +398,12 @@ feature -- Graphical changes
 							row.set_item (Col_expression_result_index, glab)
 
 							if expression_evaluator.has_error_exception then
-								set_error_pixmap (Pixmaps.Icon_exception)
+								set_error_pixmap (pixmaps.small_pixmaps.icon_dbg_error)
 							elseif expression_evaluator.has_error_expression 
 								or expression_evaluator.has_error_syntax then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
 							elseif expression_evaluator.has_error_evaluation then
-								set_error_pixmap (Pixmaps.Icon_exception)
+								set_error_pixmap (pixmaps.small_pixmaps.icon_dbg_error)
 							elseif expression_evaluator.has_error_not_implemented then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
 							end

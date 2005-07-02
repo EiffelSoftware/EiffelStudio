@@ -28,7 +28,7 @@ feature -- Access
 			-- Mini pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
-			Result := Pixmaps.Icon_mini_forth
+			Result := pixmaps.small_pixmaps.icon_mini_forth
 		end
 
 feature {NONE} -- Implementation
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
 		do
-			Result := Pixmaps.Icon_forth
+			Result := pixmaps.small_pixmaps.icon_mini_forth
 		end
 
 	menu_name: STRING is

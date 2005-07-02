@@ -50,8 +50,8 @@ feature -- Access
 
 	mini_pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command for mini toolbars.
-		do
-			Result := Pixmaps.Icon_new_class_small
+		once
+			Result := pixmaps.small_pixmaps.icon_new_class
 		end
 
 feature {NONE} -- Implementation

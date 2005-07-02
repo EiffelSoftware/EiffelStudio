@@ -88,8 +88,8 @@ feature -- Properties
 
 	mini_pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmap representing `Current' in toolbars.
-		once
-			Result := Pixmaps.Icon_delete_very_small
+		do
+			Result := pixmaps.small_pixmaps.icon_delete
 		end
 
 	tooltip: STRING is

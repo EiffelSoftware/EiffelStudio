@@ -95,15 +95,15 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			window.extend (container)
 			create right_panel.make (Current, False, True)
 			right_panel.enable_top_widget_resizing
-			right_panel.set_maximize_pixmap (Pixmaps.Icon_maximize @ 1)
-			right_panel.set_minimize_pixmap (Pixmaps.Icon_minimize @ 1)
-			right_panel.set_restore_pixmap (Pixmaps.Icon_restore @ 1)
-			right_panel.set_close_pixmap (Pixmaps.Icon_close @ 1)
+			right_panel.set_maximize_pixmap (pixmaps.small_pixmaps.icon_maximize @ 1)
+			right_panel.set_minimize_pixmap (pixmaps.small_pixmaps.icon_minimize @ 1)
+			right_panel.set_restore_pixmap (pixmaps.small_pixmaps.icon_restore @ 1)
+			right_panel.set_close_pixmap (pixmaps.small_pixmaps.icon_close @ 1)
 			create left_panel.make (Current, preferences.development_window_data.left_panel_use_explorer_style, False)
-			left_panel.set_maximize_pixmap (Pixmaps.Icon_maximize @ 1)
-			left_panel.set_minimize_pixmap (Pixmaps.Icon_minimize @ 1)
-			left_panel.set_restore_pixmap (Pixmaps.Icon_restore @ 1)
-			left_panel.set_close_pixmap (Pixmaps.Icon_close @ 1)
+			left_panel.set_maximize_pixmap (pixmaps.small_pixmaps.icon_maximize @ 1)
+			left_panel.set_minimize_pixmap (pixmaps.small_pixmaps.icon_minimize @ 1)
+			left_panel.set_restore_pixmap (pixmaps.small_pixmaps.icon_restore @ 1)
+			left_panel.set_close_pixmap (pixmaps.small_pixmaps.icon_close @ 1)
 			left_panel.enable_top_widget_resizing
 			create panel
 				-- As the side on which panels are displayed may be swapped,

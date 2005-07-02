@@ -38,7 +38,7 @@ feature -- Access
 	mini_pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command for mini toolbars.
 		do
-			Result := Pixmaps.Icon_toggle_signature_vsmall
+			Result := pixmaps.small_pixmaps.icon_toggle_signature
 		end
 
 feature {NONE} -- Implementation

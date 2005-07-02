@@ -76,7 +76,7 @@ feature -- Access
 	mini_pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command for mini toolbars.
 		do
-			Result := Pixmaps.Icon_new_feature_small
+			Result := pixmaps.small_pixmaps.icon_new_feature
 		end
 
 feature {NONE} -- Implementation

@@ -154,7 +154,7 @@ feature {NONE} -- Initialization
 
 				--| Delete command
 			create remove_debugged_object_cmd.make
-			remove_debugged_object_cmd.set_mini_pixmaps (Pixmaps.Icon_delete_very_small)
+			remove_debugged_object_cmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_delete)
 			remove_debugged_object_cmd.set_tooltip (Interface_names.e_Remove_object)
 			remove_debugged_object_cmd.add_agent (agent remove_selected_debugged_objects)
 			tbb := remove_debugged_object_cmd.new_mini_toolbar_item
@@ -1045,7 +1045,7 @@ feature {NONE} -- Impl : Stack objects grid
 					if l_exception_tag /= Void then
 						row := a_target_grid.extended_new_subrow (exception_row)
 						glab := name_label_item ("Tag")
-						a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_exception)
+						a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
 						row.set_item (1, glab)
 						create es_glab
 						es_glab.set_data (l_exception_tag)
@@ -1056,7 +1056,7 @@ feature {NONE} -- Impl : Stack objects grid
 						--| Module
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := name_label_item ("Module")
-					a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_exception)
+					a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
 					row.set_item (1, glab)
 					create es_glab
 					es_glab.set_data (l_exception_module_detail)
@@ -1068,7 +1068,7 @@ feature {NONE} -- Impl : Stack objects grid
 					if l_exception_message /= Void and then not l_exception_message.is_empty then
 						row := a_target_grid.extended_new_subrow (exception_row)
 						glab := name_label_item ("Nota")
-						a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_exception)
+						a_target_grid.grid_cell_set_pixmap (glab, pixmaps.small_pixmaps.icon_dbg_error)
 						row.set_item (1, glab)
 						create es_glab
 						es_glab.set_data (l_exception_message)

@@ -56,10 +56,6 @@ feature -- Basic operations
 			mem: MEMORY
 			rescued: BOOLEAN
 			wd: EV_WARNING_DIALOG
-			cur_dev: EB_DEVELOPMENT_WINDOW
-			first, second: EB_DEVELOPMENT_WINDOW
-			a: SPECIAL [ANY]
-			pretty: EB_PRETTY_PRINT_DIALOG
 			mem_info: MEM_INFO
 		do
 			if not rescued then

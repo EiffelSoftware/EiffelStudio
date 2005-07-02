@@ -11,6 +11,16 @@ inherit
 	
 	EB_SHARED_PIXMAP_FACTORY
 
+feature -- Access
+
+	small_pixmaps: EB_SHARED_PIXMAPS_8 is
+			-- Shared small pixmaps
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Pngs
 
 	bm_About: EV_PIXMAP is
@@ -274,11 +284,6 @@ feature -- Icons
 			Result := build_classic_pixmap ("dotnet_import")
 		end
 
-	Icon_small_open_menu: ARRAY [EV_PIXMAP] is
-		once
-			Result := build_classic_pixmap ("open_menu_small")
-		end
-
 	Icon_expanded_object: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_expanded_object")
@@ -306,14 +311,9 @@ feature -- Icons
 
 	Icon_nothing: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("icon_nothing")
+			Result := small_pixmaps.icon_nothing
 		end
 		
-	Icon_down_triangle: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_down_triangle")
-		end
-
 	Icon_compilation_succeeded: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_compiled")
@@ -458,22 +458,6 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("debug_run_continue")
 		end
-		
-	Icon_save_call_stack: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-			-- Color with explaining text is at index 3, gray with explaining text at index 4
-		once
-			Result := build_classic_pixmap ("save_call_stack")
-		end
-
-	Icon_set_stack_depth: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-			-- Color with explaining text is at index 3, gray with explaining text at index 4
-		once
-			Result := build_classic_pixmap ("set_stack_depth")
-		end
 
 	Icon_cluster_tool: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
@@ -518,13 +502,6 @@ feature -- Icons
 			-- Color with explaining text is at index 3, gray with explaining text at index 4
 		once
 			Result := build_classic_pixmap ("search")
-		end
-
-	Icon_view_small: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("view_small")
 		end
 
 	Icon_windows: ARRAY [EV_PIXMAP] is
@@ -643,67 +620,11 @@ feature -- Icons
 			Result := build_classic_pixmap ("new_dynamic_lib")
 		end
 
-	Icon_new_small: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("new_small")
-		end
-
-	Icon_new_cluster_small: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("new_cluster_small")
-		end
-
-	Icon_new_class_small: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("new_class_small")
-		end
-
-	Icon_new_cluster: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("new_cluster")
-		end
-
 	Icon_new_class: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("new_class")
-		end
-
-	Icon_new_feature_small: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("new_feature_small")
-		end
-
-	Icon_toggle_signature_vsmall: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("toggle_signature_vsmall")
-		end
-
-	Icon_toggle_alias_vsmall: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("toggle_alias_vsmall")
-		end
-
-	Icon_toggle_assigner_vsmall: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("toggle_assigner_vsmall")
 		end
 
 	Icon_close: ARRAY [EV_PIXMAP] is
@@ -803,70 +724,7 @@ feature -- Icons
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("no_stop")
-		end
-
-	Icon_minimize: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("minimize")
-		end
-
-	Icon_maximize: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("maximize")
-		end
-
-	Icon_restore: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("restore")
-		end
-
-	Icon_back: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("back")
-		end
-
-	Icon_forth: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("forth")
-		end
-
-	Icon_mini_back: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("mini_back")
-		end
-
-	Icon_mini_forth: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("mini_forth")
-		end
-		
-	Icon_mini_up: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("mini_up")
-		end
-
-	Icon_mini_down: ARRAY [EV_PIXMAP] is
-			-- Array containing both the color & the gray pixmap
-			-- Color is at index 1, gray at index 2
-		once
-			Result := build_classic_pixmap ("mini_down")
-		end		
+		end	
 
 	Icon_class_symbol: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
@@ -1094,34 +952,9 @@ feature -- Icons
 			Result := build_classic_pixmap ("delete_small")
 		end
 
-	Icon_delete_very_small: ARRAY [EV_PIXMAP] is
-		once
-			Result := build_classic_pixmap ("delete_very_small")
-		end
-		
-	Icon_numeric_format_very_small: ARRAY [EV_PIXMAP] is
-		once
-			Result := build_classic_pixmap ("numeric_format_very_small")
-		end
-
 	Icon_delete_measure: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("delete_measure")
-		end
-
-	Icon_new_expression: ARRAY [EV_PIXMAP] is
-		once
-			Result := build_classic_pixmap ("new_expression")
-		end
-
-	Icon_toggle_state_very_small: ARRAY [EV_PIXMAP] is
-		once
-			Result := build_classic_pixmap ("on_off_very_small")
-		end
-
-	Icon_edit_expression: ARRAY [EV_PIXMAP] is
-		once
-			Result := build_classic_pixmap ("edit_expression")
 		end
 
 	Icon_remove_exported_feature: ARRAY [EV_PIXMAP] is
@@ -1132,23 +965,6 @@ feature -- Icons
 	Icon_set_arguments: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("set_arguments")
-		end
-
-	Icon_slice_limits_vsmall: ARRAY [EV_PIXMAP] is
-		once
-			Result := build_classic_pixmap ("slice_limits_vsmall")
-		end
-
-	Icon_pretty_print: EV_PIXMAP is
-			-- Icon for the dialog that display expanded value of objects.
-		once
-			Result := pixmap_file_content ("icon_pretty_print_16")
-		end
-
-	Icon_pretty_print_vsmall: ARRAY [EV_PIXMAP] is
-			-- Icon for the dialog that display expanded value of objects.
-		once
-			Result := build_classic_pixmap ("expand_string")
 		end
 
 	Icon_crop: ARRAY [EV_PIXMAP] is
@@ -1230,26 +1046,6 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("sorter")
 		end
-
-	Icon_bon_deferred: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_bon_deferred")
-		end
-
-	Icon_bon_effective: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_bon_effective")
-		end
-
-	Icon_bon_interfaced: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_bon_interfaced")
-		end
-
-	Icon_bon_persistent: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_bon_persistent")
-		end
 		
 	Icon_bon_anchor: EV_PIXMAP is
 		once
@@ -1327,11 +1123,6 @@ feature -- Icons
 			Result := build_classic_pixmap ("print")
 		end
 
-	Icon_exception: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_dbg_error")
-		end
-		
 	Icon_word_wrap_color: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("word_wrap")
@@ -1375,7 +1166,7 @@ feature {NONE} -- Implementation
 	image_matrix: EV_PIXMAP is
 			-- Matrix pixmap containing all of the screen cursors
 		once
-			Result := pixmap_file_content ("studio_icon_matrix")
+			Result := pixmap_file_content ("icon_matrix_16")
 		end
 
 	pixmap_lookup: HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is

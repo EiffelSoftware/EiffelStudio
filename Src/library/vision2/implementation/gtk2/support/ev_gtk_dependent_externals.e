@@ -8,6 +8,18 @@ class
 
 feature -- Externals
 
+	frozen gtk_scrolled_window_set_shadow_type (a_window: POINTER; a_shadow_type: INTEGER) is
+		external
+			"C signature (GtkScrolledWindow*, GtkShadowType) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_win_pos_center_on_parent_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WIN_POS_CENTER_ON_PARENT"
+		end
+
 	frozen gtk_label_get_label (a_label: POINTER): POINTER is
 		external
 			"C signature (GtkLabel*): gchar* use <gtk/gtk.h>"

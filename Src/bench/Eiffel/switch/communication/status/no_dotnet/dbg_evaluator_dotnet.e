@@ -27,6 +27,8 @@ feature -- Access
 	last_once_available: BOOLEAN is False
 	last_once_failed: BOOLEAN is False
 	evaluation_aborted: BOOLEAN is False
+	error_occurred: BOOLEAN is False
+	error_message: STRING is do end
 	
 	dotnet_metamorphose_basic_to_reference_value (dmp: DUMP_VALUE): DUMP_VALUE is
 		do

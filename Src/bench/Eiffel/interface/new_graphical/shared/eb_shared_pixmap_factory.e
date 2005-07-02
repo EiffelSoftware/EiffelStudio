@@ -44,6 +44,8 @@ feature
 				warning_dialog.show
 				create Result.make_with_size (pixmap_width, pixmap_height) -- Default pixmap size
 			end
+		ensure
+			result_not_void: Result /= Void
 		rescue
 			retried := True
 			retry

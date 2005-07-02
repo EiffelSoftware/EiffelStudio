@@ -253,7 +253,7 @@ feature -- Access
 		do
 		end
 
-	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [TYPE_AS]; is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		do
 		end
@@ -268,7 +268,7 @@ feature -- Access
 		do
 		end
 
-	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE_AS]): CONVERT_FEAT_AS is
+	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS): CONVERT_FEAT_AS is
 			-- New convert feature entry AST node.
 		do
 		end
@@ -413,7 +413,7 @@ feature -- Access
 		do
 		end
 
-	new_eiffel_list_type (n: INTEGER): EIFFEL_LIST [TYPE_AS] is
+	new_eiffel_list_type (n: INTEGER): TYPE_LIST_AS is
 			-- New empty list of TYPE
 		do
 		end

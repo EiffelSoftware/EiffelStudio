@@ -353,7 +353,7 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [TYPE_AS]; is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		do
 			if n /= Void then
@@ -377,7 +377,7 @@ feature -- Access
 			end
 		end
 
-	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE_AS]): CONVERT_FEAT_AS is
+	new_convert_feat_as (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS): CONVERT_FEAT_AS is
 			-- New convert feature entry AST node.
 		do
 			if fn /= Void and (t /= Void and then not t.is_empty) then
@@ -651,7 +651,7 @@ feature -- Access
 			list_full: Result /= Void implies Result.capacity = n and Result.all_default
 		end
 
-	new_eiffel_list_type (n: INTEGER): EIFFEL_LIST [TYPE_AS] is
+	new_eiffel_list_type (n: INTEGER): TYPE_LIST_AS is
 			-- New empty list of TYPE
 		require
 			n_non_negative: n >= 0

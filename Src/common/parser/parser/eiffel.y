@@ -45,7 +45,9 @@ create
 %token		TE_COLON TE_COMMA TE_CREATE
 %token <LOCATION_AS>	TE_CREATION
 %token		TE_LARRAY TE_RARRAY TE_RPARAN
-%token		TE_LCURLY TE_RCURLY TE_LSQURE TE_RSQURE TE_CONSTRAIN
+%token		TE_LCURLY TE_RCURLY
+%token <LOCATION_AS> TE_LSQURE TE_RSQURE
+%token		TE_CONSTRAIN
 %token <BOOL_AS> TE_FALSE TE_TRUE
 %token		TE_ACCEPT TE_ADDRESS TE_AS TE_ASSIGN TE_ASSIGNMENT
 %token		TE_CHECK TE_CLASS TE_CONVERT
@@ -167,7 +169,7 @@ create
 %type <EIFFEL_LIST [RENAME_AS]>			Rename Rename_list
 %type <EIFFEL_LIST [STRING_AS]>			Debug_keys String_list
 %type <EIFFEL_LIST [TAGGED_AS]>			Assertion Assertion_list Invariant
-%type <EIFFEL_LIST [TYPE_AS]>			Generics_opt Type_list Type_list_impl
+%type <TYPE_LIST_AS>			Generics_opt Type_list Type_list_impl
 %type <EIFFEL_LIST [TYPE_DEC_AS]>		Formal_arguments
 										Entity_declaration_list Local_declarations
 
@@ -1243,7 +1245,10 @@ Generics_opt: -- Empty
 	|	TE_LSQURE TE_RSQURE
 			-- { $$ := Void }
 	|	TE_LSQURE Type_list TE_RSQURE
-			{ $$ := $2 }
+			{
+				$$ := $2
+				$$.set_positions ($1, $3)
+			}
 	;
 
 Type_list: { add_counter } Type_list_impl

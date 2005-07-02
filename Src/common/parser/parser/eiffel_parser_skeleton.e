@@ -523,7 +523,7 @@ feature {NONE} -- String factory
 
 feature {NONE} -- Type factory
 
-	new_class_type (an_id: ID_AS; generics: EIFFEL_LIST [TYPE_AS]; is_exp, is_sep: BOOLEAN): TYPE_AS is
+	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS; is_exp, is_sep: BOOLEAN): TYPE_AS is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.

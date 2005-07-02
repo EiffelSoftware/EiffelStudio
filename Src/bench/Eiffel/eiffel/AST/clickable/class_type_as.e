@@ -55,7 +55,7 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class type name
 
-	generics: EIFFEL_LIST [TYPE_AS]
+	generics: TYPE_LIST_AS
 			-- Possible generical parameters
 
 	is_class: BOOLEAN is True

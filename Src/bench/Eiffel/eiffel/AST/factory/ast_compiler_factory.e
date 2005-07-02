@@ -87,7 +87,7 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [TYPE_AS]; is_exp: BOOLEAN; is_sep: BOOLEAN): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; is_exp: BOOLEAN; is_sep: BOOLEAN): CLASS_TYPE_AS is
 		do
 			if n /= Void then
 				create Result.initialize (n, g, is_exp, is_sep)

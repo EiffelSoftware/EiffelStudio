@@ -589,7 +589,7 @@ feature {NONE} -- Implementation
 			-- Add suppliers of `a_type' to `suppliers'.
 		local
 			ct: CLASS_TYPE_AS
-			g: EIFFEL_LIST [TYPE_AS]
+			g: TYPE_LIST_AS
 			l_class_i: CLASS_I
 		do
 			ct ?= a_type
@@ -629,7 +629,7 @@ feature {NONE} -- Implementation
 			-- Does `a_type' have `a_class' as supplier?
 		local
 			ct: CLASS_TYPE_AS
-			g: EIFFEL_LIST [TYPE_AS]
+			g: TYPE_LIST_AS
 		do
 			ct ?= a_type
 			if ct /= Void then

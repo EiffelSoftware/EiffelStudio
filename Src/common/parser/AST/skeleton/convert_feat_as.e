@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: EIFFEL_LIST [TYPE_AS]) is
+	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS) is
 			-- Create a new CONVERT_FEAT_AS clause AST node.
 		require
 			fn_not_void: fn /= Void
@@ -49,8 +49,8 @@ feature -- Access
 	feature_name: FEATURE_NAME
 			-- Name of conversion feature.
 			
-	conversion_types: EIFFEL_LIST [TYPE_AS]
-			-- Types	 to which we can either convert to or from.
+	conversion_types: TYPE_LIST_AS
+			-- Types to which we can either convert to or from.
 
 feature -- Location
 

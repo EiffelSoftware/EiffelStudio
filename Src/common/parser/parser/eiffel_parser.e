@@ -9974,7 +9974,7 @@ end
 	yy_do_action_236 is
 			--|#line <not available> "eiffel.y"
 		local
-			yyval94: EIFFEL_LIST [TYPE_AS]
+			yyval94: TYPE_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -10008,7 +10008,7 @@ end
 	yy_do_action_237 is
 			--|#line <not available> "eiffel.y"
 		local
-			yyval94: EIFFEL_LIST [TYPE_AS]
+			yyval94: TYPE_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -10019,7 +10019,7 @@ end
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp94 := yyvsp94 + 1
-	yyvsp1 := yyvsp1 -2
+	yyvsp3 := yyvsp3 -2
 	if yyvsp94 >= yyvsc94 then
 		if yyvs94 = Void then
 			debug ("GEYACC")
@@ -10043,17 +10043,19 @@ end
 	yy_do_action_238 is
 			--|#line <not available> "eiffel.y"
 		local
-			yyval94: EIFFEL_LIST [TYPE_AS]
+			yyval94: TYPE_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval94 := yyvs94.item (yyvsp94) 
+				yyval94 := yyvs94.item (yyvsp94)
+				yyval94.set_positions (yyvs3.item (yyvsp3 - 1), yyvs3.item (yyvsp3))
+			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp1 := yyvsp1 -2
+	yyvsp3 := yyvsp3 -2
 	yyvs94.put (yyval94, yyvsp94)
 end
 		end
@@ -10061,7 +10063,7 @@ end
 	yy_do_action_239 is
 			--|#line <not available> "eiffel.y"
 		local
-			yyval94: EIFFEL_LIST [TYPE_AS]
+			yyval94: TYPE_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -10081,7 +10083,7 @@ end
 	yy_do_action_240 is
 			--|#line <not available> "eiffel.y"
 		local
-			yyval94: EIFFEL_LIST [TYPE_AS]
+			yyval94: TYPE_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -10115,7 +10117,7 @@ end
 	yy_do_action_241 is
 			--|#line <not available> "eiffel.y"
 		local
-			yyval94: EIFFEL_LIST [TYPE_AS]
+			yyval94: TYPE_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -10154,7 +10156,7 @@ end
 	yy_do_action_242 is
 			--|#line <not available> "eiffel.y"
 		local
-			yyval94: EIFFEL_LIST [TYPE_AS]
+			yyval94: TYPE_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -10178,7 +10180,7 @@ end
 	yy_do_action_243 is
 			--|#line <not available> "eiffel.y"
 		local
-			yyval94: EIFFEL_LIST [TYPE_AS]
+			yyval94: TYPE_LIST_AS
 		do
 --|#line <not available> "eiffel.y"
 debug ("GEYACC")
@@ -10261,7 +10263,7 @@ end
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp82 := yyvsp82 + 1
-	yyvsp1 := yyvsp1 -2
+	yyvsp3 := yyvsp3 -2
 	if yyvsp82 >= yyvsc82 then
 		if yyvs82 = Void then
 			debug ("GEYACC")
@@ -10299,7 +10301,7 @@ end
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp82 := yyvsp82 -1
-	yyvsp1 := yyvsp1 -2
+	yyvsp3 := yyvsp3 -2
 	yyvs82.put (yyval82, yyvsp82)
 end
 		end
@@ -16171,7 +16173,7 @@ end
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
 	yyvsp35 := yyvsp35 -1
-	yyvsp1 := yyvsp1 -2
+	yyvsp3 := yyvsp3 -2
 	yyvsp78 := yyvsp78 -1
 	yyvs35.put (yyval35, yyvsp35)
 end
@@ -20652,7 +20654,7 @@ yyval67 := ast_factory.new_tuple_as (ast_factory.new_eiffel_list_expr_as (0))
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp67 := yyvsp67 + 1
-	yyvsp1 := yyvsp1 -2
+	yyvsp3 := yyvsp3 -2
 	if yyvsp67 >= yyvsc67 then
 		if yyvs67 = Void then
 			debug ("GEYACC")
@@ -20688,7 +20690,7 @@ end
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp1 := yyvsp1 -2
+	yyvsp3 := yyvsp3 -2
 	yyvsp78 := yyvsp78 -1
 	yyvs67.put (yyval67, yyvsp67)
 end
@@ -20923,7 +20925,7 @@ feature {NONE} -- Table templates
 			   86,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,   10,    1,    1,    1,    1,    7,    3,    1,    3,
-			    1,    3,    1,    5,    1,    4,    4,    1,    1,    1,
+			    1,    3,    1,    5,    1,    4,    4,    3,    1,    1,
 			    1,    1,    1,    1,    2,    1,    1,    1,    1,    1,
 			    1,    1,    1,    2,    1,    1,   11,   14,   17,   18,
 			   19,    4,   21,   21,   23,   30,   35,   35,   35,   35,
@@ -20937,15 +20939,15 @@ feature {NONE} -- Table templates
 			    2,   53,   68,    1,    1,   78,   65,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,   65,   68,    1,    1,    7,
-			    5,    1,    2,   71,   71,   71,    1,   67,   68,   68,
+			    5,    1,    2,   71,   71,   71,    3,   67,   68,   68,
 			    1,   14,   68,    2,   68,   35,   35,    1,   35,    1,
-			    1,   35,   68,    1,    1,   35,    1,    1,    1,    1,
+			    1,   35,   68,    1,    1,   35,    1,    3,    1,    1,
 
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    2,    1,   35,   78,    1,
 			    1,    1,    1,    1,    1,    1,    1,    2,    5,    2,
 			    2,    1,    1,    2,   47,   47,   47,   47,   47,   47,
-			   68,    1,   94,    1,    1,    1,    1,    1,    1,   95,
+			   68,    3,   94,    1,    1,    1,    1,    1,    1,   95,
 			    2,   85,   86,    1,    1,    1,   17,   17,   19,    4,
 			   23,   30,    2,   44,   47,   57,   57,   57,   57,   57,
 			   57,   65,   68,   72,    2,    2,   12,   21,    2,    2,
@@ -20956,18 +20958,18 @@ feature {NONE} -- Table templates
 			   35,   35,   35,   35,   35,   35,   35,   35,   35,   35,
 			   35,    1,   35,   35,    1,   35,   35,   35,    2,   21,
 			   21,    2,    1,    1,    1,    1,   94,   94,    1,    1,
-			    1,   94,   94,    2,    1,    1,   95,   85,   69,   86,
+			    3,   94,   94,    2,    1,    1,   95,   85,   69,   86,
 			   72,    3,   67,    1,    1,    1,   89,   89,    1,   78,
 			    1,    1,   89,    2,    1,   78,    2,   89,    1,   78,
-			    1,   65,    2,    1,    2,   13,    1,    1,    1,   85,
-			   78,   35,   35,   89,   78,    1,   68,   94,    1,   82,
+			    3,   65,    2,    1,    2,   13,    1,    1,    1,   85,
+			   78,   35,   35,   89,   78,    3,   68,   94,    3,   82,
 			    1,    1,    1,    3,    2,   72,   12,   52,    1,   35,
 
 			   53,   68,   89,   89,   78,    1,   78,    1,   89,   78,
-			    2,   21,    1,   94,    1,   82,    1,   65,   85,   68,
+			    2,   21,    3,   94,    3,   82,    1,   65,   85,   68,
 			   72,    1,   89,    1,    1,   78,   89,    1,    1,    1,
 			   41,   42,    2,   82,   65,    1,   65,    1,    1,   94,
-			    2,    2,   42,   82,    1,   65,    1,   90,   89,    1,
+			    2,    2,   42,   82,    3,   65,    1,   90,   89,    1,
 			   96,    1,    1,   90,    1,   68,   82,    2,   54,   54,
 			   90,   75,   75,    1,   81,   94,   90,    1,    1,   74,
 			    3,    1,   28,   75,   81,   81,    1,    1,    1,    1,
@@ -21022,8 +21024,8 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    2,    2,    1,    1,    1,    1,
-			    1,    1,    1,    3,    1,    1,    1,    1,    1,    1,
-			    1,    1,    4,    4,    1,    1,    1,    1,    1,    1,
+			    1,    1,    1,    3,    1,    1,    1,    1,    1,    3,
+			    3,    1,    4,    4,    1,    1,    1,    1,    1,    1,
 			    1,    5,    1,    6,    1,    1,    1,    3,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    3,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    3,    1,
@@ -22969,8 +22971,8 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines93: KL_SPECIAL_ROUTINES [EIFFEL_LIST [TAGGED_AS]]
 			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [TAGGED_AS]]
 
-	yyvs94: SPECIAL [EIFFEL_LIST [TYPE_AS]]
-			-- Stack for semantic values of type EIFFEL_LIST [TYPE_AS]
+	yyvs94: SPECIAL [TYPE_LIST_AS]
+			-- Stack for semantic values of type TYPE_LIST_AS
 
 	yyvsc94: INTEGER
 			-- Capacity of semantic value stack `yyvs94'
@@ -22978,8 +22980,8 @@ feature {NONE} -- Semantic value stacks
 	yyvsp94: INTEGER
 			-- Top of semantic value stack `yyvs94'
 
-	yyspecial_routines94: KL_SPECIAL_ROUTINES [EIFFEL_LIST [TYPE_AS]]
-			-- Routines that ought to be in SPECIAL [EIFFEL_LIST [TYPE_AS]]
+	yyspecial_routines94: KL_SPECIAL_ROUTINES [TYPE_LIST_AS]
+			-- Routines that ought to be in SPECIAL [TYPE_LIST_AS]
 
 	yyvs95: SPECIAL [EIFFEL_LIST [TYPE_DEC_AS]]
 			-- Stack for semantic values of type EIFFEL_LIST [TYPE_DEC_AS]

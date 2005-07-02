@@ -111,9 +111,11 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 "["			{
 				last_token := TE_LSQURE
+				last_location_as_value := ast_factory.new_location_as (line, column, position, 1)
 			}
 "]"			{
 				last_token := TE_RSQURE
+				last_location_as_value := ast_factory.new_location_as (line, column, position, 1)
 			}
 "+"			{
 				last_token := TE_PLUS

@@ -31,9 +31,16 @@ rm -rf mswin
 sed -e "s/^.*mswin.*$//g" index.xml >> new_index.xml
 cp new_index.xml index.xml
 rm -rf new_index.xml
+
 cd ../contrib
 rm -rf implementation
 sed -e "s/^.*implementation.*$//g" index.xml >> new_index.xml
+cp new_index.xml index.xml
+rm -rf new_index.xml
+
+cd ../../preferences
+rm -rf registry_implementation
+sed -e "s/^.*registry_implementation.*$//g" index.xml >> new_index.xml
 cp new_index.xml index.xml
 rm -rf new_index.xml
 
@@ -51,6 +58,7 @@ mv thread $DOCUMENT_DIR/xmldoc/libraries/thread/reference
 mv time $DOCUMENT_DIR/xmldoc/libraries/time/reference
 mv web $DOCUMENT_DIR/xmldoc/libraries/web/reference
 mv store $DOCUMENT_DIR/xmldoc/libraries/store/reference
+mv preferences $DOCUMENT_DIR/xmldoc/libraries/preferences/reference
 
 
 remtrace Run the documentation tool to generate the documentation for EiffelStudio as web based help
@@ -59,7 +67,7 @@ cd $EIFFEL_SRC/tools/doc_builder/EIFGEN/F_code
 export DOCUMENT_DIR
 export EIFFEL_SRC
 
-./doc_builder -gen /xml2help -o /studio -t /web_simple -nohtml $DOCUMENT_DIR/xmldoc/documentation.dpr
+./doc_builder -gen /xml2help -o /studio -t /web_simple -nohtml $DOCUMENT_DIR/xmldoc/projects/documentation.dpr
 
 move $EIFFEL_SRC/tools/doc_builder/temp/Help $INSTALL_DIR/docs
 rm -rf $INSTALL_DIR/docs/docs_settings.xml

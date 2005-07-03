@@ -407,7 +407,9 @@ feature -- Graphical changes
 	computed_grid_item (c: INTEGER): EV_GRID_ITEM is
 		do
 			if not compute_grid_display_done then
-				compute_grid_display
+				if application.is_running and then application.is_stopped then
+					compute_grid_display
+				end
 			end
 			if row /= Void and then c <= row.count then
 				Result := row.item (c)

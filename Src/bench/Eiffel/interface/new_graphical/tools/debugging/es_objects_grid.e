@@ -248,11 +248,12 @@ feature {NONE} -- Actions implementation
 				hi := col.header_item
 				create m
 				create mi.make_with_text (hi.text)
+				mi.disable_sensitive
 				m.extend (mi)
 				
 				m.extend (create {EV_MENU_SEPARATOR})
 				
-				create mci.make_with_text ("auto resize")
+				create mci.make_with_text ("Auto resize")
 				if column_has_auto_resizing (col.index) then
 					mci.enable_select
 					mci.select_actions.extend (agent set_auto_resizing_column (col.index, False))
@@ -385,29 +386,31 @@ feature {NONE} -- Actions implementation
 debug ("debugger_interface")
 	print (generator + ".compute_grid_item ("+c.out+", "+r.out+") %N")
 end
-			if c <= column_count and r <= row_count then
-				Result := item (c, r)
-			end
-			if Result = Void then
-				a_row := row (r)
-				obj_item ?= a_row.data
-				if obj_item /= Void then
-					if not obj_item.compute_grid_display_done then
-						Result := obj_item.computed_grid_item (c)
+			if not is_processing_remove_and_clear_all_rows then
+				if c <= column_count and r <= row_count then
+					Result := item (c, r)
+				end
+				if Result = Void then
+					a_row := row (r)
+					obj_item ?= a_row.data
+					if obj_item /= Void then
+						if not obj_item.compute_grid_display_done then
+							Result := obj_item.computed_grid_item (c)
 -- We don't return the item, since they have already been added to the grid ...
---						if 0 < c and c <= a_row.count then
---							Result := a_row.item (c)
---						end
+--							if 0 < c and c <= a_row.count then
+--								Result := a_row.item (c)
+--							end
+						else
+								--| line already computed .. but still missing cells
+								--| then we fill with empty cells
+							create Result
+						end
 					else
-							--| line already computed .. but still missing cells
-							--| then we fill with empty cells
 						create Result
 					end
-				else
-					create Result
 				end
+				request_columns_auto_resizing
 			end
-			request_columns_auto_resizing
 		ensure
 			item_computed: Result /= Void or else item (c, r) /= Void
 		end
@@ -456,23 +459,26 @@ feature {NONE} -- column resizing
 			w: INTEGER
 		do
 			cancel_timer_columns_auto_resizing
-			
-			from
-				auto_resized_columns.start
-			until
-				auto_resized_columns.after
-			loop
-				c:= auto_resized_columns.item
-				if c > 0 and c <= column_count then
-					col := column (c)
-					w := col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3
-					if w > 5 then
-						col.set_width (w)
-					end
+			if row_count > 0 then
+				from
+					auto_resized_columns.start
+				until
+					auto_resized_columns.after
+				loop
+					c:= auto_resized_columns.item
+					if c > 0 and c <= column_count then
+						col := column (c)
+						if col /= Void then
+							w := col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3
+							if w > 5 then
+								col.set_width (w)
+							end
 -- Let's see what should be the behavior ...
---					col.resize_to_content
+--							col.resize_to_content
+						end
+					end
+					auto_resized_columns.forth
 				end
-				auto_resized_columns.forth
 			end
 		end
 		
@@ -512,8 +518,14 @@ feature -- Grid helpers
 		end
 
 	remove_and_clear_all_rows is
+		require
+			not is_processing_remove_and_clear_all_rows
 		do
+			is_processing_remove_and_clear_all_rows := True
 			grid_remove_and_clear_all_rows (Current)
+			is_processing_remove_and_clear_all_rows := False
 		end
+		
+	is_processing_remove_and_clear_all_rows: BOOLEAN
 
 end

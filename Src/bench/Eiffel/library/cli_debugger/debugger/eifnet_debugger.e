@@ -1876,7 +1876,10 @@ feature -- Specific function evaluation
 			l_func: ICOR_DEBUG_FUNCTION
 
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
-		do	
+		do
+			check
+				running_and_stopped: Application.is_running and Application.is_stopped			
+			end
 			debug ("debugger_trace_eval")
 				print ("<start> " + generator + ".generating_type_value_from_object_value %N")
 			end	
@@ -1941,7 +1944,10 @@ feature -- Specific function evaluation
 			l_class_type: CLASS_TYPE
 			l_func: ICOR_DEBUG_FUNCTION
 			l_value_info : EIFNET_DEBUG_VALUE_INFO
-		do	
+		do
+			check
+				running_and_stopped: Application.is_running and Application.is_stopped			
+			end
 -- FIXME jfiat [2004/07/20] : Why do we set l_icd as a_icd ... this is not what we want, check it
 --			l_icd := a_icd
 			debug ("debugger_trace_eval")

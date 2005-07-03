@@ -672,9 +672,6 @@ feature {NONE} -- Implementation
 			l_status := application.status
 			if l_status /= Void then
 				pretty_print_cmd.refresh
-				stack_objects_grid.disable_sensitive
-				debugged_objects_grid.disable_sensitive
-				
 				request_delayed_clean_stack_objects_grid
 				request_delayed_clean_debugged_objects_grid
 				if l_status.is_stopped and dbg_was_stopped then

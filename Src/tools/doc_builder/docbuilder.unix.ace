@@ -130,12 +130,12 @@ cluster
 			"CVS"; 
 		end
 
-	all editor:		"$EIFFEL_SRC\library\editor"
+	all editor:		"$EIFFEL_SRC/library/editor"
 		exclude
 			"constants.e"; "constants_imp.e"; 
 		end
 		
-	all lex:		"$ISE_EIFFEL\library\lex"
+	all lex:		"$ISE_EIFFEL/library/lex"
 
 external
 

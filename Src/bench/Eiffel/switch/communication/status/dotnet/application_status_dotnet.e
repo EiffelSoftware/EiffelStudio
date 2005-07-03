@@ -128,13 +128,17 @@ feature -- Thread info
 	refresh_current_thread_id is
 		local
 			dbg_info: EIFNET_DEBUGGER_INFO
+			edti: EIFNET_DEBUGGER_THREAD_INFO
 		do
 			dbg_info := Eifnet_debugger.info
 			if current_thread_id = 0 then
 				set_current_thread_id (dbg_info.last_icd_thread_id)
 			end
 			if not dbg_info.is_valid_managed_thread_id (current_thread_id) then
-				set_current_thread_id (dbg_info.default_managed_thread.thread_id)
+				edti := dbg_info.default_managed_thread
+				if edti /= Void then
+					set_current_thread_id (edti.thread_id)
+				end
 			end
 		end
 		

@@ -1236,7 +1236,7 @@ feature -- Stepping Access
 			from
 				i := tids.lower
 			until
-				i > tids.lower				
+				i > tids.upper				
 			loop
 				application.status.set_current_thread_id (tids @ i)
 				do_step (cst_control_step_into, False)

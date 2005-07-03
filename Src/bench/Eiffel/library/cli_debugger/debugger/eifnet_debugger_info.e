@@ -812,8 +812,10 @@ feature -- JIT Thread
 	default_managed_thread: EIFNET_DEBUGGER_THREAD_INFO is
 			-- Default Managed Thread info
 		do
-			loaded_managed_threads.start
-			Result := loaded_managed_threads.item_for_iteration
+			if not loaded_managed_threads.is_empty then
+				loaded_managed_threads.start
+				Result := loaded_managed_threads.item_for_iteration
+			end
 		ensure
 			Result_not_void_unless_empty_list: Result = Void implies loaded_managed_threads.is_empty
 		end

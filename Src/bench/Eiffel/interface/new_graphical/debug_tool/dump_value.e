@@ -619,51 +619,55 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					--| we set slices to 1,1 to avoid receiving all the capacity item of SPECIAL
 					--| since here only the printable characters matter
 
-				l_attributes := Debugged_object_manager.attributes_at_address (value_address, 1, 1)
-				from
-					l_attributes_cursor := l_attributes.new_cursor
-					l_attributes_cursor.start
-				until
-					l_attributes_cursor.after or done
-				loop
-					l_attributes_item := l_attributes_cursor.item
-					cv_spec ?= l_attributes_item
-					if
-						(area_attribute = Void and cv_spec /= Void) and then
-						cv_spec.name.is_equal (l_area_name)
-					then
-						area_attribute := cv_spec
-						done := count_attribute /= Void
-					elseif count_attribute = Void and cv_spec = Void then
-						int_value ?= l_attributes_item
-						if int_value /= Void and then int_value.name.is_equal (l_count_name) then
-							count_attribute := int_value
-							done := area_attribute /= Void
-						end
-					end
-					l_attributes_cursor.forth
+				if value_address /= Void then
+					l_attributes := Debugged_object_manager.attributes_at_address (value_address, 1, 1)
 				end
-					--| At the point `count' from STRING should have been found in
-					--| STRING object. `area' maybe Void, thus `area_attribute' may not be found.
-				check
-					count_attribute_found: count_attribute /= Void
-				end
-				if count_attribute /= Void then
-					l_count := count_attribute.value
-
-					if area_attribute /= Void then
-							--| Now we have the real count, we'll get the l_slice_max items
-							--| and not all the capacity
-						if max < 0 then
-							l_slice_max := l_count
-						else
-							l_slice_max := max.min (l_count)
+				if l_attributes /= Void then
+					from
+						l_attributes_cursor := l_attributes.new_cursor
+						l_attributes_cursor.start
+					until
+						l_attributes_cursor.after or done
+					loop
+						l_attributes_item := l_attributes_cursor.item
+						cv_spec ?= l_attributes_item
+						if
+							(area_attribute = Void and cv_spec /= Void) and then
+							cv_spec.name.is_equal (l_area_name)
+						then
+							area_attribute := cv_spec
+							done := count_attribute /= Void
+						elseif count_attribute = Void and cv_spec = Void then
+							int_value ?= l_attributes_item
+							if int_value /= Void and then int_value.name.is_equal (l_count_name) then
+								count_attribute := int_value
+								done := area_attribute /= Void
+							end
 						end
-						area_attribute.reset_items
-						area_attribute.get_items (min, l_slice_max)
-						Result := area_attribute.truncated_raw_string_value (l_count)
+						l_attributes_cursor.forth
 					end
-				end				
+						--| At the point `count' from STRING should have been found in
+						--| STRING object. `area' maybe Void, thus `area_attribute' may not be found.
+					check
+						count_attribute_found: count_attribute /= Void
+					end
+					if count_attribute /= Void then
+						l_count := count_attribute.value
+	
+						if area_attribute /= Void then
+								--| Now we have the real count, we'll get the l_slice_max items
+								--| and not all the capacity
+							if max < 0 then
+								l_slice_max := l_count
+							else
+								l_slice_max := max.min (l_count)
+							end
+							area_attribute.reset_items
+							area_attribute.get_items (min, l_slice_max)
+							Result := area_attribute.truncated_raw_string_value (l_count)
+						end
+					end									
+				end
 				if Result /= Void then
 						--| We now have retrieved the full `area' of STRING object. Let's check
 						--| if we need to display the complete area, or just part of it.
@@ -752,13 +756,15 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_final_result_value: DUMP_VALUE
 			l_feat: FEATURE_I
 		do
-			if dynamic_class /= Void then
-				l_feat := debug_output_feature_i (dynamic_class)
-				l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
-	
-				if l_final_result_value /= Void and then not l_final_result_value.is_void then
-					Result := l_final_result_value.classic_string_representation (min, max)
-					last_string_representation_length := l_final_result_value.last_string_representation_length
+			if application.is_running and application.is_stopped then
+				if dynamic_class /= Void then
+					l_feat := debug_output_feature_i (dynamic_class)
+					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
+		
+					if l_final_result_value /= Void and then not l_final_result_value.is_void then
+						Result := l_final_result_value.classic_string_representation (min, max)
+						last_string_representation_length := l_final_result_value.last_string_representation_length
+					end
 				end
 			end
 		end
@@ -773,32 +779,34 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			l_final_result_value: DUMP_VALUE
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 		do
-			if preferences.debug_tool_data.generating_type_evaluation_enabled then
-				l_feat := generating_type_feature_i (dynamic_class)
-				if application.is_dotnet then
-					if dynamic_class_type /= Void then
-						l_icdov := new_value_object_dotnet
-						if l_icdov /= Void then
-							Result := Application.imp_dotnet.eifnet_debugger.generating_type_value_from_object_value (
-										value_frame_dotnet,
-										value_dotnet,
-										l_icdov,
-										dynamic_class_type,
-										l_feat
-									)
-							l_icdov.clean_on_dispose
+			if application.is_running and application.is_stopped then
+				if preferences.debug_tool_data.generating_type_evaluation_enabled then
+					l_feat := generating_type_feature_i (dynamic_class)
+					if application.is_dotnet then
+						if dynamic_class_type /= Void then
+							l_icdov := new_value_object_dotnet
+							if l_icdov /= Void then
+								Result := Application.imp_dotnet.eifnet_debugger.generating_type_value_from_object_value (
+											value_frame_dotnet,
+											value_dotnet,
+											l_icdov,
+											dynamic_class_type,
+											l_feat
+										)
+								l_icdov.clean_on_dispose
+							end
 						end
-					end
-				else
-					l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
-
-					if l_final_result_value /= Void and then not l_final_result_value.is_void then
-						Result := l_final_result_value.classic_string_representation (0, -1)
-					end
-				end			
-			end
-			if Result /= Void then
-				Result.prune_all ('%U')
+					else
+						l_final_result_value := classic_feature_result_value_on_current (l_feat, dynamic_class)
+	
+						if l_final_result_value /= Void and then not l_final_result_value.is_void then
+							Result := l_final_result_value.classic_string_representation (0, -1)
+						end
+					end			
+				end
+				if Result /= Void then
+					Result.prune_all ('%U')
+				end
 			end
 		end
 
@@ -811,9 +819,11 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			rout_info: ROUT_INFO
 			l_dyntype: CLASS_TYPE
 		do
-			if a_feat /= Void and  value_address /= Void then
+			check
+				running_and_stopped: Application.is_running and Application.is_stopped
+			end
+			if a_feat /= Void and Application.is_valid_object_address (value_address) then
 					-- Initialize the communication.
-
 				l_dbg_obj := Debugged_object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
 				l_dyntype := l_dbg_obj.class_type
 

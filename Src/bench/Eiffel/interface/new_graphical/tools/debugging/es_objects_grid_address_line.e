@@ -84,12 +84,14 @@ feature -- Query
 
 	has_attributes_values: BOOLEAN is
 		do
-			Result := debugged_object_manager.object_at_address_has_attributes (object_address)
+			if application.is_valid_object_address (object_address) then
+				Result := debugged_object_manager.object_at_address_has_attributes (object_address)
+			end
 		end
 
 	sorted_attributes_values: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
-			if object_address /= Void then
+			if application.is_valid_object_address (object_address) then
 				Result := debugged_object_manager.sorted_attributes_at_address (object_address, object_spec_lower, object_spec_upper)
 			end
 		end

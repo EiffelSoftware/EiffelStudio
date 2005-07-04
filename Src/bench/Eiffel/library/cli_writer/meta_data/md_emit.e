@@ -90,6 +90,7 @@ feature -- Definition: access
 			type_name_not_void: type_name /= Void
 			type_name_not_empty: not type_name.is_empty
 			resolution_scope_valid:
+				(resolution_scope = 0) or
 				(resolution_scope & Md_mask = Md_module_ref) or
 				(resolution_scope & Md_mask = Md_assembly_ref) or
 				(resolution_scope & Md_mask = Md_type_ref)

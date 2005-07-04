@@ -245,7 +245,7 @@ feature -- Status setting
 		do
 			editor.remove_text
 			editor.enable_edit
-			if Application.status.is_stopped then
+			if application.is_running and then Application.is_stopped then
 				if has_object then
 					retrieve_dump_value
 					if current_dump_value /= Void then

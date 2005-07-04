@@ -876,14 +876,6 @@ feature {NONE} -- Implementation: set stack depth command
 			dialog.disable_user_resize
 			Layout_constants.set_default_size_for_button (okb)
 			Layout_constants.set_default_size_for_button (cancelb)
-			if Debugger_manager.maximum_stack_depth > 500 then
-				element_nb.set_value (500)
-			elseif Debugger_manager.maximum_stack_depth = -1 then
-				element_nb.set_value (50)
-				show_all_radio.enable_select
-			else
-				element_nb.set_value (Debugger_manager.maximum_stack_depth)
-			end
 			
 				-- Organize widgets.
 			create vb
@@ -891,7 +883,18 @@ feature {NONE} -- Implementation: set stack depth command
 			vb.set_padding (Layout_constants.Small_padding_size)
 			vb.extend (show_all_radio)
 			vb.extend (rb2)
+
 			rb2.enable_select
+			if Debugger_manager.maximum_stack_depth > 500 then
+				element_nb.set_value (500)
+			elseif Debugger_manager.maximum_stack_depth = -1 then
+				element_nb.set_value (50)
+				show_all_radio.enable_select
+				element_nb.disable_sensitive
+			else
+				element_nb.set_value (Debugger_manager.maximum_stack_depth)
+			end
+
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
 			hb.extend (element_nb)

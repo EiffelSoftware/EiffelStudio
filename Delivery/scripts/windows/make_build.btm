@@ -3,7 +3,6 @@ REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d build2 Src/build2
 
-remtrace Enterprise version of EiffelBuild
 cdd %EIFFEL_SRC/build2
 clean_project
 finalize ace.ace
@@ -13,20 +12,5 @@ iff not exist build.exe then
 	remtrace Could not finalize a new EiffelBuild
 	CANCEL
 else
-	move build.exe %INSTALL_DIR\releases\enterprise\
-endiff
-
-iff not defined BUILD_ENTERPRISE_ONLY then
-	remtrace Free version of EiffelBuild
-	cdd %EIFFEL_SRC/build2
-	clean_project
-	finalize evaluation_ace.ace
-	fff
-	cleanup_eiffel build.exe
-	iff not exist build.exe then
-		remtrace Could not finalize a new EiffelBuild
-		CANCEL
-	else
-		move build.exe %INSTALL_DIR\releases\free_version
-	endiff
+	move build.exe %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin\
 endiff

@@ -31,16 +31,7 @@ call build.btm free_add_ons
 call build.btm graphical_libraries
 call build.btm studio_core
 call build.btm vision2_tour
-
-remtrace EiffelBuild Enterprise
-candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise -dISE_MODULE_NAME=build_enterprise -dISE_PRODUCT_NAME="EiffelBuild Enterprise Edition" build.wxs
-light /b %INSTALL_DIR build.wixobj -out MSMs\build_enterprise.msm
-del build.wixobj
-
-remtrace EiffelBuild Free version
-candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=free_version -dISE_MODULE_NAME=build_free -dISE_PRODUCT_NAME="EiffelBuild Evaluation Edition" build.wxs
-light /b %INSTALL_DIR build.wixobj -out MSMs\build_free.msm
-del build.wixobj
+call build.btm build
 
 remtrace EiffelStudio Enterprise
 candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs

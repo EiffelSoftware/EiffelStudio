@@ -35,7 +35,7 @@
 				<item>Fixed infinite loop in finish_freezing which could use all the available memory.</item>
 				<item>Fixed some issues with formatting of agent using expressions as target, and display of character and string constants in context tool.</item>
 				<item>Fixed issue where tools that have been externally docked were not properly restored when reopening EiffelStudio.</item>
-				<item>Fixed issue where one could not remove entries added to the list of external commands.</LI>
+				<item>Fixed issue where one could not remove entries added to the list of external commands.</item>
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
@@ -80,17 +80,6 @@
 					<item>Fixed a bug in feature <code><feature_name>is_equal</feature_name></code> that caused stack overflow when some array item is the array itself and <code><feature_name>object_comparision</feature_name></code> is <code><keyword>true</keyword></code>.</item>
 				</list>
 			</item>
-			<item><class_name>STRING</class_name>:
-				<list ordered="false">
-					<item>Changed signature of <feature_name>infix "+"</feature_name> to match ELKS specification. It now returns <code><keyword>like Current</keyword></code> instead of <class_name>STRING</class_name>.</item>
-					<item>Added implementation query <feature_name>new_string</feature_name>. Descendants of <class_name>STRING</class_name> may need to update their inheritance clause.</item>
-					<item>Fixed a bug in .NET implementation of feature <code><feature_name>replace_substring</feature_name></code> that might produce incorrect result when argument and target of the call is the same object.</item>
-					<item>Merged .NET and classic implementation of STRING so that all features of STRING are now properly implemented for both platforms.</item>
-					<item>Fixed <feature_name>center_justify</feature_name> that would corrupt memory on classic.</item>
-					<item>Changed <feature_name>character_justify</feature_name>, <feature_name>left_justify</feature_name>, <feature_name>right_justify</feature_name> and <feature_name>center_justify</feature_name> so that justification is now done on <feature_name>count</feature_name> instead of <feature_name>capacity</feature_name>. You might expect different results after upgrading, thus check all callers of those routines.</item>
-					<item>Added <feature_name>is_case_insenstive_equal</feature_name> to compare two strings regardless of their case.</item>
-				</list>
-			</item>
 			<item><class_name>ARRAYED_LIST</class_name>:
 				<list ordered="false">
 					<item>Removed <feature_name>array_valid_index</feature_name> from <class_name>ARRAYED_LIST</class_name>. Descendants of <class_name>ARRAYED_LIST</class_name> may need to update their inheritance clause. This fixes ability to use <feature_name>put_i_th</feature_name> with indexes that may violate the invariant of <class_name>ARRAYED_LIST</class_name>, for example the code below should trigger a precondition and not violate the invariant of <class_name>ARRAYED_LIST</class_name>:
@@ -107,6 +96,24 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 					<item>Now <feature_name>remove</feature_name> will reset <feature_name>found_item</feature_name> when an element is removed.</item>
 				</list>
 			</item>
+			<item><class_name>INTERNAL</class_name>:
+				<list ordered="false">
+					<item>Implemented all the routines in the .NET version.</item>
+					<item>Added precondition to <feature_name>set_reference_field</feature_name> from <class_name>INTERNAL</class_name> to ensure validity of reattachement to attributes.</item>
+				</list>
+			</item>
+			<item><class_name>STRING</class_name>:
+				<list ordered="false">
+					<item>Changed signature of <feature_name>infix "+"</feature_name> to match ELKS specification. It now returns <code><keyword>like Current</keyword></code> instead of <class_name>STRING</class_name>.</item>
+					<item>Added implementation query <feature_name>new_string</feature_name>. Descendants of <class_name>STRING</class_name> may need to update their inheritance clause.</item>
+					<item>Fixed a bug in .NET implementation of feature <code><feature_name>replace_substring</feature_name></code> that might produce incorrect result when argument and target of the call is the same object.</item>
+					<item>Merged .NET and classic implementation of STRING so that all features of STRING are now properly implemented for both platforms.</item>
+					<item>Fixed <feature_name>center_justify</feature_name> that would corrupt memory on classic.</item>
+					<item>Changed <feature_name>character_justify</feature_name>, <feature_name>left_justify</feature_name>, <feature_name>right_justify</feature_name> and <feature_name>center_justify</feature_name> so that justification is now done on <feature_name>count</feature_name> instead of <feature_name>capacity</feature_name>. You might expect different results after upgrading, thus check all callers of those routines.</item>
+					<item>Added <feature_name>is_case_insenstive_equal</feature_name> to compare two strings regardless of their case.</item>
+					<item>Rewrote routines <feature_name>is_integer</feature_name>, <feature_name>is_real</feature_name>, <feature_name>is_double</feature_name>, <feature_name>to_integer</feature_name>, <feature_name>to_real</feature_name> and <feature_name>to_double</feature_name> so that they do not rely on C externals. This could breeak some existing code relying on specific locale to read floating numbers.</item>
+				</list>
+			</item>
 			<item>Changed behavior of <feature_name>item</feature_name> and <feature_name>eval</feature_name> in <class_name>FUNCTION</class_name>. They will not set <feature_name>last_result</feature_name> with their result. If you want to use <feature_name>last_result</feature_name> you should use <feature_name>call</feature_name> instead.</item>
 			<item>Added new set of classes <class_name>NATURAL_8</class_name>, <class_name>NATURAL_16</class_name>, <class_name>NATURAL_32</class_name> and <class_name>NATURAL_64</class_name> to perform unsigned integer operations.</item>
 			<item>Made implementations of <feature_name>cursor</feature_name> in descendants of <class_name>CURSOR_STRUCTURE</class_name> return a precise <class_name>CURSOR</class_name> type.</item>
@@ -116,7 +123,6 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 			<item>Implemented features <feature_name>collect</feature_name> and <feature_name>full_collect</feature_name> of class <class_name>MEMORY</class_name> for .NET.</item>
 			<item>Changed type of feature <feature_name>sign</feature_name> in classes <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> to <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> respectively.</item>
 			<item>Added a subcluster <cluster_name>refactoring</cluster_name> with classes that can be helpful for performing code refactoring.</item>
-			<item>Added precondition to <feature_name>set_reference_field</feature_name> from <class_name>INTERNAL</class_name> to ensure validity of reattachement to attributes.</item>
 		</list>
 		<heading><size>3</size>EiffelThread</heading>
 		<list ordered="false">

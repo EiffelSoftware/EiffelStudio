@@ -20,16 +20,13 @@
 				</Component>
 				<?if $(var.EDITION)="free" ?>
 					<Merge Id="ec" Language="1033" src="MSMs\ec_free.msm" DiskId="1" />
-					<Merge Id="build" Language="1033" src="MSMs\build_free.msm" DiskId="1" />
 				<?elseif $(var.EDITION)="university" ?>
-					<Merge Id="build" Language="1033" src="MSMs\build_enterprise.msm" DiskId="1" />
 					<Merge Id="ec" Language="1033" src="MSMs\ec_university.msm" DiskId="1" />
-					<Merge Id="eiffel_com" Language="1033" src="MSMs\eiffel_com.msm" DiskId="1" />
 				<?else?>
-					<Merge Id="build" Language="1033" src="MSMs\build_enterprise.msm" DiskId="1" />
 					<Merge Id="ec" Language="1033" src="MSMs\ec_enterprise.msm" DiskId="1" />
-					<Merge Id="eiffel_com" Language="1033" src="MSMs\eiffel_com.msm" DiskId="1" />
 				<?endif?>
+				<Merge Id="eiffel_com" Language="1033" src="MSMs\eiffel_com.msm" DiskId="1" />
+				<Merge Id="build" Language="1033" src="MSMs\build.msm" DiskId="1" />
 				<Merge Id="base_libraries" Language="1033" src="MSMs\base_libraries.msm" DiskId="1" />
 				<Merge Id="borland" Language="1033" src="MSMs\borland.msm" DiskId="1" />
 				<Merge Id="c_library" Language="1033" src="MSMs\c_library.msm" DiskId="1" />
@@ -69,11 +66,9 @@
 				<MergeRef Id="studio_core" />
 			</Feature>
 
-			<?if $(var.EDITION)!="free" ?>
-				<Feature Id="EiffelCOM" Title="EiffelCOM" TypicalDefault="install" Level="3" Display="hidden">
-					<MergeRef Id="eiffel_com" />
-				</Feature>
-			<?endif?>
+			<Feature Id="EiffelCOM" Title="EiffelCOM" TypicalDefault="install" Level="3" Display="hidden">
+				<MergeRef Id="eiffel_com" />
+			</Feature>
 
 			<Feature Id="FreeAddOns" Title="Free Additional libraries" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="free_add_ons" />

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="$(var.ISE_MODULE_NAME)" Guid="925B6F83-D534-4335-A8D1-D030B4DA753E" Language="0" Version="5.6">
-		<Package Id="925B6F83-D534-4335-A8D1-D030B4DA753E" Keywords="MergeModule, MSI, Database" Description="$(var.ISE_PRODUCT_NAME)" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" />
+	<Module Id="build" Guid="925B6F83-D534-4335-A8D1-D030B4DA753E" Language="0" Version="5.6">
+		<Package Id="925B6F83-D534-4335-A8D1-D030B4DA753E" Keywords="MergeModule, MSI, Database" Description="EiffelBuild" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" />
 	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Component Id="Registry" Guid="AE44C028-98E2-41B0-A2B5-5B359D6C13A0" Win64="$(var.IsWin64)" >
@@ -173,7 +173,7 @@
 						<Directory Id="windows_dir" Name="$(env.ISE_PLATFORM)">
 							<Directory Id="bin" Name="bin">
 								<Component Id="build.exe" Guid="B3A0FDED-6F1D-4C86-A3E5-F9F145373FED">
-									<File Id="build.exe" Name="build.exe" KeyPath="yes" src="$(env.INSTALL_DIR)\releases\$(var.ISE_RELEASE)\build.exe">
+									<File Id="build.exe" Name="build.exe" >
 										<Shortcut Id="build.exe" Directory="EiffelStudio" Name="build.exe" LongName="EiffelBuild" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
 									</File>
 								</Component>

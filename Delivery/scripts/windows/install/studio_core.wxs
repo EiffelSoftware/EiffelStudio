@@ -335,24 +335,12 @@
 						<Directory Id="png" Name="png">
 							<Component Id="png" Guid="4D7056EF-5B56-496D-B220-A0908F975A18">
 								<File Id="activation.png" Name="ACTIVA~1.PNG" LongName="activation.png" />
-								<File Id="breakpoint_icon_matrix_png" Name="BREAKP~1.PNG" LongName="breakpoint_icon_matrix.png" />
 								<File Id="bm_About.png" Name="bm_About.png" />
 								<File Id="bm_wizard_blue.png" Name="BM_WIZ~1.PNG" LongName="bm_wizard_blue.png" />
 								<File Id="bm_wizard_profiler_icon.png" Name="BM_WIZ~2.PNG" LongName="bm_wizard_profiler_icon.png" />
-								<File Id="bon_deferred.png" Name="BON_DE~1.PNG" LongName="bon_deferred.png" />
-								<File Id="bon_effective.png" Name="BON_EF~1.PNG" LongName="bon_effective.png" />
-								<File Id="bon_interfaced.png" Name="BON_IN~1.PNG" LongName="bon_interfaced.png" />
-								<File Id="bon_persistent.png" Name="BON_PE~1.PNG" LongName="bon_persistent.png" />
 								<File Id="borland_logo.png" Name="BORLAN~1.PNG" LongName="borland_logo.png" />
-								<File Id="header_open.png" Name="HEADER~3.PNG" LongName="header_open.png" />
-								<File Id="header_open_highlight.png" Name="HEADER~4.PNG" LongName="header_open_highlight.png" />
+								<File Id="breakpoint_icon_matrix_png" Name="BREAKP~1.PNG" LongName="breakpoint_icon_matrix.png" />
 								<File Id="icon_anchor.png" Name="ICON_A~1.PNG" LongName="icon_anchor.png" />
-								<File Id="icon_bon_deferred.png" Name="ICON_B~3.PNG" LongName="icon_bon_deferred.png" />
-								<File Id="icon_bon_effective.png" Name="ICON_B~4.PNG" LongName="icon_bon_effective.png" />
-								<File Id="icon_bon_interfaced.png" Name="IC1294~1.PNG" LongName="icon_bon_interfaced.png" />
-								<File Id="icon_bon_persistent.png" Name="ICF704~1.PNG" LongName="icon_bon_persistent.png" />
-								<File Id="icon_close_color.png" Name="ICE840~1.PNG" LongName="icon_close_color.png" />
-								<File Id="icon_dbg_error_png" Name="ICON_D~3.PNG" LongName="icon_dbg_error.png" />
 								<File Id="icon_degree_minus_1.png" Name="ICF329~1.PNG" LongName="icon_degree-1.png" />
 								<File Id="icon_degree_minus_2.png" Name="ICF729~1.PNG" LongName="icon_degree-2.png" />
 								<File Id="icon_degree_minus_3.png" Name="ICFB29~1.PNG" LongName="icon_degree-3.png" />
@@ -363,54 +351,29 @@
 								<File Id="icon_degree4.png" Name="ICA131~1.PNG" LongName="icon_degree4.png" />
 								<File Id="icon_degree5.png" Name="ICA135~1.PNG" LongName="icon_degree5.png" />
 								<File Id="icon_degree6.png" Name="ICB139~1.PNG" LongName="icon_degree6.png" />
-								<File Id="icon_delete_very_small_color.png" Name="IC00E3~1.PNG" LongName="icon_delete_very_small_color.png" />
 								<File Id="icon_display_cluster_color.png" Name="ICON_D~1.PNG" LongName="icon_display_cluster_color.png" />
 								<File Id="icon_display_legend_color.png" Name="ICON_D~2.PNG" LongName="icon_display_legend_color.png" />
-								<File Id="icon_down_triangle.png" Name="IC84F3~1.PNG" LongName="icon_down_triangle.png" />
-								<File Id="icon_edit_expression_color.png" Name="ICON_E~2.PNG" LongName="icon_edit_expression_color.png" />
-								<File Id="icon_expand_string_color.png" Name="IC4D7E~1.PNG" LongName="icon_expand_string_color.png" />
-								<File Id="icon_favorites_text_color.png" Name="ICON_F~3.PNG" LongName="icon_favorites_text_color.png" />
-								<File Id="icon_features_text_color.png" Name="ICF547~1.PNG" LongName="icon_features_text_color.png" />
-								<File Id="icon_fit_to_screen_color.png" Name="ICON_F~1.PNG" LongName="icon_fit_to_screen_color.png" />
+								<File Id="icon_favorites_text_color.png" Name="ICON_F~1.PNG" LongName="icon_favorites_text_color.png" />
+								<File Id="icon_features_text_color.png" Name="ICON_F~2.PNG" LongName="icon_features_text_color.png" />
+								<File Id="icon_fit_to_screen_color.png" Name="ICON_F~3.PNG" LongName="icon_fit_to_screen_color.png" />
 								<File Id="icon_folders_color.png" Name="IC4531~1.PNG" LongName="icon_folders_color.png" />
 								<File Id="icon_global_search_color.png" Name="ICON_G~1.PNG" LongName="icon_global_search_color.png" />
-								<File Id="icon_maximize_color.png" Name="ICON_M~1.PNG" LongName="icon_maximize_color.png" />
-								<File Id="icon_minimize_color.png" Name="ICD00A~1.PNG" LongName="icon_minimize_color.png" />
-								<File Id="icon_mini_back_color.png" Name="ICON_M~2.PNG" LongName="icon_mini_back_color.png" />
-								<File Id="icon_mini_down_color_png" Name="ICON_M~3.PNG" LongName="icon_mini_down_color.png" />
-								<File Id="icon_mini_forth_color.png" Name="ICON_M~4.PNG" LongName="icon_mini_forth_color.png" />
-								<File Id="icon_mini_up_color.png" Name="IC4783~1.PNG" LongName="icon_mini_up_color.png" />
-								<File Id="icon_new_class_small_color.png" Name="ICON_N~4.PNG" LongName="icon_new_class_small_color.png" />
-								<File Id="icon_new_cluster_small_color.png" Name="IC359A~1.PNG" LongName="icon_new_cluster_small_color.png" />
-								<File Id="icon_new_expression_color.png" Name="IC9FFA~1.PNG" LongName="icon_new_expression_color.png" />
-								<File Id="icon_new_feature_small_color.png" Name="ICE3CF~1.PNG" LongName="icon_new_feature_small_color.png" />
-								<File Id="icon_new_small_color.png" Name="IC5909~1.PNG" LongName="icon_new_small_color.png" />
-								<File Id="icon_nothing.png" Name="IC9C4B~1.PNG" LongName="icon_nothing.png" />
-								<File Id="icon_numeric_format.png1" Name="IC5D1C~1.PNG" LongName="icon_numeric_format_very_small_color.png" />
-								<File Id="icon_on_off_very_small_color.png" Name="ICA322~1.PNG" LongName="icon_on_off_very_small_color.png" />
-								<File Id="icon_open_menu_small_color_png" Name="ICON_O~2.PNG" LongName="icon_open_menu_small_color.png" />
+								<File Id="icon_matrix_8.png" Name="ICON_M~3.PNG" LongName="icon_matrix_8.png" />
+								<File Id="icon_matrix_12.png" Name="ICON_M~1.PNG" LongName="icon_matrix_12.png" />
+								<File Id="icon_matrix_16.png" Name="ICON_M~2.PNG" LongName="icon_matrix_16.png" />
 								<File Id="icon_open_project.png" Name="ICON_O~4.PNG" LongName="icon_open_project.png" />
 								<File Id="icon_pin_closed_color.png" Name="ICON_P~1.PNG" LongName="icon_pin_closed_color.png" />
 								<File Id="icon_pin_open_color.png" Name="ICCD2F~1.PNG" LongName="icon_pin_open_color.png" />
 								<File Id="icon_preferences_folder.png" Name="ICON_P~3.PNG" LongName="icon_preferences_folder.png" />
 								<File Id="icon_preferences_root.png" Name="ICON_P~4.PNG" LongName="icon_preferences_root.png" />
 								<File Id="icon_preference_window.png" Name="ICON_P~2.PNG" LongName="icon_preference_window.png" />
-								<File Id="icon_pretty_print_8.png" Name="IC2217~1.PNG" LongName="icon_pretty_print_8.png" />
 								<File Id="icon_remove_anchor_color.png" Name="ICON_R~1.PNG" LongName="icon_remove_anchor_color.png" />
 								<File Id="icon_reset_view_color.png" Name="ICON_R~2.PNG" LongName="icon_reset_view_color.png" />
-								<File Id="icon_restore_color.png" Name="IC0818~1.PNG" LongName="icon_restore_color.png" />
-								<File Id="icon_save_call_stack_color.png" Name="ICON_S~1.PNG" LongName="icon_save_call_stack_color.png" />
-								<File Id="icon_set_stack_depth_color.png" Name="IC8468~1.PNG" LongName="icon_set_stack_depth_color.png" />
-								<File Id="icon_slice_limits_vsmall_color.png" Name="IC0E02~1.PNG" LongName="icon_slice_limits_vsmall_color.png" />
-								<File Id="icon_toggle_alias_vsmall_color_png" Name="ICON_T~3.PNG" LongName="icon_toggle_alias_vsmall_color.png" />
-								<File Id="icon_toggle_assigner_vsmall_color_png" Name="ICON_T~5.PNG" LongName="icon_toggle_assigner_vsmall_color.png" />
 								<File Id="icon_toggle_force_color.png" Name="ICON_T~1.PNG" LongName="icon_toggle_force_color.png" />
 								<File Id="icon_toggle_quality_color.png" Name="IC5026~1.PNG" LongName="icon_toggle_quality_color.png" />
-								<File Id="icon_toggle_signature.png1" Name="ICON_T~4.PNG" LongName="icon_toggle_signature_vsmall_color.png" />
 								<File Id="icon_tool_color.png" Name="ICON_T~2.PNG" LongName="icon_tool_color.png" />
 								<File Id="icon_uml_color.png" Name="ICON_U~3.PNG" LongName="icon_uml_color.png" />
 								<File Id="icon_view_measure_color.png" Name="ICON_V~1.PNG" LongName="icon_view_measure_color.png" />
-								<File Id="icon_view_small_color.png" Name="ICON_V~4.PNG" LongName="icon_view_small_color.png" />
 								<File Id="icon_windows_text_color.png" Name="ICON_W~2.PNG" LongName="icon_windows_text_color.png" />
 								<File Id="icon_wizard_ace_project.png" Name="ICON_W~3.PNG" LongName="icon_wizard_ace_project.png" />
 								<File Id="icon_wizard_blank_project.png" Name="ICON_W~4.PNG" LongName="icon_wizard_blank_project.png" />
@@ -418,37 +381,11 @@
 								<File Id="isepower.png" Name="isepower.png" />
 								<File Id="logo.png" Name="logo.png" />
 								<File Id="projicon.png" Name="projicon.png" />
-								<File Id="studio_icon_matrix.png" Name="STUDIO~1.PNG" LongName="studio_icon_matrix.png" />
 							</Component>
 						</Directory>
 						<Directory Id="cursor" Name="cursor">
 							<Component Id="cursor" Guid="92FC9A43-713E-4C3F-B345-6DA66513A309">
-								<File Id="class.png" Name="class.png" />
-								<File Id="class_list.png" Name="CLASS_~1.PNG" LongName="class_list.png" />
-								<File Id="clientlnk.png19" Name="CLIENT~2.PNG" LongName="clientlnk.png" />
-								<File Id="closed_hand.png" Name="CLOSED~1.PNG" LongName="closed_hand.png" />
-								<File Id="cluster.png45" Name="cluster.png" />
-								<File Id="copy_selection.png" Name="COPY_S~1.PNG" LongName="copy_selection.png" />
-								<File Id="cut_selection.png" Name="CUT_SE~1.PNG" LongName="cut_selection.png" />
-								<File Id="favorites_folder.png13" Name="FAVORI~2.PNG" LongName="favorites_folder.png" />
-								<File Id="feature.png" Name="feature.png" />
-								<File Id="hourglass.png" Name="HOURGL~1.PNG" LongName="hourglass.png" />
-								<File Id="inheritlnk.png18" Name="INHERI~2.PNG" LongName="inheritlnk.png" />
-								<File Id="interro.png" Name="interro.png" />
-								<File Id="object.png53" Name="object.png" />
-								<File Id="open_hand.png" Name="OPEN_H~1.PNG" LongName="open_hand.png" />
-								<File Id="stopexec.png" Name="stopexec.png" />
-								<File Id="studio_cursor_matrix.png" Name="STUDIO~1.PNG" LongName="studio_cursor_matrix.png" />
-								<File Id="Xclass.png28" Name="Xclass.png" />
-								<File Id="Xclass_list.png" Name="XCLASS~1.PNG" LongName="Xclass_list.png" />
-								<File Id="Xclientlnk.png41" Name="XCLIEN~2.PNG" LongName="Xclientlnk.png" />
-								<File Id="Xcluster.png52" Name="Xcluster.png" />
-								<File Id="Xfavorites_folder.png17" Name="XFAVOR~2.PNG" LongName="Xfavorites_folder.png" />
-								<File Id="Xfeature.png40" Name="Xfeature.png" />
-								<File Id="Xinheritlnk.png" Name="XINHER~1.PNG" LongName="Xinheritlnk.png" />
-								<File Id="Xinterro.png37" Name="Xinterro.png" />
-								<File Id="Xobject.png" Name="Xobject.png" />
-								<File Id="Xstopexec.png34" Name="XSTOPE~2.PNG" LongName="Xstopexec.png" />
+								<File Id="studio_cursor_matrix_png" Name="STUDIO~1.PNG" LongName="studio_cursor_matrix.png" />
 							</Component>
 						</Directory>
 					</Directory>

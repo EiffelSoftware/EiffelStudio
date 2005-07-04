@@ -672,13 +672,13 @@ feature -- Plug and Makefile file
 
 			buffer.put_string ("%N%Tegc_system_name = %"")
 			buffer.put_string (System.name)
-			buffer.put_string ("%";%N%Tegc_system_location = %"")
+			buffer.put_string ("%";%N%Tegc_system_location = ")
 			if context.final_mode then
-				buffer.escape_string (Final_generation_path)
+				buffer.put_string_literal (Final_generation_path)
 			else
-				buffer.escape_string (Workbench_generation_path)
+				buffer.put_string_literal (Workbench_generation_path)
 			end
-			buffer.put_string ("%";%N%Tegc_compiler_tag = ")
+			buffer.put_string (";%N%Tegc_compiler_tag = ")
 			buffer.put_integer (System.version_tag)
 			buffer.put_string (";%N%Tegc_project_version = ")
 			buffer.put_integer (System.project_creation_time)

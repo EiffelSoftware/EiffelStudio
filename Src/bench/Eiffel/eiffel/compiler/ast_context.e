@@ -136,19 +136,9 @@ feature -- Setting
 			i: INTEGER
 			arguments: FEAT_ARG
 			rout_id: INTEGER
-			escaped: STRING
 		do
 				-- Name
-			if current_feature.is_infix or current_feature.is_prefix then
-				create escaped.make (current_feature.feature_name.count + 5)
-				(create {STRING_CONVERTER}).escape_string (escaped, current_feature.feature_name)
-				Names_heap.put (escaped)
-				byte_code.set_escaped_feature_name_id (Names_heap.found_item)
-			else
-				byte_code.set_escaped_feature_name_id (current_feature.feature_name_id)
-			end
 			byte_code.set_feature_name_id (current_feature.feature_name_id)
-
 				-- Feature id
 			byte_code.set_body_index (current_feature.body_index)
 				-- Result type if any

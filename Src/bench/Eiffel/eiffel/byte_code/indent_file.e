@@ -40,11 +40,13 @@ feature {NONE} -- Initialization
 			tmp: GENERATION_BUFFER
 		do
 			make_open_write (fn)
-			put_string ("#line 2 %"")
-			create tmp.make (fn.count * 2)
-			tmp.escape_string (fn)
+			put_string ("#line 2 ")
+				-- In worst case all letters are escaped as \nnn.
+				-- The string is then surrounded by double quotes.
+			create tmp.make (fn.count * 4 + 2)
+			tmp.put_indivisible_string_literal (fn)
 			tmp.put_in_file (Current)
-			put_string ("%"%N")
+			put_string ("%N")
 		end
 
 feature

@@ -8,13 +8,8 @@ inherit
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
-		end;
-		
-	STRING_CONVERTER
-		export
-			{NONE} all
 		end
-
+		
 feature
 
 	renamings: HASH_TABLE [STRING, STRING];
@@ -40,11 +35,6 @@ feature
 			Result := feat.feature_name;
 			if renamings /= Void and then renamings.has (Result) then
 				Result := renamings.found_item
-			else
-				if feat.is_prefix or feat.is_infix then
-					create Result.make (Result.count + 2)
-					escape_string (Result, feat.feature_name)
-				end
 			end;
 		end;
 

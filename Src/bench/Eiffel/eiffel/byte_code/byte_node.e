@@ -58,9 +58,8 @@ feature -- Eiffel source line information
 				l_buffer := buffer
 				l_buffer.put_string ("%N#line ")
 				l_buffer.put_integer (line_number)
-				l_buffer.put_string (" %"")
-				l_buffer.escape_string (Context.associated_class.lace_class.base_name)
-				l_buffer.put_string ("%"")
+				l_buffer.put_character (' ')
+				l_buffer.put_indivisible_string_literal (Context.associated_class.lace_class.base_name)
 				l_buffer.put_new_line
 			end
 		end

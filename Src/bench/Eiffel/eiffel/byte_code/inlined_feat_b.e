@@ -203,7 +203,7 @@ feature -- Generation
 			buf.put_new_line;
 
 			buf.put_string ("/* INLINED CODE (");
-			buf.put_string (escaped_feature_name);
+			buf.put_string (feature_name);
 			buf.put_string (") */");
 			buf.put_new_line;
 

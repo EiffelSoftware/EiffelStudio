@@ -87,18 +87,6 @@ feature -- Access
 			feature_name_not_empty: not Result.is_empty
 		end
 
-	escaped_feature_name: STRING is
-			-- Final name of feature with escape for C code generation
-		local
-			l_string_converter: STRING_CONVERTER
-		do
-			create l_string_converter
-			Result := l_string_converter.escaped_string (feature_name)
-		ensure
-			feature_name_not_void: Result /= Void
-			feature_name_not_empty: not Result.is_empty
-		end
-
 	alias_name: STRING is
 			-- Alias name of feature (if any).
 		do

@@ -71,62 +71,62 @@ cluster
 			"CVS"; "EIFGEN"; "Documentation"; "libraries"
 		end
 		
-	all preferences:	"$EIFFEL_SRC\library\preferences"
+	all preferences:	"$EIFFEL_SRC/library/preferences"
 		exclude
 			"xml_implementation"; "CVS"; "EIFGEN"; "Documentation";
 		end	
 		
-	 all gobo_xml:		"$EIFFEL_SRC\library\gobo\library\xml"
+	 all gobo_xml:		"$EIFFEL_SRC/library/gobo/library/xml"
 		exclude
 			"expat"; "xslt"; "CVS"; "EIFGEN"; "Documentation";
 		end
 		
-	all gobo_structure:		"$EIFFEL_SRC\library\gobo\library\structure"
+	all gobo_structure:		"$EIFFEL_SRC/library/gobo/library/structure"
 		exclude
 			"CVS"; "EIFGEN"; "Documentation";
 		end
 		
-	all gobo_kernel:		"$EIFFEL_SRC\library\gobo\library\kernel"
+	all gobo_kernel:		"$EIFFEL_SRC/library/gobo/library/kernel"
 		exclude
 					"hact"; "se"; "ve"; "base"; "other"; "CVS"; "EIFGEN"; "Documentation";
 		end
 		
-	all gobo_math:		"$EIFFEL_SRC\library\gobo\library\math"	
+	all gobo_math:		"$EIFFEL_SRC/library/gobo/library/math"	
 		exclude
 			"hact"; "se"; "ve"; "base"; "other"; "CVS"; "EIFGEN"; "Documentation";
 		end
 		
-	all gobo_string:		"$EIFFEL_SRC\library\gobo\library\string"
+	all gobo_string:		"$EIFFEL_SRC/library/gobo/library/string"
 		exclude
 			"formatter"; "CVS"; "EIFGEN"; "Documentation";
 		end
 		
-	all gobo_regexp:		"$EIFFEL_SRC\library\gobo\library\regexp"
+	all gobo_regexp:		"$EIFFEL_SRC/library/gobo/library/regexp"
 		exclude
 			"CVS"; "EIFGEN"; "Documentation";
 		end
 	
-	all gobo_utility:		"$EIFFEL_SRC\library\gobo\library\utility"
+	all gobo_utility:		"$EIFFEL_SRC/library/gobo/library/utility"
 		exclude
 			"ut_file_uri_routines.e"; "ut_shared_file_uri_routines.e"; "command"; "CVS"; "EIFGEN"; "Documentation";
 		end
 	
-	all gobo_time:		"$EIFFEL_SRC\library\gobo\library\time"
+	all gobo_time:		"$EIFFEL_SRC/library/gobo/library/time"
 		exclude
 			"format"; "time_zone"; "CVS"; "EIFGEN"; "Documentation";
 		end
 		
-	all gobo_lexical:		"$EIFFEL_SRC\library\gobo\library\lexical"
+	all gobo_lexical:		"$EIFFEL_SRC/library/gobo/library/lexical"
 		exclude
 			"regexp"; "lex"; "CVS"; "EIFGEN"; "Documentation";
 		end
 	
-	all gobo_parse:		"$EIFFEL_SRC\library\gobo\library\parse"
+	all gobo_parse:		"$EIFFEL_SRC/library/gobo/library/parse"
 		exclude
 			"generation"; "parser"; "CVS"; "EIFGEN"; "Documentation";
 		end
 	
-	all gobo_pattern:		"$EIFFEL_SRC\library\gobo\library\pattern"
+	all gobo_pattern:		"$EIFFEL_SRC/library/gobo/library/pattern"
 		exclude
 			"CVS"; "EIFGEN"; "Documentation";
 		end

@@ -10,7 +10,18 @@ indexing
 class BREAKPOINT
 
 inherit
+
+	DEBUG_OUTPUT
+		redefine
+			is_equal
+		end
+
 	HASHABLE
+		redefine
+			is_equal
+		end
+		
+	E_FEATURE_COMPARER		
 		redefine
 			is_equal
 		end
@@ -39,6 +50,31 @@ feature -- Creation
 		rescue
 			is_corrupted := True
 			retry
+		end
+
+feature -- debug output
+
+	debug_output: STRING is
+		local
+			lcl: CLASS_C
+		do
+			Result := "{"
+			lcl := routine.associated_class
+			if lcl /= Void then
+				Result.append_string (lcl.name_in_upper)
+			else
+				Result.append_string ("???")
+			end
+			Result.append_string ("}.")
+			if routine /= Void then
+				Result.append_string (routine.name)
+			else
+				Result.append_string ("???")
+			end
+			Result.append_string (" [" + breakable_line_number.out + "] ")
+			if condition /= Void then
+				Result.append_string (" (*) ")
+			end
 		end
 
 feature -- Properties
@@ -105,6 +141,7 @@ feature -- Access
 			Result := 	not is_corrupted and routine /= Void
 						and then routine.written_class /= Void 
 						and then routine.is_debuggable
+						and then same_feature (routine, routine.associated_class.feature_with_rout_id (routine.rout_id_set.first))
 		end
 
 	is_set: BOOLEAN is

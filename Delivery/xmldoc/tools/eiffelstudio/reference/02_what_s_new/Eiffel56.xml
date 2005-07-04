@@ -99,7 +99,8 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 			<item><class_name>INTERNAL</class_name>:
 				<list ordered="false">
 					<item>Implemented all the routines in the .NET version.</item>
-					<item>Added precondition to <feature_name>set_reference_field</feature_name> from <class_name>INTERNAL</class_name> to ensure validity of reattachement to attributes.</item>
+					<item>Added support for creating <class_name>TUPLE</class_name> types in <feature_name>dynamic_type_from_string</feature_name>.</item>
+					<item>Added precondition to <feature_name>set_reference_field</feature_name> to ensure validity of reattachement to attributes.</item>
 				</list>
 			</item>
 			<item><class_name>STRING</class_name>:

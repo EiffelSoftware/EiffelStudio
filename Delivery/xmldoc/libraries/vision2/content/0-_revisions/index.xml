@@ -120,7 +120,7 @@
 					<item><bold>EV_WINDOW</bold>
 						<list orderd="false">
 							<item>Fixed `screen_x' and `screen_y' so that they return the same value as `x_position' and `y_position'.</item>
-							<item>Fixed issue where `move_actions' were called with incorrect positions (before the given positions were the one from the child of the window, not the window itself.</item>
+							<item>Fixed issue where `move_actions' were called with incorrect positions (before the given positions were the one from the child of the window, not the window itself).</item>
 						</list>
 					</item>
 					<item>

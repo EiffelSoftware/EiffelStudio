@@ -260,7 +260,7 @@ feature -- Basic element change
 		end
 
 	put_string_literal (s: STRING) is
-			-- Append string literal `s'.
+			-- Append string literal `s' breaking it into several chunks if required.
 		require
 			s_not_void: s /= Void
 		local
@@ -298,19 +298,19 @@ feature -- Basic element change
 				exdent
 			else
 					-- Put string in one chunk
-				put_character ('"')
-				escape_string (s)
-				put_character ('"')
+				put_indivisible_string_literal (s)
 			end
 		end
 
-	escape_string (s: STRING) is
-			-- Append escaped version of `s'.
+	put_indivisible_string_literal (s: STRING) is
+			-- Append string literal `s' without breaking it into chunks.
 		require
 			s_not_void: s /= Void
 		do
+			put_character ('"')
 			string_converter.escape_string (current_buffer, s)
-		end
+			put_character ('"')
+		end	
 
 	escape_char (c: CHARACTER) is
 			-- Append `c' with C escape sequences.

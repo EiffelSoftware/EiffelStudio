@@ -11,8 +11,7 @@ inherit
 		rename
 			feature_id as attribute_id,
 			feature_name_id as attribute_name_id,
-			feature_name as attribute_name,
-			escaped_feature_name as escaped_attribute_name
+			feature_name as attribute_name
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
 			make_end_assignment, make_end_reverse_assignment,

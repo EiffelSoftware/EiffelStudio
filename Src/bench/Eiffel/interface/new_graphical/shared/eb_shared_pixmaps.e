@@ -69,6 +69,11 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_preference_window")
 		end
 
+	Icon_open_exception_dialog: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_open_exception_dialog")
+		end
+
 	Icon_format_feature_homonyms: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_format_feature_homonyms_color")
@@ -1297,7 +1302,7 @@ feature {NONE} -- Implementation
 			Result.put ([7, 11], "icon_open_file_color")
 			Result.put ([7, 12], "icon_past_color")
 			Result.put ([7, 13], "icon_preference_window")
-			Result.put ([7, 14], "icon_pretty_print_16")
+			Result.put ([7, 14], "icon_open_exception_dialog")
 			Result.put ([7, 15], "icon_print_color")
 			Result.put ([7, 16], "icon_profiler_window")
 			Result.put ([8, 1], "icon_progress_dialog")

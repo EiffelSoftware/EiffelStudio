@@ -8,6 +8,13 @@
 				<url>../../../../../images/eiffelstudio/icons/icon_bkpt_info_color.gif</url>
 			</image> ), displays the list of all set breakpoints in the system (enabled or disabled).
 		</paragraph>
+
+		<paragraph><alignment>center</alignment>
+			<image>
+				<url>../../../../../images/eiffelstudio/debugger/breakpoints_list.png</url>
+			</image>
+		</paragraph>		
+		Note: the * shows that the breakpoint has a <link><url>40_conditional_breakpoints.xml</url><label>condition</label></link>.		
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/> 

@@ -14,17 +14,25 @@
 				<url>/images/eiffelstudio/debugger/expression_evaluation_tool.png</url>
 			</image>
 		</paragraph>
-		<paragraph>Its first column gives the context in which the 
+		<paragraph>Its first column gives the expression's text, the context's column gives the context in which the 
 			<link>
 				<url>20_new_expression_dialog.xml</url>
 				<label>expression</label>
-			</link> is evaluated. Its second column gives the expression itself, as it was entered by the user. The last column gives the result of the expression.
+			</link> is evaluated. The value's column gives the result of the expression, and the type's column the result's type of the expression..
 		</paragraph>
+		
+		<paragraph>In the screenshot, you can see various expressions, the 4th one, is a dropped object, and the debugger displayed it as itself, this is shown by the context's value "As object", and also by the italic style. The user can name the dropped object by editing the "expression" cell. This is useful to remember the origin of the value.
+		</paragraph>
+		<paragraph>The 5th expression has an error, the icon is different, and the 'value' shows  there is an error, double click on it for more details
+		</paragraph>
+
+		
 		<tip>
-			<bold>Tip</bold>: If the expression returns a non-Void object, then the corresponding row in the list is pickable, and can be dropped for example in the object tool to inspect its state.
+			<bold>Tip</bold>: If the expression returns a non-Void (and non basic type) object, then the corresponding row in the list is pickable, and can be dropped for example in the Watch tool to evaluate expression on it, or even to keep the object over the steppings.
 		</tip>
 		<paragraph>On top of the list, four buttons can be found.</paragraph>
 		<list ordered="false">
+			<item>the first button is used to create/close watch tools via a menu popup</item>
 			<item>
 				<image>
 					<height>8</height>
@@ -56,12 +64,47 @@
 				<image>
 					<height>8</height>
 					<width>8</width>
+					<url>/images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
+				</image> set the slice limits of dropped <class_name>SPECIAL</class_name> or <class_name>NATIVE_ARRAY</class_name> objects.
+				<line_break/>
+			</item>			
+			<item>
+				<image>
+					<height>8</height>
+					<width>8</width>
+					<url>/images/eiffelstudio/icons/icon_numeric_format_very_small_color.png</url>
+				</image> Toggle format display of numeric between decimal and hexadecimal format.
+				<line_break/>
+			</item>			
+			<item>
+				<image>
+					<height>8</height>
+					<width>8</width>
+					<url>/images/eiffelstudio/icons/icon_expand_string_color.gif</url>
+				</image> This command can give an 
+						<link>
+							<url>25_expanded_display_tool.xml</url>
+							<label>expanded display</label>
+						</link> 			
+						 of the string relative to an object, by dropping the object onto the button (or pressing Ctrl+E on the selected value). 
+						 Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
+				<line_break/>
+			</item>			
+
+			<item>
+				<image>
+					<height>8</height>
+					<width>8</width>
 					<url>/images/eiffelstudio/icons/icon_delete_very_small_color.gif</url>
 				</image> removes the selected expressions from the list.
 				<line_break/> The associated key shortcut is Del.
 			</item>
+			<item>And the last two buttons are used to move up and down the expressions</item>
 		</list>
 		<tip>
-			<bold>Tip</bold>: Dropping an object onto this list lets you define quickly an expression whose context is the dropped object. This avoids having to type object addresses manually.
+			<bold>Tip</bold>: 
+			Dropping an object onto this list lets you define quickly an expression whose context is the dropped object. This avoids having to type object addresses manually.
+			<line_break></line_break>
+			If you press the [Control] key during the dropping, you will add the dropped object as itself.
 		</tip>
 	</paragraph></document>

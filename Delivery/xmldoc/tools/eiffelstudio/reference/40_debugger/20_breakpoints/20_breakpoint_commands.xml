@@ -24,5 +24,8 @@
 				<label>drop</label>
 			</link> a feature or a class onto them, in which case only set breakpoints of the feature/class will be affected.
 		</paragraph>
+		
 		<paragraph>Note that these commands work only on set breakpoints (that is, enabled or disabled breakpoints). Therefore, discarded breakpoints cannot be set again thanks to these commands.</paragraph>
-	</paragraph></document>
+	</paragraph>		
+		
+</document>

@@ -7,7 +7,7 @@
 			</image>
 		</paragraph>
 		<paragraph>The object tool is a debugging tool that displays extended dynamic information concerning one or several objects while debugging an application. This information includes the value of all their attributes, as well as the values of the once functions that have already been called.</paragraph>
-		<paragraph>It is mainly composed of two trees, the 
+		<paragraph>It is mainly composed of two grids (with tree view), the 
 			<link>
 				<url>05_local_view.xml</url>
 				<label>local view</label>
@@ -40,7 +40,8 @@
 				<url>25_expanded_display_tool.xml</url>
 				<label>expanded display</label>
 			</link> 			
-			 of the string relative to an object, by dropping the object onto the button. Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
+			 of the string relative to an object, by dropping the object onto the button (or pressing Ctrl+E on the selected value). 
+			 Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
 </paragraph><paragraph>
 			And the last command 
 			<image>

@@ -1294,7 +1294,6 @@ feature -- Skeleton generation
 	generate_skeleton2 (buffer: GENERATION_BUFFER) is
 			-- Generate skeleton of Current class type
 		local
-			upper_class_name: STRING
 			skeleton_empty: BOOLEAN
 			a_class: CLASS_C
 			creation_feature: FEATURE_I
@@ -1305,10 +1304,9 @@ feature -- Skeleton generation
 			skeleton_empty := skeleton.empty
 			buffer.put_string ("{%N(long) ")
 			buffer.put_integer (skeleton.count)
-			buffer.put_string (",%N%"")
-			upper_class_name := a_class.name
-			buffer.put_string (upper_class_name)
-			buffer.put_string ("%",%N")
+			buffer.put_string (",%N")
+			buffer.put_string_literal (a_class.name)
+			buffer.put_string (",%N")
 			if not skeleton_empty then
 				buffer.put_string ("names")
 				buffer.put_integer (type_id)

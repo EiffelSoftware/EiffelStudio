@@ -156,9 +156,7 @@ feature {NONE} -- C code generation
 				if cl_name = Void then
 					buffer.put_string ("(char *) 0")
 				else
-					buffer.put_character ('"')
-					buffer.put_string (cl_name)
-					buffer.put_character ('"')
+					buffer.put_string_literal (cl_name)
 				end
 				buffer.put_string (",%N")
 				i := i + 1

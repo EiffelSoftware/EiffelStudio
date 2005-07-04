@@ -88,9 +88,8 @@ feature
 			end;
 			buf.put_string (gc_comma);
 			if is_nested then
-				buf.put_character ('"');
-				buf.put_string (escaped_attribute_name);
-				buf.put_string ("%", ");
+				buf.put_string_literal (attribute_name)
+				buf.put_string (gc_comma);
 				reg.print_register;
 			else
 				context.generate_current_dtype;

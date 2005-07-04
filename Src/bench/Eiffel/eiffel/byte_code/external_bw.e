@@ -131,9 +131,8 @@ feature -- Code generation
 					context.generate_current_dtype
 				end
 			elseif need_invariant then
-				buf.put_character ('"')
-				buf.put_string (escaped_feature_name)
-				buf.put_string ("%", ")
+				buf.put_string_literal (feature_name)
+				buf.put_string (gc_comma)
 				reg.print_register
 			else
 				buf.put_string (gc_upper_dtype_lparan)

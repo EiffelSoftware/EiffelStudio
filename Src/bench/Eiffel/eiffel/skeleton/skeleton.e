@@ -1024,8 +1024,8 @@ feature -- Skeleton byte code
 			i, nb: INTEGER
 		do
 			buffer := generation_buffer
-			buffer.put_character ('{');
-			buffer.put_new_line;
+			buffer.put_character ('{')
+			buffer.put_new_line
 			from
 				current_area := area
 				i := 0
@@ -1033,13 +1033,12 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				buffer.put_character ('"');
-				buffer.escape_string (current_area.item (i).attribute_name);
-				buffer.put_string ("%",%N");
-				i := i + 1;
-			end;
-			buffer.put_string ("};%N%N");
-		end;
+				buffer.put_string_literal (current_area.item (i).attribute_name)
+				buffer.put_string (",%N")
+				i := i + 1
+			end
+			buffer.put_string ("};%N%N")
+		end
 
 	generate_type_array is
 			-- Generate static C array of attributes type codes in the

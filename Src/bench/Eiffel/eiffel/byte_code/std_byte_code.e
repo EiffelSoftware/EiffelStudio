@@ -1410,9 +1410,9 @@ end
 		do
 			buf := buffer
 			buf.put_string (macro_name)
-			buf.put_string ("(%"")
-			buf.put_string (escaped_feature_name)
-			buf.put_string ("%", ")
+			buf.put_character ('(')
+			buf.put_string_literal (feature_name)
+			buf.put_string (gc_comma)
 			feature_origin (buf)
 			buf.put_string (gc_comma)
 			buf.put_string (" dtype")
@@ -1429,9 +1429,9 @@ end
 		do
 			buf := buffer
 			buf.put_string (macro_name)
-			buf.put_string ("(%"")
-			buf.put_string (escaped_feature_name)
-			buf.put_string ("%", ")
+			buf.put_character ('(')
+			buf.put_string_literal (feature_name)
+			buf.put_string (gc_comma)
 			feature_origin (buf)
 			buf.put_string (gc_comma)
 			context.Current_register.print_register

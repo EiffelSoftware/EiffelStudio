@@ -114,9 +114,9 @@ feature
 
 			buffer.put_integer (l_type_id);
 
-			buffer.put_string (" = {%"")
-			buffer.put_string (classname)
-			buffer.put_string ("%", ptf")
+			buffer.put_string (" = {")
+			buffer.put_string_literal (classname)
+			buffer.put_string (", ptf")
 
 			buffer.put_integer (l_type_id);
 

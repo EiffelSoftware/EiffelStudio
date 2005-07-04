@@ -6,11 +6,11 @@
 				<url>/images/eiffelstudio/debugger/object_tree.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The second tree in the 
+		<paragraph>The second grid in the 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>object tool</label>
-			</link> gives information about objects. By default, the first object in the object view is the object corresponding to the 
+			</link> gives information about Current object and dropped objects. By default, the first object in the object view is the object corresponding to the 
 			<link>
 				<url>../30_call_stack_tool/00_introduction.xml</url>
 				<label>current stack element</label>
@@ -28,10 +28,11 @@
 			<link>
 				<url>../../../../../tools/eiffelstudio/reference/05_general_interface_description/10_general_interface_mechanisms/10_pick_and_drop.xml</url>
 				<label>pickable</label>
-			</link>, so that it is possible to drop them onto an editor, to inspect the class the object belongs to. It is also possible to use the 
+			</link>, so that it is possible to drop them onto a an expression evaluator tool (alias Watch tool), or an editor to inspect the class the object belongs to. It is also possible to use the 
 			<link>
 				<url>20_slice_size_command.xml</url>
 				<label>set slice size command</label>
-			</link> with <link><url>/libraries/base/reference/kernel/classic/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects.
+			</link> with <link><url>/libraries/base/reference/kernel/classic/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects or <class_name>NATIVE_ARRAY</class_name> objects.
 		</paragraph>
+		<tip><bold>Tip</bold>: You can use the <link><url>../50_expression_evaluation/index.xml</url><label>expression evaluator tools</label></link> (alias watch tools) to have the same features with even more functionalities</tip>
 	</paragraph></document>

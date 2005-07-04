@@ -25,6 +25,8 @@
 			</link>.
 			<line_break/>
 		</paragraph>
+		<warning><bold>Caution</bold>: if you enter an expression that is not supported or which raises an error during evaluation, by default the condition is considered as True (then the debugger will stop)
+		</warning>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>

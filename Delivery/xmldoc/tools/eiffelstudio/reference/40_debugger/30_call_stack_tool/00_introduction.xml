@@ -32,7 +32,7 @@
 				<link>
 					<url>20_current_level_information.xml</url>
 					<label>Information concerning the current call stack element</label>
-				</link> is displayed in the feature tab and the locals view.
+				</link> is displayed in the feature tab, the locals view, and is used to provide the expressions evaluations contained in the <link><label>Expression evaluator tool</label><url>../50_expression_evaluation/10_expression_list.xml</url></link>.
 			</item>
 		</list>
 	</paragraph></document>

@@ -6,7 +6,7 @@
 				<url>/images/eiffelstudio/debugger/locals_tree.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The first tree in the 
+		<paragraph>The first grid in the 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>object tool</label>
@@ -20,17 +20,21 @@
 			<link>
 				<url>10_object_view.xml</url>
 				<label>object view</label>
-			</link> or an editor. It is also possible to use the 
+			</link> ,  an  
+			<link>
+				<url>../50_expression_evaluation/index.xml</url>
+				<label>expression evaluator tool</label>
+			</link> (alias Watch tools), or an editor. It is also possible to use the 
 			<link>
 				<url>20_slice_size_command.xml</url>
 				<label>set slice size command</label>
-			</link> with <link><url>/libraries/base/reference/kernel/classic/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects.
+			</link> with <link><url>/libraries/base/reference/kernel/classic/special_chart.xml</url><label><class_name>SPECIAL</class_name></label></link> objects or <class_name>NATIVE_ARRAY</class_name> (dotnet) objects.
 		</paragraph>
 	<paragraph>
 	<paragraph><bold>Specific case for .NET system :</bold></paragraph>
-	<paragraph>When the system is stopped, the first tree item of the local tree view displays the module name for the feature where we are stopped.</paragraph>
-		<paragraph>When an exception occurs (for instance, an assertion violation), the local tree will also display the exception information :
-		<paragraph>
+	<paragraph>When the system is stopped, the first item of the local view displays the module name for the feature where we are stopped.</paragraph>
+		<paragraph>When an exception occurs (for instance, an assertion violation), the local view will also display the exception information :
+		<paragraph><alignment>center</alignment>
 			<image>
 				<url>/images/eiffelstudio/debugger/locals_tree_dotnet_exception.png</url>
 			</image>

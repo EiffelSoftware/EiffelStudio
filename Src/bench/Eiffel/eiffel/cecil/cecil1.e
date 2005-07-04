@@ -175,9 +175,7 @@ end;
 				if str = Void then
 					buffer.put_string ("(char *) 0")
 				else
-					buffer.put_character ('"')
-					buffer.put_string (str)
-					buffer.put_string ("%"")
+					buffer.put_string_literal (str)
 				end
 				buffer.put_string (",%N")
 				i := i + 1

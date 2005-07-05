@@ -411,8 +411,6 @@ end
 				end
 				request_columns_auto_resizing
 			end
-		ensure
-			item_computed: Result /= Void or else item (c, r) /= Void
 		end
 
 feature {NONE} -- column resizing

@@ -37,7 +37,7 @@ feature -- Query
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-			dobj := debugged_object (addr, 0, 1)
+			dobj := debugged_object (addr, 0, 0)
 			Result := dobj.class_type
 		end
 
@@ -47,7 +47,7 @@ feature -- Query
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-			dobj := debugged_object (addr, 0, 1)
+			dobj := debugged_object (addr, 0, 0)
 			Result := dobj.dtype
 		end
 
@@ -77,7 +77,7 @@ feature -- Query
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-			dobj := debugged_object (addr, 0, 1)
+			dobj := debugged_object (addr, 0, 0)
 			Result := dobj.is_special
 		end
 
@@ -88,7 +88,7 @@ feature -- Query
 			dobj: DEBUGGED_OBJECT
 			lst: DS_LIST [ABSTRACT_DEBUG_VALUE]
 		do
-			dobj := debugged_object (addr, 0, 1)
+			dobj := debugged_object (addr, 0, 0)
 			lst := dobj.sorted_attributes
 			Result := lst /= Void and then not lst.is_empty
 		end
@@ -99,7 +99,7 @@ feature -- Query
 		local
 			dobj: DEBUGGED_OBJECT
 		do
-			dobj := debugged_object (addr, 0, 1)
+			dobj := debugged_object (addr, 0, 0)
 			Result := dobj.capacity
 		end
 
@@ -134,7 +134,7 @@ feature -- debugged object creation
 			last_sp_upper := sp_upper		
 		end
 		
-	caching_enabled: BOOLEAN is False
+	caching_enabled: BOOLEAN is True
 
 	debugged_object (addr: STRING; sp_lower, sp_upper: INTEGER): DEBUGGED_OBJECT is
 		require

@@ -73,8 +73,7 @@ feature {NONE} -- Initialization
 			-- Here initialize editor contextual settings.  For example, set location of cursor pixmaps.
 		do
 			create syntax_files_path.make_from_string ((create {EIFFEL_ENV}).syntax_path)
-			editor_cursors.set_editor_installation_dir_name ((create {EIFFEL_ENV}).cursor_path)			
-			icons.set_editor_installation_dir_name ((create {EIFFEL_ENV}).bitmaps_path)			
+			set_cursors (create {EB_EDITOR_CURSORS})
 		end	
 
 	register_documents is

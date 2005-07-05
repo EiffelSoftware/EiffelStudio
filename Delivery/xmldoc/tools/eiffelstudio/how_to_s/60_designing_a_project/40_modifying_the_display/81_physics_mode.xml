@@ -1,0 +1,23 @@
+<document title="Turn on Physics Mode" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Diagram,Physics</meta_content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<list ordered="false">
+			<item>You can turn on and off physics to the diagram by pressing the physics mode button 
+				<image><url>../../../../../images/eiffelstudio/icons/icon_toggle_force_color.png</url></image>
+			</item>
+		</list>
+		<tip>
+			<bold>Tip</bold>: The particular configuration of the classes in your system when using the physics mode is determined by the various settings in the  
+			<link>
+				<url>81_physics_mode.xm</url>
+				<label>Physics Setting Dialog</label>
+			</link>.
+		</tip>
+	</paragraph></document>

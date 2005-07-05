@@ -19,10 +19,11 @@
 			</item>
 			<item>A color selection dialog appears. Select the color you want and click 
 				<bold>OK</bold>.
-				<line_break/>
-				<image>
-					<url>/images/eiffelstudio/dialogs_and_wizards/color-dialog-windows.png</url>
-				</image>
+				<paragraph>
+					<image>
+						<url>/images/eiffelstudio/dialogs_and_wizards/color-dialog-windows.png</url>
+					</image>
+				</paragraph>
 			</item>
 		</list>
 	</paragraph></document>

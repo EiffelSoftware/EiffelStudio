@@ -29,7 +29,7 @@
 				</row>
 				<row>
 					<cell><class_name>ARRAY_PREFERENCE</class_name></cell>
-					<cell><class_name>STRING_PREFERENCE_WIDGET</class_name></cell>
+					<cell><class_name>STRING_PREFERENCE_WIDGET</class_name> or <class_name>CHOICE_PREFERENCE_WIDGET</class_name></cell>
 				</row>
 				<row>
 					<cell><class_name>COLOR_PREFERENCE</class_name></cell>

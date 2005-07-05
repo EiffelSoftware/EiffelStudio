@@ -372,7 +372,7 @@ feature -- Concrete evaluation
 
 	attributes_list_from_object (a_addr: STRING): DS_LIST [ABSTRACT_DEBUG_VALUE] is
 		do
-			Result := Debugged_object_manager.attributes_at_address (a_addr, 0, 1)
+			Result := Debugged_object_manager.attributes_at_address (a_addr, 0, 0)
 		end
 
 	class_type_from_object (a_addr: STRING): CLASS_TYPE is

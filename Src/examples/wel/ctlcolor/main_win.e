@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 			paint_dc.set_text_color (frgnd_ctlcolor)
 			paint_dc.set_background_color (bkgnd_ctlcolor)
 			create brush.make_solid (bkgnd_ctlcolor)
-			set_message_return_value (brush.to_integer)
+			set_message_return_value (brush.item)
 			disable_default_processing
 		end
 

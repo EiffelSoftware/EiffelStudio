@@ -222,10 +222,6 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 			Result := editor_preferences.selection_background_color
 		end
 
-	Left_margin_width: INTEGER is 14
-			-- Width between the border and the beginning of the text.
-			-- In this space, one can find EDITOR_BREAKPOINT_TOKENs.
-
 feature -- Implementation of clickable and editable text
 
 	is_text: BOOLEAN is

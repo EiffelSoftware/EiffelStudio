@@ -116,6 +116,7 @@ feature
 				end
 
 				if reason /= Pg_new_breakpoint then
+					need_to_resend_bp := True
 					need_to_stop := True
 					if reason = Pg_break then
 						l_status.current_call_stack.extend (create {CALL_STACK_ELEMENT_CLASSIC}.dummy_make (name, 1, True, offset, address, dyn_type - 1, org_type - 1))

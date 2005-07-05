@@ -588,7 +588,7 @@ feature {NONE} -- Layout Implementation
 			end
 		ensure
 			debugged_objects_grid_cleaned: debugged_objects_grid_empty	
-			stack_objects_grid_clear_timer_destroyed: stack_objects_grid_clear_timer = Void
+			debugged_objects_grid_clear_timer_destroyed: debugged_objects_grid_clear_timer = Void
 		end
 
 	debugged_objects_grid_clear_timer: EV_TIMEOUT

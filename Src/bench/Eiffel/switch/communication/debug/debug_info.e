@@ -144,7 +144,7 @@ feature -- global
 			loop
 				bp := breakpoints.item_for_iteration
 				if bp.is_not_usefull or bp.is_corrupted then
-					breakpoints.remove(bp)
+					breakpoints.remove (bp)
 					breakpoints.start
 				else
 					breakpoints.forth
@@ -821,8 +821,8 @@ feature -- changing a specified breakpoint
 
 feature -- getting the status of a specified breakpoint	
 
-	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
-			-- Condition of breakpoint located at (`f', `i').
+	breakpoint (f: E_FEATURE; i: INTEGER): BREAKPOINT is
+			-- Breakpoint located at (`f', `i').
 		require
 			valid_breakpoint: is_breakpoint_set (f, i)
 		local
@@ -836,10 +836,23 @@ feature -- getting the status of a specified breakpoint
 					-- is the breakpoint known ?
 				if breakpoints.has (bp) then
 						-- yes, the breakpoint is already known, so remove its condition.
-					Result := breakpoints.found_item.condition
+					Result := breakpoints.found_item
 				end
 			else
 				error_in_bkpts := True
+			end
+		end
+
+	condition (f: E_FEATURE; i: INTEGER): EB_EXPRESSION is
+			-- Condition of breakpoint located at (`f', `i').
+		require
+			valid_breakpoint: is_breakpoint_set (f, i)
+		local
+			bp: BREAKPOINT
+		do
+			bp := breakpoint (f, i)
+			if bp /= Void then
+				Result := bp.condition
 			end
 		end
 

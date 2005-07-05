@@ -34,7 +34,7 @@ feature -- Access
 		require
 			index_in_range: 1 <= i and i <= last
 		do
-			create Result.make_by_compact_date (item_array (i))
+			create Result.make_by_ordered_compact_date (item_array (i))
 		end
 
 	last: INTEGER
@@ -48,7 +48,7 @@ feature -- Element change
 			exists: d /= Void
 		do
 			last := last + 1
-			force (d.compact_date, last)
+			force (d.ordered_compact_date, last)
 		ensure
 			inserted: equal (item (last), d)
 		end

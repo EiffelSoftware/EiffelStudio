@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (full_name)
+			a_cs := full_name
 			c_object := {EV_GTK_EXTERNALS}.gdk_font_load (a_cs.item)
 		end
 

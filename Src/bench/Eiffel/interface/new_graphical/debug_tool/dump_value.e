@@ -811,7 +811,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		end
 
 	classic_feature_result_value_on_current (a_feat: FEATURE_I; a_compiled_class: CLASS_C): DUMP_VALUE is
-			-- Evaluation of DEBUG_OUTPUT.debug_output: STRING on object related to Current	
+			-- Evaluation of `a_feat': STRING on object related to Current
 		local
 			l_dbg_val: ABSTRACT_DEBUG_VALUE
 			l_dbg_obj: DEBUGGED_OBJECT_CLASSIC
@@ -1102,6 +1102,8 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER,
 	is_type_string        : BOOLEAN is do Result := type = Type_string end
 --	is_type_string_dotnet : BOOLEAN is do Result := type = Type_string_dotnet end
 --	is_type_integer_64    : BOOLEAN is do Result := type = Type_integer_64 end
+
+	is_type_expanded      : BOOLEAN is do Result := type = Type_expanded_object end
 
 feature {NONE} -- Private Constants
 	

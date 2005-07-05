@@ -39,9 +39,7 @@
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
-				<item>Fixed a memory leak with the `estudio' process when conditional breakpoints are enabled.</item>
-				<item>Improved speed of execution when conditional breakpoints are enabled (about 20 times faster).</item>
-				<item>Fixed a bug where after killing a debugged process, the debugger could not be launched anymore.</item>
+				<item>Click <link><url>../40_debugger/80_version_history/Eiffel56.xml</url><label>here</label></link> for the EiffelStudio's debugger release notes.</item>
 			</list>
 		<heading><size>2</size>EiffelBuild</heading>
 			<list ordered="false">

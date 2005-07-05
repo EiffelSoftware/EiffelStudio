@@ -31,6 +31,12 @@
 		<paragraph><alignment>center</alignment>
 		<image><url>../../../../../images/eiffelstudio/debugger/exception_dialog.png</url></image>
 		</paragraph>
+		<paragraph>On dotnet system, when more than one thread is available to the debugger, you can switch from one to the other , for that you have to click on the thread's id "0x000..." and select from the popup list of available threads.
+		<paragraph>
+			<alignment>center</alignment>
+			<image><url>../../../../../images/eiffelstudio/debugger/call_stack_tool_with_threads.png</url></image>
+		</paragraph>
+		</paragraph>
 			
 		<paragraph>In the toolbar, the button gives the possibility to 
 			<link>

@@ -46,7 +46,7 @@ feature -- Status Setting
 feature {NONE} -- Implementation
 		
 	update_resource is
-			-- 
+			-- Updates resource.
 		do
 		end		
 
@@ -81,7 +81,9 @@ feature {NONE} -- Implementation
 			-- Actual resource.	
 	
 	combobox: EV_GRID_COMBO_ITEM
+			-- Combo widget for changing value.
 	
 	last_selected_value: BOOLEAN
+			-- Last selected value in the combo widget.
 	
 end -- class BOOLEAN_PREFERENCE_WIDGET

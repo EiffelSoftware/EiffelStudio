@@ -42,6 +42,7 @@ feature -- Access
 			-- Value last selected by user.
 
 	change_item_widget: EV_GRID_LABEL_ITEM
+			-- Font change label.
 	
 feature {PREFERENCE_VIEW} -- Commands
 
@@ -109,7 +110,7 @@ feature {NONE} -- Implementation
 		end
 		
 	show_change_item_widget is
-			-- 
+			-- Show the font change dialog.
 		do
 			change			
 		end		

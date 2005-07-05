@@ -39,8 +39,10 @@ feature -- Access
 			-- Actual resource.
 
 	last_selected_value: EV_COLOR
+			-- The last selected value in the choice dialog.
 
 	change_item_widget: EV_GRID_DRAWABLE_ITEM
+			-- Color change item widget.
 
 feature {PREFERENCE_VIEW} -- Commands
 
@@ -74,7 +76,7 @@ feature {NONE} -- Commands
 		end
 		
 	update_resource is
-			-- 
+			-- Updates resource.
 		do
 			if last_selected_value /= Void then
 				resource.set_value (last_selected_value)
@@ -82,7 +84,7 @@ feature {NONE} -- Commands
 		end		
 
 	show is
-			-- Show the widget in its editable state
+			-- Show the widget in its editable state.
 		do
 			show_change_item_widget
 		end
@@ -96,28 +98,10 @@ feature {NONE} -- Implementation
 			change_item_widget.expose_actions.extend (agent on_color_item_exposed (?))
 			change_item_widget.set_data (resource)			
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
-			change_item_widget.pointer_button_press_actions.extend (agent pointer_pressed)
-		end
-
-	pointer_pressed (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
-			-- 
-		local
-			l_width, l_height: INTEGER			
-		do
-			l_width := change_item_widget.width
-			l_height := change_item_widget.height
-			if
-				x > (l_width - 20) and then
-				x < l_width and then
-				y > 2 and then
-				y < (l_height - 4)
-			then
-				print ("in,")
-			end
-		end		
+		end	
 
 	show_change_item_widget is
-			-- 
+			-- Show the change color dialog.
 		do
 			change
 			if last_selected_value /= Void then

@@ -1,7 +1,6 @@
 indexing
 	description	: "[
-		Default widget for viewing and editing resources represented in string
-		format (i.e. STRING, INTEGER and ARRAY resources).
+		Default widget for viewing and editing ARRAY resources for which there must be only one selected value.
 		]"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -119,13 +118,6 @@ feature {NONE} -- Implementation
 				change_item_widget.combo_box.focus_out_actions.block
 				change_item_widget.combo_box.disable_edit
 				change_item_widget.combo_box.focus_out_actions.resume
---				change_item_widget.combo_box.select_actions.block
---				if resource.value then
---					change_item_widget.combo_box.i_th (1).enable_select		
---				else
---					change_item_widget.combo_box.i_th (2).enable_select	
---				end			
---				change_item_widget.combo_box.select_actions.resume
 				change_item_widget.combo_box.set_focus
 			end
 		end

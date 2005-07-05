@@ -30,7 +30,7 @@ indexing
 			   the last one to mention it takes precedence.
 					
 			Once preferences they may be modified programmatically or through an user interface conforming
-			to PREFERENCE_VIEW. A default interface is provided in PREFERENCES_TREE_WINDOW. You may implement
+			to PREFERENCE_VIEW. A default interface is provided in PREFERENCES_WINDOW. You may implement
 			your own style interface by implementing PREFERENCE_VIEW.
 			
 			You may also add your own application specific resources by implementing PREFERENCE, and may

@@ -235,7 +235,12 @@ feature -- Concrete evaluation
 			dump: DUMP_VALUE
 			l_address: STRING
 		do
-			l_address := a_addr
+			if a_target /= Void then
+				l_address := a_target.address
+			end
+			if l_address = Void then
+				l_address := a_addr
+			end
 			if l_address = Void then
 					--| cannot evaluate attribute on manifest value
 					--| (such as "foo", 1 or True .. in the expression)
@@ -263,7 +268,7 @@ feature -- Concrete evaluation
 --				result_object := a_target
 --				result_static_type := a_target.dynamic_class
 			else
-				notify_error_evaluation ("Cannot evaluate an attribute ["+ f.name+"] of a manifest value")
+				notify_error_evaluation ("Cannot evaluate an attribute ["+ f.name+"] of a expanded value")
 			end
 		end
 
@@ -300,6 +305,8 @@ feature -- Concrete evaluation
 			end
 			if l_dynclass /= Void and then l_dynclass.is_basic then
 				l_dyntype := associated_reference_class_type (l_dynclass)
+			elseif l_dynclass /= Void and then l_dynclass.types.count = 1 then
+				l_dyntype := l_dynclass.types.first
 			elseif l_dynclass = Void or else l_dynclass.types.count > 1 then
 				if a_addr /= Void then
 						-- The type has generic derivations: we need to find the precise type.
@@ -311,7 +318,7 @@ feature -- Concrete evaluation
 					end
 				else
 						--| Shouldn't happen: basic types are not generic.
-					notify_error_evaluation ("Cannot find complete dynamic type of a basic type")
+					notify_error_evaluation ("Cannot find complete dynamic type of a expanded type")
 				end
 			else
 				l_dyntype := l_dynclass.types.first

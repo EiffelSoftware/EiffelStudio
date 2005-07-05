@@ -315,7 +315,7 @@ feature {NONE} -- Events handling
 				if not choice_list.selected_rows.is_empty then
 					prev_item_index := choice_list.selected_rows.first.index
 				else	
-					prev_item_index := 0			
+					prev_item_index := 0
 				end				
 			end			
 		end
@@ -333,7 +333,9 @@ feature {NONE} -- Events handling
 					editor.handle_character (c)					
 					create c_name.make_with_name (buffered_input)
 					select_closest_match					
-				elseif not editor.unwanted_characters.has (c) then					
+				elseif c = ' ' and ev_application.ctrl_pressed then
+						-- Do nothing, we don't want to close the completion window when CTRL+SPACE is pressed
+				elseif not editor.unwanted_characters.has (c) then
 					close_and_complete
 					if not editor.has_selection then
 							-- Don't want to add character over first argument

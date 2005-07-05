@@ -37,21 +37,17 @@ feature -- Creation
 				extract_substrings (s, pos1, pos2)
 				pos2 := abs (pos2)
 				substrg.to_lower
-				if substrg = "pm" or substrg = "am" then
-					pos1 := s.count + 1
-				else
-					if substrg.count > 0 then
-						create code.make (substrg)
-						value.put (code, i)
-						i := i + 1
-					end
-					if substrg2.count > 0 then
-						value.put (create {DATE_TIME_CODE}.make (substrg2), i)
-						i := i + 1
-						separators_used := True
-					end
-					pos1 := pos2 + 1
+				if substrg.count > 0 then
+					create code.make (substrg)
+					value.put (code, i)
+					i := i + 1
 				end
+				if substrg2.count > 0 then
+					value.put (create {DATE_TIME_CODE}.make (substrg2), i)
+					i := i + 1
+					separators_used := True
+				end
+				pos1 := pos2 + 1
 			end
 			base_century := (create {C_DATE}).year_now // 100 * -100
 				-- A negative value of `base_century' indicates that it has
@@ -174,44 +170,39 @@ feature -- Interface
 				end
 				extract_substrings (s, pos1, pos2)
 				pos2 := abs (pos2)
-				if substrg.is_equal ("PM") or substrg.is_equal ("AM") then
-					pos1 := s.count + 1
-					am_pm_index := pos1
-					pos1 := pos2 + 1
+				if code = Void then
+					Result := false
 				else
-					if code /= Void then
-						if substrg.count > 0 then
-							Result := substrg.count <= code.count_max and 
-							substrg.count >= code.count_min
-							if code.is_numeric then
-								Result := Result and substrg.is_integer
-								if code.value_max /= -1 and 
-									code.value_min /= -1 then
-									Result := Result and 
-										substrg.to_integer <= code.value_max and
-										substrg.to_integer >= code.value_min
-								end
-							else
-								if code.is_day_text (code.value) then 
-									Result := Result and days.has (substrg)
-								else
-									Result := Result and months.has (substrg)
-								end
+					if substrg.count > 0 then
+						Result := substrg.count <= code.count_max and 
+						substrg.count >= code.count_min
+						if code.is_numeric then
+							Result := Result and substrg.is_integer
+							if code.value_max /= -1 and 
+								code.value_min /= -1 then
+								Result := Result and 
+									substrg.to_integer <= code.value_max and
+									substrg.to_integer >= code.value_min
 							end
-							i := i + 1
+						elseif code.is_meridiem (code.value) then
+							Result := Result and (substrg.as_upper.is_equal ("AM") or
+								substrg.as_upper.is_equal ("PM"))
+						elseif code.is_day_text (code.value) then 
+							Result := Result and days.has (substrg)
+						elseif code.is_month_text (code.value) then
+							Result := Result and months.has (substrg)
 						end
-						if has_seps then
-							code := value.item (i)
-							i := i + 1
-							if code /= Void then
-								Result := Result and (pos2 /= s.count) and 
-									substrg2.is_equal (code.value)
-							end
-						end
-						pos1 := pos2 + 1
-					else
-						Result := False
+						i := i + 1
 					end
+					if has_seps then
+						code := value.item (i)
+						i := i + 1
+						if code /= Void then
+							Result := Result and (pos2 /= s.count) and 
+								substrg2.is_equal (code.value)
+						end
+					end
+					pos1 := pos2 + 1
 				end
 			end
 		end	
@@ -225,11 +216,9 @@ feature -- Interface
 			time: TIME
 			int, i, type: INTEGER
 			double: DOUBLE
-			am_pm: STRING
 			l_tmp: STRING
 		do
 			create Result.make (1)
-			am_pm := ""
 			date := date_time.date
 			time := date_time.time
 			from 
@@ -296,18 +285,20 @@ feature -- Interface
 						Result.append ("0")
 					end
 					Result.append (int.out)
-				when 11 then
+				when 11, 24 then
 					int := time.hour
 					if int < 12 then
-						am_pm := " AM"
 						if int = 0 then
 							int := 12
 						end
 					else
-						am_pm := " PM"
 						if int /= 12 then 
 							int := int - 12
 						end
+					end
+					if type = 24 and then int < 10 then
+							-- Format padded with 0.
+						Result.append ("0")
 					end
 					Result.append (int.out)
 				when 12 then 
@@ -331,15 +322,17 @@ feature -- Interface
 						10 ^ (value.item (i).count_max)
 					int := double.truncated_to_integer
 					Result.append (int.out)
+				when 23 then
+					int := time.hour
+					if int < 12 then
+						Result.append ("AM")
+					else
+						Result.append ("PM")
+					end
 				else
 					Result.append (value.item (i).value)
 				end
-			i := i + 1
-			end
-			if am_pm_index /= 0 then
-				Result.insert_string (am_pm, am_pm_index - 1)
-			else
-				Result.append (am_pm)
+				i := i + 1
 			end
 		ensure
 			string_exists: Result /= Void
@@ -605,9 +598,6 @@ feature {NONE} -- Implementation
 
 	right_day_text: BOOLEAN
 			-- Is the name of the day the right one?
-
-	am_pm_index: INTEGER 
-			-- Index of the am/pm notation
 
 	build_parser (s: STRING) is
 			-- Build parser from `s'.

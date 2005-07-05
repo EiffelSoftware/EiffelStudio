@@ -464,7 +464,7 @@ feature {NONE} -- Implementation
 							end
 						end
 					else
-						dobj := debugged_object_manager.debugged_object (l_st_addr, 0, 1)
+						dobj := debugged_object_manager.debugged_object (l_st_addr, 0, 0)
 						debug ("DEBUGGER_INTERFACE")
 							io.put_string ("cap: " + dobj.capacity.out + "max: " + dobj.max_capacity.out + "%N")
 						end

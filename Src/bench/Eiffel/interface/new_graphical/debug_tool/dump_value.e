@@ -405,7 +405,7 @@ feature -- Status report
 			debug ("debug_recv")
 				print (generator + ".to_basic%N")
 			end
-			attribs := Debugged_object_manager.attributes_at_address (address, 0, 1)
+			attribs := Debugged_object_manager.attributes_at_address (address, 0, 0)
 			if attribs /= Void then
 				from
 					l_attribs_cursor := attribs.new_cursor
@@ -620,7 +620,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					--| since here only the printable characters matter
 
 				if value_address /= Void then
-					l_attributes := Debugged_object_manager.attributes_at_address (value_address, 1, 1)
+					l_attributes := Debugged_object_manager.attributes_at_address (value_address, 0, 0)
 				end
 				if l_attributes /= Void then
 					from

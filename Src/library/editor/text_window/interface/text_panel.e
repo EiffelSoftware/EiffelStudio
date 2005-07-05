@@ -384,7 +384,7 @@ feature -- File Properties
 feature -- Status setting
 		
 	refresh_line_number_display is
-	        -- Toggle line number display in Current and update display
+	        -- Refresh line number display in Current and update display
 	   	do
 	   	 	if line_numbers_visible and then margin_container.is_empty then
 	   	 		margin_container.put (margin.widget)

@@ -71,7 +71,11 @@ feature {NONE} -- Implementation
 					j > s.count or else (s @ j) /= ch
 				loop
 					j := j + 1
+						-- Ensure the `mi' does not get seen to be a separator
 					if ch = 'm' and then (s @ j) = 'i' then
+						ch := s @ j
+					elseif ch = 'h' and then (s @ j = '1') and (s.valid_index (j + 1) and then s.item (j + 1) = '2') then
+						j := j + 1
 						ch := s @ j
 					end
 				end

@@ -562,7 +562,7 @@ invariant
 	month_large_enough: month >= 1
 	month_small_enough: month <= Months_in_year
 	year_small_enough: year <= 65535
-	year_positive: year > 0
+	year_non_negative: year >= 0
 
 end -- class DATE
 

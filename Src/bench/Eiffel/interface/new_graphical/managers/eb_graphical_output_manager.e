@@ -452,7 +452,9 @@ feature {NONE} -- Implementation
 								else
 									first_bp := False
 								end
-								st.add_breakpoint_index (f, i, Application.has_conditional_stop (f, i))
+								if application.is_breakpoint_set (f, i) then
+									st.add_breakpoint_index (f, i, Application.has_conditional_stop (f, i))
+								end
 								bp_list.forth
 							end
 							st.add_string ("]")

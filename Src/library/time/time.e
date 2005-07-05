@@ -48,10 +48,12 @@ feature -- Initialization
 			set_hour (h)
 			set_minute (m)
 			set_second (s)
+			fractional_second := 0
 		ensure
 			hour_set: hour = h
 			minute_set: minute = m
 			second_set: second = s
+			fractional_second_set: fractional_second = 0
 		end
 
 	make_fine (h, m: INTEGER; s: DOUBLE) is
@@ -64,8 +66,8 @@ feature -- Initialization
 			s_tmp: INTEGER
 		do
 			s_tmp :=  s.truncated_to_integer
-			fractional_second := s - s_tmp
 			make (h, m, s_tmp)
+			fractional_second := s - s_tmp
 		ensure
 			hour_set: hour = h
 			minute_set: minute = m
@@ -106,7 +108,6 @@ feature -- Initialization
 			m := s // Seconds_in_minute
 			s := s - (m * Seconds_in_minute)
 			make (h, m, s)
-			fractional_second := 0
 		ensure
 			seconds_set: seconds = sec
 		end
@@ -120,8 +121,8 @@ feature -- Initialization
 			s: INTEGER
 		do
 			s := sec.truncated_to_integer
-			fractional_second := sec - s
 			make_by_seconds (s)
+			fractional_second := sec - s
 		end
 
 	make_from_string_default (s: STRING) is
@@ -178,7 +179,9 @@ feature -- Comparison
 			l_current := compact_time
 			l_other := other.compact_time
 			Result := (l_current < l_other) or else
-				((l_current = l_other) and (fractional_second < other.fractional_second))
+				((l_current = l_other) and (
+					fractional_second < other.fractional_second and then
+					(other.fractional_second - fractional_second) > 1.0E-10))
 		end
 
 feature -- Measurement

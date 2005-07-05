@@ -1,6 +1,5 @@
 indexing
-	description: "Cursor in EiffelStudio editors"
-	author: "Etienne Amodeo"
+	description: "Cursor in editors"
 	date: "$Date$"
 	revision: "$Revision$"
 

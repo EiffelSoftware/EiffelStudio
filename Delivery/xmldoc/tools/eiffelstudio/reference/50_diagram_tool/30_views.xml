@@ -1,7 +1,7 @@
 <document title="Views" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Every class or cluster has one or more view. Every view shows the 
+		<paragraph>Every class or cluster has one or more views. Every view shows the 
 			<link>
 				<url>40_contexts.xml</url>
 				<label>context</label>

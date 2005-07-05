@@ -77,6 +77,9 @@
 				</link> with replace option activated.
 			</item>
 			<item>
+				Toggle Line Numbers: Show or hide the line numbers in the current editor.
+			</item>
+			<item>
 				<link>
 					<url>./50_search_functionality.xml</url>
 					<label>Search</label>

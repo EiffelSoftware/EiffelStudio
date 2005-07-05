@@ -18,11 +18,12 @@
 			</item>
 			<item>The 
 				<bold>Link tool</bold> appears. Select the type of angle(s) you want for the link.
-				<line_break/>
-				<image>
-					<url>/images/eiffelstudio/diagram/link-tool.png</url>
-				</image>
-				<line_break/> The combinations of handles you can apply to your link are:
+				<paragraph>
+					<image>
+						<url>/images/eiffelstudio/diagram/link-tool.png</url>
+					</image>
+				</paragraph>
+				The combinations of handles you can apply to your link are:
 				<list ordered="false">
 					<item>Put handle left
 						<line_break/>

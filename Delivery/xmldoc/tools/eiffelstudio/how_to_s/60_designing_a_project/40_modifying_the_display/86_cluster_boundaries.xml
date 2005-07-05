@@ -1,0 +1,16 @@
+<document title="Showing and Hiding Cluster Boundaries" output="studio">
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Cluster,Boundaries</meta_content>
+				<name>MS-HKWD</name>
+			</meta>
+		</help>
+	</meta_data>
+	<paragraph>
+		<list ordered="false">
+			<item>You can choose show and hide the dashed cluster boundary lines by pressing the Toggle Cluster Boundary button
+				<image><url>../../../../../images/eiffelstudio/icons/icon_display_cluster_color.gif</url></image>
+			.</item>
+		</list>		
+	</paragraph></document>

@@ -16,16 +16,18 @@
 		<list ordered="true">
 			<item>Start pick-and-drop on the class bubble of which you want to change the name or formal generics.</item>
 			<item>Drop it in the 
-				<bold>Change class name and generics</bold> hole.
+				<bold>Change class name and generics</bold> hole.				
 				<image>
 					<url>/images/eiffelstudio/icons/icon_class_header_color.gif</url>
 				</image>
 			</item>
 			<item>The 
 				<bold>Class header</bold> dialog appears. You can enter a new name and/or formal generics.
-				<image>
-					<url>/images/eiffelstudio/diagram/diagram-classheader.png</url>
-				</image>
+				<paragraph>				
+					<image>
+						<url>/images/eiffelstudio/diagram/diagram-classheader.png</url>
+					</image>
+				</paragraph>
 			</item>
 			<item>If you changed the name, choose between these options:
 				<list ordered="false">

@@ -20,6 +20,14 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+	large_pixmaps: EB_SHARED_PIXMAPS_32 is
+			-- Shared large pixmaps
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
 
 feature -- Pngs
 
@@ -564,11 +572,6 @@ feature -- Icons
 			Result := build_classic_pixmap ("view_measure_plus")
 		end
 
-	Icon_view_measure: ARRAY [EV_PIXMAP] is
-		once
-			Result := build_classic_pixmap ("view_measure")
-		end
-
 	Icon_undo: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
@@ -1101,42 +1104,6 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_red_cross")
 		end
 
-	Icons_progress_degree: ARRAY [EV_PIXMAP] is
-			-- Icons representing a thermometer a different temperatures.
-		local
-			i: INTEGER
-		once
-			create Result.make (-3, 6)
-			from
-				i := -3
-			until
-				i > 6
-			loop
-				Result.put (pixmap_file_content ("icon_degree"+i.out), i)
-				i := i + 1
-			end
-		end
-
-	Icon_wizard_blank_project: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_wizard_blank_project")
-		end
-
-	Icon_wizard_project: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_wizard_project")
-		end
-
-	Icon_wizard_ace_project: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_wizard_ace_project")
-		end
-
-	Icon_open_project: EV_PIXMAP is
-		once
-			Result := pixmap_file_content ("icon_open_project")
-		end
-
 	Icon_print: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("print")
@@ -1379,6 +1346,7 @@ feature {NONE} -- Implementation
 			Result.put ([12,8], "icon_preference_root")
 			Result.put ([12,9], "icon_preference_folder")
 			Result.put ([12,10], "icon_other_feature")
+			Result.put ([12,11], "icon_reset_view_color")
 			Result.compare_objects
 		end
 

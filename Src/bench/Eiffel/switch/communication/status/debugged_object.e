@@ -48,8 +48,10 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
 feature -- Properties
 
-	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE];
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- Attributes of object being inspected (sorted by name)
+		 deferred
+		 end
 
 	is_special: BOOLEAN;
 		-- Is the object being inspected SPECIAL?

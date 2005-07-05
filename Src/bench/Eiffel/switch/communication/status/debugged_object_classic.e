@@ -62,7 +62,7 @@ feature {NONE} -- Creation
 			debug ("debug_recv")
 				print ("DEBUGGED_OBJECT_CLASSIC.make_with_class" + a_class.name_in_upper + "%N")
 			end
-			make (addr, 0, 1)
+			make (addr, 0, 0)
 			check
 				conformance: dtype.simple_conform_to (a_class)
 			end
@@ -92,5 +92,11 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 			capacity := rqst.capacity;
 			max_capacity := rqst.max_capacity
 		end
+		
+feature -- Properties
+
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			-- Attributes of object being inspected (sorted by name)
+		
 
 end

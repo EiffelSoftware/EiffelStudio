@@ -22,20 +22,36 @@ feature -- Resources
 			Result := editor_preferences_cell.item
 		end
 
-	cursors: EDITOR_CURSORS is 
+	cursors: EDITOR_CURSORS
 			-- Editor cursors
-		once
-		    create Result
-		end
 		
-	icons: EDITOR_ICONS is 
+	icons: EDITOR_ICONS
 			-- Editor icons
-		once
-		    create Result
-		end
 		
 	syntax_files_path: DIRECTORY_NAME
 			-- Path containing syntax definition files for highlighting
+			
+feature -- Status Setting
+
+	set_cursors (a_cursors: like cursors) is
+			-- Sets `cursors' with `a_cursors'
+		require
+			a_cursors_not_void: a_cursors /= Void
+		do
+			cursors := a_cursors
+		ensure	
+			cursors_set: cursors = a_cursors
+		end
+
+	set_icons (a_icons: like icons) is
+			-- Sets `icons' with `a_icons'
+		require
+			a_icons_not_void: a_icons /= Void
+		do
+			icons := a_icons
+		ensure	
+			icons_set: icons = a_icons
+		end
 	
 feature -- Query
 

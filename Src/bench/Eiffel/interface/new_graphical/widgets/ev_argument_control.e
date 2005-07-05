@@ -812,7 +812,11 @@ feature {NONE} -- Actions
 				l_row.put_front (l_argument)
 				saved_argument := l_argument
 				if not argument_list.there_exists (agent row_duplicate (?)) then
+					if argument_list.is_empty then
+						argument_list.set_column_width (argument_list.width - 4, 1)
+					end
 					argument_list.extend (l_row)
+					
 					argument_combo.extend (create {EV_LIST_ITEM}.make_with_text (saved_argument))
 					argument_list.last.enable_select
 					argument_combo.last.enable_select

@@ -110,7 +110,7 @@ feature -- Filling
 				-- Get E_FEATURE from `a_feature'.
 			routine := a_feature.e_feature
 				-- Adapt `routine' to `dynamic_class' and handles precursor case.
-			if dynamic_class /= written_class then
+			if dynamic_class /= written_class and then dynamic_class.simple_conform_to (written_class) then
 				l_routine := dynamic_class.feature_with_rout_id (a_feature.rout_id_set.first)
 				if l_routine.written_in = written_class.class_id then
 						-- Not the precursor case.

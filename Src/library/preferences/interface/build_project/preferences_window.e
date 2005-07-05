@@ -28,11 +28,6 @@ inherit
 			copy, default_create
 		end
 		
-	EV_GRID_HELPER
-		undefine
-			copy, default_create
-		end
-		
 create
 	make
 
@@ -625,6 +620,28 @@ feature {NONE} -- Implementation
 			Result.replace_substring_all ("_", " ")
 			Result.replace_substring (Result.item (1).upper.out, 1, 1)
 		end		
+
+	grid_remove_and_clear_all_rows (g: EV_GRID) is
+		require
+			g /= Void
+		local
+			rc: INTEGER
+		do
+			from
+				rc := g.row_count
+			until
+				rc = 0
+			loop
+				g.row (rc).set_data (Void)
+				g.row (rc).clear
+				g.remove_row (rc)
+				rc := g.row_count				
+			end
+			g.clear
+		ensure
+			g.row_count = 0
+			g.selected_rows.count = 0
+		end
 
 feature {NONE} -- Private attributes
 

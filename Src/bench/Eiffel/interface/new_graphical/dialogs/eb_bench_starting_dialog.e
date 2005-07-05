@@ -127,7 +127,7 @@ feature {NONE} -- Initialization
 			new_project_vb.set_border_width (Layout_constants.Small_border_size)
 			new_project_vb.set_padding (Layout_constants.Default_border_size)
 			create wizard_rb.make_with_text (Interface_names.l_Use_wizard)
-			add_option_box (Pixmaps.Icon_wizard_project.twin, wizard_rb, new_project_vb)
+			add_option_box (pixmaps.large_pixmaps.icon_wizard_project.twin, wizard_rb, new_project_vb)
 			create_and_fill_wizards_list
 			new_project_vb.extend (wizards_list)
 			new_project_frame.extend (new_project_vb)
@@ -138,12 +138,12 @@ feature {NONE} -- Initialization
 			open_project_vb.set_border_width (Layout_constants.Small_border_size)
 			open_project_vb.set_padding (Layout_constants.Default_border_size)
 			create open_ace_file_rb.make_with_text (Interface_names.l_Use_existing_ace)
-			add_option_box (Pixmaps.Icon_wizard_ace_project.twin, open_ace_file_rb, open_project_vb)
+			add_option_box (pixmaps.large_pixmaps.icon_wizard_ace_project.twin, open_ace_file_rb, open_project_vb)
 
 			if show_open_project_frame then
 				create open_epr_project_rb.make_with_text (Interface_names.l_Open_an_existing_project)
 				create browse_button.make_with_text_and_action (Interface_names.b_Browse, agent open_existing_project_not_listed)
-				add_option_box_and_button (Pixmaps.Icon_open_project.twin, open_epr_project_rb, browse_button, open_project_vb)
+				add_option_box_and_button (pixmaps.large_pixmaps.icon_open_project.twin, open_epr_project_rb, browse_button, open_project_vb)
 				create_and_fill_compiled_projects_list
 				open_project_vb.extend (compiled_projects_list)
 			end

@@ -406,7 +406,7 @@ feature {NONE} -- Implementation
 		do
 			pixmap_cell.wipe_out
 			create progress_pixmap
-			progress_pixmap.copy (Pixmaps.Icons_progress_degree @ a_degree)
+			progress_pixmap.copy (pixmaps.large_pixmaps.icons_progress_degree @ a_degree)
 			pixmap_cell.extend (progress_pixmap)
 		end 
 	

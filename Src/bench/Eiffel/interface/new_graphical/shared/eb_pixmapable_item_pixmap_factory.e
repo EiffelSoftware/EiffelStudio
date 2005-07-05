@@ -89,14 +89,17 @@ feature {NONE} -- Implementation
 					Result := Pixmaps.Icon_once_objects
 				end
 			elseif a_feature.is_external then
-				if a_feature.is_obsolete then
-					Result := Pixmaps.Icon_external_obsolete_feature
-				elseif a_feature.is_frozen then
-					Result := Pixmaps.Icon_external_frozen_feature
-				else
-					Result := Pixmaps.Icon_external_feature
+				if a_feature.associated_class = Void or else not a_feature.associated_class.is_true_external then
+					if a_feature.is_obsolete then
+						Result := Pixmaps.Icon_external_obsolete_feature
+					elseif a_feature.is_frozen then
+						Result := Pixmaps.Icon_external_frozen_feature
+					else
+						Result := Pixmaps.Icon_external_feature
+					end
 				end
-			else
+			end
+			if Result = Void then
 				if a_feature.is_obsolete then
 					Result := Pixmaps.Icon_obsolete_feature
 				elseif a_feature.is_frozen then

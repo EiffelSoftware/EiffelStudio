@@ -19,16 +19,18 @@
 				<bold>Context</bold> dialog appears. The layout depends on whether the current context is one of a class or cluster.
 				<list ordered="false">
 					<item>Context is a class:
-						<line_break/>
-						<image>
-							<url>/images/eiffelstudio/dialogs_and_wizards/context-dialog-class.png</url>
-						</image>
+						<paragraph>
+							<image>
+								<url>/images/eiffelstudio/dialogs_and_wizards/context-dialog-class.png</url>
+							</image>
+						</paragraph>
 					</item>
 					<item>Context is a cluster:
-						<line_break/>
-						<image>
-							<url>/images/eiffelstudio/dialogs_and_wizards/context-dialog-cluster.png</url>
-						</image>
+						<paragraph>
+							<image>
+								<url>/images/eiffelstudio/dialogs_and_wizards/context-dialog-cluster.png</url>
+							</image>
+						</paragraph>
 					</item>
 				</list>
 			</item>

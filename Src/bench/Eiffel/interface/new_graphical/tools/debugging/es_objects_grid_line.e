@@ -415,7 +415,7 @@ feature -- Graphical changes
 				Result := row.item (c)
 			end
 		ensure
-			Result /= Void
+			result_not_void_if_stopped: (application.is_running and then application.is_stopped) implies Result /= Void
 		end
 
 	compute_grid_display is

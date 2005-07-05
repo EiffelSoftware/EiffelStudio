@@ -18,8 +18,8 @@ feature -- Preconditions
 			is_comma (s) or is_day (s) or
 			is_day0 (s) or is_day_text (s) or
 			is_dot (s) or is_fractional_second (s) or
-			is_hour (s) or is_hour0 (s) or
-			is_hour12 (s) or is_meridiem (s) or
+			is_hour (s) or is_hour0 (s) or is_hour12 (s) or
+			is_hour12_0 (s) or is_meridiem (s) or
 			is_minus (s) or is_minute (s) or
 			is_minute0 (s) or is_month (s) or
 			is_month0 (s) or is_month_text (s) or
@@ -149,6 +149,15 @@ feature -- Preconditions
 			definition: Result = s.is_equal ("hh12")
 		end
 
+	is_hour12_0 (s: STRING): BOOLEAN is
+			-- Is the code a 12-hour-clock-scale padded with zero?
+		require
+			s_exists: s /= Void
+		do
+			Result := s.is_equal ("[0]hh12")
+		ensure
+			definition: Result = s.is_equal ("[0]hh12")
+		end
 
 	is_minute (s: STRING): BOOLEAN is
 			-- Is the code a minute-numeric?

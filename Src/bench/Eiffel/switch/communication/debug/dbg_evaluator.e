@@ -482,8 +482,6 @@ feature {NONE} -- Implementation classic
 					par := par + 2
 					rout_info := System.rout_info_table.item (f.rout_id_set.first)
 					send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
-				elseif f.written_class.is_expanded then
-					print ("Error: can not evaluate on expanded value !!%N")
 				else
 					fixme ("it seems the runtime/debug is not designed to call precursor ...")
 					send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, ctype.static_type_id - 1, par)

@@ -16,9 +16,9 @@
 		<paragraph>The floating widget depends on the type of the preference that is modified. There are four kinds of preferences:</paragraph>
 		<list ordered="false">
 			<item>Boolean preferences : their possible values are "True" and "False". A combo box will allow you to choose between both.</item>
-			<item>Color preferences : Their value is represented by three integers, which are the RGB code of the color. You do not have to use RGB codes though. When you select such a preference, the current color and two buttons are displayed. If you press the first button, a color selection window will appear. For some background colors, you have the possibility to click the "Auto" button. EiffelStudio will then set the current color to the default background color.</item>
-			<item>Font preferences : A font selection window will appear as you press the button with label "change".</item>
-			<item>Other preferences : They will be modified by typing their value directly.</item>
+			<item>Color preferences : Their value is represented by three integers, which are the RGB code of the color. You do not have to use RGB codes though. When you double-click such a preference a color chooser dialog will display, allowing you to change the color value.</item>
+			<item>Font preferences : A font selection window will appear if you double-click the value label.</item>
+			<item>Other preferences : They will be modified by typing their value directly into an editable text field.</item>
 		</list>If there is no message stating you need to restart EiffelStudio, changes will be taken into account immediately. 
 		<paragraph>
 			<tip>

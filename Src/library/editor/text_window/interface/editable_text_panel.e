@@ -836,11 +836,13 @@ feature {NONE} -- Mouse copy cut
 			copy_cut_cursor := Void
 		end
 		
-	on_key_down (ev_key: EV_KEY)is
+	on_key_down (ev_key: EV_KEY) is
 		do
 			if mouse_copy_cut and then ev_key /= Void then
 				if ev_key.code = Key_Ctrl then
-					editor_drawing_area.set_pointer_style (Cursors.Cur_copy_selection)
+					if Cursors /= Void then
+						editor_drawing_area.set_pointer_style (cursors.cur_copy_selection)	
+					end
 				elseif ev_key.code = Key_escape then
 					cancel_mouse_copy_cut
 				end
@@ -848,11 +850,13 @@ feature {NONE} -- Mouse copy cut
 			Precursor (ev_key)
 		end
 
-	on_key_up (ev_key: EV_KEY)is
+	on_key_up (ev_key: EV_KEY) is
 		do
 			Precursor {SELECTABLE_TEXT_PANEL} (ev_key)
 			if mouse_copy_cut and then ev_key /= Void and then ev_key.code = Key_Ctrl then
-				editor_drawing_area.set_pointer_style (Cursors.Cur_cut_selection)
+				if Cursors /= Void then
+					editor_drawing_area.set_pointer_style (cursors.cur_cut_selection)	
+				end
 			end
 		end		
 

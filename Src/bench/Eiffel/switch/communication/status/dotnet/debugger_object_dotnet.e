@@ -37,8 +37,6 @@ feature {NONE} -- Access
 			end
 			l_val := kept_object_item (addr)
 			if l_val /= Void then
-
-				attributes := l_val.children;
 				is_tuple := False --| We considers Tuple object as Ref with Array container
 				
 				l_spec_val ?= l_val
@@ -76,13 +74,31 @@ feature {DEBUGGED_OBJECT_MANAGER} -- Refreshing
 
 	refresh (sp_lower, sp_upper: INTEGER) is
 		do
+			internal_attributes := Void
 		end		
 
 feature -- Properties
 
-	is_string_value: BOOLEAN
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+			-- Attributes of object being inspected (sorted by name)
+		local
+			l_val: ABSTRACT_DEBUG_VALUE			
+		do
+			Result := internal_attributes
+			if Result = Void then
+				l_val := kept_object_item (object_address)
+				if l_val /= Void then
+					Result := l_val.children
+					internal_attributes := Result
+				end
+			end
+		end
 
+	is_string_value: BOOLEAN
+	
 feature {NONE} -- Implementation
+
+	internal_attributes: like attributes
 
 	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
 		do

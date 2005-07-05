@@ -1,7 +1,7 @@
 <document title="Diagram toolbar" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>The customizable toolbar of the diagram tool can contain these buttons:</paragraph>
+		<paragraph>The customizable toolbar of the diagram contains these buttons by default:</paragraph>
 		<list ordered="false">
 			<item>
 				<image>
@@ -11,9 +11,13 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_super_cluster_color.gif</url>
-				</image>Target to enclosing cluster
-				<line_break/> Re-centers the diagram on the parent cluster.
+					<url>/images/eiffelstudio/icons/icon_new_inherit_color.gif</url>
+				</image>
+				<link>
+					<url>../../how_to_s/60_designing_a_project/30_managing_links/10_new_inheritance_link.xml</url>
+					<label>Create new inheritance links</label>
+				</link>
+				<line_break/> Selecting this button allows you to create inheritance, client-supplier or aggregate links by picking from one class and dropping on the other.
 			</item>
 			<item>
 				<image>
@@ -24,47 +28,7 @@
 					<label>Create a new class</label>
 				</link>
 				<line_break/> Pick from this button and drop on the diagram to add a new class.
-			</item>
-			<item>
-				<image>
-					<url>/images/eiffelstudio/icons/icon_new_inherit_color.gif</url>
-				</image>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/30_managing_links/10_new_inheritance_link.xml</url>
-					<label>Create new inheritance links</label>
-				</link>
-				<line_break/> Selecting this button allows you to create inheritance links by picking from one class and dropping on the other.
-			</item>
-			<item>
-				<image>
-					<url>/images/eiffelstudio/icons/icon_new_supplier_color.gif</url>
-				</image>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/30_managing_links/20_new_client_link.xml</url>
-					<label>Create new client-supplier links</label>
-				</link>
-				<line_break/> Selecting this button allows you to create client-supplier links by picking from one class and dropping on the other.
-			</item>
-			<item>
-				<image>
-					<url>/images/eiffelstudio/icons/icon_new_agg_supplier_color.gif</url>
-				</image>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/30_managing_links/30_new_aggregate_link.xml</url>
-					<label>Create new aggregate client-supplier links</label>
-				</link>
-				<line_break/> Selecting this button allows you to create aggregate client-supplier links by picking from one class and dropping on the other.
-			</item>
-			<item>
-				<image>
-					<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
-				</image>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/40_remove_from_system.xml</url>
-					<label>Delete</label>
-				</link>
-				<line_break/> Drop items in this hole to remove them from the system.
-			</item>
+			</item>	
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_undo_color.gif</url>
@@ -114,7 +78,7 @@
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/40_change_color.xml</url>
 					<label>Change color</label>
 				</link>
-				<line_break/> Drop class bubbles in this hole to change their color.
+				<line_break/> Drop class bubbles in this hole to change their color, or click this button and change the color of all class bubbles at once.
 			</item>
 			<item>
 				<image>
@@ -128,13 +92,13 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_straight_arrows_color.gif</url>
+					<url>/images/eiffelstudio/icons/icon_fill_cluster_color.gif</url>
 				</image>
 				<link>
-					<url>../../how_to_s/60_designing_a_project/30_managing_links/40_link_tool.xml</url>
-					<label>Put handles on a link</label>
+					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/60_retrieve_all.xml</url>
+					<label>Include all classes of cluster</label>
 				</link>
-				<line_break/> Click on this button to toggle right angles on all links in the view. Drop a link on it to bring up the link tool for that link.
+				<line_break/> Drop a cluster in this hole to show all classes of the cluster in this view.
 			</item>
 			<item>
 				<image>
@@ -149,26 +113,6 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_fill_cluster_color.gif</url>
-				</image>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/60_retrieve_all.xml</url>
-					<label>Include all classes of cluster</label>
-				</link>
-				<line_break/> Drop a cluster in this hole to show all classes of the cluster in this view.
-			</item>
-			<item>
-				<image>
-					<url>/images/eiffelstudio/icons/icon_zoom_in_color.gif</url>
-				</image>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/50_zooming.xml</url>
-					<label>Zoom in</label>
-				</link>
-				<line_break/> Enlarge the diagram.
-			</item>
-			<item>
-				<image>
 					<url>/images/eiffelstudio/icons/icon_zoom_out_color.gif</url>
 				</image>
 				<link>
@@ -179,14 +123,24 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
+					<url>/images/eiffelstudio/icons/icon_zoom_fit_to_screen_color.gif</url>
 				</image>
 				<link>
-					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
-					<label>Show/hide client-supplier links</label>
+					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/50_zooming.xml</url>
+					<label>Fit Diagram to Screen</label>
 				</link>
-				<line_break/> Toggle visibility of all client-supplier links in the view.
-			</item>
+				<line_break/> Fit the diagram to the screen dimensions so it is all visible.
+			</item>			
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_zoom_in_color.gif</url>
+				</image>
+				<link>
+					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/50_zooming.xml</url>
+					<label>Zoom in</label>
+				</link>
+				<line_break/> Enlarge the diagram.
+			</item>		
 			<item>
 				<image>
 					<url>/images/eiffelstudio/icons/icon_inherit_color.gif</url>
@@ -196,6 +150,16 @@
 					<label>Show/hide inheritance links</label>
 				</link>
 				<line_break/> Toggle visibility of all inheritance links in the view.
+			</item>
+				<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_supplier_color.gif</url>
+				</image>
+				<link>
+					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/10_show_hide.xml</url>
+					<label>Show/hide client-supplier links</label>
+				</link>
+				<line_break/> Toggle visibility of all client-supplier links in the view.
 			</item>
 			<item>
 				<image>
@@ -209,16 +173,6 @@
 			</item>
 			<item>
 				<image>
-					<url>/images/eiffelstudio/icons/icon_delete_view_color.gif</url>
-				</image>
-				<link>
-					<url>../../how_to_s/60_designing_a_project/50_managing_views/20_delete_view.xml</url>
-					<label>Delete current view</label>
-				</link>
-				<line_break/> Click to remove the current view from the list of views for current class or cluster.
-			</item>
-			<item>
-				<image>
 					<url>/images/eiffelstudio/icons/icon_export_to_png_color.gif</url>
 				</image>
 				<link>
@@ -228,4 +182,77 @@
 				<line_break/> Click to generate a .png file from current view.
 			</item>
 		</list>
+		The toolbar may also be configured to contain these buttons:
+		<list ordered="false">	
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_toggle_quality_color.png</url>
+				</image>
+				Toggles the drawing quality.
+			</item>		
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_toggle_force_color.png</url>
+				</image>
+				Toggles the physics mode on and off.
+			</item>	
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_uml_color.png</url>
+				</image>
+				Toggles view between BON notation and UML.
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_remove_anchor_color.png</url>
+				</image>
+				Allows to anchor or unanchor a class/cluster figure.
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_physics_settings_color.png</url>
+				</image>
+				Displays physics settings dialog to control physics behavour.
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+				</image>
+				<link>
+					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/40_remove_from_system.xml</url>
+					<label>Delete</label>
+				</link>
+				<line_break/>
+				Drop items in this hole to remove them from the system.
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_display_legend_color.gif</url>
+				</image>	
+				Toggle cluster color legend.
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_display_cluster_color.gif</url>
+				</image>
+				Toggle cluster boundaries to and from view.
+			</item>
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_straight_arrows_color.gif</url>
+				</image>
+				<link>
+					<url>../../how_to_s/60_designing_a_project/30_managing_links/40_link_tool.xml</url>
+					<label>Put handles on a link</label>
+				</link>
+				<line_break/> Click on this button to toggle right angles on all links in the view. Drop a link on it to bring up the link tool for that link.
+			</item>		
+			<item>
+				<image>
+					<url>/images/eiffelstudio/icons/icon_super_cluster_color.gif</url>
+				</image>Target to enclosing cluster
+				<line_break/> Re-centers the diagram on the parent cluster.
+			</item>
+		</list>
+		In addition to these toolbar buttons there is also a drop down list for selecting various zoom percentages on the current view, and a view list for switching between previously saved views/layouts of various parts of the system.
 	</paragraph></document>

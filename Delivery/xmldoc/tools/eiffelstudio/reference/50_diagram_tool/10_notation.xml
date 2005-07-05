@@ -115,7 +115,7 @@
 		<heading>
 			<size>2</size>Inheritance links
 		</heading>
-		<paragraph>Inheritance between classes is represented by a red arrow from a class to its parent. Typically, inheritance links point upwards.</paragraph>
+		<paragraph>Inheritance between classes is represented by an arrow from a class to its parent. Typically, inheritance links point upwards.</paragraph>
 		<div>
 			<image>
 				<url>/images/eiffelstudio/diagram/bon-inheritance.png</url>
@@ -134,7 +134,7 @@
 		<heading>
 			<size>2</size>Client/supplier links
 		</heading>
-		<paragraph>Client relationships between classes are represented by a blue arrow with a double line from the client to the supplier. Typically, these links point to the right. A special kind of relationship is the aggregate client/supplier link. Aggregate means that the supplier is an integral part of the client. In the class text, it corresponds to 
+		<paragraph>Client relationships between classes are represented by an arrow with a double line from the client to the supplier. Typically, these links point to the right. A special kind of relationship is the aggregate client/supplier link. Aggregate means that the supplier is an integral part of the client. In the class text, it corresponds to 
 			<code>
 				<keyword>expanded</keyword>
 			</code> features. In the diagram, an aggregate link has a little line along the back side of the arrow.

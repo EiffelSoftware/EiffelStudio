@@ -128,6 +128,23 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 			<item>Added feature <code><feature_name>sleep</feature_name></code> to class <code><class_name>THREAD_CONTROL</class_name></code>.</item>
 			<item>Provided inheritance link between classes <code><class_name>THREAD</class_name></code> and <code><class_name>THREAD_CONTROL</class_name></code> on all platforms.</item>
 		</list>
+		<heading><size>3</size>EiffelTime</heading>
+		<list ordered="false">
+			<item>Breaking changes:
+				<list ordered="false">
+					<item>In time format, the use of hh12 alone without specifying AM or PM will default to AM.</item>
+					<item>Changed implementation of <class_name>DATE_SET</class_name> to use <feature_name>ordered_compact_date</feature_name> as storage.</item>
+				</list>
+			</item>
+			<item>Added support for [0]hh12 hour format.</item>
+			<item>Added support for specifying hh12 as a standalone format string.</item>
+			<item>Fixed a bug where calling <class_name>TIME</class_name>.<feature_name>make_by_fine_seconds</feature_name> would set <feature_name>fractional_second</feature_name> to zero rather than to the expected value.</item>
+			<item>In <class_name>TIME</class_name>, comparison of <feature_name>fractional_second</feature_name> is done using a precision of 1.0e-10.</item>
+			<item>Fixed <feature_name>is_positive</feature_name> in <class_name>DATE_TIME_DURATION</class_name> so that it is true when either the date or time is zero but the other is positive.</item>.
+			<item>Fixed incorrect postcondition of <feature_name>set_origine_date_time</feature_name> in <class_name>DATE_TIME_DURATION</class_name> which would fail when argument was <keyword>Void</keyword>.</item>
+			<item>Fixed <feature_name>is_correct_date</feature_name> in <class_name>DATE_VALIDITY_CHECKER</class_name> to check that year is less than 65535.</item>
+			<item>Fixed <class_name>DATE_TIME_PARSER</class_name> when handling time in 12h format, but internally we would convert it into 24h format thus making <feature_name>is_time</feature_name> and <feature_name>is_date_time</feature_name> return <keyword>False</keyword> where <keyword>True</keyword> was expected.</item>
+		</list>
 		<heading><size>3</size>EiffelVision2</heading>
 		<list ordered="false">
 			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>

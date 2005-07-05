@@ -92,9 +92,7 @@ feature -- Preconditions
 			m := month
 			y := year
 			ordered_compact_date := l_cd
-			Result := (m >= 1 and m <= Months_in_year and
-				d >= 1 and d <= days_in_i_th_month (m, y) and
-				y <= 65535)
+			Result := is_correct_date (y, m, d)
 		end
 
 	ordered_compact_date_valid (c_d: INTEGER): BOOLEAN is
@@ -109,16 +107,14 @@ feature -- Preconditions
 			m := month
 			y := year
 			ordered_compact_date := l_cd
-			Result := (m >= 1 and m <= Months_in_year and
-				d >= 1 and d <= days_in_i_th_month (m, y) and
-				y <= 65535)
+			Result := is_correct_date (y, m, d)
 		end
 
 	is_correct_date (y, m, d: INTEGER): BOOLEAN is
 			-- Is date specified by `y', `m', and `d' a correct date?
 		do
 			Result := m >= 1 and m <= Months_in_year and then d >= 1 and 
-				d <= days_in_i_th_month (m, y) and then y >= 0
+				d <= days_in_i_th_month (m, y) and then y >= 0 and then y <= 65535
 		end
 
 end -- class DATE_VALIDITY_CHECKER

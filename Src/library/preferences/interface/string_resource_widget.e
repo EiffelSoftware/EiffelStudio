@@ -64,7 +64,7 @@ feature {NONE} -- Command
 		end
 
 	update_resource is
-			-- 
+			-- Updates resource.
 		local
 			int: INTEGER_PREFERENCE
 			str: STRING_PREFERENCE

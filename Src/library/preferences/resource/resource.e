@@ -56,9 +56,6 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 			a_value_valid: valid_value_string (a_value)
 		deferred
-		ensure
--- TODO: neilc, problem in FONT_PREFERENCE with this post condition
---			string_value_set: string_value.as_lower.is_equal (a_value.as_lower)
 		end	
 
 	reset is

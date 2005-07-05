@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Helper class for creating graphical preference types."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -45,8 +44,5 @@ feature -- Access
 			resource_name_set: Result.name.is_equal (a_name)
 			resource_added: a_manager.preferences.has_resource (a_name)
 		end	
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end

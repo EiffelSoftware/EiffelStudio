@@ -1,7 +1,6 @@
 indexing
 	description: "[
 		Manager of related preference values.  
-				
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,7 +1,7 @@
 indexing
 	description: "[
 			Abstraction for a particular graphical view of the preferences.  Implement this to
-			provide a default view of preferences.  For an example see PREFERENCES_TREE_VIEW.
+			provide a default view of preferences.  For an example see PREFERENCES_WINDOW.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"

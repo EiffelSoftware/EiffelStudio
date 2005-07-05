@@ -1,7 +1,7 @@
 indexing
 	description: "[
 			A EV_TITLED_WINDOW containing a tree view of application preferences.  Provides a
-			list to view preference information and ability to edit the preferences.  Also allows
+			list to view preference information and ability to edit the preferences using popup floating widgets.  Also allows
 			to restore preferences to their defaults.
 		]"
 	date: "$Date$"
@@ -27,7 +27,12 @@ inherit
 		undefine
 			copy, default_create
 		end
-	
+		
+	EV_GRID_HELPER
+		undefine
+			copy, default_create
+		end
+		
 create
 	make
 
@@ -52,7 +57,7 @@ feature {NONE} -- Initialization
 			grid.column (1).set_title (l_name)
 			grid.column (2).set_title (l_type)
 			grid.column (3).set_title (l_status)
-			grid.column (4).set_title (l_literal_value)
+			grid.column (4).set_title (l_literal_value)			
 			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
 			grid.key_press_actions.extend (agent on_grid_key_pressed)			
 			close_button.select_actions.extend (agent on_close)
@@ -62,6 +67,8 @@ feature {NONE} -- Initialization
 			split_area.enable_item_expand (grid_container)
 			split_area.disable_item_expand (description_frame)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
+			resize_actions.force_extend (agent on_window_resize)
+			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
 			show			
 		end
 
@@ -191,7 +198,7 @@ feature {NONE} -- Events
 		end
 
 	on_default_item_selected (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE; a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
+			-- The default cloumn was clicked.
 		local
 			l_popup_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
@@ -258,6 +265,28 @@ feature {NONE} -- Events
 				end
 			end
 		end
+
+	on_window_resize is
+			-- Dialog was resized
+		local
+			l_width: INTEGER
+		do				
+			l_width := grid.width - (grid.column (1).width + grid.column (2).width + grid.column (3).width)			
+			grid.column (4).set_width (l_width)
+		end		
+
+	on_header_double_clicked is
+			-- Header was double-clicked.
+		local
+			div_index: INTEGER
+			col: EV_GRID_COLUMN
+		do
+			div_index := grid.header.pointed_divider_index
+			if div_index > 0 then
+				col := grid.column (div_index)
+				col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)			
+			end		
+		end		
 
 feature {NONE} -- Implementation
 
@@ -387,6 +416,7 @@ feature {NONE} -- Implementation
 			grid_type_item: EV_GRID_LABEL_ITEM			
 			l_resource: PREFERENCE
 			curr_row: INTEGER
+			l_column: EV_GRID_COLUMN
 		do			
 			grid.enable_row_height_fixed
 			grid.disable_row_height_fixed
@@ -398,12 +428,7 @@ feature {NONE} -- Implementation
 			l_names.sort
 			from
 				l_names.start
-				grid.wipe_out
-				grid.set_item (4, 1, Void)
-				grid.column (1).set_title (l_name)
-				grid.column (2).set_title (l_type)
-				grid.column (3).set_title (l_status)
-				grid.column (4).set_title (l_literal_value)
+				grid_remove_and_clear_all_rows (grid)
 				description_text.set_text ("")
 				curr_row := 1
 			until
@@ -451,12 +476,16 @@ feature {NONE} -- Implementation
 				end
 				l_names.forth
 			end
-			if grid.row_count > 0 then
+			if grid.row_count > 0 then				
 				grid.row (1).enable_select
-				grid.column (1).resize_to_content
-				grid.column (4).resize_to_content
-				grid.column (1).set_width (grid.column (1).width.max (80))
-				grid.column (4).set_width (grid.column (4).width.max (80))
+				l_column := grid.column (1)
+				l_column.resize_to_content
+				l_column.set_width (l_column.width + column_border_space)
+				l_column := grid.column (2)
+				l_column.set_width (l_column.width + column_border_space)
+				l_column := grid.column (3)
+				l_column.set_width (l_column.width + column_border_space)
+				on_window_resize
 				l_resource ?= grid.row (1).data
 				if l_resource /= Void then
 					show_resource_description (l_resource)
@@ -609,8 +638,10 @@ feature {NONE} -- Private attributes
 			-- Name of resource selected in tree.  Used to programatically to update the right-side list.
 
 	root_icon: EV_PIXMAP
-	
+			-- Icon for root node
+			
 	folder_icon: EV_PIXMAP
+			-- Folder icon
 	
 	default_font: EV_FONT is
 			-- Font for row when value is a default value
@@ -626,12 +657,16 @@ feature {NONE} -- Private attributes
 		end
 
 	grid: EV_GRID
-		-- Grid
+		-- Grid	
+
+	column_border_space: INTEGER is 3
+		-- Padding space for column content
 
 	default_row_height: INTEGER
+		-- Default row height
 
 	application: EV_APPLICATION is 
-			-- 
+			-- Application
 		once
 			Result := (create {EV_ENVIRONMENT}).application
 		end

@@ -194,7 +194,8 @@ feature -- Status report
 	is_positive: BOOLEAN is
 			-- Is duration positive?
 		do
-			Result := (date.is_positive and time.is_positive)
+			Result := (date.is_positive or date.is_zero) and (time.is_positive or time.is_zero) and
+				not (date.is_zero and time.is_zero)
 		end
 
 	has_origin_date_time: BOOLEAN is
@@ -216,7 +217,7 @@ feature -- Status setting
 			end
 		ensure
 			origin_date_time_set: origin_date_time = dt
-			origin_date_set: origin_date_time.date = date.origin_date
+			origin_date_set: origin_date_time /= Void implies (origin_date_time.date = date.origin_date)
 		end
 		
 feature -- Element Change

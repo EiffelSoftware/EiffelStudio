@@ -30,12 +30,6 @@ inherit
 			gdi_compact
 		end
 
-	EXCEPTIONS
-		rename
-			raise as exception_raise,
-			class_name as exception_class_name
-		end
-		
 	EV_PIXMAP_IMP_LOADER
 		export
 			{NONE} all
@@ -1327,8 +1321,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			else
-					-- An error occurred while loading the file
-				exception_raise ("Unable to load the file")
+				last_pixmap_loading_had_error := True
 			end
 			
 				-- Enable invariant checking again

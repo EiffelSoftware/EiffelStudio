@@ -10,6 +10,17 @@ indexing
 deferred class
 	EV_PIXMAP_IMP_LOADER
 
+inherit
+	ANY
+	
+	EXCEPTIONS
+		rename
+			raise as exception_raise,
+			class_name as exception_class_name
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	pixmap_filename: STRING is
@@ -42,6 +53,10 @@ feature {NONE} -- Implementation
 				filename_ptr := pixmap_filename.to_c
 				c_ev_load_pixmap ($Current, $filename_ptr, $update_fields)
 			end
+			if last_pixmap_loading_had_error then
+					-- An error occurred while loading the file
+				exception_raise ("Unable to load the file")
+			end
 		end
 		
 	update_fields(
@@ -55,7 +70,10 @@ feature {NONE} -- Implementation
 		is
 		deferred
 		end
-		
+	
+	last_pixmap_loading_had_error: BOOLEAN
+			-- Did the last pixmap load result in an error?
+
 feature {NONE} -- Externals
 
 	c_ev_load_pixmap(

@@ -1196,7 +1196,7 @@ feature {NONE} -- Grid related Constants
 	Col_titles: ARRAY [STRING] is
 		do
 			create Result.make (1, 5)
-			Result.put ("Name", Col_name_index)
+			Result.put ("Expression", Col_name_index)
 			Result.put ("Address", Col_address_index)
 			Result.put ("Value", Col_value_index)
 			Result.put ("Type", Col_type_index)

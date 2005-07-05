@@ -11,6 +11,17 @@ indexing
 deferred class
 	EV_PIXMAP_IMP_LOADER
 
+inherit
+	ANY
+	
+	EXCEPTIONS
+		rename
+			raise as exception_raise,
+			class_name as exception_class_name
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	pixmap_filename: STRING is
@@ -37,6 +48,7 @@ feature {NONE} -- Implementation
 		do
 				-- Disable invariant checking.
 			disable_initialized
+			last_pixmap_loading_had_error := False
 			
 			create load_pixmap_delegate.make (Current, $update_fields)
 
@@ -45,6 +57,10 @@ feature {NONE} -- Implementation
 			else
 				create l_c_string.make (pixmap_filename)
 				c_ev_load_pixmap (l_c_string.item, load_pixmap_delegate)
+			end
+			if last_pixmap_loading_had_error then
+					-- An error occurred while loading the file
+				exception_raise ("Unable to load the file")
 			end
 		end
 		
@@ -55,9 +71,14 @@ feature {NONE} -- Implementation
 		pixmap_height	: INTEGER -- Width of the loaded pixmap
 		rgb_data		: POINTER -- Pointer on a C memory zone
 		alpha_data		: POINTER -- Pointer on a C memory zone
-		) is
+		)
+		is
 		deferred
 		end
+		
+	last_pixmap_loading_had_error: BOOLEAN
+			-- Did the last pixmap load result in an error?
+
 feature {NONE} -- Externals
 
 	c_ev_load_pixmap(

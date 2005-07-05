@@ -90,8 +90,8 @@ feature -- Element change
 			s_tmp: INTEGER 
 		do 
 			s_tmp := s.truncated_to_integer
-			fractional_second := s - s_tmp
 			set_second (s_tmp)
+			fractional_second := s - s_tmp
 		end
 
 	set_fractionals (f: DOUBLE) is

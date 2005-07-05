@@ -227,6 +227,15 @@ feature -- Change
 				is_text := True
 				is_numeric := False
 				type := 23
+			elseif is_hour12_0 (value) then
+				count_max := 2
+				count_min := 2
+				name := "hour-12-clock-scale-on-2-digits"
+				value_max := 12
+				value_min := 0
+				is_text := False
+				is_numeric := True
+				type := 24
 			end
 		ensure
 			value_set: value.is_equal (v)

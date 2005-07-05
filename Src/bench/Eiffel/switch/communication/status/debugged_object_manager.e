@@ -134,7 +134,7 @@ feature -- debugged object creation
 			last_sp_upper := sp_upper		
 		end
 		
-	caching_enabled: BOOLEAN is True
+	caching_enabled: BOOLEAN is False
 
 	debugged_object (addr: STRING; sp_lower, sp_upper: INTEGER): DEBUGGED_OBJECT is
 		require

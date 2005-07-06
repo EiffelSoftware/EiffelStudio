@@ -22,12 +22,14 @@ inherit
 			make
 		redefine
 			interface,
-			needs_event_box
+			needs_event_box,
+			initialize
 		end
 		
 	EV_FONTABLE_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 create
@@ -43,7 +45,14 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_frame_new (NULL))
 			{EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, NULL)
-			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_left_enum
+		end
+
+	initialize is
+			-- Initialize `Current'.
+		do
+			set_style (Ev_frame_etched_in)
+			align_text_left
+			Precursor {EV_CELL_IMP}
 		end
 
 feature -- Access
@@ -106,21 +115,21 @@ feature -- Status setting
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 0, 0)
+			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 0, 0.5)
 			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_left_enum
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 1, 0)
+			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 1, 0.5)
 			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_right_enum
 		end
         
 	align_text_center is
 			-- Display `text' centered.
 		do
-			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 0.5, 0)
+			{EV_GTK_EXTERNALS}.gtk_frame_set_label_align (container_widget, 0.5, 0.5)
 			internal_alignment_code := {EV_GTK_EXTERNALS}.gtk_justify_center_enum
 		end
 

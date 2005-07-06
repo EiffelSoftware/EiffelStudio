@@ -79,8 +79,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, container_widget, False, False, 0)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_combo_box_get_entry (container_widget)
-				-- Set the minimum size of the entry widget to avoid unnecessarily large default size
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
+		
 
 				-- Alter focus chain so that button cannot be selected via the keyboard.
 			a_focus_list := {EV_GTK_EXTERNALS}.g_list_append (default_pointer, entry_widget)

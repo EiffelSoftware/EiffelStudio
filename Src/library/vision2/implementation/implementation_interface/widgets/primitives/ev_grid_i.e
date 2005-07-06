@@ -376,7 +376,7 @@ feature -- Access
 			l_calculation: INTEGER
 		do
 			if is_vertical_overscroll_enabled then
-				if is_row_height_fixed and not is_tree_enabled then
+				if is_row_height_fixed then
 					final_row_height := row_height
 				else
 					final_row_height := rows.i_th (row_count).height
@@ -385,7 +385,7 @@ feature -- Access
 			elseif is_vertical_scrolling_per_item then
 				row_index := last_first_row_in_per_item_scrolling
 				if row_index <= row_count and row_index > 0 then
-					if is_row_height_fixed then
+					if is_row_height_fixed and not is_tree_enabled then
 						virtual_y_position_of_last_row := (row_index - 1) * row_height
 					else
 						virtual_y_position_of_last_row := rows.i_th (row_index).virtual_y_position
@@ -409,7 +409,7 @@ feature -- Access
 			valid_result_with_rows_when_per_pixel_scrolling_with_no_overdraw: row_count > 0 and is_vertical_scrolling_per_item = False and
 				is_vertical_overscroll_enabled = False implies Result = 0
 			valid_result_with_fixed_height_rows_when_per_item_scrolling_and_no_overdraw: row_count > 0 and is_row_height_fixed and is_vertical_scrolling_per_item and
-				is_vertical_scrolling_per_item and row (row_count).virtual_y_position + row_height > viewable_height implies Result <= row_height
+				is_vertical_scrolling_per_item and row (row_count).virtual_y_position + row_height > viewable_height and not is_vertical_overscroll_enabled implies Result <= row_height
 		end
 		
 	pixels_displayed_after_final_column: INTEGER is
@@ -1237,8 +1237,8 @@ feature -- Status setting
 				row_height := a_row_height
 				is_item_height_changing := True
 				is_item_height_changing := False
-				restrict_virtual_y_position_to_maximum
 				set_vertical_computation_required (1)
+				restrict_virtual_y_position_to_maximum
 				redraw_client_area
 			end
 			
@@ -3078,8 +3078,9 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			-- the final row.
 		local
 			row_index, l_viewable_height: INTEGER
+			l_row_height: INTEGER
 		do
-			if is_row_height_fixed then
+			if is_row_height_fixed and not is_tree_enabled then
 					-- In this situation, we can simply calculate the
 					-- final row as they all have the same height.
 				row_index := (visible_row_count - (viewable_height - (viewable_height \\ row_height)) // row_height + 1)
@@ -3092,7 +3093,12 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				until
 					visible_indexes_to_row_indexes.off or l_viewable_height <= 0
 				loop
-					l_viewable_height := l_viewable_height - row (visible_indexes_to_row_indexes.item).height
+					if is_row_height_fixed then
+						l_row_height := row_height
+					else
+						l_row_height := row (visible_indexes_to_row_indexes.item).height
+					end
+					l_viewable_height := l_viewable_height - l_row_height
 					if l_viewable_height > 0 then
 						visible_indexes_to_row_indexes.back
 					end

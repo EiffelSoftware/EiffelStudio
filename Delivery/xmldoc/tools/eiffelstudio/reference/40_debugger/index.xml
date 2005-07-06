@@ -57,6 +57,13 @@
 			</item>
 			<item>
 				<link>
+					<url>65_debugger_grid_view.xml</url>
+					<label>Debugging tips with the objects grid view</label>
+				</link>
+			</item>			
+			
+			<item>
+				<link>
 					<url>70_debugger_preferences.xml</url>
 					<label>Debugging preferences</label>
 				</link>

@@ -376,7 +376,7 @@ feature -- Access
 			l_calculation: INTEGER
 		do
 			if is_vertical_overscroll_enabled then
-				if is_row_height_fixed then
+				if is_row_height_fixed and not is_tree_enabled then
 					final_row_height := row_height
 				else
 					final_row_height := rows.i_th (row_count).height
@@ -3073,14 +3073,19 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 		end
 		
 	last_first_row_in_per_item_scrolling: INTEGER is
-			--
+			-- Return the index of the row which should be displayed
+			-- as the first row of the grid to ensure we do not scroll past
+			-- the final row.
 		local
 			row_index, l_viewable_height: INTEGER
 		do
 			if is_row_height_fixed then
-				row_index := (visible_row_count - (viewable_height - (viewable_height \\ row_height)) // row_height + 1).max (1)
+					-- In this situation, we can simply calculate the
+					-- final row as they all have the same height.
+				row_index := (visible_row_count - (viewable_height - (viewable_height \\ row_height)) // row_height + 1)
 			else
-				-- Must now iterate backwards to find the first row
+					-- Must now iterate backwards to find the first row as each has
+					-- a different height.
 				from
 					l_viewable_height := viewable_height
 					visible_indexes_to_row_indexes.go_i_th (visible_row_count)
@@ -3099,16 +3104,20 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 					row_index := visible_indexes_to_row_indexes.item
 				end
 			end
-			Result := row_index
+			Result := row_index.max (1).min (row_count)
+		ensure
+			valid_result: Result >= 1 and Result <= row_count
 		end
 		
 	last_first_column_in_per_item_scrolling: INTEGER is
-			--
+			-- Return the index of the column which should be displayed
+			-- as the first column of the grid to ensure we do not scroll past
+			-- the final column.
 		local
 			l_viewable_width: INTEGER
 			l_column: EV_GRID_COLUMN_I
 		do
-			-- Must now iterate backwards to find the first column
+				-- Must now iterate backwards to find the first column
 			from
 				l_viewable_width := viewable_width
 				columns.go_i_th (column_count)
@@ -3128,6 +3137,8 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			else
 				Result := columns.index + 1
 			end
+		ensure
+			valid_result: Result >= 1 and Result <= column_count
 		end
 		
 feature {ANY}

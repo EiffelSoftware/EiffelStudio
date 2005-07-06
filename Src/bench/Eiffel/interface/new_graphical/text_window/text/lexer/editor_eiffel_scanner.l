@@ -33,7 +33,11 @@ H		([0-9A-Fa-f])
 					update_token_list
 					}
 [\t]+				{
-					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
+					if not in_comments then
+						create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					}
 \n+					{
@@ -50,13 +54,8 @@ H		([0-9A-Fa-f])
 
 "--"				{ 
 						-- comments
-					if not in_verbatim_string then
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-						in_comments := True
-					else
-						in_verbatim_string := False
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					end					
+					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					in_comments := True	
 					update_token_list					
 				}
 
@@ -76,12 +75,7 @@ H		([0-9A-Fa-f])
 "$"					{
 						-- Symbols
 					if not in_comments then
-						if not in_verbatim_string then
-							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
-						
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
@@ -109,12 +103,7 @@ H		([0-9A-Fa-f])
 "<"					{ 
 						-- Operator Symbol
 					if not in_comments then
-						if not in_verbatim_string then
-							create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
-						
+						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)					
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
@@ -190,12 +179,7 @@ H		([0-9A-Fa-f])
 [xX][oO][rR]							{
 										-- Keyword
 										if not in_comments then
-											if not in_verbatim_string then
-												create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-											else
-												create {EDITOR_TOKEN_STRING} curr_token.make(text)
-											end
-											
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
@@ -207,16 +191,11 @@ H		([0-9A-Fa-f])
 
 [A-Z][A-Z0-9_]*							{
 										if not in_comments then
-											if not in_verbatim_string then
-												if not Eiffel_universe.classes_with_name (text).is_empty then
+											if not Eiffel_universe.classes_with_name (text).is_empty then
 												create {EDITOR_TOKEN_CLASS} curr_token.make(text)
 											else
 												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-											end
-											else
-												create {EDITOR_TOKEN_STRING} curr_token.make(text)
-											end
-											
+											end									
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
@@ -226,12 +205,7 @@ H		([0-9A-Fa-f])
 
 [a-zA-Z][a-zA-Z0-9_]*					{
 										if not in_comments then
-											if not in_verbatim_string then
-												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-											else
-												create {EDITOR_TOKEN_STRING} curr_token.make(text)
-											end
-											
+												create {EDITOR_TOKEN_TEXT} curr_token.make(text)											
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
@@ -243,12 +217,7 @@ H		([0-9A-Fa-f])
 
 [@#|&][^%" \t\r\n]*						{
 										if not in_comments then
-											if not in_verbatim_string then
-												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-											else
-												create {EDITOR_TOKEN_STRING} curr_token.make(text)
-											end
-											
+											create {EDITOR_TOKEN_TEXT} curr_token.make(text)										
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
@@ -283,12 +252,7 @@ H		([0-9A-Fa-f])
 \'%<\'				|
 \'%>\'				{
 					if not in_comments then
-						if not in_verbatim_string then
-							create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
-
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
@@ -297,18 +261,13 @@ H		([0-9A-Fa-f])
 
 \'%\/[0-9]+\/\'		{
 					if not in_comments then
-						if not in_verbatim_string then
-							code_ := text_substring (4, text_count - 2).to_integer
-							if code_ > {CHARACTER}.Max_value then
-								-- Character error. Consedered as text.
-								create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-							end
+						code_ := text_substring (4, text_count - 2).to_integer
+						if code_ > {CHARACTER}.Max_value then
+							-- Character error. Consedered as text.
+							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
-						
+							create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+						end						
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
@@ -319,11 +278,7 @@ H		([0-9A-Fa-f])
 \'%\/[0-9]+(\/)?	{
 					-- Character error. Catch-all rules (no backing up)
 					if not in_comments then
-						if not in_verbatim_string then
-							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
@@ -348,6 +303,7 @@ H		([0-9A-Fa-f])
 					create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					update_token_list
 					in_verbatim_string := True
+					start_of_verbatim_string := True
 					set_start_condition (VERBATIM_STR1)
 				else
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -361,6 +317,7 @@ H		([0-9A-Fa-f])
 					create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					update_token_list
 					in_verbatim_string := True
+					start_of_verbatim_string := True
 					set_start_condition (VERBATIM_STR1)
 				else
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -372,20 +329,20 @@ H		([0-9A-Fa-f])
 	[\r]+					-- Ignore carriage return
 	[ \t\r]*\][^%\n"]*\" 	{
 							-- Verbatim string closer, possibly.
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						update_token_list	
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)						
 						end_of_verbatim_string := True
 						in_verbatim_string := False
 						set_start_condition (INITIAL)
+						update_token_list
 					}
 	
 	[ \t\r]*\}[^%\n"]*\" 	{
 							-- Verbatim string closer, possibly.
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						update_token_list
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)						
 						end_of_verbatim_string := True
 						in_verbatim_string := False
 						set_start_condition (INITIAL)
+						update_token_list
 					}	
 	
 	[ ]+				{
@@ -393,7 +350,7 @@ H		([0-9A-Fa-f])
 						update_token_list						
 					}
 					
-	[\t]+				{
+	[\t]+				{						
 						create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
 						update_token_list						
 					}
@@ -428,12 +385,7 @@ H		([0-9A-Fa-f])
 [0-1]+[bB]			{
 					-- Eiffel Bit
 					if not in_comments then
-						if not in_verbatim_string then
-							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end	
-						
+						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)						
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
@@ -446,26 +398,16 @@ H		([0-9A-Fa-f])
 0[xX]{H}(({H}|_)*{H})?	{
 						-- Eiffel Integer
 						if not in_comments then
-							if not in_verbatim_string then
-								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end
-							
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
 						update_token_list
 						}
 [0-9_]+					{
-						-- Eiffel Integer Error (considered as text)
+							-- Eiffel Integer Error (considered as text)
 						if not in_comments then
-							if not in_verbatim_string then
-								create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end						
-
+							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
@@ -481,12 +423,8 @@ H		([0-9A-Fa-f])
 [0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*	|
 ([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?	{
 							-- Eiffel reals & doubles
-						if not in_comments then							
-							if not in_verbatim_string then
-								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end
+						if not in_comments then		
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
@@ -510,12 +448,7 @@ H		([0-9A-Fa-f])
 .				{
 					-- Error (considered as text)
 				if not in_comments then
-					if not in_verbatim_string then
-						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					else
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					end
-
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 				else
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 				end

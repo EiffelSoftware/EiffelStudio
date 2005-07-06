@@ -63,13 +63,17 @@ debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 35")
 end
 
-					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
+					if not in_comments then
+						create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
 					update_token_list
 					
 when 4 then
---|#line 39 "editor_eiffel_scanner.l"
+--|#line 43 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 39")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 43")
 end
 
 					from i_ := 1 until i_ > text_count loop
@@ -80,53 +84,51 @@ end
 					in_comments := False
 					
 when 5 then
---|#line 51 "editor_eiffel_scanner.l"
+--|#line 55 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 51")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 55")
 end
  
 						-- comments
-					if not in_verbatim_string then
+--					if not in_verbatim_string then
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						in_comments := True
-					else
-						in_verbatim_string := False
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					end					
+--					else						
+--						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--					end					
 					update_token_list					
 				
 when 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 then
---|#line 65 "editor_eiffel_scanner.l"
+--|#line 68 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 65")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 68")
 end
 
 						-- Symbols
 					if not in_comments then
-						if not in_verbatim_string then
+--						if not in_verbatim_string then
 							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
-						
+--						else
+--							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--						end						
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					
 when 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 then
---|#line 91 "editor_eiffel_scanner.l"
+--|#line 93 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 91")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 93")
 end
  
 						-- Operator Symbol
 					if not in_comments then
-						if not in_verbatim_string then
+--						if not in_verbatim_string then
 							create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
+--						else
+--							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--						end
 						
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -134,41 +136,39 @@ end
 					update_token_list
 					
 when 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101 then
---|#line 126 "editor_eiffel_scanner.l"
+--|#line 128 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 126")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 128")
 end
 
 										-- Keyword
 										if not in_comments then
-											if not in_verbatim_string then
+--											if not in_verbatim_string then
 												create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-											else
-												create {EDITOR_TOKEN_STRING} curr_token.make(text)
-											end
-											
+--											else
+--												create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--											end											
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
 										update_token_list
 										
 when 102 then
---|#line 208 "editor_eiffel_scanner.l"
+--|#line 209 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 208")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 209")
 end
 
 										if not in_comments then
-											if not in_verbatim_string then
+--											if not in_verbatim_string then
 												if not Eiffel_universe.classes_with_name (text).is_empty then
-												create {EDITOR_TOKEN_CLASS} curr_token.make(text)
-											else
-												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-											end
-											else
-												create {EDITOR_TOKEN_STRING} curr_token.make(text)
-											end
-											
+													create {EDITOR_TOKEN_CLASS} curr_token.make(text)
+												else
+													create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+												end
+--											else
+--												create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--											end											
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
@@ -181,11 +181,11 @@ debug ("GELEX")
 end
 
 										if not in_comments then
-											if not in_verbatim_string then
+--											if not in_verbatim_string then
 												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-											else
-												create {EDITOR_TOKEN_STRING} curr_token.make(text)
-											end
+--											else
+--												create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--											end
 											
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -199,11 +199,11 @@ debug ("GELEX")
 end
 
 										if not in_comments then
-											if not in_verbatim_string then
+--											if not in_verbatim_string then
 												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-											else
-												create {EDITOR_TOKEN_STRING} curr_token.make(text)
-											end
+--											else
+--												create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--											end
 											
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -217,25 +217,24 @@ debug ("GELEX")
 end
 
 					if not in_comments then
-						if not in_verbatim_string then
+--						if not in_verbatim_string then
 							create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
-
+--						else
+--							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--						end
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					
 when 127 then
---|#line 298 "editor_eiffel_scanner.l"
+--|#line 297 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 298")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 297")
 end
 
 					if not in_comments then
-						if not in_verbatim_string then
+--						if not in_verbatim_string then
 							code_ := text_substring (4, text_count - 2).to_integer
 							if code_ > {CHARACTER}.Max_value then
 								-- Character error. Consedered as text.
@@ -243,9 +242,9 @@ end
 							else
 								create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 							end
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
+--						else
+--							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--						end
 						
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -253,27 +252,27 @@ end
 					update_token_list
 					
 when 128, 129 then
---|#line 318 "editor_eiffel_scanner.l"
+--|#line 317 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 318")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 317")
 end
 
 					-- Character error. Catch-all rules (no backing up)
 					if not in_comments then
-						if not in_verbatim_string then
+--						if not in_verbatim_string then
 							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end
+--						else
+--							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--						end
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					
 when 130 then
---|#line 345 "editor_eiffel_scanner.l"
+--|#line 344 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 345")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 344")
 end
 
  				if not in_comments then
@@ -281,6 +280,7 @@ end
 					create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					update_token_list
 					in_verbatim_string := True
+					start_of_verbatim_string := True
 					set_start_condition (VERBATIM_STR1)
 				else
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -298,6 +298,7 @@ end
 					create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					update_token_list
 					in_verbatim_string := True
+					start_of_verbatim_string := True
 					set_start_condition (VERBATIM_STR1)
 				else
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -305,59 +306,59 @@ end
 				end				
 			
 when 132 then
---|#line 372 "editor_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 372")
-end
--- Ignore carriage return
-when 133 then
 --|#line 373 "editor_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 373")
 end
-
-							-- Verbatim string closer, possibly.
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						update_token_list	
-						end_of_verbatim_string := True
-						in_verbatim_string := False
-						set_start_condition (INITIAL)
-					
-when 134 then
---|#line 382 "editor_eiffel_scanner.l"
+-- Ignore carriage return
+when 133 then
+--|#line 374 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 382")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 374")
 end
 
 							-- Verbatim string closer, possibly.
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						update_token_list
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)						
 						end_of_verbatim_string := True
 						in_verbatim_string := False
 						set_start_condition (INITIAL)
+						update_token_list
+					
+when 134 then
+--|#line 383 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 383")
+end
+
+							-- Verbatim string closer, possibly.
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)						
+						end_of_verbatim_string := True
+						in_verbatim_string := False
+						set_start_condition (INITIAL)
+						update_token_list
 					
 when 135 then
---|#line 391 "editor_eiffel_scanner.l"
+--|#line 392 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 391")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 392")
 end
 
 						create {EDITOR_TOKEN_SPACE} curr_token.make(text_count)
 						update_token_list						
 					
 when 136 then
---|#line 396 "editor_eiffel_scanner.l"
+--|#line 397 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 396")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 397")
 end
-
+						
 						create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
 						update_token_list						
 					
 when 137 then
---|#line 401 "editor_eiffel_scanner.l"
+--|#line 402 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 401")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 402")
 end
 
 						from i_ := 1 until i_ > text_count loop
@@ -367,18 +368,18 @@ end
 						end						
 					
 when 138 then
---|#line 409 "editor_eiffel_scanner.l"
+--|#line 410 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 409")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 410")
 end
 
 						create {EDITOR_TOKEN_STRING} curr_token.make(text)
 						update_token_list
 					
 when 139, 140 then
---|#line 415 "editor_eiffel_scanner.l"
+--|#line 416 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 415")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 416")
 end
 
 					-- Eiffel String
@@ -390,18 +391,18 @@ end
 					update_token_list
 					
 when 141 then
---|#line 428 "editor_eiffel_scanner.l"
+--|#line 429 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 428")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 429")
 end
 
 					-- Eiffel Bit
 					if not in_comments then
-						if not in_verbatim_string then
+--						if not in_verbatim_string then
 							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_STRING} curr_token.make(text)
-						end	
+--						else
+--							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--						end	
 						
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -409,19 +410,18 @@ end
 					update_token_list
 					
 when 142, 143 then
---|#line 445 "editor_eiffel_scanner.l"
+--|#line 446 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 445")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 446")
 end
 
 						-- Eiffel Integer
 						if not in_comments then
-							if not in_verbatim_string then
+--							if not in_verbatim_string then
 								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end
-							
+--							else
+--								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--							end							
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
@@ -435,12 +435,11 @@ end
 
 						-- Eiffel Integer Error (considered as text)
 						if not in_comments then
-							if not in_verbatim_string then
+--							if not in_verbatim_string then
 								create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end						
-
+--							else
+--								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--							end						
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
@@ -448,6 +447,24 @@ end
 						
 when 145 then
 	yy_end := yy_end - 1
+--|#line 476 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 476")
+end
+
+							-- Eiffel reals & doubles
+						if not in_comments then							
+--							if not in_verbatim_string then
+								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+--							else
+--								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--							end
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
+						update_token_list
+						
+when 146, 147 then
 --|#line 477 "editor_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 477")
@@ -455,29 +472,11 @@ end
 
 							-- Eiffel reals & doubles
 						if not in_comments then							
-							if not in_verbatim_string then
+--							if not in_verbatim_string then
 								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end
-						else
-							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-						end
-						update_token_list
-						
-when 146, 147 then
---|#line 478 "editor_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 478")
-end
-
-							-- Eiffel reals & doubles
-						if not in_comments then							
-							if not in_verbatim_string then
-								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end
+--							else
+--								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--							end
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
@@ -485,6 +484,24 @@ end
 						
 when 148 then
 	yy_end := yy_end - 1
+--|#line 479 "editor_eiffel_scanner.l"
+debug ("GELEX")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 479")
+end
+
+							-- Eiffel reals & doubles
+						if not in_comments then							
+--							if not in_verbatim_string then
+								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+--							else
+--								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--							end
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
+						update_token_list
+						
+when 149, 150 then
 --|#line 480 "editor_eiffel_scanner.l"
 debug ("GELEX")
 	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 480")
@@ -492,57 +509,38 @@ end
 
 							-- Eiffel reals & doubles
 						if not in_comments then							
-							if not in_verbatim_string then
+--							if not in_verbatim_string then
 								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end
-						else
-							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-						end
-						update_token_list
-						
-when 149, 150 then
---|#line 481 "editor_eiffel_scanner.l"
-debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 481")
-end
-
-							-- Eiffel reals & doubles
-						if not in_comments then							
-							if not in_verbatim_string then
-								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-							else
-								create {EDITOR_TOKEN_STRING} curr_token.make(text)
-							end
+--							else
+--								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--							end
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
 						update_token_list
 						
 when 151 then
---|#line 502 "editor_eiffel_scanner.l"
+--|#line 501 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 502")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 501")
 end
 
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					update_token_list
 					
 when 152 then
---|#line 510 "editor_eiffel_scanner.l"
+--|#line 509 "editor_eiffel_scanner.l"
 debug ("GELEX")
-	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 510")
+	std.error.put_line ("Executing scanner user-code from file 'editor_eiffel_scanner.l' at line 509")
 end
 
 					-- Error (considered as text)
 				if not in_comments then
-					if not in_verbatim_string then
+--					if not in_verbatim_string then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					else
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
-					end
-
+--					else
+--						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+--					end
 				else
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 				end

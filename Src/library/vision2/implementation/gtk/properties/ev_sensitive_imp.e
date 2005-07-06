@@ -43,12 +43,20 @@ feature -- Status setting
 			-- Allow the object to be sensitive to user input.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
+			if needs_event_box then
+					-- Restore visible window for event box.
+				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, True)
+			end
 		end
 
 	disable_sensitive is
 			-- Set the object to ignore all user input.
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
+			if needs_event_box then
+					-- We hide the event box Window so that it cannot be seen disabled.
+				{EV_GTK_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

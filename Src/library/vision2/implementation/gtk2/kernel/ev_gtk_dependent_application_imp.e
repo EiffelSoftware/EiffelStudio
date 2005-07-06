@@ -29,12 +29,8 @@ feature -- Initialize
 
 	gtk_dependent_initialize is
 			-- Gtk dependent code for `initialize'
-		local
-			a_settings: POINTER
 		do
-			a_settings := default_gtk_settings
-			default_font_name_internal := "Sans"
-			default_font_point_height_internal := 10
+			-- Do nothing
 		end
 
 	gtk_dependent_launch_initialize is
@@ -43,12 +39,6 @@ feature -- Initialize
 			if {EV_GTK_EXTERNALS}.gtk_maj_ver = 1 and then {EV_GTK_EXTERNALS}.gtk_min_ver <= 2 and then {EV_GTK_EXTERNALS}.gtk_mic_ver < 8 then
 				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + {EV_GTK_EXTERNALS}.gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
-			previous_font_description := ""
-			
-				-- Initialize the default font values
-			if font_settings_changed then
-				initialize_default_font_values
-			end			
 		end
 
 feature -- Implementation
@@ -222,8 +212,6 @@ feature -- Implementation
 
 	font_settings_changed: BOOLEAN is
 			-- Have the default font settings been changed by the user
-		require
-			default_font_initialized: previous_font_description /= Void
 		local
 			a_settings: STRING
 		do

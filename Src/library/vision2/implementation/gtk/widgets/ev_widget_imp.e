@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 				--| "button-press-event" is a special case, see below.
 				
 			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (App_imp.gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, True)
-			signal_connect  (a_event_widget, app_imp.focus_out_event_string, agent (App_imp.gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
+			signal_connect (a_event_widget, app_imp.focus_out_event_string, agent (App_imp.gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
 				
 			connect_button_press_switch_agent := agent (App_imp.gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)

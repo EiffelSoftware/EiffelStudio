@@ -139,7 +139,7 @@ feature -- Initialization
 			if l_fields /= Void then
 				nb := l_fields.count
 			end
-			if l_constructors /= Void then
+			if l_constructors /= Void and then not l_constructors.is_empty then
 				create creators.make (l_constructors.count)
 				nb := nb + l_constructors.count
 			end
@@ -165,7 +165,7 @@ feature -- Initialization
 			if l_fields /= Void then
 				process_features (l_feat_tbl, l_fields)
 			end
-			if l_constructors /= Void then
+			if l_constructors /= Void and then not l_constructors.is_empty then
 				process_features (l_feat_tbl, l_constructors)
 			end
 			if l_procedures /= Void then

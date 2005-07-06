@@ -74,11 +74,13 @@ feature {NONE} -- Initialization
 			default_create_label
 			is_high_quality := True
 			
+				-- Create `aggregate_figure' before doing any manipulation
+				-- as otherwise we can be called back and we would violate our invariant.
+			create aggregate_figure
 
 			label_group.extend (name_label)
 			extend (label_move_handle)
 
-			create aggregate_figure
 			extend (aggregate_figure)
 			aggregate_figure.set_line_width (2)
 			

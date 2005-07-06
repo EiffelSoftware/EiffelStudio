@@ -76,11 +76,12 @@ feature {NONE} -- Initialization
 			extend (commands)
 			
 			create names
-			names.extend (name_label)
+			create generics
 			create properties
+
+			names.extend (name_label)
 			properties.hide
 			names.extend (properties)
-			create generics
 			generics.hide
 			names.extend (generics)
 			
@@ -1023,9 +1024,9 @@ invariant
 	commands_line_not_void: commands_line /= Void
 	queries_not_void: queries /= Void
 	commands_not_void: commands /= Void
-	names_not_Void: names /= Void
-	properties_not_Void: properties /= Void
-	generics_not_Void: generics /= Void
+	names_not_void: names /= Void
+	properties_not_void: properties /= Void
+	generics_not_void: generics /= Void
 	border_positive: border >= 0
 
 end -- class UML_CLASS_FIGURE

@@ -148,7 +148,7 @@ feature -- Status setting
 			if not is_show_requested then
 				call_show_actions := True
 				if not (is_positioned or positioned_by_user) then
-					{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, {EV_GTK_EXTERNALS}.Gtk_win_pos_center_enum)
+					{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
 				end
 				Precursor {EV_GTK_WINDOW_IMP}
 				is_positioned := True
@@ -157,6 +157,17 @@ feature -- Status setting
 				set_blocking_window (Void)
 			end
 		end
+
+	window_position_enum: INTEGER is
+			-- GtkWindow positioning enum. 
+		do
+			if blocking_window /= Void then
+				Result := {EV_GTK_EXTERNALS}.Gtk_win_pos_center_on_parent_enum
+			else
+				Result := {EV_GTK_EXTERNALS}.Gtk_win_pos_center_enum
+			end
+		end
+		
 		
 	is_positioned: BOOLEAN
 		-- Has the Window been previously positioned on screen?
@@ -355,13 +366,13 @@ feature {NONE} -- Implementation
 				l_app_imp := app_implementation
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						a_cs := l_app_imp.c_string_from_eiffel_string (l_app_imp.key_press_event_string)
+						a_cs := l_app_imp.key_press_event_string
 						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						a_cs := l_app_imp.c_string_from_eiffel_string (l_app_imp.key_press_event_string)
+						a_cs := l_app_imp.key_press_event_string
 						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end

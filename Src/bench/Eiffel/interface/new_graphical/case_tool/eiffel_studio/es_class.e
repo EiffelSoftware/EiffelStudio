@@ -684,7 +684,6 @@ feature {NONE} -- Implementation
 invariant
 	queries_not_void: queries /= Void
 	suppliers_not_void: suppliers /= Void
-	code_generator_not_void: code_generator /= Void
 	queries_changed_actions_not_void: queries_changed_actions /= Void
 	feature_clause_list_not_Void: feature_clause_list /= Void
 	feature_clause_list_changed_actions_not_Void: feature_clause_list_changed_actions /= Void

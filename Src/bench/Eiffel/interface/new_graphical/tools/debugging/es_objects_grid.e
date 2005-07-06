@@ -92,6 +92,19 @@ feature -- Change
 			mouse_wheel_scroll_size	:= v
 		end
 
+feature -- To be implemented
+
+	enable_grid_redraw is
+		do
+			to_implement ("here we should call {GRID}.unlock_update")
+--			unlock_update
+		end
+
+	disable_grid_redraw is
+		do
+			to_implement ("here we should call {GRID}.lock_update")
+--			lock_update
+		end
 
 feature -- Grid item Activation
 	

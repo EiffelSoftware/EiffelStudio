@@ -34,7 +34,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Connect `button_press_switch' to its event sources.
 		do
 			if not button_press_switch_is_connected then
-				real_signal_connect (event_widget, App_implementation.button_press_event_string, agent (app_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), app_implementation.default_translate)
+				signal_connect (event_widget, App_implementation.button_press_event_string, agent (app_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), app_implementation.default_translate, False)
 				button_press_switch_is_connected := True
 			end
 		end

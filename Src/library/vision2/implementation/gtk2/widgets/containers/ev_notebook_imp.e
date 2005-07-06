@@ -47,10 +47,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_notebook_new ())
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_border (visual_widget, 1)
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (visual_widget, False)
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_hborder (visual_widget, 0)
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_vborder (visual_widget, 0)
+			{EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (visual_widget, True)
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_scrollable (visual_widget, True)
 			real_signal_connect (visual_widget, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
 		end
@@ -335,7 +332,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Set `an_item's text empty.
 		do
 			Precursor (an_item_imp)
-			set_item_text (an_item_imp.interface, "      ")
+			set_item_text (an_item_imp.interface, once "      ")
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is

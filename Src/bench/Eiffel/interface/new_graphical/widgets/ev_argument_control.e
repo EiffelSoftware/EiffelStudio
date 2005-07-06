@@ -10,7 +10,10 @@ class
 inherit
 
 	EV_VERTICAL_BOX
-	
+		redefine
+			set_focus
+		end
+
 	EB_CONSTANTS
 		undefine
 			default_create, copy, is_equal
@@ -34,14 +37,14 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
-	
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
-		
+
 	EB_SHARED_ARGUMENTS
 		export
 			{NONE} all
@@ -683,11 +686,20 @@ feature {NONE} -- Element Change
 			synch_with_others
 		end
 	
-feature -- GUI Properties
+feature -- Status setting
 
-	current_argument: EV_TEXT
-			-- The current argument (either 'ace_current_arg_text' or 'user_current_arg_text').
-	
+	set_focus is
+			-- Grab keyboard focus.
+		do
+				-- Set focus to a new argument field or to a check box 
+				-- to allow arguments if they are not allowed yet.
+			if argument_check.is_selected then
+				current_argument.set_focus
+			else
+				argument_check.set_focus
+			end
+		end
+
 feature {NONE} -- GUI Properties
 
 	working_directory: EV_PATH_FIELD
@@ -699,6 +711,9 @@ feature {NONE} -- GUI Properties
 	argument_check: EV_CHECK_BUTTON
 			-- Check button to determine of arguments used or not.
 
+	current_argument: EV_TEXT
+			-- The current argument (either 'ace_current_arg_text' or 'user_current_arg_text').
+	
 	argument_list: EV_EDITABLE_LIST
 			-- The current list with focus (either 'ace_arguments_list' or 'custom_arguments_list').
 			

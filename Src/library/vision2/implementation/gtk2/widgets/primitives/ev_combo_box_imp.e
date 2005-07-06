@@ -153,6 +153,8 @@ feature {NONE} -- Initialization
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_reorder (container_widget, a_cell_renderer, 0)
 			a_attribute := "pixbuf"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 0)
+			
+			set_minimum_width_in_characters (3)
 
 			real_signal_connect (container_widget, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 		end

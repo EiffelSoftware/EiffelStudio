@@ -77,7 +77,7 @@ feature -- Access
 	width: INTEGER is
 			-- Width in pixels calculated based on which tokens should be displayed
 		do	
-		    Result := 1
+		    Result := 0
 			if line_numbers_visible then				
 				Result := Result + internal_line_number_area_width
 			end
@@ -223,6 +223,15 @@ feature {NONE} -- Implementation
 			Result := text_panel.buffered_drawable_height
 		end
 
+	separator_width: INTEGER is 1
+			-- Width of vertical separator
+
+	separator_color: EV_COLOR is
+			-- Color of separator between margin and editor
+		do
+			Result := editor_preferences.margin_separator_color
+		end
+
 feature {TEXT_PANEL} -- Display functions
 
 	on_repaint (x, y, a_width, a_height: INTEGER) is
@@ -247,6 +256,7 @@ feature {TEXT_PANEL} -- Display functions
  			last_line_to_draw	: INTEGER 			
  			view_y_offset		: INTEGER
  			y_offset: INTEGER
+ 			l_height: INTEGER
  		do
 			view_y_offset := margin_viewport.y_offset
 
@@ -276,7 +286,14 @@ feature {TEXT_PANEL} -- Display functions
 				debug ("editor")
 					draw_flash (0, y_offset, width, (viewable_height - (y_offset - view_y_offset)).abs, False)					
 				end
-				margin_area.clear_rectangle (0, y_offset, width, y_offset + viewable_height - (y_offset - view_y_offset))
+				l_height := y_offset + viewable_height - (y_offset - view_y_offset)
+				margin_area.clear_rectangle (0, y_offset, width, l_height)
+				
+					-- Display the separator
+				margin_area.set_background_color (separator_color)
+				margin_area.clear_rectangle (width - separator_width, y_offset, separator_width, l_height)				
+				margin_area.set_background_color (editor_preferences.margin_background_color)
+				
  			end 	
  			in_scroll := False
  		end

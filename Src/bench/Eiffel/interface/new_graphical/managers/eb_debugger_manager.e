@@ -652,7 +652,9 @@ feature -- Debugging events
 			status: APPLICATION_STATUS
 			call_stack_elem	: CALL_STACK_ELEMENT
 		do
-			debug("DEBUGGER") io.put_string("APPLICATION_EXECUTION: on_application_before_stopped %N"); end
+			debug("debugger_trace_synchro") 
+				io.put_string(generator + "a.on_application_before_stopped %N")
+			end
 			status := Application.status
 			if status /= Void and then Application.is_stopped then
 					-- Application has stopped
@@ -701,6 +703,7 @@ feature -- Debugging events
 				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
 
+			objects_tool.enable_grid_redraw
 			objects_tool.disable_refresh
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
 			if not Application.current_call_stack_is_empty then
@@ -774,6 +777,8 @@ feature -- Debugging events
 			call_stack_tool.update
 				-- Fill in the objects tool.
 			objects_tool.update
+			objects_tool.disable_grid_redraw
+			
 				-- Update Watch tool
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 

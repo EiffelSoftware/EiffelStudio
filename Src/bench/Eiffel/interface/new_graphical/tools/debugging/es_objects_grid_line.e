@@ -409,6 +409,9 @@ feature -- Graphical changes
 			if not compute_grid_display_done then
 				if application.is_running and then application.is_stopped then
 					compute_grid_display
+				else
+--					set_name (object_name)
+--					ev_application.idle_actions.extend_kamikaze (agent parent_grid.remove_and_clear_all_rows)
 				end
 			end
 			if row /= Void and then c <= row.count then

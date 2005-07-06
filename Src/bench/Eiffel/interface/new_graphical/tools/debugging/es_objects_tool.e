@@ -536,6 +536,20 @@ feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
 			cleaning_timer_delay = ms
 		end
 
+feature -- Disable refresh grid
+
+	disable_grid_redraw is
+		do
+			stack_objects_grid.disable_grid_redraw
+			debugged_objects_grid.disable_grid_redraw
+		end
+
+	enable_grid_redraw is
+		do
+			stack_objects_grid.enable_grid_redraw
+			debugged_objects_grid.enable_grid_redraw
+		end
+
 feature {NONE} -- Layout Implementation
 
 	cleaning_timer_delay: INTEGER
@@ -554,6 +568,8 @@ feature {NONE} -- Layout Implementation
 			internal_locals_row := Void
 			internal_arguments_row := Void
 			internal_result_row := Void
+			
+			stack_objects_grid.enable_grid_redraw
 			if not stack_objects_grid_empty then
 				stack_objects_grid.remove_and_clear_all_rows
 				stack_objects_grid_empty := True
@@ -594,8 +610,8 @@ feature {NONE} -- Layout Implementation
 	clean_debugged_objects_grid is
 		do
 			cancel_delayed_clean_debugged_objects_grid
-			
 			record_objects_layout
+			debugged_objects_grid.enable_grid_redraw
 			if not debugged_objects_grid_empty then
 				debugged_objects_grid.remove_and_clear_all_rows
 				debugged_objects_grid_empty := True
@@ -692,9 +708,12 @@ feature {NONE} -- Implementation
 				request_delayed_clean_debugged_objects_grid
 				if l_status.is_stopped and dbg_was_stopped then
 					if l_status.has_valid_call_stack and then l_status.has_valid_current_eiffel_call_stack_element then
+						cancel_delayed_clean_debugged_objects_grid
+
 						clean_stack_objects_grid
-						clean_debugged_objects_grid
 						build_stack_objects_grid
+
+						clean_debugged_objects_grid
 						build_debugged_objects_grid
 					end
 				else
@@ -761,13 +780,16 @@ feature {NONE} -- Current objects grid Implementation
 				else
 					item.set_title (Interface_names.l_Current_object)
 				end
-				item.attach_to_row (debugged_objects_grid.front_new_row)				
+				item.attach_to_row (debugged_objects_grid.front_new_row)
+				if application.is_running and then application.is_stopped then
+					current_object.compute_grid_display
+				end
 			end
 			add_displayed_objects_to_grid (debugged_objects_grid)
 			if debugged_objects_grid.row_count > 0 then
 					--| be sure the grid is redrawn, and the first row is visible
 				debugged_objects_grid.row (1).ensure_visible
-				debugged_objects_grid.row (1).redraw				
+				debugged_objects_grid.row (1).redraw
 			end
 		end
 
@@ -788,7 +810,6 @@ feature {NONE} -- Current objects grid Implementation
 				displayed_objects.forth
 			end
 		end
-		
 		
 feature {NONE} -- Impl : Debugged objects grid specifics
 
@@ -903,7 +924,6 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					remove_debugged_object_line (glines.item)
 					glines.forth
 				end
-
 			end
 		end
 

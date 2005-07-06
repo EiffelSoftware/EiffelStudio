@@ -979,7 +979,7 @@ feature -- Basic operations
 						v_y := row_offsets @ (row_count + 1)
 						rectangle_height := internal_client_height - (v_y - internal_client_y)
 					end
-					if rectangle_height >= 0 then
+					if rectangle_height > 0 then
 						-- Check to see if must draw the background below the items.
 
 						if item_buffer_pixmap.width < internal_client_width or item_buffer_pixmap.height < rectangle_height then

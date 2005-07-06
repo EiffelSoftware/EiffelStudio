@@ -38,6 +38,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	REFACTORING_HELPER
 
 create
 	make
@@ -273,7 +275,10 @@ feature -- Action
 
 	show_and_set_focus is
 			-- show the search tool and set focus to the search text field
+		require
+			explorer_bar_item_not_void: explorer_bar_item /= Void
 		do
+			fixme ("it can occurs the explorer_bar_item is bad (void or maybe destroyed ..")
 			explorer_bar_item.show
 			if explorer_bar_item.is_minimized then
 				explorer_bar_item.restore

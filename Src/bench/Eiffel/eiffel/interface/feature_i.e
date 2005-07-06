@@ -1907,7 +1907,7 @@ end
 				create {VFAC1} vfac.make (system.current_class, Current)
 			elseif assigner.argument_count /= argument_count + 1 then
 				create {VFAC2} vfac.make (system.current_class, Current)
-			elseif not assigner.arguments.first.same_as (type) then
+			elseif not assigner.arguments.first.actual_type.same_as (type.actual_type) then
 				create {VFAC3} vfac.make (system.current_class, Current)
 			elseif argument_count > 0 then
 				assigner_arguments := assigner.arguments
@@ -1920,7 +1920,7 @@ end
 				until
 					assigner_arguments.after
 				loop
-					if not assigner_arguments.item.same_as (query_arguments.item) then
+					if not assigner_arguments.item.actual_type.same_as (query_arguments.item.actual_type) then
 						create {VFAC4} vfac.make (system.current_class, Current)
 						assigner_arguments.finish
 						query_arguments.finish
@@ -2100,32 +2100,6 @@ feature -- Genericity
 			loop	
 				Instantiator.dispatch (arguments.i_th (i).actual_type, a_class)
 				i := i + 1
-			end
-		end
-
-	has_anchored_or_formal_generic_type: BOOLEAN is
-			-- Has feature signature an anchored or formal generic type?
-			-- (I.e., is anchored or formal genric type used in argument or result declaration?)
-		local
-			i: INTEGER
-			a: like arguments
-		do
-			if type.is_loose then
-				Result := True
-			else
-				from
-					i := 1
-					a := arguments
-					i := argument_count
-				until
-					i <= 0
-				loop
-					if a.i_th (i).is_loose then
-						Result := True
-						i := 0
-					end
-					i := i - 1
-				end
 			end
 		end
 

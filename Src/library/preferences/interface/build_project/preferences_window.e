@@ -199,15 +199,22 @@ feature {NONE} -- Events
 			l_menu_item: EV_MENU_ITEM
 			l_pref: PREFERENCE
 		do
-			if not a_pref.is_default_value and then a_button = 3 and not grid.selected_rows.is_empty then
-				l_pref ?= grid.selected_rows.first.data
-				if l_pref /= Void and then l_pref = a_pref and then l_pref.has_default_value then					
+			if not a_pref.is_default_value and then a_button = 3 then
+					-- Extract `l_pref' from row data.
+				l_pref ?= a_item.row.data
+				
+					-- Show the menu only if necessary (that is to say, the preference value is different from the default one)
+				if l_pref /= Void and then l_pref = a_pref and then l_pref.has_default_value then
+						-- Ensure that before showing the menu, the row gets selected.
+					grid.remove_selection
+					a_item.row.enable_select
+
 						-- The right clicked preference matches the selection in the grid
 					create l_popup_menu
 					create l_menu_item.make_with_text ("Restore Default")
 					l_menu_item.select_actions.extend (agent set_resource_to_default (a_item, a_pref))
 					l_popup_menu.extend (l_menu_item)
-					l_popup_menu.show_at (grid, a_x + a_item.virtual_x_position, a_screen_y - Current.screen_y)
+					l_popup_menu.show
 				end
 			end
 		end

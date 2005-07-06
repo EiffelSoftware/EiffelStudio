@@ -48,8 +48,6 @@ feature {PREFERENCE_STRUCTURE} -- Initialization
 	make_with_location (a_resources: PREFERENCES; a_location: STRING) is
 			-- Create resource structure in the XML file at location `a_location'.
 			-- If file does not exist create new one.
-		local
-			l_file: KL_TEXT_OUTPUT_FILE
 		do			
 			resources := a_resources
 			create session_values.make (5)

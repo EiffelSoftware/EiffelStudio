@@ -85,7 +85,6 @@ feature {NONE} -- Initialization
 			-- Create and initialize button box.
 		local
 			box: POINTER
-			a_event_box: POINTER
 			hbox: POINTER
 		do
 			box := {EV_GTK_EXTERNALS}.gtk_alignment_new (0, 0, 0, 0)

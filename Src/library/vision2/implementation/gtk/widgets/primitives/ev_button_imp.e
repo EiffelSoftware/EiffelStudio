@@ -74,14 +74,11 @@ feature {NONE} -- Initialization
 			-- `Precursor' initialization,
 			-- create button box to hold label and pixmap.
 		do
-			Precursor {EV_PRIMITIVE_IMP}
-			{EV_GTK_EXTERNALS}.gtk_container_set_border_width (visual_widget, 0)
-			{EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
 			align_text_center
-			set_is_initialized (True)
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 	initialize_button_box is

@@ -35,7 +35,7 @@ feature -- Width & height
 	width: INTEGER
 			-- Width in pixels
 
-	separator_width: INTEGER is 2
+	separator_width: INTEGER is 1
 			-- Width in pixels of separator
 
 	get_substring_width (n: INTEGER): INTEGER is
@@ -102,7 +102,7 @@ feature -- Miscellaneous
 			
 				-- Display the separator
 			device.set_background_color (separator_color)
-			device.clear_rectangle (position + (width - separator_width) + 1, d_y, separator_width, height)
+			device.clear_rectangle (position + (width - separator_width), d_y, separator_width, height)
 			device.set_background_color (background_color)
 		end
 		

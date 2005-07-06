@@ -124,6 +124,7 @@ feature {NONE} -- Implementation
 				a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, color_struct, False, True)
 				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)	
 				{EV_GTK_EXTERNALS}.gdk_window_set_background (drawable, color_struct)
+				Precursor {EV_PRIMITIVE_IMP} (a_color)
 			end
 		end
 
@@ -151,13 +152,12 @@ feature {NONE} -- Implementation
 		do
 			a_drawable := drawable
 			if a_drawable /= NULL then
-				a_rectangle := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
+				a_rectangle := app_implementation.reusable_rectangle_struct
 				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (a_rectangle, a_width)
 				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (a_rectangle, a_height)
 				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (a_rectangle, a_x)
 				{EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y  (a_rectangle, a_y)
-				{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)
-				a_rectangle.memory_free				
+				{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (a_drawable, a_rectangle, False)				
 			end
 		end
 		
@@ -188,7 +188,6 @@ feature {NONE} -- Implementation
 		do
 			-- Not applicable
 		end
-		
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 
@@ -245,7 +244,7 @@ feature {NONE} -- Implementation
 			if not is_tabable_to then
 				{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			end
-			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then not has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) and then (a_button = 1 or a_button = 3) then
+			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then not has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) and then (a_button = 1 and then a_button <= 3) then
 					-- As a button has been pressed on the drawing area then 
 				set_focus
 			end

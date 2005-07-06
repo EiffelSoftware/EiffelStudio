@@ -109,15 +109,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	menu_item_box: POINTER is
-		local
-			a_child_list: POINTER
-		do
-			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (c_object)
-			Result := {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
-			{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
-		end
-
 	interface: EV_MENU_ITEM
 
 end -- class EV_MENU_ITEM_IMP

@@ -138,10 +138,10 @@ feature {NONE} -- Accelerators
 			
 			if acc_imp.key.code = {EV_KEY_CONSTANTS}.key_f10 then
 					-- F10 is used as a default window accelerator key, if we use F10 in a custom accelerator then we override the default setting
-				a_property := "gtk-menu-bar-accel"
-				a_value := "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
+				a_property := once "gtk-menu-bar-accel"
+				a_value := once "<Shift><Control><Mod1><Mod2><Mod3><Mod4><Mod5>F10"
 					-- This is a value that is highly unlikely to be used
-				a_origin := "Vision2"
+				a_origin := once "Vision2"
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_set_string_property (app_implementation.default_gtk_settings, a_property.item, a_value.item, a_origin.item)				
 			end
 		end
@@ -246,7 +246,6 @@ feature -- Element change
 			check
 				icon_implementation_exists: pixmap_imp /= Void
 			end
-
 			{EV_GTK_EXTERNALS}.gdk_window_set_icon ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
 		end
 		

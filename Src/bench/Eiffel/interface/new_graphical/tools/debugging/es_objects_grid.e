@@ -148,7 +148,7 @@ feature -- Scrolling
 				if vy < 0 then
 					vy := 0
 				else
-					vy := vy.min (virtual_height - viewable_height)
+					vy := vy.min (maximum_virtual_y_position)
 				end
 				set_virtual_position (virtual_x_position, vy)
 			end

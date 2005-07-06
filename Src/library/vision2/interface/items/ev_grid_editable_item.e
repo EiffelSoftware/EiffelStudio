@@ -76,6 +76,8 @@ feature {NONE} -- Implementation
 			
 			a_widget_y_offset := (a_widget.minimum_height - text_height) // 2
 			a_widget_x_offset := 2
+			
+			a_widget.set_minimum_width (0)
 
 			a_popup.set_x_position (a_popup.x_position + x_offset - a_widget_x_offset)
 			a_popup.set_width (a_popup.width - x_offset - right_border + a_widget_x_offset)

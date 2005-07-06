@@ -55,8 +55,6 @@ feature {NONE} -- Initialization
 			set_c_object (a_vbox)
 			entry_widget := {EV_GTK_EXTERNALS}.gtk_entry_new
 			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
-				--| Minimum sizes need to be similar on both platforms
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 			set_text (once "")
 		end
@@ -77,7 +75,7 @@ feature -- Status setting
 	set_minimum_width_in_characters (nb: INTEGER) is
 			-- Make `nb' characters visible on one line.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_width_chars (entry_widget, nb + 1)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (entry_widget, (nb + 1)  * maximum_character_width, -1)
 		end
 	
 	set_text (a_text: STRING) is

@@ -80,55 +80,27 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
-			set_is_initialized (True)
 			align_text_center
+			set_is_initialized (True)
 		end
 
 	initialize_button_box is
 			-- Create and initialize button box.
 		local
 			box: POINTER
+			a_event_box: POINTER
+			hbox: POINTER
 		do
-			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			box := {EV_GTK_EXTERNALS}.gtk_alignment_new (0, 0, 0, 0)
 			{EV_GTK_EXTERNALS}.gtk_container_add (visual_widget, box)
+			hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (hbox)
+			{EV_GTK_EXTERNALS}.gtk_container_add (box, hbox)
+			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, pixmap_box)
+			{EV_GTK_EXTERNALS}.gtk_container_add (hbox, text_label)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
-
-				-- Set up alignment dummy labels.
-			left_side_label := {EV_GTK_EXTERNALS}.gtk_label_new (NULL)
-			right_side_label := {EV_GTK_EXTERNALS}.gtk_label_new (NULL)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (left_side_label)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (right_side_label)
-
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, left_side_label)
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
-	
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
-			{EV_GTK_EXTERNALS}.gtk_container_add (box, right_side_label)
 		ensure
 			button_box /= NULL
-		end
-		
-	set_child_expandable (a_box: POINTER; a_child: POINTER; flag: BOOLEAN) is
-			-- Set whether `child' expands to fill available spare space.
-		local
-			old_expand, fill, pad, pack_type: INTEGER
-		do
-			{EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
-				a_box,
-				a_child,
-				$old_expand,
-				$fill,
-				$pad,
-				$pack_type
-			)
-			{EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
-				a_box,
-				a_child,
-				flag,
-				fill.to_boolean,
-				pad,
-				pack_type
-			)
 		end
 		
 	fontable_widget: POINTER is
@@ -136,9 +108,6 @@ feature {NONE} -- Initialization
 		do
 			Result := text_label
 		end
-		
-	left_side_label, right_side_label: POINTER
-			-- Dummy labels used for text/pixmap alignment
 
 feature -- Access
 
@@ -152,24 +121,21 @@ feature -- Status Setting
 			-- Display `text' centered.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			set_child_expandable (button_box, left_side_label, True)
-			set_child_expandable (button_box, right_side_label, True)
+			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, 0.5, 0.5, 0, 0)
 		end
 
 	align_text_left is
 			-- Display `text' left aligned.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			set_child_expandable (button_box, left_side_label, False)
-			set_child_expandable (button_box, right_side_label, True)
+			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, 0.0, 0.5, 0, 0)
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
 			Precursor {EV_TEXTABLE_IMP}
-			set_child_expandable (button_box, left_side_label, True)
-			set_child_expandable (button_box, right_side_label, False)
+			{EV_GTK_EXTERNALS}.gtk_alignment_set (button_box, 1.0, 0.5, 0, 0)
 		end
 
 	enable_default_push_button is
@@ -232,18 +198,11 @@ feature {NONE} -- implementation
 			)
 		end
 
-	padding: INTEGER is 1
-			-- Number of pixels of extra space around text and pixmap.
-
 	button_box: POINTER is
 			-- GtkHBox in button.
 			-- Holds label and pixmap.
-		local
-			a_child_list: POINTER
 		do
-			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (visual_widget)
-			Result := {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
-			{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
+			Result := {EV_GTK_EXTERNALS}.gtk_bin_struct_child (visual_widget)
 		end
 
 feature {EV_ANY_I} -- implementation

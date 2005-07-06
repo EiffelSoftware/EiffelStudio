@@ -85,6 +85,8 @@ feature {NONE} -- Implementation
 				-- Align combo box to y position of text in `Current'.
 			a_y_position := a_popup.y_position + top_border + ((a_popup.height - top_border - bottom_border - a_widget.minimum_height) // 2) + 1
 			
+			a_widget.set_minimum_width (0)
+			
 			a_popup.set_size (a_width, a_widget.minimum_height)
 			a_popup.set_position (a_x_position, a_y_position)			
 		end

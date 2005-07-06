@@ -275,6 +275,22 @@ feature -- Access
 			-- offset by the current row height.
 			-- If `False', the scrolling is smooth on a per-pixel basis.
 			
+	is_vertical_overscroll_enabled: BOOLEAN
+			-- Does the virtual height of `Current' include the
+			-- position of the final row plus the `viewable_height'.
+			-- If `True', this enables vertical scrolling until the last row
+			-- is at the very top of the viewable area. If `False', scrolling
+			-- may be performed until the last row is at the bottom of the viewable
+			-- area.
+		
+	is_horizontal_overscroll_enabled: BOOLEAN
+			-- Does the virtual width of `Current' include the
+			-- position of the final column plus the `viewable_width'.
+			-- If `True', this enables horizontal scrolling until the last column
+			-- is at the very left of the viewable area. If `False', scrolling
+			-- may be performed until the last column is at the left of the viewable
+			-- area.
+			
 	is_content_partially_dynamic: BOOLEAN
 			-- Is the content of `Current' partially dynamic? If `True' then
 			-- whenever an item must be re-drawn and it is not already set within `Current',
@@ -315,7 +331,7 @@ feature -- Access
 		do
 			Result := internal_client_x
 		ensure
-			valid_result: Result >= 0 and Result <= virtual_width - viewable_width
+			valid_result: Result >= 0 and Result <= maximum_virtual_x_position
 		end
 		
 	virtual_y_position: INTEGER is
@@ -324,7 +340,98 @@ feature -- Access
 		do
 			Result := internal_client_y
 		ensure
-			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
+			valid_result: Result >= 0 and Result <= maximum_virtual_y_position
+		end
+		
+	maximum_virtual_x_position: INTEGER is
+			-- Maximum permitted virtual x position based on current dimensions and properties.
+			-- Properties that affect this value are `is_vertical_scrolling_per_item' and
+			-- `is_vertical_scrolling_per_item'.
+		do
+			Result := (virtual_width - viewable_width).max (0)
+		ensure
+			result_non_negative: Result >= 0
+		end
+		
+	maximum_virtual_y_position: INTEGER is
+			-- Maximum permitted virtual y position based on current properties.
+			-- Properties that affect this value are `is_horizontal_scrolling_per_item' and
+			-- `is_horizontal_scrolling_per_item'.
+		do
+			Result := (virtual_height - viewable_height).max (0)
+		ensure
+			result_non_negative: Result >= 0
+		end
+		
+	pixels_displayed_after_final_row: INTEGER is
+			-- Height in pixels displayed after the final row of `Current'.
+			-- If `is_vertical_overdraw_enabled' this is `viewable_height' less the final row height.
+			-- If not `is_vertical_overdraw_enabled' and `is_vertical_scrolling_per_item' this is
+			-- the number of pixels required to ensure the first visible row is flush to the top of the
+			-- viewable area of `Current'.
+		local
+			final_row_height: INTEGER
+			virtual_y_position_of_last_row: INTEGER
+			row_index: INTEGER
+			l_calculation: INTEGER
+		do
+			if is_vertical_overscroll_enabled then
+				if is_row_height_fixed then
+					final_row_height := row_height
+				else
+					final_row_height := rows.i_th (row_count).height
+				end
+				l_calculation := final_row_height
+			elseif is_vertical_scrolling_per_item then
+				row_index := last_first_row_in_per_item_scrolling
+				if row_index <= row_count and row_index > 0 then
+					if is_row_height_fixed then
+						virtual_y_position_of_last_row := (row_index - 1) * row_height
+					else
+						virtual_y_position_of_last_row := rows.i_th (row_index).virtual_y_position
+					end
+					l_calculation := total_row_height - virtual_y_position_of_last_row
+				end
+			elseif is_vertical_scrolling_per_item = False then
+				l_calculation := viewable_height
+			end			
+				-- We perform `max' as if the viewable height is less than the
+				-- final row height then there are no extra pixels to be displayed.
+			Result := (viewable_height - l_calculation).max (0)
+		ensure		
+			result_non_negative: Result >= 0
+			result_no_more_than_viewable_height: Result <= viewable_height
+			no_rows_contained_implies_result_is_viewable_height: row_count = 0 implies Result = viewable_height
+			valid_result_with_rows_with_overdraw_with_fixed_row_height: row_count > 0 and is_row_height_fixed and is_vertical_overscroll_enabled implies
+				Result = viewable_height - row_height
+			valid_result_with_rows_with_overdraw_with_variable_row_height: row_count > 0 and not is_row_height_fixed and is_vertical_overscroll_enabled implies
+				Result = viewable_height - row (row_count).height
+			valid_result_with_rows_when_per_pixel_scrolling_with_no_overdraw: row_count > 0 and is_vertical_scrolling_per_item = False and
+				is_vertical_overscroll_enabled = False implies Result = 0
+			valid_result_with_fixed_height_rows_when_per_item_scrolling_and_no_overdraw: row_count > 0 and is_row_height_fixed and is_vertical_scrolling_per_item and
+				is_vertical_scrolling_per_item and row (row_count).virtual_y_position + row_height > viewable_height implies Result <= row_height
+		end
+		
+	pixels_displayed_after_final_column: INTEGER is
+			-- Width in pixels displayed after the final column of `Current'.
+			-- If `is_horizontal_overdraw_enabled' this is `viewable_width' less the final column width.
+			-- If not `is_horizontal_overdraw_enabled' and `is_horizontal_scrolling_per_item' this is
+			-- the number of pixels required to ensure the first visible column is flush to the left of the
+			-- viewable area of `Current'.
+		local
+			final_column_width: INTEGER
+			virtual_x_position_of_last_column: INTEGER
+		do
+			if is_horizontal_overscroll_enabled then
+					final_column_width := columns.i_th (column_count).width
+				
+					-- We perform `max' as if the viewable width is less than the
+					-- final column width then there are no extra pixels to be displayed.
+				Result := (viewable_width - final_column_width).max (0)
+			elseif is_horizontal_scrolling_per_item then
+				virtual_x_position_of_last_column := columns.i_th (last_first_column_in_per_item_scrolling).virtual_x_position
+				Result := (viewable_width - (virtual_width - virtual_x_position_of_last_column)).max (0)
+			end
 		end
 		
 	virtual_width: INTEGER is
@@ -332,46 +439,23 @@ feature -- Access
 		do
 			if columns.count > 0 then
 				perform_horizontal_computation
-				Result := column_offsets.last.max (viewable_width)
-				if is_horizontal_scrolling_per_item then
-					Result := Result + viewable_width - columns.i_th (columns.count).width
-				end
-			else
-				Result := viewable_width
+				Result := column_offsets.last + pixels_displayed_after_final_column
 			end
+			Result := Result.max (viewable_width)
 		ensure
-			result_greater_or_equal_to_viewable_width: Result >= viewable_width
+			result_non_negative: Result >= 0
 		end
 		
 	virtual_height: INTEGER is
 			-- Height of virtual area in pixels.
-		local
-			final_row_height: INTEGER
 		do
 			if row_count > 0 then
 				perform_vertical_computation
-				if is_vertical_scrolling_per_item then
-					if is_row_height_fixed then
-						final_row_height := row_height
-					else
-						final_row_height := rows.i_th (row_count).height
-					end
-					if total_row_height < viewable_height then
-						Result := viewable_height
-					else
-							-- We perform the `max' for the cass where the grid is not yet shown, has 
-							-- one or more rows and a height of 0.
-						Result := (total_row_height + viewable_height - final_row_height).max (total_row_height)
-					end
-				else
-					Result := total_row_height
-				end
-				Result := Result.max (viewable_height)
-			else
-				Result := viewable_height
+				Result := total_row_height + pixels_displayed_after_final_row
 			end
+			Result := Result.max (viewable_height)
 		ensure
-			result_greater_or_equal_to_viewable_height: Result >= viewable_height
+			result_non_negative: Result >= 0
 		end
 
 	viewable_width: INTEGER
@@ -611,7 +695,7 @@ feature -- Pick and Drop
 			-- Color used to display column and row separators.
 
 feature -- Status setting
-
+		
 	item_pebble_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM], ANY]
 		-- User pebble function
 
@@ -1093,6 +1177,51 @@ feature -- Status setting
 			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
 		end
 		
+	enable_vertical_overscroll is
+			-- Ensure `is_vertical_overscroll_enabled' is `True'.
+		do
+			is_vertical_overscroll_enabled := True
+			recompute_vertical_scroll_bar
+			redraw_client_area
+		ensure
+			is_vertical_overscroll_enabled: is_vertical_overscroll_enabled
+		end
+		
+	disable_vertical_overscroll is
+			-- Ensure `is_vertical_overscroll_enabled' is `False'.
+		require
+			dynamic_content_not_enabled_with_variable_row_heights:
+				not ((is_content_completely_dynamic or is_content_partially_dynamic) and not is_row_height_fixed)
+		do
+			is_vertical_overscroll_enabled := False
+			recompute_vertical_scroll_bar
+			restrict_virtual_y_position_to_maximum
+			redraw_client_area
+		ensure
+			not_is_vertical_overscroll_enabled: not is_vertical_overscroll_enabled
+		end
+		
+	enable_horizontal_overscroll is
+			-- Ensure `is_horizontal_overscroll_enabled' is `True'.
+		do
+			is_horizontal_overscroll_enabled := True
+			recompute_horizontal_scroll_bar
+			redraw_client_area
+		ensure
+			is_horizontal_overscroll_enabled: is_horizontal_overscroll_enabled
+		end
+		
+	disable_horizontal_overscroll is
+			-- Ensure `is_horizontal_overscroll_enabled' is `False'.
+		do
+			is_horizontal_overscroll_enabled := False
+			recompute_horizontal_scroll_bar
+			restrict_virtual_x_position_to_maximum
+			redraw_client_area
+		ensure
+			not_is_horizontal_overscroll_enabled: not is_horizontal_overscroll_enabled
+		end
+		
 	set_row_height (a_row_height: INTEGER) is
 			-- Set height of all rows within `Current' to `a_row_height
 			-- If not `is_row_height_fixed' then use the height individually per row instead.
@@ -1123,6 +1252,10 @@ feature -- Status setting
 			-- are displayed even if already contained in `Current'.
 		require
 			not_is_tree_enabled: not is_tree_enabled
+			not_row_height_variable_and_vertical_overscroll_enabled:
+				not (not is_row_height_fixed and is_vertical_overscroll_enabled)
+			not_row_height_variable_and_vertical_scrolling_per_pixel:
+				not (not is_row_height_fixed and is_vertical_scrolling_per_item)
 		do
 			is_content_completely_dynamic := True
 			is_content_partially_dynamic := False
@@ -1134,6 +1267,11 @@ feature -- Status setting
 			-- Ensure contents of `Current' must be retrieved when required via
 			-- `content_requested_actions' only if the item is not already set
 			-- in `Current'.
+		require
+			not_row_height_variable_and_vertical_overscroll_enabled:
+				not (not is_row_height_fixed and is_vertical_overscroll_enabled)
+			not_row_height_variable_and_vertical_scrolling_per_pixel:
+				not (not is_row_height_fixed and is_vertical_scrolling_per_item)
 		do
 			is_content_partially_dynamic := True
 			is_content_completely_dynamic := False
@@ -1160,6 +1298,9 @@ feature -- Status setting
 		
 	disable_row_height_fixed is
 			-- Permit rows to have varying heights.
+		require
+			not_dynamic_content_enabled_with_height_not_bounded:
+				not ((is_content_completely_dynamic or is_content_partially_dynamic) and is_vertical_overscroll_enabled = False)
 		do
 			is_row_height_fixed := False
 			set_vertical_computation_required (1)
@@ -1269,8 +1410,8 @@ feature -- Status setting
 	set_virtual_position (virtual_x, virtual_y: INTEGER) is
 			-- Move `Current' to virtual position `virtual_x', `virtual_y'.
 		require
-			virtual_x_valid: virtual_x >= 0 and virtual_x <= virtual_width - viewable_width
-			virtual_y_valid: virtual_y >= 0 and virtual_y <= virtual_height - viewable_height
+			virtual_x_valid: virtual_x >= 0 and virtual_x <= maximum_virtual_x_position
+			virtual_y_valid: virtual_y >= 0 and virtual_y <= maximum_virtual_y_position
 		local
 			row_index: INTEGER
 			visible_row_index: INTEGER
@@ -2417,22 +2558,22 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- Ensure `virtual_y_position' is within the maximum permitted.
 			-- Useful for situations where rows are removed.
 		do
-			if internal_client_y > virtual_height - viewable_height then
-				set_virtual_position (virtual_x_position, virtual_height - viewable_height)
+			if internal_client_y > maximum_virtual_y_position then
+				set_virtual_position (virtual_x_position, maximum_virtual_y_position)
 			end
 		ensure
-			virtual_y_position_valid: virtual_y_position <= virtual_height - viewable_height
+			virtual_y_position_valid: virtual_y_position <= maximum_virtual_y_position
 		end
 
 	restrict_virtual_x_position_to_maximum is
 			-- Ensure `virtual_x_position' is within the maximum permitted.
 			-- Useful for situations where columns are removed.
-		do			
-			if internal_client_x > virtual_width - viewable_width then
-				set_virtual_position (virtual_width - viewable_width, virtual_y_position)
+		do
+			if internal_client_x > maximum_virtual_x_position then
+				set_virtual_position (maximum_virtual_x_position, virtual_y_position)
 			end
 		ensure
-			virtual_x_position_valid: virtual_x_position <= virtual_width - viewable_width
+			virtual_x_position_valid: virtual_x_position <= maximum_virtual_x_position
 		end
 		
 	total_column_width: INTEGER is
@@ -2850,6 +2991,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			l_client_height: INTEGER
 			average_row_height: INTEGER
 			previous_scroll_bar_value: INTEGER
+			row_index: INTEGER
 		do
 				-- Retrieve the final row offset as this is the virtual height required for all rows.
 			if row_offsets = Void and not is_row_height_fixed then
@@ -2875,8 +3017,19 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
 					previous_scroll_bar_value := vertical_scroll_bar.value
 				end
-				if is_vertical_scrolling_per_item then					
-					vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, visible_row_count - 1))
+				if is_vertical_scrolling_per_item then	
+					if is_vertical_overscroll_enabled then
+						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, visible_row_count - 1))
+					else
+						-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
+						-- at the bottom of the viewable area.
+						if row_indexes_to_visible_indexes /= Void then
+							row_index := row_indexes_to_visible_indexes.i_th (last_first_row_in_per_item_scrolling) + 1
+						else
+							row_index := last_first_row_in_per_item_scrolling
+						end
+						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_index - 1))
+					end
 					average_row_height := (l_total_row_height // visible_row_count)
 					vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
 					if has_vertical_scrolling_per_item_just_changed then
@@ -2894,7 +3047,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 						vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
 					end
 				else
-					vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_row_height - l_client_height))
+					vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, maximum_virtual_y_position))
 					vertical_scroll_bar.set_leap (height)
 					if has_vertical_scrolling_per_item_just_changed then
 							-- If we are just switching from per item to per pixel vertical
@@ -2919,6 +3072,66 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			end
 		end
 		
+	last_first_row_in_per_item_scrolling: INTEGER is
+			--
+		local
+			row_index, l_viewable_height: INTEGER
+		do
+			if is_row_height_fixed then
+				row_index := (visible_row_count - (viewable_height - (viewable_height \\ row_height)) // row_height + 1).max (1)
+			else
+				-- Must now iterate backwards to find the first row
+				from
+					l_viewable_height := viewable_height
+					visible_indexes_to_row_indexes.go_i_th (visible_row_count)
+				until
+					visible_indexes_to_row_indexes.off or l_viewable_height <= 0
+				loop
+					l_viewable_height := l_viewable_height - row (visible_indexes_to_row_indexes.item).height
+					if l_viewable_height > 0 then
+						visible_indexes_to_row_indexes.back
+					end
+				end
+				if visible_indexes_to_row_indexes.off then
+					row_index := 1
+				else
+					visible_indexes_to_row_indexes.forth
+					row_index := visible_indexes_to_row_indexes.item
+				end
+			end
+			Result := row_index
+		end
+		
+	last_first_column_in_per_item_scrolling: INTEGER is
+			--
+		local
+			l_viewable_width: INTEGER
+			l_column: EV_GRID_COLUMN_I
+		do
+			-- Must now iterate backwards to find the first column
+			from
+				l_viewable_width := viewable_width
+				columns.go_i_th (column_count)
+			until
+				columns.off or l_viewable_width <= 0
+			loop
+				l_column := columns.item
+				if l_column.is_displayed then
+					l_viewable_width := l_viewable_width - l_column.width
+				end
+				if l_viewable_width > 0 then
+					columns.back
+				end
+			end
+			if columns.off then
+				Result := 1
+			else
+				Result := columns.index + 1
+			end
+		end
+		
+feature {ANY}
+		
 	recompute_horizontal_scroll_bar is
 			-- Recompute horizontal scroll bar positioning.
 		local
@@ -2926,6 +3139,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 			l_client_width: INTEGER
 			average_column_width: INTEGER
 			previous_scroll_bar_value: INTEGER
+			column_index: INTEGER
 		do
 				-- Retrieve the 
 			l_total_column_width := total_column_width
@@ -2948,8 +3162,15 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				if has_horizontal_scrolling_per_item_just_changed then
 					previous_scroll_bar_value := horizontal_scroll_bar.value
 				end
-				if is_horizontal_scrolling_per_item then					
-					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, columns.count - 1))
+				if is_horizontal_scrolling_per_item then
+					if is_horizontal_overscroll_enabled then
+						horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_count - 1))
+					else
+						-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
+						-- at the bottom of the viewable area.
+						column_index := last_first_column_in_per_item_scrolling
+						horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_index - 1))
+					end
 					average_column_width := (l_total_column_width // columns.count)
 					horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
 					if has_horizontal_scrolling_per_item_just_changed then
@@ -2958,7 +3179,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 						horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
 					end
 				else
-					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_column_width - l_client_width))
+					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, maximum_virtual_x_position))
 					horizontal_scroll_bar.set_leap (width)
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per item to per pixel horizontal
@@ -3033,6 +3254,8 @@ feature {NONE} -- Drawing implementation
 			viewport_y_offset := 0
 			are_tree_node_connectors_shown := True
 			are_columns_drawn_above_rows := True
+			is_horizontal_overscroll_enabled := False
+			is_vertical_overscroll_enabled := False
 			create tree_node_connector_color.make_with_8_bit_rgb (150, 150, 150)
 			invalid_row_index := invalid_row_index.max_value
 

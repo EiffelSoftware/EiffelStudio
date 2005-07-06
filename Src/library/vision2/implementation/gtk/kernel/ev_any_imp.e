@@ -39,21 +39,24 @@ feature {EV_ANY_I} -- Access
 			--| (See note at end of class)
 		require
 			a_c_object_not_null: a_c_object /= NULL
+		local
+			l_c_object: POINTER
 		do
-			c_object := a_c_object
+			l_c_object := a_c_object
 			if needs_event_box then
-				c_object := {EV_GTK_EXTERNALS}.gtk_event_box_new
-				{EV_GTK_EXTERNALS}.gtk_container_add (c_object, a_c_object)
+				l_c_object := {EV_GTK_EXTERNALS}.gtk_event_box_new
+				{EV_GTK_EXTERNALS}.gtk_container_add (l_c_object, a_c_object)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
 			end
 			
 				-- Add reference and removing floating state
-			{EV_GTK_EXTERNALS}.object_ref (c_object)
-			{EV_GTK_EXTERNALS}.gtk_object_sink (c_object)
+			{EV_GTK_EXTERNALS}.object_ref (l_c_object)
+			{EV_GTK_EXTERNALS}.gtk_object_sink (l_c_object)
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
 			end
-			 {EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
+			 {EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, object_id, $c_object_dispose)
+			 c_object := l_c_object
 		ensure
 			c_object_coupled: eif_object_from_c (c_object) = Current
 		end
@@ -86,7 +89,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Implementation
 				-- destroyed as a result of `Current's event handler being called, this causes instability within gtk
 		end
 
-feature {EV_ANY_I} -- Event handling
+feature {EV_ANY_I, EV_APPLICATION_IMP} -- Event handling
 
 	signal_connect_true (
 		a_signal_name: STRING;
@@ -119,9 +122,14 @@ feature {EV_ANY_I} -- Event handling
 		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
 		) is
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
-			do
-				internal_real_signal_connect (a_c_object, a_signal_name, an_agent, translate, False)
-			end
+		require
+			a_c_object_not_void: a_c_object /= NULL
+			a_signal_name_not_void: a_signal_name /= Void
+			a_signal_name_not_empty: not a_signal_name.string.is_empty
+			an_agent_not_void: an_agent /= Void
+		do
+			signal_connect (a_c_object, app_implementation.c_string_from_eiffel_string (a_signal_name), an_agent, translate, False)
+		end
 
 	real_signal_connect_after (
 		a_c_object: like c_object;
@@ -131,47 +139,38 @@ feature {EV_ANY_I} -- Event handling
 		) is
 				-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
 				-- 'an_agent' called after default gtk signal handler for `a_signal_name'
-			do
-				internal_real_signal_connect (a_c_object, a_signal_name, an_agent, translate, True)
-			end
-
-	internal_real_signal_connect (
-		a_c_object: like c_object;
-		a_signal_name: STRING;
-		an_agent: PROCEDURE [ANY, TUPLE];
-		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
-		invoke_after_handler: BOOLEAN
-		) is
-			-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
-			-- Use `translate' to convert GTK+ event data to TUPLE.
-			-- `invoke_after_handler' determines whether 'an_agent' is called before or after default gtk handler for `a_signal_name'
 		require
 			a_c_object_not_void: a_c_object /= NULL
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.string.is_empty
 			an_agent_not_void: an_agent /= Void
+		do
+			signal_connect (a_c_object, app_implementation.c_string_from_eiffel_string (a_signal_name), an_agent, translate, True)
+		end
+
+	signal_connect (
+		a_c_object: like c_object;
+		a_signal_name: EV_GTK_C_STRING;
+		an_agent: PROCEDURE [ANY, TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		invoke_after_handler: BOOLEAN) is
+				--
 		local
-			a_cs: EV_GTK_C_STRING
-			app_imp: like app_implementation
 			l_agent: PROCEDURE [ANY, TUPLE]
 		do
-			app_imp := app_implementation
-			a_cs := app_imp.c_string_from_eiffel_string (a_signal_name)
 			if translate = Void then
 					-- If we have no translate agent then we call the agent directly.
 				l_agent := an_agent
 			else
-				l_agent := agent (App_imp.gtk_marshal).translate_and_call (an_agent, translate)
+				l_agent := agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate)
 			end
 
 			last_signal_connection_id := {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 				a_c_object,
-				a_cs.item,
+				a_signal_name.item,
 				l_agent,
 				invoke_after_handler
-			)
-		ensure
-			signal_connection_id_positive: last_signal_connection_id > 0
+			)			
 		end
 
 	last_signal_connection_id: INTEGER

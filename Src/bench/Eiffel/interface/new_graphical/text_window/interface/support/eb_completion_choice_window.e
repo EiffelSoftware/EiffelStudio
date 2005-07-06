@@ -103,7 +103,6 @@ feature -- Initialization
 				create buffered_input.make_empty
 			end			
 			sorted_names.compare_objects
-			index_offset := 0
 			is_closing := False
 			
 			build_displayed_list (before_complete)
@@ -111,10 +110,10 @@ feature -- Initialization
 
 			if not choice_list.is_empty then
 					-- If there is only one possibility, we insert it without displaying the window
-				show_needed := choice_list.row_count > 1
+				determin_show_needed
 				if not show_needed then
-					if choice_list.row_count > 0 then							
-						choice_list.select_row (1)	
+					if choice_list.row_count > 0 then						
+						select_closest_match
 					end
 					close_and_complete					
 				end
@@ -136,8 +135,8 @@ feature -- Access
 			-- Insertion string
 
 	remainder: INTEGER
-			-- Number chars to remove on completeion
-
+			-- Number chars to remove on completion
+			
 feature -- Status report
 
 	show_needed: BOOLEAN
@@ -165,7 +164,11 @@ feature -- Query
 	has_match: BOOLEAN is
 			-- Number of matches based on `a_name' using `buffered_input' value.
 		do
-			Result := not matches_based_on_name (buffered_input).is_empty
+			if rebuild_list_during_matching then
+				Result := not matches_based_on_name (buffered_input).is_empty
+			else
+				Result := not sorted_names.is_empty				
+			end
 		end			
 		
 	default_font: EV_FONT is
@@ -214,8 +217,10 @@ feature {NONE} -- Events handling
 								choice_list.remove_selection
 								choice_list.row (choice_list.row_count).enable_select
 							end
-						end			
-						choice_list.selected_rows.first.ensure_visible	
+						end	
+						if not choice_list.selected_rows.is_empty then
+							choice_list.selected_rows.first.ensure_visible	
+						end
 					end
 				when Key_down then
 					if not choice_list.is_empty then
@@ -226,7 +231,9 @@ feature {NONE} -- Events handling
 								choice_list.row (1).enable_select
 							end
 						end
-						choice_list.selected_rows.first.ensure_visible	
+						if not choice_list.selected_rows.is_empty then
+							choice_list.selected_rows.first.ensure_visible
+						end
 					end
 				when key_back_space then
 					editor.handle_extended_key (ev_key)					
@@ -274,7 +281,9 @@ feature {NONE} -- Events handling
 								choice_list.row (ix - 10).enable_select
 							end
 						end
-						choice_list.selected_rows.first.ensure_visible	
+						if not choice_list.selected_rows.is_empty then
+							choice_list.selected_rows.first.ensure_visible	
+						end
 					end
 				when Key_page_down then
 						-- Go down 10 items
@@ -288,25 +297,35 @@ feature {NONE} -- Events handling
 								else
 									choice_list.remove_selection
 									choice_list.row (choice_list.row_count).enable_select
+									choice_list.row (choice_list.row_count).ensure_visible
 								end								
 							else
 								choice_list.remove_selection
 								choice_list.row (ix + 10).enable_select
+								choice_list.row (ix + 10).ensure_visible
 							end
 						end
-						choice_list.selected_rows.first.ensure_visible	
+						if not choice_list.selected_rows.is_empty then
+							choice_list.selected_rows.first.ensure_visible	
+						end	
 					end								
 				when key_home then
 					if ev_application.ctrl_pressed and then not choice_list.is_empty then
 							-- Go to top
 						choice_list.remove_selection
 						choice_list.select_row (1)
+						if not choice_list.selected_rows.is_empty then
+							choice_list.selected_rows.first.ensure_visible	
+						end
 					end
 				when key_end then
 					if ev_application.ctrl_pressed and then not choice_list.is_empty then
 							-- Go to bottom
 						choice_list.remove_selection
 						choice_list.select_row (choice_list.row_count)
+						if not choice_list.selected_rows.is_empty then
+							choice_list.selected_rows.first.ensure_visible	
+						end
 					end
 				else
 					-- Do nothing
@@ -370,10 +389,10 @@ feature {NONE} -- Implementation
 	character_to_append: CHARACTER
 			-- Character that should be appended after the completed feature in the editor.
 			-- '%U' if none.
-			
+				
 	index_offset: INTEGER
 			-- Index in `sorted_names' of the first element in `choice_list'
-		
+				
 	rebuild_list_during_matching: BOOLEAN is
 			-- Should the list be rebuilt according to current match?
 		do
@@ -382,6 +401,8 @@ feature {NONE} -- Implementation
 	
 	build_displayed_list (name: STRING) is
 			-- Build the list based on matches with `name'
+		require
+			sorted_names_not_void: sorted_names /= Void
 		local
 			l_count: INTEGER
 			matches: ARRAY [EB_NAME_FOR_COMPLETION]
@@ -392,7 +413,12 @@ feature {NONE} -- Implementation
 			l_upper: INTEGER	
 		do			
 			choice_list.wipe_out
-			matches := matches_based_on_name (name)
+			if rebuild_list_during_matching then
+				matches := matches_based_on_name (name)
+			else
+				matches := sorted_names.subarray (1, sorted_names.count)				
+			end
+			
 			l_minimum_width := 60
 			if matches.is_empty then
 				current_index := 0	
@@ -453,7 +479,11 @@ feature {NONE} -- Implementation
 				if character_to_append = '(' then
 					character_to_append := '%U'
 				end
-				ix := choice_list.selected_rows.first.index + index_offset
+				if rebuild_list_during_matching then
+					ix := index_offset + 1
+				else
+					ix := choice_list.selected_rows.first.index
+				end
 				if sorted_names.item (ix).has_dot then
 					editor.complete_feature_from_window (sorted_names.item (ix).full_insert_name, True, character_to_append, remainder)
 				else
@@ -475,7 +505,11 @@ feature {NONE} -- Implementation
 			ix: INTEGER
 		do
 			if not choice_list.selected_rows.is_empty then
-				ix:= choice_list.selected_rows.first.index + index_offset
+				if rebuild_list_during_matching then
+					ix := index_offset + 1
+				else
+					ix := choice_list.selected_rows.first.index
+				end
 				editor.complete_class_from_window (sorted_names.item (ix), '%U', remainder)
 			else
 				if not buffered_input.is_empty then
@@ -539,13 +573,45 @@ feature {NONE} -- Implementation
 
 	resize_column_to_window_width is
 			-- Resize the column width to the width of the window
+		local
+			l_sb_wid: INTEGER
+			i: INTEGER
 		do
-			if choice_list.column_count > 0 then				
-				choice_list.column (1).set_width (choice_list.viewable_width.max (choice_list.width))	
+			if choice_list.column_count > 0 then
+				l_sb_wid := choice_list.width - choice_list.viewable_width
+				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count - 1) + 3
+				i := i.max (choice_list.viewable_width.max (choice_list.width - l_sb_wid))
+				choice_list.column (1).set_width (i)
+				if not choice_list.selected_rows.is_empty then
+					choice_list.selected_rows.first.ensure_visible	
+				end
 			end
 		end		
 
 	is_first_show: BOOLEAN
+	
+	determin_show_needed is
+			-- Determins if completion window needs to be show to user.
+			-- `show_needed' is set as a result of calling this routine.
+		require
+			before_complete_not_void: before_complete /= Void
+			choice_list_not_void: choice_list /= Void
+		local
+			l_matches: INTEGER
+		do
+				-- Show if completion is performed on no text (completing after the period '.')
+			show_needed := before_complete.is_empty
+			if not show_needed then
+				if rebuild_list_during_matching then
+						-- Show if there are mulitple items left to show
+					show_needed := choice_list.row_count > 1
+				else
+						-- Show if no match or multiple matches
+					l_matches := matches_based_on_name (before_complete).count
+					show_needed := (l_matches = 0) or (l_matches > 1)
+				end
+			end
+		end
 
 feature {NONE} -- String matching
 
@@ -619,7 +685,8 @@ feature {NONE} -- String matching
 							-- current best match index which is already stored in `Result'.  This obviously assumes we are
 							-- sorting through an alphabetically ordered list.
 						done := True
-					end						
+					end
+						
 					iteration_count := iteration_count + 1
 				end
 			else
@@ -627,8 +694,6 @@ feature {NONE} -- String matching
 			end
 			if Result = 0 then
 				Result := 1
-			elseif buffered_input_count > last_best_match_index - 1 then
-				Result := -1
 			end		
 		end		
 
@@ -638,21 +703,24 @@ feature {NONE} -- String matching
 			if not is_first_show then
 				if rebuild_list_during_matching then
 					build_displayed_list (buffered_input)
-					resize_column_to_window_width
-				else									
-					current_index := index_of_closest_match				
+					resize_column_to_window_width		
 				end
 			end
 			
-			if is_displayed then
-				if current_index > 0 and then not choice_list.is_empty then
-					choice_list.remove_selection
-					choice_list.row (current_index).enable_select
+			if rebuild_list_during_matching then
+				current_index := 1
+			else				
+				current_index := index_of_closest_match
+				if current_index <= 0 then
+					current_index := 1
+				end
+			end
+			
+			if not choice_list.is_empty then
+				choice_list.remove_selection
+				choice_list.row (current_index).enable_select
+				if is_displayed then
 					choice_list.selected_rows.first.ensure_visible	
-				else
-					if not choice_list.selected_rows.is_empty then
-						choice_list.selected_rows.first.disable_select
-					end
 				end
 			end
 			is_first_show := False
@@ -676,7 +744,7 @@ feature {NONE} -- String matching
 				cnt := 0
 				const_count := a_name.count
 			until
-				cnt > const_count or done
+				cnt >= const_count or done
 			loop
 				c := a_name.item (cnt + 1)
 				if (cnt + 1) > l_name2.count or c /= l_name2.item (cnt + 1) then
@@ -691,30 +759,35 @@ feature {NONE} -- String matching
 
 	matches_based_on_name (a_name: STRING): ARRAY [EB_NAME_FOR_COMPLETION] is
 			-- Array of matches based on `a_name'.  Always use this function before building lists to get correct matches.
+		require
+			sorted_names_not_void: sorted_names /= Void
 		local
 			cnt: INTEGER
 			for_search: EB_NAME_FOR_COMPLETION
+			l_index_offset: INTEGER
 		do
 			create Result.make (2, 1)
-			if rebuild_list_during_matching and a_name /= Void and not a_name.is_empty then
+			if a_name /= Void and then not a_name.is_empty then
 					-- Matches are filtered according to `buffered_input'
 				from
 					create for_search.make_with_name (a_name)
-					index_offset := pos_of_first_greater (sorted_names, for_search) - 1
+					l_index_offset := pos_of_first_greater (sorted_names, for_search) - 1
 				until
-					sorted_names.upper < (index_offset + cnt + 1) or else not sorted_names.item (index_offset + cnt + 1).begins_with (a_name)
+					sorted_names.upper < (l_index_offset + cnt + 1) or else not sorted_names.item (l_index_offset + cnt + 1).begins_with (a_name)
 				loop
 					cnt := cnt + 1
 				end
 				if cnt > 0 then				   
-					Result := sorted_names.subarray (index_offset + 1, index_offset + cnt) 
+					Result := sorted_names.subarray (l_index_offset + 1, l_index_offset + cnt) 
 				end
+				index_offset := l_index_offset
 			else
 					-- Matches are just all matches
 				Result := sorted_names.subarray (1, sorted_names.count)
+				index_offset := 0
 			end
 		ensure
 			has_result: Result /= Void
-		end		
-
+		end	
+				
 end -- class EB_COMPLETION_CHOICE_WINDOW

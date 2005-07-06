@@ -65,7 +65,6 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to GTK signals.
 		local
 			connect_button_press_switch_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE[]]
-			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 			a_event_widget: POINTER
 			a_c_object: POINTER
 			app_imp: like app_implementation
@@ -79,10 +78,7 @@ feature {NONE} -- Initialization
 			internal_minimum_width := -1
 			internal_minimum_height := -1
 	
-			on_key_event_intermediary_agent := agent (app_imp.gtk_marshal).on_key_event_intermediary (a_c_object, ?, ?, ?)
-			signal_connect (a_event_widget, app_imp.key_press_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
-			signal_connect (a_event_widget, app_imp.key_release_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
-				--| "button-press-event" is a special case, see below.
+			-- Key events are handled by EV_WINDOW_IMP and propagated to the appropriate widget.
 				
 			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (App_imp.gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, True)
 			signal_connect (a_event_widget, app_imp.focus_out_event_string, agent (App_imp.gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)

@@ -76,8 +76,7 @@ feature -- Access
 		
 	width: INTEGER is
 			-- Width in pixels calculated based on which tokens should be displayed
-		do	
-		    Result := 0
+		do			    
 			if line_numbers_visible then				
 				Result := Result + internal_line_number_area_width
 			end

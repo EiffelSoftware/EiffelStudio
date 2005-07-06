@@ -74,7 +74,7 @@ feature -- Basic Operation
 		do
 			l_state ?= a_state
 			res.access_resource (l_state)
-			if {INTERLOCKED}.decrement_integer ($num_operations) <= 0 then
+			if {INTERLOCKED}.decrement ($num_operations) <= 0 then
 				return := async_operations.set
 			end
 		end

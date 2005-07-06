@@ -351,13 +351,13 @@ feature {NONE} -- Implementation
 				if i = 1 then
 					a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
-					a_gtk_c_str := "pixbuf"
+					a_gtk_c_str := once "pixbuf"
 					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
 				end
 				
 				a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)				
-				a_gtk_c_str := "text"
+				a_gtk_c_str := once "text"
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, i)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, i - 1)
 
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 						column_titles.i_th (i) /= Void then
 					temp_title := column_titles.i_th (i)
 				else
-					temp_title := ""
+					temp_title := once ""
 				end
 
 				if column_widths /= Void and then 
@@ -644,7 +644,7 @@ feature -- Status setting
 			a_column_ptr: POINTER
 		do
 			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column_ptr, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_autosize_enum)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column_ptr, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_grow_only_enum)
 		end
 
 feature -- Element change
@@ -674,7 +674,8 @@ feature -- Element change
 		do
 			if column_widths /= Void then
 				a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (a_column_ptr, value)				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column_ptr, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (a_column_ptr, value.max (1))				
 			end
 		end
 

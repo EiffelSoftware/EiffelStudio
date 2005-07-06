@@ -525,7 +525,7 @@ feature -- Memory management
 			clean_header_box
 		end
 	
-feature {NONE} -- Layout Implementation
+feature {EB_DEBUGGER_MANAGER} -- Cleaning timer change
 
 	set_cleaning_timer_delay (ms: INTEGER) is
 		require
@@ -535,6 +535,8 @@ feature {NONE} -- Layout Implementation
 		ensure
 			cleaning_timer_delay = ms
 		end
+
+feature {NONE} -- Layout Implementation
 
 	cleaning_timer_delay: INTEGER
 		-- Number of milliseconds waited before clearing debug output.

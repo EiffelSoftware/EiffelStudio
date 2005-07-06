@@ -1,8 +1,11 @@
 indexing
-	description: "Font family enumerator. The user must inherit from this %
-		%class and define the routine `action'."
-	note: "Do not use more than one instance of this class at the same %
-		%time. Nested enumerations are not supported."
+	description: "[
+		Font family enumerator. The user must inherit from this
+		class and define the routine `action'.
+		
+		Note: Do not use more than one instance of this class at the same
+			time. Nested enumerations are not supported.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

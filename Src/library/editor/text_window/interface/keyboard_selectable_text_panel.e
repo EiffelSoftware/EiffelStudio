@@ -419,7 +419,8 @@ feature {NONE} -- Process Vision2 events
 			-- Process Wm_keyup message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
 		do			
-			blink_delay_timeout.set_interval (1000)			
+			blink_delay_timeout.set_interval (1000)
+			resume_cursor_blinking		
 		end
 
 	gain_focus is
@@ -666,6 +667,7 @@ feature {NONE} -- Cursor Management
 	resume_cursor_blinking is
 			-- Resume blinking timeout to allow cursor to blink again
 		do
+			blink_on := True
 			blinking_timeout.actions.resume
 		end		
 

@@ -145,6 +145,12 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 			<item>Fixed <feature_name>is_correct_date</feature_name> in <class_name>DATE_VALIDITY_CHECKER</class_name> to check that year is less than 65535.</item>
 			<item>Fixed <class_name>DATE_TIME_PARSER</class_name> when handling time in 12h format, but internally we would convert it into 24h format thus making <feature_name>is_time</feature_name> and <feature_name>is_date_time</feature_name> return <keyword>False</keyword> where <keyword>True</keyword> was expected.</item>
 		</list>
+		<heading><size>3</size>EiffelNet</heading>
+		<list ordered="false">
+			<item>Enable to open an URL on a virtual host.</item>
+			<item>Enable to open an URL with login and password (for instance http://login:password@host/path/).</item>
+			<item>Fixed wrong URL analyse.</item>
+		</list>
 		<heading><size>3</size>EiffelVision2</heading>
 		<list ordered="false">
 			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>

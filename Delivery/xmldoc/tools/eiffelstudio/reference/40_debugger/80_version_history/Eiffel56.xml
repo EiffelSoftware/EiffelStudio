@@ -6,13 +6,13 @@
 		<heading><size>2</size>Graphical environment</heading>
 			<list ordered="false">
 				<item>The stack, objects and evaluator tools now use a grid display instead of simply a tree view</item>
-				<item>a mixed multicolumn list and tree view display which display item only when shown, this make debugger much faster to display values</item>
-				<item>the evaluator tool renamed as "watch tool" has more features than previously, such as browsing the objects value directly in the tool, moving up and down the expression, dopped objects as them self, ....</item>
-				<item>the new watch tool can be used instead of the objects view to display current, and dropped objects (and of course expressions).</item>
-				<item>you can close and create new watch tools</item>
-				<item>each tool has its hexdecimal/decimal format switch command.</item>
-				<item>most of the debugging tools are now inside a notebook, and are dockable outside this notebook</item>
-				<item>various minor bug fixes and improvements regarding the interface</item>
+				<item>A mixed multicolumn list and tree view display which display item only when shown, this make debugger much faster to display values</item>
+				<item>The evaluator tool renamed as "watch tool" has more features than previously, such as browsing the objects value directly in the tool, moving up and down the expression, dopped objects as them self, ....</item>
+				<item>The new watch tool can be used instead of the objects view to display current, and dropped objects (and of course expressions).</item>
+				<item>You can close and create new watch tools</item>
+				<item>Each tool has its hexdecimal/decimal format switch command.</item>
+				<item>Most of the debugging tools are now inside a notebook, and are dockable outside this notebook</item>
+				<item>Various minor bug fixes and improvements regarding the interface</item>
 			</list>
 		<heading><size>2</size>Debugger engine</heading>
 			<list ordered="false">

@@ -3,31 +3,30 @@
 	<paragraph>
 		<paragraph>General limitations:</paragraph>
 		<list ordered="false" >
-			<item>creation expressions are not supported (for instance "create {MY_CLASS}.make"  is not supported").</item>
-			<item>agent are not supported (for instance "agent my_function" is not supported".</item>
+			<item>Creation expressions are not supported (for instance "create {MY_CLASS}.make"  is not supported").</item>
+			<item>Agent are not supported (for instance "agent my_function" is not supported".</item>
 		</list>
 
 
 		<paragraph>Limitations or known bugs for the Classic debugger:</paragraph>
 		<list ordered="false" >
-			<item>expression evaluation on expanded objects are not supported for now (except for basic types)</item>
-			<item>evaluate "Precusor" will result the current feature's result (not the precursor)</item>
-			<item>if you use any of the previous non supported expression in a breakpoint condition, the condition will always return True, and the debugger will stop on such condition breakpoint</item>
+			<item>Expression evaluation on expanded objects are not supported for now (except for basic types)</item>
+			<item>Evaluate "Precusor" will result the current feature's result (not the precursor)</item>
+			<item>If you use any of the previous non supported expression in a breakpoint condition, the condition will always return True, and the debugger will stop on such condition breakpoint</item>
 		</list>
 		<paragraph>Limitations or known bugs for the .Net debugger:</paragraph>
 		<list ordered="false" >
-			<item>when stepping through disabled assertions or disabled debug clauses, the debugger may show incorrect current line.</item>
-			<item>when stepping through an inspect code, the debugger may show incorrect current line (especially if the inspect is not ordered)</item>
-			<item>under dotnet v2.0 beta, the debugger may have difficulties to fetch the stack values, especially during first chance exception events</item>
+			<item>When stepping through disabled assertions or disabled debug clauses, the debugger may show incorrect current line.</item>
+			<item>When stepping through an inspect code, the debugger may show incorrect current line (especially if the inspect is not ordered)</item>
+			<item>Under dotnet v2.0 beta, the debugger may have difficulties to fetch the stack values, especially during first chance exception events</item>
 			<item>Multithreaded debugging is not yet possible</item>
 		</list>
 		
 		<paragraph>Various known bugs for classic system :</paragraph>
 		<list ordered="false" >
-			<item>The a</item>
-			<item>when stepping through an inspect code, the debugger may show incorrect current line (especially if the inspect is not ordered)</item>
-			<item>under dotnet v2.0 beta, the debugger may have difficulties to fetch the stack values, especially during first chance exception events</item>
-			<item>wrong assertion tag shown in debugger for precondition violation if violated during an exception rescue, indeed the tag remains the one from the exception</item>
+			<item>When stepping through an inspect code, the debugger may show incorrect current line (especially if the inspect is not ordered)</item>
+			<item>Under dotnet v2.0 beta, the debugger may have difficulties to fetch the stack values, especially during first chance exception events</item>
+			<item>Wrong assertion tag shown in debugger for precondition violation if violated during an exception rescue, indeed the tag remains the one from the exception</item>
 		</list>		
 	</paragraph>
 </document>

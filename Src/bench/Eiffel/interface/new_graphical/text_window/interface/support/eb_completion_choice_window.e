@@ -216,7 +216,7 @@ feature {NONE} -- Events handling
 							if ix <= 1 and prev_item_index = 1 then
 								choice_list.remove_selection
 								choice_list.row (choice_list.row_count).enable_select
-							end
+							end	
 						end	
 						if not choice_list.selected_rows.is_empty then
 							choice_list.selected_rows.first.ensure_visible	
@@ -229,7 +229,7 @@ feature {NONE} -- Events handling
 							if ix >= choice_list.row_count and prev_item_index = choice_list.row_count then
 								choice_list.remove_selection
 								choice_list.row (1).enable_select
-							end
+							end		
 						end
 						if not choice_list.selected_rows.is_empty then
 							choice_list.selected_rows.first.ensure_visible
@@ -494,8 +494,7 @@ feature {NONE} -- Implementation
 					last_completed_feature_had_arguments := l_feature.has_arguments
 				else	
 					last_completed_feature_had_arguments := False
-				end
-				
+				end				
 			end
 		end
 
@@ -531,9 +530,6 @@ feature {NONE} -- Implementation
 					preferences.development_window_data.save_completion_list_size (width, height)
 				end
 				hide
-				if not last_completed_feature_had_arguments then
-					editor.exit_complete_mode
-				end
 			end
 		end
   

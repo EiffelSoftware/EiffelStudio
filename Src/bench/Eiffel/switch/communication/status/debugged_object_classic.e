@@ -66,7 +66,6 @@ feature {NONE} -- Creation
 			check
 				conformance: dtype.simple_conform_to (a_class)
 			end
-			dtype := a_class
 			class_type := dtype.types.first
 		ensure
 			set: addr = object_address

@@ -137,15 +137,19 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 		local
 			add_point: BOOLEAN
 		do
-			completion_timeout.actions.block
-			if click_and_complete_is_active and then not has_selection then
-				text_displayed.prepare_auto_complete (add_point)
-				if text_displayed.completion_possibilities /= Void then
-					completion_mode := completion_mode + 1
-					show_completion_list (True)
+			if not is_completing then
+				is_completing := True
+				completion_timeout.actions.block
+				if click_and_complete_is_active and then not has_selection then
+					text_displayed.prepare_auto_complete (add_point)
+					if text_displayed.completion_possibilities /= Void then
+						completion_mode := completion_mode + 1
+						show_completion_list (True)
+					end
 				end
+				check_cursor_position
+				is_completing := False
 			end
-			check_cursor_position
 		end
 	
 	complete_class_name is
@@ -798,6 +802,9 @@ feature {NONE} -- Autocomplete implementation
 
 	auto_point_token: EDITOR_TOKEN
 			-- Point where autocomplete should add a period.
+
+	is_completing: BOOLEAN
+			-- Is completion currently being processed?
 
 feature {NONE} -- syntax completion
 

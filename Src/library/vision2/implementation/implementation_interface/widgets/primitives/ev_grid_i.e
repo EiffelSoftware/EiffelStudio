@@ -182,8 +182,8 @@ feature -- Access
 				until
 					i > a_count
 				loop
-					a_row := row_internal (i)
-					if a_row.is_selected then
+					a_row := rows @ i
+					if a_row /= Void and then a_row.is_selected then
 						Result.extend (a_row.interface)
 					end
 					i := i + 1

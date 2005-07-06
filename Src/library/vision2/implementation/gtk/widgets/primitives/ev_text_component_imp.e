@@ -40,14 +40,14 @@ feature -- Resizing
 	set_minimum_width_in_characters (nb: INTEGER) is
 			-- Make `nb' characters visible on one line.
 		do
-			set_minimum_width (nb * maximum_character_width + 10)
+			set_minimum_width (nb * maximum_character_width)
 				-- 10 = size of handle
 		end
 
 	maximum_character_width: INTEGER is
 			-- Maximum width of a single character in `Current'.
 		do
-			Result := font.string_width ("W")
+			Result := font.string_width (once "W")
 		end
 		
 	font: EV_FONT is

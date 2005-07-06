@@ -102,12 +102,14 @@
 				</image> removes the selected expressions from the list.
 				<line_break/> The associated key shortcut is Del.
 			</item>
-			<item>And the last two buttons are used to move up and down the expressions</item>
+			<item>And the last two buttons are used to move up and down the expressions.
+			You can also move the expressions up and down using [CONTROL] + [PAGE UP] or [CONTROL] + [PAGE DOWN].
+			</item>
 		</list>
 		<tip>
 			<bold>Tip</bold>: 
 			Dropping an object onto this list lets you define quickly an expression whose context is the dropped object. This avoids having to type object addresses manually.
 			<line_break></line_break>
-			If you press the [Control] key during the dropping, you will add the dropped object as itself.
+			If you press the [Control] key during the dropping, you will add the dropped object as itself. 
 		</tip>
 	</paragraph></document>

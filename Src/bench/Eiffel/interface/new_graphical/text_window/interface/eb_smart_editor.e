@@ -498,6 +498,8 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			-- Set mode to normal (not completion mode).
 		do
 			completion_mode := (completion_mode - 1).max (0)
+			set_focus
+			resume_cursor_blinking
 		end
 
 	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER; remainder: INTEGER) is

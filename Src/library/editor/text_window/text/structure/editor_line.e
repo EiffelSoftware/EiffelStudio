@@ -109,8 +109,10 @@ feature -- Transformation
 			-- Rebuild Current using token from `lexer'.  If lexer is scanning a line that is part of
 			-- a verbatim string then `in_v_string' should be True.
 		do
-			if previous /= Void and then previous.part_of_verbatim_string and then not previous.end_of_verbatim_string then
+			if previous /= Void and then ((previous.part_of_verbatim_string and then not previous.end_of_verbatim_string) or previous.start_of_verbatim_string) then
 				lexer.set_in_verbatim_string (True)
+			else
+				lexer.set_in_verbatim_string (False)				
 			end		
 			make_from_lexer (lexer)
 		end
@@ -188,7 +190,10 @@ feature -- Status Report
 	
 	end_of_verbatim_string: BOOLEAN
 			-- Is current the end of a verbatim string?
-			
+
+	start_of_verbatim_string: BOOLEAN
+			-- Is current the start of a verbatim string?
+				
 feature -- Status Setting
 
 	set_auto_indented (a_flag: BOOLEAN) is
@@ -213,6 +218,14 @@ feature -- Status Setting
 			end_of_verbatim_string := a_flag
 		ensure
 			value_set: end_of_verbatim_string = a_flag
+		end
+		
+	set_start_of_verbatim_string (a_flag: BOOLEAN) is
+			-- Set `start_of_verbatim_string' to `a_flag'
+		do
+			start_of_verbatim_string := a_flag
+		ensure
+			value_set: start_of_verbatim_string = a_flag
 		end
 
 end -- class EDITOR_LINE

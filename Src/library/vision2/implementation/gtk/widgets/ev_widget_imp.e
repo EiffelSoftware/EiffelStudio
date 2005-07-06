@@ -80,12 +80,12 @@ feature {NONE} -- Initialization
 			internal_minimum_height := -1
 	
 			on_key_event_intermediary_agent := agent (app_imp.gtk_marshal).on_key_event_intermediary (a_c_object, ?, ?, ?)
-			real_signal_connect (a_event_widget, app_imp.key_press_event_string, on_key_event_intermediary_agent, key_event_translate_agent)
-			real_signal_connect (a_event_widget, app_imp.key_release_event_string, on_key_event_intermediary_agent, key_event_translate_agent)
+			signal_connect (a_event_widget, app_imp.key_press_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
+			signal_connect (a_event_widget, app_imp.key_release_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
 				--| "button-press-event" is a special case, see below.
 				
-			real_signal_connect_after (a_event_widget, app_imp.focus_in_event_string, agent (App_imp.gtk_marshal).widget_focus_in_intermediary (a_c_object), Void)
-			real_signal_connect_after  (a_event_widget, app_imp.focus_out_event_string, agent (App_imp.gtk_marshal).widget_focus_out_intermediary (a_c_object), Void)
+			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (App_imp.gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, True)
+			signal_connect  (a_event_widget, app_imp.focus_out_event_string, agent (App_imp.gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
 				
 			connect_button_press_switch_agent := agent (App_imp.gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)

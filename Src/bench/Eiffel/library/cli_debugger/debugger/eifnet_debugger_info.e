@@ -774,7 +774,7 @@ feature -- JIT Thread
 		local
 			l_id: INTEGER
 		do
-			debug ("_jfiat")
+			debug ("eifnet_debugger")
 				from
 					print ("%N CallStack : Threads %N")
 					loaded_managed_threads.start

@@ -377,7 +377,7 @@ feature {NONE} -- Events handling
 			-- Mouse wheel scrolled up or down
 		do		
 			if choice_list.virtual_height > choice_list.viewable_height then
-				choice_list.set_virtual_position (choice_list.virtual_x_position, ((choice_list.virtual_y_position + (choice_list.row_height * -a)).max (0)).min (choice_list.virtual_height - choice_list.viewable_height))
+				choice_list.set_virtual_position (choice_list.virtual_x_position, ((choice_list.virtual_y_position + (choice_list.row_height * -a)).max (0)).min (choice_list.maximum_virtual_y_position))
 			end
 		end		
 
@@ -712,7 +712,7 @@ feature {NONE} -- String matching
 				end
 			end
 			
-			if not choice_list.is_empty then
+			if choice_list.row_count > 0 then
 				choice_list.remove_selection
 				choice_list.row (current_index).enable_select
 				if is_displayed then

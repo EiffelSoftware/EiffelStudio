@@ -49,9 +49,15 @@ feature -- Start Job / Reinitialization
 			-- Analyze a string.
 		require
 			string_not_empty: not a_string.is_empty
-		do
+		do			
 			if end_of_verbatim_string then
 				end_of_verbatim_string := False
+			end
+			if start_of_verbatim_string then
+				start_of_verbatim_string := False				
+			end
+			if in_verbatim_string then
+				set_start_condition (verbatim_st)
 			end
 			current_start_condition := start_condition
 			reset
@@ -90,7 +96,7 @@ feature -- Access
 
 	tab_size: INTEGER
 			-- Cell that contains the size of tabulations
-			-- blank spaces.
+			-- blank spaces.				
 			
 feature -- Query
 	
@@ -99,6 +105,9 @@ feature -- Query
 		
 	end_of_verbatim_string: BOOLEAN
 			-- Was end of verbatim string found?
+
+	start_of_verbatim_string: BOOLEAN
+			-- Was start of verbatim string found?
 		
 feature -- Status Setting
 
@@ -106,9 +115,14 @@ feature -- Status Setting
 			-- Set `in_verbatim_string' to `a_flag'
 		do
 			in_verbatim_string := a_flag
+			if a_flag then
+				set_start_condition (verbatim_st)
+			else
+				set_start_condition (initial_st)
+			end
 		ensure
 			value_set: in_verbatim_string = a_flag
-		end		
+		end				
 		
 feature -- Element Change
 
@@ -173,6 +187,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	INITIAL_st: INTEGER is 0
+	VERBATIM_st: INTEGER is 1
 
 invariant
 	eif_buffer_not_void: eif_buffer /= Void

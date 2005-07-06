@@ -550,12 +550,12 @@ feature {UNDO_CMD} -- Operations on selected text
 				line_image.prepend (symbol)
 
 					-- Rebuild line from the lexer.
-				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
+				lexer.set_in_verbatim_string (False)
 				if line_image.is_empty then
 					ln.make_empty_line
 				else
 					lexer.execute (line_image)
-					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
+					ln.rebuild_from_lexer (lexer, False)
 				end
 
 				if ln = start_selection.line then
@@ -594,12 +594,12 @@ feature {UNDO_CMD} -- Operations on selected text
 				line_image.prepend(symbol)
 
 					-- Rebuild line from the lexer.
-				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
+				lexer.set_in_verbatim_string (False)
 				if line_image.is_empty then
 					ln.make_empty_line
 				else
 					lexer.execute (line_image)
-					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
+					ln.rebuild_from_lexer (lexer, False)
 				end
 
 					-- reset pos_in_file values of tokens if possible

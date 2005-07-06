@@ -399,6 +399,7 @@ feature -- Status setting
 				objects_tool.change_attach_notebook (debugging_tools)
 			end
 			objects_tool.set_debugger_manager (Current)
+			objects_tool.set_cleaning_timer_delay (Preferences.Debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.update
 
 				--| Watches tool

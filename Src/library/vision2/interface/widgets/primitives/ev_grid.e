@@ -33,7 +33,23 @@ indexing
 		virtual size given by `virtual_x' and `virtual_y'. As the scroll bars are moved,
 		`virtual_x' and `virtual_y' are directly manipulated, although you may set the
 		virtual position explicitly via calls to `set_virtual_x' and `set_virtual_y'.
-
+		
+		The maximum permitted virtual position of the grid is given by
+		`maximum_virtual_x_position', `maximum_virtual_y_position' which is dependent on
+		the following factors:
+			The viewable area of the grid.
+			The `virtual_width' and `virtual_height'.
+			The `is_*_scrolling_per_item' properties.
+			The `is_*_overscroll_enabled' properties.
+		Changing one or more of these properties may immediately change the virtual width,
+		height or maximum virtual positions, and possibly scroll the grid to ensure that the
+		current virtual position is within the new bounds.
+		
+		The properties `is_vertical_overscroll_enabled' and `is_horizontal_overscroll_enabled'
+		permit you to ensure the grid permits scrolling past the final item, ensuring that there
+		is trailing space matching the viewable dimension of the grid less the dimension of
+		the final item.
+		
 		You may query the virtual position of an item within the virtual area of
 		`Current' via `virtual_x_position' and `virtual_y_position' directly on the
 		item. You may also query the dimensions of an item via `width' and `height'. It
@@ -413,6 +429,32 @@ feature -- Access
 			Result := implementation.is_vertical_scrolling_per_item
 		end
 		
+	is_vertical_overscroll_enabled: BOOLEAN is
+			-- Does the virtual height of `Current' include the
+			-- position of the final row plus the `viewable_height'.
+			-- If `True', this enables vertical scrolling until the last row
+			-- is at the very top of the viewable area. If `False', scrolling
+			-- may be performed until the last row is at the bottom of the viewable
+			-- area.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_vertical_overscroll_enabled
+		end
+		
+	is_horizontal_overscroll_enabled: BOOLEAN is
+			-- Does the virtual width of `Current' include the
+			-- position of the final column plus the `viewable_width'.
+			-- If `True', this enables horizontal scrolling until the last column
+			-- is at the very left of the viewable area. If `False', scrolling
+			-- may be performed until the last column is at the left of the viewable
+			-- area.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_horizontal_overscroll_enabled
+		end
+		
 	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM] is
 			-- Function which computes the item that resides in a particular position of the
 			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
@@ -526,7 +568,7 @@ feature -- Access
 		do
 			Result := implementation.virtual_x_position
 		ensure
-			valid_result: Result >= 0 and Result <= virtual_width - viewable_width
+			valid_result: Result >= 0 and Result <= maximum_virtual_x_position
 		end
 		
 	virtual_y_position: INTEGER is
@@ -537,7 +579,31 @@ feature -- Access
 		do
 			Result := implementation.virtual_y_position
 		ensure
-			valid_result: Result >= 0 and Result <= virtual_height - viewable_height
+			valid_result: Result >= 0 and Result <= maximum_virtual_y_position
+		end
+		
+	maximum_virtual_x_position: INTEGER is
+			-- Maximum permitted virtual x position based on current dimensions and properties.
+			-- Properties that affect this value are `is_vertical_scrolling_per_item' and
+			-- `is_vertical_scrolling_per_item'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.maximum_virtual_x_position
+		ensure
+			result_non_negative: Result >= 0
+		end
+		
+	maximum_virtual_y_position: INTEGER is
+			-- Maximum permitted virtual y position based on current dimensions and properties.
+			-- Properties that affect this value are `is_horizontal_scrolling_per_item' and
+			-- `is_horizontal_scrolling_per_item'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.maximum_virtual_y_position
+		ensure
+			result_non_negative: Result >= 0
 		end
 		
 	virtual_width: INTEGER is
@@ -547,7 +613,7 @@ feature -- Access
 		do
 			Result := implementation.virtual_width
 		ensure
-			result_greater_or_equal_to_viewable_width: Result >= viewable_width
+			result_non_negative: Result >= 0
 		end
 		
 	virtual_height: INTEGER is
@@ -557,7 +623,7 @@ feature -- Access
 		do
 			Result := implementation.virtual_height
 		ensure
-			result_greater_or_equal_to_viewable_height: Result >= viewable_height
+			result_non_negative: Result >= 0
 		end
 		
 	viewable_width: INTEGER is
@@ -1035,10 +1101,54 @@ feature -- Status setting
 			-- Ensure vertical scrolling is performed on a per-pixel basis.
 		require
 			not_destroyed: not is_destroyed
+			not_dynamic_content_enabled_with_row_height_variable:
+				not ((is_content_completely_dynamic or is_content_partially_dynamic) and is_row_height_fixed = False)
 		do
 			implementation.disable_vertical_scrolling_per_item
 		ensure
 			vertical_scrolling_performed_per_pixel: not is_vertical_scrolling_per_item
+		end
+	
+	enable_vertical_overscroll is
+			-- Ensure `is_vertical_overscroll_enabled' is `True'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_vertical_overscroll
+		ensure
+			is_vertical_overscroll_enabled: is_vertical_overscroll_enabled
+		end
+		
+	disable_vertical_overscroll is
+			-- Ensure `is_vertical_overscroll_enabled' is `False'.
+		require
+			not_destroyed: not is_destroyed
+			dynamic_content_not_enabled_with_variable_row_heights:
+				not ((is_content_completely_dynamic or is_content_partially_dynamic) and not is_row_height_fixed)
+		do
+			implementation.disable_vertical_overscroll
+		ensure
+			not_is_vertical_overscroll_enabled: not is_vertical_overscroll_enabled
+		end
+		
+	enable_horizontal_overscroll is
+			-- Ensure `is_horizontal_overscroll_enabled' is `True'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_horizontal_overscroll
+		ensure
+			is_horizontal_overscroll_enabled: is_horizontal_overscroll_enabled
+		end
+		
+	disable_horizontal_overscroll is
+			-- Ensure `is_horizontal_overscroll_enabled' is `False'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_horizontal_overscroll
+		ensure
+			not_is_horizontal_overscroll_enabled: not is_horizontal_overscroll_enabled
 		end
 		
 	set_row_height (a_row_height: INTEGER) is
@@ -1061,6 +1171,10 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			not_is_tree_enabled: not is_tree_enabled
+			not_row_height_variable_and_vertical_overscroll_enabled:
+				not (not is_row_height_fixed and is_vertical_overscroll_enabled)
+			not_row_height_variable_and_vertical_scrolling_per_pixel:
+				not (not is_row_height_fixed and is_vertical_scrolling_per_item)
 		do
 			implementation.enable_complete_dynamic_content
 		ensure
@@ -1073,6 +1187,10 @@ feature -- Status setting
 			-- in `Current'.
 		require
 			not_destroyed: not is_destroyed
+			not_row_height_variable_and_vertical_overscroll_enabled:
+				not (not is_row_height_fixed and is_vertical_overscroll_enabled)
+			not_row_height_variable_and_vertical_scrolling_per_pixel:
+				not (not is_row_height_fixed and is_vertical_scrolling_per_item)
 		do
 			implementation.enable_partial_dynamic_content
 		ensure
@@ -1103,6 +1221,8 @@ feature -- Status setting
 			-- Permit rows to have varying heights.
 		require
 			not_destroyed: not is_destroyed
+			not_dynamic_content_enabled_with_height_not_bounded:
+				not ((is_content_completely_dynamic or is_content_partially_dynamic) and is_vertical_overscroll_enabled = False)
 		do
 			implementation.disable_row_height_fixed
 		ensure
@@ -1195,8 +1315,8 @@ feature -- Status setting
 			-- Move viewable area of `Current' to virtual position `virtual_x', `virtual_y'.
 		require
 			not_destroyed: not is_destroyed
-			virtual_x_valid: virtual_x >= 0 and virtual_x <= virtual_width - viewable_width
-			virtual_y_valid: virtual_y >= 0 and virtual_y <= virtual_height - viewable_height
+			virtual_x_valid: virtual_x >= 0 and virtual_x <= maximum_virtual_x_position
+			virtual_y_valid: virtual_y >= 0 and virtual_y <= maximum_virtual_y_position
 		do
 			implementation.set_virtual_position (virtual_x, virtual_y)
 		ensure
@@ -1815,7 +1935,8 @@ feature {NONE} -- Contract support
 				is_vertical_scrolling_per_item and is_header_displayed and
 				is_row_height_fixed and subrow_indent = 0 and is_single_item_selection_enabled and is_selection_on_click_enabled and
 				are_tree_node_connectors_shown and are_columns_drawn_above_rows and not is_resizing_divider_enabled and
-				is_column_resize_immediate and not is_full_redraw_on_virtual_position_change_enabled
+				is_column_resize_immediate and not is_full_redraw_on_virtual_position_change_enabled and
+				not is_vertical_overscroll_enabled and not is_horizontal_overscroll_enabled
 		end
 
 feature {EV_GRID_I} -- Implementation
@@ -1847,7 +1968,7 @@ feature {NONE} -- Implementation
 
 invariant
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
-
+	
 end
 
 --|----------------------------------------------------------------

@@ -20,4 +20,9 @@ feature
 	refresh (sp_lower, sp_upper: INTEGER) is
 		do
 		end
+
+	attributes: DS_LIST [ABSTRACT_DEBUG_VALUE] is
+		do
+		end
+
 end

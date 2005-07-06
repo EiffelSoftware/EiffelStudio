@@ -167,7 +167,7 @@ end
 	last_offset: INTEGER is
 			-- Return the size of the file without checking it exists.
 		require
-			file_exists: exists
+			file_exists: is_open or else exists
 		do
 			if not is_open then
 				set_buffer

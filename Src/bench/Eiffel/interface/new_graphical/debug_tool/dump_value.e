@@ -811,12 +811,13 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		end
 
 	classic_feature_result_value_on_current (a_feat: FEATURE_I; a_compiled_class: CLASS_C): DUMP_VALUE is
-			-- Evaluation of `a_feat': STRING on object related to Current
+			-- Evaluation of `a_feat': STRING on object related to Current dump_value
 		local
 			l_dbg_val: ABSTRACT_DEBUG_VALUE
 			l_dbg_obj: DEBUGGED_OBJECT_CLASSIC
 			par: INTEGER
 			rout_info: ROUT_INFO
+			l_dtype: CLASS_C
 			l_dyntype: CLASS_TYPE
 		do
 			check
@@ -825,33 +826,35 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			if a_feat /= Void and Application.is_valid_object_address (value_address) then
 					-- Initialize the communication.
 				l_dbg_obj := Debugged_object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
-				l_dyntype := l_dbg_obj.class_type
-
-				if a_feat.is_attribute then
-					l_dbg_val := l_dbg_obj.attribute_by_name (a_feat.feature_name)
-					if l_dbg_val /= Void then
-						Result := l_dbg_val.dump_value
-					end
-				else
-					Init_recv_c
-					classic_send_value
-					if a_feat.is_external then
-						par := par + 1
-					end
-
-					if a_feat.written_class.is_precompiled then
-						par := par + 2
-						rout_info := Eiffel_system.system.rout_info_table.item (a_feat.rout_id_set.first)
-						send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+				l_dtype := l_dbg_obj.dtype
+				if l_dtype = a_compiled_class or else l_dtype.simple_conform_to (a_compiled_class) then
+					l_dyntype := l_dbg_obj.class_type
+					if a_feat.is_attribute then
+						l_dbg_val := l_dbg_obj.attribute_by_name (a_feat.feature_name)
+						if l_dbg_val /= Void then
+							Result := l_dbg_val.dump_value
+						end
 					else
-						send_rqst_3_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, par)
-					end
-						-- Receive the Result.
-					c_recv_value (Current)
+						Init_recv_c
+						classic_send_value
+						if a_feat.is_external then
+							par := par + 1
+						end
 
-					if item /= Void then
-						item.set_hector_addr
-						Result := item.dump_value
+						if a_feat.written_class.is_precompiled then
+							par := par + 2
+							rout_info := Eiffel_system.system.rout_info_table.item (a_feat.rout_id_set.first)
+							send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+						else
+							send_rqst_3_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, par)
+						end
+							-- Receive the Result.
+						c_recv_value (Current)
+
+						if item /= Void then
+							item.set_hector_addr
+							Result := item.dump_value
+						end
 					end
 				end
 			end

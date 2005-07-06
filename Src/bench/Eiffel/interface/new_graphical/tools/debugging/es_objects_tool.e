@@ -82,6 +82,7 @@ feature {NONE} -- Initialization
 			display_first := True
 			debugged_objects_grid_empty := True
 			stack_objects_grid_empty := True
+			cleaning_timer_delay := Preferences.debug_tool_data.delay_before_cleaning_objects_grid
 		end
 
 	build_interface is
@@ -526,7 +527,16 @@ feature -- Memory management
 	
 feature {NONE} -- Layout Implementation
 
-	cleaning_timer_delay: INTEGER is 500
+	set_cleaning_timer_delay (ms: INTEGER) is
+		require
+			timer_delay_positive_or_null: ms >= 0
+		do
+			cleaning_timer_delay := ms
+		ensure
+			cleaning_timer_delay = ms
+		end
+
+	cleaning_timer_delay: INTEGER
 		-- Number of milliseconds waited before clearing debug output.
 		-- By waiting for a short period of time, the flicker is removed
 		-- for normal debug usage as it is only cleared immediately before
@@ -567,13 +577,15 @@ feature {NONE} -- Layout Implementation
 		
 	request_delayed_clean_stack_objects_grid is
 		do
-			if stack_objects_grid_clear_timer = Void then
+			if cleaning_timer_delay = 0 then
+				clean_stack_objects_grid
+			elseif stack_objects_grid_clear_timer = Void then
 				stack_objects_grid.disable_sensitive
 				create stack_objects_grid_clear_timer.make_with_interval (cleaning_timer_delay)
 				stack_objects_grid_clear_timer.actions.extend (agent clean_stack_objects_grid)
 			end
 		ensure
-			stack_objects_grid_clear_timer_created: stack_objects_grid_clear_timer /= Void
+			stack_objects_grid_clear_timer_created: cleaning_timer_delay >0 implies stack_objects_grid_clear_timer /= Void
 		end
 
 	debugged_objects_grid_empty: BOOLEAN
@@ -607,13 +619,15 @@ feature {NONE} -- Layout Implementation
 
 	request_delayed_clean_debugged_objects_grid is
 		do
-			if debugged_objects_grid_clear_timer = Void then
+			if cleaning_timer_delay = 0 then
+				clean_debugged_objects_grid
+			elseif debugged_objects_grid_clear_timer = Void then
 				debugged_objects_grid.disable_sensitive
 				create debugged_objects_grid_clear_timer.make_with_interval (cleaning_timer_delay)
 				debugged_objects_grid_clear_timer.actions.extend (agent clean_debugged_objects_grid)
 			end
 		ensure
-			debugged_objects_grid_clear_timer_created: debugged_objects_grid_clear_timer /= Void
+			debugged_objects_grid_clear_timer_created: cleaning_timer_delay >0 implies debugged_objects_grid_clear_timer /= Void
 		end
 
 	record_objects_layout is

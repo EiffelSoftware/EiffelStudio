@@ -96,6 +96,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := number_of_watch_tools_preference.value
 		end
+
+	delay_before_cleaning_objects_grid: INTEGER is
+		do
+			Result := delay_before_cleaning_objects_grid_preference.value
+		end
 		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -112,6 +117,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	right_debug_layout_preference: ARRAY_PREFERENCE		
 	expanded_display_bgcolor_preference: COLOR_PREFERENCE
 	number_of_watch_tools_preference: INTEGER_PREFERENCE
+	delay_before_cleaning_objects_grid_preference: INTEGER_PREFERENCE
 	
 feature -- Preference Strings
 
@@ -128,6 +134,7 @@ feature -- Preference Strings
 	right_debug_layout_string: STRING is "debugger.right_debug_layout"
 	expanded_display_bgcolor_string: STRING is "debugger.expanded_display_background_color"
 	number_of_watch_tools_string: STRING is "debugger.number_of_watch_tools"
+	delay_before_cleaning_objects_string: STRING is "debugger.delay_before_cleaning_objects_grid"
 
 feature {NONE} -- Implementation
 
@@ -151,6 +158,7 @@ feature {NONE} -- Implementation
 			right_debug_layout_preference := l_manager.new_array_resource_value (l_manager, right_debug_layout_string, <<>>)
 			expanded_display_bgcolor_preference := l_manager.new_color_resource_value (l_manager, expanded_display_bgcolor_string, create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
 			number_of_watch_tools_preference := l_manager.new_integer_resource_value (l_manager, number_of_watch_tools_string, 1)					
+			delay_before_cleaning_objects_grid_preference := l_manager.new_integer_resource_value (l_manager, delay_before_cleaning_objects_string, 500)					
 		end
 	
 	preferences: PREFERENCES
@@ -170,5 +178,6 @@ invariant
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void
 	expanded_display_bgcolor_preference_not_void: expanded_display_bgcolor_preference /= Void		
 	number_of_watch_tools_preference_not_void: number_of_watch_tools_preference /= Void	
+	delay_before_cleaning_objects_grid_preference_not_void: delay_before_cleaning_objects_grid_preference /= Void	
 
 end -- class EB_DEBUG_TOOL_DATA

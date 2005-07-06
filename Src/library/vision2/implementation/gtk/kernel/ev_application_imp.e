@@ -358,6 +358,13 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 		once
 			Result := default_window_imp.c_object
 			window_oids.prune_all (Default_window_imp.object_id)
+			default_window_imp.real_signal_connect (default_window_imp.c_object, "style-set", agent gtk_style_has_changed, Void)
+		end
+
+	gtk_style_has_changed is
+			-- The current gtk style has changed.
+		do
+			-- This is called when the user externally changes the gtk style.
 		end
 
 	default_gdk_window: POINTER is
@@ -436,6 +443,12 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 			-- Persistent GdkColorStruct
 		once
 			Result := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+		end
+
+	reusable_rectangle_struct: POINTER is
+			-- Persistent GdkColorStruct
+		once
+			Result := {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
 		end
 
 	c_string_from_eiffel_string (a_string: STRING): EV_GTK_C_STRING is

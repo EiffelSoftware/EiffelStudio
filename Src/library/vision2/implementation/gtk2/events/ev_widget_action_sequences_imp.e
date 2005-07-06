@@ -21,11 +21,12 @@ feature -- Event handling
 			-- Attach to GTK "motion-notify-event" signal.
 		do
 			create Result
-			real_signal_connect (
+			signal_connect (
 					event_widget,
 					App_implementation.motion_notify_event_string,
 					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (object_id, ?, ?, ?, ?, ?, ?, ?),
-					App_implementation.default_translate
+					App_implementation.default_translate,
+					False
 				)
 		end
 
@@ -59,11 +60,12 @@ feature -- Event handling
 			-- Attach to GTK "enter-notify-event" signal.
 		do
 			create Result
-			real_signal_connect (
+			signal_connect (
 				event_widget,
 				App_implementation.enter_notify_event_string, 
 				agent (App_implementation.gtk_marshal).pointer_enter_actions_intermediary (c_object),
-				App_implementation.default_translate
+				App_implementation.default_translate,
+				False
 			)
 		end
 
@@ -72,11 +74,12 @@ feature -- Event handling
 			-- Attach to GTK "leave-notify-event" signal.
 		do
 			create Result
-			real_signal_connect (
+			signal_connect (
 				event_widget,
 				App_implementation.leave_notify_event_string,
 				agent (App_implementation.gtk_marshal).pointer_leave_action_intermediary (c_object),
-				App_implementation.default_translate
+				App_implementation.default_translate,
+				False
 			)
 		end
 
@@ -118,7 +121,7 @@ feature -- Event handling
 			create Result
 			if is_parentable then
 					-- Window resize events are connected separately
-				real_signal_connect (c_object, App_implementation.size_allocate_event_string, agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
+				signal_connect (c_object, App_implementation.size_allocate_event_string, agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent, False)
 			end
 		end
 
@@ -126,7 +129,7 @@ feature -- Event handling
 			-- Create a mouse_wheel action sequence.
 		do
 			create Result
-			real_signal_connect (event_widget, once "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate)
+			signal_connect (event_widget, once "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate, False)
 		end
 
 feature {EV_ANY_I} -- Implementation

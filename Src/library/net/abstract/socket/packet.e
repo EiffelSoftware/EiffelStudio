@@ -47,7 +47,7 @@ feature -- Measurement
 
 feature -- Access
 
-	element, infix "@" (i: INTEGER): CHARACTER is
+	element alias "[]", infix "@" (i: INTEGER): CHARACTER assign put_element is
 			-- Entry at index `i'.
 		require
 			valid_position: valid_position (i)			
@@ -107,7 +107,7 @@ end -- class PACKET
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.
---| Copyright (C) 1985-2004 Eiffel Software. All rights reserved.
+--| Copyright (C) 1985-2005 Eiffel Software. All rights reserved.
 --| Duplication and distribution prohibited.  May be used only with
 --| ISE Eiffel, under terms of user license.
 --| Contact Eiffel Software for any other use.

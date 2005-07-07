@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): T is
+	item alias "[]", infix "@" (i: INTEGER): T assign put is
 			-- Entry at index `i', if in index interval
 		require
 			valid_index: valid_index (i)

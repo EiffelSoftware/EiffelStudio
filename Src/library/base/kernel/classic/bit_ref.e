@@ -23,7 +23,7 @@ convert
 	
 feature -- Access
 
-	item, infix "@" (i: INTEGER): BOOLEAN is
+	item alias "[]", infix "@" (i: INTEGER): BOOLEAN assign put is
 			-- `i'-th bit
 		require
 			index_large_enough: i >= 1

@@ -58,7 +58,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (key: H): G is
+	item alias "[]", infix "@" (key: H): G assign put is
 			-- Item associated with `key', if present;
 			-- otherwise default value of type `G'
 		local

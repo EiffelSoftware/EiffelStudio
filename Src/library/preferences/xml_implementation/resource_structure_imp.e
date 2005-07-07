@@ -8,6 +8,9 @@ class
 
 inherit
 	PREFERENCE_STRUCTURE_I
+		redefine
+			save_resources
+		end
 
 	XM_CALLBACKS_FILTER_FACTORY
 		export 		
@@ -79,6 +82,12 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 			--save (resources.resources.linear_representation)
 			save_all_updated_resources
 		end	
+
+	save_resources (a_resources: ARRAYED_LIST [PREFERENCE]) is
+			-- Save `a_resources' to file on disk.
+		do
+			save_all_updated_resources
+		end
 
 	save_all_updated_resources is
 			-- Save contents of structure.

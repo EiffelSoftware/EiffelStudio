@@ -17,7 +17,6 @@ inherit
 		end
 
 	INDEXABLE [INTEGER, INTEGER]
-	
 		rename
 			put as indexable_put
 		undefine
@@ -104,7 +103,7 @@ feature -- Access
 			Result := upper_internal
 		end
 
-	item, infix "@" (i: INTEGER): INTEGER is
+	item alias "[]", infix "@" (i: INTEGER): INTEGER is
 			-- Entry at index `i', if in index interval
 		do
 			Result := i

@@ -45,16 +45,13 @@ feature -- Miscellaneous
 			-- Compute the width in pixels of the first
 			-- `n' characters of the current string.
 		local
-			i,
-			l_font_width,
-			l_tab_position: INTEGER
+			i, l_font_width, l_tab_position, l_tab_width: INTEGER
 			l_string: STRING
 			l_is_fixed: BOOLEAN
 		do
 			if n = 0 then
 				Result := 0
 			else
-				l_font_width := font_width
 				l_is_fixed := is_fixed_width
 				if image.has ('%T') then
 					if previous /= Void then
@@ -62,14 +59,17 @@ feature -- Miscellaneous
 					end
 					from
 						i := 1
-						if not l_is_fixed then
+						if l_is_fixed then
+							l_font_width := font_width
+						else
 							create l_string.make_filled (' ', 1)						
 						end
+						l_tab_width := tabulation_width
 					until
 						i > n or else i > image.count
 					loop
 						if image @ i = '%T' then
-							Result := ((((l_tab_position + Result) // tabulation_width) + 1 ) * tabulation_width ) - l_tab_position
+							Result := ((((l_tab_position + Result) // l_tab_width) + 1 ) * l_tab_width ) - l_tab_position
 						else							
 							if l_is_fixed then
 								Result := Result + l_font_width
@@ -82,7 +82,7 @@ feature -- Miscellaneous
 					end
 				else
 					if l_is_fixed then
-						Result := Result + (n.min (image.count) * l_font_width)
+						Result := Result + (n.min (image.count) * font_width)
 					else
 						Result := font.string_width (image.substring (1, n.min (image.count)))
 					end
@@ -386,12 +386,15 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	tabulation_width: INTEGER is
 		do
 				-- Compute the number of pixels represented by a tabulation based on
 				-- user preferences number of spaces per tabulation.
-			Result := editor_preferences.tabulation_spaces * font.string_width(" ")
+			if is_fixed_width then
+				Result := editor_preferences.tabulation_spaces * font_width
+			else
+				Result := editor_preferences.tabulation_spaces * font.string_width(" ")
+			end
 		end
 
 	gray_text_color: EV_COLOR is

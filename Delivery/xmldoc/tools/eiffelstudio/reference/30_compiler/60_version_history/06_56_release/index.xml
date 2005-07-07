@@ -13,6 +13,23 @@
 			<item>Added support for manifest type expression "{<class_name>MY_TYPE</class_name>}" which gives an instance of <feature_name>TYPE</feature_name> [<feature_name>MY_TYPE</feature_name>].</item>
 			<item>New syntax for manifest constants. Now they can be preceeded by a manifest type expression. For example <number>1</number> is of type <class_name>INTEGER</class_name>, whereas {<class_name>INTEGER_8</class_name>} 1 is of type <class_name>INTEGER_8</class_name>.</item>
 			<item>Support for <class_name>NATURAL_XX</class_name> types which are unsigned integers.</item>
+			<item>Supported new feature alias syntax to specify operator and bracket names:
+				<code_block><feature_name>negate</feature_name> <keyword>alias</keyword> <string>"-"</string>: <keyword>like</keyword> <keyword>Current</keyword> ...
+<feature_name>multiply</feature_name> <keyword>alias</keyword> <string>"*"</string> (<local_variable>other</local_variable>: <keyword>like</keyword> <keyword>Current</keyword>): <keyword>like</keyword> <keyword>Current</keyword> ...
+<feature_name>item</feature_name> <keyword>alias</keyword> <string>"[]"</string> (<local_variable>index</local_variable>: <class_name>INTEGER</class_name>): <generics>G</generics> ...</code_block>
+				The first two declarations can be used similar to features <code><keyword>prefix</keyword> <string>"-"</string></code> and <code><keyword>infix</keyword> <string>"*"</string></code>. The last one can be used to make feature calls with bracket expressions like
+				<code_block><local_variable>letter</local_variable> <symbol> :=</symbol> <local_variable>letters</local_variable> <symbol>[</symbol><local_variable>i</local_variable><symbol>]</symbol></code_block>
+				Operator and bracket aliases can also be used in <keyword>rename</keyword> subclause to change an alias name associated with a feature.
+			</item>
+			<item>Supported new feature assigner syntax to associate feature with an assigner command:
+				<code_block><feature_name>item</feature_name> <symbol> <keyword>alias</keyword> <string>"[]"</string> (</symbol><local_variable>index</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>):</symbol> <generics>G</generics> <keyword>assign</keyword> <feature_name>put</feature_name> ...
+<feature_name>put</feature_name> <symbol>(</symbol><local_variable>value</local_variable><symbol>:</symbol> <generics>G</generics><symbol>;</symbol><local_variable>index</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> ...
+				</code_block>
+				Given the declaration above the following instructions become equivalent:
+				<code_block><local_variable>x</local_variable><symbol>.</symbol><feature_name>put</feature_name> <symbol>(</symbol><local_variable>x</local_variable><symbol>.</symbol><feature_name>item</feature_name> <symbol>(</symbol><local_variable>i</local_variable><symbol> <symbol>+</symbol> <number>1</number>)</symbol><symbol>,</symbol> <local_variable>i</local_variable><symbol>)</symbol>
+<local_variable>x</local_variable><symbol>.</symbol><feature_name>item</feature_name> <symbol>(</symbol><local_variable>i</local_variable><symbol>)</symbol> <symbol>:=</symbol> <local_variable>x</local_variable><symbol>.</symbol><feature_name>item</feature_name> <symbol>(</symbol><local_variable>i</local_variable><symbol> <symbol>+</symbol> <number>1</number>)</symbol>
+<local_variable>x</local_variable> <symbol>[</symbol><local_variable>i</local_variable><symbol>]</symbol> <symbol>:=</symbol> <local_variable>x</local_variable> <symbol>[</symbol><local_variable>i</local_variable> <symbol>+</symbol> <number>1</number><symbol>]</symbol></code_block>
+			</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
@@ -22,6 +39,10 @@
 			<item>Improved some error messages to be more precise.</item>
 			<item>Removed the requirement to freeze code that declares process-relative once routine.</item>
 			<item>Improved multi-threaded application performance in classic mode by using built-in support for thread-local storage provided by some <italic>C</italic> compilers.</item>
+			<item>Allowed underscores in hexadecimal literals.</item>
+			<item>Provided syntax highlighting for hexadecimal literals in editor.</item>
+			<item>Slightly improved reporting of syntax errors.</item>
+			<item>Made keyword operator names clickable in flat view.</item>
 		</list>
 		<heading>
 			<size>2</size>Changes
@@ -107,6 +128,7 @@
 i.e. has empty compound for a primary condition which is a constant <code><keyword>true</keyword></code>.</item>
 			<item>Fixed a bug in processing <code>Ace</code> option <code><keyword>precompiled</keyword></code> that caused a compiler to crash when no option value was provided.</item>
 			<item>Fixed a bug in incremental recompilation when multi-branch validity rules are violated in one class because constant attribute used in the multi-branch instruction is changed in another class, that declares them, into a non-constant feature.</item>
+			<item>Fixed multiple bugs in feature basic text view that caused truncated or extraneous output.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues

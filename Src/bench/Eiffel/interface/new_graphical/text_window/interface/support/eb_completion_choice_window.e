@@ -592,21 +592,25 @@ feature {NONE} -- Implementation
 		require
 			before_complete_not_void: before_complete /= Void
 			choice_list_not_void: choice_list /= Void
-		local
-			l_matches: INTEGER
+--		local
+--			l_matches: INTEGER
 		do
-				-- Show if completion is performed on no text (completing after the period '.')
-			show_needed := before_complete.is_empty
-			if not show_needed then
-				if rebuild_list_during_matching then
-						-- Show if there are mulitple items left to show
-					show_needed := choice_list.row_count > 1
-				else
-						-- Show if no match or multiple matches
-					l_matches := matches_based_on_name (before_complete).count
-					show_needed := (l_matches = 0) or (l_matches > 1)
-				end
-			end
+			show_needed := choice_list.row_count > 1
+
+				-- Enable following code to stop automatic completion after '.' for single matching items
+			
+--				-- Show if completion is performed on no text (completing after the period '.')
+--			show_needed := before_complete.is_empty
+--			if not show_needed then
+--				if rebuild_list_during_matching then
+--						-- Show if there are mulitple items left to show
+--					show_needed := choice_list.row_count > 1
+--				else
+--						-- Show if no match or multiple matches
+--					l_matches := matches_based_on_name (before_complete).count
+--					show_needed := (l_matches = 0) or (l_matches > 1)
+--				end
+--			end
 		end
 
 feature {NONE} -- String matching
@@ -670,7 +674,7 @@ feature {NONE} -- String matching
 				until
 					iteration_count > max_iterations or done
 				loop
-					match_index := match_names_until_done (sorted_names.item (iteration_count), buffered_input)
+					match_index := match_names_until_done (sorted_names.item (iteration_count).name, buffered_input)
 					if match_index > 0 and match_index > last_best_match_index then
 							-- At least one char matched so store match index
 						last_best_match_index := match_index

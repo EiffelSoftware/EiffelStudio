@@ -53,7 +53,10 @@ feature -- Initialization
 			-- create feature name with value `name'
 		do
 			Precursor {STRING} (a_name)
+			name := a_name
 			has_dot := True
+		ensure then
+			name_set: name = a_name
 		end
 
 feature -- Query
@@ -65,6 +68,9 @@ feature -- Query
 		end
 
 feature -- Access
+
+	name: STRING
+			-- Completion item name
 
 	full_insert_name: STRING is
 			-- Full name to insert in editor

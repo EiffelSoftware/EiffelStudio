@@ -100,26 +100,38 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+	eif_object_from_gtk_object (a_gtk_object: POINTER): EV_ANY_IMP is
+			-- Return the EV_ANY_IMP object from `a_gtk_object' if any.
+		require
+			a_gtk_object_not_null: a_gtk_object /= default_pointer
+		local
+			gtkwid: POINTER
+		do
+			from
+				gtkwid := a_gtk_object
+			until
+				Result /= Void or else gtkwid = NULL
+			loop
+					Result := eif_object_from_c (gtkwid)
+					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)				
+			end
+		end
+		
 	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP is
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
 			gdkwin, gtkwid: POINTER
-			a_wid: EV_ANY_IMP
 		do
 			gdkwin := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
 			if gdkwin /= null then
-				from
-					{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
-				until
-					a_wid /= Void or else gtkwid = null
-				loop
-					a_wid := eif_object_from_c (gtkwid)
-					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
+				{EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
+				if gtkwid /= default_pointer then
+					Result ?= eif_object_from_gtk_object (gtkwid)
 				end
 			end
-			if a_wid /= Void and then not a_wid.is_destroyed then
-				Result ?= a_wid
+			if Result /= Void and then Result.is_destroyed then
+				Result := Void
 			end
 		end
 

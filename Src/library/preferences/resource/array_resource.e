@@ -44,6 +44,8 @@ feature -- Access
 		once
 			Result := "LIST"			
 		end	
+		
+		
 
 	selected_value: STRING is
 			-- Value of the selected index.
@@ -85,12 +87,12 @@ feature -- Status Setting
 		do
 			create value.make (1, 0)
 			values := a_value.split (';')
-			if not values.is_empty then
+			if values.count > 1 or not values.first.is_empty then
 				from 
 					values.start
 					cnt := 1					
 				until
-					values.after --or (values.index > char_cnt)
+					values.after
 				loop
 					l_value := values.item
 					if not l_value.is_empty and then l_value.item (1) = '[' and then l_value.item (l_value.count) = ']' then
@@ -98,7 +100,7 @@ feature -- Status Setting
 						is_choice := True
 						set_selected_index (cnt)
 					end
-					value.force (l_value, cnt)					
+					value.force (l_value, cnt)			
 					values.forth
 					cnt := cnt + 1
 				end				

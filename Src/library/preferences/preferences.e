@@ -277,18 +277,8 @@ feature -- Resource
 	save_resources is
 			-- Commit all changes by saving the underlying data store.  Only save resources 
 			-- which are not using the default value.
-		local
-			l_linear: ARRAYED_LIST [PREFERENCE]
 		do
-			l_linear := resources.linear_representation
-			from
-				l_linear.start
-			until
-				l_linear.after
-			loop
-				save_resource (l_linear.item)
-				l_linear.forth
-			end
+			resource_structure.save_resources (resources.linear_representation)
 		end
 		
 	restore_defaults is

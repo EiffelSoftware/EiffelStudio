@@ -58,11 +58,19 @@ feature -- Access
 
 feature -- Save
 
-	save (a_resources: ARRAYED_LIST [PREFERENCE]) is
+	save_resources (a_resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save contents of structure.
 		require
 			resources_not_void: a_resources /= Void
-		deferred
+		do
+			from
+				a_resources.start
+			until
+				a_resources.after
+			loop
+				save_resource (a_resources.item)
+				a_resources.forth
+			end		
 		end
 
 	save_resource (a_resource: PREFERENCE) is

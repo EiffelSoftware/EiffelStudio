@@ -80,7 +80,15 @@ feature {PREFERENCES} -- Resource Management
 			resource_not_void: a_resource /= Void
 		do
 			implementation.save_resource (a_resource)		
-		end		
+		end
+		
+	save_resources (a_resources: ARRAYED_LIST [PREFERENCE]) is
+			-- Save all resources in `a_resources' to storage device.
+		require
+			resources_not_void: a_resources /= Void
+		do
+			implementation.save_resources (a_resources)
+		end
 
 	remove_resource (a_resource: PREFERENCE) is
 			-- Remove `resource' from storage device.
@@ -89,16 +97,6 @@ feature {PREFERENCES} -- Resource Management
 		do
 			implementation.remove_resource (a_resource)		
 		end	
-
-feature {PREFERENCES} -- Saving
-
-	save (a_resources: ARRAYED_LIST [PREFERENCE]) is
-			-- Save all resources.
-		require
-			resources_not_void: a_resources /= Void
-		do
-			implementation.save (a_resources)
-		end
 
 feature {NONE} -- Implementation
 

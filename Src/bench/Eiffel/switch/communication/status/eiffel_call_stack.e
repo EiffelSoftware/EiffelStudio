@@ -42,7 +42,7 @@ feature -- Fake inherit from TWO_WAY_LIST
 		deferred
 		end
 
-	i_th (i: INTEGER): like item is
+	i_th alias "[]" (i: INTEGER): like item is
 		deferred
 		end
 

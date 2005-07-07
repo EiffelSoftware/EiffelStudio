@@ -149,8 +149,8 @@ feature -- Access
 		do
 			from
 				create Result.make (10)
-				cursor := temp_columns.cursor
 				temp_columns := columns
+				cursor := temp_columns.cursor
 				temp_columns.start
 			until
 				temp_columns.after

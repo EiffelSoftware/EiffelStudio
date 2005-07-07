@@ -93,7 +93,7 @@ feature -- Access
 			bridge_ok: Result.is_equal (implementation.cursor)
 		end
 
-	i_th (i: INTEGER): like item is
+	i_th alias "[]" (i: INTEGER): like item is
 			-- Item at `i'-th position.
 			--| Redefined for performance reasons.
 		do

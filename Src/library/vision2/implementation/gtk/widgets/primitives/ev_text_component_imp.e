@@ -19,8 +19,7 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			default_key_processing_blocked,
-			on_focus_changed
+			default_key_processing_blocked
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
@@ -64,19 +63,6 @@ feature {EV_WINDOW_IMP}
 			if a_key.code = {EV_KEY_CONSTANTS}.key_down or else a_key.code = {EV_KEY_CONSTANTS}.key_up then
 				Result := True
 			end
-		end
-		
-feature {NONE} -- Implementation
-
-	on_focus_changed (a_has_focus: BOOLEAN) is
-			-- Focus for `Current' has changed'.
-		do
-			if a_has_focus then
-				top_level_window_imp.set_focus_widget (Current)
-			else
-				top_level_window_imp.set_focus_widget (Void)
-			end
-			Precursor {EV_PRIMITIVE_IMP} (a_has_focus)
 		end
 
 feature {EV_ANY_I} -- Implementation		

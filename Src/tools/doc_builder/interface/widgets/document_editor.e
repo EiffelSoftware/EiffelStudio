@@ -101,8 +101,8 @@ feature -- Initialization
 			-- Here initialize editor contextual settings.  For example, set location of cursor
 			-- pixmaps.
 		do
-			cursors.set_editor_installation_dir_name (shared_constants.application_constants.cursor_resources_directory)			
-			icons.set_editor_installation_dir_name (shared_constants.application_constants.icon_resources_directory)			
+			set_cursors (create {DOC_BUILDER_CURSORS})
+			set_icons (create {DOC_BUILDER_ICONS})
 		end		
 		
 feature -- Editing		

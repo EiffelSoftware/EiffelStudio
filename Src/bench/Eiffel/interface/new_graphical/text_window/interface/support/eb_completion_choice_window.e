@@ -197,9 +197,7 @@ feature {NONE} -- Events handling
 		-- Index of last selected item before current one.
 
 	on_key_released (ev_key: EV_KEY) is
-			-- process user input in `choice_list'	
-		local
-			ix: INTEGER
+			-- process user input in `choice_list'
 		do			
 			if ev_key /= Void then
 				inspect
@@ -484,7 +482,7 @@ feature {NONE} -- Implementation
 					character_to_append := '%U'
 				end
 				if rebuild_list_during_matching then
-					ix := index_offset + 1
+					ix := choice_list.selected_rows.first.index + index_offset
 				else
 					ix := choice_list.selected_rows.first.index
 				end
@@ -509,7 +507,7 @@ feature {NONE} -- Implementation
 		do
 			if not choice_list.selected_rows.is_empty then
 				if rebuild_list_during_matching then
-					ix := index_offset + 1
+					ix := choice_list.selected_rows.first.index + index_offset
 				else
 					ix := choice_list.selected_rows.first.index
 				end

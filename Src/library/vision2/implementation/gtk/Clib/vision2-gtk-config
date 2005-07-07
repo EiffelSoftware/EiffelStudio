@@ -7,6 +7,7 @@ Usage: vision2-gtk-config [OPTIONS]
 Options
 	[--include_path]
 	[--object]
+	[--threads]
 EOF
 	exit $1
 }
@@ -16,6 +17,8 @@ if test $# -eq 0; then
 fi
 
 ISE_LIBRARIES=$ISE_EIFFEL
+gtk_package_string=gtk+-2.0
+
 
 while test $# -gt 0; do
 	case $1 in
@@ -23,10 +26,13 @@ while test $# -gt 0; do
 		ISE_LIBRARIES=$EIFFEL_SRC
 		;;
 		--object)
-		echo $ISE_LIBRARIES/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lX11 -lXtst `pkg-config gtk+-2.0 --libs`
+		echo $ISE_LIBRARIES/library/vision2/spec/$ISE_PLATFORM/lib/gtk_eiffel.o -L/usr/X11R6/lib -L/usr/X11R6/lib64 -lX11 -lXtst `pkg-config $gtk_package_string $thread_string --libs`
+		;;
+		--threads)
+		thread_string=gthread-2.0
 		;;
     		--include_path)
-		echo `pkg-config gtk+-2.0 --cflags`
+		echo `pkg-config $gtk_package_string $thread_string --cflags`
 		;;
     		*)
       		usage 1 1>&2

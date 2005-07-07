@@ -4272,54 +4272,57 @@ feature {NONE} -- Event handling
 			if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
 				key_press_actions_internal.call ([a_key])
 			end
-				-- Handle the selection events
-			sel_items := selected_items
-					-- We always want to find an item above or below for row selection
-			if not sel_items.is_empty then
-				prev_sel_item := sel_items.last
-				a_sel_row := prev_sel_item.row
-				inspect
-					a_key.code
-				when {EV_KEY_CONSTANTS}.Key_down then					
-					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-				when {EV_KEY_CONSTANTS}.Key_up then
-					a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
-				when {EV_KEY_CONSTANTS}.Key_right then
-					if not is_row_selection_enabled then
-							-- Key right shouldn't affect row selection
-						if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
-							a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
+			
+			if is_selection_keyboard_handling_enabled then
+					-- Handle the selection events
+				sel_items := selected_items
+						-- We always want to find an item above or below for row selection
+				if not sel_items.is_empty then
+					prev_sel_item := sel_items.last
+					a_sel_row := prev_sel_item.row
+					inspect
+						a_key.code
+					when {EV_KEY_CONSTANTS}.Key_down then					
+						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, True, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
+					when {EV_KEY_CONSTANTS}.Key_up then
+						a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, is_row_selection_enabled or else ((a_sel_row.subrow_count > 0 or else a_sel_row.parent_row /= Void) and then a_sel_row.index_of_first_item = prev_sel_item.column.index))
+					when {EV_KEY_CONSTANTS}.Key_right then
+						if not is_row_selection_enabled then
+								-- Key right shouldn't affect row selection
+							if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
+								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
+							else
+								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
+							end
 						else
-							a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, True)
-						end
-					else
-						items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
-						if not items_spanning.is_empty then
-							(columns @ (items_spanning @ 1)).ensure_visible
-						end
-					end
-				when {EV_KEY_CONSTANTS}.Key_left then
-					if not is_row_selection_enabled then
-							-- Key left shouldn't affect row selection
-						if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
-							a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
-						else
-							a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
-						end
-
-					else
-						if virtual_x_position > 0 then
-							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
+							items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position + width, 0)
 							if not items_spanning.is_empty then
 								(columns @ (items_spanning @ 1)).ensure_visible
 							end
 						end
+					when {EV_KEY_CONSTANTS}.Key_left then
+						if not is_row_selection_enabled then
+								-- Key left shouldn't affect row selection
+							if prev_sel_item /= Void and then not is_item_navigatable_to (prev_sel_item) then
+								a_sel_item := find_next_item_in_column (prev_sel_item.column, prev_sel_item.row.index, False, True)
+							else
+								a_sel_item := find_next_item_in_row (prev_sel_item.row, prev_sel_item.column.index, False)
+							end
+	
+						else
+							if virtual_x_position > 0 then
+								items_spanning := drawer.items_spanning_horizontal_span (virtual_x_position - 1, 0)
+								if not items_spanning.is_empty then
+									(columns @ (items_spanning @ 1)).ensure_visible
+								end
+							end
+						end
+					else
+						-- Do nothing
 					end
-				else
-					-- Do nothing
-				end
-				if a_sel_item /= Void then
-					handle_newly_selected_item (a_sel_item)
+					if a_sel_item /= Void then
+						handle_newly_selected_item (a_sel_item)
+					end
 				end
 			end
 		end

@@ -230,6 +230,13 @@ feature -- Status setting
 			extra_width: INTEGER
 			i: INTEGER
 		do
+				-- It is necessary to perform the recomputation immediately
+				-- as this may show the horizontal or vertical scroll bar
+				-- which affects the size of the viewable area in which `Current'
+				-- is to be displayed.
+			parent_i.recompute_horizontal_scroll_bar
+			parent_i.recompute_vertical_scroll_bar
+			
 			virtual_x := virtual_x_position			
 			l_width := width
 			if virtual_x < parent_i.virtual_x_position then

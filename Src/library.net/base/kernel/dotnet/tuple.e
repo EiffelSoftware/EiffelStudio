@@ -39,7 +39,7 @@ feature -- Creation
 
 feature -- Access
 
-	item, infix "@" (index: INTEGER): ANY is
+	item alias "[]", infix "@" (index: INTEGER): ANY is
 			-- Entry of key `index'.
 		require
 			valid_index: valid_index (index)

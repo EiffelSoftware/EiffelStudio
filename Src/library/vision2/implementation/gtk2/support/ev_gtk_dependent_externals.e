@@ -8,6 +8,11 @@ class
 
 feature -- Externals
 
+	frozen gtk_window_get_focus (a_window: POINTER): POINTER is
+		external
+			"C signature (GtkWindow*): GtkWidget* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_scrolled_window_set_shadow_type (a_window: POINTER; a_shadow_type: INTEGER) is
 		external
 			"C signature (GtkScrolledWindow*, GtkShadowType) use <gtk/gtk.h>"
@@ -2458,6 +2463,13 @@ feature -- Externals
 			"C macro use <gtk/gtk.h>"
 		alias
 			"gtk_signal_emit_stop_by_name"
+		end
+
+	frozen signal_emit_by_name (a_object: POINTER; a_name: POINTER) is
+		external
+			"C macro use <gtk/gtk.h>"
+		alias
+			"gtk_signal_emit_by_name"
 		end
 
 	frozen gtk_editable_get_selection_bounds (a_editable: POINTER; a_start, a_end: TYPED_POINTER [INTEGER]): BOOLEAN is

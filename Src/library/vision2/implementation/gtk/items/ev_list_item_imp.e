@@ -161,11 +161,18 @@ feature -- Element change
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `tooltip'.
 		do
-			tooltip := a_tooltip.twin
+			internal_tooltip := a_tooltip.twin
 		end
 
-	tooltip: STRING
+	tooltip: STRING is
 			-- Tooltip displayed on `Current'.
+		do
+			if internal_tooltip /= Void then
+				Result := internal_tooltip.twin
+			else
+				Result := ""
+			end
+		end
 
 	set_text (txt: STRING) is
 			-- Set current button text to `txt'.
@@ -212,6 +219,9 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_LIST_ITEM_LIST_IMP} -- Implementation
+
+	internal_tooltip: STRING
+		-- Tooltip used for `Current'.
 
 	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT) is
 			-- Set `list_iter' to `a_iter'

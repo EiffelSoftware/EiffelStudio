@@ -41,7 +41,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): BOOLEAN is
+	item alias "[]", infix "@" (i: INTEGER): BOOLEAN assign put is
 			-- Boolean at `i'-th position,
 			-- beginning at left, 1 origin
 		do

@@ -108,7 +108,7 @@ feature -- Initialization
 			build_displayed_list (before_complete)
 			is_first_show := True
 
-			if not choice_list.is_empty then
+			if choice_list.row_count > 0 then
 					-- If there is only one possibility, we insert it without displaying the window
 				determin_show_needed
 				if not show_needed then
@@ -180,7 +180,7 @@ feature -- Query
 	should_show: BOOLEAN is
 			-- Should show in current state?
 		do
-			Result := not choice_list.is_empty
+			Result := choice_list.row_count > 0
 		end
 
 feature {NONE} -- Events handling
@@ -239,7 +239,7 @@ feature {NONE} -- Events handling
 					ev_key.code				
 				when Key_page_up then
 						-- Go up 10 items
-					if not choice_list.is_empty then
+					if choice_list.row_count > 0 then
 						if not choice_list.selected_items.is_empty then
 							ix:= choice_list.selected_rows.first.index
 							if ix <= 10 then
@@ -261,7 +261,7 @@ feature {NONE} -- Events handling
 					end
 				when Key_page_down then
 						-- Go down 10 items
-					if not choice_list.is_empty then
+					if choice_list.row_count > 0 then
 						if not choice_list.selected_items.is_empty then
 							ix:= choice_list.selected_rows.first.index
 							if ix > choice_list.row_count - 10 then
@@ -284,7 +284,7 @@ feature {NONE} -- Events handling
 						end	
 					end	
 				when Key_up then					
-					if not choice_list.is_empty then
+					if choice_list.row_count > 0 then
 						if not choice_list.selected_items.is_empty then
 							ix := choice_list.selected_rows.first.index
 							choice_list.remove_selection
@@ -299,7 +299,7 @@ feature {NONE} -- Events handling
 						end
 					end
 				when Key_down then
-					if not choice_list.is_empty then
+					if choice_list.row_count > 0 then
 						if not choice_list.selected_items.is_empty then
 							ix := choice_list.selected_rows.first.index
 							choice_list.remove_selection
@@ -314,7 +314,7 @@ feature {NONE} -- Events handling
 						end
 					end							
 				when key_home then
-					if ev_application.ctrl_pressed and then not choice_list.is_empty then
+					if ev_application.ctrl_pressed and then choice_list.row_count > 0 then
 							-- Go to top
 						choice_list.remove_selection
 						choice_list.select_row (1)
@@ -323,7 +323,7 @@ feature {NONE} -- Events handling
 						end
 					end
 				when key_end then
-					if ev_application.ctrl_pressed and then not choice_list.is_empty then
+					if ev_application.ctrl_pressed and then choice_list.row_count > 0 then
 							-- Go to bottom
 						choice_list.remove_selection
 						choice_list.select_row (choice_list.row_count)

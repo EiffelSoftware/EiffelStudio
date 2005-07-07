@@ -117,7 +117,7 @@ feature -- Access
 			Result := area.item (index - 1)
 		end
 
-	i_th, infix "@" (i: INTEGER): like item is
+	i_th alias "[]", infix "@" (i: INTEGER): like item assign put_i_th is
 			-- Item at `i'-th position
 		do
 			Result := area.item (i - 1)

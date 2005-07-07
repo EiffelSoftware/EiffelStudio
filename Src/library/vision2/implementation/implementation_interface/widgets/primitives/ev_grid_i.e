@@ -3894,7 +3894,7 @@ feature {NONE} -- Event handling
 				-- Now handle the tooltips for items.
 			if pointed_item /= Void and then pointed_item.tooltip /= Void and then not drawable.tooltip.is_equal (pointed_item.tooltip) then
 				drawable.set_tooltip (pointed_item.tooltip)
-			elseif pointed_item = Void then
+			elseif pointed_item = Void or else pointed_item /= Void and then pointed_item.tooltip = Void then
 				drawable.remove_tooltip
 			end
 

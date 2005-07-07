@@ -50,7 +50,7 @@ create {EB_NAME_FOR_COMPLETION}
 feature -- Initialization
 
 	make_with_name (a_name: STRING) is
-			-- create feature name with value `name'
+			-- Create feature name with value `name'
 		do
 			Precursor {STRING} (a_name)
 			name := a_name

@@ -111,6 +111,8 @@ feature {NONE} -- Implementation
 
 	on_color_item_exposed (area: EV_DRAWABLE) is
 			-- Expose part of color preference value item.
+		local
+			l_y: INTEGER
 		do
 				-- Write the text
 			if change_item_widget.row.is_selected then				
@@ -124,12 +126,19 @@ feature {NONE} -- Implementation
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
 				area.draw_text_top_left (20, 1, resource.string_value)					
 			end			
+			
 				-- Draw the little color box border
+			if change_item_widget.parent.is_row_height_fixed then
+				l_y := (change_item_widget.parent.row_height // 2 - 6)
+			else
+				l_y := (change_item_widget.row.height // 2 - 6)
+			end
 			area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
-			area.draw_rectangle (1, 1, 12, 12)
+			area.draw_rectangle (1, l_y, 12, 12)
+			
 				-- Draw the little color box internal color
 			area.set_foreground_color (resource.value)
-			area.fill_rectangle (2, 2, 10, 10)			
+			area.fill_rectangle (2, l_y + 1, 10, 10)			
 		end		
 
 	color_tool: EV_COLOR_DIALOG

@@ -47,7 +47,7 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is True
+	needs_event_box: BOOLEAN is False
 		-- Place drawing area inside an event box.
 
 	make (an_interface: like interface) is
@@ -123,7 +123,6 @@ feature {NONE} -- Implementation
 				a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, color_struct, False, True)
 				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)	
 				{EV_GTK_EXTERNALS}.gdk_window_set_background (drawable, color_struct)
-				Precursor {EV_PRIMITIVE_IMP} (a_color)
 			end
 		end
 

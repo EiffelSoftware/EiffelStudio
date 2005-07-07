@@ -1681,7 +1681,7 @@ feature -- Element change
 			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
 			a_parent_row_in_current: a_parent_row.parent = Current
-			all_rows_between_parent_row_and_i_are_subrows: i = a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 		do
 			implementation.insert_new_row_parented (i, a_parent_row)
 		ensure

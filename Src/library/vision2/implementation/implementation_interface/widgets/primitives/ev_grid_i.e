@@ -1820,7 +1820,7 @@ feature -- Element change
 			i_positive: i > 0
 			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
-			all_rows_between_parent_row_and_i_are_subrows: i = a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 		do
 			add_row_at (i, False)
 			a_parent_row.implementation.add_subrow_internal (row (i), a_parent_row.subrow_count + 1,True)

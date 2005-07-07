@@ -339,48 +339,11 @@
 								<File Id="bm_wizard_blue.png" Name="BM_WIZ~1.PNG" LongName="bm_wizard_blue.png" />
 								<File Id="bm_wizard_profiler_icon.png" Name="BM_WIZ~2.PNG" LongName="bm_wizard_profiler_icon.png" />
 								<File Id="borland_logo.png" Name="BORLAN~1.PNG" LongName="borland_logo.png" />
-								<File Id="breakpoint_icon_matrix_png" Name="BREAKP~1.PNG" LongName="breakpoint_icon_matrix.png" />
-								<File Id="icon_anchor.png" Name="ICON_A~1.PNG" LongName="icon_anchor.png" />
-								<File Id="icon_degree_minus_1.png" Name="ICF329~1.PNG" LongName="icon_degree-1.png" />
-								<File Id="icon_degree_minus_2.png" Name="ICF729~1.PNG" LongName="icon_degree-2.png" />
-								<File Id="icon_degree_minus_3.png" Name="ICFB29~1.PNG" LongName="icon_degree-3.png" />
-								<File Id="icon_degree0.png" Name="IC9131~1.PNG" LongName="icon_degree0.png" />
-								<File Id="icon_degree1.png" Name="IC9135~1.PNG" LongName="icon_degree1.png" />
-								<File Id="icon_degree2.png" Name="ICA139~1.PNG" LongName="icon_degree2.png" />
-								<File Id="icon_degree3.png" Name="ICA13D~1.PNG" LongName="icon_degree3.png" />
-								<File Id="icon_degree4.png" Name="ICA131~1.PNG" LongName="icon_degree4.png" />
-								<File Id="icon_degree5.png" Name="ICA135~1.PNG" LongName="icon_degree5.png" />
-								<File Id="icon_degree6.png" Name="ICB139~1.PNG" LongName="icon_degree6.png" />
-								<File Id="icon_display_cluster_color.png" Name="ICON_D~1.PNG" LongName="icon_display_cluster_color.png" />
-								<File Id="icon_display_legend_color.png" Name="ICON_D~2.PNG" LongName="icon_display_legend_color.png" />
-								<File Id="icon_favorites_text_color.png" Name="ICON_F~1.PNG" LongName="icon_favorites_text_color.png" />
-								<File Id="icon_features_text_color.png" Name="ICON_F~2.PNG" LongName="icon_features_text_color.png" />
-								<File Id="icon_fit_to_screen_color.png" Name="ICON_F~3.PNG" LongName="icon_fit_to_screen_color.png" />
-								<File Id="icon_folders_color.png" Name="IC4531~1.PNG" LongName="icon_folders_color.png" />
-								<File Id="icon_global_search_color.png" Name="ICON_G~1.PNG" LongName="icon_global_search_color.png" />
-								<File Id="icon_matrix_8.png" Name="ICON_M~3.PNG" LongName="icon_matrix_8.png" />
+								<File Id="icon_matrix_8.png" Name="ICON_M~4.PNG" LongName="icon_matrix_8.png" />
 								<File Id="icon_matrix_12.png" Name="ICON_M~1.PNG" LongName="icon_matrix_12.png" />
 								<File Id="icon_matrix_16.png" Name="ICON_M~2.PNG" LongName="icon_matrix_16.png" />
-								<File Id="icon_open_project.png" Name="ICON_O~4.PNG" LongName="icon_open_project.png" />
-								<File Id="icon_pin_closed_color.png" Name="ICON_P~1.PNG" LongName="icon_pin_closed_color.png" />
-								<File Id="icon_pin_open_color.png" Name="ICCD2F~1.PNG" LongName="icon_pin_open_color.png" />
-								<File Id="icon_preferences_folder.png" Name="ICON_P~3.PNG" LongName="icon_preferences_folder.png" />
-								<File Id="icon_preferences_root.png" Name="ICON_P~4.PNG" LongName="icon_preferences_root.png" />
-								<File Id="icon_preference_window.png" Name="ICON_P~2.PNG" LongName="icon_preference_window.png" />
-								<File Id="icon_remove_anchor_color.png" Name="ICON_R~1.PNG" LongName="icon_remove_anchor_color.png" />
-								<File Id="icon_reset_view_color.png" Name="ICON_R~2.PNG" LongName="icon_reset_view_color.png" />
-								<File Id="icon_toggle_force_color.png" Name="ICON_T~1.PNG" LongName="icon_toggle_force_color.png" />
-								<File Id="icon_toggle_quality_color.png" Name="IC5026~1.PNG" LongName="icon_toggle_quality_color.png" />
-								<File Id="icon_tool_color.png" Name="ICON_T~2.PNG" LongName="icon_tool_color.png" />
-								<File Id="icon_uml_color.png" Name="ICON_U~3.PNG" LongName="icon_uml_color.png" />
-								<File Id="icon_view_measure_color.png" Name="ICON_V~1.PNG" LongName="icon_view_measure_color.png" />
-								<File Id="icon_windows_text_color.png" Name="ICON_W~2.PNG" LongName="icon_windows_text_color.png" />
-								<File Id="icon_wizard_ace_project.png" Name="ICON_W~3.PNG" LongName="icon_wizard_ace_project.png" />
-								<File Id="icon_wizard_blank_project.png" Name="ICON_W~4.PNG" LongName="icon_wizard_blank_project.png" />
-								<File Id="icon_wizard_project.png" Name="ICF992~1.PNG" LongName="icon_wizard_project.png" />
-								<File Id="isepower.png" Name="isepower.png" />
+								<File Id="icon_matrix_32.png" Name="ICON_M~3.PNG" LongName="icon_matrix_32.png" />
 								<File Id="logo.png" Name="logo.png" />
-								<File Id="projicon.png" Name="projicon.png" />
 							</Component>
 						</Directory>
 						<Directory Id="cursor" Name="cursor">

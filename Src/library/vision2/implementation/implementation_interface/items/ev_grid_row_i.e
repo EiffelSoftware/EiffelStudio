@@ -532,6 +532,13 @@ feature -- Status setting
 			extra_height: INTEGER
 			i: INTEGER
 		do
+				-- It is necessary to perform the recomputation immediately
+				-- as this may show the horizontal or vertical scroll bar
+				-- which affects the size of the viewable area in which `Current'
+				-- is to be displayed.
+			parent_i.recompute_horizontal_scroll_bar
+			parent_i.recompute_vertical_scroll_bar
+			
 			virtual_y := virtual_y_position
 			if parent_i.is_row_height_fixed then
 				l_height := parent_i.row_height

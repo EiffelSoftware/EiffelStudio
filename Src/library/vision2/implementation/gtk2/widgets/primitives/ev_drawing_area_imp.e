@@ -31,7 +31,6 @@ inherit
 			default_key_processing_blocked,
 			dispose,
 			destroy,
-			on_focus_changed,
 			needs_event_box,
 			gdk_events_mask,
 			button_press_switch
@@ -201,17 +200,6 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			-- Mask of Current, which is always NULL.
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
-
-	on_focus_changed (a_has_focus: BOOLEAN) is
-			-- Focus for `Current' has changed'.
-		do
-			if a_has_focus then
-				top_level_window_imp.set_focus_widget (Current)
-			else
-				top_level_window_imp.set_focus_widget (Void)
-			end
-			Precursor {EV_PRIMITIVE_IMP} (a_has_focus)
-		end
 
 	call_expose_actions (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Call the expose actions for the drawing area.

@@ -71,7 +71,7 @@ feature {NONE} -- Externals
 	g_thread_init is
 		external
 			-- Application needs to be linked against gthread.
-			"C inline use <gtk/gtk.h>
+			"C inline use <gtk/gtk.h>"
 		alias
 			"g_thread_init (NULL)"
 		end

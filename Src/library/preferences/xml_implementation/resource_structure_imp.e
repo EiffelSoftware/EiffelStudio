@@ -156,9 +156,6 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 	remove_resource (a_resource: PREFERENCE) is
 			-- Remove `resource' from storage device.
 		do
-			if resources.resources.has (a_resource.name) then
-				resources.resources.remove (a_resource.name)	
-			end
 		end	
 
 feature {NONE} -- Implementation

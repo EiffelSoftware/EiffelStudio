@@ -25,7 +25,7 @@ deferred class CHAIN [G] inherit
 
 	INDEXABLE [G, INTEGER]
 		rename
-			item as i_th,
+			item as i_th alias "[]",
 			put as put_i_th
 		undefine
 			prune_all
@@ -112,7 +112,7 @@ feature -- Access
 			go_to (pos)
 		end
 
-	i_th, infix "@" (i: INTEGER): like item is
+	i_th alias "[]", infix "@" (i: INTEGER): like item assign put_i_th is
 			-- Item at `i'-th position
 		local
 			pos: CURSOR

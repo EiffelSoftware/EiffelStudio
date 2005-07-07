@@ -152,7 +152,7 @@
 	<PREF NAME="editor.eiffel.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.selection_text_color" DESCRIPTION="Foreground color for selected text."><COLOR>255;255;128</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.selection_background_color" DESCRIPTION="Background color for selected text."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.string_text_color" DESCRIPTION="Foreground color for manifest strings."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.string_text_color" DESCRIPTION="Foreground color for manifest strings."><COLOR>0;128;128</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.string_background_color" DESCRIPTION="Background color for manifest strings."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.keyword_text_color" DESCRIPTION="Foreground color for keywords."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.keyword_background_color" DESCRIPTION="Background color for keywords."><COLOR>255;255;255</COLOR></PREF>

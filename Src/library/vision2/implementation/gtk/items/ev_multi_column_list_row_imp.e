@@ -39,7 +39,8 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Create the linked lists.
-		do			
+		do	
+			tooltip := ""
 			set_is_initialized (True)
 		end
 
@@ -174,6 +175,7 @@ feature -- Element Change
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `tooltip'.
 		do
+			tooltip := a_tooltip.twin
 		end
 
 	tooltip: STRING
@@ -183,12 +185,15 @@ feature {NONE} -- Implementation
 		
 	on_item_added_at (an_item: STRING; item_index: INTEGER) is
 			-- `an_item' has been added to index `item_index'.
+		local
+			a_parent_imp: like parent_imp
 		do
-			if parent_imp /= Void then
-				if parent_imp.column_count < item_index then
-					parent_imp.expand_column_count_to (item_index)
+			a_parent_imp := parent_imp
+			if a_parent_imp /= Void then
+				if a_parent_imp.column_count < item_index then
+					a_parent_imp.expand_column_count_to (item_index)
 				end
-				parent_imp.set_text_on_position (item_index, index, an_item)
+				a_parent_imp.set_text_on_position (item_index, index, an_item)
 			end
 		end
 

@@ -225,7 +225,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): CHARACTER is
+	item alias "[]", infix "@" (i: INTEGER): CHARACTER assign put is
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)

@@ -84,7 +84,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): G is
+	item alias "[]", infix "@" (i: INTEGER): G assign put is
 			-- Entry at index `i', if in index interval
 		do
 			Result := area.item (i - lower)

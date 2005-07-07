@@ -10,9 +10,12 @@ class
 inherit
 	EV_LIST_I
 		undefine
-			wipe_out
+			wipe_out,
+			selected_items,
+			call_pebble_function
 		redefine
-			interface
+			interface,
+			disable_default_key_processing
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -20,168 +23,354 @@ inherit
 			interface,
 			visual_widget,
 			initialize,
-			has_focus,
-			add_to_container,
-			clear_selection,
-			on_item_clicked
-		end	
+			row_from_y_coord,
+			start_transport_filter,
+			row_height
+		end
+
 create
 	make
 
-feature -- Status report
-
-	multiple_selection_enabled: BOOLEAN
-			-- True if the user can choose several items,
-			-- False otherwise.
-
 feature -- Initialize
+
+	make (an_interface: like interface) is
+			-- Create a list widget with `par' as parent.
+			-- By default, a list allow only one selection.
+		do
+			base_make (an_interface)
+			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
+			set_c_object (scrollable_area)
+
+			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
+			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
+		end
+	
+	scrollable_area: POINTER
+		-- Scrollable area used for `Current'
 
 	initialize is
 			-- Initialize the list.
+		local
+			a_column, a_cell_renderer: POINTER
+			a_gtk_c_str: EV_GTK_C_STRING
+			a_selection: POINTER
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)				
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+				scrollable_area,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
+			)
+
+			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
+			--feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
 			
-			real_signal_connect (
-					list_widget,
-					"leave-notify-event",
-					agent (App_implementation.gtk_marshal).list_proximity_intermediary (c_object, True),
-					size_allocate_translate_agent
-			)
-			real_signal_connect (
-					list_widget,
-					"enter-notify-event",
-					agent (App_implementation.gtk_marshal).list_proximity_intermediary (c_object, False),
-					size_allocate_translate_agent
-			)
-			real_signal_connect (
-					visual_widget,
-					"focus-in-event",
-					agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object),
-					size_allocate_translate_agent
-			)
-			real_signal_connect (
-					visual_widget,
-					"focus-out-event",
-					agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object),
-					size_allocate_translate_agent
-			)
-				-- Set to single selection
-			multiple_selection_enabled := False
-			selection_mode_is_single := True
-			{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
+			
+			a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
+
+			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)				
+			a_gtk_c_str := "text"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
+			
+			
+			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
+			a_gtk_c_str := "pixbuf"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
+			
+
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
+			
+			previous_selection := selected_items
+			
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+			initialize_pixmaps
+		end
+
+feature -- Access
+
+	selected_item: EV_LIST_ITEM is
+			-- Item which is currently selected, for a multiple
+			-- selection.
+		local
+			a_selection: POINTER
+			a_tree_path_list: POINTER
+			a_model: POINTER
+			a_tree_path: POINTER
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
+		do
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			
+			if a_tree_path_list /= NULL then
+					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
+					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+					Result := (child_array @ (mp.read_integer_32 (0) + 1))
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
+					{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
+			end
+		end
+
+	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
+			-- List of all the selected items. For a single
+			-- selection list, it gives a list with only one
+			-- element which is `selected_item'. Therefore, one
+			-- should use `selected_item' rather than 
+			-- `selected_items' for a single selection list.
+		local
+			a_selection: POINTER
+			a_tree_path_list: POINTER
+			a_model: POINTER
+			a_tree_path: POINTER
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
+		do
+			create Result.make (0)
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			if a_tree_path_list /= NULL then
+				from
+				until
+					a_tree_path_list = NULL
+				loop
+					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
+					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+					Result.extend ((child_array @ (mp.read_integer_32 (0) + 1)))
+					a_tree_path_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_tree_path_list)
+				end
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
+				{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
+			end
 		end
 		
 feature -- Status Report
 
-	has_focus: BOOLEAN
-			-- Does the list have the focus?
+	multiple_selection_enabled: BOOLEAN is
+			-- True if the user can choose several items
+			-- False otherwise.
+		local
+			a_selection: POINTER
+		do
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_get_mode (a_selection) = {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum
+		end
 
 feature -- Status setting
 
 	ensure_item_visible (an_item: EV_LIST_ITEM) is
 			-- Ensure item `an_index' is visible in `Current'.
 		local
-			an_item_index: INTEGER
-			item_imp: EV_LIST_ITEM_IMP
-		do
-			an_item_index := index_of (an_item, 1)
-			item_imp ?= an_item.implementation
-			
-				-- Show the item at position `item_index'
-			{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (an_item_index - 1) * (App_implementation.default_font_ascent + App_implementation.default_font_descent + 2))
-			--| FIXME IEK This needs to be properly implement
+			list_item_imp: EV_LIST_ITEM_IMP
+			a_path: POINTER
+		do	
+			list_item_imp ?= an_item.implementation
+			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
 
 	enable_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
-			-- For constants, see EV_GTK_CONSTANTS
+		local
+			a_selection: POINTER
 		do
-			multiple_selection_enabled := True
-			if selection_mode_is_single then
-				{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gTK_SELECTION_MULTIPLE_ENUM)
-			else
-				{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gTK_SELECTION_EXTENDED_ENUM)
-			end
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
 		end
 
 	disable_multiple_selection is
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
-			-- For constants, see EV_GTK_CONSTANTS
 		local
-			sel_items: ARRAYED_LIST [EV_LIST_ITEM]
-			sel_item: EV_LIST_ITEM
+			a_selection: POINTER
 		do
-			multiple_selection_enabled := False
-			selection_mode_is_single := True
-			sel_items := selected_items
-			if not sel_items.is_empty then
-				sel_item := sel_items.first
-			end
-			{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM)
-			if sel_item /= Void then
-				sel_item.enable_select
-			end
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
+		end
+
+	select_item (an_index: INTEGER) is
+			-- Select an item at the one-based `index' of the list.
+		local
+			a_selection: POINTER
+			a_item_imp: EV_LIST_ITEM_IMP
+		do
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_item_imp ?= (child_array @ an_index).implementation
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, a_item_imp.list_iter.item)
+		end
+
+	deselect_item (an_index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		local
+			a_selection: POINTER
+			a_item_imp: EV_LIST_ITEM_IMP
+		do
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_item_imp ?= (child_array @ an_index).implementation
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, a_item_imp.list_iter.item)
 		end
 		
 	clear_selection is
 			-- Clear the selection of the list.
+		local
+			a_selection: POINTER
 		do
-			switch_to_single_mode_if_necessary
-			Precursor {EV_LIST_ITEM_LIST_IMP}
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_EXTERNALS}.gtk_tree_selection_unselect_all (a_selection)
+		end
+
+feature -- PND
+
+	row_index_from_y_coord (a_y: INTEGER): INTEGER is
+			-- Returns the row index at relative coordinate `a_y'.
+		local
+			a_tree_path, a_tree_column: POINTER
+			a_success: BOOLEAN
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
+		do
+			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			if a_success then
+				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+				Result := mp.read_integer_32 (0) + 1	
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+			end
+		end
+
+	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
+			-- Returns the row at relative coordinate `a_y'
+		local
+			a_row_index: INTEGER
+		do
+			a_row_index := row_index_from_y_coord (a_y)
+			if a_row_index > 0 then
+				Result ?= i_th (a_row_index).implementation
+			end
+		end
+
+	start_transport_filter (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Initialize a pick and drop transport.
+		local
+			a_row_index: INTEGER
+		do
+			a_row_index := row_index_from_y_coord (a_y)
+			if a_row_index > 0 then
+				pnd_row_imp ?= i_th (a_row_index).implementation
+				if not pnd_row_imp.able_to_transport (a_button) then
+					pnd_row_imp := Void
+				end
+			end
+			if pnd_row_imp /= Void or else pebble /= Void then
+				Precursor {EV_LIST_ITEM_LIST_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			else
+				call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			end
+		end
+
+	row_height: INTEGER is
+			-- Height of rows in `Current'
+			-- (export status {NONE})
+		local
+			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
+			a_gtk_c_str: EV_GTK_C_STRING
+			a_vert_sep: INTEGER
+		do
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_get_fixed_size (a_cell_rend, null, $Result)
+			a_gtk_c_str := "vertical-separator"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			Result := Result + a_vert_sep
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	visual_widget: POINTER is
 		do
-			Result := list_widget
+			Result := tree_view
 		end
 
 	interface: EV_LIST
 	
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation	
-	
-	set_is_out (a_value: BOOLEAN) is
-			-- Assign `a_value' to `is_out'.
-		do
-			is_out := a_value
-		end
-	
-	attain_focus is
-			-- The list has just grabbed the focus.
-		do
-			if not has_focus then
-				has_focus := True
-				top_level_window_imp.set_focus_widget (Current)
-				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)				
-				end
-			end
-		end
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	lose_focus is
-			-- The list has just lost the focus.
+	previous_selection: ARRAYED_LIST [EV_LIST_ITEM]
+		-- List of selected items from last selection change
+
+	call_selection_action_sequences is
+			-- Call appropriate selection and deselection action sequences
+		local
+			new_selection: ARRAYED_LIST [EV_LIST_ITEM]
+			newly_selected_items: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+			an_item: EV_LIST_ITEM_IMP
 		do
-				-- This routine is called when an item loses the focus too.
-				-- The follwing test prevent call to `focus_out_actions' when
-				-- the user has only changed the selected item.
-			if (not has_capture) and then 
-				(is_out or else not button_is_pressed) and then
-				(not list_has_been_clicked) and then
-				(not arrow_used)
-			then
-				has_focus := False
-				top_level_window_imp.set_focus_widget (Void)
-				if not has_focus and focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+			new_selection := selected_items
+			create newly_selected_items.make (0)
+			from
+				new_selection.start
+			until
+				new_selection.off
+			loop
+				if not previous_selection.has (new_selection.item) then
+					an_item ?= new_selection.item.implementation
+					newly_selected_items.extend (an_item)
 				end
+				previous_selection.prune_all (new_selection.item)
+				new_selection.forth
 			end
-			arrow_used := False
+			from
+				previous_selection.start
+			until
+				previous_selection.off
+			loop
+				an_item ?= previous_selection.item.implementation
+				if an_item.deselect_actions_internal /= Void then
+					an_item.deselect_actions_internal.call (Void)
+				end
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call ([an_item.interface])
+				end
+				previous_selection.forth
+			end
+			from
+				newly_selected_items.start
+			until
+				newly_selected_items.off
+			loop
+				if newly_selected_items.item.select_actions_internal /= Void then
+					newly_selected_items.item.select_actions_internal.call (Void)
+				end
+				if select_actions_internal /= Void then
+					select_actions_internal.call ([newly_selected_items.item.interface])
+				end
+				newly_selected_items.forth
+			end
+			previous_selection := new_selection
 		end
 	
 feature {NONE} -- Implementation
+
+	disable_default_key_processing is
+			-- Ensure default key processing is not performed.
+		do
+			Precursor {EV_LIST_I}
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_enable_search (tree_view, False)
+		end
+
+	tree_view: POINTER
+		-- Pointer to the view widget used to display the model within `Current'
 
 	pixmaps_size_changed is
 			-- The size of the displayed pixmaps has just
@@ -194,90 +383,9 @@ feature {NONE} -- Implementation
 	vertical_adjustment_struct: POINTER is
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
+			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (scrollable_area))
 		end
 
-	select_callback (n_args: INTEGER; args: POINTER) is
-			-- Called when a list item is selected.
-		local
-			l_item: EV_LIST_ITEM_IMP
-		do
-			switch_to_browse_mode_if_necessary		
-		 	l_item ?= eif_object_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args))
-			call_select_actions (l_item)
-		end
-
-	switch_to_single_mode_if_necessary is
-			-- Change selection mode if the last selected
-			-- item is deselected.
-		local
-			sel_items: like selected_items
-		do
-			if not selection_mode_is_single then
-				if multiple_selection_enabled then
-					sel_items := selected_items
-					if sel_items = Void or else selected_items.count <= 1 then
-						{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
-						selection_mode_is_single := True
-					end
-				else
-					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
-					selection_mode_is_single := True
-				end
-			end
-		end
-		
-	switch_to_browse_mode_if_necessary is
-			-- Change selection mode to browse mode
-			-- if necessary.
-		do
-			if selection_mode_is_single then
-				if multiple_selection_enabled then
-					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_extended_enum)					
-				else
-					{EV_GTK_EXTERNALS}.gtk_list_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.gtk_selection_browse_enum)
-				end
-				selection_mode_is_single := False
-			end
-		end
-
-	add_to_container (v: like item; v_imp: EV_LIST_ITEM_IMP) is
-			-- Add `v' to end of list.
-		do
-			Precursor {EV_LIST_ITEM_LIST_IMP} (v, v_imp)
-			real_signal_connect (
-				v_imp.c_object,
-				"focus-out-event",
-				agent (App_implementation.gtk_marshal).on_list_focus_intermediary (c_object, False),
-				size_allocate_translate_agent
-				)
-		end
-		
-	is_out: BOOLEAN
-			-- Is the mouse pointer over the list?
-		
-	button_is_pressed: BOOLEAN is
-			-- Is one of the mouse buttons pressed?
-		local
-			temp_mask, temp_x, temp_y: INTEGER
-			button_pressed_mask: INTEGER
-			temp_ptr: POINTER
-		do
-			temp_ptr := {EV_GTK_EXTERNALS}.gdk_window_get_pointer (default_pointer, $temp_x, $temp_y, $temp_mask)
-			button_pressed_mask := {EV_GTK_EXTERNALS}.gdk_button1_mask_enum + {EV_GTK_EXTERNALS}.gdk_button2_mask_enum + {EV_GTK_EXTERNALS}.gdk_button3_mask_enum
-			Result := (temp_mask.bit_and (button_pressed_mask)).to_boolean
-		end	
-
-	on_item_clicked is
-			-- One of the item has been clicked.
-		do
-			Precursor
-			switch_to_browse_mode_if_necessary
-		end
-
-	selection_mode_is_single:BOOLEAN
-
-		
 end -- class EV_LIST_IMP
 
 --|----------------------------------------------------------------

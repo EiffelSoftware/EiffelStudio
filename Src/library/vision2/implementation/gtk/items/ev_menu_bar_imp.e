@@ -15,7 +15,8 @@ inherit
 
 	EV_MENU_ITEM_LIST_IMP
 		export
-			{EV_WINDOW_IMP} list_widget
+			{EV_WINDOW_IMP}
+				list_widget
 		redefine
 			interface,
 			insert_menu_item
@@ -32,7 +33,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_bar_new)
-			{EV_GTK_EXTERNALS}.gtk_menu_bar_set_shadow_type (c_object, {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
 		
@@ -66,23 +66,7 @@ feature {NONE} -- Implementation
 
 	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
 			-- Generic menu item insertion.
-		local
-			menu_imp: EV_MENU_IMP
-			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make ("activate_item")
-			if parent_imp /= Void then
-				menu_imp ?= an_item_imp
-				if menu_imp /= Void and then menu_imp.key /= 0 then
-					{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (menu_imp.c_object,
-						a_cs.item,
-						parent_imp.accel_group,
-						menu_imp.key,
-						{EV_GTK_EXTERNALS}.gdk_mod1_mask_enum,
-						0)
-				end			
-			end
-
 			an_item_imp.set_item_parent_imp (Current)
 			{EV_GTK_EXTERNALS}.gtk_menu_shell_insert (list_widget, an_item_imp.c_object, pos - 1)
 			child_array.go_i_th (pos)

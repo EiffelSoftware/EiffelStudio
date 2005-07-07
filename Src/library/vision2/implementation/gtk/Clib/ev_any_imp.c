@@ -21,8 +21,8 @@ EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id (GtkWidget* c_object
             int eif_oid;
             EIF_REFERENCE eif_reference = NULL;
             
-	    if ((eif_oid = (int) gtk_object_get_data (
-                GTK_OBJECT (c_object),
+	    if ((eif_oid = (int) (rt_int_ptr) g_object_get_data (
+                G_OBJECT (c_object),
                 "eif_oid"
             ))) {
 	        eif_reference = eif_id_object (eif_oid);
@@ -47,27 +47,23 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
     int eif_oid,
     void (*c_object_dispose) (EIF_REFERENCE)
 )
-        // Store Eiffel object_id in `gtk_object'.
+        // Store Eiffel object_id in `g_object'.
         // Set up signal handlers.
 {
 	    	// Our function pointer is reset every time,
 		// This could be done with just one setting function.
             ev_any_imp_c_object_dispose = c_object_dispose;
-            gtk_object_set_data (
-                GTK_OBJECT (c_object),
+            g_object_set_data (
+                G_OBJECT (c_object),
                 "eif_oid",
-                (gpointer*) eif_oid
+                (gpointer) (rt_int_ptr) eif_oid
             );
-            gtk_signal_connect (
-                GTK_OBJECT (c_object),
+            g_signal_connect (
+                G_OBJECT (c_object),
                 "destroy",
-                c_ev_any_imp_c_object_dispose,
-                (gpointer*) eif_oid
+                (GCallback) c_ev_any_imp_c_object_dispose,
+                (gpointer) (rt_int_ptr) eif_oid
             );
-            /*if (GTK_IS_WINDOW (c_object)) {
-			// As Windows are toplevel widgets they need to stay alive unless explicitly destroyed.
-		gtk_object_ref (GTK_OBJECT (c_object));
-            }*/
 }
 
 /* To store previous value of `debug_mode' */
@@ -108,8 +104,25 @@ void set_debug_mode (int a_debug_mode)
 //------------------------------------------------------------------------------
 //
 // $Log$
-// Revision 1.16  2004/03/19 23:08:58  king
-// Now no longer add reffing windows
+// Revision 1.17  2005/07/07 17:13:09  king
+// Updated gtk implementation to be 2.4 based instead of 1.2 based, previous imp is located at library/vision2_for_gtk12
+//
+// Revision 1.7  2005/02/15 00:05:06  king
+// Removed asterisk from gpointer as it is not needed
+//
+// Revision 1.6  2005/02/12 01:23:42  manus
+// Removed C compiler warnings by adding cast to (rt_int_ptr) before convert to
+//   or from a pointer.
+//
+// Revision 1.5  2004/07/20 01:24:29  king
+// Added function pointer cast to prevent C compiler warning
+// Updated remaining deprecated gtk event handling setup code
+//
+// Revision 1.4  2004/03/08 19:59:07  king
+// Removed unnecessary reffing of windows
+//
+// Revision 1.3  2004/02/12 22:38:10  king
+// Removed all unused code due to refactoring
 //
 // Revision 1.15  2003/11/12 17:48:34  manus
 // Fixed bug in which when a vision2 application using capture was launched

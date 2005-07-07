@@ -26,11 +26,8 @@ feature {NONE} -- Initialization
 	
 	textable_imp_initialize is
 			-- Create a GtkLabel to display the text.
-		local
-			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make ("")
-			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
+			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 		end
@@ -38,15 +35,20 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	text: STRING is
-			-- Text of the label
+			-- Text of the label.
 		local
-			p: POINTER
+			a_str: POINTER
 		do
-			{EV_GTK_EXTERNALS}.gtk_label_get (text_label, $p)
-			check
-				p_not_null: p /= NULL
+			if real_text /= Void then
+				Result := real_text.string
+			else
+				a_str :={EV_GTK_EXTERNALS}.gtk_label_get_label (text_label)
+				if a_str /= default_pointer then
+					Result := (create{EV_GTK_C_STRING}.share_from_pointer (a_str)).string
+				else
+					Result := ""
+				end
 			end
-			create Result.make_from_c (p)
 		end
 
 	text_alignment: INTEGER is
@@ -96,15 +98,69 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_text)
-			{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
+			if accelerators_enabled then
+				real_text := a_text
+				a_cs := App_implementation.c_string_from_eiffel_string (u_lined_filter (a_text))
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_label_set_text_with_mnemonic (text_label, a_cs.item)
+			else
+				a_cs := App_implementation.c_string_from_eiffel_string (a_text)
+				real_text := Void
+				{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
+			end
 		end
 	
 feature {EV_ANY_IMP} -- Implementation
 	
 	text_label: POINTER
 			-- GtkLabel containing `text'.
+
+	accelerators_enabled: BOOLEAN is
+			-- Does `Current' have keyboard accelerators enabled?
+		do
+			Result := False
+		end
+
+	real_text: EV_GTK_C_STRING
+			-- Internal `text'. (with ampersands)
+
+	filter_ampersand (s: STRING; char: CHARACTER) is
+			-- Replace occurrences of '&' from `s'  by `char' and
+			-- replace occurrences of "&&" with '&'.
+		require
+			s_not_void: s /= Void
+			s_has_at_least_one_ampersand: s.occurrences ('&') > 0
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > s.count
+			loop
+				if s.item (i) = '&' then
+					if s.item (i + 1) /= '&' then
+						s.put (char, i)
+					else
+						i := i + 1
+					end
+				end					
+				i := i + 1
+			end
+			s.replace_substring_all (once "&&", once "&")
+		end
+
+	u_lined_filter (s: STRING): STRING is
+			-- Copy of `s' with underscores instead of ampersands.
+			-- (If `s' does not contain ampersands, return `s'.)
+		require
+			s_not_void: s /= Void
+		do
+			Result := s.twin
+			Result.replace_substring_all (once  "_", once  "__")
+			if s.has ('&') then
+				filter_ampersand (Result, '_')
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 

@@ -29,7 +29,7 @@ inherit
 		redefine
 			interface,
 			set_text,
-			text
+			accelerators_enabled
 		end
 
 	EV_MENU_ITEM_ACTION_SEQUENCES_IMP
@@ -47,120 +47,50 @@ feature {NONE} -- Initialization
 			-- Create a menu.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_item_new)
+			set_c_object ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_new)
+			pixmapable_imp_initialize
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_image_menu_item_set_image (c_object, pixmap_box)
 		end
 	
 	initialize is
-			-- Call to both precursors.		
-		do
-			real_signal_connect (c_object, "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
-			textable_imp_initialize
-			pixmapable_imp_initialize
-			initialize_menu_item_box
-			real_text := ""
-			Precursor {EV_ITEM_IMP}
-		end
-
-	initialize_menu_item_box is
-			-- Create and initialize menu item box.
+			-- Initialize `Current'
 		local
 			box: POINTER
 		do
+			Precursor {EV_ITEM_IMP}
+			real_signal_connect_after (visual_widget, once "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
+			textable_imp_initialize
+
 			box := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, box)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (box)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, True, 0)
-			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 1)
-		ensure
-			menu_item_box /= NULL
-		end
 
-feature -- Access
-
-	text: STRING is
-			-- Displayed on menu item.
-		do
-			if real_text /= Void then
-				Result := real_text.twin
+			if pixmap_box = default_pointer then
+				pixmapable_imp_initialize
+				{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, True, 0)
 			end
+			{EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
 		end
-
-	key: INTEGER
-			-- Accelerator for `Current'.
 
 feature -- Element change
 
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			temp_string: STRING
-			a_cs: EV_GTK_C_STRING
+--			tab_mod: INTEGER
 		do
-			a_text.replace_substring_all ("%T", " ")
-				-- Replace tab characters with spaces.
-			real_text := a_text.twin	
-			if a_text.has ('&') then
-				temp_string := a_text.twin
-				filter_ampersand (temp_string, '_')
-				create a_cs.make (temp_string)
-				key := {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
-				a_cs.item)
-			else
-				key := 0
-				create a_cs.make (a_text)
-				{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
-			end	
-			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
+--			tab_mod := temp_string.count \\ 8
+--			if tab_mod < 4 then
+--				temp_string.replace_substring_all ("%T", "%T%T%T")
+--			else
+--				temp_string.replace_substring_all ("%T", "%T%T")
+--			end
+			Precursor {EV_TEXTABLE_IMP} (a_text)
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	real_text: STRING
-			-- Internal `text'. (with ampersands)
-
-	filter_ampersand (s: STRING; char: CHARACTER) is
-			-- Replace occurrences of '&' from `s'  by `char' and
-			-- replace occurrences of "&&" with '&'.
-		require
-			s_not_void: s /= Void
-			s_has_at_least_one_ampersand: s.occurrences ('&') > 0
-		local
-			i: INTEGER
-		do
-			from
-				i := 1
-			until
-				i > s.count
-			loop
-				if s.item (i) = '&' then
-					if s.item (i + 1) /= '&' then
-						s.put (char, i)
-					else
-						i := i + 1
-					end
-				end					
-				i := i + 1
-			end
-			s.replace_substring_all ("&&", "&")
-		end
-
-	u_lined_filter (s: STRING): STRING is
-			-- Copy of `s' with underscores instead of ampersands.
-			-- (If `s' does not contain ampersands, return `s'.)
-		require
-			s_not_void: s /= Void
-		do
-			if s.has ('&') then
-				Result := s.twin
-				filter_ampersand (Result, '_')
-			else
-				Result := s
-			end
-		ensure
-			copied_only_if_s_had_ampersand:
-				((old s.twin).has ('&')) = (s /= Result)
-			s_not_changed: (old s.twin).is_equal (s) 
-		end
+	accelerators_enabled: BOOLEAN is True
 
 	on_activate is
 		local
@@ -177,15 +107,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			if select_actions_internal /= Void then
 				select_actions_internal.call (Void)
 			end
-		end
-
-	menu_item_box: POINTER is
-		local
-			a_child_list: POINTER
-		do
-			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (c_object)
-			Result := {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
-			{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 		end
 
 	interface: EV_MENU_ITEM

@@ -12,7 +12,6 @@ inherit
 		redefine
 			interface,
 			initialize,
-			wipe_out,
 			call_pebble_function,
 			append
 		end
@@ -41,9 +40,6 @@ inherit
 			interface,
 			insert_i_th,
 			remove_i_th,
-			i_th,
-			count,
-			wipe_out,
 			append,
 			initialize
 		end
@@ -58,125 +54,121 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is True
+	
+	scrollable_area: POINTER
+		-- Pointer to the GtkScrolledWindow widget used for scrolling the tree view
 
 	make (an_interface: like interface) is
 			-- Create an empty Tree.
-		local
-			a_scrolled_window: POINTER
 		do
 			base_make (an_interface)
-			a_scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
-			set_c_object (a_scrolled_window)
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				a_scrolled_window, 
-				{EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM,
-				{EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM
-			)
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_placement (a_scrolled_window, {EV_GTK_EXTERNALS}.gTK_CORNER_TOP_LEFT_ENUM)
-
-			list_widget := {EV_GTK_EXTERNALS}.gtk_ctree_new (1, 0)
-			
-			{EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, GTK_CTREE_LINES_DOTTED_ENUM)
-			{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (list_widget, {EV_GTK_EXTERNALS}.GTK_SELECTION_BROWSE_ENUM)
-			{EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, GTK_CTREE_EXPANDER_SQUARE_ENUM)
-			{EV_GTK_EXTERNALS}.gtk_ctree_set_show_stub (list_widget, True)
-			{EV_GTK_EXTERNALS}.gtk_ctree_set_indent (list_widget, 17)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (a_scrolled_window, list_widget)
-			
-			create ev_children.make (0)
-				-- Make initial hash table with room for 100 child pointers, may be increased later.
-		
-			create tree_node_ptr_table.make (100)
-			create timer.make_with_interval (0)
-			timer.actions.extend (agent on_time_out)
-		end
-	
-	tree_width: INTEGER
-		-- Width of tree widget
-	
-	timer: EV_TIMEOUT
-		-- Timer used for refresh hack.
-		
-	timer_interval: INTEGER is 50
-	
-	on_time_out is
-			-- Called on a timer, needed to correctly refresh tree widget.
-		local
-			a_wid: INTEGER
-		do
-			timer.set_interval (0)
-			a_wid := {EV_GTK_EXTERNALS}.gtk_clist_columns_autosize (list_widget) + 16
-			if tree_width /= a_wid then
-				{EV_GTK_EXTERNALS}.gtk_widget_set_usize (list_widget, a_wid, -1)
-				tree_width := a_wid
-			end
+			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
+			set_c_object (scrollable_area)
+			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
+			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
 		end
 
 	call_selection_action_sequences is
-			-- 
+			-- Call the appropriate selection action sequences
+		local
+			a_selected_item: EV_TREE_NODE
+			a_selected_item_imp: EV_TREE_NODE_IMP
+			previous_selected_item_imp: EV_TREE_NODE_IMP
 		do
-			-- Not needed for 1.2 implementation
+			a_selected_item := selected_item
+			
+			if a_selected_item /= previous_selected_item then
+				if previous_selected_item /= Void then
+					previous_selected_item_imp ?= previous_selected_item.implementation
+					if previous_selected_item_imp.deselect_actions_internal /= Void then
+						previous_selected_item_imp.deselect_actions_internal.call (Void)
+					end
+					if deselect_actions_internal /= Void then
+						deselect_actions_internal.call (Void)
+					end
+				end	
+				if a_selected_item /= Void then
+					a_selected_item_imp ?= a_selected_item.implementation
+					if a_selected_item_imp.select_actions_internal /= Void then
+						a_selected_item_imp.select_actions_internal.call (Void)
+					end
+					if select_actions_internal /= Void then
+						select_actions_internal.call (Void)
+					end
+				end
+			end
+			previous_selected_item := a_selected_item
 		end
 	
 	visual_widget: POINTER is
 			-- Visible widget on screen.
 		do
-			Result := list_widget
+			Result := tree_view
+		end
+
+	initialize_model is
+			-- Initialize data model
+		do
+			tree_store := new_tree_store
 		end
 
 	initialize is
 			-- Connect action sequences to signals.
+		local
+			a_column, a_cell_renderer: POINTER
+			a_gtk_c_str: EV_GTK_C_STRING
+			a_selection: POINTER
+
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_TREE_I}
+			
+			initialize_model
+
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, tree_store)				
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+				scrollable_area,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
+			)
+			
+			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
+
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
+
+			a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
+
+			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)
+			a_gtk_c_str := "text"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
+
+			a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
+			a_gtk_c_str := "pixbuf"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
+			
+
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
+			
+			real_signal_connect (tree_view, "row-collapsed", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, False, ?, ?), Void)
+			real_signal_connect (tree_view, "row-expanded", agent (app_implementation.gtk_marshal).tree_row_expansion_change_intermediary (internal_id, True, ?, ?), Void)
+
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_browse_enum)
 			initialize_pixmaps
-			
-			--| Event position 1 in intermediary
-			real_signal_connect (
-				list_widget,
-				"tree-select-row",
-				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 1, ?),
-				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
-			)
-			
-			real_signal_connect (
-				list_widget,
-				"tree-unselect-row",
-				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 2, ?),
-				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
-			)
-
-			real_signal_connect (
-				list_widget,
-				"tree-expand",
-				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 3, ?),
-				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
-			)
-
-			real_signal_connect (
-				list_widget,
-				"tree-collapse",
-				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 4, ?),
-				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
-			)
 			connect_button_press_switch
-				-- Needed so items are always hooked up, even though widget may not need to be.
 		end
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
 			-- Create a pointer_motion action sequence.
 		do
 			create Result
-		end
-
-	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
-			-- Tuple containing integer value from first of `args'.
-		do
-			(App_implementation.gtk_marshal).pointer_tuple.put ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args), 1)
-			Result := (App_implementation.gtk_marshal).pointer_tuple
-			--	Result := [(App_implementation.gtk_marshal).gtk_value_pointer (args)]
 		end
 
 	button_press_switch (
@@ -189,35 +181,44 @@ feature {NONE} -- Initialization
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
 			tree_item_imp: EV_TREE_NODE_IMP
-			timeout_imp: EV_TIMEOUT_IMP
-
+			a_property: EV_GTK_C_STRING
+			a_expander_size, a_horizontal_separator: INTEGER
+			a_success: BOOLEAN
+			a_tree_path, a_tree_column: POINTER
+			a_depth: INTEGER
+			avoid_item_events: BOOLEAN
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 
+			a_property := "expander-size"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_expander_size)
+			a_property := "horizontal-separator"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_horizontal_separator)
+
+			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, a_x, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			if a_success then
+				a_depth := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_depth (a_tree_path)
+				if a_x <= (a_horizontal_separator + a_expander_size + a_horizontal_separator) * a_depth and then a_x >= (a_horizontal_separator + a_expander_size + a_horizontal_separator) * (a_depth - 1) then
+					avoid_item_events := True
+						-- We have clicked on the expander node so therefore we don't want to emit an item event
+				end
+			end
 			tree_item_imp := row_from_y_coord (a_y)
 
 			if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
-				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
+				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
-				if 
-					tree_item_imp /= Void and then tree_item_imp.pointer_button_press_actions_internal /= Void then
-							--| This prevents freezing on possible show_modal_to_window calls for dialogs
-						if not {EV_GTK_EXTERNALS}.gtk_ctree_is_hot_spot (list_widget, a_x, a_y) then
-							timeout_imp ?= (create {EV_TIMEOUT}).implementation
-							timeout_imp.interface.actions.extend (agent (tree_item_imp.pointer_button_press_actions_internal).call (t))
-							timeout_imp.set_interval_kamikaze (100)
-						end
+				if not avoid_item_events and then tree_item_imp /= Void and then tree_item_imp.pointer_button_press_actions_internal /= Void then
+					tree_item_imp.pointer_button_press_actions_internal.call (t)
 				end
 			elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end
-				if tree_item_imp /= Void and then tree_item_imp.pointer_double_press_actions_internal /= Void then
-						if not {EV_GTK_EXTERNALS}.gtk_ctree_is_hot_spot (list_widget, a_x, a_y) then
-							tree_item_imp.pointer_double_press_actions_internal.call (t)
-						end
+				if not avoid_item_events and then tree_item_imp /= Void and then tree_item_imp.pointer_double_press_actions_internal /= Void then
+					tree_item_imp.pointer_double_press_actions_internal.call (t)
 				end
 			end
 		end
@@ -241,108 +242,51 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {EV_TREE_NODE_IMP} -- Implementation
-
-	tree_node_ptr_table: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
-			-- Hash table linking tree node pointers to eiffel implementation objects.
-
-feature {NONE} -- Implementation
-	
-	cached_width: INTEGER
-
-	dummy_tree_node: POINTER
-		-- Added to prevent seg fault on wipeout by adding temporarily
-		
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
-
-	expand_callback (a_tree_item: POINTER) is
-			-- Expand callback passing expanded `a_tree_item' node pointer.
-		local
-			a_tree_node_imp: EV_TREE_NODE_IMP
-		do
-			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void then
-				a_tree_node_imp.expand_callback
-			end
-			if timer.interval = 0 then
-				timer.set_interval (timer_interval)
-			end	
-		end
-
-	collapse_callback (a_tree_item: POINTER) is
-			-- Collapse callback passing collapsed `a_tree_item' node pointer.
-		local
-			a_tree_node_imp: EV_TREE_NODE_IMP
-		do
-			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void then
-				a_tree_node_imp.collapse_callback
-			end
-			if timer.interval = 0 then
-				timer.set_interval (timer_interval)
-			end
-		end
-		
-	selected_node: EV_TREE_NODE_IMP
-
-	select_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is selected
-		local
-			a_tree_node_imp: EV_TREE_NODE_IMP
-		do
-			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
-				if select_actions_internal /= Void then
-					select_actions_internal.call (Void)
-				end
-				if a_tree_node_imp.select_actions_internal /= Void then
-					a_tree_node_imp.select_actions_internal.call (Void)
-				end
-			end
-			selected_node := a_tree_node_imp
-		end
-		
-	deselect_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is deselected.
-		local
-			a_tree_node_imp: EV_TREE_NODE_IMP
-		do
-			a_tree_node_imp := tree_node_ptr_table.item (a_tree_item)
-			if a_tree_node_imp /= Void and selected_node = a_tree_node_imp then
-				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call (Void)
-				end
-				if a_tree_node_imp.deselect_actions_internal /= Void then
-					a_tree_node_imp.deselect_actions_internal.call (Void)
-				end
-			end
-		end
-
 feature -- Status report
 
 	selected_item: EV_TREE_NODE is
-			-- Item which is currently selected.
+			-- Item which is currently selected
 		local
+			a_selection: POINTER
+			a_tree_path_list: POINTER
+			a_model: POINTER
+			a_tree_path: POINTER
 			a_tree_node_imp: EV_TREE_NODE_IMP
-		do	
-			a_tree_node_imp := selected_item_imp		
-			if a_tree_node_imp /= Void then
-				Result := a_tree_node_imp.interface
+		do
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			
+			if a_tree_path_list /= NULL then
+					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
+					a_tree_node_imp := node_from_tree_path (a_tree_path)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
+					{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
+					Result := a_tree_node_imp.interface
 			end
 		end
-		
-	selected_item_imp: EV_TREE_NODE_IMP is
-			-- Item which is currently selected.
+
+	node_from_tree_path (a_tree_path: POINTER): EV_TREE_NODE_IMP is
+			-- Retrieve node from `a_tree_path'
 		local
-			temp_item_ptr: POINTER
-		do	
-			temp_item_ptr := {EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)			
-			if temp_item_ptr /= NULL then
-				temp_item_ptr := {EV_GTK_EXTERNALS}.g_list_nth_data (temp_item_ptr, 0)
-				-- This is incase of unwanted items due to wipeout hack.
-				Result := tree_node_ptr_table.item (temp_item_ptr)
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
+			i, a_depth: INTEGER
+			a_tree_node: EV_TREE_NODE
+		do
+			a_depth := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_depth (a_tree_path)
+			a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+			from
+				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes * a_depth)
+				a_tree_node := i_th (mp.read_integer_32 (0) + 1)
+				i := 1
+			until
+				i = a_depth
+			loop
+				a_tree_node := a_tree_node.i_th (mp.read_integer_32 (i * App_implementation.integer_bytes) + 1)
+				i := i + 1
 			end
-		end			
+			Result ?= a_tree_node.implementation
+		end		
 
 	selected: BOOLEAN is
 			-- Is one item selected?
@@ -394,12 +338,12 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, button_press_connection_id)
 			end
 			real_signal_connect (
-				visual_widget,
+				event_widget,
 				"button-press-event", 
-				agent (App_implementation.gtk_marshal).tree_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
+				agent (App_implementation.gtk_marshal).pnd_deferred_parent_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
 				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
@@ -416,17 +360,24 @@ feature -- Implementation
 		local
 			a_enable_flag: BOOLEAN
 			i: INTEGER
+			a_cursor: CURSOR
+			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			from
-				ev_children.start
+				a_cursor := child_array.cursor
+				child_array.start
 				i := 1
 			until
-				i > ev_children.count or else a_enable_flag
+				i > child_array.count or else a_enable_flag
 			loop
-				ev_children.go_i_th (i)
-				a_enable_flag := ev_children.item.is_transport_enabled_iterator
+				child_array.go_i_th (i)
+				if child_array.item /= Void then
+					a_tree_node_imp ?= child_array.item.implementation
+					a_enable_flag := a_tree_node_imp.is_transport_enabled_iterator					
+				end
 				i := i + 1
 			end
+			child_array.go_to (a_cursor)
 			update_pnd_connection (a_enable_flag)
 		end
 		
@@ -456,12 +407,16 @@ feature -- Implementation
 			if pnd_row_imp /= Void and then not pnd_row_imp.able_to_transport (a_button) then
 				pnd_row_imp := Void
 			end
-			Precursor (
+			
+			if pnd_row_imp /= Void or else pebble /= Void then
+				Precursor (
 				a_type,
 				a_x, a_y, a_button,
 				a_x_tilt, a_y_tilt, a_pressure,
-				a_screen_x, a_screen_y
-			)			
+				a_screen_x, a_screen_y)
+			else
+				call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			end
 		end
 
 	pnd_row_imp: EV_TREE_NODE_IMP
@@ -542,22 +497,24 @@ feature -- Implementation
 					y_origin := 
 						pnd_row_imp.pick_y +
 						(a_screen_y - a_y) + 
-						((ev_children.index_of (pnd_row_imp, 1) - 1) * row_height)
+						((child_array.index_of (pnd_row_imp.interface, 1) - 1) * row_height)
 				end
 			end
 		end
 
-	post_drop_steps (a_button: INTEGER) is
+	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if a_button > 0 and then pnd_row_imp /= Void and not is_destroyed then
-				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (visual_widget, "button-press-event")
-				end
-			elseif a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
-				signal_emit_stop (visual_widget, "button-press-event")
+			if a_button > 0 then
+				if pnd_row_imp /= Void and not is_destroyed then
+					if pnd_row_imp.mode_is_pick_and_drop then
+						signal_emit_stop (event_widget, "button-press-event")
+					end
+				elseif mode_is_pick_and_drop and not is_destroyed then
+						signal_emit_stop (event_widget, "button-press-event")
+				end				
 			end
-
+			
 			app_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
@@ -587,12 +544,35 @@ feature -- Implementation
 feature {EV_TREE_NODE_IMP}
 		
 	row_from_y_coord (a_y: INTEGER): EV_TREE_NODE_IMP is
+			-- Returns the row index at relative coordinate `a_y'.
 		local
-			temp_row_ptr: POINTER
+			a_tree_path, a_tree_column: POINTER
+			a_success: BOOLEAN
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
+			a_depth: INTEGER
+			a_tree_node_imp: EV_TREE_NODE_IMP
+			i: INTEGER
+			current_depth_index: INTEGER
 		do
-			temp_row_ptr := {EV_GTK_EXTERNALS}.gtk_ctree_node_nth (list_widget, a_y // (row_height + 1))
-			if temp_row_ptr /= NULL then
-				Result := tree_node_ptr_table.item (temp_row_ptr)
+			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			if a_success then
+				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+				a_depth := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_depth (a_tree_path)
+				from
+					create mp.share_from_pointer (a_int_ptr, app_implementation.integer_bytes * a_depth)
+					current_depth_index := mp.read_integer_32 (0) + 1
+					a_tree_node_imp ?= child_array.i_th (current_depth_index).implementation
+					i := 1
+				until
+					i = a_depth
+				loop
+					current_depth_index := mp.read_integer_32 (i * app_implementation.integer_bytes) + 1
+					a_tree_node_imp ?= a_tree_node_imp.child_array.i_th (current_depth_index).implementation
+					i := i + 1
+				end
+				Result := a_tree_node_imp
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 			end
 		end
 
@@ -603,39 +583,16 @@ feature {NONE} -- Implementation
 			-- Tree nodes may be expanded to achieve this.
 		local
 			tree_item_imp: EV_TREE_NODE_IMP
-			parent_item_imp: EV_TREE_ITEM_IMP
+			a_path: POINTER
 		do	
-			from
-				tree_item_imp ?= an_item.implementation
-				parent_item_imp ?= tree_item_imp.parent_imp
-			until
-				parent_item_imp = Void
-			loop
-				if not tree_item_imp.is_viewable then
-					parent_item_imp.set_expand (True)
-				end
-				tree_item_imp := parent_item_imp
-				parent_item_imp ?= tree_item_imp.parent_imp
-			end
-				-- Show the node `an_item'
 			tree_item_imp ?= an_item.implementation
-			{EV_GTK_EXTERNALS}.gtk_ctree_node_moveto (list_widget, tree_item_imp.tree_node_ptr, 0, 0.0, 1.0)
+			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (tree_store, tree_item_imp.list_iter.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
 			
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.
-
-	count: INTEGER is
-			-- Number of children
-		do
-			Result := ev_children.count
-		end
-
-	i_th (i: INTEGER): EV_TREE_NODE is
-			-- `i'_th child of Current.
-		do
-			Result := (ev_children @ i).interface
-		end
 		
 	append (s: SEQUENCE [EV_TREE_ITEM]) is
 			-- Add 's' to 'Current'
@@ -643,61 +600,23 @@ feature {NONE} -- Implementation
 			Precursor (s)
 		end
 
-	wipe_out is
-			-- Remove all items.
-		local
-			item_imp: EV_TREE_NODE_IMP
-		do
-				-- Remove all items (GTK part)
-			{EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				item_imp := ev_children.item
-				item_imp.set_item_and_children (NULL, NULL)
-				item_imp.set_parent_imp (Void)
-				ev_children.forth
-			end
-
-			-- Remove all items (Eiffel part)
-			create ev_children.make (0)
-			create child_array.make (5)
-			tree_node_ptr_table.clear_all
-			
-			index := 0
-
-			update_pnd_status
-		end
-		
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
-		do	
+		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			item_imp.set_item_and_children (NULL, NULL)
-			item_imp.check_branch_pixmaps
-			ev_children.force (item_imp)
+			
+			child_array.go_i_th (i)
+			child_array.put_left (v)	
+
+			item_imp.add_item_and_children_to_parent_tree (Current, Void, i)
+			update_row_pixmap (item_imp)
+			item_imp.remove_internal_text
 			
 			if item_imp.is_transport_enabled_iterator then
 				update_pnd_connection (True)
-			end
-			
-			child_array.go_i_th (i)
-			child_array.put_left (v)
-			if i < count then
-				{EV_GTK_EXTERNALS}.gtk_clist_row_move (list_widget, item_imp.index - 1, i - 1)
-				ev_children.prune_all (item_imp)
-				ev_children.go_i_th (i)
-				ev_children.put_left (item_imp)
-			end
-			if count = 1 then
-				selected_node := item_imp
-				item_imp.enable_select
-				selected_node := Void
 			end
 		end
 
@@ -706,61 +625,95 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_TREE_NODE_IMP
 		do
-			item_imp := (ev_children @ (a_position))
-
-				-- Remove from tree
-			{EV_GTK_EXTERNALS}.gtk_ctree_remove_node (list_widget, item_imp.tree_node_ptr)
-			item_imp.set_item_and_children (NULL, NULL)
+			item_imp ?= (child_array @ (a_position)).implementation
+				-- Remove from tree if present
+			item_imp.set_internal_text (get_text_from_position (item_imp))
+			{EV_GTK_EXTERNALS}.gtk_tree_store_remove (tree_store, item_imp.list_iter.item)
 			item_imp.set_parent_imp (Void)
-
-				-- remove the row from the `ev_children'
-			ev_children.go_i_th (a_position)
-			ev_children.remove
-			
 			child_array.go_i_th (a_position)
 			child_array.remove
-
 			update_pnd_status
 		end
 
 feature {EV_TREE_NODE_IMP} -- Implementation
 
-	spacing: INTEGER is 3
-			-- Spacing between pixmap and text.
+	get_text_from_position (a_tree_node_imp: EV_TREE_NODE_IMP): STRING is
+			-- Retrieve cell text from `a_tree_node_imp`
+		local
+			a_g_value_string_struct: POINTER
+			a_string: POINTER
+		do
+			a_g_value_string_struct := g_value_string_struct
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_unset (a_g_value_string_struct)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, a_tree_node_imp.list_iter.item, 1, a_g_value_string_struct)
+			a_string := {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct)
+			if a_string /= default_pointer then
+				create Result.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct))
+			else
+				Result := once ""
+			end
+		end
+
+	set_text_on_position (a_tree_node_imp: EV_TREE_NODE_IMP; a_text: STRING) is
+			-- Set cell text at to `a_text'.
+		local
+			a_cs: EV_GTK_C_STRING
+			str_value: POINTER
+		do
+			a_cs := App_implementation.reusable_gtk_c_string
+			a_cs.share_with_eiffel_string (a_text)
+			str_value := g_value_string_struct
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_take_string (str_value, a_cs.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_value (tree_store, a_tree_node_imp.list_iter.item, 1, str_value)
+		end
+
+	g_value_string_struct: POINTER is
+			-- Optimization for GValue struct access
+		once
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
+		end
+
+	update_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP) is
+			-- Set the pixmap for `a_tree_node_imp'
+		do
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_tree_node_imp.list_iter.item, 0, a_tree_node_imp.gdk_pixbuf)
+		end
+
+	tree_store: POINTER
+		-- Gtk Model use for storing tree data	
+
+	set_row_height (value: INTEGER) is
+			-- Make `value' the new height of all the rows.
+		local
+			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
+			a_gtk_c_str: EV_GTK_C_STRING
+			a_vert_sep: INTEGER
+		do
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
+			
+			a_gtk_c_str := "vertical-separator"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			
+			a_gtk_c_str := "height"
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
+			{EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
+		end
 
 	row_height: INTEGER is
-			-- Height of rows in tree
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget)
-		end
-
-	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER is
-			-- Insert 'a_item_imp' in 'par_node' above 'a_sibling' sibling node.
+			-- Height of rows in `Current'
 		local
-			text_ptr: POINTER
-			a_cs: EV_GTK_C_STRING
+			a_column_ptr: POINTER
+			a_x, a_y, a_width, a_height: INTEGER
 		do
-			create a_cs.make (a_item_imp.text)
-			text_ptr := a_cs.item
-			Result := {EV_GTK_EXTERNALS}.gtk_ctree_insert_node (
-				list_widget,
-				par_node,
-				a_sibling,
-				$text_ptr,
-				spacing,
-				NULL,
-				NULL,
-				NULL,
-				NULL,
-				False,
-				False
-			)
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_cell_get_size (a_column_ptr, NULL, $a_x, $a_y, $a_width, $a_height)
+			Result := a_height
 		end
 
-	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
-			-- Container for all root tree items.
-
-	list_widget: POINTER
+	tree_view: POINTER
 			-- Pointer to the gtktree widget.
 			
 feature {NONE} -- Implementation
@@ -772,23 +725,15 @@ feature {NONE} -- Implementation
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
 			--| For now, do nothing.
 		end
-
-feature {NONE} -- Externals
-
-	frozen gtk_ctree_lines_dotted_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GTK_CTREE_LINES_DOTTED"
-		end
-
-	frozen gtk_ctree_expander_square_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GTK_CTREE_EXPANDER_SQUARE"
-		end
 			
+	new_tree_store: POINTER is
+			-- New instance of a tree store.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_store_new (2, GDK_TYPE_PIXBUF, G_TYPE_STRING)"
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE

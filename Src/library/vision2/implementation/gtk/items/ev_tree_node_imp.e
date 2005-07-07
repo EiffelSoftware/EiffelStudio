@@ -11,19 +11,14 @@ inherit
 	EV_TREE_NODE_I
 		redefine
 			interface
-		select
-			interface
 		end
 	
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
-		rename
-			interface as item_list_interface
+		export
+			{EV_TREE_IMP}
+				child_array
 		redefine
-			insert_i_th,
-			remove_i_th,
-			i_th,
-			count,
-			initialize
+			interface
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -31,6 +26,10 @@ inherit
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
 
 	EV_TREE_NODE_ACTION_SEQUENCES_IMP
+		export
+			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
+				expand_actions_internal, collapse_actions_internal
+		end
 		
 	EV_PND_DEFERRED_ITEM
 		redefine
@@ -42,23 +41,6 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
-
-	make (an_interface: like interface) is
-			-- Create the tree item.
-		do
-			base_make (an_interface)
-			create ev_children.make (0)
-		end
-
-	initialize is
-			-- Set up action sequence connection and `Precursor' initialization,
-			-- create item box to hold label and pixmap.
-		do
-			Precursor {EV_ITEM_LIST_IMP}
-			is_initialized := True
-		end
-
 	destroy is
 			-- Clean up `Current'
 		do
@@ -67,17 +49,19 @@ feature {NONE} -- Initialization
 			end
 			set_is_destroyed (True)
 		end
+
+	make (an_interface: like interface) is
+			-- Create the tree item.
+		do
+			base_make (an_interface)
+			internal_text := once ""
+		end
 		
 	dispose is
 			-- Clean up
 		do
-			if not is_in_final_collect then
-				if gdk_pixmap /= default_pointer then
-					{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_pixmap)
-				end
-				if gdk_mask /= default_pointer then
-					{EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_mask)
-				end				
+			if not is_in_final_collect and then gdk_pixbuf /= default_pointer then
+					{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
 			end
 		end
 
@@ -94,51 +78,73 @@ feature -- Status report
 			end
 		end
 
-	is_expanded: BOOLEAN
+	is_expanded: BOOLEAN is
 			-- is the item expanded?
+		local
+			a_tree_path: POINTER
+			par_tree: EV_TREE_IMP
+		do
+			par_tree := parent_tree_imp
+			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_row_expanded (par_tree.tree_view, a_tree_path)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+		end
 
 feature -- Status setting
 
 	enable_select is
 			-- Select `Current' in its parent.
+		local
+			a_selection: POINTER
+			par_tree: EV_TREE_IMP
 		do
-			{EV_GTK_EXTERNALS}.gtk_ctree_select (
-				parent_tree_imp.list_widget,
-				tree_node_ptr
-			)		
+			par_tree := parent_tree_imp
+			if par_tree /= Void then
+				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, list_iter.item)				
+			end
 		end
 
 	disable_select is
 			-- Disable selection of `Current' in its parent.
+		local
+			a_selection: POINTER
+			par_tree: EV_TREE_IMP
 		do
-			{EV_GTK_EXTERNALS}.gtk_ctree_unselect (
-				parent_tree_imp.list_widget,
-				tree_node_ptr
-			)
+			par_tree := parent_tree_imp
+			if par_tree /= Void then
+				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (par_tree.tree_view)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, list_iter.item)				
+			end
 		end
 	
 	set_expand (a_flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
+		local
+			a_tree_path: POINTER
+			par_tree: EV_TREE_IMP
+			a_success: BOOLEAN
 		do
-			is_expanded := a_flag
+			par_tree := parent_tree_imp
+			a_tree_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (par_tree.tree_store, list_iter.item)
 			if a_flag then
-				{EV_GTK_EXTERNALS}.gtk_ctree_expand (
-					parent_tree_imp.list_widget,
-					tree_node_ptr
-				)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_expand_to_path (par_tree.tree_view, a_tree_path)
 			else
-				{EV_GTK_EXTERNALS}.gtk_ctree_collapse (
-					parent_tree_imp.list_widget,
-					tree_node_ptr
-				)
+				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_collapse_row (par_tree.tree_view, a_tree_path)
 			end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 		end
 		
 	set_text (a_text: STRING) is
 			-- Set 'text' to 'a_text'
+		local
+			par_tree: EV_TREE_IMP
 		do
 			internal_text := a_text.twin
-			insert_pixmap
+			par_tree := parent_tree_imp
+			if par_tree /= Void then
+				par_tree.set_text_on_position (Current, internal_text)
+			end
 		end
 
 feature -- PND
@@ -220,18 +226,27 @@ feature -- PND
 
 	is_transport_enabled_iterator: BOOLEAN is
 			-- Has 'Current' or a child of 'Current' pnd transport enabled?
+		local
+			a_cursor: CURSOR
+			a_tree_node_imp: EV_TREE_NODE_IMP
+			i: INTEGER
 		do
 			if is_transport_enabled then
 				Result := True
-			else
+			elseif count > 0 then
 				from
-					ev_children.start
+					a_cursor := child_array.cursor
+					i := 1
 				until
-					ev_children.after or else Result
+					i > child_array.count or else Result
 				loop
-					Result := ev_children.item.is_transport_enabled_iterator
-					ev_children.forth
+					if child_array.i_th (i) /= Void then
+						a_tree_node_imp ?= child_array.i_th (i).implementation
+						Result := a_tree_node_imp.is_transport_enabled_iterator
+					end
+					i := i + 1
 				end
+				child_array.go_to (a_cursor)
 			end
 		end
 
@@ -251,12 +266,16 @@ feature {EV_TREE_IMP} -- Implementation
 			(a_button = 3 and (mode_is_pick_and_drop or mode_is_target_menu)))
 		end
 
-	real_pointed_target: EV_PICK_AND_DROPABLE is
+feature {EV_ANY_I} -- Implementation
+
+	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT) is
+			-- Set `list_iter' to `a_iter'
 		do
-			check do_not_call: False end
+			list_iter := a_iter
 		end
 
-feature {EV_ANY_I} -- Implementation
+	list_iter: EV_GTK_TREE_ITER_STRUCT
+		-- Object representing position of `Current' in parent tree model
 
 	set_parent_imp (par_imp: like parent_imp) is
 		do
@@ -274,99 +293,43 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
-	expand_callback is
-			-- Called when `Current' is expanded.
-		do
-			remove_dummy_node
-			is_expanded := True
-			if expand_actions_internal /= Void then
-				expand_actions_internal.call (Void)
-			end
-		end
-
-	collapse_callback is
-			-- Called when `Current' is collapsed.
-		do
-			is_expanded := False
-			if collapse_actions_internal /= Void then
-				collapse_actions_internal.call (Void)
-			end
-		end
-
-	tree_node_ptr: POINTER
-			-- Pointer to the GtkCtreeNode of 'Current'.
-			
-	set_tree_node (a_tree_node_ptr: POINTER) is
-			-- Set 'tree_node_ptr' to 'a_tree_node_ptr'
-		do
-			if a_tree_node_ptr /= default_pointer then
-				parent_tree_imp.tree_node_ptr_table.put (Current, a_tree_node_ptr)
-			end
-			tree_node_ptr := a_tree_node_ptr
-		end
-
-	insert_pixmap is
-			-- Insert 'pixmap' in to 'Current'
+	add_item_and_children_to_parent_tree (a_parent_tree: EV_TREE_IMP; a_parent_node: EV_TREE_NODE_IMP; a_index: INTEGER)  is
+			-- Used for setting items within parent tree
 		local
-			a_cs: EV_GTK_C_STRING
-			is_leaf: INTEGER
+			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
+			i: INTEGER
+			item_imp: EV_TREE_NODE_IMP
+			a_parent_iter: POINTER
 		do
-			create a_cs.make (text)
-			if parent_tree_imp /= Void then
-				if pix_height > parent_tree_imp.row_height then
-					{EV_GTK_EXTERNALS}.gtk_clist_set_row_height (parent_tree_imp.list_widget, pix_height)
-				end
-				{EV_GTK_EXTERNALS}.gtk_ctree_set_node_info (
-					parent_tree_imp.list_widget,
-					tree_node_ptr,
-					a_cs.item,-- text,
-					parent_tree_imp.spacing, -- spacing
-					gdk_pixmap,
-					gdk_mask,
-					gdk_pixmap,
-					gdk_mask,
-					is_leaf,
-					is_expanded.to_integer
-				)
+			if a_parent_node /= Void then
+				a_parent_iter := a_parent_node.list_iter.item
 			end
-		end
-
-	set_item_and_children (parent_node: POINTER; sibling_node: POINTER) is
-			-- Used for setting items on addition and removal
-			-- Insert as child of 'parent_node' and one position above 'sibling_node'
-		do
-			if tree_node_ptr = default_pointer then
-					-- Current has been added to tree
-				set_tree_node (parent_tree_imp.insert_ctree_node (Current, parent_node, sibling_node))
-			else
-					-- Current is being removed from tree.
-				parent_tree_imp.tree_node_ptr_table.remove (tree_node_ptr)
-				set_tree_node (default_pointer)
-			end
-			
+			create a_tree_iter.make
+			set_list_iter (a_tree_iter)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_insert (a_parent_tree.tree_store, a_tree_iter.item, a_parent_iter, a_index - 1)
+			a_parent_tree.set_text_on_position (Current, text)
+			a_parent_tree.update_row_pixmap (Current)
 			from
-				ev_children.start
+				i := 1
 			until
-				ev_children.after
+				i > child_array.count
 			loop
-				ev_children.item.set_item_and_children (tree_node_ptr, default_pointer)
-				ev_children.forth
+				item_imp ?= (child_array @ i).implementation
+				item_imp.add_item_and_children_to_parent_tree (a_parent_tree, Current, i)
+				i := i + 1
 			end
 		end
 
-feature {EV_TREE_IMP} -- Implementation
-		
-	is_viewable: BOOLEAN is
-			-- Is Current viewable by user?
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_ctree_is_viewable (parent_tree_imp.list_widget, tree_node_ptr)
-		end
+feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	
 	text: STRING is
 			-- Text displayed.
+		local
+			par_t_imp: EV_TREE_IMP
 		do
 			if internal_text = Void then
-				Result := ""
+				par_t_imp := parent_tree_imp
+				Result := par_t_imp.get_text_from_position (Current)
 			else
 				Result := internal_text.twin
 			end
@@ -384,6 +347,18 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 		ensure then
 			tooltip_not_void: Result /= Void
+		end
+
+	remove_internal_text is
+			-- Make `internal_text' Void
+		do
+			internal_text := Void
+		end
+
+	set_internal_text (a_text: STRING) is
+			-- Set `internal_text' to `a_text'
+		do
+			internal_text := a_text
 		end
 
 	internal_text: STRING
@@ -408,19 +383,13 @@ feature {EV_TREE_IMP} -- Implementation
 			-- Set the pixmap for 'Current'
 		local
 			a_pix_imp: EV_PIXMAP_IMP
+			par_tree: EV_TREE_IMP
 		do
-			--| FIXME An intelligent image list needs to be implemented instead of
-			--| just retaining a pointer to passed pixmap.
 			a_pix_imp ?= a_pixmap.implementation
-			gdk_pixmap := {EV_GTK_EXTERNALS}.gdk_pixmap_ref (a_pix_imp.drawable)
-			if a_pix_imp.mask /= default_pointer then
-				gdk_mask := {EV_GTK_EXTERNALS}.gdk_bitmap_ref (a_pix_imp.mask)
-			end
-			pix_width := a_pix_imp.width
-			pix_height := a_pix_imp.height
-			
-			if tree_node_ptr /= default_pointer then
-				insert_pixmap
+			gdk_pixbuf := a_pix_imp.pixbuf_from_drawable
+			par_tree := parent_tree_imp
+			if par_tree /= Void then
+				par_tree.update_row_pixmap (Current)
 			end
 		end
 		
@@ -428,8 +397,18 @@ feature {EV_TREE_IMP} -- Implementation
 			-- Height and width of pixmap in Tree.
 
 	remove_pixmap is
+			-- Remove the pixmap for `Current'
+		local
+			par_tree: EV_TREE_IMP
 		do
-			--| FIXME Remove pixmap from tree and reset pix attributes.
+			if gdk_pixbuf /= default_pointer then
+				{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+				gdk_pixbuf := default_pointer				
+			end
+			par_tree := parent_tree_imp
+			if par_tree /= Void then
+				par_tree.update_row_pixmap (Current)
+			end
 		end
 		
 	pixmap: EV_PIXMAP is
@@ -437,56 +416,45 @@ feature {EV_TREE_IMP} -- Implementation
 		local
 			pix_imp: EV_PIXMAP_IMP
 		do
-			if gdk_pixmap /= default_pointer then
+			if gdk_pixbuf /= default_pointer then
 				create Result
 				pix_imp ?= Result.implementation
-				pix_imp.copy_from_gdk_data (gdk_pixmap, gdk_mask, pix_width, pix_height)				
+				pix_imp.set_pixmap_from_pixbuf (gdk_pixbuf)
 			end
 		end
 
-	gdk_pixmap, gdk_mask: POINTER
-		-- Stored gdk pixmap data.
-
-	count: INTEGER is
-			-- Number of child nodes in 'Current'
-		do
-			Result := ev_children.count
-		end
-	
-	i_th (i: INTEGER): EV_TREE_NODE is
-			-- i-th node of 'Current'
-		do
-			Result := (ev_children @ i).interface
-		end
+	gdk_pixbuf: POINTER
+		-- Stored gdk pixbuf data
 		
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
 			par_t_imp: EV_TREE_IMP
-			sibling_ptr: POINTER
 		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			ev_children.go_i_th (i)
-			ev_children.put_left (item_imp)
+			child_array.go_i_th (i)
+			child_array.put_left (v)
 
 				-- Using a local prevents recalculation
 			par_t_imp := parent_tree_imp
 			if par_t_imp /= Void then
-				if ev_children.valid_index (i + 1) then
-					sibling_ptr := ev_children.i_th (i + 1).tree_node_ptr
-				end
-				item_imp.set_item_and_children (tree_node_ptr, sibling_ptr)
+				item_imp.add_item_and_children_to_parent_tree (par_t_imp, Current, i)
+				item_imp.remove_internal_text
 				if item_imp.is_transport_enabled_iterator then
 					par_t_imp.update_pnd_connection (True)
 				end	
-				item_imp.check_branch_pixmaps
 			end
-			child_array.go_i_th (i)
-			child_array.put_left (v)
+				-- Resume expansion status from last node removal
 			if count = 1 and then par_t_imp /= Void then
+				if expand_actions_internal /= Void then
+					expand_actions_internal.block
+				end
 				set_expand (expanded_on_last_item_removal)
+				if expand_actions_internal /= Void then
+					expand_actions_internal.resume
+				end
 			end
 		end
 
@@ -496,32 +464,22 @@ feature {EV_TREE_IMP} -- Implementation
 			item_imp: EV_TREE_NODE_IMP
 			par_tree_imp: EV_TREE_IMP
 		do
-			if count = 1 then
-				expanded_on_last_item_removal := is_expanded
+			if count = 1 then 
+				if parent_tree /= Void then
+					expanded_on_last_item_removal := is_expanded
+				else
+					expanded_on_last_item_removal := False
+				end
 			end
-			item_imp := (ev_children @ (a_position))
+			item_imp ?= (child_array @ (a_position)).implementation
 
-			-- Remove from tree if present
+				-- Remove from tree if present
 			par_tree_imp := parent_tree_imp
 			if par_tree_imp /= Void then
-				if count = 1 and then not is_expanded then
-					--| Hack needed to prevent seg fault on removal if last item in collapse_actions.
-					remove_on_expand_node := item_imp.tree_node_ptr
-					a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-					a_timeout_imp.interface.actions.extend (agent remove_dummy_node)
-					a_timeout_imp.set_interval_kamikaze (0)
-				else
-					{EV_GTK_EXTERNALS}.gtk_ctree_remove_node (par_tree_imp.list_widget, item_imp.tree_node_ptr)
-				end
-				item_imp.set_item_and_children (default_pointer, default_pointer)
-					-- This resets item and all children
-				item_imp.set_parent_imp (Void)
+				item_imp.set_internal_text (par_tree_imp.get_text_from_position (item_imp))
+				{EV_GTK_EXTERNALS}.gtk_tree_store_remove (par_tree_imp.tree_store, item_imp.list_iter.item)
 			end
-
-			-- remove the row from the `ev_children'
-			ev_children.go_i_th (a_position)
-			ev_children.remove
-			
+			item_imp.set_parent_imp (Void)
 			child_array.go_i_th (a_position)
 			child_array.remove
 
@@ -531,62 +489,14 @@ feature {EV_TREE_IMP} -- Implementation
 		end
 		
 	expanded_on_last_item_removal: BOOLEAN
+		-- Was `Current' expanded upon removal of last item
 		
-	a_timeout_imp: EV_TIMEOUT_IMP
-			-- Timeout used for expand node removal hack.
-		
-	remove_on_expand_node: POINTER
-			-- Pointer used as hack to prevent gtk sigsegv on removal of last item.
-	
-	remove_dummy_node is
-			-- Remove the dummy node used to prevent seg fault on last item removal
-		local
-			a_d_node: POINTER
-			a_parent_tree_imp: EV_TREE_IMP
+feature {NONE} -- Redundant implementation
+
+	real_pointed_target: EV_PICK_AND_DROPABLE is
 		do
-			a_d_node := remove_on_expand_node
-			if remove_on_expand_node /= default_pointer then
-				remove_on_expand_node := default_pointer
-				a_parent_tree_imp := parent_tree_imp
-				if a_parent_tree_imp /= Void then
-					{EV_GTK_EXTERNALS}.gtk_ctree_remove_node (a_parent_tree_imp.list_widget, a_d_node)
-				end		
-			end
+			check do_not_call: False end
 		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_pos: INTEGER) is
-			-- Not needed in this class.
-		do
-			check dont_call: False end
-		end
-
-	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
-			-- Container for all tree items.
-
-feature {EV_ITEM_LIST_IMP} -- Implementation
-
-	check_branch_pixmaps is
-			-- if `Current' is attached to a GtkCTree, associate its pixmap
-			-- to its corresponding GtkCTreeNode.
-		local
-			cnt: INTEGER
-		do
-			insert_pixmap
-			cnt := ev_children.count
-			if cnt > 0 then
-				from
-					ev_children.start
-				until
-					ev_children.index > cnt
-				loop
-					ev_children.item.check_branch_pixmaps
-					ev_children.forth
-				end
-			end
-		end
-
-	list_widget: POINTER 
-			-- Pointer to the items own gtktree.
 			
 feature {EV_ANY_I} -- Implementation
 

@@ -18,7 +18,8 @@ inherit
 			internal_accept
 		redefine
 			interface,
-			initialize
+			initialize,
+			file_name
 		end
 
 create
@@ -32,36 +33,69 @@ feature {NONE} -- Initialization
 			set_title ("Open")
 		end
 
+feature {NONE} -- Access
+
 	multiple_selection_enabled: BOOLEAN
 		-- Is dialog enabled to select multiple files.
 
+	file_name: STRING is
+			-- Retrieve file name selected by user
+		do
+			Result := file_names.first
+			if Result = Void then
+				Result := Precursor {EV_FILE_DIALOG_IMP}
+			end
+		end
+
 	file_names: ARRAYED_LIST [STRING] is
 			-- List of filenames selected by user
-
+		local
+			fnlist: POINTER
+			fname: POINTER
+			fnstring: STRING
 		do
-			create Result
-			Result.extend (filename)
+			create Result.make (1)
+			if selected_button /= Void and then selected_button.is_equal (internal_accept) then
+					fnlist := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_get_filenames (c_object)
+			end
+			if fnlist /= Default_pointer then
+				from
+				until
+					fnlist = default_pointer
+				loop
+					fname := {EV_GTK_EXTERNALS}.gslist_struct_data (fnlist)
+					create fnstring.make_from_c (fname)
+					Result.extend (fnstring)
+					{EV_GTK_EXTERNALS}.g_free (fname)
+					fnlist := {EV_GTK_EXTERNALS}.gslist_struct_next (fnlist)
+				end
+				{EV_GTK_EXTERNALS}.g_slist_free (fnlist)
+			end
 		end
+
+feature {NONE} -- Setting
 
 	enable_multiple_selection is
 			-- Enable multiple file selection
 		do
-			check
-				do_not_call: False
-			end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_select_multiple (c_object, True)
 			multiple_selection_enabled := True 
 		end
 
 	disable_multiple_selection is
 			-- Disable multiple file selection
 		do
-			check
-				do_not_call: False
-			end
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_set_select_multiple (c_object, False)
 			multiple_selection_enabled := False
 		end
 
 feature {NONE} -- Implementation
+
+	file_chooser_action: INTEGER is
+			-- Action constant of the file chooser, ie: to open or save files, etc.
+		do
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_open_enum
+		end
 
 	interface: EV_FILE_OPEN_DIALOG
 

@@ -21,11 +21,12 @@ feature -- Event handling
 			-- Attach to GTK "motion-notify-event" signal.
 		do
 			create Result
-			real_signal_connect (
+			signal_connect (
 					event_widget,
-					"motion-notify-event",
-					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
-					App_implementation.default_translate
+					App_implementation.motion_notify_event_string,
+					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (object_id, ?, ?, ?, ?, ?, ?, ?),
+					App_implementation.default_translate,
+					False
 				)
 		end
 
@@ -48,7 +49,7 @@ feature -- Event handling
 			create Result
 			real_signal_connect (
 					event_widget,
-					"button-release-event",
+					once "button-release-event",
 					agent (App_implementation.gtk_marshal).pointer_button_release_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
 					App_implementation.default_translate
 				)
@@ -59,11 +60,12 @@ feature -- Event handling
 			-- Attach to GTK "enter-notify-event" signal.
 		do
 			create Result
-			real_signal_connect (
+			signal_connect (
 				event_widget,
-				"enter-notify-event", 
+				App_implementation.enter_notify_event_string, 
 				agent (App_implementation.gtk_marshal).pointer_enter_actions_intermediary (c_object),
-				App_implementation.default_translate
+				App_implementation.default_translate,
+				False
 			)
 		end
 
@@ -72,11 +74,12 @@ feature -- Event handling
 			-- Attach to GTK "leave-notify-event" signal.
 		do
 			create Result
-			real_signal_connect (
+			signal_connect (
 				event_widget,
-				"leave-notify-event",
+				App_implementation.leave_notify_event_string,
 				agent (App_implementation.gtk_marshal).pointer_leave_action_intermediary (c_object),
-				App_implementation.default_translate
+				App_implementation.default_translate,
+				False
 			)
 		end
 
@@ -116,16 +119,31 @@ feature -- Event handling
 			-- Create a resize action sequence.
 		do
 			create Result
-			real_signal_connect_after (c_object, "size-allocate", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent)
+			if is_parentable then
+					-- Window resize events are connected separately
+				signal_connect (c_object, App_implementation.size_allocate_event_string, agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), size_allocate_translate_agent, False)
+			end
 		end
-		
+
 	create_mouse_wheel_actions: EV_INTEGER_ACTION_SEQUENCE is
 			-- Create a mouse_wheel action sequence.
 		do
 			create Result
+			signal_connect (event_widget, once "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate, False)
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	is_parentable: BOOLEAN is
+			-- May `Current' be parented?
+		deferred
+		end
+
+	configure_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- Translation agent used for size allocation events
+		once
+			Result := agent (App_implementation.gtk_marshal).configure_translate
+		end
 
 	size_allocate_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
 			-- Translation agent used for size allocation events

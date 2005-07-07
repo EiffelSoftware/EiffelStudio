@@ -45,6 +45,12 @@ void set_debug_mode (int);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.6  2005/07/07 17:13:09  king
+// Updated gtk implementation to be 2.4 based instead of 1.2 based, previous imp is located at library/vision2_for_gtk12
+//
+// Revision 1.2  2004/02/12 22:38:29  king
+// Removed all unused code due to refactoring
+//
 // Revision 1.5  2003/10/22 01:13:59  king
 // Added set_debug_mode that was previous inline Eiffel code
 // Placed here because it doesn't compile with older C compilers (gcc 2.95)

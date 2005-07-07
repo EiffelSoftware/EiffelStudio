@@ -17,7 +17,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			visual_widget
+			needs_event_box,
+			set_parent_imp
 		end
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
@@ -25,6 +26,7 @@ inherit
 			item_by_data
 		redefine
 			interface,
+			insert_i_th,
 			initialize
 		end
 
@@ -33,28 +35,66 @@ create
 
 feature {NONE} -- Implementation
 
+	needs_event_box: BOOLEAN is False
+	
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
+		local
+			imp: EV_ITEM_IMP
+			item_ptr: POINTER
+		do
+			child_array.go_i_th (i)
+			imp ?= child_array.i_th (i).implementation
+			item_ptr := imp.c_object
+			 {EV_GTK_EXTERNALS}.object_ref (item_ptr)
+			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
+			child_array.remove
+			imp.set_item_parent_imp (Void)
+		end
+
 	make (an_interface: like interface) is
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
-			list_widget := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, list_widget)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_toolbar_new)
 		end
 		
 	initialize is
-			-- 
+			-- Initialize `Current'
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
-			enable_vertical_button_style
+				
+			initialize_tool_bar_style (list_widget)
+			
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
+			has_vertical_button_style := True
 		end
-		
-	visual_widget: POINTER is
+
+	initialize_tool_bar_style (a_tool_bar: POINTER) is
+			-- Remove the default shadow from the toolbar
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gtk_widget_set_name ((GtkWidget*) $a_tool_bar, "v2toolbar");
+					gtk_rc_parse_string ("style \"v2-toolbar-style\" {\n GtkToolbar::shadow-type = none\n }\n  widget \"*.v2toolbar\" style : highest  \"v2-toolbar-style\" " );
+				}
+			]"
+		end
+
+	list_widget: POINTER is
 			-- 
 		do
-			Result := list_widget
+			Result := visual_widget
+		end
+
+	set_parent_imp (a_container_imp: EV_CONTAINER_IMP) is
+			-- Set `parent_imp' to `a_container_imp'.
+		do
+			Precursor {EV_PRIMITIVE_IMP} (a_container_imp)
+			update_toolbar_style
 		end
 		
 feature -- Status report
@@ -70,14 +110,14 @@ feature -- Status setting
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
 			has_vertical_button_style := True
-			--| FIXME IEK Implement me
+			update_toolbar_style
 		end
 		
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
 			has_vertical_button_style := False
-			--| FIXME IEK Implement me
+			update_toolbar_style
 		end
 		
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
@@ -90,16 +130,54 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 feature -- Implementation
 
+	update_toolbar_style is
+			-- Set the style of `Current' relative to items
+		local
+			tbb_imp: EV_TOOL_BAR_BUTTON_IMP
+			has_text, has_pixmap: BOOLEAN
+			i, a_style: INTEGER
+		do
+			if parent_imp /= Void then
+				from
+					i := 1
+				until
+					i > interface.count
+				loop
+					tbb_imp ?= interface.i_th (i).implementation
+					if tbb_imp /= Void and then not tbb_imp.text.is_equal ("") then
+						has_text := True
+					end
+					if tbb_imp /= Void and then tbb_imp.pixmap /= Void then
+						has_pixmap := True
+					end
+					i := i + 1
+				end
+				
+				if has_text and has_pixmap then
+					if has_vertical_button_style then
+						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_enum
+					else
+						a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_both_horiz_enum
+					end
+				elseif has_text then
+					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_text_enum
+				else
+					a_style := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_icons_enum
+				end
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_style (visual_widget, a_style)
+			end
+		end	
+
 	insertion_position: INTEGER is
 			-- `Result' is index - 1 of item beneath the
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button.
 		local
-			wid_imp: EV_WIDGET_IMP
+			wid_imp: EV_GTK_WIDGET_IMP
 			tbi: EV_TOOL_BAR_ITEM
 		do
 			Result := count + 1
-			wid_imp := widget_imp_at_pointer_position
+			wid_imp := gtk_widget_imp_at_pointer_position
 			if wid_imp /= Void then
 				tbi ?= wid_imp.interface
 				if tbi /= Void and has (tbi) then
@@ -112,68 +190,16 @@ feature -- Implementation
 			-- Insert `v' at position `i'.
 		local
 			v_imp: EV_ITEM_IMP
-			a_tbb: EV_TOOL_BAR_BUTTON_IMP
 		do
 			v_imp ?= v.implementation
 			v_imp.set_item_parent_imp (Current)
-			
-			a_tbb ?= v_imp
-			
-			if a_tbb /= Void then
-				a_tbb.initialize_button_box
-			end
-			
-			add_to_container (v, v_imp)
-			gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
+			{EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
 			add_radio_button (v)
 			child_array.go_i_th (i)
 			child_array.put_left (v)
-		end
-
-	remove_i_th (i: INTEGER) is
-			-- Remove item at `i'-th position.
-		local
-			imp: EV_ITEM_IMP
-			item_ptr: POINTER
-		do
-			child_array.go_i_th (i)
-			imp ?= child_array.i_th (i).implementation
-			item_ptr := imp.c_object
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_ptr)
-			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
-			child_array.remove
-			imp.set_item_parent_imp (Void)
-		end
-
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
-			-- Add `v' to tool bar, set to non-expandable.
-		local
-			old_expand, fill, pad, pack_type: INTEGER
-		do
-			{EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
-			{EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
-				list_widget,
-				v_imp.c_object,
-				$old_expand,
-				$fill,
-				$pad,
-				$pack_type
-			)
-			{EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
-				list_widget,
-				v_imp.c_object,
-				False,
-				fill.to_boolean,
-				pad,
-				pack_type
-			)
-			add_radio_button (v)
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
-			-- Move `a_child' to `a_position' in `a_container'.
-		do
-			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_container, a_child, a_position)
+			if parent_imp /= Void then
+				update_toolbar_style			
+			end
 		end
 
 	add_radio_button (w: like item) is
@@ -185,44 +211,17 @@ feature -- Implementation
 		do
 			r ?= w.implementation
 			if r /= Void then
-				if radio_group /= NULL then
-					r.disable_select
-				end
-				radio_group := {EV_GTK_EXTERNALS}.g_slist_append (radio_group, r.c_object)
-			end
-		end
-
-	remove_radio_button (w: EV_TOOL_BAR_ITEM) is
-			-- Called every time a widget is removed from the container.
-		require
-			w_not_void: w /= Void
-		local
-			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
-		do
-			--| FIXME IEK Implement removal feature to call this feature.
-			r ?= w.implementation
-			if r /= Void then
-				if r.is_selected then
-					radio_group := {EV_GTK_EXTERNALS}.g_slist_remove (radio_group, r.c_object)
-					if radio_group /= NULL then
-						{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (
-							{EV_GTK_EXTERNALS}.gslist_struct_data (radio_group), True
-						)
-					end
-				else
-					{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (r.c_object, True)
-				end
+				{EV_GTK_EXTERNALS}.gtk_radio_tool_button_set_group (r.visual_widget, radio_group)
+				radio_group := r.radio_group
 			end
 		end
 
 feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation
 
 	radio_group: POINTER
+		-- GSList containing the radio peers held within `Current'
 
 feature {EV_ANY_I} -- Implementation
-
-	list_widget: POINTER
-			-- Pointer to the gtkhbox (toolbar) as c_object is event box.
 
 	interface: EV_TOOL_BAR
 

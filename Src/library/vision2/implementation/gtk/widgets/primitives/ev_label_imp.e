@@ -19,8 +19,7 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			set_foreground_color,
-			foreground_color_pointer
+			needs_event_box
 		end
 
 	EV_TEXTABLE_IMP
@@ -30,8 +29,7 @@ inherit
 
 	EV_FONTABLE_IMP
 		redefine
-			interface,
-			fontable_widget
+			interface
 		end
 
 create
@@ -39,39 +37,19 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
 			textable_imp_initialize
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, text_label)
+			set_c_object (text_label)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (c_object, False)
 			align_text_center
 		end
 
-feature {NONE} -- Implementation
-
-	fontable_widget: POINTER is
-			-- Pointer to `text_label'
-		do
-			Result := text_label
-		end
-
-	foreground_color_pointer: POINTER is
-			-- Color of foreground features like text.
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_style_struct_fg (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_style (text_label)
-			)
-		end
-
 feature {EV_ANY_I} -- Implementation
-
-	set_foreground_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `foreground_color'
-		do
-			real_set_foreground_color (text_label, a_color)
-		end
 
 	interface: EV_LABEL
 

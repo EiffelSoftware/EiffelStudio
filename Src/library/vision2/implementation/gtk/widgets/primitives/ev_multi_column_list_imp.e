@@ -10,14 +10,16 @@ class
 
 inherit
 	EV_MULTI_COLUMN_LIST_I
+		export
+			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
+				column_widths, update_column_width
 		redefine
 			interface,
 			initialize,
-			item,
 			call_pebble_function,
 			wipe_out,
-			append,
-			pixmaps_size_changed
+			pixmaps_size_changed,
+			remove_row_pixmap
 		end
 
 	EV_PRIMITIVE_IMP
@@ -35,7 +37,9 @@ inherit
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
 			button_press_switch,
-			create_pointer_motion_actions
+			create_pointer_motion_actions,
+			visual_widget,
+			on_button_release
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -44,13 +48,17 @@ inherit
 			count,
 			insert_i_th,
 			remove_i_th,
+			destroy,
 			interface,
 			wipe_out,
-			append,
 			initialize
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
+		export
+				{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES}
+					all
+		end
 	
 	EV_PND_DEFERRED_ITEM_PARENT
 
@@ -65,21 +73,122 @@ feature {NONE} -- Initialization
 			-- By default, a list allow only one selection.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			scrollable_area := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrollable_area, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
+			set_c_object (scrollable_area)
 			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				c_object,
+				scrollable_area,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
 				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM
 			)
-			
-			update_children_agent := agent update_children
-			
 			create ev_children.make (0)
-
-				-- create a list with one column
-			create_list (1)
-			clear_selection
+			tree_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
+			{EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
 		end
+
+	initialize is
+			-- Initialize `Current'
+		local
+			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+		do
+			Precursor {EV_ITEM_LIST_IMP}
+			Precursor {EV_PRIMITIVE_IMP}
+			Precursor {EV_MULTI_COLUMN_LIST_I}
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_enable_search (tree_view, False)
+			resize_model_if_needed (25)
+				-- Create our model with 25 columns to avoid recomputation each time the column count increases
+			create_list (2)
+	
+			previous_selection := selected_items
+			initialize_pixmaps
+			connect_button_press_switch
+			disable_multiple_selection
+			
+				-- Needed so that we can query if the mouse button is down for column resize actions
+			l_release_actions := pointer_button_release_actions
+			connect_selection_actions
+		end
+
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+	connect_selection_actions is
+			-- Connect the selection signal
+		local
+			a_selection: POINTER
+		do
+			if selection_signal_id = 0 then
+				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+				real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+				selection_signal_id := last_signal_connection_id				
+			end
+		end
+
+	disconnect_selection_actions is
+			-- Disconnect the selection signal
+		local
+			a_selection: POINTER
+		do
+			if selection_signal_id /= 0 then
+				a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+				{EV_GTK_EXTERNALS}.signal_disconnect (a_selection, selection_signal_id)
+				selection_signal_id := 0				
+			end
+		end
+
+	selection_signal_id: INTEGER
+		-- Signal id used for the selection changed event
+
+feature {NONE} -- Implementation
+
+	call_selection_action_sequences is
+			-- Call appropriate selection and deselection action sequences
+		local
+			new_selection: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			newly_selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
+			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+			disconnect_selection_actions
+			if not mouse_button_pressed then
+				new_selection := selected_items
+				create newly_selected_items.make (0)
+				from
+					new_selection.start
+				until
+					new_selection.off
+				loop
+					if not previous_selection.has (new_selection.item) then
+						an_item ?= new_selection.item.implementation
+						newly_selected_items.extend (an_item)
+					end
+					previous_selection.prune_all (new_selection.item)
+					new_selection.forth
+				end
+				from
+					previous_selection.start
+				until
+					previous_selection.off
+				loop
+					an_item ?= previous_selection.item.implementation
+					call_deselect_actions (an_item)
+					previous_selection.forth
+				end
+				
+				from
+					newly_selected_items.start
+				until
+					newly_selected_items.off
+				loop
+					call_selection_actions (newly_selected_items.item)
+					newly_selected_items.forth
+				end
+				previous_selection := new_selection
+			end
+			connect_selection_actions
+		end
+
+	previous_selection: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+		-- Previous selection of `Current'
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is
 			-- Create a pointer_motion action sequence.
@@ -87,11 +196,7 @@ feature {NONE} -- Initialization
 			create Result
 		end
 
-	call_selection_action_sequences is
-			-- 
-		do
-			-- Not needed for 1.2 implementation
-		end
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
 	button_press_switch (
 			a_type: INTEGER;
@@ -102,18 +207,21 @@ feature {NONE} -- Initialization
 		local
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
-
 			a_row_number: INTEGER
 			clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
+			mouse_button_pressed := True
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 			a_row_number := row_index_from_y_coord (a_y)
 			if a_row_number > 0 and then a_row_number <= count then
 				clicked_row := ev_children @ a_row_number
+			else
+				clear_selection
+					-- This follows the Windows behavior of clearing selection if list is clicked on
 			end
 			if a_type = {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
-				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
+				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
 				if
@@ -122,7 +230,7 @@ feature {NONE} -- Initialization
 				then
 					clicked_row.pointer_button_press_actions_internal.call (t)
 				end
-			elseif a_type = {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then --and not is_transport_enabled then
+			elseif a_type = {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end
@@ -133,7 +241,83 @@ feature {NONE} -- Initialization
 					clicked_row.pointer_double_press_actions_internal.call (t)
 				end
 			end
-        	end
+		end
+
+	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Used for pointer button release events
+			-- (export status {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I})
+		do
+			Precursor {EV_PRIMITIVE_IMP} (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			mouse_button_pressed := False
+			call_selection_action_sequences
+		end
+
+	mouse_button_pressed: BOOLEAN
+		-- Is the mouse button pressed
+
+feature {NONE} -- Implementation
+
+	call_selection_actions (clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Call the selections actions for `clicked_row'
+		do
+			if not previous_selection.has (clicked_row.interface) then
+					if clicked_row.select_actions_internal /= Void then
+						clicked_row.select_actions_internal.call (void)
+					end
+					if select_actions_internal /= Void then
+						select_actions_internal.call ([clicked_row.interface])
+					end
+			end
+		end
+
+	call_deselect_actions (deselected_row: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Call deselect actions for `deselected_row'
+		do
+				if deselected_row.deselect_actions_internal /= Void then
+					deselected_row.deselect_actions_internal.call (Void)
+				end
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call ([deselected_row.interface])
+				end
+		end
+
+	resize_model_if_needed (a_columns: INTEGER) is
+			-- 
+		local
+			a_type_array: MANAGED_POINTER
+			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
+			i: INTEGER
+		do		
+			if a_columns > model_column_count - 1 then
+				create a_type_array.make ((a_columns + 1) * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+				from
+					{EV_GTK_DEPENDENT_EXTERNALS}.add_gdk_type_pixbuf (a_type_array.item, 0)
+					i := 1
+				until
+					i > a_columns
+				loop
+					{EV_GTK_DEPENDENT_EXTERNALS}.add_g_type_string (a_type_array.item, i * {EV_GTK_DEPENDENT_EXTERNALS}.sizeof_gtype)
+					i := i + 1
+				end
+
+				list_store := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (a_columns + 1, a_type_array.item)
+				
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)
+	
+				from
+					ev_children.start
+				until
+					ev_children.after
+				loop
+					create a_tree_iter.make
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, ev_children.index - 1)
+					ev_children.item.set_list_iter (a_tree_iter)
+					update_child (ev_children.item, ev_children.index)
+					ev_children.forth
+				end				
+			end	
+		end
+	
 
 	create_list (a_columns: INTEGER) is
 			-- Create the clist with `a_columns' columns.
@@ -141,76 +325,51 @@ feature {NONE} -- Initialization
 			a_columns_positive: a_columns > 0
 		local
 			i: INTEGER
-			old_list_widget: POINTER
 			temp_title: STRING
 			temp_width: INTEGER
 			temp_alignment, default_alignment: EV_TEXT_ALIGNMENT
 			temp_alignment_code: INTEGER
-			p: POINTER
-			is_multiple_selected: BOOLEAN
-			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
+			a_gtk_c_str: EV_GTK_C_STRING
+			a_cell_renderer: POINTER
+			a_column: POINTER
+			old_column_count: INTEGER
 		do
-			old_list_widget := list_widget
-			if old_list_widget /= NULL then
-				is_multiple_selected := multiple_selection_enabled
-			end
+			old_column_count := column_count	
+			resize_model_if_needed (a_columns)
 			create default_alignment
-			
-			list_widget := {EV_GTK_EXTERNALS}.gtk_clist_new (a_columns)
-			{EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
-			disable_multiple_selection
-		
-			real_signal_connect (
-				list_widget,
-				"select_row",
-				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 1, ?),
-				agent (App_implementation.gtk_marshal).gtk_value_int_to_tuple
-			)
-			real_signal_connect (
-				list_widget,
-				"unselect_row",
-				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 2, ?),
-				agent (App_implementation.gtk_marshal).gtk_value_int_to_tuple
-			)
-			real_signal_connect (
-				list_widget,
-				"click_column",
-				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 3, ?),
-				agent (App_implementation.gtk_marshal).gtk_value_int_to_tuple
-			)
-			real_signal_connect (
-				list_widget,
-				"resize_column",
-				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 4, ?),
-				agent (App_implementation.gtk_marshal).column_resize_callback_translate
-			)
-			
-			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
-			real_signal_connect (list_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
-			real_signal_connect (list_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
-
-			if user_set_row_height > 0 then
-				set_row_height (user_set_row_height)		
-			else
-				set_row_height (App_implementation.default_font_height + 5)
-			end
-
-			{EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
-
-			show_title_row
-
 			from
-				i := 1
+				i := old_column_count + 1
 			until
 				i > a_columns
 			loop
+
+				a_column := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (a_column, True)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
+				
+				if i = 1 then
+					a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
+					a_gtk_c_str := once "pixbuf"
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
+				end
+				
+				a_cell_renderer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)				
+				a_gtk_c_str := once "text"
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, i)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, i - 1)
+
+
 				if column_titles /= Void and then
 					column_titles.valid_index (i) and then
 						column_titles.i_th (i) /= Void then
 					temp_title := column_titles.i_th (i)
 				else
-					temp_title := ""
+					temp_title := once ""
 				end
+
 				if column_widths /= Void and then 
 								column_widths.valid_index (i) then
 					temp_width := column_widths.i_th (i)
@@ -219,7 +378,7 @@ feature {NONE} -- Initialization
 				end
 				if column_alignments /= Void and then 
 							column_alignments.valid_index (i) then
-					-- Create alignment from alignment code.
+						-- Create alignment from alignment code.
 					temp_alignment_code := column_alignments.i_th (i)
 					create temp_alignment
 					if temp_alignment_code = temp_alignment.left_alignment then
@@ -233,48 +392,22 @@ feature {NONE} -- Initialization
 					temp_alignment := default_alignment
 				end
 
-				column_title_changed (temp_title, i)
 				column_width_changed (temp_width, i)
-				
+				column_title_changed (temp_title, i)
+
 				if i > 1 then
 					-- 1st column is always left aligned.
 					column_alignment_changed (temp_alignment, i)
 				end
-
+				
+				real_signal_connect (a_column, "notify::width", agent (app_implementation.gtk_marshal).mcl_column_resize_callback (object_id, i), Void)
+				real_signal_connect (a_column, "clicked", agent (app_implementation.gtk_marshal).mcl_column_click_callback (object_id, i), Void)
 				i := i + 1
 			end
-
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				p := calloc ({EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget), sizeof_pointer)
-				i := {EV_GTK_EXTERNALS}.gtk_clist_append (list_widget, p)
-				p.memory_free;
-				ev_children.item.dirty_child
-				update_child (ev_children.item, ev_children.index)
-				ev_children.forth
-			end
-			if old_list_widget /= NULL then
-				{EV_GTK_EXTERNALS}.gtk_container_remove (c_object, old_list_widget)
-			end
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, list_widget)
-			--feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
-			if is_multiple_selected then
-				enable_multiple_selection
-			end
 		end
-
-	initialize is
-		do
-			Precursor {EV_ITEM_LIST_IMP}
-			Precursor {EV_PRIMITIVE_IMP}
-			Precursor {EV_MULTI_COLUMN_LIST_I}
-			initialize_pixmaps
-			connect_button_press_switch
-			disable_multiple_selection
-		end
+		
+	list_store: POINTER
+		-- Pointer to the Model
 
 	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
 		local
@@ -301,88 +434,30 @@ feature {NONE} -- Initialization
 			-- 
 		do
 			--| FIXME IEK Add pixmap scaling code with gtk+ 2
-			if pixmaps_height > {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) then
-				set_row_height (pixmaps_height)
-			end
-		end
-
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
-
-	select_callback (int: TUPLE [INTEGER]) is
-		local
-			temp_int: INTEGER_REF
-			a_position: INTEGER
-			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
-		do
-			if not ignore_select_callback then
-				temp_int ?= int.item (1)
-				a_position := temp_int.item + 1
-	
-				an_item := (ev_children @ a_position)
-				if an_item /= previously_selected_node then
-					if an_item.select_actions_internal /= Void then
-						an_item.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
-					end
-					if select_actions_internal /= Void then
-						select_actions_internal.call ([an_item.interface])
-					end
-					switch_to_browse_mode_if_necessary
-				end
-				previously_selected_node := an_item
-			end
-		end
-		
-	previously_selected_node: EV_MULTI_COLUMN_LIST_ROW_IMP
-
-	deselect_callback (int: TUPLE [INTEGER]) is
-		local
-			temp_int: INTEGER_REF
-			a_position: INTEGER
-			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
-		do
-			temp_int ?= int.item (1)
-			a_position := temp_int.item + 1
-			an_item := (ev_children @ a_position)
-			if an_item.deselect_actions_internal /= Void then
-				an_item.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
-			end
-			if deselect_actions_internal /= Void then
-				deselect_actions_internal.call ([an_item.interface])
-			end
-		end
-
-	column_click_callback (int: TUPLE [INTEGER]) is
-		local
-			temp_int: INTEGER_REF
-		do
-			temp_int ?= int.item (1)
-			if column_title_click_actions_internal /= Void then
-				column_title_click_actions_internal.call ([temp_int.item + 1])
-			end
-		end
-
-	column_resize_callback (int: TUPLE [INTEGER]) is
-		local
-			temp_col, temp_wid: INTEGER_REF
-		do
-			temp_col ?= int.item (1)
-			-- Set column width array to new width.
-			if (temp_col.item) <= column_count and column_widths /= Void then
-				temp_wid ?= int.item (2)
-				update_column_width (temp_wid.item, temp_col.item)
-				if column_resized_actions_internal /= Void then
-					column_resized_actions_internal.call ([temp_col.item])
-				end
-			end
+--			if pixmaps_height > {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) then
+--				set_row_height (pixmaps_height)
+--			end
 		end
 
 feature -- Access
 
 	column_count: INTEGER is
 			-- Number of columns in the list.
+		local
+			col_list: POINTER
 		do
-			if list_widget /= NULL then
-				Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget)
+			col_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_columns (tree_view)
+			if col_list /= NULL then
+				Result := {EV_GTK_EXTERNALS}.g_list_length (col_list)
+				{EV_GTK_EXTERNALS}.g_list_free (col_list)
+			end
+		end
+
+	model_column_count: INTEGER is
+			-- Number of columns in GtkTreeModel
+		do
+			if list_store /= NULL then
+				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_n_columns (list_store)
 			end
 		end
 
@@ -393,33 +468,31 @@ feature -- Access
 		end
 
 	i_th (i: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
+			-- `i_th' row in `Current'
 		do
 			Result := (ev_children @ i).interface
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
-			-- Item which is currently selected, for a multiple
-			-- selection.
+			-- Item which is currently selected
 		local
-			an_index: INTEGER
+			a_selection: POINTER
+			a_tree_path_list: POINTER
+			a_model: POINTER
+			a_tree_path: POINTER
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
 		do
-			if
-				list_widget /= NULL and
-				{EV_GTK_EXTERNALS}.g_list_length (
-					{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
-				) = 0
-			then
-					-- there is no selected item
-				Result := Void
-			elseif list_widget /= NULL then
-					-- there is one selected item
-				an_index := pointer_to_integer (
-					{EV_GTK_EXTERNALS}.g_list_nth_data (
-						{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget),
-						0
-					)
-				)
-				Result := (ev_children @ (an_index + 1)).interface
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			
+			if a_tree_path_list /= NULL then
+					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
+					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+					Result := ((ev_children @ (mp.read_integer_32 (0) + 1)).interface)
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
+					{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -430,31 +503,29 @@ feature -- Access
 			-- should use `selected_item' rather than 
 			-- `selected_items' for a single selection list.
 		local
-			i: INTEGER
-			an_index: INTEGER
-			upper: INTEGER
-			row: EV_MULTI_COLUMN_LIST_ROW
+			a_selection: POINTER
+			a_tree_path_list: POINTER
+			a_model: POINTER
+			a_tree_path: POINTER
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
 		do
-			if list_widget /= NULL then
-				upper := {EV_GTK_EXTERNALS}.g_list_length (
-					{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
-				)
-			end
 			create Result.make (0)
-			from
-				i := 0
-			until
-				i = upper
-			loop
-				an_index := pointer_to_integer (
-					{EV_GTK_EXTERNALS}.g_list_nth_data (
-						{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget),
-						i
-					)
-				)
-				row := (ev_children @ (an_index + 1)).interface
-				Result.force (row)
-				i := i + 1
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			a_tree_path_list := {EV_GTK_EXTERNALS}.gtk_tree_selection_get_selected_rows (a_selection, $a_model)
+			if a_tree_path_list /= NULL then
+				from
+				until
+					a_tree_path_list = NULL
+				loop
+					a_tree_path := {EV_GTK_EXTERNALS}.glist_struct_data (a_tree_path_list)
+					a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+					create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+					Result.extend ((ev_children @ (mp.read_integer_32 (0) + 1)).interface)
+					a_tree_path_list := {EV_GTK_EXTERNALS}.glist_struct_next (a_tree_path_list)
+				end
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_list_free_contents (a_tree_path_list)
+				{EV_GTK_EXTERNALS}.g_list_free (a_tree_path_list)
 			end
 		end
 
@@ -462,27 +533,28 @@ feature -- Status report
 
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
+		local
+			a_selection: POINTER
 		do
-			if list_widget /= NULL then
-				Result := {EV_GTK_EXTERNALS}.g_list_length (
-					{EV_GTK_EXTERNALS}.gtk_clist_struct_selection (list_widget)
-				).to_boolean
-			end
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_count_selected_rows (a_selection) > 0
 		end
 
-	multiple_selection_enabled: BOOLEAN
+	multiple_selection_enabled: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise.
+		local
+			a_selection: POINTER
+		do
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_get_mode (a_selection) = {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum
+		end
 
 	title_shown: BOOLEAN is
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		do
-			if list_widget /= NULL then
-				Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_flags (list_widget).bit_and (
-					gtk_clist_show_titles_enum
-				).to_boolean
-			end
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_headers_visible (tree_view)
 		end
 
 feature -- Status setting
@@ -490,41 +562,32 @@ feature -- Status setting
 	destroy is
 			-- Destroy screen widget implementation and EV_LIST_ITEM objects.
 		do
-			clear_items
+			wipe_out
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
 	show_title_row is
 			-- Show the row of the titles.
 		do
-			{EV_GTK_EXTERNALS}.gtk_clist_column_titles_show (list_widget)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, True)
 		end
 
 	hide_title_row is
 			-- Hide the row of the titles.
 		do
-			{EV_GTK_EXTERNALS}.gtk_clist_column_titles_hide (list_widget)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
+			resize_column_to_content (1)
 		end
 
 	enable_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS.
+		local
+			a_selection: POINTER
 		do
-			multiple_selection_enabled := True
-			ignore_select_callback := True
-			if selection_mode_is_single then
-				{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
-					list_widget,
-					{EV_GTK_EXTERNALS}.gTK_SELECTION_MULTIPLE_ENUM
-				)
-			else
-				{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
-					list_widget,
-					{EV_GTK_EXTERNALS}.gTK_SELECTION_EXTENDED_ENUM
-				)
-			end
-			ignore_select_callback := False
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_multiple_enum)
 		end
 
 	disable_multiple_selection is
@@ -532,140 +595,143 @@ feature -- Status setting
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS.
 		local
-			sel_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
-			sel_item: EV_MULTI_COLUMN_LIST_ROW
+			a_selection: POINTER
 		do
-			multiple_selection_enabled := False
-			ignore_select_callback := True
-			selection_mode_is_single := True
-			sel_items := selected_items
-			if not sel_items.is_empty then
-				sel_item := sel_items.first
-			end	
-			{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
-				list_widget,
-				{EV_GTK_EXTERNALS}.gTK_SELECTION_SINGLE_ENUM
-			)
-			if sel_item /= Void then
-				sel_item.enable_select
-				sel_item.select_actions.call (Void)
-			end	
-			ignore_select_callback := False
-		
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, {EV_GTK_EXTERNALS}.gtk_selection_single_enum)
 		end
 
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `index' of the list.
+		local
+			a_selection: POINTER
+			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			switch_to_browse_mode_if_necessary;
-			(ev_children @ an_index).enable_select
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, (ev_children @ an_index).list_iter.item)
+			if selection_signal_id = 0 then
+				a_row_imp := ev_children.i_th (an_index)
+				call_selection_actions (a_row_imp)
+			end
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
+		local
+			a_selection: POINTER
+			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			switch_to_single_mode_if_necessary;
-			(ev_children @ an_index).disable_select
+			a_selection := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, (ev_children @ an_index).list_iter.item)
+			if selection_signal_id = 0 then
+				a_row_imp := ev_children.i_th (an_index)
+				call_deselect_actions (a_row_imp)
+			end
 		end
 
 	clear_selection is
 			-- Clear the selection of the list.
+		local
+			a_selection: POINTER
 		do
-			if list_widget /= NULL then
-				switch_to_single_mode_if_necessary
-				ignore_select_callback := True
-				{EV_GTK_EXTERNALS}.gtk_clist_unselect_all (list_widget)
-				ignore_select_callback := False
-			end
+			a_selection := {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			{EV_GTK_EXTERNALS}.gtk_tree_selection_unselect_all (a_selection)
 		end
 
 	resize_column_to_content (a_column: INTEGER) is
 			-- Resize column `a_column' to width of its widest text.
+		local
+			a_column_ptr: POINTER
 		do
-			if list_widget /= NULL then
-				column_width_changed (
-					{EV_GTK_EXTERNALS}.gtk_clist_optimal_column_width (list_widget, a_column - 1).max (column_width (a_column)),
-					a_column
-				)
-			end
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column_ptr, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_grow_only_enum)
 		end
 
 feature -- Element change
-
-	append (s: SEQUENCE [EV_MULTI_COLUMN_LIST_ROW]) is
-			-- Copy `s' to end of `Current'.  Do not move cursor.
-		do
-			{EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
-			Precursor (s)
-			{EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)			
-		end
 
 	column_title_changed (a_txt: STRING; a_column: INTEGER) is
 			-- Make `a_txt' the title of the column number.
 		local
 			a_cs: EV_GTK_C_STRING
+			a_column_ptr: POINTER
 		do
-			if list_widget /= NULL then
-				create a_cs.make (a_txt)
-				{EV_GTK_EXTERNALS}.gtk_clist_set_column_title (
-					list_widget,
-					a_column - 1,
-					a_cs.item
-				)
+			if a_column > column_count then
+				expand_column_count_to (a_column)
 			end
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+			check
+				a_column_not_null: a_column_ptr /= default_pointer
+			end
+			a_cs := a_txt
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_title (a_column_ptr, a_cs.item)
 		end
 
-	column_width_changed (value: INTEGER; column: INTEGER) is
+	column_width_changed (value: INTEGER; a_column: INTEGER) is
 			-- Make `value' the new width of the column number
-			-- `column'.
+			-- `a_column'.
+		local
+			a_column_ptr: POINTER
 		do
-			if list_widget /= NULL then
-				{EV_GTK_EXTERNALS}.gtk_clist_set_column_width (list_widget, column - 1, value)
+			if column_widths /= Void then
+				a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column_ptr, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (a_column_ptr, value.max (1))				
 			end
 		end
 
 	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
 			-- Set alignment of `a_column' to corresponding `alignment_code'.
 		local
-			an_alignment_code: INTEGER
+			alignment: REAL
+			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
+			a_gtk_c_str: EV_GTK_C_STRING
+			i: INTEGER
 		do
 			if an_alignment.is_left_aligned then
-				an_alignment_code := {EV_GTK_EXTERNALS}.gTK_JUSTIFY_LEFT_ENUM
+				alignment := 0
 			elseif an_alignment.is_center_aligned then
-				an_alignment_code := {EV_GTK_EXTERNALS}.gTK_JUSTIFY_CENTER_ENUM
+				alignment := 0.5
 			else
-				an_alignment_code := {EV_GTK_EXTERNALS}.gTK_JUSTIFY_RIGHT_ENUM
+				alignment := 1.0
+			end
+			
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			from
+				i := 0
+				a_gtk_c_str := "xalign"
+			until
+				i = {EV_GTK_EXTERNALS}.g_list_length (a_cell_rend_list)
+			loop
+				a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, i)
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_double (a_cell_rend, a_gtk_c_str.item, alignment)
+				i := i + 1
 			end
 
-			{EV_GTK_EXTERNALS}.gtk_clist_set_column_justification (
-				list_widget,
-				a_column - 1,
-				an_alignment_code
-			)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_alignment (a_column_ptr, alignment)
+			{EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
 		end
 
 	set_row_height (value: INTEGER) is
 			-- Make `value' the new height of all the rows.
+		local
+			a_column_ptr, a_cell_rend_list, a_cell_rend: POINTER
+			a_gtk_c_str: EV_GTK_C_STRING
+			a_vert_sep: INTEGER
 		do
-			if list_widget /= NULL then
-				{EV_GTK_EXTERNALS}.gtk_clist_set_row_height (list_widget, value)
-			end
-			user_set_row_height := value
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			a_cell_rend_list := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_cell_renderers (a_column_ptr)
+			a_cell_rend := {EV_GTK_EXTERNALS}.g_list_nth_data (a_cell_rend_list, 0)
+			
+				-- Row height setting has to take the vertical spacing of the tree view in to account
+			a_gtk_c_str := "vertical-separator"
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_gtk_c_str.item, $a_vert_sep)
+			
+			a_gtk_c_str := "height"
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (a_cell_rend, a_gtk_c_str.item, value - a_vert_sep)
+			{EV_GTK_EXTERNALS}.g_list_free (a_cell_rend_list)
 		end
-		
-	user_set_row_height: INTEGER
-		-- Row height set by user, 0 is not set.
 
-	clear_items is
-			-- Clear all the items of the list.
-			-- (Remove them from the list and destroy them).
-		do
-			if rows > 0 then
-				ev_children.wipe_out	
-				{EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
-			end
-		end
-		
 	wipe_out is
 			-- Remove all items.
 		local
@@ -673,7 +739,7 @@ feature -- Element change
 		do
 				-- Remove all items (GTK part)
 			clear_selection
-			{EV_GTK_EXTERNALS}.gtk_clist_clear (list_widget)
+			{EV_GTK_EXTERNALS}.gtk_list_store_clear (list_store)
 			from
 				ev_children.start
 			until
@@ -727,20 +793,22 @@ feature -- Implementation
 		end
 
 	enable_transport is
+			-- Enable PND transport to occur
 		do
 			connect_pnd_callback
 		end
 
 	connect_pnd_callback is
+			-- Connect Pick event for PND
 		do
 			check
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (c_object, button_press_connection_id)
+				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 			end
-			real_signal_connect (c_object,
-				"button-press-event", 
+			real_signal_connect (visual_widget,
+				once "button-press-event", 
 				agent (App_implementation.gtk_marshal).mcl_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
 				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id
@@ -748,6 +816,7 @@ feature -- Implementation
 		end
 
 	disable_transport is
+			-- Disable PND transport
 		do
 			Precursor
 			update_pnd_status
@@ -800,13 +869,16 @@ feature -- Implementation
 					pnd_row_imp := Void
 				end
 			end
-
-			Precursor (
+			
+			if pnd_row_imp /= Void or else pebble /= Void then
+				Precursor (
 				a_type,
 				a_x, a_y, a_button,
 				a_x_tilt, a_y_tilt, a_pressure,
-				a_screen_x, a_screen_y
-			)		
+				a_screen_x, a_screen_y)
+			else
+				call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			end			
 		end
 
 	pnd_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -838,7 +910,6 @@ feature -- Implementation
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Steps to perform before transport initiated.
 		do
-
 			temp_accept_cursor := accept_cursor
 			temp_deny_cursor := deny_cursor
 			app_implementation.on_pick (pebble)
@@ -892,15 +963,17 @@ feature -- Implementation
 			end
 		end
 
-	post_drop_steps (a_button: INTEGER) is
+	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if a_button > 0 and then pnd_row_imp /= Void and not is_destroyed then
-				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (c_object, "button-press-event")
-				end
-			elseif a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
-					signal_emit_stop (c_object, "button-press-event")
+			if a_button > 0  then
+				if pnd_row_imp /= Void and not is_destroyed then
+					if pnd_row_imp.mode_is_pick_and_drop then
+						signal_emit_stop (event_widget, "button-press-event")
+					end
+				elseif mode_is_pick_and_drop and not is_destroyed then
+						signal_emit_stop (event_widget, "button-press-event")
+				end				
 			end
 
 			App_implementation.on_drop (pebble)
@@ -929,21 +1002,22 @@ feature -- Implementation
 			pnd_row_imp := Void
 		end
 
-
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 	row_index_from_y_coord (a_y: INTEGER): INTEGER is
 			-- Returns the row index at relative coordinate `a_y'.
 		local
-			ver_adj: POINTER
-			temp_a_y, ver_offset: INTEGER
+			a_tree_path, a_tree_column: POINTER
+			a_success: BOOLEAN
+			a_int_ptr: POINTER
+			mp: MANAGED_POINTER
 		do
-			ver_adj := {EV_GTK_EXTERNALS}.gtk_scrolled_window_get_vadjustment (c_object)
-			ver_offset := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (ver_adj).rounded
-			temp_a_y := a_y + ver_offset
-			Result := temp_a_y // (row_height) + 1
-			if Result > ev_children.count then
-				Result := 0
+			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, 1, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
+			if a_success then
+				a_int_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+				Result := mp.read_integer_32 (0) + 1	
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 			end
 		end
 		
@@ -958,97 +1032,63 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	gtk_clist_struct_columns (a_clist: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
-		alias
-			"columns"
-		end
-
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
-			pixmap_imp: EV_PIXMAP_IMP
 			a_cs: EV_GTK_C_STRING
+			str_value: POINTER
+			a_list_iter: POINTER
 		do
-			create a_cs.make (a_text)
-			if  a_column = 1 and then ev_children.i_th (a_row).internal_pixmap /= Void then
-				pixmap_imp ?= ev_children.i_th (a_row).internal_pixmap.implementation
-				
-				{EV_GTK_EXTERNALS}.gtk_clist_set_pixtext (
-					list_widget,
-					a_row - 1,
-					a_column - 1,
-					a_cs.item,
-					3,
-					pixmap_imp.drawable,
-					pixmap_imp.mask
-				)
-			else
-				{EV_GTK_EXTERNALS}.gtk_clist_set_text (
-					list_widget,
-					a_row - 1,
-					a_column - 1,
-					a_cs.item
-				)
-			end
+			--create a_cs.make (a_text)
+			a_cs := a_text
+				-- Replace when we have UTF16 support
+			str_value := g_value_string_struct
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_unset (str_value)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
+
+			a_list_iter := ev_children.i_th (a_row).list_iter.item
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_list_iter, a_column, str_value)				
+		end
+
+	g_value_string_struct: POINTER is
+			-- Optimization for GValue struct access
+		once
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (Result)
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Set row `a_row' pixmap to `a_pixmap'.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+			a_list_iter: POINTER
+			a_pixbuf: POINTER
 		do
-			--| Do nothing, implementation not needed for GTK as it is done when the
+			pixmap_imp ?= a_pixmap.implementation
+			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
+			a_list_iter := ev_children.i_th (a_row).list_iter.item
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, a_pixbuf)
+			{EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
+		end
+
+	remove_row_pixmap (a_row: INTEGER) is
+			-- Remove pixmap from `a_row'
+		local
+			a_list_iter: POINTER
+		do
+			a_list_iter := ev_children.i_th (a_row).list_iter.item
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, NULL)
 		end
 
 feature {NONE} -- Implementation
-
-	update_children is
-			-- Update all children with `update_needed' True.
-			--| We are on an idle action now. At least one item has marked
-			--| itself `update_needed'.
-		local
-			cur: CURSOR
-			new_column_count: INTEGER
-		do
-			cur := ev_children.cursor
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				if ev_children.item.interface.count > column_count then
-					new_column_count := ev_children.item.interface.count
-				end
-				ev_children.forth
-			end
-
-			if new_column_count > column_count then
-				expand_column_count_to (new_column_count)
-			end
-
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				if ev_children.item.update_needed then
-					update_child (ev_children.item, ev_children.index)
-				end
-				ev_children.forth
-			end
-			ev_children.go_to (cur)
-		end
 
 	update_child (child: EV_MULTI_COLUMN_LIST_ROW_IMP; a_row: INTEGER) is
 			-- Update `child'.
 		require
 			child_exists: child /= Void
-			child_dirty: child.update_needed
-			room_for_child: child.interface.count <= column_count
 		local
 			cur: CURSOR
 			txt: STRING
@@ -1057,6 +1097,10 @@ feature {NONE} -- Implementation
 		do
 			list := child.interface
 			cur := list.cursor
+			
+			if child.pixmap /= Void then
+				set_row_pixmap (a_row, child.pixmap)
+			end
 			from
 				column_counter := 1
 				list.start
@@ -1082,122 +1126,50 @@ feature {NONE} -- Implementation
 				column_counter := column_counter + 1
 			end
 			list.go_to (cur)
-			child.update_performed
-		ensure
-			child_updated: not child.update_needed
 		end
-
-	selection_mode_is_single: BOOLEAN
-			-- Is selection mode set to SINGLE?
-	
-	switch_to_single_mode_if_necessary is
-			-- Change selection mode if the last selected
-			-- item is deselected.
-		local
-			sel_items: like selected_items
-		do
-			if list_widget /= NULL and then not selection_mode_is_single then
-				ignore_select_callback := True
-				if multiple_selection_enabled then
-					sel_items := selected_items
-					if 
-						sel_items = Void 
-							or else
-						selected_items.count <= 1
-					then
-						{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
-							list_widget,
-							{EV_GTK_EXTERNALS}.gtk_selection_multiple_enum
-						)
-						selection_mode_is_single := True
-					end
-				else
-					{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
-						list_widget,
-						{EV_GTK_EXTERNALS}.gtk_selection_single_enum
-					)
-					selection_mode_is_single := True
-				end
-				ignore_select_callback := False
-			end
-		end
-		
-	switch_to_browse_mode_if_necessary is
-			-- Change selection mode to browse mode
-			-- if necessary.
-		do
-			if list_widget /= NULL and then selection_mode_is_single then
-				ignore_select_callback := True
-				if multiple_selection_enabled then
-					{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
-						list_widget, 
-						{EV_GTK_EXTERNALS}.gtk_selection_extended_enum
-					)					
-				else
-					{EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (
-						list_widget,
-						{EV_GTK_EXTERNALS}.gtk_selection_browse_enum
-					)
-				end
-				ignore_select_callback := False
-				selection_mode_is_single := False
-			end
-		end
-		
-	ignore_select_callback: BOOLEAN
-		-- Ignore the select callback should selection mode change
 
 	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Ensure `a_item' is visible on the screen.
-		do
-			--| FIXME To be implemented
-		end
-
-	expand_column_count_to (a_columns: INTEGER) is
-		do
-			create_list (a_columns)
+		local
+			list_item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+			a_path: POINTER
+		do	
+			list_item_imp ?= a_item.implementation
+			a_path := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
-			p: POINTER
-			dummy: INTEGER
+			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 
-			-- update the list of rows of the column list:			
+				-- Make sure list is large enough to fit `item_imp'
+			if v.count > column_count then
+				create_list (v.count)
+			end
+
+				-- update the list of rows of the column list:			
 			ev_children.go_i_th (i)
 			ev_children.put_left (item_imp)
 
-			if v.count > column_count then
-				create_list (v.count)
-			else
-				-- add row to the existing gtk column list:
-				p := calloc ({EV_GTK_EXTERNALS}.gtk_clist_struct_columns (list_widget), sizeof_pointer)
-				dummy := {EV_GTK_EXTERNALS}.gtk_clist_append (list_widget, p)
-				p.memory_free;
-				item_imp.dirty_child
-				update_child (item_imp, ev_children.count)
-			end
+				-- Add row to model
+			create a_tree_iter.make
+			item_imp.set_list_iter (a_tree_iter)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_insert (list_store, a_tree_iter.item, i - 1)
+			update_child (item_imp, ev_children.count)
 			
 			if item_imp.is_transport_enabled then
 				update_pnd_connection (True)
 			end
 	
 			child_array.go_i_th (i)
-			child_array.put_left (v)		
-			
-			if i < count then
-				-- reorder_child (v, v_imp, i)
-				{EV_GTK_EXTERNALS}.gtk_clist_row_move (
-					list_widget,
-					item_imp.index - 1,
-					i - 1
-				)
-			end
+			child_array.put_left (v)
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -1206,10 +1178,9 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			clear_selection
 			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
-			{EV_GTK_EXTERNALS}.gtk_clist_remove (list_widget, a_position - 1)
+			{EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)
 			-- remove the row from the `ev_children'
 			ev_children.go_i_th (a_position)
 			ev_children.remove
@@ -1219,53 +1190,41 @@ feature {NONE} -- Implementation
 		end
 
 	row_height: INTEGER is
+			-- Height of rows in `Current'
+		local
+			a_column_ptr: POINTER
+			a_x, a_y, a_width, a_height: INTEGER
 		do
-			if list_widget /= NULL then
-				Result := {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget) + 1
-			end			
+			a_column_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_cell_get_size (a_column_ptr, NULL, $a_x, $a_y, $a_width, $a_height)
+			Result := a_height
 		end
 
-feature {NONE} -- Externals
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
-	pointer_to_integer (pointer: POINTER): INTEGER is
-			-- int pointer_to_integer (void* pointer) {
-			--     return (int) pointer;
-			-- }
-			-- Hack used for Result = ((EIF_INTEGER)(pointer)), blank alias avoids parser rules.
-		external
-			"C [macro <stdio.h>] (EIF_POINTER): EIF_INTEGER"
-		alias
-			" "
+	expand_column_count_to (a_columns: INTEGER) is
+			-- Expand the number of columns to `a_columns'
+		do
+			create_list (a_columns)
 		end
 
-	frozen gtk_clist_show_titles_enum: INTEGER is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"GTK_CLIST_SHOW_TITLES"
-		end
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	calloc (nmemb, size: INTEGER): POINTER is
-			-- void *calloc(size_t nmemb, size_t size);
-		external
-			"C (size_t, size_t): void* | <stdlib.h>"
-		end
-		
-	sizeof_pointer: INTEGER is
-		external
-			"C [macro <stdio.h>]"
-		alias
-			"sizeof(void*)"
-		end
+	tree_view: POINTER
+		-- Pointer to the View
 
 feature {EV_ANY_I} -- Implementation
 
-	list_widget: POINTER
+	visual_widget: POINTER is
+			-- Pointer to on-screen interactive widget
+		do
+			Result := tree_view
+		end
+
+	scrollable_area: POINTER
+		-- Gtk widget used to scroll tree view
 
 	interface: EV_MULTI_COLUMN_LIST
-	
-	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE]
-			-- Agent object for update_children
 
 end -- class EV_MULTI_COLUMN_LIST_IMP
 

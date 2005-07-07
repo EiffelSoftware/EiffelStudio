@@ -9,29 +9,74 @@ class
 
 feature -- Implementation
 
+	frozen add_g_type_string (an_array: POINTER; a_pos: INTEGER) is
+			-- Add G_TYPE_STRING constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		require
+			an_array_not_null: an_array /= default_pointer
+			a_pos_nonnegative: a_pos >= 0
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					GType type = G_TYPE_STRING;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
+		end
+
+	frozen add_gdk_type_pixbuf (an_array: POINTER; a_pos: INTEGER) is
+			-- Add GDK_TYPE_PIXBUF constant in `an_array' at `a_pos' bytes from beginning
+			-- of `an_array'.
+		require
+			an_array_not_null: an_array /= default_pointer
+			a_pos_nonnegative: a_pos >= 0
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					GType type = GDK_TYPE_PIXBUF;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
+		end
+
+	frozen sizeof_gtype: INTEGER is
+			-- Size of the `GType' C type
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"sizeof(GType)"
+		end	
+
 	create_gtk_dialog: POINTER is
-			-- Create our gtk dialog
+			-- Create and initialize a gtk dialog
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_dialog_enum)
+--			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_new
+--			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_has_separator (Result, False)
+--			{EV_GTK_EXTERNALS}.gtk_widget_hide ({EV_GTK_EXTERNALS}.gtk_dialog_struct_action_area (Result))
+			Result := {EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum)
 		end
 
 	client_area_from_c_object (a_c_object: POINTER): POINTER is
-			-- Pointer to the widget that is treated as the main holder of the client area within the window.
+			-- 
 		do
-			Result := a_c_object
+			Result := a_c_object--{EV_GTK_EXTERNALS}.gtk_dialog_struct_vbox (a_c_object)
 		end
 
-        horizontal_resolution_internal: INTEGER is
-                        -- Number of pixels per inch along horizontal axis 
-                do
-                        Result := 75
-                end
+	horizontal_resolution_internal: INTEGER is
+			-- Number of pixels per inch along horizontal axis 
+		once
+			Result := ({EV_GTK_EXTERNALS}.gdk_screen_width / {EV_GTK_EXTERNALS}.gdk_screen_get_width_mm ({EV_GTK_EXTERNALS}.gdk_screen_get_default) * 25.4).rounded
+		end
 
-        vertical_resolution_internal: INTEGER is
-                        -- Number of pixels per inch along vertical axis
-                do
-                        Result := 75
-                end
+	vertical_resolution_internal: INTEGER is
+			-- Number of pixels per inch along vertical axis
+		once
+			Result := ({EV_GTK_EXTERNALS}.gdk_screen_height / {EV_GTK_EXTERNALS}.gdk_screen_get_height_mm ({EV_GTK_EXTERNALS}.gdk_screen_get_default) * 25.4).rounded
+		end
 
 end -- class EV_GTK_DEPENDENT_ROUTINES
 

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do nothing
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 feature -- Status report
@@ -124,12 +124,69 @@ feature -- Status setting
 			bottom_spacing := a_margin
 		end
 		
+feature {EV_RICH_TEXT_IMP} -- Implementation
+
+	new_paragraph_tag_from_applicable_attributes (applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION): POINTER is
+			-- 
+		local
+			propname: EV_GTK_C_STRING
+		do
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (default_pointer)
+			
+			if applicable_attributes.alignment then
+				propname := "justification"
+				inspect
+					alignment
+				when {EV_PARAGRAPH_CONSTANTS}.alignment_left then
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
+				when {EV_PARAGRAPH_CONSTANTS}.alignment_center then
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_center_enum)
+				when {EV_PARAGRAPH_CONSTANTS}.alignment_right then
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
+				when {EV_PARAGRAPH_CONSTANTS}.alignment_justified then
+					{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, {EV_GTK_EXTERNALS}.gtk_justify_fill_enum)
+				end
+			end
+			
+			if applicable_attributes.left_margin then
+				propname := "left-margin"
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, left_margin)				
+			end
+			
+			if applicable_attributes.right_margin then
+				propname := "right-margin"
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, right_margin)				
+			end
+
+			if applicable_attributes.top_spacing then
+				propname := "pixels-above-lines"
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, top_spacing)				
+			end
+			
+			if applicable_attributes.bottom_spacing then
+				propname := "pixels-below-lines"
+				{EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_integer (Result, propname.item, bottom_spacing)				
+			end
+		end
+
+	dummy_paragraph_format_range_information: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+			-- 
+		do
+			create Result.make_with_flags (
+				{EV_PARAGRAPH_CONSTANTS}.alignment
+				| {EV_PARAGRAPH_CONSTANTS}.left_margin
+				| {EV_PARAGRAPH_CONSTANTS}.right_margin
+				| {EV_PARAGRAPH_CONSTANTS}.top_spacing
+				| {EV_PARAGRAPH_CONSTANTS}.bottom_spacing
+			)
+		end
+
 feature {NONE} -- Implementation
 
 	destroy is
 			-- Clean up `Current'
 		do
-			
+			set_is_destroyed (True)
 		end
 
 end -- class EV_PARAGRAPH_FORMAT

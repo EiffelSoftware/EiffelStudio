@@ -12,31 +12,23 @@ class
 inherit
 	EV_TOOL_BAR_RADIO_BUTTON_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
-			parent_imp,
 			make,
 			interface,
-			initialize,
-			create_select_actions,
-			enable_sensitive,
-			disable_sensitive,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			set_item_parent_imp,
+			create_select_actions
 		end
 
 	EV_RADIO_PEER_IMP
 		undefine
 			visual_widget
 		redefine
-			interface
+			interface,
+			widget_object
 		end
 
 create
@@ -48,146 +40,67 @@ feature {NONE} -- Initialization
 			-- Make a radio button with a default of selected.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_toggle_button_new)
-			avoid_reselection := True
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_radio_tool_button_new (NULL))
 				-- Needed to prevent calling of action sequence.
-			enable_select
-			avoid_reselection := False
-		end
-
-	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Redefined to prevent unwanted signal connection.
-		do
-			create Result
-		end
-
-	initialize is
-			-- Initialize default settings for radio item.
-		do
-			Precursor
-			connect_signals
-				-- Make the label text left aligned
-			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0, 0.5)
-			{EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
 		end
 
 feature -- Status setting
 
 	enable_select is
-			-- Select `Current' in its grouping.
+			-- Select `Current'.
 		do
 			if not is_selected then
-				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
+				{EV_GTK_EXTERNALS}.gtk_toggle_tool_button_set_active (visual_widget, True)
 			end
-		end
+		end	
 
 feature -- Status report
 
 	is_selected: BOOLEAN is
 			-- Is `Current' selected.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (visual_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_toggle_tool_button_get_active (visual_widget)
+		end
+
+feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
+
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a select action sequence.
+			-- Attach to GTK "clicked" signal.
+		do
+			create Result
+			real_signal_connect (visual_widget, "clicked", agent (App_implementation.gtk_marshal).toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implementation
 
-	parent_imp: EV_TOOL_BAR_IMP is
+	set_item_parent_imp (a_container_imp: EV_ITEM_LIST_IMP [EV_ITEM]) is
+			-- Set `parent_imp' to `a_container_imp'.
 		do
-			Result ?= Precursor
-		end
-
-	connect_signals is
-			-- Connect on_activate to toggled signal.
-		do
-			real_signal_connect (visual_widget, "toggled", agent (App_implementation.gtk_marshal).on_tool_bar_radio_button_activate (c_object), Void)
-		end
-		
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
-		
-	on_activate is
-			-- The button has been activated by the user (pushed).
-		local
-			a_peers: like peers
-			radio_imp: like Current
-		do
-			if is_selected and then not avoid_reselection then
-				a_peers := peers
-				from
-					a_peers.start
-				until
-					a_peers.after
-				loop
-					radio_imp ?= a_peers.item.implementation
-					if radio_imp.is_selected and radio_imp /= Current then
-						radio_imp.disable_select
-					end
-					a_peers.forth
-				end
-				if select_actions_internal /= Void then
-					select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
-				end
+			Precursor {EV_TOOL_BAR_BUTTON_IMP} (a_container_imp)
+			if a_container_imp = Void then
+				-- `Current' is being unparented so we unset the radio group
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_radio_tool_button_set_group (visual_widget, NULL)
 			end
-
-			if not avoid_reselection then
-				avoid_reselection := True
-				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, True)
-				-- Calls on_activate callback immediately
-				avoid_reselection := False
-			end				
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	disable_select is
-			-- Unselect the radio button.
+	widget_object (a_list: POINTER): POINTER is
+			-- Returns c_object relative to a_list data.
 		do
-			if is_selected then
-				avoid_reselection := True
-				{EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (visual_widget, False)
-				-- Calls on_activate callback immediately
-				avoid_reselection := False
-			end
+			Result := {EV_GTK_EXTERNALS}.gslist_struct_data (a_list)
+			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (Result)
 		end
-		
-	enable_sensitive is
-			-- 
-		do
-			if not is_sensitive then
-				{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, True)
-				{EV_GTK_EXTERNALS}.gtk_widget_set_state (c_object, gtk_state)
-			end
-		end
-	
-	disable_sensitive is
-			-- 
-		do
-			if is_sensitive then
-				gtk_state := {EV_GTK_EXTERNALS}.gtk_widget_struct_state (c_object)
-				{EV_GTK_EXTERNALS}.gtk_widget_set_sensitive (c_object, False)
-			end		
-		end
-	
-	gtk_state: INTEGER
-		-- Used to get around gtk sensitive bug that doesn't take flat style in to account.
-
-	avoid_reselection: BOOLEAN
 
 	radio_group: POINTER is
+			-- Pointer to the GSList used for holding the radio grouping of `Current'
 		do
-			if parent_imp /= Void then
-				Result := parent_imp.radio_group
-			end
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_radio_tool_button_get_group (visual_widget)
 		end
 
 	interface: EV_TOOL_BAR_RADIO_BUTTON
-
-feature {EV_ANY_I} -- Implementation
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+			-- Interface of `Current'
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 

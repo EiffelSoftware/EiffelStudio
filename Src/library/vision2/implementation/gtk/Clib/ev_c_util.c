@@ -10,14 +10,27 @@
 #include "ev_c_util.h"
 #include "eif_except.h"
 
-EIF_REAL double_array_i_th (double *double_array, int index)
+void
+c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y,
+		gpointer user_data) // is
+		// Callback that returns `x' and `y' from `user_data' for `menu'.
 {
-	return (EIF_REAL) double_array [index];
-}
+	// local
+		c_position * posp;
+	// require
+		g_return_if_fail (user_data != NULL);
+	// do
+		posp = user_data;
+		x = &posp->x_position;
+		y = &posp->y_position;
+}	// end
 
-GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index)
+void
+c_gtk_return_combo_toggle (GtkWidget *widget, GtkWidget** user_data)
 {
-	return (GtkArg*)args_array + index;
+	if ( GTK_IS_TOGGLE_BUTTON (widget) ){
+		*user_data = widget;
+	}
 }
 
 void ev_gtk_log (
@@ -30,48 +43,51 @@ void ev_gtk_log (
 	char* level;
 	int fatal = FALSE;
 	int a_debug_mode;
-	a_debug_mode = (int) user_data;
+	a_debug_mode = (int) (rt_int_ptr) user_data;
 
 	if (a_debug_mode > 0)
 	{
 	// If no debugging is set then everything is left to DBC
-	switch (log_level) {
-	case G_LOG_LEVEL_ERROR:
-		level = "ERROR";
-		fatal = TRUE;
-		break;
-	case G_LOG_LEVEL_CRITICAL:
-		level = "CRITICAL";
-		fatal = TRUE;
-		break;
-	case G_LOG_LEVEL_WARNING:
-		level = "WARNING";
-		break;
-	case G_LOG_LEVEL_MESSAGE:
-		level = "MESSAGE";
-		break;
-	case G_LOG_LEVEL_INFO:
-		level = "INFO";
-		break;
-	case G_LOG_LEVEL_DEBUG:
-		level = "DEBUG";
-	default:
-		level = "UNKNOWN";
-		fatal = TRUE;
-	}
-	if ( strlen (log_domain) + strlen (level) + strlen (message) + 2 > 999 ) {
-		if ( strlen (log_domain) + strlen (level) > 999 ) {
-			sprintf (buf, "%s-%s\n", log_domain, level);
-		} else {
-			sprintf (buf, "GTK-%s\n", level);
+		switch (log_level) 
+		{
+		case G_LOG_LEVEL_ERROR:
+			level = "ERROR";
+			fatal = TRUE;
+			break;
+		case G_LOG_LEVEL_CRITICAL:
+			level = "CRITICAL";
+			fatal = TRUE;
+			break;
+		case G_LOG_LEVEL_WARNING:
+			level = "WARNING";
+			break;
+		case G_LOG_LEVEL_MESSAGE:
+			level = "MESSAGE";
+			break;
+		case G_LOG_LEVEL_INFO:
+			level = "INFO";
+			break;
+		case G_LOG_LEVEL_DEBUG:
+			level = "DEBUG";
+		default:
+			level = "UNKNOWN";
+			fatal = TRUE;
 		}
-	} else {
-		sprintf (buf, "%s-%s %s", log_domain, level, message);
-	}
-	printf ("%s\n", buf);
-	if (fatal && a_debug_mode > 1) {
-		eraise (buf, EN_EXT);
-	}
+
+		if ( strlen (log_domain) + strlen (level) + strlen (message) + 2 > 999 )
+		{
+			if ( strlen (log_domain) + strlen (level) > 999 )
+				sprintf (buf, "%s-%s\n", log_domain, level);
+			else
+				sprintf (buf, "GTK-%s\n", level);
+			
+		} 
+		else 
+			sprintf (buf, "%s-%s %s", log_domain, level, message);
+		
+		printf ("%s\n", buf);
+		if (fatal && a_debug_mode > 1)
+			eraise (buf, EN_EXT);
 	}
 }
 
@@ -79,17 +95,66 @@ void enable_ev_gtk_log (int a_mode)
 {
 	g_log_set_handler ("Gtk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
 		G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
-    g_log_set_handler ("Gdk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
-        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) (rt_int_ptr) a_mode);
+
+	g_log_set_handler ("Gdk", G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
+        	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+		G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) (rt_int_ptr) a_mode);
+
 	g_log_set_handler ("GLib",  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
-        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-        G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
-    g_log_set_handler (NULL,  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
-        G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
-        G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL, ev_gtk_log, (gpointer) a_mode);
+        	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+        	G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) (rt_int_ptr) a_mode);
+
+	g_log_set_handler (NULL,  G_LOG_LEVEL_ERROR | G_LOG_LEVEL_CRITICAL |
+        	G_LOG_LEVEL_WARNING | G_LOG_LEVEL_MESSAGE | G_LOG_LEVEL_INFO |
+        	G_LOG_LEVEL_DEBUG | G_LOG_FLAG_FATAL | G_LOG_FLAG_RECURSION, ev_gtk_log, (gpointer) (rt_int_ptr) a_mode);
 }
+
+/* XPM */
+char *default_pixmap_data[] = {
+/* width height ncolors chars_per_pixel */
+"16 16 16 1",
+/* colors */
+"  c #B90000",
+". c #FF6B6B",
+"X c #F2F2F2",
+"o c #FFD4D4",
+"O c #960000",
+"+ c #FFAB8E",
+"@ c #C0C0C0",
+"# c #B93D00",
+"$ c #FFFBF0",
+"% c #FF4848",
+"& c #FFC7B1",
+"* c #808080",
+"= c #FFB1B1",
+"- c #FFFFFF",
+"; c #FF8E8E",
+": c None",
+/* pixels */
+"                ",
+" -------------- ",
+" -     ;#     - ",
+" -     @%     - ",
+" -     ;.     - ",
+" -     .;     - ",
+" -     ;;     - ",
+" -     *&.    - ",
+" -    #$$     - ",
+" -    =#+=    - ",
+" -    &o&;    - ",
+" -   %=O $#   - ",
+" -   ;.X@;&   - ",
+" -   -; ##&%  - ",
+" -------------- ",
+"                "
+};
+
+char **default_pixmap_xpm (void) {
+        return default_pixmap_data;
+}
+
+
 
 /* XPM */
 char * information_pixmap_data[] = {
@@ -1106,6 +1171,38 @@ char **wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.19  2005/07/07 17:13:09  king
+// Updated gtk implementation to be 2.4 based instead of 1.2 based, previous imp is located at library/vision2_for_gtk12
+//
+// Revision 1.9  2005/05/31 23:51:00  king
+// Added combo box toggle button retrieval hack
+//
+// Revision 1.8  2005/05/31 18:07:25  king
+// Moved menu functions to ev_c_util.c
+//
+// Revision 1.7  2005/02/12 01:23:42  manus
+// Removed C compiler warnings by adding cast to (rt_int_ptr) before convert to
+//   or from a pointer.
+//
+// Revision 1.6  2004/08/04 20:08:25  king
+// Added RECURSION glog flag as previously this was missing and going to the default handler which would abort the program
+// Formatting
+//
+// Revision 1.5  2004/02/12 22:38:47  king
+// Added default_pixmap_xpm
+//
+// Revision 1.4  2004/02/06 00:31:23  king
+// Removed externals that are now written in Eiffel using inline
+//
+// Revision 1.3  2003/04/16 17:13:10  king
+// Initial gtk2 default marshaller implementation
+//
+// Revision 1.2  2003/04/15 01:32:31  king
+// Now new marshal proxy is correctly executed, updated arg function to gtk2
+//
+// Revision 1.1  2003/04/03 01:40:50  king
+// Initial gtk 2 conversion
+//
 // Revision 1.18  2002/11/26 21:21:19  king
 // Merged with changes from 52 branch
 //

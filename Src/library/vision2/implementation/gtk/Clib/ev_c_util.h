@@ -11,12 +11,19 @@
 #define _EV_C_UTIL_H_INCLUDED_
 #include <gtk/gtk.h>
 
-EIF_REAL double_array_i_th (double* double_array, int index);
-GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index);
+typedef struct {
+	gint x_position;
+	gint y_position;
+} c_position;
+
+void c_gtk_menu_position_func (GtkMenu * menu, gint * x, gint * y, gpointer user_data);
+
+void c_gtk_return_combo_toggle (GtkWidget *widget, GtkWidget** user_data);
 
 void enable_ev_gtk_log (int a_mode);
 
 /* XPM */
+char **default_pixmap_xpm (void);
 char **information_pixmap_xpm (void);
 char **error_pixmap_xpm (void);
 char **question_pixmap_xpm (void);
@@ -62,6 +69,27 @@ char **wait_cursor_xpm (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.14  2005/07/07 17:13:09  king
+// Updated gtk implementation to be 2.4 based instead of 1.2 based, previous imp is located at library/vision2_for_gtk12
+//
+// Revision 1.6  2005/05/31 23:51:00  king
+// Added combo box toggle button retrieval hack
+//
+// Revision 1.5  2005/05/31 18:07:25  king
+// Moved menu functions to ev_c_util.c
+//
+// Revision 1.4  2004/02/12 22:38:57  king
+// Added default_pixmap_xpm
+//
+// Revision 1.3  2004/02/06 00:31:56  king
+// Removed externals that are now written in Eiffel using inline
+//
+// Revision 1.2  2003/04/15 01:32:31  king
+// Now new marshal proxy is correctly executed, updated arg function to gtk2
+//
+// Revision 1.1  2003/04/03 01:40:50  king
+// Initial gtk 2 conversion
+//
 // Revision 1.13  2001/11/06 02:12:28  king
 // Corrected pixmap externals
 //

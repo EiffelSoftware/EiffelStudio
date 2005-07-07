@@ -13,22 +13,27 @@ class
 inherit
 	EV_TEXT_I
 		redefine
-			interface
+			interface,
+			text_length
 		end
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			interface,
 			insert_text,
-			visual_widget,
-			set_background_color,
-			create_change_actions
+			initialize,
+			create_change_actions,
+			dispose,
+			text_length,
+			default_key_processing_blocked,
+			visual_widget
 		end
 		
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			visual_widget
+			visual_widget,
+			dispose
 		end
 
 create
@@ -37,417 +42,46 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a gtk label.
+			-- Create a gtk text view.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
-			entry_widget := gtk_text_new (NULL, NULL)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
-			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, entry_widget)
-			gtk_text_set_editable (entry_widget, True)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_event_box_new)
+			scrolled_window := {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_scrolled_window_set_shadow_type (scrolled_window, {EV_GTK_EXTERNALS}.gtk_shadow_in_enum)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (scrolled_window)
+			{EV_GTK_EXTERNALS}.gtk_container_add (c_object, scrolled_window)
+			text_view := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_new
+			text_buffer := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (text_view)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (text_view)
+			{EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, text_view)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (text_view, 1, 1)
+				-- This is needed so the text doesn't influence the size of the whole widget itself.
+			
+		end
+		
+	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Hook up the change actions for the text widget
+		do
+			Result := Precursor {EV_TEXT_COMPONENT_IMP}
+		end
+		
+	initialize is
+			-- Initialize `Current'
+		do
 			enable_word_wrapping
+			set_editable (True)
+			set_background_color ((create {EV_STOCK_COLORS}).white)
+			initialize_buffer_events
+			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
+	initialize_buffer_events is
+			-- Initialize events for `Current'
+		do
+			real_signal_connect (text_buffer, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
+		end
+		
 feature -- Access
-
-	text: STRING is
-		local
-			p: POINTER
-		do
-			p := {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, 0, -1)
-			create Result.make_from_c (p)
-			{EV_GTK_EXTERNALS}.g_free (p)
-		end
-
-	line (i: INTEGER): STRING is
-			-- Returns the content of the `i'th line.
-		local
-			line_begin_pos, line_end_pos: INTEGER
-			counter : INTEGER
-			p: POINTER
-		do
-			from
-				counter := 1
-				line_begin_pos := 1
-				line_end_pos := 1
-			until
-				counter = i
-			loop
-				line_begin_pos := text.index_of ('%N', line_begin_pos)
-				counter := counter + 1
-				line_begin_pos := line_begin_pos + 1
-			end
-
-			-- We do not substract 1 to `line_end_pos' because of 
-			-- GTK function `gtk_editable_get_chars'.
-			line_end_pos := text.index_of ('%N', line_begin_pos)
-
-			if (line_end_pos = 0) and then (counter = line_count) then
-				-- the required line is the last line and there
-				-- is no return at the end of it.
-				line_end_pos := text.count + 1
-				-- The `+ 1' is due to GTK function `gtk_editable_get_chars'. 
-			end
-
-			p := {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, line_begin_pos - 1, line_end_pos - 1)
-			create Result.make_from_c (p)
-			{EV_GTK_EXTERNALS}.g_free (p)
-		end
-
-	line_number_from_position (i: INTEGER): INTEGER is
-			-- Line containing caret position `i'.
-		do
-			--| Added for gtk2 implementation
-		end
-
-feature -- Status report
-
-	line_count: INTEGER is
-			-- Number of lines present in widget.
-		local
-			temp_text: STRING
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (vertical_adjustment_struct).rounded // line_height
-			temp_text := text
-			if temp_text /= Void then
-				Result := Result.max (temp_text.occurrences ('%N') + 1)
-				-- This is in case scroll bar has not been set
-			end
-		end
-
-	current_line_number: INTEGER is
-			-- Returns the number of the line the cursor currently
-			-- is on.
-		local
-			p: POINTER
-			temp_string: STRING
-		do
-			if is_displayed then
-				Result := (gtk_text_struct_cursor_pos_y (entry_widget) + gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
-			else
-				p := {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, 0, gtk_text_get_point (entry_widget))
-				create temp_string.make_from_c (p)
-				{EV_GTK_EXTERNALS}.g_free (p)
-				Result := temp_string.occurrences ('%N') + 1
-			end
-		end
-
-	caret_position: INTEGER is
-			-- Current position of the caret.
-		do
-			Result := gtk_text_get_point (entry_widget) + 1
-		end
-
-	first_position_from_line_number (i: INTEGER): INTEGER is
-			-- Position of the first character on the `i'-th line.
-		local
-			pos : INTEGER
-			count: INTEGER
-			start: INTEGER
-		do
-			if (i = 1) then
-				Result := 1
-			else
-				from
-					count := 1
-					pos := 1
-					start := 1
-				until
-					count = i
-				loop
-					-- Look for the ith 'Return' in the string.
-					-- Return is symbolized by '%N'
-					pos := text.index_of ('%N', start)
-					count := count + 1
-					start := pos + 1
-				end
-				Result := pos + 1
-			end
-		end
-
-	last_position_from_line_number (i: INTEGER): INTEGER is
-			-- Position of the last character on the `i'-th line.
-		do
-			if valid_line_index (i + 1) then
-				Result := first_position_from_line_number (i + 1) - 1
-			else
-				Result := text.count
-			end
-		end
-
-feature -- Status setting
-		
-	set_background_color (a_color: EV_COLOR) is
-			-- Set background color of present
-		do
-			Precursor {EV_TEXT_COMPONENT_IMP} (a_color)
-			-- We need to set the font again due to bug in GtkText widget.
-			set_font (font)
-		end
-
-	internal_set_caret_position (pos: INTEGER) is
-			-- Set the position of the caret to `pos'.
-		do
-			gtk_text_set_point (entry_widget, pos - 1)
-			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
-		end
-		
-	insert_text_at_position (txt: STRING; a_position: INTEGER) is
-		local
-			a_cs: EV_GTK_C_STRING
-			temp_caret_pos: INTEGER
-		do
-			temp_caret_pos := caret_position
-			gtk_text_set_point (entry_widget, a_position - 1)
-			create a_cs.make (txt)
-			gtk_text_insert (entry_widget, NULL, NULL, NULL, a_cs.item, -1)
-			internal_set_caret_position (temp_caret_pos)
-		end
-	
-	insert_text (txt: STRING) is
-		do
-			insert_text_at_position (txt, caret_position)
-		end
-	
-	set_text (txt: STRING) is
-		do
-			{EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, 0, -1)
-			insert_text (txt)
-		end
-	
-	append_text (txt: STRING) is
-			-- Append `txt' to `text'.
-		do
-			insert_text_at_position (txt, text_length + 1)
-		end
-	
-	prepend_text (txt: STRING) is
-			-- Prepend 'txt' to `text'.
-		do
-			insert_text_at_position (txt, 1)
-		end
-	
-	delete_text (start, finish: INTEGER) is
-			-- Delete the text between `start' and `finish' index
-			-- both sides include.
-		do
-			{EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, start + 1, finish + 1)
-		end
-
-	freeze is
-			-- Freeze the widget.
-			-- If the widget is frozen any updates made to the
-			-- window will not be shown until the widget is
-			-- `thawed out' using `thaw'.
-			-- Note: Only one window can be frozen at a time.
-			-- This is because of a limitation on Windows.
-		do
-			gtk_text_freeze (entry_widget)
-		end
-
-	thaw is
-			-- Thaw a frozen widget.
-		do
-			gtk_text_thaw (entry_widget)
-		end
-
-feature -- Basic operation
-
-	put_new_line is
-			-- Go to the beginning of the following line.
-		do
-			insert_text ("%N")
-		end
-
-	scroll_to_line (i: INTEGER) is
-		do
-			freeze
-			{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
-			thaw
-		end
-
-	enable_word_wrapping is
-			-- Set 'has_word_wrapping' to True.
-		do
-			has_word_wrapping := True
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_NEVER_ENUM,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
-			gtk_text_set_line_wrap (entry_widget, 1)
-			gtk_text_set_word_wrap (entry_widget, 1)
-		end
-
-	disable_word_wrapping is
-			-- Set 'has_word_wrapping' to False.
-		do
-			has_word_wrapping := False
-			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
-				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM)
-			gtk_text_set_line_wrap (entry_widget, 0)
-		end
-		
-	has_word_wrapping: BOOLEAN
-			-- Does 'Current' have word wrapping enabled?
-
-feature -- Assertions
-
-	last_line_not_empty: BOOLEAN is
-			-- Has the line at least one character?
-		local
-			temp_text: STRING
-		do
-			temp_text := text
-			Result := not ((temp_text @ temp_text.count) = '%N')
-		end
-		
-feature {NONE} -- Implementation
-
-	vertical_adjustment_struct: POINTER is
-			-- Pointer to vertical adjustment struct use in the scrollbar.
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment ({EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
-		end
-
-	line_height: INTEGER is
-			-- Height of the text lines in the widget.
-		do
-			if private_font /= Void then
-				Result := private_font.ascent + private_font.descent
-			else
-				Result := App_implementation.Default_font_ascent + App_implementation.Default_font_descent
-			end
-		end
-
-	entry_widget: POINTER
-		-- Pointer to the gtk text editable.
-		
-	visual_widget: POINTER is
-			-- Pointer to widget shown on screen.
-		do
-			Result := entry_widget
-		end
-		
-feature {NONE} -- Externals
-
-	gtk_text_new (a_hadj: POINTER; a_vadj: POINTER): POINTER is
-			-- GtkWidget* gtk_text_new             (GtkAdjustment *hadj,
-			--                                   GtkAdjustment *vadj);
-		external
-			"C (GtkAdjustment*, GtkAdjustment*): GtkWidget* | <gtk/gtk.h>"
-		end
-
-	gtk_text_set_editable (a_text: POINTER; a_editable: BOOLEAN) is
-			-- void       gtk_text_set_editable    (GtkText       *text,
-			-- 				     gboolean       editable);
-		external
-			"C (GtkText*, gboolean) | <gtk/gtk.h>"
-		end
-		
-	gtk_text_struct_cursor_pos_y (a_c_struct: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkText): EIF_INTEGER"
-		alias
-			"cursor_pos_y"
-		end
-		
-	gtk_text_struct_first_onscreen_ver_pixel (a_c_struct: POINTER): INTEGER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkText): EIF_INTEGER"
-		alias
-			"first_onscreen_ver_pixel"
-		end
-		
-	gtk_text_get_point (a_text: POINTER): INTEGER is
-			-- guint      gtk_text_get_point       (GtkText       *text);
-		external
-			"C (GtkText*): guint | <gtk/gtk.h>"
-		end
-		
-	gtk_text_insert (a_text: POINTER; a_font: POINTER; a_fore: POINTER; a_back: POINTER; a_chars: POINTER; a_length: INTEGER) is
-			-- void       gtk_text_insert          (GtkText       *text,
-			-- 				     GdkFont       *font,
-			-- 				     GdkColor      *fore,
-			-- 				     GdkColor      *back,
-			-- 				     const char    *chars,
-			-- 				     gint           length);
-		external
-			"C (GtkText*, GdkFont*, GdkColor*, GdkColor*, char*, gint) | <gtk/gtk.h>"
-		end
-		
-	gtk_text_set_point (a_text: POINTER; a_index: INTEGER) is
-			-- void       gtk_text_set_point       (GtkText       *text,
-			-- 				     guint          index);
-		external
-			"C (GtkText*, guint) | <gtk/gtk.h>"
-		end
-		
-	gtk_text_freeze (a_text: POINTER) is
-			-- void       gtk_text_freeze          (GtkText       *text);
-		external
-			"C (GtkText*) | <gtk/gtk.h>"
-		end
-		
-	gtk_text_thaw (a_text: POINTER) is
-			-- void       gtk_text_thaw            (GtkText       *text);
-		external
-			"C (GtkText*) | <gtk/gtk.h>"
-		end
-		
-	gtk_text_set_word_wrap (a_text: POINTER; word_wrap: INTEGER) is
-		external
-			"C (GtkText*, gint) | <gtk/gtk.h>"
-		end
-
-	gtk_text_set_line_wrap (a_text: POINTER; word_wrap: INTEGER) is
-		external
-			"C (GtkText*, gint) | <gtk/gtk.h>"
-		end		
-
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_TEXT
-	
-	
-feature -- Status report
-
-	is_editable: BOOLEAN is
-			-- Is the text editable.
-		do
-			--| FIXME This should be removed when gtk1 imp is made obsolete
-			Result := (create {EV_GTK_DEPENDENT_EXTERNALS}).gtk_editable_get_editable (entry_widget)
-		end
-
-	position: INTEGER is
-			-- Current position of the caret.
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
-		end
-
-	has_selection: BOOLEAN is
-			-- Is something selected?
-		do
-			Result := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /= 
-				{EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
-		end
-
-	selection_start: INTEGER is
-			-- Index of the first character selected.
-		local
-			a_start: INTEGER
-		do
-			a_start := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
-			Result := a_start.min ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)) + 1
-		end
-
-	selection_end: INTEGER is
-			-- Index of the last character selected.
-		local
-			a_start: INTEGER
-		do
-			a_start := {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
-			Result := a_start.max ({EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
-		end
 
 	clipboard_content: STRING is
 			-- `Result' is current clipboard content.
@@ -455,23 +89,57 @@ feature -- Status report
 			Result := App_implementation.clipboard.text
 		end
 
-feature -- status settings
+feature -- Status report
 
-	set_editable (flag: BOOLEAN) is
-			-- `flag' true make the component read-write and
-			-- `flag' false make the component read-only.
+	line_number_from_position (i: INTEGER): INTEGER is
+			-- Line containing caret position `i'.
+		local
+			a_text_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
+			from
+				create a_text_iter.make
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_text_iter.item, i - 1)
+			until
+				not {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_backward_display_line (text_view, a_text_iter.item)
+			loop
+				Result := Result + 1
+			end
+			Result := Result.max (1)
 		end
 
-	set_position (pos: INTEGER) is
-			-- Set current insertion position.
+	is_editable: BOOLEAN
+			-- Is the text editable by the user?
+
+	has_selection: BOOLEAN is
+			-- Does `Current' have a selection?
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, NULL, NULL)
+		end
+
+	selection_start: INTEGER is
+			-- Index of the first character selected.
+		do
+			Result := selection_start_internal
+		end
+
+	selection_end: INTEGER is
+			-- Index of the last character selected.
+		do
+			Result := selection_end_internal
+		end
+
+feature -- Status setting
+	
+	set_editable (flag: BOOLEAN) is
+			-- if `flag' then make the component read-write.
+			-- if not `flag' then make the component read-only.
+		do
+			is_editable := flag
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_editable (text_view, flag)
 		end
 
 	set_caret_position (pos: INTEGER) is
-			-- Set the position of the caret to `pos'.
+			-- set current insertion position
 		do
 			internal_set_caret_position (pos)
 		end
@@ -479,109 +147,440 @@ feature -- status settings
 feature -- Basic operation
 
 	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (highlight) the text between 
-			-- 'start_pos' and 'end_pos'.
+			-- Select (hilight) the text between 
+			-- `start_pos' and `end_pos'. Both `start_pos' and
+			-- `end_pos' are selected.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			internal_set_caret_position (end_pos.max (start_pos) + 1)
-			select_region_internal (start_pos, end_pos)
-			internal_timeout_imp ?= (create {EV_TIMEOUT}).implementation
-			internal_timeout_imp.interface.actions.extend 
-				(agent select_region_internal (start_pos, end_pos))
-			internal_timeout_imp.set_interval_kamikaze (0)
+			create a_start_iter.make
+			create a_end_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start_pos - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, end_pos)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_move_mark (
+										text_buffer,
+										{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bound (text_buffer),
+										a_start_iter.item
+			)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_move_mark (
+										text_buffer,
+										{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer),
+										a_end_iter.item
+			)
 		end	
-
-	select_region_internal (start_pos, end_pos: INTEGER) is
-			-- Select region
-		do
-			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
-		end
 
 	deselect_all is
 			-- Unselect the current selection.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
-		end
+			create a_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+											text_buffer,
+											a_iter.item,
+											{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+			)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_move_mark (
+										text_buffer,
+										{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bound (text_buffer),
+										a_iter.item
+			)
+		end	
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete_selection (text_buffer, True, True)
 		end
 
 	cut_selection is
-			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
-			-- to paste it later.
-			-- If the `selected_region' is empty, it does
-			-- nothing.
+			-- Cut `selected_region' by erasing it from
+			-- the text and putting it in the Clipboard to paste it later.
+			-- If `selectd_region' is empty, it does nothing.
+		local
+			clip_imp: EV_CLIPBOARD_IMP
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
+			if has_selection then
+				clip_imp ?= App_implementation.clipboard.implementation
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_cut_clipboard (text_buffer, clip_imp.clipboard, True)
+			end
 		end
 
 	copy_selection is
-			-- Copy the `selected_region' in the Clipboard
-			-- to paste it later.
-			-- If the `selected_region' is empty, it does
-			-- nothing.
+			-- Copy `selected_region' into the Clipboard.
+			-- If the `selected_region' is empty, it does nothing.
+		local
+			clip_imp: EV_CLIPBOARD_IMP
 		do
-			{EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
+			if has_selection then
+				clip_imp ?= App_implementation.clipboard.implementation
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_copy_clipboard (text_buffer, clip_imp.clipboard)				
+			end
 		end
 
 	paste (index: INTEGER) is
-			-- Insert the string which is in the 
-			-- Clipboard at the `index' position in the
-			-- text.
-			-- If the Clipboard is empty, it does nothing. 
+			-- Insert the contents of the clipboard 
+			-- at `index' postion of `text'.
+			-- If the Clipboard is empty, it does nothing.
 		local
-			pos: INTEGER
+			clip_imp: EV_CLIPBOARD_IMP
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_text: EV_GTK_C_STRING
 		do
-			pos := position
-			set_position (index)
-			insert_text (clipboard_content)
-			set_position (pos)
+			clip_imp ?= App_implementation.clipboard.implementation
+			create a_iter.make
+			a_text := clip_imp.text
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, index - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_text.item, -1)
+			a_text.set_with_eiffel_string (once "")
 		end
 
-feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature -- Access
 
-	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	text: STRING is
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			temp_text: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
-			create Result
-			real_signal_connect (entry_widget, "changed", agent (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
+			create a_start_iter.make
+			create a_end_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			temp_text := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
+			create a_cs.make_from_pointer (temp_text)
+			Result := a_cs.string
+			a_cs.set_with_eiffel_string (once "")
 		end
 
-	internal_timeout_imp: EV_TIMEOUT_IMP
-			-- Timeout to call 'select_region
-
-	stored_text: STRING
-			-- Value of 'text' prior to a change action, used to compare
-			-- between old and new text.
-
-	in_change_action: BOOLEAN
-			-- Is Current being changed?
-
-	toggle_in_change_action (a_flag: BOOLEAN) is
-			-- Set 'in_change_action' to 'a_flag'
+	line (a_line: INTEGER): STRING is
+			-- Returns the content of line `a_line'.
+		local
+			first_pos: INTEGER
+			start_iter, end_iter: EV_GTK_TEXT_ITER_STRUCT
+			text_ptr: POINTER
+			a_cs: EV_GTK_C_STRING
+			a_success: BOOLEAN
 		do
-			in_change_action := a_flag
+			first_pos := first_position_from_line_number (a_line)
+			create start_iter.make
+			create end_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, start_iter.item, first_pos -1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, end_iter.item, first_pos -1)
+			
+			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, end_iter.item)
+			
+			text_ptr := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, start_iter.item, end_iter.item, False)
+			
+			create a_cs.make_from_pointer (text_ptr)
+			Result := a_cs.string
+			a_cs.set_with_eiffel_string (once "")
+		end
+		
+	first_position_from_line_number (a_line: INTEGER): INTEGER is
+			-- Position of the first character on line `a_line'.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_success: BOOLEAN
+			i: INTEGER
+		do
+			create a_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			from
+				i := 1
+			until
+				i = a_line
+			loop
+				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				i := i + 1
+			end
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1		
+		end
+
+	last_position_from_line_number (a_line: INTEGER): INTEGER is
+			-- Position of the last character on line `a_line'.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_success: BOOLEAN
+			i: INTEGER
+		do
+			create a_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			from
+				i := 1
+			until
+				i > a_line
+			loop
+				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				i := i + 1
+			end
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item)	
+		end
+
+feature -- Status report
+
+	text_length: INTEGER is
+			-- Number of characters in `Current'
+		do
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_char_count (text_buffer)
+		end
+
+	line_count: INTEGER is
+			-- Number of display lines present in widget.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			if has_word_wrapping then
+				from
+					Result := 1
+					create a_iter.make
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+				until
+					not {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line (text_view, a_iter.item)
+				loop
+					Result := Result + 1
+				end				
+			else
+				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_line_count (text_buffer)
+			end
+		end
+
+	current_line_number: INTEGER is
+			-- Returns the number of the display line the cursor currently
+			-- is on.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			-- Count the number of iterations from insert marker to end of text.
+			from
+				create a_iter.make
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+									text_buffer,
+									a_iter.item,
+									{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+				)
+			until
+				not {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_backward_display_line (text_view, a_iter.item)
+			loop
+				Result := Result + 1
+			end			
+			Result := Result.max (1)
+		end
+
+	caret_position: INTEGER is
+			-- Current position of the caret.
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			create a_iter.make
+			-- Initialize out iter with the current caret/insert position.
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+								text_buffer,
+								a_iter.item,
+								{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+			)
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_iter.item) + 1
+		end
+		
+	has_word_wrapping: BOOLEAN
+			-- Does `Current' have word wrapping enabled?
+
+feature -- Status setting
+	
+	insert_text (a_text: STRING) is
+		local
+			a_cs: EV_GTK_C_STRING
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			a_cs := a_text
+			create a_iter.make
+			-- Initialize out iter with the current caret/insert position.
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_mark (
+								text_buffer,
+								a_iter.item,
+								{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)
+			)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
+		end
+	
+	set_text (a_text: STRING) is
+			-- Set `text' to `a_text'
+		local
+			a_cs: EV_GTK_C_STRING
+		do
+			a_cs := a_text
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
+		end
+		
+	append_text (a_text: STRING) is
+			-- Append `a_text' to `text'.
+		do
+			append_text_internal (text_buffer, a_text)
+		end
+
+	prepend_text (a_text: STRING) is
+			-- Prepend 'txt' to `text'.
+		local
+			a_cs: EV_GTK_C_STRING
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			a_cs := a_text
+			create a_iter.make
+			-- Initialize out iter with the current caret/insert position.
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_iter.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (text_buffer, a_iter.item, a_cs.item, -1)
+		end
+	
+	delete_text (start, finish: INTEGER) is
+			-- Delete the text between `start' and `finish' index
+			-- both sides include.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			create a_start_iter.make
+			create a_end_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_start_iter.item, start - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_end_iter.item, finish - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_delete (text_buffer, a_start_iter.item, a_end_iter.item)
+		end
+
+feature -- Basic operation
+
+	scroll_to_line (i: INTEGER) is
+			-- Scroll `Current' to line number `i'
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			create a_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_line (text_buffer, a_iter.item, i - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_scroll_to_iter (text_view, a_iter.item,  0.0, False, 0.0, 0.0)
+		end
+		
+	enable_word_wrapping is
+			-- Enable word wrapping for `Current'
+		do
+			-- Make sure only vertical scrollbar is showing
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+				scrolled_window, 
+				{EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
+			)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_word_enum)
+			has_word_wrapping := True
+		end
+		
+	disable_word_wrapping is
+			-- Disable word wrapping for `Current'
+		do
+			-- Make sure both scrollbars are showing
+			{EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
+				scrolled_window, 
+				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM,
+				{EV_GTK_EXTERNALS}.GTK_POLICY_ALWAYS_ENUM
+			)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_wrap_mode (text_view, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_wrap_none_enum)
+			has_word_wrapping := False
+		end
+		
+feature {NONE} -- Implementation
+
+	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
+			--	Does `a_key' require gtk default key processing to be blocked?
+		do
+			-- Do nothing
+		end
+
+	visual_widget: POINTER is
+			-- Pointer to the GtkWidget representing `Current'
+		do
+			Result := text_view
+		end
+
+	selection_start_internal: INTEGER is
+			-- Index of the first character selected.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER
+		do
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				a_start_offset := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_end_iter.item)
+				Result := a_start_offset.min (a_end_offset) + 1
+			end
+		end
+
+	selection_end_internal: INTEGER is
+			-- Index of the last character selected.
+		local
+			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_selected: BOOLEAN
+			a_start_offset, a_end_offset: INTEGER
+		do
+			create a_start_iter.make
+			create a_end_iter.make
+			a_selected := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_selection_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
+			if a_selected then
+				a_start_offset := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_start_iter.item)
+				a_end_offset := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_get_offset (a_end_iter.item)
+				Result := a_start_offset.max (a_end_offset)
+			end
+		end
+
+	dispose is
+			-- Clean up `Current'
+		do
+			Precursor {EV_TEXT_COMPONENT_IMP}
 		end
 
 	on_change_actions is
-			-- A change action has occurred.
+			-- The text within the widget has changed.
 		do
-			toggle_in_change_action (True)
-			if stored_text /= Void then
-				if not text.is_equal (stored_text) then
-						-- The text has actually changed
-					stored_text := text
-					change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
-				end
-			else
-				stored_text := text
-				change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+			if change_actions_internal /= Void then
+				change_actions_internal.call (Void)
 			end
-			toggle_in_change_action (False)
 		end
 
+	append_text_internal (a_text_buffer: POINTER; a_text: STRING) is
+			-- Append `txt' to `text'.
+		local
+			a_cs: EV_GTK_C_STRING
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_car_pos: INTEGER
+		do
+			a_car_pos := caret_position
+			a_cs := a_text
+			create a_iter.make
+			-- Initialize out iter with the current caret/insert position.
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_end_iter (a_text_buffer, a_iter.item)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_insert (a_text_buffer, a_iter.item, a_cs.item, -1)
+			internal_set_caret_position (a_car_pos)
+		end
+
+	internal_set_caret_position (pos: INTEGER) is
+			-- set current insertion position
+		local
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
+		do
+			create a_iter.make
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_iter_at_offset (text_buffer, a_iter.item, pos - 1)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_place_cursor (text_buffer, a_iter.item)
+		end
+		
+	text_view: POINTER
+		-- Pointer to the GtkTextView widget
+		
+	scrolled_window: POINTER
+		-- Pointer to the GtkScrolledWindow
+
+	text_buffer: POINTER
+			-- Pointer to the GtkTextBuffer.
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TEXT
 
 end -- class EV_TEXT_IMP
 

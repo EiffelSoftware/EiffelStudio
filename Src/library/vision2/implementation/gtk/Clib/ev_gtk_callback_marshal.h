@@ -37,6 +37,7 @@ guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
 
 guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 
+
 #endif
 
 //------------------------------------------------------------------------------
@@ -44,14 +45,20 @@ guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 //------------------------------------------------------------------------------
 //
 // $Log$
-// Revision 1.9  2004/06/24 17:08:57  king
-// Added extra parameter for invoking signals after default handler
+// Revision 1.10  2005/07/07 17:13:09  king
+// Updated gtk implementation to be 2.4 based instead of 1.2 based, previous imp is located at library/vision2_for_gtk12
 //
-// Revision 1.8  2004/03/19 23:09:41  king
-// Removed gtk_value_pointer and gtk_value_int as these are implemented inline
+// Revision 1.5  2004/06/24 17:28:15  king
+// Added extra parameter for invoking signal handler before or after default signal handler
 //
-// Revision 1.7  2003/08/13 20:32:41  king
-// Removed idle handling code as we now perform this in our main loop
+// Revision 1.4  2004/02/12 22:39:47  king
+// Removed redundant idle connection code
+//
+// Revision 1.3  2004/02/06 00:32:20  king
+// Removed externals that are now written in Eiffel using inline
+//
+// Revision 1.2  2003/04/15 01:32:31  king
+// Now new marshal proxy is correctly executed, updated arg function to gtk2
 //
 // Revision 1.6  2001/06/29 19:56:43  king
 // Updated signal connect true signature to return connect id

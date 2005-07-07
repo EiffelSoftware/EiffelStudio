@@ -916,7 +916,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.enable_selection_keyboard_handling
+			implementation.disable_selection_keyboard_handling
 		ensure
 			selection_key_handling_disabled: not is_selection_keyboard_handling_enabled
 		end

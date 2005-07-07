@@ -25,8 +25,6 @@ inherit
 			y_position,
 			screen_x,
 			screen_y,
-			minimum_width,
-			minimum_height,
 			width,
 			height,
 			is_parentable,
@@ -48,7 +46,9 @@ inherit
 		undefine
 			initialize,
 			destroy,
-			parent_imp
+			parent_imp,
+			minimum_width,
+			minimum_height
 		redefine
 			interface,
 			on_key_event,

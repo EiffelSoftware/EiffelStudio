@@ -1,15 +1,5 @@
 indexing
 	description: "Eiffel Vision font. GTK implementation."
-	note:
-		"Does not inherit from EV_ANY_IMP because c_object is not a %N%
-		%GTK object. (type is GdkFont)",
-		"All font interaction is done through the system name. This string %N%
-		%consists of 14 attributes, separated by dashes. %N%
-		%The string looks like: %N%
-		%-foundry-family-weight-slant-setwidth-addstyle-pixel-point-resx-resy-spacing-width-charset-encoding %N%
-		%Of these attributes, only family, weight, slant and pixel_size %N%
-		%are relevant to EiffelVision., %N%
- 		%See: http://developer.gnome.org/doc/API/gdk/gdk-fonts.html"
 	status: "See notice at end of class"
 	keywords: "character, face, height, family, weight, shape, bold, italic"
 	date: "$Date$"
@@ -22,8 +12,11 @@ inherit
  	EV_FONT_I
 		redefine
 			interface,
-			set_values
+			set_values,
+			string_size
 		end
+
+	DISPOSABLE
 
 create
 	make
@@ -34,23 +27,34 @@ feature {NONE} -- Initialization
  			-- Create the default font.
 		do
 			base_make (an_interface)
-			family := Family_sans
-			weight := Weight_regular
-			shape := Shape_regular
-			
-			-- The height of the default font needs to be returned from the current gtk style.
-			set_height_internal (App_implementation.default_font_height)
-
-			create preferred_families
-			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
-			preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
-
-			update_font_face
 		end
 		
-	initialize is 
-		do
+	initialize is
+			-- Set up `Current'
+		do	
+			font_description := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_new
+			create preferred_families
+			family := Family_sans
+			set_face_name (app_implementation.default_font_name)
+			set_height_in_points (App_implementation.default_font_point_height_internal)
+			set_shape (App_implementation.default_font_style_internal)
+			set_weight (App_implementation.default_font_weight_internal)
+			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
 			set_is_initialized (True)
+		end
+
+feature {EV_FONTABLE_IMP} -- Implementation
+
+	font_is_default: BOOLEAN is
+			-- Does `Current' have the characteristics of the default application font?
+		do
+			Result := 
+					family = Family_sans and then
+					weight = app_implementation.default_font_weight_internal and then
+					shape = app_implementation.default_font_style_internal and then
+					name.is_equal (app_implementation.default_font_name_internal) and then
+					height_in_points = app_implementation.default_font_point_height_internal
 		end
 
 feature -- Access
@@ -64,15 +68,11 @@ feature -- Access
 	shape: INTEGER
 			-- Preferred font slant.
 
-	height: INTEGER is
+	height: INTEGER
 			-- Preferred font height measured in screen pixels.
-		do
-			Result := internal_height
-		end
 
 	height_in_points: INTEGER
-			-- Preferred font height measure in points
-		
+			-- Preferred font height measured in points.
 
 feature -- Element change
 
@@ -82,51 +82,74 @@ feature -- Element change
 			family := a_family
 			update_font_face
 		end
+	
+	set_face_name (a_face: STRING) is
+			-- Set the face name for current.
+		local
+			propvalue: EV_GTK_C_STRING
+		do
+			name := a_face
+			--create propvalue.make (a_face)
+			propvalue := app_implementation.c_string_from_eiffel_string (a_face)
+				-- Change this code back when we get UTF16 support
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)	
+			calculate_font_metrics
+		end
 
 	set_weight (a_weight: INTEGER) is
 			-- Set `a_weight' as preferred font thickness.
 		do
 			weight := a_weight
-			update_font_face
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_weight (font_description, pango_weight)
+			calculate_font_metrics
 		end
 
 	set_shape (a_shape: INTEGER) is
 			-- Set `a_shape' as preferred font slant.
 		do
 			shape := a_shape
-			update_font_face
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_style (font_description, pango_style)
+			calculate_font_metrics
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' as preferred font size in screen pixels
 		do
-			internal_height := a_height
-			update_font_face
+			height_in_points := app_implementation.point_value_from_pixel_value (a_height)
+			height  := a_height
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, height_in_points * {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+			calculate_font_metrics
 		end
 
 	set_height_in_points (a_height: INTEGER) is
-			-- Set `a_height_in_points' to `a_height'.
+			-- Set `a_height' as preferred font size in screen pixels
 		do
-			internal_height := a_height
-				--FIXME IEK Temporary implementation
 			height_in_points := a_height
+			height := app_implementation.pixel_value_from_point_value (a_height)
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_size (font_description, height_in_points * {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale)
+			calculate_font_metrics
 		end
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
 		a_preferred_families: like preferred_families) is
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_face' at the same time for speed.
+		local
+			a_agent: PROCEDURE [EV_FONT_IMP, TUPLE [STRING]]
 		do
-			family := a_family
-			weight := a_weight
-			shape := a_shape
-			internal_height := a_height
+			ignore_font_metric_calculation := True
+			a_agent := agent update_preferred_faces
 			preferred_families.add_actions.wipe_out
 			preferred_families.remove_actions.wipe_out
 			preferred_families := a_preferred_families
-			preferred_families.add_actions.extend (agent update_preferred_faces)
-			preferred_families.remove_actions.extend (agent update_preferred_faces)
-			update_font_face
+			preferred_families.internal_add_actions.extend (a_agent)
+			preferred_families.internal_remove_actions.extend (a_agent)
+			set_family (a_family)
+			set_weight (a_weight)
+			set_shape (a_shape)
+			set_height (a_height)
+			ignore_font_metric_calculation := False
+			calculate_font_metrics
 		end
 
 feature -- Status report
@@ -134,432 +157,276 @@ feature -- Status report
 	name: STRING
 			-- Face name chosen by toolkit.
 
-	ascent: INTEGER is
-			-- Vertical distance from the origin of the drawing
-			-- operation to the top of the drawn character. 
-		do
-			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (c_object)
-		end
+	ignore_font_metric_calculation: BOOLEAN
+			-- Should the font metric calculation be ignored?
 
-	descent: INTEGER is
-			-- Vertical distance from the origin of the drawing
-			-- operation to the bottom of the drawn character. 
+	calculate_font_metrics is
+			-- Calculate metrics for font
+		local
+			a_str_size: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER]
+			a_baseline, a_height: INTEGER
 		do
-			Result := {EV_GTK_EXTERNALS}.gdk_font_struct_descent (c_object)
-		end
+			if not ignore_font_metric_calculation then
+				a_str_size := string_size (once "Ag")
+				a_baseline := a_str_size.integer_32_item (5)
+				a_height := a_str_size.integer_32_item (2)
+				ascent := a_baseline
+				descent := a_height - ascent
+			end
+		end		
+
+	ascent: INTEGER
+			-- Vertical distance from the origin of the drawing operation to the top of the drawn character. 
+
+	descent: INTEGER
+			-- Vertical distance from the origin of the drawing operation to the bottom of the drawn character. 
 
 	width: INTEGER is
 			-- Character width of current fixed-width font.
 		do
-			Result := string_width ("x")
+			Result := string_width (once "x")
 		end
 
 	minimum_width: INTEGER is
 			-- Width of the smallest character in the font.
 		do
-			Result := string_width ("l")
+			Result := string_width (once "l")
 		end
 
 	maximum_width: INTEGER is
 			-- Width of the biggest character in the font.
 		do
-			Result := string_width ("W")
+			Result := string_width (once "W")
+		end
+
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- `Result' is [width, height, left_offset, right_offset] in pixels of `a_string' in the
+			-- current font, taking into account line breaks ('%N').
+		local
+			a_cs: EV_GTK_C_STRING
+			a_pango_layout, a_pango_iter,  ink_rect, log_rect: POINTER
+			log_x, log_y, log_width, log_height, ink_x, ink_y,  ink_width, ink_height, a_width, a_height, left_off, right_off: INTEGER
+			a_baseline: INTEGER
+			l_app_imp: like app_implementation
+		do
+				
+			l_app_imp := app_implementation
+			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
+			
+			a_pango_layout := l_app_imp.pango_layout
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
+			
+			ink_rect := {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
+			log_rect := reusable_pango_rectangle_struct
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_extents (a_pango_layout, ink_rect, log_rect)
+			
+			a_pango_iter := l_app_imp.pango_iter
+			a_baseline := {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_get_baseline (a_pango_iter) // {EV_GTK_DEPENDENT_EXTERNALS}.pango_scale
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_iter_free (a_pango_iter)
+			
+			log_x := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_x (log_rect)
+			log_y := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_y (log_rect)
+			log_width := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (log_rect)
+			log_height := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_height (log_rect)
+			
+			ink_x := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_x (ink_rect)
+			ink_y := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_y (ink_rect)
+			ink_width := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_width (ink_rect)
+			ink_height := {EV_GTK_DEPENDENT_EXTERNALS}.pango_rectangle_struct_height (ink_rect)
+			
+			a_width := log_width
+			a_height := log_height
+			
+			if ink_width > 0 then
+				left_off := ink_x
+				right_off := ink_width - log_width
+			end
+			
+			Result := reusable_string_size_tuple
+			Result.put_integer (a_width.max (1), 1)
+			Result.put_integer (a_height.max (1), 2)
+			Result.put_integer (left_off, 3)
+			Result.put_integer (right_off, 4)
+			Result.put_integer (a_baseline, 5)
+
+			ink_rect.memory_free
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+		end
+
+	reusable_string_size_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- Reusable tuple for `string_size'.
+		once
+			create Result
 		end
 
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
 		local
+			a_pango_layout: POINTER
 			a_cs: EV_GTK_C_STRING
+			temp_height: INTEGER
+			l_app_imp: like App_implementation
 		do
-			create a_cs.make (a_string)
-			Result := {EV_GTK_EXTERNALS}.gdk_string_width (c_object, a_cs.item)
+			l_app_imp := App_implementation
+			a_cs := l_app_imp.c_string_from_eiffel_string (a_string)
+			a_pango_layout := l_app_imp.pango_layout
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_text (a_pango_layout, a_cs.item, a_cs.string_length)
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, font_description)
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_pixel_size (a_pango_layout, $Result, $temp_height)
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_set_font_description (a_pango_layout, default_pointer)
+		end
+
+	reusable_pango_rectangle_struct: POINTER is
+			-- PangoRectangle that may be reused to prevent memory allocation, must not be freed
+		once
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.c_pango_rectangle_struct_allocate
 		end
 
 	horizontal_resolution: INTEGER is
 			-- Horizontal resolution of screen for which the font is designed.
 		do
-			Result := substring_dash (full_name, Ev_gdk_font_string_index_resx).to_integer
+			Result := 75
 		end
 
 	vertical_resolution: INTEGER is
 			-- Vertical resolution of screen for which the font is designed.
 		do
-			Result := substring_dash (full_name, Ev_gdk_font_string_index_resy).to_integer
+			Result := 75
 		end
 
 	is_proportional: BOOLEAN is
 			-- Can characters in the font have different sizes?
 		do
-			Result := substring_dash (full_name, Ev_gdk_font_string_index_spacing).is_equal ("p")
+			Result := True
 		end
  
 feature {NONE} -- Implementation
-
-	preloaded: HASH_TABLE [EV_GDK_FONT, STRING] is
-			-- Previously cached font structures.
-		once
-			create Result.make (10)
-			Result.compare_objects
-		end
-		
-	fonts_not_found: LINKED_LIST [STRING] is
-			-- List of XLFD not found on system.
-		once
-			create Result.make
-			Result.compare_objects
-		end
-
-	try_font (a_try_string: STRING; a_try_face: STRING): EV_GDK_FONT is
-		local
-			exp_name: STRING
-		do
-			if preloaded.has (a_try_string) then
-				Result := preloaded.item (a_try_string)
-				name := a_try_face
-			else
-				if not fonts_not_found.has (a_try_string) then
-					exp_name := match_name (a_try_string)
-					if exp_name /= Void and then not exp_name.is_empty then
-						create Result.make (exp_name)
-						if Result.c_object /= default_pointer then
-							preloaded.put (Result, a_try_string)
-							name := a_try_face						
-						else
-							fonts_not_found.extend (a_try_string)
-						end
-					else
-							fonts_not_found.extend (a_try_string)
-					end
-				end
-			end
-		end
-
-	match_preferred_face (
-		try_string_creator: FUNCTION[EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]
-	): EV_GDK_FONT is
-			-- Match the preferred face using the font 
-			-- string creator `try_string_creator'
-		local
-			temp_font: EV_GDK_FONT
-			a_try_string: STRING
-			curr_face: STRING
-		do
-			if preferred_families.is_empty then
-				curr_face := family_string
-				a_try_string := try_string_creator.item ([Current, curr_face])
-				temp_font := try_font (a_try_string, curr_face)
-			else
-				from
-					preferred_families.start
-				until
-					temp_font /= Void or
-					preferred_families.after
-				loop
-					curr_face := preferred_families.item
-					a_try_string := try_string_creator.item ([Current, curr_face])
-					temp_font := try_font (a_try_string, curr_face)
-					preferred_families.forth
-				end
-					-- Impossible to match the font with the given faces, try with the
-					-- family.
-				if temp_font = Void then
-					curr_face := family_string
-					a_try_string := try_string_creator.item ([Current, curr_face])
-					temp_font := try_font (a_try_string, curr_face)
-				end
-			end
-			Result := temp_font
-		end
 
 	update_preferred_faces (a_face: STRING) is
 		do
 			update_font_face
 		end
-
+		
 	update_font_face is
-			-- Look up font and if not in list, find best match.
-		local
-			temp_font: EV_GDK_FONT
-			i: INTEGER
 		do
-			from
-				i := try_string_array.lower
-			until
-				(temp_font /= Void and then not (temp_font.c_object = default_pointer)) or i > try_string_array.upper
-			loop
-				temp_font := match_preferred_face (try_string_array.item (i))
-				i := i + 1
-			end
-
-			if temp_font.c_object = default_pointer then
-				-- The font cannot be found so we do nothing and stick with the last found font.
-				--name := ""
-				--full_name := ""
-				--| FIXME Raise exception?
-			else
-				c_object := temp_font.c_object
-				full_name := temp_font.full_name
-			end
+			set_face_name (pango_family_string)
+			calculate_font_metrics
 		end
 
-	match_name (pattern: STRING): STRING is
-			-- Get the expanded font name for `pattern'.
-			-- Void if no match is found.
-		require
-			pattern_not_void: pattern /= Void
-		local
-			a_cs: EV_GTK_C_STRING
-		do
-			create a_cs.make (pattern)
-			Result := c_match_font_name (a_cs.item)
-		end
-
-feature {EV_FONT_DIALOG_IMP} -- Implementation
-
-	--| Routine for extracting items from a X-font.
-
-	Ev_gdk_font_string_index_foundry: INTEGER is 1
-	Ev_gdk_font_string_index_family: INTEGER is 2
-	Ev_gdk_font_string_index_weight: INTEGER is 3
-	Ev_gdk_font_string_index_slant: INTEGER is 4
-	Ev_gdk_font_string_index_setwidth: INTEGER is 5
-	Ev_gdk_font_string_index_addstyle: INTEGER is 6
-	Ev_gdk_font_string_index_pixel: INTEGER is 7
-	Ev_gdk_font_string_index_point: INTEGER is 8
-	Ev_gdk_font_string_index_resx: INTEGER is 9
-	Ev_gdk_font_string_index_resy: INTEGER is 10
-	Ev_gdk_font_string_index_spacing: INTEGER is 11
-	Ev_gdk_font_string_index_width: INTEGER is 12
-	Ev_gdk_font_string_index_charset: INTEGER is 13
-	Ev_gdk_font_string_index_encoding: INTEGER is 14
-
-	substring_dash (s: STRING; index: INTEGER): STRING is
-			-- Substring of `s' between the `index'-th and `index + 1'-th dash.
-			-- If last dash, returns tail.
-		require
-			s_not_void: s /= Void
-			index_bigger_than_zero: index > 0
-			index_not_bigger_than_dash_occurrences: index <= s.occurrences ('-')
-		local
-			cur_index, next_index, str_pos: INTEGER
-		do
-			str_pos := 0
-			from cur_index := 0 until cur_index = index loop
-				str_pos := s.index_of ('-', str_pos + 1)
-				cur_index := cur_index + 1
-			end
-			next_index := s.index_of ('-', str_pos + 1)
-			if next_index = 0 then
-				Result := s.substring (str_pos + 1, s.count)
-			else
-				Result := s.substring (str_pos + 1, next_index - 1)
-			end
-		ensure
-			not_void: Result /= Void
-			no_dashes: Result.occurrences ('-') = 0
-		end
-
-	weight_from_string (a_string: STRING): INTEGER is
-			-- Return appropriate weight code from string.
-		do
-			if equal (a_string, "bold") then
-				Result := Weight_bold
-			elseif equal (a_string, "black") then
-				Result := Weight_black
-			else
-				Result := Weight_regular
-			end
-		end
-
-	shape_from_string (a_string: STRING): INTEGER is
-			-- Return appropriate shape code from string.
-		do
-			if equal (a_string, "o") then
-				Result := Shape_italic
-			else
-				Result := Shape_regular
-			end
-		end
-
-feature {EV_FONT_IMP} -- Implementation
-
-	--| String-routines to facilitate in searching the best matching font.
-
-	try_string_array: ARRAY [FUNCTION [EV_FONT_IMP, TUPLE [EV_FONT_IMP, STRING], STRING]] is
-				-- Create and setup the preferred font face mechanism
-		once
-			create Result.make (1, 6)
-			Result.put (agent {EV_FONT_IMP}.try_string, 1)
-			Result.put (agent {EV_FONT_IMP}.rescue_string_one, 2)
-			Result.put (agent {EV_FONT_IMP}.rescue_string_two, 3)
-			Result.put (agent {EV_FONT_IMP}.non_optimal, 4)
-			Result.put (agent {EV_FONT_IMP}.last_resort_match, 5)
-			Result.put (agent {EV_FONT_IMP}.default_font, 6)
-		end
-
-	family_string: STRING is
+feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP} -- Implementation
+		
+	pango_family_string: STRING is
 			-- Get standard string to represent family.
 		do
-			check valid_family (family) end
-			inspect family
-			when Family_screen then
-				Result := "fixed"
-			when Family_roman then
-				Result := "times"
-			when Family_typewriter then
-				Result := "courier"
-			when Family_sans then
-				Result := "helvetica"
-			when Family_modern then
-				Result := "lucida"
+			if not preferred_families.is_empty then
+				from
+					preferred_families.start
+				until
+					Result /= Void or else preferred_families.off
+				loop
+					if preferred_families.item /= Void and then app_implementation.font_names_on_system_as_lower.has (preferred_families.item.as_lower) then
+						Result := preferred_families.item.twin
+					end
+					preferred_families.forth
+				end				
+			end
+			if Result = Void then
+				-- We have not found a preferred family
+				if font_is_default then
+					-- If the use has made no setting changes we use default gtk
+					Result := app_implementation.default_font_name
+				else
+					create Result.make (10)
+					inspect family
+					when Family_screen then
+						Result.append (monospace_string)
+					when Family_roman then
+						Result.append (serif_string)
+					when Family_typewriter then
+						Result.append (courier_string)
+					when Family_sans then
+						Result.append (sans_string)
+					when Family_modern then
+						Result.append (lucida_string)
+					end
+				end
+			end
+		end
+
+	monospace_string: STRING is "monospace"
+	serif_string: STRING is "serif"
+	courier_string: STRING is"courier"
+	sans_string: STRING is "sans"
+	lucida_string: STRING is "lucida"
+		-- Font string constants
+
+	pango_style: INTEGER is
+			-- Pango Style constant of `Current'
+		do
+			if shape = shape_italic then
+				Result := 2
 			else
-				Result := "*"
+				Result := 0
 			end
 		end
 
-	weight_string: STRING is
-			-- Get standard string to represent weight.
+	pango_weight: INTEGER is
+			-- Pango Weight of `Current'
 		do
-			check valid_weight (weight) end
-			inspect weight
-			when Weight_thin then
-				Result := "medium"
-			when Weight_regular then
-				Result := "medium"
-			when Weight_bold then
-				Result := "bold"
-			when Weight_black then
-				Result := "black"
+			inspect
+				weight
+			when
+				{EV_FONT_CONSTANTS}.weight_bold
+			then
+				Result := pango_weight_bold
+			when
+				{EV_FONT_CONSTANTS}.weight_regular
+			then
+				Result := pango_weight_normal
+			when
+				{EV_FONT_CONSTANTS}.weight_thin
+			then
+				Result := pango_weight_ultra_light
+			when
+				{EV_FONT_CONSTANTS}.weight_black
+			then
+				Result := pango_weight_heavy
 			else
-				Result := "*"
+				Result := pango_weight_normal
 			end
 		end
 
-	shape_string: STRING is
-			-- Get standard string to represent shape.
+	set_weight_from_pango_weight (a_pango_weight: INTEGER) is
+			-- Set `weight' from Pango weight value `a_pango_weight'.
 		do
-			check valid_shape (shape) end
-			inspect shape
-			when Shape_regular then
-				Result := "r"
-			when Shape_italic then
-				Result := "o"
+			if a_pango_weight <= pango_weight_ultra_light then
+				set_weight ({EV_FONT_CONSTANTS}.weight_thin)
+			elseif a_pango_weight <= pango_weight_normal then
+				set_weight ({EV_FONT_CONSTANTS}.weight_regular)
+			elseif a_pango_weight <= pango_weight_bold then
+				set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			else
-				Result := "*"
+				set_weight ({EV_FONT_CONSTANTS}.weight_black)
 			end
-		end
-
-	setwidth_string: STRING is
-			-- Get standard string to represent shape.
-		do
-			if weight = Weight_thin then
-				Result := "narrow"
-			else
-				Result := "normal"
-			end
-		end
-
-	addstyle_string: STRING is
-			-- Get standard string to represent addstyle.
-		do
-			Result := "*"
-		end
-
-	try_string (a_name: STRING): STRING is
-			-- Font with wildcards, trying to get the best match
-			-- for the current attributes and the font face name
-			-- `a_name'.
-		do
-			Result := "-*-" + a_name + "-" + weight_string + "-"
-				+ shape_string + "-" + setwidth_string + "-"
-				+ addstyle_string + "-" + height.out
-				+ "-*-*-*-*-*-iso8859-*"
-		end
-
-	rescue_string_one (a_name: STRING): STRING is
-			-- If try_string does not give any matches, use this string.
-			-- It replaces "black" with "bold" and does not use a
-			-- preferred setwidth or addstyle.
-		local
-			wgt: STRING 
-		do
-			wgt := weight_string
-			if wgt.is_equal ("black") then
-				wgt := "bold"
-			end
-			Result := "-*-" + a_name + "-" + wgt + "-"
-				+ shape_string + "-normal-*-" + height.out
-				+ "-*-*-*-*-*-iso8859-*"
-		end
-
-	rescue_string_two (a_name: STRING): STRING is
-			-- If rescue-string-one does not match anything, use this.
-			-- It replaces "o" with "i".
-		local
-			wgt, shp: STRING 
-		do
-			wgt := weight_string
-			if wgt.is_equal ("black") then
-				wgt := "bold"
-			end
-			shp := shape_string
-			if shp.is_equal ("o") then
-				shp := "i"
-			end
-			Result := "-*-" + a_name + "-" + wgt + "-"
-				+ shp + "-*-*-" + height.out
-				+ "-*-*-*-*-*-iso8859-*"
-		end
-
-	non_optimal (a_name: STRING): STRING is
-			-- If there is no optimal match: too bad!
-			-- Try this and get at least the right size and family.
-		do
-			Result := "-*-" + a_name + "-*-"
-				+ "*-*-*-" + height.out
-				+ "-*-*-*-*-*-*-*"
-		end
-
-	last_resort_match (a_font_name: STRING): STRING is
-			-- This is getting painful. Try to get a font with only
-			-- the right name and you'll be OK.
-		do
-			Result := "-*-" + a_font_name + "-*-*-*-**-*-*-*-*-*-*-*"
-		end	
-
-	default_font (a_font_name: STRING): STRING is 
-			-- If this font does not give a match, there is not
-			-- a single font installed on the system.
-		do
-			Result := "-misc-fixed-*-*-*-*-*-*-*-*-*-*-*-*"
 		end
 
 feature {EV_ANY_IMP, EV_DRAWABLE_IMP, EV_APPLICATION_IMP} -- Implementation
+		
+	font_description: POINTER
+		-- Pointer to the PangoFontDescription struct
 
-	c_object: POINTER
-		-- Reference to the GdkFont object.
-		
-feature {EV_FONTABLE_IMP} -- Implementation
-		
-	set_font_object (a_c_object: POINTER) is
-			-- 
-		do
-			c_object := a_c_object
-		end
-		
-	set_height_internal (a_height: INTEGER) is
-			-- 
-		do
-			internal_height := a_height
-		end
+feature {EV_ANY_I} -- Implementation
+
+	frozen pango_weight_ultra_light: INTEGER is 200
+	frozen pango_weight_light: INTEGER is 300
+	frozen pango_weight_normal: INTEGER is 400
+	frozen pango_weight_bold: INTEGER is 700
+	frozen pango_weight_ultrabold: INTEGER is 800
+	frozen pango_weight_heavy: INTEGER is 900
+		-- Pango font weight constants
 
 feature {NONE} -- Implementation
-		
-	full_name: STRING
-			-- The full name of the string.
-			
-	internal_height: INTEGER
-			-- Height of font in screen pixels.
 			
 	app_implementation: EV_APPLICATION_IMP is
 			-- Return the instance of EV_APPLICATION_IMP.
@@ -569,36 +436,22 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	frozen c_match_font_name (pattern: POINTER): STRING is
-			-- Match to first in list or return NULL.
-			-- `pattern' and `Result': char *
-			-- (from EV_C_GTK)
-		external
-			" C signature (char *): EIF_REFERENCE use %"gtk_eiffel.h%""
-		end
-
 	interface: EV_FONT
-
-feature -- Obsolete
-
-	system_name: STRING is
-			-- Platform dependent font name.
-		do
-			Result := full_name
-		end
-
- 	is_standard: BOOLEAN is True
- 			-- Is the font standard and informations available (except for name) ?
+		-- Interface coupling object for `Current'
 			
 	destroy is
+			-- Flag `Current' as destroyed
 		do
 			set_is_destroyed (True)
 		end
 
-invariant
-	c_object_not_null: is_initialized implies c_object /= default_pointer
-	full_name_not_void: is_initialized implies full_name /= Void
-	
+	dispose is
+			-- Clean up `Current'
+		do
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, default_pointer)	
+			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_free (font_description)
+		end
+
 end -- class EV_FONT_IMP
 
 --|----------------------------------------------------------------

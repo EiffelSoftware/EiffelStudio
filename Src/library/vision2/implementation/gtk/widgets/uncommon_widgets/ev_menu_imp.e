@@ -10,26 +10,18 @@ class
 inherit
 	EV_MENU_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_MENU_ITEM_IMP
 		undefine
-			parent,
-			show
+			parent
 		redefine
 			interface,
 			initialize,
-			set_text,
 			on_activate,
-			dispose,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal,
-			destroy
+			destroy,
+			show
 		end
 
 	EV_MENU_ITEM_LIST_IMP
@@ -37,8 +29,6 @@ inherit
 			interface,
 			initialize,
 			list_widget,
-			insert_menu_item,
-			dispose,
 			destroy
 		end
 
@@ -58,20 +48,6 @@ feature {NONE} -- Initialization
 			Precursor {EV_MENU_ITEM_IMP}
 		end
 
-feature -- Element change
-
-	set_text (a_text: STRING) is
-			-- Assign `a_text' to `text'.
-		local
-			a_cs: EV_GTK_C_STRING
-		do
-			real_text := a_text.twin
-			create a_cs.make (u_lined_filter (real_text))
-			key := {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
-				a_cs.item)
-			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
-		end
-
 feature -- Basic operations
 
 	show is
@@ -83,7 +59,7 @@ feature -- Basic operations
 			pc := (create {EV_SCREEN}).pointer_position
 			bw := {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
 			if not interface.is_empty then
-				{EV_GTK_DEPENDENT_EXTERNALS}.c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
+				c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
 			end
 		end
 
@@ -92,46 +68,26 @@ feature -- Basic operations
 			-- of `a_widget'.
 		do
 			if not interface.is_empty then
-				{EV_GTK_DEPENDENT_EXTERNALS}.c_gtk_menu_popup (list_widget,
+				c_gtk_menu_popup (list_widget,
 					a_widget.screen_x + a_x,
 					a_widget.screen_y + a_y)
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Externals
 
-	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
-			-- Generic menu item insertion.
-		local
-			accel_group: POINTER
-			menu_imp: EV_MENU_IMP
-			a_cs: EV_GTK_C_STRING
-		do
-			Precursor {EV_MENU_ITEM_LIST_IMP} (an_item_imp, pos)
-			if an_item_imp.key /= 0 then
-				if accel_group = NULL then
-					accel_group := {EV_GTK_EXTERNALS}.gtk_menu_get_accel_group (list_widget)
-				end
-				menu_imp ?= an_item_imp
-				if menu_imp = Void and then accel_group /= NULL then
-					create a_cs.make ("activate")
-					{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (an_item_imp.c_object,
-						a_cs.item,
-						accel_group,
-						an_item_imp.key,
-						0,
-						0)
-				elseif accel_group /= NULL then
-					
-					create a_cs.make ("activate_item")
-					{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (menu_imp.c_object,
-						a_cs.item,
-						accel_group,
-						menu_imp.key,
-						0,
-						0)
-				end
-			end
+	frozen c_gtk_menu_popup (a_menu: POINTER; a_x, a_y: INTEGER) is
+		external
+			"C inline use %"ev_c_util.h%""
+		alias
+			"[
+				{
+				c_position pos;
+				pos.x_position = $a_x;
+				pos.y_position = $a_y;
+				gtk_menu_popup ((GtkMenu*) $a_menu, NULL, NULL, (GtkMenuPositionFunc) c_gtk_menu_position_func, &pos, 0, gtk_get_current_event_time());
+				}
+			]"
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -155,14 +111,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU
 
-feature {EV_ANY_I} -- Implementation
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
 feature {NONE} -- Implementation
 	
 	destroy is
@@ -170,13 +118,6 @@ feature {NONE} -- Implementation
 		do
 			interface.wipe_out
 			Precursor {EV_MENU_ITEM_IMP}
-		end
-		
-	dispose is
-			-- Disposal routine
-		do
-			Precursor {EV_MENU_ITEM_IMP}
-			list_widget := NULL
 		end
 
 end -- class EV_MENU_IMP

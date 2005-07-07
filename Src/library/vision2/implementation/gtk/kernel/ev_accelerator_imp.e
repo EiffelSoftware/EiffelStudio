@@ -15,11 +15,6 @@ inherit
 			interface
 		end
 
-	EV_ANY_IMP
-		redefine
-			interface
-		end
-
 	EV_GTK_KEY_CONVERSION
 
 create
@@ -31,19 +26,16 @@ feature {NONE} -- Initialization
 			-- Connect interface.
 		do
 			base_make (an_interface)
-			set_c_object ({EV_GTK_EXTERNALS}.gtk_menu_item_new)
 			create key
 		end
 
 	initialize is
+			-- Setup `Current'
 		do
-			real_signal_connect (c_object, "activate", agent (App_implementation.gtk_marshal).accelerator_actions_internal_intermediary (c_object), Void)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
-feature {NONE} -- Implementation
-
-	interface: EV_ACCELERATOR
+feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
 	modifier_mask: INTEGER is
 			-- The mask consisting of alt, shift and control keys.
@@ -52,42 +44,58 @@ feature {NONE} -- Implementation
 				Result := {EV_GTK_EXTERNALS}.gDK_CONTROL_MASK_ENUM
 			end
 			if alt_required then
-				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
+				Result := Result.bit_or ( {EV_GTK_EXTERNALS}.gDK_MOD1_MASK_ENUM)
 			end
 			if shift_required then
 				Result := Result.bit_or ({EV_GTK_EXTERNALS}.gDK_SHIFT_MASK_ENUM)
 			end
-		end
+		end		
 
 feature {EV_TITLED_WINDOW_IMP} -- Implementation
 
-	add_accel (a_accel_grp: POINTER) is
-			-- Add the current key combination to the invisible button.
+	add_accel (a_window_imp: EV_TITLED_WINDOW_IMP) is
+			-- Add the current key combination
 		require
-			a_accel_grp_not_null: a_accel_grp /= NULL
+			a_window_imp_not_void: a_window_imp /= Void
 		local
 			a_cs: EV_GTK_C_STRING
+			a_keymap_array: POINTER
+			n_keys: INTEGER
+			a_success: BOOLEAN
 		do
-			create a_cs.make ("activate")
-			{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
-				c_object,
-				a_cs.item,
-				a_accel_grp,
-				key_code_to_gtk (key.code),
-				modifier_mask,
-				0
-			)
+			a_cs := "activate"
+			
+			internal_gdk_key_code := key_code_to_gtk (key.code)
+			if shift_required and then not key.is_function and then not key.is_arrow then
+					-- We need to get the key val for the uppercase symbol
+				a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_get_entries_for_keyval (default_pointer, internal_gdk_key_code, $a_keymap_array, $n_keys)
+				{EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_keymapkey_struct_level (a_keymap_array, 1)
+				internal_gdk_key_code := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_keymap_lookup_key (default_pointer, a_keymap_array)
+				{EV_GTK_EXTERNALS}.g_free (a_keymap_array)
+			end
+			
+			if internal_gdk_key_code > 0 then
+					-- If internal_gdk_key_code is 0 then the key mapping doesn't exist so we do nothing
+				{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
+					a_window_imp.accel_box,
+					a_cs.item,
+					a_window_imp.accel_group,
+					internal_gdk_key_code,
+					modifier_mask,
+					0
+				)				
+			end
 		end
 
-	remove_accel (a_accel_grp: POINTER) is
-			-- Remove the current key combination to the invisible button.
+	remove_accel (a_window_imp: EV_TITLED_WINDOW_IMP) is
+			-- Remove the current key combination
 		require
-			a_accel_grp_not_null: a_accel_grp /= NULL
+			a_window_imp_not_void: a_window_imp /= Void
 		do
 			{EV_GTK_EXTERNALS}.gtk_widget_remove_accelerator (
-				c_object,
-				a_accel_grp,
-				key_code_to_gtk (key.code),
+				a_window_imp.accel_box,
+				a_window_imp.accel_group,
+				internal_gdk_key_code,
 				modifier_mask
 			)
 		end
@@ -149,6 +157,23 @@ feature -- Element change
 			-- "Control" is not part of the key combination.
 		do
 			control_required := False
+		end
+
+feature {NONE} -- Implementation
+
+	internal_gdk_key_code: NATURAL_32
+		-- Internal gdk key code used to represent key of `Current'
+
+	interface: EV_ACCELERATOR
+		-- Interface object of `Current'
+
+feature {NONE} -- Implementation
+
+	destroy is
+			-- Free resources of `Current'
+		do
+			key := Void
+			set_is_destroyed (True)
 		end
 
 end -- class EV_ACCELERATOR_IMP

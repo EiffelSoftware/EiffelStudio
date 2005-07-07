@@ -11,42 +11,26 @@ feature -- Access
 
 	Information_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a piece of information.
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (information_pixmap_xpm)
+			Result := pixmap_from_stock_id ("gtk-dialog-info")
 		end
 
 	Error_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing an error.
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (error_pixmap_xpm)
+			Result := pixmap_from_stock_id ("gtk-dialog-error")
 		end
 
 	Warning_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a warning.
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (warning_pixmap_xpm)
+			Result := pixmap_from_stock_id ("gtk-dialog-warning")
 		end
 
 	Question_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a question.
-		local
-			pixmap_imp: EV_PIXMAP_IMP
 		do
-			create Result
-			pixmap_imp ?= Result.implementation
-			pixmap_imp.set_from_xpm_data (question_pixmap_xpm)
+			Result := pixmap_from_stock_id ("gtk-dialog-question")
 		end
 
 	Collate_pixmap: EV_PIXMAP is
@@ -96,13 +80,8 @@ feature -- Access
 		do
 				-- Create a default pixmap
 			create Result
-			pixmap_imp ?= Result.implementation
-			check
-				pixmap_imp_not_void: pixmap_imp /= Void
-			end
-
 				-- Initialize the pixmap with the icon
-			pixmap_imp ?= Result.implementation
+			pixmap_imp := Result.implementation
 			pixmap_imp.set_with_default
 		end
 
@@ -112,11 +91,53 @@ feature -- Default cursors
 			-- Standard arrow and small hourglass
 		local
 			pixmap_imp: EV_PIXMAP_IMP
+--			a_pix, a_mask: POINTER
+--			pix_array, mask_array: MANAGED_POINTER
 		do
 			create Result
 			pixmap_imp ?= Result.implementation
 			pixmap_imp.set_from_xpm_data (busy_cursor_xpm)
+
+--			create pix_array.make_from_array (busy_cursor_bits)
+--			create mask_array.make_from_array (busy_cursor_mask)
+--
+--			a_pix := feature {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (pixmap_imp.app_implementation.default_gdk_window, pix_array.item, 32, 32)
+--			a_mask := feature {EV_GTK_EXTERNALS}.gdk_bitmap_create_from_data (pixmap_imp.app_implementation.default_gdk_window, mask_array.item, 32, 32)
+--
+--			pixmap_imp.set_pixmap (a_pix, a_mask)
+--			Result.set_x_hotspot (2)
+--			Result.set_y_hotspot (2)
 		end
+
+--	busy_cursor_bits: ARRAY [INTEGER_8] is
+--			--
+--		do
+--			Result := <<0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0x00,0x00,0x0c,
+--                0x00,0x00,0x00,0x1c,0x00,0x00,0x00,0x3c,0x00,0x00,0x00,0x7c,0x00,
+--                0x00,0x00,0xfc,0x00,0x00,0x00,0xfc,0x01,0x00,0x00,0xfc,0x3b,0x00,
+--                0x00,0x7c,0x38,0x00,0x00,0x6c,0x54,0x00,0x00,0xc4,0xdc,0x00,0x00,
+--                0xc0,0x44,0x00,0x00,0x80,0x39,0x00,0x00,0x80,0x39,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00>>
+--		end
+--
+--	busy_cursor_mask: ARRAY [INTEGER_8] is
+--			--
+--		do
+--			Result := <<0x00,0x00,0x00,0x00,0x06,0x00,0x00,0x00,0x0e,0x00,0x00,0x00,0x1e,
+--                0x00,0x00,0x00,0x3e,0x00,0x00,0x00,0x7e,0x00,0x00,0x00,0xfe,0x00,
+--                0x00,0x00,0xfe,0x01,0x00,0x00,0xfe,0x3b,0x00,0x00,0xfe,0x7f,0x00,
+--                0x00,0xfe,0x7f,0x00,0x00,0xfe,0xfe,0x00,0x00,0xee,0xff,0x01,0x00,
+--                0xe4,0xff,0x00,0x00,0xc0,0x7f,0x00,0x00,0xc0,0x7f,0x00,0x00,0x80,
+--                0x39,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+--                0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00>>
+--		end
 
 	Standard_cursor: EV_CURSOR is
 			-- Standard arrow
@@ -258,149 +279,171 @@ feature -- Default cursors
 			Result.set_y_hotspot (16)
 		end
 
-feature {NONE} -- Externals
+feature {NONE} -- Implementation
 
-	information_pixmap_xpm: POINTER is
+	pixmap_from_stock_id (a_stock_id: EV_GTK_C_STRING): EV_PIXMAP is
+			-- Retrieve pixmap from gtk stock id
+		local
+			a_cs: EV_GTK_C_STRING
+			pixmap_imp: EV_PIXMAP_IMP
+			retried: BOOLEAN
+		do
+			if not retried then
+				a_cs := a_stock_id
+				create Result
+				pixmap_imp ?= Result.implementation
+				pixmap_imp.set_from_stock_id (a_cs.item)				
+			else
+				create Result
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+feature {EV_GTK_DEPENDENT_APPLICATION_IMP} -- Externals
+
+	frozen information_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"information_pixmap_xpm"
 		end
 
-	error_pixmap_xpm: POINTER is
+	frozen error_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"error_pixmap_xpm"
 		end
 
-	warning_pixmap_xpm: POINTER is
+	frozen warning_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"warning_pixmap_xpm"
 		end
 
-	question_pixmap_xpm: POINTER is
+	frozen question_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"question_pixmap_xpm"
 		end
 
-	collate_pixmap_xpm: POINTER is
+	frozen collate_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"collate_pixmap_xpm"
 		end
 
-	no_collate_pixmap_xpm: POINTER is
+	frozen no_collate_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_collate_pixmap_xpm"
 		end
 
-	landscape_pixmap_xpm: POINTER is
+	frozen landscape_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"landscape_pixmap_xpm"
 		end
 
-	portrait_pixmap_xpm: POINTER is
+	frozen portrait_pixmap_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"portrait_pixmap_xpm"
 		end
 		
-	busy_cursor_xpm: POINTER is
+	frozen busy_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"busy_cursor_xpm"
 		end
 		
-	crosshair_cursor_xpm: POINTER is
+	frozen crosshair_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"crosshair_cursor_xpm"
 		end
 		
-	help_cursor_xpm: POINTER is
+	frozen help_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"help_cursor_xpm"
 		end
 		
-	ibeam_cursor_xpm: POINTER is
+	frozen ibeam_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"ibeam_cursor_xpm"
 		end
 		
-	no_cursor_xpm: POINTER is
+	frozen no_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"no_cursor_xpm"
 		end
 		
-	sizeall_cursor_xpm: POINTER is
+	frozen sizeall_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizeall_cursor_xpm"
 		end
 		
-	sizenesw_cursor_xpm: POINTER is
+	frozen sizenesw_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenesw_cursor_xpm"
 		end
 		
-	sizens_cursor_xpm: POINTER is
+	frozen sizens_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizens_cursor_xpm"
 		end
 		
-	sizenwse_cursor_xpm: POINTER is
+	frozen sizenwse_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizenwse_cursor_xpm"
 		end
 		
-	sizewe_cursor_xpm: POINTER is
+	frozen sizewe_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"sizewe_cursor_xpm"
 		end
 	
-	standard_cursor_xpm: POINTER is
+	frozen standard_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"standard_cursor_xpm"
 		end
 		
-	uparrow_cursor_xpm: POINTER is
+	frozen uparrow_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias
 			"uparrow_cursor_xpm"
 		end
 		
-	wait_cursor_xpm: POINTER is
+	frozen wait_cursor_xpm: POINTER is
 		external
 			"C | %"ev_c_util.h%""
 		alias

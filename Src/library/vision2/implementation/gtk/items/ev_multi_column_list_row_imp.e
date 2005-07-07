@@ -48,17 +48,18 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is the item selected.
 		do			
-			Result := (parent_imp.selected_items.has (interface))
-			 or (parent_imp.selected_item = interface)
+			Result := (parent_imp.selected_item = interface)
+			 or else (parent_imp.selected_items.has (interface))
 		end
 
 feature -- Status setting
 
 	destroy is
 			-- Destroy actual object.
-		local
 		do
-			parent_imp := Void
+			if parent_imp /= Void then
+				parent_imp.interface.prune_all (interface)
+			end
 			set_is_destroyed (True)
 		end
 
@@ -66,7 +67,7 @@ feature -- Status setting
 			-- Select the row in the list.
 		do
 			if not is_selected then
-				{EV_GTK_EXTERNALS}.gtk_clist_select_row (parent_imp.list_widget, index - 1, 0)
+				parent_imp.select_item (index)
 			end
 		end
 
@@ -74,7 +75,7 @@ feature -- Status setting
 			-- Deselect the row from the list.
 		do
 			if is_selected then
-				{EV_GTK_EXTERNALS}.gtk_clist_unselect_row (parent_imp.list_widget, index - 1, 0)
+				parent_imp.deselect_item (index)
 			end
 		end
 
@@ -156,14 +157,18 @@ feature -- Element Change
 			-- Set the rows `pixmap' to `a_pix'.
 		do
 			internal_pixmap := a_pix.twin
-			update
+			if parent_imp /= Void then
+				parent_imp.set_row_pixmap (index, internal_pixmap)
+			end
 		end
 
 	remove_pixmap is
 			-- Remove the rows pixmap.
 		do
 			internal_pixmap := Void
-			update
+			if parent_imp /= Void then
+				parent_imp.remove_row_pixmap (index)
+			end
 		end
 
 	set_tooltip (a_tooltip: STRING) is
@@ -173,57 +178,26 @@ feature -- Element Change
 
 	tooltip: STRING
 			-- Tooltip displayed on `Current'.
-
-feature -- Basic operations
-
-	update is
-			-- Layout of row has been changed.
-		local
-			app: EV_APPLICATION_I
-		do
-			if parent_imp /= Void then
-				update_needed := True
-				app := (create {EV_ENVIRONMENT}).application.implementation
-				if interface.count > parent_imp.count then
-					parent_imp.update_children_agent.call (Void)
-					app.once_idle_actions.prune (parent_imp.update_children_agent)
-				elseif not app.once_idle_actions.has (
-						parent_imp.update_children_agent) then
-					app.do_once_on_idle (
-						parent_imp.update_children_agent)
-				end
-			end
-		end
-
-feature {EV_ANY_I} -- Implementation
-
-	dirty_child is
-			-- Mark `Current' as dirty.
-		do
-			update_needed := True
-		end
-
-	update_needed: BOOLEAN
-			-- Is the child dirty.
-
-	update_performed is
-			-- Mark `Current' as up to date.
-		do
-			update_needed := False
-		end
 		
 feature {NONE} -- Implementation
 		
 	on_item_added_at (an_item: STRING; item_index: INTEGER) is
 			-- `an_item' has been added to index `item_index'.
 		do
-			update
+			if parent_imp /= Void then
+				if parent_imp.column_count < item_index then
+					parent_imp.expand_column_count_to (item_index)
+				end
+				parent_imp.set_text_on_position (item_index, index, an_item)
+			end
 		end
 
 	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
 			-- `an_item' has been removed from index `item_index'.
 		do
-			update
+			if parent_imp /= Void then
+				parent_imp.set_text_on_position (item_index, index, "")
+			end
 		end
 
 feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
@@ -248,6 +222,16 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	set_list_iter (a_iter: EV_GTK_TREE_ITER_STRUCT) is
+			-- Set `list_iter' to `a_iter'
+		do
+			list_iter := a_iter
+		end
+
+	list_iter: EV_GTK_TREE_ITER_STRUCT
+		-- Object representing position of `Current' in parent tree model
+		
 
 	set_parent_imp (par_imp: EV_MULTI_COLUMN_LIST_IMP) is
 			-- Set the rows parent to `par_imp'.

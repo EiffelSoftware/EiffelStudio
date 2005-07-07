@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			-- Create the gtk object.
-			create a_cs.make ("Color selection dialog")
+			a_cs := "Color selection dialog"
 			set_c_object (
 				{EV_GTK_EXTERNALS}.gtk_color_selection_dialog_new (
 					a_cs.item
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to button signals.
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
-			is_initialized := False
+			set_is_initialized (False)
 			real_signal_connect (
 				gtk_color_selection_dialog_struct_ok_button (c_object),
 				"clicked",
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			)
 			enable_closeable
 			forbid_resize
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -71,19 +71,22 @@ feature -- Access
 	color: EV_COLOR is
 			-- Currently selected color.
 		local
-			a_colorsel: POINTER
-			a_colors: POINTER
+			color_struct: POINTER
 		do
 			if not user_clicked_ok and then internal_set_color /= Void then
 				Result := internal_set_color.twin
-			else
-				a_colorsel := gtk_color_selection_dialog_struct_colorsel (c_object)
-				a_colors := gtk_color_selection_struct_values (a_colorsel)
-				create Result.make_with_rgb (
-					double_array_i_th (a_colors, 3), -- values [3] == RED
-					double_array_i_th (a_colors, 4),
-					double_array_i_th (a_colors, 5)
+			else				
+				color_struct := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_get_current_color (
+					{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_dialog_struct_color_selection (c_object),
+					color_struct
 				)
+				create Result.make_with_8_bit_rgb (
+					{EV_GTK_EXTERNALS}.gdk_color_struct_red (color_struct) // 256,
+					{EV_GTK_EXTERNALS}.gdk_color_struct_green (color_struct) // 256,
+					{EV_GTK_EXTERNALS}.gdk_color_struct_blue (color_struct) // 256
+				)
+				color_struct.memory_free
 			end
 		end
 
@@ -92,19 +95,18 @@ feature -- Element change
 	set_color (a_color: EV_COLOR) is
 			-- Set `color' to `a_color'.
 		local
-			a_color_array: ARRAY [DOUBLE]
-			a_array_pointer: ANY
+			color_struct: POINTER
 		do
 			internal_set_color := a_color.twin
-			create a_color_array.make (1, 4)
-			a_color_array.put (a_color.red, 1)
-			a_color_array.put (a_color.green, 2)
-			a_color_array.put (a_color.blue, 3)
-			a_array_pointer := a_color_array.to_c
-			{EV_GTK_EXTERNALS}.gtk_color_selection_set_color (
-				gtk_color_selection_dialog_struct_colorsel (c_object),
-				$a_array_pointer
+			color_struct := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color_struct, a_color.red_16_bit)
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color_struct, a_color.green_16_bit)
+			{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_set_current_color (
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_color_selection_dialog_struct_color_selection (c_object),
+				color_struct
 			)
+			color_struct.memory_free
 		end
 
 feature {NONE} -- Implementation
@@ -113,14 +115,6 @@ feature {NONE} -- Implementation
 		-- Color explicitly set with `set_color'.
 		
 feature {NONE} -- Externals
-
-	double_array_i_th (double_array: POINTER; index: INTEGER): REAL is
-			-- EIF_DOUBLE double_array_i_th (double *double_array, int index) {
-			--	return double_array [index];
-			-- }
-		external
-			"C | %"ev_c_util.h%""
-		end
 
 	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER is
 		external
@@ -148,13 +142,6 @@ feature {NONE} -- Externals
 			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"
 		alias
 			"help_button"
-		end
-
-	gtk_color_selection_struct_values (a_c_struct: POINTER): POINTER is
-		external
-			"C [struct <gtk/gtk.h>] (GtkColorSelection): EIF_POINTER"
-		alias
-			"values"
 		end
 	
 feature {EV_ANY_I} -- Implementation

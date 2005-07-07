@@ -30,62 +30,59 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
-			create a_cs.make ("Select directory")
-			set_c_object (
-				{EV_GTK_EXTERNALS}.gtk_file_selection_new (
-					a_cs.item
-				)
-			)
-			{EV_GTK_EXTERNALS}.gtk_widget_hide (
-				{EV_GTK_EXTERNALS}.gtk_widget_struct_parent (
-					{EV_GTK_EXTERNALS}.gtk_file_selection_struct_file_list (c_object)
-				)
-			)
-			{EV_GTK_EXTERNALS}.gtk_widget_hide (
-				{EV_GTK_EXTERNALS}.gtk_file_selection_struct_fileop_del_file (c_object)
-			)
-			{EV_GTK_EXTERNALS}.gtk_widget_hide (
-				{EV_GTK_EXTERNALS}.gtk_file_selection_struct_fileop_ren_file (c_object)
-			)
-			create start_directory.make (0)
-			start_directory.from_c (
-				{EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object)
-			)
+			a_cs := "Select directory"
+			set_c_object
+				({EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_dialog_new (a_cs.item, NULL, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_select_folder_enum))
 		end
 
 	initialize is
 			-- Setup action sequences.
+		local
+			a_ok_button, a_cancel_button: POINTER
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
-			is_initialized := False
+			set_is_initialized (False)
+			
+			a_cancel_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_cancel_enum, {EV_GTK_EXTERNALS}.gtk_response_cancel_enum)
+			a_ok_button := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_add_button (c_object, {EV_GTK_DEPENDENT_EXTERNALS}.gtk_stock_ok_enum, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
+			
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_default_response (c_object, {EV_GTK_EXTERNALS}.gtk_response_accept_enum)
+			
 			real_signal_connect (
-				{EV_GTK_EXTERNALS}.gtk_file_selection_struct_ok_button (c_object),
+				a_ok_button,
 				"clicked",
 				agent (App_implementation.gtk_marshal).directory_dialog_on_ok_intermediary (c_object),
 				Void
 			)
 			real_signal_connect (
-				{EV_GTK_EXTERNALS}.gtk_file_selection_struct_cancel_button (c_object),
+				a_cancel_button,
 				"clicked",
 				agent (App_implementation.gtk_marshal).directory_dialog_on_cancel_intermediary (c_object),
 				Void
 			)
 			enable_closeable
-			is_initialized := True
+			set_start_directory (App_implementation.current_working_directory)
+			set_is_initialized (True)
 		end
 
 feature -- Access
 
 	directory: STRING is
 			-- Path of the current selected file
+		local
+			a_filename: POINTER
 		do
 			if
 				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
-				create Result.make (0)
-				Result.from_c ({EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object))
-				if Result.item (Result.count) /= '/' then
-					Result.append ("/")
+				Result := ""
+				a_filename := {EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object)
+				if a_filename /= NULL then
+					Result.from_c (a_filename)
+					if Result.item (Result.count) /= '/' then
+						Result.append ("/")
+					end
+					{EV_GTK_EXTERNALS}.g_free (a_filename)
 				end
 			else
 				Result := ""
@@ -102,13 +99,9 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			start_directory := a_path
-			if start_directory.item (start_directory.count) /= '/' then
-				-- The path has no trailing / so we add one to internal string.
-				start_directory.append ("/")
-			end
-			create a_cs.make (start_directory)
-			{EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (
+			start_directory := a_path.twin
+			a_cs := start_directory + "/."
+			{EV_GTK_EXTERNALS}.gtk_file_chooser_set_filename (
 				c_object,
 				a_cs.item
 			)

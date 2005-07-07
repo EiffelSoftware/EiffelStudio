@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- No initialization needed.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 feature -- Access
@@ -37,8 +37,11 @@ feature -- Access
 			-- `Result' contains all supported image formats
 			-- on current platform, in the form of their three letter extension.
 			-- e.g. PNG, BMP, ICO
-		do
-			Result := (<<"PNG">>).linear_representation
+		local
+			app_imp: EV_APPLICATION_IMP
+		once
+			app_imp ?= application.implementation
+			Result := app_imp.readable_pixbuf_formats.linear_representation
 			Result.compare_objects
 		end
 
@@ -60,11 +63,11 @@ feature -- Access
 	font_families: LINEAR [STRING] is
 			-- List of fonts available on the system
 		local
-			font_list: ARRAYED_LIST [STRING]
-		do
-			create font_list.make (5)
-			font_list.extend ("Helvetica")
-			Result := font_list
+			app_imp: EV_APPLICATION_IMP
+		once
+			app_imp ?= application.implementation
+			Result := app_imp.font_names_on_system.linear_representation
+			Result.compare_objects
 		end
 
 end -- class EV_ENVIRONMENT_IMP

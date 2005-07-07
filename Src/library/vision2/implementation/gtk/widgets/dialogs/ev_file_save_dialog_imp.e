@@ -28,13 +28,19 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			Precursor
+			Precursor {EV_FILE_DIALOG_IMP}
 			set_title ("Save As")
 		end
 
 feature {NONE} -- Implementation
 
 	interface: EV_FILE_SAVE_DIALOG
+
+	file_chooser_action: INTEGER is
+			-- Action constant of the file chooser, ie: to open or save files, etc.
+		do
+			Result := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_file_chooser_action_save_enum
+		end
 
 end -- class EV_FILE_SAVE_DIALOG_IMP
 

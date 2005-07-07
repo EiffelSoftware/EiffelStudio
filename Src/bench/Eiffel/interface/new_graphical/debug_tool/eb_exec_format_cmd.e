@@ -203,8 +203,6 @@ feature {NONE} -- Implementation
 					else
 						argument_dialog.raise
 					end
-				else
-					window.show
 				end
 			end
 		end

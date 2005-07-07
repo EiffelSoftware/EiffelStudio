@@ -43,7 +43,7 @@ class FIXED_LIST [G] inherit
 		rename
 			make as array_make,
 			put as put_i_th,
-			item as i_th,
+			item as i_th alias "[]",
 			force as force_i_th,
 			bag_put as put,
 			index_set as array_index_set,

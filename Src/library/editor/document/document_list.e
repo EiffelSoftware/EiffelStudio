@@ -8,7 +8,7 @@ deferred class
 	DOCUMENT_LIST [G -> DOCUMENT_ITEM]
 
 inherit
-	ARRAYED_LIST [DOCUMENT_ITEM]
+	ARRAYED_LIST [G]
 		redefine
 			remove,
 			extend

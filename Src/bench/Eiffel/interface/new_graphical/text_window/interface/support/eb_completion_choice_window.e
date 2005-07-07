@@ -209,32 +209,6 @@ feature {NONE} -- Events handling
 				when Key_escape then
 					exit
 					editor.set_focus	
-				when Key_up then
-					if not choice_list.is_empty then
-						if not choice_list.selected_items.is_empty then
-							ix := choice_list.selected_rows.first.index
-							if ix <= 1 and prev_item_index = 1 then
-								choice_list.remove_selection
-								choice_list.row (choice_list.row_count).enable_select
-							end	
-						end	
-						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible	
-						end
-					end
-				when Key_down then
-					if not choice_list.is_empty then
-						if not choice_list.selected_items.is_empty then
-							ix := choice_list.selected_rows.first.index
-							if ix >= choice_list.row_count and prev_item_index = choice_list.row_count then
-								choice_list.remove_selection
-								choice_list.row (1).enable_select
-							end		
-						end
-						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible
-						end
-					end
 				when key_back_space then
 					editor.handle_extended_key (ev_key)					
 					if not buffered_input.is_empty then				
@@ -308,7 +282,37 @@ feature {NONE} -- Events handling
 						if not choice_list.selected_rows.is_empty then
 							choice_list.selected_rows.first.ensure_visible	
 						end	
-					end								
+					end	
+				when Key_up then					
+					if not choice_list.is_empty then
+						if not choice_list.selected_items.is_empty then
+							ix := choice_list.selected_rows.first.index
+							choice_list.remove_selection
+							if ix <= 1 and prev_item_index = 1 then							
+								choice_list.row (choice_list.row_count).enable_select														
+							else					
+								choice_list.row (prev_item_index - 1).enable_select
+							end
+						end	
+						if not choice_list.selected_rows.is_empty then
+							choice_list.selected_rows.first.ensure_visible	
+						end
+					end
+				when Key_down then
+					if not choice_list.is_empty then
+						if not choice_list.selected_items.is_empty then
+							ix := choice_list.selected_rows.first.index
+							choice_list.remove_selection
+							if ix >= choice_list.row_count and prev_item_index = choice_list.row_count then								
+								choice_list.row (1).enable_select
+							else					
+								choice_list.row (prev_item_index + 1).enable_select
+							end		
+						end
+						if not choice_list.selected_rows.is_empty then
+							choice_list.selected_rows.first.ensure_visible
+						end
+					end							
 				when key_home then
 					if ev_application.ctrl_pressed and then not choice_list.is_empty then
 							-- Go to top

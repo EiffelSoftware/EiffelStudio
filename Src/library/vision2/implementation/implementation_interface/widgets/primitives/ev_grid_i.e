@@ -92,6 +92,7 @@ feature -- Access
 		local
 			visible_counter, counter: INTEGER
 			a_col_i: EV_GRID_COLUMN_I
+			cursor: CURSOR
 		do
 			from
 				counter := 1
@@ -144,9 +145,11 @@ feature -- Access
 			-- All columns selected in `Current'.
 		local
 			temp_columns: like columns
+			cursor: CURSOR
 		do
 			from
 				create Result.make (10)
+				cursor := temp_columns.cursor
 				temp_columns := columns
 				temp_columns.start
 			until
@@ -157,6 +160,7 @@ feature -- Access
 				end
 				temp_columns.forth
 			end
+			temp_columns.go_to (cursor)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -846,6 +850,7 @@ feature -- Status setting
 			-- which flattens the tree structure.
 		local
 			current_row: EV_GRID_ROW_I
+			cursor: CURSOR
 		do
 			is_tree_enabled := False
 			adjust_hidden_node_count (- hidden_node_count)
@@ -854,6 +859,7 @@ feature -- Status setting
 				-- Now reset all rows.
 			from
 				rows.start
+				cursor := rows.cursor
 			until
 				rows.off
 			loop
@@ -863,6 +869,7 @@ feature -- Status setting
 				end
 				rows.forth
 			end
+			rows.go_to (cursor)
 		ensure
 			tree_disabled: not is_tree_enabled
 		end	
@@ -2982,7 +2989,7 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I} -- Implementation
 			-- scrolling, but may be used to achieve effects not otherwise possible unless the
 			-- entire client area is invalidated.
 
-feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
+feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 	
 	recompute_vertical_scroll_bar is
 			-- Recompute dimensions of `vertical_scroll_bar'.
@@ -3079,6 +3086,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 		local
 			row_index, l_viewable_height: INTEGER
 			l_row_height: INTEGER
+			cursor: CURSOR
 		do
 			if is_row_height_fixed and not is_tree_enabled then
 					-- In this situation, we can simply calculate the
@@ -3090,6 +3098,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				from
 					l_viewable_height := viewable_height
 					visible_indexes_to_row_indexes.go_i_th (visible_row_count)
+					cursor := visible_indexes_to_row_indexes.cursor
 				until
 					visible_indexes_to_row_indexes.off or l_viewable_height <= 0
 				loop
@@ -3109,6 +3118,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 					visible_indexes_to_row_indexes.forth
 					row_index := visible_indexes_to_row_indexes.item
 				end
+				visible_indexes_to_row_indexes.go_to (cursor)
 			end
 			Result := row_index.max (1).min (row_count)
 		ensure

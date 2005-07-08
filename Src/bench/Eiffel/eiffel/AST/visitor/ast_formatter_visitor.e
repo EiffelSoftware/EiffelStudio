@@ -62,6 +62,16 @@ feature -- Formatting
 			a_node.process (Current)
 		end
 
+	format_indexing_with_no_keyword (l_as: INDEXING_CLAUSE_AS) is
+			-- Format `l_as' without inserting the `indexing' keyword.
+		require
+			l_as_not_void: l_as /= Void
+		do
+			ctxt.set_separator (Void)
+			ctxt.set_new_line_between_tokens
+			process_eiffel_list (l_as)
+		end
+
 feature {NONE} -- Implementation: Access
 
 	ctxt: FORMAT_CONTEXT

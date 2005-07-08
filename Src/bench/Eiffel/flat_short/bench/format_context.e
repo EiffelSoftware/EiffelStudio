@@ -658,11 +658,11 @@ feature -- Element change
 			end
 
 			if is_for_case then
-				text.add_default_string (s)
+				text.add_string (s)
 			else
 				classi := Universe.class_named (s, class_c.cluster)
 				if classi = Void then
-					text.add_default_string (s)
+					text.add_string (s)
 				else
 					text.add_classi (classi, s)
 				end
@@ -917,7 +917,7 @@ feature -- Output
 			if not tabs_emitted then
 				emit_tabs
 			end
-			text.add_default_string (s)
+			text.add_manifest_string (s)
 		end
 
 	put_breakable is
@@ -967,7 +967,7 @@ feature -- Output
 			if in_indexing_clause then
 				text.add_indexing_string (s)
 			else
-				text.add_string (s)
+				text.add_manifest_string (s)
 			end
 		end
 
@@ -1031,7 +1031,7 @@ feature -- Output
 				elseif not tabs_emitted then
 					emit_tabs
 				end
-				text.add_default_string (name_of_current_feature)
+				text.add_string (name_of_current_feature)
 				arg ?= arguments
 				if arg /= Void then
 					begin

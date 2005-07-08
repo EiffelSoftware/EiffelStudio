@@ -512,7 +512,7 @@ feature -- Element change
 			tmp.to_lower;
 			classi := Universe.class_named (tmp, class_c.cluster);
 			if classi = Void then
-				text.add_default_string (s)
+				text.add_string (s)
 			else
 				text.add_classi (classi, s)
 			end

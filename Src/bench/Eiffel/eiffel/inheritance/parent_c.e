@@ -147,7 +147,6 @@ feature
 		local
 			parent_table: FEATURE_TABLE
 			vhrc1: VHRC1
-			vhrc3: VHRC3
 			vhrc4: VHRC4
 			vhrc5: VHRC5
 			vfav: VFAV_VHRC

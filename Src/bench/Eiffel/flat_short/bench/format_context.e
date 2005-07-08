@@ -882,6 +882,15 @@ feature -- Output
 			end
 		end
 
+	format_indexing_with_no_keyword (an_indexing_clause: INDEXING_CLAUSE_AS) is
+			-- Format `an_indexing_clause' without putting the `indexing' keyword
+			-- nor doing any indentation.
+		require
+			an_indexing_clause_not_void: an_indexing_clause /= Void
+		do
+			formatter.format_indexing_with_no_keyword (an_indexing_clause)
+		end
+
 	format_ast (ast: AST_EIFFEL) is
 			-- Call simple_for on `ast'.
 		require

@@ -1079,7 +1079,7 @@ feature {NONE} -- Implementation
 							-- Lines with cursor or selection in them ALWAYS need redrawing.
 						if use_buffered or l_has_data then
 		 					draw_line_to_buffered_line (curr_line, l_text.current_line)
-							draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width + left_margin_width, l_x_offset, y_offset)
+							draw_buffered_line_to_screen (l_x_offset - l_margin_width, viewable_width, l_x_offset, y_offset)
 						else
 							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width, y_offset, l_text.current_line)
 						end

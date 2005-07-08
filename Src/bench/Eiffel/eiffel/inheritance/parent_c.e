@@ -175,13 +175,7 @@ feature
 					new_name_id := feature_renaming.feature_name_id
 					new_name := names_heap.item (new_name_id)
 					alias_name_id := feature_renaming.alias_name_id
-					if old_name_id = new_name_id then
-						create vhrc3
-						vhrc3.set_class (System.current_class)
-						vhrc3.set_parent (parent)
-						vhrc3.set_feature_name (old_name)
-						Error_handler.insert_error (vhrc3)
-					elseif not parent_table.has (old_name) then
+					if not parent_table.has (old_name) then
 						create vhrc1
 						vhrc1.set_class (System.current_class)
 						vhrc1.set_parent (parent)
@@ -189,11 +183,7 @@ feature
 						Error_handler.insert_error (vhrc1)
 					elseif is_mangled_infix (new_name) then
 						f := parent_table.item (old_name)
-						if
-							(f.argument_count /= 1)
-						or else
-							(f.type.is_void)
-						then
+						if f.argument_count /= 1 or else f.type.is_void then
 							create vhrc5
 							vhrc5.set_class (System.current_class)
 							vhrc5.set_parent (parent)
@@ -202,11 +192,7 @@ feature
 						end;
 					elseif is_mangled_prefix (new_name) then
 						f := parent_table.item (old_name)
-						if
-							(f.argument_count /= 0)
-						or else
-							(f.type.is_void)
-						then
+						if f.argument_count /= 0 or else f.type.is_void then
 							create vhrc4
 							vhrc4.set_class (System.current_class)
 							vhrc4.set_parent (parent)
@@ -216,8 +202,7 @@ feature
 					elseif alias_name_id > 0 then
 						vfav := Void
 						f := parent_table.item (old_name)
-						alias_name := extract_alias_name (names_heap.item (alias_name_id))
-						if is_bracket_alias_name (alias_name) then
+						if alias_name_id = bracket_symbol_id then
 							if f.argument_count = 0 or else f.type.is_void then
 									-- Bracket features should have at least one argument and a return type.
 								create {VFAV2_VHRC} vfav
@@ -225,31 +210,34 @@ feature
 									-- Bracket alias cannot have convert mark
 								create {VFAV3_VHRC} vfav
 							end
-						elseif
-							not f.type.is_void and then
-							(f.argument_count = 0 and then is_valid_unary_operator (alias_name) or else
-							f.argument_count = 1 and then is_valid_binary_operator (alias_name))
-						then
-							if f.argument_count = 1 then
-									-- Ensure the alias name is in binary form.
-								names_heap.put (infix_feature_name_with_symbol (alias_name))
-								local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
-								if is_semi_strict_id (names_heap.found_item) and then system.current_class.lace_class /= system.boolean_class then
-										-- Semi-strick operators cannot appear in classes other than BOOLEAN
-									create {VFAV4_VHRC} vfav
+						else
+							alias_name := extract_alias_name (names_heap.item (alias_name_id))
+							if
+								not f.type.is_void and then
+								(f.argument_count = 0 and then is_valid_unary_operator (alias_name) or else
+								f.argument_count = 1 and then is_valid_binary_operator (alias_name))
+							then
+								if f.argument_count = 1 then
+										-- Ensure the alias name is in binary form.
+									names_heap.put (infix_feature_name_with_symbol (alias_name))
+									local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
+									if is_semi_strict_id (names_heap.found_item) and then system.current_class.lace_class /= system.boolean_class then
+											-- Semi-strick operators cannot appear in classes other than BOOLEAN
+										create {VFAV4_VHRC} vfav
+									end
+								else
+										-- Ensure the alias name is in unary form.
+									names_heap.put (prefix_feature_name_with_symbol (alias_name))
+									local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
+									if feature_renaming.has_convert_mark then
+											-- Unary operator cannot have convert mark
+										create {VFAV3_VHRC} vfav
+									end
 								end
 							else
-									-- Ensure the alias name is in unary form.
-								names_heap.put (prefix_feature_name_with_symbol (alias_name))
-								local_renaming.item_for_iteration.set_alias_name_id (names_heap.found_item)
-								if feature_renaming.has_convert_mark then
-										-- Unary operator cannot have convert mark
-									create {VFAV3_VHRC} vfav
-								end
+									-- Report wrong argument number or return type for operator alias.
+								create {VFAV1_VHRC} vfav
 							end
-						else
-								-- Report wrong argument number or return type for operator alias.
-							create {VFAV1_VHRC} vfav
 						end
 						if vfav /= Void then
 							vfav.set_class (System.current_class)

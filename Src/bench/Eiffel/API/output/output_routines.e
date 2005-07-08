@@ -70,12 +70,12 @@ feature -- Miscellaneous
 					else
 						text.add (ti_Colon)
 						text.add_space
-						text.add_default_string (creation_name)
+						text.add_string (creation_name)
 					end
 				elseif creation_name /= Void then
 					text.add (ti_Colon)
 					text.add_space
-					text.add_default_string (creation_name)
+					text.add_string (creation_name)
 				end
 				text.add_new_line
 				text.add_new_line

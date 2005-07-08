@@ -82,7 +82,7 @@ feature -- Output
 		do
 			st.add (ti_Like_keyword)
 			st.add_space
-			st.add_default_string (anchor)
+			st.add_string (anchor)
 		end
 
 	dump: STRING is

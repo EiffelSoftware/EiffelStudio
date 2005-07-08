@@ -351,11 +351,11 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.add_new_line
-			Result.add_default_string ("To create or open a project using")
+			Result.add_string ("To create or open a project using")
 			Result.add_new_line
-			Result.add_default_string (Interface_names.WorkBench_name+": On the File menu,")
+			Result.add_string (Interface_names.WorkBench_name+": On the File menu,")
 			Result.add_new_line
-			Result.add_default_string ("click %"New...%" or %"Open...%".")
+			Result.add_string ("click %"New...%" or %"Open...%".")
 			Result.add_new_line
 		ensure
 			Result_not_void: Result /= Void

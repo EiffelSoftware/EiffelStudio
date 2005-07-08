@@ -738,7 +738,7 @@ feature {NONE} -- Implementation
 				+ Lvs_report + Lvs_showselalways
 		end
 
-	buffer_size: INTEGER is 30
+	buffer_size: INTEGER is 256
 			-- Windows text retrieval buffer size
 
 feature {NONE} -- Externals

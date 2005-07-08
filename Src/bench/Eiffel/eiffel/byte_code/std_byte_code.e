@@ -942,10 +942,10 @@ end
 							l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
 							buf.put_new_line
 						end
-						if has_rescue and then not wkb_mode and then type_i.is_basic then
+						type_i.c_type.generate (buf)
+						if has_rescue then
 							buf.put_string ("EIF_VOLATILE ")
 						end
-						type_i.c_type.generate (buf)
 						buf.put_string ("loc")
 						buf.put_integer (i)
 						buf.put_string (" = ")
@@ -1036,9 +1036,6 @@ end
 				buf.put_string ("RTLXD;")
 				buf.put_new_line
 			end
-
-				-- Generate temporary non-reference locals declarations
-			context.generate_temporary_nonref_variables
 
 				-- Separate declarations and body with a blank line
 			buf.put_new_line

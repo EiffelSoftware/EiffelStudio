@@ -118,10 +118,6 @@ feature
 				buf.put_new_line;
 			end;
 
-				-- Generate temporary variables not under the control
-				-- of the GC
-			context.generate_temporary_nonref_variables;
-			
 				-- Separate declarations and body with a blank line
 			buf.put_new_line;
 

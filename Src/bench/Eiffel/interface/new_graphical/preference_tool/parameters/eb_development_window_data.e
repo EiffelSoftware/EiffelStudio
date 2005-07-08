@@ -325,7 +325,7 @@ feature -- Element change
 		end
 		
 	save_completion_list_size (a_width, a_height: INTEGER) is
-			-- 
+			-- Save the size of the completion list
 		do
 			completion_list_width_preference.set_value (a_width)
 			completion_list_height_preference.set_value (a_height)
@@ -401,7 +401,7 @@ feature {NONE} -- Implementation
 			completion_list_height_preference := l_manager.new_integer_resource_value (l_manager, completion_list_height_string, 100)
 			completion_list_width_preference := l_manager.new_integer_resource_value (l_manager, completion_list_width_string, 80)
 			progress_bar_color_preference := l_manager.new_color_resource_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
-			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"new_window">>)	
+			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"[new_window];editor;context;new_editor;new_context;external">>)	
 			ctrl_right_click_receiver_preference.set_is_choice (True)
 			class_completion_preference := l_manager.new_boolean_resource_value (l_manager, class_completion_string, True)
 			dock_tracking_preference := l_manager.new_boolean_resource_value (l_manager, dock_tracking_string, True)

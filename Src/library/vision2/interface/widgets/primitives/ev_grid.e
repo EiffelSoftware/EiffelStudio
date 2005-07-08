@@ -6,6 +6,27 @@ indexing
 		--------------------------------------------------------------------------------
 
 		Dynamic Modes:
+		
+		There may be times where you have very large numbers of items you wish to
+		display into the grid. Unfortunately, the overhead of building thousands and
+		thousands of grid items and inserting them can take a considerable amount of
+		which shows up as a delay to users of the system. To prevent this, the grid
+		supports the use of dynamic modes which permit you to specify how many items
+		are contained and then as and when the grid requires access to one of these items
+		for display purposes, an event is triggered requesting the item to be displayed. 
+		There are two dynamic modes available:
+		1. Partial dynamic, enabled via `enable_partial_dynamic_content'. In this mode
+		whenever the grid attempts to draw an item that is `Void', it queries you for the
+		item and then inserts it into the grid.
+		2. Complete dynamic, enabled via `enable_completely_dynamic_content'. In this mode
+		whenever the grid attempts to draw an item it queries you for the item and places
+		the item in the grid.
+		The grid requests an item in dynamic modes through the calling of the
+		`dynamic_content_function' which may be set via a call to
+		`set_dynamic_content_function'. This function has two integer arguments
+		corresponding to the column and row index of the desired item and a return type
+		of EV_GRID_ITEM.
+		
 		--------------------------------------------------------------------------------
 
 		Size and Position:

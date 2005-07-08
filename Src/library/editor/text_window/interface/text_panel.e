@@ -1078,11 +1078,11 @@ feature {NONE} -- Display functions
 		require
 			on_paint: on_paint
 		do
-			draw_margin (y)				
 			debug ("editor")
 				draw_flash (x, y, end_pos - start_pos, line_height, True)
 			end
 			editor_drawing_area.draw_sub_pixmap (x, y, buffered_line, create {EV_RECTANGLE}.make (start_pos, 0, end_pos - start_pos, line_height))
+			draw_margin (y)	
 		end
 		
 	draw_line_to_screen (start_pos, end_pos, y: INTEGER; a_line: EDITOR_LINE) is

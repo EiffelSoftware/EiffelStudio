@@ -2403,7 +2403,7 @@ feature {NONE} -- Implementation
 			f: FILE
 
 			l_format_context: FORMAT_CONTEXT
-			l_indexes: EIFFEL_LIST [INDEX_AS]
+			l_indexes: INDEXING_CLAUSE_AS
 			conv_errst: ERROR_STONE
 			cl_syntax_stone: CL_SYNTAX_STONE
 			error_line: INTEGER
@@ -2651,10 +2651,9 @@ feature {NONE} -- Implementation
 						l_format_context.put_new_line
 						l_indexes := cluster_st.cluster_i.indexes
 						if l_indexes /= Void then
-							l_format_context.set_new_line_between_tokens
-							l_format_context.format_ast (l_indexes)
-							l_format_context.exdent
+							l_format_context.format_indexing_with_no_keyword (l_indexes)
 						end
+						l_format_context.exdent
 						l_format_context.put_new_line
 						editor_tool.text_area.process_text (l_format_context.text)
 	--| END FIXME

@@ -121,6 +121,8 @@ feature -- Basic operations
 		do
 			set_blocking_window (a_window)
 			show
+				-- This extra call is needed otherwise the Window will not be transient.
+			set_blocking_window (a_window)
 		end
 
 feature {NONE} -- Implementation

@@ -17,6 +17,8 @@ class ARRAY [G] inherit
 		end
 
 	INDEXABLE [G, INTEGER]
+		rename
+			item as item alias "[]"
 		redefine
 			copy, is_equal
 		end

@@ -119,8 +119,8 @@ feature -- Basic operations
 	show_relative_to_window (a_window: EV_WINDOW) is
 			-- Show `Current' with respect to `a_window'.
 		do
-			show
 			set_blocking_window (a_window)
+			show
 		end
 
 feature {NONE} -- Implementation

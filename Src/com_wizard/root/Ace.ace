@@ -121,6 +121,8 @@ cluster
 	library thread:		"$EIFFEL_SRC\library\thread"
 
 	all vision2_extension:		"$EIFFEL_SRC\library\vision2_extension"
+		exclude
+			"gtk";
 		default
 			assertion (no)
 			assertion (require)

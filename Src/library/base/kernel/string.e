@@ -12,6 +12,8 @@ class
 
 inherit
 	INDEXABLE [CHARACTER, INTEGER]
+		rename
+			item as item
 		redefine
 			copy, is_equal, out, prune_all,
 			changeable_comparison_criterion
@@ -34,6 +36,8 @@ inherit
 		end
 
 	TO_SPECIAL [CHARACTER]
+		rename
+			item as item
 		redefine
 			copy, is_equal, out,
 			item, infix "@", put, valid_index
@@ -225,7 +229,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item alias "[]", infix "@" (i: INTEGER): CHARACTER assign put is
+	item, infix "@" (i: INTEGER): CHARACTER assign put is
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)

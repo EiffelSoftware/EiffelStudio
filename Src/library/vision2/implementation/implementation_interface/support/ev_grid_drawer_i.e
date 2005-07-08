@@ -676,37 +676,61 @@ feature -- Basic operations
 	
 												grid_item_exists := True
 											end
-	
+												-- We must now recompute the tree status of the current row as during the
+												-- dynamic computation, a user may have performed something which modified the
+												-- tree structure, therby invalidating our previously calculated tree information.
+												-- Unfortunately, this must be computed for every item that is retrieved dynamically
+												-- as it is not possible for us to know which item may modify the tree structure.
+												-- The overhead of this should not be too high, but it is unfortunate. Julian
+											if is_tree_enabled then
+												parent_row_i := current_row.parent_row_i
 											
-												-- We now recompute settings that are dependent on the items in the
-												-- row. As we are in dynamic mode, we perform certain recomputation
-												-- as the items contained may have changed/just been added for the first time.
-											
-												-- Now if in dynamic mode, we must recompute `current_subrow_indent' as
-												-- the originally computed version is probably incorrect.
-												-- This is due to the fact that the row may well have been empty up until this point
-												-- and it is only now that we are filling the row.
-		
-											current_subrow_indent := subrow_indent (current_row)
-		
-												-- Now calculate the index of the first item in the row.
-											if drawing_subrow or drawing_parentrow then
-												-- We are now about to draw a row that is a subrow of another row, so
-												-- perform any calculations required.
-		
-												-- We must retrieve `current_row_list' as the process of inserting the
-												-- item into the structure causes the obejcts to change.
-												-- See the implementation of `internal_set_item' from EV_GRID_I which
-												-- calls `enlarge_row'.
-												current_row_list := grid_rows_data_list @ current_row_index
-		
-													-- Now retrieve the new node index.
-												node_index := retrieve_node_index (current_row)
+												drawing_subrow := parent_row_i /= Void
+													-- Are we drawing a subrow of the tree?
+					
+												drawing_parentrow := current_row.is_expandable
+													-- Are we drawing a row that is a parent of other rows?
+												
+												if drawing_subrow or drawing_parentrow then
+													-- We are now about to draw a row that is a subrow of another row, so
+													-- perform any calculations required.
+				
+													node_index := retrieve_node_index (current_row)
+				
+													if drawing_subrow then
+														parent_node_index := retrieve_node_index (parent_row_i)
+														from
+															current_parent_row := parent_row_i
+														until
+															current_parent_row = Void
+														loop
+															parent_node_index := parent_node_index.max (current_parent_row.index_of_first_item)
+															current_parent_row := current_parent_row.parent_row_i
+														end
+														parent_subrow_indent := grid.item_cell_indent (parent_node_index, parent_row_i.index) + ((node_pixmap_width + 1) // 2)
+														parent_x_indent_position := parent_subrow_indent
+														node_index := node_index.max (parent_node_index)
+													end
+												else
+													node_index := 1
+												end
+												
+													-- Now compute variables required for drawing tree structures.
+													-- Note that here we only compute the vertical variables because as each row
+													-- has a fixed height, they can be computed outside of the inner row iteration.
+													-- The horizontal offsets must be computed within the inner loop.
+												row_vertical_center := (current_row_height // 2)
+												row_vertical_bottom := current_row_height
+					
+												vertical_node_pixmap_top_offset := ((current_row_height - node_pixmap_height + 1)// 2)
+												vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
+				
+												current_subrow_indent := subrow_indent (current_row)
 											end
 		
 												-- Now retrieve `current_row_list' again. This is because as an item is added,
 												-- the row list is resized, which produces a new object.
-											current_row_list := grid_rows_data_list @ (current_row_index)
+											current_row_list := grid_rows_data_list @ (current_row_index)							
 										end
 											-- Resize the bufer if required. The buffer is only every increased and never decreased
 											-- as this prevents us from having to continuously change its size, which is an

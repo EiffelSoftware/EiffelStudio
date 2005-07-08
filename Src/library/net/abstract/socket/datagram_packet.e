@@ -59,7 +59,7 @@ feature -- Status_report
 			Result := (pos >= 0 and pos < data_area_size)
 		end
 
-	element (pos: INTEGER): CHARACTER is
+	element alias "[]"(pos: INTEGER): CHARACTER assign put_element is
 			-- Element located at data position `pos'
 		do
 			Result := data.read_integer_8 (pos + c_packet_number_size).to_character

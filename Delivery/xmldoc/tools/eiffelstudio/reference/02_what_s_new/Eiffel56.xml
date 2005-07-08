@@ -22,6 +22,7 @@
 				<item>Features tree is also available for classes which are part of the universe, but not yet compiled.</item>
 				<item>New EiffelCOM wizard. Click <link><url>../../../../wizards/com/index.xml</url><label>here</label></link> for more details.</item>
 				<item>Improved speed of class completion for large system.</item>
+				<item>Added new toggles for alias names and assigner commands to feature tree.</item>
 			</list>
 			<heading><size>3</size>Changes</heading>
 			<list ordered="false">
@@ -29,6 +30,7 @@
 					Changed the default C compilation flags on Windows when using Visual Studio as a back-end C compiler. It will now compile C code using the -MT option. 
 					It may cause some linking problems if you are using C libraries compiled against the static C library. To solve those issues recompile your C code using the -MT option.
 				</item>
+				<item>Provided keyword highlighting in editor and different views for new keyword <code><keyword>assign</keyword></code>.</item>
 			</list>
 			<heading><size>3</size>Bug fixes</heading>
 			<list ordered="false">
@@ -36,6 +38,7 @@
 				<item>Fixed some issues with formatting of agent using expressions as target, and display of character and string constants in context tool.</item>
 				<item>Fixed issue where tools that have been externally docked were not properly restored when reopening EiffelStudio.</item>
 				<item>Fixed issue where one could not remove entries added to the list of external commands.</item>
+				<item>Supported keyword highlighting for the keywords <code><keyword>infix</keyword></code> and <code><keyword>prefix</keyword></code> in editor and different views.</item>
 			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
@@ -122,6 +125,7 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 			<item>Implemented features <feature_name>collect</feature_name> and <feature_name>full_collect</feature_name> of class <class_name>MEMORY</class_name> for .NET.</item>
 			<item>Changed type of feature <feature_name>sign</feature_name> in classes <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> to <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> respectively.</item>
 			<item>Added a subcluster <cluster_name>refactoring</cluster_name> with classes that can be helpful for performing code refactoring.</item>
+			<item>Augmented many features that are used to access items by their index (such as <class_name>ARRAY</class_name>.<feature_name>item</feature_name> and <class_name>TABLE</class_name>.<feature_name>item</feature_name>) with a bracket alias and an assigner command.</item>
 		</list>
 		<heading><size>3</size>EiffelThread</heading>
 		<list ordered="false">

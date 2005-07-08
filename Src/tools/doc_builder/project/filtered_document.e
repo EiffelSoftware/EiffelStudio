@@ -14,6 +14,11 @@ inherit
 			set_text
 		end
 
+	EXCEPTIONS
+		rename
+			tag_name as exception_tag_name
+		end
+	
 create
 	make
 
@@ -41,6 +46,8 @@ feature {FILTER_MANAGER} -- Creation
 				end
 			else
 				print ("%NUnable to filter " + a_doc.name)
+				print ("%N")
+				print (exception_trace)
 			end			
 		ensure
 			has_filter: filter /= Void

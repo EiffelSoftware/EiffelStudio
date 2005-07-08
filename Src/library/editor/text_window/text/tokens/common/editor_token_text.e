@@ -54,7 +54,7 @@ feature -- Miscellaneous
 			else
 				l_is_fixed := is_fixed_width
 				if image.has ('%T') then
-					if previous /= Void then
+					if previous /= Void and then not previous.is_margin_token then
 						l_tab_position := previous.position + previous.width
 					end
 					from

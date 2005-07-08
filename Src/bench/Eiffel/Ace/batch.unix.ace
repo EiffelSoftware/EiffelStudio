@@ -103,11 +103,11 @@ cluster
 			"md_strong_name.e"; "md_public_key.e"
 		end
 
-	all xml_deserializer:		"$EIFFEL_SRC/Eiffel/library/xml_deserializer"
-
 	dotnet_helpers:			"$EIFFEL_SRC/dotnet/helpers"
 
 	all eac_components:		"$EIFFEL_SRC/dotnet/consumer/components"
+
+	all eac_serialization:		"$EIFFEL_SRC/dotnet/consumer/serialization"
 
 	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
 		exclude

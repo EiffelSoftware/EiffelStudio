@@ -482,9 +482,17 @@ feature {NONE} -- Implementation
 					character_to_append := '%U'
 				end
 				if rebuild_list_during_matching then
-					ix := choice_list.selected_rows.first.index + index_offset
+					if not choice_list.selected_rows.is_empty then
+						ix := choice_list.selected_rows.first.index + index_offset
+					else	
+						ix := index_offset
+					end					
 				else
-					ix := choice_list.selected_rows.first.index
+					if not choice_list.selected_rows.is_empty then
+						ix := choice_list.selected_rows.first.index
+					else
+						ix := index_offset
+					end
 				end
 				if sorted_names.item (ix).has_dot then
 					editor.complete_feature_from_window (sorted_names.item (ix).full_insert_name, True, character_to_append, remainder)
@@ -528,7 +536,7 @@ feature {NONE} -- Implementation
 				if has_capture then
 					disable_capture
 				end
-				if preferences.development_window_data.remember_completion_list_size then
+				if preferences.development_window_data.remember_completion_list_size and then is_displayed then
 					preferences.development_window_data.save_completion_list_size (width, height)
 				end
 				hide

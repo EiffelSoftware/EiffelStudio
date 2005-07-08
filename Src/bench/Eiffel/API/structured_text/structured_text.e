@@ -186,20 +186,17 @@ feature -- Element change
 			add (ti_Space)
 		end
 
-	add_default_string (s: STRING) is
+	add_string (s: STRING) is
 			-- Put default string `s' at current position.
 			-- Default string is used for formats.
 		require
 			s_not_void: s /= Void
-		local
-			l_item: like item
 		do
-			create {BASIC_TEXT} l_item.make (s)
-			add (l_item)
+			add (create {BASIC_TEXT}.make (s))
 		end
 
-	add_string (s: STRING) is
-			-- Put string `s' at current position.
+	add_manifest_string (s: STRING) is
+			-- Put `s' at current position as a manifest string.
 			-- Break `s' up in multiple tokens, if a link is
 			-- present.
 		require
@@ -259,7 +256,7 @@ feature -- Element change
 			if not s.is_empty then
 				separate_string (s, False)
 			else
-				add_string (s)
+				add (create {STRING_TEXT}.make (s))
 			end
 		end
 

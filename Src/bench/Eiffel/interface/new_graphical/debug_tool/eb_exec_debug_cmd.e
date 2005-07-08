@@ -70,12 +70,6 @@ feature {NONE} -- Attributes
 			Result := Pixmaps.Icon_run_debug
 		end
 
-	pixmap_continue: ARRAY [EV_PIXMAP] is
-			-- Pixmap for the button.
-		once
-			Result := Pixmaps.Icon_run_debug_continue
-		end
-
 	name: STRING is "Exec_debug"
 			-- Name of the command.
 

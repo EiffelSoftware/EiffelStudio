@@ -82,12 +82,14 @@ feature {PREFERENCES} -- Resource Management
 			implementation.save_resource (a_resource)		
 		end
 		
-	save_resources (a_resources: ARRAYED_LIST [PREFERENCE]) is
+	save_resources (a_resources: ARRAYED_LIST [PREFERENCE]; a_save_modified_values_only: BOOLEAN) is
 			-- Save all resources in `a_resources' to storage device.
+			-- If `a_save_modified_values_only' then only resources whose value is different
+			-- from the default one are saved, otherwise all resources are saved.
 		require
 			resources_not_void: a_resources /= Void
 		do
-			implementation.save_resources (a_resources)
+			implementation.save_resources (a_resources, a_save_modified_values_only)
 		end
 
 	remove_resource (a_resource: PREFERENCE) is

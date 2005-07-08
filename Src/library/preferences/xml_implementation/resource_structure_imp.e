@@ -79,11 +79,13 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 			-- Save `a_resource' to the file on disk.
 		do
 				-- TODO: neilc.  How to save only a single resource to the file?
-			save_resources (resources.resources.linear_representation)
+			save_resources (resources.resources.linear_representation, True)
 		end
 
-	save_resources (a_resources: ARRAYED_LIST [PREFERENCE]) is
-			-- Save `a_resources' to file on disk.
+	save_resources (a_resources: ARRAYED_LIST [PREFERENCE]; a_save_modified_values_only: BOOLEAN) is
+			-- Save all resources in `a_resources' to storage device.
+			-- If `a_save_modified_values_only' then only resources whose value is different
+			-- from the default one are saved, otherwise all resources are saved.
 		local
 			l_resource: PREFERENCE
 			l_file: PLAIN_TEXT_FILE
@@ -101,7 +103,7 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 					a_resources.after
 				loop
 					l_resource := a_resources.item
-					if not l_resource.is_default_value then
+					if not a_save_modified_values_only or else not l_resource.is_default_value then
 						l_file.put_string (pref_string1)
 						l_file.put_string (l_resource.name)
 						l_file.put_string (pref_string2)

@@ -157,7 +157,7 @@ feature -- Attributes
 			-- Is cluster created because it was a subdirectory of a cluster
 			-- specified with `all' specification in Ace file?
 
-	indexes: EIFFEL_LIST [INDEX_AS] is
+	indexes: INDEXING_CLAUSE_AS is
 			-- Indexing clause located in "indexing.txt".
 			--| NOTE: VB 07/03/2000 For now, not an attribute.
 		do
@@ -1738,7 +1738,7 @@ feature {NONE} -- Implementation
 			Result := cl_path
 		end
 
-	build_indexes: EIFFEL_LIST [INDEX_AS] is
+	build_indexes: INDEXING_CLAUSE_AS is
 			-- Parsing results of file "indexing.txt".
 		local
 			file: KL_BINARY_INPUT_FILE

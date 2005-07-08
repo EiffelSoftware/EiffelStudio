@@ -8,6 +8,13 @@ class
 
 feature -- Externals
 
+	frozen gtk_win_pos_mouse_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_WIN_POS_MOUSE"
+		end
+
 	frozen gtk_window_get_focus (a_window: POINTER): POINTER is
 		external
 			"C signature (GtkWindow*): GtkWidget* use <gtk/gtk.h>"

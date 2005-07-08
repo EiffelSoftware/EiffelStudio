@@ -771,6 +771,15 @@ feature -- Access
 			Result := implementation.is_full_redraw_on_virtual_position_change_enabled
 		end
 		
+	is_locked: BOOLEAN is
+			-- Are all graphical updates to `Current' supressed until
+			-- `unlock_update' is called.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			Result := implementation.is_locked
+		end
+		
 feature -- Status setting
 
 	set_item_veto_pebble_function (a_function: FUNCTION [ANY, TUPLE [EV_GRID_ITEM, ANY], BOOLEAN]) is
@@ -1475,7 +1484,30 @@ feature -- Status setting
 		ensure
 			not_is_full_redraw_on_virtual_position_change_enabled: not is_full_redraw_on_virtual_position_change_enabled
 		end
-
+		
+	lock_update is
+			-- Ensure `is_locked' is `True', thereby preventing graphical
+			-- updates until `unlock_update' is called.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			implementation.lock_update
+		ensure
+			is_locked: is_locked
+		end
+		
+	unlock_update is
+			-- Ensure `is_locked' is `False', thereby ensuring graphical
+			-- updates occur as normal. The complete client area
+			-- is refreshed to synchronize the display with the contents.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			implementation.unlock_update
+		ensure
+			not_is_locked: not is_locked
+		end
+		
 feature -- Status report
 
 	prunable: BOOLEAN is False
@@ -1936,7 +1968,7 @@ feature {NONE} -- Contract support
 				is_row_height_fixed and subrow_indent = 0 and is_single_item_selection_enabled and is_selection_on_click_enabled and
 				are_tree_node_connectors_shown and are_columns_drawn_above_rows and not is_resizing_divider_enabled and
 				is_column_resize_immediate and not is_full_redraw_on_virtual_position_change_enabled and
-				not is_vertical_overscroll_enabled and not is_horizontal_overscroll_enabled
+				not is_vertical_overscroll_enabled and not is_horizontal_overscroll_enabled and not is_locked
 		end
 
 feature {EV_GRID_I} -- Implementation

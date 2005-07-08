@@ -92,7 +92,6 @@ feature -- Access
 		local
 			visible_counter, counter: INTEGER
 			a_col_i: EV_GRID_COLUMN_I
-			cursor: CURSOR
 		do
 			from
 				counter := 1
@@ -1618,6 +1617,26 @@ feature -- Status setting
 		ensure
 			not_is_full_redraw_on_virtual_position_change_enabled: not is_full_redraw_on_virtual_position_change_enabled
 		end
+		
+	lock_update is
+			-- Ensure `is_locked' is `True', thereby preventing graphical
+			-- updates until `unlock_update' is called.
+		do
+			is_locked := True
+		ensure
+			is_locked: is_locked
+		end
+		
+	unlock_update is
+			-- Ensure `is_locked' is `False', thereby ensuring graphical
+			-- updates occur as normal. The complete client area
+			-- is refreshed to synchronize the display with the contents.
+		do
+			is_locked := False
+			redraw_client_area
+		ensure
+			not_is_locked: not is_locked
+		end
 
 feature -- Status report
 
@@ -2988,6 +3007,10 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I} -- Implementation
 			-- Note that enabling this causes a large performance penalty in redrawing during
 			-- scrolling, but may be used to achieve effects not otherwise possible unless the
 			-- entire client area is invalidated.
+			
+	is_locked: BOOLEAN
+			-- Are all graphical updates to `Current' supressed until
+			-- `unlock_update' is called.
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 	

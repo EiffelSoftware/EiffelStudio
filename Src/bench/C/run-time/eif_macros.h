@@ -976,7 +976,7 @@ RT_LNK int fcount;
 
 /* new debug */
 #ifdef WORKBENCH
-#define RTLU(x,y)	insert_local_var (x, y)
+#define RTLU(x,y)	insert_local_var (x, (void *) y)
 #define RTLO(n)		clean_local_vars (n)
 #define RTHOOK(n)	dstop (exvect, n)
 #define RTNHOOK(n)	dstop_nested (exvect, n)

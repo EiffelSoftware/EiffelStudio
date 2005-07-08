@@ -9,7 +9,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	TEXT_PANEL
 
 inherit
@@ -241,7 +241,7 @@ feature -- Status Setting
 				dialog.set_buttons_and_actions (button_labels, actions)
 				dialog.set_default_push_button (dialog.button (button_labels @ 1))
 				dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
-				dialog.set_title ("External edition")
+				dialog.set_title ("External Modification")
 				dialog.show_modal_to_window (reference_window)
 			end
 			editor_drawing_area.focus_in_actions.resume
@@ -552,8 +552,9 @@ feature -- Graphical interface
 		end
 
 	reference_window: EV_WINDOW is
-			-- Window which error dialogs will be shown relative to.		
+			-- Window which error dialogs will be shown relative to.  Void if not set using `set_reference_window'.
 		do
+			Result := internal_reference_window		
 		end
 
 	show_warning_message (a_message: STRING) is

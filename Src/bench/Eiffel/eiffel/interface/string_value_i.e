@@ -145,7 +145,7 @@ feature -- Code generation
 	append_signature (st: STRUCTURED_TEXT) is
 		do
 			st.add_char ('"')
-			st.add_string (eiffel_string (string_value))
+			st.add_manifest_string (eiffel_string (string_value))
 			st.add_char ('"')
 		end
 

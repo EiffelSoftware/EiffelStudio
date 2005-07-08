@@ -82,13 +82,6 @@ feature -- Access
 	old_expressions: LINKED_LIST [UN_OLD_B]
 			-- Used to record old expressions in Pass 3.
 
-	non_gc_tmp_vars: INTEGER
-			-- Total number of registers for references variables needed.
-
-	non_gc_reg_vars: INTEGER
-			-- Currently used registers for reference variables which do not
-			-- need to be under GC control (e.g. Hector references).
-
 	local_vars: ARRAY [BOOLEAN]
 			-- Local variables used have their flag set to True.
 
@@ -911,23 +904,6 @@ feature -- Access
 			original_body_index_set: original_body_index = new_original_body_index
 		end
 
-	add_non_gc_vars is
-			-- Add a temporary reference variable not to be placed under GC.
-		do
-			non_gc_reg_vars := non_gc_reg_vars + 1
-			if non_gc_tmp_vars < non_gc_reg_vars then
-				non_gc_tmp_vars := non_gc_reg_vars
-			end
-		end
-
-	free_non_gc_vars is
-			-- Free a temporary reference not under GC control.
-		require
-			good_context: non_gc_reg_vars >= 1
-		do
-			non_gc_reg_vars := non_gc_reg_vars - 1
-		end
-
 	init_propagation is
 			-- Reset `propagated' to False.
 		do
@@ -1260,8 +1236,6 @@ feature -- Access
 			inlined_dt_current := saved_context.inlined_dt_current
 			dftype_current := saved_context.dftype_current
 			inlined_dftype_current := saved_context.inlined_dftype_current
-			non_gc_reg_vars := saved_context.non_gc_reg_vars
-			non_gc_tmp_vars := saved_context.non_gc_tmp_vars
 			local_index_table := saved_context.local_index_table
 			local_index_counter := saved_context.local_index_counter
 			associated_register_table := saved_context.associated_register_table
@@ -1319,101 +1293,72 @@ feature -- Access
 			end
 		end
 
-	generate_temporary_nonref_variables is
-			-- Generate temporary variables not under the control of the
-			-- garbage collector.
-		local
-			i, j: INTEGER
-			buf: GENERATION_BUFFER
-			has_rescue_clause: BOOLEAN
-		do
-			j := non_gc_tmp_vars
-			if j >= 1 then
-				from
-					i := 1
-					buf := buffer
-					has_rescue_clause := has_rescue
-				until
-					i > j
-				loop
-					if has_rescue_clause then
-						buf.put_string ("EIF_OBJECT EIF_VOLATILE xp")
-					else
-						buf.put_string ("EIF_OBJECT xp")
-					end
-					buf.put_integer (i)
-					buf.put_character (';')
-					buf.put_new_line
-					i := i + 1
-				end
-			end
-		end
-
 	generate_tmp_var (ctype, num: INTEGER) is
 			-- Generate declaration for temporary variable `num'
 			-- whose C type is `ctype'.
 		local
 			buf: GENERATION_BUFFER
+			l_type, l_name: STRING
 		do
-			buf := buffer
-			if
-				has_rescue and then 
-				(ctype /= C_ref and then ctype /= C_pointer)
-			then
-					-- Protect access to local variables due
-					-- to rescue clause.
-				buf.put_string ("EIF_VOLATILE ")
-			end
+			buf :=buffer
 
+				-- First get type and name of temporary local.
 			inspect
 				ctype
 			when c_uint8 then
-				buf.put_string ("EIF_NATURAL_8 tu8_")
-				buf.put_integer (num)
+				l_type := once "EIF_NATURAL_8"
+				l_name := once "tu8_"
 			when c_uint16 then
-				buf.put_string ("EIF_NATURAL_16 tu16_")
-				buf.put_integer (num)
+				l_type := once "EIF_NATURAL_16"
+				l_name := once "tu16_"
 			when c_uint32 then
-				buf.put_string ("EIF_NATURAL_32 tu32_")
-				buf.put_integer (num)
+				l_type := once "EIF_NATURAL_32"
+				l_name := once "tu32_"
 			when c_uint64 then
-				buf.put_string ("EIF_NATURAL_64 tu64_")
-				buf.put_integer (num)
+				l_type := once "EIF_NATURAL_64"
+				l_name := once "tu64_"
 			when C_int8 then
-				buf.put_string ("EIF_INTEGER_8 ti8_")
-				buf.put_integer (num)
+				l_type := once "EIF_INTEGER_8"
+				l_name := once "ti8_"
 			when C_int16 then
-				buf.put_string ("EIF_INTEGER_16 ti16_")
-				buf.put_integer (num)
+				l_type := once "EIF_INTEGER_16"
+				l_name := once "ti16_"
 			when C_int32 then
-				buf.put_string ("EIF_INTEGER_32 ti32_")
-				buf.put_integer (num)
+				l_type := once "EIF_INTEGER_32"
+				l_name := once "ti32_"
 			when C_int64 then
-				buf.put_string ("EIF_INTEGER_64 ti64_")
-				buf.put_integer (num)
+				l_type := once "EIF_INTEGER_64"
+				l_name := once "ti64_"
 			when C_ref then
-				buf.put_string ("EIF_REFERENCE tp")
-				buf.put_integer (num)
-				buf.put_string (" = NULL")
+				l_type := once "EIF_REFERENCE"
+				l_name := once "tp"
 			when C_real32 then
-				buf.put_string ("EIF_REAL_32 tr32_")
-				buf.put_integer (num)
+				l_type := once "EIF_REAL_32"
+				l_name := once "tr32_"
 			when C_char then
-				buf.put_string ("EIF_CHARACTER tc")
-				buf.put_integer (num)
+				l_type := once "EIF_CHARACTER"
+				l_name := once "tc"
 			when C_wide_char then
-				buf.put_string ("EIF_WIDE_CHAR twc")
-				buf.put_integer (num)
+				l_type := once "EIF_WIDE_CHAR"
+				l_name := once "twc"
 			when C_real64 then
-				buf.put_string ("EIF_REAL_64 tr64_")
-				buf.put_integer (num)
+				l_type := once "EIF_REAL_64"
+				l_name := once "tr64_"
 			when C_pointer then
-				if has_rescue then
-					buf.put_string ("EIF_POINTER EIF_VOLATILE ta")
-				else
-					buf.put_string ("EIF_POINTER ta")
-				end
-				buf.put_integer (num)
+				l_type := once "EIF_POINTER"
+				l_name := once "ta"
+			end
+			buf.put_string (l_type)
+			buf.put_character (' ')
+			if has_rescue then
+				buf.put_string (once " EIF_VOLATILE ")
+			end
+			buf.put_string (l_name)
+			buf.put_integer (num)
+			if ctype = c_ref then
+					-- Because it is a reference we absolutely need to initialize it
+					-- to its default value, otherwise it would mess up the GC local tracking.
+				buf.put_string (once " = NULL")
 			end
 			buf.put_character (';')
 			buf.put_new_line
@@ -1604,8 +1549,6 @@ feature -- Clearing
 			current_used_count := 0
 			need_gc_hook := False
 			label := 0
-			non_gc_reg_vars := 0
-			non_gc_tmp_vars := 0
 			local_list.wipe_out
 			breakpoint_slots_number := 0;
 				-- This should not be necessary but may limit the

@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 			-- Create `formatted_text'.
 		do
 --			create formatted_text.make
---			formatted_text.add_default_string (classi.text)
+--			formatted_text.add_string (classi.text)
 		end
 
 	create_class_cmd is

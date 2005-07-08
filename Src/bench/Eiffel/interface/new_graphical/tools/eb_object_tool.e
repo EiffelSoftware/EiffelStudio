@@ -672,7 +672,7 @@ feature {NONE} -- Implementation
 					else
 						exception_item.set_text ("Exception raised :: UnHandled")
 					end
-					exception_item.set_pixmap (Pixmaps.Icon_green_tick)
+					exception_item.set_pixmap (Pixmaps.Icon_debugger_exception)
 					
 						--| Exception message
 					l_exception_tag := Application.imp_dotnet.exception_message

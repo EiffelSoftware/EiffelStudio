@@ -164,7 +164,8 @@ feature -- Status setting
 			if blocking_window /= Void then
 				Result := {EV_GTK_EXTERNALS}.Gtk_win_pos_center_on_parent_enum
 			else
-				Result := {EV_GTK_EXTERNALS}.Gtk_win_pos_center_enum
+					-- We let the Window Manager decide where the window should be positioned.
+				Result := {EV_GTK_EXTERNALS}.gtk_win_pos_none_enum
 			end
 		end
 

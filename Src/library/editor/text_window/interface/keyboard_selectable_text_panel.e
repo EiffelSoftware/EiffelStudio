@@ -707,7 +707,7 @@ feature {NONE} -- Cursor Management
 				old_line := l_cursor.y_in_lines
 				action.call (Void)				
 				invalidate_line (old_line, False)
-				disable_selection
+				disable_selection				
 			else
 					-- There is no selection. Normal move.
 				old_line := l_cursor.y_in_lines
@@ -716,6 +716,7 @@ feature {NONE} -- Cursor Management
 				if old_line /= new_line then
 						-- redraw old cursor position 
 						-- new cursor position will be redrawn in handle_extended_key 
+					disable_selection
 					invalidate_line (old_line, True)
 				end
 			end
@@ -727,7 +728,7 @@ feature {NONE} -- Cursor Management
 		do
 			if text_displayed.cursor /= Void then
 				invalidate_line (text_displayed.cursor.y_in_lines, flush_screen)	
-			end				
+			end
 		end
 
 	draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
@@ -1077,9 +1078,9 @@ feature {NONE} -- Implementation
 					if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
 							-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
 							-- Lines with cursor or selection in them ALWAYS need redrawing.
-						if use_buffered or l_has_data then
+						if use_buffered or l_has_data then							
 		 					draw_line_to_buffered_line (curr_line, l_text.current_line)
-							draw_buffered_line_to_screen (l_x_offset - l_margin_width, viewable_width, l_x_offset, y_offset)
+							draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width + left_margin_width, l_x_offset, y_offset)
 						else
 							draw_line_to_screen ((l_x_offset - l_margin_width).max (0), l_x_offset + a_width, y_offset, l_text.current_line)
 						end

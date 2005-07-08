@@ -128,19 +128,6 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 			end
 		end	
 
-	save (a_resources: ARRAYED_LIST [PREFERENCE]) is
-			-- Save all resources.			
-		do			
-			from
-				a_resources.start
-			until
-				a_resources.after
-			loop
-				save_resource (a_resources.item)
-				a_resources.forth
-			end
-		end		
-
 invariant
 	has_session_values: session_values /= Void
 

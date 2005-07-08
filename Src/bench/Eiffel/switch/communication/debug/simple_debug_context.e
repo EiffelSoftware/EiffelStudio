@@ -83,7 +83,7 @@ feature -- Element change
 			tmp := s.as_lower
 			classi := Universe.class_named (tmp, e_class.cluster)
 			if classi = Void then
-				text.add_default_string (s)
+				text.add_string (s)
 			else
 				text.add_classi (classi, s)
 			end

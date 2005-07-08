@@ -354,7 +354,7 @@ feature -- Output
 					loop
 						st.add_space
 						eiffel_name := creation_feature_list.item.internal_name
-						st.add_default_string (eiffel_name)
+						st.add_string (eiffel_name)
 						creation_feature_list.forth
 						if not creation_feature_list.after then
 							st.add (ti_Comma)

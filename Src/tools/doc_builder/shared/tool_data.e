@@ -7,6 +7,9 @@ indexing
 class
 	TOOL_DATA
 
+inherit
+	EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -54,7 +57,7 @@ feature {NONE} -- Implementation
 
 				-- Preferences
 				
-			output_directory_preference := l_factory.new_string_resource_value (l_manager, output_directory_string, "C:\doc")	
+			output_directory_preference := l_factory.new_string_resource_value (l_manager, output_directory_string, current_working_directory)	
 		end
 
 	preferences: PREFERENCES

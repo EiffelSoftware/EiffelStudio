@@ -469,7 +469,7 @@ feature -- Icons
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("debugger_exception")
+			Result := pixmap_file_content ("icon_debugger_exception")
 		end
 
 	Icon_cluster_tool: ARRAY [EV_PIXMAP] is

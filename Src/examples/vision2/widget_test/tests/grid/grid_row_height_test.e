@@ -32,9 +32,7 @@ feature {NONE} -- Initialization
 			-- Add items to `grid' occupying `columns' columns
 			-- and `rows' rows with differing font heights.
 		local
-			l_ycount, l_xcount: INTEGER
 			grid_label_item: EV_GRID_LABEL_ITEM
-			counter: INTEGER
 			column_counter, row_counter: INTEGER
 			font: EV_FONT
 		do		

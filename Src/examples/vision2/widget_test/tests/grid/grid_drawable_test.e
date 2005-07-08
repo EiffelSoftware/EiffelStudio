@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 		local
 			counter: INTEGER
 			value: DOUBLE
-			first_row, subrow: EV_GRID_ROW
+			first_row: EV_GRID_ROW
 		do
 			if grid.is_displayed then
 				from

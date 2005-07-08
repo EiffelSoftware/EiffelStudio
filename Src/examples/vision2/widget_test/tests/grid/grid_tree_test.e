@@ -17,7 +17,6 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create `Current' and initialize test in `widget'.
 		local
-			counter: INTEGER
 			grid_label_item: EV_GRID_LABEL_ITEM
 		do
 			create grid

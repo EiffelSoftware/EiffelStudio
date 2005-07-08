@@ -18,6 +18,7 @@ inherit
 
 	INDEXABLE [INTEGER, INTEGER]
 		rename
+			item as item alias "[]",
 			put as indexable_put
 		undefine
 			changeable_comparison_criterion

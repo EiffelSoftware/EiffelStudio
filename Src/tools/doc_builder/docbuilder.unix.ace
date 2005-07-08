@@ -59,6 +59,8 @@ cluster
 			"web_browser_widget.e";
 		end
 
+	interface_icons (interface):		"$/icons"
+
 	interface_wizard (interface):		"$/wizard"
 
 	shared (root_cluster):		"$/shared"

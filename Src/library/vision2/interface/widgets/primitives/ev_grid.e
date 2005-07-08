@@ -164,6 +164,14 @@ indexing
 		its new width during the resizing, by calling `enable_resizing_divider'. This divider
 		may be solid or dashed, based on the state of `is_resizing_divider_solid', settable via
 		`enable_resizing_divider_solid' or `disable_resizing_divider_solid'.
+		
+		If you wish to perform multiple updates to the grid, in most cases the graphical
+		update is buffered until the system becomes idle, thereby reducing flicker.
+		However, in some situations, it is possible that the system may become idle
+		during the updates, which may lead to flicker. In situations such as these, you
+		may use `lock_update' to prevent graphical updates from occuring in the grid
+		until `unlock_update' is called. While the grid `is_locked', no graphical updates
+		of any form are performed.
 
 		--------------------------------------------------------------------------------
 

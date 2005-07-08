@@ -3423,6 +3423,7 @@ feature {NONE} -- Drawing implementation
 			
 			enable_selection_on_click
 			enable_single_item_selection
+			enable_selection_keyboard_handling
 
 				-- Enable PND
 			drawable.drop_actions.set_veto_pebble_function (agent veto_pebble_function_intermediary)

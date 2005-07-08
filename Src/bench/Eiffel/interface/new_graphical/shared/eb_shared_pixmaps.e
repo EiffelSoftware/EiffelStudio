@@ -465,11 +465,11 @@ feature -- Icons
 			Result := build_classic_pixmap ("debug_run")
 		end
 
-	Icon_run_debug_continue: ARRAY [EV_PIXMAP] is
+	Icon_debugger_exception: EV_PIXMAP is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
-			Result := build_classic_pixmap ("debug_run_continue")
+			Result := pixmap_file_content ("debugger_exception")
 		end
 
 	Icon_cluster_tool: ARRAY [EV_PIXMAP] is
@@ -1287,7 +1287,7 @@ feature {NONE} -- Implementation
 			Result.put ([8, 13], "icon_restore_view_color")
 			Result.put ([8, 14], "icon_run_color")
 			Result.put ([8, 15], "icon_debug_run_color")
-			Result.put ([8, 16], "icon_debug_run_continue_color")
+			Result.put ([8, 16], "icon_debugger_exception")
 			Result.put ([9, 1], "icon_running_1")
 			Result.put ([9, 2], "icon_running_2")
 			Result.put ([9, 3], "icon_running_3")
@@ -1328,8 +1328,8 @@ feature {NONE} -- Implementation
 			Result.put ([11, 6], "icon_toggle_force_color")
 			Result.put ([11, 7], "icon_toggle_quality_color")
 			Result.put ([11, 8], "icon_uml_color")
-			Result.put ([11, 9], "icon_pin_closed_color")
-			Result.put ([11, 10], "icon_pin_open_color")
+			Result.put ([11, 9], "icon_pin_open_color")
+			Result.put ([11, 10], "icon_pin_closed_color")
 			Result.put ([11, 11], "icon_arrow_empty")
 			Result.put ([11, 12], "icon_force_settings_color")	
 			Result.put ([11, 13], "icon_deferred_obsolete_feature")

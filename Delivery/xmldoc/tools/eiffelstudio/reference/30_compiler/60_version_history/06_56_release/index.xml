@@ -23,8 +23,7 @@
 			</item>
 			<item>Supported new feature assigner syntax to associate feature with an assigner command:
 				<code_block><feature_name>item</feature_name> <symbol> <keyword>alias</keyword> <string>"[]"</string> (</symbol><local_variable>index</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>):</symbol> <generics>G</generics> <keyword>assign</keyword> <feature_name>put</feature_name> ...
-<feature_name>put</feature_name> <symbol>(</symbol><local_variable>value</local_variable><symbol>:</symbol> <generics>G</generics><symbol>;</symbol><local_variable>index</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> ...
-				</code_block>
+<feature_name>put</feature_name> <symbol>(</symbol><local_variable>value</local_variable><symbol>:</symbol> <generics>G</generics><symbol>;</symbol> <local_variable>index</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> ...</code_block>
 				Given the declaration above the following instructions become equivalent:
 				<code_block><local_variable>x</local_variable><symbol>.</symbol><feature_name>put</feature_name> <symbol>(</symbol><local_variable>x</local_variable><symbol>.</symbol><feature_name>item</feature_name> <symbol>(</symbol><local_variable>i</local_variable><symbol> <symbol>+</symbol> <number>1</number>)</symbol><symbol>,</symbol> <local_variable>i</local_variable><symbol>)</symbol>
 <local_variable>x</local_variable><symbol>.</symbol><feature_name>item</feature_name> <symbol>(</symbol><local_variable>i</local_variable><symbol>)</symbol> <symbol>:=</symbol> <local_variable>x</local_variable><symbol>.</symbol><feature_name>item</feature_name> <symbol>(</symbol><local_variable>i</local_variable><symbol> <symbol>+</symbol> <number>1</number>)</symbol>
@@ -63,6 +62,7 @@
 			<item>Changed exception handling for once routines so that exception raised during the first call is raised during any subsequent call to this routine.</item>
 			<item>Introduced upper limit for value of integer constant used in <code><class_name>BIT</class_name></code> type declaration and extended <code><compiler_error>VTBT</compiler_error></code> rule to cover this change.</item>
 			<item>To evaluate the type of a manifest array we now use the first item of the manifest array instead of the last one as a first guessed type.</item>
+			<item>Allowed for integer literals with intermediate underscores at arbitrary positions.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -150,6 +150,7 @@ i.e. has empty compound for a primary condition which is a constant <code><keywo
 			<item>Fixed a bug in classic mode that caused last exception to be cleared after returning from a routine that has a rescue clause but returns normally.</item>
 			<item>Fixed several bugs related to handling of nested exceptions in classic mode.</item>
 			<item>Changed a limit of maximum class name length in melted byte code from 256 bytes to 32767 bytes.</item>
+			<item>Changed C code generation for long strings (that result from long manifest strings, identifiers, etc.) to avoid restrictions imposed by some C compilers on long string literals (in particular, by <code>cl</code> that issued error C2026).</item>
 		</list>
 		<heading>
 			<size>3</size>.NET issues

@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 			else
 				ctxt.put_string_item ("}")
 			end
-			ctxt.text.add_string (l_as.verbatim_marker + "%"")
+			ctxt.text.add_manifest_string (l_as.verbatim_marker + "%"")
 		end
 
 	process_body_as (l_as: BODY_AS) is
@@ -2129,7 +2129,7 @@ feature {NONE} -- Implementation: helpers
 				elseif in_index then
 					st.add_indexing_string (sb)
 				else
-					st.add_string (sb)
+					st.add_manifest_string (sb)
 				end
 				ctxt.put_new_line
 				n := m + 1

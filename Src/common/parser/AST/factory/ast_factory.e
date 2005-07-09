@@ -1057,14 +1057,15 @@ feature -- Access
 	new_routine_as (o: STRING_AS; pr: REQUIRE_AS;
 			l: EIFFEL_LIST [TYPE_DEC_AS]; b: ROUT_BODY_AS; po: ENSURE_AS;
 			r: EIFFEL_LIST [INSTRUCTION_AS]; end_loc: LOCATION_AS;
-			oms_count: INTEGER): ROUTINE_AS
+			oms_count, a_pos: INTEGER): ROUTINE_AS
 		is
 			-- New ROUTINE AST node
 		require
 			valid_oms_count: oms_count >= 0
+			a_pos_positive: a_pos > 0
 		do
 			if b /= Void and end_loc /= Void then
-				create Result.initialize (o, pr, l, b, po, r, end_loc, oms_count)
+				create Result.initialize (o, pr, l, b, po, r, end_loc, oms_count, a_pos)
 			end
 		end
 

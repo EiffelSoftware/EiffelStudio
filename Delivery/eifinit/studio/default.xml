@@ -535,7 +535,7 @@
 	<PREF NAME="editor.general.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.selection_text_color" DESCRIPTION="Color of selected text."><COLOR>255;255;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.selection_background_color" DESCRIPTION="Background color of selected text."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;0;0</COLOR></PREF>	
+	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;128;128</COLOR></PREF>	
 	<PREF NAME="editor.general.colors.string_background_color" DESCRIPTION="Background color of string text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>255;255;255</COLOR></PREF>	

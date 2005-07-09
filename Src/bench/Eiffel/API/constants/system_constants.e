@@ -160,7 +160,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Major_version_number: INTEGER is 5
 	Minor_version_number: INTEGER is 6
-	Build_version_number: STRING is "1108"
+	Build_version_number: STRING is "1109"
 			-- Version number
 
 	Version_number: STRING is

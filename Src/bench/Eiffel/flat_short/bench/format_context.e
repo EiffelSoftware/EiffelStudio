@@ -657,15 +657,16 @@ feature -- Element change
 				emit_tabs
 			end
 
-			if is_for_case then
-				text.add_string (s)
-			else
+				-- For .NET formatting, `class_c' might be Void.
+			if not is_for_case and then class_c /= Void then
 				classi := Universe.class_named (s, class_c.cluster)
 				if classi = Void then
 					text.add_string (s)
 				else
 					text.add_classi (classi, s)
 				end
+			else
+				text.add_string (s)
 			end
 		end
 
@@ -922,6 +923,17 @@ feature -- Output
 		end
 
 	put_string (s: STRING) is
+			-- Append `s' to `text'.
+		require
+			s_exists: s /= Void
+		do
+			if not tabs_emitted then
+				emit_tabs
+			end
+			text.add_string (s)
+		end
+
+	put_manifest_string (s: STRING) is
 			-- Append `s' to `text'.
 		require
 			s_exists: s /= Void

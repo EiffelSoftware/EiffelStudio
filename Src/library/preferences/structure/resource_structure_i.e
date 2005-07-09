@@ -72,6 +72,8 @@ feature -- Save
 			loop
 				if not a_save_modified_values_only or else not a_resources.item.is_default_value then
 					save_resource (a_resources.item)
+				else
+					remove_resource (a_resources.item)
 				end
 				a_resources.forth
 			end		

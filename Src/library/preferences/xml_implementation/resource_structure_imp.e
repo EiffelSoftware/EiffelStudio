@@ -109,6 +109,8 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 						l_file.put_string (pref_string2)
 						l_file.put_string (l_resource.string_value)
 						l_file.put_string (pref_string3)
+					else
+						-- nothing to do to remove them from file.
 					end
 					a_resources.forth
 				end

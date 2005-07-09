@@ -628,6 +628,13 @@ feature -- Icons
 			Result := build_classic_pixmap ("new_dynamic_lib")
 		end
 
+	Icon_new_cluster: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_cluster")
+		end
+
 	Icon_new_class: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2

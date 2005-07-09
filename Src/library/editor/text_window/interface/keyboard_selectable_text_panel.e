@@ -597,20 +597,20 @@ feature {NONE} -- Handle keystrokes
 			when Key_page_up then
 					-- Page up
 				if l_cursor.y_in_lines >= first_line_displayed and l_cursor.y_in_lines <= first_line_displayed + number_of_lines_displayed then
-					set_first_line_displayed ((first_line_displayed - number_of_lines_displayed).max (1), True)
-					basic_cursor_move (agent l_cursor.set_y_in_lines ((l_cursor.y_in_lines - number_of_lines_displayed).max (1)))
+					set_first_line_displayed ((first_line_displayed - number_of_lines_displayed + common_line_count).max (1), True)
+					basic_cursor_move (agent l_cursor.set_y_in_lines ((l_cursor.y_in_lines - number_of_lines_displayed + common_line_count).max (1)))
 				else
-					set_first_line_displayed ((first_line_displayed - number_of_lines_displayed).max (1), True)
-					basic_cursor_move (agent l_cursor.set_y_in_lines ((first_line_displayed + number_of_lines_displayed - 1).min (number_of_lines)))
+					set_first_line_displayed ((first_line_displayed - number_of_lines_displayed + common_line_count).max (1), True)
+					basic_cursor_move (agent l_cursor.set_y_in_lines ((first_line_displayed + number_of_lines_displayed + common_line_count - 1).min (number_of_lines)))
 				end
 
 			when Key_page_down then
 					-- Page down
 				if l_cursor.y_in_lines >= first_line_displayed and l_cursor.y_in_lines <= first_line_displayed + number_of_lines_displayed then
-					set_first_line_displayed ((first_line_displayed + number_of_lines_displayed).min (maximum_top_line_index), True)
-					basic_cursor_move (agent l_cursor.set_y_in_lines ((l_cursor.y_in_lines + number_of_lines_displayed).min (number_of_lines)))
+					set_first_line_displayed ((first_line_displayed + number_of_lines_displayed - common_line_count).min (maximum_top_line_index), True)
+					basic_cursor_move (agent l_cursor.set_y_in_lines ((l_cursor.y_in_lines + number_of_lines_displayed - common_line_count).min (number_of_lines)))
 				else
-					set_first_line_displayed ((first_line_displayed + number_of_lines_displayed - 1).min (maximum_top_line_index), True)
+					set_first_line_displayed ((first_line_displayed + number_of_lines_displayed - common_line_count - 1).min (maximum_top_line_index), True)
 					basic_cursor_move (agent l_cursor.set_y_in_lines (first_line_displayed))
 				end
 			else

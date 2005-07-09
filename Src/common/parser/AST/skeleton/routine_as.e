@@ -25,12 +25,13 @@ feature {NONE} -- Initialization
 	initialize (o: like obsolete_message; pr: like precondition;
 		l: like locals; b: like routine_body; po: like postcondition;
 		r: like rescue_clause; ek: like end_keyword;
-		oms_count: like once_manifest_string_count) is
+		oms_count: like once_manifest_string_count; a_pos: like body_start_position) is
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
 			ek_not_void: ek /= Void
 			valid_oms_count: oms_count >= 0
+			a_pos_positive: a_pos > 0
 		do
 			obsolete_message := o
 			precondition := pr
@@ -40,6 +41,7 @@ feature {NONE} -- Initialization
 			rescue_clause := r
 			end_keyword := ek
 			once_manifest_string_count := oms_count
+			body_start_position := a_pos
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
@@ -49,6 +51,7 @@ feature {NONE} -- Initialization
 			rescue_clause_set: rescue_clause = r
 			end_keyword_set: end_keyword = ek
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
+			body_start_position_set: body_start_position = a_pos
 		end
 
 feature -- Visitor
@@ -115,34 +118,8 @@ feature -- Location
 			Result := end_keyword
 		end
 
-	body_start_position: INTEGER is
+	body_start_position: INTEGER
 			-- Position at the start of the main body (after the comments and obsolete clause)
-		local
-			body_start_location: LOCATION_AS
-		do
-			if precondition /= Void then
-				body_start_location := precondition.start_location
-			end
-			if (body_start_location = Void or else body_start_location.is_null) and then locals /= Void then
-				body_start_location := locals.start_location
-			end
-			if body_start_location = Void or else body_start_location.is_null then
-				body_start_location := routine_body.start_location
-			end
-			if (body_start_location = Void or else body_start_location.is_null) and then postcondition /= Void then
-				body_start_location := postcondition.start_location
-			end
-			if (body_start_location = Void or else body_start_location.is_null) and then rescue_clause /= Void then
-				body_start_location := rescue_clause.start_location
-			end
-			if body_start_location = Void or else body_start_location.is_null then
-				body_start_location := end_keyword
-			end
-			check
-				body_start_location_not_void: body_start_location /= Void
-			end
-			Result := body_start_location.position
-		end
 		
 feature -- Properties
 

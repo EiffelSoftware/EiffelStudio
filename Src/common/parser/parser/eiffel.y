@@ -1004,6 +1004,7 @@ Strip_identifier_list: -- Empty
 
 Routine:
 		Obsolete
+			{	fbody_pos := position }
 		Precondition
 		Local_declarations
 		Routine_body
@@ -1011,7 +1012,7 @@ Routine:
 		Rescue
 		TE_END
 			{
-				$$ := ast_factory.new_routine_as ($1, $2, $3, $4, $5, $6, $7, once_manifest_string_count)
+				$$ := ast_factory.new_routine_as ($1, $3, $4, $5, $6, $7, $8, once_manifest_string_count, fbody_pos)
 				once_manifest_string_count := 0
 			}
 	;

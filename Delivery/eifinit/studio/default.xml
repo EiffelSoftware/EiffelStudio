@@ -22,21 +22,21 @@
 	<PREF NAME="debugger.show_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside preselected toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.show_all_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside all toolbar items?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>0;0;160</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_class_fill_color" DESCRIPTION="Color for BON class figures."><COLOR>145;255;145</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_class_uncompiled_fill_color" DESCRIPTION="Color for uncompiled BON class figures."><COLOR>180;180;180</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>17;3;80</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_class_fill_color" DESCRIPTION="Color for BON class figures."><COLOR>204;204;253</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_class_uncompiled_fill_color" DESCRIPTION="Color for uncompiled BON class figures."><COLOR>234;234;234</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures."><FONT>Arial-r-bold-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_color" DESCRIPTION="Color for generics in BON class figures."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_client_label_font" DESCRIPTION="Font for feature names on BON client supplier links."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_client_label_color" DESCRIPTION="Color for feature names on BON client supplier links."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_client_color" DESCRIPTION="Color for BON client supplier links."><COLOR>0;128;64</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_client_color" DESCRIPTION="Color for BON client supplier links."><COLOR>69;166;11</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_client_line_width" DESCRIPTION="Line width for BON client supplier links."><INTEGER>5</INTEGER></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_cluster_line_color" DESCRIPTION="Color for BON cluster line."><COLOR>0;128;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_cluster_iconified_fill_color" DESCRIPTION="Iconified BON Cluster fill color."><COLOR>183;255;201</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_area_color" DESCRIPTION="BON cluster name area fill color."><COLOR>210;255;255</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_cluster_line_color" DESCRIPTION="Color for BON cluster line."><COLOR>100;97;28</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_cluster_iconified_fill_color" DESCRIPTION="Iconified BON Cluster fill color."><COLOR>240;240;255</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_area_color" DESCRIPTION="BON cluster name area fill color."><COLOR>254;253;203</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_color" DESCRIPTION="BON cluster name color."><COLOR>0;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_font" DESCRIPTION="BON cluster name font."><FONT>Arial-r-bold-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_inheritance_color" DESCRIPTION="Color for BON inheritance links."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_inheritance_color" DESCRIPTION="Color for BON inheritance links."><COLOR>230;0;0</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_inheritance_line_width" DESCRIPTION="Line width for BON inheritance links."><INTEGER>2</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_class_name_font" DESCRIPTION="Font for class names in UML class figures."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_class_deferred_font" DESCRIPTION="Font for names of deferred classes in UML class figures."><FONT>Arial-i-regular-10-sans</FONT></PREF>

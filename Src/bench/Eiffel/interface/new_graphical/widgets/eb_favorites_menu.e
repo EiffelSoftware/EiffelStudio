@@ -254,9 +254,9 @@ feature -- Observer pattern
 			end
 			if l_menu /= Void then
 				if not l_menu.is_empty then
-					menu_sep ?= l_menu.last	
+					l_item_data ?= l_menu.last.data
 				end
-				if menu_sep = Void then
+				if l_item_data = Void then
 					create menu_sep
 					l_menu.extend (menu_sep)
 				end

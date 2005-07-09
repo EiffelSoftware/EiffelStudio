@@ -147,16 +147,16 @@ feature -- Status setting
 							consumed_types.put (consumed_type, a_stone.class_i.name)	
 						end
 					end
-					set_class (a_stone.e_class)
 					class_i := Void
+					set_class (a_stone.e_class)
 				else
 					l_ext_class ?= new_stone.class_i
 					check
 						l_ext_class_not_void: l_ext_class /= Void
 					end
 					consumed_type := l_ext_class.external_consumed_type
-					set_classi (new_stone.class_i)					
 					associated_class := Void
+					set_classi (new_stone.class_i)					
 				end
 			else
 				set_dotnet_mode (False)

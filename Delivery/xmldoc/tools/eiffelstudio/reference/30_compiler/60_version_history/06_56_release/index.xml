@@ -4,6 +4,7 @@
 		<heading>
 			<size>2</size>What's new
 		</heading>
+		<seealso>See also: <link><label>Differences between standard ECMA-367 and Eiffel Software implementation</label><url>../../10_ise_eiffel_specific/ecma.xml</url></link></seealso>
 		<list ordered="false">
 			<item>Implemented once manifest strings. They can be used at the same places where normal manifest strings can be used, e.g.:
 				<code_block><local_variable>s</local_variable> <symbol>:=</symbol> <keyword>once</keyword> <string>"abc"</string>

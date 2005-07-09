@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			choice_list.key_release_actions.extend (agent on_key_released)
 			choice_list.pointer_double_press_actions.extend (agent mouse_selection)
 			choice_list.hide_header
+			choice_list.disable_selection_key_handling
 
 			make_with_title (Interface_names.t_Autocomplete_window)
 			create vbox
@@ -236,11 +237,11 @@ feature {NONE} -- Events handling
 				inspect
 					ev_key.code				
 				when Key_page_up then
-						-- Go up 10 items
+						-- Go up `nb_items_to_scroll' items
 					if choice_list.row_count > 0 then
 						if not choice_list.selected_items.is_empty then
 							ix:= choice_list.selected_rows.first.index
-							if ix <= 10 then
+							if ix <= nb_items_to_scroll then
 								if prev_item_index = 1 then
 									choice_list.remove_selection
 									choice_list.row (choice_list.row_count).enable_select
@@ -250,7 +251,7 @@ feature {NONE} -- Events handling
 								end								
 							else
 								choice_list.remove_selection
-								choice_list.row (ix - 10).enable_select
+								choice_list.row (ix - nb_items_to_scroll).enable_select
 							end
 						end
 						if not choice_list.selected_rows.is_empty then
@@ -258,11 +259,11 @@ feature {NONE} -- Events handling
 						end
 					end
 				when Key_page_down then
-						-- Go down 10 items
+						-- Go down `nb_items_to_scroll' items
 					if choice_list.row_count > 0 then
 						if not choice_list.selected_items.is_empty then
 							ix:= choice_list.selected_rows.first.index
-							if ix > choice_list.row_count - 10 then
+							if ix > choice_list.row_count - nb_items_to_scroll then
 								if prev_item_index = choice_list.row_count then
 									choice_list.remove_selection
 									choice_list.row (1).enable_select
@@ -273,8 +274,8 @@ feature {NONE} -- Events handling
 								end								
 							else
 								choice_list.remove_selection
-								choice_list.row (ix + 10).enable_select
-								choice_list.row (ix + 10).ensure_visible
+								choice_list.row (ix + nb_items_to_scroll).enable_select
+								choice_list.row (ix + nb_items_to_scroll).ensure_visible
 							end
 						end
 						if not choice_list.selected_rows.is_empty then
@@ -377,9 +378,20 @@ feature {NONE} -- Events handling
 
 	on_mouse_wheel (a: INTEGER) is
 			-- Mouse wheel scrolled up or down
-		do		
+		local
+			l_row: EV_GRID_ROW
+		do
 			if choice_list.virtual_height > choice_list.viewable_height then
-				choice_list.set_virtual_position (choice_list.virtual_x_position, ((choice_list.virtual_y_position + (choice_list.row_height * -a)).max (0)).min (choice_list.maximum_virtual_y_position))
+				if preferences.editor_data.mouse_wheel_scroll_full_page then
+					l_row := choice_list.row ((choice_list.first_visible_row.index - a * nb_items_to_scroll).max (1).min (choice_list.row_count))
+					choice_list.set_virtual_position (choice_list.virtual_x_position,
+						l_row.virtual_y_position.min (choice_list.maximum_virtual_y_position))
+				else
+					choice_list.set_virtual_position (
+						choice_list.virtual_x_position,
+						((choice_list.virtual_y_position + (choice_list.row_height * -a * 
+						preferences.editor_data.mouse_wheel_scroll_size)).max (0)).min (choice_list.maximum_virtual_y_position))
+				end
 			end
 		end		
 
@@ -799,5 +811,13 @@ feature {NONE} -- String matching
 		ensure
 			has_result: Result /= Void
 		end	
-				
+
+	nb_items_to_scroll: INTEGER is
+			-- Number of items that will be scrolled when doing a page up or down operation.
+		require
+			choice_list_not_void: choice_list /= Void
+		do
+			Result := choice_list.last_visible_row.index - choice_list.first_visible_row.index - preferences.editor_data.scrolling_common_line_count
+		end
+
 end -- class EB_COMPLETION_CHOICE_WINDOW

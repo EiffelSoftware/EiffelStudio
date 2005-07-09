@@ -338,14 +338,16 @@ feature {NONE} -- Formatting
 			a_ctxt.set_separator (Void)
 			a_ctxt.set_new_line_between_tokens
 				-- Full .NET name.
-			a_ctxt.put_string_item ("description: %"")
+			a_ctxt.put_string ("description: ")
+			a_ctxt.put_string_item ("%"")
 			a_ctxt.put_string_item (dotnet_name)
 			a_ctxt.put_string_item ("%"")
 			a_ctxt.put_new_line
 		
 				-- Description of type.
 			if l_member_info /= Void then
-				a_ctxt.put_string_item ("summary: %"")
+				a_ctxt.put_string ("summary: ")
+				a_ctxt.put_string_item ("%"")
 				l_summary := a_ctxt.parse_summary (l_member_info.summary)
 				from
 					l_summary.start
@@ -405,7 +407,7 @@ feature {NONE} -- Formatting
 			a_ctxt.put_new_line
 			a_ctxt.put_text_item (ti_Before_class_end)
 			a_ctxt.put_text_item (ti_End_keyword)
-			a_ctxt.put_string_item (" -- ") 
+			a_ctxt.put_comment_text (" -- ") 
 			a_ctxt.put_comment_text ("class")
 			a_ctxt.put_space
 			a_ctxt.put_comment_text (a_ctxt.class_i.name_in_upper)			

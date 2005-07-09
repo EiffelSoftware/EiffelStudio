@@ -1,6 +1,12 @@
 <document output="studio" title="Differences between ETL 2nd printing and  Eiffel Software  implementation">
 	<meta_data/>
 	<paragraph>
+		<seealso>See also: 
+			<link>
+				<label>Differences between standard ECMA-367 and Eiffel Software implementation</label>
+				<url>ecma.xml</url>
+			</link>
+		</seealso>
 		<heading><size>2</size>Added classes</heading>
 		<list ordered="false">
 			<item>New basic classes have been added: <class_name>INTEGER_8</class_name>, <class_name>INTEGER_16</class_name>, <class_name>INTEGER_64</class_name> and <class_name>WIDE_CHARACTER</class_name>. <class_name>INTEGER</class_name> is now specified as having a 32 bits representation</item>

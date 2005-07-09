@@ -1,0 +1,215 @@
+<document output="studio" title="Differences between standard ECMA-367 and Eiffel Software implementation">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Kernel classes</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Sized variants of <class_name>CHARACTER</class_name></cell>
+				<cell><class_name>CHARACTER</class_name>, <class_name>CHARACTER_8</class_name>, <class_name>CHARACTER_32</class_name></cell>
+				<cell><class_name>CHARACTER</class_name></cell>
+				<cell>Yes</cell>
+				<cell><class_name>CHARACTER</class_name>, <class_name>WIDE_CHARACTER</class_name></cell>
+			</row>
+			<row>
+				<cell>Sized variants of <class_name>INTEGER</class_name></cell>
+				<cell>
+					<class_name>INTEGER</class_name>, <class_name>INTEGER_8</class_name>, <class_name>INTEGER_16</class_name>, <class_name>INTEGER_32</class_name>, <class_name>INTEGER_64</class_name>, 
+					<class_name>NATURAL</class_name>, <class_name>NATURAL_8</class_name>, <class_name>NATURAL_16</class_name>, <class_name>NATURAL_32</class_name>, <class_name>NATURAL_64</class_name>
+				</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes, except for <class_name>INTEGER_32</class_name> and <class_name>NATURAL</class_name></cell>
+			</row>
+			<row>
+				<cell>Sized variants of <class_name>REAL</class_name></cell>
+				<cell><class_name>REAL</class_name>, <class_name>REAL_32</class_name>, <class_name>REAL_64</class_name></cell>
+				<cell><class_name>REAL</class_name> and <class_name>DOUBLE</class_name></cell>
+				<cell>Yes</cell>
+				<cell><class_name>REAL</class_name> and <class_name>DOUBLE</class_name></cell>
+			</row>
+			<row>
+				<cell>Sized variants of <class_name>STRING</class_name></cell>
+				<cell><class_name>STRING</class_name>, <class_name>STRING_8</class_name>, <class_name>STRING_32</class_name></cell>
+				<cell><class_name>STRING</class_name></cell>
+				<cell>Yes</cell>
+				<cell><class_name>STRING</class_name></cell>
+			</row>
+			<row>
+				<cell>Fictitious class for tuples</cell>
+				<cell><class_name>TUPLE</class_name></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Classes for agents</cell>
+				<cell><class_name>PROCEDURE</class_name>, <class_name>FUNCTION</class_name>, <class_name>PREDICATE</class_name></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes, except for <class_name>PREDICATE</class_name></cell>
+			</row>
+		</table>
+		<heading><size>2</size>Features</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Prefix and infix feature names</cell>
+				<cell><code><keyword>infix</keyword> <string>"+"</string></code></cell>
+				<cell>Yes</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Operator and bracket aliases</cell>
+				<cell><code><feature_name>add</feature_name> <keyword>alias</keyword> <string>"+"</string></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes, except for new rules for free operator names</cell>
+			</row>
+			<row>
+				<cell>Assigner command</cell>
+				<cell><feature_name>item</feature_name> <symbol> <keyword>alias</keyword> <string>"[]"</string> (</symbol><local_variable>index</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>):</symbol> <generics>G</generics> <keyword>assign</keyword> <feature_name>put</feature_name></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+		</table>
+		<heading><size>2</size>Feature calls</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Precursor call</cell>
+				<cell><code><reserved_word>Precursor</reserved_word></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Non-object call</cell>
+				<cell><code><local_variable>c</local_variable> <symbol>:=</symbol> <symbol>{</symbol><class_name>COLOR</class_name><symbol>}</symbol><symbol>.</symbol><feature_name>green</feature_name></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Assigner call</cell>
+				<cell><local_variable>x</local_variable> <symbol>[</symbol><local_variable>i</local_variable><symbol>]</symbol> <symbol>:=</symbol> <local_variable>x</local_variable> <symbol>[</symbol><local_variable>i</local_variable><symbol>]</symbol> <symbol>+</symbol> <number>1</number></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+		</table>
+		<heading><size>2</size>Expressions</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Manifest type</cell>
+				<cell><code><symbol>{</symbol><class_name>MY_TYPE</class_name><symbol>}</symbol></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Once manifest string</cell>
+				<cell><code><keyword>once</keyword> <string>"abc"</string></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Bracket expression</cell>
+				<cell><code><local_variable>y</local_variable> <symbol>:=</symbol> <local_variable>x</local_variable> <symbol>[</symbol><local_variable>i</local_variable><symbol>]</symbol></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Manifest 
+					<link>
+						<url>/general/guided_tour/language/tutorial-11.xml</url>
+						<label>tuple</label>
+					</link>
+				</cell>
+				<cell><code><symbol>[</symbol><local_variable>a</local_variable>, <local_variable>b</local_variable>, <local_variable>c</local_variable><symbol>]</symbol></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>
+					<link>
+						<url>/general/guided_tour/language/tutorial-12.xml</url>
+						<label>Agent</label>
+					</link>
+				</cell>
+				<cell></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes, except for inline agents</cell>
+			</row>
+		</table>
+		<heading><size>2</size>Constants</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Verbatim string</cell>
+				<cell>
+					<code_block><local_variable>x</local_variable> <symbol>:=</symbol> <string>"[
+	This string is left-adjusted.
+]"</string>
+<local_variable>y</local_variable> <symbol>:=</symbol> <string>"{
+	This string is used "as is".
+}"</string></code_block>
+				</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Manifest type qualifier</cell>
+				<cell><code><symbol>{</symbol><class_name>INTEGER_8</class_name><symbol>}</symbol> <number>123</number></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Non-decimal integer</cell>
+				<cell><code><number>0xFF</number></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Hexadecimal integers</cell>
+			</row>
+		</table>
+	</paragraph>
+</document>

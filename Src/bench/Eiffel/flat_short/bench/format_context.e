@@ -848,7 +848,10 @@ feature -- Element change
 				local_adapt.set_target_type (l_type)
 				local_adapt.set_evaluated_type
 				last_class_printed := Void
-				local_adapt := local_adapt.adapt_nested_feature (a_name, global_adapt)
+				if not a_name.is_empty then
+						-- A creation routine or a static call was specified, use it for the adaptation.
+					local_adapt := local_adapt.adapt_nested_feature (a_name, global_adapt)
+				end
 			end
 			was_infix_arguments := False
 			arguments := args

@@ -454,6 +454,10 @@ feature {NONE} -- Implementation
 
 	process_creation_expr_as (l_as: CREATION_EXPR_AS) is
 		do
+			ctxt.new_expression
+			if not is_simple_formatting then
+				ctxt.begin
+			end
 			ctxt.put_text_item (ti_create_keyword)
 			ctxt.put_space
 			ctxt.put_text_item (ti_l_curly)
@@ -473,8 +477,16 @@ feature {NONE} -- Implementation
 						ctxt.rollback
 					end
 				end
+			else
+				ctxt.prepare_for_creation_expression_or_static_access (l_as.type, "", Void)
 			end
-			ctxt.set_type_creation (l_as.type)
+			if not is_simple_formatting then
+				if ctxt.last_was_printed then
+					ctxt.commit
+				else
+					ctxt.rollback
+				end
+			end
 		end
 
 	process_type_expr_as (l_as: TYPE_EXPR_AS) is

@@ -161,6 +161,7 @@ feature {NONE} -- Implementation
 			l_util: UTILITY_FUNCTIONS
 		do
 			create l_util
+			create Result.make_empty
 			
 			if a_node.url = Void then
 				l_url := "index"
@@ -180,6 +181,8 @@ feature {NONE} -- Implementation
 				end
 				Result := l_name
 			end	
-		end		
+		ensure
+			Result_not_void: Result /= Void
+		end	
 
 end -- class TABLE_OF_CONTENTS_SIMPLE_WEB_HELP_FORMATTER

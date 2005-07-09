@@ -93,6 +93,13 @@ feature -- Value
 			Result := use_tab_for_indentation_preference.value
 		end
 			
+	scrolling_common_line_count: INTEGER is
+			-- Number of common lines staying on screen after scrolling
+			-- by one page up or down.
+		do
+			Result := scrolling_common_line_count_preference.value
+		end
+			
 	mouse_wheel_scroll_full_page: BOOLEAN is
 			-- Should a mouse wheel scroll event scroll full page?
 		do
@@ -295,6 +302,10 @@ feature {ANY} -- Preferences
 	use_tab_for_indentation_preference: BOOLEAN_PREFERENCE
 			-- Use tabulations (not spaces) for auto-indenting?
 			
+	scrolling_common_line_count_preference: INTEGER_PREFERENCE
+			-- Number of common lines staying on screen after scrolling
+			-- by one page up or down.
+
 	mouse_wheel_scroll_full_page_preference: BOOLEAN_PREFERENCE
 			-- Should a mouse wheel scroll event scroll full page?
 			
@@ -412,6 +423,7 @@ feature {NONE} -- Preference Strings
 	line_number_text_color_string: STRING is "editor.general.colors.line_number_text_color"
 	show_line_numbers_string: STRING is "editor.general.show_line_numbers"
 	use_tab_for_indentation_string: STRING is "editor.general.use_tab_for_indentation"
+	scrolling_common_line_count_string: STRING is "editor.general.scrolling_common_line_count"
 	mouse_wheel_scroll_full_page_string: STRING is "editor.general.mouse_wheel_scroll_full_page"
 	mouse_wheel_scroll_size_string: STRING is "editor.general.mouse_wheel_scroll_size"
 	remove_trailing_white_space_string: STRING is "editor.general.remove_trailing_white_space"
@@ -500,6 +512,7 @@ feature {NONE} -- Implementation
 			margin_separator_color_preference := l_manager.new_color_resource_value (l_manager, margin_separator_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))			
 			line_number_text_color_preference := l_manager.new_color_resource_value (l_manager, line_number_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (192, 192, 192))	
 			use_tab_for_indentation_preference := l_manager.new_boolean_resource_value (l_manager, use_tab_for_indentation_string, True)		
+			scrolling_common_line_count_preference := l_manager.new_integer_resource_value (l_manager, scrolling_common_line_count_string, 1)			
 			mouse_wheel_scroll_full_page_preference := l_manager.new_boolean_resource_value (l_manager, mouse_wheel_scroll_full_page_string, False)			
 			mouse_wheel_scroll_size_preference := l_manager.new_integer_resource_value (l_manager, mouse_wheel_scroll_size_string, 3)
 			remove_trailing_white_space_preference := l_manager.new_boolean_resource_value (l_manager, remove_trailing_white_space_string, False)

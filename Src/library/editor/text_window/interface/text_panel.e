@@ -907,7 +907,7 @@ feature {NONE} -- Scroll bars Management
 			-- Number of lines to scroll per mouse wheel scroll increment.
 		do
 			if editor_preferences.mouse_wheel_scroll_full_page then
-				Result := number_of_lines_displayed - 2
+				Result := number_of_lines_displayed - common_line_count
 			else
 				Result := editor_preferences.mouse_wheel_scroll_size
 			end
@@ -1365,6 +1365,12 @@ feature -- Implementation
 
 	internal_focus_requested: BOOLEAN
 		-- Should give focus after text has been fully loaded?
+
+	common_line_count: INTEGER is
+			-- Number of lines in common when performing a page down/page up operation.
+		do
+			Result := editor_preferences.scrolling_common_line_count
+		end
 
 invariant
 	offset_view: editor_viewport.y_offset >= 0

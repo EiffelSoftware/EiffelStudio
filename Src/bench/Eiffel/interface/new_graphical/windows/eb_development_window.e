@@ -2642,12 +2642,12 @@ feature {NONE} -- Implementation
 						l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
 						l_format_context.put_text_item_without_tabs (ti_colon)
 						l_format_context.put_space
-						l_format_context.put_string ("%"" + cluster_st.cluster_i.cluster_name + "%"")
+						l_format_context.put_manifest_string ("%"" + cluster_st.cluster_i.cluster_name + "%"")
 						l_format_context.put_new_line
 						l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster_path"))
 						l_format_context.put_text_item_without_tabs (ti_colon)
 						l_format_context.put_space
-						l_format_context.put_string ("%"" + cluster_st.cluster_i.path + "%"")
+						l_format_context.put_manifest_string ("%"" + cluster_st.cluster_i.path + "%"")
 						l_format_context.put_new_line
 						l_indexes := cluster_st.cluster_i.indexes
 						if l_indexes /= Void then

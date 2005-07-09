@@ -3,6 +3,20 @@ indexing
 		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
 
 		Item Insertion:
+		
+		The grid is an item holder for EV_GRID_ITEM objects and its descendents.  Each grid
+		item may be inserted in to the grid at a specific column and row.  An item itself may be
+		added to the grid via `set_item', which takes a column and row index.  Items be also added
+		via the `set_item' routine of the row (EV_GRID_ROW) and column (EV_GRID_COLUMN) objects
+		contained within `Current'.
+
+		Items inserted may be Void if necessary, this may be useful to blank out any existing items
+		set.
+		
+		If a grid contains no items and therefore has no rows or columns, inserting an item will
+		dynamically resize and automatically create the columns and rows so that it can contain
+		and display the newly inserted item.
+	
 		--------------------------------------------------------------------------------
 
 		Dynamic Modes:
@@ -197,9 +211,57 @@ indexing
 		--------------------------------------------------------------------------------
 
 		Selection:
+
+		The grid allows both single and multiple selection handling on an item or row level.
+		When enable_single_item_selection is called, only an single item may be selected by the
+		user when `Current' is on-screen.  Selection may occur either programmatically via the
+		`enable_select' routine of either the item/column or row or on-screen via mouse or keyboard.
+		This is accompanied with the query `is_selected'.
+
+		There are two main selection modes, item selection and row selection.  In item selection,
+		single or multiple items may be selected depending on the current selection mode.  This can be
+		set with `enable_single_item_selection' and `enable_multiple_item_selection' respectively.
+
+		For each type of selection there are events.  Examples of such events are `item_select_actions',
+		`row_select_actions' and `column_select_actions', these are fired in `Current', with the
+		appropriate object being passed to the action sequence that is selected.
+
+		Along with selecting items, they may also be deselected.  This can be done programatically
+		via the `disable_select' routine of either the item/column or row.
+
+		To query what objects are selected, the following queries are available in `Current',
+		`selected_items', `selected_rows' and `selected_columns'.
+
+		To turn off any default behavior the following queries are available, `disable_selection_key_handling'
+		and `disable_selection_click_handling', this turns off the ability for the user of the grid
+		to select items via the keyboard or mouse.
+
+		The routine `enable_always_selected' makes sure that at least one item or row is selected depending
+		on the mode after the initial selection.  This can be handy for 
+
+		The selection of the grid may be removed with `remove_selection'.
+
 		--------------------------------------------------------------------------------
 
 		Item Activation:
+
+		Activation allows for interactive editing of the contents of an item. By calling
+		`activate' on an activatable item in response to a user event such as double clicking,
+		the item allows for in-place user editing, for changing things such as text.  After
+		changing the item, the user may complete the activation by pressing Enter on the
+		keyboard or by causing the item itself to loose focus.
+
+		To programmatically cancel any activation, each grid item has a `deactivate' routine
+		that may be called during the activation.
+
+		When an item is activated, the `item_activate_actions' are fired, this can be used
+		to customize the activation process of a certain item, `item_deactivate_actions' are
+		fired when the item is deactivated.  When an item is deactivated, if the user hasn't
+		cancelled the deactivation then the item's contents are updated.
+
+		See EV_GRID_EDITABLE_ITEM and EV_GRID_COMBO_ITEM for examples of activatable items 
+		that allow for in place editing.
+
 		--------------------------------------------------------------------------------
 		Event Handling:
 
@@ -269,7 +331,16 @@ inherit
 		rename
 			item as cell_item,
 			wipe_out as cell_wipe_out,
-			count as cell_count
+			count as cell_count,
+			full as cell_full,
+			has as cell_has,
+			prune as cell_prune,
+			extendible as cell_extendible,
+			put as cell_put,
+			replace as cell_replace,
+			linear_representation as cell_linear_representation,
+			is_empty as cell_is_empty,
+			extend as cell_extend
 		redefine
 			implementation,
 			create_implementation,

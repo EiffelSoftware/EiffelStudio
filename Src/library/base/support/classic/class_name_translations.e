@@ -148,27 +148,27 @@ feature {NONE} -- Externals
 
 	class_translation_put (new_name, old_name: POINTER) is
 		external
-			"C"
+			"C use %"eif_retrieve.h%""
 		end
 
 	class_translation_clear is
 		external
-			"C"
+			"C use %"eif_retrieve.h%""
 		end
 
 	class_translation_count: INTEGER is
 		external
-			"C"
+			"C use %"eif_retrieve.h%""
 		end
 
 	class_translation_old (i: INTEGER): POINTER is
 		external
-			"C"
+			"C use %"eif_retrieve.h%""
 		end
 
 	class_translation_new (i: INTEGER): POINTER is
 		external
-			"C"
+			"C use %"eif_retrieve.h%""
 		end
 
 indexing

@@ -64,7 +64,6 @@ feature {NONE} -- Initialization
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
 			resize_actions.force_extend (agent on_window_resize)
 			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
-			show			
 		end
 
 	user_initialization is

@@ -93,14 +93,14 @@ feature -- Basic operations
 						create tool_window.make
 						set_system_window (tool_window)
 					end
-						system_window.initialize_content
-						system_window.raise
-					else
-						create wd.make_with_text (Warning_messages.w_Degree_needed (6))
-						wd.show_modal_to_window (window_manager.
-							last_focused_development_window.window)
-					end
+					system_window.initialize_content
+					system_window.raise
+				else
+					create wd.make_with_text (Warning_messages.w_Degree_needed (6))
+					wd.show_modal_to_window (window_manager.
+						last_focused_development_window.window)
 				end
+			end
 		rescue
 			display_error_message (window_manager.last_focused_development_window.window)
 			if catch_exception then

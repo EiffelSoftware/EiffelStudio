@@ -1,4 +1,6 @@
 @echo off
+remtrace Adding Wix to the path.
+set PATH=%PATH;%@EXECSTR[cd]\wix
 set OLD_PATH=%PATH
 set OLD_EIFFEL_SRC=%EIFFEL_SRC
 set INIT_DIR=%@EXECSTR[cd]

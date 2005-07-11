@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# our script requires bash.
+
+if [ $# -ge 4 -a "$1" = "local" ]; then
+	remote_host=$2
+	user=$3
+	platform=$4
+	echo $local
+	export REMOTE=$remote_host
+	cp -f make_for_platform ~/
+		# Launch platform specific scripts
+	rsh $REMOTE "cd local/TEST_DELIV ; mv -f ~/make_for_platform ."
+	rsh $REMOTE "cd local/TEST_DELIV ; bash ./make_for_platform $platform"
+
+ftp -n << EOF 
+verbose 
+open $remote_host 
+user $user $user 
+binary
+get local/TEST_DELIV/PorterPackage/Eiffel56_enterprise.tgz Eiffel56_$platform.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel56_free.tgz Eiffel56_free_$platform.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel56_enterprise.iso.gz Eiffel56_enterprise_$platform.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel56_university.iso.gz Eiffel56_university_$platform.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel56_free.iso.gz Eiffel56_free_$platform.iso.gz
+close 
+EOF
+
+	echo Compilation for $platform is now done
+elif [ $# -eq 1 ]; then
+	platform=$1
+	rm -rf PorterPackage
+	tar xvf ~/PorterPackage_all.tar
+	cd PorterPackage
+	export ISE_PLATFORM=$platform
+	bash ./compile_exes
+	bash ./make_images
+else
+	echo Usage: [local] host username platform
+fi

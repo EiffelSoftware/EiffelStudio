@@ -184,7 +184,7 @@
 							<File Id="main_window_e" LongName="main_window.e" Name="MAIN_W~1.E" />
 							<File Id="ace_unix_ace" Name="ACEUNI~1.ACE" LongName="ace.unix.ace" />
 							<File Id="ace_windows_ace" Name="ACEWIN~1.ACE" LongName="ace.windows.ace" />
-							<File Id="xml_ace" Name="xml.ace" />
+							<File Id="ace_windows_xml_ace" Name="ACEWIN~2.ACE" LongName="ace.windows.xml.ace" />
 						</Component>
 					</Directory>
 					<Directory Id="store26" Name="store">

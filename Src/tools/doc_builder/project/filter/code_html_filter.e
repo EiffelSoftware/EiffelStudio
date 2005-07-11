@@ -174,7 +174,8 @@ feature {NONE} -- Implementation
 		local
 			l_toc_script_name,
 			l_filename,
-			l_toc_name: STRING
+			l_toc_name,
+			l_relative_path: STRING
 			l_util: UTILITY_FUNCTIONS
 			l_shared_objects: SHARED_OBJECTS
 		do
@@ -182,9 +183,9 @@ feature {NONE} -- Implementation
 			create Result.make_empty
 			if l_shared_objects.shared_constants.help_constants.is_web_help then
 				if not l_shared_objects.shared_constants.help_constants.is_tree_web_help then				
-					l_toc_script_name := "simple_toc.js"
+					l_toc_script_name := once "simple_toc.js"
 				else				
-					l_toc_script_name := "toc.js"
+					l_toc_script_name := once "toc.js"
 				end
 				create l_util
 				l_filename := a_filename
@@ -196,15 +197,16 @@ feature {NONE} -- Implementation
 					l_filename.remove_substring (1, l_toc_name.count + 1)
 				end
 				l_filename := l_util.file_no_extension (l_filename)
-				Result.append ("<script Language=%"JavaScript%" type=%"text/javascript%" src=%"" + relative_path_to_help_project (l_filename) + l_toc_script_name)
-				Result.append ("%"></script><script Language=%"JavaScript%">")
-				Result.append ("doc = '")
+				l_relative_path := relative_path_to_help_project (l_filename)
+				Result.append ("<script Language=%"JavaScript%" type=%"text/javascript%" src=%"" + l_relative_path + l_toc_script_name)
+				Result.append (once "%"></script><script Language=%"JavaScript%">")
+				Result.append (once "doc = '")
 				Result.append (l_filename + ".html';")
 				Result.append ("toc = '" + l_util.short_name (l_shared_objects.shared_constants.help_constants.toc.name) + "';")
-				Result.append ("deleteCookie('tocName');var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);setCookie('tocName', toc, expdate);")
+				Result.append (once "deleteCookie('tocName');var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);setCookie('tocName', toc, expdate);")
 				Result.append ("if (parent.toc_frame){parent.toc_frame.documentLoaded(doc);}%
 					%else{var now = new Date();var expdate = new Date (now.getTime () + 1 * 24 + 60 * 60 * 1000);setCookie ('delete', 'true', expdate);%
-					%setCookie ('redirecturl', doc, expdate);window.location.replace ('" + relative_path_to_help_project (l_filename) + 
+					%setCookie ('redirecturl', doc, expdate);window.location.replace ('" + l_relative_path + 
 					l_shared_objects.shared_constants.help_constants.help_project_name + "_no_content.html');}</script>")			
 			end
 		ensure
@@ -215,12 +217,17 @@ feature {NONE} -- Implementation
 			-- 
 		local
 			l_link: DOCUMENT_LINK
-			l_path: STRING
+			l_path,
+			l_parent: STRING
 			l_shared_objects: SHARED_OBJECTS
 		do
 			create l_shared_objects
 			l_path := temporary_html_location (a_file, True)			
-			create l_link.make (l_path, l_shared_objects.shared_constants.application_constants.temporary_html_directory.string)
+			l_parent := l_shared_objects.shared_constants.application_constants.temporary_html_directory.string
+			if l_parent.item (l_parent.count) /= '/' then
+				l_parent.append_character ('/')
+			end
+			create l_link.make (l_path, l_parent)			
 			Result := l_link.relative_url
 			if Result.last_index_of ('/', Result.count) > 0 then				
 				Result := Result.substring (1, Result.last_index_of ('/', Result.count))

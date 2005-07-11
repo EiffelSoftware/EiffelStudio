@@ -774,6 +774,14 @@ feature {NONE} -- Event handling
 					then
 						update_clipboard_string_with_selection (watches_grid)
 					end
+				when {EV_KEY_CONSTANTS}.key_v then
+					if
+						ev_application.ctrl_pressed
+						and not ev_application.alt_pressed
+						and not ev_application.shift_pressed
+					then
+						set_expression_from_clipboard (watches_grid)
+					end
 				when {EV_KEY_CONSTANTS}.key_e then
 					if
 						ev_application.ctrl_pressed

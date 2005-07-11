@@ -397,7 +397,8 @@ feature {NONE} -- Process Vision2 events
 		do
 			if ev_key /= Void and then not ignore_keyboard_input and then not alt_key then
 					-- Handle state key.	
-				blink_on := False
+				blink_on := True
+				blinking_timeout.actions.call ([])
 				blinking_timeout.actions.block
 				if key_pressed /= Void and then ev_key.code = key_pressed.code then
 					continue_key_action := true
@@ -405,7 +406,7 @@ feature {NONE} -- Process Vision2 events
 					key_pressed := ev_key
 					key_action_timer.actions.wipe_out
 					key_action_timer.set_interval (40)
-					continue_key_action := true
+					continue_key_action := True
 					if ctrled_key then
 						key_action_timer.actions.extend (agent repeat_ctrled_key (ev_key))
 					else

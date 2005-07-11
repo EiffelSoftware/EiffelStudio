@@ -193,21 +193,8 @@ remtrace Build
 move $INSTALL_DIR/build/spec/unix $INSTALL_DIR/build/spec/$ISE_PLATFORM
 cd $EXPORT_DIR/build
 untgz_ccode build
+cp build $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/
 gzip build
-move build.gz build_enterprise.gz
-if [ -z "$MULTIPLE_EDITIONS" ]; then
-	gunzip -c build_enterprise.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
-fi
-
-if [ "$MULTIPLE_EDITIONS" ]; then
-	remtrace Free Build
-	move build.tar.gz enterprise_build.tar.gz
-	move build_free.tar.gz build.tar.gz
-	untgz_ccode build
-	gzip build
-	move build.gz build_free.gz
-fi
-
 
 remtrace Vision2_tour
 cd $EXPORT_DIR/vision2_tour

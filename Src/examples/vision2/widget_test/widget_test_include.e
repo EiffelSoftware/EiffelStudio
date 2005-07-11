@@ -121,6 +121,18 @@ feature {NONE} -- Implementation
 			header_basic_test: HEADER_BASIC_TEST
 			header_resizing_test: HEADER_RESIZING_TEST
 			header_resize_to_content_test: HEADER_RESIZE_TO_CONTENT_TEST
+			grid_basic_test: GRID_BASIC_TEST
+			grid_tree_test: GRID_TREE_TEST
+			grid_row_height: GRID_ROW_HEIGHT_TEST
+			grid_colors_test: GRID_COLORS_TEST
+			grid_texture_test: GRID_TEXTURE_TEST
+			grid_icon_test: GRID_ICON_VIEW_TEST
+			grid_dynamic_test: GRID_DYNAMIC_TEST
+			grid_separator_test: GRID_SEPARATOR_TEST
+			grid_pixmap_test: GRID_PIXMAP_TEST
+			grid_drawable_test: GRID_DRAWABLE_TEST
+			grid_dynamic_tree_test: GRID_DYNAMIC_TREE_TEST
+			grid_draw_tree_test: GRID_DRAW_TREE_TEST
 		do
 		end
 

@@ -70,6 +70,7 @@ feature {NONE} -- Initialization
 			eiffel_project_box.validity_change_request_actions.extend (agent initialize_generate_button)
 			com_project_box.validity_change_request_actions.extend (agent initialize_generate_button)
 			update_environment
+			project_box.focus_lost_actions.extend (agent on_project_enter)
 			
 			-- Setup project box last so that profile change actions are registered
 			project_box.set_max_count (10000)
@@ -240,9 +241,8 @@ feature {NONE} -- Implementation
 			if in_delete_mode then
 				profile_manager.remove_active_profile
 				project_box.remove_active_item
-			else
-				on_project_enter
 			end
+			on_project_enter
 		end
 	
 	on_select_eiffel_project is

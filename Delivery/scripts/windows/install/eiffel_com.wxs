@@ -210,7 +210,6 @@
 						</Directory>
 						<Directory Id="config" Name="config">
 							<Component Id="config" Guid="78E866BF-4C04-4509-8F1C-864C54055C76">
-								<File Id="melted_path.reg" Name="MELTED~1.REG" LongName="melted_path.reg" KeyPath="yes" />
 								<File Id="wizard_winapi_names.cfg" Name="WIZARD~1.CFG" LongName="wizard_winapi_names.cfg" />
 							</Component>
 						</Directory>

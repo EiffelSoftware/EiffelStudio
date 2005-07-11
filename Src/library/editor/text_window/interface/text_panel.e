@@ -1359,7 +1359,7 @@ feature -- Memory management
 			not_initialized: not is_initialized
 		end
 
-feature {NONE} -- Implementation
+feature -- Implementation
 
 	buffered_line: EV_PIXMAP is
 			-- Buffer large enough to hold line information.

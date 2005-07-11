@@ -128,6 +128,31 @@ feature -- Clipboard related
 			end
 		end
 		
+	set_expression_from_clipboard (grid: ES_OBJECTS_GRID) is
+			-- Sets an expression from text held in clipboard
+		local
+			text_data: STRING
+			row: EV_GRID_ROW
+			rows: ARRAYED_LIST [EV_GRID_ROW]
+			empty_expression_cell: ES_OBJECTS_GRID_EMPTY_EXPRESSION_CELL
+		do
+			text_data := ev_application.clipboard.text
+			if text_data /= Void and then not text_data.is_empty then
+				rows := grid_selected_top_rows (grid)
+				if not rows.is_empty then
+					row := rows.first
+					if 
+						col_name_index <= row.count
+					then
+						empty_expression_cell ?= row.item (col_name_index)
+						if empty_expression_cell /= Void then
+							empty_expression_cell.activate_with_string (text_data)
+						end
+					end
+				end
+			end
+		end
+		
 feature -- numerical related processing
 
 	hexadecimal_mode_enabled: BOOLEAN is

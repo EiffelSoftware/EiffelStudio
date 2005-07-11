@@ -182,7 +182,8 @@
 							<File Id="graphics_png" Name="graphics.png" />
 							<File Id="interface_names_e" LongName="interface_names.e" Name="INTERF~1.E" />
 							<File Id="main_window_e" LongName="main_window.e" Name="MAIN_W~1.E" />
-							<File Id="registry_ace" Name="registry.ace" />
+							<File Id="ace_unix_ace" Name="ACEUNI~1.ACE" LongName="ace.unix.ace" />
+							<File Id="ace_windows_ace" Name="ACEWIN~1.ACE" LongName="ace.windows.ace" />
 							<File Id="xml_ace" Name="xml.ace" />
 						</Component>
 					</Directory>

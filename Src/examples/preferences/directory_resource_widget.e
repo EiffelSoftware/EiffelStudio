@@ -32,6 +32,12 @@ feature -- Access
 	last_selected_value: DIRECTORY_NAME
 
 	change_item_widget: EV_GRID_DRAWABLE_ITEM
+	
+	show is
+			-- 
+		do
+			show_change_item_widget
+		end		
 
 feature {PREFERENCE_VIEW} -- Commands
 
@@ -103,10 +109,6 @@ feature {NONE} -- Implementation
 				area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
 				area.draw_text_top_left (5, 1, resource.string_value)					
 			end			
---			area.set_foreground_color ((create {EV_STOCK_COLORS}).black)
---			area.draw_rectangle (1, 1, 12, 12)
---			area.set_foreground_color (resource.value)
---			area.fill_rectangle (2, 2, 10, 10)			
 		end		
 
 	directory_tool: EV_DIRECTORY_DIALOG

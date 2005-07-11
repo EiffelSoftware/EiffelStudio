@@ -53,15 +53,13 @@ feature {NONE} -- Implementation
 				-- Compiling Eiffel
 				if environment.compile_eiffel then
 					message_output.add_title (Compilation_title_eiffel)
+					progress_report.set_title (Eiffel_compilation_title)
 					if environment.is_client then
-						progress_report.set_title (Eiffel_compilation_title)
 						compiler.compile_eiffel (Client)
-						progress_report.step
 					else
-						progress_report.set_title (Eiffel_compilation_title)
 						compiler.compile_eiffel (Server)
-						progress_report.step
 					end
+					progress_report.step
 				end
 			end
 		end

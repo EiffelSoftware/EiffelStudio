@@ -159,6 +159,11 @@ feature {NONE} -- Implementation
 				print_version_info
 			end
 			l_manager.run
+			if environment.abort then
+				(create {EXCEPTIONS}).die (1)
+			else
+				(create {EXCEPTIONS}).die (0)
+			end
 		end
 
 	print_version_info is 

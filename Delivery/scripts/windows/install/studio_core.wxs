@@ -18,11 +18,9 @@
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_CFLAGS" Id="registry41" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry48" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" Type="string" />
-				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry40" Type="string" />
 				<Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_EIFFEL" Value="[Application]" Id="registry37" Type="string" />
 		</Component>
 		<Component Id="UserRegistry" Guid="9CABF13E-26F4-46d3-B72A-D5F0C008F790">
-				<Registry Root="HKCU" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry34" Type="string" />
 				<Registry Root="HKCU" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />
 				<Registry Root="HKCU" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" Type="string" />
 			</Component>

@@ -1,0 +1,58 @@
+system
+	"preferences_example"
+
+root
+	APPLICATION: make_and_launch
+
+default
+	assertion (check)
+	assertion (require)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (no)
+	syntax_warning (no)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
+
+
+cluster
+	root_cluster:		"$ISE_EIFFEL/examples/preferences"
+
+	all base:		"$ISE_EIFFEL/library/base"
+		exclude
+			"table_eiffel3"; "desc"; 
+		end
+
+	all vision2:		"$ISE_EIFFEL/library/vision2"
+		exclude
+			"mswin"; "obsolete";
+		end
+
+	all preferences:		"$ISE_EIFFEL/library/preferences"
+		exclude
+			"registry_implementation"; 
+		end
+
+	all gobo:		"$ISE_EIFFEL/library/gobo/library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "other"; 
+		end
+
+external
+
+	include_path:
+		"\$(ISE_EIFFEL)/library/vision2/spec/include",
+		"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
+
+	object:
+		"`$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
+
+end

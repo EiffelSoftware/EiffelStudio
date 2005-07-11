@@ -142,7 +142,8 @@ feature {NONE} -- Implementation
 		local
 			l_resource_widget: PREFERENCE_WIDGET
 			l_dr: DIRECTORY_RESOURCE
-			l_cr: COLOR_PREFERENCE			
+			l_cr: COLOR_PREFERENCE	
+			l_br: BOOLEAN_PREFERENCE		
 		do
 			l_dr ?= a_resource
 			if l_dr = Void then
@@ -152,6 +153,14 @@ feature {NONE} -- Implementation
 					l_resource_widget.set_caller (Current)
 					grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_resource.name))
 					grid.set_item (2, a_row_index, l_resource_widget.change_item_widget)
+				else
+					l_br ?= a_resource
+					if l_br /= Void then
+						create {BOOLEAN_PREFERENCE_WIDGET} l_resource_widget.make_with_resource (l_br)						
+						l_resource_widget.set_caller (Current)
+						grid.set_item (1, a_row_index, create {EV_GRID_LABEL_ITEM}.make_with_text (a_resource.name))
+						grid.set_item (2, a_row_index, l_resource_widget.change_item_widget)
+					end
 				end
 			else
 				create {DIRECTORY_RESOURCE_WIDGET} l_resource_widget.make_with_resource (l_dr)
@@ -163,6 +172,7 @@ feature {NONE} -- Implementation
 			grid.column (1).set_title ("Preference Name")
 			grid.column (2).set_title ("Value")
 			grid.column (1).resize_to_content
+			grid.column (1).set_width (grid.column (1).width + padding_width)
 		end	
 
 feature {NONE} -- Events
@@ -201,6 +211,9 @@ feature {NONE} -- Private Attributes
 
 	selected_resource_name: STRING
 			-- Selected resource
+
+	padding_width: INTEGER is 3
+			-- Column padding width
 
 end -- class CUSTOM_PREFERENCE_DIALOG
 

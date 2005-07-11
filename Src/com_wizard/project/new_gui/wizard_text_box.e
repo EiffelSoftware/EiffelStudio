@@ -137,6 +137,7 @@ feature -- Basic Operations
 		do
 			text_combo.start
 			text_combo.remove
+			text_combo.set_text (text_combo.first.text)
 		end
 	
 	initialize_focus is

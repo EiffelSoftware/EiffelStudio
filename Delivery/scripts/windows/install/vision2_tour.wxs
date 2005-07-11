@@ -225,6 +225,22 @@
 								<File Id="checkable_tree_basic_test_e" Name="CHECKA~2.E" LongName="checkable_tree_basic_test.e" />
 							</Component>
 						</Directory>
+						<Directory Id="grid" Name="grid">
+							<Component Id="grid" Guid="5880b02a-9a90-4898-b1f9-fec48d293a0a" >
+								<File Id="grid_basic_test_e" LongName="grid_basic_test.e" Name="GRID_B~1.E" />
+								<File Id="grid_colors_test_e" LongName="grid_colors_test.e" Name="GRID_C~1.E" />
+								<File Id="grid_drawable_test_e" LongName="grid_drawable_test.e" Name="GRID_D~1.E" />
+								<File Id="grid_draw_tree_test_e" LongName="grid_draw_tree_test.e" Name="GRID_D~2.E" />
+								<File Id="grid_dynamic_test_e" LongName="grid_dynamic_test.e" Name="GRID_D~3.E" />
+								<File Id="grid_dynamic_tree_test_e" LongName="grid_dynamic_tree_test.e" Name="GRID_D~4.E" />
+								<File Id="grid_icon_view_test_e" LongName="grid_icon_view_test.e" Name="GRID_I~1.E" />
+								<File Id="grid_pixmap_test_e" LongName="grid_pixmap_test.e" Name="GRID_P~1.E" />
+								<File Id="grid_row_height_test_e" LongName="grid_row_height_test.e" Name="GRID_R~1.E" />
+								<File Id="grid_separator_test_e" LongName="grid_separator_test.e" Name="GRID_S~1.E" />
+								<File Id="grid_texture_test_e" LongName="grid_texture_test.e" Name="GRID_T~1.E" />
+								<File Id="grid_tree_test_e" LongName="grid_tree_test.e" Name="GRID_T~2.E" />
+							</Component>
+						</Directory>
 						<Directory Id="viewport" Name="viewport">
 							<Component Id="viewport" Guid="7EAF0ECB-92C7-41B2-BCC5-A14B1BE27AB0">
 								<File Id="viewport_offset_test.e" Name="VIEWPO~2.E" LongName="viewport_offset_test.e" KeyPath="yes" />

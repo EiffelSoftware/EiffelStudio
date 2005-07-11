@@ -49,18 +49,6 @@
 							<url>/images/eiffelstudio/diagram/link-tool-two-right.png</url>
 						</image>
 					</item>
-					<item>Put three handles left
-						<line_break/>
-						<image>
-							<url>/images/eiffelstudio/diagram/link-tool-three-left.png</url>
-						</image>
-					</item>
-					<item>Put three handles right
-						<line_break/>
-						<image>
-							<url>/images/eiffelstudio/diagram/link-tool-three-right.png</url>
-						</image>
-					</item>
 					<item>Remove handles
 						<line_break/>
 						<image>

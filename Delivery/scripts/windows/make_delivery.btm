@@ -213,12 +213,14 @@ iff not defined NO_COMPILE then
 	endiff
 
 	remtrace Extracting Gobo
+	copy %INSTALL_DIR\free_add_ons\gobo\gobo_34_win.tgz %INSTALL_DIR\library
+	cdd %INSTALL_DIR\library
+	tar xfz gobo_34_win.tgz
+	fullrf gobo_34_win.tgz
 	cdd %INSTALL_DIR\free_add_ons
-	tar xfz gobo\gobo_33_win.tgz
-	fullrf gobo\gobo_win.tgz
-	fullrf gobo\gobo_unix.tgz
-	fullrf gobo\gobo_33_win.tgz
-	fullrf gobo\gobo_33_unix.tgz
+	fullrf gobo\gobo_34_unix.tgz
+	fullrf gobo\gobo_34_win.tgz
+	fullrf gobo\gobo_33_ise.tgz
 
 	cdd %INSTALL_DIR\free_add_ons\zad_miner\ace
 	sed -e s/ISE_EIFFEL/INSTALL_DIR/g zad_miner.ace >> new_ace.ace

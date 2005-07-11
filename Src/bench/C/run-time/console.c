@@ -23,13 +23,7 @@ rt_public EIF_POINTER console_def (EIF_INTEGER file)
 	  	return (EIF_POINTER) stdin;
 
 	case 1:
-			/* Output is set to only have line buffered. Meaning that
-			 * each displayed %N will flush the buffer. */
-#ifdef EIF_WINDOWS
-			/* Per Microsoft documentation, it has to be at least 2 for buffer size
-			 * in case of _IOLBF. */
-	  	setvbuf(stdout, NULL, _IOLBF, 2);
-#elif defined EIF_VMS
+#ifdef EIF_VMS
 		/*  On VMS, stdout is unbuffered by default when bound to a
 		**  terminal device (CRTL Reference, setvbuf). Setting it to
 		**  line buffered causes a problem with prompts: with stdout
@@ -40,7 +34,10 @@ rt_public EIF_POINTER console_def (EIF_INTEGER file)
 		**  Further, VMS does the "right thing" by default."
 		*/
 #else
-	  	setvbuf(stdout, NULL, _IOLBF, 0);
+			/* Ideally we wanted to use _IOLBF but on Windows it is not
+			 * supported. So to ensure we have the same behavior, we do
+			 * not buffer `stdout'. */
+	  	setvbuf(stdout, NULL, _IONBF, 0);
 #endif
 		return (EIF_POINTER) stdout;
 

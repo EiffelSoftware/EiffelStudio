@@ -114,12 +114,12 @@
 			<size>3</size>Compiler issues
 		</heading>
 		<list ordered="false">
-			<item>Fixed crash of the compiler at the very end of a finalization of a system which has an assignment of a manifest type into a variable of type <class_name>ARRAY</class_name> [<keyword>like</keyword> <feature_name>anchor</feature_name>] where<feature_name>anchor</feature_name> is a feature being redefined with a different type in a descendant class.</item>
+			<item>Fixed crash of the compiler at the very end of a finalization of a system which has an assignment of a manifest type into a variable of type <class_name>ARRAY</class_name> [<keyword>like</keyword> <feature_name>anchor</feature_name>] where <feature_name>anchor</feature_name> is a feature being redefined with a different type in a descendant class.</item>
 			<item>Fixed an issue where compiler would report more than once the same error in an incremental recompilation.</item>
 			<item>Fixed issue where changing a normal routine to an external and having a compile error, and then reverting back to a normal routine while fixing the error would cause the compiler to crash.</item>
 			<item>Fixed some cases where project could be corrupted after a recompilation.</item>
-			<item>Now compiler reports VTCT errors at the end of degree 5, rather than during degree 5, so that you can collect all the VTCT errors at once.</item>
-			<item>Thanks to the improvement in VTCT errors reporting, now compiler will not generate an incorrect VTCT errors during an incremental recompilation for a class which has actually been removed from the system.</item>
+			<item>Now compiler reports <compiler_error>VTCT</compiler_error> errors at the end of degree 5, rather than during degree 5, so that you can collect all the <compiler_error>VTCT</compiler_error> errors at once.</item>
+			<item>Thanks to the improvement in <compiler_error>VTCT</compiler_error> errors reporting, now compiler will not generate an incorrect <compiler_error>VTCT</compiler_error> errors during an incremental recompilation for a class which has actually been removed from the system.</item>
 			<item>Supported recompilation of once routines when their status is changed from "process-relative" to "thread-relative" or back.</item>
 			<item>Supported output of multi-line obsolete messages.</item>
 			<item>Fixed a recompilation bug that resulted in incorrect (or even, in case of .NET, in invalid) generated code when incrementally finalizing a system without explicitly specified root creation procedure.</item>
@@ -130,6 +130,7 @@ i.e. has empty compound for a primary condition which is a constant <code><keywo
 			<item>Fixed a bug in processing <code>Ace</code> option <code><keyword>precompiled</keyword></code> that caused a compiler to crash when no option value was provided.</item>
 			<item>Fixed a bug in incremental recompilation when multi-branch validity rules are violated in one class because constant attribute used in the multi-branch instruction is changed in another class, that declares them, into a non-constant feature.</item>
 			<item>Fixed multiple bugs in feature basic text view that caused truncated or extraneous output.</item>
+			<item>Fixed bug where if an actual generic parameter was an anchor, then if the type containing this actual was used for assignment attempt or for creation we would use an incorrect type for the actual generic. We were using the type of the anchor in the class were the code was written, instead of actually re-evaluating the type of the anchor for each descendant class.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues
@@ -151,7 +152,7 @@ i.e. has empty compound for a primary condition which is a constant <code><keywo
 			<item>Fixed a bug in classic mode that caused last exception to be cleared after returning from a routine that has a rescue clause but returns normally.</item>
 			<item>Fixed several bugs related to handling of nested exceptions in classic mode.</item>
 			<item>Changed a limit of maximum class name length in melted byte code from 256 bytes to 32767 bytes.</item>
-			<item>Changed C code generation for long strings (that result from long manifest strings, identifiers, etc.) to avoid restrictions imposed by some C compilers on long string literals (in particular, by <code>cl</code> that issued error C2026).</item>
+			<item>Changed C code generation for long strings (that result from long manifest strings, identifiers, etc.) to avoid restrictions imposed by some C compilers on long string literals (in particular, by the Microsoft C compiler <code>cl</code> that issued error C2026).</item>
 		</list>
 		<heading>
 			<size>3</size>.NET issues

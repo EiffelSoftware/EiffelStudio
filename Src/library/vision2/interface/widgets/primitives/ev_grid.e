@@ -381,14 +381,16 @@ feature -- Access
 			row_not_void: Result /= Void
 		end
 
-	visible_column (i: INTEGER): EV_GRID_COLUMN is
-			-- `i'-th visible column.
+	displayed_column (i: INTEGER): EV_GRID_COLUMN is
+			-- `i'-th displayed column. May not correspond
+			-- to `column' if one or more columns have been
+			--- hidden via `hide'.
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
-			i_not_greater_than_visible_column_count: i <= visible_column_count
+			i_not_greater_than_displayed_column_count: i <= displayed_column_count
 		do
-			Result := implementation.visible_column (i)
+			Result := implementation.displayed_column (i)
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -2003,12 +2005,14 @@ feature -- Measurements
 			result_not_negative: Result >= 0
 		end
 		
-	visible_column_count: INTEGER is
-			-- Number of visible columns in Current
+	displayed_column_count: INTEGER is
+			-- Number of non-hidden columns displayed in Current.
+			-- Equal to `column_count' if no columns have been
+			-- hidden via `hide'.
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.visible_column_count
+			Result := implementation.displayed_column_count
 		ensure
 			result_valid: Result >= 0 and Result <= column_count
 		end

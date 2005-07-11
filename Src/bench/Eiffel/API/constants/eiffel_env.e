@@ -113,23 +113,6 @@ feature -- Access: environment variable
 			-- Short version of EiffelStudio name.
 
 feature -- Access: file name
-
-	Eiffel_recent_projects: STRING is
-			-- Recent projects location
-		local
-			fname: FILE_NAME
-		once
-			if Platform_constants.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" + Major_version_number.out + Minor_version_number.out + "\recent projects"
-			else
-				create fname.make_from_string (Execution_environment.home_directory_name)
-				fname.set_file_name (".ec_recent_projects")
-				Result := fname
-			end
-			if is_workbench then
-				Result.append ("_wkbench")
-			end
-		end
 	
 	Eiffel_preferences: STRING is
 			-- Preferences location
@@ -137,7 +120,8 @@ feature -- Access: file name
 			fname: FILE_NAME
 		once
 			if Platform_constants.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" + Major_version_number.out + Minor_version_number.out + "\Preferences"
+				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel" +
+					Major_version_number.out + Minor_version_number.out + "\ec\Preferences"
 			else
 				create fname.make_from_string (Execution_environment.home_directory_name)
 				fname.set_file_name (".ecrc" + Major_version_number.out + Minor_version_number.out)
@@ -394,7 +378,6 @@ feature -- Status
 		once
 			Result := Platform_constants.is_windows and then Eiffel_c_compiler.is_equal ("bcb")
 		end
-
 
 feature -- Version limitation
 

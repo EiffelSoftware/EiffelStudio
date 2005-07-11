@@ -15,15 +15,17 @@ feature -- Access
 	initialize is
 			-- 
 		local
-			l_loc: FILE_NAME
+			l_loc, l_prefname: FILE_NAME
 		do
 			create l_loc.make_from_string (shared_constants.application_constants.templates_path)
 			l_loc.extend ("default.xml")
-			debug ("trace")
-				print ("default file: " + l_loc.string + "%N")
-				print ("registry location: HKEY_CURRENT_USER\EiffelDoc%N")
-			end			
-			create preferences.make_with_defaults_and_location (<<l_loc.string>>, "HKEY_CURRENT_USER\EiffelDoc")
+			if (create {PLATFORM}).is_windows then
+				create preferences.make_with_defaults_and_location (<<l_loc.string>>, "HKEY_CURRENT_USER\Software\ISE\doc_builder")
+			else
+				create l_prefname.make_from_string ((create {EXECUTION_ENVIRONMENT}).home_directory_name)
+				l_prefname.set_file_name (".doc_builder")
+				create preferences.make_with_defaults_and_location (<<l_loc.string>>, l_prefname)
+			end
 			create editor_data.make (preferences)
 			create tool_data.make (preferences)
 		end		

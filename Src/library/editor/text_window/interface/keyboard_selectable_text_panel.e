@@ -383,8 +383,11 @@ feature -- Observation
 			-- Reload the opened file from disk.
 		do
 			restore_cursor := True
-			stored_cursor_line := text_displayed.cursor.y_in_lines
-			stored_cursor_char := text_displayed.cursor.x_in_characters
+			if text_is_fully_loaded and text_displayed.cursor /= Void then
+				disable_selection
+				stored_cursor_line := text_displayed.cursor.y_in_lines
+				stored_cursor_char := text_displayed.cursor.x_in_characters				
+			end
 			stored_first_line := first_line_displayed
 			Precursor {TEXT_PANEL}	
 		end

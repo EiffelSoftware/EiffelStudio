@@ -247,14 +247,7 @@ feature -- Basic Operations
 			l_process_launcher.run_hidden
 			environment.add_abort_request_action (agent l_process_launcher.terminate_process)
 			l_process_launcher.launch (l_cmd, a_folder, agent message_output.add_text)
-			if eiffel_compilation_successful (a_folder) then
-				l_local_folder := a_folder.twin
-				l_local_folder.append ("\EIFGEN\W_Code")
-				l_process_launcher.launch (finish_freezing_command, l_local_folder, agent message_output.add_text)
-				check_finish_freezing_status (a_folder)
-			else
-				environment.set_abort (Eiffel_compilation_error)
-			end
+			check_finish_freezing_status (a_folder)
 			environment.remove_abort_request_action
 		end
 
@@ -289,7 +282,7 @@ feature -- Basic Operations
 				loop
 					l_file := l_file_list.item
 					l_count := l_file.count
-					l_found := l_count > 3 and then l_file.substring_index (".exe", l_count - 3) = l_count - 3
+					l_found := l_count > 3 and then (l_file.substring_index (".exe", l_count - 3) = l_count - 3 or l_file.substring_index (".dll", l_count - 3) = l_count - 3)
 					l_file_list.forth
 				end
 			end
@@ -412,8 +405,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (100)
 			Result.append (eiffel_compiler)
-			Result.append (" -precompile -batch -ace ")
-			Result.append (Ace_file_name)
+			Result.append (" -precompile -c_compile -batch -ace ")
+			Result.append (environment.workbench_ace_file_name)
 		end
 
 	eiffel_compile_command: STRING is
@@ -421,8 +414,8 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (100)
 			Result.append (eiffel_compiler)
-			Result.append (" -batch -ace ")
-			Result.append (Ace_file_name)
+			Result.append (" -batch -c_compile -ace ")
+			Result.append (environment.workbench_ace_file_name)
 		end
 			
 	user_def_file_name: STRING is
@@ -437,9 +430,6 @@ feature {NONE} -- Implementation
 
 	Executable_extension: STRING is ".exe"
 			-- Executable file extension
-
-	Ace_file_name: STRING is "Ace.ace"
-			-- Ace file name
 
 	Eiffel_project_extension: STRING is ".epr"
 			-- Eiffel project extension

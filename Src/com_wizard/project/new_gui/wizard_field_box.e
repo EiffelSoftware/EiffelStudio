@@ -20,9 +20,44 @@ inherit
 			default_create,
 			is_equal,
 			copy
+		redefine
+			on_mouse_leave
+		end
+	
+feature -- Access
+
+	focus_lost_actions: LIST [ROUTINE [ANY, TUPLE[]]] is
+			-- Focus lost actions
+		do
+			if internal_focus_lost_actions = Void then
+				create {ARRAYED_LIST [ROUTINE [ANY, TUPLE[]]]} internal_focus_lost_actions.make (10)
+			end
+			Result := internal_focus_lost_actions
+		ensure
+			attached_actions: Result /= Void
+		end
+		
+feature {NONE} -- Event Handling
+
+	on_mouse_leave is
+			-- Call actions then precursor
+		do
+			if internal_focus_lost_actions /= Void then
+				from
+					internal_focus_lost_actions.start
+				until
+					internal_focus_lost_actions.after
+				loop
+					internal_focus_lost_actions.item.call (Void)
+					internal_focus_lost_actions.forth
+				end
+			end
 		end
 
-feature -- Empty
+feature {NONE} -- Implementation
+
+		internal_focus_lost_actions: LIST [ROUTINE [ANY, TUPLE[]]]
+			-- Focus lost actions cache
 
 end -- class WIZARD_FIELD_BOX
 

@@ -350,7 +350,6 @@ feature -- File Properties
 	file_is_up_to_date: BOOLEAN is
 			-- Is the open file up to date?
 		local
-			file: RAW_FILE
 			retried: BOOLEAN
 		do
 			if not retried then

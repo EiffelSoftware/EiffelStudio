@@ -1,8 +1,0 @@
-system egal
-
-class ANY
-
-assertion all
-
-cluster     $EIFFEL4/library/base/kernel
-cluster     $EIFFEL4/library/base/support

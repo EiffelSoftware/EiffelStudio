@@ -84,11 +84,13 @@ feature -- Access
 			column_not_void: Result /= Void
 		end
 
-	visible_column (i: INTEGER): EV_GRID_COLUMN is
-			-- `i'-th visible column.
+	displayed_column (i: INTEGER): EV_GRID_COLUMN is
+			-- `i'-th displayed column. May not correspond
+			-- to `column' if one or more columns have been
+			--- hidden via `hide'.
 		require
 			i_positive: i > 0
-			i_column_not_greater_than_visible_column_count: i <= visible_column_count
+			i_column_not_greater_than_displayed_column_count: i <= displayed_column_count
 		local
 			visible_counter, counter: INTEGER
 			a_col_i: EV_GRID_COLUMN_I
@@ -883,7 +885,7 @@ feature -- Status setting
 			a_col_i := columns @ (a_column)
 			if not a_col_i.is_displayed then
 				a_col_i.set_is_displayed (True)
-				visible_column_count := visible_column_count + 1
+				displayed_column_count := displayed_column_count + 1
 
 					-- Now show the header.
 				header.go_i_th (previous_visible_column_from_index (a_col_i.index))
@@ -906,7 +908,7 @@ feature -- Status setting
 			a_col_i := columns @ (a_column)
 			if a_col_i.is_displayed then
 				a_col_i.set_is_displayed (False)
-				visible_column_count := visible_column_count - 1
+				displayed_column_count := displayed_column_count - 1
 			
 					-- Now hide the header
 				header.prune_all (a_col_i.header_item)
@@ -1083,7 +1085,7 @@ feature -- Status setting
 		require
 			valid_row_index: a_row >= 1 and a_row <= row_count			
 		do
-			set_virtual_position (virtual_x_position, (row (a_row).virtual_y_position).min (virtual_height - viewable_height))
+			set_virtual_position (virtual_x_position, (row (a_row).virtual_y_position).min (maximum_virtual_y_position))
 			redraw_client_area
 		ensure
 			-- Enough following rows implies `first_visible_row' = a_row.
@@ -1980,7 +1982,7 @@ feature -- Removal
 			update_grid_column_indices (a_column)
 			
 			if a_col_i.is_displayed then
-				visible_column_count := visible_column_count - 1
+				displayed_column_count := displayed_column_count - 1
 			end
 
 			update_index_of_first_item_dirty_row_flags (a_column)
@@ -2181,8 +2183,10 @@ feature -- Removal
 
 feature -- Measurements
 
-	visible_column_count: INTEGER
-			-- Number of visible columns in Current.
+	displayed_column_count: INTEGER
+			-- Number of non-hidden columns displayed in Current.
+			-- Equal to `column_count' if no columns have been
+			-- hidden via `hide'.
 
 	column_count: INTEGER is
 			-- Number of columns in Current.
@@ -4934,7 +4938,7 @@ invariant
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
-	visible_column_count_not_greater_than_column_count: is_initialized implies visible_column_count <= column_count
+	displayed_column_count_not_greater_than_column_count: is_initialized implies displayed_column_count <= column_count
 	hidden_node_count_zero_when_tree_disabled: not is_tree_enabled implies hidden_node_count = 0
 	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0
 	hidden_node_count_no_greated_than_rows_less_one: is_initialized and then is_tree_enabled and row_count > 0 implies hidden_node_count <= row_count - 1

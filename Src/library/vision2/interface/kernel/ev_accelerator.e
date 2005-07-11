@@ -215,7 +215,7 @@ feature -- Status report
 			if shift_required then
 				Result.append ("Shift+")
 			end
-			a_key := key.out
+			a_key := key.out.twin
 				--| We only need to convert the key to upper case if
 				--| it is one character long such as 'a'. Other keys
 				--| do not need to be converted.

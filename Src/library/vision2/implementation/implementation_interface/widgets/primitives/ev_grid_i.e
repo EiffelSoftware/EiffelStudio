@@ -1584,7 +1584,8 @@ feature -- Status setting
 			-- Assign `a_color' to `focused_selection_color'.
 		require
 			a_color_not_void: a_color /= Void
-		deferred
+		do
+			focused_selection_color := a_color
 		ensure
 			focused_selection_color_set: focused_selection_color = a_color
 		end
@@ -1593,7 +1594,8 @@ feature -- Status setting
 			-- Assign `a_color' to `non_focused_selection_color'.
 		require
 			a_color_not_void: a_color /= Void
-		deferred
+		do
+			non_focused_selection_color := a_color
 		ensure
 			non_focused_selection_color_set: non_focused_selection_color = a_color
 		end
@@ -1784,6 +1786,18 @@ feature -- Status report
 		
 	tree_node_connector_color: EV_COLOR
 			-- Color of connectors drawn between tree nodes within `Current'.
+			
+	focused_selection_color: EV_COLOR
+			-- Color used to show selection within items while focused.
+
+	non_focused_selection_color: EV_COLOR
+			-- Color used to show selection within items while not focused.
+
+	focused_selection_text_color: EV_COLOR
+		-- Color used to show selection within items while focused.
+
+	non_focused_selection_text_color: EV_COLOR
+			-- Color used for text of selected items while not focused.
 
 	displayed_background_color (a_column, a_row: INTEGER): EV_COLOR is
 			-- `Result' is background color to be displayed for item at position `a_column', `a_row'
@@ -2981,30 +2995,6 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 		-- Indent used for all indents except the first indent in the first column of `Current'.
 
 feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I} -- Implementation
-
-	focused_selection_color: EV_COLOR is
-			-- Color used to show selection within items while focused.
-		deferred
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	non_focused_selection_color: EV_COLOR is
-			-- Color used to show selection within items while not focused.
-		deferred
-		ensure
-			result_not_void: Result /= Void
-		end
-
-	focused_selection_text_color: EV_COLOR is
-			-- Color used for text of selected items while focused.
-		deferred
-		end
-
-	non_focused_selection_text_color: EV_COLOR is
-			-- Color used for text of selected items while not focused.
-		deferred
-		end
 		
 	is_full_redraw_on_virtual_position_change_enabled: BOOLEAN
 			-- Is complete client area invalidated as a result of virtual position changing?

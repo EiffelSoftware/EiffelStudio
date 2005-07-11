@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			hb: EV_HORIZONTAL_BOX
 		do
 			default_create
-			set_title ("New_feature")
+			set_title (interface_names.b_create_new_feature)
 			create vb
 			vb.set_padding (layout_constants.small_padding_size)
 			vb.set_border_width (layout_constants.default_border_size)

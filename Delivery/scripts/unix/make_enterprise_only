@@ -27,22 +27,9 @@ fi
 
 cp -f PorterPackage_all.tar ~/
 
-#Let's compile for PPC on lisbon in background
-/bin/sh make_linuxppc local &
+./compile_for_all_platforms &
 
-#Let's compile for Solaris on mosis in background
-/bin/sh make_solaris local &
-
-#Let's compile for Red Hat Fedora in background
-/bin/sh make_linux_fedora local &
-
-#Let's compile for SGI in background
-/bin/sh make_sgi local &
-
-#Let's compile for Linux 64 bits in background
-/bin/sh make_linux_64bits local &
-
-#Compile and build CDs
+#Compile and build CDs for current platform
 cd PorterPackage
 /bin/sh compile_exes
 /bin/sh make_images

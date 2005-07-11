@@ -35,7 +35,28 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
+feature -- Basic Operations
+
+	generate (a_folder: STRING) is
+			-- Generate server ace file in `a_folder'.
+			-- Delete EIFGEN is already existing.
+		require
+			non_void_folder: a_folder /= Void
+			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
+		local
+			a_text: STRING
+		do
+			if a_folder.is_equal (Server) then
+				a_text := server_generated_ace_file
+			else
+				a_text := client_generated_ace_file
+			end
+			generate_configuration (a_folder, a_text, False)
+			generate_configuration (a_folder, a_text, True)
+			ace_file_generated := True
+		end
+
+feature {NONE} -- Implementation
 
 	Partial_ace_file: STRING is
 			-- Ace file used to precompile generated Eiffel system
@@ -135,8 +156,19 @@ feature -- Access
 	original_cluster_info: EI_CLUSTER_DATA_INPUT
 			-- Cluster information
 
-	Ace_file_name: STRING is "Ace.ace"
+	Workbench_ace_file_name: STRING is
 			-- Ace file name
+		once
+			Result := environment.project_name.twin
+			Result.append (".workbench.ace")
+		end
+
+	Final_ace_file_name: STRING is
+			-- Ace file name
+		once
+			Result := environment.project_name.twin
+			Result.append (".final.ace")
+		end
 
 	ace_file_generated: BOOLEAN
 			-- Was generated project ace file generated?
@@ -227,44 +259,37 @@ feature -- Access
 	Def_file_extension: STRING is ".def"
 			-- DLL definition file extension
 
-feature -- Basic operations
+feature {NONE} -- Implementation
 
-	generate (a_folder: STRING) is
-			-- Generate server ace file in `a_folder'.
-			-- Delete EIFGEN is already existing.
-		require
-			non_void_folder: a_folder /= Void
-			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
+	generate_configuration (a_folder, a_content: STRING; is_final: BOOLEAN) is
+			-- Generate ace file for finalized system if `is_final', workbench otherwise.
 		local
 			a_file: PLAIN_TEXT_FILE
-			a_file_name, a_string: STRING
+			a_file_name, a_text: STRING
 		do
-			create a_string.make (10000)
-			if a_folder.is_equal (Server) then
-				a_string.append (server_generated_ace_file)
-			else
-				a_string.append (client_generated_ace_file)
-			end
+			a_text := a_content.twin
 			
-			a_string.append (ecom_lib_location (Client))
-			a_string.append (ecom_lib_location (Server))
-			a_string.remove (a_string.count)
-			a_string.append (";%Nend%N")
+			a_text.append (ecom_lib_location (Client, is_final))
+			a_text.append (",")
+			a_text.append (ecom_lib_location (Server, is_final))
+			a_text.append (";%Nend%N")
 
 			create a_file_name.make (100)
 			a_file_name.append (environment.destination_folder)
 			a_file_name.append (a_folder)
 			a_file_name.append_character (Directory_separator)
-			a_file_name.append (Ace_file_name)
+			if is_final then
+				a_file_name.append (environment.Final_ace_file_name)
+			else
+				a_file_name.append (environment.Workbench_ace_file_name)
+			end
 			create a_file.make_create_read_write (a_file_name)
-
-			a_file.put_string (a_string)
+			a_file.put_string (a_text)
 			a_file.close
-			ace_file_generated := True
 		end
 
-	ecom_lib_location (a_folder: STRING): STRING is
-			-- Location of ecom.lib
+	ecom_lib_location (a_folder: STRING; is_final: BOOLEAN): STRING is
+			-- Location of ecom.lib (finalized if `is_final', workbench otherwise
 		require
 			non_void_folder: a_folder /= Void
 			valid_folder: a_folder.is_equal (Client) or a_folder.is_equal (Server)
@@ -274,8 +299,12 @@ feature -- Basic operations
 				Result.append ("%N%T%T%T%"%%%"")
 				Result.append (environment.destination_folder)
 				Result.append (a_folder)
-				Result.append ("\Clib\$(ISE_C_COMPILER)\ecom.lib%%%"%",")
-			end			
+				if is_final then
+					Result.append ("\Clib\$(ISE_C_COMPILER)\ecom_final.lib%%%"%"")
+				else
+					Result.append ("\Clib\$(ISE_C_COMPILER)\ecom.lib%%%"%"")
+				end
+			end
 		ensure
 			non_void_result: Result /= Void
 			valid_result: not is_empty_clib_folder (a_folder) implies not Result.is_empty
@@ -437,7 +466,6 @@ feature -- Basic operations
 					original_cluster_info.objects.forth
 				end
 			end
-			Result.append ("%N")
 		end
 
 	if_class_cluster_insert_visible (a_cluster: STRING) is

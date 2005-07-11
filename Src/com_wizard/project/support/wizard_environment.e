@@ -166,6 +166,24 @@ feature -- Access
 			non_void_expanded_path: Result /= Void
 		end
 
+	Workbench_ace_file_name: STRING is
+			-- Ace file name
+		require
+			non_void_project_name: project_name /= Void
+		once
+			Result := project_name.twin
+			Result.append (".workbench.ace")
+		end
+
+	Final_ace_file_name: STRING is
+			-- Ace file name
+		require
+			non_void_project_name: project_name /= Void
+		once
+			Result := project_name.twin
+			Result.append (".final.ace")
+		end
+
 feature -- Element Change
 
 	set_is_eiffel_interface is

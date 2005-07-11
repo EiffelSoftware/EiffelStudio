@@ -31,6 +31,7 @@
 				<Merge Id="borland" Language="1033" src="MSMs\borland.msm" DiskId="1" />
 				<Merge Id="c_library" Language="1033" src="MSMs\c_library.msm" DiskId="1" />
 				<Merge Id="dotnet" Language="1033" src="MSMs\dotnet.msm" DiskId="1" />
+				<Merge Id="gobo" Language="1033" src="MSMs\gobo.msm" DiskId="1" />
 				<Merge Id="free_add_ons" Language="1033" src="MSMs\free_add_ons.msm" DiskId="1" />
 				<Merge Id="graphical_libraries" Language="1033" src="MSMs\graphical_libraries.msm" DiskId="1" />
 				<Merge Id="studio_core" Language="1033" src="MSMs\studio_core.msm" DiskId="1" />
@@ -68,6 +69,10 @@
 
 			<Feature Id="EiffelCOM" Title="EiffelCOM" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="eiffel_com" />
+			</Feature>
+
+			<Feature Id="Gobo" Title="Gobo - Eiffel tools and libraries" TypicalDefault="install" Level="3" Display="hidden">
+				<MergeRef Id="gobo" />
 			</Feature>
 
 			<Feature Id="FreeAddOns" Title="Free Additional libraries" TypicalDefault="install" Level="3" Display="hidden">

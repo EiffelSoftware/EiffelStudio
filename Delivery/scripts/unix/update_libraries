@@ -18,7 +18,7 @@ remtrace event
 exprt -r $DEFAULT_CVS_TAG -d event "Src/library/event"
 remtrace gobo
 exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons/gobo
-gunzip -c free_add_ons/gobo_33_unix.tgz | tar -xf -
+gunzip -c free_add_ons/gobo_33_ise.tgz | tar -xf -
 fullrd free_add_ons
 remtrace graph
 exprt -r $DEFAULT_CVS_TAG -d graph "Src/library/graph"

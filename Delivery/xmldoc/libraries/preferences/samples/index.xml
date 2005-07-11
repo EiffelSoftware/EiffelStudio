@@ -11,7 +11,7 @@
 					<item>Launch EiffelStudio.</item>
 					<item>Select <bold>Use existing Ace (control file)</bold> and click <bold>OK</bold></item>
 					<item>Browse to <italic>$ISE_EIFFEL\examples\preferences\</italic></item>
-					<item>Choose the Ace file.  For saving the preferences to the Windows registry choose registry.ace, for saving to XML choose xml.ace</item>
+					<item>Choose the Ace file.  For saving the preferences to the Windows registry choose ace.windows.ace, for saving to XML choose ace.windows.xml.ace on Windows, otherwise ace.unix.ace</item>
 					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
 					<item>Click <bold>OK</bold>.</item>
 				</list>

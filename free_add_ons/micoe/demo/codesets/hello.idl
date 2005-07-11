@@ -1,3 +1,0 @@
-interface Hello {
-  string hello (in string s);
-};

@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			set_default_push_button (ok_button)
 			set_default_cancel_button (cancel_button)
 			show_actions.extend (agent (feature_editor.feature_name_field).select_all)
-			show_actions.extend (agent (feature_editor.feature_name_field).set_focus)
+			show_actions.extend (agent set_focus_to_feature_selector)
 		end
 
 	set_default_editor is
@@ -80,19 +80,21 @@ feature {NONE} -- Initialization
 	build_selector is
 			-- Create `feature_select' radio group.
 		local
-			vb: EV_HORIZONTAL_BOX
+			h_box: EV_HORIZONTAL_BOX
 		do
 			create feature_select.make_with_text ("Select feature type")
-			create vb
-			feature_select.extend (vb)
+			create h_box
+			extend_no_expand (h_box, create {EV_CELL})
+			h_box.i_th (1).set_minimum_width (layout_constants.default_padding_size)
+			feature_select.extend (h_box)
 			create proc_button.make_with_text ("Procedure")
-			vb.extend (proc_button)
+			h_box.extend (proc_button)
 			proc_button.select_actions.extend (agent on_proc_select)
 			create func_button.make_with_text ("Function")
-			vb.extend (func_button)
+			h_box.extend (func_button)
 			func_button.select_actions.extend (agent on_func_select)
 			create attr_button.make_with_text ("Attribute")
-			vb.extend (attr_button)
+			h_box.extend (attr_button)
 			attr_button.select_actions.extend (agent on_attr_select)
 		end
 
@@ -246,6 +248,13 @@ feature {NONE} -- Implementation
 			ok_clicked := False
 			hide
 		end
+		
+	set_focus_to_feature_selector is
+			-- Assign focus to the first enabled radio button selected within 
+		do
+			proc_button.selected_peer.set_focus
+		end
+		
 
 	feature_select: EV_FRAME
 			-- Containing of the radio buttons.

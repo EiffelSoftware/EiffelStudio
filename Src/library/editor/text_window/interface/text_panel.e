@@ -160,6 +160,9 @@ feature -- Access
 	flip_count: INTEGER
 			-- How many times has the `editor_viewport' been flipped?
 
+	is_checking_modifications: BOOLEAN
+			-- Are document modifications being checked?
+
 feature -- Status Setting
 
 	set_text (a_text: TEXT; a_filename: STRING) is
@@ -221,31 +224,16 @@ feature -- Status Setting
 	on_focus is
 			-- Editor received focus
 		local
-			dialog: EV_INFORMATION_DIALOG
-			button_labels: ARRAY [STRING]
-			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
+
 		do
 			editor_drawing_area.focus_in_actions.block
-			if not changed and editor_preferences.automatic_update and then not file_date_already_checked and then not file_is_up_to_date then
-					-- File has not changed in panel and is not up to date.  Reload.
-				reload
-			elseif (changed and not file_is_up_to_date) or (not changed and not file_date_already_checked and not editor_preferences.automatic_update) and then not file_is_up_to_date then
-					-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
-				create dialog.make_with_text ("This file has been modified by another editor.")
-				create button_labels.make (1, 2)
-				create actions.make (1, 2)
-				button_labels.put ("Reload", 1)
-				actions.put (agent reload, 1)
-				button_labels.put ("Continue anyway", 2)
-				actions.put (agent text_displayed.set_changed (True, False), 2)
-				dialog.set_buttons_and_actions (button_labels, actions)
-				dialog.set_default_push_button (dialog.button (button_labels @ 1))
-				dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
-				dialog.set_title ("External Modification")
-				dialog.show_modal_to_window (reference_window)
+			
+			if not is_checking_modifications and file_loaded then
+				check_document_modifications_and_reload	
 			end
+			
 			editor_drawing_area.focus_in_actions.resume
-		end		
+		end	
 
 	set_internal_focus (a_flag: BOOLEAN) is
 			-- 
@@ -255,6 +243,12 @@ feature -- Status Setting
 
 feature -- Query
 
+	file_loaded: BOOLEAN is
+			-- Has a file been loaded into the text panel?
+		do
+			Result := file_name /= Void and then not file_name.is_empty
+		end
+		
 	editor_x: INTEGER is
 			-- editor_viewport absolute position.
 		do
@@ -361,12 +355,10 @@ feature -- File Properties
 		do
 			if not retried then
 				Result := True
-				if file_name /= Void then
-					create file.make (file_name.string)
-					if file /= Void and then file.exists and then date_of_file_when_loaded /= 0 then
-						Result := date_of_file_when_loaded = file.date
-					end
+				if file_loaded then
+					Result := date_of_file_when_loaded = file_date_ticks
 				end
+				file_date_already_checked := True
 			else
 				Result := True
 			end			
@@ -529,7 +521,44 @@ feature -- Basic Operations
 				l_line_index := l_line_index + 1
 			end			
 			redraw_current_screen
-		end		
+		end
+		
+	check_document_modifications_and_reload is
+			-- Check document modifications and reload as necessary.
+		require
+			not_is_checking_modifications: not is_checking_modifications
+			file_loaded: file_loaded
+		local
+			dialog: EV_INFORMATION_DIALOG
+			button_labels: ARRAY [STRING]
+			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
+		do	
+			is_checking_modifications := True
+
+			if not file_is_up_to_date then
+				if changed or not editor_preferences.automatic_update then
+						-- File has not changed in panel and is not up to date.  However, user does want auto-update so prompt for reload.
+					create dialog.make_with_text ("This file has been modified by another editor.")
+					create button_labels.make (1, 2)
+					create actions.make (1, 2)
+					button_labels.put ("Reload", 1)
+					actions.put (agent reload, 1)
+					button_labels.put ("Continue anyway", 2)
+					actions.put (agent continue_editing, 2)
+					dialog.set_buttons_and_actions (button_labels, actions)
+					dialog.set_default_push_button (dialog.button (button_labels @ 1))
+					dialog.set_default_cancel_button (dialog.button (button_labels @ 2))
+					dialog.set_title ("External edition")
+					dialog.show_modal_to_window (reference_window)
+				elseif editor_preferences.automatic_update and not changed then
+					reload
+				end
+			end
+		
+			is_checking_modifications := False
+		ensure
+			is_checking_modifications_is_false: is_checking_modifications = False
+		end
 			
 feature -- Graphical interface
 
@@ -1330,7 +1359,7 @@ feature -- Memory management
 			not_initialized: not is_initialized
 		end
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
 	buffered_line: EV_PIXMAP is
 			-- Buffer large enough to hold line information.
@@ -1370,6 +1399,30 @@ feature -- Implementation
 			-- Number of lines in common when performing a page down/page up operation.
 		do
 			Result := editor_preferences.scrolling_common_line_count
+		end
+		
+	file_date_ticks: INTEGER is
+			-- Retrieve file last modified date in the number of ticks
+		require
+			file_loaded: file_loaded
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make (file_name.string)
+			if l_file.exists then
+				Result := l_file.date
+			end
+		end
+		
+	continue_editing is
+			-- Continue editing document
+			-- Note: Called from the reload request prompt
+		require
+			file_loaded: file_loaded
+			text_is_fully_loaded: text_is_fully_loaded
+		do
+			text_displayed.set_changed (True, False)
+			date_of_file_when_loaded := file_date_ticks
 		end
 
 invariant

@@ -56,21 +56,6 @@ fi
 clean_project
 move build.tar.gz $EXPORT_DIR/build
 
-
-if [ "$MULTIPLE_EDITIONS" ]; then
-	remtrace Free Build
-	clean_project
-	finalize evaluation_ace.unix.ace
-	tgz_ccode build
-	if [ ! -f build.tar.gz ]; then
-		echo Could not finalize a new EiffelBuild
-		CANCEL
-	fi
-	clean_project
-	move build.tar.gz $EXPORT_DIR/build/build_free.tar.gz
-fi
-
-
 if [ ! "$NO_NEW_EC" ]; then
 	remtrace Recompile EiffelStudio
 	remtrace Enterprise edition
@@ -124,20 +109,6 @@ if [ ! "$NO_NEW_EC" ]; then
 		cd $EIFFEL_SRC/Eiffel/API/constants
 		sed -e "s/Version_type_name:\ STRING\ is\ \"University\ Edition\"/Version_type_name:\ STRING\ is\ \"Free\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
-		sed -e "s/has_case:\ BOOLEAN\ is\ True/has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		sed -e "s/has_metrics:\ BOOLEAN\ is\ True/has_metrics:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		sed -e "s/has_profiler:\ BOOLEAN\ is\ True/has_profiler:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		sed -e "s/has_documentation_generation:\ BOOLEAN\ is\ True/has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		sed -e "s/has_xmi_generation:\ BOOLEAN\ is\ True/has_xmi_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		sed -e "s/has_dll_generation:\ BOOLEAN\ is\ True/has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
-		sed -e "s/\has_signable_generation:\ BOOLEAN\ is\ True/\has_signable_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
-		move new_eiffel_env.e eiffel_env.e
 		cd $FINALIZATION_DIR
 		clean_project
 		finalize ace.ace

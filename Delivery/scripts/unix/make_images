@@ -53,11 +53,6 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
-	remtrace copying Build
-	gunzip -c $EXPORT_DIR/build/build_free.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
-	chmod a+rx $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
-	chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
-
 	remtrace Building Home CD image
 	mv Eiffel56 cdrom
 	make_cd_image Eiffel56_free Eiffel56_free.iso cdrom
@@ -70,11 +65,6 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	gunzip -c $EXPORT_DIR/ecs/ec_university.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
-
-	remtrace copying Build
-	gunzip -c $EXPORT_DIR/build/build_enterprise.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
-	chmod a+rx $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
-	chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
 
 	remtrace Building Home CD image
 	mv Eiffel56 cdrom
@@ -89,11 +79,6 @@ cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
 gunzip -c $EXPORT_DIR/ecs/ec_enterprise.gz > $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
-
-remtrace copying Build
-gunzip -c $EXPORT_DIR/build/build_enterprise.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
-chmod a+rx $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
-chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
 
 remtrace copying CD key validator
 move setup $INSTALL_DIR/register

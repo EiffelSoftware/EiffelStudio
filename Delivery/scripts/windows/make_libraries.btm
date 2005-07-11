@@ -16,6 +16,8 @@ remtrace net
 exprt -r %DEFAULT_CVS_TAG -d net "Src/library/net"
 remtrace parse
 exprt -r %DEFAULT_CVS_TAG -d parse "Src/library/parse"
+remtrace preferences
+exprt -r %DEFAULT_CVS_TAG -d preferences "Src/library/preferences"
 remtrace store
 exprt -r %DEFAULT_CVS_TAG -d store "Src/library/store"
 remtrace thread

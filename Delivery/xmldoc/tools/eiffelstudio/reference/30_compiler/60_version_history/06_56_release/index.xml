@@ -64,6 +64,7 @@
 			<item>Introduced upper limit for value of integer constant used in <code><class_name>BIT</class_name></code> type declaration and extended <code><compiler_error>VTBT</compiler_error></code> rule to cover this change.</item>
 			<item>To evaluate the type of a manifest array we now use the first item of the manifest array instead of the last one as a first guessed type.</item>
 			<item>Allowed for integer literals with intermediate underscores at arbitrary positions.</item>
+			<item>To ensure same behavior on various platforms, the standard output is now unbuffered (it previously was unbuffered on Windows and line buffered on Unix platforms).</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes

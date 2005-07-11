@@ -81,7 +81,48 @@
 			</row>
 			<row>
 				<cell>Assigner command</cell>
-				<cell><feature_name>item</feature_name> <symbol> <keyword>alias</keyword> <string>"[]"</string> (</symbol><local_variable>index</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>):</symbol> <generics>G</generics> <keyword>assign</keyword> <feature_name>put</feature_name></cell>
+				<cell><code><feature_name>item</feature_name> <symbol> <keyword>alias</keyword> <string>"[]"</string> (</symbol><local_variable>index</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>):</symbol> <generics>G</generics> <keyword>assign</keyword> <feature_name>put</feature_name></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+		</table>
+		<heading><size>2</size>Creating objects</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Bang-bang syntax</cell>
+				<cell>
+					<code><symbol>!!</symbol> <local_variable>a</local_variable></code><line_break/>
+					<code><symbol>!!</symbol> <local_variable>a</local_variable><symbol>.</symbol><feature_name>make</feature_name></code><line_break/>
+					<code><symbol>!</symbol><class_name>B</class_name><symbol>!</symbol> <local_variable>a</local_variable></code><line_break/>
+					<code><symbol>!</symbol><class_name>B</class_name><symbol>!</symbol> <local_variable>a</local_variable><symbol>.</symbol><feature_name>make</feature_name></code>
+				</cell>
+				<cell>Yes</cell>
+				<cell>No</cell>
+				<cell>Yes, marked as obsolete</cell>
+			</row>
+			<row>
+				<cell>Keyword syntax</cell>
+				<cell>
+					<code><keyword>create</keyword> <local_variable>a</local_variable></code><line_break/>
+					<code><keyword>create</keyword> <local_variable>a</local_variable><symbol>.</symbol><feature_name>make</feature_name></code><line_break/>
+					<code><keyword>create</keyword> <symbol>{</symbol><class_name>B</class_name><symbol>}</symbol> <local_variable>a</local_variable></code><line_break/>
+					<code><keyword>create</keyword> <symbol>{</symbol><class_name>B</class_name><symbol>}</symbol> <local_variable>a</local_variable><symbol>.</symbol><feature_name>make</feature_name></code><line_break/>
+				</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Creation expression</cell>
+				<cell><code><feature_name>print</feature_name> <symbol>(</symbol><keyword>create</keyword> <symbol>{</symbol><class_name>TIME</class_name><symbol>}</symbol><symbol>.</symbol><feature_name>make_now</feature_name><symbol>)</symbol></code></cell>
 				<cell>No</cell>
 				<cell>Yes</cell>
 				<cell>Yes</cell>
@@ -128,22 +169,22 @@
 				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
 			</row>
 			<row>
-				<cell>Manifest type</cell>
-				<cell><code><symbol>{</symbol><class_name>MY_TYPE</class_name><symbol>}</symbol></code></cell>
-				<cell>No</cell>
-				<cell>Yes</cell>
-				<cell>Yes</cell>
-			</row>
-			<row>
-				<cell>Once manifest string</cell>
-				<cell><code><keyword>once</keyword> <string>"abc"</string></code></cell>
-				<cell>No</cell>
-				<cell>Yes</cell>
-				<cell>Yes</cell>
-			</row>
-			<row>
 				<cell>Bracket expression</cell>
 				<cell><code><local_variable>y</local_variable> <symbol>:=</symbol> <local_variable>x</local_variable> <symbol>[</symbol><local_variable>i</local_variable><symbol>]</symbol></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Creation expression</cell>
+				<cell><code><feature_name>set_buffer</feature_name> <symbol>(</symbol><keyword>create</keyword> <symbol>{</symbol><class_name>STRING</class_name><symbol>}</symbol><symbol>.</symbol><feature_name>make</feature_name> <symbol>(</symbol><number>100</number><symbol>)</symbol><symbol>)</symbol></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Manifest type</cell>
+				<cell><code><symbol>{</symbol><class_name>MY_TYPE</class_name><symbol>}</symbol></code></cell>
 				<cell>No</cell>
 				<cell>Yes</cell>
 				<cell>Yes</cell>
@@ -167,10 +208,17 @@
 						<label>Agent</label>
 					</link>
 				</cell>
-				<cell></cell>
+				<cell><code><local_variable>list</local_variable><symbol>.</symbol><feature_name>do_all</feature_name> <symbol>(</symbol><keyword>agent</keyword> <feature_name>print</feature_name> <symbol>(</symbol><symbol>?</symbol><symbol>)</symbol><symbol>)</symbol></code></cell>
 				<cell>No</cell>
 				<cell>Yes</cell>
 				<cell>Yes, except for inline agents</cell>
+			</row>
+			<row>
+				<cell>Once manifest string</cell>
+				<cell><code><keyword>once</keyword> <string>"abc"</string></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
 			</row>
 		</table>
 		<heading><size>2</size>Constants</heading>
@@ -209,6 +257,13 @@
 				<cell>No</cell>
 				<cell>Yes</cell>
 				<cell>Hexadecimal integers</cell>
+			</row>
+			<row>
+				<cell>Integer with intermediate underscores</cell>
+				<cell><code><number>1_000</number> <number>0xFFFF_0000</number></code></cell>
+				<cell>In groups by 3 digits</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
 			</row>
 		</table>
 	</paragraph>

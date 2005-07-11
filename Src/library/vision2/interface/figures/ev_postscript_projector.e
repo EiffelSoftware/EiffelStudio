@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 		do
 			create rectangle.make (0, 0, point_width - (2 * left_margin), point_height - (2 * bottom_margin))
 			create postscript_result.make (0)
-			add_ps ("%%%%!PS-Adobe-3.0 EPSF-3.0")
+			add_ps ("%%!PS-Adobe-3.0 EPSF-3.0")
 			add_ps("%%%%Creator: N/A")
 			add_ps ("%%%%Title: N/A")
 			add_ps ("%%%%CreationDate: N/A")

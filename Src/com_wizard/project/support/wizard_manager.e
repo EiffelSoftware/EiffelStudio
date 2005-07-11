@@ -44,38 +44,12 @@ feature -- Basic Operations
 			-- Start generation.
 		local
 			l_retried: BOOLEAN
-			l_vs_setup: VS_SETUP
 			l_tasks: ARRAYED_LIST [WIZARD_PROGRESS_REPORTING_TASK]
-			l_path: STRING
 		do
 			if not l_retried then
 				message_output.clear
 				environment.set_error_data (Void)
-				if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
-					Environment.set_abort (No_ise_eiffel)
-				end
-				if not environment.abort then
-					l_path := env.get ("PATH")
-					l_path.append (";")
-					l_path.append (Eiffel_installation_dir_name)
-					l_path.append ("\studio\spec\windows\bin")
-					env.put (l_path, "PATH")
-					if use_bcb then
-						l_path := env.get ("PATH")
-						l_path.append (";")
-						l_path.append (Eiffel_installation_dir_name)
-						l_path.append ("\BCC55\Bin")
-						env.put (l_path, "PATH")
-					end
-					create l_vs_setup.make
-					if not l_vs_setup.valid_vcvars then
-						if not use_bcb then
-							Environment.set_abort (No_c_compiler)
-						elseif environment.idl then
-							Environment.set_abort (No_midl_compiler)
-						end
-					end
-				end
+				setup_environment
 				if not environment.abort then
 					message_output.add_title ("Processing  %"" + environment.project_name + "%"")
 					create l_tasks.make (9)
@@ -171,6 +145,67 @@ feature -- Basic Operations
 		
 feature {NONE} -- Implementation
 
+	setup_environment is
+			-- Setup environment variables for compilation
+		local
+			l_vs_setup: VS_SETUP
+			l_path: STRING
+		do
+			if Eiffel_installation_dir_name = Void or else Eiffel_installation_dir_name.is_empty then
+				environment.set_abort (No_ise_eiffel)
+			else
+				l_path := env.get ("PATH")
+				l_path.append (";")
+				l_path.append (Eiffel_installation_dir_name)
+				l_path.append ("\studio\spec\windows\bin")
+				env.put (l_path, "PATH")
+				if use_bcb then
+					l_path := env.get ("PATH")
+					l_path.append (";")
+					l_path.append (Eiffel_installation_dir_name)
+					l_path.append ("\BCC55\Bin")
+					env.put (l_path, "PATH")
+				end
+				if not use_bcb then
+					if smart_checking then
+						create l_vs_setup.make
+						if not l_vs_setup.valid_vcvars then
+							Environment.set_abort (No_c_compiler)
+						end
+					end
+				end
+			end
+		end
+
+	smart_checking: BOOLEAN is
+			-- smart_checking value in config.eif file
+		local
+			l_file: PLAIN_TEXT_FILE
+			l_content, l_value: STRING
+			l_index, l_index2: INTEGER
+		do
+			Result := True
+			create l_file.make (Eiffel_installation_dir_name + "\studio\config\windows\msc\config.eif")
+			if l_file.exists then
+				l_file.open_read
+				l_file.read_stream (l_file.count)
+				l_content := l_file.last_string
+				l_file.close
+				l_index := l_content.substring_index ("%Nsmart_checking:", 1)
+				if l_index > 0 then
+					l_index2 := l_content.index_of ('%N', l_content.count.min (l_index + 17))
+					if l_index2 > 0 then
+						l_value := l_content.substring (l_index + 17, l_index2)
+						l_value.right_adjust
+						l_value.left_adjust
+						if l_value.is_boolean then
+							Result := l_value.to_boolean
+						end
+					end
+				end
+			end
+		end
+		
 	event_raiser: ROUTINE [ANY, TUPLE [EV_THREAD_EVENT]]
 			-- Agent used to raise events
 		

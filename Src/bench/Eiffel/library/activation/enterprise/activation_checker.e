@@ -65,6 +65,7 @@ feature {NONE} -- Implementation
 			l_app: EV_APPLICATION
 			l_screen: EV_SCREEN
 			l_accelerator: EV_ACCELERATOR
+			l_button: EV_BUTTON
 		do
 			create l_app			
 			create l_warning.make_with_text (Not_initialized_error_message)
@@ -77,7 +78,9 @@ feature {NONE} -- Implementation
 			l_accelerator.set_key (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.Key_enter))
 			l_accelerator.actions.extend (agent die)
 			l_warning.accelerators.extend (l_accelerator)
-			l_warning.button ("Quit").set_focus
+			l_button := l_warning.button ("Quit")
+			l_warning.set_default_push_button (l_button)
+			l_warning.set_default_cancel_button (l_button)
 			l_warning.show
 			l_app.launch
 		end

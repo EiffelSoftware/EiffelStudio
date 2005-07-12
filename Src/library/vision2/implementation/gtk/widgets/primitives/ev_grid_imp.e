@@ -16,7 +16,8 @@ inherit
 			propagate_foreground_color
 		redefine
 			interface,
-			initialize
+			initialize,
+			extra_text_spacing
 		end
 
 	EV_CELL_IMP
@@ -69,6 +70,12 @@ feature {NONE} -- Initialization
 			--set_non_focused_selection_color (color_from_state (False, {EV_GTK_EXTERNALS}.gtk_state_active_enum))
 			
 			set_non_focused_selection_color (create {EV_COLOR}.make_with_8_bit_rgb (160, 189, 238))
+			
+			set_focused_selection_text_color (create {EV_COLOR}.make_with_8_bit_rgb (239, 251, 254))
+			
+			set_non_focused_selection_text_color (create {EV_COLOR}.make_with_8_bit_rgb (196, 236, 253))
+			
+			
 			set_is_initialized (True)
 		end
 
@@ -88,19 +95,25 @@ feature -- Element change
 			redraw_client_area
 		end
 
-	set_focused_selection_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `focused_selection_color'.
+	set_focused_selection_text_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `focused_selection_text_color'.
 		do
-			focused_selection_color := a_color
+			focused_selection_text_color := a_color
 		end
 		
-	set_non_focused_selection_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `non_focused_selection_color'.
+	set_non_focused_selection_text_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `non_focused_selection_text_color'.
 		do
-			non_focused_selection_color := a_color
+			non_focused_selection_text_color := a_color
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation
+
+	extra_text_spacing: INTEGER is
+			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
+		do
+			Result := 6
+		end
 
 	string_size (s: STRING; f: EV_FONT; tuple: TUPLE [INTEGER, INTEGER]) is
 			-- `Result' contains width and height required to
@@ -133,8 +146,6 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			end
 		end
 
-	focused_selection_color: EV_COLOR
-			-- Color used for selected items while focused.
 
 --	focused_selection_text_color: EV_COLOR is
 --			-- Color used for text of selected items while focused.
@@ -200,20 +211,6 @@ feature {EV_GRID_ITEM_I} -- Implementation
 --			Result.set_rgb_with_16_bit (a_r, a_g, a_b)			
 --		end
 
-	non_focused_selection_color: EV_COLOR
-			-- Color used for selected items while not focused.
-
-	non_focused_selection_text_color: EV_COLOR is
-			-- Color used for text of selected items while not focused.
-		once
-			create Result.make_with_8_bit_rgb (196, 236, 253)
-		end
-
-	focused_selection_text_color: EV_COLOR is
-			-- Color used for text of selected items while not focused.
-		once
-			create Result.make_with_8_bit_rgb (239, 251, 254)
-		end
 --
 --feature {NONE} -- Externals
 --

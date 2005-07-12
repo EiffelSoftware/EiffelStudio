@@ -6,11 +6,12 @@
 #Let's compile for Solaris on mosis in background
 ./make_for_platform local mosis.ise manus solaris-sparc ; ./make_for_platform local mosis.ise manus solaris-sparc-64 &
 
-#Let's compile for Red Hat Fedora in background
-./make_for_platform local mojo.ise manus linux-x86 &
+#Let's compile for Red Hat Fedora and FreeBSD (done together because they are on the same machine and we don't want to overload the machine
+./make_for_platform local mojo.ise manus linux-x86 ; ./make_for_platform local freebsd.ise manus freebsd-x86 &
 
 #Let's compile for SGI in background
 ./make_for_platform local iris.ise manus irix-mips ; ./make_for_platform local iris.ise manus irix-mips-64 &
 
 #Let's compile for Linux 64 bits in background
 ./make_for_platform local madrid.ise manus linux-x86-64 &
+

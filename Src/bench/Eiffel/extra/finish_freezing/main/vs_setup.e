@@ -171,54 +171,63 @@ feature -- Keys
 		local
 			l_buffer: STRING
 			l_file: PLAIN_TEXT_FILE
+			l_platform: PLATFORM
 		once
-				-- VS.NET 2005 on 32 and 64 bits
-			l_buffer := vc_product_dir_for_vs_dotnet ("8.0", 64)
-			if l_buffer = Void then
-				l_buffer := vc_product_dir_for_vs_dotnet ("8.0", 32)
-			end
-			if l_buffer /= Void then
-				create l_file.make (vcvars_bat_path_and_filename (l_buffer, 64))
-				if l_file.exists then
-					Result := l_file.name
-				else
-					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
+			if is_windows_64_bits then
+					-- We have been compiled for 64bits, meaning that we can only compile 64 bits code
+					-- and we require at least Visual Studio .NET 2005.
+				l_buffer := vc_product_dir_for_vs_dotnet ("8.0", 64)
+				if l_buffer /= Void then
+					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 64))
 					if l_file.exists then
 						Result := l_file.name
 					end
 				end
-			end
-				-- VS.NET 2003
-			if Result = Void then
-				l_buffer := vc_product_dir_for_vs_dotnet ("7.1", 32)
+			else
+					-- VS.NET 2005 on 32 and 64 bits for 32 bits version of EiffelStudio
+				l_buffer := vc_product_dir_for_vs_dotnet ("8.0", 64)
+				if l_buffer = Void then
+					l_buffer := vc_product_dir_for_vs_dotnet ("8.0", 32)
+				end
 				if l_buffer /= Void then
 					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
 					if l_file.exists then
 						Result := l_file.name
 					end
 				end
-			end
-			
-				-- VS.NET 2002
-			if Result = Void then
-				l_buffer := vc_product_dir_for_vs_dotnet ("7.0", 32)
-				if l_buffer /= Void then
-					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
-					if l_file.exists then
-						Result := l_file.name
+
+					-- VS.NET 2003
+				if Result = Void then
+					l_buffer := vc_product_dir_for_vs_dotnet ("7.1", 32)
+					if l_buffer /= Void then
+						create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
+						if l_file.exists then
+							Result := l_file.name
+						end
 					end
 				end
-			end
-			
-				-- VS 6.0
-			if Result = Void then
-				l_buffer := vc_product_dir_for_vs_6
-				if l_buffer /= Void then
-					create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
-					if l_file.exists then
-						Result := l_file.name
+				
+					-- VS.NET 2002
+				if Result = Void then
+					l_buffer := vc_product_dir_for_vs_dotnet ("7.0", 32)
+					if l_buffer /= Void then
+						create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
+						if l_file.exists then
+							Result := l_file.name
+						end
 					end
-				end	
+				end
+				
+					-- VS 6.0
+				if Result = Void then
+					l_buffer := vc_product_dir_for_vs_6
+					if l_buffer /= Void then
+						create l_file.make (vcvars_bat_path_and_filename (l_buffer, 32))
+						if l_file.exists then
+							Result := l_file.name
+						end
+					end	
+				end
 			end
 		ensure
 			valid_result: Result /= Void implies not Result.is_empty
@@ -295,9 +304,10 @@ feature {NONE} -- Keys
 			not_a_product_dir_is_empty: not a_product_dir.is_empty
 			valid_a_product_dir: a_product_dir.item (a_product_dir.count) = (create {OPERATING_ENVIRONMENT}).directory_separator
 			valid_a_bit: a_bits = 32 or a_bits = 64
+			valid_64_bits: a_bits = 64 implies is_windows_64_bits
 		do
 			if a_bits = 64 then 
-				Result := a_product_dir + "bin\amd64\vcvars_64.bat"
+				Result := a_product_dir + "bin\amd64\vcvarsamd64.bat"
 			else
 				Result := a_product_dir + "bin\vcvars" + a_bits.out + ".bat"
 			end
@@ -340,6 +350,14 @@ feature -- Externals
 			"C macro signature (LPCTSTR, LPCTSTR): EIF_BOOLEAN use <windows.h>"
 		alias
 			"SetEnvironmentVariable"
+		end
+		
+	is_windows_64_bits: BOOLEAN is
+			-- Is Current running on Windows 64 bits?
+		external
+			"C macro use %"eif_eiffel.h%""
+		alias
+			"EIF_IS_64_BITS"
 		end
 		
 end -- class VS_SETUP

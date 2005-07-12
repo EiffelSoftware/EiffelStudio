@@ -58,6 +58,12 @@
 #define EIF_IS_WINDOWS EIF_FALSE
 #endif
 
+#ifdef EIF_64_BITS
+#define EIF_IS_64_BITS	EIF_TRUE
+#else
+#define EIF_IS_64_BITS	EIF_FALSE
+#endif
+
 /* VMS definition */
 #ifdef EIF_VMS
 #define EIF_IS_VMS EIF_TRUE

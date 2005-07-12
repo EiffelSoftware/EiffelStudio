@@ -398,11 +398,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 			end
 			auto_point := switch_auto_point xor auto_point
 		end
-
-feature {NONE} -- Handle keystrokes
-
-	completion_bckp: INTEGER
-
+		
 	handle_extended_ctrled_key (ev_key: EV_KEY) is
  			-- Process the push on Ctrl + an extended key.
 		local
@@ -430,6 +426,10 @@ feature {NONE} -- Handle keystrokes
 			end
 			auto_point := auto_point xor switch_auto_point
 		end
+
+feature {NONE} -- Handle keystrokes
+
+	completion_bckp: INTEGER
 			
 	key_not_handled_action is
 			-- Apply default key processing.

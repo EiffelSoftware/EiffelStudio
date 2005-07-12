@@ -37,7 +37,7 @@
 </code_block>
 			<paragraph>  As print takes an argument of type  
 				<link>
-					<url>/libraries/base/reference/kernel/classic/string_chart.xml</url>
+					<url>/libraries/base/reference/kernel/string_chart.xml</url>
 					<label>STRING</label>
 				</link>, button2 becomes a  valid target for the pebble contained in button1. Right clicking  the mouse pointer over the 
 				<bold>source</bold> will start the transport, and right clicking  with the mouse pointer over a valid 

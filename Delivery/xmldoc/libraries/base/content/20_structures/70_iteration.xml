@@ -242,11 +242,11 @@
 			</row>
 			<row>
 				<cell><link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link></cell>
-				<cell><link><url>/libraries/base/reference/structures/list/two_way_list_chart.html</url><label>TWO_WAY_LIST</label></link></cell>
+				<cell><link><url>/libraries/base/reference/structures/list/two_way_list_chart.xml</url><label>TWO_WAY_LIST</label></link></cell>
 			</row>
 			<row>
 				<cell><link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link></cell>
-				<cell><link><url>/libraries/base/reference/structures/list/two_way_list_chart.html</url><label>TWO_WAY_LIST</label></link>, <link><url>/libraries/base/reference/structures/list/two_way_circular_chart.html</url><label>TWO_WAY_CIRCULAR</label></link></cell>
+				<cell><link><url>/libraries/base/reference/structures/list/two_way_list_chart.xml</url><label>TWO_WAY_LIST</label></link>, <link><url>/libraries/base/reference/structures/list/two_way_circular_chart.xml</url><label>TWO_WAY_CIRCULAR</label></link></cell>
 			</row>
 			<row>
 				<cell><link><url>/libraries/base/reference/structures/iteration/cursor_tree_iterator_chart.xml</url><label>CURSOR_TREE_ITERATOR</label></link></cell>
@@ -254,7 +254,7 @@
 			</row>
 		</table>
 		<paragraph>Each iterator class relies on the corresponding traversal class to provide the features for traversing the corresponding data structures, such as <feature_name>start</feature_name>, <feature_name>forth</feature_name> and <feature_name>exhausted</feature_name> for  linear structures.
-			<line_break></line_break>  Of course the data structure class used in connection with a given iterator class does not need to  be the iterator's exact correspondent as given by the above table; it may be any one of its  descendants. For example you may use  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link> to iterate over data structures described not just by  <link><url>/libraries/base/reference/structures/traversing/linear_chart.xml</url><label>LINEAR</label></link>  but also by such descendants as  <link><url>/libraries/base/reference/structures/list/list_chart.xml</url><label>LIST</label></link>, <link><url>/libraries/base/reference/structures/list/linked_list_chart.xml</url><label>LINKED_LIST</label></link>,  <link><url>/libraries/base/reference/structures/list/arrayed_list_chart.xml</url><label>ARRAYED_LIST</label></link>,  or even  <link><url>/libraries/base/reference/structures/list/two_way_list_chart.html</url><label>TWO_WAY_LIST</label></link>  if you do not need the backward iteration features (for which you will have to use  <link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>  ).
+			<line_break></line_break>  Of course the data structure class used in connection with a given iterator class does not need to  be the iterator's exact correspondent as given by the above table; it may be any one of its  descendants. For example you may use  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link> to iterate over data structures described not just by  <link><url>/libraries/base/reference/structures/traversing/linear_chart.xml</url><label>LINEAR</label></link>  but also by such descendants as  <link><url>/libraries/base/reference/structures/list/list_chart.xml</url><label>LIST</label></link>, <link><url>/libraries/base/reference/structures/list/linked_list_chart.xml</url><label>LINKED_LIST</label></link>,  <link><url>/libraries/base/reference/structures/list/arrayed_list_chart.xml</url><label>ARRAYED_LIST</label></link>,  or even  <link><url>/libraries/base/reference/structures/list/two_way_list_chart.xml</url><label>TWO_WAY_LIST</label></link>  if you do not need the backward iteration features (for which you will have to use  <link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>  ).
 		</paragraph>
 		<heading>
 			<size>2</size>General iteration facilities

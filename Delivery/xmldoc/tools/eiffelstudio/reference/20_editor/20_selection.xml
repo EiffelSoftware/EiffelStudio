@@ -30,7 +30,7 @@
 			<item>If you triple click in the edition area, then the pointed line will be selected. If you do not release the mouse button after the third click, you will be able to select text line by line.</item>
 			<item>A quadruple click will select the entire text (this is an option that you can 
 				<link>
-					<url>../85_preferences/20_preferences_reference/20_tools/30_editor/10_general_editor_preferences.xml</url>
+					<url>../85_preferences/eiffelstudio/40_editor/index.xml</url>
 					<label>modify</label>
 				</link> in the preferences dialog).
 			</item>

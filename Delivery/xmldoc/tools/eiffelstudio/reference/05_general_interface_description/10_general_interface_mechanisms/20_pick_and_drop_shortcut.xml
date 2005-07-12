@@ -12,7 +12,7 @@
 		In the <link><url>../../20_editor/00_introduction.xml</url><label>editor</label></link> and the <link><url>../20_eiffelstudio_window_overview.xml</url><label>context tool</label></link>, pressing the <bold>control</bold> key while right-clicking on a development object opens a new development window which is centered on the clicked object.
 	</paragraph>
 	<tip>
-		<bold>Tip</bold>: The effect of control-picking is now configurable in the <link><url>../../85_preferences/20_preferences_reference/20_tools/10_browsing_tools.xml</url><label>preferences</label></link>.
+		<bold>Tip</bold>: The effect of control-picking is now configurable in the <link><url>../../85_preferences/eiffelstudio/index.xml</url><label>preferences</label></link>.
 	</tip>
 
 	<seealso>

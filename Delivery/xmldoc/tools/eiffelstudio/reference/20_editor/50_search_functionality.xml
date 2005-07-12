@@ -16,7 +16,7 @@
 						<label>the preferences</label>
 					</link>. If you press "F3" as some text is selected, the editor will highlight the next occurrence of this text, if any. You can change this behavior in 
 					<link>
-						<url>../85_preferences/2eiffelstudio/40_editor/20_keyboard_shortcuts_preferences.xml</url>
+						<url>../85_preferences/eiffelstudio/40_editor/20_keyboard_shortcuts_preferences.xml</url>
 						<label>the preferences</label>
 					</link>.
 				</paragraph>

@@ -22,7 +22,7 @@
 		</paragraph>
 		<paragraph>If you want to edit the current settings, simply click on the Edit button. It will edit your Ace file in the 
 			<link>
-				<url>../85_preferences/20_preferences_reference/10_global_preferences.xml</url>
+				<url>../85_preferences/eiffelstudio/index.xml</url>
 				<label>external editor</label>
 			</link> you have selected in the preferences. The project settings window will automatically vanish, to make sure there will not conflicts between its contents and the modified Ace file.
 		</paragraph>

@@ -92,7 +92,7 @@ feature -- Element Change
 			i: INTEGER
 		do
 			i := count + 1	
-			conservative_resize (lower, lower + count)
+			conservative_resize (lower, lower + count + s.count)
 			from
 				s.start
 			until

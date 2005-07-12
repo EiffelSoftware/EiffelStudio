@@ -6,7 +6,7 @@
 				<url>/images/eiffelstudio/icons/icon_expand_string_color.gif</url>
 			</image> opens an Expanded display dialog when an object is dropped onto the button. 
 <line_break></line_break>			
-			The dropped object needs to have a string representation of its value, for instance an object conform to <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label><class_name>STRING</class_name></label></link>
+			The dropped object needs to have a string representation of its value, for instance an object conform to <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label><class_name>STRING</class_name></label></link>
 			 or conform to  <link><url>/libraries/base/reference/support/debug_output_chart.xml</url><label><class_name>DEBUG_OUTPUT</class_name></label></link> (see 
 			<link>
 				<url>17_debug_output.xml</url>

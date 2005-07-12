@@ -86,7 +86,7 @@
 					<url>/images/eiffelstudio/icons/icon_expand_string_color.gif</url>
 				</image> This command can give an 
 						<link>
-							<url>25_expanded_display_tool.xml</url>
+							<url>../40_object_tool/25_expanded_display_tool.xml</url>
 							<label>expanded display</label>
 						</link> 			
 						 of the string relative to an object, by dropping the object onto the button (or pressing Ctrl+E on the selected value). 

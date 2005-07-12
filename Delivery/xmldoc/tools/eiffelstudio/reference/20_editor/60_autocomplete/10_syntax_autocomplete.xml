@@ -29,7 +29,7 @@
 				</table>
 				<paragraph>The way these reserved words are completed is fully 
 					<link>
-						<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
+						<url>../../85_preferences/eiffelstudio/40_editor/eiffel/20_syntax_autocomplete/index.xml</url>
 						<label>customizable</label>
 					</link>.
 				</paragraph>
@@ -39,7 +39,7 @@
 			<bold>See Also</bold>
 			<line_break/>
 			To see how the editor completes by default and how it can be changed, please read the following pages: <link>
-				<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
+				<url>../../85_preferences/eiffelstudio/40_editor/eiffel/20_syntax_autocomplete/index.xml</url>
 				<label>Syntax auto-complete preferences</label>
 			</link>
 			<line_break/>

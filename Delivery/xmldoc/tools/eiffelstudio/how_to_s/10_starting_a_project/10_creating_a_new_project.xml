@@ -43,7 +43,7 @@
 		<tip>
 			<bold>Tip</bold>: If you checked the "Don't show this dialog at startup" checkbox in the start-up dialog but want to get it back, you can use the 
 			<link>
-				<url>/tools/eiffelstudio/reference/85_preferences/20_preferences_reference/30_graphical_elements/20_discardable_dialogs.xml</url>
+				<url>/tools/eiffelstudio/reference/85_preferences/eiffelstudio/20_interface/20_discardable_dialogs.xml</url>
 				<label>Preferences dialog</label>
 			</link> to reset the default value.
 		</tip>

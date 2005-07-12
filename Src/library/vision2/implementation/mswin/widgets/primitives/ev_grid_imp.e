@@ -128,6 +128,12 @@ feature {NONE} -- Implementation
 			Precursor {EV_CELL_IMP}
 		end
 		
+	extra_text_spacing: INTEGER is
+			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
+		do
+			Result := 3
+		end
+		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GRID

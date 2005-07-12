@@ -147,25 +147,12 @@ feature -- Status setting
 		do
 			if not is_show_requested then
 				call_show_actions := True
-				if not (is_positioned or positioned_by_user) then
-					{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
-				end
+				{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
 				Precursor {EV_GTK_WINDOW_IMP}
 				is_positioned := True
 			end
 			if blocking_window /= Void then
 				set_blocking_window (Void)
-			end
-		end
-
-	window_position_enum: INTEGER is
-			-- GtkWindow positioning enum. 
-		do
-			if blocking_window /= Void then
-				Result := {EV_GTK_EXTERNALS}.Gtk_win_pos_center_on_parent_enum
-			else
-					-- We let the Window Manager decide where the window should be positioned.
-				Result := {EV_GTK_EXTERNALS}.gtk_win_pos_none_enum
 			end
 		end
 
@@ -177,11 +164,17 @@ feature -- Status setting
 
 	hide is
 			-- Unmap the Window from the screen.
+		local
+			a_x_pos, a_y_pos: INTEGER
 		do
 			if is_show_requested then
+				a_x_pos := x_position
+				a_y_pos := y_position
 				disable_modal
 				set_blocking_window (Void)
 				Precursor {EV_CONTAINER_IMP}
+					-- Setting positions so that if `Current' is reshown then it reappears in the same place, as on Windows.
+				set_position (a_x_pos, a_y_pos)
 			end
 		end
 
@@ -283,8 +276,9 @@ feature {EV_ANY_IMP} -- Implementation
 	destroy is
 			-- Destroy `Current'
 		do
+			disable_capture
+			hide
 			Precursor {EV_CONTAINER_IMP}
-			{EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
 feature {NONE} -- Implementation

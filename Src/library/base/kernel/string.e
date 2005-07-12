@@ -1919,6 +1919,7 @@ feature -- Conversion
 					-- Shift characters to the right.
 				from
 					i := i - 1
+					l_area := area
 				until
 					i < nb_space
 				loop

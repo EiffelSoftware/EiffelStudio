@@ -86,7 +86,7 @@ feature -- Status setting
 			else
 				enable_modal
 			end
-
+			set_blocking_window (a_window)
 			show
 			set_blocking_window (a_window)
 			block

@@ -207,11 +207,22 @@ feature {NONE} -- Events handling
 					close_and_complete
 				when Key_escape then
 					exit
+					
 					editor.set_focus	
-				when key_back_space then
-					editor.handle_extended_key (ev_key)					
-					if not buffered_input.is_empty then				
-						buffered_input := buffered_input.substring (1, buffered_input.count - 1)											
+				when key_back_space, key_delete then
+					if ev_application.ctrl_pressed then
+						editor.handle_extended_ctrled_key (ev_key)
+					else	
+						editor.handle_extended_key (ev_key)
+					end
+					if not buffered_input.is_empty then	
+						if ev_key.code = key_back_space then
+							if ev_application.ctrl_pressed then			
+								buffered_input.wipe_out
+							else
+								buffered_input := buffered_input.substring (1, buffered_input.count - 1)
+							end
+						end
 					else
 						exit
 					end
@@ -329,7 +340,7 @@ feature {NONE} -- Events handling
 						if not choice_list.selected_rows.is_empty then
 							choice_list.selected_rows.first.ensure_visible	
 						end
-					end
+					end					
 				else
 					-- Do nothing
 				end
@@ -360,8 +371,8 @@ feature {NONE} -- Events handling
 				elseif not editor.unwanted_characters.has (c) then
 					close_and_complete
 					if not editor.has_selection then
-							-- Don't want to add character over first argument
-						editor.handle_character (c)						
+							-- Don't want to add character over first argument			
+						editor.handle_character (c)
 					end
 					exit									
 				end				

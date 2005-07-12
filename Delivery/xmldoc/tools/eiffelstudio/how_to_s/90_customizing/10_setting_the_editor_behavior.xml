@@ -18,7 +18,7 @@
 			<label>Automatic completion</label>
 		</link>, for instance, can be partially or totally disabled, and inserted strings can be defined by the user. Some accelerators are customizable too. For more information, please refer to the 
 		<link>
-			<url>../../reference/85_preferences/20_preferences_reference/20_tools/30_editor/00_introduction.xml</url>
+			<url>../../reference/85_preferences/eiffelstudio/40_editor/index.xml</url>
 			<label>editor preferences reference</label>
 		</link>.
 		<seealso>

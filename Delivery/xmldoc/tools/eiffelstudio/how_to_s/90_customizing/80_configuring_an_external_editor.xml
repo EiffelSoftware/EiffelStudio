@@ -15,13 +15,13 @@
 		</link> on the external editor toolbar button(<image><url>../../../../images/eiffelstudio/icons/icon_shell_color.gif</url></image>), you can launch an external editor. By default, this editor is VI on Unix and Notepad on Windows. You can tell EiffelStudio to launch another editor by editing the preferences.
 		<paragraph>To do so, first open the 
 			<link>
-				<url>../../reference/85_preferences/10_overview.xml</url>
+				<url>../../reference/85_preferences/eiffelstudio/index.xml</url>
 				<label>preferences window</label>
 			</link> by choosing 
 			<bold>Preferences...</bold> in the 
 			<bold>Tools</bold> menu. Select then the "Global preferences" category in the preferences tree. Click on "Command used to launch an external editor" and modify the command line so that it calls your favorite editor. You can use keywords that represent the filename ($target)and the line number ($line) as is explained in the 
 			<link>
-				<url>../../reference/85_preferences/20_preferences_reference/10_global_preferences.xml</url>
+				<url>../../reference/85_preferences/eiffelstudio/index.xml</url>
 				<label>preferences reference</label>
 			</link>.
 		</paragraph>
@@ -32,12 +32,12 @@
 			<bold>See Also</bold>
 			<line_break></line_break>
 			<link>
-				<url>../../reference/85_preferences/10_overview.xml</url>
+				<url>../../reference/85_preferences/eiffelstudio/index.xml</url>
 				<label>Preference window description</label>
 			</link>
 			<line_break></line_break>
 			<link>
-				<url>../../reference/85_preferences/20_preferences_reference/00_introduction.xml</url>
+				<url>../../reference/85_preferences/00_introduction.xml</url>
 				<label>Preferences reference</label>
 			</link>
 		</seealso>

@@ -35,7 +35,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/integer_chart.xml</url>
+					<url>../../../../libraries/base/reference/kernel/integer_chart.xml</url>
 					<label>
 						<class_name>INTEGER</class_name>
 					</label>
@@ -65,7 +65,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/boolean_ref_chart.xml</url>
+					<url>../../../../libraries/base/reference/kernel/boolean_ref_chart.xml</url>
 					<label>
 						<class_name>BOOLEAN_REF</class_name>
 					</label>
@@ -77,7 +77,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/character_ref_chart.xml</url>
+					<url>../../../../libraries/base/reference/kernel/character_ref_chart.xml</url>
 					<label>
 						<class_name>CHARACTER_REF</class_name>
 					</label>
@@ -89,7 +89,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url>
+					<url>../../../../libraries/base/reference/kernel/string_chart.xml</url>
 					<label>
 						<class_name>STRING</class_name>
 					</label>
@@ -127,8 +127,8 @@
 			<link><url>20_generated_files.xml</url><label>Generated Files</label></link>, 
 			<link><url>30_class_hierarchy.xml</url><label>Class Hierarchy</label></link>, 
 			<link><url>40_eiffel_project.xml</url><label>Adding a COM Interface to an Eiffel Project</label></link>,
-			<link><url>50_accessing.xml</url><label>Accessing a COM Component</label></link>,
-			<link><url>60_reusing.xml</url><label>Reusing a COM Component</label></link>,
+			<link><url>../guided_tour/03_accessing.xml</url><label>Accessing a COM Component</label></link>,
+			<link><url>50_reusing.xml</url><label>Reusing a COM Component</label></link>,
 			<link><url>70_options.xml</url><label>Command Line Options</label></link>
 		</seealso>
 	</paragraph>

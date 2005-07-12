@@ -104,7 +104,7 @@
 		</code> ' and comment out the rest of the feature. Now the contract of the 
 		<code>
 			<link>
-				<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
+				<url>../../../../libraries/base/reference/kernel/string_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
 				<label>replace_substring</label>
 			</link>
 		</code> feature is wrong and erroneous calls can be made. Quick melt the changes and run the client. Enter some invalid numbers in 

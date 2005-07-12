@@ -67,7 +67,10 @@ feature {NONE} -- Implementation
 			l_accelerator: EV_ACCELERATOR
 			l_button: EV_BUTTON
 		do
-			create l_app			
+			l_app := (create {EV_ENVIRONMENT}).application
+			if l_app = Void then
+				create l_app
+			end
 			create l_warning.make_with_text (Not_initialized_error_message)
 			create l_screen
 			l_warning.set_position ((l_screen.width - l_warning.width) // 2,

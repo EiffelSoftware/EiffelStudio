@@ -60,27 +60,29 @@ feature {NONE} -- Implementation
 		require
 			a_popup_not_void: a_popup /= Void
 		local
-			x_offset: INTEGER
+			l_x_offset, l_x_coord: INTEGER
 			a_width: INTEGER
 			a_widget_y_offset: INTEGER
-			a_widget_x_offset: INTEGER
 			a_widget: EV_WIDGET
 		do
 			a_widget := a_popup.item
 				-- Account for position of text relative to pixmap.
-			x_offset := left_border
+			l_x_offset := left_border
 			if pixmap /= Void then
-				x_offset := x_offset + pixmap.width + spacing
+				l_x_offset := l_x_offset + pixmap.width + spacing
 			end
-			a_width := a_popup.width - x_offset
+	
+			l_x_coord := (virtual_x_position + l_x_offset) - parent.virtual_x_position
+			l_x_coord := l_x_coord.max (0).min (l_x_offset)
+	
+			a_width := a_popup.width - l_x_coord - right_border
 			
 			a_widget_y_offset := (a_widget.minimum_height - text_height) // 2
-			a_widget_x_offset := 2
 			
 			a_widget.set_minimum_width (0)
 
-			a_popup.set_x_position (a_popup.x_position + x_offset - a_widget_x_offset)
-			a_popup.set_width (a_popup.width - x_offset - right_border + a_widget_x_offset)
+			a_popup.set_x_position (a_popup.x_position + l_x_coord)
+			a_popup.set_width (a_width)
 			a_popup.set_y_position (a_popup.y_position + ((a_popup.height - top_border - bottom_border - text_height) // 2) + top_border - a_widget_y_offset)
 			a_popup.set_height (text_height)			
 		end

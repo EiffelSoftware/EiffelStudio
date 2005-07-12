@@ -4727,8 +4727,7 @@ feature {NONE} -- Implementation
 
 	extra_text_spacing: INTEGER is
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
-		do
-			Result := 3
+		deferred
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation

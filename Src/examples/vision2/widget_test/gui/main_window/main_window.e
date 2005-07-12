@@ -112,6 +112,11 @@ feature {NONE} -- Initialization
 				-- Connect missing pixmaps to show_actions.
 			application.post_launch_actions.extend (agent display_missing_pixmaps)
 			
+				-- Ensure word wrapping is not on for the displayed texts.
+			flat_short_display.disable_word_wrapping
+			
+			show_actions.extend (agent main_split_area.set_split_position (300))
+			
 			setup_initial_screen
 		end
 
@@ -227,6 +232,9 @@ feature {NONE} -- Implementation
 			main_split_area.prune (main_box)
 			create label.make_with_text ("Please select a widget to begin exploration")
 			main_split_area.extend (label)
+			
+				-- Ensure the widget selection tree does not expand as `Current' is widened.
+			main_split_area.disable_item_expand (main_split_area.first)
 			label.set_background_color ((create {EV_STOCK_COLORS}).white)
 		end
 		

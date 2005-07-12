@@ -3,21 +3,21 @@
 	<PREF NAME="general.shell_command" DESCRIPTION="Command used to launch an external editor."><STRING>xterm -geometry 100x40 -e vi +$line $target</STRING></PREF>
 	<PREF NAME="general.acrobat_reader" DESCRIPTION="Command to read Adobe Acrobat files."><STRING>acroread</STRING></PREF>	
 	<PREF NAME="general.internet_browser" DESCRIPTION="Internet browser."><STRING>firefox $url</STRING></PREF>
-<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font. (Requires restart)"><FONT>sans-r-regular-10-sans</FONT></PREF>
-	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font. (Requires restart)" HIDDEN="True"><FONT>sans-r-regular-10-sans</FONT></PREF>
-	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font (Requires restart)"><FONT>sans-r-bold-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>sans-r-regular-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures."><FONT>sans-r-bold-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_client_label_font" DESCRIPTION="Font for feature names on BON client supplier links."><FONT>sans-r-regular-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_font" DESCRIPTION="BON cluster name font."><FONT>sans-r-bold-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_name_font" DESCRIPTION="Font for class names in UML class figures."><FONT>sans-r-regular-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_deferred_font" DESCRIPTION="Font for names of deferred classes in UML class figures."><FONT>sans-i-regular-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_properties_font" DESCRIPTION="Font for class properties in UML class figures."><FONT>sans-i-regular-10-sans</FONT></PREF>
+<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font. (Requires restart)"><FONT>sans-r-regular-9-sans</FONT></PREF>
+	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font. (Requires restart)" HIDDEN="True"><FONT>sans-r-regular-9-sans</FONT></PREF>
+	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font (Requires restart)"><FONT>sans-r-bold-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>sans-r-regular-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_class_generics_font" DESCRIPTION="Font for generics in BON class figures."><FONT>sans-r-bold-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_client_label_font" DESCRIPTION="Font for feature names on BON client supplier links."><FONT>sans-r-regular-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.bon.bon_cluster_name_font" DESCRIPTION="BON cluster name font."><FONT>sans-r-bold-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_name_font" DESCRIPTION="Font for class names in UML class figures."><FONT>sans-r-regular-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_deferred_font" DESCRIPTION="Font for names of deferred classes in UML class figures."><FONT>sans-i-regular-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_properties_font" DESCRIPTION="Font for class properties in UML class figures."><FONT>sans-i-regular-9-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.uml.uml_class_properties_color" DESCRIPTION="Color for class properties in UML class figures."><COLOR>127;0;0</COLOR></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_generics_font" DESCRIPTION="Font for generics in UML class figures."><FONT>sans-r-bold-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_features_font" DESCRIPTION="Font for class features in UML class figures."><FONT>sans-r-regular-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures."><FONT>sans-r-bold-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_client_label_font" DESCRIPTION="Font for feature names on UML client supplier links."><FONT>sans-r-regular-10-sans</FONT></PREF>
-	<PREF NAME="tools.diagram_tool.uml.uml_cluster_name_font" DESCRIPTION="UML cluster name font."><FONT>sans-r-regular-10-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_generics_font" DESCRIPTION="Font for generics in UML class figures."><FONT>sans-r-bold-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_features_font" DESCRIPTION="Font for class features in UML class figures."><FONT>sans-r-regular-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_class_feature_section_font" DESCRIPTION="Font for class feature sections in UML class figures."><FONT>sans-r-bold-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_client_label_font" DESCRIPTION="Font for feature names on UML client supplier links."><FONT>sans-r-regular-9-sans</FONT></PREF>
+	<PREF NAME="tools.diagram_tool.uml.uml_cluster_name_font" DESCRIPTION="UML cluster name font."><FONT>sans-r-regular-9-sans</FONT></PREF>
 
 </EIFFEL_DOCUMENT>

@@ -69,6 +69,17 @@ feature {NONE} -- Implementation
 			Result := internal_blocking_window
 		end
 
+	window_position_enum: INTEGER is
+			-- GtkWindow positioning enum. 
+		do
+			if blocking_window /= Void then
+				Result := {EV_GTK_EXTERNALS}.Gtk_win_pos_center_on_parent_enum
+			else
+					-- We let the Window Manager decide where the window should be positioned.
+				Result := {EV_GTK_EXTERNALS}.gtk_win_pos_none_enum
+			end
+		end
+
 	internal_blocking_window: EV_WINDOW
 			-- Window that `Current' is relative to.
 			-- Implementation
@@ -161,6 +172,7 @@ feature {NONE} -- Implementation
 	show is
 			-- Request that `Current' be displayed when its parent is.
 		do
+			{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
 			{EV_GTK_EXTERNALS}.gtk_widget_show_now (c_object)
 		end
 

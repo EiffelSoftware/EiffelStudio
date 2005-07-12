@@ -89,6 +89,7 @@ feature {NONE} -- Initialization
 			-- Build all the tool's widgets.
 		local
 			esgrid: ES_OBJECTS_GRID
+			l_box: EV_HORIZONTAL_BOX
 		do
 			create displayed_objects.make
 				--| Stack obj grid
@@ -137,8 +138,22 @@ feature {NONE} -- Initialization
 			debugged_objects_grid := esgrid
 
 			create split
-			split.set_first (stack_objects_grid)
-			split.set_second (debugged_objects_grid)
+			
+				-- The `stack_objects_grid' and `debugged_objects_grid' are
+				-- inserted into a temporary box to provide a padding of one pixel
+				-- so that it appears that they have a border. This makes the distinction
+				-- between the edges of the control and the split area more pronounced.
+				
+			create l_box
+			l_box.set_border_width (1)
+			l_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
+			split.set_first (l_box)
+			l_box.extend (stack_objects_grid)
+			create l_box
+			l_box.set_border_width (1)
+			l_box.set_background_color ((create {EV_STOCK_COLORS}).gray)
+			split.set_second (l_box)
+			l_box.extend (debugged_objects_grid)
 			expand_result := True
 			expand_args := True
 			expand_locals := True

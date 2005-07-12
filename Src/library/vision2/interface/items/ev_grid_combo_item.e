@@ -65,30 +65,35 @@ feature {NONE} -- Implementation
 		require
 			a_popup_not_void: a_popup /= Void
 		local
-			x_offset: INTEGER
+			l_x_offset: INTEGER
 			a_width: INTEGER
-			a_widget_x_offset: INTEGER
 			a_widget: EV_WIDGET
 			a_x_position, a_y_position: INTEGER
+			l_x_coord: INTEGER
 		do
 			a_widget := a_popup.item
 				-- Account for position of text relative to pixmap.
-			x_offset := left_border
+			l_x_offset := left_border
 			if pixmap /= Void then
-				x_offset := x_offset + pixmap.width + spacing
+					-- Calculate x offset for pixmap spacing if any
+				l_x_offset := l_x_offset + pixmap.width + spacing
 			end
-			a_width := a_popup.width - x_offset - right_border
-			
-			a_widget_x_offset := 2
 
-			a_x_position := a_popup.x_position + x_offset
+			l_x_coord := (virtual_x_position + l_x_offset) - parent.virtual_x_position
+			l_x_coord := l_x_coord.max (0).min (l_x_offset)
+
+			a_width := a_popup.width - l_x_coord - right_border
+
+			a_x_position := a_popup.x_position + l_x_coord
 				-- Align combo box to y position of text in `Current'.
 			a_y_position := a_popup.y_position + top_border + ((a_popup.height - top_border - bottom_border - a_widget.minimum_height) // 2) + 1
 			
 			a_widget.set_minimum_width (0)
-			
-			a_popup.set_size (a_width, a_widget.minimum_height)
-			a_popup.set_position (a_x_position, a_y_position)			
+
+			a_popup.set_x_position (a_x_position)
+			a_popup.set_width (a_width)
+			a_popup.set_y_position (a_y_position)
+			a_popup.set_height (a_widget.minimum_height)
 		end
 
 	handle_key (a_key: EV_KEY) is
@@ -133,9 +138,9 @@ feature {NONE} -- Implementation
 	initialize_actions is
 			-- Setup the action sequences when the item is shown.
 		do
-			combo_box.set_focus
-			combo_box.key_press_actions.extend (agent on_key_pressed)	
+			combo_box.set_focus	
 			combo_box.focus_out_actions.extend (agent deactivate)
+			combo_box.return_actions.extend (agent deactivate)
 			user_cancelled_activation := False
 			combo_box.key_press_actions.extend (agent handle_key)
 		end
@@ -151,15 +156,7 @@ feature {NONE} -- Implementation
 				Precursor {EV_GRID_LABEL_ITEM}
 				combo_box := Void
 			end
-		end
-
-	on_key_pressed (a_key: EV_KEY) is	
-			-- Key was pressed
-		do
-			if a_key.code = {EV_KEY_CONSTANTS}.key_enter then
-				deactivate
-			end	
-		end			
+		end		
 
 invariant
 	combo_box_parented_during_activation: combo_box /= Void implies combo_box.parent /= Void

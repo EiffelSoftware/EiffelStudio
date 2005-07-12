@@ -39,7 +39,7 @@
 			<item>You can call the auto-complete without an identifier. The auto-complete window will then show the features of the current class.</item>
 			<item>The keyboard shortcut for automatic completion can be changed in the 
 				<link>
-					<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/20_keyboard_shortcuts_preferences.xml</url>
+					<url>../../85_preferences/eiffelstudio/40_editor/20_keyboard_shortcuts_preferences.xml</url>
 					<label>editor preferences</label>
 				</link>.
 			</item>
@@ -53,7 +53,7 @@
 			<item>Only compiled features will appear in the auto-complete window.</item>
 			<item>By default, features from class ANY will be ignored by the auto-complete window. This can be changed in the 
 				<link>
-					<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/10_general_editor_preferences.xml</url>
+					<url>../../85_preferences/eiffelstudio/40_editor/10_general_editor_preferences.xml</url>
 					<label>editor preferences</label>
 				</link>.
 			</item>

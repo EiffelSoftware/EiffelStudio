@@ -26,19 +26,19 @@
 		<feature_name>PruneAll</feature_name> corresponding respectively to the features 
 		<code>
 			<link>
-				<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
+				<url>../../../../libraries/base/reference/kernel/string_chart.xml</url><anchor_name>f_replace_substring</anchor_name>
 				<label>replace_substring</label>
 			</link>
 		</code> and 
 		<code>
 			<link>
-				<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url><anchor_name>f_prune_all</anchor_name>
+				<url>../../../../libraries/base/reference/kernel/string_chart.xml</url><anchor_name>f_prune_all</anchor_name>
 				<label>prune_all</label>
 			</link>
 		</code> of the class 
 		<code>
 			<link>
-				<url>../../../../libraries/base/reference/kernel/classic/string_chart.xml</url>
+				<url>../../../../libraries/base/reference/kernel/string_chart.xml</url>
 				<label>
 					<class_name>STRING</class_name>
 				</label>

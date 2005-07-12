@@ -16,7 +16,7 @@
 		<tip>
 			<bold>Tip</bold>: The particular configuration of the classes in your system when using the physics mode is determined by the various settings in the  
 			<link>
-				<url>81_physics_mode.xm</url>
+				<url>84_physics_dialog.xml</url>
 				<label>Physics Setting Dialog</label>
 			</link>.
 		</tip>

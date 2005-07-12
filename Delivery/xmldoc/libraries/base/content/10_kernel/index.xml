@@ -20,15 +20,15 @@
 			<item>The first cluster contains the universal class defining facilities accessible to all other classes: <link><url>/libraries/base/reference/kernel/classic/any_chart.xml</url><label>ANY</label></link>.  Every developer-defined class is a descendant of this class. </item>
 			<item>The second cluster includes classes whose facilities are directly related to language concepts:
 				<list ordered="false">
-					<item>Classes describing the basic types: <link><url>/libraries/base/reference/kernel/classic/boolean_chart.xml</url><label>BOOLEAN</label></link>, <link><url>/libraries/base/reference/kernel/classic/character_chart.xml</url><label>CHARACTER</label></link>, <link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> and <link><url>/libraries/base/reference/kernel/classic/double_chart.xml</url><label>DOUBLE</label></link></item>
-					<item>Arrays: class <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link></item>
+					<item>Classes describing the basic types: <link><url>/libraries/base/reference/kernel/classic/boolean_chart.xml</url><label>BOOLEAN</label></link>, <link><url>/libraries/base/reference/kernel/classic/character_chart.xml</url><label>CHARACTER</label></link>, <link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> and <link><url>/libraries/base/reference/kernel/classic/double_chart.xml</url><label>DOUBLE</label></link></item>
+					<item>Arrays: class <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link></item>
 					<item>Tuples: class 
 						<link>
 							<url>/libraries/base/reference/kernel/classic/tuple_chart.xml</url>
 							<label>TUPLE</label>
 						</link>
 					</item>
-					<item>Strings: class <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link></item>
+					<item>Strings: class <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link></item>
 					<item>Basic facilities: class <link><url>/libraries/base/reference/kernel/classic/basic_routines_chart.xml</url><label>BASIC_ROUTINES</label></link></item>
 				</list>
 			</item>
@@ -97,7 +97,7 @@
 			<code>
 				<symbol>.</symbol>
 			</code><feature_name>new_line</feature_name> are always possible.
-			<line_break/>  Function <feature_name>out</feature_name>, of type <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link>, is a universal mechanism for obtaining a simple external representation of any object. For non-void 
+			<line_break/>  Function <feature_name>out</feature_name>, of type <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link>, is a universal mechanism for obtaining a simple external representation of any object. For non-void 
 			<code>
 				<local_variable>x</local_variable>
 			</code> of any type, the string 
@@ -210,7 +210,7 @@
 			</code> for non-void 
 			<code>
 				<local_variable>a</local_variable>
-			</code>). You will find such redefinitions in a number of classes of the Base libraries. For example an instance of <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link> is a string descriptor containing a reference to the actual character sequence, not that sequence itself, so that what the default equal compares and the default copy copies is the descriptor, not the string. Class <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link> redefines these routines to yield the semantics normally expected by string clients; the frozen variants <feature_name>standard_copy</feature_name> and <feature_name>standard_equal</feature_name>, originally declared as synonyms to <feature_name>equal</feature_name> and <feature_name>copy</feature_name>, remain available with the default semantics.
+			</code>). You will find such redefinitions in a number of classes of the Base libraries. For example an instance of <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link> is a string descriptor containing a reference to the actual character sequence, not that sequence itself, so that what the default equal compares and the default copy copies is the descriptor, not the string. Class <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link> redefines these routines to yield the semantics normally expected by string clients; the frozen variants <feature_name>standard_copy</feature_name> and <feature_name>standard_equal</feature_name>, originally declared as synonyms to <feature_name>equal</feature_name> and <feature_name>copy</feature_name>, remain available with the default semantics.
 			<line_break/>  The function <feature_name>clone</feature_name> is defined in terms of <feature_name>copy</feature_name>, and so will follow any redefinition of <feature_name>copy</feature_name>. This makes it impossible to change the semantics of one but not of the other, which would be a mistake. The variant <feature_name>standard_clone</feature_name> is defined in terms of <feature_name>standard_copy</feature_name>.
 		</paragraph>
 		<heading>
@@ -237,18 +237,18 @@
 		<heading>
 			<size>2</size>Basic types
 		</heading>
-		<paragraph>The basic types <link><url>/libraries/base/reference/kernel/classic/boolean_chart.xml</url><label>BOOLEAN</label></link>, <link><url>/libraries/base/reference/kernel/classic/character_chart.xml</url><label>CHARACTER</label></link>, <link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> and <link><url>/libraries/base/reference/kernel/classic/double_chart.xml</url><label>DOUBLE</label></link> are defined by classes of the Kernel library.
-			<line_break/>  In reading the class specifications for the numeric types <link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> and <link><url>/libraries/base/reference/kernel/classic/double_chart.xml</url><label>DOUBLE</label></link>, you might think that the type declarations are too restrictive. For example the addition operation in class <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> reads
+		<paragraph>The basic types <link><url>/libraries/base/reference/kernel/classic/boolean_chart.xml</url><label>BOOLEAN</label></link>, <link><url>/libraries/base/reference/kernel/classic/character_chart.xml</url><label>CHARACTER</label></link>, <link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> and <link><url>/libraries/base/reference/kernel/classic/double_chart.xml</url><label>DOUBLE</label></link> are defined by classes of the Kernel library.
+			<line_break/>  In reading the class specifications for the numeric types <link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> and <link><url>/libraries/base/reference/kernel/classic/double_chart.xml</url><label>DOUBLE</label></link>, you might think that the type declarations are too restrictive. For example the addition operation in class <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> reads
 		</paragraph>
 		<code_block>
 <keyword>infix</keyword> "<symbol>+</symbol>" <symbol>(</symbol>other<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></class_name><symbol>)</symbol><symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></class_name>
 </code_block>
-		<paragraph>but there is actually no problem here. A language convention applicable to all arithmetic expressions, the Balancing rule, states that in any such expression all operands are considered to be converted to the heaviest type, where <link><url>/libraries/base/reference/kernel/classic/double_chart.xml</url><label>DOUBLE</label></link> is heavier than <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> and <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> is heavier than <link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>. So mixed-type arithmetic, consistent with common practice, is possible and indeed frequent. </paragraph>
+		<paragraph>but there is actually no problem here. A language convention applicable to all arithmetic expressions, the Balancing rule, states that in any such expression all operands are considered to be converted to the heaviest type, where <link><url>/libraries/base/reference/kernel/classic/double_chart.xml</url><label>DOUBLE</label></link> is heavier than <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> and <link><url>/libraries/base/reference/kernel/classic/real_chart.xml</url><label>REAL</label></link> is heavier than <link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>. So mixed-type arithmetic, consistent with common practice, is possible and indeed frequent. </paragraph>
 		<heading>
 			<size>2</size>Arrays
 		</heading>
-		<paragraph>To create and manipulate one-dimensional arrays, use class <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> of the Kernel Library. Arrays are not primitive language elements; instead, they are handled through class <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link>. This class is 'normal' in the sense that it may be used just as any other class by client and descendant classes. It is also somewhat special, however, in that the Eiffel compiler knows about it and uses this knowledge to generate efficient code for array operations.
-			<line_break/>  To create an instance of <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link>, use the creation instruction
+		<paragraph>To create and manipulate one-dimensional arrays, use class <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> of the Kernel Library. Arrays are not primitive language elements; instead, they are handled through class <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link>. This class is 'normal' in the sense that it may be used just as any other class by client and descendant classes. It is also somewhat special, however, in that the Eiffel compiler knows about it and uses this knowledge to generate efficient code for array operations.
+			<line_break/>  To create an instance of <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link>, use the creation instruction
 		</paragraph>
 		<code_block>
 <keyword>create</keyword> <feature_name>my_array</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>1, u<symbol>)</symbol>
@@ -304,16 +304,16 @@
 		</code>and <feature_name>put</feature_name> have preconditions requiring the index (
 		<code>
 			<local_variable>i</local_variable>
-		</code>in the above calls) to be within the bounds of the array. This means that you can detect bounds violations (which correspond to bugs in the client software) by using a version of class <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> compiled with precondition checking on. The bounds of an array may be changed dynamically through procedure <feature_name>resize</feature_name>. Previously entered elements are retained. Rather than an explicit resize, you may use calls to procedure <feature_name>force</feature_name> which has the same signature as put but no precondition; if the index is not within the current bounds force will perform a resize as necessary.
+		</code>in the above calls) to be within the bounds of the array. This means that you can detect bounds violations (which correspond to bugs in the client software) by using a version of class <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> compiled with precondition checking on. The bounds of an array may be changed dynamically through procedure <feature_name>resize</feature_name>. Previously entered elements are retained. Rather than an explicit resize, you may use calls to procedure <feature_name>force</feature_name> which has the same signature as put but no precondition; if the index is not within the current bounds force will perform a resize as necessary.
 		<heading>
 			<size>2</size>Optimizing array computations
 		</heading>
 		<paragraph>
-			<bold> CAUTION</bold>: Although <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> benefits from an efficient implementation, its more advanced facilities such as resizing do not come for free. For extensive computations on large arrays, an optimization may be desirable, bypassing these facilities. The technique yields loops that run at about the same speed as the corresponding loops written in C or Fortran (the usual references for array computations). It is of interest for advanced uses only, so that you may safely skip this section on first reading unless your domain of application is numerical computation or some other area requiring high-performance array manipulations.
+			<bold> CAUTION</bold>: Although <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> benefits from an efficient implementation, its more advanced facilities such as resizing do not come for free. For extensive computations on large arrays, an optimization may be desirable, bypassing these facilities. The technique yields loops that run at about the same speed as the corresponding loops written in C or Fortran (the usual references for array computations). It is of interest for advanced uses only, so that you may safely skip this section on first reading unless your domain of application is numerical computation or some other area requiring high-performance array manipulations.
 		</paragraph>
-		<paragraph> The optimization relies on the class SPECIAL, used internally by <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> but of no direct interest to client developers in most common uses. With the declarations </paragraph>
+		<paragraph> The optimization relies on the class SPECIAL, used internally by <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> but of no direct interest to client developers in most common uses. With the declarations </paragraph>
 		<code_block>
-<feature_name>my_array</feature_name><symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></class_name> <symbol>[</symbol><class_name>SOME_TYPE</class_name><symbol>]</symbol>
+<feature_name>my_array</feature_name><symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></class_name> <symbol>[</symbol><class_name>SOME_TYPE</class_name><symbol>]</symbol>
 <feature_name>direct_access</feature_name><symbol>:</symbol> <class_name>SPECIAL</class_name> <symbol>[</symbol><class_name>SOME_TYPE</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>you may use <feature_name>direct_access</feature_name> in lieu of 'my_array' within a critical loop, provided none of the operations may resize the array. Typically, the operations should only include put and item. In such a case you can use the following scheme: </paragraph>
@@ -337,7 +337,7 @@
 		<paragraph> This replaces an original loop where the operations were on 
 			<code>
 				<local_variable>my_array</local_variable>
-			</code>. Feature <feature_name>area</feature_name> of <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> gives direct access to the special object, an instance of SPECIAL, containing the array values. Features <feature_name>put</feature_name> and <feature_name>item</feature_name> are available in SPECIAL as in <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link>, but without the preconditions; in other words, you will not get any bounds checking. Instances of SPECIAL are always indexed from zero, in contrast with arrays, whose lower bound is arbitrary, 1 being the most common value. But rather than performing index translations (that is to say, subtracting 
+			</code>. Feature <feature_name>area</feature_name> of <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> gives direct access to the special object, an instance of SPECIAL, containing the array values. Features <feature_name>put</feature_name> and <feature_name>item</feature_name> are available in SPECIAL as in <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link>, but without the preconditions; in other words, you will not get any bounds checking. Instances of SPECIAL are always indexed from zero, in contrast with arrays, whose lower bound is arbitrary, 1 being the most common value. But rather than performing index translations (that is to say, subtracting 
 			<code>
 				<local_variable>my_array</local_variable>
 			</code>
@@ -350,7 +350,7 @@
 			<code>
 				<local_variable>my_array</local_variable>
 			</code>, but only use the positions starting at 'lb'. You will waste a few memory positions (0 to lb-1), but will not have to change anything in your algorithm and will avoid costly subtractions.
-			<line_break/> It is important to note that this optimization, if at all necessary, should at most affect a few loops in a large system. You should always begin by writing your software using the normal <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> facilities; then once you have the certainty that the software is correct, if you detect that a large array computation is hampering the efficiency of the system, you may apply the above technique to get the fastest performance out of that computation. The change to the software will be minimal - a few lines - and will be easy to undo if necessary.
+			<line_break/> It is important to note that this optimization, if at all necessary, should at most affect a few loops in a large system. You should always begin by writing your software using the normal <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> facilities; then once you have the certainty that the software is correct, if you detect that a large array computation is hampering the efficiency of the system, you may apply the above technique to get the fastest performance out of that computation. The change to the software will be minimal - a few lines - and will be easy to undo if necessary.
 		</paragraph>
 		<heading>
 			<size>2</size>Tuples
@@ -407,7 +407,7 @@
 		<code_block>[CONF2]
 	For n &gt;= 0 If *every* one of the types T<sub_script>1</sub_script>, T<sub_script>2</sub_script>, ..., T<sub_script>n</sub_script> conforms
 	to a type T, then TUPLE [T<sub_script>1</sub_script>, T<sub_script>2</sub_script>, ..., T<sub_script>n</sub_script>] conforms
-	to <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> [T].</code_block>
+	to <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> [T].</code_block>
 		<paragraph>Definition: a "tuple type" is any type based on class 
 			<link>
 				<url>/libraries/base/reference/kernel/classic/tuple_chart.xml</url>
@@ -464,11 +464,11 @@
 			<link>
 				<url>/libraries/base/reference/kernel/classic/tuple_chart.xml</url>
 				<label>TUPLE</label>
-			</link> [<link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>]; 
+			</link> [<link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>]; 
 			<link>
 				<url>/libraries/base/reference/kernel/classic/tuple_chart.xml</url>
 				<label>TUPLE</label>
-			</link> [<link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link>].
+			</link> [<link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link>].
 		</paragraph>
 		<paragraph>It may seem restrictive at first to permit only one class, 
 			<link>
@@ -513,18 +513,18 @@
 			<link>
 				<url>/libraries/base/reference/kernel/classic/tuple_chart.xml</url>
 				<label>TUPLE</label>
-			</link> [<link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>]),
+			</link> [<link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>]),
 		</paragraph>
 		<paragraph> [1, [2, 3]]</paragraph>
 		<paragraph>is a tuple with two elements, the second one itself a tuple; the overall expression represents an instance of 
 			<link>
 				<url>/libraries/base/reference/kernel/classic/tuple_chart.xml</url>
 				<label>TUPLE</label>
-			</link> [<link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>,
+			</link> [<link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>,
 			<link>
 				<url>/libraries/base/reference/kernel/classic/tuple_chart.xml</url>
 				<label>TUPLE</label>
-			</link> [<link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/classic/integer_chart.xml</url><label>INTEGER</label></link>].
+			</link> [<link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>, <link><url>/libraries/base/reference/kernel/integer_chart.xml</url><label>INTEGER</label></link>].
 			<line_break/> As a special case of tuple expression syntax, the delimiters [ and ] are replaced by parentheses for the tuple representing the actual argument list of a routine call (see section 4).
 		</paragraph>
 		<heading>
@@ -629,7 +629,7 @@
 		</heading>
 		<paragraph>The implementation of tuples has the following limitations:</paragraph>
 		<list ordered="false">
-			<item>Conformance of <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> types to 
+			<item>Conformance of <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> types to 
 				<link>
 					<url>/libraries/base/reference/kernel/classic/tuple_chart.xml</url>
 					<label>TUPLE</label>
@@ -645,16 +645,16 @@
 		<heading>
 			<size>2</size>Strings
 		</heading>
-		<paragraph>Strings are handled by class <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link>, similar in many respects to <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link>. Strings are of arbitrary size. The make creation procedure takes an integer argument, as in:</paragraph>
+		<paragraph>Strings are handled by class <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link>, similar in many respects to <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link>. Strings are of arbitrary size. The make creation procedure takes an integer argument, as in:</paragraph>
 		<code_block>
-s, s1, s2, s3<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></class_name>
+s, s1, s2, s3<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></class_name>
 	...
 <keyword>create</keyword> <feature_name>s</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>30<symbol>)</symbol></code_block>
 		<paragraph>The argument indicates the number of characters for the initial allocation. This is not an absolute limit: the string will automatically grow or shrink as a result of future operations. You may always request a resizing explicitly by calling procedure resize.</paragraph>
 		<heading>
 			<size>2</size>String descriptor
 		</heading>
-		<paragraph>The object attached at run-time to an entity such declared of type <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link> is not the actual sequence of characters but a string descriptor, which contains a reference to the actual string contents.</paragraph>
+		<paragraph>The object attached at run-time to an entity such declared of type <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link> is not the actual sequence of characters but a string descriptor, which contains a reference to the actual string contents.</paragraph>
 		<paragraph>As a result, four assignment or assignment-like operations are possible:</paragraph>
 		<list ordered="false">
 			<item>
@@ -730,7 +730,7 @@ s, s1, s2, s3<symbol>:</symbol> <class_name><url>/libraries/base/reference/kerne
 				<local_variable>s1</local_variable>
 			</code> will be attached to the same descriptor as s.
 			<bold> A2</bold> keeps the descriptors distinct, but make them refer to the same sequence of characters.
-			<bold> A3</bold> uses the redefinition of clone for class <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link>: 
+			<bold> A3</bold> uses the redefinition of clone for class <link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link>: 
 			<code>
 				<local_variable>s3</local_variable>
 			</code> will be attached to a new string, completely distinct from the string attached to 
@@ -892,9 +892,9 @@ s, s1, s2, s3<symbol>:</symbol> <class_name><url>/libraries/base/reference/kerne
 			<feature_name>correct_mismatch</feature_name> will be called. This feature is defined in 
 			<class_name><url>/libraries/base/reference/kernel/classic/any_chart.xml</url><label>ANY</label></class_name> and by default will raise an exception. To handle the mismatch, you need to redefine 
 			<feature_name>correct_mismatch</feature_name> in the base class whose schema has been changed. For example in EiffelBase, 
-			<class_name><url>/libraries/base/reference/kernel/classic/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name> has changed between version 5.1 and version 5.2 to use 
+			<class_name><url>/libraries/base/reference/structures/table/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name> has changed between version 5.1 and version 5.2 to use 
 			<class_name> SPECIAL</class_name> rather than 
-			<class_name><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></class_name>for its internal data storage. To retrieve a 5.1 version of 
+			<class_name><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></class_name>for its internal data storage. To retrieve a 5.1 version of 
 			<class_name><url>/libraries/base/reference/structures/table/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name>, you need to define 
 			<feature_name>correct_mismatch</feature_name> as following: 
 		</paragraph>
@@ -902,28 +902,28 @@ s, s1, s2, s3<symbol>:</symbol> <class_name><url>/libraries/base/reference/kerne
 <feature_name>correct_mismatch</feature_name> <keyword>is</keyword>
 		<comment>-- Attempt to correct object mismatch during retrieve using `mismatch_information'.</comment>
 	<keyword>local</keyword>
-		array_content<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
-		array_keys<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></class_name> <symbol>[</symbol><class_name>H</class_name><symbol>]</symbol>
-		array_marks<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></class_name> <symbol>[</symbol><class_name><url>/libraries/base/reference/kernel/classic/boolean_chart.xml</url><label>BOOLEAN</label></class_name><symbol>]</symbol>
+		array_content<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+		array_keys<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></class_name> <symbol>[</symbol><class_name>H</class_name><symbol>]</symbol>
+		array_marks<symbol>:</symbol> <class_name><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></class_name> <symbol>[</symbol><class_name><url>/libraries/base/reference/kernel/classic/boolean_chart.xml</url><label>BOOLEAN</label></class_name><symbol>]</symbol>
 	<keyword>do</keyword>
 		<comment>-- In version 5.1 and earlier, `content', `keys' and `deleted_marks'</comment>
-		<comment>-- where of base class <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link>. In 5.2 we changed it to be a SPECIAL for</comment>
+		<comment>-- where of base class <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link>. In 5.2 we changed it to be a SPECIAL for</comment>
 		<comment>-- efficiency reasons. In order to retrieve an old <link><url>/libraries/base/reference/structures/table/hash_table_chart.xml</url><label>HASH_TABLE</label></link> we</comment>
-		<comment>-- need to convert those <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> instances into SPECIAL instances.</comment>
+		<comment>-- need to convert those <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> instances into SPECIAL instances.</comment>
 
-			<comment>-- Convert `content' from <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> to SPECIAL</comment>
+			<comment>-- Convert `content' from <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> to SPECIAL</comment>
 		array_content <symbol>?=</symbol> <feature_name>mismatch_information</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>"content"<symbol>)</symbol>
 		<keyword>if</keyword> array_content <symbol>/=</symbol> Void <keyword>then</keyword>
 			<feature_name>content</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>array_content</feature_name>.<feature_name>area</feature_name>
 		<keyword>end</keyword>
 
-			<comment>-- Convert `keys' from <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> to SPECIAL</comment>
+			<comment>-- Convert `keys' from <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> to SPECIAL</comment>
 		array_keys <symbol>?=</symbol> <feature_name>mismatch_information</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>"keys"<symbol>)</symbol>
 		<keyword>if</keyword> array_keys <symbol>/=</symbol> Void <keyword>then</keyword>
 			keys <symbol>:</symbol><symbol>=</symbol> <feature_name>array_keys</feature_name>.<feature_name>area</feature_name>
 		<keyword>end</keyword>
 
-			<comment>-- Convert `deleted_marks' from <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> to SPECIAL</comment>
+			<comment>-- Convert `deleted_marks' from <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> to SPECIAL</comment>
 		array_marks <symbol>?=</symbol> <feature_name>mismatch_information</feature_name>.<feature_name>item</feature_name> <symbol>(</symbol>"deleted_marks"<symbol>)</symbol>
 		<keyword>if</keyword> array_marks <symbol>/=</symbol> Void <keyword>then</keyword>
 			deleted_marks <symbol>:</symbol><symbol>=</symbol> <feature_name>array_marks</feature_name>.<feature_name>area</feature_name>
@@ -939,15 +939,15 @@ s, s1, s2, s3<symbol>:</symbol> <class_name><url>/libraries/base/reference/kerne
 			<feature_name>mismatch_information</feature_name>, this is a once feature of 
 			<class_name><url>/libraries/base/reference/kernel/classic/any_chart.xml</url><label>ANY</label></class_name> of type 
 			<class_name> MISMATCH_INFORMATION </class_name>which behaves like a 
-			<class_name><url>/libraries/base/reference/kernel/classic/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name>. The keys of the table are the names of the attributes on which a mismatch occurred and the values are the corresponding object fields as they were originally stored. In this particular case of 
-			<class_name><url>/libraries/base/reference/kernel/classic/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name> we know that the previous version was an 
-			<class_name><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></class_name>, so we do an assignment attempt and if it succeeds we assign its 
+			<class_name><url>/libraries/base/reference/structures/table/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name>. The keys of the table are the names of the attributes on which a mismatch occurred and the values are the corresponding object fields as they were originally stored. In this particular case of 
+			<class_name><url>/libraries/base/reference/structures/table/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name> we know that the previous version was an 
+			<class_name><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></class_name>, so we do an assignment attempt and if it succeeds we assign its 
 			<feature_name>area </feature_name>to the corresponding attribute of 
-			<class_name><url>/libraries/base/reference/kernel/classic/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name>.
+			<class_name><url>/libraries/base/reference/structures/table/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name>.
 		</paragraph>
 		<paragraph>If a class name changed, then you need to create an instance of 
 			<class_name>CLASS_NAME_TRANSLATIONS</class_name>, it behaves like a 
-			<class_name><url>/libraries/base/reference/kernel/classic/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name> where the keys represent the old name, and the value the new name. This instance needs to be created before the call to retrieved.
+			<class_name><url>/libraries/base/reference/structures/table/hash_table_chart.xml</url><label>HASH_TABLE</label></class_name> where the keys represent the old name, and the value the new name. This instance needs to be created before the call to retrieved.
 		</paragraph>
 		<heading>
 			<size>1</size>Access To Internal Properties
@@ -1024,7 +1024,7 @@ s, s1, s2, s3<symbol>:</symbol> <class_name><url>/libraries/base/reference/kerne
 		<paragraph>Writing, assembling and compiling a system yields an executable command. The system's users will call that command with arguments. These are normally provided in textual form on the command line, as in</paragraph>
 		<code_block><bold>your_system</bold> arg1 arg2 arg3 </code_block>
 		<paragraph> although one may conceive of other ways of entering the command arguments, such as tabular or graphical form-filling. In any case the software must be able to access the values passed as command arguments.
-			<line_break/> A language mechanism is available for that purpose: the Root Class rule indicates that the creation procedure of the root class may have a single argument (in the Eiffel sense of argument to a routine) of type <link><url>/libraries/base/reference/kernel/classic/array_chart.xml</url><label>ARRAY</label></link> [<link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label>STRING</label></link>
+			<line_break/> A language mechanism is available for that purpose: the Root Class rule indicates that the creation procedure of the root class may have a single argument (in the Eiffel sense of argument to a routine) of type <link><url>/libraries/base/reference/kernel/array_chart.xml</url><label>ARRAY</label></link> [<link><url>/libraries/base/reference/kernel/string_chart.xml</url><label>STRING</label></link>
 			<code>
 				<symbol>]</symbol>
 			</code>. The corresponding array of strings will be initialized at the beginning of the system's execution with the values entered as arguments to that execution of the command.

@@ -20,7 +20,7 @@
 		</paragraph>
 		<paragraph>  The procedure takes a single argument, of type 
 			<link>
-				<url>../../reference/kernel/classic/array_chart.xml</url>
+				<url>../../reference/kernel/array_chart.xml</url>
 				<label>ARRAY [ANY]</label>
 			</link>, containing  the successive actual arguments to be passed to the external routine.  The easiest technique is to use a manifest array, as in:
 		</paragraph>

@@ -15,12 +15,7 @@
 	<generate_dhtml_filter>False</generate_dhtml_filter>
 	<generate_feature_nodes>True</generate_feature_nodes>
 	<toc_folders>
-		<folder>D:/Delivery/xmldoc\libraries\com\content</folder>
-		<folder>D:/Delivery/xmldoc\libraries\com</folder>
-		<folder>D:/Delivery/xmldoc\technologies\com\images</folder>
-		<folder>D:/Delivery/xmldoc\technologies\com</folder>
-		<folder>D:/Delivery/xmldoc\tools\wizards\com\guided_tour</folder>
-		<folder>D:/Delivery/xmldoc\tools\wizards\com\images</folder>
-		<folder>D:/Delivery/xmldoc\tools\wizards\com\reference</folder>
-		<folder>D:/Delivery/xmldoc\tools\wizards\com</folder>
+		<folder>D:/Delivery/xmldoc\50_Licenses</folder>
+		<folder>D:/Delivery/xmldoc\general</folder>
+		<folder>D:/Delivery/xmldoc\installation</folder>
 	</toc_folders></project>

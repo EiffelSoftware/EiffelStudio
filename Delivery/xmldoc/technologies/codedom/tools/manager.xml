@@ -28,13 +28,13 @@
 			<item>
 				<bold>Log server</bold>: Server where events should be logged. By default events are logged on 
 				the machine running the CodeDom Provider, the corresponding value is a dot ("."). Consult the 
-				<link><url>logging.xml</url><label>Logging</label></link> section for additional information on logging.	
+				<link><url>../codedom/logging.xml</url><label>Logging</label></link> section for additional information on logging.	
 			</item>
 			<item>
 				<bold>Log level</bold>: By default only errors are written to the log. It might be useful for debugging 
 				purposes to log additional information and/or warnings. This setting also allows to disable 
 				logging in case it is not required. Consult the 
-				<link><url>logging.xml</url><label>Logging</label></link> section for additional information on logging.
+				<link><url>../codedom/logging.xml</url><label>Logging</label></link> section for additional information on logging.
 			</item>
 		</list>
 
@@ -143,8 +143,7 @@
 		applications that use it if it's not the default configuration.
 		<seealso>
 			<bold>See also:</bold> <link><url>../codedom/configuration.xml</url><label>Configuration</label></link>, 
-			<link><url>../codedom/logging.xml</url><label>Logging</label></link>, 
-			 <link><url>../codedom/security.xml</url><label>Security</label></link>
+			<link><url>../codedom/logging.xml</url><label>Logging</label></link>
 		</seealso>
 	</paragraph>
 </document>

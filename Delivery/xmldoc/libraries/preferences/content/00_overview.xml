@@ -7,11 +7,7 @@
 		</heading>
 		<paragraph>Simply, preferences are name-value pairs.  All preferences are descendents of the deferred class 
 			<class_name>PREFERENCE</class_name>, and therefore all inherit the common properties of name, value, default values and string representations.  Common to all 
-			<class_name>PREFERENCE</class_name> objects is the notion of `manager'.  All preferences belong to a manager, which is a helper class used for organizational and hierarchical management of your applications preferences.  For a more detailed explanation of managers clicked 
-			<link>
-				<label>here</label>
-				<url>02_managers.xml</url>
-			</link>.
+			<class_name>PREFERENCE</class_name> objects is the notion of `manager'.  All preferences belong to a manager, which is a helper class used for organizational and hierarchical management of your applications preferences.
 		</paragraph>
 		<paragraph>So, all preferences belong to a 
 			<class_name>PREFERENCE_MANAGER</class_name>.  The manager itself belongs to a set of related 
@@ -37,6 +33,6 @@
 		<paragraph>For every group of preferences or configuration values you therefore wish to create for your project, you will need a corresponding 
 			<class_name>PREFERENCES</class_name> object.  In general one 
 			<class_name>PREFERENCE</class_name> object should be sufficient for most applications, and will be the point of reference for all preference values in the entire application.  This class may be initialized in a number of ways, depending on the specific configuration of your application.  It will be used to create new managers, store default preference values, and handle the saving and retrieval of preference values to and from the underlying data store between sessions.  In between sessions the preference name and value pairs are persisted to an underlying data store.  This may be any imaginable datastore, such as a file, database or external storage device.  Support for XML and the Windows Registry is provided in the library by default, but it would not be be too difficult to provide 
-an implementation for your needs (such as SQL database store).  For more on data storage click <link><label>here</label><url>04_persistence.xml</url></link>.
+an implementation for your needs (such as SQL database store).
 		</paragraph>
 	</paragraph></document>

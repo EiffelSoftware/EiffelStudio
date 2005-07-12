@@ -13,7 +13,7 @@
 			<label>user-definable keyboard shortcuts</label>
 		</link> and a preferences for Eiffel specific preferences such as 
 		<link>
-			<url>11_eiffel_specific_preferences/index.xml</url>
+			<url>eiffel\20_syntax_autocomplete\index.xml</url>
 			<label>automatic completion.</label>
 		</link>
 	</paragraph></document>

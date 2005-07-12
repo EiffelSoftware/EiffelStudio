@@ -112,7 +112,7 @@
 		<paragraph>  The precise form of the procedure in the class relies on a call to another procedure,  until_continue,  and on inherited assertions. Here everything has been unfolded for illustration  purposes.
 			<line_break></line_break>  This procedure will traverse the linear structure identified by  target  and apply the procedure called  action  on every item up to but excluding the first one satisfying test.
 			<line_break></line_break>  The class similarly offers  <feature_name>do_all</feature_name>,  <feature_name>do_while</feature_name>,  <feature_name>do_for</feature_name>,  <feature_name>do_if</feature_name>  and other procedures representing the common control structures.  It also includes functions such as <feature_name>exists</feature_name> and <feature_name>forall</feature_name>, corresponding to the usual quantifiers.
-			<line_break></line_break>  These iteration schemes depend on the procedure <feature_name>action</feature_name>, defining the action to be applied to successive elements, and on the function <feature_name>test</feature_name>, defining the boolean query to be applied to these elements. These features are declared in class  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link> (the highest-level deferred class of the Iteration library); here is <feature_name>test</feature_name>:
+			<line_break></line_break>  These iteration schemes depend on the procedure <feature_name>action</feature_name>, defining the action to be applied to successive elements, and on the function <feature_name>test</feature_name>, defining the boolean query to be applied to these elements. These features are declared in class  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link> (the highest-level deferred class of the Iteration library); here is <feature_name>test</feature_name>:
 		</paragraph>
 		<code_block>
 <feature_name>test</feature_name><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
@@ -126,8 +126,8 @@
 	<keyword>ensure</keyword>
 		<indexing_tag>not_off</indexing_tag><symbol>:</symbol> <keyword>not</keyword> <feature_name>target</feature_name>.<feature_name>off</feature_name>
 	<keyword>end</keyword></code_block>
-		<paragraph> This indicates that the value of the boolean function <feature_name>test</feature_name> will be obtained by applying <feature_name>item_test</feature_name> to the item at the current position in the target structure. In <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link>, function <feature_name>item_test</feature_name> always return 
-			; descendant classes will redefine it so as to describe the desired test. Similarly, <feature_name>action</feature_name> is declared in class <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link> as a call to <feature_name>item_action</feature_name>. Descendants will redefine <feature_name>item_action</feature_name>, which as initially declared in <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link> is a procedure with a null body.
+		<paragraph> This indicates that the value of the boolean function <feature_name>test</feature_name> will be obtained by applying <feature_name>item_test</feature_name> to the item at the current position in the target structure. In <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link>, function <feature_name>item_test</feature_name> always return 
+			; descendant classes will redefine it so as to describe the desired test. Similarly, <feature_name>action</feature_name> is declared in class <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link> as a call to <feature_name>item_action</feature_name>. Descendants will redefine <feature_name>item_action</feature_name>, which as initially declared in <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link> is a procedure with a null body.
 			<line_break></line_break> Going through <feature_name>item_action</feature_name> and <feature_name>item_test</feature_name> provides an extra degree of flexibility. Normally the action and test performed at each step apply to <feature_name>target</feature_name> 
 			<code>
 				<symbol>.</symbol>
@@ -219,33 +219,33 @@
 		</heading>
 		<paragraph>  There are only four Iteration classes, whose simple inheritance structure appeared at the  beginning of this chapter.</paragraph>
 		<list ordered="false">
-			<item><link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link>,  a deferred class which describes the most general notion.</item>
-			<item><link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.html</url><label>LINEAR_ITERATOR</label></link>,  for iterating over linear structures and chains.</item>
-			<item><link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.html</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>,  a repeated heir of  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.html</url><label>LINEAR_ITERATOR</label></link>,  for iterating in either direction over a bilinear structure.</item>
-			<item><link><url>/libraries/base/reference/structures/iteration/cursor_tree_iterator_chart.html</url><label>CURSOR_TREE_ITERATOR</label></link>,  for iterating over trees.</item>
+			<item><link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link>,  a deferred class which describes the most general notion.</item>
+			<item><link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link>,  for iterating over linear structures and chains.</item>
+			<item><link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>,  a repeated heir of  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link>,  for iterating in either direction over a bilinear structure.</item>
+			<item><link><url>/libraries/base/reference/structures/iteration/cursor_tree_iterator_chart.xml</url><label>CURSOR_TREE_ITERATOR</label></link>,  for iterating over trees.</item>
 		</list>
 		<paragraph>  As you will remember from the 
 			<link>
 				<url>/libraries/base/content/20_structures/10_taxonomy.xml</url>
 				<label>presentation</label>
-			</link> of the abstract overall taxonomy,  the traversal hierarchy describes how data structures can be traversed; its most general class  is <link><url>/libraries/base/reference/structures/traversing/traversable_chart.html</url><label>TRAVERSABLE</label></link>.
+			</link> of the abstract overall taxonomy,  the traversal hierarchy describes how data structures can be traversed; its most general class  is <link><url>/libraries/base/reference/structures/list/two_way_list_chart.xml</url><label>TRAVERSABLE</label></link>.
 			<line_break></line_break>  Each one of the iterator classes is paired with a traversal class (or two in one case):
 		</paragraph>
 		<table>
 			<row>
-				<cell><link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link></cell>
-				<cell><link><url>/libraries/base/reference/structures/traversing/traversable_chart.html</url><label>TRAVERSABLE</label></link></cell>
+				<cell><link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link></cell>
+				<cell><link><url>/libraries/base/reference/structures/list/two_way_list_chart.xml</url><label>TRAVERSABLE</label></link></cell>
 			</row>
 			<row>
 				<cell><link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link></cell>
 				<cell><link><url>/libraries/base/reference/structures/traversing/linear_chart.xml</url><label>LINEAR</label></link></cell>
 			</row>
 			<row>
-				<cell><link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.html</url><label>TWO_WAY_CHAIN_ITERATOR</label></link></cell>
+				<cell><link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link></cell>
 				<cell><link><url>/libraries/base/reference/structures/list/two_way_list_chart.html</url><label>TWO_WAY_LIST</label></link></cell>
 			</row>
 			<row>
-				<cell><link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.html</url><label>TWO_WAY_CHAIN_ITERATOR</label></link></cell>
+				<cell><link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link></cell>
 				<cell><link><url>/libraries/base/reference/structures/list/two_way_list_chart.html</url><label>TWO_WAY_LIST</label></link>, <link><url>/libraries/base/reference/structures/list/two_way_circular_chart.html</url><label>TWO_WAY_CIRCULAR</label></link></cell>
 			</row>
 			<row>
@@ -254,7 +254,7 @@
 			</row>
 		</table>
 		<paragraph>Each iterator class relies on the corresponding traversal class to provide the features for traversing the corresponding data structures, such as <feature_name>start</feature_name>, <feature_name>forth</feature_name> and <feature_name>exhausted</feature_name> for  linear structures.
-			<line_break></line_break>  Of course the data structure class used in connection with a given iterator class does not need to  be the iterator's exact correspondent as given by the above table; it may be any one of its  descendants. For example you may use  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.html</url><label>LINEAR_ITERATOR</label></link> to iterate over data structures described not just by  <link><url>/libraries/base/reference/structures/traversing/linear_chart.html</url><label>LINEAR</label></link>  but also by such descendants as  <link><url>/libraries/base/reference/structures/list/list_chart.html</url><label>LIST</label></link>, <link><url>/libraries/base/reference/structures/list/linked_list_chart.html</url><label>LINKED_LIST</label></link>,  <link><url>/libraries/base/reference/structures/list/arrayed_list_chart.html</url><label>ARRAYED_LIST</label></link>,  or even  <link><url>/libraries/base/reference/structures/list/two_way_list_chart.html</url><label>TWO_WAY_LIST</label></link>  if you do not need the backward iteration features (for which you will have to use  <link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.html</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>  ).
+			<line_break></line_break>  Of course the data structure class used in connection with a given iterator class does not need to  be the iterator's exact correspondent as given by the above table; it may be any one of its  descendants. For example you may use  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link> to iterate over data structures described not just by  <link><url>/libraries/base/reference/structures/traversing/linear_chart.xml</url><label>LINEAR</label></link>  but also by such descendants as  <link><url>/libraries/base/reference/structures/list/list_chart.xml</url><label>LIST</label></link>, <link><url>/libraries/base/reference/structures/list/linked_list_chart.xml</url><label>LINKED_LIST</label></link>,  <link><url>/libraries/base/reference/structures/list/arrayed_list_chart.xml</url><label>ARRAYED_LIST</label></link>,  or even  <link><url>/libraries/base/reference/structures/list/two_way_list_chart.html</url><label>TWO_WAY_LIST</label></link>  if you do not need the backward iteration features (for which you will have to use  <link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>  ).
 		</paragraph>
 		<heading>
 			<size>2</size>General iteration facilities
@@ -282,7 +282,7 @@
  			<feature_name>target</feature_name> <symbol>=</symbol> s
 			<feature_name>target</feature_name> <symbol>/= Void</symbol>
 		<keyword>end</keyword></code_block>
-		<paragraph>  Next  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link>  introduces the routines describing the elementary action and test  that will be applied to items of the iteration targets:</paragraph>
+		<paragraph>  Next  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link>  introduces the routines describing the elementary action and test  that will be applied to items of the iteration targets:</paragraph>
 		<code_block>
 	action <keyword>is</keyword>
     			<comment>-- Action to be applied to item at current position in</comment>
@@ -315,8 +315,8 @@
 		<keyword>end</keyword></code_block>
 		<paragraph>  These routines rely on two others,  <feature_name>item_action</feature_name> and  <feature_name>item_test</feature_name>,  which both take an argument of type G, the formal generic parameter. The reason, already noted above, is  that in a vast majority of cases the iterated action and test solely depend, at each step of  the traversal, on the item (of type G) at the current position. To define an iteration  process, then, it suffices to redefine<feature_name> item_action</feature_name> and <feature_name>item_test</feature_name> in a descendant of the  appropriate iteration class. Only in complex cases will it be necessary to redefine <feature_name>action</feature_name> and <feature_name>test</feature_name> themselves.
 			<line_break></line_break>  If you encounter such a case, note the caveat about action changing the target's structure.  Understandably enough, an iterator that attempts to change the data structure while traversing it  may engage in strange behavior. No such risk exists if you only redefine <feature_name>item_action</feature_name>, which  may change the contents of items but not the structure itself.
-			<line_break></line_break>  Another feature introduced in  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link>  is the query  <feature_name>invariant_value</feature_name>,  describing invariant properties that must be ensured at the beginning of any iteration and preserved  by every iteration step. As declared in  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link>  this query always returns true, but proper descendants can redefine it to describe more interesting  invariant properties.
-			<line_break></line_break>  Finally,  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link>  introduces in deferred form the general iteration routines applicable to all iteration variants.  They include two queries corresponding to the quantifiers of first-order predicate calculus:
+			<line_break></line_break>  Another feature introduced in  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link>  is the query  <feature_name>invariant_value</feature_name>,  describing invariant properties that must be ensured at the beginning of any iteration and preserved  by every iteration step. As declared in  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link>  this query always returns true, but proper descendants can redefine it to describe more interesting  invariant properties.
+			<line_break></line_break>  Finally,  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link>  introduces in deferred form the general iteration routines applicable to all iteration variants.  They include two queries corresponding to the quantifiers of first-order predicate calculus:
 		</paragraph>
 		<list ordered="false">
 			<item><feature_name>for_all</feature_name> will return true if all items of the target structure satisfy test.</item>
@@ -330,12 +330,12 @@
 			<item><feature_name>do_until</feature_name>, to all items up to and including the first one that satisfies test.</item>
 			<item><feature_name>while_do</feature_name> and  <feature_name>do_while</feature_name>,  to all items up to the first one that does not satisfy  test.  (This can also be achieved with  <feature_name>until_do</feature_name>  or  <feature_name>do_until </feature_name> by choosing the opposite test.)</item>
 		</list>
-		<paragraph>  All these features, and most of the other iteration features introduced in proper  descendants of  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link>  and described next, have no argument. Information about the target of iteration comes  from feature  <feature_name>target</feature_name>,  set by procedure  <feature_name>set</feature_name>;  information about what needs to be done for each item of the target structure comes from  <feature_name>item_action</feature_name>  and  <feature_name>item_test</feature_name>.</paragraph>
+		<paragraph>  All these features, and most of the other iteration features introduced in proper  descendants of  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link>  and described next, have no argument. Information about the target of iteration comes  from feature  <feature_name>target</feature_name>,  set by procedure  <feature_name>set</feature_name>;  information about what needs to be done for each item of the target structure comes from  <feature_name>item_action</feature_name>  and  <feature_name>item_test</feature_name>.</paragraph>
 		<heading>
 			<size>2</size>Linear and chain iteration
 		</heading>
-		<paragraph><link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.html</url><label>LINEAR_ITERATOR</label></link>,  an effective class, refines the iteration mechanisms for cases in which the target is a linear  structure, such as a list in any implementation or a circular chain.
-			<line_break></line_break>  The class effects all the deferred features inherited from  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.html</url><label>ITERATOR</label></link>,  taking advantage of the linear traversal mechanisms present in the corresponding traversal class,  <link><url>/libraries/base/reference/structures/traversing/linear_chart.html</url><label>LINEAR</label></link>.  Here for example is the effecting of  <feature_name>do_if</feature_name>:
+		<paragraph><link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link>,  an effective class, refines the iteration mechanisms for cases in which the target is a linear  structure, such as a list in any implementation or a circular chain.
+			<line_break></line_break>  The class effects all the deferred features inherited from  <link><url>/libraries/base/reference/structures/iteration/iterator_chart.xml</url><label>ITERATOR</label></link>,  taking advantage of the linear traversal mechanisms present in the corresponding traversal class,  <link><url>/libraries/base/reference/structures/traversing/linear_chart.xml</url><label>LINEAR</label></link>.  Here for example is the effecting of  <feature_name>do_if</feature_name>:
 		</paragraph>
 		<code_block>
 	<feature_name>do_if</feature_name> <keyword>is</keyword>
@@ -355,7 +355,7 @@
 				<feature_name>forth</feature_name>
 			<keyword>end</keyword>
 		<keyword>end</keyword></code_block>
-		<paragraph>  This routine text relies on features  <feature_name>start</feature_name>,  <feature_name>forth</feature_name> and  <feature_name>exhausted</feature_name>  which, together with  <feature_name>off</feature_name>,  have for convenience been carried over to  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.html</url><label>LINEAR_ITERATOR</label></link> from their counterparts in  <link><url>/libraries/base/reference/structures/traversing/linear_chart.html</url><label>LINEAR</label></link>,  with feature declarations such as</paragraph>
+		<paragraph>  This routine text relies on features  <feature_name>start</feature_name>,  <feature_name>forth</feature_name> and  <feature_name>exhausted</feature_name>  which, together with  <feature_name>off</feature_name>,  have for convenience been carried over to  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link> from their counterparts in  <link><url>/libraries/base/reference/structures/traversing/linear_chart.xml</url><label>LINEAR</label></link>,  with feature declarations such as</paragraph>
 		<code_block>
 	<feature_name>off</feature_name><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
 			<comment>-- Is position of target off?</comment>
@@ -393,7 +393,7 @@
 		<heading>
 			<size>2</size>Two-way iteration
 		</heading>
-		<paragraph>  Class  <link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.html</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>  has all the features of  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.html</url><label>LINEAR_ITERATOR</label></link>,  to which it adds features for iterating backward as well as forward.
+		<paragraph>  Class  <link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>  has all the features of  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link>,  to which it adds features for iterating backward as well as forward.
 			<line_break></line_break>  The class introduces commands  <feature_name>finish</feature_name> and  <feature_name>back</feature_name>,  applying the corresponding operations to the two-way target. It also has a backward variant for every iteration  feature. The name of each such variant is the name of the forward feature followed by  
 			<italic>_back</italic>:  <feature_name>do_all_back</feature_name>,  <feature_name>until_do_back</feature_name>  and so on.
 			<line_break></line_break>  An alternative design would have kept just one set of features and added two features: a  command reverse to reverse the direction of future iteration operations, and a query backward  to find out the direction currently in force.
@@ -401,7 +401,7 @@
 			<code>
 				<keyword>Feature</keyword>
 			</code> clause only contains the declarations of two  features,  <feature_name>finish</feature_name> and  <feature_name>back</feature_name>.
-			<line_break></line_break>  The trick is to use repeated inheritance.  <link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.html</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>  inherits twice from  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.html</url><label>LINEAR_ITERATOR</label></link>;  the first inheritance branch yields the forward iteration features,  the second yields those for backward iteration. There is  no need for any explicit declaration or redeclaration of iteration features. Here is the  entire class text that yields this result:
+			<line_break></line_break>  The trick is to use repeated inheritance.  <link><url>/libraries/base/reference/structures/iteration/two_way_chain_iterator_chart.xml</url><label>TWO_WAY_CHAIN_ITERATOR</label></link>  inherits twice from  <link><url>/libraries/base/reference/structures/iteration/linear_iterator_chart.xml</url><label>LINEAR_ITERATOR</label></link>;  the first inheritance branch yields the forward iteration features,  the second yields those for backward iteration. There is  no need for any explicit declaration or redeclaration of iteration features. Here is the  entire class text that yields this result:
 		</paragraph>
 		<code_block>
 	<keyword>class</keyword>

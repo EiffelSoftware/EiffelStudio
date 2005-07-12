@@ -6529,6 +6529,7 @@ eif_integer_64_display='"lld"'
 eif_natural_64_display='"llu"'
 eif_pointer_display='"X"'
 eif_integer_64_constant='CAT2(x,LL)'
+eif_natural_64_constant='CAT2(x,ULL)'
 d_uint64_to_real='define'
 
 #File system
@@ -6641,6 +6642,7 @@ defvoidused='$defvoidused'
 eif_sgi='$eif_sgi'
 eif_solaris='$eif_solaris'
 eif_windows='$eif_windows'
+eif_64_bits=''
 Mcc='$Mcc'
 d_tls='$d_tls'
 #Check value for next 2
@@ -6655,6 +6657,7 @@ wkoptimize="$wkoptimize \$binary_format \$platform_arch"
 
 #Makefiles
 ar='ar'
+boehmgclib='gc'
 command_makefile='make -f'
 concurrent_prefix='c'
 cp='$cp'

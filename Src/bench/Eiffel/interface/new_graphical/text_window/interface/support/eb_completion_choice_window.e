@@ -608,7 +608,7 @@ feature {NONE} -- Implementation
 		do
 			if choice_list.column_count > 0 then
 				l_sb_wid := choice_list.width - choice_list.viewable_width
-				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count - 1) + 3
+				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
 				i := i.max (choice_list.viewable_width.max (choice_list.width - l_sb_wid))
 				choice_list.column (1).set_width (i)
 				if not choice_list.selected_rows.is_empty then

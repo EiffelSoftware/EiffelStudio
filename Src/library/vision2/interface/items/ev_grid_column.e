@@ -189,6 +189,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			parented: parent /= Void
+			valid_rows: start_row >= 1 and end_row <= parent.row_count and start_row < end_row
 		do
 			Result := implementation.required_width_of_item_span (start_row, end_row)
 		ensure

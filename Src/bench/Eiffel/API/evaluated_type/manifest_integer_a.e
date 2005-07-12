@@ -12,7 +12,7 @@ inherit
 			convert_to,
 			intrinsic_type
 		end
-
+	INTEGER_TYPE_MASKS
 	SHARED_TYPES
 
 create
@@ -20,33 +20,28 @@ create
 
 feature {NONE} -- Initialization
 
-	make_for_constant (n, m: INTEGER; is_neg: BOOLEAN) is
+	make_for_constant (n: like size; possible_types: INTEGER) is
 			-- Create instance of INTEGER_A represented by `n' bits
-			-- whose value can hold at list `m' bits with a sign of `is_neg'.
+			-- whose value can also be of a type taken from `possible_types'.
 		require
 			valid_n: n = 32 or n = 64
-			valid_m: m = 8 or m = 16 or m = 32 or m = 64
+			valid_possible_types:
+				possible_types & (
+					integer_8_mask | integer_16_mask | integer_32_mask | integer_64_mask |
+					natural_8_mask | natural_16_mask | natural_32_mask | natural_64_mask
+				).bit_not = 0
+			consistent_integer_32: n = 32 implies (possible_types & integer_32_mask) /= 0
+			consistent_integer_64: n = 64 implies (possible_types & integer_64_mask) /= 0
 		do
-			size := n.to_integer_8
-			compatibility_size := m.to_integer_8
-			is_negative := is_neg
+			size := n
+			types := possible_types
 			cl_make (associated_class.class_id)
 		ensure
 			size_set: size = n
-			compatibility_size_set: compatibility_size = m
-			is_negative_set: is_negative = is_neg
+			types_set: types = possible_types
 		end
 
 feature -- Property
-
-	compatibility_size: INTEGER_8
-			-- Minimum integer size that can hold current.
-			-- Used for manifest integers that are of size `32' or `64'
-			-- by default, but their value might be able to fit
-			-- on an integer of size `8' or `16' as well.
-
-	is_negative: BOOLEAN
-			-- Is current value negative?
 
 	intrinsic_type: INTEGER_A is
 			-- Real type of current manifest integer.
@@ -72,33 +67,27 @@ feature {COMPILER_EXPORTER} -- Implementation
 		do
 			if a_target_type.is_integer then
 				l_int ?= a_target_type
-				Result := (l_int.size >= size) or else
-					(l_int.size >= compatibility_size)
-				if Result then
+				if (types & integer_mask (l_int.size)) /= 0 then
 					l_feat := associated_class.feature_table.
 						item ("to_integer_" + l_int.size.out)
 						-- We protect ourself in case the `to_integer_xx' routines
 						-- would have been removed from the INTEGER_XX classes
 					if l_feat /= Void then
 						create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_int, associated_class, l_feat)
-					else
-						Result := False
+						Result := True
 					end
 				end
 				context.set_last_conversion_info (l_info)
 			elseif a_target_type.is_natural then
 				l_nat ?= a_target_type
-				Result := not is_negative and then ((l_nat.size >= size) or else
-					(l_nat.size >= compatibility_size))
-				if Result then
+				if (types & natural_mask (l_nat.size)) /= 0 then
 					l_feat := associated_class.feature_table.
 						item ("to_natural_" + l_nat.size.out)
 						-- We protect ourself in case the `to_natural_xx' routines
 						-- would have been removed from the INTEGER_XX classes
 					if l_feat /= Void then
 						create {FEATURE_CONVERSION_INFO} l_info.make_to (Current, l_nat, associated_class, l_feat)
-					else
-						Result := False
+						Result := True
 					end
 				end
 				context.set_last_conversion_info (l_info)
@@ -107,8 +96,18 @@ feature {COMPILER_EXPORTER} -- Implementation
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	types: INTEGER
+			-- Possible types of integer constant
+			-- (Combination of bit masks `integer_..._mask' and `natural_..._mask')
+
 invariant
 	correct_size: size = 32 or size = 64
-	valid_compatibility_size: compatibility_size <= size
+	valid_types:
+		types & (
+			integer_8_mask | integer_16_mask | integer_32_mask | integer_64_mask |
+			natural_8_mask | natural_16_mask | natural_32_mask | natural_64_mask
+		).bit_not = 0
 
-end -- class MANIFEST_INTEGER_A
+end

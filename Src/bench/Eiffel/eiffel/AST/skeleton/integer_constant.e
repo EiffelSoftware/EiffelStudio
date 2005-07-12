@@ -126,9 +126,9 @@ feature -- Access
 					-- Default can be only the following types: INTEGER_32, INTEGER_64, NATURAL_64
 				inspect default_type
 				when integer_32_mask then
-					create {MANIFEST_INTEGER_A} Result.make_for_constant (32, compatibility_size, has_minus)
+					create {MANIFEST_INTEGER_A} Result.make_for_constant (32, types)
 				when integer_64_mask then
-					create {MANIFEST_INTEGER_A} Result.make_for_constant (64, compatibility_size, has_minus)
+					create {MANIFEST_INTEGER_A} Result.make_for_constant (64, types)
 				when natural_64_mask then
 					create {MANIFEST_NATURAL_64_A} Result.make_for_constant (has_integer (64))
 				end

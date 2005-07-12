@@ -626,7 +626,9 @@ feature -- Pick and Drop
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
+				-- Call Precursor so that post-condiition passes even though the cursor itself is never used.
 			Precursor {EV_CELL_I} (a_cursor)
+				-- Set actual cursor on the drawable as this is the widget used for PND.
 			drawable.set_accept_cursor (a_cursor)
 		end
 
@@ -634,7 +636,9 @@ feature -- Pick and Drop
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that doesn't accept `pebble' during pick and drop.
 		do
+				-- Call Precursor so that post-condiition passes even though the cursor itself is never used.
 			Precursor {EV_CELL_I} (a_cursor)
+				-- Set actual cursor on the drawable as this is the widget used for PND.
 			drawable.set_deny_cursor (a_cursor)
 		end
 
@@ -718,6 +722,7 @@ feature -- Status setting
 			x_coord, y_coord: INTEGER
 			a_screen_x, a_screen_y: INTEGER
 			boundary_x, item_width, item_height: INTEGER
+			x_delta: INTEGER
 		do
 			if currently_active_item /= Void and then currently_active_item.parent = interface then
 					-- If an item is currently active and present in the grid then deactivate it.
@@ -731,6 +736,12 @@ feature -- Status setting
 			a_screen_y := screen_y
 
 			x_coord := a_screen_x - virtual_x_position + a_item.virtual_x_position
+			
+			if x_coord < a_screen_x then
+				x_delta := a_screen_x - x_coord
+				x_coord := a_screen_x
+			end
+
 			y_coord := a_screen_y - virtual_y_position + a_item.virtual_y_position + viewable_y_offset
 
 			boundary_x := a_screen_x + width
@@ -747,7 +758,7 @@ feature -- Status setting
 				-- Set default size and position.
 			activate_window.set_position (x_coord, y_coord)
 
-			item_width := a_item.column.width - a_item.horizontal_indent
+			item_width := a_item.column.width - a_item.horizontal_indent - x_delta
 
 			if x_coord + item_width > boundary_x then
 					-- If column extends beyond the visible part of the grid, the size of the activate_window is clipped.
@@ -4420,7 +4431,10 @@ feature {NONE} -- Event handling
 					remove_selection
 			end
 
-			if a_item /= Void then
+			if
+				a_item /= Void
+				--and then a_item /= currently_active_item --| This code may be uncommented to prevent selection on activation
+			then 
 				if not a_item.is_selected then
 					a_item.enable_select
 					if is_row_selection_enabled then
@@ -4706,15 +4720,15 @@ feature {NONE} -- Implementation
 	default_row_height: INTEGER is
 			-- Default height of a row, based on the height of the default font.
 		once
-			Result := (create {EV_LABEL}).minimum_height
-			if (create {PLATFORM}).is_windows then
-				Result := Result + 3
-			else
-					-- This matches the gtk default row height used for all GtkTreeView variants.
-				Result := Result + 6
-			end
+			Result := (create {EV_LABEL}).minimum_height + extra_text_spacing
 		ensure
 			result_positive: result > 0
+		end
+
+	extra_text_spacing: INTEGER is
+			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
+		do
+			Result := 3
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation

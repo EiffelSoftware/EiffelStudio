@@ -19,20 +19,12 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' attached to an object considered
 			-- equal to current object?
+		local
+			l_internal :INTERNAL
 		do
-			Result := internal.generic_dynamic_type (Current, 1) =
-				internal.generic_dynamic_type (other, 1)
+			create l_internal
+			Result := l_internal.generic_dynamic_type (Current, 1) =
+				l_internal.generic_dynamic_type (other, 1)
 		end
 		
-feature {NONE} -- Implementation
-
-	internal: INTERNAL is
-			-- Quick access to INTERNAL features
-		once
-			create Result
-		ensure
-			internal_not_void: Result /= Void
-		end
-		
-
 end

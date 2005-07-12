@@ -1073,6 +1073,7 @@ feature {NONE} -- Implementation
 		local
 			l_class_type: RT_CLASS_TYPE
 			l_basic_type: RT_BASIC_TYPE
+			l_none_type: RT_NONE_TYPE
 			l_gen_type, l_new_gen_type: RT_GENERIC_TYPE
 			i, nb: INTEGER
 			l_generics: NATIVE_ARRAY [RT_TYPE]
@@ -1115,9 +1116,16 @@ feature {NONE} -- Implementation
 				if l_basic_type /= Void then
 					create {RT_BASIC_TYPE} Result.make
 				else
-					create Result.make
+					l_none_type ?= a_class_type
+					if l_none_type /= Void then
+						create {RT_NONE_TYPE} Result.make
+					else
+						create Result.make
+					end
 				end
-				Result.set_type (implementation_type (a_class_type.dotnet_type).type_handle)
+				if l_none_type = Void then
+					Result.set_type (implementation_type (a_class_type.dotnet_type).type_handle)
+				end
 			end
 		end
 		
@@ -1129,6 +1137,7 @@ feature {NONE} -- Implementation
 		local
 			l_gen_type, l_new_gen_type: RT_GENERIC_TYPE
 			l_basic_type: RT_BASIC_TYPE
+			l_none_type: RT_NONE_TYPE
 			i, nb: INTEGER
 			l_generics: NATIVE_ARRAY [RT_TYPE]
 			l_class_type: RT_CLASS_TYPE
@@ -1171,9 +1180,16 @@ feature {NONE} -- Implementation
 				if l_basic_type /= Void then
 					create {RT_BASIC_TYPE} Result.make
 				else
-					create Result.make
+					l_none_type ?= a_class_type
+					if l_none_type /= Void then
+						create {RT_NONE_TYPE} Result.make
+					else
+						create Result.make
+					end
 				end
-				Result.set_type (interface_type (a_class_type.dotnet_type).type_handle)
+				if l_none_type = Void then
+					Result.set_type (interface_type (a_class_type.dotnet_type).type_handle)
+				end
 			end
 		end
 
@@ -1536,6 +1552,8 @@ feature {NONE} -- Implementation
 		do
 			if abstract_types.contains (a_type) then
 				create {RT_BASIC_TYPE} Result.make
+			elseif a_type.equals_type ({RT_NONE_TYPE}) then
+				create {RT_NONE_TYPE} Result.make
 			else
 				create Result.make
 			end
@@ -1759,14 +1777,14 @@ feature {NONE} -- Implementation
 		do
 			l_new_count := array_upper_cell.item
 			if max_type_id > l_new_count then
-				l_new_count := l_new_count * 2
+				l_new_count := (max_type_id).max (l_new_count * 2)
 				array_upper_cell.put (l_new_count)
-				id_to_eiffel_type.grow (l_new_count)
-				id_to_eiffel_implementation_type.grow (l_new_count)
-				id_to_fields.grow (l_new_count)
-				id_to_fields_static_type.grow (l_new_count)
-				id_to_fields_abstract_type.grow (l_new_count)
-				id_to_fields_name.grow (l_new_count)
+				id_to_eiffel_type.conservative_resize (0, l_new_count)
+				id_to_eiffel_implementation_type.conservative_resize (0, l_new_count)
+				id_to_fields.conservative_resize (0, l_new_count)
+				id_to_fields_static_type.conservative_resize (0, l_new_count)
+				id_to_fields_abstract_type.conservative_resize (0, l_new_count)
+				id_to_fields_name.conservative_resize (0, l_new_count)
 			end
 		end
 

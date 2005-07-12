@@ -78,39 +78,60 @@ feature {NONE} -- Initialization
 			-- Application window
 
 	initialize_temp_directories is
-		-- Initialize directory for storage of temporary information.  Currently this is a directory
-		-- on the root drive because help compilation for Microsoft Help 1.x fails in directories
-		-- with absolute path names of a certain size.  By placing in the root this reduces the overall
-		-- size of path names.
+			-- Initialize directory for storage of temporary information.  Currently this is a directory
+			-- on the root drive because help compilation for Microsoft Help 1.x fails in directories
+			-- with absolute path names of a certain size.  By placing in the root this reduces the overall
+			-- size of path names.
 		local
-			l_dir: DIRECTORY
+			l_dir: KL_DIRECTORY
 			l_constants: SHARED_CONSTANTS
 		once
 			l_constants := (create {SHARED_OBJECTS}).shared_constants
 			
-					-- Main temporary directory
 			create l_dir.make (l_constants.Application_constants.Temporary_directory)
+			if not l_dir.exists then
+				l_dir.create_directory
+			end
 			if l_dir.exists then
-				l_dir.recursive_delete
-			end
-			l_dir.create_dir
-			
-					-- Temporary directory for Help projects
-			create l_dir.make (l_constants.Application_constants.Temporary_help_directory)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end		
-			
-					-- 	Temporary directory for HTML
-			create l_dir.make (l_constants.Application_constants.Temporary_html_directory)
-			if not l_dir.exists then
-				l_dir.create_dir
-			end
-			
-					-- Temporary directory for XML
-			create l_dir.make (l_constants.Application_constants.Temporary_xml_directory)
-			if not l_dir.exists then
-				l_dir.create_dir
+						-- Temporary directory for Help projects
+				create l_dir.make (l_constants.Application_constants.Temporary_help_directory)
+				if l_dir.exists then
+					l_dir.recursive_delete
+				end	
+				l_dir.create_directory
+				if not l_dir.exists then
+					io.error.put_string ("Could not create output directory at " + l_dir.name)
+					io.error.put_new_line;
+					(create {EXCEPTIONS}).die (0)
+				end
+				
+						-- 	Temporary directory for HTML
+				create l_dir.make (l_constants.Application_constants.Temporary_html_directory)
+				if l_dir.exists then
+					l_dir.recursive_delete
+				end	
+				l_dir.create_directory	
+				if not l_dir.exists then
+					io.error.put_string ("Could not create output directory at " + l_dir.name)
+					io.error.put_new_line;
+					(create {EXCEPTIONS}).die (0)
+				end
+				
+						-- Temporary directory for XML
+				create l_dir.make (l_constants.Application_constants.Temporary_xml_directory)
+				if l_dir.exists then
+					l_dir.recursive_delete
+				end	
+				l_dir.create_directory
+				if not l_dir.exists then
+					io.error.put_string ("Could not create output directory at " + l_dir.name)
+					io.error.put_new_line;
+					(create {EXCEPTIONS}).die (0)
+				end
+			else
+				io.error.put_string ("Could not create output directory at " + l_dir.name)
+				io.error.put_new_line;
+				(create {EXCEPTIONS}).die (0)
 			end
 		end	
 		

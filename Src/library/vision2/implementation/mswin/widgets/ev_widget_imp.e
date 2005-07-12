@@ -920,8 +920,8 @@ feature {NONE} -- Implementation
 		do
 			if key_press_string_actions_internal /= Void then
 				inspect character_code
-				when 8, 27 then
-					-- Do not fire `key_press_string_actions' if Backspace or Esc
+				when 8, 27, 127 then
+					-- Do not fire `key_press_string_actions' if Backspace, Esc or del
 					-- are pressed as they are not displayable charcters.
 				when 13 then
 						-- On Windows, the Enter key gives us "%R" but we need to

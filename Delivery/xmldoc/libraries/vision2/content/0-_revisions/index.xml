@@ -118,7 +118,7 @@
 						</list>
 					</item>
 					<item><bold>EV_WINDOW</bold>
-						<list orderd="false">
+						<list ordered="false">
 							<item>Fixed `screen_x' and `screen_y' so that they return the same value as `x_position' and `y_position'.</item>
 							<item>Fixed issue where `move_actions' were called with incorrect positions (before the given positions were the one from the child of the window, not the window itself).</item>
 						</list>
@@ -181,6 +181,7 @@
 						<list ordered="false">
 							<item>Fixed two bugs with `key_press_string_actions'. The first was that the action sequence was fired when Escape or Backspace was pressed. As these are not displayable characters, the `key_press_string_actions' are no longer fired for these keys. The second is that pressing Enter was passing the the string &quot;%R&quot; which is the Windows specific newline character. We now pass &quot;%N&quot; when the Enter key is pressed.</item>
 							<item>Fixed bug in `pointer_motion_actions'. In some uncommon situations, it was possible to receive the motion event multiple times with the same position.</item>
+							<item>The `key_press_string_actions' are no longer fired by the "delete" key ( ASCII 127).</item>
 						</list>
 					</item>
 					<item>

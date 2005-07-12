@@ -1,17 +1,18 @@
 #!/bin/sh
 
-# our script requires bash.
+# our script requires sh aliased to bash.
 
-if [ $# -ge 4 -a "$1" = "local" ]; then
-	remote_host=$2
-	user=$3
-	platform=$4
+if [ $# -ge 3 ]; then
+	remote_host=$1
+	user=$2
+	platform=$3
 	echo $local
-	export REMOTE=$remote_host
 	cp -f make_for_platform ~/
 		# Launch platform specific scripts
-	rsh $REMOTE "cd local/TEST_DELIV ; mv -f ~/make_for_platform ."
-	rsh $REMOTE "cd local/TEST_DELIV ; bash ./make_for_platform $platform"
+	rsh $remote_host "cd local/TEST_DELIV ; rm -rf PorterPackage"
+	rsh $remote_host "cd local/TEST_DELIV ; tar xvf ~/PorterPackage_all.tar"
+	rsh $remote_host "cd local/TEST_DELIV/PorterPackage; export ISE_PLATFORM=$platform ; sh ./compile_exes"
+	rsh $remote_host "cd local/TEST_DELIV/PorterPackage; export ISE_PLATFORM=$platform ; sh ./make_images"
 
 ftp -n << EOF 
 verbose 
@@ -27,14 +28,6 @@ close
 EOF
 
 	echo Compilation for $platform is now done
-elif [ $# -eq 1 ]; then
-	platform=$1
-	rm -rf PorterPackage
-	tar xvf ~/PorterPackage_all.tar
-	cd PorterPackage
-	export ISE_PLATFORM=$platform
-	bash ./compile_exes
-	bash ./make_images
 else
 	echo Usage: [local] host username platform
 fi

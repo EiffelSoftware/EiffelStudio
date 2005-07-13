@@ -36,6 +36,7 @@ fullrd vision2/implementation/mswin
 if [ "$1" == "gtk" ]; then
 	# TODO
 	# Copy GTK 1.2 implementation over gtk directory
+	echo ""
 fi
 remtrace web
 exprt -r $DEFAULT_CVS_TAG -d web Src/library/web

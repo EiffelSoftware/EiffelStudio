@@ -43,6 +43,7 @@ exprt -r $DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
 if [ "$1" == "gtk" ]; then
 	# TODO
 	# Copy GTK 1.2 implementation over gtk directory
+	echo ""
 fi
 remtrace wizard
 exprt -r $DEFAULT_CVS_TAG -d wizard "Src/library/wizard"

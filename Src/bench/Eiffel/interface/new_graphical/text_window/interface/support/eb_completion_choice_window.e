@@ -71,10 +71,11 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
-	initialize_for_features (an_editor: EB_SMART_EDITOR; feature_name: STRING; a_remainder: INTEGER; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]) is
+	initialize_for_features (an_editor: EB_SMART_EDITOR; feature_name: STRING; a_remainder: INTEGER; completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]; a_complete_word: BOOLEAN) is
 			-- Initialize to to complete for `feature_name' in `an_editor'.
 		do
 			feature_mode := True
+			user_completion := a_complete_word
 			editor := an_editor
 			before_complete := feature_name
 			before_complete.prune_all_leading (' ')
@@ -88,6 +89,7 @@ feature -- Initialization
 			-- Initialize to to complete for `class_name' in `an_editor'.
 		do
 			feature_mode := False
+			user_completion := True
 			editor := an_editor
 			before_complete := class_name
 			sorted_names := completion_possibilities
@@ -109,11 +111,11 @@ feature -- Initialization
 			build_displayed_list (before_complete)
 			is_first_show := True
 
-			if choice_list.row_count > 0 then
+			if not sorted_names.is_empty then
 					-- If there is only one possibility, we insert it without displaying the window
-				determin_show_needed
+				determine_show_needed
 				if not show_needed then
-					if choice_list.row_count > 0 then						
+					if choice_list.row_count > 0 then					
 						select_closest_match
 					end
 					close_and_complete					
@@ -146,13 +148,16 @@ feature -- Status report
 	feature_mode: BOOLEAN
 			-- Is `Current' used to select feature names ?
 
+	user_completion: BOOLEAN
+			-- Should single items in completion list be completed automatically?
+
 feature -- Status Setting
 
 	show is
 			-- Show
 		do
 			check
-				should_show: should_show
+				show_needed: show_needed
 			end
 			Precursor {EV_WINDOW}
 			choice_list.set_focus
@@ -207,7 +212,6 @@ feature {NONE} -- Events handling
 					close_and_complete
 				when Key_escape then
 					exit
-					
 					editor.set_focus	
 				when key_back_space, key_delete then
 					if ev_application.ctrl_pressed then
@@ -423,6 +427,12 @@ feature {NONE} -- Implementation
 		do
 		    Result := preferences.editor_data.filter_completion_list
 		end
+		
+	automatically_complete_words: BOOLEAN is
+			-- Should completion list automatically complete words.
+		do
+			Result := preferences.editor_data.auto_complete_words
+		end
 	
 	build_displayed_list (name: STRING) is
 			-- Build the list based on matches with `name'
@@ -607,7 +617,7 @@ feature {NONE} -- Implementation
 		do
 			if choice_list.column_count > 0 then
 				l_sb_wid := choice_list.width - choice_list.viewable_width
-				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
+				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3	
 				i := i.max (choice_list.viewable_width.max (choice_list.width - l_sb_wid))
 				choice_list.column (1).set_width (i)
 			end
@@ -615,31 +625,60 @@ feature {NONE} -- Implementation
 
 	is_first_show: BOOLEAN
 	
-	determin_show_needed is
+	determine_show_needed is
 			-- Determins if completion window needs to be show to user.
 			-- `show_needed' is set as a result of calling this routine.
 		require
 			before_complete_not_void: before_complete /= Void
 			choice_list_not_void: choice_list /= Void
---		local
---			l_matches: INTEGER
-		do
-			show_needed := choice_list.row_count > 1
-
-				-- Enable following code to stop automatic completion after '.' for single matching items
+		local
+			l_matches: INTEGER
+		do		
+				-- Show if completion is performed on no text (completing after the period '.')
+			if rebuild_list_during_matching then
+					-- Show if there are mulitple items left to show
+				if choice_list.row_count = 0 then
+						-- There are no items to choose from
+					if before_complete.is_empty then
+							-- There are no possible items given that there is no completion term.
+						show_needed := False
+					else
+							-- There are no choices visible, but there are some available. The user
+							-- can delete a character or two to view refiltered list.
+						show_needed := not sorted_names.is_empty
+					end
+				else
+					if user_completion then
+							-- User completed without a completion term so only show completion
+							-- list if there are mulitple items available
+						if automatically_complete_words then
+							show_needed := choice_list.row_count > 1
+						else
+							show_needed := True
+						end
+					else
+							-- Completion list is being shown automatically
+						check
+							non_completion_term: before_complete.is_empty	
+						end
+						show_needed := True
+					end
+				end
+			else
+				l_matches := matches_based_on_name (before_complete).count
 			
---				-- Show if completion is performed on no text (completing after the period '.')
---			show_needed := before_complete.is_empty
---			if not show_needed then
---				if rebuild_list_during_matching then
---						-- Show if there are mulitple items left to show
---					show_needed := choice_list.row_count > 1
---				else
---						-- Show if no match or multiple matches
---					l_matches := matches_based_on_name (before_complete).count
---					show_needed := (l_matches = 0) or (l_matches > 1)
---				end
---			end
+				if l_matches = 0 then
+						-- Only show if the completion term is empty
+					show_needed := not before_complete.is_empty
+				elseif l_matches = 1 and automatically_complete_words then
+						-- If there is only one item in completion list and user completed
+						-- then there is no need to show list.
+					show_needed := not user_completion
+				else
+						-- Mulitple items are avialable so show completion list
+					show_needed := True
+				end
+			end
 		end
 
 feature {NONE} -- String matching
@@ -692,38 +731,63 @@ feature {NONE} -- String matching
 			buffered_input_count,
 			match_index,
 			last_best_match_index: INTEGER
+			item_name: STRING
+			buffered_char: CHARACTER
 			done: BOOLEAN
 		do
 			if not buffered_input.is_empty then
 				buffered_input_count := buffered_input.count
-				max_iterations := sorted_names.count										
+				max_iterations := sorted_names.count
+				buffered_char := buffered_input.item (1)										
 				from
 					iteration_count := 1					
 					index_count := 1
 				until
 					iteration_count > max_iterations or done
 				loop
-					match_index := match_names_until_done (sorted_names.item (iteration_count).name, buffered_input)
+					item_name := sorted_names.item (iteration_count).name
+					match_index := match_names_until_done (item_name, buffered_input)
 					if match_index > 0 and match_index > last_best_match_index then
 							-- At least one char matched so store match index
 						last_best_match_index := match_index
 						Result := iteration_count
-					end
-					if match_index = 1 and last_best_match_index > 1 then
-							-- We have reached a worse case down the list so we can stop processing here and use the
-							-- current best match index which is already stored in `Result'.  This obviously assumes we are
-							-- sorting through an alphabetically ordered list.
+						if last_best_match_index < buffered_input_count then
+							if iteration_count < max_iterations then
+								from
+								until
+									iteration_count = max_iterations or done
+								loop
+									match_index := match_names_until_done (sorted_names.item (iteration_count + 1).name, buffered_input)
+									if match_index < last_best_match_index then
+										Result := iteration_count
+										done := True
+									elseif match_index = buffered_input_count then
+										Result := iteration_count + 1
+										done := True
+									end
+									iteration_count := iteration_count + 1
+								end
+							end
+						end
+					elseif Result = 0 then
+						if item_name.item (1) > buffered_char then
+							Result := iteration_count
+							done := True
+						end		
+					else
 						done := True
-					end
-						
+					end					
 					iteration_count := iteration_count + 1
 				end
 			else
-				Result := -1
+				Result := 0
 			end
-			if Result = 0 then
-				Result := 1
-			end		
+			if Result > sorted_names.count then
+				Result := sorted_names.count	
+			end
+		ensure
+			result_greater_than_zero: Result >= 0
+			result_too_big: Result <= sorted_names.count
 		end		
 
 	select_closest_match is
@@ -778,12 +842,13 @@ feature {NONE} -- String matching
 				c := a_name.item (cnt + 1)
 				if (cnt + 1) > l_name2.count or c /= l_name2.item (cnt + 1) then
 					done := True
+				else
+					cnt := cnt + 1
 				end
-				cnt := cnt + 1
 			end
 			Result := cnt
 		ensure
-			index_returned_makes_sense: Result > 0
+			index_returned_makes_sense: Result >= 0
 		end
 
 	matches_based_on_name (a_name: STRING): ARRAY [EB_NAME_FOR_COMPLETION] is

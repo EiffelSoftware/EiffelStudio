@@ -351,7 +351,7 @@ feature -- Access
 	maximum_virtual_x_position: INTEGER is
 			-- Maximum permitted virtual x position based on current dimensions and properties.
 			-- Properties that affect this value are `is_vertical_scrolling_per_item' and
-			-- `is_vertical_scrolling_per_item'.
+			-- `is_vertical_overscroll_enabled'.
 		do
 			Result := (virtual_width - viewable_width).max (0)
 		ensure
@@ -361,7 +361,7 @@ feature -- Access
 	maximum_virtual_y_position: INTEGER is
 			-- Maximum permitted virtual y position based on current properties.
 			-- Properties that affect this value are `is_horizontal_scrolling_per_item' and
-			-- `is_horizontal_scrolling_per_item'.
+			-- `is_horizontal_overscroll_enabled'.
 		do
 			Result := (virtual_height - viewable_height).max (0)
 		ensure

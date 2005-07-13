@@ -6,6 +6,9 @@
 #Let's compile for Solaris on mosis in background
 (sh ./make_for_platform mosis.ise manus solaris-sparc ; sh ./make_for_platform mosis.ise manus solaris-sparc-64) &
 
+#Let's compile for Solaris x86 in background
+(sh ./make_for_platform rio.ise manus solaris-x86) &
+
 #Let's compile for Red Hat Fedora and FreeBSD (done together because they are on the same machine and we don't want to overload the machine
 (sh ./make_for_platform mojo.ise manus linux-x86 ; sh ./make_for_platform freebsd.ise manus freebsd-x86) &
 

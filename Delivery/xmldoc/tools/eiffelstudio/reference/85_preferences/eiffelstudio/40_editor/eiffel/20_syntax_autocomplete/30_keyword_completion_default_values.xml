@@ -25,8 +25,8 @@
 				</paragraph>
 				<table><border>1</border>
 					<row>
-						<cell>Keyword</cell>
-						<cell>Value</cell>
+						<cell><bold>Keyword</bold></cell>
+						<cell><bold>Value</bold></cell>
 					</row>
 					<row>
 						<cell>indexing</cell>
@@ -193,8 +193,8 @@
 				</paragraph>
 				<table><border>1</border>
 					<row>
-						<cell>Keyword</cell>
-						<cell>Return</cell>
+						<cell><bold>Keyword</bold></cell>
+						<cell><bold>Return</bold></cell>
 					</row>
 					<row>
 						<cell>indexing</cell>
@@ -361,8 +361,8 @@
 				</paragraph>
 				<table><border>1</border>
 					<row>
-						<cell>Keyword</cell>
-						<cell>Space</cell>
+						<cell><bold>Keyword</bold></cell>
+						<cell><bold>Space</bold></cell>
 					</row>
 					<row>
 						<cell>indexing</cell>
@@ -529,8 +529,8 @@
 				</paragraph>
 				<table><border>1</border>
 					<row>
-						<cell>Keyword</cell>
-						<cell>Return</cell>
+						<cell><bold>Keyword</bold></cell>
+						<cell><bold>Return</bold></cell>
 					</row>
 					<row>
 						<cell>indexing</cell>

@@ -3,8 +3,8 @@
 	<paragraph>This category gathers the preferences related to the EiffelStudio BON Diagram tool.  Preferences for BON notation are under the 'Bon' category and for UML notation are under the 'UML' category.		
 		<table><border>1</border>
 			<row>
-				<cell>Label in the preferences window</cell>
-				<cell>Complete description</cell>
+				<cell><bold>Label in the preferences window</bold></cell>
+				<cell><bold>Complete description</bold></cell>
 			</row>
 			<row><cell>Bon class name font</cell><cell>Font for class names in BON class figures.</cell></row>
 <row><cell>Bon class name color</cell><cell>Color for class names in BON class figures.</cell></row>

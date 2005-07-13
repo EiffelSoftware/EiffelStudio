@@ -7,6 +7,10 @@
 		<table>
 			<border>1</border>
 			<row>
+				<cell><bold>Label in the preferences window</bold></cell>
+				<cell><bold>Complete Description</bold></cell>
+			</row>
+			<row>
 				<cell>left_margin_width</cell>
 				<cell>Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor.</cell>
 			</row>

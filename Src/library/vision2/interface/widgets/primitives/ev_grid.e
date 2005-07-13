@@ -687,7 +687,7 @@ feature -- Access
 	maximum_virtual_x_position: INTEGER is
 			-- Maximum permitted virtual x position based on current dimensions and properties.
 			-- Properties that affect this value are `is_vertical_scrolling_per_item' and
-			-- `is_vertical_scrolling_per_item'.
+			-- `is_vertical_overscroll_enabled'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -699,7 +699,7 @@ feature -- Access
 	maximum_virtual_y_position: INTEGER is
 			-- Maximum permitted virtual y position based on current dimensions and properties.
 			-- Properties that affect this value are `is_horizontal_scrolling_per_item' and
-			-- `is_horizontal_scrolling_per_item'.
+			-- `is_horizontal_overscroll_enabled'.
 		require
 			not_destroyed: not is_destroyed
 		do

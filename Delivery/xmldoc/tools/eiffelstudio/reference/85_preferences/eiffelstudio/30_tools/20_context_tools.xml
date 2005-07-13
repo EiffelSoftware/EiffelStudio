@@ -3,8 +3,8 @@
 	<paragraph>This category gathers the preferences related to context tools. 		
 		<table><border>1</border>
 			<row>
-				<cell>Label in the preferences window</cell>
-				<cell>Complete description</cell>
+				<cell><bold>Label in the preferences window</bold></cell>
+				<cell><bold>Complete Description</bold></cell>
 			</row>
 				<row><cell>Show all callers</cell><cell>Show all callers (as opposed to local callers) in `callers' form.</cell></row>
 				<row><cell>Diagram toolbar layout</cell><cell>The visible toolbar items for the Diagram Tool toolbar.</cell></row>
@@ -21,8 +21,8 @@
 		<paragraph>Class views indices
 			<table><border>1</border>
 				<row>
-					<cell>Index</cell>
-					<cell>Class view</cell>
+					<cell><bold>Index</bold></cell>
+					<cell><bold>Class view</bold></cell>
 				</row>
 				<row>
 					<cell>1</cell>
@@ -85,8 +85,8 @@
 		<paragraph>Feature views indices
 			<table><border>1</border>
 				<row>
-					<cell>Index</cell>
-					<cell>Feature view</cell>
+					<cell><bold>Index</bold></cell>
+					<cell><bold>Feature view</bold></cell>
 				</row>
 				<row>
 					<cell>1</cell>

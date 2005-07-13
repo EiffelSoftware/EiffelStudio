@@ -3,6 +3,10 @@
 	<paragraph>This category gathers a list of preferences related to the development window in EiffelStudio.
 		<line_break/>
 		<table><border>1</border>
+			<row>
+				<cell><bold>Label in the preferences window</bold></cell>
+				<cell><bold>Complete Description</bold></cell>
+			</row>
 			<row><cell>Is maximized</cell><cell>Is window maximized?</cell></row>
 			<row><cell>Left panel use explorer style</cell><cell>Show only one tool (Features, Clusters, Search, Windows) at a time.  (Requires restart)</cell></row>
 			<row><cell>Window left panel width</cell><cell>Width of navigation panel</cell></row>
@@ -10,7 +14,7 @@
 			<row><cell>Right panel layout</cell><cell>Items/tools information for editor panel.</cell></row>
 			<row><cell>Show general_toolbar</cell><cell>Should general toolbar be shown?</cell></row>
 			<row><cell>Show text in general_toolbar</cell><cell>Should text be shown in general toolbar?</cell></row>
-			<row><cell>Show all text in general_toolbar</cell><cell></cell></row>
+			<row><cell>Show all text in general_toolbar</cell><cell>Is text of toolbar items displayed?</cell></row>
 			<row><cell>Show address toolbar</cell><cell>Should address toolbar be shown?</cell></row>
 			<row><cell>Show project toolbar</cell><cell>Should project toolbar be shown?</cell></row>
 			<row><cell>Search tool show_options</cell><cell>Should search tool be shown?</cell></row>

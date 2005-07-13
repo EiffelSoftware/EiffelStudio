@@ -6,6 +6,10 @@
 		<paragraph>The Eiffel category under the main Editor category contains preferences for Eiffel specific editor values.  For example, here you can customize the behavour of autocompletion in the editor, syntax completion on Eiffel keywords, or the colors of Eiffel keywords.</paragraph>
 		<table><border>1</border>
 			<row>
+				<cell><bold>Label in the preferences window</bold></cell>
+				<cell><bold>Complete Description</bold></cell>
+			</row>
+			<row>
 				<cell>Formatters history size</cell>
 				<cell>Size of formatter history.</cell>
 			</row>

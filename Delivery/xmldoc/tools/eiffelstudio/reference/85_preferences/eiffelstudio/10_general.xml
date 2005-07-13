@@ -4,8 +4,8 @@
 		<line_break/>
 		<table><border>1</border>
 			<row>
-				<cell>Label in the preferences window</cell>
-				<cell>Complete Description</cell>
+				<cell><bold>Label in the preferences window</bold></cell>
+				<cell><bold>Complete description</bold></cell>
 			</row>
 			<row>
 				<cell>Command used to launch an external editor.</cell>

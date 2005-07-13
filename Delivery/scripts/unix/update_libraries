@@ -40,10 +40,10 @@ remtrace time
 exprt -r $DEFAULT_CVS_TAG -d time "Src/library/time"
 remtrace vision2
 exprt -r $DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
-if [ "$1" == "gtk2" ]; then
-	cp -rf vision2/implementation/gtk2/* vision2/implementation/gtk
+if [ "$1" == "gtk" ]; then
+	# TODO
+	# Copy GTK 1.2 implementation over gtk directory
 fi
-fullrd vision2/implementation/gtk2
 remtrace wizard
 exprt -r $DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
 

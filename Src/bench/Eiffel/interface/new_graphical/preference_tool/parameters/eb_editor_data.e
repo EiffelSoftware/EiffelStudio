@@ -182,6 +182,12 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 		do
 			Result := auto_auto_complete_preference.value
 		end
+		
+	auto_complete_words: BOOLEAN is
+			-- Should completion automatically complete words when a single best match is available?
+		do
+			Result := auto_complete_words_preference.value
+		end
 
 	filter_completion_list: BOOLEAN is
 			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
@@ -274,6 +280,9 @@ feature {NONE} -- Preference
 
 	auto_auto_complete_preference: BOOLEAN_PREFERENCE
 			-- Should completion window show automatically after valid '.' calls?
+			
+	auto_complete_words_preference: BOOLEAN_PREFERENCE
+			-- Should completion automatically complete words when a single best match is available?
 
 	filter_completion_list_preference: BOOLEAN_PREFERENCE
 			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
@@ -333,8 +342,11 @@ feature {NONE} -- Preference Strings
 	show_any_features_string: STRING is "editor.eiffel.show_any_features" 
 			-- Should autocomplete show features inherited from any ?
 
-	auto_auto_complete_string: STRING is "editor.eiffel.auto_auto_complete" 
+	auto_auto_complete_string: STRING is "editor.eiffel.auto_auto-complete" 
 			-- Should completion window show automatically after valid '.' calls?
+			
+	auto_complete_words_string: STRING is "editor.eiffel.auto_complete_words" 
+			-- Should completion automatically complete words when a single best match is available?
 
 	filter_completion_list_string: STRING is "editor.eiffel.filter_completion_list" 
 			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
@@ -403,6 +415,7 @@ feature {NONE} -- Initialization
 			show_any_features_preference := l_manager.new_boolean_resource_value (l_manager, show_any_features_string, False)
 			syntax_complete_enabled_preference := l_manager.new_boolean_resource_value (l_manager, syntax_complete_enabled_string, True)			
 			auto_auto_complete_preference := l_manager.new_boolean_resource_value (l_manager, auto_auto_complete_string, True)
+			auto_complete_words_preference := l_manager.new_boolean_resource_value (l_manager, auto_complete_words_string, True)
 			filter_completion_list_preference := l_manager.new_boolean_resource_value (l_manager, filter_completion_list_string, True)
 			show_completion_signature_preference := l_manager.new_boolean_resource_value (l_manager, show_completion_signature_string, True)
 			show_completion_type_preference := l_manager.new_boolean_resource_value (l_manager, show_completion_type_string, True)
@@ -460,6 +473,7 @@ feature {NONE} -- Initialization
 			syntax_complete_enabled_preference.change_actions.extend (agent update)
 			quadruple_click_enabled_preference.change_actions.extend (agent update)
 			auto_auto_complete_preference.change_actions.extend (agent update)
+			auto_complete_words_preference.change_actions.extend (agent update)
 			filter_completion_list_preference.change_actions.extend (agent update)
 			show_completion_signature_preference.change_actions.extend (agent update)
 			show_completion_type_preference.change_actions.extend (agent update)
@@ -919,6 +933,7 @@ invariant
 	autocomplete_quotes_preference_not_void: autocomplete_quotes_preference /= Void
 	show_any_features_preference_not_void: show_any_features_preference /= Void
 	auto_auto_complete_preference_not_void: auto_auto_complete_preference /= Void
+	auto_complete_words_preference_not_void: auto_complete_words_preference /= Void
 	filter_completion_list_preference_not_void: filter_completion_list_preference /= Void
 	show_completion_signature_preference_not_void: show_completion_signature_preference /= Void
 	show_completion_type_preference_not_void: show_completion_type_preference /= Void

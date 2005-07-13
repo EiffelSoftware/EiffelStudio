@@ -186,6 +186,10 @@
 				<cell>Auto complete appears automatically?</cell>
 			</row>
 			<row>
+				<cell>Auto complete word</cell>
+				<cell>Automatically completes words when a single best match is available?</cell>
+			</row>
+			<row>
 				<cell>Filter completion list</cell>
 				<cell>Completion list entries are filtered based on matches?</cell>
 			</row>

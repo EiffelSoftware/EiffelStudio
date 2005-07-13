@@ -134,7 +134,7 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is name lexicographically lower than `other'?
 		do
-			Result := as_lower.lower_than (other.as_lower)
+			Result := name.as_lower < (other.name.as_lower)
 		end
 		
 	begins_with (s:STRING): BOOLEAN is

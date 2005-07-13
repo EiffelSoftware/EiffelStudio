@@ -8,11 +8,11 @@
 		</paragraph>
 		<paragraph>The left part is used to display a tree that shows preference categories. A description of the contents of this tree, i.e. the different categories of preferences and preferences themselves, is available 
 			<link>
-				<url>./eiffelstudio/index.xml</url>
+				<url>eiffelstudio/index.xml</url>
 				<label>here</label>
 			</link>.
 		</paragraph>
-		<paragraph>The right part shows the preferences attached to the currently selected tree node. They appear in a table that has two columns. The first one contains the description of the preference, the second one contains its value. To modify this value, select the preference by clicking on it. A floating widget appears on top of the preference value to let you change it.</paragraph>
+		<paragraph>The right part shows the preferences attached to the currently selected tree node. They appear in a table that has four columns. The first one contains the name of the preference, the second one contains its type, the third one shows if it is modified from its predefined default, and the last one one contains its value. To modify this value, select the preference by clicking on it. A floating widget appears on top of the preference value to let you change it.</paragraph>
 		<paragraph>The floating widget depends on the type of the preference that is modified. There are four kinds of preferences:</paragraph>
 		<list ordered="false">
 			<item>Boolean preferences : their possible values are "True" and "False". A combo box will allow you to choose between both.</item>

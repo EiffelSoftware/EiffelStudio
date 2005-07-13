@@ -20,7 +20,7 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>
-			The <link><url>url</url><label>Eiffel for .NET language</label></link> is Eiffel. It is not a variant of Eiffel that spawned a new language, as is <bold>C#</bold>, or a dramatic evolution of Eiffel, such as <bold>Visual Basic .NET</bold> is to <bold>VB6</bold>.
+			The <link><url>index.xml</url><label>Eiffel for .NET language</label></link> is Eiffel. It is not a variant of Eiffel that spawned a new language, as is <bold>C#</bold>, or a dramatic evolution of Eiffel, such as <bold>Visual Basic .NET</bold> is to <bold>VB6</bold>.
 			 As Eiffel stands today, and will probably remain, Eiffel's conventions for class names and features names do not match that of the Pascal and Camel-casing conventions recommended by Microsoft. Eiffel also does not support the notion of full quantified type names. 
 			 The period ('<bold>.</bold>') between namespace and type names is not valid Eiffel syntax. These naming convention rules pose a problem for maintaining the Eiffel language. To address this issue, when referencing .NET assemblies, all referenced assembly type names and 
 			 feature names are converted into "Eiffel-case" when using Eiffel.
@@ -57,7 +57,7 @@
 		
 		<output output="envision">
 			<paragraph>
-				In EiffelEnvision you can set a prefix using the <link><url>url</url><label>*Prefix</label></link> property displayed in the property window for an <link><url>url</url><label>*Component Reference</label></link>. For those prefixes/assembly associations that have been preset by Eiffel Software, the <link><url>url</url><label>*Prefix</label></link> property is read-only.
+				In EiffelEnvision you can set a prefix using the <link><url>../../../../tools/eiffelenvision/using_eiffelenvision/eiffelenvision_projects/configuring/project_configuration/item_configuration/reference.xml</url><anchor_name>class_name_prefix</anchor_name><label>Class Name Prefix</label></link> property displayed in the property window for an <link><url>../../../../tools/eiffelenvision/using_eiffelenvision/eiffelenvision_projects/structure/references/index.xml</url><label>Component Reference</label></link>. For those prefixes/assembly associations that have been preset by Eiffel Software, the <link><url>../../../../tools/eiffelenvision/using_eiffelenvision/eiffelenvision_projects/configuring/project_configuration/item_configuration/reference.xml</url><anchor_name>class_name_prefix</anchor_name><label>Class Name Prefix</label></link> property is read-only.
 			</paragraph>
 		</output>
 				
@@ -103,7 +103,7 @@
 
 		<output output="envision">
 			<paragraph>
-				In EiffelEnvision, to browse the available .NET types and features, with their formatted and prefixed names you can use the <link><url>url</url><label>*Object Browser</label></link>.
+				In EiffelEnvision, to browse the available .NET types and features, with their formatted and prefixed names you can use the <link><url>../../../../tools/eiffelenvision/using_eiffelenvision/code_browsing/object_browser/index.xml</url><label>Object Browser</label></link>.
 			</paragraph>
 		</output>
 	</paragraph>

@@ -865,7 +865,7 @@ rt_private void interpret(int flag, int where)
 					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_int64; break;
 					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_int64; break;
 					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_int64; break;
-					case 64: last->it_uint64 = (EIF_NATURAL_32) last->it_int64; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_int64; break;
 					default:
 						eif_panic ("Illegal type");
 				}	

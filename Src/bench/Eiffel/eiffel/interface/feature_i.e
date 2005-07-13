@@ -1931,11 +1931,7 @@ end
 			end
 			if vfac /= Void then
 				if assigner /= Void then
-					if system.current_class.class_id = assigner.written_in then
-						vfac.set_assigner (assigner.api_feature (assigner.written_in))
-					elseif assigner.written_class.has_feature_table then
-						vfac.set_assigner (assigner.written_class.feature_with_rout_id (assigner.rout_id_set.first))
-					end
+					vfac.set_assigner (assigner.api_feature (system.current_class.class_id))
 				end
 				error_handler.insert_error (vfac)
 			end

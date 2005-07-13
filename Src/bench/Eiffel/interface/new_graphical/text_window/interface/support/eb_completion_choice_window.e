@@ -433,9 +433,8 @@ feature {NONE} -- Implementation
 			matches: ARRAY [EB_NAME_FOR_COMPLETION]
 			list_row: EV_GRID_LABEL_ITEM
 			match_item: EB_NAME_FOR_COMPLETION
-			l_minimum_width,
 			row_index: INTEGER		
-			l_upper: INTEGER	
+			l_upper: INTEGER
 		do			
 			choice_list.wipe_out
 			if rebuild_list_during_matching then
@@ -444,7 +443,7 @@ feature {NONE} -- Implementation
 				matches := sorted_names.subarray (1, sorted_names.count)				
 			end
 			
-			l_minimum_width := 60
+			
 			if matches.is_empty then
 				current_index := 0	
 			else
@@ -611,9 +610,6 @@ feature {NONE} -- Implementation
 				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
 				i := i.max (choice_list.viewable_width.max (choice_list.width - l_sb_wid))
 				choice_list.column (1).set_width (i)
-				if not choice_list.selected_rows.is_empty then
-					choice_list.selected_rows.first.ensure_visible	
-				end
 			end
 		end		
 

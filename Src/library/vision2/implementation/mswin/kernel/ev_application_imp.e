@@ -459,6 +459,7 @@ feature -- Status setting
 			-- Assign `a_delay' to `tooltip_delay'.
 		local
 			l_wel_tooltip: WEL_TOOLTIP
+			l_hwnd: POINTER
 		do
 			tooltip_delay := a_delay
 				-- Iterate through all tooltips within application and
@@ -468,12 +469,21 @@ feature -- Status setting
 			until
 				all_tooltips.off
 			loop
-				l_wel_tooltip ?= window_of_item (all_tooltips.item)
-				if l_wel_tooltip /= Void then
-					cwin_send_message (l_wel_tooltip.item, Ttm_setdelaytime,
-						cwel_integer_to_pointer (Ttdt_initial), cwin_make_long (a_delay, 0))
-					all_tooltips.forth
+				l_hwnd := all_tooltips.item
+				if l_hwnd /= default_pointer and then is_window (l_hwnd) then
+					l_wel_tooltip ?= window_of_item (l_hwnd)
+					if l_wel_tooltip /= Void then
+						cwin_send_message (l_wel_tooltip.item, Ttm_setdelaytime,
+							cwel_integer_to_pointer (Ttdt_initial), cwin_make_long (a_delay, 0))
+						all_tooltips.forth
+					else
+							-- Object has been collected, we remove it
+							-- from `all_tooltips'.
+						all_tooltips.remove
+					end
 				else
+						-- Object has been collected, we remove it
+						-- from `all_tooltips'.
 					all_tooltips.remove
 				end
 			end

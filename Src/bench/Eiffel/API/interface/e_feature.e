@@ -568,8 +568,6 @@ feature -- Output
 			args: like arguments
 			orig_type, cur_type: TYPE_A
 			same: BOOLEAN
-			class_c: CLASS_C
-			assigner_feature: E_FEATURE
 		do
 			args := arguments
 			if args /= Void then
@@ -608,20 +606,6 @@ feature -- Output
 				st.add (Ti_colon)
 				st.add_space
 				type.ext_append_to (st, Current)
-			end
-			if assigner_name /= Void then
-				st.add_space
-				st.add (ti_assign_keyword)
-				st.add_space
-				class_c := written_class
-				if class_c /= Void and then class_c.has_feature_table then
-					assigner_feature := class_c.feature_with_name (assigner_name)
-				end
-				if assigner_feature /= Void then
-					st.add_feature (assigner_feature, assigner_name)
-				else
-					st.add_feature_name (assigner_name, class_c)
-				end
 			end
 		end
 

@@ -278,7 +278,7 @@ feature -- Status setting
 			-- row index `start_row', `end_row'.
 		require
 			parented: parent /= Void
-			valid_rows: start_row >= 1 and end_row <= parent.row_count and start_row < end_row
+			valid_rows: start_row >= 1 and end_row <= parent.row_count and start_row <= end_row
 		local
 			item_counter: INTEGER
 			parent_row_count: INTEGER

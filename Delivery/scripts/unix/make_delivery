@@ -104,15 +104,6 @@ remtrace wizards
 exprt -r $DEFAULT_CVS_TAG -d wizards Delivery/wizards
 remtrace C_library
 exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
-remtrace Free add ons
-exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons
-cd $INSTALL_DIR/library
-gunzip -c $INSTALL_DIR/free_add_ons/gobo/gobo_34_unix.tgz | tar -xf -
-cd $INSTALL_DIR/free_add_ons
-fullrf gobo/gobo_34_unix.tgz
-fullrf gobo/gobo_34_win.tgz
-fullrf gobo/gobo_33_ise.tgz
-fullrd wex
 cd $INSTALL_DIR
 remtrace root
 exprt -l -r $DEFAULT_CVS_TAG Delivery/
@@ -170,6 +161,18 @@ cd $INIT_DIR
 remtrace "Putting the Eiffel libraries in the delivery"
 . make_libraries $GTK_DIR
 give_time_to "export the Eiffel libraries"
+cd $INIT_DIR
+
+cd $INSTALL_DIR
+remtrace Free add ons
+exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons
+cd $INSTALL_DIR/library
+gunzip -c $INSTALL_DIR/free_add_ons/gobo/gobo_34_unix.tgz | tar -xf -
+cd $INSTALL_DIR/free_add_ons
+fullrf gobo/gobo_34_unix.tgz
+fullrf gobo/gobo_34_win.tgz
+fullrf gobo/gobo_33_ise.tgz
+fullrd wex
 cd $INIT_DIR
 
 if [ ! "$NO_INSTALL" ]; then

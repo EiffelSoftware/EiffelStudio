@@ -79,19 +79,13 @@ feature -- Output
 		do
 			st.add_string ("Feature: ")
 			a_feature.append_signature (st)
-			st.add_string (" Version from: ")
-			a_feature.written_class.append_name (st)
 			st.add_new_line
-			st.add_string ("Assigner mark: ")
 			if assigner = Void then
+				st.add_string ("Assigner mark: ")
 				st.add_feature_name (a_feature.assigner_name, a_feature.written_class)
 			else
-				st.add_feature (assigner, a_feature.assigner_name)
-				st.add_new_line
 				st.add_string ("Assigner feature: ")
 				assigner.append_signature (st)
-				st.add_string (" Version from: ")
-				assigner.written_class.append_name (st)
 			end
 			st.add_new_line
 		end

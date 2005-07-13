@@ -6,11 +6,12 @@
 			<table>
 				<row><cell>Computer/Processor</cell><cell>G4</cell></row>
 				<row><cell>Operating System</cell><cell>Mac OS X 10.3 or higher with GTK+ 2.4</cell></row>
-				<row><cell>Memory</cell><cell>256 MB of RAM (512 Mb recommended)</cell></row>
-				<row><cell>Hard Disk</cell><cell>400Mb uncompressed hard disk space (1GB recommended) </cell></row>
-				<row><cell>Drive</cell><cell>CD-ROM or DVD drive (not required for Free Edition downloads)</cell></row>
+				<row><cell>Memory</cell><cell>256MB of RAM (512MB recommended)</cell></row>
+				<row><cell>Hard Disk</cell><cell>400MB of hard disk space (1GB recommended) </cell></row>
+				<row><cell>Drive</cell><cell>CD-ROM or DVD drive (not required when downloading EiffelStudio)</cell></row>
 				<row><cell>Display</cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor</cell></row>
 				<row><cell>Peripherals</cell><cell>Keyboard and mouse or compatible pointing device</cell></row>
+				<row><cell><bold>ISE_PLATFORM</bold></cell><cell><bold>macosx-ppc</bold>.</cell></row>
 			</table>
 		</paragraph>
 		<heading><size>2</size>Prerequisites</heading>
@@ -29,7 +30,7 @@
 		<paragraph>Insert the CD into your CD-ROM drive. Open the CD-ROM contents and double click on the <bold>Eiffel56.mpkg</bold> file to launch the installation procedure. Follow the steps indicated in the dialogs to complete the installation.</paragraph>
 		<paragraph>Once installed you need to register EiffelStudio. First you need to make sure you have started the X server. Then open a terminal window and type the following commands:
 			<code_block>export ISE_EIFFEL=/Developer/Applications/Eiffel56
-export ISE_PLATFORM=macosx
+export ISE_PLATFORM=macosx-ppc
 cd $ISE_EIFFEL
 sudo ./register</code_block>
 		</paragraph>

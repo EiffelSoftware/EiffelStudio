@@ -7,9 +7,9 @@
 				<row><cell><bold>Computer/Processor</bold></cell><cell>AlphaServer.</cell></row>
 				<row><cell><bold>Operating System</bold></cell><cell>HP OpenVMS/Alpha version 7.3.2 with DECWindows and GTK+ 1.2.10.</cell></row>
 				<row><cell><bold>C compiler</bold></cell><cell>Compaq C compiler V6 or later.</cell></row>
-				<row><cell><bold>Memory</bold></cell><cell>256 MB of RAM (512Mb recommended).</cell></row>
+				<row><cell><bold>Memory</bold></cell><cell>256MB of RAM (512MB recommended).</cell></row>
 				<row><cell><bold>Hard Disk</bold></cell><cell>1GB free disk space on an ODS-5 formatted volume, plus an additional 1GB of free space while performing the software installation.</cell></row>
-				<row><cell><bold>Drive</bold></cell><cell>CD-ROM or DVD drive (not required for Free Edition downloads).</cell></row>
+				<row><cell><bold>Drive</bold></cell><cell>CD-ROM or DVD drive (not required when downloading EiffelStudio).</cell></row>
 				<row><cell><bold>Display</bold></cell><cell>Super VGA (800 x 600) or higher resolution video adapter and monitor.</cell></row>
 				<row><cell><bold>Peripherals</bold></cell><cell>Keyboard and mouse or compatible pointing device.</cell></row>
 			</table>

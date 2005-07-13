@@ -379,7 +379,8 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 			elseif code = key_period then
 					-- case: .				
 				Precursor (ev_key)
-				if auto_complete_after_dot and then not shifted_key then				   	
+				if auto_complete_after_dot and then not shifted_key then			   	
+					completing_automatically := True
 					completion_timeout.reset_count
 					completion_timeout.actions.resume
 				end
@@ -771,7 +772,8 @@ feature {NONE} -- Autocomplete implementation
 						Current, 
 						text_displayed.feature_name_part_to_be_completed, 
 						text_displayed.feature_name_part_to_be_completed_remainder, 
-						text_displayed.completion_possibilities
+						text_displayed.completion_possibilities,
+						completing_word
 					)
 			else
 				choices.initialize_for_classes 
@@ -785,10 +787,10 @@ feature {NONE} -- Autocomplete implementation
 			if choices.is_displayed then
 				choices.hide
 			end
-			if choices.show_needed and choices.should_show then			
+			if choices.show_needed then			
 				position_completion_choice_window
 				choices.show
-			end
+			end		
 		end	
 
 	completion_mode: INTEGER
@@ -1023,6 +1025,44 @@ feature -- Memory management
 		do
 			Precursor {EB_CLICKABLE_EDITOR}
 			dev_window := Void
+		end
+
+feature {NONE} -- Implementation	
+
+	completing_automatically: BOOLEAN
+			-- Is completion being shown automatically?
+
+	completing_word: BOOLEAN is
+			-- Has user requested to complete a word.
+			-- Note: Word completion is based on context.
+			-- Completing without context is considered completing (pressing CTRL+SPACE for a feature list of Current).
+			-- Completing with context (a_var.f..., a_v...) is completing a word.
+		require
+			text_is_fully_loaded: text_is_fully_loaded
+		local
+			l_text: like text_displayed
+			l_tok: EDITOR_TOKEN
+		do
+			l_text := text_displayed
+			if l_text /= Void and then not text_displayed.is_empty then
+				from
+					l_tok := l_text.cursor.token.previous
+				until
+					l_tok = Void or else not l_tok.is_blank
+				loop
+					l_tok := l_tok.previous
+				end
+				if l_tok /= Void and then l_tok.is_text then
+					Result := l_tok.image.is_equal (".") = False
+					if not Result then
+							-- is a '.'
+						Result := not completing_automatically
+					end
+				end
+			end
+			completing_automatically := False
+		ensure
+			completing_automatically_reset: completing_automatically = False
 		end
 
 end -- class SMART_EDITOR

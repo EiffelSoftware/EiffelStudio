@@ -400,7 +400,13 @@ feature -- Status setting
 			-- Give the focus to the editor area.
 		do
 			if not editor_drawing_area.is_destroyed and then editor_drawing_area.is_displayed and then editor_drawing_area.is_sensitive then
-				editor_drawing_area.set_focus
+				if reference_window /= Void then
+					if reference_window.has_focus then
+						editor_drawing_area.set_focus
+					end
+				else
+					editor_drawing_area.set_focus
+				end
 			else
 				internal_focus_requested := True
 			end

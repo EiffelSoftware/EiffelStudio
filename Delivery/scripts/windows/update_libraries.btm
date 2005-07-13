@@ -57,7 +57,6 @@ exprt -r %DEFAULT_CVS_TAG -d wel "Src/library/wel"
 remtrace vision2
 exprt -r %DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
 fullrd vision2\implementation\gtk
-fullrd vision2\implementation\gtk2
 remtrace vision2_extension
 exprt -r %DEFAULT_CVS_TAG -d vision2_extension "Src/library/vision2_extension"
 remtrace wizard

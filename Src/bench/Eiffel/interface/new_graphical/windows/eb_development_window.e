@@ -496,7 +496,7 @@ feature {NONE} -- Initialization
 			(managed_main_formatters @ 1).enable_select;
 
 				-- We now select the correct class formatter.
-			f_ind := preferences.formatter_data.default_class_formatter_index
+			f_ind := preferences.context_tool_data.default_class_formatter_index
 				--| This takes the formatter separators in consideration.
 			if f_ind > 4 then
 				f_ind := f_ind + 1
@@ -509,7 +509,7 @@ feature {NONE} -- Initialization
 			end
 			(managed_class_formatters @ f_ind).enable_select;
 				-- We now select the correct feature formatter.
-			f_ind := preferences.formatter_data.default_feature_formatter_index
+			f_ind := preferences.context_tool_data.default_feature_formatter_index
 			if f_ind > 2 then
 				f_ind := f_ind + 1
 			end

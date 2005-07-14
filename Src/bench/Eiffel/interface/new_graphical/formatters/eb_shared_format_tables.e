@@ -300,7 +300,7 @@ feature {NONE} -- Attributes
 
 	History_size: INTEGER is
 		once
-			Result := preferences.formatter_data.editor_history_size
+			Result := preferences.context_tool_data.editor_history_size
 			if Result < 1 then
 				Result := 5
 			elseif Result > 200 then

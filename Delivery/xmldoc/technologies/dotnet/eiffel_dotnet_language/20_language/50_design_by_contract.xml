@@ -36,19 +36,11 @@
 			<feature_name>s</feature_name> to be correct, then we should be able to make a statement of any conditions that must be true prior to executing 
 			<feature_name>s</feature_name>. That is, we will state the conditions required for it to be possible for 
 			<feature_name>s</feature_name> to run correctly. We call this statement of preconditions for success 
-			<feature_name>s</feature_name>'s 
-			<link>
-				<url/>
-				<label>precondition</label>
-			</link>.
+			<feature_name>s</feature_name>'s precondition.
 		</paragraph>
 		<paragraph>Likewise we should be able to make a statement of the conditions that will be true always if 
 			<feature_name>s</feature_name> works correctly. This we call 
-			<feature_name>s</feature_name>'s 
-			<link>
-				<url/>
-				<label>postcondition</label>
-			</link>.
+			<feature_name>s</feature_name>'s postcondition.
 		</paragraph>
 		<paragraph>As an example, suppose 
 			<feature_name>s</feature_name> accepted an argument of type 
@@ -246,11 +238,7 @@
 		<paragraph>Assertions on 
 			<class_name>TIME_OF_DAY</class_name>'s routines gives us specification for each routine and guarantees that if the specification of a routine gets violated at runtime we will be served immediately with an exception. This will go a long way toward preventing invalid instances from going unnoticed in a running system and fouling up lots of other stuff.
 		</paragraph>
-		<paragraph>What will help even more is something called a 
-			<link>
-				<url/>
-				<label>class invariant</label>
-			</link>. Using the class invariant we are able to state what it means for an instance of a class to be valid, or as it is sometimes put, in a stable state.
+		<paragraph>What will help even more is something called a class invariant. Using the class invariant we are able to state what it means for an instance of a class to be valid, or as it is sometimes put, in a stable state.
 		</paragraph>
 		<paragraph>The class invariant is an assertion like precondition and postcondition, but there is only one per class. Check 
 			<link>

@@ -9,15 +9,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>
-			<link>
-				<url></url>
-				<label>Inheritance</label>
-			</link>, along with 
-			<link>
-				<url></url>
-				<label>client/supplier</label>
-			</link>, are the two relationships that can exist between classes.
+		<paragraph>Inheritance, along with client/supplier, are the two relationships that can exist between classes.
 		</paragraph>
 		<paragraph>Inheritance lets us mirror in software the types of abstractions that are common in many problem domains, i.e., the more general to the more specialized. </paragraph>
 		<paragraph>Inheritance also gives a way us to combine these abstractions.</paragraph>
@@ -34,35 +26,15 @@
 				<class_name>A</class_name> is also a feature of 
 				<class_name>B</class_name>
 			</item>
-			<item>In any case in which an 
-				<link>
-					<url></url>
-					<label>instance</label>
-				</link> of 
+			<item>In any case in which an instance of 
 				<class_name>A</class_name> is called for, then an instance of 
 				<class_name>B</class_name> will suffice.
 			</item>
 		</list>
 		<paragraph>Flexibility and adaptability are key qualities of the Eiffel inheritance model. On an informal level, this means that, except as prevented by certain constraints, a class can inherit from a set of classes containing just about any other classes.</paragraph>
-		<paragraph>Eiffel classes can be 
-			<link>
-				<url></url>
-				<label>effective</label>
-			</link> or 
-			<link>
-				<url></url>
-				<label>deferred</label>
-			</link>. If a class is effective, then it is completely implemented. As a result, it is possible to create and use 
-			<link>
-				<url></url>
-				<label>direct instances</label>
-			</link> of an effective class at runtime.
+		<paragraph>Eiffel classes can be effective or deferred. If a class is effective, then it is completely implemented. As a result, it is possible to create and use direct instances of an effective class at runtime.
 		</paragraph>
-		<paragraph>If a class is deferred, then it is not completely implemented. A class is deferred if it contains at least one 
-			<link>
-				<url></url>
-				<label>deferred feature</label>
-			</link>. So, it is possible for you to mark a feature (and by consequence also its class) as deferred when you code it. This means that the specification for this class dictates that such a feature exists, but there is no implementation for the feature included in the class. As a result, there can be no direct instances of deferred classes at runtime. However, a class that inherits from a deferred class can implement, or effect, the deferred features. This results in an effective descendant to the deferred class. And it is possible to create direct instances of this effective descendant. Such instances would also be instances (albeit not direct instances) of the original deferred class.
+		<paragraph>If a class is deferred, then it is not completely implemented. A class is deferred if it contains at least one deferred feature. So, it is possible for you to mark a feature (and by consequence also its class) as deferred when you code it. This means that the specification for this class dictates that such a feature exists, but there is no implementation for the feature included in the class. As a result, there can be no direct instances of deferred classes at runtime. However, a class that inherits from a deferred class can implement, or effect, the deferred features. This results in an effective descendant to the deferred class. And it is possible to create direct instances of this effective descendant. Such instances would also be instances (albeit not direct instances) of the original deferred class.
 		</paragraph>
 		<paragraph>What this means to us as software producers, is that in any development effort, we have available a great number of classes which can serve as potential starting points. That is, classes that we could make parents to the classes we produce. And, those classes do not have to chosen from a strict dichotomy of classes which are either completely abstract or completely implemented. Inheritance from classes that are deferred but have some implemented features is both possible and encouraged. It reuses existing software and it reduces the opportunity for error.</paragraph>
 		<paragraph>Consider the deferred class 

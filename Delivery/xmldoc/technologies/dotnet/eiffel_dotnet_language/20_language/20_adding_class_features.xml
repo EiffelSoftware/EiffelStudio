@@ -9,17 +9,9 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The 
-			<link>
-				<url></url>
-				<label>features</label>
-			</link> of a class make it useful. They are the things that objects which are instances of the class have and can do.
+		<paragraph>The features of a class make it useful. They are the things that objects which are instances of the class have and can do.
 		</paragraph>
-		<paragraph>It is during the process of adding class features that we relate a class we are producing to other classes via the 
-			<link>
-				<url></url>
-				<label>client/supplier relationship</label>
-			</link>.
+		<paragraph>It is during the process of adding class features that we relate a class we are producing to other classes via the >client/supplier relationship.
 		</paragraph>
 		<paragraph>It is when we add features to a class that we can build the executable code that makes things happen.</paragraph>
 		<heading>
@@ -115,45 +107,19 @@
 		<heading>
 			<size>3</size>Implementation Type
 		</heading>
-		<paragraph>Whenever we are building a class in Eiffel, we are potential 
-			<link>
-				<url></url>
-				<label>reuse producers</label>
-			</link>. As such, we can categorize the features of a class based on the three types of feature implementation:
+		<paragraph>Whenever we are building a class in Eiffel, we are potential reuse producers. As such, we can categorize the features of a class based on the three types of feature implementation:
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<link>
-					<url></url>
-					<label>Attribute</label>
-				</link>
+				Attribute
 			</item>
-			<item>
-				<link>
-					<url></url>
-					<label>Function</label>
-				</link>
+			<item>Function
 			</item>
-			<item>
-				<link>
-					<url></url>
-					<label>Procedure</label>
-				</link>
+			<item>Procedure
 			</item>
 		</list>
-		<paragraph>Attributes are those features which occupy storage in an instance. When you code an attribute in a class that you are producing, that class becomes a 
-			<link>
-				<url></url>
-				<label>client</label>
-			</link> to the class of the attribute. This is the most common way to establish a 
-			<link>
-				<url></url>
-				<label>client/supplier relationship</label>
-			</link> between the classses. Client/supplier is one of the two 
-			<link>
-				<url></url>
-				<label>relationships</label>
-			</link> that can exist between classes.
+		<paragraph>Attributes are those features which occupy storage in an instance. When you code an attribute in a class that you are producing, that class becomes a client to the class of the attribute. This is the most common way to establish a 
+			client/supplier relationship between the classses. Client/supplier is one of the two relationships that can exist between classes.
 		</paragraph>
 		<paragraph>Functions and procedures are the computation features, that is they are features that involve executable code. Functions and procedures together are themselves categorized as routines.</paragraph>
 		<paragraph>Also, from the producer standpoint we may view features as whether they work from memory or through computation:</paragraph>
@@ -179,31 +145,19 @@
 		</heading>
 		<paragraph>A times we find it appropriate to categorize features by how we use them. Specifically, as:</paragraph>
 		<list ordered="false">
-			<item>
-				<link>
-					<url></url>
-					<label>Query</label>
-				</link>
+			<item>Query
 				<list ordered="false">
 					<item>Attribute</item>
 					<item>Function</item>
 				</list>
 			</item>
-			<item>
-				<link>
-					<url></url>
-					<label>Command</label>
-				</link>
+			<item>Command
 				<list ordered="false">
 					<item>Procedure</item>
 				</list>
 			</item>
 		</list>
-		<paragraph>Queries are features that, when applied to an instance, provide a value in response. Commands instruct an intance to take some action, but do not return a value. Seeing features as either queries or commands is of primary interest to 
-			<link>
-				<url></url>
-				<label>reuse consumers</label>
-			</link>. But as producers there are important reasons for ensuring that when we implement a feature, we implement it as a query or as a command, but not both. We will see more about this in 
+		<paragraph>Queries are features that, when applied to an instance, provide a value in response. Commands instruct an intance to take some action, but do not return a value. Seeing features as either queries or commands is of primary interest to reuse consumers. But as producers there are important reasons for ensuring that when we implement a feature, we implement it as a query or as a command, but not both. We will see more about this in 
 			<link>
 				<url>50_design_by_contract.xml</url>
 				<label>Design by Contract and Assertions</label>
@@ -325,42 +279,49 @@
 				<link>
 					<anchor_name>Header Comment</anchor_name>
 					<label>Header Comment</label>
+					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>obsolete</anchor_name>
 					<label>Obsolete</label>
+					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Precondition</anchor_name>
 					<label>Precondition</label>
+					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Local Declarations</anchor_name>
 					<label>Local Declarations</label>
-				</link>
+					<url>20_adding_class_features.xml</url>
+				</link>				
 			</item>
 			<item>
 				<link>
 					<anchor_name>Routine Body</anchor_name>
 					<label>Routine Body</label>
+					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Postcondition</anchor_name>
 					<label>Postcondition</label>
+					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Rescue</anchor_name>
 					<label>Rescue</label>
+					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 		</list>
@@ -395,15 +356,7 @@
 			<comment>-- Insert a text item to the header control</comment>
 			<comment>--     after the `insert_item_item_no' item.</comment>
 </code_block>
-		<paragraph>Although the feature's header comment is optional, most Eiffel programmers and their technical  managers feel that it should never be omitted. Header comments are included by some language processing tools in specialized views of classes. Header comments are almost always short, usually no more than a few lines. Header comments serve to provide a natural language description of what the feature will do (in the case of features that are 
-			<link>
-				<url></url>
-				<label>commands</label>
-			</link>) or what information it provides (in the case of 
-			<link>
-				<url></url>
-				<label>queries</label>
-			</link>).
+		<paragraph>Although the feature's header comment is optional, most Eiffel programmers and their technical  managers feel that it should never be omitted. Header comments are included by some language processing tools in specialized views of classes. Header comments are almost always short, usually no more than a few lines. Header comments serve to provide a natural language description of what the feature will do (in the case of features that are commands) or what information it provides (in the case of queries).
 		</paragraph>
 		<heading>
 			<size>3</size>Obsolete
@@ -748,19 +701,7 @@
 			<feature_name>y</feature_name> conforms to the type of 
 			<feature_name>x</feature_name>.
 		</paragraph>
-		<paragraph>The rule is clear enough ... if you know what "conform" means. In the presence of mechanisms like 
-			<link>
-				<url></url>
-				<label>expanded types</label>
-			</link>, 
-			<link>
-				<url></url>
-				<label>inheritance</label>
-			</link>, and 
-			<link>
-				<url></url>
-				<label>genericity</label>
-			</link>, a precise definition of conformance is lengthy.
+		<paragraph>The rule is clear enough ... if you know what "conform" means. In the presence of mechanisms like expanded types, inheritance, and genericity, a precise definition of conformance is lengthy.
 		</paragraph>
 		<paragraph>But we can get by for a while with much less. For now let us be satisfied with this:</paragraph>
 		<paragraph>Consider the classes in the declarations for 
@@ -769,17 +710,9 @@
 		</paragraph>
 		<paragraph>You might be tempted to say that to achieve "conformance", the classes would have to be the same. And for the case in which the declarations for 
 			<feature_name>x</feature_name> and 
-			<feature_name>y</feature_name> are 
-			<link>
-				<url></url>
-				<label>expanded classes</label>
-			</link>, you'd be correct. They conform only if they are the same class.
+			<feature_name>y</feature_name> are expanded classes, you'd be correct. They conform only if they are the same class.
 		</paragraph>
-		<paragraph>But for 
-			<link>
-				<url></url>
-				<label>reference types</label>
-			</link>, that constraint is unnecessarily restrictive. So, for reference types, the class of 
+		<paragraph>But for reference types, that constraint is unnecessarily restrictive. So, for reference types, the class of 
 			<feature_name>y</feature_name> conforms to that 
 			<feature_name>x</feature_name> if it is the same class or a proper descendant of that class. This facilitates a powerful idea known as polymorphic attachment that we will see more closely in the section on 
 			<link>

@@ -9,11 +9,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>We got a very short introduction to 
-			<link>
-				<url/>
-				<label>generic classes</label>
-			</link> when we were looking at the formal generic part of class structure in 
+		<paragraph>We got a very short introduction to generic classes when we were looking at the formal generic part of class structure in 
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>

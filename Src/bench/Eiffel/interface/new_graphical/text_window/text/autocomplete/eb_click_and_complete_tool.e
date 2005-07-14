@@ -651,8 +651,13 @@ feature -- Basic Operations
 					if prev_token /= Void and cursor.pos_in_token = 1 then
 						if prev_token.is_text and then token_image_is_in_array (prev_token, Feature_call_separators) then
 								-- Previous token is a separator so take there is no insertion term
-								-- Happens when completing 'a.b.|c'
-							insertion_remainder := token.image.count
+							l_char := token.image.item (1)
+							if l_char.is_alpha then
+									-- Happens when completing 'a.b.|c'
+								insertion_remainder := token.image.count
+							else
+									-- Happens when completing 'a.b.|)'
+							end
 						elseif token_image_is_in_array (token, Feature_call_separators) then
 							if prev_token.is_text then
 									-- Token is a separator so take the entire previous token as insertion, if it is an Eiffel identifier							
@@ -1253,7 +1258,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 			current_token := a_token
 			go_to_previous_token
 			Result := token_image_is_same_as_word (current_token, Create_word)
-			if not Result and then token_image_is_same_as_word (a_token, Closing_brace) then
+			if not Result and then token_image_is_same_as_word (a_token, closing_brace) then
 				from
 					par_cnt := 1
 				until

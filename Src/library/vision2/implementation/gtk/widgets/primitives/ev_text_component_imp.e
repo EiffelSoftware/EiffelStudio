@@ -19,12 +19,23 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			interface,
-			default_key_processing_blocked
+			default_key_processing_blocked,
+			initialize
 		end
 
 	EV_TEXT_COMPONENT_ACTION_SEQUENCES_IMP
 		export
 			{EV_INTERMEDIARY_ROUTINES} change_actions_internal	
+		end
+
+feature -- Initialization
+
+	initialize is
+			-- Initialize `Current'.
+		do
+			set_minimum_width_in_characters (4)
+				-- Set default width to 4 characters, as on Windows.
+			Precursor {EV_PRIMITIVE_IMP}
 		end
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation

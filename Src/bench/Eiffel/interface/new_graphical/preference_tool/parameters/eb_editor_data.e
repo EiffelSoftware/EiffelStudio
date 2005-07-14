@@ -339,7 +339,7 @@ feature {NONE} -- Preference Strings
 	autocomplete_quotes_string: STRING is "editor.eiffel.auto-complete_quotes" 
 			-- Should we close the quotes automatically?
 
-	show_any_features_string: STRING is "editor.eiffel.show_any_features" 
+	show_any_features_string: STRING is "editor.eiffel.show_ANY_features" 
 			-- Should autocomplete show features inherited from any ?
 
 	auto_auto_complete_string: STRING is "editor.eiffel.auto_auto-complete" 

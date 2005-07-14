@@ -81,6 +81,18 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := excluded_class_figures_preference.value
 		end
 	
+	default_class_formatter_index: INTEGER is
+			-- Default class formatter that should be popped up automatically.
+		do
+			Result := default_class_formatter_index_preference.value
+		end
+
+	default_feature_formatter_index: INTEGER is
+			-- Default feature formatter that should be popped up automatically.
+		do
+			Result := default_feature_formatter_index_preference.value
+		end		
+	
 feature -- Toolbar
 
 	retrieve_diagram_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]): EB_TOOLBAR is
@@ -97,6 +109,12 @@ feature -- Toolbar
 			preferences.save_resource (diagram_toolbar_layout_preference)
 		end	
 		
+	editor_history_size: INTEGER is
+			-- Number of memorized formatted text in formatters.
+		do
+			Result := editor_history_size_preference.value
+		end	
+		
 feature {NONE} -- Preference
 
 	diagram_toolbar_layout_preference: ARRAY_PREFERENCE	
@@ -108,6 +126,9 @@ feature {NONE} -- Preference
 	descendant_depth_preference: INTEGER_PREFERENCE
 	ignore_excluded_class_figures_preference: BOOLEAN_PREFERENCE		
 	excluded_class_figures_preference: ARRAY_PREFERENCE
+	editor_history_size_preference: INTEGER_PREFERENCE
+	default_class_formatter_index_preference: INTEGER_PREFERENCE
+	default_feature_formatter_index_preference: INTEGER_PREFERENCE	
 
 feature {NONE} -- Preference Strings
 
@@ -120,6 +141,9 @@ feature {NONE} -- Preference Strings
 	descendant_depth_string: STRING is "tools.diagram_tool.descendant_depth"
 	ignore_excluded_class_figures_string: STRING is "tools.diagram_tool.ignore_excluded_class_figures"		
 	excluded_class_figures_string: STRING is "tools.diagram_tool.excluded_class_figures"
+	editor_history_size_string: STRING is "tools.context_tool.formatters_history_size"
+	default_class_formatter_index_string: STRING is "tools.context_tool.default_class_formatter_index"
+	default_feature_formatter_index_string: STRING is "tools.context_tool.default_feature_formatter_index"
 
 feature {NONE} -- Implementation
 
@@ -138,7 +162,10 @@ feature {NONE} -- Implementation
 			ancestor_depth_preference := l_manager.new_integer_resource_value (l_manager, ancestor_depth_string, 1)
 			descendant_depth_preference := l_manager.new_integer_resource_value (l_manager, descendant_depth_string, 1)
 			ignore_excluded_class_figures_preference := l_manager.new_boolean_resource_value (l_manager, ignore_excluded_class_figures_string, False)			
-			excluded_class_figures_preference := l_manager.new_array_resource_value (l_manager, excluded_class_figures_string,  <<>>)--Default_excluded_class_figures)
+			excluded_class_figures_preference := l_manager.new_array_resource_value (l_manager, excluded_class_figures_string,  <<>>)
+			editor_history_size_preference := l_manager.new_integer_resource_value (l_manager, editor_history_size_string, 60)
+			default_class_formatter_index_preference := l_manager.new_integer_resource_value (l_manager, default_class_formatter_index_string, 5)
+			default_feature_formatter_index_preference := l_manager.new_integer_resource_value (l_manager, default_feature_formatter_index_string, 2)
 		end
 	
 	preferences: PREFERENCES

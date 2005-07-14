@@ -2202,7 +2202,9 @@ feature -- Removal
 			recompute_vertical_scroll_bar
 			recompute_horizontal_scroll_bar
 			redraw_client_area
-			create physical_column_indexes_internal.make (0)	
+			create physical_column_indexes_internal.make (0)
+			last_vertical_scroll_bar_value := 0
+			last_horizontal_scroll_bar_value := 0	
 		ensure
 			columns_removed: column_count = 0
 			rows_removed: row_count = 0
@@ -3725,13 +3727,9 @@ feature {NONE} -- Drawing implementation
 
 				-- We set the computation required to the final column and row as this
 				-- triggers re-computation of the scroll bars, with the minimal recompute performed.
-			if not header.is_empty then
 					-- Update horizontal scroll bar size and position.
-				set_horizontal_computation_required (columns.count)
-			end
-			if row_count /= 0 then
-				set_vertical_computation_required (row_count)
-			end
+				set_horizontal_computation_required (columns.count + 1)
+				set_vertical_computation_required (row_count + 1)
 				-- Flag that we have triggered a recompute/redraw as the result of
 				-- the viewport resizing. In this situation, extra procssing is performed
 				-- to ensure that the scroll bars update correctly.

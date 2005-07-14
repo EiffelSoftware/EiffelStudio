@@ -14,19 +14,7 @@
 		<heading>
 			<size>2</size>Objects that Represent Operations
 		</heading>
-		<paragraph>Object technology is based on the idea that when we model real world objects, we model them based on the things that they have and what they can do ... their properties and their operations. The operations in Eiffel are the 
-			<link>
-				<url/>
-				<label>routines</label>
-			</link>, i.e., the 
-			<link>
-				<url/>
-				<label>functions</label>
-			</link> and 
-			<link>
-				<url/>
-				<label>procedures</label>
-			</link>, of classes. Operations are not objects.
+		<paragraph>Object technology is based on the idea that when we model real world objects, we model them based on the things that they have and what they can do ... their properties and their operations. The operations in Eiffel are the routines, i.e., the functions and procedures, of classes. Operations are not objects.
 		</paragraph>
 		<paragraph>Having said that, it is sometimes desirable for us to model operations. We do this in the same fashion that we model other concepts: statically as classes, and as objects at runtime.</paragraph>
 		<paragraph>An object that represents an operation is called an agent.</paragraph>

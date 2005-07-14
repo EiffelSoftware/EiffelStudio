@@ -9,34 +9,14 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The unit of software reuse in Eiffel is the 
-			<link>
-				<url/>
-				<label>class</label>
-			</link>.
+		<paragraph>The unit of software reuse in Eiffel is the class.
 		</paragraph>
-		<paragraph>The unit of 
-			<link>
-				<url/>
-				<label>modularity</label>
-			</link> in Eiffel is the class.
+		<paragraph>The unit of modularity in Eiffel is the class.
 		</paragraph>
-		<paragraph>The unit of 
-			<link>
-				<url/>
-				<label>type</label>
-			</link> modeling in Eiffel is the class.
+		<paragraph>The unit of type modeling in Eiffel is the class.
 		</paragraph>
 		<paragraph>All Eiffel code must exist within the context of a class.</paragraph>
-		<paragraph>In Eiffel, application systems, or simply 
-			<link>
-				<url/>
-				<label>systems,</label>
-			</link> are created by assembling a set of related classes. The classes in a system will be related only by one or both of the two allowable 
-			<link>
-				<url/>
-				<label>relationships</label>
-			</link> in object-oriented design.
+		<paragraph>In Eiffel, application systems, or simply systems, are created by assembling a set of related classes. The classes in a system will be related only by one or both of the two allowable relationships in object-oriented design.
 		</paragraph>
 		<paragraph>Having read the above, you should be convinced that the concept of class is important and far-reaching. The fact that we have precise rules about classes simplifies life a lot. The only kind of module in Eiffel is a class. Each class exists in one source file (which contains only that class), and contains the code necessary to provide a static definition of a data type. Every runtime entity, i.e. every object, must be an instance of a class. Because we can depend upon these things in Eiffel, we have consistency and predictabililty in the inherently complex world of software development.</paragraph>
 		<paragraph>Let's take a look at how classes are structured.</paragraph>
@@ -49,48 +29,56 @@
 				<link>
 					<anchor_name>indexing</anchor_name>
 					<label>Indexing</label>
+					<url>10_eiffel_classes.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>class header</anchor_name>
 					<label>Class header</label>
+					<url>10_eiffel_classes.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>formal generics</anchor_name>
 					<label>Formal generics</label>
+					<url>10_eiffel_classes.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>obsolete</anchor_name>
 					<label>Obsolete</label>
+					<url>10_eiffel_classes.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>inheritance</anchor_name>
 					<label>Inheritance</label>
+					<url>10_eiffel_classes.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>creators</anchor_name>
 					<label>Creators</label>
+					<url>10_eiffel_classes.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>features</anchor_name>
 					<label>Features</label>
+					<url>10_eiffel_classes.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>invariant</anchor_name>
 					<label>Invariant</label>
+					<url>10_eiffel_classes.xml</url>
 				</link>
 			</item>
 		</list>
@@ -183,15 +171,7 @@
 			</code>, or 
 			<code>
 				<keyword>external</keyword>
-			</code>. In our example, the class has none of these markings, so it is an 
-			<link>
-				<url/>
-				<label>effective class</label>
-			</link> whose instances are access by 
-			<link>
-				<url/>
-				<label>reference</label>
-			</link>.
+			</code>. In our example, the class has none of these markings, so it is an effective class whose instances are access by reference.
 		</paragraph>
 		<paragraph>The keyword class is followed by the class name, in this case " 
 			<class_name>OLD_FASHIONED_LIST</class_name>".
@@ -199,19 +179,8 @@
 		<paragraph>Of the three keywords for header marks, the one which you will encounter most often is 
 			<code>
 				<keyword>deferred</keyword>
-			</code>. A class is 
-			<link>
-				<url/>
-				<label>deferred</label>
-			</link> if it contains one or more 
-			<link>
-				<url/>
-				<label>features that are deferred</label>
-			</link>, that is, features which have been specified in the class but for which no implementation has been provided. 
-			<link>
-				<url/>
-				<label>Proper descendants</label>
-			</link> of a deferred class will provide implementations for its deferred features.
+			</code>. A class is deferred if it contains one or more features that are deferred, that is, features which have been specified in the class but for which no implementation has been provided. 
+			Proper descendants of a deferred class will provide implementations for its deferred features.
 		</paragraph>
 		<heading>
 			<size>3</size>Formal Generics
@@ -223,11 +192,7 @@
 		<paragraph>In this example the class name is followed by the specification of one formal generic parameter " 
 			<code>
 				<generics>G</generics>
-			</code>". The presence of one or more formal generic parameters will designate a class as a 
-			<link>
-				<url/>
-				<label>generic class</label>
-			</link>. The formal generic parameter is a place holder for a class name which will be provided by reuse consumers. For example if we wrote a class which was a client to 
+			</code>". The presence of one or more formal generic parameters will designate a class as a generic class. The formal generic parameter is a place holder for a class name which will be provided by reuse consumers. For example if we wrote a class which was a client to 
 			<class_name>OLD_FASHIONED_LIST</class_name> we would substitute the class name for the type of objects that we would want to build an 
 			<class_name>OLD_FASHIONED_LIST</class_name> of. We might make this declaration:
 		</paragraph>
@@ -267,20 +232,8 @@
 <keyword>inherit</keyword>
 	<class_name>DYNAMIC_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 </code_block>
-		<paragraph>One of the two possible 
-			<link>
-				<url/>
-				<label>relationships</label>
-			</link> between classes, 
-			<link>
-				<url/>
-				<label>inheritance</label>
-			</link> is also a powerful software reuse mechanism. In this example class 
-			<class_name>OLD_FASHIONED_LIST</class_name> declares itself to be a 
-			<link>
-				<url/>
-				<label>proper descendant</label>
-			</link> of class 
+		<paragraph>One of the two possible relationships between classes, inheritance is also a powerful software reuse mechanism. In this example class 
+			<class_name>OLD_FASHIONED_LIST</class_name> declares itself to be a proper descendant of class 
 			<class_name>DYNAMIC_LIST</class_name>.
 		</paragraph>
 		<paragraph>There will be more in the section called . For now though, be aware of two important implications of this declaration:</paragraph>
@@ -301,11 +254,7 @@
 <keyword>create</keyword>
 	<feature_name>make</feature_name>
 </code_block>
-		<paragraph>The creators part of a class declares a procedure as being a 
-			<link>
-				<url/>
-				<label>creation procedure</label>
-			</link>. In this case the procedure in question is the one named 
+		<paragraph>The creators part of a class declares a procedure as being a creation procedure. In this case the procedure in question is the one named 
 			<feature_name>make</feature_name>. By convention, creation procedure names begin with the word " 
 			<feature_name>make</feature_name>".
 		</paragraph>
@@ -330,11 +279,7 @@
 		<list ordered="false">
 			<item>A shell of a new instance of 
 				<class_name>OLD_FASHION_LIST</class_name> [ 
-				<class_name>CAT</class_name>] is created in memory with a memory field for every 
-				<link>
-					<url/>
-					<label>attribute</label>
-				</link>
+				<class_name>CAT</class_name>] is created in memory with a memory field for every attribute
 			</item>
 			<item>Each field is initialized with standard default values
 				<list ordered="false">
@@ -360,11 +305,7 @@
 			</item>
 		</list>
 		<paragraph>Once these steps complete successfully, 
-			<feature_name>my_list_of_cats</feature_name> will be attached to a valid instance (i.e., an instance in which the 
-			<link>
-				<url/>
-				<label>class invariant</label>
-			</link> is true) of 
+			<feature_name>my_list_of_cats</feature_name> will be attached to a valid instance (i.e., an instance in which the class invariant is true) of 
 			<class_name>OLD_FASHIONED_LIST</class_name> [ 
 			<class_name>CAT</class_name>].
 		</paragraph>
@@ -449,11 +390,7 @@
 				<keyword>invariant</keyword>
 			</code>", is that portion of the class in which we can state what it means for an object to be a valid instance of this class.
 		</paragraph>
-		<paragraph>We will learn more about 
-			<link>
-				<url/>
-				<label>class invariants</label>
-			</link> in the section titled 
+		<paragraph>We will learn more about class invariants in the section titled 
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/50_design_by_contract.xml</url>
 				<label>Design by Contract and Assertions</label>

@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 			menu_imp: EV_MENU_IMP
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make ("activate_item")
+			a_cs := "activate_item"
 			if parent_imp /= Void then
 				menu_imp ?= an_item_imp
 				if menu_imp /= Void and then menu_imp.key /= 0 then

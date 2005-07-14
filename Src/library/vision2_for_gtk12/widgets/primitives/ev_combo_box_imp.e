@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (v_imp.text)
+			a_cs := v_imp.text
 			{EV_GTK_EXTERNALS}.gtk_combo_set_item_string (container_widget, v_imp.c_object, a_cs.item)
 			{EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			v_imp.set_item_parent_imp (Current)

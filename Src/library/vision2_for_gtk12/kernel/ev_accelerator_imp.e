@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			real_signal_connect (c_object, "activate", agent (App_implementation.gtk_marshal).accelerator_actions_internal_intermediary (c_object), Void)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {NONE} -- Implementation
@@ -68,7 +68,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make ("activate")
+			a_cs := "activate"
 			{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
 				c_object,
 				a_cs.item,

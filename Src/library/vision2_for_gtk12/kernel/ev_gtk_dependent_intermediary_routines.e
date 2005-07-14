@@ -17,6 +17,11 @@ inherit
 
 feature {EV_ANY_IMP} -- Gtk Dependent intermediary routines
 
+	scroll_wheel_translate (n: INTEGER; args: POINTER): TUPLE is
+		do
+			-- Not used.
+		end
+
 	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
 			-- Retrieve index of switched page.
 		local

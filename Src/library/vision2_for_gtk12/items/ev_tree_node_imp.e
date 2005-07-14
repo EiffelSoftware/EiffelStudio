@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			-- create item box to hold label and pixmap.
 		do
 			Precursor {EV_ITEM_LIST_IMP}
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 	destroy is
@@ -311,7 +311,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			a_cs: EV_GTK_C_STRING
 			is_leaf: INTEGER
 		do
-			create a_cs.make (text)
+			a_cs := text
 			if parent_tree_imp /= Void then
 				if pix_height > parent_tree_imp.row_height then
 					{EV_GTK_EXTERNALS}.gtk_clist_set_row_height (parent_tree_imp.list_widget, pix_height)

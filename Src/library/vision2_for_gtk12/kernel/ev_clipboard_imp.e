@@ -37,7 +37,7 @@ feature {NONE}-- Initialization
 		do
 			{EV_GTK_EXTERNALS}.gtk_container_add (App_implementation.default_window_imp.hbox, clipboard_widget)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (clipboard_widget)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -50,13 +50,13 @@ feature -- Access
 			edit_chars: POINTER
 		do
 			{EV_GTK_EXTERNALS}.gtk_editable_delete_text (clipboard_widget, 0, -1)
-			create a_cs1.make ("CLIPBOARD")
-			create a_cs2.make ("COMPOUND_TEXT")
+			a_cs1 :=  "CLIPBOARD"
+			a_cs2 := "COMPOUND_TEXT"
 			a_success := {EV_GTK_EXTERNALS}.gtk_selection_convert (
 				clipboard_widget,
 				{EV_GTK_EXTERNALS}.gdk_atom_intern (a_cs1.item, 1),
 				{EV_GTK_EXTERNALS}.gdk_atom_intern (a_cs2.item, 1),
-				{EV_GTK_EXTERNALS}.GDK_CURRENT_TIME
+				0
 			)
 			edit_chars := {EV_GTK_EXTERNALS}.gtk_editable_get_chars (clipboard_widget, 0, -1)
 			create Result.make_from_c (edit_chars)
@@ -82,7 +82,7 @@ feature -- Status Setting
 			else
 				clip_text := ""
 			end
-			create a_cs.make (clip_text)
+			a_cs := clip_text
 			{EV_GTK_EXTERNALS}.gtk_editable_delete_text (clipboard_widget, 0, -1)
 			gtk_text_insert (clipboard_widget, NULL, NULL, NULL, a_cs.item, -1)
 			{EV_GTK_EXTERNALS}.gtk_editable_select_region (clipboard_widget, 0, -1)

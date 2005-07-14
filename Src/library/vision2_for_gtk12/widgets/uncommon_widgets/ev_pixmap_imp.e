@@ -162,7 +162,7 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (file_name)
+			a_cs := file_name
 			c_ev_load_pixmap ($Current, a_cs.item, $update_fields)
 		end
 

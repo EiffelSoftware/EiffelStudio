@@ -66,9 +66,9 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			real_text := a_text.twin
-			create a_cs.make (u_lined_filter (real_text))
+			a_cs := u_lined_filter (real_text)
 			key := {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
-				a_cs.item)
+				a_cs.item).to_natural_32
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end
 
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 				end
 				menu_imp ?= an_item_imp
 				if menu_imp = Void and then accel_group /= NULL then
-					create a_cs.make ("activate")
+					a_cs := "activate"
 					{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (an_item_imp.c_object,
 						a_cs.item,
 						accel_group,
@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 						0)
 				elseif accel_group /= NULL then
 					
-					create a_cs.make ("activate_item")
+					a_cs := "activate_item"
 					{EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (menu_imp.c_object,
 						a_cs.item,
 						accel_group,

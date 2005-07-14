@@ -110,7 +110,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Initialization
 			)
 			if l_item /= Void and then not l_item.is_destroyed then
 				if l_item.deselect_actions_internal /= Void then
-					l_item.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					l_item.deselect_actions_internal.call (Void)
 				end
 	
 				if deselect_actions_internal /= Void then
@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 				index > count
 			loop
 				item_imp ?= item.implementation
-				if item_imp /= Void and then gtk_widget_has_focus (item_imp.c_object) then
+				if item_imp /= Void and then has_struct_flag (item_imp.c_object, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) then
 					Result := item
 				end
 				forth

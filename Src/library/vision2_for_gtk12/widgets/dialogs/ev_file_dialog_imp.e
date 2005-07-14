@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
-			create a_cs.make ("Select file")
+			a_cs := "Select file"
 			set_c_object
 				({EV_GTK_EXTERNALS}.gtk_file_selection_new (a_cs.item))
 			filter := "*.*"
@@ -42,13 +42,13 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
-			is_initialized := False
+			set_is_initialized (False)
 			a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children ({EV_GTK_EXTERNALS}.gtk_file_selection_struct_ok_button (c_object))
 			a_label := {EV_GTK_EXTERNALS}.g_list_nth_data (
 				a_child_list,
 				0)
 			{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
-			create a_cs.make (internal_accept)
+			a_cs := internal_accept
 			{EV_GTK_EXTERNALS}.gtk_label_set_text (a_label, a_cs.item)
 			
 			real_signal_connect (
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 				Void
 			)
 			enable_closeable
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -125,7 +125,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			filter := a_filter.twin
-			create a_cs.make (filter)
+			a_cs := filter
 			{EV_GTK_EXTERNALS}.gtk_file_selection_complete (c_object, a_cs.item)
 		end
 
@@ -134,7 +134,7 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_name)
+			a_cs := a_name
 			{EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (c_object, a_cs.item)
 		end
 
@@ -148,7 +148,7 @@ feature -- Element change
 				-- The path has no trailing / so we add one to internal string.
 				start_directory.append ("/")
 			end
-			create a_cs.make (start_directory)
+			a_cs := start_directory
 			{EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (
 				c_object,
 				a_cs.item

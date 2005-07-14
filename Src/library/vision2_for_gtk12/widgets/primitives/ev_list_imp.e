@@ -156,7 +156,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				has_focus := True
 				top_level_window_imp.set_focus_widget (Current)
 				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)				
+					focus_in_actions_internal.call (Void)				
 				end
 			end
 		end
@@ -175,7 +175,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				has_focus := False
 				top_level_window_imp.set_focus_widget (Void)
 				if not has_focus and focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					focus_out_actions_internal.call (Void)
 				end
 			end
 			arrow_used := False

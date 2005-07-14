@@ -1,23 +1,26 @@
-indexing 
-	description: "Eiffel Vision file open dialog."
-	status: "See notice at end of class"
+indexing
+	description: "EiffelVision popup window, GTK+ implementation"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EV_FILE_OPEN_DIALOG_IMP
+	EV_POPUP_WINDOW_IMP
 
 inherit
-	EV_FILE_OPEN_DIALOG_I
+	EV_POPUP_WINDOW_I
+		undefine
+			propagate_background_color,
+			propagate_foreground_color,
+			lock_update,
+			unlock_update
 		redefine
 			interface
 		end
 
-	EV_FILE_DIALOG_IMP
-		undefine
-			internal_accept
+	EV_WINDOW_IMP
 		redefine
 			interface,
+			make,
 			initialize
 		end
 
@@ -26,45 +29,30 @@ create
 
 feature {NONE} -- Initialization
 
+	make (an_interface: like interface) is
+			-- Connect interface and initialize `c_object'.
+		do
+			base_make (an_interface)
+			set_c_object ({EV_GTK_EXTERNALS}.gtk_window_new ({EV_GTK_EXTERNALS}.gtk_window_toplevel_enum))
+		end
+
 	initialize is
+			-- Initialize `Current'.
 		do
-			Precursor
-			set_title ("Open")
+			Precursor {EV_WINDOW_IMP}
+			--{EV_GTK_EXTERNALS}.gtk_window_set_decorated (c_object , False)
+			--{EV_GTK_EXTERNALS}.gtk_window_set_skip_pager_hint (c_object, True)
+			--{EV_GTK_EXTERNALS}.gtk_window_set_skip_taskbar_hint (c_object, True)
+			set_is_initialized (True)
 		end
 
-	multiple_selection_enabled: BOOLEAN
-		-- Is dialog enabled to select multiple files.
+feature {EV_ANY_I} -- Implementation
 
-	file_names: ARRAYED_LIST [STRING] is
-			-- List of filenames selected by user
-		do
-			create Result.make (1)
-			Result.extend (file_name)
-		end
+	interface: EV_POPUP_WINDOW
+			-- Provides a common user interface to possibly dependent
+			-- functionality implemented by `Current'.
 
-	enable_multiple_selection is
-			-- Enable multiple file selection
-		do
-			check
-				do_not_call: False
-			end
-			multiple_selection_enabled := True 
-		end
-
-	disable_multiple_selection is
-			-- Disable multiple file selection
-		do
-			check
-				do_not_call: False
-			end
-			multiple_selection_enabled := False
-		end
-
-feature {NONE} -- Implementation
-
-	interface: EV_FILE_OPEN_DIALOG
-
-end -- class EV_FILE_OPEN_DIALOG_IMP
+end -- class EV_POPUP_WINDOW_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
@@ -82,4 +70,3 @@ end -- class EV_FILE_OPEN_DIALOG_IMP
 --| For latest info on our award winning products, visit:
 --|	http://www.eiffel.com
 --|----------------------------------------------------------------
-

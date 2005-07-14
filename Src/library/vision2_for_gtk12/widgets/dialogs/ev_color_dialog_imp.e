@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			-- Create the gtk object.
-			create a_cs.make ("Color selection dialog")
+			a_cs := "Color selection dialog"
 			set_c_object (
 				{EV_GTK_EXTERNALS}.gtk_color_selection_dialog_new (
 					a_cs.item
@@ -48,7 +48,7 @@ feature {NONE} -- Initialization
 			-- Connect action sequences to button signals.
 		do
 			Precursor {EV_STANDARD_DIALOG_IMP}
-			is_initialized := False
+			set_is_initialized (False)
 			real_signal_connect (
 				gtk_color_selection_dialog_struct_ok_button (c_object),
 				"clicked",
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			)
 			enable_closeable
 			forbid_resize
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

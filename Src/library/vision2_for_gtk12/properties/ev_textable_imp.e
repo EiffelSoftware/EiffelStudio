@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make ("")
+			a_cs := ""
 			text_label := {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 			{EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
@@ -96,7 +96,7 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_text)
+			a_cs := a_text
 			{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end

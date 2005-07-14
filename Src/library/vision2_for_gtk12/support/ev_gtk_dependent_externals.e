@@ -8,6 +8,21 @@ class
 
 feature -- Externals
 
+	frozen gtk_scrolled_window_set_shadow_type (a_window: POINTER; a_shadow_type: INTEGER) is
+			-- (from EV_GTK_DEPENDENT_EXTERNALS)
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
+	frozen gtk_event_box_set_visible_window (c_object: POINTER; a_visible: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			" "
+		end
+
 	frozen gdk_selection_convert (a_requestor: POINTER; a_selection: INTEGER; a_target: INTEGER; a_time: INTEGER) is
 			-- void	   gdk_selection_convert   (GdkWindow	 *requestor,
 			-- 				    GdkAtom	  selection,

@@ -57,6 +57,42 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
+	is_tabable_to: BOOLEAN is
+			-- Is Current able to be tabbed to?
+		do
+			
+		end
+
+	is_tabable_from: BOOLEAN is
+			-- Is Current able to be tabbed from?
+		do
+			
+		end
+
+	enable_tabable_to is
+			-- Make `is_tabable_to' `True'.
+		do
+			
+		end
+
+	disable_tabable_to is
+			-- Make `is_tabable_to' `False'.
+		do
+			
+		end
+
+	enable_tabable_from is
+			-- Make `is_tabable_from' `True'.
+		do
+			
+		end
+
+	disable_tabable_from is
+			-- Make `is_tabable_from' `False'.
+		do
+			
+		end
+		
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 		do
 			if a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab then

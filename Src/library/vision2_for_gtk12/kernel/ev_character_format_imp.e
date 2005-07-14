@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do nothing
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 feature -- Access

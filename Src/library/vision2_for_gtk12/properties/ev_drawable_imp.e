@@ -334,7 +334,7 @@ feature -- Drawing operations
 			a_cs: EV_GTK_C_STRING
 		do
 			if drawable /= default_pointer then
-				create a_cs.make (a_text)
+				a_cs := a_text
 				{EV_GTK_EXTERNALS}.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
@@ -347,13 +347,29 @@ feature -- Drawing operations
 			end
 		end
 
+	draw_ellipsed_text (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		do
+			draw_text (x, y, a_text)
+		end
+
+	draw_ellipsed_text_top_left (x, y: INTEGER; a_text: STRING; clipping_width: INTEGER) is
+			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
+			-- Text is clipped to `clipping_width' in pixels and ellipses are displayed
+			-- to show truncated characters if any.
+		do
+			draw_text_top_left (x, y, a_text)
+		end
+
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		local
 			a_cs: EV_GTK_C_STRING
 		do
 			if drawable /= default_pointer then
-				create a_cs.make (a_text)
+				a_cs := a_text
 				{EV_GTK_EXTERNALS}.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,

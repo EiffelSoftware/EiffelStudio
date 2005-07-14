@@ -154,7 +154,7 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (an_icon_name)
+			a_cs := an_icon_name
 			{EV_GTK_EXTERNALS}.gdk_window_set_icon_name (
 				{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_cs.item)
 			icon_name_holder := an_icon_name.twin

@@ -46,7 +46,7 @@ feature -- Initialization
 	initialize is
 			-- Initialize the dynamic list.
 		do
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access

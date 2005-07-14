@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_ITEM_IMP}
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 10, -1)
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_ANY_I} -- Implementation

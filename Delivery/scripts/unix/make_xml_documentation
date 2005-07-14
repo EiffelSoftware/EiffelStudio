@@ -11,7 +11,7 @@ cd $EIFFEL_SRC/tools
 exprt -r $DEFAULT_CVS_TAG -d doc_builder Src/tools/doc_builder
 cd $EIFFEL_SRC/tools/doc_builder
 ec -batch -finalize -ace docbuilder.unix.ace -c_compile &> $INSTALL_LOG
-if [ ! -e EIFGEN/F_code/doc_builder ]; then
+if [ ! -f EIFGEN/F_code/doc_builder ]; then
 	remtrace Couldnt generate doc_builder
 	CANCEL
 fi

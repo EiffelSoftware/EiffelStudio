@@ -21,7 +21,7 @@ if [ ! -d $EXPORT_DIR ]; then
 	CANCEL
 fi
 
-if [ -e free_rt ]; then
+if [ -d free_rt ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
@@ -29,7 +29,7 @@ fi
 
 cd $EXPORT_DIR
 
-if [ ! -e cdrom ]; then
+if [ ! -d cdrom ]; then
 	mkdir cdrom
 fi
 
@@ -38,7 +38,7 @@ if [ ! -f Eiffel56_deliv.tgz ]; then
 	tar czf Eiffel56_deliv.tgz Eiffel56 
 fi
 
-if [ ! -e Eiffel56 ]; then
+if [ ! -d Eiffel56 ]; then
 	remtrace Extracting current delivery
 	gunzip -c Eiffel56_deliv.tgz | tar -xf -
 fi

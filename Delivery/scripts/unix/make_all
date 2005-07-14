@@ -21,7 +21,7 @@ mv -f tmp set_aliases
 cd ..
 
 # Let's keep an archive of this package
-if [ ! -e PorterPackage_all.tar ]; then
+if [ ! -f PorterPackage_all.tar ]; then
 	tar cvf PorterPackage_all.tar PorterPackage
 fi
 

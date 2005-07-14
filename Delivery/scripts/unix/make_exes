@@ -67,7 +67,7 @@ if [ ! "$NO_NEW_EC" ]; then
 	clean_project
 	finalize ace.ace
 	tgz_ccode ec
-	if [ ! -e ec.tar.gz ]; then
+	if [ ! -f ec.tar.gz ]; then
 		echo Could not finalize a new EiffelStudio
 		CANCEL
 	fi
@@ -90,7 +90,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		clean_project
 		finalize ace.ace
 		tgz_ccode ec
-		if [ ! -e ec.tar.gz ]; then
+		if [ ! -f ec.tar.gz ]; then
 			echo Could not finalize a new EiffelStudio
 			CANCEL
 		fi
@@ -113,7 +113,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		clean_project
 		finalize ace.ace
 		tgz_ccode ec
-		if [ ! -e ec.tar.gz ]; then
+		if [ ! -f ec.tar.gz ]; then
 			echo Could not finalize a new EiffelStudio
 			CANCEL
 		fi

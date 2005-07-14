@@ -129,6 +129,7 @@ feature -- Initialization
 			create suppliers.make
 			formal_parameters.wipe_out
 			id_level := Normal_level
+			is_frozen := False
 			has_externals := False
 			once_manifest_string_count := 0
 			counters.wipe_out

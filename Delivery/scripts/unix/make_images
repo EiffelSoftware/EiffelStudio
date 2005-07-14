@@ -35,7 +35,7 @@ fi
 
 if [ ! -f Eiffel56_deliv.tgz ]; then
 	remtrace Saving empty delivery in Eiffel56_deliv.tgz
-	tar -c Eiffel56 | gzip -c > Eiffel56_deliv.tgz
+	tar czf Eiffel56_deliv.tgz Eiffel56 
 fi
 
 if [ ! -e Eiffel56 ]; then
@@ -56,7 +56,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	make_cd_image Eiffel56_free Eiffel56_free.iso cdrom
 	gzip Eiffel56_free.iso
 	mv cdrom/Eiffel56 Eiffel56
-	tar -c Eiffel56 | gzip -c > Eiffel56_free.tgz
+	tar czf Eiffel56_free.tgz Eiffel56 
 
 	remtrace Preparing University version
 	cp -r commercial_rt/* $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib
@@ -69,7 +69,7 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	make_cd_image Eiffel56_university Eiffel56_university.iso cdrom
 	gzip Eiffel56_university.iso
 	mv cdrom/Eiffel56 Eiffel56
-	tar -c Eiffel56 | gzip -c > Eiffel56_university.tgz
+	tar czf Eiffel56_university.tgz Eiffel56 
 fi
 
 remtrace Preparing Enterprise version
@@ -90,4 +90,4 @@ mv Eiffel56 cdrom
 make_cd_image Eiffel56_enterprise Eiffel56_enterprise.iso cdrom
 gzip Eiffel56_enterprise.iso
 mv cdrom/Eiffel56 Eiffel56
-tar -c Eiffel56 | gzip -c > Eiffel56_enterprise.tgz
+tar czf Eiffel56_enterprise.tgz Eiffel56

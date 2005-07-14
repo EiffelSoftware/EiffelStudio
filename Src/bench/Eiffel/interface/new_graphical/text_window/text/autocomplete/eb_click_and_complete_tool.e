@@ -432,12 +432,13 @@ feature -- Basic Operations
 				token := cursor.token
 				if token /= Void then
 					cls_c := class_c_to_complete_from (token, cursor, l_current_class_c, False, False)
+					
 					if exploring_current_class then
 						local_analyzer.build_entities_list (cursor.line, token)
 						add_names_to_completion_list (Local_analyzer, l_current_class_c)
 						local_analyzer.reset
 					end
-				end				
+				end			
 	
 					-- Build the completion list based on data mined from 
 				if cls_c /= Void and then cls_c.has_feature_table then
@@ -551,13 +552,29 @@ feature -- Basic Operations
 			reset_after_search
 		end
 
-	class_c_to_complete_from (token: EDITOR_TOKEN; cursor: TEXT_CURSOR; a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): CLASS_C is
+	class_c_to_complete_from (a_token: EDITOR_TOKEN; cursor: TEXT_CURSOR; a_compiled_class: CLASS_C; recurse, two_back: BOOLEAN): CLASS_C is
 			-- Class type to complete on from `token'
 		local
 			prev_token: EDITOR_TOKEN
 			type: TYPE_A
 			gone_back_two: BOOLEAN
+			token: like a_token
+			old_token: like a_token
+			old_position: INTEGER
+			l_swapped: BOOLEAN
 		do			
+			token := a_token
+			if token /= Void then
+					-- Restore faked cursor position so we can complete before '.'
+				if token.image.is_equal (".") then
+					old_token := cursor.token
+					old_position := cursor.pos_in_token
+					cursor.go_left_char
+					token := cursor.token
+					l_swapped := True					
+				end
+			end	
+		
 			exploring_current_class := False				
 			if can_attempt_auto_complete_from_token (token) then
 				if token.is_text then
@@ -591,6 +608,13 @@ feature -- Basic Operations
 					
 				end
 			end
+			if l_swapped = True then
+					-- Restore faked cursor position so we can complete before '.'
+					-- User is completing before '.'
+				cursor.set_current_char (old_token, old_position)
+				token := cursor.token
+			end				
+			
 			if Result = Void then
 				if exploring_current_class then								
 					Result := a_compiled_class
@@ -604,6 +628,7 @@ feature -- Basic Operations
 					Result := found_class
 				end					
 			end
+			
 			if not recurse then
 				calculate_insertion (cursor, token)
 			end
@@ -612,28 +637,75 @@ feature -- Basic Operations
 	calculate_insertion (cursor: TEXT_CURSOR; token: EDITOR_TOKEN) is
 			--
 		local
-			prev_token: EDITOR_TOKEN	
+			prev_token: EDITOR_TOKEN
+			l_char: CHARACTER
 		do
 			insertion_remainder := 0
+			insertion.put ("")
 			if can_attempt_auto_complete_from_token (token) then
 				if token.is_text or token.is_blank then
 						-- The cursor is in a text token so we complete based upon the previous token unless the cursor
 						-- is somewhere inside this token..
-					if cursor.pos_in_token > 1 then
-						insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
-							insertion_remainder := token.length - (cursor.pos_in_token - 1)
-					else
-						prev_token := token.previous
-						if prev_token /= Void then
-							if token_image_is_in_array (token, Feature_call_separators) then
-									-- Token is dot or tilda.  Do nothing.
-							elseif token_image_is_in_array (prev_token, Feature_call_separators) then
-									-- Previous token is a dot or tilda so use thie token for insertion
-								insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
-								insertion_remainder := token.length - cursor.pos_in_token
-							elseif prev_token.is_text then
-								insertion.put (prev_token.image)
+					prev_token := token.previous
+					
+					if prev_token /= Void and cursor.pos_in_token = 1 then
+						if prev_token.is_text and then token_image_is_in_array (prev_token, Feature_call_separators) then
+								-- Previous token is a separator so take there is no insertion term
+								-- Happens when completing 'a.b.|c'
+							insertion_remainder := token.image.count
+						elseif token_image_is_in_array (token, Feature_call_separators) then
+							if prev_token.is_text then
+									-- Token is a separator so take the entire previous token as insertion, if it is an Eiffel identifier							
+								l_char := prev_token.image.item (prev_token.image.count)
+								if l_char.is_alpha or l_char.is_digit or l_char = '_' then
+										-- Previous token is an Eiffel identifier
+										-- Happens when completing 'a.b|.c'
+									insertion.put (prev_token.image)
+									insertion_remainder := 0		
+								else
+										-- Happens when completing '|.b.c' or '(|.b.c)'
+								end
 							end
+						else
+							if token.is_blank then
+								-- Previous token is a partially completed term.
+								-- Happens when completing 'a.b.c| '
+								insertion.put (prev_token.image)
+--							elseif prev_token.is_blank then
+--									-- There is blank or a token separator before cursor
+--									-- Happens when completing ' |a.b.c'
+--									-- Note: This code is commented out because completion should add the select item before
+--									--       'a' and not overwrite 'a'
+--								insertion_remainder := token.image.count
+							elseif token.is_text and prev_token.is_text then
+									-- Happens when you completer '(a.b.c|)'
+									-- Also happens for '(|a.b.c)' but we do not want to replace the open parenthesis or 'a' (see previous rule)
+								if not prev_token.image.is_empty then
+									l_char := prev_token.image.item (prev_token.image.count)
+									if l_char.is_alpha or l_char.is_digit or l_char = '_' then
+											-- Previous token is an Eiffel identifier
+										insertion.put (prev_token.image)		
+									end
+								end
+									-- Uncomment to have 'a' be replaced when completing '(|a.b.c)'
+--								if not token.image.is_empty then
+--									l_char := token.image.item (token.image.count)
+--									if l_char.is_alpha then
+--											-- Token is an Eiffel identifier
+--										insertion_remainder := token.image.count		
+--									end
+--								end
+								
+							end	
+						end
+					elseif cursor.pos_in_token > 1 then
+							-- Cursor is current in a token at `cursor.pos_in_token'
+							-- Happens when completing 'a.bb|bbbb.c'
+						insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
+						insertion_remainder := token.length - (cursor.pos_in_token - 1)
+					else
+						check
+							not_reachable: False
 						end
 					end
 				else

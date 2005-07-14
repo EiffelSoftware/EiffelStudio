@@ -2,8 +2,6 @@
  
 # Set up the environment
 . set_aliases
-LASTTIME=`date +%s`
-LASTTIME_TOT=`date +%s`
 OLD_PATH=$PATH
 INIT_DIR=`pwd`
 EIFFEL_SRC=$EXPORT_DIR; export EIFFEL_SRC

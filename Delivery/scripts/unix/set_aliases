@@ -70,7 +70,7 @@ fi
 safe_md ()
 {
 if [ ! -d $1 ]; then
-if [ -e $1 ]; then
+if [ -f $1 ]; then
 fullrf $1
 fi
 md $1
@@ -122,7 +122,7 @@ cvs -z9 -q export $* >> $INSTALL_LOG
 safe_up ()
 {
 if [ ! -d $2 ]; then
-if [ -e $2 ]; then fullrf $2; fi
+if [ -f $2 ]; then fullrf $2; fi
 co -d $2 $1
 else
 up $2
@@ -159,7 +159,7 @@ fi
 clean_project ()
 {
 if [ -d EIFGEN ]; then fullrd EIFGEN; fi
-if [ -e *.epr ]; then fullrf *.epr; fi
+if [ -f *.epr ]; then fullrf *.epr; fi
 }
 # Create a portable.tar.gz of the C code. Parameter: name of the .tgz file
 tgz_ccode ()
@@ -221,7 +221,7 @@ fi
 finalize ()
 {
 $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -batch -finalize -ace $* &> $INSTALL_LOG
-if [ ! -e EIFGEN/F_code/Makefile.SH ]; then
+if [ ! -f EIFGEN/F_code/Makefile.SH ]; then
 echo "Couldn't finalize $1"
 CANCEL
 fi
@@ -229,7 +229,7 @@ fi
 # Move up the generated finalized exe (its name is the parameter) and delete the compiled files
 cleanup_eiffel ()
 {
-if [ -e EIFGEN/F_code/$1 ]; then
+if [ -f EIFGEN/F_code/$1 ]; then
 move EIFGEN/F_code/$1 .
 clean_project
 fi

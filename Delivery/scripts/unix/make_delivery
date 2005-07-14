@@ -53,7 +53,7 @@ remtrace `date +%c`
 
 . check_environment
 cd $INIT_DIR
-if [ -e $EXPORT_DIR ]; then
+if [ -d $EXPORT_DIR ]; then
 	fullrd $EXPORT_DIR
 fi
 safe_md $EXPORT_DIR
@@ -61,8 +61,8 @@ safe_md $EXPORT_DIR
 remtrace Retrieve and organize the delivery
 remtrace Remove $INSTALL_DIR
 if [ -d $INSTALL_DIR ]; then fullrd $INSTALL_DIR >> $INSTALL_LOG; fi
-if [ -e $INSTALL_DIR ]; then fullrf $INSTALL_DIR >> $INSTALL_LOG; fi
-if [ -e $INSTALL_DIR ]; then
+if [ -d $INSTALL_DIR ]; then fullrf $INSTALL_DIR >> $INSTALL_LOG; fi
+if [ -d $INSTALL_DIR ]; then
 	echo "Cannot delete $INSTALL_DIR!"
 	CANCEL
 fi
@@ -111,7 +111,7 @@ remtrace Borland files
 fullrf BCC55.tar.gz
 fullrf *.bat
 fullrf *.exe
-if [ ! -e $NEW_EIFFEL_SRC ]; then
+if [ ! -d $NEW_EIFFEL_SRC ]; then
 	md $NEW_EIFFEL_SRC
 fi
 TMP_EIFFEL_SRC=$EIFFEL_SRC

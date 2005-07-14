@@ -1,7 +1,7 @@
 #!/bin/sh
 
 remtrace Update the Eiffel libraries source
-if [ -e $EIFFEL_SRC ]; then
+if [ -d $EIFFEL_SRC ]; then
 fullrd $EIFFEL_SRC
 fi
 md $EIFFEL_SRC

@@ -20,14 +20,14 @@ if [ ! -d $EXPORT_DIR ]; then
 	remtrace Couldnt find the directory with the tgzs.
 	CANCEL
 fi
-if [ -e ecfree.tar.gz ]; then
+if [ -f ecfree.tar.gz ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
 fi
 remtrace Compile C code of the libraries
 remtrace \"A tout seigneur tout honneur\", let\'s start with the run-time
-if [ ! -e c.tar.gz ]; then
+if [ ! -f c.tar.gz ]; then
 	remtrace 'No.tar.gz for the C directory'
 	CANCEL
 fi
@@ -49,11 +49,11 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	safe_md $EXPORT_DIR/free_rt
 	move run-time/*.so $EXPORT_DIR/free_rt
 	move run-time/*.a $EXPORT_DIR/free_rt
-	if [ ! -e $EXPORT_DIR/free_rt/libwkbench.a ]; then
+	if [ ! -f $EXPORT_DIR/free_rt/libwkbench.a ]; then
 		remtrace Couldnt generate the run-time
 		CANCEL
 	else
-		if [ ! -e $EXPORT_DIR/free_rt/libwkbench.so ]; then
+		if [ ! -f $EXPORT_DIR/free_rt/libwkbench.so ]; then
 			remtrace Couldnt generate the run-time
 			CANCEL
 		fi
@@ -69,11 +69,11 @@ cd C
 safe_md $EXPORT_DIR/commercial_rt
 cp run-time/*.so $EXPORT_DIR/commercial_rt
 cp run-time/*.a $EXPORT_DIR/commercial_rt
-if [ ! -e $EXPORT_DIR/commercial_rt/libwkbench.a ]; then
+if [ ! -f $EXPORT_DIR/commercial_rt/libwkbench.a ]; then
 	remtrace Couldnt generate the run-time
 	CANCEL
 else
-	if [ ! -e $EXPORT_DIR/commercial_rt/libwkbench.so ]; then
+	if [ ! -f $EXPORT_DIR/commercial_rt/libwkbench.so ]; then
 		remtrace Couldnt generate the run-time
 		CANCEL
 	fi
@@ -81,7 +81,7 @@ fi
 
 cd $EXPORT_DIR
 remtrace Extract the delivery
-if [ ! -e delivery.tar.gz ]; then
+if [ ! -f delivery.tar.gz ]; then
 	remtrace 'No.tar.gz of the delivery'
 	CANCEL
 else
@@ -158,7 +158,7 @@ move estudio $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
 remtrace Then the Eiffel libraries
 cd $EXPORT_DIR
-if [ ! -e libs.tar.gz ]; then
+if [ ! -f libs.tar.gz ]; then
 	remtrace 'No.tar.gz for the library directory'
 	CANCEL
 fi
@@ -169,7 +169,7 @@ if [ ! -d library ]; then
 fi
 
 remtrace Then the C libraries
-if [ ! -e c_libs.tar.gz ]; then
+if [ ! -f c_libs.tar.gz ]; then
 	remtrace 'No.tar.gz for the C_library directory'
 	CANCEL
 fi

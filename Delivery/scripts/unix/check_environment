@@ -45,7 +45,7 @@ if [ ! "$INSTALL_DIR" ]; then
 	echo Error: No path specified for the generated delivery
 	CANCEL
 fi
-if [ -e $INSTALL_DIR ]; then
+if [ -d $INSTALL_DIR ]; then
 	echo Warning: $INSTALL_DIR and $NEW_EIFFEL_SRC will be replaced by the installation script, you will lose everything in it
 fi
 echo Current configuration:

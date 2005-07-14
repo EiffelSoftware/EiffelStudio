@@ -1,8 +1,6 @@
 #!/bin/sh
 
 # Set up the environment
-LASTTIME=`date +%s`
-LASTTIME_TOT=`date +%s`
 OLD_PATH=$PATH
 INIT_DIR=`pwd`
 TMP_EIFFEL_SRC=""
@@ -60,7 +58,6 @@ if [ -e $EXPORT_DIR ]; then
 fi
 safe_md $EXPORT_DIR
 
-give_time_to warm up
 remtrace Retrieve and organize the delivery
 remtrace Remove $INSTALL_DIR
 if [ -d $INSTALL_DIR ]; then fullrd $INSTALL_DIR >> $INSTALL_LOG; fi
@@ -121,26 +118,22 @@ TMP_EIFFEL_SRC=$EIFFEL_SRC
 EIFFEL_SRC=$NEW_EIFFEL_SRC
 
 cd $INIT_DIR
-give_time_to organize the delivery and to start filling it
 
 # Fill directories
 if [ ! "$NO_COMPILE" ]; then
 	remtrace Update all libraries
 	source update_libraries $GTK_DIR
 	cd $INIT_DIR
-	give_time_to update libraries
 
 	remtrace Generate needed executables of the bin directory
 	cd $INIT_DIR
 	source make_exes
 	cd $INIT_DIR
-	give_time_to compile exes
 
 	if [ ! "$NO_WIZARDS" ]; then
 		remtrace Generate the precompilation and the \"new project\" wizards
 		source make_wizards
 		cd $INIT_DIR
-		give_time_to compile basic wizards
 	else
 		quick_move -r studio/wizards
 	fi
@@ -149,7 +142,6 @@ else
 	remtrace Copy executable files from the old delivery
 	quick_move -r studio/spec
 	quick_move -r studio/wizards
-	give_time_to copy executables from the old delivery
 fi
 
 remtrace Check out the documentation
@@ -160,7 +152,6 @@ cd $INIT_DIR
 
 remtrace "Putting the Eiffel libraries in the delivery"
 . make_libraries $GTK_DIR
-give_time_to "export the Eiffel libraries"
 cd $INIT_DIR
 
 cd $INSTALL_DIR
@@ -205,7 +196,6 @@ if [ ! "$NO_INSTALL" ]; then
 	copy make_images $EXPORT_DIR
 	copy make_cd_image $EXPORT_DIR
 	copy set_aliases $EXPORT_DIR
-	give_time_to compile the delivery
 fi
 EIFFEL_SRC=$TMP_EIFFEL_SRC
 TMP_EIFFEL_SRC=""
@@ -217,9 +207,6 @@ fullrd $DOCUMENT_DIR/xmldoc
 # Finish
 remtrace final time:
 remtrace `date +%c`
-remtrace "total time used (seconds):"
-newtime=`date +%s`
-remtrace $(($newtime - $LASTTIME_TOT))
 
 # Error handling and normal ending
 echo You should now run \'compile_exes\' in $EXPORT_DIR, after modifying set_aliases to update the EXPORT_DIR, if necessary.

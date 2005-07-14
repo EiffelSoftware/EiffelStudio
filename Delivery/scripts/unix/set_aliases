@@ -90,15 +90,6 @@ echo $*
 echo -------------------------------- >> $INSTALL_LOG
 echo $* >> $INSTALL_LOG
 }
-# Give info concerning the elapsed time
-give_time_to ()
-{
-local curtime
-remtrace "time used to $* (in seconds):"
-newtime=`date +%s`
-remtrace $(($newtime - $LASTTIME))
-LASTTIME=$newtime
-}
 # Clean exit
 CANCEL ()
 {

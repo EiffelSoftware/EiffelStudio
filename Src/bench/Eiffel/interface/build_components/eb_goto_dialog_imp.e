@@ -48,7 +48,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (cancel_button)
 			
 			set_minimum_width (250)
-			set_minimum_height (120)
 			disable_user_resize
 			set_title ("Go To Line")
 			l_ev_vertical_box_1.set_padding_width (10)

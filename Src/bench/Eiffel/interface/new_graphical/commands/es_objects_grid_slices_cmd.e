@@ -339,7 +339,6 @@ feature {NONE} -- Implementation
 
 			dial.wipe_out
 			dial.extend (maincont)
-			dial.set_maximum_height (dial.minimum_height)
 			dial.set_default_cancel_button (cancelb)
 
 				-- Display the dialog.

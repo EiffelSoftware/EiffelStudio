@@ -449,6 +449,8 @@ feature {NONE} -- Handle keystrokes
 
 	tab_action is
 			-- Process push on tab key when in auto_complete mode.
+		require
+			text_displayed_not_void: text_displayed /= Void
 		local
 			x,y: INTEGER
 			cursor: EDITOR_CURSOR
@@ -456,37 +458,43 @@ feature {NONE} -- Handle keystrokes
 			from
 				cursor := text_displayed.cursor
 			until 
-				cursor.item = '(' or cursor.item = ';' or cursor.item = ')'
+				cursor.item = '(' or cursor.item = ';' or cursor.item = ')' or cursor.item = '%N'
 			loop
 				cursor.go_right_char
 			end
-			if cursor.item = ')' then
-				if has_selection then
-					disable_selection
-				end
-				completion_mode := (completion_mode - 1).max (0)
-				cursor.go_right_char
-			else
-				if cursor.item = ';' then
-					text_displayed.replace_char (',')
-				end
-				cursor.go_right_char
-				from
-					x := cursor.x_in_characters
-					y := cursor.y_in_lines
-				until 
-					cursor.item = ';' or cursor.item = ')' or else cursor.token = cursor.line.eol_token
-				loop
+			if cursor.item /= '%N' then
+				if cursor.item = ')' then
+					if has_selection then
+						disable_selection
+					end
+					completion_mode := (completion_mode - 1).max (0)
 					cursor.go_right_char
+				else
+					if cursor.item = ';' then
+						text_displayed.replace_char (',')
+					end
+					cursor.go_right_char
+					from
+						x := cursor.x_in_characters
+						y := cursor.y_in_lines
+					until 
+						cursor.item = ';' or cursor.item = ')' or else cursor.token = cursor.line.eol_token
+					loop
+						cursor.go_right_char
+					end
+					text_displayed.selection_cursor.make_from_character_pos (cursor.x_in_characters, cursor.y_in_lines, text_displayed)
+					cursor.set_y_in_lines (y)
+					cursor.set_x_in_characters (x)
+					if not has_selection and not cursor.is_equal (text_displayed.selection_cursor) then
+						text_displayed.enable_selection
+						show_selection (False)					
+					end
 				end
-				text_displayed.selection_cursor.make_from_character_pos (cursor.x_in_characters, cursor.y_in_lines, text_displayed)
-				cursor.set_y_in_lines (y)
-				cursor.set_x_in_characters (x)
-				if not has_selection and not cursor.is_equal (text_displayed.selection_cursor) then
-					text_displayed.enable_selection
-					show_selection (False)					
-				end
+			else
+				completion_mode := (completion_mode - 1).max (0)
+				handle_extended_key (create {EV_KEY}.make_with_code (key_tab))
 			end
+			
 			invalidate_cursor_rect (True)
 			check_cursor_position
 		end
@@ -502,8 +510,9 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 	exit_complete_mode is
 			-- Set mode to normal (not completion mode).
 		do
-			completion_mode := (completion_mode - 1).max (0)
+			is_completing := False
 			set_focus
+			blink_on := True
 			resume_cursor_blinking
 		end
 

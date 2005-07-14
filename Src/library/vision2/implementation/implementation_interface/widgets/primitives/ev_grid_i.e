@@ -1472,8 +1472,8 @@ feature -- Status setting
 			if virtual_position_changed_actions_internal /= Void then
 				virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
 			end
-			last_vertical_scroll_bar_value := vertical_scroll_bar.value
-			last_horizontal_scroll_bar_value := horizontal_scroll_bar.value
+--			last_vertical_scroll_bar_value := vertical_scroll_bar.value
+--			last_horizontal_scroll_bar_value := horizontal_scroll_bar.value
 		ensure
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
@@ -3107,7 +3107,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 					update_scroll_bar_spacer
 				end
 			end
-			last_vertical_scroll_bar_value := vertical_scroll_bar.value
+--			last_vertical_scroll_bar_value := vertical_scroll_bar.value
 		end
 		
 	last_first_row_in_per_item_scrolling: INTEGER is
@@ -3270,7 +3270,7 @@ feature {ANY}
 				
 				header_viewport.set_x_offset ((l_total_column_width - viewable_width).max (0))
 			end
-			last_horizontal_scroll_bar_value := horizontal_scroll_bar.value
+--			last_horizontal_scroll_bar_value := horizontal_scroll_bar.value
 		end
 
 feature {EV_GRID_DRAWER_I} -- Drawing implementation

@@ -124,7 +124,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 					a_peers.forth
 				end
 				if select_actions_internal /= Void then
-					select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+					select_actions_internal.call (Void)
 				end
 			end
 

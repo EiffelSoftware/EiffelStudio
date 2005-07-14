@@ -199,7 +199,7 @@ feature -- Status setting
 		do
 			temp_caret_pos := caret_position
 			gtk_text_set_point (entry_widget, a_position - 1)
-			create a_cs.make (txt)
+			a_cs := txt
 			gtk_text_insert (entry_widget, NULL, NULL, NULL, a_cs.item, -1)
 			internal_set_caret_position (temp_caret_pos)
 		end
@@ -573,11 +573,11 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if not text.is_equal (stored_text) then
 						-- The text has actually changed
 					stored_text := text
-					change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+					change_actions_internal.call (Void)
 				end
 			else
 				stored_text := text
-				change_actions_internal.call (App_implementation.gtk_marshal.Empty_tuple)
+				change_actions_internal.call (Void)
 			end
 			toggle_in_change_action (False)
 		end

@@ -68,7 +68,7 @@ feature -- Status setting
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_text)
+			a_cs := a_text
 			{EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
 		end
 
@@ -79,7 +79,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			temp_caret_pos := caret_position
-			create a_cs.make (txt)
+			a_cs := txt
 			{EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
 			internal_set_caret_position (temp_caret_pos)
 		end
@@ -91,7 +91,7 @@ feature -- Status setting
 			a_cs: EV_GTK_C_STRING
 		do
 			temp_caret_pos := caret_position
-			create a_cs.make (txt)
+			a_cs := txt
 			{EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
 			internal_set_caret_position (temp_caret_pos)
 		end
@@ -223,7 +223,7 @@ feature -- Basic operation
 			a_cs: EV_GTK_C_STRING
 		do
 			pos := caret_position - 1
-			create a_cs.make (txt)
+			a_cs := txt
 			{EV_GTK_EXTERNALS}.gtk_editable_insert_text (
 				entry_widget,
 				a_cs.item,

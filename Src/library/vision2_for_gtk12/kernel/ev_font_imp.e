@@ -171,7 +171,7 @@ feature -- Status report
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_string)
+			a_cs := a_string
 			Result := {EV_GTK_EXTERNALS}.gdk_string_width (c_object, a_cs.item)
 		end
 
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 		local
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (pattern)
+			a_cs := pattern
 			Result := c_match_font_name (a_cs.item)
 		end
 

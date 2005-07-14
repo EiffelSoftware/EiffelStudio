@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
-			create a_cs.make ("Font selection dialog")
+			a_cs := "Font selection dialog"
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_font_selection_dialog_new (
 						a_cs.item
 					))
@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 				Void
 			)
 			enable_closeable
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature -- Access
@@ -123,7 +123,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			font_imp ?= a_font.implementation
-			create a_cs.make (font_imp.system_name)
+			a_cs := font_imp.system_name
 			a_success_flag := {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_set_font_name (
 							c_object,
 							a_cs.item

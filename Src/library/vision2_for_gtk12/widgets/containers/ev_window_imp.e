@@ -379,7 +379,7 @@ feature -- Element change
 				-- Some window managers do not like empty strings as titles and show it as an error.
 				a_title := "%T"
 			end
-			create a_cs.make (a_title)
+			a_cs := a_title
 			{EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
 		end
 
@@ -395,7 +395,7 @@ feature -- Element change
 			mb_imp.set_parent_window_imp (Current)
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
 			{EV_GTK_EXTERNALS}.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
-			create a_cs.make ("activate_item")
+			a_cs := "activate_item"
 			from
 				menu_bar.start
 			until
@@ -585,13 +585,13 @@ feature {NONE} -- Implementation
 					-- Used to disable certain key behavior such as Tab focus.
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						create a_cs.make ("key-press-event")
+						a_cs := "key-press-event"
 						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						create a_cs.make ("key-release-event")
+						a_cs := "key-release-event"
 						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
@@ -609,7 +609,7 @@ feature {NONE} -- Implementation
 			a_decor: INTEGER
 		do
 			Precursor
-			is_initialized := False
+			set_is_initialized (False)
 			set_title("")
 			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
@@ -633,7 +633,7 @@ feature {NONE} -- Implementation
 			enable_user_resize
 			default_height := -1
 			default_width := -1
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 	client_area: POINTER is

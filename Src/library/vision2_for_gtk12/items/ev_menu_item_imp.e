@@ -85,7 +85,7 @@ feature -- Access
 			end
 		end
 
-	key: INTEGER
+	key: NATURAL_32
 			-- Accelerator for `Current'.
 
 feature -- Element change
@@ -102,12 +102,12 @@ feature -- Element change
 			if a_text.has ('&') then
 				temp_string := a_text.twin
 				filter_ampersand (temp_string, '_')
-				create a_cs.make (temp_string)
+				a_cs := temp_string
 				key := {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
-				a_cs.item)
+				a_cs.item).to_natural_32
 			else
 				key := 0
-				create a_cs.make (a_text)
+				a_cs := a_text
 				{EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			end	
 			{EV_GTK_EXTERNALS}.gtk_widget_show (text_label)

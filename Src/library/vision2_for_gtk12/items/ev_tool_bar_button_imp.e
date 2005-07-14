@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_button_box
-			is_initialized := True
+			set_is_initialized (True)
 		end
 
 feature {EV_TOOL_BAR_IMP} -- Implementation

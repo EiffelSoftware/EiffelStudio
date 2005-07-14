@@ -308,20 +308,15 @@ feature {NONE} -- Initialization
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
-	select_callback (int: TUPLE [INTEGER]) is
+	select_callback (a_position: INTEGER) is
 		local
-			temp_int: INTEGER_REF
-			a_position: INTEGER
 			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			if not ignore_select_callback then
-				temp_int ?= int.item (1)
-				a_position := temp_int.item + 1
-	
-				an_item := (ev_children @ a_position)
+			if not ignore_select_callback then	
+				an_item := (ev_children @ (a_position + 1))
 				if an_item /= previously_selected_node then
 					if an_item.select_actions_internal /= Void then
-						an_item.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+						an_item.select_actions_internal.call (Void)
 					end
 					if select_actions_internal /= Void then
 						select_actions_internal.call ([an_item.interface])
@@ -334,42 +329,34 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	previously_selected_node: EV_MULTI_COLUMN_LIST_ROW_IMP
 
-	deselect_callback (int: TUPLE [INTEGER]) is
+	deselect_callback (a_position: INTEGER) is
 		local
-			temp_int: INTEGER_REF
-			a_position: INTEGER
 			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			temp_int ?= int.item (1)
-			a_position := temp_int.item + 1
-			an_item := (ev_children @ a_position)
+			an_item := (ev_children @ (a_position + 1))
 			if an_item.deselect_actions_internal /= Void then
-				an_item.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
+				an_item.deselect_actions_internal.call (Void)
 			end
 			if deselect_actions_internal /= Void then
 				deselect_actions_internal.call ([an_item.interface])
 			end
 		end
 
-	column_click_callback (int: TUPLE [INTEGER]) is
-		local
-			temp_int: INTEGER_REF
+	column_click_callback (a_column: INTEGER) is
 		do
-			temp_int ?= int.item (1)
 			if column_title_click_actions_internal /= Void then
-				column_title_click_actions_internal.call ([temp_int.item + 1])
+				column_title_click_actions_internal.call ([a_column + 1])
 			end
 		end
 
-	column_resize_callback (int: TUPLE [INTEGER]) is
+	column_resize_callback (a_column: INTEGER) is
 		local
 			temp_col, temp_wid: INTEGER_REF
 		do
-			temp_col ?= int.item (1)
 			-- Set column width array to new width.
 			if (temp_col.item) <= column_count and column_widths /= Void then
-				temp_wid ?= int.item (2)
-				update_column_width (temp_wid.item, temp_col.item)
+				--| FIXME IEK Implement this  width = GTK_CLIST(clist)->column[col].width;
+				update_column_width (temp_wid.item, 80)
 				if column_resized_actions_internal /= Void then
 					column_resized_actions_internal.call ([temp_col.item])
 				end
@@ -606,7 +593,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			if list_widget /= NULL then
-				create a_cs.make (a_txt)
+				a_cs := a_txt
 				{EV_GTK_EXTERNALS}.gtk_clist_set_column_title (
 					list_widget,
 					a_column - 1,
@@ -975,7 +962,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			pixmap_imp: EV_PIXMAP_IMP
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_text)
+			a_cs := a_text
 			if  a_column = 1 and then ev_children.i_th (a_row).internal_pixmap /= Void then
 				pixmap_imp ?= ev_children.i_th (a_row).internal_pixmap.implementation
 				

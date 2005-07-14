@@ -740,7 +740,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			text_ptr: POINTER
 			a_cs: EV_GTK_C_STRING
 		do
-			create a_cs.make (a_item_imp.text)
+			a_cs := a_item_imp.text
 			text_ptr := a_cs.item
 			Result := {EV_GTK_EXTERNALS}.gtk_ctree_insert_node (
 				list_widget,

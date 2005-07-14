@@ -69,6 +69,12 @@ feature
 
 feature {NONE} -- Implementation
 
+	pointed_divider_index: INTEGER is
+			-- Index of divider currently beneath the mouse pointer, or
+			-- 0 if none.
+		do
+		end
+
 	pixmaps_size_changed is
 			-- The size of the displayed pixmaps has just
 			-- changed.

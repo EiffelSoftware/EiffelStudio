@@ -8,15 +8,37 @@ class
 	EV_GTK_C_STRING
 
 create
-	make, make_from_pointer, make_from_ascii_string
+	set_with_eiffel_string, make_from_pointer, share_from_pointer
 
 convert
-	make_from_ascii_string ({STRING})
+	set_with_eiffel_string ({STRING})
 	
 	
 feature {NONE} -- Initialization
 
-	make, make_from_ascii_string (a_string: STRING) is
+	make_from_pointer (a_ptr: POINTER) is
+			-- Set `Current' to use `a_ptr'
+		require
+			a_pointer_valid: a_ptr /= default_pointer
+		local
+			a_string: STRING
+		do
+			create a_string.make_from_c (a_ptr)
+			set_with_eiffel_string (a_string)
+		end
+
+	share_from_pointer (a_ptr: POINTER) is
+			-- Set `Current' to use `a_ptr'.
+		require
+			a_pointer_valid: a_ptr /= default_pointer
+		do
+				--| Fixme added sharing implementation to avoid memory copy.
+			make_from_pointer (a_ptr)
+		end
+
+feature -- Access
+
+	set_with_eiffel_string (a_string: STRING) is
 			-- Create a UTF8 string from `a_string'
 		require
 			a_string_not_void: a_string /= Void
@@ -27,19 +49,6 @@ feature {NONE} -- Initialization
 				-- String count doesn't take the null character in to account
 			create managed_data.make_from_pointer ($a_string_value, a_string.count + 1)
 		end
-
-	make_from_pointer (a_ptr: POINTER) is
-			-- Set `Current' to use `a_ptr'
-		require
-			a_pointer_valid: a_ptr /= default_pointer
-		local
-			a_string: STRING
-		do
-			create a_string.make_from_c (a_ptr)
-			make (a_string)
-		end
-
-feature -- Access
 
 	item: POINTER is
 			-- Pointer to the UTF8 string

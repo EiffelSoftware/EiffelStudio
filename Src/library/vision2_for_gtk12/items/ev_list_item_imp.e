@@ -79,7 +79,7 @@ feature {NONE} -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, text_label, True, True, 0)
 
 			--feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)	
-			is_initialized := True
+			set_is_initialized (True)
 		end
 		
 	checkable_imp_initialize is
@@ -204,7 +204,7 @@ feature -- Element change
 			a_cs: EV_GTK_C_STRING
 		do
 			Precursor (txt)
-			create a_cs.make (txt)
+			a_cs := txt
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp
 			if (combo_par /= Void) then

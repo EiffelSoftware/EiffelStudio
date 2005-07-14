@@ -572,6 +572,9 @@ feature {NONE} -- Implementation
 					preferences.development_window_data.save_completion_list_size (width, height)
 				end
 				hide
+				if not last_completed_feature_had_arguments then	 
+					editor.exit_complete_mode	 
+				end
 			end
 		end
   

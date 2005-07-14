@@ -154,7 +154,7 @@ feature {NONE} -- Initialization
 			a_attribute := "pixbuf"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_layout_set_attribute (container_widget, a_cell_renderer, a_attribute.item, 0)
 			
-			set_minimum_width_in_characters (3)
+			set_minimum_width_in_characters (4)
 
 			real_signal_connect (container_widget, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 		end
@@ -185,11 +185,14 @@ feature -- Status report
 
 	has_focus: BOOLEAN is
 			-- Does widget have the keyboard focus?
+		local
+			a_toggle: POINTER
 		do
 			Result := Precursor {EV_TEXT_FIELD_IMP}
 				-- Check to see if the toggle button is depressed, if it is then the combo must have the focus
-			if not Result and toggle_button /= default_pointer then
-				Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (toggle_button)
+			return_combo_toggle (container_widget, $a_toggle)
+			if not Result and a_toggle /= default_pointer then
+				Result := {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle)
 			end
 		end
 
@@ -242,7 +245,8 @@ feature {NONE} -- Implementation
 
 	on_focus_changed (a_has_focus: BOOLEAN) is
 			-- Focus for `Current' has changed'.
-			-- (export status {NONE})
+		local
+			a_toggle: POINTER
 		do
 			if a_has_focus then
 				if in_popup_action then
@@ -252,7 +256,8 @@ feature {NONE} -- Implementation
 					Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
 				end
 			else
-				if toggle_button /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (toggle_button) then
+				return_combo_toggle (container_widget, $a_toggle)
+				if a_toggle /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle) then
 						-- We have a "popup" action.
 					in_popup_action := True
 				else
@@ -264,32 +269,35 @@ feature {NONE} -- Implementation
 	in_popup_action: BOOLEAN
 		-- Is combo currently popped up?
 
-	toggle_button: POINTER
-		-- Pointer to the toggle button used for the Combo Box, this can only be retrieved when the widget is realized.
-
 	retrieve_toggle_button_signal_connection_id: INTEGER
 		-- Signal connection id used when finding the toggle button of `Current'.
 
 	retrieve_toggle_button is
 			-- Retrieve the toggle button from the GtkComboBox structure.
+		local
+			a_toggle: POINTER
 		do
-			return_combo_toggle (container_widget, $toggle_button)
+			return_combo_toggle (container_widget, $a_toggle)
 			check
-				toggle_button_set: toggle_button /= default_pointer
+				toggle_button_set: a_toggle /= default_pointer
 			end
 				-- Set the size of the toggle so that it isn't bigger than the entry size
-			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (toggle_button, -1, 1)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (a_toggle, -1, 1)
 
-			real_signal_connect (toggle_button, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_toggled (internal_id), Void)
+			real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_toggled (internal_id), Void)
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
+			retrieve_toggle_button_signal_connection_id := 0
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
 	toggle_button_toggled is
 			-- The toggle button has been toggled.
+		local
+			a_toggle: POINTER
 		do
-			if {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (toggle_button) then
+			return_combo_toggle (container_widget, $a_toggle)
+			if a_toggle /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle) then
 				if drop_down_actions_internal /= Void then
 					drop_down_actions_internal.call (Void)
 				end

@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 							generated_constants_string := generated_constants_string + Indent_less_two + font_constant.name + ": EV_FONT is" +
 							indent + "-- `Result' is EV_FONT constant named `" + font_constant.name + "'." + 
 							indent_less_one + "once" + indent + "create Result" + Indent +
-							"Result.set_family (feature {EV_FONT_CONSTANTS}."
+							"Result.set_family ({EV_FONT_CONSTANTS}."
 							
 							inspect font_constant.value.family
 							when feature {EV_FONT_CONSTANTS}.Family_screen then
@@ -605,7 +605,7 @@ feature {NONE} -- Implementation
 								end
 							end
 							generated_constants_string.append (indent)
-							generated_constants_string.append ("Result.set_weight (feature {EV_FONT_CONSTANTS}.")
+							generated_constants_string.append ("Result.set_weight ({EV_FONT_CONSTANTS}.")
 							
 							inspect font_constant.value.weight
 							when feature {EV_FONT_CONSTANTS}.weight_thin then
@@ -622,7 +622,7 @@ feature {NONE} -- Implementation
 								end
 							end			
 							generated_constants_string.append (indent)
-							generated_constants_string.append ("Result.set_shape (feature {EV_FONT_CONSTANTS}.")
+							generated_constants_string.append ("Result.set_shape ({EV_FONT_CONSTANTS}.")
 							inspect font_constant.value.shape
 							
 							when feature {EV_FONT_CONSTANTS}.shape_regular then

@@ -8,10 +8,10 @@
 				<cell><bold>Complete description</bold></cell>
 			</row>
 			<row>
-							<cell>Number of projects kept in the recent projects list</cell>
-							<cell>This integral preference defines the maximum number of entries that should  be displayed in the 
-								<bold>File/Recent projects</bold> menu.
-							</cell>
+				<cell>Keep n projects</cell>
+				<cell>This integral preference defines the maximum number of entries that should be displayed in the 
+					<bold>File/Recent projects</bold> menu.
+				</cell>
 			</row>
 			<row>
 				<cell>Last opened projects</cell>

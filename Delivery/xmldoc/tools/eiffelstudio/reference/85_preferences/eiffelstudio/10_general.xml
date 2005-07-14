@@ -8,7 +8,11 @@
 				<cell><bold>Complete description</bold></cell>
 			</row>
 			<row>
-				<cell>Command used to launch an external editor.</cell>
+				<cell>Acrobat Reader</cell>
+				<cell>Command to read Adobe Acrobat files.</cell>
+			</row>
+			<row>
+				<cell>Shell command</cell>
 				<cell>You may open a class in an external editor by dropping the corresponding pebble on the external editor icon. This preference sets which command line will be used to launch the external editor. The parameter "$target"will be replaced in the command with the file name corresponding to the class, "$line" with the line number if this information is relevant, with 1  otherwise.</cell>
 			</row>		
 			<row>

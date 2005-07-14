@@ -2,23 +2,14 @@
 	<meta_data/>
 	<paragraph>This category gathers the preferences related to context tools. 		
 		<table><border>1</border>
-			<row>
-				<cell><bold>Label in the preferences window</bold></cell>
-				<cell><bold>Complete Description</bold></cell>
-			</row>
-				<row><cell>Show all callers</cell><cell>Show all callers (as opposed to local callers) in `callers' form.</cell></row>
-				<row><cell>Diagram toolbar layout</cell><cell>The visible toolbar items for the Diagram Tool toolbar.</cell></row>
-				<row><cell>Subcluster depth</cell><cell>Show subclusters of a cluster down to a level of preference value.</cell></row>
-				<row><cell>Supercluster depth</cell><cell>Show superclusters of a cluster up to a level of preference value.</cell></row>
-				<row><cell>Client depth</cell><cell>Show clients of a class up to a level of preference value.</cell></row>
-				<row><cell>Supplier depth</cell><cell>Show suppliers of a class up to a level of preference value.</cell></row>
-				<row><cell>Ancestor depth</cell><cell>Show ancestors of a class up to a level of preference value.</cell></row>
-				<row><cell>Descendant depth</cell><cell>Show descendants of a class down to a level of preference value.</cell></row>
-				<row><cell>Ignore excluded class figures</cell><cell>Show ALL classes in the diagram (ignore the following list)?</cell></row>
-				<row><cell>Excluded class figures</cell><cell>Names of classes that should not appear in generated diagrams.</cell></row>
-				<row><cell>Excluded indexing items</cell><cell>Indexing items that need not be included in formatted texts.</cell></row>
+			<row><cell><bold>Label in the preferences window</bold></cell><cell><bold>Complete Description</bold></cell></row>
+			<row><cell>Default class formatter index</cell><cell>Class view format that is selected by default (see table below for available format indexes).</cell></row>
+			<row><cell>Default feature formatter index</cell><cell>Feature view format that is selected by default (see table below for available format indexes).</cell></row>			
+			<row><cell>Excluded indexing items</cell><cell>Indexing items that need not be included in formatted texts.</cell></row>
+			<row><cell>Formatters history size</cell><cell>Number of cached formatted text in history.</cell></row>
+			<row><cell>Show all callers</cell><cell>Show all callers (as opposed to local callers) in `callers' form.</cell></row>
 		</table>  
-		<paragraph>Class views indices
+		<paragraph>Class views indices:
 			<table><border>1</border>
 				<row>
 					<cell><bold>Index</bold></cell>
@@ -82,7 +73,7 @@
 				</row>
 			</table>
 		</paragraph>
-		<paragraph>Feature views indices
+		<paragraph>Feature views indices:
 			<table><border>1</border>
 				<row>
 					<cell><bold>Index</bold></cell>

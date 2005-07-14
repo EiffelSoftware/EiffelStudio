@@ -6,6 +6,9 @@ iff not defined INIT_DIR then
 	set INIT_DIR=%@EXECSTR[cd]
 endiff
 iff "%@SEARCH[candle.exe]" == "" then
+	set PATH=%PATH;%INIT_DIR\wix
+endiff
+iff "%@SEARCH[candle.exe]" == "" then
 	echo Cannot find a version of Wix compiler. Cannot continue
 	CANCEL
 endiff
@@ -28,6 +31,7 @@ call build.btm c_library
 call build.btm dotnet
 call build.btm eiffel_com
 call build.btm free_add_ons
+call build.btm gobo
 call build.btm graphical_libraries
 call build.btm studio_core
 call build.btm vision2_tour

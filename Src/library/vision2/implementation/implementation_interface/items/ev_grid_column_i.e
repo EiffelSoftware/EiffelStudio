@@ -351,13 +351,12 @@ feature -- Status report
 				a_item := a_parent_i.item_internal (a_index, i)
 				if a_item /= Void then
 					non_void_item_found := True
-					internal_is_selected := False
 					Result := a_item.is_selected
 				end
 				i := i + 1
 			end
 			if not non_void_item_found then
-					-- If no non-void items are present then we cannot be selected
+					-- If no non-void items are present then we check internal flag.
 				Result := internal_is_selected
 			end
 		end
@@ -502,14 +501,16 @@ feature {EV_GRID_I} -- Implementation
 			-- Select `Current' in `parent_i'.
 		do
 			internal_update_selection (True)		
-			internal_is_selected := True
+			set_internal_is_selected (True)
+			parent_i.redraw_column (Current)
 		end
 
 	disable_select is
 			-- Deselect `Current' from `parent_i'.
 		do
 			internal_update_selection (False)
-			internal_is_selected := False
+			set_internal_is_selected (False)
+			parent_i.redraw_column (Current)
 		end
 
 	destroy is
@@ -541,12 +542,12 @@ feature {NONE} -- Implementation
 			a_index: INTEGER
 			l_is_selected: BOOLEAN
 		do
+			l_is_selected := is_selected
+			a_parent_i := parent_i
 			from
 				i := 1
 				a_count := count
-				a_parent_i := parent_i
 				a_index := index
-				l_is_selected := is_selected
 			until
 				i > a_count
 			loop
@@ -561,24 +562,33 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 				-- Call the grid column events.
-			if a_selection_state and not l_is_selected then
+			if (a_selection_state and then not l_is_selected) or else l_is_selected then
+				call_selection_events (l_is_selected)
+			end
+		end
+
+feature {EV_GRID_I} -- Implementation
+
+	call_selection_events (a_selection_state: BOOLEAN) is
+			-- Call the selection events of `Current' for selection state `a_selection_state'. 
+		do
+			if a_selection_state then
 				if parent_i.column_select_actions_internal /= Void then
 					parent_i.column_select_actions_internal.call ([interface])
 				end
 				if select_actions_internal /= Void then
 					select_actions_internal.call (Void)
 				end
-			elseif l_is_selected then
+			else
 				if parent_i.column_deselect_actions_internal /= Void  then
 					parent_i.column_deselect_actions_internal.call ([interface])
 				end
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call (Void)
 				end
-			end
-			parent_i.redraw_column (Current)
+			end			
 		end
-		
+
 feature {EV_GRID_I} -- Implementation
 
 	unparent is
@@ -591,6 +601,14 @@ feature {EV_GRID_I} -- Implementation
 
 feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_ROW_I} -- Implementation
 
+	set_internal_is_selected (a_selected: BOOLEAN) is
+			-- Set `internal_is_selected' to `a_selected'.
+		do
+			internal_is_selected := a_selected
+		ensure
+			internal_is_selected_set: internal_is_selected = a_selected
+		end
+		
 	set_index (a_index: INTEGER) is
 			-- Set the internal index of row
 		require

@@ -44,12 +44,12 @@ feature {NONE} -- Output
 					i := i + 1
 					c := a_line.item (i)
 					if c = '%T' then
-						st.add_char (' ')
-						st.add_char (' ')
-						st.add_char (' ')
-						st.add_char (' ')
+						st.add_string (" ")
+						st.add_string (" ")
+						st.add_string (" ")
+						st.add_string (" ")
 					else
-						st.add_char (c)
+						st.add_string (c.out)
 					end
 				end
 				st.add_new_line
@@ -75,15 +75,15 @@ feature {NONE} -- Output
 				i := i + 1
 				c := a_line.item (i)
 				if c = '%T' then
-					st.add_char (' ')
-					st.add_char (' ')
-					st.add_char (' ')
-					st.add_char (' ')
+					st.add_string (" ")
+					st.add_string (" ")
+					st.add_string (" ")
+					st.add_string (" ")
 					if i <= column then
 						nb_tab := nb_tab + 1
 					end
 				else
-					st.add_char (c)
+					st.add_string (c.out)
 				end
 			end
 			st.add_new_line
@@ -101,7 +101,7 @@ feature {NONE} -- Output
 				until
 					i > position
 				loop
-					st.add_char ('-')
+					st.add_string ("-")
 					i := i + 1
 				end
 				st.add_string ("^")

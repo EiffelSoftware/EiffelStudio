@@ -35,6 +35,12 @@ cluster
 			"desc";"table_eiffel3";"CVS"
 		end
 
+		-- EiffelBase
+	all time: "$EIFFEL_SRC/library/time"
+		exclude
+			"french";"german";"CVS"
+		end
+
 		-- EiffelVision
 	all vision2: "$EIFFEL_SRC/library/vision2"
 		exclude

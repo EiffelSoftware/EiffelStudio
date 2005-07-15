@@ -57,6 +57,11 @@ cluster
 			"desc"; "table_eiffel3"; "CVS"; 
 		end
 
+	all time: "$EIFFEL_SRC/library/time"
+		exclude
+			"french";"german";"CVS"
+		end
+
 	all vision2:		"$EIFFEL_SRC/library/vision2"
 		exclude
 			"mswin"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 

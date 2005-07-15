@@ -8,6 +8,13 @@ class
 
 feature -- Externals
 
+	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
+		alias
+			"tip_label"
+		end
+
 	frozen gtk_win_pos_mouse_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

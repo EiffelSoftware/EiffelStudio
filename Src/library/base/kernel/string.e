@@ -1918,27 +1918,32 @@ feature -- Conversion
 			if nb_space > 0 then
 					-- Shift characters to the right.
 				from
-					i := i - 1
 					l_area := area
+				variant
+					i + 1
 				until
-					i < nb_space
+					i = 0
 				loop
-					l_area.put (l_area.item (i), i + nb_space)
 					i := i - 1
+					l_area.put (l_area.item (i), i + nb_space)
 				end
 
 					-- Fill left part with spaces.
 				from
+				variant
+					nb_space + 1
 				until
-					i = -1
+					nb_space = 0
 				loop
-					l_area.put (' ', i)
-					i := i - 1
+					nb_space := nb_space - 1
+					l_area.put (' ', nb_space)
 				end
 					-- Restore `count'
 				count := nb
 				internal_hash_code := 0
 			end
+		ensure
+			same_count: count = old count
 		end
 
 	character_justify (pivot: CHARACTER; position: INTEGER) is

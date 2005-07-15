@@ -84,7 +84,7 @@ feature -- Output
 		do
 			msg := syntax_message
 			if not msg.is_empty then
-				st.add_char ('(')
+				st.add_string ("(")
 				st.add_string (msg)
 				st.add_string (")")
 				st.add_new_line

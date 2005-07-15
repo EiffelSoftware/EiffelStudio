@@ -1,0 +1,7 @@
+<document title="Third Party Tools Installalation Help" output="studio">	
+	<meta_data></meta_data>	
+	<paragraph>			
+		<paragraph>Here you can find help for installing third party tools and programs which may be necessary for your Eiffel programming needs.</paragraph>					
+		<link><url>msfreeccompiler.xml</url><label><heading><size>2</size>Microsoft Free C++ Compiler</heading></label></link>
+	</paragraph>
+</document>

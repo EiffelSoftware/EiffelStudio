@@ -223,6 +223,7 @@ feature -- Status setting
 					l_column.is_selected
 				then
 						-- Call column actions if selecting `Current' selects `column'.
+					l_column.implementation.set_internal_is_selected (False)
 					l_parent_i.column_select_actions_internal.call ([l_column])
 				end
 			end

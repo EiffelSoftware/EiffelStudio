@@ -243,13 +243,13 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	header_item_event_dispatcher (a_object_id: INTEGER; n_args: INTEGER; args: POINTER) is
-			-- Intermediary agent for header item events.
+	gdk_event_dispatcher (a_object_id: INTEGER; n_args: INTEGER; args: POINTER) is
+			-- Intermediary agent for gdk events.
 		local
-			a_header_item: EV_HEADER_ITEM_IMP
+			l_any_imp: EV_ANY_IMP
 		do
-			a_header_item ?= eif_id_object (a_object_id)
-			a_header_item.process_event (n_args, args)
+			l_any_imp ?= eif_id_object (a_object_id)
+			l_any_imp.process_gdk_event (n_args, args)
 		end
 
 feature {EV_ANY_I} -- Externals

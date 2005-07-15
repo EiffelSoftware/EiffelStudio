@@ -1,7 +1,7 @@
 indexing
 	description:
 		"Window intended for transient user interaction.%N%
-		%Optionaly modal. A modal dialog blocks the rest of the application%
+		%Optionally modal. A modal dialog blocks the rest of the application%
 		%until closed."
 	status: "See notice at end of class"
 	keywords: "dialog, dialogue, popup, window"

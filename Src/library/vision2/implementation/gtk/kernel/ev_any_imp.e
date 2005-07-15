@@ -187,14 +187,17 @@ feature {NONE} -- Implementation
 	dispose is
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
+		local
+			l_c_object: POINTER
 		do
 			if not is_in_final_collect then
-				if c_object /= NULL then
-					 {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (c_object, internal_id)
+				l_c_object := c_object
+				if l_c_object /= NULL then
+					 {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (l_c_object, internal_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
-					{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (c_object)
-					{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (c_object)
+					{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (l_c_object)
+					{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (l_c_object)
 				end
 			end
 			Precursor {IDENTIFIED}
@@ -210,6 +213,14 @@ feature {NONE} -- Implementation
 		ensure
 			is_destroyed_set: is_destroyed
 			c_object_detached: c_object = NULL
+		end
+
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+	process_gdk_event (n_args: INTEGER; args: POINTER) is
+			-- Process any incoming gdk event.
+		do
+			-- Redefined by descendents.
 		end
 
 feature {EV_ANY_I} -- Access

@@ -497,7 +497,7 @@ feature {EV_ANY_I} -- Implementation
 					-- parent of the widget that is pointed to. For example, if you place a notebook in a box
 					-- and point to the are to the right of the tabs, the widget returned is the box. Julian.
 				composite_window ?= wel_window_at_cursor_position
-				if composite_window /= Void then -- and widget_imp_at_cursor_position.parent /= Void then
+				if composite_window /= Void and (widget_imp_at_cursor_position = Void or else widget_imp_at_cursor_position.parent /= Void) then
 						-- If we are pointing to a window that has children.
 					if widget_imp_at_cursor_position /= Void then
 						create client_coordinate_point.make (wel_point.x - widget_imp_at_cursor_position.screen_x,

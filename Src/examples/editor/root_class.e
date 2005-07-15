@@ -18,11 +18,16 @@ feature {NONE} -- Initialization
 	make_and_launch is
 			-- Create `Current', build and display `main_window',
 			-- then launch the application.
+		local
+			pro: PROFILING_SETTING
 		do
+			create pro.make
+			pro.stop_profiling
 			default_create
 			create main_window
 			main_window.show
 			launch
+			pro.start_profiling
 		end
 		
 feature {NONE} -- Implementation

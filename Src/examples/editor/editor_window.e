@@ -26,6 +26,7 @@ feature -- Access
 			l_editor_data: EDITOR_DATA
 			l_env: EXECUTION_ENVIRONMENT
 			l_path: FILE_NAME
+			l: INTEGER
 		do
 			create l_env
 			create l_path.make_from_string (l_env.current_working_directory)
@@ -35,6 +36,7 @@ feature -- Access
 			goto_line_button.select_actions.extend (agent goto_line)
 			select_char_button.select_actions.extend (agent select_chars)
 			select_line_button.select_actions.extend (agent select_lines)
+			close_request_actions.extend (agent close_window)
 		end
 			
 	preferences: PREFERENCES	
@@ -51,7 +53,8 @@ feature {NONE} -- Initialization
 			initialize_preferences
 			editor_container.extend (text_panel.widget)	 		
 			add_header
-			preferences_button.select_actions.extend (agent show_preferences_window)
+			--preferences_button.select_actions.extend (agent show_preferences_window)
+			preferences_button.select_actions.extend (agent test_drawing)
 			open_file.select_actions.extend (agent open_document)
 			cut_tb.select_actions.extend (agent text_panel.cut_selection)
 			copy_tb.select_actions.extend (agent text_panel.copy_selection)
@@ -70,11 +73,30 @@ feature {NONE} -- Initialization
 			editor_container.extend (header.container)
 			editor_container.disable_item_expand (header.container)	
 			header.selection_actions.extend (agent on_document_change)
---			header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\Eiffel56\library\base\kernel\classic\string.e"))
-			header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\test.txt"))
+			--header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\testtiny.txt"))
+			header.open_document (create {TEXT_PANEL_HEADER_ITEM}.make ("C:\Eiffel56\library\base\kernel\stringtest.e"))
 		end	
 		
 	header: TEXT_PANEL_HEADER
+
+	test_drawing is
+			-- 
+		local
+			cnt: INTEGER
+			prof: PROFILING_SETTING
+		do		
+			create prof.make
+			prof.start_profiling
+			from
+				cnt := 1
+			until
+				cnt > 2000
+			loop
+				text_panel.set_first_line_displayed (cnt, True)
+				cnt := cnt + 1
+			end	
+			prof.stop_profiling
+		end		
 
 feature {NONE} -- Preference information	
 		
@@ -98,7 +120,7 @@ feature {NONE} -- Preference information
 			Result_not_void: Result /= Void
 		end	
 
-	preference_window: PREFERENCES_TREE_WINDOW
+	preference_window: PREFERENCES_WINDOW
 	        -- Preference window
 
 feature {NONE} -- Events
@@ -172,9 +194,9 @@ feature {NONE} -- Implementation
 	        -- Editor.
 	 	once
 	 	    create Result
-			register_documents (Result)			
-	 	end		 		
-	 	
+			--register_documents (Result)			
+	 	end
+
 	 register_documents (a_panel: TEXT_PANEL) is
 	 		-- Register syntax definition files for particular document types
 	 	do
@@ -186,7 +208,7 @@ feature {NONE} -- Implementation
 	 		end
 	 	   	if java_class /= Void then
 	 	   		a_panel.register_document ("java", java_class)
-	 	   	end	 	   	
+	 	   	end
 	 	end	 	
 	 	
 	 eiffel_class: DOCUMENT_CLASS is
@@ -282,7 +304,7 @@ feature {NONE} -- Observation
 			cursor_text_position.set_text (text_panel.text_displayed.cursor.pos_in_characters.out)	
 			cursor_line_number.set_text (text_panel.text_displayed.current_line_number.out)
 			cursor_line_pos.set_text (text_panel.text_displayed.cursor.x_in_characters.out)
-			line_width_label.set_text (text_panel.text_displayed.cursor.line.width.out)
+			line_width_label.set_text (text_panel.text_displayed.cursor.line.width.out)			
 			if text_panel.has_selection then				
 				status_label.set_text ("Selected text (" + text_panel.text_displayed.selection_cursor.pos_in_text.out + " - " + 
 					text_panel.text_displayed.cursor.pos_in_text.out + ")")		
@@ -361,7 +383,14 @@ feature {NONE} -- Observation
  		do
 		end
 	
---	tmp: EV_GRID
+	close_window is
+			-- The user wants to close the window
+		do
+				-- Destroy the window
+			destroy;
+			(create {EV_ENVIRONMENT}).application.destroy
+		end
+
 	
 end -- class EDITOR_WINDOW
 

@@ -233,7 +233,8 @@ feature -- Access
 		local
 			sel_rows: like selected_rows
 			sel_items: like selected_items
-		do
+			sel_columns: like selected_columns
+		do			
 			sel_rows := internal_selected_rows.linear_representation
 			from
 				sel_rows.start
@@ -251,6 +252,18 @@ feature -- Access
 			loop
 				sel_items.item.disable_select
 				sel_items.forth
+			end
+
+				-- Columns need to be cleared in case selection has occurred and all of the items in the column are Void.
+			sel_columns := selected_columns
+			from
+				sel_columns.start
+			until
+				sel_columns.after
+			loop
+					-- Remove selection flag
+				sel_columns.item.implementation.set_internal_is_selected (False)
+				sel_columns.forth
 			end
 		ensure
 			selected_items_empty: selected_items.is_empty
@@ -4435,15 +4448,17 @@ feature {NONE} -- Event handling
 
 			if
 				a_item /= Void
-				--and then a_item /= currently_active_item --| This code may be uncommented to prevent selection on activation
 			then 
 				if not a_item.is_selected then
-					a_item.enable_select
-					if is_row_selection_enabled then
-						a_item.row.ensure_visible
-					else
-						a_item.ensure_visible
+					if a_item /= currently_active_item then
+							-- We don't want to scroll the grid if an item is being activated.
+						if is_row_selection_enabled then
+							a_item.row.ensure_visible
+						else
+							a_item.ensure_visible
+						end						
 					end
+					a_item.enable_select
 				elseif is_ctrl_pressed and then not is_always_selected then
 						-- Allow for removal of item selection by Ctrl clicking
 					a_item.disable_select
@@ -4832,6 +4847,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			column_physical_index: INTEGER
 			item_implementation: EV_GRID_ITEM_I
 			grid_row_parent_i: EV_GRID_ROW_I
+			l_call_col_deselection_actions, l_call_row_deselection_actions: BOOLEAN
 		do
 			if a_column > columns.count then
 					-- Create new columns needed.
@@ -4855,6 +4871,9 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				if a_existing_item /= Void then
 					a_existing_item.disable_select_internal
 					a_existing_item.update_for_removal
+				else
+					l_call_col_deselection_actions := a_grid_col_i.is_selected
+					l_call_row_deselection_actions := not is_row_selection_enabled and then a_grid_row_i.is_selected
 				end
 			end
 
@@ -4871,6 +4890,15 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 						-- row, so we must update the internal settings for the tree.
 					a_grid_row_i.update_depths_in_tree
 				end
+				
+				if l_call_col_deselection_actions then
+						-- Make sure that the column and row deselection events are called.
+					a_grid_col_i.call_selection_events (False)
+				end
+				if l_call_row_deselection_actions then
+					
+				end
+				
 				redraw_item (item_implementation)
 			else
 					-- Set `last_pointed_item' to `Void' if it is being removed from `Current'

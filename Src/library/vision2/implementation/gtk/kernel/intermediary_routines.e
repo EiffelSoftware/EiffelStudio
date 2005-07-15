@@ -352,17 +352,6 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			end
 		end
 		
-	pointer_leave_action_intermediary (a_c_object: POINTER) is
-			-- Pointer left
-		local
-			widget: EV_WIDGET_IMP
-		do
-			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if widget /= Void then
-				widget.pointer_leave_actions_internal.call (Void)
-			end
-		end
-		
 	pointer_enter_actions_intermediary (a_c_object: POINTER) is
 			-- Pointer entered
 		local
@@ -370,7 +359,18 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			if widget /= Void then
-				widget.pointer_enter_actions_internal.call (Void)
+				widget.on_pointer_enter_leave (True)
+			end
+		end
+
+	pointer_leave_action_intermediary (a_c_object: POINTER) is
+			-- Pointer left
+		local
+			widget: EV_WIDGET_IMP
+		do
+			widget ?= c_get_eif_reference_from_object_id (a_c_object)
+			if widget /= Void then
+				widget.on_pointer_enter_leave (False)
 			end
 		end
 		

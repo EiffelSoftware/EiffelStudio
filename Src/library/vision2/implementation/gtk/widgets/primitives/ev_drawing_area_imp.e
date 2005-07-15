@@ -33,13 +33,19 @@ inherit
 			destroy,
 			needs_event_box,
 			gdk_events_mask,
-			button_press_switch
+			button_press_switch,
+			initialize,
+			tooltips_pointer,
+			set_tooltip,
+			tooltip,
+			on_pointer_enter_leave
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
 		redefine
 			interface,
-			needs_event_box
+			needs_event_box,
+			process_gdk_event
 		end
 
 create
@@ -55,14 +61,23 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_drawing_area_new)
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (visual_widget, False)
+		end	
+
+	initialize is
+			-- Initialize `Current'.
+		do
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (c_object, False)
 				-- This means that when the drawing area is resized, only the new portions are redrawn
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
 			init_default_values
-			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (visual_widget, False)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (c_object, False)
 			disable_tabable_to
 			disable_tabable_from
-		end		
+			
+				-- Initialize tooltip.
+			internal_tooltip := ""		
+			Precursor {EV_PRIMITIVE_IMP}
+		end
 
 feature -- Status report
 
@@ -77,14 +92,14 @@ feature -- Status setting
 	enable_tabable_to is
 			-- Make `is_tabable_to' `True'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_flags (c_object, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			is_tabable_to := True
 		end
 
 	disable_tabable_to is
 			-- Make `is_tabable_to' `False'.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (c_object, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			is_tabable_to := False
 		end
 
@@ -101,6 +116,118 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	on_pointer_enter_leave (a_enter: BOOLEAN) is
+			-- The mouse pointer has either just entered or left `Current'.
+		do
+			update_tooltip (a_enter)
+			Precursor {EV_PRIMITIVE_IMP} (a_enter)
+		end
+
+	update_tooltip (a_show_tooltip: BOOLEAN) is
+			-- Set tooltip status to `a_show_tooltip'.
+		do
+			if tooltips_pointer /= default_pointer then
+				-- Tooltips have been initialized so activate them.
+				if a_show_tooltip then
+					show_tooltips_if_activated := True
+					tooltip_repeater.set_interval (app_implementation.tooltip_delay)
+				else
+					show_tooltips_if_activated := False
+					update_tooltip_window
+					tooltip_repeater.set_interval (0)
+				end
+			end	
+		end
+
+	update_tooltip_window is
+			-- Update the tooltip window.
+		local
+			a_tip_win: POINTER
+			a_mouse_coords: EV_COORDINATE
+			l_x, l_y: INTEGER
+			l_show_tooltip: BOOLEAN
+		do
+			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+			a_mouse_coords := pnd_screen.pointer_position
+			l_x := a_mouse_coords.x
+			l_y := a_mouse_coords.y
+			
+			if
+				l_x > (tooltip_initial_x + tooltip_delta) or else l_x < (tooltip_initial_x - tooltip_delta) or else
+				l_y > (tooltip_initial_y + tooltip_delta) or else l_y < (tooltip_initial_y - tooltip_delta)
+			then
+				tooltip_initial_x := l_x
+				tooltip_initial_y := l_y
+				l_show_tooltip := False
+			else
+				l_show_tooltip := True
+			end
+			
+			if show_tooltips_if_activated and then l_show_tooltip then
+				{EV_GTK_EXTERNALS}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y + tooltip_window_y_offset)
+				{EV_GTK_EXTERNALS}.gtk_widget_show (a_tip_win)
+			else
+				{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
+			end
+		end
+
+	tooltip_delta: INTEGER is 5
+		-- Amount of pixels +/- that the pointer has to move in either axis to deactivate tooltip from initial showing.
+
+	tooltip_window_y_offset: INTEGER is 20
+		-- Amount of pixels tooltip window is offset down from the mouse pointer when shown.
+
+	tooltip_repeater: EV_TIMEOUT
+		-- Timeout repeater used for hiding/show tooltip.
+
+	show_tooltips_if_activated: BOOLEAN
+		-- Should tooltips be shown if activated?
+	
+	tooltip_initial_x, tooltip_initial_y: INTEGER
+		-- Initial tooltip x and y coordinate.
+		
+	tooltips_pointer: POINTER
+		-- Tooltips pointer for `Current'.
+
+	set_tooltip (a_text: STRING) is
+			-- Set `tooltip' to `a_text'.
+		local
+			a_tip_label: POINTER
+			a_tip_win: POINTER
+			a_cs: EV_GTK_C_STRING
+		do
+			if tooltips_pointer = default_pointer then
+				-- The tooltips have not yet been initialized.
+				tooltips_pointer := {EV_GTK_EXTERNALS}.gtk_tooltips_new
+				{EV_GTK_EXTERNALS}.gtk_tooltips_force_window (tooltips_pointer)
+				a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+				{EV_GTK_EXTERNALS}.gtk_window_set_position (a_tip_win, {EV_GTK_EXTERNALS}.gtk_win_pos_mouse_enum)
+				create tooltip_repeater
+				tooltip_repeater.actions.extend (agent update_tooltip_window)
+			end
+			internal_tooltip := a_text.twin
+			a_cs := App_implementation.c_string_from_eiffel_string (internal_tooltip)
+
+			a_tip_label := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_label (tooltips_pointer)
+			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+			{EV_GTK_EXTERNALS}.gtk_label_set_text (a_tip_label, a_cs.item)
+			{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
+			if not a_text.is_empty then
+				update_tooltip (True)
+			else
+				update_tooltip (False)
+			end	
+		end
+
+	tooltip: STRING is
+			-- Tooltip for `Current'.
+		do
+			Result := internal_tooltip.twin
+		end
+
+	internal_tooltip: STRING
+		-- Used for storing `tooltip' of `Current'.
 
 	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
 			-- Should default key processing be allowed for `a_key'.
@@ -192,7 +319,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 	drawable: POINTER is
 			-- Pointer to the drawable object for `Current'.
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
+			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object)
 		end
 
 	mask: POINTER

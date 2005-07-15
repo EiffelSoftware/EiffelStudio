@@ -44,31 +44,36 @@ feature -- Element change
 			-- Set `tooltip' to `a_text'.
 		local
 			a_cs: EV_GTK_C_STRING
-			l_app_imp: like app_implementation
+			a_win: POINTER
 		do
 			if not a_text.is_empty then
-				l_app_imp := app_implementation
-				a_cs := l_app_imp.c_string_from_eiffel_string (a_text)
+				a_cs := app_implementation.c_string_from_eiffel_string (a_text)
 				{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
-					app_implementation.tooltips,
+					tooltips_pointer,
 					visual_widget,
 					a_cs.item,
 					NULL
-				)				
+				)			
 			else
-				remove_tooltip
+				{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
+					tooltips_pointer,
+					visual_widget,
+					NULL,
+					NULL
+				)
+				a_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+				if a_win /= default_pointer then
+					{EV_GTK_EXTERNALS}.gtk_widget_hide (a_win)
+				end
 			end
 		end
 
-	remove_tooltip is
-			-- Set `tooltip' to `Void'.
-	    do
-			{EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
-				app_implementation.tooltips,
-				visual_widget,
-				NULL,
-				NULL
-			)
+feature {NONE} -- Implementation
+
+	tooltips_pointer: POINTER is
+			-- Pointer to the tooltips pointer
+		do
+			Result := app_implementation.tooltips
 		end
 
 feature {EV_ANY_I} -- Implementation

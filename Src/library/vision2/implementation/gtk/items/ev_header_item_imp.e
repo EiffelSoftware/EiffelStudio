@@ -19,12 +19,14 @@ inherit
 	
 	EV_TEXTABLE_IMP
 		redefine
-			interface
+			interface,
+			process_gdk_event
 		end
 
 	EV_PIXMAPABLE_IMP
 		redefine
-			interface
+			interface,
+			process_gdk_event
 		end
 
 create
@@ -187,7 +189,7 @@ feature -- PND
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
-	process_event (n_args: INTEGER; args: POINTER) is
+	process_gdk_event (n_args: INTEGER; args: POINTER) is
 			-- Process gtk events using raw marshal data.
 		local
 			gdk_event: POINTER
@@ -256,7 +258,7 @@ feature {EV_HEADER_IMP} -- Implementation
 				a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
 					-- We don't want the button stealing focus.
 				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
-				real_signal_connect (a_button, once "event", agent (App_implementation.gtk_marshal).header_item_event_dispatcher (internal_id, ? , ?), Void)
+				real_signal_connect (a_button, once "event", agent (App_implementation.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?), Void)
 			else
 				{EV_GTK_EXTERNALS}.object_ref (box)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer))

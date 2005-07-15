@@ -9,7 +9,9 @@ class
 inherit
 	EDITABLE_TEXT_PANEL
 		redefine
-			handle_extended_ctrled_key
+			handle_extended_ctrled_key,
+			reference_window,
+			initialize_editor_context
 		end
 
 feature -- Initialization		

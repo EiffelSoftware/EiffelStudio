@@ -4,7 +4,7 @@ indexing
 
 		Item Insertion:
 		
-		The grid is an item holder for EV_GRID_ITEM objects and its descendents.  Each grid
+		The grid is an item holder for objects of type EV_GRID_ITEM and its descendents.  Each grid
 		item may be inserted in to the grid at a specific column and row.  An item itself may be
 		added to the grid via `set_item', which takes a column and row index.  Items be also added
 		via the `set_item' routine of the row (EV_GRID_ROW) and column (EV_GRID_COLUMN) objects
@@ -15,7 +15,8 @@ indexing
 		
 		If a grid contains no items and therefore has no rows or columns, inserting an item will
 		dynamically resize and automatically create the columns and rows so that it can contain
-		and display the newly inserted item.
+		and display the newly inserted item. New columns and rows may also be added to the grid via
+		`insert_new_column' and `insert_new_row' respectively.
 	
 		--------------------------------------------------------------------------------
 
@@ -216,7 +217,9 @@ indexing
 		When enable_single_item_selection is called, only an single item may be selected by the
 		user when `Current' is on-screen.  Selection may occur either programmatically via the
 		`enable_select' routine of either the item/column or row or on-screen via mouse or keyboard.
-		This is accompanied with the query `is_selected'.
+		This is accompanied with the query `is_selected'.  When a user attempts to select an item or
+		row on-screen the grid attempts to make that item or row more visible to the user so that the
+		text of the item may be read. 
 
 		There are two main selection modes, item selection and row selection.  In item selection,
 		single or multiple items may be selected depending on the current selection mode.  This can be
@@ -237,7 +240,8 @@ indexing
 		to select items via the keyboard or mouse.
 
 		The routine `enable_always_selected' makes sure that at least one item or row is selected depending
-		on the mode after the initial selection.  This can be handy for 
+		on the mode after the initial selection.  This can be handy for implementing widgets that require an item
+		be selected at all times.
 
 		The selection of the grid may be removed with `remove_selection'.
 
@@ -253,6 +257,9 @@ indexing
 
 		To programmatically cancel any activation, each grid item has a `deactivate' routine
 		that may be called during the activation.
+		
+		If an activation occurs during a user selection then the grid itself will not attempt to reposition
+		the item so that it is more visible.
 
 		When an item is activated, the `item_activate_actions' are fired, this can be used
 		to customize the activation process of a certain item, `item_deactivate_actions' are
@@ -335,12 +342,35 @@ inherit
 			full as cell_full,
 			has as cell_has,
 			prune as cell_prune,
+			prune_all as cell_prune_all,
 			extendible as cell_extendible,
 			put as cell_put,
 			replace as cell_replace,
 			linear_representation as cell_linear_representation,
 			is_empty as cell_is_empty,
-			extend as cell_extend
+			extend as cell_extend,
+			fill as cell_fill,
+			is_inserted as cell_is_inserted,
+			empty as cell_empty,
+			has_recursive as cell_has_recursive,
+			may_contain as cell_may_contain,
+			merge_radio_button_groups as cell_merge_radio_button_groups,
+			unmerge_radio_button_groups as cell_unmerge_radio_button_groups,
+			merged_radio_button_groups as cell_merged_radio_button_groups,
+			items_unique as cell_items_unique,
+			parent_of_items_is_current as cell_parent_of_items_is_current,
+			background_color_propagated as cell_background_color_propagated,
+			foreground_color_propagated as cell_foreground_color_propagated,
+			all_radio_buttons_connected as cell_all_radio_buttons_connected,
+			first_radio_button_selected as cell_first_radio_button_selected,
+			is_parent_recursive as cell_is_parent_recursive,
+			has_radio_button as cell_has_radio_button,
+			has_selected_radio_button as cell_has_selected_radio_button,
+			propagate_background_color as cell_propagate_background_color,
+			propagate_foreground_color as cell_propagate_foreground_color,
+			client_height as cell_client_height,
+			client_width as cell_client_width,
+			background_pixmap as cell_background_pixmap
 		redefine
 			implementation,
 			create_implementation,

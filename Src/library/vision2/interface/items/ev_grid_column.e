@@ -300,6 +300,7 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			is_parented: parent /= Void
+			all_items_may_be_removed: all_items_may_be_removed
 		do
 			implementation.clear
 		ensure

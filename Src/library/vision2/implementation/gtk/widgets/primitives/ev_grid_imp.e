@@ -16,8 +16,7 @@ inherit
 			propagate_foreground_color
 		redefine
 			interface,
-			initialize,
-			extra_text_spacing
+			initialize
 		end
 
 	EV_CELL_IMP
@@ -61,6 +60,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'
 		do
+				-- We need to explicitly show the cell gtk widget as we are not calling the Precursor as the event hookup is not needed.
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			initialize_grid
 			set_focused_selection_color (create {EV_COLOR}.make_with_8_bit_rgb (83, 85, 161))

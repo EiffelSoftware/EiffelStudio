@@ -35,7 +35,7 @@ cluster
 			"desc";"table_eiffel3";"CVS"
 		end
 
-		-- EiffelBase
+		-- EiffelTime
 	all time: "$EIFFEL_SRC/library/time"
 		exclude
 			"french";"german";"CVS"

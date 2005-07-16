@@ -23,9 +23,7 @@ inherit
 
 	EV_MODEL_POSTSCRIPT_PROJECTOR
 		redefine
-			project--,
---			add_ps,
---			add_footer
+			project
 		end
 
 	EXECUTION_ENVIRONMENT
@@ -49,13 +47,10 @@ feature {NONE} -- Initialization
 			end
 			make_with_filename (an_interface.world, filename)
 				-- World needs resetting on project
-				
-					-- Set up our page size based on context size resolution.
---			point_width := interface.context.horizontal_resolution
---			point_height := interface.context.vertical_resolution
 		end
 
 	initialize is
+			-- Initialize `Current'.
 		do
 			set_is_initialized (True)
 		end
@@ -63,6 +58,7 @@ feature {NONE} -- Initialization
 feature {EV_ANY_I} -- Access
 
 	project is
+			-- Make a standard projection of the world on the device.
 		local
 			i: INTEGER
 			a_cs: C_STRING
@@ -73,28 +69,11 @@ feature {EV_ANY_I} -- Access
 				i := mkfifo (a_cs.item, S_IRWXU)
 				system ("lpr < " + filename + " &")
 			end
-
---			create file.make_open_write (filename)
---			output_to_postscript
---			file.close
+				-- Print the file using the postscript projector.
+			Precursor {EV_MODEL_POSTSCRIPT_PROJECTOR}
 		end
 
---	add_ps (ps_code: STRING) is
---			-- Append `ps_code' postscript to output.
---		do
---			file.put_string (ps_code + "%N")
---		end
-
 feature {NONE} -- Implementation
-
---	add_footer is
---			-- Add showpage if printing to printer.
---		do
---			if not interface.context.output_to_file then
---				add_ps ("showpage")
---			end
---			Precursor {EV_POSTSCRIPT_PROJECTOR}
---		end
 
 	tmp_print_job_name: STRING is
 			-- A unique print job file name.

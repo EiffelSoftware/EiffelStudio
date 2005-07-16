@@ -166,7 +166,7 @@ feature {NONE}-- Initialization
 			
 			set_minimum_width (800)
 			set_minimum_height (600)
-			set_title ("Vision2 Tour")
+			set_title ("Vision2 Demo")
 			file_menu.set_text ("File")
 			file_generate.disable_sensitive
 			file_generate.set_text ("Generate")

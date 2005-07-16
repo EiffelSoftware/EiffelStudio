@@ -51,7 +51,7 @@ feature -- Initialization
 			file: RAW_FILE
 		do
 			default_create
-			set_title ("EiffelVision2 Tour")
+			set_title ("EiffelVision2 Demo")
 			disable_user_resize
 
 				-- Create controls.
@@ -134,7 +134,7 @@ feature -- Constant strings
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelVision2 Tour"
+			Result := "EiffelVision2 Demo"
 		end
 		
 

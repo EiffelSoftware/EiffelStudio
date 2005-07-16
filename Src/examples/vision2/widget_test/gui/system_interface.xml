@@ -18,7 +18,7 @@
 <EV_WIDGET><Minimum_width>800</Minimum_width>
 	<Minimum_height>600</Minimum_height>
 	</EV_WIDGET>
-<EV_WINDOW><Title><![CDATA[Vision2 Tour]]></Title>
+<EV_WINDOW><Title><![CDATA[Vision2 Demo]]></Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>

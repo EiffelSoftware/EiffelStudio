@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 	update_title (a_widget: EV_WIDGET) is
 			-- Update `title' based on type of `a_widget'.
 		do
-			set_title ("Vision2 Tour - " + a_widget.generating_type)
+			set_title ("Vision2 Demo - " + a_widget.generating_type)
 		end
 		
 

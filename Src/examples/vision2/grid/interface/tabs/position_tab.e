@@ -218,8 +218,8 @@ feature {NONE} -- Implementation
 			x_pos := a_x
 			y_pos := a_y
 			if moving then
-				v_x := ((x_pos - left) * scale).truncated_to_integer.max (0).min (grid.virtual_width - grid.viewable_width)
-				v_y := ((y_pos - top) * scale).truncated_to_integer.max (0).min (grid.virtual_height - grid.viewable_height)
+				v_x := ((x_pos - left) * scale).truncated_to_integer.max (0).min (grid.maximum_virtual_x_position)
+				v_y := ((y_pos - top) * scale).truncated_to_integer.max (0).min (grid.maximum_virtual_y_position)
 				grid.set_virtual_position (v_x, v_y)
 				virtual_x_position.set_value (v_x)
 				virtual_y_position.set_value (v_y)

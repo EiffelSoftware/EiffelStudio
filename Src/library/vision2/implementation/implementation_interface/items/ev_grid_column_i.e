@@ -456,7 +456,7 @@ feature -- Element change
 				i := i + 1
 			end
 		ensure
-			to_implement_assertion ("EV_GRID_COLUMN_I.clear - All items positions return `Void'.")
+			cleared: index_of_first_item = 0
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is

@@ -66,8 +66,9 @@ feature {NONE}-- Initialization
 			
 			make_editor
 			editor_drawing_area.set_pebble_function (agent pebble_from_x_y)
-			editor_drawing_area.enable_pebble_positioning			
-		end
+			editor_drawing_area.enable_pebble_positioning
+			editor_drawing_area.drop_actions.extend (agent resume_cursor_for_drop)
+		end	
 
 	initialize_customizable_commands is
 			-- Create array of customizable commands.
@@ -577,9 +578,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			status_valid: a_status = pnd_pick or a_status = no_pnd
 		do		
 			if a_status = pnd_pick then
-				stop_cursor_blinking
-			else
-				resume_cursor_blinking
+				suspend_cursor_blinking
 			end
 		end		
 
@@ -756,6 +755,12 @@ feature {NONE} -- Implementation
 		end
 
 	in_feature_click: BOOLEAN
+	
+	resume_cursor_for_drop (a: ANY) is
+			-- Resumes cursor on drop from pick and drop
+		do
+			resume_cursor_blinking
+		end
 
 feature -- Memory management
 

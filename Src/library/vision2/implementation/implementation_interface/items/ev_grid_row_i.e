@@ -13,6 +13,10 @@ inherit
 		end
 	
 	EV_GRID_ROW_ACTION_SEQUENCES_I
+		export
+			{EV_GRID_I}
+				deselect_actions_internal
+		end
 	
 	EV_DESELECTABLE_I
 		redefine

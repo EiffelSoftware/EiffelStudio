@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 				loop
 					create grid_label_item
 					grid_label_item.set_text ("Item" + " " + l_xcount.out + ", " + l_ycount.out)
-					grid_label_item.set_tooltip (grid_label_item.text.twin)
+--					grid_label_item.set_tooltip (grid_label_item.text.twin)
 					grid.set_item (l_xcount, l_ycount, grid_label_item)
 					l_xcount := l_xcount + 1
 				end
@@ -1190,7 +1190,9 @@ feature {NONE} -- Implementation
 			counter, counter2: INTEGER
 			items: EV_GRID_ARRAYED_LIST [EV_GRID_ITEM]
 			time1, time2: DATE_TIME
---			i: INTEGER
+			i: INTEGER
+			main: EV_TITLED_WINDOW
+			grid2: EV_GRID
 		do
 --			reset_grid
 --			l_item := grid.item_at_virtual_position (200, 16)
@@ -1582,18 +1584,48 @@ feature {NONE} -- Implementation
 --			create time2.make_now
 --			set_status_message (("Redraw in : " + ((time2.fine_second - time1.fine_second).out)))
 --			grid.pointer_button_press_item_actions.extend (agent button_pressed)
+--			
+--			create time1.make_now
+--			if profile_cell.item then
+--				start_profiling
+--			end
+--			grid.column (1).resize_to_content
+--			if profile_cell.item then
+--				stop_profiling
+--			end
+--			create time2.make_now
+--			set_status_message (("Redrawn in : " + ((time2.fine_second - time1.fine_second).out)))
+--			grid.enable_tree
+--			grid.set_item (1, 1, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 1"))
+--			grid.set_item (1, 2, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 2"))
+--			grid.row (1).add_subrow (grid.row (2))
+--			grid.set_item (1, 3, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 3"))
+--			grid.set_item (1, 4, create {EV_GRID_LABEL_ITEM}.make_with_text ("item 4"))
+--			grid.row (1).add_subrow (grid.row (3))
+--			grid.insert_new_row_parented (4, grid.row (1))
+
+--			grid.lock_update
+--			add_items (10, 10)
+--			grid.set_item (5, 5, Void)
+--			grid.item (5, 4).set_tooltip ("A tooltip")
+--			grid.pointer_button_press_actions.force_extend (agent grid.unlock_update)
+--			grid.set_focused_selection_color (light_blue)
+--			grid.set_non_focused_selection_color (light_green)
 			
-			create time1.make_now
-			if profile_cell.item then
-				start_profiling
-			end
-			grid.column (1).resize_to_content
-			if profile_cell.item then
-				stop_profiling
-			end
-			create time2.make_now
-			set_status_message (("Redrawn in : " + ((time2.fine_second - time1.fine_second).out)))
+--			add_items (1, 200)
+--			grid.set_virtual_position (0, grid.maximum_virtual_y_position)
+--			grid.wipe_out
+--			add_items (1, 200)
+			add_items (3, 100)
+			grid.pointer_motion_actions.force_extend (agent resize_first_column)
 		end
+		
+	resize_first_column is
+			--
+		do
+			grid.column (1).resize_to_content
+		end
+		
 		
 	button_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
 			--
@@ -1607,9 +1639,7 @@ feature {NONE} -- Implementation
 	compute_items (a_column, a_row: INTEGER): EV_GRID_ITEM is
 			--
 		local	
-			drawable_item: EV_GRID_DRAWABLE_ITEM
 			label_item: EV_GRID_LABEL_ITEM
-			counter: INTEGER
 		do
 			create label_item
 			label_item.set_text ("A text" + a_column.out + ", " + a_row.out)
@@ -2147,22 +2177,11 @@ feature {NONE} -- Implementation
 			pixmaps.extend (stock_pixmaps.information_pixmap.twin)
 			pixmaps.extend (stock_pixmaps.question_pixmap.twin)
 			pixmaps.extend (stock_pixmaps.warning_pixmap.twin)
-			from
-				pixmaps.start
-			until
-				grid.row_count = 0
-			loop
-				grid.remove_row (grid.row_count)
-			end
-			from
-			until
-				grid.column_count = 0
-			loop
-				grid.remove_column (grid.column_count)
-			end
+
 			grid.hide_header
 			from
 				a_x := 1
+				pixmaps.start
 			until
 				a_x > 5
 			loop
@@ -2860,6 +2879,33 @@ feature {NONE} -- Implementation
 	texture_width: INTEGER is 256
 
 	texture_height: INTEGER is 256
+	
+	is_vertical_overdraw_enabled_button_selected is
+			-- Called by `select_actions' of `is_virtual_height_bounded_by_viewable_height_button'.
+		do
+			if is_vertical_overdraw_enabled_button.is_selected then
+				grid.enable_vertical_overscroll
+			else
+				grid.disable_vertical_overscroll
+			end
+		end
+	
+	is_horizontal_overdraw_enabled_button_selected is
+			-- Called by `select_actions' of `is_virtual_width_bounded_by_viewable_width_button'.
+		do
+			if is_horizontal_overdraw_enabled_button.is_selected then
+				grid.enable_horizontal_overscroll
+			else
+				grid.disable_horizontal_overscroll
+			end
+		end
+		
+	wipe_out_button_selected is
+			--
+		do
+			grid.wipe_out
+		end
+		
 		
 end -- class GRID_TAB
 

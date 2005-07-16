@@ -1,1 +1,7 @@
 1    ICON    DISCARDABLE     "vision2_tour.ico"
+
+// It should be 
+// CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "vision2_tour.exe.manifest"
+// but on older version of VC or older version of the Platform SDK they
+// are not defined.
+1 24 "vision2_tour.exe.manifest"

@@ -130,6 +130,7 @@
 							<item>Fixed bug which caused processing of particular keys in widgets contained within the dialog to be processed by the dialog preventing the `key_press_actions' from being fired and causing miscellaneous keyboard navigational issues.</item>
 							<item>Proper handling of `remove_default_push_button' and `set_default_push_button'. Before the internal state would be messed up, resulting in calling the `select_actions' of the the `default_push_button' even though the `default_push_button' did not have focus.</item>
 							<item>Better navigation using keys</item>
+							<item>Fixed bug where modal and modeless dialogs were not centered to parent</item>
 						</list>
 					</item>
 					<item>
@@ -211,7 +212,11 @@
 						<bold>EV_CLIPBOARD</bold> - Now UTF8 strings from different language locales are handled correctly for copying and pasting
 					</item>
 					<item>
-						<bold>EV_DRAWING_AREA</bold> - Fixed `flush' to instantly call any pending expose events
+						<bold>EV_DRAWING_AREA</bold> - 
+						<list ordered="false">
+							<item>Fixed `flush' to instantly call any pending expose events</item>
+							<item>Fixed issue where drawing area was not being focused when clicked upon by default</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_FONT</bold>
@@ -258,7 +263,10 @@
 						<bold>EV_ACCELERATOR</bold> - Now the key accelerator is checked if valid before proceeding, in some circumstances when a key is not present in the key mapping table adding an accelerator would crash the system, now if the accelerator is not valid for the current key mapping then nothing is done
 					</item>
 					<item>
-						<bold>EV_WINDOW</bold> - Now setting and querying focus works in all circumstances with all window types
+						<bold>EV_WINDOW</bold>
+						<list ordered="false">
+							<item>Now setting and querying focus works in all circumstances with all window types</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_PIXMAP</bold> - Improved pixmap 'stretch' for smaller images
@@ -269,6 +277,18 @@
 							<item>Optimized motion event handling so that current motion events only get requested when the previous one has been processed</item>
 							<item>Fixed theme managed handling in all widgets so that fonts when changed outside of the application by the theme manager get reflected in the Vision2 application</item>
 						</list>
+					</item>
+					<item>
+						<bold>EV_DIALOG</bold> 
+						<list ordered="false"> 
+							<item>Fixed bug where modal and modeless dialogs were not centered to parent</item>
+						</list>
+					</item>
+					<item>
+						<bold>EV_FRAME</bold> - Corrected issue where changing alignment of text was resetting the vertical alignment
+					</item>
+					<item>
+						<bold>EV_COMBO_BOX</bold> - Now the drop down box doesn't fire focus out actions when shown
 					</item>
 				</list>
 			</item>

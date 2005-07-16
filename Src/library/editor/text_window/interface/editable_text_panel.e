@@ -52,7 +52,6 @@ feature {NONE} -- Initialization
 			
 			Precursor {SELECTABLE_TEXT_PANEL}
 			editor_drawing_area.key_press_string_actions.extend (agent on_char)
-			editor_drawing_area.key_release_actions.extend (agent on_key_up)
 			basic_pointer := editor_drawing_area.pointer_style
 		end
 
@@ -715,6 +714,9 @@ feature {NONE} -- Mouse copy cut
 				forget_mouse_moves := False
 			end
 			Precursor (x_cur, l_y_pos, button, unused1,unused2,unused3, a_screen_x, a_screen_y)
+			if blink_suspended then
+				resume_cursor_blinking
+			end
 		end
 
 	on_mouse_move (abs_x_pos, abs_y_pos: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER) is

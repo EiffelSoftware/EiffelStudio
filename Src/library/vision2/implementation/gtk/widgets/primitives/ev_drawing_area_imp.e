@@ -38,7 +38,8 @@ inherit
 			tooltips_pointer,
 			set_tooltip,
 			tooltip,
-			on_pointer_enter_leave
+			on_pointer_enter_leave,
+			on_key_event
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -131,6 +132,7 @@ feature {NONE} -- Implementation
 				-- Tooltips have been initialized so activate them.
 				if a_show_tooltip then
 					show_tooltips_if_activated := True
+					reset_tooltip_position := True
 					tooltip_repeater.set_interval (app_implementation.tooltip_delay)
 				else
 					show_tooltips_if_activated := False
@@ -140,31 +142,23 @@ feature {NONE} -- Implementation
 			end	
 		end
 
+	reset_tooltip_position: BOOLEAN
+		-- Should the tooltip window position be reset?
+
 	update_tooltip_window is
 			-- Update the tooltip window.
 		local
 			a_tip_win: POINTER
 			a_mouse_coords: EV_COORDINATE
-			l_x, l_y: INTEGER
-			l_show_tooltip: BOOLEAN
 		do
-			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
-			a_mouse_coords := pnd_screen.pointer_position
-			l_x := a_mouse_coords.x
-			l_y := a_mouse_coords.y
-			
-			if
-				l_x > (tooltip_initial_x + tooltip_delta) or else l_x < (tooltip_initial_x - tooltip_delta) or else
-				l_y > (tooltip_initial_y + tooltip_delta) or else l_y < (tooltip_initial_y - tooltip_delta)
-			then
-				tooltip_initial_x := l_x
-				tooltip_initial_y := l_y
-				l_show_tooltip := False
-			else
-				l_show_tooltip := True
+			if show_tooltips_if_activated and then reset_tooltip_position then
+				a_mouse_coords := pnd_screen.pointer_position
+				tooltip_initial_x := a_mouse_coords.x
+				tooltip_initial_y := a_mouse_coords.y
+				reset_tooltip_position := False		
 			end
-			
-			if show_tooltips_if_activated and then l_show_tooltip then
+			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
+			if show_tooltips_if_activated then
 				{EV_GTK_EXTERNALS}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y + tooltip_window_y_offset)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_tip_win)
 			else
@@ -172,8 +166,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	tooltip_delta: INTEGER is 5
-		-- Amount of pixels +/- that the pointer has to move in either axis to deactivate tooltip from initial showing.
+	tooltip_initial_x, tooltip_initial_y: INTEGER
+		-- Initial x and y coordinates for the tooltip window.
 
 	tooltip_window_y_offset: INTEGER is 20
 		-- Amount of pixels tooltip window is offset down from the mouse pointer when shown.
@@ -183,9 +177,6 @@ feature {NONE} -- Implementation
 
 	show_tooltips_if_activated: BOOLEAN
 		-- Should tooltips be shown if activated?
-	
-	tooltip_initial_x, tooltip_initial_y: INTEGER
-		-- Initial tooltip x and y coordinate.
 		
 	tooltips_pointer: POINTER
 		-- Tooltips pointer for `Current'.
@@ -351,10 +342,20 @@ feature {NONE} -- Implementation
 				-- Setting this flag on other gtk widgets such as GtkTreeView causes problems with the implementation
 		end
 
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Used for key event actions sequences.
+		do
+				-- Make sure tooltip window is hidden.
+			update_tooltip (False)
+			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
+		end
+
 	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		do
+				-- Make sure the tooltip is hidden if any button events occur.
+			update_tooltip (False)
 			if not is_tabable_to then
 				{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			end
@@ -365,7 +366,7 @@ feature {NONE} -- Implementation
 			if not is_tabable_to then
 				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			end
-			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)		
 		end
 
 	interface: EV_DRAWING_AREA

@@ -509,7 +509,7 @@
 								</Component>
 								<Component Id="VISION1.EXE" Guid="ED8D2B15-007F-4611-9E13-4C5201289287">
 									<File Id="vision2_tour.exe" Name="VISION~1.EXE" LongName="vision2_tour.exe" KeyPath="yes">
-										<Shortcut Id="vision2_tour.exe" Directory="Documentation" Name="EIFFEL~1" LongName="EiffelVision2 Tour" Description="EiffelVision2 overview presentation" Hotkey="0" Show="normal" />
+										<Shortcut Id="vision2_tour.exe" Directory="Documentation" Name="EIFFEL~1" LongName="EiffelVision2 Demo" Description="EiffelVision2 overview presentation" Hotkey="0" Show="normal" />
 									</File>
 								</Component>
 							</Directory>

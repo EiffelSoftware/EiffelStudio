@@ -219,7 +219,7 @@ indexing
 		`enable_select' routine of either the item/column or row or on-screen via mouse or keyboard.
 		This is accompanied with the query `is_selected'.  When a user attempts to select an item or
 		row on-screen the grid attempts to make that item or row more visible to the user so that the
-		text of the item may be read. 
+		text of the item may be read, this will not occur however if the item is currently activated.
 
 		There are two main selection modes, item selection and row selection.  In item selection,
 		single or multiple items may be selected depending on the current selection mode.  This can be

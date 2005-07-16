@@ -2217,7 +2217,9 @@ feature -- Removal
 			redraw_client_area
 			create physical_column_indexes_internal.make (0)
 			last_vertical_scroll_bar_value := 0
-			last_horizontal_scroll_bar_value := 0	
+			last_horizontal_scroll_bar_value := 0
+			hidden_node_count := 0
+			displayed_column_count := 0
 		ensure
 			columns_removed: column_count = 0
 			rows_removed: row_count = 0

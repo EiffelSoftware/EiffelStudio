@@ -109,36 +109,32 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	base_make_called: BOOLEAN is
 			-- Was `base_make' called?
 		do
-			Result := state_flags.bit_test (0) = True
+			Result := state_flags.bit_test (0)
 		end
 
 	is_initialized: BOOLEAN is
 			-- Has `Current' been initialized properly?
 		do
-			Result := state_flags.bit_test (1) = True
+			Result := state_flags.bit_test (1)
 		end
 
 	is_destroyed: BOOLEAN is
 			-- Is `Current' no longer usable?
 		do
-			Result := state_flags.bit_test (2) = True
+			Result := state_flags.bit_test (2)
 		end
 
 	is_in_destroy: BOOLEAN is
 			-- Is `Current' in the process of being destroyed?
 			-- Needed for call protection when in the process of `destroy' to prevent multiple calls as a result of destruction.
 		do
-			Result := state_flags.bit_test (3) = True
+			Result := state_flags.bit_test (3)
 		end
 
 	set_base_make_called (flag: BOOLEAN) is
 			-- Set `base_make_called' to `flag'.
 		do
-			if flag then
-				state_flags := state_flags.set_bit (True, 0)
-			else
-				state_flags := state_flags.set_bit (False, 0)
-			end
+			state_flags := state_flags.set_bit (flag, 0)
 		ensure
 			is_base_make_called_set: base_make_called = flag
 		end
@@ -146,11 +142,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	set_is_initialized (flag: BOOLEAN) is
 			-- Set `is_initialized' to `flag'.
 		do
-			if flag then
-				state_flags := state_flags.set_bit (True, 1)
-			else
-				state_flags := state_flags.set_bit (False, 1)
-			end
+			state_flags := state_flags.set_bit (flag, 1)
 		ensure
 			is_initialized_set: is_initialized = flag
 		end
@@ -158,11 +150,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	set_is_destroyed (flag: BOOLEAN) is
 			-- Set `is_destroyed' to `flag'.
 		do
-			if flag then
-				state_flags := state_flags.set_bit (True, 2)
-			else
-				state_flags := state_flags.set_bit (False, 2)
-			end
+			state_flags := state_flags.set_bit (flag, 2)
 		ensure
 			is_destroyed_set: is_destroyed = flag
 		end
@@ -170,11 +158,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	set_is_in_destroy (flag: BOOLEAN) is
 			-- Set `is_in_destroy' to `flag'.
 		do
-			if flag then
-				state_flags := state_flags.set_bit (True, 3)
-			else
-				state_flags := state_flags.set_bit (False, 3)
-			end
+			state_flags := state_flags.set_bit (flag, 3)
 		ensure
 			is_in_destroy_set: is_in_destroy = flag
 		end

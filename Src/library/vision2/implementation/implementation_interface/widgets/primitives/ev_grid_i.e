@@ -146,22 +146,22 @@ feature -- Access
 			-- All columns selected in `Current'.
 		local
 			temp_columns: like columns
-			cursor: CURSOR
+			i: INTEGER
+			a_column: EV_GRID_COLUMN_I
 		do
 			from
 				create Result.make (10)
 				temp_columns := columns
-				cursor := temp_columns.cursor
-				temp_columns.start
+				i := 1
 			until
-				temp_columns.after
+				i > temp_columns.count
 			loop
-				if temp_columns.item.is_selected then
-					Result.extend (temp_columns.item.interface)
+				a_column := temp_columns @ i
+				if a_column.is_selected then
+					Result.extend (a_column.interface)
 				end
-				temp_columns.forth
+				i := i + 1
 			end
-			temp_columns.go_to (cursor)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -516,7 +516,6 @@ feature -- Access
 		do
 			Result := drawable.has_focus
 		end
-		
 
 feature -- Pick and Drop
 
@@ -4874,8 +4873,17 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 					a_existing_item.disable_select_internal
 					a_existing_item.update_for_removal
 				else
-					l_call_col_deselection_actions := a_grid_col_i.is_selected
-					l_call_row_deselection_actions := not is_row_selection_enabled and then a_grid_row_i.is_selected
+						-- A row or column may have been deselected, so events must be fired if deselection occurs.
+					if (column_deselect_actions_internal /= Void and then not column_deselect_actions_internal.is_empty) or else
+						(a_grid_col_i.deselect_actions_internal /= Void and then not a_grid_col_i.deselect_actions_internal.is_empty) then
+						l_call_col_deselection_actions :=  a_grid_col_i.is_selected
+					end
+					
+					if (row_deselect_actions_internal /= Void and then not row_deselect_actions_internal.is_empty) or else
+						(a_grid_row_i.deselect_actions_internal /= Void and then not a_grid_row_i.deselect_actions_internal.is_empty)
+					then
+						l_call_row_deselection_actions := not is_row_selection_enabled and then a_grid_row_i.is_selected
+					end
 				end
 			end
 
@@ -4898,7 +4906,12 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 					a_grid_col_i.call_selection_events (False)
 				end
 				if l_call_row_deselection_actions then
-					
+					if a_grid_row_i.deselect_actions_internal /= Void and then not a_grid_row_i.deselect_actions_internal.is_empty then
+						a_grid_row_i.deselect_actions_internal.call (Void)
+					end
+					if row_deselect_actions_internal /= Void and then not row_deselect_actions_internal.is_empty then
+						row_deselect_actions_internal.call ([a_grid_row_i.interface])
+					end
 				end
 				
 				redraw_item (item_implementation)

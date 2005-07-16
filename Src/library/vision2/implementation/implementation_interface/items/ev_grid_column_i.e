@@ -16,6 +16,10 @@ inherit
 		end
 
 	EV_GRID_COLUMN_ACTION_SEQUENCES_I
+		export
+			{EV_GRID_I}
+				deselect_actions_internal
+		end
 	
 create
 	make

@@ -44,6 +44,8 @@ feature {NONE} -- Initialization
 			Precursor {TEXT_PANEL}
 	
 			create blinking_timeout
+			blinking_timeout.set_interval (blink_interval)
+			
 			editor_drawing_area.key_press_actions.extend (agent on_key_down)
 			create key_action_timer.make_with_interval (0)
 			editor_drawing_area.key_release_actions.extend (agent on_key_up)
@@ -52,6 +54,7 @@ feature {NONE} -- Initialization
 			editor_drawing_area.focus_out_actions.extend (agent lose_focus)
 
 			editor_drawing_area.enable_sensitive
+			let_blink := True
 		end
 
 feature -- Access
@@ -399,10 +402,10 @@ feature {NONE} -- Process Vision2 events
 			-- key `virtual_key' and the associated data `key_data'.
 		do
 			if ev_key /= Void and then not ignore_keyboard_input and then not alt_key then
-					-- Handle state key.	
-				blink_on := True
-				blinking_timeout.actions.call ([])
-				blinking_timeout.actions.block
+					-- Handle state key.
+
+				reset_blinking
+							
 				if key_pressed /= Void and then ev_key.code = key_pressed.code then
 					continue_key_action := true
 				else
@@ -422,9 +425,8 @@ feature {NONE} -- Process Vision2 events
 	on_key_up (ev_key: EV_KEY) is
 			-- Process Wm_keyup message corresponding to the
 			-- key `virtual_key' and the associated data `key_data'.
-		do			
-			blink_delay_timeout.set_interval (1000)
-			resume_cursor_blinking		
+		do
+			blink_on := False
 		end
 
 	gain_focus is
@@ -435,7 +437,7 @@ feature {NONE} -- Process Vision2 events
 		do
 				-- Redraw the line where the cursor is (we will add the cursor)
 			show_cursor := True
---			invalidate_cursor_rect (True)
+			resume_cursor_blinking
 			if has_selection then
 				sel_start := text_displayed.selection_start.y_in_lines
 				sel_end := text_displayed.selection_end.y_in_lines
@@ -454,9 +456,7 @@ feature {NONE} -- Process Vision2 events
 				-- Redraw the line where the cursor is (we will erase the cursor)
 			show_cursor := False
 			invalidate_cursor_rect (True)
-			if blinking_timeout /= Void then
-				blinking_timeout.set_interval (0)
-			end						
+			suspend_cursor_blinking				
 		end
 
 feature {NONE} -- Handle keystrokes
@@ -637,42 +637,78 @@ feature {NONE} -- Cursor Management
 	show_cursor: BOOLEAN
 			-- Show cursor in editor?
 
+feature {NONE} -- Blink Cursor Management
+
+	blink_on: BOOLEAN
+			-- Flag indicating current status of cursor blink.
+			-- `True' indicates the cursor should be draw as a solid state
+			
+	let_blink: BOOLEAN
+			-- Should cursor be allowed to blink?
+
 	blink_interval: INTEGER is 500
 			-- Interval in milliseconds between cursor blinks
 
 	blinking_timeout: EV_TIMEOUT
 			-- Timeout for control cursor blinking	
 
-	blink_on: BOOLEAN
-			-- Flag indicating current status of cursor blink.
-
-	blink_delay_timeout: EV_TIMEOUT is
-			-- Timeout for causing a delay before re-blinking cursor after a keyup event.  Without this the
-			-- cursor will blink as you move it during repeating movement operations (up, donw, left, right).
+	blink_deplay_timeout: EV_TIMEOUT is
+			-- Timeout for controlling blinking cursor resuce (when `reset_blinking' is called)
 		once
-			if internal_blinking_timeout = Void then
-				create internal_blinking_timeout
-				internal_blinking_timeout.actions.extend (agent resume_cursor_blinking)
+			create Result.make_with_interval (400)
+			Result.actions.extend (agent on_blink_delay_timer)
+			Result.actions.resume
+		end
+
+	on_blink_delay_timer is
+			-- Called when `blink_deplay_timeout' times out.
+		do
+			let_blink := True
+		end
+
+	reset_blinking is
+			-- Resets cursor blinking delay timer `blink_deplay_timeout' to temporarly stop blinking.
+		local
+			i: INTEGER
+		do
+				-- Resets timer
+			let_blink := False
+			i := blink_deplay_timeout.interval
+			blink_deplay_timeout.set_interval (i)
+		end
+
+	suspend_cursor_blinking is
+			-- Suspends cursor blinking until `resume_cursor_blinking' is called.
+		do
+			if not blink_suspended then
+				let_blink := False
+				blink_on := True
+				blinking_timeout.actions.call ([])
+				blinking_timeout.actions.block
+				blink_suspended := True	
 			end
-			Result := internal_blinking_timeout
+		ensure
+			blink_suspended: blink_suspended
 		end
 		
-	internal_blinking_timeout: EV_TIMEOUT
-			-- Internal blinking timeout
-
-	stop_cursor_blinking is
-			-- Stop cursor from blinking
-		do
-			blink_delay_timeout.set_interval (10000)
-			blink_on := False
-			blinking_timeout.actions.wipe_out
-		end
+	blink_suspended: BOOLEAN
+			-- Has blinking been suspended?
 
 	resume_cursor_blinking is
-			-- Resume blinking timeout to allow cursor to blink again
-		do
-			blink_on := True
-			blinking_timeout.actions.resume
+			-- Resumes cursor blinking from a call to `suspend_cursor_blinking'
+		do	
+			if blink_suspended then
+				let_blink := True
+				blink_on := True
+				blinking_timeout.actions.call ([])
+				blinking_timeout.actions.resume
+				blink_suspended := False
+			else
+				reset_blinking
+				let_blink := True
+			end
+		ensure
+			not_blink_suspended: not blink_suspended
 		end		
 
 	basic_cursor_move (action: PROCEDURE[TEXT_CURSOR,TUPLE]) is
@@ -743,14 +779,13 @@ feature {NONE} -- Cursor Management
 			cursor_has_token: text_displayed.cursor.token /= Void
 		do
 				-- Draw the cursor
-			internal_draw_cursor (buffered_line, x, y, width, line_height, show_cursor)				 					
 			blinking_timeout.actions.wipe_out
 			if editor_preferences.blinking_cursor and has_focus then				
 					-- Set up a timeout to be called to make the cursor blink
-				if blinking_timeout.interval = 0 then
-					blinking_timeout.set_interval (blink_interval)										
-				end																																												
-				blinking_timeout.actions.extend (agent internal_draw_cursor (media, x, y, width, line_height, show_cursor))				
+				blinking_timeout.actions.extend (agent internal_draw_cursor (media, x, y, width, line_height, show_cursor))
+				blinking_timeout.actions.call ([])
+			else
+				internal_draw_cursor (media, x, y, width, line_height, show_cursor)
 			end
  		end
 
@@ -768,7 +803,7 @@ feature {NONE} -- Cursor Management
 			if not do_show then	
 				media.set_foreground_color (editor_preferences.plain_gray)
 			elseif editor_preferences.blinking_cursor and has_focus then
-				if blink_on then
+				if let_blink and then blink_on then
 					media.set_foreground_color (editor_preferences.plain_black)
 				else
 					media.set_foreground_color (editor_preferences.normal_background_color)
@@ -1155,8 +1190,10 @@ feature {NONE} -- Scroll bars management
  			
  				-- If the cursor is blinking here we must wipe out the previous action because they draw onto the wrong line
  			if blinking_timeout /= Void and then text_displayed.cursor /= Void then
-				blinking_timeout.actions.wipe_out	
+				blinking_timeout.actions.wipe_out
+				let_blink := False	
 				draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)	
+				let_blink := True
  			end				
  		end
 

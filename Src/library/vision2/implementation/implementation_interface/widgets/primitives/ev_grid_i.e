@@ -589,24 +589,36 @@ feature -- Pick and Drop
 		local
 			a_item: EV_GRID_ITEM
 			l_drop_actions_internal: EV_PND_ACTION_SEQUENCE
+			l_ignore_drop_actions: BOOLEAN
 		do
 			a_item := item_target
-
 				-- Call appropriate drop actions for grid and item.
-			if item_accepts_pebble (a_item, a_pebble) then
+			if
+				item_accepts_pebble (a_item, a_pebble)
+			then
 				item_drop_actions_internal.call ([a_item, a_pebble])
-			end
-
-			if drop_actions_internal /= Void and then drop_actions_internal.accepts_pebble (a_pebble) then
-				drop_actions_internal.call ([a_pebble])
+				l_ignore_drop_actions := True
 			end
 
 			if a_item /= Void then
 				l_drop_actions_internal := a_item.implementation.drop_actions_internal
-				if l_drop_actions_internal /= Void and then l_drop_actions_internal.accepts_pebble (a_pebble) then
+				if
+					l_drop_actions_internal /= Void and then
+					l_drop_actions_internal.accepts_pebble (a_pebble)
+				then
+					l_ignore_drop_actions := True
 					l_drop_actions_internal.call ([a_pebble])
 				end
 			end
+
+			if
+				not l_ignore_drop_actions and then
+				drop_actions_internal /= Void and then
+				drop_actions_internal.accepts_pebble (a_pebble)
+			then
+				drop_actions_internal.call ([a_pebble])
+			end
+
 		end
 
 	item_target: EV_GRID_ITEM is

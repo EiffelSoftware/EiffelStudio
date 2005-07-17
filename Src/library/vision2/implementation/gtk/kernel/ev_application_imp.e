@@ -98,9 +98,9 @@ feature {NONE} -- Initialization
 					end
 					
 					if idle_actions_pending then
-							call_idle_actions
+						call_idle_actions
 					else
-								-- Block loop by running a gmain loop iteration with blocking enabled.
+							-- Block loop by running a gmain loop iteration with blocking enabled.
 						events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
 					end
 				end

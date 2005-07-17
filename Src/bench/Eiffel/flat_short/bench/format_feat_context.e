@@ -85,7 +85,7 @@ feature -- Execution
 						rout_as ?= f_ast.body.content
 						if rout_as /= Void then
 							end_pos := rout_as.body_start_position
-						elseif f_ast.is_attribute then
+						else
 							end_pos := f_ast.next_position
 						end
 						create eiffel_file.make_with_positions (file.name, start_pos, end_pos)

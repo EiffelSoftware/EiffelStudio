@@ -3903,7 +3903,16 @@ feature {NONE} -- Event handling
 				end
 			end
 			if not ignore_selection_handling and then is_selection_on_click_enabled then
-				handle_newly_selected_item (selected_item)
+				if
+					selected_item /= Void and then
+					selected_item.is_selected and then
+					(create {EV_ENVIRONMENT}).application.ctrl_pressed and then
+					not is_always_selected
+				then
+					selected_item.disable_select
+				else
+					handle_newly_selected_item (selected_item)
+				end
 			end
 		end
 
@@ -4388,7 +4397,11 @@ feature {NONE} -- Event handling
 						-- Do nothing
 					end
 					if a_sel_item /= Void then
+						if a_sel_item.is_selected and then last_selected_item /= Void then
+							last_selected_item.disable_select
+						end
 						handle_newly_selected_item (a_sel_item)
+						last_selected_item := a_sel_item.implementation
 					end
 				end
 			end
@@ -4409,6 +4422,7 @@ feature {NONE} -- Event handling
 			a_application := (create {EV_ENVIRONMENT}).application
 			is_ctrl_pressed := a_application.ctrl_pressed
 			is_shift_pressed := a_application.shift_pressed
+			
 			if not (a_item = Void and is_always_selected) then
 					-- If we are `is_item_always_selected' mode then clicking on Void items should have no effect
 				l_remove_selection := True
@@ -4472,9 +4486,6 @@ feature {NONE} -- Event handling
 						end						
 					end
 					a_item.enable_select
-				elseif is_ctrl_pressed and then not is_always_selected then
-						-- Allow for removal of item selection by Ctrl clicking
-					a_item.disable_select
 				end
 			end
 		end

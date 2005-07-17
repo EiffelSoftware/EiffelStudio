@@ -332,14 +332,22 @@ feature -- Access
 			class_text: STRING;
 			start_position, end_position: INTEGER;
 			body_as: FEATURE_AS;
+			rout_as: ROUTINE_AS
 			c: like written_class;	
 		do
 			c := written_class;
 			class_text := c.text;
 			if class_text /= Void then
 				body_as := ast;
-				start_position := body_as.start_position;
-				end_position := body_as.end_position;
+				start_position := body_as.start_position
+				rout_as ?= body_as.body.content
+				if rout_as = Void then
+						-- `body_as.end_position' excludes feature comments
+						-- Let's use take the text up-to the next syntax construct
+					end_position := body_as.next_position - 1
+				else
+					end_position := body_as.end_position
+				end
 				create Result.make;
 				Result.add_string ("-- Version from class: ");
 				Result.add_classi (c.lace_class, c.name_in_upper);

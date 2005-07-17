@@ -175,14 +175,14 @@ feature -- Output
 			start_pos, end_pos: INTEGER;
 		do
 			if not is_empty then
-				start_pos := current_feature.start_position;
-				rout_as ?= current_feature.body.content;
+				start_pos := current_feature.start_position
+				rout_as ?= current_feature.body.content
 				if rout_as = Void then
-					end_pos := end_position
+					end_pos := current_feature.next_position
 				else
 					end_pos := rout_as.body_start_position
-				end;
-				Result := extract_comments_from (start_pos, end_pos);
+				end
+				Result := extract_comments_from (start_pos, end_pos)
 			end
 		end
 

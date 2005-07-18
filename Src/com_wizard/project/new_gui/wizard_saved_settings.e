@@ -63,7 +63,7 @@ feature -- Basic Operations
 			-- Persist combo box strings.
 		local
 			l_save_routine: ROUTINE [ANY, TUPLE [LIST [STRING]]]
-			l_list, l_new_list: LIST [STRING]
+			l_list: LIST [STRING]
 			l_item: EV_LIST_ITEM
 			l_entry: STRING
 		do
@@ -86,26 +86,6 @@ feature -- Basic Operations
 					end
 					create l_item.make_with_text (a_entry)
 					a_combo.put_front (l_item)
-				else
-					if not a_combo.first.text.as_lower.is_equal (l_entry) then
-						create {ARRAYED_LIST [STRING]} l_new_list.make (l_list.count)
-						l_new_list.extend (a_entry)
-						from
-							l_list.start
-						until
-							l_list.after
-						loop
-							if l_list.item.as_lower.is_equal (l_entry) then
-								l_list.remove
-								l_list.finish
-							end
-							l_list.forth
-						end
-						l_new_list.append (l_list)
-						a_combo.change_actions.block
-						a_combo.set_strings (l_new_list)
-						a_combo.change_actions.resume
-					end
 				end
 				l_save_routine ?= a_combo.data
 				if l_save_routine /= Void then

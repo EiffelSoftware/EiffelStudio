@@ -89,22 +89,6 @@ feature -- Initialization
 			create cont_request.make (Rqst_cont)
 		end
 
-feature -- Callbacks
-
-	execute_warner_help is
-		do
-		end
-
-	execute_warner_ok (argument: ANY) is
-		do
-			if not launch_program then		
-				Eiffel_project.call_finish_freezing (True)
-			else
-				launch_program := False
-				start_program
-			end
-		end
-
 feature -- Access
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
@@ -137,22 +121,26 @@ feature -- Execution
 				Eiffel_project.initialized and then
 				not Eiffel_project.Workbench.is_compiling
 			then
-				if not Eiffel_project.Workbench.successful then
-						-- The last compilation was not successful.
-						-- It is VERY dangerous to launch the debugger in these conditions.
-						-- However, forbidding it completely may be too frustating.
-					create cd.make_with_text (Warning_messages.w_Debug_not_compiled)
-					cd.button ("OK").select_actions.extend (agent launch_application)
-					cd.show_modal_to_window (Window_manager.last_focused_window.window)
-				elseif not Debugger_manager.can_debug then
-						-- A class was removed since the last compilation.
-						-- It is VERY dangerous to launch the debugger in these conditions.
-						-- However, forbidding it completely may be too frustating.
-					create cd.make_with_text (Warning_messages.w_Removed_class_debug)
-					cd.button ("OK").select_actions.extend (agent launch_application)
-					cd.show_modal_to_window (Window_manager.last_focused_window.window)					
+				if not Application.is_running then
+					if not Eiffel_project.Workbench.successful then
+							-- The last compilation was not successful.
+							-- It is VERY dangerous to launch the debugger in these conditions.
+							-- However, forbidding it completely may be too frustating.
+						create cd.make_with_text (Warning_messages.w_Debug_not_compiled)
+						cd.button ("OK").select_actions.extend (agent launch_application)
+						cd.show_modal_to_window (Window_manager.last_focused_window.window)
+					elseif not Debugger_manager.can_debug then
+							-- A class was removed since the last compilation.
+							-- It is VERY dangerous to launch the debugger in these conditions.
+							-- However, forbidding it completely may be too frustating.
+						create cd.make_with_text (Warning_messages.w_Removed_class_debug)
+						cd.button ("OK").select_actions.extend (agent launch_application)
+						cd.show_modal_to_window (Window_manager.last_focused_window.window)					
+					else
+						launch_application
+					end
 				else
-					launch_application
+					resume_application
 				end
 			end
 		end
@@ -262,10 +250,8 @@ feature -- Execution
 			-- Launch the program from the project target.
 		local
 			makefile_sh_name: FILE_NAME
-			status: APPLICATION_STATUS
 			uf: RAW_FILE
 			make_f: PLAIN_TEXT_FILE
-			kept_objects: LINKED_SET [STRING]
 			wd: EV_WARNING_DIALOG
 			cd: EV_CONFIRMATION_DIALOG
 			ignore_all_breakpoints_confirmation_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
@@ -375,24 +361,36 @@ feature -- Execution
 					end
 				end
 			else
-				status := Application.status
-				if status /= Void and then status.is_stopped then
-					-- Application is stopped. Continue execution.
+					--| Should not occurs
+				check  application_should_not_be_running: False end
+			end
+		end
+
+	resume_application is
+			-- Continue the execution of the program (stepping ...)
+		local
+			status: APPLICATION_STATUS
+			kept_objects: LINKED_SET [STRING]
+		do
+			check debugger_running_and_stopped: Application.is_running and then Application.is_stopped end
+			status := Application.status
+			if status /= Void and then status.is_stopped then
+				-- Application is stopped. Continue execution.
 debug("DEBUGGER")
-	io.error.put_string (generator)
-	io.error.put_string (": Continue execution%N")
+io.error.put_string (generator)
+io.error.put_string (": Continue execution%N")
 end
-						-- Ask the application to wean objects the
-						-- debugger doesn't need anymore.
+					-- Ask the application to wean objects the
+					-- debugger doesn't need anymore.
 --| FIXME ARNAUD
 --					kept_objects := window_manager.object_tool_mgr.objects_kept
 --					kept_objects.merge (debug_target.kept_objects)
-					if debugger_manager /= Void then
-						kept_objects := debugger_manager.kept_objects
-					else
-						create kept_objects.make
-					end
-					Application.continue (kept_objects)
+				if debugger_manager /= Void then
+					kept_objects := debugger_manager.kept_objects
+				else
+					create kept_objects.make
+				end
+				Application.continue (kept_objects)
 --					window_manager.object_tool_mgr.hang_on
 --					if status.e_feature /= Void then
 --						window_manager.feature_tool_mgr.show_stoppoint 
@@ -404,11 +402,10 @@ end
 --					Window_manager.feature_tool_mgr.synchronize_with_callstack
 --					debug_target.save_current_cursor_position
 --					debug_target.display_string ("System is running%N")
-					if debugger_manager /= Void then
-						debugger_manager.on_application_resumed
-					end
---| END FIXME
+				if debugger_manager /= Void then
+					debugger_manager.on_application_resumed
 				end
+--| END FIXME
 			end
 		end
  

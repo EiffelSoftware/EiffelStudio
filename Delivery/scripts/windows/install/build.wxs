@@ -176,6 +176,11 @@
 									<File Id="build.exe" Name="build.exe" >
 										<Shortcut Id="build.exe" Directory="EiffelStudio" Name="build.exe" LongName="EiffelBuild" Description="GUI Builder using EiffelVision2" Hotkey="0" Show="normal" />
 									</File>
+									<ProgId Id="build.project" Description="EiffelBuild project">
+										<Extension Id="bpr">
+											<Verb Id="bpr" Argument="&quot;%1&quot;" Command="open" Target="&quot;[build.exe]&quot;" />
+										</Extension>
+									</ProgId>
 								</Component>
 								<Component Id="wel_hook.dll" Guid="6E65E2A3-1D01-451D-B106-2DABD40F4286">
 									<File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />

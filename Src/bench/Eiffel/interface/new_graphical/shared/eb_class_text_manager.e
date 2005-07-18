@@ -42,6 +42,7 @@ feature -- Access
 				loop
 						-- Wait for the editor to read class text.
 					editor := l.item.editor_tool.text_area
+					l.item.window.set_pointer_style (default_pixmaps.wait_cursor)
 					from
 						process_events_and_idle
 					until
@@ -51,6 +52,7 @@ feature -- Access
 							-- stays in an infinite loop.
 						ev_application.idle_actions.call ([])
 					end
+					l.item.window.set_pointer_style (default_pixmaps.standard_cursor)
 
 					if editor.is_editable then
 						if l.item.changed then
@@ -131,6 +133,12 @@ feature {NONE} -- Implementation
 				end
 				a_file.close
 			end
+		end
+		
+	default_pixmaps: EV_STOCK_PIXMAPS is
+			-- Default pixmaps and cursors.
+		once
+			create Result
 		end
 
 end -- class EB_CLASS_TEXT_MANAGER

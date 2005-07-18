@@ -3058,6 +3058,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 			previous_scroll_bar_value: INTEGER
 			row_index: INTEGER
 		do
+			perform_vertical_computation
 				-- Retrieve the final row offset as this is the virtual height required for all rows.
 			if row_offsets = Void and not is_row_height_fixed then
 				l_total_row_height := 0
@@ -3227,6 +3228,8 @@ feature {ANY}
 			previous_scroll_bar_value: INTEGER
 			column_index: INTEGER
 		do
+			perform_horizontal_computation
+			
 				-- Retrieve the 
 			l_total_column_width := total_column_width
 			

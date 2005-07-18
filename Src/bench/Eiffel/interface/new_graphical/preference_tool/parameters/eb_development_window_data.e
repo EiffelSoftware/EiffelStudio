@@ -129,7 +129,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := max_history_size_preference.value
 		end
 		
-	use_animated_icons: BOOLEAN -- (True)	
+	use_animated_icons: BOOLEAN is
+			-- Should window status bar use animated icons?
+		do
+			Result := use_animated_icons_preference.value
+		end		
 	 
 	remember_completion_list_size: BOOLEAN is
 			-- 
@@ -261,6 +265,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	graphical_output_disabled_preference: BOOLEAN_PREFERENCE			
 		
+	use_animated_icons_preference: BOOLEAN_PREFERENCE	
+		
 feature -- Element change
 
 	save_size (a_width, a_height: INTEGER; a_maximized: BOOLEAN) is
@@ -370,6 +376,7 @@ feature {NONE} -- Preference Strings
 	last_browsed_cluster_directory_string: STRING is "interface.development_window.last_browsed_cluster_directory"
 	context_unified_stone_string: STRING is "interface.development_window.unified_stone"
 	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"	
+	use_animated_icons_string: STRING is "interface.development_window.use_animated_icons"
 
 feature {NONE} -- Implementation
 
@@ -408,6 +415,7 @@ feature {NONE} -- Implementation
 			last_browsed_cluster_directory_preference := l_manager.new_string_resource_value (l_manager, last_browsed_cluster_directory_string, "")
 			context_unified_stone_preference := l_manager.new_boolean_resource_value (l_manager, context_unified_stone_string, False)
 			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)			
+			use_animated_icons_preference := l_manager.new_boolean_resource_value (l_manager, use_animated_icons_string, True)			
 		end
 	
 	preferences: PREFERENCES

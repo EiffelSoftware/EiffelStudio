@@ -47,20 +47,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	accept_cursor: EV_CURSOR
-			-- `Result' is cursor displayed when the screen pointer is over a
-			-- target that accepts `pebble' during pick and drop.
-
-	deny_cursor: EV_CURSOR
-			-- `Result' is cursor displayed when the screen pointer is over a
-			-- target that does not accept `pebble' during pick and drop.
-
-	pebble: ANY
-		-- Data to be transported by pick and drop mechanism.
-
-	pebble_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], ANY]
-		-- Returns data to be transported by pick and drop mechanism.
-
 	column: EV_GRID_COLUMN is
 			-- Column to which current item belongs.
 		require
@@ -372,42 +358,6 @@ feature -- Status report
 		end
 
 feature -- Element change
-
-	set_pebble (a_pebble: like pebble) is
-			-- Assign `a_pebble' to `pebble'.
-		require
-			a_pebble_not_void: a_pebble /= Void
-		do
-			pebble_function := Void
-			pebble := a_pebble
-		ensure
-			pebble_assigned: interface.implementation.pebble = a_pebble
-		end
-
-	set_pebble_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], ANY]) is
-			-- Assign `a_function' to `pebble_function'.
-		require
-			a_function_not_void: a_function /= Void
-		do
-			pebble := Void
-			pebble_function := a_function
-		ensure
-			pebble_function_assigned: interface.implementation.pebble_function = a_function
-		end
-
-	set_deny_cursor (a_cursor: EV_CURSOR) is
-			-- Set `a_cursor' to be displayed when the screen pointer is over a
-			-- target that doesn't accept `pebble' during pick and drop.
-		do
-			deny_cursor := a_cursor
-		end
-
-	set_accept_cursor (a_cursor: EV_CURSOR) is
-			-- Set `a_cursor' to be displayed when the screen pointer is over a
-			-- target that accepts `pebble' during pick and drop.
-		do
-			accept_cursor := a_cursor
-		end
 
 	set_foreground_color (a_color: like foreground_color) is
 			-- Set `foreground_color' with `a_color'.

@@ -22,6 +22,7 @@ inherit
 			set_first_line_displayed,
 			recycle,
 			on_vertical_scroll,
+			on_horizontal_scroll,
 			reload,
 			on_text_loaded
 		end
@@ -1190,7 +1191,21 @@ feature {NONE} -- Scroll bars management
  			
  				-- If the cursor is blinking here we must wipe out the previous action because they draw onto the wrong line
  			if blinking_timeout /= Void and then text_displayed.cursor /= Void then
-				blinking_timeout.actions.wipe_out
+				reset_blinking
+				let_blink := False	
+				draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)	
+				let_blink := True
+ 			end				
+ 		end
+
+	on_horizontal_scroll (scroll_pos: INTEGER) is
+ 			-- Process horizontal scroll event. `horizontal_scrollbar.value' has changed.
+ 		do 	 		
+ 			Precursor {TEXT_PANEL} (scroll_pos)
+ 			
+ 				-- If the cursor is blinking here we must wipe out the previous action because they draw onto the wrong line
+ 			if blinking_timeout /= Void and then text_displayed.cursor /= Void then
+				reset_blinking
 				let_blink := False	
 				draw_cursor (buffered_line, current_cursor_position, (text_displayed.cursor.y_in_lines - first_line_displayed) * line_height, cursor_width)	
 				let_blink := True

@@ -44,6 +44,7 @@ feature
 		do
 			create rep.make
 			transfer_to (rep);
+			rep.set_access_in (access_in)
 			rep.set_code_id (new_code_id);
 			Result := rep;
 		end;

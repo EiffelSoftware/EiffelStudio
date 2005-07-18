@@ -109,7 +109,9 @@ feature -- Drawing operations
 	update_if_needed is
 			-- Update `Current' if needed.
 		do
-			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
+			if is_displayed then
+				{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
+			end
 		end
 
 feature -- Measurement

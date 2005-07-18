@@ -46,15 +46,7 @@ feature {NONE} -- Initialization
 				disable_sensitive
 			end
 		end
-
-feature -- Access
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
+		
 feature -- Element change
 
 	refresh is
@@ -208,7 +200,6 @@ feature {NONE} -- Initialization Implementation
 
 					create l_menu
 					l_menu.extend (l_menu_item)
-					l_menu.extend (create {EV_MENU_SEPARATOR})
 					update_folder_item (l_menu)
 
 					Result := l_menu
@@ -237,6 +228,7 @@ feature -- Observer pattern
 		local
 			l_item: EV_MENU_ITEM
 			l_item_data: EB_FAVORITES_ITEM
+			l_class_data: EB_FAVORITES_CLASS
 			l_menu: EV_MENU
 			menu_item: EV_MENU_ITEM
 			menu_sep: EV_MENU_SEPARATOR
@@ -252,13 +244,21 @@ feature -- Observer pattern
 					replace_class_menu_item_by (l_item, l_menu)
 				end
 			end
+			
 			if l_menu /= Void then
 				if not l_menu.is_empty then
 					l_item_data ?= l_menu.last.data
-				
 					if l_item_data = Void then
+							-- Creates a separator between favorite options and favorite items.
 						create menu_sep
 						l_menu.extend (menu_sep)
+					elseif l_menu.count = 1 then
+						l_class_data ?= l_item_data
+						if l_class_data /= Void then
+								-- Creates a separator between class an feature items
+							create menu_sep
+							l_menu.extend (menu_sep)							
+						end
 					end
 				end
 				l_menu.extend (menu_item)

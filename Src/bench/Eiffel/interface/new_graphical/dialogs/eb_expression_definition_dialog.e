@@ -1,6 +1,6 @@
 indexing
 	description: "Dialogs that allow to define a new expression in the debugger sense"
-	author: "Xavier Rousselot"
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -409,7 +409,6 @@ feature {NONE} -- Event handling
 		do
 			set_expression_mode
 			class_field.disable_sensitive
-			expression_field.enable_sensitive
 			if stick_with_current_object then
 				set_focus (expression_field)
 			else
@@ -423,7 +422,6 @@ feature {NONE} -- Event handling
 		do
 			set_object_name_mode
 			class_field.disable_sensitive
-			expression_field.disable_sensitive
 			if stick_with_current_object then
 				set_focus (object_name_field)
 			else
@@ -438,7 +436,6 @@ feature {NONE} -- Event handling
 			set_expression_mode
 			address_field.disable_sensitive
 			class_field.disable_sensitive
-			expression_field.enable_sensitive
 			set_focus (expression_field)
 		end
 		

@@ -714,7 +714,7 @@ feature {NONE} -- Mouse copy cut
 				forget_mouse_moves := False
 			end
 			Precursor (x_cur, l_y_pos, button, unused1,unused2,unused3, a_screen_x, a_screen_y)
-			if blink_suspended then
+			if blink_suspended and button /= 3 then
 				resume_cursor_blinking
 			end
 		end

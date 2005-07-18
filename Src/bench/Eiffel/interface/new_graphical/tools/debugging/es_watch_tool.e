@@ -918,6 +918,12 @@ feature {NONE} -- Event handling
 			watched_items.extend (expr_item)
 
 			if expr_item /= Void and then expr_item.row /= Void then
+				if 
+					not expr_item.compute_grid_display_done 
+					and then (expr /= Void and then (expr.evaluation_disabled or not expr.is_evaluated))
+				then
+					expr_item.compute_grid_display
+				end
 				watches_grid.remove_selection
 				expr_item.row.ensure_visible
 				expr_item.row.enable_select
@@ -1050,14 +1056,13 @@ feature {NONE} -- Implementation
 						l_expr.set_unevaluated
 					end
 				end
-				if l_item.row /= Void then
-					l_item.refresh
-				else
+				if l_item.row = Void then
 					check
 						should_not_occurred: False
 					end
 					l_item.attach_to_row (watches_grid.extended_new_row)
 				end
+				l_item.refresh
 				watched_items.forth
 			end
 			ensure_last_row_is_new_expression_row

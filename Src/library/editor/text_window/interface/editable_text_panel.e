@@ -313,6 +313,7 @@ feature {NONE} -- Handle keystokes
 				end
 			else
 				Precursor (ev_key)
+				scroll_to_cursor := False
 			end
 			if not meta_key_codes.has (ev_key.code) and then scroll_to_cursor then
 				check_cursor_position

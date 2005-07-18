@@ -89,7 +89,7 @@ feature -- Status report
 	is_destroyed: BOOLEAN is
 			-- Is `Current' no longer usable?
 		do
-			Result := implementation.is_destroyed or not notebook.has (widget)	
+			Result := implementation.is_destroyed or else not notebook.has (widget)	
 		end
 
 feature {NONE} -- Contract Support

@@ -64,6 +64,7 @@ feature {NONE} -- Initialization
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
 			resize_actions.force_extend (agent on_window_resize)
 			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
+			grid.header.item_resize_end_actions.force_extend (agent on_header_resize)
 		end
 
 	user_initialization is
@@ -273,7 +274,9 @@ feature {NONE} -- Events
 			l_width: INTEGER
 		do				
 			l_width := grid.width - (grid.column (1).width + grid.column (2).width + grid.column (3).width)			
-			grid.column (4).set_width (l_width)
+			if not resized_columns_list.item (4) then									
+				grid.column (4).set_width (l_width)
+			end			
 		end		
 
 	on_header_double_clicked is
@@ -288,6 +291,19 @@ feature {NONE} -- Events
 				col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)			
 			end		
 		end		
+		
+	on_header_resize is
+			-- Header was double-clicked.
+		local
+			div_index: INTEGER
+			col: EV_GRID_COLUMN
+		do
+			div_index := grid.header.pointed_divider_index
+			if div_index > 0 then
+				col := grid.column (div_index)
+				resized_columns_list.put (True, col.index)
+			end		
+		end	
 
 feature {NONE} -- Implementation
 
@@ -480,12 +496,20 @@ feature {NONE} -- Implementation
 			if grid.row_count > 0 then				
 				grid.row (1).enable_select
 				l_column := grid.column (1)
-				l_column.resize_to_content
-				l_column.set_width (l_column.width + column_border_space)
+				if not resized_columns_list.item (1) then					
+					l_column.resize_to_content	
+					l_column.set_width (l_column.width + column_border_space)
+				end				
 				l_column := grid.column (2)
-				l_column.set_width (l_column.width + column_border_space)
+				if not resized_columns_list.item (2) then					
+					l_column.resize_to_content	
+					l_column.set_width (l_column.width + column_border_space)
+				end				
 				l_column := grid.column (3)
-				l_column.set_width (l_column.width + column_border_space)
+				if not resized_columns_list.item (3) then					
+					l_column.resize_to_content
+					l_column.set_width (l_column.width + column_border_space)
+				end				
 				on_window_resize
 				l_resource ?= grid.row (1).data
 				if l_resource /= Void then
@@ -687,6 +711,12 @@ feature {NONE} -- Private attributes
 
 	default_row_height: INTEGER
 		-- Default row height
+
+	resized_columns_list: ARRAY [BOOLEAN] is
+			-- List of boolean s for each column indicating if it has been user resizedat all.
+		once
+			Result := <<False, False, False, False>>
+		end
 
 	application: EV_APPLICATION is 
 			-- Application

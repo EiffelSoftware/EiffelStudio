@@ -3799,7 +3799,7 @@ feature {NONE} -- Drawing implementation
 	resizing_line_border: INTEGER is 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 		
-	buffered_drawable_size: INTEGER is 2000
+	buffered_drawable_size: INTEGER is 32000
 		-- Default size of `drawable' used for scrolling purposes.
 
 	horizontal_redraw_triggered_by_viewport_resize: BOOLEAN
@@ -4737,7 +4737,7 @@ feature {NONE} -- Implementation
 			counts_equal: rows.count = internal_row_data.count
 		end
 		
-	maximum_header_width: INTEGER is 10000
+	maximum_header_width: INTEGER is 32000
 		-- Maximium width of `header'.
 		
 	default_scroll_bar_leap: INTEGER is 1

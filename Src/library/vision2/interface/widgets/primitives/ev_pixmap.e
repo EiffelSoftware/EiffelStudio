@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 feature -- Basic Operations
 
 	flush is
-			-- Ensure that the appearence of `Current' is updated on screen
+			-- Ensure that the appearance of `Current' is updated on screen
 			-- immediately. Any changes that have not yet been reflected will
 			-- become visible.
 		require	

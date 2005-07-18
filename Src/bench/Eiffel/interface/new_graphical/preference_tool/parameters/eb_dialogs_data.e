@@ -193,7 +193,7 @@ feature -- Preference strings
 	acknowledge_not_loaded_string: STRING is "interface.dialogs.acknowledge_not_loaded"
 	confirm_finalize_precompile_string: STRING is "interface.dialogs.confirm_finalize_precompile"	
 	show_starting_dialog_string: STRING is "interface.dialogs.show_starting_dialog"
-	confirm_change_resource_need_restart_string: STRING is "interface.dialogs.confirm_change_resource_need_restart"
+	confirm_change_resource_need_restart_string: STRING is "interface.dialogs.confirm_resource_change_needs_restart"
 	generate_homonyms_string: STRING is "interface.dialogs.generate_homonyms"
 	stop_execution_when_compiling_string: STRING is "interface.dialogs.stop_execution_when_compiling"
 	confirm_kill_string: STRING is "interface.dialogs.confirm_kill"

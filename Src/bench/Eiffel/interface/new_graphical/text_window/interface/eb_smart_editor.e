@@ -138,7 +138,6 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 			add_point: BOOLEAN
 		do
 			if not is_completing then
-				suspend_cursor_blinking
 				is_completing := True
 				completion_timeout.actions.block
 				if click_and_complete_is_active and then not has_selection then
@@ -157,7 +156,6 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW} -- Commands
 			-- Autocomplete class name before cursor.
 		do					
 			if not has_selection then
-				suspend_cursor_blinking
 				text_displayed.prepare_class_name_complete
 				if text_displayed.class_completion_possibilities /= Void then
 					show_completion_list (False)

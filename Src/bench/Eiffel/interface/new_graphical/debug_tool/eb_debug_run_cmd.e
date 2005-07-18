@@ -445,6 +445,7 @@ end
 			else
 				debugger_manager.raise
 				Application.set_critical_stack_depth (preferences.debugger_data.critical_stack_depth)
+				Application.set_displayed_string_size (preferences.misc_data.default_displayed_string_size)
 				Application.run (l_cmd_line_arg, working_dir)
 				if Application.is_running then
 					output_text.add_string ("System is running")

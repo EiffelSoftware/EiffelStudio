@@ -270,7 +270,11 @@ feature -- Graphical changes
 						a_item.set_text (expression.expression)
 					elseif not new_text.is_equal (expression.expression) then
 						expression.set_expression (new_text)
-						request_evaluation (True)
+						if application.is_running and then application.is_stopped then
+							request_evaluation (True)
+						elseif expression /= Void then
+							expression.set_unevaluated
+						end
 						refresh
 					end
 				end

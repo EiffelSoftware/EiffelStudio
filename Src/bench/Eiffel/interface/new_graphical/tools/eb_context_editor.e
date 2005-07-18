@@ -222,7 +222,7 @@ feature {NONE} -- Initialization
 			tb_commands.extend (toggle_cluster_legend_cmd)
 			tb_commands.extend (toggle_uml_cmd)
 			tb_commands.extend (force_settings_cmd)
-			custom_toolbar := preferences.context_tool_data.retrieve_diagram_toolbar (tb_commands)
+			custom_toolbar := preferences.diagram_tool_data.retrieve_diagram_toolbar (tb_commands)
 
 			
 			from
@@ -452,9 +452,9 @@ feature -- Status settings.
 			l_array: ARRAY [STRING]
 			i: INTEGER
 		do
-			ignore_excluded_figures := preferences.context_tool_data.ignore_excluded_class_figures --", False)
+			ignore_excluded_figures := preferences.diagram_tool_data.ignore_excluded_class_figures
 			if not ignore_excluded_figures then
-				l_array := preferences.context_tool_data.excluded_class_figures -- Default_excluded_class_figures)
+				l_array := preferences.diagram_tool_data.excluded_class_figures
 				create excluded_class_figures.make (l_array.count)
 				from
 					i := l_array.lower
@@ -1630,12 +1630,12 @@ feature {NONE} -- Implementation
 	retrieve_depth_preferences is
 			-- Retrieve values for default depth from preferences.
 		do
-			default_subcluster_depth := preferences.context_tool_data.subcluster_depth --", 1)
-			default_supercluster_depth := preferences.context_tool_data.supercluster_depth--", 1)
-			default_client_depth := preferences.context_tool_data.client_depth--", 0)
-			default_supplier_depth := preferences.context_tool_data.supplier_depth--", 0)
-			default_ancestor_depth := preferences.context_tool_data.ancestor_depth--", 1)
-			default_descendant_depth := preferences.context_tool_data.descendant_depth--", 1)
+			default_subcluster_depth := preferences.diagram_tool_data.subcluster_depth
+			default_supercluster_depth := preferences.diagram_tool_data.supercluster_depth
+			default_client_depth := preferences.diagram_tool_data.client_depth
+			default_supplier_depth := preferences.diagram_tool_data.supplier_depth
+			default_ancestor_depth := preferences.diagram_tool_data.ancestor_depth
+			default_descendant_depth := preferences.diagram_tool_data.descendant_depth
 			
 			if class_graph /= Void then
 				class_graph.set_descendant_depth (default_descendant_depth)
@@ -1703,7 +1703,7 @@ feature {NONE} -- Implementation
 			-- Customize diagram toolbar.
 		do
 			custom_toolbar.customize
-			preferences.context_tool_data.save_diagram_toolbar (custom_toolbar)
+			preferences.diagram_tool_data.save_diagram_toolbar (custom_toolbar)
 			reset_tool_bar_toggles
 		end
 			

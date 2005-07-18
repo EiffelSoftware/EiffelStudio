@@ -69,14 +69,16 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'
 		local
 			gdkpix, gdkmask: POINTER
+			l_app_imp: like app_implementation
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
+			l_app_imp := app_implementation
+			gdkpix := {EV_GTK_EXTERNALS}.gdk_pixmap_new (l_app_imp.default_gdk_window, 1, 1, Default_color_depth)
 
 			set_pixmap (gdkpix, gdkmask)
 				-- Initialize the Graphical Context
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (gdkpix)
-			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, app_implementation.fg_color)
+			{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, l_app_imp.fg_color)
 			init_default_values			
 		end
 

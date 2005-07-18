@@ -47,6 +47,9 @@ feature -- Access
 					until
 						editor.text_is_fully_loaded
 					loop
+							-- Because editor text is loaded on idle, unless idle_actions are called EiffelStudio
+							-- stays in an infinite loop.
+						ev_application.idle_actions.call ([])
 					end
 
 					if editor.is_editable then

@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 				vbox.extend (label)
 				extend_no_expand (maincont, vbox)
 					--| Separator
-				extend_no_expand (maincont, create {EV_HORIZONTAL_SEPARATOR})
+				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 					--| String display size
 				create tf_disp_str_size.make_with_text (application.displayed_string_size.out)
@@ -258,10 +258,10 @@ feature {NONE} -- Implementation
 				label.align_text_left
 				hbox.extend (label)
 				extend_no_expand (hbox, tf_disp_str_size)
-				maincont.extend (hbox)
+				extend_no_expand (maincont, hbox)
 			
 					--| Separator
-				extend_no_expand (maincont, create {EV_HORIZONTAL_SEPARATOR})
+				maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 				slice_min := min_slice_ref.item
 				slice_max := max_slice_ref.item
@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 			extend_no_expand (maincont, vbox)
 
 				--| Separator
-			extend_no_expand (maincont, create {EV_HORIZONTAL_SEPARATOR})
+			maincont.extend (create {EV_HORIZONTAL_SEPARATOR})
 
 				--| Buttons box
 			create hbox
@@ -342,7 +342,6 @@ feature {NONE} -- Implementation
 			dial.set_default_cancel_button (cancelb)
 
 				-- Display the dialog.
-			dial.disable_user_resize
 
 			debug ("debugger_interface")
 				io.put_string ("displaying the dialog%N")

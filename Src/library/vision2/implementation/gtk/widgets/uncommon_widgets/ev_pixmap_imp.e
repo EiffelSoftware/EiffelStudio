@@ -97,6 +97,9 @@ feature -- Drawing operations
 		end
 
 	flush is
+			-- Ensure that the appearance of `Current' is updated on screen
+			-- immediately. Any changes that have not yet been reflected will
+			-- become visible.
 		do
 			if is_displayed then
 				{EV_GTK_EXTERNALS}.gtk_widget_draw (visual_widget, NULL)
@@ -104,9 +107,9 @@ feature -- Drawing operations
 		end
 
 	update_if_needed is
-			-- Update `Current' if needed
+			-- Update `Current' if needed.
 		do
-			flush
+			{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
 		end
 
 feature -- Measurement

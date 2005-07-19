@@ -260,8 +260,8 @@ feature {NONE} -- Initialization
 															l_il_offset,
 															l_line_number 	-- break_index / line number
 															)
+														eiffel_cse.set_chain_frame_indexes (c, i)
 														call := eiffel_cse
-														
 														extend (call)
 														level := level + 1
 													end

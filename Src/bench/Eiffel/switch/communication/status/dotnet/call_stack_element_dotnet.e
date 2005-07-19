@@ -143,6 +143,80 @@ feature -- Dotnet Properties
 	
 	il_offset: INTEGER
 
+feature {EIFFEL_CALL_STACK_DOTNET} -- Query
+
+	chain_index, frame_index: INTEGER
+			-- Chain and Frame index used to be able to refresh
+			-- the icd_chain and icd_frame values
+	
+	set_chain_frame_indexes (vc, vf: INTEGER) is
+		do
+			chain_index := vc
+			frame_index := vf
+		end
+
+	refresh_icd_data is
+			-- Refresh the icd_chain and icd_frame values
+		local
+			l_active_thread: ICOR_DEBUG_THREAD
+			l_enum_chain: ICOR_DEBUG_CHAIN_ENUM
+			l_enum_frames: ICOR_DEBUG_FRAME_ENUM
+			l_chains: ARRAY [ICOR_DEBUG_CHAIN]
+			l_frames: ARRAY [ICOR_DEBUG_FRAME]
+			l_chain: ICOR_DEBUG_CHAIN
+			l_frame: ICOR_DEBUG_FRAME
+			l_frame_il: ICOR_DEBUG_IL_FRAME
+		do
+			l_active_thread := Application.imp_dotnet.Eifnet_debugger.icor_debug_thread
+			if l_active_thread /= Void then
+				l_enum_chain := l_active_thread.enumerate_chains
+				if l_enum_chain /= Void then 
+					if l_enum_chain.get_count >= chain_index then
+						l_chain := l_enum_chain.i_th (chain_index)
+						if l_chain /= Void then
+							l_chain.add_ref
+							if icd_chain /= Void then
+								icd_chain.clean_on_dispose
+							end
+							icd_chain := l_chain
+							l_enum_frames := icd_chain.enumerate_frames
+							if l_enum_frames /= Void then 
+								if l_enum_frames.get_count >= frame_index then
+									l_frame := l_enum_frames.i_th (frame_index)
+									if l_frame /= Void then
+										l_frame.add_ref
+										if icd_frame /= Void then
+											icd_frame.clean_on_dispose
+										end
+										icd_frame := l_frame
+										if icd_il_frame /= Void then
+											icd_il_frame.clean_on_dispose
+										end
+										icd_il_frame := icd_frame.query_interface_icor_debug_il_frame
+										check
+											same_ip: il_offset = icd_il_frame.get_ip
+										end
+									end
+								end
+								l_enum_frames.clean_on_dispose
+							end
+						end
+					end
+					l_enum_chain.clean_on_dispose
+				end
+			end
+		end
+
+	fresh_icd_il_frame: ICOR_DEBUG_IL_FRAME is
+			-- Fresh ICorDebugILFrame value.
+		do
+			Result := icd_frame.query_interface_icor_debug_il_frame
+			if Result = Void then
+				refresh_icd_data
+				Result := icd_il_frame
+			end
+		end
+
 feature -- Properties
 
 	routine: E_FEATURE
@@ -253,7 +327,7 @@ feature {NONE} -- Implementation
 			l_il_frame: ICOR_DEBUG_IL_FRAME
 		do
 			if not retried then
-				l_il_frame := icd_frame.query_interface_icor_debug_il_frame
+				l_il_frame := fresh_icd_il_frame
 				if l_il_frame /= Void then
 					l_il_frame.add_ref
 					l_function := l_il_frame.get_function
@@ -538,7 +612,7 @@ feature {NONE} -- Implementation
 			l_enum_args: ICOR_DEBUG_VALUE_ENUM
 			l_array_objects: ARRAY [ICOR_DEBUG_VALUE]
 		do
-			l_il_frame := icd_frame.query_interface_icor_debug_il_frame
+			l_il_frame := fresh_icd_il_frame
 			if l_il_frame /= Void then
 				l_il_frame.add_ref
 				l_enum_args := l_il_frame.enumerate_arguments
@@ -561,7 +635,7 @@ feature {NONE} -- Implementation
 			l_il_frame: ICOR_DEBUG_IL_FRAME
 			l_enum: ICOR_DEBUG_VALUE_ENUM
 		do
-			l_il_frame := icd_frame.query_interface_icor_debug_il_frame
+			l_il_frame := fresh_icd_il_frame
 			if l_il_frame /= Void then
 				l_il_frame.add_ref
 				l_enum := l_il_frame.enumerate_arguments
@@ -589,7 +663,7 @@ feature {NONE} -- Implementation
 			l_il_frame: ICOR_DEBUG_IL_FRAME
 			l_enum: ICOR_DEBUG_VALUE_ENUM
 		do
-			l_il_frame := icd_frame.query_interface_icor_debug_il_frame
+			l_il_frame := fresh_icd_il_frame
 			if l_il_frame /= Void then
 				l_il_frame.add_ref
 				l_enum := l_il_frame.enumerate_local_variables

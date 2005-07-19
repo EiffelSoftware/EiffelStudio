@@ -19,7 +19,6 @@ feature {NONE} --Initialization
 			name_not_empty: not a_name.is_empty
 			value_not_void: a_value /= Void
 		do
-			create change_actions
 			manager := a_manager
 			name := a_name
 			set_value (a_value)
@@ -38,7 +37,6 @@ feature {NONE} --Initialization
 			value_not_void: a_value /= Void
 			value_valid: valid_value_string (a_value)
 		do
-			create change_actions
 			manager := a_manager
 			name := a_name
 			set_value_from_string (a_value)			
@@ -57,6 +55,7 @@ feature -- Setting
 		do
 			value := a_value	
 			change_actions.call ([Current])
+			typed_change_actions.call ([value])
 		ensure
 			value_set: value = a_value
 		end
@@ -70,6 +69,24 @@ feature -- Access
 			-- Does Current have a value to use?
 		do
 			Result := value /= Void	
-		end		
+		end
+		
+	typed_change_actions: ACTION_SEQUENCE [TUPLE [G]] is
+			-- Actions to be performed when `value' changes after actions of `change_actions'.
+		do
+			Result := internal_typed_change_actions
+			if Result = Void then
+				create Result
+				internal_typed_change_actions := Result
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	internal_typed_change_actions: like typed_change_actions
+			-- Storage for `typed_change_actions'.
+	
+invariant
+	typed_change_actions_not_void: typed_change_actions /= Void
 
 end -- class TYPED_PREFERENCE

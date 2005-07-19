@@ -2525,6 +2525,12 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			l_parent_row_i: EV_GRID_ROW_I
 			just_looped: BOOLEAN
 			original_row_index: INTEGER
+			l_row_indexes_to_visible_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+			l_visible_indexes_to_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
+			l_row_offsets: EV_GRID_ARRAYED_LIST [INTEGER]
+			l_rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
+			l_is_row_height_fixed: BOOLEAN
+			l_row_height: INTEGER
 		do
 			original_row_index := rows.index
 			if not is_tree_enabled then
@@ -2585,19 +2591,30 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				end
 				from
 					row_index := index
+					
+						-- We assign these attributes of the class to locals as this
+						-- provides a speed improvement. It appears that this code is
+						-- 20% faster when this is performed. It was tested with 1,000,000
+						-- rows, expanding and collapsing the first. Julian
 					l_row_count := rows.count
+					l_row_indexes_to_visible_indexes := row_indexes_to_visible_indexes
+					l_visible_indexes_to_row_indexes := visible_indexes_to_row_indexes
+					l_rows := rows
+					l_row_offsets := row_offsets
+					l_is_row_height_fixed := is_row_height_fixed
+					l_row_height := row_height
 				until
 					row_index > l_row_count
 				loop
-					current_item := rows.i_th (row_index)
+					current_item := l_rows.i_th (row_index)
 		
 					if not just_looped then
 						old_i := i
-						if current_item /= Void and not is_row_height_fixed then
+						if current_item /= Void and not l_is_row_height_fixed then
 							i := i + current_item.height
 						else
 								-- Use the default height here.
-							i := i + row_height
+							i := i + l_row_height
 						end
 					else
 						just_looped := False
@@ -2612,13 +2629,13 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 							row_offsets.put_i_th (old_i, j)
 							j := j + 1
 						end
-						row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
 						row_index := (k - 1)
 						just_looped := True
 					else
-						row_offsets.put_i_th (i, row_index + 1)
-						row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
-						visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
+						l_row_offsets.put_i_th (i, row_index + 1)
+						l_row_indexes_to_visible_indexes.put_i_th (visible_count, row_index)
+						l_visible_indexes_to_row_indexes.put_i_th (row_index, visible_count + 1)
 						row_index := row_index + 1
 						visible_count := visible_count + 1
 					end

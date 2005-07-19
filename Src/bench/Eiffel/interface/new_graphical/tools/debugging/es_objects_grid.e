@@ -390,10 +390,12 @@ feature {NONE} -- Actions implementation
 			div_index := header.pointed_divider_index
 			if div_index > 0 then
 				col := column (div_index)
-				if ev_application.shift_pressed then
-					col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3)
-				else
-					col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + 3)
+				if row_count > 0 then
+					if ev_application.shift_pressed then
+						col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3)
+					else
+						col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + 3)
+					end
 				end
 			end			
 		end

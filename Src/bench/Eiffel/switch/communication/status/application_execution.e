@@ -49,6 +49,8 @@ feature {NONE} -- Initialization
 		do
 			create debug_info.make
 			displayed_string_size := preferences.misc_data.default_displayed_string_size
+			get_max_evaluation_duration
+			preferences.debug_tool_data.max_evaluation_duration_preference.change_actions.extend (agent get_max_evaluation_duration)
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
 		ensure
@@ -248,10 +250,12 @@ feature -- Properties
 		
 feature -- Query
 
-	max_evaluation_duration: INTEGER is
+	get_max_evaluation_duration is
 		do
-			Result := preferences.debug_tool_data.max_evaluation_duration
+			max_evaluation_duration := preferences.debug_tool_data.max_evaluation_duration
 		end
+		
+	max_evaluation_duration: INTEGER
 
 feature -- Access
 

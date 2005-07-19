@@ -138,8 +138,20 @@ feature -- Query
 
 feature -- Actions
 
-	change_actions: ACTION_SEQUENCE [TUPLE]
+	change_actions: ACTION_SEQUENCE [TUPLE] is
 			-- Actions to be performed when `value' changes, after call to `set_value'.
+		do
+			Result := internal_change_actions
+			if Result = Void then
+				create Result
+				internal_change_actions := Result
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	internal_change_actions: like change_actions
+			-- Storage for `change_actions'.
 
 invariant
 	has_manager: manager /= Void

@@ -296,8 +296,8 @@ feature -- Text Selection
 		do
 			l_first_line := text_displayed.line (a_start)
 			l_last_line := text_displayed.line (a_end)
-			l_first_char := text_displayed.line_pos_in_chars (l_first_line) 
-			l_last_char := text_displayed.line_pos_in_chars (l_last_line) + l_last_line.image.count + 1
+			l_first_char := text_displayed.line_pos_in_chars (l_first_line)
+			l_last_char := text_displayed.line_pos_in_chars (l_last_line) + l_last_line.image.count
 			select_region (l_first_char, l_last_char)
 		end		
 

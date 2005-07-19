@@ -527,8 +527,6 @@
 	<PREF NAME="editor.general.smart_identation" DESCRIPTION="Should editor perform auto-indenting?"><BOOLEAN>True</BOOLEAN></PREF>	
 	<PREF NAME="editor.general.tab_step" DESCRIPTION="Number of spaces that a tabulation character represents."><INTEGER>4</INTEGER></PREF>
 	<PREF NAME="editor.general.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.use_tab_for_indentation" DESCRIPTION="Should tab character be used for auto-indentation?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.scrolling_common_line_count" DESCRIPTION="editor.general.scrolling_common_line_count"><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="editor.general.colors.margin_background_color" DESCRIPTION="Background color of line number margin."><COLOR>212;208;200</COLOR></PREF>
 	<PREF NAME="editor.general.colors.margin_separator_color" DESCRIPTION="Color of separator between line number margin and editor."><COLOR>192;192;192</COLOR></PREF>
 	<PREF NAME="editor.general.colors.line_number_text_color" DESCRIPTION="Color of line number text."><COLOR>0;0;0</COLOR></PREF>

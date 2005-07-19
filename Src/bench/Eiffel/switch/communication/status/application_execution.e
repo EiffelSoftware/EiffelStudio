@@ -48,9 +48,11 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			create debug_info.make
-			displayed_string_size := preferences.misc_data.default_displayed_string_size
-			get_max_evaluation_duration
-			preferences.debug_tool_data.max_evaluation_duration_preference.change_actions.extend (agent get_max_evaluation_duration)
+			displayed_string_size := Preferences.misc_data.default_displayed_string_size
+			if Preferences.debug_tool_data /= Void then
+				get_max_evaluation_duration
+				Preferences.debug_tool_data.max_evaluation_duration_preference.change_actions.extend (agent get_max_evaluation_duration)
+			end
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
 		ensure

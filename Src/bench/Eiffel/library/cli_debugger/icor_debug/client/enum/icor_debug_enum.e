@@ -37,8 +37,12 @@ feature {ICOR_EXPORTER} -- Access Property
 feature {ICOR_EXPORTER} -- Access
 
 	skip (a_nb: INTEGER) is
+			-- Skip the next a_nb entries
+			-- if a_nb is zero, we don't skip any
 		do
-			last_call_success := cpp_skip (item, a_nb)
+			if a_nb > 0 then
+				last_call_success := cpp_skip (item, a_nb)
+			end
 		end
 
 	reset is

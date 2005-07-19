@@ -16,7 +16,22 @@ inherit
 
 feature {ICOR_EXPORTER} -- Access
 
+	i_th (i: INTEGER): G is
+			-- i_th item of the enum items.
+		require
+			valid_index: i > 0 and i <= get_count
+		local
+			arr: like next
+		do
+			reset
+			skip (i - 1)
+			arr := next (1)
+			Result := arr.item (1)
+		end
+
 	next (a_celt: INTEGER): ARRAY [G] is
+			-- Array of `a_celt' fetched items.
+			-- index start at '1'
 		require
 			celt_positive: a_celt > 0
 		local

@@ -103,8 +103,17 @@ feature {NONE} -- Initialization
 			esgrid.column (col_value_index).set_width (150)
 			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
 			esgrid.column (col_type_index).set_width (200)
+			
+				-- Set scrolling preferences.
 			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
 			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
+			esgrid.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
+			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
+				agent esgrid.set_mouse_wheel_scroll_size)
+			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
+				agent esgrid.set_mouse_wheel_scroll_full_page)
+			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
+				agent esgrid.set_scrolling_common_line_count)
 
 			esgrid.set_item_veto_pebble_function (agent on_stacks_veto_pebble_function)
 			esgrid.item_drop_actions.extend (agent on_drop_stack_element)
@@ -125,8 +134,18 @@ feature {NONE} -- Initialization
 			esgrid.column (col_value_index).set_width (150)
 			esgrid.column (col_type_index).set_title (col_titles @ col_type_index)
 			esgrid.column (col_type_index).set_width (200)
+
+				-- Set scrolling preferences.
 			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
 			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
+			esgrid.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
+			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
+				agent esgrid.set_mouse_wheel_scroll_size)
+			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
+				agent esgrid.set_mouse_wheel_scroll_full_page)
+			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
+				agent esgrid.set_scrolling_common_line_count)
+
 
 			esgrid.set_item_veto_pebble_function (agent on_debugged_objects_veto_pebble_function)
 			esgrid.item_drop_actions.extend (agent on_add_debugged_object)

@@ -91,8 +91,18 @@ feature {NONE} -- Initialization
 			esgrid.column (col_type_index).set_width (100)
 			esgrid.column (col_context_index).set_title (col_titles @ col_context_index)
 			esgrid.column (col_context_index).set_width (200)
+			
+				-- Set scrolling preferences.
 			esgrid.set_mouse_wheel_scroll_size (preferences.editor_data.mouse_wheel_scroll_size)
 			esgrid.set_mouse_wheel_scroll_full_page (preferences.editor_data.mouse_wheel_scroll_full_page)
+			esgrid.set_scrolling_common_line_count (preferences.editor_data.scrolling_common_line_count)
+			preferences.editor_data.mouse_wheel_scroll_size_preference.typed_change_actions.extend (
+				agent esgrid.set_mouse_wheel_scroll_size)
+			preferences.editor_data.mouse_wheel_scroll_full_page_preference.typed_change_actions.extend (
+				agent esgrid.set_mouse_wheel_scroll_full_page)
+			preferences.editor_data.scrolling_common_line_count_preference.typed_change_actions.extend (
+				agent esgrid.set_scrolling_common_line_count)
+				
 			esgrid.row_select_actions.extend (agent on_row_selected)
 			esgrid.row_deselect_actions.extend (agent on_row_deselected)
 			esgrid.drop_actions.extend (agent on_element_drop)

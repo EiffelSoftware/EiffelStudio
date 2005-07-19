@@ -1072,7 +1072,7 @@ feature {NONE} -- Implementation
 					end
 					l_item.attach_to_row (watches_grid.extended_new_row)
 				end
-				l_item.refresh
+				l_item.request_refresh
 				watched_items.forth
 			end
 			ensure_last_row_is_new_expression_row

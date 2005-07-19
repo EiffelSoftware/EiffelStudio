@@ -73,6 +73,24 @@ feature -- Recycling
 
 feature -- Refresh management
 
+	refresh_requested: BOOLEAN
+
+	request_refresh is
+			-- Use this when we don't want to evaluate the expression if the grid is not displayed
+		require
+			refresh_not_requested: not refresh_requested
+		do
+			if evaluation_requested then
+				refresh_requested := True
+				refresh
+				refresh_requested := False
+			else
+				refresh
+			end
+		ensure		
+			refresh_not_requested: not refresh_requested
+		end
+
 	refresh is
 		require else
 			has_expression: expression /= Void
@@ -347,7 +365,7 @@ feature -- Graphical changes
 			glab: EV_GRID_LABEL_ITEM
 			add,res,typ: STRING
 		do
-			if not compute_grid_display_done then
+			if not compute_grid_display_done and not refresh_requested then
 				if evaluation_requested then
 					process_evaluation 
 				elseif row /= Void then

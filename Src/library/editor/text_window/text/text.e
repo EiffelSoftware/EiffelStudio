@@ -184,16 +184,16 @@ feature -- Query
 		do
 			from
 				start				
-				if a_line = current_line then
-					Result := 1
-				end
+				Result := 1
 			until
 				a_line = current_line or after
 			loop
 				Result := Result + current_line.image.count + 1
 				forth
 			end
-		end		
+		ensure
+			line_pos_in_chars_positive: Result > 0
+		end
 
 feature -- Element Change
 

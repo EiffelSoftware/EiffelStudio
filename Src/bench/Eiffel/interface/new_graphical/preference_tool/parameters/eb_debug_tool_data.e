@@ -122,7 +122,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 feature -- Preference Strings
 
 	last_saved_stack_path_string: STRING is "debugger.last_saved_stack_path"
-	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_n_instructions"
+	interrupt_every_n_instructions_string: STRING is "debugger.interrupt_every_N_instructions"
 	debug_output_evaluation_enabled_string: STRING is "debugger.debug_output_evaluation"	
 	generating_type_evaluation_enabled_string: STRING is "debugger.generating_type_evaluation"				
 	min_slice_string: STRING is "debugger.min_slice"

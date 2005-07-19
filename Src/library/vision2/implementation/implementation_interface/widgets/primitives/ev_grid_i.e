@@ -4452,9 +4452,9 @@ feature {NONE} -- Event handling
 			if is_multiple_selection_enabled then
 				if is_shift_pressed then
 					l_selected_items := selected_items
-					if not l_selected_items.is_empty then
+					if last_selected_item /= Void and then not l_selected_items.is_empty or l_selected_items.count = 1 then
 						start_item := l_selected_items.last
-					end
+					end			
 					if a_item /= Void and then start_item /= Void and then start_item /= a_item then
 						start_row_index := start_item.row.index
 						end_row_index := a_item.row.index
@@ -4509,6 +4509,10 @@ feature {NONE} -- Event handling
 					end
 					a_item.enable_select
 				end
+			end
+			if start_item /= Void then
+				-- Reset the last selected item so that multiple selection works from previous position.
+				last_selected_item := start_item.implementation
 			end
 		end
 
@@ -4853,7 +4857,7 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		-- Item that was previously selected by the user, used from Ctrl-Shift selection handling.
 
 	remove_item_from_selected_items (a_item: EV_GRID_ITEM_I) is
-			-- Remove`a_item' from `internal_selected_items'.
+			-- Remove `a_item' from `internal_selected_items'.
 		require
 			a_item_not_void: a_item /= Void
 			has_a_item: internal_selected_items.has (a_item)

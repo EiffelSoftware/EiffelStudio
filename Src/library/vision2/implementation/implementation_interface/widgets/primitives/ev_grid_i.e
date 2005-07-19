@@ -30,6 +30,9 @@ inherit
 	EV_GRID_ACTION_SEQUENCES_I
 	
 	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -3537,11 +3540,11 @@ feature {NONE} -- Drawing implementation
 		end
 
 	last_width_of_header_during_resize: INTEGER is
-		-- The last width of the header item that is currently being
-		-- resized. Used to determine if we must refresh the column to
-		-- the left of the current one as it could cause the border to
-		-- need to be drawn on the previous column if it is the final
-		-- column that current has a width greater than 0.
+			-- The last width of the header item that is currently being
+			-- resized. Used to determine if we must refresh the column to
+			-- the left of the current one as it could cause the border to
+			-- need to be drawn on the previous column if it is the final
+			-- column that current has a width greater than 0.
 		require
 			is_header_item_resizing: is_header_item_resizing
 		do
@@ -3763,7 +3766,6 @@ feature {NONE} -- Drawing implementation
 			a_width_non_negative: a_width >= 0
 			a_height_non_negative: a_height >= 0
 		do
-			
 				-- Set the internal client dimensions for
 				-- quick retrieval later. This reduces the dependencies on
 				-- `viewport' within other code.

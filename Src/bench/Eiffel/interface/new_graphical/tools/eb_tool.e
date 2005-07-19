@@ -122,8 +122,8 @@ feature -- Status setting
 	close is
 			-- Close the tool (if possible)
 		do
-			if explorer_bar_item /= Void then
-				unattach_from_explorer_bar
+			if explorer_bar_item /= Void and then explorer_bar_item.is_closeable then
+				explorer_bar_item.close
 			end
 		end
 

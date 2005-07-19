@@ -19,7 +19,7 @@ fi
 
 echo "Do you want to precompile EiffelBase (required to compile examples) ? [y/n]"
 read prec_base
-echo "Do you want to precompile EiffelVision2 (might take a while) ? [y/n]"
+echo "Do you want to precompile EiffelVision (might take a while) ? [y/n]"
 read prec_vision2
 
 INIT_DIR=`pwd`
@@ -31,10 +31,20 @@ if [ "$prec_base" != "n" ]; then
 	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace -c_compile
 fi
 if [ "$prec_vision2" = "y" ]; then
-	echo Precompile EiffelVision2
-	cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision2
-	rm -rf EIFGEN
-	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace -c_compile
+	if which pkg-config 2> /dev/null ; then
+		if pkg-config --atleast-version=2.4 gtk+-2.0 ; then
+			echo Precompile EiffelVision
+			cd $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision2
+			rm -rf EIFGEN
+			$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec -precompile -ace Ace.ace -c_compile
+		else
+			echo "GTK 2.4 does not seem to be installed"
+			echo "Precompilation of EiffelVision interrupted."
+		fi
+	else
+		echo "GTK 2.4 does not seem to be installed"
+		echo "Precompilation of EiffelVision interrupted."
+	fi
 fi
 
 cd $INIT_DIR

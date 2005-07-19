@@ -48,15 +48,17 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			create debug_info.make
-			displayed_string_size := Preferences.misc_data.default_displayed_string_size
-			if Preferences.debug_tool_data /= Void then
-				get_max_evaluation_duration
-				Preferences.debug_tool_data.max_evaluation_duration_preference.change_actions.extend (agent get_max_evaluation_duration)
+			displayed_string_size := preferences.misc_data.default_displayed_string_size
+			if preferences.debug_tool_data /= Void then
+				set_max_evaluation_duration (preferences.debug_tool_data.max_evaluation_duration)
+				preferences.debug_tool_data.max_evaluation_duration_preference.typed_change_actions.extend (agent set_max_evaluation_duration)
 			end
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
 		ensure
 			displayed_string_size: displayed_string_size = preferences.misc_data.default_displayed_string_size
+			max_evaluation_duration_set: preferences.debug_tool_data /= Void implies
+				max_evaluation_duration = preferences.debug_tool_data.max_evaluation_duration
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
 		end
 		
@@ -251,13 +253,10 @@ feature -- Properties
 		end
 		
 feature -- Query
-
-	get_max_evaluation_duration is
-		do
-			max_evaluation_duration := preferences.debug_tool_data.max_evaluation_duration
-		end
 		
 	max_evaluation_duration: INTEGER
+			-- Maximum number of seconds to wait before cancelling an evaluation.
+			-- A negative value means no cancellation will be done.
 
 feature -- Access
 
@@ -423,6 +422,14 @@ feature -- Element change
 			valid_breakpoint: is_breakpoint_set (f, i)
 		do
 			debug_info.remove_condition (f, i)
+		end
+
+	set_max_evaluation_duration (v: like max_evaluation_duration) is
+			-- Set `max_evaluation_duration' with `v'.
+		do
+			max_evaluation_duration := v
+		ensure
+			max_evaluation_duration_set: max_evaluation_duration = v
 		end
 
 feature -- Access

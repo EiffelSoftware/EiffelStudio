@@ -166,7 +166,7 @@ feature -- Actions
 						loop
 							deg.put_case_class_message (classes.item.compiled_class)
 							set_base_cluster (classes.item.cluster)
-							cl_name := classes.item.name
+							cl_name := classes.item.name.as_lower
 							set_class_name (cl_name)
 							if filter.is_html then
 								filter.set_keyword ("html_meta", html_meta_for_class (classes.item))
@@ -181,7 +181,7 @@ feature -- Actions
 		--							end
 									prepare_for_file (
 										classes.item.cluster.relative_path ('%U'),
-										classes.item.name.as_lower + cf.file_extension
+										cl_name + cf.file_extension
 									)
 									set_document_title (cl_name + " " + cf.description)
 									generate_class (classes.item, cf)
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			until
 				classes.after
 			loop
-				s := classes.item.name.twin
+				s := classes.item.name.as_lower
 				class_array.append ("%T%T%"" + s + "%"")
 				s.to_lower
 				s := "" + classes.item.cluster.relative_path ('/') +
@@ -751,7 +751,7 @@ feature -- Specific Generation
 				text.add (ti_after_class_declaration)
 			end
 			filter.prepend_to_file_suffix (format.file_extension)
-			insert_class_menu_bars (text, class_i.name, format)
+			insert_class_menu_bars (text, class_i.name.as_lower, format)
 			generate_from_structured_text (text)
 			filter.set_feature_redirect (feature_links)
 		rescue

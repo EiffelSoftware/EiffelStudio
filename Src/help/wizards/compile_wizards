@@ -13,6 +13,6 @@ remtrace Vision2 wizard Built!
 remtrace Building the Precompilation wizard
 cd $EXPORT_DIR/precomp_wizard
 untgz_ccode wizard
-mkdir -p $INSTALL_DIR/studio/wizards/precompile/spec/$ISE_PLATFORM
-move wizard $INSTALL_DIR/studio/wizards/precompile/spec/$ISE_PLATFORM
+mkdir -p $INSTALL_DIR/studio/wizards/others/precompile/spec/$ISE_PLATFORM
+move wizard $INSTALL_DIR/studio/wizards/others/precompile/spec/$ISE_PLATFORM
 remtrace Precompilation wizard Built!

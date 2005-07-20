@@ -360,6 +360,18 @@ feature -- Accelerator, focus label and menu name
 	m_Wizard_precompile: STRING is 		"Precompilation &Wizard..."
 	f_Wizard_precompile: STRING is		"Wizard to precompile libraries"
 
+feature -- Toggles
+
+	f_hide_alias: STRING is			"Hide Alias Name"
+	f_hide_assigner: STRING is		"Hide Assigner Command Name"
+	f_hide_signature: STRING is		"Hide Signature"
+	f_show_alias: STRING is			"Show Alias Name"
+	f_show_assigner: STRING is		"Show Assigner Command Name"
+	f_show_signature: STRING is		"Show Signature"
+	l_toggle_alias: STRING is		"Toggle visibility of feature alias name"
+	l_toggle_assigner: STRING is	"Toggle visibility of assigner command name"
+	l_toggle_signature: STRING is	"Toggle visibility of feature signature"
+
 feature -- Menu mnenomics
 
 	m_Add_exported_feature: STRING is	"&Add..."
@@ -369,9 +381,6 @@ feature -- Menu mnenomics
 	m_Create_new_cluster: STRING is		"New C&luster..."
 	m_Create_new_class: STRING is		"&New Class..."
 	m_Create_new_feature: STRING is		"New Fea&ture..."
-	m_Showhide_signature: STRING is		"Show/Hide Signature"
-	m_Showhide_alias: STRING is		"Show/Hide Alias Name"
-	m_Showhide_assigner: STRING is		"Show/hide Assigner Command Name"
 	m_Debug: STRING is					"&Debug"
 	m_Debugging_tool: STRING is			"&Debugging Tools"
 	m_Disable_this_bkpt: STRING is		"&Disable This Breakpoint"

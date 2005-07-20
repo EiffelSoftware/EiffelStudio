@@ -715,8 +715,17 @@ feature -- Basic Operations
 					end
 				else
 						-- The token is not text so the insertion must be taken from the previous token IF that is text
-					if token.previous /= Void and then token.previous.is_text and then not token_image_is_in_array (token.previous, feature_call_separators) then
-						insertion.put (token.previous.image)
+					prev_token := token.previous
+					if prev_token /= Void and then prev_token.is_text and then not token_image_is_in_array (prev_token, feature_call_separators) then
+						l_char := prev_token.image.item (prev_token.image.count)
+						if l_char.is_alpha or l_char.is_digit or l_char = '_' then
+								-- Previous token is an Eiffel identifier
+								-- Happens when completing 'p|'
+							insertion.put (prev_token.image)
+							insertion_remainder := 0		
+						else
+								-- Happens when completing ')|.b.c'
+						end
 					end
 				end
 			end

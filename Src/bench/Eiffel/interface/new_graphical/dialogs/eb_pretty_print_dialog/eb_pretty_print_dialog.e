@@ -91,8 +91,9 @@ feature {NONE} -- Initialization
 			word_wrap_button.set_pixmap (icon_word_wrap_color @ 1)
 
 			editor.set_minimum_height (100)
-			editor.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (190, 190, 190))
+			editor.set_background_color (No_text_background_color)
 			editor.disable_word_wrapping
+			editor.disable_edit
 
 			editor.drop_actions.extend (agent on_stone_dropped)
 			editor.drop_actions.set_veto_pebble_function (agent is_stone_valid)

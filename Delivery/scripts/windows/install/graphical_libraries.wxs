@@ -1630,7 +1630,6 @@
 									<File Id="ev_postscript_drawable.e" Name="EV_POS~1.E" LongName="ev_postscript_drawable.e" />
 									<File Id="ev_scaled_font_factory.e" Name="EV_SCA~1.E" LongName="ev_scaled_font_factory.e" />
 									<File Id="ev_scaled_pixmap_factory.e" Name="EV_SCA~2.E" LongName="ev_scaled_pixmap_factory.e" />
-									<File Id="ev_shared_application.e" Name="EV_SHA~1.E" LongName="ev_shared_application.e" />
 									<File Id="ev_shared_scale_factory.e" Name="EV_SHA~2.E" LongName="ev_shared_scale_factory.e" />
 								</Component>
 							</Directory>
@@ -1717,6 +1716,7 @@
 									<File Id="ev_clipboard.e" Name="EV_CLI~3.E" LongName="ev_clipboard.e" />
 									<File Id="ev_character_format.e" Name="EV_CHA~4.E" LongName="ev_character_format.e" />
 									<File Id="ev_paragraph_format.e" Name="EV_PAR~2.E" LongName="ev_paragraph_format.e" />
+									<File Id="ev_shared_application.e" Name="EV_SHA~1.E" LongName="ev_shared_application.e" />
 								</Component>
 							</Directory>
 							<Directory Id="properties39" Name="PROPER~3" LongName="properties">

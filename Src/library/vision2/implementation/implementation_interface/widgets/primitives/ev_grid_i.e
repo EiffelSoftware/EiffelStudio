@@ -33,7 +33,12 @@ inherit
 		export
 			{NONE} all
 		end
-
+		
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+		
 feature -- Access
 
 	drop_actions: EV_PND_ACTION_SEQUENCE is
@@ -2434,7 +2439,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if not vertical_computation_added_to_once_idle_actions then
 						-- Do nothing if `Current' is empty or the agent is already contained
 						-- in the do once on idle actions.
-					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar_from_once_idle_actions)
+					ev_application.do_once_on_idle (agent recompute_vertical_scroll_bar_from_once_idle_actions)
 					vertical_computation_added_to_once_idle_actions := True
 				end
 				vertical_redraw_triggered_by_viewport_resize := False
@@ -2459,7 +2464,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if not horizontal_computation_added_to_once_idle_actions then
 						-- Do nothing if `Current' is empty or the agent is already contained
 						-- in the do once on idle actions.
-					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar_from_once_idle_actions)
+					ev_application.do_once_on_idle (agent recompute_horizontal_scroll_bar_from_once_idle_actions)
 					horizontal_computation_added_to_once_idle_actions := True
 				end
 				horizontal_redraw_triggered_by_viewport_resize := False
@@ -3947,7 +3952,7 @@ feature {NONE} -- Event handling
 				if
 					selected_item /= Void and then
 					selected_item.is_selected and then
-					(create {EV_ENVIRONMENT}).application.ctrl_pressed and then
+					ev_application.ctrl_pressed and then
 					not is_always_selected
 				then
 					selected_item.disable_select
@@ -4460,7 +4465,7 @@ feature {NONE} -- Event handling
 			a_application: EV_APPLICATION
 			l_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 		do
-			a_application := (create {EV_ENVIRONMENT}).application
+			a_application := ev_application
 			is_ctrl_pressed := a_application.ctrl_pressed
 			is_shift_pressed := a_application.shift_pressed
 			

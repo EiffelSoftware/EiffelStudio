@@ -56,7 +56,7 @@ feature -- Query
 	deactivate is
 		do
 			Precursor
-			if not text.is_empty then
+			if not user_cancelled_activation and then not text.is_empty then
 				apply_actions.call ([text])
 			end
 			set_text (empty_text)

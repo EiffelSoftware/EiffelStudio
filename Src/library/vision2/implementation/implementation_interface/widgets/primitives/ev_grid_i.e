@@ -1462,49 +1462,64 @@ feature -- Status setting
 			row_index: INTEGER
 			visible_row_index: INTEGER
 			items: ARRAYED_LIST [INTEGER]
+			virtual_x_changed: BOOLEAN
+			virtual_y_changed: BOOLEAN
 		do
-			perform_horizontal_computation
-			perform_vertical_computation
-			internal_set_virtual_y_position (virtual_y)
-			internal_set_virtual_x_position (virtual_x)
-			if is_vertical_scrolling_per_item then
-				vertical_scroll_bar.change_actions.block
-				items := drawer.items_spanning_vertical_span (internal_client_y, viewable_height)
-				if items.count > 0 then
-					row_index := items.first
-					if row_indexes_to_visible_indexes = Void then
-						visible_row_index := row_index - 1
+			virtual_x_changed := virtual_x /= internal_client_x
+			virtual_y_changed := virtual_y /= internal_client_y
+			
+			if virtual_x_changed then
+				recompute_horizontal_scroll_bar
+				internal_set_virtual_x_position (virtual_x)
+				
+			end
+			if virtual_y_changed then
+				recompute_vertical_scroll_bar
+				internal_set_virtual_y_position (virtual_y)
+			end
+			
+			if virtual_y_changed then
+				if is_vertical_scrolling_per_item then
+					vertical_scroll_bar.change_actions.block
+					items := drawer.items_spanning_vertical_span (internal_client_y, viewable_height)
+					if items.count > 0 then
+						row_index := items.first
+						if row_indexes_to_visible_indexes = Void then
+							visible_row_index := row_index - 1
+						else
+							visible_row_index := row_indexes_to_visible_indexes @ row_index
+						end
+						vertical_scroll_bar.set_value (visible_row_index)
 					else
-						visible_row_index := row_indexes_to_visible_indexes @ row_index
-					end
-					vertical_scroll_bar.set_value (visible_row_index)
+							-- There are no rows in `Current', so we set the
+							-- value of `vertical_scroll_bar' to 0.
+						check
+							row_count_must_be_zero: row_count = 0
+							vertical_scroll_bar.value_range.has (0)
+						end
+						vertical_scroll_bar.set_value (0)
+					end	
+					vertical_scroll_bar.change_actions.resume
 				else
-						-- There are no rows in `Current', so we set the
-						-- value of `vertical_scroll_bar' to 0.
-					check
-						row_count_must_be_zero: row_count = 0
-						vertical_scroll_bar.value_range.has (0)
-					end
-					vertical_scroll_bar.set_value (0)
-				end	
-				vertical_scroll_bar.change_actions.resume
-			else
-				vertical_scroll_bar.change_actions.block
-				vertical_scroll_bar.set_value (virtual_y)
-				vertical_scroll_bar.change_actions.resume
+					vertical_scroll_bar.change_actions.block
+					vertical_scroll_bar.set_value (virtual_y)
+					vertical_scroll_bar.change_actions.resume
+				end
 			end
-			if is_horizontal_scrolling_per_item then
-				fixme (Once "Implement")
-			else
-				horizontal_scroll_bar.change_actions.block
-				horizontal_scroll_bar.set_value (virtual_x)
-				horizontal_scroll_bar.change_actions.resume
+			if virtual_x_changed then
+				if is_horizontal_scrolling_per_item then
+					fixme (Once "Implement")
+				else
+					horizontal_scroll_bar.change_actions.block
+					horizontal_scroll_bar.set_value (virtual_x)
+					horizontal_scroll_bar.change_actions.resume
+				end
 			end
-			if virtual_position_changed_actions_internal /= Void then
-				virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
+			if virtual_x_changed or virtual_y_changed then
+				if virtual_position_changed_actions_internal /= Void then
+					virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
+				end
 			end
---			last_vertical_scroll_bar_value := vertical_scroll_bar.value
---			last_horizontal_scroll_bar_value := horizontal_scroll_bar.value
 		ensure
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
 		end
@@ -2416,7 +2431,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if vertical_redraw_triggered_by_viewport_resize then
 					recompute_vertical_scroll_bar
 				end
-				if row_count > 0 and not vertical_computation_added_to_once_idle_actions then
+				if not vertical_computation_added_to_once_idle_actions then
 						-- Do nothing if `Current' is empty or the agent is already contained
 						-- in the do once on idle actions.
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_vertical_scroll_bar_from_once_idle_actions)
@@ -2441,7 +2456,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if horizontal_redraw_triggered_by_viewport_resize then
 					recompute_horizontal_scroll_bar
 				end
-				if columns.count > 0 and not horizontal_computation_added_to_once_idle_actions then
+				if not horizontal_computation_added_to_once_idle_actions then
 						-- Do nothing if `Current' is empty or the agent is already contained
 						-- in the do once on idle actions.
 					((create {EV_ENVIRONMENT}).application).do_once_on_idle (agent recompute_horizontal_scroll_bar_from_once_idle_actions)

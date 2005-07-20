@@ -75,7 +75,7 @@ feature {NONE} -- Initialization
 				gtk_dependent_launch_initialize
 				main_loop			
 					-- Unhook marshal object.
-				gtk_marshal.destroy				
+				gtk_marshal.destroy			
 			end
 		end	
 		
@@ -84,24 +84,43 @@ feature {NONE} -- Initialization
 		local
 			post_launch_actions_called: BOOLEAN
 			events_pending: BOOLEAN
+			l_is_destroyed: BOOLEAN
+			l_window_list: like windows
 		do
 			from
 			until 
-				is_destroyed
+				l_is_destroyed
 			loop
 				if not {EV_GTK_EXTERNALS}.g_main_iteration (False) then		
 						-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
 						-- All pending resizing has been performed at this point.
+					l_is_destroyed := is_destroyed
+						-- We need to make sure that we only quit the application when all pending events have been processed.
+						-- This is so that 
 					if not post_launch_actions_called then
 						interface.post_launch_actions.call (Void)
 						post_launch_actions_called := True
 					end
 					
-					if idle_actions_pending then
-						call_idle_actions
+					if not l_is_destroyed then
+						if idle_actions_pending then
+							call_idle_actions
+						else
+								-- Block loop by running a gmain loop iteration with blocking enabled.
+							events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
+						end					
 					else
-							-- Block loop by running a gmain loop iteration with blocking enabled.
-						events_pending := {EV_GTK_EXTERNALS}.g_main_iteration (True)
+						-- Application has been flagged to be destroyed so we hide any existing windows.
+						-- Hide any existing Windows
+						l_window_list := windows
+						from
+							l_window_list.start
+						until
+							l_window_list.after
+						loop
+							l_window_list.item.hide
+							l_window_list.forth	
+						end
 					end
 				end
 			end
@@ -125,9 +144,10 @@ feature {EV_ANY_IMP} -- Access
 	call_idle_actions is
 			-- Execute idle actions
 		do
-				-- Call the opo idle actions first.
-			internal_idle_actions.call (Void)
-			if idle_actions_internal /= Void then
+				-- Call the opo idle actions only if there are actions available.
+			if not internal_idle_actions.is_empty then
+				internal_idle_actions.call (Void)
+			elseif idle_actions_internal /= Void then
 				idle_actions_internal.call (Void)
 			end
 		end

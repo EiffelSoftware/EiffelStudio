@@ -17,18 +17,15 @@ inherit
 			on_item_added, on_item_removed
 		end
 
-	EB_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create, is_equal, copy
-		end
-
 	EB_RECYCLABLE
 		undefine
 			default_create, is_equal, copy
 		end
-
+		
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	make
@@ -62,8 +59,8 @@ feature -- Element change
 
 	update_class_item (a_class_item: EB_FAVORITES_CLASS; m: EV_MENU_ITEM) is
 		do
-			if a_class_item.associated_class_c /= Void then
-				m.set_pixmap (Pixmaps.Icon_class_symbol_color)
+			if a_class_item.associated_class_i /= Void then
+				m.set_pixmap (pixmap_from_class_i (a_class_item.associated_class_i))
 			else
 				m.set_pixmap (Pixmaps.Icon_class_symbol_gray)
 			end
@@ -71,17 +68,7 @@ feature -- Element change
 		
 	update_feature_item (a_feat_item: EB_FAVORITES_FEATURE; m: EV_MENU_ITEM) is
 		do
-			if a_feat_item.is_deferred then
-				m.set_pixmap (Pixmaps.icon_deferred_feature)
-			elseif a_feat_item.is_once or a_feat_item.is_constant then
-				m.set_pixmap (Pixmaps.icon_once_objects)
-			elseif a_feat_item.is_attribute then
-				m.set_pixmap (Pixmaps.icon_attributes)
-			elseif a_feat_item.is_external then
-				m.set_pixmap (Pixmaps.icon_external_feature)
-			else
-				m.set_pixmap (Pixmaps.icon_feature @ 1)
-			end
+			m.set_pixmap (pixmap_from_e_feature (a_feat_item.associated_e_feature))
 		end
 		
 feature {NONE} -- Initialization Implementation

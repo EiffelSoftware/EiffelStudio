@@ -955,7 +955,9 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					glines.after
 				loop
 					check glines.item /= Void end
-					remove_debugged_object_line (glines.item)
+					if is_removable_debugged_object_address (glines.item.object_address) then
+						remove_debugged_object_line (glines.item)
+					end
 					glines.forth
 				end
 			end
@@ -998,19 +1000,23 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		end
 
 	is_removable_debugged_object (ost: OBJECT_STONE): BOOLEAN is
-		local
-			addr: STRING
 		do
-			addr := ost.object_address
-			from
-				displayed_objects.start
-			until
-				displayed_objects.after or else Result
-			loop
-				Result := displayed_objects.item.object_address.is_equal (addr)
-				displayed_objects.forth
+			Result := is_removable_debugged_object_address (ost.object_address)
+		end
+
+	is_removable_debugged_object_address (addr: STRING): BOOLEAN is
+		do
+			if addr /= Void then
+				from
+					displayed_objects.start
+				until
+					displayed_objects.after or else Result
+				loop
+					Result := displayed_objects.item.object_address.is_equal (addr)
+					displayed_objects.forth
+				end
 			end
-		end			
+		end		
 	
 feature {NONE} -- Impl : Stack objects grid
 

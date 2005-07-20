@@ -1076,7 +1076,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if insertion_position = 0 then
-					insertion_position := class_as.feature_clause_insert_position + 1
+					insertion_position := class_as.feature_clause_insert_position
 				end
 
 				insert_feature_clause (a_export, a_comment)

@@ -32,11 +32,25 @@ inherit
 			key_not_handled_action,
 			on_text_saved,
 			on_text_back_to_its_last_saved_state,
-			on_key_down
+			on_key_down,
+			make
 		end	
 
 create
 	make
+	
+feature {NONE} -- Initialize
+
+	make(a_dev_window: EB_DEVELOPMENT_WINDOW) is
+			-- Initialize the editor.
+		do
+			Precursor {EB_CLICKABLE_EDITOR} (a_dev_window)
+			
+				-- Create timeout for completion list.
+			create completion_timeout.make_with_interval (1500)
+			completion_timeout.actions.extend (agent complete_feature_name)
+			completion_timeout.actions.block
+		end
 	
 feature -- Content change
 
@@ -203,12 +217,8 @@ feature -- Autocomplete
 			choices.set_position (calculate_completion_list_x_position, calculate_completion_list_y_position)
 		end		
 
-	completion_timeout: EV_TIMEOUT is
+	completion_timeout: EV_TIMEOUT
 			-- Timeout for showing completion list
-		once
-			create Result.make_with_interval (1500)
-			Result.actions.extend (agent complete_feature_name)
-		end		
 
 feature {NONE} -- Text loading
 
@@ -511,6 +521,8 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			-- Set mode to normal (not completion mode).
 		do
 			is_completing := False
+				-- Invalidating cursor forces cursor to be updated.
+			invalidate_cursor_rect (False)
 			resume_cursor_blinking
 			set_focus
 		end
@@ -1033,6 +1045,10 @@ feature -- Memory management
 		do
 			Precursor {EB_CLICKABLE_EDITOR}
 			dev_window := Void
+			if completion_timeout /= Void and then not completion_timeout.is_destroyed then
+				completion_timeout.destroy
+			end
+			completion_timeout := Void
 		end
 
 feature {NONE} -- Implementation	
@@ -1072,5 +1088,8 @@ feature {NONE} -- Implementation
 		ensure
 			completing_automatically_reset: completing_automatically = False
 		end
+
+invariant
+	completion_timeout_not_void: completion_timeout /= Void
 
 end -- class SMART_EDITOR

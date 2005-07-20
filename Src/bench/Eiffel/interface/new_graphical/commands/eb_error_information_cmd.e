@@ -92,13 +92,14 @@ feature {NONE} -- Implementation
 			-- Dialog used to display the error explanations.
 
 	current_editor: SELECTABLE_TEXT_PANEL
-			-- Editor in which the explanation texts are put.
+			-- Text in which the explanation texts are put.
 
 	execute_with_text (a_text: STRING) is
 			-- Pop up a new dialog and display `a_text' inside it.
 		do
 			create_new_dialog
 			current_editor.load_text (a_text)
+			current_editor.hide_line_numbers
 			current_dialog.show_relative_to_window (Window_manager.last_focused_development_window.window)
 			current_dialog := Void
 		end
@@ -109,31 +110,32 @@ feature {NONE} -- Implementation
 			but: EV_BUTTON
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
-			f: EV_FRAME
 			scr: EV_SCREEN
 			fs: INTEGER
 			ft: EV_FONT
+			f: EV_FRAME
 		do
 				-- Build the layout.
 			create vb
 			vb.set_padding (Layout_constants.small_padding_size)
 			vb.set_border_width (Layout_constants.small_border_size)
 			create hb
-			create f
 			create current_dialog
 			current_dialog.set_title (Interface_names.t_Extended_explanation)
 			
 			create but.make_with_text (Interface_names.b_Close)
 			Layout_constants.set_default_size_for_button (but)
 			create current_editor
+			current_editor.set_cursors (create {EB_EDITOR_CURSORS})
 			current_editor.set_reference_window (current_dialog)
 			current_editor.widget.set_minimum_size (150, 100)
 			
+			create f
+			f.extend (current_editor.widget)
 			hb.extend (create {EV_CELL})
 			hb.extend (but)
 			hb.disable_item_expand (but)
 			hb.extend (create {EV_CELL})
-			f.extend (current_editor.widget)
 			vb.extend (f)
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
@@ -158,7 +160,7 @@ feature {NONE} -- Implementation
 			valid_editor: current_editor /= Void
 		end
 
-	set_stone (editor: KEYBOARD_SELECTABLE_TEXT_PANEL; st: ERROR_STONE) is
+	set_stone (editor: SELECTABLE_TEXT_PANEL; st: ERROR_STONE) is
 			-- Display the help text associated with `st' in `editor'.
 		require
 			valid_stone: st /= Void

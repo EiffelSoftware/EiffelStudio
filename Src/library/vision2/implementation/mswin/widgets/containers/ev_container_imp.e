@@ -255,7 +255,7 @@ feature {NONE} -- WEL Implementation
 				is_a_widget: w /= Void
 			end
 			label ?= w
-			if application_imp.themes_active and label /= Void then
+			if label /= Void and then application_imp.themes_active then
 				disable_default_processing
 				brush := background_brush
 				theme_drawer.draw_widget_background (label, paint_dc, create {WEL_RECT}.make (0, 0, w.width, w.height), brush)

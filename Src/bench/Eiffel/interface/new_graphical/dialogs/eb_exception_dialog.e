@@ -24,6 +24,13 @@ inherit
 			default_create, copy
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+		
 create
 	make
 
@@ -40,8 +47,8 @@ feature {NONE} -- Initialization
 			ignore_button: EV_BUTTON
 			quit_button: EV_BUTTON
 			restart_button: EV_BUTTON
-			exception_frame: EV_FRAME
 			pixmap_box: EV_VERTICAL_BOX
+			exception_frame: EV_FRAME
 			exception_text: SELECTABLE_TEXT_PANEL
 			save_button: EV_BUTTON
 		do
@@ -66,7 +73,8 @@ feature {NONE} -- Initialization
 			Layout_constants.set_default_size_for_button (save_button)
 
 			create exception_text
-			exception_text.widget.set_minimum_height (Layout_constants.dialog_unit_to_pixels (60))
+			exception_text.set_cursors (create {EB_EDITOR_CURSORS})
+			exception_text.widget.set_minimum_height (Layout_constants.dialog_unit_to_pixels (60))						
 			exception_text.load_text (trace)
 			
 			create pixmap_box

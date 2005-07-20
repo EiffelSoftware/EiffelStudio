@@ -29,7 +29,7 @@
 	<feature_name>empty</feature_name><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
 		<keyword>indexing</keyword>
 			<comment>description</comment><symbol>:</symbol> "<string>Is Current empty?</string>"
-			<comment>attribute</comment><symbol>:</symbol> <keyword>create</keyword> <symbol>{</symbol><class_name>SYSTEM_OBSOLETEATTRIBUTE</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make_obsoleteattribute_1</feature_name> <symbol>(</symbol>"<string>Use `is_empty</string><symbol>'</symbol> instead"<symbol>)</symbol> <keyword>end</keyword>
+			<comment>metadata</comment><symbol>:</symbol> <keyword>create</keyword> <symbol>{</symbol><class_name>SYSTEM_OBSOLETEATTRIBUTE</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>"<string>Use `is_empty</string><symbol>'</symbol> instead"<symbol>)</symbol> <keyword>end</keyword>
 		<keyword>obsolete</keyword>
 			"<string>Use is_empty instead</string>"
 		<keyword>do</keyword>
@@ -40,7 +40,7 @@
 			<feature_name>empty</feature_name> . The custom attribute defined by 
 			<class_name>SYSTEM_OBSOLETEATTRIBUTE</class_name> is used to ensure that any consumer of the resulting assembly will see the feature as being obsolete. The custom attribute is defined in the indexing clause 
 			<code>
-				<contract_tag>attribute</contract_tag>
+				<contract_tag>metadata</contract_tag>
 			</code>. The definition consists of a creation expression that creates the custom attribute with the right parameters.
 		</paragraph>
 		<heading>
@@ -70,12 +70,12 @@
 				<class_name>LIST_ANY</class_name>
 			</item>
 			<item>
-				<class_name>LIST_Int32</class_name>
+				<class_name>LIST_INT32</class_name>
 			</item>
 		</list>
 		<paragraph>Meaning that if one wants to reuse an Eiffel generic class from another language than Eiffel for .NET, one has to use either 
 			<class_name>LIST_ANY</class_name> or 
-			<class_name>LIST_Int32</class_name>.
+			<class_name>LIST_INT32</class_name>.
 		</paragraph>
 		<heading>
 			<size>3</size>Enum types

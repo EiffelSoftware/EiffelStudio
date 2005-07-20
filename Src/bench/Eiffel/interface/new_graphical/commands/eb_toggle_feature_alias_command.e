@@ -37,12 +37,6 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	menu_name: STRING is
-			-- Name as it appears in the menu (with & symbol).
-		do
-			Result := Interface_names.m_Showhide_alias
-		end
-
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command (one for the
 			-- gray version, one for the color version).
@@ -52,18 +46,28 @@ feature {NONE} -- Implementation
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := Interface_names.m_Showhide_alias
+			if target.features_tool.tree.is_alias_enabled then
+				Result := Interface_names.f_hide_alias
+			else
+				Result := Interface_names.f_show_alias
+			end
 		end
 
 	description: STRING is
 			-- Description for this command.
 		do
-			Result := Interface_names.m_Showhide_alias
+			Result := Interface_names.l_toggle_alias
 		end
 
 	name: STRING is "Toggle_feature_alias"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
+
+	update_tooltip (toggle: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON) is
+			-- Update tooltip of `toggle'.
+		do
+			toggle.set_tooltip (tooltip)
+		end
 
 feature -- Basic operations
 
@@ -79,6 +83,7 @@ feature -- Basic operations
 			end
 			Result.set_tooltip (tooltip)
 			Result.select_actions.extend (agent execute)
-		end			
+			Result.select_actions.extend (agent update_tooltip (Result))
+		end
 
 end

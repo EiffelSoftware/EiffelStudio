@@ -62,7 +62,6 @@ feature {NONE} -- Initialization
 			create vbox
 			vbox.extend (choice_list)
 			extend (vbox)
-			enable_user_resize
 			choice_list.focus_out_actions.extend (agent on_lose_focus)
 			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
 			focus_out_actions.extend (agent on_lose_focus)			

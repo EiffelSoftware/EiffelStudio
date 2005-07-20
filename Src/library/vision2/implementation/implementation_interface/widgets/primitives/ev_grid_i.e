@@ -1479,9 +1479,13 @@ feature -- Status setting
 					end
 					vertical_scroll_bar.set_value (visible_row_index)
 				else
-					if row_count > 0 then
-						vertical_scroll_bar.set_value (visible_row_count - 1)
+						-- There are no rows in `Current', so we set the
+						-- value of `vertical_scroll_bar' to 0.
+					check
+						row_count_must_be_zero: row_count = 0
+						vertical_scroll_bar.value_range.has (0)
 					end
+					vertical_scroll_bar.set_value (0)
 				end	
 				vertical_scroll_bar.change_actions.resume
 			else

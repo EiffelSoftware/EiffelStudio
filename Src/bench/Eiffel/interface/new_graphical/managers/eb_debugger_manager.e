@@ -642,6 +642,9 @@ feature -- Debugging events
 				observers.item.on_application_launched
 				observers.forth
 			end
+
+				-- Update Watch tool
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 		end
 
 	on_application_before_stopped is

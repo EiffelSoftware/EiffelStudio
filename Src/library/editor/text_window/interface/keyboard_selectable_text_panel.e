@@ -653,13 +653,22 @@ feature {NONE} -- Blink Cursor Management
 
 	blinking_timeout: EV_TIMEOUT
 			-- Timeout for control cursor blinking	
+			
+	internal_blink_delay_timeout: EV_TIMEOUT
+			-- Cached version of `blinking_timeout' do not use directly
 
-	blink_deplay_timeout: EV_TIMEOUT is
+	blink_delay_timeout: EV_TIMEOUT is
 			-- Timeout for controlling blinking cursor resuce (when `reset_blinking' is called)
-		once
-			create Result.make_with_interval (400)
-			Result.actions.extend (agent on_blink_delay_timer)
-			Result.actions.resume
+		do
+			Result := internal_blink_delay_timeout
+			if Result = Void then
+				create Result.make_with_interval (400)
+				Result.actions.extend (agent on_blink_delay_timer)
+				Result.actions.resume
+				internal_blink_delay_timeout := Result
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	on_blink_delay_timer is
@@ -675,8 +684,8 @@ feature {NONE} -- Blink Cursor Management
 		do
 				-- Resets timer
 			let_blink := False
-			i := blink_deplay_timeout.interval
-			blink_deplay_timeout.set_interval (i)
+			i := blink_delay_timeout.interval
+			blink_delay_timeout.set_interval (i)
 		end
 
 	suspend_cursor_blinking is
@@ -702,8 +711,8 @@ feature {NONE} -- Blink Cursor Management
 			if blink_suspended then
 				let_blink := True
 				blink_on := True
-				blinking_timeout.actions.call ([])
 				blinking_timeout.actions.resume
+				blinking_timeout.actions.call ([])
 				blink_suspended := False
 			else
 				reset_blinking
@@ -1223,7 +1232,15 @@ feature {NONE} -- Memory Management
 			if key_action_timer /= Void and then not key_action_timer.is_destroyed then
 				key_action_timer.destroy
 			end
+			if blinking_timeout /= Void and then not blinking_timeout.is_destroyed then
+				blinking_timeout.destroy
+			end
+			if internal_blink_delay_timeout /= Void and then not internal_blink_delay_timeout.is_destroyed then
+				internal_blink_delay_timeout.destroy
+			end		
 			key_action_timer := Void
+			blinking_timeout := Void
+			internal_blink_delay_timeout := Void
 		end
 
 feature {NONE} -- Private Constants

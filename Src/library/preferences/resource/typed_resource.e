@@ -53,9 +53,13 @@ feature -- Setting
 		require
 			value_not_void: a_value /= Void
 		do
-			value := a_value	
-			change_actions.call ([Current])
-			typed_change_actions.call ([value])
+			value := a_value
+			if internal_change_actions /= Void then
+				internal_change_actions.call ([Current])
+			end
+			if internal_typed_change_actions /= Void then
+				internal_typed_change_actions.call ([value])
+			end
 		ensure
 			value_set: value = a_value
 		end

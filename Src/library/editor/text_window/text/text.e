@@ -309,6 +309,7 @@ feature {NONE} -- Text Loading
 			j: INTEGER
 		do
 			lexer.set_tab_size (editor_preferences.tabulation_spaces)
+			lexer.set_in_verbatim_string (False)
 
 				-- read the file
 			from

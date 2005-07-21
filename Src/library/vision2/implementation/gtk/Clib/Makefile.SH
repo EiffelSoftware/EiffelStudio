@@ -22,6 +22,7 @@ INCLUDE = -I\$(ISE_EIFFEL)/studio/spec/\$(ISE_PLATFORM)/include
 CFLAGS = $optimize $ccflags $large -g `pkg-config gtk+-2.0 --cflags` \$(INCLUDE)
 SHAREDLINK = $sharedlink
 LDSHAREDFLAGS = $ldsharedflags
+LDFLAGS = $ldflags
 LN = $ln
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --

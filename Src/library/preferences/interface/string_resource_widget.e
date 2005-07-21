@@ -108,7 +108,23 @@ feature {NONE} -- Implementation
 			-- Activate the text
 		do
 			change_item_widget.activate
-			change_item_widget.text_field.select_all
+			change_item_widget.set_text_validation_agent (agent validate_preference_text)
+			if not change_item_widget.text_field.text.is_empty then					
+				change_item_widget.text_field.select_all
+			end
 		end		
+
+    validate_preference_text (a_text: STRING): BOOLEAN is
+            -- Validate `a_text'.  Disallow input if text is not an integer and the preference
+            -- is an INTEGER_PREFERENCE.
+        local
+            int: INTEGER_PREFERENCE
+        do
+            Result := True
+            int ?= resource
+            if int /= Void and then not a_text.is_integer then
+                Result := False
+            end
+        end
 
 end -- class STRING_PREFERENCE_WIDGET

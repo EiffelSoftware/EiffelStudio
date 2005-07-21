@@ -104,12 +104,18 @@ feature -- Element change
 			-- Set `x_offset' to `a_x'.
 		do
 			internal_set_value_from_adjustment (horizontal_adjustment, a_x)
+				-- The code below could be optimized so that `expose_actions' are not
+				-- called immediately on `item'.
+			{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (horizontal_adjustment)
 		end
 
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
 		do
 			internal_set_value_from_adjustment (vertical_adjustment, a_y)
+				-- The code below could be optimized so that `expose_actions' are not
+				-- called immediately on `item'.
+			{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (vertical_adjustment)
 		end
 
 	set_horizontal_step (a_step: INTEGER) is

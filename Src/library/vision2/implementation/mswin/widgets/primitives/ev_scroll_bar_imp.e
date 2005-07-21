@@ -147,6 +147,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			must_adjust: BOOLEAN
 			adjusted_value: INTEGER
+			l_value: INTEGER
 		do
 				--| This has been redefined to fic the following bug:
 				--| run the vision2 Gauges sample, without redefining this feature,
@@ -154,10 +155,11 @@ feature {EV_ANY_I} -- Implementation
 				--| the horizontal scroll bar.
 				--| This redefinition ensures that if the range of `Current' changes, the
 				--| `value' remains valid.
-			if value < a_minimum then
+			l_value := value
+			if l_value < a_minimum then
 				must_adjust := True
 				adjusted_value := a_minimum
-			elseif value > a_maximum then
+			elseif l_value > a_maximum then
 				must_adjust := True
 				adjusted_value := a_maximum
 			end

@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 			resize_actions.force_extend (agent on_window_resize)
 			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
 			grid.header.item_resize_end_actions.force_extend (agent on_header_resize)
+			display_update_agent := agent on_preference_changed_externally
 		end
 
 	user_initialization is
@@ -132,6 +133,14 @@ feature {NONE} -- Events
 					l_default_item.set_font (non_default_font)	
 				end
 			end
+		end	
+		
+	on_preference_changed_externally (a_pref: PREFERENCE) is
+			-- Set the resource value to the newly entered value NOT changed in the edit item.
+		do
+			if grid.row_count > 0 then
+				rebuild_right_list
+			end						
 		end	
 
 	set_resource_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE) is
@@ -434,10 +443,13 @@ feature {NONE} -- Implementation
 			l_resource: PREFERENCE
 			curr_row: INTEGER
 			l_column: EV_GRID_COLUMN
-		do			
+		do
 			grid.enable_row_height_fixed
 			grid.disable_row_height_fixed
 			selected_resource_name := a_pref_name
+			wipe_out_visible_preference_change_action
+			visible_preferences.wipe_out
+			
 				-- Retrieve known preferences
 			create l_names.make
 
@@ -473,6 +485,7 @@ feature {NONE} -- Implementation
 							grid_name_item.set_text ("")
 						end
 						add_resource_change_item (l_resource, curr_row)
+						l_resource.change_actions.extend (display_update_agent)
 						grid.row (curr_row).set_data (l_resource)
 						grid.row (curr_row).select_actions.extend (agent show_resource_description (l_resource))
 						create grid_default_item
@@ -488,6 +501,7 @@ feature {NONE} -- Implementation
 						create grid_type_item
 						grid_type_item.set_text (l_resource.string_type)
 						grid.set_item (2, curr_row, grid_type_item)						
+						visible_preferences.extend (l_resource)
 						curr_row := curr_row + 1
 					end
 				end
@@ -518,12 +532,54 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	rebuild_right_list is
+			-- Rebuild right list.  This is used to update the values shown for the currently visible preferences
+			-- in case they have been changed external to this window.
+		local		
+			grid_default_item: EV_GRID_LABEL_ITEM			
+			l_resource: PREFERENCE
+			curr_row: INTEGER
+		do			
+			from
+				visible_preferences.start
+				curr_row := 1
+			until
+				visible_preferences.after
+			loop
+				l_resource := visible_preferences.item
+				grid_default_item ?= grid.row (curr_row).item (3)
+				if grid_default_item /= Void and then l_resource.is_default_value then
+					grid_default_item.set_text (default_value)
+					grid_default_item.set_font (default_font)	
+				else
+					grid_default_item.set_text (user_value)
+					grid_default_item.set_font (non_default_font)
+				end					
+				curr_row := curr_row + 1
+				
+				visible_preferences.forth
+			end
+		end
+
 	should_display_preference (a_pref_name, b_pref_name: STRING): BOOLEAN is
 			-- Should we display the preference in the right list?
 		do
 			Result := a_pref_name.substring (1, b_pref_name.count).is_equal (b_pref_name)
 			if Result then				
 				Result := not (a_pref_name.substring (b_pref_name.count + 2, a_pref_name.count).has ('.'))
+			end
+		end		
+
+	wipe_out_visible_preference_change_action is
+			-- Wipe out the change action setup to notify Current about a change from outside
+		do
+			from	
+				visible_preferences.start
+			until
+				visible_preferences.after
+			loop
+				visible_preferences.item.change_actions.prune_all (display_update_agent)
+				visible_preferences.forth
 			end
 		end		
 
@@ -559,11 +615,19 @@ feature {NONE} -- Implementation
 			-- Show selected list resource in edit widget.
 		require
 			resource_not_void: a_resource /= Void
+		local
+			l_text: STRING
 		do
 			if a_resource.description /= Void then
-				description_text.set_text (a_resource.description)
+				l_text := a_resource.description
 			else
-				description_text.set_text (no_description_text)
+				l_text := no_description_text
+			end
+			
+			if a_resource.restart_required then
+				description_text.set_text (l_text + once " (REQUIRES RESTART)")
+			else
+				description_text.set_text (l_text)
 			end
 		end		
 
@@ -673,6 +737,12 @@ feature {NONE} -- Implementation
 			g.selected_rows.count = 0
 		end
 
+	visible_preferences: ARRAYED_LIST [PREFERENCE] is
+			-- List of the preferences currently in view.
+		once
+			create Result.make (10)
+		end		
+
 feature {NONE} -- Private attributes
 
 	show_full_resource_name: BOOLEAN
@@ -711,6 +781,9 @@ feature {NONE} -- Private attributes
 
 	default_row_height: INTEGER
 		-- Default row height
+
+	display_update_agent: PROCEDURE [ANY, TUPLE [PREFERENCE]]
+			-- Agent to be called when preference is changed outside	
 
 	resized_columns_list: ARRAY [BOOLEAN] is
 			-- List of boolean s for each column indicating if it has been user resizedat all.

@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 		do
 			create_new_dialog
 			current_editor.load_text (a_text)
-			current_editor.hide_line_numbers
+			current_editor.disable_line_numbers
 			current_dialog.show_relative_to_window (Window_manager.last_focused_development_window.window)
 			current_dialog := Void
 		end

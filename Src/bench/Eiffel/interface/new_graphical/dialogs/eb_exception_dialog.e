@@ -74,7 +74,8 @@ feature {NONE} -- Initialization
 
 			create exception_text
 			exception_text.set_cursors (create {EB_EDITOR_CURSORS})
-			exception_text.widget.set_minimum_height (Layout_constants.dialog_unit_to_pixels (60))						
+			exception_text.widget.set_minimum_height (Layout_constants.dialog_unit_to_pixels (60))
+			exception_text.disable_line_numbers
 			exception_text.load_text (trace)
 			
 			create pixmap_box

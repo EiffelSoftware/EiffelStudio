@@ -65,8 +65,7 @@ feature {NONE} -- Initialization
 			-- Initialize the editor.
 		do
 			default_create
-			register_documents				
-			unwanted_characters.extend ('%N')
+			register_documents
 		end
 
 	initialize_editor_context is

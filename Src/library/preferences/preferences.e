@@ -304,8 +304,8 @@ feature -- Resource
 		
 feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW, PREFERENCE_STRUCTURE_IMP} -- Implementation
 
-	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN], STRING]
-			-- Hash table of known preference default values.  [[Description, Value, Hidden], Name].
+	default_values: HASH_TABLE [TUPLE [STRING, STRING, BOOLEAN, BOOLEAN], STRING]
+			-- Hash table of known preference default values.  [[Description, Value, Hidden, Restart], Name].
 		
 	session_values: HASH_TABLE [STRING, STRING]
 			-- Hash table of user-defined values retrieved from the underlying data store.
@@ -372,6 +372,7 @@ feature {NONE} -- Implementation
 			pref_description,
 			pref_value: STRING
 			pref_hidden,
+			pref_restart,
 			retried: BOOLEAN
 		do
 			if not retried then				
@@ -382,12 +383,12 @@ feature {NONE} -- Implementation
 				loop
 					node ?= xml_elem.item_for_iteration
 					if node /= Void then
-						if node.name.is_equal ("PREF") then
+						if node.name.is_equal (once "PREF") then
 								-- Found preference
-							l_attribute := node.attribute_by_name ("NAME")
+							l_attribute := node.attribute_by_name (once "NAME")
 							if l_attribute /= Void then
 								pref_name := l_attribute.value
-								l_attribute := node.attribute_by_name ("DESCRIPTION")
+								l_attribute := node.attribute_by_name (once "DESCRIPTION")
 								if l_attribute /= Void then
 									pref_description := l_attribute.value
 								else
@@ -395,11 +396,18 @@ feature {NONE} -- Implementation
 									pref_description := ""
 								end
 								
-								l_attribute := node.attribute_by_name ("HIDDEN")
+								l_attribute := node.attribute_by_name (once "HIDDEN")
 								if l_attribute /= Void then
-									pref_hidden := l_attribute.value.as_lower.is_equal ("true")
+									pref_hidden := l_attribute.value.as_lower.is_equal (once "true")
 								else
 									pref_hidden := False
+								end
+								
+								l_attribute := node.attribute_by_name (once "RESTART")
+								if l_attribute /= Void then
+									pref_restart := l_attribute.value.as_lower.is_equal (once "true")
+								else
+									pref_restart := False
 								end
 								
 								if node.elements /= Void and then not node.elements.is_empty then								
@@ -408,7 +416,7 @@ feature {NONE} -- Implementation
 									if sub_node /= Void then
 										-- Found preference default value								
 										pref_value := sub_node.text									
-										default_values.force ([pref_description, pref_value, pref_hidden], pref_name)
+										default_values.force ([pref_description, pref_value, pref_hidden, pref_restart], pref_name)
 									end
 								end
 							end

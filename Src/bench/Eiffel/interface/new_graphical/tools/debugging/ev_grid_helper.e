@@ -192,6 +192,9 @@ feature -- Access
 		local
 			rc: INTEGER
 		do
+				-- To speed up removal of all rows we ensure that the grid
+				-- is displayed with cell of coordinate (1, 1) at the top.
+			g.set_virtual_position (0, 0)
 			from
 				rc := g.row_count
 			until

@@ -26,7 +26,6 @@ feature -- Commands
 			l_fullname,
 			l_value,
 			l_desc: STRING
-			l_hidden: BOOLEAN_REF
 		do		
 			l_fullname := a_name					
 			if preferences.session_values.has (l_fullname) then				
@@ -34,8 +33,8 @@ feature -- Commands
 				l_value := preferences.session_values.item (l_fullname)
 				create Result.make_from_string_value (a_manager, a_name, l_value)					
 				if preferences.default_values.has (l_fullname) then					
-					l_hidden ?= preferences.default_values.item (l_fullname).item (3)
-					Result.set_hidden (l_hidden.item)	
+					Result.set_hidden (preferences.default_values.item (l_fullname).boolean_item (3))	
+					Result.set_restart_required (preferences.default_values.item (l_fullname).boolean_item (4))	
 				end
 			elseif preferences.default_values.has (l_fullname) then
 					-- Retrieve from default values.
@@ -44,8 +43,8 @@ feature -- Commands
 					l_value := ""
 				end
 				create Result.make_from_string_value (a_manager, a_name, l_value)
-				l_hidden ?= preferences.default_values.item (l_fullname).item (3)
-				Result.set_hidden (l_hidden.item)
+				Result.set_hidden (preferences.default_values.item (l_fullname).boolean_item (3))	
+				Result.set_restart_required (preferences.default_values.item (l_fullname).boolean_item (4))	
 			else				
 					-- Create with `a_value'.
 				create Result.make (a_manager, a_name, a_fallback_value)

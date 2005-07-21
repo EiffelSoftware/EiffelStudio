@@ -68,6 +68,14 @@ feature -- Status setting
 			is_reset: is_default_value
 		end		
 
+	set_restart_required (is_required: BOOLEAN) is
+			-- Set 'restart_required'
+		do
+			restart_required := is_required
+		ensure
+			restart_required_set: restart_required = is_required
+		end	
+
 feature -- Access
 
 	name: STRING
@@ -135,6 +143,9 @@ feature -- Query
 			string_not_void: a_string /= Void
 		deferred
 		end	
+
+	restart_required: BOOLEAN
+			-- Is a restart required to apply the preference when changed? (Default: False)
 
 feature -- Actions
 

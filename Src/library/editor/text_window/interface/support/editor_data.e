@@ -60,7 +60,7 @@ feature {EB_PREFERENCES} -- Initialization
 				panel_manager.panels.after
 			loop
 				if panel_manager.panels.item /= Void then					
-					panel_manager.panels.item.reload_text
+					panel_manager.panels.item.on_font_changed
 				end
 				panel_manager.panels.forth
 			end			

@@ -210,7 +210,7 @@ feature -- Process Vision2 events
 			if not ignore_keyboard_input then
 				if not character_string.is_empty then
 		   			c := character_string @ 1
-					if not ((ctrled_key xor alt_key) or else unwanted_characters.has (c)) then
+					if not ((ctrled_key xor alt_key) or else unwanted_characters.item (c.code)) then
 							-- Ignoring ctrled keys and other special keys (Esc, Tab, Enter, Backspace)
 						handle_character (c)
 					end
@@ -941,15 +941,22 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Private Constants
 
-	unwanted_characters: ARRAYED_LIST [CHARACTER] is
+	unwanted_characters: SPECIAL [BOOLEAN] is
 			-- Unwanted characters: backspace, tabulation, carriage return and escape. 
+		local
+			c: CHARACTER
+			i: INTEGER
 		once
-			create Result.make (4)
-			Result.extend ('%/8/')
-			Result.extend ('%/9/')
-			Result.extend ('%/10/')
-			Result.extend ('%/13/')
-			Result.extend ('%/27/')
+			create Result.make (256)
+			from
+				i := 0
+			until
+				i = 256
+			loop
+				c := i.to_character
+				Result.put (c.is_control, i)
+				i := i + 1
+			end
 		end
 
 	meta_key_codes: ARRAY [INTEGER] is

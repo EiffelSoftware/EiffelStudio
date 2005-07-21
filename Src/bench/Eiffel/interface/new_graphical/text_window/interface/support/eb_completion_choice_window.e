@@ -161,8 +161,8 @@ feature -- Status Setting
 			enable_user_resize
 			Precursor {EV_WINDOW}
 			choice_list.set_focus
-			select_closest_match
 			resize_column_to_window_width
+			select_closest_match
 		end		
 
 feature -- Query

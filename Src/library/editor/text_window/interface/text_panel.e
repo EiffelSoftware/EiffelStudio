@@ -107,7 +107,6 @@ feature {NONE} -- Initialization
 			buffered_line.set_background_color (editor_preferences.normal_background_color)	
 			
 			refresh_line_number_display
-			editor_preferences.show_line_numbers_preference.change_actions.extend (agent refresh_line_number_display)
 		end
 
 	initialize_editor_context is
@@ -385,6 +384,26 @@ feature -- Status setting
 	   	   	refresh_now
 	   	ensure
 	   		widget_displayed: line_numbers_visible implies not margin_container.is_empty
+	   	end		
+	   	
+	show_line_numbers is
+	        -- Show line number margin
+	   	do
+	   	 	if margin_container.is_empty then
+	   	 		margin_container.put (margin.widget)
+	   	 	end
+	   	ensure
+	   		widget_displayed: not margin_container.is_empty
+	   	end	   	
+	   	
+	hide_line_numbers is
+	        -- Hide line number margin
+	   	do
+	   	 	if not margin_container.is_empty then	   	 		
+	   	 		margin_container.prune (margin.widget)
+	   	 	end
+	   	ensure
+	   		widget_not_displayed: margin_container.is_empty
 	   	end	
 	   	
 	toggle_view_invisible_symbols is
@@ -1335,7 +1354,7 @@ feature -- Memory management
 				ev_application.idle_actions.prune_all (update_scroll_agent)
 			end
 			update_scroll_agent := Void
-			
+						
 			if editor_drawing_area /= Void then
 				editor_drawing_area.destroy
 				editor_drawing_area := Void

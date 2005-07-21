@@ -1267,10 +1267,9 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 			type_check_succeed: BOOLEAN
-			l_error: ERROR
 		do
-			reset_error
 			if not retried then
+				reset_error
 				error_handler.wipe_out
 				Ast_context.set_is_ignoring_export (True)
 				feature_checker.init (ast_context)
@@ -1279,19 +1278,19 @@ feature {NONE} -- Implementation
 				
 				if error_handler.has_error then
 					type_check_succeed := True
-					l_error := error_handler.error_list.first
-					notify_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
+					notify_error_list_expression_and_tag (error_handler.error_list)
+					error_handler.wipe_out
 					Result := Void
 				else
 					Result ?= feature_checker.last_byte_node
 				end
 			else
+				ast_context.set_is_ignoring_export (False)				
 				if not type_check_succeed then
 					notify_error_expression (Cst_error_type_checking_failed)
 				end
 				if error_handler.has_error then
-					l_error := error_handler.error_list.first
-					notify_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
+					notify_error_list_expression_and_tag (error_handler.error_list)
 					error_handler.wipe_out
 				else
 					if not error_occurred then
@@ -1311,23 +1310,6 @@ feature {NONE} -- Implementation
 		end
 
 	internal_expression_byte_node: like expression_byte_node
-	
-feature {NONE} -- Utility Implementation
-	
-	error_to_string (e: ERROR): STRING is
-			-- Convert Error code to Error description STRING
-		require
-			error_not_void: e /= Void
-		local
-			yw: YANK_STRING_WINDOW
-			st: STRUCTURED_TEXT
-		do
-			create st.make
-			e.trace (st)
-			create yw.make
-			yw.process_text (st)
-			Result := yw.stored_output
-		end
 
 feature {NONE} -- Dump value helpers
 

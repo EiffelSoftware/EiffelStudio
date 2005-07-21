@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 			text_area.drop_actions.extend (agent drop_class)
 			text_area.drop_actions.extend (agent drop_feature)
 			text_area.drop_actions.extend (agent drop_cluster)
+			text_area.disable_line_numbers
 			f.extend (text_area.widget)
 			widget := f
 			graphical_output_manager.extend (Current)

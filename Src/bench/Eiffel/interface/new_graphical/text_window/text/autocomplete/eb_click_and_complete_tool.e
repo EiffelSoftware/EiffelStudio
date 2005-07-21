@@ -666,7 +666,6 @@ feature -- Basic Operations
 										-- Previous token is an Eiffel identifier
 										-- Happens when completing 'a.b|.c'
 									insertion.put (prev_token.image)
-									insertion_remainder := 0		
 								else
 										-- Happens when completing '|.b.c' or '(|.b.c)'
 								end

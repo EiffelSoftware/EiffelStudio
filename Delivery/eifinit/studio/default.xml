@@ -1,9 +1,9 @@
 <EIFFEL_DOCUMENT>		
-	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel).  Changing this value will not take effect until next time you restart EiffelStudio."><INTEGER>1000</INTEGER></PREF>
+	<PREF NAME="debugger.critical_stack_depth" DESCRIPTION="Stack overflow detection: depth of stack at which execution will pause and ask whether it is ok to continue (only works in classic Eiffel)." RESTART="True"><INTEGER>1000</INTEGER></PREF>
 	<PREF NAME="debugger.debug_output_evaluation"  DESCRIPTION="Display DEBUG_OUTPUT.debug_output for objects whose base class inherits from DEBUG_OUTPUT."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.default_displayed_string_size"  DESCRIPTION="Default number of displayed characters of a STRING (increasing this value might slow down debugging)."><INTEGER>50</INTEGER></PREF>	
 	<PREF NAME="debugger.default_expanded_view_size" DESCRIPTION="Default number of displayed characters in the expanded view (increasing this value might slow down debugging)."><INTEGER>500</INTEGER></PREF>
-	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default number of call stack elements shown in Call Stack tool (-1 to show all of them).  Changing this value will not take effect until next time you restart EiffelStudio."><INTEGER>100</INTEGER></PREF>
+	<PREF NAME="debugger.default_maximum_stack_depth" DESCRIPTION="Default number of call stack elements shown in Call Stack tool (-1 to show all of them)." RESTART="True"><INTEGER>100</INTEGER></PREF>
 	<PREF NAME="debugger.delay_before_cleaning_objects_grid" DESCRIPTION="Delay (in milliseconds) before clearing the stacks and objects grid.  By tuning this value, you can reduce the potential flickering of the related grid."><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="debugger.dotnet_debugger" DESCRIPTION="Which .NET debugger to launch: `EiffelStudio Dbg' will use the EiffelStudio debugger; `cordbg' will use the command line debugger from the .NET Framework SDK; `DebugCLR' will use the graphical debugger from the .NET Framework SDK."><LIST>[EiffelStudio Dbg];cordbg;DbgCLR</LIST></PREF>
 	<PREF NAME="debugger.expanded_display_background_color" DESCRIPTION="Background color for expanded display view (default is white, change it to better see white space at end of lines in displayed text)."><COLOR>255;255;255</COLOR></PREF>
@@ -90,6 +90,7 @@
 	<PREF NAME="interface.dialogs.acknowledge_not_loaded" DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_finalize_precompile" DESCRIPTION="Display confirmation dialog for finalizing a .NET precompiled library."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.show_starting_dialog" DESCRIPTION="Display New/Open project dialog at startup."><BOOLEAN>True</BOOLEAN></PREF>	
+	<PREF NAME="interface.dialogs.confirm_resource_change_needs_restart" DESCRIPTION="Display warning dialog when changing resources that require you to restart EiffeStudio before they become effective." HIDDEN="True"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.generate_homonyms" DESCRIPTION="Display dialog that warns that homonym format can take a long time."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.stop_execution_when_compiling" DESCRIPTION="Display dialog when an application is running and a compilation is launched."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.confirm_kill" DESCRIPTION="Display dialog before killing a debugged application."><BOOLEAN>True</BOOLEAN></PREF>
@@ -99,16 +100,16 @@
 	<PREF NAME="interface.development_window.class_completion" DESCRIPTION="Allow class name completion in the address combo boxes?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.ctrl_right_click_receiver" DESCRIPTION="Receivers of control-right-click."><LIST>[new_window];editor;context;new_editor;new_context;external</LIST></PREF>
 	<PREF NAME="interface.development_window.dock_tracking" DESCRIPTION="Docked tools track main window?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left? (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.editor_left_side" DESCRIPTION="Display editor on left?" RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.expand_feature_tree" DESCRIPTION="Automatically expand the feature tree."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.feature_clause_order" DESCRIPTION="Order used to sort feature clauses in formatted texts."><LIST>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST></PREF>
 	<PREF NAME="interface.development_window.graphical_output_disabled" DESCRIPTION="Disable graphical output."><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.is_maximized" HIDDEN="true" DESCRIPTION="Is window maximized?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.last_browsed_cluster_directory" HIDDEN="true" DESCRIPTION="Directory of last browsed cluster."><STRING></STRING></PREF>
 	<PREF NAME="interface.development_window.left_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for navigation panel."><LIST>Features;visible;0;0;0;266;Clusters;visible;0;0;0;250;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0</LIST></PREF>
-	<PREF NAME="interface.development_window.left_panel_use_explorer_style" DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time. (Requires restart)"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.left_panel_use_explorer_style" DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time." RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes."><INTEGER>20</INTEGER></PREF>
-	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar." RESTART="True"><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.right_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for editor panel."><LIST>Editor;visible;0;0;0;266;Context;visible;0;0;0;250</LIST></PREF>	
 	<PREF NAME="interface.development_window.search_tool_show_options" DESCRIPTION="Should search options be shown in search tool?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -183,8 +184,8 @@
 	<PREF NAME="editor.eiffel.colors.cluster_background_color" DESCRIPTION="Background color for clusters."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.error_text_color" DESCRIPTION="Foreground color for errors."><COLOR>255;0;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.error_background_color" DESCRIPTION="Background color for errors."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.object_text_color" DESCRIPTION="Foreground color for objects."><COLOR>0;0;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.object_background_color" DESCRIPTION="Background color for objects."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.object_text_color" DESCRIPTION="Foreground color for object addresses."><COLOR>0;0;255</COLOR></PREF>
+	<PREF NAME="editor.eiffel.colors.object_background_color" DESCRIPTION="Background color for object addresses."><COLOR>255;255;255</COLOR></PREF>
 	
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.autocomplete_indexing" DESCRIPTION="Autocomplete indexing?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.class_structure_keywords.indexing.use_default_indexing" DESCRIPTION="Use default autocomplete?"><BOOLEAN>True</BOOLEAN></PREF>
@@ -494,19 +495,19 @@
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
 
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted. (Requires restart)"><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
 
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted. (Requires restart)"><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
 
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted. (Requires restart)"><STRING></STRING></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
@@ -515,9 +516,9 @@
 
 	<PREF NAME="editor.general.automatic_update" DESCRIPTION="Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.blinking_cursor" DESCRIPTION="Does text cursor blink?"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font. (Requires restart)"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
-	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font. (Requires restart)" HIDDEN="True"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
-	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font (Requires restart)"><FONT>Courier New-r-bold-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.header_font" DESCRIPTION="Editor header font." HIDDEN="True"><FONT>Courier New-r-regular-8-typewriter</FONT></PREF>
+	<PREF NAME="editor.general.keyword_font" DESCRIPTION="Keyword editor font"><FONT>Courier New-r-bold-8-typewriter</FONT></PREF>
 	<PREF NAME="editor.general.left_margin_width" DESCRIPTION="Width of left margin in editor.  Note: this is not the breakpoint margin, but the whitespace to the left of the editor."><INTEGER>8</INTEGER></PREF>
 	<PREF NAME="editor.general.scrolling_common_line_count" DESCRIPTION="Number of lines that will stay visible when you perform a page down or a page up operation."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="editor.general.mouse_wheel_scroll_full_page" DESCRIPTION="Does mouse wheel scroll documents a page at a time (If True, it overrides Mouse Wheel Scroll Size)?"><BOOLEAN>False</BOOLEAN></PREF>

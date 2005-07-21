@@ -64,7 +64,6 @@ feature {NONE}-- Initialization
 			create after_reading_text_actions.make
 			initialize_customizable_commands	
 			
-			make_editor
 			editor_drawing_area.set_pebble_function (agent pebble_from_x_y)
 			editor_drawing_area.enable_pebble_positioning
 			editor_drawing_area.drop_actions.extend (agent resume_cursor_for_drop)

@@ -534,11 +534,12 @@ feature -- Basic Operations
 			setup_editor (1)
 		end	
 			
-	reload_text is
+	on_font_changed is
 			-- Recompute token information for for loaded text.
 		local
 			l_line_index: INTEGER
-		do
+		do			
+				-- Recompute token information for for loaded text.
 			from
 				l_line_index := 1
 			until
@@ -546,7 +547,12 @@ feature -- Basic Operations
 			loop
 				text_displayed.update_line (l_line_index)
 				l_line_index := l_line_index + 1
-			end			
+			end
+			
+			buffered_line.set_size (buffered_line.width, line_height)
+			update_horizontal_scrollbar
+			update_vertical_scrollbar
+			margin.on_font_changed
 			redraw_current_screen
 		end
 		
@@ -1240,7 +1246,7 @@ feature {NONE} -- Display functions
 			y_pos: INTEGER
 			l_line_height: INTEGER
 		do
-			l_line_height :=line_height
+			l_line_height := line_height
 			y_pos := (line_number - first_line_displayed )* l_line_height
 
 			editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset + y_pos, buffered_line.width, l_line_height)

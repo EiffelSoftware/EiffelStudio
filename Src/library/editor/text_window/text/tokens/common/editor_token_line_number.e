@@ -98,12 +98,7 @@ feature -- Miscellaneous
 				display_with_colors (d_y, text_color, background_color, device)
 			else
 				display_with_colors (d_y, gray_text_color, background_color, device)
-			end	
-			
-				-- Display the separator
-			device.set_background_color (separator_color)
-			device.clear_rectangle (position + (width - separator_width), d_y, separator_width, height)
-			device.set_background_color (background_color)
+			end
 		end
 		
 	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
@@ -115,9 +110,6 @@ feature -- Miscellaneous
 			else
 				display_with_colors_offset (x_offset, d_y, gray_text_color, background_color, device)
 			end
-			device.set_background_color (separator_color)
-			device.clear_rectangle (x_offset + position + (width - separator_width) + 1, d_y, separator_width, height)
-			device.set_background_color (background_color)
 		end
 
 	hide is

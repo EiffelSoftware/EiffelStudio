@@ -617,13 +617,17 @@ feature {NONE} -- Text Loading
 	refresh_line_number_display is
 	        -- Toggle line number display in Current and update display
 	   	do
-	   	 	if (line_numbers_visible or not hidden_breakpoints) and then margin_container.is_empty then
-	   	 			-- One of line numbers or breakpoints must be visible
-	   	 		margin_container.put (margin.widget)
-	   	 	elseif not line_numbers_visible and then hidden_breakpoints and then not margin_container.is_empty then	   	 		
-	   	 			-- Nothing needs displaying so just prune
-	   	 		margin_container.prune (margin.widget)	   	 		
-	   	 	end	   	 	
+	   		if line_numbers_enabled then
+		   	 	if (line_numbers_visible or not hidden_breakpoints) and then margin_container.is_empty then
+		   	 			-- One of line numbers or breakpoints must be visible
+		   	 		margin_container.put (margin.widget)
+		   	 	elseif not line_numbers_visible and then hidden_breakpoints and then not margin_container.is_empty then	   	 		
+		   	 			-- Nothing needs displaying so just prune
+		   	 		margin_container.prune (margin.widget)	   	 		
+		   	 	end
+		   	 else	 	
+		   	 	margin_container.prune (margin.widget)
+		   	 end
 	   	 	refresh_now	   	 	
 	   	end	
 

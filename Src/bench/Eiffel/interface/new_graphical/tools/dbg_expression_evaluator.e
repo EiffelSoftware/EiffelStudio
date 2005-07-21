@@ -145,6 +145,26 @@ feature -- Change
 			notify_error (cst_error_expression, t, mesg)
 		end
 
+	notify_error_list_expression_and_tag (error_list: LINKED_LIST [ERROR]) is
+		local
+			l_error: ERROR
+			l_cursor: LINKED_LIST_CURSOR [ERROR]
+		do
+			if error_list /= Void then
+				l_cursor := error_list.cursor
+				from
+					error_list.start
+				until
+					error_list.after
+				loop
+					l_error := error_list.item
+					notify_error_expression_and_tag ("Error " + l_error.code + "%N" + error_to_string (l_error), l_error.code)
+					error_list.forth
+				end
+				error_list.go_to (l_cursor)
+			end
+		end
+
 	notify_error_expression (mesg: STRING) is
 		do
 			notify_error (cst_error_expression, Void, mesg)
@@ -159,6 +179,23 @@ feature -- Change
 		do
 			notify_error (cst_error_not_implemented, Void, mesg)
 		end
+
+feature {NONE} -- Utility Implementation
+	
+	error_to_string (e: ERROR): STRING is
+			-- Convert Error code to Error description STRING
+		require
+			error_not_void: e /= Void
+		local
+			yw: YANK_STRING_WINDOW
+			st: STRUCTURED_TEXT
+		do
+			create st.make
+			e.trace (st)
+			create yw.make
+			yw.process_text (st)
+			Result := yw.stored_output
+		end		
 	
 feature {NONE} -- Error code
 

@@ -11,8 +11,9 @@ if [ $# -ge 3 ]; then
 		# Launch platform specific scripts
 	rsh $remote_host "cd local/TEST_DELIV ; \rm -rf PorterPackage"
 	rsh $remote_host "cd local/TEST_DELIV ; tar xvf ~/PorterPackage_all.tar"
-	rsh $remote_host "cd local/TEST_DELIV/PorterPackage; export ISE_PLATFORM=$platform ; sh ./compile_exes"
-	rsh $remote_host "cd local/TEST_DELIV/PorterPackage; export ISE_PLATFORM=$platform ; sh ./make_images"
+		#Note: we use `setenv' because we expect the remote shell to be csh.
+	rsh $remote_host "cd local/TEST_DELIV/PorterPackage; setenv ISE_PLATFORM $platform ; sh ./compile_exes"
+	rsh $remote_host "cd local/TEST_DELIV/PorterPackage; setenv ISE_PLATFORM $platform ; sh ./make_images"
 
 ftp -n << EOF 
 verbose 

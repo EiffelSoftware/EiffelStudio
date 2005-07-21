@@ -49,7 +49,9 @@ feature {EB_PREFERENCES} -- Initialization
 		do
 			line_height_cell.put (calculate_line_height)
 			font_offset_cell.put (calculate_font_offset)
-			is_fixed_width_cell.put (not font.is_proportional)
+			is_fixed_width_cell.put (
+				(not font.is_proportional and not keyword_font.is_proportional) and then
+				font.width = keyword_font.width)
 			font_width_cell.put (font.width)
 
 			from
@@ -521,12 +523,14 @@ feature {NONE} -- Implementation
 			show_line_numbers_preference := l_manager.new_boolean_resource_value (l_manager, show_line_numbers_string, False)
 			
 			editor_font_preference := l_manager.new_font_resource_value (l_manager, editor_font_string, create {EV_FONT})	
-			font_cell.put (editor_font_preference)		
-			is_fixed_width_cell.put (not editor_font_preference.value.is_proportional)
+			font_cell.put (editor_font_preference)
 			header_font_preference := l_manager.new_font_resource_value (l_manager, header_font_string, create {EV_FONT})
 			header_font_cell.put (header_font_preference)
 			keyword_font_preference := l_manager.new_font_resource_value (l_manager, keyword_font_string, create {EV_FONT})	
 			keyword_font_cell.put (keyword_font_preference)
+			is_fixed_width_cell.put (
+				(not font.is_proportional and not keyword_font.is_proportional) and then
+				font.width = keyword_font.width)
 			
 			normal_text_color_preference := l_manager.new_color_resource_value (l_manager, normal_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			normal_background_color_preference := l_manager.new_color_resource_value (l_manager, normal_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))

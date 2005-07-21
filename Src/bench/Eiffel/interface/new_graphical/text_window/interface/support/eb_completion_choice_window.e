@@ -158,6 +158,7 @@ feature -- Status Setting
 			check
 				show_needed: show_needed
 			end
+			enable_user_resize
 			Precursor {EV_WINDOW}
 			choice_list.set_focus
 			select_closest_match
@@ -228,6 +229,14 @@ feature {NONE} -- Events handling
 						end
 					else
 						exit
+					end
+					select_closest_match
+				when key_v then
+					if ev_application.ctrl_pressed then
+						editor.handle_extended_ctrled_key (ev_key)
+						buffered_input.append (ev_application.clipboard.text)
+					else	
+						editor.handle_extended_key (ev_key)
 					end
 					select_closest_match					
 				else
@@ -371,7 +380,7 @@ feature {NONE} -- Events handling
 					select_closest_match					
 				elseif c = ' ' and ev_application.ctrl_pressed then
 						-- Do nothing, we don't want to close the completion window when CTRL+SPACE is pressed
-				elseif not editor.unwanted_characters.has (c) then
+				elseif not editor.unwanted_characters.item (c.code) then
 					close_and_complete
 					if not editor.has_selection then
 							-- Don't want to add character over first argument			

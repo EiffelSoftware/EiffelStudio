@@ -228,7 +228,7 @@ feature -- Implementation
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_object_get_string (default_gtk_settings, gtk_font_name_setting.item, $font_name_ptr)
 			if font_name_ptr /= default_pointer then
-				create a_cs.share_from_pointer (font_name_ptr)
+				create a_cs.make_from_pointer (font_name_ptr)
 				Result := a_cs.string
 			end
 					-- Sometimes when gtk isn't setup correctly the 'gtk-font-name' setting cannot be found, so the default is used instead.

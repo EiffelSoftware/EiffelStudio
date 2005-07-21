@@ -202,9 +202,9 @@ feature -- Text Selection
 			end
 			if  start_pos < offset then
 				set_offset (start_pos)
-			elseif end_pos >= (offset + editor_drawing_area.width - left_margin_width - 30) then
-				if editor_width > editor_drawing_area.width then
-					set_offset (end_pos - editor_drawing_area.width + left_margin_width + 30)
+			elseif end_pos >= (offset + viewable_width - left_margin_width - 30) then
+				if editor_width > viewable_width then
+					set_offset (end_pos - viewable_width + left_margin_width + 30)
 				end
 			end
 		end

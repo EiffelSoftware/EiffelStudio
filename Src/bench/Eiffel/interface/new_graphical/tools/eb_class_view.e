@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			formatters := a_tool.managed_class_formatters
 			create managed_formatters.make (10)
 			create shared_editor.make (a_tool)
+			shared_editor.disable_line_numbers
 			shared_editor.drop_actions.extend (agent drop_stone)
 			from
 				formatters.start

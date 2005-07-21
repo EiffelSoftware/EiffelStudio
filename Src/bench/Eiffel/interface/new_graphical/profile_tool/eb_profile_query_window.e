@@ -143,6 +143,7 @@ feature {NONE} -- Initialization
 				--| Result display
 			create editor_window.make (Void)
 			editor_window.set_read_only (True)
+			editor_window.disable_line_numbers
 			text_window := editor_window
 			create text_frame
 			text_frame.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(100))

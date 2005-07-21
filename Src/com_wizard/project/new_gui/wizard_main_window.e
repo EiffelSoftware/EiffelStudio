@@ -70,7 +70,7 @@ feature {NONE} -- Initialization
 			eiffel_project_box.validity_change_request_actions.extend (agent initialize_generate_button)
 			com_project_box.validity_change_request_actions.extend (agent initialize_generate_button)
 			update_environment
-			project_box.focus_lost_actions.extend (agent on_project_enter)
+			project_box.focus_lost_actions.extend (agent on_project_focus_lost)
 			
 			-- Setup project box last so that profile change actions are registered
 			project_box.set_max_count (10000)
@@ -225,24 +225,42 @@ feature {NONE} -- Implementation
 			l_project_name := project_box.value
 			if not project_name_validity (l_project_name).is_error then
 				l_active_profile := Profile_manager.active_profile
-				if l_active_profile /= Void and then l_active_profile.is_equal (l_project_name) and not project_selected and first_generate_button.is_sensitive then
+				if l_active_profile /= Void and then l_active_profile.is_equal (l_project_name) and not project_selected and first_generate_button.is_sensitive and not in_delete_mode then
 					on_generate
-				else
+				elseif not in_delete_mode then
 					on_project_select
 				end
 			end
 			project_selected := False
+		end
+	
+	on_project_focus_lost is
+			-- 	Project text box focus is lost, create project if `new' wasn't clicked.
+		local
+			l_active_profile: STRING
+		do
+			l_active_profile := Profile_manager.active_profile
+			if l_active_profile /= Void and then not l_active_profile.is_equal (project_box.value) then
+				on_project_enter
+				if project_button.select_actions then
+					focus_lost := True
+				end
+			end
 		end
 		
 	on_project_button_select is
 			-- Called by `select_actions' of `project_button'.
 			-- Remove selected profile, load or create profile depending on mode.
 		do
-			if in_delete_mode then
-				profile_manager.remove_active_profile
-				project_box.remove_active_item
+			if not focus_lost then
+				if in_delete_mode then
+					profile_manager.remove_active_profile
+					project_box.remove_active_item
+				end
+				on_project_enter
+			else
+				focus_lost := False
 			end
-			on_project_enter
 		end
 	
 	on_select_eiffel_project is
@@ -650,6 +668,9 @@ feature {NONE} -- Private Access
 
 	is_running: BOOLEAN
 			-- Is wizard currently running?
+
+	focus_lost: BOOLEAN
+			-- Was focus from project textbox lost?
 
 	compile_eiffel_check_button_was_selected: BOOLEAN
 			-- Save state of compile eiffel check box to restore it when enabled again

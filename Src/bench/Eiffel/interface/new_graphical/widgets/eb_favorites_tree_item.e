@@ -199,13 +199,17 @@ feature {NONE} -- Implementation
 			else
 				a_fav_class_stone ?= a_pebble
 				if a_fav_class_stone /= Void then
-						-- Do not drop on picked class.
-					Result := data /= a_fav_class_stone.origin
+						-- Do not drop on feature or picked class.
+					Result := not data.is_feature and then data /= a_fav_class_stone.origin
 				else
 						-- Some class stone was selected.
 					Result := True
 				end
 			end
-		end			
+		end		
+		
+invariant
+	
+	data_not_void: data /= Void
 
 end -- class EB_FAVORITES_TREE_ITEM

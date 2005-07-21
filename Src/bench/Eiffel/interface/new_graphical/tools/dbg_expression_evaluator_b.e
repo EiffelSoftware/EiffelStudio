@@ -100,12 +100,12 @@ feature -- Evaluation
 					(on_context and context_feature = Void)
 					or (on_class and context_class = Void)
 				then
-					notify_error_expression (Cst_error_during_expression_analyse)
+					notify_error_expression (Cst_error_during_context_preparation)
 				else
 						--| Compute and get `expression_byte_node'
 					get_expression_byte_node
 				end
-	
+
 				l_error_occurred := error_occurred or expression_byte_node = Void
 					--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
 					-- and if this is handle later or not
@@ -1001,14 +1001,21 @@ feature -- Change Context
 			cf: FEATURE_I
 		do
 			cse := Application.status.current_call_stack_element
-			context_address := cse.object_address
-			ecse ?= cse
-			if ecse = Void then
-				--| Could occurs in case of External call stack element
-				--| in case of Exception or stopped state
+			if cse = Void then
+				notify_error_expression (Cst_error_during_context_preparation)
 			else
-				cf := ecse.routine.associated_feature_i
-				set_context_data (cf, ecse.dynamic_class, ecse.dynamic_type)
+					--| Cse can be Void if the application raised an exception 
+					--| at the very beginning of the execution (for instance under dotnet)
+				context_address := cse.object_address
+				ecse ?= cse
+				if ecse = Void then
+					--| Could occurs in case of External call stack element
+					--| in case of Exception or stopped state
+					notify_error_expression (Cst_error_during_context_preparation)
+				else
+					cf := ecse.routine.associated_feature_i
+					set_context_data (cf, ecse.dynamic_class, ecse.dynamic_type)
+				end
 			end
 		end
 		

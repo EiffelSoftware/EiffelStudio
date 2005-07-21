@@ -174,6 +174,8 @@ feature {NONE} -- Error message values
 
 	Cst_error_context_corrupted_or_not_found:STRING is "Context corrupted or not found"
 
+	Cst_error_during_context_preparation: STRING is "Error occurred while retrieving the expression's context"
+	
 	Cst_error_during_expression_analyse: STRING is "Error during expression analyse"
 
 	Cst_error_type_checking_failed : STRING is "Type checking failed"

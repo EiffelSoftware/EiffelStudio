@@ -45,7 +45,9 @@ feature -- Status setting
 			a_value_valid: valid_value_string (a_value)
 		do
 			default_value := a_value
-			change_actions.call ([Current])
+			if internal_change_actions /= Void then
+				internal_change_actions.call ([Current])
+			end
 		ensure		
 			default_value_set: default_value = a_value
 		end		

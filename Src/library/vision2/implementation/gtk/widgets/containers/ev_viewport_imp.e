@@ -110,19 +110,41 @@ feature -- Element change
 	set_x_offset (a_x: INTEGER) is
 			-- Set `x_offset' to `a_x'.
 		do
-			block_resize_actions
-			internal_x_offset := a_x
-			internal_set_value_from_adjustment (horizontal_adjustment, a_x)
-			unblock_resize_actions
+			if a_x /= internal_x_offset then
+				block_resize_actions
+				internal_x_offset := a_x
+				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
+					-- Code below is to ensure that if the widget is visible then
+					-- we only move the window, and not call the `expose_actions' on `item'
+					-- as it is the case when calling `gtk_adjustment_value_changed'.
+				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget) /= default_pointer then
+					{EV_GTK_EXTERNALS}.gdk_window_move (
+						{EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget), -a_x, -internal_y_offset)
+				else
+					{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (horizontal_adjustment)
+				end
+				unblock_resize_actions
+			end
 		end
 
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
 		do
-			block_resize_actions
-			internal_y_offset := a_y
-			internal_set_value_from_adjustment (vertical_adjustment, a_y)
-			unblock_resize_actions
+			if a_y /= internal_y_offset then
+				block_resize_actions
+				internal_y_offset := a_y
+				internal_set_value_from_adjustment (vertical_adjustment, a_y)
+					-- Code below is to ensure that if the widget is visible then
+					-- we only move the window, and not call the `expose_actions' on `item'
+					-- as it is the case when calling `gtk_adjustment_value_changed'.
+				if {EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget) /= default_pointer then
+					{EV_GTK_EXTERNALS}.gdk_window_move (
+						{EV_GTK_EXTERNALS}.gtk_viewport_struct_bin_window (visual_widget), -internal_x_offset, -a_y)
+				else
+					{EV_GTK_EXTERNALS}.gtk_adjustment_value_changed (vertical_adjustment)
+				end
+				unblock_resize_actions
+			end
 		end
 		
 	set_item_size (a_width, a_height: INTEGER) is
@@ -211,10 +233,10 @@ feature {NONE} -- Implementation
 			elseif {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (l_adj) < a_value then
 				{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (l_adj, a_value)			
 			end
-			{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (l_adj, a_value)
+			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_value (l_adj, a_value)
 		ensure
 			value_set: {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_adj) = a_value
-		end
+  		end
 
 	viewport: POINTER
 			-- Pointer to viewport, used for reuse of adjustment functions from descendants.

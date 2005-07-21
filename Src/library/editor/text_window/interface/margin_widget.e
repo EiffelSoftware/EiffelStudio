@@ -8,7 +8,7 @@ class
 	MARGIN_WIDGET
 
 inherit
-	MARGIN_WIDGET_IMP		
+	MARGIN_WIDGET_IMP
 		rename
 			initialized_cell as constants_initialized_cell
 		redefine
@@ -77,7 +77,7 @@ feature -- Access
 	width: INTEGER is
 			-- Width in pixels calculated based on which tokens should be displayed
 		do			    
-			if line_numbers_visible then				
+			if text_panel.line_numbers_enabled and then line_numbers_visible then				
 				Result := Result + internal_line_number_area_width
 			end
 		end	
@@ -155,6 +155,18 @@ feature -- Basic operations
 			refresh_now
 		end
 
+	on_font_changed is
+			-- Font was changed so must update some internal values
+		local
+			l_no_lines: INTEGER
+			l_max_token: EDITOR_TOKEN_LINE_NUMBER
+			l_spacer: STRING
+		do		
+				-- Width cell
+			update_width_cell
+			synch_with_panel
+		end		
+
 feature {NONE} -- Implementation
 
 	in_resize: BOOLEAN
@@ -171,18 +183,24 @@ feature {NONE} -- Implementation
 
 	default_line_number_area_width_cell: CELL [INTEGER] is
 			-- Value of line number area width for files with less than 100,000 lines).
+		once		
+			create Result
+			update_width_cell			
+		end
+
+	update_width_cell is
+			-- Update `default_line_number_area_width_cell'.
 		local
 			l_no_lines: INTEGER
 			l_max_token: EDITOR_TOKEN_LINE_NUMBER
 			l_spacer: STRING
-		once		
-			create Result
+		do		
 			create l_max_token.make
 			l_no_lines := text_panel.text_displayed.number_of_lines
 			create l_spacer.make_filled ('0', default_width)
 			l_max_token.set_internal_image (l_spacer)	
 			l_max_token.update_width
-			Result.put (l_max_token.width)
+			default_line_number_area_width_cell.put (l_max_token.width)
 		end
 
 	internal_line_number_area_width: INTEGER is
@@ -198,7 +216,7 @@ feature {NONE} -- Implementation
 				l_max_token.update_width
 				Result := Result + l_max_token.width	
 			end
-		end		
+		end
 
 	viewable_height: INTEGER is
 			-- Height of `Current' available to view displayed items. Does
@@ -287,7 +305,7 @@ feature {TEXT_PANEL} -- Display functions
 				end
 				l_height := y_offset + viewable_height - (y_offset - view_y_offset)
 				margin_area.clear_rectangle (0, y_offset, width, l_height)
-				
+	
 					-- Display the separator
 				margin_area.set_background_color (separator_color)
 				margin_area.clear_rectangle (width - separator_width, y_offset, separator_width, l_height)				
@@ -297,7 +315,7 @@ feature {TEXT_PANEL} -- Display functions
  			in_scroll := False
  		end
 
-		update_lines (first, last: INTEGER; buffered: BOOLEAN) is
+	update_lines (first, last: INTEGER; buffered: BOOLEAN) is
 			-- Update the lines from `first' to `last'.  If `buffered' then draw to `buffered_line'
  			-- before drawing to screen, otherwise draw straight to screen.
 		require
@@ -309,7 +327,7 @@ feature {TEXT_PANEL} -- Display functions
  			y_offset,
  			l_line_height: INTEGER
  			l_text_displayed: TEXT
-		do  	
+		do
 			updating_line := True
 			l_text_displayed := text_panel.text_displayed
 			l_text_displayed.go_i_th (first)
@@ -383,6 +401,9 @@ feature {TEXT_PANEL} -- Display functions
 				a_line.forth 				
 				curr_token := a_line.item
 			end
+			margin_area.set_background_color (separator_color)
+			margin_area.clear_rectangle (width - separator_width, y, separator_width, editor_preferences.line_height)
+			margin_area.set_background_color (editor_preferences.margin_background_color)
 		end
  
  	draw_flash (x, y, a_width, height: INTEGER; buffered: BOOLEAN) is

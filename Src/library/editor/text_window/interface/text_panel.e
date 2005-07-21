@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 		do
 				-- First display the first line...
 			first_line_displayed := 1	
+			line_numbers_enabled := True
 			panel_manager.add_panel (Current)
 			initialize_editor_context
 			text_displayed := new_text_displayed
@@ -327,11 +328,8 @@ feature -- Query
 			Result := text_displayed.changed
 		end
 
-	line_modulo: INTEGER is
-			-- Number of pixels of bottom displayed line that are out of view.
- 		do		
- 			Result := line_height - (viewable_height \\ line_height)
- 		end	
+	line_numbers_enabled: BOOLEAN
+			-- Is it permitted to show line numbers in Current?
 
 feature -- Pick and Drop
 
@@ -379,35 +377,37 @@ feature -- Status setting
 	refresh_line_number_display is
 	        -- Refresh line number display in Current and update display
 	   	do
-	   	 	if line_numbers_visible and then margin_container.is_empty then
-	   	 		margin_container.put (margin.widget)
-	   	 	elseif not line_numbers_visible and then not margin_container.is_empty then	   	 		
-	   	 		margin_container.prune (margin.widget)
-	   	 	end
+	   		if line_numbers_enabled then
+		   	 	if line_numbers_visible and then margin_container.is_empty then
+		   	 		margin_container.put (margin.widget)
+		   	 	elseif not line_numbers_visible and then not margin_container.is_empty then	   	 		
+		   	 		margin_container.prune (margin.widget)
+		   	 	end
+		   	elseif not margin_container.is_empty then	   	 		
+		   	 	margin_container.prune (margin.widget)
+		   	end
 	   	   	refresh_now
 	   	ensure
 	   		widget_displayed: line_numbers_visible implies not margin_container.is_empty
 	   	end		
 	   	
-	show_line_numbers is
-	        -- Show line number margin
-	   	do
-	   	 	if margin_container.is_empty then
-	   	 		margin_container.put (margin.widget)
-	   	 	end
-	   	ensure
-	   		widget_displayed: not margin_container.is_empty
-	   	end	   	
+	enable_line_numbers is
+			-- Enable line numbers
+		do
+			line_numbers_enabled := True
+			refresh_line_number_display
+		ensure
+			line_numbers_enabled: line_numbers_enabled = True
+		end		
 	   	
-	hide_line_numbers is
-	        -- Hide line number margin
-	   	do
-	   	 	if not margin_container.is_empty then	   	 		
-	   	 		margin_container.prune (margin.widget)
-	   	 	end
-	   	ensure
-	   		widget_not_displayed: margin_container.is_empty
-	   	end	
+	disable_line_numbers is
+			-- Disable line numbers
+		do
+			line_numbers_enabled := False
+			refresh_line_number_display
+		ensure
+			line_numbers_disabled: line_numbers_enabled = False
+		end
 	   	
 	toggle_view_invisible_symbols is
 			-- Toggle `view_invisible_symbols'.
@@ -1361,7 +1361,7 @@ feature -- Memory management
 			if ev_application.idle_actions.has (update_scroll_agent) then
 				ev_application.idle_actions.prune_all (update_scroll_agent)
 			end
-			
+
 				-- Remove `refresh_line_number_agent' from `change_actions' for `show_line_numbers'.
 			editor_preferences.show_line_numbers_preference.change_actions.prune_all (refresh_line_number_agent)
 			refresh_line_number_agent := Void

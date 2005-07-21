@@ -547,8 +547,10 @@ feature {NONE} -- Handle keystrokes
 					
 			when key_l then
 					-- Ctrl-L (line number toggle)
-				editor_preferences.show_line_numbers_preference.set_value (not line_numbers_visible)
-				scroll_to_cursor := False
+				if line_numbers_enabled then
+					editor_preferences.show_line_numbers_preference.set_value (not line_numbers_visible)
+					scroll_to_cursor := False
+				end
 			else
 					-- Key not handled
 

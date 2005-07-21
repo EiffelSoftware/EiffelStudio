@@ -886,20 +886,18 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			is_parented: parent /= Void
 		local
 			i: INTEGER
-			a_count: INTEGER
 			a_parent_i: EV_GRID_I
 			a_index: INTEGER
 		do
 			from
-				i := 1
-				a_count := count
+				i := count
 				a_parent_i := parent_i
 				a_index := index
 			until
-				i > a_count
+				i = 0
 			loop
 				a_parent_i.internal_set_item (i, a_index, Void)
-				i := i + 1
+				i := i - 1
 			end
 		ensure
 			cleared: index_of_first_item = 0

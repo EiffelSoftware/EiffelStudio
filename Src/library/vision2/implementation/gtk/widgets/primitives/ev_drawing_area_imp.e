@@ -149,16 +149,25 @@ feature {NONE} -- Implementation
 			-- Update the tooltip window.
 		local
 			a_tip_win: POINTER
-			a_mouse_coords: EV_COORDINATE
+			l_show_tooltips: BOOLEAN
+			a_window: POINTER
+			i, a_x, a_y, a_screen_x, a_screen_y: INTEGER
 		do
-			if show_tooltips_if_activated and then reset_tooltip_position then
-				a_mouse_coords := pnd_screen.pointer_position
-				tooltip_initial_x := a_mouse_coords.x
-				tooltip_initial_y := a_mouse_coords.y
-				reset_tooltip_position := False		
+			a_window := {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
+			if a_window = drawable and then show_tooltips_if_activated and then not has_capture then
+				if reset_tooltip_position then
+					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (a_window, $a_screen_x, $a_screen_y)
+					tooltip_initial_x := a_screen_x + a_x
+					tooltip_initial_y := a_screen_y + a_y
+					reset_tooltip_position := False
+				end			
+				l_show_tooltips := True
+			else
+				show_tooltips_if_activated := False
+				tooltip_repeater.set_interval (0)
 			end
 			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
-			if show_tooltips_if_activated then
+			if l_show_tooltips then
 				{EV_GTK_EXTERNALS}.gtk_window_move (a_tip_win, tooltip_initial_x, tooltip_initial_y + tooltip_window_y_offset)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_tip_win)
 			else
@@ -204,7 +213,7 @@ feature {NONE} -- Implementation
 			a_tip_win := {EV_GTK_EXTERNALS}.gtk_tooltips_struct_tip_window (tooltips_pointer)
 			{EV_GTK_EXTERNALS}.gtk_label_set_text (a_tip_label, a_cs.item)
 			{EV_GTK_EXTERNALS}.gtk_widget_hide (a_tip_win)
-			if not a_text.is_empty then
+			if not a_text.is_empty and then is_displayed then
 				update_tooltip (True)
 			else
 				update_tooltip (False)
@@ -327,8 +336,9 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 
 	lose_focus is
+			-- Current has lost keyboard focus.
 		do
-			--| FIXME IEK Remove me
+			update_tooltip (False)
 		end
 		
 feature {NONE} -- Implementation
@@ -375,6 +385,7 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Destroy implementation.
 		do
+			update_tooltip (False)
 			Precursor {EV_PRIMITIVE_IMP}
 			if gc /= NULL then
 				{EV_GTK_EXTERNALS}.gdk_gc_unref (gc)

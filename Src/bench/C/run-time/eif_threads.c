@@ -315,17 +315,20 @@ rt_public void eif_thr_register(void)
 		/* Allocate room for once manifest strings array. */
 		ALLOC_OMS (EIF_oms);
 
-		/*
-		 * Allocate room for once values for all threads but the initial 
-		 * because we do not have the number of onces yet
-		 * Also set value root thread id.
-		 */
-
-		EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
-			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-		if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
-			enomem();
-		memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
+		if (EIF_once_count == 0) {
+			EIF_once_values = (EIF_once_value_t *) 0;
+		} else {
+			/*
+			 * Allocate room for once values for all threads but the initial 
+			 * because we do not have the number of onces yet
+			 * Also set value root thread id.
+			 */
+			EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
+				/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
+			if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
+				enomem();
+			memset ((EIF_REFERENCE) EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
+		}
 	} else {
 		not_root_thread = 1;
 		eif_thr_id = (EIF_THR_TYPE *) 0;	/* Null by convention in root */
@@ -473,9 +476,11 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 		/* Free array of once manifest strings */
 	FREE_OMS (EIF_oms);
 
-		/* Free once values. */
-	eif_free (EIF_once_values);
-	EIF_once_values = NULL;
+	if (EIF_once_values != NULL) {
+			/* Free once values. */
+		eif_free (EIF_once_values);
+		EIF_once_values = NULL;
+	}
 
 		/* Free allocated stacks in eif_globals. */
 #ifdef ISE_GC

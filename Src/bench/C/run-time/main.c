@@ -401,25 +401,33 @@ rt_public void once_init (void)
 	/* Allocate room for once manifest strings array. */
 	ALLOC_OMS (EIF_oms);
 
-	/* Allocate room for once values. */
-	EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
-			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-	if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
-		enomem();
-	memset (EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
+	if (EIF_once_count == 0) {
+		EIF_once_values = (EIF_once_value_t *) 0;
+	} else {
+		/* Allocate room for once values. */
+		EIF_once_values = (EIF_once_value_t *) eif_realloc (EIF_once_values, EIF_once_count * sizeof *EIF_once_values);
+				/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
+		if (EIF_once_values == (EIF_once_value_t *) 0) /* Out of memory */
+			enomem();
+		memset (EIF_once_values, 0, EIF_once_count * sizeof *EIF_once_values);
+	}
 
 #ifdef EIF_THREADS
-		/* Allocate room for process-relative once values. */
-	EIF_process_once_values = (EIF_process_once_value_t *) eif_realloc (EIF_process_once_values, EIF_process_once_count * sizeof *EIF_process_once_values);
-			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-	if (EIF_process_once_values == (EIF_process_once_value_t *) 0) /* Out of memory */
-		enomem();
-	memset (EIF_process_once_values, 0, EIF_process_once_count * sizeof *EIF_process_once_values);
-	{
-		int i = EIF_process_once_count;
-		while (i > 0) {
-			i--;
-			EIF_process_once_values [i].mutex = eif_thr_mutex_create ();
+	if (EIF_process_once_count == 0)
+		EIF_process_once_values = (EIF_process_once_value_t *) 0;
+	} else {
+			/* Allocate room for process-relative once values. */
+		EIF_process_once_values = (EIF_process_once_value_t *) eif_realloc (EIF_process_once_values, EIF_process_once_count * sizeof *EIF_process_once_values);
+				/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
+		if (EIF_process_once_values == (EIF_process_once_value_t *) 0) /* Out of memory */
+			enomem();
+		memset (EIF_process_once_values, 0, EIF_process_once_count * sizeof *EIF_process_once_values);
+		{
+			int i = EIF_process_once_count;
+			while (i > 0) {
+				i--;
+				EIF_process_once_values [i].mutex = eif_thr_mutex_create ();
+			}
 		}
 	}
 #endif

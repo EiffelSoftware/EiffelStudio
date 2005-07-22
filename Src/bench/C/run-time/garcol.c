@@ -1290,8 +1290,10 @@ rt_public void reclaim(void)
 
 #endif
 
-			eif_free (EIF_once_values); /* have been allocated with eif_malloc */
-			EIF_once_values = (EIF_once_value_t *) 0;
+			if (EIF_once_values != (EIF_once_value_t *) 0) {
+				eif_free (EIF_once_values); /* have been allocated with eif_malloc */
+				EIF_once_values = (EIF_once_value_t *) 0;
+			}
 #ifdef EIF_THREADS
 			{
 				int i = EIF_process_once_count;
@@ -1301,7 +1303,9 @@ rt_public void reclaim(void)
 				}
 			}
 
-			eif_free (EIF_process_once_values); /* Free array of process-relative once results. */
+			if (EIF_process_once_values != (EIF_process_once_value_t *) 0) {
+				eif_free (EIF_process_once_values); /* Free array of process-relative once results. */
+			}
 #endif
 			FREE_ONCE_INDEXES; /* Free array of once indexes. */
 

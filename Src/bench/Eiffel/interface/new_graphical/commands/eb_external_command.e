@@ -490,7 +490,7 @@ feature {NONE} -- Implementation
 						i2 = 0
 					loop
 						if i2 > i1 then
-							st.extend (create {STRING_TEXT}.make (output.substring (i1 + 1, i2 - 1)))
+							st.extend (create {BASIC_TEXT}.make (output.substring (i1 + 1, i2 - 1)))
 						end
 						st.extend (create {NEW_LINE_ITEM}.make)
 						i1 := i2
@@ -498,7 +498,7 @@ feature {NONE} -- Implementation
 					end
 						-- Don't forget the last line...
 					if i1 + 1 < output.count then
-						st.extend (create {STRING_TEXT}.make (output.substring (i1 + 1, output.count)))
+						st.extend (create {BASIC_TEXT}.make (output.substring (i1 + 1, output.count)))
 					end
 					output_manager.force_display
 					output_manager.process_text (st)

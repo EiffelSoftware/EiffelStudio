@@ -208,7 +208,6 @@ feature {NONE} -- Implementation
 				)
 				cg.set_end_mark (new_name)
 				cg.commit_modification
-				cg.reset_date
 				a_class.set_name (new_name)
 				if not new_generics.is_empty then
 					a_class.set_generics (new_generics)

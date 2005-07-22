@@ -34,7 +34,6 @@ feature -- Output
 				ctxt.put_text_item_without_tabs (ti_Invariant_keyword)
 				ctxt.indent
 				ctxt.put_new_line
-				ctxt.put_new_line
 				from
 					start
 				until

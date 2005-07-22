@@ -1173,6 +1173,7 @@ feature {NONE} -- Menu Building
 			cmd: EB_EDITOR_COMMAND
 			os_cmd: EB_ON_SELECTION_COMMAND
 			editor: EB_SMART_EDITOR
+			ln_cmd: EB_TOGGLE_LINE_NUMBERS_COMMAND
 		do
 			editor := editor_tool.text_area
 			create command_controller.make
@@ -1243,14 +1244,12 @@ feature {NONE} -- Menu Building
 			edit_menu.extend (create {EV_MENU_SEPARATOR})
 
 				-- Line numbers
-			create cmd.make
-			cmd.set_menu_name (Interface_names.m_line_numbers)
-			cmd.add_agent (agent toggle_line_number_display)
-			cmd.set_needs_editable (True)
-			command_menu_item := cmd.new_menu_item
-			command_controller.add_edition_command (cmd)
+			create ln_cmd.make
+			command_menu_item := ln_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			edit_menu.extend (command_menu_item)
+			window.accelerators.extend (ln_cmd.accelerator)
+			
 
 				-- Separator --------------------------------------
 			edit_menu.extend (create {EV_MENU_SEPARATOR})

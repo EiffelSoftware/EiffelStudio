@@ -812,7 +812,7 @@ feature -- Status setting
 
 			if not activate_window.is_destroyed and then not activate_window.is_empty and then not activate_window.is_show_requested then
 				-- If some processing has been performed on `activate_window' then show it.
-				activate_window.show
+				ev_application.do_once_on_idle (agent activate_window.show)
 			end
 		end
 
@@ -3953,7 +3953,7 @@ feature {NONE} -- Event handling
 					selected_item /= Void and then
 					selected_item.is_selected and then
 					ev_application.ctrl_pressed and then
-					not is_always_selected
+					((is_always_selected and then (internal_selected_items.count > 1 or else internal_selected_rows.count > 1)) or not is_always_selected)
 				then
 					selected_item.disable_select
 				else
@@ -4476,7 +4476,7 @@ feature {NONE} -- Event handling
 			if is_multiple_selection_enabled then
 				if is_shift_pressed then
 					l_selected_items := selected_items
-					if last_selected_item /= Void and then not l_selected_items.is_empty or l_selected_items.count = 1 then
+					if (last_selected_item /= Void and then not l_selected_items.is_empty) or l_selected_items.count = 1 then
 						start_item := l_selected_items.last
 					end			
 					if a_item /= Void and then start_item /= Void and then start_item /= a_item then

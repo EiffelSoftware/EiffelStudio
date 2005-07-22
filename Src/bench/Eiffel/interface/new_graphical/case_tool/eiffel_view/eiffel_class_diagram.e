@@ -103,16 +103,19 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 			
 			Precursor {EIFFEL_WORLD} (node)
 			
+				-- Check if cluster still exists
 			cl := universe.cluster_of_name (cccn)
-			cc := universe.class_named (ccn, cl)
-			
-			if cc /= Void then
-				esc := model.class_from_interface (cc)
-				if esc = Void then
-					create esc.make (cc)
-					model.add_node (esc)
+			if cl /= Void then
+				cc := universe.class_named (ccn, cl)
+					-- Check if class still exists
+				if cc /= Void then
+					esc := model.class_from_interface (cc)
+					if esc = Void then
+						create esc.make (cc)
+						model.add_node (esc)
+					end
+					model.set_center_class (esc)
 				end
-				model.set_center_class (esc)
 			end
 		end
 		

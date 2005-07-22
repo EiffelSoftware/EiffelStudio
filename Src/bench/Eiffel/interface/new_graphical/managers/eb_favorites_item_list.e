@@ -287,15 +287,24 @@ feature -- Element change
 	add_feature_stone (a_stone: FEATURE_STONE) is
 			-- Append a favorite feature defined by `a_stone'.
 		local
+			l_fav_current: EB_FAVORITES_ITEM
 			l_fav_class: EB_FAVORITES_CLASS
 		do
-			l_fav_class ?= Current
-			if l_fav_class = Void then
+			l_fav_current ?= Current
+			l_fav_class ?= l_fav_current
+			if 
+				l_fav_class = Void
+				or else l_fav_class.associated_class_c /= a_stone.e_class
+			then
 				l_fav_class ?= favorite_by_name (a_stone.class_name)
 			end
 			if l_fav_class = Void then
 				create l_fav_class.make (a_stone.class_name, Current)
-				extend (l_fav_class)
+				if l_fav_current /= Void and then l_fav_current.is_class then
+					l_fav_current.parent.extend (l_fav_class)
+				else
+					extend (l_fav_class)
+				end
 			end
 			if not l_fav_class.contains_name (a_stone.feature_name) then
 				l_fav_class.extend (create {EB_FAVORITES_FEATURE}.make_from_feature_stone (a_stone, l_fav_class))				

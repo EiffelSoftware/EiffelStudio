@@ -191,9 +191,9 @@ feature {NONE} -- Initialization
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 
-			a_property := "expander-size"
+			a_property := once "expander-size"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_expander_size)
-			a_property := "horizontal-separator"
+			a_property := once "horizontal-separator"
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_style_get_integer (tree_view, a_property.item, $a_horizontal_separator)
 
 			a_success := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_path_at_pos (tree_view, a_x, a_y, $a_tree_path, $a_tree_column, NULL, NULL)
@@ -203,6 +203,7 @@ feature {NONE} -- Initialization
 					avoid_item_events := True
 						-- We have clicked on the expander node so therefore we don't want to emit an item event
 				end
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
 			end
 			tree_item_imp := row_from_y_coord (a_y)
 
@@ -675,7 +676,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		end
 
 	update_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP) is
-			-- Set the pixmap for `a_tree_node_imp'
+			-- Set the pixmap for `a_tree_node_imp'.
 		do
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_tree_node_imp.list_iter.item, 0, a_tree_node_imp.gdk_pixbuf)
 		end

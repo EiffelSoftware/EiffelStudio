@@ -2621,7 +2621,7 @@ feature {NONE} -- Implementation
 					end
 				else
 						-- not a class text : cannot be edited
-					editor_tool.text_area.disable_editable
+					editor_tool.text_area.set_read_only (True)
 					address_manager.disable_formatters
 
 						--| Disable all formatters.

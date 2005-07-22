@@ -965,9 +965,7 @@ feature {NONE} -- Implementation, focus event
 			if top_level_window_imp /= Void then
 				top_level_window_imp.set_last_focused_widget (wel_item)	
 				top_level_titled_window ?= top_level_window_imp.interface
-				if top_level_titled_window /= Void then
-					application_imp.set_window_with_focus (top_level_titled_window)
-				end
+				application_imp.set_window_with_focus (top_level_titled_window)
 			end
 			Focus_on_widget.put (Current)
 			if focus_in_actions_internal /= Void then

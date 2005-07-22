@@ -527,9 +527,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP}
 					top_level_window_imp.set_last_focused_widget (combo.item)	
 				end
 				top_level_titled_window ?= top_level_window_imp.interface
-				if top_level_titled_window /= Void then
-					application_imp.set_window_with_focus (top_level_titled_window)
-				end
+				application_imp.set_window_with_focus (top_level_titled_window)
 			end
 				--| `Current' is made up of
 				--| multiple widgets which propagate events accordingly.

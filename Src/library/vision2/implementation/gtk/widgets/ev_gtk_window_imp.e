@@ -164,7 +164,6 @@ feature {NONE} -- Implementation
 
 	has_wm_decorations: BOOLEAN is
 			-- Does current Window object have WM decorations.
-			-- (export status {NONE})
 		do
 			Result := False
 		end

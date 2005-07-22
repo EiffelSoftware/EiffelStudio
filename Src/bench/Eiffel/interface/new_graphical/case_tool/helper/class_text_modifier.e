@@ -169,8 +169,11 @@ feature -- Status setting
 		do
 			if text = Void then
 				text := class_text (class_i)
-				if text.item (text.count) = '%N' then
-					is_unix_file := text.item (text.count - 1) /= '%R'
+					-- Ensured that there is some text in the class we are loading
+					-- so that we can properly find out if we are using a Unix text
+					-- file format.
+				if not text.is_empty and then text.item (text.count) = '%N' then
+					is_unix_file := (text.count = 1) or else (text.item (text.count - 1) /= '%R')
 				else
 						-- Text is messed up, we use the platform default
 					is_unix_file := (create {PLATFORM_CONSTANTS}).is_unix
@@ -191,11 +194,12 @@ feature -- Status setting
 
 	commit_modification is
 			-- Save `class_text' to file when not opened in an editor
-			-- or display changes in editors.
+			-- or display changes in editors, and reset `date'.
 		require
 			text_managed: text_managed
 		do
 			set_class_text (class_i, text)
+			reset_date
 			text := Void
 			class_as := Void
 		ensure
@@ -327,7 +331,6 @@ feature -- Modification (Add/Remove feature)
 					end
 					if valid_syntax then
 						commit_modification
-						reset_date
 					end
 				end
 			end
@@ -354,9 +357,8 @@ feature -- Modification (Add/Remove feature)
 					insert_code ("inherit%N")
 				end
 				insert_code ("%T" + a_name + "%N%N")
+				commit_modification
 			end
-			commit_modification
-			reset_date
 		end
 		
 	remove_features (data: LIST [FEATURE_AS]) is
@@ -439,7 +441,6 @@ feature -- Modification (Add/Remove feature)
 					data.forth
 				end
 				commit_modification
-				reset_date
 			end
 		end
 			
@@ -475,9 +476,8 @@ feature -- Modification (Add/Remove feature)
 					insert_code (str)
 					data.forth
 				end
+				commit_modification
 			end
-			commit_modification
-			reset_date
 		end
 		
 	delete_code (data: LIST [TUPLE [STRING, INTEGER]]) is
@@ -517,9 +517,8 @@ feature -- Modification (Add/Remove feature)
 					remove_code (pos, pos + str.count - 1)
 					data.back
 				end
+				commit_modification
 			end
-			commit_modification
-			reset_date
 		end
 	
 	new_query_from_diagram (preset_type: STRING; x_pos, y_pos, screen_w, screen_h: INTEGER) is
@@ -629,7 +628,9 @@ feature -- Modification (Add/Remove feature)
 						end
 						set_position_by_feature_clause (fcw.clause_export, fcw.clause_comment)
 						insert_code (fcw.code)
-						if not valid_syntax then
+						if valid_syntax then
+							commit_modification
+						else
 							create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
 							warning_dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 							warning_dialog := Void
@@ -641,8 +642,6 @@ feature -- Modification (Add/Remove feature)
 						warning_dialog := Void
 						invalidate_text
 					end
-					commit_modification
-					reset_date
 				else
 					create warning_dialog.make_with_text (
 						Warning_messages.w_Class_syntax_error_before_generation (class_i.name_in_upper))
@@ -711,9 +710,6 @@ feature -- Modification (Add/Remove feature)
 ----					end
 ----					remove_feature (fcw.feature_name)
 ----					commit_modification
-----					create class_file.make (class_i.file_name)
-----					check class_file.exists end
-----					date := class_file.date
 ----					supplier_data.remove
 ----				end
 ----			else
@@ -754,9 +750,6 @@ feature -- Modification (Add/Remove feature)
 ----						data.forth
 ----					end
 ----					commit_modification
-----					create class_file.make (class_i.file_name)
-----					check class_file.exists end
-----					date := class_file.date
 ----				end
 ----			else
 ----				create warning_dialog.make_with_text (Warning_messages.w_Class_modified_outside_diagram)
@@ -922,17 +915,17 @@ feature {NONE} -- Implementation
 		local
 			retried: BOOLEAN
 		do
-				--| FIXME set `current_class' in `system'.
-			if class_i.compiled then
-				class_i.system.set_current_class (class_i.compiled_class)
-			end
-			if retried then
-				class_as := Void
-			else
+			if not retried then
+					--| FIXME set `current_class' in `system'.
+				if class_i.compiled then
+					class_i.system.set_current_class (class_i.compiled_class)
+				end
 				inst_context.set_cluster (class_i.cluster)
 				Eiffel_parser.parse_from_string (text)
 				class_as := Eiffel_parser.root_node
 				is_modified := False
+			else
+				class_as := Void
 			end
 		rescue
 			retried := True
@@ -1269,7 +1262,9 @@ feature {NONE} -- Implementation
 							extend_invariant (inv)
 							reparse
 						end	
-						if not valid_syntax then
+						if valid_syntax then
+							commit_modification
+						else
 							create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
 							warning_dialog.show_modal_to_window (context_editor.development_window.window)
 							warning_dialog := Void
@@ -1283,8 +1278,6 @@ feature {NONE} -- Implementation
 						extend_from_diagram_successful := False
 						invalidate_text
 					end
-					commit_modification
-					reset_date
 				else
 					create warning_dialog.make_with_text (Warning_messages.w_New_feature_syntax_error)
 					warning_dialog.show_modal_to_window (context_editor.development_window.window)

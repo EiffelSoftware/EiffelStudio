@@ -1,6 +1,5 @@
 indexing
 	description: "Window that displays a text area and a list of possible features for automatic completion"
-	author: "Etienne Amodeo"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -732,12 +731,14 @@ feature {NONE} -- String matching
 			last_best_match_index: INTEGER
 			item_name: STRING
 			buffered_char: CHARACTER
+			input: STRING
 			done: BOOLEAN
 		do
 			if not buffered_input.is_empty then
 				buffered_input_count := buffered_input.count
+				input := buffered_input.as_lower
 				max_iterations := sorted_names.count
-				buffered_char := buffered_input.item (1)										
+				buffered_char := input.item (1)										
 				from
 					iteration_count := 1					
 					index_count := 1
@@ -745,7 +746,7 @@ feature {NONE} -- String matching
 					iteration_count > max_iterations or done
 				loop
 					item_name := sorted_names.item (iteration_count).name
-					match_index := match_names_until_done (item_name, buffered_input)
+					match_index := match_names_until_done (item_name, input)
 					if match_index > 0 and match_index > last_best_match_index then
 							-- At least one char matched so store match index
 						last_best_match_index := match_index
@@ -756,7 +757,7 @@ feature {NONE} -- String matching
 								until
 									iteration_count = max_iterations or done
 								loop
-									match_index := match_names_until_done (sorted_names.item (iteration_count + 1).name, buffered_input)
+									match_index := match_names_until_done (sorted_names.item (iteration_count + 1).name, input)
 									if match_index < last_best_match_index then
 										Result := iteration_count
 										done := True
@@ -821,31 +822,34 @@ feature {NONE} -- String matching
 	match_names_until_done (a_name, a_name2: STRING): INTEGER is
 			-- Match the characters of `a_name2' against `a_name' from the start of `a_name2' until no match is
 			-- found or all characters match.  Return the index where the match failed.
+		require
+			a_name_not_void: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			a_name2_not_void: a_name2 /= Void
+			not_a_name2_is_empty: not a_name2.is_empty
+			a_name2_formatted: a_name2.as_lower.is_equal (a_name2)
 		local
-			cnt,
-			const_count: INTEGER
+			i: INTEGER
+			cnt: INTEGER
 			done: BOOLEAN
 			c: CHARACTER
-			l_name2: STRING
+			l_count: INTEGER
 		do
-			l_name2 := a_name2.twin
-			if not feature_mode then
-				l_name2.to_upper
-			end
 			from
-				cnt := 0
-				const_count := a_name.count
+				i := 0
+				cnt := a_name.count
+				l_count := a_name2.count
 			until
-				cnt >= const_count or done
+				i = cnt or done
 			loop
-				c := a_name.item (cnt + 1)
-				if (cnt + 1) > l_name2.count or c /= l_name2.item (cnt + 1) then
+				c := a_name.item (i + 1).as_lower
+				if (i + 1) > l_count or c /= a_name2.item (i + 1) then
 					done := True
 				else
-					cnt := cnt + 1
+					i := i + 1
 				end
 			end
-			Result := cnt
+			Result := i
 		ensure
 			index_returned_makes_sense: Result >= 0
 		end

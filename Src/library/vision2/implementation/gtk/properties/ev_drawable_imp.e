@@ -717,24 +717,42 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 	pixbuf_from_drawable: POINTER is
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
 		do
-			Result := pixbuf_from_drawable_at_position (0, 0, 0, 0, -1, -1)
+			Result := pixbuf_from_drawable_at_position (0, 0, 0, 0, width, height)
 		end
 
 	pixbuf_from_drawable_at_position (src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER is
 			-- Return a GdkPixbuf object from the current Gdkpixbuf structure
 		local
-			a_pix, mask_pixbuf1, mask_pixbuf2: POINTER
+			new_pix, new_mask_pix, l_image, l_mask_image, a_pix, a_mask_pix, l_temp_pix: POINTER
 		do
-			a_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_drawable (Result, drawable, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
+			new_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_new (0, True, 8, a_width, a_height)	
+			l_image := {EV_GTK_EXTERNALS}.gdk_drawable_copy_to_image (drawable, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
+			
+			
+			a_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_image (new_pix, l_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
+				-- We do not unref new_pix as it is being reused
+	
+			{EV_GTK_EXTERNALS}.object_unref (l_image)
+			l_image := default_pointer
+
 			if mask /= default_pointer then
-				mask_pixbuf1 := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
-				mask_pixbuf2 := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf1, True, '%/255/', '%/255/', '%/255/')
-				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf2, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 255)
-				Result := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (a_pix)
-				draw_mask_on_pixbuf (Result, mask_pixbuf2)
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf1)
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (mask_pixbuf2)
+				new_mask_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
+				l_mask_image := {EV_GTK_EXTERNALS}.gdk_drawable_copy_to_image (mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
+				a_mask_pix := {EV_GTK_EXTERNALS}.gdk_pixbuf_get_from_image (new_mask_pix, l_mask_image, default_pointer, 0, 0, 0, 0, a_width, a_height)
+				{EV_GTK_EXTERNALS}.object_unref (l_mask_image)
+				l_mask_image := default_pointer
+				
+				l_temp_pix := a_mask_pix
+				a_mask_pix := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (l_temp_pix, True, 255, 255, 255)
+				{EV_GTK_EXTERNALS}.object_unref (l_temp_pix)
+					-- Draw mask on top of pixbuf.
+				{EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (a_mask_pix, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 255)
+				draw_mask_on_pixbuf (a_pix, a_mask_pix)
+				
+				 -- Clean up
+				{EV_GTK_EXTERNALS}.object_unref (a_mask_pix)
+				
+				Result := a_pix				
 			else
 				Result := a_pix
 			end

@@ -558,12 +558,16 @@ feature -- Status settings.
 			is_force_directed_used := True
 			if class_graph = Void then
 				fig ?= world.figure_from_model (cluster_graph.center_cluster)
-				min_box := fig.minimum_size
-				force_directed_layout.set_center (min_box.left + min_box.width // 2, min_box.top + min_box.height // 2)
+				if fig /= Void then
+					min_box := fig.minimum_size
+					force_directed_layout.set_center (min_box.left + min_box.width // 2, min_box.top + min_box.height // 2)
+				end
 			else
 				fig ?= world.figure_from_model (class_graph.center_class)
-				force_directed_layout.set_center (fig.port_x, fig.port_y)
-				fig.set_is_fixed (True)
+				if fig /= Void then
+					force_directed_layout.set_center (fig.port_x, fig.port_y)
+					fig.set_is_fixed (True)
+				end
 			end
 			if world.is_right_angles then
 				world.remove_right_angles

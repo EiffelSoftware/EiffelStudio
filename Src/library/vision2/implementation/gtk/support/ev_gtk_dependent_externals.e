@@ -8,6 +8,21 @@ class
 
 feature -- Externals
 
+	frozen gdk_drawable_copy_to_image (a_drawable, a_image: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER is
+		external
+			"C signature (GdkDrawable*, GdkImage*, int, int, int, int, int, int): GdkImage* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_drawable_get_colormap (a_drawable: POINTER): POINTER is
+		external
+			"C signature (GdkDrawable*): GdkColormap* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_drawable_get_image (a_drawable: POINTER; a_x, a_y, a_width, a_height: INTEGER): POINTER is
+		external
+			"C signature (GdkDrawable*, gint, gint, gint, gint): GdkImage* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_tooltips_struct_tip_label (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkTooltips): EIF_POINTER"
@@ -717,7 +732,7 @@ feature -- Externals
 			"C signature (GtkTreeView*): GtkTreeViewColumn* use <gtk/gtk.h>"
 		end
 
-	frozen gdk_pixbuf_add_alpha (a_pixbuf: POINTER; substitute_color: BOOLEAN; r, g, b: CHARACTER): POINTER is
+	frozen gdk_pixbuf_add_alpha (a_pixbuf: POINTER; substitute_color: BOOLEAN; r, g, b: NATURAL_8): POINTER is
 		external
 			"C signature (GdkPixbuf*, gboolean, guchar, guchar, guchar): GdkPixbuf* use <gtk/gtk.h>"
 		end
@@ -2113,6 +2128,11 @@ feature -- Externals
 			"C signature (GdkPixbuf*, GdkDrawable*, GdkColormap*, int, int, int, int, int, int): GdkPixbuf use <gtk/gtk.h>"
 		end
 
+	frozen gdk_pixbuf_get_from_image (a_pixbuf, a_drawable, a_colormap: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height: INTEGER): POINTER is
+		external
+			"C signature (GdkPixbuf*, GdkImage*, GdkColormap*, int, int, int, int, int, int): GdkPixbuf use <gtk/gtk.h>"
+		end
+
 	frozen gdk_pixbuf_render_pixmap_and_mask (a_pixbuf: POINTER; a_pixmap, a_mask: TYPED_POINTER [POINTER]; alpha_threshold: INTEGER) is
 		external
 			"C signature (GdkPixbuf*, GdkPixmap**, GdkBitmap**, int) use <gtk/gtk.h>"
@@ -2121,6 +2141,11 @@ feature -- Externals
 	frozen gdk_pixbuf_new_from_file (a_filename: POINTER; a_error: TYPED_POINTER [POINTER]): POINTER is
 		external
 			"C signature (char*, GError**): GdkPixbuf* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pixbuf_new (a_colorspace: INTEGER; a_has_alpha: BOOLEAN; a_bits_per_sample, a_width, a_height: INTEGER): POINTER is
+		external
+			"C signature (GdkColorspace, gboolean, int, int, int): GdkPixbuf* use <gtk/gtk.h>"
 		end
 
 	frozen g_locale_to_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER]) is

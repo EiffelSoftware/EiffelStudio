@@ -230,8 +230,12 @@ feature -- Element change
 		local
 			win_imp: EV_TITLED_WINDOW_IMP
 		do
-			win_imp ?= a_window.implementation
-			window_with_focus := win_imp
+			if a_window /= Void then
+				win_imp ?= a_window.implementation
+				window_with_focus := win_imp
+			else
+				window_with_focus := Void
+			end
 		end
 
 feature {NONE} -- Implementation

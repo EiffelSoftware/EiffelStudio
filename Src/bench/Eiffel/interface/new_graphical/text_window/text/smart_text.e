@@ -25,6 +25,11 @@ inherit
 			stone_at,
 			make
 		end
+		
+	REFACTORING_HELPER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -371,6 +376,11 @@ feature -- Completion-clickable initialization / update
 			-- are available in `completion_possibilities'.
 		require
 			click_and_complete_is_active
+		local
+			l_token: EDITOR_TOKEN
+			l_image: STRING
+			l_do_not_complete: BOOLEAN
+			l_comment: EDITOR_TOKEN_COMMENT
 		do
 			history.record_move
 			auto_complete_possible := False
@@ -378,11 +388,40 @@ feature -- Completion-clickable initialization / update
 				insert_char ('.')
 					-- will prevent `click_tool' from considering
 					-- what precedes as the name to be completed.
+			else
+				l_token := cursor.token
+				if l_token /= Void then
+					if l_token.is_text then
+						l_image := l_token.image
+						if l_image.count > 1 and then cursor.pos_in_token > 1 then
+								-- Will prevent completion of '`.' or '..'
+							l_do_not_complete := is_completable_separator (l_image.item (cursor.pos_in_token - 1).out)	
+						end
+					end
+					
+					l_token := l_token.previous
+					
+					if l_token /= Void then
+						l_comment ?= l_token
+						if l_comment /= Void then
+								-- Previous token is a comment so we cannot complete.
+								-- Happens when completing -- A Comment `.|
+							l_do_not_complete := True	
+						elseif l_token.is_text then
+							l_image := l_token.image
+							if l_image.count > 1 then
+									-- Will prevent completion of '|.' or '..'
+								l_do_not_complete := is_completable_separator (l_token.image.item (l_token.image.count).out)
+							end
+						end
+					end
+				end
 			end
-			if not cursor.line.part_of_verbatim_string then
+			
+			if not l_do_not_complete and not cursor.line.part_of_verbatim_string then
 				click_tool.build_completion_list (cursor)	
 			end
-			if click_tool.completion_possibilities /= Void then
+			if not l_do_not_complete and click_tool.completion_possibilities /= Void then
 				
 				auto_complete_possible := True
 			elseif add_point then
@@ -734,6 +773,37 @@ feature {NONE} -- Implementation
 			Result ?= Precursor {CLICKABLE_TEXT} (line_image)
 			if current_class_is_clickable then
 				click_tool.setup_line (Result)
+			end
+		end
+		
+	analyzer: EB_CLASS_INFO_ANALYZER is
+			-- Class infor analyzer
+		once
+			fixme ("Refactor so that access to `feature_call_separators' is done differently.")
+			create {EB_CLICK_AND_COMPLETE_TOOL} Result
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	is_completable_separator (a_str: STRING): BOOLEAN is
+			-- Is `a_str' a completable string separator?
+		local
+			i: INTEGER
+			l_seps: ARRAY [STRING]
+		do
+			l_seps := analyzer.feature_call_separators
+			if l_seps /= Void and then not l_seps.is_empty then
+				from
+					i := l_seps.lower
+				until
+					Result or i > l_seps.upper
+				loop
+					if (l_seps[i]).is_equal (a_str) then
+						Result := True
+					else
+						i := i + 1
+					end
+				end
 			end
 		end
 

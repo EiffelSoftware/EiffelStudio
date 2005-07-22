@@ -77,12 +77,12 @@ feature -- Initialization
 		do
 			a_width := width_internal			
 			if a_width /= width then
-					if parent_imp.call_item_resize_start_actions or else parent_imp.item_resize_tuple /= Void then
-						-- Always make sure that the event box is the same size as the header item.
-						{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, default_box_height)
-						width := a_width
-						parent_imp.on_resize (interface)						
-					end
+				if parent_imp.call_item_resize_start_actions or else parent_imp.item_resize_tuple /= Void then
+					-- Always make sure that the event box is the same size as the header item.
+					{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, default_box_height)
+					width := a_width
+					parent_imp.on_resize (interface)
+				end
 			end
 		end
 
@@ -234,7 +234,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						end
 					else
 								-- Handle any potential resize.
-							handle_resize
+						handle_resize
 					end					
 				end
 			end

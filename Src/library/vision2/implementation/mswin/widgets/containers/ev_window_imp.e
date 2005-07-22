@@ -1020,6 +1020,8 @@ feature {EV_ANY_I} -- Implementation
 					titled_window ?= Current
 					if titled_window /= Void then
 						application_imp.set_window_with_focus (titled_window.interface)
+					else
+						application_imp.set_window_with_focus (Void)
 					end
 					if focus_in_actions_internal /= Void then
 						focus_in_actions_internal.call (Void)

@@ -147,7 +147,6 @@ feature -- Status setting
 		do
 			if not is_show_requested then
 				call_show_actions := True
-				{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
 				Precursor {EV_GTK_WINDOW_IMP}
 				is_positioned := True
 			end

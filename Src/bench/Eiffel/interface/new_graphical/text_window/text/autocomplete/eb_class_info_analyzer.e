@@ -1547,13 +1547,12 @@ feature {NONE} -- Implementation
 			end			
 		end
 
-feature {NONE} -- Constants
+feature {SMART_TEXT} -- Constants
 
 	boolean_values: ARRAY [STRING] is
 		once
 			Result := <<"True", "False">>
 		end
-		
 
 	feature_call_separators: ARRAY [STRING] is 
 		once

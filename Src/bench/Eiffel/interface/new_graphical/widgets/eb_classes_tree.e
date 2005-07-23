@@ -230,12 +230,13 @@ feature -- Activation
 		local
 			path: LINKED_LIST [CLUSTER_I]
 			a_folder: EB_CLASSES_TREE_FOLDER_ITEM
+			a_class_item: EB_CLASSES_TREE_CLASS_ITEM
 		do
 			path := cluster_parents (a_class.cluster)
 			from
 				path.start
 				a_folder := find_cluster_in (path.item, a_folder)
-				if not a_folder.is_expanded then
+				if a_folder /= Void and then not a_folder.is_expanded then
 					a_folder.expand
 				end
 				path.forth
@@ -243,12 +244,15 @@ feature -- Activation
 				path.after or else a_folder = Void
 			loop
 				a_folder := find_cluster_in (path.item, a_folder)
-				if not a_folder.is_expanded then
+				if a_folder /= Void and then not a_folder.is_expanded then
 					a_folder.expand
 				end
 				path.forth
 			end
-			(find_class_in (a_class, a_folder)).enable_select
+			a_class_item := find_class_in (a_class, a_folder)
+			if a_class_item /= Void then
+				a_class_item.enable_select
+			end
 		end
 
 feature -- Observer pattern

@@ -269,6 +269,12 @@ feature -- Query
 		do
 			Result := editor_drawing_area.has_focus
 		end
+		
+	has_margin: BOOLEAN is
+			-- Should margin be displayed?
+		do
+			Result := line_numbers_enabled and line_numbers_visible
+		end
 
 	is_empty: BOOLEAN is
 			-- Is the text panel blank?
@@ -376,19 +382,21 @@ feature -- Status setting
 		
 	refresh_line_number_display is
 	        -- Refresh line number display in Current and update display
-	   	do
-	   		if line_numbers_enabled then
-		   	 	if line_numbers_visible and then margin_container.is_empty then
-		   	 		margin_container.put (margin.widget)
-		   	 	elseif not line_numbers_visible and then not margin_container.is_empty then	   	 		
-		   	 		margin_container.prune (margin.widget)
-		   	 	end
-		   	elseif not margin_container.is_empty then	   	 		
-		   	 	margin_container.prune (margin.widget)
-		   	end
-	   	   	refresh_now
+		do
+			if has_margin then 
+				if margin_container.is_empty then
+					-- One of line numbers or breakpoints must be visible
+					margin_container.put (margin.widget)
+				end
+			else
+				if not margin_container.is_empty then
+					-- Nothing needs displaying so just prune
+					margin_container.prune (margin.widget)
+				end
+			end
+			refresh_now
 	   	ensure
-	   		widget_displayed: line_numbers_visible implies not margin_container.is_empty
+	   		widget_displayed: has_margin implies not margin_container.is_empty
 	   	end		
 	   	
 	enable_line_numbers is

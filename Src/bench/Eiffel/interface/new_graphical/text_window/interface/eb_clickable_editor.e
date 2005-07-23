@@ -27,7 +27,7 @@ inherit
 			copy_selection,			
 			recycle,
 			margin,
-			refresh_line_number_display
+			has_margin
 		end
 
 	EB_FORMATTED_TEXT
@@ -123,7 +123,7 @@ feature -- Access
 		end
 			
 	margin: EB_CLICKABLE_MARGIN
-			-- Margin widget for breakpoints, line numbers, etc.  This is different to the left margin
+			-- Margin widget for breakpoints, line numbers, etc. This is different to the left margin
 			-- used in the editor for spacing purposes.		
 			
 feature -- Content Change
@@ -154,6 +154,14 @@ feature -- Content Change
 			editor_viewport.enable_sensitive
 		end
 
+feature -- Status report
+
+	has_margin: BOOLEAN is
+			-- Should margin be displayed?
+		do
+			Result := (line_numbers_enabled and line_numbers_visible) or not hidden_breakpoints
+		end
+		
 feature -- Status setting
 
 	enable_has_breakable_slots is
@@ -282,7 +290,7 @@ feature -- Possibly delayed operations
 			end
 		end
 
-feature  -- Compatibility
+feature -- Compatibility
 
 	set_position (a_position: INTEGER) is
 			-- Set cursor position to `a_position'.
@@ -599,7 +607,7 @@ feature {NONE} -- Text Loading
 			after_reading_text_actions.wipe_out
 		end
 
-	on_text_loaded  is
+	on_text_loaded is
 			-- Finish editor setup as the entire text has been loaded.
 		do
 			Precursor {EB_EDITOR}
@@ -613,23 +621,6 @@ feature {NONE} -- Text Loading
 			end
 			after_reading_text_actions.wipe_out
 		end
-
-	refresh_line_number_display is
-	        -- Toggle line number display in Current and update display
-	   	do
-	   		if line_numbers_enabled then
-		   	 	if (line_numbers_visible or not hidden_breakpoints) and then margin_container.is_empty then
-		   	 			-- One of line numbers or breakpoints must be visible
-		   	 		margin_container.put (margin.widget)
-		   	 	elseif not line_numbers_visible and then hidden_breakpoints and then not margin_container.is_empty then
-		   	 			-- Nothing needs displaying so just prune
-		   	 		margin_container.prune (margin.widget)
-		   	 	end
-			elseif not margin_container.is_empty then
-		   		margin_container.prune (margin.widget)
-			end
-	   	 	refresh_now
-	   	end	
 
 feature {EB_EDITOR_TOOL} -- Update
 

@@ -148,7 +148,8 @@ feature {NONE} -- Initialization Implementation
 				a_class_item ?= an_item
 				create Result.make (a_class_item)
 				if is_clickable then
-					Result.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
+					Result.pointer_button_press_actions.force_extend (
+						agent on_button_pressed (a_class_item, ?, ?, ?))
 				end
 				if not a_class_item.is_empty then
 					from
@@ -168,7 +169,8 @@ feature {NONE} -- Initialization Implementation
 				a_feat_item ?= an_item
 				create Result.make (a_feat_item)
 				if is_clickable then
-					Result.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))
+					Result.pointer_button_press_actions.force_extend (
+						agent on_button_pressed (a_feat_item, ?, ?, ?))					
 				end					
 			end
 			Result.set_text (an_item.name)
@@ -196,12 +198,14 @@ feature -- Observer pattern
 				if a_item.is_class then		
 					a_class_item ?= a_item
 					if is_clickable then
-						tree_item.select_actions.extend (agent favorites_manager.go_to_class (a_class_item))
+						tree_item.pointer_button_press_actions.force_extend (
+							agent on_button_pressed (a_class_item, ?, ?, ?))
 					end
 				elseif a_item.is_feature then
 					a_feat_item ?= a_item
 					if is_clickable then
-						tree_item.select_actions.extend (agent favorites_manager.go_to_feature (a_feat_item))
+						tree_item.pointer_button_press_actions.force_extend (
+							agent on_button_pressed (a_feat_item, ?, ?, ?))					
 					end					
 				end
 				tree_item.set_text (a_item.name)
@@ -328,7 +332,27 @@ feature -- Observer pattern
 			old_feat := a_stone.origin
 			old_feat.parent.start
 			old_feat.parent.prune (old_feat)
-		end		
+		end
+		
+	on_button_pressed (a_node: ANY; a_x, a_y, a_button: INTEGER) is
+			-- Action done when an item is selected.
+		local
+			l_class: EB_FAVORITES_CLASS
+			l_feat: EB_FAVORITES_FEATURE
+		do
+			if a_button = 1 then
+					-- We check if it is a class, and if not if it is a feature.
+				l_class ?= a_node
+				if l_class /= Void then
+					favorites_manager.go_to_class (l_class)
+				else
+					l_feat ?= a_node
+					if l_feat /= Void then
+						favorites_manager.go_to_feature (l_feat)		
+					end
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 		

@@ -105,7 +105,7 @@ feature -- Text status report
 	is_editable: BOOLEAN is
 			-- Is the text editable?
 		do
-			Result := not is_read_only and then allow_edition and then not text_displayed.text_being_processed and then not open_backup
+			Result := not is_read_only and then allow_edition and then not text_displayed.text_being_processed
 		end
 
 feature -- Status setting
@@ -642,10 +642,8 @@ feature -- Edition Operations on text
 			wm: STRING
 		do
 			wm := "Current text is not editable"
-			if text_displayed /= Void then
-				if open_backup then
-					show_warning_message ("Backup_file_not_editable")
-				elseif is_read_only then
+			if text_displayed /= Void then				
+				if is_read_only then
 					if not_editable_warning_message /= Void and not not_editable_warning_message.is_empty then
 						wm := not_editable_warning_message
 					end	
@@ -888,7 +886,6 @@ feature {NONE} -- Text Loading
 		do
 			Precursor {SELECTABLE_TEXT_PANEL}		
 			date_of_file_when_loaded := 0
-			open_backup := False
 			file_name := Void
 		end
 

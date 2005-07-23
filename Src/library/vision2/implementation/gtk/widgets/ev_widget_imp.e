@@ -117,7 +117,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			end	
 			if a_capture_widget_imp /= Void then
 				a_capture_widget_imp.end_transport (0, 0, 0, 0, 0 ,0 ,0 ,0)
-			elseif has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) or else has_struct_flag (event_widget, {EV_GTK_EXTERNALS}.gtk_has_grab_enum) then
+			elseif has_focus or else has_capture then
 					-- We make sure that only the widget with either the focus or the keyboard capture receives key events
 				if a_key_press then
 						-- The event is a key press event.

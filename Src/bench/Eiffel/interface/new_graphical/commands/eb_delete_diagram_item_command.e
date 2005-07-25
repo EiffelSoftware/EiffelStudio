@@ -169,6 +169,7 @@ feature {NONE} -- Implementation
 					could_not_delete := False
 				end
 				Application.resynchronize_breakpoints
+				window_manager.synchronize_all
 			end
 			if could_not_delete then
 					-- We were not able to delete the file.

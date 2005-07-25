@@ -10,7 +10,7 @@ class
 inherit
 	EV_GRID_EDITABLE_ITEM
 		redefine
-			activate_action
+			initialize_actions
 		end
 
 create
@@ -19,14 +19,13 @@ create
 
 feature -- Query
 
-	activate_action (popup_window: EV_POPUP_WINDOW) is
-			-- `Current' has been requested to be updated via `popup_window'.
+	initialize_actions is
 		do
-			Precursor (popup_window)
+			Precursor
+			text_field.disable_edit
 			if text_field.text_length > 0 then
 				text_field.select_all
 			end
-			text_field.disable_edit
 		end
 		
 end

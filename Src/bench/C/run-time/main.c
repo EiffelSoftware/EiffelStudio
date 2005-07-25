@@ -413,7 +413,7 @@ rt_public void once_init (void)
 	}
 
 #ifdef EIF_THREADS
-	if (EIF_process_once_count == 0)
+	if (EIF_process_once_count == 0) {
 		EIF_process_once_values = (EIF_process_once_value_t *) 0;
 	} else {
 			/* Allocate room for process-relative once values. */

@@ -382,6 +382,9 @@ feature -- Implementation
 				{EV_GTK_EXTERNALS}.gtk_widget_draw (event_widget, NULL)				
 			end
 			
+				-- Make sure 'in_transport' returns False before firing any drop actions.
+			App_implementation.on_drop (pebble)
+			
 				-- Call appropriate action sequences
 			if
 				able_to_transport (a_button)
@@ -441,7 +444,6 @@ feature -- Implementation
 			if a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
 				signal_emit_stop (event_widget, "button-press-event")
 			end
-			App_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
 			last_pointed_target := Void

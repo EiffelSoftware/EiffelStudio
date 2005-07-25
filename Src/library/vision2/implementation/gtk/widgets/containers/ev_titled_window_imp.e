@@ -224,9 +224,10 @@ feature -- Status setting
 			-- Restore to original position when minimized or maximized.
 		do
 			if is_maximized then
-				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_unmaximize (c_object)
 				is_maximized := False
+				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_unmaximize (c_object)
 			else
+				is_minimized := False
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_deiconify (c_object)
 			end
 		end

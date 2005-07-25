@@ -64,33 +64,37 @@
 		<list ordered="false">
 			<item>Create an object of type 
 				<link>
+					<url>/libraries/base/reference/support/classic/profiling_setting_chart.xml</url>
 					<label>PROFILING_SETTING</label>
 				</link>.
 			</item>
-			<item>Call ` 
+			<item>Call 
 				<link>
-					<url>/libraries/base/reference/support/classic/profiling_setting_chart.xml</url><anchor_name>f_start_profiling</anchor_name>
-					<label>PROFILING_SETTING</label>
-				</link>' on this object to start the profiler.
+					<url>/libraries/base/reference/support/classic/profiling_setting_flatshort.xml</url>
+					<anchor_name>f_start_profiling</anchor_name>
+					<label>start_profiling</label>
+				</link> on this object to start the profiler.
 			</item>
-			<item>Call ` 
+			<item>Call 
 				<link>
-					<url>/libraries/base/reference/support/classic/profiling_setting_chart.xml</url><anchor_name>f_stop_profiling</anchor_name>
-					<label/>
-				</link>' on this object to stop the profiler.
+					<url>/libraries/base/reference/support/classic/profiling_setting_flatshort.xml</url>
+					<anchor_name>f_stop_profiling</anchor_name>
+					<label>stop_profiling</label>
+				</link> on this object to stop the profiler.
 			</item>
 		</list>
 		<tip>
-			<bold>Tip</bold>: To profile only part of a program, turnoff the profiler at the very beginning of the program, turn it on just before the part of the code that should be profiled, and turn it back off after this section. Typically, it results in the following code:
+			<bold>Tip</bold>: To profile only part of a program, turn off the profiler at the very beginning of the program, turn it on just before the part of the code that should be profiled, and turn it back off after this section. Typically, it results in the following code:
 		</tip>
 		<paragraph>In the root feature:</paragraph>
 		<paragraph>
 			<code_block>
 	<keyword>local</keyword>
-		ps: PROFILER_SETTING
+		ps: <class_name>PROFILING_SETTING</class_name>
 			<comment>-- Other local variables if necessary.</comment>
 	<keyword>do</keyword>
-		<keyword>create</keyword> psps.<feature_name>stop_profiling</feature_name>
+		<keyword>create</keyword> psps.<feature_name>make</feature_name>
+		ps.<feature_name>stop_profiling</feature_name>
 			<comment>-- Real program execution.</comment>
 		ps.<feature_name>start_profiling</feature_name>
 	<keyword>end</keyword></code_block>
@@ -100,10 +104,11 @@
 		<paragraph>
 			<code_block>
 	<keyword>local</keyword>
-		ps: PROFILER_SETTING
+		ps: <class_name>PROFILING_SETTING</class_name>
 			<comment>-- Other local variables if necessary.</comment>
 	<keyword>do</keyword>
-		<keyword>create</keyword> psps.<feature_name>start_profiling</feature_name>
+		<keyword>create</keyword> psps.<feature_name>make</feature_name>
+		ps.<feature_name>start_profiling</feature_name>
 			<comment>-- What needs to be profiled.</comment>
 		ps.<feature_name>stop_profiling</feature_name>
 	<keyword>end</keyword></code_block>
@@ -115,7 +120,7 @@
 				<url>/tools/eiffelstudio/reference/25_project_settings/20_debug.xml</url>
 				<label>System Settings</label>
 			</link> dialog must be checked or the 
-			<bold>profile</bold> option must be set in certain clusters.
+			<bold>profile</bold> option must be set on certain clusters.
 		</note>
 		<paragraph>Once the profiler has been enabled and the program has been recompiled, it is necessary to launch the program.</paragraph>
 		<tip>

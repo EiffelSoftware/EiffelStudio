@@ -1,14 +1,11 @@
-<document title="Installing and Configuring the Microsoft Free C++ Compiler" output="studio">
+<document title="Installing and Configuring the Microsoft Visual C++ Toolkit 2003" output="studio">
 	<meta_data/>
 	<paragraph>
 		<paragraph>The Microsoft Visual C++ Toolkit 2003 includes the core tools developers need to compile and link C++ based applications for Windows 
 		and the .NET Common Language Runtime.</paragraph>
-		<paragraph>This document describes how to setup the Microsoft Free C++ compiler and compile Eiffel systems using it.  
-		It assumes you have EiffelStudio installed on your system and the location of this will be 
-		substituted where appropriate below with 
-			<italic>$ISE_EIFFEL</italic>.
+		<paragraph>This document describes how to setup the Microsoft Visual C++ Toolkit 2003 and compile Eiffel systems using it.  
 		</paragraph>
-			<paragraph>The steps required to setup the free C++ compiler include installing the toolkit, installing the Windows Platform SDK, and setting up your system environment 
+			<paragraph>The steps required to setup the C++ compiler include installing the toolkit, installing the Windows Platform SDK, and setting up your system environment 
 			variables for the needed include, header, library and binary needed files during the C compilation.</paragraph>
 		<list ordered="true">		
 			<item>Download and install the <link><label>Microsoft Visual C++ Toolkit 2003</label><url>http://msdn.microsoft.com/visualc/vctoolkit2003/</url></link>.  For this documentation we assume your installation location is 
@@ -20,15 +17,15 @@
 					<url>http://www.microsoft.com/downloads/details.aspx?FamilyId=A55B6B43-E24F-4EA3-A93E-40C0EC4F68E5</url>
 				</link>.
 				  Assume for this document it is installed at 
-				<italic>&quot;C:\Program Files Microsoft SDK&quot;</italic> and substitute this with approprate location on your system when necessary.
+				<italic>&quot;C:\Program Files\Microsoft SDK&quot;</italic> and substitute this with approprate location on your system when necessary.
 			</item>
 			<item>Setup your environment variables.  Make sure your <bold>INCLUDE</bold> path has the following (substituting the appropriate locations with your actual values for the installed packages):
 			
-			<code_block>INCLUDE=C:\Program Files Microsoft SDK\Include;C:\Microsoft Visual C++ ToolKit 2003\include;$ISE_EIFFEL\studio\spec\windows\include</code_block>
+			<code_block>INCLUDE=C:\Program Files\Microsoft SDK\Include;C:\Microsoft Visual C++ ToolKit 2003\include</code_block>
 			
 			<paragraph>Make sure your <bold>LIB</bold> path has the following:</paragraph>
 			
-			<code_block>LIB=C:\Program Files Microsoft SDK\Lib&quot;;C:\Microsoft Visual C++ ToolKit 2003\lib;$ISE_EIFFEL\studio\spec\windows\lib</code_block>
+			<code_block>LIB=C:\Program Files\Microsoft SDK\Lib;C:\Microsoft Visual C++ ToolKit 2003\lib</code_block>
 			
 			Your <bold>PATH</bold> environment variable must also contain a directory which holds four needed binary files: nmake.exe, lib.exe, cvsres.exe and msvcr70.dll.  These programs are provided in the Platform SDK and can be easily found by searching for them.  Their location may differ depending on the exact version of the SDK you downloaded.  
 			For example on a system with the Windows Server 2003 SDK it is in <italic>C:\Program Files\Microsoft SDK\Bin\Win64</italic>.  You may choose to add this location to your path, like so:
@@ -40,5 +37,5 @@
 			<code_block>PATH=C:\Microsoft Visual C++ ToolKit 2003\bin</code_block>
 			
 			</item>
-		</list>If this is all done correctly you should now be able to use the Microsoft Free C++ compiler when compiling your Eiffel systems.
+		</list>If this is all done correctly you should now be able to use the Microsoft Visual C++ Toolkit 2003 when compiling your Eiffel systems.
 	</paragraph></document>

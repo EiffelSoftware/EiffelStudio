@@ -97,6 +97,18 @@
 				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
 			</row>
 			<row>
+				<cell>Implicit creation procedure (version of <code><class_name>ANY</class_name><symbol>.</symbol><feature_name>default_create</feature_name></code>)</cell>
+				<cell>
+					<code><keyword>class</keyword> <class_name>A</class_name> <keyword>feature</keyword> ... <keyword>end</keyword></code><line_break/>
+					<code><comment>-- The following instructions are equivalent:</comment></code><line_break/>
+					<code><keyword>create</keyword> <symbol>{</symbol><class_name>A</class_name><symbol>}</symbol> <local_variable>a</local_variable></code><line_break/>
+					<code><keyword>create</keyword> <symbol>{</symbol><class_name>A</class_name><symbol>}</symbol> <local_variable>a</local_variable><symbol>.</symbol><feature_name>default_create</feature_name></code>
+				</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
 				<cell>Bang-bang syntax</cell>
 				<cell>
 					<code><symbol>!!</symbol> <local_variable>a</local_variable></code><line_break/>

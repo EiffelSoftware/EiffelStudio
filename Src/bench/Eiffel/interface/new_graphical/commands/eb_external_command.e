@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 				cl.append (output_file_name)
 			else
 				create finished_file_name.make_temporary_name
-				cl.prepend ("sh -q ")
+				cl.prepend ("sh -c ")
 				cl.append (" > ")
 				cl.append (output_file_name)
 				cl.append (" 2> ")

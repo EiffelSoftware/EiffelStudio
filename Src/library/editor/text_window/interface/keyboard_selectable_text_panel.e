@@ -128,8 +128,14 @@ feature -- Cursor Management
 			pointed_line	: EDITOR_LINE
 			pointed_token	: EDITOR_TOKEN
 			tw				: INTEGER
-		do			
-			if x_pos >= 0 and then y_pos >= 0 then
+			l_x_pos			: INTEGER
+		do
+			l_x_pos := x_pos
+			if l_x_pos < 0 then
+				l_x_pos := 0
+			end
+		
+			if y_pos >= 0 then
 					-- Compute the line number pointed by the mouse cursor
 					-- and adjust it if its over the number of lines in the text.
 				l_number := (y_pos + (first_line_displayed * line_height)) // line_height
@@ -138,7 +144,7 @@ feature -- Cursor Management
 				if l_number > nol then
 					l_number := nol
 				end
-				current_width := x_pos
+				current_width := l_x_pos
 				pointed_line := text_displayed.line (l_number)
 				if pointed_line /= Void then					
 					pointed_token := pointed_line.first_token
@@ -544,13 +550,7 @@ feature {NONE} -- Handle keystrokes
 					-- Ctrl-A (select all)
 				select_all
 				scroll_to_cursor := False		
-					
-			when key_l then
-					-- Ctrl-L (line number toggle)
-				if line_numbers_enabled then
-					editor_preferences.show_line_numbers_preference.set_value (not line_numbers_visible)
-					scroll_to_cursor := False
-				end
+
 			else
 					-- Key not handled
 
@@ -807,7 +807,7 @@ feature {NONE} -- Blink Cursor Management
 		require
 			x_pos_valid: x >= 0
 			width_valid: width_cursor > 0
-		do		
+		do
 			if not updating_line then				
 				blink_on := not blink_on
 				invalidate_cursor_rect (True)
@@ -1130,7 +1130,7 @@ feature {NONE} -- Implementation
 					if (l_line_width + l_margin_width) > l_x_offset or l_buffered or l_has_data then
 							-- Only iterate the line if at least some or part of it is in view AND needs redrawing.
 							-- Lines with cursor or selection in them ALWAYS need redrawing.
-						if use_buffered or l_has_data then							
+						if use_buffered or l_has_data then
 		 					draw_line_to_buffered_line (curr_line, l_text.current_line)
 							draw_buffered_line_to_screen (l_x_offset - l_margin_width, buffered_line.width + left_margin_width, l_x_offset, y_offset)
 						else

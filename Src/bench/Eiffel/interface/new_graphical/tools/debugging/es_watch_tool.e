@@ -946,7 +946,12 @@ feature {NONE} -- Event handling on notebook item
 		require
 			notebook_item /= Void
 		do
-			if ab = 3 then
+			if 
+				ab = 3
+				and then not Ev_application.ctrl_pressed
+				and then not Ev_application.shift_pressed
+				and then not Ev_application.alt_pressed
+			then
 				open_watch_menu (notebook_item.parent.widget, ax, ay)
 			end
 		end

@@ -261,7 +261,6 @@ feature -- Scrolling
 					end
 					set_virtual_position (virtual_x_position, vy)
 				end
-				request_columns_auto_resizing
 			end
 		end		
 
@@ -270,16 +269,25 @@ feature {NONE} -- Actions implementation
 	on_key_pressed (k: EV_KEY) is
 		do
 			if 
-				not ev_application.ctrl_pressed
-				and not ev_application.shift_pressed
+				not ev_application.shift_pressed
 				and not ev_application.alt_pressed
 			then
-				inspect k.code
-				when {EV_KEY_CONSTANTS}.key_page_up then
-					scroll_rows (+1, True)
-				when {EV_KEY_CONSTANTS}.key_page_down then
-					scroll_rows (-1, True)
+				if ev_application.ctrl_pressed then
+					inspect k.code
+					when {EV_KEY_CONSTANTS}.key_a then
+						if is_multiple_row_selection_enabled then
+							select_all_rows
+						end
+					else
+					end
 				else
+					inspect k.code
+					when {EV_KEY_CONSTANTS}.key_page_up then
+						scroll_rows (+1, True)
+					when {EV_KEY_CONSTANTS}.key_page_down then
+						scroll_rows (-1, True)
+					else
+					end
 				end
 			end
 		end
@@ -341,8 +349,17 @@ feature {NONE} -- Actions implementation
 			hi: EV_HEADER_ITEM
 			col: EV_GRID_COLUMN
 			c: INTEGER
+			l_x, l_y: INTEGER
 		do
 			if abutton = 3 then
+				fixme ("[
+						we use this hack, because on linux/GTK, 
+						the `ax' is related to the current header item's widget
+						and not as for windows, related to the full header's widget.
+						This way, we have a portable solution.
+					]")
+				l_x := ascreen_x - header.screen_x
+				
 					--| Find the column whom header is clicked
 				from
 					c := 1
@@ -351,7 +368,7 @@ feature {NONE} -- Actions implementation
 				loop
 					col := column (c)
 					hi := col.header_item
-					if header.item_x_offset (hi) > ax and c > 1 then
+					if header.item_x_offset (hi) > l_x and c > 1 then
 						col := column (c - 1)
 					elseif c = column_count then
 						-- keep loop's col value
@@ -378,7 +395,7 @@ feature {NONE} -- Actions implementation
 					mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
 				end
 				m.extend (mci)
-				m.show_at (header, ax, ay)
+				m.show_at (header, l_x, ay)
 			end
 		end
 
@@ -482,11 +499,11 @@ feature {NONE} -- Actions implementation
 		end
 
 	last_width_of_header_during_resize: INTEGER is
-                        -- The last width of the header item that is currently being
-                        -- resized. Used to determine if we must refresh the column to
-                        -- the left of the current one as it could cause the border to
-                        -- need to be drawn on the previous column if it is the final
-                        -- column that current has a width greater than 0.
+			-- The last width of the header item that is currently being
+			-- resized. Used to determine if we must refresh the column to
+			-- the left of the current one as it could cause the border to
+			-- need to be drawn on the previous column if it is the final
+			-- column that current has a width greater than 0.
 		do
 			Result := last_width_of_header_during_resize_internal
 		ensure
@@ -494,7 +511,7 @@ feature {NONE} -- Actions implementation
 		end
 
 	last_width_of_header_during_resize_internal: INTEGER
-   			-- Storage for `last_width_of_header_during_resize'.
+			-- Storage for `last_width_of_header_during_resize'.
 
 	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM is
 		local
@@ -585,24 +602,22 @@ feature {NONE} -- column resizing
 					if c > 0 and c <= column_count then
 						col := column (c)
 						if col /= Void then
-							w := col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3
+							w := col.required_width_of_item_span (1, row_count) + 3
 							if w > 5 then
 								col.set_width (w)
 							end
--- Let's see what should be the behavior ...
---							col.resize_to_content
 						end
 					end
 					auto_resized_columns.forth
 				end
 			end
 		end
-		
+	
 	column_has_auto_resizing (c: INTEGER): BOOLEAN is
 		do
 			Result := auto_resized_columns.has (c)
 		end
-	
+
 	auto_resized_columns: LINKED_LIST [INTEGER]
 
 feature -- Grid helpers
@@ -643,5 +658,22 @@ feature -- Grid helpers
 		end
 		
 	is_processing_remove_and_clear_all_rows: BOOLEAN
+
+	select_all_rows is
+			-- Select all rows from the grid
+		local
+			r: INTEGER
+		do
+			if row_count > 0 then
+				from
+					r := 1
+				until
+					r > row_count
+				loop
+					select_row (r)
+					r := r + 1
+				end
+			end
+		end
 
 end

@@ -195,6 +195,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			gdk_event: POINTER
 			event_type: INTEGER
 			a_button: POINTER
+			l_parent_x: INTEGER
 		do	
 			a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
 					-- We don't want the button stealing focus.
@@ -223,14 +224,26 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 						if pointer_button_press_actions_internal /= Void then
 							pointer_button_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])	
 						end
+						if parent_imp /= Void and then parent_imp.pointer_button_press_actions_internal /= Void then
+							l_parent_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - parent_imp.screen_x
+							parent_imp.pointer_button_press_actions_internal.call ([l_parent_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])	
+						end
 					elseif
 						event_type = {EV_GTK_ENUMS}.gdk_button_release_enum
 					then
+						if parent_imp /= Void and then parent_imp.pointer_button_release_actions_internal /= Void then
+							l_parent_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - parent_imp.screen_x
+							parent_imp.pointer_button_release_actions_internal.call ([l_parent_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
+						end
 					elseif
 						event_type = {EV_GTK_ENUMS}.gdk_2button_press_enum
 					then
 						if pointer_double_press_actions_internal /= Void then
 							pointer_double_press_actions_internal.call ([{EV_GTK_EXTERNALS}.gdk_event_button_struct_x (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])	
+						end
+						if parent_imp /= Void and then parent_imp.pointer_double_press_actions_internal /= Void then
+							l_parent_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - parent_imp.screen_x
+							parent_imp.pointer_double_press_actions_internal.call ([l_parent_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 						end
 					else
 								-- Handle any potential resize.

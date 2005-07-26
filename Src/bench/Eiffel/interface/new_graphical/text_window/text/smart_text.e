@@ -381,6 +381,7 @@ feature -- Completion-clickable initialization / update
 			l_image: STRING
 			l_do_not_complete: BOOLEAN
 			l_comment: EDITOR_TOKEN_COMMENT
+			l_number: EDITOR_TOKEN_NUMBER
 		do
 			history.record_move
 			auto_complete_possible := False
@@ -408,10 +409,22 @@ feature -- Completion-clickable initialization / update
 								-- Happens when completing -- A Comment `.|
 							l_do_not_complete := True	
 						elseif l_token.is_text then
-							l_image := l_token.image
-							if l_image.count > 1 then
-									-- Will prevent completion of '|.' or '..'
-								l_do_not_complete := is_completable_separator (l_token.image.item (l_token.image.count).out)
+								-- Will prevent completion of '22|'
+							l_number ?= l_token
+							l_do_not_complete := l_number /= Void
+							
+							if not l_do_not_complete then
+								l_image := l_token.image
+								if l_image.count > 1 then
+										-- Will prevent completion of '|.' or '..'
+									l_do_not_complete := is_completable_separator (l_image.item (l_image.count).out)
+								elseif not l_image.is_empty and is_completable_separator (l_image) then
+									if l_token.previous /= Void then
+											-- Will prevent completion of '10.|'
+										l_number ?= l_token.previous
+										l_do_not_complete := l_number /= Void
+									end
+								end
 							end
 						end
 					end

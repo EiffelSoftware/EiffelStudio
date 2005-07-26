@@ -44,6 +44,7 @@ feature -- Access
 		local
 			creats: HASH_TABLE [EXPORT_I, STRING]
 			f: E_FEATURE
+			default_create_feature: FEATURE_I
 		do
 			Precursor {E_CLASS_FORMAT_CMD}
 			if not current_class.is_deferred then
@@ -68,7 +69,13 @@ feature -- Access
 						creats.forth
 					end
 				else
-					structured_text.add_feature_name ("default_create", current_class)
+					default_create_feature := current_class.default_create_feature
+					if default_create_feature /= Void then
+						f := default_create_feature.api_feature (current_class.class_id)
+						display_feature (f, structured_text)
+					else
+						structured_text.add_feature_name ("default_create", current_class)
+					end
 					structured_text.add_new_line
 					structured_text.add_indent
 				end

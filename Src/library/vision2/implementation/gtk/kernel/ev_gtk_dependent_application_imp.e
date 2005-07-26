@@ -142,6 +142,11 @@ feature -- Implementation
 			end
 			font_names.go_to (a_cursor)
 			
+			if default_font_name_internal = Void then
+					-- A default is needed should no enumerable fonts be found on the system.
+				default_font_name_internal := once "Sans"
+			end
+			
 			split_values := font_desc.split (' ')
 			split_values.compare_objects
 			default_font_point_height_internal := split_values.last.to_integer

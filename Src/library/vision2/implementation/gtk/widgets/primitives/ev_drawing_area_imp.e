@@ -39,7 +39,8 @@ inherit
 			set_tooltip,
 			tooltip,
 			on_pointer_enter_leave,
-			on_key_event
+			on_key_event,
+			set_focus
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -340,6 +341,22 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		do
 			update_tooltip (False)
 		end
+
+	set_focus is
+			-- Grab keyboard focus.
+		local
+			l_can_focus: BOOLEAN
+		do
+			l_can_focus := has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			if not l_can_focus then
+				{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			end
+			Precursor {EV_PRIMITIVE_IMP}
+				-- Reset focus handling.
+			if not l_can_focus then
+				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+			end
+		end
 		
 feature {NONE} -- Implementation
 
@@ -359,22 +376,16 @@ feature {NONE} -- Implementation
 			update_tooltip (False)
 			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
 		end
-
+		
 	button_press_switch (a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Call pointer_button_press_actions or pointer_double_press_actions
 			-- depending on event type in first position of `event_data'.
 		do
 				-- Make sure the tooltip is hidden if any button events occur.
 			update_tooltip (False)
-			if not is_tabable_to then
-				{EV_GTK_EXTERNALS}.gtk_widget_set_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
-			end
 			if a_type = {EV_GTK_ENUMS}.gdk_button_press_enum and then not has_struct_flag (visual_widget, {EV_GTK_EXTERNALS}.gtk_has_focus_enum) and then (a_button = 1 and then a_button <= 3) then
 					-- As a button has been pressed on the drawing area then 
 				set_focus
-			end
-			if not is_tabable_to then
-				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (visual_widget, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)		
 		end

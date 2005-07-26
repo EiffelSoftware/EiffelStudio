@@ -22,9 +22,6 @@ inherit
 			default_create,
 			copy,
 			is_equal
-		redefine
-			on_text_loaded,
-			on_text_block_loaded
 		end		
 		
 	SHARED_EDITOR_DATA
@@ -108,21 +105,7 @@ feature -- Status setting
 feature -- Graphical Interface
 
 	text_panel: TEXT_PANEL
-			-- The text panel/editor to which Current is anchored	
-
-feature {NONE} -- Text Loading
-
-	on_text_loaded is
-			-- Finish the margin setup as the entire text has been loaded in the editor.
-		do
-			refresh_now
-		end
-
-	on_text_block_loaded (was_first_block: BOOLEAN) is
-			-- Update scroll bar as a new block of text as been loaded.
-		do			
-			refresh_now					
-		end
+			-- The text panel/editor to which Current is anchored
 
 feature -- Basic operations
 

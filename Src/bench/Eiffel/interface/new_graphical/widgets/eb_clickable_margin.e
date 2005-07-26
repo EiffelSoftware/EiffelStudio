@@ -159,7 +159,9 @@ feature {NONE} -- Events
 					text_panel.on_mouse_button_down (abs_x_pos, y_pos, 1, 0, 0, 0, a_screen_x, a_screen_y)
 				end
 			elseif button = 3 then
-				text_panel.on_click_in_text (abs_x_pos - width, y_pos, 3, a_screen_x, a_screen_y)
+				if not text_panel.text_displayed.is_empty then
+					text_panel.on_click_in_text (abs_x_pos - width, y_pos, 3, a_screen_x, a_screen_y)
+				end
 			end
 		end
 

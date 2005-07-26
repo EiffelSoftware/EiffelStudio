@@ -889,7 +889,6 @@ feature {EB_EDITOR_TOOL} -- Implementation
 				syntax_error_dialog.destroy
 			end
 			syntax_error_dialog := Void
-			refresh
 		end
 
 feature -- Access

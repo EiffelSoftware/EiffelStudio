@@ -140,6 +140,8 @@ feature {NONE} -- Handle mouse clicks
 	on_click_in_text (x_pos, y_pos, button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
 			-- Process click on the text. `x_pos' and `y_pos' are coordinates relative to the upper left
 			-- left corner of the drawing area.
+		require
+			not_text_displayed_is_empty: not text_displayed.is_empty
 		local
 			l_number: INTEGER
 			old_l_number: INTEGER

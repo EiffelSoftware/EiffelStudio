@@ -154,6 +154,7 @@ i.e. has empty compound for a primary condition which is a constant <code><keywo
 			<item>Fixed several bugs related to handling of nested exceptions in classic mode.</item>
 			<item>Changed a limit of maximum class name length in melted byte code from 256 bytes to 32767 bytes.</item>
 			<item>Changed C code generation for long strings (that result from long manifest strings, identifiers, etc.) to avoid restrictions imposed by some C compilers on long string literals (in particular, by the Microsoft C compiler <code>cl</code> that issued error C2026).</item>
+			<item>Fixed a bug in finalized C code generation when calling <keyword>Precursor</keyword> in a routine which is recursively calling itself before the call to <keyword>Precursor</keyword>. Instead of generating the call to <keyword>Precursor</keyword> we would generate a recursive call to the routine.</item>
 		</list>
 		<heading>
 			<size>3</size>.NET issues

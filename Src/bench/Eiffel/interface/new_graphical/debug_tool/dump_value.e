@@ -658,9 +658,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 								--| Now we have the real count, we'll get the l_slice_max items
 								--| and not all the capacity
 							if max < 0 then
-								l_slice_max := l_count
+								l_slice_max := l_count - 1
 							else
-								l_slice_max := max.min (l_count)
+								l_slice_max := max.min (l_count - 1)
 							end
 							area_attribute.reset_items
 							area_attribute.get_items (min, l_slice_max)

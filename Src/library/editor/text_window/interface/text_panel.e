@@ -731,7 +731,7 @@ feature -- Status Setting
 				offset_within_bounds: horizontal_scrollbar.value_range.has (an_offset)
 			end
 			if horizontal_scrollbar.is_show_requested then
-				horizontal_scrollbar.set_value (offset)
+				horizontal_scrollbar.set_value (offset.min (horizontal_scrollbar.value_range.upper))
 			end
 		end
 

@@ -161,11 +161,8 @@ feature {EIFFEL_CALL_STACK_DOTNET} -- Query
 			l_active_thread: ICOR_DEBUG_THREAD
 			l_enum_chain: ICOR_DEBUG_CHAIN_ENUM
 			l_enum_frames: ICOR_DEBUG_FRAME_ENUM
-			l_chains: ARRAY [ICOR_DEBUG_CHAIN]
-			l_frames: ARRAY [ICOR_DEBUG_FRAME]
 			l_chain: ICOR_DEBUG_CHAIN
 			l_frame: ICOR_DEBUG_FRAME
-			l_frame_il: ICOR_DEBUG_IL_FRAME
 		do
 			l_active_thread := Application.imp_dotnet.Eifnet_debugger.icor_debug_thread
 			if l_active_thread /= Void then

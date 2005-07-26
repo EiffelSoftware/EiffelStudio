@@ -910,7 +910,12 @@ feature -- Implementation
 					create l_depend_unit.make_with_level (l_last_id, l_feature,
 						{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
 				else
-					create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+					if is_precursor then
+						create l_depend_unit.make_with_level (a_precursor_type.associated_class.class_id, l_feature,
+							depend_unit_level)
+					else
+						create l_depend_unit.make_with_level (l_last_id, l_feature, depend_unit_level)
+					end
 				end
 				context.supplier_ids.extend (l_depend_unit)
 

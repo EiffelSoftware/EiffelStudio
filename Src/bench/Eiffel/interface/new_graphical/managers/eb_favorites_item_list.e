@@ -299,10 +299,14 @@ feature -- Element change
 				l_fav_class ?= favorite_by_name (a_stone.class_name)
 			end
 			if l_fav_class = Void then
-				create l_fav_class.make (a_stone.class_name, Current)
 				if l_fav_current /= Void and then l_fav_current.is_class then
-					l_fav_current.parent.extend (l_fav_class)
+					l_fav_class ?= l_fav_current.parent.favorite_by_name (a_stone.class_name)
+					if l_fav_class = Void then
+						create l_fav_class.make (a_stone.class_name, Current)						
+						l_fav_current.parent.extend (l_fav_class)
+					end
 				else
+					create l_fav_class.make (a_stone.class_name, Current)
 					extend (l_fav_class)
 				end
 			end

@@ -120,6 +120,7 @@
 	<PREF NAME="interface.development_window.show_text_in_general_toolbar" DESCRIPTION="Should selective text of toolbar items in general toolbar?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.general_toolbar_layout" HIDDEN="true" DESCRIPTION="Items shown in general toolbar."><LIST>New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden</LIST></PREF>
 	<PREF NAME="interface.development_window.unified_stone" DESCRIPTION="Link the context tool with other components by default?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="interface.development_window.use_animated_icons" DESCRIPTION="Use animated icons in the status bar?"><BOOLEAN>True</BOOLEAN></PREF>	
 
 	<PREF NAME="interface.development_window.window_left_panel_width" HIDDEN="true" DESCRIPTION="Width of navigation panel"><INTEGER>100</INTEGER></PREF>	
 	<PREF NAME="interface.development_window.width" DESCRIPTION="Width of development window." HIDDEN="true"><INTEGER>950</INTEGER></PREF>

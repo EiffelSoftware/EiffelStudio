@@ -671,10 +671,16 @@ feature -- Basic Operations
 								end
 							end
 						else
-							if token.is_blank then
-								-- Previous token is a partially completed term.
-								-- Happens when completing 'a.b.c| '
-								insertion.put (prev_token.image)
+							if token.is_blank and not prev_token.is_blank then
+									-- Previous token is a partially completed term.
+									-- Happens when completing 'a.b.c| '
+								if not prev_token.image.is_empty then
+									l_char := prev_token.image.item (prev_token.image.count)
+									if l_char.is_alpha or l_char.is_digit or l_char = '_' then
+											-- Previous token is an Eiffel identifier
+										insertion.put (prev_token.image)		
+									end
+								end
 --							elseif prev_token.is_blank then
 --									-- There is blank or a token separator before cursor
 --									-- Happens when completing ' |a.b.c'
@@ -699,14 +705,17 @@ feature -- Basic Operations
 --										insertion_remainder := token.image.count		
 --									end
 --								end
-								
 							end	
 						end
 					elseif cursor.pos_in_token > 1 then
 							-- Cursor is current in a token at `cursor.pos_in_token'
-							-- Happens when completing 'a.bb|bbbb.c'
-						insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
-						insertion_remainder := token.length - (cursor.pos_in_token - 1)
+						if not token.is_blank then
+								-- Happens when completing 'a.bb|bbbb.c'						
+							insertion.put (token.image.substring (1, cursor.pos_in_token - 1))
+							insertion_remainder := token.length - (cursor.pos_in_token - 1)							
+						else
+							-- Happens when completing 'if | then'
+						end
 					else
 						check
 							not_reachable: False

@@ -188,6 +188,7 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Row attachement
 			attributes_row := Void
 			onces_row := Void
 
+			object_stone_properties_computed := False
 			compute_grid_display_done := False
 			compute_grid_display
 		ensure
@@ -303,6 +304,11 @@ feature -- Pick and Drop
 			ostn: STRING
 		do
 			object_stone_properties_computed := True
+			
+			internal_object_stone := Void
+			internal_object_stone_accept_cursor := Void
+			internal_object_stone_deny_cursor := Void
+			
 			if object_address /= Void then
 					--| For now we don't support this for external type
 				ostn := object_name
@@ -405,6 +411,7 @@ feature -- Graphical changes
 	reset_compute_grid_display_done is
 			-- Reset value of `compute_grid_display_done'
 		do
+			object_stone_properties_computed := False
 			compute_grid_display_done := False
 		end
 		

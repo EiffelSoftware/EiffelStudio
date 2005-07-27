@@ -186,19 +186,20 @@ feature -- Text Selection
 		local
 			select_line: INTEGER
 			fld: INTEGER
-			end_pos, start_pos: INTEGER
+			end_pos, start_pos, nol: INTEGER
 		do
 				-- Compute the first line to be displayed 
  			select_line := text_displayed.selection_start.y_in_lines
+ 			nol := number_of_lines_displayed
 			if not always_scroll then
-				if select_line < first_line_displayed or else select_line >= first_line_displayed + number_of_lines_displayed then
+				if select_line < first_line_displayed or else select_line >= first_line_displayed + nol then
 						-- beginning of selection not displayed
-					fld := select_line - number_of_lines_displayed + (number_of_lines_displayed // 2).min (2)
-					set_first_line_displayed (fld.max (1). min (maximum_top_line_index), True)		
+					fld := (select_line - (nol // 2)).max (1)
+					set_first_line_displayed (fld.min (maximum_top_line_index), True)		
 				end
 			else
-				fld := select_line - number_of_lines_displayed + (number_of_lines_displayed // 2).min (2)
-				set_first_line_displayed (fld.max (1). min (maximum_top_line_index), True)
+				fld := (select_line - (nol // 2)).max (1)				
+				set_first_line_displayed (fld.min (maximum_top_line_index), True)
 			end
 			start_pos := x_position_of_cursor (text_displayed.selection_start)
 			if text_displayed.selection_start.y_in_lines = text_displayed.selection_end.y_in_lines then

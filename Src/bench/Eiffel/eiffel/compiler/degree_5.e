@@ -82,7 +82,7 @@ feature -- Processing
 			classes: ARRAY [CLASS_C]
 			a_class: CLASS_C
 			l_old_info: CLASS_INFO
-			l_removed_classes: HASH_TABLE [BOOLEAN, CLASS_C]
+			l_removed_classes: SEARCH_TABLE [CLASS_C]
 		do
 			from
 				classes := system.classes

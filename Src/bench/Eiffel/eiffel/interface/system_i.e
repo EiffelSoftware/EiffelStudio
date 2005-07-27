@@ -241,10 +241,8 @@ feature -- Properties
 			-- New classes in the system
 			-- Used during the time check
 
-	removed_classes: HASH_TABLE [BOOLEAN, CLASS_C]
-			-- List of removed classes from system. If entry is True, it means that
-			-- the class is physically not present anymore, otherwise it is simply
-			-- not in the universe anymore.
+	removed_classes: SEARCH_TABLE [CLASS_C]
+			-- List of removed classes from system.
 			-- Filled during degree 6, processed after degree 5
 
 	missing_classes: HASH_TABLE [SEARCH_TABLE [CLASS_C], STRING]
@@ -605,7 +603,7 @@ end
 			if removed_classes = Void then
 				create removed_classes.make (10)
 			end
-			removed_classes.put (True, a_class)
+			removed_classes.put (a_class)
 		end
 		
 	record_potential_vtct_error (a_class: CLASS_C; a_name: STRING) is
@@ -815,18 +813,7 @@ end
 			internal_special_make_id := - 1
 
 				-- Wipe out faked removed classes.
-			if removed_classes /= Void then
-				from
-					removed_classes.start
-				until
-					removed_classes.after
-				loop
-					if not removed_classes.item_for_iteration then
-						removed_classes.remove (removed_classes.key_for_iteration)
-					end
-					removed_classes.forth
-				end
-			end
+			removed_classes := Void
 		end
 
 feature -- ANY.default_rescue routine id
@@ -1095,7 +1082,8 @@ end
 					not Compilation_modes.is_precompiling and
 					not Lace.compile_all_classes
 				then
-					root_class_c.check_root_class_creators
+						-- `root_class_c' cannot be used here as `root_class.compiled_class' might be changed
+					root_class.compiled_class.check_root_class_creators
 				end
 
 					-- Byte code production and type checking
@@ -1423,7 +1411,7 @@ io.error.put_string (a_class.name)
 io.error.put_new_line
 end
 						-- Recursively remove `a_class' from system.
-					removed_classes.put (False, a_class)
+					removed_classes.put (a_class)
 				end
 				i := i + 1
 			end

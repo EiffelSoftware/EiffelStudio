@@ -69,6 +69,8 @@ feature -- Recycling
 			if expression /= Void then
 				expression.recycle
 			end
+			evaluation_requested := False
+			refresh_requested := False
 		end		
 
 feature -- Refresh management

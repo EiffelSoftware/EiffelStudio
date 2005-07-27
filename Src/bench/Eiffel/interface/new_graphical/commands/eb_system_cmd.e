@@ -53,52 +53,28 @@ feature -- Basic operations
 			-- Open the Project configuration window.
 		local
 			tool_window: EB_SYSTEM_WINDOW
-			mem: MEMORY
 			rescued: BOOLEAN
 			wd: EV_WARNING_DIALOG
-			mem_info: MEM_INFO
 		do
 			if not rescued then
-				if
-					ev_application /= Void and then ev_application.ctrl_pressed
-				then
-						-- Small addition to force a GC cycle when `we' want
-						-- to see if objects are indeed collected when we
-						-- think they should.
-					create mem
-					mem.full_collect
-					mem.full_coalesce
-					mem.full_collect
-					
-					debug ("MEMORY")
-						mem_info := mem.memory_statistics ({MEM_CONST}.Eiffel_memory)
-						print ("Eiffel total memory: " + mem_info.total.out + "%N")
-						print ("Eiffel used memory: " + mem_info.used.out + "%N")
-						print ("Eiffel overhead memory: " + mem_info.overhead.out + "%N")
-						print ("Eiffel free memory: " + mem_info.free.out + "%N")
-
-						mem_info := mem.memory_statistics ({MEM_CONST}.C_memory)
-						print ("C total memory: " + mem_info.total.out + "%N")
-						print ("C used memory: " + mem_info.used.out + "%N")
-						print ("C overhead memory: " + mem_info.overhead.out + "%N")
-						print ("C free memory: " + mem_info.free.out + "%N")
-					end
-				end
-
-				if
-					(not Workbench.is_compiling or else
-					Workbench.last_reached_degree <= 5)
-				then
-					if not system_window_is_valid then
-						create tool_window.make
-						set_system_window (tool_window)
-					end
-					system_window.initialize_content
-					system_window.raise
+				if ev_application.ctrl_pressed then
+					gc_window.show
 				else
-					create wd.make_with_text (Warning_messages.w_Degree_needed (6))
-					wd.show_modal_to_window (window_manager.
-						last_focused_development_window.window)
+					if
+						(not Workbench.is_compiling or else
+						Workbench.last_reached_degree <= 5)
+					then
+						if not system_window_is_valid then
+							create tool_window.make
+							set_system_window (tool_window)
+						end
+						system_window.initialize_content
+						system_window.raise
+					else
+						create wd.make_with_text (Warning_messages.w_Degree_needed (6))
+						wd.show_modal_to_window (window_manager.
+							last_focused_development_window.window)
+					end
 				end
 			end
 		rescue
@@ -110,6 +86,13 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	gc_window: EB_GC_STATISTIC_WINDOW is
+		once
+			create Result.make
+		ensure
+			gc_window_not_void: Result /= Void
+		end
 
 	name: STRING is "System_tool"
 			-- Name of command. Used to store command in preferences

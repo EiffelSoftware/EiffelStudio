@@ -115,6 +115,10 @@ feature -- Byte code generation
 
 			create l_type_creator.make (context.real_type (type_data))
 			l_type_creator.make_byte_code (ba)
+
+				-- Runtime is in charge to make sure that newly created object
+				-- has been duplicated so that we can check the invariant.
+			ba.append (bc_create_inv)			
 		end
 
 feature -- Code analyzis

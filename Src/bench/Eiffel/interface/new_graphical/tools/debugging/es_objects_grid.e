@@ -349,7 +349,7 @@ feature {NONE} -- Actions implementation
 			hi: EV_HEADER_ITEM
 			col: EV_GRID_COLUMN
 			c: INTEGER
-			l_x, l_y: INTEGER
+			l_x: INTEGER
 		do
 			if abutton = 3 then
 				fixme ("[

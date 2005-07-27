@@ -68,6 +68,7 @@ feature {NONE} -- Initialization
 					set_pixmap (pixmap_from_e_feature (conv_feat.associated_e_feature))				
 				end
 				drop_actions.extend (agent drop_feature_stone_after)
+				drop_actions.extend (agent drop_folder_after)
 			end
 			set_accept_cursor (an_item.mouse_cursor)
 			set_deny_cursor (an_item.Xmouse_cursor)
@@ -104,8 +105,17 @@ feature -- Status setting
 
 	drop_folder_after (a_folder: EB_FAVORITES_FOLDER) is
 			-- Put `an_item' to the right of `data' in `data's parent
+		local
+			l_fav: EB_FAVORITES_ITEM
 		do
-			data.parent.add_item_after (a_folder, data)
+			if data.is_feature then
+				l_fav ?= data.parent
+			else
+				l_fav := data
+			end
+			if l_fav /= Void then
+				l_fav.parent.add_item_after (a_folder, l_fav)
+			end
 		end
 
 	drop_class_stone_after (a_stone: CLASSI_STONE) is

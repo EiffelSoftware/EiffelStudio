@@ -860,10 +860,11 @@ RT_LNK int fcount;
  * RTCDD:		Declare `dtype' for later computation of Dtype of Current.
  */
 
-#define Dtype(x) 		(eif_cid_map[(HEADER(x)->ov_flags & EO_TYPE)])
-#define Dftype(x) 		(HEADER(x)->ov_flags & EO_TYPE)
-#define Deif_bid(x)		(eif_cid_map[(x) & EO_TYPE])
-#define Mapped_flags(x) (((x) & EO_UPPER) | ((uint32) eif_cid_map [(x) & EO_TYPE]))
+#define Dftype_flags(x)	((int16) ((x) & EO_TYPE))
+#define Dftype(x) 		Dftype_flags(HEADER(x)->ov_flags)
+#define Dtype(x) 		(eif_cid_map[Dftype(x)])
+#define Deif_bid(x)		(eif_cid_map[Dftype_flags(x)])
+#define Mapped_flags(x) (((x) & EO_UPPER) | ((uint32) Deif_bid(x)))
 #define RTCDT			int EIF_VOLATILE dtype = Dtype(Current)
 #define RTCDD			int EIF_VOLATILE dtype
 #define RTCFDT			int EIF_VOLATILE dftype = Dftype(Current)

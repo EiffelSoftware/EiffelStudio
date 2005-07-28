@@ -49,7 +49,12 @@ feature -- Access
 	tooltip: STRING is
 			-- Tooltip for Current
 		do
-			Result := description
+			if is_selected then
+				Result := "Hide "
+			else
+				Result := "Show "
+			end
+			Result.append_string (explorer_bar_item.title)
 		end
 
 	tooltext: STRING is
@@ -119,6 +124,7 @@ feature -- Basic operations
 				Result.enable_select
 			end
 			Result.select_actions.extend (agent execute)
+			Result.select_actions.extend (agent update_tooltip (Result))
 		end
 
 	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is
@@ -185,6 +191,12 @@ feature {NONE} -- Implementation
 				end
 				safety_flag := False
 			end
+		end
+
+	update_tooltip (toggle: EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON) is
+			-- Update tooltip of `toggle'.
+		do
+			toggle.set_tooltip (tooltip)
 		end
 
 feature {NONE} -- Implementation

@@ -34,7 +34,7 @@ feature -- Basic operations
 			retried: BOOLEAN
 		do
 			if retried then
-				create wd.make_with_text (Warning_messages.W_class_not_modifiable)
+				create wd.make_with_text (Warning_messages.w_could_not_modify_class)
 				wd.show_modal_to_window (target.window)	
 			else
 				if

@@ -13,6 +13,15 @@ namespace EiffelSoftware.Runtime.Types {
 public abstract class RT_TYPE {
 
 /*
+feature -- Conformance
+*/
+	public virtual bool conform_to (RT_TYPE other)
+		// Does `Current' conform to `other'?
+	{
+		return false;
+	}
+
+/*
 feature -- Status Report
 */
 	public virtual bool is_basic ()

@@ -166,7 +166,36 @@ feature -- Access
 	is_checking_modifications: BOOLEAN
 			-- Are document modifications being checked?
 
+	cursors: EDITOR_CURSORS
+			-- Editor cursors
+		
+	icons: EDITOR_ICONS
+			-- Editor icons
+		
+	syntax_files_path: DIRECTORY_NAME
+			-- Path containing syntax definition files for highlighting
+			
 feature -- Status Setting
+
+	set_cursors (a_cursors: like cursors) is
+			-- Sets `cursors' with `a_cursors'
+		require
+			a_cursors_not_void: a_cursors /= Void
+		do
+			cursors := a_cursors
+		ensure	
+			cursors_set: cursors = a_cursors
+		end
+
+	set_icons (a_icons: like icons) is
+			-- Sets `icons' with `a_icons'
+		require
+			a_icons_not_void: a_icons /= Void
+		do
+			icons := a_icons
+		ensure	
+			icons_set: icons = a_icons
+		end
 
 	set_text (a_text: TEXT; a_filename: STRING) is
 			-- Set `text_displayed' to `text'.  If text is associated to a file store then
@@ -1168,6 +1197,7 @@ feature {NONE} -- Display functions
 			redraw_token: BOOLEAN
 			token_start_pos,
 			token_end_position: INTEGER
+			eol_token: EDITOR_TOKEN_EOL
 		do
 			from
 				if offset < left_margin_width then
@@ -1193,6 +1223,10 @@ feature {NONE} -- Display functions
 				end
 				a_line.forth
 				curr_token := a_line.item
+			end
+			if curr_token = a_line.eol_token and then view_invisible_symbols then
+				eol_token ?= curr_token
+				eol_token.display_with_offset (curr_token.position + left_margin_width, y, da, Current)
 			end
 		end
  

@@ -107,15 +107,18 @@ feature -- Status report
 							// It does conform, so now we have to go through
 							// the parents to make sure it has the same generic
 							// derivation.
+							// FIXME: we should use feature `conform_to' from RT_TYPE here.
 					}
 				} else {
 						// Both types are generic. We first check if they
 						// simply conforms.
+					#if ASSERTIONS
+						ASSERTIONS.CHECK ("l_current_type_not_void", l_current_type != null);
+						ASSERTIONS.CHECK ("l_other_type_not_void", l_other_type != null);
+					#endif
 					Result = ISE_RUNTIME.interface_type (other_info.GetType()).IsAssignableFrom (Current.GetType ());
 					if (Result) {
-							// It does conform, so now we have to go through
-							// the parents to make sure it has the same generic
-							// derivation.
+						Result = l_current_type.conform_to (l_other_type);
 					}
 				}
 			}
@@ -127,7 +130,6 @@ feature -- Status report
 		// Is type of current object identical to type of `other'?
 	{
 		bool Result = false;
-		int i, nb;
 		RT_GENERIC_TYPE l_current_type, l_other_type;
 		EIFFEL_TYPE_INFO l_current;
 
@@ -137,7 +139,7 @@ feature -- Status report
 		if (Current == null) {
 			generate_call_on_void_target_exception ();
 		} else {
-			Result = Current.GetType () == other.GetType ();
+			Result = Current.GetType ().Equals (other.GetType ());
 			if (Result) {
 				l_current = Current as EIFFEL_TYPE_INFO;
 				if (l_current != null) {
@@ -152,13 +154,11 @@ feature -- Status report
 							ASSERTIONS.CHECK ("has_derivation", l_other_type != null);
 							ASSERTIONS.CHECK ("Same base type", l_current_type.type.Equals (l_other_type.type));
 						#endif
-						Result = (l_current_type.count == l_other_type.count);
-						if (Result) {
-							for (i = 0, nb = l_current_type.count - 1; (i < nb) && Result; i++) {
-								Result = (l_current_type.generics [i]).Equals (l_other_type.generics [i]);
-							}
-						}
+						Result = l_current_type.Equals (l_other_type);
 					}
+				} else {
+						// It is not generic, then they definitely have the same type.
+						// No need to assign Result again, as it is already holding the true value.
 				}
 			}
 		}
@@ -200,7 +200,6 @@ feature -- Comparison
 	{
 		bool Result = false;
 		FieldInfo [] l_attributes;
-		Type l_other_type;
 		object l_attr;
 
 		#if ASSERTIONS
@@ -212,9 +211,8 @@ feature -- Comparison
 		} else{
 			Result = (Current == other);
 			if (!Result) {
-				l_other_type = other.GetType();
-				if (Current.GetType ().Equals (l_other_type)) {
-					l_attributes = l_other_type.GetFields (
+				if (same_type (Current, other)) {
+					l_attributes = other.GetType().GetFields (
 						BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
 					foreach (FieldInfo attribute in l_attributes) {
@@ -597,7 +595,7 @@ feature {NONE} -- Implementation: Deep equality
 		int i;
 		bool Result = true;
 
-		if (target.GetType ().Equals (source.GetType ())) {
+		if (same_type (target, source)) {
 			if (source is Array) {
 				source_array = (Array) source;
 				target_array = (Array) target;

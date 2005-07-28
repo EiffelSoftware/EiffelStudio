@@ -26,6 +26,47 @@ feature -- Access
 		// Does current generic type has formals?
 	
 /*
+feature -- Conformance
+*/
+	public override bool valid_generic (RT_CLASS_TYPE a_type)
+		// Do the generic parameters of `type' conform to those of Current?
+		// Assumes that `a_type' base class conforms to current's base class.
+	{
+		bool Result = false;
+		RT_GENERIC_TYPE l_type;
+		RT_TYPE [] l_generics, l_type_generics;
+		int i, nb;
+
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE("a_type_not_null", a_type != null);
+		#endif
+
+		if (type.Value == a_type.type.Value) {
+				// Types are the same, check that their generic paramters are conformant
+			Result = true;
+			l_type = a_type as RT_GENERIC_TYPE;
+			#if ASSERTIONS
+				ASSERTIONS.CHECK("l_type_not_void", l_type != null);
+				ASSERTIONS.CHECK("same_count", count == l_type.count);
+			#endif
+			l_generics = generics;
+			l_type_generics = l_type.generics;
+			nb = count;
+			for (i = 0; (i < nb) && Result; i++) {
+				Result = (l_type_generics [i]).conform_to (l_generics [i]);
+			}
+		} else {
+				// `type' is a descendant type of Current: so we
+				// have to check the current generic parameters
+				// FIXME: We cannot do that because we do not have a parent table.
+				//        for now we simply return True as we know that we have
+				//        conformance of classes.
+			Result = true;
+		}
+		return Result;
+	}
+
+/*
 feature -- Status Report
 */
 	public override RT_TYPE evaluated_type (RT_GENERIC_TYPE context_type)

@@ -16,6 +16,20 @@ namespace EiffelSoftware.Runtime.Types {
 public class RT_CLASS_TYPE: RT_TYPE {
 
 /*
+feature -- Initialization
+*/
+	public RT_CLASS_TYPE ()
+		// Default creation procedure
+	{
+	}
+
+	public RT_CLASS_TYPE (RuntimeTypeHandle a_type)
+		// Initialize `Current' with type `a_type'.
+	{
+		type = a_type;
+	}
+
+/*
 feature -- Access
 */
 	public RuntimeTypeHandle type;
@@ -25,6 +39,31 @@ feature -- Access
 		// Associated .NET type of `type'.
 	{
 		return Type.GetTypeFromHandle (type);
+	}
+
+/*
+feature -- Conformance
+*/
+	public override bool conform_to (RT_TYPE other)
+		// Does `Current' conform to `other'?
+	{
+		RT_CLASS_TYPE l_other = other as RT_CLASS_TYPE;
+		bool Result = l_other != null;
+		if (Result) {
+			Result = l_other.dotnet_type().IsAssignableFrom (dotnet_type ()) &&
+				l_other.valid_generic (this);
+		}
+		return Result;
+	}
+
+	public virtual bool valid_generic (RT_CLASS_TYPE a_type)
+		// Do the generic parameters of `type' conform to those of Current?
+		// Assumes that `a_type' base class conforms to current's base class.
+	{
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE("a_type_not_null", a_type != null);
+		#endif
+		return true;
 	}
 
 /*

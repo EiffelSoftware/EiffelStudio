@@ -108,14 +108,14 @@ feature {EB_FILE_OPENER} -- Callbacks
 			new_file.open_write
 			if not to_write.is_empty then
 				to_write.prune_all ('%R')
+				if to_write.item (to_write.count) /= '%N' then 
+						-- Add a carriage return like `vi' if there's none at the end 
+					to_write.extend ('%N')
+				end
 				if preferences.misc_data.text_mode_is_windows then
 					to_write.replace_substring_all ("%N", "%R%N")
 				end
 				new_file.put_string (to_write)
-				if to_write.item (to_write.count) /= '%N' then 
-						-- Add a carriage return like `vi' if there's none at the end 
-						new_file.put_new_line				
-				end
 			end
 			new_file.close
 		end
@@ -126,11 +126,16 @@ feature {EB_SAVE_FILE_COMMAND} -- Implementation
 			-- Save a file with the chosen name.
 		local
 			fsd: EV_FILE_SAVE_DIALOG
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			if argument = Void then
 				create fsd
 				fsd.save_actions.extend (agent execute_with_dialog (fsd))
+				create l_env
+				l_dir := l_env.current_working_directory
 				fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				l_env.change_working_directory (l_dir)
 			else
 				execute_with_filename (argument.file_name)
 			end

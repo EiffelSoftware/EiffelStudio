@@ -149,11 +149,16 @@ feature {NONE} -- Implementation
 			sfd: EV_FILE_SAVE_DIALOG
 			text_file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			if not retried then
 				create sfd
 				set_dialog_filters_and_add_all (sfd, <<text_files_filter>>)
+				create l_env
+				l_dir := l_env.current_working_directory
 				sfd.show_modal_to_window (window)
+				l_env.change_working_directory (l_dir)
 				if not sfd.file_name.is_empty then
 					create text_file.make_open_write (sfd.file_name)
 					text_file.put_string (message_text.text)

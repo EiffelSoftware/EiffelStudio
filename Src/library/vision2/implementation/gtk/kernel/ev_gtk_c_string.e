@@ -62,7 +62,7 @@ feature -- Access
 				l_nat8 := l_ptr.read_natural_8 (i)
 				if l_nat8 <= 127 then
 					Result.extend (l_nat8.to_character)
-				elseif (l_nat8 & 0xC0) = 0xC0 then
+				elseif (l_nat8 & 0xE0) = 0xC0 then
 					l_code := (l_nat8 & 0x1F).to_natural_32 |<< 6
 					i := i + 1
 					l_nat8 := l_ptr.read_natural_8 (i)

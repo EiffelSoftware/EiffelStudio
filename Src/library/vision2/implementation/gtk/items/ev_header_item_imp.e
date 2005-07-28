@@ -75,12 +75,12 @@ feature -- Initialization
 		local
 			a_width: INTEGER
 		do
-			a_width := width_internal			
+			a_width := tree_view_column_width
 			if a_width /= width then
+				width := a_width
 				if parent_imp.call_item_resize_start_actions or else parent_imp.item_resize_tuple /= Void then
 					-- Always make sure that the event box is the same size as the header item.
 					{EV_GTK_EXTERNALS}.gtk_widget_set_minimum_size (box, a_width, default_box_height)
-					width := a_width
 					parent_imp.on_resize (interface)
 				end
 			end
@@ -89,7 +89,7 @@ feature -- Initialization
 feature -- Access
 
 	width: INTEGER
-		-- Width of `Current' in pixels.
+			-- Width of `Current' in pixels.
 
 feature -- Status setting
 
@@ -245,7 +245,9 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 							l_parent_x := {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer - parent_imp.screen_x
 							parent_imp.pointer_double_press_actions_internal.call ([l_parent_x, {EV_GTK_EXTERNALS}.gdk_event_button_struct_y (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_button_struct_button (gdk_event), 0.5, 0.5, 0.5, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer, {EV_GTK_EXTERNALS}.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer])
 						end
-					else
+					elseif
+						event_type = {EV_GTK_ENUMS}.gdk_expose_enum
+					 then
 								-- Handle any potential resize.
 						handle_resize
 					end					
@@ -272,11 +274,20 @@ feature {EV_HEADER_IMP} -- Implementation
 					-- We don't want the button stealing focus.
 				{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_button, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
 				real_signal_connect (a_button, once "event", agent (App_implementation.gtk_marshal).gdk_event_dispatcher (internal_id, ? , ?), Void)
+				item_event_id := last_signal_connection_id
 			else
+				if item_event_id /= 0 then
+					a_button := {EV_GTK_EXTERNALS}.gtk_tree_view_column_struct_button (c_object)
+					{EV_GTK_EXTERNALS}.signal_disconnect (a_button, item_event_id)
+					item_event_id := 0
+				end
 				{EV_GTK_EXTERNALS}.object_ref (box)
 				{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, {EV_GTK_EXTERNALS}.gtk_label_new (default_pointer))
 			end
 		end
+
+	item_event_id: INTEGER
+		-- Item event id of `Current'
 
 	parent_imp: EV_HEADER_IMP
 		-- Parent of `Current'
@@ -289,7 +300,7 @@ feature {NONE} -- Implementation
 			Result := (create {EV_LABEL}).minimum_height + 3
 		end
 
-	width_internal: INTEGER is
+	tree_view_column_width: INTEGER is
 			-- `Result' is width of `Current' used
 			-- while parented.
 		do
@@ -323,6 +334,5 @@ feature {NONE} -- Implementation
 		end
 
 	interface: EV_HEADER_ITEM
-
-
+		-- Interface object of `Current'.
 end

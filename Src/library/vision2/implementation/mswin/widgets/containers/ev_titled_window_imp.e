@@ -525,6 +525,43 @@ feature {NONE} -- WEL Implementation
 		-- If `True' then restore_actions must be fired.
 		-- We have to have this flag, as Windows does not provide a message
 		-- which distinguishes between a normal resize or a restore.
+		
+	copy_box_attributes (original_box, new_box: EV_BOX) is
+			-- Copy all widgets from `original_box' to `new_box'
+			-- and set attributes.
+		require
+			original_box_not_void: original_box /= Void
+			new_box_not_void: new_box /= Void
+			new_box_empty: new_box.is_empty
+		local
+			current_widget: EV_WIDGET
+			ub_imp: EV_VERTICAL_BOX_IMP
+		do
+			fixme (once "[We should copy all attributes and action sequences.]")
+			ub_imp ?= new_box.implementation
+			if ub_imp.wel_item /= default_pointer then
+				from
+					original_box.start
+				until
+					original_box.is_empty
+				loop
+					current_widget := original_box.item
+					original_box.remove
+					new_box.extend (current_widget)
+				end
+				new_box.set_padding (original_box.padding)
+				new_box.set_border_width (original_box.border_width)
+				check
+					ub_imp_not_void: ub_imp /= Void
+				end
+				ub_imp.on_parented
+				ub_imp.wel_set_parent (Current)
+				ub_imp.set_top_level_window_imp (Current)
+			end
+		ensure
+			old_and_new_counts_consistent: old original_box.count = new_box.count
+			original_box_empty: original_box.is_empty
+		end
 
 feature {EV_WINDOW_IMP} -- Implementation
 

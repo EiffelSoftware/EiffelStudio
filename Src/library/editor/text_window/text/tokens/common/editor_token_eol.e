@@ -25,12 +25,13 @@ feature -- Initialisation
 		do
 			image := ""
 			length := 1
-			width := 0
 		end
 
 feature -- Display
 
-	width: INTEGER
+	width: INTEGER is
+		do		
+		end
 	
 	display_end_token_normal(d_y: INTEGER; a_device: EV_DRAWABLE; a_width: INTEGER; panel: TEXT_PANEL) is
 			-- Display the end token, at the coordinates (position,`d_y') on the
@@ -53,10 +54,29 @@ feature -- Display
 			-- Do nothing.
 		end
 		
-	display_with_offset (x_offset, d_y: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
+	display_with_offset (x_offset, d_y: INTEGER; a_device: EV_DRAWABLE; panel: TEXT_PANEL) is
 			-- Display the current token on device context `dc' at the coordinates (`position + x_offset',`d_y')
+		local
+			the_text_color: EV_COLOR
+			l_width: INTEGER
+			l_view_invisible: BOOLEAN
 		do
-			-- Do nothing
+			the_text_color := text_color
+			a_device.set_background_color (editor_preferences.normal_background_color)
+			l_view_invisible := panel /= Void and then panel.view_invisible_symbols
+			if l_view_invisible then
+				if is_fixed_width then
+					l_width := font_width
+				else
+					l_width := font.string_width (eol_symbol)
+				end
+			end
+			a_device.clear_rectangle (x_offset, d_y, l_width, d_y + height)
+			if l_view_invisible then
+				a_device.set_foreground_color (the_text_color)
+				a_device.set_font (font)
+				draw_text_top_left (x_offset, d_y, eol_symbol, a_device)
+			end
 		end
 
 feature -- Width & height
@@ -74,7 +94,7 @@ feature -- Width & height
 		do
 			Result := 1
 		end
-
+		
 feature -- Visitor
 
 	process (a_visitor: TOKEN_VISITOR) is

@@ -172,7 +172,7 @@ feature {NONE} -- Implementation
 			-- Request that `Current' be displayed when its parent is.
 		do
 			{EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, window_position_enum)
-			{EV_GTK_EXTERNALS}.gtk_widget_show_now (c_object)
+			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 		end
 
 feature {EV_ANY_I} -- Implementation

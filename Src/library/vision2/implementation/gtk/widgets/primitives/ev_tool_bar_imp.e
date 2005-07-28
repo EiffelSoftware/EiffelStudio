@@ -46,7 +46,6 @@ feature {NONE} -- Implementation
 			child_array.go_i_th (i)
 			imp ?= child_array.i_th (i).implementation
 			item_ptr := imp.c_object
-			 {EV_GTK_EXTERNALS}.object_ref (item_ptr)
 			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_ptr)
 			child_array.remove
 			imp.set_item_parent_imp (Void)

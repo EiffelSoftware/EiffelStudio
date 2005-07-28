@@ -283,6 +283,7 @@ feature {NONE} -- Implementation
 			end
 				-- Set the size of the toggle so that it isn't bigger than the entry size
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (a_toggle, -1, 1)
+			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_toggle, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
 
 			real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_toggled (internal_id), Void)
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)

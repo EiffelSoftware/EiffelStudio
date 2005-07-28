@@ -1025,6 +1025,8 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			-- If `load' then we assume we want to open a file. Otherwise we want to save it.
 		local
 			dd: EV_FILE_DIALOG
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			file_call_back := next_action
 			if load then
@@ -1035,7 +1037,10 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			dd.set_start_directory (Eiffel_project.name)
 			set_dialog_filters_and_add_all (dd, <<definition_files_filter>>)
 			dd.ok_actions.extend (agent file_was_chosen (dd))
+			create l_env
+			l_dir := l_env.current_working_directory
 			dd.show_modal_to_window (window)
+			l_env.change_working_directory (l_dir)
 		end
 
 	file_was_chosen (dd: EV_FILE_DIALOG) is

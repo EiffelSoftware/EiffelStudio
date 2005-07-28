@@ -543,6 +543,8 @@ feature {NONE} -- Implementation
 		local
 			fod: EV_FILE_OPEN_DIALOG
 			existing_path: STRING
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			existing_path := directory_field.text
 			create fod
@@ -552,7 +554,10 @@ feature {NONE} -- Implementation
 			fod.set_title (Interface_names.t_Select_a_file)
 			set_dialog_filters_and_add_all (fod, <<ace_files_filter>>)
 			fod.open_actions.extend (agent retrieve_ace_file (fod))
+			create l_env
+			l_dir := l_env.current_working_directory
 			fod.show_modal_to_window (Current)
+			l_env.change_working_directory (l_dir)
 		end
 
 	check_and_create_directory (a_directory_name: DIRECTORY_NAME) is

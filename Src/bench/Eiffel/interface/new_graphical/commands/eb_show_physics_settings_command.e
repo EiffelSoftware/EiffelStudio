@@ -38,7 +38,7 @@ feature -- Basic operations
 		do
 			if is_sensitive then
 				create dialog.make (tool.force_directed_layout, tool)
-				dialog.show_relative_to_window (tool.development_window.window)
+				dialog.show_modal_to_window (tool.development_window.window)
 			end
 		end
 

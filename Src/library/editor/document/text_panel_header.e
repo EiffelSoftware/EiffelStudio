@@ -137,6 +137,9 @@ feature -- Access
 	previous_selected_index: INTEGER
 			-- Index of previously selected item
 
+	icons: EDITOR_ICONS   
+			-- Editor icons   
+
 feature -- Actions
 
 	selection_actions: ACTION_SEQUENCE [TUPLE]

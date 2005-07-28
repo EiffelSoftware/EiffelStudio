@@ -356,7 +356,6 @@ feature {NONE} -- Implementation
 			key_press_string_actions_internal := other_imp.key_press_string_actions_internal
 			key_release_actions_internal := other_imp.key_release_actions_internal
 			last_pointed_target := other_imp.last_pointed_target
-			lower_bar := other_imp.lower_bar
 			maximum_height := other_imp.maximum_height
 			maximum_width := other_imp.maximum_width
 			other_menu_bar := other_imp.menu_bar
@@ -391,15 +390,20 @@ feature {NONE} -- Implementation
 			rubber_band_is_drawn := other_imp.rubber_band_is_drawn
 			shared := other_imp.shared
 			show_actions_internal := other_imp.show_actions_internal
-			upper_bar := other_imp.upper_bar
 			user_can_resize := other_imp.user_can_resize
 			user_interface_mode := other_imp.user_interface_mode
 			apply_center_dialog := other_imp.apply_center_dialog
 			call_show_actions := other_imp.call_show_actions
 			scroller := other_imp.scroller
 			set_position (other_imp.x_position, other_imp.y_position)
+			
+				-- Now copy contents of bars.
+			create lower_bar
+			copy_box_attributes (other_imp.lower_bar, lower_bar)
+			create upper_bar
+			copy_box_attributes (other_imp.upper_bar, upper_bar)
 		end
-
+		
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Process all message plus `WM_INITDIALOG'.
 		do

@@ -9,9 +9,6 @@ class
 
 inherit
 	EDITOR_TOKEN_MARGIN
-		rename
-			cursors as editor_editor_cursors,
-			icons as editor_icons
 		redefine
 			pebble,
 			update_position,

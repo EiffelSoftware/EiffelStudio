@@ -736,6 +736,8 @@ feature {NONE} -- Implementation
 			fn: FILE_NAME
 			last_path: STRING
 			i: INTEGER
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 				--| Get last path from the preferences.
 			last_path := preferences.debug_tool_data.last_saved_stack_path
@@ -771,7 +773,10 @@ feature {NONE} -- Implementation
 				--| OK, now `fn' represents a file that does not exist.
 			fd.set_file_name (fn)
 			fd.save_actions.extend (agent save_call_stack_to_file (fd))
+			create l_env
+			l_dir := l_env.current_working_directory
 			fd.show_modal_to_window (Debugger_manager.debugging_window.window)
+			l_env.change_working_directory (l_dir)
 		end
 
 	save_call_stack_to_file (fd: EV_FILE_DIALOG) is

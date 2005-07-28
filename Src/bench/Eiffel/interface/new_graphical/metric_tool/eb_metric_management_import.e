@@ -274,11 +274,17 @@ feature -- Importation
 
 	import_action is
 			-- Open dialog to select file for metric importation.
+		local
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			create open_dialog
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			open_dialog.open_actions.extend (agent import_file)
+			create l_env
+			l_dir := l_env.current_working_directory
 			open_dialog.show_modal_to_window (interface.management_dialog)
+			l_env.change_working_directory (l_dir)
 		end
 	
 	import_file is

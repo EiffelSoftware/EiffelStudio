@@ -119,11 +119,16 @@ feature -- Actions
 	load_ace is
 		local
 			file_dialog: EV_FILE_OPEN_DIALOG
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			create file_dialog
 			set_dialog_filters_and_add_all (file_dialog, <<ace_files_filter>>)
 			file_dialog.open_actions.extend (agent retrieve_ace_file (file_dialog))
+			create l_env
+			l_dir := l_env.current_working_directory
 			file_dialog.show_modal_to_window (window)
+			l_env.change_working_directory (l_dir)
 		end
 
 	edit_ace is

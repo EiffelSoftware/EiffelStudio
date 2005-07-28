@@ -48,15 +48,16 @@ feature {EV_ANY_I} -- Access
 				{EV_GTK_EXTERNALS}.gtk_container_add (l_c_object, a_c_object)
 				{EV_GTK_EXTERNALS}.gtk_widget_show (a_c_object)
 			end
-			
-				-- Add reference and removing floating state
+
+				-- Remove floating state.
 			{EV_GTK_EXTERNALS}.object_ref (l_c_object)
-			{EV_GTK_EXTERNALS}.gtk_object_sink (l_c_object)
+			{EV_GTK_EXTERNALS}.gtk_object_sink (l_c_object)		
+
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
 			end
-			 {EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, object_id, $c_object_dispose)
-			 c_object := l_c_object
+			{EV_GTK_CALLBACK_MARSHAL}.set_eif_oid_in_c_object (l_c_object, object_id, $c_object_dispose)
+			c_object := l_c_object
 		ensure
 			c_object_coupled: eif_object_from_c (c_object) = Current
 		end
@@ -196,7 +197,6 @@ feature {NONE} -- Implementation
 					 {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (l_c_object, internal_id)
 					--| This is the signal attached in ev_any_imp.c
 					--| used for GC/Ref-Counting interaction.
-					{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (l_c_object)
 					{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (l_c_object)
 				end
 			end

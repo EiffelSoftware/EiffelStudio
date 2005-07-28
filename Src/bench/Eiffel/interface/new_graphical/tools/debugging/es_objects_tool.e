@@ -946,6 +946,7 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 	remove_selected_debugged_objects is
 		local
 			glines: LIST [ES_OBJECTS_GRID_LINE]
+			line: ES_OBJECTS_GRID_LINE
 		do
 			glines := selected_debugged_object_lines
 			if glines /= Void then
@@ -954,9 +955,16 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 				until
 					glines.after
 				loop
-					check glines.item /= Void end
-					if is_removable_debugged_object_address (glines.item.object_address) then
-						remove_debugged_object_line (glines.item)
+					line := glines.item
+					check 
+						line /= Void
+						line.row /= Void
+					end
+					if 
+						is_removable_debugged_object_row (line.row)
+						and then is_removable_debugged_object_address (line.object_address) 
+					then
+						remove_debugged_object_line (line)
 					end
 					glines.forth
 				end
@@ -987,9 +995,6 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 					rows.after
 				loop
 					row := rows.item
-					if row.parent_row /= Void then
-						row := row.parent_row_root
-					end
 					gline ?= row.data
 					if gline /= Void then
 						Result.extend (gline)
@@ -1000,8 +1005,19 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 		end
 
 	is_removable_debugged_object (ost: OBJECT_STONE): BOOLEAN is
+		local
+			row: EV_GRID_ROW
 		do
-			Result := is_removable_debugged_object_address (ost.object_address)
+			row ?= ost.ev_item
+			if row /= Void then
+				Result := is_removable_debugged_object_row (row)
+			end
+			Result := Result and then is_removable_debugged_object_address (ost.object_address)
+		end
+		
+	is_removable_debugged_object_row (row: EV_GRID_ROW): BOOLEAN is
+		do
+			Result := row.parent_row = Void
 		end
 
 	is_removable_debugged_object_address (addr: STRING): BOOLEAN is

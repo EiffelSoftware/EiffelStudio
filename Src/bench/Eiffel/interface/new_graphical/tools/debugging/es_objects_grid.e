@@ -335,9 +335,11 @@ feature {NONE} -- Actions implementation
 		local
 			ei: ES_OBJECTS_GRID_CELL
 		do
-			ei ?= a_item
-			if ei /= Void then
-				grid_activate (ei)
+			if ab = 1 then
+				ei ?= a_item
+				if ei /= Void then
+					grid_activate (ei)
+				end
 			end
 		end
 		

@@ -133,7 +133,6 @@ feature
 			child_array.go_i_th (a_position)
 			item_imp ?=item.implementation
 			item_imp.set_parent_imp (Void)
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_remove_column (visual_widget, item_imp.c_object)
 			child_array.remove
 		end
@@ -224,10 +223,18 @@ feature {NONE} -- Implementation
 			-- Used for pointer button release events
 		do
 			if call_item_resize_end_actions then
-				item_has_resized
-				item_resize_tuple := Void
+					-- This is needed as the there may be a slight difference between when the button was released
+					-- and when the column width was calculated.
+				app_implementation.do_once_on_idle (agent call_item_resize_actions)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
+
+	call_item_resize_actions is
+			-- Call the item resize end actions.
+		do
+			item_has_resized
+			item_resize_tuple := Void			
 		end
 
 	model_count: INTEGER

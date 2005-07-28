@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 					end
 					class_i := Void
 				else
-					create wd.make_with_text (Warning_messages.w_cannot_delete_none_empty_cluster (class_i.name_in_upper))
+					create wd.make_with_text (Warning_messages.w_cannot_delete_read_only_class (class_i.name_in_upper))
 					wd.show_modal_to_window (window.window)
 					class_i := Void
 				end

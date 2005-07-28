@@ -192,7 +192,6 @@ feature -- Element change
 				check
 					item_has_implementation: w /= Void
 				end
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (w.c_object)
 				{EV_GTK_EXTERNALS}.gtk_container_remove (hbox, w.c_object)
 			end
 			if v /= Void then
@@ -264,7 +263,6 @@ feature -- Element change
 			if menu_bar /= Void then
 				mb_imp ?= menu_bar.implementation
 				mb_imp.remove_parent_window
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (mb_imp.list_widget)
 				{EV_GTK_EXTERNALS}.gtk_container_remove (vbox, mb_imp.list_widget)
 			end
 			menu_bar := Void

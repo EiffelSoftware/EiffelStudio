@@ -52,22 +52,8 @@ feature -- Element change
 
 	replace (v: like item) is
 			-- Replace `item' with `v'.
-		local
-			i: EV_WIDGET
-			imp: EV_WIDGET_IMP
 		do
-			i := item
-			if i /= Void then
-				imp ?= i.implementation
-				on_removed_item (imp)
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (imp.c_object)
-				{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, imp.c_object)
-			end
-			if v /= Void then
-				imp ?= v.implementation
-				{EV_GTK_EXTERNALS}.gtk_container_add (container_widget, imp.c_object)
-				on_new_item (imp)
-			end
+			Precursor {EV_CONTAINER_IMP} (v)
 			item := v
 		end
 

@@ -165,8 +165,6 @@ feature {NONE} -- Implementation
 			check
 				item_imp_not_void: item_imp /= Void
 			end
-
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, item_imp.c_object)
 			child_array.go_i_th (a_position)
 			child_array.remove

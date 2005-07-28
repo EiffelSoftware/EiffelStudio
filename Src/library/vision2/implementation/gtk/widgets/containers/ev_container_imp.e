@@ -72,7 +72,6 @@ feature -- Element change
 			if not interface.is_empty then
 				w ?= interface.item.implementation
 				on_removed_item (w)
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (w.c_object)
 				{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, w.c_object)
 			end
 			if v /= Void then

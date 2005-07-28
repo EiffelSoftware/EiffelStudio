@@ -92,7 +92,6 @@ feature -- Access
 				item_imp ?= an_item.implementation
 				item_imp.set_parent_imp (Void)
 				check item_imp_not_void: item_imp /= Void end
-				{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
 				{EV_GTK_EXTERNALS}.gtk_container_remove ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (item_imp.c_object), item_imp.c_object)
 				if an_item = first then
 					first_expandable := False

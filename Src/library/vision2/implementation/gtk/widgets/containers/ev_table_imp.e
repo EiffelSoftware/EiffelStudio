@@ -139,7 +139,6 @@ feature -- Status settings
 			Precursor {EV_TABLE_I} (v)
 			item_imp ?= v.implementation
 			on_removed_item (item_imp)
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (item_imp.c_object)
 			{EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, item_imp.c_object)
 		end
 		

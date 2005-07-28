@@ -182,13 +182,8 @@ feature -- Miscellaneous
 
 			-- Draw unselected text (first part) ----------------------------------------------------
 
---			if start_selection >= end_selection then
---				l_start := end_selection
---				l_end := start_selection
---			else
-				l_start := start_selection
-				l_end := end_selection
---			end
+			l_start := start_selection
+			l_end := end_selection
 
 			if l_start /= 1 then
 				indx := image.index_of ('%T', 1)
@@ -208,7 +203,6 @@ feature -- Miscellaneous
 				end
 
 					-- Display the beginning of the text.
---! FIXME
 				draw_text_top_left (local_position, d_y, local_string, device)
 				local_position := local_position + text_width
 			end
@@ -246,8 +240,6 @@ feature -- Miscellaneous
 			end
 
 				-- Display the "selected" text.
---! FIXME
-		--	device.draw_text_top_left (local_position, d_y + height // 8, local_string)
 			draw_text_top_left (local_position, d_y, local_string, device)
 
 			local_position := local_position + text_width

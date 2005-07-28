@@ -114,14 +114,14 @@ feature -- Execution
 							tmp_file.open_write
 							if not to_write.is_empty then
 								to_write.prune_all ('%R')
+								if to_write.item (to_write.count) /= '%N' then 
+										-- Add a carriage return like `vi' if there's none at the end 
+									to_write.extend ('%N')
+								end
 								if preferences.misc_data.text_mode_is_windows then
 									to_write.replace_substring_all ("%N", "%R%N")
 								end
 								tmp_file.put_string (to_write)
-								if to_write.item (to_write.count) /= '%N' then 
-										-- Add a carriage return like `vi' if there's none at the end 
-										tmp_file.put_new_line								
-								end
 							end
 							tmp_file.close
 		

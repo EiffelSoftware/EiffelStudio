@@ -102,12 +102,17 @@ feature -- Actions
 			-- Display the save as dialog for key generation file
 		local
 			fd: EV_FILE_SAVE_DIALOG
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			create fd
 			fd.save_actions.extend (agent generate_and_save_key (fd))
 			set_dialog_filters_and_add_all (fd, <<strong_name_key_files_filter>>)
 			fd.set_title ("Save key file as...")
+			create l_env
+			l_dir := l_env.current_working_directory
 			fd.show_modal_to_window (system_window.window)
+			l_env.change_working_directory (l_dir)
 		end
 			
 feature -- Store/Retrieve

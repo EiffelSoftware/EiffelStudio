@@ -841,6 +841,8 @@ feature -- Warning messages
 
 	w_Class_not_modifiable: STRING is "The text of this class cannot be modified."
 
+	w_could_not_modify_class: STRING is "The text of this class could not be modified."
+
 	w_Could_not_save_all: STRING is "Some files could not be saved.%N%
 									%Exit was cancelled."
 

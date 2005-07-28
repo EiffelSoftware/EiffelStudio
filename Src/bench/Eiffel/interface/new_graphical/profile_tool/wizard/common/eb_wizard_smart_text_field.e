@@ -324,6 +324,8 @@ feature {NONE} -- Implementation
 			-- Launch a file Browser.
 		local
 			file_selector: EV_FILE_OPEN_DIALOG
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			create file_selector
 			if starting_directory /= Void and then 
@@ -334,7 +336,10 @@ feature {NONE} -- Implementation
 			end
 			set_dialog_filters_and_add_all (file_selector, <<browse_file_filter>>)
 			file_selector.open_actions.extend(agent file_selected(file_selector))
+			create l_env
+			l_dir := l_env.current_working_directory
 			file_selector.show_modal_to_window (caller.first_window)
+			l_env.change_working_directory (l_dir)
 		end
 
 	browse_directory is

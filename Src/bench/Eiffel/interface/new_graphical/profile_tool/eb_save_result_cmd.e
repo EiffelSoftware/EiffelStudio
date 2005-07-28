@@ -29,10 +29,15 @@ feature {EB_PROFILE_QUERY_WINDOW} -- Command Execution
 			-- Execute Current
 		local
 			fsd: EV_FILE_SAVE_DIALOG
+			l_dir: STRING
+			l_env: EXECUTION_ENVIRONMENT
 		do
 			create fsd
 			fsd.save_actions.extend (agent save_in (fsd))
+			create l_env
+			l_dir := l_env.current_working_directory
 			fsd.show_modal_to_window (query_window)
+			l_env.change_working_directory (l_dir)
 		end
 
 feature -- Access

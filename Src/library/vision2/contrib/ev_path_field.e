@@ -155,6 +155,8 @@ feature {NONE} -- Actions
 		local
 			fd: EV_FILE_OPEN_DIALOG
 			start_directory: STRING
+			l_env: EXECUTION_ENVIRONMENT
+			l_dir: STRING
 		do
 			create fd
 			if filter /= Void then
@@ -170,7 +172,10 @@ feature {NONE} -- Actions
 			then
 				fd.set_start_directory(start_directory)
 			end
+			create l_env
+			l_dir := l_env.current_working_directory
 			fd.show_modal_to_window (parent_window)
+			l_env.change_working_directory (l_dir)
 			if fd.file_name /= Void and then not fd.file_name.is_empty then
 				field.set_text (fd.file_name)
 			end

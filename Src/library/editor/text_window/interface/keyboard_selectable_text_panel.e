@@ -1143,12 +1143,18 @@ feature {NONE} -- Implementation
 					if l_x_offset >= (l_line_width + l_margin_width) and not l_has_data then
 							-- Some (or all) of the line ends in the viewable area.  So we must clear from the end of
 							-- the line to the edge of the viewport in the background color.
+						if view_invisible_symbols then
+							l_start_clear := font.string_width (once "¶")
+						else
+							l_start_clear := 0
+						end	
+							
 						if (l_line_width + l_margin_width) <= l_offset then
 								-- There is no part of the line visible so draw all blank
-							l_start_clear := l_offset
+							l_start_clear := l_start_clear + l_offset
 						else
 								-- Some of the line is visible so only draw blank from the end of the visible area to the edge of the viewable area
-							l_start_clear := l_line_width + l_margin_width
+							l_start_clear := l_start_clear + l_line_width + l_margin_width
 						end
 		
 						if l_line_width < x_offset or (l_start_clear >= x_offset and l_start_clear <= (x_offset + a_width)) then

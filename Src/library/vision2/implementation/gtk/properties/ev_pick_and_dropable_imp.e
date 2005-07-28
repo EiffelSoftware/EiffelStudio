@@ -448,6 +448,7 @@ feature -- Implementation
 			y_origin := 0
 			last_pointed_target := Void
 			if pebble_function /= Void then
+				pebble_function.clear_last_result
 				pebble := Void
 			end
 		end

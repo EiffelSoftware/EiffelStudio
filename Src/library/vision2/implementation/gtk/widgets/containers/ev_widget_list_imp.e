@@ -80,7 +80,6 @@ feature {NONE} -- Implementation
 			child_array.remove
 			on_removed_item (v_imp)
 			a_child := v_imp.c_object
-			{EV_GTK_DEPENDENT_EXTERNALS}.object_ref (a_child)
 			{EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, a_child)
 			index := a_index
 				-- The call to gtk_container_remove might indirectly fire an event which changes the index so we reset just to make sure

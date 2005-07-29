@@ -60,9 +60,6 @@ feature -- Access
 	text: STRING
 			-- Text			
 
-	widget: TEXT_PANEL_HEADER_ITEM
-			-- Widget representing Current in editor, if any
-
 feature -- File
 
 	file: PLAIN_TEXT_FILE
@@ -167,11 +164,7 @@ feature -- Query
 	is_modified: BOOLEAN is
 			-- Has current been modified since last save?
 		do
-			if widget /= Void and widget.data /= Void then
-				Result := not saved_text.is_equal (widget.data.text)
-			else				
-				Result := not saved_text.is_equal (text)	
-			end
+			Result := not saved_text.is_equal (text)
 		end
 		
 	do_update_link: BOOLEAN
@@ -216,17 +209,7 @@ feature -- Status Setting
 			else
 				name := a_new_name
 			end
-		end		
-
-	set_widget (a_widget: like widget) is
-			-- Set `widget'
-		require
-			widget_not_void: a_widget /= Void
-		do
-			widget := a_widget
-		ensure
-			widget_set: widget = a_widget
-		end		
+		end
 
 	set_text (a_text: STRING) is
 			-- Set `text'

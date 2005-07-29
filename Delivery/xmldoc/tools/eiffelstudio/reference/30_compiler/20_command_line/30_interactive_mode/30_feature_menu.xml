@@ -17,5 +17,35 @@
 	(Y) Yank         : yank (save) output of last command to a file.
 </code_block>
 		<paragraph>Each command will prompt you for the name of a class, the name of a feature in that class and a filter name; 
-		you can specify these names (or just the class name) after the command. The Ancestor versions and Descendant versions of a feature are all the versions that appeared in ancestors and descendants. Callers gives you the list of classes which contain calls to the feature; Implementers, the list of classes where the feature is redeclared.</paragraph>
-	</paragraph></document>
+			you can specify these names (or just the class name) after the command.</paragraph>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Command</bold></cell>
+				<cell><alignment>center</alignment><bold>Description</bold></cell>
+			</row>
+			<row>
+				<cell><code>Ancestors</code></cell>
+				<cell>All the versions of a feature that appeared in ancestors.</cell>
+			</row>
+			<row>
+				<cell><vertical_alignment>top</vertical_alignment><code>Callers</code></cell>
+				<cell>
+					The list of classes which contains calls to the feature. Modifiers:
+					<list ordered="false">
+						<item><code>All senders</code> - include all callers rather than only those in the specified class</item>
+						<item><code>Only assigners</code> - restrict callers to those that use given feature only as a target of an assignment instruction</item>
+						<item><code>Only creators</code> - restrict callers to those that use given feature only as a target of a creation instruction</item>
+					</list>
+				</cell>
+			</row>
+			<row>
+				<cell><code>Descendants</code></cell>
+				<cell>All the versionsof a feature that appeared in descendants.</cell>
+			</row>
+			<row>
+				<cell><code>Implementers</code></cell>
+				<cell>The list of classes where the feature is redeclared.</cell>
+			</row>
+		</table>
+	</paragraph>
+</document>

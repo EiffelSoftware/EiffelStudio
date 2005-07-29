@@ -485,8 +485,6 @@ feature -- Status Setting
 
 feature {NONE} -- Implementation
 		
-	header: TEXT_PANEL_HEADER	
-		
 	toggle_sensitivity (sensitive_item: EV_SENSITIVE; on: BOOLEAN)	is
 			-- Toggle `sensitive_item' to `on'
 		require

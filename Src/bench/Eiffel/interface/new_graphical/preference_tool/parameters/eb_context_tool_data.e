@@ -42,7 +42,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := editor_history_size_preference.value
 		end	
 		
-feature {NONE} -- Preference
+feature {EB_SHARED_PREFERENCES} -- Preference
 
 	editor_history_size_preference: INTEGER_PREFERENCE
 	default_class_formatter_index_preference: INTEGER_PREFERENCE

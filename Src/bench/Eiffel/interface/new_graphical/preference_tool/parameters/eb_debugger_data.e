@@ -75,7 +75,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := project_toolbar_layout_preference.value
 		end
 
-feature -- Preference
+feature {EB_SHARED_PREFERENCES} -- Preference
 
 	default_maximum_stack_depth_preference: INTEGER_PREFERENCE
 	critical_stack_depth_preference: INTEGER_PREFERENCE		

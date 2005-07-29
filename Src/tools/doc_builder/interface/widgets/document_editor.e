@@ -31,6 +31,14 @@ inherit
 			copy
 		end
 		
+	EDITOR_CURSORS
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end
+		
+	
 create
 	make
 
@@ -41,9 +49,10 @@ feature -- Initialization
 		do
 			default_create
 			register_document ("xml", xml_class)
---			register_document ("java", java_class)
+			register_document ("java", java_class)
+			set_current_document_class (xml_class)
 			editor_drawing_area.pointer_button_release_actions.force_extend (agent pointer_released)
-			editor_drawing_area.pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))		
+			editor_drawing_area.pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))
 			editor_drawing_area.drop_actions.extend (agent pebble_dropped)
 		end
 		
@@ -51,7 +60,7 @@ feature -- Initialization
 			-- Update observers of text editing
 		do
 			add_edition_observer (shared_web_browser)
-			add_edition_observer (application_window)			
+			add_edition_observer (application_window)
 		end
 		
 	handle_extended_key (ev_key: EV_KEY) is
@@ -101,8 +110,8 @@ feature -- Initialization
 			-- Here initialize editor contextual settings.  For example, set location of cursor
 			-- pixmaps.
 		do
-			set_cursors (create {DOC_BUILDER_CURSORS})
-			set_icons (create {DOC_BUILDER_ICONS})
+--			set_cursors (create {DOC_BUILDER_CURSORS})
+--			set_icons (create {DOC_BUILDER_ICONS})
 		end		
 		
 feature -- Editing		
@@ -283,14 +292,6 @@ feature {NONE} -- Implementation
 			create Result.make ("java", "java", l_file_name.string)
 		end
 
---	eiffel_class: DOCUMENT_CLASS is
---			--
---			-- (export status {NONE})
---		once
---			create Result.make ("eiffel", "e", Void)
---			Result.set_scanner (create {EDITOR_EIFFEL_SCANNER}.make)
---		end
-
 	unescape_content (a_content: STRING): STRING is
 			-- Content unescaped.
 		do
@@ -298,6 +299,31 @@ feature {NONE} -- Implementation
 			Result.replace_substring_all ("&lt;", "<")
 			Result.replace_substring_all ("&gt;", ">")
 		end
+
+feature -- Cursors
+
+	cur_cut_selection: EV_CURSOR is
+			-- Editor cut cursor icon
+		local
+			l_filename: FILE_NAME
+		once		
+			create l_filename.make_from_string (shared_constants.application_constants.cursor_resources_directory)
+			l_filename.extend ("cut_selection.png")
+			create Result
+			Result.set_with_named_file (l_filename.string)			
+		end
+
+	cur_copy_selection: EV_CURSOR is
+			-- Editor copy cursor icon
+		local
+			l_filename: FILE_NAME
+		once		
+			create l_filename.make_from_string (shared_constants.application_constants.cursor_resources_directory)
+			l_filename.extend ("copy_selection.png")
+			create Result
+			Result.set_with_named_file (l_filename.string)
+		end
+		
 
 feature {NONE} -- Events
 	

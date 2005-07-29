@@ -87,6 +87,36 @@
 				<cell>Yes</cell>
 			</row>
 		</table>
+		<heading><size>2</size>Genericity</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>Example</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Mutually recursive constraints</cell>
+				<cell>
+					<code><class_name>A</class_name> <symbol>[</symbol><generics>H</generics><symbol>,</symbol> <generics>G</generics> <symbol>-></symbol> <generics>H</generics><symbol>]</symbol></code><line_break/>
+					<code><class_name>B</class_name> <symbol>[</symbol><generics>H</generics> <symbol>-></symbol> <class_name>C</class_name><symbol>,</symbol> <generics>G</generics> <symbol>-></symbol> <class_name>ARRAY</class_name> <symbol>[</symbol><generics>H</generics><symbol>]</symbol><symbol>]</symbol></code>
+				</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>Expandedness restriction on formal generic</cell>
+				<cell>
+					<code><class_name>A</class_name> <symbol>[</symbol><keyword>reference</keyword> <generics>G</generics><symbol>]</symbol></code><line_break/>
+					<code><class_name>B</class_name> <symbol>[</symbol><keyword>expanded</keyword> <generics>H</generics><symbol>]</symbol></code>
+				</cell>
+				<cell>No</cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+			</row>
+		</table>
 		<heading><size>2</size>Creating objects</heading>
 		<table>
 			<row>
@@ -126,7 +156,7 @@
 					<code><keyword>create</keyword> <local_variable>a</local_variable></code><line_break/>
 					<code><keyword>create</keyword> <local_variable>a</local_variable><symbol>.</symbol><feature_name>make</feature_name></code><line_break/>
 					<code><keyword>create</keyword> <symbol>{</symbol><class_name>B</class_name><symbol>}</symbol> <local_variable>a</local_variable></code><line_break/>
-					<code><keyword>create</keyword> <symbol>{</symbol><class_name>B</class_name><symbol>}</symbol> <local_variable>a</local_variable><symbol>.</symbol><feature_name>make</feature_name></code><line_break/>
+					<code><keyword>create</keyword> <symbol>{</symbol><class_name>B</class_name><symbol>}</symbol> <local_variable>a</local_variable><symbol>.</symbol><feature_name>make</feature_name></code>
 				</cell>
 				<cell>No</cell>
 				<cell>Yes</cell>
@@ -135,6 +165,18 @@
 			<row>
 				<cell>Creation expression</cell>
 				<cell><code><feature_name>print</feature_name> <symbol>(</symbol><keyword>create</keyword> <symbol>{</symbol><class_name>TIME</class_name><symbol>}</symbol><symbol>.</symbol><feature_name>make_now</feature_name><symbol>)</symbol></code></cell>
+				<cell>No</cell>
+				<cell>Yes</cell>
+				<cell>Yes</cell>
+			</row>
+			<row>
+				<cell>
+					<link>
+						<url>/general/guided_tour/language/tutorial-08.xml</url>
+						<label>Generic creation</label>
+					</link>
+				</cell>
+				<cell><code><keyword>create</keyword> <symbol>{</symbol><generics>G</generics><symbol>}</symbol> <local_variable>x</local_variable><symbol>.</symbol><feature_name>make</feature_name></code></cell>
 				<cell>No</cell>
 				<cell>Yes</cell>
 				<cell>Yes</cell>
@@ -276,6 +318,51 @@
 				<cell>In groups by 3 digits</cell>
 				<cell>Yes</cell>
 				<cell>Yes</cell>
+			</row>
+		</table>
+		<heading><size>2</size>Interfacing with external software</heading>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Feature</bold></cell>
+				<cell><alignment>center</alignment><bold>ETL2</bold></cell>
+				<cell><alignment>center</alignment><bold>ECMA-367</bold></cell>
+				<cell><alignment>center</alignment><bold>EiffelStudio</bold></cell>
+			</row>
+			<row>
+				<cell>Access to software written in C</cell>
+				<cell>Basic syntax for any external software</cell>
+				<cell>Registered sub-language</cell>
+				<cell>
+					See details for 
+					<link>
+						<url>../30_external_features/10_c_externals.xml</url>
+						<label>C externals</label>
+					</link>
+				</cell>
+			</row>
+			<row>
+				<cell>Access to software written in C++</cell>
+				<cell>Basic syntax for any external software</cell>
+				<cell>Registered sub-language</cell>
+				<cell>
+					See details for 
+					<link>
+						<url>../30_external_features/20_cpp_externals.xml</url>
+						<label>C++ externals</label>
+					</link>
+				</cell>
+			</row>
+			<row>
+				<cell>Access to dynamically loaded libraries (DLLs)</cell>
+				<cell>Basic syntax for any external software</cell>
+				<cell>Registered sub-language</cell>
+				<cell>No</cell>
+			</row>
+			<row>
+				<cell>Other external software</cell>
+				<cell>Basic syntax for any external software</cell>
+				<cell>Unregistered sub-language</cell>
+				<cell>No</cell>
 			</row>
 		</table>
 	</paragraph>

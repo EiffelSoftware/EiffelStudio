@@ -2142,8 +2142,6 @@ feature -- Removal
 
 	clear is
 			-- Remove all items from `Current'.
-		require
-			is_parented: parent /= Void
 		local
 			i, a_row_count: INTEGER
 			temp_rows: like rows
@@ -2168,8 +2166,6 @@ feature -- Removal
 
 	wipe_out is
 			-- Remove all columns and rows from `Current'.
-		require
-			is_parented: parent /= Void
 		local
 			current_row_data: SPECIAL [EV_GRID_ITEM_I]
 			current_item: EV_GRID_ITEM_I

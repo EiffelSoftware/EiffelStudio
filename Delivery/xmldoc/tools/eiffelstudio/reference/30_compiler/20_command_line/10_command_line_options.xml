@@ -57,6 +57,32 @@
 			<bold>ec</bold> command.
 			<line_break></line_break>
 		</paragraph>
+		<paragraph>Some options can have modifiers that can affect their results. The modifiers are listed in the table below:</paragraph>
+		<table>
+			<row>
+				<cell><alignment>center</alignment><bold>Option</bold></cell>
+				<cell><alignment>center</alignment><bold>Modifier</bold></cell>
+				<cell><alignment>center</alignment><bold>Effect</bold></cell>
+			</row>
+			<row>
+				<cell>-callers</cell>
+			</row>
+			<row>
+				<cell></cell>
+				<cell>-show_all</cell>
+				<cell>Include all callers rather than only those in the specified class.</cell>
+			</row>
+			<row>
+				<cell></cell>
+				<cell>-assigners</cell>
+				<cell>Restrict callers to those that use given feature only as a target of an assignment instruction.</cell>
+			</row>
+			<row>
+				<cell></cell>
+				<cell>-creators</cell>
+				<cell>Restrict callers to those that use given feature only as a target of a creation instruction.</cell>
+			</row>
+		</table>
 		<heading><size>2</size>Finalization</heading>
 		<link></link>To produce a finalized system, you may use the command 
 		<bold>ec</bold> -finalize. The effect is the same as when you press the Finalize button in the graphical environment, except for two differences:

@@ -1390,9 +1390,11 @@ feature -- Status setting
 			-- Resize `Current' to have `a_row_count' columns.
 		require
 			a_row_count_positive: a_row_count >= 1
+		local
+			l_count: INTEGER
 		do
+			set_vertical_computation_required (internal_row_data.count)
 			resize_row_lists (a_row_count)
-			set_vertical_computation_required (1)
 			redraw_client_area
 		ensure
 			row_count_set: row_count = a_row_count

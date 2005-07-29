@@ -1972,7 +1972,6 @@ feature -- Element change
 			-- Remove all items from `Current'.
 		require
 			not_destroyed: not is_destroyed
-			is_parented: parent /= Void
 		do
 			implementation.clear
 		ensure
@@ -1983,7 +1982,6 @@ feature -- Element change
 			-- Remove all columns and rows from `Current'.
 		require
 			not_destroyed: not is_destroyed
-			is_parented: parent /= Void
 		do
 			implementation.wipe_out
 		ensure

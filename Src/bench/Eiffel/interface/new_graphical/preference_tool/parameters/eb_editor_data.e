@@ -236,7 +236,7 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 	
 	maximized: BOOLEAN
 	
-feature {NONE} -- Preference
+feature {EB_SHARED_PREFERENCES} -- Preference
 		
 	breakpoint_background_color_preference: COLOR_PREFERENCE
 			-- Background color used to display breakpoints		

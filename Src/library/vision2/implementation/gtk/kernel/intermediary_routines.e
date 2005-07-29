@@ -197,10 +197,12 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			a_widget: EV_PICK_AND_DROPABLE_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then a_widget.is_transport_enabled and then (a_button = 1 or a_button = 3) then
-					-- We don't want button press events from gtk is PND is enabled as these are handled via PND implementation
-			else
-				a_widget.button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			if a_widget /= Void then
+				if a_type = {EV_GTK_EXTERNALS}.gdk_button_press_enum and then a_widget.is_transport_enabled and then (a_button = 1 or a_button = 3) then
+						-- We don't want button press events from gtk is PND is enabled as these are handled via PND implementation
+				else
+					a_widget.button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+				end				
 			end
 		end
 
@@ -227,7 +229,9 @@ feature {EV_ANY_IMP} -- Window intermediary agent routines
 			check
 				a_widget_imp_not_void: a_widget_imp /= Void
 			end
-			a_widget_imp.on_widget_mapped
+			if a_widget_imp /= Void then
+				a_widget_imp.on_widget_mapped
+			end
 		end
 	
 feature {EV_ANY_IMP} -- Tree intermediary agent routines	

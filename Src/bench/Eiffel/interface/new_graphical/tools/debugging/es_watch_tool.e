@@ -855,7 +855,11 @@ feature {NONE} -- Event handling
 					then
 						empty_expression_cell ?= row.item (col_name_index)
 						if empty_expression_cell /= Void then
-							empty_expression_cell.activate_with_string (s)
+							if s.is_equal ("%N") then
+								empty_expression_cell.activate
+							else								
+								empty_expression_cell.activate_with_string (s)
+							end
 						end
 					end
 				end

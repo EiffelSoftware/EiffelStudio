@@ -272,7 +272,7 @@ feature -- Output
 					%%T-aversions [-filter filtername] class feature |%N%
 					%%T-dversions [-filter filtername] class feature |%N%
 					%%T-implementers [-filter filtername] class feature |%N%
-					%%T-callers [-filter filtername] [-show_all] class feature |%N%T")
+					%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N%T")
 			end
 			io.put_string ("%
 				%[-stop] [-ace Ace] [-project Project_file_name]|%N%
@@ -372,6 +372,8 @@ feature -- Update
 			cn, fn: STRING
 			filter_name: STRING
 			show_all: BOOLEAN
+			show_assigners: BOOLEAN
+			show_creators: BOOLEAN
 			ewb_senders: EWB_SENDERS
 		do
 			filter_name := ""
@@ -499,6 +501,13 @@ feature -- Update
 							show_all := True
 							current_option := current_option + 1
 						end
+						if argument (current_option).is_equal ("-assigners") then
+							show_assigners := True
+							current_option := current_option + 1
+						elseif argument (current_option).is_equal ("-creators") then
+							show_creators := True
+							current_option := current_option + 1
+						end
 						if not option_error then
 							if current_option < argument_count then
 								cn := argument (current_option)
@@ -507,7 +516,12 @@ feature -- Update
 								create ewb_senders.make (cn, fn, filter_name)
 								if show_all then
 									ewb_senders.set_all_callers
-								end;	
+								end
+								if show_assigners then
+									ewb_senders.set_assigners_only
+								elseif show_creators then
+									ewb_senders.set_creators_only
+								end
 								command := ewb_senders
 							else
 								option_error := True

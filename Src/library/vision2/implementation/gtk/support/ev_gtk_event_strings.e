@@ -13,61 +13,61 @@ feature -- Implementation
 
 	key_press_event_string: EV_GTK_C_STRING is
 		once
-			Result := "key_press_event"
+			Result := "key-press-event"
 		end
 
 	key_release_event_string: EV_GTK_C_STRING is
 			-- key-release-event string constant
 		once
-			Result := "key_release_event"
+			Result := "key-release-event"
 		end
 
 	focus_in_event_string: EV_GTK_C_STRING is
 			-- focus_in_event_string constant.
 		once
-			Result := "focus_in_event"
+			Result := "focus-in-event"
 		end
 
 	focus_out_event_string: EV_GTK_C_STRING is
 			-- focus_out_event_string constant.
 		once
-			Result := "focus_out_event"
+			Result := "focus-out-event"
 		end
 
 	enter_notify_event_string: EV_GTK_C_STRING is
 			-- enter_notify_event_string constant.
 		once
-			Result := "enter_notify_event"
+			Result := "enter-notify-event"
 		end
 
 	leave_notify_event_string: EV_GTK_C_STRING is
 			-- leave_notify_event_string constant.
 		once
-			Result := "leave_notify_event"
+			Result := "leave-notify-event"
 		end
 
 	motion_notify_event_string: EV_GTK_C_STRING is
 			-- motion_notify_event_string constant.
 		once
-			Result := "motion_notify_event"
+			Result := "motion-notify-event"
 		end
 
 	size_allocate_event_string: EV_GTK_C_STRING is
 			-- size_allocate_event_string constant.
 		once
-			Result := "size_allocate"
+			Result := "size-allocate"
 		end		
 
 	button_press_event_string: EV_GTK_C_STRING is
 			-- button_press_event_string constant.
 		once
-			Result := "button_press_event"
+			Result := "button-press-event"
 		end				
 
 	button_release_event_string: EV_GTK_C_STRING is
 			-- button_release_event_string constant.
 		once
-			Result := "button_release_event"
+			Result := "button-release-event"
 		end
 
 	clicked_event_string: EV_GTK_C_STRING is

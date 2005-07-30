@@ -1393,7 +1393,7 @@ feature -- Status setting
 		local
 			l_count: INTEGER
 		do
-			set_vertical_computation_required (internal_row_data.count)
+			set_vertical_computation_required (internal_row_data.count + 1)
 			resize_row_lists (a_row_count)
 			redraw_client_area
 		ensure

@@ -91,6 +91,8 @@ fullrd widget_test
 fullrd tests
 fullrd tutorial
 cd ..
+remtrace web
+exprt -r $DEFAULT_CVS_TAG -d web Src/examples/web
 remtrace studio
 exprt -r $DEFAULT_CVS_TAG -d studio Src/examples/studio
 

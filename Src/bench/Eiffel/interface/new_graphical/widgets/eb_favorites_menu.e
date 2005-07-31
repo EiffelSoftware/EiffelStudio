@@ -68,7 +68,9 @@ feature -- Element change
 		
 	update_feature_item (a_feat_item: EB_FAVORITES_FEATURE; m: EV_MENU_ITEM) is
 		do
-			m.set_pixmap (pixmap_from_e_feature (a_feat_item.associated_e_feature))
+			if a_feat_item.associated_e_feature /= Void then			
+				m.set_pixmap (pixmap_from_e_feature (a_feat_item.associated_e_feature))
+			end
 		end
 		
 feature {NONE} -- Initialization Implementation

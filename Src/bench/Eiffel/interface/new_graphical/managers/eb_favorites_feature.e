@@ -51,6 +51,8 @@ feature {NONE} -- Access
 		do
 			class_name := a_stone.class_name
 			feature_name := a_stone.feature_name
+			associated_e_feature := a_stone.e_feature
+			associated_class_c := a_stone.e_class
 			make (feature_name, a_parent)
 		end
 		
@@ -105,7 +107,9 @@ feature -- Convert
 	associated_feature_stone: FEATURE_STONE is
 			-- FEATURE_STONE associated with favorite class, Void if none.
 		do
-			create {EB_FAVORITES_FEATURE_STONE} Result.make_from_favorite (Current)
+			if associated_e_feature /= Void then
+				create {EB_FAVORITES_FEATURE_STONE} Result.make_from_favorite (Current)
+			end
 		end
 		
 feature -- Feature nature
@@ -150,7 +154,7 @@ feature {NONE} -- Implementation
 					associated_class_c := conv_class.associated_class_c
 				end				
 			end
-			if associated_class_c /= Void then
+			if associated_class_c /= Void and associated_e_feature = Void then
 				associated_e_feature := associated_class_c.feature_with_name (feature_name)
 			end
 		end

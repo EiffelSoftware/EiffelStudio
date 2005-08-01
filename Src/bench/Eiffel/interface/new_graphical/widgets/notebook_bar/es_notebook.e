@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			widget := box
 			notebook.selection_actions.extend (agent on_tab_selected)
 			notebook.drop_actions.extend (agent on_dropped_stone)
+			notebook.drop_actions.set_veto_pebble_function (agent on_dropped_stone_veto)
 			notebook.pointer_button_press_actions.extend (agent on_pointer_button_press)
 		end
 
@@ -287,18 +288,41 @@ feature {NONE} -- Drop action
 	on_dropped_stone (a_data: ANY) is
 		local
 			pointed_w: EV_WIDGET
+			t: ES_NOTEBOOK_ITEM
+		do
+			t := pointed_notebook_item
+			if t /= Void then
+				pointed_w := t.widget
+				notebook.item_tab (pointed_w).enable_select
+				t.drop_actions.call ([a_data])
+			end
+		end
+		
+	on_dropped_stone_veto (a: ANY): BOOLEAN is
+		local
+			t: ES_NOTEBOOK_ITEM
+		do
+			t := pointed_notebook_item
+			if t /= Void then
+				if t.drop_actions.accepts_pebble (a) then
+					Result := t.drop_actions.veto_pebble_function = Void
+						or else t.drop_actions.veto_pebble_function.item ([a])
+				end
+			end
+		end
+		
+	pointed_notebook_item: ES_NOTEBOOK_ITEM is
+		local
+			pointed_w: EV_WIDGET
 			i: INTEGER
 			t: ES_NOTEBOOK_ITEM
 		do
 			i := notebook.pointed_tab_index
 			if notebook.valid_index (i) then
 				pointed_w := notebook.i_th (i)
-				notebook.item_tab (pointed_w).enable_select
-				t := item_by_widget (pointed_w)
-				t.drop_actions.call ([a_data])
+				Result := item_by_widget (pointed_w)
 			end
 		end
-
 
 feature {NONE} -- Implementation
 

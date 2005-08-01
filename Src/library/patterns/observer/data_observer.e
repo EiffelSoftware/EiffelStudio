@@ -18,7 +18,7 @@ feature -- Initialization
 			data_exists: d /= Void
 		do
 			data := d
-			create observer_list.make
+			create observer_list.make (10)
 		end
 
 feature -- Properties
@@ -26,7 +26,7 @@ feature -- Properties
 	data: ANY
 		-- Data observed by Current.
 
-	observer_list: LINKED_LIST [OBSERVER]
+	observer_list: ARRAYED_LIST [OBSERVER]
 		-- List of objects which observes the data 'data'.
 
 feature -- Managment
@@ -49,13 +49,13 @@ feature -- Managment
 		do
 			from 
 				observer_list.start
-				removed := false
+				removed := False
 			until 
 				observer_list.after or removed
 			loop
-				if observer_list.item=w then
-						observer_list.remove
-						removed := true
+				if observer_list.item = w then
+					observer_list.remove
+					removed := True
 				end		
 				if not removed then
 					observer_list.forth
@@ -84,9 +84,8 @@ feature -- Managment
 		end
 
 invariant
-
-	DATA_OBSERVER_observer_list_exists: observer_list /= Void
-	DATA_OBSERVER_data_exists: data /= Void
+	observer_list_exists: observer_list /= Void
+	data_exists: data /= Void
 
 end -- class DATA_OBSERVER
 

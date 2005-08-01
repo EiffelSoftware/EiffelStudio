@@ -470,7 +470,6 @@ feature {NONE} -- Implementation
 			if file.is_open_read then
 				create l_concat_filter.make_null
 				create parser.make
-				parser.set_string_mode_mixed
 				parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, pipe_callback.start>>))
 				parser.parse_from_stream (file)
 				parser.finish_incremental

@@ -74,9 +74,6 @@ feature -- Basic operation
 			generation_settings: GB_GENERATION_SETTINGS
 			output_file: KL_TEXT_OUTPUT_FILE
 			last_string: KL_STRING_OUTPUT_STREAM
-			invalid_chars: HASH_TABLE [CHARACTER, CHARACTER]
-			dialog: EV_MESSAGE_DIALOG
-			warning_text: STRING
 			abort_saving: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
 		do
@@ -90,39 +87,7 @@ feature -- Basic operation
 			create formater.make
 			formater.set_output (last_string)
 			formater.process_document (document)
-			
-
-				-- Check for invalid characters.
-				-- It is only possible to perform this at this stage, as the save file must have been generated
-				-- so that we have access to the text so we may search for invalid characters.
-			invalid_chars := invalid_characters (last_string.string)
-			if not invalid_chars.is_empty then
-				clear_status_bar
-				warning_text := invalid_characters1.twin
-				from
-					invalid_chars.start
-				until
-					invalid_chars.off
-				loop
-					warning_text.append_character ('%'')
-					warning_text.append_character (invalid_chars.item_for_iteration)
-					warning_text.append_character ('%'')
-					invalid_chars.forth
-					if not invalid_chars.off then
-						warning_text.append (", ")
-					end
-				end
-				warning_text.append (invalid_characters2)
-				create {EV_CONFIRMATION_DIALOG} dialog.make_with_text (warning_text)
-				dialog.show_modal_to_window (main_window)
-				if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-					replace_invalid_characters (last_string.string)
-				else
-					abort_saving := True
-					set_timed_status_text ("Project save cancelled")
-				end
-			end
-			
+						
 			if not abort_saving then
 					-- Nicely format `last_string.string' to have indentation.
 				process_xml_string (last_string.string)

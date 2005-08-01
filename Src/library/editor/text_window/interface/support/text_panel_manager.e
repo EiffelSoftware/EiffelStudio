@@ -43,4 +43,15 @@ feature -- Status Setting
 			panel_added: panels.has (a_panel)
 		end
 
+	remove_panel (a_panel: TEXT_PANEL) is
+			-- Remove new panel
+		require
+			a_panel_not_void: a_panel /= Void
+			has_panel: panels.has (a_panel)
+		do
+			panels.prune_all (a_panel)
+		ensure
+			panel_removed: not panels.has (a_panel)
+		end
+
 end

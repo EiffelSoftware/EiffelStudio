@@ -394,7 +394,6 @@ feature -- Status Setting
 				if selectable_command /= Void then
 					selectable_command.disable_selected
 				end
-				parent.prune_item (Current)
 				
 					-- In EiffelStudio, the `parent' of `Current'
 					-- does not have to contain `Current', as it may
@@ -403,6 +402,7 @@ feature -- Status Setting
 				if parent.linear_representation.has (widget) or parent.external_representation.has (widget) then
 					parent.remove (widget)
 				end
+				parent.prune_item (Current)
 				parent := Void
 			end
 		end

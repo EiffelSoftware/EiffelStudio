@@ -168,7 +168,6 @@ feature {NONE} -- Implementation
 						l_progress_dialog.set_value (0)
 						l_progress_dialog.show
 						l_progress_dialog.set_message ("Including classes into Cluster")
-						l_progress_dialog.show_relative_to_window (context_editor.window_manager.last_focused_window.window)
 					end
 					
 					if new_cluster = Void then

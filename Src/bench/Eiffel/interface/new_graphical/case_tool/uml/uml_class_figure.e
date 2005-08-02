@@ -178,9 +178,11 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
-			model.feature_clause_list_changed_actions.prune_all (agent set_queries_commands)
-			model.generics_changed_actions.prune_all (agent set_generics)
-			model.properties_changed_actions.prune_all (agent set_properties)
+			if model /= Void then
+				model.feature_clause_list_changed_actions.prune_all (agent set_queries_commands)
+				model.generics_changed_actions.prune_all (agent set_generics)
+				model.properties_changed_actions.prune_all (agent set_properties)
+			end
 		end
 	
 	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is

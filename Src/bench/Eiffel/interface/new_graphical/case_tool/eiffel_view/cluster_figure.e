@@ -73,7 +73,9 @@ feature -- Element change
 			start_actions.prune_all (agent save_position)
 			end_actions.prune_all (agent extend_history)
 			move_actions.prune_all (agent on_move)
-			model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
+			if model /= Void then
+				model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
+			end
 		end
 		
 		

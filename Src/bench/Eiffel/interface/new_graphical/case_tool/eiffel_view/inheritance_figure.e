@@ -48,7 +48,9 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_LINK_FIGURE}
-			model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
+			if model /= Void then
+				model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
+			end
 		end
 			
 feature {NONE} -- Implementation

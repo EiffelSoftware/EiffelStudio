@@ -29,14 +29,31 @@ create
 feature {NONE} -- Initialization
 
 	make_with_buffer (a_world: like world; a_drawing_area: EV_DRAWING_AREA) is
-				-- Create an EIFFEL_PROJECTOR projecting `a_world' to `a_drawing_area'.
-			do
-				Precursor {EV_MODEL_BUFFER_PROJECTOR} (a_world, a_drawing_area)
-				register_figure (create {BON_CLIENT_SUPPLIER_FIGURE}, agent draw_bon_client_supplier)
-				register_figure (create {BON_INHERITANCE_FIGURE}, agent draw_bon_inheritance)
-				register_figure (create {BON_CLASS_FIGURE}, agent draw_bon_class)
-				register_figure (create {UML_INHERITANCE_FIGURE}, agent draw_uml_inheritance)
-			end
+			-- Create an EIFFEL_PROJECTOR projecting `a_world' to `a_drawing_area'.
+		local
+			l_figure: EG_FIGURE
+		do
+			Precursor {EV_MODEL_BUFFER_PROJECTOR} (a_world, a_drawing_area)
+			
+				-- Below, we need to create the corresponding figure instance and
+				-- set it to the local variable `l_figure' so that we can call
+				-- `recycle' on it when we are completely done with it.
+			create {BON_CLIENT_SUPPLIER_FIGURE} l_figure
+			register_figure (l_figure, agent draw_bon_client_supplier)
+			l_figure.recycle
+			
+			create {BON_INHERITANCE_FIGURE} l_figure
+			register_figure (l_figure, agent draw_bon_inheritance)
+			l_figure.recycle
+			
+			create {BON_CLASS_FIGURE} l_figure
+			register_figure (l_figure, agent draw_bon_class)
+			l_figure.recycle
+			
+			create {UML_INHERITANCE_FIGURE} l_figure
+			register_figure (l_figure, agent draw_uml_inheritance)
+			l_figure.recycle
+		end
 		
 feature -- Status report
 

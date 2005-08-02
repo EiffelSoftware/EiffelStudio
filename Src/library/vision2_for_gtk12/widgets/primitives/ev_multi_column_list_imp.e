@@ -353,10 +353,12 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 		local
 			temp_col, temp_wid: INTEGER_REF
 		do
+			temp_col := a_column
 			-- Set column width array to new width.
 			if (temp_col.item) <= column_count and column_widths /= Void then
 				--| FIXME IEK Implement this  width = GTK_CLIST(clist)->column[col].width;
-				update_column_width (temp_wid.item, 80)
+				temp_wid := 80
+				update_column_width (temp_wid.item, temp_col.item)
 				if column_resized_actions_internal /= Void then
 					column_resized_actions_internal.call ([temp_col.item])
 				end

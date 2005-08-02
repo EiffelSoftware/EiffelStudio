@@ -579,24 +579,49 @@ feature {NONE} -- Implementation
 			-- Used for key event actions sequences.
 		local
 			a_cs: EV_GTK_C_STRING
+			a_gtk_focus_widget: POINTER
+			a_focus_widget: EV_WIDGET_IMP
+			l_app_imp: EV_APPLICATION_IMP
 		do
 			Precursor (a_key, a_key_string, a_key_press)
-			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then
-					-- Used to disable certain key behavior such as Tab focus.
-				if a_key_press then
-					if focus_widget.default_key_processing_blocked (a_key) then
-						a_cs := "key-press-event"
-						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
-						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
-					end
-				else
-					if focus_widget.default_key_processing_blocked (a_key) then
-						a_cs := "key-release-event"
-						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
-						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
-					end
-				end	
+			
+			-- Fire the widget events.
+			
+			a_gtk_focus_widget := {EV_GTK_EXTERNALS}.gtk_window_struct_focus_widget (c_object)
+			if a_gtk_focus_widget /= default_pointer then
+				a_focus_widget ?= eif_object_from_gtk_object (a_gtk_focus_widget)
 			end
+
+			if a_focus_widget /= Void and a_key /= Void and then a_focus_widget.is_sensitive and then a_focus_widget.has_focus then
+				if a_focus_widget.default_key_processing_blocked (a_key) then
+						-- Block event from losing focus should the widget want to keep it.
+					l_app_imp := app_implementation
+					if a_key_press then
+						a_cs := l_app_imp.key_press_event_string
+					else
+						a_cs := l_app_imp.key_release_event_string
+					end
+					{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)				
+				end
+				a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
+			end
+			
+--			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then
+--					-- Used to disable certain key behavior such as Tab focus.
+--				if a_key_press then
+--					if focus_widget.default_key_processing_blocked (a_key) then
+--						a_cs := "key-press-event"
+--						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
+--						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
+--					end
+--				else
+--					if focus_widget.default_key_processing_blocked (a_key) then
+--						a_cs := "key-release-event"
+--						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
+--						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
+--					end
+--				end	
+--			end
 		end
 
 	initialize is
@@ -607,14 +632,17 @@ feature {NONE} -- Implementation
 			-- The `hbox' will contain the child of the window.
 		local
 			a_decor: INTEGER
+			app_imp: EV_APPLICATION_IMP
+			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
 		do
-			Precursor
-			set_is_initialized (False)
 			set_title("")
 			accel_group := {EV_GTK_EXTERNALS}.gtk_accel_group_new
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
 			create upper_bar
 			create lower_bar
+			
+
+			
 
 			maximum_width := 32000
 			maximum_height := 32000
@@ -629,11 +657,20 @@ feature {NONE} -- Implementation
 				a_decor := {EV_GTK_EXTERNALS}.Gdk_decor_border_enum
 			end	
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_decor)
+
+			app_imp := app_implementation
+			on_key_event_intermediary_agent := agent (app_imp.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
+			signal_connect (c_object, app_imp.key_press_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
+			signal_connect (c_object, app_imp.key_release_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
+			
+			real_signal_connect (c_object, once "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
+			
+			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, 1, 1)
 			
 			enable_user_resize
 			default_height := -1
 			default_width := -1
-			set_is_initialized (True)
+			Precursor {EV_CONTAINER_IMP}
 		end
 		
 	client_area: POINTER is

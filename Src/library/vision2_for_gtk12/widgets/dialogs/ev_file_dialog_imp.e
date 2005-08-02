@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 				({EV_GTK_EXTERNALS}.gtk_file_selection_new (a_cs.item))
 			filter := "*.*"
 			set_start_directory (".")
+			create filters.make (0)
 		end
 
 	initialize is

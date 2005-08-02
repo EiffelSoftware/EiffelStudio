@@ -60,15 +60,13 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'
 		do
+				-- We need to explicitly show the cell gtk widget as we are not calling the Precursor as the event hookup is not needed.
 			{EV_GTK_EXTERNALS}.gtk_widget_show (c_object)
 			initialize_grid
 			set_focused_selection_color (create {EV_COLOR}.make_with_8_bit_rgb (83, 85, 161))
-			
-			--set_focused_selection_color (color_from_state (False, {EV_GTK_EXTERNALS}.gtk_state_selected_enum))
-			
-			--set_non_focused_selection_color (color_from_state (False, {EV_GTK_EXTERNALS}.gtk_state_active_enum))
-			
 			set_non_focused_selection_color (create {EV_COLOR}.make_with_8_bit_rgb (160, 189, 238))
+			set_focused_selection_text_color (create {EV_COLOR}.make_with_8_bit_rgb (239, 251, 254))
+			set_non_focused_selection_text_color (create {EV_COLOR}.make_with_8_bit_rgb (196, 236, 253))
 			set_is_initialized (True)
 		end
 
@@ -111,6 +109,18 @@ feature {EV_GRID_ITEM_I} -- Implementation
 				tuple.put_integer (a_width, a_tuple.integer_32_item (1))
 				tuple.put_integer (a_height, a_tuple.integer_32_item (2))				
 			end
+		end
+
+	set_focused_selection_text_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `focused_selection_text_color'.
+		do
+			focused_selection_text_color := a_color
+		end
+		
+	set_non_focused_selection_text_color (a_color: EV_COLOR) is
+			-- Assign `a_color' to `non_focused_selection_text_color'.
+		do
+			non_focused_selection_text_color := a_color
 		end
 
 

@@ -183,10 +183,6 @@ feature -- Access
 		do
 			if is_row_selection_enabled then
 				Result := internal_selected_rows.linear_representation
-				if last_selected_row /= Void then
-					Result.prune (last_selected_row.interface)
-					Result.extend (last_selected_row.interface)
-				end
 			else
 				create Result.make (10)	
 				from
@@ -227,10 +223,6 @@ feature -- Access
 				end
 			else
 				Result := internal_selected_items.linear_representation
-				if last_selected_item /= Void then
-					Result.prune (last_selected_item.interface)
-					Result.extend (last_selected_item.interface)
-				end
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -273,6 +265,7 @@ feature -- Access
 				sel_columns.item.implementation.set_internal_is_selected (False)
 				sel_columns.forth
 			end
+			shift_key_start_item := Void
 		ensure
 			selected_items_empty: selected_items.is_empty
 			selected_rows_empty: selected_rows.is_empty
@@ -812,7 +805,7 @@ feature -- Status setting
 
 			if not activate_window.is_destroyed and then not activate_window.is_empty and then not activate_window.is_show_requested then
 				-- If some processing has been performed on `activate_window' then show it.
-				ev_application.do_once_on_idle (agent activate_window.show)
+				activate_window.show
 			end
 		end
 
@@ -1390,8 +1383,6 @@ feature -- Status setting
 			-- Resize `Current' to have `a_row_count' columns.
 		require
 			a_row_count_positive: a_row_count >= 1
-		local
-			l_count: INTEGER
 		do
 			set_vertical_computation_required (internal_row_data.count + 1)
 			resize_row_lists (a_row_count)
@@ -2256,6 +2247,9 @@ feature -- Removal
 			last_horizontal_scroll_bar_value := 0
 			hidden_node_count := 0
 			displayed_column_count := 0
+			last_selected_item := Void
+			last_selected_row := Void
+			shift_key_start_item := Void
 		ensure
 			columns_removed: column_count = 0
 			rows_removed: row_count = 0
@@ -3901,7 +3895,6 @@ feature {NONE} -- Event handling
 		do
 			pointed_item := drawer.item_at_position_strict (a_x, a_y)
 
-
 				-- We fire the pointer button press actions before the node or selection actions which may occur
 				-- as a result of this press.
 			if pointer_button_press_actions_internal /= Void and then not pointer_button_press_actions_internal.is_empty then
@@ -3951,9 +3944,13 @@ feature {NONE} -- Event handling
 					selected_item /= Void and then
 					selected_item.is_selected and then
 					ev_application.ctrl_pressed and then
-					((is_always_selected and then (internal_selected_items.count > 1 or else internal_selected_rows.count > 1)) or not is_always_selected)
+					not ev_application.shift_pressed and then
+					((is_always_selected and then (internal_selected_items.count > 1 or else internal_selected_rows.count > 1)) or not is_always_selected)	
 				then
+						-- Handle Ctrl-clicking to deselect items
 					selected_item.disable_select
+					last_selected_item := selected_item.implementation
+					shift_key_start_item := Void
 				else
 					handle_newly_selected_item (selected_item)
 				end
@@ -4386,8 +4383,8 @@ feature {NONE} -- Event handling
 		local
 			prev_sel_item, a_sel_item: EV_GRID_ITEM
 			a_sel_row: EV_GRID_ROW
-			sel_items: like selected_items
 			items_spanning: ARRAYED_LIST [INTEGER]
+			l_index_of_first_item: INTEGER
 		do
 			if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
 				key_press_actions_internal.call ([a_key])
@@ -4395,10 +4392,18 @@ feature {NONE} -- Event handling
 			
 			if is_selection_keyboard_handling_enabled then
 					-- Handle the selection events
-				sel_items := selected_items
+				if is_row_selection_enabled then
+					if last_selected_row /= Void then
+						l_index_of_first_item := last_selected_row.index_of_first_item
+						if l_index_of_first_item /= 0 then
+							prev_sel_item := last_selected_row.item (l_index_of_first_item)
+						end
+					end
+				elseif last_selected_item /= Void then
+					prev_sel_item := last_selected_item.interface
+				end
 						-- We always want to find an item above or below for row selection
-				if not sel_items.is_empty then
-					prev_sel_item := sel_items.last
+				if prev_sel_item /= Void then
 					a_sel_row := prev_sel_item.row
 					inspect
 						a_key.code
@@ -4441,27 +4446,36 @@ feature {NONE} -- Event handling
 						-- Do nothing
 					end
 					if a_sel_item /= Void then
-						if a_sel_item.is_selected and then last_selected_item /= Void then
+						if a_sel_item.is_selected and then last_selected_item /= Void and then not ev_application.shift_pressed then
 							last_selected_item.disable_select
 						end
 						handle_newly_selected_item (a_sel_item)
-						last_selected_item := a_sel_item.implementation
+						if is_row_selection_enabled then
+							last_selected_row := a_sel_item.row.implementation
+						end
+						last_selected_item := a_sel_item.implementation						
 					end
 				end
 			end
 		end
 
+	shift_key_start_item: EV_GRID_ITEM
+		-- Item where initial selection began from.
+
 	handle_newly_selected_item (a_item: EV_GRID_ITEM) is
 			-- Handle selection for newly selected `a_item'.
 		local
-			start_item: EV_GRID_ITEM
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
 			a_col_counter, a_row_counter: INTEGER
 			current_item: EV_GRID_ITEM
 			l_remove_selection: BOOLEAN
 			is_ctrl_pressed, is_shift_pressed: BOOLEAN
 			a_application: EV_APPLICATION
-			l_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
+			l_index_of_first_item: INTEGER
+			previous_selected_item_column_index, previous_selected_item_row_index: INTEGER
+			shift_key_start_item_column_index, shift_key_start_item_row_index: INTEGER
+			navigation_item_column_index, navigation_item_row_index: INTEGER
+			selection_boundary_left, selection_boundary_right, selection_boundary_top, selection_boundary_bottom: INTEGER
 		do
 			a_application := ev_application
 			is_ctrl_pressed := a_application.ctrl_pressed
@@ -4473,28 +4487,74 @@ feature {NONE} -- Event handling
 			end
 			if is_multiple_selection_enabled then
 				if is_shift_pressed then
-					l_selected_items := selected_items
-					if (last_selected_item /= Void and then not l_selected_items.is_empty) or l_selected_items.count = 1 then
-						start_item := l_selected_items.last
-					end			
-					if a_item /= Void and then start_item /= Void and then start_item /= a_item then
-						start_row_index := start_item.row.index
-						end_row_index := a_item.row.index
-						start_column_index := start_item.column.index
-						end_column_index := a_item.column.index
+						-- Find the item to begin the Shift multiple selection from.
+					if shift_key_start_item = Void then
+						if last_selected_row /= Void then
+							l_index_of_first_item := last_selected_row.index_of_first_item
+							if l_index_of_first_item /= 0 then
+								shift_key_start_item := last_selected_row.item (l_index_of_first_item)
+							end						
+						else
+							if last_selected_item /= Void then
+								shift_key_start_item := last_selected_item.interface
+							end
+						end
+						if not shift_key_start_item.is_selected then
+								-- If start of multiple Shift selection is not selected then we cancel the selection.
+							shift_key_start_item := Void
+						end
+					elseif shift_key_start_item.parent /= interface then
+							-- The previous shift selection key has been removed from the grid so set existing one to Void.
+						shift_key_start_item := Void
+					end
+					-- Clear previous multiple selection
+		
+					if a_item /= Void and then shift_key_start_item /= Void then
+						
+						shift_key_start_item_column_index := shift_key_start_item.column.index
+						shift_key_start_item_row_index := shift_key_start_item.row.index
+						
+						if last_selected_item /= Void then
+							previous_selected_item_column_index := last_selected_item.column.index
+							previous_selected_item_row_index := last_selected_item.row.index
+						else
+							previous_selected_item_column_index := shift_key_start_item_column_index
+							previous_selected_item_row_index := shift_key_start_item_row_index
+						end
+						
+						navigation_item_column_index := a_item.column.index
+						navigation_item_row_index := a_item.row.index
+
 						from
-							a_col_counter := start_column_index.min (end_column_index)
+							selection_boundary_left := shift_key_start_item_column_index.min (navigation_item_column_index)
+							selection_boundary_right := shift_key_start_item_column_index.max (navigation_item_column_index)
+							selection_boundary_top := shift_key_start_item_row_index.min (navigation_item_row_index)
+							selection_boundary_bottom := shift_key_start_item_row_index.max (navigation_item_row_index)
+							
+							start_column_index := shift_key_start_item_column_index.min (previous_selected_item_column_index.min (navigation_item_column_index))
+							start_row_index := shift_key_start_item_row_index.min (previous_selected_item_row_index.min (navigation_item_row_index))
+							end_column_index := shift_key_start_item_column_index.max (previous_selected_item_column_index.max (navigation_item_column_index))
+							end_row_index := shift_key_start_item_row_index.max (previous_selected_item_row_index.max (navigation_item_row_index))
+							a_col_counter := start_column_index
 						until
-							a_col_counter > start_column_index.max (end_column_index)
+							a_col_counter > end_column_index
 						loop
 							from
-								a_row_counter := start_row_index.min (end_row_index)
+								a_row_counter := start_row_index
 							until
-								a_row_counter > start_row_index.max (end_row_index)
+								a_row_counter > end_row_index
 							loop
 								current_item := item (a_col_counter, a_row_counter)
 								if current_item /= Void then
-									current_item.enable_select
+									-- See if this item needs either selecting or deselecting by checking the bounds of the selection.
+									if
+										a_col_counter >= selection_boundary_left and then a_col_counter <= selection_boundary_right and then
+										a_row_counter >= selection_boundary_top and then a_row_counter <= selection_boundary_bottom
+									then
+										current_item.enable_select
+									else
+										current_item.disable_select
+									end
 								end
 								a_row_counter := a_row_counter + 1
 							end
@@ -4505,8 +4565,13 @@ feature {NONE} -- Event handling
 					l_remove_selection := False
 				elseif is_ctrl_pressed then
 					-- If the ctrl key is pressed and we are in a multiple selection mode then we do nothing.
+					shift_key_start_item := Void
 					l_remove_selection := False
+				else
+					shift_key_start_item := Void
 				end
+			else
+				shift_key_start_item := Void
 			end
 
 			if l_remove_selection and then
@@ -4520,21 +4585,23 @@ feature {NONE} -- Event handling
 			if
 				a_item /= Void
 			then 
-				if not a_item.is_selected then
-					if a_item /= currently_active_item then
-							-- We don't want to scroll the grid if an item is being activated.
-						if is_row_selection_enabled then
-							a_item.row.ensure_visible
-						else
-							a_item.ensure_visible
-						end						
-					end
-					a_item.enable_select
+				if a_item /= currently_active_item then
+						-- We don't want to scroll the grid if an item is being activated.
+					if is_row_selection_enabled then
+						a_item.row.ensure_visible
+					else
+						a_item.ensure_visible
+					end						
 				end
-			end
-			if start_item /= Void then
-				-- Reset the last selected item so that multiple selection works from previous position.
-				last_selected_item := start_item.implementation
+				a_item.enable_select
+					-- Reset the last selected item so that multiple selection works from previous position.
+				if last_selected_row /= Void then
+					last_selected_row := a_item.row.implementation
+				end
+				last_selected_item := a_item.implementation	
+			else
+				last_selected_row := Void
+				last_selected_item := Void
 			end
 		end
 
@@ -4608,6 +4675,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 
 				-- Set grid of `grid_row' to `Current'
 			row_i.set_parent_i (Current, row_counter)
+			row_counter := row_counter + 1
 
 			if replace_existing_item then
 				internal_row_data.replace (a_row_data)

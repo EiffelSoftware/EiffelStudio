@@ -164,7 +164,11 @@ feature -- Concrete evaluation
 				f_is_once: f.associated_feature_i.is_once
 			end
 			if f.written_class.types.count > 1 then
-				notify_error_evaluation ("Once evaluation on generic classes not available")
+				if f.written_class.is_generic then
+					notify_error_evaluation ("Once evaluation on generic class {" + f.written_class.name_in_upper + "} not available")
+				else
+					notify_error_evaluation ("Evaluation on expanded class {" + f.written_class.name_in_upper + "} is not supported")
+				end
 			else
 				if is_dotnet_system then
 						--| Dotnet
@@ -182,10 +186,14 @@ feature -- Concrete evaluation
 						--| Classic
 					once_r := debug_info.once_request
 					if once_r.already_called (f) then
-						evaluate_function (a_addr, a_target, Void, f, params)
+						if a_addr /= Void or a_target /= Void then
+							evaluate_function (a_addr, a_target, Void, f, params)
+						else							
 -- FIXME jfiat [2005/03/11] : changed
---						last_result_value := once_r.once_result (f).dump_value
---						last_result_static_type := f.type.associated_class
+fixme ("Complete once evaluation implementation changes (cf: jfiat + alexk)")
+							last_result_value := once_r.once_result (f).dump_value
+							last_result_static_type := f.type.associated_class
+						end
 						if last_result_value = Void then
 							notify_error_evaluation ("Once feature " + f.name + ": an exception occurred")
 						end
@@ -316,9 +324,11 @@ feature -- Concrete evaluation
 					elseif l_dynclass = Void then
 						l_dynclass := l_dyntype.associated_class						
 					end
+				elseif f.is_once then
+					notify_error_evaluation ("Due to recent changes on once implementation,%N It is not possible to evaluate once function on Class context.")
 				else
 						--| Shouldn't happen: basic types are not generic.
-					notify_error_evaluation ("Cannot find complete dynamic type of a expanded type")
+					notify_error_evaluation ("Cannot find complete dynamic type of an expanded type")
 				end
 			else
 				l_dyntype := l_dynclass.types.first

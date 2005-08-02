@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 
 
 				-- This is a hack, remove when the toggle button can be retrieved via the API.
-			real_signal_connect (container_widget, "realize", agent retrieve_toggle_button, Void)
+			real_signal_connect (container_widget, "realize", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1), Void)
 			retrieve_toggle_button_signal_connection_id := last_signal_connection_id
 		end
 
@@ -272,6 +272,8 @@ feature {NONE} -- Implementation
 	retrieve_toggle_button_signal_connection_id: INTEGER
 		-- Signal connection id used when finding the toggle button of `Current'.
 
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
+
 	retrieve_toggle_button is
 			-- Retrieve the toggle button from the GtkComboBox structure.
 		local
@@ -285,12 +287,10 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (a_toggle, -1, 1)
 			{EV_GTK_EXTERNALS}.gtk_widget_unset_flags (a_toggle, {EV_GTK_EXTERNALS}.gtk_can_focus_enum)
 
-			real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_toggled (internal_id), Void)
+			real_signal_connect (a_toggle, once "toggled", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 2), Void)
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_signal_handler_disconnect (container_widget, retrieve_toggle_button_signal_connection_id)
 			retrieve_toggle_button_signal_connection_id := 0
 		end
-
-feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 
 	toggle_button_toggled is
 			-- The toggle button has been toggled.

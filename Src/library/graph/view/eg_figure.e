@@ -116,7 +116,9 @@ feature -- Element change
 			-- Free resources of `Current' such that GC can collect it.
 			-- Leave it in an unstable state.
 		do
-			model.name_change_actions.prune_all (agent on_name_change)
+			if model /= Void then
+				model.name_change_actions.prune_all (agent on_name_change)
+			end
 		end
 		
 feature -- Status setting

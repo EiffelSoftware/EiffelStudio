@@ -147,8 +147,10 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EG_LINKABLE_FIGURE}
-			model.linkable_add_actions.prune_all (agent on_linkable_add)
-			model.linkable_remove_actions.prune_all (agent on_linkable_remove)
+			if model /= Void then
+				model.linkable_add_actions.prune_all (agent on_linkable_add)
+				model.linkable_remove_actions.prune_all (agent on_linkable_remove)
+			end
 		end
 
 	set_layouter (a_layouter: like layouter) is

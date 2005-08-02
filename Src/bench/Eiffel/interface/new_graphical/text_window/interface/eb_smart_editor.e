@@ -1043,7 +1043,6 @@ feature -- Memory management
 			-- so that we know whether we're still referenced or not.
 		do
 			Precursor {EB_CLICKABLE_EDITOR}
-			dev_window := Void
 			if completion_timeout /= Void and then not completion_timeout.is_destroyed then
 				completion_timeout.destroy
 			end

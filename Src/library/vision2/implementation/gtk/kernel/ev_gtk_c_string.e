@@ -41,7 +41,7 @@ feature -- Access
 		-- Is `item' shared with gtk?
 
 	item: POINTER
-			-- Pointer to the UTF8 string
+			-- Pointer to the UTF8 string.
 
 	string: STRING is
 			-- Locale string representation of the UTF8 string
@@ -54,7 +54,8 @@ feature -- Access
 			from
 				i := 0
 				nb := string_length
-				create l_ptr.share_from_pointer (item, nb)
+				l_ptr := shared_pointer_helper
+				l_ptr.set_from_pointer (item, nb)
 				create Result.make (nb)
 			until
 				i = nb
@@ -79,7 +80,7 @@ feature -- Access
 			-- Length of string data held in `managed_data'
 
 	set_with_eiffel_string (a_string: STRING) is
-			-- Create `item' and retian ownership.
+			-- Create `item' and retain ownership.
 		do
 			internal_set_with_eiffel_string (a_string, False)
 		end
@@ -92,6 +93,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
+	shared_pointer_helper: MANAGED_POINTER is
+			-- Reusable Managed Pointer for UTF8 pointer manipulations.
+		once
+			create Result.share_from_pointer (default_pointer, 0)
+		end
+		
 	internal_set_with_eiffel_string (a_string: STRING; a_shared: BOOLEAN) is
 			-- Create a UTF8 string from Eiffel String `a_string'
 		require
@@ -131,7 +138,8 @@ feature {NONE} -- Implementation
 				else
 					utf8_ptr := {EV_GTK_EXTERNALS}.g_malloc (bytes_written + 1)
 				end
-				create l_ptr.share_from_pointer (utf8_ptr, bytes_written + 1)
+				l_ptr := shared_pointer_helper
+				l_ptr.set_from_pointer (utf8_ptr, bytes_written + 1)
 				bytes_written := 0
 			until
 				i > l_string_length

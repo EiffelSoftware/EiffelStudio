@@ -89,14 +89,6 @@ feature -- Recycling
 		do
 			preferences.diagram_tool_data.remove_observer (Current)
 			world.recycle
-			world := Void
-			drawing_area := Void
-			tool := Void
-			projector := Void
-			autoscroll.destroy
-			autoscroll := Void
-			horizontal_scrollbar := Void
-			vertical_scrollbar := Void
 		end
 		
 feature {NONE} -- Implementation

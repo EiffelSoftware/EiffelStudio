@@ -46,22 +46,22 @@ feature -- Initialization
 	initialize is
 			-- Initialize the dynamic list.
 		do
+			set_width (80)
 			set_is_initialized (True)
 		end
 
 feature -- Access
 
-	width: INTEGER is
+	width: INTEGER
 			-- `Result' is width of `Current' used
 			-- while parented.
-		do
-		end
 
 feature -- Status setting
 
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		do
+			width := a_width
 		end
 		
 	resize_to_content is
@@ -69,6 +69,7 @@ feature -- Status setting
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
 		do
+			width := 80
 		end
 
 feature -- PND
@@ -143,6 +144,12 @@ feature -- PND
 		end
 
 feature
+
+	set_parent_imp (par_imp: like parent_imp) is
+			-- Set `parent_imp' to `par_imp'.
+		do
+			parent_imp := par_imp
+		end
 
 	parent_imp: EV_HEADER_IMP
 	

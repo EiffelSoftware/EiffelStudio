@@ -1441,6 +1441,7 @@ feature -- Memory management
 				text_displayed.recycle
 				text_displayed := Void
 			end
+			panel_manager.remove_panel (Current)
 		ensure
 			not_initialized: not is_initialized
 		end

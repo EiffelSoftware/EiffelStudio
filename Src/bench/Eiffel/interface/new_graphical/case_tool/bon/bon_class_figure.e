@@ -277,8 +277,10 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}			
-			model.properties_changed_actions.prune_all (agent set_bon_icons)
-			model.generics_changed_actions.prune_all (agent set_generics)
+			if model /= Void then
+				model.properties_changed_actions.prune_all (agent set_bon_icons)
+				model.generics_changed_actions.prune_all (agent set_generics)
+			end
 			preferences.diagram_tool_data.remove_observer (Current)
 		end
 

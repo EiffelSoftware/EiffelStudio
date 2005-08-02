@@ -196,7 +196,9 @@ feature -- Element change
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
 			label_group.pointer_double_press_actions.prune_all (agent on_label_group_double_clicked)
-			model.is_aggregated_changed.prune_all (agent on_is_aggregated_change)
+			if model /= Void then
+				model.is_aggregated_changed.prune_all (agent on_is_aggregated_change)
+			end
 			polyline_lable_recycle
 			preferences.diagram_tool_data.remove_observer (Current)
 		end

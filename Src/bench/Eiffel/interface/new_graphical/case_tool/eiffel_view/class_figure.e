@@ -85,7 +85,9 @@ feature -- Element change
 			end_actions.prune_all (agent extend_history)
 			move_actions.prune_all (agent on_move)
 			pointer_double_press_actions.prune_all (agent on_pointer_double_pressed)
-			model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
+			if model /= Void then
+				model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
+			end
 		end
 		
 	apply_right_angles is

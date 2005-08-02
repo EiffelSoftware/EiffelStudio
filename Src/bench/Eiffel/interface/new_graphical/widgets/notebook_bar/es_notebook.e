@@ -315,7 +315,6 @@ feature {NONE} -- Drop action
 		local
 			pointed_w: EV_WIDGET
 			i: INTEGER
-			t: ES_NOTEBOOK_ITEM
 		do
 			i := notebook.pointed_tab_index
 			if notebook.valid_index (i) then

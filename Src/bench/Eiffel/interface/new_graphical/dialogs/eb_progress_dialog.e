@@ -237,19 +237,14 @@ feature -- Basic operation
 
 	show is
 			-- Show dialog if not shown yet it to front.
-		local
-			wparent: EB_WINDOW
 		do
 			if not is_show_requested then
---				wparent := Window_manager.last_focused_window
-				if wparent /= Void then
-					show_relative_to_window (wparent.window)
-				else
-					Precursor {EV_DIALOG}
-				end
-				restore
-				raise
+				Precursor {EV_DIALOG}
 			end
+			if is_minimized then
+				restore
+			end
+			raise
 		end
 
 	start (nr_items: INTEGER) is

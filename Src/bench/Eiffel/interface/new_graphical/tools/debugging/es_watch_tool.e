@@ -1085,6 +1085,7 @@ feature {NONE} -- Implementation
 				watched_items.forth
 			end
 			ensure_last_row_is_new_expression_row
+			on_row_deselected (Void) -- Reset toolbar buttons
 		end
 
 	standard_grid_label (s: STRING): EV_GRID_LABEL_ITEM is

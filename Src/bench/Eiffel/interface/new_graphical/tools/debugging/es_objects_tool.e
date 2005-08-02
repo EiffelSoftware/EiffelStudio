@@ -761,6 +761,7 @@ feature {NONE} -- Implementation
 			if header_box /= Void then
 				update_header_box (dbg_was_stopped)
 			end
+			on_debugged_objects_row_deselected (Void) -- reset toolbar buttons
 		end
 	
 feature {NONE} -- Current objects grid Implementation

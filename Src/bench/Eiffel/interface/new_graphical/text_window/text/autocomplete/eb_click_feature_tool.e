@@ -128,7 +128,23 @@ feature -- Analysis preparation
 		local
 			token: EDITOR_TOKEN
 			line: EDITOR_LINE
+			feature_name: FEATURE_NAME
+			feature_name_image: STRING
 		do
+			if current_feature_as /= Void then
+				feature_name := current_feature_as.feature_names.i_th (1)
+				if feature_name.is_frozen then
+					feature_name_image := "frozen"
+				elseif feature_name.is_infix then
+					feature_name_image := "infix"
+				elseif feature_name.is_prefix then
+					feature_name_image := "prefix"
+				else
+					feature_name_image := feature_name.internal_name
+				end
+			else
+				feature_name_image := current_feature_name
+			end
 			split_string := False
 			pos_in_file := 1
 			from
@@ -136,7 +152,7 @@ feature -- Analysis preparation
 				line := content.current_line
 				token := line.first_token
 			until
-				token = Void or token_image_is_same_as_word (token, current_feature_name)
+				token = Void or token_image_is_same_as_word (token, feature_name_image)
 			loop
 				if token.next /= Void then
 					token := token.next
@@ -151,7 +167,6 @@ feature -- Analysis preparation
 				error := True
 			else
 				pos_in_file := current_feature_as.start_position
-				token.set_pos_in_text (pos_in_file)
 			end
 			from
 			until
@@ -200,6 +215,9 @@ feature -- Analysis preparation
 									token := Void
 								end
 							end
+						else
+								-- It might be an operator name
+							token.set_pos_in_text (pos_in_file)
 						end
 					else
 							-- "Normal" text token

@@ -74,7 +74,10 @@ feature -- Location
 	start_location: LOCATION_AS is
 			-- Starting point for current construct.
 		do
-			Result := internal_name.start_location
+			Result := frozen_location
+			if Result = Void then
+				Result := internal_name.start_location
+			end
 		end
 		
 	end_location: LOCATION_AS is
@@ -85,8 +88,13 @@ feature -- Location
 
 feature -- Status report
 
-	is_frozen: BOOLEAN
+	is_frozen: BOOLEAN is
 			-- Is the name of the feature frozen?
+		do
+			Result := frozen_location /= Void
+		ensure
+			definition: Result = (frozen_location /= Void)
+		end
 
 	is_infix: BOOLEAN is
 			-- Is the feature name an infixed notation?
@@ -183,18 +191,26 @@ feature -- Status setting
 			is_unary: is_unary
 		end
 
+	set_frozen_location (l: LOCATION_AS) is
+			-- Set location of the associated "frozen" keyword to `l'.
+		require
+			l_not_void: l /= Void
+		do
+			frozen_location := l
+		ensure
+			frozen_location_set: frozen_location = l
+		end
+
 feature -- Comparison
 
 	infix "<" (other: FEATURE_NAME): BOOLEAN is
 		deferred
 		end
 
-feature {COMPILER_EXPORTER}
+feature {NONE} -- Location
 
-	set_is_frozen (b: BOOLEAN) is
-		do
-			is_frozen := b
-		end
+	frozen_location: LOCATION_AS
+			-- Location of the keyword "frozen" (if any)
 
 feature {NONE} -- Implementation: helper functions
 

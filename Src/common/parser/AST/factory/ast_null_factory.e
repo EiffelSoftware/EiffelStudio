@@ -478,12 +478,12 @@ feature -- Access
 		do
 		end
 
-	new_feature_name_alias_as (feature_name: ID_AS; alias_name: STRING_AS; is_frozen: BOOLEAN; has_convert_mark: BOOLEAN): FEATURE_NAME_ALIAS_AS is
+	new_feature_name_alias_as (feature_name: ID_AS; alias_name: STRING_AS; has_convert_mark: BOOLEAN): FEATURE_NAME_ALIAS_AS is
 			-- New FEATURE_NAME_ALIAS AST node
 		do
 		end
 
-	new_feature_name_id_as (f: ID_AS; b: BOOLEAN): FEAT_NAME_ID_AS is
+	new_feature_name_id_as (f: ID_AS): FEAT_NAME_ID_AS is
 			-- New FEAT_NAME_ID AST node
 		do
 		end
@@ -521,7 +521,7 @@ feature -- Access
 		do
 		end
 
-	new_infix_as (op: STRING_AS; b: BOOLEAN; l: LOCATION_AS): INFIX_PREFIX_AS is
+	new_infix_as (op: STRING_AS; l: LOCATION_AS): INFIX_PREFIX_AS is
 			-- New INFIX AST node
 		do
 		end
@@ -624,7 +624,7 @@ feature -- Access
 		do
 		end
 
-	new_prefix_as (op: STRING_AS; b: BOOLEAN; l: LOCATION_AS): INFIX_PREFIX_AS is
+	new_prefix_as (op: STRING_AS; l: LOCATION_AS): INFIX_PREFIX_AS is
 			-- New PREFIX AST node
 		do
 		end

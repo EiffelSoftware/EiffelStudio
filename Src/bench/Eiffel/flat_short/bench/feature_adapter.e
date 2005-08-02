@@ -113,18 +113,18 @@ feature -- Element change
 							create {INFIX_PREFIX_AS} f_name.initialize
 								(create {STRING_AS}.initialize (
 									extract_symbol_from_infix (source_feature.feature_name), 0, 0, 0, 0),
-								source_feature.is_frozen, True, create {LOCATION_AS}.make_null)
+								True, create {LOCATION_AS}.make_null)
 						elseif source_feature.is_prefix then
 							create {INFIX_PREFIX_AS} f_name.initialize
 								(create {STRING_AS}.initialize (
 									extract_symbol_from_prefix (source_feature.feature_name), 0, 0, 0, 0),
-								source_feature.is_frozen, False, create {LOCATION_AS}.make_null)
+								False, create {LOCATION_AS}.make_null)
 						elseif source_feature.alias_name /= Void then
 							create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
 								create {ID_AS}.initialize (source_feature.feature_name),
 								create {STRING_AS}.initialize (
 									extract_alias_name (source_feature.alias_name), 0, 0, 0, 0),
-								source_feature.is_frozen, source_feature.has_convert_mark)
+								source_feature.has_convert_mark)
 							if source_feature.is_binary then
 								f_name.set_is_binary
 							elseif source_feature.is_unary then
@@ -132,8 +132,10 @@ feature -- Element change
 							end
 						else
 							create {FEAT_NAME_ID_AS} f_name.initialize (
-								create {ID_AS}.initialize (source_feature.feature_name),
-								f_name.is_frozen)
+								create {ID_AS}.initialize (source_feature.feature_name))
+						end
+						if source_feature.is_frozen then
+							f_name.set_frozen_location (create {LOCATION_AS}.make_null)
 						end
 						create eiffel_list.make (1);
 						eiffel_list.extend (f_name);

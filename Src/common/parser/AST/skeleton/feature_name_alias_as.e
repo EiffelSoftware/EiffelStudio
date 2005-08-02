@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Creation
 
-	initialize (feature_id: ID_AS; alias_id: STRING_AS; frozen_status: BOOLEAN; convert_status: BOOLEAN) is
+	initialize (feature_id: ID_AS; alias_id: STRING_AS; convert_status: BOOLEAN) is
 			-- Create feature name object with given characteristics.
 		require
 			feature_id_not_void: feature_id /= Void
@@ -40,7 +40,7 @@ feature {NONE} -- Creation
 				is_valid_binary_operator (alias_id.value) or else
 				is_valid_unary_operator (alias_id.value)
 		do
-			initialize_id (feature_id, frozen_status)
+			initialize_id (feature_id)
 			alias_name := alias_id
 			has_convert_mark := convert_status
 			if not is_bracket then
@@ -54,7 +54,6 @@ feature {NONE} -- Creation
 		ensure
 			feature_name_set: feature_name = feature_id
 			alias_name_set: alias_name = alias_id
-			is_frozen_set: is_frozen = frozen_status
 			has_convert_mark_set: has_convert_mark = convert_status
 		end
 

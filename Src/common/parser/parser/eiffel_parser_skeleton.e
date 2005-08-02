@@ -129,7 +129,6 @@ feature -- Initialization
 			create suppliers.make
 			formal_parameters.wipe_out
 			id_level := Normal_level
-			is_frozen := False
 			has_externals := False
 			once_manifest_string_count := 0
 			counters.wipe_out
@@ -295,9 +294,6 @@ feature {NONE} -- Implementation
 
 	is_separate: BOOLEAN
 			-- Boolean mark for separate class
-
-	is_frozen: BOOLEAN
-			-- Boolean mark for frozen feature names
 
 	has_convert_mark: BOOLEAN
 			-- Boolean mark for alias names with convert mark

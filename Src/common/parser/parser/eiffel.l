@@ -256,6 +256,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [fF][rR][oO][zZ][eE][nN]	{
 				last_token := TE_FROZEN
+				last_location_as_value := ast_factory.new_location_as (line, column, position, 6)
 			}
 [iI][fF]	{
 				last_token := TE_IF

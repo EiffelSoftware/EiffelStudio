@@ -16,16 +16,14 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like feature_name; b: BOOLEAN) is
+	initialize (f: like feature_name) is
 			-- Create a new FEAT_NAME_ID AST node.
 		require
 			f_not_void: f /= Void
 		do
 			feature_name := f
-			is_frozen := b
 		ensure
 			feature_name_set: feature_name = f
-			is_frozen_set: is_frozen = b
 		end
 
 feature -- Visitor

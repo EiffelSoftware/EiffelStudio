@@ -1586,7 +1586,7 @@ feature {NONE} -- Implementation
 						create l_creators.make (1)
 						create l_features.make (1)
 						l_features.extend (create {FEAT_NAME_ID_AS}.initialize (
-							create {ID_AS}.initialize (l_feat.feature_name), False))
+							create {ID_AS}.initialize (l_feat.feature_name)))
 						create l_create.initialize (Void, l_features)
 						l_creators.extend (l_create)
 					end
@@ -1649,7 +1649,7 @@ feature {NONE} -- Implementation
 						create l_creators.make (1)
 						create l_features.make (1)
 						l_features.extend (create {FEAT_NAME_ID_AS}.initialize (
-							create {ID_AS}.initialize (l_feat.feature_name), False))
+							create {ID_AS}.initialize (l_feat.feature_name)))
 						create l_create.initialize (Void, l_features)
 						l_creators.extend (l_create)
 					end

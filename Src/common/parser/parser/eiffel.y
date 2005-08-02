@@ -58,7 +58,9 @@ create
 %token		TE_ELSE TE_ELSEIF
 %token <LOCATION_AS> TE_END
 %token		TE_ENSURE TE_EXPANDED TE_EXPORT
-%token		TE_EXTERNAL TE_FEATURE TE_FROM TE_FROZEN TE_IF TE_INDEXING
+%token		TE_EXTERNAL TE_FEATURE TE_FROM
+%token <LOCATION_AS> TE_FROZEN
+%token		TE_IF TE_INDEXING
 %token <LOCATION_AS> TE_INFIX
 %token		TE_INHERIT TE_INSPECT TE_INVARIANT TE_IS
 %token		TE_LIKE TE_LOCAL TE_LOOP TE_OBSOLETE TE_ONCE TE_ONCE_STRING
@@ -587,24 +589,23 @@ New_feature_list: New_feature
 			}
 	;
 
-New_feature: Feature_name_mark Extended_feature_name
-			{ $$ := $2 }
-	;
-
-Feature_name_mark: -- Empty
-			{ is_frozen := False }
-	|	TE_FROZEN
-			{ is_frozen := True }
+New_feature: Extended_feature_name
+			{ $$ := $1 }
+	|	TE_FROZEN Extended_feature_name
+			{
+				$$ := $2
+				$2.set_frozen_location ($1)
+			}
 	;
 
 Extended_feature_name: Feature_name
 			{ $$ := $1 }
 	|	Identifier_as_lower Alias
-			{ $$ := ast_factory.new_feature_name_alias_as ($1, $2, is_frozen, has_convert_mark) }
+			{ $$ := ast_factory.new_feature_name_alias_as ($1, $2, has_convert_mark) }
 	;
 
 Feature_name: Identifier_as_lower
-			{ $$ := ast_factory.new_feature_name_id_as ($1, is_frozen) }
+			{ $$ := ast_factory.new_feature_name_id_as ($1) }
 	|	Infix
 			{ $$ := $1 }
 	|	Prefix
@@ -612,12 +613,12 @@ Feature_name: Identifier_as_lower
 	;
 
 Infix: TE_INFIX Infix_operator
-			{ $$ := ast_factory.new_infix_as ($2, is_frozen, $1) }
+			{ $$ := ast_factory.new_infix_as ($2, $1) }
 	;
 
 
 Prefix: TE_PREFIX Prefix_operator
-			{ $$ := ast_factory.new_prefix_as ($2, is_frozen, $1) }
+			{ $$ := ast_factory.new_prefix_as ($2, $1) }
 	;
 
 Alias: TE_ALIAS Alias_name Alias_mark

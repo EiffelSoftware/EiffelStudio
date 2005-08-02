@@ -423,7 +423,10 @@ feature -- Access
 					-- to create an empty AST otherwise we cannot pick and drop it.
 				create l_feature_names.make (1)
 				l_feature_names.extend (create {FEAT_NAME_ID_AS}.initialize (
-					create {ID_AS}.initialize (name), is_frozen))
+					create {ID_AS}.initialize (name)))
+				if is_frozen then
+					l_feature_names.last.set_frozen_location (create {LOCATION_AS}.make_null)
+				end
 				create Result.initialize (l_feature_names, create {BODY_AS}.initialize (Void, Void, Void, Void), Void, 0, 0)
 			end
 		end;

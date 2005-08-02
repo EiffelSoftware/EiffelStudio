@@ -88,6 +88,9 @@ feature -- Analysis preparation
 							split_string := False
 						elseif token.image @ token.image.count /= '%"' then
 							split_string := True
+						else
+								-- It might be an operator name
+							token.set_pos_in_text (pos_in_file)						
 						end
 					else
 						if not split_string then
@@ -349,6 +352,9 @@ feature -- Click list update
 									token := Void
 								end
 							end
+						else
+								-- It might be an operator name
+							token.set_pos_in_text (pos_in_file)
 						end
 					else
 							-- "Normal" text token
@@ -370,7 +376,7 @@ feature -- Click list update
 							end
 							features_position.forth
 						else
-							token.set_pos_in_text (pos_in_file)						
+							token.set_pos_in_text (pos_in_file)
 						end
 					end
 				end

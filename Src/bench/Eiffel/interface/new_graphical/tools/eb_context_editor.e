@@ -724,7 +724,6 @@ feature -- Element change
 				progress_dialog.enable_cancel
 				progress_dialog.set_value (0)
 				progress_dialog.show
-				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
 				
 				update_excluded_class_figures
 				world_cell.disable_resize
@@ -869,7 +868,6 @@ feature -- Element change
 				progress_dialog.enable_cancel
 				progress_dialog.set_value (0)
 				progress_dialog.show
-				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
 				
 				update_excluded_class_figures
 				world_cell.disable_resize
@@ -1460,7 +1458,6 @@ feature {NONE} -- Events
 				progress_dialog.set_degree ("Calculating size:")
 				progress_dialog.enable_cancel
 				progress_dialog.show
-				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
 				
 				progress_dialog.start (0)
 				
@@ -1558,7 +1555,6 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 				progress_dialog.set_message ("Diagram for " + view_selector.text)
 				progress_dialog.enable_cancel
 				progress_dialog.show
-				progress_dialog.show_relative_to_window (Window_manager.last_focused_window.window)
 				
 				if is_force_directed_used then
 					disable_force_directed

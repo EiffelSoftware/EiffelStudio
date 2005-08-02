@@ -67,15 +67,19 @@ feature -- basic operations
 		end
 
 	token_image_is_same_as_word (token: EDITOR_TOKEN; word: STRING): BOOLEAN is
-			-- Are the token image and the word equal (case has no importance) ?
+			-- Are the token image (except comments) and the word equal (case has no importance)?
 		require
 			word_not_void: word /= Void
 		local
 			image: STRING
+			comment_token: EDITOR_TOKEN_COMMENT
 		do
 			if token /= Void then
-				image := token.image.as_lower
-				Result := image.is_equal (word)
+				comment_token ?= token
+				if comment_token = Void then
+					image := token.image.as_lower
+					Result := image.is_equal (word)
+				end
 			end
 		end
 

@@ -772,6 +772,11 @@ feature -- Update
 			cluster_tool.synchronize
 			history_manager.synchronize
 			features_tool.synchronize
+				-- Update main views
+			managed_main_formatters.i_th (2).invalidate
+			managed_main_formatters.i_th (3).invalidate
+			managed_main_formatters.i_th (4).invalidate
+			managed_main_formatters.i_th (5).invalidate
 			if stone /= Void then
 				st := stone.synchronized_stone
 			end

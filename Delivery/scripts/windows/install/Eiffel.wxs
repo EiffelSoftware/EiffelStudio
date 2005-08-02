@@ -38,7 +38,12 @@
 				<Merge Id="vision2_tour" Language="1033" src="MSMs\vision2_tour.msm" DiskId="1" />
 			</Directory>
 
-			<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="Projects" />
+			<Directory Id="PROJECTDIR" Name="79f10432.412" LongName="Projects" >
+				<Component Id="PROJECTDIR" Guid="0281A275-2D0F-478b-B415-648EE707E271" KeyPath="yes">
+					<CreateFolder />
+					<RemoveFolder Id="PROJECTDIR" On="uninstall"/>
+				</Component>
+			</Directory>
 		</Directory>
 
 		<Feature Id="Complete" Title="EiffelStudio 5.6" Description="The complete package."
@@ -46,6 +51,7 @@
 
 			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="3" Display="hidden">
 				<ComponentRef Id="display_icon" />
+				<ComponentRef Id="PROJECTDIR" />
 			</Feature>
 			<Feature Id="EiffelBuild" Title="EiffelBuild" TypicalDefault="install" Level="3" Display="hidden">
 				<MergeRef Id="build" />

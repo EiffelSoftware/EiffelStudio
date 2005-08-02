@@ -215,14 +215,22 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	on_combo_box_toggle_button_toggled (a_object_id: INTEGER) is
+	on_combo_box_toggle_button_event (a_object_id: INTEGER; a_event_id: INTEGER) is
 			-- A combo box toggle button has been toggled.
 		local
 			a_combo: EV_COMBO_BOX_IMP
 		do
 			a_combo ?= eif_id_object (a_object_id)
-			if a_combo /= Void then
-				a_combo.toggle_button_toggled
+			if a_combo /= Void and then not a_combo.is_destroyed then
+				inspect
+					a_event_id
+				when 1 then
+						-- The toggle button has been realized
+					a_combo.retrieve_toggle_button
+				when 2 then
+						-- The toggle button has been toggled.
+					a_combo.toggle_button_toggled			
+				end				
 			end
 		end
 

@@ -4329,7 +4329,7 @@ feature {NONE} -- Event handling
 			item_offset: INTEGER
 			item_index: INTEGER
 			last_index: INTEGER
-		do
+		do	
 			if look_down then
 				item_offset := 1
 				last_index := grid_column.count + 1
@@ -4365,17 +4365,19 @@ feature {NONE} -- Event handling
 		local
 			a_parent_row: EV_GRID_ROW
 		do
-			from
-				Result := True
-				a_parent_row := a_item.row.parent_row
-			until
-				a_parent_row = Void or else not Result
-			loop
-				if not a_parent_row.is_expanded then
-					Result := False
-				end
-				a_parent_row := a_parent_row.parent_row
-			end		
+			Result := True
+			if is_tree_enabled then
+				from
+					a_parent_row := a_item.row.parent_row
+				until
+					a_parent_row = Void or else not Result
+				loop
+					if not a_parent_row.is_expanded then
+						Result := False
+					end
+					a_parent_row := a_parent_row.parent_row
+				end					
+			end
 		end
 
 	key_press_received (a_key: EV_KEY) is
@@ -4467,7 +4469,7 @@ feature {NONE} -- Event handling
 		local
 			start_row_index, end_row_index, start_column_index, end_column_index: INTEGER
 			a_col_counter, a_row_counter: INTEGER
-			current_item: EV_GRID_ITEM
+			current_item: EV_GRID_ITEM_I
 			l_remove_selection: BOOLEAN
 			is_ctrl_pressed, is_shift_pressed: BOOLEAN
 			a_application: EV_APPLICATION
@@ -4499,7 +4501,7 @@ feature {NONE} -- Event handling
 								shift_key_start_item := last_selected_item.interface
 							end
 						end
-						if not shift_key_start_item.is_selected then
+						if shift_key_start_item /= Void and then not shift_key_start_item.is_selected then
 								-- If start of multiple Shift selection is not selected then we cancel the selection.
 							shift_key_start_item := Void
 						end
@@ -4544,16 +4546,21 @@ feature {NONE} -- Event handling
 							until
 								a_row_counter > end_row_index
 							loop
-								current_item := item (a_col_counter, a_row_counter)
+								current_item := item_internal (a_col_counter, a_row_counter)
 								if current_item /= Void then
-									-- See if this item needs either selecting or deselecting by checking the bounds of the selection.
+										-- See if this item needs either selecting or deselecting by checking the bounds of the selection.
 									if
 										a_col_counter >= selection_boundary_left and then a_col_counter <= selection_boundary_right and then
 										a_row_counter >= selection_boundary_top and then a_row_counter <= selection_boundary_bottom
 									then
-										current_item.enable_select
+										if not current_item.is_selected and then is_item_navigatable_to (current_item.interface) then
+												-- The item must be user navigatable inorder to select it.
+											current_item.enable_select
+										end	
 									else
-										current_item.disable_select
+										if current_item.is_selected and then is_item_navigatable_to (current_item.interface) then
+											current_item.disable_select
+										end	
 									end
 								end
 								a_row_counter := a_row_counter + 1

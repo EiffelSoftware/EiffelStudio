@@ -395,7 +395,7 @@ feature -- Access
 	world: EIFFEL_WORLD is
 			-- Current world.
 		do
-			Result ?= world_cell.world
+			Result := world_cell.world
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -1082,7 +1082,8 @@ feature -- Memory management
 			if cluster_graph /= Void then
 				cluster_graph.manager.remove_observer (cluster_graph)
 			end
-			world.recycle
+			world_cell.recycle
+			world_cell := Void
 		end
 
 feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, EIFFEL_CLASS_FIGURE} -- Toolbar actions

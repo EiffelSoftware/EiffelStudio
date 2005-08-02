@@ -3125,7 +3125,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 					else
 						-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
 						-- at the bottom of the viewable area.
-						if row_indexes_to_visible_indexes /= Void then
+						if is_tree_enabled or not is_row_height_fixed then
 							row_index := row_indexes_to_visible_indexes.i_th (last_first_row_in_per_item_scrolling) + 1
 						else
 							row_index := last_first_row_in_per_item_scrolling

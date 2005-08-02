@@ -77,7 +77,9 @@ feature -- Element change
 			-- Free `Current's resources.
 		do
 			Precursor {EG_FIGURE}
-			model.is_directed_change_actions.extend (agent on_is_directed_change)
+			if model /= Void then
+				model.is_directed_change_actions.extend (agent on_is_directed_change)
+			end
 		end
 			
 feature {EG_FIGURE_WORLD} -- Element change.

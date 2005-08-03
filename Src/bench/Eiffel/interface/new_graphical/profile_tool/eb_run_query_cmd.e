@@ -31,7 +31,7 @@ feature -- Command Execution
 			-- Extract the current query and display the results.
 		local
 			profiler_query: PROFILER_QUERY
-			executer: E_SHOW_PROFILE_QUERY_DIRECT
+			executer: E_SHOW_PROFILE_QUERY
 --			mp: MOUSE_PTR
 		do
 			query_window.update_profiler_query
@@ -39,7 +39,7 @@ feature -- Command Execution
 			profiler_query.merge (query_window.profiler_query)
 			if profiler_query.subqueries.count > 0 then
 	--			create mp.set_watch_cursor
-				create executer.make (profiler_query, query_window.profiler_options)
+				create executer.make_simple (profiler_query, query_window.profiler_options)
 				executer.set_last_output (query_window.profinfo)
 				executer.execute
 				query_window.update_window (profiler_query, query_window.profiler_options, executer.last_output)

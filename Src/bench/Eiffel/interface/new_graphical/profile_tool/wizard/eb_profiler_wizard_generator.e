@@ -102,7 +102,7 @@ feature -- Basic operations
 			profiler_query: PROFILER_QUERY
 			profiler_options: PROFILER_OPTIONS
 			st: STRUCTURED_TEXT
-			executer: E_SHOW_PROFILE_QUERY_DIRECT
+			executer: E_SHOW_PROFILE_QUERY
 			retried: BOOLEAN
 		do
 			last_operation_successful := False
@@ -121,7 +121,7 @@ feature -- Basic operations
 					profiler_options.set_language_names (language_names.twin)
 	
 					create st.make
-					create executer.make (profiler_query, profiler_options)
+					create executer.make_simple (profiler_query, profiler_options)
 					executer.execute
 					show_new_window (profiler_query, profiler_options, executer.last_output)
 					last_operation_successful := True

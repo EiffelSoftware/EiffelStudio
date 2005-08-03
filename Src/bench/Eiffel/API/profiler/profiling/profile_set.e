@@ -493,7 +493,7 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-feature {E_SHOW_PROFILE_QUERY} -- Column-Attributes
+feature {E_SHOW_PROFILE_QUERY, E_SHOW_PROFILE_QUERY_DIRECT} -- Column-Attributes
 
 	-- column-attributes: min, max, avg per column means
 	-- calls_min_eiffel, percentage_min_eiffel, etc.

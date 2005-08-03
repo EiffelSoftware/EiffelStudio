@@ -164,9 +164,7 @@ feature {CIL_CODE_GENERATOR} -- Generation
 
 feature {NONE} -- Generation
 
-	add_named_argument (
-			a_ca_blob: MD_CUSTOM_ATTRIBUTE; a_class: CLASS_C; a_tuple: TUPLE_CONST_B)
-		is
+	add_named_argument (a_ca_blob: MD_CUSTOM_ATTRIBUTE; a_class: CLASS_C; a_tuple: TUPLE_CONST_B) is
 			-- Lookup named argument in `a_tuple' and insert it in `a_ca_blob'.
 		require
 			blob_not_void: a_ca_blob /= Void
@@ -178,12 +176,15 @@ feature {NONE} -- Generation
 			l_extension: IL_EXTENSION_I
 			l_string_b: STRING_B
 			l_feat_name: STRING
+			l_cl_type: CL_TYPE_I
+			l_ext_class: EXTERNAL_CLASS_C
+			l_type_name: STRING
 		do
 			l_string_b ?= a_tuple.expressions.first
 			check
 				has_string: l_string_b /= Void
 			end
-			l_feat_name := l_string_b.value
+			l_feat_name := l_string_b.value.as_lower
 			
 			l_feat := a_class.feature_table.item (l_feat_name)
 			check
@@ -202,8 +203,21 @@ feature {NONE} -- Generation
 			check
 				has_expression: l_expr_b /= Void
 			end
-			a_ca_blob.put_integer_8 (l_expr_b.type.element_type)
-
+			l_cl_type ?= l_expr_b.type
+			if l_cl_type /= Void and then l_cl_type.is_enum then
+				a_ca_blob.put_integer_8 (0x55)
+				create l_type_name.make_from_string (l_cl_type.il_type_name (Void))
+				l_type_name.append_character (',')
+				l_ext_class ?= l_cl_type.base_class
+				check
+					l_ext_class_not_void: l_ext_class /= Void
+				end
+				l_type_name.append (l_ext_class.assembly.full_name)
+				a_ca_blob.put_string (l_type_name)
+			else
+				a_ca_blob.put_integer_8 (l_expr_b.type.element_type)
+			end
+	
 				-- Put name of attribute or property.
 			if l_feat.written_class.is_external then
 				l_extension ?= l_feat.extension

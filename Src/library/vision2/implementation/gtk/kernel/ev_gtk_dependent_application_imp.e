@@ -30,7 +30,9 @@ feature -- Initialize
 	gtk_dependent_initialize is
 			-- Gtk dependent code for `initialize'
 		do
-			-- Do nothing
+				-- Initialize custom styles for gtk.
+			initialize_combo_box_style
+			initialize_tool_bar_style
 		end
 
 	gtk_dependent_launch_initialize is
@@ -46,14 +48,12 @@ feature -- Implementation
 	pixel_value_from_point_value (a_point_value: INTEGER): INTEGER is
 			-- Returns the number of screen pixels represented by `a_point_value'
 		do
-			--Result := (a_point_value / 72 * 96).rounded
 			Result := ((a_point_value / 3 * 4) + 0.5).truncated_to_integer
 		end
 
 	point_value_from_pixel_value (a_pixel_value: INTEGER): INTEGER is
 			-- Returns the number of points represented by `a_pixel_value' screen pixels value
 		do
-			--Result := (a_pixel_value / 96 * 72).rounded
 			Result := ((a_pixel_value / 4 * 3) + 0.5).truncated_to_integer
 		end
 
@@ -336,6 +336,30 @@ feature -- Implementation
 		end
 
 feature {NONE} -- Externals
+
+	initialize_combo_box_style is
+			-- Set the combo box style so that they appear as lists and not menus.
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gtk_rc_parse_string ("style \"v2-combo-style\" {\n GtkComboBox::appears-as-list = 1\n }\n  widget \"*.v2combobox\" style : highest  \"v2-combo-style\" " );
+				}
+			]"
+		end
+
+	initialize_tool_bar_style is
+			-- Remove the default shadow from the toolbar
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gtk_rc_parse_string ("style \"v2-toolbar-style\" {\n GtkToolbar::shadow-type = none\n }\n  widget \"*.v2toolbar\" style : highest  \"v2-toolbar-style\" " );
+				}
+			]"
+		end
 
 	retrieve_available_fonts (a_widget: POINTER; name_array: TYPED_POINTER [POINTER]; number_elements: TYPED_POINTER [INTEGER]) is
 			-- Retrieve all available fonts present on the system

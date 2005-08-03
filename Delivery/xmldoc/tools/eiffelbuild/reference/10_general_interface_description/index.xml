@@ -1,10 +1,11 @@
-<document title="General interface description" output="studio">
+<document title="General interface description">
 	<meta_data>
 		<help>
-			<meta>
-				<meta_content>general interface description</meta_content>
-				<name>MS-HKWD</name>
-			</meta>
+			<toc>
+				<envision_title>General Interface Description</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference</envision_location>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
 		</help>
 	</meta_data>
 	<paragraph>

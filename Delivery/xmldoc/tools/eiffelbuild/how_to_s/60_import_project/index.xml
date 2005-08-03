@@ -1,5 +1,13 @@
-<document output="studio" title="Import a project">
-	<meta_data/>
+<document title="Import a project">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Import a Project</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\How To's</envision_location>
+				<envision_pseudo_name>60</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>The contents of an existing project may be imported into the currently open project, permitting re-use of existing structures. All versions of EiffelBuild before 5.4 limited each project to a single titled window, with 5.4 removing this limitation. The ability to import multiple EiffelBuild projects into a single project is useful for maintaining larger systems with many windows.</paragraph>
 		<paragraph>To import the contents of an existing project, select 'Import Project' from the 'File' menu as illustrated below:</paragraph>

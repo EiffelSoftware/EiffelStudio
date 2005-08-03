@@ -1,5 +1,13 @@
-<document title="Project settings window" output="studio">
-	<meta_data/>
+<document title="Project settings window">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Project Settings Window</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference</envision_location>
+				<envision_pseudo_name>80</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>This is where global settings regarding your project are going to be made. In here you can specify:</paragraph>
 		<list ordered="false">

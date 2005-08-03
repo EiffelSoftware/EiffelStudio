@@ -1,5 +1,13 @@
-<document title="EiffelBuild window overview" output="studio">
-	<meta_data></meta_data>
+<document title="EiffelBuild window overview">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>EiffelBuild Window Overview</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference\General Interface Description</envision_location>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>Window layout

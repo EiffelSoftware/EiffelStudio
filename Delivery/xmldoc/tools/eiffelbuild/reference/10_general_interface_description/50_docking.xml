@@ -1,5 +1,13 @@
-<document output="studio" title="Docking">
-	<meta_data/>
+<document title="Docking">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Docking</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference\General Interface Description</envision_location>
+				<envision_pseudo_name>50</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>The docking mechanism permits customization of the EiffelBuild interface through the re-ordering of tools to suit your preferences. You may simply "drag" one of the supported tools to a new location as desired. The 
 			<link>

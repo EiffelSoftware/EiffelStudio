@@ -1,5 +1,13 @@
 <document title="EiffelBuild Notation">
-	<meta_data></meta_data>
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>EiffelBuild Notation</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference</envision_location>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>This page contains descriptions of terms found within the EiffelBuild documentation. 
 			<link></link>

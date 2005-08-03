@@ -1,5 +1,13 @@
 <document title="Key shortcuts">
-	<meta_data></meta_data>
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Key Shortcuts</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference\General Interface Description</envision_location>
+				<envision_pseudo_name>40</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>Many operations in EiffelBuild do not require the use of the mouse. The same effect can be achieved through the keyboard only.</paragraph>
 		<paragraph>This page gathers all the keyboard shortcuts available in the environment.</paragraph>

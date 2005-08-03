@@ -1,6 +1,32 @@
-<document title="Retrieving a project from a Build project file" output="studio">
-	<meta_data></meta_data>
+<document title="Retrieving a project from a Build project file">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Retrieving a Project</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\How To's\Starting a Project</envision_location>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
+	
+		<output output="envision">
+			EiffelEnvision projects containing EiffelBuild project files (<image>
+				<url>../../../eiffelenvision/images/icons/build.ico</url>
+			</image>) can open in the EiffelBuild designer automatically. To open an EiffelBuild project file:
+			<list ordered="true">
+				<item>
+					Select the EiffelBuild project file in the EiffelEnvision project.
+				</item>
+				<item>
+					Choose <bold>View</bold>, <bold>Open</bold> from the Visual Studio .NET menu.
+				</item>
+				<item>
+					EiffelBuild will now be opened with the EiffelBuild project file selected.
+				</item>
+			</list>
+		</output>
+	
 		<paragraph>When a project is not open in Build, there are only two menus available, 'File' and 'Help'. To retrieve an existing project, select 'file', 'Open Project</paragraph>
 		<paragraph>
 			<image>

@@ -2,8 +2,9 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_pseudo_name>20</envision_pseudo_name>
-				<envision_location>Eiffel ENViSioN!\Developing with Eiffel ENViSioN!\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\How To's</envision_location>
+				<envision_title>Delete an Object</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\How To's</envision_location>
+				<envision_pseudo_name>30</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>

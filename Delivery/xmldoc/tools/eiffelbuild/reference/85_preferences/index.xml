@@ -1,5 +1,13 @@
-<document output="studio" title="Preferences">
-	<meta_data/>
+<document title="Preferences">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Preferences</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference</envision_location>
+				<envision_pseudo_name>85</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>The EiffelBuild preferences are used to handle all user defined preferences. For example, each time a dialog is displayed with a "do not show again" option, your chosen setting is recorded in the preferences. Various properties of the EiffelBuild interface are recorded by the preferences, on a user by user basis, permitting you to adapt the behavior of EiffelBuild to suit your needs.</paragraph>
 		<paragraph>During use of EiffelBuild, many settings and options that you select, will modify the preferences, ensuring the desired behavior is maintained. To access all of the available EiffelBuild preferences, you may use the Preferences dialog, accessible from the "View", "Preferences", "Preferences..." menu option. The preference dialog has the following appearance:</paragraph>

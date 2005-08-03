@@ -1,5 +1,13 @@
-<document output="studio" title="Code Generation">
-	<meta_data/>
+<document title="Code Generation">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Code Generation</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference</envision_location>
+				<envision_pseudo_name>90</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>To generate Eiffel code representing your system, select 
 			<bold>Generate code</bold> from the 

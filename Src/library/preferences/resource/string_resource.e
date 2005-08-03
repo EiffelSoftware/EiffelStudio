@@ -17,7 +17,7 @@ feature -- Access
 	string_value: STRING is
 			-- String representation of `value'.
 		do
-			Result := value
+			Result := value.twin
 		end	
 		
 	string_type: STRING is

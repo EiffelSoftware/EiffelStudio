@@ -51,6 +51,8 @@ feature {NONE} -- Initialization
 				create window_oids.make
 	
 				tooltips := {EV_GTK_EXTERNALS}.gtk_tooltips_new
+				{EV_GTK_EXTERNALS}.object_ref (tooltips)
+				{EV_GTK_EXTERNALS}.gtk_object_sink (tooltips)
 				set_tooltip_delay (500)
 				
 					-- Initialize the marshal object.
@@ -263,6 +265,7 @@ feature -- Basic operation
 	destroy is
 			-- End the application.
 		do
+			{EV_GTK_EXTERNALS}.object_unref (tooltips)
 			set_is_destroyed (True)
 				-- This will exit our main loop
 		end

@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 
 
 				-- This is a hack, remove when the toggle button can be retrieved via the API.
-			real_signal_connect (container_widget, "realize", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1), Void)
+			real_signal_connect (container_widget, once "realize", agent (app_implementation.gtk_marshal).on_combo_box_toggle_button_event (internal_id, 1), Void)
 			retrieve_toggle_button_signal_connection_id := last_signal_connection_id
 		end
 

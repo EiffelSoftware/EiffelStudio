@@ -75,7 +75,7 @@ feature -- Location
 			-- Starting point for current construct.
 		do
 			Result := frozen_location
-			if Result = Void then
+			if Result = Void or else Result.is_null then
 				Result := internal_name.start_location
 			end
 		end

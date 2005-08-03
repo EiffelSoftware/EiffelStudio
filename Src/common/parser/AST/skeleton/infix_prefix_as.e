@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 
 	initialize (op: STRING_AS; inf: BOOLEAN; l: LOCATION_AS) is
 			-- Create a new INFIX AST node.
-			-- `b' is `is_frozen', `inf' is `is_infix', `l' is a start location.
+			-- `inf' is `is_infix', `l' is a start location.
 		require
 			op_not_void: op /= Void
 		do

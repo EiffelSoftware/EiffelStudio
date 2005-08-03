@@ -4363,19 +4363,19 @@ feature {NONE} -- Event handling
 	is_item_navigatable_to (a_item: EV_GRID_ITEM): BOOLEAN is
 			-- Is `a_item' currently navigatable via the keyboard?
 		local
-			a_parent_row: EV_GRID_ROW
+			l_parent_row_i: EV_GRID_ROW_I
 		do
 			Result := True
 			if is_tree_enabled then
 				from
-					a_parent_row := a_item.row.parent_row
+					l_parent_row_i := a_item.row.implementation.parent_row_i
 				until
-					a_parent_row = Void or else not Result
+					l_parent_row_i = Void or else not Result
 				loop
-					if not a_parent_row.is_expanded then
+					if not l_parent_row_i.is_expanded then
 						Result := False
 					end
-					a_parent_row := a_parent_row.parent_row
+					l_parent_row_i := l_parent_row_i.parent_row_i
 				end					
 			end
 		end

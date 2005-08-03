@@ -50,7 +50,6 @@ feature -- Output
 			-- May be Void if feature was renamed or profile
 			-- information is out of synch with the compiled project.
 		local
-			l_class_c: CLASS_C
 			feature_i: FEATURE_I
 		do
 			feature_i := class_c.feature_table.item (feature_name)

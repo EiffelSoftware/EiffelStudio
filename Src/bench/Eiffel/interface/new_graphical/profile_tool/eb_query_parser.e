@@ -8,7 +8,7 @@ class
 	EB_QUERY_PARSER
 	
 inherit
-	EB_PROFILER_CONSTANTS
+	E_PROFILER_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 						index := index + operator.count
 						index := index + white_space_length (str, index)
 						if index <= str.count then
-							end_index := stricly_positive_min (str.substring_index (" and ", index), str.substring_index (" or ", index), str.count) 
+							end_index := stricly_positive_min (str.substring_index (profiler_spaced_and, index), str.substring_index (profiler_spaced_or, index), str.count) 
 							value := value_str (str, index, end_index)
 							index := end_index
 						else
@@ -156,9 +156,9 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			operator := str.substring (idx, idx + 1)
 			
-			if operator.is_equal ("<=") 
-			   or else operator.is_equal (">=") 
-			   or else operator.is_equal ("/=") 
+			if operator.is_equal (profiler_less_than_or_equal) 
+			   or else operator.is_equal (profiler_greater_than_or_equal) 
+			   or else operator.is_equal (profiler_not_equal) 
 			then
 				Result := operator
 				expects_bounded := false
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 				Result.extend (operator.item (1))
 				expects_bounded := false
 
-			elseif operator.is_equal ("in") then
+			elseif operator.is_equal (profiler_in) then
 				Result := operator
 				expects_real := false
 				expects_int := false
@@ -203,7 +203,7 @@ feature {NONE} -- Implementation
 			
 	is_computed_value (value: STRING) : BOOLEAN is
 		do
-			if value.is_equal ("max") or else value.is_equal ("min") or else value.is_equal ("avg") then
+			if value.is_equal (profiler_max) or else value.is_equal (profiler_min) or else value.is_equal (profiler_avg) then
 				Result := true
 			else
 				Result := false

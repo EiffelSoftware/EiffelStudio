@@ -1,5 +1,13 @@
 <document title="Main toolbar">
-	<meta_data/>
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Main Toolbar</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference\General Interface Description</envision_location>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 At the top of the EiffelBuild development window, one toolbar is displayed by default, as shown below: 
 		<paragraph>

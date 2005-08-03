@@ -1,5 +1,13 @@
-<document title="EiffelBuild Introduction" output="studio">
-	<meta_data/>
+<document title="EiffelBuild Introduction">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Introduction</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference</envision_location>
+				<envision_pseudo_name>00</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>EiffelBuild is the new graphical builder by 
 			<link>

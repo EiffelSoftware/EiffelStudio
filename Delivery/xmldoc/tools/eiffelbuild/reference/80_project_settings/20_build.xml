@@ -1,5 +1,13 @@
-<document title="Build Tab" output="studio">
-	<meta_data/>
+<document title="Build Tab">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Build Tab</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference\Preferences</envision_location>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>This tab contains information about the type of project you wish to build, and associated information.</paragraph>
 		<paragraph>Here is the appearance of the Build tab when 'build type' is selected as 'Project':</paragraph>

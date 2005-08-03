@@ -1,5 +1,13 @@
-<document title="Save a project" output="studio">
-	<meta_data/>
+<document title="Save a project">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Save a Project</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\How To's</envision_location>
+				<envision_pseudo_name>40</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>To save the project that is currently open, select 
 			<bold>Save</bold> from the 

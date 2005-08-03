@@ -1,5 +1,13 @@
-<document output="studio" title="Version History">
-	<meta_data/>
+<document title="Version History">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Version History</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild</envision_location>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 			EiffelBuild
 			<line_break/>

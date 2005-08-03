@@ -1,5 +1,13 @@
-<document title="Generation Tab" output="studio">
-	<meta_data/>
+<document title="Generation Tab">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Generation Tab</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\Reference\Preferences</envision_location>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph> 
 		<paragraph>This tab contains information about the available code generation options.</paragraph>
 		<paragraph>Here is the appearance of the Generation tab with default settings for a Build project:</paragraph>

@@ -1,5 +1,13 @@
-<document title="Starting a project" output="studio">
-	<meta_data/>
+<document title="Starting a project">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Starting a Project</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\How To's</envision_location>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<list ordered="false">
 			<item>

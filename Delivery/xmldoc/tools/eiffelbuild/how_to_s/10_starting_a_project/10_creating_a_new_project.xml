@@ -1,5 +1,13 @@
-<document title="Creating a new project" output="studio">
-	<meta_data/>
+<document title="Creating a new project">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Creating a New Project</envision_title>
+				<envision_location>EiffelEnvision\Tools\EiffelBuild\How To's\Starting a Project</envision_location>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>When a project is not open in Build, there are only two menu options available. 'File' and 'Help'. To create a new project, select 'file', 'New project' as illustrated below:</paragraph>   
 		<paragraph>

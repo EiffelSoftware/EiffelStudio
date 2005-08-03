@@ -59,28 +59,19 @@ feature {NONE} -- Implementation
 		end
 		
 	initialize is
-			-- Initialize `Current'
+			-- Initialize `Current'.
+		local
+			a_cs: EV_GTK_C_STRING
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
-				
-			initialize_tool_bar_style (list_widget)
-			
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
-			has_vertical_button_style := True
-		end
 
-	initialize_tool_bar_style (a_tool_bar: POINTER) is
-			-- Remove the default shadow from the toolbar
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"[
-				{
-					gtk_widget_set_name ((GtkWidget*) $a_tool_bar, "v2toolbar");
-					gtk_rc_parse_string ("style \"v2-toolbar-style\" {\n GtkToolbar::shadow-type = none\n }\n  widget \"*.v2toolbar\" style : highest  \"v2-toolbar-style\" " );
-				}
-			]"
+				-- Set widget name so that the style can be used as set in EV_GTK_DEPENDENT_APPLICATION_IMP
+			a_cs := once "v2toolbar"
+			{EV_GTK_EXTERNALS}.gtk_widget_set_name (list_widget, a_cs.item)
+			
+			{EV_GTK_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
+			has_vertical_button_style := True
 		end
 
 	list_widget: POINTER is

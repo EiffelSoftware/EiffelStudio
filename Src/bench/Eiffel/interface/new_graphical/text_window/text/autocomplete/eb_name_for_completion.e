@@ -10,23 +10,11 @@ class
 inherit
 	STRING
 		rename
-			make_from_string as make_with_name
+			make as make_string
 		redefine
-			make_with_name, 
 			is_equal, infix "<"
-		select
-			infix "<", is_equal
 		end
 
-	STRING
-		rename
-			make_from_string as make_with_name,
-			infix "<" as lower_than,
-			is_equal as is_same_string
-		redefine
-			make_with_name
-		end
-		
 	EB_SHARED_PREFERENCES
 		undefine
 		    copy,
@@ -43,16 +31,16 @@ inherit
 
 create
 	make_with_name
-
+	
 create {EB_NAME_FOR_COMPLETION}
-	make
+	make_string
 
 feature -- Initialization
 
 	make_with_name (a_name: STRING) is
 			-- Create feature name with value `name'
 		do
-			Precursor {STRING} (a_name)
+			make_from_string (a_name)
 			name := a_name
 			has_dot := True
 		ensure then
@@ -128,13 +116,21 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 			-- Is name made of same character sequence as `other' (case has no importance)
 		do
-			Result := as_lower.is_same_string (other.as_lower)
+			if name = Void or other.name = Void then
+				Result := Precursor {STRING} (other)
+			else
+				Result := name.as_lower.is_equal (other.name.as_lower)
+			end
 		end
-
+		
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is name lexicographically lower than `other'?
 		do
-			Result := name.as_lower < (other.name.as_lower)
+			if name = Void or other.name = Void then
+				Result := Precursor {STRING} (other)
+			else
+				Result := name.as_lower < other.name.as_lower
+			end
 		end
 		
 	begins_with (s:STRING): BOOLEAN is

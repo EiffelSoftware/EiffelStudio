@@ -8,25 +8,17 @@ class
 	EB_FEATURE_FOR_COMPLETION
 
 inherit
-	PREFIX_INFIX_NAMES
-		rename
-			out as out_prefix_infix_names,
-			copy as copy_prefix_infix_names,
-			is_equal as is_equal_prefix_infix_names
-		end
-	
 	EB_NAME_FOR_COMPLETION
-		rename
-			make as make_string
 		redefine
 			icon,
 			tooltip_text,
 			is_class,
 			full_insert_name
-		select
-			out,
-			copy,
-			is_equal
+		end
+
+	PREFIX_INFIX_NAMES
+		undefine
+			out, copy, is_equal
 		end
 
 create

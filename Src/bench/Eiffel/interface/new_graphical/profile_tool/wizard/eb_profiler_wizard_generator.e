@@ -30,7 +30,7 @@ inherit
 			{NONE} all
 		end
 		
-	EB_PROFILER_CONSTANTS
+	E_PROFILER_CONSTANTS
 		export
 			{NONE} all
 		end

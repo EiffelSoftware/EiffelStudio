@@ -722,68 +722,71 @@ feature {NONE} -- String matching
 	index_of_closest_match: INTEGER is
 			-- The index of the closest name match to `buffered_input' in `sorted_names'.  If there is no part or full
 			-- match return -1.
-		local
-			index_count,
-			iteration_count,
-			max_iterations,
-			buffered_input_count,
-			match_index,
-			last_best_match_index: INTEGER
-			item_name: STRING
-			buffered_char: CHARACTER
-			input: STRING
-			done: BOOLEAN
+		local			
+			l_input: like buffered_input
+			l_input_count: INTEGER
+			l_names: like sorted_names
+			l_names_count: INTEGER
+			l_item: STRING
+			l_match_index: INTEGER
+			l_last_match: INTEGER
+			l_stop: BOOLEAN
+			c: CHARACTER
+			i: INTEGER		
 		do
 			if not buffered_input.is_empty then
-				buffered_input_count := buffered_input.count
-				input := buffered_input.as_lower
-				max_iterations := sorted_names.count
-				buffered_char := input.item (1)										
+				l_input := buffered_input			
+				l_input_count := l_input.count
+				l_names := sorted_names
+				l_names_count := l_names.count
+				c := l_input.item (1)
 				from
-					iteration_count := 1					
-					index_count := 1
+					i := 1
 				until
-					iteration_count > max_iterations or done
+					i > l_names_count or l_stop
 				loop
-					item_name := sorted_names.item (iteration_count).name
-					match_index := match_names_until_done (item_name, input)
-					if match_index > 0 and match_index > last_best_match_index then
-							-- At least one char matched so store match index
-						last_best_match_index := match_index
-						Result := iteration_count
-						if last_best_match_index < buffered_input_count then
-							if iteration_count < max_iterations then
-								from
-								until
-									iteration_count = max_iterations or done
-								loop
-									match_index := match_names_until_done (sorted_names.item (iteration_count + 1).name, input)
-									if match_index < last_best_match_index then
-										Result := iteration_count
-										done := True
-									elseif match_index = buffered_input_count then
-										Result := iteration_count + 1
-										done := True
-									end
-									iteration_count := iteration_count + 1
-								end
+					l_item := (l_names[i]).name
+					
+					l_match_index := match_names_until_done (l_item, l_input)
+					if l_match_index = l_input_count then
+							-- Exact match
+						Result := i
+						l_stop := True
+					elseif l_match_index > l_last_match then
+							-- Better match than last
+						l_last_match := l_match_index
+						Result := i
+					elseif Result = 0 then
+							-- There have been no matches yet.
+						if l_item.item (1) > c then
+								-- The first character of the current item is greater that the requested match
+								-- so we can stop here.
+							Result := i
+							l_stop := True
+						elseif i = l_names_count then
+								-- No match found and we are at the end
+							Result := i
+						end
+					elseif i > 1 and l_match_index = l_last_match and l_match_index < l_input_count then
+							-- This match was the same as the last
+						if l_item.item (l_match_index + 1) > l_input.item (l_match_index + 1) then
+							l_item := (l_names[i - 1]).name
+							if l_item.item (l_match_index + 1) < l_input.item (l_match_index + 1) then
+									-- Ensures `deep_twin' is chosen over `deep_equals' if l_input is `deep_f'
+									-- and ensures `deep_copy' is *NOT* chosen over `deep_clone' when l_input is `deef'
+								l_last_match := l_last_match + 1
+								Result := i
 							end
 						end
-					elseif Result = 0 then
-						if item_name.item (1) > buffered_char then
-							Result := iteration_count
-							done := True
-						end		
-					else
-						done := True
-					end					
-					iteration_count := iteration_count + 1
+					end
+					
+					i := i + 1
 				end
 			else
 				Result := 0
 			end
-			if Result > sorted_names.count then
-				Result := sorted_names.count	
+			if Result > l_names_count then
+				Result := l_names_count	
 			end
 		ensure
 			result_greater_than_zero: Result >= 0

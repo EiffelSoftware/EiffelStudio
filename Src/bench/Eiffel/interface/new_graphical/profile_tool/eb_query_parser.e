@@ -6,6 +6,12 @@ indexing
 
 class
 	EB_QUERY_PARSER
+	
+inherit
+	EB_PROFILER_CONSTANTS
+		export
+			{NONE} all
+		end
 
 feature -- Parsing
 
@@ -44,7 +50,7 @@ feature {NONE} -- Implementation
 				col_name := column_name (str, index)
 				if col_name = Void then
 					error := True
-				elseif col_name.is_equal ("EOQ") then
+				elseif col_name.is_equal (profiler_end_of_query) then
 					if index = 1 then
 							-- This is an error to find "EOQ" the first time the loop is executed.
 							-- It means the query is not valid.
@@ -78,7 +84,7 @@ feature {NONE} -- Implementation
 								boolean_op := boolean_operator (str, index)
 								if boolean_op = void then
 									error := True
-								elseif boolean_op.is_equal ("EOQ") then
+								elseif boolean_op.is_equal (profiler_end_of_query) then
 									end_of_query := True
 								else
 									index := index + boolean_op.count
@@ -113,31 +119,31 @@ feature {NONE} -- Implementation
 			-- Get the column name in `str' at position `idx'
 		do
 			if idx < str.count then
-				if str.substring (idx, idx + ("featurename").count - 1).is_equal ("featurename") then
-					Result := "featurename"
+				if str.substring (idx, idx + (profiler_feature_name).count - 1).is_equal (profiler_feature_name) then
+					Result := profiler_feature_name
 					expects_real := False
 					expects_int := False
 					expects_bounded := False --| Guillaume - 09/18/97
-				elseif str.substring (idx, idx + ("calls").count - 1).is_equal ("calls") then
-					Result := "calls"
+				elseif str.substring (idx, idx + (profiler_calls).count - 1).is_equal (profiler_calls) then
+					Result := profiler_calls
 					expects_string := False --| Guillaume - 09/18/97
-				elseif str.substring (idx, idx + ("total").count - 1).is_equal ("total") then
-					Result := "total"
+				elseif str.substring (idx, idx + (profiler_total).count - 1).is_equal (profiler_total) then
+					Result := profiler_total
 					expects_string := False --| Guillaume - 09/18/97
-				elseif str.substring (idx, idx + ("self").count - 1).is_equal ("self") then
-					Result := "self"
+				elseif str.substring (idx, idx + (profiler_self).count - 1).is_equal (profiler_self) then
+					Result := profiler_self
 					expects_string := False --| Guillaume - 09/18/97
-				elseif str.substring (idx, idx + ("percentage").count - 1).is_equal ("percentage") then
-					Result := "percentage"
+				elseif str.substring (idx, idx + (profiler_percentage).count - 1).is_equal (profiler_percentage) then
+					Result := profiler_percentage
 					expects_string := False --| Guillaume - 09/18/97
-				elseif str.substring (idx, idx + ("descendants").count - 1).is_equal ("descendants") then
-					Result := "descendants"
+				elseif str.substring (idx, idx + (profiler_descendants).count - 1).is_equal (profiler_descendants) then
+					Result := profiler_descendants
 					expects_string := False --| Guillaume - 09/18/97
 				else
 					Result := Void
 				end
 			else
-				Result := "EOQ"
+				Result := profiler_end_of_query
 			end
 		end
 
@@ -235,18 +241,18 @@ feature {NONE} -- Implementation
 			if
 				idx > str.count
 			then
-			 	Result := "EOQ"
+			 	Result := profiler_end_of_query
 			elseif
 				str @ idx = 'o' and then
 				str @ (idx + 1) = 'r'
 			then
-				Result := "or"
+				Result := profiler_or
 			elseif
 				str @ idx = 'a' and then
 				str @ (idx + 1) = 'n' and then
 				str @ (idx + 2) = 'd'
 			then
-				Result := "and"
+				Result := profiler_and
 			else
 				Result := Void
 			end

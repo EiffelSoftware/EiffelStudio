@@ -9,8 +9,6 @@ class
 
 inherit
 	EB_NAME_FOR_COMPLETION
-		rename
-			make as make_string
 		redefine
 			icon,
 			tooltip_text,

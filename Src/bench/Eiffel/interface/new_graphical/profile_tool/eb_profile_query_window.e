@@ -59,7 +59,7 @@ inherit
 			default_create, copy
 		end
 		
-	EB_PROFILER_CONSTANTS
+	E_PROFILER_CONSTANTS
 		export
 			{NONE} all
 		undefine

@@ -42,6 +42,7 @@ feature -- Basic Operation
 		do
 				--| Switches Frame
 			create name_switch.make_with_text (Interface_names.b_Feature_name)
+			name_switch.disable_sensitive
 			create number_of_calls_switch.make_with_text (Interface_names.b_Number_of_calls)
 			create time_switch.make_with_text (Interface_names.b_Function_time)
 			create descendant_switch.make_with_text (Interface_names.b_Descendant_time)

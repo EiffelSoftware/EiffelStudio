@@ -15,6 +15,8 @@ inherit
 		redefine
 			executable, execute
 		end
+		
+	E_PROFILER_CONSTANTS
 
 create
 	make,
@@ -178,12 +180,12 @@ end;
 			-- Expands `all' to all posible columnnames
 		do
 			if prof_options.output_names.item (1).is_equal ("all") then
-				prof_options.output_names.force ("percentage", 1);
-				prof_options.output_names.force ("self", 2);
-				prof_options.output_names.force ("descendants", 3);
-				prof_options.output_names.force ("total", 4);
-				prof_options.output_names.force ("calls", 5);
-				prof_options.output_names.force ("featurename", 6)
+				prof_options.output_names.force (profiler_percentage, 1);
+				prof_options.output_names.force (profiler_self, 2);
+				prof_options.output_names.force (profiler_descendants, 3);
+				prof_options.output_names.force (profiler_total, 4);
+				prof_options.output_names.force (profiler_calls, 5);
+				prof_options.output_names.force (profiler_feature_name, 6)
 			end
 		end;
 
@@ -442,22 +444,22 @@ end;
 			col_name: STRING
 		do
 			col_name := prof_query.subquery_at (i).column;
-			if col_name.is_equal ("percentage") then
+			if col_name.is_equal (profiler_percentage) then
 				create {PERCENTAGE_FILTER} Result.make;
 				Result := set_filter_value (Result, false, i)
-			elseif col_name.is_equal ("self") then
+			elseif col_name.is_equal (profiler_self) then
 				create {SELF_FILTER} Result.make;
 				Result := set_filter_value (Result, false, i)
-			elseif col_name.is_equal ("descendants") then
+			elseif col_name.is_equal (profiler_descendants) then
 				create {DESCENDANTS_FILTER} Result.make;
 				Result := set_filter_value (Result, false, i)
-			elseif col_name.is_equal ("total") then
+			elseif col_name.is_equal (profiler_total) then
 				create {TOTAL_FILTER} Result.make;
 				Result := set_filter_value (Result, false, i)
-			elseif col_name.is_equal ("calls") then
+			elseif col_name.is_equal (profiler_calls) then
 				create {CALLS_FILTER} Result.make;
 				Result := set_filter_value (Result, true, i)
-			elseif col_name.is_equal ("featurename") then
+			elseif col_name.is_equal (profiler_feature_name) then
 				create {NAME_FILTER} Result.make;
 				Result.set_value (prof_query.subquery_at (i).value)
 			end;
@@ -513,30 +515,30 @@ end;
 		do
 			if calls then
 				create int_ref;
-				if val.is_equal ("min") then
-					if prof_options.language_names.item (1).is_equal ("eiffel") then
+				if val.is_equal (profiler_min) then
+					if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 						int_ref.set_item (profile_information.profile_data.calls_min_eiffel)
-					elseif prof_options.language_names.item (1).is_equal ("c") then
+					elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 						int_ref.set_item (profile_information.profile_data.calls_min_c)
-					elseif prof_options.language_names.item (1).is_equal ("cycle") then
+					elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 						int_ref.set_item (profile_information.profile_data.calls_min_cycle)
 					end
-				elseif val.is_equal ("max") then
-					if prof_options.language_names.item (1).is_equal ("eiffel") then
+				elseif val.is_equal (profiler_max) then
+					if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 						int_ref.set_item (profile_information.profile_data.calls_max_eiffel)
-					elseif prof_options.language_names.item (1).is_equal ("c") then
+					elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 						int_ref.set_item (profile_information.profile_data.calls_max_c)
-					elseif prof_options.language_names.item (1).is_equal ("cycle") then
+					elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 						int_ref.set_item (profile_information.profile_data.calls_max_cycle)
 					end
-				elseif val.is_equal ("avg") then
-					if prof_options.language_names.item (1).is_equal ("eiffel") then
+				elseif val.is_equal (profiler_avg) then
+					if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 						int_ref.set_item (profile_information.profile_data.calls_avg_eiffel 
 									// profile_information.profile_data.number_of_eiffel_features)
-					elseif prof_options.language_names.item (1).is_equal ("c") then
+					elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 						int_ref.set_item (profile_information.profile_data.calls_avg_c
 									// profile_information.profile_data.number_of_c_functions)
-					elseif prof_options.language_names.item (1).is_equal ("cycle") then
+					elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 						int_ref.set_item (profile_information.profile_data.calls_avg_cycle
 									// profile_information.profile_data.number_of_cycles)
 					end
@@ -546,124 +548,124 @@ end;
 				Result := int_ref
 			else
 				create real_ref;
-				if prof_query.subquery_at (i).column.is_equal ("percentage") then
-					if val.is_equal ("min") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+				if prof_query.subquery_at (i).column.is_equal (profiler_percentage) then
+					if val.is_equal (profiler_min) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.calls_min_eiffel)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.calls_min_c)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.calls_min_cycle)
 						end
-					elseif val.is_equal ("max") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+					elseif val.is_equal (profiler_max) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.calls_max_eiffel)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.calls_max_c)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.calls_max_cycle)
 						end
-					elseif val.is_equal ("avg") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+					elseif val.is_equal (profiler_avg) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.calls_avg_eiffel
 									/ profile_information.profile_data.number_of_eiffel_features)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.calls_avg_c
 									/ profile_information.profile_data.number_of_c_functions)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.calls_avg_cycle
 									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
 						real_ref.set_item (val.to_real)
 					end
-				elseif prof_query.subquery_at (i).column.is_equal ("descendants") then
-					if val.is_equal ("min") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+				elseif prof_query.subquery_at (i).column.is_equal (profiler_descendants) then
+					if val.is_equal (profiler_min) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.descendants_min_eiffel)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.descendants_min_c)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.descendants_min_cycle)
 						end
-					elseif val.is_equal ("max") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+					elseif val.is_equal (profiler_max) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.descendants_max_eiffel)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.descendants_max_c)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.descendants_max_cycle)
 						end
-					elseif val.is_equal ("avg") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+					elseif val.is_equal (profiler_avg) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.descendants_avg_eiffel
 									/ profile_information.profile_data.number_of_eiffel_features)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.descendants_avg_c
 									/ profile_information.profile_data.number_of_c_functions)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.descendants_avg_cycle
 									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
 						real_ref.set_item (val.to_real)
 					end
-				elseif prof_query.subquery_at (i).column.is_equal ("self") then
-					if val.is_equal ("min") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+				elseif prof_query.subquery_at (i).column.is_equal (profiler_self) then
+					if val.is_equal (profiler_min) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.self_min_eiffel)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.self_min_c)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.self_min_cycle)
 						end
-					elseif val.is_equal ("max") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+					elseif val.is_equal (profiler_max) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.self_max_eiffel)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.self_max_c)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.self_max_cycle)
 						end
-					elseif val.is_equal ("avg") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+					elseif val.is_equal (profiler_avg) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.self_avg_eiffel
 									/ profile_information.profile_data.number_of_eiffel_features)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.self_avg_c
 									/ profile_information.profile_data.number_of_c_functions)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.self_avg_cycle
 									/ profile_information.profile_data.number_of_cycles)
 						end
 					else
 						real_ref.set_item (val.to_real)
 					end
-				elseif prof_query.subquery_at (i).column.is_equal ("total") then
-					if val.is_equal ("min") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+				elseif prof_query.subquery_at (i).column.is_equal (profiler_total) then
+					if val.is_equal (profiler_min) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.total_min_eiffel)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.total_min_c)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.total_min_cycle)
 						end
-					elseif val.is_equal ("max") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+					elseif val.is_equal (profiler_max) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.total_max_eiffel)
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.total_max_c)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.total_max_cycle)
 						end
-					elseif val.is_equal ("avg") then
-						if prof_options.language_names.item (1).is_equal ("eiffel") then
+					elseif val.is_equal (profiler_avg) then
+						if prof_options.language_names.item (1).is_equal (profiler_eiffel) then
 							real_ref.set_item (profile_information.profile_data.total_avg_eiffel
 									/ profile_information.profile_data.number_of_eiffel_features);
-						elseif prof_options.language_names.item (1).is_equal ("c") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_c) then
 							real_ref.set_item (profile_information.profile_data.total_avg_c
 									/ profile_information.profile_data.number_of_c_functions)
-						elseif prof_options.language_names.item (1).is_equal ("cycle") then
+						elseif prof_options.language_names.item (1).is_equal (profiler_cycle) then
 							real_ref.set_item (profile_information.profile_data.total_avg_cycle
 									/ profile_information.profile_data.number_of_cycles)
 						end
@@ -712,11 +714,11 @@ end;
 		do
 			lang_name := prof_options.language_names.item (i);
 			lang_name.to_lower;
-			if lang_name.is_equal ("eiffel") then
+			if lang_name.is_equal (profiler_eiffel) then
 				create {EIFFEL_FILTER} Result.make
-			elseif lang_name.is_equal ("c") then
+			elseif lang_name.is_equal (profiler_c) then
 				create {C_FILTER} Result.make
-			elseif lang_name.is_equal ("cycle") then
+			elseif lang_name.is_equal (profiler_cycle) then
 				create {CYCLE_FILTER} Result.make
 			end
 		end;

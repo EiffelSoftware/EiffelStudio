@@ -444,10 +444,12 @@ feature -- Element change
 	add_indents (nr: INTEGER) is
 			-- Add `nr' indentations.
 		do
-			if nr = 1 then
-				add_indent
-			else
-				add (create {INDENT_TEXT}.make (nr))
+			if nr > 0 then
+				if nr = 1 then
+					add (ti_tab1)
+				else
+					add (create {INDENT_TEXT}.make (nr))
+				end
 			end
 		end
 

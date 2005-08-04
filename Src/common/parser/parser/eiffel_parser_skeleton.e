@@ -589,6 +589,9 @@ feature {NONE} -- Basic type factory
 				if not l_type.is_integer and not l_type.is_natural then
 					report_invalid_type_for_integer_error (a_type, buffer)
 				end
+			elseif a_type /= Void then
+					-- A type was specified but did not result in a valid type
+				report_invalid_type_for_integer_error (a_type, buffer)
 			end
 				-- Remember original token
 			token_value := buffer
@@ -634,6 +637,9 @@ feature {NONE} -- Basic type factory
 				if not l_type.is_real_32 and not l_type.is_real_64 then
 					report_invalid_type_for_real_error (a_type, buffer)
 				end
+			elseif a_type /= Void then
+					-- A type was specified but did not result in a valid type
+				report_invalid_type_for_real_error (a_type, buffer)				
 			end
 			if is_signed and sign_symbol = '-' then
 				buffer.precede ('-')

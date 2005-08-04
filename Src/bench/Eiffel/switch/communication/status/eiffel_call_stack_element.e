@@ -96,8 +96,6 @@ feature -- Properties
 					end
 				end
 			end
-		ensure
-			non_void_implies_not_empty: Result /= Void implies not Result.is_empty
 		end
 
 	arguments: LIST [ABSTRACT_DEBUG_VALUE] is

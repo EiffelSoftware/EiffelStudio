@@ -455,10 +455,16 @@ feature -- Status Setting
 				i := i + 1
 			end
 			
-			query_grid_item := cluster_array.item (cluster_array.upper)
-			query_grid_item.set_upper (class_array.upper)
-			query_grid_item := class_array.item (class_array.upper)
-			query_grid_item.set_upper (feature_array.upper)
+				-- The loop does not handle the upper of the final items, so
+				-- set them explicitly here.
+			if not cluster_array.is_empty then
+				query_grid_item := cluster_array.item (cluster_array.upper)
+				query_grid_item.set_upper (class_array.upper)
+			end
+			if not class_array.is_empty then
+				query_grid_item := class_array.item (class_array.upper)
+				query_grid_item.set_upper (feature_array.upper)
+			end
 			
 					-- Now build the root nodes for Eiffel queries.
 			if feature_array.count >= 1 then

@@ -338,7 +338,7 @@ feature {ICOR_EXPORTER} -- Implementation
 
 feature -- External macro (enum)
 
-	enum_cor_debug_thread_state__thread_run: INTEGER is
+	frozen enum_cor_debug_thread_state__thread_run: INTEGER is
 			-- 
 		external
 			"C++ macro use %"cli_headers.h%" "
@@ -346,7 +346,7 @@ feature -- External macro (enum)
 			"THREAD_RUN"
 		end		
 		
-	enum_cor_debug_thread_state__thread_suspend: INTEGER is
+	frozen enum_cor_debug_thread_state__thread_suspend: INTEGER is
 			-- 
 		external
 			"C++ macro use %"cli_headers.h%" "

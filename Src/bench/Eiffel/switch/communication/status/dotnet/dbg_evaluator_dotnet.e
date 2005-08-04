@@ -649,7 +649,7 @@ feature {NONE} -- Debug purpose only
 			debug ("debugger_trace_eval_data")
 				if not retried then
 					create l_edvi.make (icdv)
-					if l_edvi.has_object_interface then
+					if l_edvi.has_object_interface and then l_edvi.value_class_name /= Void then
 						print (generating_type + " : ClassName = " + l_edvi.value_class_name + "%N")
 					else
 						if l_edvi.is_reference_type then

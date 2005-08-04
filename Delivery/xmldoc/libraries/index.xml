@@ -34,7 +34,7 @@
 							<item output="studio">
 								<link>
 									<url>lex/index.xml</url>
-									<label>Lex&amp;Parse</label>
+									<label>Lex &amp; Parse</label>
 			
 								</link>: lexical analysis and parsing libraries.
 							</item>

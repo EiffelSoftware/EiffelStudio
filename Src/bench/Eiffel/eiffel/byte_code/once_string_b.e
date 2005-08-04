@@ -11,7 +11,7 @@ inherit
 	EXPR_B
 		redefine
 			enlarged, make_byte_code, generate_il,
-			is_simple_expr, allocates_memory
+			is_simple_expr, allocates_memory, size
 		end
 
 create
@@ -74,6 +74,13 @@ feature -- Properties
 		do
 				-- Current always allocates memory
 			Result := True
+		end
+
+	size: INTEGER is
+		do
+				-- Inlining will not be done for once string as they need to
+				-- be generated in the context of the feature were they are defined.
+			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 		end
 
 feature -- Settings

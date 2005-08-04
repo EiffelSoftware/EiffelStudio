@@ -29,9 +29,9 @@
 			<line_break/>
 		</paragraph>
 		<paragraph>To add an icon or a separator to the toolbar, select it in the left list and click on the 
-			<bold>Add -&amp;gt;</bold> button. It will then be inserted in the right list after the selected item.
+			<bold>Add -&gt;</bold> button. It will then be inserted in the right list after the selected item.
 			<line_break/>To remove an icon, click on it in the right list and click on 
-			<bold>&amp;lt;- Remove</bold>.
+			<bold>&lt;- Remove</bold>.
 		</paragraph>
 		<paragraph>The order of the icons in the right list is the same as in the toolbar. If you want to move an icon in the list, select it and use 
 			<bold>Up</bold> and 

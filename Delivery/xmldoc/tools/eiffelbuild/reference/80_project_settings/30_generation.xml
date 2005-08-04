@@ -27,7 +27,7 @@
 					<item><bold>Export only named</bold> - Only those attributes that have been named are exported to ANY while unnaned attributes are not exported..</item>
 					<item><bold>Export None</bold> - None of the attributes are exported.</item>
 					</list>
-					<item><bold>Grouped</bold> - Should different objects of same type be declared individually, or grouped?<line_break></line_break>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;button1: <class_name>EV_BUTTON</class_name><line_break></line_break>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;button2: <class_name>EV_BUTTON</class_name><line_break></line_break>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;button3: <class_name>EV_BUTTON</class_name><line_break></line_break><bold>or</bold><line_break></line_break>&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;button1, button2, button3: <class_name>EV_BUTTON</class_name></item>
+					<item><bold>Grouped</bold> - Should different objects of same type be declared individually, or grouped?<line_break></line_break>&#160;&#160;&#160;&#160;button1: <class_name>EV_BUTTON</class_name><line_break></line_break>&#160;&#160;&#160;&#160;button2: <class_name>EV_BUTTON</class_name><line_break></line_break>&#160;&#160;&#160;&#160;button3: <class_name>EV_BUTTON</class_name><line_break></line_break><bold>or</bold><line_break></line_break>&#160;&#160;&#160;&#160;button1, button2, button3: <class_name>EV_BUTTON</class_name></item>
 				</list>
 			<item>
 				<bold>Generate debugging information</bold>

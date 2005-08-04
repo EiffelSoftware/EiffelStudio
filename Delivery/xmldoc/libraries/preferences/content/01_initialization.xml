@@ -30,8 +30,21 @@
 			</paragraph>
 			<paragraph>The final option 
 				<feature_name>make_with_defaults_and_location</feature_name> is similar to 
-				<feature_name>make_with_location</feature_name> except an additional parameter is given to retrieve one or more default file locations. This will be one or more XML files on disk containing the default values to use for some or all of your preferences.  It is a convenient way to initialize your application with all the default values required `out of the box' for correct or preferred functioning.  Those files also contain additional attributes for preference configuration such a more detailed description of the preference. If two files list the same preference,
-			   the last one to mention it takes precedence. Please read the section below for details of the format of this default file.
+				<feature_name>make_with_location</feature_name> except an additional parameter is given to retrieve one or more default file locations. This will be one or more XML files on disk containing the default values to use for some or all of your preferences.  It is a convenient way to initialize your application with all the default values required `out of the box' for correct or preferred functioning.  Those files also contain additional attributes for preference configuration such as more detailed descriptions of the preference. If two files list the same preference,
+			   the last one to mention it takes precedence. 
+			</paragraph>
+			<paragraph>
+				The format of the XML default file is very simple:
+				
+				<code_block>&lt;EIFFEL_DOCUMENT>		
+	&lt;PREF NAME="some_manager.some_name" DESCRIPTION="Preference description here" HIDDEN="True/False" RESTART="True/False">&lt;TYPE>Value here&lt;/TYPE>&lt;/PREF>
+	...More preferences...
+&lt;EIFFEL_DOCUMENT>
+				</code_block>
+				
+				The "HIDDEN" attribute indicates if this preference is to be hidden from view and is used for preferences that you do not wish for your users to modify or see.  
+				The "RESTART" attribute allows for you to flag that when a particular preference is changed it may be necessary to restart the application for the changes to take effect.  
+				You can handle this in your application by querying for this value in the preference and dispalying appropriate dialogs and messages for your application.
 			</paragraph>
 			<heading>
 				<size>2</size>Managers

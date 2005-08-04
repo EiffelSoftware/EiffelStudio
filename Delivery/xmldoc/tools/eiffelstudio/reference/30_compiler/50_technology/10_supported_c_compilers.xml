@@ -31,8 +31,8 @@
 		<heading>
 			<size>2</size>Changing your C compiler on Windows
 		</heading>
-		<paragraph>You can do it in two different ways. The first one is using the registry keys of the Windows&amp;amp;trade; operating system, the second one modifies the environment variables.</paragraph>
-		<paragraph>When modifying the registry keys, simply create a `compiler.reg'file with the following content: </paragraph>
+		<paragraph>You can do it in two different ways. The first one is using the registry keys of the Windows&#174; operating system, the second one modifies the environment variables.</paragraph>
+		<paragraph>When modifying the registry keys, simply create a `compiler.reg' file with the following content: </paragraph>
 		<code_block>REGEDIT4
 
 [HKEY_LOCAL_MACHINE\Software\ISE\Eiffel55]

@@ -20,23 +20,21 @@ indexing
 	
 		--------------------------------------------------------------------------------
 
-		Dynamic Modes:
+		Dynamic Mode:
 		
 		There may be times where you have very large numbers of items you wish to
 		display into the grid. Unfortunately, the overhead of building thousands and
 		thousands of grid items and inserting them can take a considerable amount of
 		which shows up as a delay to users of the system. To prevent this, the grid
-		supports the use of dynamic modes which permit you to specify how many items
+		supports the use of a dynamic mode which permit you to specify how many items
 		are contained and then as and when the grid requires access to one of these items
 		for display purposes, an event is triggered requesting the item to be displayed. 
-		There are two dynamic modes available:
-		1. Partial dynamic, enabled via `enable_partial_dynamic_content'. In this mode
+		
+		dynamic content is enabled via `enable_partial_dynamic_content'. In this mode
 		whenever the grid attempts to draw an item that is `Void', it queries you for the
 		item and then inserts it into the grid.
-		2. Complete dynamic, enabled via `enable_completely_dynamic_content'. In this mode
-		whenever the grid attempts to draw an item it queries you for the item and places
-		the item in the grid.
-		The grid requests an item in dynamic modes through the calling of the
+		
+		The grid requests an item in the dynamic mode through the calling of the
 		`dynamic_content_function' which may be set via a call to
 		`set_dynamic_content_function'. This function has two integer arguments
 		corresponding to the column and row index of the desired item and a return type
@@ -589,7 +587,7 @@ feature -- Access
 		
 	dynamic_content_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM] is
 			-- Function which computes the item that resides in a particular position of the
-			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
+			-- grid while `is_content_partially_dynamic'.
 		require
 			not_is_destroyed: not is_destroyed
 		do
@@ -605,16 +603,6 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := implementation.is_content_partially_dynamic
-		end
-		
-	is_content_completely_dynamic: BOOLEAN is
-			-- Is the content of `Current' completely dynamic? If `True' then
-			-- whenever an item must be re-drawn it is always queried via execution
-			-- of `dynamic_content_function' and not added to `Current'.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.is_content_completely_dynamic
 		end
 		
 	is_row_height_fixed: BOOLEAN is
@@ -958,7 +946,6 @@ feature -- Status setting
 			-- Enable tree functionality for `Current'.
 		require
 			not_destroyed: not is_destroyed
-			not_is_content_completely_dynamic: not is_content_completely_dynamic
 		do
 			implementation.enable_tree
 		ensure
@@ -1243,7 +1230,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			not_dynamic_content_enabled_with_row_height_variable:
-				not ((is_content_completely_dynamic or is_content_partially_dynamic) and is_row_height_fixed = False)
+				not (is_content_partially_dynamic and is_row_height_fixed = False)
 		do
 			implementation.disable_vertical_scrolling_per_item
 		ensure
@@ -1265,7 +1252,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			dynamic_content_not_enabled_with_variable_row_heights:
-				not ((is_content_completely_dynamic or is_content_partially_dynamic) and not is_row_height_fixed)
+				not (is_content_partially_dynamic and not is_row_height_fixed)
 		do
 			implementation.disable_vertical_overscroll
 		ensure
@@ -1305,23 +1292,6 @@ feature -- Status setting
 			row_height_set: row_height = a_row_height
 		end
 		
-	enable_complete_dynamic_content is
-			-- Ensure contents of `Current' must be retrieved when required via execution of
-			-- `dynamic_content_function'. Contents are requested each time they
-			-- are displayed even if already contained in `Current'.
-		require
-			not_destroyed: not is_destroyed
-			not_is_tree_enabled: not is_tree_enabled
-			not_row_height_variable_and_vertical_overscroll_enabled:
-				not (not is_row_height_fixed and is_vertical_overscroll_enabled)
-			not_row_height_variable_and_vertical_scrolling_per_pixel:
-				not (not is_row_height_fixed and is_vertical_scrolling_per_item)
-		do
-			implementation.enable_complete_dynamic_content
-		ensure
-			content_completely_dynamic: is_content_completely_dynamic
-		end
-		
 	enable_partial_dynamic_content is
 			-- Ensure contents of `Current' must be retrieved when required via execution of
 			-- `dynamic_content_function' only if the item is not already set
@@ -1345,7 +1315,7 @@ feature -- Status setting
 		do
 			implementation.disable_dynamic_content
 		ensure
-			content_not_dynamic: not is_content_completely_dynamic and not is_content_partially_dynamic
+			content_not_dynamic: not is_content_partially_dynamic
 		end
 		
 	enable_row_height_fixed is
@@ -1363,7 +1333,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			not_dynamic_content_enabled_with_height_not_bounded:
-				not ((is_content_completely_dynamic or is_content_partially_dynamic) and is_vertical_overscroll_enabled = False)
+				not (is_content_partially_dynamic and is_vertical_overscroll_enabled = False)
 		do
 			implementation.disable_row_height_fixed
 		ensure
@@ -1374,7 +1344,7 @@ feature -- Status setting
 			-- Resize `Current' to have `a_column_count' columns.
 		require
 			not_destroyed: not is_destroyed
-			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
+			content_is_dynamic: is_content_partially_dynamic
 			a_column_count_positive: a_column_count >= 1
 		do
 			implementation.set_column_count_to (a_column_count)
@@ -1386,7 +1356,7 @@ feature -- Status setting
 			-- Resize `Current' to have `a_row_count' columns.
 		require
 			not_destroyed: not is_destroyed
-			content_is_dynamic: is_content_completely_dynamic or is_content_partially_dynamic
+			content_is_dynamic: is_content_partially_dynamic
 			a_row_count_positive: a_row_count >= 1
 		do
 			implementation.set_row_count_to (a_row_count)
@@ -1396,7 +1366,7 @@ feature -- Status setting
 		
 	set_dynamic_content_function (a_function: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_GRID_ITEM]) is
 			-- Function which computes the item that resides in a particular position of the
-			-- grid while `is_content_partially_dynamic' or `is_content_completely_dynamic.
+			-- grid while `is_content_partially_dynamic'.
 		require
 			not_destroyed: not is_destroyed
 			a_function_not_void: a_function /= Void
@@ -2129,9 +2099,6 @@ feature {NONE} -- Implementation
 		do
 			create {EV_GRID_IMP} implementation.make (Current)
 		end
-
-invariant
-	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
 	
 end
 

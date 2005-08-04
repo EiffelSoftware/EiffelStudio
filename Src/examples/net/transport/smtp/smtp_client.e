@@ -22,22 +22,22 @@ feature -- Initialization
 				-- Get smtp server.
 			io.put_string ("Enter your SMTP server address: ")
 			io.read_line
-			l_smtp_server := clone (io.last_string)
+			l_smtp_server := io.last_string.twin
 
 				-- Get sender email.
 			io.put_string ("Enter your email address: ")
 			io.read_line
-			l_sender := clone (io.last_string)
+			l_sender := io.last_string.twin
 			
 				-- Get recipient email.
 			io.put_string ("Enter your recipient email address: ")
 			io.read_line
-			l_recipient := clone (io.last_string)
+			l_recipient := io.last_string.twin
 			
 				-- Get one line message.
 			io.put_string ("Enter your one line message: ")
 			io.read_line
-			l_message := clone (io.last_string)
+			l_message := io.last_string.twin
 
 				-- To get local host name needed in creation of SMTP_PROTOCOL.
 			create l_host.make_local

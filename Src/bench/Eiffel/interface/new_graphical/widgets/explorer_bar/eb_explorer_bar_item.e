@@ -92,6 +92,7 @@ feature {NONE} -- Initialization
 			parent.minimize_actions.extend (agent internal_set_minimized_wrapper)
 			parent.maximize_actions.extend (agent internal_set_maximized_wrapper)
 			parent.restore_actions.extend (agent internal_set_restored_wrapper)
+			parent.close_actions.extend (agent close_wrapper)
 		end
 
 feature -- Access
@@ -211,7 +212,6 @@ feature -- Status Setting
 			
 			if is_closeable then
 				parent.enable_close_button (widget)
-				parent.close_actions.extend (agent close_wrapper)
 			else
 				parent.enable_close_button_as_grayed (widget)
 			end
@@ -314,7 +314,6 @@ feature -- Status Setting
 				end
 				if is_closeable then
 					parent.enable_close_button (widget)
-					parent.close_actions.extend (agent close_wrapper)
 				else
 					parent.enable_close_button_as_grayed (widget)
 				end

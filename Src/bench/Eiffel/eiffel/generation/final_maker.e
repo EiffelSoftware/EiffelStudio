@@ -92,9 +92,7 @@ feature
 				cecil_basket.extend ("bits.o"); cecil_basket.finish
 				cecil_basket.extend ("file.o"); cecil_basket.finish
 				cecil_basket.extend ("dir.o"); cecil_basket.finish
-				cecil_basket.extend ("string.o"); cecil_basket.finish
 				cecil_basket.extend ("misc.o"); cecil_basket.finish
-				cecil_basket.extend ("pattern.o"); cecil_basket.finish
 				cecil_basket.extend ("error.o"); cecil_basket.finish
 				cecil_basket.extend ("umain.o"); cecil_basket.finish
 				cecil_basket.extend ("memory.o"); cecil_basket.finish
@@ -140,9 +138,7 @@ feature
 				cecil_basket.extend ("MTbits.o"); cecil_basket.finish
 				cecil_basket.extend ("MTfile.o"); cecil_basket.finish
 				cecil_basket.extend ("MTdir.o"); cecil_basket.finish
-				cecil_basket.extend ("MTstring.o"); cecil_basket.finish
 				cecil_basket.extend ("MTmisc.o"); cecil_basket.finish
-				cecil_basket.extend ("MTpattern.o"); cecil_basket.finish
 				cecil_basket.extend ("MTerror.o"); cecil_basket.finish
 				cecil_basket.extend ("MTumain.o"); cecil_basket.finish
 				cecil_basket.extend ("MTmemory.o"); cecil_basket.finish

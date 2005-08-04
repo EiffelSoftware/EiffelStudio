@@ -174,6 +174,7 @@ feature {NONE} -- Initialization
 			output_grid.row_collapse_actions.extend (agent row_collapsed)
 			output_grid.pointer_button_press_item_actions.extend (agent item_pressed)
 			output_grid.key_press_actions.extend (agent key_pressed)
+			output_grid.mouse_wheel_actions.extend (agent mouse_wheel_received)
 			
 			create grid_border
 			grid_border.set_border_width (1)
@@ -1334,7 +1335,41 @@ feature {NONE} -- Implementation
 				if not clipboard_text.is_empty then
 					ev_application.clipboard.set_text (clipboard_text)
 				end
+			elseif a_key.code = key_page_up then
+				scroll_output_grid ( - lines_to_move_in_per_page_scrolling)
+			elseif a_key.code = key_page_down then
+				scroll_output_grid (lines_to_move_in_per_page_scrolling)
 			end
+		end
+		
+	lines_to_move_in_per_page_scrolling: INTEGER is
+			-- Number of lines to be moved in per page scrolling mode.
+		do
+			Result := output_grid.last_visible_row.index - output_grid.first_visible_row.index - preferences.editor_data.scrolling_common_line_count
+		end
+		
+	mouse_wheel_received (a_delta: INTEGER) is
+			-- Respond to movement of mouse wheel by `delta' on `output_grid'.
+		local
+			lines_to_move: INTEGER
+		do
+			if preferences.editor_data.mouse_wheel_scroll_full_page then
+				lines_to_move := lines_to_move_in_per_page_scrolling
+				if a_delta > 0 then
+					lines_to_move := 0 - lines_to_move
+				end
+			else
+				lines_to_move := - a_delta * preferences.editor_data.mouse_wheel_scroll_size
+			end
+			scroll_output_grid (lines_to_move)	
+		end
+		
+	scroll_output_grid (line_count: INTEGER) is
+			-- Scroll `output_grid' by `line_count' lines,
+			-- restricted to maximum positions permitted by grid.
+		do
+			output_grid.set_virtual_position (output_grid.virtual_x_position,
+				(output_grid.virtual_y_position + (output_grid.row_height * line_count)).min (output_grid.maximum_virtual_y_position).max (0))			
 		end
 		
 	append_row_to_string (a_row: EV_GRID_ROW; a_string: STRING) is

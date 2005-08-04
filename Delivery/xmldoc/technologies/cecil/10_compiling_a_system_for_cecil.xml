@@ -68,17 +68,17 @@
 		<list ordered="false">
 			<item>Finalized C code. </item>
 			<item>Workbench (melted/frozen) code, usually for development purposes. In this case you must copy the 
-				<italic>&amp;lt;system name&amp;gt;. melted</italic> file ( where 
-				<italic>&amp;lt;system name&amp;gt;</italic> is the name of your system) located in EIFGEN\W_code to the directory where you intend to execute your C application from.
+				<italic>&lt;system name&gt;. melted</italic> file ( where 
+				<italic>&lt;system name&gt;</italic> is the name of your system) located in EIFGEN\W_code to the directory where you intend to execute your C application from.
 			</item>
 		</list>
 		<note>
 			<bold>Note</bold>: each time you melt the Eiffel system, the 
-			<italic>&amp;lt;system name&amp;gt;. melted</italic> file is updated.
+			<italic>&lt;system name&gt;. melted</italic> file is updated.
 		</note>
 		<warning>
 			<bold>Caution</bold>: in the second case (workbench mode), it is not possible to call through the CECIL interface any routine that has been melted in the last compilation; this would raise the run-time exception:
-			<line_break/>&amp;nbsp;&amp;nbsp;<bold>$ applied to melted routine</bold>
+			<line_break/><bold>  $ applied to melted routine</bold>
 			<line_break/> The solution is simply to refreeze the system.
 		</warning>
 	</paragraph></document>

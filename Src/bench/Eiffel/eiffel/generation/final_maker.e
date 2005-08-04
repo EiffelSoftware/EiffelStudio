@@ -112,6 +112,7 @@ feature
 				cecil_basket.extend ("eif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("rout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_project.o"); cecil_basket.finish
+				cecil_basket.extend ("idrs.o"); cecil_basket.finish
 			else
 				cecil_basket := cecil_rt_basket
 				cecil_basket.extend ("MTmalloc.o"); cecil_basket.finish
@@ -159,6 +160,7 @@ feature
 				cecil_basket.extend ("MTrout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_project.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_special_table.o"); cecil_basket.finish
+				cecil_basket.extend ("MTidrs.o"); cecil_basket.finish
 			end
 		end;
 

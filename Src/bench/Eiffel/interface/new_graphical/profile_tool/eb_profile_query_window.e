@@ -1395,14 +1395,22 @@ feature {NONE} -- Implementation
 				else
 					query_grid_row ?= a_row.data
 					if query_grid_row.type = 4 then
-						a_string.append (query_grid_row.cluster_text + query_grid_row.class_text + query_grid_row.feature_text)
+						a_string.append (query_grid_row.cluster_text)
+						a_string.append (query_grid_row.class_text)
+						a_string.append (query_grid_row.feature_text)
 					else
 						eiffel_profile_data ?= query_grid_row.profile_data
 						if eiffel_profile_data /= Void then
 							function := eiffel_profile_data.function
 							if query_grid_row.type = 1 then
-								a_string.append (function.class_c.cluster.cluster_name + full_stop + function.class_c.name + full_stop + function.feature_name)
+								a_string.append (function.class_c.cluster.cluster_name)
+								a_string.append (full_stop)
+								a_string.append (function.class_c.name)
+								a_string.append (full_stop)
+								a_string.append (function.feature_name)
 							elseif query_grid_row.type = 2 then
+								a_string.append (function.class_c.cluster.cluster_name)
+								a_string.append (full_stop)
 								a_string.append (function.class_c.name)
 							elseif query_grid_row.type = 3 then
 								a_string.append (function.class_c.cluster.cluster_name)

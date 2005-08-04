@@ -65,6 +65,7 @@ feature {EIFNET_EXPORTER, EB_OBJECT_TOOL} -- Evaluation primitives
 		do
 			debug ("debugger_trace_eval")
 				print ("Start : " + generator + ".function_evaluation ... %N")
+				print (" -----> " + a_func.to_function_name + "%N")
 			end
 			prepare_evaluation (a_frame, True)
 			

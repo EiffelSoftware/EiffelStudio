@@ -56,7 +56,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to `Current'?
 		do
-			Result := type.is_equivalent (other.type)
+			Result := equivalent (type, other.type)
 		end
 
 invariant

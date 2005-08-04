@@ -19,7 +19,7 @@
 				<link>
 					<url>/tools/eiffelstudio/reference/60_metric_tool/metric_toolbar.xml</url>
 					<label>scope combo box</label>
-				</link> (you can either choose the scope type of the previously selected object or a greater scope type in the sense of the following order relation: feature &amp;lt; class &amp;lt; cluster &amp;lt; system &amp;lt; archive).
+				</link> (you can either choose the scope type of the previously selected object or a greater scope type in the sense of the following order relation: feature &lt; class &lt; cluster &lt; system &lt; archive).
 				<line_break/>
 				<line_break/>
 				<image>

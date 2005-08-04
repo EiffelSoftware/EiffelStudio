@@ -25,7 +25,7 @@
     (H) Help : show list of commands.
     (Q) Quit : terminate session.
     (Y) Yank : yank (save) output of last command to a file.
-Command =&amp;gt;</code_block>
+Command =&gt;</code_block>
 		<line_break></line_break>The revision number in the first line may be different in your case to indicate that you have a more recent delivery. In this menu, and in all subsequent ones, the commands appear in two groups.
 		<list ordered="false">
 			<item>commands in the first group are specific to each menu</item>

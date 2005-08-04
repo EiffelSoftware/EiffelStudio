@@ -68,7 +68,7 @@
 			<item>self</item>
 			<item>descendants</item>
 			<item>percentage</item>
-		</list>operator is one of: &amp;lt;, &amp;gt;, &amp;lt;=, &amp;gt;=, =, /=, in
+		</list>operator is one of: &lt;, &gt;, &lt;=, &gt;=, =, /=, in
 		<paragraph>and value is one of:</paragraph>
 		<list ordered="false">
 			<item>An integer (for calls)</item>
@@ -83,60 +83,60 @@
 		<paragraph>To reactivate a query, use (R) Reactivate. Again you will have to provide a query index.</paragraph>
 		<paragraph>The Total Query resulting from a succession of (A) Add commands, possibly with some (I) Inactivate and (R) Reactivate commands, is a boolean query resulting by default from adding all the currently active queries. For example after the following set of commands(note that commands output help lines, which have been skipped here):</paragraph>
 		<code_block>
-Command =&amp;gt; a
---&amp;gt; Subquery: featurename = put*
+Command =&gt; a
+--&gt; Subquery: featurename = put*
 
-Command =&amp;gt; a
---&amp;gt; Subquery: calls = 3
+Command =&gt; a
+--&gt; Subquery: calls = 3
 	-- Here we change our mind and deactivate the second query
 	-- to replace it by calls = 3:
 
-Command =&amp;gt; s
+Command =&gt; s
 [1] featurename = put* is active
 [2] calls = 3 is active
 
 The total active query:
 featurename = put* and
-calls &amp;gt; 
+calls &gt; 
 		
-Command =&amp;gt; i
---&amp;gt; Subquery index: 2
+Command =&gt; i
+--&gt; Subquery index: 2
 	
 Command =&amp;gt; a
---&amp;gt; Subquery: calls &amp;gt; 5</code_block>
+--&gt; Subquery: calls &gt; 5</code_block>
 		<line_break/>The (S) Show command will show the following result:
 		<code_block>
-Command =&amp;gt; s
+Command =&gt; s
 All subqueries:
 [1] featurename = put* is active
 [2] calls = 3 is inactive
-[3] calls &amp;gt; 5 is active
+[3] calls &gt; 5 is active
 		
 The total active query:
 featurename = put* and
-calls &amp;gt; 5</code_block>
+calls &gt; 5</code_block>
 
 		<paragraph>To change the boolean operator to 'or' rather than 'and', use the (C) Operator command. It will prompt you for the index of the operator and the new value:</paragraph>
 		<code_block>
-Command =&amp;gt; c
---&amp;gt; Operator index followed by operator ('and' or 'or'): 1 or
+Command =&gt; c
+--&gt; Operator index followed by operator ('and' or 'or'): 1 or
 	
-Command =&amp;gt; s
+Command =&gt; s
 All subqueries:
 [1] featurename = put* is active
 [2] calls = 3 is inactive
-[3] calls &amp;gt; 5 is active
+[3] calls &gt; 5 is active
 		
 The total active query:
 featurename = put* or
-calls &amp;gt; 5</code_block>
+calls &gt; 5</code_block>
 		<heading>
 			<size>2</size>Input command
 		</heading>The (I) Input command serves to load Execution Profiles. It is initially set to *.pfi meaning that it will load all files with extension pfi. By calling the command repeatedly with new arguments, you are able to load more Execution Profiles. If you use the command without any argument, and the set of input files contained just one file, then the queries will use the last generated output. This avoids explicitly loading a file.
 		<heading>
 			<size>2</size>Language command
 		</heading>The (L) Language command enables you to specify the languages to which profiling should be applied. You can specify Eiffel only, C only, or both. If you specify only one language, the query results will not contain any information about routines written in the other language.
-		<paragraph>The default is Eiffel only. To switch to both Eiffel and C, use Command =&amp;gt; L eiffel and c</paragraph>
+		<paragraph>The default is Eiffel only. To switch to both Eiffel and C, use Command =&gt; L eiffel and c</paragraph>
 		<paragraph>To return to just Eiffel, simply type L.</paragraph>
 		<heading>
 			<size>2</size>Run Command
@@ -150,7 +150,7 @@ calls &amp;gt; 5</code_block>
 			<item>Compilation mode: workbench or finalized (default: workbench).</item>
 			<item>Name of profiler tool (default: eiffel).</item>
 		</list>
-		<paragraph>You can also type in the arguments directly without waiting to be prompted, as in command =&amp;gt; g profinfo finalize eiffel
+		<paragraph>You can also type in the arguments directly without waiting to be prompted, as in command =&gt; g profinfo finalize eiffel
 			<line_break/>
 		</paragraph>
 		<seealso>

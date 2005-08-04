@@ -12,16 +12,16 @@
 			<size>2</size>Linking the CECIL archive into a program
 		</heading>The CECIL archive already incorporates the Eiffel run-time. To use the functions provided in the CECIL archive, simply write the C programs according to the CECIL specifications of ETL, and then include the CECIL archive in the link line of your C application. This line looks like:
 		<paragraph>on Unix/linux:</paragraph>
-		<code_block>ld -o [name of your CECIL executable] [your C object files and archives]lib&amp;lt;system name&amp;gt;.a -lm</code_block>
+		<code_block>ld -o [name of your CECIL executable] [your C object files and archives]lib&lt;system name&gt;.a -lm</code_block>
 		<note>
 			<bold>Note</bold>: On Unix, linking with "-lm" is required since the Eiffel run-time uses the standard math libraries. You may need to link with other libraries (for example, on linux: with "-lbsd", in MT mode with "-lpthread" (posix threads) or "-lthread" (solaris)).
 		</note>
 		<paragraph/>
 		<paragraph>on Windows, with MS VC++:</paragraph>
-		<code_block>link [your link flags] -OUT:[name of your cecil executable] [your C object files and archives] lib&amp;lt;system name&amp;gt;.lib [other Windows libraries]</code_block>
+		<code_block>link [your link flags] -OUT:[name of your cecil executable] [your C object files and archives] lib&lt;system name&gt;.lib [other Windows libraries]</code_block>
 		<paragraph/>
 		<paragraph>on Windows with Borland:</paragraph>
-		<code_block>ilink32 -ap -c -Tpe main.obj c0w32.obj, [name of your cecil executable],,EIFGEN\W_code\lib&amp;lt;system name&amp;gt;.lib CW32 IMPORT32 OLE2w32,,</code_block>
+		<code_block>ilink32 -ap -c -Tpe main.obj c0w32.obj, [name of your cecil executable],,EIFGEN\W_code\lib&lt;system name&gt;.lib CW32 IMPORT32 OLE2w32,,</code_block>
 		<paragraph/>
 		<paragraph>
 			<bold>Notes for compiling CECIL C files:</bold>
@@ -29,11 +29,11 @@
 			<line_break/>The C flags to use are usually the same as the ones needed during the compilation of the generated C-code plus those which are relevant to your own C-code.
 		</paragraph>
 		<paragraph>Typically, you will compile with your flags as below (if you are using gcc):</paragraph>
-		<code_block>gcc -c -O -I$ISE_EIFFEL/studio/spec/$PLATFORM/include -I&amp;lt;SOME_INCLUDE_PATH&amp;gt; -D&amp;lt;SOME_FLAGS&amp;gt; your_file.c</code_block>
+		<code_block>gcc -c -O -I$ISE_EIFFEL/studio/spec/$PLATFORM/include -I&lt;SOME_INCLUDE_PATH&gt; -D&lt;SOME_FLAGS&gt; your_file.c</code_block>
 		<paragraph>or , if you are on Windows using MS VC++:</paragraph>
-		<code_block>cl -c -nologo -Ox -I$ISE_EIFFEL\studio\spec\windows\include -I&amp;lt;SOME_INCLUDE_PATH&amp;gt; -D&amp;lt;SOME_FLAGS&amp;gt; your_file.c</code_block>
+		<code_block>cl -c -nologo -Ox -I$ISE_EIFFEL\studio\spec\windows\include -I&lt;SOME_INCLUDE_PATH&gt; -D&lt;SOME_FLAGS&gt; your_file.c</code_block>
 		<paragraph>or, if you are on Windows using Borland:</paragraph>
-		<code_block>bcc32 -c -I$ISE_EIFFEL\studio\spec\windows\include -I&amp;lt;SOME_INCLUDE_PATH&amp;gt; -D&amp;lt;SOME_FLAGS&amp;gt; your_file.c</code_block>
+		<code_block>bcc32 -c -I$ISE_EIFFEL\studio\spec\windows\include -I&lt;SOME_INCLUDE_PATH&gt; -D&lt;SOME_FLAGS&gt; your_file.c</code_block>
 		<sample>
 			<bold>Sample</bold>: if you want to use the multithreaded facilities of Eiffel, you should define the EIFFEL MT flags by adding "-DEIF_THREADS" to the command line and follow the instructions of your C compiler and platform to find out which additional flags you may need 
 			<bold>. For example:</bold> on Solaris you need to add "-DSOLARIS_THREADS -D_REENTRANT".

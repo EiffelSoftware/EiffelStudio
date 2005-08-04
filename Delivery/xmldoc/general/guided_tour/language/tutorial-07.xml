@@ -282,33 +282,27 @@
 		
 		<table>
 			<row>
-				<cell><paragraph><bold>Type</bold></paragraph></cell>
-				<cell>&amp;nbsp;</cell>
+				<cell><paragraph><bold>Type</bold></paragraph></cell>				
 				<cell><paragraph><bold>Default value</bold></paragraph></cell>
 			</row>
 			<row>
 				<cell><paragraph><code><class_name>INTEGER</class_name></code>, <code><class_name>REAL</class_name></code>, <code><class_name>DOUBLE</class_name></code> </paragraph></cell>
-				<cell>&amp;nbsp;&amp;nbsp;&amp;nbsp;</cell>
 				<cell><paragraph>Zero</paragraph></cell>
 			</row>
 			<row>
 				<cell><paragraph><code><class_name>BOOLEAN</class_name></code></paragraph></cell>
-				<cell>&amp;nbsp;</cell>
 				<cell><paragraph>False</paragraph></cell>
 			</row>
 			<row>
 				<cell><paragraph><code><class_name>CHARACTER</class_name></code></paragraph></cell> 
-				<cell>&amp;nbsp;</cell>
 				<cell><paragraph>Null</paragraph></cell>
 			</row>
 			<row>
-				<cell><paragraph>Reference types (such as ACCOUNT and <code><class_name>DEPOSIT_LIST</class_name></code>)</paragraph></cell>
-				<cell>&amp;nbsp;</cell>
+				<cell><paragraph>Reference types (such as <class_name>ACCOUNT</class_name> and <class_name>DEPOSIT_LIST</class_name>)</paragraph></cell>
 				<cell><paragraph>Void reference</paragraph></cell>
 			</row>
 			<row>
 				<cell><paragraph>Composite expanded types (see next) </paragraph></cell>
-				<cell>&amp;nbsp;</cell>
 				<cell><paragraph>Same rules, applied recursively to all fields</paragraph></cell>
 			</row>
 		</table>

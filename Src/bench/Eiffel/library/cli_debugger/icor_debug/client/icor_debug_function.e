@@ -28,6 +28,11 @@ feature {ICOR_EXPORTER} -- Access
 	
 feature -- Addons
 
+	to_function_name: STRING is
+		do
+			Result := get_module.md_member_name (get_token)
+		end
+
 	to_string: STRING is
 			-- String representation of the Current ICorDebugFunction.
 			-- For debug purpose only

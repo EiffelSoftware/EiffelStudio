@@ -1698,7 +1698,7 @@ feature -- Status setting
 		ensure
 			not_is_locked: not is_locked
 		end
-
+		
 feature -- Status report
 
 	is_selection_on_click_enabled: BOOLEAN
@@ -4314,6 +4314,19 @@ feature {NONE} -- Event handling
 				Result /= Void or else item_index = last_index
 			loop
 				Result := grid_row.item (item_index)
+				if result = Void and then is_content_partially_dynamic and then dynamic_content_function /= Void then
+					Result := dynamic_content_function.item ([item_index, grid_row.index])
+						-- We now check that the set item is the same as the one returned. If you both
+						-- set an item and return a different item from the dynamic function, this is invalid
+						-- so the following check prevents this:
+					check
+						item_set_implies_set_item_is_returned_item: item (item_index, grid_row.index) /= Void
+							implies item (item_index, grid_row.index) = Result
+					end
+					if item_internal (item_index, grid_row.index) = Void then
+						internal_set_item (item_index, grid_row.index, Result)
+					end	
+				end
 				item_index := item_index + item_offset
 			end
 		end
@@ -4344,6 +4357,19 @@ feature {NONE} -- Event handling
 				Result /= Void or else item_index = last_index
 			loop
 				Result := grid_column.item (item_index)
+				if result = Void and then is_content_partially_dynamic and then dynamic_content_function /= Void then
+					Result := dynamic_content_function.item ([grid_column.index, item_index])
+						-- We now check that the set item is the same as the one returned. If you both
+						-- set an item and return a different item from the dynamic function, this is invalid
+						-- so the following check prevents this:
+					check
+						item_set_implies_set_item_is_returned_item: item (grid_column.index, item_index) /= Void
+							implies item (grid_column.index, item_index) = Result
+					end
+					if item_internal (grid_column.index, item_index) = Void then
+						internal_set_item (grid_column.index, item_index, Result)
+					end	
+				end
 				if Result = Void and then look_left_right_if_void then
 					-- There is no item in the column so we first look left, then right
 					Result := find_next_item_in_row (row (item_index), grid_column.index, False)

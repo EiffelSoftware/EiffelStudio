@@ -4448,7 +4448,12 @@ feature {NONE} -- Event handling
 						-- Do nothing
 					end
 					if a_sel_item /= Void then
-						if a_sel_item.is_selected and then last_selected_item /= Void and then not ev_application.shift_pressed then
+						if 
+							a_sel_item.is_selected and then
+							last_selected_item /= Void and then
+							not ev_application.shift_pressed and then
+							last_selected_item /= a_sel_item.implementation
+						then
 							last_selected_item.disable_select
 						end
 						handle_newly_selected_item (a_sel_item)

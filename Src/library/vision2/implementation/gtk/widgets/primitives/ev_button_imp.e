@@ -23,7 +23,8 @@ inherit
 			set_foreground_color,
 			foreground_color_pointer,
 			on_focus_changed,
-			needs_event_box
+			needs_event_box,
+			event_widget
 		end
  
 	EV_PIXMAPABLE_IMP
@@ -56,12 +57,9 @@ inherit
 		end
 
 create
-        make
+	make
 
 feature {NONE} -- Initialization
-
-	needs_event_box: BOOLEAN is True
-		-- Make sure `Current' is placed within a GtkEventBox.
 
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
@@ -104,6 +102,15 @@ feature {NONE} -- Initialization
 		do
 			Result := text_label
 		end
+
+	event_widget: POINTER is
+			-- Widget that handles the events.
+		do
+			Result := visual_widget
+		end
+
+	needs_event_box: BOOLEAN is True
+		-- Make sure `Current' is placed within a GtkEventBox.
 
 feature -- Access
 

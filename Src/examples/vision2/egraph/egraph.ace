@@ -71,7 +71,7 @@ cluster
 
 	all graph:		"$ISE_EIFFEL\library\graph"
 
-	all gobo:		"$ISE_EIFFEL\free_add_ons\gobo\library"
+	all gobo:		"$ISE_EIFFEL\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
 		end

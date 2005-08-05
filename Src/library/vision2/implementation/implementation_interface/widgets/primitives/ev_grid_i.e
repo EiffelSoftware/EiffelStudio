@@ -2110,7 +2110,95 @@ feature -- Removal
 			node_counts_correct_in_parent: old (row_internal (a_row).parent_row_i) /= Void implies (old row_internal (a_row).parent_row_i).node_counts_correct
 			to_implement_assertion ("EV_GRID.remove_row		All old recursive subrows removed.")
 		end
+		
+	remove_rows (lower_index, upper_index: INTEGER) is
+			-- Remove all rows from `lower_index' to `upper_index' inclusive.
+		require
+			valid_lower_index: lower_index >= 1 and lower_index <= row_count
+			valid_upper_index: upper_index >= lower_index and upper_index <= row_count
+		local
+			current_item: EV_GRID_ITEM
+			current_row: EV_GRID_ROW
+			i: INTEGER
+			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
+			l_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
+			l_row_index: INTEGER
+			r: EV_GRID_ROW
+		do
+			r := row (upper_index)
+			if is_row_selection_enabled then
+					-- In this case, it is possible that an empty row is selected
+					-- so just by iterating the items, the row is not unselected
+					-- correctly.
+				l_selected_rows := selected_rows
+				from
+					l_selected_rows.start
+				until
+					l_selected_rows.after
+				loop
+					current_row := l_selected_rows.item
+					l_row_index := current_row.index
+					if l_row_index >= lower_index and l_row_index <= upper_index then
+						current_row.disable_select
+					end
+					l_selected_rows.forth
+				end
+			else
+				l_selected_items := selected_items
+				from
+					l_selected_items.start
+				until
+					l_selected_items.off
+				loop
+					current_item := l_selected_items.item
+					l_row_index := current_item.row.index
+					if l_row_index >= lower_index and l_row_index <= upper_index then
+						current_item.disable_select
+					end
+					l_selected_items.forth
+				end
+			end
 	
+			from
+				i := upper_index
+			until
+				i < lower_index
+			loop
+				rows.i_th (i).update_for_removal
+				i := i - 1
+			end
+
+			if upper_index < internal_row_data.count then
+				internal_row_data.move_items (upper_index + 1, lower_index, internal_row_data.count - upper_index)
+			end
+			internal_row_data.resize (internal_row_data.count - upper_index + lower_index - 1)
+			if upper_index < rows.count then
+				rows.move_items (upper_index + 1, lower_index, rows.count - upper_index)
+			end
+			rows.resize (rows.count - upper_index + lower_index - 1)
+			
+			update_grid_row_indices (lower_index)
+
+			set_vertical_computation_required (lower_index)
+			recompute_vertical_scroll_bar
+			redraw_client_area
+			last_vertical_scroll_bar_value := 0
+			if last_selected_item /= Void and then last_selected_item.row.index >= lower_index and last_selected_item.row.index <= upper_index then
+				last_selected_item := Void
+			end
+			if last_selected_row /= Void and then last_selected_row.index >= lower_index and last_selected_row.index <= upper_index then
+				last_selected_row := Void
+			end
+			if shift_key_start_item /= Void and then shift_key_start_item.row.index >= lower_index and shift_key_start_item.row.index <= upper_index then
+				shift_key_start_item := Void
+			end
+		ensure
+			row_count_consistent: row_count = (old row_count) - (upper_index - lower_index + 1)
+			lower_row_removed: (old row (lower_index)).parent = Void
+			upper_row_removed: (old row (upper_index)).parent = Void
+			to_implement_assertion (once "middle_rows_removed from lower to upper all old rows parent = Void")
+		end	
+		
 	internal_remove_row (a_row: EV_GRID_ROW_I) is
 			-- Perform internal settings required for removal of `a_row'.
 			require

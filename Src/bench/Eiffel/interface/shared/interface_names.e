@@ -283,7 +283,7 @@ feature -- Accelerator, focus label and menu name
 	m_How_to_s: STRING is				"&How to's"
 	m_If_block: STRING is				"&Embed in %"if...%"%TCtrl+I"
 	m_Indent: STRING is					"&Indent selection%TTab"
-	m_Line_numbers: STRING is			"Toggle &Line numbers%TCtrl+L"
+	m_Line_numbers: STRING is			"Toggle &Line numbers"
 	f_Melt: STRING is					"Compile current project"
 	m_Melt_new: STRING is				"&Compile"
 	m_New: STRING is					"&New"

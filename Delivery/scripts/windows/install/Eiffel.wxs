@@ -558,13 +558,16 @@ To install into a different folder, click the Browse button, and select another 
 				<Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="[ButtonText_Cancel]">
 					<Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
 				</Control>
-				<Control Id="Compiler_choice" Type="RadioButtonGroup" X="55" Y="171" Width="176" Height="42" Property="SELECTEDCCOMPILER" />
+				<Control Id="Compiler_choice" Type="RadioButtonGroup" X="55" Y="171" Width="176" Height="28" Property="SELECTEDCCOMPILER" />
 				<Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="[ButtonText_Back]">
 					<Publish Event="NewDialog" Value="Single_Feature_Destination"><![CDATA[FRAMEWORKPATH <> "empty"]]></Publish>
 					<Publish Event="NewDialog" Value="Dotnet_Error_Dialog"><![CDATA[FRAMEWORKPATH = "empty"]]></Publish>
 				</Control>
-				<Control Id="Text" Type="Text" X="232" Y="172" Width="107" Height="23">
+				<Control Id="Text" Type="Text" X="232" Y="173" Width="107" Height="14">
 					<Text>(Recommended)</Text>
+				</Control>
+				<Control Id="Text2" Type="Text" X="232" Y="186" Width="107" Height="14">
+					<Text>(Recommended if you have it)</Text>
 				</Control>
 				<Control Id="Text19" Type="Text" X="23" Y="23" Width="221" Height="14" Transparent="yes">
 					<Text>Select the C compiler you want to use.</Text>

@@ -5098,12 +5098,11 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				if last_pointed_item /= Void and then last_pointed_item = item_internal (a_column, a_row) then
 					last_pointed_item := Void
 				end
+				redraw_item (item_implementation)
 				internal_row_data.i_th (a_row).put (Void, column_physical_index)
 				a_grid_row_i.flag_index_of_first_item_dirty_if_needed (a_column)
 					-- Update the row for the removal.
 				a_grid_row_i.update_for_item_removal (a_column)
-					-- We no longer have access to the item so we calculate the redraw area based on the rows and columns.
-				drawable.redraw_rectangle (a_grid_col_i.virtual_x_position - (internal_client_x - viewport_x_offset), a_grid_row_i.virtual_y_position - (internal_client_y - viewport_y_offset), a_grid_col_i.width, a_grid_row_i.height)
 			end
 
 			fixme (Once "EV_GRID_I.internal_set_item Adding or removing items may require the complete row to be redrawn if the row is a subrow.")

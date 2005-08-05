@@ -95,6 +95,10 @@ feature {EV_GRID_I} -- Implementation
 				-- Now always set the `count' to `new_capacity' although
 				-- the actual area allocated may not equal `new_capacity'.
 			count := new_capacity
+			
+				-- Ensure index is now valid if it was previously in the
+				-- items that were removed.
+			index := index.min (new_capacity + 1)
 		ensure
 			count_set: count = new_capacity
 		end

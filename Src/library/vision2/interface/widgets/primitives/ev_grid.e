@@ -1990,7 +1990,25 @@ feature -- Removal
 			old_row_removed: (old row (a_row)).parent = Void
 			to_implement_assertion ("EV_GRID.remove_row		All old recursive subrows removed.")
 		end
-
+		
+	remove_rows (lower_index, upper_index: INTEGER) is
+			-- Remove all rows from `lower_index' to `upper_index' inclusive.
+		require
+			not_destroyed: not is_destroyed
+			valid_lower_index: lower_index >= 1 and lower_index <= row_count
+			valid_upper_index: upper_index >= lower_index and upper_index <= row_count
+			valid_final_row_in_tree_structure: is_tree_enabled and then highest_parent_row_within_bounds (lower_index, upper_index) /= Void implies
+				upper_index = highest_parent_row_within_bounds (lower_index, upper_index).index +
+				highest_parent_row_within_bounds (lower_index, upper_index).subrow_count_recursive
+		do
+			implementation.remove_rows (lower_index, upper_index)
+		ensure
+			row_count_consistent: row_count = (old row_count) - (upper_index - lower_index + 1)
+			lower_row_removed: (old row (lower_index)).parent = Void
+			upper_row_removed: (old row (upper_index)).parent = Void
+			to_implement_assertion (once "middle_rows_removed from lower to upper all old rows parent = Void")
+		end
+		
 feature -- Measurements
 
 	column_count: INTEGER is
@@ -2057,6 +2075,29 @@ feature -- Contract support
 			loop
 				Result := column (a_counter).all_items_may_be_removed
 				a_counter := a_counter + 1
+			end
+		end
+		
+	highest_parent_row_within_bounds (lower_index, upper_index: INTEGER): EV_GRID_ROW is
+			-- Return the highest level `parent_row' recursively of row `upper_index'
+			-- that has an index greater or equal to `lower_index'.
+		require
+			not_destroyed: not is_destroyed
+			tree_enabled: is_tree_enabled
+			valid_lower_index: lower_index >= 1 and lower_index <= row_count
+			valid_upper_index: upper_index >= lower_index and upper_index <= row_count
+		local
+			parent_row: EV_GRID_ROW
+		do
+			parent_row := row (upper_index).parent_row
+			from
+			until
+				parent_row = Void or parent_row.index < lower_index
+			loop
+				parent_row ?= parent_row.parent_row
+				if parent_row.index > lower_index then
+					Result := parent_row
+				end
 			end
 		end
 

@@ -7,7 +7,7 @@
 int main (int argc,char **argv,char **envp) {
 
 	EIF_INTEGER *c_array;
-	int i;
+	int i, j;
 
 	
 	EIF_PROCEDURE p_make;		/* `make ' from MY_ARRAY [INTEGER] */
@@ -48,14 +48,16 @@ int main (int argc,char **argv,char **envp) {
 		/* Set C array */
 	for (i = 0; i < 10; i++) {
 		printf ("Enter element %d: ", i + 1);
-		scanf ("%ld", c_array+i);
+		scanf ("%d", &j);
+		c_array [i] = (EIF_INTEGER) j;
 	}
 	printf ("\n");
 
 		/* Set Eiffel array from C array */
-	for (i = 0; i < 10; i++) 
+	for (i = 0; i < 10; i++) {
 				/* Call `put (value, i)' on array */
-		(p_put) (eif_access (o_array), *(c_array+i), i+1);			
+		(p_put) (eif_access (o_array), (EIF_INTEGER) c_array [i], i+1);
+	}
 
 		
 	(p_display) (eif_access (o_array));	/* Call `display on array */

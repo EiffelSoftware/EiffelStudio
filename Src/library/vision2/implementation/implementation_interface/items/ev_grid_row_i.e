@@ -81,6 +81,18 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 			indexes_equivalent: parent_i.rows.i_th (index) = Current
 			index_less_than_row_count: index <= parent.row_count
 		end
+		
+	set_subrow_index (a_subrow_index: INTEGER) is
+			-- Set the index of row in parent row.
+		require
+			a_index_greater_than_zero: a_subrow_index > 0
+		do
+			subrow_index := a_subrow_index
+		ensure
+			index_set: subrow_index = a_subrow_index
+			indexes_equivalent: parent_row_i.subrows.i_th (subrow_index) = Current
+			index_less_than_row_count: subrow_index <= parent_row_i.subrow_count
+		end
 
 	set_parent_i (a_grid_i: EV_GRID_I; a_row_id: INTEGER) is
 			-- Make `Current' associated with `a_grid_i'.
@@ -336,7 +348,6 @@ feature -- Access
 			end
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
-			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_height - viewable_height")
 		end
 		
 	is_expandable: BOOLEAN is
@@ -365,6 +376,9 @@ feature -- Status report
 
 	index: INTEGER
 			-- Position of Current in `parent'.
+			
+	subrow_index: INTEGER
+			-- Position of `Current' in `parent_row' if any.
 
 	count: INTEGER is
 			-- Number of items in current.
@@ -692,13 +706,13 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			node_counts_correct: node_counts_correct
 		end
 
-	insert_subrow (subrow_index: INTEGER) is
+	insert_subrow (a_subrow_index: INTEGER) is
 			-- Add a new row to `parent' as a subrow of `Current'
-			-- with index in subrows of `Current' given by `subrow_index'.
+			-- with index in subrows of `Current' given by `a_subrow_index'.
 		require
 			is_parented: parent /= Void
 			parent_enabled_as_tree: parent.is_tree_enabled
-			valid_subrow_index: subrow_index >= 1 and subrow_index <= subrow_count + 1
+			valid_subrow_index: a_subrow_index >= 1 and a_subrow_index <= subrow_count + 1
 		local
 			l_subrow: EV_GRID_ROW_I
 			l_index: INTEGER
@@ -706,19 +720,19 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			if subrow_count = 0 then
 					-- There are no subrows, so simply perform a standard subrow addition.
 				parent_i.insert_new_row_parented (index + 1, interface)
-			elseif subrow_index = 1 then
+			elseif a_subrow_index = 1 then
 					-- There is no subrow before the current insert index so
 					-- add at a position in `parent_i' based on `Current'.
 				parent_i.add_row_at (index + 1, False)
-				add_subrow_internal (parent_i.row (index + 1), subrow_index, True)
+				add_subrow_internal (parent_i.row (index + 1), a_subrow_index, True)
 			else
 					-- There is a subrow before the current insert index so
 					-- add at a position in `parent_i' based on the item before the insert
 					-- As this item may have rows of it's own the subrow count recursive must also be added.
-				l_subrow := subrows.i_th (subrow_index - 1)
+				l_subrow := subrows.i_th (a_subrow_index - 1)
 				l_index := l_subrow.index + l_subrow.subrow_count_recursive + 1
 				parent_i.add_row_at (l_index, False)
-				add_subrow_internal (parent_i.row (l_index), subrow_index, True)
+				add_subrow_internal (parent_i.row (l_index), a_subrow_index, True)
 			end
 		ensure
 			subrow_count_increased: subrow_count = old subrow_count + 1
@@ -746,6 +760,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			subrows.go_i_th (subrow_count)
 			subrows.remove
 			row_imp.internal_set_parent_row (Void)
+			row_imp.set_subrow_index (0)
 
 
 			if row_imp.subrow_count > 0 then
@@ -782,7 +797,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			subrow_count_decreased: subrow_count = old subrow_count - 1
 		end
 		
-	add_subrow_internal (a_row: EV_GRID_ROW; subrow_index: INTEGER; inserting_within_tree_structure: BOOLEAN) is
+	add_subrow_internal (a_row: EV_GRID_ROW; a_subrow_index: INTEGER; inserting_within_tree_structure: BOOLEAN) is
 			-- Make `a_row' a child of Current. `inserting_within_tree_structure' determines
 			-- if `a_row' is to be added within an existing tree structure and is used to
 			-- relax the preconditions that determine if a row may be added.
@@ -806,9 +821,13 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			is_ensured_expandable := False
 
 			row_imp := a_row.implementation
-			subrows.go_i_th (subrow_index)
+			subrows.go_i_th (a_subrow_index)
 			subrows.put_left (row_imp)
 			row_imp.internal_set_parent_row (Current)
+			row_imp.set_subrow_index (a_subrow_index)
+			
+				-- Update all indices of subrows in `Current'.
+			update_subrow_indices (a_subrow_index + 1)
 			
 				-- Increase the node count for `Current' and all parents by 1 + the node count
 				-- for the added subrow as this may also be a tree structure.
@@ -827,7 +846,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			parent_i.redraw_client_area
 		ensure
 			added: a_row.parent_row = interface
-			subrow (subrow_index) = a_row
+			subrow (a_subrow_index) = a_row
 			node_counts_correct: node_counts_correct
 		end
 		
@@ -959,7 +978,9 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			else
 				parent_i.adjust_hidden_node_count ( -1)
 			end
-			subrows.prune_all (a_subrow)
+			subrows.go_i_th (a_subrow.subrow_index)
+			subrows.remove
+			update_subrow_indices (a_subrow.subrow_index)
 			
 				-- Set the expanded state to `False' if no subrows.
 			if subrow_count = 0 then
@@ -970,6 +991,31 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			subrow_count_recursive_decreased: subrow_count_recursive = old subrow_count_recursive - 1
 			subrow_not_contained_in_subrows: not subrows.has (a_subrow)
 			not_expanded_when_no_subrows: subrow_count = 0 implies not is_expanded
+		end
+		
+	update_subrow_indices (a_index: INTEGER) is
+			-- Recalculate subsequent subrow indexes starting from `a_index'.
+		require
+			valid_index: a_index > 0 and then a_index <= subrow_count + 1
+		local
+			i, a_subrow_count: INTEGER
+			row_i: EV_GRID_ROW_I
+			temp_rows: like subrows
+		do
+				-- Set subsequent indexes to their new values
+			temp_rows := subrows
+			from
+				i := a_index
+				a_subrow_count := temp_rows.count
+			until
+				i > a_subrow_count
+			loop
+				row_i := temp_rows @ i
+				if row_i /= Void then
+					row_i.set_subrow_index (i)
+				end
+				i := i + 1
+			end
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
@@ -999,7 +1045,7 @@ feature {EV_GRID_ROW_I, EV_GRID_I} -- Implementation
 			no_parent_implies_depths_set_to_one: parent_row_i = Void implies depth_in_tree = 1 and indent_depth_in_tree = 1
 		end
 
-feature {EV_GRID_ITEM_I} -- Implementation
+feature {EV_GRID_ITEM_I, EV_GRID_ROW_I} -- Implementation
 		
 	subrows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
 		-- All subrows of `Current'.
@@ -1147,21 +1193,21 @@ feature {NONE} -- Implementation
 			-- of `Current', and each child row themselves. This is used when expanding
 			-- or collapsing items to determine how many nodes are now visible or hidden.
 		local
-			subrow_index: INTEGER
+			a_subrow_index: INTEGER
 		do
 			from
-				subrow_index := 1
+				a_subrow_index := 1
 			until
-				subrow_index > subrow_count
+				a_subrow_index > subrow_count
 					-- iterate all rows parented within `Current'.
 			loop
 				Result := Result + 1
 					-- Add one for the current row which is now hidden.
 					
-				Result := Result + subrows.i_th (subrow_index).expanded_subrow_count_recursive
+				Result := Result + subrows.i_th (a_subrow_index).expanded_subrow_count_recursive
 					-- Add the number of expanded items for that row.
 					
-				subrow_index := subrow_index + 1
+				a_subrow_index := a_subrow_index + 1
 			end
 		ensure
 			result_non_negative: result >= 0

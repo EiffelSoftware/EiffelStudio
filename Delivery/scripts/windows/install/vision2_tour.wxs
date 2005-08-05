@@ -102,6 +102,7 @@
 								<File Id="size_up.png" Name="size_up.png" />
 								<File Id="image1.png" Name="image1.png" />
 								<File Id="image2.png" Name="image2.png" />
+								<File Id="image3.png" Name="image3.png" />
 								<File Id="ev_menu_separator.png" Name="EV_MEN~3.PNG" LongName="ev_menu_separator.png" KeyPath="yes" />
 								<File Id="ev_combo_box.png" Name="EV_COM~1.PNG" LongName="ev_combo_box.png" />
 								<File Id="icon_object_symbol.png" Name="ICON_O~2.PNG" LongName="icon_object_symbol.png" />

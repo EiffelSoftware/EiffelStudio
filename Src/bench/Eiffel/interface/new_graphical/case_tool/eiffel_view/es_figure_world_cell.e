@@ -15,7 +15,8 @@ inherit
 			on_pointer_button_release_on_drawing_area,
 			initialize,
 			on_mouse_wheel_on_drawing_area,
-			world
+			world,
+			set_world
 		end
 		
 	EB_RECYCLABLE
@@ -81,6 +82,19 @@ feature -- Access
 
 	world: EIFFEL_WORLD
 			-- World shown in Current.
+
+feature -- Element change
+
+	set_world (a_world: like world) is
+			-- Set `world' to `a_world'.
+		do
+			if world /= Void then
+					-- `recycle' former world to avoid memory leak.
+				world.recycle
+			end
+			world := a_world
+			projector.set_world (a_world)
+		end
 
 feature -- Recycling
 

@@ -18,7 +18,7 @@ cluster
 		end
 
 external
-	object: "$ISE_EIFFEL\examples\cecil\Eiffel2C\array\fext.obj";
-	include_path: "$ISE_EIFFEL\examples\cecil\Eiffel2C\array"
+	object: "../../fext.obj";
+	include_path: "../../.."
 
 end

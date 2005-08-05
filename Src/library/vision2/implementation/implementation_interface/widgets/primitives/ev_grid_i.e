@@ -2110,7 +2110,7 @@ feature -- Removal
 			node_counts_correct_in_parent: old (row_internal (a_row).parent_row_i) /= Void implies (old row_internal (a_row).parent_row_i).node_counts_correct
 			to_implement_assertion ("EV_GRID.remove_row		All old recursive subrows removed.")
 		end
-		
+	
 	internal_remove_row (a_row: EV_GRID_ROW_I) is
 			-- Perform internal settings required for removal of `a_row'.
 			require
@@ -5047,6 +5047,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 					-- There is an item already present, if non void then mark it as removed from grid
 				a_existing_item := a_row_data @ column_physical_index
 				if a_existing_item /= Void then
+					redraw_item (a_existing_item)
 					a_existing_item.disable_select_internal
 					a_existing_item.update_for_removal
 				else
@@ -5098,7 +5099,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				if last_pointed_item /= Void and then last_pointed_item = item_internal (a_column, a_row) then
 					last_pointed_item := Void
 				end
-				redraw_item (item_implementation)
 				internal_row_data.i_th (a_row).put (Void, column_physical_index)
 				a_grid_row_i.flag_index_of_first_item_dirty_if_needed (a_column)
 					-- Update the row for the removal.

@@ -699,25 +699,28 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			a_caret_position: INTEGER
 			a_selection_start, a_selection_end: INTEGER
 		do
-			if not (a_text_mark = {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)) then
-				a_selection_start := selection_start_internal
-				a_selection_end := selection_end_internal
-				if selection_change_actions_internal /= Void and then (previous_selection_start /= a_selection_start or else previous_selection_end /= a_selection_end) then
-					selection_change_actions_internal.call (Void)
-				end
-				previous_selection_start := a_selection_start
-				previous_selection_end := a_selection_end
-			else
-				a_caret_position := caret_position
-				if a_caret_position /= previous_caret_position then
-					if caret_move_actions_internal /= Void then
-						caret_move_actions_internal.call ([a_caret_position])
+			if is_displayed then
+					-- We only want text mark events when rich text is displayable to user.
+				if not (a_text_mark = {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)) then
+					a_selection_start := selection_start_internal
+					a_selection_end := selection_end_internal
+					if selection_change_actions_internal /= Void and then (previous_selection_start /= a_selection_start or else previous_selection_end /= a_selection_end) then
+						selection_change_actions_internal.call (Void)
 					end
-						-- Wipeout current format
-					current_format := Void
+					previous_selection_start := a_selection_start
+					previous_selection_end := a_selection_end
+				else
+					a_caret_position := caret_position
+					if a_caret_position /= previous_caret_position then
+						if caret_move_actions_internal /= Void then
+							caret_move_actions_internal.call ([a_caret_position])
+						end
+							-- Wipeout current format
+						current_format := Void
+					end
 				end
+				previous_caret_position := a_caret_position
 			end
-			previous_caret_position := a_caret_position
 		end
 
 feature {NONE} -- Implementation

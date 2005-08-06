@@ -80,6 +80,7 @@ fullrd drawing_area
 fullrd ev_list
 fullrd fake_event
 fullrd figure
+fullrd grid
 fullrd hello_world
 fullrd menu
 fullrd multicolumn_list

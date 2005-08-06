@@ -68,6 +68,9 @@ exprt -r $DEFAULT_CVS_TAG -d store Src/examples/store
 fullrd store/matisse
 remtrace thread
 exprt -r $DEFAULT_CVS_TAG -d thread Src/examples/thread
+cd thread
+fullrd fancy
+cd ..
 remtrace time
 exprt -r $DEFAULT_CVS_TAG -d time Src/examples/time
 remtrace vision

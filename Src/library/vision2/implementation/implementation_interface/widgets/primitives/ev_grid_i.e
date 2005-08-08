@@ -1901,7 +1901,7 @@ feature -- Element change
 				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
 				row (i - 1).parent_row_root /= row (i).parent_row_root)
 		do
-			add_row_at (i, False)
+			insert_row_at (i)
 		ensure
 			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (row_count = i)
 		end
@@ -1914,7 +1914,7 @@ feature -- Element change
 			a_parent_row_not_void: a_parent_row /= Void
 			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 		do
-			add_row_at (i, False)
+			insert_row_at (i)
 			a_parent_row.implementation.add_subrow_internal (row (i), a_parent_row.subrow_count + 1,True)
 		ensure
 			row_count_set: row_count = old row_count + 1
@@ -2183,21 +2183,13 @@ feature -- Removal
 			recompute_vertical_scroll_bar
 			redraw_client_area
 			last_vertical_scroll_bar_value := 0
-			if last_selected_item /= Void and then last_selected_item.row.index >= lower_index and last_selected_item.row.index <= upper_index then
-				last_selected_item := Void
-			end
-			if last_selected_row /= Void and then last_selected_row.index >= lower_index and last_selected_row.index <= upper_index then
-				last_selected_row := Void
-			end
-			if shift_key_start_item /= Void and then shift_key_start_item.row.index >= lower_index and shift_key_start_item.row.index <= upper_index then
-				shift_key_start_item := Void
-			end
+			reset_internal_grid_attributes
 		ensure
 			row_count_consistent: row_count = (old row_count) - (upper_index - lower_index + 1)
 			lower_row_removed: (old row (lower_index)).parent = Void
 			upper_row_removed: (old row (upper_index)).parent = Void
 			to_implement_assertion (once "middle_rows_removed from lower to upper all old rows parent = Void")
-		end	
+		end
 		
 	internal_remove_row (a_row: EV_GRID_ROW_I) is
 			-- Perform internal settings required for removal of `a_row'.
@@ -4775,9 +4767,9 @@ feature {NONE} -- Event handling
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 
-	add_row_at (a_index: INTEGER; replace_existing_item: BOOLEAN) is
-			-- Add a new row at index `a_index'.
-			-- If `replace_existing_item' then replace value at `a_index', else insert at `a_index'.
+	add_row_at (a_index: INTEGER) is
+			-- Add a new row at index `a_index', replacing existing row
+			-- if any.
 		require
 			i_positive: a_index > 0
 		local
@@ -4788,12 +4780,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			
 			create a_row_data.make (0)
 			if a_index > row_count then
-				if replace_existing_item then
-						-- We are inserting at a certain value so we resize to one less
-					resize_row_lists (a_index)
-				else
-					resize_row_lists (a_index - 1)
-				end
+				resize_row_lists (a_index)
 			end
 
 			rows.go_i_th (a_index)
@@ -4803,20 +4790,44 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			row_i.set_parent_i (Current, row_counter)
 			row_counter := row_counter + 1
 
-			if replace_existing_item then
-				internal_row_data.replace (a_row_data)
-				replaced_row := rows.item
-				if replaced_row /= Void then
-					replaced_row.update_for_removal
-				end
-				rows.replace (row_i)
-				row_i.set_index (a_index)
-			else
-				internal_row_data.put_left (a_row_data)
-				rows.put_left (row_i)
-					-- Update the index of `row_i' and subsequent rows in `rows'
-				update_grid_row_indices (a_index)
+			internal_row_data.replace (a_row_data)
+			replaced_row := rows.item
+			if replaced_row /= Void then
+				replaced_row.update_for_removal
 			end
+			rows.replace (row_i)
+			row_i.set_index (a_index)
+			set_vertical_computation_required (a_index)
+		end
+		
+	insert_row_at (a_index: INTEGER) is
+			-- Insert a new row at index `a_index'.
+		require
+			i_positive: a_index > 0
+		local
+			row_i: EV_GRID_ROW_I
+			a_row_data: SPECIAL [EV_GRID_ITEM_I]
+		do
+			row_i := interface.new_row.implementation
+			
+			create a_row_data.make (0)
+			if a_index > row_count then
+					-- We are inserting at a certain value so we resize to one less
+					-- as the call to `put_left' resizes the count to `a_index'.
+				resize_row_lists (a_index - 1)
+			end
+
+			rows.go_i_th (a_index)
+			internal_row_data.go_i_th (a_index)
+
+				-- Set grid of `grid_row' to `Current'
+			row_i.set_parent_i (Current, row_counter)
+			row_counter := row_counter + 1
+
+			internal_row_data.put_left (a_row_data)
+			rows.put_left (row_i)
+				-- Update the index of `row_i' and subsequent rows in `rows'
+			update_grid_row_indices (a_index)
 			set_vertical_computation_required (a_index)
 		end
 		
@@ -4832,7 +4843,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 				Result := temp_rows @ a_row
 			end
 			if Result = Void then
-				add_row_at (a_row, True)
+				add_row_at (a_row)
 				Result := temp_rows @ a_row
 			end
 		ensure
@@ -5011,6 +5022,26 @@ feature {NONE} -- Implementation
 	extra_text_spacing: INTEGER is
 			-- Extra spacing for rows that is added to the height of a row text to make up `default_row_height'.
 		deferred
+		end
+		
+	reset_internal_grid_attributes is
+			-- Set all temporary attributes used internally by the
+			-- grid to `Void' if they are no longer contained in the grid.
+			-- This prevents memory leaks as otherwise references may be kept
+			-- to objects no longer in the grid.
+		do
+			if last_selected_item /= Void and then last_selected_item.parent_i = Void then
+				last_selected_item := Void
+			end
+			if last_selected_row /= Void and then last_selected_row.parent_i = Void then
+				last_selected_row := Void
+			end
+			if shift_key_start_item /= Void and then shift_key_start_item.parent = Void then
+				shift_key_start_item := Void
+			end
+			if last_pointed_item /= Void and then last_pointed_item.parent_i = Void then
+				last_pointed_item := Void
+			end
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation

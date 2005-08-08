@@ -1729,8 +1729,8 @@ feature {NONE} -- open new class
 			str := feature_address.text
 			if not str.is_empty and then not (str.substring_index (l_From, 1) > 0) then
 				last_caret_position := feature_address.caret_position
+					-- Only perform `left_adjust' so that we can type `infix "X"' in the combo box.
 				str.left_adjust
-				str.right_adjust
 				str.to_lower
 				nb := str.count
 				do_not_complete :=	last_key_was_delete or

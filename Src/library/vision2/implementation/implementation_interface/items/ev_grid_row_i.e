@@ -723,7 +723,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			elseif a_subrow_index = 1 then
 					-- There is no subrow before the current insert index so
 					-- add at a position in `parent_i' based on `Current'.
-				parent_i.add_row_at (index + 1, False)
+				parent_i.insert_row_at (index + 1)
 				add_subrow_internal (parent_i.row (index + 1), a_subrow_index, True)
 			else
 					-- There is a subrow before the current insert index so
@@ -731,7 +731,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					-- As this item may have rows of it's own the subrow count recursive must also be added.
 				l_subrow := subrows.i_th (a_subrow_index - 1)
 				l_index := l_subrow.index + l_subrow.subrow_count_recursive + 1
-				parent_i.add_row_at (l_index, False)
+				parent_i.insert_row_at (l_index)
 				add_subrow_internal (parent_i.row (l_index), a_subrow_index, True)
 			end
 		ensure
@@ -849,7 +849,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			subrow (a_subrow_index) = a_row
 			node_counts_correct: node_counts_correct
 		end
-		
+				
 	enable_select is
 			-- Select the object.
 		do

@@ -1943,8 +1943,11 @@ feature -- Element change
 			row_at_i_has_no_parent_row: row (i).parent_row = Void
 			end_row_last_in_tree_structure: i + n <= row_count implies row (i + n).parent_row = Void
 		do
-				-- Only move if the row move is not overlapping.
-			if j < i or else j >= i + n then
+			if j >= i + n or else j < i then
+					-- Only move rows if the move is not overlapping.
+					-- As we are moving rows from one place to another, if the
+					-- destination index is within the range of the source index plus the number
+					-- of rows to move then no move is needed.
 				rows.move_items (i, j, n)
 				internal_row_data.move_items (i, j, n)
 					-- Update the changed indexes.
@@ -1969,7 +1972,11 @@ feature -- Element change
 			a_counter: INTEGER
 			a_insertion_index: INTEGER
 		do
-			if j < i or else j >= i + n then
+			if j >= i + n or else j < i then
+					-- Only move columns if the move is not overlapping.
+					-- As we are moving columns from one place to another, if the
+					-- destination index is within the range of the source index plus the number
+					-- of columns to move then no move is needed.
 				columns.move_items (i, j, n)
 					-- Move items within header control.
 				from

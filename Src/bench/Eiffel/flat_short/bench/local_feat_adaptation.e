@@ -334,7 +334,9 @@ end;
 					--| If in bench mode make everything clickable
 				rout_id := source_feature.rout_id_set.first;
 				select_table := target_select_table;
-				new_feat := select_table.item (rout_id);
+				if select_table /= Void then
+					new_feat := select_table.item (rout_id);
+				end
 				target_feature := new_feat;
 				if new_feat = Void then
 					clear
@@ -402,7 +404,7 @@ feature {NONE} -- Implementation
 			valid_target_class: target_type /= Void
 		do
 			Result := private_target_select_table;
-			if Result = Void then
+			if Result = Void and then target_class /= Void then
 				Result := Feat_tbl_server.item (target_class.class_id).origin_table
 			end;
 		end;

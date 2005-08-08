@@ -777,15 +777,15 @@ rt_public void eif_thr_exit(void)
 		eif_unsynchronize_gc (rt_globals);
 #endif
 
-		/* Clean per thread data. */
-	eif_free_context (rt_globals);
-
 #ifdef LMALLOC_CHECK
 		if (eif_thr_is_root ())	{	/* Is this the root thread */
 			eif_lm_display ();
 			eif_lm_free ();
 		}
 #endif	/* LMALLOC_CHECK */
+
+		/* Clean per thread data. */
+	eif_free_context (rt_globals);
 
 #ifdef VXWORKS
 		/* The TSD is managed in a different way under VxWorks: each thread

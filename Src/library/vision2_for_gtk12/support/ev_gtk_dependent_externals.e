@@ -215,7 +215,7 @@ feature -- Externals
 			"GTK_VALUE_INT (*(GtkArg*) $arg )"
 		end
 
-	frozen gtk_value_uint (arg: POINTER): INTEGER is
+	frozen gtk_value_uint (arg: POINTER): NATURAL_32 is
 			-- Integer value from a GtkArg.
 		external
 			"C inline use <gtk/gtk.h>"

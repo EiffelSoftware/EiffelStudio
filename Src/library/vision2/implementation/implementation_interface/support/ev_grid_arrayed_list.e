@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			create area.make (0)
 		end
 
-feature {EV_GRID_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
 	move_items (i, j, n: INTEGER) is
 			-- Move `n' items starting at index `i' to index `j'.
@@ -67,7 +67,7 @@ feature {EV_GRID_I} -- Implementation
 			end
 			merge_right (a_duplicate)
 		end
-
+		
 	resize (new_capacity: INTEGER) is
 			-- Resize list so that it can contain
 			-- at least `n' items. Lose items if `new_capacity' is less than `capacity'

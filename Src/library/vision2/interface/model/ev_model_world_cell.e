@@ -49,6 +49,8 @@ feature {NONE} -- Initialization
 		do
 			world := a_world
 			default_create
+		ensure
+			world_set: world = a_world
 		end
 		
 	initialize is

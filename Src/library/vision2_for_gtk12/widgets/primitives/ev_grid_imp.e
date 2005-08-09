@@ -98,7 +98,6 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		local
 			a_font_imp: EV_FONT_IMP
 			a_tuple: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
-			a_width, a_height: INTEGER
 		do
 			if s.is_empty then
 				tuple.put_integer (0, 1)
@@ -106,8 +105,8 @@ feature {EV_GRID_ITEM_I} -- Implementation
 			else
 				a_font_imp ?= f.implementation
 				a_tuple := a_font_imp.string_size (s)
-				tuple.put_integer (a_width, a_tuple.integer_32_item (1))
-				tuple.put_integer (a_height, a_tuple.integer_32_item (2))				
+				tuple.put_integer (a_tuple.integer_32_item (1), 1)
+				tuple.put_integer (a_tuple.integer_32_item (2), 2)				
 			end
 		end
 

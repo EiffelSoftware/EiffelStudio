@@ -515,8 +515,6 @@ feature -- Implementation
 						signal_emit_stop (event_widget, "button-press-event")
 				end				
 			end
-			
-			app_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
 			last_pointed_target := Void	

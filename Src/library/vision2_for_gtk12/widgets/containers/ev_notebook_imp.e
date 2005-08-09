@@ -47,10 +47,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object ({EV_GTK_EXTERNALS}.gtk_notebook_new ())
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_border (visual_widget, 1)
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (visual_widget, False)
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_hborder (visual_widget, 0)
-			{EV_GTK_EXTERNALS}.gtk_notebook_set_tab_vborder (visual_widget, 0)
 			{EV_GTK_EXTERNALS}.gtk_notebook_set_scrollable (visual_widget, True)
 			real_signal_connect (visual_widget, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
 		end

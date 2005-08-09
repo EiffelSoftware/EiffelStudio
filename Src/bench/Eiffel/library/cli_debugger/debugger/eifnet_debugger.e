@@ -776,14 +776,15 @@ feature {NONE} -- Callback actions
 				else
 					execution_stopped := execution_stopped_on_end_of_step_complete_callback
 				end
-			elseif 
-				managed_callback_is_exception (cb_id) and then
-				is_inside_function_evaluation
-			then
-				if icor_debug_controller /= Void then
-					call_do_continue_on_cb
-				end					
-				execution_stopped := False
+			elseif managed_callback_is_exception (cb_id) then 
+				if is_inside_function_evaluation then
+					if icor_debug_controller /= Void then
+						call_do_continue_on_cb
+					end					
+					execution_stopped := False
+				else
+					execution_stopped := execution_stopped_on_exception_callback
+				end
 			else
 					--| Then we stop the execution ;)
 					--| do nothing for now
@@ -981,6 +982,51 @@ feature {NONE} -- Callback actions
 				end	
 				Result := execution_stopped
 			end			
+		end
+
+	execution_stopped_on_exception_callback: BOOLEAN is
+		require
+			exception_occurred: exception_occurred
+		local
+			cln: STRING
+			es: STRING
+			l_icd_exception: ICOR_DEBUG_VALUE
+			l_exception_info: EIFNET_DEBUG_VALUE_INFO			
+		do
+			if application.exceptions_handler.ignoring_external_exception then
+				l_icd_exception := new_active_exception_value_from_thread
+--| Check if we should not use directly the `exception_class_name' feature
+--				cln := exception_class_name
+				if l_icd_exception /= Void and then l_icd_exception.item /= default_pointer then
+					l_icd_exception.add_ref
+					create l_exception_info.make (l_icd_exception)
+					cln := l_exception_info.value_class_name
+					l_exception_info.icd_prepared_value.clean_on_dispose
+					l_exception_info.clean
+					l_icd_exception.clean_on_dispose
+				end				
+				if cln /= Void then
+					es := once "EiffelSoftware.Runtime." --EIFFEL_EXCEPTION"
+					if es.is_equal (cln.substring (1, es.count - 1)) then
+						debug ("dbg_trace")
+							print ("Catch exception : " + cln + "%N")
+						end
+						Result := True
+					else
+						debug ("dbg_trace")
+							print ("Ignore exception : " + cln + "%N")
+						end
+						Result := False
+					end
+				else
+					Result := True
+				end
+			else				
+				Result := True
+			end
+			if not Result then
+				call_do_continue_on_cb
+			end
 		end
 
 feature -- Various continuing mode from callback

@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 			end
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
+			create exceptions_handler
 		ensure
 			displayed_string_size: displayed_string_size = preferences.misc_data.default_displayed_string_size
 			max_evaluation_duration_set: preferences.debug_tool_data /= Void implies
@@ -257,6 +258,11 @@ feature -- Query
 	max_evaluation_duration: INTEGER
 			-- Maximum number of seconds to wait before cancelling an evaluation.
 			-- A negative value means no cancellation will be done.
+			
+feature -- Exception handling
+
+	exceptions_handler: DBG_EXCEPTION_HANDLER
+
 
 feature -- Access
 

@@ -192,6 +192,11 @@ feature -- Access
 
 			Result.extend (set_critical_stack_depth_cmd.new_menu_item)
 
+				-- Separator.
+			create sep
+			Result.extend (sep)
+			Result.extend (exception_handler_cmd.new_menu_item)
+
 			debug ("DEBUGGER_INTERFACE")
 					-- Separator.
 				create sep
@@ -957,6 +962,8 @@ feature {NONE} -- Implementation
 
 	set_critical_stack_depth_cmd: EB_STANDARD_CMD
 			-- Command that changes the depth at which we warn the user against a stack overflow.
+			
+	exception_handler_cmd: EB_EXCEPTION_HANDLER_CMD
 
 	stop_cmd: EB_EXEC_STOP_CMD
 			-- Command that can interrupt the execution.
@@ -1024,6 +1031,11 @@ feature {NONE} -- Implementation
 
 			create display_error_help_cmd.make
 			toolbarable_commands.extend (display_error_help_cmd)
+
+
+			create exception_handler_cmd.make
+			exception_handler_cmd.enable_sensitive
+			toolbarable_commands.extend (exception_handler_cmd)
 
 			create step_cmd.make (Current)
 			toolbarable_commands.extend (step_cmd)

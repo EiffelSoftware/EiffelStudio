@@ -160,9 +160,9 @@ exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons
 cd $INSTALL_DIR/library
 gunzip -c $INSTALL_DIR/free_add_ons/gobo/gobo_34_unix.tgz | tar -xf -
 cd $INSTALL_DIR/free_add_ons
-fullrf gobo/gobo_34_unix.tgz
-fullrf gobo/gobo_34_win.tgz
-fullrf gobo/gobo_33_ise.tgz
+fullrd eclop
+fullrf gobo
+fullrf micoe
 fullrd wex
 cd $INIT_DIR
 

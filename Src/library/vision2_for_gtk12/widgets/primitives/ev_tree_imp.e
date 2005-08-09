@@ -557,8 +557,6 @@ feature -- Implementation
 			elseif a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
 				signal_emit_stop (visual_widget, "button-press-event")
 			end
-
-			app_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
 			last_pointed_target := Void	

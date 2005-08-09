@@ -641,10 +641,10 @@ feature -- Backup warnings
 								%The state of the system was too damaged."
 
 	w_Found_backup: STRING is "A backed up version of the file was found.%N%
-							%Do you want to open the normal file or the backup file?%N%
-							%If you choose the normal file, the backup file will be%N%
-							%deleted. If choose the backup file, then the normal file%
-							%will be overwritten with the contents of the backup file%
+							%Do you want to open the original file or the backup file?%N%
+							%If you choose the original file, the backup file will be%N%
+							%deleted. If choose the backup file, then the original file%N%
+							%will be overwritten with the contents of the backup file%N%
 							%when you save.%N"
 
 	w_Save_backup: STRING is "You are about to overwrite the original file with%N%

@@ -1482,10 +1482,10 @@ feature -- Status setting
 					items := drawer.items_spanning_vertical_span (internal_client_y, viewable_height)
 					if items.count > 0 then
 						row_index := items.first
-						if row_indexes_to_visible_indexes = Void then
-							visible_row_index := row_index - 1
-						else
+						if not is_row_height_fixed or is_tree_enabled then
 							visible_row_index := row_indexes_to_visible_indexes @ row_index
+						else
+							visible_row_index := row_index - 1
 						end
 						vertical_scroll_bar.set_value (visible_row_index)
 					else

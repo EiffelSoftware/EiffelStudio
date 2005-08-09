@@ -1007,7 +1007,7 @@ feature {NONE} -- Callback actions
 				end				
 				if cln /= Void then
 					es := once "EiffelSoftware.Runtime." --EIFFEL_EXCEPTION"
-					if es.is_equal (cln.substring (1, es.count - 1)) then
+					if es.is_equal (cln.substring (1, es.count)) then
 						debug ("dbg_trace")
 							print ("Catch exception : " + cln + "%N")
 						end

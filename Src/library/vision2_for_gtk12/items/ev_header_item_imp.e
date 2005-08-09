@@ -38,9 +38,6 @@ feature -- Initialization
 			-- Create the tree item.
 		do
 			base_make (an_interface)
-			check
-				not_available_with_gtk1_implementation: False
-			end
 		end
 
 	initialize is
@@ -167,7 +164,10 @@ feature {NONE} -- Redundant implementation
 
 feature {NONE} -- Implementation
 
-	destroy is do end
+	destroy is
+		do
+			set_is_destroyed (True)
+		end
 
 	interface: EV_HEADER_ITEM
 

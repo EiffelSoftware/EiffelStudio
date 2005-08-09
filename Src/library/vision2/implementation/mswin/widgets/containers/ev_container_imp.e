@@ -305,7 +305,7 @@ feature {NONE} -- WEL Implementation
  		do
 			-- To avoid the commands to be call two times, we check that
 			-- it is not a call for a end of scroll
-			if cwin_lo_word (wparam) /= Wel_sb_constants.Sb_endscroll then
+			if cwin_lo_word (wparam) /= {WEL_SB_CONSTANTS}.Sb_endscroll then
 	 			p := get_wm_vscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
 	 				-- The message comes from a gauge,
@@ -337,7 +337,7 @@ feature {NONE} -- WEL Implementation
  		do
 			-- To avoid the commands to be call two times, we check that
 			-- it is not a call for a end of scroll
-			if cwin_lo_word (wparam) /= Wel_sb_constants.Sb_endscroll then
+			if cwin_lo_word (wparam) /= {WEL_SB_CONSTANTS}.Sb_endscroll then
 	 			p := get_wm_hscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
 	 				-- The message comes from a gauge
@@ -830,12 +830,6 @@ feature {NONE} -- Implementation
 			if not process_menu_message (msg, wparam, lparam) then
 				Precursor {EV_WIDGET_IMP} (msg, wparam, lparam)
 			end
-		end
-
-	wel_sb_constants: WEL_SB_CONSTANTS is
-			-- Access to SB_xxx constants.
-		once
-			create Result
 		end
 
 invariant

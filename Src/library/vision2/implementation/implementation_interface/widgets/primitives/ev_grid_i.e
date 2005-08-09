@@ -1901,9 +1901,23 @@ feature -- Element change
 				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
 				row (i - 1).parent_row_root /= row (i).parent_row_root)
 		do
-			insert_row_at (i)
+			insert_rows_at (1, i)
 		ensure
 			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (row_count = i)
+		end
+		
+	insert_new_rows (rows_to_insert, i: INTEGER) is
+			-- Insert `rows_to_insert' rows at index `i'.
+		require
+			i_positive: i > 0
+			rows_to_insert_positive: rows_to_insert >= 1
+			not_inserting_within_existing_subrow_structure: i = 1 or else (i < row_count and
+				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
+				row (i - 1).parent_row_root /= row (i).parent_row_root)
+		do
+			insert_rows_at (rows_to_insert, i)
+		ensure
+			row_count_set: (i <= old row_count implies row_count = old row_count + rows_to_insert) or (row_count = i + rows_to_insert - 1)
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
@@ -1914,11 +1928,27 @@ feature -- Element change
 			a_parent_row_not_void: a_parent_row /= Void
 			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 		do
-			insert_row_at (i)
-			a_parent_row.implementation.add_subrow_internal (row (i), a_parent_row.subrow_count + 1,True)
+			insert_rows_at (1, i)
+			a_parent_row.implementation.add_subrows_internal (1, i, a_parent_row.subrow_count + 1,True)
 		ensure
 			row_count_set: row_count = old row_count + 1
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
+		end
+		
+	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW) is
+			-- Insert `rows_to_insert' new rows at index `i' and make those rows subnodes of `a_parent_row'.
+		require
+			i_positive: i > 0
+			rows_to_insert_positive: row_count >= 1
+			i_less_than_row_count: i <= row_count + 1
+			a_parent_row_not_void: a_parent_row /= Void
+			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+		do
+			insert_rows_at (rows_to_insert, i)
+			a_parent_row.implementation.add_subrows_internal (rows_to_insert, i, a_parent_row.subrow_count + 1,True)
+		ensure
+			row_count_set: row_count = old row_count + rows_to_insert
+			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + rows_to_insert
 		end
 
 	insert_new_column (a_index: INTEGER) is
@@ -4807,32 +4837,38 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			set_vertical_computation_required (a_index)
 		end
 		
-	insert_row_at (a_index: INTEGER) is
-			-- Insert a new row at index `a_index'.
+	insert_rows_at (rows_to_insert, a_index: INTEGER) is
+			-- Insert `rows_to_insert' rows at index `a_index'.
 		require
 			i_positive: a_index > 0
 		local
 			row_i: EV_GRID_ROW_I
 			a_row_data: SPECIAL [EV_GRID_ITEM_I]
+			old_count: INTEGER
+			i, j: INTEGER
 		do
-			row_i := interface.new_row.implementation
+			old_count := internal_row_data.count
+			resize_row_lists ((internal_row_data.count).max (a_index - 1) + rows_to_insert)
 			
-			create a_row_data.make (0)
-			if a_index > row_count then
-					-- We are inserting at a certain value so we resize to one less
-					-- as the call to `put_left' resizes the count to `a_index'.
-				resize_row_lists (a_index - 1)
+			internal_row_data.area.move_data (a_index - 1, a_index - 1 + rows_to_insert, old_count - a_index + 1)
+			rows.area.move_data (a_index - 1, a_index - 1 + rows_to_insert, old_count - a_index + 1)
+			
+			from
+				i := 1
+				j := a_index - 1
+			until
+				i > rows_to_insert
+			loop
+				create a_row_data.make (0)
+				internal_row_data.put_i_th (a_row_data, i + j)
+				row_i := interface.new_row.implementation
+				row_i.set_parent_i (Current, row_counter)
+				row_counter := row_counter + 1
+				
+				rows.put_i_th (row_i, i + j)
+				i := i + 1
 			end
 
-			rows.go_i_th (a_index)
-			internal_row_data.go_i_th (a_index)
-
-				-- Set grid of `grid_row' to `Current'
-			row_i.set_parent_i (Current, row_counter)
-			row_counter := row_counter + 1
-
-			internal_row_data.put_left (a_row_data)
-			rows.put_left (row_i)
 				-- Update the index of `row_i' and subsequent rows in `rows'
 			update_grid_row_indices (a_index)
 			set_vertical_computation_required (a_index)

@@ -164,7 +164,6 @@ feature -- Access
 			Result := implementation.virtual_y_position
 		ensure
 			parent_void_implies_result_zero: parent = Void implies result = 0
-			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_height - viewable_height")
 		end
 		
 	index_of_first_item: INTEGER is
@@ -422,6 +421,22 @@ feature -- Element change
 		ensure
 			subrow_count_increased: subrow_count = old subrow_count + 1
 			parent_row_count_increased: parent.row_count = old parent.row_count + 1
+		end
+		
+	insert_subrows (rows_to_insert, subrow_index: INTEGER) is
+			-- Add `rows_to_insert' rows to `parent' as a subrow of `Current'
+			-- with index in subrows of `Current' given by `subrow_index'.
+		require
+			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
+			parent_enabled_as_tree: parent.is_tree_enabled
+			rows_to_insert_positive: rows_to_insert >= 1
+			valid_subrow_index: subrow_index >= 1 and subrow_index <= subrow_count + 1
+		do
+			implementation.insert_subrows (rows_to_insert, subrow_index)
+		ensure
+			subrow_count_increased: subrow_count = old subrow_count + rows_to_insert
+			parent_row_count_increased: parent.row_count = old parent.row_count + rows_to_insert
 		end
 
 	remove_subrow (a_row: EV_GRID_ROW) is

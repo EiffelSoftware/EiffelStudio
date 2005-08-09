@@ -184,7 +184,7 @@ feature -- Recording Operation once_tokens
 
 feature -- Queries IL Offsets
 
-	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]] is
+	breakable_il_offsets (a_feature_i: FEATURE_I): ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]] is
 			-- breakable_il_offsets associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
@@ -205,7 +205,7 @@ feature -- Queries IL Offsets
 
 feature -- Recording Operation
 
-	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]]): TUPLE [INTEGER, LIST [INTEGER]] is
+	line_info_for_eiffel_line (a_eiffel_line: INTEGER; a_data: ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]]): TUPLE [INTEGER, IL_OFFSET_SET] is
 			-- Breakable line info for `eiffel_line' inside `a_data'
 		do
 			from
@@ -232,9 +232,9 @@ feature -- Recording Operation
 			a_il_offset >= 0
 			a_eiffel_line >= 0
 		local
-			l_il_offset_list: ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]] 
-			l_line_info: TUPLE [INTEGER, LIST [INTEGER]]
-			l_offsets_info: LIST [INTEGER]
+			l_il_offset_list: ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]] 
+			l_line_info: TUPLE [INTEGER, IL_OFFSET_SET]
+			l_offsets_info: IL_OFFSET_SET
 				-- bp index => [eiffel line number, [IL offsets, ...]]
 			l_feature_name_id: INTEGER
 		do		
@@ -264,7 +264,7 @@ feature -- Recording Operation
 				l_line_info := line_info_for_eiffel_line (a_eiffel_line, l_il_offset_list)
 			end
 			if l_line_info = Void then
-				create {LINKED_LIST [INTEGER]} l_offsets_info.make
+				create {IL_OFFSET_SET} l_offsets_info.make
 				l_line_info := [a_eiffel_line, l_offsets_info]
 				l_il_offset_list.extend (l_line_info)
 			else
@@ -328,7 +328,7 @@ feature {NONE} -- Storage Implementation
 	list_once_tokens: HASH_TABLE [TUPLE [INTEGER, INTEGER, INTEGER, INTEGER], INTEGER] 
 			-- feature_tokens[_data_class|_done|_result|_exception] <= [feature_name_id]
 
-	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST [TUPLE [INTEGER, LIST [INTEGER]]], INTEGER]
+	list_breakable_il_offset: HASH_TABLE [ARRAYED_LIST [TUPLE [INTEGER, IL_OFFSET_SET]], INTEGER]
 			-- [bp index => [eiffel line, List [Offset IL]] ] <= [feature_name_id]
 
 invariant

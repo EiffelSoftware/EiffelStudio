@@ -113,7 +113,6 @@ feature -- Access
 			Result := implementation.virtual_x_position
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
-			to_implement_assertion ("valid_result: Result >= 0 and Result <= virtual_width - viewable_width")
 		end
 
 	background_color: EV_COLOR is

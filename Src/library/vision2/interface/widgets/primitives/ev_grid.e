@@ -1806,6 +1806,21 @@ feature -- Element change
 		ensure
 			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (row_count = i)
 		end
+		
+	insert_new_rows (rows_to_insert, i: INTEGER) is
+			-- Insert `rows_to_insert' rows at index `i'.
+		require
+			not_destroyed: not is_destroyed
+			i_positive: i > 0
+			rows_to_insert_positive: rows_to_insert >= 1
+			not_inserting_within_existing_subrow_structure: i = 1 or else (i < row_count and
+				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
+				row (i - 1).parent_row_root /= row (i).parent_row_root)
+		do
+			implementation.insert_new_rows (rows_to_insert, i)
+		ensure
+			row_count_set: (i <= old row_count implies row_count = old row_count + rows_to_insert) or (row_count = i + rows_to_insert - 1)
+		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
 			-- Insert a new row at index `i' and make that row a subnode of `a_parent_row'.
@@ -1821,6 +1836,21 @@ feature -- Element change
 		ensure
 			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (i = row_count)
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
+		end
+		
+	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW) is
+			-- Insert `rows_to_insert' new rows at index `i' and make those rows subnodes of `a_parent_row'.
+		require
+			i_positive: i > 0
+			rows_to_insert_positive: rows_to_insert >= 1
+			i_less_than_row_count: i <= row_count + 1
+			a_parent_row_not_void: a_parent_row /= Void
+			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+		do
+			implementation.insert_new_rows_parented (rows_to_insert, i, a_parent_row)
+		ensure
+			row_count_set: row_count = old row_count + rows_to_insert
+			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + rows_to_insert
 		end
 
 	insert_new_column (a_index: INTEGER) is

@@ -287,7 +287,9 @@ feature {NONE} -- Implementation
 			window_not_destroyed: not display_container.is_destroyed
 			window_shown: display_container.is_displayed
 		do
-			grid_remove_and_clear_all_rows (output_grid)
+			if output_grid.row_count >= 1 then
+				output_grid.remove_rows (1, output_grid.row_count)
+			end
 			output_text.remove_text
 			if display_container.full then
 				if display_container.item /= output_text then
@@ -310,7 +312,9 @@ feature {NONE} -- Implementation
 			window_not_destroyed: not display_container.is_destroyed
 			window_shown: display_container.is_displayed
 		do
-			grid_remove_and_clear_all_rows (output_grid)
+			if output_grid.row_count >= 1 then
+				output_grid.remove_rows (1, output_grid.row_count)
+			end
 			output_text.remove_text
 			if display_container.full then
 				if display_container.item /= output_grid then
@@ -364,7 +368,9 @@ feature {NONE} -- Implementation
 			from
 				l_data := grid_data
 				l_grid := output_grid
-				grid_remove_and_clear_all_rows (l_grid)
+				if output_grid.row_count >= 1 then
+					output_grid.remove_rows (1, output_grid.row_count)
+				end
 				i := 1
 				l_data.start
 			until
@@ -426,6 +432,7 @@ feature {NONE} -- Implementation
 			if a_parent_row.subrow_count = 0 then
 				l_data := mem.memory_map.item (a_dynamic_type)
 				if l_data /= Void then
+					output_grid.insert_new_rows_parented (l_data.count, a_parent_row.index + 1, a_parent_row)
 					from
 						l_data.start
 						l_row_index := a_parent_row.index
@@ -433,7 +440,6 @@ feature {NONE} -- Implementation
 					until
 						l_data.after
 					loop
-						output_grid.insert_new_row_parented (i, a_parent_row)
 						create l_item.make_with_text ((i - l_row_index).out)
 						output_grid.set_item (1, i, l_item)
 						l_any := l_data.item
@@ -474,10 +480,10 @@ feature {NONE} -- Implementation
 						l_row_index := a_parent_row.index
 						i := l_row_index + 1
 						nb := l_data.count
+						output_grid.insert_new_rows_parented (l_data.count, i, a_parent_row)
 					until
 						j = nb
 					loop
-						output_grid.insert_new_row_parented (i, a_parent_row)
 						create l_item.make_with_text ((i - l_row_index).out + ": " + l_int.type_name (l_data.item (j)))
 						output_grid.set_item (1, i, l_item)
 						l_any := l_data.item (j)

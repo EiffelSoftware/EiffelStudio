@@ -318,24 +318,33 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 		
 	pango_family_string: STRING is
 			-- Get standard string to represent family.
+		local
+			l_preferred_families: like preferred_families
+			l_font_names_on_system_as_lower: ARRAYED_LIST [STRING]
+			l_item_string: STRING
+			i, l_preferred_families_count: INTEGER
 		do
-			if not preferred_families.is_empty then
+			l_preferred_families := preferred_families
+			l_font_names_on_system_as_lower := app_implementation.font_names_on_system_as_lower
+			if not l_preferred_families.is_empty then
 				from
-					preferred_families.start
+					l_preferred_families_count := l_preferred_families.count
+					i := 1
 				until
-					Result /= Void or else preferred_families.off
+					Result /= Void or else i > l_preferred_families_count
 				loop
-					if preferred_families.item /= Void and then app_implementation.font_names_on_system_as_lower.has (preferred_families.item.as_lower) then
-						Result := preferred_families.item.twin
+					l_item_string := l_preferred_families [i]
+					if l_item_string /= Void and then l_font_names_on_system_as_lower.has (l_item_string.as_lower) then
+						Result := l_item_string.twin
 					end
-					preferred_families.forth
+					i := i + 1
 				end				
 			end
 			if Result = Void then
 				-- We have not found a preferred family
 				if font_is_default then
 					-- If the use has made no setting changes we use default gtk
-					Result := app_implementation.default_font_name
+					Result := app_implementation.default_font_name.twin
 				else
 					create Result.make (10)
 					inspect family

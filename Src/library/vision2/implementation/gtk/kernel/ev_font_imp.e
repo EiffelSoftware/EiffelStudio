@@ -48,13 +48,16 @@ feature {EV_FONTABLE_IMP} -- Implementation
 
 	font_is_default: BOOLEAN is
 			-- Does `Current' have the characteristics of the default application font?
+		local
+			l_app_imp: like app_implementation
 		do
-			Result := 
+			l_app_imp := app_implementation
+			Result :=
+					height_in_points = l_app_imp.default_font_point_height_internal and then
 					family = Family_sans and then
-					weight = app_implementation.default_font_weight_internal and then
-					shape = app_implementation.default_font_style_internal and then
-					name.is_equal (app_implementation.default_font_name_internal) and then
-					height_in_points = app_implementation.default_font_point_height_internal
+					weight = l_app_imp.default_font_weight_internal and then
+					shape = l_app_imp.default_font_style_internal and then
+					name.is_equal (l_app_imp.default_font_name_internal)		
 		end
 
 feature -- Access

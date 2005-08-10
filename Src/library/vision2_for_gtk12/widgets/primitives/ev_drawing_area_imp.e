@@ -29,8 +29,7 @@ inherit
 			default_key_processing_blocked,
 			set_focus,
 			dispose,
-			destroy,
-			on_key_event
+			destroy
 		end
 
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
@@ -175,19 +174,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 		
 feature {NONE} -- Implementation
-
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
-			-- Key event has occured
-		do
-			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
-			if 
-				a_key /= Void and then
-				(a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down)
-			then
-				-- This is a hack for Studio to force trailing cursors to be undrawn upon key scrolling.
-				{EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
-			end				
-		end
 
 	destroy is
 			-- Destroy implementation

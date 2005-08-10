@@ -377,6 +377,14 @@ inherit
 			writable,
 			is_in_default_state
 		end
+		
+	EV_TOOLTIPABLE
+		undefine
+			copy, is_equal
+		redefine
+			implementation,
+			is_in_default_state
+		end
 
 	EV_GRID_TYPES
 		undefine

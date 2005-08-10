@@ -704,6 +704,12 @@ rt_public void eif_thr_exit(void)
 	EIF_GET_CONTEXT
 
 	if (!thread_exiting) {
+#ifdef LMALLOC_CHECK
+			/* Perform call to `eif_thr_is_root' now as later, it would fail
+			 * since the per thread data could be removed if thread is exiting
+			 * following a call to `eif_terminate_all_other_threads'. */
+		EIF_BOOLEAN is_root_thread = eif_thr_is_root();
+#endif
 		int destroy_mutex = 0; /* If non null, we'll destroy the 'join' mutex */
 
 			/* We need to keep a reference to the children mutex, 
@@ -778,7 +784,7 @@ rt_public void eif_thr_exit(void)
 #endif
 
 #ifdef LMALLOC_CHECK
-		if (eif_thr_is_root ())	{	/* Is this the root thread */
+		if (is_root_thread)	{	/* Is this the root thread */
 			eif_lm_display ();
 			eif_lm_free ();
 		}

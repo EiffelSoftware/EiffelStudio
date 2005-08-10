@@ -18,15 +18,6 @@ convert
 	
 feature {NONE} -- Initialization
 
-	share_from_pointer (a_utf8_ptr: POINTER) is
-			-- Set `Current' to use `a_utf8_ptr'.
-			-- `a_utf8_ptr' is not owned by `Current' as it isn't copied so do not free from outside.
-		require
-			a_utf8_ptr_not_null: a_utf8_ptr /= default_pointer
-		do
-			set_from_pointer (a_utf8_ptr, byte_length_from_utf8_ptr (a_utf8_ptr), True)
-		end
-
 	make_from_pointer (a_utf8_ptr: POINTER) is
 			-- Set `item' to `a_utf8_ptr' and gain ownership of memory.
 		require
@@ -89,6 +80,15 @@ feature -- Access
 			-- Create `item' but do not take ownership.
 		do
 			internal_set_with_eiffel_string (a_string, True)
+		end
+
+	share_from_pointer (a_utf8_ptr: POINTER) is
+			-- Set `Current' to use `a_utf8_ptr'.
+			-- `a_utf8_ptr' is not owned by `Current' as it isn't copied so do not free from outside.
+		require
+			a_utf8_ptr_not_null: a_utf8_ptr /= default_pointer
+		do
+			set_from_pointer (a_utf8_ptr, byte_length_from_utf8_ptr (a_utf8_ptr), True)
 		end
 
 feature {NONE} -- Implementation

@@ -16,7 +16,7 @@ inherit
 	DISPOSABLE
 
 	MEM_CONST
-
+	
 feature -- Measurement
 
 	memory_statistics (memory_type: INTEGER): MEM_INFO is
@@ -171,14 +171,44 @@ feature -- Status report
 			l_spec: SPECIAL [ANY]
 			l_item: ANY
 			l_list: ARRAYED_LIST [ANY]
+			l_memory_count_map: HASH_TABLE [INTEGER, INTEGER]
+			time1, time2: DATE_TIME
+			l_actual_count: INTEGER
 		do
 				-- First get all object instances in runtime.
 			l_spec := find_all_instances (special_any_dynamic_type)
 			
+				-- Now create a memory count map of all objects. There are two reasons
+				-- why we do not simply query `memory_count_map':
+				-- 1. This would cause two calls to `find_all_instances'.
+				-- 2. The new objects created by the first call would be included in the
+				-- second list so they would not match exactly.
+				
+				-- The reason why we prepass and create a memory count map is
+				-- to enable us to create the arrayed lists in `Result' with
+				-- the exact size required for their contents. Even though we now have to
+				-- perform the prepass, `memory_map' is approx 15-20% faster as
+				-- resizing the arrayed lists each time an item was addded is slow.
+				
+			create l_memory_count_map.make (100)
+			from
+				i := 0
+				nb := l_spec.count
+			until
+				i >= nb
+			loop
+				l_item := l_spec.item (i)
+				if l_item /= Void then
+					dtype := {ISE_RUNTIME}.dynamic_type ($l_item)
+					l_memory_count_map.force (l_memory_count_map.item (dtype) + 1, dtype)
+				end
+				i := i + 1
+			end
+
 				-- Now create table indexed by dynamic type. For a given
 				-- dynamic type, we will have a list of all objects of
 				-- this type.
-			create Result.make (100)
+			create Result.make (100)		
 			from
 				i := 0
 				nb := l_spec.count
@@ -192,10 +222,12 @@ feature -- Status report
 					if Result.found then
 						l_list := Result.found_item
 					else
-						create l_list.make (5)
+						create l_list.make_filled (l_memory_count_map.item (dtype) + 1)
+						l_list.start
 						Result.put (l_list, dtype)
 					end
-					l_list.extend (l_item)
+					l_list.put_i_th (l_item, l_list.index)
+					l_list.forth
 				end
 				i := i + 1
 			end

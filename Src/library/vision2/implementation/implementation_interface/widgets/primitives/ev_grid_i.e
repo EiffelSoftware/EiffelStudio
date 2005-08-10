@@ -26,6 +26,11 @@ inherit
 			set_accept_cursor,
 			set_deny_cursor
 		end
+		
+	EV_TOOLTIPABLE_I
+		redefine
+			interface
+		end
 
 	EV_GRID_ACTION_SEQUENCES_I
 	
@@ -517,7 +522,10 @@ feature -- Access
 		do
 			Result := drawable.has_focus
 		end
-
+		
+	tooltip: STRING
+		-- Tooltip displayed on `Current'.
+		
 feature -- Pick and Drop
 
 	item_accepts_pebble (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is
@@ -3628,6 +3636,7 @@ feature {NONE} -- Drawing implementation
 			set_foreground_color ((create {EV_STOCK_COLORS}).black.twin)
 			set_separator_color ((create {EV_STOCK_COLORS}).black.twin)
 			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
+			tooltip := ""
 		end
 
 	header_item_resizing (header_item: EV_HEADER_ITEM) is
@@ -4119,7 +4128,15 @@ feature {NONE} -- Event handling
 			if pointed_item /= Void and then pointed_item.tooltip /= Void and then not drawable.tooltip.is_equal (pointed_item.tooltip) then
 				drawable.set_tooltip (pointed_item.tooltip)
 			elseif pointed_item = Void or else pointed_item /= Void and then pointed_item.tooltip = Void then
-				drawable.remove_tooltip
+				if tooltip.is_empty and not drawable.tooltip.is_empty then
+						-- There is no tooltip at the item or grid level, but there
+						-- is still a tooltip set, so remove the tooltip.
+					drawable.remove_tooltip					
+				elseif (not drawable.tooltip.is_equal (tooltip)) then
+						-- Reset the tooltip back to the one of the grid, only
+						-- if not already equal.
+					drawable.set_tooltip (tooltip)
+				end
 			end
 
 				-- Now handle the enter and leave actions. Note that these are fired before the motion events.
@@ -4800,6 +4817,17 @@ feature {NONE} -- Event handling
 			if mouse_wheel_actions_internal /= Void and then not mouse_wheel_actions_internal.is_empty then
 				mouse_wheel_actions_internal.call ([a_value])
 			end
+		end
+		
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `Current'.
+		do
+			
+			if (drawable.tooltip.is_empty) or (not a_tooltip.is_equal (tooltip)) then
+					-- Do not set the tooltip if already set.
+				drawable.set_tooltip (a_tooltip)
+			end
+			tooltip := a_tooltip.twin
 		end
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation

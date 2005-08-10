@@ -120,31 +120,30 @@ feature -- Implementation
 			-- Initialize values use for creating our default font
 		local
 			font_desc: STRING
-			font_names: ARRAYED_LIST [STRING]
+			font_names, font_names_as_lower: ARRAYED_LIST [STRING]
 			exit_loop: BOOLEAN
 			split_values: LIST [STRING]
-			a_cursor: CURSOR
-		do
-			font_desc := default_font_description.as_lower
-			font_names := font_names_on_system
-			
+			i, l_font_names_count: INTEGER
+			l_font_item: STRING
+		do	
 			from
-				font_names.start
-				a_cursor := font_names.cursor
-			until
-				exit_loop or else font_names.after
-			loop
-				if font_desc.substring_index (font_names.item.as_lower, 1) = 1 then
-					default_font_name_internal := font_names.item
-					exit_loop := True
-				end
-				font_names.forth
-			end
-			font_names.go_to (a_cursor)
-			
-			if default_font_name_internal = Void then
+				font_desc := default_font_description.as_lower
+				font_names_as_lower := font_names_on_system_as_lower
+				font_names := font_names_on_system
+				i := 1
+				l_font_names_count := font_names.count
 					-- A default is needed should no enumerable fonts be found on the system.
 				default_font_name_internal := once "Sans"
+			until
+				exit_loop or else i > l_font_names_count
+			loop
+				l_font_item := font_names_as_lower [i]
+				if font_desc.substring_index (l_font_item, 1) = 1 then
+						-- Set default font name to font name
+					default_font_name_internal := font_names [i]
+					exit_loop := True
+				end
+				i := i + 1
 			end
 			
 			split_values := font_desc.split (' ')
@@ -265,10 +264,12 @@ feature -- Implementation
 			create Result.make_filled (n_array_elements)
 			from
 				i := 1
+					-- Create an initialize our reusable pointer.
+				create utf8_string.set_with_eiffel_string ("")
 			until
 				i > n_array_elements
 			loop
-				create utf8_string.share_from_pointer (gchar_array_i_th (a_name_array, i))
+				utf8_string.share_from_pointer (gchar_array_i_th (a_name_array, i))
 				Result.put_i_th (utf8_string.string, i)
 				i := i + 1
 			end
@@ -278,27 +279,23 @@ feature -- Implementation
 
 	font_names_on_system_as_lower: ARRAYED_LIST [STRING] is
 			-- Retrieve a list of all the font names available on the system in lower case
+			-- This is needed for easy case insensitive lookup in EV_FONT_IMP.
 		local
-			a_name_array: POINTER
-			i, n_array_elements: INTEGER
-			i_th_item: STRING
-			utf8_string: EV_GTK_C_STRING
-		once
-			retrieve_available_fonts (default_gtk_window, $a_name_array, $n_array_elements)
-			create Result.make_filled (n_array_elements)
+			i, l_font_count: INTEGER
+			l_font_names: like font_names_on_system
+		once	
 			from
 				i := 1
+				l_font_names := font_names_on_system
+				l_font_count := l_font_names.count
+				create Result.make_filled (l_font_count)
 			until
-				i > n_array_elements
+				i > l_font_count
 			loop
-				create utf8_string.share_from_pointer (gchar_array_i_th (a_name_array, i))
-				i_th_item := utf8_string.string
-				i_th_item.to_lower
-				Result.put_i_th (i_th_item, i)
+				Result [i] := (l_font_names [i]).as_lower
 				i := i + 1
 			end
 			Result.compare_objects
-			a_name_array.memory_free
 		end
 		
 	default_gtk_window: POINTER is deferred end

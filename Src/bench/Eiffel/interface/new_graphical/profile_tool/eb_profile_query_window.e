@@ -652,7 +652,7 @@ feature {NONE} -- Implementation
 			if query_grid_row.feature_grid_item = Void then
 				create feature_grid_item.make_with_expose_action_agent (agent draw_grid_item (?, query_grid_row))
 				if show_calls then
-					create calls_grid_item.make_with_text (query_grid_row.calls.out)	
+					create calls_grid_item.make_with_text (query_grid_row.calls.out)
 				end
 				if show_self then
 					create self_grid_item.make_with_text (query_grid_row.self.out)
@@ -706,16 +706,9 @@ feature {NONE} -- Implementation
 		do
 				-- Remove all existing rows. We do not wish to call `wipe_out'
 				-- as we do not want to loose the columns.
-			from
-				output_grid.set_virtual_position (0, 0)
-				i := output_grid.row_count
-			until
-				i = 0
-			loop
-				output_grid.remove_row (i)
-				i := i - 1
-			end
-			
+			if output_grid.row_count > 0 then
+				output_grid.remove_rows (1, output_grid.row_count)
+			end			
 			if not tree_structure_enabled then
 				output_grid.disable_tree
 				from
@@ -1387,8 +1380,6 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			label_item: EV_GRID_LABEL_ITEM
 			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
-			eiffel_profile_data: EIFFEL_PROFILE_DATA
-			function: EIFFEL_FUNCTION
 		do
 			from
 				i := 1
@@ -1400,31 +1391,7 @@ feature {NONE} -- Implementation
 					a_string.append (label_item.text)
 				else
 					query_grid_row ?= a_row.data
-					if query_grid_row.type = 4 then
-						a_string.append (query_grid_row.cluster_text)
-						a_string.append (query_grid_row.class_text)
-						a_string.append (query_grid_row.feature_text)
-					else
-						eiffel_profile_data ?= query_grid_row.profile_data
-						if eiffel_profile_data /= Void then
-							function := eiffel_profile_data.function
-							if query_grid_row.type = 1 then
-								a_string.append (function.class_c.cluster.cluster_name)
-								a_string.append (full_stop)
-								a_string.append (function.class_c.name)
-								a_string.append (full_stop)
-								a_string.append (function.feature_name)
-							elseif query_grid_row.type = 2 then
-								a_string.append (function.class_c.cluster.cluster_name)
-								a_string.append (full_stop)
-								a_string.append (function.class_c.name)
-							elseif query_grid_row.type = 3 then
-								a_string.append (function.class_c.cluster.cluster_name)
-							end
-						else
-							a_string.append (query_grid_row.text)
-						end
-					end
+					a_string.append (full_feature_path (query_grid_row))
 				end
 				if i < a_row.count then
 					a_string.append (tab)
@@ -1435,6 +1402,45 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	full_feature_path (query_grid_row: EB_PROFILE_QUERY_GRID_ROW): STRING is
+			-- `Result' is expanded version of the the name a associated
+			-- with `query_grid_row'. For Eiffel features, this is the full cluster,
+			-- class and feature name.
+		require
+			query_grid_row_not_void: query_grid_row /= Void
+		local
+			eiffel_profile_data: EIFFEL_PROFILE_DATA
+			function: EIFFEL_FUNCTION
+		do
+			Result := ""
+			if query_grid_row.type = 4 then
+				Result.append (query_grid_row.cluster_text)
+				Result.append (query_grid_row.class_text)
+				Result.append (query_grid_row.feature_text)
+			else
+				eiffel_profile_data ?= query_grid_row.profile_data
+				if eiffel_profile_data /= Void then
+					function := eiffel_profile_data.function
+					if query_grid_row.type = 1 then
+						Result.append (function.class_c.cluster.cluster_name)
+						Result.append (full_stop)
+						Result.append (function.class_c.name)
+						Result.append (full_stop)
+						Result.append (function.feature_name)
+					elseif query_grid_row.type = 2 then
+						Result.append (function.class_c.cluster.cluster_name)
+						Result.append (full_stop)
+						Result.append (function.class_c.name)
+					elseif query_grid_row.type = 3 then
+						Result.append (function.class_c.cluster.cluster_name)
+					end
+				else
+					Result.append (query_grid_row.text)
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 		
 	item_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
 			-- Respond to a press of button `a_button' at virtual position `an_x', `a_y'
@@ -1527,10 +1533,24 @@ feature {NONE} -- Implementation
 		
 	record_mouse_relative_to_item (an_x, a_y: INTEGER; grid_item: EV_GRID_ITEM) is
 			-- Store the last position of the mouse relative to an item.
+		local
+			query_grid_row: EB_PROFILE_QUERY_GRID_ROW	
 		do
 			if grid_item /= Void then
 				last_x := an_x - grid_item.virtual_x_position
 				last_y := a_y - grid_item.virtual_y_position
+			
+				if grid_item.column.index = 1 then
+					query_grid_row ?= grid_item.row.data
+					check
+						data_pointed_to_query_grid_row: query_grid_row /= Void
+					end
+					output_grid.set_tooltip (full_feature_path (query_grid_row))
+				else
+					output_grid.remove_tooltip
+				end	
+			else
+				output_grid.remove_tooltip
 			end
 		end
 		

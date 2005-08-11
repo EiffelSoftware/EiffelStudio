@@ -4727,6 +4727,20 @@ feature {NONE} -- Event handling
 								a_row_counter > end_row_index
 							loop
 								current_item := item_internal (a_col_counter, a_row_counter)
+								if current_item = Void and then is_content_partially_dynamic and then dynamic_content_function /= Void then
+									current_item := dynamic_content_function.item ([a_col_counter, a_row_counter]).implementation
+										-- We now check that the set item is the same as the one returned. If you both
+										-- set an item and return a different item from the dynamic function, this is invalid
+										-- so the following check prevents this:
+									check
+										item_set_implies_set_item_is_returned_item: item (a_col_counter, a_row_counter) /= Void
+											implies item (a_col_counter, a_row_counter) = current_item.interface
+									end
+									if item_internal (a_col_counter, a_row_counter) = Void then
+										internal_set_item (a_col_counter, a_row_counter, current_item.interface)
+									end	
+								end
+								
 								if current_item /= Void then
 										-- See if this item needs either selecting or deselecting by checking the bounds of the selection.
 									if

@@ -172,8 +172,6 @@ feature -- Status report
 			l_item: ANY
 			l_list: ARRAYED_LIST [ANY]
 			l_memory_count_map: HASH_TABLE [INTEGER, INTEGER]
-			time1, time2: DATE_TIME
-			l_actual_count: INTEGER
 		do
 				-- First get all object instances in runtime.
 			l_spec := find_all_instances (special_any_dynamic_type)

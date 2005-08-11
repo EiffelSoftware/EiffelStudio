@@ -628,6 +628,7 @@ feature {NONE} -- Initialization
 			a_features_not_void: a_features /= Void
 		local
 			l_member: CONSUMED_ENTITY
+			l_consumed_member: CONSUMED_MEMBER
 			l_literal: CONSUMED_LITERAL_FIELD
 			l_constructor: CONSUMED_CONSTRUCTOR
 			l_args: ARRAY [CONSUMED_ARGUMENT]
@@ -635,7 +636,7 @@ feature {NONE} -- Initialization
 			l_arg_ids: ARRAY [INTEGER]
 			j, k, l, m, l_record_pos, l_id: INTEGER
 			l_creators: like creators
-			l_external_type, l_written_type: CL_TYPE_A
+			l_return_type, l_external_type, l_written_type: CL_TYPE_A
 			l_feat: FEATURE_I
 			l_attribute: ATTRIBUTE_I
 			l_proc: PROCEDURE_I
@@ -670,13 +671,20 @@ feature {NONE} -- Initialization
 
 				create l_ext
 
+					-- First get return type. It is needed now in case we are handling a constant
+					-- whose type is enum based, then we need to create an instance of EXTERNAL_FUNC_I
+					-- and not an instance of CONSTANT_I.
+				if l_member.has_return_value then
+					l_return_type := internal_type_from_consumed_type (True, l_member.return_type)
+				end
+
 				if l_member.is_attribute then
 					if l_member.is_literal then
 						l_literal ?= l_member
 						check
 							l_literal_not_void: l_literal /= Void
 						end
-						if external_class.is_enum then
+						if l_return_type.associated_class.is_enum then
 								-- Too bad here we just discarded newly created extension
 								-- object `l_ext', but that simpler this way.
 							create l_enum_ext
@@ -747,7 +755,7 @@ feature {NONE} -- Initialization
 
 				if l_member.is_static then
 					if l_member.is_attribute then
-						if external_class.is_enum then
+						if l_return_type.associated_class.is_enum then
 							l_ext.set_type ({SHARED_IL_CONSTANTS}.Enum_field_type)
 						else
 							l_ext.set_type ({SHARED_IL_CONSTANTS}.Static_field_type)
@@ -774,6 +782,16 @@ feature {NONE} -- Initialization
 					end
 				end
 
+					-- Special override of external type in case we handle an attribute setter routine.
+				l_consumed_member ?= l_member
+				if l_consumed_member /= Void and then l_consumed_member.is_attribute_setter then
+					if l_consumed_member.is_static then
+						l_ext.set_type ({SHARED_IL_CONSTANTS}.set_static_field_type)
+					else
+						l_ext.set_type ({SHARED_IL_CONSTANTS}.set_field_type)
+					end
+				end
+
 				l_ext.set_base_class (l_member.declared_type.name)
 
 				l_names_heap.put (l_member.dotnet_name)
@@ -786,15 +804,13 @@ feature {NONE} -- Initialization
 				end
 				l_feat.set_private_external_name_id (l_names_heap.found_item)
 				if l_member.has_return_value then
-					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
-
-					l_feat.set_type (l_external_type, 0)
+					l_feat.set_type (l_return_type, 0)
 
 					l_names_heap.put (l_member.return_type.name)
 					l_ext.set_return_type (l_names_heap.found_item)
 
 					if l_constant /= Void then
-						set_constant_value (l_constant, l_external_type, l_literal.value)
+						set_constant_value (l_constant, l_return_type, l_literal.value)
 					end
 				end
 

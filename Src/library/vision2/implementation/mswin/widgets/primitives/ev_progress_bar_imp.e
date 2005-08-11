@@ -201,33 +201,6 @@ feature {NONE} -- Implementation
 			leap := a_leap
 		end
 
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
-		end
-
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			check
-				Never_called: False
-			end
-		end
-
-	show_window (hwnd: POINTER; cmd_show: INTEGER) is
-			-- Encapsulation of the cwin_show_window function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			cwin_show_window (hwnd, cmd_show)
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PROGRESS_BAR

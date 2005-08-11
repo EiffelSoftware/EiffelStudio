@@ -740,7 +740,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
 			-- because we cannot do a deferred feature become an
 			-- external feature.
@@ -748,22 +748,13 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := internal_text_field.next_dlgtabitem (hdlg, hctl, previous)
 		end
 
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgGroupItem,
 			-- because we cannot do a deferred feature become an
 			-- external feature.
 		do
-			Result := internal_text_field.next_dlggroupitem (hdlg, hctl,
+			Result := internal_text_field.cwin_get_next_dlggroupitem (hdlg, hctl,
 				previous)
-		end
-
-	show_window (hwnd: POINTER; cmd_show: INTEGER) is
-			-- Encapsulation of the cwin_show_window function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			cwin_show_window (hwnd, cmd_show)
 		end
 
 	class_name: STRING is

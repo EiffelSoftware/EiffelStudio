@@ -1313,35 +1313,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 	image_list: EV_IMAGE_LIST_IMP
 			-- Image list to store all images required by items.
 
-feature {NONE} -- Feature that should be directly implemented by externals
-
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
-		end
-
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			check
-				Never_called: False
-			end
-		end
-
-	show_window (hwnd: POINTER; cmd_show: INTEGER) is
-			-- Encapsulation of the cwin_show_window function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			cwin_show_window (hwnd, cmd_show)
-		end
-
 feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: EV_MULTI_COLUMN_LIST

@@ -153,22 +153,6 @@ feature -- Basic operations
 			Result := window_of_item (wel_item)
 		end
 
-feature {NONE} -- Feature that should be directly implemented by externals
-
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		deferred
-		end
-
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		deferred
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	destroy is

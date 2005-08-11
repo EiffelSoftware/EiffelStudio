@@ -291,8 +291,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	source_connection_agent: PROCEDURE [ANY, TUPLE]
-
 	is_aborted_stack: LINKED_STACK [BOOLEAN]
 			-- `item' holds abort status of
 			-- innermost of possibly recursive `call's.
@@ -345,7 +343,6 @@ invariant
 	call_buffer_consistent: state = Normal_state implies call_buffer.is_empty
 	not_empty_actions_not_void: not_empty_actions /= Void
 	empty_actions_not_void: empty_actions /= Void
-	source_connection_agent_disgarded_after_call:
 
 indexing
 

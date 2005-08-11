@@ -145,15 +145,6 @@ feature {NONE} -- Deferred features
 
 feature {NONE} -- Features that should be directly implemented by externals.
 
-	show_window (hwnd: POINTER; cmd_show: INTEGER) is
-			-- Encapsulation of the cwin_show_window function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			cwin_show_window (hwnd, cmd_show)
-		end
-
 	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is
 			-- Encapsulation of the external cwin_get_wm_hscroll_code.
 		do
@@ -188,6 +179,22 @@ feature {NONE} -- Features that should be directly implemented by externals.
 			-- Encapsulation of the external cwin_get_wm_vscroll_pos
 		do
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
+		end
+		
+	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgGroupItem"
+		end
+		
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgTabItem"
 		end
 
 end -- class EV_WEL_CONTROL_CONTAINER_IMP

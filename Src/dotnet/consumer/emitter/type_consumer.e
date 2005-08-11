@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			create dotnet_name.make_from_cil (info.name)
 			l_type := info.declaring_type
 			if info.is_literal then
-				if l_type.is_enum then
+				if info.field_type.is_enum then
 						-- Conversion to integer is required to get associated value of `info',
 						-- Otherwise we simply get an object where calling `ToString' on it
 						-- will print out field name.

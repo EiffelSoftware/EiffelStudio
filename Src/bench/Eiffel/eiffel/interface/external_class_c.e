@@ -799,6 +799,7 @@ feature {NONE} -- Initialization
 				if l_ext.type = {SHARED_IL_CONSTANTS}.Enum_field_type then
 					check
 						l_enum_ext_not_void: l_enum_ext /= Void
+						value_is_integer: l_literal.value.is_integer
 					end
 					l_enum_ext.set_value (l_literal.value.to_integer)
 				end

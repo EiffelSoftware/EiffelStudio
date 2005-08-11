@@ -1132,7 +1132,7 @@ feature {NONE} -- Added features for ENUM types.
 		do		
 			l_eiffel_name := "set_" + a_field_name + "_field"
 			create l_arg.make ("a_value", "a_value", referenced_type_from_type (a_field.field_type))
-			create Result.make_attribute_setter (l_eiffel_name,
+			create Result.make_attribute_setter (l_eiffel_name, a_field.name,
 												l_arg,
 												internal_referenced_type,
 												a_field.is_static)

@@ -1205,7 +1205,35 @@ feature -- Deferred features
 				create Result.make_rgb (0, 0, 0)
 			end
 		end
+				
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+		
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		deferred
+		end
+		
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
 
+	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		deferred
+		end
+		
 feature -- Feature that should be directly implemented by externals
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
@@ -1213,6 +1241,14 @@ feature -- Feature that should be directly implemented by externals
 			-- WEL_WINDOW. Normaly, we should be able to have directly
 			-- cwin_show_window deferred but it does not wotk because
 			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
+		end
+		
+	cwin_show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- SDK ShowWindow
+			-- (from WEL_WINDOW)
+			-- (export status {NONE})
 		deferred
 		end
 

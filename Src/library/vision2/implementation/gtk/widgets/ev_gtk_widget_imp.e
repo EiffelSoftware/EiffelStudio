@@ -163,7 +163,6 @@ feature {EV_ANY_I} -- Implementation
 		do
 			a_cursor_ptr := app_implementation.gdk_cursor_from_pixmap (a_cursor)
 			set_composite_widget_pointer_style (a_cursor_ptr)
-			{EV_GTK_EXTERNALS}.gdk_cursor_destroy (a_cursor_ptr)
 		end
 
 	set_composite_widget_pointer_style (a_cursor_ptr: POINTER) is

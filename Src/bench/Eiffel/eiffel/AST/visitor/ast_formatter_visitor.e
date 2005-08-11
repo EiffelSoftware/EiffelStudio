@@ -1971,9 +1971,13 @@ feature {NONE} -- Implementation
 						ctxt.put_new_line
 						ctxt.set_new_line_between_tokens
 						ctxt.set_classes (ctxt.class_c, ctxt.class_c)
-						ctxt.set_separator (ti_comma)
-						l_as.feature_list.process (Current)
-						ctxt.put_new_line
+						if ctxt.is_flat_short then
+							format_creation_features (l_as.feature_list)
+						else
+							ctxt.set_separator (ti_comma)
+							l_as.feature_list.process (Current)
+							ctxt.put_new_line
+						end
 					end
 					ctxt.commit
 				end
@@ -2569,6 +2573,35 @@ feature {NONE} -- Implementation: helpers
 					end
 				end
 			end
+		end
+
+	format_creation_features (a_list: EIFFEL_LIST [FEATURE_NAME]) is
+			-- Format the features in the creation clause,
+			-- including header comment and contracts.
+		require
+			list_not_void: a_list /= Void
+		local
+			i, l_count: INTEGER
+			item: FEATURE_NAME
+			creators: HASH_TABLE [FEATURE_ADAPTER, STRING]
+			feat_adapter: FEATURE_ADAPTER
+		do
+			ctxt.begin
+			creators := ctxt.format_registration.creation_table
+			from
+				i := 1
+				l_count := a_list.count
+			until
+				i > l_count 
+			loop
+				item := a_list.i_th (i)
+				feat_adapter := creators.item (item.internal_name)
+				if feat_adapter /= Void then
+					feat_adapter.format (ctxt)
+				end
+				i := i + 1
+			end
+			ctxt.commit
 		end
 
 end

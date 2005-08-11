@@ -39,6 +39,10 @@ feature -- Initialize
 			end			
 		end
 
+	previous_cursor: EV_CURSOR
+	previous_gdk_cursor: POINTER
+		-- Used for optimization of `gdk_cursor_from_pixmap'.
+
 	gdk_cursor_from_pixmap (a_cursor: EV_CURSOR): POINTER is
 			-- Return a GdkCursor constructed from `a_cursor'
 		local
@@ -48,31 +52,42 @@ feature -- Initialize
 			a_cur_data: ANY
 			a_mask, a_gc: POINTER
 		do
-			fg := fg_color
-			bg := bg_color
-			a_cursor_imp ?= a_cursor.implementation
-			check
-				a_cursor_imp_not_void: a_cursor_imp /= Void
-			end
-			bitmap_data := a_cursor_imp.bitmap_array
-			a_cur_data := bitmap_data.to_c
-			cur_pix := {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_data (default_pointer, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
-			
-			if a_cursor_imp.mask = Default_pointer then
-					-- If mask isn't available then we create one
-				a_mask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (default_pointer, a_cursor_imp.width, a_cursor_imp.height, 1)
-				a_gc := {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_function (a_gc, {EV_GTK_EXTERNALS}.Gdk_copy_enum)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (a_gc, fg_color)
-				{EV_GTK_EXTERNALS}.gdk_gc_set_background (a_gc, bg_color)
-				{EV_GTK_EXTERNALS}.gdk_draw_rectangle (a_mask, a_gc, 1, 0, 0, a_cursor_imp.width, a_cursor_imp.height)
-				{EV_GTK_EXTERNALS}.gdk_gc_unref (a_gc)
-			else
-				a_mask := a_cursor_imp.mask
+			if a_cursor /= previous_cursor then
+				if previous_gdk_cursor /= default_pointer then
+						-- Clean up previous cursor.
+					{EV_GTK_EXTERNALS}.gdk_cursor_destroy (previous_gdk_cursor)
+				end
+				fg := fg_color
+				bg := bg_color
+				a_cursor_imp ?= a_cursor.implementation
+				check
+					a_cursor_imp_not_void: a_cursor_imp /= Void
+				end
+				bitmap_data := a_cursor_imp.bitmap_array
+				a_cur_data := bitmap_data.to_c
+				cur_pix := {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_data (default_pointer, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
+				
+				if a_cursor_imp.mask = Default_pointer then
+						-- If mask isn't available then we create one
+					a_mask := {EV_GTK_EXTERNALS}.gdk_pixmap_new (default_pointer, a_cursor_imp.width, a_cursor_imp.height, 1)
+					a_gc := {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
+					{EV_GTK_EXTERNALS}.gdk_gc_set_function (a_gc, {EV_GTK_EXTERNALS}.Gdk_copy_enum)
+					{EV_GTK_EXTERNALS}.gdk_gc_set_foreground (a_gc, fg_color)
+					{EV_GTK_EXTERNALS}.gdk_gc_set_background (a_gc, bg_color)
+					{EV_GTK_EXTERNALS}.gdk_draw_rectangle (a_mask, a_gc, 1, 0, 0, a_cursor_imp.width, a_cursor_imp.height)
+					{EV_GTK_EXTERNALS}.gdk_gc_unref (a_gc)
+				else
+					a_mask := a_cursor_imp.mask
+				end
+	
+				a_cursor_ptr := {EV_GTK_EXTERNALS}.gdk_cursor_new_from_pixmap (cur_pix, a_mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
+				Result := a_cursor_ptr
+				previous_gdk_cursor := Result
+				previous_cursor := a_cursor
+			else			
+				Result := previous_gdk_cursor
 			end
 
-			a_cursor_ptr := {EV_GTK_EXTERNALS}.gdk_cursor_new_from_pixmap (cur_pix, a_mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
-			Result := a_cursor_ptr
 		end
 		
 	fg_color: POINTER is

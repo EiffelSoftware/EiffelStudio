@@ -230,6 +230,8 @@ feature -- Iteration
 
 	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Is `test' true for at least one item?
+			-- Semantics not guaranteed if `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead. 
 		local
 			cs: CURSOR_STRUCTURE [G]
 			c: CURSOR
@@ -259,6 +261,8 @@ feature -- Iteration
 
 	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
 			-- Is `test' true for all items?
+			-- Semantics not guaranteed if `test' changes the structure;
+			-- in such a case, apply iterator to clone of structure instead. 
 		local
 			cs: CURSOR_STRUCTURE [G]
 			c: CURSOR

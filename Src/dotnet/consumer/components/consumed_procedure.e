@@ -71,15 +71,17 @@ feature {NONE} -- Initialization
 			declared_type_set: declared_type = a_type
 		end
 
-	make_attribute_setter (en: STRING; arg: CONSUMED_ARGUMENT; a_type: CONSUMED_REFERENCED_TYPE; a_is_static: BOOLEAN) is
+	make_attribute_setter (en, dn: STRING; arg: CONSUMED_ARGUMENT; a_type: CONSUMED_REFERENCED_TYPE; a_is_static: BOOLEAN) is
 			-- Initialize consumed method.
 		require
 			non_void_eiffel_name: en /= Void
 			valid_eiffel_name: not en.is_empty
+			non_void_dotnet_name: dn /= Void
+			valid_dotnet_name: not dn.is_empty
 			non_void_arguments: arg /= Void
 			a_type_not_void: a_type /= Void
 		do
-			member_make (en, en, True, a_type)
+			member_make (en, dn, True, a_type)
 			a := <<arg>>
 			f := f | {FEATURE_ATTRIBUTE}.Is_frozen
 			if a_is_static then
@@ -100,7 +102,7 @@ feature {NONE} -- Initialization
 			is_attribute_setter_set: is_attribute_setter = True
 			declared_type_set: declared_type = a_type
 		end
-		
+
 feature -- Access
 
 	arguments: ARRAY [CONSUMED_ARGUMENT] is

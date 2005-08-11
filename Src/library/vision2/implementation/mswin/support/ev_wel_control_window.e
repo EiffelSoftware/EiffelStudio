@@ -66,6 +66,22 @@ feature {NONE} -- Implementation
 		do
 			Result := generator
 		end
+		
+	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgGroupItem"
+		end
+
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgTabItem"
+		end
 
 end -- class EV_WEL_CONTROL_WINDOW
 

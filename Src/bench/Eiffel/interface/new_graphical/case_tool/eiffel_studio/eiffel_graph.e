@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create an EIFFEL_GRAPH.
 		local
-			l_comparer: AGENT_BASED_EQUALITY_TESTER [TUPLE [EG_LINKABLE, EG_LINKABLE]]
+			l_comparer: AGENT_BASED_EQUALITY_TESTER [like link_type]
 		do
 			Precursor {EG_GRAPH}
 			create class_name_to_node_lookup.make (50)
@@ -106,8 +106,14 @@ feature -- Access
 		require
 			a_descendant_not_void: a_descendant /= Void
 			an_ancestor_not_void: an_ancestor /= Void
+		local
+			l_tuple: like link_type
 		do
-			Result := inheritance_links_lookup.item ([a_descendant, an_ancestor])
+			l_tuple := [a_descendant, an_ancestor]
+			inheritance_links_lookup.search (l_tuple)
+			if inheritance_links_lookup.found then
+				Result := inheritance_links_lookup.found_item
+			end
 		end
 		
 	client_supplier_link_connecting (a_client, a_supplier: EG_LINKABLE): ES_CLIENT_SUPPLIER_LINK is
@@ -115,8 +121,14 @@ feature -- Access
 		require
 			a_client_not_void: a_client /= Void
 			a_supplier_not_void: a_supplier /= Void
+		local
+			l_tuple: like link_type
 		do
-			Result := client_supplier_links_lookup.item ([a_client, a_supplier])
+			l_tuple := [a_client, a_supplier]
+			client_supplier_links_lookup.search (l_tuple)
+			if client_supplier_links_lookup.found then
+				Result := client_supplier_links_lookup.found_item
+			end
 		end
 		
 feature -- Element change
@@ -621,13 +633,13 @@ feature {NONE} -- Implementation
 	class_name_to_node_lookup: HASH_TABLE [ES_CLASS, STRING]
 			-- Lookup tables to speed up `class_from_interface'.
 			
-	inheritance_links_lookup: DS_HASH_TABLE [ES_INHERITANCE_LINK, TUPLE[EG_LINKABLE, EG_LINKABLE]]
+	inheritance_links_lookup: DS_HASH_TABLE [ES_INHERITANCE_LINK, like link_type]
 			-- Lookup tables to speed up `inheritance_link_connecting'.
 			
-	client_supplier_links_lookup: DS_HASH_TABLE [ES_CLIENT_SUPPLIER_LINK, TUPLE [EG_LINKABLE, EG_LINKABLE]]
+	client_supplier_links_lookup: DS_HASH_TABLE [ES_CLIENT_SUPPLIER_LINK, like link_type]
 			-- Lookup tables to speed up `client_supplier_link_connecting'.
 
-	link_comparer (u, v: TUPLE [EG_LINKABLE, EG_LINKABLE]): BOOLEAN is
+	link_comparer (u, v: like link_type): BOOLEAN is
 			-- Comparison agent used in `client_supplier_links_lookup' and in
 			-- `inheritance_links_lookup'.
 		require
@@ -635,6 +647,11 @@ feature {NONE} -- Implementation
 			v_not_void: v /= Void
 		do
 			Result := (u.item (1) = v.item (1)) and (u.item (2) = v.item (2))
+		end
+		
+	link_type: TUPLE [EG_LINKABLE, EG_LINKABLE] is 
+			-- For typing purposes only
+		do
 		end
 			
 invariant

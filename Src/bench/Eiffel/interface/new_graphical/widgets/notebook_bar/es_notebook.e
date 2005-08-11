@@ -293,7 +293,7 @@ feature {NONE} -- Drop action
 			t := pointed_notebook_item
 			if t /= Void then
 				pointed_w := t.widget
-				notebook.item_tab (pointed_w).enable_select
+				t.tab.enable_select
 				t.drop_actions.call ([a_data])
 			end
 		end

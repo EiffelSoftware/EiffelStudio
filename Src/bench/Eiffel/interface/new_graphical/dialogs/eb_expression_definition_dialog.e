@@ -279,6 +279,7 @@ feature {NONE} -- Graphical initialization and changes
 				--| ...
 			f.extend (vb)
 			cnt.extend (f)
+			cnt.disable_item_expand (f)
 
 				--| 2 : expression_or_name_cell
 			create expression_or_name_cell
@@ -308,13 +309,13 @@ feature {NONE} -- Graphical initialization and changes
 			hb.disable_item_expand (cb)
 			hb.extend (create {EV_CELL})
 			cnt.extend (hb)
+			cnt.disable_item_expand (hb)
 			
 			dialog.extend (cnt)
 
 				--| Finish setting up the dialog.
 			dialog.set_minimum_width (dialog.minimum_width.max (2 * sz))
 			dialog.set_width (dialog.minimum_width.max (3 * sz))
-			dialog.set_maximum_height (dialog.minimum_height)
 			dialog.set_default_push_button (ok_button)
 			dialog.set_default_cancel_button (cb)
 			dialog.show_actions.extend (agent on_shown)

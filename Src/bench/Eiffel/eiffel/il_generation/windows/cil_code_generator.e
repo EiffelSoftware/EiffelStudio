@@ -3146,11 +3146,6 @@ feature -- IL Generation
 			l_field_sig: like field_sig
 			l_class_token: INTEGER
 			i, nb: INTEGER
-			l_has_return_type: BOOLEAN
-			l_type: TYPE_I
-			l_real_type: STRING
-			l_is_array: BOOLEAN
-			l_is_by_ref: BOOLEAN
 			l_parameters_string: ARRAY [STRING]
 			l_return_type: STRING
 		do
@@ -3158,39 +3153,22 @@ feature -- IL Generation
 			l_parameters_string := Names_heap.convert_to_string_array (parameters_type)
 			l_return_type := Names_heap.item (return_type)
 
-			l_has_return_type := l_return_type /= Void
-			if l_has_return_type then
-				if l_return_type.item (l_return_type.count) = '&' then
-					l_real_type := l_return_type.substring (1, l_return_type.count - 1)
-					l_is_by_ref := True
-				end
-				if l_return_type.item (l_return_type.count) = ']' then
-					l_real_type := l_return_type.substring (1, l_return_type.count - 2)
-					l_is_array := True
-				else
-					l_real_type := l_return_type
-				end
-				l_type := external_class_mapping.item (l_real_type)
-			end
-
 			inspect ext_kind
-			when Field_type, Static_field_type, Set_field_type, Set_static_field_type then
+			when Field_type, Static_field_type then
+				l_field_sig := field_sig
+				l_field_sig.reset
+				set_type_in_signature (l_field_sig, l_return_type)
+				uni_string.set_string (member_name)
+				Result := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
+			when Set_field_type, Set_static_field_type then
 				check
-					not_is_by_ref: not l_is_by_ref
+					l_parameters_string_not_void: l_parameters_string /= Void
+					l_parameters_string_count_is_one: l_parameters_string.count = 1
 				end
 				l_field_sig := field_sig
 				l_field_sig.reset
-				if l_is_array then
-					l_field_sig.set_type (
-						{MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-				end
-				if l_type /= Void then
-					set_signature_type (l_field_sig, l_type)
-				else
-					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
-						current_module.external_token_mapping (l_return_type))
-				end
-
+					-- Type of field is actually the first argument of our setter routine.
+				set_type_in_signature (l_field_sig, l_parameters_string.item (1))
 				uni_string.set_string (member_name)
 				Result := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
 			else
@@ -3208,60 +3186,21 @@ feature -- IL Generation
 
 				l_meth_sig.set_parameter_count (nb)
 
-				if l_has_return_type then
-					if l_is_by_ref then
-						l_meth_sig.set_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
-					end
-					if l_is_array then
-						l_meth_sig.set_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					end
-					if l_type /= Void then
-						set_signature_type (l_meth_sig, l_type)
-					else
-						l_meth_sig.set_return_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							current_module.external_token_mapping (l_return_type))
-					end
+					-- Set return type if any in `l_meth_sig'.
+				if l_return_type /= Void then
+					set_type_in_signature (l_meth_sig, l_return_type)
 				else
 					l_meth_sig.set_return_type (
 						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				end
 
+					-- Set arguments in `l_meth_sig'.
 				from
 					i := 1
 				until
 					i > nb
 				loop
-					l_real_type := l_parameters_string.item (i)
-					if l_real_type.item (l_real_type.count) = '&' then
-						l_is_by_ref := True
-						l_real_type := l_real_type.substring (1, l_real_type.count - 1)
-					else
-						l_is_by_ref := False
-					end
-					if l_real_type.item (l_real_type.count) = ']' then
-						l_is_array := True
-						l_real_type := l_real_type.substring (1, l_real_type.count - 2)
-					else
-						l_is_array := False
-					end
-					l_type := external_class_mapping.item (l_real_type)
-					if l_is_by_ref then
-						l_meth_sig.set_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
-					end
-					if l_is_array then
-						l_meth_sig.set_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					end
-					if l_type /= Void then
-						set_signature_type (l_meth_sig, l_type)
-					else
-						l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							current_module.external_token_mapping (l_real_type))
-					end
+					set_type_in_signature (l_meth_sig, l_parameters_string.item (i))
 					i := i + 1
 				end
 
@@ -3289,11 +3228,6 @@ feature -- IL Generation
 			l_field_sig: like field_sig
 			l_class_token: INTEGER
 			i, nb: INTEGER
-			l_has_return_type: BOOLEAN
-			l_type: TYPE_I
-			l_real_type: STRING
-			l_is_array: BOOLEAN
-			l_is_by_ref: BOOLEAN
 		do
  			if base_name /= Void then
  				uni_string.set_string (base_name)
@@ -3302,49 +3236,32 @@ feature -- IL Generation
 				l_class_token := a_type_token
 			end
 
-			l_has_return_type := return_type /= Void
-			if l_has_return_type then
-				if return_type.item (return_type.count) = '&' then
-					l_real_type := return_type.substring (1, return_type.count - 1)
-					l_is_by_ref := True
-				end
-				if return_type.item (return_type.count) = ']' then
-					l_real_type := return_type.substring (1, return_type.count - 2)
-					l_is_array := True
-				else
-					l_real_type := return_type
-				end
-				l_type := external_class_mapping.item (l_real_type)
-			end
-
 			inspect ext_kind
-			when Field_type, Static_field_type, Set_field_type, Set_static_field_type then
-				check
-					not_is_by_ref: not l_is_by_ref
-				end
+			when Field_type, Static_field_type then
 				l_field_sig := field_sig
 				l_field_sig.reset
-				if l_is_array then
-					l_field_sig.set_type (
-						{MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-				end
-				if l_type /= Void then
-					set_signature_type (l_field_sig, l_type)
-				else
-					l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
-						current_module.external_token_mapping (return_type))
-				end
-
+				set_type_in_signature (l_field_sig, return_type)
 				uni_string.set_string (member_name)
 				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
-				inspect ext_kind
-				when Field_type then
+				if ext_kind = field_type then
 					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, l_token)
-				when Static_field_type then
+				else
 					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, l_token)
-				when Set_field_type then
+				end
+			when Set_field_type, Set_static_field_type then
+				l_field_sig := field_sig
+				l_field_sig.reset
+				check
+					parameters_string_not_void: parameters_string /= Void
+					parameters_string_count_is_one: parameters_string.count = 1
+				end
+					-- Type of field is actually the first argument of our setter routine.
+				set_type_in_signature (l_field_sig, parameters_string.item (1))
+				uni_string.set_string (member_name)
+				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_field_sig)
+				if ext_kind = set_field_type then
 					method_body.put_opcode_mdtoken ({MD_OPCODES}.Stfld, l_token)
-				when Set_static_field_type then
+				else
 					method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, l_token)
 				end
 			else
@@ -3362,68 +3279,20 @@ feature -- IL Generation
 
 				l_meth_sig.set_parameter_count (nb)
 
-				if l_has_return_type then
-					if l_is_by_ref then
-						l_meth_sig.set_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
-					end
-					if l_is_array then
-						l_meth_sig.set_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					end
-					if l_type /= Void then
-						set_method_return_type (l_meth_sig, l_type)
-					else
-						l_meth_sig.set_return_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							current_module.external_token_mapping (return_type))
-					end
+					-- Set return type if any in `l_meth_sig'.
+				if return_type /= Void then
+					set_type_in_signature (l_meth_sig, return_type)
 				else
-					l_meth_sig.set_return_type (
-						{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+					l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				end
 
+					-- Set arguments in `l_meth_sig'.
 				from
 					i := 1
 				until
 					i > nb
 				loop
-					l_real_type := parameters_string.item (i)
-					if l_real_type.item (l_real_type.count) = '&' then
-						l_is_by_ref := True
-						l_real_type := l_real_type.substring (1, l_real_type.count - 1)
-					else
-						l_is_by_ref := False
-					end
-					if l_real_type.item (l_real_type.count) = ']' then
-						l_is_array := True
-						l_real_type := l_real_type.substring (1, l_real_type.count - 2)
-					else
-						l_is_array := False
-					end
-					l_type := external_class_mapping.item (l_real_type)
-					if l_is_by_ref then
-						l_meth_sig.set_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
-					end
-					if l_is_array then
-						l_meth_sig.set_type (
-							{MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
-					end
-					if l_type /= Void then
-						set_signature_type (l_meth_sig, l_type)
-					else
-							-- A runtime type.
-						if l_real_type.is_equal (Assertion_level_enum_class_name) then
-							l_meth_sig.set_type (
-								{MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
-								current_module.external_token_mapping (l_real_type))
-						else
-							l_meth_sig.set_type (
-								{MD_SIGNATURE_CONSTANTS}.Element_type_class,
-								current_module.external_token_mapping (l_real_type))
-						end
-					end
+					set_type_in_signature (l_meth_sig, parameters_string.item (i))
 					i := i + 1
 				end
 
@@ -3437,19 +3306,70 @@ feature -- IL Generation
 
 				inspect ext_kind
 				when Creator_call_type then
-					method_body.put_call ({MD_OPCODES}.Call, l_token, nb, l_has_return_type)
+					method_body.put_call ({MD_OPCODES}.Call, l_token, nb, return_type /= Void)
 				when Static_type, Operator_type then
-					method_body.put_static_call (l_token, nb, l_has_return_type)
+					method_body.put_static_call (l_token, nb, return_type /= Void)
 				when Normal_type, Deferred_type then
 					if is_virtual then
 						method_body.put_call (
-							{MD_OPCODES}.Callvirt, l_token, nb, l_has_return_type)
+							{MD_OPCODES}.Callvirt, l_token, nb, return_type /= Void)
 					else
 						method_body.put_call (
-							{MD_OPCODES}.Call, l_token, nb, l_has_return_type)
+							{MD_OPCODES}.Call, l_token, nb, return_type /= Void)
 					end
 				when Creator_type then
 					method_body.put_newobj (l_token, nb)
+				end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	set_type_in_signature (a_sig: MD_SIGNATURE; a_type_name: STRING) is
+			-- Set `a_type_name' into `a_sig'. It properly analyzes `a_type_name'
+			-- to detect if it is an array type or a byref.
+		require
+			a_sig_not_void: a_sig /= Void
+			a_type_name_not_void: a_type_name /= Void
+		local
+			l_is_by_ref, l_is_array: BOOLEAN
+			l_real_type: STRING
+			l_type: TYPE_I
+		do
+			l_real_type := a_type_name
+			if l_real_type.item (l_real_type.count) = '&' then
+				l_is_by_ref := True
+				l_real_type := l_real_type.substring (1, l_real_type.count - 1)
+			else
+				l_is_by_ref := False
+			end
+			if l_real_type.item (l_real_type.count) = ']' then
+				l_is_array := True
+				l_real_type := l_real_type.substring (1, l_real_type.count - 2)
+			else
+				l_is_array := False
+			end
+			l_type := external_class_mapping.item (l_real_type)
+			if l_is_by_ref then
+				a_sig.set_type (
+					{MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
+			end
+			if l_is_array then
+				a_sig.set_type (
+					{MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			end
+			if l_type /= Void then
+				set_signature_type (a_sig, l_type)
+			else
+					-- A runtime type.
+				if l_real_type.is_equal (Assertion_level_enum_class_name) then
+					a_sig.set_type (
+						{MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+						current_module.external_token_mapping (l_real_type))
+				else
+					a_sig.set_type (
+						{MD_SIGNATURE_CONSTANTS}.Element_type_class,
+						current_module.external_token_mapping (l_real_type))
 				end
 			end
 		end

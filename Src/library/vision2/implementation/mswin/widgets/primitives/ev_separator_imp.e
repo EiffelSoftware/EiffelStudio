@@ -70,37 +70,6 @@ feature {NONE} -- WEL Implementation
 			set_message_return_value (to_lresult (1))
 		end
 
-feature {NONE} -- Feature that should be directly implemented by externals
-
-	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgTabItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			check
-				Never_called: False
-			end
-		end
-
-	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
-			-- Encapsulation of the SDK GetNextDlgGroupItem,
-			-- because we cannot do a deferred feature become an
-			-- external feature.
-		do
-			check
-				Never_called: False
-			end
-		end
-
-	show_window (hwnd: POINTER; cmd_show: INTEGER) is
-			-- Encapsulation of the cwin_show_window function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not work because
-			-- it would be implemented by an external.
-		do
-			cwin_show_window (hwnd, cmd_show)
-		end
-
 feature {EV_ANY_I}
 
 	interface: EV_SEPARATOR

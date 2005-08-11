@@ -61,8 +61,28 @@ feature -- Settings
 feature -- Status report
 
 	used (r: REGISTRABLE): BOOLEAN is
+			-- Is register `r' used in local access ?
+		local
+			expr: EXPR_B
+			i, nb: INTEGER
+			l_area: SPECIAL [BYTE_NODE]
+			l_expressions: BYTE_LIST [BYTE_NODE]
 		do
-		end;
+			l_expressions := expressions
+			from
+				l_area := l_expressions.area
+				nb := l_expressions.count
+			until
+				i = nb or Result
+			loop
+				expr ?= l_area.item (i)
+				check
+					expr_not_void: expr /= Void
+				end
+				Result := expr.used (r)
+				i := i + 1
+			end
+		end
 
 	allocates_memory: BOOLEAN is True
 			-- Current allocates memory.

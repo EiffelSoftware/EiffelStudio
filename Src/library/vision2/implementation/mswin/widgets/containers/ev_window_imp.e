@@ -1138,13 +1138,20 @@ feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
 
 feature {NONE} -- Features that should be directly implemented by externals
 
-	show_window (hwnd: POINTER; cmd_show: INTEGER) is
-			-- Encapsulation of the cwin_show_window function of
-			-- WEL_WINDOW. Normaly, we should be able to have directly
-			-- c_mouse_message_x deferred but it does not wotk because
-			-- it would be implemented by an external.
-		do
-			cwin_show_window (hwnd, cmd_show)
+	cwin_get_next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgGroupItem"
+		end
+		
+	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- SDK GetNextDlgGroupItem
+		external
+			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
+		alias
+			"GetNextDlgTabItem"
 		end
 
 	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER is

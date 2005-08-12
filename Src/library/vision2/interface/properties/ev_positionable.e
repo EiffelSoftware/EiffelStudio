@@ -19,6 +19,8 @@ feature -- Status setting
 
 	set_x_position (a_x: INTEGER) is
 			-- Assign `a_x' to `x_position' in pixels.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_x_position (a_x)
 		ensure
@@ -27,6 +29,8 @@ feature -- Status setting
 
 	set_y_position (a_y: INTEGER) is
 			-- Assign `a_y' to `y_position' in pixels.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_y_position (a_y)
 		ensure
@@ -35,6 +39,8 @@ feature -- Status setting
 
 	set_position (a_x, a_y: INTEGER) is
 			-- Assign `a_x' to `x_position' and `a_y' to `y_position' in pixels.
+		require
+			not_destroyed: not is_destroyed
 		do
 			implementation.set_position (a_x, a_y)
 		ensure
@@ -45,6 +51,7 @@ feature -- Status setting
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width' in pixels.
 		require
+			not_destroyed: not is_destroyed
 			a_width_positive_or_zero: a_width >= 0
 		do
 			implementation.set_width (a_width)
@@ -55,6 +62,7 @@ feature -- Status setting
 	set_height (a_height: INTEGER) is
 			-- Assign `a_height' to `height' in pixels.
 		require
+			not_destroyed: not is_destroyed
 			a_height_positive_or_zero: a_height >= 0
 		do
 			implementation.set_height (a_height)
@@ -65,6 +73,7 @@ feature -- Status setting
 	set_size (a_width, a_height: INTEGER) is
 			-- Assign `a_width' to `width' and `a_height' to `height' in pixels.
 		require
+			not_destroyed: not is_destroyed
 			a_width_positive_or_zero: a_width >= 0
 			a_height_positive_or_zero: a_height >= 0
 		do
@@ -73,7 +82,7 @@ feature -- Status setting
 			width_assigned: width = minimum_width or else width = a_width
 			height_assigned: height = minimum_height or else height = a_height
 		end
-
+		
 feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_POSITIONABLE_I

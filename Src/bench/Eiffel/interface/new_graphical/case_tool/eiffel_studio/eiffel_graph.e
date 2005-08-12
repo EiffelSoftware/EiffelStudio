@@ -162,11 +162,11 @@ feature -- Element change
 			Precursor {EG_GRAPH} (a_link)
 			eil ?= a_link
 			if eil /= Void then
-				inheritance_links_lookup.put (eil, [eil.descendant, eil.ancestor])
+				inheritance_links_lookup.force (eil, [eil.descendant, eil.ancestor])
 			end
 			ecsl ?= a_link
 			if ecsl /= Void then
-				client_supplier_links_lookup.put (ecsl, [ecsl.client, ecsl.supplier])
+				client_supplier_links_lookup.force (ecsl, [ecsl.client, ecsl.supplier])
 			end
 		end
 		

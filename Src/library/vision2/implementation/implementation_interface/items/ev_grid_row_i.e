@@ -855,9 +855,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				row_imp.internal_set_parent_row (Current)
 				row_imp.set_subrow_index (l_subrow_index)
 				
-					-- Update all indices of subrows in `Current'.
-				update_subrow_indices (l_subrow_index + 1)
-				
 					-- Increase the node count for `Current' and all parents by 1 + the node count
 					-- for the added subrow as this may also be a tree structure.
 				update_parent_node_counts_recursively (row_imp.subrow_count_recursive + 1)
@@ -874,6 +871,9 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				i := i + 1
 				l_subrow_index := l_subrow_index + 1
 			end
+				-- Update all indices of subrows in `Current'.
+			update_subrow_indices (a_subrow_index + 1)
+			
 			parent_i.set_vertical_computation_required (index)
 			parent_i.redraw_client_area
 		ensure

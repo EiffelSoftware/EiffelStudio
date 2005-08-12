@@ -15,7 +15,8 @@ inherit
 			compute_minimum_size,
 			compute_minimum_height,
 			compute_minimum_width,
-			make
+			make,
+			frame_width, border_width
 		end
 
 	EV_POPUP_WINDOW_I
@@ -82,6 +83,12 @@ feature {NONE} -- Implementation
 			end
 			ev_set_minimum_size (mw, mh)
 		end
+		
+	frame_width: INTEGER is 0
+			-- `Result' is frame width of `Current'.
+	
+	border_width: INTEGER is 0
+			-- `Result' is border width of `Current'.
 	
 feature  -- Implementation
 

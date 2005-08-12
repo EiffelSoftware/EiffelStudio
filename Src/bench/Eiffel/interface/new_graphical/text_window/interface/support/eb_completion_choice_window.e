@@ -735,7 +735,7 @@ feature {NONE} -- String matching
 			i: INTEGER		
 		do
 			if not buffered_input.is_empty then
-				l_input := buffered_input			
+				l_input := buffered_input.as_lower			
 				l_input_count := l_input.count
 				l_names := sorted_names
 				l_names_count := l_names.count

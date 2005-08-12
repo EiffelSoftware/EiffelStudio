@@ -56,14 +56,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			internal_text := once ""
 		end
-		
-	dispose is
-			-- Clean up
-		do
-			if not is_in_final_collect and then gdk_pixbuf /= default_pointer then
-					{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
-			end
-		end
 
 feature -- Status report
 
@@ -380,11 +372,13 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		end
 	
 	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Set the pixmap for 'Current'
+			-- Set the pixmap for 'Current'.
 		local
 			a_pix_imp: EV_PIXMAP_IMP
 			par_tree: EV_TREE_IMP
 		do
+				-- Clean up previous pixmap if any
+			dispose
 			a_pix_imp ?= a_pixmap.implementation
 			gdk_pixbuf := a_pix_imp.pixbuf_from_drawable
 			par_tree := parent_tree_imp
@@ -496,6 +490,17 @@ feature {NONE} -- Redundant implementation
 	real_pointed_target: EV_PICK_AND_DROPABLE is
 		do
 			check do_not_call: False end
+		end
+
+feature {NONE} -- Implementation
+
+	dispose is
+			-- Clean up
+		do
+			if not is_in_final_collect and then gdk_pixbuf /= default_pointer then
+					{EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
+					gdk_pixbuf := default_pointer
+			end
 		end
 			
 feature {EV_ANY_I} -- Implementation

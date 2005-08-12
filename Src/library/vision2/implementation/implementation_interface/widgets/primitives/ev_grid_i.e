@@ -26,7 +26,8 @@ inherit
 			set_accept_cursor,
 			set_deny_cursor,
 			enable_capture,
-			disable_capture
+			disable_capture,
+			has_capture
 		end
 		
 	EV_TOOLTIPABLE_I
@@ -528,6 +529,12 @@ feature -- Access
 	tooltip: STRING
 		-- Tooltip displayed on `Current'.
 		
+	has_capture: BOOLEAN is
+			-- Does `Current' have capture?
+		do
+			Result := drawable.has_capture
+		end
+
 feature -- Pick and Drop
 
 	item_accepts_pebble (a_item: EV_GRID_ITEM; a_pebble: ANY): BOOLEAN is

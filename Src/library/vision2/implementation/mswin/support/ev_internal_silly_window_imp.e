@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Windows default style used in creation of `Current'.
 		do
-			Result := Ws_overlappedwindow
+			Result := ws_popup
 		end
 
 	on_wm_vscroll (wparam, lparam: POINTER) is

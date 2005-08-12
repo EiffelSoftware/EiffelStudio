@@ -1250,7 +1250,6 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 		<Property Id="ALLUSERS">2</Property>
 		<Property Id="INSTALLLEVEL">3</Property>
 		<Property Id="PROMPTROLLBACKCOST">P</Property>
-		<Property Id="ROOTDRIVE"><![CDATA[C:\]]></Property>
 		<Property Id="InstallMode">Typical</Property>
 		<Property Id="Setup">Setup</Property>
 

@@ -39,7 +39,19 @@ feature {COMPILER_EXPORTER}
 			l_area: like area
 		do
 			if not has (a_rout_id) then
-				Precursor (a_rout_id)
+					-- Routine id `a_rout_id' is not present in set.
+				if first = Dead_value then
+					first := a_rout_id
+				else
+					l_area := area
+					if l_area /= Void then
+						l_pos := l_area.count
+					end
+					l_area := new_area (l_area, l_pos + 1)
+					area := l_area
+					l_area.put (a_rout_id, l_pos)
+				end
+
 					-- Processing for attribute table:
 					-- Since the byte code inspect the first value of this	
 					-- routine id set, if there are thw ids one for a routine

@@ -737,7 +737,7 @@ feature {EV_ANY_I, WEL_WINDOW} -- Implementation
 			-- `Result' is implementation of application from environment.
 		local
 			environment: EV_ENVIRONMENT
-		do
+		once
 			create environment
 			Result ?= environment.application.implementation
 		ensure

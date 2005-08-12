@@ -176,10 +176,11 @@ feature -- Root window
 			--| application was launched. Now we set the main window
 			--| to an EV_INTERNAL_SILLY_WINDOW_IMP which is never seen by the
 			--| User. The application still ends when the last of the user
-			--| created windows is destroyed. This now allows and application
+			--| created windows is destroyed. This now allows an application
 			--| to create it's windows from within post_launch_actions and
 			--| provides more flexibility.
 			create Result.make_top ("Main Window")
+			Result.move (0, 0)
 		end
 
 feature -- Element change

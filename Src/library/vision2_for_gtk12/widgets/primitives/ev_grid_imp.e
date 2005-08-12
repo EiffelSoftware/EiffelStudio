@@ -32,7 +32,9 @@ inherit
 			pick_actions,
 			pick_ended_actions,
 			set_accept_cursor,
-			set_deny_cursor
+			set_deny_cursor,
+			disable_capture,
+			enable_capture
 		redefine
 			interface,
 			initialize,

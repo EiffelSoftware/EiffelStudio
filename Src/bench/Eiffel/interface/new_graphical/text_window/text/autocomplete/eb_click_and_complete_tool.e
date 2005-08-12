@@ -458,7 +458,10 @@ feature -- Basic Operations
 							until
 								crtrs.after
 							loop
-								if feat_table.has (crtrs.key_for_iteration) then
+								if 
+									feat_table.has (crtrs.key_for_iteration) and then
+									crtrs.item_for_iteration.is_exported_to (l_current_class_c)
+								then
 									add_feature_to_completion_possibilities	(feat_table.item (crtrs.key_for_iteration))
 								end								
 								crtrs.forth
@@ -624,7 +627,7 @@ feature -- Basic Operations
 			if Result = Void then
 				if exploring_current_class then								
 					Result := a_compiled_class
-				elseif prev_token /= Void and not is_static and not is_parenthesized then
+				elseif prev_token /= Void and not is_create and not is_static and not is_parenthesized then
 					current_feature_as := feature_containing (prev_token, cursor.line)
 					type := type_from (prev_token, cursor.line)
 					if type /= Void then
@@ -1281,7 +1284,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 			current_token := a_token
 			go_to_previous_token
 			Result := token_image_is_same_as_word (current_token, Create_word)
-			if not Result and then token_image_is_same_as_word (a_token, closing_brace) then
+			if not Result and then token_image_is_same_as_word (current_token, closing_brace) then
 				from
 					par_cnt := 1
 				until

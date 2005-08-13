@@ -330,12 +330,32 @@ feature -- Duplication
 
 feature -- Iteration
 
+	do_all (action: PROCEDURE [ANY, TUPLE [INTEGER]]) is
+			-- Apply `action' to every item of current interval.
+		require
+			action_exists: action /= Void
+			finite: upper_defined and lower_defined
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := lower
+				nb := upper
+			until
+				i > nb
+			loop
+				action.call ([i])
+				i := i + 1
+			end
+		end
+		
 	for_all (condition:
 				FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]):
 			BOOLEAN is
 			-- Do all interval's values satisfy `condition'?
 		require
 			finite: upper_defined and lower_defined
+			condition_not_void: condition /= Void
 		local
 			i: INTEGER
 		do
@@ -359,6 +379,7 @@ feature -- Iteration
 			-- satisfy `condition'?
 		require
 			finite: upper_defined and lower_defined
+			condition_not_void: condition /= Void
 		local
 			i: INTEGER
 		do
@@ -382,6 +403,7 @@ feature -- Iteration
 			-- satisfy `condition'?
 		require
 			finite: upper_defined and lower_defined
+			condition_not_void: condition /= Void
 		do
 			Result := (hold_count (condition) = 1)
 		ensure
@@ -396,6 +418,7 @@ feature -- Iteration
 			-- satisfy `condition'
 		require
 			finite: upper_defined and lower_defined
+			condition_not_void: condition /= Void
 		local
 			i: INTEGER
 		do

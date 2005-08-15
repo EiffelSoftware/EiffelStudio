@@ -143,6 +143,14 @@ feature -- Status report
 		ensure
 			bridge_ok: Result = implementation.user_can_resize
 		end
+		
+	is_border_enabled: BOOLEAN is
+			-- Is a border displayed around `Current'?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_border_enabled	
+		end
 
 feature -- Status setting
 
@@ -164,6 +172,28 @@ feature -- Status setting
 			implementation.disable_user_resize
 		ensure
 			not_user_can_resize: not user_can_resize
+		end
+		
+	enable_border is
+			-- Ensure a border is displayed around `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_border
+		ensure
+			is_border_enabled: is_border_enabled
+		end
+		
+	disable_border is
+			-- Ensure no border is displayed around `Current'.
+			-- Has no immediate effect if `user_can_resize', although
+			-- is reflected at next call to `disable_user_resize'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_border
+		ensure
+			border_disabled: not user_can_resize implies not is_border_enabled
 		end
 
 	set_maximum_width (a_maximum_width: INTEGER) is
@@ -302,9 +332,23 @@ feature {NONE} -- Contract support
 			-- Is `Current' in its default state?
 		do
 			Result := Precursor {EV_CELL} and Precursor {EV_POSITIONABLE} and
-				user_can_resize = True and menu_bar = Void and maximum_width = maximum_dimension and maximum_height = maximum_dimension
+				user_can_resize = user_can_resize_default_state and
+				is_border_enabled = is_border_enabled_default_state and
+				menu_bar = Void and maximum_width = maximum_dimension and maximum_height = maximum_dimension
 		end
-
+		
+	user_can_resize_default_state: BOOLEAN is
+			-- Is the default state of `Current' `user_can_resize'?
+		do
+			Result := True
+		end
+		
+	is_border_enabled_default_state: BOOLEAN is
+			-- Is the default state of `Current' `is_border_enabled'?
+		do
+			Result := True
+		end
+		
 feature {NONE} -- Implementation
 
 	create_implementation is

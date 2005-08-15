@@ -16,7 +16,8 @@ inherit
 			compute_minimum_height,
 			compute_minimum_width,
 			make,
-			frame_width, border_width
+			frame_width, border_width,
+			initialize
 		end
 
 	EV_POPUP_WINDOW_I
@@ -40,6 +41,16 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			make_child (application_imp.silly_main_window, "")
 		end
+		
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Initialize `Current'.
+		do
+			Precursor {EV_WINDOW_IMP}
+			user_can_resize := False
+			internal_is_border_enabled := False
+		end
 
 feature {NONE} -- Implementation
 
@@ -47,7 +58,7 @@ feature {NONE} -- Implementation
 			-- Default style of `Current'.
 			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
-			Result := Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings
+			Result := Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings 
 		end
 		
 	compute_minimum_width is
@@ -57,6 +68,11 @@ feature {NONE} -- Implementation
 		do
 			if item /= Void then
 				mw := item.minimum_width
+			end
+			if user_can_resize then
+				mw := mw + 2 * window_frame_width
+			elseif is_border_enabled then
+				mw := mw + 2 * dialog_window_frame_height
 			end
 			ev_set_minimum_width (mw)
 		end
@@ -69,6 +85,11 @@ feature {NONE} -- Implementation
 			if item /= Void then
 				mh := item.minimum_height
 			end
+			if user_can_resize then
+				mh := mh + 2 * window_frame_width
+			elseif is_border_enabled then
+				mh := mh + 2 * dialog_window_frame_height
+			end
 			ev_set_minimum_height (mh)
 		end
 
@@ -80,6 +101,13 @@ feature {NONE} -- Implementation
 			if item /= Void then
 				mw := item.minimum_width
 				mh := item.minimum_height
+			end
+			if user_can_resize then
+				mw := mw + 2 * window_frame_width
+				mh := mh + 2 * window_frame_width
+			elseif is_border_enabled then
+				mw := mw + 2 * dialog_window_frame_height
+				mh := mh + 2 * dialog_window_frame_height
 			end
 			ev_set_minimum_size (mw, mh)
 		end

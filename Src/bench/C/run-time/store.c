@@ -941,7 +941,7 @@ rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 	 */
 
 	union overhead *zone;
-	uint32 flags;
+	uint32 flags, size;
 	rt_uint_ptr nb_char;
 
 	flags = Mapped_flags(fflags);
@@ -962,7 +962,8 @@ rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 			 * a header. */
 		zone = HEADER(object);
 		/* We have to save the size of the special object */
-		buffer_write((char *)(&(zone->ov_size)), sizeof(uint32));
+		size = (uint32) zone->ov_size;
+		buffer_write((char *)(&size), sizeof(uint32));
 
 #if DEBUG & 2
 		printf (" %lx", zone->ov_size);

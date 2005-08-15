@@ -900,7 +900,7 @@ feature -- Access
 		end
 		
 	is_locked: BOOLEAN is
-			-- Are all graphical updates to `Current' supressed until
+			-- Are all graphical updates to `Current' suppressed until
 			-- `unlock_update' is called.
 		require
 			not_is_destroyed: not is_destroyed

@@ -3227,7 +3227,7 @@ feature {EV_GRID_ITEM_I, EV_GRID, EV_GRID_DRAWER_I} -- Implementation
 			-- entire client area is invalidated.
 			
 	is_locked: BOOLEAN
-			-- Are all graphical updates to `Current' supressed until
+			-- Are all graphical updates to `Current' suppressed until
 			-- `unlock_update' is called.
 
 feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation

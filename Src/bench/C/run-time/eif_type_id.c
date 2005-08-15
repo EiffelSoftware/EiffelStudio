@@ -181,8 +181,8 @@ doc:	</routine>
 */
 rt_private struct rt_type ** eif_decompose_parameters (char *params, uint32 *a_count)
 {
-	int i, l_nesting = 0;
-	size_t l_count;
+	int l_nesting = 0;
+	size_t i, l_count;
 	int l_valid = 1, l_first_pos = 0;
 	char c;
 	char * l_type_name;
@@ -322,8 +322,7 @@ doc:	</routine>
 rt_private void eif_remove_surrounding_white_spaces (char * str)
 {
 	char *s;
-	int i;
-	size_t length = strlen(str);
+	size_t i, length = strlen(str);
 
 		/* Step 1: we remove trailing white spaces. */
 

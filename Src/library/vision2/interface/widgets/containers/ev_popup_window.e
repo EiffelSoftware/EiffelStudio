@@ -1,7 +1,7 @@
 indexing
 	description:
 		"[
-			A borderless window which does not appear in the task bar.
+			A window which does not appear in the task bar and is, by default, borderless.
 			Useful for simulation of graphical elements such as tooltips and in-place editing.
 		]"
 	date: "$Date$"
@@ -14,7 +14,23 @@ inherit
 	EV_WINDOW
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			user_can_resize_default_state,
+			is_border_enabled_default_state
+		end
+				
+feature {NONE} -- Contract support
+			
+	user_can_resize_default_state: BOOLEAN is
+			-- Is the default state of `Current' `user_can_resize'?
+		do
+			Result := False
+		end
+		
+	is_border_enabled_default_state: BOOLEAN is
+			-- Is the default state of `Current' `is_border_enabled'?
+		do
+			Result := False
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -693,7 +693,6 @@ feature -- Title part
 	t_Select_class: STRING is					"Select Class"
 	t_Select_cluster: STRING is					"Select Cluster"
 	t_Select_feature: STRING is					"Select Feature"
-	t_Select_location: STRING is				"Select Location"
 	t_Search_tool: STRING is					"Search"
 	t_Select_a_file: STRING is					"Select a File"
 	t_Select_a_directory: STRING is				"Select a Directory"

@@ -271,8 +271,8 @@ feature -- Status setting
 			set_style (new_style)
 			compute_minimum_size
 			if is_displayed then
-				hide
-				show
+				notify_change (2 + 1, Current)
+				invalidate
 			end
 		end
 
@@ -288,8 +288,8 @@ feature -- Status setting
 			set_style (new_style)
 			compute_minimum_size
 			if is_displayed then
-				hide
-				show
+				notify_change (2 + 1, Current)
+				invalidate
 			end
 		end
 
@@ -616,7 +616,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
 			Result := Ws_popup + Ws_overlapped + Ws_dlgframe
-					+ Ws_clipchildren + Ws_clipsiblings
+					+ Ws_clipchildren + Ws_clipsiblings + Ws_sizebox
 		end
 
 	default_ex_style: INTEGER is

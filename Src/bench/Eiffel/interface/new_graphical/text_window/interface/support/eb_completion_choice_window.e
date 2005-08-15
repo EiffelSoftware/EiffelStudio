@@ -7,7 +7,7 @@ class
 	EB_COMPLETION_CHOICE_WINDOW
 
 inherit
-	EV_WINDOW
+	EV_POPUP_WINDOW
 		redefine
 			show
 		end
@@ -158,7 +158,7 @@ feature -- Status Setting
 				show_needed: show_needed
 			end
 			enable_user_resize
-			Precursor {EV_WINDOW}
+			Precursor {EV_POPUP_WINDOW}
 			choice_list.set_focus
 			resize_column_to_window_width
 			select_closest_match

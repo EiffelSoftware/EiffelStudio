@@ -141,6 +141,7 @@ feature {NONE} -- Initialization
 			init_bars
 			application_imp.add_root_window (Current)
 			set_is_initialized (True)
+			internal_is_border_enabled := True
 		end	
 
 	init_bars is
@@ -258,22 +259,19 @@ feature -- Status setting
 			set_maximum_width (32000)
 			set_maximum_height (32000)
 		end
-
+		
 	forbid_resize is
 			-- Forbid the resize of `Current'.
 		local
 			new_style: INTEGER
 		do
 			new_style := style
-			new_style := clear_flag (new_style, Ws_maximizebox)
-			new_style := clear_flag (new_style, Ws_minimizebox)
-			new_style := clear_flag (new_style, Ws_sizebox)
-			set_style (new_style)
-			compute_minimum_size
-			if is_displayed then
-				notify_change (2 + 1, Current)
-				invalidate
+			new_style := clear_flag (new_style, Ws_maximizebox | Ws_minimizebox | Ws_sizebox)
+			if not is_border_enabled then
+				new_style := clear_flag (new_style, ws_dlgframe)
 			end
+			set_style (new_style)
+			set_style_and_redraw (new_style)
 		end
 
 	allow_resize is
@@ -282,17 +280,35 @@ feature -- Status setting
 			new_style: INTEGER
 		do
 			new_style := style
-			new_style := set_flag (new_style, Ws_maximizebox)
-			new_style := set_flag (new_style, Ws_minimizebox)
-			new_style := set_flag (new_style, Ws_sizebox)
-			set_style (new_style)
-			compute_minimum_size
-			if is_displayed then
-				notify_change (2 + 1, Current)
-				invalidate
-			end
+			new_style := set_flag (new_style, Ws_maximizebox | Ws_minimizebox | Ws_sizebox | ws_dlgframe)
+			set_style_and_redraw (new_style)
 		end
-
+		
+	internal_enable_border is
+			-- Ensure a border is displayed around `Current'.
+		local
+			new_style: INTEGER
+		do
+			new_style := style
+			if user_can_resize then
+				new_style := set_flag (new_style, Ws_sizebox)
+			end
+			new_style := set_flag (new_style, ws_dlgframe)	
+			set_style_and_redraw (new_style)
+		end
+		
+	internal_disable_border is
+			-- Ensure no border is displayed around `Current'.
+		local
+			new_style: INTEGER
+		do
+			new_style := style
+			if not user_can_resize then
+				new_style := clear_flag (new_style, Ws_sizebox | Ws_dlgframe)
+			end
+			set_style_and_redraw (new_style)
+		end
+		
 feature -- Element change
 
 	set_x_position (a_x: INTEGER) is
@@ -1090,6 +1106,17 @@ feature -- {EV_PICK_AND_DROPABLE_IMP, EV_SPLIT_AREA_IMP}
 			override_movement := False
 			cwin_set_window_pos (wel_item, Hwnd_top, 0, 0, 0, 0,
 				Swp_nosize + Swp_nomove)
+		end
+		
+	set_style_and_redraw (new_style: INTEGER) is
+			-- Set `style' to `new_style', recompute
+			-- sizing dimensions and redraw.
+		do
+			set_style (new_style)
+			if is_displayed then
+				notify_change (2 + 1, Current)
+				invalidate
+			end
 		end
 
 feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}

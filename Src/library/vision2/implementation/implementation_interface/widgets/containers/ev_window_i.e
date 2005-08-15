@@ -89,6 +89,13 @@ feature -- Access
 			-- Horizontal bar at top of client area that contains menu's.
 		deferred
 		end
+		
+	is_border_enabled: BOOLEAN is
+			-- Is a border displayed around `Current'?
+			-- Always return `True' if `user_can_resize'.
+		do
+			Result := internal_is_border_enabled or else user_can_resize
+		end
 
 feature -- Status setting
 
@@ -181,6 +188,40 @@ feature -- Status setting
 		do
 			(create {EV_ENVIRONMENT}).application.implementation.set_locked_window (Void)
 		end
+		
+	enable_border is
+			-- Ensure a border is displayed around `Current'
+			-- and set `internal_is_border_enabled' to `True'.
+		do
+			internal_is_border_enabled := True
+			internal_enable_border
+		ensure
+			is_border_enabled: is_border_enabled
+		end
+		
+	disable_border is
+			-- Ensure no border is displayed around `Current'
+			-- and set `internal_is_border_enabled' to `False'.
+		do
+			internal_is_border_enabled := False
+			internal_disable_border
+		ensure
+			border_disabled: not user_can_resize implies not is_border_enabled
+		end
+		
+feature {NONE} -- Implementation
+
+	internal_disable_border is
+			-- Ensure no border is displayed around `Current'.
+		deferred
+		end
+	
+	internal_enable_border is
+			-- Ensure a border is displayed around `Current'.
+		deferred
+		end
+		
+	internal_is_border_enabled: BOOLEAN
 
 feature {EV_ANY_I} -- Implementation
 

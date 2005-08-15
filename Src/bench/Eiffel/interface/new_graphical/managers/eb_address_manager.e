@@ -124,7 +124,7 @@ feature {NONE} -- Initialization
 				output_line.align_text_right
 				vb.extend (output_line)
 				create address_dialog
-				address_dialog.set_title (Interface_names.t_Select_location)
+				address_dialog.enable_border
 				address_dialog.close_request_actions.extend (agent address_dialog.hide)
 				address_dialog.extend (vb)
 				generate_header_info
@@ -1889,7 +1889,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			-- Textable in which warnings are displayed.
 			-- May be Void, warnings are then not displayed.
 
-	address_dialog: EV_WINDOW
+	address_dialog: EV_POPUP_WINDOW
 			-- Window that pops up in the context tool to change the stone centering.
 
 	key_csts: EV_KEY_CONSTANTS is

@@ -40,6 +40,9 @@
 			<item>
 				<bold>Windows</bold>
 				<list ordered="false">
+					<item>
+						<bold>EV_WINDOW</bold> - The default state is now `user_can_resize'. Although this was previously specified within `is_in_default_state', the window was not actually resizeable.
+					</item>
 					<item/>
 				</list>
 			</item>

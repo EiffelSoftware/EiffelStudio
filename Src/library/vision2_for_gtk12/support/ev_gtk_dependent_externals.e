@@ -8,8 +8,14 @@ class
 
 feature -- Externals
 
+	frozen gdk_decor_resizeh_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GDK_DECOR_RESIZEH"
+		end
+
 	frozen gtk_scrolled_window_set_shadow_type (a_window: POINTER; a_shadow_type: INTEGER) is
-			-- (from EV_GTK_DEPENDENT_EXTERNALS)
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
@@ -24,11 +30,6 @@ feature -- Externals
 		end
 
 	frozen gdk_selection_convert (a_requestor: POINTER; a_selection: INTEGER; a_target: INTEGER; a_time: INTEGER) is
-			-- void	   gdk_selection_convert   (GdkWindow	 *requestor,
-			-- 				    GdkAtom	  selection,
-			-- 				    GdkAtom	  target,
-			-- 				    guint32	  time);
-			-- (from C_GDK)
 		external
 			"C (GdkWindow*, GdkAtom, GdkAtom, guint32) | <gtk/gtk.h>"
 		end

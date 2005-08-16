@@ -99,6 +99,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					loop
 						l_name.keep_head (l_name.last_index_of ('_', l_name.count))
 						l_name.append (i.out)
+						l_ok := not l_features.has (l_name)
 						i := i + 1
 					end
 					create l_snippet_feature.make (l_name, a_source.text)

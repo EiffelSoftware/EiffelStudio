@@ -1655,14 +1655,14 @@ debug ("GEYACC")
 end
 
 				if yyvs5.item (yyvsp5) /= Void then
-					yyval9 := create {ARRAYED_LIST [CODE_SNIPPET_EXPORT_CLAUSE]}.make (yyvs5.item (yyvsp5 - 1).count)
+					yyval9 := create {ARRAYED_LIST [CODE_SNIPPET_EXPORT_CLAUSE]}.make (yyvs5.item (yyvsp5).count)
 					from
-						yyvs5.item (yyvsp5 - 1).start
+						yyvs5.item (yyvsp5).start
 					until
-						yyvs5.item (yyvsp5 - 1).after
+						yyvs5.item (yyvsp5).after
 					loop
-						yyval9.extend (create {CODE_SNIPPET_EXPORT_CLAUSE}.make (yyvs5.item (yyvsp5 - 1).item, yyvs5.item (yyvsp5)))
-						yyvs5.item (yyvsp5 - 1).forth
+						yyval9.extend (create {CODE_SNIPPET_EXPORT_CLAUSE}.make (yyvs5.item (yyvsp5).item, yyvs5.item (yyvsp5 - 1)))
+						yyvs5.item (yyvsp5).forth
 					end
 				end
 			

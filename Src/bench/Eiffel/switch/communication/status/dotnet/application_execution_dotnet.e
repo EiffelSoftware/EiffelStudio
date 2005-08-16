@@ -211,9 +211,17 @@ feature -- Bridge to Debugger
 		do
 			Result := Eifnet_debugger.last_exception_is_handled
 		end
+		
+	exception_class_name: STRING is
+			-- Exception class name
+		require
+			exception_occurred: exception_occurred
+		do
+			Result := Eifnet_debugger.exception_class_name
+		end		
 
 	exception_module_name: STRING is
-			-- Exception "GetMessage" output
+			-- Exception module name
 		require
 			exception_occurred: exception_occurred
 		do

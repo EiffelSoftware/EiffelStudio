@@ -255,14 +255,14 @@ New_export_list: New_export_item
 New_export_item: Client_list Feature_set ASemi
 			{
 				if $2 /= Void then
-					$$ := create {ARRAYED_LIST [CODE_SNIPPET_EXPORT_CLAUSE]}.make ($1.count)
+					$$ := create {ARRAYED_LIST [CODE_SNIPPET_EXPORT_CLAUSE]}.make ($2.count)
 					from
-						$1.start
+						$2.start
 					until
-						$1.after
+						$2.after
 					loop
-						$$.extend (create {CODE_SNIPPET_EXPORT_CLAUSE}.make ($1.item, $2))
-						$1.forth
+						$$.extend (create {CODE_SNIPPET_EXPORT_CLAUSE}.make ($2.item, $1))
+						$2.forth
 					end
 				end
 			}

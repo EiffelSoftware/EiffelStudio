@@ -28,11 +28,13 @@ inherit
 			set_accept_cursor,
 			set_deny_cursor,
 			enable_capture, disable_capture,
-			has_capture
+			has_capture,
+			set_default_colors
 		redefine
 			initialize,
 			destroy,
-			set_background_color, set_foreground_color
+			set_background_color,
+			set_foreground_color
 		end
 	
 	EV_GRID_I
@@ -120,7 +122,7 @@ feature {NONE} -- Status setting
 		do
 			foreground_color_imp ?= color.implementation
 			redraw_client_area
-		end
+		end		
 
 feature {NONE} -- Implementation
 

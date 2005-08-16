@@ -2201,9 +2201,7 @@ feature -- Removal
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_selected_items: ARRAYED_LIST [EV_GRID_ITEM]
 			l_row_index: INTEGER
-			r: EV_GRID_ROW
 		do
-			r := row (upper_index)
 			if is_row_selection_enabled then
 					-- In this case, it is possible that an empty row is selected
 					-- so just by iterating the items, the row is not unselected

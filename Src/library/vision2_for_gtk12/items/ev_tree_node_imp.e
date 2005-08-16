@@ -22,8 +22,7 @@ inherit
 			insert_i_th,
 			remove_i_th,
 			i_th,
-			count,
-			initialize
+			count
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -49,14 +48,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			create ev_children.make (0)
-		end
-
-	initialize is
-			-- Set up action sequence connection and `Precursor' initialization,
-			-- create item box to hold label and pixmap.
-		do
-			Precursor {EV_ITEM_LIST_IMP}
-			set_is_initialized (True)
 		end
 
 	destroy is

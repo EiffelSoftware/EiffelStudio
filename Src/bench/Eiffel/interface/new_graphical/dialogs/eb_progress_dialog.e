@@ -69,8 +69,6 @@ feature {NONE} -- Initialization
 			space: EV_CELL
 			text_box, progress_box: EV_HORIZONTAL_BOX
 			frame: EV_FRAME
-			fg_color: EV_COLOR
-			bg_color: EV_COLOR
 			i: INTEGER
 			new_label: EV_LABEL
 		do
@@ -149,17 +147,7 @@ feature {NONE} -- Initialization
 			set_default_push_button (cancel_button)
 			set_default_cancel_button (cancel_button)
 
-				-- Set color of progress bar.
-			fg_color := progress_bar_color
-			if fg_color /= Void then
-				progress_bar.set_foreground_color (fg_color)
-				bg_color := progress_bar.background_color
-				if (bg_color.lightness - fg_color.lightness).abs < 0.2 then
-					bg_color.set_red (1.0 - fg_color.red)
-					bg_color.set_green (1.0 - fg_color.green)
-					bg_color.set_blue (1.0 - fg_color.blue)
-				end
-			end
+			update_progress_bar_color
 		end
 
 feature -- Access
@@ -238,6 +226,7 @@ feature -- Basic operation
 	show is
 			-- Show dialog if not shown yet it to front.
 		do
+			update_progress_bar_color
 			if not is_show_requested then
 				Precursor {EV_DIALOG}
 			end
@@ -433,6 +422,23 @@ feature {NONE} -- Implementation
 	progress_bar_color: EV_COLOR is
 		do
 			Result := preferences.development_window_data.progress_bar_color
+		end
+		
+	update_progress_bar_color is
+			-- Set color of progress bar.
+		local
+			fg_color, bg_color: EV_COLOR
+		do
+			fg_color := progress_bar_color
+			if fg_color /= Void then
+				progress_bar.set_foreground_color (fg_color)
+				bg_color := progress_bar.background_color
+				if (bg_color.lightness - fg_color.lightness).abs < 0.2 then
+					bg_color.set_red (1.0 - fg_color.red)
+					bg_color.set_green (1.0 - fg_color.green)
+					bg_color.set_blue (1.0 - fg_color.blue)
+				end
+			end
 		end
 
 end -- class EB_PROGRESS_DIALOG

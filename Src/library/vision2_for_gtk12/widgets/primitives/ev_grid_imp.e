@@ -34,7 +34,8 @@ inherit
 			set_accept_cursor,
 			set_deny_cursor,
 			disable_capture,
-			enable_capture
+			enable_capture,
+			has_capture
 		redefine
 			interface,
 			initialize,
@@ -123,116 +124,6 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		do
 			non_focused_selection_text_color := a_color
 		end
-
-
---	focused_selection_text_color: EV_COLOR is
---			-- Color used for text of selected items while focused.
---		local
---			a_text_field: POINTER
---			a_style: POINTER
---			fg_color: POINTER
---			a_focus_sel_color: POINTER
---			a_r, a_g, a_b: INTEGER
---		once
---			Result := color_from_state (True, {EV_GTK_EXTERNALS}.gtk_state_selected_enum)
---		end
---
---	non_focused_selection_text_color: EV_COLOR is
---			-- Color used for text of selected items while focused.
---		once
---			Result := color_from_state (True, {EV_GTK_EXTERNALS}.gtk_state_active_enum)
---		end
-
---	color_from_state (use_fg: BOOLEAN; a_state: INTEGER): EV_COLOR is
---			-- Return color of either fg or bg representing `a_state'
---		require
---			a_state_valid: a_state >= {EV_GTK_EXTERNALS}.gtk_state_normal_enum and a_state <= {EV_GTK_EXTERNALS}.gtk_state_insensitive_enum
---		local
---			a_widget: POINTER
---			a_style: POINTER
---			a_color, a_gdk_color, a_gc, a_gc_values: POINTER
---			a_r, a_g, a_b: INTEGER
---		do
---			a_widget := {EV_GTK_EXTERNALS}.gtk_entry_new
---			a_style := {EV_GTK_EXTERNALS}.gtk_widget_struct_style (a_widget)
---			if use_fg then
---				a_gc := gtk_style_struct_text_gc (a_style)
---				--a_color := gtk_style_struct_text (a_style)
---			else
---				a_gc := gtk_style_struct_base_gc (a_style)
---				--a_color := gtk_style_struct_base (a_style)
---			end
---			--a_gc := a_gc + (a_state * pointer_bytes)
---			
---			a_gc_values := {EV_GTK_EXTERNALS}.c_gdk_gcvalues_struct_allocate
---			
---			{EV_GTK_EXTERNALS}.gdk_gc_get_values (a_gc, a_gc_values)
---			
---			a_gdk_color := {EV_GTK_EXTERNALS}.gdk_gcvalues_struct_foreground (a_gc_values)
---			
---			a_color := {EV_GTK_EXTERNALS}.c_gdk_color_struct_allocate
---			
---			{EV_GTK_EXTERNALS}.gdk_colormap_query_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, {EV_GTK_EXTERNALS}.gdk_color_struct_pixel (a_gdk_color), a_color)
---			
---			a_gdk_color := a_color
---			
---			
---			
---			--a_gdk_color := a_color + (a_state * pointer_bytes)
---			a_r := {EV_GTK_EXTERNALS}.gdk_color_struct_red (a_gdk_color)
---			a_g := {EV_GTK_EXTERNALS}.gdk_color_struct_green (a_gdk_color)
---			a_b := {EV_GTK_EXTERNALS}.gdk_color_struct_blue (a_gdk_color)
---			{EV_GTK_EXTERNALS}.object_unref (a_widget)
---			a_gc_values.memory_free
---			a_color.memory_free
---			create Result
---			Result.set_rgb_with_16_bit (a_r, a_g, a_b)			
---		end
-
---
---feature {NONE} -- Externals
---
---	gtk_style_struct_fg (p: POINTER): POINTER is
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
---		alias
---			"&fg"
---		end
---
---	gtk_style_struct_bg (p: POINTER): POINTER is
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
---		alias
---			"&bg"
---		end
---
---	gtk_style_struct_base (p: POINTER): POINTER is
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
---		alias
---			"&text"
---		end
---
---	gtk_style_struct_text (p: POINTER): POINTER is
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
---		alias
---			"&base"
---		end
---
---	gtk_style_struct_base_gc (p: POINTER): POINTER is
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
---		alias
---			"&text_gc"
---		end
---
---	gtk_style_struct_text_gc (p: POINTER): POINTER is
---		external
---			"C [struct <gtk/gtk.h>] (GtkStyle): POINTER"
---		alias
---			"&base_gc"
---		end
 
 feature {EV_ANY_I} -- Implementation
 

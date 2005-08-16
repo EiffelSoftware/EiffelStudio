@@ -35,7 +35,8 @@ inherit
 			set_deny_cursor,
 			enable_capture,
 			disable_capture,
-			has_capture
+			has_capture,
+			set_default_colors
 		redefine
 			interface,
 			initialize,

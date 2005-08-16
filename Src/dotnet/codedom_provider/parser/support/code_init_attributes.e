@@ -201,6 +201,10 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
+	process_assigner_call_as (l_as: ASSIGNER_CALL_AS) is
+		do
+		end
+
 	process_type_expr_as (l_as: TYPE_EXPR_AS) is
 		do
 		end

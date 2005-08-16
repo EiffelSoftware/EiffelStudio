@@ -24,7 +24,7 @@ feature {NONE} -- Implementation
 		end
 
 	is_parentable: BOOLEAN is False
-			-- Is `Current' parentable, 
+			-- May `Current' have a parent?
 
 	width: INTEGER is
 			-- Horizontal size measured in pixels.

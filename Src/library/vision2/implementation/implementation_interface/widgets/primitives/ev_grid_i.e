@@ -1716,6 +1716,13 @@ feature -- Status setting
 			not_is_locked: not is_locked
 		end
 		
+	set_default_colors is
+			-- Set foreground and background color to their default values.
+		do
+			set_background_color ((create {EV_STOCK_COLORS}).white.twin)
+			set_foreground_color ((create {EV_STOCK_COLORS}).black.twin)
+		end
+		
 feature -- Status report
 
 	is_selection_on_click_enabled: BOOLEAN
@@ -3654,8 +3661,7 @@ feature {NONE} -- Drawing implementation
 
 			item_counter := 1
 			row_counter := 1
-			set_background_color ((create {EV_STOCK_COLORS}).white.twin)
-			set_foreground_color ((create {EV_STOCK_COLORS}).black.twin)
+			set_default_colors
 			set_separator_color ((create {EV_STOCK_COLORS}).black.twin)
 			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
 			tooltip := ""

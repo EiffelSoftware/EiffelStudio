@@ -545,6 +545,10 @@ feature {AST_YACC} -- Initialization
 		do
 		end
 
+	process_bracket_as (l_as: BRACKET_AS) is
+		do
+		end
+
 end -- CODE_INIT_ATTRIBUTES
 
 --+--------------------------------------------------------------------

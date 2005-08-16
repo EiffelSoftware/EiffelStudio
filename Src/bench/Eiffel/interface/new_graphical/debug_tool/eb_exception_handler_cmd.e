@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 
 feature -- Formatting
 
---	dialog: ES_EXCEPTION_HANDLER_DIALOG
 
 	execute is
 			-- Pause the execution.
@@ -45,38 +44,20 @@ feature -- Formatting
 			vb: EV_VERTICAL_BOX
 			bt: EV_BUTTON
 			lb: EV_LABEL
+			dialog: ES_EXCEPTION_HANDLER_DIALOG
 		do
 			if application.is_dotnet then
---				create dialog
---				dialog.set_handler (application.exceptions_handler)
---				dialog.show
---				dlg := dialog
-
-				create dlg
-				create vb
-				vb.set_border_width (5)
-				vb.set_padding_width (5)
-				create bt
-				if Application.exceptions_handler.ignoring_external_exception then
-					dlg.set_title ("Is ignoring external exceptions")
-					bt.set_text ("Catch external exception")
-				else
-					dlg.set_title ("Is catching external exceptions")
-					bt.set_text ("Ignore external exception")
-				end
-				bt.select_actions.extend (agent on_click (dlg, bt))
-				vb.extend (bt)
-				
-					--| Close
-				create bt.make_with_text_and_action ("Close", agent dlg.destroy)
-				dlg.set_default_cancel_button (bt)
-				vb.extend (bt)
-				
-				dlg.extend (vb)
+				create dialog
+				dialog.set_handler (application.exceptions_handler)
+				dlg := dialog
 			else		
 				create dlg
+				dlg.set_title ("Exceptions handler")
+
 				create vb
 				
+				vb.set_padding_width (5)
+				vb.set_border_width (5)
 				create lb.make_with_text ("Not yet available for classic system")
 				vb.extend (lb)
 					--| Close

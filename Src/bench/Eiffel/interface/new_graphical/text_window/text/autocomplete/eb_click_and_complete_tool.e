@@ -633,7 +633,19 @@ feature -- Basic Operations
 					if type /= Void then
 						Result := type.associated_class
 					end
-				elseif is_create or is_static or is_parenthesized then
+				elseif is_create then
+					if found_class /= Void then
+							-- Looks like it was a creation expression since `found_class' was computed.
+						Result := found_class
+					else
+							-- Looks like it was a creation instruction since `found_class' was not set.
+						current_feature_as := feature_containing (prev_token, cursor.line)
+						type := type_from (prev_token, cursor.line)
+						if type /= Void then
+							Result := type.associated_class
+						end
+					end
+				elseif is_static or is_parenthesized then
 					Result := found_class
 				end					
 			end

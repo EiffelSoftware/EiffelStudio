@@ -1352,8 +1352,7 @@ feature -- Status setting
 			-- Resize `Current' to have `a_column_count' columns.
 		require
 			not_destroyed: not is_destroyed
-			content_is_dynamic: is_content_partially_dynamic
-			a_column_count_positive: a_column_count >= 1
+			a_column_count_positive: a_column_count >= 0
 		do
 			implementation.set_column_count_to (a_column_count)
 		ensure
@@ -1364,8 +1363,7 @@ feature -- Status setting
 			-- Resize `Current' to have `a_row_count' columns.
 		require
 			not_destroyed: not is_destroyed
-			content_is_dynamic: is_content_partially_dynamic
-			a_row_count_positive: a_row_count >= 1
+			a_row_count_non_negative: a_row_count >= 0
 		do
 			implementation.set_row_count_to (a_row_count)
 		ensure

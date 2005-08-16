@@ -171,16 +171,24 @@ feature {NONE} -- Implementation
 			create Result.make (50)
 			if license.is_licensed then
 				if license.username /= Void then
-					Result := l_Registered + license.username + "%N%N"
+					Result := l_Registered + license.username
 				end
 			else
 				Result := l_Unregistered_version
+			end
+			
+			Result.append ("%N%N")
+			Result.append ("Installation information:%N")
+			Result.append ("$ISE_EIFFEL = " + eiffel_installation_dir_name + "%N")
+			Result.append ("$ISE_PLATFORM = " + eiffel_platform)
+			if platform_constants.is_windows then
+				Result.append ("%N$ISE_C_COMPILER = " + eiffel_c_compiler)
 			end
 		end
 
 feature {NONE} -- Constant strings
 
-	t_Version_info: STRING is
+	t_version_info: STRING is
 		once
 			create Result.make (100)
 			Result.append (Interface_names.t_Project)

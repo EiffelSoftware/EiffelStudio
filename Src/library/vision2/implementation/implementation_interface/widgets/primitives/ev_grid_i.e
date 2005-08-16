@@ -1399,11 +1399,15 @@ feature -- Status setting
 	set_row_count_to (a_row_count: INTEGER) is
 			-- Resize `Current' to have `a_row_count' columns.
 		require
-			a_row_count_positive: a_row_count >= 1
+			a_row_count_non_negative: a_row_count >= 0
 		do
-			set_vertical_computation_required (internal_row_data.count + 1)
-			resize_row_lists (a_row_count)
-			redraw_client_area
+			if a_row_count > row_count then
+				set_vertical_computation_required (internal_row_data.count + 1)
+				resize_row_lists (a_row_count)
+				redraw_client_area
+			elseif a_row_count < row_count then
+				remove_rows (a_row_count + 1, row_count)
+			end	
 		ensure
 			row_count_set: row_count = a_row_count
 		end

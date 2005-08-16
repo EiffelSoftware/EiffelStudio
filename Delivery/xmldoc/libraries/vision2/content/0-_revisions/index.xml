@@ -21,6 +21,7 @@
 					<item>Added `insert_new_rows' and `insert_new_rows_parented' which permit you to add insert multiple rows at once. This is far quicker than adding rows individually.</item>
 					<item>Added `remove_rows' which permits you to remove multiple rows at once. This is far quicker than removing each row individually.</item>
 					<item>Fixed `enable_capture' and disable_capture' which previously captured an internally hidden component of the grid, so no events were ever received during capture.</item>
+					<item>Previously, `set_default_colors' did not work.</item>
 				</list>
 			</item>
 			<item>

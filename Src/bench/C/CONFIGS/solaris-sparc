@@ -142,12 +142,12 @@ spitshell='cat'
 add_log='undef'
 binary_format=''
 cc='gcc'
-ccflags='-D__BUILTIN_VA_ARG_INCR'
+ccflags='-pipe -D__BUILTIN_VA_ARG_INCR'
 cpp='g++'
-cppflags='-D__BUILTIN_VA_ARG_INCR'
+cppflags='-pipe -D__BUILTIN_VA_ARG_INCR'
 cpp_stuff='42'
 defvoidused='15'
-#Check value for next 3
+#Check value for next 4
 eif_sgi='undef'
 eif_solaris='define'
 eif_windows='undef'
@@ -172,7 +172,7 @@ concurrent_prefix='c'
 cp='/bin/cp'
 eiflib='finalized'
 ld='ld'
-ldflags=" $binary_format $platform_arch"
+ldflags="$binary_format $platform_arch"
 ldsharedflags="$ldflags -G -o"
 libs='-lsocket -lnsl -lm'
 ln='/bin/ln'

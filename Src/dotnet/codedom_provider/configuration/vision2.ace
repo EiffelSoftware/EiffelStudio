@@ -51,7 +51,7 @@ cluster
 
 	all vision2_extensions:		"$EIFFEL_SRC\library\vision2_extension"
 		exclude
-			"CVS";
+			"CVS"; "gtk"; "gtk2";
  		default
  			namespace ("EiffelSoftware.Library.Vision2Extension")
 		end

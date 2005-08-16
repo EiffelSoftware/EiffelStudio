@@ -109,7 +109,7 @@
 	<PREF NAME="interface.development_window.left_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for navigation panel."><LIST>Features;visible;0;0;0;266;Clusters;visible;0;0;0;250;Favorites;closed;0;0;0;0;Windows;closed;0;0;0;0;Search;closed;0;0;0;0</LIST></PREF>
 	<PREF NAME="interface.development_window.left_panel_use_explorer_style" DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time." RESTART="True"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.maximum_history_size" DESCRIPTION="Maximum number of items displayed in the history combo boxes."><INTEGER>20</INTEGER></PREF>
-	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar." RESTART="True"><COLOR>0;0;128</COLOR></PREF>
+	<PREF NAME="interface.development_window.progress_bar_color" DESCRIPTION="Color for progress bar."><COLOR>0;0;128</COLOR></PREF>
 	<PREF NAME="interface.development_window.remember_completion_list_size" DESCRIPTION="Should size of completion list be remembered between completions in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.development_window.right_panel_layout" HIDDEN="true" DESCRIPTION="Items/tools information for editor panel."><LIST>Editor;visible;0;0;0;266;Context;visible;0;0;0;250</LIST></PREF>	
 	<PREF NAME="interface.development_window.search_tool_show_options" DESCRIPTION="Should search options be shown in search tool?"><BOOLEAN>True</BOOLEAN></PREF>

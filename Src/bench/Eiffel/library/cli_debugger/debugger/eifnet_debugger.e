@@ -989,11 +989,12 @@ feature {NONE} -- Callback actions
 			exception_occurred: exception_occurred
 		local
 			cln: STRING
-			es: STRING
 			l_icd_exception: ICOR_DEBUG_VALUE
 			l_exception_info: EIFNET_DEBUG_VALUE_INFO			
 		do
-			if application.exceptions_handler.ignoring_external_exception then
+			if 
+				application.exceptions_handler.exception_handling_enabled 
+			then
 				l_icd_exception := new_active_exception_value_from_thread
 --| Check if we should not use directly the `exception_class_name' feature
 --				cln := exception_class_name
@@ -1006,18 +1007,7 @@ feature {NONE} -- Callback actions
 					l_icd_exception.clean_on_dispose
 				end				
 				if cln /= Void then
-					es := once "EiffelSoftware.Runtime." --EIFFEL_EXCEPTION"
-					if es.is_equal (cln.substring (1, es.count)) then
-						debug ("dbg_trace")
-							print ("Catch exception : " + cln + "%N")
-						end
-						Result := True
-					else
-						debug ("dbg_trace")
-							print ("Ignore exception : " + cln + "%N")
-						end
-						Result := False
-					end
+					Result := application.exceptions_handler.exception_catched (cln)
 				else
 					Result := True
 				end

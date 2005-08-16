@@ -30,19 +30,19 @@
 extern "C" {
 #endif
 
-#ifndef EIF_THREADS
 #ifdef WORKBENCH
+#ifndef EIF_THREADS
 extern struct pgcontext d_cxt;		/* Program context */
 extern struct dbstack db_stack;		/* Calling context stack */
 extern struct id_list once_list;	/* Calling context once_list */
+#else
+extern void dbstack_reset(struct dbstack *stk);
+extern void once_list_reset (struct id_list *stk);
 #endif
 #endif
 
 extern void dbreak_create_table(void);
 extern void dbreak_free_table(void);
-
-extern void dbstack_reset(struct dbstack *stk);
-extern void once_list_reset (struct id_list *stk);
 
 #ifdef __cplusplus
 }

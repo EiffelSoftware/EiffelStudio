@@ -61,11 +61,18 @@ feature	-- Access
 			-- Code
 		do
 			create Result.make (1024)
+			Result.append_character ('%T')
+			Result.append (type)
+			Result.append_character ('%N')
 			Result.append (renames_code)
 			Result.append (exports_code)
 			Result.append (undefines_code)
 			Result.append (redefines_code)
 			Result.append (selects_code)
+			if undefines /= Void or redefines /= Void or renames /= Void or exports /= Void then
+				Result.append ("%T%Tend%N")
+			end
+			Result.append ("%N")
 		end
 	
 	renames_code: STRING is

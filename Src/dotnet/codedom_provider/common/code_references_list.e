@@ -216,7 +216,9 @@ feature -- Basic Operations
 					l_found_new := not has_name (l_name)
 					if l_found_new then
 						l_location := Void
-						l_code_base := l_name.code_base
+						if l_name.code_base /= Void then
+							l_code_base := l_name.code_base
+						end
 						if l_code_base /= Void and then not l_code_base.is_empty then
 							create l_uri.make (l_code_base)
 							if l_uri.is_file then

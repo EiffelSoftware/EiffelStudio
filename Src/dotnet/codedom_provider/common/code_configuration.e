@@ -27,6 +27,7 @@ indexing
 						<compiler>
 							<default_root_class>ANY</default_root_class>
 							<metadata_cache></metadata_cache>
+							<compiler_metadata_cache></compiler_metadata_cache>
 							<precompile_ace_file></precompile_ace_file>
 							<precompile_cache></precompile_cache>
 						</compiler>
@@ -131,6 +132,12 @@ feature -- Access
 			-- Path to EAC if any
 		do
 			Result := config_values.item ("metadata_cache")
+		end
+
+	compiler_metadata_cache: STRING is
+			-- Path to EAC if any
+		do
+			Result := config_values.item ("compiler_metadata_cache")
 		end
 
 	precompile_cache: STRING is
@@ -260,6 +267,7 @@ feature {NONE} -- Implementation
 			internal_config_values.extend ("NONE", "default_root_class")
 			if Default_metadata_cache_path /= Void then
 				internal_config_values.extend (Default_metadata_cache_path, "metadata_cache")
+				internal_config_values.extend (Default_metadata_cache_path.twin, "compiler_metadata_cache")
 			end
 			if Default_precompile_ace_file /= Void then
 				internal_config_values.extend (Default_precompile_ace_file, "precompile_ace_file")

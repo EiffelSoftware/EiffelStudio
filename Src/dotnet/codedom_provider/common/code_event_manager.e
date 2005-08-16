@@ -72,6 +72,7 @@ feature {NONE} -- Implementation
 				create l_event_log.make
 				l_event_log.set_source (log_source_name)
 				l_event_log.set_machine_name (log_server_name)
+				l_event_log.set_log (log_name)
 				if an_event.is_error then
 					l_event_type := {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.error
 				elseif an_event.is_warning then

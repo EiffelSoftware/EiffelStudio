@@ -19,7 +19,8 @@ inherit
 	
 	EV_TEXTABLE_IMP
 		redefine
-			interface
+			interface,
+			set_text
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -35,14 +36,15 @@ feature -- Initialization
 	needs_event_box: BOOLEAN is False
 
 	make (an_interface: like interface) is
-			-- Create the tree item.
+			-- Create the header item.
 		do
 			base_make (an_interface)
 		end
 
 	initialize is
-			-- Initialize the dynamic list.
+			-- Initialize `Current'.
 		do
+			textable_imp_initialize
 			set_width (80)
 			set_is_initialized (True)
 		end
@@ -55,17 +57,38 @@ feature -- Access
 
 feature -- Status setting
 
+	set_text (a_text: STRING) is
+			-- Assign `a_text' to `text'.
+		do
+			Precursor {EV_TEXTABLE_IMP} (a_text)
+			if parent_imp /= Void then
+				parent_imp.update_items
+			end
+		end
+
 	set_width (a_width: INTEGER) is
+			-- Assign `a_width' to `width'.
+		do
+			if parent_imp /= Void then
+				{EV_GTK_EXTERNALS}.gtk_clist_set_column_width (parent_imp.visual_widget, parent_imp.index_of (interface, 1) - 1, a_width)
+			else
+				internal_set_width (a_width)
+			end
+		end
+
+	internal_set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		do
 			width := a_width
 		end
+		
 		
 	resize_to_content is
 			-- Resize `Current' to fully display both `pixmap' and `text'.
 			-- As size of `text' is dependent on `font' of `parent', `Current'
 			-- must be parented.
 		do
+			--| FIXME Implement correctly
 			width := 80
 		end
 
@@ -149,6 +172,7 @@ feature
 		end
 
 	parent_imp: EV_HEADER_IMP
+		-- Parent of `Current'.
 	
 	create_drop_actions: EV_PND_ACTION_SEQUENCE is
 			-- Create a drop action sequence.
@@ -165,11 +189,14 @@ feature {NONE} -- Redundant implementation
 feature {NONE} -- Implementation
 
 	destroy is
+			-- Destroy `Current'.
 		do
 			set_is_destroyed (True)
 		end
 
-	interface: EV_HEADER_ITEM
+feature {EV_ANY_I} -- Implementation
 
+	interface: EV_HEADER_ITEM
+		-- Interface object for `Current'.
 
 end

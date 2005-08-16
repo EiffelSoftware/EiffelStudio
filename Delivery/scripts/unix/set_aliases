@@ -6,9 +6,9 @@ INSTALL_LOG=`pwd`/install.log
 # File in which the status of the installation compilation is logged
 COMPILE_LOG=`pwd`/compile.log
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=`pwd`/Eiffel56
+INSTALL_DIR=`pwd`/Eiffel57
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=`pwd`/Eiffel56
+FINAL_INSTALL_DIR=`pwd`/Eiffel57
 # Where documentation will be generated
 DOCUMENT_DIR=`pwd`
 # Where all.tar.gz files should be stored
@@ -151,7 +151,7 @@ cd $TMP_PATH
 mac_ranlib ()
 {
 if [ ! -d $1 ]; then
-if [ "$ISE_PLATFORM" = "macosx" ]; then ranlib $1; fi
+if echo "$ISE_PLATFORM" | grep "macosx" >/dev/null 2>&1; then ranlib $1; fi
 fi
 }
 # Eiffel Compilation

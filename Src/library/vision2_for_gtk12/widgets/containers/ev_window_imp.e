@@ -605,23 +605,6 @@ feature {NONE} -- Implementation
 				end
 				a_focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 			end
-			
---			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then
---					-- Used to disable certain key behavior such as Tab focus.
---				if a_key_press then
---					if focus_widget.default_key_processing_blocked (a_key) then
---						a_cs := "key-press-event"
---						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
---						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
---					end
---				else
---					if focus_widget.default_key_processing_blocked (a_key) then
---						a_cs := "key-release-event"
---						{EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
---						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
---					end
---				end	
---			end
 		end
 
 	initialize is
@@ -640,30 +623,20 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
 			create upper_bar
 			create lower_bar
-			
-
-			
 
 			maximum_width := 32000
 			maximum_height := 32000
+			app_imp := app_implementation
 			
-			signal_connect_true ("delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
+			signal_connect_true ("delete_event", agent (App_imp.gtk_marshal).on_window_close_request (c_object))
 			initialize_client_area
 
-					-- Set appropriate WM decorations
-			if has_wm_decorations then
-				a_decor := {EV_GTK_EXTERNALS}.Gdk_decor_all_enum
-			else
-				a_decor := {EV_GTK_EXTERNALS}.Gdk_decor_border_enum
-			end	
-			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_decor)
-
-			app_imp := app_implementation
+			
 			on_key_event_intermediary_agent := agent (app_imp.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
 			signal_connect (c_object, app_imp.key_press_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
 			signal_connect (c_object, app_imp.key_release_event_string, on_key_event_intermediary_agent, key_event_translate_agent, False)
 			
-			real_signal_connect (c_object, once "configure-event", agent (App_implementation.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
+			real_signal_connect (c_object, once "configure-event", agent (App_imp.gtk_marshal).on_size_allocate_intermediate (internal_id, ?, ?, ?, ?), configure_translate_agent)
 			
 			{EV_GTK_EXTERNALS}.gtk_window_set_default_size (c_object, 1, 1)
 			
@@ -671,6 +644,14 @@ feature {NONE} -- Implementation
 			default_height := -1
 			default_width := -1
 			Precursor {EV_CONTAINER_IMP}
+				-- Set appropriate WM decorations
+			if has_wm_decorations then
+				a_decor := {EV_GTK_EXTERNALS}.Gdk_decor_all_enum
+			else
+				a_decor := {EV_GTK_EXTERNALS}.gdk_decor_border_enum
+			end	
+			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_decor)
+
 		end
 		
 	client_area: POINTER is

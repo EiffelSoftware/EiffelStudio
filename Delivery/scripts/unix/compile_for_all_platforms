@@ -4,7 +4,15 @@
 (sh ./make_for_platform lisbon.ise manus linux-ppc) &
 
 #Let's compile for Solaris on mosis in background
-(sh ./make_for_platform mosis.ise manus solaris-sparc ; sh ./make_for_platform mosis.ise manus solaris-sparc-64) &
+(
+rsh mosis "\rm -f ~/local/gtkinstall" ;
+rsh mosis "\ln -s ~/local/gtk24install ~/local/gtkinstall" ;
+sh ./make_for_platform mosis.ise manus solaris-sparc;
+
+rsh mosis "\rm -f ~/local/gtkinstall" ;
+rsh mosis "\ln -s ~/local/gtk269-64/gtkinstall ~/local/gtkinstall" ;
+sh ./make_for_platform mosis.ise manus solaris-sparc-64
+) &
 
 #Let's compile for Solaris x86 in background
 (sh ./make_for_platform rio.ise manus solaris-x86) &

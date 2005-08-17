@@ -166,7 +166,7 @@ feature -- Status Report
 						Result := is_cls_compliant_type (a_type.get_element_type)
 					else
 							-- Compliant if is has the custom attribute set to True, or none.
-						Result := is_cls_compliant (a_type) and not is_cls_generic_type (a_type)
+						Result := is_eiffel_compliant (a_type) and not is_cls_generic_type (a_type)
 					end
 				end
 				l_cls.set_item (a_type, Result)
@@ -193,6 +193,15 @@ feature -- Status Report
 			ca ?= feature {SYSTEM_ATTRIBUTE}.get_custom_attribute_member_info_type (member, {CLS_COMPLIANT_ATTRIBUTE})
 			Result := ca = Void or else ca.is_compliant
 		end
+		
+	is_eiffel_compliant (type: SYSTEM_TYPE): BOOLEAN is
+			-- 	Is `type' and Eiffel compliant type?
+		do
+			Result := is_cls_compliant (type)
+			if not Result then
+				Result ?= eiffel_compliant_types.item (type)
+			end
+		end
 
 	is_public_field (a_field: FIELD_INFO): BOOLEAN is
 			-- Is `a_field' public and static?
@@ -215,6 +224,17 @@ feature {NONE} -- Implementation
 			create Result.make (500)
 		ensure
 			cls_compliant_status_not_void: Result /= Void
+		end
+		
+	eiffel_compliant_types: HASHTABLE is
+			-- Table where keys are instances of SYSTEM
+		once
+			create Result.make (5)
+			Result.add ({SYSTEM_TYPE}.get_type_string ("System.IntPtr"), True)
+			Result.add ({SYSTEM_TYPE}.get_type_string ("System.Byte"), True)
+			Result.add ({SYSTEM_TYPE}.get_type_string ("System.UInt16"), True)
+			Result.add ({SYSTEM_TYPE}.get_type_string ("System.UInt32"), True)
+			Result.add ({SYSTEM_TYPE}.get_type_string ("System.UInt64"), True)
 		end
 
 end -- class REFLECTION

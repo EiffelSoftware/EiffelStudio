@@ -206,10 +206,10 @@ feature {NONE} -- Implementation
 					r > grid.row_count
 				loop
 					row := grid.row (r)
-					cell ?= row.item (1)
+					cell ?= row.item (2)
 					l_pat := cell.text
 					
-					cell ?= row.item (2)
+					cell ?= row.item (1)
 					l_st := cell.text
 					if l_st.is_equal (status_id[1]) then
 						exception_handler.catch_exception (l_pat)

@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 		do
 			create displayed_objects.make
 				--| Stack obj grid
-			create esgrid.make ("Stack objects")
+			create esgrid.make_with_name ("Stack objects")
 			esgrid.set_column_count_to (4)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
 			esgrid.column (col_name_index).set_width (150)
@@ -124,7 +124,7 @@ feature {NONE} -- Initialization
 			stack_objects_grid := esgrid
 
 				--| Debugged obj grid
-			create esgrid.make ("Debugged objects")
+			create esgrid.make_with_name ("Debugged objects")
 			esgrid.set_column_count_to (4)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)
 			esgrid.column (col_name_index).set_width (150)

@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 		do
 			create watched_items.make (10)
 
-			create esgrid.make ("Watches")
+			create esgrid.make_with_name ("Watches")
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (5)
 			esgrid.column (col_name_index).set_title (col_titles @ col_name_index)

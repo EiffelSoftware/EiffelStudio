@@ -2123,16 +2123,16 @@ feature -- Contract support
 			valid_lower_index: lower_index >= 1 and lower_index <= row_count
 			valid_upper_index: upper_index >= lower_index and upper_index <= row_count
 		local
-			parent_row: EV_GRID_ROW
+			l_row: EV_GRID_ROW
 		do
-			parent_row := row (upper_index).parent_row
+			l_row := row (upper_index)
 			from
 			until
-				parent_row = Void or parent_row.index < lower_index
+				l_row.parent_row = Void or l_row.index < lower_index
 			loop
-				parent_row ?= parent_row.parent_row
-				if parent_row.index > lower_index then
-					Result := parent_row
+				l_row := l_row.parent_row
+				if l_row.index >= lower_index then
+					Result := l_row
 				end
 			end
 		end

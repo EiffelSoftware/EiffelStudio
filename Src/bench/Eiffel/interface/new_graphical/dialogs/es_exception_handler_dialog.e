@@ -25,8 +25,10 @@ feature {NONE} -- Initialization
 			grid.set_minimum_size (100, 100)
 			grid.set_column_count_to (2)
 			grid.enable_single_row_selection
-			grid.column (1).set_title ("Name")
-			grid.column (2).set_title ("Status")
+			grid.column (1).set_title ("Action")
+			grid.column (2).set_title ("Name")
+			grid.column (1).set_width (60)
+			grid.column (2).set_width (400)	
 			grid.row_select_actions.extend (agent row_selected)
 			grid.row_deselect_actions.extend (agent row_deselected)
 			
@@ -110,10 +112,10 @@ feature -- Access
 			end
 			cell_combo.activate_actions.extend (agent activate_combo (cell_combo, ?))
 			cell_combo.pointer_double_press_actions.force_extend (agent cell_combo.activate)
-			row.set_item (2, cell_combo)
+			row.set_item (1, cell_combo)
 
 			create cell_lab.make_with_text (s)
-			row.set_item (1, cell_lab)
+			row.set_item (2, cell_lab)
 		end
 		
 	activate_combo (ci: EV_GRID_COMBO_ITEM; a_dlg: EV_POPUP_WINDOW) is
@@ -142,7 +144,7 @@ feature -- Access
 		
 	Status_id: ARRAY [STRING] is
 		once
-			Result := <<"Stop", "Continue", "Disabled">>
+			Result := <<"Catch", "Ignore", "Disabled">>
 		end
 
 feature {NONE} -- Implementation

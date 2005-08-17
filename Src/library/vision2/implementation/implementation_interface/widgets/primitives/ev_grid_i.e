@@ -4438,6 +4438,9 @@ feature {NONE} -- Event handling
 				if pointer_leave_item_actions_internal /= Void then
 					pointer_leave_item_actions_internal.call ([True, pointed_item])
 				end
+				if last_pointed_item /= Void and then last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
+					last_pointed_item.pointer_leave_actions_internal.call (Void)
+				end
 
 					-- Reset `pointer_enter_called' as we are no longer within `Current'.
 				pointer_enter_called := False
@@ -4449,8 +4452,8 @@ feature {NONE} -- Event handling
 				if last_pointed_item.pointer_leave_actions_internal /= Void and then not last_pointed_item.pointer_leave_actions_internal.is_empty then
 					last_pointed_item.pointer_leave_actions_internal.call (Void)
 				end
-				last_pointed_item := Void
 			end
+			last_pointed_item := Void
 		end
 
 	find_next_item_in_row (grid_row: EV_GRID_ROW; starting_index: INTEGER; look_right: BOOLEAN): EV_GRID_ITEM is

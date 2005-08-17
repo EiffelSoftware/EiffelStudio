@@ -9,7 +9,9 @@ class
 
 inherit
 	ES_EXCEPTION_HANDLER_DIALOG_IMP
-
+		redefine
+			grid
+		end
 
 feature {NONE} -- Initialization
 
@@ -32,8 +34,13 @@ feature {NONE} -- Initialization
 			handling_checkbox.select_actions.extend (agent on_handling_changed)
 
 			handling_external_checking.select_actions.extend (agent on_external_handling_changed)
+			set_default_cancel_button (cancel_button)
 		end
 
+feature -- Properties
+
+	grid: ES_GRID
+	
 feature -- Access
 
 	exception_handler: DBG_EXCEPTION_HANDLER
@@ -212,6 +219,12 @@ feature {NONE} -- Implementation
 					r := r + 1
 				end
 			end
+			if handling_checkbox.is_selected then
+				exception_handler.enable_exception_handling
+			else
+				exception_handler.disable_exception_handling				
+			end
+			exception_handler.ignore_external_exceptions (handling_external_checking.is_selected)			
 		end			
 	
 	on_ok is
@@ -224,12 +237,9 @@ feature {NONE} -- Implementation
 	on_handling_changed is
 		do
 			if handling_checkbox.is_selected then
-				exception_handler.enable_exception_handling
 				main_frame.enable_sensitive
 				grid.set_default_colors
-				grid.set_background_color (grid.background_color)
 			else
-				exception_handler.disable_exception_handling
 				main_frame.disable_sensitive
 				grid.set_background_color ((create {EV_STOCK_COLORS}).Color_read_only)
 				grid.set_foreground_color ((create {EV_STOCK_COLORS}).Color_3d_shadow )				
@@ -238,7 +248,6 @@ feature {NONE} -- Implementation
 		
 	on_external_handling_changed is
 		do
-			exception_handler.ignore_external_exceptions (handling_external_checking.is_selected)
 		end		
 
 end -- class ES_EXCEPTION_HANDLER_DIALOG

@@ -8,42 +8,33 @@ class
 	ES_OBJECTS_GRID
 
 inherit
-	EV_GRID
-
-	EV_SHARED_APPLICATION
-		undefine
-			default_create, copy
-		end
-	
-	EV_GRID_HELPER
-		undefine
-			default_create, copy
+	ES_GRID
+		redefine
+			initialize
 		end
 
 create
-	make
+	make_with_name
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING) is
+	make_with_name (a_name: STRING) is
 			-- Create current with a_name and a_tool
 		do
 			default_create
-			create auto_resized_columns.make
-			auto_resized_columns.compare_objects
-			
 			name := a_name
-			enable_tree
-			enable_partial_dynamic_content
-			enable_row_height_fixed
-			set_dynamic_content_function (agent compute_grid_item)
 			enable_single_row_selection
-			enable_solid_resizing_divider
-			set_separator_color (color_separator)
-			set_tree_node_connector_color (color_tree_node_connector)
+		end
+		
+	initialize is
+		do
+			Precursor {ES_GRID}
 
-			pre_draw_overlay_actions.extend (agent on_draw_borders)
-			header.item_resize_actions.extend (agent invalidate_for_border)
+			enable_tree
+			enable_row_height_fixed
+
+			enable_partial_dynamic_content
+			set_dynamic_content_function (agent compute_grid_item)
 
 			row_expand_actions.extend (agent on_row_expand)
 			row_collapse_actions.extend (agent on_row_collapse)
@@ -51,90 +42,13 @@ feature {NONE} -- Initialization
 			set_item_accept_cursor_function (agent on_pnd_accept_cursor_function)
 			set_item_deny_cursor_function (agent on_pnd_deny_cursor_function)
 			pointer_double_press_item_actions.extend (agent on_pointer_double_press_item)
-			header.pointer_button_press_actions.extend (agent on_header_clicked)
-			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
-
-			mouse_wheel_scroll_size := 3 --| default value
-			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
-			key_press_actions.extend (agent on_key_pressed)
 		end
 		
-	color_separator: EV_COLOR is
-		once
-			create Result.make_with_8_bit_rgb (210, 210, 210)
-		end
-		
-	color_tree_node_connector: EV_COLOR is
-		once
-			create Result.make_with_8_bit_rgb (0, 0, 0)
-		end		
-
-feature -- properties
+feature -- Properties
 
 	name: STRING
 			-- associated name to identify the related grid.
-			
-	mouse_wheel_scroll_size: INTEGER
-			-- Number of rows to scroll if we are not on a page by page scrolling.
-	
-	mouse_wheel_scroll_full_page: BOOLEAN
-			-- Should we scroll by page rather by a fixed amount of rows?
-	
-	scrolling_common_line_count: INTEGER
-			-- On a page by page scrolling, number of rows that will be common
-			-- between the two pages.
-	
-feature -- Change
 
-	set_mouse_wheel_scroll_full_page (v: BOOLEAN) is
-			-- Set the mouse wheel scroll page mode
-		do
-			mouse_wheel_scroll_full_page := v
-		ensure
-			mouse_wheel_scroll_full_page_set: mouse_wheel_scroll_full_page = v
-		end
-
-	set_mouse_wheel_scroll_size (v: like mouse_wheel_scroll_size) is
-			-- Set the mouse wheel scroll size
-		require
-			v_positive: v > 0
-		do
-			mouse_wheel_scroll_size	:= v
-		ensure
-			mouse_wheel_scroll_size_set: mouse_wheel_scroll_size = v
-		end
-
-	set_scrolling_common_line_count (v: like scrolling_common_line_count) is
-			-- Set `scrolling_common_line_count' with `v'.
-		do
-			scrolling_common_line_count := v
-		ensure	
-			scrolling_common_line_count_set: scrolling_common_line_count = v
-		end
-		
-feature -- To be implemented
-
-	enable_grid_redraw is
-		do
-			to_implement ("here we should call {GRID}.unlock_update")
---			unlock_update
-		end
-
-	disable_grid_redraw is
-		do
-			to_implement ("here we should call {GRID}.lock_update")
---			lock_update
-		end
-
-feature -- Grid item Activation
-	
-	grid_activate (a_item: EV_GRID_ITEM) is
-		require
-			a_item /= Void
-		do
-			a_item.activate
-		end
-		
 feature -- Query
 		
 	grid_pebble_from_row (a_row: EV_GRID_ROW): ANY is
@@ -150,152 +64,7 @@ feature -- Query
 			end
 		end
 
-feature -- Scrolling
-
-	scroll_rows (a_step: INTEGER; is_full_page_scrolling: BOOLEAN) is
-		local
-			vy_now, vy, l_visible_count: INTEGER
-			l_visible_rows: ARRAYED_LIST [INTEGER]
-			l_viewable_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
-			l_first_row: EV_GRID_ROW
-		do
-			l_visible_rows := visible_row_indexes
-			
-			if l_visible_rows.is_empty then
-					-- Nothing to be done, since no rows are visible
-			else
-				vy_now := virtual_y_position
-				if is_full_page_scrolling then
-					if a_step < 0 then
-							-- We are scrolling down.
-						if scrolling_common_line_count < l_visible_rows.count then
-							vy := row (l_visible_rows.i_th (
-								l_visible_rows.count - scrolling_common_line_count)).virtual_y_position
-						else
-								-- Cannot go below, go to the last element.
-							vy := row (l_visible_rows.last).virtual_y_position
-						end
-					else
-							-- We are scrolling up
-						fixme ("[
-							In order to scroll back we use a private data `visible_indexes_to_row_indexes'
-							from the implementation, we should instead use APIs from either EV_GRID or
-							EV_GRID_ROW when they become available.
-							The defensive programing style here is to protect ourself from the changes in the
-							data we used.
-							]")
-						l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
-						if l_viewable_row_indexes /= Void then
-							l_visible_count := viewable_height // row_height - scrolling_common_line_count
-							l_first_row := row (l_visible_rows.first)
-							l_viewable_row_indexes.start
-							l_viewable_row_indexes.search (l_first_row.index)
-							if not l_viewable_row_indexes.exhausted then
-								if l_visible_count < l_viewable_row_indexes.index then
-									vy := row (l_viewable_row_indexes.i_th (
-										l_viewable_row_indexes.index - l_visible_count)).virtual_y_position
-								else
-										-- We reached the top.
-									vy := 0
-								end
-							else
-									-- We could not find the item. This is not right.
-								vy := vy_now - a_step * l_visible_count * row_height
-							end
-						else
-								-- We could not use `visible_indexes_to_row_indexes' to get the right
-								-- information. Use an approximation that only works when there is no
-								-- tree in the grid.
-							vy := vy_now - a_step * l_visible_count * row_height
-						end
-					end
-				else
-					if a_step < 0 then
-							-- We are scrolling down.
-						if mouse_wheel_scroll_size < l_visible_rows.count then
-							vy := row (l_visible_rows.i_th (mouse_wheel_scroll_size + 1)).virtual_y_position
-						else
-								-- Do nothing.
-							vy := vy_now
-						end
-					else
-							-- We are scrolling up
-						fixme ("[
-							In order to scroll back we use a private data `visible_indexes_to_row_indexes'
-							from the implementation, we should instead use APIs from either EV_GRID or
-							EV_GRID_ROW when they become available.
-							The defensive programing style here is to protect ourself from the changes in the
-							data we used.
-							]")
-						l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
-						if l_viewable_row_indexes /= Void then
-							l_first_row := row (l_visible_rows.first)
-							l_viewable_row_indexes.start
-							l_viewable_row_indexes.search (l_first_row.index)
-							if not l_viewable_row_indexes.exhausted then
-								if mouse_wheel_scroll_size < l_viewable_row_indexes.index then
-									vy := row (l_viewable_row_indexes.i_th (
-										l_viewable_row_indexes.index - mouse_wheel_scroll_size)).virtual_y_position
-								else
-										-- We reached the top.
-									vy := 0
-								end
-							else
-									-- We could not find the item. This is not right.
-								vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
-							end
-						else
-								-- We could not use `visible_indexes_to_row_indexes' to get the right
-								-- information. Use an approximation that only works when there is no
-								-- tree in the grid.
-							vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
-						end
-					end
-				end
-					-- Code below do the adjustment to the type of scrolling decided by user.
-				if vy_now /= vy then			
-					if vy < 0 then
-						vy := 0
-					else
-						vy := vy.min (maximum_virtual_y_position)
-					end
-					set_virtual_position (virtual_x_position, vy)
-				end
-			end
-		end		
-
 feature {NONE} -- Actions implementation
-
-	on_key_pressed (k: EV_KEY) is
-		do
-			if 
-				not ev_application.shift_pressed
-				and not ev_application.alt_pressed
-			then
-				if ev_application.ctrl_pressed then
-					inspect k.code
-					when {EV_KEY_CONSTANTS}.key_a then
-						if is_multiple_row_selection_enabled then
-							select_all_rows
-						end
-					else
-					end
-				else
-					inspect k.code
-					when {EV_KEY_CONSTANTS}.key_page_up then
-						scroll_rows (+1, True)
-					when {EV_KEY_CONSTANTS}.key_page_down then
-						scroll_rows (-1, True)
-					else
-					end
-				end
-			end
-		end
-		
-	on_mouse_wheel_action (a_step: INTEGER) is
-		do
-			scroll_rows (a_step, mouse_wheel_scroll_full_page or ev_application.ctrl_pressed)
-		end
 		
 	on_pebble_function (a_item: EV_GRID_ITEM): ANY is
 		do
@@ -343,82 +112,6 @@ feature {NONE} -- Actions implementation
 			end
 		end
 		
-	on_header_clicked (ax, ay, abutton: INTEGER; ax_tilt, ay_tilt, apressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
-		local
-			m: EV_MENU
-			mi: EV_MENU_ITEM
-			mci: EV_CHECK_MENU_ITEM
-			hi: EV_HEADER_ITEM
-			col: EV_GRID_COLUMN
-			c: INTEGER
-			l_x: INTEGER
-		do
-			if abutton = 3 then
-				fixme ("[
-						we use this hack, because on linux/GTK, 
-						the `ax' is related to the current header item's widget
-						and not as for windows, related to the full header's widget.
-						This way, we have a portable solution.
-					]")
-				l_x := ascreen_x - header.screen_x
-				
-					--| Find the column whom header is clicked
-				from
-					c := 1
-				until
-					c > column_count or col /= Void
-				loop
-					col := column (c)
-					hi := col.header_item
-					if header.item_x_offset (hi) > l_x and c > 1 then
-						col := column (c - 1)
-					elseif c = column_count then
-						-- keep loop's col value
-					else
-						col := Void
-					end
-					c := c + 1
-				end
-					--| Col is the pointed header
-				hi := col.header_item
-				create m
-				create mi.make_with_text (hi.text)
-				mi.disable_sensitive
-				m.extend (mi)
-				
-				m.extend (create {EV_MENU_SEPARATOR})
-				
-				create mci.make_with_text ("Auto resize")
-				if column_has_auto_resizing (col.index) then
-					mci.enable_select
-					mci.select_actions.extend (agent set_auto_resizing_column (col.index, False))
-				else
-					mci.disable_select
-					mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
-				end
-				m.extend (mci)
-				m.show_at (header, l_x, ay)
-			end
-		end
-
-	on_header_auto_width_resize is
-		local
-			div_index: INTEGER
-			col: EV_GRID_COLUMN
-		do
-			div_index := header.pointed_divider_index
-			if div_index > 0 then
-				col := column (div_index)
-				if row_count > 0 then
-					if ev_application.shift_pressed then
-						col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3)
-					else
-						col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + 3)
-					end
-				end
-			end			
-		end
-
 	on_row_expand (a_row: EV_GRID_ROW) is
 		require
 			a_row /= Void
@@ -447,73 +140,6 @@ feature {NONE} -- Actions implementation
 			end
 			request_columns_auto_resizing
 		end
-
-	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
-		local
-			current_column_width, current_row_height: INTEGER
-			all_remaining_columns_minimized: BOOLEAN
-		do
-			drawable.set_foreground_color (separator_color)
-			current_column_width := column (a_column_index).width
-			if is_row_height_fixed then
-				current_row_height := row_height
-			else
-				current_row_height := row (a_row_index).height
-			end
-			if a_column_index > 1 then
-				drawable.draw_segment (0, 0, 0, current_row_height - 1)
-			end
-			if a_column_index < column_count then
-				if column (a_column_index + 1).virtual_x_position = column (column_count).virtual_x_position + column (column_count).width then
-					all_remaining_columns_minimized := True
-				end
-			end
-			if a_column_index = column_count or all_remaining_columns_minimized then
-				drawable.draw_segment (current_column_width - 1, 0, current_column_width - 1, current_row_height - 1)
-			end
-			drawable.draw_segment (0, current_row_height - 1, current_column_width, current_row_height - 1)
-		end
-
-	invalidate_for_border (header_item: EV_HEADER_ITEM) is
-			-- resized that has a width greater than 0 as the column border must be updated
-			-- in this column.
-			-- (export status {NONE})
-		local
-			header_index: INTEGER
-			old_header_index: INTEGER
-		do
-			header_index := header_item.parent.index_of (header_item, 1)
-			old_header_index := header_index
-			if (last_width_of_header_during_resize = 0 and header_item.width > 0) or last_width_of_header_during_resize_internal > 0 and header_item.width = 0 then
-				if header_index > 1 then
-					from
-						header_index := header_index - 1
-					until
-						header_index = 1 or column (header_index).width > 0
-					loop
-						header_index := header_index - 1
-					end
-				end
-				if header_index < old_header_index then
-					column (header_index).redraw
-				end
-			end
-		end
-
-	last_width_of_header_during_resize: INTEGER is
-			-- The last width of the header item that is currently being
-			-- resized. Used to determine if we must refresh the column to
-			-- the left of the current one as it could cause the border to
-			-- need to be drawn on the previous column if it is the final
-			-- column that current has a width greater than 0.
-		do
-			Result := last_width_of_header_during_resize_internal
-		ensure
-			result_non_negative: Result >= 0
-		end
-
-	last_width_of_header_during_resize_internal: INTEGER
-			-- Storage for `last_width_of_header_during_resize'.
 
 	compute_grid_item (c, r: INTEGER): EV_GRID_ITEM is
 		local
@@ -547,134 +173,6 @@ end
 					end
 				end
 				request_columns_auto_resizing
-			end
-		end
-
-feature {NONE} -- column resizing
-		
-	set_auto_resizing_column (c: INTEGER; auto: BOOLEAN) is
-		do
-			if column_has_auto_resizing (c) then
-				if not auto then
-					auto_resized_columns.prune_all (c)
-				end
-			elseif auto then
-				auto_resized_columns.extend (c)
-			end
-			request_columns_auto_resizing			
-		end
-
-	timer_columns_auto_resizing: EV_TIMEOUT
-
-	request_columns_auto_resizing is
-		do
-			if not auto_resized_columns.is_empty then
-				if timer_columns_auto_resizing = Void then
-					create timer_columns_auto_resizing.make_with_interval (500)
-					timer_columns_auto_resizing.actions.extend (agent process_columns_auto_resizing)
-				else
-					timer_columns_auto_resizing.set_interval (500)
-				end
-			end
-		end
-		
-	cancel_timer_columns_auto_resizing is
-		do
-			if timer_columns_auto_resizing /= Void then
-				timer_columns_auto_resizing.actions.wipe_out
-				timer_columns_auto_resizing.destroy
-				timer_columns_auto_resizing := Void
-			end
-		end
-
-	process_columns_auto_resizing is
-		local
-			col: EV_GRID_COLUMN
-			c: INTEGER
-			w: INTEGER
-		do
-			cancel_timer_columns_auto_resizing
-			if row_count > 0 then
-				from
-					auto_resized_columns.start
-				until
-					auto_resized_columns.after
-				loop
-					c:= auto_resized_columns.item
-					if c > 0 and c <= column_count then
-						col := column (c)
-						if col /= Void then
-							w := col.required_width_of_item_span (1, row_count) + 3
-							if w > 5 then
-								col.set_width (w)
-							end
-						end
-					end
-					auto_resized_columns.forth
-				end
-			end
-		end
-	
-	column_has_auto_resizing (c: INTEGER): BOOLEAN is
-		do
-			Result := auto_resized_columns.has (c)
-		end
-
-	auto_resized_columns: LINKED_LIST [INTEGER]
-
-feature -- Grid helpers
-
-	front_new_row: EV_GRID_ROW is
-		do
-			Result := grid_front_new_row (Current)
-		end
-
-	extended_new_row: EV_GRID_ROW is
-		do
-			Result := grid_extended_new_row (Current)
-		end
-		
-	extended_new_subrow (a_row: EV_GRID_ROW): EV_GRID_ROW is
-		require
-			a_row /= Void
-			row_related_to_current: a_row.parent = Current
-		do
-			Result := grid_extended_new_subrow (a_row)
-		end	
-
-	remove_and_clear_subrows_from (a_row: EV_GRID_ROW) is
-		require
-			a_row /= Void
-			row_related_to_current: a_row.parent = Current
-		do
-			grid_remove_and_clear_subrows_from (a_row)
-		end
-
-	remove_and_clear_all_rows is
-		require
-			not is_processing_remove_and_clear_all_rows
-		do
-			is_processing_remove_and_clear_all_rows := True
-			grid_remove_and_clear_all_rows (Current)
-			is_processing_remove_and_clear_all_rows := False
-		end
-		
-	is_processing_remove_and_clear_all_rows: BOOLEAN
-
-	select_all_rows is
-			-- Select all rows from the grid
-		local
-			r: INTEGER
-		do
-			if row_count > 0 then
-				from
-					r := 1
-				until
-					r > row_count
-				loop
-					select_row (r)
-					r := r + 1
-				end
 			end
 		end
 

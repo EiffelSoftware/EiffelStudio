@@ -276,6 +276,7 @@ feature -- Element change
 			a_cs := a_text
 			
 			a_event_box := {EV_GTK_EXTERNALS}.gtk_event_box_new
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_event_box_set_visible_window (a_event_box, False)
 			{EV_GTK_EXTERNALS}.gtk_widget_show (a_event_box)
 			a_hbox := {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
 			{EV_GTK_EXTERNALS}.gtk_container_add (a_event_box, a_hbox)

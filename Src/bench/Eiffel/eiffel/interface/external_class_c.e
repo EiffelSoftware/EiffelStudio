@@ -1336,6 +1336,8 @@ feature {NONE} -- Implementation
 				end
 				create l_int.make_from_string (Void, l_is_negative, l_val)
 				l_value := l_int
+			elseif a_external_type.is_natural then
+				create {INTEGER_CONSTANT} l_value.make_from_string (a_external_type, False, a_value)
 			elseif a_external_type.is_boolean then
 				a_value.to_lower
 				create l_bool_value.make (a_value.is_equal (a_value.True_constant))

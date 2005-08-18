@@ -614,6 +614,17 @@ feature {EV_ANY_I} -- Implementation
 			-- Is `a_child' a child of `Current'?
 		deferred
 		end
+		
+	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+			-- `Result' is 1 based index of `child' within `Current'.
+		require
+			child_not_void: child /= Void
+			child_contained: interface.has (child.interface)
+		deferred
+		ensure
+			valid_result: Result >= 1 and Result <= interface.count
+		end
+
 
 feature {EV_CONTAINER_IMP} -- Implementation
 

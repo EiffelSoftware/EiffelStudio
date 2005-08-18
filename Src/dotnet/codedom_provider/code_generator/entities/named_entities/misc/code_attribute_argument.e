@@ -63,6 +63,12 @@ feature -- Access
 			end
 		end
 
+	argument_code: STRING is
+			-- | Result := "`value'" always
+		do
+			Result := value.code
+		end
+
 invariant
 	non_void_value: value /= Void
 	non_void_type: type /= Void

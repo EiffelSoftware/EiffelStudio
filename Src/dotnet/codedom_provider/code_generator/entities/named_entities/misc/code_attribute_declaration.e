@@ -51,7 +51,7 @@ feature -- Access
 					arguments.start
 					if not arguments.after then
 						Result.append (" (")
-						Result.append (arguments.item.code)
+						Result.append (arguments.item.argument_code)
 						arguments.forth
 					end
 				until

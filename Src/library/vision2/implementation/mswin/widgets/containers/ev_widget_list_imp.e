@@ -15,7 +15,8 @@ inherit
 
 	EV_CONTAINER_IMP
 		redefine
-			interface
+			interface,
+			next_tabstop_widget
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET, EV_WIDGET_IMP]
@@ -155,7 +156,60 @@ feature {EV_ANY_I} -- WEL Implementation
 			go_to (old_cursor)
 		end
 		
-
+	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+			-- `Result' is 1 based index of `child' within `Current'.
+		do
+			Result := index_of (child.interface, 1)
+		end
+		
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
+			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
+			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
+			-- container must be searched next.
+		require else
+			valid_search_pos: search_pos >= 0 and search_pos <= count + 1			
+		local
+			w: EV_WIDGET_IMP
+			container: EV_CONTAINER
+			l_cursor: CURSOR
+		do
+			l_cursor := cursor
+			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
+			if Result = Void then
+					-- Otherwise iterate through children and search each.
+				from
+					go_i_th (search_pos)
+				until
+					off or Result /= Void
+				loop
+					w ?= item.implementation
+					if forwards then
+						Result := w.next_tabstop_widget (start_widget, 1, forwards)
+					else
+						container ?= w.interface
+						if container /= Void then
+							Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+						else
+							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						end
+					end
+					if Result = Void then
+						if forwards then
+							forth
+						else
+							back
+						end
+					end
+				end
+			end
+			
+			if Result = Void then
+				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			end
+			go_to (l_cursor)
+		end
+		
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_WIDGET_LIST

@@ -1213,12 +1213,25 @@ feature -- Deferred features
 		local
 			l_widget: EV_WIDGET_IMP
 		do
+				-- Reset the start widget searched flag.
+			start_widget_searched_cell.put (False)
+			
 			if application_imp.shift_pressed then
-				l_widget := next_tabstop_widget (interface, 0, False)
+				l_widget := next_tabstop_widget (interface, 0, False)				
 			else
 				l_widget := next_tabstop_widget (interface, 1, True)
 			end
 			Result := l_widget.wel_item
+		end
+		
+	start_widget_searched_cell: CELL [BOOLEAN] is
+			-- A cell to hold whether or not the item that
+			-- was tabbed from has been checked or not.
+			-- This is necessary to prevent infinite recursion in the
+			-- case where there is no next item as if we return to the
+			-- original widget then we know we have exhausted all other possibilities.
+		once
+			create Result
 		end
 		
 	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
@@ -1228,11 +1241,24 @@ feature -- Deferred features
 			-- container must be searched next.
 		require
 			start_widget_not_void: start_widget /= Void
+		local
+			w: EV_WIDGET_IMP
 		do
 			if interface /= start_widget then
 				if has_tabstop then
 					Result := Current
 				end
+			else
+				if start_widget_searched_cell.item then
+						-- We have reached the original widget for the second time
+						-- meaning there is no other widget to tab to and the original
+						-- widget must be returned.
+					w ?= start_widget.implementation
+					Result := w
+				end
+					-- Record the fact that we have reached the original
+					-- widget at least once.
+				start_widget_searched_cell.put (True)
 			end
 			if Result = Void then
 				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
@@ -1248,6 +1274,8 @@ feature -- Deferred features
 			-- its children dependent on the state of `forwards'.
 		require
 			start_widget_not_void: start_widget /= Void
+		local
+			w: EV_WIDGET_IMP
 		do
 			if interface /= start_widget then
 				if (forwards and search_pos = 1) or (not forwards and search_pos = 0) then
@@ -1255,6 +1283,17 @@ feature -- Deferred features
 						Result := Current
 					end
 				end
+			else
+				if start_widget_searched_cell.item then
+						-- We have reached the original widget for the second time
+						-- meaning there is no other widget to tab to and the original
+						-- widget must be returned.
+					w ?= start_widget.implementation
+					Result := w
+				end
+					-- Record the fact that we have reached the original
+					-- widget at least once.
+				start_widget_searched_cell.put (True)
 			end
 		end
 		

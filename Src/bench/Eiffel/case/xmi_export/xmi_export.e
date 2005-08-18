@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 		do
 			f_name := feature_name (a_feature)
 			c := a_feature.type.associated_class
-			full_type_name := c.name_in_upper
+			full_type_name := c.name_in_upper.twin
 			if c.has_ast and c.generics /= Void then
 				full_type_name.append (c.ast.generics_as_string)
 			end
@@ -552,7 +552,7 @@ feature {NONE} -- Implementation
 				if current_argument_list.item.has_associated_class then
 					new_xmi_class := xmi_class_by_class_c (current_argument_list.item.associated_class)
 					if new_xmi_class = Void then	
-						create new_xmi_type.make_type (idref_counter, current_argument_list.item.associated_class.name_in_upper)
+						create new_xmi_type.make_type (idref_counter, current_argument_list.item.associated_class.name_in_upper.twin)
 						if not xmi_types.has (new_xmi_type) then
 							idref_counter := idref_counter + 1
 							add_type (new_xmi_type)
@@ -644,7 +644,7 @@ feature {NONE} -- Implementation
 		do
 			f_name := feature_name (a_feature)
 			c := a_feature.type.associated_class
-			full_type_name := c.name_in_upper
+			full_type_name := c.name_in_upper.twin
 			if c.has_ast and c.generics /= Void then
 				full_type_name.append (c.ast.generics_as_string)
 			end
@@ -839,7 +839,7 @@ feature {NONE} -- Implementation
 		do
 			f_name := feature_name (a_feature)
 			c := a_feature.type.associated_class
-			full_type_name := c.name_in_upper
+			full_type_name := c.name_in_upper.twin
 			if c.has_ast and c.generics /= Void then
 				full_type_name.append (c.ast.generics_as_string)
 			end
@@ -1028,7 +1028,9 @@ feature {NONE} -- Implementation
 			create internal
 			l_parent_id := internal.dynamic_type_from_string (a_parent_name)
 			l_child_id := internal.dynamic_type_from_string (a_child_name)
-			Result := internal.type_conforms_to (l_child_id, l_parent_id)
+			if l_parent_id >= 0 and then l_child_id >= 0 then
+				Result := internal.type_conforms_to (l_child_id, l_parent_id)
+			end
 		end
 
 	full_class_name_from_generic_class (a_feature: E_FEATURE): STRING is
@@ -1040,7 +1042,7 @@ feature {NONE} -- Implementation
 			l_cnt: INTEGER
 			l_multiple_generics: BOOLEAN
 		do
-			full_type_name := a_feature.type.associated_class.name_in_upper
+			full_type_name := a_feature.type.associated_class.name_in_upper.twin
 			from
 				l_cnt := 1
 				full_type_name.append (" [")

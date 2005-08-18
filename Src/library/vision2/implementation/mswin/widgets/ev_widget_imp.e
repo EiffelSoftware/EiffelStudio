@@ -64,7 +64,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+			
 feature {NONE} -- Initialization
 
 	initialize  is
@@ -465,7 +465,7 @@ feature -- Element change
 			end
 		end
 
-feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_THEME_DRAWER_IMP} -- Implementation
+feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_THEME_DRAWER_IMP, EV_WIDGET_IMP} -- Implementation
 
 	background_color_imp: EV_COLOR_IMP
 			-- Color used for the background of `Current'.
@@ -1205,13 +1205,84 @@ feature -- Deferred features
 				create Result.make_rgb (0, 0, 0)
 			end
 		end
-				
+		
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
 			-- because we cannot do a deferred feature become an
 			-- external feature.
+		local
+			l_widget: EV_WIDGET_IMP
 		do
-			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+			if application_imp.shift_pressed then
+				l_widget := next_tabstop_widget (interface, 0, False)
+			else
+				l_widget := next_tabstop_widget (interface, 1, True)
+			end
+			Result := l_widget.wel_item
+		end
+		
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
+			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
+			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
+			-- container must be searched next.
+		require
+			start_widget_not_void: start_widget /= Void
+		do
+			if interface /= start_widget then
+				if has_tabstop then
+					Result := Current
+				end
+			end
+			if Result = Void then
+				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			end
+		ensure
+			Result_not_void: Result /= Void
+				-- If there is no next tabstop widget, then simply return `start_widget'.
+		end
+		
+	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- If `Current' is not equal to `start_widget' then return `Current' but only if `search_pos' is 1 and `forwards' or
+			-- `search_pos' is 0 and not `forwards. This ensures that we return a container in the correct order (before or after)
+			-- its children dependent on the state of `forwards'.
+		require
+			start_widget_not_void: start_widget /= Void
+		do
+			if interface /= start_widget then
+				if (forwards and search_pos = 1) or (not forwards and search_pos = 0) then
+					if has_tabstop then
+						Result := Current
+					end
+				end
+			end
+		end
+		
+	next_tabstop_widget_from_parent (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- Return the next widget that may be tabbed to as a result of pressing the tab key from `start_widget'
+			-- by visiting the parent of `Current' with a search index determined by `search_pos' and `forwards'.
+		require
+			start_widget_not_void: start_widget /= Void
+		local
+			l_parent_index: INTEGER
+		do
+			l_parent_index := parent_imp.index_of_child (Current)
+			if forwards then
+				l_parent_index := l_parent_index + 1
+			else
+				l_parent_index := l_parent_index - 1
+			end
+			Result := parent_imp.next_tabstop_widget (start_widget, l_parent_index, forwards)
+		ensure
+			Result_not_void: Result /= Void
+				-- If there is no next tabstop widget, then simply return `start_widget'.
+		end
+				
+	has_tabstop: BOOLEAN is
+			-- Does `Current' exhibit all attributes to permit it to receive the
+			-- focus while tabbing?
+		do
+			Result :=  flag_set (style, {WEL_WINDOW_CONSTANTS}.ws_tabstop) and is_sensitive and is_displayed
 		end
 		
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

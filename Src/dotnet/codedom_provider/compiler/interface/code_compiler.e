@@ -462,6 +462,11 @@ feature {NONE} -- Implementation
 				l_cluster.set_is_library
 				l_ace_file.add_cluster (l_cluster)
 				
+				create l_cluster.make ("codedom", "$ISE_EIFFEL\library.net\codedom")
+				l_cluster.set_namespace ("EiffelSoftware.Library.CodeDom")
+				l_cluster.set_is_library
+				l_ace_file.add_cluster (l_cluster)
+
 				-- Add referenced assemblies
 				from
 					Referenced_assemblies.start

@@ -17,7 +17,8 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color,
 			update_for_pick_and_drop,
-			on_size
+			on_size,
+			next_tabstop_widget
 		end
 
 feature -- Access
@@ -160,6 +161,43 @@ feature {EV_ANY_I} -- WEL Implementation
 				end
 				ordered_widgets.force (child)
 				widget_depths.force (depth)
+			end
+		end
+		
+	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+			-- `Result' is 1 based index of `child' within `Current'.
+		do
+			Result := 1
+		end
+		
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
+			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
+			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
+			-- container must be searched next.
+		require else
+			valid_search_pos: search_pos >= 0 and search_pos <= interface.count + 1
+		local
+			w: EV_WIDGET_IMP
+			container: EV_CONTAINER
+		do
+			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
+			if Result = Void and search_pos = 1 and item /= Void then
+					-- Otherwise search the child.
+				w := item_imp
+				if forwards then
+					Result := w.next_tabstop_widget (start_widget, 1, forwards)
+				else
+					container ?= w.interface
+					if container /= Void then
+						Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+					else
+						Result := w.next_tabstop_widget (start_widget, 1, forwards)
+					end
+				end
+			end
+			if Result = Void then
+				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
 		end
 

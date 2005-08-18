@@ -93,7 +93,7 @@ feature {NONE} -- get member data
 		do
 			l_icd_value := v
 			create l_value_info.make (l_icd_value)
-			l_icd_obj_value := l_value_info.interface_debug_object_value
+			l_icd_obj_value := l_value_info.new_interface_debug_object_value
 			if l_icd_obj_value /= Void then
 				l_icd_class := l_icd_obj_value.get_class
 				if l_icd_class /= Void then
@@ -124,30 +124,6 @@ feature {NONE} -- get member data
 			end
 		end
 
-	integer_from (v: ICOR_DEBUG_VALUE; token: INTEGER): INTEGER is
-		local
-			l_icd_value: ICOR_DEBUG_VALUE
-			l_value_info: EIFNET_DEBUG_VALUE_INFO
-			l_icd_obj_value: ICOR_DEBUG_OBJECT_VALUE
-			l_icd_class: ICOR_DEBUG_CLASS
-		do
-			l_icd_value := v
-			create l_value_info.make (l_icd_value)
-			l_icd_obj_value := l_value_info.interface_debug_object_value
-			if l_icd_obj_value /= Void then
-				l_icd_class := l_icd_obj_value.get_class
-				if l_icd_class /= Void then
-					l_icd_value := l_icd_obj_value.get_field_value (l_icd_class, token)
-					if l_icd_value /= Void then
-						Result := Edv_formatter.icor_debug_value_to_integer (l_icd_value)
-						l_icd_value.clean_on_dispose
-					end
-				end
-				l_icd_obj_value.clean_on_dispose
-				l_value_info.clean				
-			end	
-		end
-		
 feature {EIFNET_DEBUGGER} -- Restricted access
 
 	get_member_tokens is

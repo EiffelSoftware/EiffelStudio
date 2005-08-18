@@ -89,7 +89,7 @@ feature -- Get
 		require
 			object_value_void: not has_object_value
 		do
-			object_value := icd_value_info.interface_debug_object_value
+			object_value := icd_value_info.new_interface_debug_object_value
 		end
 		
 	release_object_value is

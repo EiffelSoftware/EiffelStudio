@@ -1446,7 +1446,7 @@ feature -- Exception
 					exception_info_class_name := l_exception_info.value_class_name
 					exception_info_module_name := l_exception_info.value_module_file_name
 
-					l_icdov := l_exception_info.interface_debug_object_value
+					l_icdov := l_exception_info.new_interface_debug_object_value
 					if l_icdov /= Void then
 						l_icdov.add_ref
 						exception_info_to_string := to_string_value_from_exception_object_value (Void, 
@@ -1499,7 +1499,7 @@ feature -- Exception
 					l_class_name := l_exception_info.value_class_name
 					l_module_name := l_exception_info.value_module_file_name
 
-					l_icdov := l_exception_info.interface_debug_object_value
+					l_icdov := l_exception_info.new_interface_debug_object_value
 					if l_icdov /= Void then
 						l_to_string := to_string_value_from_exception_object_value (Void, 
 							icdv,
@@ -1650,7 +1650,7 @@ feature -- Function Evaluation
 			if icdv /= Void and ct.is_external then
 				create l_info.make (icdv)
 				if l_info.has_object_interface then
-					l_icd_obj_val := l_info.interface_debug_object_value
+					l_icd_obj_val := l_info.new_interface_debug_object_value
 					if l_icd_obj_val /= Void then
 						l_icd_class := l_icd_obj_val.get_class
 						if l_icd_class /= Void then
@@ -1938,9 +1938,11 @@ feature -- Specific function evaluation
 				end
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
-					l_icdov := l_value_info.interface_debug_object_value
-					Result := string_value_from_string_class_value (l_icd, l_icdov, 0, -1)
-					l_icdov.clean_on_dispose
+					l_icdov := l_value_info.new_interface_debug_object_value
+					if l_icdov /= Void then
+						Result := string_value_from_string_class_value (l_icd, l_icdov, 0, -1)
+						l_icdov.clean_on_dispose
+					end
 					l_value_info.icd_prepared_value.clean_on_dispose
 					l_value_info.clean
 					l_icd.clean_on_dispose
@@ -2023,8 +2025,11 @@ feature -- Specific function evaluation
 				end
 				if l_icd /= Void then
 					create l_value_info.make (l_icd)
-					l_icdov := l_value_info.interface_debug_object_value
-					Result := string_value_from_string_class_value (l_icd, l_icdov, min, max)
+					l_icdov := l_value_info.new_interface_debug_object_value
+					if l_icdov /= Void then
+						Result := string_value_from_string_class_value (l_icd, l_icdov, min, max)
+						l_icdov.clean_on_dispose
+					end
 					l_value_info.icd_prepared_value.clean_on_dispose
 					l_value_info.clean
 					l_icd.clean_on_dispose
@@ -2080,9 +2085,11 @@ feature -- Specific function evaluation
 					if l_icd /= Void then
 							--| We should get a System.String
 						create l_debug_info.make (l_icd)
-						l_icdov := l_debug_info.interface_debug_object_value
-						Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
-						l_icdov.clean_on_dispose
+						l_icdov := l_debug_info.new_interface_debug_object_value
+						if l_icdov /= Void then
+							Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
+							l_icdov.clean_on_dispose
+						end
 						l_debug_info.icd_prepared_value.clean_on_dispose
 						l_debug_info.clean
 						l_icd.clean_on_dispose
@@ -2125,9 +2132,11 @@ feature -- Specific function evaluation
 				if l_icd /= Void then
 						--| We should get a System.String
 					create l_debug_info.make (l_icd)
-					l_icdov := l_debug_info.interface_debug_object_value
-					Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
-					l_icdov.clean_on_dispose
+					l_icdov := l_debug_info.new_interface_debug_object_value
+					if l_icdov /= Void then
+						Result := Edv_external_formatter.system_string_value_to_string (l_icdov)
+						l_icdov.clean_on_dispose
+					end
 					l_debug_info.icd_prepared_value.clean_on_dispose					
 					l_debug_info.clean
 					l_icd.clean_on_dispose

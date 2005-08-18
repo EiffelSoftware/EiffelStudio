@@ -130,7 +130,7 @@ feature {NONE} -- Special childrens
 			l_is_static: BOOLEAN
 		do
 			if icd_value_info.has_object_interface then
-				l_object_value := icd_value_info.interface_debug_object_value
+				l_object_value := icd_value_info.new_interface_debug_object_value
 			end
 			
 			if l_object_value /= Void then

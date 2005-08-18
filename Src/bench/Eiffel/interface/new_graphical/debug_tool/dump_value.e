@@ -351,7 +351,7 @@ feature {NONE} -- Implementation dotnet
 			-- Dotnet value as an ICorDebugObjectValue interface
 		do
 			if icd_value_info /= Void then
-				Result := icd_value_info.interface_debug_object_value
+				Result := icd_value_info.new_interface_debug_object_value
 			end
 		end
 

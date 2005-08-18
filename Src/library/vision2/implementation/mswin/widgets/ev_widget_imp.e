@@ -1216,7 +1216,7 @@ feature -- Deferred features
 				-- Reset the start widget searched flag.
 			start_widget_searched_cell.put (False)
 			
-			if application_imp.shift_pressed then
+			if not previous then
 				l_widget := next_tabstop_widget (interface, 0, False)				
 			else
 				l_widget := next_tabstop_widget (interface, 1, True)

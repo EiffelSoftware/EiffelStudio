@@ -41,7 +41,8 @@ inherit
 			on_size,
 			insert,
 			screen_x, screen_y,
-			default_process_message
+			default_process_message,
+			next_tabstop_widget
 		end
 
 	WEL_FRAME_WINDOW
@@ -1093,7 +1094,7 @@ feature {EV_ANY_I} -- Implementation
 		-- `height' and `width'. Therefore we store them internally,
 		-- and restore them in on_show if necessary.
 
-feature -- {EV_PICK_AND_DROPABLE_IMP, EV_SPLIT_AREA_IMP}
+feature {EV_ANY_I} -- Implementation
 
 	allow_movement is
 		do
@@ -1116,6 +1117,32 @@ feature -- {EV_PICK_AND_DROPABLE_IMP, EV_SPLIT_AREA_IMP}
 			if is_displayed then
 				notify_change (2 + 1, Current)
 				invalidate
+			end
+		end
+		
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
+			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
+			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
+			-- container must be searched next.
+		require else
+			valid_search_pos: search_pos >= 0 and search_pos <= interface.count + 1
+		local
+			w: EV_WIDGET_IMP
+			container: EV_CONTAINER
+		do
+				-- A window cannot receive the tabstop, so we simply
+				-- continue the search within `item'.
+			w ?= item.implementation
+			if forwards then
+				Result := w.next_tabstop_widget (start_widget, 1, forwards)
+			else
+				container ?= w.interface
+				if container /= Void then
+					Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+				else
+					Result := w.next_tabstop_widget (start_widget, 1, forwards)
+				end
 			end
 		end
 

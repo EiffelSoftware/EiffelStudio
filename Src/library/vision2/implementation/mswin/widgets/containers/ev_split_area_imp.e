@@ -28,7 +28,8 @@ inherit
 			enable_sensitive,
 			disable_sensitive,
 			update_for_pick_and_drop,
-			on_set_cursor
+			on_set_cursor,
+			next_tabstop_widget
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -380,6 +381,67 @@ feature {NONE} -- Implementation
 				end
 				ordered_widgets.force (child)
 				widget_depths.force (depth)
+			end
+		end
+		
+	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+			-- `Result' is 1 based index of `child' within `Current'.
+		do
+			if first_imp = child then
+				Result := 1
+			else
+				Result := 2
+			end
+		end
+			
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
+			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
+			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
+			-- container must be searched next.
+		require else
+			valid_search_pos: search_pos >= 0 and search_pos <= count + 1
+		local
+			w: EV_WIDGET_IMP
+			container: EV_CONTAINER
+		do	
+			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
+			if Result = Void then
+					-- Otherwise iterate through children and search each.
+				if search_pos >= 1 and search_pos <= count then
+					if forwards then
+						if search_pos = 1 and first /= Void then
+							w ?= first.implementation
+							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						end
+						if Result = Void and second /= Void then
+							w ?= second.implementation
+							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						end
+					else
+						if search_pos = 2 and second /= Void then
+							w ?= second.implementation
+							container ?= w.interface
+							if container /= Void then
+								Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+							else
+								Result := w.next_tabstop_widget (start_widget, 1, forwards)
+							end
+						end
+						if Result = Void and first /= Void then
+							w ?= first.implementation
+							container ?= w.interface
+							if container /= Void then
+								Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+							else
+								Result := w.next_tabstop_widget (start_widget, 1, forwards)
+							end
+						end
+					end
+				end
+			end
+			if Result = Void then
+				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
 		end
 

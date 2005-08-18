@@ -20,7 +20,8 @@ inherit
 			on_key_down,
 			on_char,
 			interface,
-			initialize
+			initialize,
+			next_dlgtabitem
 		end
 		
 	EV_FONTABLE_IMP
@@ -215,6 +216,33 @@ feature {NONE} -- WEL Implementation
 		do
 			Precursor {EV_FONTABLE_IMP} (ft)
 			set_default_minimum_size
+		end
+		
+feature {EV_SPIN_BUTTON_IMP} -- Implementation
+		
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem.
+			-- This has been redefined from EV_WIDGET_IMP as EV_SPIN_BUTTON
+			-- uses an instance of EV_TEXT_FIELD internally.
+		local
+			l_widget: EV_WIDGET_IMP
+			l_spin_button_imp: EV_SPIN_BUTTON_IMP
+			l_interface: EV_WIDGET
+		do
+				-- Reset the start widget searched flag.
+			start_widget_searched_cell.put (False)
+			l_spin_button_imp ?= wel_parent
+			if l_spin_button_imp /= Void then
+				l_interface := l_spin_button_imp.interface
+			else
+				l_interface := interface
+			end
+			if not previous then
+				l_widget := next_tabstop_widget (l_interface, 0, False)				
+			else
+				l_widget := next_tabstop_widget (l_interface, 1, True)
+			end
+			Result := l_widget.wel_item
 		end
 
 feature {NONE} -- Implementation

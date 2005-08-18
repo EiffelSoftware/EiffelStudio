@@ -32,10 +32,9 @@ feature --Initialization
 			id_model := id_package
 			compiled_class := c
 			if compiled_class.is_basic then
-				name := compiled_class.name
-				name.to_lower
+				name := compiled_class.name.as_lower
 			else
-				name := compiled_class.name_in_upper
+				name := compiled_class.name_in_upper.twin
 			end
 			if compiled_class.has_ast and compiled_class.generics /= Void then
 				c_ast := compiled_class.ast

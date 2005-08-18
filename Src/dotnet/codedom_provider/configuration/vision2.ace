@@ -37,7 +37,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_delegate.e"; "ev_pixmap_imp_loader.e"; "CVS;
+			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_delegate.e"; "ev_pixmap_imp_loader.e"; "CVS";
  		default
  			namespace ("EiffelSoftware.Library.Vision2")
 		end

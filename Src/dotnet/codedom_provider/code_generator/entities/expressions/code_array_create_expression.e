@@ -33,9 +33,6 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	conversion_feature_name: STRING
-			-- Name of feature used to cast System.Object array into correct type
-
 	array_type: CODE_TYPE_REFERENCE
 			-- Array type
 	
@@ -63,9 +60,7 @@ feature -- Code Generation
 			-- | OR
 			-- | 	Result := "create {`array_type'}.make (1, `size')" if size > 0 and target = Void
 			-- | OR 
-			-- |	Result := "[`initializers', `initializers',...]"
-			-- | OR 
-			-- |	Result := "conversion_feature_name ([`initializers', `initializers',...]) if conversion_feature_name /= Void"
+			-- |	Result := "(create {MANIFEST_ARRAY_CONVERTER [SYSTEM_OBJECT]}).convert_to (<<`initializers', `initializers',...>>)
 		do
 			create Result.make (160)
 			if size_expression /= Void or size > 0 then
@@ -85,11 +80,9 @@ feature -- Code Generation
 				end
 				Result.append_character (')')
 			elseif initializers /= Void then
-				if conversion_feature_name /= Void then
-					Result.append (conversion_feature_name)
-					Result.append (" (")
-				end
-				Result.append ("<<")
+				Result.append ("(create {MANIFEST_ARRAY_CONVERTER [")
+				Result.append (array_type.eiffel_name)
+				Result.append ("]}).cil_array (<<")
 				from
 					initializers.start
 					if not initializers.after then
@@ -103,10 +96,7 @@ feature -- Code Generation
 					Result.append (initializers.item.code)
 					initializers.forth
 				end
-				Result.append (">>")
-				if conversion_feature_name /= Void then
-					Result.append (")")
-				end
+				Result.append (">>)")
 			end
 		end
 		
@@ -116,18 +106,6 @@ feature -- Status Report
 			-- Type
 		do
 			Result := array_type
-		end
-
-feature -- Element Settings
-
-	set_conversion_feature_name (a_name: like conversion_feature_name) is
-			-- Set `conversion_feature_name' with `a_name'.
-		require
-			non_void_creation_feature_name: a_name /= Void
-		do
-			conversion_feature_name := a_name
-		ensure
-			name_set: conversion_feature_name = a_name
 		end
 	
 feature {CODE_ASSIGN_STATEMENT} -- Element Settings

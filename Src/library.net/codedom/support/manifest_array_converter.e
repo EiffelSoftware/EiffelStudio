@@ -9,12 +9,12 @@ class
 
 feature -- Conversion
 
-	convert_to (a_array: ARRAY [ANY]): NATIVE_ARRAY [G] is
-			-- Converts `a_array' to an NATIVE_ARRAY.
+	cil_array (a_array: ARRAY [ANY]): NATIVE_ARRAY [G] is
+			-- Instance of NATIVE_ARRAY with same elements as `a_array'.
 		require
-			a_array_not_void: a_array /= Void
+			attached_array: a_array /= Void
 		local
-			ref: G
+			obj: G
 			i: INTEGER
 			l, u: INTEGER
 		do
@@ -26,13 +26,13 @@ feature -- Conversion
 			until
 				i < l
 			loop
-				ref ?= a_array[i]
-				Result.put (i - 1, ref)
+				obj ?= a_array[i]
+				Result.put (i - 1, obj)
 				i := i - 1
 			end
 		ensure
-			result_not_void: Result /= Void
-			result_count_matches_a_array: Result.count = a_array.count
+			attached_cil_array: Result /= Void
+			counts_match: Result.count = a_array.count
 		end
 
 end -- class MANIFEST_ARRAY_CONVERTER

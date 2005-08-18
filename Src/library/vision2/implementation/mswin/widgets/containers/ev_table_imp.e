@@ -1075,6 +1075,12 @@ feature {NONE} -- Implementation
 		do
 			--| FIXME implement.
 		end
+		
+	index_of_child (child: EV_WIDGET_IMP): INTEGER is
+			-- `Result' is 1 based index of `child' within `Current'.
+		do
+			Result := interface.index_of (child.interface, 1)
+		end
 
 feature -- Implementation
 

@@ -120,7 +120,6 @@ inherit
 			default_style,
 			on_bn_clicked,
 			wel_set_text,
-			process_message,
 			on_erase_background,
 			on_wm_theme_changed
 		end
@@ -386,19 +385,6 @@ feature {NONE} -- WEL Implementation
 		do
 			process_tab_key (virtual_key)
 			Precursor {EV_PRIMITIVE_IMP} (virtual_key, key_data)
-		end
-
-	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
-			-- Process all message plus `WM_GETDLGCODE'.
-		do
-			if msg = Wm_getdlgcode then
-					--| We prevent here Windows to redraw the default push button by itself
-					--| as we do the redrawing by ourselves.
-				Result := to_lresult (0)
-				set_default_processing (False)
-			else
-				Result := Precursor (hwnd, msg, wparam, lparam)
-			end
 		end
 		
 	on_wm_theme_changed is

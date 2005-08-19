@@ -34,7 +34,8 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_char,
-			default_process_message
+			default_process_message,
+			on_getdlgcode
 		end
 
 create
@@ -229,6 +230,12 @@ feature {NONE} -- Implementation
 				disable_default_processing
 			end
 			parent.enable_context_menu
+		end
+		
+	on_getdlgcode is
+			-- Called when window receives WM_GETDLGCODE message.
+		do
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_tab))
 		end
 
 end -- class EV_INTERNAL_COMBO_FIELD_IMP

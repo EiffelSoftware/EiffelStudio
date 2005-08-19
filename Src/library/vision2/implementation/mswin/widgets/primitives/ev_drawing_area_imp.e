@@ -37,7 +37,8 @@ inherit
 		undefine
 			on_sys_key_down,
 			wel_set_font,
-			wel_font
+			wel_font,
+			on_getdlgcode
 		redefine
 			on_paint,
 			on_erase_background,

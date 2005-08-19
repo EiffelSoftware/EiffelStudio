@@ -114,7 +114,8 @@ inherit
 			on_sys_key_down,
 			on_sys_key_up,
 			default_process_message,
-			text_length
+			text_length,
+			on_getdlgcode
 		redefine
 			on_char,
 			on_wm_vscroll,

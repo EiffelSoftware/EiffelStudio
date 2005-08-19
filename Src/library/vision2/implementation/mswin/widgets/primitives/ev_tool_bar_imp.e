@@ -72,7 +72,7 @@ inherit
 			on_kill_focus, on_desactivate, on_set_focus, on_set_cursor,
 			on_char, show, hide, on_size, x_position, y_position,
 			on_sys_key_down, default_process_message, on_sys_key_up,
-			on_mouse_wheel
+			on_mouse_wheel, on_getdlgcode
 		redefine
 			wel_set_parent, wel_resize, wel_move, wel_move_and_resize,
  			on_left_button_double_click, default_style, background_brush

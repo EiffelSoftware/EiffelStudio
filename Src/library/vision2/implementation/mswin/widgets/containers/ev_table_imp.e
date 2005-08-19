@@ -1098,11 +1098,12 @@ feature {NONE} -- Implementation
 					Result := Current
 				end
 			else
-				if start_widget_searched_cell.item then
+				if start_widget_searched_cell.item = search_pos then
 					w ?= start_widget.implementation
 					Result := w
+				elseif start_widget_searched_cell.item = -1 then
+					start_widget_searched_cell.put (search_pos)
 				end
-				start_widget_searched_cell.put (True)
 			end
 			if Result = Void then
 					-- Otherwise iterate through children and search each.

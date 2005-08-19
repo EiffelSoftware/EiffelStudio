@@ -231,7 +231,7 @@ feature {EV_SPIN_BUTTON_IMP} -- Implementation
 			l_interface: EV_WIDGET
 		do
 				-- Reset the start widget searched flag.
-			start_widget_searched_cell.put (False)
+			start_widget_searched_cell.put (-1)
 			l_spin_button_imp ?= wel_parent
 			if l_spin_button_imp /= Void then
 				l_interface := l_spin_button_imp.interface

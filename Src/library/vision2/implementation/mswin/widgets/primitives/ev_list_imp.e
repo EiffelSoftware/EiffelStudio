@@ -57,7 +57,7 @@ inherit
 			on_mouse_move, on_key_down, on_key_up, on_char, on_set_focus,
 			on_desactivate, on_kill_focus, on_set_cursor, show, hide,
 			x_position, y_position, on_sys_key_down, on_sys_key_up,
-			default_process_message, on_mouse_wheel
+			default_process_message, on_mouse_wheel, on_getdlgcode
 		redefine
 			on_lvn_itemchanged, on_size, on_erase_background, default_style,
 			default_ex_style

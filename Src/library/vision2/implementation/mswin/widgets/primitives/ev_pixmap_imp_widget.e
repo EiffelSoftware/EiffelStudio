@@ -56,7 +56,7 @@ inherit
 	EV_WEL_CONTROL_WINDOW
 		undefine
 			on_sys_key_down,
-			wel_font, wel_set_font
+			wel_font, wel_set_font, on_getdlgcode
 		redefine
 			on_paint, on_erase_background, class_background, default_style,
 			class_style

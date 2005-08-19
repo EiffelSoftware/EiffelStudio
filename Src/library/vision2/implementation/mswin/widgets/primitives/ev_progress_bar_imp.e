@@ -69,7 +69,8 @@ inherit
 			y_position,
 			on_sys_key_down,
 			on_sys_key_up,
-			default_process_message
+			default_process_message,
+			on_getdlgcode
 		redefine
 			wel_set_step
 		end

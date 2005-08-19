@@ -24,7 +24,8 @@ inherit
 
 	EV_WEL_CONTROL_WINDOW
 		undefine
-			on_sys_key_down
+			on_sys_key_down,
+			on_getdlgcode
 		redefine
 			default_style,
 			background_brush,

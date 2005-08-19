@@ -75,7 +75,7 @@ inherit
 			on_desactivate, on_key_down, on_char, on_key_up,
 			on_set_cursor, show, hide, on_size, x_position, y_position,
 			on_sys_key_down, default_process_message, on_sys_key_up,
-			on_mouse_wheel
+			on_mouse_wheel, on_getdlgcode
 		redefine
 			default_style, on_tvn_selchanged, on_tvn_itemexpanded,
 			on_tvn_selchanging, on_erase_background, collapse_item,

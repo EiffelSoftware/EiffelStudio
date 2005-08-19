@@ -142,7 +142,8 @@ inherit
 			class_name,
 			show,
 			destroy,
-			wel_make
+			wel_make,
+			on_getdlgcode
 		redefine
 			default_style,
 			default_ex_style,

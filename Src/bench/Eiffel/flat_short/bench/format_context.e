@@ -679,6 +679,15 @@ feature -- Element change
 			text.add_classi (c, c.name)
 		end
 
+	put_clusteri (c: CLUSTER_I) is		
+			-- Append cluster name to 'text', treated as a stone.
+		do
+			if not tabs_emitted then
+				emit_tabs
+			end
+			text.add_cluster (c, c.cluster_name)
+		end
+
 	prepare_class_text is
 			-- Append standard text before class.
 		do

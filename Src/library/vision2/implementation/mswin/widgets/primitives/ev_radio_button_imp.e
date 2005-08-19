@@ -29,9 +29,9 @@ inherit
 			internal_default_height,
 			set_default_minimum_size,
 			next_dlggroupitem,
-			on_getdlgcode,
 			on_key_down,
-			set_background_color
+			set_background_color,
+			on_getdlgcode
 		select
 			wel_make
 		end
@@ -104,9 +104,9 @@ inherit
 			default_process_message
 		redefine
 			on_key_down,
-			on_getdlgcode,
 			default_style,
-			on_erase_background
+			on_erase_background,
+			on_getdlgcode
 		end
 		
 create
@@ -173,17 +173,17 @@ feature {NONE} -- Implementation
 			process_tab_and_arrows_keys (virtual_key)
 			Precursor {EV_BUTTON_IMP} (virtual_key, key_data)
 		end
-
-	on_getdlgcode is
-			-- Called when window receives WM_GETDLGCODE message.
-		do
-			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_arrows))
-		end
 		
 	on_bn_clicked is
 			-- Called when `Current' is pressed.
 		do
 			enable_select
+		end
+		
+	on_getdlgcode is
+			-- Called when window receives WM_GETDLGCODE message.
+		do
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_tab | {WEL_DLGC_CONSTANTS}.dlgc_want_arrows))
 		end
 
 	default_style: INTEGER is

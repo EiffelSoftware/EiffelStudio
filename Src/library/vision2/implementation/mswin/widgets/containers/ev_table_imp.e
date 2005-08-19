@@ -36,7 +36,8 @@ inherit
 			interface,
 			initialize,
 			on_size,
-			destroy
+			destroy,
+			next_tabstop_widget
 		end
 		
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -1080,6 +1081,60 @@ feature {NONE} -- Implementation
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
 			Result := interface.index_of (child.interface, 1)
+		end
+		
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
+			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
+			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
+			-- container must be searched next.
+		local
+			w: EV_WIDGET_IMP
+			container: EV_CONTAINER
+			l_item_list: ARRAYED_LIST [EV_WIDGET]
+		do
+			if interface /= start_widget then
+				if has_tabstop then
+					Result := Current
+				end
+			else
+				if start_widget_searched_cell.item then
+					w ?= start_widget.implementation
+					Result := w
+				end
+				start_widget_searched_cell.put (True)
+			end
+			if Result = Void then
+					-- Otherwise iterate through children and search each.
+				l_item_list := item_list
+				from
+					l_item_list.go_i_th (search_pos)
+				until
+					l_item_list.off or Result /= Void
+				loop
+					w ?= l_item_list.item.implementation
+					if forwards then
+						Result := w.next_tabstop_widget (start_widget, 1, forwards)
+					else
+						container ?= w.interface
+						if container /= Void then
+							Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+						else
+							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						end
+					end
+					if Result = Void then
+						if forwards then
+							l_item_list.forth
+						else
+							l_item_list.back
+						end
+					end
+				end
+			end
+			if Result = Void then
+				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			end
 		end
 
 feature -- Implementation

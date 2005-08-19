@@ -2711,15 +2711,17 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
+			l_sorted_cluster: EB_SORTED_CLUSTER
 			l_format_context: FORMAT_CONTEXT
 			l_indexes: INDEXING_CLAUSE_AS
-			l_classes: HASH_TABLE [CLASS_I, STRING]
-			l_subclu: ARRAYED_LIST [CLUSTER_I]			
+			l_classes: LIST [CLASS_I]
+			l_subclu: LIST [EB_SORTED_CLUSTER]			
 			l_cl_i: CLASS_I
 			l_list_cl_i: LIST [CLASS_I]
 			l_cluster: CLUSTER_I
 			l_assert_level: ASSERTION_I
 		do
+			
 			create l_format_context.make_for_case
 			
 			l_format_context.put_text_item (ti_indexing_keyword)
@@ -2753,18 +2755,21 @@ feature {NONE} -- Implementation
 				l_format_context.put_new_line
 				l_format_context.exdent
 			end
-			if not a_cluster.sub_clusters.is_empty then
+
+			create l_sorted_cluster.make (a_cluster)
+
+			if not l_sorted_cluster.clusters.is_empty then
 				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("sub cluster(s)"))
 				l_format_context.put_text_item_without_tabs (ti_colon)
 				l_format_context.put_new_line
 				l_format_context.indent
 				from
-					l_subclu := a_cluster.sub_clusters
+					l_subclu := l_sorted_cluster.clusters
 					l_subclu.start
 				until
 					l_subclu.after
 				loop
-					l_cluster := l_subclu.item
+					l_cluster := l_subclu.item.actual_cluster
 					l_format_context.put_manifest_string (" - ")
 					l_format_context.put_clusteri (l_cluster)
 					l_format_context.put_space
@@ -2777,49 +2782,53 @@ feature {NONE} -- Implementation
 				l_format_context.exdent
 			end
 
-			if not a_cluster.classes.is_empty then
+			if not l_sorted_cluster.classes.is_empty then
 				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("class(es)"))
 				l_format_context.put_text_item_without_tabs (ti_colon)
 				l_format_context.put_new_line
 				l_format_context.indent
 				from
-					l_classes := a_cluster.classes
+					l_classes := l_sorted_cluster.classes
 					l_classes.start
 				until
 					l_classes.after
 				loop
-					l_cl_i := l_classes.item_for_iteration
+					l_cl_i := l_classes.item
 					l_assert_level := l_cl_i.assertion_level
 					l_format_context.put_manifest_string (" - ")
 					l_format_context.put_classi (l_cl_i)
 					l_format_context.put_text_item_without_tabs (ti_colon)
-					if l_assert_level.check_all then
-						l_format_context.put_space
-						l_format_context.put_text_item_without_tabs (ti_All_keyword)
-					elseif l_assert_level.level = 0  then
-						l_format_context.put_space
-						l_format_context.put_comment_text ("None")
+					if l_cl_i.compiled then
+						if l_assert_level.check_all then
+							l_format_context.put_space
+							l_format_context.put_text_item_without_tabs (ti_All_keyword)
+						elseif l_assert_level.level = 0  then
+							l_format_context.put_space
+							l_format_context.put_comment_text (once "None")
+						else
+							if l_assert_level.check_precond then
+								l_format_context.put_space
+								l_format_context.put_text_item_without_tabs (ti_Require_keyword)
+							end
+							if l_assert_level.check_postcond then
+								l_format_context.put_space
+								l_format_context.put_text_item_without_tabs (ti_Ensure_keyword)
+							end
+							if l_assert_level.check_check then
+								l_format_context.put_space
+								l_format_context.put_text_item_without_tabs (ti_Check_keyword)
+							end
+							if l_assert_level.check_loop then
+								l_format_context.put_space
+								l_format_context.put_text_item_without_tabs (ti_Loop_keyword)
+							end
+							if l_assert_level.check_invariant then
+								l_format_context.put_space
+								l_format_context.put_text_item_without_tabs (ti_Invariant_keyword)
+							end
+						end
 					else
-						if l_assert_level.check_precond then
-							l_format_context.put_space
-							l_format_context.put_text_item_without_tabs (ti_Require_keyword)
-						end
-						if l_assert_level.check_postcond then
-							l_format_context.put_space
-							l_format_context.put_text_item_without_tabs (ti_Ensure_keyword)
-						end
-						if l_assert_level.check_check then
-							l_format_context.put_space
-							l_format_context.put_text_item_without_tabs (ti_Check_keyword)
-						end
-						if l_assert_level.check_loop then
-							l_format_context.put_space
-							l_format_context.put_text_item_without_tabs (ti_Loop_keyword)
-						end
-						if l_assert_level.check_invariant then
-							l_format_context.put_space
-							l_format_context.put_text_item_without_tabs (ti_Invariant_keyword)
-						end
+						l_format_context.put_comment_text (" Not in system.")
 					end
 					l_format_context.put_new_line
 					l_classes.forth
@@ -2833,12 +2842,12 @@ feature {NONE} -- Implementation
 				l_format_context.put_new_line
 				l_format_context.indent
 				from
-					l_classes := a_cluster.overriden_classes
+					l_classes := a_cluster.overriden_classes.linear_representation
 					l_classes.start
 				until
 					l_classes.after
 				loop
-					l_cl_i := l_classes.item_for_iteration
+					l_cl_i := l_classes.item
 					l_format_context.put_manifest_string (" - ")
 					l_format_context.put_classi (l_cl_i)
 					l_list_cl_i := eiffel_universe.classes_with_name (l_cl_i.name)
@@ -2866,7 +2875,6 @@ feature {NONE} -- Implementation
 				l_format_context.exdent
 				l_format_context.put_new_line
 			end
-			
 
 			l_format_context.exdent
 			l_format_context.put_new_line

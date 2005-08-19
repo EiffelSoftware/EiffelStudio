@@ -2,7 +2,7 @@ indexing
 	description	: "Window holding a project tool"
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	author		: "$Author$"
 
 class
 	EB_DEVELOPMENT_WINDOW
@@ -2407,7 +2407,6 @@ feature {NONE} -- Implementation
 			f: FILE
 
 			l_format_context: FORMAT_CONTEXT
-			l_indexes: INDEXING_CLAUSE_AS
 			conv_errst: ERROR_STONE
 			cl_syntax_stone: CL_SYNTAX_STONE
 			error_line: INTEGER
@@ -2639,26 +2638,7 @@ feature {NONE} -- Implementation
 					end
 					if cluster_st /= Void then
 	--| FIXME XR: Really manage cluster display in the main editor
-						create l_format_context.make_for_case
-						l_format_context.put_text_item (ti_indexing_keyword)
-						l_format_context.put_new_line
-						l_format_context.indent
-						l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
-						l_format_context.put_text_item_without_tabs (ti_colon)
-						l_format_context.put_space
-						l_format_context.put_manifest_string ("%"" + cluster_st.cluster_i.cluster_name + "%"")
-						l_format_context.put_new_line
-						l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster_path"))
-						l_format_context.put_text_item_without_tabs (ti_colon)
-						l_format_context.put_space
-						l_format_context.put_manifest_string ("%"" + cluster_st.cluster_i.path + "%"")
-						l_format_context.put_new_line
-						l_indexes := cluster_st.cluster_i.indexes
-						if l_indexes /= Void then
-							l_format_context.format_indexing_with_no_keyword (l_indexes)
-						end
-						l_format_context.exdent
-						l_format_context.put_new_line
+						l_format_context := formatted_context_for_cluster (cluster_st.cluster_i)
 						editor_tool.text_area.process_text (l_format_context.text)
 	--| END FIXME
 					end
@@ -2726,6 +2706,175 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	formatted_context_for_cluster (a_cluster: CLUSTER_I): FORMAT_CONTEXT is
+			-- Formatted context representing the list of classes inside `a_cluster'.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_format_context: FORMAT_CONTEXT
+			l_indexes: INDEXING_CLAUSE_AS
+			l_classes: HASH_TABLE [CLASS_I, STRING]
+			l_subclu: ARRAYED_LIST [CLUSTER_I]			
+			l_cl_i: CLASS_I
+			l_list_cl_i: LIST [CLASS_I]
+			l_cluster: CLUSTER_I
+			l_assert_level: ASSERTION_I
+		do
+			create l_format_context.make_for_case
+			
+			l_format_context.put_text_item (ti_indexing_keyword)
+			l_format_context.put_new_line
+			l_format_context.indent
+			l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
+			l_format_context.put_text_item_without_tabs (ti_colon)
+			l_format_context.put_space
+			l_format_context.put_quoted_string_item (a_cluster.cluster_name)
+
+			l_format_context.put_new_line
+			l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster_path"))
+			l_format_context.put_text_item_without_tabs (ti_colon)
+			l_format_context.put_space
+			l_format_context.put_quoted_string_item (a_cluster.path)
+			l_format_context.put_new_line
+			l_indexes := a_cluster.indexes
+			if l_indexes /= Void then
+				l_format_context.format_indexing_with_no_keyword (l_indexes)
+				l_format_context.put_new_line							
+			end
+			
+			if a_cluster.parent_cluster /= Void then
+				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("parent cluster"))
+				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.put_new_line
+				l_format_context.indent
+				l_format_context.put_manifest_string (" - ")
+				
+				l_format_context.put_clusteri (a_cluster.parent_cluster)
+				l_format_context.put_new_line
+				l_format_context.exdent
+			end
+			if not a_cluster.sub_clusters.is_empty then
+				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("sub cluster(s)"))
+				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.put_new_line
+				l_format_context.indent
+				from
+					l_subclu := a_cluster.sub_clusters
+					l_subclu.start
+				until
+					l_subclu.after
+				loop
+					l_cluster := l_subclu.item
+					l_format_context.put_manifest_string (" - ")
+					l_format_context.put_clusteri (l_cluster)
+					l_format_context.put_space
+					l_format_context.put_text_item_without_tabs (ti_L_parenthesis)
+					l_format_context.put_comment_text (l_cluster.classes.count.out)
+					l_format_context.put_text_item_without_tabs (ti_R_parenthesis)					
+					l_format_context.put_new_line
+					l_subclu.forth
+				end
+				l_format_context.exdent
+			end
+
+			if not a_cluster.classes.is_empty then
+				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("class(es)"))
+				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.put_new_line
+				l_format_context.indent
+				from
+					l_classes := a_cluster.classes
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_cl_i := l_classes.item_for_iteration
+					l_assert_level := l_cl_i.assertion_level
+					l_format_context.put_manifest_string (" - ")
+					l_format_context.put_classi (l_cl_i)
+					l_format_context.put_text_item_without_tabs (ti_colon)
+					if l_assert_level.check_all then
+						l_format_context.put_space
+						l_format_context.put_text_item_without_tabs (ti_All_keyword)
+					elseif l_assert_level.level = 0  then
+						l_format_context.put_space
+						l_format_context.put_comment_text ("None")
+					else
+						if l_assert_level.check_precond then
+							l_format_context.put_space
+							l_format_context.put_text_item_without_tabs (ti_Require_keyword)
+						end
+						if l_assert_level.check_postcond then
+							l_format_context.put_space
+							l_format_context.put_text_item_without_tabs (ti_Ensure_keyword)
+						end
+						if l_assert_level.check_check then
+							l_format_context.put_space
+							l_format_context.put_text_item_without_tabs (ti_Check_keyword)
+						end
+						if l_assert_level.check_loop then
+							l_format_context.put_space
+							l_format_context.put_text_item_without_tabs (ti_Loop_keyword)
+						end
+						if l_assert_level.check_invariant then
+							l_format_context.put_space
+							l_format_context.put_text_item_without_tabs (ti_Invariant_keyword)
+						end
+					end
+					l_format_context.put_new_line
+					l_classes.forth
+				end
+				l_format_context.exdent
+			end
+
+			if not a_cluster.overriden_classes.is_empty then
+				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("overriden class(es)"))
+				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.put_new_line
+				l_format_context.indent
+				from
+					l_classes := a_cluster.overriden_classes
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_cl_i := l_classes.item_for_iteration
+					l_format_context.put_manifest_string (" - ")
+					l_format_context.put_classi (l_cl_i)
+					l_list_cl_i := eiffel_universe.classes_with_name (l_cl_i.name)
+					if l_list_cl_i /= Void and then not l_list_cl_i.is_empty then
+						l_format_context.put_text_item_without_tabs (ti_colon)
+						l_format_context.put_comment_text (" overriden by")
+						from
+							l_list_cl_i.start
+						until
+							l_list_cl_i.after
+						loop
+							l_cluster := l_list_cl_i.item.cluster
+							if l_cluster /= a_cluster then
+								l_format_context.put_space
+								l_format_context.put_text_item_without_tabs (ti_double_quote)
+								l_format_context.put_clusteri (l_list_cl_i.item.cluster)
+								l_format_context.put_text_item_without_tabs (ti_double_quote)
+							end
+							l_list_cl_i.forth
+						end
+					end
+					l_format_context.put_new_line
+					l_classes.forth
+				end
+				l_format_context.exdent
+				l_format_context.put_new_line
+			end
+			
+
+			l_format_context.exdent
+			l_format_context.put_new_line
+			Result := l_format_context
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is
 			-- highlight the feature correspnding to `feat_as' in the class represented by `displayed_class'
 		require

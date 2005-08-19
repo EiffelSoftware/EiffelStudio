@@ -33,7 +33,8 @@ inherit
 			initialize,
 			insert_i_th,
 			remove_i_th,
-			i_th
+			i_th,
+			next_tabstop_widget
 		end
 
 	EV_FONTABLE_IMP
@@ -984,6 +985,54 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			application_imp.theme_drawer.close_theme_data (open_theme)
 			application_imp.update_theme_drawer			
 			open_theme := application_imp.theme_drawer.open_theme_data (wel_item, "Tab")
+		end
+		
+	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
+			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
+			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
+			-- container must be searched next.
+		require else
+			valid_search_pos: search_pos >= 0 and search_pos <= interface.count + 1
+		local
+			w: EV_WIDGET_IMP
+			container: EV_CONTAINER
+		do
+			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
+			if Result = Void then
+					-- Otherwise iterate through children and search each.
+				from
+					go_i_th (search_pos)
+				until
+					off or Result /= Void
+				loop
+					if index = selected_item_index then
+							-- We only need to search the item if it is the currently
+							-- selected item, as all other items may not be tabbed to.
+						w ?= item.implementation
+						if forwards then
+							Result := w.next_tabstop_widget (start_widget, 1, forwards)
+						else
+							container ?= w.interface
+							if container /= Void then
+								Result := w.next_tabstop_widget (start_widget, container.count, forwards)
+							else
+								Result := w.next_tabstop_widget (start_widget, 1, forwards)
+							end
+						end
+					end
+					if Result = Void then
+						if forwards then
+							forth
+						else
+							back
+						end
+					end
+				end
+			end
+			if Result = Void then
+				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			end
 		end
 		
 feature {EV_XP_THEME_DRAWER_IMP} -- Implementation

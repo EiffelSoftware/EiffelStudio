@@ -740,7 +740,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			is_parented: parent /= Void
 			parent_enabled_as_tree: parent.is_tree_enabled
 			rows_to_insert_positive: rows_to_insert >= 1
-			valid_subrow_index: subrow_index >= 1 and subrow_index <= subrow_count + 1
+			valid_subrow_index: a_subrow_index >= 1 and a_subrow_index <= subrow_count + 1
 		local
 			l_subrow: EV_GRID_ROW_I
 			l_index: INTEGER

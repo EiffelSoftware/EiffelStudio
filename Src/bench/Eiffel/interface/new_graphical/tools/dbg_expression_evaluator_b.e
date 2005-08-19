@@ -967,6 +967,9 @@ feature {NONE} -- Concrete evaluation
 	dotnet_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
 				a_feature_name, a_external_name: STRING; 
 				params: LIST [DUMP_VALUE]) is
+		require
+			a_feature_name_not_void: a_feature_name /= Void
+			a_external_name_not_void: a_external_name /= Void
 		do
 			prepare_evaluation
 			Dbg_evaluator.dotnet_evaluate_function_with_name (a_addr, a_target, a_feature_name, a_external_name, params)

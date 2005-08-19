@@ -60,7 +60,7 @@
 			<content>Compilation and Timeouts</content>
 		</heading>
 
-		Eiffel compilations can take longer than the default timouts set in ASP.NET. In particular ASP.NET will run batch compilations on the entire directory 
+		Eiffel compilations can take longer than the default timeouts set in ASP.NET. In particular ASP.NET will run batch compilations on the entire directory 
 		that is being accessed by IIS each time the time stamp of that directory changes. If the batch compilation takes longer than the 
 		<italic>batchTimeout</italic> property defined in the machine wide configuration file (<italic>machine.config</italic>) then ASP.NET will 
 		start another compilation just for the requested file. This can be quite resource intensive for the Web server and thus it might be 

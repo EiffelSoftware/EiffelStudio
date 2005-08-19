@@ -1254,7 +1254,8 @@ feature -- Deferred features
 						-- widget must be returned.
 					w ?= start_widget.implementation
 					Result := w
-				else
+				elseif start_widget_searched_cell.item = -1 then
+					
 					-- Record the fact that we have reached the original
 					-- widget at least once.
 					start_widget_searched_cell.put (search_pos)
@@ -1290,7 +1291,7 @@ feature -- Deferred features
 						-- widget must be returned.
 					w ?= start_widget.implementation
 					Result := w
-				else
+				elseif start_widget_searched_cell.item = -1 then
 						-- Record the fact that we have reached the original
 						-- widget at least once.
 					start_widget_searched_cell.put (search_pos)

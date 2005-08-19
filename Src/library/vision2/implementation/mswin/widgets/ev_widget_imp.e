@@ -1214,7 +1214,7 @@ feature -- Deferred features
 			l_widget: EV_WIDGET_IMP
 		do
 				-- Reset the start widget searched flag.
-			start_widget_searched_cell.put (False)
+			start_widget_searched_cell.put (-1)
 			
 			if not previous then
 				l_widget := next_tabstop_widget (interface, 0, False)				
@@ -1224,12 +1224,11 @@ feature -- Deferred features
 			Result := l_widget.wel_item
 		end
 		
-	start_widget_searched_cell: CELL [BOOLEAN] is
-			-- A cell to hold whether or not the item that
-			-- was tabbed from has been checked or not.
+	start_widget_searched_cell: CELL [INTEGER] is
+			-- A cell to hold the seach index that the item tabbed from started with.
 			-- This is necessary to prevent infinite recursion in the
 			-- case where there is no next item as if we return to the
-			-- original widget then we know we have exhausted all other possibilities.
+			-- original widget with the same search position, then we know we have exhausted all other possibilities.
 		once
 			create Result
 		end
@@ -1249,16 +1248,17 @@ feature -- Deferred features
 					Result := Current
 				end
 			else
-				if start_widget_searched_cell.item then
-						-- We have reached the original widget for the second time
+				if start_widget_searched_cell.item = search_pos then
+						-- We have reached the original widget for the second time with the same search position
 						-- meaning there is no other widget to tab to and the original
 						-- widget must be returned.
 					w ?= start_widget.implementation
 					Result := w
-				end
+				else
 					-- Record the fact that we have reached the original
 					-- widget at least once.
-				start_widget_searched_cell.put (True)
+					start_widget_searched_cell.put (search_pos)
+				end
 			end
 			if Result = Void then
 				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
@@ -1284,16 +1284,17 @@ feature -- Deferred features
 					end
 				end
 			else
-				if start_widget_searched_cell.item then
-						-- We have reached the original widget for the second time
+				if start_widget_searched_cell.item = search_pos then
+						-- We have reached the original widget for the second time with the same search position
 						-- meaning there is no other widget to tab to and the original
 						-- widget must be returned.
 					w ?= start_widget.implementation
 					Result := w
+				else
+						-- Record the fact that we have reached the original
+						-- widget at least once.
+					start_widget_searched_cell.put (search_pos)
 				end
-					-- Record the fact that we have reached the original
-					-- widget at least once.
-				start_widget_searched_cell.put (True)
 			end
 		end
 		

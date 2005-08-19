@@ -144,6 +144,12 @@ feature -- Basic operations
 			end
 		end
 
+	on_getdlgcode is
+			-- Called when window receives WM_GETDLGCODE message.
+		do
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_tab))
+		end
+
 	tooltip_window: WEL_WINDOW is
 			-- `Result' is WEL_WINDOW of `Current' used
 			-- to trigger tooltip events. May be redefined in

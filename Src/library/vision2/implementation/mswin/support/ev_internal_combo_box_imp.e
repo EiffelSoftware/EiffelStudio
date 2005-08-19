@@ -32,7 +32,8 @@ inherit
 			on_set_cursor,
 			on_char,
 			on_erase_background,
-			process_message
+			process_message,
+			on_getdlgcode
 		end
 		
 	WEL_WM_CTLCOLOR_CONSTANTS
@@ -296,6 +297,12 @@ feature {NONE} -- Implementation
 			else
 				Result := Precursor {WEL_COMBO_BOX} (hwnd, msg, wparam, lparam)
 			end
+		end
+		
+	on_getdlgcode is
+			-- Called when window receives WM_GETDLGCODE message.
+		do
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_tab))
 		end
 
 feature {NONE} -- Implementation

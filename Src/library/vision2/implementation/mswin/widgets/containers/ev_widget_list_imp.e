@@ -121,41 +121,6 @@ feature {EV_ANY_I} -- WEL Implementation
 			index_not_changed: old ev_children.index = ev_children.index
 		end
 		
-	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
-			-- Adjust tab ordering of children in `Current'.
-			-- used when `Current' is a child of an EV_DIALOG_IMP_MODAL
-			-- or an EV_DIALOG_IMP_MODELESS.
-		local
-			child: WEL_WINDOW
-			widget_imp: EV_WIDGET_IMP
-			container: EV_CONTAINER_IMP
-			old_cursor: like cursor
-		do
-			old_cursor := cursor.twin
-			from
-				go_i_th (1)
-			until
-				index = count + 1
-			loop
-				container ?= item.implementation
-				if container /= Void then
-					container.adjust_tab_ordering (ordered_widgets, widget_depths, depth + 1)
-				end
-					-- Add `child' to `ordered_widgets'
-				widget_imp ?= item.implementation
-				child ?= widget_imp
-				check
-					child_not_void: child /= Void
-				end
-				ordered_widgets.force (child)
-				widget_depths.force (depth)
-
-				index := index + 1
-			end
-				-- Restore cursor of `Current'.
-			go_to (old_cursor)
-		end
-		
 	index_of_child (child: EV_WIDGET_IMP): INTEGER is
 			-- `Result' is 1 based index of `child' within `Current'.
 		do

@@ -137,32 +137,6 @@ feature -- Basic operations
 		end
 
 feature {EV_ANY_I} -- WEL Implementation
-
-	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
-			-- Adjust tab ordering of children in `Current'.
-			-- used when `Current' is a child of an EV_DIALOG_IMP_MODAL
-			-- or an EV_DIALOG_IMP_MODELESS.
-		local
-			widget_imp: EV_WIDGET_IMP
-			child: WEL_WINDOW
-			container: EV_CONTAINER_IMP
-		do
-			if item /= Void then
-				container ?= item.implementation
-				if container /= Void then
-						-- Reverse tab order of `widget_list'.
-					container.adjust_tab_ordering (ordered_widgets, widget_depths, depth + 1)
-				end
-					-- Add `child' to `ordered_widgets'.
-				widget_imp ?= item.implementation
-				child ?= widget_imp
-				check
-					child_not_void: child /= Void
-				end
-				ordered_widgets.force (child)
-				widget_depths.force (depth)
-			end
-		end
 		
 	index_of_child (child: EV_WIDGET_IMP): INTEGER is
 			-- `Result' is 1 based index of `child' within `Current'.

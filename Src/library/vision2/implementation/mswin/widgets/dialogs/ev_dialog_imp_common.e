@@ -165,74 +165,6 @@ feature -- Status Setting
 			update_style_and_minimum_size
 		end
 
-feature {EV_CONTAINER_IMP} -- Implementation
-
-	modify_tab_order (widget: EV_WIDGET_IMP) is
-			--
-		local
-			first, second: WEL_WINDOW
-			container: EV_CONTAINER_IMP
-			a_counter : INTEGER
-			ordered_widgets: ARRAYED_LIST [WEL_WINDOW]
-			widget_depths: ARRAYED_LIST [INTEGER]
-			maximum_depth: INTEGER
-		do
-			container ?= widget
-				-- Create the lists.
-			create ordered_widgets.make (20)
-			create widget_depths.make (20)
-				--| Note that if the child of `Current' is not a container, there is no need to 
-				--| adjust the tab order, as it will be the only child, and therefore the tab ordering
-				--| will not be a problem.
-			if container /= Void then
-				container.adjust_tab_ordering (ordered_widgets, widget_depths, 1)
-			end	
-			check
-				lists_equal_in_length: ordered_widgets.count = widget_depths.count
-			end
-				
-				-- If we did reverse the tab orders then.
-			if ordered_widgets.count > 0 then
-					-- We now find the maximum_depth of the children of `Current'.
-				from
-					widget_depths.start
-				until
-					widget_depths.off
-				loop
-					if widget_depths.item > maximum_depth then
-						maximum_depth := widget_depths.item
-					end
-					widget_depths.forth
-				end
-					-- For every depth of window in `Current'.
-				from
-					a_counter := 1
-				until
-					a_counter = maximum_depth + 1
-				loop
-					from
-						widget_depths.start
-						ordered_widgets.start
-					until
-						widget_depths.off
-					loop
-							-- If this window is of the correct depth
-							-- Then we will re-order it as necessary.
-						if widget_depths.item = a_counter then
-							first := second
-							second := ordered_widgets.item
-							if first /= Void and second /= Void then
-								second.insert_after (first)
-							end
-						end
-						widget_depths.forth
-						ordered_widgets.forth
-					end	
-					a_counter := a_counter + 1
-				end
-			end
-		end
-
 feature {EV_DIALOG_I} -- Implementation
 
 	apply_center_dialog: BOOLEAN
@@ -467,7 +399,6 @@ feature {NONE} -- Implementation
 			if loc_item_imp /= Void then
 				loc_item_imp.set_top_level_window_imp (Current)
 				loc_item_imp.wel_set_parent (Current)
-				modify_tab_order (loc_item_imp)
 			end
 		end
 

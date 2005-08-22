@@ -34,7 +34,8 @@ inherit
 			insert_i_th,
 			remove_i_th,
 			i_th,
-			next_tabstop_widget
+			next_tabstop_widget,
+			return_current_if_next_tabstop_widget
 		end
 
 	EV_FONTABLE_IMP
@@ -1033,6 +1034,26 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			if Result = Void then
 				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
+		end
+		
+	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
+			-- If `Current' is not equal to `start_widget' then return `Current' but only if `search_pos' is 1 and `forwards' or
+			-- `search_pos' is 0 and not `forwards. This ensures that we return a container in the correct order (before or after)
+			-- its children dependent on the state of `forwards'.
+		do
+			if interface /= start_widget then
+				if (forwards and search_pos = 1) or (not forwards and search_pos < selected_item_index) then
+						-- We perform special handling here for notebooks, as only the `selected_item_index' tab
+						-- needs to be searched within the notebook. That is why we check `search_pos' against
+						-- `selected_item_index'. The standard version for widget lists checks against 0.
+					if has_tabstop then
+						Result := Current
+					end
+				end
+			else
+				Result := Precursor {EV_WIDGET_LIST_IMP} (start_widget, search_pos, forwards)
+			end
+			
 		end
 		
 feature {EV_XP_THEME_DRAWER_IMP} -- Implementation

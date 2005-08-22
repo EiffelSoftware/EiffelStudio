@@ -1100,19 +1100,23 @@ feature -- Basic operations
 		require
 			has_parent_object: parent_object /= Void
 			object_not_void: an_object /= Void
-			object_parent_not_full: not parent_object.is_full		
+			object_parent_not_full: not parent_object.is_full
 		local
 			command_add: GB_COMMAND_ADD_OBJECT
 			insert_position: INTEGER
+			an_object_index, an_index: INTEGER
 		do
 			insert_position := parent_object.children.index_of (Current, 1)
 			
 				-- We must now check that the item being inserted before is not contained in the same parent as `Current'.
 				-- If this is the case, and the item is before `Current' in the parent, then we must use an insert_position
 				-- one less than normal.
-			if parent_object.children.has (an_object) and
-			insert_position < parent_object.children.index_of (Current, 1) then
-				insert_position := insert_position - 1
+			if parent_object.children.has (an_object) then
+				an_object_index := parent_object.children.index_of (an_object, 1)
+				an_index := parent_object.children.index_of (Current, 1)
+				if an_object_index < an_index and then insert_position <= an_index then
+					insert_position := insert_position - 1
+				end
 			end
 			create command_add.make (parent_object, an_object, insert_position)
 			command_add.execute

@@ -56,7 +56,6 @@ feature {NONE} -- Initialization
 			create radio_group.make
 			new_item_actions.extend (agent disable_widget_sensitivity)
 			new_item_actions.extend (agent add_radio_button)
-			new_item_actions.extend (agent update_tab_ordering_for_dialog)
 			create remove_item_actions
 			remove_item_actions.extend (agent enable_widget_sensitivity)
 			remove_item_actions.extend (agent remove_radio_button)
@@ -480,39 +479,6 @@ feature {NONE} -- WEL Implementation
 					end
 				end
 			end
-		end
-
-	update_tab_ordering_for_dialog (w: EV_WIDGET) is
-			-- If `Current' is an EV_DIALOG_IMP_MODAL or an 
-			-- EV_DIALOG_IMP_MODELESS
-			-- Then we must recursively reverse the tab order of the children.
-		local
-			common: EV_DIALOG_IMP_COMMON
-			widget_imp: EV_WIDGET_IMP
-		do
-			common ?= top_level_window_imp
-			widget_imp ?= w.implementation
-			check
-				widget_imp_not_void: widget_imp /= Void
-			end
-				--| This should only be called after `widget_imp' has been parented
-				--| So `Parent_imp' should never ben Void.
-			check
-				parent_not_void: widget_imp.parent_imp /= Void
-			end
-			if common /= Void then
-				common.modify_tab_order (widget_imp.parent_imp)
-			end
-		end
-
-feature {EV_CONTAINER_IMP} -- Implementation
-
-	adjust_tab_ordering (ordered_widgets: ARRAYED_LIST [WEL_WINDOW]; 
-				widget_depths: ARRAYED_LIST [INTEGER]; depth: INTEGER) is
-			-- Adjust tab ordering of children in `Current'.
-			-- Used when `Current' is a child of an EV_DIALOG_IMP_MODAL
-			-- or an EV_DIALOG_IMP_MODELESS.
-		deferred
 		end
 
 feature {NONE} -- Implementation, focus event

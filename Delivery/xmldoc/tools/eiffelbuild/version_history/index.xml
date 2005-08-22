@@ -8,40 +8,49 @@
 			</toc>
 		</help>
 	</meta_data>
-	<paragraph>
-			EiffelBuild
-			<line_break/>
-			Platform: Any
-			<line_break/>
-			Availability: Student and Enterprise versions.
-			<line_break/>
-		<heading><size>2</size>5.6 Release</heading>
+	<paragraph>EiffelBuild
+		<line_break/>Platform: Any
+		<line_break/>Availability: Student and Enterprise versions.
+		<line_break/>
+		<heading>
+			<size>2</size>5.7 Release
+		</heading>
 		<list ordered="false">
-		<item>Added support for the generation of any widget as a class. You now may place widgets within
-		 the "Widget Selector" to enable this. The "Widget Selector" is simply the old "Widget Selector" renamed.</item>
-		<item>Added clipboard functionality, permitting the copying/pasting of objects.</item>
-		<item>Added support for new constant types: Font and Color.</item>
+			<item>Fixed positioning bug when moving items within their current parent by dropping on another item in that parent with the shift key held down.</item>
+			<item>Fixed bug where modifying the &quot;User can resize&quot; property of a window while the tools were always shown on top stopped the tools from being shown on top.</item>
+			<item>Added support for multi-line tooltips.</item>
 		</list>
-		<heading><size>2</size>5.5 Release</heading>
+		<heading>
+			<size>2</size>5.6 Release
+		</heading>
 		<list ordered="false">
-		<item>Added support for EV_RICH_TEXT which has been added to EiffelVision2.</item>
-		<item>Notebook item texts may now be set to string constants.</item>
-		<item>Better support for corrupt installations with warning dialogs now displayed.</item>
-		<item>Fixed bug with generated code for notebooks often hiding the first item when they were actually displayed.</item>
+			<item>Added support for the generation of any widget as a class. You now may place widgets within the &quot;Widget Selector&quot; to enable this. The &quot;Widget Selector&quot; is simply the old &quot;Widget Selector&quot; renamed.</item>
+			<item>Added clipboard functionality, permitting the copying/pasting of objects.</item>
+			<item>Added support for new constant types: Font and Color.</item>
 		</list>
-		<heading><size>2</size>5.4 Release</heading>
+		<heading>
+			<size>2</size>5.5 Release
+		</heading>
+		<list ordered="false">
+			<item>Added support for EV_RICH_TEXT which has been added to EiffelVision2.</item>
+			<item>Notebook item texts may now be set to string constants.</item>
+			<item>Better support for corrupt installations with warning dialogs now displayed.</item>
+			<item>Fixed bug with generated code for notebooks often hiding the first item when they were actually displayed.</item>
+		</list>
+		<heading>
+			<size>2</size>5.4 Release
+		</heading>
 		<list ordered="false">
 			<item>Added support for multiple windows, including dialogs.</item>
 			<item>Added support for constants of type Integer, String, Directory and Pixmap.</item>
-			<item>New tool, "Widget Selector" added to handle organization of windows, including the ability to define subdirectories in a project, and group windows accordingly.</item>
+			<item>New tool, &quot;Widget Selector&quot; added to handle organization of windows, including the ability to define subdirectories in a project, and group windows accordingly.</item>
 			<item>Tip of the day dialog added.</item>
-			<item>Recent projects are now available from the "File" menu.</item>
+			<item>Recent projects are now available from the &quot;File&quot; menu.</item>
 			<item>The contents of EiffelBuild projects may now be imported.</item>
 			<item>The ability to reset the minimum dimensions of widgets have been added. In the previous version, it was not possible to complete undo the effects of setting a widgets minimum size.</item>
 			<item>Preferences added, which allow you to customize the default behavior of EiffelBuild. For example, dialogs may be displayed or hidden as desired.</item>
 			<item>The layout of EiffelBuild and its tools is now maintained between sessions.</item>
-			<item>Docking added, permitting the re-ordering of particular tools within the interface, including making them "float" externally.</item>
+			<item>Docking added, permitting the re-ordering of particular tools within the interface, including making them &quot;float&quot; externally.</item>
 			<item>Smarter code generation options, permitting only named attributes to be exported.</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

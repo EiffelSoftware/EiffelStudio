@@ -3215,6 +3215,13 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 			Result := (create {EV_STOCK_COLORS}).black.twin
 		end
 		
+	screen: EV_SCREEN is
+			-- Once access to EV_SCREEN object.
+		once
+			create Result
+		end
+		
+		
 	node_pixmap_width: INTEGER
 		-- Width of node pixmaps.
 
@@ -3664,7 +3671,7 @@ feature {NONE} -- Drawing implementation
 			item_counter := 1
 			row_counter := 1
 			set_default_colors
-			set_separator_color ((create {EV_STOCK_COLORS}).black.twin)
+			set_separator_color (black.twin)
 			set_node_pixmaps (initial_expand_node_pixmap, initial_collapse_node_pixmap)
 			tooltip := ""
 		end
@@ -4398,10 +4405,8 @@ feature {NONE} -- Event handling
 			-- Called by `pointer_leave_actions' of widgets comprising `Current'.
 		local
 			pointed_widget: EV_WIDGET
-			screen: EV_SCREEN
 			pointed_item: EV_GRID_ITEM
 		do
-			create screen
 			pointed_widget := screen.widget_at_position (screen.pointer_position.x, screen.pointer_position.y)
 			if pointed_widget /= drawable and pointed_widget /= horizontal_scroll_bar and pointed_widget /= vertical_scroll_bar and pointed_widget /= header then
 				if pointer_leave_actions_internal /= Void then
@@ -4423,10 +4428,8 @@ feature {NONE} -- Event handling
 			-- Called by `pointer_leave_actions' of `drawable'.
 		local
 			pointed_widget: EV_WIDGET
-			screen: EV_SCREEN
 			pointed_item: EV_GRID_ITEM
 		do
-			create screen
 			pointed_widget := screen.widget_at_position (screen.pointer_position.x, screen.pointer_position.y)
 			if pointed_widget /= horizontal_scroll_bar and pointed_widget /= vertical_scroll_bar and pointed_widget /= header then
 				if pointer_leave_actions_internal /= Void then

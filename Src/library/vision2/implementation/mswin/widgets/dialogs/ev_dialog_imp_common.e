@@ -200,10 +200,9 @@ feature {NONE} -- Implementation
 			-- the `user_can_resize' flag.
 		do
 			update_style
-			compute_minimum_size
+			notify_change (2 + 1, Current)
 			if is_displayed then
-				hide
-				show
+				invalidate
 			end
 		end
 		

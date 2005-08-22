@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 				Result := Precursor {EV_TITLED_WINDOW_IMP} (hwnd, msg, wparam, lparam)
 			end
 		end
-		
+
 	on_wm_ctlcolordialog (wparam, lparam: POINTER) is
 			-- Wm_ctlcolordialog message received.
 		local

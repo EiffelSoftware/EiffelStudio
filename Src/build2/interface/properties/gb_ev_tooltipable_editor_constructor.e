@@ -29,7 +29,7 @@ feature -- Access
 			Result.set_padding_width (object_editor_vertical_padding_width)
 			initialize_attribute_editor (Result)
 			create tooltip_entry.make (Current, Result, tooltip_string, Gb_ev_tooltipable_tooltip , Gb_ev_tooltipable_tooltip_tooltip,
-				agent set_tooltip (?), agent validate_true (?), single_line_entry)
+				agent set_tooltip (?), agent validate_true (?), multiple_line_entry)
 
 			update_attribute_editor
 			disable_all_items (Result)

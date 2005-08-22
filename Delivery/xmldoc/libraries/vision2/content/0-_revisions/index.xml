@@ -22,6 +22,7 @@
 					<item>Added `remove_rows' which permits you to remove multiple rows at once. This is far quicker than removing each row individually.</item>
 					<item>Fixed `enable_capture' and disable_capture' which previously captured an internally hidden component of the grid, so no events were ever received during capture.</item>
 					<item>Previously, `set_default_colors' did not work.</item>
+					<item>Fixed bug in `pointer_enter_actions' and `pointer_leave_actions' of EV_GRID_ITEM which were not always fired when the mouse pointer entered or left the grid.</item>
 				</list>
 			</item>
 			<item>
@@ -46,6 +47,9 @@
 				<list ordered="false">
 					<item>
 						<bold>EV_WINDOW</bold> - The default state is now `user_can_resize'. Although this was previously specified within `is_in_default_state', the window was not actually resizeable.
+					</item>
+					<item>
+						<bold>EV_DIALOG</bold> - Calling `enable_user_resize' or `disable_user_resize' on a dialog that is shown relative to another window no longer looses the relative state of the dialog.
 					</item>
 					<item/>
 				</list>

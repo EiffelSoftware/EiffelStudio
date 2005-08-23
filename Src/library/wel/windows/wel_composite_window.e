@@ -661,6 +661,9 @@ feature {NONE} -- Implementation
 			if control /= Void and then control.exists then
 				control.process_notification_info (info)
 			end
+			if control.has_return_value then
+				set_message_return_value (control.message_return_value)
+			end
 		end
 
 	on_wm_command (wparam, lparam: POINTER) is

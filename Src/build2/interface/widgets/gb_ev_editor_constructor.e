@@ -217,4 +217,4 @@ feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD} -- Implementation
 			object_set: object = an_object
 		end
 
-end -- class GB_EV_EDITOR
+end -- class GB_EV_EDITOR_CONSTRUCTOR

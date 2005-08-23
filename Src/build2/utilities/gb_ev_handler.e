@@ -28,6 +28,7 @@ feature -- Access
 			Result.extend ("gb_ev_widget")
 			Result.extend ("gb_ev_window")
 			Result.extend ("gb_ev_box")
+			Result.extend ("gb_ev_split_area")
 			Result.extend ("gb_ev_frame")
 			Result.extend ("gb_ev_notebook")
 			Result.extend ("gb_ev_gauge")

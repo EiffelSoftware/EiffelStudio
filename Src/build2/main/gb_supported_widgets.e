@@ -115,6 +115,7 @@ feature {NONE} -- Implementation
 			gb_ev_pixmap: GB_EV_PIXMAP
 			gb_ev_progress_bar: GB_EV_PROGRESS_BAR
 			gb_ev_tool_bar: GB_EV_TOOL_BAR
+			gb_ev_split_area: GB_EV_SPLIT_AREA
 		do
 		end
 

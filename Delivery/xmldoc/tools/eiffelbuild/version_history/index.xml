@@ -19,6 +19,7 @@
 			<item>Fixed positioning bug when moving items within their current parent by dropping on another item in that parent with the shift key held down.</item>
 			<item>Fixed bug where modifying the &quot;User can resize&quot; property of a window while the tools were always shown on top stopped the tools from being shown on top.</item>
 			<item>Added support for multi-line tooltips.</item>
+			<item>Added support for `is_item_expanded' from EV_SPLIT_AREA.</item>
 		</list>
 		<heading>
 			<size>2</size>5.6 Release

@@ -325,7 +325,7 @@ feature -- Generation constants
 			-- Comment to be inserted into generated code before
 			-- the event connections are declared.
 		once
-			Result := indent + "%T--Connect events."
+			Result := indent + "%T-- Connect events."
 		end
 		
 	build_widgets_comment: STRING is

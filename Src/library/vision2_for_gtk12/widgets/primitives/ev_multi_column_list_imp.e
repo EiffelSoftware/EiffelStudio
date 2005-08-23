@@ -1254,6 +1254,15 @@ feature {EV_ANY_I} -- Implementation
 	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_I, TUPLE]
 			-- Agent object for update_children
 
+feature {EV_ANY_I} -- External
+
+    frozen gtk_clist_column_width (a_clist: POINTER; a_column: INTEGER): INTEGER is
+        external
+            "C inline use <gtk/gtk.h>"
+        alias
+            "GTK_CLIST ($a_clist)->column[$a_column].width"
+        end
+
 end -- class EV_MULTI_COLUMN_LIST_IMP
 
 --|----------------------------------------------------------------

@@ -111,7 +111,7 @@ feature -- Basic operation
 				-- Disable item in `main_window' so that a user may not modify anything while
 				-- an import is taking place.
 			Main_window.smart_disable_sensitive;
-			((create {EV_ENVIRONMENT}).application).process_events
+			application.process_events
 			initialize_load_output
 				-- Clear History, as it is no longer possible to go back
 				-- after importing a system.
@@ -130,7 +130,7 @@ feature -- Basic operation
 				-- Build deferred parts.
 			deferred_builder.build
 			main_window.smart_enable_sensitive;
-			((create {EV_ENVIRONMENT}).application).process_events
+			application.process_events
 			if initial_selection /= Void then
 				initial_selection.tree_item.enable_select
 			end

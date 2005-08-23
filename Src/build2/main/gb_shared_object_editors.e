@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 				if local_item.object /= Void and then local_item.object.id = object_id then
 					an_object ?= local_all_editors.item.object
 					current_parent_window := local_all_editors.item.parent_window (local_all_editors.item)
-					if current_parent_window /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+					if current_parent_window /= Void and (application.locked_window = Void) then
 						locked_in_here := True
 						current_parent_window.lock_update
 					end

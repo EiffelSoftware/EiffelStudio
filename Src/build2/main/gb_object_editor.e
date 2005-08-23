@@ -230,7 +230,7 @@ feature -- Status setting
 				name_field.focus_out_actions.block			
 			end
 			object := Void
-			if current_parent_window /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+			if current_parent_window /= Void and (application.locked_window = Void) then
 				locked_in_here := True
 				current_parent_window.lock_update
 			end
@@ -461,7 +461,7 @@ feature {NONE} -- Implementation
 			text: STRING
 		do
 			current_window_parent := parent_window (Current)
-			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+			if current_window_parent /= Void and (application.locked_window = Void) then
 				locked_in_here := True
 				current_window_parent.lock_update	
 			end
@@ -793,7 +793,7 @@ feature {NONE} -- Implementation
 		do
 			if viewport.height < control_holder.minimum_height then
 				if not scroll_bar.is_show_requested then
-					if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+					if (application.locked_window = Void) then
 						locked_in_this_feature := True
 						parent_window (Current).lock_update
 					end

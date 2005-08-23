@@ -1073,7 +1073,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR, GB_OBJECT} -- Implementation
 			locked_in_here, display_window_shown, builder_window_shown: BOOLEAN
 			original_children: ARRAYED_LIST [GB_OBJECT]
 		do
-			if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
+			if (application.locked_window = Void) then
 				locked_in_here := True
 				parent_window (Layout_constructor).lock_update
 			end

@@ -1069,7 +1069,7 @@ feature {NONE} -- Implementation
 				preferences.preferences.save_resources;				
 				
 					-- Destroy the application.
-				(create {EV_ENVIRONMENT}).application.destroy
+				application.destroy
 			end
 		end
 		

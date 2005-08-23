@@ -868,7 +868,7 @@ feature -- Preferences
 	show_project_location_changed_warning: STRING is "show_project_location_changed_warning"
 	
 	show_adding_existing_directory_warning: STRING is "show_adding_existing_directory_warning"
-	
+		
 feature -- Prompts
 
 	select_directory_location_modify_string: STRING is "Please select new location for directory constant %""

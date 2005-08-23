@@ -9,6 +9,11 @@ class
 
 inherit
 	INVALID_ENVIRONMENT_DIALOG_IMP
+	
+	GB_CONSTANTS
+		undefine
+			copy, default_create, is_equal
+		end
 
 
 feature {NONE} -- Initialization
@@ -28,7 +33,7 @@ feature {NONE} -- Implementation
 	button_selected is
 			-- Called by `select_actions' of `ok_button'.
 		do
-			((create {EV_ENVIRONMENT}).application).destroy
+			application.destroy
 		end
 
 	

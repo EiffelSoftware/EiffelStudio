@@ -332,7 +332,7 @@ feature -- Generation constants
 			-- Comment to be inserted into generated code before
 			-- the widgets are parented.
 		once
-			Result := indent + "%T-- Build_widget_structure."
+			Result := indent + "%T-- Build widget structure."
 		end
 	create_widgets_comment: STRING is
 			-- Comment to be inserted into generated code before

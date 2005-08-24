@@ -166,7 +166,6 @@ feature -- Access
 		require
 			a_row /= Void
 		local
-			r: EV_GRID_ROW
 			g: EV_GRID
 		do
 			g := a_row.parent

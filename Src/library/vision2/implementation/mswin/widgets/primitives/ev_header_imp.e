@@ -27,7 +27,8 @@ inherit
 			interface,
 			initialize,
 			destroy,
-			on_mouse_move
+			on_mouse_move,
+			on_set_cursor
 		end
 		
 	EV_FONTABLE_IMP
@@ -265,6 +266,10 @@ feature {EV_HEADER_ITEM_IMP} -- Implementation
 				end
 			end
 			desired_width := desired_width + 18
+				-- Restrict `desired_width' to dimensions permitted by `resize_item_to_content'.
+			desired_width := desired_width.min (header_item.maximum_width)
+			desired_width := desired_width.max (header_item.minimum_width)
+			
 			header_item.set_width (desired_width)
 		end
 
@@ -303,9 +308,13 @@ feature {NONE} -- Implementation
 		local
 			header_item: EV_HEADER_ITEM_IMP
 		do
+			header_item := ev_children @ (info.item_index + 1)
 			if item_resize_start_actions_internal /= Void then
-				header_item := ev_children @ (info.item_index + 1)
 				item_resize_start_actions_internal.call ([header_item.interface])
+			end
+			if not header_item.user_can_resize then
+					-- Prevent the item from resizing if not `user_can_resize'.
+				set_message_return_value (to_lresult (1))
 			end
 		end
 
@@ -313,9 +322,15 @@ feature {NONE} -- Implementation
 			-- The user is dragging a divider in the header control. 
 		local
 			header_item: EV_HEADER_ITEM_IMP
+			desired_width: INTEGER
 		do
+			header_item := ev_children.i_th (info.item_index + 1)
 			if flag_set (hdi_width, info.header_item.mask) then
-				(ev_children.i_th (info.item_index + 1)).set_width (info.header_item.width)
+				desired_width := info.header_item.width
+				desired_width := desired_width.min (header_item.maximum_width).max (header_item.minimum_width)
+				if header_item.width /= desired_width then
+					header_item.set_width (desired_width)
+				end
 			end
 			if item_resize_actions_internal /= Void then
 				header_item := ev_children @ (info.item_index + 1)
@@ -337,7 +352,15 @@ feature {NONE} -- Implementation
 	on_hdn_item_changing (info: WEL_HD_NOTIFY) is
 			-- The attributes of a header are changing.
 			-- (from WEL_HEADER_CONTROL)
+		local
+			header_item: EV_HEADER_ITEM_IMP
+			desired_width: INTEGER
 		do
+			header_item := ev_children @ (info.item_index + 1)
+			desired_width := info.header_item.width
+			if desired_width < header_item.minimum_width or desired_width > header_item.maximum_width then
+				set_message_return_value (to_lresult (1))
+			end
 		end
 		
 	on_hdn_item_changed (info: WEL_HD_NOTIFY) is
@@ -448,6 +471,19 @@ feature {NONE} -- Implementation
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			Precursor {EV_PRIMITIVE_IMP} (keys, x_pos, y_pos)
+		end
+		
+	on_set_cursor (hit_code: INTEGER) is
+			-- Called when a `Wm_setcursor' message is received.
+			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
+		local
+			widget: EV_WIDGET_IMP
+			l_pointed_divider_index: INTEGER
+		do
+			l_pointed_divider_index := pointed_divider_index
+			if l_pointed_divider_index > 1 and then not (ev_children @ l_pointed_divider_index).user_can_resize then
+				disable_default_processing
+			end
 		end
 		
 end -- class EV_HEADER_IMP

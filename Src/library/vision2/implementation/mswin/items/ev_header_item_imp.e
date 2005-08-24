@@ -108,7 +108,6 @@ feature -- Status setting
 			-- Sets width of item with `value'
 			-- Also updates `mask'
 		do
-			print ("set width : " + value.out)
 			Precursor {WEL_HD_ITEM} (value)
 			refresh
 		end

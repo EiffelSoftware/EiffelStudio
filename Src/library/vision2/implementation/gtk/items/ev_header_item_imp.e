@@ -67,6 +67,7 @@ feature -- Initialization
 			set_width (80)
 			
 			align_text_left
+			enable_user_resize
 			set_is_initialized (True)
 		end
 
@@ -90,6 +91,17 @@ feature -- Access
 
 	width: INTEGER
 			-- Width of `Current' in pixels.
+
+
+		-- FIXME IEK Implement
+	minimum_width: INTEGER is 0
+	maximum_width: INTEGER is 32000
+	user_can_resize: BOOLEAN
+	
+	set_maximum_width (a_width: INTEGER) is do end
+	set_minimum_width (a_width: INTEGER) is do end
+	disable_user_resize is do user_can_resize := False end
+	enable_user_resize is do user_can_resize := True end
 
 feature -- Status setting
 

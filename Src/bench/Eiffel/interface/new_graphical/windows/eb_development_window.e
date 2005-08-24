@@ -2711,6 +2711,7 @@ feature {NONE} -- Implementation
 		require
 			a_cluster_not_void: a_cluster /= Void
 		local
+			l_assembly: ASSEMBLY_I
 			l_sorted_cluster: EB_SORTED_CLUSTER
 			l_format_context: FORMAT_CONTEXT
 			l_indexes: INDEXING_CLAUSE_AS
@@ -2721,12 +2722,26 @@ feature {NONE} -- Implementation
 			l_cluster: CLUSTER_I
 			l_assert_level: ASSERTION_I
 		do
-			
 			create l_format_context.make_for_case
 			
 			l_format_context.put_text_item (ti_indexing_keyword)
 			l_format_context.put_new_line
 			l_format_context.indent
+			if a_cluster.is_assembly then
+				l_assembly ?= a_cluster
+				check l_assembly /= Void end
+				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("assembly_name"))
+				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.put_space
+				l_format_context.put_quoted_string_item (l_assembly.assembly_name)
+				l_format_context.put_new_line
+				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("assembly_path"))
+				l_format_context.put_text_item_without_tabs (ti_colon)
+				l_format_context.put_space
+				l_format_context.put_quoted_string_item (l_assembly.assembly_path)
+				l_format_context.put_new_line
+				
+			end
 			l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
 			l_format_context.put_text_item_without_tabs (ti_colon)
 			l_format_context.put_space

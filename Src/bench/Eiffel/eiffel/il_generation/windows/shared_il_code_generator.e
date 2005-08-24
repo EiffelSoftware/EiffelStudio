@@ -16,9 +16,6 @@ feature -- IL generator object
 		
 	cil_generator: CIL_CODE_GENERATOR is
 			-- Generator for CIL code
-		local
-			single: SINGLE_IL_CODE_GENERATOR
-			multiple: INTERFACE_IL_CODE_GENERATOR
 		once
 				-- We keep both `INTERFACE_xx' and `SINGLE_xx' in
 				-- our system for the moment in case we need to

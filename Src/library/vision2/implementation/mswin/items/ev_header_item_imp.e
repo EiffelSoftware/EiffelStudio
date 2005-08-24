@@ -67,12 +67,23 @@ feature {NONE} -- Initialization
 			set_width (80)
 			set_text ("")
 			set_is_initialized (True)
+			user_can_resize := True
+			maximum_width := 32000
 		end
 		
 feature -- Status report
 
 	parent_imp: EV_HEADER_IMP
 		-- Parent of `Current'
+		
+	user_can_resize: BOOLEAN
+			-- Can a user resize `Current'?
+			
+	minimum_width: INTEGER
+			-- Minimum width permitted for `Current'.
+			
+	maximum_width: INTEGER
+			-- Maximum width permitted for `Current'.
 
 feature -- Status setting
 
@@ -97,8 +108,29 @@ feature -- Status setting
 			-- Sets width of item with `value'
 			-- Also updates `mask'
 		do
+			print ("set width : " + value.out)
 			Precursor {WEL_HD_ITEM} (value)
 			refresh
+		end
+		
+	set_minimum_width (a_minimum_width: INTEGER) is
+			-- Assign `a_minimum_width' in pixels to `minimum_width'.
+			-- If `width' is less than `a_minimum_width', resize.
+		do
+			minimum_width := a_minimum_width
+			if width < minimum_width then
+				set_width (minimum_width)
+			end
+		end
+		
+	set_maximum_width (a_maximum_width: INTEGER) is
+			-- Assign `a_maximum_width' in pixels to `maximum_width'.
+			-- If `width' is greater than `a_maximum_width', resize.
+		do
+			maximum_width := a_maximum_width
+			if width > maximum_width then
+				set_width (maximum_width)
+			end
 		end
 		
 	resize_to_content is
@@ -203,7 +235,19 @@ feature -- Status setting
 			set_format (l_format | hdf_left)
 			refresh
 		end
+		
+	enable_user_resize is
+			-- Permit `Current' from being resized by users.
+		do
+			user_can_resize := True
+		end
 
+	disable_user_resize is
+			-- Prevent `Current' from being resized by users.
+		do
+			user_can_resize := False
+		end
+		
 feature {NONE} -- implementation
 
 	refresh is

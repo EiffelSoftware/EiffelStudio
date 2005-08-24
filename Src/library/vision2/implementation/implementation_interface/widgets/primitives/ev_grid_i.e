@@ -886,6 +886,8 @@ feature -- Status setting
 
 	enable_tree is
 			-- Enable tree functionality for `Current'.
+			-- Must be `True' to perform any tree structure functions on `Current'.
+			-- Use `enable_tree' and `disable_tree' to set this state.
 		require
 			not_is_content_completely_dynamic: not is_content_completely_dynamic
 		do

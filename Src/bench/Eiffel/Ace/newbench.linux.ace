@@ -156,11 +156,6 @@ cluster
 			"CVS"; 
 		end
 
-	encryption:		"$EIFFEL_SRC/library/encryption"
-		exclude
-			"des_encoder.e"; 
-		end
-
 	switch:		"$EIFFEL_SRC/Eiffel/switch"
 
 	interface_switch (switch):		"$/interface/new_graphical"

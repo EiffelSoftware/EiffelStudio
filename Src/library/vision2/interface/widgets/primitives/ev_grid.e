@@ -1629,6 +1629,8 @@ feature -- Status report
 
 	is_tree_enabled: BOOLEAN is
 			-- Is tree functionality enabled?
+			-- Must be `True' to perform any tree structure functions on `Current'.
+			-- Use `enable_tree' and `disable_tree' to set this state.
 		require
 			not_destroyed: not is_destroyed
 		do

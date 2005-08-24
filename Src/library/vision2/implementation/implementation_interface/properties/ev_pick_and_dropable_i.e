@@ -259,10 +259,11 @@ feature {EV_ANY_I} -- Implementation
 				application.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
 			end
 			
-			--| FIXME we should only need to call update_pointer_style
-			--| if `target' /= `last_pointed_target'. However, on windows, 
-			--| this leads to problems. (Try picking from a tree item).
-			update_pointer_style (target)
+				-- Optimization to avoid having to set the same cursor over and over
+				-- (mostly useful on slow Unix X servers).
+			if target /= last_pointed_target then
+				update_pointer_style (target)
+			end
 		end
 
 	update_pointer_style (target: EV_ABSTRACT_PICK_AND_DROPABLE) is

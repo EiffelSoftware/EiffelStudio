@@ -114,6 +114,16 @@ feature  -- Access
 
 feature -- Status setting
 
+	internal_disable_border is
+			-- Ensure no border is displayed around `Current'.
+		do
+		end
+	
+	internal_enable_border is
+			-- Ensure a border is displayed around `Current'.
+		do
+		end
+
 	block is
 			-- Wait until window is closed by the user.
 		local
@@ -405,7 +415,7 @@ feature {NONE} -- Implementation
 				a_decor := {EV_GTK_EXTERNALS}.Gdk_decor_all_enum
 			else
 				a_decor := {EV_GTK_EXTERNALS}.Gdk_decor_border_enum
-			end	
+			end
 			{EV_GTK_EXTERNALS}.gdk_window_set_decorations ({EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), a_decor)
 		end
 		

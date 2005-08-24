@@ -802,6 +802,7 @@ feature {NONE} -- Filling
 			es_glab: EV_GRID_LABEL_ITEM
 
 			vlist: DS_LIST [ABSTRACT_DEBUG_VALUE]
+			l_row_index: INTEGER
 		do
 			row_attributes_filled := True
 				-- We remove the dummy item.
@@ -812,17 +813,21 @@ feature {NONE} -- Filling
 				check
 					vlist /= Void
 				end
+				grid := attributes_row.parent
+				
 				from
+					l_row_index := a_row.index
+					a_row.insert_subrows (vlist.count, 1)
 					list_cursor := vlist.new_cursor
 					list_cursor.start
 				until
 					list_cursor.after
 				loop
-					add_debug_value_to_grid_row (a_row, list_cursor.item)
+					l_row_index := l_row_index + 1
+					attach_debug_value_to_grid_row (grid.row (l_row_index), list_cursor.item)
 					list_cursor.forth
 				end
 				if object_is_special_value then
-					grid := attributes_row.parent
 					if object_spec_lower > 0 then
 						es_glab := slice_label_item (Interface_names.l_More_items)
 						if object_spec_lower > object_spec_capacity then
@@ -889,66 +894,63 @@ feature {NONE} -- Filling
 			odv: ABSTRACT_DEBUG_VALUE
 			l_feat: E_FEATURE
 		do
-			grid := a_row.parent
-			r := a_row.index + a_row.subrow_count + 1
-
-			once_r := Application.debug_info.Once_request
 			flist := a_once_list
-			from
-				flist.start
-			until
-				flist.after
-			loop
-				l_feat := flist.item
-				if once_r.already_called (l_feat) then
---					odv := once_r.once_result (l_feat)
---					l_item := debug_value_to_tree_item (odv)
-
-					fixme ("JFIAT: update the runtime to avoid evaluate the once")
-					
-					if l_feat.argument_count > 0 then
-						grid.insert_new_row_parented (r, a_row)
-
-						glab := name_label_item (l_feat.name)
-						grid.set_item (Col_name_index, r, glab)
-
-						glab := type_label_item ("could not evaluate once with arguments...")
-						grid.set_item (Col_type_index, r, glab)
-
-						grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.icon_dbg_error)
-					else
-						if dv /= Void then
-							odv := once_r.once_eval_result (dv.address, l_feat, dv.dynamic_class)
-						else
-							odv := once_r.once_eval_result (object_address, l_feat, object_dynamic_class)
-						end
-						if odv /= Void then
-							add_debug_value_to_grid_row (a_row, odv)
-						else
-							grid.insert_new_row_parented (r, a_row)
-
+			if not flist.is_empty then
+				grid := a_row.parent
+				once_r := Application.debug_info.Once_request
+				from
+					r := a_row.subrow_count + 1
+					a_row.insert_subrows (flist.count, r)
+					r := a_row.index + r
+					flist.start
+				until
+					flist.after
+				loop
+					l_feat := flist.item
+					if once_r.already_called (l_feat) then
+--						odv := once_r.once_result (l_feat)
+--						l_item := debug_value_to_tree_item (odv)
+	
+						fixme ("JFIAT: update the runtime to avoid evaluate the once")
+						
+						if l_feat.argument_count > 0 then
 							glab := name_label_item (l_feat.name)
 							grid.set_item (Col_name_index, r, glab)
-
-							glab := type_label_item ("unable to get value !")
+	
+							glab := type_label_item ("could not evaluate once with arguments...")
 							grid.set_item (Col_type_index, r, glab)
-
+	
 							grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.icon_dbg_error)
-						end
-					end						
-				else
-					grid.insert_new_row_parented (r, a_row)
-
-					glab := name_label_item (l_feat.name)
-					grid.set_item (Col_name_index, r, glab)
-
-					glab := type_label_item (Interface_names.l_Not_yet_called)
-					grid.set_item (Col_type_index, r, glab)
-
-					grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.Icon_void_object)
+						else
+							if dv /= Void then
+								odv := once_r.once_eval_result (dv.address, l_feat, dv.dynamic_class)
+							else
+								odv := once_r.once_eval_result (object_address, l_feat, object_dynamic_class)
+							end
+							if odv /= Void then
+								attach_debug_value_to_grid_row (grid.row (r), odv)
+							else
+								glab := name_label_item (l_feat.name)
+								grid.set_item (Col_name_index, r, glab)
+	
+								glab := type_label_item ("unable to get value !")
+								grid.set_item (Col_type_index, r, glab)
+	
+								grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.icon_dbg_error)
+							end
+						end						
+					else
+						glab := name_label_item (l_feat.name)
+						grid.set_item (Col_name_index, r, glab)
+	
+						glab := type_label_item (Interface_names.l_Not_yet_called)
+						grid.set_item (Col_type_index, r, glab)
+	
+						grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.Icon_void_object)
+					end
+					r := r + 1
+					flist.forth
 				end
-				r := r + 1
-				flist.forth
 			end
 		end
 
@@ -966,65 +968,73 @@ feature {NONE} -- Filling
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
 			l_feat: E_FEATURE
 		do
-
-			grid := a_row.parent
-			r := a_row.index + a_row.subrow_count + 1
-
 			flist := a_once_list
-			if dv /= Void then
-				l_abs_value := dv
-			else
-				l_abs_value := associated_debug_value
-			end
-			check
-				l_abs_value /= Void
-			end
-			l_dotnet_ref_value ?= l_abs_value
-
+			if not flist.is_empty then
+				if dv /= Void then
+					l_abs_value := dv
+				else
+					l_abs_value := associated_debug_value
+				end
+				check
+					l_abs_value /= Void
+				end
+				l_dotnet_ref_value ?= l_abs_value
+	
 -- FIXME jfiat 2004-07-06: Maybe we should have EIFNET_DEBUG_STRING_VALUE conform to EIFNET_DEBUG_REFERENCE_VALUE
 -- in the futur, we should make this available
-
-			if l_dotnet_ref_value /= Void and not flist.is_empty then
-					--| Eiffel dotnet |--
-				l_dotnet_ref_value.get_object_value
-				if l_dotnet_ref_value.has_object_value then
-					from
-						flist.start
-					until
-						flist.after
-					loop
-						l_feat := flist.item
-						if dv /= Void then
-							odv := l_dotnet_ref_value.once_function_value (l_feat)
+	
+				if l_dotnet_ref_value /= Void and not flist.is_empty then
+						--| Eiffel dotnet |--
+					l_dotnet_ref_value.get_object_value
+					if l_dotnet_ref_value.has_object_value then
+						grid := a_row.parent
+						from
+							r := a_row.subrow_count + 1
+							a_row.insert_subrows (flist.count, r)
+							r := r + a_row.index
+							flist.start
+						until
+							flist.after
+						loop
+							l_feat := flist.item
+							if dv /= Void then
+								odv := l_dotnet_ref_value.once_function_value (l_feat)
+							end
+							if odv /= Void then
+								attach_debug_value_to_grid_row (grid.row (r), odv)
+							else
+								glab := name_label_item (l_feat.name)
+								grid.set_item (Col_name_index, r, glab)
+		
+								glab := type_label_item (Interface_names.l_Not_yet_called)
+								grid.set_item (Col_type_index, r, glab)
+		
+								grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.Icon_void_object)
+							end
+							r := r + 1
+							flist.forth
 						end
-						if odv /= Void then
-							add_debug_value_to_grid_row (a_row, odv)
-						else
-							grid.insert_new_row_parented (r, a_row)
-	
-							glab := name_label_item (l_feat.name)
-							grid.set_item (Col_name_index, r, glab)
-	
-							glab := type_label_item (Interface_names.l_Not_yet_called)
-							grid.set_item (Col_type_index, r, glab)
-	
-							grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.Icon_void_object)
-						end
-						r := r + 1
-						flist.forth
+						l_dotnet_ref_value.release_object_value				
 					end
-					l_dotnet_ref_value.release_object_value				
 				end
 			end
 		end
 
-	add_debug_value_to_grid_row (a_parent_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
+	add_debug_value_to_grid_parent_row (a_parent_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
 			-- Create a row for `dv' and insert it in the Grid with `a_parent_row' as parent
 		require
 			dv /= Void
 		do
-			tool.add_debug_value_to_grid_row (a_parent_row, dv)
+			tool.add_debug_value_to_grid_parent_row (a_parent_row, dv)
 		end
+		
+	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
+			-- attach `dv' to row `a_row'
+		require
+			debug_value_not_void: dv /= Void
+		do
+			tool.attach_debug_value_to_grid_row (a_row, dv)
+		end		
 
 feature {NONE} -- Implementation
 		

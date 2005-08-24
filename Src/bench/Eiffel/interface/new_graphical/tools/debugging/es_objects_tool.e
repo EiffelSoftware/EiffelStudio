@@ -1199,6 +1199,7 @@ feature {NONE} -- Impl : Stack objects grid
 		local
 			dv: ABSTRACT_DEBUG_VALUE
 			glab: EV_GRID_LABEL_ITEM
+			r: INTEGER			
 		do
 			if cse.has_result then
 				internal_result_row := a_target_grid.extended_new_row
@@ -1207,7 +1208,9 @@ feature {NONE} -- Impl : Stack objects grid
 				internal_result_row.set_item (1, glab)
 				dv := cse.result_value
 				if dv /= Void then
-					add_debug_value_to_grid_row (internal_result_row, dv)
+					internal_result_row.insert_subrows (1, 1)
+					r := internal_result_row.index + 1
+					attach_debug_value_to_grid_row (a_target_grid.row (r), dv)
 				end
 			else
 				internal_result_row := Void
@@ -1221,6 +1224,7 @@ feature {NONE} -- Impl : Stack objects grid
 		local
 			glab: EV_GRID_LABEL_ITEM
 			list: LIST [ABSTRACT_DEBUG_VALUE]
+			r: INTEGER
 		do
 			list := cse.arguments
 			if list /= Void and then not list.is_empty then
@@ -1229,11 +1233,14 @@ feature {NONE} -- Impl : Stack objects grid
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.Icon_feature_clause_any)
 				internal_arguments_row.set_item (1, glab)
 				from
+					internal_arguments_row.insert_subrows (list.count, 1)
+					r := internal_arguments_row.index + 1
 					list.start
 				until
 					list.after
 				loop
-					add_debug_value_to_grid_row (internal_arguments_row, list.item)
+					attach_debug_value_to_grid_row (a_target_grid.row (r), list.item)
+					r := r + 1
 					list.forth
 				end
 			else
@@ -1251,6 +1258,7 @@ feature {NONE} -- Impl : Stack objects grid
 			list: LIST [ABSTRACT_DEBUG_VALUE]
 			tmp: SORTABLE_ARRAY [ABSTRACT_DEBUG_VALUE]
 			dbg_nb: INTEGER
+			r: INTEGER			
 		do
 			list := cse.locals
 			if list /= Void and then not list.is_empty then
@@ -1272,11 +1280,14 @@ feature {NONE} -- Impl : Stack objects grid
 				end
 				tmp.sort
 				from
+					internal_locals_row.insert_subrows (dbg_nb, 1)
+					r := internal_locals_row.index + 1
 					i := 1
 				until
 					i > dbg_nb
 				loop
-					add_debug_value_to_grid_row (internal_locals_row, tmp @ i)
+					attach_debug_value_to_grid_row (a_target_grid.row (r), tmp @ i)
+					r := r + 1
 					i := i + 1
 				end
 			else

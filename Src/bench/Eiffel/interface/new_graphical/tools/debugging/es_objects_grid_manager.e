@@ -10,7 +10,7 @@ inherit
 
 feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
-	add_debug_value_to_grid_row (a_parent_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
+	add_debug_value_to_grid_parent_row (a_parent_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
 		require
 			dv /= Void
 		local
@@ -19,6 +19,16 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 			create litem.make_with_value (dv, Current)
 			litem.attach_as_subrow (a_parent_row)
 		end
+		
+	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
+		require
+			dv /= Void
+		local
+			litem: ES_OBJECTS_GRID_VALUE_LINE
+		do
+			create litem.make_with_value (dv, Current)
+			litem.attach_to_row (a_row)
+		end		
 
 	objects_grid_item (add: STRING): ES_OBJECTS_GRID_LINE is
 		require

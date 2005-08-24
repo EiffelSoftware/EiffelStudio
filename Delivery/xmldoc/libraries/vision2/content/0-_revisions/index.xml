@@ -31,6 +31,9 @@
 			<item>
 				<bold>EV_WINDOW</bold> -  Added `is_border_enabled', `enable_border' and `disable_border'. This lets you turn on/off the border as required.
 			</item>
+			<item>
+				<bold>EV_HEADER_ITEM</bold> - Added `user_can_resize' which enables you to prevent a user from resizing the item. Also added `minimum_width' and `maximum_width'  which permit you to restrict the resizing of the item within a particular range.
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>

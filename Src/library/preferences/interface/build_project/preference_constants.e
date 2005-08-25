@@ -17,6 +17,7 @@ feature -- Access
 	l_type: STRING is				"Type"
 	default_value: STRING is		"default"
 	user_value: STRING is			"user set"
+	auto_value: STRING is		"auto"
 	no_description_text: STRING is	"No description available for this preference."
 
 	w_Preferences_delayed_resources: STRING is

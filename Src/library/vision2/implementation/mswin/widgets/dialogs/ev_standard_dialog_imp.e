@@ -25,11 +25,7 @@ feature -- Status setting
 			--| A window is required for the gtk implementation.
 		local
 			modal_to: WEL_COMPOSITE_WINDOW
-			app_imp: EV_APPLICATION_IMP
-			app: EV_APPLICATION
 		do
-			app := (create {EV_ENVIRONMENT}).application
-			app_imp ?= app.implementation
 			set_blocking_window (a_window)
 			modal_to ?= blocking_window.implementation
 			activate (modal_to)

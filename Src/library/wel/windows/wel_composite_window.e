@@ -658,12 +658,14 @@ feature {NONE} -- Implementation
 			create info.make_by_pointer (lparam)
 			on_notify (wparam.to_integer_32, info)
 			control ?= info.window_from
+			control.increment_level
 			if control /= Void and then control.exists then
 				control.process_notification_info (info)
 			end
 			if control.has_return_value then
 				set_message_return_value (control.message_return_value)
 			end
+			control.decrement_level
 		end
 
 	on_wm_command (wparam, lparam: POINTER) is

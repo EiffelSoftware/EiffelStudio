@@ -178,16 +178,8 @@ feature {EV_DIALOG_I} -- Implementation
 
 	destroy_implementation is
 			-- Destroy `Current' but does not wipe out the children.
-		local
-			app_i: EV_APPLICATION_I
-			app_imp: EV_APPLICATION_IMP
 		do
-			app_i := (create {EV_ENVIRONMENT}).application.implementation
-			app_imp ?= app_i
-			check
-				implementation_not_void: app_imp /= void
-			end
-			app_imp.remove_root_window (Current)
+			application_imp.remove_root_window (Current)
 
 			wel_destroy_window
 			set_is_destroyed (True)
@@ -341,7 +333,6 @@ feature {NONE} -- Implementation
 			-- children.
 		local
 			button_imp: EV_BUTTON_IMP
-			app_imp: EV_APPLICATION_IMP
 		do
 				-- Copy the attributes from the window to the dialog
 			copy_attributes
@@ -383,8 +374,7 @@ feature {NONE} -- Implementation
 			other_imp.destroy_implementation
 
 				-- Add this dialog as root window.
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			app_imp.add_root_window (Current)
+			application_imp.add_root_window (Current)
 		end
 	
 	move_children is

@@ -324,11 +324,6 @@ feature -- Access
 			-- then it is queried via `content_requested_actions'. The returned item is added
 			-- to `Current' so the query only occurs once.
 		
-	is_content_completely_dynamic: BOOLEAN
-			-- Is the content of `Current' completely dynamic? If `True' then
-			-- whenever an item must be re-drawn it is always queried via `content_requested_actions'
-			-- and not added to `Current'.
-		
 	is_row_height_fixed: BOOLEAN
 			-- Must all rows in `Current' have the same height?
 
@@ -888,8 +883,6 @@ feature -- Status setting
 			-- Enable tree functionality for `Current'.
 			-- Must be `True' to perform any tree structure functions on `Current'.
 			-- Use `enable_tree' and `disable_tree' to set this state.
-		require
-			not_is_content_completely_dynamic: not is_content_completely_dynamic
 		do
 			is_tree_enabled := True
 				-- The row offsets must always be computed when
@@ -1254,7 +1247,7 @@ feature -- Status setting
 			-- Ensure `is_vertical_overscroll_enabled' is `False'.
 		require
 			dynamic_content_not_enabled_with_variable_row_heights:
-				not ((is_content_completely_dynamic or is_content_partially_dynamic) and not is_row_height_fixed)
+				not (is_content_partially_dynamic and not is_row_height_fixed)
 		do
 			is_vertical_overscroll_enabled := False
 			recompute_vertical_scroll_bar
@@ -1309,23 +1302,6 @@ feature -- Status setting
 			row_height_set: row_height = a_row_height
 		end
 		
-	enable_complete_dynamic_content is
-			-- Ensure contents of `Current' must be retrieved when required via
-			-- `content_requested_actions'. Contents are requested each time they
-			-- are displayed even if already contained in `Current'.
-		require
-			not_is_tree_enabled: not is_tree_enabled
-			not_row_height_variable_and_vertical_overscroll_enabled:
-				not (not is_row_height_fixed and is_vertical_overscroll_enabled)
-			not_row_height_variable_and_vertical_scrolling_per_pixel:
-				not (not is_row_height_fixed and is_vertical_scrolling_per_item)
-		do
-			is_content_completely_dynamic := True
-			is_content_partially_dynamic := False
-		ensure
-			content_completely_dynamic: is_content_completely_dynamic
-		end
-		
 	enable_partial_dynamic_content is
 			-- Ensure contents of `Current' must be retrieved when required via
 			-- `content_requested_actions' only if the item is not already set
@@ -1337,7 +1313,6 @@ feature -- Status setting
 				not (not is_row_height_fixed and is_vertical_scrolling_per_item)
 		do
 			is_content_partially_dynamic := True
-			is_content_completely_dynamic := False
 		ensure
 			content_partially_dynamic: is_content_partially_dynamic
 		end
@@ -1346,9 +1321,8 @@ feature -- Status setting
 			-- Ensure contents of `Current' are not dynamic and are no longer retrieved as such.
 		do
 			is_content_partially_dynamic := False
-			is_content_completely_dynamic := False
 		ensure
-			content_not_dynamic: not is_content_completely_dynamic and not is_content_partially_dynamic
+			content_not_dynamic: not is_content_partially_dynamic
 		end
 		
 	enable_row_height_fixed is
@@ -1363,7 +1337,7 @@ feature -- Status setting
 			-- Permit rows to have varying heights.
 		require
 			not_dynamic_content_enabled_with_height_not_bounded:
-				not ((is_content_completely_dynamic or is_content_partially_dynamic) and is_vertical_overscroll_enabled = False)
+				not (is_content_partially_dynamic and is_vertical_overscroll_enabled = False)
 		do
 			is_row_height_fixed := False
 			set_vertical_computation_required (1)
@@ -5403,7 +5377,6 @@ invariant
 	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
-	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
 	displayed_column_count_not_greater_than_column_count: is_initialized implies displayed_column_count <= column_count
 	hidden_node_count_zero_when_tree_disabled: not is_tree_enabled implies hidden_node_count = 0
 	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0

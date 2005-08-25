@@ -75,7 +75,7 @@ feature {NONE} -- Command
 			list ?= resource
 			if int /= Void then
 				if not change_item_widget.text.is_empty and then change_item_widget.text.is_integer then
-						int.set_value (change_item_widget.text.to_integer)
+					int.set_value (change_item_widget.text.to_integer)
 				else
 					int.set_value (0)
 				end
@@ -91,16 +91,16 @@ feature {NONE} -- Command
 		do
 			Precursor {PREFERENCE_WIDGET}
 			change_item_widget.set_text (resource.default_value)
-		end		
+		end
 
 feature {NONE} -- Implementation
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
 		do
-			create change_item_widget						
+			create change_item_widget
 			change_item_widget.deactivate_actions.extend (agent update_changes)
-			change_item_widget.set_text (resource.string_value)			
+			change_item_widget.set_text (resource.string_value)
 			change_item_widget.pointer_button_press_actions.force_extend (agent activate)
 		end
 		

@@ -17,6 +17,11 @@ if make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then
 			make_args="-j $ncpus"
 		fi
 	fi
+		# Special handling if `distcc' is currently used to speed up C compilation
+		# time.
+	if [ -n "$DISTCC_COUNT" ]; then
+		make_args="-j $DISTCC_COUNT"
+	fi
 fi
 
 if [ $# -gt 0 ]; then

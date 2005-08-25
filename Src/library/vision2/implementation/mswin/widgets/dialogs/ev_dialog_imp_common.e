@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 				default_push_button.is_sensitive
 			then
 				button_imp ?= interface.default_push_button.implementation
-				button_imp.enable_default_push_button
+				set_default_push_button (button_imp.interface)
 				button_imp.set_focus
 			end
 

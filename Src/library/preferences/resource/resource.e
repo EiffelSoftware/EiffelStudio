@@ -44,12 +44,12 @@ feature -- Status setting
 			a_value_not_void: a_value /= Void
 			a_value_valid: valid_value_string (a_value)
 		do
-			default_value := a_value
+			internal_default_value := a_value
 			if internal_change_actions /= Void then
 				internal_change_actions.call ([Current])
 			end
 		ensure		
-			default_value_set: default_value = a_value
+			default_value_set: internal_default_value = a_value
 		end		
 	
 	set_value_from_string (a_value: STRING) is
@@ -65,7 +65,11 @@ feature -- Status setting
 		require
 			has_default_value: has_default_value
 		do
-			set_value_from_string (default_value)
+			if auto_preference /= Void then			
+				set_value_from_string (auto_preference.string_value)			
+			else			
+				set_value_from_string (default_value)	
+			end
 		ensure
 			is_reset: is_default_value
 		end		
@@ -76,7 +80,7 @@ feature -- Status setting
 			restart_required := is_required
 		ensure
 			restart_required_set: restart_required = is_required
-		end	
+		end		
 
 feature -- Access
 
@@ -86,8 +90,15 @@ feature -- Access
 	description: STRING
 			-- Description of what the resource is all about.
 
-	default_value: STRING
+	default_value: STRING is
 			-- Value to be used for default.
+		do
+			if auto_preference = Void then
+				Result := internal_default_value
+			else
+				Result := auto_preference.string_value
+			end
+		end
 
 	string_value: STRING is
 			-- String value for this resource.
@@ -115,6 +126,9 @@ feature -- Access
 	manager: PREFERENCE_MANAGER
 			-- Manager to which Current belongs.
 
+	auto_preference: like Current
+			-- Preference to use for auto color.
+
 feature -- Query
 		
 	has_value: BOOLEAN is
@@ -125,13 +139,13 @@ feature -- Query
 	has_default_value: BOOLEAN is
 			-- Does this resource have a default value to use?
 		do
-			Result := default_value /= Void	
+			Result := default_value /= Void	or auto_preference /= Void
 		end		
 
 	is_default_value: BOOLEAN is
 			-- Is this resource value the same as the default value?
 		do
-			if has_value and then has_default_value then
+			if has_default_value then
 				Result := string_value.as_lower.is_equal (default_value.as_lower)
 			end
 		end		
@@ -149,6 +163,9 @@ feature -- Query
 	restart_required: BOOLEAN
 			-- Is a restart required to apply the preference when changed? (Default: False)
 
+	is_auto: BOOLEAN
+			-- Is Current using auto value?		
+
 feature -- Actions
 
 	change_actions: ACTION_SEQUENCE [TUPLE] is
@@ -165,6 +182,12 @@ feature {NONE} -- Implementation
 
 	internal_change_actions: like change_actions
 			-- Storage for `change_actions'.
+
+	auto_string: STRING is "auto"
+			-- Auto
+
+	internal_default_value: STRING
+			-- Internal default value
 
 invariant
 	has_manager: manager /= Void

@@ -80,9 +80,6 @@ feature {NONE} -- Implementation
 	resource: BOOLEAN_PREFERENCE
 			-- Actual resource.	
 	
-	combobox: EV_GRID_COMBO_ITEM
-			-- Combo widget for changing value.
-	
 	last_selected_value: BOOLEAN
 			-- Last selected value in the combo widget.
 	

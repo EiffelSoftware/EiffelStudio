@@ -61,6 +61,10 @@ feature -- Bridge to Debugger
 		do
 		end
 		
+	exception_class_name: STRING is
+		do
+		end
+
 	exception_module_name: STRING is
 		do
 		end

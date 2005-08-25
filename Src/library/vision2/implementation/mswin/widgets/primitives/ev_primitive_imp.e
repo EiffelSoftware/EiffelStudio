@@ -147,7 +147,7 @@ feature -- Basic operations
 	on_getdlgcode is
 			-- Called when window receives WM_GETDLGCODE message.
 		do
-			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_tab))
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
 	tooltip_window: WEL_WINDOW is

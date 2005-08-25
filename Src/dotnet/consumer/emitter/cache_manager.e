@@ -102,26 +102,28 @@ feature -- Basic Oprtations
 			valid_path: not a_path.is_empty			
 		local
 			l_paths: LIST [STRING]
-			l_resolver: AR_RESOLVER
+			l_resolver: CONSUMER_AGUMENTED_RESOLVER
 		do	
 			is_successful := True
 			last_error_message := ""
 			
 			add_to_eac := True
 			
+			l_paths := a_path.split (';')
+			create l_resolver.make (l_paths)
+			resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+			
 			from
-				l_paths := a_path.split (';')
 				l_paths.start
 			until
 				l_paths.after
 			loop
-				create l_resolver.make
 				l_resolver.add_resolve_path_from_file_name (l_paths.item)
-				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 				add_assembly_to_eac (l_paths.item)
-				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
+				l_resolver.remove_resolve_path_from_file_name (l_paths.item)
 				l_paths.forth
 			end
+			resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
 		ensure
 			successful: is_successful
 		end

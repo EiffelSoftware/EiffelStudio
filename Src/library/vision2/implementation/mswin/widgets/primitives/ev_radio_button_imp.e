@@ -30,8 +30,7 @@ inherit
 			set_default_minimum_size,
 			next_dlggroupitem,
 			on_key_down,
-			set_background_color,
-			on_getdlgcode
+			set_background_color
 		select
 			wel_make
 		end
@@ -101,12 +100,12 @@ inherit
 			wel_background_color,
 			on_sys_key_down,
 			on_sys_key_up,
-			default_process_message
+			default_process_message,
+			on_getdlgcode
 		redefine
 			on_key_down,
 			default_style,
-			on_erase_background,
-			on_getdlgcode
+			on_erase_background
 		end
 		
 create
@@ -180,12 +179,6 @@ feature {NONE} -- Implementation
 			enable_select
 		end
 		
-	on_getdlgcode is
-			-- Called when window receives WM_GETDLGCODE message.
-		do
-			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_tab | {WEL_DLGC_CONSTANTS}.dlgc_want_arrows))
-		end
-
 	default_style: INTEGER is
 			-- Default style used to create the control.
 		once

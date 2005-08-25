@@ -20,6 +20,7 @@ default
   	version ("2.0.1.1704")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	msil_assembly_compatibility ("None")
+ 	msil_clr_version ("v1.1.4322")
 
 cluster
 	all interface:		"$EIFFEL_SRC\dotnet\codedom_provider\interface"

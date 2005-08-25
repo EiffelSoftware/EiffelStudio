@@ -19,6 +19,7 @@ default
  	use_cluster_name_as_namespace (no)
 	msil_use_optimized_precompile (yes)
   	version ("2.0.1.1704")
+ 	msil_clr_version ("v1.1.4322")
 
 cluster 
 	cache_browser:		"$EIFFEL_SRC\dotnet\codedom_provider\cache_browser"

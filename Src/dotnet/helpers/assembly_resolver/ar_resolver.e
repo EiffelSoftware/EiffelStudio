@@ -20,19 +20,28 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize instance
 		do
-			create internal_resolve_paths.make (1)
-			internal_resolve_paths.compare_objects
-			add_current_assembly_path
-			create resolve_event_handler.make (Current, $resolve)
+			common_initialization
 		end
 
 	make_with_name (a_name: like friendly_name) is
 			-- Initialize instance and set `friendly_name' with `a_name'
+		require
+			a_name_not_void: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
 		do
-			make
+			common_initialization
 			friendly_name := a_name
 		ensure
 			friendly_name_set: friendly_name = a_name
+		end
+		
+	common_initialization is
+			-- Additional initialization.
+		do
+			create internal_resolve_paths.make (1)
+			internal_resolve_paths.compare_objects
+			add_current_assembly_path
+			create resolve_event_handler.make (Current, $resolve)
 		end
 
 feature -- Access
@@ -93,7 +102,6 @@ feature -- Resolution
 			l_paths: like resolve_paths
 			l_file_name: FILE_NAME
 			l_name: ASSEMBLY_NAME
-			l_key: NATIVE_ARRAY [NATURAL_8]
 		do
 			feature {SYSTEM_DLL_TRACE}.write_string ("Attempting to use custom assembly resolver")
 			if friendly_name /= Void then
@@ -121,30 +129,10 @@ feature -- Resolution
 					feature {SYSTEM_DLL_TRACE}.write_line_string ("Looking for '" + l_file_name + "'.")
 					if (create {RAW_FILE}.make (l_file_name)).exists then
 						feature {SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_name + "'.")
-						Result := load_assembly (l_file_name)
-						if Result /= Void then
-							l_name := Result.get_name
-							if a_version /= Void then
-								if not a_version.is_equal (l_name.version.to_string) then
-									Result := Void
-								end
-							end
-							if Result /= Void and then a_culture /= Void then
-								if not a_culture.as_lower.is_equal (l_name.culture_info.to_string.to_lower) then
-									Result := Void
-								end								
-							end
-							if Result /= Void and then a_key /= Void then
-								l_key := l_name.get_public_key_token
-								if a_key.is_empty then
-									if l_key /= Void and then l_key.length > 0 then
-										Result := Void
-									end
-								else
-									if not encoded_key (l_key).as_lower.is_equal (a_key.as_lower) then
-										Result := Void
-									end
-								end
+						l_name := get_assembly_name (l_file_name)
+						if l_name /= Void then
+							if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
+								Result := load_assembly (l_file_name)
 							end
 						end
 					end
@@ -158,6 +146,35 @@ feature -- Resolution
 		ensure
 			not_resolve_paths_moved: resolve_paths.cursor.is_equal (old resolve_paths.cursor)
 		end
+		
+feature -- Query
+
+	does_name_match (a_asm_name: ASSEMBLY_NAME; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): BOOLEAN is
+			-- Does `a_asm_name' match `a_name', `a_version', `a_culture' and `a_key'
+		require
+			a_asm_name_not_void: a_asm_name /= Void
+			a_name_not_void: a_name /= Void
+			not_a_name_is_empty: not a_name.is_empty
+			not_a_version_is_empty: a_version /= Void implies not a_version.is_empty
+		local
+			l_key: NATIVE_ARRAY [NATURAL_8]
+		do
+			Result := a_name.is_equal (a_asm_name.name)
+			if Result and then a_version /= Void then
+				Result := a_version.is_equal (a_asm_name.version.to_string)
+			end
+			if Result and then a_culture /= Void then
+				Result := a_culture.as_lower.is_equal (a_asm_name.culture_info.to_string.to_lower)
+			end
+			if Result and then a_key /= Void then
+				l_key := a_asm_name.get_public_key_token
+				if a_key.is_empty then
+					Result := l_key = Void or else l_key.length > 0
+				else
+					Result := encoded_key (l_key).as_lower.is_equal (a_key.as_lower)
+				end
+			end
+		end		
 		
 feature -- Extending
 
@@ -389,6 +406,23 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				Result := feature {ASSEMBLY}.load_from (a_path)
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
+	get_assembly_name (a_path: STRING): ASSEMBLY_NAME is
+			-- Retrieve an assembly name from `a_path'
+		require
+			a_path_not_void: a_path /= Void
+			not_a_path_is_empty: not a_path.is_empty
+			a_path_exists: (create {RAW_FILE}.make (a_path)).exists
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				Result := {ASSEMBLY_NAME}.get_assembly_name (a_path)
 			end
 		rescue
 			retried := True

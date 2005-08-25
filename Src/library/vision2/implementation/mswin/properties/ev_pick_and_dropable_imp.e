@@ -220,8 +220,7 @@ feature {EV_ANY_I} -- Implementation
 							application_imp.start_awaiting_movement
 						end
 					elseif mode_is_target_menu and a_button = 3 then
-						(create {EV_ENVIRONMENT}).application.
-							implementation.target_menu (pebble).show
+						application_imp.target_menu (pebble).show
 					end
 				end
 			end

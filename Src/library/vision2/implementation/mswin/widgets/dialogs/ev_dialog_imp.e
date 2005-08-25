@@ -50,8 +50,6 @@ feature {NONE} -- Initialization
 			-- Create `Current' using attributes of `other_imp'.
 		require
 			other_imp_not_void: other_imp /= Void
-		local
-			app_imp: EV_APPLICATION_IMP
 		do
 			apply_center_dialog := False
 
@@ -67,8 +65,7 @@ feature {NONE} -- Initialization
 			other_imp.destroy_implementation
 
 				-- Add this dialog as root window.
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			app_imp.add_root_window (Current)
+			application_imp.add_root_window (Current)
 		end
 
 feature -- Status Report
@@ -209,14 +206,8 @@ feature {EV_DIALOG_I} -- Implementation
 
 	destroy_implementation is
 			-- Destroy `Current' but does not wipe out the children.
-		local
-			app_imp: EV_APPLICATION_IMP
 		do
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			check
-				implementation_not_void: app_imp /= void
-			end
-			app_imp.remove_root_window (Current)
+			application_imp.remove_root_window (Current)
 
 			wel_destroy_window
 			set_is_destroyed (True)

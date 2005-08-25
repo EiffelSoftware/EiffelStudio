@@ -17,6 +17,7 @@ default
  	use_all_cluster_name_as_namespace (no)
  	use_cluster_name_as_namespace (yes)
   	version ("2.0.1.1704")
+ 	msil_clr_version ("v1.1.4322")
 
 cluster 
  

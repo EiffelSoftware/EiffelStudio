@@ -416,6 +416,7 @@ feature {NONE} -- Implementation
 			end
 			create b.make_with_text_and_action (Interface_names.b_Browse, agent browse_directory)
 			create hb
+			hb.set_padding_width (Layout_constants.Small_border_size)
 			hb.extend (directory_field)
 			hb.extend (b)
 			hb.disable_item_expand (b)

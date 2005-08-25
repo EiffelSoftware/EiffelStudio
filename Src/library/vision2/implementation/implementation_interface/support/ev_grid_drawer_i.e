@@ -453,7 +453,7 @@ feature -- Basic operations
 			current_column: EV_GRID_COLUMN_I
 			drawable: EV_DRAWABLE
 			row_count, row_height: INTEGER
-			is_tree_enabled, is_content_completely_dynamic, is_content_partially_dynamic : BOOLEAN
+			is_tree_enabled, is_content_partially_dynamic : BOOLEAN
 			first_item_in_row_drawn: BOOLEAN
 			current_parent_row: EV_GRID_ROW_I
 			v_y: INTEGER
@@ -510,7 +510,6 @@ feature -- Basic operations
 					drawable := grid.drawable
 					row_count := grid.row_count
 					is_tree_enabled := grid.is_tree_enabled
-					is_content_completely_dynamic := grid.is_content_completely_dynamic
 					is_content_partially_dynamic := grid.is_content_partially_dynamic
 					row_height := grid.row_height
 					
@@ -634,7 +633,7 @@ feature -- Basic operations
 											-- data structures. So we use a BOOLEAN to determine this instead.
 										grid_item_exists := False
 				
-										if not is_content_completely_dynamic and current_row_list /= Void and then current_physical_column_index < current_row_list.count then
+										if current_row_list /= Void and then current_physical_column_index < current_row_list.count then
 												-- If the grid is set to retrieve completely dynamic content, then we do not execute this code
 												-- as the current contents of the grid are never used. We also check that the current row and
 												-- current row position are valid.
@@ -650,7 +649,7 @@ feature -- Basic operations
 					
 										current_item_x_position  := (column_offsets @ (current_column_index)) - (internal_client_x - horizontal_buffer_offset)
 										
-										if (is_content_partially_dynamic or is_content_completely_dynamic) and then not grid_item_exists and dynamic_content_function /= Void then
+										if is_content_partially_dynamic and then not grid_item_exists and dynamic_content_function /= Void then
 												-- If we are dynamically computing the contents of the grid and we have not already retrieved an item for
 												-- the grid, then we execute this code.
 	

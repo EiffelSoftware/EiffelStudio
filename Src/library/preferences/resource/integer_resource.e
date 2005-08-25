@@ -52,4 +52,7 @@ feature {NONE} -- Implementation
 			set_value (a_value.to_integer)			
 		end		
 
+	auto_default_value: INTEGER
+			-- Value to use when Current is using auto by default (until real auto is set)
+
 end -- class INTEGER_PREFERENCE

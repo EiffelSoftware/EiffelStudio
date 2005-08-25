@@ -52,7 +52,11 @@
 						<bold>EV_WINDOW</bold> - The default state is now `user_can_resize'. Although this was previously specified within `is_in_default_state', the window was not actually resizeable.
 					</item>
 					<item>
-						<bold>EV_DIALOG</bold> - Calling `enable_user_resize' or `disable_user_resize' on a dialog that is shown relative to another window no longer looses the relative state of the dialog.
+						<bold>EV_DIALOG</bold>
+						<list ordered="false">
+							<item>Calling `enable_user_resize' or `disable_user_resize' on a dialog that is shown relative to another window no longer looses the relative state of the dialog.</item>
+							<item>Fixed failure of a &quot;check&quot; statement within EiffelVision when showing a dialog with a `default_cancel_button' relative or modal to another window.</item>
+						</list>
 					</item>
 					<item/>
 				</list>

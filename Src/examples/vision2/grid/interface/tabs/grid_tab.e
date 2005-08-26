@@ -178,31 +178,9 @@ feature {NONE} -- Implementation
 			if is_partially_dynamic.is_selected then
 				grid.enable_partial_dynamic_content
 				resize_rows_columns_box.enable_sensitive
-				is_completely_dynamic.select_actions.block
-				is_completely_dynamic.disable_select
-				is_completely_dynamic.select_actions.resume
 			else
-				if not is_completely_dynamic.is_selected then
-					resize_rows_columns_box.disable_sensitive
-					grid.disable_dynamic_content
-				end
-			end
-		end
-	
-	is_completely_dynamic_selected is
-			-- Called by `select_actions' of `is_completely_dynamic'.
-		do
-			if is_completely_dynamic.is_selected then
-				grid.enable_complete_dynamic_content
-				resize_rows_columns_box.enable_sensitive
-				is_partially_dynamic.select_actions.block
-				is_partially_dynamic.disable_select
-				is_partially_dynamic.select_actions.resume
-			else
-				if not is_partially_dynamic.is_selected then
-					resize_rows_columns_box.disable_sensitive
-					grid.disable_dynamic_content
-				end
+				grid.disable_dynamic_content
+				resize_rows_columns_box.disable_sensitive
 			end
 		end
 
@@ -496,12 +474,15 @@ feature {NONE} -- Implementation
 			current_row := grid.row (38)
 			current_row.clear
 			current_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("Show Font Sizes"))
+			
+			grid.insert_new_rows_parented (15, current_row.index + 1, current_row)
+			
 			from
 				counter := 1
 			until
 				counter = 16
 			loop
-				current_row.insert_subrow (counter)
+--				current_row.insert_subrow (counter)
 				create grid_label_item.make_with_text ("Font Height : " + ((counter + 3) * 2).out)
 				current_row.subrow (counter).set_item (1, grid_label_item)
 				create font
@@ -1181,6 +1162,207 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	remove_rows (x_pos, y_pos, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		local
+			time1, time2: DATE_TIME
+		do
+			start_profiling
+			if an_item /= Void then
+				create time1.make_now
+				if an_item.column.index = 1 then				
+					from			
+					until
+						grid.row_count = 0
+					loop
+						grid.remove_row (1)
+					end
+				elseif an_item.column.index = 2 then
+					from			
+					until
+						grid.row_count = 0
+					loop
+						grid.remove_row (grid.row_count)
+					end
+				elseif an_item.column.index = 3 then
+					grid.wipe_out
+				end
+				create time2.make_now
+				set_status_message (("Removed in : " + ((time2.fine_second - time1.fine_second).out)))
+			end
+			stop_profiling
+		end
+		
+	edge_size: INTEGER is 2
+		
+	press_resize (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		local
+			item_y: INTEGER
+			item_x: INTEGER
+		do
+			if an_item /= Void and a_button = 1 then
+				item_y := an_item.virtual_y_position
+				if (a_y >= item_y and (a_y - item_y < edge_size)) then			
+					resizing_row := grid.row (an_item.row.index - 1)
+					relative_row_pos := a_y - item_y + resizing_row.height
+					grid.enable_capture
+				elseif (a_y >= item_y + an_item.row.height - edge_size) then
+					relative_row_pos :=  a_y - item_y
+					resizing_row := an_item.row
+					grid.enable_capture
+				end
+				item_x := an_item.virtual_x_position
+				if (an_x >= item_x and (an_x - item_x < edge_size)) then			
+					resizing_column := grid.column (an_item.column.index - 1)
+					relative_column_pos := an_x - item_x + resizing_column.width
+					grid.enable_capture
+				elseif (an_x >= item_x + an_item.column.width - edge_size) then
+					relative_column_pos :=  an_x - item_x
+					resizing_column := an_item.column
+					grid.enable_capture
+				end
+			end
+		end
+		
+	sizens_cursor: EV_CURSOR is
+			--
+		once
+			Result := (create {EV_STOCK_PIXMAPS}).sizens_cursor
+		end
+		
+	sizewe_cursor: EV_CURSOR is
+			--
+		once
+			Result := (create {EV_STOCK_PIXMAPS}).sizewe_cursor
+		end
+		
+	standard_cursor: EV_CURSOR is
+			--
+		once
+			Result := (create {EV_STOCK_PIXMAPS}).standard_cursor
+		end
+		
+	Sizenwse_cursor: EV_CURSOR is
+			--
+		once
+			Result := (create {EV_STOCK_PIXMAPS}).Sizenwse_cursor
+		end
+		
+	Sizenesw_cursor: EV_CURSOR is
+			--
+		once
+			Result := (create {EV_STOCK_PIXMAPS}).Sizenesw_cursor
+		end
+		
+	resizing_row: EV_GRID_ROW
+	
+	resizing_column: EV_GRID_COLUMN
+	
+	relative_row_pos: INTEGER
+	
+	relative_column_pos: INTEGER
+	
+	row_height: INTEGER
+	
+	row_width: INTEGER
+	
+	cursor_style: INTEGER
+	
+	top, left, bottom, right: BOOLEAN
+		
+	release_resize (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
+			--
+		do
+			grid.disable_capture
+			resizing_row := Void
+			resizing_column := Void
+			relative_row_pos := 0
+			relative_column_pos := 0
+			row_height := 0
+		end
+		
+	motion_resize (an_x, a_y: INTEGER; an_item: EV_GRID_ITEM) is	
+			--
+		local
+			item_y, item_x: INTEGER
+		do
+			if resizing_row = Void then
+				if an_item /= Void then
+					item_y := an_item.virtual_y_position
+					top := False
+					bottom := False
+					if (a_y >= item_y and (a_y - item_y < edge_size)) then
+						top := True
+					elseif (a_y >= item_y + an_item.row.height - edge_size) then
+						bottom := True
+					end
+				end
+			else
+				resizing_row.set_height ((a_y - resizing_row.virtual_y_position).max (0))
+			end
+			if resizing_column = Void then
+				if an_item /= Void then
+					item_x := an_item.virtual_x_position
+					left := False
+					right := False
+					if (an_x >= item_x and (an_x - item_x < edge_size)) then
+						left := True
+					elseif (an_x >= item_x + an_item.column.width - edge_size) then
+						right := True
+					end
+				end
+			else
+				resizing_column.set_width ((an_x - resizing_column.virtual_x_position).max (0))
+			end
+			if top or bottom or left or right then
+				grid.disable_selection_on_click
+				if (left or right) and not (top or bottom) then
+					grid.set_pointer_style (sizewe_cursor)
+				elseif (top or bottom) and not (left or right) then
+					grid.set_pointer_style (sizens_cursor)
+				elseif top or bottom then
+					grid.set_pointer_style (sizenwse_cursor)
+				elseif left or right then
+					grid.set_pointer_style (sizenesw_cursor)
+				end				
+			else
+				grid.enable_selection_on_click
+				grid.set_pointer_style (standard_cursor)
+			end
+		end
+		
+	retrieve_pebble (a_grid_item: EV_GRID_ITEM): ANY is	
+			--
+		do
+			if a_grid_item /= Void then
+				Result := "Item Picked"
+			end
+		end
+		
+	pebble_dropped (a_string: STRING) is
+			--
+		do
+			print ("Pebble dropped")
+		end
+		
+	pebble_dropped_on_item (a_grid_item: EV_GRID_ITEM; a_string: STRING) is
+			--
+		do
+			if a_grid_item /= Void then
+				print ("Pebble dropped on item")
+			else
+				print ("Pebble dropped on grid")
+			end
+		end
+		
+	pebble_dropped_directly_on_item (string: STRING) is
+			--
+		do
+			print ("Pebble dropped on item 1,1")
+		end
+		
+		
 	custom_button_selected is
 			-- Called by `select_actions' of `custom_button'.
 		local
@@ -1193,7 +1375,91 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			main: EV_TITLED_WINDOW
 			grid2: EV_GRID
+			list: ARRAYED_LIST [INTEGER]
 		do
+			grid.enable_tree
+			add_items (3, 3)
+			grid.row (1).add_subrow (grid.row (2))
+			grid.remove_rows (1, 2)
+--			grid.set_column_count_to (10)
+--			grid.set_row_count_to (1000)
+--			add_items (10, 1000)
+--			grid.set_row_count_to (20)
+--		grid.set_row_count_to (61)
+--			grid.disable_sensitive
+			
+--			add_items (10, 10)
+--			grid.set_foreground_color (light_green)
+--			grid.set_background_color (light_red)
+			
+--			grid.set_default_colors
+			
+--			add_items (10, 10)
+--			grid.set_item_pebble_function (agent retrieve_pebble)
+--			grid.drop_actions.extend (agent pebble_dropped)
+--			grid.item_drop_actions.extend (agent pebble_dropped_on_item)
+--			grid.item (1, 1).drop_actions.extend (agent pebble_dropped_directly_on_item)
+--			add_items (10, 100)
+--			grid.hide_header
+--			grid.enable_column_separators
+--			grid.enable_row_separators
+--			grid.disable_row_height_fixed
+--			grid.pointer_button_press_item_actions.extend (agent press_resize)
+--			grid.pointer_button_release_item_actions.extend (agent release_resize)
+--			grid.pointer_motion_item_actions.extend (agent motion_resize)
+			
+			
+			
+			
+--			grid.enable_tree
+--			add_items (10, 10)
+--			grid.insert_new_rows_parented (5, 2, grid.row (1))
+--			grid.insert_new_rows_parented (500, 8, grid.row (7))
+--			grid.row (2).insert_subrows (3, 1)
+--			grid.row (2).insert_subrows (4, 2)
+--			grid.insert_new_row_parented (5, grid.row (4))
+--			grid.insert_new_rows_parented (10, 6, grid.row (4))
+--			grid.insert_new_rows (100, grid.row_count)
+--			grid.insert_new_row (1000)
+--			
+--			grid.enable_tree
+--			add_items (1, 5000)
+--			from
+--				i := 2
+--			until
+--				i > grid.row_count
+--			loop
+--				grid.row (1).add_subrow (grid.row (i))
+--				i := i + 1
+--			end
+--			create time1.make_now
+----			from
+----				i := grid.row_count
+----			until
+----				i = 2
+----			loop
+----				grid.remove_row (i)
+----				i := i - 1
+----			end
+--			start_profiling
+--			grid.remove_rows (3, grid.row_count - 2)
+--			stop_profiling
+--			create time2.make_now
+--			set_status_message (("Removed in : " + ((time2.fine_second - time1.fine_second).out)))
+----			grid.remove_rows (2, 10)
+----			grid.remove_rows (2, 9)
+--			grid.remove_rows (2, 11)
+--			add_items (4, 10)
+--			grid.enable_tree
+--			grid.set_item (1, 1, Void)
+--			grid.set_item (1, 2, Void)
+--			grid.set_item (1, 3, Void)
+--			grid.set_item (1, 4, Void)
+--			grid.row (2).add_subrow (grid.row (3))
+--			add_items (4, 10000)
+--			grid.pointer_button_press_item_actions.wipe_out
+--			grid.pointer_button_press_item_actions.extend (agent remove_rows)
+			--GRID.set_virtual_position (0, GRID.maximum_virtual_y_position)
 --			reset_grid
 --			l_item := grid.item_at_virtual_position (200, 16)
 --			misc_button_selected
@@ -1616,9 +1882,26 @@ feature {NONE} -- Implementation
 --			grid.set_virtual_position (0, grid.maximum_virtual_y_position)
 --			grid.wipe_out
 --			add_items (1, 200)
-			add_items (3, 100)
-			grid.pointer_motion_actions.force_extend (agent resize_first_column)
+--			add_items (3, 100)
+--			grid.pointer_motion_actions.force_extend (agent resize_first_column)
+--			list := grid.visible_row_indexes
+--			grid.enable_tree
+--			add_items (1, 1000000)
+--			grid.insert_new_row_parented (2, grid.row (1))
+--			grid.pointer_double_press_actions.force_extend (agent expand_first)
 		end
+		
+	expand_first is
+			--
+		local
+			time1, time2: DATE_TIME
+		do
+			create time1.make_now
+			grid.row (1).expand
+			create time2.make_now
+			set_status_message (("Expanded in : " + ((time2.fine_second - time1.fine_second).out)))	
+		end
+		
 		
 	resize_first_column is
 			--

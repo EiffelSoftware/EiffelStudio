@@ -105,10 +105,10 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				create value.make_with_values (family, weight, shape, height)
-				value.set_height_in_points (height)
-				value.preferred_families.extend (face)
-				set_value (value)
+				create internal_value.make_with_values (family, weight, shape, height)
+				internal_value.set_height_in_points (height)
+				internal_value.preferred_families.extend (face)
+				set_value (internal_value)
 			end
 		end
 
@@ -223,6 +223,12 @@ feature {NONE} -- Implementation
 			if s.is_integer then
 				height := s.to_integer
 			end
+		end
+
+	auto_default_value: EV_FONT is
+			-- Value to use when Current is using auto by default (until real auto is set)
+		once
+			create Result
 		end
 
 end -- class FONT_PREFERENCE

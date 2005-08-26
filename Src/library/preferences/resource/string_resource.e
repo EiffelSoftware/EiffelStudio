@@ -49,6 +49,12 @@ feature {NONE} -- Implementation
 			-- Parse the string value `a_value' and set `value'.
 		do		
 			set_value (a_value)
+		end
+
+	auto_default_value: STRING is
+			-- Value to use when Current is using auto by default (until real auto is set)
+		once
+			create Result.make_empty
 		end	
 
 end -- class STRING_PREFERENCE

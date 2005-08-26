@@ -85,7 +85,7 @@ feature -- Status Setting
 			l_value: STRING
 			values: LIST [STRING]
 		do
-			create value.make (1, 0)
+			create internal_value.make (1, 0)
 			values := a_value.split (';')
 			if values.count > 1 or not values.first.is_empty then
 				from 
@@ -105,7 +105,7 @@ feature -- Status Setting
 					cnt := cnt + 1
 				end				
 			end
-			set_value (value)
+			set_value (internal_value)
 		end	
 
 feature -- Query
@@ -130,5 +130,13 @@ feature {PREFERENCES} -- Access
 				Result := "TEXT"
 			end
 		end
+
+feature {NONE} -- Implementation
 	
+	auto_default_value: ARRAY [STRING] is
+			-- Value to use when Current is using auto by default (until real auto is set)
+		once
+			create Result.make (0, 1)
+		end
+
 end -- class ARRAY_PREFERENCE

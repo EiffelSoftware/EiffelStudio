@@ -58,4 +58,9 @@ feature -- Status Setting
 			set_value (l_value.is_equal ("true"))
 		end	
 
+feature {NONE} -- Implementation
+
+	auto_default_value: BOOLEAN
+			-- Value to use when Current is using auto by default (until real auto is set)
+
 end -- class BOOLEAN_PREFERENCE

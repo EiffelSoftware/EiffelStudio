@@ -17,15 +17,19 @@ feature -- Access
 	string_value: STRING is
 			-- String representation of `value'.		
 		do
-			Result := value.red_8_bit.out + ";" + value.green_8_bit.out + ";" + value.blue_8_bit.out
+			if is_auto then
+				Result := auto_preference.string_value
+			else
+				Result := internal_value.red_8_bit.out + ";" + internal_value.green_8_bit.out + ";" + internal_value.blue_8_bit.out	
+			end			
 		end	
 		
 	string_type: STRING is
 			-- String description of this resource type.
 		once
 			Result := "COLOR"
-		end		
-		
+		end
+	
 feature -- Query
 
 	valid_value_string (a_string: STRING): BOOLEAN is
@@ -52,6 +56,8 @@ feature -- Query
 						Result := not rgbval.is_empty and then rgbval.count < 4 and then rgbval.is_integer
 					end
 				end
+			elseif s.is_equal (auto_string) then
+				Result := True
 			end
 		end			
 	
@@ -72,24 +78,34 @@ feature {NONE} -- Implementation
 			i, r, g, b: INTEGER
 		do
 			s := a_value.twin
+			
+			if s.is_equal (auto_string) then
+				set_value (auto_default_value)
+			else				
+					-- Red value
+				i := s.index_of (';', 1)
+				rgbval := s.substring (1, i - 1)
+				r := rgbval.to_integer
 				
-				-- Red value
-			i := s.index_of (';', 1)
-			rgbval := s.substring (1, i - 1)
-			r := rgbval.to_integer
+					-- Green value
+				s := s.substring (rgbval.count + 2, s.count)
+				i := s.index_of (';', 1)
+				rgbval := s.substring (1, i - 1)
+				g := rgbval.to_integer
+				
+					-- Blue value
+				s := s.substring (rgbval.count + 2, s.count)				
+				rgbval := s.substring (1, s.count)
+				b := rgbval.to_integer
 			
-				-- Green value
-			s := s.substring (rgbval.count + 2, s.count)
-			i := s.index_of (';', 1)
-			rgbval := s.substring (1, i - 1)
-			g := rgbval.to_integer
-			
-				-- Blue value
-			s := s.substring (rgbval.count + 2, s.count)				
-			rgbval := s.substring (1, s.count)
-			b := rgbval.to_integer
-		
-			set_value (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
+				set_value (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
+			end
+		end	
+
+	auto_default_value: EV_COLOR is
+			-- Value to use when Current is using auto by default (until real auto is set)
+		once
+			create Result
 		end	
 
 end -- class COLOR_PREFERENCE

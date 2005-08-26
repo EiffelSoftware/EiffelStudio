@@ -426,6 +426,12 @@ feature {NONE} -- Initialization
 			customized_string_3_preference := l_manager.new_string_resource_value (l_manager, customized_string_3_string, "")
 			customized_strings.extend (customized_string_3_preference)
 			
+				-- Auto colors
+			indexing_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
+			assertion_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
+			reserved_background_color_preference.set_auto_preference (normal_background_color_preference)
+			local_background_color_preference.set_auto_preference (normal_background_color_preference)			
+			
 			keyword_font_preference.change_actions.extend (agent update)
 			normal_text_color_preference.change_actions.extend (agent update)
 			normal_background_color_preference.change_actions.extend (agent update)

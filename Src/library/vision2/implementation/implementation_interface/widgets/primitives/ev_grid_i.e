@@ -2210,7 +2210,7 @@ feature -- Removal
 					l_selected_items.forth
 				end
 			end
-	
+			lock_update
 			from
 				i := upper_index
 			until
@@ -2233,7 +2233,7 @@ feature -- Removal
 
 			set_vertical_computation_required (lower_index)
 			recompute_vertical_scroll_bar
-			redraw_client_area
+			unlock_update
 			last_vertical_scroll_bar_value := 0
 			reset_internal_grid_attributes
 		ensure
@@ -2943,7 +2943,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID_ITEM} -- Implementation
 		
 	redraw_item (an_item: EV_GRID_ITEM_I) is
-			-- Redraw area of `an_item' if visible.
+			-- Redraw area of `an_item' if visible and not `is_locked'.
 		require
 			an_item_not_void: an_item /= Void
 		local
@@ -2952,32 +2952,37 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			column_i: EV_GRID_COLUMN_I
 			l_indent: INTEGER
 		do
-				-- Increase the number of times that `redraw_item' has been called
-				-- since the last refresh.
-			redraw_item_counter := redraw_item_counter + 1
-			if redraw_item_counter < maximum_items_redrawn_between_refresh then
-					-- Only perform the exact item calculation if our threshold
-					-- for individual item redrawing has not been met.
+			if not is_locked then
+					-- Only perform the redraw if the grid is not locked.
+			
+			
+					-- Increase the number of times that `redraw_item' has been called
+					-- since the last refresh.
+				redraw_item_counter := redraw_item_counter + 1
+				if redraw_item_counter < maximum_items_redrawn_between_refresh then
+						-- Only perform the exact item calculation if our threshold
+						-- for individual item redrawing has not been met.
+						
+					row_i := an_item.row_i
+					column_i := an_item.column_i
+					if row_i.parent_row_i /= Void then
+						l_indent := item_cell_indent (column_i.index, row_i.index)
+					end
+					if is_row_height_fixed then
+						item_height := row_height
+					else
+						item_height := an_item.row.height
+					end
 					
-				row_i := an_item.row_i
-				column_i := an_item.column_i
-				if row_i.parent_row_i /= Void then
-					l_indent := item_cell_indent (column_i.index, row_i.index)
+						-- Note that we calculate the virtual x offset of the item ourselves, which
+						-- prevents `item_indent' being called twice, once in the virtual x offset calculation
+						-- and once for calculating the width of the item to draw.
+					drawable.redraw_rectangle (column_i.virtual_x_position + l_indent - (internal_client_x - viewport_x_offset), an_item.virtual_y_position - (internal_client_y - viewport_y_offset), column_i.width - l_indent, item_height)
+				elseif redraw_item_counter = maximum_items_redrawn_between_refresh then
+						-- The threshold has been met, so invalidate the complete client area.
+						
+					redraw_client_area
 				end
-				if is_row_height_fixed then
-					item_height := row_height
-				else
-					item_height := an_item.row.height
-				end
-				
-					-- Note that we calculate the virtual x offset of the item ourselves, which
-					-- prevents `item_indent' being called twice, once in the virtual x offset calculation
-					-- and once for calculating the width of the item to draw.
-				drawable.redraw_rectangle (column_i.virtual_x_position + l_indent - (internal_client_x - viewport_x_offset), an_item.virtual_y_position - (internal_client_y - viewport_y_offset), column_i.width - l_indent, item_height)
-			elseif redraw_item_counter = maximum_items_redrawn_between_refresh then
-					-- The threshold has been met, so invalidate the complete client area.
-					
-				redraw_client_area
 			end
 		end
 		

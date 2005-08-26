@@ -212,6 +212,32 @@ feature -- Conversion
 			definition: Result = sign * ((abs + 0.5).floor)
 		end
 
+	ceiling_real_64: DOUBLE is
+			-- Smallest integral value no smaller than current object
+		do
+			Result := {MATH}.ceiling (item)
+		ensure
+			result_no_smaller: Result >= item
+			close_enough: Result - item < item.one
+		end
+
+	floor_real_64: DOUBLE is
+			-- Greatest integral value no greater than current object
+		do
+			Result := {MATH}.floor (item)
+		ensure
+			result_no_greater: Result <= item
+			close_enough: item - Result < Result.one
+		end
+
+	rounded_real_64: DOUBLE is
+			-- Rounded integral value
+		do
+			Result := sign * {MATH}.floor ({MATH}.abs_double (item) + 0.5)
+		ensure
+			definition: Result = sign * ((abs + 0.5).floor_real_64)
+		end
+
 feature -- Basic operations
 
 	abs: DOUBLE is

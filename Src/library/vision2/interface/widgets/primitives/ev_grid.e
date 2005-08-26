@@ -1309,7 +1309,7 @@ feature -- Status setting
 			not_row_height_variable_and_vertical_overscroll_enabled:
 				not (not is_row_height_fixed and is_vertical_overscroll_enabled)
 			not_row_height_variable_and_vertical_scrolling_per_pixel:
-				not (not is_row_height_fixed and is_vertical_scrolling_per_item)
+				not (not is_row_height_fixed and not is_vertical_scrolling_per_item)
 		do
 			implementation.enable_partial_dynamic_content
 		ensure

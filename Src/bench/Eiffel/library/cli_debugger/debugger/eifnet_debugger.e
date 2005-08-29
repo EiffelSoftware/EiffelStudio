@@ -435,7 +435,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 						end
 					else
 						s.set_current_thread_id (eifnet_debugger_info.last_icd_thread_id)
-						s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads.current_keys)
+						s.set_thread_ids (eifnet_debugger_info.loaded_managed_threads_ids)
 					end
 					debug ("debugger_trace_callback")
 						print (" - Info : Debuggee is STOPPED %N")

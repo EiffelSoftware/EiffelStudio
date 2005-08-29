@@ -35,6 +35,9 @@ cluster
 	all wel:		"$ISE_EIFFEL\library\wel"
 
 	all vision2:		"$ISE_EIFFEL\library\vision2"
+		exclude
+			"gtk"
+		end
 
 external
 

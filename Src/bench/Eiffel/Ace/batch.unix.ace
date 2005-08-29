@@ -25,6 +25,8 @@ cluster
 			"table"; "CVS"; 
 		end
 
+	table_eiffel_3:		"$EIFFEL_SRC/library/obsolete/table_eiffel3"
+
 	all time:		"$EIFFEL_SRC/library/time"
 		exclude
 			"CVS"; "french"; "german"; 

@@ -135,6 +135,8 @@ cluster
 			assertion (require)
 		end
 
+	table_eiffel_3:		"$EIFFEL_SRC/library/obsolete/table_eiffel3"
+
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"; 

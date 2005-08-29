@@ -92,6 +92,7 @@ cluster
 			"table"; "CVS"; 
 		end
 
+	table_eiffel_3:		"$EIFFEL_SRC/library/obsolete/table_eiffel3"
 
 	events:		"$EIFFEL_SRC/library/event"
 		exclude

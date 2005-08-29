@@ -392,7 +392,12 @@ feature -- Properties change
 
 	refresh_spec_items (vl, vu: INTEGER) is
 			-- Refresh special items with new slices range [vl:vu]
+		local
+			g: EV_GRID
+			old_r: INTEGER
 		do
+			g := row.parent
+			old_r := g.first_visible_row.index
 			set_object_spec_slices (vl, vu)
 			if row /= Void then
 				row_attributes_filled := False
@@ -400,6 +405,9 @@ feature -- Properties change
 				if attributes_row /= Void then
 					fill_attributes (attributes_row)
 				end
+			end
+			if old_r <= g.row_count then
+				g.set_first_visible_row (old_r)
 			end
 		end
 
@@ -920,7 +928,7 @@ feature {NONE} -- Filling
 							glab := type_label_item ("could not evaluate once with arguments...")
 							grid.set_item (Col_type_index, r, glab)
 	
-							grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.icon_dbg_error)
+							grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.small_pixmaps.icon_dbg_error)
 						else
 							if dv /= Void then
 								odv := once_r.once_eval_result (dv.address, l_feat, dv.dynamic_class)
@@ -936,7 +944,7 @@ feature {NONE} -- Filling
 								glab := type_label_item ("unable to get value !")
 								grid.set_item (Col_type_index, r, glab)
 	
-								grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.icon_dbg_error)
+								grid_cell_set_pixmap (grid.item (Col_pixmap_index, r), Pixmaps.small_pixmaps.icon_dbg_error)
 							end
 						end						
 					else

@@ -9,12 +9,8 @@ default
 --	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base");
 
 cluster 
-	-- EiffelBase
+		-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"
-		exclude
-			"table_eiffel3";
-			"desc"
-		end
 
 		-- WEL
 	all wel:		"$ISE_EIFFEL\library\wel"

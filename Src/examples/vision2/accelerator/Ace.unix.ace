@@ -56,18 +56,11 @@ default
 cluster
 	root_cluster:		"$ISE_EIFFEL/examples/vision2/accelerator"
 
-
 	all base:		"$ISE_EIFFEL/library/base"
-		exclude
-			"table"; "desc"; "CVS"; 
-		end
 
 	all vision2_interface:		"$ISE_EIFFEL/library/vision2/interface"
 
 	all vision2_implementation:		"$ISE_EIFFEL/library/vision2/implementation"
-		exclude
-			"mswin"; "components"; "obsolete"; 
-		end
 
 external
 	include_path:

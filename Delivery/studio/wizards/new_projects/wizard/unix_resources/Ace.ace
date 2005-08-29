@@ -30,7 +30,7 @@ cluster
 	src (root_cluster): "$/src"
 
 		-- EiffelBase
-	all base:				"$ISE_EIFFEL/library/base"
+	all base:			"$ISE_EIFFEL/library/base"
 
 		-- EiffelVision2
 	all vision2: 			"$ISE_EIFFEL/library/vision2"

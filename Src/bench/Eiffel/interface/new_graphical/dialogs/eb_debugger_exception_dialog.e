@@ -136,6 +136,7 @@ feature {NONE} -- Initialization
 			message_text.disable_edit
 			message_text.set_background_color ((create {EV_STOCK_COLORS}).white)
 			window.set_default_cancel_button (close_button)
+			window.set_icon_pixmap (pixmaps.icon_dialog_window)
 		end
 
 feature {NONE} -- Implementation

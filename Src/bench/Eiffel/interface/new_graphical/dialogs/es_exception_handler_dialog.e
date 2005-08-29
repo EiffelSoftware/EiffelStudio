@@ -12,6 +12,13 @@ inherit
 		redefine
 			grid
 		end
+		
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -37,6 +44,7 @@ feature {NONE} -- Initialization
 
 			handling_external_checking.select_actions.extend (agent on_external_handling_changed)
 			set_default_cancel_button (cancel_button)
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 		end
 
 feature -- Properties

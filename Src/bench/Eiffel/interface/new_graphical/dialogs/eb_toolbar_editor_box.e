@@ -26,6 +26,7 @@ feature -- Initialization
 	make is
 		do
 			make_with_title (Interface_names.t_Customize_toolbar_text)
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 			w_width := Layout_constants.dialog_unit_to_pixels(560)
 			w_height := Layout_constants.dialog_unit_to_pixels(360)
 			close_request_actions.wipe_out

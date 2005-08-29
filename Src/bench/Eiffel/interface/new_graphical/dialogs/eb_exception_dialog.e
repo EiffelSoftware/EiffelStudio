@@ -56,6 +56,7 @@ feature {NONE} -- Initialization
 			
 			default_create
 			set_title ("Internal Error")
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 			set_size (600, 440)
 
 			create error_label.make_with_text (Warning_messages.w_internal_error)

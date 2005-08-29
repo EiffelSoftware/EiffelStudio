@@ -161,12 +161,13 @@ feature -- Basic operations
 					menu.extend (item)
 				end
 			end
-			create item.make_with_text (Interface_names.m_Run_to_this_point)
 			conv_dev ?= window_manager.last_focused_window
 			if conv_dev /= Void then
 					-- `conv_dev = Void' should never happen.
 				menu.extend (create {EV_MENU_SEPARATOR})
+
 					-- "Run to breakpoint"
+				create item.make_with_text (Interface_names.m_Run_to_this_point)
 				item.select_actions.extend (agent debugger_manager.set_debugging_window (conv_dev))
 				item.select_actions.extend (agent (debugger_manager.debug_run_cmd).process_breakable (Current))
 				menu.extend (item)

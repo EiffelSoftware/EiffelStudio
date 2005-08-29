@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 			favorites_manager := a_favorites_manager
 			default_create
 			set_title (Interface_names.t_Choose_folder_name)
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 			prepare
 		end
 

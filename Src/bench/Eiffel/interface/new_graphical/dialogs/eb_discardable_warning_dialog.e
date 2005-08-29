@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			button_box: EV_HORIZONTAL_BOX -- Bar with all buttons of the dialog.
 		do
 			Precursor {EV_DIALOG}
+			set_icon_pixmap (Default_pixmaps.Warning_pixmap)
 
 			create check_button.make_with_text (Check_button_label)
 

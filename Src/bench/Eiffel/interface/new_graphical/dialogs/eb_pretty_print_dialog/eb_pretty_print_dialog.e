@@ -100,6 +100,7 @@ feature {NONE} -- Initialization
 
 			lower_slice_field.set_text (slice_min.out)
 			upper_slice_field.set_text (slice_max.out)
+			dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
 		end
 
 	Text_format: EV_CHARACTER_FORMAT is

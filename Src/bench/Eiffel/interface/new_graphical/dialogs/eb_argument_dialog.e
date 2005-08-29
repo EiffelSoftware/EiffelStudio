@@ -57,6 +57,7 @@ feature {NONE} -- Initialization
 			cmd_not_void: cmd /= Void
 		do		
 			make_with_title ("Execution Control")
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 			Debugger_manager.observers.extend (Current)
 			run := cmd
 			

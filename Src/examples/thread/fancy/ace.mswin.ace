@@ -33,11 +33,7 @@ default
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\thread\fancy"
 
-
 	all base:		"$ISE_EIFFEL\library\base"
-		exclude
-			"table_eiffel3"; 
-		end
 
 	all wel:		"$ISE_EIFFEL\library\wel"
 

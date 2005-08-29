@@ -41,18 +41,11 @@ default
 cluster
 	root_cluster:		"$ISE_EIFFEL\examples\vision2\accelerator"
 
-
 	all base:		"$ISE_EIFFEL\library\base"
-		exclude
-			"table_eiffel3"; 
-		end
 
 	all wel:		"$ISE_EIFFEL\library\wel"
 
 	all vision2:		"$ISE_EIFFEL\library\vision2"
-		exclude
-			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "bench_used"; 
-		end
 
 external
 

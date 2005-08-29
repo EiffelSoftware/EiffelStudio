@@ -14,6 +14,8 @@ inherit
 		end
 		
 	ICOR_EXPORTER
+	
+	SHARED_EIFNET_DEBUGGER
 		
 create
 	make
@@ -64,8 +66,79 @@ feature -- Cleaning
 
 feature -- Access
 
+	refresh_thread_details is
+			-- Get again thread details
+		do
+			thread_details_fetched := False
+			thread_name := Void
+			thread_priority := 0
+			get_thread_details
+		end
+
+	get_thread_details is
+			-- Get the thread details
+			-- i.e: name, priority and so on ...
+		local
+			l_icd: ICOR_DEBUG_VALUE
+			l_icdov: ICOR_DEBUG_OBJECT_VALUE
+			l_name_icd: ICOR_DEBUG_VALUE
+			l_priority_icd: ICOR_DEBUG_VALUE
+			l_info: EIFNET_DEBUG_VALUE_INFO
+			r: INTEGER
+			p: POINTER
+		do
+			if not thread_details_fetched then
+				thread_details_fetched := True
+				
+				r := {ICOR_DEBUG_THREAD}.cpp_get_object (icd_thread_pointer, $p)
+				if p /= Default_pointer then
+					create l_icd.make_by_pointer (p)
+				end
+				
+				if l_icd /= Void then
+					create l_info.make (l_icd)
+					l_icdov := l_info.new_interface_debug_object_value
+					if l_icdov /= Void then
+						l_name_icd := l_icdov.get_field_value (
+											l_info.value_icd_class, 
+											eifnet_debugger.edv_external_formatter.token_Thread_m_Name
+										)
+						l_priority_icd := l_icdov.get_field_value (
+											l_info.value_icd_class,
+											eifnet_debugger.edv_external_formatter.token_Thread_m_Priority
+										)
+						l_icdov.clean_on_dispose
+						if l_name_icd /= Void then
+							thread_name := Eifnet_debugger.Edv_external_formatter.system_string_value_to_string (l_name_icd)
+							l_name_icd.clean_on_dispose
+						end
+						if l_priority_icd /= Void then
+							thread_priority := eifnet_debugger.edv_formatter.icor_debug_value_to_integer (l_priority_icd)
+							l_priority_icd.clean_on_dispose
+						end						
+					end
+					l_info.icd_prepared_value.clean_on_dispose					
+					l_info.clean
+					l_icd.clean_on_dispose
+				end
+			end
+		ensure
+			thread_details_fetched
+		end
+		
+	get_thread_name is
+			-- Get thread's name
+		do
+			get_thread_details
+		end
+		
+	get_thread_priority is
+			-- Get thread's priority
+		do
+			get_thread_details
+		end	
+
 	icd_thread: ICOR_DEBUG_THREAD is
-			-- 
 		do
 			Result := opo_icd_thread
 			if Result = Void then
@@ -148,6 +221,9 @@ feature -- Change
 		
 feature {NONE} -- Implementation
 
+	thread_details_fetched: BOOLEAN
+			-- Is thread details already fetched or computed ?
+
 	opo_icd_thread: ICOR_DEBUG_THREAD
 			-- Once per object for `icd_thread'
 		
@@ -158,6 +234,10 @@ feature -- Properties
 	stepping_for_startup: BOOLEAN
 
 	thread_id: INTEGER
+	
+	thread_name: STRING
+	
+	thread_priority: INTEGER
 	
 	icd_thread_pointer: POINTER
 	

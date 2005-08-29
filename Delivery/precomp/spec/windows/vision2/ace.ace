@@ -31,19 +31,10 @@ default
 
 cluster
 	all base:		"$ISE_EIFFEL\library\base"
-		exclude
-			"CVS"; "table_eiffel3"; "desc"; 
-		end
 
 	all wel:		"$ISE_EIFFEL\library\wel"
-		exclude
-			"CVS"; 
-		end
 
 	all vision2:		"$ISE_EIFFEL\library\vision2"
-		exclude
-			"gtk"; "release"; "obsolete"; "CVS"; "components"; 
-		end
 
 external
 

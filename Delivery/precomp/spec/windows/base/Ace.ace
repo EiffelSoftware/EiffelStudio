@@ -11,9 +11,5 @@ cluster
 
 		-- EiffelBase
 	all base: 		"$ISE_EIFFEL\library\base"
-		exclude
-			"table_eiffel3";
-			"desc"
-		end
 		
 end -- system base

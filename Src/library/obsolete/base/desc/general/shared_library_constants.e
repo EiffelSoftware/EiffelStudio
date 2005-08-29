@@ -9,6 +9,9 @@ indexing
 
 class SHARED_LIBRARY_CONSTANTS
 
+obsolete
+	"This class should no longer be used due to platform dependence and non-64bit compliance"
+
 feature -- Access
 
 	T_array: INTEGER is 0

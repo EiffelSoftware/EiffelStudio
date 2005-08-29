@@ -124,10 +124,9 @@ feature {NONE} -- get member data
 			end
 		end
 
-feature {EIFNET_DEBUGGER} -- Restricted access
+feature {EIFNET_DEBUGGER, SHARED_EIFNET_DEBUGGER} -- Restricted access
 
-	get_member_tokens is
-			-- Get all tokens we need in this context
+	get_system_text_stringbuilder_tokens is
 		local
 			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
 			l_type_token: INTEGER
@@ -137,7 +136,16 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 					--| System.Text.StringBuilder |--
 				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Text.StringBuilder")
 				private_token_StringBuilder_m_StringValue := l_mscorlib_icd_module.md_member_token (l_type_token, "m_StringValue")
+			end
+		end
 
+	get_system_exception_tokens is
+		local
+			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
+			l_type_token: INTEGER
+		do
+			l_mscorlib_icd_module := debugger_info.icor_debug_module_for_mscorlib
+			if l_mscorlib_icd_module /= Void then
 					--| System.Exceptione |--
 				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Exception")
 				private_token_Exception__message    := l_mscorlib_icd_module.md_member_token (l_type_token, "_message")
@@ -146,13 +154,27 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 				private_token_Exception_get_Message := l_mscorlib_icd_module.md_member_token (l_type_token, "get_Message")
 			end
 		end
+
+	get_system_threading_thread_tokens is
+		local
+			l_mscorlib_icd_module: ICOR_DEBUG_MODULE
+			l_type_token: INTEGER
+		do
+			l_mscorlib_icd_module := debugger_info.icor_debug_module_for_mscorlib
+			if l_mscorlib_icd_module /= Void then
+					--| System.Threading.Thread |--
+				l_type_token := l_mscorlib_icd_module.md_class_token_by_type_name ("System.Threading.Thread")
+				private_token_System_Threading_Thread_m_Name := l_mscorlib_icd_module.md_member_token (l_type_token, "m_Name")
+				private_token_System_Threading_Thread_m_Priority := l_mscorlib_icd_module.md_member_token (l_type_token, "m_Priority")				
+			end
+		end		
 		
 	token_StringBuilder_m_StringValue: INTEGER is
 			-- Attribute token of System.StringBuilder::m_StringValue	
 		do
 			Result := private_token_StringBuilder_m_StringValue
 			if Result = 0 then
-				get_member_tokens
+				get_system_text_stringbuilder_tokens
 				Result := private_token_StringBuilder_m_StringValue
 			end
 		end
@@ -162,7 +184,7 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 		do
 			Result := private_token_Exception__message
 			if Result = 0 then
-				get_member_tokens
+				get_system_exception_tokens
 				Result := private_token_Exception__message
 			end
 		end	
@@ -172,7 +194,7 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 		do
 			Result := private_token_Exception__className
 			if Result = 0 then
-				get_member_tokens
+				get_system_exception_tokens
 				Result := private_token_Exception__className
 			end
 		end	
@@ -182,7 +204,7 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 		do
 			Result := private_token_Exception_ToString
 			if Result = 0 then
-				get_member_tokens
+				get_system_exception_tokens
 				Result := private_token_Exception_ToString
 			end
 		end	
@@ -192,10 +214,30 @@ feature {EIFNET_DEBUGGER} -- Restricted access
 		do
 			Result := private_token_Exception_get_Message
 			if Result = 0 then
-				get_member_tokens
+				get_system_exception_tokens
 				Result := private_token_Exception_get_Message
 			end
-		end	
+		end
+
+	token_Thread_m_Name: INTEGER is
+			-- Attribute token of System.Threading.Thread::m_Name
+		do
+			Result := private_token_System_Threading_Thread_m_Name
+			if Result = 0 then
+				get_system_threading_thread_tokens
+				Result := private_token_System_Threading_Thread_m_Name
+			end
+		end				
+		
+	token_Thread_m_Priority: INTEGER is
+			-- Attribute token of System.Threading.Thread::m_Priority
+		do
+			Result := private_token_System_Threading_Thread_m_Priority
+			if Result = 0 then
+				get_system_threading_thread_tokens
+				Result := private_token_System_Threading_Thread_m_Priority
+			end
+		end		
 
 feature {NONE} -- Once per instance implementation
 
@@ -213,5 +255,11 @@ feature {NONE} -- Once per instance implementation
 
 	private_token_Exception_get_Message: INTEGER
 			-- Attribute token of System.Exception::get_Message
+			
+	private_token_System_Threading_Thread_m_Name: INTEGER
+			-- Attribute token of System.Threading.Thread::m_Name
+			
+	private_token_System_Threading_Thread_m_Priority: INTEGER
+			-- Attribute token of System.Threading.Thread::m_Priority
 		
 end -- class EIFNET_DEBUG_EXTERNAL_FORMATTER

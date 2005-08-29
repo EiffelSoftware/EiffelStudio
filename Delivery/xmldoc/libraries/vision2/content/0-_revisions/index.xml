@@ -35,6 +35,9 @@
 			<item>
 				<bold>EV_HEADER_ITEM</bold> - Added `user_can_resize' which enables you to prevent a user from resizing the item. Also added `minimum_width' and `maximum_width'  which permit you to restrict the resizing of the item within a particular range.
 			</item>
+			<item>
+				<bold>EV_MESSAGE_DIALOG</bold> - All message dialogs now use their associated message icon as the icon pixmap displayed in the title bar, instead of the standard EiffelVision2 icon.
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>

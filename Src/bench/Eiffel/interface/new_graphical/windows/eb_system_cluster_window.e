@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title ("Create New Cluster")
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 			create clusters_names.make (10)
 			build_widgets
 			initialize_tree_with (image)

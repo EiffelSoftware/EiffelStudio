@@ -999,6 +999,7 @@ feature {NONE} -- Implementation: set stack depth command
 			
 				-- Set widget properties.
 			dialog.set_title (Interface_names.t_Set_stack_depth)
+			dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
 			dialog.disable_user_resize
 			Layout_constants.set_default_size_for_button (okb)
 			Layout_constants.set_default_size_for_button (cancelb)

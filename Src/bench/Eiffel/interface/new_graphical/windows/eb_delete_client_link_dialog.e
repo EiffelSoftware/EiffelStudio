@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			Precursor
 			cancelled := False
 			set_title (Interface_names.t_Diagram_delete_client_link)
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 
 			create ok_button.make_with_text_and_action (Interface_names.b_ok, agent ok_action)
 			create cancel_button.make_with_text_and_action (Interface_names.b_cancel, agent cancel_action)

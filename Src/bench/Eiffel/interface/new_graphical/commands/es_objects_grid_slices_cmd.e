@@ -224,6 +224,7 @@ feature {NONE} -- Implementation
 				-- Build the dialog.
 			create dial
 			dial.set_title (Interface_names.t_Slice_limits)
+			dial.set_icon_pixmap (pixmaps.icon_dialog_window)
 
 				-- Build the dialog interface.
 				-- Build containers.

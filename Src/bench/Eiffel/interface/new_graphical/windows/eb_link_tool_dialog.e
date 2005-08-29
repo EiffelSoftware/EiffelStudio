@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			reset_selected := False
 			cancelled := False
 			set_title (Interface_names.t_Diagram_link_tool)
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 
 			create ok_button.make_with_text_and_action (Interface_names.b_ok, agent ok_action)
 			create apply_button.make_with_text_and_action (Interface_names.b_apply, agent apply_action)

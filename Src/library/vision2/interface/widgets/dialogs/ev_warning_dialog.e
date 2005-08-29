@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_MESSAGE_DIALOG}
 			set_title (ev_warning_dialog_title)
 			set_pixmap (Default_pixmaps.Warning_pixmap)
+			set_icon_pixmap (Default_pixmaps.Warning_pixmap)
 			set_buttons (<<ev_ok>>)
 			set_default_push_button (button (ev_ok))
 			set_default_cancel_button (button (ev_ok))

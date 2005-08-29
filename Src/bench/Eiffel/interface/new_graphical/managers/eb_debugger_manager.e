@@ -67,6 +67,9 @@ feature -- Access
 	call_stack_tool: EB_CALL_STACK_TOOL
 			-- A tool that represents the call stack in a graphical display.
 
+	threads_tool: ES_DBG_THREADS_TOOL
+			-- A tool that represents the threads list in a graphical display
+
 	debugging_tools: ES_DOCKABLE_NOTEBOOK
 			-- A tool that represents the call stack in a graphical display.
 
@@ -189,6 +192,12 @@ feature -- Access
 				-- Separator.
 			create sep
 			Result.extend (sep)
+			build_debugging_tools_menu
+			Result.extend (debugging_tools_menu)
+
+				-- Separator.
+			create sep
+			Result.extend (sep)
 
 			Result.extend (set_critical_stack_depth_cmd.new_menu_item)
 
@@ -211,6 +220,91 @@ feature -- Access
 
 --| FIXME XR: TODO: Add:
 --| 3) edit feature, feature evaluation
+		end
+
+	build_debugging_tools_menu is
+		require
+			debugging_tools_menu = Void
+		do
+			create debugging_tools_menu.make_with_text (Interface_names.m_Tools)
+			update_debugging_tools_menu
+		ensure		
+			debugging_tools_menu /= Void
+		end
+		
+	debugging_tools_menu: EV_MENU
+			-- Debugging tools menu which is updated on raise and unraise
+	
+	update_debugging_tools_menu is
+		require
+			debugging_tools_menu /= Void
+		local
+			mit: EV_MENU_ITEM
+			l_tools: ARRAY [EB_TOOL]
+			l_tool: EB_TOOL
+			i: INTEGER
+		do
+			debugging_tools_menu.wipe_out
+			if raised then				
+				l_tools := <<threads_tool>>
+				from
+					i := l_tools.lower
+				until
+					i > l_tools.upper
+				loop
+					l_tool := l_tools [i]
+					if threads_tool /= Void then
+						create mit.make_with_text (l_tool.menu_name)
+						if l_tool.pixmap /= Void and then not l_tool.pixmap.is_empty then
+							mit.set_pixmap (l_tool.pixmap [l_tool.pixmap.lower] )
+						end
+						mit.select_actions.extend (agent show_hide_debugging_tools (mit))
+						debugging_tools_menu.extend (mit)
+					end
+					i := i + 1
+				end
+			end
+			if debugging_tools_menu.count > 0 then
+				create {EV_MENU_SEPARATOR} mit
+				mit.disable_sensitive
+				debugging_tools_menu.put_front (mit)
+
+				create mit.make_with_text ("Show/Hide tools")
+				mit.disable_sensitive
+				debugging_tools_menu.put_front (mit)
+				
+				debugging_tools_menu.enable_sensitive
+			else
+				debugging_tools_menu.disable_sensitive
+			end
+		end
+		
+	show_hide_debugging_tools (mit: EV_MENU_ITEM) is
+		require
+			mit /= Void
+		local
+			l_tool: EB_TOOL
+			l_tools: ARRAY [EB_TOOL]
+			i: INTEGER
+			s: STRING
+		do
+			l_tools := <<threads_tool>>
+			from
+				s := mit.text
+				i := l_tools.lower
+			until
+				i > l_tools.upper
+			loop
+				l_tool := l_tools [i]
+				if l_tool /= Void and then s.is_equal (l_tool.menu_name) then
+					if l_tool.shown then
+						l_tool.close
+					else
+						l_tool.show
+					end
+				end
+				i := i + 1
+			end
 		end
 
 	create_new_watch_tool_inside_notebook (manager: EB_TOOL_MANAGER; nb: ES_NOTEBOOK) is
@@ -432,6 +526,15 @@ feature -- Status setting
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.prepare_for_debug)
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 
+				--| Threads Tool
+			if threads_tool = Void then
+				create threads_tool.make (debugging_window)
+				threads_tool.attach_to_explorer_bar (debugging_window.left_panel)
+			else
+				threads_tool.change_manager_and_explorer_bar (debugging_window, debugging_window.left_panel)
+			end
+			threads_tool.update
+
 				--| Call Stack Tool
 			if call_stack_tool = Void then
 				create call_stack_tool.make (debugging_window)
@@ -485,7 +588,7 @@ feature -- Status setting
 			end
 
 			raised := True
-
+			update_debugging_tools_menu			
 			debugging_window.window.unlock_update
 		ensure
 			raised
@@ -571,6 +674,7 @@ feature -- Status setting
 				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 
+			update_debugging_tools_menu
 			debugging_window.window.unlock_update
 		ensure
 			not raised
@@ -579,6 +683,7 @@ feature -- Status setting
 	recycle_tools is
 			-- Recycle tools to free unused data
 		do
+			threads_tool.recycle
 			call_stack_tool.recycle
 			objects_tool.recycle
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.recycle)				
@@ -599,6 +704,15 @@ feature -- Status setting
 				call_stack_tool.set_stone (st)
 				objects_tool.set_stone (st)
 				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
+			end
+		end
+		
+	set_current_thread_id (tid: INTEGER) is
+			-- Set Current thread id to `tid'
+		do
+			if raised then
+				call_stack_tool.update
+				threads_tool.update
 			end
 		end
 
@@ -725,6 +839,8 @@ feature -- Debugging events
 
 			window_manager.quick_refresh_all_margins
 
+				-- Fill in the threads tool.
+			threads_tool.update
 				-- Fill in the stack tool.
 			call_stack_tool.update
 				-- Fill in the objects tool.
@@ -781,6 +897,8 @@ feature -- Debugging events
 				-- Reset
 			Application.on_resumed
 
+				-- Fill in the threads tool.
+			threads_tool.update
 				-- Fill in the stack tool.
 			call_stack_tool.update
 				-- Fill in the objects tool.

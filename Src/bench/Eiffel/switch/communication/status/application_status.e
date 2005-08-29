@@ -140,7 +140,15 @@ feature -- Thread related access
 			-- All available threads' ids
 			
 	all_thread_ids_count: INTEGER
+	
+	thread_name (id: like current_thread_id): STRING is
+		do
+		end
 
+	thread_priority (id: like current_thread_id): INTEGER is
+		do
+		end
+		
 feature -- Thread related change
 
 	set_call_stack (tid: INTEGER; ecs: like current_call_stack) is

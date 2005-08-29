@@ -9,6 +9,9 @@ indexing
 
 class DLL_32_ROUTINE
 
+obsolete
+	"This class should no longer be used due to platform dependence and non-64bit compliance"
+
 inherit
 	SHARED_LIBRARY_ROUTINE
 		redefine

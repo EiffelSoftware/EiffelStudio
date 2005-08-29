@@ -9,6 +9,9 @@ indexing
 
 class DLL_32
 
+obsolete
+	"This class should no longer be used due to platform dependence and non-64bit compliance"
+
 inherit
 	DISPOSABLE
 

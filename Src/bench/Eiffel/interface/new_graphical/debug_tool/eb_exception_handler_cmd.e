@@ -53,6 +53,7 @@ feature -- Formatting
 			else		
 				create dlg
 				dlg.set_title ("Exceptions handler")
+				dlg.set_icon_pixmap (pixmaps.icon_dialog_window)
 
 				create vb
 				

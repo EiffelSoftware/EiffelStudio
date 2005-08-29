@@ -58,6 +58,7 @@ feature -- Widget
 --		once
 			create new_metric_definition_dialog
 			new_metric_definition_dialog.set_title ("New metric formula")
+			new_metric_definition_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
 
 			create vb
 				vb.set_padding (5)

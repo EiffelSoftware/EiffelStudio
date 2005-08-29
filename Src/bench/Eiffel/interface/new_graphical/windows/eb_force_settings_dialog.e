@@ -20,6 +20,13 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 
 create
 	make
@@ -235,6 +242,7 @@ feature {NONE} -- Implementation
 			client_slider.change_actions.extend (agent on_client_change)
 			
 			exit_button.select_actions.extend (agent hide)
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 		end
 		
 	on_stiffness_change (a_value: INTEGER) is

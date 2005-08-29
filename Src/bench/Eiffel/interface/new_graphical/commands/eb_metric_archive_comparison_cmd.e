@@ -78,6 +78,7 @@ feature -- Initialization
 		do
 			create archive_dialog
 			archive_dialog.set_title ("Archive setting")
+			archive_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
 
 			create vb1
 				vb1.set_padding (5)

@@ -1139,6 +1139,7 @@ feature {NONE} -- Implementation: Properties dialog
 		do
 			create properties_dialog
 			properties_dialog.set_title (Interface_names.t_Feature_properties)
+			properties_dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
 			create mainvb
 			properties_dialog.extend (mainvb)
 			mainvb.set_padding (Layout_constants.small_padding_size)

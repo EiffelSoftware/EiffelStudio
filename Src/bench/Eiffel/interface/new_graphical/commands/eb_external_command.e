@@ -326,6 +326,7 @@ feature {NONE} -- Implementation
 			Layout_constants.set_default_size_for_button (okb)
 			Layout_constants.set_default_size_for_button (cb)
 			dialog.set_title (Interface_names.t_External_command)
+			dialog.set_icon_pixmap (pixmaps.icon_dialog_window)
 			dialog.set_maximum_height (dialog.minimum_height)
 			dialog.set_default_push_button (okb)
 			dialog.set_default_cancel_button (cb)

@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_title (interface_names.b_create_new_feature)
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 			create vb
 			vb.set_padding (layout_constants.small_padding_size)
 			vb.set_border_width (layout_constants.default_border_size)

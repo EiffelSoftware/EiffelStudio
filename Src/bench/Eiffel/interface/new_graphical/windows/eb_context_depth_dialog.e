@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			client_depth := 1
 			supplier_depth := 1
 			set_title (Interface_names.t_Diagram_context_depth)
+			set_icon_pixmap (pixmaps.icon_dialog_window)
 
 			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent ok_action)
 			Layout_constants.set_default_size_for_button (ok_button)

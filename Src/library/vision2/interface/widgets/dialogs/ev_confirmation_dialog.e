@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_MESSAGE_DIALOG}
 			set_pixmap (Default_pixmaps.Question_pixmap)
+			set_icon_pixmap (Default_pixmaps.Question_pixmap)
 			set_title (ev_confirmation_dialog_title)
 			set_buttons (<<ev_ok, ev_cancel>>)
 			set_default_push_button (button (ev_ok))

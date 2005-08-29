@@ -102,6 +102,16 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := delay_before_cleaning_objects_grid_preference.value
 		end
 		
+	row_highlight_background_color: EV_COLOR is
+		do
+			Result := row_highlight_background_color_preference.value
+		end
+
+	row_unsensitive_foreground_color: EV_COLOR is
+		do
+			Result := row_unsensitive_foreground_color_preference.value
+		end
+		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	last_saved_stack_path_preference: STRING_PREFERENCE
@@ -118,6 +128,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	expanded_display_bgcolor_preference: COLOR_PREFERENCE
 	number_of_watch_tools_preference: INTEGER_PREFERENCE
 	delay_before_cleaning_objects_grid_preference: INTEGER_PREFERENCE
+	row_highlight_background_color_preference: COLOR_PREFERENCE
+	row_unsensitive_foreground_color_preference: COLOR_PREFERENCE
 	
 feature -- Preference Strings
 
@@ -135,6 +147,8 @@ feature -- Preference Strings
 	expanded_display_bgcolor_string: STRING is "debugger.expanded_display_background_color"
 	number_of_watch_tools_string: STRING is "debugger.number_of_watch_tools"
 	delay_before_cleaning_objects_string: STRING is "debugger.delay_before_cleaning_objects_grid"
+	row_highlight_background_color_string: STRING is "debugger.row_highlight_background_color"
+	row_unsensitive_foreground_color_string: STRING is "debugger.row_unsensitive_foreground_color"
 
 feature {NONE} -- Implementation
 
@@ -159,6 +173,8 @@ feature {NONE} -- Implementation
 			expanded_display_bgcolor_preference := l_manager.new_color_resource_value (l_manager, expanded_display_bgcolor_string, create {EV_COLOR}.make_with_8_bit_rgb (210, 210, 210))
 			number_of_watch_tools_preference := l_manager.new_integer_resource_value (l_manager, number_of_watch_tools_string, 1)					
 			delay_before_cleaning_objects_grid_preference := l_manager.new_integer_resource_value (l_manager, delay_before_cleaning_objects_string, 500)					
+			row_highlight_background_color_preference := l_manager.new_color_resource_value (l_manager, row_highlight_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 170))
+			row_unsensitive_foreground_color_preference := l_manager.new_color_resource_value (l_manager, row_unsensitive_foreground_color_string, create {EV_COLOR}.make_with_8_bit_rgb (150, 150, 150))
 		end
 	
 	preferences: PREFERENCES
@@ -179,5 +195,7 @@ invariant
 	expanded_display_bgcolor_preference_not_void: expanded_display_bgcolor_preference /= Void		
 	number_of_watch_tools_preference_not_void: number_of_watch_tools_preference /= Void	
 	delay_before_cleaning_objects_grid_preference_not_void: delay_before_cleaning_objects_grid_preference /= Void	
+	row_highlight_background_color_preference_not_void: row_highlight_background_color_preference /= Void	
+	row_unsensitive_foreground_color_preference_not_void: row_unsensitive_foreground_color_preference /= Void	
 
 end -- class EB_DEBUG_TOOL_DATA

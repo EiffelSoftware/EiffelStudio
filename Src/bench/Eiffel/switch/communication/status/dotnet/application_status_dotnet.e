@@ -14,7 +14,8 @@ inherit
 			current_call_stack_element,
 			current_call_stack,
 			update_on_stopped_state,
-			set_current_thread_id
+			set_current_thread_id,
+			thread_name, thread_priority
 		end
 		
 	SHARED_EIFNET_DEBUGGER
@@ -141,6 +142,32 @@ feature -- Thread info
 				end
 			end
 		end
+
+	thread_name	(a_id: like current_thread_id): STRING is
+		local
+			dbg_info: EIFNET_DEBUGGER_INFO
+		do
+			dbg_info := Eifnet_debugger.info
+			if dbg_info.is_valid_managed_thread_id (a_id) then
+				dbg_info.managed_thread (a_id).get_thread_name
+				Result := dbg_info.managed_thread (a_id).thread_name
+			else
+				Result := Precursor (a_id)
+			end
+		end
+		
+	thread_priority	(a_id: like current_thread_id): INTEGER is
+		local
+			dbg_info: EIFNET_DEBUGGER_INFO
+		do
+			dbg_info := Eifnet_debugger.info
+			if dbg_info.is_valid_managed_thread_id (a_id) then
+				dbg_info.managed_thread (a_id).get_thread_priority
+				Result := dbg_info.managed_thread (a_id).thread_priority
+			else
+				Result := Precursor (a_id)
+			end
+		end		
 		
 feature -- Call stack related
 

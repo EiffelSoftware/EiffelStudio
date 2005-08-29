@@ -409,7 +409,7 @@ feature {NONE} -- Borders drawing
 	last_width_of_header_during_resize_internal: INTEGER
 			-- Storage for `last_width_of_header_during_resize'.
 
-feature {NONE} -- column resizing
+feature -- column resizing access
 		
 	set_auto_resizing_column (c: INTEGER; auto: BOOLEAN) is
 		do
@@ -423,8 +423,6 @@ feature {NONE} -- column resizing
 			request_columns_auto_resizing			
 		end
 
-	timer_columns_auto_resizing: EV_TIMEOUT
-
 	request_columns_auto_resizing is
 		do
 			if not auto_resized_columns.is_empty then
@@ -436,7 +434,11 @@ feature {NONE} -- column resizing
 				end
 			end
 		end
-		
+
+feature {NONE} -- column resizing impl
+
+	timer_columns_auto_resizing: EV_TIMEOUT
+
 	cancel_timer_columns_auto_resizing is
 		do
 			if timer_columns_auto_resizing /= Void then
@@ -534,6 +536,18 @@ feature -- Grid helpers
 					select_row (r)
 					r := r + 1
 				end
+			end
+		end
+		
+	single_selected_row: EV_GRID_ROW is
+		require
+			is_single_row_selection_enabled: is_single_row_selection_enabled
+		local
+			l_rows: like selected_rows
+		do
+			l_rows := selected_rows
+			if l_rows.count = 1 then
+				Result := l_rows.first
 			end
 		end
 

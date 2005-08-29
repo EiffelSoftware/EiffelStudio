@@ -796,6 +796,14 @@ feature -- JIT Thread
 
 	loaded_managed_threads: HASH_TABLE [EIFNET_DEBUGGER_THREAD_INFO, INTEGER]
 			-- Managed thread, indexed by Thread ID
+
+	loaded_managed_threads_ids: ARRAY [INTEGER] is
+			-- All managed threads'ids.
+		do
+			Result := loaded_managed_threads.current_keys
+		ensure
+			Result /= Void
+		end
 			
 	is_valid_managed_thread_id (thid: INTEGER): BOOLEAN is
 			-- Is `thid' a valid Thread id for a managed thread ?
@@ -1083,5 +1091,8 @@ feature -- Stepping
 			or else last_control_mode_is_step_next
 		end
 	
+invariant
+	loaded_managed_threads_not_void: loaded_managed_threads /= Void
+
 end -- class EIFNET_DEBUGGER_INFO
 

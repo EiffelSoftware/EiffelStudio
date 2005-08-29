@@ -29,9 +29,6 @@ cluster
 
 		-- EiffelBase
 	all base: "$ISE_EIFFEL\library\base"
-		exclude
-			"table_eiffel3"; "desc";
-		end
 
 		-- WEL
 	all wel: "$ISE_EIFFEL\library\wel"

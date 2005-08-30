@@ -389,6 +389,7 @@ feature {NONE} -- Initialization
 			managed_class_formatters.extend (Void)
 			managed_class_formatters.extend (create {EB_ATTRIBUTES_FORMATTER}.make (Current))
 			managed_class_formatters.extend (create {EB_ROUTINES_FORMATTER}.make (Current))
+			managed_class_formatters.extend (create {EB_CREATORS_FORMATTER}.make (Current))
 			managed_class_formatters.extend (create {EB_DEFERREDS_FORMATTER}.make (Current))
 			managed_class_formatters.extend (create {EB_ONCES_FORMATTER}.make (Current))
 			managed_class_formatters.extend (create {EB_EXTERNALS_FORMATTER}.make (Current))

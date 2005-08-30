@@ -12,8 +12,7 @@ inherit
 	E_CLASS_FORMAT_CMD
 
 create
-
-	make, do_nothing
+	make, default_create
 
 feature -- Access
 

@@ -13,7 +13,7 @@ inherit
 
 create
 
-	make, do_nothing
+	make, default_create
 
 feature -- Execution
 

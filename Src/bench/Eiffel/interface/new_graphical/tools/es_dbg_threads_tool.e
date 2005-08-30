@@ -62,6 +62,8 @@ feature {NONE} -- Initialization
 			box.extend (grid)
 			
 			create_update_on_idle_agent
+
+			grid.build_delayed_cleaning
 			widget := box
 		end
 		
@@ -175,7 +177,7 @@ feature -- Status setting
 			l_status: APPLICATION_STATUS			
 		do
 			cancel_process_real_update_on_idle
-			clean_threads_info
+			request_clean_threads_info
 			l_status := application.status
 			if l_status /= Void then
 				process_real_update_on_idle (l_status.is_stopped)
@@ -227,9 +229,12 @@ feature {NONE} -- Implementation
 
 	clean_threads_info is
 		do
-			if grid.row_count > 0 then
-				grid.remove_rows (1, grid.row_count)
-			end
+			grid.call_delayed_clean
+		end
+		
+	request_clean_threads_info is
+		do
+			grid.request_delayed_clean
 		end
 		
 	refresh_threads_info is

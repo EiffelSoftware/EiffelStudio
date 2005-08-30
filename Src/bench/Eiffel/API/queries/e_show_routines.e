@@ -8,24 +8,13 @@ indexing
 class E_SHOW_ROUTINES 
 
 inherit
-
-	E_CLASS_FORMAT_CMD
-		rename
-			work as class_work
-		export
-			{NONE} class_work
-		end;
-
 	E_CLASS_FORMAT_CMD
 		redefine
-			work
-		select
 			work
 		end
 
 create
-
-	make, do_nothing
+	make, default_create
 
 feature -- Access
 
@@ -44,7 +33,7 @@ feature -- Execution
 		local
 			class_f: CLASS_TEXT_FORMATTER
 		do
-			class_work;
+			Precursor {E_CLASS_FORMAT_CMD}
 			create class_f;
 			class_f.set_clickable;
 			class_f.format_invariants (current_class);

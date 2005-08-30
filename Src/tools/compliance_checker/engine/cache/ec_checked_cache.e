@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
 			
 			l_type := {SYSTEM_TYPE}.get_type ("System.SByte")
-			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
+			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))
 			
 			l_type := {SYSTEM_TYPE}.get_type ("System.UInt16")
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, True))

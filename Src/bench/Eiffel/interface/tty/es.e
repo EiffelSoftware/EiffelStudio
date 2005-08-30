@@ -772,16 +772,16 @@ feature -- Update
 					option_error := True
 				end
 			elseif option.is_equal ("-dumploop") then
-					create {EWB_DUMP_LOOP} command.do_nothing
+					create {EWB_DUMP_LOOP} command
 			elseif option.is_equal ("-dumpuniverse") then
 				if current_option < argument_count then
-					create {EWB_DUMP_UNIVERSE} command.do_nothing
+					create {EWB_DUMP_UNIVERSE} command
 				else
 					option_error := True
 				end
 			elseif option.is_equal ("-dumpclasses") then
 				if current_option < argument_count then
-					create {EWB_DUMP_CLASSES} command.do_nothing
+					create {EWB_DUMP_CLASSES} command
 				else
 					option_error := True
 				end

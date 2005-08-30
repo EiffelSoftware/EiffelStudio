@@ -25,7 +25,7 @@ default
 	use_all_cluster_name_as_namespace (no)
 	msil_generation_type ("exe")
 	namespace ("EiffelSoftware.MetadataConsumer")
-	version ("5.6.1210")
+	version ("5.7.0201")
 	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
@@ -73,6 +73,11 @@ cluster
 	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
 		exclude
 			"CVS"; "example"; 
+		end
+		
+	all compliance_checker:		"$EIFFEL_SRC\tools\compliance_checker\engine"
+		exclude
+			"CVS"; "EIFGEN"; "interop"; 
 		end
 
 assembly

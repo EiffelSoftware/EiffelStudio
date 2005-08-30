@@ -1,27 +1,27 @@
 indexing
-
-	description: 
-		"Server for invariants.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Server for invariants."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INVARIANT_SERVER
 
 inherit
+	LINKED_LIST [INVARIANT_ADAPTER]
 
-	LINKED_LIST [INVARIANT_ADAPTER];
 	SHARED_TEXT_ITEMS
 		undefine
 			copy, is_equal
 		end
 
 create
-
 	make
 
 feature -- Output
 
 	format (ctxt: FORMAT_CONTEXT) is
+			-- Format Current in `ctxt'.
+		require
+			ctxt_not_void: ctxt /= Void
 		local
 			is_not_first: BOOLEAN
 			target_class: CLASS_C
@@ -30,8 +30,8 @@ feature -- Output
 				target_class := ctxt.class_c
 				ctxt.set_in_assertion
 				ctxt.begin
-				ctxt.put_text_item (ti_Before_invariant)
-				ctxt.put_text_item_without_tabs (ti_Invariant_keyword)
+				ctxt.put_text_item (ti_before_invariant)
+				ctxt.put_text_item_without_tabs (ti_invariant_keyword)
 				ctxt.indent
 				ctxt.put_new_line
 				from
@@ -42,7 +42,10 @@ feature -- Output
 					ctxt.begin
 					if target_class /= item.source_class then
 						ctxt.indent
-						ctxt.put_text_item (ti_Dashdash)
+						if is_not_first then
+							ctxt.put_new_line
+						end
+						ctxt.put_text_item (ti_dashdash)
 						ctxt.put_space
 						ctxt.put_comment_text ("from ")
 						ctxt.put_classi (item.source_class.lace_class)
@@ -52,7 +55,7 @@ feature -- Output
 					item.format (ctxt)
 					ctxt.put_new_line
 					if ctxt.last_was_printed then
-						is_not_first := true
+						is_not_first := True
 						ctxt.commit
 					else
 						ctxt.rollback
@@ -62,7 +65,7 @@ feature -- Output
 				if is_not_first then
 					ctxt.put_new_line
 					ctxt.commit
-					ctxt.put_text_item (ti_After_invariant)
+					ctxt.put_text_item (ti_after_invariant)
 				else
 					ctxt.rollback
 				end

@@ -568,9 +568,7 @@ feature {NONE} -- Compliance Checking
 		end		
 
 feature {NONE} -- Report Row Building
-
-	counter: INTEGER
-		
+	
 	add_type_report_row (a_report_type: EC_REPORT_TYPE) is
 			-- Add a row for `a_checked_type'
 			-- `a_report_type' id added as grid row data
@@ -585,8 +583,6 @@ feature {NONE} -- Report Row Building
 			l_row: EV_GRID_ROW
 			i: INTEGER
 		do
-			counter := counter + 1
-			print (counter.out +"%N")
 			l_grid := grid_output
 			i := l_grid.row_count + 1
 			first_level_row_count := first_level_row_count + 1

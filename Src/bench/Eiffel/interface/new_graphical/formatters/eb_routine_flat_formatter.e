@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 		require else
 			associated_feature_non_void: associated_feature /= Void
 		do
-			create feature_cmd.do_nothing
+			create feature_cmd
 		end
 
 	generate_text is

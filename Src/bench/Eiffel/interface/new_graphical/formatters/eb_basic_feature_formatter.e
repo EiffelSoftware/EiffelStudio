@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 		require else
 			True
 		do
-			create feature_cmd.do_nothing
+			create feature_cmd
 		end
 
 	has_breakpoints: BOOLEAN is False

@@ -13,8 +13,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 
 create
-
-	make, do_nothing
+	make, default_create
 
 feature -- Execution
 

@@ -17,8 +17,7 @@ inherit
 		end
 
 create
-
-	make, do_nothing
+	make, default_create
 
 feature {NONE} -- Implementation
 
@@ -26,7 +25,7 @@ feature {NONE} -- Implementation
 			-- Associated feature command to be executed
 			-- after successfully retrieving the feature_i
 		do
-			create Result.do_nothing
+			create Result
 		end;
 
 end -- class EWB_PAST

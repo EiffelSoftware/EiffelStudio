@@ -143,6 +143,7 @@ feature {NONE} -- Initialization
 			if show_open_project_frame then
 				create open_epr_project_rb.make_with_text (Interface_names.l_Open_an_existing_project)
 				create browse_button.make_with_text_and_action (Interface_names.b_Browse, agent open_existing_project_not_listed)
+				open_epr_project_rb.pointer_double_press_actions.force_extend (agent open_existing_project_not_listed)
 				add_option_box_and_button (pixmaps.large_pixmaps.icon_open_project.twin, open_epr_project_rb, browse_button, open_project_vb)
 				create_and_fill_compiled_projects_list
 				open_project_vb.extend (compiled_projects_list)
@@ -268,7 +269,7 @@ feature {NONE} -- Initialization
 		local
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
-		do
+		do	
 			Layout_constants.set_default_size_for_button (a_button)
 			create vb
 			vb.extend (create {EV_CELL})

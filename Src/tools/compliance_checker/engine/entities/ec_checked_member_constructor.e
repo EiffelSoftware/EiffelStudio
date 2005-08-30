@@ -33,7 +33,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			l_member: like member
 		do
 			l_member := member
-			if not l_member.is_private and not l_member.is_assembly then
+			if l_member.is_public or l_member.is_family or l_member.is_family_or_assembly then
 				Precursor {EC_CHECKED_MEMBER_METHOD_BASE}
 				if internal_is_compliant and not internal_is_marked then
 					internal_is_compliant := are_parameters_compliant (False)
@@ -50,7 +50,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			l_member: like member
 		do
 			l_member := member
-			if (not internal_is_compliant or not internal_is_marked) and then (not l_member.is_private and not l_member.is_assembly) then
+			if (not internal_is_compliant or not internal_is_marked) and then (l_member.is_public or l_member.is_family or l_member.is_family_or_assembly) then
 				internal_is_eiffel_compliant := are_parameters_compliant (True)
 			else
 				internal_is_eiffel_compliant := True

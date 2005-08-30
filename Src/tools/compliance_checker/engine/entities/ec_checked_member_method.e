@@ -47,7 +47,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			l_compliant: BOOLEAN
 		do
 			l_member := member
-			if not l_member.is_private and not l_member.is_assembly then
+			if l_member.is_public or l_member.is_family or l_member.is_family_or_assembly then
 				Precursor {EC_CHECKED_MEMBER_METHOD_BASE}
 				if internal_is_compliant and not internal_is_marked then
 					if l_member.return_type /= Void then
@@ -72,7 +72,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 		do
 			l_member := member
 			l_compliant := True
-			if (not internal_is_compliant or not internal_is_marked) and then (not l_member.is_private and not l_member.is_assembly) then
+			if (not internal_is_compliant or not internal_is_marked) and then (l_member.is_public or l_member.is_family or l_member.is_family_or_assembly) then
 				if l_member.return_type /= Void then
 					l_compliant := checked_return_type.is_eiffel_compliant
 				end

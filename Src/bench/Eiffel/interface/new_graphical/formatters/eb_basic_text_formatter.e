@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 		require else
 			True
 		do
-			create class_cmd.do_nothing
+			create class_cmd
 		end
 
 	has_breakpoints: BOOLEAN is False

@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 		require else
 			associated_class_non_void: associated_class /= Void
 		do
-			create class_cmd.do_nothing
+			create class_cmd
 		end
 
 	generate_text is

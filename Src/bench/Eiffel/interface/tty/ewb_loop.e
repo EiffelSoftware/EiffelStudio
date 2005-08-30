@@ -46,7 +46,6 @@ feature -- Initialization
 	main_menu: EWB_MENU is
 			-- Main menu options
 		local
-			ewb_cmd: EWB_CMD
 			i: INTEGER
 		once
 			i := 2
@@ -60,155 +59,118 @@ feature -- Initialization
 			Result.set_is_main
 
 			if Has_documentation_generation then
-				create {EWB_STRING} ewb_cmd.make (class_cmd_name, class_help, class_abb, class_menu)
-				Result.add_entry (ewb_cmd)
+				Result.add_entry (
+					create {EWB_STRING}.make (class_cmd_name, class_help, class_abb, class_menu))
 			end
-			create {EWB_STRING} ewb_cmd.make (compile_cmd_name, compile_help, compile_abb, compile_menu)
-			Result.add_entry (ewb_cmd)
+
+			Result.add_entry (
+				create {EWB_STRING}.make (compile_cmd_name, compile_help, compile_abb, compile_menu))
+
 			if Has_documentation_generation then
-				create {EWB_STRING} ewb_cmd.make (feature_cmd_name, feature_help, feature_abb, feature_menu)
-				Result.add_entry (ewb_cmd)
+				Result.add_entry (
+					create {EWB_STRING}.make (feature_cmd_name, feature_help, feature_abb, feature_menu))
 			end
-			create {EWB_STRING} ewb_cmd.make (system_cmd_name, system_help, system_abb, system_menu)
-			Result.add_entry (ewb_cmd)
+
+			Result.add_entry (create {EWB_STRING}.make (system_cmd_name, system_help, system_abb, system_menu))
 			if has_profiler then
-				create {EWB_STRING} ewb_cmd.make (profile_cmd_name, profile_help, profile_abb, profile_menu)
-				Result.add_entry (ewb_cmd)
+				Result.add_entry (
+					create {EWB_STRING}.make (profile_cmd_name, profile_help, profile_abb, profile_menu))
 			end
 			if has_documentation_generation then
-				create {EWB_STRING} ewb_cmd.make (documentation_cmd_name, documentation_help, documentation_abb, documentation_menu)
-				Result.add_entry (ewb_cmd)
+				Result.add_entry (
+					create {EWB_STRING}.make (documentation_cmd_name, documentation_help,
+						documentation_abb, documentation_menu))
 			end
+		ensure
+			main_menu_not_void: Result /= Void
 		end
 
 	Documentation_menu: EWB_MENU is
 			-- Documentation menu options
-		local
-			ewb_cmd: EWB_CMD
 		once
 			create Result.make (1, 4)
-
-			create {EWB_DOCUMENTATION} ewb_cmd.make_flat_short (Void, false)
-			Result.add_entry (ewb_cmd)
-			create {EWB_DOCUMENTATION} ewb_cmd.make_short (Void, false)
-			Result.add_entry (ewb_cmd)
-			create {EWB_DOCUMENTATION} ewb_cmd.make_flat (Void, false)
-			Result.add_entry (ewb_cmd)
-			create {EWB_DOCUMENTATION} ewb_cmd.make_text (Void)
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (create {EWB_DOCUMENTATION}.make_flat_short (Void, False))
+			Result.add_entry (create {EWB_DOCUMENTATION}.make_short (Void, False))
+			Result.add_entry (create {EWB_DOCUMENTATION}.make_flat (Void, False))
+			Result.add_entry (create {EWB_DOCUMENTATION}.make_text (Void))
+		ensure
+			documentation_menu_not_void: Result /= Void
 		end
 
 	System_menu: EWB_MENU is
 			-- System menu options
-		local
-			ewb_cmd: EWB_CMD
 		once
 			create Result.make (1, 8)
 			Result.set_parent (Main_menu)
-
-			create {EWB_ACE} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_CLASS_LIST} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_CLUSTER_HIERARCHY} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_CLUSTERS} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_EDIT_ACE} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_INDEXING} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_MODIFIED} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_STATISTICS} ewb_cmd
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (create {EWB_ACE})
+			Result.add_entry (create {EWB_CLASS_LIST})
+			Result.add_entry (create {EWB_CLUSTER_HIERARCHY})
+			Result.add_entry (create {EWB_CLUSTERS})
+			Result.add_entry (create {EWB_EDIT_ACE})
+			Result.add_entry (create {EWB_INDEXING})
+			Result.add_entry (create {EWB_MODIFIED})
+			Result.add_entry (create {EWB_STATISTICS})
+		ensure
+			system_menu_not_void: Result /= Void
 		end
 
 	profile_menu: EWB_MENU is
 			-- Profile menu options.
-		local
-			ewb_cmd: EWB_CMD
 		once
 			create Result.make (1, 7)
 			Result.set_parent (Main_menu)
-
-			create {EWB_SWITCHES_CMD} ewb_cmd.make_without_help (switches_cmd_name, switches_abb, switches_menu)
-			Result.add_entry (ewb_cmd)
-			create {EWB_STRING} ewb_cmd.make (queries_cmd_name, queries_help, queries_abb, queries_menu)
-			Result.add_entry (ewb_cmd)
-			create {EWB_INPUT} ewb_cmd.make_loop
-			Result.add_entry (ewb_cmd)
-			create {EWB_LANGUAGE} ewb_cmd.make_loop
-			Result.add_entry (ewb_cmd)
-			create {EWB_RUN_PROF} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_GENERATE} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_DEFAULTS} ewb_cmd.make_loop (Current)
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (
+				create {EWB_SWITCHES_CMD}.make_without_help (switches_cmd_name, switches_abb, switches_menu))
+			Result.add_entry (
+				create {EWB_STRING}.make (queries_cmd_name, queries_help, queries_abb, queries_menu))
+			Result.add_entry (create {EWB_INPUT}.make_loop)
+			Result.add_entry (create {EWB_LANGUAGE}.make_loop)
+			Result.add_entry (create {EWB_RUN_PROF})
+			Result.add_entry (create {EWB_GENERATE})
+			Result.add_entry (create {EWB_DEFAULTS}.make_loop (Current))
+		ensure
+			profile_menu_not_void: Result /= Void
 		end
 
 	class_menu: EWB_MENU is
 			-- Class menu options
-		local
-			ewb_cmd: EWB_CMD
 		once
-			create Result.make (1, 15)
+			create Result.make (1, 16)
 			Result.set_parent (Main_menu)
-
-			create {EWB_ANCESTORS} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_ATTRIBUTES} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_CLIENTS} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_DEFERRED} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_DESCENDANTS} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_EDIT_CLASS} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_EXPORTED} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_EXTERNALS} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_FLAT} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_FS} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_ONCE} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_ROUTINES} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_SHORT} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_SUPPLIERS} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_TEXT} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (create {EWB_ANCESTORS})
+			Result.add_entry (create {EWB_ATTRIBUTES})
+			Result.add_entry (create {EWB_CLIENTS})
+			Result.add_entry (create {EWB_DEFERRED})
+			Result.add_entry (create {EWB_DESCENDANTS})
+			Result.add_entry (create {EWB_EDIT_CLASS})
+			Result.add_entry (create {EWB_EXPORTED})
+			Result.add_entry (create {EWB_EXTERNALS})
+			Result.add_entry (create {EWB_FLAT})
+			Result.add_entry (create {EWB_FS})
+			Result.add_entry (create {EWB_ONCE})
+			Result.add_entry (create {EWB_ROUTINES})
+			Result.add_entry (create {EWB_CREATORS})
+			Result.add_entry (create {EWB_SHORT})
+			Result.add_entry (create {EWB_SUPPLIERS})
+			Result.add_entry (create {EWB_TEXT})
+		ensure
+			class_menu_not_void: Result /= Void
 		end
 
 	feature_menu: EWB_MENU is
 			-- Feature menu options
-		local
-			ewb_cmd: EWB_CMD
 		once
 			create Result.make (1, 7)
 			Result.set_parent (Main_menu)
-			create {EWB_PAST} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_SENDERS} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_FUTURE} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_R_FLAT} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_HOMONYMS} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_HISTORY} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
-			create {EWB_R_TEXT} ewb_cmd.do_nothing
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (create {EWB_PAST})
+			Result.add_entry (create {EWB_SENDERS})
+			Result.add_entry (create {EWB_FUTURE})
+			Result.add_entry (create {EWB_R_FLAT})
+			Result.add_entry (create {EWB_HOMONYMS})
+			Result.add_entry (create {EWB_HISTORY})
+			Result.add_entry (create {EWB_R_TEXT})
+		ensure
+			feature_menu_not_void: Result /= Void
 		end
 
 	compile_menu: EWB_MENU is
@@ -219,27 +181,18 @@ feature -- Initialization
 
 	c_menu: EWB_MENU is
 			-- Menu options for c compilations
-		local
-			ewb_cmd: EWB_CMD
 		do
 			create Result.make (1,8)
-
-			create {EWB_ARGS} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_F_COMPILE} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_FINALIZE} ewb_cmd.make (False)
-			Result.add_entry (ewb_cmd)
-			create {EWB_FREEZE} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_COMP} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_QUICK_MELT} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_RUN} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_W_COMPILE} ewb_cmd
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (create {EWB_ARGS})
+			Result.add_entry (create {EWB_F_COMPILE})
+			Result.add_entry (create {EWB_FINALIZE}.make (False))
+			Result.add_entry (create {EWB_FREEZE})
+			Result.add_entry (create {EWB_COMP})
+			Result.add_entry (create {EWB_QUICK_MELT})
+			Result.add_entry (create {EWB_RUN})
+			Result.add_entry (create {EWB_W_COMPILE})
+		ensure
+			c_menu_not_void: Result /= Void
 		end
 
 	menu_commands: ARRAY [EWB_MENU] is
@@ -273,48 +226,37 @@ feature -- Initialization
 				Result.put (switches_menu, i)
 				i := i + 1
 			end
+		ensure
+			menu_commands_not_void: menu_commands /= Void
 		end
 
 	switches_menu: EWB_MENU is
 			-- Menu containing output switches
-		local
-			ewb_cmd: EWB_CMD
 		once
 			create Result.make (1, 6)
 			Result.set_parent (profile_menu)
-
-			create {EWB_NUMBER_OF_CALLS} ewb_cmd.make_loop
-			Result.add_entry (ewb_cmd)
-			create {EWB_FEATURENAME} ewb_cmd.make_loop
-			Result.add_entry (ewb_cmd)
-			create {EWB_TOTAL_SEC} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_SELF_SEC} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_DESCENDANTS_SEC} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_PERCENTAGE} ewb_cmd
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (create {EWB_NUMBER_OF_CALLS}.make_loop)
+			Result.add_entry (create {EWB_FEATURENAME}.make_loop)
+			Result.add_entry (create {EWB_TOTAL_SEC})
+			Result.add_entry (create {EWB_SELF_SEC})
+			Result.add_entry (create {EWB_DESCENDANTS_SEC})
+			Result.add_entry (create {EWB_PERCENTAGE})
+		ensure
+			switches_menu_not_void: Result /= Void
 		end
 			
 	queries_menu: EWB_MENU is
 			-- Sub-menu containing commands to manipulate queries.
-		local
-			ewb_cmd: EWB_CMD
 		once
 			create Result.make (1,5)
 			Result.set_parent (profile_menu)
-
-			create {EWB_ADD_SUBQUERY} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_INACTIVATE_SUBQUERY} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_REACTIVATE_SUBQUERY} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_CHANGE_OPERATOR} ewb_cmd
-			Result.add_entry (ewb_cmd)
-			create {EWB_SHOW_SUBQUERIES} ewb_cmd
-			Result.add_entry (ewb_cmd)
+			Result.add_entry (create {EWB_ADD_SUBQUERY})
+			Result.add_entry (create {EWB_INACTIVATE_SUBQUERY})
+			Result.add_entry (create {EWB_REACTIVATE_SUBQUERY})
+			Result.add_entry (create {EWB_CHANGE_OPERATOR})
+			Result.add_entry (create {EWB_SHOW_SUBQUERIES})
+		ensure
+			queries_menu_not_void: Result /= Void
 		end
 
 feature -- Execution

@@ -477,7 +477,6 @@ feature {NONE} -- Implementation
 			-- Called when a `Wm_setcursor' message is received.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
 		local
-			widget: EV_WIDGET_IMP
 			l_pointed_divider_index: INTEGER
 		do
 			l_pointed_divider_index := pointed_divider_index

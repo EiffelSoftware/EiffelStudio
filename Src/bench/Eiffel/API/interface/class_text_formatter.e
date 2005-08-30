@@ -130,7 +130,7 @@ feature -- Output
 			class_c ?= e_class;
 			System.set_current_class (class_c);
 			Inst_context.set_cluster (e_class.cluster);
-			f.register_ancestors_invariants;
+			f.register_invariants;
 			f.format_invariants;
 			System.set_current_class (old_class);
 			Inst_context.set_cluster (old_cluster);

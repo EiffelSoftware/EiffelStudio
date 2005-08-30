@@ -182,13 +182,14 @@ feature {NONE} -- Initialization
 			
 			stack_grid.drop_actions.extend (agent on_element_drop)
 			stack_grid.key_press_actions.extend (agent key_pressed)
---			stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
-			stack_grid.pointer_double_press_item_actions.extend (agent on_grid_item_pointer_pressed)
+			stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
+--			stack_grid.pointer_double_press_item_actions.extend (agent on_grid_item_pointer_pressed)
 			stack_grid.set_item_pebble_function (agent on_grid_item_pebble_function)
 			stack_grid.set_item_accept_cursor_function (agent on_grid_item_accept_cursor_function)
 			
 			box.extend (stack_grid)			
 			
+			stack_grid.build_delayed_cleaning
 			create_update_on_idle_agent
 			widget := box
 		end
@@ -331,7 +332,7 @@ feature -- Status setting
 			l_status: APPLICATION_STATUS			
 		do
 			cancel_process_real_update_on_idle
-			clean_stack_grid
+			request_clean_stack_grid
 			l_status := application.status
 			if l_status /= Void then
 				display_stop_cause (l_status.is_stopped)
@@ -447,10 +448,16 @@ feature {NONE} -- Implementation
 	clean_stack_grid is
 			-- Clean the stack_grid
 		do
-			stack_grid.remove_and_clear_all_rows
+			stack_grid.call_delayed_clean
 		ensure
 			stack_grid_cleaned: stack_grid.row_count = 0
 		end			
+
+	request_clean_stack_grid is
+			-- Clean the stack_grid
+		do
+			stack_grid.request_delayed_clean
+		end
 
 	real_update (dbg_was_stopped: BOOLEAN) is
 			-- Display current execution status.
@@ -462,6 +469,7 @@ feature {NONE} -- Implementation
 			glab: EV_GRID_LABEL_ITEM
 			l_status: APPLICATION_STATUS
 		do
+			request_clean_stack_grid
 			if Application.is_running then
 				l_status := application.status
 				if dbg_was_stopped then
@@ -469,10 +477,10 @@ feature {NONE} -- Implementation
 				end
 				display_stop_cause (dbg_was_stopped)
 				refresh_threads_info
-				clean_stack_grid
 				if
 					dbg_was_stopped and l_status.is_stopped
 				then
+					clean_stack_grid
 					stack := l_status.current_call_stack
 					if stack /= Void then
 						save_call_stack_cmd.enable_sensitive

@@ -498,7 +498,7 @@ feature -- Status setting
 				objects_tool.change_attach_notebook (debugging_tools)
 			end
 			objects_tool.set_debugger_manager (Current)
-			objects_tool.set_cleaning_timer_delay (Preferences.Debug_tool_data.delay_before_cleaning_objects_grid)
+			objects_tool.set_cleaning_delay (Preferences.Debug_tool_data.delay_before_cleaning_objects_grid)
 			objects_tool.update
 
 				--| Watches tool
@@ -825,7 +825,6 @@ feature -- Debugging events
 				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
 
-			objects_tool.enable_grid_redraw
 			objects_tool.disable_refresh
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.disable_refresh)
 			if not Application.current_call_stack_is_empty then
@@ -903,7 +902,6 @@ feature -- Debugging events
 			call_stack_tool.update
 				-- Fill in the objects tool.
 			objects_tool.update
-			objects_tool.disable_grid_redraw
 			
 				-- Update Watch tool
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)

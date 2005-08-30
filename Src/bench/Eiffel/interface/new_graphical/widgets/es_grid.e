@@ -45,7 +45,9 @@ feature {NONE} -- Initialization
 
 			mouse_wheel_scroll_size := 3 --| default value
 			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
-			key_press_actions.extend (agent on_key_pressed)			
+			key_press_actions.extend (agent on_key_pressed)
+			
+			cleaning_delay := 500
 		end
 		
 	color_separator: EV_COLOR is
@@ -96,16 +98,6 @@ feature -- Change
 			scrolling_common_line_count := v
 		ensure	
 			scrolling_common_line_count_set: scrolling_common_line_count = v
-		end
-		
-feature -- To be implemented
-
-	enable_grid_redraw is
-		do
-		end
-
-	disable_grid_redraw is
-		do
 		end
 
 feature -- Grid item Activation
@@ -550,5 +542,73 @@ feature -- Grid helpers
 				Result := l_rows.first
 			end
 		end
+
+feature -- Delayed cleaning
+
+	delayed_cleaning_exists: BOOLEAN is
+		do
+			Result := delayed_cleaning /= Void
+		end
+
+	request_delayed_clean is
+		require
+			delayed_cleaning_exists
+		do
+			delayed_cleaning.request_call_delayed_action
+		end
+
+	call_delayed_clean is
+		require
+			delayed_cleaning_exists
+		do
+			delayed_cleaning.call_delayed_action			
+		end
+
+	cancel_delayed_clean is
+		require
+			delayed_cleaning_exists
+		do
+			delayed_cleaning.cancel_delayed_action			
+		end
+		
+	set_cleaning_delay (v: INTEGER) is
+		require
+			v_positive_or_zero: v >= 0
+		do
+			cleaning_delay := v
+			if delayed_cleaning /= Void then
+				delayed_cleaning.set_delay (cleaning_delay)
+			end
+		end
+
+	build_delayed_cleaning is
+		do
+			if delayed_cleaning = Void then
+				create delayed_cleaning.make (
+									agent default_clean,
+									cleaning_delay
+							)
+				delayed_cleaning.set_starting_delayed_action (agent disable_sensitive)
+				delayed_cleaning.set_ending_delayed_action (agent enable_sensitive)
+			end
+		end
+
+	default_clean is
+		do
+			remove_and_clear_all_rows
+		end
+
+	set_delayed_cleaning_action (v: PROCEDURE [ANY, TUPLE]) is
+		require
+			delayed_cleaning_exists
+		do
+			delayed_cleaning.set_delayed_action (v)
+		end
+
+feature {NONE} -- Implementation
+
+	cleaning_delay: INTEGER
+
+	delayed_cleaning: ES_DELAYED_ACTION
 
 end

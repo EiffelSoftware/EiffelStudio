@@ -122,6 +122,11 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_format_creator_callers_color")
 		end
 
+	Icon_format_invariants: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_invariants_color")
+		end
+
 	Icon_format_ancestors: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_format_ancestors_color")
@@ -1355,6 +1360,7 @@ feature {NONE} -- Implementation
 			Result.put ([12,10], "icon_other_feature")
 			Result.put ([12,11], "icon_reset_view_color")
 			Result.put ([12,12], "icon_format_creators_color")
+			Result.put ([12,13], "icon_format_invariants_color")
 			Result.compare_objects
 		end
 

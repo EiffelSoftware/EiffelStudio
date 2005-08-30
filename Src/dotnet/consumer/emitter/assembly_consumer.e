@@ -392,7 +392,7 @@ feature {NONE} -- Constants
 	base_types: ARRAY [STRING] is
 			-- base types.
 		once
-			create Result.make (1, 13)
+			create Result.make (1, 15)
 			Result.put ("System.Byte", 1)
 			Result.put ("System.Int16", 2)
 			Result.put ("System.Int32", 3)
@@ -406,6 +406,8 @@ feature {NONE} -- Constants
 			Result.put ("System.Double", 11)
 			Result.put ("System.Char", 12)
 			Result.put ("System.Boolean", 13)
+			Result.put ("System.SByte", 14)
+			Result.put ("EiffelSoftware.Runtime.ANY", 15)
 			Result.compare_objects
 		end
 		

@@ -141,6 +141,8 @@ feature {NONE}
 
 	routines_help: STRING is "show the routines of a class"
 
+	invariants_help: STRING is "show the invariants of a class"
+
 	creators_help: STRING is "show the creation procedures of a class"
 
 	run_help: STRING is "execute the system"

@@ -271,9 +271,7 @@ feature {NONE} -- Implementation
 			a_type_not_void: a_type /= Void
 		local
 			l_type: like a_type
-			l_full_name: SYSTEM_STRING
-			l_count: INTEGER
-			
+			l_full_name: SYSTEM_STRING			
 			l_name: SYSTEM_STRING
 			l_tail: SYSTEM_STRING
 			c: CHARACTER
@@ -326,10 +324,12 @@ feature {NONE} -- Implementation
 			Result.add (("System.Int16").to_cil, ("short").to_cil)
 			Result.add (("System.Int32").to_cil, ("int").to_cil)
 			Result.add (("System.Int64").to_cil, ("long").to_cil)
+			Result.add (("System.SByte").to_cil, ("sbyte").to_cil)
 			Result.add (("System.UInt16").to_cil, ("ushort").to_cil)
 			Result.add (("System.UInt32").to_cil, ("uint").to_cil)
 			Result.add (("System.UInt64").to_cil, ("ulong").to_cil)
 			Result.add (("System.Boolean").to_cil, ("bool").to_cil)
+			Result.add (("System.Char").to_cil, ("char").to_cil)			
 			Result.add (("System.Void").to_cil, ("void").to_cil)
 			Result.add (("System.Single").to_cil, ("single").to_cil)
 			Result.add (("System.Double").to_cil, ("double").to_cil)

@@ -869,11 +869,11 @@ feature -- Element change
 
 feature -- Output
 
-	register_ancestors_invariants is
+	register_invariants is
 			-- Register the invariants for target class.
 		do
 			create format_registration.make (class_c, client)
-			format_registration.register_ancestors_invariants
+			format_registration.register_invariants
 		end
 
 	format_categories is

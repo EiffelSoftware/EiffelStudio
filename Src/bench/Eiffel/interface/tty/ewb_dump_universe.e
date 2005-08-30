@@ -18,10 +18,6 @@ inherit
 
 	SHARED_WORKBENCH
 
-create
-
-	do_nothing
-
 feature
 
 	execute is

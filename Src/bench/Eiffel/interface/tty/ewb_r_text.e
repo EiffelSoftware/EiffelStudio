@@ -19,8 +19,7 @@ inherit
 		end
 
 create
-
-	make, do_nothing
+	make, default_create
 
 feature {NONE} -- Implementation
 

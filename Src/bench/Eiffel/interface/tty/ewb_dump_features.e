@@ -25,8 +25,7 @@ inherit
 	SHARED_WORKBENCH
 
 create
-
-	make, make_verbose, do_nothing
+	make, make_verbose
 
 feature
 

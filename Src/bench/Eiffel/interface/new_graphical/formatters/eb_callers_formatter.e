@@ -50,8 +50,8 @@ feature -- Properties
 					Result.put (pixmaps.icon_format_assigners, 1)
 					Result.put (pixmaps.icon_format_assigners, 2)
 				when {DEPEND_UNIT}.is_in_creation_flag then
-					Result.put (pixmaps.icon_format_creators, 1)
-					Result.put (pixmaps.icon_format_creators, 2)
+					Result.put (pixmaps.icon_format_creator_callers, 1)
+					Result.put (pixmaps.icon_format_creator_callers, 2)
 				else
 					Result.put (pixmaps.icon_format_feature_callers, 1)
 					Result.put (pixmaps.icon_format_feature_callers, 2)

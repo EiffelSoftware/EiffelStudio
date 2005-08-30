@@ -135,7 +135,7 @@ feature -- Initialization
 	class_menu: EWB_MENU is
 			-- Class menu options
 		once
-			create Result.make (1, 16)
+			create Result.make (1, 17)
 			Result.set_parent (Main_menu)
 			Result.add_entry (create {EWB_ANCESTORS})
 			Result.add_entry (create {EWB_ATTRIBUTES})
@@ -149,6 +149,7 @@ feature -- Initialization
 			Result.add_entry (create {EWB_FS})
 			Result.add_entry (create {EWB_ONCE})
 			Result.add_entry (create {EWB_ROUTINES})
+			Result.add_entry (create {EWB_INVARIANTS})
 			Result.add_entry (create {EWB_CREATORS})
 			Result.add_entry (create {EWB_SHORT})
 			Result.add_entry (create {EWB_SUPPLIERS})

@@ -84,16 +84,12 @@ feature -- Basic Operations
 	organize_favorites is
 			-- Display a dialog to organize the favorites.
 		do
-			create organize_favorites_dialog.make (Current)
-
-				-- Disable all windows sensitivity (to avoid pick&drop pbs).
-			window_manager.disable_all
-
-				-- Show the dialog.
-			organize_favorites_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
-
-				-- Enable all windows sensitivity back.
-			window_manager.enable_all
+				-- Show the dialog if not already shown, otherwise raise the dialog topmost.
+			if not organize_favorites_dialog.is_displayed then
+				organize_favorites_dialog.show
+			else
+				organize_favorites_dialog.raise
+			end
 		end
 
 feature -- Load / Save / Reset...
@@ -109,6 +105,7 @@ feature -- Load / Save / Reset...
 		do
 			widget.refresh
 			menu.refresh
+			organize_favorites_dialog.refresh
 		end
 
 feature -- Memory management
@@ -129,7 +126,12 @@ feature {EB_FAVORITES_MENU} -- Implementation
 	development_window: EB_DEVELOPMENT_WINDOW
 			-- Associated development window.
 
-	organize_favorites_dialog: EB_ORGANIZE_FAVORITES_DIALOG
+	organize_favorites_dialog: EB_ORGANIZE_FAVORITES_DIALOG is
 			-- Dialog window to organize the favorites.
+		once
+			create Result.make (Current)
+		ensure
+			result_not_void: Result /= Void
+		end
 
 end -- class EB_FAVORITES

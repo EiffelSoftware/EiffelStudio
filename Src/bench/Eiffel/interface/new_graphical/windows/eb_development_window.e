@@ -3215,7 +3215,7 @@ feature {NONE} -- Implementation
 	destroy is
 			-- check if current text has been saved and destroy
 		local
-			dialog_w: EB_WARNING_DIALOG
+			dialog_w: EV_WARNING_DIALOG
 		do
 			if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
 				if Window_manager.development_windows_count > 1 then

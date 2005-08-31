@@ -43,7 +43,7 @@ feature -- Basic operations
 			dial: EV_FILE_SAVE_DIALOG
 			test_file: RAW_FILE
 			error: INTEGER
-			wd: EB_WARNING_DIALOG
+			wd: EV_WARNING_DIALOG
 			env: EXECUTION_ENVIRONMENT
 			current_directory: STRING
 		do

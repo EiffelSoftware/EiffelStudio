@@ -1555,7 +1555,9 @@ feature {NONE} -- Implementation
 			-- `Text' has been modified.
 			--| We call the change_actions.
 		do
-			Precursor {WEL_RICH_EDIT}
+			if change_actions_internal /= Void then
+				change_actions_internal.call (Void)
+			end
 			text_up_to_date := False
 		end
 		

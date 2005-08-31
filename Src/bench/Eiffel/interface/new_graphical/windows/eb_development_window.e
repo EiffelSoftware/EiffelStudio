@@ -733,6 +733,9 @@ feature -- Pulldown Menus
 
 	debug_menu: EV_MENU
 			-- Debug ID menu.
+			
+	debugging_tools_menu: EV_MENU
+			-- Debugging tools menu item
 
 	active_menus (erase: BOOLEAN) is
 			-- Enable all the menus and if `erase' clean
@@ -748,6 +751,12 @@ feature -- Pulldown Menus
 			-- Disable all the menus.
 		do
 			compile_menu.disable_sensitive
+		end
+		
+	update_debug_menu is
+			-- Update debug menu
+		do
+			debugger_manager.update_debugging_tools_menu_from (Current)
 		end
 
 feature -- Modifiable menus
@@ -835,6 +844,11 @@ feature -- Update
 				end
 				debug_menu.forth
 			end
+				--| Debugging tools menu
+			debugging_tools_menu := debugger_manager.new_debugging_tools_menu
+			debug_menu.extend (create {EV_MENU_SEPARATOR})
+			debug_menu.extend (debugging_tools_menu)
+			update_debug_menu
 		end
 
 	build_menu_bar is
@@ -2027,7 +2041,7 @@ feature -- Resource Update
 	on_project_loaded is
 			-- Inform tools that the current project has been loaded or re-loaded.
 		do
-	--			cluster_manager.on_project_loaded
+--			cluster_manager.on_project_loaded
 			enable_commands_on_project_loaded
 			cluster_tool.on_project_loaded
 			context_tool.on_project_loaded
@@ -2036,7 +2050,7 @@ feature -- Resource Update
 	on_project_unloaded is
 			-- Inform tools that the current project will soon been unloaded.
 		do
-	--			cluster_manager.on_project_unloaded
+--			cluster_manager.on_project_unloaded
 			disable_commands_on_project_unloaded
 			cluster_tool.on_project_unloaded
 			context_tool.on_project_unloaded

@@ -193,7 +193,7 @@ feature -- Action
 			-- Close dialog. If `created' then `OK' button has been selected,
 			-- otherwise `Cancel' button has been selected.
 		local
-			error_dialog: EB_WARNING_DIALOG
+			error_dialog: EV_WARNING_DIALOG
 		do
 			is_selected := created
 			if created then

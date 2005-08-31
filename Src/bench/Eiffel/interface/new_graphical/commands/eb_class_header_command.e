@@ -56,7 +56,7 @@ feature -- Access
 	change_name_dialog: EB_CLASS_HEADER_DIALOG
 			-- Dialog where new class name is typed.
 
-	invalid_name_dialog: EB_WARNING_DIALOG
+	invalid_name_dialog: EV_WARNING_DIALOG
 			-- Dialog displaying error messages.
 
 	explain_dialog: EB_INFORMATION_DIALOG

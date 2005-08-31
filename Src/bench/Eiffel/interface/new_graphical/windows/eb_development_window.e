@@ -345,6 +345,10 @@ feature {NONE} -- Initialization
 	set_up_accelerators is
 			-- Fill the accelerator of `window' with the accelerators of the `toolbarable_commands'.
 		do
+				--| Enable shortcuts to create and show special debug menu for estudio
+			window.accelerators.extend ((create {ESTUDIO_DEBUG_CMD}.make (window)).accelerator)
+
+				--| Accelerators related to toolbarable_commands
 			from
 				toolbarable_commands.start
 			until
@@ -356,6 +360,7 @@ feature {NONE} -- Initialization
 				toolbarable_commands.forth
 			end
 
+				--| Accelerators related to debugging toolbarable_commands
 			from
 				debugger_manager.toolbarable_commands.start
 			until

@@ -62,7 +62,7 @@
 							<item>Fixed failure of a &quot;check&quot; statement within EiffelVision when showing a dialog with a `default_cancel_button' relative or modal to another window.</item>
 						</list>
 					</item>
-					<item/>
+					<item><bold>EV_RICH_TEXT</bold> - Fixed calling of `change_actions' which were never called in the  previous version.</item>
 				</list>
 			</item>
 			<item>

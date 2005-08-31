@@ -289,6 +289,10 @@ rt_public int eifthd_gen_conf (int16, int16);
 #define EIFMTX_LOCK   EIF_LW_MUTEX_LOCK(eif_gen_mutex, "Cannot lock mutex for eif_gen_conf\n")
 #define EIFMTX_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gen_mutex, "Cannot unlock mutex for eif_gen_conf\n")
 
+#else
+/* Noop for locks in non-multithreaded mode. */
+#define EIFMTX_LOCK
+#define EIFMTX_UNLOCK
 #endif
 /*------------------------------------------------------------------*/
 
@@ -342,9 +346,7 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 	int16   result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_compound_id (cache, current_dftype, base_id, types);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -356,9 +358,7 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, int16
 	int16   result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_final_id (stype, ttable, gttable, dftype, offset);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -370,9 +370,7 @@ rt_shared int eif_gen_count_with_dftype (int16 dftype)
 	int result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_gen_count_with_dftype (dftype);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -384,9 +382,7 @@ rt_shared char eif_gen_typecode_with_dftype (int16 dftype, int pos)
 	char    result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_gen_typecode_with_dftype (dftype, pos);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -398,9 +394,7 @@ rt_public int16 eif_gen_param_id (int16 stype, int16 dftype, int pos)
 	int16   result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_gen_param_id (stype, dftype, pos);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -412,9 +406,7 @@ rt_public EIF_REFERENCE eif_gen_create (EIF_REFERENCE obj, int pos)
 	char    *result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_gen_create (obj, pos);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -426,9 +418,7 @@ rt_shared int16 eif_register_bit_type (long size)
 	int16   result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_register_bit_type (size);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -440,9 +430,7 @@ rt_shared int16 eif_typeof_array_of (int16 dtype)
 	int16   result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_typeof_array_of (dtype);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -454,9 +442,7 @@ rt_shared int16 *eif_gen_cid (int16 dftype)
 	int16   *result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_gen_cid (dftype);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -468,9 +454,7 @@ rt_shared int16 eif_gen_id_from_cid (int16 *a_cidarr, int *dtype_map)
 	int16   result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_gen_id_from_cid (a_cidarr, dtype_map);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -482,9 +466,7 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 	int result;
 
 	EIFMTX_LOCK;
-
 	result = eifthd_gen_conf (source_type, target_type);
-
 	EIFMTX_UNLOCK;
 
 	return result;
@@ -1011,16 +993,12 @@ rt_public char eif_gen_typecode (EIF_REFERENCE obj, int pos)
 	if (obj == NULL) {
 		return (char) 0;
 	} else {
-#ifdef EIF_THREADS
 		char result;
 			/* Critical section as we might compute a new `eif_anc_id_map' entry */
 		EIFMTX_LOCK;
 		result = eif_gen_typecode_with_dftype ((int16) Dftype(obj), pos);
 		EIFMTX_UNLOCK;
 		return result;
-#else
-		return eif_gen_typecode_with_dftype ((int16) Dftype(obj), pos);
-#endif
 	}
 }
 
@@ -1102,22 +1080,14 @@ rt_public EIF_REFERENCE eif_gen_typecode_str (EIF_REFERENCE obj)
 
 	/* NOTE: Since dftype is a TUPLE we have RTUD(dftype) = dftype.  */
 
-	/* Critical section as we might compute a new `eif_anc_id_map' entry */
-#ifdef EIF_THREADS
+		/* Critical section as we might compute a new `eif_anc_id_map' entry */
 	EIFMTX_LOCK;
-#endif
-
 	amap = eif_anc_id_map [dftype];
-
-	if (amap == (EIF_ANC_ID_MAP *) 0)
-	{
+	if (amap == (EIF_ANC_ID_MAP *) 0) {
 		eif_compute_anc_id_map (dftype);
 		amap = eif_anc_id_map [dftype];
 	}
-
-#ifdef EIF_THREADS
 	EIFMTX_UNLOCK;
-#endif
 
 	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
 
@@ -1192,22 +1162,14 @@ rt_public EIF_REFERENCE eif_gen_tuple_typecode_str (EIF_REFERENCE obj)
 
 	/* NOTE: Since dftype is a TUPLE we have RTUD(dftype) = dftype.  */
 
-	/* Critical section as we might compute a new `eif_anc_id_map' entry */
-#ifdef EIF_THREADS
+		/* Critical section as we might compute a new `eif_anc_id_map' entry */
 	EIFMTX_LOCK;
-#endif
-
 	amap = eif_anc_id_map [dftype];
-
-	if (amap == (EIF_ANC_ID_MAP *) 0)
-	{
+	if (amap == (EIF_ANC_ID_MAP *) 0) {
 		eif_compute_anc_id_map (dftype);
 		amap = eif_anc_id_map [dftype];
 	}
-
-#ifdef EIF_THREADS
 	EIFMTX_UNLOCK;
-#endif
 
 	gdp = eif_derivations [(amap->map)[tuple_static_type - (amap->min_id)]];
 
@@ -1378,18 +1340,9 @@ rt_public EIF_REFERENCE eif_gen_typename_of_type (int16 current_dftype)
 	char    *name;
 	EIF_REFERENCE ret;	/* Return value. */
 
-	if (current_dftype == (int16) 0)
-		return makestr("NONE", 4);
-
-#ifdef EIF_THREADS
 	EIFMTX_LOCK;
-#endif
-
 	name = eif_typename (current_dftype);
-
-#ifdef EIF_THREADS
 	EIFMTX_UNLOCK;
-#endif
 
 	ret = makestr(name, strlen(name));
 	return ret;

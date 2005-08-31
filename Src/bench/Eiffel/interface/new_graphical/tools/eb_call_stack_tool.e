@@ -141,7 +141,7 @@ feature {NONE} -- Initialization
 			create tb_exception
 			create tb_but_exception
 			tb_but_exception.set_pixmap (pixmaps.Icon_open_exception_dialog)
-			tb_but_exception.set_tooltip ("Open exception dialog for more details")			
+			tb_but_exception.set_tooltip ("Open exception dialog for more details")
 			tb_but_exception.pointer_button_press_actions.extend (agent show_call_stack_message)
 			tb_exception.extend (tb_but_exception)
 			box_exception.extend (tb_exception)
@@ -180,18 +180,40 @@ feature {NONE} -- Initialization
 			stack_grid.column (3).set_title (Interface_names.t_Static_type)
 			stack_grid.column (3).set_width (100)
 			
+				--| Action/event on call stack grid
 			stack_grid.drop_actions.extend (agent on_element_drop)
 			stack_grid.key_press_actions.extend (agent key_pressed)
-			stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
---			stack_grid.pointer_double_press_item_actions.extend (agent on_grid_item_pointer_pressed)
 			stack_grid.set_item_pebble_function (agent on_grid_item_pebble_function)
 			stack_grid.set_item_accept_cursor_function (agent on_grid_item_accept_cursor_function)
+				--| Call stack level selection mode
+			if preferences.debug_tool_data.select_call_stack_level_on_double_click then
+				stack_grid.pointer_double_press_item_actions.extend (agent on_grid_item_pointer_pressed)
+			else
+				stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
+			end
+			preferences.debug_tool_data.select_call_stack_level_on_double_click_preference.change_actions.extend (agent update_call_stack_level_selection_mode)
+			
 			
 			box.extend (stack_grid)			
 			
 			stack_grid.build_delayed_cleaning
 			create_update_on_idle_agent
 			widget := box
+		end
+		
+	update_call_stack_level_selection_mode (dbl_click_bpref: BOOLEAN_PREFERENCE) is
+			-- Update call stack level selection mode when preference select_call_stack_level_on_double_click_preference
+			-- changes.
+			-- if true then use double click
+			-- otherwise use single click
+		do
+			stack_grid.pointer_double_press_item_actions.wipe_out				
+			stack_grid.pointer_button_press_item_actions.wipe_out				
+			if dbl_click_bpref.value then
+				stack_grid.pointer_double_press_item_actions.extend (agent on_grid_item_pointer_pressed)				
+			else
+				stack_grid.pointer_button_press_item_actions.extend (agent on_grid_item_pointer_pressed)
+			end
 		end
 
 	build_mini_toolbar is
@@ -760,8 +782,11 @@ feature {NONE} -- Implementation
 			a_row.set_item (1, glab)
 			
 			create glab.make_with_text (l_class_info)
+			glab.set_tooltip (l_class_info)
 			a_row.set_item (2, glab)
+			
 			create glab.make_with_text (l_orig_class_info)
+			glab.set_tooltip (l_orig_class_info)
 			a_row.set_item (3, glab)			
 
 				--| Set GUI behavior

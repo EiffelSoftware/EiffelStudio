@@ -23,7 +23,7 @@ feature -- Status
 
 	build_accelerator is
 			-- Build accelerator related to Current command
-		once
+		do
 			create accelerator.make_with_key_combination (
 					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_d) ,
 					True, True, False

@@ -111,6 +111,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := row_unsensitive_foreground_color_preference.value
 		end
+
+	select_call_stack_level_on_double_click: BOOLEAN is
+		do
+			Result := select_call_stack_level_on_double_click_preference.value
+		end
 		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -130,6 +135,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	delay_before_cleaning_objects_grid_preference: INTEGER_PREFERENCE
 	row_highlight_background_color_preference: COLOR_PREFERENCE
 	row_unsensitive_foreground_color_preference: COLOR_PREFERENCE
+	select_call_stack_level_on_double_click_preference: BOOLEAN_PREFERENCE
 	
 feature -- Preference Strings
 
@@ -149,6 +155,7 @@ feature -- Preference Strings
 	delay_before_cleaning_objects_string: STRING is "debugger.delay_before_cleaning_objects_grid"
 	row_highlight_background_color_string: STRING is "debugger.row_highlight_background_color"
 	row_unsensitive_foreground_color_string: STRING is "debugger.row_unsensitive_foreground_color"
+	select_call_stack_level_on_double_click_string: STRING is "debugger.select_call_stack_level_on_double_click"
 
 feature {NONE} -- Implementation
 
@@ -175,6 +182,7 @@ feature {NONE} -- Implementation
 			delay_before_cleaning_objects_grid_preference := l_manager.new_integer_resource_value (l_manager, delay_before_cleaning_objects_string, 500)					
 			row_highlight_background_color_preference := l_manager.new_color_resource_value (l_manager, row_highlight_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 170))
 			row_unsensitive_foreground_color_preference := l_manager.new_color_resource_value (l_manager, row_unsensitive_foreground_color_string, create {EV_COLOR}.make_with_8_bit_rgb (150, 150, 150))
+			select_call_stack_level_on_double_click_preference := l_manager.new_boolean_resource_value (l_manager, select_call_stack_level_on_double_click_string, False)
 		end
 	
 	preferences: PREFERENCES
@@ -197,5 +205,6 @@ invariant
 	delay_before_cleaning_objects_grid_preference_not_void: delay_before_cleaning_objects_grid_preference /= Void	
 	row_highlight_background_color_preference_not_void: row_highlight_background_color_preference /= Void	
 	row_unsensitive_foreground_color_preference_not_void: row_unsensitive_foreground_color_preference /= Void	
+	select_call_stack_level_on_double_click_preference_not_void: select_call_stack_level_on_double_click_preference /= Void	
 
 end -- class EB_DEBUG_TOOL_DATA

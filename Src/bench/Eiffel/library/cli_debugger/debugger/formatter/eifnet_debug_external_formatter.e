@@ -36,8 +36,9 @@ feature {NONE} -- Debugger information
 feature -- Conversion String
 
 	system_string_value_to_string (v: ICOR_DEBUG_VALUE): STRING is
+			-- STRING value from `v' which is supposed to be a System.String value.
 		do
-			Result := Edv_formatter.icor_debug_value_to_string (v)
+			Result := Edv_formatter.icor_debug_value_as_string_to_string (v)
 		end
 
 feature -- StringBuilder

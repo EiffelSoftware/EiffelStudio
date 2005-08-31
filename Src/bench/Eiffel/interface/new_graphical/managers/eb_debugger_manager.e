@@ -149,7 +149,6 @@ feature -- Access
 --			b := exec_cmd.new_toolbar_item (False)
 --			tb.extend (b)
 --			b.select_actions.extend (window_manager~quick_refresh_all_margins)
-
 		end
 
 	new_debug_menu: EV_MENU is
@@ -192,12 +191,6 @@ feature -- Access
 				-- Separator.
 			create sep
 			Result.extend (sep)
-			build_debugging_tools_menu
-			Result.extend (debugging_tools_menu)
-
-				-- Separator.
-			create sep
-			Result.extend (sep)
 
 			Result.extend (set_critical_stack_depth_cmd.new_menu_item)
 
@@ -222,64 +215,76 @@ feature -- Access
 --| 3) edit feature, feature evaluation
 		end
 
-	build_debugging_tools_menu is
-		require
-			debugging_tools_menu = Void
+	menuable_debugging_tools: ARRAY [EB_TOOL] is
+			-- List of all debugging tools to be listed under the debug->tools menu.
 		do
-			create debugging_tools_menu.make_with_text (Interface_names.m_Tools)
-			update_debugging_tools_menu
-		ensure		
-			debugging_tools_menu /= Void
+			Result := <<threads_tool>>
+		end
+
+	new_debugging_tools_menu: EV_MENU is
+			-- New debugging tools menu.
+		do
+			create Result.make_with_text (Interface_names.m_Tools)
+			Result.disable_sensitive
+		ensure
+			Result /= Void
 		end
 		
-	debugging_tools_menu: EV_MENU
-			-- Debugging tools menu which is updated on raise and unraise
-	
-	update_debugging_tools_menu is
+	update_debugging_tools_menu_from (w: EB_DEVELOPMENT_WINDOW) is
+			-- Update the debugging_tools_menu related to `w'	
 		require
-			debugging_tools_menu /= Void
+			w /= Void
 		local
+			m: EV_MENU
 			mit: EV_MENU_ITEM
 			l_tools: ARRAY [EB_TOOL]
 			l_tool: EB_TOOL
 			i: INTEGER
 		do
-			debugging_tools_menu.wipe_out
-			if raised then				
-				l_tools := <<threads_tool>>
-				from
-					i := l_tools.lower
-				until
-					i > l_tools.upper
-				loop
-					l_tool := l_tools [i]
-					if threads_tool /= Void then
-						create mit.make_with_text (l_tool.menu_name)
-						if l_tool.pixmap /= Void and then not l_tool.pixmap.is_empty then
-							mit.set_pixmap (l_tool.pixmap [l_tool.pixmap.lower] )
+			m := w.debugging_tools_menu
+			m.wipe_out
+			if raised then
+				l_tools := menuable_debugging_tools
+				if not l_tools.is_empty then
+					create mit.make_with_text ("Show/Hide tools")
+					mit.disable_sensitive
+					m.extend (mit)
+		
+					create {EV_MENU_SEPARATOR} mit
+					mit.disable_sensitive
+					m.extend (mit)
+					
+					from
+						i := l_tools.lower
+					until
+						i > l_tools.upper
+					loop
+						l_tool := l_tools [i]
+						if l_tool /= Void then
+							create mit.make_with_text (l_tool.menu_name)
+							if l_tool.pixmap /= Void and then not l_tool.pixmap.is_empty then
+								mit.set_pixmap (l_tool.pixmap [l_tool.pixmap.lower] )
+							end
+							mit.select_actions.extend (agent show_hide_debugging_tools (mit))
+							m.extend (mit)
 						end
-						mit.select_actions.extend (agent show_hide_debugging_tools (mit))
-						debugging_tools_menu.extend (mit)
+						i := i + 1
 					end
-					i := i + 1
+					m.enable_sensitive
 				end
+			else				
+				m.disable_sensitive
 			end
-			if debugging_tools_menu.count > 0 then
-				create {EV_MENU_SEPARATOR} mit
-				mit.disable_sensitive
-				debugging_tools_menu.put_front (mit)
-
-				create mit.make_with_text ("Show/Hide tools")
-				mit.disable_sensitive
-				debugging_tools_menu.put_front (mit)
-				
-				debugging_tools_menu.enable_sensitive
-			else
-				debugging_tools_menu.disable_sensitive
-			end
+		end
+	
+	update_all_debugging_tools_menu is
+			-- Update all debugging_tools_menu in all development windows
+		do
+			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.update_debug_menu)
 		end
 		
 	show_hide_debugging_tools (mit: EV_MENU_ITEM) is
+			-- Toggle display status of Tool related to `mit'
 		require
 			mit /= Void
 		local
@@ -288,22 +293,27 @@ feature -- Access
 			i: INTEGER
 			s: STRING
 		do
-			l_tools := <<threads_tool>>
-			from
-				s := mit.text
-				i := l_tools.lower
-			until
-				i > l_tools.upper
-			loop
-				l_tool := l_tools [i]
-				if l_tool /= Void and then s.is_equal (l_tool.menu_name) then
-					if l_tool.shown then
-						l_tool.close
-					else
-						l_tool.show
+			if raised then
+				l_tools := menuable_debugging_tools
+				from
+					s := mit.text
+					i := l_tools.lower
+				until
+					i > l_tools.upper
+				loop
+					l_tool := l_tools [i]
+					if l_tool /= Void and then s.is_equal (l_tool.menu_name) then
+						if l_tool.shown then
+							l_tool.close
+						else
+							l_tool.show
+							if l_tool.widget.is_displayed then
+								l_tool.widget.set_focus
+							end
+						end
 					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		end
 
@@ -588,7 +598,7 @@ feature -- Status setting
 			end
 
 			raised := True
-			update_debugging_tools_menu			
+			update_all_debugging_tools_menu
 			debugging_window.window.unlock_update
 		ensure
 			raised
@@ -674,7 +684,7 @@ feature -- Status setting
 				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 
-			update_debugging_tools_menu
+			update_all_debugging_tools_menu
 			debugging_window.window.unlock_update
 		ensure
 			not raised

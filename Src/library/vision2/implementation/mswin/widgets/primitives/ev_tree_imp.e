@@ -428,7 +428,9 @@ feature {EV_ANY_I} -- WEL Implementation
 			pt: WEL_POINT
 			offsets: TUPLE [INTEGER, INTEGER]
 			item_press_actions_called: BOOLEAN
+			was_in_transport_at_start: BOOLEAN
 		do
+			was_in_transport_at_start := application_imp.pick_and_drop_source /= Void
 			pre_drop_it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 
@@ -483,6 +485,18 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 				-- Reset `call_press_event'.
 			keep_press_event
+			if button = 3 and was_in_transport_at_start /= (application_imp.pick_and_drop_source /= Void) then
+					-- If the state of the pick and drop has changed during execution of
+					-- this procedure, then we wish to disable the default processing for the
+					-- click. This prevents the nasty visual feedback where the item on which you right
+					-- click becomes temporarily drawn as selected even though it is not. This is
+					-- standard Windows behavior for a tree control, but we wish to supress it.
+					-- Without this fix, the old behavior has the effect of selecting the first item in a tree
+					-- when picking from a tree item in a tree with no selected item.
+					-- The selection was never actually changed, but the visual feedback is not pleasant.
+					-- Julian
+				disable_default_processing
+			end
 		end
 
 	internal_propagate_pointer_double_press

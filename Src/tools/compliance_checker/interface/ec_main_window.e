@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			tbtn_open.select_actions.extend (agent on_open_project)
 			tbtn_save.select_actions.extend (agent on_save_project)
 			tbtn_check.select_actions.extend (agent on_check_project)
+			tbtn_help.select_actions.extend (agent on_show_help)
 		
 			btn_close.select_actions.extend (agent on_close)
 			close_request_actions.extend (agent on_close)
@@ -193,6 +194,12 @@ feature {NONE} -- Agent Handlers
 			l_notebook := nb_main
 			l_notebook.select_item (l_notebook.i_th (2))
 			vbox_output.btn_start_checking.select_actions.call ([])
+		end
+		
+	on_show_help is
+			-- Called when user selects help toolbar button
+		do
+			--| Implement me...
 		end
 		
 	on_back_button_selected (a_rotate: BOOLEAN) is

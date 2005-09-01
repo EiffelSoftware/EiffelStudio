@@ -45,6 +45,13 @@ cluster
  			namespace ("EiffelSoftware.Library.Helpers")
  		end
  
+	all compliance_checker:	"$EIFFEL_SRC\tools\compliance_checker\engine"
+		exclude
+			"CVS"; "reporting";
+  		default
+ 			namespace ("EiffelSoftware.Library.ComplianceChecker")
+		end
+
 assembly
 	"System.Configuration.Install":	"$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll"
 		prefix

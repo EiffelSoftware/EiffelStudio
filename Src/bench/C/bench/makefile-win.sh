@@ -31,7 +31,7 @@ WOBJECTS = pretrieve.$obj wpstore.$obj \
 MT_OBJECTS = MTpretrieve.$obj MTpstore.$obj \
 			MTdate.$obj MToffset.$obj MTbyte.$obj MTencode.$obj MTminilzo.$obj
 
-MT_WOBJECTS = MTpretrieve.$obj MTwpstore.$obj \
+MT_WOBJECTS = MTwpretrieve.$obj MTwpstore.$obj \
 			MTdate.$obj MToffset.$obj MTbyte.$obj MTencode.$obj MTminilzo.$obj
 
 all:: $output_libraries
@@ -78,6 +78,9 @@ MTpstore.$obj: pstore.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 
 
 MTwpstore.$obj: pstore.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
+
+MTwpretrieve.$obj: pretrieve.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $? 
 
 MTminilzo.$obj: minilzo.c

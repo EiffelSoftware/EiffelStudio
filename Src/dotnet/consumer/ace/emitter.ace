@@ -77,7 +77,7 @@ cluster
 		
 	all compliance_checker:		"$EIFFEL_SRC\tools\compliance_checker\engine"
 		exclude
-			"CVS"; "EIFGEN"; "interop"; 
+			"CVS"; "reporting"; 
 		end
 
 assembly

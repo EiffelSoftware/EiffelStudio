@@ -58,6 +58,9 @@ feature {NONE} -- Implementation
 			--
 			-- Note: Please use `set_checked_entity' to set item data instead of using HASHTABLE
 			--       features directly.
+		indexing
+			once_status: global
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		once
 			create Result.make (1000)
 			add_predefine_checked_entities (Result)
@@ -66,12 +69,12 @@ feature {NONE} -- Implementation
 		end
 		
 	add_predefine_checked_entities (a_table: HASHTABLE) is
-			-- Predefined checked entities
+			-- Predefined checked entities.
 		require
 			a_table_not_void: a_table /= Void
 		local
 			l_type: SYSTEM_TYPE
-		once			
+		do			
 			l_type := {SYSTEM_TYPE}.get_type ("System.Byte")
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
 			

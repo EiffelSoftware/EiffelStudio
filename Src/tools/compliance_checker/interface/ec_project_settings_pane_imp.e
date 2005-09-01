@@ -72,6 +72,7 @@ feature {NONE}-- Initialization
 			pixm_assembly_cannot_be_found.hide
 			pixm_assembly_cannot_be_found.set_minimum_width (16)
 			pixm_assembly_cannot_be_found.set_minimum_height (16)
+			pixm_assembly_cannot_be_found.copy (icon_error)
 			lbl_assembly.set_text (label_assembly)
 			lbl_assembly.set_tooltip (tooltip_assembly)
 			lbl_assembly.align_text_left

@@ -68,7 +68,7 @@ feature -- Messages
 	error_already_added: STRING is "The selected reference path has already been added."
 	error_assembly_not_specified: STRING is "You have not specified an assembly to check!"
 	error_could_not_find_assembly: STRING is "The specified assembly could not be found:%N%N%TPath: {1}"
-	error_could_not_load_assembly: STRING is "The specified assembly, or one of its dependendies, could not be loaded:%N%N%TAssembly: {1}%N%NPlease ensure that the specified assembly existsing and is a valid .NET assembly.%NPlease also ensure that any dependencies can be located in the project%Nreference paths."
+	error_could_not_load_assembly: STRING is "The specified assembly, or one of its dependendies, could not be loaded:%N%N%TAssembly: {1}%N%NPlease ensure that the specified assembly exists and is a valid .NET assembly.%NPlease also ensure that any dependencies can be located in the project reference paths."
 	error_report_generation_failed: STRING is "The report was not successfully generated.%NThe following .NET exception occurred:%N%N{1}"
 	error_export_failed: STRING is "Exporting the report failed:%N%N{1}"
 	

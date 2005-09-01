@@ -57,6 +57,11 @@ indexing
 		virtual width of `Current' is greater than `viewable_width'.
 		4. A vertical scroll bar displayed to the right of viewable area and header,
 		only shown if the virtual height of `Current' is greater than `viewable_height'.
+		
+		You may supress the displaying of the scroll bars if required via calls to
+		`hide_vertical_scroll_bar' and `hide_horizontal_scroll_bar' which ensure that
+		the scroll bars are never displayed. This is useful for situations where you
+		wish to control the virtual position of the grid via your own custom interface.
 
 		The virtual size of the grid represents the complete screen area in pixels
 		required to display the contents of `Current' and may be queried via

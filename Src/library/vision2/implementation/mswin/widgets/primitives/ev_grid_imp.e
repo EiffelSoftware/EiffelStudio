@@ -15,7 +15,11 @@ inherit
 		rename
 			item as cell_item,
 			set_item as wel_set_item,
-			interface as drawing_area_interface
+			interface as drawing_area_interface,
+			hide_horizontal_scroll_bar as wel_hide_horizontal_scroll_bar,
+			show_horizontal_scroll_bar as wel_show_horizontal_scroll_bar,
+			hide_vertical_scroll_bar as wel_hide_vertical_scroll_bar,
+			show_vertical_scroll_bar as wel_show_vertical_scroll_bar
 		undefine
 			drop_actions,
 			has_focus,

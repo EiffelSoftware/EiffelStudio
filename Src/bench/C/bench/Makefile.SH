@@ -40,6 +40,7 @@ AR = ar rc
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
+JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
 JLDFLAGS = \$(LDFLAGS) $ldflags
 LIBS = $libs
 LINT = lint
@@ -55,7 +56,7 @@ SED = $sed
 
 USRINC = $usrinc
 SOURCES =  \$(LSRC) \$(PSTORE) \$(LSRC) \$(PSTORE) bytedump.c meltdump.c
-OBJECTS =  \$(FOBJ) \$(WOBJ) bytedump.o meltdump.o
+OBJECTS =  \$(FOBJ) \$(WOBJ) \$(MT_FOBJ) \$(MT_WOBJ) bytedump.o meltdump.o
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -80,31 +81,82 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the daemon
-LSRC = byte.c date.c encode.c offset.c pretrieve.c minilzo.c
-PSTORE = pstore.c
-WPSTORE_OBJ = wpstore.o
+LSRC = byte.c date.c encode.c offset.c minilzo.c
+PSTORE = pstore.c pretrieve.c
 
 # Derived object file names
-OBJ = \
+FOBJ = \
 	   byte.o \
 	   date.o \
 	   encode.o \
 	   offset.o \
-	   pretrieve.o \
-	   minilzo.o 
+	   minilzo.o \
+	   pstore.o \
+	   pretrieve.o 
 
-FOBJ = \
-	       $(OBJ) \
-	   pstore.o 
+MT_FOBJ = \
+	       MTbyte.o \
+	       MTdate.o \
+	       MTencode.o \
+	       MToffset.o \
+	       MTminilzo.o \
+	       MTpstore.o \
+	       MTpretrieve.o 
 
 WOBJ = \
-	       $(OBJ) \
-	       wpstore.o 
+	      byte.o \
+	      date.o \
+	      encode.o \
+	      offset.o \
+	      minilzo.o \
+	       wpstore.o \
+	       wpretrieve.o 
 
+MT_WOBJ = \
+	       MTbyte.o \
+	       MTdate.o \
+	       MTencode.o \
+	       MToffset.o \
+	       MTminilzo.o \
+	       MTwpstore.o \
+	       MTwpretrieve.o 
 wpstore.o: pstore.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
+wpretrieve.o: pretrieve.c
+	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
+
+MTbyte.o: byte.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTdate.o: date.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTencode.o: encode.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MToffset.o: offset.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTminilzo.o: minilzo.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTpstore.o: pstore.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTpretrieve.o: pretrieve.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+
+MTwpstore.o: pstore.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+MTwpretrieve.o: pretrieve.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+
+# Where shared archive is located (path and name)
 # Where shared archive is located (path and name)
 LIBRUN = ../run-time
 
@@ -129,6 +181,26 @@ local_realclean::
 libwcompiler.a: $(WOBJ)
 	$(RM) $@
 	$(AR) $@ $(WOBJ)
+	$(RANLIB) $@
+
+all:: libmtcompiler.a
+
+local_realclean::
+	$(RM) libmtcompiler.a
+
+libmtcompiler.a: $(MT_FOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_FOBJ)
+	$(RANLIB) $@
+
+all:: libmtwcompiler.a
+
+local_realclean::
+	$(RM) libmtwcompiler.a
+
+libmtwcompiler.a: $(MT_WOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_WOBJ)
 	$(RANLIB) $@
 
 all:: bytedump

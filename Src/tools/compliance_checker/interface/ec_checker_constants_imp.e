@@ -61,6 +61,12 @@ feature -- Access
 			Result := "Should non-CLS-compliant entities be shown in the report?"
 		end
 
+	button_remove: STRING is
+			-- `Result' is STRING constant named `button_remove'.
+		once
+			Result := "Remove"
+		end
+
 	tooltip_assembly_cannot_be_found: STRING is
 			-- `Result' is STRING constant named `tooltip_assembly_cannot_be_found'.
 		once
@@ -73,14 +79,10 @@ feature -- Access
 			Result := "Assembly:"
 		end
 
-	icon_open: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
+	tooltip_help: STRING is
+			-- `Result' is STRING constant named `tooltip_help'.
 		once
-			create Result
-			create a_file_name.make_from_string (pixmaps)
-			a_file_name.set_file_name ("open.ico")
-			set_with_named_file (Result, a_file_name)
+			Result := "Recieve help on using the compliance checker tool."
 		end
 
 	icon_export: EV_PIXMAP is
@@ -93,10 +95,14 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	button_remove: STRING is
-			-- `Result' is STRING constant named `button_remove'.
+	icon_open: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
 		once
-			Result := "Remove"
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("open.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	box_border_width: INTEGER is 
@@ -111,14 +117,10 @@ feature -- Access
 			Result := "Browse for an assembly."
 		end
 
-	icon_check_compliance: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
+	tab_output: STRING is
+			-- `Result' is STRING constant named `tab_output'.
 		once
-			create Result
-			create a_file_name.make_from_string (pixmaps)
-			a_file_name.set_file_name ("check_compliance.ico")
-			set_with_named_file (Result, a_file_name)
+			Result := "Compliance Checker "
 		end
 
 	box_padding_width: INTEGER is 
@@ -135,12 +137,6 @@ feature -- Access
 			create a_file_name.make_from_string (pixmaps)
 			a_file_name.set_file_name ("blank.ico")
 			set_with_named_file (Result, a_file_name)
-		end
-
-	tab_project: STRING is
-			-- `Result' is STRING constant named `tab_project'.
-		once
-			Result := "Project Settings "
 		end
 
 	main_window_title: STRING is
@@ -161,28 +157,28 @@ feature -- Access
 			Result := "Please select a project to open"
 		end
 
-	error_unable_to_retried_project: STRING is
-			-- `Result' is STRING constant named `error_unable_to_retried_project'.
-		once
-			Result := "Error: Unable to retrieve project."
-		end
-
-	button_check: STRING is
-			-- `Result' is STRING constant named `button_check'.
-		once
-			Result := "Check"
-		end
-
-	label_progress: STRING is
-			-- `Result' is STRING constant named `label_progress'.
-		once
-			Result := "Progress:"
-		end
-
 	button_okay: STRING is
 			-- `Result' is STRING constant named `button_okay'.
 		once
 			Result := "Ok"
+		end
+
+	label_non_compliant: STRING is
+			-- `Result' is STRING constant named `label_non_compliant'.
+		once
+			Result := "Non-compliant assembly members"
+		end
+
+	pixmaps: STRING is
+			-- `Result' is DIRECTORY constant named `pixmaps'.
+		once
+			Result := "E:\tools\compliance_checker\resources"
+		end
+
+	tab_project: STRING is
+			-- `Result' is STRING constant named `tab_project'.
+		once
+			Result := "Project Settings "
 		end
 
 	frame_report_generation: STRING is
@@ -191,20 +187,32 @@ feature -- Access
 			Result := "Report generation"
 		end
 
-	icon_save: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
+	error_unable_to_retried_project: STRING is
+			-- `Result' is STRING constant named `error_unable_to_retried_project'.
 		once
-			create Result
-			create a_file_name.make_from_string (pixmaps)
-			a_file_name.set_file_name ("save.ico")
-			set_with_named_file (Result, a_file_name)
+			Result := "Error: Unable to retrieve project."
 		end
 
 	tooltip_open: STRING is
 			-- `Result' is STRING constant named `tooltip_open'.
 		once
 			Result := "Open an existing compliance checker project."
+		end
+
+	icon_help: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("help.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	button_check: STRING is
+			-- `Result' is STRING constant named `button_check'.
+		once
+			Result := "Check"
 		end
 
 	icon_new: EV_PIXMAP is
@@ -223,16 +231,22 @@ feature -- Access
 			Result := "Error: Unable to save project."
 		end
 
+	tooltip_check: STRING is
+			-- `Result' is STRING constant named `tooltip_check'.
+		once
+			Result := "Perform Eiffel-compliance assembly checks"
+		end
+
 	button_height: INTEGER is 
 			-- `Result' is INTEGER constant named button_height.
 		once
 			Result := 23
 		end
 
-	label_non_compliant: STRING is
-			-- `Result' is STRING constant named `label_non_compliant'.
+	label_progress: STRING is
+			-- `Result' is STRING constant named `label_progress'.
 		once
-			Result := "Non-compliant assembly members"
+			Result := "Progress:"
 		end
 
 	tooltip_close: STRING is
@@ -297,10 +311,14 @@ feature -- Access
 			Result := "Reference paths"
 		end
 
-	tooltip_check: STRING is
-			-- `Result' is STRING constant named `tooltip_check'.
+	icon_check_compliance: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
 		once
-			Result := "Perform Eiffel-compliance assembly checks"
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("check_compliance.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	button_close: STRING is
@@ -309,22 +327,20 @@ feature -- Access
 			Result := "Close"
 		end
 
-	pixmaps: STRING is
-			-- `Result' is DIRECTORY constant named `pixmaps'.
-		once
-			Result := "E:\eiffel_projects\eiffel_compliant_check_ui\resources"
-		end
-
 	button_add: STRING is
 			-- `Result' is STRING constant named `button_add'.
 		once
 			Result := "Add"
 		end
 
-	tab_output: STRING is
-			-- `Result' is STRING constant named `tab_output'.
+	icon_save: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
 		once
-			Result := "Compliance Checker "
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("save.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	button_recheck: STRING is

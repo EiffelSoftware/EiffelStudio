@@ -39,6 +39,7 @@ feature {NONE}-- Initialization
 			create tbtn_save
 			create l_ev_tool_bar_separator_1
 			create tbtn_check
+			create tbtn_help
 			create l_ev_cell_1
 			create l_ev_horizontal_separator_1
 			create l_ev_vertical_box_3
@@ -47,6 +48,8 @@ feature {NONE}-- Initialization
 			create vbox_output
 			create l_ev_horizontal_box_1
 			create l_ev_cell_2
+			create l_ev_label_1
+			create l_ev_cell_3
 			create btn_close
 			
 				-- Build_widget_structure.
@@ -58,6 +61,7 @@ feature {NONE}-- Initialization
 			tbar_main.extend (tbtn_save)
 			tbar_main.extend (l_ev_tool_bar_separator_1)
 			tbar_main.extend (tbtn_check)
+			tbar_main.extend (tbtn_help)
 			l_ev_vertical_box_1.extend (l_ev_cell_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_separator_1)
 			l_ev_vertical_box_1.extend (l_ev_vertical_box_3)
@@ -66,6 +70,8 @@ feature {NONE}-- Initialization
 			nb_main.extend (vbox_output)
 			l_ev_vertical_box_3.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_2)
+			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_horizontal_box_1.extend (l_ev_cell_3)
 			l_ev_horizontal_box_1.extend (btn_close)
 			
 			l_ev_vertical_box_1.disable_item_expand (l_ev_vertical_box_2)
@@ -82,6 +88,8 @@ feature {NONE}-- Initialization
 			tbtn_save.set_pixmap (icon_save)
 			tbtn_check.set_tooltip (tooltip_check)
 			tbtn_check.set_pixmap (icon_check_compliance)
+			tbtn_help.set_tooltip (tooltip_help)
+			tbtn_help.set_pixmap (icon_help)
 			l_ev_cell_1.set_minimum_height (2)
 			l_ev_vertical_box_3.set_padding_width (box_padding_width)
 			l_ev_vertical_box_3.set_border_width (4)
@@ -91,7 +99,11 @@ feature {NONE}-- Initialization
 			nb_main.set_item_text (vbox_output, tab_output)
 			nb_main.item_tab (vbox_project_settings).set_pixmap (icon_project)
 			nb_main.item_tab (vbox_output).set_pixmap (icon_settings)
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_2)
 			l_ev_horizontal_box_1.disable_item_expand (btn_close)
+			l_ev_cell_2.set_minimum_width (3)
+			l_ev_label_1.set_text ("(C)2005 Eiffel Software.%NAll Rights Reserved.")
+			l_ev_label_1.align_text_left
 			btn_close.set_text (button_close)
 			btn_close.set_tooltip (tooltip_close)
 			btn_close.set_minimum_width (100)
@@ -117,17 +129,18 @@ feature -- Access
 	btn_close: EV_BUTTON
 	tbar_main: EV_TOOL_BAR
 	tbtn_new, tbtn_open, tbtn_save,
-	tbtn_check: EV_TOOL_BAR_BUTTON
+	tbtn_check, tbtn_help: EV_TOOL_BAR_BUTTON
 	nb_main: EV_NOTEBOOK
 
 feature {NONE} -- Implementation
 
 	l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
 	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_cell_1, l_ev_cell_2,
+	l_ev_cell_3: EV_CELL
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-	l_ev_vertical_box_1,
-	l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
+	l_ev_label_1: EV_LABEL
 
 feature {NONE} -- Implementation
 

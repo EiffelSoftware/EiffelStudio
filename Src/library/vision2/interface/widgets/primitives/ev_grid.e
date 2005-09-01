@@ -1616,6 +1616,72 @@ feature -- Status setting
 			not_is_locked: not is_locked
 		end
 		
+	hide_vertical_scroll_bar is
+			-- Ensure no vertical scroll bar is displayed in `Current'
+			-- at any time.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			implementation.hide_vertical_scroll_bar
+		ensure	
+			not_is_vertical_scroll_bar_show_requested: not is_vertical_scroll_bar_show_requested
+		end
+		
+	show_vertical_scroll_bar is
+			-- Ensure a vertical scroll bar is displayed in `Current'
+			-- when required. Note that this does not force the vertical
+			-- scroll bar to be visible, simply ensures that when `virtual_height'
+			-- is greater than `viewable_height', the scroll bar is displayed.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			implementation.show_vertical_scroll_bar
+		ensure	
+			is_vertical_scroll_bar_show_requested: is_vertical_scroll_bar_show_requested
+		end
+		
+	is_vertical_scroll_bar_show_requested: BOOLEAN is
+			-- Will a vertical scroll bar be displayed in `Current' when
+			-- `virtual_height' exceeds `viewable_height'?
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			Result := implementation.is_vertical_scroll_bar_show_requested
+		end
+		
+	hide_horizontal_scroll_bar is
+			-- Ensure no horizontal scroll bar is displayed in `Current'
+			-- at any time.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			implementation.hide_horizontal_scroll_bar
+		ensure	
+			not_is_horizontal_scroll_bar_show_requested: not is_horizontal_scroll_bar_show_requested
+		end
+		
+	show_horizontal_scroll_bar is
+			-- Ensure a horizontal scroll bar is displayed in `Current'
+			-- when required. Note that this does not force the horizontal
+			-- scroll bar to be visible, simply ensures that when `virtual_width'
+			-- is greater than `viewable_width', the scroll bar is displayed.
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			implementation.show_horizontal_scroll_bar
+		ensure	
+			is_horizontal_scroll_bar_show_requested: is_horizontal_scroll_bar_show_requested
+		end
+		
+	is_horizontal_scroll_bar_show_requested: BOOLEAN is
+			-- Will a horizontal scroll bar be displayed in `Current' when
+			-- `virtual_width' exceeds `viewable_width'?
+		require
+			not_is_destroyed: not is_destroyed
+		do
+			Result := implementation.is_horizontal_scroll_bar_show_requested
+		end
+		
 feature -- Status report
 
 	prunable: BOOLEAN is False
@@ -2149,7 +2215,8 @@ feature {NONE} -- Contract support
 				is_row_height_fixed and subrow_indent = 0 and is_single_item_selection_enabled and is_selection_on_click_enabled and
 				are_tree_node_connectors_shown and are_columns_drawn_above_rows and not is_resizing_divider_enabled and
 				is_column_resize_immediate and not is_full_redraw_on_virtual_position_change_enabled and
-				not is_vertical_overscroll_enabled and not is_horizontal_overscroll_enabled and not is_locked
+				not is_vertical_overscroll_enabled and not is_horizontal_overscroll_enabled and not is_locked and
+				is_horizontal_scroll_bar_show_requested and is_vertical_scroll_bar_show_requested
 		end
 
 feature {EV_GRID_I} -- Implementation

@@ -1703,6 +1703,60 @@ feature -- Status setting
 			set_foreground_color ((create {EV_STOCK_COLORS}).black.twin)
 		end
 		
+	hide_vertical_scroll_bar is
+			-- Ensure no vertical scroll bar is displayed in `Current'
+			-- at any time.
+		do
+			is_vertical_scroll_bar_show_requested := False
+			if vertical_scroll_bar.is_show_requested then
+				vertical_scroll_bar.hide
+			end
+		ensure	
+			not_is_vertical_scroll_bar_show_requested: not is_vertical_scroll_bar_show_requested
+		end
+		
+	show_vertical_scroll_bar is
+			-- Ensure a vertical scroll bar is displayed in `Current'
+			-- when required. Note that this does not force the vertical
+			-- scroll bar to be visible, simply ensures that when `virtual_height'
+			-- is greater than `viewable_height', the scroll bar is displayed.
+		do
+			is_vertical_scroll_bar_show_requested := True
+		ensure	
+			is_vertical_scroll_bar_show_requested: is_vertical_scroll_bar_show_requested
+		end
+		
+	is_vertical_scroll_bar_show_requested: BOOLEAN
+			-- Will a vertical scroll bar be displayed in `Current' when
+			-- `virtual_height' exceeds `viewable_height'?
+			
+	hide_horizontal_scroll_bar is
+			-- Ensure no horizontal scroll bar is displayed in `Current'
+			-- at any time.
+		do
+			is_horizontal_scroll_bar_show_requested := False
+			if horizontal_scroll_bar.is_show_requested then
+				horizontal_scroll_bar.hide
+			end
+		ensure	
+			not_is_horizontal_scroll_bar_show_requested: not is_horizontal_scroll_bar_show_requested
+		end
+		
+	show_horizontal_scroll_bar is
+			-- Ensure a horizontal scroll bar is displayed in `Current'
+			-- when required. Note that this does not force the horizontal
+			-- scroll bar to be visible, simply ensures that when `virtual_width'
+			-- is greater than `viewable_width', the scroll bar is displayed.
+		do
+			is_horizontal_scroll_bar_show_requested := True
+		ensure	
+			is_horizontal_scroll_bar_show_requested: is_horizontal_scroll_bar_show_requested
+		end
+		
+	is_horizontal_scroll_bar_show_requested: BOOLEAN
+			-- Will a horizontal scroll bar be displayed in `Current' when
+			-- `virtual_width' exceeds `viewable_width'?
+		
 feature -- Status report
 
 	is_selection_on_click_enabled: BOOLEAN
@@ -3252,7 +3306,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 				
 			if l_total_row_height > l_client_height then
 					-- The rows are higher than the visible client area.
-				if not vertical_scroll_bar.is_show_requested then
+				if not vertical_scroll_bar.is_show_requested and is_vertical_scroll_bar_show_requested then
 						-- Show `vertical_scroll_bar' if not already shown.
 					vertical_scroll_bar.show
 					update_scroll_bar_spacer
@@ -3420,7 +3474,7 @@ feature {ANY}
 				
 			if l_total_column_width > l_client_width then
 					-- The headers are wider than the visible client area.
-				if not horizontal_scroll_bar.is_show_requested then
+				if not horizontal_scroll_bar.is_show_requested and is_horizontal_scroll_bar_show_requested then
 						-- Show `horizontal_scroll_bar' if not already shown.
 					horizontal_scroll_bar.show
 					update_scroll_bar_spacer
@@ -3526,6 +3580,8 @@ feature {NONE} -- Drawing implementation
 			are_columns_drawn_above_rows := True
 			is_horizontal_overscroll_enabled := False
 			is_vertical_overscroll_enabled := False
+			is_vertical_scroll_bar_show_requested := True
+			is_horizontal_scroll_bar_show_requested := True
 			create tree_node_connector_color.make_with_8_bit_rgb (150, 150, 150)
 			invalid_row_index := invalid_row_index.max_value
 
@@ -5376,9 +5432,9 @@ invariant
 	drawer_not_void: is_initialized implies drawer /= Void
 	drawable_not_void: is_initialized implies drawable /= Void
 	header_positioned_corrently: is_initialized implies header_viewport.x_offset >= 0 and header_viewport.y_offset = 0
-	internal_client_y_valid_while_vertical_scrollbar_hidden: is_initialized and then not vertical_scroll_bar.is_show_requested implies internal_client_y = 0
+	internal_client_y_valid_while_vertical_scrollbar_hidden: is_initialized and then is_vertical_scroll_bar_show_requested and then not vertical_scroll_bar.is_show_requested implies internal_client_y = 0
 	internal_client_y_valid_while_vertical_scrollbar_shown: is_initialized and then vertical_scroll_bar.is_show_requested implies internal_client_y >= 0
-	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
+	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then is_horizontal_scroll_bar_show_requested and then not horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
 	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed and not is_tree_enabled implies row_offsets = Void
 	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count

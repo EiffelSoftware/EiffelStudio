@@ -29,7 +29,7 @@ feature {NONE}-- Initialization
 				-- Create all widgets.
 			create l_ev_vertical_box_1
 			create l_ev_horizontal_box_1
-			create l_ev_label_1
+			create label
 			create l_ev_cell_1
 			create wrapping_button
 			create message_text
@@ -45,7 +45,7 @@ feature {NONE}-- Initialization
 				-- Build_widget_structure.
 			window.extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_horizontal_box_1.extend (label)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
 			l_ev_horizontal_box_1.extend (wrapping_button)
 			l_ev_vertical_box_1.extend (message_text)
@@ -63,10 +63,9 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (details_box)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
+			l_ev_horizontal_box_1.disable_item_expand (label)
 			l_ev_horizontal_box_1.disable_item_expand (wrapping_button)
-			l_ev_label_1.set_text (" Exception message from debugger")
-			l_ev_label_1.set_minimum_height (20)
+			label.set_minimum_height (20)
 			wrapping_button.enable_select
 			wrapping_button.set_text ("wrap")
 			message_text.set_minimum_width (300)
@@ -82,7 +81,6 @@ feature {NONE}-- Initialization
 			close_button.set_text (close_string)
 			close_button.set_minimum_width (default_button_width)
 			window.set_minimum_width (400)
-			window.set_title ("Debugger :: Exception message")
 			
 				--Connect events.
 			wrapping_button.select_actions.extend (agent set_wrapping_mode)
@@ -105,19 +103,17 @@ feature -- Basic operation
 
 feature -- Access
 
-	wrapping_button: EV_CHECK_BUTTON
-	message_text: EV_TEXT
-	details_text: EV_LABEL
 	save_button, close_button: EV_BUTTON
+	message_text: EV_TEXT
+	wrapping_button: EV_CHECK_BUTTON
+	label, details_text: EV_LABEL
 	details_box: EV_FRAME
 
 feature {NONE} -- Implementation
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-	l_ev_label_1: EV_LABEL
-	l_ev_cell_1,
-	l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

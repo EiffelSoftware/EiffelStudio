@@ -324,14 +324,22 @@ feature -- Graphical changes
 			grid_cell_set_pixmap (gi, v)
 		end
 
-	show_text_in_popup (txt: STRING) is
-			--
+	show_error_dialog (txt: STRING) is
 		local
-			w_dlg: EB_INFORMATION_DIALOG
+			dlg: EB_DEBUGGER_EXCEPTION_DIALOG
+			l_tag: STRING
 		do
-			create w_dlg.make_with_text (txt)
-			w_dlg.show_modal_to_window (parent_window_from (row.parent.parent))
-		end
+			if expression /= Void then
+				l_tag := expression.expression
+				if l_tag /= Void then
+					l_tag.prepend_string ("Error on expression : %"")
+					l_tag.append_string ("%"")
+				end
+			end
+			create dlg.make (l_tag, txt)
+			dlg.set_title_and_label ("Watch tool :: error message", "Error message :")
+			dlg.show_modal_to_window (parent_window_from (row.parent.parent))
+		end		
 		
 	grid_activate_item_if_row_selected (a_item: EV_GRID_ITEM; 
 				check_if_row_selected: BOOLEAN;
@@ -419,7 +427,7 @@ feature -- Graphical changes
 
 							create glab
 							grid_cell_set_text (glab, "Error occurred (double click to see details)")
-							glab.pointer_double_press_actions.force_extend (agent show_text_in_popup (l_error_message))
+							glab.pointer_double_press_actions.force_extend (agent show_error_dialog (l_error_message))
 							row.set_item (Col_expression_result_index, glab)
 
 							if expression_evaluator.has_error_exception then

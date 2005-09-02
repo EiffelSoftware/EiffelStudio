@@ -543,6 +543,7 @@ feature -- Actions on all windows
 	synchronize_all_about_breakpoints is
 		do
 			quick_refresh_all_margins			
+			for_all (agent synchronize_breakpoints_action)
 		end
 
 	synchronize_all is
@@ -862,6 +863,17 @@ feature {NONE} -- Implementation
 		do
 			a_window.refresh
 			notify_observers (a_window, Notify_changed_window)
+		end
+
+	synchronize_breakpoints_action (a_window: EB_WINDOW) is
+			-- Action to synchronize `a_window' regarding the breakpoints data.
+		local
+			conv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			conv_dev ?= a_window
+			if conv_dev /= Void then
+				conv_dev.breakpoints_tool.synchronize
+			end
 		end
 
 	synchronize_action (a_window: EB_WINDOW)  is

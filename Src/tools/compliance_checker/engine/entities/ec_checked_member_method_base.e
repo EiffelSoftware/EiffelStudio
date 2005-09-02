@@ -1,5 +1,7 @@
 indexing
-	description: "Objects that ..."
+	description: "[
+		Base implementation for checked entities that describes and examines an assembly type method.
+	]"
 	author     : "$Author$"
 	date       : "$Date$"
 	revision   : "$Revision$"

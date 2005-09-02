@@ -57,6 +57,15 @@ inherit
 			is_equal,
 			copy
 		end	
+		
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		undefine
+			default_create,
+			is_equal,
+			copy
+		end			
 
 feature {NONE} -- Initialization
 
@@ -468,6 +477,8 @@ feature {NONE} -- Compliance Checking
 			l_member: EC_CHECKED_MEMBER
 			l_cursor: CURSOR
 		do
+			ev_application.idle_actions.block
+			
 			l_checked_type := a_type.type
 			l_show_cls := report_non_cls_compliant
 			if report_all then
@@ -515,6 +526,8 @@ feature {NONE} -- Compliance Checking
 			if l_add then
 				add_type_report_row (a_type)
 			end
+			
+			ev_application.idle_actions.resume
 		end
 		
 	on_report_percentage_changed (a_percent: NATURAL_8) is
@@ -522,7 +535,9 @@ feature {NONE} -- Compliance Checking
 		require
 			a_precent_small_enough: a_percent <= 100
 		do
+			ev_application.idle_actions.block
 			prg_check.set_value (a_percent)
+			ev_application.idle_actions.resume
 		end
 		
 	on_report_completed (a_complete: BOOLEAN) is
@@ -536,6 +551,7 @@ feature {NONE} -- Compliance Checking
 			l_reflection_type_load_exception: REFLECTION_TYPE_LOAD_EXCEPTION
 			l_file_not_found_exception: FILE_NOT_FOUND_EXCEPTION
 		do
+			ev_application.idle_actions.block
 			if is_checking then
 				stop_checking
 				if a_complete then
@@ -565,6 +581,7 @@ feature {NONE} -- Compliance Checking
 					show_error (error_report_generation_failed, [l_exception.message], owner_window)
 				end
 			end
+			ev_application.idle_actions.resume
 		end		
 
 feature {NONE} -- Report Row Building

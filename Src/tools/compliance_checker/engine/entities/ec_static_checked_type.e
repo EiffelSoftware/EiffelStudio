@@ -28,7 +28,13 @@ feature {NONE} -- Initialization
 			has_been_checked := True
 			internal_is_marked := True
 			internal_is_compliant := a_is_compliant
+			if not a_is_compliant then
+				non_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
+			end
 			internal_is_eiffel_compliant := a_is_eiffel_compliant
+			if not a_is_compliant then
+				non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
+			end
 		end
 			
 end -- class EC_STATIC_CHECKED_TYPE

@@ -92,7 +92,7 @@ feature -- Events
 				end
 					-- Update output tools
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all_margins
+				Window_manager.synchronize_all_about_breakpoints
 			end
 		end
 
@@ -112,7 +112,7 @@ feature -- Events
 				end
 					-- Update output tools
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all_margins
+				Window_manager.synchronize_all_about_breakpoints
 			end
 		end
 
@@ -132,7 +132,7 @@ feature -- Events
 				end
 					-- Update output tools
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all_margins
+				Window_manager.synchronize_all_about_breakpoints
 			end
 		end
 
@@ -154,7 +154,7 @@ feature -- Execution
 				
 					-- Update output tools
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all_margins
+				Window_manager.synchronize_all_about_breakpoints
 			end
 		end
 
@@ -163,13 +163,13 @@ feature {NONE} -- Implementation
 	quick_refresh_on_class_drop (unused: CLASSC_STONE) is
 			-- Quick refresh all windows.
 		do
-			window_manager.quick_refresh_all_margins
+			Window_manager.synchronize_all_about_breakpoints
 		end
 
 	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE) is
 			-- Quick refresh all windows.
 		do
-			window_manager.quick_refresh_all_margins
+			Window_manager.synchronize_all_about_breakpoints
 		end
 
 	can_drop (st: ANY): BOOLEAN is
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			end
 				-- Update output tools
 			output_manager.display_stop_points
-			Window_manager.quick_refresh_all_margins
+			Window_manager.synchronize_all_about_breakpoints
 		end
 
 end -- class EB_CLEAR_STOP_POINTS_COMMAND

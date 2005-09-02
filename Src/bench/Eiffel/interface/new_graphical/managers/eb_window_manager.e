@@ -540,6 +540,10 @@ feature -- Actions on all windows
 			end
 		end
 
+	synchronize_all_about_breakpoints is
+		do
+			quick_refresh_all_margins			
+		end
 
 	synchronize_all is
 			-- A compilation is over. Warn all windows and tools.

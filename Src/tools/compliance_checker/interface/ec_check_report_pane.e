@@ -540,7 +540,7 @@ feature {NONE} -- Compliance Checking
 				stop_checking
 				if a_complete then
 					if grid_output.row_count > 0 then
-						ask_show_check_report
+						show_information (question_check_completed, [], owner_window)
 					else	
 						show_information (information_no_non_compliant_member, [], owner_window)
 					end
@@ -604,10 +604,12 @@ feature {NONE} -- Report Row Building
 			
 			l_checked_abstact_type ?= l_checked_type
 			
+				-- Name
 			create l_item.make_with_text (l_checked_type.type.full_name)
 			l_item.set_tooltip (l_item.text)
 			l_row.set_item (1, l_item)
 			
+				-- Is Eiffel-compliant
 			create l_item
 			if l_checked_type.is_eiffel_compliant then
 				if l_checked_abstact_type = Void or else l_checked_abstact_type.is_eiffel_compliant_interface then
@@ -624,6 +626,7 @@ feature {NONE} -- Report Row Building
 			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (2, l_item)
 			
+				-- Is CLS-compliant
 			create l_item
 			if l_checked_type.is_compliant then
 				if l_checked_abstact_type = Void or else l_checked_abstact_type.is_compliant_interface then
@@ -640,12 +643,17 @@ feature {NONE} -- Report Row Building
 			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (3, l_item)
 			
+				-- Is marked compliant
 			create l_item
 			if l_checked_type.is_marked then
 				l_item.set_pixmap (icon_check)	
-				l_item.set_layout_procedure (layout_agent)
 				l_item.set_tooltip (tooltip_type_is_marked)
+			else
+				l_item.set_pixmap (icon_cross)
+				l_item.set_tooltip (tooltip_type_is_not_marked)
 			end
+			l_item.set_layout_procedure (layout_agent)
+			
 			l_row.set_item (4, l_item)
 			l_grid.unlock_update
 		end
@@ -708,9 +716,12 @@ feature {NONE} -- Report Row Building
 			create l_item
 			if l_checked_member.is_marked then
 				l_item.set_pixmap (icon_check)	
-				l_item.set_layout_procedure (layout_agent)
 				l_item.set_tooltip (tooltip_member_is_marked)
+			else
+				l_item.set_pixmap (icon_cross)
+				l_item.set_tooltip (tooltip_member_is_not_marked)
 			end
+			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (4, l_item)
 			
 			l_grid.unlock_update
@@ -789,22 +800,6 @@ feature {NONE} -- Implementation
 			btn_export.disable_sensitive
 		end
 		
-	ask_show_check_report is
-			-- Ask user if they want to see the report
-		require
-			owner_window_not_void: owner_window /= Void
-		local
-			l_notebook: EV_NOTEBOOK
-		do
-			show_information (question_check_completed, [], owner_window)
---			if ask_question (question_check_completed, button_okay, button_cancel, button_okay, [], owner_window) then
---				l_notebook := owner_window.nb_main
---				if l_notebook.selected_item_index /= 2 then
---					l_notebook.select_item (l_notebook.i_th (2))	
---				end
---			end
-		end
-
 	resize_first_column is
 			-- Resizes first column to fit grid space.
 		require

@@ -153,6 +153,7 @@ feature -- Accelerator, focus label and menu name
 	m_Add_to_favorites: STRING is		"&Add to Favorites"
 	m_Address_toolbar: STRING is		"&Address Bar"
 	m_Apply: STRING is					"&Apply"
+	m_Breakpoints_tool: STRING is		"Breakpoints"
 	f_Clear_breakpoints: STRING is		"Remove all breakpoints"
 	m_Clear_breakpoints: STRING is		"Re&move All Breakpoints"
 	m_Comment: STRING is				"&Comment%TCtrl+K"
@@ -642,6 +643,7 @@ feature -- Title part
 			Result := "About " + Workbench_name
 		end
 	t_Alias: STRING is							"Alias"
+	t_Breakpoints_tool: STRING is				"Breakpoints"
 	t_Call_stack_tool: STRING is				"Call Stack"
 	t_Calling_convention: STRING is				"Calling Convention"
 	t_Choose_ace_file: STRING is 				"Choose an Ace File"

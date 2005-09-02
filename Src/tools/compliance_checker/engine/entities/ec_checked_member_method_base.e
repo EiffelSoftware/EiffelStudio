@@ -10,13 +10,61 @@ deferred class
 inherit
 	EC_CHECKED_MEMBER
 		redefine
-			member
+			member,
+			check_extended_compliance,
+			check_eiffel_compliance
 		end
 
 feature -- Access {EC_CHECKED_MEMBER}
 		
 	member: METHOD_BASE
 			-- Member that was examined.
+
+feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
+
+	check_extended_compliance is
+			-- Checks entity's CLS-compliance.
+		local
+			l_member: like member
+			l_compliant: BOOLEAN
+		do
+			l_member := member
+			if l_member.is_public or l_member.is_family or l_member.is_family_or_assembly then
+				Precursor {EC_CHECKED_MEMBER}
+				if internal_is_compliant and not internal_is_marked then
+					l_compliant := not (l_member.calling_convention = {CALLING_CONVENTIONS}.var_args)
+					if not l_compliant then
+						non_compliant_reason := non_compliant_reasons.reason_method_uses_var_args
+					end
+					internal_is_compliant := l_compliant
+				end
+			else
+				internal_is_compliant := True
+				internal_is_marked := True
+			end
+		end
+		
+	check_eiffel_compliance is
+			-- Checks entity to see if it is Eiffel-compliant.
+		local
+			l_member: like member
+			l_compliant: BOOLEAN
+		do
+			l_member := member
+			if l_member.is_public or l_member.is_family or l_member.is_family_or_assembly then
+				Precursor {EC_CHECKED_MEMBER}
+				if internal_is_eiffel_compliant then
+					l_compliant := not (l_member.calling_convention = {CALLING_CONVENTIONS}.var_args)
+					if not l_compliant then
+						non_eiffel_compliant_reason := non_compliant_reasons.reason_method_uses_var_args
+					end
+					internal_is_eiffel_compliant := l_compliant
+				end
+			else
+				internal_is_eiffel_compliant := True
+			end
+			
+		end
 
 feature -- Access
 			

@@ -613,7 +613,7 @@ feature {NONE} -- Stack grid Layout Implementation
 			internal_result_row := Void
 			
 			if not stack_objects_grid_empty then
-				stack_objects_grid.remove_and_clear_all_rows
+				stack_objects_grid.default_clean
 				stack_objects_grid_empty := True
 			end
 		ensure
@@ -652,7 +652,7 @@ feature {NONE} -- debugged grid Layout Implementation
 		do
 			record_objects_layout
 			if not debugged_objects_grid_empty then
-				debugged_objects_grid.remove_and_clear_all_rows
+				debugged_objects_grid.default_clean
 				debugged_objects_grid_empty := True
 			end
 		ensure

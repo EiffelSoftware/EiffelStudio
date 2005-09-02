@@ -44,10 +44,12 @@ feature -- Tooltip
 	tooltip_type_is_cls_compliant: STRING is "Type is CLS-compliant"
 	tooltip_type_is_eiffel_compliant: STRING is "Type is Eiffel-compliant"
 	tooltip_type_is_marked: STRING is "Type has been marked, either at the type or assembly level,%Nwith the System.ClsCompliantAttribute attribute"
+	tooltip_type_is_not_marked: STRING is "Type has *not* been marked with the System.ClsCompliantAttribute attribute"
 
 	tooltip_member_is_cls_compliant: STRING is "Member is CLS-compliant"
 	tooltip_member_is_eiffel_compliant: STRING is "Member is Eiffel-compliant"
 	tooltip_member_is_marked: STRING is "Member has been marked, either at the memeber, type or assembly level,%Nwith the System.ClsCompliantAttribute attribute"
+	tooltip_member_is_not_marked: STRING is "Member has *not* been marked with the System.ClsCompliantAttribute attribute"
 
 feature -- Labels
 

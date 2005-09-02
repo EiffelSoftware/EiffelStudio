@@ -93,6 +93,8 @@ feature {NONE} -- Basic Operations
 				l_types := assembly.get_types
 				l_count := l_types.count
 
+				{SYSTEM_ARRAY}.sort (l_types, create {EC_TYPE_SORTER})
+
 				from
 					i := 0
 				until
@@ -160,6 +162,8 @@ feature {NONE} -- Implementation
 			l_members := l_type.get_members
 			l_count := l_members.count
 			
+			{SYSTEM_ARRAY}.sort (l_members, create {EC_MEMBER_SORTER})
+			
 			from
 			until
 				i = l_count
@@ -213,6 +217,7 @@ feature {NONE} -- Implementation
 
 	printer: EC_CHECK_PRINTER
 			-- Printer to write output to
+			
 			
 invariant
 	printer_not_void: printer /= Void

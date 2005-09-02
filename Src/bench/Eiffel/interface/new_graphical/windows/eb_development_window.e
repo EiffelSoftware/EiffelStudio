@@ -542,6 +542,15 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (features_tool)
 
+				-- Build the breakpoints tool
+			create breakpoints_tool.make (Current)
+			breakpoints_tool.attach_to_explorer_bar (left_panel)
+			left_tools.extend (breakpoints_tool.explorer_bar_item)
+			create show_cmd.make (Current, breakpoints_tool.explorer_bar_item)
+			show_tool_commands.extend (show_cmd)
+			toolbarable_commands.extend (show_cmd)
+			add_recyclable (breakpoints_tool)
+
 				-- Build the cluster tool
 			create cluster_tool.make (Current, Current)
 			cluster_tool.attach_to_explorer_bar (left_panel)
@@ -788,6 +797,7 @@ feature -- Update
 			cluster_tool.synchronize
 			history_manager.synchronize
 			features_tool.synchronize
+			breakpoints_tool.synchronize
 				-- Update main views
 			managed_main_formatters.i_th (2).invalidate
 			managed_main_formatters.i_th (3).invalidate
@@ -802,7 +812,7 @@ feature -- Update
 			address_manager.refresh
 			during_synchronization := False
 		end
-
+		
 	synchronize_routine_tool_to_default is
 			-- Synchronize the editor tool to the debug format.
 		do
@@ -2050,6 +2060,7 @@ feature -- Resource Update
 			enable_commands_on_project_loaded
 			cluster_tool.on_project_loaded
 			context_tool.on_project_loaded
+			breakpoints_tool.on_project_loaded
 		end
 
 	on_project_unloaded is
@@ -2230,6 +2241,8 @@ feature -- Tools & Controls
 	search_tool: EB_SEARCH_TOOL
 
 	features_tool: EB_FEATURES_TOOL
+	
+	breakpoints_tool: ES_BREAKPOINTS_TOOL	
 
 	windows_tool: EB_WINDOWS_TOOL
 
@@ -2466,7 +2479,7 @@ feature {NONE} -- Implementation
 					Application.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
 				output_manager.display_stop_points
-				window_manager.quick_refresh_all_margins
+				window_manager.synchronize_all_about_breakpoints
 			elseif conv_errst /= Void then
 				display_error_help_cmd.execute_with_stone (conv_errst)
 			elseif conv_ace /= Void then

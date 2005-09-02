@@ -123,6 +123,16 @@ feature -- Access
 			Result := "Compliance Checker "
 		end
 
+	icon_cross: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("cross.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	box_padding_width: INTEGER is 
 			-- `Result' is INTEGER constant named box_padding_width.
 		once
@@ -231,10 +241,14 @@ feature -- Access
 			Result := "Error: Unable to save project."
 		end
 
-	tooltip_check: STRING is
-			-- `Result' is STRING constant named `tooltip_check'.
+	icon_check_compliance: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
 		once
-			Result := "Perform Eiffel-compliance assembly checks"
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("check_compliance.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	button_height: INTEGER is 
@@ -311,14 +325,10 @@ feature -- Access
 			Result := "Reference paths"
 		end
 
-	icon_check_compliance: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
+	tooltip_check: STRING is
+			-- `Result' is STRING constant named `tooltip_check'.
 		once
-			create Result
-			create a_file_name.make_from_string (pixmaps)
-			a_file_name.set_file_name ("check_compliance.ico")
-			set_with_named_file (Result, a_file_name)
+			Result := "Perform Eiffel-compliance assembly checks"
 		end
 
 	button_close: STRING is

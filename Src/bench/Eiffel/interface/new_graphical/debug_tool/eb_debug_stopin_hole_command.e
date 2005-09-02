@@ -91,7 +91,7 @@ feature -- Update
 				end
 
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all_margins
+				Window_manager.synchronize_all_about_breakpoints
 			end
 		end
 
@@ -121,7 +121,7 @@ feature -- Update
 				end
 
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all_margins
+				Window_manager.synchronize_all_about_breakpoints
 			end
 		end
 
@@ -142,7 +142,7 @@ feature -- Update
 				end
 	
 				output_manager.display_stop_points
-				Window_manager.quick_refresh_all_margins
+				Window_manager.synchronize_all_about_breakpoints
 			end
 		end
 
@@ -153,7 +153,7 @@ feature -- Execution
 		do
 			Application.enable_all_breakpoints
 			output_manager.display_stop_points
-			Window_manager.quick_refresh_all_margins
+			Window_manager.synchronize_all_about_breakpoints
 		end
 
 feature {NONE} -- Implementation
@@ -178,13 +178,13 @@ feature {NONE} -- Implementation
 	quick_refresh_on_class_drop (unused: CLASSC_STONE) is
 			-- Quick refresh all windows.
 		do
-			window_manager.quick_refresh_all_margins
+			window_manager.synchronize_all_about_breakpoints
 		end
 
 	quick_refresh_on_brk_drop (unused: BREAKABLE_STONE) is
 			-- Quick refresh all windows.
 		do
-			window_manager.quick_refresh_all_margins
+			window_manager.synchronize_all_about_breakpoints
 		end
 
 	can_drop (st: ANY): BOOLEAN is

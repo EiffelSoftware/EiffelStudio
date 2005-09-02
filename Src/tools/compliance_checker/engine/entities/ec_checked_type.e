@@ -70,16 +70,23 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			l_checked_asm: EC_CHECKED_ASSEMBLY
 			l_asm: ASSEMBLY
 			l_element: like element_checked_type
+			l_compliant: BOOLEAN
 		do
 			l_type := type
 			
 			if l_type.is_pointer then
 				internal_is_marked := True
 				internal_is_compliant := False
+				non_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
 			elseif has_element_checked_type then
 				l_element := element_checked_type
 				internal_is_marked := l_element.is_marked
-				internal_is_compliant := l_element.is_compliant
+				l_compliant := l_element.is_compliant
+				if l_compliant then
+					internal_is_compliant := True
+				else
+					non_compliant_reason := l_element.non_compliant_reason
+				end
 			else
 				Precursor {EC_CACHABLE_CHECKED_ENTITY}
 				if not internal_is_marked then
@@ -88,12 +95,14 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 					l_asm := type.assembly
 					l_checked_asm := checked_assembly (l_asm)
 					internal_is_marked := l_checked_asm.is_marked
-					if not internal_is_marked and l_type.is_interface then
-							-- There is no indication if assembly is CLS-complaint or not,
-							-- so we need to check interface members for compliance.
+					l_compliant := l_checked_asm.is_compliant
+					if l_compliant then
+						internal_is_compliant := True
 					else
-						internal_is_compliant := l_checked_asm.is_compliant
+						non_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_cls_compliant
 					end
+				elseif not internal_is_compliant then
+					non_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
 				end
 			end
 
@@ -106,11 +115,18 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 		local
 			l_compliant: BOOLEAN
 			l_type: SYSTEM_TYPE
+			l_element_type: like element_checked_type
 		do
 			l_type := type
 			l_compliant := not l_type.is_pointer
 			if l_compliant and has_element_checked_type then
-				l_compliant := element_checked_type.is_eiffel_compliant
+				l_element_type := element_checked_type
+				l_compliant := l_element_type.is_eiffel_compliant
+				if not l_compliant then
+					non_eiffel_compliant_reason := l_element_type.non_eiffel_compliant_reason
+				end
+			else
+				non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
 			end
 			internal_is_eiffel_compliant := l_compliant
 		end

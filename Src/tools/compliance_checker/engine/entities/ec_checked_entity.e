@@ -59,9 +59,27 @@ feature -- Access
 			Result := internal_is_marked
 		end
 			
+	non_compliant_reason: STRING
+			-- Reason why entity is non-CLS-compliant
+			
+	non_eiffel_compliant_reason: STRING
+			-- Reason why entity is non-Eiffel-compliant
+			
 	has_been_checked: BOOLEAN
 			-- Has entity been checked?
 
+feature {NONE} -- Access
+
+	non_compliant_reasons: EC_CHECKED_REASON_CONSTANTS is
+			-- Checked reasons
+		indexing
+			once_status: global
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 feature {NONE} -- Basic Operations
 
 	frozen check_compliance is
@@ -80,6 +98,8 @@ feature {NONE} -- Basic Operations
 			has_been_checked := True
 		ensure
 			has_been_checked_set: has_been_checked
+			reason_set: not internal_is_compliant implies non_compliant_reason /= Void
+			eiffel_reason_set: not internal_is_eiffel_compliant implies non_eiffel_compliant_reason /= Void
 		end
 		
 	check_extended_compliance is
@@ -107,6 +127,32 @@ feature {NONE} -- Query
 		deferred
 		ensure
 			result_not_void: Result /= Void
+		end
+		
+	is_cls_member_name (a_member: MEMBER_INFO): BOOLEAN is
+			-- Does `a_member' have a valid CLS-compliant name?
+		require
+			a_member_not_void: a_member /= Void
+		local
+			l_name: NATIVE_ARRAY [CHARACTER]
+			l_count: INTEGER
+			i: INTEGER
+			c: CHARACTER
+		do
+			l_name := a_member.name.to_char_array
+			l_count := l_name.count
+			if l_count > 0 then
+				Result := l_name.item (0).is_alpha
+				from
+					i := 1
+				until
+					i = l_count or not Result
+				loop
+					c := l_name.item (0)
+					Result := c.is_alpha_numeric or c = '_'
+					i := i + 1
+				end
+			end
 		end
 		
 feature {NONE} -- Implementation

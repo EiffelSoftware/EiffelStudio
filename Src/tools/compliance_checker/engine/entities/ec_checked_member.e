@@ -44,7 +44,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			l_type: SYSTEM_TYPE
 		do
 			Precursor {EC_CHECKED_ENTITY}
-			if not internal_is_marked then
+			if internal_is_compliant and then not internal_is_marked then
 					-- No CLS-compliant attribute was set on member so we need to check parent
 					-- container type.
 				l_type := member.declaring_type
@@ -53,14 +53,17 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 					create l_checked_type.make (l_type)
 				end
 				internal_is_compliant := l_checked_type.is_compliant
-				internal_is_marked := l_checked_type.is_marked				
+				internal_is_marked := l_checked_type.is_marked
+				non_compliant_reason := l_checked_type.non_compliant_reason
+			elseif not internal_is_compliant then
+				non_compliant_reason := non_compliant_reasons.reason_member_marked_non_cls_compliant
 			end
 		end
 
 	check_eiffel_compliance is
 			-- Checks entity to see if it is Eiffel-compliant.
 		do
-			internal_is_eiffel_compliant := internal_is_compliant
+			internal_is_eiffel_compliant := True
 		end
 		
 feature {NONE} -- Query {EC_CHECKED_ENTITY}

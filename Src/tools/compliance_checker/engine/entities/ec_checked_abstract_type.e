@@ -113,6 +113,9 @@ feature {NONE} -- Basic Operations
 						if l_checked_member /= Void then
 							if l_compliant then
 								l_compliant := l_checked_member.is_compliant
+								if not l_compliant then
+									l_compliant := l_checked_member.is_marked
+								end
 							end
 							if l_eiffel_compliant then
 								l_eiffel_compliant := l_checked_member.is_eiffel_compliant	
@@ -143,19 +146,21 @@ feature {NONE} -- Implementation
 		do
 			l_method ?= a_member
 			if l_method /= Void then
-				Result := l_method.is_abstract and (l_method.is_public or l_method.is_family)
+				Result := l_method.is_abstract and (l_method.is_public or l_method.is_family or l_method.is_family_or_assembly)
 			else
 				l_property ?= a_member
 				if l_property /= Void then
-					Result := True
+						-- No need to check properties as associated methods will be checked later.
+					Result := False
 				else
 					l_ctor ?= a_member
 					if l_ctor /= Void then
-						Result := l_ctor.is_public or l_ctor.is_family
+						Result := l_ctor.is_public or l_ctor.is_family or l_ctor.is_family_or_assembly
 					else
 						l_event ?= a_member
 						if l_event /= Void then
-							Result := True
+								-- No need to check events as associated methods will be checked later.
+							Result := False
 						else
 							l_field ?= a_member
 							if l_field /= Void then
@@ -174,8 +179,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end	
-		
+		end
 
 	internal_is_compliant_interface: BOOLEAN
 	internal_is_eiffel_compliant_interface: BOOLEAN

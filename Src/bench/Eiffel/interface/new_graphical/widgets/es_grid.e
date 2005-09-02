@@ -37,9 +37,6 @@ feature {NONE} -- Initialization
 			enable_solid_resizing_divider
 			set_separator_color (color_separator)
 			set_tree_node_connector_color (color_tree_node_connector)
-			pre_draw_overlay_actions.extend (agent on_draw_borders)
-
-			header.item_resize_actions.extend (agent invalidate_for_border)
 			header.pointer_button_press_actions.extend (agent on_header_clicked)
 			header.pointer_double_press_actions.force_extend (agent on_header_auto_width_resize)
 
@@ -71,8 +68,24 @@ feature -- properties
 	scrolling_common_line_count: INTEGER
 			-- On a page by page scrolling, number of rows that will be common
 			-- between the two pages.
+
+	border_enabled: BOOLEAN
+			-- Is border enabled ?
+			-- i.e: the pre draw cell's border, alias cell separators
 	
 feature -- Change
+
+	enable_border is
+			-- enabled the cell's borders
+		do
+			set_border_enabled (True)
+		end
+
+	disable_border is
+			-- enabled the cell's borders
+		do
+			set_border_enabled (False)
+		end
 
 	set_mouse_wheel_scroll_full_page (v: BOOLEAN) is
 			-- Set the mouse wheel scroll page mode
@@ -324,15 +337,29 @@ feature {NONE} -- Actions implementation
 				col := column (div_index)
 				if row_count > 0 then
 					if ev_application.shift_pressed then
-						col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + 3)
+						col.set_width (col.required_width_of_item_span (first_visible_row.index, last_visible_row.index) + Additional_pixels_for_column_width)
 					else
-						col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + 3)
+						col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + Additional_pixels_for_column_width)
 					end
 				end
 			end			
 		end
 
 feature {NONE} -- Borders drawing
+
+	set_border_enabled (b: BOOLEAN) is
+		do
+			if b /= border_enabled then
+				border_enabled := True
+				if border_enabled then
+					pre_draw_overlay_actions.extend (agent on_draw_borders)
+					header.item_resize_actions.extend (agent invalidate_for_border)
+				else
+					pre_draw_overlay_actions.wipe_out
+					header.item_resize_actions.wipe_out
+				end
+			end
+		end
 
 	on_draw_borders (drawable: EV_DRAWABLE; grid_item: EV_GRID_ITEM; a_column_index, a_row_index: INTEGER) is
 		local
@@ -429,6 +456,10 @@ feature -- column resizing access
 
 feature {NONE} -- column resizing impl
 
+	Additional_pixels_for_column_width: INTEGER is 5
+			-- Additional width to add the column's content width during resizing
+			-- for better reading.
+
 	timer_columns_auto_resizing: EV_TIMEOUT
 
 	cancel_timer_columns_auto_resizing is
@@ -457,9 +488,13 @@ feature {NONE} -- column resizing impl
 					if c > 0 and c <= column_count then
 						col := column (c)
 						if col /= Void then
-							w := col.required_width_of_item_span (1, row_count) + 3
+							w := col.required_width_of_item_span (1, row_count) + Additional_pixels_for_column_width
 							if w > 5 then
-								col.set_width (w)
+								if w < col.width and col.index = column_count then
+									--| Do not resize smaller if it is last column
+								else
+									col.set_width (w)
+								end
 							end
 						end
 					end

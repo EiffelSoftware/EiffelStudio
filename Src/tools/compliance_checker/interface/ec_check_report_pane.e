@@ -587,6 +587,7 @@ feature {NONE} -- Report Row Building
 			i := l_grid.row_count + 1
 			first_level_row_count := first_level_row_count + 1
 			
+			l_grid.lock_update
 			l_grid.insert_new_row (i)
 			l_row := l_grid.row (i)
 			
@@ -616,8 +617,11 @@ feature {NONE} -- Report Row Building
 					l_item.set_pixmap (icon_error)
 					l_item.set_tooltip (tooltip_interface_illegally_compliant)
 				end
-				l_item.set_layout_procedure (layout_agent)
+			else
+				l_item.set_pixmap (icon_cross)
+				l_item.set_tooltip (l_checked_type.non_eiffel_compliant_reason)
 			end
+			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (2, l_item)
 			
 			create l_item
@@ -629,8 +633,11 @@ feature {NONE} -- Report Row Building
 					l_item.set_pixmap (icon_error)
 					l_item.set_tooltip (tooltip_interface_illegally_compliant)
 				end
-				l_item.set_layout_procedure (layout_agent)
+			else
+				l_item.set_pixmap (icon_cross)
+				l_item.set_tooltip (l_checked_type.non_compliant_reason)
 			end
+			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (3, l_item)
 			
 			create l_item
@@ -640,6 +647,7 @@ feature {NONE} -- Report Row Building
 				l_item.set_tooltip (tooltip_type_is_marked)
 			end
 			l_row.set_item (4, l_item)
+			l_grid.unlock_update
 		end
 		
 	add_report_member_to_row (a_row: EV_GRID_ROW; a_report_member: EC_REPORT_MEMBER) is
@@ -658,6 +666,9 @@ feature {NONE} -- Report Row Building
 			l_grid := grid_output
 			l_row := a_row
 			i := l_row.subrow_count + 1
+			
+			l_grid.lock_update
+			
 			l_row.insert_subrow (i)
 			l_row := l_row.subrow (i)
 			
@@ -673,18 +684,24 @@ feature {NONE} -- Report Row Building
 			create l_item
 			if l_checked_member.is_eiffel_compliant then
 				l_item.set_pixmap (icon_check)
-				l_item.set_layout_procedure (layout_agent)
 				l_item.set_tooltip (tooltip_member_is_eiffel_compliant)
+			else
+				l_item.set_pixmap (icon_cross)
+				l_item.set_tooltip (l_checked_member.non_eiffel_compliant_reason)
 			end
+			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (2, l_item)
 			
 				-- Is CLS-compliant
 			create l_item
 			if l_checked_member.is_compliant then
 				l_item.set_pixmap (icon_check)	
-				l_item.set_layout_procedure (layout_agent)
 				l_item.set_tooltip (tooltip_member_is_cls_compliant)
+			else
+				l_item.set_pixmap (icon_cross)
+				l_item.set_tooltip (l_checked_member.non_compliant_reason)
 			end
+			l_item.set_layout_procedure (layout_agent)
 			l_row.set_item (3, l_item)
 			
 				-- Is marked compliant
@@ -695,6 +712,8 @@ feature {NONE} -- Report Row Building
 				l_item.set_tooltip (tooltip_member_is_marked)
 			end
 			l_row.set_item (4, l_item)
+			
+			l_grid.unlock_update
 		end		
 
 	row_background_color: EV_COLOR is

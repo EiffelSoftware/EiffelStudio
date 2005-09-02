@@ -171,6 +171,7 @@ feature {NONE} -- Initialization
 				--| Stack grid
 			create stack_grid
 			stack_grid.enable_single_row_selection
+			stack_grid.enable_border
 ----| FIXME XR: Use preferences to store/restore column widths			
 			stack_grid.set_column_count_to (3)
 			stack_grid.column (1).set_title (Interface_names.t_Feature)

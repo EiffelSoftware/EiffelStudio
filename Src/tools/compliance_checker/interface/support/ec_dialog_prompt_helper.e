@@ -41,8 +41,8 @@ feature -- Basic Operations
 			l_text.replace_substring_all ("%R", "")
 			create l_dialog.make_with_text (l_text)
 			l_dialog.set_buttons (<<a_confirm, a_cancel>>)
-			l_dialog.set_default_push_button (l_dialog.button (a_confirm))
-			l_dialog.set_default_cancel_button (l_dialog.button (a_confirm))
+			l_dialog.set_default_push_button (l_dialog.button (a_default_button))
+			l_dialog.set_default_cancel_button (l_dialog.button (a_cancel))
 			l_dialog.show_modal_to_window (a_window)
 			Result := l_dialog.selected_button.is_equal (a_confirm)
 		end

@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			
 			create grid
 			grid.enable_single_row_selection
+			grid.enable_border
 			grid.set_column_count_to (3)
 			grid.column (1).set_title ("id")
 			grid.column (2).set_title ("name")

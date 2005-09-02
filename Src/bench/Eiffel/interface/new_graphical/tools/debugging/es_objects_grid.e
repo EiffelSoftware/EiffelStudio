@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			default_create
 			name := a_name
 			enable_single_row_selection
+			enable_border
 		end
 		
 	initialize is

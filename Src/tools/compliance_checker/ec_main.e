@@ -12,6 +12,11 @@ frozen class
 inherit
 	SYSTEM_OBJECT
 
+	EC_SHARED_PROJECT
+		export
+			{NONE} all
+		end
+
 create
 	make,
 	make_sta
@@ -23,6 +28,7 @@ feature {NONE} -- Initialization
 		local
 			l_app: EC_APPLICATION
 		do
+			add_arguments
 			create l_app.make_and_launch
 		end
 
@@ -37,6 +43,38 @@ feature {NONE} -- Initialization
 			l_thread.set_apartment_state (feature {APARTMENT_STATE}.sta)
 			l_thread.start
 			l_thread.join
+		end
+		
+feature {NONE} -- Implementation
+
+	add_arguments is
+			-- Add first argument as assembly file name and all others as reference paths
+		local
+			l_args: like arguments
+			l_count: INTEGER
+			i: INTEGER
+		do
+			l_args := arguments
+			l_count := l_args.argument_count
+			if l_count >= 1 then
+				project.set_assembly (arguments.argument (1))
+				from
+					i := 2
+				until
+					i > l_count
+				loop
+					project.add_reference_path (l_args.argument (i))
+					i := i + 1
+				end
+			end
+		end
+		
+	arguments: ARGUMENTS is
+			-- Application arguments
+		once
+			create Result
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 end -- class EC_MAIN

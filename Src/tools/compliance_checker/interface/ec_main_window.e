@@ -84,6 +84,7 @@ feature {NONE} -- Agent Handlers
 				l_close := True
 			end
 			if l_close then
+				vbox_output.reset_report
 				destroy
 				
 				if application_exists then

@@ -26,7 +26,7 @@ feature -- Formatting
 		do
 			l_type ?= a_member
 			if l_type /= Void then
-				Result := format_type (l_type)
+				Result := format_type (l_type, a_show_full_name)
 			else
 				l_method ?= a_member
 				if l_method /= Void then
@@ -61,12 +61,17 @@ feature -- Formatting
 			not_result_is_empty: not Result.is_empty
 		end
 		
-	format_type (a_type: SYSTEM_TYPE): STRING is
+	format_type (a_type: SYSTEM_TYPE; a_show_full_name: BOOLEAN): STRING is
 			-- Format `a_type'
+			-- `a_show_full_name' will cause member fully qualified name to be generated
 		require
 			a_type_not_void: a_type /= Void
 		do
-			Result := a_type.full_name
+			if a_show_full_name then
+				Result := a_type.full_name
+			else
+				Result := a_type.name
+			end
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty

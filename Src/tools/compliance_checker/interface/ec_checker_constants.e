@@ -87,6 +87,9 @@ feature -- Dialog Title/Filters
 	
 	filter_name_assembly: STRING is "Assembly (*.exe; *.dll)"
 	filter_assembly: STRING is "*.exe; *.dll"
+
+	filter_name_xml_files: STRING is "Xml Document (*.xml)"
+	filter_xml_files: STRING is "*.xml"
 	
 	filter_name_all_files: STRING is "All Files (*.*)"
 	filter_all_files: STRING is "*.*"

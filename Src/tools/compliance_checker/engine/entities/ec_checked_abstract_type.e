@@ -32,6 +32,12 @@ feature {NONE} -- Initialization
 		end
 		
 feature -- Access
+				
+	non_compliant_interface_reason: STRING
+			-- Reason why entity is non-CLS-compliant interface
+			
+	non_eiffel_compliant_interface_reason: STRING
+			-- Reason why entity is non-Eiffel-compliant interface
 						
 	has_interface_been_checked: BOOLEAN
 			-- Has type's interface been checked?
@@ -128,6 +134,13 @@ feature {NONE} -- Basic Operations
 			end
 			internal_is_compliant_interface := l_compliant
 			internal_is_eiffel_compliant_interface := l_eiffel_compliant
+			
+			if not l_compliant then
+				non_compliant_interface_reason := non_compliant_reasons.reason_interface_contains_non_cls_compliant_members
+			end
+			if not l_eiffel_compliant then
+				non_eiffel_compliant_interface_reason := non_compliant_reasons.reason_interface_contains_non_cls_compliant_members
+			end
 		end		
 		
 feature {NONE} -- Implementation

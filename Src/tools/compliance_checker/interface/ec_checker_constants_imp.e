@@ -67,6 +67,12 @@ feature -- Access
 			Result := "Remove"
 		end
 
+	label_check: STRING is
+			-- `Result' is STRING constant named `label_check'.
+		once
+			Result := "Compliant"
+		end
+
 	tooltip_assembly_cannot_be_found: STRING is
 			-- `Result' is STRING constant named `tooltip_assembly_cannot_be_found'.
 		once
@@ -77,6 +83,16 @@ feature -- Access
 			-- `Result' is STRING constant named `label_assembly'.
 		once
 			Result := "Assembly:"
+		end
+
+	icon_caution: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("caution.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	tooltip_help: STRING is
@@ -133,6 +149,12 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
+	label_caution: STRING is
+			-- `Result' is STRING constant named `label_caution'.
+		once
+			Result := "Illegally compliant"
+		end
+
 	box_padding_width: INTEGER is 
 			-- `Result' is INTEGER constant named box_padding_width.
 		once
@@ -147,6 +169,12 @@ feature -- Access
 			create a_file_name.make_from_string (pixmaps)
 			a_file_name.set_file_name ("blank.ico")
 			set_with_named_file (Result, a_file_name)
+		end
+
+	label_cross: STRING is
+			-- `Result' is STRING constant named `label_cross'.
+		once
+			Result := "Not compliant"
 		end
 
 	main_window_title: STRING is
@@ -273,6 +301,12 @@ feature -- Access
 			-- `Result' is STRING constant named `tooltip_progress'.
 		once
 			Result := "Checking conformance progress."
+		end
+
+	label_legend: STRING is
+			-- `Result' is STRING constant named `label_legend'.
+		once
+			Result := "Legend..."
 		end
 
 	icon_check: EV_PIXMAP is

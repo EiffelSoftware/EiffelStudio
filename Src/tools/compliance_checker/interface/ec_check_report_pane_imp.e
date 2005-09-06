@@ -31,47 +31,96 @@ feature {NONE}-- Initialization
 			initialize_constants
 			
 				-- Create all widgets.
+			create l_ev_horizontal_box_1
 			create l_ev_label_1
+			create l_ev_cell_1
+			create hbox_legend
+			create l_ev_cell_2
+			create l_ev_pixmap_1
+			create l_ev_label_2
+			create l_ev_cell_3
+			create l_ev_pixmap_2
+			create l_ev_label_3
+			create l_ev_cell_4
+			create l_ev_pixmap_3
+			create l_ev_label_4
 			create l_ev_frame_1
 			create grid_output
-			create l_ev_horizontal_box_1
-			create l_ev_cell_1
+			create l_ev_horizontal_box_2
+			create l_ev_cell_5
 			create btn_export
 			create l_ev_frame_2
 			create l_ev_vertical_box_1
-			create l_ev_horizontal_box_2
+			create l_ev_horizontal_box_3
 			create chk_show_cls_compliant
 			create chk_show_all
-			create l_ev_cell_2
-			create l_ev_horizontal_box_3
+			create l_ev_cell_6
+			create l_ev_horizontal_box_4
 			create lbl_progress
 			create prg_check
 			create btn_start_checking
 			
 				-- Build_widget_structure.
-			extend (l_ev_label_1)
+			extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_horizontal_box_1.extend (l_ev_cell_1)
+			l_ev_horizontal_box_1.extend (hbox_legend)
+			hbox_legend.extend (l_ev_cell_2)
+			hbox_legend.extend (l_ev_pixmap_1)
+			hbox_legend.extend (l_ev_label_2)
+			hbox_legend.extend (l_ev_cell_3)
+			hbox_legend.extend (l_ev_pixmap_2)
+			hbox_legend.extend (l_ev_label_3)
+			hbox_legend.extend (l_ev_cell_4)
+			hbox_legend.extend (l_ev_pixmap_3)
+			hbox_legend.extend (l_ev_label_4)
 			extend (l_ev_frame_1)
 			l_ev_frame_1.extend (grid_output)
-			extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_cell_1)
-			l_ev_horizontal_box_1.extend (btn_export)
+			extend (l_ev_horizontal_box_2)
+			l_ev_horizontal_box_2.extend (l_ev_cell_5)
+			l_ev_horizontal_box_2.extend (btn_export)
 			extend (l_ev_frame_2)
 			l_ev_frame_2.extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (chk_show_cls_compliant)
-			l_ev_horizontal_box_2.extend (chk_show_all)
-			l_ev_horizontal_box_2.extend (l_ev_cell_2)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (lbl_progress)
-			l_ev_horizontal_box_3.extend (prg_check)
-			l_ev_horizontal_box_3.extend (btn_start_checking)
+			l_ev_horizontal_box_3.extend (chk_show_cls_compliant)
+			l_ev_horizontal_box_3.extend (chk_show_all)
+			l_ev_horizontal_box_3.extend (l_ev_cell_6)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_4.extend (lbl_progress)
+			l_ev_horizontal_box_4.extend (prg_check)
+			l_ev_horizontal_box_4.extend (btn_start_checking)
 			
+			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
+			l_ev_horizontal_box_1.disable_item_expand (hbox_legend)
 			l_ev_label_1.set_text (label_non_compliant)
 			l_ev_label_1.align_text_left
+			hbox_legend.set_padding_width (box_padding_width)
+			hbox_legend.disable_item_expand (l_ev_pixmap_1)
+			hbox_legend.disable_item_expand (l_ev_label_2)
+			hbox_legend.disable_item_expand (l_ev_cell_3)
+			hbox_legend.disable_item_expand (l_ev_pixmap_2)
+			hbox_legend.disable_item_expand (l_ev_label_3)
+			hbox_legend.disable_item_expand (l_ev_cell_4)
+			hbox_legend.disable_item_expand (l_ev_pixmap_3)
+			hbox_legend.disable_item_expand (l_ev_label_4)
+			l_ev_pixmap_1.set_minimum_width (16)
+			l_ev_pixmap_1.set_minimum_height (16)
+			l_ev_pixmap_1.copy (icon_check)
+			l_ev_label_2.set_text (label_check)
+			l_ev_cell_3.set_minimum_width (6)
+			l_ev_pixmap_2.set_minimum_width (16)
+			l_ev_pixmap_2.set_minimum_height (16)
+			l_ev_pixmap_2.copy (icon_cross)
+			l_ev_label_3.set_text (label_cross)
+			l_ev_cell_4.set_minimum_width (6)
+			l_ev_pixmap_3.set_minimum_width (16)
+			l_ev_pixmap_3.set_minimum_height (16)
+			l_ev_pixmap_3.copy (icon_caution)
+			l_ev_label_4.set_text (label_caution)
 			l_ev_frame_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			l_ev_frame_1.set_style (1)
-			l_ev_horizontal_box_1.set_padding_width (box_padding_width)
-			l_ev_horizontal_box_1.disable_item_expand (btn_export)
+			l_ev_horizontal_box_2.set_padding_width (box_padding_width)
+			l_ev_horizontal_box_2.disable_item_expand (btn_export)
 			btn_export.disable_sensitive
 			btn_export.set_text (button_export)
 			btn_export.set_minimum_width (120)
@@ -80,19 +129,19 @@ feature {NONE}-- Initialization
 			l_ev_frame_2.set_text (frame_report_generation)
 			l_ev_vertical_box_1.set_padding_width (box_padding_width)
 			l_ev_vertical_box_1.set_border_width (box_padding_width)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_2.set_padding_width (box_padding_width)
-			l_ev_horizontal_box_2.disable_item_expand (chk_show_cls_compliant)
-			l_ev_horizontal_box_2.disable_item_expand (chk_show_all)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
+			l_ev_horizontal_box_3.set_padding_width (box_padding_width)
+			l_ev_horizontal_box_3.disable_item_expand (chk_show_cls_compliant)
+			l_ev_horizontal_box_3.disable_item_expand (chk_show_all)
 			chk_show_cls_compliant.enable_select
 			chk_show_cls_compliant.set_text (check_cls_compliance)
 			chk_show_cls_compliant.set_tooltip (tooltip_cls_compliance)
 			chk_show_all.set_text (check_show_all)
 			chk_show_all.set_tooltip (tooltip_show_all)
-			l_ev_horizontal_box_3.set_padding_width (box_padding_width)
-			l_ev_horizontal_box_3.disable_item_expand (lbl_progress)
-			l_ev_horizontal_box_3.disable_item_expand (btn_start_checking)
+			l_ev_horizontal_box_4.set_padding_width (box_padding_width)
+			l_ev_horizontal_box_4.disable_item_expand (lbl_progress)
+			l_ev_horizontal_box_4.disable_item_expand (btn_start_checking)
 			lbl_progress.set_text (label_progress)
 			lbl_progress.set_tooltip (tooltip_progress)
 			lbl_progress.set_minimum_height (button_height)
@@ -105,8 +154,8 @@ feature {NONE}-- Initialization
 			btn_start_checking.set_pixmap (icon_check_compliance)
 			set_padding_width (box_padding_width)
 			set_border_width (box_border_width)
-			disable_item_expand (l_ev_label_1)
 			disable_item_expand (l_ev_horizontal_box_1)
+			disable_item_expand (l_ev_horizontal_box_2)
 			disable_item_expand (l_ev_frame_2)
 			
 				--Connect events.
@@ -122,17 +171,22 @@ feature -- Access
 	grid_output: EV_GRID
 	prg_check: EV_HORIZONTAL_PROGRESS_BAR
 	btn_export, btn_start_checking: EV_BUTTON
-	chk_show_cls_compliant, chk_show_all: EV_CHECK_BUTTON
+	hbox_legend: EV_HORIZONTAL_BOX
+	chk_show_cls_compliant,
+	chk_show_all: EV_CHECK_BUTTON
 	lbl_progress: EV_LABEL
 
 feature {NONE} -- Implementation
 
-	l_ev_cell_1, l_ev_cell_2: EV_CELL
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4, l_ev_cell_5, l_ev_cell_6: EV_CELL
+	l_ev_pixmap_1,
+	l_ev_pixmap_2, l_ev_pixmap_3: EV_PIXMAP
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
+	l_ev_horizontal_box_4: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_label_1: EV_LABEL
-	l_ev_frame_1,
-	l_ev_frame_2: EV_FRAME
+	l_ev_label_1, l_ev_label_2, l_ev_label_3,
+	l_ev_label_4: EV_LABEL
+	l_ev_frame_1, l_ev_frame_2: EV_FRAME
 
 feature {NONE} -- Implementation
 

@@ -79,6 +79,7 @@ feature {NONE} -- Initialization
 			l_grid: like grid_output
 			l_column: EV_GRID_COLUMN
 			l_header: EV_GRID_HEADER
+			l_grid_processor: EV_GRID_DEFAULT_UI_PROCESSOR
 		do
 
 			--| `grid_output'
@@ -127,8 +128,8 @@ feature {NONE} -- Initialization
 			
 			l_grid.resize_actions.extend (agent on_resize_grid_output)
 			l_grid.virtual_size_changed_actions.extend (agent on_resize_grid_output (0, 0, ?, ?))
-			l_grid.mouse_wheel_actions.extend (agent on_grid_mouse_wheel_recieved)
-			l_grid.key_release_actions.extend (agent on_grid_key_released)
+			
+			create l_grid_processor.make (l_grid)
 			
 			btn_export.select_actions.extend (agent on_export_selected)
 			btn_start_checking.select_actions.extend (agent on_check_selected)
@@ -144,8 +145,16 @@ feature -- Element change
 
 	set_owner_window (an_owner_window: like owner_window) is
 			-- Set `owner_window' to `an_owner_window'.
+		require
+			owner_window_not_set: owner_window = Void
+		local
+			l_accelerator: EV_ACCELERATOR
 		do
 			owner_window := an_owner_window
+			
+			create l_accelerator.make_with_key_combination (create {EV_KEY}.make_with_code (key_c), True, False, False)
+			l_accelerator.actions.extend (agent on_copy_selected)
+			an_owner_window.accelerators.extend (l_accelerator)
 		ensure
 			owner_window_assigned: owner_window = an_owner_window
 		end
@@ -156,58 +165,6 @@ feature {NONE} -- Agent Handlers
 			-- Called when report output (`grid_output') is resized.
 		do
 			resize_first_column
-		end
-		
-	on_grid_mouse_wheel_recieved (a_delta: INTEGER) is
-			-- Called when user scrolls `grid_output' using the mouse wheel
-		local
-			l_move_by: INTEGER
-			l_grid: like grid_output
-		do
-			l_move_by := (- a_delta) * 5
-			
-			l_grid := grid_output
-			l_grid.set_virtual_position (l_grid.virtual_x_position, (l_grid.virtual_y_position + (l_grid.row_height * l_move_by)).min (l_grid.maximum_virtual_y_position).max (0))
-		end
-		
-	on_grid_key_released (a_key: EV_KEY) is
-			-- Called when user releases a key when output gird has focus.
-		require
-			a_key_not_void: a_key /= Void
-		local
-			l_grid: like grid_output
-			l_rows: ARRAY [EV_GRID_ROW]
-			l_row: EV_GRID_ROW
-		do
-			inspect a_key.code
-			
-			when key_left then
-				l_grid := grid_output
-				l_rows := l_grid.selected_rows
-				if l_rows.count > 0 then
-					l_row := l_rows[1]
-					if l_row.is_expanded then
-						l_row.collapse
-					elseif l_row.parent_row /= Void then
-						l_row.disable_select
-						l_row.parent_row.enable_select
-					end
-				end
-			when key_right then
-				l_grid := grid_output
-				l_rows := l_grid.selected_rows
-				if l_rows.count > 0 then
-					l_row := l_rows[1]
-					if not l_row.is_expanded and l_row.is_expandable then
-						l_row.expand
-					elseif l_row.subrow_count > 0 then
-						l_row.disable_select
-						l_row.subrow (1).enable_select
-					end
-				end
-			else
-				
-			end
 		end
 		
 	on_perform_layout (a_item: EV_GRID_LABEL_ITEM; a_layout: EV_GRID_LABEL_ITEM_LAYOUT) is
@@ -228,7 +185,7 @@ feature {NONE} -- Agent Handlers
 			l_show_all: BOOLEAN
 			l_show_cls: BOOLEAN
 			l_add: BOOLEAN
-			l_sorted_members: SORTED_TWO_WAY_LIST [EC_REPORT_MEMBER]
+			l_members: LIST [EC_REPORT_MEMBER]
 			l_member: EC_REPORT_MEMBER
 			l_checked_member: EC_CHECKED_MEMBER
 		do
@@ -239,16 +196,14 @@ feature {NONE} -- Agent Handlers
 				end
 				
 				l_data ?= a_row.data
-				if l_data /= Void then		
-					create l_sorted_members.make
-					l_sorted_members.append (l_data.members)
-					l_sorted_members.sort
+				if l_data /= Void then	
+					l_members := l_data.members
 					from
-						l_sorted_members.start
+						l_members.start
 					until
-						l_sorted_members.after
+						l_members.after
 					loop
-						l_member := l_sorted_members.item
+						l_member := l_members.item
 						l_checked_member := l_member.member
 						l_add := l_show_all
 						if not l_add then
@@ -261,7 +216,7 @@ feature {NONE} -- Agent Handlers
 						if l_add then
 							add_report_member_to_row (a_row, l_member)
 						end
-						l_sorted_members.forth
+						l_members.forth
 					end
 				end
 			end
@@ -274,20 +229,34 @@ feature {NONE} -- Agent Handlers
 		local
 			l_sfd: EV_FILE_SAVE_DIALOG
 			l_exporter: EC_REPORT_EXPORTER
+			l_file_name: STRING
+			l_ext: STRING
 		do
 			create l_sfd.make_with_title (title_browse_export_file_name)
-			--l_sfd.set_start_directory (st)
+			l_sfd.filters.extend ([filter_xml_files, filter_name_xml_files])
 			l_sfd.filters.extend ([filter_all_files, filter_name_all_files])
 			l_sfd.show_modal_to_window (owner_window)
-			if l_sfd.file_name /= Void then
+			l_file_name := l_sfd.file_name
+			if l_file_name /= Void and then not l_file_name.is_empty then
+				l_ext ?= l_sfd.filters.i_th (l_sfd.selected_filter_index).item (1)
+				if not l_ext.is_equal ("*.*") then
+					l_ext.prune_all_leading ('*')
+					if l_file_name.count > l_ext.count then
+						if not l_file_name.substring (l_file_name.count - (l_ext.count - 1), l_file_name.count).is_case_insensitive_equal (l_ext) then
+							l_file_name.append (l_ext)
+						end
+					else
+						l_file_name.append (l_ext)
+					end
+				end
+				
 				create l_exporter.make (report, report_non_cls_compliant, report_all)
-				l_exporter.export_report (l_sfd.file_name)
+				l_exporter.export_report (l_file_name)
 				if not l_exporter.export_successful then
 					show_error (error_export_failed, [l_exporter.last_error], owner_window)
 				end
 			end
 		end
-		
 		
 	on_check_selected is
 			-- Called when user selects Check/Recheck/Cancel button (`btn_check')
@@ -358,6 +327,50 @@ feature {NONE} -- Agent Handlers
 			else
 				chk_show_cls_compliant.enable_sensitive
 			end
+		end
+
+	on_copy_selected is
+			-- Called when user presses CTRL+C
+		require
+			grid_output_not_void: grid_output /= Void
+		local
+			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_member: EC_REPORT_MEMBER
+			l_type: EC_REPORT_TYPE
+			l_item_string: STRING
+			l_clip: STRING
+		do
+			create l_clip.make (256)
+			l_rows := grid_output.selected_rows
+			if not l_rows.is_empty then
+				from
+					l_rows.start
+				until
+					l_rows.after
+				loop
+					l_row := l_rows.item
+					l_type ?= l_row.data
+					if l_type = Void then
+						l_member ?= l_row.data
+						check
+							data_not_correctly_set: l_member /= Void
+						end
+						l_item_string := format_clip_member (l_member.member)
+					else
+						l_item_string := format_clip_type (l_type.type)
+					end
+					check
+						l_item_string_not_void: l_item_string /= Void
+					end
+					l_clip.append (l_item_string)
+					l_rows.forth
+					if not l_rows.after then
+						l_clip.append_character ('%N')	
+					end
+				end
+			end
+			ev_application.clipboard.set_text (l_clip)
 		end
 
 feature {NONE} -- Compliance Checking
@@ -554,17 +567,15 @@ feature {NONE} -- Compliance Checking
 			ev_application.idle_actions.block
 			if is_checking then
 				stop_checking
+				l_grid := grid_output
 				if a_complete then
-					if grid_output.row_count > 0 then
+					if l_grid.row_count > 0 then
 						show_information (question_check_completed, [], owner_window)
 					else	
 						show_information (information_no_non_compliant_member, [], owner_window)
-					end
-					l_grid := grid_output
-					if l_grid.row_count > 0 then
-						l_grid.select_row (1)
-					end					
+					end			
 				end
+				l_grid.set_focus
 				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, checker_resolver)
 				checker_resolver := Void
 			end
@@ -608,7 +619,6 @@ feature {NONE} -- Report Row Building
 			l_grid.insert_new_row (i)
 			l_row := l_grid.row (i)
 			
-			
 			l_checked_type := a_report_type.type
 			l_row.set_data (a_report_type)
 			
@@ -633,7 +643,7 @@ feature {NONE} -- Report Row Building
 					l_item.set_pixmap (icon_check)
 					l_item.set_tooltip (tooltip_type_is_eiffel_compliant)
 				else
-					l_item.set_pixmap (icon_error)
+					l_item.set_pixmap (icon_caution)
 					l_item.set_tooltip (tooltip_interface_illegally_compliant)
 				end
 			else
@@ -650,7 +660,7 @@ feature {NONE} -- Report Row Building
 					l_item.set_pixmap (icon_check)
 					l_item.set_tooltip (tooltip_type_is_cls_compliant)
 				else
-					l_item.set_pixmap (icon_error)
+					l_item.set_pixmap (icon_caution)
 					l_item.set_tooltip (tooltip_interface_illegally_compliant)
 				end
 			else
@@ -672,6 +682,9 @@ feature {NONE} -- Report Row Building
 			l_item.set_layout_procedure (layout_agent)
 			
 			l_row.set_item (4, l_item)
+			if l_row.index = 1 then
+				l_row.enable_select
+			end
 			l_grid.unlock_update
 		end
 		
@@ -696,6 +709,7 @@ feature {NONE} -- Report Row Building
 			
 			l_row.insert_subrow (i)
 			l_row := l_row.subrow (i)
+			l_row.set_data (a_report_member)
 			
 			l_checked_member := a_report_member.member
 			
@@ -800,6 +814,101 @@ feature {EC_MAIN_WINDOW} -- Clean Up
 			prg_check.set_value (0)
 			btn_start_checking.set_text (button_check)
 		end
+
+feature {NONE} -- Formatting
+
+	format_clip_type (a_type: EC_CHECKED_TYPE): STRING is
+			-- Formats type `a_type' to a single STRING for clipboard.
+		require
+			a_type_not_void: a_type /= Void
+		local
+			l_ab_type: EC_CHECKED_ABSTRACT_TYPE
+		do
+			create Result.make (256)
+			Result.append ("Type%T")
+			Result.append (report_formatter.format_member (a_type.type, True))
+			Result.append_character ('%T')
+			
+			l_ab_type ?= a_type
+			
+			if a_type.is_eiffel_compliant then
+				if l_ab_type = Void or else l_ab_type.is_eiffel_compliant_interface then
+					Result.append (eiffel_compliant_string)
+				else
+					Result.append (non_eiffel_compliant_string)
+					Result.append (l_ab_type.non_eiffel_compliant_interface_reason)
+				end
+			else
+				Result.append (non_eiffel_compliant_string)
+				Result.append (a_type.non_eiffel_compliant_reason)
+			end			
+
+			Result.append_character ('%T')
+			
+			if a_type.is_compliant then
+				if l_ab_type = Void or else l_ab_type.is_compliant_interface then
+					Result.append (compliant_string)
+				else
+					Result.append (non_compliant_string)
+					Result.append (l_ab_type.non_compliant_interface_reason)
+				end
+			else
+				Result.append (non_compliant_string)
+				Result.append (a_type.non_compliant_reason)
+			end	
+			Result.append_character ('%T')
+			
+			if a_type.is_marked then
+				Result.append (marked_string)	
+			else
+				Result.append (not_marked_string)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	format_clip_member (a_member: EC_CHECKED_MEMBER): STRING is
+			-- Formats member `a_member' to a single STRING for clipboard.
+		require
+			a_member_not_void: a_member /= Void
+		do
+			create Result.make (256)
+			Result.append ("Member%T")
+			Result.append (report_formatter.format_member (a_member.member, True))
+			Result.append_character ('%T')
+			
+			if a_member.is_eiffel_compliant then
+				Result.append (eiffel_compliant_string)	
+			else
+				Result.append (non_eiffel_compliant_string)
+				Result.append (a_member.non_eiffel_compliant_reason)
+			end
+			Result.append_character ('%T')
+			
+			if a_member.is_compliant then
+				Result.append (compliant_string)	
+			else
+				Result.append (non_compliant_string)
+				Result.append (a_member.non_compliant_reason)
+			end
+			Result.append_character ('%T')
+			
+			if a_member.is_marked then
+				Result.append (marked_string)	
+			else
+				Result.append (not_marked_string)
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	illegaly_cls_compliant_string: STRING is "Illegal: "
+	compliant_string: STRING is "CLS-Compliant"
+	non_compliant_string: STRING is "Not CLS-Compliant: "
+	eiffel_compliant_string: STRING is "Eiffel-Compliant"
+	non_eiffel_compliant_string: STRING is "Not Eiffel-Compliant: "
+	marked_string: STRING is "Marked with ClsCompliantAttribute"
+	not_marked_string: STRING is "Not marked with ClsCompliantAttribute"
 
 feature {NONE} -- Implementation
 

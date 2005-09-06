@@ -18,9 +18,20 @@ inherit
 		undefine
 			default_create,
 			copy,
-			is_equal
+			is_equal,
+			out
 		end
-
+		
+	EV_KEY
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy,
+			is_equal,
+			out
+		end
+		
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -31,6 +42,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		local
 			l_grid: like grid_reference_paths
+			l_grid_processor: EV_GRID_DEFAULT_UI_PROCESSOR
 		do			
 			synchronize_project_with_interface
 		
@@ -44,7 +56,7 @@ feature {NONE} -- Initialization
 			l_grid := grid_reference_paths
 			l_grid.set_column_count_to (1)
 			l_grid.column (1).set_title (label_path)
-			l_grid.enable_multiple_row_selection
+			l_grid.enable_single_row_selection
 			l_grid.enable_selection_key_handling
 			l_grid.disable_dynamic_content
 			l_grid.post_draw_overlay_actions.extend (agent on_item_post_draw)
@@ -55,6 +67,9 @@ feature {NONE} -- Initialization
 			l_grid.set_separator_color ((create {EV_STOCK_COLORS}).grey)
 			l_grid.enable_row_separators
 			l_grid.header.first.disable_user_resize
+			l_grid.key_release_actions.extend (agent on_grid_key_released)
+			
+			create l_grid_processor.make (l_grid)
 			
 			--| `btn_add_reference'
 			btn_add_reference.select_actions.extend (agent on_add_selected)
@@ -154,7 +169,7 @@ feature {NONE} -- Agent Handlers
 		
 	sticky_assembly_path: STRING
 			-- Last assembly path directory		
-		
+				
 	on_grid_row_selection_changed (a_selected: BOOLEAN; a_row: EV_GRID_ROW) is
 			-- Called when selection changes in `grid_reference_paths'.
 			-- `a_selected' indicates a selection or deselection.
@@ -174,6 +189,37 @@ feature {NONE} -- Agent Handlers
 				else
 					btn_remove_reference.disable_sensitive
 				end
+			end
+		end
+		
+	on_grid_key_released (a_key: EV_KEY) is
+			-- Called when user presses key on focused item in `grid_reference_paths'
+		require
+			a_key_not_void: a_key /= Void
+		local
+			l_rows: ARRAY [EV_GRID_ROW]
+			l_item: EV_GRID_EDITABLE_ITEM
+		do
+			inspect a_key.code
+			
+			when key_f2 then
+				l_rows := grid_reference_paths.selected_rows
+				if l_rows.count > 0 then
+					l_item ?= (l_rows[1]).item (1)
+					check
+						l_item_not_void: l_item /= Void
+					end
+					if l_item /= Void then
+						l_item.ensure_visible
+						active_reference_text := l_item.text
+						l_item.activate	
+						l_item.text_field.select_all
+					end
+				end
+			when key_delete then
+				on_remove_selected
+			else
+				--| Do nothing...	
 			end
 		end
 		
@@ -302,10 +348,12 @@ feature {NONE} -- Agent Handlers
 			l_project: like project
 			l_row: EV_GRID_ROW
 			l_item: EV_GRID_EDITABLE_ITEM
+			i: INTEGER
 		do
 			l_grid := grid_reference_paths
 			l_selected_rows := l_grid.selected_rows
 			if not l_selected_rows.is_empty then
+				i := (l_selected_rows.first.index - 1).max (1)
 				l_project := project
 				from
 					l_selected_rows.start
@@ -322,6 +370,10 @@ feature {NONE} -- Agent Handlers
 					end
 					l_grid.remove_row (l_row.index)
 					l_selected_rows.forth
+				end
+				if l_grid.row_count > 0 then
+					i := i.min (l_grid.row_count)
+					l_grid.row (i).enable_select
 				end
 			end
 		end
@@ -367,6 +419,9 @@ feature {NONE} -- Implementation
 			l_edit_item.pointer_motion_actions.extend (agent on_reference_path_pointer_move (l_edit_item, ?, ?, ?, ?, ?, ?, ?))
 			set_path_pixmap (l_edit_item, a_path)
 			l_edit_item.set_right_border (18)
+			if i = 1 then
+				l_edit_item.row.enable_select	
+			end
 		end
 
 	browse_for_reference_path: STRING is

@@ -66,6 +66,7 @@ feature {NONE} -- Implementation
 					project.add_reference_path (l_args.argument (i))
 					i := i + 1
 				end
+				project.set_is_dirty (False)
 			end
 		end
 		

@@ -17,8 +17,8 @@ inherit
 
 feature -- Directories
 
-	pixmaps: STRING is
-			-- `Result' is DIRECTORY constant named `pixmaps'.
+	application_directory: STRING is 
+			-- Directory where application is located
 		local
 			l_args: ARGUMENTS
 			l_path: STRING
@@ -32,6 +32,31 @@ feature -- Directories
 			end
 			create Result.make (l_path.count + 9)
 			Result.append (l_path)
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+		
+	help_file: STRING is
+			-- Complied help file name
+		once
+			create Result.make (application_directory.count + 13)
+			Result.append (application_directory)
+			Result.append ("help\help.chm")
+		ensure
+			result_not_void: Result /= Void
+			not_result_is_empty: not Result.is_empty
+		end
+
+	pixmaps: STRING is
+			-- `Result' is DIRECTORY constant named `pixmaps'.
+		local
+			l_args: ARGUMENTS
+			l_path: STRING
+			i: INTEGER
+		once
+			create Result.make (application_directory.count + 9)
+			Result.append (application_directory)
 			Result.append ("resources")
 		end
 
@@ -67,6 +92,8 @@ feature -- Messages
 	
 	information_no_non_compliant_member: STRING is "The assembly has been fully checked and no%Nnon-complaint members were found."
 
+	error_cannot_find_help_file: STRING is "The find help documentation file:%N%N%T{1}"
+	error_help_launch_failed: STRING is "Failed to launch help documentation for:%N%N%T{1}%N%NPlease ensure the help launcher %%SystemRoot%%\hh.exe exists!"
 	error_already_added: STRING is "The selected reference path has already been added."
 	error_assembly_not_specified: STRING is "You have not specified an assembly to check!"
 	error_could_not_find_assembly: STRING is "The specified assembly could not be found:%N%N%TPath: {1}"

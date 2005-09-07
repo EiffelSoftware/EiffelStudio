@@ -40,11 +40,11 @@ feature {NONE} -- Initialization
 			-- Create and initialize a `EV_GRID' default user interface processor
 		require
 			a_grid_not_void: a_grid /= Void
-			a_grid_is_single_row_selection_enabled: a_grid.is_single_row_selection_enabled
 		do
 			a_grid.mouse_wheel_actions.extend (agent on_grid_mouse_wheel_recieved (a_grid, ?))
 			a_grid.key_release_actions.extend (agent on_grid_key_released (a_grid, ?))
 			a_grid.key_press_actions.extend (agent on_grid_key_pressed (a_grid, ?))
+			a_grid.row_select_actions.extend (agent on_grid_row_selected)
 		end
 
 feature {NONE} -- Agent Handlers
@@ -63,62 +63,24 @@ feature {NONE} -- Agent Handlers
 		require
 			a_grid_not_void: a_grid /= Void
 			a_key_not_void: a_key /= Void
-		local
-			l_rows: ARRAY [EV_GRID_ROW]
-			l_row: EV_GRID_ROW
 		do
 			inspect a_key.code
 					
 			when key_left, key_numpad_subtract then
-				l_rows := a_grid.selected_rows
-				if l_rows.count > 0 then
-					l_row := l_rows[1]
-					if l_row.is_expanded then
-						l_row.collapse
-					elseif l_row.parent_row /= Void then
-						l_row.disable_select
-						l_row := l_row.parent_row
-						l_row.enable_select
-					end
-					l_row.ensure_visible
-				end
+				on_shift_selection_left (a_grid)
 			when key_right, key_numpad_add, key_numpad_multiply then
-				l_rows := a_grid.selected_rows
-				if l_rows.count > 0 then
-					l_row := l_rows[1]
-					if not l_row.is_expanded and l_row.is_expandable then
-						l_row.expand
-					elseif l_row.subrow_count > 0 then
-						l_row.disable_select
-						l_row := l_row.subrow (1)
-						l_row.enable_select
-					end
-					l_row.ensure_visible
-				end
+				on_shift_selection_right (a_grid)
 			when key_home then
 				if ev_application.ctrl_pressed then
-					l_rows := a_grid.selected_rows
-					if l_rows.count > 0 then
-						(l_rows[1]).disable_select
-						l_row := a_grid.row (1)
-						l_row.enable_select
-						l_row.ensure_visible
-					end
+					on_ctrl_home (a_grid)
 				end
 			when key_end then
 				if ev_application.ctrl_pressed then
-					l_rows := a_grid.selected_rows
-					if l_rows.count > 0 then
-						(l_rows[1]).disable_select
-						l_row := a_grid.row (a_grid.row_count)
-						if l_row.parent_row /= Void then
-							if not l_row.parent_row_root.is_expanded then
-								l_row := l_row.parent_row_root	
-							end
-						end
-						l_row.enable_select
-						l_row.ensure_visible
-					end
+					on_ctrl_end (a_grid)
+				end
+			when key_a then
+				if ev_application.ctrl_pressed then
+					on_select_all (a_grid)
 				end
 			else
 				--| Do nothing...	
@@ -130,42 +92,259 @@ feature {NONE} -- Agent Handlers
 		require
 			a_grid_not_void: a_grid /= Void
 			a_key_not_void: a_key /= Void
+		do
+			inspect a_key.code
+			
+			when key_page_up then
+				on_page_up (a_grid)
+			when key_page_down then
+				on_page_down (a_grid)
+			else
+				--| Do nothing...
+			end
+		end
+		
+	on_grid_row_selected (a_row: EV_GRID_ROW) is
+			-- Called when a grid row has been selected
+		require
+			a_row_not_void: a_row /= Void
+		do
+			last_selected_row := a_row
+		end
+		
+feature {NONE} -- Implementation
+
+	on_shift_selection_left (a_grid: EV_GRID) is
+			-- Preform a left shift selection.
+		require
+			a_grid_not_void: a_grid /= Void
+		local
+			l_rows: ARRAY [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+		do			
+			l_rows := a_grid.selected_rows
+			if l_rows.count = 1 then
+				l_row := l_rows[1]
+				if l_row.is_expandable and then l_row.is_expanded then
+					l_row.collapse
+				elseif l_row.parent_row /= Void then
+					l_row.disable_select
+					l_row := l_row.parent_row
+					l_row.enable_select
+				end
+				l_row.ensure_visible
+			end
+		end
+		
+	on_shift_selection_right (a_grid: EV_GRID) is
+			-- Preform a right shift selection.
+		require
+			a_grid_not_void: a_grid /= Void
+		local
+			l_rows: ARRAY [EV_GRID_ROW]
+			l_row: EV_GRID_ROW			
+		do			
+			l_rows := a_grid.selected_rows
+			if l_rows.count = 1 then
+				l_row := l_rows[1]
+				if l_row.is_expandable and then not l_row.is_expanded then
+					l_row.expand
+				elseif l_row.subrow_count > 0 then
+					l_row.disable_select
+					l_row := l_row.subrow (1)
+					l_row.enable_select
+				end
+				l_row.ensure_visible
+			end
+		end
+
+	on_ctrl_home (a_grid: EV_GRID) is
+			-- Performed when a select all is selected (CTRL+HOME)
+		require
+			a_grid_not_void: a_grid /= Void
+			last_selected_row_not_void: last_selected_row /= Void
+		local
+			l_row: EV_GRID_ROW
+			l_last_row: like last_selected_row
+			l_count: INTEGER
+		do
+			l_count	:= a_grid.row_count
+			
+			if l_count > 0 then
+				l_row := a_grid.row (1)
+				if a_grid.is_multiple_row_selection_enabled and ev_application.shift_pressed then
+					l_last_row := last_selected_row
+					select_range (a_grid, 1, l_last_row.index)
+					l_last_row.disable_select
+					l_last_row.enable_select
+				else
+					deselect_all (a_grid)
+					l_row.enable_select
+				end
+				l_row.ensure_visible
+			end
+		end
+
+	on_ctrl_end (a_grid: EV_GRID) is
+			-- Performed when a select all is selected (CTRL+END)
+		require
+			a_grid_not_void: a_grid /= Void
+			last_selected_row_not_void: last_selected_row /= Void
+		local
+			l_row: EV_GRID_ROW
+			l_last_row: like last_selected_row
+			l_count: INTEGER	
+		do
+			l_count	:= a_grid.row_count
+			
+			if l_count > 0 then
+				l_row := a_grid.row (a_grid.row_count)
+				if l_row.parent_row /= Void then
+					if not l_row.parent_row_root.is_expanded then
+						l_row := l_row.parent_row_root	
+					end
+				end
+				if a_grid.is_multiple_row_selection_enabled and ev_application.shift_pressed then
+					l_last_row := last_selected_row
+					select_range (a_grid, l_last_row.index, l_count)
+					l_last_row.disable_select
+					l_last_row.enable_select
+				else
+					deselect_all (a_grid)
+					l_row.enable_select
+				end
+				l_row.ensure_visible	
+			end
+		end
+
+	on_select_all (a_grid: EV_GRID) is
+			-- Performed when a select all is selected (CTRL+A)
+		require
+			a_grid_not_void: a_grid /= Void
+			last_selected_row_not_void: last_selected_row /= Void
+		do
+			select_range (a_grid, 1, a_grid.row_count)
+		end
+		
+	on_page_up (a_grid: EV_GRID) is
+			-- Perform a page up selection
+		require
+			a_grid_not_void: a_grid /= Void
+			last_selected_row_not_void: last_selected_row /= Void
 		local
 			l_rows: ARRAY [EV_GRID_ROW]
 			l_row: EV_GRID_ROW
 			i: INTEGER
 		do
-			inspect a_key.code
-			
-			when key_page_up then
-				l_rows := a_grid.selected_rows
-				if l_rows.count > 0 then
-					l_row := l_rows[1]
-					i := l_row.index
-					if i > 1 then
-						l_row.disable_select
-						i := (l_row.index - (a_grid.visible_row_indexes.count - 1)).max (1)
-						l_row := a_grid.row (i)
-						l_row.enable_select
-					end
-					l_row.ensure_visible
-				end
-			when key_page_down then
-				l_rows := a_grid.selected_rows
-				if l_rows.count > 0 then
-					l_row := l_rows[1]
-					i := l_row.index
-					if i < a_grid.row_count then
-						l_row.disable_select
-						i := (l_row.index + (a_grid.visible_row_indexes.count - 1)).min (a_grid.row_count)
-						l_row := a_grid.row (i)
-						l_row.enable_select
-					end
-					l_row.ensure_visible
-				end
-			else
-				--| Do nothing...
+			l_rows := a_grid.selected_rows
+			if l_rows.count > 0 then
+				i := (last_selected_row.index - (a_grid.visible_row_indexes.count - 1)).max (1)
+				l_row := l_rows[1]
+				l_row.disable_select
+				l_row := a_grid.row (i)
+				l_row.enable_select
+				l_row.ensure_visible
 			end
 		end
+
+	on_page_down (a_grid: EV_GRID) is
+			-- Perform a page down selection
+		require
+			a_grid_not_void: a_grid /= Void
+			last_selected_row_not_void: last_selected_row /= Void
+		local
+			l_rows: ARRAY [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_expanded_count: INTEGER
+			i: INTEGER
+		do
+			l_rows := a_grid.selected_rows
+			if l_rows.count > 0 then
+				
+				l_row := a_grid.row (a_grid.row_count)
+				if l_row.parent_row /= Void then
+					if not l_row.parent_row_root.is_expanded then
+						l_row := l_row.parent_row_root	
+					end
+				end
+				l_expanded_count := l_row.index
+				i := (last_selected_row.index + (a_grid.visible_row_indexes.count - 1)).min (l_expanded_count)
+				l_row := l_rows[1]
+				l_row.disable_select
+				l_row := a_grid.row (i)
+				l_row.enable_select
+				l_row.ensure_visible
+			end
+		end
+			
+	select_range (a_grid: EV_GRID; a_start: INTEGER a_end: INTEGER) is
+			-- Selected a range of items from `a_start' to `a_end' in `a_grid'
+		require
+			a_grid_not_void: a_grid /= Void
+			a_start_positive: a_start > 0
+			a_end_greater_than_a_start: a_end >= a_start
+			a_end_in_range: a_end <= a_grid.row_count
+			a_grid_has_multiple_selection: a_grid.is_multiple_row_selection_enabled
+		local
+			l_rows: ARRAY [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_count: INTEGER
+			i: INTEGER
+		do
+			l_rows := a_grid.selected_rows
+			l_count := l_rows.count
+			if l_rows.count > 0 then
+				a_grid.lock_update
+				deselect_all (a_grid)
+				if a_start < a_end then
+					from
+						i := a_start
+					until
+						i > a_end
+					loop
+						l_row := a_grid.row (i)
+						l_row.enable_select	
+						i := i + 1
+					end
+				else
+					l_row := a_grid.row (a_start)
+					l_row.enable_select
+				end
+				a_grid.unlock_update
+			end
+		ensure
+			range_selected: a_grid.selected_rows.count = (a_end - a_start) + 1
+		end
+		
+	deselect_all (a_grid: EV_GRID) is
+			-- Deselects all items
+		require
+			a_grid_not_void: a_grid /= Void
+		local
+			l_rows: ARRAY [EV_GRID_ROW]
+			l_row: EV_GRID_ROW
+			l_count: INTEGER
+			i: INTEGER
+		do
+			l_rows := a_grid.selected_rows
+			l_count := l_rows.count
+			if l_count > 0 then
+					-- Deselect items
+				from
+					i := 1
+				until
+					i > l_count
+				loop
+					l_row := l_rows[i]
+					l_row.disable_select
+					i := i + 1
+				end
+			end
+		ensure
+			selected_count_is_zero: a_grid.selected_rows.count = 0	
+		end
+
+	last_selected_row: EV_GRID_ROW
+			-- Last selected row
 
 end -- class EV_GRID_DEFAULT_UI_PROCESSOR

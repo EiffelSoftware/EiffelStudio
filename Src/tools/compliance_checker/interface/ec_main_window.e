@@ -199,8 +199,25 @@ feature {NONE} -- Agent Handlers
 		
 	on_show_help is
 			-- Called when user selects help toolbar button
+		local
+			l_process: SYSTEM_DLL_PROCESS
+			l_help: like help_file
+			retried: BOOLEAN
 		do
-			--| Implement me...
+			if not retried then
+				l_help := help_file
+				if (create {RAW_FILE}.make (l_help)).exists then
+					l_process := {SYSTEM_DLL_PROCESS}.start_string_string ("hh.exe", help_file)
+						-- Above will throw an exception is hh.exe cannot be found
+				else
+					show_error (error_cannot_find_help_file, [l_help], Current)
+				end
+			else
+				show_error (error_help_launch_failed, [l_help], Current)
+			end
+		rescue
+			retried := True
+			retry
 		end
 		
 	on_back_button_selected (a_rotate: BOOLEAN) is

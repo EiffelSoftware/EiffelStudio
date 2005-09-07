@@ -85,7 +85,7 @@ feature {NONE} -- Initialization
 			--| `grid_output'
 			l_grid := grid_output
 			l_grid.set_column_count_to (4)
-			l_grid.enable_single_row_selection
+			l_grid.enable_multiple_row_selection
 			
 			l_grid.set_row_height (20)
 			
@@ -340,6 +340,9 @@ feature {NONE} -- Agent Handlers
 			l_type: EC_REPORT_TYPE
 			l_item_string: STRING
 			l_clip: STRING
+			l_subrow_count: INTEGER
+			l_expanded: BOOLEAN
+			i: INTEGER
 		do
 			create l_clip.make (256)
 			l_rows := grid_output.selected_rows
@@ -351,21 +354,44 @@ feature {NONE} -- Agent Handlers
 				loop
 					l_row := l_rows.item
 					l_type ?= l_row.data
-					if l_type = Void then
-						l_member ?= l_row.data
-						check
-							data_not_correctly_set: l_member /= Void
-						end
-						l_item_string := format_clip_member (l_member.member)
-					else
+					if l_type /= Void then
 						l_item_string := format_clip_type (l_type.type)
+						check
+							l_item_string_not_void: l_item_string /= Void
+						end
+						l_clip.append (l_item_string)
+	
+						if l_type /= Void then
+								-- Add items to grid row and add members of type
+							on_grid_row_expanded (l_row)
+							l_expanded := l_row.is_expanded
+							from
+								l_subrow_count := l_row.subrow_count
+								i := 1
+							until
+								i > l_subrow_count
+							loop
+								if (not l_expanded) or else l_row.subrow (i).is_selected then
+										-- Only add if either parent row is collapsed or 
+										-- expanded item is selected.
+									l_member ?= l_row.subrow (i).data
+									check
+										l_member_not_void: l_member /= Void
+									end
+									if l_member /= Void then
+										l_item_string := format_clip_member (l_member.member)
+										l_clip.append_character ('%N')
+										l_clip.append (l_item_string)
+									end
+								end
+			
+								i := i + 1
+							end
+						end
 					end
-					check
-						l_item_string_not_void: l_item_string /= Void
-					end
-					l_clip.append (l_item_string)
+					
 					l_rows.forth
-					if not l_rows.after then
+					if l_type /= Void and then not l_rows.after then
 						l_clip.append_character ('%N')	
 					end
 				end

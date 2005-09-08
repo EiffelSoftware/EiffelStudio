@@ -50,10 +50,6 @@ feature -- Directories
 
 	pixmaps: STRING is
 			-- `Result' is DIRECTORY constant named `pixmaps'.
-		local
-			l_args: ARGUMENTS
-			l_path: STRING
-			i: INTEGER
 		once
 			create Result.make (application_directory.count + 9)
 			Result.append (application_directory)

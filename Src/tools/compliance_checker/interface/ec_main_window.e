@@ -42,6 +42,8 @@ feature {NONE} -- Initialization
 			l_accelerator: EV_ACCELERATOR
 			l_key: EV_KEY
 			l_consts: EV_KEY_CONSTANTS
+			l_so: SYSTEM_OBJECT
+			l_version: STRING
 		do
 			set_icon_pixmap (icon_check_compliance)
 			
@@ -69,6 +71,13 @@ feature {NONE} -- Initialization
 			l_accelerator.actions.extend (agent on_navigate_backward)
 			accelerators.extend (l_accelerator)
 			
+			l_so ?= Current
+			create l_version.make (20 + lbl_copyright.text.count)
+			l_version.append ("Build v.")
+			l_version.append (l_so.get_type.assembly.get_name.version.to_string)
+			l_version.append_character ('%N')
+			l_version.append (lbl_copyright.text)
+			lbl_copyright.set_text (l_version)
 		end
 
 feature {NONE} -- Agent Handlers

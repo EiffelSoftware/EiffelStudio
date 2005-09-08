@@ -29,6 +29,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	icon_check_compliance: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("check_compliance.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	icon_settings: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -171,12 +181,6 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	label_cross: STRING is
-			-- `Result' is STRING constant named `label_cross'.
-		once
-			Result := "Not compliant"
-		end
-
 	main_window_title: STRING is
 			-- `Result' is STRING constant named `main_window_title'.
 		once
@@ -225,10 +229,14 @@ feature -- Access
 			Result := "Report generation"
 		end
 
-	error_unable_to_retried_project: STRING is
-			-- `Result' is STRING constant named `error_unable_to_retried_project'.
+	icon_save: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
 		once
-			Result := "Error: Unable to retrieve project."
+			create Result
+			create a_file_name.make_from_string (pixmaps)
+			a_file_name.set_file_name ("save.ico")
+			set_with_named_file (Result, a_file_name)
 		end
 
 	tooltip_open: STRING is
@@ -269,20 +277,22 @@ feature -- Access
 			Result := "Error: Unable to save project."
 		end
 
-	icon_check_compliance: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
+	label_cross: STRING is
+			-- `Result' is STRING constant named `label_cross'.
 		once
-			create Result
-			create a_file_name.make_from_string (pixmaps)
-			a_file_name.set_file_name ("check_compliance.ico")
-			set_with_named_file (Result, a_file_name)
+			Result := "Not compliant"
 		end
 
 	button_height: INTEGER is 
 			-- `Result' is INTEGER constant named button_height.
 		once
 			Result := 23
+		end
+
+	label_copyright: STRING is
+			-- `Result' is STRING constant named `label_copyright'.
+		once
+			Result := "(C)2005 Eiffel Software. All rights reserved."
 		end
 
 	label_progress: STRING is
@@ -371,20 +381,16 @@ feature -- Access
 			Result := "Close"
 		end
 
+	tooltip_new: STRING is
+			-- `Result' is STRING constant named `tooltip_new'.
+		once
+			Result := "Create a new compliance checker project."
+		end
+
 	button_add: STRING is
 			-- `Result' is STRING constant named `button_add'.
 		once
 			Result := "Add"
-		end
-
-	icon_save: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		once
-			create Result
-			create a_file_name.make_from_string (pixmaps)
-			a_file_name.set_file_name ("save.ico")
-			set_with_named_file (Result, a_file_name)
 		end
 
 	button_recheck: STRING is
@@ -399,10 +405,10 @@ feature -- Access
 			Result := "Show all"
 		end
 
-	tooltip_new: STRING is
-			-- `Result' is STRING constant named `tooltip_new'.
+	error_unable_to_retried_project: STRING is
+			-- `Result' is STRING constant named `error_unable_to_retried_project'.
 		once
-			Result := "Create a new compliance checker project."
+			Result := "Error: Unable to retrieve project."
 		end
 
 	file_dialog_save_project: STRING is

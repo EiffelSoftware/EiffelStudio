@@ -23,6 +23,8 @@ feature -- Starting
 
 	notify_start is
 			-- Called when checker is about to begin checking an assembly.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			should_continue: should_continue
 		deferred
@@ -30,6 +32,8 @@ feature -- Starting
 		
 	start_type (a_type: SYSTEM_TYPE) is
 			-- Called when checker is about to begin checking type `a_type'.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_type_not_void: a_type /= Void
 			should_continue: should_continue
@@ -38,6 +42,8 @@ feature -- Starting
 
 	start_constructor (a_ctor: CONSTRUCTOR_INFO) is
 			-- Called when checker is about to begin checking constructor `a_ctor'.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_ctor_not_void: a_ctor /= Void
 			should_continue: should_continue
@@ -46,6 +52,8 @@ feature -- Starting
 		
 	start_method (a_method: METHOD_INFO) is
 			-- Called when checker is about to begin checking method `a_method'.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_method_not_void: a_method /= Void
 			should_continue: should_continue
@@ -54,6 +62,8 @@ feature -- Starting
 		
 	start_property (a_property: PROPERTY_INFO) is
 			-- Called when checker is about to begin checking property `a_property'.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_property_not_void: a_property /= Void
 			should_continue: should_continue
@@ -62,6 +72,8 @@ feature -- Starting
 		
 	start_field (a_field: FIELD_INFO) is
 			-- Called when checker is about to begin checking field `a_field'.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_field_not_void: a_field /= Void
 			should_continue: should_continue
@@ -70,6 +82,8 @@ feature -- Starting
 	
 	start_event (a_event: EVENT_INFO) is
 			-- Called when checker is about to begin checking ecent `a_event'.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_event_not_void: a_event /= Void
 			should_continue: should_continue
@@ -80,6 +94,8 @@ feature -- Checked
 		
 	checked_type (a_type: EC_CHECKED_TYPE) is
 			-- Called when checker is about to begin checking type `a_type'
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_type_not_void: a_type /= Void
 		deferred
@@ -87,6 +103,8 @@ feature -- Checked
 
 	checked_constructor (a_ctor: EC_CHECKED_MEMBER_CONSTRUCTOR) is
 			-- Called when checker is about to begin checking constructor `a_ctor'
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end			
 		require
 			a_ctor_not_void: a_ctor /= Void
 		deferred
@@ -94,6 +112,8 @@ feature -- Checked
 		
 	checked_method (a_method: EC_CHECKED_MEMBER_METHOD) is
 			-- Called when checker is about to begin checking method `a_method'
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_method_not_void: a_method /= Void
 		deferred
@@ -101,6 +121,8 @@ feature -- Checked
 
 	checked_property (a_property: EC_CHECKED_MEMBER) is
 			-- Called when checker is about to begin checking property `a_property'
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_property_not_void: a_property /= Void
 		deferred
@@ -108,6 +130,8 @@ feature -- Checked
 		
 	checked_field (a_field: EC_CHECKED_MEMBER_FIELD) is
 			-- Called when checker is about to begin checking field `a_field'
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end			
 		require
 			a_field_not_void: a_field /= Void
 		deferred
@@ -115,6 +139,8 @@ feature -- Checked
 	
 	checked_event (a_event: EC_CHECKED_MEMBER) is
 			-- Called when checker is about to begin checking event `a_event'
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_event_not_void: a_event /= Void
 		deferred
@@ -125,36 +151,50 @@ feature -- Endding
 	notify_end (a_complete: BOOLEAN) is
 			-- Called when checker is finished.
 			-- `a_complete' indicates if report is a full complete report.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 		
 	end_type is
 			-- Called when checker is finished checking last started checked type.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end			
 		deferred
 		end
 		
 	end_constructor is
 			-- Called when checker is finished checking last started checked constructor.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 		
 	end_method is
 			-- Called when checker is finished checking last started checked method.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 		
 	end_property is
 			-- Called when checker is finished checking last started checked property.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end	
 		
 	end_field is
 			-- Called when checker is finished checking last started checked field.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end
 	
 	end_event is
 			-- Called when checker is about to begin checking event.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		deferred
 		end	
 

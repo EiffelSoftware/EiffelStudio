@@ -48,7 +48,7 @@ feature {NONE}-- Initialization
 			create vbox_output
 			create l_ev_horizontal_box_1
 			create l_ev_cell_2
-			create l_ev_label_1
+			create lbl_copyright
 			create l_ev_cell_3
 			create btn_close
 			
@@ -70,7 +70,7 @@ feature {NONE}-- Initialization
 			nb_main.extend (vbox_output)
 			l_ev_vertical_box_3.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_2)
-			l_ev_horizontal_box_1.extend (l_ev_label_1)
+			l_ev_horizontal_box_1.extend (lbl_copyright)
 			l_ev_horizontal_box_1.extend (l_ev_cell_3)
 			l_ev_horizontal_box_1.extend (btn_close)
 			
@@ -102,8 +102,8 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_2)
 			l_ev_horizontal_box_1.disable_item_expand (btn_close)
 			l_ev_cell_2.set_minimum_width (3)
-			l_ev_label_1.set_text ("(C)2005 Eiffel Software.%NAll Rights Reserved.")
-			l_ev_label_1.align_text_left
+			lbl_copyright.set_text (label_copyright)
+			lbl_copyright.align_text_left
 			btn_close.set_text (button_close)
 			btn_close.set_tooltip (tooltip_close)
 			btn_close.set_minimum_width (100)
@@ -131,6 +131,7 @@ feature -- Access
 	tbtn_new, tbtn_open, tbtn_save,
 	tbtn_check, tbtn_help: EV_TOOL_BAR_BUTTON
 	nb_main: EV_NOTEBOOK
+	lbl_copyright: EV_LABEL
 
 feature {NONE} -- Implementation
 
@@ -140,7 +141,6 @@ feature {NONE} -- Implementation
 	l_ev_cell_3: EV_CELL
 	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1, l_ev_vertical_box_2, l_ev_vertical_box_3: EV_VERTICAL_BOX
-	l_ev_label_1: EV_LABEL
 
 feature {NONE} -- Implementation
 

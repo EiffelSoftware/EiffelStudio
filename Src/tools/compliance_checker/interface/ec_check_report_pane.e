@@ -571,6 +571,8 @@ feature {NONE} -- Compliance Checking
 		
 	on_report_percentage_changed (a_percent: NATURAL_8) is
 			-- Called when `report' percent completion changes
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			a_precent_small_enough: a_percent <= 100
 		do
@@ -578,19 +580,30 @@ feature {NONE} -- Compliance Checking
 			prg_check.set_value (a_percent)
 			ev_application.idle_actions.resume
 		end
-		
+
 	on_report_completed (a_complete: BOOLEAN) is
-			-- Called when `report' has completed.
+			-- Called when `report' has completed, called by worker thread.
+		indexing
+			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
+		do
+			ev_application.idle_actions.extend (agent on_report_completed_idle (a_complete))
+		end
+		
+	on_report_completed_idle (a_complete: BOOLEAN) is
+			-- Called when `report' has completed, called by the UI thread.
 		require
 			owner_window_not_void: owner_window /= Void
 			grid_output_not_void: grid_output /= Void
 		local
+			l_actions: EV_NOTIFY_ACTION_SEQUENCE
 			l_grid: like grid_output
 			l_exception: NATIVE_EXCEPTION
 			l_reflection_type_load_exception: REFLECTION_TYPE_LOAD_EXCEPTION
 			l_file_not_found_exception: FILE_NOT_FOUND_EXCEPTION
 		do
-			ev_application.idle_actions.block
+			l_actions := ev_application.idle_actions
+			l_actions.block
+			l_actions.wipe_out
 			if is_checking then
 				stop_checking
 				l_grid := grid_output
@@ -599,7 +612,7 @@ feature {NONE} -- Compliance Checking
 						show_information (question_check_completed, [], owner_window)
 					else	
 						show_information (information_no_non_compliant_member, [], owner_window)
-					end			
+					end
 				end
 				l_grid.set_focus
 				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, checker_resolver)
@@ -618,8 +631,8 @@ feature {NONE} -- Compliance Checking
 					show_error (error_report_generation_failed, [l_exception.message], owner_window)
 				end
 			end
-			ev_application.idle_actions.resume
-		end		
+			l_actions.resume
+		end	
 
 feature {NONE} -- Report Row Building
 	

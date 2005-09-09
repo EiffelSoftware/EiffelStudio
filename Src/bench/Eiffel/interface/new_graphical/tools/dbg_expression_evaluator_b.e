@@ -1029,6 +1029,7 @@ feature -- Change Context
 		local
 			l_reset_byte_node: BOOLEAN
 			c_c_t: CLASS_TYPE
+			c_t_i: CL_TYPE_I
 		do
 			if c /= Void then
 				if 
@@ -1048,7 +1049,10 @@ feature -- Change Context
 				if ct /= Void then
 					c_c_t := ct
 				elseif context_class /= Void then
-					c_c_t := context_class.actual_type.type_i.associated_class_type
+					c_t_i := context_class.actual_type.type_i
+					if c_t_i.has_associated_class_type then
+						c_c_t := c_t_i.associated_class_type
+					end
 				end
 				if not equal (context_class_type, c_c_t) then
 					context_class_type := c_c_t
@@ -1098,7 +1102,9 @@ feature -- Access
 			get_expression_byte_node
 			if expression_byte_node /= Void then
 				bak_context_class_type := Byte_context.class_type
-				Byte_context.set_class_type (context_class_type)
+				if context_class_type /= Void then
+					Byte_context.set_class_type (context_class_type)
+				end
 				Result := expression_byte_node.type.is_boolean
 				if bak_context_class_type /= Void then
 					Byte_context.set_class_type (bak_context_class_type)

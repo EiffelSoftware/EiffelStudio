@@ -226,131 +226,22 @@ feature -- Memory management
 
 feature {NONE} -- Grid layout Implementation
 
+	grid_layout_manager: ES_GRID_LAYOUT_MANAGER
+	
 	record_grid_layout is
-		local
-			r: INTEGER
-			lst: LINKED_LIST [TUPLE]
 		do
-			if grid.row_count > 0 then
-				create lst.make
-				grid_layout := ["NONE", lst]
-				from
-					r := 1
-				until
-					r > grid.row_count
-				loop
-					lst.extend (recorded_row_layout (grid.row (r)))
-					r := r + grid.row (r).subrow_count_recursive + 1
-				end
+			if grid_layout_manager = Void then
+				create grid_layout_manager.make (grid, "Breakpoints")
 			end
+			grid_layout_manager.record
 		end
 		
-	recorded_row_layout (a_row: EV_GRID_ROW): like grid_layout is
-		local
-			lab: EV_GRID_LABEL_ITEM
-			r: INTEGER
-			s: STRING
-			lst: ARRAYED_LIST [TUPLE]			
-		do
-			if a_row /= Void then
-				lab ?= a_row.item (1)
-				if lab /= Void then
-					s := lab.text
-					if a_row.is_expanded and a_row.subrow_count > 0 then
-						create lst.make (a_row.subrow_count)
-						from
-							r := 1
-						until
-							r > a_row.subrow_count
-						loop
-							lst.extend (recorded_row_layout (a_row.subrow (r)))
-							r := r + 1
-						end
-					end
-					Result := [s, lst]
-				end
-			end
-		end		
-
 	restore_grid_layout is
-		local
-			lst: LIST [TUPLE]
-			t: like grid_layout
-			r: INTEGER
 		do
-			if grid_layout /= Void and grid.row_count > 0 then
-				lst ?= grid_layout.item (2)
-				if lst /= Void and then not lst.is_empty then
-					from
-						lst.start
-						r := 1
-					until
-						r > grid.row_count or lst.after
-					loop
-						t ?= lst.item
-						if t /= Void then
-							restore_row_layout (grid.row (r), t)
-						end
-						lst.forth
-						r := r + grid.row (r).subrow_count_recursive + 1
-					end
-				end
+			if grid_layout_manager /= Void then
+				grid_layout_manager.restore
 			end
 		end
-
-	restore_row_layout (a_row: EV_GRID_ROW; lay: like grid_layout) is
-		local
-			lst: LIST [TUPLE]
-			lab: EV_GRID_LABEL_ITEM
-			ts, s: STRING
-			r: INTEGER
-			t: like grid_layout			
-		do
-			if a_row /= Void then
-				ts ?= lay.item (1)
-				if ts /= Void then
-					lab ?= a_row.item (1)
-					if lab /= Void then
-						s := lab.text
-						if ts.is_equal (s) then
-								--| Same text .. so maybe same row
-							lst ?= lay.item (2)
-							if lst /= Void then
-									--| a non Void list, then should be expanded
-								if a_row.is_expandable and a_row.subrow_count > 0 then
-									a_row.expand
-									from
-										lst.start
-										r := 1
-									until
-										r > a_row.subrow_count or lst.after
-									loop
-										t ?= lst.item
-										if t /= Void then
-											restore_row_layout (a_row.subrow (r), t)
-										end
-										lst.forth
-										r := r + 1
-									end
-								end
-							end
-						end
-					end
-				end
-			end
-		end
-		
-	grid_layout: TUPLE [STRING, LIST [TUPLE]]
-			--	TUPLE [STRING, LIST [like grid_layout]]]
-			-- ["A"
-			--    {
-			--       ["sub a" Void]
-			--       ["sub b" {
-			--                 ["sub sub b" Void]
-			--                }
-			--		 ]
-			--    }
-			-- ]
 
 feature {NONE} -- Implementation
 

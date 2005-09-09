@@ -117,6 +117,16 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := select_call_stack_level_on_double_click_preference.value
 		end
 		
+	is_stack_grid_layout_managed: BOOLEAN is
+		do
+			Result := is_stack_grid_layout_managed_preference.value
+		end
+
+	is_debugged_grid_layout_managed: BOOLEAN is
+		do
+			Result := is_debugged_grid_layout_managed_preference.value
+		end
+		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
 	last_saved_stack_path_preference: STRING_PREFERENCE
@@ -136,6 +146,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	row_highlight_background_color_preference: COLOR_PREFERENCE
 	row_unsensitive_foreground_color_preference: COLOR_PREFERENCE
 	select_call_stack_level_on_double_click_preference: BOOLEAN_PREFERENCE
+	is_stack_grid_layout_managed_preference: BOOLEAN_PREFERENCE
+	is_debugged_grid_layout_managed_preference: BOOLEAN_PREFERENCE
 	
 feature -- Preference Strings
 
@@ -156,6 +168,8 @@ feature -- Preference Strings
 	row_highlight_background_color_string: STRING is "debugger.row_highlight_background_color"
 	row_unsensitive_foreground_color_string: STRING is "debugger.row_unsensitive_foreground_color"
 	select_call_stack_level_on_double_click_string: STRING is "debugger.select_call_stack_level_on_double_click"
+	is_stack_grid_layout_managed_string: STRING is "debugger.stack_grid_layout_managed"
+	is_debugged_grid_layout_managed_string: STRING is "debugger.debugged_grid_layout_managed"
 
 feature {NONE} -- Implementation
 
@@ -183,6 +197,8 @@ feature {NONE} -- Implementation
 			row_highlight_background_color_preference := l_manager.new_color_resource_value (l_manager, row_highlight_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 170))
 			row_unsensitive_foreground_color_preference := l_manager.new_color_resource_value (l_manager, row_unsensitive_foreground_color_string, create {EV_COLOR}.make_with_8_bit_rgb (150, 150, 150))
 			select_call_stack_level_on_double_click_preference := l_manager.new_boolean_resource_value (l_manager, select_call_stack_level_on_double_click_string, False)
+			is_stack_grid_layout_managed_preference := l_manager.new_boolean_resource_value (l_manager, is_stack_grid_layout_managed_string, False)
+			is_debugged_grid_layout_managed_preference := l_manager.new_boolean_resource_value (l_manager, is_debugged_grid_layout_managed_string, False)
 		end
 	
 	preferences: PREFERENCES
@@ -206,5 +222,7 @@ invariant
 	row_highlight_background_color_preference_not_void: row_highlight_background_color_preference /= Void	
 	row_unsensitive_foreground_color_preference_not_void: row_unsensitive_foreground_color_preference /= Void	
 	select_call_stack_level_on_double_click_preference_not_void: select_call_stack_level_on_double_click_preference /= Void	
+	is_stack_grid_layout_managed_preference_not_void: is_stack_grid_layout_managed_preference /= Void	
+	is_debugged_grid_layout_managed_preference_not_void: is_debugged_grid_layout_managed_preference /= Void	
 
 end -- class EB_DEBUG_TOOL_DATA

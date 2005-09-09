@@ -487,7 +487,7 @@ feature {NONE} -- Impl bp
 						else
 							first_bp := False
 						end
-						create lab.make_with_text ("line " + i.out)
+						create lab.make_with_text ("offset " + i.out)
 						create fs.make (f)
 						lab.set_data (fs)
 						subrow.subrow (ir).set_item (1, lab)

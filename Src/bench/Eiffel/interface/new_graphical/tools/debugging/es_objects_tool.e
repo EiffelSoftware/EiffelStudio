@@ -90,7 +90,10 @@ feature {NONE} -- Initialization
 		local
 			esgrid: ES_OBJECTS_GRID
 			l_box: EV_HORIZONTAL_BOX
+			l_pref: BOOLEAN_PREFERENCE
 		do
+				--| Build interface
+				
 			create displayed_objects.make
 				--| Stack obj grid
 			create esgrid.make_with_name ("Stack objects")
@@ -178,7 +181,18 @@ feature {NONE} -- Initialization
 			expand_locals := True
 			widget := split
 			
-			init_delayed_cleaning_mecanism			
+				--| Stack objects grid layout
+			l_pref := preferences.debug_tool_data.is_stack_grid_layout_managed_preference
+			set_stack_objects_grid_layout_managed (l_pref)
+			l_pref.change_actions.extend (agent set_stack_objects_grid_layout_managed)
+
+				--| Debugged objects grid layout
+			l_pref := preferences.debug_tool_data.is_debugged_grid_layout_managed_preference
+			set_debugged_objects_grid_layout_managed (l_pref)
+			l_pref.change_actions.extend (agent set_debugged_objects_grid_layout_managed)
+			
+				--| Initialize various agent and special mecanisms
+			init_delayed_cleaning_mecanism
 			create_update_on_idle_agent
 		end
 
@@ -632,6 +646,7 @@ feature {NONE} -- Stack grid Layout Implementation
 				if internal_result_row /= Void and then internal_result_row.parent /= Void then
 					expand_result := internal_result_row.is_expanded
 				end
+				record_stack_objects_grid_layout
 			end
 		end
 
@@ -643,8 +658,82 @@ feature {NONE} -- Stack grid Layout Implementation
 
 	expand_locals: BOOLEAN
 			-- Should the "Locals" tree item be expanded?
+			
+feature {NONE} -- Grid layout Implementation
+
+	set_stack_objects_grid_layout_managed (pv: BOOLEAN_PREFERENCE) is
+		do
+			is_stack_objects_grid_layout_managed := pv.value
+			if 
+				not is_stack_objects_grid_layout_managed
+				and stack_objects_grid_layout_manager /= Void
+			then
+				stack_objects_grid_layout_manager.wipe_out
+			end
+		end
+
+	is_stack_objects_grid_layout_managed: BOOLEAN
+
+	stack_objects_grid_layout_manager: ES_GRID_LAYOUT_MANAGER
+
+	record_stack_objects_grid_layout is
+		do
+			if is_stack_objects_grid_layout_managed then
+				if stack_objects_grid_layout_manager = Void then
+					create stack_objects_grid_layout_manager.make (stack_objects_grid, stack_objects_grid.name)
+				end
+				stack_objects_grid_layout_manager.record
+			end
+		end
+		
+	restore_stack_objects_grid_layout is
+		do
+			if 
+				is_stack_objects_grid_layout_managed
+				and stack_objects_grid_layout_manager /= Void
+			then
+				stack_objects_grid_layout_manager.restore
+			end
+		end
 
 feature {NONE} -- debugged grid Layout Implementation
+
+	set_debugged_objects_grid_layout_managed (pv: BOOLEAN_PREFERENCE) is
+		require
+			pv /= Void
+		do
+			is_debugged_objects_grid_layout_managed := pv.value	
+			if 
+				not is_debugged_objects_grid_layout_managed
+				and debugged_objects_grid_layout_manager /= Void
+			then
+				debugged_objects_grid_layout_manager.wipe_out
+			end
+		end
+
+	is_debugged_objects_grid_layout_managed: BOOLEAN
+
+	debugged_objects_grid_layout_manager: ES_GRID_LAYOUT_MANAGER
+	
+	record_debugged_objects_grid_layout is
+		do
+			if is_debugged_objects_grid_layout_managed then
+				if debugged_objects_grid_layout_manager = Void then
+					create debugged_objects_grid_layout_manager.make (debugged_objects_grid, debugged_objects_grid.name)
+				end
+				debugged_objects_grid_layout_manager.record
+			end
+		end
+		
+	restore_debugged_objects_grid_layout is
+		do
+			if 
+				is_debugged_objects_grid_layout_managed
+				and debugged_objects_grid_layout_manager /= Void 
+			then
+				debugged_objects_grid_layout_manager.restore
+			end
+		end	
 
 	debugged_objects_grid_empty: BOOLEAN
 	
@@ -663,6 +752,9 @@ feature {NONE} -- debugged grid Layout Implementation
 		do
 			if current_object /= Void then
 				current_object.record_layout
+			end
+			if debugged_objects_grid.row_count > 0 then			
+				record_debugged_objects_grid_layout
 			end
 		end
 
@@ -780,6 +872,7 @@ feature {NONE} -- Current objects grid Implementation
 				debugged_objects_grid.row (1).ensure_visible
 				debugged_objects_grid.row (1).redraw
 			end
+			restore_debugged_objects_grid_layout			
 		end
 
 	add_displayed_objects_to_grid (a_target_grid: ES_OBJECTS_GRID) is
@@ -1047,6 +1140,7 @@ feature {NONE} -- Impl : Stack objects grid
 						internal_result_row.expand
 					end
 				end
+				restore_stack_objects_grid_layout
 			end
 		end
 

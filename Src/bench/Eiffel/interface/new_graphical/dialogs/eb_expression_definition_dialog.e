@@ -43,6 +43,7 @@ create
 	make_with_named_object,
 	make_as_named_object,
 	make_for_context,
+	make_with_expression_on_object,
 	make_with_expression
 
 feature {NONE} -- Initialization
@@ -112,6 +113,16 @@ feature {NONE} -- Initialization
 			object_name_field.set_text (on)
 			set_object_name_mode
 			disable_all_but_object_radios
+		end
+		
+	make_with_expression_on_object	(oa: STRING; a_exp: STRING) is
+		require
+			application_stopped: Application.is_running and Application.is_stopped
+			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
+			valid_expression: a_exp /= Void and then not a_exp.is_empty
+		do
+			make_with_object (oa)
+			expression_field.set_text (a_exp)
 		end
 
 	make_with_named_object (oa: STRING; on: STRING) is

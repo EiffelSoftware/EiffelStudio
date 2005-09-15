@@ -51,6 +51,14 @@ feature -- Properties
 			-- associated name to identify the related grid.
 
 feature -- Query
+
+	grid_pebble_from_cell (a_cell: EV_GRID_ITEM): ANY is
+			-- Return pebble which may be contained in `a_cell'
+		do
+				--| Nota: At this point we could try to return 
+				--| special stone depending of the clicked cell
+			Result := grid_pebble_from_row (a_cell.row)
+		end
 		
 	grid_pebble_from_row (a_row: EV_GRID_ROW): ANY is
 			-- Return pebble which may be contained in `a_row'
@@ -73,7 +81,7 @@ feature {NONE} -- Actions implementation
 				not ev_application.ctrl_pressed
 				and a_item /= Void 
 			then
-				Result := grid_pebble_from_row (a_item.row)
+				Result := grid_pebble_from_cell (a_item)
 			end
 		end
 

@@ -323,7 +323,7 @@ feature -- Pick and Drop
 			end
 		end
 
-	object_stone: OBJECT_STONE is
+	object_stone: STONE is
 		do
 			if not object_stone_properties_computed then
 				get_object_stone_properties
@@ -720,9 +720,14 @@ feature {NONE} -- Filling
 		
 	on_slice_double_click is
 			-- Action triggered by double clicking on the slice limit row
+		local
+			os: OBJECT_STONE
 		do
 			if tool.slices_cmd /= Void then
-				tool.slices_cmd.drop_object_stone (object_stone)
+				os ?= object_stone
+				if os /= Void then
+					tool.slices_cmd.drop_object_stone (os)
+				end
 			end
 		end
 
@@ -832,7 +837,7 @@ feature {NONE} -- Filling
 					list_cursor.after
 				loop
 					l_row_index := l_row_index + 1
-					attach_debug_value_to_grid_row (grid.row (l_row_index), list_cursor.item)
+					attach_debug_value_from_line_to_grid_row (grid.row (l_row_index), list_cursor.item, Current)
 					list_cursor.forth
 				end
 				if object_is_special_value then
@@ -936,7 +941,7 @@ feature {NONE} -- Filling
 								odv := once_r.once_eval_result (object_address, l_feat, object_dynamic_class)
 							end
 							if odv /= Void then
-								attach_debug_value_to_grid_row (grid.row (r), odv)
+								attach_debug_value_from_line_to_grid_row (grid.row (r), odv, Current)
 							else
 								glab := name_label_item (l_feat.name)
 								grid.set_item (Col_name_index, r, glab)
@@ -1009,7 +1014,7 @@ feature {NONE} -- Filling
 								odv := l_dotnet_ref_value.once_function_value (l_feat)
 							end
 							if odv /= Void then
-								attach_debug_value_to_grid_row (grid.row (r), odv)
+								attach_debug_value_from_line_to_grid_row (grid.row (r), odv, Current)
 							else
 								glab := name_label_item (l_feat.name)
 								grid.set_item (Col_name_index, r, glab)
@@ -1028,14 +1033,14 @@ feature {NONE} -- Filling
 			end
 		end
 
-	add_debug_value_to_grid_parent_row (a_parent_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
-			-- Create a row for `dv' and insert it in the Grid with `a_parent_row' as parent
+	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE) is
+			-- attach `dv' to row `a_row'
 		require
-			dv /= Void
+			debug_value_not_void: dv /= Void
 		do
-			tool.add_debug_value_to_grid_parent_row (a_parent_row, dv)
+			tool.attach_debug_value_from_line_to_grid_row (a_row, dv, a_line)
 		end
-		
+
 	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
 			-- attach `dv' to row `a_row'
 		require

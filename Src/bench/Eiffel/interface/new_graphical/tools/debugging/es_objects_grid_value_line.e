@@ -16,7 +16,8 @@ inherit
 		redefine
 			object,
 			reset_special_attributes_values,
-			recycle
+			recycle,
+			get_object_stone_properties
 		end
 
 create
@@ -75,6 +76,53 @@ feature -- Properties
 		end
 
 	object_spec_capacity: INTEGER
+	
+feature -- Object stone
+
+	get_object_stone_properties is
+
+		local
+			cl: CLASS_C
+			fost: FEATURED_OBJECT_STONE
+			fst: FEATURE_STONE
+			ostn: STRING
+			addr: STRING
+			feat: E_FEATURE
+		do
+			Precursor
+			if internal_object_stone = Void and then related_line /= Void then
+				ostn := object_name
+				if ostn /= Void then
+					cl := related_line.object_dynamic_class
+					if cl /= Void then
+						feat := cl.feature_with_name (ostn)
+						if feat /= Void then
+							addr := related_line.object_address
+							if addr /= Void then
+								create fost.make (addr, feat)
+								internal_object_stone_accept_cursor := fost.stone_cursor
+								internal_object_stone_deny_cursor := fost.X_stone_cursor
+								internal_object_stone := fost
+							else								
+								create fst.make (feat)
+								internal_object_stone_accept_cursor := fst.stone_cursor
+								internal_object_stone_deny_cursor := fst.X_stone_cursor
+								internal_object_stone := fst
+							end
+						end						
+					end
+				end
+			end
+		end
+	
+feature -- Related line if precised
+
+	set_related_line (v: like related_line) is
+		do
+			related_line := v
+		end
+	
+	related_line: ES_OBJECTS_GRID_LINE
 
 feature -- Query
 

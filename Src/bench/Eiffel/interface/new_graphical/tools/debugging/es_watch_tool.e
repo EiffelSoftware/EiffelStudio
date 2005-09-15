@@ -699,21 +699,31 @@ feature {NONE} -- Event handling
 		local
 			cst: CLASSC_STONE
 			ost: OBJECT_STONE
+			fost: FEATURED_OBJECT_STONE			
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			oname: STRING
 		do
-			ost ?= s
-			if ost /= Void then
-				oname := ost.name + ": " + ost.object_address
+			fost ?= s
+			if fost /= Void then
+				oname := fost.feature_name
 				if ev_application.ctrl_pressed then
-					add_object (ost, oname)
 				else
-					create dlg.make_with_named_object (ost.object_address, oname)
+					create dlg.make_with_expression_on_object (fost.object_address, fost.feature_name)
 				end
 			else
-				cst ?= s
-				if cst /= Void then
-					create dlg.make_with_class (cst.e_class)
+				ost ?= s
+				if ost /= Void then
+					oname := ost.name + ": " + ost.object_address
+					if ev_application.ctrl_pressed then
+						add_object (ost, oname)
+					else
+						create dlg.make_with_named_object (ost.object_address, oname)
+					end
+				else
+					cst ?= s
+					if cst /= Void then
+						create dlg.make_with_class (cst.e_class)
+					end
 				end
 			end
 			if dlg /= Void then

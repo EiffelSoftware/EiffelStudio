@@ -2,10 +2,12 @@ class STOPPED_HDLR
 
 inherit
 
-	RQST_HANDLER;
-	SHARED_DEBUG;
-	OBJECT_ADDR;
-	SHARED_CONFIGURE_RESOURCES
+	RQST_HANDLER
+	
+	SHARED_DEBUG
+	
+	OBJECT_ADDR
+	
 	EB_SHARED_DEBUG_TOOLS
 
 create
@@ -17,9 +19,9 @@ feature
 	make is
 			-- Create Current and pass addresses to C
 		do
-			request_type := Rep_stopped;
+			request_type := Rep_stopped
 			pass_addresses
-		end;
+		end
 
 	execute is
 			-- Register that the application is stopped
@@ -34,15 +36,16 @@ feature
 			--    exception code (undefined if irrelevant)
 			--    assertion tag (undefined if irrelevant)
 		local
-			name: STRING;
-			org_type: INTEGER;
-			dyn_type: INTEGER;
-			offset: INTEGER;
-			address: STRING;
-			reason: INTEGER;
-			excep_code: INTEGER
-			excep_tag: STRING
-			l_status: APPLICATION_STATUS_CLASSIC;	
+			feature_name: STRING
+			origine_type: INTEGER
+			dynamic_type: INTEGER
+			offset: INTEGER
+			address: STRING
+			stopping_reason: INTEGER
+			exception_code: INTEGER
+			exception_tag: STRING
+			
+			l_status: APPLICATION_STATUS_CLASSIC
 			retry_clause: BOOLEAN
 			cse: CALL_STACK_ELEMENT_CLASSIC
 			expr: EB_EXPRESSION
@@ -56,100 +59,126 @@ feature
 				debug ("DEBUGGER_TRACE")
 					io.error.put_string ("STOPPED_HDLR: Application is stopped - reading information from application%N")
 				end
-					-- Physical address of objects held in object tools
-					-- may have been change...
+
 				update_threads_info
+
+					--| Physical address of objects held in object tools
+					--| may have been change...
 				update_addresses;
 	
-				position := 1;
+					--|--------------------------------|--
+					--| Retrieve data sent by debuggee |--
+					--|--------------------------------|--
+					
+					--| Reset pipe reader parsing
+				reset_parsing
 
-					-- Read feature name.
+					--| Read feature name.
 				read_string;
-				name := last_string;
+				feature_name := last_string;
 
-					-- Read object address and convert it to hector address.
+					--| Read object address and convert it to hector address.
 				read_string;
 				address := hector_addr (last_string);
 	
-					-- Read origin of feature
+					--| Read origin of feature
 				read_int;
-				org_type := last_int + 1;
+				origine_type := last_int + 1;
 
-					-- Read type of current object.
+					--| Read type of current object.
 					--| Note: the type id on the C side must be 
 					--| incremented by one.
 				read_int;
-				dyn_type := last_int + 1;
+				dynamic_type := last_int + 1;
 
-					-- Read offset in byte code.
+					--| Read offset in byte code.
 				read_int;
 				offset := last_int;
 
-					-- Read reason for stopping.
+					--| Read reason for stopping.
 				read_int;
-				reason := last_int;
+				stopping_reason := last_int;
 
-					-- Read exception code.
+					--| Read exception code.
 				read_int;
-				excep_code := last_int
+				exception_code := last_int
 
-					-- Read assertion tag.
+					--| Read assertion tag.
 				read_string;
-				excep_tag := last_string
+				exception_tag := last_string
+				
+
+					--|----------------------------|--
+					--| Data retrieved             |--
+					--| Now process stopped state  |--
+					--|----------------------------|--
 
 				debug ("DEBUGGER_TRACE")
 					io.error.put_string ("STOPPED_HDLR: Application is stopped - finished reading%N")
 					io.error.put_string ("              Setting app status for routine: ")
-					io.error.put_string (name)
+					io.error.put_string (feature_name)
 					io.error.put_new_line
 				end
+				
 				l_status := Application.imp_classic.status;
 				check
 					application_launched: l_status /= Void
 				end
 				l_status.set_is_stopped (True)
-				l_status.set (name, address, org_type, dyn_type, offset, reason)
-				l_status.set_exception (excep_code, excep_tag)
+				l_status.set (feature_name, address, origine_type, dynamic_type, offset, stopping_reason)
+				l_status.set_exception (exception_code, exception_tag)
 
 				debug ("DEBUGGER_TRACE")
 					io.error.put_string ("STOPPED_HDLR: Finished setting status (Now calling after cmd)%N")
 				end
 
-				if reason /= Pg_new_breakpoint then
+					--|----------------------------|--
+					--| Status set , now process   |--
+					--| stopped state operations   |--
+					--|----------------------------|--
+
+				if stopping_reason /= Pg_new_breakpoint then
+						--| The debuggee is on a real stopped state
+						
 					need_to_resend_bp := True
 					need_to_stop := True
-					if reason = Pg_break then
-						l_status.current_call_stack.extend (create {CALL_STACK_ELEMENT_CLASSIC}.dummy_make (name, 1, True, offset, address, dyn_type - 1, org_type - 1))
+					
+					if stopping_reason = Pg_break then
+							--| debuggee stopped on a Breakpoint
+
+							--| Initialize the stack with a dummy first call stack element
+							--| to be able to operation on the current feature
+						l_status.current_call_stack.extend (create {CALL_STACK_ELEMENT_CLASSIC}.dummy_make (feature_name, 1, True, offset, address, dynamic_type - 1, origine_type - 1))
 						Application.set_current_execution_stack_number (1)
-							-- Test if the breakpoint is conditional, and if so, its condition.
+						
+							--| Check if this is a Conditional Breakpoint
 						cse := l_status.current_call_stack.i_th (1)
 						if application.is_breakpoint_set (cse.routine, cse.break_index) then
 							expr := Application.condition (cse.routine, cse.break_index)
-						end
-						if expr /= Void then
-							expr.evaluate
-							evaluator := expr.expression_evaluator
-							if evaluator.error_occurred then
-								need_to_stop := True
-							else
-								need_to_stop := evaluator.final_result_is_true_boolean_value
+							if expr /= Void then
+									--| if the breakpoint is conditional, tests the condition.
+								expr.evaluate
+								evaluator := expr.expression_evaluator
+								need_to_stop := evaluator.error_occurred or else evaluator.final_result_is_true_boolean_value
+								need_to_resend_bp := need_to_stop
 							end
-							need_to_resend_bp := need_to_stop
 						end
 					end
 					if need_to_stop then
-							-- Load the call stack.
+							--| Now that we know the debuggee will be really stopped
+							--| Let get the effective call stack (not the dummy)
 						l_status.reload_current_call_stack
 						Application.set_current_execution_stack_number (Application.number_of_stack_elements)
-							-- Inspect the application's current state.
 
+							-- Inspect the application's current state.
 						Application_notification_controller.notify_on_after_stopped
 							
 						debug ("DEBUGGER_TRACE")
 							io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
 						end
 					else
-							-- Relaunch the application.
+							--| We don't stop on thie breakpoint, 
+							--| Relaunch the application.
 						keep_objects (debugger_manager.kept_objects)
 						if need_to_resend_bp then
 								--| if we stopped on cond bp
@@ -161,9 +190,9 @@ feature
 						l_status.set_is_stopped (False)
 						Cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 					end
-				else
-						-- If the reason is Pg_new_breakpoint, the application sends the
-						-- new breakpoints and then automatically resume its execution.
+				else --| stopping_reason = Pg_new_breakpoint |--
+						--| If the reason is Pg_new_breakpoint, the application sends the
+						--| new breakpoints and then automatically resume its execution.
 					debug ("DEBUGGER_TRACE")
 						io.error.put_string ("STOPPED_HDLR: New breakpoint added, do nothing%N")
 					end
@@ -185,10 +214,34 @@ feature
 --			retry
 		end
 
-feature {} -- parsing features
+feature {NONE} -- Implementation
+
+	update_threads_info is
+			-- Update current threads information
+		local
+			s: APPLICATION_STATUS
+		do
+			s := application.status
+			if s /= Void and then s.current_thread_id = 0 then
+				s.set_current_thread_id (1) -- FIXME jfiat: fake Thread ID ... for now
+			end
+		end		
+
+	cont_request: EWB_REQUEST is
+			-- Request to relaunch the application when needed.
+		once
+			create Result.make (Rqst_cont)
+		end
+
+feature {NONE} -- parsing features
 
 	position: INTEGER;
 			-- Position in parsed string
+
+	reset_parsing is
+		do
+			position := 1
+		end
 
 	last_string: STRING;
 			-- Last parsed string token
@@ -241,22 +294,4 @@ feature {} -- parsing features
 			last_int := last_string.to_integer;
 		end;
 
-feature {NONE} -- Implementation
-
-	update_threads_info is
-			-- Update current threads information
-		local
-			s: APPLICATION_STATUS
-		do
-			s := application.status
-			if s /= Void and then s.current_thread_id = 0 then
-				s.set_current_thread_id (1) -- FIXME jfiat: fake Thread ID ... for now
-			end
-		end		
-
-	cont_request: EWB_REQUEST is
-			-- Request to relaunch the application when needed.
-		once
-			create Result.make (Rqst_cont)
-		end
 end

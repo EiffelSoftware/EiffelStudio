@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that is used to have access to special feature from DEBUG_VALUE..."
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 

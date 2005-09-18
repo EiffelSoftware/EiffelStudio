@@ -46,7 +46,7 @@ feature	{} -- Initialization of the C/Eiffel interface
 	set_nat16 (v: NATURAL_16) is
 			-- Receive an integer value.
 		do
-			create {DEBUG_VALUE [NATURAL_16]} item.make (sk_uint16, 16)
+			create {DEBUG_VALUE [NATURAL_16]} item.make (sk_uint16, v)
 		end
 
 	set_nat32 (v: NATURAL_32) is

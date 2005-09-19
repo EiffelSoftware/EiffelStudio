@@ -41,6 +41,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -108,11 +113,11 @@ feature {NONE} -- Implementation
 
 	process is
 		local
-			fod: EV_FILE_OPEN_DIALOG
+			fod: EB_FILE_OPEN_DIALOG
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
-			create fod
+			create fod.make_with_preference (preferences.dialog_data.last_opened_file_directory_preference)
 			set_dialog_filters_and_add_all (fod, <<eiffel_class_files_filter>>)
 			fod.open_actions.extend (agent execute_callback (fod))
 			create l_env
@@ -121,7 +126,7 @@ feature {NONE} -- Implementation
 			l_env.change_working_directory (l_dir)
 		end
 	
-	execute_callback (dialog: EV_FILE_OPEN_DIALOG) is
+	execute_callback (dialog: EB_FILE_OPEN_DIALOG) is
 			-- Open a file.
 		local
 			fn: FILE_NAME

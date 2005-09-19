@@ -118,11 +118,11 @@ feature -- Actions
 
 	load_ace is
 		local
-			file_dialog: EV_FILE_OPEN_DIALOG
+			file_dialog: EB_FILE_OPEN_DIALOG
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
-			create file_dialog
+			create file_dialog.make_with_preference (preferences.dialog_data.last_opened_system_ace_directory_preference)
 			set_dialog_filters_and_add_all (file_dialog, <<ace_files_filter>>)
 			file_dialog.open_actions.extend (agent retrieve_ace_file (file_dialog))
 			create l_env
@@ -471,7 +471,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	retrieve_ace_file (f: EV_FILE_OPEN_DIALOG) is
+	retrieve_ace_file (f: EB_FILE_OPEN_DIALOG) is
 			-- Retrieve selected Ace file from `f' and set it to
 			-- system if valid.
 		require

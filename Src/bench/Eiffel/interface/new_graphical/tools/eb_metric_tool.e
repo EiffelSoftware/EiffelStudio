@@ -28,6 +28,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -501,7 +506,7 @@ feature -- Metric
 	nb_basic_metrics: INTEGER
 		-- Number of basic metrics.
 
-	open_dialog: EV_FILE_OPEN_DIALOG
+	open_dialog: EB_FILE_OPEN_DIALOG
 		-- Dialog to select an archive file.
 
 	archive_for_measure: STRING
@@ -735,7 +740,7 @@ feature -- Archive
 			current_directory: STRING
 			ee: EXECUTION_ENVIRONMENT
 		do
-			create open_dialog
+			create open_dialog.make_with_preference (preferences.dialog_data.last_opened_metric_directory_preference)
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			create ee
 			current_directory := ee.current_working_directory

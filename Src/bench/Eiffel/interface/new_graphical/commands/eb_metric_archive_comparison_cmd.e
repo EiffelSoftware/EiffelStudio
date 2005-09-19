@@ -36,6 +36,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -290,10 +295,10 @@ feature -- Access
 	browse_archive_field: EV_TEXT_FIELD
 		-- Field to display path of the selected archive for comparison .
 
-	open_dialog: EV_FILE_OPEN_DIALOG
+	open_dialog: EB_FILE_OPEN_DIALOG
 		-- Dialog to load archive.
 
-	save_dialog: EV_FILE_SAVE_DIALOG
+	save_dialog: EB_FILE_SAVE_DIALOG
 		-- Dialog to save new archive.
 
 	archived_root_element: XM_ELEMENT
@@ -310,7 +315,7 @@ feature -- Action
 			current_directory: STRING
 			ee: EXECUTION_ENVIRONMENT
 		do
-			create save_dialog
+			create save_dialog.make_with_preference (preferences.dialog_data.last_saved_metric_new_archive_directory_preference)
 			set_dialog_filters_and_add_all (save_dialog, <<xml_files_filter>>)
 			create ee
 			current_directory := ee.current_working_directory
@@ -381,7 +386,7 @@ feature -- Action
 			current_directory: STRING
 			ee: EXECUTION_ENVIRONMENT
 		do
-			create open_dialog
+			create open_dialog.make_with_preference (preferences.dialog_data.last_opened_metric_update_archive_directory_preference)
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			create ee
 			current_directory := ee.current_working_directory
@@ -477,7 +482,7 @@ feature -- Action
 			current_directory: STRING
 			ee: EXECUTION_ENVIRONMENT
 		do
-			create open_dialog
+			create open_dialog.make_with_preference (preferences.dialog_data.last_opened_metric_browse_archive_directory_preference)
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			create ee
 			current_directory := ee.current_working_directory

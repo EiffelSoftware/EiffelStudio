@@ -864,7 +864,7 @@ feature {NONE} -- Implementation
 	save_call_stack is
 			-- Saves the current call stack representation in a file.
 		local
-			fd: EV_FILE_SAVE_DIALOG
+			fd: EB_FILE_SAVE_DIALOG
 			standard_path: DIRECTORY_NAME
 			f: RAW_FILE
 			fn: FILE_NAME
@@ -883,7 +883,7 @@ feature {NONE} -- Implementation
 				create standard_path.make
 				standard_path.extend (last_path)
 			end
-			create fd
+			create fd.make_with_preference (preferences.dialog_data.last_saved_call_stack_directory_preference)
 			set_dialog_filters_and_add_all (fd, <<Text_files_filter>>)
 			fd.set_start_directory (standard_path)
 				--| We try to find a file_name that does not exist.

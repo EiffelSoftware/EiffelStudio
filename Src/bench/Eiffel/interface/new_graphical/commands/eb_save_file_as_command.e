@@ -122,15 +122,15 @@ feature {EB_FILE_OPENER} -- Callbacks
 
 feature {EB_SAVE_FILE_COMMAND} -- Implementation
 
-	execute_with_dialog (argument: EV_FILE_SAVE_DIALOG) is
+	execute_with_dialog (argument: EB_FILE_SAVE_DIALOG) is
 			-- Save a file with the chosen name.
 		local
-			fsd: EV_FILE_SAVE_DIALOG
+			fsd: EB_FILE_SAVE_DIALOG
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
 			if argument = Void then
-				create fsd
+				create fsd.make_with_preference (preferences.dialog_data.last_saved_save_file_as_directory_preference)
 				fsd.save_actions.extend (agent execute_with_dialog (fsd))
 				create l_env
 				l_dir := l_env.current_working_directory

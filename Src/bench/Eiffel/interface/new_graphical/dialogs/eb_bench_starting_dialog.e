@@ -375,11 +375,11 @@ feature {NONE} -- Execution
 	create_new_project_using_ace_file is
 			-- Create a new project using an existing ace file.
 		local
-			file_dialog: EV_FILE_OPEN_DIALOG
+			file_dialog: EB_FILE_OPEN_DIALOG
 			success: BOOLEAN
 			create_project_dialog: EB_CREATE_PROJECT_DIALOG
 		do
-			create file_dialog
+			create file_dialog.make_with_preference (preferences.dialog_data.last_opened_ace_directory_preference)
 			file_dialog.set_title (Interface_names.t_Choose_ace_file)
 			set_dialog_filters_and_add_all (file_dialog, <<ace_files_filter>>)
 			file_dialog.show_modal_to_window (Current)

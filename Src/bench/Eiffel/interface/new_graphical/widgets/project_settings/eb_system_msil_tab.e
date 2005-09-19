@@ -29,6 +29,13 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	make
@@ -101,11 +108,11 @@ feature -- Actions
 	show_key_dialog is
 			-- Display the save as dialog for key generation file
 		local
-			fd: EV_FILE_SAVE_DIALOG
+			fd: EB_FILE_SAVE_DIALOG
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
-			create fd
+			create fd.make_with_preference (preferences.dialog_data.last_saved_system_generate_key_directory_preference)
 			fd.save_actions.extend (agent generate_and_save_key (fd))
 			set_dialog_filters_and_add_all (fd, <<strong_name_key_files_filter>>)
 			fd.set_title ("Save key file as...")
@@ -733,7 +740,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	generate_and_save_key (fd: EV_FILE_SAVE_DIALOG) is
+	generate_and_save_key (fd: EB_FILE_SAVE_DIALOG) is
 			-- Generate a new signing key in the chosen file from 'fd'
 			--and set as new assembly key
 		require

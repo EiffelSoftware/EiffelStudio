@@ -143,14 +143,14 @@ feature {NONE} -- Implementation
 	save_exeption_trace is
 			-- Save exception trace into a file
 		local
-			sfd: EV_FILE_SAVE_DIALOG
+			sfd: EB_FILE_SAVE_DIALOG
 			text_file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
 			if not retried then
-				create sfd
+				create sfd.make_with_preference (preferences.dialog_data.last_saved_exception_directory_preference)
 				set_dialog_filters_and_add_all (sfd, <<text_files_filter>>)
 				create l_env
 				l_dir := l_env.current_working_directory

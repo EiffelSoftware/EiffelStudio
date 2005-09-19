@@ -19,6 +19,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -38,7 +43,7 @@ feature -- Access
 	interface: EB_METRIC_MANAGEMENT_CMD
 		-- Parent interface.
 
-	open_dialog: EV_FILE_OPEN_DIALOG
+	open_dialog: EB_FILE_OPEN_DIALOG
 		-- Dialog to select file containing a set of metric definitions.
 
 	formula_field_import: EV_TEXT_FIELD
@@ -284,7 +289,7 @@ feature -- Importation
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
-			create open_dialog
+			create open_dialog.make_with_preference (preferences.dialog_data.last_opened_import_metric_directory_preference)
 			set_dialog_filters_and_add_all (open_dialog, <<xml_files_filter>>)
 			open_dialog.open_actions.extend (agent import_file)
 			create l_env

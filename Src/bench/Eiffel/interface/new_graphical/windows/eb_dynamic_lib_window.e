@@ -1024,15 +1024,15 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			-- Prompt the user for a `.def' file, set `file_name' to the chosen file name, and execute `next_action'.
 			-- If `load' then we assume we want to open a file. Otherwise we want to save it.
 		local
-			dd: EV_FILE_DIALOG
+			dd: EB_FILE_DIALOG
 			l_env: EXECUTION_ENVIRONMENT
 			l_dir: STRING
 		do
 			file_call_back := next_action
 			if load then
-				create {EV_FILE_OPEN_DIALOG} dd
+				create {EB_FILE_OPEN_DIALOG} dd.make_with_preference (preferences.dialog_data.last_opened_dynamic_lib_directory_preference)
 			else
-				create {EV_FILE_SAVE_DIALOG} dd
+				create {EB_FILE_SAVE_DIALOG} dd.make_with_preference (preferences.dialog_data.last_saved_dynamic_lib_directory_preference)
 			end
 			dd.set_start_directory (Eiffel_project.name)
 			set_dialog_filters_and_add_all (dd, <<definition_files_filter>>)
@@ -1043,7 +1043,7 @@ feature {NONE} -- Implementation: Low_level dialog, file operations
 			l_env.change_working_directory (l_dir)
 		end
 
-	file_was_chosen (dd: EV_FILE_DIALOG) is
+	file_was_chosen (dd: EB_FILE_DIALOG) is
 			-- The user selected a file in `dd'.
 			-- Set `file_name' accordingly and call `file_call_back'.
 		require

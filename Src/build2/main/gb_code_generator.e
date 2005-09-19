@@ -439,6 +439,7 @@ feature {NONE} -- Implementation
 		do
 			generate_ace_file (windows_ace_file_name.twin, windows_ace_name)
 			generate_ace_file (unix_ace_file_name.twin, unix_ace_name)
+			generate_ace_file (dotnet_ace_file_name.twin, dotnet_ace_name)
 		end
 		
 	generate_ace_file (template_file_name, file_name: STRING) is

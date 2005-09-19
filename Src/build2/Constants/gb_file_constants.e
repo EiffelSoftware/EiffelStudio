@@ -73,6 +73,14 @@ feature -- Generation constants
 			Result.extend ("ace_template.ace")
 		end
 		
+	dotnet_ace_file_name: FILE_NAME is
+			-- `Result' is location of dotnet ace file template.
+		do
+			Result := template_file_location
+			Result.extend ("Windows")
+			Result.extend ("dotnet_ace_template.ace")
+		end
+		
 	eiffel_class_extension: STRING is ".e"
 			-- String constant for class file extension to be used.
 
@@ -91,6 +99,8 @@ feature -- XML saving
 	unix_ace_name: STRING is "ace.Unix.ace"
 	
 	windows_ace_name: STRING is "ace.Windows.ace"
+	
+	dotnet_ace_name: STRING is "ace.dotNet.ace"
 		
 	project_filename: STRING is "build_project.bpr"
 		-- File name for project settings.

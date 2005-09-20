@@ -3370,7 +3370,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 					update_scroll_bar_spacer
 				end
 			end
---			last_vertical_scroll_bar_value := vertical_scroll_bar.value
 		end
 		
 	last_first_row_in_per_item_scrolling: INTEGER is

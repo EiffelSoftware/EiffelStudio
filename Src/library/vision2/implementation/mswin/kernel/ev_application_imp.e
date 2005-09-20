@@ -59,6 +59,8 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create the application with `an_interface' interface.
+		local
+			l_result: BOOLEAN
 		do
 			base_make (an_interface)
 			set_application (Current)
@@ -68,6 +70,12 @@ feature {NONE} -- Initialization
 			init_instance
 			init_application
 			tooltip_delay := no_tooltip_delay_assigned
+			
+				-- This is a hack to ensure that `silly_main_window' exists before
+				-- we create any widgets. If this is not the case, then `themes_active' fails
+				-- during creation of the widgets, and those widgets created before a window
+				-- end up with a null theme handle.
+			l_result := silly_main_window.is_inside
 			stop_processing_requested_msg := cwin_register_window_message (ev_stop_processing_requested.item)
 			cwin_disable_xp_ghosting
 				-- Initialize the theme drawer to the correct version for

@@ -108,8 +108,24 @@ feature -- Contract support
 			end
 			Result := scaled_pixmap.is_equal (pixmap)
 		end
+		
+feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 
-feature {EV_ANY_I} -- Implementation
+	ensure_expandable is
+			-- Ensure `Current' is displayed as expandable.
+		require
+			is_empty: interface.is_empty
+		deferred
+		ensure
+			is_empty: interface.is_empty
+		end
+		
+	remove_expandable is
+			-- Ensure `Current' is no longer displayed as expandable.
+		deferred
+		end
+
+feature {EV_ANY_I, EV_DYNAMIC_TREE_ITEM} -- Implementation
 
 	interface: EV_TREE_NODE
 

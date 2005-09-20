@@ -38,6 +38,9 @@
 			<item>
 				<bold>EV_MESSAGE_DIALOG</bold> - All message dialogs now use their associated message icon as the icon pixmap displayed in the title bar, instead of the standard EiffelVision2 icon.
 			</item>
+			<item>
+				<bold>EV_DYNAMIC_TREE_ITEM</bold> - The `subtree_function' is now only executed when you expand the item. In the previous version, querying the contents of the item caused the subtree function to  be executed, filling the children.
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -62,7 +65,9 @@
 							<item>Fixed failure of a &quot;check&quot; statement within EiffelVision when showing a dialog with a `default_cancel_button' relative or modal to another window.</item>
 						</list>
 					</item>
-					<item><bold>EV_RICH_TEXT</bold> - Fixed calling of `change_actions' which were never called in the  previous version.</item>
+					<item>
+						<bold>EV_RICH_TEXT</bold> - Fixed calling of `change_actions' which were never called in the  previous version.
+					</item>
 				</list>
 			</item>
 			<item>

@@ -235,7 +235,7 @@ feature -- Status report
 		local
 			sel_end: INTEGER
 		do
-			fixme ("[
+			fixme (once "[
 				Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.
 			]")
 				-- We pass `Void' as the previous implementation only returned
@@ -252,7 +252,7 @@ feature -- Status report
 		local
 			sel_start, sel_end: INTEGER
 		do
-			fixme ("[
+			fixme (once "[
 				Replace sel_start, and set_end 's type by INTEGER_32, as it has
 				to be a pointer to a DWORD.
 			]")
@@ -268,7 +268,7 @@ feature -- Status report
 		local
 			sel_start: INTEGER
 		do
-			fixme ("[
+			fixme (once "[
 				Replace sel_start's type by INTEGER_32, as $sel_start has to be a pointer to a DWORD.
 			]")
 			cwin_send_message (item, Em_getsel, $sel_start, to_lparam (0))
@@ -286,7 +286,7 @@ feature -- Status report
 		local
 			sel_end: INTEGER
 		do
-			fixme ("[
+			fixme (once "[
 				Replace sel_end's type by INTEGER_32, as $sel_end has to be a pointer to a DWORD.
 			]")
 			cwin_send_message (item, Em_getsel, to_wparam (0), $sel_end)

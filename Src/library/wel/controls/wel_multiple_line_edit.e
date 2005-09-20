@@ -70,7 +70,7 @@ feature -- Status setting
 			exists: exists
 			positive_tab: tab > 0
 		do
-			fixme ("Should not use $tab here, since it is supposed to be an array of unsigned int.")
+			fixme (once "Should not use $tab here, since it is supposed to be an array of unsigned int.")
 			cwin_send_message (item, Em_settabstops, to_wparam (1), $tab)
 		end
 
@@ -83,7 +83,7 @@ feature -- Status setting
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			fixme ("Should use a WEL_UINT_ARRAY here, since it is supposed to be an array of unsigned int.")
+			fixme (once "Should use a WEL_UINT_ARRAY here, since it is supposed to be an array of unsigned int.")
 			create a.make (tab)
 			cwin_send_message (item, Em_settabstops, to_wparam (tab.count), a.item)
 		end

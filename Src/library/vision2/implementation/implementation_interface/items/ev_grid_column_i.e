@@ -505,7 +505,9 @@ feature {EV_GRID_I} -- Implementation
 		do
 			internal_update_selection (True)		
 			set_internal_is_selected (True)
-			parent_i.redraw_column (Current)
+			if parent_i /= Void then
+				parent_i.redraw_column (Current)
+			end
 		end
 
 	disable_select is
@@ -513,7 +515,9 @@ feature {EV_GRID_I} -- Implementation
 		do
 			internal_update_selection (False)
 			set_internal_is_selected (False)
-			parent_i.redraw_column (Current)
+			if parent_i /= Void then
+				parent_i.redraw_column (Current)
+			end
 		end
 
 	destroy is

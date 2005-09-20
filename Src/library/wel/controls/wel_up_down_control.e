@@ -65,7 +65,7 @@ feature -- Access
 		local
 			lower: INTEGER
 		do
-			fixme ("lower should be an INTEGER_32")
+			fixme (once "lower should be an INTEGER_32")
 			cwin_send_message (item, Udm_getrange32, $lower, to_lparam (0))
 			Result := lower
 		end
@@ -75,7 +75,7 @@ feature -- Access
 		local
 			upper: INTEGER
 		do
-			fixme ("upper should be an INTEGER_32")
+			fixme (once "upper should be an INTEGER_32")
 			cwin_send_message (item, Udm_getrange32, to_wparam (0), $upper)
 			Result := upper
 		end

@@ -488,7 +488,9 @@ feature {NONE} -- Implementation
 			display_mask_bitmap: WEL_BITMAP
 			display_bitmap_dc: WEL_MEMORY_DC
 			display_mask_dc: WEL_MEMORY_DC
+			theme_drawer: EV_THEME_DRAWER_IMP
 		do
+			theme_drawer := application_imp.theme_drawer
 				-- Get the background color of the container to be used around `Current'.
 			if parent_imp /= Void and then parent_imp.background_color_imp /= Void then
 				create container_background_brush.make_solid (parent_imp.background_color_imp)
@@ -564,25 +566,25 @@ feature {NONE} -- Implementation
 				-- fill AREA 1
 			if bitmap_top > 0 then
 				wel_rect.set_rect (0, 0, window_width, bitmap_top)
-				display_dc.fill_rect (wel_rect, container_background_brush)
+				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
 			end
 
 				-- fill AREA 2
 			if bitmap_bottom < window_height then
 				wel_rect.set_rect (0, bitmap_bottom, window_width, window_height)
-				display_dc.fill_rect (wel_rect, container_background_brush)
+				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
 			end
 
 				-- fill AREA 3
 			if bitmap_left > 0 then
 				wel_rect.set_rect (0, bitmap_top, bitmap_left, bitmap_bottom)
-				display_dc.fill_rect (wel_rect, container_background_brush)
+				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
 			end
 
 				-- fill AREA 4
 			if bitmap_right < window_width then
 				wel_rect.set_rect (bitmap_right, bitmap_top, window_width, bitmap_bottom)
-				display_dc.fill_rect (wel_rect, container_background_brush)
+				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
 			end
 			container_background_brush.delete
 		end

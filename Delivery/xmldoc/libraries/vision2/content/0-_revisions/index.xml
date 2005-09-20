@@ -68,6 +68,9 @@
 					<item>
 						<bold>EV_RICH_TEXT</bold> - Fixed calling of `change_actions' which were never called in the  previous version.
 					</item>
+					<item>
+						<bold>EV_PIXMAP</bold> - If a pixmap was parented directly within a container and Windows XP themes were enabled, the background theme of the parent container was not applied to the pixmap. This was especially noticeable when using EV_NOTEBOOK as a parent container.
+					</item>
 				</list>
 			</item>
 			<item>

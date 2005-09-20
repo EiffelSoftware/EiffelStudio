@@ -485,7 +485,9 @@ feature -- Status setting
 					is_ensured_expandable := False
 					is_expanded := subrow_count > 0
 				end
-				parent_i.redraw_from_row_to_end (Current)
+				if parent_i /= Void then
+					parent_i.redraw_from_row_to_end (Current)
+				end
 			end
 		ensure
 			is_expanded: is_expanded or subrow_count = 0
@@ -518,8 +520,9 @@ feature -- Status setting
 				if collapse_actions_internal /= Void then
 					collapse_actions_internal.call (Void)
 				end
-				
-				parent_i.redraw_from_row_to_end (Current)
+				if parent_i /= Void then
+					parent_i.redraw_from_row_to_end (Current)
+				end
 			end
 		ensure
 			not_is_expanded: not is_expanded
@@ -897,8 +900,10 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 					end
 				else
 					internal_update_selection (True)
-				end				
-				parent_i.redraw_row (Current)
+				end		
+				if parent_i /= Void then
+					parent_i.redraw_row (Current)
+				end
 			end
 		end
 
@@ -918,8 +923,10 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				end
 			else
 				internal_update_selection (False)
-			end			
-			parent_i.redraw_row (Current)
+			end
+			if parent_i /= Void then
+				parent_i.redraw_row (Current)
+			end
 		end
 
 	destroy is

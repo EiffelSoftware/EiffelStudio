@@ -215,7 +215,9 @@ feature -- Status setting
 			end
 			
 				-- Request that `Current' be redrawn
-			l_parent_i.redraw_item (Current)
+			if parent_i /= Void then
+				parent_i.redraw_item (Current)
+			end
 		end
 
 	disable_select is
@@ -260,7 +262,9 @@ feature -- Status setting
 			end
 
 				-- Request that `Current' be redrawn
-			l_parent_i.redraw_item (Current)
+			if parent_i /= Void then
+				parent_i.redraw_item (Current)
+			end
 		end
 		
 	ensure_visible is

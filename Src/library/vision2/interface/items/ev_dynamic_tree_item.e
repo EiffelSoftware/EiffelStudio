@@ -15,22 +15,17 @@ inherit
 	
 	EV_TREE_NODE
 		export
-			{EV_DYNAMIC_TREE_ITEM} sequential_occurrences, fill, is_inserted, dl_force,
-			writable, first, index_set, infix "@", isfirst, islast, last, put, valid_cursor,
-			valid_index, prunable, prune_all, before, is_equal, append, back, count,
-			cursor, extend, force, full, go_i_th, go_to, i_th, index_of, merge_left, merge_right,
-			move, prune, put_front, put_i_th, put_left, put_right, remove, remove_left,
-			remove_right, replace, retrieve_item_by_data, retrieve_items_by_data, same, swap,
-			wipe_out, item_by_data, find_item_recursively_by_data, has_recursively,
-			recursive_do_all, retrieve_item_recursively_by_data, retrieve_items_recursively_by_data
-			{ANY}
-			readable, extendible
-		undefine
-			forth, finish, start, is_empty, index, after, item
+			{EV_DYNAMIC_TREE_ITEM} fill, dl_force, put, writable, prunable, prune_all, append,
+			extend, force, merge_left, merge_right, move, prune, put_front, put_i_th, put_left,
+			put_right, remove, remove_left, remove_right, replace, swap, wipe_out
 		redefine
 			implementation,
-			parent_of_items_is_current,
-			count
+			parent_of_items_is_current
+		end
+		
+	REFACTORING_HELPER
+		undefine
+			default_create, is_equal, copy
 		end
 		
 create
@@ -49,46 +44,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item: EV_TREE_NODE is
-			-- Item at current position
-		local
-			linear: LINEAR [EV_TREE_NODE]
-			chain: CHAIN [EV_TREE_NODE]
-			cs: CURSOR_STRUCTURE [EV_TREE_NODE]
-			c: CURSOR
-			i: INTEGER
-		do
-			check
-				subtree_function_not_void: subtree_function /= Void 
-			end
-			subtree_function_call
-			linear := subtree_function.last_result
-			chain ?= linear
-			if chain /= Void then
-				Result := chain.i_th (index)
-			else
-				cs ?= linear
-				if cs /= Void then
-					c := cs.cursor
-				end
-				from
-					linear.start
-					i := 1
-				variant
-					index - i
-				until
-					i = index
-				loop
-					linear.forth
-					i := i + 1
-				end
-				Result := linear.item
-				if cs /= Void then
-					cs.go_to (c)
-				end
-			end
-		end
-
 	subtree_function: FUNCTION [ANY, TUPLE, LINEAR [EV_TREE_NODE]]
 			-- Function be be executed to fill `Current' with items of
 			-- type EV_TREE_NODE.
@@ -103,11 +58,9 @@ feature -- Access
 			if subtree_function /= Void then
 				remove_subtree_function
 			end
-			if a_subtree_function /= Void then
-				expand_actions.extend (agent fill_from_subtree_function)
-				implementation.extend (create {EV_TREE_ITEM})
-				set_subtree_function_timeout (default_subtree_function_timeout)
-			end
+			expand_actions.extend (agent fill_from_subtree_function)
+			ensure_expandable
+			set_subtree_function_timeout (default_subtree_function_timeout)
 			subtree_function := a_subtree_function
 		end
 		
@@ -118,8 +71,7 @@ feature -- Access
 				-- We reset all attributes.
 			subtree_function := Void
 			expand_actions.wipe_out
-			implementation.start
-			implementation.remove
+			remove_expandable
 			last_subtree_function_call_time := 0
 			subtree_function_timeout := 0
 		end
@@ -166,138 +118,6 @@ feature -- Access
 			end
 		end
 
-	index: INTEGER
-			-- Index of current position.
-
-feature -- Status report
-
-	after: BOOLEAN is
-			-- Is there no valid position to the right of current one?
-		local
-			linear: LINEAR [EV_TREE_NODE]
-			finite: FINITE [EV_TREE_NODE]
-			cs: CURSOR_STRUCTURE [EV_TREE_NODE]
-			c: CURSOR
-			i: INTEGER
-		do
-			if subtree_function /= Void then
-				subtree_function_call
-				linear := subtree_function.last_result
-				finite ?= linear
-				if finite /= Void then
-					Result := index = finite.count + 1
-				else
-					cs ?= linear
-					if cs /= Void then
-						c := cs.cursor
-					end
-					from
-						linear.start
-						i := 1
-					variant
-						index - i
-					until
-						i = index or linear.off
-					loop
-						linear.forth
-						i := i + 1
-					end
-					Result := linear.after
-					if cs /= Void then
-						cs.go_to (c)
-					end
-				end
-			else
-				Result := Precursor {EV_TREE_NODE}
-			end
-		end
-
-	is_empty: BOOLEAN is
-			-- Is there no element?
-		do
-			Result := True
-			if subtree_function /= Void then
-				subtree_function_call
-				if subtree_function.last_result /= Void then
-					Result := subtree_function.last_result.is_empty
-				end
-			end
-		end
-		
-	count: INTEGER is
-			-- Number of elements in `Current'.
-		local
-			items: linear [EV_TREE_NODE]
-		do
-			if subtree_function /= Void then
-				subtree_function_call
-				if subtree_function.last_result /= Void then
-					items := subtree_function.last_result
-					from
-						items.start
-					until
-						items.off
-					loop
-						Result := Result + 1
-						items.forth
-					end
-				end
-			end
-		end
-
-feature -- Cursor movement
-
-	start is
-			-- Move to first position if any.
-		do
-			index := 1
-		end
-	
-	finish is
-			-- Move to last position.
-		local
-			linear: LINEAR [EV_TREE_NODE]
-			finite: FINITE [EV_TREE_NODE]
-			cs: CURSOR_STRUCTURE [EV_TREE_NODE]
-			c: CURSOR
-			i: INTEGER
-		do
-			if
-				subtree_function /= Void
-			then
-				subtree_function_call
-				linear := subtree_function.last_result
-				finite ?= linear
-				if finite /= Void then
-					index := finite.count
-				else
-					cs ?= linear
-					if cs /= Void then
-						c := cs.cursor
-					end
-					from
-						linear.start
-						i := 1
-					until
-						linear.off
-					loop
-						linear.forth
-						i := i + 1
-					end
-					if cs /= Void then
-						cs.go_to (c)
-					end
-				end
-			end
-		end
-	
-	forth is
-			-- Move to next position; if no next position,
-			-- ensure that `exhausted' will be true.
-		do
-			index := index + 1
-		end
-
 feature -- Contract support
 
 	is_expandable: BOOLEAN is
@@ -342,37 +162,30 @@ feature {NONE} -- Implementation
 			cs: CURSOR_STRUCTURE [EV_TREE_NODE]
 			c: CURSOR
 		do
-			from until implementation.count = 1 loop
+			from until implementation.count = 0 loop
 				implementation.start
 				implementation.remove
 			end
-			if subtree_function /= Void then
-				subtree_function_call
-				linear := subtree_function.last_result
-				if linear /= Void then
-					cs ?= linear
-					if cs /= Void then
-						c := cs.cursor
-					end
-					from
-						linear.start
-					until
-						linear.off
-					loop
-						implementation.extend (linear.item)
-						linear.forth
-					end
-					if cs /= Void then
-						cs.go_to (c)
-					end
+			subtree_function_call
+			linear := subtree_function.last_result
+			if linear /= Void then
+				cs ?= linear
+				if cs /= Void then
+					c := cs.cursor
 				end
-				implementation.start
-				implementation.remove
-			else
-				implementation.extend (create {EV_TREE_ITEM})
-				implementation.start
-				implementation.remove
+				from
+					linear.start
+				until
+					linear.off
+				loop
+					implementation.extend (linear.item)
+					linear.forth
+				end
+				if cs /= Void then
+					cs.go_to (c)
+				end
 			end
+			remove_expandable
 		end
 
 	time_msec (now: TYPED_POINTER [INTEGER]) is
@@ -391,7 +204,23 @@ feature {NONE} -- Implementation
 				}
 			]"
 		end
-
+		
+	ensure_expandable is
+			-- Ensure `Current' is displayed as expandable.
+		require
+			is_empty: is_empty
+		do
+			implementation.ensure_expandable
+		ensure
+			is_empty: is_empty
+		end
+		
+	remove_expandable is
+			-- Ensure `Current' is no longer displayed as expandable.
+		do
+			implementation.remove_expandable
+		end
+		
 end -- class EV_DYNAMIC_TREE_ITEM
 
 --|----------------------------------------------------------------

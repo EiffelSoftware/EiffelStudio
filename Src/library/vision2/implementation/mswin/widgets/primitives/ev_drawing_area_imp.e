@@ -346,7 +346,7 @@ feature -- Commands.
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control needs to process this kind of keys.
 		do
-			fixme ("EV_DRAWING_AREA_IMP.process_tab_key - refactor all tab handling code in this class")
+			fixme (once "EV_DRAWING_AREA_IMP.process_tab_key - refactor all tab handling code in this class")
 			if virtual_key = ({WEL_INPUT_CONSTANTS}.Vk_tab) and then 
 				flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_tabstop)
 			then

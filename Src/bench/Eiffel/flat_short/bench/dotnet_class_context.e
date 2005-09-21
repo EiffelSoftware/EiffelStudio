@@ -14,13 +14,8 @@ inherit
 		export
 			{DOTNET_CLASS_AS} name_of_current_feature	
 		end
-		
-	EB_WINDOW_MANAGER
-		rename
-			make as win_manager_make
-		export 
-			{NONE} all 
-		end
+
+	EB_SHARED_WINDOW_MANAGER
 
 create
 	make

@@ -692,7 +692,7 @@ feature {EV_ANY_I} -- Drawing implementation
 		end
 	
 	on_mouse_leave is
-			-- Called when the mouse enters `Current'.
+			-- Called when the mouse leaves `Current'.
 		do
 			Precursor {EV_PRIMITIVE_IMP}
 			mouse_on_button := False

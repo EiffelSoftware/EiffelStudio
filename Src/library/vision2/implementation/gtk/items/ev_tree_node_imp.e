@@ -313,6 +313,37 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 		end
 
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
+
+ 	         ensure_expandable is
+ 	                         -- Ensure `Current' is displayed as expandable.
+ 	                 do
+ 	                 		--| FIXME IEK Implement properly
+-- 	                         insert_i_th (create {EV_TREE_ITEM}, 1)
+-- 	                                 -- Now remove the new item from `ev_children'
+-- 	                                 -- as we do not wish the item to be accessible from the interface.
+-- 	                         ev_children.wipe_out
+ 	                 end
+ 	 
+ 	         remove_expandable is
+ 	                         -- Ensure `Current' is no longer displayed as expandable.
+ 	                 local
+-- 	                         l_parent_tree: EV_TREE_IMP
+-- 	                         c: ARRAYED_LIST [EV_TREE_NODE_IMP]
+ 	                 do
+ 	                 	--| FIXME IEK Implement properly
+-- 	                         l_parent_tree ?= parent_imp
+-- 	                         if l_parent_tree /= Void then
+-- 	                                 c := l_parent_tree.get_children (Current)
+-- 	                                 if c.count > count then
+-- 	                                                 -- We only remove the extra item if it is actually
+-- 	                                                 -- there, as determined by the real count compared
+-- 	                                                 -- to the count as queried from the interface
+-- 	                                         l_parent_tree.general_remove_item (c.last)
+-- 	                                 end
+-- 	                         else
+-- 	                                 internal_children.prune_all (internal_children.last)
+-- 	                         end
+ 	                 end
 	
 	text: STRING is
 			-- Text displayed.

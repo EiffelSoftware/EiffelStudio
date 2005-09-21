@@ -614,7 +614,7 @@ feature {EV_ANY_I} -- Drawing implementation
 			if foreground_color_imp /= Void then
 				color_imp := foreground_color_imp
 			else
-				color_imp ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
+				color_imp ?= default_foreground_color_imp
 			end
 			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, wel_text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, color_imp)
 			
@@ -676,6 +676,14 @@ feature {EV_ANY_I} -- Drawing implementation
 			-- `Result' is color corresponding to white
 		once
 			Create Result.make_rgb (255, 255, 255)
+		end
+		
+	default_foreground_color_imp: EV_COLOR_IMP is
+			-- Default foreground color for widgets.
+		once
+			Result ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
+		ensure
+			result_not_void: result /= Void
 		end
 		
 	mouse_on_button: BOOLEAN

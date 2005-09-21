@@ -146,8 +146,7 @@ feature -- Basic operation
 			-- Generate the project as per settings in `project_settings'.
 		local
 			directory: DIRECTORY
-			root_element: XM_ELEMENT
-			directory_file_name: FILE_NAME			
+			root_element: XM_ELEMENT	
 			warning_dialog: EV_WARNING_DIALOG
 			error_message: STRING
 			window_file_name: FILE_NAME
@@ -162,8 +161,7 @@ feature -- Basic operation
 		
 				-- Note that the generation of the XML file used internally,
 				-- is not performed until `build_main_window_implementation' is called.
-			create directory_file_name.make_from_string (project_settings.project_location)
-			create directory.make (directory_file_name)
+			create directory.make (generated_path)
 				-- If the directory for the generated code does not already exist then
 				-- we must create it.
 			if not directory.exists then
@@ -447,13 +445,11 @@ feature {NONE} -- Implementation
 			-- as `file_name'. `template_file_name' is full path, but `file_name' is
 			-- just name of ace file.
 		local
-			project_location, temp_string: STRING
+			temp_string: STRING
 			ace_file_name: FILE_NAME
 			ace_template_file, ace_output_file: PLAIN_TEXT_FILE
 			i, j: INTEGER
 		do
-			create project_location.make_from_string (system_status.current_project_settings.project_location)
-		
 			ace_template_file := open_text_file_for_read (template_file_name)
 			if ace_template_file /= Void then
 					-- Only perform generation if the template file was readable.
@@ -470,10 +466,10 @@ feature {NONE} -- Implementation
 				j := ace_text.substring_index (project_location_tag, i + 1)
 				
 				ace_text.replace_substring_all (project_location_tag, "")			
-				ace_text.insert_string (project_location, i)
-				temp_string := project_location
-				if j >0 then
-					ace_text.insert_string (project_location, j - project_location_tag.count + temp_string.count)
+				temp_string := generated_path.out
+				ace_text.insert_string (temp_string, i)
+				if j > 0 then
+					ace_text.insert_string (temp_string, j - project_location_tag.count + temp_string.count)
 				end
 				
 					-- Now add the project_name. Note that we add double quotes around the name.

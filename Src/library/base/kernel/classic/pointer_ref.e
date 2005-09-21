@@ -95,9 +95,9 @@ feature -- Conversion
 --			not_too_small: item >= feature {INTEGER}.Min_value
 --			not_too_big: item <= feature {INTEGER}.Max_value
 		do
-			fixme ("Do not forget to add proper precondition to ensure we can convert pointer %
+			fixme (once "Do not forget to add proper precondition to ensure we can convert pointer %
 				%value into an INTEGER")
-			fixme ("Change return type to INTEGER_32")
+			fixme (once "Change return type to INTEGER_32")
 			Result := item.to_integer_32
 		end
 

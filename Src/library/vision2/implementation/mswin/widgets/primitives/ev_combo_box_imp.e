@@ -96,7 +96,8 @@ inherit
 			count as wel_count,
 			text as wel_text,
 			has_capture as wel_has_capture,
-			text_length as wel_text_length
+			text_length as wel_text_length,
+			list_shown as is_list_shown
 		export
 			{EV_INTERNAL_COMBO_FIELD_IMP} edit_item
 			{EV_INTERNAL_COMBO_BOX_IMP} combo_item
@@ -133,6 +134,7 @@ inherit
 			on_cbn_editchange,
 			on_cbn_selchange,
 			on_cbn_dropdown,
+			on_cbn_closeup,
 			on_cben_insert_item,
 			on_erase_background,
 			default_style,
@@ -194,7 +196,7 @@ feature -- Access
 			--| Windows sends messages to combo box's parent.
 			--| Therefore we use EV_INTERNAL_COMBO_BOX_IMP to propagate these
 			--| messages correctly.
-
+			
 feature -- Measurement
 
 	height: INTEGER is
@@ -556,7 +558,7 @@ feature {NONE} -- Implementation
 			-- Should we propagate a key event if `Current' is parented in a dialog?
 			-- If `is_pressed', then it is a key_press event, otherwise a key_release event.
 		do
-			Result := not list_shown
+			Result := not is_list_shown
 		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
@@ -933,6 +935,14 @@ feature {NONE} -- WEL Implementation
 				combo.resize (combo.width, screen_height - pt.y)
 			else
 				combo.resize (combo.width, 50)
+			end
+		end
+		
+	on_cbn_closeup is
+			-- The combo box has been closed.
+		do
+			if list_hidden_actions_internal /= Void then
+				list_hidden_actions_internal.call (Void)
 			end
 		end
 

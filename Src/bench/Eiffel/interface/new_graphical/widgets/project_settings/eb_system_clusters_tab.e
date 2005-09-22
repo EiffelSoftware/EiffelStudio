@@ -1046,6 +1046,9 @@ feature {NONE} -- Actions
 					end
 				end
 				clusters.remove (clus_name)
+				
+					-- Remove deleted clusters from override clusters.
+				override_cluster_names.remove (clus_name)
 			end
 		end
 
@@ -1269,5 +1272,6 @@ feature {NONE} -- Assertion checks access through list
 invariant
 	cluster_tree_not_void: cluster_tree /= Void
 	clusters_not_void: clusters /= Void
+	override_cluster_names_not_void: override_cluster_names /= Void
 	
 end -- class EB_SYSTEM_GENERAL_TAB

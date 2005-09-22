@@ -133,7 +133,7 @@ feature -- Basic operation
 		end
 		
 	window_to_generate: STRING
-		-- Nmae of window to generate if a single window is being generated,
+		-- Name of window to generate if a single window is being generated,
 		-- Void otherwise.
 	
 	generating_single_window: BOOLEAN is
@@ -150,100 +150,116 @@ feature -- Basic operation
 			warning_dialog: EV_WARNING_DIALOG
 			error_message: STRING
 			window_file_name: FILE_NAME
+			rescued: BOOLEAN
 		do
-			
-				-- We must build an XML file representing the project, and
-				-- then for every window found in that file, generate a new window.
-			generate_xml_for_project
-			
-			window_counter := 0	
-			total_windows := widget_selector.objects.count
+			if not rescued then
+				last_generation_successful := True
+				
+					-- Note that the generation of the XML file used internally,
+					-- is not performed until `build_main_window_implementation' is called.
+				create directory.make (generated_path)
+					-- If the directory for the generated code does not already exist then
+					-- we must create it.
+				if not directory.exists then
+					directory.create_dir
+				end
 		
-				-- Note that the generation of the XML file used internally,
-				-- is not performed until `build_main_window_implementation' is called.
-			create directory.make (generated_path)
-				-- If the directory for the generated code does not already exist then
-				-- we must create it.
+					-- We must build an XML file representing the project, and
+					-- then for every window found in that file, generate a new window.
+				generate_xml_for_project
+				
+				window_counter := 0	
+				total_windows := widget_selector.objects.count
+				
+					-- We only generate an ace file and an EV_APPLICATION if the user
+					-- has selected to generate a complete project from the system settings.
+				if project_settings.complete_project and not generating_single_window then
+						-- Generate an ace file for the project.
+					build_ace_file
+						-- Generate an EV_APPLICATION for the project
+					build_application_file
+				end
+				
+				if not (generating_single_window or constants.all_constants.is_empty) then
+					build_constants_file
+					if project_settings.load_constants then
+						build_constants_load_file
+					end
+				end
+				
+				root_element ?= current_document.first
+				create class_ids.make (20)
+				create class_directories.make (20)
+				parse_directories (root_element, create {ARRAYED_LIST [STRING]}.make (4))
+				check
+					counts_consistent: class_ids.count = class_directories.count
+				end
+				
+					-- Now perform generation of all classes.
+				from
+					class_ids.start
+					class_directories.start
+				until
+					class_ids.off
+				loop
+					reset_generation_constants_for_class
+					create window_file_name.make_from_string (class_directories.item)
+					build_main_window_implementation (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
+					build_main_window (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
+					class_ids.forth
+					class_directories.forth
+				end
+				
+					-- Now display error dialog if one or more templates could not be found.
+				if missing_files /= Void then
+					error_message := "EiffelBuild was unable to locate the following files required for generation:%N%N"
+					from
+						missing_files.start
+					until
+						missing_files.off
+					loop
+						error_message.append (missing_files.item)
+						error_message.append ("%N")
+						missing_files.forth
+					end
+					error_message := error_message + "%NCode generation has failed.%NPlease ensure that your installation of EiffelBuild has not been corrupted."
+					create warning_dialog.make_with_text (error_message)
+					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
+					warning_dialog.show_modal_to_window (parent_window (progress_bar))
+					last_generation_successful := False
+				end
+				
+					-- Now display an error dialog if one or more files could not be written.
+				if not read_only_files.is_empty then
+					error_message := "EiffelBuild was unable to open the following files:%N%N"
+					from
+						read_only_files.start
+					until
+						read_only_files.off
+					loop
+						error_message.append (read_only_files.item)
+						error_message.append ("%N")
+						read_only_files.forth
+					end
+					error_message := error_message + "%NCode generation has been unable to complete succesfully.%NPlease check file permissions and try again."
+					create warning_dialog.make_with_text (error_message)
+					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
+					warning_dialog.show_modal_to_window (parent_window (progress_bar))
+					last_generation_successful := False
+				end
+			end
+		rescue
 			if not directory.exists then
-				directory.create_dir
-			end
-
-			
-				-- We only generate an ace file and an EV_APPLICATION if the user
-				-- has selected to generate a complete project from the system settings.
-			if project_settings.complete_project and not generating_single_window then
-					-- Generate an ace file for the project.
-				build_ace_file
-					-- Generate an EV_APPLICATION for the project
-				build_application_file
-			end
-			
-			if not (generating_single_window or constants.all_constants.is_empty) then
-				build_constants_file
-				if project_settings.load_constants then
-					build_constants_load_file
-				end
-			end
-			
-			root_element ?= current_document.first
-			create class_ids.make (20)
-			create class_directories.make (20)
-			parse_directories (root_element, create {ARRAYED_LIST [STRING]}.make (4))
-			check
-				counts_consistent: class_ids.count = class_directories.count
-			end
-			
-				-- Now perform generation of all classes.
-			from
-				class_ids.start
-				class_directories.start
-			until
-				class_ids.off
-			loop
-				reset_generation_constants_for_class
-				create window_file_name.make_from_string (class_directories.item)
-				build_main_window_implementation (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
-				build_main_window (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
-				class_ids.forth
-				class_directories.forth
-			end
-			
-				-- Now display error dialog if one or more templates could not be found.
-			if missing_files /= Void then
-				error_message := "EiffelBuild was unable to locate the following files required for generation:%N%N"
-				from
-					missing_files.start
-				until
-					missing_files.off
-				loop
-					error_message.append (missing_files.item)
-					error_message.append ("%N")
-					missing_files.forth
-				end
-				error_message := error_message + "%NCode generation has failed.%NPlease ensure that your installation of EiffelBuild has not been corrupted."
-				create warning_dialog.make_with_text (error_message)
-				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
-				warning_dialog.show_modal_to_window (parent_window (progress_bar))
-			end
-			
-				-- Now display an error dialog if one or more files could not be written.
-			if not read_only_files.is_empty then
-				error_message := "EiffelBuild was unable to open the following files:%N%N"
-				from
-					read_only_files.start
-				until
-					read_only_files.off
-				loop
-					error_message.append (read_only_files.item)
-					error_message.append ("%N")
-					read_only_files.forth
-				end
-				error_message := error_message + "%NCode generation has been unable to complete succesfully.%NPlease check file permissions and try again."
-				create warning_dialog.make_with_text (error_message)
-				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
-				warning_dialog.show_modal_to_window (parent_window (progress_bar))
+				create warning_dialog.make_with_text (invalid_generation_directory)
+				warning_dialog.show_modal_to_window (main_window)
+				last_generation_successful := False
+				rescued := True
+				retry
 			end
 		end
+		
+	last_generation_successful: BOOLEAN
+		-- Was last call to `generate' or `generate_window' successful?
 		
 	parse_directories (an_element: XM_ELEMENT; parent_directories: ARRAYED_LIST [STRING]) is
 			-- Parse `an_element' and build windows and directories found. `parent_directories' holds
@@ -424,7 +440,7 @@ feature {NONE} -- Implementation
 	generated_path: FILE_NAME is
 			-- `Result' is generated directory for current project.
 		do
-			create Result.make_from_string (system_status.current_project_settings.project_location)
+			create Result.make_from_string (system_status.current_project_settings.actual_generation_location)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -12,22 +12,25 @@ class
 	
 inherit
 	EV_FILE_OPEN_DIALOG
-		rename
-			show_modal_to_window as standard_show_modal_to_window
-		select
-			implementation,
-			open_actions
+		undefine
+			show_modal_to_window
+		redefine
+			implementation
 		end
 		
 	EB_FILE_DIALOG
 		rename
-			ok_actions as standard_ok_actions,
-			implementation as file_dialog_implementation
-		select
-			show_modal_to_window
+			ok_actions as open_actions
+		redefine
+			implementation
 		end
 		
 create
 	make_with_preference
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
+
+	implementation: EV_FILE_OPEN_DIALOG_I
+		-- Responsible for interaction with native graphics toolkit.
 
 end

@@ -17,13 +17,9 @@
 		<Directory>pixmap_location</Directory>
 		<Filename>icon_component_viewer_color.png</Filename>
 		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>large_padding</Name>
-		<Value>12</Value>
-		</Constant>
 	<Constant><type>STRING</type>
-		<Name>close_text</Name>
-		<Value>Close</Value>
+		<Name>system_window_title</Name>
+		<Value>Project Configuration</Value>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>modify_pixmap_dialog_title</Name>
@@ -41,6 +37,10 @@
 		<Name>new_button_add_text</Name>
 		<Value>Add</Value>
 		</Constant>
+	<Constant><type>DIRECTORY</type>
+		<Name>pixmap_location</Name>
+		<Value>D:\Eiffel54\build\bitmaps\png</Value>
+		</Constant>
 	<Constant><type>INTEGER</type>
 		<Name>medium_padding</Name>
 		<Value>8</Value>
@@ -48,13 +48,6 @@
 	<Constant><type>STRING</type>
 		<Name>next_tip_text</Name>
 		<Value>Next tip</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>icon_component_build_view_color_png</Name>
-		<Value>D:\Eiffel54\build\bitmaps\png\icon_component_build_view_color.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>pixmap_location</Directory>
-		<Filename>icon_component_build_view_color.png</Filename>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>ok_button_text</Name>
@@ -66,10 +59,6 @@
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_location</Directory>
 		<Filename>icon_component_display_view_color.png</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>system_window_title</Name>
-		<Value>Project Configuration</Value>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>constants_dialog_title</Name>
@@ -86,25 +75,36 @@
 		<Directory>pixmap_location</Directory>
 		<Filename>icon_build_window_color.png</Filename>
 		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>default_button_width</Name>
-		<Value>80</Value>
-		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>negative</Name>
-		<Value>-100</Value>
+	<Constant><type>PIXMAP</type>
+		<Name>icon_component_build_view_color_png</Name>
+		<Value>D:\Eiffel54\build\bitmaps\png\icon_component_build_view_color.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>pixmap_location</Directory>
+		<Filename>icon_component_build_view_color.png</Filename>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>tip_of_day_dialog_title</Name>
 		<Value>Tip of the Day</Value>
 		</Constant>
 	<Constant><type>STRING</type>
+		<Name>cancel_button_text</Name>
+		<Value>Cancel</Value>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>negative</Name>
+		<Value>-100</Value>
+		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>default_button_width</Name>
+		<Value>80</Value>
+		</Constant>
+	<Constant><type>STRING</type>
 		<Name>modify_button_text</Name>
 		<Value>Modify</Value>
 		</Constant>
-	<Constant><type>DIRECTORY</type>
-		<Name>pixmap_location</Name>
-		<Value>D:\Eiffel54\build\bitmaps\png</Value>
+	<Constant><type>STRING</type>
+		<Name>close_text</Name>
+		<Value>Close</Value>
 		</Constant>
 	<Constant><type>INTEGER</type>
 		<Name>large_spacing_width</Name>
@@ -118,9 +118,9 @@
 		<Name>pixmap_settings_dialog_title</Name>
 		<Value>Pixmap Selection</Value>
 		</Constant>
-	<Constant><type>STRING</type>
-		<Name>cancel_button_text</Name>
-		<Value>Cancel</Value>
+	<Constant><type>INTEGER</type>
+		<Name>large_padding</Name>
+		<Value>12</Value>
 		</Constant>
 	</item>
 <item type="Directory"><Internal_properties>
@@ -3429,8 +3429,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
-	</EV_SENSITIVE>
+<EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
 <EV_BOX><Is_item_expanded>01</Is_item_expanded>
 	</EV_BOX>
@@ -3557,7 +3556,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 </item>
 <item type="EV_FRAME"><Internal_properties>
-	<id>268</id>
+	<id>267</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3571,7 +3570,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>270</id>
+	<id>268</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3584,10 +3583,10 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 	<Is_item_expanded>00</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER><merged_radio_button_groups>277</merged_radio_button_groups>
+<EV_CONTAINER><merged_radio_button_groups>273</merged_radio_button_groups>
 	</EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>271</id>
+	<id>269</id>
 	<name>generate_to_current_project_location_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3604,7 +3603,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 	</Events>
 </item>
 <item type="EV_VERTICAL_BOX"><Internal_properties>
-	<id>272</id>
+	<id>270</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3617,7 +3616,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
-	<id>277</id>
+	<id>273</id>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
@@ -3626,10 +3625,10 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 <EV_BOX><Is_item_expanded>11</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
-<EV_CONTAINER><merged_radio_button_groups>270</merged_radio_button_groups>
+<EV_CONTAINER><merged_radio_button_groups>268</merged_radio_button_groups>
 	</EV_CONTAINER>
 <item type="EV_RADIO_BUTTON"><Internal_properties>
-	<id>273</id>
+	<id>271</id>
 	<name>generate_to_specified_location_radio_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3646,7 +3645,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 	</Events>
 </item>
 <item type="EV_BUTTON"><Internal_properties>
-	<id>275</id>
+	<id>272</id>
 	<name>browse_for_generation_location_button</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>
@@ -3664,7 +3663,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 </item>
 </item>
 <item type="EV_TEXT_FIELD"><Internal_properties>
-	<id>278</id>
+	<id>274</id>
 	<name>generation_location_display</name>
 	<Expanded>0</Expanded>
 	</Internal_properties>

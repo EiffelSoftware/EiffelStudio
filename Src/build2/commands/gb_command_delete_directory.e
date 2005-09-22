@@ -62,7 +62,7 @@ feature -- Basic Operation
 			directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 				-- Now actually remove the directory from the disk.
-			create temp_file_name.make_from_string (generated_path.string)
+			create temp_file_name.make_from_string (system_status.current_project_settings.actual_generation_location)
 			from
 				directory_name.start
 			until
@@ -100,7 +100,7 @@ feature -- Basic Operation
 		do
 				-- Only restore the directory to the disk if it was actually
 				-- removed previously.
-			create temp_file_name.make_from_string (generated_path.string)
+			create temp_file_name.make_from_string (system_status.current_project_settings.actual_generation_location)
 			from
 				directory_name.start
 			until
@@ -125,14 +125,6 @@ feature -- Basic Operation
 
 feature {NONE} -- Implementation
 
-	generated_path: FILE_NAME is
-			-- `Result' is generated directory for current project.
-		do
-			create Result.make_from_string (system_status.current_project_settings.project_location)
-		ensure
-			result_not_void: Result /= Void
-		end
-		
 	parent_directory_name: ARRAYED_LIST [STRING]
 		-- Name of parent directory in which `directory_name' is contained.
 

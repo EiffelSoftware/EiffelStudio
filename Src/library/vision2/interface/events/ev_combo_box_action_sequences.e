@@ -23,7 +23,7 @@ feature -- Event handling
 
 
 	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
-		obsolete "Use `list_displayed_actions' instead."
+		obsolete "Use `list_shown_actions' instead."
 			-- Actions to be performed when drop down list is displayed.
 		do
 			Result := implementation.drop_down_actions

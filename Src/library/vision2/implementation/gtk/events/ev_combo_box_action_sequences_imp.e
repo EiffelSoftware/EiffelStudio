@@ -19,6 +19,12 @@ feature -- Event handling
 			create Result
 		end
 
+	create_list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a drop action sequence.
+		do
+			create Result
+		end
+
 end
 
 --|----------------------------------------------------------------

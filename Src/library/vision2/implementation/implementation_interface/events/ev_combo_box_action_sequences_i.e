@@ -32,6 +32,31 @@ feature {EV_ANY_I} -- Implementation
 
 	drop_down_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `drop_down_actions'.
+			
+			
+feature -- Event handling
+
+	list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when drop down list is hidden.
+		do
+			if list_hidden_actions_internal = Void then
+				list_hidden_actions_internal :=
+					 create_list_hidden_actions
+			end
+			Result := list_hidden_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a list hidden action sequence.
+		deferred
+		end
+
+	list_hidden_actions_internal: EV_NOTIFY_ACTION_SEQUENCE
+			-- Implementation of once per object `list_hidden_actions'.
 
 end
 

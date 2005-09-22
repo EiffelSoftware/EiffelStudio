@@ -116,6 +116,37 @@ feature {NONE} -- Events
 			command_handler.update
 		end
 		
+	generate_to_current_project_location_radio_button_selected is
+			-- Called by `select_actions' of `generate_to_current_project_location_radio_button'.
+		do
+			browse_for_generation_location_button.disable_sensitive
+			generation_location_display.disable_sensitive
+				-- Now set the generation location back to empty.
+			project_settings.set_generation_location ("")
+		end
+	
+	generate_to_specified_location_radio_button_selected is
+			-- Called by `select_actions' of `generate_to_specified_location_radio_button'.
+		do
+			browse_for_generation_location_button.enable_sensitive
+			generation_location_display.enable_sensitive
+				-- Now set the generation location to the contents of `generation_location_display'.
+			project_settings.set_generation_location (generation_location_display.text)
+		end
+	
+	browse_for_generation_location_button_selected is
+			-- Called by `select_actions' of `browse_for_generation_location_button'.
+		local
+			directory_dialog: EV_DIRECTORY_DIALOG
+		do
+			create directory_dialog
+			directory_dialog.show_modal_to_window (Current)
+			if directory_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
+				generation_location_display.set_text (directory_dialog.directory)
+				generation_location_display.set_tooltip (generation_location_display.text)
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	display_project_information is
@@ -172,6 +203,13 @@ feature {NONE} -- Implementation
 			else
 				load_constants_check_button.disable_select
 			end
+			
+			if project_settings.generation_location.is_empty then
+				generate_to_current_project_location_radio_button.enable_select
+			else
+				generation_location_display.set_text (project_settings.generation_location)
+				generate_to_specified_location_radio_button.enable_select
+			end
 		end
 		
 	store_project_information is
@@ -220,6 +258,11 @@ feature {NONE} -- Implementation
 				project_settings.enable_constant_loading
 			else
 				project_settings.disable_constant_loading
+			end
+			if generate_to_specified_location_radio_button.is_selected then
+				project_settings.set_generation_location (generation_location_display.text)
+			else
+				project_settings.set_generation_location ("")
 			end
 		end
 

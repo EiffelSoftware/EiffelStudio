@@ -809,7 +809,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 	generated_path: FILE_NAME is
 			-- `Result' is generated directory for current project.
 		do
-			create Result.make_from_string (system_status.current_project_settings.project_location)
+			create Result.make_from_string (system_status.current_project_settings.actual_generation_location)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -83,7 +83,7 @@ feature -- Access
 			directory ?= parent
 			if directory /= Void then
 				path := directory.path
-				create file_name.make_from_string (system_status.current_project_settings.project_location)
+				create file_name.make_from_string (system_status.current_project_settings.actual_generation_location)
 				from
 					path.start
 				until

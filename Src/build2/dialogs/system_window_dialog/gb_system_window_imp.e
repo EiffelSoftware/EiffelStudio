@@ -174,7 +174,6 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_6.set_border_width (small_padding)
 			attributes_local_check_button.set_text ("Local")
 			attributes_class_check_button.set_text ("Attributes")
-			l_ev_horizontal_box_5.disable_sensitive
 			l_ev_horizontal_box_5.disable_item_expand (l_ev_cell_1)
 			l_ev_cell_1.set_minimum_width (16)
 			attributes_exported_check_button.set_text ("Export all")

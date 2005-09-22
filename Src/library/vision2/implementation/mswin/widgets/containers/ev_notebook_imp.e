@@ -1000,8 +1000,10 @@ feature {EV_NOTEBOOK_TAB_IMP} -- Implementation
 			container: EV_CONTAINER
 		do
 			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
-			if Result = Void then
-					-- Otherwise iterate through children and search each.
+			if Result = Void and is_sensitive then
+					-- Otherwise iterate through children and search each but only if
+					-- we are sensitive. In the case of a non-sensitive container, no
+					-- children should recieve the tab stop.
 				from
 					go_i_th (search_pos)
 				until

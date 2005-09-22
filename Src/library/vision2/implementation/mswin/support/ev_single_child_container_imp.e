@@ -156,7 +156,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			container: EV_CONTAINER
 		do
 			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
-			if Result = Void and search_pos = 1 and item /= Void then
+			if Result = Void and search_pos = 1 and item /= Void and is_sensitive then
 					-- Otherwise search the child.
 				w := item_imp
 				if forwards then
@@ -174,7 +174,7 @@ feature {EV_ANY_I} -- WEL Implementation
 				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
 		end
-
+		
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so notify `item_imp'.
 		do

@@ -636,6 +636,8 @@ feature -- Warning Dialogs
 	
 	unable_to_save_part2: STRING is "%N%NPlease check file permissions and try again."
 	
+	invalid_generation_directory: STRING is "The directory specified for code generation is invalid.%NPlease check this directory from the %"Generation%"%Ntab of the project settings dialog and correct it as necessary.%N%NNo code has been generated."
+	
 
 feature -- Object editor properties
 

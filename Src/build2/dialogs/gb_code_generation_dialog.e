@@ -102,11 +102,10 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 		do
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 			generation_progress.set_proportion (1)
-			set_timed_status_text ("Generation successful - " + system_status.current_project_settings.project_location)
+			set_timed_status_text ("Generation successful - " + system_status.current_project_settings.actual_generation_location)
 			destroy
 		end
 		
-
 	start_generation is
 			-- Begin generation and set generation
 			-- output progress bar to `progress_bar'.
@@ -120,7 +119,11 @@ feature {GB_GENERATION_COMMAND} -- Basic operation
 			else
 				code_generator.generate
 			end
-			show_completion
+			if code_generator.last_generation_successful then
+				show_completion
+			else
+				destroy
+			end
 		end
 		
 		

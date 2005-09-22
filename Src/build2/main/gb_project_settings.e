@@ -68,6 +68,7 @@ feature {NONE} -- Initialization
 			enable_rebuild_ace_file
 			disable_constant_loading
 			constants_class_name := "CONSTANTS"
+			generation_location := ""
 		end
 
 feature -- Access
@@ -135,6 +136,22 @@ feature -- Access
 		-- Was client information for the project contained directly in the project file?
 		-- This is only true for older projects. In this case, we must now set the client
 		-- information for all windows to match the original setting from the file.
+		
+	generation_location: STRING
+		-- Location for generation of all files and structure. If empty,
+		-- generation is performed at the current project location.
+		
+	actual_generation_location: STRING is
+			-- Actual location for generated files.
+		do
+			if generation_location.is_empty then
+				Result := project_location
+			else
+				Result := generation_location
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 	
 feature -- Basic operation
 
@@ -158,6 +175,9 @@ feature -- Basic operation
 			data.extend ([rebuild_ace_file_string, rebuild_ace_file.out])
 			data.extend ([load_constants_string, load_constants.out])
 			data.extend ([constants_class_name_string, constants_class_name])
+			if not generation_location.is_empty then
+				data.extend ([generation_location_string, generation_location])
+			end
 			
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
@@ -183,15 +203,15 @@ feature -- Basic operation
 				check
 					data_not_void: data /= Void
 				end
-				set_integer_attribute (data @ project_type_string, agent set_project_type (?))
-				set_string_attribute (data @ project_name_string, agent set_project_name (?))
-				set_string_attribute (data @ project_location_string, agent set_project_location (?))
-				set_string_attribute (data @ main_window_class_name_string, agent set_main_window_class_name (?))
-				set_string_attribute (data @ application_class_name_string, agent set_application_class_name (?))
+				set_integer_attribute (data @ project_type_string, agent set_project_type)
+				set_string_attribute (data @ project_name_string, agent set_project_name)
+				set_string_attribute (data @ project_location_string, agent set_project_location)
+				set_string_attribute (data @ main_window_class_name_string, agent set_main_window_class_name)
+				set_string_attribute (data @ application_class_name_string, agent set_application_class_name)
 				set_boolean_attribute (data @ complete_project_string, agent enable_complete_project, agent disable_complete_project)
 				set_boolean_attribute (data @ grouped_locals_string, agent enable_grouped_locals, agent disable_grouped_locals)
 				set_boolean_attribute (data @ debugging_output_string, agent enable_debugging_output, agent disable_debugging_output)
-				set_string_attribute (data @ attributes_local_string, agent set_attributes_locality (?))
+				set_string_attribute (data @ attributes_local_string, agent set_attributes_locality)
 				if data.has (client_of_window_string) then
 					if data.item (client_of_window_string).is_equal (true_string) then
 						loaded_project_had_client_information := True
@@ -203,11 +223,16 @@ feature -- Basic operation
 					set_boolean_attribute (data @ load_constants_string, agent enable_constant_loading, agent disable_constant_loading)
 				end
 				if data.has (constants_class_name_string) then
-					set_string_attribute (data @ constants_class_name_string, agent set_constants_class_name (?))
+					set_string_attribute (data @ constants_class_name_string, agent set_constants_class_name)
 				else
 					set_constants_class_name ("CONSTANTS")
 				end
-				if data.count < 11 or data.count > 13 then
+				if data.has (generation_location_string) then
+					set_string_attribute (data @ generation_location_string, agent set_generation_location)
+				else
+					set_string_attribute ("", agent set_generation_location)
+				end
+				if data.count < 11 or data.count > 14 then
 					create dialog.make_with_text (invalid_bpr_file)
 					dialog.button ((create {EV_DIALOG_CONSTANTS}).ev_abort).select_actions.extend (agent cancel_load)
 					dialog.show_modal_to_window (main_window)
@@ -353,6 +378,14 @@ feature -- Status Setting
 			load_constants := False
 		end
 		
+	set_generation_location (location: STRING) is
+			-- Assign `location' to `generation_location'.
+		do
+			generation_location := location.twin
+		ensure
+			location_set: generation_location.is_equal (location)
+		end
+		
 feature {GB_FILE_OPEN_COMMAND}
 
 	set_object_as_client (an_object: GB_OBJECT) is
@@ -400,6 +433,8 @@ feature {NONE} --Implementation
 	load_constants_string: STRING is "Load_constants_from_file"
 	
 	project_type_string: STRING is "Project_type"
+	
+	generation_location_string: STRING is "Generation_location"
 	
 		-- Type of Current project. We must store this information
 		-- in the save file, so we know what sort of processing to perform

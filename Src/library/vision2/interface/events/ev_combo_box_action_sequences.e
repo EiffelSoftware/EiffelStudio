@@ -23,13 +23,30 @@ feature -- Event handling
 
 
 	drop_down_actions: EV_NOTIFY_ACTION_SEQUENCE is
+		obsolete "Use `list_displayed_actions' instead."
 			-- Actions to be performed when drop down list is displayed.
 		do
 			Result := implementation.drop_down_actions
 		ensure
 			not_void: Result /= Void
 		end
-
+		
+	list_shown_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when drop down list is shown.
+		do
+			Result := implementation.drop_down_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
+	list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when drop down list is hidden.
+		do
+			Result := implementation.list_hidden_actions
+		ensure
+			not_void: Result /= Void
+		end
+		
 end
 
 --|----------------------------------------------------------------

@@ -19,6 +19,13 @@ inherit
 		end
 		
 	EV_COMBO_BOX_ACTION_SEQUENCES_I
+	
+feature -- Status report
+
+	is_list_shown: BOOLEAN is
+			-- Is drop down list currently shown?
+		deferred
+		end
 
 feature {EV_COMBO_BOX_I} -- Implementation
 

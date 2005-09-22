@@ -3534,7 +3534,6 @@ feature {ANY}
 				
 				header_viewport.set_x_offset ((l_total_column_width - viewable_width).max (0))
 			end
---			last_horizontal_scroll_bar_value := horizontal_scroll_bar.value
 		end
 
 feature {EV_GRID_DRAWER_I} -- Drawing implementation

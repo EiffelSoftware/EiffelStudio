@@ -55,6 +55,16 @@ create
 	default_create,
 	make_with_strings,
 	make_with_text
+	
+feature -- Status report
+
+	is_list_shown: BOOLEAN is
+			-- Is drop down list currently shown?
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.is_list_shown
+		end
 
 feature -- Element change
 

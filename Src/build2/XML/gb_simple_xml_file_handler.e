@@ -29,6 +29,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	XM_CALLBACKS_FILTER_FACTORY
+		export
+			{NONE} all 
+		end
 	
 feature -- Basic operations
 
@@ -175,23 +180,24 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 		end
-		
+
 	parse_file (a_filename: STRING) is
 			-- Parse XML file `filename' with `parser'.
 		local
-			file: RAW_FILE
-			buffer: STRING
+			file: KL_BINARY_INPUT_FILE
+			l_concat_filter: XM_CONTENT_CONCATENATOR
 		do
-			create file.make_open_read (a_filename)
-			create buffer.make (file.count) 
-			file.start
-			file.read_stream (file.count)
-			buffer := file.last_string
-			create parser.make
-			parser.set_callbacks (pipe_callback.start)
-			parser.parse_from_string (buffer)
+			create file.make (a_filename)
+			file.open_read
+			if file.is_open_read then
+				create l_concat_filter.make_null
+				create parser.make
+				parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, pipe_callback.start>>))
+				parser.parse_from_stream (file)
+				parser.finish_incremental
+			end
 		end
-		
+				
 	parser: XM_EIFFEL_PARSER
 		
 	show_warning_dialog is

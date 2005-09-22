@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 			a_selected_item_imp: EV_LIST_ITEM_IMP
 		do
 			a_selected_item := selected_item
-			if in_popup_action then
+			if is_list_shown then
 				{EV_GTK_EXTERNALS}.gtk_combo_box_popdown (container_widget)
 			end
 			if a_selected_item /= Void then
@@ -240,9 +240,13 @@ feature {NONE} -- Implementation
 			a_toggle: POINTER
 		do
 			if a_has_focus then
-				if in_popup_action then
+				if is_list_shown then
 						-- `Current' is being popped down.
-					in_popup_action := False
+					is_list_shown := False
+						-- Call list_hidden_actions.
+					if list_hidden_actions_internal /= Void then
+						list_hidden_actions_internal.call (Void)
+					end
 				else
 					Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
 				end
@@ -250,15 +254,15 @@ feature {NONE} -- Implementation
 				return_combo_toggle (container_widget, $a_toggle)
 				if a_toggle /= default_pointer and then {EV_GTK_EXTERNALS}.gtk_toggle_button_get_active (a_toggle) then
 						-- We have a "popup" action.
-					in_popup_action := True
+					is_list_shown := True
 				else
 					Precursor {EV_TEXT_FIELD_IMP} (a_has_focus)
 				end
 			end
 		end
 
-	in_popup_action: BOOLEAN
-		-- Is combo currently popped up?
+	is_list_shown: BOOLEAN
+		-- Is combo list current shown?
 
 	retrieve_toggle_button_signal_connection_id: INTEGER
 		-- Signal connection id used when finding the toggle button of `Current'.

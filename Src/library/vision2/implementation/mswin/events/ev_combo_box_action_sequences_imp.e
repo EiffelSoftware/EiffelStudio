@@ -18,6 +18,12 @@ feature -- Event handling
 		do
 			create Result
 		end
+		
+	create_list_hidden_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a list_hidden action sequence.
+		do
+			create Result
+		end
 
 end
 

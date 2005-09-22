@@ -151,7 +151,14 @@ feature {NONE} -- Implementation
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
-			parent.on_key_down (virtual_key, key_data)
+			if not (virtual_key = {WEL_VK_CONSTANTS}.vk_down or virtual_key = {WEL_VK_CONSTANTS}.vk_up) then
+					-- It appears that the up and down arrows are handled slightly
+					-- differently to other keys and the  default processing seems to
+					-- be called. Without this fix, the key press or release actions
+					-- in a combo box are called twice for these two keys. Unfortunately
+					-- at the moment, I am unaware why this happens. Julian.
+				parent.on_key_down (virtual_key, key_data)
+			end
 		end
 
 	on_char (character_code, key_data: INTEGER) is

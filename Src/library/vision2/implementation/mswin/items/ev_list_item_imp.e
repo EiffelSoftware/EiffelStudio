@@ -216,7 +216,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Implementation.
 				combo_imp ?= parent_imp
 				if combo_imp /= Void then
 						-- The parent is not a combo. Is the list visible?
-					is_visible := combo_imp.list_shown
+					is_visible := combo_imp.is_list_shown
 				else
 						-- The parent is not a combo, the list is
 						-- always visible

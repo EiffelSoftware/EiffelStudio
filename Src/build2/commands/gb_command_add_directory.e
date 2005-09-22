@@ -90,11 +90,13 @@ feature -- Basic Operation
 			directory_exists_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			created_directories: ARRAYED_LIST [DIRECTORY]
 			test_file_name, test_directory_name: DIRECTORY_NAME
+			l_path: STRING
 		do
 			create created_directories.make (4)
-			create temp_file_name.make_from_string (generated_path.string)
-			create root_directory.make_open_read (generated_path.string)
-			create test_directory_name.make_from_string (generated_path.string)
+			l_path := system_status.current_project_settings.actual_generation_location
+			create temp_file_name.make_from_string (l_path)
+			create root_directory.make_open_read (l_path)
+			create test_directory_name.make_from_string (l_path)
 			test_directory_name.extend (unique_name_from_array (root_directory.linear_representation, "TEMP"))
 			
 			from
@@ -235,14 +237,6 @@ feature {NONE} -- Implementation
 		-- Has `execute' already been called once? If so, we must call `create_new_directory'
 		-- within `execute'. The first time that we call `execute' we do not perform it directly
 		-- as the caller can do this to enable chacking for invalid directory names.
-
-	generated_path: FILE_NAME is
-			-- `Result' is generated directory for current project.
-		do
-			create Result.make_from_string (system_status.current_project_settings.project_location)
-		ensure
-			result_not_void: Result /= Void
-		end
 
 	directory_name: STRING
 		-- Name of directory that was added. Only the actual name,

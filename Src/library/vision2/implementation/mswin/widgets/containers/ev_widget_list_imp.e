@@ -141,8 +141,12 @@ feature {EV_ANY_I} -- WEL Implementation
 		do
 			l_cursor := cursor
 			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
-			if Result = Void then
-					-- Otherwise iterate through children and search each.
+					-- We do not iterate through a container it is not sensitive as no children
+					-- should receive the tab stop.
+			if Result = Void and is_sensitive then
+					-- Otherwise iterate through children and search each but only if
+					-- we are sensitive. In the case of a non-sensitive container, no
+					-- children should recieve the tab stop.
 				from
 					go_i_th (search_pos)
 				until
@@ -168,7 +172,6 @@ feature {EV_ANY_I} -- WEL Implementation
 					end
 				end
 			end
-			
 			if Result = Void then
 				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end

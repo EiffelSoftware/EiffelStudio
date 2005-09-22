@@ -1105,8 +1105,10 @@ feature {NONE} -- Implementation
 					start_widget_searched_cell.put (search_pos)
 				end
 			end
-			if Result = Void then
-					-- Otherwise iterate through children and search each.
+			if Result = Void and is_sensitive then
+					-- Otherwise iterate through children and search each but only if
+					-- we are sensitive. In the case of a non-sensitive container, no
+					-- children should recieve the tab stop.
 				l_item_list := item_list
 				from
 					l_item_list.go_i_th (search_pos)

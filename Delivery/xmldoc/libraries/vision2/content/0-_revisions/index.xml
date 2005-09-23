@@ -41,6 +41,9 @@
 			<item>
 				<bold>EV_DYNAMIC_TREE_ITEM</bold> - The `subtree_function' is now only executed when you expand the item. In the previous version, querying the contents of the item caused the subtree function to  be executed, filling the children.
 			</item>
+			<item>
+				<bold>EV_COMBO_BOX</bold> - Added `is_list_shown', `list_hidden_actions' and renamed `drop_down_actions' to `list_shown_actions'.
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>
@@ -73,6 +76,9 @@
 					</item>
 					<item>
 						<bold>EV_WIDGET</bold> - Fixed bug in theme handling on Windows XP. Previously, any widgets that were created before the first window was created did not draw correctly when displayed.
+					</item>
+					<item>
+						<bold>EV_COMBO_BOX</bold> - Fixed bug in `key_press_actions' which were called twice when you pressed the up or down arrow keys.
 					</item>
 				</list>
 			</item>

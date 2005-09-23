@@ -36,7 +36,7 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_box_2
 			create l_ev_label_1
 			create location_field
-			create l_ev_notebook_1
+			create main_notebook
 			create l_ev_vertical_box_2
 			create l_ev_frame_1
 			create l_ev_vertical_box_3
@@ -87,8 +87,8 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (l_ev_label_1)
 			l_ev_horizontal_box_2.extend (location_field)
-			l_ev_vertical_box_1.extend (l_ev_notebook_1)
-			l_ev_notebook_1.extend (l_ev_vertical_box_2)
+			l_ev_vertical_box_1.extend (main_notebook)
+			main_notebook.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (l_ev_frame_1)
 			l_ev_frame_1.extend (l_ev_vertical_box_3)
 			l_ev_vertical_box_3.extend (l_ev_horizontal_box_3)
@@ -105,7 +105,7 @@ feature {NONE}-- Initialization
 			project_specific_name_holder.extend (application_class_name_field)
 			l_ev_vertical_box_4.extend (l_ev_label_4)
 			l_ev_vertical_box_4.extend (constants_class_name_field)
-			l_ev_notebook_1.extend (l_ev_vertical_box_5)
+			main_notebook.extend (l_ev_vertical_box_5)
 			l_ev_vertical_box_5.extend (l_ev_frame_2)
 			l_ev_frame_2.extend (l_ev_vertical_box_6)
 			l_ev_vertical_box_6.extend (attributes_local_check_button)
@@ -141,8 +141,8 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_1)
 			l_ev_label_1.set_text ("Project Location:")
 			location_field.disable_edit
-			l_ev_notebook_1.set_item_text (l_ev_vertical_box_2, "Build")
-			l_ev_notebook_1.set_item_text (l_ev_vertical_box_5, "Generation")
+			main_notebook.set_item_text (l_ev_vertical_box_2, "Build")
+			main_notebook.set_item_text (l_ev_vertical_box_5, "Generation")
 			l_ev_vertical_box_2.set_padding_width (small_padding)
 			l_ev_vertical_box_2.set_border_width (small_padding)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_frame_1)
@@ -231,6 +231,7 @@ feature -- Access
 	class_radio_button, attributes_local_check_button, attributes_class_check_button,
 	attributes_exported_check_button, attributes_optimal_check_button, attributes_not_exported_check_button,
 	generate_to_current_project_location_radio_button, generate_to_specified_location_radio_button: EV_RADIO_BUTTON
+	main_notebook: EV_NOTEBOOK
 	project_specific_name_holder,
 	attribute_class_box: EV_VERTICAL_BOX
 	rebuild_ace_file_check_button, local_check_button, debugging_check_button,
@@ -242,9 +243,8 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
-	l_ev_notebook_1: EV_NOTEBOOK
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
-	l_ev_horizontal_box_3, l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
+	l_ev_horizontal_box_1, l_ev_horizontal_box_2, l_ev_horizontal_box_3,
+	l_ev_horizontal_box_4, l_ev_horizontal_box_5, l_ev_horizontal_box_6: EV_HORIZONTAL_BOX
 	l_ev_vertical_box_1,
 	l_ev_vertical_box_2, l_ev_vertical_box_3, l_ev_vertical_box_4, l_ev_vertical_box_5,
 	l_ev_vertical_box_6, l_ev_vertical_box_7, l_ev_vertical_box_8, l_ev_vertical_box_9: EV_VERTICAL_BOX

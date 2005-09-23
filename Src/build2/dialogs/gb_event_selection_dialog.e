@@ -92,6 +92,13 @@ inherit
 		undefine
 			copy, default_create, is_equal
 		end
+		
+	CONSTANTS
+		export
+			{NONE} all
+		undefine
+			copy, default_create, is_equal
+		end
 
 create
 	make_with_object
@@ -134,8 +141,14 @@ feature {NONE} -- Initialization
 			create header_label.make_with_text ("Actions to be performed when:")
 			header_label.align_text_left
 			header_label.set_minimum_height (20)
-			temp_box.extend (header_label)
-			temp_box.disable_item_expand (header_label)
+			create h_box
+			temp_box.extend (h_box)
+			temp_box.disable_item_expand (h_box)
+			create cell
+			h_box.extend (cell)
+			cell.set_minimum_width (large_padding)
+			h_box.disable_item_expand (cell)
+			h_box.extend (header_label)
 			create separator
 			temp_box.extend (separator)
 			temp_box.disable_item_expand (separator)

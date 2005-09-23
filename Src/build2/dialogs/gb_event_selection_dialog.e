@@ -110,8 +110,12 @@ feature {NONE} -- Initialization
 			separator: EV_HORIZONTAL_SEPARATOR
 		do
 			default_create
-			set_title ("Event selection")
 			object := an_object
+			if object.name.is_empty then
+				set_title ("Event selection for unnamed " + object.short_type)
+			else
+				set_title ("Event selection for `" + object.name + "'")
+			end
 			show_actions.extend (agent update_text_field_minimum_width)
 				-- Reset building counter.
 			building_counter := 0
@@ -176,7 +180,6 @@ feature {NONE} -- Initialization
 				all_labels.item.set_minimum_width (minimum_label_width + 5)
 				all_labels.forth
 			end
-
 				-- We now wipe out the events for the object. When we check for valid
 				-- names, we will not check the current names. The events must be
 				-- wiped out when the window is closed anyway to be re-filled with

@@ -17,9 +17,13 @@
 		<Directory>pixmap_location</Directory>
 		<Filename>icon_component_viewer_color.png</Filename>
 		</Constant>
+	<Constant><type>INTEGER</type>
+		<Name>large_padding</Name>
+		<Value>12</Value>
+		</Constant>
 	<Constant><type>STRING</type>
-		<Name>system_window_title</Name>
-		<Value>Project Configuration</Value>
+		<Name>close_text</Name>
+		<Value>Close</Value>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>modify_pixmap_dialog_title</Name>
@@ -36,10 +40,6 @@
 	<Constant><type>STRING</type>
 		<Name>new_button_add_text</Name>
 		<Value>Add</Value>
-		</Constant>
-	<Constant><type>DIRECTORY</type>
-		<Name>pixmap_location</Name>
-		<Value>D:\Eiffel54\build\bitmaps\png</Value>
 		</Constant>
 	<Constant><type>INTEGER</type>
 		<Name>medium_padding</Name>
@@ -59,6 +59,10 @@
 		<is_absolute>False</is_absolute>
 		<Directory>pixmap_location</Directory>
 		<Filename>icon_component_display_view_color.png</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>system_window_title</Name>
+		<Value>Project Configuration</Value>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>constants_dialog_title</Name>
@@ -86,10 +90,6 @@
 		<Name>tip_of_day_dialog_title</Name>
 		<Value>Tip of the Day</Value>
 		</Constant>
-	<Constant><type>STRING</type>
-		<Name>cancel_button_text</Name>
-		<Value>Cancel</Value>
-		</Constant>
 	<Constant><type>INTEGER</type>
 		<Name>negative</Name>
 		<Value>-100</Value>
@@ -102,9 +102,9 @@
 		<Name>modify_button_text</Name>
 		<Value>Modify</Value>
 		</Constant>
-	<Constant><type>STRING</type>
-		<Name>close_text</Name>
-		<Value>Close</Value>
+	<Constant><type>DIRECTORY</type>
+		<Name>pixmap_location</Name>
+		<Value>D:\Eiffel54\build\bitmaps\png</Value>
 		</Constant>
 	<Constant><type>INTEGER</type>
 		<Name>large_spacing_width</Name>
@@ -118,9 +118,9 @@
 		<Name>pixmap_settings_dialog_title</Name>
 		<Value>Pixmap Selection</Value>
 		</Constant>
-	<Constant><type>INTEGER</type>
-		<Name>large_padding</Name>
-		<Value>12</Value>
+	<Constant><type>STRING</type>
+		<Name>cancel_button_text</Name>
+		<Value>Cancel</Value>
 		</Constant>
 	</item>
 <item type="Directory"><Internal_properties>
@@ -3086,6 +3086,7 @@ Please enter the name of a DIRECTORYconstant which will be used.</Text>
 </item>
 <item type="EV_NOTEBOOK"><Internal_properties>
 	<id>45</id>
+	<name>main_notebook</name>
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>

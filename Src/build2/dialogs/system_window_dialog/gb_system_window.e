@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 				-- Closing window
 			close_request_actions.wipe_out
 			close_request_actions.put_front (agent cancel_pressed)
+			show_actions.extend (agent set_focus_to_notebook)
 		end
 
 feature {NONE} -- Events
@@ -357,6 +358,12 @@ feature {NONE} -- Implementation
 			-- `Result' is access to current project settings.
 		do
 			Result := System_status.current_project_settings
+		end
+
+	set_focus_to_notebook is
+			-- Assign focus to `main_notebook'
+		do
+			main_notebook.set_focus
 		end
 
 end -- class GB_SYSTEM_WINDOW

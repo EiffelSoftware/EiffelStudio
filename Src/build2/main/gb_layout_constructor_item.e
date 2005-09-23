@@ -57,9 +57,9 @@ inherit
 		end
 
 create
-	{GB_OBJECT_HANDLER, GB_OBJECT, GB_WINDOW_SELECTOR} make
+	{GB_OBJECT_HANDLER, GB_OBJECT} make
 
-feature {GB_TITLED_WINDOW_OBJECT, GB_WINDOW_SELECTOR} -- Initialization
+feature {GB_TITLED_WINDOW_OBJECT} -- Initialization
 
 	make (an_object: GB_OBJECT) is
 			-- Create `Current' and assign `an_object' to `object'.

@@ -38,33 +38,37 @@ feature -- Visitor
 		require
 			an_element_not_void: an_element /= Void
 		local
-			internal: INTERNAL
 			type_id: INTEGER
-			args: TUPLE [G]
+			l_args: like arguments
+			l_actions_cache: like actions_cache
+			l_actions: like actions
 			i: INTEGER 
 		do
-			args := [an_element]
+			l_args := arguments
+			l_args.put (an_element, 1)
 
-			create internal
+			l_actions_cache := actions_cache
+			l_actions := actions
+
 			type_id := {ISE_RUNTIME}.dynamic_type ($an_element)
 
-			if actions_cache.valid_index (type_id) and then actions_cache.item (type_id) /= Void then
-				actions_cache.item (type_id).call (args)
+			if l_actions_cache.valid_index (type_id) and then l_actions_cache.item (type_id) /= Void then
+				l_actions_cache.item (type_id).call (l_args)
 			else
 				from
-					i := actions.count
+					i := l_actions.count
 				until
-					i < 1 or else actions.item (i).valid_operands (args)
+					i < 1 or else l_actions.item (i).valid_operands (l_args)
 				loop
 					i := i - 1
 				end
 
-				if i >= 1 and i <= actions.count then
-					actions.item (i).call (args)
-					actions_cache.force (actions.item (i), type_id)
+				if i >= 1 and i <= l_actions.count then
+					l_actions.item (i).call (l_args)
+					l_actions_cache.force (l_actions.item (i), type_id)
 				else
 					catch_all (an_element)
-					actions_cache.force (catch_all_agent, type_id)
+					l_actions_cache.force (catch_all_agent, type_id)
 				end
 			end
 		end
@@ -240,6 +244,14 @@ feature {NONE} -- Implementation (Cache)
 
 	catch_all_agent: PROCEDURE [ANY, TUPLE [G]]
 			-- Agent on `catch_all'
+
+	arguments: TUPLE [G] is
+			-- Memory buffer to perform call to agents.
+		once
+			create Result
+		ensure
+			arguments_not_void: Result /= Void
+		end
 
 invariant
 

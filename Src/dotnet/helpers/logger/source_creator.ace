@@ -1,0 +1,45 @@
+system
+	"screator"
+
+root
+	SOURCE_CREATOR: make
+
+default
+	msil_generation (yes)
+	line_generation (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	msil_generation_type ("exe")
+	console_application (yes)
+
+cluster
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; "CVS"; 
+		default
+			namespace ("Base")
+		end
+
+	all base_net:		"$EIFFEL_SRC\library.net\base"
+		exclude
+			"CVS"; 
+		default
+			namespace ("Base")
+		end
+
+	helpers:		"$EIFFEL_SRC\dotnet\helpers"
+		
+assembly
+	"mscorlib":	"${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"
+
+	"System":	"${ISE_DOTNET_FRAMEWORK}\System.dll"
+		prefix
+			"SYSTEM_DLL_"
+		end
+
+	"System.Xml":	"${ISE_DOTNET_FRAMEWORK}\System.Xml.dll"
+		prefix
+			"XML_"
+		end
+
+end

@@ -50,7 +50,13 @@ feature -- Access
 			l_vd64: VD64
 			l_vd67: VD67
 		do
-			Result := internal_il_emitter
+			Result := internal_il_emitter.item
+			if Result = Void then
+				create Result.make (assembly_cache_folder, system.clr_runtime_version)
+				if Result.exists then
+					internal_il_emitter.put (Result)
+				end
+			end
 			if Result = Void or else not Result.exists then
 					-- IL_EMITTER component could not be loaded.
 				create l_vd64
@@ -70,10 +76,12 @@ feature -- Access
 
 feature {NONE}
 
-	internal_il_emitter: IL_EMITTER is
+	internal_il_emitter: CELL [IL_EMITTER] is
 			-- Unique instance of IL_EMITTER
 		once
-			create Result.make (assembly_cache_folder, system.clr_runtime_version)
+			create Result
+		ensure
+			result_not_void: Result /= Void
 		end
 
 end -- class SHARED_IL_EMITTER

@@ -73,18 +73,6 @@ feature {NONE} -- Implementation
 			execution_agents.extend (agent set_font (?), font_string)
 			validate_agents.extend (agent valid_font, font_string)
 		end
-
-	show_dialog is
-			-- Display font dialog for user input, and
-			-- set font of `objects' to match result.
-		do
-			create font_dialog
-			font_dialog.set_font (first.font)
-			font_dialog.show_modal_to_window (parent_window (parent_editor))
-			if font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
-				for_all_objects (agent {EV_FONTABLE}.set_font (font_dialog.font))
-			end
-		end
 		
 	set_font (a_font: EV_FONT) is
 			-- Assign `a_font' to all instances of `object'.
@@ -120,9 +108,6 @@ feature {NONE} -- Implementation
 			font_entry.update_constant_display (first.font)
 			update_editors
 		end
-
-	font_dialog: EV_FONT_DIALOG
-		-- Dialog for user font choices.
 		
 	font_entry: GB_FONT_INPUT_FIELD
 		-- Input field for retrieving font information.

@@ -83,7 +83,7 @@ default
 	array_optimization (no)
 	dead_code_removal (yes)
 	dynamic_runtime (no)
-	exception_trace (no)
+	exception_trace (yes)
 	inlining (no)
 	multithreaded (no)
 
@@ -91,7 +91,7 @@ default
 cluster
 	all com_generated:		"$EIFFEL_SRC\com_compiler"
 		exclude
-			"EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib"; "ace_file"; "idl"; "Client_Only"; "generated_client"; 
+			"eb_flat_short_data.e"; "EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib"; "ace_file"; "idl"; "Client_Only"; "generated_client"; 
 		visible
 			IEIFFEL_COMPILER_EVENTS_IMPL_PROXY
 				end
@@ -255,6 +255,11 @@ cluster
 			DATE_TIME
 				end
 		end
+		
+	all net:		"$EIFFEL_SRC\library\net"
+		exclude
+			"CVS"; 
+		end
 
 	all ecom:		"$EIFFEL_SRC\library\com"
 		visible
@@ -302,21 +307,31 @@ cluster
 
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
 
-	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
+	all editor:		"$EIFFEL_SRC\library\editor"
+		exclude
+			"CVS"; "eiffel"; "text_formatter.e"; "structured_text.e"; 
+		end
+
+	all compiler_support:		"$EIFFEL_SRC\Eiffel\support"
 
 	all common:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
-			"CVS"; "external"; "compiler_override"; "error"; "types"; 
+			"CVS"; "external"; "compiler_override"; "types"; "error"; 
 		end
 
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
 
-	all gobo:		"$gobo\library"
+	observer:		"$EIFFEL_SRC\library\patterns\observer"
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
+		default
+			assertion (no)
+			assertion (require)
 		end
 
-	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
+	all documentation:		"$EIFFEL_SRC\Eiffel\case"
 		exclude
 			"CVS"; 
 		end
@@ -333,55 +348,67 @@ cluster
 
 	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
 		exclude
-			"CVS"; "structured_text"; "eb_preference_manager.e"; 
+			"CVS"; 
 		end
 
-	all eiffel_structured_text:		"$EIFFEL_SRC\Eiffel\API\structured_text"
+	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
-			"CVS"; "common"; 
+			"CVS"; "xml_implementation"; 
 		end
 
-	all common_structured_text:		"$EIFFEL_SRC\library\editor\text_window\text\structure\structured_text\common"
-		exclude
-			"CVS"; "text_formatter.e"; "structured_text.e"; 
-		end
+	encryption:		"$EIFFEL_SRC\library\encryption"
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
 
-	interface_switch (switch):		"$\interface\batch_only"
+	interface_switch (switch):		"$\interface\new_graphical"
 
-	license_switch (switch):		"$\license\no_license"
+	time_lock (switch):		"$\license\time_lock"
 
-	communications (switch):		"$\no_communication"
+	communications (switch):		"$\communication"
 
-	status (communications):		"$\status"
+	all status (communications):		"$\status"
+		exclude
+			"no_dotnet"; "CVS"; 
+		end
+
+	ipc (communications):		"$\ipc"
 
 	debuging_class (communications):		"$\debug"
 
-	interface:		"$EIFFEL_SRC\Eiffel\interface"
+	debuging_formatters (communications):		"$\formatters"
 
-	interface_shared (interface):		"$\shared"
+	io_watcher (communications):		"$\spec\mswin"
 
-	all tty (interface):		"$\tty"
+	all lex:		"$EIFFEL_SRC\library\lex"
+
+	all interface:		"$EIFFEL_SRC\Eiffel\interface"
 		exclude
-			"eb_flat_short_data.e"; 
+			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "xml_implementation"; "preferences"; "no_dotnet"; 
 		end
 
-	preference_tool (interface):		"$\graphical\preference_tool"
-
-	profile_tool (interface):		"$\graphical\profile_tool"
+	all tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
+		exclude
+			"eb_diagram_html_generator.e"; "eb_gui_preferences.e";
+		end
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+		exclude
+			"clib"; "spec"; 
+		end
 
-	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+	all cli_debugger:		"$EIFFEL_SRC\Eiffel\library\cli_debugger"
 
-	dotnet_helpers:		"$EIFFEL_SRC/dotnet/helpers"
+	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
+	all eac_serialization:		"$EIFFEL_SRC\dotnet\consumer\serialization"
+
+	eac_documentation:		"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
+
 	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
 		exclude
-			"enterprise"; "free"; "CVS"; 
+			"free"; "command_line"; "CVS"; "unix"; 
 		end
 
 	all keygen:		"$EIFFEL_SRC\library\keygen"
@@ -389,14 +416,9 @@ cluster
 			"eiffel_envision_10"; "unix"; "CVS"; "EIFGEN"; 
 		end
 
-	all preferences:		"$EIFFEL_SRC\library\preferences"
+	all graph:		"$EIFFEL_SRC\library\graph"
 		exclude
-			"xml_implementation"; "graphical"; 
-		end
-
-	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src"
-		exclude
-			"cache.e"; 
+			"CVS"; 
 		end
 
 	all doc_manager:		"$EIFFEL_SRC\dotnet\VisualStudio\tools\documentation_manager\generated"
@@ -433,6 +455,12 @@ external
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
 		"mscorsn.lib",
-		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Client\Clib\msc\ecom.lib"
+		"htmlhelp.lib",
+		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Client\Clib\msc\ecom.lib",
+		"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
+		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
+		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
+		"$(EIFFEL_SRC)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_debugger.lib"
 
 end

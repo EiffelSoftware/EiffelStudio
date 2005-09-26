@@ -266,8 +266,14 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			-- Display a font dialog and let a user select the desired font directly.
 		local
 			font_dialog: EV_FONT_DIALOG
+			fontable: EV_FONTABLE
 		do
 			create font_dialog
+			fontable ?= internal_gb_ev_any.first
+			check
+				first_item_fontable: fontable /= Void
+			end
+			font_dialog.set_font (fontable.font)
 			font_dialog.show_modal_to_window (parent_window (Current))
 			if font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				execute_agent (font_dialog.font)

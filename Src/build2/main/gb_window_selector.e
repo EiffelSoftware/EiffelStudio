@@ -873,13 +873,13 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					l_class_as := l_eiffel_parser.root_node
 					create l_visitor
 					l_class_as.process (l_visitor)
-					file_contents.replace_substring (new_name.as_upper, l_visitor.name_start_position + 1, l_visitor.name_end_position)
+					file_contents.replace_substring (new_name.as_upper, l_visitor.name_start_position, l_visitor.name_end_position)
 					
 						-- As we are performing two replaces,we must update the character indexes of the second, by the difference
 						-- in characters between what was replaced, and the new string of the first replacement.
 					character_difference := old_name.count - new_name.count
 					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper,
-						l_visitor.parent_start_position + 1 - character_difference, l_visitor.parent_end_position - character_difference)
+						l_visitor.parent_start_position - character_difference, l_visitor.parent_end_position - character_difference)
 						
 						-- Now replace the class name at end after comment.
 					replace_final_class_name_comment (file_contents, old_name.as_upper, new_name.as_upper)
@@ -906,7 +906,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					l_class_as := l_eiffel_parser.root_node
 					create l_visitor
 					l_class_as.process (l_visitor)
-					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper, l_visitor.name_start_position + 1, l_visitor.name_end_position)
+					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper, l_visitor.name_start_position, l_visitor.name_end_position)
 						
 	
 						-- Now replace the class name at end after comment.

@@ -295,6 +295,14 @@ feature -- Status setting
 			end
 		end
 		
+	flush is
+			-- Remove `object' if it has been deleted.
+		do
+			if object /= Void and then object_handler.deleted_objects.has (object.id) then
+				make_empty
+			end
+		end
+		
 feature {GB_COMMAND_ADD_CONSTANT, GB_COMMAND_DELETE_CONSTANT, GB_PIXMAP_SETTINGS_DIALOG, GB_CONSTANT} -- Implementation
 		
 	constant_added (a_constant: GB_CONSTANT) is

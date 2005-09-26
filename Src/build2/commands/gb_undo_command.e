@@ -46,6 +46,11 @@ feature {NONE} -- Initialization
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_undo)
 			set_name ("Undo")
 			set_menu_name ("Undo")
+			add_agent (agent execute)
+				-- Now add an accelerator for `Current'.
+			set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_z),
+				True, False, False))
 		end
 		
 feature -- Access

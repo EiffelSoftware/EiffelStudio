@@ -18,7 +18,12 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
-
+		
+	GB_WIDGET_UTILITIES
+		undefine
+			copy, is_equal, default_create
+		end
+		
 feature {NONE} -- Implementation
 
 	docked_object_editor: GB_OBJECT_EDITOR is
@@ -53,8 +58,10 @@ feature {NONE} -- Implementation
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			local_item: GB_OBJECT_EDITOR
+			cursor: CURSOR
 		do
 			local_all_editors := all_editors
+			cursor := local_all_editors.cursor
 			from
 				local_all_editors.start
 			until
@@ -76,6 +83,7 @@ feature {NONE} -- Implementation
 
 				local_all_editors.forth
 			end
+			local_all_editors.go_to (cursor)
 		end
 
 	update_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE]) is
@@ -83,8 +91,10 @@ feature {NONE} -- Implementation
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			local_item: GB_OBJECT_EDITOR
+			cursor: CURSOR
 		do
 			local_all_editors := all_editors
+			cursor := local_all_editors.cursor
 			from
 				local_all_editors.start
 			until
@@ -99,6 +109,7 @@ feature {NONE} -- Implementation
 				end
 				local_all_editors.forth
 			end
+			local_all_editors.go_to (cursor)
 		end
 		
 	update_all_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE]) is
@@ -106,8 +117,10 @@ feature {NONE} -- Implementation
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			local_item: GB_OBJECT_EDITOR
+			cursor: CURSOR
 		do
 			local_all_editors := all_editors
+			cursor := local_all_editors.cursor
 			from
 				local_all_editors.start
 			until
@@ -122,6 +135,7 @@ feature {NONE} -- Implementation
 				end
 				local_all_editors.forth
 			end
+			local_all_editors.go_to (cursor)
 		end
 		
 	rebuild_associated_editors (object_id: INTEGER) is
@@ -132,8 +146,10 @@ feature {NONE} -- Implementation
 			an_object: GB_OBJECT
 			locked_in_here: BOOLEAN
 			current_parent_window: EV_WINDOW
+			cursor: CURSOR
 		do
 			local_all_editors := all_editors
+			cursor := local_all_editors.cursor
 			from
 				local_all_editors.start
 			until
@@ -154,10 +170,10 @@ feature {NONE} -- Implementation
 					if current_parent_window /= Void and locked_in_here then
 						current_parent_window.unlock_update
 					end
-					
 				end
 				local_all_editors.forth
 			end
+			local_all_editors.go_to (cursor)
 		end
 		
 	destroy_floating_editors is
@@ -169,7 +185,7 @@ feature {NONE} -- Implementation
 			from
 				floating_object_editors.start
 			until
-				floating_object_editors.is_empty
+				floating_object_editors.off
 			loop
 				a_window_parent := floating_object_editors.item.parent_window (floating_object_editors.item)
 				check
@@ -183,6 +199,32 @@ feature {NONE} -- Implementation
 			no_floating_editors: floating_object_editors.is_empty
 		end
 		
+	flush_all is
+			-- For every item in `floating_object_editors', flush their
+			-- contents so that any objects that have been deleted are
+			-- no longer targeted.
+		local
+			current_editor: GB_OBJECT_EDITOR
+		do
+			docked_object_editor.flush
+			from
+				floating_object_editors.start
+			until
+				floating_object_editors.off
+			loop
+				current_editor := floating_object_editors.item
+				current_editor.flush
+				if current_editor.object = Void then
+					remove_floating_object_editor (parent_window (current_editor))
+					parent_window (current_editor).destroy
+				else
+						-- Only step through the iteration if we have not just removed
+						-- the item.
+					floating_object_editors.forth
+				end
+			end
+		end
+		
 	force_name_change_completion_on_all_editors is
 			-- Force all object editors that are editing an object
 			-- to update their object to use either the newly enterd name
@@ -191,8 +233,10 @@ feature {NONE} -- Implementation
 			-- renaming, we can take into account the current name.
 		local
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+			cursor: CURSOR
 		do
 			local_all_editors := all_editors
+			cursor := local_all_editors.cursor
 			from
 				local_all_editors.start
 			until
@@ -203,6 +247,7 @@ feature {NONE} -- Implementation
 				end
 				local_all_editors.forth
 			end
+			local_all_editors.go_to (cursor)
 		end
 
 	new_object_editor_empty is
@@ -266,12 +311,15 @@ feature {NONE} -- Implementation
 			
 		local
 			editor: GB_OBJECT_EDITOR
+			cursor: CURSOR
 		do
 			editor ?= a_window.item
 			check
 				editor /= Void
 			end
+			cursor := floating_object_editors.cursor
 			floating_object_editors.prune_all (editor)
+			floating_object_editors.go_to (cursor)
 		ensure
 			-- Object editor is not in floating object editors.
 		end

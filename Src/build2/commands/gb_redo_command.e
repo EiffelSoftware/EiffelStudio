@@ -46,6 +46,11 @@ feature {NONE} -- Initialization
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_redo)
 			set_name ("Redo")
 			set_menu_name ("Redo")
+			add_agent (agent execute)
+				-- Now add an accelerator for `Current'.
+			set_accelerator (create {EV_ACCELERATOR}.make_with_key_combination (
+				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_y),
+				True, False, False))
 		end
 		
 feature -- Access

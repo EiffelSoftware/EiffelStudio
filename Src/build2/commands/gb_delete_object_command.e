@@ -37,6 +37,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -130,6 +135,9 @@ feature {GB_WIDGET_SELECTOR, GB_CUT_OBJECT_COMMAND} -- Basic operation
 					command_delete_window.execute
 				end
 			end
+				-- Now flush all object editors so that they no longer show the deleted object.
+			flush_all	
+				
 			--| FIXME we have not really performed the delete, as the object still exists.
 			--| Need to clean up. May not be possible, unless we switch to XML representations and
 			--| rebuild on the undo. Could be tricky.

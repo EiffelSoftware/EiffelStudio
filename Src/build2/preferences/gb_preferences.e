@@ -41,12 +41,21 @@ feature -- Basic operations
 	show_preference_window (a_window: EV_TITLED_WINDOW) is
 			-- Ensure that `preference_window' is displayed.
 		do				
-			create preference_window.make (preferences, a_window)				
+			create preference_window.make (preferences, a_window)	
+			preference_window.show_actions.extend (agent set_focus_to_preference_window_left_list)
 			preference_window.show
-		end		
+		end
 
 feature {NONE} -- Implementation
 
+	set_focus_to_preference_window_left_list is
+			-- Assign keyboard focus to `left_list' of `preference_window'.
+		require
+			preference_window_not_void: preference_window /= Void
+		do
+			preference_window.left_list.set_focus
+		end
+		
 	preference_window: GB_PREFERENCES_WINDOW
 			-- Preference window used to allow editing of the preferences.
 

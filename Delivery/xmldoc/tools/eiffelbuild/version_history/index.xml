@@ -20,6 +20,13 @@
 			<item>Fixed bug where modifying the &quot;User can resize&quot; property of a window while the tools were always shown on top stopped the tools from being shown on top.</item>
 			<item>Added support for multi-line tooltips.</item>
 			<item>Added support for `is_item_expanded' from EV_SPLIT_AREA.</item>
+			<item>Added the ability to specify a directory for generation, into which location all files are to be generated.</item>
+			<item>Event selection dialogs now contain the name of the object to which they refer in their title for cases where multiple dialogs are open simultaneously</item>
+			<item>The project settings dialog is now completely navigatable via the keyboard on Windows platforms.</item>
+			<item>Added support for Ctrl+Z and Ctrl+Y to navigate through the history.</item>
+			<item>The font selection dialog now shows the currently selected font when displayed.</item>
+			<item>Deleting an object that is contained within an object editor now clears the contents of the object editor.</item>
+			<item>Preferences window now has the focus when displayed so it is fully navigatable via the keyboard.</item>
 		</list>
 		<heading>
 			<size>2</size>5.6 Release

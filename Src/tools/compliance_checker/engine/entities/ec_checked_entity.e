@@ -115,7 +115,8 @@ feature {NONE} -- Basic Operations
 			-- Checks entity to see if it is Eiffel-compliant.
 		indexing
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
-		deferred
+		do
+			--| Do nothing...
 		end
 			
 feature {NONE} -- Query
@@ -179,11 +180,13 @@ feature {NONE} -- Implementation
 		local
 			l_attributes: NATIVE_ARRAY [SYSTEM_OBJECT]
 			l_cls_comp_attr: CLS_COMPLIANT_ATTRIBUTE
+			l_eiffel_attr: EIFFEL_CONSUMABLE_ATTRIBUTE
 			l_enum: IENUMERATOR
 			l_compliant: BOOLEAN
+			l_type: SYSTEM_TYPE
 		do
 			l_compliant := True
-			l_attributes := a_provider.get_custom_attributes (True)
+			l_attributes := a_provider.get_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, True)
 			if l_attributes /= Void and then l_attributes.count > 0 then
 				from
 					l_enum := l_attributes.get_enumerator
@@ -199,6 +202,28 @@ feature {NONE} -- Implementation
 				end
 			end
 			internal_is_compliant := l_compliant
+			
+			l_type ?= a_provider
+			if l_type /= Void and then l_type.name.is_equal (("ANY").to_cil) then
+				l_type := l_type
+			end
+			
+			l_compliant := True
+			l_attributes := a_provider.get_custom_attributes ({EIFFEL_CONSUMABLE_ATTRIBUTE}, True)
+			if l_attributes /= Void and then l_attributes.count > 0 then
+				from
+					l_enum := l_attributes.get_enumerator
+				until
+					not l_enum.move_next or else
+					l_eiffel_attr /= Void 
+				loop
+					l_eiffel_attr ?= l_enum.current_
+					if l_eiffel_attr /= Void then
+						l_compliant := l_eiffel_attr.consumable
+					end
+				end
+			end
+			internal_is_eiffel_compliant := l_compliant
 		end
 
 end -- class EC_CHECKED_ENTITY

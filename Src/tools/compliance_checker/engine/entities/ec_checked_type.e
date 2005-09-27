@@ -10,7 +10,8 @@ class
 inherit		
 	EC_CACHABLE_CHECKED_ENTITY
 		redefine
-			check_extended_compliance
+			check_extended_compliance,
+			check_eiffel_compliance
 		end
 		
 create
@@ -114,21 +115,36 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		local
 			l_compliant: BOOLEAN
-			l_type: SYSTEM_TYPE
+			l_type: SYSTEM_TYPE		
 			l_element_type: like element_checked_type
+			l_checked_asm: EC_CHECKED_ASSEMBLY
+			l_asm: ASSEMBLY
 		do
-			l_type := type
-			l_compliant := not l_type.is_pointer
-			if l_compliant and has_element_checked_type then
-				l_element_type := element_checked_type
-				l_compliant := l_element_type.is_eiffel_compliant
-				if not l_compliant then
-					non_eiffel_compliant_reason := l_element_type.non_eiffel_compliant_reason
+			Precursor {EC_CACHABLE_CHECKED_ENTITY}
+			if internal_is_eiffel_compliant then
+				l_asm := type.assembly
+				l_checked_asm := checked_assembly (l_asm)
+				internal_is_marked := l_checked_asm.is_marked
+				l_compliant := l_checked_asm.is_compliant
+				if l_compliant then
+					l_type := type
+					l_compliant := not l_type.is_pointer
+					if l_compliant and has_element_checked_type then
+						l_element_type := element_checked_type
+						l_compliant := l_element_type.is_eiffel_compliant
+						if not l_compliant then
+							non_eiffel_compliant_reason := l_element_type.non_eiffel_compliant_reason
+						end
+					else
+						non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
+					end
+				else
+					non_eiffel_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_eiffel_consumable
 				end
+				internal_is_eiffel_compliant := l_compliant
 			else
-				non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
+				non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_eiffel_consumable
 			end
-			internal_is_eiffel_compliant := l_compliant
 		end
 		
 feature {NONE} -- Query {EC_CHECKED_ENTITY}

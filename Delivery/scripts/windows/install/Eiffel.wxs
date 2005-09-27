@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="windows-1252"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Product Name="EiffelStudio 5.6" Id="0A21C24B-51D8-49b9-ABD2-BD8E7BF59BC6"
-			Language="1033" Codepage="1252" Version="5.6" Manufacturer="Eiffel Software">
+	<Product Name="EiffelStudio 5.7" Id="FFE8FDEB-9EFE-41f5-AEEB-E739648921CD"
+			Language="1033" Codepage="1252" Version="5.7" Manufacturer="Eiffel Software">
 
-		<Package Id="????????-????-????-????-????????????" Keywords="Installer" Description="EiffelStudio 5.6 Installer"
+		<Package Id="????????-????-????-????-????????????" Keywords="Installer" Description="EiffelStudio 5.7 Installer"
 			Comments="EiffelStudio is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software"
 			InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 
 		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="registry" Win64="$(var.IsWin64)" /></Property>
-		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Type="registry" Win64="$(var.IsWin64)" /></Property>
+		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel57\ec" Name="ISE_C_COMPILER" Type="registry" Win64="$(var.IsWin64)" /></Property>
 		<Condition Message="This installation can only run in full UI mode.">Installed OR UILevel = 5</Condition>
 
-		<Media Id="1" Cabinet="Sample.cab" EmbedCab="yes" DiskPrompt="EiffelStudio 5.6 Installation CD-ROM" />
+		<Media Id="1" Cabinet="Sample.cab" EmbedCab="yes" DiskPrompt="EiffelStudio 5.7 Installation CD-ROM" />
 
 		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="INSTALLDIR" Name="Eiffel56">
+			<Directory Id="INSTALLDIR" Name="Eiffel57">
 				<Component Id="display_icon" Guid="4FBFB3EE-4F75-46C7-8464-2710DD1E44A7" Win64="$(var.IsWin64)" >
 					<Registry Id="registry" Root="HKLM" Key="Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]" Name="DisplayIcon" Type="string" Value="[INSTALLDIR]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe,0" />
 				</Component>
@@ -46,7 +46,7 @@
 			</Directory>
 		</Directory>
 
-		<Feature Id="Complete" Title="EiffelStudio 5.6" Description="The complete package."
+		<Feature Id="Complete" Title="EiffelStudio 5.7" Description="The complete package."
 				TypicalDefault="install" Display="expand" Level="3" ConfigurableDirectory="INSTALLDIR">
 
 			<Feature Id="MainProgram" Title="Program" TypicalDefault="install" Level="3" Display="hidden">

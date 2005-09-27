@@ -6,6 +6,12 @@ indexing
 class
 	METHOD_RETRIEVER
 
+inherit
+	SHARED_LOGGER
+		export
+			{NONE} all
+		end
+
 feature -- Implementation
 
 	property_getter (prop: PROPERTY_INFO): METHOD_INFO is
@@ -17,6 +23,9 @@ feature -- Implementation
 				Result := prop.get_get_method_boolean (True)
 			end
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			retried := True
 			retry
 		end
@@ -30,6 +39,9 @@ feature -- Implementation
 				Result := prop.get_set_method_boolean (True)
 			end
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			retried := True
 			retry
 		end
@@ -43,6 +55,9 @@ feature -- Implementation
 				Result := event.get_add_method_boolean (True)
 			end
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			retried := True
 			retry
 		end
@@ -56,6 +71,9 @@ feature -- Implementation
 				Result := event.get_remove_method_boolean (True)
 			end
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			retried := True
 			retry
 		end
@@ -69,6 +87,9 @@ feature -- Implementation
 				Result := event.get_raise_method_boolean (True)
 			end
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			retried := True
 			retry
 		end

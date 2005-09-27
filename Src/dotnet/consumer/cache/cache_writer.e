@@ -42,6 +42,11 @@ inherit
 			{ANY} clr_version
 		end
 
+	SHARED_LOGGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -233,6 +238,9 @@ feature -- Basic Operations
 			end
 			guard.unlock
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			l_retried := True
 			retry
 		end
@@ -284,6 +292,9 @@ feature -- Basic Operations
 			end
 			guard.unlock
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to fully unconsuming the assembly '{0}'.", a_path))
 			l_retried := True
 			retry
@@ -323,6 +334,9 @@ feature -- Basic Operations
 			end
 			guard.unlock
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			l_retried := True
 			retry
 		end
@@ -381,6 +395,9 @@ feature -- Basic Operations
 			end
 			guard.unlock
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			l_retried := True
 			retry
 		end		
@@ -548,6 +565,9 @@ feature {NONE} -- Implementation
 			end
 			guard.unlock
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to remove assembly '{0}'.", a_path))
 			l_retried := True
 			retry

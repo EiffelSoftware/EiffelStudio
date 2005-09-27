@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOGGER
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	deserialized_object: ANY
@@ -50,6 +55,9 @@ feature -- Basic Operations
 		ensure
 			deserialized_object_set_if_no_error: successful implies deserialized_object /= Void
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			retried := True
 			retry
 		end

@@ -80,25 +80,26 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			l_member: like member
 			l_compliant: BOOLEAN
 		do
-			l_member := member	
-			if (not internal_is_compliant or not internal_is_marked) and then (l_member.is_public or l_member.is_family or l_member.is_family_or_assembly) then
-				Precursor {EC_CHECKED_MEMBER_METHOD_BASE}
-				if internal_is_eiffel_compliant then
-					l_compliant := are_parameters_compliant (True)
-					if l_compliant then
-						if l_member.return_type /= Void then
-							l_compliant := checked_return_type.is_eiffel_compliant
-							if not l_compliant then
-								non_eiffel_compliant_reason := non_compliant_reasons.reason_method_returns_non_complaint_type
+			Precursor {EC_CHECKED_MEMBER_METHOD_BASE}
+			if internal_is_eiffel_compliant then
+				l_member := member	
+				if (not internal_is_compliant or not internal_is_marked) and then (l_member.is_public or l_member.is_family or l_member.is_family_or_assembly) then
+					Precursor {EC_CHECKED_MEMBER_METHOD_BASE}
+					if internal_is_eiffel_compliant then
+						l_compliant := are_parameters_compliant (True)
+						if l_compliant then
+							if l_member.return_type /= Void then
+								l_compliant := checked_return_type.is_eiffel_compliant
+								if not l_compliant then
+									non_eiffel_compliant_reason := non_compliant_reasons.reason_method_returns_non_complaint_type
+								end
 							end
+						else
+							non_eiffel_compliant_reason := non_compliant_reasons.reason_parameters_uses_non_complaint_types
 						end
-					else
-						non_eiffel_compliant_reason := non_compliant_reasons.reason_parameters_uses_non_complaint_types
 					end
+					internal_is_eiffel_compliant := l_compliant
 				end
-				internal_is_eiffel_compliant := l_compliant
-			else
-				internal_is_eiffel_compliant := True
 			end
 		end
 			

@@ -65,16 +65,17 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			l_member: like member
 			l_compliant: BOOLEAN
 		do
-			l_member := member
-			if not internal_is_compliant then
-				l_compliant := checked_property_type.is_eiffel_compliant
-				if not l_compliant then
-					non_eiffel_compliant_reason := non_compliant_reasons.reason_property_uses_non_complaint_type				
-				end
-				internal_is_eiffel_compliant := l_compliant
-			else
-				internal_is_eiffel_compliant := True
-			end			
+			Precursor {EC_CHECKED_MEMBER}
+			if internal_is_eiffel_compliant then
+				l_member := member
+				if not internal_is_compliant then
+					l_compliant := checked_property_type.is_eiffel_compliant
+					if not l_compliant then
+						non_eiffel_compliant_reason := non_compliant_reasons.reason_property_uses_non_complaint_type				
+					end
+					internal_is_eiffel_compliant := l_compliant
+				end		
+			end
 		end
 			
 end -- class EC_CHECKED_MEMBER_PROPERTY

@@ -18,6 +18,14 @@ feature -- Access
 	reason_field_marked_non_cls_compliant: STRING is "Field was marked with 'ClsCompliantAttribute (false)'"
 	reason_event_marked_non_cls_compliant: STRING is "Event was marked with 'ClsCompliantAttribute (false)'"
 	reason_member_marked_non_cls_compliant: STRING is "Member was marked with 'ClsCompliantAttribute (false)'"
+	reason_assembly_marked_non_eiffel_consumable: STRING is "Assembly was marked with 'EIFFEL_CONSUMABLE_ATTRIBUTE (false)'"
+	reason_type_marked_non_eiffel_consumable: STRING is "Type was marked with 'EIFFEL_CONSUMABLE_ATTRIBUTE (false)'"
+	reason_constructor_marked_non_eiffel_consumable: STRING is "Assembly was marked with 'EIFFEL_CONSUMABLE_ATTRIBUTE (false)'"
+	reason_method_marked_non_eiffel_consumable: STRING is "Assembly was marked with 'EIFFEL_CONSUMABLE_ATTRIBUTE (false)'"
+	reason_property_marked_non_eiffel_consumable: STRING is "Assembly was marked with 'EIFFEL_CONSUMABLE_ATTRIBUTE (false)'"
+	reason_field_marked_non_eiffel_consumable: STRING is "Assembly was marked with 'EIFFEL_CONSUMABLE_ATTRIBUTE (false)'"
+	reason_event_marked_non_eiffel_consumable: STRING is "Assembly was marked with 'EIFFEL_CONSUMABLE_ATTRIBUTE (false)'"
+	reason_member_marked_non_eiffel_consumable: STRING is "Assembly was marked with 'EIFFEL_CONSUMABLE_ATTRIBUTE (false)'"
 	
 		-- Entity name
 	reason_type_name_is_non_compliant: STRING is "Type name is non-compliant"

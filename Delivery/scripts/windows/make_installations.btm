@@ -62,17 +62,17 @@ cdd %INIT_DIR\install
 
 remtrace Preparing Free edition
 candle -dIsWin64=%IS_WIN64% -dEDITION="free" -dEDITIONNAME="Free Edition" Eiffel.wxs
-light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Free\Eiffel56.msi
+light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Free\Eiffel57.msi
 del Eiffel.wixobj
 
 remtrace Preparing University edition
 candle -dIsWin64=%IS_WIN64% -dEDITION="university" -dEDITIONNAME="University Edition" Eiffel.wxs
-light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\University\Eiffel56.msi
+light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\University\Eiffel57.msi
 del Eiffel.wixobj
 
 remtrace Preparing Enterprise edition
 candle -dIsWin64=%IS_WIN64% -dEDITION="enterprise" -dEDITIONNAME="Enterprise Edition" Eiffel.wxs
-light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Enterprise\Eiffel56.msi
+light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Enterprise\Eiffel57.msi
 del Eiffel.wixobj
 
 remtrace Your deliveries are now ready

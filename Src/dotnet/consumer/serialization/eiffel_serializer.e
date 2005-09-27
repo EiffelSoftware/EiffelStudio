@@ -14,6 +14,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOGGER
+		export
+			{NONE} all
+		end
+
 feature -- Status report
 
 	successful: BOOLEAN
@@ -56,6 +61,9 @@ feature -- Basic Operations
 				error_message := "Cannot store into " + path
 			end
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			retried := True
 			retry
 		end

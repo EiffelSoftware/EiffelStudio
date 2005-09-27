@@ -295,6 +295,9 @@ feature -- Basic Operation
 			non_void_properties: consumed_type.properties /= Void
 			non_void_events: consumed_type.events /= Void
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			rescued := True
 			retry
 		end

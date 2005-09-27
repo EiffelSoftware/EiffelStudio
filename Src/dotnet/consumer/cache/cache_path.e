@@ -24,7 +24,12 @@ inherit
 			{NONE} all
 			{ANY} clr_version
 		end
-		
+	
+	SHARED_LOGGER
+		export
+			{NONE} all
+		end
+
 feature {CACHE_READER} -- Access
 		
 	relative_assembly_path_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): STRING is
@@ -177,6 +182,9 @@ feature {CACHE_READER} -- Access
 			exist: Result /= Void
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			retried := True
 			retry
 		end		

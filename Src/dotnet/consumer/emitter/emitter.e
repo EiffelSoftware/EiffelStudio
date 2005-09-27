@@ -36,6 +36,11 @@ inherit
 			{NONE} all
 		end
 		
+	SHARED_LOGGER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -343,6 +348,9 @@ feature {NONE} -- Implementation
 			end	
 			cache_writer.add_assembly (a_path)
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			cache_writer.clean_cache
 		end
 
@@ -359,6 +367,9 @@ feature {NONE} -- Implementation
 			end		
 			cache_writer.remove_recursive_assembly (a_path)
 		rescue
+			debug ("log_exceptions")
+				log_last_exception
+			end
 			cache_writer.clean_cache
 		end
 		

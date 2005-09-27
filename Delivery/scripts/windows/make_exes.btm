@@ -1,8 +1,12 @@
 REM Clean up the files
 remtrace Update all source files.
 cdd %EIFFEL_SRC
+mkdir tools
 exprt -r %DEFAULT_CVS_TAG -d Eiffel Eiffel
 exprt -r %DEFAULT_CVS_TAG -d dotnet "Src/dotnet"
+cd tools
+exprt -r %DEFAULT_CVS_TAG -d compliance_checker "Src/tools/compliance_checker"
+cdd %EIFFEL_SRC
 
 remtrace Compile C code of the libraries
 remtrace "A tout seigneur tout honneur", let's start with the run-time
@@ -275,7 +279,6 @@ move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
 remtrace Recompile Custom actions for installation program
 cdd %EIFFEL_SRC
-mkdir tools
 cd tools
 exprt -r %DEFAULT_CVS_TAG -d setup "Src/tools/setup"
 cd %EIFFEL_SRC\tools\setup\studio

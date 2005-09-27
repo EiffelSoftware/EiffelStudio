@@ -175,7 +175,9 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
-	dotnet_helpers:		"$EIFFEL_SRC/dotnet/helpers"
+	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
+
+	dotnet_logger:		"$EIFFEL_SRC\dotnet\helpers\logger\classic"
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 

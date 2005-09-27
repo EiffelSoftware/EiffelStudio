@@ -256,6 +256,8 @@ cluster
 
 	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
 
+	dotnet_logger:		"$EIFFEL_SRC\dotnet\helpers\logger\classic"
+
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
 	all eac_serialization:		"$EIFFEL_SRC\dotnet\consumer\serialization"

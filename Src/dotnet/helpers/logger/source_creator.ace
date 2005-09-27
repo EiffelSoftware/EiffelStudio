@@ -27,7 +27,10 @@ cluster
 			namespace ("Base")
 		end
 
-	helpers:		"$EIFFEL_SRC\dotnet\helpers"
+	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
+		exclude
+			"CVS"; "classic";
+		end
 		
 assembly
 	"mscorlib":	"${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="base_libraries" Guid="4004275F-B3A3-4A76-A234-BE50E5C3382A" Language="0" Version="5.6">
+	<Module Id="base_libraries" Guid="4004275F-B3A3-4A76-A234-BE50E5C3382A" Language="0" Version="5.7">
 		<Package Id="4004275F-B3A3-4A76-A234-BE50E5C3382A" Keywords="MergeModule, MSI, Database" Description="Base libraries" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" Comments="Base libraries" />
 	<Directory Id="TARGETDIR" Name="SourceDir">
 		<Directory Id="Application" Name=".">
@@ -859,12 +859,6 @@
 							</Component>
 						</Directory>
 						<Directory Id="structures" Name="STRUCT~1" LongName="structures">
-							<Directory Id="table_eiffel3" Name="TABLE_~1" LongName="table_eiffel3">
-								<Component Id="table_eiffel3" Guid="3B4999AB-4FAF-4282-B7CC-DD38E346F405">
-									<File Id="array2.e" Name="array2.e" KeyPath="yes" />
-									<File Id="hash_table.e2" Name="HASH_T~3.E" LongName="hash_table.e" />
-								</Component>
-							</Directory>
 							<Directory Id="list" Name="list">
 								<Component Id="list" Guid="7A5601D3-7D7A-4BC3-8017-00F811B8016F">
 									<File Id="arrayed_list.e" Name="ARRAYE~2.E" LongName="arrayed_list.e" KeyPath="yes" />
@@ -922,7 +916,7 @@
 							</Directory>
 							<Directory Id="table" Name="table">
 								<Component Id="table" Guid="56050468-5224-42C0-83BC-F85CB8122D59">
-									<File Id="array2.e1" Name="array2.e" KeyPath="yes" />
+									<File Id="array2.e" Name="array2.e" KeyPath="yes" />
 									<File Id="hash_table.e" Name="HASH_T~1.E" LongName="hash_table.e" />
 								</Component>
 							</Directory>
@@ -1019,21 +1013,30 @@
 								</Component>
 							</Directory>
 						</Directory>
-						<Directory Id="desc" Name="desc">
-							<Directory Id="general" Name="general">
-								<Component Id="general" Guid="A8CF4BEC-CF0F-4C77-B212-DB6743A3D1A5">
-									<File Id="shared_library_routine.e" Name="SHARED~3.E" LongName="shared_library_routine.e" KeyPath="yes" />
-									<File Id="shared_library_constants.e" Name="SHARED~2.E" LongName="shared_library_constants.e" />
-									<File Id="shared_library.e" Name="SHARED~1.E" LongName="shared_library.e" />
-								</Component>
-							</Directory>
-							<Directory Id="spec" Name="spec">
-								<Directory Id="win32" Name="win32">
-									<Component Id="win32" Guid="2116631F-99BA-4C7B-879A-1B0D004D7714">
-										<File Id="dll_32_routine.e" Name="DLL_32~1.E" LongName="dll_32_routine.e" KeyPath="yes" />
-										<File Id="dll_32.e" Name="dll_32.e" />
+					</Directory>
+					<Directory Id="obsolete" Name="obsolete">
+						<Directory Id="base2" Name="base">
+							<Directory Id="desc" Name="desc">
+								<Directory Id="general" Name="general">
+									<Component Id="general" Guid="A8CF4BEC-CF0F-4C77-B212-DB6743A3D1A5">
+										<File Id="shared_library_routine.e" Name="SHARED~3.E" LongName="shared_library_routine.e" KeyPath="yes" />
+										<File Id="shared_library_constants.e" Name="SHARED~2.E" LongName="shared_library_constants.e" />
+										<File Id="shared_library.e" Name="SHARED~1.E" LongName="shared_library.e" />
 									</Component>
 								</Directory>
+								<Directory Id="spec" Name="spec">
+									<Directory Id="win32" Name="win32">
+										<Component Id="win32" Guid="2116631F-99BA-4C7B-879A-1B0D004D7714">
+											<File Id="dll_32_routine.e" Name="DLL_32~1.E" LongName="dll_32_routine.e" KeyPath="yes" />
+											<File Id="dll_32.e" Name="dll_32.e" />
+										</Component>
+									</Directory>
+								</Directory>
+							</Directory>
+							<Directory Id="table_eiffel3" Name="TABLE_~1" LongName="table_eiffel3">
+								<Component Id="table_eiffel3" Guid="3B4999AB-4FAF-4282-B7CC-DD38E346F405">
+									<File Id="hash_table.e2" Name="HASH_T~3.E" LongName="hash_table.e" />
+								</Component>
 							</Directory>
 						</Directory>
 					</Directory>

@@ -2527,6 +2527,9 @@ feature {NONE} -- Implementation
 					-- Update the address manager if needed.
 				address_manager.refresh
 				if new_class_stone /= Void then
+						-- Text is now editable.
+					editor_tool.text_area.set_read_only (False)
+
 						-- class stone was dropped
 					create class_file.make (new_class_stone.class_i.file_name)
 					class_text_exists := class_file.exists

@@ -72,7 +72,7 @@ cluster
 
 	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
 		exclude
-			"CVS"; "example"; 
+			"CVS"; "example"; "classic";
 		end
 		
 	all compliance_checker:		"$EIFFEL_SRC\tools\compliance_checker\engine"

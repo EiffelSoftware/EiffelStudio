@@ -47,7 +47,6 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			-- Checks entity's CLS-compliance.
 		local
 			l_checked_type: EC_CHECKED_TYPE
-			l_type: SYSTEM_TYPE
 		do
 			Precursor {EC_CHECKED_ENTITY}
 			if internal_is_compliant and then not internal_is_marked then
@@ -66,7 +65,6 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 			-- Checks entity to see if it is Eiffel-compliant.
 		local
 			l_checked_type: EC_CHECKED_TYPE
-			l_type: SYSTEM_TYPE
 		do
 			Precursor {EC_CHECKED_ENTITY}
 			if internal_is_eiffel_compliant then

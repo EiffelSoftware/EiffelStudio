@@ -18,6 +18,8 @@ remtrace mel
 exprt -r $DEFAULT_CVS_TAG -d mel Src/library/mel
 remtrace net
 exprt -r $DEFAULT_CVS_TAG -d net Src/library/net
+remtrace obsolete
+exprt -r $DEFAULT_CVS_TAG -d obsolete Src/library/obsolete
 remtrace parse
 exprt -r $DEFAULT_CVS_TAG -d parse Src/library/parse
 remtrace preferences

@@ -30,14 +30,6 @@ feature -- Access
 	assembly: ASSEMBLY
 			-- Assembly that was examined.
 		
-feature {NONE} -- Basic Operations
-
-	check_eiffel_compliance is
-			-- Checks entity to see if it is Eiffel-compliant.
-		do
-			internal_is_eiffel_compliant := True
-		end
-		
 feature {NONE} -- Query {EC_CHECKED_ENTITY}
 
 	custom_attribute_provider: ICUSTOM_ATTRIBUTE_PROVIDER is

@@ -8,10 +8,12 @@ indexing
 using System;
 using System.Reflection;
 using EiffelSoftware.Runtime.Types;
+using EiffelSoftware.Runtime.CA;
 
 namespace EiffelSoftware.Runtime {
 
-[CLSCompliantAttribute (false)]
+[EIFFEL_CONSUMABLE_ATTRIBUTE (false)]
+[CLSCompliant (false)]
 [System.Runtime.InteropServices.ComVisibleAttribute (false)]
 public interface EIFFEL_TYPE_INFO {
 /*

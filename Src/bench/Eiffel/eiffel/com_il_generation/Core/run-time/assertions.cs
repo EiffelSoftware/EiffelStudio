@@ -6,11 +6,13 @@ indexing
 */
 	
 using System;
+using EiffelSoftware.Runtime.CA;
 
 namespace EiffelSoftware.Runtime
 {
 
-[CLSCompliantAttribute (false)]
+[EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+[CLSCompliant(false)]
 [Serializable]
 public class ASSERTIONS	{
 

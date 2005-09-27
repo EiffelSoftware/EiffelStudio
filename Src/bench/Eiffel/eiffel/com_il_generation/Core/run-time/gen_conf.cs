@@ -9,11 +9,13 @@ indexing
 using System;
 using System.Reflection;
 using EiffelSoftware.Runtime.Types;
+using EiffelSoftware.Runtime.CA;
 
 namespace EiffelSoftware.Runtime {
 
+[EIFFEL_CONSUMABLE_ATTRIBUTE (false)]
+[CLSCompliant (false)]
 [Serializable]
-[CLSCompliantAttribute (false)]
 public class GENERIC_CONFORMANCE {
 
 	public static void compute_type (

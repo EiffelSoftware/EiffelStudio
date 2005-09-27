@@ -14,7 +14,8 @@ using EiffelSoftware.Runtime.Types;
 
 namespace EiffelSoftware.Runtime {
 
-[CLSCompliantAttribute (false)]
+[EIFFEL_CONSUMABLE_ATTRIBUTE(false)]
+[CLSCompliant(false)]
 public class ANY {
 
 /*

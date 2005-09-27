@@ -41,7 +41,8 @@
 						</Directory>
 						<Directory Id="Windows" Name="Windows">
 							<Component Id="Windows" Guid="96A1A5A8-E024-471C-A413-402C61C19090">
-								<File Id="ace_template.ace2" Name="ACE_TE~2.ACE" LongName="ace_template.ace" KeyPath="yes" />
+								<File Id="ace_template.ace2" Name="ACE_TE~2.ACE" LongName="ace_template.ace" />
+								<File Id="dotnet_ace_template.ace" Name="DOTNET~1.ACE" LongName="dotnet_ace_template.ace" />
 							</Component>
 						</Directory>
 					</Directory>

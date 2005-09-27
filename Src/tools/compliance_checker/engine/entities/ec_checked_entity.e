@@ -183,7 +183,6 @@ feature {NONE} -- Implementation
 			l_eiffel_attr: EIFFEL_CONSUMABLE_ATTRIBUTE
 			l_enum: IENUMERATOR
 			l_compliant: BOOLEAN
-			l_type: SYSTEM_TYPE
 		do
 			l_compliant := True
 			l_attributes := a_provider.get_custom_attributes ({CLS_COMPLIANT_ATTRIBUTE}, True)
@@ -202,11 +201,6 @@ feature {NONE} -- Implementation
 				end
 			end
 			internal_is_compliant := l_compliant
-			
-			l_type ?= a_provider
-			if l_type /= Void and then l_type.name.is_equal (("ANY").to_cil) then
-				l_type := l_type
-			end
 			
 			l_compliant := True
 			l_attributes := a_provider.get_custom_attributes ({EIFFEL_CONSUMABLE_ATTRIBUTE}, True)

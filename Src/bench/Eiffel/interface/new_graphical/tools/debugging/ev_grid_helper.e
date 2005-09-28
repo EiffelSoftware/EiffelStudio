@@ -103,6 +103,33 @@ feature -- Access
 			end
 		end
 
+	grid_top_row (a_grid: EV_GRID; a_index: INTEGER): EV_GRID_ROW is
+			-- Return the `a_index' i_th top row of `a_grid'.
+		require
+			a_grid /= Void
+			a_index >= 1
+		local
+			tr, r: INTEGER
+		do
+			if a_grid.row_count > 0 then
+				from
+					tr := 1
+					r := 1
+					Result := a_grid.row (r)
+				until
+					(Result /= Void) or (r > a_grid.row_count)
+				loop
+					if tr = a_index then
+						Result := a_grid.row (r)
+					end
+					r := r + a_grid.row (r).subrow_count_recursive + 1
+					tr := tr + 1
+				end
+			end
+		ensure
+			Result /= Void implies Result.parent_row = Void
+		end
+
 	grid_selected_top_rows (a_grid: EV_GRID): ARRAYED_LIST [EV_GRID_ROW] is
 			-- Return the selected_rows filtered to keep only top rows
 		require

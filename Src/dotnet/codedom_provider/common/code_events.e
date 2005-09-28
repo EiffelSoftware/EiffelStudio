@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			Result.extend (["Missing Return Type", "consumer", "Return type is missing in {1}", Warning],
 						Missing_return_type)
 			Result.extend (["Missing Statements", "consumer", "Statements are missing in {1}", Warning],
-						Missing_return_type)
+						Missing_statements)
 			Result.extend (["Missing Members", "consumer", "Members information is missing in {1}", Warning],
 						Missing_members)
 			Result.extend (["Missing type", "consumer", "Type definition for '{1}' is missing", Warning],

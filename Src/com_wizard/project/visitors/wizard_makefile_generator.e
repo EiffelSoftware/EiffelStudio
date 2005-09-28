@@ -101,7 +101,7 @@ feature -- Miscellaneous
 			end	
 			Result.append (	"CFLAGS = ")
 			if c_compiler.is_equal ("msc") then
-				Result.append ("-W0 -Ox ")
+				Result.append ("-MT -W0 -Ox ")
 				Result.append ("-YX")
 				Result.append (Ecom_generated_rt_globals_header_file_name)
 				Result.append_character (' ')

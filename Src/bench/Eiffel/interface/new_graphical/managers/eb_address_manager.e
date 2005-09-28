@@ -1593,7 +1593,7 @@ feature {NONE} -- open new class
 					str.to_upper
 					class_address.set_text (str)
 					if not truncated then
-						class_address.set_caret_position (last_caret_position)
+						class_address.set_caret_position (last_caret_position.min (str.count + 1))
 					else
 						class_address.set_caret_position (nb + 1)
 					end

@@ -242,9 +242,7 @@ feature {NONE} -- Implementation
 			l_active_profile := Profile_manager.active_profile
 			if l_active_profile /= Void and then not l_active_profile.is_equal (project_box.value) then
 				on_project_enter
-				if project_button.select_actions then
-					focus_lost := True
-				end
+--				focus_lost := not project_button.select_actions
 			end
 		end
 		

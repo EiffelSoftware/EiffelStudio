@@ -1490,13 +1490,20 @@ feature {NONE} -- Implementation
 								j = l_count
 							loop
 								l_param_type := l_array.item (j)
-								if l_param_type.equals (l_any_type) then
+									-- Special case here. If we load another Eiffel assembly which
+									-- contains its own version of ANY, then the comparison will fail.
+									-- Since the code was generated so that it is either ANY or a value type,
+									-- then if it is not a value type, then we need to do as if it was our ANY.
+								if l_param_type.equals (l_any_type) or else not l_param_type.is_value_type then
 										-- It is a formal
 									create l_formal_type.make
 									l_formal_type.set_position (j)
 									l_rt_array.put (j, l_formal_type)
 								else
 										-- It is an expanded type
+									check
+										l_param_type_is_value_type: l_param_type.is_value_type
+									end
 									l_rt_array.put (j,
 										associated_runtime_type (interface_type (l_param_type)))
 								end

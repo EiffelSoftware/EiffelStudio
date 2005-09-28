@@ -20,7 +20,7 @@ feature -- Access
 	Compiler_key: STRING is
 			-- Key holding compiler values
 		once
-			Result := "Software\ISE\Eiffel55\"
+			Result := "Software\ISE\Eiffel56\"
 			Result.append (Compiler_file_name)
 			Result.keep_head (Result.count - 4)
 		end

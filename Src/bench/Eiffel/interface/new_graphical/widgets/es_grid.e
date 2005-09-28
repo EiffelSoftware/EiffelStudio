@@ -272,10 +272,8 @@ feature {NONE} -- Actions implementation
 	on_header_clicked (ax, ay, abutton: INTEGER; ax_tilt, ay_tilt, apressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
 		local
 			m: EV_MENU
-			mi: EV_MENU_ITEM
-			mci: EV_CHECK_MENU_ITEM
-			hi: EV_HEADER_ITEM
 			col: EV_GRID_COLUMN
+			hi: EV_HEADER_ITEM			
 			c: INTEGER
 			l_x: INTEGER
 		do
@@ -306,25 +304,47 @@ feature {NONE} -- Actions implementation
 					c := c + 1
 				end
 					--| Col is the pointed header
-				hi := col.header_item
-				create m
-				create mi.make_with_text (hi.text)
-				mi.disable_sensitive
-				m.extend (mi)
-				
-				m.extend (create {EV_MENU_SEPARATOR})
-				
-				create mci.make_with_text ("Auto resize")
-				if column_has_auto_resizing (col.index) then
-					mci.enable_select
-					mci.select_actions.extend (agent set_auto_resizing_column (col.index, False))
-				else
-					mci.disable_select
-					mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
-				end
-				m.extend (mci)
+				m := header_menu_on_column (col)
 				m.show_at (header, l_x, ay)
 			end
+		end
+		
+	header_menu_on_column (col: EV_GRID_COLUMN): EV_MENU is
+			-- Menu related to `col'.
+		local
+			mi: EV_MENU_ITEM
+			mci: EV_CHECK_MENU_ITEM
+			hi: EV_HEADER_ITEM
+			gm: EV_MENU
+		do
+			hi := col.header_item
+			create Result
+			create mi.make_with_text (hi.text)
+			mi.disable_sensitive
+			Result.extend (mi)
+			
+			Result.extend (create {EV_MENU_SEPARATOR})
+			
+			create mci.make_with_text ("Auto resize")
+			if column_has_auto_resizing (col.index) then
+				mci.enable_select
+				mci.select_actions.extend (agent set_auto_resizing_column (col.index, False))
+			else
+				mci.disable_select
+				mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
+			end
+			Result.extend (mci)
+			
+			gm := grid_menu
+			if gm /= Void then
+				Result.extend (create {EV_MENU_SEPARATOR})
+				Result.extend (gm)
+			end
+		end
+		
+	grid_menu: EV_MENU is
+			-- Menu related to current grid.
+		do
 		end
 
 	on_header_auto_width_resize is

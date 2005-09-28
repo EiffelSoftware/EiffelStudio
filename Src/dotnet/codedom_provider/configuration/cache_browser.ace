@@ -40,7 +40,7 @@ cluster
  
  	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
  		exclude
- 			"CVS"; "example";
+ 			"CVS"; "example"; "classic";
   		default
  			namespace ("EiffelSoftware.Library.Helpers")
  		end

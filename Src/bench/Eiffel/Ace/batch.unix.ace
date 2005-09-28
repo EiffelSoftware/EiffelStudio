@@ -16,6 +16,7 @@ default
 	inlining (yes)
 	inlining_size ("0")
 	override_cluster ("override")
+	multithreaded(yes)
 
 cluster
 	override:		"$EIFFEL_SRC/Eiffel/override"
@@ -135,7 +136,7 @@ external
 		"\$(EIFFEL_SRC)/C/platform"
 
 	object:
-		"$(EIFFEL_SRC)/C/bench/libcompiler.a",
+		"$(EIFFEL_SRC)/C/bench/libmtcompiler.a",
         "$(EIFFEL_SRC)/C/platform/libplatform.a"
 
 end

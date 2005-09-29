@@ -26,6 +26,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -36,7 +41,12 @@ feature {NONE}  -- Initialization
 			-- Initialize server.
 		local
 			l_string: STRING
+			l_preferences: PREFERENCES
 		do
+				-- Initialize preferences
+			create l_preferences.make_with_defaults_and_location (<< general_preferences, platform_preferences >>, eiffel_preferences)
+			initialize_preferences (l_preferences, False)
+		
 			default_show_cmd := Sw_shownormal
 			if argument_count > 0 then
 				l_string := argument (1).as_lower

@@ -17,7 +17,7 @@ esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
-CURRENT=ipc/ewb
+CURRENT=ewb
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
 
@@ -40,6 +40,7 @@ AR = ar rc
 CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
+JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
 LINT = lint
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
@@ -53,7 +54,7 @@ SED = $sed
 
 USRINC = $usrinc
 SOURCES =  \$(LSRC)
-OBJECTS =  \$(LOBJ)
+OBJECTS =  \$(LOBJ) \$(MT_LOBJ)
 
 ########################################################################
 # New suffixes and associated building rules -- edit with care
@@ -88,6 +89,34 @@ LOBJ = \
 	       ewb_init.o \
 	       ewb_dumped.o 
 
+MT_LOBJ = \
+	       MTewb_proto.o \
+	       MTeproto.o \
+	       MTeif_in.o \
+	       MTeif_out.o \
+	       MTewb_init.o \
+	       MTewb_dumped.o 
+
+# The following is to buiilt the multithreaded version, we creates rules to generate the MT*.o files
+MTewb_proto.o: ewb_proto.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTeproto.o: eproto.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTeif_in.o: eif_in.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTeif_out.o: eif_out.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTewb_init.o: ewb_init.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+MTewb_dumped.o: ewb_dumped.c
+	       $(CC) -c $(JMTCFLAGS) $? -o $@
+
+
 # Where shared archive is located (path and name)
 LIB_SHARED = ../shared
 LIB_IDR = ../../idrs
@@ -104,6 +133,16 @@ local_realclean::
 libewb.a: $(LOBJ)
 	$(RM) $@
 	$(AR) $@ $(LOBJ)
+	$(RANLIB) $@
+
+all:: libmtewb.a
+
+local_realclean::
+	$(RM) libmtewb.a
+
+libmtewb.a: $(MT_LOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_LOBJ)
 	$(RANLIB) $@
 
 depend:: ../../mkdep

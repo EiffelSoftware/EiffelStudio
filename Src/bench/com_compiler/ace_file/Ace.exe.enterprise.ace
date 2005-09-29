@@ -87,7 +87,6 @@ default
 	inlining (no)
 	multithreaded (no)
 
-
 cluster
 	all com_generated:		"$EIFFEL_SRC\com_compiler"
 		exclude
@@ -255,7 +254,7 @@ cluster
 			DATE_TIME
 				end
 		end
-		
+
 	all net:		"$EIFFEL_SRC\library\net"
 		exclude
 			"CVS"; 
@@ -388,7 +387,7 @@ cluster
 
 	all tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
 		exclude
-			"eb_diagram_html_generator.e"; "eb_gui_preferences.e";
+			"eb_diagram_html_generator.e"; "eb_gui_preferences.e"; 
 		end
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
@@ -399,7 +398,7 @@ cluster
 	all cli_debugger:		"$EIFFEL_SRC\Eiffel\library\cli_debugger"
 
 	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
-	
+
 	logger (dotnet_helpers):		"$EIFFEL_SRC\dotnet\helpers\logger\classic"
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
@@ -415,7 +414,7 @@ cluster
 
 	all keygen:		"$EIFFEL_SRC\library\keygen"
 		exclude
-			"eiffel_envision_10"; "unix"; "CVS"; "EIFGEN"; 
+			"eiffel_studio_52"; "unix"; "CVS"; "EIFGEN"; 
 		end
 
 	all graph:		"$EIFFEL_SRC\library\graph"

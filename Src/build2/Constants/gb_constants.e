@@ -163,6 +163,13 @@ feature -- Generation constants
 			Result := "<CLASS_NAME>"
 		end
 		
+	constant_resetting_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for resetting of constant values.
+		once
+			Result := "<CONSTANT_RESETTING>"
+		end
+		
 	inherited_class_name_tag: STRING is
 			-- `Result' is tag used in templates
 			-- for the inherited class name.
@@ -179,7 +186,7 @@ feature -- Generation constants
 		
 	build_tag: STRING is
 			-- `Result' is tag used in templates
-			-- for buiilding of the widget heirarchy.
+			-- for building of the widget heirarchy.
 		once
 			Result := "<BUILD>"
 		end

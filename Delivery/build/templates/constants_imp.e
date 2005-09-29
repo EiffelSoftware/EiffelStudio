@@ -1,9 +1,36 @@
 indexing
-	description: "Objects that provide access to constants loaded from files."
+	description: "[
+	Objects that provide access to constants, possibly loaded from a files.
+	Each constant is generated into two features: both a query and a storage
+	feature. For example, for a STRING constant named `my_string', the following
+	features are generated: my_string: STRING and my_string_cell: CELL [STRING].
+	`my_string' simply returns the current item of `my_string_cell'. By seperating
+	the constant access in this way, it is possible to change the constant's value
+	by either redefining `my_string' in descendent classes or simply performing
+	my_string_cell.put ("new_string") as required.
+	If you are loading the constants from a file and you wish to reload a different set
+	of constants for your interface (e.g. for multi-language support), you may perform
+	this in the following way:
+	
+	set_file_name ("my_constants_file.text")
+	reload_constants_from_file
+	
+	and then for each generated widget, call `set_attributes' to reset the newly loaded
+	constants into the attribute settings of each widget that relies on constants.
+	
+	Note that if you wish your constants file to be loaded from a specific location,
+	you may redefine `initialize_constants' to handle the loading of the file from
+	an alternative location.
+	
+	Note that if you have selected to load constants from a file, and the file cannot
+	be loaded, you will get a precondition violation when attempting to access one
+	of the constants that should have been loaded. Therefore, you must ensure that either the
+	file is accessible or you do not specify to load from a file.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	<CLASS_NAME>
 	
 feature {NONE} -- Initialization
@@ -28,8 +55,21 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-<CONSTANTS>
 
+	reload_constants_from_file is
+			-- Re-load all constants from file named `file_name'.
+			-- When used in conjunction with `set_file_name', it enables
+			-- you to load a fresh set of INTEGER and STRING constants
+			-- from a constants file. If you then wish these to be applied
+			-- to a current generated interface, call `set_attributes' on that
+			-- interface for the changed constants to be reflected in the attributes
+			-- of your widgets.
+		do
+			initialized_cell.put (False)
+			initialize_constants
+			<CONSTANT_RESETTING>
+		end
+<CONSTANTS>
 feature -- Access
 
 --| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
@@ -93,8 +133,23 @@ feature {NONE} -- Implementation
 			create Result.make (4)
 		end
 		
-	file_name: STRING is "constants.txt"
-		-- File name from which constants must be loaded.
+	file_name: STRING is
+			-- File name from which constants must be loaded.
+		do
+			Result := file_name_cell.item
+		end
+		
+	file_name_cell: CELL [STRING] is
+		once
+			create Result
+			Result.put ("constants.txt")
+		end
+		
+	set_file_name (a_file_name: STRING) is
+			-- Assign `a_file_name' to `file_name'.
+		do
+			file_name_cell.put (a_file_name)
+		end
 		
 	String_constant: STRING is "STRING"
 	
@@ -124,7 +179,7 @@ feature {NONE} -- Implementation
 						end_quote2 := line_contents.index_of ('"', start_quote2 + 1)
 						name := line_contents.substring (start_quote1 + 1, end_quote1 - 1)
 						value := line_contents.substring (start_quote2 + 1, end_quote2 - 1)
-						all_constants.put (value, name)
+						all_constants.force (value, name)
 					end
 				end
 			end

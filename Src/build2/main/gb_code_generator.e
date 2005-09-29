@@ -530,6 +530,7 @@ feature {NONE} -- Implementation
 			color_constant: GB_COLOR_CONSTANT
 			font_constant: GB_FONT_CONSTANT
 			l_string: STRING
+			constant_resetting_string: STRING
 		do	
 				--Firstly read the contents of the file.
 			constants_file := open_text_file_for_read (constants_template_imp_file_name)
@@ -542,6 +543,7 @@ feature {NONE} -- Implementation
 					-- Now generate string representing all constants.
 				all_constants := constants.all_constants
 				generated_constants_string := ""
+				constant_resetting_string := ""
 				from
 					all_constants.start
 				until
@@ -552,54 +554,77 @@ feature {NONE} -- Implementation
 					if integer_constant /= Void then
 						if project_settings.load_constants then
 							l_string := "integer_constant_by_name (%"" + integer_constant.name + "%")"
+							if not constant_resetting_string.is_empty then
+								constant_resetting_string := constant_resetting_string + indent
+							end
+							constant_resetting_string := constant_resetting_string + integer_constant.name + "_cell.put(" + l_string + ")"
 						else
 							l_string := integer_constant.value_as_string
 						end
-						generated_constants_string := generated_constants_string + Indent_less_two + integer_constant.name + ": INTEGER is " +
-							indent +  "-- `Result' is INTEGER constant named " + integer_constant.name + "." + 
-							indent_less_one + "once" + indent + "Result := " + l_string + Indent_less_one + "end" + "%N"
+						generated_constants_string := generated_constants_string + Indent_less_two + integer_constant.name + ": INTEGER is" +
+							indent + "-- `Result' is INTEGER constant named `" + integer_constant.name + "'." + 
+							indent_less_one + "do" + indent + "Result := " + integer_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
+							indent_less_two + integer_constant.name + "_cell" + ": CELL [INTEGER] is" + indent + "--`Result' is once access to a cell holding vale of `" + integer_constant.name + "'." +
+							indent_less_one + "once" + indent + "create Result.put (" + l_string + ")" + indent_less_one + "end" + "%N"
 					end
 					string_constant ?= constant
 					if string_constant /= Void then
 						if project_settings.load_constants then
 							l_string := "string_constant_by_name (%"" + string_constant.name + "%")"
+							if not constant_resetting_string.is_empty then
+								constant_resetting_string := constant_resetting_string + indent	
+							end
+							constant_resetting_string := constant_resetting_string + string_constant.name + "_cell.put(" + l_string + ")"
 						else
 							l_string := "%"" + escape_special_characters (string_constant.value_as_string) + "%""
 						end
 						generated_constants_string := generated_constants_string + Indent_less_two + string_constant.name + ": STRING is" +
 							indent + "-- `Result' is STRING constant named `" + string_constant.name + "'." + 
-							indent_less_one + "once" + indent + "Result := " + l_string + Indent_less_one + "end" + "%N"
+							indent_less_one + "do" + indent + "Result := " + string_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
+							indent_less_two + string_constant.name + "_cell" + ": CELL [STRING] is" + indent + "--`Result' is once access to a cell holding vale of `" + string_constant.name + "'." +
+							indent_less_one + "once" + indent + "create Result.put (" + l_string + ")" + indent_less_one + "end" + "%N"
 					end
 					pixmap_constant ?= constant
 					if pixmap_constant /= Void then
 						if pixmap_constant.is_absolute then
 							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
-							"once" + Indent + "create Result" + Indent + "Result.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
+							"once" + Indent + "Result := " + pixmap_constant.name + "_cell.item" + indent_less_one + "end" + "%N" +
+							indent_less_two + pixmap_constant.name + "_cell" + ": CELL [EV_PIXMAP] is" + indent + "--`Result' is once access to a cell holding vale of `" + pixmap_constant.name + "'." +
+							indent_less_one + "once" + indent + "create Result.put (create {EV_PIXMAP})" + Indent + "Result.item.set_with_named_file (%"" + pixmap_constant.value + "%")" + Indent_less_one + "end" + "%N"
 						else
-							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" + Indent_less_one +
-							"local" + indent + "a_file_name: FILE_NAME" + Indent_less_one + "once" + Indent + "create Result" + Indent + 
+							generated_constants_string := generated_constants_string + Indent_less_two + pixmap_constant.name + ": EV_PIXMAP is" +
+							indent + "-- `Result' is EV_PIXMAP constant named `" + pixmap_constant.name + "'." + Indent_less_one +
+							"do" + Indent + "Result := " + pixmap_constant.name + "_cell.item" + indent_less_one + "end" + "%N" +
+							indent_less_two + pixmap_constant.name + "_cell" + ": CELL [EV_PIXMAP] is" + indent + "--`Result' is once access to a cell holding vale of `" + pixmap_constant.name + "'." +
+							Indent_less_one + "local" + indent + "a_file_name: FILE_NAME" + indent_less_one + "once" + Indent + "create Result.put (create {EV_PIXMAP})" + indent +  
 							"create a_file_name.make_from_string (" + pixmap_constant.directory + ")" + Indent + "a_file_name.set_file_name (%"" + pixmap_constant.filename +"%")" +
-							indent + "set_with_named_file (Result, a_file_name)" + Indent_less_one + "end" + "%N"
+							indent + "set_with_named_file (Result.item, a_file_name)" + Indent_less_one + "end" + "%N"
 						end
 					end
 					directory_constant ?= constant
 					if directory_constant/= Void then
 						generated_constants_string := generated_constants_string + Indent_less_two + directory_constant.name + ": STRING is" +
 							indent + "-- `Result' is DIRECTORY constant named `" + directory_constant.name + "'." + 
-							indent_less_one + "once" + indent + "Result := %"" + directory_constant.value_as_string + "%"" + Indent_less_one + "end" + "%N"
+							indent_less_one + "do" + indent + "Result := " + directory_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
+							indent_less_two + directory_constant.name + "_cell" + ": CELL [STRING] is" + indent + "--`Result' is once access to a cell holding vale of `" + directory_constant.name + "'." +
+							indent_less_one + "once" + indent + "create Result.put (%"" + directory_constant.value_as_string + "%")" + Indent_less_one + "end" + "%N"
 					end
 					color_constant ?= constant
 					if color_constant /= Void then
 						generated_constants_string := generated_constants_string + Indent_less_two + color_constant.name + ": EV_COLOR is" +
 							indent + "-- `Result' is EV_COLOR constant named `" + color_constant.name + "'." + 
-							indent_less_one + "once" + indent + "Result := create {EV_COLOR}.make_with_8_bit_rgb (" + color_constant.value.red_8_bit.out + ", " + color_constant.value.green_8_bit.out + ", " + color_constant.value.blue_8_bit.out + ")" + Indent_less_one + "end" + "%N"
+							indent_less_one + "do" + indent + "Result := " + color_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
+							indent_less_two + color_constant.name + "_cell" + ": CELL [EV_COLOR] is" + indent + "--`Result' is once access to a cell holding vale of `" + color_constant.name + "'." +
+							indent_less_one + "once" + indent + "create Result.put (create {EV_COLOR}.make_with_8_bit_rgb (" + color_constant.value.red_8_bit.out + ", " + color_constant.value.green_8_bit.out + ", " + color_constant.value.blue_8_bit.out + "))" + indent_less_one + "end" + "%N"
 					end
 					font_constant ?= constant
 					if font_constant /= Void then
 							generated_constants_string := generated_constants_string + Indent_less_two + font_constant.name + ": EV_FONT is" +
 							indent + "-- `Result' is EV_FONT constant named `" + font_constant.name + "'." + 
-							indent_less_one + "once" + indent + "create Result" + Indent +
-							"Result.set_family ({EV_FONT_CONSTANTS}."
+							indent_less_one + "do" + indent + "Result := " + font_constant.name + "_cell.item" + Indent_less_one + "end" + "%N" +
+							indent_less_two + font_constant.name + "_cell" + ": CELL [EV_FONT] is" + indent + "--`Result' is once access to a cell holding vale of `" + font_constant.name + "'." +
+							indent_less_one + "once" +	indent + "create Result.put (create {EV_FONT})" + Indent +
+							"Result.item.set_family ({EV_FONT_CONSTANTS}."
 							
 							inspect font_constant.value.family
 							when feature {EV_FONT_CONSTANTS}.Family_screen then
@@ -618,7 +643,7 @@ feature {NONE} -- Implementation
 								end
 							end
 							generated_constants_string.append (indent)
-							generated_constants_string.append ("Result.set_weight ({EV_FONT_CONSTANTS}.")
+							generated_constants_string.append ("Result.item.set_weight ({EV_FONT_CONSTANTS}.")
 							
 							inspect font_constant.value.weight
 							when feature {EV_FONT_CONSTANTS}.weight_thin then
@@ -635,7 +660,7 @@ feature {NONE} -- Implementation
 								end
 							end			
 							generated_constants_string.append (indent)
-							generated_constants_string.append ("Result.set_shape ({EV_FONT_CONSTANTS}.")
+							generated_constants_string.append ("Result.item.set_shape ({EV_FONT_CONSTANTS}.")
 							inspect font_constant.value.shape
 							
 							when feature {EV_FONT_CONSTANTS}.shape_regular then
@@ -647,9 +672,9 @@ feature {NONE} -- Implementation
 									Invalid_value: False
 								end
 							end	
-							generated_constants_string := generated_constants_string + Indent + "Result.set_height_in_points (" + font_constant.value.height_in_points.out + ")"
+							generated_constants_string := generated_constants_string + Indent + "Result.item.set_height_in_points (" + font_constant.value.height_in_points.out + ")"
 							if not font_constant.value.preferred_families.is_empty then
-								generated_constants_string := generated_constants_string + Indent + "Result.preferred_families.extend (%"" + font_constant.value.preferred_families.i_th (1) + "%")"
+								generated_constants_string := generated_constants_string + Indent + "Result.item.preferred_families.extend (%"" + font_constant.value.preferred_families.i_th (1) + "%")"
 							end
 							generated_constants_string := generated_constants_string + Indent_less_one + "end" + "%N"							
 					end
@@ -660,6 +685,8 @@ feature {NONE} -- Implementation
 				Constants_content.replace_substring_all (class_name_tag, project_settings.constants_class_name.as_upper + Class_implementation_extension)
 				
 				add_generated_string (constants_content, generated_constants_string, constants_tag)
+				
+				add_generated_string (constants_content, constant_resetting_string, constant_resetting_tag)
 				
 					-- Now write the new constants file to disk.
 				constants_file_name := generated_path.twin
@@ -806,7 +833,7 @@ feature {NONE} -- Implementation
 			file_name.extend (a_class_name.as_lower + ".e")
 			
 				-- Retrieve the template for a class file to generate.
-			window_template := window_template_imp_file_namE
+			window_template := window_template_imp_file_name
 			
 			window_template_file := open_text_file_for_read (window_template)
 			if window_template_file /= Void then
@@ -884,8 +911,8 @@ feature {NONE} -- Implementation
 				end
 				
 				
-					-- Add code for widget attribute settings to `class_text'.
-				add_generated_string (class_text, set_string, set_tag)
+--					-- Add code for widget attribute settings to `class_text'.
+--				add_generated_string (class_text, set_string, set_tag)
 
 				if local_string /= Void then
 					add_generated_string (class_text, local_string, local_tag)
@@ -973,6 +1000,8 @@ feature {NONE} -- Implementation
 
 					-- Add declaration of features as deferred to `class_text'.
 				add_generated_string (class_text, event_declaration_string, event_declaration_tag)
+				
+				add_generated_string (class_text, set_string, constant_resetting_tag)
 				
 				
 					-- Tidy up `document_info' ready for next generation.
@@ -1080,7 +1109,17 @@ feature {NONE} -- Implementation
 				a_class_text.replace_substring_all (tag, "")
 					-- Prune the "%N" following the tag, as we do not want
 					-- a new line added anymore.
+					-- FIXME remove all tab characters before the new line as well to retain formatting of the
+					-- next line correctly.
 				a_class_text.remove_substring (temp_index, temp_index)
+				from
+					temp_index := temp_index - 1
+				until
+					a_class_text.item (temp_index) /= '%T'
+				loop
+					a_class_text.remove (temp_index)
+					temp_index := temp_index - 1
+				end
 			end
 		end
 		
@@ -1374,7 +1413,7 @@ feature {NONE} -- Implementation
 						end
 						add_set (temp_set)	
 						current_settings.forth
-					end					
+					end
 					supported_types.forth
 				end
 				
@@ -1751,8 +1790,7 @@ feature {NONE} -- Implementation
 				non_void_set := ""
 			end
 
-			if set_string = Void then
-				set_string := set_widgets_comment + indent
+			if set_string.is_empty then
 				temp_string := non_void_set
 			else
 				if not non_void_set.is_empty then
@@ -1834,7 +1872,7 @@ feature {NONE} -- Implementation
 	set_string: STRING
 		-- String representation of all attribute setting statements built
 		-- by `Current'. This is inserted into the template when complete.
-		
+				
 	event_connection_string: STRING
 		-- String representation of all event connection statements built by
 		-- `Current'. This is inserted into the template when completed.

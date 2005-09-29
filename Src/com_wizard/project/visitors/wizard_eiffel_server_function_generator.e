@@ -115,23 +115,35 @@ feature {NONE} -- Implementation
 			non_void_func_desc: func_desc /= Void
 			non_void_arguments: func_desc.arguments /= Void
 		local
-			arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
+			l_arguments: LIST [WIZARD_PARAM_DESCRIPTOR]
+			l_argument: WIZARD_PARAM_DESCRIPTOR
 		do
-			arguments := func_desc.arguments
+			l_arguments := func_desc.arguments
 
 			from
-				arguments.start
 				create Result.make (100)
+				l_arguments.start
 			until
-				arguments.after
+				l_arguments.after or not Result.is_empty
 			loop
-				if Result.is_empty then
+				l_argument := l_arguments.item
+				if not is_paramflag_fretval (l_argument.flags) then
 					Result.append (" (")
-				else
-					Result.append (", ")
+					Result.append (l_argument.name)
 				end
-				Result.append (arguments.item.name)
-				arguments.forth
+				l_arguments.forth
+			end
+			
+			from
+			until
+				l_arguments.after
+			loop
+				l_argument := l_arguments.item
+				if not is_paramflag_fretval (l_argument.flags) then
+					Result.append (", ")
+					Result.append (l_argument.name)
+				end
+				l_arguments.forth
 			end
 			if not Result.is_empty then
 				Result.append (")")

@@ -371,6 +371,22 @@ feature {NONE} -- Implementation
 			(create {GB_GLOBAL_STATUS}).mark_as_dirty
 		end
 		
+	is_type_a_constant (a_type_name: STRING): BOOLEAN is
+			-- Is data associated with `a_type_name' in `full_information',
+			-- a constant?
+		require
+			type_not_not_void: a_type_name /= Void
+		local
+			element_info: ELEMENT_INFORMATION
+		do
+			element_info := full_information @ a_type_name
+			if element_info /= Void then
+				if element_info.is_constant then
+					Result := True
+				end
+			end	
+		end
+		
 	retrieve_and_set_integer_value (a_type_name: STRING): INTEGER is
 			-- Result is integer data associated with `a_type_name'.
 			-- If the data of `a_type_name' is a constant, then create a new constant_context
@@ -582,6 +598,44 @@ feature {NONE} -- Implementation
 
 	full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 		-- Result of last call to `get_unique_full_info'.
+		
+	build_set_code_for_string (item_text, access_string, feature_call: STRING): ARRAYED_LIST [STRING] is
+			-- Generate code for a string property represented by `item_text' within `full_information'
+			-- called on an object named `access_string' with the property features call represented by `feature_call'.
+		require
+			item_text_not_void: item_text /= Void
+			access_string_not_void: access_string /= Void
+			feature_call_not_void: feature_call /= Void
+		do
+			create Result.make (1)
+			if is_type_a_constant (item_text) then
+				Result.extend (string_constant_set_procedures_string + ".extend (agent " + access_string + feature_call + "?))")
+				Result.extend (string_constant_retrieval_functions_string + ".extend (agent " + retrieve_string_setting (item_text) + ")")
+			else
+				Result.extend (access_string + feature_call + retrieve_string_setting (item_text) + ")")
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	build_set_code_for_integer (item_text, access_string, feature_call: STRING): ARRAYED_LIST [STRING] is
+			-- Generate code for an integer property represented by `item_text' within `full_information'
+			-- called on an object named `access_string' with the property features call represented by `feature_call'.
+		require
+			item_text_not_void: item_text /= Void
+			access_string_not_void: access_string /= Void
+			feature_call_not_void: feature_call /= Void
+		do
+			create Result.make (1)
+			if is_type_a_constant (item_text) then
+				Result.extend (integer_constant_set_procedures_string + ".extend (agent " + access_string + feature_call + "?))")
+				Result.extend (integer_constant_retrieval_functions_string + ".extend (agent " + retrieve_string_setting (item_text) + ")")
+			else
+				Result.extend (access_string + feature_call + retrieve_integer_setting (item_text) + ")")
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
 
 invariant
 

@@ -909,10 +909,9 @@ feature {NONE} -- Implementation
 					or not info.pixmaps_set.is_empty) then
 					add_generated_string (class_text, "local", local_tag)
 				end
-				
-				
---					-- Add code for widget attribute settings to `class_text'.
---				add_generated_string (class_text, set_string, set_tag)
+
+					-- Add code for widget attribute settings to `class_text'.
+				add_generated_string (class_text, set_string, set_tag)
 
 				if local_string /= Void then
 					add_generated_string (class_text, local_string, local_tag)
@@ -1000,10 +999,7 @@ feature {NONE} -- Implementation
 
 					-- Add declaration of features as deferred to `class_text'.
 				add_generated_string (class_text, event_declaration_string, event_declaration_tag)
-				
-				add_generated_string (class_text, set_string, constant_resetting_tag)
-				
-				
+	
 					-- Tidy up `document_info' ready for next generation.
 				document_info.reset_after_generation
 
@@ -1347,8 +1343,6 @@ feature {NONE} -- Implementation
 			gb_ev_any: GB_EV_ANY
 			generated_info: GB_GENERATED_INFO
 			supported_types, current_settings: ARRAYED_LIST [STRING]
-			temp_set: STRING
-			dot_index: INTEGER
 			children: ARRAYED_LIST [GB_GENERATED_INFO]
 		do
 			create children.make (10)
@@ -1381,37 +1375,7 @@ feature {NONE} -- Implementation
 					until
 						current_settings.off
 					loop
-							-- We must handle a root object as a special case, as there
-							-- is no need for a dot call, unless we are using the window as a client.
-						temp_set := current_settings.item
-						check
-							temp_set_not_empty: not temp_set.is_empty
-						end
-						if generated_info.is_root_object then
-								--| FIXME there must be a better way of performing this, but if a pixmap
-								--| is set to a window, we must not strip the name. Otherwise the name
-								--| must always be stripped.
-							dot_index := temp_set.index_of ('.', 1)
-							if not temp_set.substring (1, dot_index - 1).is_equal (pixmap_name) then
-								temp_set := temp_set.substring (dot_index + 1, temp_set.count)
-							end
-							if info.generate_as_client and not temp_set.is_empty then
-								if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
-									temp_set := Client_window_string + "." + temp_set
-								else
-									temp_set := client_widget_string + "." + temp_set
-								end
-							end
-						end
-						if not temp_set.is_empty and then (temp_set @ 1) = '.' then
-							if info.generate_as_client then
-								temp_set := "window" + temp_set
-							else
-								temp_set := temp_set.substring (2, temp_set.count)
-								temp_set.replace_substring_all (indent + ".", indent)
-							end
-						end
-						add_set (temp_set)	
+						add_set (current_settings.item)	
 						current_settings.forth
 					end
 					supported_types.forth

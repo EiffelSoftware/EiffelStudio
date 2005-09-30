@@ -2207,9 +2207,10 @@ feature -- Removal
 
 			internal_remove_row (a_row_i)
 			
-				-- Note that we must tell the computation to start from the 
-				-- previous row as if we are removing the final item then
-				-- the index is invalid.
+				-- Note that the recomputation is performed from the row before `lower_index'.
+				-- This is to handle the case where you remove all of the subrows of a row that
+				-- is collapsed. If you do not start the recompute from the parent row, `row_offsets'
+				-- may not be computed correctly and the grid drawing will be incorrect.
 			set_vertical_computation_required ((a_row - 1).max (1))
 			redraw_client_area
 		ensure
@@ -2285,7 +2286,11 @@ feature -- Removal
 			
 			update_grid_row_indices (lower_index)
 
-			set_vertical_computation_required (lower_index)
+				-- Note that the recomputation is performed from the row before `lower_index'.
+				-- This is to handle the case where you remove all of the subrows of a row that
+				-- is collapsed. If you do not start the recompute from the parent row, `row_offsets'
+				-- may not be computed correctly and the grid drawing will be incorrect.
+			set_vertical_computation_required ((lower_index - 1).max (1))
 			recompute_vertical_scroll_bar
 			unlock_update
 			last_vertical_scroll_bar_value := 0
@@ -2757,6 +2762,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					index := an_index
 				end
 			end
+--			index := (index - 1).max (1)
 			if not is_row_height_fixed or is_tree_enabled then
 					-- Only perform recomputation if the rows do not all have the same height
 					-- or there is tree functionality enabled. Otherwise, we do not need to

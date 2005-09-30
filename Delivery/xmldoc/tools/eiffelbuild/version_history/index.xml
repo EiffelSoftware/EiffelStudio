@@ -27,6 +27,7 @@
 			<item>The font selection dialog now shows the currently selected font when displayed.</item>
 			<item>Deleting an object that is contained within an object editor now clears the contents of the object editor.</item>
 			<item>Preferences window now has the focus when displayed so it is fully navigatable via the keyboard.</item>
+			<item>Code generation improved to allow the modifying of constants and subsequent update of the interface, permitting multiple languages to be supported.</item>
 		</list>
 		<heading>
 			<size>2</size>5.6 Release

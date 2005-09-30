@@ -113,6 +113,36 @@ feature -- Access
 	name: STRING
 		-- Name associated with object.
 		
+	actual_name: STRING is
+			-- Actual name to be applied to object represented by `Current'
+			-- in the generated code.
+		do
+			if is_root_object then
+				if generate_as_client then
+					if type.is_equal (ev_titled_window_string) or type.is_equal (ev_dialog_string) then
+						Result := client_window_string.twin
+					else
+						Result := client_widget_string.twin
+					end
+				else	
+					Result := ""
+				end
+			else	
+				Result := name.twin
+			end
+		end
+		
+	actual_name_for_feature_call: STRING is
+			-- Return `actual_name' with a "." appended if not
+			-- empty. Permits a feature call to be appended directly
+			-- for generated code.
+		do
+			Result := actual_name
+			if not Result.is_empty then
+				Result.append (".")
+			end
+		end
+		
 	generated_name: BOOLEAN
 		-- Was `name' generated during generation? Names
 		-- are generated if an object was not named by a user.

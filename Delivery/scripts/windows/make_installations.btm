@@ -8,21 +8,18 @@ endiff
 iff "%@SEARCH[candle.exe]" == "" then
 	set PATH=%PATH;%INIT_DIR\wix
 endiff
-iff "%@SEARCH[candle.exe]" == "" then
-	echo Cannot find a version of Wix compiler. Cannot continue
-	CANCEL
-endiff
-iff "%@SEARCH[light.exe]" == "" then
-	echo Cannot find a version of Wix compiler. Cannot continue
-	CANCEL
-endiff
 
 cdd %INIT_DIR\install
 iff .%ISE_PLATFORM%.==.win64. then
 	set IS_WIN64=yes
+	copy %INIT_DIR%\wix\winterop.dll-x86-64 %INIT_DIR\wix\winterop.dll
 else
 	set IS_WIN64=no
+	copy %INIT_DIR%\wix\winterop.dll-x86 %INIT_DIR\wix\winterop.dll
 endiff
+
+rem To get rid of the CNDL1044 warnings about possible problems with shortnames.
+set CANDLE_FLAGS=-sw1044
 
 remtrace In order to work INSTALL_DIR needs to be properly defined (see above checks)
 call build.btm base_libraries
@@ -38,18 +35,18 @@ call build.btm vision2_tour
 call build.btm build
 
 remtrace EiffelStudio Enterprise
-candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs
-light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_enterprise.msm
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=enterprise -dISE_MODULE_NAME=ec_enterprise -dISE_PRODUCT_NAME="EiffelStudio Enterprise Edition" ec.wxs
+%INIT_DIR%\wix\light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_enterprise.msm
 del ec.wixobj
 
 remtrace EiffelStudio University
-candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=university_version -dISE_MODULE_NAME=ec_university -dISE_PRODUCT_NAME="EiffelStudio University Edition" ec.wxs
-light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_university.msm
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=university_version -dISE_MODULE_NAME=ec_university -dISE_PRODUCT_NAME="EiffelStudio University Edition" ec.wxs
+%INIT_DIR%\wix\light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_university.msm
 del ec.wixobj
 
 remtrace EiffelStudio Free version
-candle -dIsWin64=%IS_WIN64% -dISE_RELEASE=free_version -dISE_MODULE_NAME=ec_free -dISE_PRODUCT_NAME="EiffelStudio Evaluation Edition" ec.wxs
-light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_free.msm
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dISE_RELEASE=free_version -dISE_MODULE_NAME=ec_free -dISE_PRODUCT_NAME="EiffelStudio Evaluation Edition" ec.wxs
+%INIT_DIR%\wix\light /b %INSTALL_DIR ec.wixobj -out MSMs\ec_free.msm
 del ec.wixobj
 
 cdd %INSTALL_DIR
@@ -61,18 +58,18 @@ if not exist setups\Free mkdir setups\Free
 cdd %INIT_DIR\install
 
 remtrace Preparing Free edition
-candle -dIsWin64=%IS_WIN64% -dEDITION="free" -dEDITIONNAME="Free Edition" Eiffel.wxs
-light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Free\Eiffel57.msi
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dEDITION="free" -dEDITIONNAME="Free Edition" Eiffel.wxs
+%INIT_DIR%\wix\light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Free\Eiffel57.msi
 del Eiffel.wixobj
 
 remtrace Preparing University edition
-candle -dIsWin64=%IS_WIN64% -dEDITION="university" -dEDITIONNAME="University Edition" Eiffel.wxs
-light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\University\Eiffel57.msi
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dEDITION="university" -dEDITIONNAME="University Edition" Eiffel.wxs
+%INIT_DIR%\wix\light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\University\Eiffel57.msi
 del Eiffel.wixobj
 
 remtrace Preparing Enterprise edition
-candle -dIsWin64=%IS_WIN64% -dEDITION="enterprise" -dEDITIONNAME="Enterprise Edition" Eiffel.wxs
-light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Enterprise\Eiffel57.msi
+%INIT_DIR%\wix\candle %CANDLE_FLAGS% -dIsWin64=%IS_WIN64% -dEDITION="enterprise" -dEDITIONNAME="Enterprise Edition" Eiffel.wxs
+%INIT_DIR%\wix\light /b %INSTALL_DIR Eiffel.wixobj -out %INSTALL_DIR\setups\Enterprise\Eiffel57.msi
 del Eiffel.wixobj
 
 remtrace Your deliveries are now ready

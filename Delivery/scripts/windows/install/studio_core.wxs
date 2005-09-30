@@ -354,9 +354,9 @@
 						<Directory Id="errors" Name="errors">
 							<Component Id="errors" Guid="50FB8C41-7003-411B-8E28-947E877DA5B6">
 								<File Id="COMP_INT" Name="COMP_INT" />
-								<File Id="ECMA-VDJR" Name="ECMA-V~1" LongName="ECMA-VDJR" />
-								<File Id="ECMA-VDRD" Name="ECMA-V~2" LongName="ECMA-VDRD" />
-								<File Id="ECMA-VMFN" Name="ECMA-V~3" LongName="ECMA-VMFN" />
+								<File Id="ECMA_VDJR" Name="ECMA-V~1" LongName="ECMA-VDJR" />
+								<File Id="ECMA_VDRD" Name="ECMA-V~2" LongName="ECMA-VDRD" />
+								<File Id="ECMA_VMFN" Name="ECMA-V~3" LongName="ECMA-VMFN" />
 								<File Id="NO_LICENSE" Name="NO_LIC~1" LongName="NO_LICENSE" />
 								<File Id="RE_INT" Name="RE_INT" />
 								<File Id="VAOL" Name="VAOL" />
@@ -444,11 +444,11 @@
 							<Directory Id="short" Name="short">
 								<Component Id="short" Guid="F22C41E6-52CB-40F8-A6A5-FE7DCD426D3B">
 									<File Id="COMP_INT2" Name="COMP_INT" />
-									<File Id="ECMA-VDJR2" Name="ECMA-V~1" LongName="ECMA-VDJR2" />
-									<File Id="ECMA-VDJR3" Name="ECMA-V~2" LongName="ECMA-VDJR3" />
-									<File Id="ECMA-VDRD7" Name="ECMA-V~3" LongName="ECMA-VDRD7" />
-									<File Id="ECMA-VDRD8" Name="ECMA-V~4" LongName="ECMA-VDRD8" />
-									<File Id="ECMA-VMFN2" Name="EC62ED~1" LongName="ECMA-VMFN2" />
+									<File Id="ECMA_VDJR2" Name="ECMA-V~1" LongName="ECMA-VDJR2" />
+									<File Id="ECMA_VDJR3" Name="ECMA-V~2" LongName="ECMA-VDJR3" />
+									<File Id="ECMA_VDRD7" Name="ECMA-V~3" LongName="ECMA-VDRD7" />
+									<File Id="ECMA_VDRD8" Name="ECMA-V~4" LongName="ECMA-VDRD8" />
+									<File Id="ECMA_VMFN2" Name="EC62ED~1" LongName="ECMA-VMFN2" />
 									<File Id="EXT_CPP" Name="EXT_CPP" />
 									<File Id="EXT_DLL_ALIAS" Name="EXT_DL~1" LongName="EXT_DLL_ALIAS" />
 									<File Id="EXT_DLL_SIGN" Name="EXT_DL~2" LongName="EXT_DLL_SIGN" />

@@ -7,11 +7,12 @@
 			Comments="EiffelStudio is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software"
 			InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 
-		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="registry" Win64="$(var.IsWin64)" /></Property>
-		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel57\ec" Name="ISE_C_COMPILER" Type="registry" Win64="$(var.IsWin64)" /></Property>
+		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="raw" Win64="$(var.IsWin64)" /></Property>
+		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel57\ec" Name="ISE_C_COMPILER" Type="raw" Win64="$(var.IsWin64)" /></Property>
 		<Condition Message="This installation can only run in full UI mode.">Installed OR UILevel = 5</Condition>
 
-		<Media Id="1" Cabinet="Sample.cab" EmbedCab="yes" DiskPrompt="EiffelStudio 5.7 Installation CD-ROM" />
+		<Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt="CD-ROM #1" />
+		<Property Id='DiskPrompt' Value="EiffelStudio 5.7 Installation [1]" />
 
 		<Directory Id="TARGETDIR" Name="SourceDir">
 			<Directory Id="INSTALLDIR" Name="Eiffel57">
@@ -925,22 +926,22 @@ Vision2 is a graphic library that is easy-to-use, powerful and platform-independ
 				</Control>
 			</Dialog>
 
-			<RadioGroup Property="IAgree">
+			<RadioButtonGroup Property="IAgree">
 				<RadioButton Text="I &amp;accept the terms in the License Agreement" Value="Yes" X="5" Y="0" Width="250" Height="15" />
 				<RadioButton Text="I &amp;do not accept the terms in the License Agreement" Value="No" X="5" Y="20" Width="250" Height="15" />
-			</RadioGroup>
+			</RadioButtonGroup>
 
-			<RadioGroup Property="SELECTEDCCOMPILER">
+			<RadioButtonGroup Property="SELECTEDCCOMPILER">
 				<RadioButton Value="bcb" X="0" Y="0" Width="176" Height="14" Text="Install and use free Borland C++ 5.5" />
 				<RadioButton Value="msc" X="0" Y="14" Width="176" Height="14" Text="Use Microsoft Visual Studio C++" />
-			</RadioGroup>
+			</RadioButtonGroup>
 
-			<RadioGroup Property="PRECOMPILEDLIBRARIES">
+			<RadioButtonGroup Property="PRECOMPILEDLIBRARIES">
 				<RadioButton Value="none" X="0" Y="0" Width="255" Height="14" Text="Do not precompile libraries" />
 				<RadioButton Value="base" X="0" Y="14" Width="255" Height="14" Text="Base" />
 				<RadioButton Value="wel" X="0" Y="28" Width="255" Height="14" Text="Base and WEL" />
 				<RadioButton Value="vision2" X="0" Y="42" Width="255" Height="14" Text="Base, WEL and Vision2" />
-			</RadioGroup>
+			</RadioButtonGroup>
 
 			<TextStyle Id="DlgFont8" FaceName="MS Sans Serif" Size="8" />
 			<TextStyle Id="DlgTitleFont" FaceName="MS Sans Serif" Size="8" Bold="yes" />

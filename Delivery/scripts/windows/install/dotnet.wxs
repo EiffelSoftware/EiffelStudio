@@ -69,10 +69,10 @@
 									<File Id="libEiffelSoftware.MetadataConsumer.dll" Name="LIBEIF~1.DLL" LongName="libEiffelSoftware.MetadataConsumer.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\libEiffelSoftware.MetadataConsumer.dll" />
 								</Component>
 								<Component Id="EiffelSoftware.MetadataConsumer.dll" Guid="269EF7C6-ABD2-4422-AA8D-4599F96CF4F3">
-									<File Id="EiffelSoftware.MetadataConsumer.dll" Name="EIFFEL~2.DLL" LongName="EiffelSoftware.MetadataConsumer.dll" KeyPath="yes" Assembly=".net" AssemblyRegisterComInterop="yes" AssemblyApplication="EiffelSoftware.MetadataConsumer.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.MetadataConsumer.dll" />
+									<File Id="EiffelSoftware.MetadataConsumer.dll" Name="EIFFEL~2.DLL" LongName="EiffelSoftware.MetadataConsumer.dll" KeyPath="yes" Assembly=".net" AssemblyApplication="EiffelSoftware.MetadataConsumer.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\EiffelSoftware.MetadataConsumer.dll" />
 								</Component>
 								<Component Id="ISE.VS.FusionSupport.dll" Guid="74612B43-50C6-4769-828C-AC55E479CB92">
-									<File Id="ISE.VS.FusionSupport.dll" Name="ISEVSF~1.DLL" LongName="ISE.VS.FusionSupport.dll" Checksum="yes" KeyPath="yes" Assembly=".net" AssemblyRegisterComInterop="yes"	AssemblyApplication="ISE.VS.FusionSupport.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\ISE.VS.FusionSupport.dll" />
+									<File Id="ISE.VS.FusionSupport.dll" Name="ISEVSF~1.DLL" LongName="ISE.VS.FusionSupport.dll" Checksum="yes" KeyPath="yes" Assembly=".net" AssemblyApplication="ISE.VS.FusionSupport.dll" src="$(env.INSTALL_DIR)\dotnet_binaries\ISE.VS.FusionSupport.dll" />
 								</Component>
 							</Directory>
 						</Directory>

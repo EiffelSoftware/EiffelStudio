@@ -51,7 +51,7 @@
 									<Component Id="App.rc" Guid="2F4FE3BC-2F8C-4044-93A4-7F88BB0F590A">
 										<File Id="App.rc" Name="App.rc" KeyPath="yes" />
 										<File Id="main_win.e" Name="main_win.e" />
-										<File Id="App.ico" Name="App.ico" />
+										<File Id="app.ico_2" Name="App.ico" />
 										<File Id="Ace.ace" Name="Ace.ace" />
 										<File Id="App.e2" Name="App.e" />
 									</Component>

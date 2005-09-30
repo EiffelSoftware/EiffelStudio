@@ -37,31 +37,7 @@ iff not defined WIN64 then
 	copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\free_version\lib\bcb
 endiff
 
-remtrace Compile a run-time for Microsoft
-fullrd C
-exprt -r %DEFAULT_CVS_TAG -d C runtime
-cd C
-iff defined WIN64 then
-call configure win64 m >>& %INSTALL_LOG
-else
-call configure win32 m >>& %INSTALL_LOG
-endiff
-cd %EIFFEL_SRC
-fullrf C\run-time\LIB\ebench.lib
-copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\msc
-iff not defined WIN64 then
-	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\enterprise\lib\msc
-	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\enterprise\lib\msc
-endiff
-
-copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
-copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
-iff not defined WIN64 then
-	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\free_version\lib\msc
-	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\free_version\lib\msc
-endiff
-
-remtrace Compile a dynamic run-time
+remtrace Compile a dynamic run-time for Microsoft
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd %EIFFEL_SRC\C/CONFIGS
@@ -90,6 +66,31 @@ copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\enterprise\lib\msc
 copy C\run-time\LIB\*dll* %INSTALL_DIR\releases\free_version\lib\msc
 copy C\run-time\FREELIB\*dll* %INSTALL_DIR\releases\free_version\lib\msc
 cd %EIFFEL_SRC
+
+remtrace Compile a run-time for Microsoft
+fullrd C
+exprt -r %DEFAULT_CVS_TAG -d C runtime
+cd C
+iff defined WIN64 then
+call configure win64 m >>& %INSTALL_LOG
+else
+call configure win32 m >>& %INSTALL_LOG
+endiff
+cd %EIFFEL_SRC
+fullrf C\run-time\LIB\ebench.lib
+copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\enterprise\lib\msc
+iff not defined WIN64 then
+	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\enterprise\lib\msc
+	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\enterprise\lib\msc
+endiff
+
+copy C\run-time\LIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
+copy C\run-time\FREELIB\*.lib %INSTALL_DIR\releases\free_version\lib\msc
+iff not defined WIN64 then
+	copy C\desc\ise_desc.dll %INSTALL_DIR\releases\free_version\lib\msc
+	copy C\desc\ise_desc.lib %INSTALL_DIR\releases\free_version\lib\msc
+endiff
+
 
 remtrace Copy the header files
 copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include

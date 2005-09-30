@@ -74,9 +74,9 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (is_selected_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result.extend (info.name + ".enable_select")
+					Result.extend (info.actual_name_for_feature_call + "enable_select")
 				else
-					Result.extend (info.name + ".disable_select")
+					Result.extend (info.actual_name_for_feature_call + "disable_select")
 				end
 			end
 		end

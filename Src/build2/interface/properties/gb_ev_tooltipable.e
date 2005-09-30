@@ -58,7 +58,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Tooltip_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				Result.extend (info.name + ".set_tooltip (" + retrieve_string_setting (Tooltip_string) +")")
+				Result.append (build_set_code_for_string (tooltip_string, info.actual_name_for_feature_call, "set_tooltip ("))
 			end
 		end
 

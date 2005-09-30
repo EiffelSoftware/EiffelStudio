@@ -65,9 +65,9 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (is_sensitive_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result.extend (info.name + ".enable_sensitive")
+					Result.extend (info.actual_name_for_feature_call + "enable_sensitive")
 				else
-					Result.extend (info.name + ".disable_sensitive")
+					Result.extend (info.actual_name_for_feature_call + "disable_sensitive")
 				end
 			end
 		end

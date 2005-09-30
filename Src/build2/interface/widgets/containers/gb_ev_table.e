@@ -157,18 +157,18 @@ feature {GB_CODE_GENERATOR} -- Output
 				rows := "1"
 			end
 			
-			Result.extend (info.name + ".resize (" + columns + ", " + rows + ")")
+			Result.extend (info.actual_name_for_feature_call + "resize (" + columns + ", " + rows + ")")
 			
 			if attribute_set (row_spacing_string) then
-				Result.extend (info.name + ".set_row_spacing (" +  retrieve_integer_setting (row_spacing_string) + ")")
+				Result.append (build_set_code_for_integer (row_spacing_string, info.actual_name_for_feature_call, "set_row_spacing ("))
 			end
 			
 			if attribute_set (column_spacing_string) then
-				Result.extend (info.name + ".set_column_spacing (" + retrieve_integer_setting (column_spacing_string) + ")")
+				Result.append (build_set_code_for_integer (column_spacing_string, info.actual_name_for_feature_call, "set_column_spacing ("))
 			end
 			
 			if attribute_set (border_width_string) then
-				Result.extend (info.name + ".set_border_width (" + retrieve_integer_setting (border_width_string) + ")")
+				Result.append (build_set_code_for_integer (border_width_string, info.actual_name_for_feature_call, "set_border_width ("))
 			end
 
 			element_info := full_information @ (column_positions_string)
@@ -220,7 +220,7 @@ feature {GB_CODE_GENERATOR} -- Output
 					row_position.prune_all_leading ('0')
 					column_span.prune_all_leading ('0')
 					row_span.prune_all_leading ('0')
-					Result.extend (info.name + ".put_at_position (" + current_child_name + ", " + column_position + ", " +
+					Result.extend (info.actual_name_for_feature_call + "put_at_position (" + current_child_name + ", " + column_position + ", " +
 						row_position + ", " + column_span + ", " + row_span + ")")
 					counter := counter + 1
 				end			

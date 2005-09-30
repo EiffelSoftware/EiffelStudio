@@ -107,7 +107,8 @@ feature {GB_CODE_GENERATOR} -- Output
 			end
 			if element_info /= Void then
 				if element_info.is_constant then
-					Result.extend (info.name + ".set_font (" + element_info.data + ")")
+					Result.extend (font_constant_set_procedures_string + ".extend (agent " + info.actual_name_for_feature_call + "set_font (?))")
+					Result.extend (font_constant_retrieval_functions_string + ".extend (agent " + retrieve_string_setting (font_string) + ")")
 				else
 					info.enable_fonts_set
 					Result.extend ("create internal_font")
@@ -185,7 +186,7 @@ feature {GB_CODE_GENERATOR} -- Output
 					if element_info /= Void then
 						Result.extend ("internal_font.preferred_families.extend (%"" + element_info.data + "%")")
 					end
-					Result.extend (info.name + ".set_font (internal_font)")
+					Result.extend (info.actual_name_for_feature_call + "set_font (internal_font)")
 				end
 			end
 		end

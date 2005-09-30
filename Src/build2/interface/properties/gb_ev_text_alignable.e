@@ -91,11 +91,11 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (text_alignment_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (Ev_textable_left_string) then
-					Result.extend (info.name + ".align_text_left")
+					Result.extend (info.actual_name_for_feature_call + "align_text_left")
 				elseif element_info.data.is_equal (Ev_textable_center_string) then
-					Result.extend (info.name + ".align_text_center")
+					Result.extend (info.actual_name_for_feature_call + "align_text_center")
 				elseif element_info.data.is_equal (Ev_textable_right_string) then
-					Result.extend (info.name + ".align_text_right")
+					Result.extend (info.actual_name_for_feature_call + "align_text_right")
 				end
 			end
 		end

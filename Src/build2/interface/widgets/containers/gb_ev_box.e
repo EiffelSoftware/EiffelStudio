@@ -120,18 +120,18 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (Is_homogeneous_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result.extend (info.name + ".enable_homogeneous")
+					Result.extend (info.actual_name_for_feature_call + "enable_homogeneous")
 				else
-					Result.extend (info.name + ".disable_homogeneous")
+					Result.extend (info.actual_name_for_feature_call + "disable_homogeneous")
 				end
 			end
 			
 			if attribute_set (Padding_string) then
-				Result.extend (info.name + ".set_padding_width (" + retrieve_integer_setting (padding_string) + ")")
+				Result.append (build_set_code_for_integer (padding_string, info.actual_name_for_feature_call, "set_padding ("))
 			end
 			
 			if attribute_set (Border_string) then
-				Result.extend (info.name + ".set_border_width (" + retrieve_integer_setting (border_string) + ")")
+				Result.append (build_set_code_for_integer (border_string, info.actual_name_for_feature_call, "set_border_width ("))
 			end
 
 			element_info := full_information @ (Is_item_expanded_string)
@@ -149,7 +149,7 @@ feature {GB_CODE_GENERATOR} -- Output
 						-- We only generate code for all the children that are disabled as they
 						-- are expanded by default.
 					if element_info.data @ children.index /= '1' then						
-						Result.extend (info.name + ".disable_item_expand (" + children.item.ev_any_access_name + ")")
+						Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.item.ev_any_access_name + ")")
 					end
 					children.forth
 				end

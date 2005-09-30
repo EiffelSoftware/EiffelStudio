@@ -73,14 +73,14 @@ feature {GB_CODE_GENERATOR} -- Output
 			if element_info /= Void then
 				children := info.children
 				if element_info.data.is_equal ("0") then
-					Result.extend (info.name +".enable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
-					Result.extend (info.name +".enable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
+					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
+					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
 				elseif element_info.data.is_equal ("1") then
-					Result.extend (info.name +".enable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
-					Result.extend (info.name +".disable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
+					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
+					Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
 				elseif element_info.data.is_equal ("2") then
-					Result.extend (info.name +".disable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
-					Result.extend (info.name +".enable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
+					Result.extend (info.actual_name_for_feature_call + "disable_item_expand (" + children.i_th (1).ev_any_access_name + ")")
+					Result.extend (info.actual_name_for_feature_call + "enable_item_expand (" + children.i_th (2).ev_any_access_name + ")")
 				end
 			end
 		end

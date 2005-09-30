@@ -55,14 +55,14 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (is_show_requested_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (false_string) then
-					Result.extend (info.name + ".hide")
+					Result.extend (info.actual_name_for_feature_call + "hide")
 				end
 			end
 			if attribute_set (Minimum_width_string) then
-				Result.extend (info.name + ".set_minimum_width (" + retrieve_integer_setting (Minimum_width_string) + ")")
+				Result.append (build_set_code_for_integer (Minimum_width_string, info.actual_name_for_feature_call, "set_minimum_width ("))
 			end
 			if attribute_set (Minimum_height_string) then
-				Result.extend (info.name + ".set_minimum_height (" + retrieve_integer_setting (Minimum_height_string) + ")")
+				Result.append (build_set_code_for_integer (Minimum_height_string, info.actual_name_for_feature_call, "set_minimum_height ("))
 			end
 		end
 

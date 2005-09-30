@@ -88,10 +88,10 @@ feature {GB_CODE_GENERATOR} -- Output
 					lower := (counter - 1) * 4 + 1
 					upper := (counter - 1) * 4 + 4
 					current_child_name := children_names @ counter
-					Result.extend (info.name + ".set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")")
-					Result.extend (info.name + ".set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")")
-					Result.extend (info.name + ".set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")")
-					Result.extend (info.name + ".set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")")
+					Result.extend (info.actual_name_for_feature_call + "set_item_x_position (" + current_child_name + ", " + temp_x_position_string.substring (lower, upper) + ")")
+					Result.extend (info.actual_name_for_feature_call + "set_item_y_position (" + current_child_name + ", " + temp_y_position_string.substring (lower, upper) + ")")
+					Result.extend (info.actual_name_for_feature_call + "set_item_width (" + current_child_name + ", " + temp_width_string.substring (lower, upper) + ")")
+					Result.extend (info.actual_name_for_feature_call + "set_item_height (" + current_child_name + ", " + temp_height_string.substring (lower, upper) + ")")
 					counter := counter + 1
 				end
 			end

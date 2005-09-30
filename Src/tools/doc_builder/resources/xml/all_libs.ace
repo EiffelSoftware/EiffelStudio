@@ -108,7 +108,7 @@ cluster
 	
 	all gobo_utility:		"$EIFFEL_SRC/library/gobo/library/utility"
 		exclude
-			"ut_file_uri_routines.e"; "ut_shared_file_uri_routines.e"; "command"; "CVS"; "EIFGEN"; "Documentation";
+			"command"; "CVS"; "EIFGEN"; "Documentation";
 		end
 	
 	all gobo_time:		"$EIFFEL_SRC/library/gobo/library/time"

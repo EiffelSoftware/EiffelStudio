@@ -25,9 +25,9 @@ exprt -r %DEFAULT_CVS_TAG -d editor "Src/library/editor"
 remtrace event
 exprt -r %DEFAULT_CVS_TAG -d event "Src/library/event"
 remtrace gobo
-copy %INSTALL_DIR\free_add_ons\gobo\gobo_33_ise.tgz .
-tar xfz gobo_33_ise.tgz
-fullrf gobo_33_ise.tgz
+copy %INSTALL_DIR\free_add_ons\gobo\gobo_34_win.tgz .
+tar xfz gobo_34_win.tgz
+fullrf gobo_34_win.tgz
 remtrace graph
 exprt -r %DEFAULT_CVS_TAG -d graph "Src/library/graph"
 remtrace helpers

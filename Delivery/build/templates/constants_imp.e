@@ -15,8 +15,8 @@ indexing
 	set_file_name ("my_constants_file.text")
 	reload_constants_from_file
 	
-	and then for each generated widget, call `set_attributes' to reset the newly loaded
-	constants into the attribute settings of each widget that relies on constants.
+	and then for each generated widget, call `set_all_attributes_using_constants' to reset
+	the newly loaded constants into the attribute settings of each widget that relies on constants.
 	
 	Note that if you wish your constants file to be loaded from a specific location,
 	you may redefine `initialize_constants' to handle the loading of the file from
@@ -61,8 +61,8 @@ feature -- Access
 			-- When used in conjunction with `set_file_name', it enables
 			-- you to load a fresh set of INTEGER and STRING constants
 			-- from a constants file. If you then wish these to be applied
-			-- to a current generated interface, call `set_attributes' on that
-			-- interface for the changed constants to be reflected in the attributes
+			-- to a current generated interface, call `set_all_attributes_using_constants'
+			-- on that interface for the changed constants to be reflected in the attributes
 			-- of your widgets.
 		do
 			initialized_cell.put (False)

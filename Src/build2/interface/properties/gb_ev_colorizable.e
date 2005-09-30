@@ -94,19 +94,21 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (background_color_string)
 			if element_info /= Void then
 				if element_info.is_constant then
-					Result.extend (info.name + ".set_background_color (" + element_info.data + ")")	
+					Result.extend (color_constant_set_procedures_string + ".extend (agent " + info.actual_name_for_feature_call + "set_background_color (?))")
+					Result.extend (color_constant_retrieval_functions_string + ".extend (agent " + retrieve_string_setting (background_color_string) + ")")
 				else
 					temp_color := build_color_from_string (element_info.data)
-					Result.extend (info.name + ".set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
+					Result.extend (info.actual_name_for_feature_call + "set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
 				end
 			end
 			element_info := full_information @ (foreground_color_string)
 			if element_info /= Void then
 				if element_info.is_constant then
-					Result.extend (info.name + ".set_foreground_color (" + element_info.data + ")")	
+					Result.extend (color_constant_set_procedures_string + ".extend (agent " + info.actual_name_for_feature_call + "set_foreground_color (?))")
+					Result.extend (color_constant_retrieval_functions_string + ".extend (agent " + retrieve_string_setting (foreground_color_string) + ")")
 				else
 					temp_color := build_color_from_string (element_info.data)
-					Result.extend (info.name + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
+					Result.extend (info.actual_name_for_feature_call + "set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))")
 				end
 			end
 		end

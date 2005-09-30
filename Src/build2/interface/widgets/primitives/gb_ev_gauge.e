@@ -109,20 +109,38 @@ feature {GB_CODE_GENERATOR} -- Output
 				check
 					both_upper_and_lower_set: attribute_set (Lower_string)
 				end
-				lower := retrieve_integer_setting (lower_string)
-				upper := retrieve_integer_setting (upper_string)
-				Result.extend (info.name + ".value_range.adapt (create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))")
-			end
+				if is_type_a_constant (lower_string) then
+					if is_type_a_constant (upper_string) then
+						Result.extend (integer_interval_constant_set_procedures_string + ".extend (agent (" + info.actual_name_for_feature_call + "value_range).adapt (?))")
+						Result.extend (integer_interval_constant_retrieval_functions_string + ".extend (agent " + retrieve_integer_setting (lower_string) + ")")
+						Result.extend (integer_interval_constant_retrieval_functions_string + ".extend (agent " + retrieve_integer_setting (upper_string) + ")")
+					else	
+						Result.extend (integer_interval_constant_set_procedures_string + ".extend (agent (" + info.actual_name_for_feature_call + "value_range).adapt (?))")
+						Result.extend (integer_interval_constant_retrieval_functions_string + ".extend (agent " + retrieve_integer_setting (lower_string) + ")")
+						Result.extend (integer_interval_constant_retrieval_functions_string + ".extend (agent " + "integer_from_integer (" + retrieve_integer_setting (upper_string) + "))")
+					end
+				else	
+					if is_type_a_constant (upper_string) then
+						Result.extend (integer_interval_constant_set_procedures_string + ".extend (agent (" + info.actual_name_for_feature_call + "value_range).adapt (?))")
+						Result.extend (integer_interval_constant_retrieval_functions_string + ".extend (agent " + "integer_from_integer (" + retrieve_integer_setting (upper_string) + "))")
+						Result.extend (integer_interval_constant_retrieval_functions_string + ".extend (agent " + retrieve_integer_setting (upper_string) + ")")
+					else
+						lower := retrieve_integer_setting (lower_string)
+						upper := retrieve_integer_setting (upper_string)
+						Result.extend (info.actual_name_for_feature_call + "value_range.adapt (create {INTEGER_INTERVAL}.make (" + lower + ", " + upper + "))")
+					end
+				end		
+			end			
 			
 			if attribute_set (Value_string) then
-				Result.extend (info.name + ".set_value (" + retrieve_integer_setting (value_string) + ")")
+				Result.append (build_set_code_for_integer (value_string, info.actual_name_for_feature_call, "set_value ("))
 			end
 			
 			if attribute_set (Step_string) then
-				Result.extend (info.name + ".set_step (" + retrieve_integer_setting (step_string) + ")")
+				Result.append (build_set_code_for_integer (step_string, info.actual_name_for_feature_call, "set_step ("))
 			end
 			if attribute_set (Leap_string) then
-				Result.extend (info.name + ".set_leap (" + retrieve_integer_setting (leap_string) + ")")
+				Result.append (build_set_code_for_integer (leap_string, info.actual_name_for_feature_call, "set_leap ("))
 			end
 		end
 

@@ -93,7 +93,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info: ELEMENT_INFORMATION
 			linked_groups: ARRAYED_LIST [INTEGER]
 			temp_output: STRING
-			window_access_string: STRING
+			window_actual_name_for_feature_call: STRING
 			other_info: GB_GENERATED_INFO
 		do
 			create Result.make (2)
@@ -115,16 +115,16 @@ feature {GB_CODE_GENERATOR} -- Output
 						other_info := info.generated_info_by_id.item (linked_groups.item)
 						if other_info.generate_as_client then
 							if other_info.type.is_equal (ev_titled_window_string) or other_info.type.is_equal (ev_dialog_string) then
-								window_access_string.append (client_window_string)
+								window_actual_name_for_feature_call.append (client_window_string)
 							else
-								window_access_string.append (client_widget_string)
+								window_actual_name_for_feature_call.append (client_widget_string)
 							end
 						else
-							window_access_String := "Current"
+							window_actual_name_for_feature_call := "Current"
 						end
-						temp_output := info.name + ".merge_radio_button_groups (" + window_access_string + ")"
+						temp_output := info.actual_name_for_feature_call + "merge_radio_button_groups (" + window_actual_name_for_feature_call + ")"
 					else
-						temp_output := info.name + ".merge_radio_button_groups (" + info.Names_by_id.item (linked_groups.item) + ")"
+						temp_output := info.actual_name_for_feature_call + "merge_radio_button_groups (" + info.Names_by_id.item (linked_groups.item) + ")"
 					end
 					Result.extend (temp_output)
 					linked_groups.forth

@@ -56,9 +56,9 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (Is_editable_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result.extend (info.name + ".enable_edit")
+					Result.extend (info.actual_name_for_feature_call + "enable_edit")
 				else
-					Result.extend (info.name + ".disable_edit")
+					Result.extend (info.actual_name_for_feature_call + "disable_edit")
 				end
 			end
 		end

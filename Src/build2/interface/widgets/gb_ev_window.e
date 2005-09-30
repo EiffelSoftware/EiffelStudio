@@ -157,22 +157,22 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (User_can_resize_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result.extend (info.name + ".enable_user_resize")
+					Result.extend (info.actual_name_for_feature_call + "enable_user_resize")
 				else
-					Result.extend (info.name + ".disable_user_resize")
+					Result.extend (info.actual_name_for_feature_call + "disable_user_resize")
 				end
 			end
 			
 			if attribute_set (Maximum_width_string) then
-				Result.extend (info.name + ".set_maximum_width (" + retrieve_integer_setting (Maximum_width_string) + ")")
+				Result.append (build_set_code_for_integer (Maximum_width_string, info.actual_name_for_feature_call, "set_maximum_width ("))
 			end
 				
 			if attribute_set (Maximum_height_string) then
-				Result.extend (info.name + ".set_maximum_height (" + retrieve_integer_setting (Maximum_height_string) + ")")
+				Result.append (build_set_code_for_integer (Maximum_height_string, info.actual_name_for_feature_call, "set_maximum_height ("))
 			end
 			
 			if attribute_set (Title_string) then
-				Result.extend (info.name + ".set_title (" + retrieve_string_setting (title_string) + ")")
+				Result.append (build_set_code_for_string (title_string, info.actual_name_for_feature_call, "set_title ("))
 			end
 		end
 

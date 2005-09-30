@@ -207,7 +207,6 @@ feature {GB_CODE_GENERATOR} -- Output
 			children_names: ARRAYED_LIST [STRING]
 			current_element: XM_ELEMENT
 			counter: INTEGER
-			string_value: STRING
 			a_pixmap_string: STRING
 			data: STRING
 		do
@@ -215,7 +214,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (tab_position_string)
 			if element_info /= Void then
-				Result.extend (info.name + ".set_tab_position (" + element_info.data + ")")
+				Result.extend (info.actual_name_for_feature_call + "set_tab_position (" + element_info.data + ")")
 			end
 
 			full_information := get_unique_full_info (element)
@@ -237,8 +236,7 @@ feature {GB_CODE_GENERATOR} -- Output
 						loop
 							if full_information.has (item_text_string + counter.out) then
 								if full_information.item (item_text_string + counter.out).data /= Void then
-									string_value := retrieve_string_setting (item_text_string + counter.out)
-									Result.extend (info.name + ".set_item_text (" + (children_names @ (counter)) + ", " + string_value + ")")
+									Result.append (build_set_code_for_string (item_text_string + counter.out, info.actual_name_for_feature_call, "set_item_text (" + children_names @ (counter) + ", "))
 								end
 							end
 							counter := counter + 1
@@ -276,7 +274,12 @@ feature {GB_CODE_GENERATOR} -- Output
 									Result.extend (pixmap_name + ".set_with_named_file (%"" + data + "%")")
 									a_pixmap_string := pixmap_name
 								end
-								Result.extend (info.name + ".item_tab (" + (children_names @ (counter)) + ").set_pixmap (" + a_pixmap_string + ")")
+								if is_type_a_constant (Item_pixmap_string + counter.out) then
+									Result.extend (pixmap_constant_set_procedures_string + ".extend (agent (" + info.actual_name_for_feature_call + "item_tab (" + (children_names @ (counter)) + ")).set_pixmap)")
+									Result.extend (pixmap_constant_retrieval_functions_string + ".extend (agent " + retrieve_string_setting (Item_pixmap_string + counter.out) + ")")
+								else
+									Result.extend (info.actual_name_for_feature_call + "item_tab (" + (children_names @ (counter)) + ").set_pixmap (" + a_pixmap_string + ")")
+								end
 							end
 							counter := counter + 1
 						end

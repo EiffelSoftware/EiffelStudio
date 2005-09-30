@@ -63,7 +63,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Style_string)
 			if element_info /= Void then
-				Result.extend (info.name + ".set_style (" + element_info.data + ")")
+				Result.extend (info.actual_name_for_feature_call + "set_style (" + element_info.data + ")")
 			end
 		end
 

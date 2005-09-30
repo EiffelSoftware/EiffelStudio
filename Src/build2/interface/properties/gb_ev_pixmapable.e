@@ -89,27 +89,29 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
-			data: STRING
-			a_pixmap_string: STRING
+			data, a_pixmap_string, set_string: STRING
 		do
 			create Result.make (2)
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
+				if type_conforms_to (dynamic_type_from_string (info.type), dynamic_type_from_string (Ev_container_string)) then
+					set_string := "set_background_pixmap ("
+				else
+					set_string := "set_pixmap ("
+				end
 				if element_info.is_constant then
 					a_pixmap_string := element_info.data
+					Result.extend (pixmap_constant_set_procedures_string + ".extend (agent " + info.actual_name_for_feature_call + set_string + "?))")
+					Result.extend (pixmap_constant_retrieval_functions_string + ".extend (agent " + retrieve_string_setting (pixmap_path_string) + ")")
 				else
 					info.enable_pixmaps_set
 					data := element_info.data
 					Result.extend (pixmap_name + ".set_with_named_file (%"" + data + "%")")
 					a_pixmap_string := pixmap_name
+					Result.extend (info.actual_name_for_feature_call + set_string + a_pixmap_string + ")")
 				end
-
-				if type_conforms_to (dynamic_type_from_string (info.type), dynamic_type_from_string (Ev_container_string)) then
-					Result.extend (info.name + ".set_background_pixmap (" + a_pixmap_string + ")")
-				else
-					Result.extend (info.name + ".set_pixmap (" + a_pixmap_string + ")")
-				end
+				
 			end
 		end
 

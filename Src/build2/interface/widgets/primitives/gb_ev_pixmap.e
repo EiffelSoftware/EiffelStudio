@@ -105,9 +105,10 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				if element_info.is_constant then
-					Result.extend (info.name + ".copy (" + element_info.data + ")")
+					Result.extend (pixmap_constant_set_procedures_string + ".extend (agent " + info.actual_name_for_feature_call + "copy (?))")
+					Result.extend (pixmap_constant_retrieval_functions_string + ".extend (agent " + retrieve_string_setting (pixmap_path_string) + ")")
 				else
-					Result.extend (info.name + ".set_with_named_file (%"" + element_info.data + "%")")
+					Result.extend (info.actual_name_for_feature_call + "set_with_named_file (%"" + element_info.data + "%")")
 				end
 			end
 		end

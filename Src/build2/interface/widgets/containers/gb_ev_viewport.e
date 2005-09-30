@@ -95,23 +95,23 @@ feature {GB_CODE_GENERATOR} -- Output
 						
 			element_info := full_information @ item_width_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result.extend (info.name + ".set_item_width (" + retrieve_integer_setting (item_width_string) + ")")
+				Result.append (build_set_code_for_integer (item_width_string, info.actual_name_for_feature_call, "set_item_width ("))
 			end
 			
 			element_info := full_information @ item_height_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result.extend (info.name + ".set_item_height (" + retrieve_integer_setting (item_height_string) + ")")
+				Result.append (build_set_code_for_integer (item_height_string, info.actual_name_for_feature_call, "set_item_height ("))
 			end
 			
 			element_info := full_information @ X_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
-				Result.extend (info.name + ".set_x_offset (" + retrieve_integer_setting (X_offset_string) + ")")
+				Result.append (build_set_code_for_integer (x_offset_string, info.actual_name_for_feature_call, "set_x_offset ("))
 			end
 			
 			element_info := full_information @ Y_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
-				Result.extend (info.name + ".set_y_offset (" + retrieve_integer_setting (Y_offset_string) + ")")
+				Result.append (build_set_code_for_integer (y_offset_string, info.actual_name_for_feature_call, "set_y_offset ("))
 			end
 		end
 
-end -- class GB_EV_WINDOW
+end -- class GB_EV_VIEWPORT

@@ -56,9 +56,9 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (is_segmented_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result.extend (info.name + ".enable_segmentation")
+					Result.extend (info.actual_name_for_feature_call + "enable_segmentation")
 				else
-					Result.extend (info.name + ".disable_segmentation")
+					Result.extend (info.actual_name_for_feature_call + "disable_segmentation")
 				end
 			end
 		end

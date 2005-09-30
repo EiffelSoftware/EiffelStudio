@@ -859,6 +859,19 @@ feature -- Constants
 	
 	invalid_pixmap_name_prefix: STRING is "pixmap_"
 		-- Name prepended to pixmaps that are invalid.
+		
+	integer_constant_set_procedures_string: STRING is "integer_constant_set_procedures"
+	integer_constant_retrieval_functions_string: STRING is "integer_constant_retrieval_functions"
+	string_constant_set_procedures_string: STRING is "string_constant_set_procedures"
+	string_constant_retrieval_functions_string: STRING is "string_constant_retrieval_functions"
+	font_constant_set_procedures_string: STRING is "font_constant_set_procedures"
+	font_constant_retrieval_functions_string: STRING is "font_constant_retrieval_functions"
+	color_constant_set_procedures_string: STRING is "color_constant_set_procedures"
+	color_constant_retrieval_functions_string: STRING is "color_constant_retrieval_functions"
+	pixmap_constant_set_procedures_string: STRING is "pixmap_constant_set_procedures"
+	pixmap_constant_retrieval_functions_string: STRING is "pixmap_constant_retrieval_functions"
+	integer_interval_constant_set_procedures_string: STRING is "integer_interval_constant_set_procedures"
+	integer_interval_constant_retrieval_functions_string: STRING is "integer_interval_constant_retrieval_functions"
 
 feature -- Preferences
 

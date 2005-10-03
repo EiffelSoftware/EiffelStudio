@@ -167,8 +167,11 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	confirm_convert_project_preference: BOOLEAN_PREFERENCE
 			-- Should we display a dialog before converting an old project?
+			
+	confirm_replace_all_preference: BOOLEAN_PREFERENCE
+			-- Should we display a dialog before replacing all?
 
-	acknowledge_not_loaded_preference: BOOLEAN_PREFERENCE
+	acknowledge_not_loaded_preference: BOOLEAN_PREFERENCE 
 			-- Should we display a dialog warning that text is not editable
 			-- before it is completely loaded?
 			
@@ -212,6 +215,7 @@ feature -- Preference strings
 	confirm_clear_breakpoints_string: STRING is "interface.dialogs.confirm_clear_breakpoints"
 	confirm_ignore_all_breakpoints_string: STRING is "interface.dialogs.confirm_ignore_all_breakpoints"
 	confirm_convert_project_string: STRING is "interface.dialogs.confirm_convert_project"
+	confirm_replace_all_string: STRING is "interface.dialogs.confirm_replace_all"
 	acknowledge_not_loaded_string: STRING is "interface.dialogs.acknowledge_not_loaded"
 	confirm_finalize_precompile_string: STRING is "interface.dialogs.confirm_finalize_precompile"	
 	show_starting_dialog_string: STRING is "interface.dialogs.show_starting_dialog"
@@ -270,8 +274,8 @@ feature {NONE} -- Implementation
 			confirm_kill_preference := l_manager.new_boolean_resource_value (l_manager, confirm_kill_string, True)
 			already_editing_class_preference := l_manager.new_boolean_resource_value (l_manager, already_editing_class_string, True)
 			executing_command_preference := l_manager.new_boolean_resource_value (l_manager, executing_command_string, True)
+			confirm_replace_all_preference := l_manager.new_boolean_resource_value (l_manager, confirm_replace_all_string, True)
 			file_open_and_save_dialogs_remember_last_directory := l_manager.new_boolean_resource_value (l_manager, file_open_and_save_dialogs_remember_last_directory_string, True)
-			
 			last_opened_project_directory_preference := l_manager.new_string_resource_value (l_manager, last_opened_project_directory_string, "")
 			last_opened_ace_directory_preference := l_manager.new_string_resource_value (l_manager, last_opened_ace_directory_string, "")
 			last_opened_dynamic_lib_directory_preference := l_manager.new_string_resource_value (l_manager, last_opened_dynamic_lib_directory_string, "")

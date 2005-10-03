@@ -24,6 +24,7 @@
 					<item>Previously, `set_default_colors' did not work.</item>
 					<item>Fixed bug in `pointer_enter_actions' and `pointer_leave_actions' of EV_GRID_ITEM which were not always fired when the mouse pointer entered or left the grid.</item>
 					<item>Corrected `not_row_height_variable_and_vertical_scrolling_per_pixel' precondition of `enable_partial_dynamic_content'.</item>
+					<item>Fixed bug which caused an internal exception within the grid when `is_tree_enabled' and `is_content_partially_dynamic'.</item>
 				</list>
 			</item>
 			<item>

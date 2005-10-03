@@ -340,9 +340,6 @@ feature -- Search commands
 			-- Find next occurrence of selection.
 		do
 			if search_tool /= Void then
-				if not text_displayed.selection_is_empty then
-					search_tool.set_current_searched (text_displayed.selected_string)
-				end
 				find_next
 			end
 		end

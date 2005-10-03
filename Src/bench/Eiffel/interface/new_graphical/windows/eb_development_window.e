@@ -578,15 +578,6 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (windows_tool)
 
-				-- Build the search tool
-			create search_tool.make (Current)
-			search_tool.attach_to_explorer_bar (left_panel)
-			left_tools.extend (search_tool.explorer_bar_item)
-			create show_cmd.make (Current, search_tool.explorer_bar_item)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			add_recyclable (search_tool)
-
 				-- Build the editor tool
 			create editor_tool.make (Current)
 			editor_tool.attach_to_explorer_bar (right_panel)
@@ -612,6 +603,16 @@ feature {NONE} -- Initialization
 			show_tool_commands.extend (show_cmd)
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (context_tool)
+
+				-- Build the search tool
+			create {EB_MULTI_SEARCH_TOOL}search_tool.make (Current)
+			search_tool.attach_to_explorer_bar (left_panel)
+			bottom_tools.extend (search_tool.explorer_bar_item)
+			create show_cmd.make (Current, search_tool.explorer_bar_item)
+			show_tool_commands.extend (show_cmd)
+			toolbarable_commands.extend (show_cmd)
+			editor_tool.text_area.add_edition_observer(search_tool)
+			add_recyclable (search_tool)
 
 				-- Set the flag "Tools initialized"
 			tools_initialized := True

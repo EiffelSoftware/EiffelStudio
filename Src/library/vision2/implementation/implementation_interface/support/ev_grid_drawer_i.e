@@ -184,60 +184,6 @@ feature -- Basic operations
 						end
 					else
 						row_offsets := grid.row_offsets
-	
-							-- Now iterate through `row_offsets', moving `pre_search_iteration_size'
-							-- each time, to determine where we should start the detailed search from.
-							-- By performing a pre-pass this way, we can reduce the number of iterations we
-							-- perform to seach for the row index at a paticular index.
-							-- This code and the subsequent main iteration could be replaced by a binary seach if
-							-- a simple method of iteration can be found.
-							-- The problems with the binary search lie with finding offsets within
-							-- subrows of non-expanded tree items when different size rows are permissable. The initial
-							-- binary search algorithm follows:
-							-- It still has the following problems
-							-- 1. The check for "i = next_offset" uses the incorrect `current_height'. In the case that
-							-- a node has non-expanded children, we must find the height of the first parent row recursively
-							-- that is displayed and use this height. The problem is that to do this, requires processing and the
-							-- speed advantage of the binary search is compromised. It is for this reason that the current code uses
-							-- the simple pre-pass loop below + it is also far easier to maintain.
-							-- 2. The result is off by 1 in some cases.
-	
-							--					from
-							--						row_counter := 1
-							--						hi := grid_row_count + 1
-							--						lo := 1
-							--						i := -1000
-							--					until
-							--						(hi - lo).abs = 1
-							--					loop
-							--						row_counter := ((hi - lo) // 2) + lo
-							--						i := row_offsets @ (row_counter)
-							--						next_offset := row_offsets @ (row_counter + 1)
-							--
-							--
-							--						current_row := grid.rows.i_th (row_counter - 1)
-							--
-							--						if grid.is_row_height_fixed then
-							--							current_height := grid.row_height
-							--						else
-							--							current_height := current_row.height
-							--						end
-							--
-							--						if (i = next_offset) and invalid_y_start <= i + current_height then
-							--							hi := row_counter
-							--						elseif invalid_y_start > i + current_height then
-							--							lo := row_counter
-							--						else	
-							--							hi := row_counter
-							--						end
-							--						if (i = next_offset) and invalid_y_start <= i + current_height then
-							--							hi := row_counter
-							--						elseif invalid_y_start > i + current_height then
-							--							lo := row_counter	
-							--						else	
-							--							hi := row_counter
-							--						end
-							--				end
 						if grid_row_count >= 1 then
 								-- Only compute the rows that span the area if there are rows
 								-- are contained in `grid'. If not, there is nothing to perform here
@@ -257,8 +203,8 @@ feature -- Basic operations
 		
 								-- If the starting index has fallen within a tree structure,
 								-- we must start from the beginning of the root parent.
-							if start_pos <= grid_row_count and then grid.rows.i_th (start_pos) /= Void and then grid.rows.i_th (start_pos).parent_row /= Void then
-								start_pos := grid.rows.i_th (start_pos).parent_row_root.index
+							if start_pos <= grid_row_count and then grid.row_internal (start_pos).parent_row /= Void then
+								start_pos := grid.row_internal (start_pos).parent_row_root.index
 							end
 		
 							from

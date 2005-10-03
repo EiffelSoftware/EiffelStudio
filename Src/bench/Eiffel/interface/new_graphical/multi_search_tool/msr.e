@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Set Text strategy as default to `search_strategy_internal'
 		do
-			create {MSR_SEARCH_TEXT_STRATEGY} search_strategy_internal.make
+			create {MSR_SEARCH_TEXT_STRATEGY} search_strategy_internal.make_empty
 			create {MSR_REPLACE_STRATEGY} replace_strategy_internal
 		ensure
 			is_replace_strategy_set : is_replace_strategy_set

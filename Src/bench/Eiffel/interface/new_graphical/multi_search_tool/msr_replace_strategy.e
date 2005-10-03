@@ -181,19 +181,18 @@ feature {NONE} -- Implementation
 			-- surrounding and line number will be freshed in all items.
 		local
 			l_item : MSR_TEXT_ITEM
-			l_off_set : INTEGER
+			l_offset : INTEGER
 		do
 			l_item ?= replace_items.item
 			if l_item /= Void then
-			 	l_item.source_text.replace_substring (	actual_replacement (l_item),
-			 													replace_items.item.start_index, 
-			 													replace_items.item.end_index)
-				l_item.context_text.replace_substring (	actual_replacement (l_item), 
+			 	l_item.source_text.replace_substring (actual_replacement (l_item), 
+			 													l_item.start_index,
+			 													l_item.end_index)
+				l_item.context_text.replace_substring (actual_replacement (l_item), 
 																l_item.start_index_in_context_text, 
-																l_item.text.count + l_item.start_index_in_context_text - 1
-																)
-				l_off_set := actual_replacement (l_item).count - replace_items.item.text.count
-				l_item.set_end_index (l_item.end_index + l_off_set)
+																l_item.text.count + l_item.start_index_in_context_text - 1)
+				l_offset := actual_replacement (l_item).count - l_item.text.count
+				l_item.set_end_index (l_item.end_index + l_offset)
 			 	refresh_item_capture_positions
 			 		-- refresh_item_capture_positions counts on old finding context,
 			 		-- so set_text later than refresh_item_capture_positions
@@ -265,41 +264,34 @@ feature {NONE} -- Implementation
 			replace_items_set: is_replace_items_set
 			replace_string_set : is_replace_string_set
 		local
-			l_off_set: INTEGER
+			l_offset: INTEGER
 			l_text_item: MSR_TEXT_ITEM
-			l_current_position: INTEGER
-			l_start_index: INTEGER
-			s: STRING
+			l_stop: BOOLEAN
+			l_cursor: CURSOR
 		do
-			l_off_set := replace_string.count - replace_items.item.text.count
-			s := replace_string
-			s := replace_items.item.text
-			l_current_position := replace_items.index
-			l_start_index := replace_items.item.end_index
+			l_text_item ?= replace_items.item
+			if l_text_item /= Void then
+				l_offset := replace_string.count - l_text_item.text.count
+			end
+			l_cursor := replace_items.cursor
 			from 
 				replace_items.forth
-				if replace_items.off then
-					l_text_item := Void
-				else
-					l_text_item ?= replace_items.item
-				end
+				l_text_item := Void
 			until
-				replace_items.after or l_text_item = Void
+				replace_items.after or l_stop
 			loop
+				l_text_item ?= replace_items.item
 				if l_text_item /= Void then
-					l_text_item.set_end_index (l_text_item.end_index + l_off_set)
-					l_text_item.set_start_index (l_text_item.start_index + l_off_set)
+					l_text_item.set_end_index (l_text_item.end_index + l_offset)
+					l_text_item.set_start_index (l_text_item.start_index + l_offset)
+				else
+					l_stop := True
 				end
 				replace_items.forth
-				if replace_items.off then
-					l_text_item := Void
-				else
-					l_text_item ?= replace_items.item
-				end				
-			end		
-			replace_items.go_i_th (l_current_position)
+			end	
+			replace_items.go_to (l_cursor)
 		ensure
-			replace_items_current_in_the_same_place: old replace_items.index = replace_items.index
+			not_replace_items_moved: old replace_items.index = replace_items.index
 		end
 	
 	append_replacement_to_string (a_string, a_replacement: STRING; a_text_item: MSR_TEXT_ITEM) is

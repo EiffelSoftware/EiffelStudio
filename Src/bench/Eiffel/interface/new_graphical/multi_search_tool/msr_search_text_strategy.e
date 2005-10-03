@@ -9,19 +9,37 @@ class
 inherit
 	MSR_SEARCH_STRATEGY
 		redefine
-			reset_all, launch, make, is_search_prepared
+			reset_all, launch, is_search_prepared
 		end
 		
 create
-	make
+	make, make_empty
 	
 feature {NONE} -- Initialization
 
-	make is
+
+	make (a_keyword: STRING; a_range: INTEGER; a_class_name: STRING; a_path: FILE_NAME; a_source_text: STRING) is
 			-- Initialization
+		require
+			keyword_attached: a_keyword /= Void
+			range_positive: a_range >= 0
+			class_name_attached: a_class_name /= Void
+			path_attached: a_path /= Void
+			source_text_attached: a_source_text /= Void
 		do
-			Precursor
-			reset_all
+			make_search_strategy (a_keyword, a_range)
+			class_name_internal := a_class_name
+			text_in_file_path_internal := a_path
+			text_to_be_searched_internal.set_real_string (a_source_text)
+		ensure
+			class_name_attached: a_class_name = class_name_internal
+			path_attached: a_path = text_in_file_path
+			source_text_attached: a_source_text = text_to_be_searched_internal.real_string
+		end
+	
+	make_empty is
+			-- Empty object
+		do
 		end
 
 feature -- Access
@@ -216,13 +234,8 @@ feature {NONE} -- Implementation
 			line_number: INTEGER
 			start_count_line_position: INTEGER
 		do
-			create new_item.make
-			new_item.set_class_name (class_name_internal)
+			create new_item.make (class_name_internal, text_in_file_path, text_to_be_searched_internal, pcre_regex.captured_start_position (0), pcre_regex.captured_end_position (0))
 			new_item.set_text (pcre_regex.captured_substring (0))
-			new_item.set_start_index (pcre_regex.captured_start_position (0))
-			new_item.set_end_index (pcre_regex.captured_end_position (0))
-			new_item.set_source_text (text_to_be_searched_internal)
-			new_item.set_path (text_in_file_path)
 			new_item.set_pcre_regex (pcre_regex)
 			if data /= Void then
 				new_item.set_data (data)

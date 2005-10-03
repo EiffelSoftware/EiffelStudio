@@ -8,13 +8,8 @@ class
 
 inherit
 	MSR_ITEM
-		redefine
-			start_index,
-			context_text,
-			end_index,
-			set_text,
-			set_start_index_in_context_text,
-			make
+		rename
+			make as make_item
 		end 
 		
 create
@@ -22,12 +17,15 @@ create
 
 feature {NONE} -- Initialization
 	
-	make is
-			-- Initialization, set `context_text_internal' and `text_internal' with "-"		
+	make (a_name: like class_name; a_path: like path; a_text: MSR_STRING_ADAPTER) is
+			-- Initialization, set `context_text_internal' and `text_internal' with "-"	
+		require	
+			name_attached: a_name /= Void
+			not_name_is_empty: not a_name.is_empty
+			path_attached: a_path /= Void
+			text_attached: a_text /= Void
 		do
-			Precursor {MSR_ITEM}
-			context_text_internal := "-"
-			text_internal := "-"
+			make_item (a_name, a_path, a_text)
 		end	
 
 feature -- Access
@@ -47,38 +45,6 @@ feature -- Access
 		ensure then
 			end_index_equal_zero: Result = 0
 		end
-	
-	context_text: STRING is
-			-- Found text with surrounding text
-		do
-			Result := context_text_internal
-		end
 
-feature -- Element Change
-
-	set_text (context: STRING) is
-			-- Do nothing
-		do		
-			
-		end
 		
-	set_start_index_in_context_text (p_position: INTEGER) is
-			-- Do nothing
-		do
-			
-		end		
-	
-feature -- Measurement
-
-	count : INTEGER is
-			-- Number of searching text in this class item
-		do
-			Result := child_list_internal.count
-		end
-	
-invariant
-
-	context_text_internal_not_void: context_text_internal /= Void
-	text_internal_not_void: text_internal /= Void
-
-end
+end -- class MSR_CLASS_ITEM

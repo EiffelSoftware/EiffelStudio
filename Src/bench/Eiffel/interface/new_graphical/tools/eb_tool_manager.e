@@ -61,8 +61,10 @@ feature {NONE} -- Initialization
 			-- Create and set up the list of tools that can be put on the left
 			-- and on the bottom-right.
 		do
-			create left_tools.make (7)
-			create bottom_tools.make (4)
+--			create left_tools.make (7)
+--			create bottom_tools.make (4) Ted
+			create left_tools.make (6)
+			create bottom_tools.make (5)
 		end
 
 feature {EB_TOOL_MANAGER} -- Initialization

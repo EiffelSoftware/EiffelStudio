@@ -549,6 +549,42 @@ feature -- Cursor movement
 			go_right_char
 			go_end_word
 		end
+		
+	go_to_position (a_position: INTEGER) is
+			-- Move `Current' to `a_position' of the text
+		local
+			pos: INTEGER
+			cline: EDITOR_LINE
+			t: EDITOR_TOKEN
+			stop: BOOLEAN
+		do
+			from
+				pos := a_position
+				cline := text.first_line
+				t := cline.first_token
+			until
+				stop or else pos <= t.length
+			loop
+				pos := pos - t.length
+				if t.next = Void then
+					if cline.next /= Void then
+						cline := cline.next
+						t := cline.first_token
+					else
+						stop := True
+						pos := 1
+					end
+				else
+					t := t.next
+				end
+			end
+			check
+				token_exists: t /= Void
+			end
+			line := cline
+			y_in_lines := cline.index
+			set_current_char (t, pos)
+		end
  
 	char_is_separator (char: CHARACTER): BOOLEAN is
 			-- Is `char' considered a word separator?

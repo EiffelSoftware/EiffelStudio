@@ -17,11 +17,15 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make( a_keyword: STRING; a_range: INTEGER; a_path: FILE_NAME) is
 			-- Initialization
+		require
+			keyword_attached: a_keyword /= Void
+			range_positive: a_range >= 0
+			a_path_attached: a_path /= Void
 		do
-			Precursor
-			reset_all
+			make_search_strategy (a_keyword, a_range)
+			set_path (a_path)
 		end
 
 feature -- Access

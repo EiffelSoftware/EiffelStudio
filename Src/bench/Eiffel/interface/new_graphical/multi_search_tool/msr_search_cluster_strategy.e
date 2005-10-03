@@ -9,31 +9,24 @@ class
 inherit
 	MSR_SEARCH_STRATEGY
 		redefine
-			make,
 			launch,
 			reset_all,
 			is_search_prepared
 		end
 
 create
-	make,
-	make_with_cluster
+	make
 		
 feature {NONE} -- Initialization
 	
-	make is
-			-- Initialization
-		do
-			Precursor
-			reset_all
-		end
-	
-	make_with_cluster (a_cluster: CLUSTER_I) is
+	make (a_keyword: STRING; a_range: INTEGER; a_cluster: CLUSTER_I) is
 			-- Initialization with a cluster
 		require
 			a_cluster_not_void: a_cluster /= Void
+			keyword_attached: a_keyword /= Void
+			range_positive: a_range >= 0
 		do
-			make
+			make_search_strategy (a_keyword, a_range)
 			set_cluster (a_cluster)
 		end
 		
@@ -84,16 +77,14 @@ feature -- Basic operatioin
 					until
 						subcluster.after
 					loop
-						create cluster_strategy.make_with_cluster (subcluster.item)
+						create cluster_strategy.make (keyword, surrounding_text_range_internal, subcluster.item)
 						if case_sensitive then
 							cluster_strategy.set_case_sensitive
 						else
 							cluster_strategy.set_case_insensitive
 						end
 						cluster_strategy.set_regular_expression_used (is_regular_expression_used)
-						cluster_strategy.set_keyword (keyword)
 						cluster_strategy.set_subcluster_searched (is_subcluster_searched)
-						cluster_strategy.set_surrounding_text_range (surrounding_text_range_internal)
 						cluster_strategy.set_whole_word_matched (is_whole_word_matched)
 						cluster_strategy.launch
 						if cluster_strategy.is_launched then
@@ -111,15 +102,13 @@ feature -- Basic operatioin
 				until
 					classes.after
 				loop
-					create class_strategy.make_with_class (classes.item_for_iteration)
+					create class_strategy.make (keyword, surrounding_text_range_internal, classes.item_for_iteration)
 					if case_sensitive then
 						class_strategy.set_case_sensitive
 					else
 						class_strategy.set_case_insensitive
 					end
 					class_strategy.set_regular_expression_used (is_regular_expression_used)
-					class_strategy.set_keyword (keyword)
-					class_strategy.set_surrounding_text_range (surrounding_text_range_internal)
 					class_strategy.set_whole_word_matched (is_whole_word_matched)
 					class_strategy.launch
 					if class_strategy.is_launched then

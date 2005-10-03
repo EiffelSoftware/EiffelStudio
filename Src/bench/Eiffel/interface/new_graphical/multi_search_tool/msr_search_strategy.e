@@ -8,11 +8,20 @@ deferred class
 
 feature {NONE} -- Initialization
 
-	make is
+	make_search_strategy(a_keyword: STRING; a_range: INTEGER) is
 			-- Initialization
+		require
+			keyword_attached: a_keyword /= Void
+			range_positive: a_range >= 0
 		do
 			create pcre_regex.make
+			reset_all
 			pcre_regex.set_multiline (true)
+			keyword_internal := a_keyword
+			surrounding_text_range_internal := a_range
+		ensure
+			keyword_attached: keyword = a_keyword
+			surrounding_positive: surrounding_text_range_internal >= 0
 		end
 
 feature -- Access

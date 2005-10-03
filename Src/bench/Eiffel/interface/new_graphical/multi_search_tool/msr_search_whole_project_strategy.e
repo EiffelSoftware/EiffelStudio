@@ -13,7 +13,7 @@ inherit
 		end
 	
 create
-	make_with_scope_container
+	make
 	
 feature -- Basic Operation	
 	
@@ -31,16 +31,14 @@ feature -- Basic Operation
 				until
 					l_clusters.clusters.after
 				loop
-					create l_cluster_strategy.make_with_cluster (l_clusters.clusters.item.actual_cluster)
+					create l_cluster_strategy.make (keyword, surrounding_text_range_internal, l_clusters.clusters.item.actual_cluster)
 					if case_sensitive then
 						l_cluster_strategy.set_case_sensitive
 					else
 						l_cluster_strategy.set_case_insensitive
 					end
 					l_cluster_strategy.set_regular_expression_used (is_regular_expression_used)
-					l_cluster_strategy.set_keyword (keyword)
 					l_cluster_strategy.set_subcluster_searched (true)
-					l_cluster_strategy.set_surrounding_text_range (surrounding_text_range_internal)
 					l_cluster_strategy.set_whole_word_matched (is_whole_word_matched)
 					l_cluster_strategy.launch
 					if l_cluster_strategy.is_launched then

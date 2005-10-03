@@ -97,7 +97,7 @@ feature -- Basic operation
 								editor.text_displayed.insert_string (actual_replacement (l_item))
 							end							
 						else
-							editor.select_region (replace_items.item.start_index_in_unix_text, replace_items.item.end_index_in_unix_text + 1)
+							editor.select_region (l_item.start_index_in_unix_text, l_item.end_index_in_unix_text + 1)
 							if editor.has_selection then
 								if not actual_replacement (l_item).is_empty then
 									editor.replace_selection (actual_replacement (l_item))

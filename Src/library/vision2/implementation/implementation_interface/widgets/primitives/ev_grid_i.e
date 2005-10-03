@@ -410,7 +410,7 @@ feature -- Access
 					if is_row_height_fixed and not is_tree_enabled then
 						virtual_y_position_of_last_row := (row_index - 1) * row_height
 					else
-						virtual_y_position_of_last_row := rows.i_th (row_index).virtual_y_position
+						virtual_y_position_of_last_row := row_internal (row_index).virtual_y_position
 					end
 					l_calculation := total_row_height - virtual_y_position_of_last_row
 				end

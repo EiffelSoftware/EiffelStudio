@@ -1,0 +1,216 @@
+indexing
+	description: "Dialog to choose multi classes and clusters"
+	author: "Tedf"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	EB_CHOOSE_MULTI_CLUSTER_N_CLASS_DIALOG
+
+inherit
+	EV_DIALOG
+
+	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+	EB_VISION2_FACILITIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Initialize the dialog.
+		do
+			default_create
+			set_title (Interface_names.t_Add_search_scope)
+			prepare
+		end
+
+	prepare is
+			-- Create the controls and setup the layout
+		local
+			buttons_box: EV_HORIZONTAL_BOX
+			controls_box: EV_VERTICAL_BOX
+			vb: EV_VERTICAL_BOX
+		do
+				-- Create the button box.
+			create buttons_box
+			buttons_box.set_padding (Layout_constants.Small_padding_size)
+			buttons_box.set_border_width (Layout_constants.Small_padding_size)
+			
+			create add_button.make_with_text_and_action (Interface_names.b_add, agent on_add)
+			extend_button (buttons_box, add_button)
+	
+			create ok_button.make_with_text_and_action (Interface_names.b_Ok, agent on_ok)
+			extend_button (buttons_box, ok_button)
+
+--			create cancel_button.make_with_text_and_action (Interface_names.b_Cancel, agent on_cancel)
+--			extend_button (buttons_box, cancel_button)
+
+			buttons_box.extend (create {EV_CELL})
+
+				-- Create the controls.
+--			create class_name_entry.make
+			create classes_tree.make
+			classes_tree.set_minimum_width (Layout_constants.dialog_unit_to_pixels(200))
+			classes_tree.set_minimum_height (Layout_constants.dialog_unit_to_pixels(300))
+			classes_tree.refresh
+			
+				-- Create the top panel: a Combo Box to type the name of the class
+				-- and a tree to select the class.
+			create controls_box
+			controls_box.set_padding (Layout_constants.small_padding_size)
+			controls_box.set_border_width (Layout_constants.small_padding_size)
+--			extend_no_expand (controls_box, class_name_entry)
+			controls_box.extend (classes_tree)
+
+				-- Pack the buttons_box and the controls.
+			create vb
+			vb.extend (controls_box)
+			extend_no_expand (vb, buttons_box)
+			extend (vb)
+			set_default_push_button (add_button)
+			set_default_cancel_button (ok_button)
+--			classes_tree.associate_textable_with_classes (class_name_entry)
+			classes_tree.add_double_click_action_to_classes (agent on_class_double_click)
+--			show_actions.extend (agent class_name_entry.set_focus)
+		end
+
+feature -- Access
+
+	selected: BOOLEAN
+			-- Has the user selected a class (True) or pushed
+			-- the cancel button (False)?
+
+	class_name: STRING is
+			-- class selected by the user, if any.
+		require
+			selected: selected
+		do
+			Result := selected_class_name
+		end
+
+feature -- Element Change
+	
+	set_class_add_action (action: PROCEDURE [ANY, TUPLE [CLASS_I]]) is
+			-- set class add action
+		do
+			on_class_add := action
+		end
+		
+	set_cluster_add_action (action: PROCEDURE [ANY, TUPLE [CLUSTER_I]]) is
+			-- set cluster add action
+		do
+			on_cluster_add := action
+		end
+		
+feature {NONE} -- Implementation
+
+	selected_class_name: STRING
+			-- name of the selected class, if any.
+	
+	object: ANY
+			-- operations can be committed on this object
+
+feature {NONE} -- Vision2 events
+
+	on_add is
+			-- add a do add operations to object.
+		local
+			l_class: CLASS_I
+			l_cluster: EB_SORTED_CLUSTER
+		do
+			if classes_tree.selected_item /= Void then
+				l_class ?= classes_tree.selected_item.data
+				l_cluster ?= classes_tree.selected_item.data
+				if l_class /= Void then
+					on_class_add.call ([l_class])
+				end
+				if l_cluster /= Void then
+					on_cluster_add.call ([l_cluster.actual_cluster])
+				end
+			end
+		end
+		
+	on_class_add: PROCEDURE [ANY, TUPLE [CLASS_I]]
+	
+	on_cluster_add: PROCEDURE [ANY, TUPLE [CLUSTER_I]]
+
+--	on_ok is
+--			-- Terminate the dialog.
+--		local
+--			loclist: LIST [CLASS_I]
+--		do
+--			selected_class_name := class_name_entry.text.as_upper
+--			selected := not selected_class_name.is_empty
+--			if selected then -- User typed a class name.
+--				loclist := Eiffel_universe.classes_with_name (selected_class_name)
+--				if loclist.is_empty then -- No class has such a name.
+--					class_name_entry.set_text (Interface_names.l_Unknown_class_name)
+--					class_name_entry.set_focus
+--					class_name_entry.select_all
+--				else
+--					destroy
+--				end
+--			else
+--				class_name_entry.set_focus
+--			end
+--		end
+
+	on_ok is
+			-- Terminate the dialog and clear the selection.
+		do
+			selected := False
+			destroy
+		end
+
+	on_class_double_click (	x_rel: INTEGER;
+							y_rel: INTEGER;
+							button: INTEGER;
+							x_tilt: DOUBLE;
+							y_tilt: DOUBLE;
+							pression: DOUBLE;
+							x_abs: INTEGER;
+							y_abs: INTEGER ) is
+			-- Call on_ok through an agent compatible with double click actions.
+		do
+			on_ok
+		end
+
+feature {NONE} -- Controls
+
+	add_button: EV_BUTTON
+			-- "Add button"
+
+	ok_button: EV_BUTTON
+			-- "Ok" button.
+
+--	cancel_button: EV_BUTTON
+--			-- "Cancel" button.
+
+--	class_name_entry: EB_CHOOSE_CLASS_COMBO_BOX
+			-- Combo box where the user can type its class name.
+
+	classes_tree: EB_CLASSES_TREE
+			-- Tree where the user can choose its class.
+
+end -- class EB_CHOOSE_CLASS_DIALOG
+	

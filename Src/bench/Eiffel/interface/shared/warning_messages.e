@@ -1061,5 +1061,9 @@ feature -- Warning messages
 	w_Finalize_precompile: STRING is    ".NET precompiled libraries can be finalized to create%N%
 									%an optimized version as well as a workbench version.%N%
 									%Would you like to create a finalized verion?"
+									
+	w_Replace_all: STRING is "This operation can not be undone %N%
+									%to files not loaded to the editor.%N%
+									%Would you like to continue replacing all?"
 
 end -- class WARNING_MESSAGES

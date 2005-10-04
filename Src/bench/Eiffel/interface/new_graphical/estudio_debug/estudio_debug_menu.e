@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that represent the special debug menu for eStudio"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,47 +40,46 @@ feature {NONE} -- Initialization
 			menu_item.select_actions.extend (agent launch_memory_tool)
 			extend (menu_item)
 		
---				-- Breakpoints
---			create menu_item.make_with_text_and_action ("Save breakpoints now", agent save_breakpoints)
---			extend (menu_item)
-
 		end
 		
 feature {NONE} -- Actions
 
---	save_breakpoints is
---		local
---			sh_app: SHARED_APPLICATION_EXECUTION
---			app: APPLICATION_EXECUTION
---		do
---			create sh_app
---			app := sh_app.application
---			app.save_debug_info
---			show_popup_message ("Breakpoints saved")
---		end			
-	
 	launch_memory_tool is
+			-- Launch Memory Analyzer.
+		local
+			l_env: EXECUTION_ENVIRONMENT
+			l_path: STRING
+			l_dir: DIRECTORY_NAME
+			l_dlg: EV_INFORMATION_DIALOG
 		do
 			if ma_window = Void or ma_window.is_destroyed then
-				create ma_window
+				create l_env
+				l_path := l_env.get ("EIFFEL_SRC")
+				if l_path = Void then
+					create l_dlg.make_with_text ("EIFFEL_SRC not defined.")
+					l_dlg.show
+				else
+					create l_dir.make_from_string (l_path)
+					l_dir.extend_from_array (<<"library", "memory_analyzer" >>)
+					create ma_window.make (l_dir)
+					ma_window.close_request_actions.extend (agent handle_close_window)
+				end
 			end
-			ma_window.show	
+			ma_window.show
 		end
 		
 feature {NONE} -- Implementation
 
+	handle_close_window is
+			-- Handle user press window action.
+		do
+			ma_window.hide
+		end
+		
 	window: EV_WINDOW
 			-- Main development window.
 	
 	ma_window: MA_WINDOW
 			-- Memory analyzer window.
-
---	show_popup_message (m: STRING) is
---		local
---			d: EV_INFORMATION_DIALOG
---		do
---			create d.make_with_text (m)
---			d.show_relative_to_window (window)
---		end
 
 end

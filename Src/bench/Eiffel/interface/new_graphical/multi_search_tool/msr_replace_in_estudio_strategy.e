@@ -91,7 +91,7 @@ feature -- Basic operation
 				if class_i /= Void then				 	
 					if is_class_i_editing (class_i) then
 						if l_item.end_index_in_unix_text + 1 = l_item.start_index_in_unix_text then
-							editor.text_displayed.cursor.go_to_position_in_whole_text (l_item.end_index_in_unix_text + 1)
+							editor.text_displayed.cursor.go_to_position (l_item.end_index_in_unix_text + 1)
 							editor.deselect_all
 							if not actual_replacement (l_item).is_empty then
 								editor.text_displayed.insert_string (actual_replacement (l_item))

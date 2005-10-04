@@ -1998,6 +1998,8 @@ feature -- Element change
 			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
 			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+				implies row (i + 1).parent_row = a_parent_row
 		do
 			insert_rows_at (1, i)
 			a_parent_row.implementation.add_subrows_internal (1, i, a_parent_row.subrow_count + 1,True)
@@ -2014,6 +2016,8 @@ feature -- Element change
 			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
 			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+				implies row (i + 1).parent_row = a_parent_row
 		do
 			insert_rows_at (rows_to_insert, i)
 			a_parent_row.implementation.add_subrows_internal (rows_to_insert, i, a_parent_row.subrow_count + 1,True)

@@ -449,7 +449,9 @@ feature {NONE} -- Process Vision2 events
 			if has_selection then
 				sel_start := text_displayed.selection_start.y_in_lines
 				sel_end := text_displayed.selection_end.y_in_lines
-				invalidate_block (sel_start, sel_end, True)
+					-- Do not flush screen, other events might invalidate first.
+					-- Otherwise, the selection might flash when gaining focus.
+				invalidate_block (sel_start, sel_end, false)
 			end
 		end
 
@@ -463,8 +465,8 @@ feature {NONE} -- Process Vision2 events
 		do
 				-- Redraw the line where the cursor is (we will erase the cursor)
 			show_cursor := False
-			invalidate_cursor_rect (True)
-			suspend_cursor_blinking				
+			invalidate_selection_rect (True)
+			suspend_cursor_blinking	
 		end
 
 feature {NONE} -- Handle keystrokes
@@ -784,6 +786,19 @@ feature {NONE} -- Blink Cursor Management
 				invalidate_line (text_displayed.cursor.y_in_lines, flush_screen)	
 			end
 		end
+		
+	invalidate_selection_rect (flush_screen: BOOLEAN) is
+			-- Set lines of the selection be redrawn.
+			-- Redraw immediately if `flush_screen' is set.
+		local
+			line_start, line_end: INTEGER
+		do
+			if not is_empty then
+				line_start := text_displayed.selection_start.y_in_lines
+				line_end := text_displayed.selection_end.y_in_lines
+				invalidate_block (line_start, line_end, true)
+			end
+		end
 
 	draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
 			-- Draw the cursor block defined by the rectangle associated with the current cursor at `y' and on `media'.
@@ -827,7 +842,7 @@ feature {NONE} -- Blink Cursor Management
 			end
 			media.fill_rectangle (x, y, width_cursor, ln_height)			
 			media.set_copy_mode			
-		end		
+		end
 
 	x_position_of_cursor (a_cursor: TEXT_CURSOR): INTEGER is
 			-- Horizontal position in pixels of `a_cursor' in the panel.

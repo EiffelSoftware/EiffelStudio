@@ -1,6 +1,5 @@
 indexing
 	description : "Objects that represents the special debug menu access point"
-	author      : "$Author$"
 	date        : "$Date$"
 	revision    : "$Revision$"
 
@@ -123,7 +122,6 @@ feature -- Command
 		end
 		
 invariant
-	
 	accelerator_not_void: accelerator /= Void
 
 end

@@ -46,7 +46,14 @@ feature -- Basic Exportations
 
 	initialize (a_clr_version: SYSTEM_STRING) is
 			-- initialize the object using default path to EAC
+		local
+			l_sub: AR_RESOLVE_SUBSCRIBER
+			l_resolver: AR_RESOLVER
 		do
+			create l_sub.make
+			create l_resolver.make_with_name ("Initializing Resolver")
+			l_sub.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
+		
 			clr_version := a_clr_version
 
 				-- Turn of all security to prevent any security exceptions

@@ -122,5 +122,11 @@ feature -- Commands
 			create Result.make
 			Result.enable_sensitive
 		end
+		
+	Estudio_debug_cmd: ESTUDIO_DEBUG_CMD is
+			-- Show/Hide EiffelStudio self debug menu.
+		once
+			create Result
+		end
 
 end -- class EB_SHARED_GRAPHICAL_COMMANDS

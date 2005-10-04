@@ -198,7 +198,7 @@ feature -- Access
 			create sep
 			Result.extend (sep)
 			Result.extend (exception_handler_cmd.new_menu_item)
-
+				
 			debug ("DEBUGGER_INTERFACE")
 					-- Separator.
 				create sep
@@ -1111,7 +1111,9 @@ feature {NONE} -- Implementation
 
 	no_stop_cmd: EB_EXEC_NO_STOP_CMD
 			-- Run without stop points command.
+			
 
+	
 	init_commands is
 			-- Create a new project toolbar.
 		do
@@ -1177,7 +1179,7 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (stop_cmd)
 			create quit_cmd.make
 			toolbarable_commands.extend (quit_cmd)
-
+			
 			step_cmd.enable_sensitive
 			into_cmd.enable_sensitive
 			out_cmd.enable_sensitive

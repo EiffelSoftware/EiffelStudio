@@ -266,6 +266,9 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	graphical_output_disabled_preference: BOOLEAN_PREFERENCE			
 		
 	use_animated_icons_preference: BOOLEAN_PREFERENCE	
+	
+	show_eiffel_studio_debug_preference: BOOLEAN_PREFERENCE
+			-- If last time user open Eiffel Studio Debug menu ?
 		
 feature -- Element change
 
@@ -377,6 +380,7 @@ feature {NONE} -- Preference Strings
 	context_unified_stone_string: STRING is "interface.development_window.unified_stone"
 	graphical_output_disabled_string: STRING is "interface.development_window.graphical_output_disabled"	
 	use_animated_icons_string: STRING is "interface.development_window.use_animated_icons"
+	show_eiffel_studio_debug_menu: STRING is "interface.development_window.show_eiffel_studio_debug_menu"
 
 feature {NONE} -- Implementation
 
@@ -416,6 +420,7 @@ feature {NONE} -- Implementation
 			context_unified_stone_preference := l_manager.new_boolean_resource_value (l_manager, context_unified_stone_string, False)
 			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)			
 			use_animated_icons_preference := l_manager.new_boolean_resource_value (l_manager, use_animated_icons_string, True)			
+			show_eiffel_studio_debug_preference := l_manager.new_boolean_resource_value (l_manager, show_eiffel_studio_debug_menu, False)
 		end
 	
 	preferences: PREFERENCES

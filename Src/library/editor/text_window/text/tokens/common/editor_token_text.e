@@ -155,7 +155,11 @@ feature -- Miscellaneous
 			-- at the coordinates (`position',`d_y') with its
 			-- selected state.
 		do
-			display_with_colors(d_y, selected_text_color, selected_background_color, device)
+			if panel.has_focus then
+				display_with_colors(d_y, selected_text_color, selected_background_color, device)
+			else
+				display_with_colors(d_y, text_color, focus_out_selected_background_color, device)
+			end
 		end
 
 	display_half_selected (d_y: INTEGER; start_selection, end_selection: INTEGER; device: EV_DRAWABLE; panel: TEXT_PANEL) is
@@ -231,12 +235,20 @@ feature -- Miscellaneous
 			text_width := text_width.abs		
 	
 				-- Set drawing style to "selected" text
-			device.set_foreground_color(selected_text_color)
+			if panel.has_focus then
+				device.set_foreground_color(selected_text_color)
+			else
+				device.set_foreground_color(text_color)
+			end			
 			if selected_background_color /= Void then
-				device.set_background_color(selected_background_color)					
-					if text_width >= 0 then
-						device.clear_rectangle (local_position, d_y, text_width, height)
-					end
+				if panel.has_focus then
+					device.set_background_color (selected_background_color)
+				else
+					device.set_background_color (focus_out_selected_background_color)
+				end
+				if text_width >= 0 then
+					device.clear_rectangle (local_position, d_y, text_width, height)
+				end
 			end
 
 				-- Display the "selected" text.
@@ -267,7 +279,7 @@ feature -- Miscellaneous
 					-- Set drawing style to "normal" text
 				device.set_foreground_color(txt_color)
 				if background_color /= Void then
-					device.set_background_color(background_color)
+					device.set_background_color (background_color)
 					check
 						text_valid: text_width >= 0
 					end

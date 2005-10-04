@@ -221,6 +221,11 @@ feature {EDITOR_TOKEN} -- Properties used to display the token
 		do
 			Result := editor_preferences.selection_background_color
 		end
+	
+	focus_out_selected_background_color: EV_COLOR is
+		do
+			Result := editor_preferences.focus_out_selection_background_color	
+		end		
 
 feature -- Implementation of clickable and editable text
 

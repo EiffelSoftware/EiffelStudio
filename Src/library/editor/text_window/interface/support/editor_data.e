@@ -177,9 +177,15 @@ feature -- Value
 		end
 
 	selection_background_color: EV_COLOR is
-			-- Background color used to display selected text
+			-- Background color used to display selected text when has focus
 		do
 			Result := selection_background_color_preference.value
+		end
+		
+	focus_out_selection_background_color: EV_COLOR is
+			-- Background color used to display selected text when focus losed
+		do
+			Result := focus_out_selection_background_color_preference.value
 		end
 
 	string_text_color: EV_COLOR is
@@ -346,7 +352,10 @@ feature {ANY} -- Preferences
 			-- Color used to display selected text
 
 	selection_background_color_preference: COLOR_PREFERENCE
-			-- Background color used to display selected text
+			-- Background color used to display selected text when has focus
+			
+	focus_out_selection_background_color_preference: COLOR_PREFERENCE
+			-- Background color used to display selected text when focus losed
 
 	string_text_color_preference: COLOR_PREFERENCE
 			-- Color used to display strings
@@ -446,7 +455,10 @@ feature {NONE} -- Preference Strings
 			-- Color used to display selected text
 
 	selection_background_color_string: STRING is "editor.general.colors.selection_background_color"
-			-- Background color used to display selected text
+			-- Background color used to display selected text when has focus
+			
+	focus_out_selection_background_color_string: STRING is "editor.general.colors.focus_out_selection_background_color"
+			-- Background color used to display selected text when focus losed.
 
 	string_text_color_string: STRING is "editor.general.colors.string_text_color"
 			-- Color used to display strings
@@ -536,6 +548,7 @@ feature {NONE} -- Implementation
 			normal_background_color_preference := l_manager.new_color_resource_value (l_manager, normal_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			selection_text_color_preference := l_manager.new_color_resource_value (l_manager, selection_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 128))
 			selection_background_color_preference := l_manager.new_color_resource_value (l_manager, selection_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
+			focus_out_selection_background_color_preference := l_manager.new_color_resource_value (l_manager, focus_out_selection_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (236, 233, 216))
 			string_text_color_preference := l_manager.new_color_resource_value (l_manager, string_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (115, 85, 0))			
 			string_background_color_preference := l_manager.new_color_resource_value (l_manager, string_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			keyword_text_color_preference := l_manager.new_color_resource_value (l_manager, keyword_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))

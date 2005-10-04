@@ -119,12 +119,19 @@ feature {NONE} -- Implementation
 			-- state.
 		local
 			the_text_color: EV_COLOR
+			the_background_color: EV_COLOR
 		do
-			if selected then 
- 				the_text_color := selected_text_color
+			if selected then
+				if panel.has_focus then
+					the_text_color := selected_text_color
+					the_background_color := selected_background_color
+				else
+					the_text_color := text_color
+					the_background_color := focus_out_selected_background_color
+				end
 
 	 				-- Fill the end of the line with the specified background brush.
-				a_device.set_background_color(selected_background_color)
+				a_device.set_background_color(the_background_color)
  				a_device.clear_rectangle(position, d_y, a_width, d_y + height)
  			else
  				the_text_color := text_color

@@ -70,8 +70,13 @@ feature {NONE} -- Implementation
 			l_count: INTEGER
 		do
  			if selected then
- 				the_text_color := selected_text_color
- 				the_background_color := selected_background_color
+ 				if panel.has_focus then
+	 				the_text_color := selected_text_color
+	 				the_background_color := selected_background_color
+	 			else	
+	 				the_text_color := text_color
+	 				the_background_color := focus_out_selected_background_color
+ 				end
  			else
  				the_text_color := text_color
  				the_background_color := background_color

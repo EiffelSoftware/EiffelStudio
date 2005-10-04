@@ -161,7 +161,7 @@ feature -- Query
 		do
 			Result := a_name.is_equal (a_asm_name.name)
 			if Result and then a_version /= Void then
-				Result := a_version.is_equal (a_asm_name.version.to_string)
+				Result := is_near_version_match (a_version, a_asm_name.version.to_string)
 			end
 			if Result and then a_culture /= Void then
 				Result := a_culture.as_lower.is_equal (a_asm_name.culture_info.to_string.to_lower)
@@ -174,7 +174,54 @@ feature -- Query
 					Result := encoded_key (l_key).as_lower.is_equal (a_key.as_lower)
 				end
 			end
-		end		
+		end	
+		
+	is_near_version_match (a_version: STRING; a_match_version: STRING): BOOLEAN is
+			-- Is `a_match_version' a near enough match for `a_version'?
+		require
+			a_version_attached: a_version /= Void
+			not_a_version_is_empty: not a_version.is_empty
+			a_match_version_attached: a_match_version /= Void
+			not_a_match_version_is_empty: not a_match_version.is_empty
+		local
+			l_parts_a: LIST [STRING]
+			l_parts_b: LIST [STRING]
+			l_count: INTEGER
+			l_a: STRING
+			l_b: STRING
+			i: INTEGER
+		do
+			
+			l_parts_a := a_version.split ('.')
+			l_parts_b := a_match_version.split ('.')
+			l_count := l_parts_a.count.min (l_parts_b.count)
+				
+				-- Must have major and minor version numbers
+			Result := l_count > 2
+			from
+				i := 1
+			until
+				not Result or i > l_count
+			loop
+				l_a :=  l_parts_a[i]
+				l_b :=  l_parts_b[i]
+				
+					-- Remove leading zeros (should not be there but you never know)
+				l_a.prune_all_leading ('0')
+				l_b.prune_all_leading ('0')
+				if l_a.is_empty then
+					l_a.append_character ('0')
+				end
+				if l_b.is_empty then
+					l_b.append_character ('0')
+				end
+				
+				Result := l_a.is_equal (l_b)
+				
+				i := i + 1
+			end
+		end
+		
 		
 feature -- Extending
 

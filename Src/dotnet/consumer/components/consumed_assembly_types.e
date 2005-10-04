@@ -54,7 +54,7 @@ feature -- Access
 			l_namespaces.compare_objects
 			from
 				i := 1
-				l_count := dotnet_names.count
+				l_count := dotnet_names.upper
 			until
 				i > l_count
 			loop
@@ -101,7 +101,7 @@ feature -- Access
 			create l_types_index.make (count)
 			from
 				i := 1
-				l_count := dotnet_names.count
+				l_count := dotnet_names.upper
 			until
 				i > l_count
 			loop

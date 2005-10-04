@@ -51,7 +51,7 @@ feature -- Access
 
 	editor_data: EB_EDITOR_DATA
 		-- Preference data for EiffelStudio editor		
-
+	
 invariant
 	dialog_data_not_void: dialog_data /= Void	
 	context_tool_data_not_void: context_tool_data /= Void

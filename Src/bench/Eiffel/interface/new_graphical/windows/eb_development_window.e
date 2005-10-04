@@ -340,14 +340,12 @@ feature {NONE} -- Initialization
 			toggle_feature_assigner_cmd.disable_sensitive
 
 			create editors.make (5)
+			estudio_debug_cmd.set_main_window (window)
 		end
 
 	set_up_accelerators is
 			-- Fill the accelerator of `window' with the accelerators of the `toolbarable_commands'.
 		do
-				--| Enable shortcuts to create and show special debug menu for estudio
-			window.accelerators.extend ((create {ESTUDIO_DEBUG_CMD}.make (window)).accelerator)
-
 				--| Accelerators related to toolbarable_commands
 			from
 				toolbarable_commands.start
@@ -838,7 +836,7 @@ feature -- Update
 			build_debug_menu
 			build_tools_menu
 			build_window_menu
-			build_help_menu
+			build_help_menu	
 				-- Build the menu bar.
 			build_menu_bar
 		end
@@ -904,6 +902,7 @@ feature -- Update
 			mb.extend (tools_menu)
 			mb.extend (window_menu)
 			mb.extend (help_menu)
+			estudio_debug_cmd.build_menu_bar
 		end
 
 feature -- Graphical Interface
@@ -1712,7 +1711,7 @@ feature {NONE} -- Menu Building
 
 			rebuild_tools_menu
 		end
-
+		
 feature -- Stone process
 
 	stone: STONE
@@ -3528,7 +3527,7 @@ feature {EB_TOOL} -- Implementation / Commands
 
 	show_favorites_menu_item: EV_MENU_ITEM
 			-- Show/Hide favorites menu item.
-
+			
 	update_show_favorites_menu_item is
 			-- Update `show_favorites_menu_item' menu label.
 		do

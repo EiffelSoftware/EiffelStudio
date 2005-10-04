@@ -46,6 +46,8 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent add_stone)
 			drop_actions.extend (agent add_folder)
 			
+			key_press_actions.extend (agent handle_key)
+			
 			if favorites_manager.Favorites.sensitive then
 				enable_sensitive
 			else
@@ -355,6 +357,23 @@ feature -- Observer pattern
 		end
 
 feature {NONE} -- Implementation
+
+	handle_key (a_key: EV_KEY) is
+			-- Handle `a_key' press for favorites tree.
+		local
+			item_to_delete: EB_FAVORITES_ITEM
+			l_selected_item: like selected_item
+			item_list: EB_FAVORITES_ITEM_LIST
+		do
+			l_selected_item := selected_item
+			if l_selected_item /= Void and then a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.key_delete then
+					-- Delete key has been pressed so we remove the selected favorite from the list.
+				item_to_delete ?= l_selected_item.data
+				item_list := item_to_delete.parent
+				item_list.start
+				item_list.prune (item_to_delete)
+			end
+		end
 		
 	get_tree_item_from_path (item_list: EV_TREE_NODE_LIST; a_path: ARRAYED_LIST [EB_FAVORITES_FOLDER]): EV_TREE_NODE_LIST is
 			-- Get the tree item corresponding to the path `a_path'

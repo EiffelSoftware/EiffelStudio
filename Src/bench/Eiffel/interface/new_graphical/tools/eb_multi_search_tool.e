@@ -1492,7 +1492,7 @@ feature {NONE} -- Implementation
 									l_editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)
 								end
 							elseif l_text_item.end_index_in_unix_text + 1 = l_text_item.start_index_in_unix_text then
-								l_editor.text_displayed.cursor.go_to_position_in_whole_text (l_text_item.end_index_in_unix_text + 1)
+								l_editor.text_displayed.cursor.go_to_position (l_text_item.end_index_in_unix_text + 1)
 								l_editor.deselect_all
 							end
 							if l_editor.has_selection then
@@ -1556,7 +1556,7 @@ feature {NONE} -- Implementation
 								editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)
 							end
 						elseif l_text_item.end_index_in_unix_text + 1 = l_text_item.start_index_in_unix_text then
-							editor.text_displayed.cursor.go_to_position_in_whole_text (l_text_item.end_index_in_unix_text + 1)
+							editor.text_displayed.cursor.go_to_position (l_text_item.end_index_in_unix_text + 1)
 							editor.deselect_all
 						end
 						if editor.has_selection then

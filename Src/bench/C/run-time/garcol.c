@@ -4710,7 +4710,7 @@ doc:	</routine>
 */
 rt_shared void alloc_once_indexes (void)
 {
-	if (EIF_once_indexes == (BODY_INDEX *) 0) {
+	if ((EIF_once_indexes == (BODY_INDEX *) 0) && (eif_nb_org_routines != 0)) {
 			/* Indexes have not been allocated yet. */
 		EIF_once_indexes = (BODY_INDEX *) eif_calloc (eif_nb_org_routines, sizeof *EIF_once_indexes);
 		if (EIF_once_indexes == (BODY_INDEX *) 0) { /* Out of memory */
@@ -4718,7 +4718,7 @@ rt_shared void alloc_once_indexes (void)
 		}
 	}
 #ifdef EIF_THREADS
-	if (EIF_process_once_indexes == (BODY_INDEX *) 0) {
+	if ((EIF_process_once_indexes == (BODY_INDEX *) 0) && (eif_nb_org_routines != 0)) {
 			/* Indexes have not been allocated yet. */
 		EIF_process_once_indexes = (BODY_INDEX *) eif_calloc (eif_nb_org_routines, sizeof *EIF_process_once_indexes);
 		if (EIF_process_once_indexes == (BODY_INDEX *) 0) { /* Out of memory */

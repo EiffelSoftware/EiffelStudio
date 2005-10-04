@@ -64,6 +64,8 @@ feature -- Basic operations
 			l_mem: like memory
 			l_is_collecting: BOOLEAN
 		do
+			has_error := False
+
 				-- Read number of objects we are retrieving
 			l_count := deserializer.read_compressed_natural_32
 			create object_references.make (l_count.to_integer_32 + 1)

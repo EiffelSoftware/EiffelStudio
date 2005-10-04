@@ -41,7 +41,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			i_positive: i > 0
 			j_positive: j > 0
 			i_less_than_count: i <= count
-			j_valid: j <= count + 1
+			j_valid: j <= count
 			n_valid: i + n <= count + 1	
 		local
 			a_duplicate: like Current

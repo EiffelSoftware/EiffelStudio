@@ -25,6 +25,7 @@
 					<item>Fixed bug in `pointer_enter_actions' and `pointer_leave_actions' of EV_GRID_ITEM which were not always fired when the mouse pointer entered or left the grid.</item>
 					<item>Corrected `not_row_height_variable_and_vertical_scrolling_per_pixel' precondition of `enable_partial_dynamic_content'.</item>
 					<item>Fixed bug which caused an internal exception within the grid when `is_tree_enabled' and `is_content_partially_dynamic'.</item>
+					<item>Strengthened preconditions of `insert_new_row_parented' to prevent you inserting a new row at an index within a subtree structure of one of the existing subrows, as in that case, it is impossible for the parent to be the desired row.</item>
 				</list>
 			</item>
 			<item>

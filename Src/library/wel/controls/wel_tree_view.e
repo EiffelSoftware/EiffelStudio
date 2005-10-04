@@ -304,11 +304,35 @@ feature -- Status report
 		end
 
 	get_item_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT is
+			-- `Result' is rect of item `an_item' or `Void'
+			-- if `an_item' is not visible.
+		require
+			an_item_not_void: an_item /= Void
+		local
+			rect: WEL_RECT
 		do
-			create Result.make (0, 0, 0, 0)
-			cwin_send_message (item, Tvm_getitemrect, to_wparam (0), Result.item)
+			create rect.make (0, 0, 0, 0)
+			set_item_pointer_in_rect (rect.item, an_item.h_item)
+			if cwin_send_message_result_integer (item, Tvm_getitemrect, to_wparam (0), rect.item) = 1 then
+				Result := rect
+			end
 		end
-
+		
+	get_item_text_rect (an_item: WEL_TREE_VIEW_ITEM): WEL_RECT is
+			-- `Result' is rect for text of `an_item' or `Void'
+			-- if `an_item' is not visible.
+		require
+			an_item_not_void: an_item /= Void
+		local
+			rect: WEL_RECT
+		do
+			create rect.make (0, 0, 0, 0)
+			set_item_pointer_in_rect (rect.item, an_item.h_item)
+			if cwin_send_message_result_integer (item, Tvm_getitemrect, to_wparam (1), rect.item) = 1 then
+				Result := rect
+			end
+		end
+		
 	get_tooltip: WEL_TOOLTIP is
 			-- `Result' is tooltip associated with `Current'.
 		local
@@ -721,6 +745,14 @@ feature {NONE} -- Externals
 			"C [macro %"commctrl.h%"] (UINT): EIF_INTEGER"
 		alias
 			"INDEXTOSTATEIMAGEMASK"
+		end
+		
+	set_item_pointer_in_rect (a_rect_item, a_tree_item: POINTER) is
+			-- Place value of `a_tree_item' in structure pointed to by `a_rect_item'.
+		external
+			"C inline use <windows.h>"
+		alias
+			"*(HTREEITEM*)$a_rect_item = (HTREEITEM *) $a_tree_item"
 		end
 
 end -- class WEL_TREE_VIEW

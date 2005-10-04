@@ -38,11 +38,10 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 	move_items (i, j, n: INTEGER) is
 			-- Move `n' items starting at index `i' to index `j'.
 		require
-			i_positive: i > 0
-			j_positive: j > 0
-			i_less_than_count: i <= count
-			j_valid: j <= count
-			n_valid: i + n <= count + 1	
+			i_valid: i > 0 and then i <= count
+			j_valid: j > 0 and then j <= count
+			n_valid: n > 0
+			move_within_bounds: i + n <= count + 1 and then j <= count - n + 1
 		local
 			a_duplicate: like Current
 			l_default: G

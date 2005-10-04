@@ -2309,16 +2309,6 @@ feature -- Multiple editor management
 				old_index /= new_index
 			then
 				current_editor_index := new_index
-				from
-					editors.start
-				until
-					editors.after
-				loop
-					if editors.index /= current_editor_index and then editors.item.has_selection then
-						editors.item.disable_selection
-					end
-					editors.forth
-				end
 				update_paste_cmd
 					-- Last thing, update the menu entry for the formatting marks.
 				if current_editor.view_invisible_symbols then

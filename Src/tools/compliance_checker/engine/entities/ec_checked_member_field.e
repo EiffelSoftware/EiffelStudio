@@ -76,7 +76,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 					if l_compliant then
 						internal_is_eiffel_compliant := True
 					else
-						non_eiffel_compliant_reason := non_compliant_reasons.reason_field_uses_non_complaint_type
+						non_eiffel_compliant_reason := checked_field_type.non_eiffel_compliant_reason
 					end
 				end
 			end

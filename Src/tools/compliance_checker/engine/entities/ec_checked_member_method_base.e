@@ -52,18 +52,15 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 			l_member: like member
 			l_compliant: BOOLEAN
 		do
-			Precursor {EC_CHECKED_MEMBER}
-			if internal_is_eiffel_compliant then
-				l_member := member
-				if l_member.is_public or l_member.is_family or l_member.is_family_or_assembly then
-					Precursor {EC_CHECKED_MEMBER}
-					if internal_is_eiffel_compliant then
-						l_compliant := not (l_member.calling_convention = {CALLING_CONVENTIONS}.var_args)
-						if not l_compliant then
-							non_eiffel_compliant_reason := non_compliant_reasons.reason_method_uses_var_args
-						end
-						internal_is_eiffel_compliant := l_compliant
+			l_member := member
+			if l_member.is_public or l_member.is_family or l_member.is_family_or_assembly then
+				Precursor {EC_CHECKED_MEMBER}
+				if internal_is_eiffel_compliant then
+					l_compliant := not (l_member.calling_convention = {CALLING_CONVENTIONS}.var_args)
+					if not l_compliant then
+						non_eiffel_compliant_reason := non_compliant_reasons.reason_method_uses_var_args
 					end
+					internal_is_eiffel_compliant := l_compliant
 				end
 			end
 		end

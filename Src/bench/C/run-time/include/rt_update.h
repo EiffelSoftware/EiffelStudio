@@ -41,7 +41,7 @@ extern "C" {
 #define BC_YES			'y'
 
 
-extern void update(char ignore_updt);					/* Update of internal structures */
+extern void update(char ignore_updt, char *argv0);					/* Update of internal structures */
 extern void cnode_updt(void);				/* Update a cnode structure */
 extern void routid_updt(void);				/* Update routine id arrays */
 extern void conform_updt(void);				/* Update conformance table */

@@ -258,7 +258,8 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 				-- Now assign a clip area based on the borders of the item before we draw the text and the pixmap as they
 				-- may be clipped based on the amount of space available to them based on the border settings.
-			drawable.set_clip_area (create {EV_RECTANGLE}.make (left_border, top_border, column_i.width - right_border, height - bottom_border))
+			temp_rectangle.move_and_resize (left_border, top_border, column_i.width - right_border, height - bottom_border)
+			drawable.set_clip_area (temp_rectangle)
 			if l_pixmap /= Void then
 					-- Now blit the pixmap
 				drawable.draw_pixmap (pixmap_x + an_indent, pixmap_y, l_pixmap)
@@ -281,6 +282,12 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 	grid_label_item_layout: EV_GRID_LABEL_ITEM_LAYOUT is
 			-- Once access to a layout structure used by `layout_procedure'.
+		once
+			create Result
+		end
+		
+	temp_rectangle: EV_RECTANGLE is
+			-- Once access to a rectangle object used by the drawer.
 		once
 			create Result
 		end

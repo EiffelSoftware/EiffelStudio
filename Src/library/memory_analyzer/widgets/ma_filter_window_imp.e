@@ -60,6 +60,7 @@ feature {NONE}-- Initialization
 			file_open.select_actions.extend (agent open_clicked)
 			file_save.select_actions.extend (agent save_clicked)
 			add_new_class_name.select_actions.extend (agent add_new_class_name_clicked)
+			del_class_name.pointer_button_press_actions.extend (agent del_class_clicked (?, ?, ?, ?, ?, ?, ?, ?))
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -105,6 +106,11 @@ feature {NONE} -- Implementation
 	
 	add_new_class_name_clicked is
 			-- Called by `select_actions' of `add_new_class_name'.
+		deferred
+		end
+	
+	del_class_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Called by `pointer_button_press_actions' of `del_class_name'.
 		deferred
 		end
 	

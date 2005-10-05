@@ -41,7 +41,8 @@ feature {NONE} -- Initialization
 			grid.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2))
 			grid.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3))
 			
-			grid.enable_single_row_selection
+			-- If enable single row selection, user can't change grid item value.
+--			grid.enable_single_row_selection
 			
 			update_grid_data
 		ensure then
@@ -111,9 +112,7 @@ feature {NONE} -- Implementation
 		do
 			l_filter_data ?= a_check_item.data
 			check l_filter_data /= Void end
-
-				l_filter_data.put_boolean (a_check_item.selected, 2)
-
+			l_filter_data.put_boolean (a_check_item.selected, 2)
 		end
 		
 	open_clicked is
@@ -163,7 +162,6 @@ feature {NONE} -- Implementation
 			l_filter_datas.basic_store (l_data_file)
 		end
 		
-
 	add_new_class_name_clicked is
 			-- Called by `select_actions' of `l_ev_tool_bar_button_3'.
 		local
@@ -175,17 +173,17 @@ feature {NONE} -- Implementation
 			l_item.activate
 		end
 		
-	del_class_clicked is
+	del_class_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Del row user current selected in `grid'.
 		local
-			l_rows: ARRAYED_LIST [EV_GRID_ROW]
+			l_rows: ARRAYED_LIST [EV_GRID_ITEM]
 		do
-			l_rows := grid.selected_rows
+			l_rows := grid.selected_items
 			
 			if l_rows.count >= 1 then
 				l_rows.start
-				filter.item_and_filter_names.remove (l_rows.item.index)
-				grid.remove_row (l_rows.item.index)
+				filter.item_and_filter_names.remove (l_rows.item.row.index)
+				grid.remove_row (l_rows.item.row.index)
 			end
 		end
 		
@@ -229,7 +227,6 @@ feature {NONE} -- Implementation
 			grid_row_increased: old grid.row_count = grid.row_count - 1			
 		end
 		
-		
 	user_edit_item (a_item: EV_GRID_ITEM) is
 			-- When user click a editable item on the grid, active it.
 		require
@@ -261,11 +258,10 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-
 	adjust_column_width (a_column_index: INTEGER) is
 			-- adjust a column width to fix the max width of the item its contain
 		require
-			column_index_valid: grid.column_count <= a_column_index and a_column_index > 0
+			column_index_valid: grid.column_count >= a_column_index and a_column_index > 0
 		do
 			if grid.row_count > 0 then
 				grid.column (a_column_index).set_width (grid.column (a_column_index).required_width_of_item_span (1, grid.row_count))

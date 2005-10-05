@@ -92,8 +92,6 @@ feature {NONE} -- Implementation
 	
 	draw_unselected (a_drawable: EV_DRAWABLE) is
 			-- Draw the pixmap which is represent current is unseleted.
-		require
-			figure_size_valid: check_figure_size < height and check_figure_size < width
 		do
 			a_drawable.set_line_width (1)
 			a_drawable.draw_rectangle (figure_start_x, figure_start_y, check_figure_size, check_figure_size)

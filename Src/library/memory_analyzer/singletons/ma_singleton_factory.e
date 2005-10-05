@@ -1,4 +1,4 @@
-indexing
+	indexing
 	description: "Class that store all singletons in the system.%
 				 %Class want to use the singletons it contains should inherit this class."
 	date: "$Date$"
@@ -11,16 +11,16 @@ feature  -- Singletons
 	
 	filter: MA_FILTER_SINGLETON is
 			-- FILTER_SINGLETON instance
-		once
-			create Result.make
+		do
+			Result := internal_filter.item
 		ensure
 			filter_not_void: Result /= Void
 		end
 	
-	filter_widnow: MA_FILTER_WINDOW is
+	filter_window: MA_FILTER_WINDOW is
 			-- 
-		once
-			create Result
+		do
+			Result := internal_filter_window.item
 		ensure
 			filter_window_not_void: Result /= Void
 		end
@@ -51,8 +51,8 @@ feature  -- Singletons
 		
 	main_window: MA_WINDOW is
 			-- MEMORY_TOOL_WINDOW instance
-		once
-			Result := the_main_window
+		do
+			Result := internal_main_window.item
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -81,19 +81,18 @@ feature  -- Singletons
 			icons_not_void: Result /= Void
 		end
 
-feature -- Access
+feature {MA_WINDOW} -- Access
 
 	set_main_window (a_window: like main_window) is
 			-- Set main_window instance
 		require
 			a_window_not_void: a_window /= Void
-		local
-			l_set_window: like main_window
-		once
-			the_main_window := a_window
-			l_set_window := main_window
+		do
+			internal_main_window.put (a_window)
+			internal_filter.put (create {MA_FILTER_SINGLETON}.make)
+			internal_filter_window.put (create {MA_FILTER_WINDOW})
 		ensure
-			a_window_set: a_window = the_main_window
+			a_window_set: a_window = internal_main_window.item
 		end
 		
 feature -- States Report
@@ -101,7 +100,7 @@ feature -- States Report
 	main_window_not_void: BOOLEAN is
 			-- Is main_windows Void ?
 		do
-			Result := the_main_window /= Void
+			Result := internal_main_window /= Void
 		end
 		
 feature -- Cursors
@@ -170,9 +169,24 @@ feature -- Colors
 		
 feature {NONE} -- misc
 
-	the_main_window: MA_WINDOW 
-			-- MAIN_WINDOW instance
+	internal_main_window: CELL [MA_WINDOW] is
+			-- MAIN_WINDOW instance's cell.
+		once
+			create Result
+		end
+		
+	internal_filter: CELL [MA_FILTER_SINGLETON] is
+			-- MA_FILTER_SINGLETON instance's cell.
+		once
+			create Result
+		end
 	
+	internal_filter_window: CELL [MA_FILTER_WINDOW] is
+			-- MA_FILTER_WINDOW instance'e cell.
+		once
+			create Result
+		end
+		
 	state_file_suffix: TUPLE [STRING, STRING] is 
 			-- Suffix of the States File name.
 		once
@@ -186,6 +200,6 @@ feature {NONE} -- misc
 		end
 	
 invariant
-	the_main_window_not_void: the_main_window /= Void
+	internal_main_window_not_void: internal_main_window /= Void
 
 end

@@ -28,7 +28,9 @@ feature {NONE} -- Initialization
 			
 			create grid_data.make_default
 			init_grid
---			adjust_widgets_layout -- No use ?
+			grid_changed.set_item_pebble_function (agent handle_pick_item)
+			grid_changed.set_accept_cursor (accept_node_class)
+			grid_changed.set_deny_cursor (deny_node_class)
 		end
 
 feature -- Command
@@ -262,6 +264,14 @@ feature {NONE} -- Implemention
 					sort_data
 					update_grid_increased_content
 				end
+			end
+		end
+	
+	handle_pick_item (a_item: EV_GRID_LABEL_ITEM): MA_CLASS_STONE is
+			-- User pick a item from grid to filter.
+		do
+			if a_item /= Void and a_item.column.index = 1 then
+				Result := create {MA_CLASS_STONE}.make (a_item.text)				
 			end
 		end
 		

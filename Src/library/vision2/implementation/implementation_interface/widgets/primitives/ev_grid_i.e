@@ -3334,9 +3334,9 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 				if has_vertical_scrolling_per_item_just_changed or is_item_height_changing then
 					previous_scroll_bar_value := vertical_scroll_bar.value
 				end
-				if is_vertical_scrolling_per_item then	
+				if is_vertical_scrolling_per_item then
 					if is_vertical_overscroll_enabled then
-						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, visible_row_count - 1))
+						vertical_scroll_bar.value_range.resize_exactly (0, visible_row_count - 1)
 					else
 						-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
 						-- at the bottom of the viewable area.
@@ -3345,7 +3345,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 						else
 							row_index := last_first_row_in_per_item_scrolling
 						end
-						vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_index - 1))
+						vertical_scroll_bar.value_range.resize_exactly (0, row_index - 1)
 					end
 					average_row_height := (l_total_row_height // visible_row_count)
 					vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
@@ -3364,7 +3364,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 						vertical_scroll_bar.change_actions.call ([previous_scroll_bar_value])
 					end
 				else
-					vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, maximum_virtual_y_position))
+					vertical_scroll_bar.value_range.resize_exactly (0, maximum_virtual_y_position)
 					vertical_scroll_bar.set_leap (height)
 					if has_vertical_scrolling_per_item_just_changed then
 							-- If we are just switching from per item to per pixel vertical
@@ -3503,12 +3503,12 @@ feature {ANY}
 				end
 				if is_horizontal_scrolling_per_item then
 					if is_horizontal_overscroll_enabled then
-						horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_count - 1))
+						horizontal_scroll_bar.value_range.resize_exactly (0, column_count - 1)
 					else
 						-- We must now calculate the index of the row that ensures the final row that is visible in `Current'
 						-- at the bottom of the viewable area.
 						column_index := last_first_column_in_per_item_scrolling
-						horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, column_index - 1))
+						horizontal_scroll_bar.value_range.resize_exactly (0, column_index - 1)
 					end
 					average_column_width := (l_total_column_width // columns.count)
 					horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
@@ -3518,7 +3518,7 @@ feature {ANY}
 						horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
 					end
 				else
-					horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, maximum_virtual_x_position))
+					horizontal_scroll_bar.value_range.resize_exactly (0, maximum_virtual_x_position)
 					horizontal_scroll_bar.set_leap (width)
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per item to per pixel horizontal

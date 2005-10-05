@@ -513,6 +513,13 @@ feature {NONE} -- Implementation
 			end
 			set_is_destroyed (True)
 		end
+		
+	internal_rectangle: EV_RECTANGLE is
+			-- Once access to a rectangle object used by the drawer.
+			-- This is re-used to prevent repeatedly creating new objects.
+		once
+			create Result
+		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 		

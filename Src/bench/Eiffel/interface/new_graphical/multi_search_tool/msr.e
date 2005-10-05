@@ -111,15 +111,21 @@ feature -- Status report
 		end
 		
 	isfisrt: BOOLEAN is
-			-- 
+			-- Current item is the first item?
 		do
 			Result := (is_search_launched and then item_matched.isfirst)
 		end
 	
 	islast: BOOLEAN is
-			-- 
+			-- Current item is the last item?
 		do
 			Result := (is_search_launched and then item_matched.islast)
+		end
+		
+	is_empty: BOOLEAN is
+			-- No matches?
+		do
+			Result := (is_search_launched and then item_matched.is_empty)
 		end
 	
 	before: BOOLEAN is

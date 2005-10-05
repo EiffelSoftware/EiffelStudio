@@ -77,6 +77,9 @@ feature -- Access
 		require
 			is_launched : is_launched
 		do
+			if class_name_internal.is_empty then				
+				build_class_name
+			end
 			Result := class_name_internal
 		ensure
 			class_name_not_void: Result = class_name_internal
@@ -156,6 +159,12 @@ feature -- Status setting
 			data := a_data
 		ensure
 			data_not_void: data /= Void
+		end	
+		
+	set_date (a_date: INTEGER) is
+			-- Set `date' with a_date.
+		do
+			date := a_date
 		end		
 	
 feature -- Basic operations		
@@ -165,7 +174,7 @@ feature -- Basic operations
 		do
 			Precursor
 			create text_to_be_searched_internal.make ("")
-			class_name_internal := Void			
+			class_name_internal := Void		
 			text_in_file_path_internal := Void			
 		ensure then
 			not_is_text_in_file_path_set: not is_text_to_be_searched_set
@@ -224,6 +233,9 @@ feature {NONE} -- Implementation
 			
 	data: ANY
 			-- Data that will be set to all items yielding.
+	
+	date: INTEGER
+			-- Date of the current source
 			
 	add_new_item is
 			-- Add new item from the pcre_regex's captures.
@@ -240,6 +252,7 @@ feature {NONE} -- Implementation
 			if data /= Void then
 				new_item.set_data (data)
 			end
+			new_item.set_date (date)
 			if not item_matched.is_empty then
 				last_item ?= item_matched.last
 			end

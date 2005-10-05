@@ -52,6 +52,9 @@ feature -- Access
 		do
 			Result := children_internal
 		end
+		
+	date: INTEGER
+			-- Date of lastest source text before current made.
 
 feature -- Measurement
 
@@ -82,6 +85,12 @@ feature -- Element change
 			data := a_data
 		ensure
 			data_set: data = a_data
+		end
+	
+	set_date (a_date: INTEGER) is
+			-- Set `date' with a_date
+		do
+			date := a_date
 		end
 		
 	set_source_text_real_string (a_string: STRING) is

@@ -42,16 +42,12 @@ feature -- Basic operations
 							file.readstream (buffer_length)					
 							text.append (file.laststring)
 						end						
-						create text_strategy.make
+						create text_strategy.make (keyword, surrounding_text_range_internal, "", path, text)
 						if case_sensitive then 
 							text_strategy.set_case_sensitive 
 						else 
 							text_strategy.set_case_insensitive 
 						end
-						text_strategy.set_keyword (keyword)
-						text_strategy.set_surrounding_text_range (surrounding_text_range_internal)
-						text_strategy.set_text_in_file_path (path)
-						text_strategy.set_text_to_be_searched (text)
 						text_strategy.set_whole_word_matched (is_whole_word_matched)
 						text_strategy.set_regular_expression_used (is_regular_expression_used)
 						text_strategy.launch
@@ -61,6 +57,7 @@ feature -- Basic operations
 								class_item.set_class_name (text_strategy.class_name)
 								class_item.set_path (path_internal)
 								class_item.set_source_text (text_strategy.text_to_be_searched_adapter)
+								class_item.set_date (file.date)
 								item_matched_internal.extend (class_item)
 								from
 									text_strategy.item_matched.start

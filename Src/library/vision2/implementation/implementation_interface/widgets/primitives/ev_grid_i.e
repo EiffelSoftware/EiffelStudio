@@ -1990,23 +1990,7 @@ feature -- Element change
 		ensure
 			row_count_set: (i <= old row_count implies row_count = old row_count + rows_to_insert) or (row_count = i + rows_to_insert - 1)
 		end
-
-	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Insert `a_row' between rows `i' and `i+1'.
-		require
-			i_positive: i > 0
-			i_less_than_row_count: i <= row_count + 1
-			a_parent_row_not_void: a_parent_row /= Void
-			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
-			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive
-				implies row (i + 1).parent_row = a_parent_row
-		do
-			insert_new_rows_parented (1, i, a_parent_row)
-		ensure
-			row_count_set: row_count = old row_count + 1
-			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
-		end
-		
+	
 	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW) is
 			-- Insert `rows_to_insert' new rows at index `i' and make those rows subnodes of `a_parent_row'.
 		require
@@ -2315,7 +2299,7 @@ feature -- Removal
 		
 	internal_remove_row (a_row: EV_GRID_ROW_I) is
 			-- Perform internal settings required for removal of `a_row'.
-			require
+		require
 			a_row_not_void: a_row /= Void
 		local
 			l_row_index: INTEGER

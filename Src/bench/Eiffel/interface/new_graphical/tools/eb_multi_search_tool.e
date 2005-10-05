@@ -27,6 +27,7 @@ inherit
 			default_search,
 			enable_disable_search_button,
 			on_text_edited,
+			on_text_reset,
 			show_and_set_focus
 		end
 	
@@ -190,7 +191,7 @@ feature -- Access
 	scope_list: EV_LIST
 			-- List of the specific scope
 			
-	search_report_grid: EV_GRID
+	search_report_grid: ES_GRID
 			-- Grid to contain search report
 
 	replace_combo_box: EV_COMBO_BOX
@@ -360,19 +361,21 @@ feature -- Action
 			end
 			if editor.number_of_lines /= 0 then	
 				if editor.is_editable then	
-					if not multi_search_performer.off and not multi_search_performer.item_matched.is_empty then
-						create editor_replace_strategy.make (editor)
-						currently_replacing := replace_combo_box.text
-						multi_search_performer.set_replace_strategy (editor_replace_strategy)
-						multi_search_performer.set_replace_string (currently_replacing)
-						multi_search_performer.replace
-						update_combo_box_specific (replace_combo_box, currently_replacing)
-						new_search_set := false
-						select_and_show
-						go_to_next_found
-						redraw_grid
-						select_current_row
-						new_search_set := false
+					if not multi_search_performer.off and not multi_search_performer.is_empty then
+						if not is_item_source_changed (l_item) then
+							create editor_replace_strategy.make (editor)
+							currently_replacing := replace_combo_box.text
+							multi_search_performer.set_replace_strategy (editor_replace_strategy)
+							multi_search_performer.set_replace_string (currently_replacing)
+							multi_search_performer.replace
+							update_combo_box_specific (replace_combo_box, currently_replacing)
+							new_search_set := false
+							select_and_show
+							go_to_next_found
+							redraw_grid
+							select_current_row
+							new_search_set := false
+						end
 					end
 				else
 					editor.display_not_editable_warning_message
@@ -655,6 +658,7 @@ feature {NONE} -- Implementation
 			
 			create vbox
 			vbox.set_border_width (5)
+			vbox.set_padding_width (2)
 
 			vbox.extend (add_button)
 			vbox.disable_item_expand (add_button)
@@ -1024,7 +1028,17 @@ feature {NONE} -- Implementation
 			-- not via another tool or wizard.
 		do
 			force_new_search
-		end		
+			is_text_changed_in_editor := true
+		end
+
+	on_text_reset is
+			-- make the command insensitive
+		do
+			is_text_changed_in_editor := false
+		end
+		
+	is_text_changed_in_editor: BOOLEAN
+			-- Text changed in the editor?
 	
 	add_class_item (a_class: CLASS_I) is
 			-- Add a class item to the tree.
@@ -1244,6 +1258,52 @@ feature {NONE} -- Implementation
 			end		
 		end
 		
+	compute_adjust_vertical (a_font: EV_FONT; a_label_item: EV_GRID_ITEM) is
+			-- Compute `adjust_vertical'
+		require
+			font_attached: a_font /= Void
+			label_item_attached: a_label_item /= Void
+		local
+			vertical_text_offset_into_available_space: INTEGER
+			label_item: EV_GRID_LABEL_ITEM
+			client_height: INTEGER
+		do
+			if adjust_vertical = 0 then
+				label_item ?= a_label_item
+				if label_item /= Void then
+					if text_height = 0 then
+						text_height := a_font.string_size ("a").integer_item (2)
+					end
+					client_height := label_item.height - label_item.top_border - label_item.bottom_border
+					if label_item.is_top_aligned then
+						vertical_text_offset_into_available_space := 0
+					elseif label_item.is_bottom_aligned then
+						vertical_text_offset_into_available_space := client_height - text_height - 1
+					else
+						vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
+					end
+					vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
+					adjust_vertical := vertical_text_offset_into_available_space - label_item.top_border
+				end					
+			end			
+		end
+		
+	new_label_item (a_string: STRING): EV_GRID_LABEL_ITEM is
+			-- Create uniformed label item
+		require
+			string_attached: a_string /= Void
+		do
+			create Result.make_with_text (a_string)
+		ensure
+			new_item_not_void: Result /= Void
+		end		
+		
+	adjust_vertical: INTEGER
+			-- Offset between top of a row and top of charactors in it, buffer for effiency enhancement
+			
+	text_height: INTEGER
+			-- Height of the text in the `search_report_grid', buffer for effiency enhancement
+		
 	expose_drawable_action (drawable: EV_DRAWABLE; a_item: MSR_ITEM; query_grid_row: EV_GRID_ROW) is
 			-- Draw grid item, to make the text colorfull.
 			-- return width of current drawable item.
@@ -1251,12 +1311,13 @@ feature {NONE} -- Implementation
 			off_set: INTEGER
 			row_selected, focused: BOOLEAN
 			l_color: EV_COLOR
-			adjust_vertical: INTEGER
 			font: EV_FONT
 			l_item: MSR_TEXT_ITEM
 		do
 			font := drawable.font
-			adjust_vertical := ((search_report_grid.row_height - font.height) // 2).to_integer
+			if adjust_vertical = 0 then
+				compute_adjust_vertical (font, query_grid_row.item (1))
+			end
 			drawable.clear			
 			row_selected := query_grid_row.is_selected
 			focused := search_report_grid.has_focus
@@ -1342,7 +1403,7 @@ feature {NONE} -- Implementation
 						search_report_grid.insert_new_row (row_count)
 						search_report_grid.row (row_count).set_data (l_class_item)
 						if i /= 0 then
-							search_report_grid.set_item (2, i, create {EV_GRID_LABEL_ITEM}.make_with_text (k.out))
+							search_report_grid.set_item (2, i, new_label_item (k.out))
 							search_report_grid.item (2, i).set_foreground_color (preferences.editor_data.number_text_color_preference.value)
 						end
 						i := row_count
@@ -1354,11 +1415,11 @@ feature {NONE} -- Implementation
 						search_report_grid.set_item (1, row_count, l_grid_label_item)
 						search_report_grid.set_item (3, 
 													row_count, 
-													create {EV_GRID_LABEL_ITEM}.make_with_text (once "-")
+													new_label_item (once "-")
 													)
 						search_report_grid.set_item (4, 
 													row_count, 
-													create {EV_GRID_LABEL_ITEM}.make_with_text (l_item.path)
+													new_label_item (l_item.path)
 													)
 						k := 0
 					else
@@ -1375,18 +1436,18 @@ feature {NONE} -- Implementation
 							end
 							search_report_grid.set_item (1, 
 														row_count, 
-														create {EV_GRID_LABEL_ITEM}.make_with_text ("Line " + l_text_item.line_number.out + ":")
+														new_label_item ("Line " + l_text_item.line_number.out + ":")
 														)
 							search_report_grid.set_item (2,
 														row_count, 
-														create {EV_GRID_LABEL_ITEM}.make_with_text (replace_rnt_to_space (l_text_item.text))
+														new_label_item (replace_rnt_to_space (l_text_item.text))
 														)
 							search_report_grid.item (2, row_count).set_foreground_color (preferences.editor_data.operator_text_color)
 							create l_grid_drawable_item
 							l_grid_drawable_item.expose_actions.extend (agent expose_drawable_action (?, l_item, search_report_grid.row (row_count)))
 							l_grid_drawable_item.set_required_width (font.string_width (l_text_item.context_text))
 							search_report_grid.set_item (3, row_count, l_grid_drawable_item)
-							search_report_grid.set_item (4, row_count, create {EV_GRID_LABEL_ITEM}.make_with_text (l_item.path))
+							search_report_grid.set_item (4, row_count, new_label_item (l_item.path))
 							if not l_text_item.captured_submatches.is_empty then
 								submatch_parent := row_count
 								search_report_grid.row (row_count).ensure_expandable
@@ -1399,11 +1460,10 @@ feature {NONE} -- Implementation
 									search_report_grid.insert_new_row_parented (row_count, search_report_grid.row (submatch_parent))
 									search_report_grid.set_item (1, 
 																row_count, 
-																create {EV_GRID_LABEL_ITEM}.make_with_text ("Capture " + 
-																											l_text_item.captured_submatches.index.out + 
-																											": " + 
-																											l_text_item.captured_submatches.item)
-																											)
+																new_label_item ("Capture " + 
+																				l_text_item.captured_submatches.index.out + 
+																				": " + 
+																				l_text_item.captured_submatches.item))
 									l_text_item.captured_submatches.forth								
 								end
 							end
@@ -1413,7 +1473,7 @@ feature {NONE} -- Implementation
 					arrayed_list.forth
 				end
 				if i /= 0 then
-					search_report_grid.set_item (2, i, create {EV_GRID_LABEL_ITEM}.make_with_text (k.out))
+					search_report_grid.set_item (2, i, new_label_item (k.out))
 					search_report_grid.item (2, i).set_foreground_color (preferences.editor_data.number_text_color)
 				end
 				multi_search_performer.go_i_th (x)
@@ -1461,7 +1521,7 @@ feature {NONE} -- Implementation
 		end
 	
 	grid_row_selected (a_row: EV_GRID_ROW) is
-			-- when a row of the report grid selected
+			-- Invoke when a row of the report grid selected
 		require
 			a_row_not_void: a_row /= Void
 		local
@@ -1469,19 +1529,19 @@ feature {NONE} -- Implementation
 			l_text_item: MSR_TEXT_ITEM
 			l_editor: EB_EDITOR
 		do
-			if not new_search_set then
-				if a_row.parent /= Void and then a_row.parent_row /= Void and then a_row.parent_row.is_expandable and then not a_row.parent_row.is_expanded then
-					a_row.parent_row.expand
-				end
-				l_item ?= a_row.data
-				if l_item /= Void then
-					multi_search_performer.start
-					multi_search_performer.search (l_item)
-					if multi_search_performer.is_search_launched and then not multi_search_performer.off then
-						check_class_file
-						new_search_set := false
-						l_text_item ?= multi_search_performer.item
-						if l_text_item /= Void then
+			if a_row.parent /= Void and then a_row.parent_row /= Void and then a_row.parent_row.is_expandable and then not a_row.parent_row.is_expanded then
+				a_row.parent_row.expand
+			end
+			l_item ?= a_row.data
+			if l_item /= Void then
+				multi_search_performer.start
+				multi_search_performer.search (l_item)
+				if multi_search_performer.is_search_launched and then not multi_search_performer.off then
+					check_class_file
+					new_search_set := false
+					l_text_item ?= multi_search_performer.item
+					if l_text_item /= Void then
+						if not is_item_source_changed (l_text_item) then
 							if old_editor /= Void then
 								l_editor := old_editor
 							else
@@ -1504,6 +1564,21 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+	
+	is_item_source_changed (a_item: MSR_TEXT_ITEM): BOOLEAN is
+			-- Source in a_item changed?
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_class_i: CLASS_I
+		do
+			l_class_i ?= a_item.data
+			if l_class_i /= Void then
+				Result := is_text_changed_in_editor or a_item.date /= l_class_i.date
+			else
+				Result := true
+			end
+		end		
 	
 	select_current_row is
 			-- Select current row in the grid
@@ -1568,7 +1643,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	grid_row_by_data (a_grid: EV_GRID; a_data: ANY) : EV_GRID_ROW is
+	grid_row_by_data (a_grid: ES_GRID; a_data: ANY) : EV_GRID_ROW is
 			-- Find a row in a_grid that include a_data
 		local
 			i: INTEGER

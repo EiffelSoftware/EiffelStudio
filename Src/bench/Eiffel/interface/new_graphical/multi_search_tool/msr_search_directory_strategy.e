@@ -17,7 +17,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make( a_keyword: STRING; a_range: INTEGER; a_path: FILE_NAME) is
+	make (a_keyword: STRING; a_range: INTEGER; a_path: FILE_NAME) is
 			-- Initialization
 		require
 			keyword_attached: a_keyword /= Void
@@ -122,15 +122,12 @@ feature -- Basic operations
 						create l_file.make (string_formatter.extend_file_path (path, l_directory.lastentry).out)
 						if l_file.exists then
 							if l_file.is_directory and then is_subdirectory_searched then
-								create directory_strategy.make
+								create directory_strategy.make (keyword, surrounding_text_range_internal, string_formatter.extend_file_path (path, l_directory.lastentry)) is
 								if case_sensitive then 
 									directory_strategy.set_case_sensitive 
 								else 
 									directory_strategy.set_case_insensitive 
 								end
-								directory_strategy.set_path (string_formatter.extend_file_path (path, l_directory.lastentry))
-								directory_strategy.set_keyword (keyword)
-								directory_strategy.set_surrounding_text_range (surrounding_text_range_internal)
 								directory_strategy.set_whole_word_matched (is_whole_word_matched)
 								directory_strategy.set_regular_expression_used (is_regular_expression_used)
 								directory_strategy.launch
@@ -139,15 +136,12 @@ feature -- Basic operations
 									item_matched_internal.merge_right (directory_strategy.item_matched)
 								end
 							else 
-								create file_strategy.make
+								create file_strategy.make (keyword, surrounding_text_range_internal, string_formatter.extend_file_path (path, l_directory.lastentry))
 								if case_sensitive then
 									file_strategy.set_case_sensitive
 								else 
 									file_strategy.set_case_insensitive
 								end
-								file_strategy.set_path (string_formatter.extend_file_path (path, l_directory.lastentry))
-								file_strategy.set_keyword (keyword)
-								file_strategy.set_surrounding_text_range (surrounding_text_range_internal)
 								file_strategy.set_whole_word_matched (is_whole_word_matched)
 								file_strategy.set_regular_expression_used (is_regular_expression_used)
 								file_strategy.launch

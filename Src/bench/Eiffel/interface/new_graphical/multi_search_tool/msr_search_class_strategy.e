@@ -50,11 +50,13 @@ feature -- Basic operation
 			text_strategy.set_whole_word_matched (is_whole_word_matched)
 			text_strategy.set_regular_expression_used (is_regular_expression_used)
 			text_strategy.set_data (class_i)
+			text_strategy.set_date (class_i.date)
 			text_strategy.launch
 			if text_strategy.is_launched then
 				if text_strategy.item_matched.count > 0 then
 					create l_class_item.make (text_strategy.class_name, class_i.file_name, text_strategy.text_to_be_searched_adapter)
 					l_class_item.set_data (class_i)
+					l_class_item.set_date (class_i.date)
 					item_matched_internal.extend (l_class_item)
 					
 					l_matched := text_strategy.item_matched

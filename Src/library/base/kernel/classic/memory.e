@@ -220,7 +220,7 @@ feature -- Status report
 					if Result.found then
 						l_list := Result.found_item
 					else
-						create l_list.make_filled (l_memory_count_map.item (dtype) + 1)
+						create l_list.make_filled (l_memory_count_map.item (dtype))
 						l_list.start
 						Result.put (l_list, dtype)
 					end

@@ -20,6 +20,7 @@ feature {NONE} -- Initialization
 			a_grid_not_void: a_grid /= Void
 		do
 			grid := a_grid
+			create temp_rectangle
 		ensure
 			grid_set: grid = a_grid
 		end
@@ -739,7 +740,8 @@ feature -- Basic operations
 														if node_pixmap_height > current_row_height then
 																-- In this situation, the height of the expand image is greater than the current row height,
 																-- so we only draw the part that fits within the node.
-															item_buffer_pixmap.draw_sub_pixmap (horizontal_node_pixmap_left_offset, 0, l_pixmap, create {EV_RECTANGLE}.make (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height))
+															temp_rectangle.move_and_resize (0, (node_pixmap_height - current_row_height) // 2, node_pixmap_height, current_row_height)
+															item_buffer_pixmap.draw_sub_pixmap (horizontal_node_pixmap_left_offset, 0, l_pixmap, temp_rectangle)
 														else
 															item_buffer_pixmap.draw_pixmap (horizontal_node_pixmap_left_offset, vertical_node_pixmap_top_offset, l_pixmap)
 														end
@@ -915,7 +917,8 @@ feature -- Basic operations
 										end
 		
 											-- Now blit the buffered drawing for the item to `drawable'.
-										drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, current_column_width, current_row_height))
+										temp_rectangle.move_and_resize (0, 0, current_column_width, current_row_height)
+										drawable.draw_sub_pixmap (current_item_x_position, current_item_y_position, item_buffer_pixmap, temp_rectangle)
 									end
 									visible_column_indexes.forth
 								end
@@ -940,7 +943,8 @@ feature -- Basic operations
 							item_buffer_pixmap.set_foreground_color (grid.background_color)
 							item_buffer_pixmap.fill_rectangle (0, 0, rectangle_width, internal_client_height)
 						end
-						drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, rectangle_width, internal_client_height))
+						temp_rectangle.move_and_resize (0, 0, rectangle_width, internal_client_height)
+						drawable.draw_sub_pixmap  (horizontal_buffer_offset + internal_client_width - rectangle_width, vertical_buffer_offset, item_buffer_pixmap, temp_rectangle)
 					end
 					if current_row = Void or else current_row.index >= row_count - grid.hidden_node_count then
 						if grid.is_row_height_fixed and not is_tree_enabled then
@@ -963,7 +967,8 @@ feature -- Basic operations
 								item_buffer_pixmap.set_foreground_color (grid.background_color)
 								item_buffer_pixmap.fill_rectangle (0, 0, internal_client_width, rectangle_height)
 							end
-							drawable.draw_sub_pixmap (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, create {EV_RECTANGLE}.make (0, 0, internal_client_width, rectangle_height))
+							temp_rectangle.move_and_resize (0, 0, internal_client_width, rectangle_height)
+							drawable.draw_sub_pixmap (horizontal_buffer_offset, vertical_buffer_offset + internal_client_height - rectangle_height, item_buffer_pixmap, temp_rectangle)
 						end
 					end
 					else
@@ -979,6 +984,19 @@ feature -- Basic operations
 				end
 			end
 		end
+		
+feature {EV_GRID_DRAWABLE_ITEM_I} -- Implementation
+
+	drawable_item_buffer_pixmap: EV_PIXMAP is
+			-- Once access to a pixmap used for drawing into for drawable items.
+			-- We do not use `item_buffer_pixmap' for this as this pixmap is exposed to
+			-- the interface so, must be resized exactly to the size of the item before
+			-- a user retrieves it. They can then query its dimensions to know where to draw to.
+		once
+			create Result
+		end
+		
+feature {NONE} -- Implementation
 
 	subrow_indent (current_row: EV_GRID_ROW_I): INTEGER is
 			-- `Result' is indent of `current_row'.
@@ -1067,16 +1085,10 @@ feature -- Basic operations
 			Result.set_size (100, 16)
 		end
 		
-	drawable_item_buffer_pixmap: EV_PIXMAP is
-			-- Once access to a pixmap used for drawing into for drawable items.
-			-- We do not use `item_buffer_pixmap' for this as this pixmap is exposed to
-			-- the interface so, must be resized exactly to the size of the item before
-			-- a user retrieves it. They can then query its dimensions to know where to draw to.
-		once
-			create Result
-		end
-
-feature {NONE} -- Implementation
+	temp_rectangle: EV_RECTANGLE
+		-- A rectangle used temporarily by the drawing code.
+		-- Prevents the need to keep creating new rectangle objects
+		-- which may be a strain on the debugger as many are created unecessarily.
 
 	drawable_x_to_virtual_x (an_x: INTEGER): INTEGER is
 			-- Convert `an_x' in drawable coordinates to a virtual x coordinate.
@@ -1092,5 +1104,6 @@ feature {NONE} -- Implementation
 
 invariant
 	grid_not_void: grid /= Void
+	temp_rectangle_not_void: temp_rectangle /= Void
 
 end

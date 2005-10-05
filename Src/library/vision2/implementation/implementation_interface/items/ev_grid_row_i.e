@@ -729,7 +729,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				l_subrow := subrows.i_th (a_subrow_index - 1)
 				l_index := l_subrow.index + l_subrow.subrow_count_recursive + 1
 			end
-			parent_i.insert_new_row_parented (l_index, interface)
+			parent_i.insert_new_rows_parented (1, l_index, interface)
 		ensure
 			subrow_count_increased: subrow_count = old subrow_count + 1
 			parent_row_count_increased: parent.row_count = old parent.row_count + 1

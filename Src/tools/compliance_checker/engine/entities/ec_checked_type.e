@@ -128,15 +128,20 @@ feature {NONE} -- Basic Operations {EC_CHECKED_ENTITY}
 				l_compliant := l_checked_asm.is_compliant
 				if l_compliant then
 					l_type := type
-					l_compliant := not l_type.is_pointer
-					if l_compliant and has_element_checked_type then
-						l_element_type := element_checked_type
-						l_compliant := l_element_type.is_eiffel_compliant
-						if not l_compliant then
-							non_eiffel_compliant_reason := l_element_type.non_eiffel_compliant_reason
+					l_compliant := l_type.full_name /= Void and then not (l_type.full_name.index_of_character ('`') >= 0)
+					if l_compliant then
+						l_compliant := not l_type.is_pointer
+						if l_compliant and has_element_checked_type then
+							l_element_type := element_checked_type
+							l_compliant := l_element_type.is_eiffel_compliant
+							if not l_compliant then
+								non_eiffel_compliant_reason := l_element_type.non_eiffel_compliant_reason
+							end
+						else
+							non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
 						end
 					else
-						non_eiffel_compliant_reason := non_compliant_reasons.reason_type_marked_non_cls_compliant
+						non_eiffel_compliant_reason := non_compliant_reasons.reason_type_is_generic
 					end
 				else
 					non_eiffel_compliant_reason := non_compliant_reasons.reason_assembly_marked_non_eiffel_consumable

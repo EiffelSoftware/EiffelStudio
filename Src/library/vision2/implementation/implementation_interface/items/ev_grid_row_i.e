@@ -840,6 +840,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 		local
 			row_imp: EV_GRID_ROW_I
 			i, j, l_subrow_index: INTEGER
+			l_original_subrow_count: INTEGER
 		do
 				-- Reset `is_ensured_expandable' 
 			is_ensured_expandable := False
@@ -849,7 +850,12 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				i := row_index
 				j := row_index + rows_to_insert
 				l_subrow_index := a_subrow_index
+				l_original_subrow_count := subrows.count
 				subrows.resize (subrows.count + rows_to_insert)
+				if a_subrow_index < l_original_subrow_count + 1 then
+						-- Move the existing items as required to make space for the new.
+					subrows.move_items (a_subrow_index, a_subrow_index + rows_to_insert, l_original_subrow_count - a_subrow_index + 1)
+				end
 			until
 				i = j
 			loop

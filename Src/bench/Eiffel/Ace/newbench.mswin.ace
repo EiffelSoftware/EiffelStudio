@@ -108,6 +108,7 @@ default
 	disabled_debug ("win_dispatcher")
 	disabled_debug ("xml_input_stream")
 	disabled_debug ("xml_parser")
+	disabled_debug ("larry")
 	line_generation (no)
 	profile (no)
 	trace (no)
@@ -280,7 +281,7 @@ cluster
 		exclude
 			"CVS"; 
 		end
-
+	all memory_analyzer:		"$EIFFEL_SRC\library\memory_analyzer"
 external
 
 	include_path:

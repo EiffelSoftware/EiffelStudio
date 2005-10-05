@@ -41,9 +41,6 @@ feature -- Initlization
 			object_grid.set_item_pebble_function (agent pick_item)
 			
 --			object_grid.set_item_pebble_function (agent pick_item_for_filter)
-			
-
-		
 			show_memory_map
 		ensure
 			object_grid_column_added: object_grid.column_count = 3
@@ -61,7 +58,6 @@ feature -- Initlization
 			end
 		end
 		
-	
 feature -- Command
 
 	show_memory_map is
@@ -134,21 +130,20 @@ feature {NONE} -- Implementation
 	
 	pick_item (a_item: EV_GRID_LABEL_ITEM): MA_STONE is
 			-- User pick one item from the grid.
-		require
-			a_item_not_void: a_item /= Void
 		do
-			-- If is an item represent a object. Only an item represent an object has been setted the data.
-			if a_item.data /= Void then
-				create {MA_OBJECT_STONE} Result.make (a_item.data)
-				object_grid.set_accept_cursor (accept_node)
-				object_grid.set_deny_cursor (deny_node)	
-			else
-			-- If is an item represent a class.
-				create {MA_CLASS_STONE} Result.make (a_item.text)
-				object_grid.set_accept_cursor (accept_node_class)
-				object_grid.set_deny_cursor (deny_node_class)
+			if a_item /= Void and then a_item.column.index = 1 then
+				-- If is an item represent a object. Only an item represent an object has been setted the data.
+				if a_item.data /= Void then
+					create {MA_OBJECT_STONE} Result.make (a_item.data)
+					object_grid.set_accept_cursor (accept_node)
+					object_grid.set_deny_cursor (deny_node)	
+				else
+				-- If is an item represent a class.
+					create {MA_CLASS_STONE} Result.make (a_item.text)
+					object_grid.set_accept_cursor (accept_node_class)
+					object_grid.set_deny_cursor (deny_node_class)
+				end				
 			end
-			
 		end
 			
 	on_grid_header_click (a_column_index: INTEGER) is
@@ -190,7 +185,6 @@ feature {NONE} -- Implementation
 			l_sorter.sort (grid_data)
 		end
 		
-
 	update_grid_content is
 			-- Fill grid using `grid_data'
 		require
@@ -306,7 +300,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
 
 	on_expand_actions_for_referers (an_object: ANY; a_parent_row: EV_GRID_ROW) is
 			-- Add all objects referring to `an_object' as subnode

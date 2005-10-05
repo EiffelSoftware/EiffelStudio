@@ -11,6 +11,9 @@ class
 	
 inherit
 	MA_WINDOW_IMP
+		redefine
+			destroy
+		end
 	
 	MA_SINGLETON_FACTORY
 		export
@@ -21,6 +24,7 @@ inherit
 		end
 create
 	make
+	
 feature {NONE} -- Initialization
 	make (a_dir: STRING) is
 			-- 
@@ -116,7 +120,25 @@ feature {NONE} -- Initialization
 			retreive_pixmap_set: retreive.pixmap /= Void
 		end
 		
-	
+feature -- Redefine
+
+	destroy is
+			-- Destroy window, clear singleton.
+		do
+			timer.set_interval (0)
+			timer.actions.wipe_out
+			timer := Void
+			main_book.drop_actions.wipe_out
+			filter_setting.drop_actions.wipe_out
+			show_actions.wipe_out
+			split_incre.resize_actions.wipe_out
+			gc_graphs.resize_actions.wipe_out
+			if not filter_window.is_destroyed then
+				filter_window.destroy
+			end
+			Precursor {MA_WINDOW_IMP}
+		end
+		
 feature {NONE} -- Implementation for agents
 
 	update_splitter_proportion_once (a_splitter: EV_SPLIT_AREA; a_proportion: REAL) is
@@ -157,7 +179,7 @@ feature {NONE} -- Implementation for agents
 	filter_clicked is
 			-- When the user click the filter button.
 		do
-			filter_widnow.show
+			filter_window.show
 		end
 		
 	auto_refresh_enable is
@@ -227,7 +249,7 @@ feature {NONE} -- Implementation for agents
 		require
 			a_stone_not_void: a_stone /= Void
 		do
-			filter_widnow.add_class_name (a_stone.class_name)
+			filter_window.add_class_name (a_stone.class_name)
 		end
 		
 --	from_object_grid_to_object_graph (x, y: INTEGER): EV_NOTEBOOK is

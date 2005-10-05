@@ -48,5 +48,9 @@ feature -- Access
 	reason_constructor_uses_var_args: STRING is "Constructor accepts variable number of parameters"
 	reason_method_uses_var_args: STRING is "Method accepts variable number of parameters"
 	
+		-- Generics
+	reason_type_is_generic: STRING is "Type is a generic type"
+	reason_member_is_generic: STRING is "Member is a generic member"
+	
 
 end -- class EC_CHECKED_REASON_CONSTANTS

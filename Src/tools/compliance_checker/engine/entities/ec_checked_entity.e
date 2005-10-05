@@ -116,7 +116,7 @@ feature {NONE} -- Basic Operations
 		indexing
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		do
-			--| Do nothing...
+			internal_is_eiffel_compliant := True
 		end
 			
 feature {NONE} -- Query

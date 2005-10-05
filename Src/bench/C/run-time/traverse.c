@@ -390,7 +390,7 @@ rt_shared EIF_OBJECT map_next(void)
 }
 
 /*
-doc:	<routine name="map_next" export="shared">
+doc:	<routine name="map_reset" export="shared">
 doc:		<summary>At the end of a cloning operation, the stack is reset (i.e. emptied) and a consistency check is made to ensure it is really empty.</summary>
 doc:		<param name="emergency" type="int">Need to reset due to emergency (exception)?</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
@@ -437,7 +437,7 @@ doc:	<attribute name="referers_target" return_type="EIF_REFERENCE" export="priva
 doc:		<summary>Object for which we track all the objects that refers to it in `find_referers'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_REFERENCE referers_target = NULL;
@@ -447,7 +447,7 @@ doc:	<attribute name="instance_type" return_type="EIF_INTEGER" export="private">
 doc:		<summary>Dynamic type used to track all objects of this particular dynamic type in `find_instance_of'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_INTEGER instance_type = 0;
@@ -458,7 +458,7 @@ doc:		<summary>Find all objects that refers to `target' and return a SPECIAL obj
 doc:		<param name="target" type="EIF_REFERENCE">Object from which we want to find all objects that refer to it.</param>
 doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL [ANY].</param>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Through `eif_eo_store_mutex'.</synchronization>
+doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
 doc:	</routine>
 */
 
@@ -466,10 +466,10 @@ rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
-	EIF_EO_STORE_LOCK;
+	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	referers_target = target;
 	result = matching (internal_find_referers, result_type);
-	EIF_EO_STORE_UNLOCK;
+	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 	return result;
 }
 
@@ -479,7 +479,7 @@ doc:		<summary>Find all object that have `type' as dynamic type and return a SPE
 doc:		<param name="type" type="EIF_INTEGER">Dynamic type of objects we are looking for.</param>
 doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL[ANY].</param>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Through `eif_eo_store_mutex'.</synchronization>
+doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
 doc:	</routine>
 */
 
@@ -487,10 +487,10 @@ rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_t
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
-	EIF_EO_STORE_LOCK;
+	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	instance_type = type;
 	result = matching (internal_find_instance_of, result_type);
-	EIF_EO_STORE_UNLOCK;
+	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 	return result;
 }
 
@@ -499,7 +499,7 @@ doc:	<routine name="find_all_instances" return_type="EIF_REFERENCE" export="shar
 doc:		<summary>Find all objects in system and return a SPECIAL object containing them all.</summary>
 doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL[ANY].</param>
 doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Through `eif_eo_store_mutex'.</synchronization>
+doc:		<synchronization>Through `eif_gc_mutex'.</synchronization>
 doc:	</routine>
 */
 
@@ -507,9 +507,9 @@ rt_public EIF_REFERENCE find_all_instances (EIF_INTEGER result_type)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE result = NULL;
-	EIF_EO_STORE_LOCK;
+	GC_THREAD_PROTECT(eif_synchronize_gc (rt_globals));
 	result = matching (internal_find_all_instances, result_type);
-	EIF_EO_STORE_UNLOCK;
+	GC_THREAD_PROTECT(eif_unsynchronize_gc (rt_globals));
 	return result;
 }
 
@@ -519,7 +519,7 @@ doc:	<attribute name="found_collection" return_type="struct obj_array *" export=
 doc:		<summary>Collects all matching objects found in `find_instance_of' or `find_referers'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private struct obj_array *found_collection = NULL;
@@ -529,7 +529,7 @@ doc:	<attribute name="marked_collection" return_type="struct obj_array *" export
 doc:		<summary>Keeps all objects marked during search in `find_instance_of' or `find_referers'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private struct obj_array *marked_collection = NULL;
@@ -540,7 +540,7 @@ doc:		<summary>Add `obj' to `a_collection'.</summary>
 doc:		<param name="obj" type="EIF_REFERENCE">Object to add in `a_collection'.</param>
 doc:		<param name="a_collection" type="struct obj_array *">Collection in which `obj' is added.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
@@ -562,7 +562,7 @@ doc:		<summary>Check if dynamic type of `compare_to' and `enclosing' matches `in
 doc:		<param name="enclosing" type="EIF_REFERENCE">Object we possibly want to add to `found_collection'.</param>
 doc:		<param name="compare_to" type="EIF_REFERENCE">Only for signature purposes. We only do something if `enclosing' references the same object as `compare_to'.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
@@ -583,7 +583,7 @@ doc:		<summary>Add `enclosing' to `found_collection' if not yet processed, as we
 doc:		<param name="enclosing" type="EIF_REFERENCE">Object we possibly want to add to `found_collection'.</param>
 doc:		<param name="compare_to" type="EIF_REFERENCE">Only for signature purposes. We only do something if `enclosing' references the same object as `compare_to'.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
@@ -600,7 +600,7 @@ doc:		<summary>Check if `compare_to' refers to `referers_target' and that `enclo
 doc:		<param name="enclosing" type="EIF_REFERENCE">Object we possibly want to add to `found_collection'.</param>
 doc:		<param name="compare_to" type="EIF_REFERENCE">If `compare_to' is `referers_target' then we add enclosing.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
@@ -620,7 +620,7 @@ doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' return
 doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
 doc:		<param name="result_type" type="int">Full dynamic type of SPECIAL [ANY].</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
@@ -652,6 +652,7 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 		/* Traverse all stacks and root object to find objects matching `action_fnptr'. */
 	match_object (root_obj, action_fnptr);
 
+#ifndef EIF_THREADS
 #ifdef ISE_GC
 	match_simple_stack (&hec_saved, action_fnptr);
 	match_simple_stack (&hec_stack, action_fnptr);
@@ -659,13 +660,28 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	match_stack (&loc_set, action_fnptr);
 	match_stack (&loc_stack, action_fnptr);
 #endif
-
 #ifdef WORKBENCH
 	match_simple_stack (&once_set, action_fnptr);
 #else
 	match_stack (&once_set, action_fnptr);
 #endif
 	match_stack (&oms_set, action_fnptr);
+#else
+	for (i = 0; i < hec_saved_list.count; i++)
+		match_simple_stack(hec_saved_list.threads.sstack[i], action_fnptr);
+	for (i = 0; i < hec_stack_list.count; i++)
+		match_simple_stack(hec_stack_list.threads.sstack[i], action_fnptr);
+
+	for (i = 0; i < loc_set_list.count; i++)
+		match_stack(loc_set_list.threads.sstack[i], action_fnptr);
+	for (i = 0; i < loc_stack_list.count; i++)
+		match_stack(loc_stack_list.threads.sstack[i], action_fnptr);
+
+	match_stack(&global_once_set, action_fnptr);
+
+	for (i = 0; i < once_set_list.count; i++)
+		match_simple_stack(once_set_list.threads.sstack[i], action_fnptr);
+#endif
 
 		/* Now `l_found' is properly populated so let's create
 		 * SPECIAL objects of type `result_type' that we will return.
@@ -710,7 +726,7 @@ doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' return
 doc:		<param name="stk" type="struct stack *">Stack in which we are searching.</param>
 doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
@@ -744,7 +760,7 @@ doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' return
 doc:		<param name="stk" type="struct stack *">Stack in which we are searching.</param>
 doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 
@@ -778,7 +794,7 @@ doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' return
 doc:		<param name="object" type="EIF_REFERENCE">Object we use for comparison.</param>
 doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
 doc:		<thread_safety>Safe with synchronization</thread_safety>
-doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:		<synchronization>Safe if caller holds the `eif_gc_mutex' lock.</synchronization>
 doc:	</routine>
 */
 

@@ -150,7 +150,10 @@ feature -- Element change
 					-- will happen to the tree (check calls to `widget.wipe_out' and
 					-- `widget.extend (tree)'.
 				if classc_stone /= Void then
-					if classc_stone.e_class.has_ast then
+					if
+						not classc_stone.e_class.is_external and then
+						classc_stone.e_class.has_ast
+					then
 						if classc_stone.e_class /= current_compiled_class then
 							widget.wipe_out
 							Eiffel_system.System.set_current_class (classc_stone.e_class)

@@ -8,16 +8,16 @@ class
 	IO_REDIRECTION_PROCESS_LAUNCHER
 
 inherit
-	WEL_PROCESS_LAUNCHER_2
-		rename
-			make as ewaesel_make,
-			launch as eweasel_make
+	EXCEPTIONS
 		export
-			{ANY}
-				last_process_result,put_string,last_string, 
-				run_hidden,hidden
+			{NONE} all
+		end
+
+	WEL_PROCESS_LAUNCHER
+		rename
+			launch as wel_launch				    
 		redefine
-			startup_info, close
+			startup_info
 		end
 		
 create
@@ -33,21 +33,53 @@ feature -- Creation
 			cmd_line := cmd
 			working_directory := a_working_directory
 			launched := False
-			end_of_error := True
-			end_of_file := True -- It's end of output
-			input_has_been_closed := False
-			output_has_been_closed := False
-			error_has_been_closed := False						
+			input_has_been_closed := True
+			output_has_been_closed := True
+			error_has_been_closed := True	
+			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection					
+			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection						
 		ensure		
 			command_line_set: cmd_line = cmd
 			working_directory_set: working_directory = a_working_directory
 			process_not_launched: not launched
-			end_of_error_true: end_of_error
-			end_of_file_ture: end_of_file -- It's end of output
+			input_direction_set: 
+				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection					
+			output_direction_set:
+				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			error_direction_set:
+				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection						
+			
+		end
+		
+feature -- Status setting
+	
+	set_input_direction (direction: INTEGER) is
+			-- Set `input_direction' with `direction'
+		do
+			input_direction := direction
+		ensure
+			input_direction_set: input_direction = direction
+		end
+		
+	set_output_direction (direction: INTEGER) is
+			-- Set `output_direction' with `direction'
+		do
+			output_direction := direction
+		ensure
+			output_direction_set: output_direction = direction
+		end
+		
+	set_error_direction (direction: INTEGER) is
+			-- Set `error_direction' with `direction'
+		do
+			error_direction := direction
+		ensure
+			error_direction_set: error_direction = direction
 		end
 		
 feature -- Control
-	launch (inf, outf, errf: STRING; buffer_size: INTEGER; is_err_same: BOOLEAN) is
+	launch (inf, outf, errf: STRING; buffer_size: INTEGER) is
 			-- Launch a process
 			-- inf is the file name of the input stream, if Void,
 			-- use pipe to communicate between parent and child processes.
@@ -59,31 +91,36 @@ feature -- Control
 			-- the size of the string that you can read from or write to a
 			-- pipe. 
 		require
-			process_not_launched: not launched
+			process_not_running: (not launched) or (launched and then has_process_exited)
+			input_closed: input_has_been_closed
+			output_closed: output_has_been_closed
+			error_closed: error_has_been_closed
 		local
 			l_success1:BOOLEAN
 			l_success2:BOOLEAN
 			l_success3:BOOLEAN
 		do
+			close
 			input_file_name := inf
 			output_file_name := outf
 			error_file_name := errf
-			is_error_same_as_output := is_err_same
+			is_error_same_as_output := error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output
 			
-			input_pipe_needed := inf = Void
-			output_pipe_needed := outf = Void	
-			
-			if not is_error_same_as_output then
-				error_pipe_needed := errf = Void						
-			else					
-				error_pipe_needed := False
-			end
+			input_pipe_needed := input_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream
+			output_pipe_needed := 
+				--(output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream or
+				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent	
 
-			if with_console then
+			error_pipe_needed := 
+				--(error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_stream or
+				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent
+			
+			if has_console then
 				spawn_with_flags (cmd_line, working_directory, create_new_console)
 			else
 				spawn_with_flags (cmd_line, working_directory, create_no_window)
 			end
+
 			last_operation_successful := last_launch_successful
 			l_success1 := file_handle.close (child_input)
 			l_success2 := file_handle.close (child_output)
@@ -96,8 +133,8 @@ feature -- Control
 			
 			last_operation_successful := last_operation_successful
 			launched := last_operation_successful
-			end_of_file := False
-			end_of_error := False
+		rescue
+
 		end
 		
 	wait_for_exit is
@@ -109,6 +146,7 @@ feature -- Control
 		do
 			successed := cwin_wait_for_single_object (process_info.process_handle,
 						cwin_infinite) = cwin_wait_object_0
+
 		end
 		
 	read_output_stream (bsize: INTEGER) is
@@ -143,11 +181,11 @@ feature -- Control
 				else
 					last_string := Void
 				end
-			end			
+			end	
 		rescue
+			last_operation_successful := False
 			if exception = Io_exception then
 				in_progress := True
-				end_of_file := True
 				retry
 			end
 		end
@@ -186,10 +224,23 @@ feature -- Control
 				end
 			end			
 		rescue
+			last_operation_successful := False		
 			if exception = Io_exception then
 				in_progress := True
-				end_of_error := True
 				retry
+			end
+		end
+		
+	put_string (s: STRING) is
+			-- Send characters in `s' to process
+		require
+			string_not_void: s /= Void
+		local
+			l_file_handle: FILE_HANDLE
+		do
+			if input_pipe_needed then
+				create l_file_handle
+				l_file_handle.put_string (std_input, s)
 			end
 		end
 		
@@ -226,15 +277,12 @@ feature -- Control
 		local
 			l_success: BOOLEAN
 		do
-
-			if not is_error_same_as_output then
-				if not error_has_been_closed then
-					if std_error /= default_pointer then
-						l_success := file_handle.close (std_error)			
-					end						
-				end
-				error_has_been_closed := True					
+			if not error_has_been_closed then
+				if std_error /= default_pointer then
+					l_success := file_handle.close (std_error)			
+				end						
 			end
+			error_has_been_closed := True					
 		end
 				
 	close is
@@ -245,19 +293,52 @@ feature -- Control
 			close_std_error
 		end
 		
-	run_with_console is
+	terminate is
+			-- Terminate independent process
+		local
+			a_boolean: BOOLEAN
+			terminated: BOOLEAN		
+		do
+			close
+			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+			if a_boolean then
+				if last_process_result = cwin_still_active then
+					terminated := cwin_terminate_process (process_info.process_handle, 0)
+				end
+				cwin_close_handle (process_info.thread_handle)
+				cwin_close_handle (process_info.process_handle)
+			end
+			suspended := False
+		end
+		
+	set_has_console (b: BOOLEAN) is
 			-- 
 		do
-			with_console := True
+			has_console := b
 		ensure
-			with_console_set: with_console = True
+			has_console_set: has_console = b
 		end
 		
 		
 feature -- Status reporting
-	end_of_error: BOOLEAN
+
+	input_direction: INTEGER
+			-- Direction of input of process
+			
+	output_direction: INTEGER
+			-- Direction of output of process
+	
+	error_direction: INTEGER
+			-- Direction of error of process
+
+	suspended: BOOLEAN
+			-- Is process suspended awaiting user input?
 
 	last_error: STRING
+	
+	last_string: STRING
+			-- Result of last call to `read_line'
+
 	
 	last_operation_successful: BOOLEAN
 		-- Is last process operation successful?
@@ -280,6 +361,12 @@ feature -- Status reporting
 			end
 		end
 		
+	input_has_been_closed: BOOLEAN
+	
+	output_has_been_closed: BOOLEAN
+	
+	error_has_been_closed: BOOLEAN		
+		
 	check_process_state is
 		-- Try to get the last state that the child process has returned.
 		-- after calling this feature, check last_operation_successful feature
@@ -297,9 +384,40 @@ feature -- Status reporting
 
 feature {NONE} -- Implementation
 
-	input_has_been_closed: BOOLEAN
-	output_has_been_closed: BOOLEAN
-	error_has_been_closed: BOOLEAN
+	input_pipe_needed: BOOLEAN
+			-- Is a pipe needed to write input from current process?
+			
+	output_pipe_needed: BOOLEAN
+			-- Is a pipe needed to read output from current process?
+			
+	input_file_name: STRING
+			-- Name if any of input file
+			
+	output_file_name: STRING
+			-- Name if any of output file
+
+	savefile: RAW_FILE
+			-- File to which output read from process is written, 
+			-- if not void
+			
+	std_input, std_output: POINTER
+			-- Handle used to read input and output from child.
+
+	child_input, child_output: POINTER
+			-- Input/output given to child.
+
+	last_character: CHARACTER
+			-- Result of last call to `read_character'
+	
+	file_handle: FILE_HANDLE is
+			-- Factory for managing HANDLE
+		once
+			create Result
+		ensure
+			file_handle_not_void: Result /= Void
+		end
+		
+
 	cmd_line: STRING
 	
 	working_directory: STRING
@@ -316,7 +434,7 @@ feature {NONE} -- Implementation
 
 	is_error_same_as_output: BOOLEAN
 	
-	with_console: BOOLEAN
+	has_console: BOOLEAN
 			-- Will process be launched with a console?
 			-- Only has effects on Windows
 
@@ -326,60 +444,113 @@ feature {NONE} -- Implementation
 			-- Process startup information
 		local
 			l_tuple: TUPLE [POINTER, POINTER]
+			l_flag: BOOLEAN
 		do
-				-- Initialize input of child
-			if input_pipe_needed then
-				l_tuple := file_handle.create_pipe_read_inheritable
-				child_input := l_tuple.pointer_item (1)
-				std_input := l_tuple.pointer_item (2)
-			else
-				child_input := file_handle.open_file_inheritable (input_file_name)
-				std_input := default_pointer
-
-			end
-				-- Initialize output of child
-			if output_pipe_needed then
-				l_tuple := file_handle.create_pipe_write_inheritable
-				std_output := l_tuple.pointer_item (1)
-				child_output := l_tuple.pointer_item (2)
-			else
-				child_output := file_handle.create_file_inheritable (output_file_name, False)
-				std_output := default_pointer
-			
-			end
-			if not is_error_same_as_output then
-				if error_pipe_needed then
-					l_tuple := file_handle.create_pipe_write_inheritable
-					std_error := l_tuple.pointer_item (1)
-					child_error := l_tuple.pointer_item (2)
-				else
-					child_error := file_handle.create_file_inheritable (error_file_name, False)
-					std_error := default_pointer				
-				end	
-			else			
-				child_error := child_output
-				std_error := std_output				
-			end
-
-			
 			create Result.make
-			Result.set_flags (Startf_use_std_handles)
+			
+			l_flag := 
+				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection and
+				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection and
+				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			if not l_flag then
+				Result.set_flags (Startf_use_std_handles)
+				
+					-- Initialize input of child
+				if not (input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) then
+					if input_pipe_needed then
+						l_tuple := file_handle.create_pipe_read_inheritable
+						child_input := l_tuple.pointer_item (1)
+						std_input := l_tuple.pointer_item (2)
+					else
+						child_input := file_handle.open_file_inheritable (input_file_name)
+						std_input := default_pointer
+					end	
+					input_has_been_closed := False
+					Result.set_std_input (child_input)	
+				else	
+					Result.set_std_input (stdin)
+				end
+	
+					-- Initialize output of child
+				if not (output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) then
+					if output_pipe_needed then
+						l_tuple := file_handle.create_pipe_write_inheritable
+						std_output := l_tuple.pointer_item (1)
+						child_output := l_tuple.pointer_item (2)
+					else
+						child_output := file_handle.create_file_inheritable (output_file_name, False)
+						std_output := default_pointer					
+					end
+					output_has_been_closed := False
+					Result.set_std_output (child_output)
+				else
+					Result.set_std_output (stdout)
+				end
+	
+				if not (error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) then
+					if not is_error_same_as_output then
+						if error_pipe_needed then
+							l_tuple := file_handle.create_pipe_write_inheritable
+							std_error := l_tuple.pointer_item (1)
+							child_error := l_tuple.pointer_item (2)
+						else
+							child_error := file_handle.create_file_inheritable (error_file_name, False)
+							std_error := default_pointer				
+						end	
+						Result.set_std_error (child_error)
+						error_has_been_closed := False
+					else	
+						if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
+							Result.set_std_error (stderr)
+						else		
+							child_error := child_output
+							std_error := std_output
+							Result.set_std_error (child_error)	
+						end			
+					end						
+				else
+					Result.set_std_error (stderr)
+				end					
+			end			
+			
 			if hidden then
 				Result.set_show_command (Sw_hide)
 			else
 				Result.set_show_command (Sw_show)
 			end
 			Result.add_flag (Startf_use_show_window)
-			Result.set_std_input (child_input)
-			Result.set_std_output (child_output)
-			Result.set_std_error (child_error)
+			
 		end
 
 	cwin_peek_named_pipe (a_handle: POINTER; a_buffer:  POINTER;  buf_size: INTEGER; bytes_read: POINTER; bytes_avail: POINTER; a_integer: POINTER): BOOLEAN is
+			-- Peek a pipe to see whether there is data in it.
 		external
 			"C blocking macro signature (HANDLE, LPVOID, DWORD, LPDWORD, LPDWORD, LPDWORD): BOOL use <windows.h>"
 		alias
 			"PeekNamedPipe"
 		end	
-
+		
+	stdin: POINTER is
+			-- Standard input handle
+		external
+			"C inline use <windows.h>"
+		alias
+			"GetStdHandle (STD_INPUT_HANDLE)"
+		end
+		
+	stdout: POINTER is
+			-- Standard output handle
+		external
+			"C inline use <windows.h>"
+		alias
+			"GetStdHandle (STD_OUTPUT_HANDLE)"
+		end
+		
+	stderr: POINTER is
+			-- Standard error handle
+		external
+			"C inline use <windows.h>"
+		alias
+			"GetStdHandle (STD_ERROR_HANDLE)"
+		end
 end

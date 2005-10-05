@@ -33,6 +33,21 @@ feature -- Status setting
 			mutex.unlock
 		end
 		
+	set_sleep_time (interval: INTEGER) is
+			-- 
+		require
+			interval_positive: interval > 0
+		do
+			mutex.lock
+			sleep_time := interval
+			mutex.unlock
+		ensure
+			sleep_time = interval
+		end
+		
+		
+	
+		
 feature -- Status reporting
 
 	should_thread_exit: BOOLEAN is
@@ -53,6 +68,14 @@ feature {NONE} -- Implementation
 			
 	mutex: MUTEX
 			-- `mutex' used to keep critical section safe.
+			
+	sleep_time: INTEGER
+			-- Time in nanosecond for this thread to sleep when waiting for data
+			-- 
+			
+	initial_sleep_time: INTEGER is 1000
+			-- Initial time in nanosecond for this thread to sleep when waiting for data
+		
 			
 invariant
 	mutext_not_null: mutex /= Void

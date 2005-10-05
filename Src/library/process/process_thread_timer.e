@@ -11,10 +11,8 @@ inherit
 	PROCESS_TIMER
 	
 	PROCESS_IO_LISTENER_THREAD
-
 		rename
-			process_launcher as old_process_launcher,
-			execute as start
+			process_launcher as old_process_launcher
 		export
 			{NONE} all
 		end
@@ -33,12 +31,14 @@ feature{NONE} -- Implementation
 		do
 			process_launcher := prc
 			should_exit_signal:= False
-			time_interval := interval
+			time_interval := interval * 1000000
 			create mutex		
+			destroyed := True
 		ensure
 			process_launched_set: process_launcher = prc
 			should_exit_signal_set_to_false: not should_exit_signal	
-			time_interval_set: time_interval = interval
+			time_interval_set: time_interval = interval * 1000000
+			destroyed_set: destroyed = True
 		end
 		
 feature -- Control
@@ -48,16 +48,28 @@ feature -- Control
 		do
 			set_exit_signal
 		end
+	
+	start is
+			-- 
+		do
+			mutex.lock
+			destroyed := False
+			should_exit_signal := False			
+			mutex.unlock
+
+			launch
+		end		
 		
 feature{NONE} -- Implementation
 	
-	start is
+	execute is
 		local
-			prc_imp: PROCESS_IMP
-			iv: INTEGER			
+			prc_imp: PROCESS_IMP		
 		do
 			prc_imp ?= process_launcher
-			iv := time_interval * 1000
+			if prc_imp.platform.is_dotnet then
+				
+			end
 			if prc_imp /= Void then
 				from		
 					
@@ -65,9 +77,13 @@ feature{NONE} -- Implementation
 					should_thread_exit
 				loop
 					prc_imp.check_exit
-					sleep (iv)
+					if not should_exit_signal then
+						sleep (time_interval)						
+					end
 				end
 			end
-
+			mutex.lock
+			destroyed := True
+			mutex.unlock
 		end
 end

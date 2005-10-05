@@ -8,8 +8,9 @@ class
 	PROCESS_REDIRECTION_CONSTANTS
 
 feature
-	To_stream: INTEGER is 0 
-	To_file: INTEGER is 1
-	To_agent: INTEGER is 2
-	To_same_as_output: INTEGER is 5
+	to_stream: INTEGER is 0 
+	to_file: INTEGER is 1
+	to_agent: INTEGER is 2
+	no_redirection: INTEGER is 3
+	to_same_as_output: INTEGER is 5
 end

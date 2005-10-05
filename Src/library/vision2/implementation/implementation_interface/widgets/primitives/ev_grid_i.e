@@ -1998,11 +1998,10 @@ feature -- Element change
 			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
 			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
-			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (i + 1).parent_row = a_parent_row
 		do
-			insert_rows_at (1, i)
-			a_parent_row.implementation.add_subrows_internal (1, i, a_parent_row.subrow_count + 1,True)
+			insert_new_rows_parented (1, i, a_parent_row)
 		ensure
 			row_count_set: row_count = old row_count + 1
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
@@ -2016,11 +2015,19 @@ feature -- Element change
 			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
 			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
-			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (i + 1).parent_row = a_parent_row
+		local
+			l_subrow_index: INTEGER
 		do
 			insert_rows_at (rows_to_insert, i)
-			a_parent_row.implementation.add_subrows_internal (rows_to_insert, i, a_parent_row.subrow_count + 1,True)
+			if i = a_parent_row.index + a_parent_row.subrow_count_recursive + 1 then
+				l_subrow_index := a_parent_row.subrow_count + 1
+			else
+					-- Set the subrow index based on that of the next subrow.
+				l_subrow_index := row_internal (i + rows_to_insert).subrow_index
+			end
+			a_parent_row.implementation.add_subrows_internal (rows_to_insert, i, l_subrow_index, True)
 		ensure
 			row_count_set: row_count = old row_count + rows_to_insert
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + rows_to_insert

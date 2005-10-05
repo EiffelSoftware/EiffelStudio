@@ -28,10 +28,12 @@ feature{NONE} -- Initialization
 		do
 			process_launcher := prc_launcher
 			should_exit_signal:= False	
+			sleep_time := initial_sleep_time
 			create mutex		
 		ensure
 			process_launched_set: prc_launcher = prc_launcher
-			should_exit_signal_set_to_false: not should_exit_signal			
+			should_exit_signal_set_to_false: not should_exit_signal	
+			sleep_time_set: sleep_time = initial_sleep_time		
 		end
 
 feature -- Run	
@@ -54,6 +56,8 @@ feature -- Run
 				end	
 				if should_thread_exit and then str = Void then
 					done := True
+				elseif (str = Void) or (str /= Void and then str.is_empty) then
+					sleep (sleep_time)
 				end	
 			end
 		end

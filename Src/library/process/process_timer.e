@@ -7,7 +7,7 @@ indexing
 deferred class
 	PROCESS_TIMER
 	
-feature	 -- Control
+feature{PROCESS} -- Control
 	
 	start is
 			-- Start timer.
@@ -18,6 +18,8 @@ feature	 -- Control
 			-- Destroy timer.
 		deferred
 		end
+		
+	destroyed: BOOLEAN
 	
 feature{NONE} -- Implementation
 
@@ -25,7 +27,7 @@ feature{NONE} -- Implementation
 			-- process launcher to which this timer is attached.
 	
 	time_interval: INTEGER
-		
+			-- Time for this timer to sleep
 invariant
 	process_launcher_not_null: process_launcher /= Void
 	time_interval_positive: time_interval > 0

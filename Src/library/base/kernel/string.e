@@ -196,7 +196,7 @@ feature -- Initialization
 			resize (l_count + 1)
 			count := l_count
 			internal_hash_code := 0
-			c_string_provider.read_substring_into (Current, start_pos, end_pos)
+			c_string_provider.read_substring_into (Current, 1, l_count)
 		ensure
 			valid_count: count = end_pos - start_pos + 1
 			-- characters: for all i in 1..count, item (i) equals

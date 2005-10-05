@@ -80,6 +80,7 @@ default
 	disabled_debug ("verbose")
 	disabled_debug ("xml_input_stream")
 	disabled_debug ("xml_parser")
+	disabled_debug ("larry")
 	debug (no)
 	line_generation (no)
 	profile (no)
@@ -239,6 +240,8 @@ cluster
 		exclude
 			"CVS"; 
 		end
+
+	all memory_analyzer:	"$EIFFEL_SRC/library/memory_analyzer"
 
 external
 

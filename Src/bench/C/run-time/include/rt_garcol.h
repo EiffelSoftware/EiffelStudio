@@ -135,6 +135,7 @@ extern struct stack_list hec_stack_list;	/* List of all `hec_stack' allocted in 
 extern struct stack_list hec_saved_list;	/* List of all `hec_saved' allocted in each thread */
 extern struct stack_list eif_stack_list;	/* List of all `eif_stack' allocted in each thread */
 extern struct stack_list eif_trace_list;	/* List of all `eif_trace' allocted in each thread */
+extern struct stack global_once_set;		/* Global once functions. */
 #ifdef WORKBENCH
 extern struct stack_list opstack_list;	/* List of all `opstack' allocated in each thread */
 #endif

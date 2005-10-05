@@ -62,7 +62,8 @@ feature {NONE} -- Implementation
 			end
 			
 				-- Now blit the pixmap to `drawable'.
-			drawable.draw_sub_pixmap (an_indent, 0, pixmap, create {EV_RECTANGLE}.make (0, 0, a_width, a_height))
+			internal_rectangle.move_and_resize (0, 0, a_width, a_height)
+			drawable.draw_sub_pixmap (an_indent, 0, pixmap, internal_rectangle)
 		end
 		
 	internal_required_width: INTEGER

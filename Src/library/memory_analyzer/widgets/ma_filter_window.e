@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			grid.insert_new_column (1)
 			grid.column (1).set_title ("Class name")
 			grid.insert_new_column (2)
-			grid.column (2).set_title ("Ingnore")
+			grid.column (2).set_title ("Ignore")
 			grid.insert_new_column (3)
 			grid.column (3).set_title ("Description")
 			

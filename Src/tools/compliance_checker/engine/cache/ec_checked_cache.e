@@ -122,6 +122,9 @@ feature {NONE} -- Implementation
 			
 			l_type := {SYSTEM_TYPE}.get_type ("System.Void")
 			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, True, True))
+			
+			l_type := {SYSTEM_TYPE}.get_type ("System.TypedReference")
+			a_table.add (l_type, create {EC_STATIC_CHECKED_TYPE}.make (l_type, False, False))
 		end
 		
 

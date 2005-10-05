@@ -307,7 +307,9 @@ feature -- Measurement
 			if exists then
 				if not is_open_write then
 					internal_file.refresh
-					Result := internal_file.length.to_integer
+					if not is_directory then
+						Result := internal_file.length.to_integer
+					end
 				else
 					Result := internal_stream.length.to_integer
 				end
@@ -345,9 +347,15 @@ feature -- Status report
 	exists: BOOLEAN is
 			-- Does physical file exist?
 			-- (Uses effective UID.)
+		local
+			l_directory: DIRECTORY
 		do
 			internal_file.refresh
 			Result := internal_file.exists
+			if not Result then -- May return `False' on directories
+				create l_directory.make (name)
+				Result := l_directory.exists
+			end
 		ensure then
 			unchanged_mode: mode = old mode
 		end

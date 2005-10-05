@@ -1913,7 +1913,7 @@ feature -- Element change
 			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (i + 1).parent_row = a_parent_row
 		do
-			implementation.insert_new_row_parented (i, a_parent_row)
+			implementation.insert_new_rows_parented (1, i, a_parent_row)
 		ensure
 			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (i = row_count)
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1

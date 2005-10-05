@@ -701,7 +701,7 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 				break;
 			}
 		}
-		update(temp);					
+		update(temp, argv[0]);					
 	}									/* Read melted information
 										 * Note: the `update' function takes
 										 * care of the initialization of the 

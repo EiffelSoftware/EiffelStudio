@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	handle_close_window is
 			-- Handle user press window action.
 		do
-			ma_window.hide
+			ma_window.destroy
 		end
 		
 	window: EV_WINDOW

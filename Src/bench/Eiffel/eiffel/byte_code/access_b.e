@@ -439,12 +439,21 @@ feature -- IL code generation
 			-- special transformation if Current type is expanded.
 		require
 			il_generation: System.il_generation
+		local
+			type_i: TYPE_I
 		do
 				-- Mutual recursive call in ACCESS_B, but
 				-- `is_predefined' descendants will stop
 				-- recursion when it occurs because current
 				-- feature is redefined.
-			generate_il
+			generate_il_value
+			if is_target_of_call then
+				type_i := real_type (type)
+				if type_i.is_true_expanded and then not type_i.type_a.associated_class.is_enum then
+						-- Pointer to value type is required
+					generate_il_metamorphose (type_i, type_i, True)
+				end
+			end
 		end
 
 	generate_il is
@@ -468,7 +477,7 @@ feature -- IL code generation
 			l_il_ext: IL_EXTENSION_I
 		do
 			cl_type ?= real_type (type)
-			Result := is_target_of_call and then cl_type.is_expanded
+			Result := is_target_of_call and then cl_type.is_true_expanded
 			
 			if Result then
 				call_access ?= parent.message
@@ -493,20 +502,11 @@ feature -- IL code generation
 					-- We do not load the address if it is an optimized call of the compiler.
 				Result := not call_access.is_il_feature_special (cl_type)
 				if Result then
-					if call_access.written_in > 0 then
-							-- Find location of feature to find out if the address needs
-							-- to be loaded. True when written in the same class, False
-							-- otherwise.
-						Result := cl_type.same_as (
-							il_generator.implemented_type (call_access.written_in, cl_type))
-					end
-					if Result then
-						l_ext ?= call_access
-						if l_ext /= Void then
-							l_il_ext ?= l_ext.extension
-							Result := l_il_ext = Void or else l_il_ext.type /= 
-								{SHARED_IL_CONSTANTS}.Operator_type
-						end
+					l_ext ?= call_access
+					if l_ext /= Void then
+						l_il_ext ?= l_ext.extension
+						Result := l_il_ext = Void or else l_il_ext.type /= 
+							{SHARED_IL_CONSTANTS}.Operator_type
 					end
 				end
 			end

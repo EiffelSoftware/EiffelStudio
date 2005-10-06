@@ -33,14 +33,71 @@ feature -- Status report
 
 	support_storable: BOOLEAN is False
 			-- Can medium be used to store an Eiffel structure?
+			
+	overflowed: BOOLEAN
+			-- Is last integer/natural read overflowed according to its type?
+
+	too_small: BOOLEAN
+			-- Is last integer/natural read overflowed because
+			-- number is too small?	
+	
+	too_large: BOOLEAN
+			-- Is last integer/natural read overflowed because
+			-- number is too large?	
+				
+	expected_number_found: BOOLEAN
+			-- Has number been found?
+			-- Check this after read_integer_x or read_natural_x.			
 
 feature -- Output
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
 		do
 			file_pi (file_pointer, i)
 		end
+		
+	put_integer_64 (i: INTEGER_64) is
+			-- Write ASCII value of `i' at current position.
+		do
+			put_string (i.out)
+		end
+
+	put_integer_16 (i: INTEGER_16) is
+			-- Write ASCII value of `i' at current position.
+		do
+			put_string (i.out)
+		end	
+		
+	put_integer_8 (i: INTEGER_8) is
+			-- Write ASCII value of `i' at current position.
+		do
+			put_string (i.out)
+		end
+		
+	put_natural_64 (i: NATURAL_64) is
+			-- Write ASCII value of `i' at current position.
+		do
+			put_string (i.out)
+		end
+		
+	put_natural, put_natural_32 (i: NATURAL_32) is
+			-- Write ASCII value of `i' at current position.
+		do
+			put_string (i.out)
+		end
+				
+	put_natural_16 (i: NATURAL_16) is
+			-- Write ASCII value of `i' at current position.
+		do
+			put_string (i.out)
+		end	
+		
+	put_natural_8 (i: NATURAL_8) is
+			-- Write ASCII value of `i' at current position.
+		do
+			put_string (i.out)
+		end			
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write ASCII value of `b' at current position.
@@ -70,12 +127,132 @@ feature -- Output
 
 feature -- Input
 
-	read_integer, readint is
-			-- Read the ASCII representation of a new integer
-			-- from file. Make result available in `last_integer'.
+--	read_integer, readint, read_integer_32 is
+--			-- Read the ASCII representation of a new integer
+--			-- from file. Make result available in `last_integer'.
+--		do
+--			last_integer := file_gi (file_pointer)
+--		end
+		
+	read_integer_64 is
+			-- 
+		local
+			str: STRING
 		do
-			last_integer := file_gi (file_pointer)
+			str := read_integer_with_no_type
+			expected_number_found := not str.is_empty
+			if expected_number_found then
+				last_integer_64 := str.to_integer_64
+				overflowed := str.overflowed
+				too_large := str.too_large
+				too_small := str.too_small
+			end
 		end
+		
+	read_integer, readint, read_integer_32 is
+			-- 
+		local
+			str: STRING
+		do
+			str := read_integer_with_no_type
+			expected_number_found := not str.is_empty
+			if expected_number_found then
+				last_integer := str.to_integer_32
+				overflowed := str.overflowed
+				too_large := str.too_large
+				too_small := str.too_small				
+			end
+		end
+		
+	read_integer_16 is
+			-- 
+		local
+			str: STRING
+		do
+			str := read_integer_with_no_type
+			expected_number_found := not str.is_empty
+			if expected_number_found then
+				last_integer_16 := str.to_integer_16
+				overflowed := str.overflowed
+				too_large := str.too_large
+				too_small := str.too_small				
+			end
+		end
+		
+	read_integer_8 is
+			-- 
+		local
+			str: STRING
+		do
+			str := read_integer_with_no_type
+			expected_number_found := not str.is_empty
+			if expected_number_found then
+				last_integer_8 := str.to_integer_8
+				overflowed := str.overflowed
+				too_large := str.too_large
+				too_small := str.too_small				
+			end
+		end	
+		
+	read_natural_64 is
+			-- 
+		local
+			str: STRING
+		do
+			str := read_integer_with_no_type
+			expected_number_found := not str.is_empty
+			if expected_number_found then
+				last_natural_64 := str.to_natural_64
+				overflowed := str.overflowed
+				too_large := str.too_large
+				too_small := str.too_small
+			end
+		end
+		
+	read_natural, read_natural_32 is
+			-- 
+		local
+			str: STRING
+		do
+			str := read_integer_with_no_type
+			expected_number_found := not str.is_empty
+			if expected_number_found then
+				last_natural := str.to_natural_32
+				overflowed := str.overflowed
+				too_large := str.too_large
+				too_small := str.too_small				
+			end
+		end
+		
+	read_natural_16 is
+			-- 
+		local
+			str: STRING
+		do
+			str := read_integer_with_no_type
+			expected_number_found := not str.is_empty
+			if expected_number_found then
+				last_natural_16 := str.to_natural_16
+				overflowed := str.overflowed
+				too_large := str.too_large
+				too_small := str.too_small				
+			end
+		end
+		
+	read_natural_8 is
+			-- 
+		local
+			str: STRING
+		do
+			str := read_integer_with_no_type
+			expected_number_found := not str.is_empty
+			if expected_number_found then
+				last_natural_8 := str.to_natural_8
+				overflowed := str.overflowed
+				too_large := str.too_large
+				too_small := str.too_small				
+			end
+		end						
 
 	read_real, readreal is
 			-- Read the ASCII representation of a new real
@@ -92,6 +269,83 @@ feature -- Input
 		end
 
 feature {NONE} -- Implementation
+
+	ctoi_state_machine: STRING_TO_INTEGER_STATE_MACHINE is
+			-- State machine used to parse string to integer or natural
+		once
+			create Result.make
+		end
+
+	platform_indicator: PLATFORM is
+			-- Platform indicator
+		once
+			create Result
+		end
+		
+	read_integer_with_no_type: STRING is
+			-- Read a number string start from current position.
+		local
+			l_is_integer: BOOLEAN
+			l_count: INTEGER
+			read_count: INTEGER			
+		do
+			create Result.make (128)
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation)
+					-- We don't allow trailing white spaces be part of a string.
+			ctoi_state_machine.set_trailing_white_spaces_acceptable (False)
+			from			
+				l_is_integer := True
+				l_count := 0
+			until
+				end_of_file or else not l_is_integer
+			loop
+				read_character
+				if not end_of_file then
+					read_count := l_count + 1
+					Result.extend (last_character)
+					ctoi_state_machine.parse (Result, l_count, l_count)
+					l_is_integer := ctoi_state_machine.is_part_of_integer
+				end
+			end
+
+			if not l_is_integer then
+					-- We reached a character that can not be parsed as part of an integer.
+					l_count := l_count - 1
+				if last_character = '%N' then
+					if l_count > 0 and then Result.item (l_count).is_digit then
+							-- If string before '%N' is an integer or natural
+							-- swallow  '%N' character.
+						Result.keep_head (l_count)
+					elseif l_count = 0 then
+							-- If we read nothing before '%N',
+							-- swallow '%N'.
+						Result.clear_all
+					else		
+							-- If we read something which can be a valid start part
+							-- (but not an integral one) of an integer or natural, 
+							-- we move file pointer back to its orginal position.
+						Result.clear_all
+						file_move (file_pointer, -l_count-1)
+						if platform_indicator.is_windows then
+							back
+						end
+					end
+				else
+					back
+					Result.keep_head (l_count)
+					if not Result.is_empty and then not Result.item (l_count).is_digit then
+						file_move (file_pointer, -l_count)
+						Result.clear_all
+					end					
+				end
+			elseif end_of_file then
+					-- We reached end of file and the string read so far is a part of an integer.
+				if not ctoi_state_machine.is_integral_integer then
+					file_move (file_pointer, -Result.count)
+					Result.clear_all
+				end				
+			end
+		end
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at

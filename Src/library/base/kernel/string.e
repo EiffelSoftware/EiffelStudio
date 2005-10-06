@@ -884,6 +884,44 @@ feature -- Status report
 		ensure
 			is_boolean: Result = (as_lower.has_substring (true_constant) or as_lower.has_substring (false_constant))
 		end
+		
+	overflowed: BOOLEAN is
+			-- Is last integer/natural conversion overflowed?
+		do
+			Result := ctoi_state_machine.overflowed
+		end
+		
+	too_large: BOOLEAN is
+			-- Is last integer/natural conversion overflowed because
+			-- number is too large?
+		do
+			Result := ctoi_state_machine.too_large
+		end
+		
+	too_small: BOOLEAN is
+			-- Is last integer/natural conversion overflowed because
+			-- number is too small?
+		do
+			Result := ctoi_state_machine.too_small
+		end	
+		
+	is_valid_integer: BOOLEAN is	
+			-- Is this string a representation of a valid integer?
+			-- Call this feature after every to_integer_xx to check if 
+			-- conversion succeeded.
+		do
+			Result := ctoi_state_machine.is_integral_integer
+		end
+		
+	is_valid_natural: BOOLEAN is
+			-- Is this string a representation of a valid natural?
+			-- Call this feature after every to_natural_xx to check if 
+			-- conversion succeeded.			
+		do
+			Result := ctoi_state_machine.is_integral_integer			
+		end
+		
+		
 
 feature -- Element change
 
@@ -2021,97 +2059,193 @@ feature -- Conversion
 		ensure
 			length_end_content: elks_checking implies is_equal (old as_upper)
 		end
-
-	to_integer: INTEGER is
-			-- Integer value;
-			-- for example, when applied to "123", will yield 123
-		require
-			is_integer: is_integer
-		local
-			l_c: CHARACTER; 
-			l_is_negative: BOOLEAN
-			l_area: like area
-			i, nb: INTEGER
+		
+	to_integer_8: INTEGER_8 is
+			-- 8-bit integer value 
 		do
-				-- Skip spaces.
-			from
-				l_area := area
-				nb := count
-				i := 0
-			until
-				l_area.item (i) /= ' '
-			loop
-				i := i + 1
-			end
-
-				-- Read sign mark if any.
-			l_c := l_area.item (i)
-			i := i + 1
-			if l_c = '+' then
-				l_c := l_area.item (i)
-				i := i + 1
-			elseif l_c = '-' then
-				l_is_negative := True
-				l_c := l_area.item (i)
-				i := i + 1
-			end
-			from
-				Result := l_c.code - 48
-			until
-				i = nb
-			loop
-				l_c := l_area.item (i)
-				if l_c.is_digit then
-					Result := 10 * Result + l_c.code - 48
-				else
-					i := nb - 1 -- Jump out of loop
-				end
-				i := i + 1
-			end
-			if l_is_negative then
-				Result := -Result
-			end
-		ensure
-			single_digit: count = 1 implies Result = ("0123456789").index_of (item (1), 1) - 1
-			minus_sign_followed_by_single_digit:
-				count = 2 and item (1) = '-' implies Result = -substring (2, 2).to_integer
-			plus_sign_followed_by_single_digit:
-				count = 2 and item (1) = '+' implies Result = substring (2, 2).to_integer
-			recurse_to_reduce_length:
-				count > 2 or count = 2 and not(("+-").has (item (1))) implies
-				 Result // 10 = substring (1, count - 1).to_integer and
-				 (Result \\ 10).abs = substring (count, count).to_integer
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_8)
+			ctoi_state_machine.parse (Current, 1, count)
+			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
+				Result := 0
+			else
+				Result := ctoi_state_machine.parsed_integer_8
+			end			
 		end
-
+		
+	to_integer_16: INTEGER_16 is
+			-- 16-bit integer value 
+		do
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_16)
+			ctoi_state_machine.parse (Current, 1, count)
+			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
+				Result := 0
+			else
+				Result := ctoi_state_machine.parsed_integer_16
+			end			
+		end		
+		
+	to_integer, to_integer_32: INTEGER is
+			-- 32-bit integer value 
+		do
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_32)
+			ctoi_state_machine.parse (Current, 1, count)
+			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
+				Result := 0
+			else
+				Result := ctoi_state_machine.parsed_integer_32
+			end			
+		end		
+		
 	to_integer_64: INTEGER_64 is
-			-- Integer value of type INTEGER_64;
-			-- for example, when applied to "123", will yield 123
-		require
-			is_integer: is_integer
-		local
-			l_area: like area
-			l_character: CHARACTER
-			i, nb: INTEGER
-			l_is_negative: BOOLEAN
+			-- 64-bit integer value 
 		do
-			from
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				l_character := l_area.item (i)
-				if l_character.is_digit then
-					Result := (Result * 10) + l_character.code - 48
-				elseif l_character = '-' then
-					l_is_negative := True
-				end
-				i := i + 1
-			end
-			if l_is_negative then
-				Result := - Result
-			end
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_64)
+			ctoi_state_machine.parse (Current, 1, count)
+			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
+				Result := 0
+			else
+				Result := ctoi_state_machine.parsed_integer_64
+			end			
+		end	
+		
+	to_natural_8: NATURAL_8 is		
+			-- 8-bit natural value 
+		do
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_8)
+			ctoi_state_machine.parse (Current, 1, count)
+			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
+				Result := 0
+			else
+				Result := ctoi_state_machine.parsed_natural_8
+			end			
 		end
+		
+	to_natural_16: NATURAL_16 is		
+			-- 16-bit natural value
+		do
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_16)
+			ctoi_state_machine.parse (Current, 1, count)
+			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
+				Result := 0
+			else
+				Result := ctoi_state_machine.parsed_natural_16
+			end			
+		end
+		
+	to_natural_32: NATURAL_32 is		
+			-- 32-bit natural value 
+		do
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_32)
+			ctoi_state_machine.parse (Current, 1, count)
+			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
+				Result := 0
+			else
+				Result := ctoi_state_machine.parsed_natural_32
+			end			
+		end	
+		
+	to_natural_64: NATURAL_64 is		
+			-- 64-bit natural value
+		do
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_64)
+			ctoi_state_machine.parse (Current, 1, count)
+			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
+				Result := 0
+			else
+				Result := ctoi_state_machine.parsed_natural_64
+			end			
+		end					
+
+--	to_integer: INTEGER is
+--			-- Integer value;
+--			-- for example, when applied to "123", will yield 123
+--		require
+--			is_integer: is_integer
+--		local
+--			l_c: CHARACTER; 
+--			l_is_negative: BOOLEAN
+--			l_area: like area
+--			i, nb: INTEGER
+--		do
+--				-- Skip spaces.
+--			from
+--				l_area := area
+--				nb := count
+--				i := 0
+--			until
+--				l_area.item (i) /= ' '
+--			loop
+--				i := i + 1
+--			end
+--
+--				-- Read sign mark if any.
+--			l_c := l_area.item (i)
+--			i := i + 1
+--			if l_c = '+' then
+--				l_c := l_area.item (i)
+--				i := i + 1
+--			elseif l_c = '-' then
+--				l_is_negative := True
+--				l_c := l_area.item (i)
+--				i := i + 1
+--			end
+--			from
+--				Result := l_c.code - 48
+--			until
+--				i = nb
+--			loop
+--				l_c := l_area.item (i)
+--				if l_c.is_digit then
+--					Result := 10 * Result + l_c.code - 48
+--				else
+--					i := nb - 1 -- Jump out of loop
+--				end
+--				i := i + 1
+--			end
+--			if l_is_negative then
+--				Result := -Result
+--			end
+--		ensure
+--			single_digit: count = 1 implies Result = ("0123456789").index_of (item (1), 1) - 1
+--			minus_sign_followed_by_single_digit:
+--				count = 2 and item (1) = '-' implies Result = -substring (2, 2).to_integer
+--			plus_sign_followed_by_single_digit:
+--				count = 2 and item (1) = '+' implies Result = substring (2, 2).to_integer
+--			recurse_to_reduce_length:
+--				count > 2 or count = 2 and not(("+-").has (item (1))) implies
+--				 Result // 10 = substring (1, count - 1).to_integer and
+--				 (Result \\ 10).abs = substring (count, count).to_integer
+--		end
+--
+--	to_integer_64: INTEGER_64 is
+--			-- Integer value of type INTEGER_64;
+--			-- for example, when applied to "123", will yield 123
+--		require
+--			is_integer: is_integer
+--		local
+--			l_area: like area
+--			l_character: CHARACTER
+--			i, nb: INTEGER
+--			l_is_negative: BOOLEAN
+--		do
+--			from
+--				l_area := area
+--				nb := count
+--			until
+--				i = nb
+--			loop
+--				l_character := l_area.item (i)
+--				if l_character.is_digit then
+--					Result := (Result * 10) + l_character.code - 48
+--				elseif l_character = '-' then
+--					l_is_negative := True
+--				end
+--				i := i + 1
+--			end
+--			if l_is_negative then
+--				Result := - Result
+--			end
+--		end
 
 	to_real: REAL is
 			-- Real value;
@@ -2553,10 +2687,16 @@ feature {NONE} -- Implementation
 
 	empty_area: SPECIAL [CHARACTER] is
 			-- Empty `area' to avoid useless creation of empty areas when wiping out a STRING.
-		once
+		do
 			create Result.make (1)
 		ensure
 			empty_area_not_void: Result /= Void
+		end
+		
+	ctoi_state_machine: STRING_TO_INTEGER_STATE_MACHINE is
+			-- State machine used to parse string to integer or natural
+		once
+			create Result.make
 		end
 
 invariant

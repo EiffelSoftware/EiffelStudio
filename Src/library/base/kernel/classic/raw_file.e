@@ -30,11 +30,60 @@ feature -- Status report
 
 feature -- Output
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write binary value of `i' at current position.
 		do
 			file_pib (file_pointer, i)
 		end
+		
+	put_integer_8 (i: INTEGER_8) is
+			-- 
+		do
+			integer_buffer.put_integer_8 (i, 0)
+			put_managed_pointer (integer_buffer, 0, 1)
+		end
+
+	put_integer_16 (i: INTEGER_16) is
+			-- 
+		do
+			integer_buffer.put_integer_16 (i, 0)
+			put_managed_pointer (integer_buffer, 0, 2)
+		end		
+		
+	put_integer_64 (i: INTEGER_64) is
+			-- 
+		do
+			integer_buffer.put_integer_64 (i, 0)
+			put_managed_pointer (integer_buffer, 0, 8)
+		end
+		
+	put_natural_8 (i: NATURAL_8) is
+			-- 
+		do
+			integer_buffer.put_natural_8 (i, 0)
+			put_managed_pointer (integer_buffer, 0, 1)			
+		end
+		
+	put_natural_16 (i: NATURAL_16) is
+			-- 
+		do
+			integer_buffer.put_natural_16 (i, 0)
+			put_managed_pointer (integer_buffer, 0, 2)			
+		end
+
+	put_natural, put_natural_32 (i: NATURAL_32) is
+			-- 
+		do
+			integer_buffer.put_natural_32 (i, 0)
+			put_managed_pointer (integer_buffer, 0, 4)			
+		end
+		
+	put_natural_64 (i: NATURAL_64) is
+			-- 
+		do
+			integer_buffer.put_natural_64 (i, 0)
+			put_managed_pointer (integer_buffer, 0, 8)			
+		end			
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write binary value of `b' at current position.
@@ -72,12 +121,61 @@ feature -- Output
 
 feature -- Input
 
-	read_integer, readint is
+	read_integer, readint, read_integer_32 is
 			-- Read the binary representation of a new integer
 			-- from file. Make result available in `last_integer'.
 		do
 			last_integer := file_gib (file_pointer)
 		end
+		
+	read_integer_8 is
+			-- 
+		do
+			read_to_managed_pointer (integer_buffer, 0, 1)
+			last_integer_8 := integer_buffer.read_integer_8 (0)	
+		end		
+		
+	read_integer_16 is
+			-- 
+		do
+			read_to_managed_pointer (integer_buffer, 0, 2)
+			last_integer_16 := integer_buffer.read_integer_16 (0)	
+		end
+
+	read_integer_64 is
+			-- 
+		do
+			read_to_managed_pointer (integer_buffer, 0, 8)
+			last_integer_64 := integer_buffer.read_integer_64 (0)
+		end
+		
+	read_natural_8 is
+			--
+		do
+			read_to_managed_pointer (integer_buffer, 0, 1)
+			last_natural_8 := integer_buffer.read_natural_8 (0)			
+		end
+		
+	read_natural_16 is
+			--
+		do
+			read_to_managed_pointer (integer_buffer, 0, 2)
+			last_natural_16 := integer_buffer.read_natural_16 (0)			
+		end	
+		
+	read_natural, read_natural_32 is
+			--
+		do
+			read_to_managed_pointer (integer_buffer, 0, 4)
+			last_natural := integer_buffer.read_natural_32 (0)			
+		end	
+		
+	read_natural_64 is
+			--
+		do
+			read_to_managed_pointer (integer_buffer, 0, 8)
+			last_natural_64 := integer_buffer.read_natural_64 (0)			
+		end		
 
 	read_real, readreal is
 			-- Read the binary representation of a new real
@@ -118,6 +216,14 @@ feature -- Input
 		end
 
 feature {NONE} -- Implementation
+
+	integer_buffer: MANAGED_POINTER is
+			-- buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
+		once
+			create Result.make (initial_integer_buffer_size)
+		end
+		
+	initial_integer_buffer_size: INTEGER is 8
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at

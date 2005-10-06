@@ -57,11 +57,53 @@ feature -- Status report
 			Result := input.last_character
 		end
 
-	last_integer, lastint: INTEGER is
+	last_integer, lastint, last_integer_32: INTEGER is
 			-- Last integer read by `read_integer'
 		do
 			Result := input.last_integer
 		end
+		
+	last_integer_8: INTEGER_8 is
+			-- Last 8-bit integer read by `read_integer_8'
+		do
+			Result := input.last_integer_8
+		end
+		
+	last_integer_16: INTEGER_16 is
+			-- Last 16-bit integer read by `read_integer_16'
+		do
+			Result := input.last_integer_16
+		end	
+		
+	last_integer_64: INTEGER_64 is
+			-- Last 8-bit integer read by `read_integer_64'
+		do
+			Result := input.last_integer_64
+		end	
+		
+	last_natural_8: NATURAL_8 is
+			-- Last 8-bit natural read by `read_natural_8'
+		do
+			Result := input.last_natural_8
+		end		
+
+	last_natural_16: NATURAL_16 is
+			-- Last 16-bit natural read by `read_natural_16'
+		do
+			Result := input.last_natural_16
+		end	
+		
+	last_natural, last_natural_32: NATURAL_32 is
+			-- Last 32-bit natural read by `read_natural_32'
+		do
+			Result := input.last_natural_32
+		end		
+
+	last_natural_64: NATURAL_64 is
+			-- Last 64-bit natural read by `read_natural_64'
+		do
+			Result := input.last_natural_64
+		end						
 
 	last_real, lastreal: REAL is
 			-- Last real read by `read_real'
@@ -131,12 +173,54 @@ feature -- Element change
 			standard_default.put_double (d)
 		end
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint, put_intege_32 (i: INTEGER) is
 			-- Write `i' at end of default output.
 		do
 			standard_default.put_integer (i)
 		end
+		
+	put_integer_8 (i: INTEGER_8) is
+			-- Write `i' at end of default output.
+		do
+			standard_default.put_integer_8 (i)
+		end
 
+	put_integer_16 (i: INTEGER_16) is
+			-- Write `i' at end of default output.
+		do
+			standard_default.put_integer_16 (i)
+		end	
+		
+	put_integer_64 (i: INTEGER_64) is
+			-- Write `i' at end of default output.
+		do
+			standard_default.put_integer_64 (i)
+		end	
+		
+	put_natural_8 (i: NATURAL_8) is
+			-- Write `i' at end of default output.
+		do
+			standard_default.put_natural_8 (i)
+		end	
+		
+	put_natural_16 (i: NATURAL_16) is
+			-- Write `i' at end of default output.
+		do
+			standard_default.put_natural_16 (i)
+		end	
+		
+	put_natural, put_natural_32 (i: NATURAL_32) is
+			-- Write `i' at end of default output.
+		do
+			standard_default.put_natural_32 (i)
+		end		
+		
+	put_natural_64 (i: NATURAL_64) is
+			-- Write `i' at end of default output.
+		do
+			standard_default.put_natural_64 (i)
+		end							
+		
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' at end of default output.
 		do
@@ -155,12 +239,68 @@ feature -- Element change
 
 feature -- Input
 
-	read_integer, readint is
+	read_integer, readint, read_integer_32 is
 			-- Read a new integer from standard input.
 			-- Make result available in `last_integer'.
 		do
 			input.read_integer
 		end
+		
+	read_integer_8 is
+			-- 
+			-- Read a new 8-bit integer from standard input.
+			-- Make result available in `last_integer_8'.
+		do
+			input.read_integer_8
+		end		
+
+	read_integer_16 is
+			-- 
+			-- Read a new 16-bit integer from standard input.
+			-- Make result available in `last_integer_16'.
+		do
+			input.read_integer_16
+		end		
+		
+	read_integer_64 is
+			-- 
+			-- Read a new 64-bit integer from standard input.
+			-- Make result available in `last_integer_64'.
+		do
+			input.read_integer_64
+		end	
+		
+	read_natural_8 is
+			-- 
+			-- Read a new 8-bit natural from standard input.
+			-- Make result available in `last_natural_8'.
+		do
+			input.read_natural_8
+		end	
+		
+	read_natural_16 is
+			-- 
+			-- Read a new 16-bit natural from standard input.
+			-- Make result available in `last_natural_16'.
+		do
+			input.read_natural_16
+		end	
+		
+	read_natural, read_natural_32 is
+			-- 
+			-- Read a new 32-bit natural from standard input.
+			-- Make result available in `last_natural'.
+		do
+			input.read_natural_32
+		end	
+		
+	read_natural_64 is
+			-- 
+			-- Read a new 64-bit natural from standard input.
+			-- Make result available in `last_natural_64'.
+		do
+			input.read_natural_64
+		end											
 
 	read_real, readreal is
 			-- Read a new real from standard input.

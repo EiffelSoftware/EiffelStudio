@@ -1,23 +1,23 @@
 indexing
-	description: "Object that implements PROCESS."
+	description: 
+		"[
+			Object that implements PROCESS on UNIX
+		]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+class 
 	PROCESS_IMP
 
 inherit
 	PROCESS
-	
+
 	THREAD_CONTROL
-		export
-			{NONE} all
-		end
 	
-create
+create 
 	make, make_with_command_line
-	
+
 feature {NONE} -- Initialization
 
 	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			create arguments.make			
 				-- make up a command_line
 			create command_line.make_from_string (a_exec_name)
-
+			create executable.make_from_string (a_exec_name)
 			if args /= Void then				
 				from
 					args.start
@@ -48,14 +48,13 @@ feature {NONE} -- Initialization
 			else
 				create working_directory.make_from_string (a_working_directory)
 			end
-
 			hidden := False
 			has_console := True
 			last_error := Void
 			last_output := Void
-			create prc_launcher.make (command_line, working_directory)
+			create prc_launcher.make (executable, arguments, working_directory)
 		end
-		
+
 	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
 		local
 			ls: LIST [STRING]
@@ -80,14 +79,14 @@ feature {NONE} -- Initialization
 			end
 			make (p_name, args, a_working_directory)
 		end
-		
+
 feature{PROCESS_TIMER}  -- Status checking
 
 	check_exit is
 			-- Check whether process has exited.
-		do		
+		do
 			if (launched and then has_process_exited) 
-			then
+			then		
 				if out_thread /= Void then
 					out_thread.set_exit_signal
 				end
@@ -99,13 +98,12 @@ feature{PROCESS_TIMER}  -- Status checking
 				if timer /= Void then
 					timer.destroy				
 				end	
-
+				prc_launcher.set_child_process_to_void
 				on_exit		
 			end
 		end
-				
-feature	-- Control
-
+		
+feature  -- Control
 	terminate is
 		local
 			retried: BOOLEAN
@@ -127,13 +125,13 @@ feature	-- Control
 				end
 				if err_thread /= Void then
 					err_thread.set_exit_signal
-				end		
-						
-				wait_for_threads_to_exit	
-				prc_launcher.close
-				on_terminate								
+				end							
+				wait_for_threads_to_exit				
+				on_terminate					
+				prc_launcher.close				
 				force_terminated := True				
-				last_operation_successful := True				
+				last_operation_successful := True		
+				prc_launcher.set_child_process_to_void
 			end
 		rescue		
 			retried := True
@@ -144,7 +142,7 @@ feature	-- Control
 			end
 			retry
 		end
-		
+
 	launch is
 		local
 			retried:BOOLEAN
@@ -155,18 +153,11 @@ feature	-- Control
 			if not retried then
 				if timer /= Void then
 					wait_for_timer_to_be_destroyed
-				end				
-				
-				on_start
-				
-				launched := False
-				force_terminated := False
-				
-				if hidden = True then
-					prc_launcher.run_hidden
 				end
 				
-				prc_launcher.set_has_console (has_console)
+				on_start
+				launched := False
+				force_terminated := False
 				
 				if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
 					l_in_fname := ""
@@ -185,34 +176,33 @@ feature	-- Control
 				else
 					l_err_fname := error_file_name
 				end	
-				prc_launcher.set_input_direction (input_direction)
+				create prc_launcher.make (executable, arguments, working_directory)
+				prc_launcher.set_input_direction (input_direction)									
 				prc_launcher.set_output_direction (output_direction)
 				prc_launcher.set_error_direction (error_direction)
-				
-				prc_launcher.launch (l_in_fname, l_out_fname, l_err_fname,  buffer_size)
-				
-				last_operation_successful := prc_launcher.last_operation_successful
+				prc_launcher.set_buffer_size (buffer_size)
+				prc_launcher.launch (l_in_fname, l_out_fname, l_err_fname)
+				last_operation_successful := True 
 				launched := last_operation_successful
 				
 				if launched then
-					-- start a output listening thread is necessory
+						-- start  output listening thread is necessory
 					if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-					   create out_thread.make (Current)	
+						create out_thread.make (Current)
 					   out_thread.launch
 					else
 						out_thread := Void
 					end
-		
-					-- start a error listening thread is necessory	
-					if error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output then
+						-- start a error listening thread is necessory	
+					if (error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output)  then
 						if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 							create err_thread.make (Current)
 							err_thread.launch
 						else
 							err_thread := Void
-						end						
-					end		
-					on_launch_successed
+						end	
+					end
+					on_launch_successed										
 					if timer /= Void then
 						timer.start
 					else
@@ -226,9 +216,8 @@ feature	-- Control
 		rescue
 			retried := True
 			if launched = True then
-				
 				if timer /= Void then
-					timer.destroy				
+					timer.destroy					
 				end	
 				wait_for_timer_to_be_destroyed		
 				prc_launcher.terminate
@@ -244,15 +233,14 @@ feature	-- Control
 				wait_for_threads_to_exit	
 			
 				prc_launcher.close
-					
-				on_launch_failed
-										
+				prc_launcher.set_child_process_to_void
+				on_launch_failed		
 			end
 			launched := False
 			last_operation_successful := False
 			retry
 		end
-		
+
 	wait_for_exit is
 		do
 			prc_launcher.wait_for_exit
@@ -267,7 +255,7 @@ feature	-- Control
 			if not retried then
 				if not prc_launcher.has_process_exited and then not s.is_empty then
 					prc_launcher.put_string (s)
-					last_operation_successful := prc_launcher.last_operation_successful
+					last_operation_successful := True
 				end				
 			end
 		rescue
@@ -275,89 +263,68 @@ feature	-- Control
 			last_operation_successful := False
 			retry
 		end
-
-feature -- Status report
 		
+feature -- Status reporting
+
 	has_exited: BOOLEAN is
 		do
-			Result := has_process_exited
-			if Result then
-					-- Process was launched and exited. Let's check that 
-					-- threads if any have exited as well.
-				Result :=
-					(out_thread /= Void implies out_thread.terminated) and
-					(err_thread /= Void implies err_thread.terminated)
+			Result := prc_launcher.has_process_exited
+			if  Result then
+				Result :=(((out_thread /= Void) implies (out_thread.terminated)) and ((err_thread /= Void) implies (err_thread.terminated)))		
 			end
-		end	
-				
-	exit_code: INTEGER is
-		do
-			prc_launcher.check_process_state
-			last_operation_successful := prc_launcher.last_operation_successful
-			Result := prc_launcher.last_process_result
 		end
 
-feature{PROCESS_IMP} -- Implementation
-
-	out_thread: PROCESS_OUTPUT_LISTENER_THREAD
-	err_thread: PROCESS_ERROR_LISTENER_THREAD
-			-- Threads to listen to output and error from child process.
+	exit_code: INTEGER is
+		local
+			retried: BOOLEAN
+		do
+			if not retried  then
+				Result := prc_launcher.process_status				
+				last_operation_successful := True
+			end
+		rescue
+			retried := True
+			last_operation_successful := False
+			retry
+		end		
 
 feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 
+	read_output_stream is
+			-- Read output data from process.
+			-- May block.
+		do
+			prc_launcher.read_output_stream 
+			last_output := prc_launcher.last_output
+		end
+
+	read_error_stream is
+			-- Read error data from process.
+			-- May block.
+		do
+			prc_launcher.read_error_stream 
+			last_error := prc_launcher.last_error
+		end
+		
 	last_output: STRING
 			-- Last output received from process
-
+			
 	last_error: STRING
 			-- Last error received from process
 
-	read_output_stream is
-			-- Read output stream of process and store data read, if any, in `last_output'.
-		do
-			prc_launcher.read_output_stream (buffer_size)
-			last_output := prc_launcher.last_string
-			last_operation_successful := prc_launcher.last_operation_successful			
-		end	
-				
-	read_error_stream is
-			-- Read error stream of process and store data read, if any, in `last_error'.
-		do
-			prc_launcher.read_error_stream (buffer_size)
-			last_error := prc_launcher.last_error
-			last_operation_successful := prc_launcher.last_operation_successful			
-		end
-		
-feature {NONE} -- Implementation
-		
-	prc_launcher: IO_REDIRECTION_PROCESS_LAUNCHER
-			-- Process launcher 
-			
-	initial_buffer_size: INTEGER is 1024
-			-- Initial size of buffer used to store interprocess data temporarily
-	
-	initial_time_interval: INTEGER is 10000
-			-- Initial time interval in nanoseconds used to check process status
-			
-	has_process_exited: BOOLEAN is
-			-- Has process exited?
-		do
-			Result := prc_launcher.has_process_exited
-		end
-		
+feature {NONE}  -- Implementation
+
 	wait_for_threads_to_exit is
-			-- If parent process starts some listening threads, then wait for them to exit.
-		require
-			process_launched: launched
+			-- Wait for listening threads to exit.
 		do
 			from
 			until
-				((out_thread /= Void) implies out_thread.terminated) and
-				((err_thread /= Void) implies err_thread.terminated)
+				((out_thread /= Void) implies out_thread.terminated) and ((err_thread /= Void) implies err_thread.terminated)
 			loop
 				sleep (initial_time_interval)
-			end	
+			end
 			out_thread := Void
-			err_thread := Void		
+			err_thread := Void
 		end
 		
 	wait_for_timer_to_be_destroyed is
@@ -373,7 +340,32 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+	has_process_exited: BOOLEAN is
+			-- Has process exited?
+		do
+			Result := prc_launcher.has_process_exited
+		end		
+		
+feature {NONE} -- Implementation
 
+	executable: STRING
+			-- Program which will be launched
+
+	prc_launcher: IO_REDIRECTION_PROCESS_LAUNCHER
+			-- Process launcher
+
+	out_thread: PROCESS_OUTPUT_LISTENER_THREAD
+	err_thread: PROCESS_ERROR_LISTENER_THREAD
+			-- Threads to listen to output and error from process
+
+	Initial_buffer_size: INTEGER is 1024
+			-- Initial size of buffer used to store interprocess data temporarily
+	
+	initial_time_interval: INTEGER is 10000
+			-- Initial time interval in nanoseconds used to check process status
+	
 invariant
-	prc_launcher_not_void: prc_launcher /= Void
-end
+	eweasel_process_launcher_not_null: prc_launcher /= Void
+
+end -- class PROCESS_IMP

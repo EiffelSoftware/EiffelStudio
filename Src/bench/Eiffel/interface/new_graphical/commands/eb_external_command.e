@@ -34,10 +34,18 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	-- Jason Wei on Sep 2 2005
+	EB_SHARED_MANAGERS
+	
+	EB_SHARED_PIXMAPS
+	-- Jason Wei on Sep 2 2005
+
 
 create
 	make,
-	make_from_string
+	make_from_string,
+	make_from_new_command_line
 
 feature {NONE} -- Initialization
 
@@ -51,6 +59,7 @@ feature {NONE} -- Initialization
 			create_dialog
 
 				-- Find first available index for new command.
+
 			from
 				index := 0
 			until
@@ -66,7 +75,43 @@ feature {NONE} -- Initialization
 				commands.put (Current, index)
 			end
 			enable_sensitive
+			-- Jason Wei
+			external_output_manager.synchronize_command_list (Current)
+			-- Jason Wei			
 		end
+		
+	-- Jason Wei
+	make_from_new_command_line (w:EV_WINDOW; cmd_line: STRING) is
+			-- Use command line indicated by `cmd_line' to make a new
+			-- external command object.
+		require
+			w_not_null: w /= Void
+			cmd_line_not_null: cmd_line /= Void
+		do
+			old_index := -1
+			create_dialog
+
+				-- Find first available index for new command.
+			from
+				index := 0
+			until
+				index > 9 or commands.item (index) = Void
+			loop
+				index := index + 1
+			end
+			index_field.set_value (index)
+			command_field.set_text (cmd_line)
+			dialog.show_modal_to_window (w)
+			
+			if is_valid then
+					-- Automatically add `Current' to the list of commands.
+				commands.put (Current, index)
+			end
+			enable_sensitive
+			write_to_preference
+			external_output_manager.synchronize_command_list (Current)						
+		end
+	-- Jason Wei	
 
 	make_from_string (a_command: STRING) is
 			-- Create with `a_command'
@@ -74,7 +119,7 @@ feature {NONE} -- Initialization
 			command_not_void: a_command /= Void
 		local
 			tok: STRING
-			i, i1: INTEGER
+			i, i1 ,i2: INTEGER
 		do
 			i := a_command.index_of (separator, 1)
 			name := a_command.substring (1, i - 1)
@@ -85,8 +130,16 @@ feature {NONE} -- Initialization
 			else
 				index := -1
 			end
-			external_command := a_command.substring (i1 + 1, a_command.count)
+			-- Jason Wei
+			i2 := a_command.index_of (separator, i1 + 1)
 			
+			external_command := a_command.substring (i1 + 1, i2 - 1)--a_command.count)
+			if i2 = a_command.count then
+				working_directory := ""
+			else
+				working_directory := a_command.substring (i2 + 1, a_command.count)
+			end
+			-- Jason Wei
 				-- Check validity before inserting.
 				-- This is a bit redundant with the precondition, but
 				-- you never know what a David Hollenberg is capable of ^.^;;
@@ -99,7 +152,31 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Basic operations
-
+	
+	-- Jason Wei
+	write_to_preference is
+			-- Write `Current' external command to preference.
+		local 
+			i: INTEGER
+		do
+			from
+			until
+				i > 9
+			loop
+				if commands @ i = Current then
+					preferences.misc_data.i_th_external_preference (i).set_value ((commands @ i).resource)
+--				else
+--						-- We use an empty string as value, because this is how the
+--						-- preferences are initialized. That way, the entry is actually
+--						-- removed from the preferences.
+--					preferences.misc_data.i_th_external_preference (i).set_value ("")
+				end
+				i := i + 1
+			end
+		end
+	-- Jason Wei
+			
+	-- Jason Wei on Sep 2 2005
 	execute is
 			-- Launch the external command that is linked to `Current', if possible.
 		local
@@ -111,6 +188,7 @@ feature -- Basic operations
 			cv_cst: CLASSI_STONE
 			od: STRING
 			exec: EXECUTION_ENVIRONMENT
+			dlg: EV_WARNING_DIALOG
 		do
 			create exec
 			od := exec.current_working_directory
@@ -141,10 +219,25 @@ feature -- Basic operations
 				end
 			end
 			if ok then
-				launch_command (cl)
+				-- Jason Wei on Sep 2 2005
+				if external_launcher.launched and then not external_launcher.has_exited then
+					create dlg.make_with_text ("An external command is running now. %NPlease wait until it exits.")
+					dlg.show_modal_to_window (dev.window)
+				else		
+					if working_directory /= Void then
+						external_launcher.prepare_command_line (cl,working_directory)
+					else
+						external_launcher.prepare_command_line (cl,"")
+					end			
+
+					external_launcher.launch				
+				end
+				-- Jason Wei on Sep 2 2005				
 			end
 			exec.change_working_directory (od)
 		end
+	-- Jason Wei on Sep 2 2005
+
 
 feature -- Properties
 
@@ -166,6 +259,11 @@ feature -- Properties
 
 	external_command: STRING
 			-- Command line that is invoked when `Current' is executed.
+	
+	-- Jason Wei
+	working_directory: STRING
+			-- Working director where the corresponding external command is invoked.
+	-- Jason Wei
 
 	last_call_output: STRING
 			-- Output of the last invocation of command.
@@ -186,6 +284,11 @@ feature -- Status setting
 			if external_command /= Void then
 				command_field.set_text (external_command)
 			end
+			-- Jason Wei
+			if working_directory /= Void then
+				working_directory_field.set_text (working_directory)
+			end
+			-- Jason Wei
 			old_index := index
 			dialog.show_modal_to_window (w)
 			if is_valid then
@@ -195,7 +298,11 @@ feature -- Status setting
 				end
 			end
 			old_index := -1
-		end
+			-- Jason Wei
+			write_to_preference
+			external_output_manager.synchronize_command_list (Current)
+			-- Jason Wei			
+		end	
 
 feature -- Status report
 
@@ -208,6 +315,16 @@ feature -- Status report
 			Result.append (index.out)
 			Result.append_character (separator)
 			Result.append (external_command)
+			-- Jason Wei
+				-- Store `working_directory' to preference.
+			Result.append_character (separator)
+			if working_directory /= Void then
+				Result.append (working_directory)
+			else	
+				Result.append ("")
+			end
+			
+			-- Jason Wei
 		ensure
 			not_void: Result /= Void
 			valid: valid_resource (Result)
@@ -218,7 +335,9 @@ feature -- Status report
 		require
 			not_void_resource: r /= Void
 		do
-			Result := r.occurrences (separator) = 2
+			-- Jason Wei
+			Result := r.occurrences (separator) = 3
+			-- Jason Wei
 		end
 
 	is_valid: BOOLEAN is
@@ -244,6 +363,11 @@ feature {NONE} -- Widgets
 
 	command_field: EV_TEXT_FIELD
 			-- Text field where the user can enter `external_command'.
+			
+	-- Jason Wei
+	working_directory_field: EV_TEXT_FIELD
+			-- Text field where the user can enter `working_directory'
+	-- Jason Wei
 
 feature {NONE} -- Implementation
 
@@ -252,19 +376,44 @@ feature {NONE} -- Implementation
 
 	commands: ARRAY [EB_EXTERNAL_COMMAND] is
 			-- Abstract representation of external commands.
+		local
+			i: INTEGER
 		do
 			Result := (create {EB_EXTERNAL_COMMANDS_EDITOR}.make).commands
 		end
 
+	dir_dlg: EV_DIRECTORY_DIALOG
+	
+	create_directory_dialog is
+			-- 
+		do
+			create dir_dlg.make_with_title ("Select working directory")
+			dir_dlg.ok_actions.extend (agent on_directory_dialog_ok)	
+			dir_dlg.show_modal_to_window (dialog)	
+		end
+	
+	on_directory_dialog_ok is
+			-- 
+		do
+			if dir_dlg /= Void then
+				working_directory := dir_dlg.directory
+				working_directory_field.set_text (working_directory)
+				dir_dlg.destroy
+			end
+			
+		end
+		
+		
 	create_dialog is
 			-- Initialize `dialog' and all widgets.
 		local
-			hb: EV_HORIZONTAL_BOX
+			hb, hb1: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			f: EV_FRAME
 			okb, cb: EV_BUTTON
-			nl, il, cl: EV_LABEL
+			nl, il, cl, wd: EV_LABEL
 			sz: INTEGER
+			dir_btn: EV_BUTTON
 		do
 				-- Create widgets.
 			create dialog
@@ -276,6 +425,19 @@ feature {NONE} -- Implementation
 			create name_field
 			create index_field.make_with_value_range (0 |..| 9)
 			create command_field
+			
+			-- Jason Wei
+			create hb1.default_create
+			create working_directory_field
+			create wd.make_with_text ("Working directory:")
+			wd.align_text_left
+			create dir_btn.default_create
+			dir_btn.set_pixmap (Icon_open_file.item (1))
+			dir_btn.select_actions.extend (agent create_directory_dialog)
+			hb1.extend (working_directory_field)
+			hb1.extend (dir_btn)
+			hb1.disable_item_expand (dir_btn)
+			-- Jason Wei
 			
 				-- Organize widgets.
 			sz := nl.minimum_width.max (il.minimum_width)
@@ -298,6 +460,13 @@ feature {NONE} -- Implementation
 			vb.extend (hb)
 			vb.extend (cl)
 			vb.extend (command_field)
+			
+			-- Jason Wei
+			vb.extend (wd)
+			vb.extend (hb1)
+--			vb.extend (working_directory_field)
+--			vb.extend (dir_btn)
+			-- Jason Wei
 			
 			create f
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_etched_in)
@@ -357,6 +526,9 @@ feature {NONE} -- Implementation
 				else
 					name := name_field.text
 					external_command := command_field.text
+					-- Jason Wei
+					working_directory := working_directory_field.text
+					-- Jason Wei
 					index := index_field.value
 					destroy_dialog
 				end

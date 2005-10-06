@@ -193,6 +193,7 @@ feature -- Access
 			-- See header of `EV_GRID' for a description of this behavior.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.background_color
 		end
@@ -203,6 +204,7 @@ feature -- Access
 			-- See header of `EV_GRID' for a description of this behavior.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.foreground_color
 		end

@@ -16,7 +16,7 @@ inherit
 	EB_SHARED_WINDOW_MANAGER
 
 	PROJECT_CONTEXT
-
+	
 create
 	make_workbench, 
 	make_finalized
@@ -62,7 +62,7 @@ feature -- Execution
 			end
 			makefile_sh_name.set_file_name (Makefile_SH)
 			create file.make (makefile_sh_name)
-			if file.exists then
+			if file.exists then		
 				Eiffel_project.call_finish_freezing (is_workbench)
 			else
 				create wd.make_with_text (Warning_messages.w_Makefile_does_not_exist (makefile_sh_name))

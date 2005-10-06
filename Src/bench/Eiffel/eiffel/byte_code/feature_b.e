@@ -185,11 +185,11 @@ feature -- IL code generation
 			is_special_handled: BOOLEAN
 			invariant_checked: BOOLEAN
 			class_c: CLASS_C
-			local_number: INTEGER
 			real_metamorphose: BOOLEAN
 			need_generation: BOOLEAN
 			target_type: CL_TYPE_I
 			l_count: INTEGER
+			is_call_on_any: BOOLEAN
 		do
 				-- Get type on which call will be performed.
 			cl_type ?= context_type
@@ -232,30 +232,22 @@ feature -- IL code generation
 				if is_first then
 						-- First call in dot expression, we need to generate Current
 						-- only when we do not call a static feature.
-					if cl_type.is_reference then
-							-- Normal call, we simply push current object.
-						il_generator.generate_current
-					else
-						if real_metamorphose then
-								-- Feature is written in an inherited class of current
-								-- expanded class. We need to box.
-							generate_il_metamorphose (cl_type, target_type, real_metamorphose)
-						end
-					end
-				elseif cl_type.is_expanded then
+					il_generator.generate_current
+				elseif cl_type.is_basic then
 						-- A metamorphose is required to perform call.
 					generate_il_metamorphose (cl_type, target_type, real_metamorphose)
 				end
 
 				if invariant_checked then
-						-- Need two copies of current object in stack
-						-- to perform invariant check before and after
-						-- feature call.
-					il_generator.duplicate_top
-					if inv_checked then
-						il_generator.duplicate_top
-						il_generator.generate_invariant_checking (cl_type)
-					end
+					generate_il_call_invariant_leading (cl_type, inv_checked)
+				end
+				
+					-- Box value type if the call is made to the predefined feature from ANY
+					-- This has to be done before calculating feature arguments
+				is_call_on_any := is_any_feature and precursor_type = Void
+				if is_call_on_any and then cl_type.is_true_expanded then
+					il_generator.generate_load_from_address (cl_type)
+					il_generator.generate_metamorphose (cl_type)
 				end
 
 				if class_c.is_special then
@@ -292,6 +284,10 @@ feature -- IL code generation
 						parameters.i_th (2).generate_il
 					else
 						parameters.generate_il
+						if is_call_on_any and then parameters.count > 0 and then real_type (parameters.last.attachment_type).is_expanded then
+								-- Run-time features work on arguments of reference type only
+							il_generator.generate_metamorphose (real_type (parameters.last.attachment_type))
+						end
 					end
 					l_count := parameters.count
 				end
@@ -328,27 +324,21 @@ feature -- IL code generation
 				
 				if need_generation then
 						-- Perform call to feature
-					if is_any_feature and precursor_type = Void then
+					if is_call_on_any then
 						generate_il_any_call (target_type, cl_type,
 							cl_type.is_reference or else real_metamorphose)
 					else
+						if target_type.is_reference and then cl_type.is_true_expanded then
+								-- Box value object
+							il_generator.generate_load_from_address (cl_type)
+							il_generator.generate_metamorphose (cl_type)
+						end
 						generate_il_normal_call (target_type,
 							cl_type.is_reference or else real_metamorphose) 
 					end
 				end
 				if invariant_checked then
-					if type.is_void then
-						il_generator.generate_invariant_checking (cl_type)
-					else
-							-- It is a function and we need to save the result onto
-							-- a local variable.
-						context.add_local (return_type)
-						local_number := context.local_list.count
-						il_generator.put_dummy_local_info (return_type, local_number)
-						il_generator.generate_local_assignment (local_number)
-						il_generator.generate_invariant_checking (cl_type)
-						il_generator.generate_local (local_number)
-					end
+					generate_il_call_invariant_trailing (cl_type, return_type)
 				end
 			end
 		end

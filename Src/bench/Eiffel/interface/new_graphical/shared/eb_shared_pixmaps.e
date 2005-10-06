@@ -1131,6 +1131,21 @@ feature -- Icons
 			Result := build_classic_pixmap ("auto_slice_limits")
 		end
 		
+	Icon_input_to_process: EV_PIXMAP is
+			-- 
+		once
+			Result := pixmap_file_content ("icon_input_to_process")
+		end
+		
+	Icon_add_new_external_cmd: EV_PIXMAP is
+			-- 
+		once
+			Result := pixmap_file_content ("icon_add_new_external_cmd")
+		end
+		
+	
+		
+		
 feature -- Reading
 
 	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
@@ -1361,6 +1376,8 @@ feature {NONE} -- Implementation
 			Result.put ([12,11], "icon_reset_view_color")
 			Result.put ([12,12], "icon_format_creators_color")
 			Result.put ([12,13], "icon_format_invariants_color")
+			Result.put ([12,14], "icon_input_to_process")
+			Result.put ([12,15], "icon_add_new_external_cmd")
 			Result.compare_objects
 		end
 

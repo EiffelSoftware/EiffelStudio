@@ -119,7 +119,9 @@ feature -- Button texts
 	b_Raise_all: STRING is						"Raise Windows"
 	b_Remove_class_cluster: STRING is			"Remove Class/CLuster"
 	b_Minimize_all: STRING is					"Minimize All"
-	
+	-- Jason Wei added the following line on Aug 31 2005
+	b_Terminate_c_compilation: STRING is 		"Terminate C Compilation"
+	-- Jason Wei added the above line on Aug 31 2005
 	
 feature -- Graphical degree output
 
@@ -640,7 +642,9 @@ feature -- Label texts
 	l_Windows_only: STRING is			"(Windows only)"
 	l_Workbench_mode: STRING is 		"Workbench mode"
 	l_Working_formatter: STRING is		"Extracting "
-
+	-- Jason Wei
+	l_Tab_external_output: STRING is    "External output"
+	-- Jason Wei
 feature -- Stone names
 
 	s_Class_stone: STRING is			"Class "
@@ -931,6 +935,7 @@ feature -- Description texts
 	e_Undo: STRING is					"Undo"
 	e_Up_to_date: STRING is				"Executable is up-to-date"
 	e_Unify_stone: STRING is			"Link the context tool to the other components"
+	e_Terminate_c_compilation: STRING is "Terminate running C compilation"
 
 feature -- Wizard texts
 

@@ -239,7 +239,7 @@ feature
 		do
 			Result := context.real_type (typ)
 		ensure
-			Result_not_void: 
+			Result_not_void: Result /= Void
 		end
 
 	enlarge_tree is

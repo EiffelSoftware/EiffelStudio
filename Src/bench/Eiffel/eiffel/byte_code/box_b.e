@@ -54,8 +54,8 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for Void value.
 		do
-			expr.generate_il
-			il_generator.generate_metamorphose (type)
+			expr.generate_il_value
+			il_generator.generate_metamorphose (expr.type)
 		end
 
 invariant

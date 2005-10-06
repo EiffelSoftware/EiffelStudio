@@ -39,4 +39,4 @@ feature {NONE} -- Implementation
 	command: EB_MENUABLE_COMMAND
 			-- Command associated with Current.
 
-end -- class EB_TOOL_BAR_BUTTON
+end

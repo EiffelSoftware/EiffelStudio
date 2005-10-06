@@ -368,8 +368,6 @@ feature -- Output
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
-		local
-			c: INTEGER
 		do
 			integer_buffer.put_integer_16_be (i, 0)
 			put_managed_pointer (integer_buffer, 0, 2)
@@ -379,8 +377,6 @@ feature -- Output
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
-		local
-			c: INTEGER
 		do
 			integer_buffer.put_integer_64_be (i, 0)
 			put_managed_pointer (integer_buffer, 0, 8)

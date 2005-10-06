@@ -11,7 +11,7 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			generate_il
+			generate_il, generate_il_value
 		end
 
 create
@@ -130,6 +130,13 @@ feature -- IL code generation
 			-- Generate IL code for parenthesized expression
 		do
 			expr.generate_il
+		end
+
+	generate_il_value is
+			-- Generate code that evaluates expression and puts its value
+			-- (rather than a pointer to it) to the evaluation stack.
+		do
+			expr.generate_il_value
 		end
 
 feature -- Byte code generation

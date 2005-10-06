@@ -52,7 +52,7 @@ feature {NONE} -- IL code generation
 				generate_frozen_boolean_routine
 
 			when {PREDEFINED_NAMES}.default_name_id then
-				generate_default (target_type)
+				generate_default (target_type, l_return_type)
 
 			when {PREDEFINED_NAMES}.default_pointer_name_id then
 				generate_default_pointer (target_type)
@@ -208,6 +208,11 @@ feature {NONE} -- IL code generation
 			
 				-- Call routine
 			l_extension.generate_call (False)
+			
+				-- Unbox result if required
+			if real_type (a_result_type).is_expanded then
+				il_generator.generate_unmetamorphose (real_type (a_result_type))
+			end
 
 				-- Cast result back to proper type
 			il_generator.generate_check_cast (Void, a_result_type)
@@ -240,7 +245,7 @@ feature {NONE} -- IL code generation
 			l_extension.generate_call (False)
 		end
 		
-	generate_default (target_type: TYPE_I) is
+	generate_default (target_type, return_type: TYPE_I) is
 			-- Generate inlined call to `default'.
 		require
 			target_type_not_void: target_type /= Void
@@ -255,6 +260,10 @@ feature {NONE} -- IL code generation
 				else
 						-- Create new instance of expanded type
 					(create {CREATE_TYPE}.make (target_type)).generate_il
+				end
+				if return_type.is_reference then
+						-- Box value type
+					il_generator.generate_metamorphose (target_type)
 				end
 			else
 					-- Reference case, we simply return Void
@@ -472,6 +481,11 @@ feature {NONE} -- IL code generation
 			
 				-- Call routine
 			l_extension.generate_call (False)
+
+				-- Unbox result if required
+			if real_type (a_result_type).is_expanded then
+				il_generator.generate_unmetamorphose (real_type (a_result_type))
+			end
 
 				-- Cast result back to proper type
 			il_generator.generate_check_cast (Void, a_result_type)

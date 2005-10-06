@@ -1536,6 +1536,7 @@ feature {NONE} -- Menu Building
 			favorites_menu.select_actions.extend (agent update_show_favorites_menu_item)
 		end
 
+	-- Jason Wei modified the following on Aug 31 2005
 	build_project_menu is
 			-- Build the project menu.
 		local
@@ -1581,6 +1582,13 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
 
+			-- Jason Wei
+				-- Terminate C compilation
+			command_menu_item := Terminate_c_compilation_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			project_menu.extend (command_menu_item)
+			-- Jason Wei
+			
 				-- Execute Finalized code
 			command_menu_item := run_finalized_cmd.new_menu_item
 			add_recyclable (command_menu_item)
@@ -1623,6 +1631,96 @@ feature {NONE} -- Menu Building
 				project_menu.extend (command_menu_item)
 			end
 		end
+
+------- This is the original version
+--	build_project_menu is
+--			-- Build the project menu.
+--		local
+--			command_menu_item: EB_COMMAND_MENU_ITEM
+--		do
+--			create project_menu.make_with_text (Interface_names.m_project)
+--
+--				-- Melt
+--			command_menu_item := Melt_project_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Quick melt
+--			command_menu_item := Quick_melt_project_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Freeze
+--			command_menu_item := Freeze_project_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Finalize
+--			command_menu_item := Finalize_project_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Precompile
+--			command_menu_item := precompilation_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Separator -------------------------------------------------
+--			project_menu.extend (create {EV_MENU_SEPARATOR})
+--
+--				-- Compile Workbench C code
+--			command_menu_item := c_workbench_compilation_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Compile Finalized C code
+--			command_menu_item := c_finalized_compilation_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Execute Finalized code
+--			command_menu_item := run_finalized_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Separator -------------------------------------------------
+--			project_menu.extend (create {EV_MENU_SEPARATOR})
+--
+--				-- System Tool window
+--			command_menu_item := system_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- System information
+--			command_menu_item := system_info_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--				-- Error information
+--			command_menu_item := display_error_help_cmd.new_menu_item
+--			add_recyclable (command_menu_item)
+--			project_menu.extend (command_menu_item)
+--
+--			if has_documentation_generation or has_xmi_generation then
+--					-- Separator -------------------------------------------------
+--				project_menu.extend (create {EV_MENU_SEPARATOR})
+--			end
+--
+--			if has_documentation_generation then
+--					-- Generate Documentation
+--				command_menu_item := document_cmd.new_menu_item
+--				add_recyclable (command_menu_item)
+--				project_menu.extend (command_menu_item)
+--			end
+--
+--			if has_xmi_generation then
+--					-- Export XMI
+--				command_menu_item := export_cmd.new_menu_item
+--				add_recyclable (command_menu_item)
+--				project_menu.extend (command_menu_item)
+--			end
+--		end
+	-- Jason Wei modified the above on Aug 31 2005
 
 	build_tools_menu is
 			-- Create and build `tools_menu'
@@ -3103,7 +3201,7 @@ feature {NONE} -- Implementation
 			refresh_cursor_position
 			text_edited := False
 		end
-
+		
 	on_text_back_to_its_last_saved_state is
 		local
 			str: STRING
@@ -3441,11 +3539,15 @@ feature {EB_TOOL} -- Implementation / Commands
 	finalize_cmd: EB_FINALIZE_PROJECT_COMMAND
 			-- Command to Finalize the project.
 
+feature{EB_TOOL, EB_C_COMPILER_LAUNCHER}
+
 	c_workbench_compilation_cmd: EB_C_COMPILATION_COMMAND
 			-- Command to compile the workbench C code.
 
 	c_finalized_compilation_cmd: EB_C_COMPILATION_COMMAND
 			-- Command to compile the finalized C code.
+
+feature{EB_TOOL}
 
 	new_cluster_cmd: EB_NEW_CLUSTER_COMMAND
 			-- Command to create a new cluster.
@@ -3484,12 +3586,16 @@ feature {EB_TOOL} -- Implementation / Commands
 	save_as_cmd: EB_SAVE_FILE_AS_COMMAND
 			-- Command to save a class with a different file name.
 
+feature{EB_TOOL, EB_EXTERNAL_OUTPUT_TOOL}
+
 	Edit_external_commands_cmd: EB_EXTERNAL_COMMANDS_EDITOR is
 			-- Command that lets the user add new external commands to the tools menu.
 		once
 			create Result.make
 			Result.enable_sensitive
 		end
+
+feature{EB_TOOL}
 
 	system_info_cmd: EB_STANDARD_CMD is
 			-- Command to display information about the system (root class,...)

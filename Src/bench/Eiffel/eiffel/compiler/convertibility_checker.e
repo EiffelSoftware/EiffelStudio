@@ -364,7 +364,7 @@ feature -- Initialization/Checking
 					if l_cl_type /= Void and then l_cl_type.is_system_object_or_any then
 						if a_source_type.is_expanded then
 								-- Case of passing an expanded to .NET
-							create {BOX_CONVERSION_INFO} last_conversion_info.make (a_source_type)
+							create {BOX_CONVERSION_INFO} last_conversion_info.make (a_target_type)
 						else
 								-- Case of passing a reference to .NET
 							create {ANY_OBJECT_CONVERSION_INFO} last_conversion_info.make (a_target_type)

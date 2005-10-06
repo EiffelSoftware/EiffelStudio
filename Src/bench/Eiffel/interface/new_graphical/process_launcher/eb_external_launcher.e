@@ -73,7 +73,7 @@ feature
 			
 			if launched then
 				if not force_terminated then
-					external_output_manager.display_state (l_command_has_exited+" with exit code "+external_launcher.exit_code.out, False)			
+					external_output_manager.display_state (l_command_has_exited+" with code "+external_launcher.exit_code.out, False)			
 				end
 				external_output_manager.synchronize_on_process_exits
 			end	

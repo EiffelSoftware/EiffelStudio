@@ -170,7 +170,8 @@ feature{NONE} -- Initialization
 			edit_cmd_detail_btn.set_tooltip (f_edit_cmd_detail_button)
 			edit_cmd_detail_btn.set_pixmap (icon_save.item (1))
 				
-			state_label.set_minimum_height (State_bar_height)						
+			state_label.set_minimum_height (State_bar_height)
+			state_label.align_text_right						
 			
 			run_btn.set_pixmap (Pixmaps.icon_run.item (1))
 			run_btn.set_tooltip (f_start_command_button)

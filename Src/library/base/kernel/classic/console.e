@@ -21,18 +21,28 @@ class CONSOLE inherit
 			{CONSOLE} open_read, close
 			{ANY}
 				separator, append, file_pointer, last_character, last_integer,
+				last_integer_32, last_integer_8, last_integer_16, last_integer_64,
+				last_natural_8, last_natural_16, last_natural, last_natural_32,
+				last_natural_64,
 				last_real, last_string, last_double, file_readable,
 				lastchar, lastint, lastreal, laststring, lastdouble,
-				readable, is_closed, extendible, is_open_write
+				readable, is_closed, extendible, is_open_write,
+				overflowed, too_large, too_small
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
-			read_integer, read_real, read_double, read_character,
-			read_line, read_stream, read_word, next_line, put_integer,
+			 read_real, read_double, read_character,
+			read_line, read_stream, read_word, next_line, 
 			put_boolean, put_real, put_double, put_string, put_character,
 			put_new_line, new_line, end_of_file, file_close,
-			readint, readreal, readdouble, readchar, readline, readstream,
-			readword, putint, putbool, putreal, putdouble, putstring, putchar,
-			dispose, read_to_string
+			readreal, readdouble, readchar, readline, readstream,
+			readword, putbool, putreal, putdouble, putstring, putchar,
+			dispose, read_to_string,
+			read_integer_8, read_integer_16, readint, read_integer, read_integer_32, read_integer_64,
+			read_natural_8, read_natural_16, read_natural, read_natural_32, read_natural_64,
+			put_integer_8, put_integer_16, putint, put_integer, put_integer_32, put_integer_64,
+			put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64
+
+			
 		end
 
 	ANY
@@ -94,12 +104,116 @@ feature -- Removal
 
 feature -- Input
 
-	read_integer, readint is
-			-- Read a new integer from standard input.
-			-- Make result available in `last_integer'.
+--	read_integer, readint is
+--			-- Read a new integer from standard input.
+--			-- Make result available in `last_integer'.
+--		do
+--			last_integer := console_readint (file_pointer)
+--		end
+		
+	read_integer_8 is
+			-- Read a new 8-bit integer from standard input.
+			-- Make result available in `last_integer_8'. 
+		local
+			str: STRING
 		do
-			last_integer := console_readint (file_pointer)
-		end
+			str := read_console_integer_with_no_type
+			last_integer_8 := str.to_integer_8
+			overflowed := str.overflowed
+			too_small := str.too_small
+			too_large := str.too_large
+		end		
+		
+	read_integer_16 is
+			-- Read a new 16-bit integer from standard input.
+			-- Make result available in `last_integer_16'. 
+		local
+			str: STRING
+		do
+			str := read_console_integer_with_no_type
+			last_integer_16 := str.to_integer_16
+			overflowed := str.overflowed
+			too_small := str.too_small
+			too_large := str.too_large
+		end	
+		
+	read_integer, readint, read_integer_32 is
+			-- Read a new 32-bit integer from standard input.
+			-- Make result available in `last_integer'. 
+		local
+			str: STRING
+		do
+			str := read_console_integer_with_no_type
+			last_integer := str.to_integer_32
+			overflowed := str.overflowed
+			too_small := str.too_small
+			too_large := str.too_large
+		end	
+		
+	read_integer_64 is
+			-- Read a new 64-bit integer from standard input.
+			-- Make result available in `last_integer_64'. 
+		local
+			str: STRING
+		do
+			str := read_console_integer_with_no_type
+			last_integer_64 := str.to_integer_64
+			overflowed := str.overflowed
+			too_small := str.too_small
+			too_large := str.too_large
+		end	
+		
+	read_natural_64 is
+			-- Read a new 64-bit natural from standard input.
+			-- Make result available in `last_natural_64'. 
+		local
+			str: STRING
+		do
+			str := read_console_integer_with_no_type
+			last_natural_64 := str.to_natural_64
+			overflowed := str.overflowed
+			too_small := str.too_small
+			too_large := str.too_large
+		end		
+
+	read_natural, read_natural_32 is
+			-- Read a new 32-bit natural from standard input.
+			-- Make result available in `last_natural'. 
+		local
+			str: STRING
+		do
+			str := read_console_integer_with_no_type
+			last_natural := str.to_natural_32
+			overflowed := str.overflowed
+			too_small := str.too_small
+			too_large := str.too_large
+		end				
+
+	read_natural_16 is
+			-- Read a new 16-bit natural from standard input.
+			-- Make result available in `last_natural_16'.  
+		local
+			str: STRING
+		do
+			str := read_console_integer_with_no_type
+			last_natural_16 := str.to_natural_16
+			overflowed := str.overflowed
+			too_small := str.too_small
+			too_large := str.too_large
+		end	
+		
+	read_natural_8 is
+			-- Read a new 8-bit natural from standard input.
+			-- Make result available in `last_natural_8'.  
+		local
+			str: STRING
+		do
+			str := read_console_integer_with_no_type
+			last_natural_8 := str.to_natural_8
+			overflowed := str.overflowed
+			too_small := str.too_small
+			too_large := str.too_large
+		end			
 
 	read_real, readreal is
 			-- Read a new real from standard input.
@@ -271,11 +385,60 @@ feature -- Output
 			console_pd (file_pointer, d)
 		end
 
-	put_integer, putint (i: INTEGER) is
+--	put_integer, putint (i: INTEGER) is
+--			-- Write `i' at end of default output.
+--		do
+--			console_pi (file_pointer, i)
+--		end
+		
+	put_integer_64 (i: INTEGER_64) is
 			-- Write `i' at end of default output.
 		do
-			console_pi (file_pointer, i)
+			put_string (i.out)
 		end
+		
+	put_integer, put_integer_32, putint (i: INTEGER) is
+			-- Write `i' at end of default output. 
+		do
+			put_string (i.out)
+		end
+		
+				
+	put_integer_16 (i: INTEGER_16) is
+			-- Write `i' at end of default output.
+		do
+			put_string (i.out)
+		end
+		
+	put_integer_8 (i: INTEGER_8) is
+			-- Write `i' at end of default output.
+		do
+			put_string (i.out)
+		end
+	
+	put_natural_8 (i: NATURAL_8) is		
+			-- Write `i' at end of default output.
+		do
+			put_string (i.out)
+		end
+		
+	put_natural_16 (i: NATURAL_16) is		
+			-- Write `i' at end of default output.
+		do
+			put_string (i.out)
+		end
+		
+	put_natural, put_natural_32 (i: NATURAL_32) is		
+			-- Write `i' at end of default output.
+		do
+			put_string (i.out)
+		end
+
+	put_natural_64 (i: NATURAL_64) is		
+			-- Write `i' at end of default output. 
+		do
+			put_string (i.out)
+		end		
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' at end of default output.
@@ -301,6 +464,29 @@ feature {NONE} -- Inapplicable
 			--| `empty' is false not to invalidate invariant clauses.
 
 feature {NONE} -- Implementation
+
+	read_console_integer_with_no_type: STRING is
+			-- Read a number which is at most `number_length' bytes long 
+			-- from console. 
+		local
+			str_cap: INTEGER
+			read: INTEGER -- Amount of bytes already read
+			str_area: ANY
+			done: BOOLEAN
+		do
+			create Result.make (100)
+			str_area := Result.area
+
+			read := console_readline (file_pointer, $str_area, number_length, 0)
+			if read > number_length then
+				Result.set_count (number_length)
+			else	
+				Result.set_count (read)
+			end
+		end
+		
+	number_length: INTEGER is 100
+			-- Maximum bytes used when read an integer or natural from console
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at

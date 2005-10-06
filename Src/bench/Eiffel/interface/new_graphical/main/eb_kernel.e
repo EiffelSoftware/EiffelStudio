@@ -47,12 +47,15 @@ inherit
 		end
 
 	EB_SHARED_PREFERENCES
+	
+	EB_SHARED_MANAGERS	
 
 create
 	make
 
 feature {NONE} -- Initialization
 
+	-- Jason Wei on Sep 6
 	make is
 			-- Create and map the first window: the system window.
 		local
@@ -62,7 +65,7 @@ feature {NONE} -- Initialization
 			pref_strs: PREFERENCE_CONSTANTS
 			fn: FILE_NAME	
 			preference_access: PREFERENCES
-			l_app: EV_APPLICATION
+			l_app: EB_EV_THREAD_APPLICATION
 			l_is_gui: BOOLEAN
 			--| uncomment the following line when profiling 
 			--prof_setting: PROFILING_SETTING
@@ -122,6 +125,10 @@ feature {NONE} -- Initialization
 					create graphic_compiler.make (l_app)
 
 						-- Launch graphical compiler
+					-- Jason Wei
+					l_app.implementation.add_idle_action (agent idle_printing)
+					-- Jason Wei
+
 					l_app.launch
 				else					
 					if
@@ -144,8 +151,20 @@ feature {NONE} -- Initialization
 			--| uncomment the following line when profiling 
 			--prof_setting.start_profiling
 		end
+		
+		idle_printing is
+				-- 
+			do
+				idle_printing_manager.print_when_idle
+			end
+			
+	-- Jason Wei on Sep 6		
 
 feature {NONE} -- Implementation
+
+	-- Jason Wei
+	timer: EV_TIMEOUT
+	-- Jason Wei
 
 	graphic_compiler: ES_GRAPHIC
 			-- Object needed to interact with Vision2 initialization

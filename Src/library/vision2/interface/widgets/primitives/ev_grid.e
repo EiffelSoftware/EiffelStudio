@@ -2212,6 +2212,8 @@ feature -- Contract support
 					Result := l_row
 				end
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Contract support

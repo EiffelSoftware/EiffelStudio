@@ -12,7 +12,8 @@ deferred class NETWORK_SOCKET inherit
 	SOCKET
 		undefine
 			send, put_character, putchar, put_string, putstring,
-			put_integer, putint, put_boolean, putbool,
+			put_integer, putint,
+			put_boolean, putbool,
 			put_real, putreal, put_double, putdouble, put_managed_pointer
 		redefine
 			address, is_valid_peer_address, create_from_descriptor

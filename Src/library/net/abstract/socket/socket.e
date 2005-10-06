@@ -346,14 +346,81 @@ feature -- Output
 			c_put_float (descriptor, r)
 		end;
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write integer `i' to socket.
 		require else
 			socket_exists: exists;
 			opened_for_write: is_open_write
 		do
 			c_put_int (descriptor, i)
-		end;
+		end
+		
+	put_integer_8 (i: INTEGER_8) is
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+		do
+			integer_buffer.put_integer_8_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 1)
+		end
+
+	put_integer_16 (i: INTEGER_16) is
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+		local
+			c: INTEGER
+		do
+			integer_buffer.put_integer_16_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 2)
+		end		
+		
+	put_integer_64 (i: INTEGER_64) is
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+		local
+			c: INTEGER
+		do
+			integer_buffer.put_integer_64_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 8)
+		end
+		
+	put_natural_8 (i: NATURAL_8) is
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+		do
+			integer_buffer.put_natural_8_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 1)			
+		end
+		
+	put_natural_16 (i: NATURAL_16) is
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+		do
+			integer_buffer.put_natural_16_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 2)			
+		end
+
+	put_natural, put_natural_32 (i: NATURAL_32) is
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+		do
+			integer_buffer.put_natural_32_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 4)			
+		end
+		
+	put_natural_64 (i: NATURAL_64) is
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+		do
+			integer_buffer.put_natural_64_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 8)			
+		end			
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write boolean `b' to socket.
@@ -520,7 +587,7 @@ feature -- Input
 	last_boolean: BOOLEAN;
 			-- Last boolean read by read_boolean
 
-	read_integer, readint is
+	read_integer, readint, read_integer_32 is
 			-- Read a new integer.
 			-- Make result available in `last_integer'.
 		require else
@@ -529,6 +596,69 @@ feature -- Input
 		do
 			last_integer := c_read_int (descriptor)
 		end;
+		
+	read_integer_8 is
+		require else
+			socket_exists: exists
+			opened_for_read: is_open_read
+		do
+			read_to_managed_pointer (integer_buffer, 0, 1)
+			last_integer_8 := integer_buffer.read_integer_8_le (0)
+		end		
+		
+	read_integer_16 is
+		require else
+			socket_exists: exists
+			opened_for_read: is_open_read
+		do
+			read_to_managed_pointer (integer_buffer, 0, 2)
+			last_integer_16 := integer_buffer.read_integer_16_le (0)			
+		end
+
+	read_integer_64 is
+		require else
+			socket_exists: exists
+			opened_for_read: is_open_read
+		do
+			read_to_managed_pointer (integer_buffer, 0, 8)
+			last_integer_64 := integer_buffer.read_integer_64_le (0)	
+		end
+		
+	read_natural_8 is
+		require else
+			socket_exists: exists
+			opened_for_read: is_open_read
+		do
+			read_to_managed_pointer (integer_buffer, 0, 1)
+			last_natural_8 := integer_buffer.read_natural_8_le (0)			
+		end
+		
+	read_natural_16 is
+		require else
+			socket_exists: exists
+			opened_for_read: is_open_read
+		do
+			read_to_managed_pointer (integer_buffer, 0, 2)
+			last_natural_16 := integer_buffer.read_natural_16_le (0)			
+		end	
+		
+	read_natural, read_natural_32 is
+		require else
+			socket_exists: exists
+			opened_for_read: is_open_read
+		do
+			read_to_managed_pointer (integer_buffer, 0, 4)
+			last_natural := integer_buffer.read_natural_32_le (0)			
+		end	
+		
+	read_natural_64 is
+		require else
+			socket_exists: exists
+			opened_for_read: is_open_read
+		do
+			read_to_managed_pointer (integer_buffer, 0, 8)
+			last_natural_64 := integer_buffer.read_natural_64_le (0)			
+		end							
 
 	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' characters.
@@ -842,6 +972,15 @@ feature -- socket options
 
 feature {NONE} -- Externals
 
+	integer_buffer: MANAGED_POINTER is
+			-- buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
+		once
+			create Result.make (initial_integer_buffer_size)
+		end
+		
+	initial_integer_buffer_size: INTEGER is 8
+			-- Initial size of `integer_buffer'
+	
 	c_socket (add_family, a_type, protoc: INTEGER): INTEGER is
 			-- External c routine to create the socket descriptor
 		external

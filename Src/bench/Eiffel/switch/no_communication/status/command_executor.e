@@ -7,6 +7,10 @@ class COMMAND_EXECUTOR
 
 inherit
 	SHARED_EXEC_ENVIRONMENT
+	
+	-- Jason Wei added the following on Aug 31 2005
+	EB_SHARED_MANAGERS
+	-- Jason Wei added the above on Aug 31 2005
 
 feature -- Command Execution
 
@@ -46,22 +50,52 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 				prelink_cmd_name.to_c, driver_name.to_c)
 		end
 
-	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN) is
+	-- Jason Wei modified the following feature on Aug 29 2005
+	invoke_finish_freezing (c_code_dir, freeze_command: STRING; asynchronous: BOOLEAN; workbench_mode: BOOLEAN) is
 			-- Invoke the `finish_freezing' script.
 		local
 			cwd: STRING
+			--Jason Wei f 8/30/2005
+			f_cmd: STRING
+			--Jason Wei a 8/30/2005
 		do
 				-- Store current working directory
 			cwd := Execution_environment.current_working_directory
 			
+			--Jason Wei f 8/30/2005
+			create f_cmd.make_from_string (freeze_command)
+			f_cmd.append (" -silent")
+			--Jason Wei a 8/30/2005			
+			
 			Execution_environment.change_working_directory (c_code_dir)
 			if asynchronous then
-				Execution_environment.launch (freeze_command)
+				--Jason Wei 9/12/2005
+				if workbench_mode then
+					freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
+					freezing_launcher.launch
+				else
+					finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
+					finalizing_launcher.launch
+				end
+				--Jason Wei 9/12/2005
+				--Execution_environment.launch (freeze_command)
 			else
-				Execution_environment.system (freeze_command)
+				--Execution_environment.system (freeze_command)
+				--Jason Wei 9/12/2005
+				if workbench_mode then
+					freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
+					freezing_launcher.launch
+					freezing_launcher.wait_for_exit
+				else
+					finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
+					finalizing_launcher.launch
+					finalizing_launcher.wait_for_exit
+				end				
+				--Jason Wei 9/12/2005		
 			end
 			Execution_environment.change_working_directory (cwd)
 		end
+	-- Jason Wei modified the above feature on Aug 29 2005		
 
 feature {NONE} -- Externals
 

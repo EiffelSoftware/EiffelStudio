@@ -64,7 +64,7 @@ feature -- IL code generation
 			end
 
 				-- Generate expression byte code
-			source.generate_il
+			source.generate_il_value
 
 			if source_type.is_expanded then
 				if target_type.is_expanded then
@@ -83,7 +83,7 @@ feature -- IL code generation
 				success_label := il_label_factory.new_label
 				il_generator.branch_on_true (success_label)
 
-					-- Assignment attempt faild.
+					-- Assignment attempt failed.
 					-- Remove duplicate obtained from call to `isinst'.
 				il_generator.pop
 					-- Assignment attempt failed, we simply load previous

@@ -417,7 +417,7 @@ feature -- Element change
 			parent_enabled_as_tree: parent.is_tree_enabled
 			valid_subrow_index: subrow_index >= 1 and subrow_index <= subrow_count + 1
 		do
-			implementation.insert_subrow (subrow_index)
+			implementation.insert_subrows (1, subrow_index)
 		ensure
 			subrow_count_increased: subrow_count = old subrow_count + 1
 			parent_row_count_increased: parent.row_count = old parent.row_count + 1

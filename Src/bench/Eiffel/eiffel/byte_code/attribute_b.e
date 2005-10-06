@@ -166,25 +166,9 @@ feature -- IL code generation
 							-- NESTED_B.generate_il to assign back the new value of the attribute.
 						il_generator.generate_current
 					end
-					if cl_type.is_reference then
-							-- Normal access we simply push current
-						il_generator.generate_current
-					else
-							-- It is declared in an expanded class, we need to
-							-- load the address of current register.
-						if need_real_metamorphose (cl_type) then
-								-- Current attribute is written in a non-expanded class
-								-- we need to box current register to be able to
-								-- access Current attribute.
-							il_generator.generate_metamorphose (cl_type)
-						end
-					end
-				elseif not cl_type.is_reference then
-						-- Current attribute coming from an expanded class need a special
-						-- transformation of the `parent' if we want to access it.
-						-- If `need_real_metamorphose (cl_type)' a box operation will
-						-- occur meaning that current attribute was written in a
-						-- non-expanded class.
+					il_generator.generate_current
+				elseif cl_type.is_basic then
+						-- A metamorphose is required to perform call.
 					generate_il_metamorphose (cl_type, target_type, need_real_metamorphose (cl_type))
 				end
 

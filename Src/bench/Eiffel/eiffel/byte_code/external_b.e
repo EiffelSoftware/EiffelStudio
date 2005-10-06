@@ -214,7 +214,6 @@ feature -- IL code generation
 			class_type: CLASS_TYPE
 			invariant_checked: BOOLEAN
 			class_c: CLASS_C
-			local_number: INTEGER
 			real_metamorphose: BOOLEAN
 			basic_type: BASIC_I
 			need_generation: BOOLEAN
@@ -258,6 +257,7 @@ feature -- IL code generation
 						il_generator.generate_current
 					end
 				else
+					il_generator.generate_current
 					if real_metamorphose then
 							-- Feature is written in an inherited class of current
 							-- expanded class. We need to box.
@@ -270,14 +270,7 @@ feature -- IL code generation
 			end
 
 			if invariant_checked then
-					-- Need two copies of current object in stack
-					-- to perform invariant check before and after
-					-- feature call.
- 				il_generator.duplicate_top
-				if inv_checked then
-					il_generator.duplicate_top
-					il_generator.generate_invariant_checking (cl_type)
-				end
+				generate_il_call_invariant_leading (cl_type, inv_checked)
 			end
 
 			if parameters /= Void then
@@ -318,18 +311,7 @@ feature -- IL code generation
 					end
 				end
 				if invariant_checked then
-					if type.is_void then
-						il_generator.generate_invariant_checking (cl_type)
-					else
-							-- It is a function and we need to save the result onto
-							-- a local variable.
-						context.add_local (return_type)
-						local_number := context.local_list.count
-						il_generator.put_dummy_local_info (return_type, local_number)
-						il_generator.generate_local_assignment (local_number)
-						il_generator.generate_invariant_checking (cl_type)
-						il_generator.generate_local (local_number)
-					end
+					generate_il_call_invariant_trailing (cl_type, return_type)
 				end
 			end
 		end
@@ -410,7 +392,7 @@ feature {NONE} -- Implementation
 						else
 								-- In all other cases we will generate the metamorphose.
 							if written_in = cl_type.class_id then
-								generate_il_metamorphose (cl_type, cl_type, real_metamorphose)
+--								generate_il_metamorphose (cl_type, cl_type, real_metamorphose)
 							else							
 								generate_il_metamorphose (cl_type, Void, real_metamorphose)
 							end

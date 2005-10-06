@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 	on_successful_launch_handler: ROUTINE [ANY, TUPLE]
 			-- Different agent handlers
 
-	initial_time_interval: INTEGER is 100000000
+	initial_time_interval: INTEGER is 10
 	initial_buffer_size: INTEGER is 50
 				
 end

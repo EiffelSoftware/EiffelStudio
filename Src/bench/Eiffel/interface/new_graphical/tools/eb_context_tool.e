@@ -44,6 +44,7 @@ create
 
 feature {NONE} -- Initialization
 
+	-- Jason Wei Sep 1 2005
 	build_interface is
 			-- Build all the tool's widgets.
 		local
@@ -59,6 +60,10 @@ feature {NONE} -- Initialization
 			create class_view.make_with_tool (development_window, Current)
 			create feature_view.make_with_tool (development_window, Current)
 			create output_view.make (development_window, Current)
+			-- Jason Wei
+			create external_output_view.make (development_window, Current)
+			-- Jason Wei
+		
 			if has_metrics then
 				create metrics.make (development_window, Current)
 			end
@@ -73,6 +78,7 @@ feature {NONE} -- Initialization
 			end
 				-- Set pages of the notebook.
 			notebook.extend (output_view.widget)
+
 			if has_case then
 				notebook.extend (editor.widget)
 				diagram_index := 2
@@ -91,7 +97,12 @@ feature {NONE} -- Initialization
 			else
 				metric_index := -1
 			end
+			-- Jason Wei
+			notebook.extend (external_output_view.widget)
+			-- Jason Wei
 			notebook.set_item_text (output_view.widget, interface_names.l_Tab_output)
+			notebook.set_item_text (external_output_view.widget, interface_names.l_Tab_external_output)
+			
 			if has_case then
 				notebook.set_item_text (editor.widget, interface_names.l_Tab_diagram)
 			end
@@ -107,9 +118,13 @@ feature {NONE} -- Initialization
 			class_view.set_parent_notebook (notebook)
 			feature_view.set_parent_notebook (notebook)
 			output_view.set_parent_notebook (notebook)
+			-- Jason Wei
+			external_output_view.set_parent_notebook (notebook)
+			-- Jason Wei
 			notebook.drop_actions.extend (agent on_tab_dropped)
 			notebook.drop_actions.set_veto_pebble_function (agent on_tab_droppable)
 		end
+	-- Jason Wei Sep 1 2005
 
 	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
 			-- Build the associated explorer bar item and
@@ -140,6 +155,9 @@ feature {NONE} -- Initialization
 			class_view.set_parent (explorer_bar_item)
 			feature_view.set_parent (explorer_bar_item)
 			output_view.set_parent (explorer_bar_item)
+			-- Jason Wei
+			external_output_view.set_parent (explorer_bar_item)
+			-- Jason Wei
 		end
 
 feature -- Access
@@ -161,6 +179,11 @@ feature -- Access
 
 	output_view: EB_OUTPUT_TOOL
 			-- Displays the compiler messages.
+			
+	-- Jason Wei added the following feature on Sep 1 2005
+	external_output_view: EB_EXTERNAL_OUTPUT_TOOL
+	-- Jason Wei added the following feature on Sep 1 2005
+
 
 	metrics: EB_METRIC_TOOL
 			-- 
@@ -182,7 +205,7 @@ feature -- Access
 		end
 
 	notebook: EV_NOTEBOOK
-			-- Container of `output_view', `editor', `class_view', `feature_view' and `metric'.
+			-- Container of `output_view', `external_output_view', `editor', `class_view', `feature_view' and `metric'.
 
 	title: STRING is 
 			-- Title of the tool
@@ -254,6 +277,9 @@ feature -- Status setting
 			-- Update content of all editors.
 		do
 			output_view.quick_refresh_editor
+			-- Jason Wei
+			external_output_view.quick_refresh_editor
+			-- Jason Wei
 			class_view.quick_refresh_editor
 			feature_view.quick_refresh_editor
 			address_manager.refresh
@@ -263,6 +289,9 @@ feature -- Status setting
 			-- Update margins of all editors.
 		do
 			output_view.quick_refresh_margin
+			-- Jason Wei
+			external_output_view.quick_refresh_margin
+			-- Jason Wei			
 			class_view.quick_refresh_margin
 			feature_view.quick_refresh_margin
 			address_manager.refresh
@@ -311,6 +340,10 @@ feature -- Status setting
 			
 			if sit = output_view.widget and then output_view.widget.is_displayed then
 				output_view.set_focus
+			-- Jason Wei
+			elseif sit = external_output_view.widget and then external_output_view.widget.is_displayed then
+				external_output_view.set_focus
+			-- Jason Wei
 			elseif has_case and then sit = editor.widget and then editor.widget.is_displayed then
 				editor.set_focus
 			elseif sit = class_view.widget and then class_view.widget.is_displayed then
@@ -336,6 +369,9 @@ feature -- Memory management
 			Precursor {EB_HISTORY_OWNER}
 				-- Recycle the views
 			output_view.recycle
+			-- Jason Wei
+			external_output_view.recycle
+			-- Jason Wei
 			class_view.recycle
 			feature_view.recycle
 			if has_case then
@@ -433,11 +469,15 @@ feature {NONE} -- Implementation
 	metric_index: INTEGER
 			-- Index of the metrics in the notebook.
 
+	-- Jason Wei changed the following feature
 	on_tab_changed is
 			-- User selected a different tab.
 		do
 			if has_case and then notebook.selected_item = editor.widget then
 				output_view.on_deselect
+				-- Jason Wei
+				external_output_view.on_deselect
+				-- Jason Wei				
 				is_diagram_selected := True
 				editor.on_select
 				class_view.on_deselect
@@ -447,6 +487,9 @@ feature {NONE} -- Implementation
 				end
 			elseif notebook.selected_item = class_view.widget then
 				output_view.on_deselect
+				-- Jason Wei
+				external_output_view.on_deselect
+				-- Jason Wei				
 				is_diagram_selected := False
 				class_view.on_select
 				feature_view.on_deselect
@@ -455,6 +498,9 @@ feature {NONE} -- Implementation
 				end
 			elseif notebook.selected_item = feature_view.widget then
 				output_view.on_deselect
+				-- Jason Wei
+				external_output_view.on_deselect
+				-- Jason Wei				
 				is_diagram_selected := False
 				feature_view.on_select
 				class_view.on_deselect
@@ -463,20 +509,40 @@ feature {NONE} -- Implementation
 				end
 			elseif has_metrics and then notebook.selected_item = metrics.widget then
 				output_view.on_deselect
+				-- Jason Wei
+				external_output_view.on_deselect
+				-- Jason Wei				
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
 				metrics.on_select
 			elseif notebook.selected_item = output_view.widget then
 				output_view.on_select
+				-- Jason Wei
+				external_output_view.on_deselect
+				-- Jason Wei
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
 				if has_metrics then
 					metrics.on_deselect
 				end
+			-- Jason Wei
+			elseif notebook.selected_item = external_output_view.widget then
+				external_output_view.on_select
+				output_view.on_deselect
+				is_diagram_selected := False
+				class_view.on_deselect
+				feature_view.on_deselect
+				if has_metrics then
+					metrics.on_deselect
+				end	
+			-- Jason Wei			
 			else
 				output_view.on_deselect
+				-- Jason Wei
+				external_output_view.on_deselect
+				-- Jason Wei
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
@@ -485,10 +551,11 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+	-- Jason Wei changed the above feature
 
 	on_tab_droppable (a_pebble: ANY): BOOLEAN is
 			-- Can be data be dropped on `notebook' for a particular notebook item?
-			-- Will be true for all tab items except `output_view' when `a_pebble' is
+			-- Will be true for all tab items except `output_view' and `external_output_view' when `a_pebble' is
 			-- of type `STONE'.
 		require
 			notebook_not_void: notebook /= Void
@@ -500,7 +567,11 @@ feature {NONE} -- Implementation
 			l_stone ?= a_pebble
 			if l_stone /= Void then
 				l_tab_index := notebook.pointed_tab_index
-				Result := l_tab_index > 0 and then notebook.i_th (l_tab_index) /= output_view.widget
+				-- Jason Wei
+				Result := l_tab_index > 0 and then (notebook.i_th (l_tab_index) /= output_view.widget and notebook.i_th (l_tab_index) /= external_output_view.widget)
+				-- Original version:
+				--Result := l_tab_index > 0 and then (notebook.i_th (l_tab_index) /= output_view.widget)				
+				-- Jason Wei
 			end
 		end
 
@@ -512,6 +583,9 @@ feature {NONE} -- Implementation
 			notebook_not_destroyed: not notebook.is_destroyed
 			notebook_has_pointed_tab: notebook.pointed_tab_index > 0
 			not_output_view: notebook.i_th (notebook.pointed_tab_index) /= output_view.widget
+			-- Jason Wei
+			not_external_output_wiew: notebook.i_th (notebook.pointed_tab_index) /= external_output_view.widget
+			-- Jason Wei
 		local
 			l_tab_index: INTEGER
 			l_stone: STONE

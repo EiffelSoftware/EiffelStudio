@@ -21,8 +21,6 @@ feature{NONE} -- Initialization
 			-- from process.
 		require
 			str_not_void: str /= Void
-		local
-			s: STRING
 		do
 			is_error := from_error
 			is_end := is_last_one

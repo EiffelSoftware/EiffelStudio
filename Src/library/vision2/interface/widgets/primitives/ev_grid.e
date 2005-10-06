@@ -1957,11 +1957,12 @@ feature -- Element change
 			i_not_greater_than_row_count: i <= row_count
 			j_valid: j <= row_count
 			row_at_i_not_a_subnode: row (i).parent_row = Void
-			row_after_i_not_a_subnode: i < row_count implies row (i + 1).parent_row = Void
+			row_has_no_subrows: row (i).subrow_count = 0
 		do
 			implementation.move_rows (i, j, 1)
 		ensure
-			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
+			rows_moved: (j > i implies row (j) = old row (i) and then row (i) = old row (i + 1)) or
+				(j > i implies row (j) = old row (i) and then row (i) = old row (i - 1))
 			row_count_unchanged: row_count = old row_count
 		end
 
@@ -1981,7 +1982,8 @@ feature -- Element change
 		do
 			implementation.move_rows (i, j, n)
 		ensure
-			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or (j >= i + n implies row (j - n + 1) = old row (i) and then row (j - n + n) = old row (i + n - 1))
+			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or
+				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
 			row_count_unchanged: row_count = old row_count
 		end
 

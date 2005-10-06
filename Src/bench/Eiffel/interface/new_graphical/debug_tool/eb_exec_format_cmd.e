@@ -26,7 +26,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION
 
 	EB_SHARED_WINDOW_MANAGER
-
+	
 feature {NONE} -- Initialization
 
 	make (a_manager: like debugger_manager) is
@@ -117,9 +117,10 @@ feature {NONE} -- Implementation
 					-- (a compilation was running, the user didn't want to launch it after all,...)
 				debugger_manager.set_debugging_window (Void)
 			end
-			executed_from_widget := False
+			debug
+				executed_from_widget := False
+			end
 		end
-		
 
 	execute_from (widget: EV_CONTAINABLE) is
 			-- Set widget's top-level window as the debugging window.

@@ -197,7 +197,7 @@ feature -- Execution
 	c_compile is
 			-- Freeze system.
 		do
-			if Eiffel_project.initialized then
+			if Eiffel_project.initialized then				
 				Eiffel_project.call_finish_freezing (True)
 --				Application.set_execution_mode (User_stop_points)
 --				launch_application

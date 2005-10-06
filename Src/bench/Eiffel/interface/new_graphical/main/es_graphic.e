@@ -73,6 +73,11 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			compile_index: INTEGER
 			open_project: EB_OPEN_PROJECT_COMMAND
 			an_output_manager: EB_GRAPHICAL_OUTPUT_MANAGER
+			
+			-- Jason Wei added on Sep 1 2005
+			an_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER
+			-- Jason Wei added on Sep 1 2005
+			
 			a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			first_window: EB_DEVELOPMENT_WINDOW
 			a_progress_dialog: EB_PROGRESS_DIALOG
@@ -89,6 +94,12 @@ feature {NONE} -- Implementation (preparation of all widgets)
 					-- Create and setup the output manager / Error displayer
 				create an_output_manager
 				set_output_manager (an_output_manager)
+				-- Jason Wei added on Sep 1 2005
+				create an_external_output_manager
+				set_external_output_manager (an_external_output_manager)
+				-- Jason Wei added on Sep 1 2005
+				
+				
 				Eiffel_project.set_error_displayer (an_output_manager)
 		
 					-- Create and setup the degree output window.

@@ -213,6 +213,7 @@ feature -- IL code generation
 	generate_il is
 			-- Generate byte code for equality test
 		local
+			current_type: TYPE_I
 			left_type: TYPE_I
 			right_type: TYPE_I
 		do
@@ -233,17 +234,29 @@ feature -- IL code generation
 				generate_il_boolean_constant
 			else
 				if
-					(left_type.is_basic and right_type.is_reference) or else
-					(left_type.is_reference and right_type.is_basic)
+					(left_type.is_expanded and right_type.is_reference) or else
+					(left_type.is_reference and right_type.is_expanded)
 				then
-					left.generate_il	
-					if left_type.is_basic and right_type.is_reference then
-						left.generate_il_eiffel_metamorphose (left_type)
+						-- Generate Current
+					il_generator.generate_current
+					current_type := context.real_type (context.class_type.type)
+					if current_type.is_expanded then
+						il_generator.generate_load_from_address (current_type)
+						il_generator.generate_metamorphose (current_type)
 					end
 
-					right.generate_il
-					if left_type.is_reference and right_type.is_basic then
-						right.generate_il_eiffel_metamorphose (right_type)
+						-- Generate left operand
+					left.generate_il_value
+					if right_type.is_reference then
+						check left_type_is_expanded: left_type.is_expanded end
+						generate_il_metamorphose (left_type, right_type, True)
+					end
+
+						-- Generate right operand
+					right.generate_il_value
+					if left_type.is_reference then
+						check right_type_is_expanded: right_type.is_expanded end
+						generate_il_metamorphose (right_type, left_type, True)
 					end
 
 					il_generator.generate_object_equality_test

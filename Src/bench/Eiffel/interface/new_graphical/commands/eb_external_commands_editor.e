@@ -19,6 +19,10 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	-- Jason Wei
+	EB_SHARED_MANAGERS
+	-- Jason Wei
 
 create
 	make
@@ -92,6 +96,21 @@ feature -- Basic operations
 			end
 		end
 
+feature{EB_EXTERNAL_OUTPUT_TOOL} -- Synchronizing features used by EB_EXTERNAL_OUTPUT_TOOL
+
+	refresh_list_from_outside is
+			-- Refresh command list from EB_EXTERNAL_OUTPUT_TOOL
+		do
+			if list /= Void then
+				refresh_list				
+			end
+		end
+	update_menus_from_outside is
+			-- Update external menu items from EB_EXTERNAL_OUTPUT_TOOL
+		do
+			update_menus
+		end
+		
 feature {NONE} -- Widgets
 
 	dialog: EV_DIALOG
@@ -309,6 +328,9 @@ feature {NONE} -- Implementation
 			update_edit_buttons
 			add_button.enable_sensitive
 			add_button.set_focus
+			-- Jason Wei
+			external_output_manager.synchronize_command_list (Void)
+			-- Jason Wei
 		end
 
 	on_key (k: EV_KEY) is

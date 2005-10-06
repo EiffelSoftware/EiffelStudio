@@ -26,7 +26,7 @@ feature -- Status setting
 			-- Set `is_sensitive' to `True'.
 		deferred
 		ensure
-			sensitive: is_sensitive
+  			sensitive: is_sensitive
 		end
 
 	disable_sensitive is

@@ -55,6 +55,13 @@ feature -- Il code generation
 		do
 		end
 
+	generate_il_value is
+			-- Generate code that evaluates expression and puts its value
+			-- (rather than a pointer to it) to the evaluation stack.
+		do
+			generate_il
+		end
+
 	generate_il_metamorphose (a_type, target_type: TYPE_I; real_metamorphose: BOOLEAN) is
 			-- Generate a metamorphose of target object.
 			-- If `real_metamorphose' is set to True, target is an

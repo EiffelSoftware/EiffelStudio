@@ -2000,7 +2000,7 @@ feature -- Element change
 			a_parent_row_not_void: a_parent_row /= Void
 			i_valid_for_parent: i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 			not_inserting_within_existing_subrow_structure: i < a_parent_row.index + a_parent_row.subrow_count_recursive
-				implies row (i + 1).parent_row = a_parent_row
+				implies row (i).parent_row = a_parent_row
 		local
 			l_subrow_index: INTEGER
 		do

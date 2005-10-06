@@ -320,24 +320,24 @@ feature -- Basic operation
 			-- `selected_cmd', if not Void, indicates the list item which
 			-- should be selected as defaulted.
 		local
-			ms: LIST [EB_EXTERNAL_COMMAND]		
+			ms: ARRAY [EB_EXTERNAL_COMMAND]		
 			ext_cmd: EB_EXTERNAL_COMMAND
-			lst_item, li1: EV_LIST_ITEM	
+			lst_item: EV_LIST_ITEM	
 			str: STRING
 			text_set: BOOLEAN
+			i: INTEGER
 		do
 			if cmd_lst.is_sensitive then
 				str := cmd_lst.text
 				ms := owner.Edit_external_commands_cmd.commands
 				cmd_lst.wipe_out
-				--cmd_lst.set_text (str)
 				from
-					ms.start
+					i := ms.lower
 					text_set := False
 				until
-					ms.after
+					i > ms.upper
 				loop
-					ext_cmd ?= ms.item
+					ext_cmd ?= ms.item (i)
 					if ext_cmd /= Void then
 						create lst_item.make_with_text (ext_cmd.external_command)
 		
@@ -350,7 +350,7 @@ feature -- Basic operation
 							text_set := True
 						end
 					end
-					ms.forth
+					i := i + 1
 				end	
 				if not text_set then
 					cmd_lst.set_text (str)

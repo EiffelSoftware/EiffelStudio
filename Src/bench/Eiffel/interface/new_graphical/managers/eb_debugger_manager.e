@@ -27,7 +27,7 @@ inherit
 		end
 		
 	EB_SHARED_PREFERENCES
-
+	
 create
 	make
 
@@ -429,19 +429,47 @@ feature -- Status setting
 			into_cmd.disable_sensitive
 		end
 
+	-- Jason Wei modified the following feature on Aug 30 2005
 	on_compile_stop is
 			-- A compilation is over. Make all run* commands sensitive.
 		do
-			if is_msil_dll_system then
-				disable_debugging_commands (True)
-			else
-				step_cmd.enable_sensitive
-				into_cmd.enable_sensitive
-				no_stop_cmd.enable_sensitive
-				debug_cmd.enable_sensitive
-				enable_debug
+			if
+				((not freezing_launcher.launched) or (freezing_launcher.launched and freezing_launcher.has_exited))
+				and
+				((not finalizing_launcher.launched) or (finalizing_launcher.launched and finalizing_launcher.has_exited))
+					-- If eight `freezing_launcher' or `finalizing_launcher' is working,
+					-- do not enable relative widgets.
+			then
+				if is_msil_dll_system then
+					disable_debugging_commands (True)
+				else
+					step_cmd.enable_sensitive
+	
+					into_cmd.enable_sensitive
+					no_stop_cmd.enable_sensitive			
+					debug_cmd.enable_sensitive
+					enable_debug
+				end					
 			end
 		end
+
+------ This is the original version		
+--	on_compile_stop is
+--			-- A compilation is over. Make all run* commands sensitive.
+--		do
+--			if is_msil_dll_system then
+--				disable_debugging_commands (True)
+--			else
+--				step_cmd.enable_sensitive
+--				into_cmd.enable_sensitive
+--				no_stop_cmd.enable_sensitive
+--				debug_cmd.enable_sensitive
+--				enable_debug
+--			end
+--		end
+		
+	-- Jason Wei modified the above feature on Aug 30 2005
+
 
 	raise is
 			-- Make the debug tools appear in `debugging_window'.
@@ -1189,7 +1217,6 @@ feature {NONE} -- Implementation
 			quit_cmd.disable_sensitive
 
 			toolbarable_commands.extend (system_cmd)
-
 			toolbarable_commands.extend (Melt_project_cmd)
 			toolbarable_commands.extend (Quick_melt_project_cmd)
 			toolbarable_commands.extend (Freeze_project_cmd)

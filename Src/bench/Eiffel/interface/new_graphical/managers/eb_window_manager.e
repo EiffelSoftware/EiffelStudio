@@ -539,13 +539,14 @@ feature -- Actions on all windows
 				end
 			end
 		end
-
+		
 	synchronize_all_about_breakpoints is
 		do
 			quick_refresh_all_margins			
 			for_all (agent synchronize_breakpoints_action)
 		end
 
+	-- Jason Wei modified the following
 	synchronize_all is
 			-- A compilation is over. Warn all windows and tools.
 		do
@@ -557,21 +558,75 @@ feature -- Actions on all windows
 
 				-- Update the state of some commands.
 			if not Eiffel_project.compilation_modes.is_precompiling then
-				precompilation_cmd.disable_sensitive
-				melt_project_cmd.enable_sensitive
-				Quick_melt_project_cmd.enable_sensitive
-				freeze_project_cmd.enable_sensitive
-				Finalize_project_cmd.enable_sensitive
+				if  (freezing_launcher.launched and then not freezing_launcher.has_exited)
+					 or
+					(finalizing_launcher.launched and then not finalizing_launcher.has_exited) 				
+				then
+					melt_project_cmd.disable_sensitive
+					Quick_melt_project_cmd.disable_sensitive
+					freeze_project_cmd.disable_sensitive
+					precompilation_cmd.disable_sensitive
+					Finalize_project_cmd.disable_sensitive	
+					terminate_c_compilation_cmd.enable_sensitive				
+				else	
+					precompilation_cmd.disable_sensitive
+					melt_project_cmd.enable_sensitive
+					Quick_melt_project_cmd.enable_sensitive
+					freeze_project_cmd.enable_sensitive
+					Finalize_project_cmd.enable_sensitive
+					terminate_c_compilation_cmd.disable_sensitive										
+				end
 			else
-				melt_project_cmd.enable_sensitive
-				Quick_melt_project_cmd.enable_sensitive
-				freeze_project_cmd.disable_sensitive
-				precompilation_cmd.enable_sensitive
-				Finalize_project_cmd.disable_sensitive
+				if  (freezing_launcher.launched and then not freezing_launcher.has_exited)
+					 or
+					(finalizing_launcher.launched and then not finalizing_launcher.has_exited) 				
+				then
+					melt_project_cmd.disable_sensitive
+					Quick_melt_project_cmd.disable_sensitive
+					freeze_project_cmd.disable_sensitive
+					precompilation_cmd.disable_sensitive
+					Finalize_project_cmd.disable_sensitive
+					terminate_c_compilation_cmd.enable_sensitive			    	
+				else	
+					melt_project_cmd.enable_sensitive
+					Quick_melt_project_cmd.enable_sensitive
+					freeze_project_cmd.disable_sensitive
+					precompilation_cmd.enable_sensitive
+					Finalize_project_cmd.disable_sensitive
+					terminate_c_compilation_cmd.disable_sensitive			
+				end				
 			end
-
 			for_all (agent synchronize_action)
 		end
+
+----- This is the original version		
+--	synchronize_all is
+--			-- A compilation is over. Warn all windows and tools.
+--		do
+--				-- Reload the cluster tree in the cluster manager.
+--			manager.refresh
+--
+--				-- Get rid of all dead classes in the favorites.
+--			favorites.refresh
+--
+--				-- Update the state of some commands.
+--			if not Eiffel_project.compilation_modes.is_precompiling then
+--				precompilation_cmd.disable_sensitive
+--				melt_project_cmd.enable_sensitive
+--				Quick_melt_project_cmd.enable_sensitive
+--				freeze_project_cmd.enable_sensitive
+--				Finalize_project_cmd.enable_sensitive
+--			else
+--				melt_project_cmd.enable_sensitive
+--				Quick_melt_project_cmd.enable_sensitive
+--				freeze_project_cmd.disable_sensitive
+--				precompilation_cmd.enable_sensitive
+--				Finalize_project_cmd.disable_sensitive
+--			end
+--
+--			for_all (agent synchronize_action)
+--		end
+		-- Jason Wei modified the above		
 
 	display_message (m: STRING) is
 			-- Display a message in status bars of all development windows.
@@ -1146,8 +1201,13 @@ feature {EB_WINDOW} -- Implementation / Observer pattern
 	observers: ARRAYED_LIST [EB_WINDOW_MANAGER_OBSERVER]
 			-- All observers for Current.
 
-feature {EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU, EB_EXEC_FORMAT_CMD} -- Implementation
-	
+-- Jason Wei modified the following line on Aug 31 2005
+feature {EB_C_COMPILER_LAUNCHER, EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU, EB_EXEC_FORMAT_CMD} -- Implementation
+
+-- This is the original line
+--feature {EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU, EB_EXEC_FORMAT_CMD} -- Implementation
+-- Jason Wei modified the above line on Aug 31 2005
+
 	managed_windows: ARRAYED_LIST [EB_WINDOW]
 			-- Managed windows.
 

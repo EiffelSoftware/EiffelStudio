@@ -14,28 +14,27 @@ feature -- Status report
 
 	external_launcher: EB_EXTERNAL_LAUNCHER is	
 			-- 
-		do
+		once
 			create Result.make
 		end
 		
 	freezing_launcher: EB_FREEZING_LAUNCHER is
 			-- 
-		do
+		once
 			create Result.make
 		end
 		
 	finalizing_launcher: EB_FINALIZING_LAUNCHER is
 			-- 
-		do
+		once
 			create Result.make
 		end
 		
 	idle_printing_manager: EB_IDLE_PRINTING_MANAGER is
 			-- 
-		do
+		once
 			create Result.make
 		end
-		
 
 	external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER is
 			-- 

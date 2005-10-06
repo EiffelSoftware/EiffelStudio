@@ -55,11 +55,16 @@ feature -- IL code generation
 			target.generate_il_start_assignment
 
 				-- Generate expression byte code
-			source.generate_il
+			source.generate_il_value
 			
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).
-			source_type ?= context.real_type (source.type);
+			source_type ?= context.real_type (source.type)
+
+				-- Convert expanded type to reference if required
+			if source_type.is_expanded and then target.type.is_reference then
+				il_generator.generate_metamorphose (source_type)
+			end
 
 				-- Generate assignment
 			target.generate_il_assignment (source_type)

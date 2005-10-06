@@ -33,6 +33,7 @@ feature -- Access
 			-- Header item used for resizing `Current' in grid.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.header_item
 		ensure
@@ -121,6 +122,7 @@ feature -- Access
 			-- See header of `EV_GRID' for a description of this behavior.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.background_color
 		end
@@ -131,6 +133,7 @@ feature -- Access
 			-- See header of `EV_GRID' for a description of this behavior.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.foreground_color
 		end
@@ -139,6 +142,7 @@ feature -- Access
 			-- Pixmap display on header of `parent' to left of `title'.
 		require
 			not_destroyed: not is_destroyed
+			is_parented: parent /= Void
 		do
 			Result := implementation.pixmap
 		end

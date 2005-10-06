@@ -140,8 +140,9 @@ feature -- Launching parameters setting
 	
 feature -- Control
 		
-	launch is
+	launch (redirection_needed: BOOLEAN) is
 			-- Launch process.
+			-- If `redirection_needed', redirect input, output and error of process.
 		require
 			output_handler_set: output_handler /= Void
 			error_handler_set: error_handler /= Void
@@ -165,9 +166,15 @@ feature -- Control
 			prc_imp ?= prc			
 			create err_thread.make (prc_imp)
 			create out_thread.make (prc_imp)
-			prc.redirect_input_to_stream
-			prc.redirect_error_to_agent (error_handler)
-			prc.redirect_output_to_agent (output_handler)
+			if redirection_needed then
+				prc.redirect_input_to_stream
+				prc.redirect_error_to_agent (error_handler)
+				prc.redirect_output_to_agent (output_handler)				
+			else
+				prc.cancel_error_redirection
+				prc.cancel_input_redirection
+				prc.cancel_output_redirection
+			end
 			create pt.make (prc_imp, time_interval)
 			prc.set_timer (pt)
 	

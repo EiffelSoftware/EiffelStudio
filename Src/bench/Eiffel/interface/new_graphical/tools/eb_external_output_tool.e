@@ -501,7 +501,7 @@ feature{NONE} -- Actions
 						external_launcher.prepare_command_line (str,"")							
 					end
 					external_launcher.set_hidden (True)					
-					external_launcher.launch						
+					external_launcher.launch (True)						
 				end
 			else
 				create dlg.make_with_text ("An external command is running now. %NPlease wait until it exits.")

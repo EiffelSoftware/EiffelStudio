@@ -283,8 +283,8 @@ feature -- IL code generation
 	generate_standard_il is
 			-- Generate standard IL code for binary expression.
 		do
-			left.generate_il
-			right.generate_il
+			left.generate_il_value
+			right.generate_il_value
 			il_generator.generate_binary_operator (il_operator_constant)
 		end
 

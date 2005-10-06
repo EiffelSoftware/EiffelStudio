@@ -37,6 +37,14 @@ feature {NONE} -- Element change
 		do
 			Output_manager_cell.put (a_output_manager)
 		end
+	
+	-- Jason Wei added on Sep 1 2005	
+	set_external_output_manager (a_external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER) is
+			-- Set `a_output_manager' as Output manager for development windows
+		do
+			External_output_manager_cell.put (a_external_output_manager)
+		end
+	-- Jason Wei added on Sep 1 2005
 
 	set_recent_projects_manager (a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER) is
 			-- Set `a_recent_projects_manager' as Recent projects manager for $EiffelGraphicalCompiler$

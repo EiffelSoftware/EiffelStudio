@@ -708,32 +708,6 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			subrow (subrow_count) = a_row
 			node_counts_correct: node_counts_correct
 		end
-
-	insert_subrow (a_subrow_index: INTEGER) is
-			-- Add a new row to `parent' as a subrow of `Current'
-			-- with index in subrows of `Current' given by `a_subrow_index'.
-		require
-			is_parented: parent /= Void
-			parent_enabled_as_tree: parent.is_tree_enabled
-			valid_subrow_index: a_subrow_index >= 1 and a_subrow_index <= subrow_count + 1
-		local
-			l_subrow: EV_GRID_ROW_I
-			l_index: INTEGER
-		do
-			if a_subrow_index = 1 then
-				l_index := index + 1
-			else
-					-- There is a subrow before the current insert index so
-					-- add at a position in `parent_i' based on the item before the insert
-					-- As this item may have rows of it's own the subrow count recursive must also be added.
-				l_subrow := subrows.i_th (a_subrow_index - 1)
-				l_index := l_subrow.index + l_subrow.subrow_count_recursive + 1
-			end
-			parent_i.insert_new_rows_parented (1, l_index, interface)
-		ensure
-			subrow_count_increased: subrow_count = old subrow_count + 1
-			parent_row_count_increased: parent.row_count = old parent.row_count + 1
-		end
 		
 	insert_subrows (rows_to_insert, a_subrow_index: INTEGER) is
 			-- Add `rows_to_insert' rows to `parent' as a subrow of `Current'

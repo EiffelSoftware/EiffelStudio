@@ -1285,7 +1285,6 @@ feature -- Metadata description
 		local
 			l_meth_token: INTEGER
 			l_sig: like method_sig
-			l_ctor_token: INTEGER
 			l_uni_string: like uni_string
 			l_class: CLASS_C
 		do
@@ -1311,13 +1310,15 @@ feature -- Metadata description
 					{MD_METHOD_ATTRIBUTES}.Rt_special_name,
 					l_sig, {MD_METHOD_ATTRIBUTES}.Managed)
 
-				l_ctor_token := constructor_token (single_parent_mapping.item (
-						class_type.implementation_id))
-
 				il_code_generator.start_new_body (l_meth_token)
-				il_code_generator.generate_current
-				il_code_generator.method_body.put_call ({MD_OPCODES}.Call, l_ctor_token,
-					0, False)
+
+				if not class_type.is_expanded then
+						-- Call constructor from super-class for reference type
+					il_code_generator.generate_current
+					il_code_generator.method_body.put_call ({MD_OPCODES}.Call, 
+						constructor_token (single_parent_mapping.item (class_type.implementation_id)),
+						0, False)
+				end
 
 				il_code_generator.generate_return (False)
 				method_writer.write_current_body

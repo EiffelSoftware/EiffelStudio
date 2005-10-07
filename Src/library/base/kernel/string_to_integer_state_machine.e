@@ -118,10 +118,10 @@ feature -- String parsing
 		-- Parse `s' from `start_position' to `end_position'.
 		require
 			s_not_void: s /= Void
-			s_not_empty: not s.is_empty
+			--s_not_empty: not s.is_empty
 			start_position_valid: start_position > 0
-			start_position_small_enough: start_position <= s.count
-			start_position_not_larger_then_end_position: start_position <= end_position
+			--start_position_small_enough: start_position <= s.count
+			--start_position_not_larger_then_end_position: start_position <= end_position
 			end_position_small_enough: end_position <= s.count
 		local
 			i: INTEGER

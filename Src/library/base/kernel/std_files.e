@@ -123,6 +123,32 @@ feature -- Status report
 		do
 			Result := input.last_double
 		end
+		
+	last_read_number_overflowed: BOOLEAN is
+			-- Is last integer/natural read overflowed according to its type?
+		do
+			Result := input.last_read_number_overflowed
+		end
+
+	last_read_number_below_range: BOOLEAN is
+			-- Is last integer/natural read overflowed because
+			-- number is below range (too small)?		
+		do	
+			Result := input.last_read_number_below_range
+		end
+	
+	last_read_number_above_range: BOOLEAN is
+			-- Is last integer/natural read overflowed because
+			-- number is above range (too large)?
+		do
+			Result := input.last_read_number_above_range
+		end
+			
+	last_read_number_correct: BOOLEAN is
+			-- Is last integer/natural correct according to its type?
+		do	
+			Result := input.last_read_number_correct
+		end
 
 feature -- Element change
 

@@ -636,59 +636,15 @@ feature -- Status report
 
 	is_integer: BOOLEAN is
 			-- Does `Current' represent an INTEGER?
-		local
-			l_c: CHARACTER
-			l_area: like area
-			i, nb, l_state: INTEGER
 		do
-				-- l_state = 0 : waiting sign or first digit.
-				-- l_state = 1 : sign read, waiting first digit.
-				-- l_state = 2 : in the number.
-				-- l_state = 3 : trailing white spaces
-				-- l_state = 4 : error state.
-			from
-				l_area := area
-				i := 0
-				nb := count
-			until
-				i = nb or l_state = 4
-			loop
-				l_c := l_area.item (i)
-				i := i + 1
-				inspect l_state
-				when 0 then
-						-- Let's find beginning of an integer, if any.
-					if l_c.is_digit then
-						l_state := 2
-					elseif l_c = '-' or l_c = '+' then
-						l_state := 1
-					elseif l_c = ' ' then
-					else
-						l_state := 4
-					end
-				when 1 then
-						-- Let's find first digit after sign.
-					if l_c.is_digit then
-						l_state := 2
-					else
-						l_state := 4
-					end
-				when 2 then
-						-- Let's find another digit or end of integer.
-					if l_c.is_digit then
-					elseif l_c = ' ' then
-						l_state := 3
-					else
-						l_state := 4
-					end
-				when 3 then
-						-- Consume remaining white space.
-					if l_c /= ' ' then
-						l_state := 4
-					end
-				end
+			if count = 0 then
+				Result := False
+			else		
+				
+				ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation)
+				ctoi_state_machine.parse (Current, 1, count)
+				Result := ctoi_state_machine.is_integral_integer	
 			end
-			Result := l_state = 2 or l_state = 3
 		ensure
 			syntax_and_range:
 				-- Result is true if and only if the following two
@@ -885,43 +841,31 @@ feature -- Status report
 			is_boolean: Result = (as_lower.has_substring (true_constant) or as_lower.has_substring (false_constant))
 		end
 		
-	overflowed: BOOLEAN is
-			-- Is last integer/natural conversion overflowed?
+	last_conversion_overflowed: BOOLEAN is
+			-- Is last string to integer/natural conversion overflowed?
 		do
-			Result := ctoi_state_machine.overflowed
+			Result := conversion_overflowed
+		end
+	
+	last_conversion_successful: BOOLEAN is
+			-- Is last string to integer/natural conversion successful?
+		do
+			Result := conversion_successful
 		end
 		
-	too_large: BOOLEAN is
-			-- Is last integer/natural conversion overflowed because
-			-- number is too large?
+	last_conversion_above_range: BOOLEAN is
+			-- Is last string to integer/natural conversion overflowed because
+			-- number is above range (too large)?
 		do
-			Result := ctoi_state_machine.too_large
+			Result := conversion_above_range
 		end
 		
-	too_small: BOOLEAN is
-			-- Is last integer/natural conversion overflowed because
-			-- number is too small?
+	last_conversion_below_range: BOOLEAN is
+			-- Is last string to integer/natural conversion overflowed because
+			-- number is below range (too small)?
 		do
-			Result := ctoi_state_machine.too_small
+			Result := conversion_below_range
 		end	
-		
-	is_valid_integer: BOOLEAN is	
-			-- Is this string a representation of a valid integer?
-			-- Call this feature after every to_integer_xx to check if 
-			-- conversion succeeded.
-		do
-			Result := ctoi_state_machine.is_integral_integer
-		end
-		
-	is_valid_natural: BOOLEAN is
-			-- Is this string a representation of a valid natural?
-			-- Call this feature after every to_natural_xx to check if 
-			-- conversion succeeded.			
-		do
-			Result := ctoi_state_machine.is_integral_integer			
-		end
-		
-		
 
 feature -- Element change
 
@@ -2065,10 +2009,11 @@ feature -- Conversion
 		do
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_8)
 			ctoi_state_machine.parse (Current, 1, count)
-			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
-				Result := 0
-			else
+			set_flags_after_conversion
+			if conversion_successful then
 				Result := ctoi_state_machine.parsed_integer_8
+			else
+				Result := 0
 			end			
 		end
 		
@@ -2077,10 +2022,11 @@ feature -- Conversion
 		do
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_16)
 			ctoi_state_machine.parse (Current, 1, count)
-			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
-				Result := 0
-			else
+			set_flags_after_conversion		
+			if conversion_successful then
 				Result := ctoi_state_machine.parsed_integer_16
+			else
+				Result := 0
 			end			
 		end		
 		
@@ -2089,10 +2035,11 @@ feature -- Conversion
 		do
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_32)
 			ctoi_state_machine.parse (Current, 1, count)
-			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
-				Result := 0
-			else
+			set_flags_after_conversion		
+			if conversion_successful then
 				Result := ctoi_state_machine.parsed_integer_32
+			else
+				Result := 0
 			end			
 		end		
 		
@@ -2101,10 +2048,11 @@ feature -- Conversion
 		do
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_64)
 			ctoi_state_machine.parse (Current, 1, count)
-			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
-				Result := 0
-			else
+			set_flags_after_conversion			
+			if conversion_successful then
 				Result := ctoi_state_machine.parsed_integer_64
+			else
+				Result := 0
 			end			
 		end	
 		
@@ -2113,10 +2061,11 @@ feature -- Conversion
 		do
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_8)
 			ctoi_state_machine.parse (Current, 1, count)
-			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
-				Result := 0
-			else
+			set_flags_after_conversion
+			if conversion_successful then
 				Result := ctoi_state_machine.parsed_natural_8
+			else
+				Result := 0
 			end			
 		end
 		
@@ -2125,22 +2074,24 @@ feature -- Conversion
 		do
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_16)
 			ctoi_state_machine.parse (Current, 1, count)
-			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
-				Result := 0
-			else
+			set_flags_after_conversion
+			if conversion_successful then
 				Result := ctoi_state_machine.parsed_natural_16
+			else
+				Result := 0
 			end			
 		end
 		
-	to_natural_32: NATURAL_32 is		
+	to_natural, to_natural_32: NATURAL_32 is		
 			-- 32-bit natural value 
 		do
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_32)
 			ctoi_state_machine.parse (Current, 1, count)
-			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
-				Result := 0
-			else
+			set_flags_after_conversion
+			if conversion_successful then
 				Result := ctoi_state_machine.parsed_natural_32
+			else
+				Result := 0
 			end			
 		end	
 		
@@ -2149,103 +2100,13 @@ feature -- Conversion
 		do
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_64)
 			ctoi_state_machine.parse (Current, 1, count)
-			if ctoi_state_machine.overflowed or not ctoi_state_machine.is_integral_integer then
-				Result := 0
-			else
+			set_flags_after_conversion
+			if conversion_successful then
 				Result := ctoi_state_machine.parsed_natural_64
+			else
+				Result := 0
 			end			
-		end					
-
---	to_integer: INTEGER is
---			-- Integer value;
---			-- for example, when applied to "123", will yield 123
---		require
---			is_integer: is_integer
---		local
---			l_c: CHARACTER; 
---			l_is_negative: BOOLEAN
---			l_area: like area
---			i, nb: INTEGER
---		do
---				-- Skip spaces.
---			from
---				l_area := area
---				nb := count
---				i := 0
---			until
---				l_area.item (i) /= ' '
---			loop
---				i := i + 1
---			end
---
---				-- Read sign mark if any.
---			l_c := l_area.item (i)
---			i := i + 1
---			if l_c = '+' then
---				l_c := l_area.item (i)
---				i := i + 1
---			elseif l_c = '-' then
---				l_is_negative := True
---				l_c := l_area.item (i)
---				i := i + 1
---			end
---			from
---				Result := l_c.code - 48
---			until
---				i = nb
---			loop
---				l_c := l_area.item (i)
---				if l_c.is_digit then
---					Result := 10 * Result + l_c.code - 48
---				else
---					i := nb - 1 -- Jump out of loop
---				end
---				i := i + 1
---			end
---			if l_is_negative then
---				Result := -Result
---			end
---		ensure
---			single_digit: count = 1 implies Result = ("0123456789").index_of (item (1), 1) - 1
---			minus_sign_followed_by_single_digit:
---				count = 2 and item (1) = '-' implies Result = -substring (2, 2).to_integer
---			plus_sign_followed_by_single_digit:
---				count = 2 and item (1) = '+' implies Result = substring (2, 2).to_integer
---			recurse_to_reduce_length:
---				count > 2 or count = 2 and not(("+-").has (item (1))) implies
---				 Result // 10 = substring (1, count - 1).to_integer and
---				 (Result \\ 10).abs = substring (count, count).to_integer
---		end
---
---	to_integer_64: INTEGER_64 is
---			-- Integer value of type INTEGER_64;
---			-- for example, when applied to "123", will yield 123
---		require
---			is_integer: is_integer
---		local
---			l_area: like area
---			l_character: CHARACTER
---			i, nb: INTEGER
---			l_is_negative: BOOLEAN
---		do
---			from
---				l_area := area
---				nb := count
---			until
---				i = nb
---			loop
---				l_character := l_area.item (i)
---				if l_character.is_digit then
---					Result := (Result * 10) + l_character.code - 48
---				elseif l_character = '-' then
---					l_is_negative := True
---				end
---				i := i + 1
---			end
---			if l_is_negative then
---				Result := - Result
---			end
---		end
+		end
 
 	to_real: REAL is
 			-- Real value;
@@ -2698,6 +2559,34 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 		end
+		
+feature{NONE} -- Implementation
+
+	conversion_below_range: BOOLEAN
+			-- Flag indicating whether last string to integer/natural conversion failed 
+			-- because number is below range (too small)
+		
+	conversion_above_range: BOOLEAN
+			-- Flag indicating whether last string to integer/natural conversion failed 
+			-- because number is above range (too large)
+
+	conversion_successful: BOOLEAN
+			-- Flag indicating whether last string to integer/natural conversion successed
+	
+	conversion_overflowed: BOOLEAN
+			-- Flag indicating whether last string to integer/natural conversion overflowed
+			-- either because number is below or above range (too small or too large)
+	
+	set_flags_after_conversion is
+			-- Set flags after every string to integer/natural conversion.
+		do
+			conversion_overflowed := ctoi_state_machine.overflowed
+			conversion_above_range := ctoi_state_machine.too_large
+			conversion_below_range := ctoi_state_machine.too_small
+			conversion_successful := (not ctoi_state_machine.overflowed) and 
+								     ctoi_state_machine.is_integral_integer
+		end
+		
 
 invariant
 	extendible: extendible

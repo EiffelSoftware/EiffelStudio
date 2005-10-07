@@ -11,6 +11,9 @@ indexing
 
 class
 	EB_PROCESS_LAUNCHER
+
+inherit
+	EB_SHARED_MANAGERS
 		
 feature -- Launching parameters setting
 
@@ -160,6 +163,8 @@ feature -- Control
 			prc_imp: PROCESS_IMP
 			pt: PROCESS_VISION2_TIMER
 		do
+			idle_printing_manager.initiate_timer
+			
 			create prc_ftry
 			prc := prc_ftry.new_process_launcher_with_command_line (command_line, working_directory)						
 			prc.redirect_input_to_stream

@@ -1308,7 +1308,7 @@ feature {NONE} -- Implementation
 			-- Draw grid item, to make the text colorfull.
 			-- return width of current drawable item.
 		local
-			off_set: INTEGER
+			offset: INTEGER
 			row_selected, focused: BOOLEAN
 			l_color: EV_COLOR
 			font: EV_FONT
@@ -1341,13 +1341,13 @@ feature {NONE} -- Implementation
 				drawable.draw_text_top_left (0, adjust_vertical, 
 											l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
 				drawable.set_foreground_color (preferences.editor_data.operator_text_color)
-				off_set := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
+				offset := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
 				
-				drawable.draw_text_top_left (off_set, adjust_vertical, replace_rnt_to_space (l_item.text))
+				drawable.draw_text_top_left (offset, adjust_vertical, replace_rnt_to_space (l_item.text))
 				drawable.set_foreground_color (l_color)
-				off_set := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text + l_item.text.count - 1))
+				offset := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text + l_item.text.count - 1))
 				
-				drawable.draw_text_top_left (off_set, 
+				drawable.draw_text_top_left (offset, 
 											adjust_vertical,
 											l_item.context_text.substring (l_item.start_index_in_context_text + l_item.text.count,
 																			l_item.context_text.count))	

@@ -3184,8 +3184,10 @@ feature {NONE} -- Implementation
 
 	on_cursor_moved is
 			-- The cursor has moved, reflect the change in the status bar.
+			-- And reflect location editing in the text in features tool and address bar.
 		do
 			refresh_cursor_position
+			refresh_context_info
 		end
 
 	on_text_fully_loaded is
@@ -3380,6 +3382,68 @@ feature {NONE} -- Implementation: Editor commands
 			l := editor_tool.text_area.cursor_y_position
 			c := editor_tool.text_area.cursor_x_position
 			status_bar.set_cursor_position (l, c)
+		end
+		
+	refresh_context_info is
+			-- Refresh address bar and features tool to relect
+			-- where in the code the cursor is located.
+		local
+			l_feature: FEATURE_AS
+			l_classc_stone: CLASSC_STONE
+		do
+			l_classc_stone ?= stone
+			if l_classc_stone /= Void then
+				l_feature := editor_tool.text_area.text_displayed.current_feature_containing
+				if l_feature /= Void then
+					set_editing_location_by_feature (l_feature)
+				else
+					set_editing_location_by_feature (Void)
+				end
+			end
+		end
+	
+	set_editing_location_by_feature (a_feature: FEATURE_AS) is
+			-- Set editing location, feature tool and combo box changes according to `a_feature'.
+		local
+			l_efeature: E_FEATURE
+			l_class_i: CLASS_I
+			l_classc: CLASS_C
+		do
+			if a_feature /= Void then
+				address_manager.set_feature_text_simply (a_feature.feature_names.first.internal_name)
+				l_class_i := eiffel_universe.class_named (class_name, cluster)
+				if l_class_i.is_compiled then
+					l_classc := l_class_i.compiled_class
+					l_efeature := l_classc.feature_with_name (a_feature.feature_names.first.internal_name)
+				end
+			else
+				address_manager.set_feature_text_simply (once "")
+			end
+			seek_item_in_feature_tool (l_efeature)
+		end
+		
+	seek_item_in_feature_tool (a_feature: E_FEATURE) is
+			-- Seek and select item contains data of `a_feature' in features tool.
+			-- If `a_feature' is void, deselect item in features tool.
+		local
+			l_node: EV_TREE_NODE
+			l_selected_node: EV_TREE_NODE
+		do
+			l_selected_node := features_tool.tree.selected_item
+			if a_feature /= Void then
+				l_node := features_tool.tree.retrieve_item_recursively_by_data (a_feature, true)
+				if l_node /= Void then
+					l_node.enable_select
+				else
+					if l_selected_node /= Void then
+						l_selected_node.disable_select
+					end
+				end
+			else
+				if l_selected_node /= Void then
+					l_selected_node.disable_select
+				end
+			end
 		end
 
 	select_all is

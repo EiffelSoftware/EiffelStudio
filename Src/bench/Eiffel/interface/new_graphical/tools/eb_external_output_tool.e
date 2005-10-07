@@ -484,7 +484,6 @@ feature{NONE} -- Actions
 			dlg: EV_WARNING_DIALOG	
 			str ,wd: STRING	
 			e_cmd: EB_EXTERNAL_COMMAND	
-			dev: EB_DEVELOPMENT_WINDOW
 		do
 			if (not external_launcher.launched) or (external_launcher.launched and then external_launcher.has_exited) then
 				create str.make_from_string (cmd_lst.text)
@@ -687,7 +686,7 @@ feature -- Status reporting
 			str: STRING
 			e_cmd: EB_EXTERNAL_COMMAND
 			done: BOOLEAN
-			cl, wd: STRING
+			cl: STRING
 			i: INTEGER
 		do
 			create str.make_from_string (cmd_lst.text)

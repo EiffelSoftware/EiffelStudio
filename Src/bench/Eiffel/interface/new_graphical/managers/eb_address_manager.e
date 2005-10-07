@@ -304,6 +304,16 @@ feature -- Element change
 		do
 			output_line := t
 		end
+		
+	set_feature_text_simply (s: STRING) is
+			-- Set feature combo text with `s'.
+		require
+			s_attached: s /= Void
+		do
+			feature_address.change_actions.block
+			feature_address.set_text (s)
+			feature_address.change_actions.resume
+		end		
 
 feature -- Observer management
 

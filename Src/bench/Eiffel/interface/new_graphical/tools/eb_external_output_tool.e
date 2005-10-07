@@ -21,8 +21,6 @@ inherit
 	
 	SHARED_PLATFORM_CONSTANTS
 	
-	EB_SHARED_PROCESS_IO_DATA_STORAGE
-	
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -686,7 +684,6 @@ feature -- Status reporting
 			str: STRING
 			e_cmd: EB_EXTERNAL_COMMAND
 			done: BOOLEAN
-			cl: STRING
 			i: INTEGER
 		do
 			create str.make_from_string (cmd_lst.text)

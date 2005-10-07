@@ -173,7 +173,7 @@ feature -- Element change
 			standard_default.put_double (d)
 		end
 
-	put_integer, putint, put_intege_32 (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write `i' at end of default output.
 		do
 			standard_default.put_integer (i)

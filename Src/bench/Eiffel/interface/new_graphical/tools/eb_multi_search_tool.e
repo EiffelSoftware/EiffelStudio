@@ -27,8 +27,7 @@ inherit
 			default_search,
 			enable_disable_search_button,
 			on_text_edited,
-			on_text_reset,
-			show_and_set_focus
+			on_text_reset
 		end
 	
 	MSR_FORMATTER
@@ -302,23 +301,6 @@ feature -- Action
 			temp_reverse := true
 			go_to_next_found
 			temp_reverse := false
-		end
-		
-	show_and_set_focus is
-			-- Show the search tool and set focus to the search text field
-		do
-			fixme ("it can occurs the explorer_bar_item is bad (void or maybe destroyed ..")
-			explorer_bar_item.show
-			if explorer_bar_item.is_minimized then
-				explorer_bar_item.restore
-			end
-			if currently_searched /= Void and then currently_searched.is_empty then
-				keyword_field.set_text (currently_searched)
-			end
-			if currently_replacing /= Void and then currently_replacing.is_empty then
-				replace_combo_box.set_text (currently_replacing)
-			end	
-			keyword_field.set_focus
 		end
 
 	replace_current is

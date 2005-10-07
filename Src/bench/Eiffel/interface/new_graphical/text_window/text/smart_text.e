@@ -92,6 +92,13 @@ feature -- Status report
 
 	no_error, syntax_error, class_name_changed: INTEGER is unique
 			-- `click_tool_status' possible values.
+			
+	current_feature_containing : FEATURE_AS is
+			-- Feature containg current cursor.
+			-- Void if not exists.
+		do
+			Result := click_tool.feature_containing_cursor (cursor)
+		end
 
 feature -- Status setting
 

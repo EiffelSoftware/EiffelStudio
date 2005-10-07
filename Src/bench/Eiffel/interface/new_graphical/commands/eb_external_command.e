@@ -376,8 +376,6 @@ feature {NONE} -- Implementation
 
 	commands: ARRAY [EB_EXTERNAL_COMMAND] is
 			-- Abstract representation of external commands.
-		local
-			i: INTEGER
 		do
 			Result := (create {EB_EXTERNAL_COMMANDS_EDITOR}.make).commands
 		end

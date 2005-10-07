@@ -36,6 +36,19 @@ feature -- Basic Operations
 			l_log.close
 		end
 
+	log_message (a_message: STRING) is
+			-- Log `a_message'.
+		require
+			source_ready: source_ready
+			attached_message: a_message /= Void
+		local
+			l_log: SYSTEM_DLL_EVENT_LOG
+		do
+			create l_log.make (Log_name, ".", Log_source)
+			l_log.write_entry (a_message.to_cil, {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.information)
+			l_log.close
+		end
+
 	create_source is
 			-- Create event source if not already created.
 		require

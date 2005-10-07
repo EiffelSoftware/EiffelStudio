@@ -10,6 +10,8 @@ feature -- Access
 
 	guard: CACHE_MUTEX_GUARD is
 			-- singleton guard
+		indexing
+			once_status: "global"
 		once
 			create Result
 		ensure

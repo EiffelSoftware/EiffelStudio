@@ -290,9 +290,9 @@ cluster
 			"dotnet"; "unix"; 
 		end
 
-	all vision2_extension:		"$EIFFEL_SRC\library\vision2_extension"
+	all vision2_extension:		"$EIFFEL_SRC\library\vision2_extension\independent"
 		exclude
-			"dotnet"; "gtk"; 
+			"gtk"; 
 		end
 
 	all thread:		"$EIFFEL_SRC\library\thread"

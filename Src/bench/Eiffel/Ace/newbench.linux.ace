@@ -243,6 +243,18 @@ cluster
 
 	all memory_analyzer:	"$EIFFEL_SRC/library/memory_analyzer"
 
+	all process:		"$EIFFEL_SRC/library/process"
+		exclude
+			"dotnet"; "windows"; 
+		end
+
+	all vision2_extension:		"$EIFFEL_SRC/library/vision2_extension/independent"
+		exclude
+			"mswin";
+		end
+
+	all thread:		"$EIFFEL_SRC/library/thread"
+
 external
 
 	include_path:

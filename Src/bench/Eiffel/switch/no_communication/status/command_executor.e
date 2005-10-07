@@ -72,10 +72,10 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 				--Jason Wei 9/12/2005
 				if workbench_mode then
 					freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
-					freezing_launcher.launch
+					freezing_launcher.launch (True)
 				else
 					finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
-					finalizing_launcher.launch
+					finalizing_launcher.launch (True)
 				end
 				--Jason Wei 9/12/2005
 				--Execution_environment.launch (freeze_command)
@@ -84,11 +84,11 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 				--Jason Wei 9/12/2005
 				if workbench_mode then
 					freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
-					freezing_launcher.launch
+					freezing_launcher.launch (True)
 					freezing_launcher.wait_for_exit
 				else
 					finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
-					finalizing_launcher.launch
+					finalizing_launcher.launch (True)
 					finalizing_launcher.wait_for_exit
 				end				
 				--Jason Wei 9/12/2005		

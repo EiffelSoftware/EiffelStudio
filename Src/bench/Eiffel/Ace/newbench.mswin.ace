@@ -82,6 +82,7 @@ default
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
 	disabled_debug ("il_info_trace")
+	disabled_debug ("larry")
 	disabled_debug ("lex_output")
 	disabled_debug ("local_feat_adaptation")
 	disabled_debug ("log_exceptions")
@@ -92,6 +93,7 @@ default
 	disabled_debug ("parse")
 	disabled_debug ("profile_convert")
 	disabled_debug ("refactor_fixme")
+	disabled_debug ("regexp")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
 	disabled_debug ("server")
@@ -108,7 +110,6 @@ default
 	disabled_debug ("win_dispatcher")
 	disabled_debug ("xml_input_stream")
 	disabled_debug ("xml_parser")
-	disabled_debug ("larry")
 	line_generation (no)
 	profile (no)
 	trace (no)
@@ -281,7 +282,21 @@ cluster
 		exclude
 			"CVS"; 
 		end
+
 	all memory_analyzer:		"$EIFFEL_SRC\library\memory_analyzer"
+
+	all process:		"$EIFFEL_SRC\library\process"
+		exclude
+			"dotnet"; "unix"; 
+		end
+
+	all vision2_extension:		"$EIFFEL_SRC\library\vision2_extension"
+		exclude
+			"dotnet"; "gtk"; 
+		end
+
+	all thread:		"$EIFFEL_SRC\library\thread"
+
 external
 
 	include_path:

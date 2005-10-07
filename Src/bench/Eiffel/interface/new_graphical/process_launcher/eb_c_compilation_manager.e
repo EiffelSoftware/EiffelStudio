@@ -155,7 +155,7 @@ feature{NONE} -- Implementation
 				str.append ("Run `make -s -nologo` from the directory `")					
 			end
 			str.append (working_directory)
-			str.append ("`%Nto see what went wrong.%N%NClick OK the terminate.")
+			str.append ("`%Nto see what went wrong.%N%NClick OK to terminate.")
 			if platform_constants.is_windows then
 				str.append ("%NClick Cancel to open a command line console.%N")
 			else

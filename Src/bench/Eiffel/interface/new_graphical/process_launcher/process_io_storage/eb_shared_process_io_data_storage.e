@@ -7,8 +7,11 @@ indexing
 class
 	EB_SHARED_PROCESS_IO_DATA_STORAGE
 
+--inherit
+--	EB_IDLE_PRINTING_MANAGER
+
 feature
-	
+		
 	freezing_storage: EB_PROCESS_IO_STORAGE is
 			-- 
 		indexing
@@ -32,4 +35,5 @@ feature
 		once
 			create Result.make
 		end		
+
 end

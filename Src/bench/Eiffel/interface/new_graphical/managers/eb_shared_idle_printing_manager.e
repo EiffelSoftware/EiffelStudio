@@ -11,8 +11,6 @@ inherit
 	EB_SHARED_MANAGERS
 
 	EB_SHARED_PROCESS_IO_DATA_STORAGE
-	
-	EB_SHARED_PROCESS_IO_DATA_STORAGE
 
 create
 	make
@@ -26,6 +24,15 @@ feature{NONE} -- Initialization
 			is_printing_freezing_set_to_false: is_printing_freezing = False
 			is_printing_finalizing_set_to_false: is_printing_finalizing = False
 		end
+		
+feature -- Timer initialization
+
+	initiate_timer is
+			-- Initiate `timer'.
+		once
+			create timer.make_with_interval (100)
+			timer.actions.extend (agent print_when_idle)
+		end		
 		
 feature -- Printing
 
@@ -133,5 +140,10 @@ feature{NONE} -- Implementation
 	
 	has_printed_anything: BOOLEAN
 			-- Has anything from c-compiler been printed already?
+			feature{NONE}
 
+feature{NONE}
+
+	timer: EV_TIMEOUT
+			-- Timer to call an agent to print output and error from another process
 end

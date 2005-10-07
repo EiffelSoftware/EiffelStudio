@@ -78,7 +78,7 @@ feature
 				external_output_manager.synchronize_on_process_exits
 			end	
 			
-			set_launch_session_over (False)
+			set_launch_session_over (True)
 						
 		end
 		

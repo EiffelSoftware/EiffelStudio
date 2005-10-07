@@ -633,53 +633,56 @@ feature {NONE} -- Implementation
 			create Result.make (200)
 			
 			-- Unary operators
-			Result.put ("#--", "op_Decrement");
-			Result.put ("#++", "op_Increment");
-			Result.put ("-", "op_UnaryNegation");
-			Result.put ("+", "op_UnaryPlus");
-			Result.put ("not", "op_LogicalNot");
-			Result.put ("#true", "op_True");
-			Result.put ("#false", "op_False");
-			Result.put ("&", "op_AddressOf");
-			Result.put ("#~", "op_OnesComplement");
-			Result.put ("*", "op_PointerDereference");
+			Result.put ("#--", "op_Decrement")
+			Result.put ("#++", "op_Increment")
+			Result.put ("-", "op_UnaryNegation")
+			Result.put ("+", "op_UnaryPlus")
+			Result.put ("not", "op_LogicalNot")
+			Result.put ("#true", "op_True")
+			Result.put ("#false", "op_False")
+			Result.put ("&", "op_AddressOf")
+			Result.put ("#~", "op_OnesComplement")
+			Result.put ("*", "op_PointerDereference")
 			
 			-- Binary operators
-			Result.put ("+", "op_Addition" );
-			Result.put ("-", "op_Subtraction");
-			Result.put ( "*", "op_Multiply");
-			Result.put ( "/", "op_Division");
-			Result.put ( "\\", "op_Modulus");
-			Result.put ( "xor", "op_ExclusiveOr");
-			Result.put ("&", "op_BitwiseAnd");
-			Result.put ("|", "op_BitwiseOr");
-			Result.put ("and", "op_LogicalAnd");
-			Result.put ("or", "op_LogicalOr");
-			Result.put ("#=", "op_Assign");
-			Result.put ("#<<", "op_LeftShift");
-			Result.put ("#>>", "op_RightShift");
-			Result.put ("#|>>", "op_SignedRightShift");
-			Result.put ("|>>", "op_UnsignedRightShift");
-			Result.put ("#==", "op_Equality");
-			Result.put (">", "op_GreaterThan");
-			Result.put ("<", "op_LessThan");
-			Result.put ("|=", "op_Inequality");
-			Result.put (">=", "op_GreaterThanOrEqual");
-			Result.put ("<=", "op_LessThanOrEqual");
-			Result.put ("#|>>=", "op_UnsignedRightShiftAssignment");
-			Result.put ("#->", "op_MemberSelection");
-			Result.put ("#>>=", "op_RightShiftAssignment");
-			Result.put ("#*=", "op_MultiplicationAssignment");
-			Result.put ("#->*", "op_PointerToMemberSelection");
-			Result.put ("#-=", "op_SubtractionAssignment");
-			Result.put ("#^=", "op_ExclusiveOrAssignment");
-			Result.put ("#<<=", "op_LeftShiftAssignment");
-			Result.put ("#\\=", "op_ModulusAssignment");
-			Result.put ("#+=", "op_AdditionAssignment");
-			Result.put ("#&=", "op_BitwiseAndAssignment");
-			Result.put ("#|=", "op_BitwiseOrAssignment");
-			Result.put ("#,", "op_Comma");
-			Result.put ("#/=", "op_DivisionAssignment");
+			Result.put ("+", "op_Addition" )
+			Result.put ("-", "op_Subtraction")
+			Result.put ( "*", "op_Multiply")
+			Result.put ( "/", "op_Division")
+			Result.put ( "\\", "op_Modulus")
+			Result.put ( "xor", "op_ExclusiveOr")
+			Result.put ("&", "op_BitwiseAnd")
+			Result.put ("|", "op_BitwiseOr")
+			Result.put ("and", "op_LogicalAnd")
+			Result.put ("or", "op_LogicalOr")
+			Result.put ("#=", "op_Assign")
+			Result.put ("#<<", "op_LeftShift")
+			Result.put ("#>>", "op_RightShift")
+			Result.put ("#|>>", "op_SignedRightShift")
+			Result.put ("|>>", "op_UnsignedRightShift")
+			Result.put ("#==", "op_Equality")
+			Result.put (">", "op_GreaterThan")
+			Result.put ("<", "op_LessThan")
+			Result.put ("|=", "op_Inequality")
+			Result.put (">=", "op_GreaterThanOrEqual")
+			Result.put ("<=", "op_LessThanOrEqual")
+			Result.put ("#|>>=", "op_UnsignedRightShiftAssignment")
+			Result.put ("#->", "op_MemberSelection")
+			Result.put ("#>>=", "op_RightShiftAssignment")
+			Result.put ("#*=", "op_MultiplicationAssignment")
+			Result.put ("#->*", "op_PointerToMemberSelection")
+			Result.put ("#-=", "op_SubtractionAssignment")
+			Result.put ("#^=", "op_ExclusiveOrAssignment")
+			Result.put ("#<<=", "op_LeftShiftAssignment")
+			Result.put ("#\\=", "op_ModulusAssignment")
+			Result.put ("#+=", "op_AdditionAssignment")
+			Result.put ("#&=", "op_BitwiseAndAssignment")
+			Result.put ("#|=", "op_BitwiseOrAssignment")
+			Result.put ("#,", "op_Comma")
+			Result.put ("#/=", "op_DivisionAssignment")
+			
+			-- Constructor
+			Result.put ("make", ".ctor")
 		end
 	
 feature {NONE} -- Constants

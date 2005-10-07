@@ -27,7 +27,8 @@ class CONSOLE inherit
 				last_real, last_string, last_double, file_readable,
 				lastchar, lastint, lastreal, laststring, lastdouble,
 				readable, is_closed, extendible, is_open_write,
-				overflowed, too_large, too_small
+				last_read_number_overflowed, last_read_number_above_range, 
+				last_read_number_below_range, last_read_number_correct
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			 read_real, read_double, read_character,
@@ -118,10 +119,8 @@ feature -- Input
 			str: STRING
 		do
 			str := read_console_integer_with_no_type
-			last_integer_8 := str.to_integer_8
-			overflowed := str.overflowed
-			too_small := str.too_small
-			too_large := str.too_large
+			last_integer_8 := str.to_integer_8			
+			set_flags_after_conversion (str)
 		end		
 		
 	read_integer_16 is
@@ -132,9 +131,7 @@ feature -- Input
 		do
 			str := read_console_integer_with_no_type
 			last_integer_16 := str.to_integer_16
-			overflowed := str.overflowed
-			too_small := str.too_small
-			too_large := str.too_large
+			set_flags_after_conversion (str)
 		end	
 		
 	read_integer, readint, read_integer_32 is
@@ -145,9 +142,7 @@ feature -- Input
 		do
 			str := read_console_integer_with_no_type
 			last_integer := str.to_integer_32
-			overflowed := str.overflowed
-			too_small := str.too_small
-			too_large := str.too_large
+			set_flags_after_conversion (str)
 		end	
 		
 	read_integer_64 is
@@ -158,9 +153,7 @@ feature -- Input
 		do
 			str := read_console_integer_with_no_type
 			last_integer_64 := str.to_integer_64
-			overflowed := str.overflowed
-			too_small := str.too_small
-			too_large := str.too_large
+			set_flags_after_conversion (str)
 		end	
 		
 	read_natural_64 is
@@ -171,9 +164,7 @@ feature -- Input
 		do
 			str := read_console_integer_with_no_type
 			last_natural_64 := str.to_natural_64
-			overflowed := str.overflowed
-			too_small := str.too_small
-			too_large := str.too_large
+			set_flags_after_conversion (str)
 		end		
 
 	read_natural, read_natural_32 is
@@ -184,9 +175,7 @@ feature -- Input
 		do
 			str := read_console_integer_with_no_type
 			last_natural := str.to_natural_32
-			overflowed := str.overflowed
-			too_small := str.too_small
-			too_large := str.too_large
+			set_flags_after_conversion (str)
 		end				
 
 	read_natural_16 is
@@ -197,9 +186,7 @@ feature -- Input
 		do
 			str := read_console_integer_with_no_type
 			last_natural_16 := str.to_natural_16
-			overflowed := str.overflowed
-			too_small := str.too_small
-			too_large := str.too_large
+			set_flags_after_conversion (str)
 		end	
 		
 	read_natural_8 is
@@ -210,9 +197,7 @@ feature -- Input
 		do
 			str := read_console_integer_with_no_type
 			last_natural_8 := str.to_natural_8
-			overflowed := str.overflowed
-			too_small := str.too_small
-			too_large := str.too_large
+			set_flags_after_conversion (str)
 		end			
 
 	read_real, readreal is
@@ -384,12 +369,6 @@ feature -- Output
 		do
 			console_pd (file_pointer, d)
 		end
-
---	put_integer, putint (i: INTEGER) is
---			-- Write `i' at end of default output.
---		do
---			console_pi (file_pointer, i)
---		end
 		
 	put_integer_64 (i: INTEGER_64) is
 			-- Write `i' at end of default output.
@@ -469,10 +448,8 @@ feature {NONE} -- Implementation
 			-- Read a number which is at most `number_length' bytes long 
 			-- from console. 
 		local
-			str_cap: INTEGER
 			read: INTEGER -- Amount of bytes already read
 			str_area: ANY
-			done: BOOLEAN
 		do
 			create Result.make (100)
 			str_area := Result.area

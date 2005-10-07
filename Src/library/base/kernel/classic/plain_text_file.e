@@ -34,20 +34,24 @@ feature -- Status report
 	support_storable: BOOLEAN is False
 			-- Can medium be used to store an Eiffel structure?
 			
-	overflowed: BOOLEAN
+	last_read_number_overflowed: BOOLEAN
 			-- Is last integer/natural read overflowed according to its type?
 
-	too_small: BOOLEAN
+	last_read_number_below_range: BOOLEAN
 			-- Is last integer/natural read overflowed because
-			-- number is too small?	
+			-- number is below range (too small)?	
 	
-	too_large: BOOLEAN
+	last_read_number_above_range: BOOLEAN
 			-- Is last integer/natural read overflowed because
-			-- number is too large?	
+			-- number is above range (too large)?
+			
+	last_read_number_correct: BOOLEAN
+			-- Is last integer/natural correct according to its type?	
 				
-	expected_number_found: BOOLEAN
+	is_number_found: BOOLEAN
 			-- Has number been found?
-			-- Check this after read_integer_x or read_natural_x.			
+			-- Check this after read_integer_xx or read_natural_xx 
+			-- where xx stands for 8, 16, 32 or 64.		
 
 feature -- Output
 
@@ -127,25 +131,16 @@ feature -- Output
 
 feature -- Input
 
---	read_integer, readint, read_integer_32 is
---			-- Read the ASCII representation of a new integer
---			-- from file. Make result available in `last_integer'.
---		do
---			last_integer := file_gi (file_pointer)
---		end
-		
 	read_integer_64 is
 			-- 
 		local
 			str: STRING
 		do
 			str := read_integer_with_no_type
-			expected_number_found := not str.is_empty
-			if expected_number_found then
+			is_number_found := not str.is_empty
+			if is_number_found then
 				last_integer_64 := str.to_integer_64
-				overflowed := str.overflowed
-				too_large := str.too_large
-				too_small := str.too_small
+				set_flags_after_conversion (str)
 			end
 		end
 		
@@ -155,12 +150,10 @@ feature -- Input
 			str: STRING
 		do
 			str := read_integer_with_no_type
-			expected_number_found := not str.is_empty
-			if expected_number_found then
+			is_number_found := not str.is_empty
+			if is_number_found then
 				last_integer := str.to_integer_32
-				overflowed := str.overflowed
-				too_large := str.too_large
-				too_small := str.too_small				
+				set_flags_after_conversion (str)
 			end
 		end
 		
@@ -170,12 +163,10 @@ feature -- Input
 			str: STRING
 		do
 			str := read_integer_with_no_type
-			expected_number_found := not str.is_empty
-			if expected_number_found then
+			is_number_found := not str.is_empty
+			if is_number_found then
 				last_integer_16 := str.to_integer_16
-				overflowed := str.overflowed
-				too_large := str.too_large
-				too_small := str.too_small				
+				set_flags_after_conversion (str)
 			end
 		end
 		
@@ -185,12 +176,10 @@ feature -- Input
 			str: STRING
 		do
 			str := read_integer_with_no_type
-			expected_number_found := not str.is_empty
-			if expected_number_found then
+			is_number_found := not str.is_empty
+			if is_number_found then
 				last_integer_8 := str.to_integer_8
-				overflowed := str.overflowed
-				too_large := str.too_large
-				too_small := str.too_small				
+				set_flags_after_conversion (str)
 			end
 		end	
 		
@@ -200,12 +189,10 @@ feature -- Input
 			str: STRING
 		do
 			str := read_integer_with_no_type
-			expected_number_found := not str.is_empty
-			if expected_number_found then
+			is_number_found := not str.is_empty
+			if is_number_found then
 				last_natural_64 := str.to_natural_64
-				overflowed := str.overflowed
-				too_large := str.too_large
-				too_small := str.too_small
+				set_flags_after_conversion (str)
 			end
 		end
 		
@@ -215,12 +202,10 @@ feature -- Input
 			str: STRING
 		do
 			str := read_integer_with_no_type
-			expected_number_found := not str.is_empty
-			if expected_number_found then
+			is_number_found := not str.is_empty
+			if is_number_found then
 				last_natural := str.to_natural_32
-				overflowed := str.overflowed
-				too_large := str.too_large
-				too_small := str.too_small				
+				set_flags_after_conversion (str)
 			end
 		end
 		
@@ -230,12 +215,10 @@ feature -- Input
 			str: STRING
 		do
 			str := read_integer_with_no_type
-			expected_number_found := not str.is_empty
-			if expected_number_found then
+			is_number_found := not str.is_empty
+			if is_number_found then
 				last_natural_16 := str.to_natural_16
-				overflowed := str.overflowed
-				too_large := str.too_large
-				too_small := str.too_small				
+				set_flags_after_conversion (str)
 			end
 		end
 		
@@ -245,12 +228,9 @@ feature -- Input
 			str: STRING
 		do
 			str := read_integer_with_no_type
-			expected_number_found := not str.is_empty
-			if expected_number_found then
-				last_natural_8 := str.to_natural_8
-				overflowed := str.overflowed
-				too_large := str.too_large
-				too_small := str.too_small				
+			is_number_found := not str.is_empty
+			if is_number_found then
+				set_flags_after_conversion (str)
 			end
 		end						
 
@@ -269,6 +249,16 @@ feature -- Input
 		end
 
 feature {NONE} -- Implementation
+
+	set_flags_after_conversion (str: STRING) is
+			-- Set status after we tried to convert `str' to an integer/natural.
+		do
+			last_read_number_overflowed := str.last_conversion_overflowed
+			last_read_number_above_range := str.last_conversion_above_range
+			last_read_number_below_range := str.last_conversion_below_range	
+			last_read_number_correct := str.last_conversion_successful		
+		end
+		
 
 	ctoi_state_machine: STRING_TO_INTEGER_STATE_MACHINE is
 			-- State machine used to parse string to integer or natural

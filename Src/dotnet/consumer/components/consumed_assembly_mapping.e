@@ -37,4 +37,7 @@ feature -- Access
 	assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			-- Referenced assemblies indexed by id
 
+invariant
+	attached_assemblies: assemblies /= Void
+
 end -- class CONSUMED_ASSEMBLY_MAPPING

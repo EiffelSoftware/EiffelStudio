@@ -30,6 +30,14 @@ feature -- Basic Operations
 		do
 		end
 
+	log_message (a_message: STRING) is
+			-- Log `a_message' to Windows event log.
+		require
+			source_ready: source_ready
+			attached_message: a_message /= Void
+		do
+		end
+
 	create_source is
 			-- Create event source if not already created.
 		do

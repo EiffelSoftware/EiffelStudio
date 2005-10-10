@@ -166,7 +166,7 @@ feature -- Control
 			idle_printing_manager.initiate_timer
 			
 			create prc_ftry
-			prc := prc_ftry.new_process_launcher_with_command_line (command_line, working_directory)						
+			prc := prc_ftry.process_launcher_with_command_line (command_line, working_directory)						
 			prc.redirect_input_to_stream
 			prc_imp ?= prc			
 			create err_thread.make (prc_imp)
@@ -180,7 +180,7 @@ feature -- Control
 				prc.cancel_input_redirection
 				prc.cancel_output_redirection
 			end
-			create pt.make (prc_imp, time_interval)
+			create pt.make (time_interval)
 			prc.set_timer (pt)
 	
 			prc.set_on_start_handler (on_start_handler)

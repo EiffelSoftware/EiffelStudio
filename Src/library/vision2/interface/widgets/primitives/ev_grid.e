@@ -1956,7 +1956,6 @@ feature -- Element change
 			j_positive: j > 0
 			i_not_greater_than_row_count: i <= row_count
 			j_valid: j <= row_count
-			row_at_i_not_a_subnode: row (i).parent_row = Void
 			row_has_no_subrows: row (i).subrow_count = 0
 		do
 			implementation.move_rows (i, j, 1)
@@ -1977,8 +1976,7 @@ feature -- Element change
 			i_not_greater_than_row_count: i <= row_count
 			j_valid: j <= row_count
 			n_valid: i + n <= row_count + 1
-			row_at_i_not_a_subnode: row (i).parent_row = Void
-			row_at_i_plus_n_not_a_subnode: i + n <= row_count implies row (i + n).parent_row = Void
+			rows_may_be_moved: rows_may_be_moved (i, n)
 		do
 			implementation.move_rows (i, j, n)
 		ensure
@@ -2216,6 +2214,38 @@ feature -- Contract support
 			end
 		ensure
 			result_not_void: Result /= Void
+		end
+		
+	rows_may_be_moved (a_first_row_index, a_row_count: INTEGER): BOOLEAN is
+			-- Do rows from `a_first_row_index' to `a_first_row_index' + `a_row_count' - 1 represent a complete tree structure?
+			-- and if row (`a_first_row_index') has a `parent_row', are all rows to be moved nested within that parent
+			-- within the tree structure?
+		require
+			row_count_positive: a_row_count >= 1
+			first_row_index_valid: a_first_row_index >= 1 and a_first_row_index + a_row_count - 1 <= row_count
+		local
+			counter: INTEGER
+			current_row, parent_of_first_row: EV_GRID_ROW
+		do
+			Result := True
+			parent_of_first_row := row (a_first_row_index).parent_row
+			from
+				counter := a_first_row_index
+			until
+				counter >= a_first_row_index + a_row_count or Result = False
+			loop
+				current_row := row (counter)
+				if parent_of_first_row /= Void then
+						-- Ensure that we have not moved up a level in the tree structure
+						-- past the parent of row `a_first_row_index'.
+					Result := current_row.parent_row = parent_of_first_row
+				end
+				if counter + 1 + current_row.subrow_count_recursive > a_first_row_index + a_row_count then
+						-- Ensure that we are not splitting an existing structure.
+					Result := False
+				end
+				counter := counter + 1 + current_row.subrow_count_recursive
+			end
 		end
 
 feature {NONE} -- Contract support

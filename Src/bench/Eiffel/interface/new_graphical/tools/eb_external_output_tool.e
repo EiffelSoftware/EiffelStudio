@@ -583,7 +583,7 @@ feature{NONE} -- Actions
 				ew.show_modal_to_window (owner.window)
 			else
 				create save_file_dlg.make_with_title ("Save output to file")
-				save_file_dlg.ok_actions.extend (agent on_save_file_selected)
+				save_file_dlg.save_actions.extend (agent on_save_file_selected)
 				save_file_dlg.show_modal_to_window (owner.window)
 				save_file_dlg.destroy
 			end

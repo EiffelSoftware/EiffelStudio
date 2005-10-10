@@ -230,7 +230,11 @@ indexing
 
 		For each type of selection there are events.  Examples of such events are `item_select_actions',
 		`row_select_actions' and `column_select_actions', these are fired in `Current', with the
-		appropriate object being passed to the action sequence that is selected.
+		appropriate object being passed to the action sequence that is selected. `item_select_actions'
+		will only get executed whilst in either single or multiple item selection mode. For handling selection
+		events during single or multiple row selection modes, `row_select_actions' should be used.
+		To keep track of deselected items, rows or columns, there is `item_deselect_actions',
+		`row_deselect_actions' and `column_deselect_actions' respectively.
 
 		Along with selecting items, they may also be deselected.  This can be done programatically
 		via the `disable_select' routine of either the item/column or row.
@@ -473,6 +477,7 @@ feature -- Access
 
 	selected_columns: ARRAYED_LIST [EV_GRID_COLUMN] is
 			-- All columns selected in `Current'.
+			-- Returned list is unsorted so no particular ordering is guaranteed.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -483,6 +488,7 @@ feature -- Access
 		
 	selected_rows: ARRAYED_LIST [EV_GRID_ROW] is
 			-- All rows selected in `Current'.
+			-- Returned list is unsorted so no particular ordering is guaranteed.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -493,6 +499,7 @@ feature -- Access
 		
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
+			-- Returned list is unsorted so no particular ordering is guaranteed.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -1955,7 +1962,7 @@ feature -- Element change
 			i_positive: i > 0
 			j_positive: j > 0
 			i_not_greater_than_row_count: i <= row_count
-			j_valid: j <= row_count
+			j_valid: j <= row_count		
 			row_has_no_subrows: row (i).subrow_count = 0
 		do
 			implementation.move_rows (i, j, 1)

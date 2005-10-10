@@ -2033,13 +2033,54 @@ feature -- Element change
 			i_positive: i > 0
 			j_positive: j > 0
 			n_positive: n > 0
-			i_less_than_row_count: i <= row_count
+			i_not_greater_than_row_count: i <= row_count
 			j_valid: j <= row_count
 			n_valid: i + n <= row_count + 1
-			row_at_i_has_no_parent_row: row (i).parent_row = Void
-			end_row_last_in_tree_structure: i + n <= row_count implies row (i + n).parent_row = Void
+		local
+			counter: INTEGER
+			parent_of_first: EV_GRID_ROW_I
+			rows_moved: INTEGER
+			expanded_rows_moved: INTEGER
+			current_row: EV_GRID_ROW_I
 		do
 			if j >= i + n or else j < i then
+				parent_of_first := row_internal (i).parent_row_i
+				if parent_of_first /= Void then
+						-- We only need to handle the tree structure if the first row to be moved has
+						-- a parent row, otherwise all rows are being moved from the root level to the
+						-- root level.
+					from
+						counter := i
+					until
+						counter = i + n
+					loop
+						current_row ?= row_internal (counter)
+							-- Note that this following line only works when moving to the root as we have not yet
+							-- parented the row. If you were to move to a parent row, the depths must all be updated
+							-- after the actual setting of the new parent.
+						current_row.update_depths_in_tree
+						if current_row.parent_row_i /= Void and then current_row.parent_row_i = parent_of_first then
+								-- We only re-parent the top level rows that are being moved. All subrows of these
+								-- rows remain parented, so the tree structure remains consistent.
+							current_row.parent_row_i.update_for_subrow_removal (current_row)
+							current_row.internal_set_parent_row (Void)
+
+							rows_moved := rows_moved + current_row.subrow_count_recursive
+							expanded_rows_moved := expanded_rows_moved + current_row.expanded_subrow_count_recursive
+						end
+						counter := counter + 1
+					end
+					
+						-- Now update attributes of `parent_of_first' to reflect the fact that the rows
+						-- have been removed.
+					if rows_moved /= 0 then
+						parent_of_first.update_parent_node_counts_recursively (- rows_moved)
+					end
+					if expanded_rows_moved /= 0 then
+						parent_of_first.update_parent_expanded_node_counts_recursively (-expanded_rows_moved)
+					end
+				end
+				
 					-- Only move rows if the move is not overlapping.
 					-- As we are moving rows from one place to another, if the
 					-- destination index is within the range of the source index plus the number

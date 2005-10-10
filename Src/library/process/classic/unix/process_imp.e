@@ -206,7 +206,8 @@ feature  -- Control
 					if timer /= Void then
 						timer.start
 					else
-						create {PROCESS_THREAD_TIMER}timer.make (Current, 1)
+						create {PROCESS_THREAD_TIMER}timer.make (initial_timer_interval // 1000)
+						timer.set_process_launcher (Current)
 						timer.start
 					end
 				else

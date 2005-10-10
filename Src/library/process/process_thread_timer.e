@@ -22,20 +22,17 @@ create
 	
 feature{NONE} -- Implementation
 	
-	make (prc: PROCESS; interval: INTEGER) is
-			-- `prc' is process launcher object to which this timer is attached.
+	make (interval: INTEGER) is
+			-- Set time interval which this timer will be triggered with `interval'.
 			-- Unit of `interval' is milliseconds.
 		require
 			interval_positive: interval > 0
-			prc_not_null: prc /= Void
 		do
-			process_launcher := prc
 			should_exit_signal:= False
 			time_interval := interval * 1000000
 			create mutex		
 			destroyed := True
 		ensure
-			process_launched_set: process_launcher = prc
 			should_exit_signal_set_to_false: not should_exit_signal	
 			time_interval_set: time_interval = interval * 1000000
 			destroyed_set: destroyed = True

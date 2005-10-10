@@ -692,7 +692,10 @@ feature {NONE} -- Implementation
 		do
 			if search_tool.is_visible then
 				search_tool.set_focus
-			else				
+			else
+				if search_tool.explorer_bar_item.is_minimized then
+					search_tool.explorer_bar_item.restore
+				end
 				search_tool.show_and_set_focus
 			end
 			if not text_displayed.selection_is_empty then

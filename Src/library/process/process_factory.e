@@ -8,7 +8,7 @@ class
 	PROCESS_FACTORY
 
 feature
-	new_process_launcher (a_file_name: STRING; args: LIST [STRING]; a_working_directory: STRING): PROCESS is
+	process_launcher (a_file_name: STRING; args: LIST [STRING]; a_working_directory: STRING): PROCESS is
 			-- Get a process launcher to launch program `a_file_name'  with arguments `args', 
 			-- and with `a_working_directory' as its working directory.
 			-- Apply Void to `a_working_directory' if no working directory is specified.
@@ -26,8 +26,8 @@ feature
 			process_launched_created: Result /= Void
 		end
 		
-	new_process_launcher_with_command_line (a_cmd_line: STRING; a_working_directory: STRING): PROCESS is
-			--  Get a process launcher to launch `cmd_line' as command line in which executable and 
+	process_launcher_with_command_line (a_cmd_line: STRING; a_working_directory: STRING): PROCESS is
+			-- Get a process launcher to launch `cmd_line' as command line in which executable and 
 			-- arguments are included and with `a_working_directory' as its working directory.
 			-- Apply Void to `a_working_directory' if no working directory is specified.		
 		require

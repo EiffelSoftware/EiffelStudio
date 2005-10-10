@@ -15,14 +15,12 @@ create
 	
 feature{NONE} -- Implementation
 	
-	make (prc: PROCESS; interval: INTEGER) is
-			-- `prc' is process launcher object to which this timer is attached.
+	make (interval: INTEGER) is
+			-- Set time interval which this timer will be triggered with `interval'.
 			-- Unit of `interval' is milliseconds.
 		require
-			interval_positive: interval > 0
-			prc_not_null: prc /= Void			
+			interval_positive: interval > 0		
 		do
-			process_launcher := prc
 			time_interval := interval 
 			timer := Void
 			destroyed := True

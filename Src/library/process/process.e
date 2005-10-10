@@ -282,6 +282,7 @@ feature -- Status setting
 			a_timer_not_void: a_timer /= Void			
 		do
 			timer := a_timer
+			timer.set_process_launcher (Current)
 		ensure
 			timer_set: timer = a_timer
 		end

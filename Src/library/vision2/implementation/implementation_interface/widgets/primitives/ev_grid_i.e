@@ -2042,8 +2042,16 @@ feature -- Element change
 			rows_moved: INTEGER
 			expanded_rows_moved: INTEGER
 			current_row: EV_GRID_ROW_I
+			l_j: INTEGER
 		do
 			if j >= i + n or else j < i then
+					-- Adjust `j' to its new position should `j' + `n' be greater than the number of rows.
+				if j + n > row_count then
+					l_j := j - n + 1
+				else
+					l_j := j
+				end
+	
 				parent_of_first := row_internal (i).parent_row_i
 				if parent_of_first /= Void then
 						-- We only need to handle the tree structure if the first row to be moved has
@@ -2085,11 +2093,11 @@ feature -- Element change
 					-- As we are moving rows from one place to another, if the
 					-- destination index is within the range of the source index plus the number
 					-- of rows to move then no move is needed.
-				rows.move_items (i, j, n)
-				internal_row_data.move_items (i, j, n)
+				rows.move_items (i, l_j, n)
+				internal_row_data.move_items (i, l_j, n)
 					-- Update the changed indexes.
-				update_grid_row_indices (i.min (j))
-				set_vertical_computation_required (i.min (j))
+				update_grid_row_indices (i.min (l_j))
+				set_vertical_computation_required (i.min (l_j))
 				redraw_client_area
 			end
 		end
@@ -2099,6 +2107,7 @@ feature -- Element change
 		require
 			i_positive: i > 0
 			j_positive: j > 0
+			n_positive: n > 0
 			i_not_greater_than_column_count: i <= column_count
 			j_not_greater_than_column_count: j <= column_count
 			n_valid: i + n <= row_count + 1
@@ -2108,13 +2117,23 @@ feature -- Element change
 			a_duplicate: ARRAYED_LIST [EV_HEADER_ITEM]
 			a_counter: INTEGER
 			a_insertion_index: INTEGER
+			l_j: INTEGER
 		do
 			if j >= i + n or else j < i then
 					-- Only move columns if the move is not overlapping.
 					-- As we are moving columns from one place to another, if the
 					-- destination index is within the range of the source index plus the number
 					-- of columns to move then no move is needed.
-				columns.move_items (i, j, n)
+
+
+					-- Adjust `j' to its new position should `j' + `n' be greater than the number of columns.
+				if j + n > row_count then
+					l_j := j - n + 1
+				else
+					l_j := j
+				end
+
+				columns.move_items (i, l_j, n)
 					-- Move items within header control.
 				from
 					create a_duplicate.make (n)
@@ -2130,10 +2149,10 @@ feature -- Element change
 				end
 				
 				from
-					if j > (i + n - 1) then
-						a_insertion_index := j - n
+					if l_j > (i + n - 1) then
+						a_insertion_index := l_j - n
 					else
-						a_insertion_index := j - 1
+						a_insertion_index := l_j - 1
 					end
 					header.go_i_th (a_insertion_index)
 					a_duplicate.start
@@ -2144,7 +2163,7 @@ feature -- Element change
 					a_duplicate.forth
 				end
 
-				min_index := i.min (j)
+				min_index := i.min (l_j)
 				update_grid_column_indices (min_index)
 	
 					-- Flag `physical_column_indexes' for recalculation

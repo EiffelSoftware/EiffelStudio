@@ -2016,7 +2016,7 @@ feature -- Element change
 	insert_new_column (a_index: INTEGER) is
 			-- Insert a new column at index `a_index'.
 		require
-			i_positive: a_index > 0
+			a_index_within_range: a_index > 0 and a_index <= column_count + 1
 		do
 			add_column_at (a_index, False)
 		ensure

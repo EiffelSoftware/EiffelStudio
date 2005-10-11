@@ -1967,24 +1967,20 @@ feature -- Element change
 	insert_new_row (i: INTEGER) is
 			-- Insert a new row at index `i'.
 		require
-			i_positive: i > 0
-			not_inserting_within_existing_subrow_structure: i = 1 or else (i < row_count and
-				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
-				row (i - 1).parent_row_root /= row (i).parent_row_root)
+			i_within_range: i > 0 and i <= row_count + 1
+			not_inserting_within_existing_subrow_structure: i <= row_count implies row (i).parent_row = Void
 		do
 			insert_rows_at (1, i)
 		ensure
 			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (row_count = i)
 		end
-		
+
 	insert_new_rows (rows_to_insert, i: INTEGER) is
 			-- Insert `rows_to_insert' rows at index `i'.
 		require
-			i_positive: i > 0
+			i_within_range: i > 0 and i <= row_count + 1
 			rows_to_insert_positive: rows_to_insert >= 1
-			not_inserting_within_existing_subrow_structure: i = 1 or else (i < row_count and
-				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
-				row (i - 1).parent_row_root /= row (i).parent_row_root)
+			not_inserting_within_existing_subrow_structure: i <= row_count implies row (i).parent_row = Void
 		do
 			insert_rows_at (rows_to_insert, i)
 		ensure

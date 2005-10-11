@@ -1883,10 +1883,8 @@ feature -- Element change
 			-- Insert a new row at index `i'.
 		require
 			not_destroyed: not is_destroyed
-			i_positive: i > 0
-			not_inserting_within_existing_subrow_structure: i = 1 or else (i < row_count and
-				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
-				row (i - 1).parent_row_root /= row (i).parent_row_root)
+			i_within_range: i > 0 and i <= row_count + 1
+			not_inserting_within_existing_subrow_structure: i <= row_count implies row (i).parent_row = Void
 		do
 			implementation.insert_new_row (i)
 		ensure
@@ -1897,11 +1895,9 @@ feature -- Element change
 			-- Insert `rows_to_insert' rows at index `i'.
 		require
 			not_destroyed: not is_destroyed
-			i_positive: i > 0
+			i_within_range: i > 0 and i <= row_count + 1
 			rows_to_insert_positive: rows_to_insert >= 1
-			not_inserting_within_existing_subrow_structure: i = 1 or else (i < row_count and
-				row (i - 1).parent_row_root /= Void and row (i).parent_row_root /= Void implies
-				row (i - 1).parent_row_root /= row (i).parent_row_root)
+			not_inserting_within_existing_subrow_structure: i <= row_count implies row (i).parent_row = Void
 		do
 			implementation.insert_new_rows (rows_to_insert, i)
 		ensure

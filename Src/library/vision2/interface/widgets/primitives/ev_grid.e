@@ -1960,6 +1960,8 @@ feature -- Element change
 			i_not_greater_than_row_count: i <= row_count
 			j_valid: j <= row_count		
 			row_has_no_subrows: row (i).subrow_count = 0
+			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void
+			not_breaking_existing_subrow_structure_when_moving_up: i <= j implies row (j + 1).parent_row = Void
 		do
 			implementation.move_rows (i, j, 1)
 		ensure
@@ -1980,6 +1982,8 @@ feature -- Element change
 			j_valid: j <= row_count
 			n_valid: i + n <= row_count + 1
 			rows_may_be_moved: rows_may_be_moved (i, n)
+			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void
+			not_breaking_existing_subrow_structure_when_moving_up: i <= j implies row (j + 1).parent_row = Void
 		do
 			implementation.move_rows (i, j, n)
 		ensure

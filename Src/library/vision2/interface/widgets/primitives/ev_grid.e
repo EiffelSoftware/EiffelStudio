@@ -1943,7 +1943,7 @@ feature -- Element change
 			-- Insert a new column at index `a_index'.
 		require
 			not_destroyed: not is_destroyed
-			i_positive: a_index > 0
+			a_index_within_range: a_index > 0 and a_index <= column_count + 1
 			new_column_insertable: a_index <= column_count implies column ((a_index - 1).max (1)).all_items_may_be_set
 		do
 			implementation.insert_new_column (a_index)
@@ -2222,7 +2222,8 @@ feature -- Contract support
 	rows_may_be_moved (a_first_row_index, a_row_count: INTEGER): BOOLEAN is
 			-- Do rows from `a_first_row_index' to `a_first_row_index' + `a_row_count' - 1 represent a complete tree structure?
 			-- and if row (`a_first_row_index') has a `parent_row', are all rows to be moved nested within that parent
-			-- within the tree structure?
+			-- within the tree structure? If `Result' is `True', the rows may be moved without breaking an existing
+			-- tree structure.
 		require
 			row_count_positive: a_row_count >= 1
 			first_row_index_valid: a_first_row_index >= 1 and a_first_row_index + a_row_count - 1 <= row_count

@@ -32,6 +32,15 @@ feature -- Access
 				a_class_type: CLASS_TYPE; a_feat: FEATURE_I): STRING is
 		do
 		end
+
+	once_function_value (a_icd_frame: ICOR_DEBUG_FRAME; a_class_c: CLASS_C;
+								a_feat: E_FEATURE): ICOR_DEBUG_VALUE is		
+		do
+		end
 		
+	last_once_failed,
+	last_once_already_called,
+	last_once_available: BOOLEAN is False
+	
 
 end

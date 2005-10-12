@@ -44,6 +44,25 @@ feature {APPLICATION_EXECUTION} -- Properties
 		do
 		end
 
+	keep_only_objects (kept_objects: SET [STRING]) is
+			-- (export status {APPLICATION_EXECUTION})
+		do
+		end
+		
+	continue_ignoring_kept_objects is
+		do
+		end
+		
+feature -- access
+
+	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
+		do
+		end
+		
+	debug_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
+		do
+		end		
+
 feature -- Trigger eStudio done
 
 	callback_notification_processing: BOOLEAN is False

@@ -248,7 +248,7 @@ feature -- Basic Operations / Information message
 		do
 		end
 
-	display_stop_points is
+	display_breakpoints is
 		do
 		end
 

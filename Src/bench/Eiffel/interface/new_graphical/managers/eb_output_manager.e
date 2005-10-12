@@ -53,7 +53,7 @@ feature -- Basic Operations / Information message
 		deferred
 		end
 
-	display_stop_points is
+	display_breakpoints is
 			-- Display the breakpoints status.
 		deferred
 		end

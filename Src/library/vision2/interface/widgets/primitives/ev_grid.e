@@ -1991,6 +1991,32 @@ feature -- Element change
 				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
 			row_count_unchanged: row_count = old row_count
 		end
+		
+	move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW) is
+			-- Move `n' rows starting at index `i' to index `j', setting `parent_row' of each to `a_parent_row'.
+			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
+		require
+			not_destroyed: not is_destroyed
+			i_positive: i > 0
+			n_positive: n > 0
+			a_parent_row_not_void: a_parent_row /= Void
+			i_not_greater_than_row_count: i <= row_count
+			j_valid: j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			n_valid: i + n <= row_count + 1
+			rows_may_be_moved: rows_may_be_moved (i, n)
+--			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void or
+--				row (j).parent_row = a_parent_row or row (j - 1) = a_parent_row
+--			not_breaking_existing_subrow_structure_when_moving_up: i <= j implies row (j + 1).parent_row = Void or
+--				row (j + 1).parent_row = a_parent_row
+			not_inserting_within_existing_subrow_structure: i <= j and j < a_parent_row.index + a_parent_row.subrow_count_recursive
+				implies row (j).parent_row = a_parent_row
+		do
+			implementation.move_rows_to_parent (i, j, n, a_parent_row)
+		ensure
+			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or
+				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
+			row_count_unchanged: row_count = old row_count
+		end
 
 	move_column (i, j: INTEGER) is
 			-- Move column at index `i' to index `j'.

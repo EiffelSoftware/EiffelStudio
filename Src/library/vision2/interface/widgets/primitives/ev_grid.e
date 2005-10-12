@@ -2002,9 +2002,9 @@ feature -- Element change
 			a_parent_row_not_void: a_parent_row /= Void
 			i_not_greater_than_row_count: i <= row_count
 			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
-				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
+				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
 			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
-				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 			n_valid: i + n <= row_count + 1
 			rows_may_be_moved: rows_may_be_moved (i, n)
 			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive

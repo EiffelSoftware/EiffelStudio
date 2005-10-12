@@ -123,7 +123,7 @@ d_maypanic='undef'
 d_nanosleep='define'
 d_pidcheck='define'
 d_sbrk='define'
-d_sbrksmart='undef'
+d_sbrksmart='define'
 d_smartmmap='undef'
 d_strerror='define'
 d_syserrlst='define'
@@ -159,7 +159,7 @@ d_tls='undef'
 #Check value for next 2
 mtccflags="$ccflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
 mtcppflags="$cppflags -D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS"
-optimize="-xO3 $platform_arch "
+optimize="-xO2 -g $platform_arch "
 voidflags='15'
 #Check value for next 1
 warning_level=''

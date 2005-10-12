@@ -2001,14 +2001,13 @@ feature -- Element change
 			n_positive: n > 0
 			a_parent_row_not_void: a_parent_row /= Void
 			i_not_greater_than_row_count: i <= row_count
-			j_valid: j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
+				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
+			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
+				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 			n_valid: i + n <= row_count + 1
 			rows_may_be_moved: rows_may_be_moved (i, n)
---			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void or
---				row (j).parent_row = a_parent_row or row (j - 1) = a_parent_row
---			not_breaking_existing_subrow_structure_when_moving_up: i <= j implies row (j + 1).parent_row = Void or
---				row (j + 1).parent_row = a_parent_row
-			not_inserting_within_existing_subrow_structure: i <= j and j < a_parent_row.index + a_parent_row.subrow_count_recursive
+			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (j).parent_row = a_parent_row
 		do
 			implementation.move_rows_to_parent (i, j, n, a_parent_row)

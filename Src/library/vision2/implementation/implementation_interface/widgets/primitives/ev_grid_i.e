@@ -2043,17 +2043,17 @@ feature -- Element change
 			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
 		require
 			i_positive: i > 0
-			j_positive: j > 0
 			n_positive: n > 0
+			a_parent_row_not_void: a_parent_row /= Void
 			i_not_greater_than_row_count: i <= row_count
-			j_valid: j <= row_count
+			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
+				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
+			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
+				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 			n_valid: i + n <= row_count + 1
-			not_breaking_existing_subrow_structure_when_moving_down_with_no_parent: a_parent_row = Void and i > j implies row (j).parent_row = Void
-			not_breaking_existing_subrow_structure_when_moving_up_with_no_parent: a_parent_row = Void and i <= j implies row (j + 1).parent_row = Void
---			not_breaking_existing_subrow_structure_when_moving_down_with_parent: a_parent_row /= Void and i > j implies row (j).parent_row = Void or
---				row (j).parent_row = a_parent_row or row (j - 1) = a_parent_row
---			not_breaking_existing_subrow_structure_when_moving_up_with_parent: a_parent_row /= Void and i <= j implies row (j + 1).parent_row = Void or
---				row (j + 1).parent_row = a_parent_row
+			--rows_may_be_moved: rows_may_be_moved (i, n) not available as only defined in the interface
+			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
+				implies row (j).parent_row = a_parent_row
 		local
 			counter: INTEGER
 			parent_of_first: EV_GRID_ROW_I

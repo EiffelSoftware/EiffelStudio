@@ -40,8 +40,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 		require
 			i_valid: i > 0 and then i <= count
 			j_valid: j > 0 and then j <= count
-			n_valid: n > 0
-			move_within_bounds: i + n <= count + 1 and then j <= count - n + 1
+			n_valid: n > 0 and then n <= count - i + 1
 		local
 			a_duplicate: like Current
 			l_default: G

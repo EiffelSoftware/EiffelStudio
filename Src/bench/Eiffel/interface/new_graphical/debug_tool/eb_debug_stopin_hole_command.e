@@ -14,6 +14,8 @@ inherit
 		end
 
 	SHARED_APPLICATION_EXECUTION
+	
+	EB_SHARED_DEBUG_TOOLS
 
 	SHARED_EIFFEL_PROJECT
 
@@ -90,8 +92,7 @@ feature -- Update
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -119,9 +120,7 @@ feature -- Update
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -140,9 +139,8 @@ feature -- Update
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-	
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -152,8 +150,7 @@ feature -- Execution
 			-- Enable all breakpoints in the application.
 		do
 			Application.enable_all_breakpoints
-			output_manager.display_stop_points
-			Window_manager.synchronize_all_about_breakpoints
+			Debugger_manager.notify_breakpoints_changes
 		end
 
 feature {NONE} -- Implementation
@@ -208,14 +205,6 @@ feature {NONE} -- Implementation
 			-- Does `fst' represent a feature that is debuggable?
 		do
 			Result := fst.e_feature.is_debuggable
-		end
-
-feature -- Obsolete
-
-	display_stop_points is
-		obsolete "use `output_manager.display_stop_points' instead"
-		do
-			output_manager.display_stop_points
 		end
 
 end -- class EB_DEBUG_STOPIN_HOLE_COMMAND

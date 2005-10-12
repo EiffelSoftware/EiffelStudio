@@ -15,6 +15,8 @@ inherit
 		end
 
 	SHARED_APPLICATION_EXECUTION
+	
+	EB_SHARED_DEBUG_TOOLS
 
 	SHARED_EIFFEL_PROJECT
 
@@ -84,9 +86,7 @@ feature -- Execution
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-					-- Update output tools
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -110,9 +110,7 @@ feature -- Update
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-					-- Update output tools
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -130,9 +128,7 @@ feature -- Update
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-					-- Update output tools
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -162,9 +158,7 @@ feature -- Update
 					create wd.make_with_text (Warning_messages.w_Feature_is_not_compiled)
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
-					-- Update output tools
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				Debugger_manager.notify_breakpoints_changes
 			end
 		end
 

@@ -23,9 +23,9 @@ feature
 			-- Restore the debug information when
 			-- a failure occurs.
 		do
-debug ("DEBUGGER")
-	io.error.put_string ("Failure happened%N")
-end
+			debug ("DEBUGGER")
+				io.error.put_string ("Failure happened%N")
+			end
 			debug_info.restore
 		end
 

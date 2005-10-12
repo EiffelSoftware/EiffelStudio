@@ -2042,17 +2042,26 @@ feature -- Element change
 			-- Move `n' rows starting at index `i' to index `j', setting `parent_row' of each to `a_parent'.
 			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
 		require
+				-- The preconditions here are a mismatch of those from `move_rows' and `move_rows_to_parent' so both
+				-- may be implemented directly using this feature. First the common ones:
 			i_positive: i > 0
 			n_positive: n > 0
-			a_parent_row_not_void: a_parent_row /= Void
 			i_not_greater_than_row_count: i <= row_count
-			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
-				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
-			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
-				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 			n_valid: i + n <= row_count + 1
-			--rows_may_be_moved: rows_may_be_moved (i, n) not available as only defined in the interface
-			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
+			--rows_may_be_moved: rows_may_be_moved (i, n) only defined in the interface so not checked here.
+			
+				-- Then those from `move_rows' which requrie `a_parent_row' to be `Void'
+			parent_row_void_implies_j_positive: a_parent_row = Void implies j > 0
+			parent_row_void_implies_j_valid: a_parent_row = Void implies j <= row_count
+			not_breaking_existing_subrow_structure_when_moving_down: a_parent_row = Void and i > j implies row (j).parent_row = Void
+			not_breaking_existing_subrow_structure_when_moving_up: a_parent_row = Void and i <= j implies row (j + 1).parent_row = Void
+
+				-- Finally those from `move_rows_to_parent' which require `a_parent_row' to be non-Void.
+			j_valid_when_moving_in_same_parent: a_parent_row /= Void and row (i).parent_row = a_parent_row implies
+				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
+			j_valid_when_moving_to_new_parent: a_parent_row /= Void and row (i).parent_row /= a_parent_row implies
+				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			not_inserting_within_existing_subrow_structure: a_parent_row /= Void and j < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (j).parent_row = a_parent_row
 		local
 			counter: INTEGER
@@ -2063,8 +2072,6 @@ feature -- Element change
 			a_parent_row_i: EV_GRID_ROW_I
 			current_subrow_index: INTEGER
 		do
-				-- We always must flatten the tree structure to handle the case where you perform
-				-- move_row (3, 3) to flatten the final row in a tree structure to the root.
 			parent_of_first := row_internal (i).parent_row_i
 			if a_parent_row /= Void then
 				a_parent_row_i := a_parent_row.implementation

@@ -681,7 +681,7 @@ feature -- Status report
 				--				 | "e" Exponent
 				-- Exponent		= Integer_literal
 				-- Mantissa		= Decimal_literal
-				-- Decimal_literal = Integer_literal ["." Integer]
+				-- Decimal_literal = Integer_literal ["." [Integer]] | "." Integer
 				-- Integer_literal = [Sign] Integer
 				-- Sign			= "+" | "-"
 				-- Integer		= Digit | Digit Integer
@@ -758,6 +758,8 @@ feature -- Status report
 						l_state := 7
 					elseif l_c.is_digit then
 						l_state := 4
+					elseif l_c.as_lower = 'e' then
+						l_state := 5
 					else
 						l_state := 8
 					end
@@ -816,7 +818,7 @@ feature -- Status report
 				--				 | "e" Exponent
 				-- Exponent		= Integer_literal
 				-- Mantissa		= Decimal_literal
-				-- Decimal_literal = Integer_literal ["." Integer] | "." Integer
+				-- Decimal_literal = Integer_literal ["." [Integer]] | "." Integer
 				-- Integer_literal = [Sign] Integer
 				-- Sign			= "+" | "-"
 				-- Integer		= Digit | Digit Integer
@@ -2187,6 +2189,8 @@ feature -- Conversion
 						-- We are done with mantissa, now reads decimal part
 					if l_c = ' ' then
 						l_state := 7
+					elseif l_c.as_lower = 'e' then
+						l_state := 5
 					else
 						check l_c.is_digit end
 						l_has_fractional_part := True

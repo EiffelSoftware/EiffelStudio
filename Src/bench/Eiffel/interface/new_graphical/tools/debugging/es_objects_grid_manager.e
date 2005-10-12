@@ -50,6 +50,34 @@ feature -- cmd specific
 	pretty_print_cmd: EB_PRETTY_PRINT_CMD
 			-- Command that is used to display extended information concerning objects.
 
+feature {NONE} -- Layout managment
+
+	grid_objects_on_difference_cb (a_row: EV_GRID_ROW; a_val: ANY) is
+		do
+			print ("DIFF:: " + grid_objects_id_name_from_row (a_row) + " => old=[" + a_val.out + "] new=[" + grid_objects_id_value_from_row (a_row).out + "]%N")
+			a_row.set_background_color (Highlight_different_value_bg_color)
+		end
+
+	grid_objects_id_name_from_row (a_row: EV_GRID_ROW): STRING is
+		local
+			lab: EV_GRID_LABEL_ITEM
+		do
+			lab ?= a_row.item (Col_name_index)
+			if lab /= Void then
+				Result := lab.text
+			end
+		end
+		
+	grid_objects_id_value_from_row (a_row: EV_GRID_ROW): ANY is
+		local
+			lab: EV_GRID_LABEL_ITEM
+		do
+			lab ?= a_row.item (Col_value_index)
+			if lab /= Void then
+				Result := lab.text
+			end
+		end
+
 feature -- ES grid specific
 
 	expand_selected_rows (a_grid: EV_GRID) is
@@ -213,6 +241,11 @@ feature -- Graphical look
 	error_row_fg_color: EV_COLOR is
 		once
 			create Result.make_with_8_bit_rgb (190, 130, 130)
+		end
+
+	Highlight_different_value_bg_color: EV_COLOR is
+		once
+			create Result.make_with_8_bit_rgb (255,210,210)
 		end
 
 feature -- Constants

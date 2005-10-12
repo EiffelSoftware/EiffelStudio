@@ -36,11 +36,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize `Current'.
 		do
-			Application_notification_controller.on_launched_actions.extend (agent on_application_launched)
-			Application_notification_controller.on_before_stopped_actions.extend (agent on_application_before_stopped)
-			Application_notification_controller.on_after_stopped_actions.extend (agent on_application_just_stopped)
-			Application_notification_controller.on_terminated_actions.extend (agent on_application_quit)
-
 			create debug_run_cmd.make
 			can_debug := True
 			maximum_stack_depth := preferences.debugger_data.default_maximum_stack_depth
@@ -52,8 +47,6 @@ feature {NONE} -- Initialization
 			create watch_tool_list.make
 
 			create observers.make (10)
-			create kept_objects.make
-			kept_objects.compare_objects
 		end
 
 feature -- Access
@@ -77,79 +70,12 @@ feature -- Access
 
 	watch_tool_list: LINKED_SET [ES_WATCH_TOOL]
 
-	kept_objects: LINKED_SET [STRING]
-			-- Objects represented by their address that should be kept during the execution.
-			
-	keep_object (add: STRING) is
-			-- Add object identified by `add' to `kept_objects'
-		require
-			address_not_empty: add /= Void and then not add.is_empty
-		do
-			kept_objects.extend (add)
-		end		
-
 	new_toolbar: EB_TOOLBAR is
 			-- Toolbar containing all debugging commands.
 		do
 			Result := preferences.debugger_data.retrieve_project_toolbar (toolbarable_commands)
 		end
 
-	new_project_toolbar: EV_VERTICAL_BOX is
-			-- Create a new project toolbar.
-			-- Obsolete. Use `new_toolbar' instead.
-		local
-			hsep: EV_HORIZONTAL_SEPARATOR
-			a_toolbar: EV_HORIZONTAL_BOX
-			tb: EV_TOOL_BAR
-			b: EV_TOOL_BAR_BUTTON
-		do
-			create Result
-
-			create a_toolbar
-			create tb
-			create hsep
-			Result.set_padding (2)
-			Result.extend (hsep)
-			Result.disable_item_expand (hsep)
-			Result.extend (tb)
-
-					-- Stop points
-			b := clear_bkpt.new_toolbar_item (False, False)
-			tb.extend (b)
-
-			b := disable_bkpt.new_toolbar_item (False, False)
-			tb.extend (b)
-
-			b := enable_bkpt.new_toolbar_item (False, False)
-			tb.extend (b)
-
---| FIXME XR: TODO: Add:
---| 1) step into, step/step, step out, run through,
---| 2) interruption request, kill appli,
---| 3) edit feature, feature evaluation
-
-			tb.extend (create {EV_TOOL_BAR_SEPARATOR})
-
-			tb.extend (step_cmd.new_toolbar_item (False, False))
-			tb.extend (into_cmd.new_toolbar_item (False, False))
-			tb.extend (out_cmd.new_toolbar_item (False, False))
-
-			tb.extend (create {EV_TOOL_BAR_SEPARATOR})
-
-			tb.extend (debug_cmd.new_toolbar_item (False, False))
-			tb.extend (no_stop_cmd.new_toolbar_item (False, False))
-
-			tb.extend (create {EV_TOOL_BAR_SEPARATOR})
-
-			tb.extend (stop_cmd.new_toolbar_item (False, False))
-			tb.extend (quit_cmd.new_toolbar_item (False, False))
-
---			create {EB_EXEC_STEP_CMD} exec_cmd.make (Current)
---| FIXME XR: Preferences  should be used and updated
---			b := exec_cmd.new_toolbar_item (False)
---			tb.extend (b)
---			b.select_actions.extend (window_manager~quick_refresh_all_margins)
-		end
 
 	new_debug_menu: EV_MENU is
 			-- Generate a menu that can be displayed in development windows.
@@ -360,6 +286,33 @@ feature -- Status report
 	maximum_stack_depth: INTEGER
 			-- Maximum number of call stack elements displayed.
 			-- -1 means display all elements.
+			
+feature -- Access
+
+	display_breakpoints is
+			-- Show the list of breakpoints (set and disabled) in the output manager.
+		local
+			bp_tool: ES_BREAKPOINTS_TOOL
+			conv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			conv_dev ?= window_manager.last_focused_window
+			if conv_dev /= Void then
+				bp_tool := conv_dev.breakpoints_tool
+				if bp_tool /= Void then
+					if bp_tool.shown then
+						bp_tool.refresh
+					else
+						bp_tool.show
+					end
+				end
+			end
+		end
+		
+	notify_breakpoints_changes is
+		do
+			display_breakpoints
+			window_manager.synchronize_all_about_breakpoints
+		end
 
 feature -- Status setting
 
@@ -979,7 +932,10 @@ feature -- Debugging events
 				window_manager.quick_refresh_all_margins
 				debugging_window := Void
 				output_manager.display_system_info
-				kept_objects.wipe_out
+				
+				if application.is_running then
+					Application.status.kept_objects.wipe_out
+				end
 				
 				from
 					observers.start
@@ -1301,19 +1257,11 @@ feature {NONE} -- Implementation
 			out_cmd.disable_sensitive
 		end		
 
-	display_breakpoints is
-			-- Show the list of breakpoints (set and disabled) in the output manager.
-		do
-			output_manager.display_stop_points
-			output_manager.force_display
-		end
-
 	force_raise is
 			-- Debug feature.
 		do
 			if not raised then
 					-- Update `Current'.
-				create kept_objects.make
 				if debugging_window = Void then
 					debugging_window ?= Window_manager.last_focused_window
 				end
@@ -1326,7 +1274,6 @@ feature {NONE} -- Implementation
 		do
 			if raised then
 				unraise
-				kept_objects := Void
 			end
 		end
 

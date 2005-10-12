@@ -1,6 +1,9 @@
--- Translation between physical address of objects and their
--- hector address in the user application. At a given time
--- a physical object has only one hector address.
+indexing
+	description: "[
+			Translation between physical address of objects and their
+			hector address in the user application. At a given time
+			a physical object has only one hector address.
+		]"
 
 class
 
@@ -16,6 +19,18 @@ inherit
 
 feature -- Access
 
+	keep_object_as_hector_address (addr: STRING): STRING is
+		require
+			addr_not_void: addr /= Void
+		do
+			Result := hector_addr (addr)
+		end
+		
+	update_kept_objects_addresses is
+		do
+			update_addresses
+		end
+
 	hector_addr (addr: STRING): STRING is
 			-- Hector address (EIF_OBJ) of object at `addr';
 			-- Ask user application to adopt that object if not already done
@@ -25,47 +40,34 @@ feature -- Access
 			if not addr_table.has (addr) then
 				send_rqst_3 (Rqst_adopt, In_address, 0, hex_to_pointer (addr));
 				addr_table.put (c_tread, addr)
-			end;
+			end
 			Result := addr_table.item (addr)
 
-debug ("HECTOR")
-	io.error.put_string ("Address: ");
-	io.error.put_string (addr);
-	io.error.put_string (" Hector: ");
-	io.error.put_string (Result);
-	io.error.put_new_line
-end
-		end;
+			debug ("HECTOR")
+				io.error.put_string ("Address: ")
+				io.error.put_string (addr)
+				io.error.put_string (" Hector: ")
+				io.error.put_string (Result)
+				io.error.put_new_line
+			end
+		end
 	
-	physical_addr (h_addr: STRING): STRING is
-			-- Address of object `h_addr' (hector addr) previously
-			-- adopted by user application
-		require
-			h_addr_not_void: h_addr /= Void
-		do
-			send_rqst_3 (Rqst_access, In_address, 0, hex_to_pointer (h_addr));
-			Result := c_tread
-	
-debug ("HECTOR")
-	io.error.put_string ("Hector: ");
-	io.error.put_string (h_addr);
-	io.error.put_string (" Address: ");
-	io.error.put_string (Result);
-	io.error.put_new_line
-end
-		end;
-
-	is_hector_addr (h_addr: STRING): BOOLEAN is
+	is_object_kept (h_addr: STRING): BOOLEAN is
 			-- Is `h_addr' a known hector address?
 		require
 			h_addr_not_void: h_addr /= Void
 		do
 			Result := addr_table.has_item (h_addr)
-		end;
+		end
 
 feature -- Updating
 
-	keep_objects (kept_addrs: SET [STRING]) is
+	release_all_objects is
+		do
+			addr_table.wipe_out
+		end
+
+	keep_only_objects (kept_addrs: SET [STRING]) is
 			-- Keep references to `kept_addrs' and ask user application
 			-- to wean the other adopted objects not used anymore.
 		require
@@ -88,7 +90,7 @@ feature -- Updating
 				end;
 				i := i + 1
 			end
-		end;
+		end
 
 	update_addresses is
 			-- Update physical addresses of adopted objects after
@@ -110,7 +112,25 @@ feature -- Updating
 			end
 		end;
 
-feature {NONE} 
+feature {NONE} -- Implementation
+
+	physical_addr (h_addr: STRING): STRING is
+			-- Address of object `h_addr' (hector addr) previously
+			-- adopted by user application
+		require
+			h_addr_not_void: h_addr /= Void
+		do
+			send_rqst_3 (Rqst_access, In_address, 0, hex_to_pointer (h_addr));
+			Result := c_tread
+	
+			debug ("HECTOR")
+				io.error.put_string ("Hector: ");
+				io.error.put_string (h_addr);
+				io.error.put_string (" Address: ");
+				io.error.put_string (Result);
+				io.error.put_new_line
+			end
+		end;
 
 	forget_obj (h_addr: STRING) is
 			-- Ask user application to wean adopted object `h_addr'.
@@ -119,11 +139,11 @@ feature {NONE}
 		do
 			send_rqst_3 (Rqst_wean, In_address, 0, hex_to_pointer (h_addr))
 
-debug ("HECTOR")
-	io.error.put_string ("Wean Hector: ");
-	io.error.put_string (h_addr);
-	io.error.put_new_line
-end
+			debug ("HECTOR")
+				io.error.put_string ("Wean Hector: ");
+				io.error.put_string (h_addr);
+				io.error.put_new_line
+			end
 		end;
 
 	addr_table: HASH_TABLE [STRING, STRING] is
@@ -133,6 +153,6 @@ end
 		once
 			create Result.make (40);
 			Result.compare_objects
-		end;
+		end
 
 end -- class OBJECT_ADDR	

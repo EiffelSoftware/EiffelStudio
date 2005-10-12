@@ -2058,9 +2058,9 @@ feature -- Element change
 
 				-- Finally those from `move_rows_to_parent' which require `a_parent_row' to be non-Void.
 			j_valid_when_moving_in_same_parent: a_parent_row /= Void and row (i).parent_row = a_parent_row implies
-				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
+				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
 			j_valid_when_moving_to_new_parent: a_parent_row /= Void and row (i).parent_row /= a_parent_row implies
-				j >= a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
 			not_inserting_within_existing_subrow_structure: a_parent_row /= Void and j < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (j).parent_row = a_parent_row
 		local

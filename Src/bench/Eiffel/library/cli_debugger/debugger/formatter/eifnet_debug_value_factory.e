@@ -23,15 +23,15 @@ inherit
 
 feature -- Access
 
-	debug_value_from (a_icd: ICOR_DEBUG_VALUE): EIFNET_ABSTRACT_DEBUG_VALUE is
+	debug_value_from (a_icd: ICOR_DEBUG_VALUE; a_stat_class: CLASS_C): EIFNET_ABSTRACT_DEBUG_VALUE is
 		local
 			l_icd_prepared: ICOR_DEBUG_VALUE
 		do
 			l_icd_prepared := edv_formatter.prepared_debug_value (a_icd)
-			Result := debug_value_from_prepared_icd (a_icd, l_icd_prepared)
+			Result := debug_value_from_prepared_icd (a_icd, l_icd_prepared, a_stat_class)
 		end
 
-	debug_value_from_prepared_icd (a_icd: ICOR_DEBUG_VALUE; a_prepared_icd: ICOR_DEBUG_VALUE): EIFNET_ABSTRACT_DEBUG_VALUE is
+	debug_value_from_prepared_icd (a_icd: ICOR_DEBUG_VALUE; a_prepared_icd: ICOR_DEBUG_VALUE; a_stat_class: CLASS_C): EIFNET_ABSTRACT_DEBUG_VALUE is
 		require
 			arg_not_void: a_prepared_icd /= Void
 		local
@@ -118,6 +118,9 @@ feature -- Access
 				else
 					create {EIFNET_DEBUG_UNKNOWN_TYPE_VALUE} Result.make (a_icd, l_icd_prepared)
 				end
+			end
+			if Result /= Void then
+				Result.set_static_class (a_stat_class)
 			end
 		end
 end

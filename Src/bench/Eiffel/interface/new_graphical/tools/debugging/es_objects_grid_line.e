@@ -72,6 +72,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	DEBUG_VALUE_EXPORTER		
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 

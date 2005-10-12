@@ -2566,8 +2566,7 @@ feature {NONE} -- Implementation
 				else
 					Application.set_breakpoint (conv_brkstone.routine, conv_brkstone.index)
 				end
-				output_manager.display_stop_points
-				window_manager.synchronize_all_about_breakpoints
+				Debugger_manager.notify_breakpoints_changes
 			elseif conv_errst /= Void then
 				display_error_help_cmd.execute_with_stone (conv_errst)
 			elseif conv_ace /= Void then
@@ -3414,7 +3413,9 @@ feature {NONE} -- Implementation: Editor commands
 				l_class_i := eiffel_universe.class_named (class_name, cluster)
 				if l_class_i.is_compiled then
 					l_classc := l_class_i.compiled_class
-					l_efeature := l_classc.feature_with_name (a_feature.feature_names.first.internal_name)
+					if l_classc.has_feature_table then
+						l_efeature := l_classc.feature_with_name (a_feature.feature_names.first.internal_name)
+					end
 				end
 			else
 				address_manager.set_feature_text_simply (once "")
@@ -3870,4 +3871,3 @@ feature {NONE} -- Execution
 		end
 
 end -- class EB_DEVELOPMENT_WINDOW
-

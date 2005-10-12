@@ -45,6 +45,13 @@ inherit
 			is_equal, copy			
 		end
 		
+	SHARED_EIFNET_DEBUGGER
+		export
+			{NONE} all
+		undefine
+			is_equal, copy			
+		end			
+		
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		export
 			{NONE} all
@@ -173,7 +180,7 @@ feature {NONE} -- Initialization
 
 			level := 1
 
-			l_active_thread := Application.imp_dotnet.Eifnet_debugger.icor_debug_thread
+			l_active_thread := Eifnet_debugger.icor_debug_thread
 			if l_active_thread /= Void then
 				l_enum_chain := l_active_thread.enumerate_chains
 				if l_active_thread.last_call_succeed and then l_enum_chain.get_count > 0 then
@@ -237,7 +244,7 @@ feature {NONE} -- Initialization
 													
 														--| Compute data to get address and co ...
 													l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
-													l_stack_adv := debug_value_from_icdv (l_stack_object)
+													l_stack_adv := debug_value_from_icdv (l_stack_object, l_class_type.associated_class)
 													l_hexaddress := l_stack_adv.address
 													if l_hexaddress /= Void then
 														l_stack_drv ?= l_stack_adv

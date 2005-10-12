@@ -1961,12 +1961,14 @@ feature -- Element change
 			j_valid: j <= row_count		
 			row_has_no_subrows: row (i).subrow_count = 0
 			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void
-			not_breaking_existing_subrow_structure_when_moving_up: i <= j implies row (j + 1).parent_row = Void
+			not_breaking_existing_subrow_structure_when_moving_up: (i <= j and then j < row_count) implies row (j + 1).parent_row = Void
 		do
 			implementation.move_rows (i, j, 1)
 		ensure
-			rows_moved: (j > i implies row (j) = old row (i) and then row (i) = old row (i + 1)) or
-				(j > i implies row (j) = old row (i) and then row (i) = old row (i - 1))
+			rows_moved:
+				row (j) = old row (i)
+				and (j < i implies row (i) = old row ((i - 1).max (1)))
+				and (j > i and then i < row_count implies (row (i) = old row ((i + 1).min (row_count))))
 			row_count_unchanged: row_count = old row_count
 		end
 

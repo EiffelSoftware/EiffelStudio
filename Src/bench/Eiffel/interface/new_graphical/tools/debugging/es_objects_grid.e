@@ -10,7 +10,7 @@ class
 inherit
 	ES_GRID
 		redefine
-			initialize
+			initialize, grid_menu
 		end
 
 create
@@ -49,6 +49,25 @@ feature -- Properties
 
 	name: STRING
 			-- associated name to identify the related grid.
+
+feature -- Access
+
+	grid_menu: EV_MENU is
+		local
+			mci: EV_CHECK_MENU_ITEM
+		do
+			if layout_manager /= Void then
+				create Result.make_with_text ("Grid " + name)
+				create mci.make_with_text ("Keep grid layout")
+				if is_layout_managed then
+					mci.enable_select
+					mci.select_actions.extend (agent disable_layout_management)
+				else
+					mci.select_actions.extend (agent enable_layout_management)
+				end
+				Result.extend (mci)
+			end
+		end
 
 feature -- Query
 
@@ -182,6 +201,96 @@ end
 					end
 				end
 				request_columns_auto_resizing
+			end
+		end
+
+feature -- Layout manager
+
+	layout_preference: BOOLEAN_PREFERENCE
+	
+	on_layout_preferenced_changed is
+		do
+			if layout_preference.value then
+				if not is_layout_managed then
+					enable_layout_management
+				end
+			else
+				if is_layout_managed then
+					disable_layout_management
+				end
+			end
+		end
+	
+	initialize_layout_management (v: BOOLEAN_PREFERENCE) is
+		require
+			layout_manager_void: layout_manager = Void
+			layout_preference = Void
+		do
+			layout_preference := v
+			create layout_manager.make (Current, name)
+			if layout_preference /= Void then
+				layout_preference.change_actions.extend (agent on_layout_preferenced_changed)
+				on_layout_preferenced_changed				
+			end
+		end
+
+	reset_layout_recorded_values is
+		do
+			if layout_manager /= Void then
+				layout_manager.reset_layout_recorded_values
+			end
+		end
+
+	clear_layout_manager is
+		do
+			if layout_manager /= Void then
+				layout_manager.wipe_out
+			end
+		end
+
+	enable_layout_management is
+		do
+			if layout_manager /= Void then
+				layout_manager.enable
+				is_layout_managed := True
+				if 
+					layout_preference /= Void
+					and then layout_preference.value /= is_layout_managed 
+				then
+					layout_preference.set_value (is_layout_managed)
+				end
+			end
+		end
+
+	disable_layout_management is
+		do
+			if layout_manager /= Void then
+				layout_manager.disable
+			end
+			is_layout_managed := False
+			if 
+				layout_preference /= Void
+				and then layout_preference.value /= is_layout_managed 
+			then
+				layout_preference.set_value (is_layout_managed)
+			end
+		end
+
+	is_layout_managed: BOOLEAN
+
+	layout_manager: ES_OBJECTS_GRID_LAYOUT_MANAGER
+
+	record_layout is
+		do
+			if is_layout_managed and layout_manager /= Void then
+				layout_manager.record
+			end
+		end
+		
+	restore_layout is
+		do
+			if is_layout_managed and layout_manager /= Void then
+				layout_manager.restore
 			end
 		end
 

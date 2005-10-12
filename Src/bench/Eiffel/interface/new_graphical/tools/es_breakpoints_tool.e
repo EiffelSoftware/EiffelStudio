@@ -519,7 +519,11 @@ feature {NONE} -- Impl bp
 							lab.set_font (condition_font)
 							subrow.subrow (ir).set_item (3, lab)
 						else
-							subrow.subrow (ir).set_item (3, create {EV_GRID_ITEM})
+							if bp.is_disabled then
+								s.append_string ("-")
+							else
+								subrow.subrow (ir).set_item (3, create {EV_GRID_ITEM})
+							end
 						end
 					else
 						create lab.make_with_text ("Error with " + f.name + " line " + i.out)

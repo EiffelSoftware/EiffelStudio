@@ -181,7 +181,7 @@ feature -- Basic Operations / Information message
 			clear_and_process_text (st)
 		end
 
-	display_stop_points is
+	display_breakpoints is
 			-- Print information about the current project.
 		local
 			st: STRUCTURED_TEXT
@@ -201,7 +201,7 @@ feature -- Basic Operations / Information message
 					st.add_string ("Enabled breakpoints:")
 					st.add_new_line
 					st.add_new_line
-					display_breakpoints (st, Application.features_with_breakpoint_set, True)
+					display_filtered_breakpoints (st, Application.features_with_breakpoint_set, True)
 					if disabled_bps then
 						st.add_new_line
 						st.add_string ("-------------")
@@ -213,7 +213,7 @@ feature -- Basic Operations / Information message
 					st.add_string ("Disabled breakpoints:")
 					st.add_new_line
 					st.add_new_line
-					display_breakpoints (st, Application.features_with_breakpoint_set, False)
+					display_filtered_breakpoints (st, Application.features_with_breakpoint_set, False)
 				end
 			end
 			st.add_new_line
@@ -389,7 +389,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	display_breakpoints (st: STRUCTURED_TEXT; routine_list: LIST [E_FEATURE]; display_enabled:BOOLEAN) is
+	display_filtered_breakpoints (st: STRUCTURED_TEXT; routine_list: LIST [E_FEATURE]; display_enabled:BOOLEAN) is
 			-- Display either the list of routines whose stop points are
 			-- activated, or the list of routines whose stop points have been
 			-- deactivated.

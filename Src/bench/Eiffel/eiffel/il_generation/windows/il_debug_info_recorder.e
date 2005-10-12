@@ -16,6 +16,7 @@ class
 	IL_DEBUG_INFO_RECORDER
 
 inherit
+	REFACTORING_HELPER
 
 	IL_DEBUG_INFO_HELPERS
 
@@ -270,7 +271,61 @@ feature -- Queries : eStudio data from debugger data
 
 feature -- Access to module name computing
 
-	module_file_name_for_class (a_class_type: CLASS_TYPE): FILE_NAME is
+	module_file_name_for_class (a_class_c: CLASS_C): FILE_NAME is
+			-- Computed module file name for `a_class_c'
+		require
+			class_c_not_void: a_class_c /= Void
+			a_class_c_is_not_external: not a_class_c.is_external
+		local
+			l_assembly_name: STRING
+			l_module_filename: STRING
+			l_type_id: INTEGER
+			l_is_single_module: BOOLEAN
+		do
+				--| Please make sure this computing is similar to 
+				--| the one inside IL_CODE_GENERATOR.il_module
+			if a_class_c.is_precompiled then
+					--| it is is precompiled, this mean we are using it, not compiling
+					--| so no recording process
+				l_assembly_name := a_class_c.assembly_info.assembly_name
+
+-- FIXME: when we debug .. we load the W_code\assemblies\...dll 
+--				if system.msil_use_optimized_precompile then
+--					Result := finalized_precompilation_module_filename (l_assembly_name)					
+--				else
+					Result := workbench_precompilation_module_filename (l_assembly_name)
+--				end					
+			else
+					--| Compute module file name
+					--| WARNING : Please make sure this computing is similar to 
+					--| the one inside IL_CODE_GENERATOR.il_module
+				if is_recording then
+						-- The context is pertinent only in recording context
+					if context.workbench_mode then
+						l_is_single_module := False
+						create Result.make_from_string (workbench_module_directory_path_name)
+					else
+						l_is_single_module := True					
+						create Result.make_from_string (finalized_module_directory_path_name)					
+					end
+				else
+						--| We assume, we are debugging only Workbench application for now.
+					l_is_single_module := False
+					create Result.make_from_string (workbench_module_directory_path_name)
+				end
+				if l_is_single_module then
+					l_type_id := 1
+				else
+					l_type_id := a_class_c.class_id // System.msil_classes_per_module + 1
+				end
+				l_module_filename := "module_" + l_type_id.out + ".dll"
+
+					--| There complete creation of module file name
+				Result.set_file_name (l_module_filename)
+			end
+		end
+
+	module_file_name_for_class_type (a_class_type: CLASS_TYPE): FILE_NAME is
 			-- Computed module file name for `a_class_type'
 			--| we use CLASS_TYPE for the precompiled case .
 		require
@@ -341,7 +396,7 @@ feature -- Queries : dotnet data from estudio data
 			Result := internal_requested_class_tokens.item (l_id)
 			if Result = 0 then --| Not yet known, no requested yet
 				if a_module_filename = Void then
-					l_info_from_module := info_from_module_if_exists (module_file_name_for_class (a_class_type))
+					l_info_from_module := info_from_module_if_exists (module_file_name_for_class_type (a_class_type))
 				else
 					l_info_from_module := info_from_module_if_exists (a_module_filename)
 				end
@@ -383,16 +438,16 @@ feature -- Queries : dotnet data from estudio data
 			Result := feature_token_for_feat_and_class_type (a_feat, l_class_type)
 		end
 
-	once_feature_tokens_for_feat_and_class_type (a_feat: FEATURE_I; a_class_type: CLASS_TYPE): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+	once_feature_tokens_for_feat_and_class (a_feat: FEATURE_I; a_class_c: CLASS_C): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
 			-- `_done' and `_result' Tokens for the once `a_feat'
 		require
 			feat_not_void: a_feat /= Void
 			feat_is_once: a_feat.is_once
-			class_type_not_void: a_class_type /= Void
+			class_c_not_void: a_class_c /= Void
 		local
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 		do
-			l_info_from_class_type := info_from_class_type (a_class_type, False)
+			l_info_from_class_type := first_info_from_class_c (a_class_c)
 			if l_info_from_class_type /= Void then
 				Result := l_info_from_class_type.once_tokens (a_feat)
 			end
@@ -719,6 +774,12 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 		local
 			l_class_types: LIST [CLASS_TYPE]
 		do
+			fixme ("[
+						JFIAT: 2005-09-20 : maybe we should record only once for CLASS_C
+						and not for each CLASS_TYPE.
+						This would implies a new storage indexed by CLASS_C.
+						However, this is optimisation for generic classes
+					]")
 			if 
 				is_debug_info_enabled
 			then
@@ -925,7 +986,7 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 			end
 
 				--| Clean Module Info     |--
-			l_module_filename := module_file_name_for_class (l_class_type)
+			l_module_filename := module_file_name_for_class_type (l_class_type)
 			if 
 				(last_module_info_cleaned = Void) or else
 				not (last_module_info_cleaned.is_equal (l_module_filename))
@@ -953,6 +1014,24 @@ feature {NONE} -- Debugger Info List Access
 
 	last_info_from_module: like info_from_module
  			-- Last IL_DEBUG_INFO_FROM_MODULE used
+ 			
+	first_info_from_class_c (a_class_c: CLASS_C): IL_DEBUG_INFO_FROM_CLASS_TYPE is
+			-- Info from any Class_type	 from `a_class_c'.
+		require
+			class_c_not_void: a_class_c /= Void
+		local
+			l_types: TYPE_LIST
+		do
+			from
+				l_types := a_class_c.types
+				l_types.start
+			until
+				l_types.after or Result /= Void
+			loop
+				Result := info_from_class_type (l_types.item, False)
+				l_types.forth
+			end
+		end
 
 	info_from_class_type (a_class_type: CLASS_TYPE; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_CLASS_TYPE is
 			-- Info from Class_type
@@ -1351,7 +1430,7 @@ feature {NONE}-- Implementation for save and load task
 		local
 			l_mod_fn: STRING
 		do
--- FIXME: when we debug we use the W_code\assemblies\....dll one
+--| FIXME: when we debug we use the W_code\assemblies\....dll one
 --			if system.msil_use_optimized_precompile then
 --				l_mod_fn := finalized_precompilation_module_filename (a_info_module.system_name)				
 --			else

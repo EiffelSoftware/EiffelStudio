@@ -9,12 +9,14 @@ inherit
 	OBJECT_ADDR
 	
 	EB_SHARED_DEBUG_TOOLS
+	
+	APPLICATION_STATUS_EXPORTER
 
 create
 	
 	make
 
-feature
+feature {NONE} -- Initialization
 
 	make is
 			-- Create Current and pass addresses to C
@@ -22,6 +24,8 @@ feature
 			request_type := Rep_stopped
 			pass_addresses
 		end
+		
+feature -- Execution
 
 	execute is
 			-- Register that the application is stopped
@@ -54,7 +58,7 @@ feature
 			evaluator: DBG_EXPRESSION_EVALUATOR
 		do
 			if not retry_clause then
-				Application_notification_controller.notify_on_before_stopped
+				Application.on_application_before_stopped
 
 				debug ("DEBUGGER_TRACE")
 					io.error.put_string ("STOPPED_HDLR: Application is stopped - reading information from application%N")
@@ -64,7 +68,7 @@ feature
 
 					--| Physical address of objects held in object tools
 					--| may have been change...
-				update_addresses;
+				update_kept_objects_addresses
 	
 					--|--------------------------------|--
 					--| Retrieve data sent by debuggee |--
@@ -79,7 +83,7 @@ feature
 
 					--| Read object address and convert it to hector address.
 				read_string;
-				address := hector_addr (last_string);
+				address := keep_object_as_hector_address (last_string);
 	
 					--| Read origin of feature
 				read_int;
@@ -120,7 +124,7 @@ feature
 					io.error.put_new_line
 				end
 				
-				l_status := Application.imp_classic.status;
+				l_status ?= Application.status;
 				check
 					application_launched: l_status /= Void
 				end
@@ -171,7 +175,7 @@ feature
 						Application.set_current_execution_stack_number (Application.number_of_stack_elements)
 
 							-- Inspect the application's current state.
-						Application_notification_controller.notify_on_after_stopped
+						Application.on_application_just_stopped
 							
 						debug ("DEBUGGER_TRACE")
 							io.error.put_string ("STOPPED_HDLR: Finished calling after_cmd%N")
@@ -179,7 +183,7 @@ feature
 					else
 							--| We don't stop on thie breakpoint, 
 							--| Relaunch the application.
-						keep_objects (debugger_manager.kept_objects)
+						Application.release_all_but_kept_object
 						if need_to_resend_bp then
 								--| if we stopped on cond bp
 								--| in case we don't really stop

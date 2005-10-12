@@ -681,10 +681,13 @@ feature {NONE} -- Implementation
 		
 	exception_message_text: STRING is
 			-- Text corresponding to the current exception.
+		local
+			dotnet_status: APPLICATION_STATUS_DOTNET
 		do
 			if application.is_dotnet then
-				if application.imp_dotnet.exception_occurred then
-					Result := application.imp_dotnet.exception_to_string
+				dotnet_status ?= application.status
+				if dotnet_status.exception_occurred then
+					Result := dotnet_status.exception_to_string
 				else
 					Result := "No exception occurred"
 				end
@@ -817,7 +820,8 @@ feature {NONE} -- Implementation
 			elseif level >= 0 then
 				glab.set_pixmap (Pixmaps.Icon_arrow_empty)
 			else
-				glab.set_pixmap (Empty_icon)
+				glab.remove_pixmap
+				glab.set_left_border (glab.left_border + glab.spacing + pixmaps.icon_arrow_empty.width)
 				a_row.set_foreground_color (row_unsensitive_fg_color)
 			end
 		end
@@ -1158,10 +1162,4 @@ feature {NONE} -- Implementation, cosmetic
 	
 	row_unsensitive_fg_color: EV_COLOR
 		
-	Empty_icon: EV_PIXMAP is
-		once
-			fixme ("Add empty transparent icon for each family of icons .. 8, 16 32")
-			create Result.make_with_size (pixmaps.icon_arrow_empty.width, pixmaps.icon_arrow_empty.width)
-		end
-
 end -- class EB_CALL_STACK_TOOL

@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 			-- all the information has been received from the application.)
 		do
 			if address /= Void then
-				address := hector_addr (address);
+				address := keep_object_as_hector_address (address);
 			end
 			is_null := (address = Void)
 

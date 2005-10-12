@@ -77,6 +77,19 @@ feature -- Access
 			valid_result: Result /= Void
 		end
 
+	static_class: CLASS_C
+			-- Static type used if Current represents a Void/NULL value
+			-- if current does not represent a Void value
+			-- this value may be Void
+
+feature -- Change
+
+	set_static_class (cl: like static_class) is
+			-- Set `static_class' as `cl'.
+		do
+			static_class := cl
+		end
+
 feature -- Comparison
 
 	infix "<" (other: ABSTRACT_DEBUG_VALUE): BOOLEAN is
@@ -135,11 +148,6 @@ feature {NONE} -- Computed Value access
 
 feature -- Output
 
-	is_dummy_value: BOOLEAN is
-			-- Does `Current' represent a object value or for instance an error message
-		deferred
-		end		
-
 	expandable: BOOLEAN is
 			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
 		deferred
@@ -197,7 +205,7 @@ feature {ATTR_REQUEST, CALL_STACK_ELEMENT} -- Setting
 			item_number = n
 		end
 
-feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER} -- Setting
+feature {RECV_VALUE, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ABSTRACT_DEBUG_VALUE} -- Setting
 
 	set_name (n: like name) is
 			-- Set `name' to `n'.

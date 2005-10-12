@@ -1,16 +1,16 @@
 indexing
-	description: "Dummy debug value, named but no more information"
+	description: "Exception debug value, named"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	DUMMY_MESSAGE_DEBUG_VALUE
+	EXCEPTION_DEBUG_VALUE
 
 inherit
 	ABSTRACT_DEBUG_VALUE
 
-create {RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER, ES_OBJECTS_GRID_LINE}
+create {RECV_VALUE, ATTR_REQUEST, CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make_with_name
 	
 feature {NONE} -- Initialization
@@ -19,32 +19,51 @@ feature {NONE} -- Initialization
 			-- Create current
 		do
 			name := a_name
-			display_kind := kind
 		end
 
 feature -- change
 
-	set_message (a_msg: STRING) is
+	set_tag (a_tag: STRING) is
 		do
-			message := a_msg
+			tag := a_tag
+		end
+
+	set_message (a_mesg: STRING) is
+		do
+			message := a_mesg
 		end
 		
-	set_display_kind (a_kind: like display_kind) is
+	set_exception_value	(a_dbg_value: ABSTRACT_DEBUG_VALUE) is
 		do
-			display_kind := a_kind
+			debug_value := a_dbg_value
+			debug_value.set_name (once "<exception>")
 		end
 
 feature -- Access
 
+	debug_value: ABSTRACT_DEBUG_VALUE
+
+	tag: STRING 
+			-- Exception tag
+
 	message: STRING 
-			-- Information message to display in object tool
+			-- Exception message to display in object tool
+
+	display_tag: STRING is
+			-- Computed information message to display in object tool
+		do
+			Result := tag
+			if Result = Void then
+				Result := "Exception occurred"
+			end
+		end
 
 	display_message: STRING is
 			-- Computed information message to display in object tool
 		do
-			Result := message
+			Result := tag
 			if Result = Void then
-				Result := "Unavailable value"
+				Result := "Exception occurred"
 			end
 		end
 
@@ -57,7 +76,7 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		do
-			create Result.make_manifest_string (display_message, dynamic_class)
+			create Result.make_exception (Current)
 		end
 
 feature {ABSTRACT_DEBUG_VALUE} -- Output
@@ -65,7 +84,7 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 	append_type_and_value (st: STRUCTURED_TEXT) is 
 			-- Append type and value of Current to `st'.
 		do 
-			st.add_string (display_message)
+			st.add_string (display_tag)
 		end
 
 feature {NONE} -- Output
@@ -73,7 +92,7 @@ feature {NONE} -- Output
 	append_value (st: STRUCTURED_TEXT) is
 			-- Append only the value of Current to `st'.
 		do
-			st.add_string (display_message)
+			st.add_string (display_tag)
 		end
 
 	output_value: STRING is
@@ -85,7 +104,7 @@ feature {NONE} -- Output
 	type_and_value: STRING is
 			-- Return a string representing `Current'.
 		do
-			Result := display_message
+			Result := display_tag
 		end
 		
 feature -- Output
@@ -102,13 +121,11 @@ feature -- Output
 			Result := Void
 		end
 		
-	display_kind: like kind
-		
 	kind: INTEGER is
 			-- Actual type of `Current'. cf possible codes underneath.
 			-- Used to display the corresponding icon.
-		once
-			Result := Error_message_value
+		do
+			Result := Exception_message_value
 		end
 
 end

@@ -64,6 +64,8 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_EIFNET_DEBUGGER
 
 create
 	make_void,
@@ -73,7 +75,8 @@ create
 	make_real,
 	make_double, make_pointer, make_object,	make_manifest_string,
 	make_string_for_dotnet, make_object_for_dotnet, make_bits,
-	make_expanded_object
+	make_expanded_object,
+	make_exception
 	
 feature -- Initialization
 
@@ -84,12 +87,12 @@ feature -- Initialization
 			is_dotnet_value := is_dotnet_system
 		end
 
-	make_void is
+	make_void (dtype: CLASS_C) is
 		do
 			init
 			value_address := Void
 			type := Type_object
-			dynamic_class := Void
+			dynamic_class := dtype
 		end
 
 	make_boolean(value: BOOLEAN; dtype: CLASS_C) is
@@ -191,7 +194,7 @@ feature -- Initialization
 			type /= Type_unknown
 		end
 
-	make_object(value: STRING; dtype: CLASS_C) is
+	make_object (value: STRING; dtype: CLASS_C) is
 			-- make a object item initialized to `value'
 		do
 			init
@@ -237,7 +240,7 @@ feature -- Initialization
 			type_of_bits_set: type_of_bits = a_type
 		end
 
-	make_manifest_string(value: STRING; dtype: CLASS_C) is
+	make_manifest_string (value: STRING; dtype: CLASS_C) is
 			-- make a string item initialized to `value'
 		do
 			init
@@ -246,6 +249,14 @@ feature -- Initialization
 			dynamic_class := dtype
 		ensure
 			type /= Type_unknown
+		end
+		
+	make_exception (value: EXCEPTION_DEBUG_VALUE) is
+		do
+			init
+			value_exception := value
+			type := Type_exception
+			dynamic_class := value_exception.dynamic_class
 		end
 
 feature -- Dotnet creation
@@ -299,12 +310,15 @@ feature -- Dotnet creation
 					print ("[>] dyn_class_type = " + dynamic_class_type.full_il_type_name + "%N")
 				end
 			end
+			if dynamic_class = Void then
+				dynamic_class := a_eifnet_drv.static_class
+			end
 			is_external_type := a_eifnet_drv.is_external_type
 		ensure
 			type /= Type_unknown
 		end
 
-feature -- Access 
+feature -- Dotnet access 
 
 	is_dotnet_system: BOOLEAN
 			-- Is current related to a dotnet system ?
@@ -334,7 +348,7 @@ feature -- Access
 	value_frame_dotnet: ICOR_DEBUG_FRAME is
 			-- ICorDebugFrame in this DUMP_VALUE context
 		do
-			Result := application.imp_dotnet.eifnet_debugger.current_stack_icor_debug_frame
+			Result := Eifnet_debugger.current_stack_icor_debug_frame
 		end
 	
 feature -- change
@@ -926,29 +940,6 @@ feature -- Access
 			end
 		end
 
-	type_representation: STRING is
-			-- String representation of the type of `Current'.
-		require
-			dynamic_class /= Void
-		local
-			l_generating_type_string: STRING
-		do
-			if is_dotnet_value and then is_external_type then
-				l_generating_type_string := value_class_name				
-			elseif dynamic_class.is_true_external then
-				l_generating_type_string := dynamic_class.external_class_name
-			elseif dynamic_class.is_generic or dynamic_class.is_tuple then
-				l_generating_type_string := generating_type_evaluated_string
-			elseif type = type_bits then
-				l_generating_type_string := type_of_bits
-			end
-			if l_generating_type_string	/= Void then
-				Result := l_generating_type_string
-			else
-				Result := dynamic_class.name_in_upper
-			end
-		end
-		
 	generating_type_representation: STRING is
 			-- {TYPE}.generating_type string representation
 		local
@@ -957,7 +948,15 @@ feature -- Access
 			create Result.make (100)
 
 			if is_void then
-				Result := "NONE"
+				if dynamic_class /= Void then
+					if dynamic_class.is_true_external then
+						Result := dynamic_class.external_class_name
+					else
+						Result := dynamic_class.name_in_upper
+					end
+				else
+					Result := "NONE"
+				end
 			elseif dynamic_class /= Void then
 				if is_dotnet_value and then dynamic_class.is_true_external then
 					l_generating_type_string := value_class_name				
@@ -1082,6 +1081,8 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER,
 	value_address	: STRING -- string standing for the address of the object if type=Type_object
 	value_string    : STRING -- String value
 
+	value_exception : EXCEPTION_DEBUG_VALUE
+
 
 	type: INTEGER 
 		-- type discrimant, possible values are Type_XXXX
@@ -1105,8 +1106,9 @@ feature {DUMP_VALUE, EB_OBJECT_TREE_ITEM, ES_OBJECTS_GRID_LINE, EIFNET_EXPORTER,
 	is_type_string        : BOOLEAN is do Result := type = Type_string end
 --	is_type_string_dotnet : BOOLEAN is do Result := type = Type_string_dotnet end
 --	is_type_integer_64    : BOOLEAN is do Result := type = Type_integer_64 end
-
 	is_type_expanded      : BOOLEAN is do Result := type = Type_expanded_object end
+
+	is_type_exception     : BOOLEAN is do Result := type = Type_exception end
 
 feature {NONE} -- Private Constants
 	

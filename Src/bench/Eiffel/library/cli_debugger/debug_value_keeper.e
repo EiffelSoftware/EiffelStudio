@@ -17,8 +17,7 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			create debug_value_kept.make (10)
-			debug_value_kept.compare_objects
+			initialize			
 		end
 
 feature {EIFNET_EXPORTER, APPLICATION_EXECUTION_DOTNET, EB_DEBUGGER_MANAGER} -- Operation
@@ -35,7 +34,9 @@ feature {EIFNET_EXPORTER, APPLICATION_EXECUTION_DOTNET, EB_DEBUGGER_MANAGER} -- 
 
 	recycle is
 		do
-			debug_value_kept.wipe_out
+			if debug_value_kept /= Void then
+				debug_value_kept.wipe_out
+			end
 		end
 
 feature -- Access
@@ -44,13 +45,11 @@ feature -- Access
 		require
 			dv /= Void
 		local
-			l_address: STRING
+			ddv: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
-			l_address := dv.address
-			if l_address /= Void then
-				if not debug_value_kept.has (l_address) then
-					debug_value_kept.put (dv, l_address)
-				end
+			ddv ?= dv
+			if ddv /= Void then
+				keep_dotnet_value (ddv)
 			end
 		end
 		
@@ -62,8 +61,10 @@ feature -- Access
 		do
 			l_address := ddv.address
 			if l_address /= Void then
-				if not debug_value_kept.has (l_address) then
-					debug_value_kept.put (ddv, l_address)
+				if debug_value_kept /= Void then
+					if not debug_value_kept.has (l_address) then
+						debug_value_kept.put (ddv, l_address)
+					end
 				end
 			end
 		end		
@@ -71,8 +72,10 @@ feature -- Access
 	know_about (l_k: STRING): BOOLEAN is
 			-- Has a Debug Value object address by `l_k'
 		do
-			if debug_value_kept.valid_key (l_k) then
-				Result := debug_value_kept.has (l_k)				
+			if debug_value_kept /= Void then
+				if debug_value_kept.valid_key (l_k) then
+					Result := debug_value_kept.has (l_k)				
+				end
 			end
 		end
 
@@ -81,28 +84,32 @@ feature -- Access
 		require
 			know_about (l_k)
 		do
-			Result := debug_value_kept.item (l_k)
+			if debug_value_kept /= Void then
+				Result := debug_value_kept.item (l_k)
+			end
 		ensure
 			Result /= Void
 		end		
 
-feature {APPLICATION_EXECUTION_DOTNET} -- Implementation
+feature {SHARED_DEBUG_VALUE_KEEPER} -- Implementation
 
-	keep_only (l_addresses: LIST [STRING]) is
+	keep_only (l_addresses: SET [STRING]) is
 			-- Clean all the value except the one from l_addresses
 		local
 			l_add: STRING
 		do
-			from
-				debug_value_kept.start
-			until
-				debug_value_kept.after
-			loop
-				l_add := debug_value_kept.key_for_iteration
-				if not l_addresses.has (l_add) then
-					debug_value_kept.remove (l_add)
+			if debug_value_kept /= Void then
+				from
+					debug_value_kept.start
+				until
+					debug_value_kept.after
+				loop
+					l_add := debug_value_kept.key_for_iteration
+					if not l_addresses.has (l_add) then
+						debug_value_kept.remove (l_add)
+					end
+					debug_value_kept.forth
 				end
-				debug_value_kept.forth
 			end
 		end
 		
@@ -110,4 +117,4 @@ feature {NONE} -- restricted access
 	
 	debug_value_kept: HASH_TABLE [ABSTRACT_DEBUG_VALUE, STRING]
 
-end -- class DEBUG_VALUE_KEEPER
+end

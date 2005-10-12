@@ -15,6 +15,8 @@ inherit
 	EB_CONSTANTS
 
 	SHARED_APPLICATION_EXECUTION
+	
+	EB_SHARED_DEBUG_TOOLS
 
 create
 	make
@@ -219,7 +221,7 @@ feature {NONE} -- Implementation
 			else
 				Application.set_breakpoint (st.routine, st.index)
 			end
-			output_manager.display_stop_points
+			debugger_manager.display_breakpoints
 		end
 		
 	drop_class (st: CLASSI_STONE) is

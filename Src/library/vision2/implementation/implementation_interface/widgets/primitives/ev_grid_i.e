@@ -2068,7 +2068,10 @@ feature -- Element change
 			parent_of_first := row_internal (i).parent_row_i
 			if a_parent_row /= Void then
 				a_parent_row_i := a_parent_row.implementation
-				if i = j then
+				if i = j and parent_of_first = a_parent_row_i then
+						-- It is possible for the parent of a row to change without the index
+						-- changing, so we only keep the same subrow index if the parent
+						-- has not changed.
 					current_subrow_index := row_internal (i).subrow_index
 				elseif row_internal (j - 1) = a_parent_row_i then
 					current_subrow_index := 1

@@ -1,4 +1,10 @@
--- General request from workbench to ised.
+indexing
+	description : "[
+			General request from workbench to ised.
+		]"
+	author      : "$Author$"
+	date        : "$Date$"
+	revision    : "$Revision$"
 
 class EWB_REQUEST 
 
@@ -31,7 +37,7 @@ feature -- Update
 			curr_callstack_depth: INTEGER
 			bp: BREAKPOINT
 		do
-			debug("DEBUGGER")
+			debug("debugger_trace_breakpoint")
 				io.put_string("sending new breakpoint to the application%N")
 			end
 			bpts := debug_info.breakpoints
@@ -120,22 +126,22 @@ feature -- Update
 
 feature {NONE} -- Implementation
 
-	send_breakpoint(bp: BREAKPOINT; bp_mode: INTEGER) is
+	send_breakpoint (bp: BREAKPOINT; bp_mode: INTEGER) is
 			-- send a breakpoint to the application, and update the
 			-- status of the sent breakpoint
 		do
 			if (bp_mode = bp.breakpoint_to_remove) then
-				debug("DEBUGGER")
-					io.put_string("removing the breakpoint...%N")
-					print(bp)
+				debug("debugger_trace_breakpoint")
+					io.put_string("removing the breakpoint : %N")
+					io.put_string (bp.debug_output)
 					io.put_new_line
 				end
 				send_rqst_3_integer (Rqst_break, bp.real_body_id - 1, Break_remove, bp.breakable_line_number)
 				bp.set_application_not_set
 			elseif (bp_mode = bp.breakpoint_to_add) then
-				debug("DEBUGGER")
-					io.put_string("adding the breakpoint...%N")
-					print(bp)
+				debug("debugger_trace_breakpoint")
+					io.put_string("adding the breakpoint : ")
+					io.put_string (bp.debug_output)
 					io.put_new_line
 				end
 				send_rqst_3_integer (Rqst_break, bp.real_body_id - 1, Break_set, bp.breakable_line_number)
@@ -143,7 +149,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	update_breakpoints(bpts: BREAK_LIST) is
+	update_breakpoints (bpts: BREAK_LIST) is
 			-- Synchronize breakpoints status between application and $EiffelGraphicalCompiler$.
 		local
 			bp: BREAKPOINT

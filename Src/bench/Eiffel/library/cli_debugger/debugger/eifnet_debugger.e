@@ -196,7 +196,12 @@ feature -- Initialization
 		ensure
 			not is_inside_function_evaluation
 		end
-		
+
+	recycle_debug_value_keeper is
+		do
+			Debug_value_keeper.recycle
+		end
+
 	initialize_debugger_session (dbgw: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize a debugger session
 		require
@@ -1387,6 +1392,9 @@ feature -- Bridge to EIFNET_DEBUGGER_INFO
 			l_cse ?= application.status.current_call_stack_element
 			if l_cse /= Void then
 				Result := l_cse.icd_frame
+			else
+					--| Check if needed |--
+				Result := icor_debug_thread.get_active_frame
 			end
 		end
 
@@ -1604,18 +1612,36 @@ feature -- Exception
 
 feature -- Easy access
 
-	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
+	icor_debug_module_for_class (a_class_c: CLASS_C): ICOR_DEBUG_MODULE is
 		require
-			arg_class_type_void: a_class_type /= Void
+			arg_class_c_not_void: a_class_c /= Void
 		local
 			l_class_module_name: STRING
+		do
+			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (a_class_c)
+			Result := icor_debug_module (l_class_module_name)
+		end
+
+	icor_debug_module_for_class_type (a_class_type: CLASS_TYPE): ICOR_DEBUG_MODULE is
+		require
+			a_class_type_not_void: a_class_type /= Void
+		local
+			l_class_module_name: STRING
+		do
+			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class_type (a_class_type)
+			Result := icor_debug_module (l_class_module_name)
+		end
+
+	icor_debug_class (a_class_type: CLASS_TYPE): ICOR_DEBUG_CLASS is
+		require
+			arg_class_type_not_void: a_class_type /= Void
+		local
 			l_icd_module: ICOR_DEBUG_MODULE
 			l_class_token: INTEGER
 		do
-			l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (a_class_type)
-			l_icd_module := icor_debug_module (l_class_module_name)
+			l_icd_module := icor_debug_module_for_class_type (a_class_type)
 			if l_icd_module /= Void then
-				l_class_token := Il_debug_info_recorder.class_token (l_class_module_name, a_class_type)
+				l_class_token := Il_debug_info_recorder.class_token (l_icd_module.name, a_class_type)
 				Result := l_icd_module.get_class_from_token (l_class_token)
 			end
 		end
@@ -1665,7 +1691,7 @@ feature -- Function Evaluation
 			else
 					--| This should be an true Eiffel type
 				l_feat_tok := Il_debug_info_recorder.feature_token_for_feat_and_class_type (a_feat, ct)
-				l_class_module_name := Il_debug_info_recorder.module_file_name_for_class (ct)				
+				l_class_module_name := Il_debug_info_recorder.module_file_name_for_class_type (ct)
 				l_icd_module := icor_debug_module (l_class_module_name)
 				if l_feat_tok = 0 then
 					l_feat_name := a_feat.feature_name
@@ -2149,25 +2175,13 @@ feature -- Specific function evaluation
 			end			
 		end
 
-	once_function_value (a_icd_frame: ICOR_DEBUG_FRAME; a_adapted_class_type: CLASS_TYPE;
+	once_function_value (a_icd_frame: ICOR_DEBUG_FRAME; a_class_c: CLASS_C;
 								a_feat: E_FEATURE): ICOR_DEBUG_VALUE is
 			-- ICorDebugValue object representing the once value.
-		local
-			l_icd_class: ICOR_DEBUG_CLASS
-		do
-			l_icd_class := icor_debug_class (a_adapted_class_type)			
-			if l_icd_class /= Void then
-				Result := once_function_value_on_icd_class (a_icd_frame,
-									l_icd_class, a_adapted_class_type, a_feat)
-			end
-		end
-
-	once_function_value_on_icd_class (a_icd_frame: ICOR_DEBUG_FRAME; a_icd_class: ICOR_DEBUG_CLASS; a_adapted_class_type: CLASS_TYPE; a_feat: E_FEATURE): ICOR_DEBUG_VALUE is
-			-- ICorDebugValue object representing the once value.
+			-- This will also set `last_once_available' and `last_once_failed'.
 		require
-			a_icd_class_not_void: a_icd_class /= Void
+			a_class_c_not_void: a_class_c /= Void
 			a_feat_not_void: a_feat /= Void
-			adapted_class_not_void: a_adapted_class_type /= Void
 		local
 			l_once_info_tokens: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 			l_data_class_token, l_done_token, l_result_token, l_exception_token: INTEGER
@@ -2176,21 +2190,23 @@ feature -- Specific function evaluation
 			l_once_already_called: BOOLEAN
 			l_once_not_available: BOOLEAN
 			l_icd_frame: ICOR_DEBUG_FRAME
-			l_icd_class: ICOR_DEBUG_CLASS
+			l_data_icd_class: ICOR_DEBUG_CLASS
 			l_icd_module: ICOR_DEBUG_MODULE
 		do
 			last_once_failed := False
 			last_once_available := False
+			last_once_already_called := False
 
 				--| Set related frame
-			l_icd_frame := a_icd_frame
-			if l_icd_frame = Void and then icor_debug_thread /= Void then
+			if a_icd_frame = Void and then icor_debug_thread /= Void then
 					--| just in case icd_frame is not set
-				l_icd_frame := icor_debug_thread.get_active_frame
+				l_icd_frame := current_stack_icor_debug_frame
+			else
+				l_icd_frame := a_icd_frame
 			end
 
 				--| Get related tokens
-			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class_type (a_feat.associated_feature_i, a_adapted_class_type)
+			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class (a_feat.associated_feature_i, a_class_c)
 			if l_once_info_tokens /= Void then
 				l_data_class_token := l_once_info_tokens.integer_item (1)
 				l_done_token := l_once_info_tokens.integer_item (2)
@@ -2198,19 +2214,19 @@ feature -- Specific function evaluation
 				l_exception_token := l_once_info_tokens.integer_item (4)
 			end
 			
-				--| Set ICorDebugClass
-			l_icd_class := a_icd_class
+				--| Get ICorDebugClass
 			if l_data_class_token /= 0 then
-				l_icd_module := l_icd_class.get_module
-				l_icd_class := l_icd_module.get_class_from_token (l_data_class_token)
+				l_icd_module := icor_debug_module_for_class (a_class_c)
+				l_data_icd_class := l_icd_module.get_class_from_token (l_data_class_token)
 			end
 
 				--| Check if already called (_done)
 			if 
-				l_icd_frame /= Void and then 
-				l_done_token /= 0 
+				l_data_icd_class /= Void
+				and then l_done_token /= 0 
+				and then l_icd_frame /= Void 
 			then
-				l_icd_debug_value := l_icd_class.get_static_field_value (l_done_token, l_icd_frame)
+				l_icd_debug_value := l_data_icd_class.get_static_field_value (l_done_token, l_icd_frame)
 				if l_icd_debug_value /= Void then
 					l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
 					l_once_already_called := Edv_formatter.prepared_icor_debug_value_as_boolean (l_prepared_icd_debug_value)
@@ -2219,7 +2235,7 @@ feature -- Specific function evaluation
 					end
 					l_icd_debug_value.clean_on_dispose
 				else
-					if (l_icd_class.last_call_success & 0xFFFF) = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
+					if (l_data_icd_class.last_error_code) = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
 						l_once_already_called := False
 					else
 						l_once_not_available := True
@@ -2235,19 +2251,35 @@ feature -- Specific function evaluation
 			else
 				last_once_available := True
 				if l_once_already_called then
-					l_icd_debug_value := l_icd_class.get_static_field_value (l_exception_token, l_icd_frame)
+					last_once_already_called := True
+					l_icd_debug_value := l_data_icd_class.get_static_field_value (l_exception_token, l_icd_frame)
 					if l_icd_debug_value /= Void then
 						l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
 						last_once_failed := not Edv_formatter.prepared_icor_debug_value_is_null (l_prepared_icd_debug_value)
 						if l_prepared_icd_debug_value /= l_icd_debug_value then
 							l_prepared_icd_debug_value.clean_on_dispose
 						end
-						l_icd_debug_value.clean_on_dispose
+						if last_once_failed then
+							Result := l_icd_debug_value
+						else
+							l_icd_debug_value.clean_on_dispose
+						end
+					elseif l_data_icd_class.last_error_code = {EIFNET_API_ERROR_CODE_FORMATTER}.cordbg_e_static_var_not_available then
+						fixme ("[
+									JFIAT: in this case, the once data about exception is not initialized yet.
+									So there is no exception and no result yet.
+									What is the status of the once ... not yet called, or called ?
+									There should be a status .... is being called
+									]")
+					else
+						last_once_failed := True
 					end
 					
 					if not last_once_failed and then l_result_token /= 0 then
-						Result := l_icd_class.get_static_field_value (l_result_token, l_icd_frame)
+						Result := l_data_icd_class.get_static_field_value (l_result_token, l_icd_frame)
 					end
+				else
+					last_once_already_called := False
 				end
 			end
 		end
@@ -2256,9 +2288,15 @@ feature -- Specific function evaluation
 			-- Last once request show the once is available
 			-- if False, this mean the debugger had issue to get information
 
+	last_once_already_called: BOOLEAN
+			-- Last once request show the once has already been called
+			-- thus the value is available
+			-- ps: relevant only if last_once_available = True
+			
 	last_once_failed: BOOLEAN
 			-- Last once request show the once has failed
 			-- if True, this mean the once had an exception
+			-- ps: relevant only if last_once_available = True
 
 --| NOTA jfiat [2004/03/19] : not yet ready, to be continued
 --
@@ -2290,6 +2328,29 @@ feature -- Specific function evaluation
 --			eifnet_dbg_evaluator.method_evaluation (active_frame, l_icdf, <<icdv>>)
 --		end
 
+
+feature -- Bridge to debug_value_keeper
+
+	keep_only_objects (a_addresses: SET [STRING]) is
+			-- Remove all ref kept, and keep only the ones contained in `a_addresses'
+		do
+			Debug_value_keeper.keep_only (a_addresses)
+		end
+
+	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
+			-- Keep this object addressed by `a_address'
+		require
+			know_about_object: know_about_kept_object (a_address)
+		do
+			Result := Debug_value_keeper.item (a_address)
+		end
+
+	know_about_kept_object (a_address: STRING): BOOLEAN is
+			-- Do we have a reference for the object addressed by `a_address' ?
+		do
+			Result := Debug_value_keeper.know_about (a_address)
+		end
+		
 feature -- Bridge to eifnet_dbg_evaluator
 
 	eifnet_dbg_evaluator: EIFNET_DEBUGGER_EVALUATOR

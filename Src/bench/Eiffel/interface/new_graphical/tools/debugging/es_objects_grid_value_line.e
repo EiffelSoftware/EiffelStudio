@@ -56,6 +56,7 @@ feature -- Recycling
 			-- in order to free special data (for instance dotnet references)
 		do
 			Precursor
+			internal_associated_dump_value := Void
 			object := Void
 		end
 		
@@ -161,10 +162,16 @@ feature -- Query
 			end
 		end
 
-	associated_debug_value: ABSTRACT_DEBUG_VALUE is
+	associated_dump_value: DUMP_VALUE is
 		do
-			Result := object
+			Result := internal_associated_dump_value
+			if Result = Void then
+				Result := object.dump_value
+				internal_associated_dump_value := Result
+			end
 		end
+		
+	internal_associated_dump_value: like associated_dump_value
 
 feature -- Graphical changes
 
@@ -172,6 +179,7 @@ feature -- Graphical changes
 		local
 			dv: ABSTRACT_DEBUG_VALUE
 			dmdv: DUMMY_MESSAGE_DEBUG_VALUE
+			excdv: EXCEPTION_DEBUG_VALUE
 		do
 			if row /= Void and not compute_grid_display_done then
 				compute_grid_display_done := True
@@ -183,28 +191,37 @@ feature -- Graphical changes
 					set_type (Void)
 					set_address (Void)
 					set_pixmap (Icons @ (Void_value))
-				elseif dv.is_dummy_value then
-					last_dump_value := Void
-					dmdv ?= dv
+				else --| dv /= Void |--
 					set_name (dv.name)
-					set_value (dmdv.display_message)
-					set_type (once "invalid data")
-					set_address (Void)
-					set_pixmap (Icons @ (dv.kind))
-				else
-					last_dump_value := dv.dump_value
-					set_name (dv.name)
-					set_value (last_dump_value.output_for_debugger)
-					set_type (last_dump_value.generating_type_representation)
 					set_address (dv.address)
-					set_pixmap (Icons @ (dv.kind))
+					
+					last_dump_value := Void
+					if dv.kind = Error_message_value then
+						dmdv ?= dv
+						set_value (dmdv.display_message)
+						set_type (once "Invalid data")
+						set_pixmap (Icons @ (dmdv.display_kind))
+					elseif dv.kind = Exception_message_value then
+						excdv ?= dv
+						set_value (excdv.display_tag)
+						set_type (once "Exception data")
+						set_pixmap (Icons @ (dv.kind))
+						if excdv.debug_value /= Void then
+							attach_debug_value_to_grid_row (grid_extended_new_subrow (row), excdv.debug_value)
+						end
+					else
+						last_dump_value := dv.dump_value
+						set_value (last_dump_value.output_for_debugger)
+						set_type (last_dump_value.generating_type_representation)
 
-					if dv.expandable then
-						row.ensure_expandable
-						expand_actions.extend (agent on_row_expand)
-						collapse_actions.extend (agent on_row_collapse)
-						if display then
-							row.expand
+						set_pixmap (Icons @ (dv.kind))
+						if dv.expandable then
+							row.ensure_expandable
+							expand_actions.extend (agent on_row_expand)
+							collapse_actions.extend (agent on_row_collapse)
+							if display then
+								row.expand
+							end
 						end
 					end
 				end

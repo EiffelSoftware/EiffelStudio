@@ -61,7 +61,7 @@ feature -- Recycling
 			-- in order to free special data (for instance dotnet references)
 		do
 			Precursor
-			internal_associated_debug_value := Void
+			internal_associated_dump_value := Void
 		end
 
 feature -- Properties
@@ -123,34 +123,21 @@ feature -- Query
 		
 	get_last_dump_value is
 		do
-			if Application.is_dotnet then
-				last_dump_value := associated_debug_value.dump_value
-			else
-				create last_dump_value.make_object (object_address, object_dynamic_class)
-			end
+			last_dump_value := associated_dump_value
 		ensure
 			last_dump_value /= Void
 		end
 
-	associated_debug_value: ABSTRACT_DEBUG_VALUE is
-		local
-			l_addr: STRING
+	associated_dump_value: DUMP_VALUE is
 		do
-			Result := internal_associated_debug_value
+			Result := internal_associated_dump_value
 			if Result = Void then
-				if application.is_dotnet then
-					l_addr := object_address
-					if application.imp_dotnet.know_about_kept_object (l_addr) then
-						Result := Application.imp_dotnet.kept_object_item (l_addr)
-					end
-					internal_associated_debug_value := Result
-				else
-					-- not available
-				end
+				Result := Application.dump_value_at_address_with_class (object_address, object_dynamic_class)
+				internal_associated_dump_value := Result
 			end
 		end
 
-	internal_associated_debug_value: like associated_debug_value
+	internal_associated_dump_value: like associated_dump_value
 
 feature -- Graphical changes
 

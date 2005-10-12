@@ -1,5 +1,7 @@
 indexing
-	description: "Class used to process evaluation on dotnet system ..."
+	description: "[
+			Class used to process evaluation on dotnet system ...
+		]"
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"

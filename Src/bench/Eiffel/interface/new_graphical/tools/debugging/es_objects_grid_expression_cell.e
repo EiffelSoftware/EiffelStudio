@@ -8,7 +8,7 @@ class
 	ES_OBJECTS_GRID_EXPRESSION_CELL
 
 inherit
-	EV_GRID_EDITABLE_ITEM
+	ES_OBJECTS_GRID_CELL
 		redefine
 			initialize_actions
 		end
@@ -22,6 +22,7 @@ feature -- Query
 	initialize_actions is
 		do
 			Precursor
+			text_field.enable_edit
 			if text_field.text_length > 0 then
 				text_field.select_all				
 			end

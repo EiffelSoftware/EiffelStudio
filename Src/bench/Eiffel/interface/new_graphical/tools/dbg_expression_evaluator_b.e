@@ -272,9 +272,9 @@ feature {NONE} -- EXPR_B evaluation
 			t: TYPE_I
 		do
 			t := a_void_b.type
-
 			tmp_result_value := Void
-			create tmp_result_value.make_void
+			tmp_result_value := Void
+			create tmp_result_value.make_void (Void)
 		end
 		
 	evaluate_manifest_value (a_expr_b: EXPR_B) is
@@ -630,7 +630,6 @@ feature {NONE} -- EXPR_B evaluation
 			ef: E_FEATURE
 			cl: CLASS_C
 			params: ARRAYED_LIST [DUMP_VALUE]
-			l_addr: STRING
 		do
 			if tmp_target /= Void then
 				cl := tmp_target.dynamic_class
@@ -647,18 +646,15 @@ feature {NONE} -- EXPR_B evaluation
 			else
 				ef := cl.feature_with_name (a_external_b.feature_name)
 				if ef = Void then
-					if application.is_dotnet then
-						params := parameter_values_from_parameters_b (a_external_b.parameters)
-						if tmp_target /= Void then
-							l_addr := tmp_target.value_address
-						else
-							l_addr := context_address
-						end
-						dotnet_evaluate_function_with_name (l_addr, tmp_target, a_external_b.feature_name, a_external_b.external_name, params)
+					params := parameter_values_from_parameters_b (a_external_b.parameters)
+					prepare_evaluation
+					evaluate_function_with_name (tmp_target, a_external_b.feature_name, a_external_b.external_name, params)
+					retrieve_evaluation
+
+					if tmp_result_value = Void then
 							-- FIXME: What about static ? check ...
-					else
 						notify_error_expression (a_external_b.generator + Cst_error_during_evaluation_of_external_call + a_external_b.feature_name)
-					end
+					end						
 				else
 					fi := ef.associated_feature_i
 					if fi.is_external then
@@ -843,9 +839,6 @@ feature {NONE} -- EXPR_B evaluation
 	evaluate_current_b (l_current_b: CURRENT_B) is
 		local
 			cse: EIFFEL_CALL_STACK_ELEMENT
-			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
-			l_addr: STRING
-			l_curr_obj : ABSTRACT_DEBUG_VALUE
 		do
 			if on_object then
 					--| If the context is on object
@@ -857,17 +850,9 @@ feature {NONE} -- EXPR_B evaluation
 			else
 				cse ?= Application.status.current_call_stack_element
 				check cse /= Void end
-				l_addr := cse.object_address
-				if application.is_dotnet then
-					cse_dotnet ?= cse
-					l_curr_obj := cse_dotnet.current_object
-					if l_curr_obj /= Void then
-						tmp_result_value := l_curr_obj.dump_value
-					else
-						notify_error_evaluation ("Unable to get Current object")
-					end
-				else
-					create tmp_result_value.make_object (l_addr, cse.dynamic_class)
+				tmp_result_value := dbg_evaluator.current_object_from_callstack (cse)
+				if tmp_result_value = Void then
+					notify_error_evaluation ("Unable to get Current object")
 				end
 				tmp_result_static_type := context_class
 			end
@@ -964,16 +949,26 @@ feature {NONE} -- Concrete evaluation
 			end
 		end
 
-	dotnet_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
+	evaluate_function_with_name (a_target: DUMP_VALUE;
 				a_feature_name, a_external_name: STRING; 
 				params: LIST [DUMP_VALUE]) is
 		require
 			a_feature_name_not_void: a_feature_name /= Void
 			a_external_name_not_void: a_external_name /= Void
+		local
+			l_addr: STRING
 		do
-			prepare_evaluation
-			Dbg_evaluator.dotnet_evaluate_function_with_name (a_addr, a_target, a_feature_name, a_external_name, params)
-			retrieve_evaluation
+			if application.is_dotnet then
+					-- FIXME: What about static ? check ...
+				if a_target /= Void then
+					l_addr := tmp_target.value_address
+				else
+					l_addr := context_address
+				end
+				prepare_evaluation
+				Dbg_evaluator.evaluate_function_with_name (l_addr, a_target, a_feature_name, a_external_name, params)
+				retrieve_evaluation
+			end
 		end
 
 feature {DBG_EXPRESSION_EVALUATOR} -- Evaluation data
@@ -1139,21 +1134,8 @@ feature {NONE} -- Implementation
 	dump_value_at_address (addr: STRING): DUMP_VALUE is
 		require
 			addr /= Void
-		local
-			appdotnet: APPLICATION_EXECUTION_DOTNET
-			l_cl: CLASS_C
 		do
-			if application.is_dotnet then
-				appdotnet := application.imp_dotnet
-				if appdotnet.know_about_kept_object (addr) then
-					Result := application.imp_dotnet.kept_object_item (addr).dump_value
-				end
-			else
-				l_cl := debugged_object_manager.class_c_at_address (addr)
-				if l_cl /= Void then
-					create Result.make_object (addr, l_cl)
-				end
-			end
+			Result := dbg_evaluator.dump_value_at_address (addr)
 		end
 
 	local_table_for (a_feat_i: FEATURE_I; a_feat_as: FEATURE_AS): HASH_TABLE [LOCAL_INFO, STRING] is

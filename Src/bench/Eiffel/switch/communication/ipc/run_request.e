@@ -51,12 +51,9 @@ feature -- Update
 
 	send is
 			-- Send `Current' request to ised, which may relay it to the application.
-		local
-			status: APPLICATION_STATUS_CLASSIC
 		do
 			if server_mode and then not Application.is_running and then start_application then
-				create status.make
-				Application.set_status(status)
+				Application.build_status
 				send_breakpoints
 				send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, Application.critical_stack_depth)
 				Application.status.set_is_stopped (False)

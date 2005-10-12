@@ -90,7 +90,6 @@ feature {NONE} -- Initialization
 		local
 			esgrid: ES_OBJECTS_GRID
 			l_box: EV_HORIZONTAL_BOX
-			l_pref: BOOLEAN_PREFERENCE
 		do
 				--| Build interface
 				
@@ -182,14 +181,10 @@ feature {NONE} -- Initialization
 			widget := split
 			
 				--| Stack objects grid layout
-			l_pref := preferences.debug_tool_data.is_stack_grid_layout_managed_preference
-			set_stack_objects_grid_layout_managed (l_pref)
-			l_pref.change_actions.extend (agent set_stack_objects_grid_layout_managed)
+			initialize_stack_objects_grid_layout (preferences.debug_tool_data.is_stack_grid_layout_managed_preference)
 
 				--| Debugged objects grid layout
-			l_pref := preferences.debug_tool_data.is_debugged_grid_layout_managed_preference
-			set_debugged_objects_grid_layout_managed (l_pref)
-			l_pref.change_actions.extend (agent set_debugged_objects_grid_layout_managed)
+			initialize_debugged_objects_grid_layout (preferences.debug_tool_data.is_debugged_grid_layout_managed_preference)
 			
 				--| Initialize various agent and special mecanisms
 			init_delayed_cleaning_mecanism
@@ -558,7 +553,6 @@ feature -- Memory management
 		do
 			preferences.debug_tool_data.min_slice_preference.set_value (min_slice_ref.item)
 			preferences.debug_tool_data.max_slice_preference.set_value (max_slice_ref.item)
-			debugger_manager.kept_objects.wipe_out
 			displayed_objects.wipe_out
 			pretty_print_cmd.end_debug
 			if explorer_bar_item /= Void then
@@ -573,6 +567,9 @@ feature -- Memory management
 			end
 			stack_objects_grid.call_delayed_clean
 			debugged_objects_grid.call_delayed_clean
+
+			debugged_objects_grid.reset_layout_recorded_values
+			stack_objects_grid.reset_layout_recorded_values
 			clean_header_box
 		end
 	
@@ -646,7 +643,7 @@ feature {NONE} -- Stack grid Layout Implementation
 				if internal_result_row /= Void and then internal_result_row.parent /= Void then
 					expand_result := internal_result_row.is_expanded
 				end
-				record_stack_objects_grid_layout
+				stack_objects_grid.record_layout
 			end
 		end
 
@@ -658,82 +655,50 @@ feature {NONE} -- Stack grid Layout Implementation
 
 	expand_locals: BOOLEAN
 			-- Should the "Locals" tree item be expanded?
-			
+
 feature {NONE} -- Grid layout Implementation
 
-	set_stack_objects_grid_layout_managed (pv: BOOLEAN_PREFERENCE) is
+	initialize_stack_objects_grid_layout (pv: BOOLEAN_PREFERENCE) is
+		require
+			not is_stack_objects_grid_layout_initialized
+			stack_objects_grid.layout_manager = Void
+		local
+			l_grid: ES_OBJECTS_GRID
 		do
-			is_stack_objects_grid_layout_managed := pv.value
-			if 
-				not is_stack_objects_grid_layout_managed
-				and stack_objects_grid_layout_manager /= Void
-			then
-				stack_objects_grid_layout_manager.wipe_out
+			l_grid := stack_objects_grid
+			l_grid.initialize_layout_management (pv)
+			check
+				l_grid.layout_manager /= Void
 			end
+			l_grid.layout_manager.set_identification_agent (agent grid_objects_id_name_from_row)
+			l_grid.layout_manager.set_value_agent (agent grid_objects_id_value_from_row)
+			l_grid.layout_manager.set_on_difference_callback (agent grid_objects_on_difference_cb)
+			is_stack_objects_grid_layout_initialized := True
 		end
 
-	is_stack_objects_grid_layout_managed: BOOLEAN
-
-	stack_objects_grid_layout_manager: ES_GRID_LAYOUT_MANAGER
-
-	record_stack_objects_grid_layout is
-		do
-			if is_stack_objects_grid_layout_managed then
-				if stack_objects_grid_layout_manager = Void then
-					create stack_objects_grid_layout_manager.make (stack_objects_grid, stack_objects_grid.name)
-				end
-				stack_objects_grid_layout_manager.record
-			end
-		end
-		
-	restore_stack_objects_grid_layout is
-		do
-			if 
-				is_stack_objects_grid_layout_managed
-				and stack_objects_grid_layout_manager /= Void
-			then
-				stack_objects_grid_layout_manager.restore
-			end
-		end
+	is_stack_objects_grid_layout_initialized: BOOLEAN
 
 feature {NONE} -- debugged grid Layout Implementation
 
-	set_debugged_objects_grid_layout_managed (pv: BOOLEAN_PREFERENCE) is
+	initialize_debugged_objects_grid_layout (pv: BOOLEAN_PREFERENCE) is
 		require
-			pv /= Void
+			not is_debugged_objects_grid_layout_initialized
+			debugged_objects_grid.layout_manager = Void
+		local
+			l_grid: ES_OBJECTS_GRID
 		do
-			is_debugged_objects_grid_layout_managed := pv.value	
-			if 
-				not is_debugged_objects_grid_layout_managed
-				and debugged_objects_grid_layout_manager /= Void
-			then
-				debugged_objects_grid_layout_manager.wipe_out
+			l_grid := debugged_objects_grid
+			l_grid.initialize_layout_management (pv)
+			check
+				l_grid.layout_manager /= Void
 			end
+			l_grid.layout_manager.set_identification_agent (agent grid_objects_id_name_from_row)
+			l_grid.layout_manager.set_value_agent (agent grid_objects_id_value_from_row)
+			l_grid.layout_manager.set_on_difference_callback (agent grid_objects_on_difference_cb)
+			is_debugged_objects_grid_layout_initialized := True
 		end
 
-	is_debugged_objects_grid_layout_managed: BOOLEAN
-
-	debugged_objects_grid_layout_manager: ES_GRID_LAYOUT_MANAGER
-	
-	record_debugged_objects_grid_layout is
-		do
-			if is_debugged_objects_grid_layout_managed then
-				if debugged_objects_grid_layout_manager = Void then
-					create debugged_objects_grid_layout_manager.make (debugged_objects_grid, debugged_objects_grid.name)
-				end
-				debugged_objects_grid_layout_manager.record
-			end
-		end
-		
-	restore_debugged_objects_grid_layout is
-		do
-			if 
-				is_debugged_objects_grid_layout_managed
-				and debugged_objects_grid_layout_manager /= Void 
-			then
-				debugged_objects_grid_layout_manager.restore
-			end
-		end	
+	is_debugged_objects_grid_layout_initialized: BOOLEAN
 
 	debugged_objects_grid_empty: BOOLEAN
 	
@@ -753,8 +718,8 @@ feature {NONE} -- debugged grid Layout Implementation
 			if current_object /= Void then
 				current_object.record_layout
 			end
-			if debugged_objects_grid.row_count > 0 then			
-				record_debugged_objects_grid_layout
+			if debugged_objects_grid.row_count > 0 then
+				debugged_objects_grid.record_layout
 			end
 		end
 
@@ -872,7 +837,7 @@ feature {NONE} -- Current objects grid Implementation
 				debugged_objects_grid.row (1).ensure_visible
 				debugged_objects_grid.row (1).redraw
 			end
-			restore_debugged_objects_grid_layout			
+			debugged_objects_grid.restore_layout
 		end
 
 	add_displayed_objects_to_grid (a_target_grid: ES_OBJECTS_GRID) is
@@ -923,6 +888,8 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 
 	add_debugged_object (a_stone: OBJECT_STONE) is
 			-- Add the object represented by `a_stone' to the managed objects.
+		require
+			application_is_running: Application.is_running
 		local
 			n_obj: ES_OBJECTS_GRID_LINE
 			conv_spec: SPECIAL_VALUE
@@ -948,27 +915,26 @@ feature {NONE} -- Impl : Debugged objects grid specifics
 			n_obj := Void
 			if not exists then
 				l_item := a_stone.ev_item
-				if application.is_dotnet then
-					abstract_value ?= grid_data_from_widget (l_item)
---| FIXME jfiat : check if it is safe to use a Value ?
---					if abstract_value /= Void then
---						create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (abstract_value, Current)
---					else
-						create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, Current)
---					end
-				else
-					if l_item /= Void then
+				if l_item /= Void then
+					if application.is_dotnet then
+						abstract_value ?= grid_data_from_widget (l_item)
+							--| FIXME jfiat : check if it is safe to use a Value ?
+						if abstract_value /= Void then
+							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (abstract_value, Current)
+						end
+					else
 						conv_spec ?= grid_data_from_widget (l_item)
 						if conv_spec /= Void then
 							create {ES_OBJECTS_GRID_VALUE_LINE} n_obj.make_with_value (conv_spec, Current)
 						end
 					end
-					if n_obj = Void then
-						create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, Current)
-					end
 				end
+				if n_obj = Void then
+					create {ES_OBJECTS_GRID_ADDRESS_LINE} n_obj.make_with_address (a_stone.object_address, a_stone.dynamic_class, Current)
+				end
+				
 				n_obj.set_title (a_stone.name + Left_address_delim + a_stone.object_address + Right_address_delim)
-				debugger_manager.keep_object (a_stone.object_address)
+				Application.status.keep_object (a_stone.object_address)
 				displayed_objects.extend (n_obj)
 				debugged_objects_grid.insert_new_row (debugged_objects_grid.row_count + 1)
 				n_obj.attach_to_row (debugged_objects_grid.row (debugged_objects_grid.row_count))
@@ -1140,7 +1106,7 @@ feature {NONE} -- Impl : Stack objects grid
 						internal_result_row.expand
 					end
 				end
-				restore_stack_objects_grid_layout
+				stack_objects_grid.restore_layout
 			end
 		end
 
@@ -1163,15 +1129,20 @@ feature {NONE} -- Impl : Stack objects grid
 			l_exception_class_detail: STRING
 			l_exception_module_detail: STRING
 			l_exception_tag, l_exception_message: STRING
+			dotnet_status: APPLICATION_STATUS_DOTNET
+			exc_dv: ABSTRACT_DEBUG_VALUE
 		do
-			if application.is_dotnet and then application.imp_dotnet.exception_occurred then
+			if application.is_dotnet and then application.status.exception_occurred then
+				dotnet_status ?= application.status
+				check dotnet_status /= Void end
+				
 					--| Details
 				exception_row := a_target_grid.extended_new_row
 				glab := folder_label_item (Cst_exception_raised_text)
 				a_target_grid.grid_cell_set_pixmap (glab, Pixmaps.icon_debugger_exception)
 				exception_row.set_item (1, glab)
 				create glab
-				if application.imp_dotnet.exception_handled then
+				if dotnet_status.exception_handled then
 					a_target_grid.grid_cell_set_text (glab, Cst_exception_first_chance_text)
 				else
 					a_target_grid.grid_cell_set_text (glab, Cst_exception_unhandled_text)
@@ -1179,7 +1150,7 @@ feature {NONE} -- Impl : Stack objects grid
 				exception_row.set_item (2, glab)
 
 					--| Tag
-				l_exception_tag := application.imp_dotnet.exception_message
+				l_exception_tag := dotnet_status.exception_message
 				if l_exception_tag /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := name_label_item ("Tag")
@@ -1191,7 +1162,7 @@ feature {NONE} -- Impl : Stack objects grid
 					row.set_item (2, es_glab)
 				end
 					--| Class
-				l_exception_class_detail := application.imp_dotnet.exception_class_name
+				l_exception_class_detail := dotnet_status.exception_class_name
 				if l_exception_class_detail /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := name_label_item ("Class")
@@ -1203,7 +1174,7 @@ feature {NONE} -- Impl : Stack objects grid
 					row.set_item (2, es_glab)						
 				end
 					--| Module
-				l_exception_module_detail := application.imp_dotnet.exception_module_name
+				l_exception_module_detail := dotnet_status.exception_module_name
 				if l_exception_module_detail /= Void then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := name_label_item ("Module")
@@ -1216,7 +1187,7 @@ feature {NONE} -- Impl : Stack objects grid
 				end
 
 					--| Nota/Message
-				l_exception_message := application.imp_dotnet.exception_to_string
+				l_exception_message := dotnet_status.exception_to_string
 				if l_exception_message /= Void and then not l_exception_message.is_empty then
 					row := a_target_grid.extended_new_subrow (exception_row)
 					glab := name_label_item ("Nota")
@@ -1228,6 +1199,12 @@ feature {NONE} -- Impl : Stack objects grid
 					a_target_grid.grid_cell_set_tooltip (es_glab, l_exception_message)
 					es_glab.pointer_double_press_actions.force_extend (agent show_exception_dialog (l_exception_tag, l_exception_message))
 					row.set_item (2, es_glab)
+				end
+
+				exc_dv := dotnet_status.exception_debug_value
+				if exc_dv /= Void then
+					row := a_target_grid.extended_new_subrow (exception_row)
+					attach_debug_value_to_grid_row (row, exc_dv)
 				end
 			end
 		end

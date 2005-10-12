@@ -544,7 +544,7 @@ feature {NONE} -- Event handling
 							create wd.make_with_text (Warning_messages.w_Syntax_error_in_expression (expression_field.text))
 							wd.show_modal_to_window (dialog)
 						else
-							Debugger_manager.keep_object (t)
+							Application.status.keep_object (t)
 						end
 					else
 						set_focus (address_field)

@@ -24,5 +24,6 @@ feature -- Type identifiant in context of DUMP_VALUE
 	Type_string			: INTEGER is 12
 	Type_string_dotnet	: INTEGER is 13
 	Type_expanded_object: INTEGER is 14
+	Type_exception		: INTEGER is 20
 
 end -- class DUMP_VALUE_CONSTANTS

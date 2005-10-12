@@ -1992,6 +1992,27 @@ feature -- Element change
 			row_count_unchanged: row_count = old row_count
 		end
 		
+	move_row_to_parent (i, j: INTEGER; a_parent_row: EV_GRID_ROW) is
+			-- Move row at index `i' to index `j', setting `parent_row' to `a_parent_row'.
+		require
+			not_destroyed: not is_destroyed
+			i_positive: i > 0
+			a_parent_row_not_void: a_parent_row /= Void
+			i_not_greater_than_row_count: i <= row_count
+			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
+				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
+			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
+				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			rows_may_be_moved: rows_may_be_moved (i, 1)
+			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
+				implies row (j).parent_row = a_parent_row
+		do
+			move_rows_to_parent (i, j, 1, a_parent_row)
+		ensure
+			rows_moved: row (j) = old row (i) and then row (i) = old row (j)
+			row_count_unchanged: row_count = old row_count
+		end
+		
 	move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW) is
 			-- Move `n' rows starting at index `i' to index `j', setting `parent_row' of each to `a_parent_row'.
 			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').

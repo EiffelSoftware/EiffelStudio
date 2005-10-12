@@ -2034,6 +2034,26 @@ feature -- Element change
 			n_valid: i + n <= row_count + 1
 			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void
 			not_breaking_existing_subrow_structure_when_moving_up: i <= j implies row (j + 1).parent_row = Void
+		do
+			move_rows_to_parent (i, j, n, Void)
+		end
+		
+	move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW) is
+			-- Move `n' rows starting at index `i' to index `j', setting `parent_row' of each to `a_parent'.
+			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
+		require
+			i_positive: i > 0
+			j_positive: j > 0
+			n_positive: n > 0
+			i_not_greater_than_row_count: i <= row_count
+			j_valid: j <= row_count
+			n_valid: i + n <= row_count + 1
+			not_breaking_existing_subrow_structure_when_moving_down_with_no_parent: a_parent_row = Void and i > j implies row (j).parent_row = Void
+			not_breaking_existing_subrow_structure_when_moving_up_with_no_parent: a_parent_row = Void and i <= j implies row (j + 1).parent_row = Void
+--			not_breaking_existing_subrow_structure_when_moving_down_with_parent: a_parent_row /= Void and i > j implies row (j).parent_row = Void or
+--				row (j).parent_row = a_parent_row or row (j - 1) = a_parent_row
+--			not_breaking_existing_subrow_structure_when_moving_up_with_parent: a_parent_row /= Void and i <= j implies row (j + 1).parent_row = Void or
+--				row (j + 1).parent_row = a_parent_row
 		local
 			counter: INTEGER
 			parent_of_first: EV_GRID_ROW_I
@@ -2041,36 +2061,50 @@ feature -- Element change
 			expanded_rows_moved: INTEGER
 			current_row: EV_GRID_ROW_I
 			l_j: INTEGER
+			a_parent_row_i: EV_GRID_ROW_I
+			current_subrow_index: INTEGER
 		do
 				-- We always must flatten the tree structure to handle the case where you perform
 				-- move_row (3, 3) to flatten the final row in a tree structure to the root.
 			parent_of_first := row_internal (i).parent_row_i
-			if parent_of_first /= Void then
-					-- We only need to handle the tree structure if the first row to be moved has
-					-- a parent row, otherwise all rows are being moved from the root level to the
-					-- root level.
-				from
-					counter := i
-				until
-					counter = i + n
-				loop
-					current_row ?= row_internal (counter)
-						-- Note that this following line only works when moving to the root as we have not yet
-						-- parented the row. If you were to move to a parent row, the depths must all be updated
-						-- after the actual setting of the new parent.
-					current_row.update_depths_in_tree
-					if current_row.parent_row_i /= Void and then current_row.parent_row_i = parent_of_first then
+			if a_parent_row /= Void then
+				a_parent_row_i := a_parent_row.implementation
+				if row_internal (j - 1) = a_parent_row_i then
+					current_subrow_index := 1
+				else
+					current_subrow_index := row_internal (j - 1).subrow_index + 1
+				end
+			end
+			from
+				counter := i
+			until
+				counter = i + n
+			loop
+				current_row ?= row_internal (counter)
+				if current_row.parent_row_i = parent_of_first then
+					if current_row.parent_row_i /= Void then
 							-- We only re-parent the top level rows that are being moved. All subrows of these
 							-- rows remain parented, so the tree structure remains consistent.
 						current_row.parent_row_i.update_for_subrow_removal (current_row)
 						current_row.internal_set_parent_row (Void)
-
-						rows_moved := rows_moved + current_row.subrow_count_recursive
-						expanded_rows_moved := expanded_rows_moved + current_row.expanded_subrow_count_recursive
 					end
-					counter := counter + 1
-				end
-				
+					if a_parent_row /= Void then
+						current_row.internal_set_parent_row (a_parent_row_i)
+						a_parent_row_i.update_parent_node_counts_recursively (1)
+						if a_parent_row_i.is_expanded then
+							a_parent_row_i.update_parent_expanded_node_counts_recursively (1)
+						end
+						adjust_hidden_node_count (1)
+						a_parent_row_i.subrows.go_i_th (current_subrow_index)
+						a_parent_row_i.subrows.put_left (current_row)
+						a_parent_row_i.update_subrow_indices (current_subrow_index)
+					end
+					rows_moved := rows_moved + current_row.subrow_count_recursive
+					expanded_rows_moved := expanded_rows_moved + current_row.expanded_subrow_count_recursive
+				end			
+				counter := counter + 1
+			end
+			if parent_of_first /= Void then
 					-- Now update attributes of `parent_of_first' to reflect the fact that the rows
 					-- have been removed.
 				if rows_moved /= 0 then
@@ -2079,9 +2113,17 @@ feature -- Element change
 				if expanded_rows_moved /= 0 then
 					parent_of_first.update_parent_expanded_node_counts_recursively (-expanded_rows_moved)
 				end
-				set_vertical_computation_required (i.min (j))
-				redraw_client_area
 			end
+			if a_parent_row_i /= Void then
+				if rows_moved /= 0 then
+					a_parent_row_i.update_parent_node_counts_recursively (rows_moved)
+				end
+				if expanded_rows_moved /= 0 then
+					a_parent_row_i.update_parent_expanded_node_counts_recursively (expanded_rows_moved)
+				end
+			end
+			set_vertical_computation_required (i.min (j))
+			redraw_client_area
 				
 			if j >= i + n or else j < i then
 					-- Adjust `j' to its new position should `j' + `n' be greater than the number of rows.
@@ -2102,6 +2144,10 @@ feature -- Element change
 				set_vertical_computation_required (i.min (l_j))
 				redraw_client_area
 			end
+		ensure
+			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or
+				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
+			row_count_unchanged: row_count = old row_count
 		end
 
 	move_columns (i, j, n: INTEGER) is

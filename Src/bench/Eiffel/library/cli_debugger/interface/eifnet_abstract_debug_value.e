@@ -85,7 +85,7 @@ feature {NONE} -- Init
 				Debug_value_keeper.keep_dotnet_value (Current)
 				debug ("debugger_eifnet_data")
 					print ("  <end> " + generating_type + ".register_dotnet_data : " + address + "%N")
-				end				
+				end
 			end
 		end
 
@@ -210,7 +210,7 @@ feature {NONE} -- Special childrens
 									l_att_icd_debug_value := l_object_value.get_field_value (l_icd_class, l_att_token)
 								end
 								if l_att_icd_debug_value /= Void then
-									l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value)
+									l_att_debug_value := debug_value_from_icdv (l_att_icd_debug_value, Void)
 									if l_att_debug_value /= Void then
 										l_att_debug_value.set_static (l_is_static)
 										l_att_debug_value.set_name (l_att_name)

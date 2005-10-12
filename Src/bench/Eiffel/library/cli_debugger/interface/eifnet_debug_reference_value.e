@@ -26,6 +26,13 @@ inherit
 		undefine
 			is_equal
 		end
+	
+	SHARED_EIFNET_DEBUGGER
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
 
 create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make
@@ -121,7 +128,7 @@ feature -- Access
 			if Result = Void then
 				l_class_type := dynamic_class_type
 				if l_class_type /= Void then
-					Result := internal_dynamic_class_type.associated_class
+					Result := l_class_type.associated_class
 					internal_dynamic_class := Result
 				end
 			end
@@ -266,7 +273,7 @@ feature {NONE} -- Children implementation
 			if l_att_token /= 0 then
 				l_att_icd_debug_value := a_obj_value.get_field_value (a_icd_class, l_att_token)
 				if l_att_icd_debug_value /= Void then
-					Result := debug_value_from_icdv (l_att_icd_debug_value)
+					Result := debug_value_from_icdv (l_att_icd_debug_value, f.type.actual_type.associated_class)
 					if Result /= Void then
 						Result.set_name (f.feature_name)
 					else
@@ -319,61 +326,33 @@ feature -- Once request
 			is_once: a_feat.is_once
 			has_result: a_feat.is_function
 		local
-			l_icd_class: ICOR_DEBUG_CLASS
-			l_origin_class_c: CLASS_C
-			l_cl_type_a: CL_TYPE_A
-			l_adapted_class_type: CLASS_TYPE
+			l_class_c: CLASS_C
+			l_origin_clc: CLASS_C
 
 			l_icd_dv_result: ICOR_DEBUG_VALUE
 			l_icd_frame: ICOR_DEBUG_FRAME
 			l_eifnet_debugger: EIFNET_DEBUGGER
 		do
-			--| In case the once is attached to an ancestor
-			--| we need to access the static of the correct ICOR_DEBUG_CLASS
-			l_origin_class_c := a_feat.written_class
-			l_eifnet_debugger := Application.imp_dotnet.eifnet_debugger
+				--| In case the once is attached to an ancestor
+			l_origin_clc := a_feat.written_class
+			l_eifnet_debugger := Eifnet_debugger
 
-			if dynamic_class.is_equal (l_origin_class_c) then
-					--| The Once is not inherited
-				if object_value /= Void then
-					l_icd_class := object_value.get_class
-					l_adapted_class_type := dynamic_class_type
-				end
-			else
-				if l_origin_class_c.types.count = 1 then
-					l_adapted_class_type := l_origin_class_c.types.first
-				else
-					--| The Once is inherited
-	
-					--| let's search and find the correct CLASS_TYPE among the parents
-					--| this will solve the problem of inherited once and generic class
-					--| the level on inheritance is represented by the CLASS_C
-					--| then the derivation of the GENERIC by the CLASS_TYPE
-					--| among the parent we know the right CLASS_TYPE
-					--| so first we localite the CLASS_C then we keep the CLASS_TYPE					
-					l_cl_type_a := dynamic_class_type.type.type_a
-					l_adapted_class_type := l_cl_type_a.find_class_type (l_origin_class_c).type_i.associated_class_type
-				end
-
-				check
-					found_item_is_correct: l_adapted_class_type /= Void 
-							and then l_adapted_class_type.associated_class = l_origin_class_c
-				end
-
-				l_icd_class := l_eifnet_debugger.icor_debug_class (l_adapted_class_type)
+			l_class_c := l_origin_clc
+			if l_class_c = Void then
+				l_class_c := dynamic_class
 			end
 
-			if l_icd_class /= Void then
-					--| now we have the correct ICOR_DEBUG_CLASS as a_icd_class
-					--| and we know the good CLASS_TYPE as
+			if l_class_c /= Void then
 				l_icd_frame := eifnet_debugger.current_stack_icor_debug_frame
-				l_icd_dv_result := l_eifnet_debugger.once_function_value_on_icd_class (l_icd_frame, l_icd_class, l_adapted_class_type, a_feat)
+				l_icd_dv_result := l_eifnet_debugger.once_function_value (l_icd_frame, l_class_c, a_feat)
 				if l_eifnet_debugger.last_once_available then
-					if l_eifnet_debugger.last_once_failed then
-						Result := error_value (a_feat.name , "exception occurred")
+					if not l_eifnet_debugger.last_once_already_called then
+						Result := error_value (a_feat.name , "Not yet called")
+					elseif l_eifnet_debugger.last_once_failed then
+						Result := exception_value (a_feat.name , "Exception occurred", debug_value_from_icdv (l_icd_dv_result, Void))
 					else
 						if l_icd_dv_result /= Void then
-							Result := debug_value_from_icdv (l_icd_dv_result)
+							Result := debug_value_from_icdv (l_icd_dv_result, a_feat.type.associated_class)
 							Result.set_name (a_feat.name)
 						end
 					end

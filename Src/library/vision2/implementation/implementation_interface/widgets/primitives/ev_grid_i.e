@@ -2068,7 +2068,9 @@ feature -- Element change
 			parent_of_first := row_internal (i).parent_row_i
 			if a_parent_row /= Void then
 				a_parent_row_i := a_parent_row.implementation
-				if row_internal (j - 1) = a_parent_row_i then
+				if i = j then
+					current_subrow_index := row_internal (i).subrow_index
+				elseif row_internal (j - 1) = a_parent_row_i then
 					current_subrow_index := 1
 				else
 					current_subrow_index := row_internal (j - 1).subrow_index + 1
@@ -2100,7 +2102,11 @@ feature -- Element change
 					end
 					rows_moved := rows_moved + current_row.subrow_count_recursive
 					expanded_rows_moved := expanded_rows_moved + current_row.expanded_subrow_count_recursive
-				end			
+				else
+						-- As the parent of this row has been moved, we must update the
+						-- depth of this row so that it is set based on the new depth of the parent row.
+					current_row.update_depths_in_tree
+				end		
 				counter := counter + 1
 			end
 			if parent_of_first /= Void then

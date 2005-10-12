@@ -33,13 +33,37 @@ inherit
 --creation {APPLICATION_STATUS_EXPORTER}
 --
 --	do_nothing
+	
+feature {NONE} -- Initialization
+
+	make is
+			-- Create Current
+		do
+			initialize
+		end
 
 feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize Current
 		do
+			create kept_objects.make
+			kept_objects.compare_objects
+			
 			reset_call_stack_list
+		end
+
+feature -- Objects kept from session to session
+
+	kept_objects: LINKED_SET [STRING]
+			-- Objects represented by their address that should be kept during the execution.
+			
+	keep_object (add: STRING) is
+			-- Add object identified by `add' to `kept_objects'
+		require
+			address_not_empty: add /= Void and then not add.is_empty
+		do
+			kept_objects.extend (add)
 		end
 
 feature -- Call Stack List management
@@ -102,12 +126,23 @@ feature -- Values
 	object_address: STRING
 			-- Address of object in which we are stopped
 			-- (hector address with an indirection)
+			
+	exception_occurred: BOOLEAN is
+		deferred
+		end
 		
 	exception_code: INTEGER
 			-- Exception code if any
 
 	exception_tag: STRING
 			-- Exception tag if any
+			
+	exception_message: STRING is
+			-- Exception message if any
+		require
+			exception_occurred: exception_occurred
+		deferred
+		end
 
 feature -- Call Stack related
 
@@ -435,4 +470,4 @@ feature -- Output
 			st.add_new_line
 		end
 
-end -- class APPLICATION_STATUS
+end

@@ -47,7 +47,7 @@ feature {APPLICATION_EXECUTION} -- Properties
 			-- Is object address `addr' valid?
 			-- (i.e Does bench know about it)
 		do
-			Result := is_hector_addr (addr)
+			Result := is_object_kept (addr)
 		end			
 			
 feature -- Execution
@@ -79,17 +79,11 @@ feature -- Execution
 			end
 		end
 
-	continue (kept_objects: LINKED_SET [STRING]) is
-			-- Continue the running of the application and keep the 
-			-- objects addresses in `kept_objects'. Objects that are not in 
-			-- `kept_objects' will be removed and will be not under the 
-			-- control of bench. Therefore, these addresses cannot be
-			-- referenced the next time we stop the application.
+	continue_ignoring_kept_objects is
 		do
-			keep_objects (kept_objects)
 			cont_request.send_breakpoints
 			status.set_is_stopped (False)
-			cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, Application.critical_stack_depth)
+			cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 		end
 
 	interrupt is
@@ -135,7 +129,22 @@ feature -- Execution
 			-- Process the termination of the executed
 			-- application. Also execute the `termination_command'.
 		do
-			addr_table.clear_all
+			release_all_objects
+		end
+
+feature -- Query
+
+	dump_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): DUMP_VALUE is
+		do
+			create Result.make_object (a_addr, a_cl)
+		end
+
+	debug_value_at_address_with_class (a_addr: STRING; a_cl: CLASS_C): ABSTRACT_DEBUG_VALUE is
+		do
+--			debugged_object_manager.classic_debugged_object_with_class (a_addr, a_cl)
+--			Result := dump_value_at_address_with_class (a_addr, a_cl).
+			to_implement ("Need to be implemented, but for now this is not used.")
+			check FALSE end
 		end
 
 feature {RUN_REQUEST} -- Implementation

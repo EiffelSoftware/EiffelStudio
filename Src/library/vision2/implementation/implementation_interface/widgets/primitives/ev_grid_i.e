@@ -2037,7 +2037,8 @@ feature -- Element change
 		do
 			move_rows_to_parent (i, j, n, Void)
 		ensure
-			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or (j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
+			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or
+				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
 			row_count_unchanged: row_count = old row_count
 		end
 		

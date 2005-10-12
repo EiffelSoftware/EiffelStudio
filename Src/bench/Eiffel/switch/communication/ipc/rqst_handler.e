@@ -1,5 +1,7 @@
--- General response to a request from
--- ised to workbench.
+indexing
+	description: "[
+			General response to a request from ised to workbench.
+		]"
 
 deferred class RQST_HANDLER 
 

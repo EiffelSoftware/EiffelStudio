@@ -11,6 +11,8 @@ inherit
 			new_toolbar_item,
 			tooltext
 		end
+		
+	EB_SHARED_DEBUG_TOOLS
 
 	SHARED_APPLICATION_EXECUTION
 
@@ -91,8 +93,7 @@ feature -- Events
 					id.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 					-- Update output tools
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -111,8 +112,7 @@ feature -- Events
 					id.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 					-- Update output tools
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -131,8 +131,7 @@ feature -- Events
 					id.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
 					-- Update output tools
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -153,8 +152,7 @@ feature -- Execution
 				cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				
 					-- Update output tools
-				output_manager.display_stop_points
-				Window_manager.synchronize_all_about_breakpoints
+				debugger_manager.notify_breakpoints_changes
 			end
 		end
 
@@ -200,8 +198,7 @@ feature {NONE} -- Implementation
 				id.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end
 				-- Update output tools
-			output_manager.display_stop_points
-			Window_manager.synchronize_all_about_breakpoints
+			debugger_manager.notify_breakpoints_changes
 		end
 
 end -- class EB_CLEAR_STOP_POINTS_COMMAND

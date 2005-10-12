@@ -126,6 +126,11 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		do
 			Result := is_debugged_grid_layout_managed_preference.value
 		end
+
+	is_watches_grids_layout_managed: BOOLEAN is
+		do
+			Result := is_watches_grids_layout_managed_preference.value
+		end
 		
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -148,6 +153,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	select_call_stack_level_on_double_click_preference: BOOLEAN_PREFERENCE
 	is_stack_grid_layout_managed_preference: BOOLEAN_PREFERENCE
 	is_debugged_grid_layout_managed_preference: BOOLEAN_PREFERENCE
+	is_watches_grids_layout_managed_preference: BOOLEAN_PREFERENCE
 	
 feature -- Preference Strings
 
@@ -170,6 +176,7 @@ feature -- Preference Strings
 	select_call_stack_level_on_double_click_string: STRING is "debugger.select_call_stack_level_on_double_click"
 	is_stack_grid_layout_managed_string: STRING is "debugger.stack_grid_layout_managed"
 	is_debugged_grid_layout_managed_string: STRING is "debugger.debugged_grid_layout_managed"
+	is_watches_grids_layout_managed_string: STRING is "debugger.watches_grids_layout_managed"
 
 feature {NONE} -- Implementation
 
@@ -199,6 +206,7 @@ feature {NONE} -- Implementation
 			select_call_stack_level_on_double_click_preference := l_manager.new_boolean_resource_value (l_manager, select_call_stack_level_on_double_click_string, False)
 			is_stack_grid_layout_managed_preference := l_manager.new_boolean_resource_value (l_manager, is_stack_grid_layout_managed_string, False)
 			is_debugged_grid_layout_managed_preference := l_manager.new_boolean_resource_value (l_manager, is_debugged_grid_layout_managed_string, False)
+			is_watches_grids_layout_managed_preference := l_manager.new_boolean_resource_value (l_manager, is_watches_grids_layout_managed_string, False)
 		end
 	
 	preferences: PREFERENCES
@@ -224,5 +232,6 @@ invariant
 	select_call_stack_level_on_double_click_preference_not_void: select_call_stack_level_on_double_click_preference /= Void	
 	is_stack_grid_layout_managed_preference_not_void: is_stack_grid_layout_managed_preference /= Void	
 	is_debugged_grid_layout_managed_preference_not_void: is_debugged_grid_layout_managed_preference /= Void	
+	is_watches_grids_layout_managed_preference_not_void: is_watches_grids_layout_managed_preference /= Void	
 
 end -- class EB_DEBUG_TOOL_DATA

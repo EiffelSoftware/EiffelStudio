@@ -9,6 +9,9 @@ class
 
 inherit
 	APPLICATION_STATUS
+	
+create
+	make
 		
 feature -- Class stack creation
 
@@ -25,5 +28,17 @@ feature -- Values
 	refresh_current_thread_id is
 		do
 		end
+		
+	exception_debug_value: ABSTRACT_DEBUG_VALUE	 is do end	
+		
+	exception_to_string, 
+	exception_module_name, 
+	exception_class_name: STRING is do end
+		
+	exception_handled: BOOLEAN is False
+	
+	exception_occurred: BOOLEAN is False
+	
+	exception_message: STRING is do end	
 
 end -- class APPLICATION_STATUS_DOTNET

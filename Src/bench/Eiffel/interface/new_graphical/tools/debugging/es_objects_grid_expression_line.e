@@ -64,7 +64,7 @@ feature -- Recycling
 			-- in order to free special data (for instance dotnet references)
 		do
 			Precursor
-			internal_associated_debug_value := Void
+			internal_associated_dump_value := Void
 			expression_evaluator := Void
 			if expression /= Void then
 				expression.recycle
@@ -220,25 +220,16 @@ fixme ("find a smarter way to get a valid value")
 			Result := last_dump_value.generating_type_representation
 		end
 
-	associated_debug_value: ABSTRACT_DEBUG_VALUE is
-		local
-			l_addr: STRING
+	associated_dump_value: DUMP_VALUE is
 		do
-			Result := internal_associated_debug_value
+			Result := internal_associated_dump_value
 			if Result = Void then
-				if application.is_dotnet then
-					l_addr := object_address
-					if application.imp_dotnet.know_about_kept_object (l_addr) then
-						Result := Application.imp_dotnet.kept_object_item (l_addr)
-					end
-					internal_associated_debug_value := Result
-				else
-					-- not available
-				end
+				Result := Application.dump_value_at_address_with_class (object_address, object_dynamic_class)
+				internal_associated_dump_value := Result
 			end
 		end
 
-	internal_associated_debug_value: like associated_debug_value
+	internal_associated_dump_value: like associated_dump_value
 
 feature -- Graphical changes
 
@@ -330,10 +321,10 @@ feature -- Graphical changes
 			l_tag: STRING
 		do
 			if expression /= Void then
-				l_tag := expression.expression
+				l_tag := expression.expression.twin
 				if l_tag /= Void then
 					l_tag.prepend_string ("Error on expression : %"")
-					l_tag.append_string ("%"")
+					l_tag.append_string ("%"%N")
 				end
 			end
 			create dlg.make (l_tag, txt)
@@ -375,6 +366,7 @@ feature -- Graphical changes
 			l_error_tag: STRING
 			glab: EV_GRID_LABEL_ITEM
 			add,res,typ: STRING
+			l_exception_dump_value: DUMP_VALUE
 		do
 			if not compute_grid_display_done and not refresh_requested then
 				if evaluation_requested then
@@ -440,6 +432,10 @@ feature -- Graphical changes
 							elseif expression_evaluator.has_error_not_implemented then
 								set_error_pixmap (Pixmaps.Icon_compilation_failed)
 							end
+							l_exception_dump_value := expression_evaluator.final_result_value
+							if l_exception_dump_value /= Void and then l_exception_dump_value.is_type_exception then
+								attach_debug_value_to_grid_row (grid_extended_new_subrow (row), l_exception_dump_value.value_exception)
+							end
 						else
 							if last_dump_value /= Void then
 								add := object_address
@@ -463,7 +459,9 @@ feature -- Graphical changes
 						end
 					end
 					set_context (expression.context)
-					grid_cell_set_tooltip (row.item (Col_expression_index), l_tooltip)
+					if row.item (col_expression_index) /= Void then
+						grid_cell_set_tooltip (row.item (Col_expression_index), l_tooltip)
+					end
 					if display and row.is_expandable then
 						row.expand
 					end

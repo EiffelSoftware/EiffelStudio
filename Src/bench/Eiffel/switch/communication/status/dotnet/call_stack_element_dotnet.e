@@ -49,7 +49,14 @@ inherit
 	ICOR_EXPORTER -- debug trace purpose
 		export
 			{NONE} all
-		end		
+		end
+		
+	SHARED_EIFNET_DEBUGGER
+	
+	SHARED_INST_CONTEXT
+	
+	SHARED_WORKBENCH
+
 
 create {EIFFEL_CALL_STACK}
 	make
@@ -164,7 +171,7 @@ feature {EIFFEL_CALL_STACK_DOTNET} -- Query
 			l_chain: ICOR_DEBUG_CHAIN
 			l_frame: ICOR_DEBUG_FRAME
 		do
-			l_active_thread := Application.imp_dotnet.Eifnet_debugger.icor_debug_thread
+			l_active_thread := Eifnet_debugger.icor_debug_thread
 			if l_active_thread /= Void then
 				l_enum_chain := l_active_thread.enumerate_chains
 				if l_enum_chain /= Void then 
@@ -333,7 +340,7 @@ feature {NONE} -- Implementation
 
 				if l_function = Void then
 						--| FIXME jfiat: Nasty fix, since we use the top level stack frame
-					l_icd_th := application.imp_dotnet.eifnet_debugger.icor_debug_thread
+					l_icd_th := Eifnet_debugger.icor_debug_thread
 					l_frame := l_icd_th.get_active_frame
 					if l_frame /= Void then
 						l_il_frame := l_frame.query_interface_icor_debug_il_frame
@@ -367,7 +374,7 @@ feature {NONE} -- Implementation
 		local
 			cobj: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
-			if application.imp_dotnet.exit_process_occurred then
+			if Eifnet_debugger.exit_process_occurred then
 				debug ("debugger_trace_callstack_data") 
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
@@ -401,11 +408,12 @@ feature {NONE} -- Implementation
 			value			: ABSTRACT_DEBUG_VALUE
 			args_list		: like private_arguments
 			arg_names		: LIST [STRING]
+			arg_types		: E_FEATURE_ARGUMENTS
 			rout			: like routine
 			counter			: INTEGER
-			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]			
+			l_list			: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 		do
-			if application.imp_dotnet.exit_process_occurred then
+			if Eifnet_debugger.exit_process_occurred then
 				debug ("debugger_trace_callstack_data") 
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
@@ -427,8 +435,11 @@ feature {NONE} -- Implementation
 --| FIXME jfiat [2004/08/24] : check why l_list could be empty at this point 
 							create args_list.make_filled (l_count)	
 							arg_names := rout.argument_names
+							arg_types := rout.arguments
 							from
 								arg_names.start
+								arg_types.start
+								
 								args_list.start
 								l_list.start
 							until
@@ -436,9 +447,11 @@ feature {NONE} -- Implementation
 							loop
 								value := l_list.item
 								value.set_name (arg_names.item)
+								value.set_static_class (arg_types.item.associated_class)
 								args_list.replace (value)
 								args_list.forth
 								arg_names.forth
+								arg_types.forth
 								l_list.forth
 							end
 
@@ -450,7 +463,7 @@ feature {NONE} -- Implementation
 								until
 									args_list.after
 								loop
-									args_list.item.set_item_number(counter)
+									args_list.item.set_item_number (counter)
 									args_list.forth
 									counter := counter + 1
 								end
@@ -485,8 +498,11 @@ feature {NONE} -- Implementation
 			l_names_heap: like Names_heap
 			l_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]
 			l_dotnet_ref_value: EIFNET_DEBUG_REFERENCE_VALUE
+			l_stat_class: CLASS_C
+			l_old_cluster: CLUSTER_I
+			l_old_class: CLASS_C
 		do
-			if application.imp_dotnet.exit_process_occurred then
+			if Eifnet_debugger.exit_process_occurred then
 				debug ("debugger_trace_callstack_data") 
 					print ("EXIT_PROCESS OCCURRED !!!%N")
 				end
@@ -529,6 +545,9 @@ feature {NONE} -- Implementation
 								private_result.set_name ("Result")
 							end
 						end
+						if private_result /= Void then
+							private_result.set_static_class (rout.type.associated_class)							
+						end
 					end
 					
 					--| LOCAL |--
@@ -537,6 +556,12 @@ feature {NONE} -- Implementation
 						--| let's get the real Local variables 
 						local_decl_grps := rout.locals
 						if local_decl_grps /= Void then
+							l_old_cluster := inst_context.cluster
+							Inst_context.set_cluster (rout.associated_class.cluster)
+
+							l_old_class := System.current_class
+							System.set_current_class (dynamic_class)
+			
 							l_count := l_list.count
 							create locals_list.make (l_count)
 							from
@@ -547,22 +572,32 @@ feature {NONE} -- Implementation
 							until
 								local_decl_grps.after 
 								or l_index > l_count
-							loop 
-								from
-									id_list := local_decl_grps.item.id_list
-									id_list.start
-								until
-									id_list.after or
-									l_index > l_count
-								loop
-									value := l_list.item
-									value.set_name (l_names_heap.item (id_list.item))
-									locals_list.extend (value)
-									id_list.forth
-									l_list.forth
-									l_index := l_index + 1
+							loop
+								id_list := local_decl_grps.item.id_list
+								if not id_list.is_empty then
+									l_stat_class := local_decl_grps.item.type.actual_type.associated_class
+									from
+										id_list.start
+									until
+										id_list.after or
+										l_index > l_count
+									loop
+										value := l_list.item
+										value.set_name (l_names_heap.item (id_list.item))
+										value.set_static_class (l_stat_class)
+										locals_list.extend (value)
+										id_list.forth
+										l_list.forth
+										l_index := l_index + 1
+									end
 								end
 								local_decl_grps.forth
+							end
+							if l_old_cluster /= Void then
+								inst_context.set_cluster (l_old_cluster)
+							end
+							if l_old_class /= Void then
+								System.set_current_class (l_old_class)
 							end
 
 								--| initialize item numbers for locals
@@ -572,7 +607,7 @@ feature {NONE} -- Implementation
 							until
 								locals_list.after
 							loop
-								locals_list.item.set_item_number(counter)
+								locals_list.item.set_item_number (counter)
 								locals_list.forth
 								counter := counter + 1
 							end
@@ -617,7 +652,7 @@ feature {NONE} -- Implementation
 					if l_enum_args.get_count > 0 then
 						l_enum_args.reset
 						l_array_objects := l_enum_args.next (1)
-						Result := debug_value_from_icdv (l_array_objects @ (l_array_objects.lower))
+						Result := debug_value_from_icdv (l_array_objects @ (l_array_objects.lower), dynamic_class)
 					end
 					l_enum_args.clean_on_dispose
 				end
@@ -700,7 +735,7 @@ feature {NONE} -- Implementation
 					loop
 						l_icd_val := l_array_objects @ l_object_index
 						if l_icd_val /= Void then
-							l_abstract_debug_value := debug_value_from_icdv (l_icd_val)
+							l_abstract_debug_value := debug_value_from_icdv (l_icd_val, Void)
 							Result.extend (l_abstract_debug_value)
 						end
 						l_object_index := l_object_index + 1

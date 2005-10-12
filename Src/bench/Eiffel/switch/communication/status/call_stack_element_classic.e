@@ -35,6 +35,16 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_INST_CONTEXT
+		export
+			{NONE} all
+		end
+		
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
 
 create {EIFFEL_CALL_STACK}
 	make
@@ -163,7 +173,7 @@ feature {EIFFEL_CALL_STACK} -- Implementation
 			-- to hector addresses. (should be called only once just after
 			-- all the information has been received from the application.)
 		do
-			object_address := hector_addr (object_address)
+			object_address := keep_object_as_hector_address (object_address)
 
 				-- Now the address is correct and we can display it.
 			display_object_address := object_address
@@ -229,10 +239,14 @@ feature {NONE} -- Implementation
 			unprocessed_l	: like unprocessed_values
 			locals_list		: like private_locals
 			args_list		: like private_arguments
+			arg_types		: E_FEATURE_ARGUMENTS
 			arg_names		: LIST [STRING]
 			rout			: like routine
 			counter			: INTEGER
-			l_names_heap: like Names_heap
+			l_names_heap	: like Names_heap
+			l_stat_class	: CLASS_C
+			l_old_cluster   : CLUSTER_I
+			l_old_class		: CLASS_C
 		do
 			debug ("DEBUGGER_TRACE_CALLSTACK")
 				io.put_string (generator + ".initializing_stack: " + routine_name + " from "+dynamic_class.name+"%N")
@@ -250,23 +264,34 @@ feature {NONE} -- Implementation
 				--l_count := rout.argument_count
 				l_count := retrieved_arguments_count
 				if l_count > 0 then
-					arg_names := rout.argument_names
 					create args_list.make_filled (l_count)	
 					from
+						arg_names := rout.argument_names
+						arg_types := rout.arguments
 						arg_names.start
+						arg_types.start
 						args_list.start
 					until
 						args_list.after
 					loop
 						value := unprocessed_l.item
 						value.set_name (arg_names.item)
+						value.set_static_class (arg_types.item.associated_class)
 						args_list.replace (value)
 						args_list.forth
 						arg_names.forth
+						arg_types.forth
 						unprocessed_l.forth
 					end
 				end
 				if local_decl_grps /= Void then
+					l_old_cluster := inst_context.cluster
+					inst_context.set_cluster (rout.associated_class.cluster)
+					
+					l_old_class := System.current_class
+					System.set_current_class (dynamic_class)
+
+					
 					create locals_list.make (retrieved_locals_count)
 					from
 						l_count := 0
@@ -276,26 +301,39 @@ feature {NONE} -- Implementation
 						local_decl_grps.after or
 						l_count >= retrieved_locals_count
 					loop 
-						from
-							id_list := local_decl_grps.item.id_list
-							id_list.start
-						until
-							id_list.after or
-							l_count >= retrieved_locals_count
-						loop
-							value := unprocessed_l.item
-							value.set_name (l_names_heap.item (id_list.item))
-							locals_list.extend (value)
-							id_list.forth
-							unprocessed_l.forth
-							l_count := l_count + 1
+						id_list := local_decl_grps.item.id_list
+						if not id_list.is_empty then
+							l_stat_class := local_decl_grps.item.type.actual_type.associated_class
+
+							from
+								id_list.start
+							until
+								id_list.after or
+								l_count >= retrieved_locals_count
+							loop
+								value := unprocessed_l.item
+								value.set_name (l_names_heap.item (id_list.item))
+								value.set_static_class (l_stat_class)
+								locals_list.extend (value)
+								id_list.forth
+								unprocessed_l.forth
+								l_count := l_count + 1
+							end
 						end
 						local_decl_grps.forth
 					end
+					if l_old_cluster /= Void then
+						inst_context.set_cluster (l_old_cluster)
+					end
+					if l_old_class /= Void then
+						System.set_current_class (l_old_class)
+					end
+					
 				end
 				if rout.is_function and not unprocessed_values.is_empty then
 					private_result := unprocessed_values.last
 					private_result.set_name ("Result")
+					private_result.set_static_class (rout.type.associated_class)
 				end
 			end
 			

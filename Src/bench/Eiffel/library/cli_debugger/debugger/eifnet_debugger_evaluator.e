@@ -389,7 +389,7 @@ feature {NONE}
 				l_icd_eval := l_icd_thread.create_eval
 			end
 			
-			l_status := application.imp_dotnet.status
+			l_status ?= Application.status
 			Eifnet_debugger.reset_evaluation_exception
 			l_status.set_is_evaluating (True)
 				--| Let use the evaluating mecanism instead of the normal one

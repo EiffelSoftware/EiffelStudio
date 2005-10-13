@@ -79,7 +79,7 @@ feature -- Basic operations
 			create file.make (file_name)
 			file.open_write
 			if file.is_open_write then
-				file.put_string (string_from_xm_document (document))
+				file.put_string (xml_format + string_from_xm_document (document))
 				file.close
 			else
 				create warning_dialog.make_with_text (unable_to_save_part1 + file_name + unable_to_save_part2)

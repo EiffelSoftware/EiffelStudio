@@ -265,74 +265,24 @@ feature -- Access
 			cursor_not_moved: old element.index = element.index
 		end
 		
-	process_xml_string (xml_string: STRING) is
-			-- Format `xml_string' so that it includes indents and new lines, so that it
-			-- will appear nicely in editors that do not automatically format XML.
-			-- Note that this algorithm is far from perfect, but is good enough for the
-			-- moment. There is definitely the possibility for improvement. Julian 02/03/03
+	string_from_xm_document (a_document: XM_DOCUMENT): STRING is
+			-- Return a string representation of XM document `a_document'.
 		require
-			xml_string_not_void: xml_string /= Void
+			a_document_not_void: a_document /= Void
 		local
-			depth: INTEGER
-			counter: INTEGER
-			closing_index: INTEGER
-			tag_contents: STRING
-			temp_string: STRING
+			pretty_print: XM_INDENT_PRETTY_PRINT_FILTER
+			xmlns_generator: XM_XMLNS_GENERATOR
+			output_stream: KL_STRING_OUTPUT_STREAM
 		do
-			temp_string := xml_string.twin
-			xml_string.wipe_out
-			from
-				counter := 1
-			until
-				counter > temp_string.count
-			loop
-				xml_string.append_character (temp_string @ counter)
-				if (temp_string @ counter).is_equal ('<') then
-					closing_index := temp_string.index_of ('>', counter  + 1)
-					if closing_index - counter > 1 then
-						tag_contents := temp_string.substring (counter + 1, closing_index - 1)
-						if tag_contents.has ('/')  then
-							if not ((tag_contents @ tag_contents.count) = '/') then
-								from
-									counter := counter + 1
-								until
-									counter = closing_index + 1
-								loop
-									xml_string.append_character (temp_string @ counter)
-									counter := counter + 1
-								end
-								counter := counter - 1
-								if depth > 0 then
-									depth := depth - 1
-								end
-								xml_string.append_character ('%N')
-								add_tabs (xml_string, closing_index + 2, depth)
-							else
-								xml_string.append_character ('%N')
-								add_tabs (xml_string, closing_index + 2, depth)
-							end
-						else
-							if (not tag_contents.is_equal (Internal_properties_string)) then
-								depth := depth + 1
-							else
-								from
-									counter := counter + 1
-								until
-									counter = closing_index + 1
-								loop
-									xml_string.append_character (temp_string @ counter)
-									counter := counter + 1
-								end
-								counter := counter - 1
-								xml_string.append_character ('%N')
-								add_tabs (xml_string, closing_index + 2, depth)
-							end
-						end
-					end
-				end
-				counter := counter + 1
-			end
-		end
+			create output_stream.make ("")
+			create pretty_print.make_null
+			pretty_print.set_output_stream (output_stream)
+			create xmlns_generator.set_next (pretty_print)
+			a_document.process_to_events (xmlns_generator)
+			Result := output_stream.string
+		ensure	
+			result_not_void: Result /= Void
+		end		
 		
 	add_tabs (a_string: STRING; index, count: INTEGER) is
 			-- Add `count' tab characters to `a_string' at index `index'.
@@ -367,19 +317,14 @@ feature -- Access
 			cancel_button: EV_BUTTON
 			namespace: XM_NAMESPACE
 			document: XM_DOCUMENT
-			formater: XM_FORMATTER
-			last_string: KL_STRING_OUTPUT_STREAM
-			string: STRING
+			l_string: STRING
 		do		
 			create namespace.make_default
 			create document.make
 				-- If we do not twin the element, the parent is changed which
 				-- is a side effect that we do not wish.
 			document.set_root_element (element.deep_twin)
-			create last_string.make ("")
-			create formater.make
-			formater.set_output (last_string)
-			formater.process_document (document)
+			l_string := string_from_xm_document (document)
 			
 			create dialog
 			dialog.set_minimum_size (400, 600)
@@ -392,9 +337,7 @@ feature -- Access
 			vertical_box.disable_item_expand (cancel_button)
 			cancel_button.select_actions.extend (agent dialog.destroy)
 			dialog.set_default_cancel_button (cancel_button)
-			string := last_string.string
-			process_xml_string (string)
-			text.set_text (string)
+			text.set_text (l_string)
 			dialog.show_modal_to_window (window)
 		end
 		

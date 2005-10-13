@@ -53,15 +53,30 @@ feature -- Access
 			loop
 				l_nat8 := l_ptr.read_natural_8 (i)
 				if l_nat8 <= 127 then
+						-- Form 0xxxxxxx.
 					Result.extend (l_nat8.to_character)
+
 				elseif (l_nat8 & 0xE0) = 0xC0 then
+						-- Form 110xxxxx 10xxxxxx.
 					l_code := (l_nat8 & 0x1F).to_natural_32 |<< 6
 					i := i + 1
 					l_nat8 := l_ptr.read_natural_8 (i)
 					l_code := l_code | (l_nat8 & 0x3F).to_natural_32
 					Result.extend (l_code.to_character)
-				else
+				
+				elseif (l_nat8 & 0xF0) = 0xE0 then
+					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
 					-- Not supported yet since Eiffel does not support character code greater than 255
+					-- we replace it with space.
+					Result.extend (' ')
+					i := i + 2
+				
+				elseif (l_nat8 & 0xF8) = 0xF0 then
+					-- Form 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx.
+					-- Not supported yet since Eiffel does not support character code greater than 255
+					-- we replace it with space.
+					Result.extend (' ')
+					i := i + 3
 				end
 				i := i + 1
 			end
@@ -72,14 +87,22 @@ feature -- Access
 
 	set_with_eiffel_string (a_string: STRING) is
 			-- Create `item' and retain ownership.
+		require
+			a_string_not_void: a_string /= Void
 		do
 			internal_set_with_eiffel_string (a_string, False)
+		ensure
+			string_set: a_string.is_equal (string)
 		end
 
 	share_with_eiffel_string (a_string: STRING) is
 			-- Create `item' but do not take ownership.
+		require
+			a_string_not_void: a_string /= Void
 		do
 			internal_set_with_eiffel_string (a_string, True)
+		ensure
+			string_set: a_string.is_equal (string)
 		end
 
 	share_from_pointer (a_utf8_ptr: POINTER) is
@@ -146,8 +169,12 @@ feature {NONE} -- Implementation
 			loop
 				l_code := a_string.item (i).code
 				if l_code <= 127 then
+						-- Of the form 0xxxxxxx.
 					l_ptr.put_natural_8 (l_code.to_natural_8, bytes_written)
 				else
+					check
+						ascii_only: l_code <= 255
+					end
 						-- Insert 110xxxxx 10xxxxxx.
 					l_ptr.put_natural_8 ((0xC0 | (l_code |>> 6)).to_natural_8, bytes_written)
 					bytes_written := bytes_written + 1
@@ -181,12 +208,30 @@ feature {NONE} -- Implementation
 		require
 			a_utf8_ptr_not_null: a_utf8_ptr /= default_pointer
 		local
-			end_byte: POINTER
+			l_ptr: MANAGED_POINTER
+			l_done: BOOLEAN
+			l_nat8: NATURAL_8
 		do
-			if {EV_GTK_DEPENDENT_EXTERNALS}.g_utf8_validate (a_utf8_ptr, -1, $end_byte) then
-				Result := pointer_diff (a_utf8_ptr, end_byte) + 1
-			else
-				Result := {EV_GTK_EXTERNALS}.g_utf8_strlen (a_utf8_ptr, -1) + 1
+				-- We compute it ourself since we cannot trust GTK `g_utf8_validate'.
+				-- This is a security risk as we don't know how much we can read, we limit ourself
+				-- to the maximum we can allocate.
+			create l_ptr.share_from_pointer (a_utf8_ptr, {INTEGER}.max_value)
+			from
+				Result := 0
+			until
+				l_done
+			loop
+				l_nat8 := l_ptr.read_natural_8 (Result)
+				if l_nat8 <= 127 then
+					l_done := l_nat8 = 0
+				elseif (l_nat8 & 0xE0) = 0xC0 then
+					Result := Result + 1
+				elseif (l_nat8 & 0xF0) = 0xE0 then
+					Result := Result + 2
+				elseif (l_nat8 & 0xF8) = 0xF0 then
+					Result := Result + 3
+				end
+				Result := Result + 1
 			end
 		end
 

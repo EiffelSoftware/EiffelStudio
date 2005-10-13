@@ -229,7 +229,7 @@ feature -- Basic operations
 					else
 						external_launcher.prepare_command_line (cl,"")
 					end			
-
+					external_launcher.set_hidden (False)
 					external_launcher.launch (True)				
 				end
 				-- Jason Wei on Sep 2 2005				

@@ -851,7 +851,7 @@ feature -- Status report
 		end
 		
 	is_integer_64: BOOLEAN is
-			-- Does `Current' represent an INTEGER16? 
+			-- Does `Current' represent an INTEGER_64? 
 		do
 			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_64)		
 		end

@@ -58,7 +58,7 @@ inherit
 			is_equal, copy, default_create
 		end
 		
-	CONSTANTS_IMP
+	GB_INTERFACE_CONSTANTS
 		export
 			{NONE} all
 		undefine

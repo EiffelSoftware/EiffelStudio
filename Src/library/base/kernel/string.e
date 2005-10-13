@@ -634,23 +634,16 @@ feature -- Status report
 
 	changeable_comparison_criterion: BOOLEAN is False
 
-	is_integer: BOOLEAN is
-			-- Does `Current' represent an INTEGER?
+	is_number_sequence: BOOLEAN is
+			-- Does `Current' represent a number sequence?
 		do
-			if count = 0 then
-				Result := False
-			else		
-				
-				ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation)
-				ctoi_state_machine.parse (Current, 1, count)
-				Result := ctoi_state_machine.is_integral_integer	
-			end
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_no_limitation)			
 		ensure
 			syntax_and_range:
 				-- Result is true if and only if the following two
 				-- conditions are satisfied:
 				--
-				-- 1. In the following BNF grammar, the value of
+				-- In the following BNF grammar, the value of
 				--	Current can be produced by "Integer_literal":
 				--
 				-- Integer_literal = [Space] [Sign] Integer [Space]
@@ -658,12 +651,8 @@ feature -- Status report
 				-- Sign		= "+" | "-"
 				-- Integer	= Digit | Digit Integer
 				-- Digit	= "0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9"
-				--
-				-- 2. The integer value represented by Current
-				--	is within the range that can be represented
-				--	by an instance of type INTEGER.
 		end
-
+		
 	is_real: BOOLEAN is
 			-- Does `Current' represent a REAL?
 		do
@@ -843,31 +832,54 @@ feature -- Status report
 			is_boolean: Result = (as_lower.has_substring (true_constant) or as_lower.has_substring (false_constant))
 		end
 		
-	last_conversion_overflowed: BOOLEAN is
-			-- Is last string to integer/natural conversion overflowed?
+	is_integer_8: BOOLEAN is
+			-- Does `Current' represent an INTEGER_8?
 		do
-			Result := conversion_overflowed
-		end
-	
-	last_conversion_successful: BOOLEAN is
-			-- Is last string to integer/natural conversion successful?
-		do
-			Result := conversion_successful
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_8)		
 		end
 		
-	last_conversion_above_range: BOOLEAN is
-			-- Is last string to integer/natural conversion overflowed because
-			-- number is above range (too large)?
+	is_integer_16: BOOLEAN is
+			-- Does `Current' represent an INTEGER_16?
 		do
-			Result := conversion_above_range
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_16)		
 		end
 		
-	last_conversion_below_range: BOOLEAN is
-			-- Is last string to integer/natural conversion overflowed because
-			-- number is below range (too small)?
+	is_integer, is_integer_32: BOOLEAN is
+			-- Does `Current' represent an INTEGER?
 		do
-			Result := conversion_below_range
-		end	
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_32)		
+		end
+		
+	is_integer_64: BOOLEAN is
+			-- Does `Current' represent an INTEGER16? 
+		do
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_64)		
+		end
+		
+	is_natural_8: BOOLEAN is
+			-- Does `Current' represent a NATURAL_8?
+		do
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_natural_8)		
+		end
+		
+	is_natural_16: BOOLEAN is
+			-- Does `Current' represent a NATURAL_16?
+
+		do
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_natural_16)		
+		end
+		
+	is_natural, is_natural_32: BOOLEAN is
+			-- Does `Current' represent a NATURAL_32?
+		do
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_natural_32)		
+		end
+		
+	is_natural_64: BOOLEAN is
+			-- Does `Current' represent a NATURAL_64?
+		do
+			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_natural_64)		
+		end
 
 feature -- Element change
 
@@ -2008,106 +2020,66 @@ feature -- Conversion
 		
 	to_integer_8: INTEGER_8 is
 			-- 8-bit integer value 
+		require
+			is_integer_8: is_integer_8
 		do
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_8)
-			ctoi_state_machine.parse (Current, 1, count)
-			set_flags_after_conversion
-			if conversion_successful then
-				Result := ctoi_state_machine.parsed_integer_8
-			else
-				Result := 0
-			end			
+			Result := ctoi_state_machine.parsed_integer_8	
 		end
 		
 	to_integer_16: INTEGER_16 is
 			-- 16-bit integer value 
-		do
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_16)
-			ctoi_state_machine.parse (Current, 1, count)
-			set_flags_after_conversion		
-			if conversion_successful then
-				Result := ctoi_state_machine.parsed_integer_16
-			else
-				Result := 0
-			end			
+		require
+			is_integer_16: is_integer_16
+		do		
+			Result := ctoi_state_machine.parsed_integer_16
 		end		
 		
 	to_integer, to_integer_32: INTEGER is
 			-- 32-bit integer value 
+		require		
+			is_integer: is_integer_32
 		do
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_32)
-			ctoi_state_machine.parse (Current, 1, count)
-			set_flags_after_conversion		
-			if conversion_successful then
-				Result := ctoi_state_machine.parsed_integer_32
-			else
-				Result := 0
-			end			
+			Result := ctoi_state_machine.parsed_integer
 		end		
 		
 	to_integer_64: INTEGER_64 is
 			-- 64-bit integer value 
+		require		
+			is_integer_64: is_integer_64
 		do
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_integer_64)
-			ctoi_state_machine.parse (Current, 1, count)
-			set_flags_after_conversion			
-			if conversion_successful then
-				Result := ctoi_state_machine.parsed_integer_64
-			else
-				Result := 0
-			end			
+			Result := ctoi_state_machine.parsed_integer_64
 		end	
 		
 	to_natural_8: NATURAL_8 is		
 			-- 8-bit natural value 
+		require
+			is_natural_8: is_natural_8
 		do
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_8)
-			ctoi_state_machine.parse (Current, 1, count)
-			set_flags_after_conversion
-			if conversion_successful then
-				Result := ctoi_state_machine.parsed_natural_8
-			else
-				Result := 0
-			end			
+			Result := ctoi_state_machine.parsed_natural_8
 		end
 		
 	to_natural_16: NATURAL_16 is		
 			-- 16-bit natural value
+		require	
+			is_natural_16: is_natural_16
 		do
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_16)
-			ctoi_state_machine.parse (Current, 1, count)
-			set_flags_after_conversion
-			if conversion_successful then
-				Result := ctoi_state_machine.parsed_natural_16
-			else
-				Result := 0
-			end			
+			Result := ctoi_state_machine.parsed_natural_16	
 		end
 		
 	to_natural, to_natural_32: NATURAL_32 is		
 			-- 32-bit natural value 
+		require	
+			is_natural: is_natural
 		do
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_32)
-			ctoi_state_machine.parse (Current, 1, count)
-			set_flags_after_conversion
-			if conversion_successful then
-				Result := ctoi_state_machine.parsed_natural_32
-			else
-				Result := 0
-			end			
+			Result := ctoi_state_machine.parsed_natural_32
 		end	
 		
 	to_natural_64: NATURAL_64 is		
 			-- 64-bit natural value
+		require		
+			is_natural_64: is_natural_64
 		do
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_natural_64)
-			ctoi_state_machine.parse (Current, 1, count)
-			set_flags_after_conversion
-			if conversion_successful then
-				Result := ctoi_state_machine.parsed_natural_64
-			else
-				Result := 0
-			end			
+			Result := ctoi_state_machine.parsed_natural_64
 		end
 
 	to_real: REAL is
@@ -2507,6 +2479,15 @@ feature {NONE} -- Transformation
 		
 feature {NONE} -- Implementation
 
+	is_valid_number (type: INTEGER) : BOOLEAN is
+			-- Is `Current' a valid number according to given `type'?
+		do
+			ctoi_state_machine.reset (type)
+			ctoi_state_machine.parse_string_with_type (Current, type)
+			Result := ctoi_state_machine.is_integral_integer and then
+					  (not ctoi_state_machine.overflowed)		
+		end
+
 	str_strict_cmp (this, other: like area; nb: INTEGER): INTEGER is
 			-- Compare `this' and `other' strings 
 			-- for the first `nb' characters.
@@ -2563,34 +2544,6 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 		end
-		
-feature{NONE} -- Implementation
-
-	conversion_below_range: BOOLEAN
-			-- Flag indicating whether last string to integer/natural conversion failed 
-			-- because number is below range (too small)
-		
-	conversion_above_range: BOOLEAN
-			-- Flag indicating whether last string to integer/natural conversion failed 
-			-- because number is above range (too large)
-
-	conversion_successful: BOOLEAN
-			-- Flag indicating whether last string to integer/natural conversion successed
-	
-	conversion_overflowed: BOOLEAN
-			-- Flag indicating whether last string to integer/natural conversion overflowed
-			-- either because number is below or above range (too small or too large)
-	
-	set_flags_after_conversion is
-			-- Set flags after every string to integer/natural conversion.
-		do
-			conversion_overflowed := ctoi_state_machine.overflowed
-			conversion_above_range := ctoi_state_machine.too_large
-			conversion_below_range := ctoi_state_machine.too_small
-			conversion_successful := (not ctoi_state_machine.overflowed) and 
-								     ctoi_state_machine.is_integral_integer
-		end
-		
 
 invariant
 	extendible: extendible

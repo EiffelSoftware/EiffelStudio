@@ -20,7 +20,10 @@ inherit
 		redefine
 			send,
 			put_character, putchar, put_string, putstring,
-			put_integer, putint, put_boolean, putbool,
+			put_integer, putint, put_integer_32,
+			put_integer_8, put_integer_16, put_integer_64,
+			put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64,
+			put_boolean, putbool,
 			put_real, putreal, put_double, putdouble, put_managed_pointer
 		end
 
@@ -170,7 +173,7 @@ feature -- Output
 			c_send_float_to (descriptor, r, 0, peer_address.socket_address.item, peer_address.count)
 		end;
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Send integer `i' through socket.
 		require else
 			socket_exists: exists;
@@ -179,6 +182,84 @@ feature -- Output
 		do
 			c_send_int_to (descriptor, i, 0, peer_address.socket_address.item, peer_address.count)
 		end;
+		
+	put_integer_8 (i: INTEGER_8) is
+			-- Send integer `i' through socket.
+		require else
+			socket_exists: exists;
+			opened_for_write: is_open_write;
+			valid_peer: peer_address /= Void
+		do
+			integer_buffer.put_integer_8_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 1)
+		end
+		
+	put_integer_16 (i: INTEGER_16) is
+			-- Send integer `i' through socket.
+		require else
+			socket_exists: exists;
+			opened_for_write: is_open_write;
+			valid_peer: peer_address /= Void
+		do
+			integer_buffer.put_integer_16_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 2)
+		end
+		
+	put_integer_64 (i: INTEGER_64) is
+			-- Send integer `i' through socket.
+		require else
+			socket_exists: exists;
+			opened_for_write: is_open_write;
+			valid_peer: peer_address /= Void
+		do
+			integer_buffer.put_integer_64_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 8)			
+		end
+		
+	put_natural_8 (i: NATURAL_8) is
+			-- Send integer `i' through socket.
+		require else
+			socket_exists: exists;
+			opened_for_write: is_open_write;
+			valid_peer: peer_address /= Void
+		do
+			integer_buffer.put_natural_8_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 1)			
+		end
+		
+	put_natural_16 (i: NATURAL_16) is
+			-- Send integer `i' through socket.
+		require else
+			socket_exists: exists;
+			opened_for_write: is_open_write;
+			valid_peer: peer_address /= Void
+		do
+			integer_buffer.put_natural_16_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 2)			
+		end
+		
+	put_natural, put_natural_32 (i: NATURAL_32) is
+			-- Send integer `i' through socket.
+		require else
+			socket_exists: exists;
+			opened_for_write: is_open_write;
+			valid_peer: peer_address /= Void
+		do
+			integer_buffer.put_natural_32_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 4)			
+		end
+		
+	put_natural_64 (i: NATURAL_64) is
+			-- Send integer `i' through socket.
+		require else
+			socket_exists: exists;
+			opened_for_write: is_open_write;
+			valid_peer: peer_address /= Void
+		do
+			integer_buffer.put_natural_64_be (i, 0)
+			put_managed_pointer (integer_buffer, 0, 8)			
+		end
+		
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Send boolean `b' through socket.

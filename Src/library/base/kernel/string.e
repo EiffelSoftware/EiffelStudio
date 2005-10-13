@@ -2023,6 +2023,7 @@ feature -- Conversion
 		require
 			is_integer_8: is_integer_8
 		do
+			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_integer_8)
 			Result := ctoi_state_machine.parsed_integer_8	
 		end
 		
@@ -2030,7 +2031,8 @@ feature -- Conversion
 			-- 16-bit integer value 
 		require
 			is_integer_16: is_integer_16
-		do		
+		do	
+			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_integer_16)			
 			Result := ctoi_state_machine.parsed_integer_16
 		end		
 		
@@ -2039,6 +2041,7 @@ feature -- Conversion
 		require		
 			is_integer: is_integer_32
 		do
+			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_integer_32)			
 			Result := ctoi_state_machine.parsed_integer
 		end		
 		
@@ -2047,6 +2050,7 @@ feature -- Conversion
 		require		
 			is_integer_64: is_integer_64
 		do
+			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_integer_64)			
 			Result := ctoi_state_machine.parsed_integer_64
 		end	
 		
@@ -2055,6 +2059,7 @@ feature -- Conversion
 		require
 			is_natural_8: is_natural_8
 		do
+			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_natural_8)
 			Result := ctoi_state_machine.parsed_natural_8
 		end
 		
@@ -2063,6 +2068,7 @@ feature -- Conversion
 		require	
 			is_natural_16: is_natural_16
 		do
+			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_natural_16)			
 			Result := ctoi_state_machine.parsed_natural_16	
 		end
 		
@@ -2071,6 +2077,7 @@ feature -- Conversion
 		require	
 			is_natural: is_natural
 		do
+			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_natural_32)			
 			Result := ctoi_state_machine.parsed_natural_32
 		end	
 		
@@ -2079,6 +2086,7 @@ feature -- Conversion
 		require		
 			is_natural_64: is_natural_64
 		do
+			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_natural_64)			
 			Result := ctoi_state_machine.parsed_natural_64
 		end
 

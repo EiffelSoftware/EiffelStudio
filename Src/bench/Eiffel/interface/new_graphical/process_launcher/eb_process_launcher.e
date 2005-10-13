@@ -14,6 +14,8 @@ class
 
 inherit
 	EB_SHARED_MANAGERS
+	
+	EB_SHARED_FLAGS
 		
 feature -- Launching parameters setting
 
@@ -161,7 +163,7 @@ feature -- Control
 			err_thread: PROCESS_ERROR_LISTENER_THREAD
 			out_thread: PROCESS_OUTPUT_LISTENER_THREAD
 			prc_imp: PROCESS_IMP
-			pt: PROCESS_VISION2_TIMER
+			pt: PROCESS_TIMER
 		do
 			idle_printing_manager.initiate_timer
 			
@@ -174,13 +176,22 @@ feature -- Control
 			if redirection_needed then
 				prc.redirect_input_to_stream
 				prc.redirect_error_to_agent (error_handler)
-				prc.redirect_output_to_agent (output_handler)				
+				prc.redirect_output_to_agent (output_handler)
+				prc.set_hidden (is_hidden)
+				prc.set_has_console (False)									
 			else
 				prc.cancel_error_redirection
 				prc.cancel_input_redirection
 				prc.cancel_output_redirection
+				prc.set_hidden (False)
+				prc.set_has_console (True)
 			end
-			create pt.make (time_interval)
+			
+			if is_gui then
+				pt := create {PROCESS_VISION2_TIMER}.make (time_interval)
+			else
+				pt := create {PROCESS_THREAD_TIMER}.make (time_interval)
+			end
 			prc.set_timer (pt)
 	
 			prc.set_on_start_handler (on_start_handler)
@@ -198,8 +209,6 @@ feature -- Control
 				dir := ee.current_working_directory	
 				ee.change_working_directory (working_directory)									
 			end		
-			prc.set_hidden (is_hidden)
-			prc.set_has_console (False)
 			prc.launch
 			
 			if ee /= Void then

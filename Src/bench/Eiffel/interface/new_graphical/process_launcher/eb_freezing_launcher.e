@@ -10,8 +10,6 @@ class
 inherit
 	EB_C_COMPILER_LAUNCHER
 	
-	EB_SHARED_FLAGS
-	
 create
 	make
 
@@ -42,43 +40,37 @@ feature{NONE}  -- Actions
 		do
 			freezing_storage.reset_output_byte_count
 			freezing_storage.reset_error_byte_count									
-			terminate_c_compilation_cmd.enable_sensitive
+
 			if is_gui then
-				debugger_manager.on_compile_start		
+				debugger_manager.on_compile_start
+				terminate_c_compilation_cmd.enable_sensitive
+				notify_development_windows_on_c_compilation_start											
 			end
-			notify_development_windows_on_c_compilation_start			
 		end
 		
 	on_exit is
 			-- 
 		do
 			if is_gui then
-				debugger_manager.on_compile_stop				
-			end
-
-			terminate_c_compilation_cmd.disable_sensitive				
-			window_manager.synchronize_all
-			notify_development_windows_on_c_compilation_stop
-			if not freezing_launcher.force_terminated then
-				if platform_constants.is_windows then
+				debugger_manager.on_compile_stop
+				terminate_c_compilation_cmd.disable_sensitive				
+				window_manager.synchronize_all
+				notify_development_windows_on_c_compilation_stop
+				if freezing_launcher.launched and then not freezing_launcher.force_terminated then
 					if freezing_launcher.exit_code /= 0 then
 						show_compilation_error_dialog
 					end	
-				end		
-				if platform_constants.is_unix then
-					
-				end	
-				if platform_constants.is_vms then
-					
-				end	
-			end				
+				end					
+			end
 		end
 					
 	on_terminate is
 			-- handler called when c compiler has been terminated.
 		do
-			freezing_storage.wipe_out
-			freezing_storage.extend_block (create {EB_PROCESS_IO_STRUCTURED_TEXT_BLOCK}.make ("%NC compilation has been terminated.%N", False, True))
+			if is_gui then
+				freezing_storage.wipe_out
+				freezing_storage.extend_block (create {EB_PROCESS_IO_STRUCTURED_TEXT_BLOCK}.make ("%NC compilation has been terminated.%N", False, True))				
+			end
 			on_exit
 		end
 		
@@ -90,9 +82,11 @@ feature{NONE}  -- Actions
 	on_launch_failed is
 			-- 
 		do
-			freezing_storage.extend_block (create {EB_PROCESS_IO_STRUCTURED_TEXT_BLOCK}.make ("Background C compilation launch failed.%N", True, True))
-			freezing_storage.reset_error_byte_count
-			show_compiler_launch_fail_dialog
+			if is_gui then
+				freezing_storage.extend_block (create {EB_PROCESS_IO_STRUCTURED_TEXT_BLOCK}.make ("Background C compilation launch failed.%N", True, True))
+				freezing_storage.reset_error_byte_count
+				show_compiler_launch_fail_dialog				
+			end
 			on_exit			
 		end	
 		

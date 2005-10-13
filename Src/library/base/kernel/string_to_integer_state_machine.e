@@ -1,5 +1,5 @@
 indexing
-	description: "State machine to do string to integer/natural transition"
+	description: "State machine to do string to integer/natural conversion"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,8 @@ feature{NONE} -- Initialization
 			-- 
 		do
 			reset (type_no_limitation)
+			set_leading_separators (" ")
+			set_trailing_separators (" ")
 		end
 		
 feature	-- State machine setting
@@ -31,64 +33,103 @@ feature	-- State machine setting
 		do
 			last_state := state_0
 			overflowed := False
-			part1 := 0
-			part1_length := 0			
+			part1 := 0		
 			part2 := 0
 			sign := 0
-			trailing_white_spaces_acceptable := True
-			leading_white_spaces_acceptable := True
+			trailing_separators_acceptable := True
+			leading_separators_acceptable := True
 			conversion_type := type
 		ensure
 			last_state_set: last_state = state_0
 			overflowed_set: not overflowed
 			part1_set: part1 = 0
-			part2_set: part2 = 0
-			part1_length_set: part1_length = 0			
+			part2_set: part2 = 0			
 			sign_set: sign = 0
-			trailing_white_spaces_acceptable_set:
-				trailing_white_spaces_acceptable
-			leading_white_spaces_acceptable_set:
-				leading_white_spaces_acceptable
+			trailing_separators_acceptable_set:
+				trailing_separators_acceptable
+			leading_separators_acceptable_set:
+				leading_separators_acceptable
 			conversion_type_set: conversion_type = type
 		end
 	
 feature -- Status setting
 		
-	set_trailing_white_spaces_acceptable (b: BOOLEAN) is
-			-- Set `trailing_white_spaces_acceptable' to `b'.
-		require
-			state_machine_on_valid_state: last_state /= state_3
+	set_trailing_separators_acceptable (b: BOOLEAN) is
+			-- Set `trailing_separators_acceptable' to `b'.
 		do
-			trailing_white_spaces_acceptable := b
+			trailing_separators_acceptable := b
 		ensure
-			trailing_white_spaces_acceptable_set: 
-				trailing_white_spaces_acceptable = b
+			trailing_separators_acceptable_set: 
+				trailing_separators_acceptable = b
 		end
 		
-	set_leading_white_spaces_acceptable (b: BOOLEAN) is
-			-- Set `leading_white_spaces_acceptable' to `b'.
-		require
-			state_machine_on_valid_state: last_state /= state_0
+	set_leading_separators_acceptable (b: BOOLEAN) is
+			-- Set `leading_separators_acceptable' to `b'.
 		do
-			leading_white_spaces_acceptable := b
+			leading_separators_acceptable := b
 		ensure
-			leading_white_spaces_acceptable_set: 
-				leading_white_spaces_acceptable = b
+			leading_separators_acceptable_set: 
+				leading_separators_acceptable = b
 		end	
+		
+	set_leading_separators (separators: STRING) is
+			-- Set `leading_separators' with `separators'.
+		require
+			separators_not_void: separators /= Void
+			separators_valid: separators_valid (separators)
+		do
+			create leading_separators.make_from_string (separators)
+		ensure
+			leading_separators_set: leading_separators.is_equal (separators)
+		end
+		
+	set_trailing_separators (separators: STRING) is
+			-- Set `trailing_separators' with `separators'.
+		require
+			separators_not_void: separators /= Void
+			separators_valid: separators_valid (separators)
+		do
+			create trailing_separators.make_from_string (separators)
+		ensure
+			trailing_separators_set: trailing_separators.is_equal (separators)
+		end
+		
 					
 feature -- Status reporting
 
-	stop_position: INTEGER
-		-- Position where last `parse' stopped.
+	separators_valid (separators: STRING): BOOLEAN is
+			-- Are `separators' valid?
+		require
+			separators_not_void: separators /= Void
+			separators_not_empty: not separators.is_empty
+		local
+			i: INTEGER
+			l_c: INTEGER
+			c: CHARACTER
+			done: BOOLEAN
+		do
+			from
+				i := 1
+				l_c := separators.count
+				done := False
+				Result := True
+			until
+				i > l_c or done
+			loop
+				c := separators.item (i)
+				if (c >='0' and c <= '9') or c ='+' or c = '-' then
+					done := True
+					Result := False
+				end
+				i := i + 1
+			end
+		end	
 		
-	trailing_white_spaces_acceptable: BOOLEAN
+	trailing_separators_acceptable: BOOLEAN
 		-- Are trailing white spaces acceptable?
 		
-	leading_white_spaces_acceptable: BOOLEAN
+	leading_separators_acceptable: BOOLEAN
 		-- Are leading white spaces acceptable?
-
-	character_count: INTEGER
-		-- Number of characters stored in `char_buffer'
 
 	last_state: INTEGER
 		-- Last state of this state machine
@@ -106,74 +147,79 @@ feature -- Status reporting
 		end
 			
 	sign: INTEGER
-		-- Sign of this integer, 0 positive; 1 nagetive.
+		-- Sign of this integer, 0: positive; 1: nagetive.
 				
 	conversion_type: INTEGER
 		-- Expected number type of string stored in `char_buffer'
-		-- See `INTEGER_NATURAL_INFORMATION' for more information.	
+		-- See `INTEGER_NATURAL_INFORMATION' for more information.
+		
+	leading_separators: STRING
+	
+	trailing_separators: STRING
 		
 feature -- String parsing
 		
-	parse (s: STRING; start_position:INTEGER; end_position: INTEGER) is
-		-- Parse `s' from `start_position' to `end_position'.
+	parse_string_with_type (s: STRING; type: INTEGER) is
+			-- Parse `s' to see if it is a number with `type'.
+			-- Call `is_integral_integer' or `is_part_of_integer' to see result.
 		require
 			s_not_void: s /= Void
-			--s_not_empty: not s.is_empty
-			start_position_valid: start_position > 0
-			--start_position_small_enough: start_position <= s.count
-			--start_position_not_larger_then_end_position: start_position <= end_position
-			end_position_small_enough: end_position <= s.count
 		local
 			i: INTEGER
-			l_c: CHARACTER
+			l_c: INTEGER			
 		do
+			reset (type)
 			from
-				i := start_position
+				i := 1
+				l_c := s.count
 			until
-				i > end_position or last_state = state_4 or last_state = state_5
+				i > l_c or last_state = state_4 or last_state = state_5
 			loop
-				l_c := s.item (i)
+				parse_character (s.item (i))
 				i := i + 1
+			end
+		end
+
+	parse_character (c: CHARACTER) is
+			-- Parse `c'.
+			-- Call `is_integral_integer' or `is_part_of_integer' to see result.
+		local
+			temp_p1: like max_natural_type
+			temp_p2: like max_natural_type
+		do
+			if last_state /= state_4 and last_state /= state_5 then
+				temp_p1 := (0).to_natural_64
+				temp_p2 := (0).to_natural_64
 				inspect last_state
 				when state_0 then
 						-- Let's find beginning of an integer, if any.
-					if l_c.is_digit then
-
+					if c.is_digit then
 						last_state := state_2
-						if conversion_type /= type_no_limitation then
-							part1 := 0
-									-- Note: If max length of an integer is not 64,
-									-- this would change to another proper feature,
-									-- for example, to_natural_128.
-							part2 := (l_c.code - 48).to_natural_64	
-						end						
-					elseif l_c = '-' or l_c = '+' then
+						part1 := 0
+						part2 := (c.code - 48).to_natural_64						
+					elseif c = '-' or c = '+' then
 						last_state := state_1
-						if l_c = '-' then
+						if c = '-' then
 							sign := 1
 						else
 							sign := 0
 						end
-					elseif l_c = ' ' then
-						if not leading_white_spaces_acceptable then
-							last_state := state_4
-						end							
+					elseif leading_separators_acceptable and then leading_separators.has (c) then
 					else
 						last_state := state_4
 					end
 				when state_1 then
 						-- Let's find first digit after sign.
-					if l_c.is_digit then						
+					if c.is_digit then	
+						part1 := 0
+						part2 := (c.code - 48).to_natural_64									
 						if conversion_type /= type_no_limitation then
-							part1 := 0
-									-- Note: If max length of an integer is not 64,
-									-- this would change to another proper feature,
-									-- for example, to_natural_128.
-							part2 := (l_c.code - 48).to_natural_64	
-							overflowed := overflow.will_overflow (part1, part2, conversion_type, sign)						
+							overflowed := overflow.will_overflow (part1, part2, conversion_type, sign)							
 							if overflowed then
-								last_state := state_5
-							end						
+								part1 := temp_p1
+								part2 := temp_p2
+								last_state := state_5								
+							end	
 						end
 						last_state := state_2
 					else
@@ -181,44 +227,32 @@ feature -- String parsing
 					end
 				when state_2 then
 						-- Let's find another digit or end of integer.
-					if l_c.is_digit then
+					if c.is_digit then
+						temp_p1 := part1
+						temp_p2 := part2
+						part1 := part1*10 + part2
+						part2 := (c.code - 48).to_natural_64					
 						if conversion_type /= type_no_limitation then
-							if not overflow.can_new_digit_be_added (part1, part1_length, conversion_type, sign) then
-								overflowed := True
+							overflowed := overflow.will_overflow (part1, part2, conversion_type, sign)							
+							if overflowed then
 								last_state := state_5
-							else
-								if not (part1 = 0 and part2 = 0) then
-									part1_length := part1_length + 1
-									part1 := part1 * 10
-								end
-								part1 := part1 + part2
-										-- Note: If max length of an integer is not 64,
-										-- this would change to another proper feature,
-										-- for example, to_natural_128.
-								part2 := (l_c.code - 48).to_natural_64
-								overflowed := overflow.will_overflow (part1, part2, conversion_type, sign)							
-								if overflowed then
-									last_state := state_5
-								end	
-							end							
+								part1 := temp_p1
+								part2 := temp_p2								
+							end	
 						end						
-					elseif l_c = ' ' then
-						if trailing_white_spaces_acceptable then
-							last_state := state_3
-						else
-							last_state := state_4
-						end					
+					elseif trailing_separators_acceptable and then trailing_separators.has (c) then					
+						last_state := state_3				
 					else
 						last_state := state_4
 					end
 				when state_3 then
 						-- Consume remaining white space.
-					if l_c /= ' ' then
+					if trailing_separators_acceptable and then trailing_separators.has (c) then
+					else
 						last_state := state_4
 					end
-				end
-			end
-			stop_position := i - 1
+				end						
+			end	
 		end
 		
 feature -- Status reporting
@@ -236,15 +270,17 @@ feature -- Status reporting
 			Result := (last_state = state_2) or (last_state = state_3)
 		end
 		
+	is_integral_integer_state (state: INTEGER):BOOLEAN is
+			-- Is `state' an integral integer state?
+		do
+			Result := (state = state_2) or (state = state_3)
+		end
+		
 	overflowed: BOOLEAN
 			-- Is integer overflowed?
 
 	parsed_integer_8: INTEGER_8 is
 			-- INTEGER_8 representation of parsed string
-		require
-			type_valid: conversion_type = type_integer_8
-			integer_is_integral: is_integral_integer			
-			not_overflowed: not overflowed
 		local
 			l1: INTEGER_8
 		do
@@ -257,12 +293,9 @@ feature -- Status reporting
 				Result := l1 + part2.as_integer_8
 			end
 		end		
+		
 	parsed_integer_16: INTEGER_16 is
 			-- INTEGER_16 representation of parsed string
-		require
-			type_valid: conversion_type = type_integer_16
-			integer_is_integral: is_integral_integer			
-			not_overflowed: not overflowed
 		local
 			l1: INTEGER_16
 		do
@@ -274,13 +307,9 @@ feature -- Status reporting
 				Result := l1 + part2.as_integer_16
 			end
 		end
-		
+				
 	parsed_integer_32, parsed_integer: INTEGER is
 			-- INTEGER representation of parsed string
-		require
-			type_valid: conversion_type = type_integer_32
-			integer_is_integral: is_integral_integer
-			not_overflowed: not overflowed
 		local
 			l1: INTEGER
 		do
@@ -295,10 +324,6 @@ feature -- Status reporting
 		
 	parsed_integer_64: INTEGER_64 is
 			-- INTEGER_64 representation of parsed string 
-		require
-			type_valid: conversion_type = type_integer_64
-			integer_is_integral: is_integral_integer			
-			not_overflowed: not overflowed
 		local
 			l1: INTEGER_64
 		do
@@ -309,14 +334,10 @@ feature -- Status reporting
 			else
 				Result := l1 + part2.as_integer_64
 			end
-		end			
-	
+		end	
+			
 	parsed_natural_8: NATURAL_8 is
 			-- NATURAL_8 representation of parsed string
-		require
-			type_valid: conversion_type = type_natural_8
-			integer_is_integral: is_integral_integer			
-			not_overflowed: not overflowed
 		local
 			l1: NATURAL_8
 		do
@@ -324,13 +345,9 @@ feature -- Status reporting
 			l1 := l1 * 10
 			Result := l1 + part2.as_natural_8
 		end	
-			
+					
 	parsed_natural_16: NATURAL_16 is
 			-- NATURAL_16 representation of parsed string
-		require
-			type_valid: conversion_type = type_natural_16
-			integer_is_integral: is_integral_integer			
-			not_overflowed: not overflowed
 		local
 			l1: NATURAL_16
 		do
@@ -338,27 +355,19 @@ feature -- Status reporting
 			l1 := l1 * 10
 			Result := l1 + part2.as_natural_16
 		end	
-		
+				
 	parsed_natural_32, parsed_natural: NATURAL_32 is
 			-- NATURAL_32 representation of parsed string 
-		require
-			type_valid: conversion_type = type_natural_32
-			integer_is_integral: is_integral_integer			
-			not_overflowed: not overflowed
 		local
 			l1: NATURAL_32
 		do
 			l1 := part1.as_natural_32
 			l1 := l1 * 10
 			Result := l1 + part2.as_natural_32
-		end				
-
+		end	
+		
 	parsed_natural_64: NATURAL_64 is
 			-- NATURAL_64 representation of parsed string
-		require
-			type_valid: conversion_type = type_natural_64
-			integer_is_integral: is_integral_integer			
-			not_overflowed: not overflowed
 		local
 			l1: NATURAL_64
 		do
@@ -366,18 +375,6 @@ feature -- Status reporting
 			l1 := l1 * 10
 			Result := l1 + part2.as_natural_64
 		end	
-		
-feature{NONE} -- Implementation
-	
-	overflow: OVERFLOW_CHECKER is
-			-- Overflow checker
-		once
-			create Result.make
-		end
-		
-	part1, part2: like max_natural_type
-	
-	part1_length: INTEGER	
 		
 feature	-- States
 
@@ -398,5 +395,16 @@ feature	-- States
 	
 	state_5: INTEGER is 5
 			-- state 5 : overflow state
-			
+		
+feature{NONE} -- Implementation
+	
+	overflow: OVERFLOW_CHECKER is
+			-- Overflow checker
+		once
+			create Result.make
+		end
+		
+	part1, part2: like max_natural_type
+			-- Naturals used for conversion	
+						
 end

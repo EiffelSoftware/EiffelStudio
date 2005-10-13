@@ -13,6 +13,8 @@ inherit
 	-- Jason Wei added the following on Aug 31 2005
 	EB_SHARED_MANAGERS
 	-- Jason Wei added the above on Aug 31 2005
+	
+	EB_SHARED_FLAGS
 
 feature -- Command Execution
 
@@ -78,11 +80,11 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 				if workbench_mode then
 					freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
 					freezing_launcher.set_hidden (True)
-					freezing_launcher.launch (True)
+					freezing_launcher.launch (is_gui)
 				else
 					finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
 					finalizing_launcher.set_hidden (True)
-					finalizing_launcher.launch (True)
+					finalizing_launcher.launch (is_gui)
 				end
 				--Jason Wei 9/12/2005
 				--Execution_environment.launch (freeze_command)
@@ -92,12 +94,12 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 				if workbench_mode then
 					freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
 					freezing_launcher.set_hidden (True)
-					freezing_launcher.launch (True)
+					freezing_launcher.launch (is_gui)
 					freezing_launcher.wait_for_exit
 				else
 					finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
 					finalizing_launcher.set_hidden (True)
-					finalizing_launcher.launch (True)
+					finalizing_launcher.launch (is_gui)
 					finalizing_launcher.wait_for_exit
 				end				
 				--Jason Wei 9/12/2005

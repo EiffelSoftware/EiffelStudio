@@ -498,7 +498,7 @@ feature{NONE} -- Actions
 					else
 						external_launcher.prepare_command_line (str,"")							
 					end
-					external_launcher.set_hidden (True)					
+					external_launcher.set_hidden (False)					
 					external_launcher.launch (True)						
 				end
 			else

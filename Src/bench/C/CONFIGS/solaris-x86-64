@@ -163,7 +163,7 @@ optimize="-xO2 -g $platform_arch "
 voidflags='15'
 #Check value for next 1
 warning_level=''
-wkoptimize="-xO0 $platform_arch"
+wkoptimize="$platform_arch"
 
 #Makefiles
 ar='ar'

@@ -145,7 +145,8 @@ feature {NONE} -- Implementation
 		end
 
 	read_attributes (a_dtype: INTEGER) is
-			-- Read attribute description for `a_dtype' where `a_dtype' is in
+			-- Read attribute description for `a_dtype' where `a_dtype' is a dynamic type
+			-- from the current system.
 		require
 			a_dtype_non_negative: a_dtype >= 0
 			attributes_mapping_not_void: attributes_mapping /= Void
@@ -154,52 +155,63 @@ feature {NONE} -- Implementation
 			l_map: like attributes_map
 			l_mapping: SPECIAL [INTEGER]
 			l_name: STRING
-			l_dtype: INTEGER
+			l_dtype, l_field_count: INTEGER
 			i, nb: INTEGER
 		do
 			l_deser := deserializer
-			from
-				i := 1
-				nb := l_deser.read_compressed_natural_32.to_integer_32
-				l_map := attributes_map (a_dtype)
-				nb := nb + 1				
-				create l_mapping.make (nb)
-			until
-				i = nb
-			loop
-					-- Read attribute static type
-				l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
-					-- Write attribute name
-				l_name := l_deser.read_string_8
 
-				l_map.search (l_name)
-				if l_map.found then
-					if l_map.found_item.integer_32_item (2) /= l_dtype then
-						set_has_error
-						i := nb - 1 -- Jump out of loop
+				-- Compare count of attributes
+			l_field_count := internal.field_count_of_type (a_dtype)
+			nb := l_deser.read_compressed_natural_32.to_integer_32
+
+			if nb /= l_field_count then
+					-- Stored type has a different number of attributes than the type
+					-- from the retrieving system.
+				set_has_error
+			else
+				from
+					i := 1
+					l_map := attributes_map (a_dtype, l_field_count)
+					nb := nb + 1				
+					create l_mapping.make (nb)
+				until
+					i = nb
+				loop
+						-- Read attribute static type
+					l_dtype := new_dynamic_type_id (l_deser.read_compressed_natural_32.to_integer_32)
+						-- Write attribute name
+					l_name := l_deser.read_string_8
+
+					l_map.search (l_name)
+					if l_map.found then
+						if l_map.found_item.integer_32_item (2) /= l_dtype then
+							set_has_error
+							i := nb - 1 -- Jump out of loop
+						else
+							l_mapping.put (l_map.found_item.integer_32_item (1), i)
+						end
 					else
-						l_mapping.put (l_map.found_item.integer_32_item (1), i)
+						set_has_error
+						i := nb	- 1 -- Jump out of loop
 					end
-				else
-					set_has_error
-					i := nb	- 1 -- Jump out of loop
+					i := i + 1
 				end
-				i := i + 1
-			end
-			if not has_error then
-				if not attributes_mapping.valid_index (a_dtype) then
-					attributes_mapping := attributes_mapping.resized_area ((a_dtype + 1).max (
-						attributes_mapping.count * 2))
+				if not has_error then
+					if not attributes_mapping.valid_index (a_dtype) then
+						attributes_mapping := attributes_mapping.resized_area ((a_dtype + 1).max (
+							attributes_mapping.count * 2))
+					end
+					attributes_mapping.put (l_mapping, a_dtype)
 				end
-				attributes_mapping.put (l_mapping, a_dtype)
 			end
 		end
 
-	attributes_map (a_dtype: INTEGER): HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
+	attributes_map (a_dtype, a_field_count: INTEGER): HASH_TABLE [TUPLE [INTEGER, INTEGER], STRING] is
 			-- Attribute map for dynamic type `a_dtype' which records
 			-- position and dynamic type for a given attribute name.
 		require
 			a_dtype_non_negative: a_dtype >= 0
+			a_field_count_non_negative: a_field_count >= 0
 		local
 			l_int: like internal
 			i, nb: INTEGER
@@ -208,9 +220,8 @@ feature {NONE} -- Implementation
 
 			from
 				i := 1
-				nb := l_int.field_count_of_type (a_dtype)
-				create Result.make (nb)
-				nb := nb + 1
+				create Result.make (a_field_count)
+				nb := a_field_count + 1
 			until
 				i = nb
 			loop

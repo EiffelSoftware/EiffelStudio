@@ -93,8 +93,8 @@ feature -- Serialization routines
 				l_deserializer.decode (a_is_gc_enabled)
 				if not l_deserializer.has_error then
 					Result := l_deserializer.last_decoded_object
+					a_reader.read_footer
 				end
-				a_reader.read_footer
 			end
 		end
 

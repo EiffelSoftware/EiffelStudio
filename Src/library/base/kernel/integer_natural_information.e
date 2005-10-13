@@ -17,19 +17,24 @@ feature
 	type_count: INTEGER is 4
 			-- Number of types of integer/natural in Eiffel
 	
-	type_no_limitation: INTEGER is 0	
+	type_no_limitation: INTEGER is 0
+			-- Type representing a number sequence (no length limitation)
+
+	type_integer_natural_separator: INTEGER is 10
+			
 	type_integer_8:  INTEGER is 1
 	type_integer_16: INTEGER is 2
 	type_integer, type_integer_32: INTEGER is 3
 	type_integer_64: INTEGER is 4	
-	type_integer_natural_separator: INTEGER is 10
+
 	type_natural_8: INTEGER is 11
 	type_natural_16: INTEGER is 12
 	type_natural, type_natural_32: INTEGER is 13
 	type_natural_64: INTEGER is 14
-			-- Type indicators
+			-- Integer/natural type indicators
 	
-feature
+feature -- Status reporting
+
 	integer_type_valid (type: INTEGER): BOOLEAN is
 			-- Is `type' a valid integer type?
 		do

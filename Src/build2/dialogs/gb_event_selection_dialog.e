@@ -93,7 +93,7 @@ inherit
 			copy, default_create, is_equal
 		end
 		
-	CONSTANTS
+	GB_INTERFACE_CONSTANTS
 		export
 			{NONE} all
 		undefine

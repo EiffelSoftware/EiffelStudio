@@ -18,7 +18,7 @@ inherit
 			initialize, is_in_default_state
 		end
 			
-	CONSTANTS
+	GB_INTERFACE_CONSTANTS
 		undefine
 			is_equal, default_create, copy
 		end
@@ -57,7 +57,7 @@ feature {NONE}-- Initialization
 			create next_tip_button
 			create close_button
 			
-				-- Build widget structure.
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_2)
@@ -94,15 +94,14 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			integer_constant_set_procedures.extend (agent l_ev_vertical_box_1.set_padding (?))
-			integer_constant_retrieval_functions.extend (agent large_spacing_width)
-			integer_constant_set_procedures.extend (agent l_ev_vertical_box_1.set_border_width (?))
-			integer_constant_retrieval_functions.extend (agent large_spacing_width)
+			
+			l_ev_vertical_box_1.set_padding_width (large_spacing_width)
+			l_ev_vertical_box_1.set_border_width (large_spacing_width)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
 			l_ev_frame_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_frame_1.set_style (1)
 			l_ev_vertical_box_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			l_ev_vertical_box_3.set_padding (5)
+			l_ev_vertical_box_3.set_padding_width (5)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_3)
 			l_ev_horizontal_box_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
@@ -110,8 +109,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_1)
 			l_ev_pixmap_1.set_minimum_width (39)
 			l_ev_pixmap_1.set_minimum_height (33)
-			pixmap_constant_set_procedures.extend (agent l_ev_pixmap_1.copy (?))
-			pixmap_constant_retrieval_functions.extend (agent lightbulb_png)
+			l_ev_pixmap_1.copy (lightbulb_png)
 			l_ev_cell_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_cell_1.set_minimum_width (5)
 			l_ev_vertical_box_4.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
@@ -146,26 +144,20 @@ feature {NONE}-- Initialization
 			l_ev_cell_5.set_minimum_width (20)
 			l_ev_cell_6.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_cell_6.set_minimum_height (10)
-			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_4.set_padding (?))
-			integer_constant_retrieval_functions.extend (agent large_spacing_width)
+			l_ev_horizontal_box_4.set_padding_width (large_spacing_width)
 			l_ev_horizontal_box_4.disable_item_expand (show_tips_button)
 			l_ev_horizontal_box_4.disable_item_expand (next_tip_button)
 			l_ev_horizontal_box_4.disable_item_expand (close_button)
 			show_tips_button.set_text ("Show tips at startup")
-			string_constant_set_procedures.extend (agent next_tip_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent next_tip_text)
-			integer_constant_set_procedures.extend (agent next_tip_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
-			string_constant_set_procedures.extend (agent close_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent close_text)
-			integer_constant_set_procedures.extend (agent close_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
-			string_constant_set_procedures.extend (agent set_title (?))
-			string_constant_retrieval_functions.extend (agent tip_of_day_dialog_title)
+			next_tip_button.set_text (next_tip_text)
+			next_tip_button.set_minimum_width (default_button_width)
+			close_button.set_text (close_text)
+			close_button.set_minimum_width (default_button_width)
+			set_title (tip_of_day_dialog_title)
 			
 			set_all_attributes_using_constants
 			
-				-- Connect events.
+				--Connect events.
 			next_tip_button.select_actions.extend (agent next_tip_selected)
 			close_button.select_actions.extend (agent close_button_selected)
 				-- Close the application when an interface close

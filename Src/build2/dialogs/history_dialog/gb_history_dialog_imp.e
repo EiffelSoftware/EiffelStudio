@@ -18,7 +18,7 @@ inherit
 			initialize, is_in_default_state
 		end
 			
-	CONSTANTS
+	GB_INTERFACE_CONSTANTS
 		undefine
 			is_equal, default_create, copy
 		end
@@ -38,7 +38,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_1
 			create close_button
 			
-				-- Build widget structure.
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (history_list)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
@@ -58,21 +58,19 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			integer_constant_set_procedures.extend (agent l_ev_vertical_box_1.set_padding (?))
-			integer_constant_retrieval_functions.extend (agent medium_padding)
-			integer_constant_set_procedures.extend (agent l_ev_vertical_box_1.set_border_width (?))
-			integer_constant_retrieval_functions.extend (agent medium_padding)
+			
+			l_ev_vertical_box_1.set_padding_width (medium_padding)
+			l_ev_vertical_box_1.set_border_width (medium_padding)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.disable_item_expand (close_button)
-			string_constant_set_procedures.extend (agent close_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent close_text)
+			close_button.set_text (close_text)
 			set_minimum_width (250)
 			set_minimum_height (250)
 			set_title ("History")
 			
 			set_all_attributes_using_constants
 			
-				-- Connect events.
+				--Connect events.
 			close_button.select_actions.extend (agent close_button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.

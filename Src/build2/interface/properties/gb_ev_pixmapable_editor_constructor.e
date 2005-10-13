@@ -13,7 +13,7 @@ inherit
 			default_create
 		end
 		
-	CONSTANTS
+	GB_INTERFACE_CONSTANTS
 		undefine
 			default_create
 		end

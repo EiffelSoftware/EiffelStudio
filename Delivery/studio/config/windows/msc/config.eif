@@ -37,6 +37,7 @@ ar: ""
 ld: ""
 ldflags: "-STACK:5000000 -NODEFAULTLIB:libc"
 mtldflags: "-STACK:5000000 -NODEFAULTLIB:libc"
+ccldflags: "-STACK:5000000 -NODEFAULTLIB:libc"
 console_flags: "-SUBSYSTEM:CONSOLE"
 windows_flags: "-SUBSYSTEM:WINDOWS"
 ldsharedflags: "-dll -incremental:no"
@@ -93,7 +94,7 @@ appl_make: "$appl.exe: $appl.lnk $appl.res%N%
 %%N%
 %$appl.lnk: $(OBJECTS) e1\emain.obj $appl.res $precompilelibs Makefile%N%
 %%Tif exist $@ $(RM) $@%N%
-%%T@echo $(LDFLAGS) -OUT:$appl.exe > $@%N%
+%%T@echo $(LDFLAGS) $(CCLDFLAGS) -OUT:$appl.exe > $@%N%
 %%T@echo e1\emain.obj >> $@%N%
 %%T@echo $library $(EXTERNALS) >> $@%N%
 %%T@echo $sharedlibs >> $@%N%
@@ -124,7 +125,7 @@ precompile: "driver.exe: driver.lnk driver.rc precomp.lib%N%
 %%Tlib -nologo -OUT:precomp.lib $(C_OBJECTS) $(EXTERNALS)%N%
 %%N%
 %driver.lnk: e1\emain.obj $(OBJECTS) driver.res $precompilelibs%N%
-%%Techo $(LDFLAGS) -OUT:driver.exe > $@%N%
+%%Techo $(LDFLAGS) $(CCLDFLAGS) -OUT:driver.exe > $@%N%
 %%Techo e1\emain.obj >> $@%N%
 %%Techo $sharedlibs >> $@%N%
 %$precompile_libs_command%

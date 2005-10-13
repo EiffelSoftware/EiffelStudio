@@ -26,9 +26,7 @@ class CONSOLE inherit
 				last_natural_64,
 				last_real, last_string, last_double, file_readable,
 				lastchar, lastint, lastreal, laststring, lastdouble,
-				readable, is_closed, extendible, is_open_write,
-				last_read_number_overflowed, last_read_number_above_range, 
-				last_read_number_below_range, last_read_number_correct
+				readable, is_closed, extendible, is_open_write
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			 read_real, read_double, read_character,
@@ -37,12 +35,8 @@ class CONSOLE inherit
 			put_new_line, new_line, end_of_file, file_close,
 			readreal, readdouble, readchar, readline, readstream,
 			readword, putbool, putreal, putdouble, putstring, putchar,
-			dispose, read_to_string,
-			read_integer_8, read_integer_16, readint, read_integer, read_integer_32, read_integer_64,
-			read_natural_8, read_natural_16, read_natural, read_natural_32, read_natural_64,
-			put_integer_8, put_integer_16, putint, put_integer, put_integer_32, put_integer_64,
-			put_natural_8, put_natural_16, put_natural, put_natural_32, put_natural_64
-
+			dispose, read_to_string, back,
+			internal_leading_separators, read_integer_with_no_type
 			
 		end
 
@@ -103,102 +97,13 @@ feature -- Removal
 			-- file_close (file_pointer)
 		end
 
+feature -- Cursor movement
+	back is
+			-- Not supported on console
+		do			
+		end
+		
 feature -- Input
-
---	read_integer, readint is
---			-- Read a new integer from standard input.
---			-- Make result available in `last_integer'.
---		do
---			last_integer := console_readint (file_pointer)
---		end
-		
-	read_integer_8 is
-			-- Read a new 8-bit integer from standard input.
-			-- Make result available in `last_integer_8'. 
-		local
-			str: STRING
-		do
-			str := read_console_integer_with_no_type
-			last_integer_8 := str.to_integer_8			
-			set_flags_after_conversion (str)
-		end		
-		
-	read_integer_16 is
-			-- Read a new 16-bit integer from standard input.
-			-- Make result available in `last_integer_16'. 
-		local
-			str: STRING
-		do
-			str := read_console_integer_with_no_type
-			last_integer_16 := str.to_integer_16
-			set_flags_after_conversion (str)
-		end	
-		
-	read_integer, readint, read_integer_32 is
-			-- Read a new 32-bit integer from standard input.
-			-- Make result available in `last_integer'. 
-		local
-			str: STRING
-		do
-			str := read_console_integer_with_no_type
-			last_integer := str.to_integer_32
-			set_flags_after_conversion (str)
-		end	
-		
-	read_integer_64 is
-			-- Read a new 64-bit integer from standard input.
-			-- Make result available in `last_integer_64'. 
-		local
-			str: STRING
-		do
-			str := read_console_integer_with_no_type
-			last_integer_64 := str.to_integer_64
-			set_flags_after_conversion (str)
-		end	
-		
-	read_natural_64 is
-			-- Read a new 64-bit natural from standard input.
-			-- Make result available in `last_natural_64'. 
-		local
-			str: STRING
-		do
-			str := read_console_integer_with_no_type
-			last_natural_64 := str.to_natural_64
-			set_flags_after_conversion (str)
-		end		
-
-	read_natural, read_natural_32 is
-			-- Read a new 32-bit natural from standard input.
-			-- Make result available in `last_natural'. 
-		local
-			str: STRING
-		do
-			str := read_console_integer_with_no_type
-			last_natural := str.to_natural_32
-			set_flags_after_conversion (str)
-		end				
-
-	read_natural_16 is
-			-- Read a new 16-bit natural from standard input.
-			-- Make result available in `last_natural_16'.  
-		local
-			str: STRING
-		do
-			str := read_console_integer_with_no_type
-			last_natural_16 := str.to_natural_16
-			set_flags_after_conversion (str)
-		end	
-		
-	read_natural_8 is
-			-- Read a new 8-bit natural from standard input.
-			-- Make result available in `last_natural_8'.  
-		local
-			str: STRING
-		do
-			str := read_console_integer_with_no_type
-			last_natural_8 := str.to_natural_8
-			set_flags_after_conversion (str)
-		end			
 
 	read_real, readreal is
 			-- Read a new real from standard input.
@@ -369,55 +274,6 @@ feature -- Output
 		do
 			console_pd (file_pointer, d)
 		end
-		
-	put_integer_64 (i: INTEGER_64) is
-			-- Write `i' at end of default output.
-		do
-			put_string (i.out)
-		end
-		
-	put_integer, put_integer_32, putint (i: INTEGER) is
-			-- Write `i' at end of default output. 
-		do
-			put_string (i.out)
-		end
-		
-				
-	put_integer_16 (i: INTEGER_16) is
-			-- Write `i' at end of default output.
-		do
-			put_string (i.out)
-		end
-		
-	put_integer_8 (i: INTEGER_8) is
-			-- Write `i' at end of default output.
-		do
-			put_string (i.out)
-		end
-	
-	put_natural_8 (i: NATURAL_8) is		
-			-- Write `i' at end of default output.
-		do
-			put_string (i.out)
-		end
-		
-	put_natural_16 (i: NATURAL_16) is		
-			-- Write `i' at end of default output.
-		do
-			put_string (i.out)
-		end
-		
-	put_natural, put_natural_32 (i: NATURAL_32) is		
-			-- Write `i' at end of default output.
-		do
-			put_string (i.out)
-		end
-
-	put_natural_64 (i: NATURAL_64) is		
-			-- Write `i' at end of default output. 
-		do
-			put_string (i.out)
-		end		
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' at end of default output.
@@ -444,27 +300,57 @@ feature {NONE} -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	read_console_integer_with_no_type: STRING is
-			-- Read a number which is at most `number_length' bytes long 
-			-- from console. 
-		local
-			read: INTEGER -- Amount of bytes already read
-			str_area: ANY
+	internal_leading_separators: STRING is
+			-- 
 		do
-			create Result.make (100)
-			str_area := Result.area
-
-			read := console_readline (file_pointer, $str_area, number_length, 0)
-			if read > number_length then
-				Result.set_count (number_length)
-			else	
-				Result.set_count (read)
+			Result := " %T"
+		end	
+		
+	internal_trailing_separators: STRING is
+			-- 
+		do
+			Result := " %T%N"
+		end
+		
+	read_integer_with_no_type is
+			-- Read a ASCII representation of number of `type'
+			-- at current position.
+		local
+			l_is_integer: BOOLEAN
+			cnt: INTEGER
+			entered: BOOLEAN
+		do
+			l_is_integer := True
+			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation )
+			ctoi_state_machine.set_leading_separators (internal_leading_separators)
+			ctoi_state_machine.set_trailing_separators (internal_trailing_separators)
+			from			
+				l_is_integer := True
+				cnt := 0
+				entered := False
+			until
+				entered or end_of_file or else not l_is_integer
+			loop
+				read_character
+				if not end_of_file then
+					cnt := 1
+					if last_character = '%N' then
+						entered := True
+					end
+					ctoi_state_machine.parse_character (last_character)
+					l_is_integer := ctoi_state_machine.is_part_of_integer
+				end
+			end
+				-- Consume all left characters.
+			from
+				
+			until
+				entered or end_of_file or last_character = '%N' 
+			loop
+				read_character
 			end
 		end
 		
-	number_length: INTEGER is 100
-			-- Maximum bytes used when read an integer or natural from console
-
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.

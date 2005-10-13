@@ -123,32 +123,6 @@ feature -- Status report
 		do
 			Result := input.last_double
 		end
-		
-	last_read_number_overflowed: BOOLEAN is
-			-- Is last integer/natural read overflowed according to its type?
-		do
-			Result := input.last_read_number_overflowed
-		end
-
-	last_read_number_below_range: BOOLEAN is
-			-- Is last integer/natural read overflowed because
-			-- number is below range (too small)?		
-		do	
-			Result := input.last_read_number_below_range
-		end
-	
-	last_read_number_above_range: BOOLEAN is
-			-- Is last integer/natural read overflowed because
-			-- number is above range (too large)?
-		do
-			Result := input.last_read_number_above_range
-		end
-			
-	last_read_number_correct: BOOLEAN is
-			-- Is last integer/natural correct according to its type?
-		do	
-			Result := input.last_read_number_correct
-		end
 
 feature -- Element change
 
@@ -266,14 +240,13 @@ feature -- Element change
 feature -- Input
 
 	read_integer, readint, read_integer_32 is
-			-- Read a new integer from standard input.
+			-- Read a new 32-bit integer from standard input.
 			-- Make result available in `last_integer'.
 		do
 			input.read_integer
 		end
 		
 	read_integer_8 is
-			-- 
 			-- Read a new 8-bit integer from standard input.
 			-- Make result available in `last_integer_8'.
 		do
@@ -281,7 +254,6 @@ feature -- Input
 		end		
 
 	read_integer_16 is
-			-- 
 			-- Read a new 16-bit integer from standard input.
 			-- Make result available in `last_integer_16'.
 		do
@@ -289,7 +261,6 @@ feature -- Input
 		end		
 		
 	read_integer_64 is
-			-- 
 			-- Read a new 64-bit integer from standard input.
 			-- Make result available in `last_integer_64'.
 		do
@@ -297,7 +268,6 @@ feature -- Input
 		end	
 		
 	read_natural_8 is
-			-- 
 			-- Read a new 8-bit natural from standard input.
 			-- Make result available in `last_natural_8'.
 		do
@@ -305,7 +275,6 @@ feature -- Input
 		end	
 		
 	read_natural_16 is
-			-- 
 			-- Read a new 16-bit natural from standard input.
 			-- Make result available in `last_natural_16'.
 		do
@@ -313,7 +282,6 @@ feature -- Input
 		end	
 		
 	read_natural, read_natural_32 is
-			-- 
 			-- Read a new 32-bit natural from standard input.
 			-- Make result available in `last_natural'.
 		do
@@ -321,7 +289,6 @@ feature -- Input
 		end	
 		
 	read_natural_64 is
-			-- 
 			-- Read a new 64-bit natural from standard input.
 			-- Make result available in `last_natural_64'.
 		do

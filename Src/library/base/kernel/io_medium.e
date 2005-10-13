@@ -360,7 +360,7 @@ feature -- Input
 		end
 
 	read_integer, readint, read_integer_32 is
-			-- Read a new integer.
+			-- Read a new 32-bit integer.
 			-- Make result available in `last_integer'.
 		require
 			is_readable: readable

@@ -356,6 +356,7 @@ feature -- Output
 		end
 		
 	put_integer_8 (i: INTEGER_8) is
+			-- Write integer `i' to socket.
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
@@ -365,6 +366,7 @@ feature -- Output
 		end
 
 	put_integer_16 (i: INTEGER_16) is
+			-- Write integer `i' to socket.
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
@@ -374,6 +376,7 @@ feature -- Output
 		end		
 		
 	put_integer_64 (i: INTEGER_64) is
+			-- Write integer `i' to socket.
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
@@ -383,6 +386,7 @@ feature -- Output
 		end
 		
 	put_natural_8 (i: NATURAL_8) is
+			-- Write natural `i' to socket.
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
@@ -392,6 +396,7 @@ feature -- Output
 		end
 		
 	put_natural_16 (i: NATURAL_16) is
+			-- Write natural `i' to socket.
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
@@ -401,6 +406,7 @@ feature -- Output
 		end
 
 	put_natural, put_natural_32 (i: NATURAL_32) is
+			-- Write natural `i' to socket.
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
@@ -410,6 +416,7 @@ feature -- Output
 		end
 		
 	put_natural_64 (i: NATURAL_64) is
+			-- Write natural `i' to socket.
 		require else
 			socket_exists: exists
 			opened_for_write: is_open_write
@@ -584,7 +591,7 @@ feature -- Input
 			-- Last boolean read by read_boolean
 
 	read_integer, readint, read_integer_32 is
-			-- Read a new integer.
+			-- Read a new 32-bit integer.
 			-- Make result available in `last_integer'.
 		require else
 			socket_exists: exists;
@@ -594,66 +601,80 @@ feature -- Input
 		end;
 		
 	read_integer_8 is
+			-- Read a new 8-bit integer.
+			-- Make result available in `last_integer_8'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 1)
-			last_integer_8 := integer_buffer.read_integer_8_le (0)
+			last_integer_8 := integer_buffer.read_integer_8_be (0)
 		end		
 		
 	read_integer_16 is
+			-- Read a new 16-bit integer.
+			-- Make result available in `last_integer_16'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 2)
-			last_integer_16 := integer_buffer.read_integer_16_le (0)			
+			last_integer_16 := integer_buffer.read_integer_16_be (0)			
 		end
 
 	read_integer_64 is
+			-- Read a new 64-bit integer.
+			-- Make result available in `last_integer_64'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 8)
-			last_integer_64 := integer_buffer.read_integer_64_le (0)	
+			last_integer_64 := integer_buffer.read_integer_64_be (0)	
 		end
 		
 	read_natural_8 is
+			-- Read a new 8-bit natural.
+			-- Make result available in `last_natural_8'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 1)
-			last_natural_8 := integer_buffer.read_natural_8_le (0)			
+			last_natural_8 := integer_buffer.read_natural_8_be (0)			
 		end
 		
 	read_natural_16 is
+			-- Read a new 16-bit natural.
+			-- Make result available in `last_natural_16'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 2)
-			last_natural_16 := integer_buffer.read_natural_16_le (0)			
+			last_natural_16 := integer_buffer.read_natural_16_be (0)			
 		end	
 		
 	read_natural, read_natural_32 is
+			-- Read a new 32-bit natural.
+			-- Make result available in `last_natural'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 4)
-			last_natural := integer_buffer.read_natural_32_le (0)			
+			last_natural := integer_buffer.read_natural_32_be (0)			
 		end	
 		
 	read_natural_64 is
+			-- Read a new 64-bit natural.
+			-- Make result available in `last_natural_64'.
 		require else
 			socket_exists: exists
 			opened_for_read: is_open_read
 		do
 			read_to_managed_pointer (integer_buffer, 0, 8)
-			last_natural_64 := integer_buffer.read_natural_64_le (0)			
+			last_natural_64 := integer_buffer.read_natural_64_be (0)			
 		end							
 
 	read_stream, readstream (nb_char: INTEGER) is
@@ -974,8 +995,11 @@ feature {NONE} -- Externals
 			create Result.make (initial_integer_buffer_size)
 		end
 		
-	initial_integer_buffer_size: INTEGER is 8
+	initial_integer_buffer_size: INTEGER is 
 			-- Initial size of `integer_buffer'
+		once
+			Result := 16
+		end
 	
 	c_socket (add_family, a_type, protoc: INTEGER): INTEGER is
 			-- External c routine to create the socket descriptor

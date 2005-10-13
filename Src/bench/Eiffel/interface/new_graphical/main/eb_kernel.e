@@ -48,6 +48,8 @@ inherit
 
 	EB_SHARED_PREFERENCES
 	
+	EB_SHARED_FLAGS
+	
 create
 	make
 
@@ -91,10 +93,10 @@ feature {NONE} -- Initialization
 			fn.extend ("png")
 			pref_strs.Pixmaps_path_cell.put (fn)
 
-
 			l_is_gui := argument_count > 0 and then
 				(argument (1).is_equal ("-bench") or else argument (1).is_equal ("-from_bench"))			
-					
+			
+			set_gui (l_is_gui)		
 			if l_is_gui then
 					-- Create EV_APPLICATION object even if running in batch mode as it is required
 					-- for preference initialization

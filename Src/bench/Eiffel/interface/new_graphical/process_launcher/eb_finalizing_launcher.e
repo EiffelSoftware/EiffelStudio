@@ -10,6 +10,8 @@ class
 inherit
 	EB_C_COMPILER_LAUNCHER
 	
+	EB_SHARED_FLAGS
+	
 create
 	make
 
@@ -40,7 +42,10 @@ feature{NONE} -- Actions
 			finalizing_storage.reset_error_byte_count
 			
 			terminate_c_compilation_cmd.enable_sensitive
-			debugger_manager.on_compile_start
+			if is_gui then
+				debugger_manager.on_compile_start				
+			end
+
 			notify_development_windows_on_c_compilation_start			
 		end
 		
@@ -52,8 +57,18 @@ feature{NONE} -- Actions
 			terminate_c_compilation_cmd.disable_sensitive				
 			window_manager.synchronize_all
 			notify_development_windows_on_c_compilation_stop
-			if finalizing_storage.error_byte_count > 0 then
-				show_compilation_error_dialog
+			if not finalizing_launcher.force_terminated then
+				if platform_constants.is_windows then
+					if freezing_launcher.exit_code /= 0 then
+						show_compilation_error_dialog
+					end	
+				end		
+				if platform_constants.is_unix then
+					
+				end	
+				if platform_constants.is_vms then
+					
+				end				
 			end
 		end
 			
@@ -62,6 +77,7 @@ feature{NONE} -- Actions
 		do
 			finalizing_storage.wipe_out
 			finalizing_storage.extend_block (create {EB_PROCESS_IO_STRUCTURED_TEXT_BLOCK}.make ("%NC compilation has been terminated.%N", False, True))
+			on_exit
 		end
 		
 	on_launch_successed is
@@ -74,7 +90,8 @@ feature{NONE} -- Actions
 		do
 			finalizing_storage.extend_block (create {EB_PROCESS_IO_STRUCTURED_TEXT_BLOCK}.make ("Background C compilation launch failed.%N", True, True))
 			finalizing_storage.reset_error_byte_count
-			show_compiler_launch_fail_dialog		
+			show_compiler_launch_fail_dialog
+			on_exit		
 		end				
 		
 	output_dispatch_handler (s: STRING) is

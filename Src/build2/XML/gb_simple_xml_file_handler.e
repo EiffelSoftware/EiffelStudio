@@ -45,16 +45,14 @@ feature -- Basic operations
 			root_node_name_not_void: root_node_name /= Void
 			
 		local
-			formater: XM_FORMATTER
 			document: XM_DOCUMENT
 			root_element: XM_ELEMENT
 			counter: INTEGER
 			namespace: XM_NAMESPACE
 			a_name_string, a_data_string: STRING
 			file: KL_TEXT_OUTPUT_FILE
-			last_string: KL_STRING_OUTPUT_STREAM
-			processed_string: STRING
 			warning_dialog: EV_WARNING_DIALOG
+			l_string: STRING
 		do
 				-- Create the root element.
 			create namespace.make_default
@@ -77,21 +75,11 @@ feature -- Basic operations
 				counter := counter + 1
 			end
 			
-				-- Format document.
-			create formater.make
-			create last_string.make ("")
-			formater.set_output (last_string)
-			formater.process_document (document)
-			
-			processed_string := last_string.string
-			processed_string := xml_format + processed_string
-			process_xml_string (processed_string)
-			
 				-- Save document.
 			create file.make (file_name)
 			file.open_write
 			if file.is_open_write then
-				file.put_string (processed_string)
+				file.put_string (string_from_xm_document (document))
 				file.close
 			else
 				create warning_dialog.make_with_text (unable_to_save_part1 + file_name + unable_to_save_part2)

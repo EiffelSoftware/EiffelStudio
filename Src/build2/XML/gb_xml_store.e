@@ -70,34 +70,24 @@ feature -- Basic operation
 	store is
 			-- Store `display_window' and contents in XML format in file `filename'.
 		local
-			formater: XM_FORMATTER
 			generation_settings: GB_GENERATION_SETTINGS
 			output_file: KL_TEXT_OUTPUT_FILE
-			last_string: KL_STRING_OUTPUT_STREAM
 			abort_saving: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
+			l_string: STRING
 		do
 			create generation_settings
 			generation_settings.enable_is_saving
 				-- Generate an XML representation of the system in `document'.
 			generate_document (generation_settings)
-			
-				-- Process XML to `last_string'.
-			create last_string.make ("")
-			create formater.make
-			formater.set_output (last_string)
-			formater.process_document (document)
-						
+			l_string := string_from_xm_document (document)			
 			if not abort_saving then
-					-- Nicely format `last_string.string' to have indentation.
-				process_xml_string (last_string.string)
-						
 					-- Save nicely formatted XML ouput to disk in `filename'.
 				create output_file.make (filename)
 				output_file.open_write
 				if output_file.is_open_write then
 					output_file.put_string (xml_format)
-					output_file.put_string (last_string.string)
+					output_file.put_string (l_string)
 					output_file.close
 					set_timed_status_text ("Saved.")
 				else

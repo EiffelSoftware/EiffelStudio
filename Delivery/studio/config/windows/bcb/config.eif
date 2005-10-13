@@ -34,8 +34,9 @@ large: ""
 -- linker flags
 ar: ""
 ld: ""
-ldflags: "-c -x -Tpe -L$(ISE_EIFFEL)\bcc55\lib -L$(ISE_EIFFEL)\bcc55\lib\psdk"
-mtldflags: "-c -x -Tpe"
+ldflags: ""
+mtldflags: ""
+ccldflags: "-c -x -Tpe -L$(ISE_EIFFEL)\bcc55\lib -L$(ISE_EIFFEL)\bcc55\lib\psdk"
 console_flags: "-ap"
 windows_flags: "-aa"
 ldsharedflags: "-Tpd -Gn"
@@ -81,7 +82,7 @@ appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS
 %%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\version.eif .%N%
 %%Tif exist $@ $(RM) $@%N%
 %%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
-%%T$(LDFLAGS) e1\emain.obj c0w32.obj, $appl.exe,,%
+%%T$(CCLDFLAGS) e1\emain.obj c0w32.obj, $appl.exe,,%
 %$(EIFLIB) $precompile_libs_command $(LIBS) %
 %$(OBJECTS) $(EXTERNALS)%
 %,,$appl.res%N|%
@@ -98,7 +99,7 @@ appl_make: "$appl.exe: $appl.res e1\emain.obj Makefile $precompilelibs $(OBJECTS
 precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precompilelibs%N%
 %%Tif exist driver.exe $(RM) driver.exe%N%
 %%T$(ISE_EIFFEL)\bcc55\bin\ilink32 @&&|%N%
-%%T$(LDFLAGS) e1\emain.obj c0w32.obj, driver.exe,,%
+%%T$(CCLDFLAGS) e1\emain.obj c0w32.obj, driver.exe,,%
 %$(EIFLIB) $precompile_libs_command $(LIBS) $(OBJECTS) $(EXTERNALS) %
 %,,driver.res%N|%N%
 %%T$(MV) $(ISE_EIFFEL)\studio\config\$(ISE_PLATFORM)\$(ISE_C_COMPILER)\version.eif .%N%

@@ -18,7 +18,7 @@ inherit
 			initialize, is_in_default_state
 		end
 			
-	CONSTANTS
+	GB_INTERFACE_CONSTANTS
 		undefine
 			is_equal, default_create, copy
 		end
@@ -49,7 +49,7 @@ feature {NONE}-- Initialization
 			create ok_button
 			create cancel_button
 			
-				-- Build widget structure.
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_vertical_box_2)
@@ -80,38 +80,34 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			l_ev_vertical_box_1.set_padding (10)
+			
+			l_ev_vertical_box_1.set_padding_width (10)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
-			l_ev_horizontal_box_1.set_padding (10)
+			l_ev_horizontal_box_1.set_padding_width (10)
 			l_ev_horizontal_box_1.set_border_width (10)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_2)
 			l_ev_label_1.set_text ("You have not specified a DIRECTORY constant for one or more relative PIXMAP%Nconstants, and no matching directory constant is available. %NPlease enter the name of a DIRECTORYconstant which will be used.")
 			l_ev_label_1.align_text_left
-			l_ev_horizontal_box_2.set_padding (10)
+			l_ev_horizontal_box_2.set_padding_width (10)
 			l_ev_horizontal_box_2.set_border_width (10)
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("Use DIRECTORY constant named:")
-			l_ev_horizontal_box_4.set_padding (10)
+			l_ev_horizontal_box_4.set_padding_width (10)
 			l_ev_horizontal_box_4.set_border_width (10)
 			l_ev_horizontal_box_4.disable_item_expand (ok_button)
 			l_ev_horizontal_box_4.disable_item_expand (cancel_button)
 			ok_button.disable_sensitive
-			string_constant_set_procedures.extend (agent ok_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent ok_button_text)
-			integer_constant_set_procedures.extend (agent ok_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
-			string_constant_set_procedures.extend (agent cancel_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent cancel_button_text)
-			integer_constant_set_procedures.extend (agent cancel_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
-			string_constant_set_procedures.extend (agent set_title (?))
-			string_constant_retrieval_functions.extend (agent no_directory_dialog)
+			ok_button.set_text (ok_button_text)
+			ok_button.set_minimum_width (default_button_width)
+			cancel_button.set_text (cancel_button_text)
+			cancel_button.set_minimum_width (default_button_width)
+			set_title (no_directory_dialog)
 			
 			set_all_attributes_using_constants
 			
-				-- Connect events.
+				--Connect events.
 			directory_name_field.change_actions.extend (agent text_changed)
 			directory_name_field.return_actions.extend (agent return_pressed)
 			ok_button.select_actions.extend (agent ok_button_pressed)

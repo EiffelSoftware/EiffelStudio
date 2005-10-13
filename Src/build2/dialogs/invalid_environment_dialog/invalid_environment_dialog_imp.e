@@ -18,7 +18,7 @@ inherit
 			initialize, is_in_default_state
 		end
 			
-	CONSTANTS
+	GB_INTERFACE_CONSTANTS
 		undefine
 			is_equal, default_create, copy
 		end
@@ -43,7 +43,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_2
 			create l_ev_cell_3
 			
-				-- Build widget structure.
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_frame_1)
@@ -68,29 +68,25 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
+			
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_3)
-			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_1.set_padding (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
-			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_1.set_border_width (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
+			l_ev_horizontal_box_1.set_padding_width (small_padding)
+			l_ev_horizontal_box_1.set_border_width (small_padding)
 			l_ev_horizontal_box_2.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_2.set_border_width (?))
-			integer_constant_retrieval_functions.extend (agent medium_padding)
+			l_ev_horizontal_box_2.set_border_width (medium_padding)
 			warning_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			warning_label.align_text_left
 			l_ev_horizontal_box_3.disable_item_expand (ok_button)
 			ok_button.set_text ("OK")
-			integer_constant_set_procedures.extend (agent ok_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
-			integer_constant_set_procedures.extend (agent l_ev_cell_3.set_minimum_height (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
+			ok_button.set_minimum_width (default_button_width)
+			l_ev_cell_3.set_minimum_height (small_padding)
 			disable_user_resize
 			set_title ("EiffelBuild - Environment Fatal Error")
 			
 			set_all_attributes_using_constants
 			
-				-- Connect events.
+				--Connect events.
 			ok_button.select_actions.extend (agent button_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.

@@ -18,7 +18,7 @@ inherit
 			initialize, is_in_default_state
 		end
 			
-	CONSTANTS
+	GB_INTERFACE_CONSTANTS
 		undefine
 			is_equal, default_create, copy
 		end
@@ -72,7 +72,7 @@ feature {NONE}-- Initialization
 			create ok_button
 			create l_ev_cell_6
 			
-				-- Build widget structure.
+				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_frame_1)
@@ -126,11 +126,12 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			l_ev_vertical_box_1.set_padding (10)
+			
+			l_ev_vertical_box_1.set_padding_width (10)
 			l_ev_vertical_box_1.set_border_width (5)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_vertical_box_6)
 			l_ev_frame_1.set_text ("Constants Defined")
-			l_ev_vertical_box_2.set_padding (1)
+			l_ev_vertical_box_2.set_padding_width (1)
 			l_ev_vertical_box_2.set_border_width (2)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_separator_1)
@@ -140,14 +141,12 @@ feature {NONE}-- Initialization
 			display_all_types.enable_select
 			display_all_types.set_text ("Show all types")
 			l_ev_horizontal_box_3.enable_homogeneous
-			l_ev_horizontal_box_3.set_padding (5)
+			l_ev_horizontal_box_3.set_padding_width (5)
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_vertical_box_3)
-			integer_constant_set_procedures.extend (agent l_ev_vertical_box_3.set_padding (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
+			l_ev_vertical_box_3.set_padding_width (small_padding)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_4)
 			l_ev_horizontal_box_4.disable_item_expand (l_ev_cell_1)
-			integer_constant_set_procedures.extend (agent l_ev_cell_1.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
+			l_ev_cell_1.set_minimum_width (small_padding)
 			l_ev_label_1.set_text ("Type")
 			l_ev_label_1.align_text_left
 			type_combo_box.set_text ("DIRECTORY")
@@ -160,54 +159,41 @@ feature {NONE}-- Initialization
 			pixmap_item.set_text ("PIXMAP")
 			color_item.set_text ("COLOR")
 			font_item.set_text ("FONT")
-			integer_constant_set_procedures.extend (agent l_ev_vertical_box_4.set_padding (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
+			l_ev_vertical_box_4.set_padding_width (small_padding)
 			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_5)
 			l_ev_horizontal_box_5.disable_item_expand (l_ev_cell_2)
-			integer_constant_set_procedures.extend (agent l_ev_cell_2.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
+			l_ev_cell_2.set_minimum_width (small_padding)
 			l_ev_label_2.set_text ("Name")
 			l_ev_label_2.align_text_left
-			integer_constant_set_procedures.extend (agent l_ev_vertical_box_5.set_padding (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
+			l_ev_vertical_box_5.set_padding_width (small_padding)
 			l_ev_vertical_box_5.disable_item_expand (l_ev_horizontal_box_6)
 			l_ev_horizontal_box_6.disable_item_expand (l_ev_cell_3)
-			integer_constant_set_procedures.extend (agent l_ev_cell_3.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent small_padding)
+			l_ev_cell_3.set_minimum_width (small_padding)
 			l_ev_label_3.set_text ("Value")
 			l_ev_label_3.align_text_left
 			l_ev_cell_4.set_minimum_height (5)
-			l_ev_horizontal_box_7.set_padding (5)
+			l_ev_horizontal_box_7.set_padding_width (5)
 			l_ev_horizontal_box_7.disable_item_expand (new_button)
 			l_ev_horizontal_box_7.disable_item_expand (modify_button)
 			l_ev_horizontal_box_7.disable_item_expand (remove_button)
-			string_constant_set_procedures.extend (agent new_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent new_button_text)
-			integer_constant_set_procedures.extend (agent new_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
-			string_constant_set_procedures.extend (agent modify_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent modify_button_text)
-			integer_constant_set_procedures.extend (agent modify_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
+			new_button.set_text (new_button_text)
+			new_button.set_minimum_width (default_button_width)
+			modify_button.set_text (modify_button_text)
+			modify_button.set_minimum_width (default_button_width)
 			remove_button.disable_sensitive
-			string_constant_set_procedures.extend (agent remove_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent remove_button_text)
-			integer_constant_set_procedures.extend (agent remove_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
+			remove_button.set_text (remove_button_text)
+			remove_button.set_minimum_width (default_button_width)
 			l_ev_vertical_box_6.set_border_width (10)
 			l_ev_vertical_box_6.disable_item_expand (ok_button)
-			string_constant_set_procedures.extend (agent ok_button.set_text (?))
-			string_constant_retrieval_functions.extend (agent ok_button_text)
-			integer_constant_set_procedures.extend (agent ok_button.set_minimum_width (?))
-			integer_constant_retrieval_functions.extend (agent default_button_width)
+			ok_button.set_text (ok_button_text)
+			ok_button.set_minimum_width (default_button_width)
 			set_minimum_width (640)
 			set_minimum_height (480)
-			string_constant_set_procedures.extend (agent set_title (?))
-			string_constant_retrieval_functions.extend (agent constants_dialog_title)
+			set_title (constants_dialog_title)
 			
 			set_all_attributes_using_constants
 			
-				-- Connect events.
+				--Connect events.
 			constants_list.select_actions.extend (agent item_selected_in_list (?))
 			constants_list.deselect_actions.extend (agent item_deselected_in_list (?))
 			constants_list.column_title_click_actions.extend (agent column_clicked (?))

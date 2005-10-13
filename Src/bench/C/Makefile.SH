@@ -1,5 +1,5 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 3.0.1.3 1997/02/28 14:56:16 ram Exp $
+: $X-Id: Jmake.tmpl,v 1.4 2005/10/13 21:38:08 manus Exp $
 
 case $CONFIG in
 '')
@@ -50,7 +50,7 @@ SUBDIRS = \$(SUB)
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 3.0.1.6 1997/02/28 14:56:01 ram Exp $
+# $X-Id: Jmake.rules,v 1.4 2005/10/13 21:37:30 manus Exp $
 ########################################################################
 # Start of Jmakefile
 

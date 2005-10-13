@@ -1,5 +1,5 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 1.2 2004/11/30 00:21:14 manus Exp $
+: $X-Id: Jmake.tmpl,v 1.4 2005/10/13 21:38:08 manus Exp $
 
 case $CONFIG in
 '')
@@ -43,7 +43,7 @@ CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
-JLDFLAGS = \$(LDFLAGS) $ldflags
+JLDFLAGS = \$(LDFLAGS) $ccldflags
 LDSHAREDFLAGS = $ldsharedflags
 SHAREDLINK= $sharedlink
 L = $manext
@@ -77,7 +77,7 @@ SOURCES =  \$(LSRC) \$(OTHER) \$(WADD) x2c.c
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 1.2 2004/11/30 00:21:14 manus Exp $
+# $X-Id: Jmake.rules,v 1.4 2005/10/13 21:37:30 manus Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 

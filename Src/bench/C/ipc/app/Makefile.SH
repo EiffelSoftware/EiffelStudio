@@ -1,5 +1,5 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL70]
-: $X-Id: Jmake.tmpl,v 1.2 2004/11/30 00:21:14 manus Exp $
+: $X-Id: Jmake.tmpl,v 1.4 2005/10/13 21:38:08 manus Exp $
 
 case $CONFIG in
 '')
@@ -17,7 +17,7 @@ esac
 case "$0" in
 */*) cd `expr X$0 : 'X\(.*\)/'` ;;
 esac
-CURRENT=app
+CURRENT=ipc/app
 DIR=`echo $CURRENT/ | sed -e 's/\.\///g'`
 echo "Extracting ${DIR}Makefile (with variable substitutions)"
 
@@ -40,7 +40,7 @@ CC = $cc
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $warning_level $mtccflags $large
-JLDFLAGS = \$(LDFLAGS) $ldflags
+JLKFLAGS = \$(LDFLAGS) $ldflags
 LD = ld
 LINT = lint
 MAKE = make
@@ -64,7 +64,7 @@ USRINC = $usrinc
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 1.2 2004/11/30 00:21:14 manus Exp $
+# $X-Id: Jmake.rules,v 1.4 2005/10/13 21:37:30 manus Exp $
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit
 
@@ -128,7 +128,7 @@ local_realclean::
 
 network.o: $(OBJ)
 	$(RM) $@
-	$(LD) $(JLDFLAGS) -r $(OBJ) -o $@ $(LIB_IPC_ARCH)
+	$(LD) $(JLKFLAGS) -r $(OBJ) -o $@ $(LIB_IPC_ARCH)
 
 $(LIB_SHARED)/$(LIB_MTIPCNAME): .FORCE
 	@echo "Checking "$(LIB_MTIPCNAME)" in "$(LIB_SHARED)"..."
@@ -144,7 +144,7 @@ local_realclean::
 
 MTnetwork.o: $(MT_OBJ)
 	$(RM) $@
-	$(LD) $(JLDFLAGS) -r $(MT_OBJ) -o $@ $(LIB_MTIPC_ARCH)
+	$(LD) $(JLKFLAGS) -r $(MT_OBJ) -o $@ $(LIB_MTIPC_ARCH)
 
 depend:: ../../mkdep
 

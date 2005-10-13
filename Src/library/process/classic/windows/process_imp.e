@@ -130,10 +130,10 @@ feature	-- Control
 				end		
 						
 				wait_for_threads_to_exit	
-				prc_launcher.close
-				on_terminate								
+				prc_launcher.close								
 				force_terminated := True				
-				last_operation_successful := True				
+				last_operation_successful := True	
+				on_terminate							
 			end
 		rescue		
 			retried := True

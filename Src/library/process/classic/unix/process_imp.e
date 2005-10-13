@@ -126,12 +126,12 @@ feature  -- Control
 				if err_thread /= Void then
 					err_thread.set_exit_signal
 				end							
-				wait_for_threads_to_exit				
-				on_terminate					
+				wait_for_threads_to_exit								
 				prc_launcher.close				
 				force_terminated := True				
 				last_operation_successful := True		
 				prc_launcher.set_child_process_to_void
+				on_terminate				
 			end
 		rescue		
 			retried := True

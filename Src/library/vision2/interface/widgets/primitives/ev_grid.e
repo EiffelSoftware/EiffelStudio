@@ -1998,6 +1998,7 @@ feature -- Element change
 			-- Move row at index `i' to index `j', setting `parent_row' to `a_parent_row'.
 		require
 			not_destroyed: not is_destroyed
+			tree_enabled: is_tree_enabled
 			i_positive: i > 0
 			a_parent_row_not_void: a_parent_row /= Void
 			i_not_greater_than_row_count: i <= row_count
@@ -2020,6 +2021,7 @@ feature -- Element change
 			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
 		require
 			not_destroyed: not is_destroyed
+			tree_enabled: is_tree_enabled
 			i_positive: i > 0
 			n_positive: n > 0
 			a_parent_row_not_void: a_parent_row /= Void

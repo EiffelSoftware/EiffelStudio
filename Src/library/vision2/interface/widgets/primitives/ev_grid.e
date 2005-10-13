@@ -1908,6 +1908,7 @@ feature -- Element change
 			-- Insert a new row at index `i' and make that row a subnode of `a_parent_row'.
 		require
 			not_destroyed: not is_destroyed
+			tree_enabled: is_tree_enabled
 			i_positive: i > 0
 			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void
@@ -1925,6 +1926,8 @@ feature -- Element change
 	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW) is
 			-- Insert `rows_to_insert' new rows at index `i' and make those rows subnodes of `a_parent_row'.
 		require
+			not_destroyed: not is_destroyed
+			tree_enabled: is_tree_enabled
 			i_positive: i > 0
 			rows_to_insert_positive: rows_to_insert >= 1
 			i_less_than_row_count: i <= row_count + 1

@@ -556,18 +556,13 @@ feature -- Generation, Header
 			generate_specific_defines
 			make_file.put_string ("-I%H$(ISE_EIFFEL)/studio/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
-			make_file.put_string ("LDFLAGS = ")
+			make_file.put_string ("LDFLAGS = $ldflags%N")
 
+			make_file.put_string ("CCLDFLAGS = $ccldflags ")
 			if System.is_console_application then
 				make_file.put_string (" $console_flags")
 			else
 				make_file.put_string (" $windows_flags")
-			end
-
-			if System.has_multithreaded then
-				make_file.put_string (" $mtldflags")
-			else
-				make_file.put_string (" $ldflags")
 			end
 
 			make_file.put_new_line
@@ -818,7 +813,7 @@ feature -- Generation (Linking rules)
 			if System.has_cpp_externals then
 				make_file.put_string ("PP")
 			end
-			make_file.put_string ("FLAGS) $(LDFLAGS) ")
+			make_file.put_string ("FLAGS) $(CCLDFLAGS) ")
 			make_file.put_string (" $(OBJECTS) ")
 			make_file.put_string (packet_name (system_object_prefix, 1))
 			make_file.put_string ("/emain.o ") 

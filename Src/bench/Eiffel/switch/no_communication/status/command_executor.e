@@ -7,12 +7,6 @@ class COMMAND_EXECUTOR
 
 inherit
 	SHARED_EXEC_ENVIRONMENT
-	
-	-- Jason Wei added the following on Aug 31 2005
-	EB_SHARED_MANAGERS
-	-- Jason Wei added the above on Aug 31 2005
-
-	EB_SHARED_FLAGS
 
 feature -- Command Execution
 
@@ -57,47 +51,15 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 			-- Invoke the `finish_freezing' script.
 		local
 			cwd: STRING
-			--Jason Wei f 8/30/2005
-			f_cmd: STRING
-			--Jason Wei a 8/30/2005
 		do
 				-- Store current working directory
 			cwd := Execution_environment.current_working_directory
 			
-			--Jason Wei f 8/30/2005
-			create f_cmd.make_from_string (freeze_command)
-			f_cmd.append (" -silent")
-			--Jason Wei a 8/30/2005			
-			
 			Execution_environment.change_working_directory (c_code_dir)
 			if asynchronous then
-				--Jason Wei 9/12/2005
-				if workbench_mode then
-					freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
-					freezing_launcher.set_hidden (True)
-					freezing_launcher.launch (is_gui)
-				else
-					finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
-					finalizing_launcher.set_hidden (True)
-					finalizing_launcher.launch (is_gui)
-				end
-				--Jason Wei 9/12/2005
-				--Execution_environment.launch (freeze_command)
+				Execution_environment.launch (freeze_command)
 			else
-				--Execution_environment.system (freeze_command)
-				--Jason Wei 9/12/2005
-				if workbench_mode then
-					freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
-					freezing_launcher.set_hidden (True)
-					freezing_launcher.launch (is_gui)
-					freezing_launcher.wait_for_exit
-				else
-					finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
-					finalizing_launcher.set_hidden (True)
-					finalizing_launcher.launch (is_gui)
-					finalizing_launcher.wait_for_exit
-				end				
-				--Jason Wei 9/12/2005		
+				Execution_environment.system (freeze_command)
 			end
 			Execution_environment.change_working_directory (cwd)
 		end

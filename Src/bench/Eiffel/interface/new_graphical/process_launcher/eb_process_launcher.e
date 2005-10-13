@@ -198,7 +198,6 @@ feature -- Control
 				dir := ee.current_working_directory	
 				ee.change_working_directory (working_directory)									
 			end		
-			
 			prc.set_hidden (is_hidden)
 			prc.set_has_console (False)
 			prc.launch

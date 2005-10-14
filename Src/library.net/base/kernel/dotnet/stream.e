@@ -201,10 +201,45 @@ feature -- Output
 		do
 		end
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write `i' to medium.
 		do
 		end
+		
+	put_integer_8 (i: INTEGER_8) is
+			-- Write `i' to medium.
+		do			
+		end
+		
+	put_integer_16 (i: INTEGER_16) is
+			-- Write `i' to medium.
+		do			
+		end
+
+	put_integer_64 (i: INTEGER_64) is
+			-- Write `i' to medium.
+		do			
+		end
+		
+	put_natural_8 (i: NATURAL_8) is
+			-- Write `i' to medium.
+		do			
+		end
+
+	put_natural_16 (i: NATURAL_16) is
+			-- Write `i' to medium.
+		do			
+		end
+		
+	put_natural, put_natural_32 (i: NATURAL_32) is
+			-- Write `i' to medium.
+		do			
+		end
+		
+	put_natural_64 (i: NATURAL_64) is
+			-- Write `i' to medium.
+		do			
+		end		
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write `b' to medium.
@@ -242,12 +277,54 @@ feature -- Input
 		do
 		end
 
-	read_integer, readint is
+	read_integer, readint, read_integer_32 is
 			-- Read a new integer.
 			-- Make result available in `last_integer'.
 		do
 		end
 
+	read_integer_8 is
+			-- Read a new 8-bit integer.
+			-- Make result available in `last_integer_8'.
+		do
+		end
+
+	read_integer_16 is
+			-- Read a new 16-bit integer.
+			-- Make result available in `last_integer_16'.
+		do
+		end		
+		
+	read_integer_64 is
+			-- Read a new 64-bit integer.
+			-- Make result available in `last_integer_64'.
+		do
+		end
+		
+	read_natural_8 is
+			-- Read a new 8-bit natural.
+			-- Make result available in `last_natural_8'.
+		do
+		end
+
+	read_natural_16 is
+			-- Read a new 16-bit natural.
+			-- Make result available in `last_natural_16'.
+		do
+		end		
+
+	read_natural, read_natural_32 is
+			-- Read a new 32-bit natural.
+			-- Make result available in `last_natural'.
+		do
+		end
+		
+	read_natural_64 is
+			-- Read a new 64-bit natural.
+			-- Make result available in `last_natural_64'.
+		do
+		end
+		
 	read_stream, readstream (nb_char: INTEGER) is
 			-- Read a string of at most `nb_char' bound characters
 			-- or until end of medium is encountered.

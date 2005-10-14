@@ -35,14 +35,29 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
 	feature_id: INTEGER
 			-- Feature id of an attribute
 
-	attribute_name: STRING
+	attribute_name_id: INTEGER
+			-- Name ID corresponding to `attribute_name'.
+
+	attribute_name: STRING is
 			-- Attribute name
+		require
+			attribute_name_id_positive: attribute_name_id > 0
+		do
+			Result := names_heap.item (attribute_name_id)
+		ensure
+			attribute_name_not_void: Result /= Void
+		end
 
 	rout_id: INTEGER
 			-- Attribute routine id
@@ -55,10 +70,14 @@ feature -- Settings
 			feature_id := i
 		end
 
-	set_attribute_name (s: STRING) is
+	set_attribute_name_id (an_id: INTEGER) is
 			-- Assign `s' to `attribute_name'.
+		require
+			an_id_positive: an_id > 0
 		do
-			attribute_name := s
+			attribute_name_id := an_id
+		ensure
+			attribute_name_id_set: attribute_name_id = an_id
 		end
 
 	set_rout_id (i: INTEGER) is

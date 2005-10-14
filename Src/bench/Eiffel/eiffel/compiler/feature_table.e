@@ -807,7 +807,7 @@ end
 							desc := attr_type.description
 						end
 						desc.set_feature_id (feature_i.feature_id)
-						desc.set_attribute_name (feature_i.feature_name)
+						desc.set_attribute_name_id (feature_i.feature_name_id)
 						desc.set_rout_id (feature_i.rout_id_set.first)
 						Result.extend (desc)
 					end

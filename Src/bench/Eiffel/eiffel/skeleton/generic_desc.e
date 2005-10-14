@@ -111,7 +111,7 @@ feature -- Instantiation
 			end
 
 			Result.set_feature_id (feature_id)
-			Result.set_attribute_name (attribute_name)
+			Result.set_attribute_name_id (attribute_name_id)
 			Result.set_rout_id (rout_id)
 		end
 

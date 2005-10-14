@@ -49,8 +49,6 @@ inherit
 			default_create, copy, is_equal
 		end
 		
-	EV_GRID_HELPER
-		
 create
 	make
 
@@ -62,6 +60,8 @@ feature {NONE} -- Initialization
 			Precursor (a_manager)
 			create multi_search_performer.make
 			new_search_set := true
+			is_text_new_loaded := true
+			create changed_classes.make (0)
 		end
 
 	build_interface is
@@ -735,9 +735,7 @@ feature {NONE} -- Implementation
 			search_report_grid.column (2).set_title (grid_head_found)
 			search_report_grid.column (3).set_title (grid_head_context)
 			search_report_grid.column (4).set_title (grid_head_file_location)
-			search_report_grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
-			search_report_grid.header.item_resize_actions.force_extend (agent on_header_resize)
-			search_report_grid.row_select_actions.extend (agent grid_row_selected (?))
+			search_report_grid.row_select_actions.extend (agent on_grid_row_selected (?))
 			search_report_grid.set_item_pebble_function (agent grid_pebble_function (?))
 			search_report_grid.set_accept_cursor (Cursors.cur_class)
 			search_report_grid.set_deny_cursor (Cursors.cur_x_class)
@@ -782,7 +780,8 @@ feature {NONE} -- Implementation
 				incremental_search_strategy.set_regular_expression_used (use_regular_expression_button.is_selected)
 				incremental_search_strategy.set_whole_word_matched (whole_word_button.is_selected)
 				if class_i /= Void then
-					incremental_search_strategy.set_data (class_i)	
+					incremental_search_strategy.set_data (class_i)
+					incremental_search_strategy.set_date (class_i.date)	
 				end
 				if editor.dev_window.class_name /= Void then
 					incremental_search_strategy.set_class_name (editor.dev_window.class_name)
@@ -791,6 +790,8 @@ feature {NONE} -- Implementation
 				multi_search_performer.do_search
 				multi_search_performer.start
 				force_new_search
+				changed_classes.wipe_out
+				is_text_changed_in_editor := false
 			end
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end		
@@ -824,7 +825,8 @@ feature {NONE} -- Implementation
 				text_strategy.set_regular_expression_used (use_regular_expression_button.is_selected)
 				text_strategy.set_whole_word_matched (whole_word_button.is_selected)
 				if class_i /= Void then
-					text_strategy.set_data (class_i)	
+					text_strategy.set_data (class_i)
+					text_strategy.set_date (class_i.date)	
 				end
 				multi_search_performer.do_search
 				update_combo_box_specific (keyword_field, currently_searched)
@@ -866,7 +868,8 @@ feature {NONE} -- Implementation
 					text_strategy.set_regular_expression_used (true)
 					text_strategy.set_whole_word_matched (false)
 					if class_i /= Void then
-						text_strategy.set_data (class_i)	
+						text_strategy.set_data (class_i)
+						text_strategy.set_date (class_i.date)	
 					end
 					multi_search_performer.do_search
 					update_combo_box_specific (keyword_field, currently_searched)
@@ -932,7 +935,9 @@ feature {NONE} -- Implementation
 				old_search_key_value := currently_searched				
 				old_editor := editor
 				redraw_grid
-				new_search_set := false		
+				new_search_set := false
+				changed_classes.wipe_out
+				is_text_changed_in_editor := false
 			end
 		end
 		
@@ -1002,25 +1007,38 @@ feature {NONE} -- Implementation
 			-- Invoke when replacing all, one matched item replaced.
 		do
 			new_search_set := false
-		end
+		end		
 		
 	on_text_edited (directly_edited: BOOLEAN) is
 			-- Notify observers that some text has been modified.
 			-- If `directly_edited', the user has modified the text in the editor,
 			-- not via another tool or wizard.
+		local
+			l_class_stone: CLASSI_STONE
 		do
 			force_new_search
 			is_text_changed_in_editor := true
+			if is_text_new_loaded and then multi_search_performer.is_search_launched and then not multi_search_performer.is_empty then
+				l_class_stone ?= manager.stone
+				if l_class_stone /= Void then
+					changed_classes.extend (l_class_stone.actual_class_i)
+				end
+				is_text_new_loaded := false
+			end
 		end
 
 	on_text_reset is
-			-- make the command insensitive
+			-- 
 		do
 			is_text_changed_in_editor := false
+			is_text_new_loaded := true
 		end
 		
 	is_text_changed_in_editor: BOOLEAN
 			-- Text changed in the editor?
+			
+	is_text_new_loaded: BOOLEAN
+			-- Text loaded in the editor?
 	
 	add_class_item (a_class: CLASS_I) is
 			-- Add a class item to the tree.
@@ -1214,32 +1232,6 @@ feature {NONE} -- Implementation
 			Result := not for_test.is_empty
 		end
 		
-	on_header_double_clicked is
-			-- Header was double-clicked.
-		local
-			div_index: INTEGER
-			col: EV_GRID_COLUMN
-		do
-			div_index := search_report_grid.header.pointed_divider_index
-			if div_index > 0 then
-				col := search_report_grid.column (div_index)
-				col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + column_border_space)			
-			end		
-		end		
-		
-	on_header_resize is
-			-- Header was double-clicked.
-		local
-			div_index: INTEGER
-			col: EV_GRID_COLUMN
-		do
-			div_index := search_report_grid.header.pointed_divider_index
-			if div_index > 0 then
-				col := search_report_grid.column (div_index)
-				resized_columns_list.put (True, col.index)
-			end		
-		end
-		
 	compute_adjust_vertical (a_font: EV_FONT; a_label_item: EV_GRID_ITEM) is
 			-- Compute `adjust_vertical'
 		require
@@ -1257,15 +1249,15 @@ feature {NONE} -- Implementation
 						text_height := a_font.string_size ("a").integer_item (2)
 					end
 					client_height := label_item.height - label_item.top_border - label_item.bottom_border
+					vertical_text_offset_into_available_space := client_height - text_height - 1
 					if label_item.is_top_aligned then
 						vertical_text_offset_into_available_space := 0
 					elseif label_item.is_bottom_aligned then
-						vertical_text_offset_into_available_space := client_height - text_height - 1
 					else
 						vertical_text_offset_into_available_space := vertical_text_offset_into_available_space // 2
 					end
 					vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
-					adjust_vertical := vertical_text_offset_into_available_space - label_item.top_border
+					adjust_vertical := vertical_text_offset_into_available_space + label_item.top_border
 				end					
 			end			
 		end
@@ -1274,8 +1266,12 @@ feature {NONE} -- Implementation
 			-- Create uniformed label item
 		require
 			string_attached: a_string /= Void
+		local
+			l_color: EV_COLOR
 		do
 			create Result.make_with_text (a_string)
+			l_color := search_report_grid.background_color
+			Result.set_foreground_color (row_text_color (l_color))
 		ensure
 			new_item_not_void: Result /= Void
 		end		
@@ -1292,11 +1288,13 @@ feature {NONE} -- Implementation
 		local
 			offset: INTEGER
 			row_selected, focused: BOOLEAN
-			l_color: EV_COLOR
+			l_color, focused_sel_color, non_focused_sel_color: EV_COLOR
 			font: EV_FONT
 			l_item: MSR_TEXT_ITEM
 		do
 			font := drawable.font
+			focused_sel_color := search_report_grid.focused_selection_color
+			non_focused_sel_color := search_report_grid.non_focused_selection_color
 			if adjust_vertical = 0 then
 				compute_adjust_vertical (font, query_grid_row.item (1))
 			end
@@ -1305,16 +1303,14 @@ feature {NONE} -- Implementation
 			focused := search_report_grid.has_focus
 			if row_selected then
 				if focused then
-					drawable.set_foreground_color(search_report_grid.focused_selection_color)
-					create l_color.make_with_rgb (1, 1, 1)
+					drawable.set_foreground_color(focused_sel_color)
 				else
-					drawable.set_foreground_color(search_report_grid.non_focused_selection_color)
-					create l_color.make_with_rgb (0, 0, 0)
+					drawable.set_foreground_color(non_focused_sel_color)
 				end
 			else
-				drawable.set_foreground_color ((create {EV_STOCK_COLORS}).white)
-				create l_color.make_with_rgb (0, 0, 0)
+				drawable.set_foreground_color (search_report_grid.background_color)
 			end
+			l_color := row_text_color (drawable.foreground_color)
 			
 			drawable.fill_rectangle (0, 0, drawable.width,drawable.height)
 			l_item ?= a_item
@@ -1322,7 +1318,9 @@ feature {NONE} -- Implementation
 				drawable.set_foreground_color (l_color)
 				drawable.draw_text_top_left (0, adjust_vertical, 
 											l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
-				drawable.set_foreground_color (preferences.editor_data.operator_text_color)
+				if not row_selected then
+					drawable.set_foreground_color (preferences.editor_data.operator_text_color)
+				end
 				offset := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
 				
 				drawable.draw_text_top_left (offset, adjust_vertical, replace_rnt_to_space (l_item.text))
@@ -1336,6 +1334,18 @@ feature {NONE} -- Implementation
 			else
 				drawable.draw_text (0, adjust_vertical, "-")
 			end		
+		end
+		
+	row_text_color (a_bg_color: EV_COLOR): EV_COLOR is
+			-- Text color according to its background color `a_bg_color'
+		require
+			bg_color_attached: a_bg_color  /= Void
+		do
+			if a_bg_color.lightness > 0.6 then
+				create Result.make_with_rgb (0, 0, 0)
+			else
+				create Result.make_with_rgb (1, 1, 1)
+			end
 		end
 		
 	redraw_grid is
@@ -1356,7 +1366,7 @@ feature {NONE} -- Implementation
 			font: EV_FONT
 		do
 			if multi_search_performer.is_search_launched then
-				grid_remove_and_clear_all_rows (search_report_grid)
+				search_report_grid.remove_and_clear_all_rows
 				sumary_label.set_text ("   " +
 										multi_search_performer.text_found_count.out + 
 										" found(s) in " + 
@@ -1502,7 +1512,7 @@ feature {NONE} -- Implementation
 			end
 		end
 	
-	grid_row_selected (a_row: EV_GRID_ROW) is
+	on_grid_row_selected (a_row: EV_GRID_ROW) is
 			-- Invoke when a row of the report grid selected
 		require
 			a_row_not_void: a_row /= Void
@@ -1556,11 +1566,15 @@ feature {NONE} -- Implementation
 		do
 			l_class_i ?= a_item.data
 			if l_class_i /= Void then
-				Result := is_text_changed_in_editor or a_item.date /= l_class_i.date
+				
+				Result := is_text_changed_in_editor or a_item.date /= l_class_i.date or changed_classes.has (l_class_i)
 			else
 				Result := true
 			end
-		end		
+		end
+		
+	changed_classes: ARRAYED_LIST [CLASS_I]
+		-- Keep a record of modified class by editor.
 	
 	select_current_row is
 			-- Select current row in the grid

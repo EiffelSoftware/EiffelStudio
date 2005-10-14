@@ -601,7 +601,7 @@ feature {NONE} -- Basic type factory
 				token_value := token_value.twin
 				token_value.prune_all ('_')
 			end
-			if token_value.is_integer then
+			if token_value.is_number_sequence then
 				Result := ast_factory.new_integer_as (a_type, sign_symbol = '-', token_value)
 			elseif
 				token_value.item (1) = '0' and then

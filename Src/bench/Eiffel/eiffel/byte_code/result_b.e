@@ -8,13 +8,21 @@ inherit
 		redefine
 			enlarged, read_only, is_result, is_creatable,
 			register_name,
-			make_byte_code, creation_access,
+			make_byte_code,
 			assign_code, expanded_assign_code, reverse_code,
 			assigns_to, pre_inlined_code, generate_il_call_access,
 			generate_il_address,
 			is_fast_as_local, is_predefined
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_result_b (Current)
+		end
+	
 feature 
 
 	read_only: BOOLEAN is False;
@@ -45,12 +53,6 @@ feature
 		do
 			result_b ?= other;
 			Result := result_b /= Void
-		end;
-
-	creation_access (t: TYPE_I): RESULT_CR_B is
-			-- Creation access
-		do
-			create Result.make (t);
 		end;
 
 	enlarged: RESULT_B is

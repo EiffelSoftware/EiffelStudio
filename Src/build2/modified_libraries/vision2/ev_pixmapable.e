@@ -30,7 +30,7 @@ feature -- Access
 				Result.is_equal (implementation.pixmap)
 		end
 		
-	pixmap_path: STRING
+	internal_pixmap_path: STRING
 			-- Path of `pixmap'.
 
 feature -- Element change
@@ -46,15 +46,14 @@ feature -- Element change
 		--	pixmap_assigned: a_pixmap.is_equal (pixmap) and pixmap /= a_pixmap
 		end
 		
-	set_pixmap_path (a_path: STRING) is
-			-- Assign `a_path' to `pixmap_path'.
+	set_internal_pixmap_path (a_path: STRING) is
+			-- Assign `a_path' to `internal_pixmap_path'.
 		do
-			pixmap_path := a_path
+			internal_pixmap_path := a_path
 		ensure
-			path_set: pixmap_path = a_path
+			path_set: internal_pixmap_path = a_path
 		end
 		
-
 	remove_pixmap is
 			-- Make `pixmap' `Void'.
 		require

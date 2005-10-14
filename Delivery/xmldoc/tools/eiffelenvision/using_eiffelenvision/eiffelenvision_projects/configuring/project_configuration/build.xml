@@ -3,13 +3,13 @@
   <meta_data>
     <help>
       <toc>
-        <envision_title>Build Properties</envision_title>
+        <envision_title>Building Properties</envision_title>
         <envision_pseudo_name>50</envision_pseudo_name>
       </toc>
       <xml>
         <xmlkeyword>
           <index>K</index>
-          <term>Project Configuration, Build Properties</term>
+          <term>Project Configuration, Building Properties</term>
         </xmlkeyword>
         <xmlkeyword>
           <index>F</index>
@@ -20,7 +20,7 @@
   </meta_data>
   <paragraph>
     <paragraph>
-			The <bold>Build</bold> property page in the <bold>Configuration Properties</bold> folder contains the following properties:
+			The <bold>Building</bold> property page in the <bold>Configuration Properties</bold> folder contains the following properties:
 		</paragraph>
     <anchor>code_generation_group</anchor>
     <heading>
@@ -43,10 +43,11 @@
     <paragraph>
       <bold>Debug Clauses</bold>
       <line_break />
-			A semi-colon (;) delimited list of <link><url>../../../compiling_projects/debug_clauses.xml</url><label>Debug Clauses</label></link> to conditional compile sections of code with your project.
-			<line_break/>
-			Clicking on the ellipse (...) button will display the <link><url>url</url><label>Edit Debug Clauses</label></link> dialog where you can enter debug clauses graphically.
+		A semi-colon (;) delimited list of <link><url>../../../compiling_projects/debug_clauses.xml</url><label>Debug Clauses</label></link> to conditional compile sections of code with your project.
+		<paragraph>
+			Clicking on the ellipse (...) button will display the <link><url>edit_command_dialog.xml</url><label>Edit Debug Clauses</label></link> dialog where you can enter debug clauses graphically.
 		</paragraph>
+	</paragraph>
     <anchor>optimize_code</anchor>
     <paragraph>
       <bold>Optimize Code</bold>
@@ -124,8 +125,8 @@
       </link>
       <line_break />
       <link>
-        <url>assertions.xml</url>
-        <label>Assertion Properties</label>
+        <url>build_events.xml</url>
+        <label>Build Events Properties</label>
       </link>
       <line_break />
       <link>

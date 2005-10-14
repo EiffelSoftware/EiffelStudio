@@ -98,7 +98,25 @@ feature -- Types
 		-- ELEMENT_TYPE_MODIFIER, sentinel for varargs
 
 	element_type_pinned: INTEGER_8 is 0x05
-		-- ELEMENT_TYPE_MODIFIER,
+		-- ELEMENT_TYPE_MODIFIER
+		
+feature -- Custom attribute flags
+
+	element_type_type: INTEGER_8 is 0x50
+		-- No name in CLI standard. Used for custom attributes representing
+		-- a System.Type instance.
+		
+	element_type_field: INTEGER_8 is 0x53
+		-- No name in CLI standard. Used for custom attributes representing
+		-- a field setting.
+		
+	element_type_property: INTEGER_8 is 0x54
+		-- No name in CLI standard. Used for custom attributes representing
+		-- a property setting.
+
+	element_type_enum: INTEGER_8 is 0x55
+		-- No name in CLI standard. Used for custom attributes representing
+		-- an enum type instance.
 
 feature -- Native types
 

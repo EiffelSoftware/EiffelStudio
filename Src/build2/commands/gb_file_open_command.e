@@ -290,12 +290,6 @@ feature {NONE} -- Implementation
 		do
 			location_update_cancelled := True
 			system_status.close_current_project
-				-- If we are in wizard mode, and they have clicked cancel, to
-				-- the update of the .bpr project location, then we end Build
-				-- as there is nothing to do.
-			if project_settings.is_envision_project then
-				Environment.application.destroy
-			end
 		end
 	
 	location_update_cancelled: BOOLEAN

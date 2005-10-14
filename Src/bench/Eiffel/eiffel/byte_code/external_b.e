@@ -15,7 +15,7 @@ inherit
 			pre_inlined_code, inlined_byte_code,
 			make_end_byte_code, make_end_precomp_byte_code,
 			make_static_call_byte_code, need_target,
-			standard_make_code
+			standard_make_code, is_constant_expression
 		end
 
 	SHARED_INCLUDE
@@ -27,6 +27,14 @@ inherit
 			{NONE} all
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_external_b (Current)
+		end
+	
 feature 
 
 	type: TYPE_I;
@@ -71,6 +79,18 @@ feature -- Attributes for externals
 			Result := static_class_type
 		end
 
+feature -- Status report
+
+	is_constant_expression: BOOLEAN is
+			-- Is constant expression?
+		local
+			l_ext: IL_ENUM_EXTENSION_I
+		do
+				-- For now only a .NET enum type is constant for an external call.
+			l_ext ?= extension
+			Result := l_ext /= Void
+		end
+		
 feature -- Routines for externals
 
 	set_extension (e: like extension) is

@@ -356,7 +356,7 @@ feature {NONE} -- Implementation
 			end
 
 			buffer.exdent
-			buffer.put_string ("};")
+			buffer.put_string ("}")
 			buffer.put_new_line
 			buffer.put_new_line
 		end

@@ -180,7 +180,7 @@ feature
 			end
 
 			buffer.exdent
-			buffer.put_string ("};%N%N")
+			buffer.put_string ("}%N%N")
 		end
 
 feature {POLY_TABLE} -- Special data

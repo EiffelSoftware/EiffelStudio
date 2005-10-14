@@ -137,7 +137,7 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
-		split_area: GB_VERTICAL_SPLIT_AREA
+		split_area: EV_VERTICAL_SPLIT_AREA
 			-- Split are used in `Current'.
 		
 		first_tool_holder, second_tool_holder: GB_TOOL_HOLDER

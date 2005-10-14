@@ -163,9 +163,6 @@ feature -- Basic operations
 					(error_dialog.button (dialog_constants.ev_ignore)).hide
 					error_dialog.show_modal_to_window (main_window)
 					system_status.close_current_project
-					if project_settings.is_envision_project then
-						Environment.application.destroy
-					end
 				end
 				if System_status.project_open then
 					add_project_to_recent_projects
@@ -250,9 +247,7 @@ feature -- Basic operations
 										command_handler.update
 											-- Compress all used ids.
 										id_compressor.compress_all_id
-										if not project_settings.is_envision_project then
-											main_window.update_title
-										end
+										main_window.update_title
 										update_client_information
 									end
 								end

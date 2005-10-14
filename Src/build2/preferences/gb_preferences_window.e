@@ -15,7 +15,7 @@ inherit
 			on_close
 		end
 		
-	EIFFEL_ENV
+	GB_EIFFEL_ENV
 		export
 			{NONE} all	
 		undefine

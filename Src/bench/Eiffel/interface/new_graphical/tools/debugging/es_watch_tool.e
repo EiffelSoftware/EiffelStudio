@@ -460,7 +460,7 @@ feature {NONE} -- add new expression from the grid
 				glab.pointer_double_press_actions.force_extend (agent glab.activate)
 				glab.apply_actions.extend (agent add_new_expression_for_context)
 			elseif new_expression_row.index < watches_grid.row_count then
-				watches_grid.move_row (new_expression_row.index, watches_grid.row_count)
+				watches_grid.move_row (new_expression_row.index, watches_grid.row_count +1)
 			end
 			watches_grid_empty := False
 		ensure

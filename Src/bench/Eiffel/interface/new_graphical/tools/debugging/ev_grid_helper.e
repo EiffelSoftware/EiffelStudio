@@ -60,6 +60,9 @@ feature -- Access
 		do
 			to_index := grid_next_top_row (grid, row_index, offset)
 			if to_index /= row_index then
+				if offset > 0 then
+					to_index := to_index + 1
+				end
 				grid.move_rows (row_index, to_index, 1 + grid.row (row_index).subrow_count_recursive)
 			end
 			Result := to_index

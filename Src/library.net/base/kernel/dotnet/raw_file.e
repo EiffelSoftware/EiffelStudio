@@ -13,16 +13,15 @@ inherit
 	FILE
 		rename
 			index as position,
-			reader as text_reader,
 			writer as text_writer
 		redefine
 			read_stream, 
 			readstream,
 			read_character,
 			readchar,
-			put_string,
+			put_string, 
 			putstring,
-			put_character,
+			put_character, 
 			putchar,
 			close
 		end
@@ -50,10 +49,52 @@ feature -- Status setting
 
 feature -- Output
 
-	put_integer, putint (i: INTEGER) is
+	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write binary value of `i' at current position.
 		do
-			writer.write (i)
+			writer.write_integer_32 (i)
+		end
+		
+	put_integer_8 (i: INTEGER_8) is
+			-- Write binary value of `i' at current position.
+		do
+			writer.write_natural_8 (i.as_natural_8)
+		end
+		
+	put_integer_16 (i: INTEGER_16) is
+			-- Write binary value of `i' at current position.
+		do
+			writer.write_integer_16 (i)
+		end
+		
+	put_integeR_64 (i: INTEGER_64) is
+			-- Write binary value of `i' at current position.
+		do
+			writer.write_integer_64 (i)
+		end
+		
+	put_natural_8 (i: NATURAL_8) is
+			-- Write binary value of `i' at current position.
+		do
+			writer.write_natural_8 (i)
+		end
+		
+	put_natural_16 (i: NATURAL_16) is
+			-- Write binary value of `i' at current position.
+		do
+			writer.write_integer_16 (i.as_integer_16)		
+		end
+		
+	put_natural, put_natural_32 (i: NATURAL_32) is
+			-- Write binary value of `i' at current position.
+		do
+			writer.write_integer_32 (i.as_integer_32)		
+		end
+		
+	put_natural_64 (i: NATURAL_64) is
+			-- Write binary value of `i' at current position.
+		do
+			writer.write_integer_64 (i.as_integer_64)	
 		end
 
 	put_boolean, putbool (b: BOOLEAN) is
@@ -77,8 +118,6 @@ feature -- Output
 	put_data (p: POINTER; size: INTEGER) is
 			-- Put `data' of length `size' pointed by `p' at
 			-- current position.
-		obsolete
-			"Use put_managed_pointer instead."
 		local
 			i: INTEGER
 		do
@@ -87,11 +126,12 @@ feature -- Output
 			until
 				i > (size - 1)
 			loop
-				writer.write ({MARSHAL}.read_byte (p + i))
+				writer.write_natural_8 (feature {MARSHAL}.read_byte (p + i))
+				
 				i := i + 1
 			end
 		end
-
+		
 	put_string, putstring (s: STRING) is
 			-- 
 		local
@@ -107,13 +147,13 @@ feature -- Output
 				byte_array.put (str_index, s.item (str_index + 1).code.to_natural_8)
 				str_index := str_index + 1
 			end
-			writer.write (byte_array)
+			writer.write_natural_8_array (byte_array)
 		end
 		
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		do
-			writer.write (c.code.to_integer.to_natural_8)
+			writer.write_natural_8 (c.code.to_natural_8)
 		end
 
 feature -- Input
@@ -136,8 +176,7 @@ feature -- Input
 				last_string.grow (nb_char)
 			end
 			create str_area.make (nb_char)
-			new_count := reader.read (str_area, 0, nb_char)
-			
+			new_count := reader.read_natural_8_array_integer_32_integer_32 (str_area, 0, nb_char) 
 			check
 				valid_new_count: new_count <= nb_char
 			end
@@ -153,12 +192,68 @@ feature -- Input
 			internal_end_of_file := reader.peek_char = -1
 		end
 
-	read_integer, readint is
+	read_integer, readint, read_integer_32 is
 			-- Read the binary representation of a new integer
 			-- from file. Make result available in `last_integer'.
 		do
 			last_integer := reader.read_int_32
 			internal_end_of_file := reader.peek_char = -1
+		end
+		
+	read_integer_8 is
+			-- Read the binary representation of a new 8-bit integer
+			-- from file. Make result available in `last_integer_8'.
+		do
+			last_integer_8 := reader.read_byte.as_integer_8
+			internal_end_of_file := reader.peek_char = -1			
+		end
+		
+	read_integer_16 is
+			-- Read the binary representation of a new 16-bit integer
+			-- from file. Make result available in `last_integer_16'.
+		do
+			last_integer_16 := reader.read_int_16
+			internal_end_of_file := reader.peek_char = -1			
+		end
+		
+	read_integer_64 is
+			-- Read the binary representation of a new 64-bit integer
+			-- from file. Make result available in `last_integer_64'.
+		do
+			last_integer_64 := reader.read_int_64
+			internal_end_of_file := reader.peek_char = -1
+		end
+		
+	read_natural_8 is
+			-- Read the binary representation of a new 8-bit natural
+			-- from file. Make result available in `last_natural_8'.
+		do
+			last_natural_8 := reader.read_byte
+			internal_end_of_file := reader.peek_char = -1
+		end
+	
+	read_natural_16 is
+			-- Read the binary representation of a new 16-bit natural
+			-- from file. Make result available in `last_natural_16'.
+		do
+			last_natural_16 := reader.read_int_16.as_natural_16
+			internal_end_of_file := reader.peek_char = -1	
+		end
+
+	read_natural, read_natural_32 is
+			-- Read the binary representation of a new 32-bit natural
+			-- from file. Make result available in `last_natural'.
+		do
+			last_natural := reader.read_int_32.as_natural_32
+			internal_end_of_file := reader.peek_char = -1
+		end
+	
+	read_natural_64 is
+			-- Read the binary representation of a new 64-bit natural
+			-- from file. Make result available in `last_natural_64'.
+		do
+			last_natural_64 := reader.read_int_64.as_natural_64
+			internal_end_of_file := reader.peek_char = -1			
 		end
 
 	read_real, readreal is
@@ -195,8 +290,6 @@ feature -- Input
 			-- Read a string of at most `nb_bytes' bound bytes
 			-- or until end of file.
 			-- Make result available in `p'.
-		obsolete
-			"Use read_to_managed_pointer instead."
 		local
 			i: INTEGER
 			byte: NATURAL_8
@@ -207,12 +300,12 @@ feature -- Input
 				i > (nb_bytes - 1)
 			loop
 				byte := reader.read_byte
-				{MARSHAL}.write_byte (p + i, byte)
+				feature {MARSHAL}.write_byte (p + i, byte)
 				i := i + 1
 			end
 			internal_end_of_file := reader.peek_char = -1
 		end
-
+		
 feature {NONE} -- Implementation
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
@@ -224,7 +317,7 @@ feature {NONE} -- Implementation
 			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			create str_area.make (nb)
-			Result := reader.read (str_area, 0, nb)
+			Result := reader.read_natural_8_array_integer_32_integer_32 (str_area, 0, nb)
 			internal_end_of_file := reader.peek_char = -1
 			from
 				i := 0

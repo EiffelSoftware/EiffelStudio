@@ -521,6 +521,14 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("search")
 		end
+	
+	Icon_editor: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_classic_pixmap ("editor")
+		end
 
 	Icon_windows: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
@@ -1228,6 +1236,7 @@ feature {NONE} -- Implementation
 			Result.put ([3, 7], "icon_dynamiclib_window")
 			Result.put ([3, 8], "icon_edit_exported_feature_color")
 			Result.put ([3, 9], "icon_editing")
+			Result.put ([6, 1], "icon_editor_color")
 			Result.put ([3, 10], "icon_enable_bkpt_color")
 			Result.put ([3, 11], "icon_exec_quit_color")
 			Result.put ([3, 12], "icon_exec_quit_color")

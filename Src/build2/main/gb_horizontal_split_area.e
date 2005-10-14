@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 			-- Set flat mode.
 		do
 			Precursor {EV_HORIZONTAL_SPLIT_AREA}
-			implementation.enable_flat_separator
 		end
 
 end -- class GB_SPLIT_AREA

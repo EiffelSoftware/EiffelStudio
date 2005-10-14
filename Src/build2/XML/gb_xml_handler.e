@@ -124,7 +124,6 @@ feature -- Basic operations
 				buffer := file.last_string
 				parser.set_callbacks (pipe_callback.start)
 				parser.parse_from_string (buffer)
-				parser.finish_incremental
 				component_document := pipe_callback.document
 				an_element ?= component_document.first
 				component_element ?= an_element.first

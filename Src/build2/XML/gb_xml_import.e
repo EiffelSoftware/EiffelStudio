@@ -853,7 +853,6 @@ feature {NONE} -- Implementation
 			create parser.make
 			parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, pipe_callback.start>>))
 			parser.parse_from_string (buffer)
-			parser.finish_incremental
 		end
 		
 	pipe_callback: XM_TREE_CALLBACKS_PIPE is

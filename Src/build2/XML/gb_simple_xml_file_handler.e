@@ -181,7 +181,6 @@ feature {NONE} -- Implementation
 				create parser.make
 				parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, pipe_callback.start>>))
 				parser.parse_from_stream (file)
-				parser.finish_incremental
 			end
 		end
 				

@@ -52,7 +52,6 @@ feature -- Basic operations
 			a_name_string, a_data_string: STRING
 			file: KL_TEXT_OUTPUT_FILE
 			warning_dialog: EV_WARNING_DIALOG
-			l_string: STRING
 		do
 				-- Create the root element.
 			create namespace.make_default
@@ -157,7 +156,7 @@ feature {NONE} -- Implementation
 					child_names.off
 				loop
 					element_info := full_information @ (child_names.item)
-					Result.extend (element_info.data, element_info.name)
+					Result.put (element_info.data, element_info.name)
 					child_names.forth
 				end
 			end

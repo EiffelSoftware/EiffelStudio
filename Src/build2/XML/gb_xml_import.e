@@ -468,7 +468,7 @@ feature {NONE} -- Implementation
 				constant_names.off
 			loop
 				all_names_pre_import.put (constant_names.item, constant_names.item)
-				all_constant_names.extend (constant_names.item, constant_names.item)
+				all_constant_names.put (constant_names.item, constant_names.item)
 				constant_names.forth
 			end
 			

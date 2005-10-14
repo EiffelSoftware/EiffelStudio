@@ -32,14 +32,6 @@ feature -- Access
 			Result := Current
 		end
 
-	creation_access (t: TYPE_I): ACCESS_B is
-			-- Creation access
-		require
-			creatable: is_creatable
-		do
-			Result := Current
-		end
-
 	context_type: TYPE_I is
 			-- Context type of the access (properly instantiated)
 		local

@@ -819,7 +819,7 @@ feature -- Basic operation
 				current_object := all_children_recursive.item
 				if not deleted_objects.has (current_object.id) then
 					objects.remove (current_object.id)
-					deleted_objects.extend (current_object, current_object.id)
+					deleted_objects.put (current_object, current_object.id)
 				end
 				all_children_recursive.forth
 			end
@@ -851,7 +851,7 @@ feature -- Basic operation
 				current_object := all_children_recursive.item
 				if not objects.has (current_object.id) then
 					deleted_objects.remove (current_object.id)
-					objects.extend (current_object, current_object.id)
+					objects.put (current_object, current_object.id)
 				end
 				all_children_recursive.forth
 			end
@@ -1236,7 +1236,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR, GB_OBJECT} -- Implementation
 			until
 				an_object.instance_referers.off
 			loop
-				new_object.instance_referers.extend (an_object.instance_referers.item_for_iteration, an_object.instance_referers.item_for_iteration)
+				new_object.instance_referers.put (an_object.instance_referers.item_for_iteration, an_object.instance_referers.item_for_iteration)
 				an_object.instance_referers.forth
 			end				
 				-- We now perform any deferred building that is required.
@@ -1269,7 +1269,7 @@ feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER, GB_XML_LOAD, GB_XML_IMP
 		require
 			not_already_included: not objects.has (an_object.id)
 		do		
-			objects.extend (an_object, an_object.id)
+			objects.put (an_object, an_object.id)
 		ensure
 			contained: objects.has (an_object.id)
 		end

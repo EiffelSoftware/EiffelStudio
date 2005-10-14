@@ -369,7 +369,7 @@ feature -- Access
 			until
 				old_object.instance_referers.off
 			loop
-				Result.instance_referers.extend (old_object.instance_referers.item_for_iteration, old_object.instance_referers.item_for_iteration)
+				Result.instance_referers.put (old_object.instance_referers.item_for_iteration, old_object.instance_referers.item_for_iteration)
 				old_object.instance_referers.forth
 			end
 			check
@@ -389,7 +389,7 @@ feature -- Access
 					old_child_object.instance_referers.off
 				loop
 					iterated_referer := old_child_object.instance_referers.item_for_iteration
-					a_new_object.instance_referers.extend (iterated_referer, iterated_referer)
+					a_new_object.instance_referers.put (iterated_referer, iterated_referer)
 					old_child_object.instance_referers.forth
 				end
 				check
@@ -983,7 +983,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 				actual_object := object_handler.deep_object_from_id (instance_objects.item_for_iteration)
 				all_dependents.clear_all
 				all_dependents_recursive (actual_object, all_dependents)
-				all_dependents.extend (actual_object, actual_object.id)
+				all_dependents.put (actual_object, actual_object.id)
 				from
 					all_dependents.start
 				until
@@ -1198,7 +1198,7 @@ feature {GB_ID_COMPRESSOR, GB_OBJECT}
 			until
 				linear.off
 			loop
-				instance_referers.extend (conversion_data @ linear.item, conversion_data @ linear.item)
+				instance_referers.put (conversion_data @ linear.item, conversion_data @ linear.item)
 				linear.forth
 			end
 			if is_instance_of_top_level_object then
@@ -1950,7 +1950,7 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 					-- when the top level object has its referers connected.
 				if not inside_nested then
 						-- Add `Current' as an instance referer of `l_object'.
-					l_object.instance_referers.extend (Current.id, Current.id)
+					l_object.instance_referers.put (Current.id, Current.id)
 					connect_instance_referers (l_object, Current)
 				end
 
@@ -2013,7 +2013,7 @@ feature {NONE} -- Contract support
 						create instance_viewer.make_with_object (object_handler.object_from_id (list.item))
 					end
 				else
-					ids.extend (list.item, list.item)
+					ids.put (list.item, list.item)
 				end
 				if current_result.item then
 					referred_object := object_handler.deep_object_from_id (list.item)

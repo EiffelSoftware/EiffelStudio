@@ -47,7 +47,7 @@ inherit
 			default_create
 		end
 	
-	EIFFEL_ENV
+	GB_EIFFEL_ENV
 		export
 			{NONE} all
 		undefine
@@ -1531,7 +1531,7 @@ feature {NONE} -- Implementation
 			if current_item = Void then
 				create current_item.make (4)
 				current_item.extend (item)
-				hash_table.extend (current_item, key)
+				hash_table.put (current_item, key)
 			else
 				current_item.extend (item)
 			end

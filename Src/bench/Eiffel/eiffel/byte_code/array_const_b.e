@@ -11,7 +11,7 @@ inherit
 			make_byte_code, enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
 			pre_inlined_code, inlined_byte_code, generate_il,
-			allocates_memory, has_call
+			allocates_memory, has_call, is_constant_expression
 		end
 
 	PREDEFINED_NAMES
@@ -45,6 +45,14 @@ feature {NONE} -- Initialize
 			info_set: info = i
 		end
 		
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_array_const_b (Current)
+		end
+	
 feature -- Access
 
 	expressions: BYTE_LIST [BYTE_NODE];
@@ -66,21 +74,19 @@ feature -- Status report
 			l_area: SPECIAL [BYTE_NODE]
 			l_expressions: BYTE_LIST [BYTE_NODE]
 		do
-			l_expressions := expressions
-			if l_expressions /= Void then
-				from
-					l_area := l_expressions.area
-					nb := l_expressions.count
-				until
-					i = nb or Result
-				loop
-					expr ?= l_area.item (i)
-					check
-						expr_not_void: expr /= Void
-					end
-					Result := expr.used (r)
-					i := i + 1
+			from
+				l_expressions := expressions
+				l_area := l_expressions.area
+				nb := l_expressions.count
+			until
+				i = nb or Result
+			loop
+				expr ?= l_area.item (i)
+				check
+					expr_not_void: expr /= Void
 				end
+				Result := expr.used (r)
+				i := i + 1
 			end
 		end
 
@@ -91,27 +97,48 @@ feature -- Status report
 			-- Does current contain a call?
 		local
 			expr: EXPR_B
+			l_expressions: like expressions
 		do
 			from
-				expressions.start
+				l_expressions := expressions
+				l_expressions.start
 			until
-				expressions.after or Result
+				l_expressions.after or Result
 			loop
-				expr ?= expressions.item
-				Result := expr.has_call;
-				expressions.forth
-			end;
-		end;
+				expr ?= l_expressions.item
+				check expr_not_void: expr /= Void end
+				Result := expr.has_call
+				l_expressions.forth
+			end
+		end
+
+	is_constant_expression: BOOLEAN is
+			-- Is current array only made of constant expressions?
+		local
+			expr: EXPR_B
+			l_expressions: like expressions
+		do
+			from
+				l_expressions := expressions
+				Result := True
+				l_expressions.start
+			until
+				l_expressions.after or not Result
+			loop
+				expr ?= l_expressions.item
+				check expr_not_void: expr /= Void end
+				Result := expr.is_constant_expression
+				l_expressions.forth
+			end
+		end
 
 feature -- Code generation
 
 	enlarge_tree is
 			-- Enlarge the expressions.
 		do
-			if expressions /= Void then
-				expressions.enlarge_tree;
-			end;
-		end;
+			expressions.enlarge_tree
+		end
 
 	enlarged: ARRAY_CONST_BL is
 			-- Enlarge node
@@ -207,7 +234,7 @@ feature -- Byte code generation
 			base_class := real_ty.base_class;
 			f_table := base_class.feature_table;
 			feat_i := f_table.item_id (make_name_id);
-				-- Need to insert expression into
+				-- Need to insert  into
 				-- the stack back to front in order
 				-- to be inserted into the area correctly
 			from

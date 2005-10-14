@@ -38,7 +38,7 @@ inherit
 			default_create, copy
 		end
 	
-	EIFFEL_ENV
+	GB_EIFFEL_ENV
 		export
 			{NONE} all
 		undefine

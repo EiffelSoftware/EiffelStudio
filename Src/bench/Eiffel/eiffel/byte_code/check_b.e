@@ -14,6 +14,14 @@ inherit
 			{NONE} all
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_check_b (Current)
+		end
+	
 feature -- Access
 
 	check_list: BYTE_LIST [BYTE_NODE];

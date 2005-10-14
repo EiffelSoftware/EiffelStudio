@@ -20,7 +20,15 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_elsif_b (Current)
+		end
+
 feature -- Access
 
 	line_number : INTEGER

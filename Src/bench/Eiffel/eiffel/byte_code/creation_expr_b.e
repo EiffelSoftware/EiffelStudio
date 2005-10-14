@@ -15,6 +15,14 @@ inherit
 			line_number, set_line_number, has_call, allocates_memory
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_creation_expr_b (Current)
+		end
+	
 feature -- Register
 
 	register: REGISTRABLE

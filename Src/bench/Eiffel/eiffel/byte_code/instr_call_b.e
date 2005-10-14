@@ -14,6 +14,14 @@ inherit
 create
 	make
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_instr_call_b (Current)
+		end
+
 feature {NONE} -- Initialization
 
 	make (c: like call; l: like line_number) is

@@ -10,6 +10,14 @@ inherit
 			is_commutative, print_register, built_in_enlarged
 		end;
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_bin_xor_b (Current)
+		end
+	
 feature -- Enlarging
 
 	built_in_enlarged: EXPR_B is

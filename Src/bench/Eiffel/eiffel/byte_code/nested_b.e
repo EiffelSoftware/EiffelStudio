@@ -13,6 +13,14 @@ inherit
 			inlined_byte_code, generate_il, need_target
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_nested_b (Current)
+		end
+	
 feature 
 
 	target: ACCESS_B;

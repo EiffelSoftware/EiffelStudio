@@ -15,6 +15,14 @@ inherit
 			generate_il
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_debug_b (Current)
+		end
+	
 feature -- Access
 
 	compound: BYTE_LIST [BYTE_NODE]

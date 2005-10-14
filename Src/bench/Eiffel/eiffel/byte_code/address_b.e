@@ -53,6 +53,14 @@ feature {NONE} -- Initialization
 			record_feature (cl_id, feature_id)
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_address_b (Current)
+		end
+	
 feature -- Access
 
 	feature_id: INTEGER

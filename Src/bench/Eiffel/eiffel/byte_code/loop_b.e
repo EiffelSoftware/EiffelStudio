@@ -19,6 +19,14 @@ inherit
 			{NONE} all
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_loop_b (Current)
+		end
+	
 feature -- Access
 
 	from_part: BYTE_LIST [BYTE_NODE]

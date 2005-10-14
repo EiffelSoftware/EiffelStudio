@@ -18,6 +18,14 @@ inherit
 
 	SHARED_BODY_ID
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_invariant_b (Current)
+		end
+
 feature -- Access
 
 	byte_list: BYTE_LIST [BYTE_NODE]

@@ -27,6 +27,14 @@ feature {NONE} -- Initialization
 			tuple_set: tuple = a_tuple
 		end
 		
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_custom_attribute_b (Current)
+		end
+	
 feature -- Access
 
 	creation_expr: CREATION_EXPR_B

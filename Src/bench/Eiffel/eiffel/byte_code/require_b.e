@@ -8,7 +8,15 @@ class REQUIRE_B
 inherit
 	ASSERT_B
 		redefine
-			generate
+			generate, process
+		end
+	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_require_b (Current)
 		end
 	
 feature 

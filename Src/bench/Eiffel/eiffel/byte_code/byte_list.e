@@ -1,7 +1,7 @@
 -- List used in the byte code generation.
 -- Defines some of the commonly used iterations.
 
-class BYTE_LIST [T -> BYTE_NODE] 
+class BYTE_LIST [reference T -> BYTE_NODE] 
 
 inherit
 	BYTE_NODE
@@ -22,6 +22,14 @@ inherit
 create
 	make, make_filled
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_byte_list (Current)
+		end
+		
 feature -- Code analyzis
 
 	analyze is

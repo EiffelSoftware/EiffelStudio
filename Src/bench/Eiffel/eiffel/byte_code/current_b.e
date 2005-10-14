@@ -11,6 +11,14 @@ inherit
 			is_fast_as_local
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_current_b (Current)
+		end
+	
 feature 
 
 	type: TYPE_I is

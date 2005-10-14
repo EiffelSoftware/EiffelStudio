@@ -43,6 +43,14 @@ feature -- Access
 	is_dotnet_string: BOOLEAN
 			-- Is current a manifest System.String constant?
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_once_string_b (Current)
+		end
+	
 feature -- Properties
 
 	type: CL_TYPE_I is

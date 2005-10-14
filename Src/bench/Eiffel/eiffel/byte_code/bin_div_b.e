@@ -16,6 +16,14 @@ inherit
 			generate_simple, is_built_in
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_bin_div_b (Current)
+		end
+	
 feature -- Status report
 
 	is_simple: BOOLEAN is

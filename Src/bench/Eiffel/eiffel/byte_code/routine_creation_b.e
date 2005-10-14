@@ -13,6 +13,14 @@ inherit
 			allocates_memory
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_routine_creation_b (Current)
+		end
+	
 feature  -- Initialization
 
 	init (cl_type: CL_TYPE_I; cl_id: INTEGER; f: FEATURE_I; 

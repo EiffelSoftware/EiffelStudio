@@ -5,9 +5,17 @@ class REVERSE_B
 inherit
 	ASSIGN_B
 		redefine
-			enlarged, make_byte_code, generate_il
+			enlarged, make_byte_code, generate_il, process
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_reverse_b (Current)
+		end
+	
 feature -- Access
 
 	info: CREATE_INFO

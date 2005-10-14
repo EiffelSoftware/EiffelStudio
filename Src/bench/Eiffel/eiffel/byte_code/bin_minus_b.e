@@ -17,6 +17,14 @@ inherit
 			is_additive
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_bin_minus_b (Current)
+		end
+	
 feature -- Status report
 
 	is_simple: BOOLEAN is

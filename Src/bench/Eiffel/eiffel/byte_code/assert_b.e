@@ -19,6 +19,14 @@ inherit
 			{NONE} generate_assertion_code, buffer
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_assert_b (Current)
+		end
+	
 feature -- Access
 
 	tag: STRING

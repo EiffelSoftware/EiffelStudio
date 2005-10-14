@@ -20,6 +20,14 @@ inherit
 			is_hector
 		end;
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_access_expr_b (Current)
+		end
+	
 feature 
 
 	expr: EXPR_B;

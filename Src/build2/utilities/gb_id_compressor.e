@@ -58,7 +58,7 @@ feature -- Basic operation
 					-- we are dealing with an old save, and as such there
 					-- were no ids in the system, so ignore.
 				if existing_ids @ counter /= 0  then
-					lookup.extend (counter, existing_ids @ counter)
+					lookup.put (counter, existing_ids @ counter)
 				else
 					objects_without_ids := True
 				end
@@ -71,7 +71,7 @@ feature -- Basic operation
 				objects.off
 			loop
 				if object_handler.deleted_objects.has (objects.item.id) then
-					deleted_ids.extend (objects.item.id, objects.item.id)
+					deleted_ids.put (objects.item.id, objects.item.id)
 				end
 				objects.forth
 			end
@@ -90,9 +90,9 @@ feature -- Basic operation
 				current_object.update_internal_id_references (lookup)
 			
 				if deleted_ids.has (original_id) then
-					object_handler.deleted_objects.extend (current_object, current_object.id)
+					object_handler.deleted_objects.put (current_object, current_object.id)
 				else
-					object_handler.objects.extend (current_object, current_object.id)
+					object_handler.objects.put (current_object, current_object.id)
 				end
 					
 				objects.forth
@@ -184,7 +184,7 @@ feature -- Basic operation
 			loop
 				new_value := linear.item + amount_to_shift_ids_during_import
 					-- Insert the new referer back into `instance_referers'.
-				an_object.instance_referers.extend (new_value, new_value)
+				an_object.instance_referers.put (new_value, new_value)
 				linear.forth
 			end
 		ensure
@@ -242,7 +242,7 @@ feature -- Basic operation
 				until
 					counter > existing_ids.count
 				loop
-					lookup.extend (counter + start_value - 1, existing_ids @ counter)
+					lookup.put (counter + start_value - 1, existing_ids @ counter)
 					counter := counter + 1
 				end
 	

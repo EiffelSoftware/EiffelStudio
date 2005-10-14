@@ -700,17 +700,17 @@ feature {NONE} -- Implementation
 			-- `Result' is a lookup table for all INTEGER font constant values by STRING.
 		once
 			create Result.make (11)
-			Result.extend (1, "FamilyScreen")
-			Result.extend (2, "FamilyRoman")
-			Result.extend (3, "FamilySans")
-			Result.extend (4, "FamilyTypewriter")
-			Result.extend (5, "FamilyModern")
-			Result.extend (6, "WeightThin")
-			Result.extend (7, "WeightRegular")
-			Result.extend (8, "WeightBold")
-			Result.extend (9, "WeightBlack")
-			Result.extend (10, "ShapeRegular")
-			Result.extend (11, "ShapeItalic")
+			Result.put (1, "FamilyScreen")
+			Result.put (2, "FamilyRoman")
+			Result.put (3, "FamilySans")
+			Result.put (4, "FamilyTypewriter")
+			Result.put (5, "FamilyModern")
+			Result.put (6, "WeightThin")
+			Result.put (7, "WeightRegular")
+			Result.put (8, "WeightBold")
+			Result.put (9, "WeightBlack")
+			Result.put (10, "ShapeRegular")
+			Result.put (11, "ShapeItalic")
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -719,17 +719,17 @@ feature {NONE} -- Implementation
 			-- `Result' is a lookup table for all STRING font constant values by INTEGER.
 		once
 			create Result.make (11)
-			Result.extend ("FamilyScreen", 1)
-			Result.extend ("FamilyRoman", 2)
-			Result.extend ("FamilySans", 3)
-			Result.extend ("FamilyTypewriter", 4)
-			Result.extend ("FamilyModern", 5)
-			Result.extend ("WeightThin", 6)
-			Result.extend ("WeightRegular", 7)
-			Result.extend ("WeightBold", 8)
-			Result.extend ("WeightBlack", 9)
-			Result.extend ("ShapeRegular", 10)
-			Result.extend ("ShapeItalic", 11)
+			Result.put ("FamilyScreen", 1)
+			Result.put ("FamilyRoman", 2)
+			Result.put ("FamilySans", 3)
+			Result.put ("FamilyTypewriter", 4)
+			Result.put ("FamilyModern", 5)
+			Result.put ("WeightThin", 6)
+			Result.put ("WeightRegular", 7)
+			Result.put ("WeightBold", 8)
+			Result.put ("WeightBlack", 9)
+			Result.put ("ShapeRegular", 10)
+			Result.put ("ShapeItalic", 11)
 		ensure
 			result_not_void: Result /= Void
 		end

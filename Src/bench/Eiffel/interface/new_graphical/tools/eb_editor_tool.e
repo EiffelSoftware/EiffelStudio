@@ -12,7 +12,8 @@ inherit
 			text_area,
 			menu_name,
 			refresh,
-			build_text_area
+			build_text_area,
+			pixmap
 		end
 
 	EXEC_MODES
@@ -30,7 +31,9 @@ feature {NONE} -- Initialization
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
 		do
-			create explorer_bar_item.make (explorer_bar, widget, title, False)
+			create explorer_bar_item.make (explorer_bar, widget, title, true)
+			explorer_bar_item.set_menu_name (menu_name)
+			explorer_bar_item.set_pixmap (pixmap)
 			explorer_bar.add (explorer_bar_item)
 		end
 
@@ -50,6 +53,12 @@ feature -- Access
 
 	text_area: EB_SMART_EDITOR
 			-- Text Editor.
+			
+	pixmap: ARRAY [EV_PIXMAP] is
+			-- Pixmap as it may appear in toolbars and menus.
+		do
+			Result := Pixmaps.Icon_editor
+		end
 
 feature -- Status Report
 

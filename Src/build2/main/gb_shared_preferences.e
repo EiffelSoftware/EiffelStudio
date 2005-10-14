@@ -7,12 +7,12 @@ class
 	GB_SHARED_PREFERENCES
 
 inherit
-	EIFFEL_ENV
+	GB_EIFFEL_ENV
 		export
 			{NONE} all	
 		end
 
-feature {GB} -- Initialization
+feature -- Initialization
 
 	initialize_preferences (a_preferences: PREFERENCES) is
 			-- Initialize with `a_preferences'.

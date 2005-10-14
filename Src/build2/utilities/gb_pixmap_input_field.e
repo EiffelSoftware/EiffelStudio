@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			else
 				a_pixmapable ?= first
 				if a_pixmapable /= Void then
-					a_path := a_pixmapable.pixmap_path
+					a_path := a_pixmapable.internal_pixmap_path
 				end
 			end
 			if a_path /= Void then

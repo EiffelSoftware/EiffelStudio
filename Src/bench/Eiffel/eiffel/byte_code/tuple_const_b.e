@@ -11,7 +11,7 @@ inherit
 			make_byte_code, enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
 			pre_inlined_code, inlined_byte_code, generate_il,
-			allocates_memory, has_call
+			allocates_memory, has_call, is_constant_expression
 		end
 
 	PREDEFINED_NAMES
@@ -37,6 +37,14 @@ feature {NONE} -- Initialization
 			type_set: type = t
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_tuple_const_b (Current)
+		end
+	
 feature -- Access
 
 	expressions: BYTE_LIST [BYTE_NODE];
@@ -66,7 +74,7 @@ feature -- Status report
 			expr: EXPR_B
 			i, nb: INTEGER
 			l_area: SPECIAL [BYTE_NODE]
-			l_expressions: BYTE_LIST [BYTE_NODE]
+			l_expressions: like expressions
 		do
 			l_expressions := expressions
 			from
@@ -84,22 +92,45 @@ feature -- Status report
 			end
 		end
 
-	allocates_memory: BOOLEAN is True
+	allocates_memory: BOOLEAN is True;
 			-- Current allocates memory.
 
 	has_call: BOOLEAN is
-			-- Does Current contains calls?
+			-- Does current contain a call?
 		local
 			expr: EXPR_B
+			l_expressions: like expressions
 		do
 			from
-				expressions.start
+				l_expressions := expressions
+				l_expressions.start
 			until
-				expressions.after or else Result
+				l_expressions.after or Result
 			loop
-				expr ?= expressions.item
+				expr ?= l_expressions.item
+				check expr_not_void: expr /= Void end
 				Result := expr.has_call
-				expressions.forth
+				l_expressions.forth
+			end
+		end
+
+	is_constant_expression: BOOLEAN is
+			-- Is current array only made of constant expressions?
+		local
+			expr: EXPR_B
+			l_expressions: like expressions
+		do
+			from
+				l_expressions := expressions
+				Result := True
+				l_expressions.start
+			until
+				l_expressions.after or not Result
+			loop
+				expr ?= l_expressions.item
+				check expr_not_void: expr /= Void end
+				Result := expr.is_constant_expression
+				l_expressions.forth
 			end
 		end
 
@@ -108,10 +139,8 @@ feature -- Code generation
 	enlarge_tree is
 			-- Enlarge the expressions.
 		do
-			if expressions /= Void then
-				expressions.enlarge_tree;
-			end;
-		end;
+			expressions.enlarge_tree
+		end
 
 	enlarged: TUPLE_CONST_BL is
 			-- Enlarge node

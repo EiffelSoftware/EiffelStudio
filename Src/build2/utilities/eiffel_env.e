@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EIFFEL_ENV
+class GB_EIFFEL_ENV
 
 feature -- Status
 
@@ -216,4 +216,4 @@ feature {NONE} -- Implementation
 			platform_constants_not_void: Result /= Void
 		end
 
-end -- class EIFFEL_ENV
+end -- class GB_EIFFEL_ENV

@@ -138,9 +138,9 @@ feature {NONE} -- Implementation
 			until
 				counter > 32
 			loop
-				validate_agents.extend (agent validate_true (?), item_text_string + counter.out)
-				execution_agents.extend (agent set_text (?, counter), item_text_string + counter.out)
-				execution_agents.extend (agent set_pixmap (?, ?,  counter), Item_pixmap_string + counter.out)
+				validate_agents.put (agent validate_true (?), item_text_string + counter.out)
+				execution_agents.put (agent set_text (?, counter), item_text_string + counter.out)
+				execution_agents.put (agent set_pixmap (?, ?,  counter), Item_pixmap_string + counter.out)
 				counter := counter + 1
 			end
 		end

@@ -30,8 +30,8 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		do
-			if first.pixmap_path /= Void or uses_constant (pixmap_path_string)  then
-				add_string_element (element, pixmap_path_string, objects.first.pixmap_path)
+			if first.internal_pixmap_path /= Void or uses_constant (pixmap_path_string)  then
+				add_string_element (element, pixmap_path_string, objects.first.internal_pixmap_path)
 			end
 		end
 		
@@ -76,7 +76,7 @@ feature {GB_XML_STORE} -- Output
 						new_pixmap.set_with_named_file (data)
 						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 					end
-					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (a_file_name))
+					for_all_objects (agent {EV_PIXMAPABLE}.set_internal_pixmap_path (a_file_name))
 				end
 			end
 		end

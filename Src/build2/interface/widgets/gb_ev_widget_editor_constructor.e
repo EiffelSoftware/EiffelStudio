@@ -129,10 +129,10 @@ feature {NONE} -- Implementation
 			-- contain all agents required for modification of `Current.
 		do
 			
-			execution_agents.extend (agent set_minimum_height (?), Minimum_height_string)
-			validate_agents.extend (agent valid_minimum_dimension (?), Minimum_height_string)
-			execution_agents.extend (agent set_minimum_width (?), Minimum_width_string)
-			validate_agents.extend (agent valid_minimum_dimension (?), Minimum_width_string)
+			execution_agents.put (agent set_minimum_height (?), Minimum_height_string)
+			validate_agents.put (agent valid_minimum_dimension (?), Minimum_height_string)
+			execution_agents.put (agent set_minimum_width (?), Minimum_width_string)
+			validate_agents.put (agent valid_minimum_dimension (?), Minimum_width_string)
 		end
 		
 	toggle_visibility is

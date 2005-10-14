@@ -49,8 +49,8 @@ feature {NONE} -- Implementation
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
-			execution_agents.extend (agent set_tooltip (?), tooltip_string)
-			validate_agents.extend (agent validate_true (?), tooltip_string)
+			execution_agents.put (agent set_tooltip (?), tooltip_string)
+			validate_agents.put (agent validate_true (?), tooltip_string)
 		end
 	
 	tooltip_entry: GB_STRING_INPUT_FIELD

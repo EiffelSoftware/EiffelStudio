@@ -70,8 +70,8 @@ feature {NONE} -- Implementation
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
-			execution_agents.extend (agent set_font (?), font_string)
-			validate_agents.extend (agent valid_font, font_string)
+			execution_agents.put (agent set_font (?), font_string)
+			validate_agents.put (agent valid_font, font_string)
 		end
 		
 	set_font (a_font: EV_FONT) is

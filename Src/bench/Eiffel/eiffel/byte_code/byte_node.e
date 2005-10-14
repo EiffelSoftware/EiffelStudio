@@ -4,7 +4,7 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class BYTE_NODE 
+deferred class BYTE_NODE 
 
 inherit
 	BYTE_CONST
@@ -30,6 +30,15 @@ inherit
 
 	SHARED_IL_CODE_GENERATOR
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Visitor feature.
+		require
+			v_not_void: v /= Void
+		deferred
+		end
+		
 feature -- Eiffel source line information
 
 	line_number: INTEGER is     

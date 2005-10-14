@@ -3,6 +3,8 @@ deferred class
 
 inherit
 	EB_CONSTANTS
+	
+	EB_POSITIONABLE
 
 feature -- Properties
 

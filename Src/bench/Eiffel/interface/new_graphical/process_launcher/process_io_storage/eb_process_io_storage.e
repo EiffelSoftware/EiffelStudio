@@ -79,7 +79,6 @@ feature	-- Basic operations
 			is_end: BOOLEAN
 			done: BOOLEAN
 			s: STRING
-			e: EB_PROCESS_IO_DATA_BLOCK
 		do
 			mutex.lock
 			create s.make (count)

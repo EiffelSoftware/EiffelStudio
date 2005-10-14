@@ -48,10 +48,10 @@ feature {NONE} -- Implementation
 		do
 			if a_pixmap /= Void then
 				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (a_pixmap))
-				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (pixmap_path))
+				for_all_objects (agent {EV_PIXMAPABLE}.set_internal_pixmap_path (pixmap_path))
 			else
 				for_all_objects (agent {EV_PIXMAPABLE}.remove_pixmap)
-				for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (Void))
+				for_all_objects (agent {EV_PIXMAPABLE}.set_internal_pixmap_path (Void))
 			end
 		end
 		
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 	return_pixmap_path: STRING is
 			-- `Result' is path used to retrieve pixmap.
 		do
-			Result := objects.first.pixmap_path
+			Result := objects.first.internal_pixmap_path
 		end
 
 end -- class GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR

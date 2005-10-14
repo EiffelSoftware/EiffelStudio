@@ -64,8 +64,8 @@ feature {NONE} -- Implementation
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
-			execution_agents.extend (agent set_text (?), text_string)
-			validate_agents.extend (agent validate_true (?), text_string)
+			execution_agents.put (agent set_text (?), text_string)
+			validate_agents.put (agent validate_true (?), text_string)
 		end
 
 	update_attribute_editor is

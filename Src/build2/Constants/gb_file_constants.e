@@ -11,7 +11,7 @@ feature -- Generation constants
 	template_file_location: FILE_NAME is
 			-- Location of templates.
 		do
-			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)		
+			create Result.make_from_string ((create {GB_EIFFEL_ENV}).Eiffel_installation_dir_name)		
 			Result.extend ("build")
 			Result.extend ("templates")
 		end

@@ -8,7 +8,7 @@ class
 	GB_SHOW_PROJECT_SETTINGS_COMMAND
 	
 inherit
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make, execute, executable
 		end
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 			set_tooltip ("Settings...")
 			set_pixmaps (<<(create {GB_SHARED_PIXMAPS}).icon_system_window>>)
 			set_name ("Settings...")

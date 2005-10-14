@@ -8,7 +8,7 @@ class
 
 inherit
 
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make, execute
 		end
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 				-- Retrieve top level window of `layout_constructor'.
 			set_menu_name ("Expand layout tree")
 			add_agent (agent execute)

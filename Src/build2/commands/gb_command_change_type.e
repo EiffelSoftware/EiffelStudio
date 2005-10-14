@@ -90,7 +90,7 @@ feature -- Basic Operation
 				-- mark all the children as deleted also. Only the
 				-- actual object should be marked as deleted.
 			object_handler.objects.remove (original_object.id)
-			object_handler.deleted_objects.extend (original_object, original_object.id)
+			object_handler.deleted_objects.put (original_object, original_object.id)
 			
 			if not executed_once then
 					-- The first time `Current' is executed, we build a new object.
@@ -98,13 +98,13 @@ feature -- Basic Operation
 				new_ids.extend (new_object.id)
 				original_ids.extend (original_object.id)
 				if instance_object /= Void then
-					instance_object.instance_referers.extend (new_object.id, new_object.id)
+					instance_object.instance_referers.put (new_object.id, new_object.id)
 				end
 			else
 					-- Additional executions use the objects created the first time.
 				new_object := object_handler.deleted_objects.item (new_ids.item)
 				object_handler.deleted_objects.remove (new_object.id)
-				object_handler.objects.extend (new_object, new_object.id)
+				object_handler.objects.put (new_object, new_object.id)
 				new_ids.forth
 			end
 			
@@ -144,10 +144,10 @@ feature -- Basic Operation
 				original_object := Object_handler.deep_object_from_id (original_ids.item)
 				new_object := Object_handler.deep_object_from_id (new_ids.i_th (original_ids.index))
 				object_handler.deleted_objects.remove (original_object.id)
-				object_handler.objects.extend (original_object, original_object.id)
+				object_handler.objects.put (original_object, original_object.id)
 				
 				object_handler.objects.remove (new_object.id)
-				object_handler.deleted_objects.extend (new_object, new_object.id)
+				object_handler.deleted_objects.put (new_object, new_object.id)
 
 				object_handler.replace_object (new_object, original_object)
 				new_object.set_name (original_object.name)

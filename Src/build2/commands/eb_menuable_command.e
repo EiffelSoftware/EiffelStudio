@@ -4,10 +4,10 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	EB_MENUABLE_COMMAND 
+	GB_MENUABLE_COMMAND 
 
 inherit
-	EB_GRAPHICAL_COMMAND
+	GB_GRAPHICAL_COMMAND
 
 feature -- Access
 
@@ -64,7 +64,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_menu_item: EB_COMMAND_MENU_ITEM is
+	new_menu_item: GB_COMMAND_MENU_ITEM is
 			-- Create a new menu entry for this command.
 		local
 			mname: STRING
@@ -89,7 +89,7 @@ feature -- Basic operations
 			end
 		end
 
-feature {EB_COMMAND_MENU_ITEM} -- Implementation
+feature {GB_COMMAND_MENU_ITEM} -- Implementation
 
 	managed_menu_items: ARRAYED_LIST [like new_menu_item]
 			-- Menu items associated with this command.

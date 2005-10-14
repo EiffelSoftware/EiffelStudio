@@ -4,10 +4,10 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EB_COMMAND_CHECK_MENU_ITEM 
+	GB_COMMAND_CHECK_MENU_ITEM 
 
 inherit
-	EB_COMMAND_MENU_ITEM
+	GB_COMMAND_MENU_ITEM
 		undefine
 			is_in_default_state
 		redefine

@@ -12,7 +12,7 @@ deferred class
 	
 inherit
 
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	GB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_toolbar_item,
 			new_menu_item
@@ -102,7 +102,7 @@ feature -- Execution
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 		local
 			tt: STRING
@@ -141,7 +141,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is
+	new_menu_item: GB_COMMAND_CHECK_MENU_ITEM is
 			-- Create a new menu entry for this command.
 		local
 			mname: STRING

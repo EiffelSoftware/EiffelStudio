@@ -174,7 +174,7 @@ feature -- Basic operation
 			-- For every command in `all_standard_commands',
 			--  and `all_two_state_commands', update their state.
 		local
-			current_command: EB_STANDARD_CMD
+			current_command: GB_STANDARD_CMD
 			two_state_command: GB_TWO_STATE_COMMAND
 		do
 			from
@@ -207,7 +207,7 @@ feature -- Basic operation
 
 feature {GB_MAIN_WINDOW} -- Implementation
 
-	all_standard_commands: ARRAYED_LIST [EB_STANDARD_CMD] is
+	all_standard_commands: ARRAYED_LIST [GB_STANDARD_CMD] is
 			-- All the standard commands accessible through `Current'.
 			-- This assumes that the commands are static and no new
 			-- commands are created during the programs execution.

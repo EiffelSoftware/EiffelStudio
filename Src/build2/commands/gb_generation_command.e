@@ -8,7 +8,7 @@ class
 	GB_GENERATION_COMMAND
 	
 inherit
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make, execute, executable
 		end
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			acc: EV_ACCELERATOR
 			key: EV_KEY
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 			set_tooltip ("Generate code")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_code_generation)
 			set_name ("generate code")

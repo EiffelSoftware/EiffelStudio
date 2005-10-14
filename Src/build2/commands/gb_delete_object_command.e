@@ -7,7 +7,7 @@ class
 	GB_DELETE_OBJECT_COMMAND
 	
 inherit
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make, execute, executable,
 			new_toolbar_item
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 			set_tooltip ("Delete")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_delete_small)
 			set_name ("Delete")
@@ -68,11 +68,11 @@ feature -- Access
 
 feature -- Basic operations
 
-		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON is
 				-- Create a new toolbar item linked to `Current'. This has been redefined as each button
 				-- needs to have its drop actions set.
 			do
-				Result := Precursor {EB_STANDARD_CMD} (display_text, use_gray_icons)
+				Result := Precursor {GB_STANDARD_CMD} (display_text, use_gray_icons)
 				Result.drop_actions.extend (agent delete_transported_object)
 				Result.drop_actions.extend (agent delete_radio_merge)
 				Result.drop_actions.extend (agent delete_directory)

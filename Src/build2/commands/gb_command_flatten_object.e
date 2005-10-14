@@ -215,7 +215,7 @@ feature -- Basic Operation
 				new_link_object.remove_client_representation (original_instance_object)
 				new_link_object.instance_referers.remove (original_instance_object.id)
 				new_link_object.unconnect_instance_referers (new_link_object, original_instance_object)
-				original_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
+				original_link_object.instance_referers.put (original_instance_object.id, original_instance_object.id)
 				original_link_object.connect_instance_referers (original_link_object, original_instance_object)
 				
 				new_links.forth
@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 
 						original_link_object.instance_referers.remove (original_instance_object.id)
 						
-						new_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
+						new_link_object.instance_referers.put (original_instance_object.id, original_instance_object.id)
 						current_item.set_associated_top_level_object (new_link_object)
 						current_object.connect_instance_referers (new_link_object, original_instance_object)
 						

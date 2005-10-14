@@ -4,10 +4,10 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EB_COMMAND_RADIO_TOOL_BAR_BUTTON 
+	GB_COMMAND_RADIO_TOOL_BAR_BUTTON 
 
 inherit
-	EB_COMMAND_TOOL_BAR_BUTTON
+	GB_COMMAND_TOOL_BAR_BUTTON
 		undefine
 			is_in_default_state
 		redefine
@@ -37,4 +37,4 @@ feature {EV_ANY_I} -- Implementation
 	implementation: EV_TOOL_BAR_RADIO_BUTTON_I
 			-- Responsible for interaction with the native graphics toolkit.
 
-end -- class EB_COMMAND_RADIO_TOOL_BAR_BUTTON
+end -- class GB_COMMAND_RADIO_TOOL_BAR_BUTTON

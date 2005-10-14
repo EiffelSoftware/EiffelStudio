@@ -8,7 +8,7 @@ class
 	GB_REDO_COMMAND
 	
 inherit
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make, execute, executable
 		end
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 			set_tooltip ("Redo")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_redo)
 			set_name ("Redo")

@@ -4,7 +4,7 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	EB_GRAPHICAL_COMMAND
+	GB_GRAPHICAL_COMMAND
 
 inherit
 	EB_COMMAND

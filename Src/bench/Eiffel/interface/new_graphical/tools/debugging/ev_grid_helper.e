@@ -49,6 +49,14 @@ feature -- Access
 				end
 			end
 		end
+		
+	grid_move_to_end_of_grid (a_row: EV_GRID_ROW) is
+		require
+			a_row /= Void
+			a_row.parent /= Void
+		do
+			a_row.parent.move_rows (a_row.index, a_row.parent.row_count + 1, 1 + a_row.subrow_count_recursive)
+		end
 
 	grid_move_top_row_node_by (grid: EV_GRID; row_index: INTEGER; offset: INTEGER): INTEGER is
 		require

@@ -158,13 +158,14 @@ feature -- Basic operation
 			-- This is used in Wizard mode.
 		require
 			box_exists: vb /= Void
+		local
+			preference_access: PREFERENCES
 		do
+				-- Initialization of preferences.
+			create preference_access.make_with_defaults_and_location (<<default_xml_file>>, eiffel_preferences)
+			initialize_preferences (preference_access)
 			build_widget_structure (vb)
-				-- When we are launching as the Envision modification
-				-- wizard, we will not be able to ensure that the top item
-				-- is visible as at window will not be displayed. If this is
-				-- the case, then we perform the "item_visible" i
-				-- `make_and_launch_as_modify_wizard' of WIZARD_PROJECT_MANAGER.
+				-- Must ensure the top level window is visible before calling `ensure_top_item_visible'.
 			if is_show_requested then
 				type_selector.ensure_top_item_visible
 			end
@@ -1001,7 +1002,7 @@ feature {NONE} -- Implementation
 			-- For all command accelerators,
 			-- add them to the accelerators of `Current'.
 		local
-			local_commands: ARRAYED_LIST [EB_STANDARD_CMD]
+			local_commands: ARRAYED_LIST [GB_STANDARD_CMD]
 		do
 			local_commands := command_handler.all_standard_commands
 			from

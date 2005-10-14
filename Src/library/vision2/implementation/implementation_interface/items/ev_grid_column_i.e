@@ -454,8 +454,6 @@ feature -- Element change
 				a_parent_i.internal_set_item (a_index, i, Void)
 				i := i + 1
 			end
-		ensure
-			cleared: index_of_first_item = 0
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is

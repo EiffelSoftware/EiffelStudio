@@ -65,10 +65,18 @@
     <paragraph>
       <link>
         <url>build.xml</url>
-        <label>Build Properties</label>
+        <label>Building Properties</label>
       </link>
       <line_break />
 			Configuration dependent and advanced <link><url>../../../compiling_projects/index.xml</url><label>Build</label></link> related project properties, for specifying specific build properties and tweaking the compiler.
+		</paragraph>
+    <paragraph>
+      <link>
+        <url>build_events.xml</url>
+        <label>Build Events Properties</label>
+      </link>
+      <line_break />
+			Configuration dependent properties for executing command-line actions based on pre and post-build events.
 		</paragraph>
     <paragraph>
       <link>
@@ -105,6 +113,14 @@
       <line_break />
 			Information on targeting alternative versions of the .NET Framework and <bold>Common Language Runtime</bold> (CLR).
 		</paragraph>
+    <paragraph>
+     	<link>
+        	<url>edit_command_dialog.xml</url>
+        	<label>Edit Command Dialog</label>
+		</link>
+		<line_break />
+		Explains the usage and role of the <bold>Edit Command Dialog</bold> in configurating EiffelEnvision projects.
+	</paragraph>
     <paragraph>
       <link>
         <url>item_configuration/index.xml</url>

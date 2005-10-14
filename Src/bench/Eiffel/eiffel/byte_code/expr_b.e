@@ -1,4 +1,7 @@
--- An Eiffel expression.
+indexing
+	description: "An Eiffel expression."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class EXPR_B
 
@@ -145,6 +148,16 @@ feature -- Il code generation
 			end
 		end
 
+feature -- Status report
+
+	is_constant_expression: BOOLEAN is
+			-- Does current represent a node which is constant?
+			-- Case of manifest constants, and tuples/arrays with
+			-- constant expressions.
+		do
+			-- Default: False
+		end
+		
 feature -- C generation
 
 	get_register is

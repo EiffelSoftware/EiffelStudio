@@ -71,8 +71,8 @@
       </link>
       <line_break />
       <link>
-        <url>build.xml</url>
-        <label>Build Properties</label>
+        <url>build_events.xml</url>
+        <label>Build Events Properties</label>
       </link>
       <line_break />
       <link>

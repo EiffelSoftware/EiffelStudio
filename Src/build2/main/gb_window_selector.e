@@ -1224,7 +1224,7 @@ feature {NONE} -- Implementation
 			an_object_not_void: an_object /= Void
 			hash_table_not_void: hash_table /= Void
 		do
-			hash_table.extend (an_object.name, an_object.name)
+			hash_table.put (an_object.name, an_object.name)
 		ensure
 			object_name_contained: hash_table.item (an_object.name) /= Void and then hash_table.item (an_object.name) = an_object.name
 		end

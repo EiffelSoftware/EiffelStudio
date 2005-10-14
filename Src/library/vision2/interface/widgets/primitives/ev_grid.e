@@ -1880,19 +1880,19 @@ feature -- Status report
 feature -- Element change
 
 	insert_new_row (i: INTEGER) is
-			-- Insert a new row at index `i'.
+			-- Insert a new row immediately before row at index `i'.
 		require
 			not_destroyed: not is_destroyed
 			i_within_range: i > 0 and i <= row_count + 1
 			not_inserting_within_existing_subrow_structure: i <= row_count implies row (i).parent_row = Void
 		do
-			implementation.insert_new_row (i)
+			implementation.insert_new_rows (1, i)
 		ensure
-			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (row_count = i)
+			row_count_set: row_count = old row_count + 1
 		end
 		
 	insert_new_rows (rows_to_insert, i: INTEGER) is
-			-- Insert `rows_to_insert' rows at index `i'.
+			-- Insert `rows_to_insert' rows immediately before row at index `i'.
 		require
 			not_destroyed: not is_destroyed
 			i_within_range: i > 0 and i <= row_count + 1
@@ -1901,11 +1901,11 @@ feature -- Element change
 		do
 			implementation.insert_new_rows (rows_to_insert, i)
 		ensure
-			row_count_set: (i <= old row_count implies row_count = old row_count + rows_to_insert) or (row_count = i + rows_to_insert - 1)
+			row_count_set: row_count = old row_count + rows_to_insert
 		end
 
 	insert_new_row_parented (i: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Insert a new row at index `i' and make that row a subnode of `a_parent_row'.
+			-- Insert a new row immediately before row at index `i' and make that row a subnode of `a_parent_row'.
 		require
 			not_destroyed: not is_destroyed
 			tree_enabled: is_tree_enabled
@@ -1919,12 +1919,13 @@ feature -- Element change
 		do
 			implementation.insert_new_rows_parented (1, i, a_parent_row)
 		ensure
-			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (i = row_count)
+			row_count_set: row_count = old row_count + 1
 			subrow_count_set: a_parent_row.subrow_count = old a_parent_row.subrow_count + 1
 		end
 		
 	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Insert `rows_to_insert' new rows at index `i' and make those rows subnodes of `a_parent_row'.
+			-- Insert `rows_to_insert' new rows immediately before row at index `i'.
+			-- Make these newly inserted rows subnodes of `a_parent_row'.
 		require
 			not_destroyed: not is_destroyed
 			tree_enabled: is_tree_enabled
@@ -1943,7 +1944,7 @@ feature -- Element change
 		end
 
 	insert_new_column (a_index: INTEGER) is
-			-- Insert a new column at index `a_index'.
+			-- Insert a new column immediately before column at index `a_index'.
 		require
 			not_destroyed: not is_destroyed
 			a_index_within_range: a_index > 0 and a_index <= column_count + 1
@@ -1951,60 +1952,64 @@ feature -- Element change
 		do
 			implementation.insert_new_column (a_index)
 		ensure
-			column_count_set: (a_index <= old column_count implies column_count = old column_count + 1) or (column_count = a_index)
+			column_count_set: column_count = old column_count + 1
 		end
 
 	move_row (i, j: INTEGER) is
-			-- Move row at index `i' to index `j'.
+			-- Move row at index `i' immediately before row at index `j'.
+			-- If `j' = `row_count + 1' then row `i' is moved to the last index in the grid.
+			-- Row `i' will be unparented if it has a `parent_row'.
 		require
 			not_destroyed: not is_destroyed
-			i_positive: i > 0
-			j_positive: j > 0
-			i_not_greater_than_row_count: i <= row_count
-			j_valid: j <= row_count		
+			i_valid: i > 0 and then i <= row_count
+			j_valid: j > 0 and then j <= row_count + 1
 			row_has_no_subrows: row (i).subrow_count = 0
-			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void
-			not_breaking_existing_subrow_structure_when_moving_up: (i <= j and then j < row_count) implies row (j + 1).parent_row = Void
+			not_breaking_existing_subrow_structure: j <= row_count implies row (j).parent_row = Void
 		do
-			implementation.move_rows (i, j, 1)
+			implementation.move_rows_to_parent (i, j, 1, Void)
 		ensure
 			rows_moved:
-				row (j) = old row (i)
-				and (j < i implies row (i) = old row ((i - 1).max (1)))
-				and (j > i and then i < row_count implies (row (i) = old row ((i + 1).min (row_count))))
+				(j <= i implies row (j) = old row (i)) and
+				(j > i implies row (j - 1) = old row (i)) and
+				(j < i implies (row (i) = old row ((i - 1).max (1)))) and
+				(j > i + 1 implies (row (i) = old row ((i + 1).min (row_count))))
 			row_count_unchanged: row_count = old row_count
 		end
 
 	move_rows (i, j, n: INTEGER) is
-			-- Move `n' rows starting at index `i' to index `j'.
-			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
+			-- Move `n' rows starting at index `i' immediately before row at index `j'.
+			-- If `j' = `row_count + 1' the rows are moved to the very bottom of the grid.
+			-- If `is_tree_enabled', all rows moved that share the same tree structure depth
+			-- as row `i' are unparented and set as root rows within the grid tree.
+			-- All parent rows within the rows moved that have a tree structure depth
+			-- greater than that of row `i' are left parented.
 		require
 			not_destroyed: not is_destroyed
-			i_positive: i > 0
-			j_positive: j > 0
-			n_positive: n > 0
-			i_not_greater_than_row_count: i <= row_count
-			j_valid: j <= row_count
-			n_valid: i + n <= row_count + 1
+			i_valid: i > 0 and then i <= row_count
+			j_valid: j > 0 and then j <= row_count + 1	
+			n_valid: n > 0 and then i + n <= row_count + 1
+			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
 			rows_may_be_moved: rows_may_be_moved (i, n)
-			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void
-			not_breaking_existing_subrow_structure_when_moving_up: i <= j implies row (j + 1).parent_row = Void
+			not_breaking_existing_subrow_structure: j <= row_count implies row (j).parent_row = Void
 		do
-			implementation.move_rows (i, j, n)
+			implementation.move_rows_to_parent (i, j, n, Void)
 		ensure
-			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or
-				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
+			rows_moved:
+				(j <= i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) and
+				(j > i + n implies row (j - n) = old row (i) and then row (j - 1) = old row (i + n - 1))
 			row_count_unchanged: row_count = old row_count
 		end
 		
 	move_row_to_parent (i, j: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Move row at index `i' to index `j', setting `parent_row' to `a_parent_row'.
+			-- Move row at index `i' immediately before row at index `j'.
+			-- Row `i' is re-parented as a subrow of `a_parent_row'.
 		require
 			not_destroyed: not is_destroyed
 			tree_enabled: is_tree_enabled
-			i_positive: i > 0
+			i_valid: i > 0 and then i <= row_count
+			j_valid: j > 0 and then j <= row_count + 1
+			row_has_no_subrows: row (i).subrow_count = 0
 			a_parent_row_not_void: a_parent_row /= Void
-			i_not_greater_than_row_count: i <= row_count
 			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
 				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
 			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
@@ -2013,72 +2018,82 @@ feature -- Element change
 			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (j).parent_row = a_parent_row
 		do
-			move_rows_to_parent (i, j, 1, a_parent_row)
+			implementation.move_rows_to_parent (i, j, 1, a_parent_row)
 		ensure
-			rows_moved: row (j) = old row (i) and then row (i) = old row (j)
+			rows_moved:
+				(j <= i implies row (j) = old row (i)) and
+				(j > i implies row (j - 1) = old row (i)) and
+				(j < i implies (row (i) = old row ((i - 1).max (1)))) and
+				(j > i + 1 implies (row (i) = old row ((i + 1).min (row_count))))
 			row_count_unchanged: row_count = old row_count
 		end
 		
-	move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Move `n' rows starting at index `i' to index `j', setting `parent_row' of each to `a_parent_row'.
-			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
+	 move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW) is
+			-- Move `n' rows starting at index `i' immediately before row at index `j'.
+			-- All rows moved that share the same tree structure depth
+			-- as row `i' are reparented as a subrow of `a_parent_row'.
+			-- All parent rows within the rows moved that have a tree structure depth
+			-- greater than that of row `i' are left parented.
 		require
 			not_destroyed: not is_destroyed
 			tree_enabled: is_tree_enabled
-			i_positive: i > 0
-			n_positive: n > 0
+			i_valid: i > 0 and then i <= row_count
+			j_valid: j > 0 and then j <= row_count + 1	
+			n_valid: n > 0 and then i + n <= row_count + 1
+			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
+			rows_may_be_moved: rows_may_be_moved (i, n)
 			a_parent_row_not_void: a_parent_row /= Void
-			i_not_greater_than_row_count: i <= row_count
 			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
 				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
 			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
 				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
-			n_valid: i + n <= row_count + 1
-			rows_may_be_moved: rows_may_be_moved (i, n)
 			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (j).parent_row = a_parent_row
 		do
 			implementation.move_rows_to_parent (i, j, n, a_parent_row)
 		ensure
-			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or
-				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
+			rows_moved:
+				(j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) and
+				(j > i + n implies row (j - n) = old row (i) and then row (j - 1) = old row (i + n - 1))
 			row_count_unchanged: row_count = old row_count
 		end
 
 	move_column (i, j: INTEGER) is
-			-- Move column at index `i' to index `j'.
+			-- Move column at index `i' and insert immediately before column at index `j'.
+			-- To move column `i' to the last index in the grid, use `j' = `column_count + 1'.
 		require
 			not_destroyed: not is_destroyed
-			i_positive: i > 0
-			j_positive: j > 0
-			i_not_greater_than_column_count: i <= column_count
-			j_not_greater_than_column_count: j <= column_count
+			i_valid: i > 0 and then i <= column_count
+			j_valid: j > 0 and then j <= column_count + 1
 			column_i_moveable: column (i).all_items_may_be_removed
-			column_j_settable: column ((j - 1).max (1)).all_items_may_be_set
+			column_j_settable: j <= column_count implies column (j).all_items_may_be_set
 		do
 			implementation.move_columns (i, j, 1)
 		ensure
-			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
+			columns_moved:
+				(j <= i implies column (j) = old column (i)) and
+				(j > i implies column (j - 1) = old column (i)) and
+				(j < i implies (column (i) = old column ((i - 1).max (1)))) and
+				(j > i + 1 implies (column (i) = old column ((i + 1).min (column_count))))
 			column_count_unchanged: column_count = old column_count
 		end
 
 	move_columns (i, j, n: INTEGER) is
-			-- Move `n' columns at index `i' to index `j'.
-			-- Columns will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
+			-- Move `n' columns starting at column `i' and insert immediately before column `j'.
 		require
 			not_destroyed: not is_destroyed
-			i_positive: i > 0
-			j_positive: j > 0
-			n_positive: n > 0
-			i_not_greater_than_column_count: i <= column_count
-			j_not_greater_than_column_count: j <= column_count
-			n_valid: i + n <= column_count + 1
+			i_valid: i > 0 and then i <= column_count
+			j_valid: j > 0 and then j <= column_count + 1
+			n_valid: n > 0 and then i + n <= column_count + 1
+			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
 			columns_removable: are_columns_removable (i, n)
-			column_j_settable: column ((j - 1).max (1)).all_items_may_be_set
+			column_j_settable: j <= column_count implies column (j).all_items_may_be_set
 		do
 			implementation.move_columns (i, j, n)
 		ensure
-			columns_moved: (j < i implies column (j) = old column (i) and then column (j + n - 1) = old column (i + n - 1)) or (j >= i + n implies column (j - n + 1) = old column (i) and then column (j - n + n) = old column (i + n - 1))
+			columns_moved:
+				(j < i implies column (j) = old column (i) and then column (j + n - 1) = old column (i + n - 1)) and
+				(j > i + n implies column (j - n) = old column (i) and then column (j - 1) = old column (i + n - 1))
 			column_count_unchanged: column_count = old column_count
 		end	
 

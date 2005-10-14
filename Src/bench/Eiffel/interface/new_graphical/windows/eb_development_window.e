@@ -24,10 +24,15 @@ inherit
 			refresh,
 			recycle,
 			destroy_imp,
-			destroy
+			destroy,
+			position,
+			pos_container
 		end
 
 	EB_FILEABLE
+		export {NONE}
+			set_position,
+			set_pos_container
 		redefine
 			set_stone,
 			reset,
@@ -35,7 +40,9 @@ inherit
 			on_text_saved,
 			perform_check_before_save,
 			check_passed,
-			update_save_symbol
+			update_save_symbol,
+			position,
+			pos_container
 		select
 			set_stone
 		end
@@ -44,14 +51,18 @@ inherit
 		rename
 			set_stone as old_set_stone
 		export {NONE}
-			old_set_stone
+			old_set_stone,
+			set_position,
+			set_pos_container
 		redefine
 			reset,
 			stone,
 			on_text_saved,
 			perform_check_before_save,
 			check_passed,
-			update_save_symbol
+			update_save_symbol,
+			position,
+			pos_container
 		end
 
 
@@ -575,6 +586,15 @@ feature {NONE} -- Initialization
 			show_tool_commands.extend (show_cmd)
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (windows_tool)
+			
+				-- Build the search tool
+			create {EB_MULTI_SEARCH_TOOL}search_tool.make (Current)
+			search_tool.attach_to_explorer_bar (right_panel)
+			bottom_tools.extend (search_tool.explorer_bar_item)
+			create show_cmd.make (Current, search_tool.explorer_bar_item)
+			show_tool_commands.extend (show_cmd)
+			toolbarable_commands.extend (show_cmd)
+			add_recyclable (search_tool)
 
 				-- Build the editor tool
 			create editor_tool.make (Current)
@@ -584,8 +604,12 @@ feature {NONE} -- Initialization
 			editor_tool.text_area.add_edition_observer(save_as_cmd)
 			editor_tool.text_area.add_edition_observer(print_cmd)
 			editor_tool.text_area.add_edition_observer(Current)
+			editor_tool.text_area.add_edition_observer(search_tool)
 			editor_tool.text_area.drop_actions.set_veto_pebble_function (agent can_drop)
 			editor_tool.text_area.add_cursor_observer (Current)
+			create show_cmd.make(Current, editor_tool.explorer_bar_item)
+			show_tool_commands.extend (show_cmd)
+			toolbarable_commands.extend (show_cmd)
 
 				-- The minimim height masks a bug on windows to do with the sizing of the editors
 				-- scroll bars, which were affecting the resizing although they should not have done so.
@@ -601,16 +625,6 @@ feature {NONE} -- Initialization
 			show_tool_commands.extend (show_cmd)
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (context_tool)
-
-				-- Build the search tool
-			create {EB_MULTI_SEARCH_TOOL}search_tool.make (Current)
-			search_tool.attach_to_explorer_bar (left_panel)
-			bottom_tools.extend (search_tool.explorer_bar_item)
-			create show_cmd.make (Current, search_tool.explorer_bar_item)
-			show_tool_commands.extend (show_cmd)
-			toolbarable_commands.extend (show_cmd)
-			editor_tool.text_area.add_edition_observer(search_tool)
-			add_recyclable (search_tool)
 
 				-- Set the flag "Tools initialized"
 			tools_initialized := True
@@ -1878,10 +1892,39 @@ feature -- Stone process
 			same_class: BOOLEAN
 			conv_ferrst: FEATURE_ERROR_STONE
 			ef_stone: EXTERNAL_FILE_STONE
+			cluster_st: CLUSTER_STONE
+			new_class_stone: CLASSI_STONE
+			conv_ace: ACE_SYNTAX_STONE
+			conv_errst: ERROR_STONE
+			conv_brkstone: BREAKABLE_STONE
 		do
 			old_class_stone ?= stone
 			feature_stone ?= a_stone
 			ef_stone ?= a_stone
+			new_class_stone ?= a_stone
+			cluster_st ?= a_stone
+			
+				-- Update the history.
+			conv_brkstone ?= a_stone
+			conv_errst ?= a_stone
+			conv_ace ?= a_stone
+			if 
+				conv_brkstone = Void and
+				conv_errst = Void and
+				conv_ace = Void and
+				ef_stone = Void 
+			then
+				if
+					new_class_stone /= Void
+				then
+					history_manager.extend (new_class_stone)
+				elseif
+					cluster_st /= Void
+				then
+					history_manager.extend (cluster_st)
+				end
+			end
+			
 			if old_class_stone /= Void then
 				create test_stone.make (old_class_stone.class_i)
 				same_class := test_stone.same_as (a_stone)
@@ -2026,6 +2069,32 @@ feature -- Stone process
 	--			end
 	--			set_last_format (f)
 	--| END FIXME
+		end
+
+feature -- Position provider
+
+	position: like position_internal is
+			-- Currently shown text position in the editor
+		do
+			Result := editor_tool.text_area.first_line_displayed
+		end	
+		
+	pos_container: like pos_container_internal is
+			-- Current selected formatter
+		local
+			l_end : BOOLEAN
+		do
+			from
+				managed_main_formatters.start
+			until
+				managed_main_formatters.after or l_end
+			loop
+				if managed_main_formatters.item.selected then
+					l_end := true
+					Result := managed_main_formatters.item
+				end
+				managed_main_formatters.forth
+			end
 		end
 
 feature -- Resource Update
@@ -2522,6 +2591,7 @@ feature {NONE} -- Implementation
 			conv_classc: CLASSC_STONE
 			conv_brkstone: BREAKABLE_STONE
 			cluster_st: CLUSTER_STONE
+			old_cluster_st: CLUSTER_STONE
 			feature_stone: FEATURE_STONE
 			conv_ferrst: FEATURE_ERROR_STONE
 
@@ -2543,6 +2613,7 @@ feature {NONE} -- Implementation
 			dotnet_class: BOOLEAN
 			l_short_formatter: EB_SHORT_FORMATTER
 			l_flat_formatter: EB_FLAT_SHORT_FORMATTER
+			l_main_formatter: EB_CLASS_TEXT_FORMATTER
 		do
 				-- the text does not change if the text was saved with syntax errors
 			cur_wid := window
@@ -2581,6 +2652,7 @@ feature {NONE} -- Implementation
 					-- Remember previous stone.
 				old_stone := stone
 				old_class_stone ?= stone
+				old_cluster_st ?= stone
 
 					-- New stone properties
 				new_class_stone ?= a_stone
@@ -2601,16 +2673,6 @@ feature {NONE} -- Implementation
 					favorites_menu.first.disable_sensitive
 				end
 
-					-- Update the history.
-				if
-					new_class_stone /= Void
-				then
-					history_manager.extend (new_class_stone)
-				elseif
-					cluster_st /= Void
-				then
-					history_manager.extend (cluster_st)
-				end
 					-- Update the address manager if needed.
 				address_manager.refresh
 				if new_class_stone /= Void then
@@ -2643,8 +2705,24 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-
+					
 					conv_classc ?= new_class_stone
+
+						-- First choose possible formatter
+					l_main_formatter ?= new_class_stone.pos_container
+					if l_main_formatter /= Void and not during_synchronization then
+						if 
+							not (conv_classc /= Void and class_text_exists and (not changed or not same_class))
+						then
+							l_main_formatter.enable_select
+						elseif feature_stone = Void then				
+							if l_main_formatter /= pos_container then
+								l_main_formatter.enable_select
+							end
+							editor_tool.text_area.display_line_at_top_when_ready (new_class_stone.position)
+						end
+					end
+					
 					if conv_classc = Void or else
 						conv_classc.e_class.is_external or else
 						feature_stone /= Void and not
@@ -2764,6 +2842,9 @@ feature {NONE} -- Implementation
 	--| FIXME XR: Really manage cluster display in the main editor
 						l_format_context := formatted_context_for_cluster (cluster_st.cluster_i)
 						editor_tool.text_area.process_text (l_format_context.text)
+						if cluster_st.position > 0 then
+							editor_tool.text_area.display_line_at_top_when_ready (cluster_st.position)
+						end
 	--| END FIXME
 					end
 				end

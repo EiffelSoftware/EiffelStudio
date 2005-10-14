@@ -303,13 +303,13 @@ feature {NONE} -- Implementation
 	internal_leading_separators: STRING is
 			-- 
 		do
-			Result := " %T"
+			Result := " %N%T"
 		end	
 		
 	internal_trailing_separators: STRING is
 			-- 
 		do
-			Result := " %T%N"
+			Result := " %T"
 		end
 		
 	read_integer_with_no_type is
@@ -317,8 +317,6 @@ feature {NONE} -- Implementation
 			-- at current position.
 		local
 			l_is_integer: BOOLEAN
-			cnt: INTEGER
-			entered: BOOLEAN
 		do
 			l_is_integer := True
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation )
@@ -326,17 +324,11 @@ feature {NONE} -- Implementation
 			ctoi_state_machine.set_trailing_separators (internal_trailing_separators)
 			from			
 				l_is_integer := True
-				cnt := 0
-				entered := False
 			until
-				entered or end_of_file or else not l_is_integer
+				end_of_file or else not l_is_integer
 			loop
 				read_character
 				if not end_of_file then
-					cnt := 1
-					if last_character = '%N' then
-						entered := True
-					end
 					ctoi_state_machine.parse_character (last_character)
 					l_is_integer := ctoi_state_machine.is_part_of_integer
 				end
@@ -345,7 +337,7 @@ feature {NONE} -- Implementation
 			from
 				
 			until
-				entered or end_of_file or last_character = '%N' 
+				end_of_file or last_character = '%N' 
 			loop
 				read_character
 			end

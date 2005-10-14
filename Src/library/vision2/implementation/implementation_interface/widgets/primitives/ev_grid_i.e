@@ -1961,19 +1961,7 @@ feature -- Status report
 			drawable.disable_capture
 		end
 		
-				
 feature -- Element change
-
-	insert_new_row (i: INTEGER) is
-			-- Insert a new row at index `i'.
-		require
-			i_within_range: i > 0 and i <= row_count + 1
-			not_inserting_within_existing_subrow_structure: i <= row_count implies row (i).parent_row = Void
-		do
-			insert_rows_at (1, i)
-		ensure
-			row_count_set: (i <= old row_count implies row_count = old row_count + 1) or (row_count = i)
-		end
 
 	insert_new_rows (rows_to_insert, i: INTEGER) is
 			-- Insert `rows_to_insert' rows at index `i'.
@@ -1984,7 +1972,7 @@ feature -- Element change
 		do
 			insert_rows_at (rows_to_insert, i)
 		ensure
-			row_count_set: (i <= old row_count implies row_count = old row_count + rows_to_insert) or (row_count = i + rows_to_insert - 1)
+			row_count_set: row_count = old row_count + rows_to_insert
 		end
 	
 	insert_new_rows_parented (rows_to_insert, i: INTEGER; a_parent_row: EV_GRID_ROW) is
@@ -2020,45 +2008,28 @@ feature -- Element change
 		do
 			add_column_at (a_index, False)
 		ensure
-			column_count_set: (a_index <= old column_count implies column_count = old column_count + 1) or (column_count = a_index)
-		end
-
-	move_rows (i, j, n: INTEGER) is
-			-- Move `n' rows starting at index `i' to index `j'.
-		require
-			i_positive: i > 0
-			j_positive: j > 0
-			n_positive: n > 0
-			i_not_greater_than_row_count: i <= row_count
-			j_valid: j <= row_count
-			n_valid: i + n <= row_count + 1
-			not_breaking_existing_subrow_structure_when_moving_down: i > j implies row (j).parent_row = Void
-			not_breaking_existing_subrow_structure_when_moving_up: i <= j implies row (j + 1).parent_row = Void
-		do
-			move_rows_to_parent (i, j, n, Void)
-		ensure
-			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or
-				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
-			row_count_unchanged: row_count = old row_count
+			column_count_set: column_count = old column_count + 1
 		end
 		
 	move_rows_to_parent (i, j, n: INTEGER; a_parent_row: EV_GRID_ROW) is
-			-- Move `n' rows starting at index `i' to index `j', setting `parent_row' of each to `a_parent'.
-			-- Rows will not move if overlapping (`j' >= `i' and `j' < `i' + `n').
+			-- All purpose row moving routine.
+			-- Move `n' rows starting at index `i' immediately before row at index `j'.
+			-- If `j' = `row_count + 1' the rows are moved to the very bottom of the grid.
+			-- If `is_tree_enabled', all rows moved that share the same tree structure depth
+			-- as row `i' are reparented as a subrow of `a_parent_row'.
+			-- If `a_parent_row' is Void then they are set as root nodes of the grid tree.
+			-- All parent rows within the rows moved that have a tree structure depth
+			-- greater than that of row `i' are left parented.
 		require
-				-- The preconditions here are a mismatch of those from `move_rows' and `move_rows_to_parent' so both
+				-- The preconditions here are a combination of those from `move_rows' and `move_rows_to_parent' so that both
 				-- may be implemented directly using this feature. First the common ones:
-			i_positive: i > 0
-			n_positive: n > 0
-			i_not_greater_than_row_count: i <= row_count
-			n_valid: i + n <= row_count + 1
-			--rows_may_be_moved: rows_may_be_moved (i, n) only defined in the interface so not checked here.
+			i_valid: i > 0 and then i <= row_count
+			j_valid: j > 0 and then j <= row_count + 1
+			n_valid: n > 0 and then i + n <= row_count + 1
+			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
 			
-				-- Then those from `move_rows' which requrie `a_parent_row' to be `Void'
-			parent_row_void_implies_j_positive: a_parent_row = Void implies j > 0
-			parent_row_void_implies_j_valid: a_parent_row = Void implies j <= row_count
-			not_breaking_existing_subrow_structure_when_moving_down: a_parent_row = Void and i > j implies row (j).parent_row = Void
-			not_breaking_existing_subrow_structure_when_moving_up: a_parent_row = Void and i <= j implies row (j + 1).parent_row = Void
+				-- Then those from `move_rows' which require `a_parent_row' to be `Void'
+			not_breaking_existing_subrow_structure: a_parent_row = Void and j <= row_count implies row (j).parent_row = Void
 
 				-- Finally those from `move_rows_to_parent' which require `a_parent_row' to be non-Void.
 			j_valid_when_moving_in_same_parent: a_parent_row /= Void and row (i).parent_row = a_parent_row implies
@@ -2127,7 +2098,7 @@ feature -- Element change
 					-- Now update attributes of `parent_of_first' to reflect the fact that the rows
 					-- have been removed.
 				if rows_moved /= 0 then
-					parent_of_first.update_parent_node_counts_recursively (- rows_moved)
+					parent_of_first.update_parent_node_counts_recursively (-rows_moved)
 				end
 				if expanded_rows_moved /= 0 then
 					parent_of_first.update_parent_expanded_node_counts_recursively (-expanded_rows_moved)
@@ -2144,33 +2115,26 @@ feature -- Element change
 			set_vertical_computation_required (i.min (j))
 			redraw_client_area
 				
-			if j >= i + n or else j < i then	
-					-- Only move rows if the move is not overlapping.
-					-- As we are moving rows from one place to another, if the
-					-- destination index is within the range of the source index plus the number
-					-- of rows to move then no move is needed.
-				rows.move_items (i, j, n)
-				internal_row_data.move_items (i, j, n)
-					-- Update the changed indexes.
-				update_grid_row_indices (i.min (j))
-				set_vertical_computation_required (i.min (j))
-				redraw_client_area
-			end
+			rows.move_items (i, j, n)
+			internal_row_data.move_items (i, j, n)
+				-- Update the changed indexes.
+			update_grid_row_indices (i.min (j))
+			set_vertical_computation_required (i.min (j))
+			redraw_client_area
 		ensure
-			rows_moved: (j < i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) or
-				(j >= i + n implies row (j - n + 1) = old row (i) and then row (j) = old row (i + n - 1))
+			rows_moved:
+				(j <= i implies row (j) = old row (i) and then row (j + n - 1) = old row (i + n - 1)) and
+				(j > i + n implies row (j - n) = old row (i) and then row (j - 1) = old row (i + n - 1))
 			row_count_unchanged: row_count = old row_count
 		end
 
 	move_columns (i, j, n: INTEGER) is
 			-- Move `n' columns at index `i' to index `j'.
 		require
-			i_positive: i > 0
-			j_positive: j > 0
-			n_positive: n > 0
-			i_not_greater_than_column_count: i <= column_count
-			j_not_greater_than_column_count: j <= column_count
-			n_valid: i + n <= row_count + 1
+			i_valid: i > 0 and then i <= column_count
+			j_valid: j > 0 and then j <= column_count + 1
+			n_valid: n > 0 and then i + n <= column_count + 1
+			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
 		local
 			header_item: EV_HEADER_ITEM
 			min_index: INTEGER
@@ -2178,55 +2142,50 @@ feature -- Element change
 			a_counter: INTEGER
 			a_insertion_index: INTEGER
 		do
-			if j >= i + n or else j < i then
-					-- Only move columns if the move is not overlapping.
-					-- As we are moving columns from one place to another, if the
-					-- destination index is within the range of the source index plus the number
-					-- of columns to move then no move is needed.
-
-				columns.move_items (i, j, n)
-					-- Move items within header control.
-				from
-					create a_duplicate.make (n)
-					a_counter := 1
-					header.go_i_th (i)
-				until
-					a_counter > n
-				loop
-					header_item := header.item
-					a_duplicate.put_front (header_item)
-					header.remove
-					a_counter := a_counter + 1
-				end
-				
-				from
-					if j > (i + n - 1) then
-						a_insertion_index := j - n
-					else
-						a_insertion_index := j - 1
-					end
-					header.go_i_th (a_insertion_index)
-					a_duplicate.start
-				until
-					a_duplicate.after
-				loop
-					header.put_right (a_duplicate.item)
-					a_duplicate.forth
-				end
-
-				min_index := i.min (j)
-				update_grid_column_indices (min_index)
-	
-					-- Flag `physical_column_indexes' for recalculation
-				physical_column_indexes_dirty := True
-	
-				update_index_of_first_item_dirty_row_flags (min_index)
-				
-				set_horizontal_computation_required (min_index)
-				redraw_client_area			
+			columns.move_items (i, j, n)
+				-- Move items within header control.
+			from
+				create a_duplicate.make (n)
+				a_counter := 1
+				header.go_i_th (i)
+			until
+				a_counter > n
+			loop
+				header_item := header.item
+				a_duplicate.put_front (header_item)
+				header.remove
+				a_counter := a_counter + 1
 			end
+			
+			from
+				if j > (i + n - 1) then
+					a_insertion_index := j - n - 1
+				else
+					a_insertion_index := j - 1
+				end
+				header.go_i_th (a_insertion_index)
+				a_duplicate.start
+			until
+				a_duplicate.after
+			loop
+				header.put_right (a_duplicate.item)
+				a_duplicate.forth
+			end
+
+			min_index := i.min (j)
+			update_grid_column_indices (min_index)
+
+				-- Flag `physical_column_indexes' for recalculation
+			physical_column_indexes_dirty := True
+
+			update_index_of_first_item_dirty_row_flags (min_index)
+			
+			set_horizontal_computation_required (min_index)
+			redraw_client_area
 		ensure
-			columns_moved: (j < i implies column (j) = old column (i) and then column (j + n - 1) = old column (i + n - 1)) or (j >= i + n implies column (j - n + 1) = old column (i) and then column (j - n + n) = old column (i + n - 1))
+			columns_moved:
+				(j < i implies column (j) = old column (i) and then column (j + n - 1) = old column (i + n - 1)) and
+				(j > i + n implies column (j - n) = old column (i) and then column (j - 1) = old column (i + n - 1))
 			column_count_unchanged: column_count = old column_count
 		end
 

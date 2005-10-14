@@ -15,11 +15,19 @@ inherit
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
 			make_end_assignment, make_end_reverse_assignment,
-			creation_access, enlarged, is_creatable, is_attribute, read_only,
+			enlarged, is_creatable, is_attribute, read_only,
 			assigns_to, pre_inlined_code, generate_il_call_access,
 			need_target, generate_il_address
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_attribute_b (Current)
+		end
+	
 feature 
 
 	type: TYPE_I
@@ -68,13 +76,6 @@ feature
 
 	is_creatable: BOOLEAN is True
 			-- Can an access to an attribute be a target for a creation ?
-
-	creation_access (t: TYPE_I): ATTRIBUTE_B is
-			-- Creation access
-		do
-			Result := twin
-			Result.set_type (t)
-		end
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access as Current ?

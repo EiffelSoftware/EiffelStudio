@@ -12,13 +12,21 @@ inherit
 		redefine
 			enlarged, read_only, is_local, is_creatable,
 			make_byte_code, register_name,
-			creation_access, print_register,
+			print_register,
 			assign_code, expanded_assign_code, reverse_code,
 			make_end_assignment, make_end_reverse_assignment,
 			bit_assign_code, assigns_to, array_descriptor,
 			pre_inlined_code, generate_il_call_access,
 			generate_il_address,
 			is_fast_as_local, is_predefined
+		end
+	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_local_b (Current)
 		end
 	
 feature 
@@ -48,13 +56,6 @@ feature
 	is_creatable: BOOLEAN is True
 			-- Can an access to a local variable be the target for
 			-- a creation ?
-
-	creation_access (t: TYPE_I): LOCAL_CR_B is
-			-- Creation access for a local variable
-		do
-			create Result.make (t)
-			Result.set_position (position)
-		end
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access as Current ?

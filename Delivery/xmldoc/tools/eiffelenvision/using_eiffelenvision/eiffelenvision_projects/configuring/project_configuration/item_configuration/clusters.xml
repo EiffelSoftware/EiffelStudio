@@ -51,6 +51,9 @@
 			<link><url>../../../structure/project_items/clusters_and_items/cluster_folders.xml</url><label>Cluster Folders</label></link>.
 			<tip><bold>Recommended</bold>: It is recommended that you excluded items via the item itself. For information on how to achieve this, see <link><url>../../item_exclusion.xml</url><label>Including and Excluding Project Items</label></link>.
 			</tip></paragraph>
+		<paragraph>
+			Clicking on the ellipse (...) button will display the <link><url>../edit_command_dialog.xml</url><label>Edit Excluded Items</label></link> dialog where you can enter debug clauses graphically.
+		</paragraph>
     <paragraph>	
 			This property is <italic>read-only</italic> when <link><url>clusters.xml</url><anchor_name>library_cluster</anchor_name><label>Library Cluster</label></link> is set to <bold>Yes</bold>.
 		</paragraph>

@@ -9,7 +9,7 @@ inherit
 	EXPR_B
 		redefine
 			enlarged, make_byte_code, generate_il,
-			is_simple_expr, allocates_memory
+			is_simple_expr, allocates_memory, is_constant_expression
 		end
 
 create
@@ -27,6 +27,14 @@ feature {NONE} -- Initialization
 			value_set: value = v
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_string_b (Current)
+		end
+	
 feature -- Access
 
 	value: STRING
@@ -63,6 +71,9 @@ feature -- Properties
 
 	allocates_memory: BOOLEAN is True
 			-- Current always allocates memory.
+
+	is_constant_expression: BOOLEAN is True
+			-- A string is a constant expression.
 
 feature -- Settings
 

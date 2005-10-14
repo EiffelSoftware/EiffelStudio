@@ -11,7 +11,7 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			generate_il, generate_il_value
+			generate_il, is_constant_expression, generate_il_value
 		end
 
 create
@@ -29,6 +29,22 @@ feature {NONE} -- Initialize
 			expr_set: expr = e
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_paran_b (Current)
+		end
+	
+feature -- Properties
+
+	is_constant_expression: BOOLEAN is
+			-- Is current a constant expression?
+		do
+			Result := expr.is_constant_expression
+		end
+		
 feature
 
 	expr: EXPR_B;

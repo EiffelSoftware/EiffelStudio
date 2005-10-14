@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 			-- the name was already included.
 		do
 			Result := not hashed_names.has (a_name)
-			hashed_names.extend (a_name, a_name)
+			hashed_names.put (a_name, a_name)
 		end
 
 	last_validation_successful: BOOLEAN

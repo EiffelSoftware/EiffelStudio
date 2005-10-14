@@ -171,6 +171,7 @@ feature -- Element change
 			initial: INTEGER
 		do
 			initial := index_active
+			fresh_active_position
 			from
 				index_active := index_active - 1
 			until
@@ -203,6 +204,7 @@ feature -- Element change
 			initial: INTEGER
 		do
 			initial := index_active
+			fresh_active_position
 			from
 				index_active := index_active + 1
 			until
@@ -238,6 +240,7 @@ feature -- Element change
 			initial: INTEGER
 		do
 			initial := index_active
+			fresh_active_position
 			index_active := i
 			notify_observers (notify_move, Void, index_active)
 			target.advanced_set_stone (active)
@@ -280,6 +283,7 @@ feature -- Element change
 					--| Useless test: if fst /= Void, then active is not Void and a classi_stone.
 				--active_is_cst
 			then
+				fresh_active_position
 				if is_forth_possible then
 						-- Wipe out everything after `active'
 					from
@@ -514,6 +518,23 @@ feature {NONE} -- Implementation
 		do
 			Result := preferences.development_window_data.max_history_size
 		end
-	
+
+	fresh_active_position is
+			-- Fresh active stone position
+		do
+			if active /= Void then
+				if target.position >= 0 then
+					active.set_position (target.position)
+				else
+					active.set_position (0)
+				end
+				if target.pos_container /= Void then
+					active.set_pos_container (target.pos_container)
+				else
+					active.set_pos_container (Void)
+				end			
+			end
+		end
+
 end -- class EB_HISTORY_MANAGER
 

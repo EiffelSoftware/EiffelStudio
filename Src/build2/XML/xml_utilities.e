@@ -207,7 +207,7 @@ feature -- Access
 							end
 							current_element.forth
 						end
-					Result.extend (info, info.name)
+					Result.put (info, info.name)
 					end
 				end
 				element.forth

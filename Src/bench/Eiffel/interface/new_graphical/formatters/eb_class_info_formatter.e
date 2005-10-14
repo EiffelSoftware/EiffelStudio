@@ -34,6 +34,7 @@ feature -- Status setting
 		local
 			a_stone: CLASSC_STONE
 		do
+			force_stone (new_stone)
 			a_stone ?= new_stone
 			if a_stone /= Void then
 				if (not a_stone.class_i.is_external_class) or is_dotnet_formatter then

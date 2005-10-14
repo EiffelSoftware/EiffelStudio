@@ -42,16 +42,6 @@ feature -- Access
 
 feature -- Status setting
 
-	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
-			-- Set `editor' to `an_editor'.
-			-- Used to share an editor between several formatters.
-		require
-			an_editor_non_void: an_editor /= Void
-		do
-			editor := an_editor			
-			internal_widget := an_editor.widget
-		end
-
 	set_dotnet_mode (a_flag: BOOLEAN) is
 			-- Set whether formatting in .NET mode to 'a_flag'
 		do
@@ -105,9 +95,6 @@ feature {NONE} -- Implementation
 			editor.clear_window
 		end
 
-	editor: EB_CLICKABLE_EDITOR
-			-- Output editor.
-
 	on_feature_drop (fs: FEATURE_STONE) is
 			-- Notify `manager' of the dropping of `fs'.
 		do
@@ -124,9 +111,6 @@ feature {NONE} -- Implementation
 		do
 			Result := False
 		end
-
-	internal_widget: EV_WIDGET
-			-- Widget corresponding to `editor's text area.
 
 	empty_widget: EV_WIDGET is
 			-- Widget displayed when no information can be displayed.

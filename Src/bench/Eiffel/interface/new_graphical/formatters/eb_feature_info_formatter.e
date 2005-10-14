@@ -27,6 +27,7 @@ feature -- Status setting
 	set_stone (new_stone: FEATURE_STONE) is
 			-- Associate current formatter with feature contained in `new_stone'.
 		do
+			force_stone (new_stone)
 			if new_stone /= Void then
 				if (not new_stone.class_i.is_external_class) or is_dotnet_formatter then
 					set_feature (new_stone.e_feature)

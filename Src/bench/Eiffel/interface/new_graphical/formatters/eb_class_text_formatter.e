@@ -40,19 +40,6 @@ feature -- Access
 			Result := False
 		end
 
-feature -- Status setting
-
-	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
-			-- Set `editor' to `an_editor'.
-			-- Used to share an editor between several formatters.
-		require
-			an_editor_non_void: an_editor /= Void
-		do
-			editor := an_editor
-			internal_widget := an_editor.widget
---			editor.drop_actions.extend (~on_class_drop)
-		end
-
 feature -- Formatting
 
 	format is
@@ -66,6 +53,7 @@ feature -- Formatting
 				if not last_was_error then
 					if editor.current_text /= formatted_text then						
 						editor.process_text (formatted_text)
+						go_to_position
 					end					
 					if has_breakpoints then
 						editor.enable_has_breakable_slots
@@ -90,9 +78,6 @@ feature {NONE} -- Implementation
 			editor.clear_window
 		end
 
-	editor: EB_CLICKABLE_EDITOR
-			-- Output editor.
-
 	on_class_drop (cs: CLASSI_STONE) is
 			-- Notify `manager' of the dropping of `cs'.
 		do
@@ -109,9 +94,6 @@ feature {NONE} -- Implementation
 		do
 			Result := False
 		end
-
-	internal_widget: EV_WIDGET
-			-- Widget corresponding to `editor's text area.
 
 	empty_widget: EV_WIDGET is
 			-- Widget displayed when no information can be displayed.

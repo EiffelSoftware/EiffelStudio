@@ -4,12 +4,12 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	EB_TOOLBARABLE_COMMAND 
+	GB_TOOLBARABLE_COMMAND 
 
 inherit
-	EB_GRAPHICAL_COMMAND
+	GB_GRAPHICAL_COMMAND
 
-	EB_TOOLBARABLE
+	GB_TOOLBARABLE
 		redefine
 			new_toolbar_item
 		end
@@ -104,7 +104,7 @@ feature -- Status setting
 
 feature -- Basic operations
 
-	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new toolbar button for this command.
 			--
 			-- Call `recycle' on the result when you don't need it anymore otherwise
@@ -146,7 +146,7 @@ feature -- Basic operations
 			end
 		end
 
-	new_mini_toolbar_item: EB_COMMAND_TOOL_BAR_BUTTON is
+	new_mini_toolbar_item: GB_COMMAND_TOOL_BAR_BUTTON is
 			-- Create a new mini toolbar button for this command.
 		require
 			mini_pixmap_not_void: mini_pixmap /= Void
@@ -165,7 +165,7 @@ feature -- Basic operations
 			Result.select_actions.extend (agent execute)
 		end
 
-feature {EB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
+feature {GB_COMMAND_TOOL_BAR_BUTTON} -- Implementation
 
 	managed_toolbar_items: ARRAYED_LIST [like new_toolbar_item]
 			-- Toolbar items associated with this command.

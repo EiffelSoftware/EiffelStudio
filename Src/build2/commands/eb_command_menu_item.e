@@ -4,7 +4,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EB_COMMAND_MENU_ITEM 
+	GB_COMMAND_MENU_ITEM 
 
 inherit
 	EV_MENU_ITEM
@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_command: EB_MENUABLE_COMMAND) is
+	make (a_command: GB_MENUABLE_COMMAND) is
 		do
 			default_create
 			command := a_command
@@ -36,7 +36,7 @@ feature -- Cleaning
 
 feature {NONE} -- Implementation
 
-	command: EB_MENUABLE_COMMAND
+	command: GB_MENUABLE_COMMAND
 			-- Command associated with Current.
 
 end -- class EB_TOOL_BAR_BUTTON

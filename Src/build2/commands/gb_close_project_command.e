@@ -8,7 +8,7 @@ class
 	GB_CLOSE_PROJECT_COMMAND
 	
 inherit
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make, execute, executable
 		end
@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			--	acc: EV_ACCELERATOR
 			--	key: EV_KEY
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 			set_tooltip ("Close Project")
 			set_name ("Close Project")
 			set_menu_name ("Close Project")

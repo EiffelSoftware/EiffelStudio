@@ -9,7 +9,7 @@ class
 
 inherit
 
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make, execute
 		end
@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 			set_menu_name ("Collapse layout tree")
 			add_agent (agent execute)
 			enable_sensitive

@@ -6,10 +6,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	GB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			mini_pixmap
 		end

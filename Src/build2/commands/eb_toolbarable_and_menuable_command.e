@@ -4,16 +4,16 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND 
+	GB_TOOLBARABLE_AND_MENUABLE_COMMAND 
 
 inherit
-	EB_TOOLBARABLE_COMMAND
+	GB_TOOLBARABLE_COMMAND
 		redefine
 			disable_sensitive,
 			enable_sensitive
 		end
 
-	EB_MENUABLE_COMMAND
+	GB_MENUABLE_COMMAND
 		redefine
 			disable_sensitive,
 			enable_sensitive,
@@ -95,7 +95,7 @@ feature -- Status setting
 			end
 		end
 		
-	new_menu_item: EB_COMMAND_MENU_ITEM is
+	new_menu_item: GB_COMMAND_MENU_ITEM is
 			-- Create a new menu entry for this command.
 		local
 			mname: STRING

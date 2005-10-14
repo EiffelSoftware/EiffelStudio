@@ -8,7 +8,7 @@ class
 	GB_SET_ROOT_WINDOW_COMMAND
 	
 inherit
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make, execute, executable
 		end
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 			set_tooltip ("Set root window")
 			set_pixmaps (Icon_titled_window_main_small)
 			set_name ("Set root window")

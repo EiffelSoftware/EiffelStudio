@@ -217,9 +217,9 @@ feature {NONE} -- Implementation
 							-- Create a new representation of `child_object'.
 						real_child := child_object.new_top_level_representation
 							-- Record the fact that we have now created a new representation.
-						new_parent_child_objects.extend (real_child.id, parent_object.id)
+						new_parent_child_objects.put (real_child.id, parent_object.id)
 							-- Update the instance referers.
-						child_object.instance_referers.extend (real_child.id, real_child.id)
+						child_object.instance_referers.put (real_child.id, real_child.id)
 						real_child.connect_instance_referers (child_object, real_child)
 					end
 					actual_child_id := real_child.id
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 				old_parent := a_child.parent_object
 					-- Actually perform the unparenting.
 				if not new_parent_child_objects.has (a_child.parent_object.id) then
-					new_parent_child_objects.extend (a_child.id, a_child.parent_object.id)
+					new_parent_child_objects.put (a_child.id, a_child.parent_object.id)
 				end
 				a_child.parent_object.remove_child (a_child)
 				check
@@ -324,8 +324,8 @@ feature {NONE} -- Implementation
 				else
 					if not object_handler.deleted_objects.has (parent_object.instance_referers.item_for_iteration) then
 						new_object := actual_child.new_top_level_representation
-						new_parent_child_objects.extend (new_object.id, parent_object.instance_referers.item_for_iteration)
-						child_object.instance_referers.extend (new_object.id, new_object.id)
+						new_parent_child_objects.put (new_object.id, parent_object.instance_referers.item_for_iteration)
+						child_object.instance_referers.put (new_object.id, new_object.id)
 						new_object.connect_instance_referers (actual_child, new_object)
 					end
 				end

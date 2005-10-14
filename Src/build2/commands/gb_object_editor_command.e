@@ -8,7 +8,7 @@ class
 	GB_OBJECT_EDITOR_COMMAND
 	
 inherit
-	EB_STANDARD_CMD
+	GB_STANDARD_CMD
 		redefine
 			make,
 			new_toolbar_item
@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create `Current'.
 		do
-			Precursor {EB_STANDARD_CMD}
+			Precursor {GB_STANDARD_CMD}
 			set_tooltip ("New object editor")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).Icon_object_editor)
 			set_name ("New object editor")
@@ -61,11 +61,11 @@ feature {NONE} -- Initialization
 		
 feature -- Basic operations
 
-		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+		new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): GB_COMMAND_TOOL_BAR_BUTTON is
 				-- Create a new toolbar item linked to `Current'. This has been redefined as each button
 				-- needs to have its drop actions set.
 			do
-				Result := Precursor {EB_STANDARD_CMD} (display_text, use_gray_icons)
+				Result := Precursor {GB_STANDARD_CMD} (display_text, use_gray_icons)
 				Result.drop_actions.extend (agent update_object_editor (?, Result))
 				Result.drop_actions.set_veto_pebble_function (agent do_not_allow_object_type (?))
 				Result.select_actions.extend (agent show_usage_dialog)
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			
-		update_object_editor (object_stone: GB_STANDARD_OBJECT_STONE; button: EB_COMMAND_TOOL_BAR_BUTTON) is
+		update_object_editor (object_stone: GB_STANDARD_OBJECT_STONE; button: GB_COMMAND_TOOL_BAR_BUTTON) is
 				-- If `button' is parented (at any level) in a GB_OBJECT_EDITOR then assign `object' to
 				-- the parent object editor, otherwise create a new object_editor containing `object'.
 			require

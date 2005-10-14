@@ -5,7 +5,7 @@ indexing
 	revision	: "$Revision$"
 
 deferred class
-	EB_TOOLBARABLE
+	GB_TOOLBARABLE
 
 feature -- Access
 
@@ -22,7 +22,7 @@ feature -- Basic operations
 		deferred
 		end
 
-feature {EB_CUSTOMIZABLE_LIST_ITEM, EB_CUSTOM_TOOLBAR_LIST} -- Implementation
+feature {GB_CUSTOMIZABLE_LIST_ITEM, GB_CUSTOM_TOOLBAR_LIST} -- Implementation
 
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the item (one for the

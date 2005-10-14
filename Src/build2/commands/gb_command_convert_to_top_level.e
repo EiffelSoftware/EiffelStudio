@@ -140,7 +140,7 @@ feature -- Basic Operation
 			child_object.set_associated_top_level_object (new_object)
 			child_object.represent_as_locked_instance
 			new_object.represent_as_non_locked_instance
-			new_object.instance_referers.extend (child_object.id, child_object.id)
+			new_object.instance_referers.put (child_object.id, child_object.id)
 			from
 				all_children_old.start
 				all_children_new.start
@@ -164,7 +164,7 @@ feature -- Basic Operation
 				check
 					no_instance_referers: all_children_new.item.instance_referers.is_empty
 				end
-				all_children_new.item.instance_referers.extend (all_children_old.item.id, all_children_old.item.id)
+				all_children_new.item.instance_referers.put (all_children_old.item.id, all_children_old.item.id)
 				all_children_new.forth
 				all_children_old.forth
 			end

@@ -4,7 +4,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	EB_COMMAND_TOOL_BAR_BUTTON 
+	GB_COMMAND_TOOL_BAR_BUTTON 
 
 inherit
 	EV_TOOL_BAR_BUTTON
@@ -19,7 +19,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_command: EB_TOOLBARABLE_COMMAND) is
+	make (a_command: GB_TOOLBARABLE_COMMAND) is
 		do
 			default_create
 			command := a_command
@@ -39,7 +39,7 @@ feature -- Cleaning
 	
 feature {NONE} -- Implementation
 
-	command: EB_TOOLBARABLE_COMMAND
+	command: GB_TOOLBARABLE_COMMAND
 			-- command associated with Current.
 
-end -- class EB_toolbar_command_TOOL_BAR_BUTTON
+end -- class GB_COMMAND_TOOL_BAR_BUTTON

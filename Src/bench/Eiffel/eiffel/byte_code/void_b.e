@@ -9,9 +9,19 @@ class
 inherit
 	EXPR_B
 		redefine
-			is_simple_expr, is_predefined, generate_il, make_byte_code, print_register, is_fast_as_local
+			is_simple_expr, is_predefined, generate_il,
+			make_byte_code, print_register, is_fast_as_local,
+			is_constant_expression
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_void_b (Current)
+		end
+	
 feature -- Access
 
 	type: TYPE_I is
@@ -26,9 +36,12 @@ feature -- Status report
 
 	is_simple_expr: BOOLEAN is True
 			-- Void is a simple expression
-			
+
 	is_predefined: BOOLEAN is False
 			-- Void is not predefined
+
+	is_constant_expression: BOOLEAN is True
+			-- Void is a constant.
 
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is register `r' used in local or forthcomming dot calls ?

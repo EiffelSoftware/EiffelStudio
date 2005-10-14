@@ -10,7 +10,7 @@ inherit
 		redefine
 			print_register, make_byte_code, evaluate,
 			is_simple_expr, is_predefined, generate_il,
-			is_fast_as_local
+			is_fast_as_local, is_constant_expression
 		end
 
 create
@@ -26,6 +26,14 @@ feature {NONE} -- Initialization
 			value_set: value = v
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_char_const_b (Current)
+		end
+	
 feature -- Access
 
 	value: CHARACTER
@@ -46,6 +54,9 @@ feature -- Status report
 
 	is_predefined: BOOLEAN is True
 			-- A constant is a predefined structure.
+
+	is_constant_expression: BOOLEAN is True
+			-- A character constant is constant.
 
 	type: TYPE_I is
 			-- Expression type

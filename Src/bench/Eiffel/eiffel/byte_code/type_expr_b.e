@@ -11,7 +11,7 @@ inherit
 			register, set_register, analyze, generate,
 			propagate, print_register, unanalyze,
 			make_byte_code, generate_il,
-			is_simple_expr, allocates_memory
+			is_simple_expr, allocates_memory, is_constant_expression
 		end
 
 	REFACTORING_HELPER
@@ -34,6 +34,14 @@ feature {NONE} -- Initialization
 			type_data_set: type_data = v
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_type_expr_b (Current)
+		end
+	
 feature -- Access
 
 	type_data: GEN_TYPE_I
@@ -64,6 +72,9 @@ feature -- Properties
 
 	is_simple_expr: BOOLEAN is True
 			-- A type expression is a simple expression
+
+	is_constant_expression: BOOLEAN is True
+			-- A type constant is constant.
 
 	allocates_memory: BOOLEAN is True
 			-- Current always allocates memory.

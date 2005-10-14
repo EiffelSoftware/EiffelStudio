@@ -14,6 +14,14 @@ inherit
 			allocates_memory, generate_il
 		end;
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_parameter_b (Current)
+		end
+	
 feature 
 
 	expression: EXPR_B;

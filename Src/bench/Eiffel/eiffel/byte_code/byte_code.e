@@ -31,6 +31,14 @@ inherit
 			{NONE} all
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			-- Do nothing as BYTE_CODE is not really a BYTE_NODE.
+		end
+		
 feature -- Access
 
 	real_body_id: INTEGER

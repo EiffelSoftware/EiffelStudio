@@ -13,6 +13,14 @@ inherit
 			is_fast_as_local, is_predefined
 		end;
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_argument_b (Current)
+		end
+	
 feature 
 
 	position: INTEGER;

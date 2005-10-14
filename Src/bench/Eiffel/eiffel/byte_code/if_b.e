@@ -20,6 +20,14 @@ inherit
 			{NONE} all
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_if_b (Current)
+		end
+	
 feature -- Access
 
 	condition: EXPR_B

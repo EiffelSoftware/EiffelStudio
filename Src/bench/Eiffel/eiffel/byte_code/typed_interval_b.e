@@ -14,6 +14,14 @@ inherit
 create
 	make
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_typed_interval_b (Current)
+		end
+
 feature -- Access
 
 	lower: G

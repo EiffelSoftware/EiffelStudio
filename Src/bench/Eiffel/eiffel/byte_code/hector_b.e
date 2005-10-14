@@ -43,6 +43,14 @@ feature {NONE} -- Initialization
 			internal_type_set: internal_type = t
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_hector_b (Current)
+		end
+	
 feature -- Access
 
 	is_pointer: BOOLEAN is True

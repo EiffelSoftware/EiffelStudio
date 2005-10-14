@@ -11,6 +11,14 @@ inherit
 			calls_special_features, size, inlined_byte_code,
 			pre_inlined_code, generate_il
 		end;
+
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_assign_b (Current)
+		end
 	
 feature 
 

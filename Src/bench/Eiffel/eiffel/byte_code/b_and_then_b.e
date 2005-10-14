@@ -14,6 +14,14 @@ inherit
 			generate_standard_il
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_bin_and_then_b (Current)
+		end
+	
 feature -- Status report
 
 	is_and: BOOLEAN is

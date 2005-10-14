@@ -16,6 +16,14 @@ inherit
 create
 	make
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_int64_val_b (Current)
+		end
+
 feature -- Comparison
 
 	infix "<" (other: INT64_VAL_B): BOOLEAN is

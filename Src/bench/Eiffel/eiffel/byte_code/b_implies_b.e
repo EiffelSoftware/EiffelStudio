@@ -10,6 +10,14 @@ inherit
 			generate_il
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_bin_implies_b (Current)
+		end
+	
 feature 
 
 	built_in_enlarged: EXPR_B is

@@ -20,6 +20,14 @@ inherit
 			{NONE} all
 		end
 
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_bin_power_b (Current)
+		end
+	
 feature -- IL code generation
 
 	generate_standard_il is

@@ -30,6 +30,14 @@ feature {NONE} -- Initialization
 			compound_set: compound = l
 		end
 		
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_instr_list_b (Current)
+		end
+	
 feature -- Access
 
 	compound: BYTE_LIST [BYTE_NODE]

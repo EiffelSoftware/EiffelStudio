@@ -37,6 +37,14 @@ feature {NONE} -- Initialization
 			is_boxing_set: is_boxing = a_is_boxing
 		end
 		
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_formal_conversion_b (Current)
+		end
+	
 feature -- Access
 
 	expr: EXPR_B

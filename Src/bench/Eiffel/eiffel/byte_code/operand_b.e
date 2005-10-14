@@ -8,6 +8,14 @@ inherit
 			enlarged
 		end
 	
+feature -- Visitor
+
+	process (v: BYTE_NODE_VISITOR) is
+			-- Process current element.
+		do
+			v.process_operand_b (Current)
+		end
+	
 feature 
 
 	type: REFERENCE_I is

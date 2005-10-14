@@ -16,7 +16,7 @@ inherit
 		rename
 			target_propagated as register_propagated
 		undefine
-			enlarged
+			enlarged, process
 		redefine
 			analyze, generate_regular_assignment,
 			generate_last_assignment, make

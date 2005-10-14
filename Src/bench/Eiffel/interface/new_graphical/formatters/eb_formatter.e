@@ -17,6 +17,8 @@ inherit
 	EB_CONSTANTS
 
 	EV_STOCK_PIXMAPS
+	
+	EB_STONABLE
 
 feature -- Properties
 
@@ -30,6 +32,9 @@ feature -- Properties
 			-- Widget representing the associated system information.
 		deferred
 		end
+		
+	stone: STONE
+			-- Stone representing Current
 
 feature -- Initialization
 
@@ -71,6 +76,16 @@ feature -- Setting
 			a_manager_not_void: a_manager /= Void
 		do
 			manager := a_manager
+		end
+		
+	set_editor (an_editor: EB_CLICKABLE_EDITOR) is
+			-- Set `editor' to `an_editor'.
+			-- Used to share an editor between several formatters.
+		require
+			an_editor_non_void: an_editor /= Void
+		do
+			editor := an_editor			
+			internal_widget := an_editor.widget
 		end
 
 feature -- Formatting
@@ -168,6 +183,7 @@ feature -- Commands
 		do
 			enable_select
 			popup
+			fresh_old_formatter
 			format
 		end
 
@@ -191,6 +207,79 @@ feature -- Commands
 				cur_wid := Void
 			end
 		end
+		
+feature -- Stonable
+
+	refresh is
+			-- Do nothing.
+		do	
+		end
+		
+	force_stone (a_stone: STONE) is
+			-- Directly set `stone' with `a_stone'
+		do
+			stone := a_stone
+			if stone /= Void then
+				stone.set_pos_container (Current)	
+			end
+		end
+		
+feature -- Loacation
+
+	fresh_position is
+			-- Fresh stone position
+		do
+			if manager.stone /= Void then
+				stone := manager.stone.twin
+			end
+			if stone /= Void then
+				if manager.position >= 0 then
+					stone.set_position (manager.position)
+				else
+					stone.set_position (0)
+				end
+				stone.set_pos_container (Current)
+			end
+		end
+		
+	go_to_position is
+			-- Save manager position and go to position in `editor' if possible.
+		do
+			save_manager_position
+			if 
+				selected and then
+				stone /= Void and then
+				stone.pos_container = current and then
+				stone.position > 0 and then 
+				stone.position < editor.number_of_lines 
+			then
+				editor.display_line_at_top_when_ready (stone.position)
+			end
+		end
+		
+feature {NONE} -- Location
+		
+	fresh_old_formatter is
+			-- Fresh old formatter position
+		local
+			l_formatter: EB_FORMATTER
+		do
+			l_formatter ?= manager.previous_pos_container
+			if l_formatter /= Void then
+				l_formatter.fresh_position
+			end
+		end
+		
+	save_manager_position is
+			-- Save container and position in manager
+		do
+			if stone /= Void then
+				manager.set_previous_position (stone.position)
+			else
+				manager.set_previous_position (manager.position)
+			end
+			manager.set_previous_pos_container (Current)	
+		end		
 
 feature {NONE} -- Implementation
 
@@ -199,6 +288,9 @@ feature {NONE} -- Implementation
 
 	cur_wid: EV_WIDGET
 			-- Widget on which the hourglass cursor was set.
+			
+	editor: EB_CLICKABLE_EDITOR
+			-- Output editor.
 
 	displayed: BOOLEAN is
 			-- Is `widget' displayed?
@@ -208,6 +300,9 @@ feature {NONE} -- Implementation
 
 	internal_displayed: BOOLEAN
 			-- Is `widget's parent visible?
+			
+	internal_widget: EV_WIDGET
+			-- Widget corresponding to `editor's text area.
 
 	must_format: BOOLEAN
 			-- Is a call to `format' really necessary? 

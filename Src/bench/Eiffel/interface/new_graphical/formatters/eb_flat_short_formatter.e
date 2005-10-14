@@ -126,6 +126,7 @@ feature -- Status setting
 			a_stone: CLASSC_STONE
 			l_ext_class: EXTERNAL_CLASS_I
 		do
+			stone := new_stone
 			if new_stone /= Void and new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
 				a_stone ?= new_stone

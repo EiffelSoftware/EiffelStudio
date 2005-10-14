@@ -43,6 +43,7 @@ feature -- Status setting
 		local
 			l_ext_class: EXTERNAL_CLASS_I
 		do
+			force_stone (new_stone)
 			if new_stone /= Void and new_stone.class_i.is_external_class then
 				set_dotnet_mode (True)
 				if consumed_types.has (new_stone.class_i.name) then

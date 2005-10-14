@@ -75,6 +75,7 @@ feature -- Formatting
 				if class_file.exists then
 					if not equal (classi.file_name, editor.file_name) then
 						editor.load_file (classi.file_name)
+						go_to_position
 					end
 					if editor.load_file_error then
 						f_name := editor.file_name
@@ -124,6 +125,7 @@ feature -- Status setting
 		local
 			a_stone: CLASSI_STONE
 		do
+			force_stone (new_stone)
 			a_stone ?= new_stone
 			if a_stone /= Void then
 				if not new_stone.class_i.is_external_class then

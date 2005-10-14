@@ -566,6 +566,13 @@ feature {NONE} -- Implementation
 			quadruple_click_enabled_preference := l_manager.new_boolean_resource_value (l_manager, quadruple_click_enabled_string, True)
 			use_buffered_line_preference := l_manager.new_boolean_resource_value (l_manager, use_buffered_line_string, True)
 			
+				-- Auto colors
+			spaces_background_color_preference.set_auto_preference (normal_background_color_preference)
+			keyword_background_color_preference.set_auto_preference (normal_background_color_preference)
+			comments_background_color_preference.set_auto_preference (normal_background_color_preference)
+			number_background_color_preference.set_auto_preference (normal_background_color_preference)
+			operator_background_color_preference.set_auto_preference (normal_background_color_preference)		
+			
 			tabulation_spaces_preference.change_actions.extend (agent update)
 			left_margin_width_preference.change_actions.extend (agent update)
 			show_line_numbers_preference.change_actions.extend (agent update)

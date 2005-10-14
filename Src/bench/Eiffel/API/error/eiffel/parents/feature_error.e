@@ -51,8 +51,6 @@ feature -- Output
 
 	trace (st: STRUCTURED_TEXT) is
 			-- Output the error message.
-		local
-			
 		do
 			print_error_message (st)
 			st.add_string ("Class: ")
@@ -77,7 +75,7 @@ feature -- Output
 			st.add_new_line
 			build_explain (st)
 			if line > 0 then
-				print_context_of_error (st)
+				print_context_of_error (class_c, st)
 			end
 		end
 
@@ -90,46 +88,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			non_void_class_c: class_c /= Void
 		do
 			e_feature := f.api_feature (class_c.class_id)
-		end
-
-feature {NONE} -- Implementation
-
-	print_context_of_error (st: STRUCTURED_TEXT) is
-			-- Display the line number in `st'.
-		require
-			valid_line: line > 0
-		do
-			initialize_output
-			st.add_string ("Line: ")
-			st.add_string (line.out)
-			if class_c.lace_class.date_has_changed then
-				st.add_string (" (source code has changed)")
-				st.add_new_line
-			elseif line > 0 then
-				st.add_new_line
-				st.add_string ("  ")
-				if previous_line /= Void then
-					if not previous_line.is_empty then
-						previous_line.replace_substring_all ("%T", "  ")
-					end
-					st.add_string (previous_line)
-					st.add_new_line
-				end
-				st.add_string ("->")
-				if not current_line.is_empty then
-					current_line.replace_substring_all ("%T", "  ")
-				end
-				st.add_string (current_line)
-				st.add_new_line
-				if next_line /= Void then
-					st.add_string ("  ")
-					if not next_line.is_empty then
-						next_line.replace_substring_all ("%T", "  ")
-					end
-					st.add_string (next_line)
-					st.add_new_line
-				end
-			end
 		end
 
 end -- class FEATURE_ERROR

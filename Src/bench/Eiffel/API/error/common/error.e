@@ -218,6 +218,48 @@ feature -- Output
 		deferred
 		end;
 
+feature {NONE} -- Implementation
+
+	print_context_of_error (a_context_class: CLASS_C; st: STRUCTURED_TEXT) is
+			-- Display the line number in `st'.
+		require
+			valid_line: line > 0
+			st_not_void: st /= Void
+			a_context_class_not_void: a_context_class /= Void
+		do
+			initialize_output
+			st.add_string ("Line: ")
+			st.add_string (line.out)
+			if a_context_class.lace_class.date_has_changed then
+				st.add_string (" (source code has changed)")
+				st.add_new_line
+			elseif line > 0 then
+				st.add_new_line
+				st.add_string ("  ")
+				if previous_line /= Void then
+					if not previous_line.is_empty then
+						previous_line.replace_substring_all ("%T", "  ")
+					end
+					st.add_string (previous_line)
+					st.add_new_line
+				end
+				st.add_string ("->")
+				if not current_line.is_empty then
+					current_line.replace_substring_all ("%T", "  ")
+				end
+				st.add_string (current_line)
+				st.add_new_line
+				if next_line /= Void then
+					st.add_string ("  ")
+					if not next_line.is_empty then
+						next_line.replace_substring_all ("%T", "  ")
+					end
+					st.add_string (next_line)
+					st.add_new_line
+				end
+			end
+		end
+
 invariant
 	non_void_code: code /= Void
 	non_void_error_message: error_string /= Void

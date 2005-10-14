@@ -36,10 +36,10 @@ feature {NONE} -- Initialization
 feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 
 	move_items (i, j, n: INTEGER) is
-			-- Move `n' items starting at index `i' to index `j'.
+			-- Move `n' items starting at index `i' before index `j'.
 		require
 			i_valid: i > 0 and then i <= count
-			j_valid: j > 0 and then j <= count
+			j_valid: j > 0 and then j <= count + 1
 			n_valid: n > 0 and then n <= count - i + 1
 		local
 			a_duplicate: like Current
@@ -50,6 +50,13 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			index := i
 			a_duplicate := duplicate (n)
 
+				-- Calculate insertion index to insert before index `j'
+			if j > (i + n - 1) then
+				index := j - n - 1
+			else
+				index := j - 1
+			end
+
 				-- Move existing items up.
 			area.move_data ((i - 1) + n, i - 1, a_count - ((i - 1) + n))
 
@@ -58,11 +65,6 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			area.fill_with (l_default, a_count, upper - 1)
 			count := a_count
 
-			if j > (i + n - 1) then
-				index := j - n
-			else
-				index := j - 1
-			end
 			merge_right (a_duplicate)
 		end
 		

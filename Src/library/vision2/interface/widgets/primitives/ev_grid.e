@@ -2003,6 +2003,7 @@ feature -- Element change
 	move_row_to_parent (i, j: INTEGER; a_parent_row: EV_GRID_ROW) is
 			-- Move row at index `i' immediately before row at index `j'.
 			-- Row `i' is re-parented as a subrow of `a_parent_row'.
+			-- If `j' = `row_count + 1' then row `i' is moved to the last index in the grid.
 		require
 			not_destroyed: not is_destroyed
 			tree_enabled: is_tree_enabled
@@ -2010,10 +2011,8 @@ feature -- Element change
 			j_valid: j > 0 and then j <= row_count + 1
 			row_has_no_subrows: row (i).subrow_count = 0
 			a_parent_row_not_void: a_parent_row /= Void
-			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
-				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
-			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
-				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
+			j_valid_for_move_to_a_parent_row:
+				(j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)
 			rows_may_be_moved: rows_may_be_moved (i, 1)
 			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
 				implies row (j).parent_row = a_parent_row
@@ -2043,12 +2042,10 @@ feature -- Element change
 			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
 			rows_may_be_moved: rows_may_be_moved (i, n)
 			a_parent_row_not_void: a_parent_row /= Void
-			j_valid_when_moving_in_same_parent: row (i).parent_row = a_parent_row implies
-				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
-			j_valid_when_moving_to_new_parent: row (i).parent_row /= a_parent_row implies
-				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
-			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
-				implies row (j).parent_row = a_parent_row
+			j_valid_for_move_to_a_parent_row:
+				(j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)
+			not_inserting_within_existing_subrow_structure: 
+				j <= a_parent_row.index + a_parent_row.subrow_count_recursive implies row (j).parent_row = a_parent_row
 		do
 			implementation.move_rows_to_parent (i, j, n, a_parent_row)
 		ensure

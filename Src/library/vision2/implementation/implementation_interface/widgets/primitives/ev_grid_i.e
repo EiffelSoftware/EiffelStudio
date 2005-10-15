@@ -2032,11 +2032,10 @@ feature -- Element change
 			not_breaking_existing_subrow_structure: a_parent_row = Void and j <= row_count implies row (j).parent_row = Void
 
 				-- Finally those from `move_rows_to_parent' which require `a_parent_row' to be non-Void.
-			j_valid_when_moving_in_same_parent: a_parent_row /= Void and row (i).parent_row = a_parent_row implies
-				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive
-			j_valid_when_moving_to_new_parent: a_parent_row /= Void and row (i).parent_row /= a_parent_row implies
-				j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1
-			not_inserting_within_existing_subrow_structure: a_parent_row /= Void and j < a_parent_row.index + a_parent_row.subrow_count_recursive
+			j_valid_for_move_to_a_parent_row:
+				(j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)
+			not_inserting_within_existing_subrow_structure: 
+				(a_parent_row /= Void and j <= a_parent_row.index + a_parent_row.subrow_count_recursive)
 				implies row (j).parent_row = a_parent_row
 		local
 			counter: INTEGER
@@ -2050,15 +2049,15 @@ feature -- Element change
 			parent_of_first := row_internal (i).parent_row_i
 			if a_parent_row /= Void then
 				a_parent_row_i := a_parent_row.implementation
-				if i = j and parent_of_first = a_parent_row_i then
+				if i = j + 1 and parent_of_first = a_parent_row_i then
 						-- It is possible for the parent of a row to change without the index
 						-- changing, so we only keep the same subrow index if the parent
 						-- has not changed.
 					current_subrow_index := row_internal (i).subrow_index
-				elseif row_internal (j - 1) = a_parent_row_i then
+				elseif row_internal (j) = a_parent_row_i then
 					current_subrow_index := 1
 				else
-					current_subrow_index := row_internal (j - 1).subrow_index + 1
+					current_subrow_index := row_internal (j).subrow_index + 1
 				end
 			end
 			from
@@ -2345,7 +2344,7 @@ feature -- Removal
 			end
 			internal_row_data.resize (internal_row_data.count - upper_index + lower_index - 1)
 			if upper_index < rows.count then
-				rows.move_items (upper_index + 1, lower_index, rows.count - upper_index)
+				rows.shift_items (upper_index + 1, lower_index, rows.count - upper_index)
 			end
 			rows.resize (rows.count - upper_index + lower_index - 1)
 			

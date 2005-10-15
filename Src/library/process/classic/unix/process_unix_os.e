@@ -8,65 +8,25 @@ indexing
 class PROCESS_UNIX_OS
 
 inherit
-	PROCESS_OPERATING_SYSTEM
+
 	UNIX_SIGNALS
 		rename
 			meaning as signal_meaning
 		end
+		
 	EXECUTION_ENVIRONMENT
 		export
 			{ANY} return_code ;
 			{NONE} all
 		end
 
-feature -- Path names
+feature -- File descriptor operations
 
-	null_file_name: STRING is "/dev/null";
-			-- File name which represents null input or output
-	
-	full_file_name (dir_name, f_name: STRING): STRING is
-			-- Full name of file in directory `dir_name'
-			-- with name `f_name'.
+	valid_file_descriptor (fd: INTEGER): BOOLEAN is
+			-- Is `fd' in the range of valid file descriptors?
 		do
-			create Result.make (dir_name.count + f_name.count + 1);
-			if not dir_name.is_empty then
-				Result.append (dir_name);
-				if dir_name.item (dir_name.count) /= Directory_separator then
-					Result.extend (Directory_separator);
-				end
-			end
-			Result.append (f_name);
-		end;
-
-	executable_full_file_name (dir_name, f_name: STRING): STRING is
-			-- Full name of file in directory `dir_name'
-			-- with name `f_name'.
-		do
-			Result := full_file_name (dir_name, f_name)
-		end;
-
-	full_directory_name (dir_name, subdir: STRING): STRING is
-			-- Full name of subdirectory `subdir' of directory 
-			-- `dir_name'
-		do
-			Result := full_file_name (dir_name, subdir);
-		end;
-
-
-feature -- Directory operations
-	
-	delete_directory_tree (dir_name: STRING) is
-			-- Try to delete the directory tree rooted at 
-			-- `dir_name'.  Ignore any errors.  Leave status 
-			-- code in `return_code'
-		local
-			cmd: STRING
-		do
-			create cmd.make (dir_name.count + 12);
-			cmd.append ("/bin/rm -rf ");
-			cmd.append (dir_name);
-			system (cmd);
-		end;
+			Result := fd >= 0
+		end
 
 feature -- File descriptor operations
 
@@ -79,9 +39,17 @@ feature -- File descriptor operations
 			valid_old_descriptor: valid_file_descriptor (old_fd)
 			valid_new_descriptor: valid_file_descriptor (new_fd)
 		external
-			"C"
+			"C inline use <unistd.h>"
 		alias
-			"unix_dup2"
+			"[
+				{
+				  int rc;
+				  rc = dup2($old_fd, $new_fd);
+				  if (rc < 0) {
+					    eraise(error_description(errno), EN_SYS);
+				  }
+				}
+			]"
 		end;
 	
 	close_file_descriptor (fd: INTEGER) is
@@ -89,19 +57,19 @@ feature -- File descriptor operations
 		require
 			valid_descriptor: valid_file_descriptor (fd)
 		external
-			"C"
+			"C inline use <unistd.h>"
 		alias
-			"unix_close"
+			"[
+				{
+					 int rc;
+					  rc = close($fd);
+					  if (rc != 0) {
+					    eraise(error_description(errno), EN_SYS);
+					  }				
+				}
+			]"
 		end;
-
-feature -- Interval timer
-
-	system_interval_timer: PROCESS_UNIX_SYSTEM_INTERVAL_TIMER is
-			-- Operating system's interval timer
-		once
-			create Result;
-		end;
-
+		
 feature -- Pipes
 
 	new_pipe: PROCESS_UNIX_PIPE is
@@ -116,12 +84,6 @@ feature -- Pipes
 		end;
 
 feature -- Process operations
-
-	my_process_id: INTEGER is
-			-- Process id of currently executing process
-		do
-			Result := unix_get_process_id;
-		end;
 
 	fork_process: INTEGER is
 			-- Fork a new process.  Return process id of new
@@ -223,114 +185,169 @@ feature -- Process operations
 		do
 			send_signal (Sigkill, pid)
 		end
-	
-feature -- Date and time
-	
-	current_time_in_seconds: INTEGER is
-			-- Current time in seconds since the start of
-			-- the epoch (00:00:00 GMT,  Jan.  1,  1970)
-		external
-			"C"
-		end;
-
-	current_time_in_fine_seconds: DOUBLE is
-			-- Current time in seconds since the start of
-			-- the epoch (00:00:00 GMT,  Jan.  1,  1970), with
-			-- a fine resolution
-		external
-			"C"
-		end;
-
-feature -- Sleeping
-
-	sleep_milliseconds (n: DOUBLE) is
-			-- Suspend execution for `n' milliseconds.
-			-- Actual time could be longer or shorter
-			-- since routine is awakened by any signal
-			-- (not just the SIGALRM signal)
-		do
-			sleep_seconds (n / 1.0E3);
-		end;
-
-	sleep_seconds (n: DOUBLE) is
-			-- Suspend execution for `n' seconds.
-			-- Actual time could be longer or shorter
-			-- since routine is awakened by any signal
-			-- (not just the SIGALRM signal)
-		local
-			timer: PROCESS_INTERVAL_TIMER
-			tried: BOOLEAN
-		do
-			if not tried then
-				create timer.set_seconds (n);
-				unix_pause;
-			
-				-- Shouldn't ever get here since signal will
-				-- raise an exception and take us to 
-				-- rescue clause
-				timer.clear;
-			end
-		rescue
-			if timer /= Void and then not timer.is_expired then
-				timer.clear;
-			end
-			if timer /= Void and then timer.is_expiration_exception then
-				tried := True
-				retry
-			end
-		end;
 
 feature {NONE} -- Externals
 
 	str_dup (area: POINTER): POINTER is
 			-- Return new copy of C string indicated by `area'
-		external
-			"C"
-		end;
+		do
+			c_str_dup (area, $Result);
+		end
+		
+	c_str_dup (area: POINTER; a_result: POINTER) is
+			-- 
+			external
+				"C inline use <string.h>"
+			alias
+				"[
+					{
+					  char * result;
+						#ifdef __SVR4
+						  result = (char *) malloc((size_t) (strlen((char *) $area) + 1));
+						#else
+						  result = (char *) malloc((unsigned) (strlen((char *) $area) + 1));
+						#endif
+					  if (result == NULL) {
+				    	enomem();
+					  }
+					  strcpy(result, $area);
+					  $a_result = result;
+					}
+				]"
+			end
+		
 
 	unix_pipe (read_fd, write_fd: POINTER) is
 			-- Create a new pipe and put the read file descriptor
 			-- in `read_fd' and the write file descriptor in
 			-- `write_fd'
 		external
-			"C"
-		end;
+			"C inline use <unistd.h>, %"unix_os.h%""
+		alias
+			"[
+				{
+				  int rc;
+				  int fd[2];
+				  EIF_INTEGER * read_ptr;
+				  EIF_INTEGER * write_ptr;
+				 rc = pipe(fd);
+				  if (rc != 0) {
+				    eraise(error_description(errno), EN_SYS);
+				  }
+				  read_ptr = (EIF_INTEGER *) $read_fd;
+				  write_ptr = (EIF_INTEGER *) $write_fd;
+				  *read_ptr = fd[0];
+				  *write_ptr = fd[1];				
+				}
+			]"
+		end
 
 	unix_kill (pid, sig: INTEGER) is
 			-- Send signal `sig' to process(es) identified by `pid'
 		external
-			"C"
-		end;
+			"C inline use <sys/types.h>, <signal.h>, %"unix_os.h%""
+		alias
+			"[
+			 {
+				int rc; 
+				rc = kill((pid_t) $pid, (int) $sig);
+			    if (rc != 0 && errno != ESRCH) {
+					eraise(error_description(errno), EN_SYS);
+				}
+			}
+			]"
+
+		end
 
 	unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: POINTER): INTEGER is
 			-- Wait for process specified by `pid'.  Block if
 			-- no process has status available if `block' is
 			-- true.  Set boolean at `status_avail_addr' to
 			-- indicate whether status was available
+		do
+			c_unix_waitpid (pid, block, status_avail_addr, $Result)
+		end
+		
+	c_unix_waitpid (pid: INTEGER; block: BOOLEAN; status_avail_addr: POINTER; a_status: TYPED_POINTER [INTEGER]) is
+			-- 
 		external
-			"C"
-		end;
+			"C inline use <sys/types.h>, <sys/wait.h>, %"unix_os.h%""
+		alias
+			"[
+			{
+			  pid_t rc;
+			  int status, options;
+			  EIF_BOOLEAN * ptr;
+			  options = ($block ? 0 : WNOHANG) | WUNTRACED;
+			  ptr = (EIF_BOOLEAN *) $status_avail_addr;
+			  rc = waitpid((pid_t) $pid, &status, options);
+			  if (rc == -1) {
+			    eraise(error_description(errno), EN_SYS);
+			  } else if (rc == 0) {	/* No process has status to report yet */
+			    *ptr = EIF_FALSE;
+			  } else {		/* Process reported status */
+			    *ptr = EIF_TRUE;
+			  }
+			  *$a_status = (EIF_INTEGER) status;			
+			}
+			]"
+		end
+		
 
 	unix_fork_process: INTEGER is
 			-- Create a new process.  Return the process id
 			-- to the parent and 0 to the child
+		do
+			c_unix_fork_process ($Result)
+		end
+		
+	c_unix_fork_process (a_result : TYPED_POINTER [INTEGER]) is
+			-- 
 		external
-			"C"
-		end;
+			"C inline use <sys/types.h>, <unistd.h>, %"unix_os.h%""
+		alias
+			"[
+				{
+				  pid_t pid;
+				  pid = fork();
+				  if (pid == (pid_t) -1) {
+				    eraise(error_description(errno), EN_SYS);
+				  }
+				  *$a_result = (EIF_INTEGER)pid;
+				}
+			]"
+		end
+		
 
 	unix_exec_process (pname, args, env: POINTER; close_nonstd_files: BOOLEAN) is
 			-- Call execv or execve to overlay current process with
 			-- new one.  Does not return (raises exception
 			-- if error doing the exec)
 		external
-			"C"
-		end;
-
-	unix_get_process_id: INTEGER is
-			-- Process id of currently executing process
-		external
-			"C"
-		end;
+			"C inline use %"unix_os.h%""
+		alias
+			"[
+				{
+				  int max_descriptors;
+				  int k, rc;
+  				  if ($close_nonstd_files == EIF_TRUE) {
+				    max_descriptors = getdtablesize();
+					for (k = 3; k < max_descriptors; k++) {
+					    rc = fcntl(k, F_SETFD, 1);
+					    if (rc == -1 && errno != EBADF) {
+						      eraise(error_description(errno), EN_SYS);
+					    }
+			  	    }
+				  }
+				  if ($env == NULL) {
+				    (void) execv((char *) $pname, (char **) $args);
+				  } else {
+				    (void) execve((char *) $pname, (char **) $args, (char **) $env);
+				  }
+				  eraise(error_description(errno), EN_SYS);				
+				}
+			]"
+		end
 	
 	unix_allocate_arg_memory (count: INTEGER): POINTER is
 			-- Return pointer to newly allocated memory
@@ -338,21 +355,57 @@ feature {NONE} -- Externals
 			-- to garbage collection.  `count' must
 			-- include both argument 0 and the trailing
 			-- null pointer that terminates the argument list
+		do
+			c_unix_allocate_arg_memory (count, $Result)
+		end
+		
+	c_unix_allocate_arg_memory (count: INTEGER; a_result: TYPED_POINTER [POINTER]) is		
+			-- 
 		external
-			"C"
-		end;
+			"C inline"
+		alias
+			"[
+				{
+					EIF_POINTER result;
+					result = (EIF_POINTER) malloc((size_t) ($count * sizeof(char *)));
+					if (result == NULL) {
+						enomem();
+					}
+					*$a_result = result;
+				}
+			]"
+		end
+		
 
 	unix_set_arg_value (arg_array: POINTER; pos: INTEGER; arg: POINTER) is
 			-- Set the element of `arg_array' at position `pos' 
 			-- (relative to 0) to `arg'
 		external
-			"C"
+			"C inline"
+		alias
+			"[
+				{
+				  char ** arguments;
+ 				  arguments = (char **) $arg_array;
+				  arguments[$pos] = (char *) $arg;				
+				}
+			]"
 		end;
 
 	unix_pause is
 			-- Pause until signal is received
 		external
-			"C"
+			"C inline use <unistd.h>,%"unix_os.h%""
+		alias
+			"[
+				{
+				  int rc;
+				  rc = pause();
+				  if (rc == -1) {
+					    eraise(error_description(errno), EN_SYS);
+				  }				
+				}			
+			]"
 		end;
 
 end -- class PROCESS_UNIX_OS

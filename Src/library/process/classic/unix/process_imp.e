@@ -206,7 +206,7 @@ feature  -- Control
 					if timer /= Void then
 						timer.start
 					else
-						create {PROCESS_THREAD_TIMER}timer.make (initial_timer_interval // 1000)
+						create {PROCESS_THREAD_TIMER}timer.make (initial_time_interval // 1000)
 						timer.set_process_launcher (Current)
 						timer.start
 					end
@@ -280,15 +280,15 @@ feature -- Status reporting
 			retried: BOOLEAN
 		do
 			if not retried  then
-				Result := prc_launcher.process_status				
+				Result := exit_code_from_status (prc_launcher.process_status)
 				last_operation_successful := True
 			end
 		rescue
 			retried := True
 			last_operation_successful := False
 			retry
-		end		
-
+		end	
+	
 feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 
 	read_output_stream is
@@ -315,6 +315,14 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 
 feature {NONE}  -- Implementation
 
+	exit_code_from_status (status: INTEGER): INTEGER is	
+			-- Exit code evaluated from status returned by process
+		external
+			"C inline use <sys/wait.h>"
+		alias
+			"WEXITSTATUS($status)"
+		end
+		
 	wait_for_threads_to_exit is
 			-- Wait for listening threads to exit.
 		do

@@ -289,7 +289,27 @@ feature -- Status report
 			
 feature -- Access
 
-	display_breakpoints is
+	toggle_display_breakpoints is
+			-- Show or hide the breakpoint tool
+		local
+			bp_tool: ES_BREAKPOINTS_TOOL
+			conv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			conv_dev ?= window_manager.last_focused_window
+			if conv_dev /= Void then
+				bp_tool := conv_dev.breakpoints_tool
+				if bp_tool /= Void then
+					if bp_tool.shown then
+						bp_tool.close
+					else
+						bp_tool.show
+						bp_tool.refresh
+					end
+				end
+			end			
+		end
+
+	display_breakpoints (show_tool_if_closed: BOOLEAN) is
 			-- Show the list of breakpoints (set and disabled) in the output manager.
 		local
 			bp_tool: ES_BREAKPOINTS_TOOL
@@ -301,7 +321,7 @@ feature -- Access
 				if bp_tool /= Void then
 					if bp_tool.shown then
 						bp_tool.refresh
-					else
+					elseif show_tool_if_closed then
 						bp_tool.show
 					end
 				end
@@ -310,7 +330,7 @@ feature -- Access
 		
 	notify_breakpoints_changes is
 		do
-			display_breakpoints
+			display_breakpoints (False)
 			window_manager.synchronize_all_about_breakpoints
 		end
 
@@ -1123,7 +1143,7 @@ feature {NONE} -- Implementation
 			bkpt_info_cmd.set_menu_name (Interface_names.m_Bkpt_info)
 			bkpt_info_cmd.set_tooltext (Interface_names.b_Bkpt_info)
 			bkpt_info_cmd.set_name ("Bkpt_info")
-			bkpt_info_cmd.add_agent (agent display_breakpoints)
+			bkpt_info_cmd.add_agent (agent toggle_display_breakpoints)
 			bkpt_info_cmd.enable_sensitive
 			toolbarable_commands.extend (bkpt_info_cmd)
 

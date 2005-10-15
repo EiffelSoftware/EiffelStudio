@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			else
 				Application.set_breakpoint (st.routine, st.index)
 			end
-			debugger_manager.display_breakpoints
+			debugger_manager.notify_breakpoints_changes
 		end
 		
 	drop_class (st: CLASSI_STONE) is

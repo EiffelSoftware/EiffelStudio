@@ -828,7 +828,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 				subrows.resize (subrows.count + rows_to_insert)
 				if a_subrow_index < l_original_subrow_count + 1 then
 						-- Move the existing items as required to make space for the new.
-					subrows.move_items (a_subrow_index, a_subrow_index + rows_to_insert + 1, l_original_subrow_count - a_subrow_index + 1)
+					subrows.shift_items (a_subrow_index, a_subrow_index + rows_to_insert, l_original_subrow_count - a_subrow_index + 1)
 				end
 			until
 				i = j

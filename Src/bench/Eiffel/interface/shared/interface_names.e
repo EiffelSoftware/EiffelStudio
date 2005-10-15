@@ -861,7 +861,7 @@ feature -- Title part
 feature -- Description texts
 
 	e_Add_exported_feature: STRING is	"Add a new feature to this dynamic library definition"
-	e_Bkpt_info: STRING is				"Display information about breakpoints"
+	e_Bkpt_info: STRING is				"Show/Hide information about breakpoints"
 	e_Check_exports: STRING is			"Check the validity of the library definition"
 	e_Compilation_failed: STRING is		"Compilation failed"
 	e_Compilation_succeeded: STRING is	"Compilation succeeded"

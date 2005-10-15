@@ -14,6 +14,12 @@ inherit
 		redefine
 			dispose
 		end
+		
+	PROCESS_UNIX_OS
+		export
+			{NONE}all
+			{PROCESS_UNIX_PIPE}close_file_descriptor
+		end
 create
 	make
 
@@ -91,16 +97,6 @@ feature {NONE} -- Cleanup
 		end
 
 feature {NONE} -- Implementation
-
-	close_file_descriptor (fd: INTEGER) is
-			-- Close existing open file descriptor `fd'
-		require
-			valid_descriptor: fd >= 0
-		external
-			"C"
-		alias
-			"unix_close"
-		end;
 
 	Invalid_file_descriptor: INTEGER is -1
 			-- File descriptor which is not in valid range

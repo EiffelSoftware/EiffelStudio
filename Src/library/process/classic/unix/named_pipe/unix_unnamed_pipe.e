@@ -592,6 +592,15 @@ feature
 		do
 			write_block (write_descriptor, p.item + start_pos, nb_bytes)
 		end
+		
+feature
+	last_natural: NATURAL_32
+	last_natural_64: NATURAL_64
+	last_natural_16: NATURAL_16
+	last_natural_8: NATURAL_8
+	last_integer_8: INTEGER_8
+	last_integer_16: INTEGER_16
+	last_integer_64: INTEGER_64
 	
 feature 
 

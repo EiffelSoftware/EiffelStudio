@@ -152,6 +152,15 @@ feature -- Basic operation
 				-- When an attempt to close `Current' is made, call `close_requested'.
 			close_request_actions.extend (agent close_requested)
 		end
+		
+	build_non_once_windows is
+			-- Create windows that must be explicitly created before use
+			-- i.e. non once features.
+			-- (export status {NONE})
+		do
+			set_display_window (create {GB_DISPLAY_WINDOW})
+			set_builder_window (create {GB_BUILDER_WINDOW})
+		end
 
 	generate_interface (vb: EV_VERTICAL_BOX) is
 			-- Build interface of `Current' into `vb'.
@@ -160,10 +169,12 @@ feature -- Basic operation
 			box_exists: vb /= Void
 		local
 			preference_access: PREFERENCES
+			supported_widgets: GB_SUPPORTED_WIDGETS
 		do
 				-- Initialization of preferences.
 			create preference_access.make_with_defaults_and_location (<<default_xml_file>>, eiffel_preferences)
 			initialize_preferences (preference_access)
+			build_non_once_windows
 			build_widget_structure (vb)
 				-- Must ensure the top level window is visible before calling `ensure_top_item_visible'.
 			if is_show_requested then
@@ -189,33 +200,34 @@ feature -- Basic operation
 		local
 			vertical_box: EV_VERTICAL_BOX
 		do
-			lock_update
-				-- Remove the filler.
-			vertical_box ?= item
-			check
-				item_was_vertical_box: vertical_box /= Void
-			end
-			vertical_box.go_i_th (1)
-			vertical_box.remove
-			vertical_box.put_left (tool_holder)
-			build_menu
-			
-				-- Ensure `recent_projects_menu' is sensitive.
-			recent_projects_menu.disable_sensitive
-			
-				-- Now restore from preferences
-			if horizontal_split_area.full then
-				set_split_position (horizontal_split_area, preferences.global_data.main_split_position)
-			end
-			initialize_tool_positions (preferences.global_data.tool_order)
-			initialize_external_tool_positions (preferences.global_data.external_tool_order)
-			
-				-- This will update the tool interface if `multiple_split_area' has no items contained,
-				-- effectively hiding `multiple_split_area'.
-			widget_removed_from_multiple_split_area
-	
-			unlock_update
-			
+			if item /= Void then
+				lock_update
+					-- Remove the filler.
+				vertical_box ?= item
+				check
+					item_was_vertical_box: vertical_box /= Void
+				end
+				vertical_box.go_i_th (1)
+				vertical_box.remove
+				vertical_box.put_left (tool_holder)
+				build_menu
+				
+					-- Ensure `recent_projects_menu' is sensitive.
+				recent_projects_menu.disable_sensitive
+				
+					-- Now restore from preferences
+				if horizontal_split_area.full then
+					set_split_position (horizontal_split_area, preferences.global_data.main_split_position)
+				end
+				initialize_tool_positions (preferences.global_data.tool_order)
+				initialize_external_tool_positions (preferences.global_data.external_tool_order)
+				
+					-- This will update the tool interface if `multiple_split_area' has no items contained,
+					-- effectively hiding `multiple_split_area'.
+				widget_removed_from_multiple_split_area
+		
+				unlock_update
+			end			
 		ensure
 			has_item: item /= Void
 		end

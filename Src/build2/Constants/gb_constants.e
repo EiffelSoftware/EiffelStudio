@@ -904,15 +904,4 @@ feature -- Prompts
 	select_font_location_modify_string: STRING is "Please select new font value for font constant %""
 		-- String displayed when selecting a new font during a modification of an existing font constant.
 		
-feature -- Miscellaneous
-
-	supported_widgets: GB_SUPPORTED_WIDGETS is
-			-- Access to GB_SUPPORTED_WIDGETS to ensure that it is
-			-- compiled into the system when compiling Build into
-			-- EiffelStudio.
-		do
-			create Result
-		end
-		
-
 end -- class GB_CONSTANTS

@@ -1979,6 +1979,7 @@ feature -- Element change
 			-- Insert `rows_to_insert' new rows at index `i' and make those rows subnodes of `a_parent_row'.
 		require
 			i_positive: i > 0
+			tree_enabled: is_tree_enabled
 			rows_to_insert_positive: row_count >= 1
 			i_less_than_row_count: i <= row_count + 1
 			a_parent_row_not_void: a_parent_row /= Void

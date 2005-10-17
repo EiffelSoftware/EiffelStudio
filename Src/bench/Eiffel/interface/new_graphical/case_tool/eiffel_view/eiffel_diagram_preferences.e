@@ -42,6 +42,12 @@ feature {EB_PREFERENCES} -- Initialization
 
 feature -- Value
 
+	diagram_background_color: EV_COLOR is
+			-- 
+		do
+			Result := diagram_background_color_preference.value
+		end
+
 	diagram_toolbar_layout: ARRAY [STRING] is
 			-- Toolbar organization
 		do
@@ -375,6 +381,7 @@ feature -- Toolbar
 
 feature {NONE} -- Preference
 
+	diagram_background_color_preference: COLOR_PREFERENCE
 	diagram_toolbar_layout_preference: ARRAY_PREFERENCE	
 	subcluster_depth_preference: INTEGER_PREFERENCE 
 	supercluster_depth_preference: INTEGER_PREFERENCE
@@ -454,6 +461,7 @@ feature {NONE} -- Preference Strings
 	descendant_depth_string: STRING is "tools.diagram_tool.descendant_depth"
 	ignore_excluded_class_figures_string: STRING is "tools.diagram_tool.ignore_excluded_class_figures"		
 	excluded_class_figures_string: STRING is "tools.diagram_tool.excluded_class_figures"
+	diagram_background_color_string: STRING is "tools.diagram_tool.diagram_background_color"
 
 		-- BON Class
 	bon_class_name_font_string: STRING is "tools.diagram_tool.bon.bon_class_name_font"
@@ -518,10 +526,12 @@ feature {NONE} -- Implementation
 	initialize_preferences is
 			-- Initialize preference values.
 		local
-			l_manager: EB_PREFERENCE_MANAGER	
+			l_manager: EB_PREFERENCE_MANAGER
+			l_update_agent: PROCEDURE [ANY, TUPLE]
 		do				
 			create l_manager.make (preferences, "diagram_tool")
-		
+
+			diagram_background_color_preference := l_manager.new_color_resource_value (l_manager, diagram_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))--255, 255))
 			diagram_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, diagram_toolbar_layout_string, <<"Clear_bkpt__visible">>)					
 			subcluster_depth_preference := l_manager.new_integer_resource_value (l_manager, subcluster_depth_string, 1)
 			supercluster_depth_preference := l_manager.new_integer_resource_value (l_manager, supercluster_depth_string, 1)
@@ -591,47 +601,49 @@ feature {NONE} -- Implementation
 			diagram_auto_scroll_speed_preference := l_manager.new_integer_resource_value (l_manager, diagram_auto_scroll_speed_preference_string, 50)
 			
 				-- Actions
-			bon_class_name_font_preference.change_actions.extend (agent update)
-			bon_class_name_color_preference.change_actions.extend (agent update)
-			bon_class_fill_color_preference.change_actions.extend (agent update)
-			bon_class_uncompiled_fill_color_preference.change_actions.extend (agent update)
-			bon_generics_font_preference.change_actions.extend (agent update)
-			bon_generics_color_preference.change_actions.extend (agent update)
-			bon_client_label_font_preference.change_actions.extend (agent update)
-			bon_client_label_color_preference.change_actions.extend (agent update)
-			bon_client_color_preference.change_actions.extend (agent update)
-			bon_client_line_width_preference.change_actions.extend (agent update) 
-			bon_cluster_line_color_preference.change_actions.extend (agent update)
-			bon_cluster_iconified_fill_color_preference.change_actions.extend (agent update)
-			bon_cluster_name_area_color_preference.change_actions.extend (agent update)
-			bon_cluster_name_color_preference.change_actions.extend (agent update)
-			bon_cluster_name_font_preference.change_actions.extend (agent update)
-			bon_inheritance_color_preference.change_actions.extend (agent update)
-			bon_inheritance_line_width_preference.change_actions.extend (agent update)
-			uml_class_name_font_preference.change_actions.extend (agent update)
-			uml_class_deferred_font_preference.change_actions.extend (agent update)
-			uml_class_properties_font_preference.change_actions.extend (agent update)
-			uml_class_properties_color_preference.change_actions.extend (agent update)
-			uml_class_name_color_preference.change_actions.extend (agent update)
-			uml_class_fill_color_preference.change_actions.extend (agent update)
-			uml_generics_font_preference.change_actions.extend (agent update)
-			uml_generics_color_preference.change_actions.extend (agent update)
-			uml_class_features_font_preference.change_actions.extend (agent update)
-			uml_class_features_color_preference.change_actions.extend (agent update)
-			uml_class_feature_section_font_preference.change_actions.extend (agent update)
-			uml_class_feature_section_color_preference.change_actions.extend (agent update)
-			uml_client_line_width_preference.change_actions.extend (agent update)
-			uml_client_color_preference.change_actions.extend (agent update) 
-			uml_client_label_color_preference.change_actions.extend (agent update)
-			uml_client_label_font_preference.change_actions.extend (agent update)
-			uml_cluster_line_color_preference.change_actions.extend (agent update)
-			uml_cluster_iconified_fill_color_preference.change_actions.extend (agent update)
-			uml_cluster_name_area_color_preference.change_actions.extend (agent update)
-			uml_cluster_name_color_preference.change_actions.extend (agent update)
-			uml_cluster_name_font_preference.change_actions.extend (agent update)
-			uml_inheritance_line_width_preference.change_actions.extend (agent update)
-			uml_inheritance_color_preference.change_actions.extend (agent update)
-			diagram_auto_scroll_speed_preference.change_actions.extend (agent update)
+			l_update_agent := agent update
+			diagram_background_color_preference.change_actions.extend (l_update_agent)
+			bon_class_name_font_preference.change_actions.extend (l_update_agent)
+			bon_class_name_color_preference.change_actions.extend (l_update_agent)
+			bon_class_fill_color_preference.change_actions.extend (l_update_agent)
+			bon_class_uncompiled_fill_color_preference.change_actions.extend (l_update_agent)
+			bon_generics_font_preference.change_actions.extend (l_update_agent)
+			bon_generics_color_preference.change_actions.extend (l_update_agent)
+			bon_client_label_font_preference.change_actions.extend (l_update_agent)
+			bon_client_label_color_preference.change_actions.extend (l_update_agent)
+			bon_client_color_preference.change_actions.extend (l_update_agent)
+			bon_client_line_width_preference.change_actions.extend (l_update_agent) 
+			bon_cluster_line_color_preference.change_actions.extend (l_update_agent)
+			bon_cluster_iconified_fill_color_preference.change_actions.extend (l_update_agent)
+			bon_cluster_name_area_color_preference.change_actions.extend (l_update_agent)
+			bon_cluster_name_color_preference.change_actions.extend (l_update_agent)
+			bon_cluster_name_font_preference.change_actions.extend (l_update_agent)
+			bon_inheritance_color_preference.change_actions.extend (l_update_agent)
+			bon_inheritance_line_width_preference.change_actions.extend (l_update_agent)
+			uml_class_name_font_preference.change_actions.extend (l_update_agent)
+			uml_class_deferred_font_preference.change_actions.extend (l_update_agent)
+			uml_class_properties_font_preference.change_actions.extend (l_update_agent)
+			uml_class_properties_color_preference.change_actions.extend (l_update_agent)
+			uml_class_name_color_preference.change_actions.extend (l_update_agent)
+			uml_class_fill_color_preference.change_actions.extend (l_update_agent)
+			uml_generics_font_preference.change_actions.extend (l_update_agent)
+			uml_generics_color_preference.change_actions.extend (l_update_agent)
+			uml_class_features_font_preference.change_actions.extend (l_update_agent)
+			uml_class_features_color_preference.change_actions.extend (l_update_agent)
+			uml_class_feature_section_font_preference.change_actions.extend (l_update_agent)
+			uml_class_feature_section_color_preference.change_actions.extend (l_update_agent)
+			uml_client_line_width_preference.change_actions.extend (l_update_agent)
+			uml_client_color_preference.change_actions.extend (l_update_agent) 
+			uml_client_label_color_preference.change_actions.extend (l_update_agent)
+			uml_client_label_font_preference.change_actions.extend (l_update_agent)
+			uml_cluster_line_color_preference.change_actions.extend (l_update_agent)
+			uml_cluster_iconified_fill_color_preference.change_actions.extend (l_update_agent)
+			uml_cluster_name_area_color_preference.change_actions.extend (l_update_agent)
+			uml_cluster_name_color_preference.change_actions.extend (l_update_agent)
+			uml_cluster_name_font_preference.change_actions.extend (l_update_agent)
+			uml_inheritance_line_width_preference.change_actions.extend (l_update_agent)
+			uml_inheritance_color_preference.change_actions.extend (l_update_agent)
+			diagram_auto_scroll_speed_preference.change_actions.extend (l_update_agent)
 		end
 				
 	preferences: PREFERENCES

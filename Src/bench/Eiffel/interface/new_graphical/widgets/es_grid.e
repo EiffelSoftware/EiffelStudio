@@ -131,107 +131,108 @@ feature -- Scrolling
 			l_viewable_row_indexes: EV_GRID_ARRAYED_LIST [INTEGER]
 			l_first_row: EV_GRID_ROW
 		do
-			l_visible_rows := visible_row_indexes
-			
-			if l_visible_rows.is_empty then
-					-- Nothing to be done, since no rows are visible
-			else
-				vy_now := virtual_y_position
-				if is_full_page_scrolling then
-					if a_step < 0 then
-							-- We are scrolling down.
-						if scrolling_common_line_count < l_visible_rows.count then
-							vy := row (l_visible_rows.i_th (
-								l_visible_rows.count - scrolling_common_line_count)).virtual_y_position
+			if is_displayed then
+				l_visible_rows := visible_row_indexes
+				if l_visible_rows.is_empty then
+						-- Nothing to be done, since no rows are visible
+				else
+					vy_now := virtual_y_position
+					if is_full_page_scrolling then
+						if a_step < 0 then
+								-- We are scrolling down.
+							if scrolling_common_line_count < l_visible_rows.count then
+								vy := row (l_visible_rows.i_th (
+									l_visible_rows.count - scrolling_common_line_count)).virtual_y_position
+							else
+									-- Cannot go below, go to the last element.
+								vy := row (l_visible_rows.last).virtual_y_position
+							end
 						else
-								-- Cannot go below, go to the last element.
-							vy := row (l_visible_rows.last).virtual_y_position
-						end
-					else
-							-- We are scrolling up
-						fixme ("[
-							In order to scroll back we use a private data `visible_indexes_to_row_indexes'
-							from the implementation, we should instead use APIs from either EV_GRID or
-							EV_GRID_ROW when they become available.
-							The defensive programing style here is to protect ourself from the changes in the
-							data we used.
-							]")
-						l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
-						if l_viewable_row_indexes /= Void then
-							l_visible_count := viewable_height // row_height - scrolling_common_line_count
-							l_first_row := row (l_visible_rows.first)
-							l_viewable_row_indexes.start
-							l_viewable_row_indexes.search (l_first_row.index)
-							if not l_viewable_row_indexes.exhausted then
-								if l_visible_count < l_viewable_row_indexes.index then
-									vy := row (l_viewable_row_indexes.i_th (
-										l_viewable_row_indexes.index - l_visible_count)).virtual_y_position
+								-- We are scrolling up
+							fixme ("[
+								In order to scroll back we use a private data `visible_indexes_to_row_indexes'
+								from the implementation, we should instead use APIs from either EV_GRID or
+								EV_GRID_ROW when they become available.
+								The defensive programing style here is to protect ourself from the changes in the
+								data we used.
+								]")
+							l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
+							if l_viewable_row_indexes /= Void then
+								l_visible_count := viewable_height // row_height - scrolling_common_line_count
+								l_first_row := row (l_visible_rows.first)
+								l_viewable_row_indexes.start
+								l_viewable_row_indexes.search (l_first_row.index)
+								if not l_viewable_row_indexes.exhausted then
+									if l_visible_count < l_viewable_row_indexes.index then
+										vy := row (l_viewable_row_indexes.i_th (
+											l_viewable_row_indexes.index - l_visible_count)).virtual_y_position
+									else
+											-- We reached the top.
+										vy := 0
+									end
 								else
-										-- We reached the top.
-									vy := 0
+										-- We could not find the item. This is not right.
+									vy := vy_now - a_step * l_visible_count * row_height
 								end
 							else
-									-- We could not find the item. This is not right.
+									-- We could not use `visible_indexes_to_row_indexes' to get the right
+									-- information. Use an approximation that only works when there is no
+									-- tree in the grid.
 								vy := vy_now - a_step * l_visible_count * row_height
 							end
-						else
-								-- We could not use `visible_indexes_to_row_indexes' to get the right
-								-- information. Use an approximation that only works when there is no
-								-- tree in the grid.
-							vy := vy_now - a_step * l_visible_count * row_height
-						end
-					end
-				else
-					if a_step < 0 then
-							-- We are scrolling down.
-						if mouse_wheel_scroll_size < l_visible_rows.count then
-							vy := row (l_visible_rows.i_th (mouse_wheel_scroll_size + 1)).virtual_y_position
-						else
-								-- Do nothing.
-							vy := vy_now
 						end
 					else
-							-- We are scrolling up
-						fixme ("[
-							In order to scroll back we use a private data `visible_indexes_to_row_indexes'
-							from the implementation, we should instead use APIs from either EV_GRID or
-							EV_GRID_ROW when they become available.
-							The defensive programing style here is to protect ourself from the changes in the
-							data we used.
-							]")
-						l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
-						if l_viewable_row_indexes /= Void then
-							l_first_row := row (l_visible_rows.first)
-							l_viewable_row_indexes.start
-							l_viewable_row_indexes.search (l_first_row.index)
-							if not l_viewable_row_indexes.exhausted then
-								if mouse_wheel_scroll_size < l_viewable_row_indexes.index then
-									vy := row (l_viewable_row_indexes.i_th (
-										l_viewable_row_indexes.index - mouse_wheel_scroll_size)).virtual_y_position
-								else
-										-- We reached the top.
-									vy := 0
-								end
+						if a_step < 0 then
+								-- We are scrolling down.
+							if mouse_wheel_scroll_size < l_visible_rows.count then
+								vy := row (l_visible_rows.i_th (mouse_wheel_scroll_size + 1)).virtual_y_position
 							else
-									-- We could not find the item. This is not right.
-								vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
+									-- Do nothing.
+								vy := vy_now
 							end
 						else
-								-- We could not use `visible_indexes_to_row_indexes' to get the right
-								-- information. Use an approximation that only works when there is no
-								-- tree in the grid.
-							vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
+								-- We are scrolling up
+							fixme ("[
+								In order to scroll back we use a private data `visible_indexes_to_row_indexes'
+								from the implementation, we should instead use APIs from either EV_GRID or
+								EV_GRID_ROW when they become available.
+								The defensive programing style here is to protect ourself from the changes in the
+								data we used.
+								]")
+							l_viewable_row_indexes := implementation.visible_indexes_to_row_indexes
+							if l_viewable_row_indexes /= Void then
+								l_first_row := row (l_visible_rows.first)
+								l_viewable_row_indexes.start
+								l_viewable_row_indexes.search (l_first_row.index)
+								if not l_viewable_row_indexes.exhausted then
+									if mouse_wheel_scroll_size < l_viewable_row_indexes.index then
+										vy := row (l_viewable_row_indexes.i_th (
+											l_viewable_row_indexes.index - mouse_wheel_scroll_size)).virtual_y_position
+									else
+											-- We reached the top.
+										vy := 0
+									end
+								else
+										-- We could not find the item. This is not right.
+									vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
+								end
+							else
+									-- We could not use `visible_indexes_to_row_indexes' to get the right
+									-- information. Use an approximation that only works when there is no
+									-- tree in the grid.
+								vy := vy_now - a_step * mouse_wheel_scroll_size * row_height
+							end
 						end
 					end
-				end
-					-- Code below do the adjustment to the type of scrolling decided by user.
-				if vy_now /= vy then			
-					if vy < 0 then
-						vy := 0
-					else
-						vy := vy.min (maximum_virtual_y_position)
+						-- Code below do the adjustment to the type of scrolling decided by user.
+					if vy_now /= vy then			
+						if vy < 0 then
+							vy := 0
+						else
+							vy := vy.min (maximum_virtual_y_position)
+						end
+						set_virtual_position (virtual_x_position, vy)
 					end
-					set_virtual_position (virtual_x_position, vy)
 				end
 			end
 		end		

@@ -193,7 +193,9 @@ feature {NONE} -- Basic operation
 					lchild.forth
 					end -- loop.
 				end -- is_homogeneous.
-			lchild.go_to (cur)
+				if lchild.valid_cursor (cur) then
+					lchild.go_to (cur)
+				end
 			end
 		end
 
@@ -223,7 +225,9 @@ feature {NONE} -- Implementation for automatic size compute
 					end
 					lchild.forth
 				end
-				lchild.go_to (cur)
+				if lchild.valid_cursor (cur) then
+					lchild.go_to (cur)
+				end
 				childvisible_nb := nb_visi
 				compute_childexpand_nb
 			end
@@ -278,7 +282,9 @@ feature {NONE} -- Implementation for automatic size compute
 					ev_set_minimum_width
 						(value + total_spacing + 2 * border_width)
 				end
-				lchild.go_to (cur)
+				if lchild.valid_cursor (cur) then
+					lchild.go_to (cur)
+				end
 			else
 				children_width := 0
 				ev_set_minimum_width (2 * border_width)
@@ -337,7 +343,9 @@ feature {NONE} -- Implementation for automatic size compute
 					ev_set_minimum_size (wvalue + total_spacing +
 						2 * border_width, hvalue + 2 * border_width) 
 				end
-				lchild.go_to (cur)
+				if lchild.valid_cursor (cur) then
+					lchild.go_to (cur)
+				end
 			else
 				children_width := 0
 				ev_set_minimum_size (2 * border_width, 2 * border_width)

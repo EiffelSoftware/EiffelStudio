@@ -54,7 +54,9 @@ feature {NONE} -- Layout managment
 
 	grid_objects_on_difference_cb (a_row: EV_GRID_ROW; a_val: ANY) is
 		do
-			print ("DIFF:: " + grid_objects_id_name_from_row (a_row) + " => old=[" + a_val.out + "] new=[" + grid_objects_id_value_from_row (a_row).out + "]%N")
+			debug ("grid_layout")
+				print ("DIFF:: " + grid_objects_id_name_from_row (a_row) + " => old=[" + a_val.out + "] new=[" + grid_objects_id_value_from_row (a_row).out + "]%N")
+			end
 			a_row.set_background_color (Highlight_different_value_bg_color)
 		end
 

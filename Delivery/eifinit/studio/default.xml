@@ -24,6 +24,7 @@
 	<PREF NAME="debugger.watches_grids_layout_managed" HIDDEN="true" DESCRIPTION="Enable/Disable the layout management for the watches expressions (keep value expanded or not, and highlight difference)."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.show_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside preselected toolbar items?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="debugger.show_all_text_in_project_toolbar" HIDDEN="true" DESCRIPTION="Should text be shown alongside all toolbar items?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.diagram_tool.diagram_background_color" DESCRIPTION="Background Color for Diagram Tool"><COLOR>255;255;235</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_font" DESCRIPTION="Font for class names in BON class figures."><FONT>Arial-r-regular-10-sans</FONT></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_name_color" DESCRIPTION="Color for class names in BON class figures."><COLOR>17;3;80</COLOR></PREF>
 	<PREF NAME="tools.diagram_tool.bon.bon_class_fill_color" DESCRIPTION="Color for BON class figures."><COLOR>204;204;253</COLOR></PREF>

@@ -39,9 +39,12 @@ feature{NONE} -- Initialization
 			time_interval_set: time_interval = initial_time_interval
 		end
 
-feature
+feature -- Status reporting
+
 	is_launch_session_over: BOOLEAN
 			-- Is an external command output printing session over?
+
+feature -- Status setting
 	
 	set_launch_session_over (b: BOOLEAN) is
 			-- Set `is_launch_session_over' with `b'.
@@ -50,7 +53,20 @@ feature
 		ensure
 			is_launch_session_over_set: is_launch_session_over = b
 		end
+
+	set_original_command_name (name: STRING) is		
+			-- Set `original_command_name' with `name'.
+		require
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+		do
+			create original_command_name.make_from_string (name)
+		ensure
+			original_command_name_set: original_command_name.is_equal (name)
+		end
 		
+feature
+
 	on_ouput_print_session_over is
 			-- Agent called when an external command output printing session over
 			-- to synchronize status.
@@ -76,14 +92,12 @@ feature
 					external_output_manager.display_state (l_command_has_exited+" with code "+external_launcher.exit_code.out, False)			
 				end
 				external_output_manager.synchronize_on_process_exits
-			end	
-			
-			set_launch_session_over (True)
-						
+			end				
+			set_launch_session_over (True)						
 		end
-		
-feature{NONE} -- Actions
 
+feature{NONE} -- Actions
+		
 	on_start is
 		local
 			i,cnt: INTEGER
@@ -110,7 +124,7 @@ feature{NONE} -- Actions
 			end
 			external_output_manager.force_display
 			external_output_manager.display_state (l_launching, False)
-			external_output_manager.synchronize_on_process_starts (command_line)	
+			external_output_manager.synchronize_on_process_starts (original_command_name)	
 			set_launch_session_over (False)
 		end
 		
@@ -141,6 +155,9 @@ feature{NONE} -- Actions
 		end
 
 feature{NONE} -- Implementation
+
+	original_command_name: STRING
+			-- Original external name
 
 	commands: ARRAY [EB_EXTERNAL_COMMAND] is
 			-- Abstract representation of external commands.

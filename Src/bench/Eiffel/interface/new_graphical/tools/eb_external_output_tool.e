@@ -634,11 +634,8 @@ feature{NONE} -- Actions
 		
 	on_clear_output_window is
 			-- Clear `console'.
-		local
-			d: DEMO
 		do
 			console.clear
-			create d.make
 		end
 		
 	on_delete_command is

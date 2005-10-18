@@ -397,18 +397,10 @@ feature{NONE} -- Actions
 
 	on_external_cmd_list_key_down (key: EV_KEY) is
 			-- Check if user pressed enter key in command list box.
-			-- If so, launch process indicated by text in this command list box.
-		local
-			dlg: EV_WARNING_DIALOG	
+			-- If so, launch process indicated by text in this command list box.	
 		do
-			if key.code = {EV_KEY_CONSTANTS}.key_enter then
-				if external_launcher.launched and then not external_launcher.has_exited then
-					create dlg.make_with_text ("An external command is running now. %NPlease wait until it exits.")
-					dlg.show
-				else	
-					on_run_process
-				end	
-			else	
+			if key.code = {EV_KEY_CONSTANTS}.key_enter then	
+				on_run_process	
 			end
 		end
 		
@@ -479,11 +471,10 @@ feature{NONE} -- Actions
 	on_run_process is
 			-- Agent called when launching a process
 		local
-			dlg: EV_WARNING_DIALOG	
 			str ,wd: STRING	
 			e_cmd: EB_EXTERNAL_COMMAND	
+			temp_cmd: EB_EXTERNAL_COMMAND
 		do
-			if (not external_launcher.launched) or (external_launcher.launched and then external_launcher.has_exited) then
 				create str.make_from_string (cmd_lst.text)
 				str.left_adjust
 				str.right_adjust
@@ -494,17 +485,13 @@ feature{NONE} -- Actions
 						if wd = Void then
 							wd := ""
 						end
-						external_launcher.prepare_command_line (e_cmd.external_command, wd)
+						create temp_cmd.make_and_run_only (e_cmd.external_command, wd)
+						print_command_name (e_cmd.external_command)
 					else
-						external_launcher.prepare_command_line (str,"")							
-					end
-					external_launcher.set_hidden (False)					
-					external_launcher.launch (True)						
+						create temp_cmd.make_and_run_only (str, "")
+						print_command_name (str)
+					end	
 				end
-			else
-				create dlg.make_with_text ("An external command is running now. %NPlease wait until it exits.")
-				dlg.show_modal_to_window (owner.window)
-			end
 		end
 				
 	on_input_to_process (str: STRING) is
@@ -647,8 +634,11 @@ feature{NONE} -- Actions
 		
 	on_clear_output_window is
 			-- Clear `console'.
+		local
+			d: DEMO
 		do
 			console.clear
+			create d.make
 		end
 		
 	on_delete_command is

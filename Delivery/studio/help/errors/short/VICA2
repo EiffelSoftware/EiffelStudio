@@ -1,0 +1,3 @@
+Error: Custom attribute creation used non-constant expressions.
+What to do: Make sure that all arguments of the custom attributes are
+    using a manifest constant.

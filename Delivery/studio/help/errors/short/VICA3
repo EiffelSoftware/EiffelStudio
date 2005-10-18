@@ -1,0 +1,4 @@
+Error: Custom attribute optional arguments not valid.
+What to do: Make sure that all arguments of the custom attributes are
+    attributes or properties of the base class of the custom attribute
+    type.

@@ -57,6 +57,7 @@ feature -- Removal
 	wipe_out is
 			-- Remove all items.
 		do
+			last_index := 0
 			table.clear
 		end
 

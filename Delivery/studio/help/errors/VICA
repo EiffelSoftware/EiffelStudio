@@ -1,0 +1,16 @@
+VICA, .NET specific error
+
+    A custom attribute declaration is valid if and only if it
+    satisfies one of the following conditions:
+
+      1 Its creation expression is valid
+
+      2 The actual arguments of the creation expression are
+        manifest constants, or constants access.
+
+      3 If it has some optional arguments, arguments shall be
+        attributes  or  properties  of the base class  of its
+        creation type.
+
+      4 If it has some  optional  arguments, arguments  shall
+	    appear only once in the list.

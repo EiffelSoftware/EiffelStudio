@@ -6079,7 +6079,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			hash_code_feat_id_non_negative: Result >= 0
 		end
 		
-feature {CIL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition
+feature {CIL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom attribute definition
 
 	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE) is
 			-- Define a custom attribute on `token' using constructor `ctor_token' with

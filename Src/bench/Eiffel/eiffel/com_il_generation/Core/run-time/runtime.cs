@@ -548,7 +548,7 @@ feature -- Status report
 			l_gen_type = info.____type ();
 			if (l_gen_type != null) {
 					// A generic class, possibly a good candidate for ARRAY.
-				Result = info.____class_name ().Equals ("ARRAY");
+				Result = l_gen_type.class_name ().Equals ("ARRAY");
 			}
 		}
 		return Result;
@@ -563,13 +563,7 @@ feature -- Status report
 		StringBuilder builder;
 
 		if (is_eiffel_string (o)) {
-			eiffel_string_type = o.GetType();	
-			string_builder_info = eiffel_string_type.GetField ("$$internal_string_builder");
-			if (string_builder_info == null) {
-				string_builder_info = eiffel_string_type.GetField ("$$internalStringBuilder");
-			}
-			builder = (StringBuilder) string_builder_info.GetValue (o);
-			Result = "\"" + builder.ToString() + "\"";
+			Result = "\"" + o.ToString () + "\"";
 		}
 
 		return Result;
@@ -594,13 +588,13 @@ feature -- Status report
 
 				// Get System.Array
 			eiffel_special_type = special.GetType();
-			native_info = eiffel_special_type.GetField ("$$native_array");
+			native_info = eiffel_special_type.GetField ("$$internal_native_array");
 			if (native_info == null) {
-				native_info = eiffel_special_type.GetField ("native_array");
+				native_info = eiffel_special_type.GetField ("internal_native_array");
 				if (native_info == null) {
-					native_info = eiffel_special_type.GetField ("$$nativeArray");
+					native_info = eiffel_special_type.GetField ("$$internalNativeArray");
 					if (native_info == null) {
-						native_info = eiffel_special_type.GetField ("nativeArray");
+						native_info = eiffel_special_type.GetField ("internalNativeArray");
 					}
 				}
 			}

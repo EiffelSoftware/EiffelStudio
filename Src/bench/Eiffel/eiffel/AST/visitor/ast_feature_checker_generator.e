@@ -148,7 +148,6 @@ feature -- Type checking
 			a_cas.process (Current)
 		end
 
-
 	check_local_names (a_procedure: PROCEDURE_I; a_node: FEATURE_AS) is
 			-- Check validity of the names of the locals of `a_procedure'.
 			-- Useful when a feature has been added, we need to make sure that
@@ -301,9 +300,6 @@ feature {NONE} -- Implementation: State
 				{DEPEND_UNIT}.is_in_assignment_flag
 		end
 
-	current_locals: HASH_TABLE [LOCAL_INFO, STRING]
-			-- Locals of current_feature if any
-
 	last_expressions_type: ARRAY [TYPE_A]
 			-- Last computed types of a list of expressions
 
@@ -343,6 +339,9 @@ feature {NONE} -- Implementation: State
 
 	is_assigner_call: BOOLEAN
 			-- Is an assigner call being processed?
+			
+	is_checking_cas: BOOLEAN
+			-- Is a custom attribute being processed?
 
 feature {NONE} -- Implementation: Access
 
@@ -458,9 +457,10 @@ feature -- Implementation
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
 		local
 			l_creation: CREATION_EXPR_B
-			l_tuple: TUPLE_CONST_B
 			l_creation_type: CL_TYPE_A
+			l_ca_b: CUSTOM_ATTRIBUTE_B
 		do
+			is_checking_cas := True
 			l_as.creation_expr.process (Current)
 			l_creation_type ?= last_type
 			if
@@ -471,15 +471,23 @@ feature -- Implementation
 			end
 			if is_byte_node_enabled then
 				l_creation ?= last_byte_node
+				create l_ca_b.make (l_creation)
 				if l_as.tuple /= Void then
-					check_tuple_validity_for_ca (l_creation_type, l_as.tuple)
-					l_tuple ?= last_byte_node
+					check_tuple_validity_for_ca (l_creation_type, l_as.tuple, l_ca_b)
 				end
-				create {CUSTOM_ATTRIBUTE_B} last_byte_node.make (l_creation, l_tuple)
+				last_byte_node := l_ca_b
 			elseif l_as.tuple /= Void then
-				check_tuple_validity_for_ca (l_creation_type, l_as.tuple)
+				check_tuple_validity_for_ca (l_creation_type, l_as.tuple, Void)
 			end
 			reset_types
+			is_checking_cas := False
+		ensure then
+			is_checking_cas_reset: not is_checking_cas
+		rescue
+				-- If an exception occurs while type checking the custom attribute
+				-- we need to satisfy our post-condition before passing the exception
+				-- to our caller.
+			is_checking_cas := False
 		end
 
 	process_id_as (l_as: ID_AS) is
@@ -565,6 +573,7 @@ feature -- Implementation
 			l_result_type: TYPE_A
 			l_veen: VEEN
 			l_vsta2: VSTA2
+			l_vica2: VICA2
 			l_cl_type_i: CL_TYPE_I
 			l_parameter: PARAMETER_B
 			l_parameter_list: BYTE_LIST [PARAMETER_B]
@@ -778,7 +787,11 @@ feature -- Implementation
 								if l_conv_info.has_depend_unit then
 									context.supplier_ids.extend (l_conv_info.depend_unit)
 								end
-								if l_needs_byte_node then
+									-- Generate conversion byte node only if we are not checking
+									-- a custom attribute. Indeed in that case, we do not want those
+									-- conversion routines, we will use the attachment type to figure
+									-- out how the custom attribute will be generated.
+								if l_needs_byte_node and not is_checking_cas then
 									l_expr ?= l_arg_nodes.i_th (i)
 									l_arg_nodes.put_i_th (l_conv_info.byte_node (l_expr), i)
 								end
@@ -804,6 +817,19 @@ feature -- Implementation
 							l_parameter.set_expression (l_expr)
 							l_parameter.set_attachment_type (l_formal_arg_type.type_i)
 							l_parameter_list.extend (l_parameter)
+
+							if is_checking_cas then
+								fixme ("[
+									Validity checking should not be done when byte code generation
+									is required. But unfortunately we need the compiled version to get
+									information about the parameters.
+									]")
+								if not l_expr.is_constant_expression then
+									create l_vica2.make (context.current_class, current_feature)
+									l_vica2.set_location (l_parameters.i_th (i).start_location)
+									error_handler.insert_error (l_vica2)
+								end
+							end
 						end
 						i := i + 1
 					end
@@ -1043,15 +1069,24 @@ feature -- Implementation
 			l_gen_type: GEN_TYPE_A
 			l_last_types: like last_expressions_type
 			l_has_error: BOOLEAN
+			l_has_array_target: BOOLEAN
 		do
 			reset_for_unqualified_call_checking
 				-- Get target for manifest array creation (either through assignment or
 				-- argument passing).
 			l_gen_type ?= current_target_type
 				-- Let's try to find the type of the manifest array.
-			if l_gen_type /= Void and then l_gen_type.class_id = system.array_id then
-					-- Check that expressions' type matches element's type of `l_gen_type' array.
-				l_element_type := l_gen_type.generics.item (1).actual_type
+			if l_gen_type /= Void then
+					-- Check that it is either an ARRAY, or a NATIVE_ARRAY when used
+					-- in a custom attribute.
+				if
+					l_gen_type.class_id = system.array_id or
+					(is_checking_cas and then l_gen_type.class_id = system.native_array_id)
+				then
+					l_has_array_target := True
+						-- Check that expressions' type matches element's type of `l_gen_type' array.
+					l_element_type := l_gen_type.generics.item (1).actual_type
+				end
 			end
 
 				-- Type check expression list
@@ -1067,7 +1102,7 @@ feature -- Implementation
 			end
 
 				-- Let's try to find the type of the manifest array.
-			if l_gen_type /= Void and then l_gen_type.class_id = system.array_id then
+			if l_has_array_target then
 					-- Check that expressions' type matches element's type of `l_gen_type' array.
 				l_type_a := l_element_type
 				if nb > 0 then
@@ -1079,7 +1114,7 @@ feature -- Implementation
 						l_element_type := l_last_types.item (i)
 						if not l_element_type.conform_to (l_type_a) then
 							if l_element_type.convert_to (context.current_class, l_type_a) then
-								if is_byte_node_enabled then
+								if is_byte_node_enabled and not is_checking_cas then
 									l_list.put_i_th (context.last_conversion_info.byte_node (
 										l_list.i_th (i)), i)
 								end
@@ -1102,38 +1137,79 @@ feature -- Implementation
 						-- the anchor) to solve the problem.
 					create l_generics.make (1, 1)
 					l_generics.put (l_type_a.deep_actual_type, 1)
-					create l_array_type.make (system.array_id, l_generics)
+					if is_checking_cas then
+						check l_gen_type.class_id = system.native_array_id end
+						create {NATIVE_ARRAY_TYPE_A} l_array_type.make (system.native_array_id, l_generics)
+					else
+						create l_array_type.make (system.array_id, l_generics)
+					end
 					instantiator.dispatch (l_array_type, context.current_class)
 				end
 			end
 			if l_array_type = Void then
 				if nb > 0 then
-						-- `l_gen_type' is not an array type, so for now we compute as if
-						-- there was no context the type of the manifest array by taking the lowest
-						-- common type.
-					from
-						l_has_error := False
-							-- Take first element in manifest array and let's suppose
-							-- it is the lowest type.
-						l_type_a := l_last_types.item (1)
-						i := 2
-					until
-						i > nb
-					loop
-						l_element_type := l_last_types.item (i)
-							-- Let's try to find the type to which everyone conforms to.
-							-- If not found it will be ANY.
-						if l_element_type.conform_to (l_type_a) then
-								-- Nothing to be done
-						elseif l_type_a.conform_to (l_element_type) then
-								-- Found a lowest type.
-							l_type_a := l_element_type
-						else
-								-- Cannot find a common type
-							l_has_error := True
-							i := nb + 1 -- Exit the loop
+					if is_checking_cas then
+							-- `l_gen_type' is not an array type, so for now we compute as if
+							-- there was no context the type of the manifest array by taking the lowest
+							-- common type.
+						from
+							l_has_error := False
+								-- Take first element in manifest array and let's suppose
+								-- it is the lowest type.
+							l_type_a := l_last_types.item (1)
+							i := 2
+						until
+							i > nb
+						loop
+							l_element_type := l_last_types.item (i)
+								-- Let's try to find the type to which everyone conforms to.
+								-- If not found it will be ANY.
+							if
+								l_element_type.conform_to (l_type_a) or
+								l_element_type.convert_to (context.current_class, l_type_a)
+							then
+									-- Nothing to be done
+							elseif
+								l_type_a.conform_to (l_element_type) or
+								l_type_a.convert_to (context.current_class, l_element_type)
+							then
+									-- Found a lowest type.
+								l_type_a := l_element_type
+							else
+									-- Cannot find a common type
+								l_has_error := True
+								i := nb + 1 -- Exit the loop
+							end
+							i := i + 1
 						end
-						i := i + 1
+					else
+							-- `l_gen_type' is not an array type, so for now we compute as if
+							-- there was no context the type of the manifest array by taking the lowest
+							-- common type.
+						from
+							l_has_error := False
+								-- Take first element in manifest array and let's suppose
+								-- it is the lowest type.
+							l_type_a := l_last_types.item (1)
+							i := 2
+						until
+							i > nb
+						loop
+							l_element_type := l_last_types.item (i)
+								-- Let's try to find the type to which everyone conforms to.
+								-- If not found it will be ANY.
+							if l_element_type.conform_to (l_type_a) then
+									-- Nothing to be done
+							elseif l_type_a.conform_to (l_element_type) then
+									-- Found a lowest type.
+								l_type_a := l_element_type
+							else
+									-- Cannot find a common type
+								l_has_error := True
+								i := nb + 1 -- Exit the loop
+							end
+							i := i + 1
+						end
 					end
 					if l_has_error then
 							-- We could not find a common type, so let's iterate again to ensure that
@@ -1148,8 +1224,10 @@ feature -- Implementation
 							l_element_type := l_last_types.item (i)
 							if not l_element_type.conform_to (l_type_a) then
 								if l_element_type.convert_to (context.current_class, l_type_a) then
-									l_list.put_i_th (context.last_conversion_info.byte_node (
-										l_list.i_th (i)), i)
+									if is_byte_node_enabled and not is_checking_cas then
+										l_list.put_i_th (context.last_conversion_info.byte_node (
+											l_list.i_th (i)), i)
+									end
 								else
 									l_has_error := True
 									i := nb + 1	-- Exit the loop
@@ -4088,7 +4166,20 @@ feature -- Implementation
 		end
 		
 	process_void_as (l_as: VOID_AS) is
+		local
+			l_class: CLASS_C
+			l_vica2: VICA2
 		do
+			if is_checking_cas then
+					-- When we have Void, it is only valid, if target is
+					-- an array type.
+				l_class := current_target_type.associated_class
+				if l_class = Void or else l_class.class_id /= system.native_array_id then
+					create l_vica2.make (context.current_class, current_feature)
+					l_vica2.set_location (l_as.start_location)
+					error_handler.insert_error (l_vica2)
+				end
+			end
 			last_type := none_type
 			if is_byte_node_enabled then
 				create {VOID_B} last_byte_node
@@ -4259,7 +4350,7 @@ feature {NONE} -- Implementation
 				((old last_byte_node /= last_byte_node) and then last_byte_node /= Void)
 		end
 		
-	check_tuple_validity_for_ca (a_creation_type: CL_TYPE_A; a_tuple: TUPLE_AS) is
+	check_tuple_validity_for_ca (a_creation_type: CL_TYPE_A; a_tuple: TUPLE_AS; a_ca_b: CUSTOM_ATTRIBUTE_B) is
 			-- Check validity of `a_tuple' in context of Current.
 			-- i.e. it should be a tuple of tuple whose elements are
 			-- a name and a value. For each name, a feature `f'
@@ -4269,106 +4360,119 @@ feature {NONE} -- Implementation
 		require
 			a_creation_type_not_void: a_creation_type /= Void
 			a_tuple_not_void: a_tuple /= Void
+			a_ca_b_not_void: is_byte_node_enabled implies a_ca_b /= Void
 		local
-			vica: VICA
+			l_vica2: VICA2
+			l_vica3: VICA3
+			l_vica4: VICA4
+			l_veen: VEEN
 			l_sub: TUPLE_AS
 			l_name: STRING_AS
 			l_value: EXPR_AS
-			l_has_syntax_error, l_has_semantic_error: BOOLEAN
+			l_has_error: BOOLEAN
 			l_feat: FEATURE_I
-			i: INTEGER
 			vjar: VJAR
-			l_tuple_type, l_tuple_item: TUPLE_TYPE_A
+			l_expressions: ARRAYED_LIST [TUPLE [STRING_B, EXPR_B]]
+			l_expr_b: EXPR_B
+			l_strings: SEARCH_TABLE [STRING]
 		do
-				-- Check `a_tuple'.
-			a_tuple.process (Current)
-
-				-- Get type of `a_tuple'.
-			l_tuple_type := last_tuple_type
-
 				-- Let's first check that TUPLE elements are indeed of the form
 				-- ["my_attribute", my_value]
 			from
+				create l_strings.make (a_tuple.expressions.count)
 				a_tuple.expressions.start
 			until
-				a_tuple.expressions.after
+				a_tuple.expressions.after or l_has_error
 			loop
 				l_sub ?= a_tuple.expressions.item
-				l_has_syntax_error := l_sub = Void or else l_sub.expressions.count /= 2
-				if not l_has_syntax_error then
+				l_has_error := l_sub = Void or else l_sub.expressions.count /= 2
+				if not l_has_error then
 					l_name ?= l_sub.expressions.i_th (1)
-					l_has_syntax_error := l_name = Void
-					if not l_has_syntax_error then
-						l_value := l_sub.expressions.i_th (2)
-						l_has_syntax_error := l_name = Void
+					l_has_error := l_name = Void
+					if not l_has_error then
+						l_strings.search (l_name.value)
+						if l_strings.found then
+								-- The property/attribute appears twice, this is an error
+							create l_vica4.make (context.current_class, current_feature,
+								a_creation_type, l_name.value)
+							l_vica4.set_location (l_name.start_location)
+							error_handler.insert_error (l_vica4)
+						else
+							l_strings.put (l_name.value)
+							l_value := l_sub.expressions.i_th (2)
+							l_has_error := l_value = Void
+						end
 					end
-				end
-				if l_has_syntax_error then
-					create vica.make (context.current_class, a_creation_type)
-					vica.set_location (a_tuple.expressions.item.start_location)
-					error_handler.insert_error (vica)
 				end
 				a_tuple.expressions.forth
 			end
-			
-			if not l_has_syntax_error then
+
+			l_strings := Void
+
+			if not l_has_error then
 					-- Let's do the semantic analyzis of ["my_attribute", my_value]
-					-- It consists to make sure that `my_attribute' is a feature of `type' created
-					-- by Current and type of this feature matches type of `my_value'.
+					-- It consists to make sure that `my_attribute' is a feature of `a_creation_type'
+					-- which is either an attribute or a property.
+					-- We also need to check that `my_value' is a constant and that its type
+					-- is valid for `my_attribute'.
 				from
 					a_tuple.expressions.start
-					i := 1
+					create l_expressions.make (a_tuple.expressions.count)
 				until
-					a_tuple.expressions.after
+					a_tuple.expressions.after or l_has_error
 				loop
 					l_sub ?= a_tuple.expressions.item
 					l_name ?= l_sub.expressions.i_th (1)
 					l_value := l_sub.expressions.i_th (2)
-					l_feat := a_creation_type.associated_class.feature_table.item
-						(l_name.value.as_lower)
-					l_has_semantic_error := l_feat = Void
-					if not l_has_semantic_error then
+					l_feat := a_creation_type.associated_class.feature_table.item (l_name.value.as_lower)
+					l_has_error := l_feat = Void
+					if not l_has_error then
 						if not valid_feature_for_ca (l_feat, l_name) then
-							create vica.make (context.current_class, a_creation_type)
-							vica.set_feature (l_feat)
-							vica.set_location (l_value.start_location)
-							error_handler.insert_error (vica)
+							create l_vica3.make (context.current_class, current_feature, a_creation_type)
+							l_vica3.set_named_argument_feature (l_feat)
+							l_vica3.set_location (l_name.start_location)
+							error_handler.insert_error (l_vica3)
 						else
-							l_tuple_item ?= l_tuple_type.generics.item (i)
-							check
-								l_tuple_item_not_void: l_tuple_item /= Void
-							end
-							l_has_semantic_error := not l_tuple_item.generics.item (2).
-								conform_to (l_feat.type.actual_type)
-							if l_has_semantic_error then
+							reset_for_unqualified_call_checking
+							current_target_type := l_feat.type.actual_type
+							l_value.process (Current)
+							l_has_error := not last_type.conform_to (l_feat.type.actual_type) and
+								not last_type.convert_to (context.current_class, l_feat.type.actual_type)
+							if l_has_error then
 								create vjar
 								context.init_error (vjar)
-								vjar.set_source_type (l_tuple_item.generics.item (2))
+								vjar.set_source_type (last_type)
 								vjar.set_target_type (l_feat.type.actual_type)
 								vjar.set_target_name (l_name.value)
 								vjar.set_location (l_value.start_location)
 								error_handler.insert_error (vjar)
-
-								create vica.make (context.current_class, a_creation_type)
-								vica.set_feature (l_feat)
-								vica.set_location (l_value.start_location)
-								error_handler.insert_error (vica)
+							elseif is_byte_node_enabled then
+								fixme ("Not great since it can only be done when byte code is enabled.")
+								l_expr_b ?= last_byte_node
+								check l_expr_b_not_void: l_expr_b /= Void end
+								if not l_expr_b.is_constant_expression then
+									l_has_error := True
+									create l_vica2.make (context.current_class, current_feature)
+									l_vica2.set_location (l_value.start_location)
+									error_handler.insert_error (l_vica2)
+								end
 							end
 						end
 					else
-						create vica.make (context.current_class, a_creation_type)
-						vica.set_feature_name (l_name.value)
-						vica.set_location (l_value.start_location)
-						error_handler.insert_error (vica)
+						create l_veen
+						context.init_error (l_veen)
+						l_veen.set_identifier (l_name.value)
+						l_veen.set_location (l_name.start_location)
+						error_handler.insert_error (l_veen)
+					end
+					if not l_has_error and is_byte_node_enabled then
+						l_expressions.extend ([create {STRING_B}.make (l_name.value), l_expr_b])
 					end
 					a_tuple.expressions.forth
-					i := i + 1
 				end
 
-				if l_has_semantic_error and vica = Void then
-					create vica.make (context.current_class, a_creation_type)
-					vica.set_location (a_tuple.start_location)
-					error_handler.insert_error (vica)
+				if not l_has_error and is_byte_node_enabled then
+					a_ca_b.set_named_arguments (l_expressions)
 				end
 			end
 		end
@@ -5425,7 +5529,7 @@ feature {NONE} -- Implementation: checking locals
 			l_track_local: BOOLEAN
 			i: INTEGER
 			l_local_info: LOCAL_INFO
-			l_context_locals: like current_locals
+			l_context_locals: HASH_TABLE [LOCAL_INFO, STRING]
 			l_vrle1: VRLE1
 			l_vrle2: VRLE2
 			l_vreg: VREG

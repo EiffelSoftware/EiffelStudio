@@ -15,16 +15,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_creation: CREATION_EXPR_B; a_tuple: TUPLE_CONST_B) is
+	make (a_creation: CREATION_EXPR_B) is
 			-- Create new instance of Current.
 		require
 			a_creation_not_void: a_creation /= Void
 		do
 			creation_expr := a_creation
-			tuple := a_tuple
 		ensure
 			creation_expr_set: creation_expr = a_creation
-			tuple_set: tuple = a_tuple
 		end
 		
 feature -- Visitor
@@ -40,9 +38,19 @@ feature -- Access
 	creation_expr: CREATION_EXPR_B
 			-- Associated creation expression.
 			
-	tuple: TUPLE_CONST_B
-			-- Associated tuple for named arguments.
+	named_arguments:  ARRAYED_LIST [TUPLE [STRING_B, EXPR_B]]
+			-- Associated data for named arguments.
 
+feature -- Settings
+
+	set_named_arguments (n: like named_arguments) is
+			-- Set `named_arguments' with `n'.
+		do
+			named_arguments := n
+		ensure
+			named_arguments_set: named_arguments = n
+		end
+		
 feature {NONE} -- Not applicable
 
 	type: TYPE_I is

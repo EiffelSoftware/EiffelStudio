@@ -1285,6 +1285,7 @@ feature -- Third pass: byte code production and type check
 			then
 				create l_ca_feature.make (Current)
 				l_ca_feature.set_feature_name ("class_custom_attributes")
+				ast_context.set_current_feature (l_ca_feature)
 				feature_checker.init (ast_context)
 			end
 			if l_ast.custom_attributes /= Void then

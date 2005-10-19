@@ -324,7 +324,7 @@ feature {NONE} -- Externals
 			-- new one.  Does not return (raises exception
 			-- if error doing the exec)
 		external
-			"C inline use %"unix_os.h%""
+			"C inline use %"unix_os.h%", <fcntl.h>"
 		alias
 			"[
 				{

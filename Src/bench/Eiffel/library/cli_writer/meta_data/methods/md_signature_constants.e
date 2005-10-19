@@ -106,6 +106,10 @@ feature -- Custom attribute flags
 		-- No name in CLI standard. Used for custom attributes representing
 		-- a System.Type instance.
 		
+	element_type_boxed: INTEGER_8 is 0x51
+		-- No name in CLI standard. Used for custom attributes representing
+		-- a boxed object.
+		
 	element_type_field: INTEGER_8 is 0x53
 		-- No name in CLI standard. Used for custom attributes representing
 		-- a field setting.

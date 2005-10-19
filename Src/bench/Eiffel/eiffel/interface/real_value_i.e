@@ -12,7 +12,7 @@ class
 inherit
 	VALUE_I
 		redefine
-			generate, is_real_64, is_real_32, unary_minus, set_real_type
+			generate, is_real_64, is_real_32, unary_minus, set_real_type, is_real
 		end
 
 create
@@ -59,6 +59,9 @@ feature -- Access
 			-- Real value.
 
 feature -- Status report
+
+	is_real: BOOLEAN is True
+			-- Is current constant a real constant (regardless of its implementation size)?
 
 	is_real_64: BOOLEAN
 			-- Is the current constant a double one?

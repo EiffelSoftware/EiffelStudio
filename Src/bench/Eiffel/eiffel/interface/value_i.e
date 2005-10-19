@@ -59,6 +59,14 @@ feature -- Status report
 			-- Do nothing
 		end
 
+	is_real: BOOLEAN is
+			-- Is constant a real constant?
+		do
+			Result := is_real_32 or is_real_64
+		ensure
+			is_real_definition: Result = (is_real_32 or is_real_64)
+		end
+		
 	is_real_32: BOOLEAN is
 			-- is the constant a real 32 bits constant ?
 		do

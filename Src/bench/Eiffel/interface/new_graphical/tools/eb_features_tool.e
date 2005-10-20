@@ -227,8 +227,10 @@ feature {EB_FEATURES_TREE} -- Status setting
 	go_to_clause (a_clause: FEATURE_CLAUSE_AS) is
 			-- `a_clause' has been selected, the associated class
 			-- window should display the corresponding feature clause.
+			-- the premise is that basic view is being used.
 		local
 			s: STRING
+			l_formatter: EB_BASIC_TEXT_FORMATTER
 		do
 			if a_clause.start_position > 0 then
 				s := current_compiled_class.text
@@ -238,16 +240,25 @@ feature {EB_FEATURES_TREE} -- Status setting
 				check
 					s_not_void: s /= Void
 				end
-				development_window.editor_tool.text_area.display_line_at_top_when_ready (
-					character_line (a_clause.start_position, s))
+				l_formatter ?= development_window.pos_container
+				if l_formatter /= Void then
+					development_window.editor_tool.text_area.display_line_at_top_when_ready (
+						character_line (a_clause.start_position, s))
+				end
 			end
 		end
 
 	go_to_line (a_line: INTEGER) is
 			-- Text at `a_line' has been selected, the associated class
 			-- window should display the corresponding line.
+		local
+			l_formatter: EB_BASIC_TEXT_FORMATTER
 		do
 			if a_line > 0 then
+				l_formatter ?= development_window.pos_container
+				if l_formatter = Void then
+					development_window.managed_main_formatters.first.execute
+				end
 				development_window.editor_tool.text_area.display_line_at_top_when_ready (
 					a_line)
 			end

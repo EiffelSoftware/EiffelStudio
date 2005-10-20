@@ -1284,7 +1284,7 @@ feature {EB_ADDRESS_MANAGER}-- Implementation
 			tfs ?= current_token
 			if tfs /= Void then
 				index := tfs.feature_index_in_table
-				if features_ast.valid_cursor_index (index) then
+				if features_ast.valid_cursor_index (index) and index > 0 then
 					Result := features_ast @ index
 				end
 			end			

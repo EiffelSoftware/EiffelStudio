@@ -484,7 +484,7 @@ feature -- Status report
 			a_font_description: POINTER
 			a_color: POINTER
 			font_size, font_weight, font_style: INTEGER
-			a_family: STRING--EV_GTK_C_STRING
+			a_family: EV_GTK_C_STRING
 			a_change: BOOLEAN
 		do
 			Result ?= (create {EV_CHARACTER_FORMAT}).implementation
@@ -496,7 +496,7 @@ feature -- Status report
 			a_text_appearance := gtk_text_attributes_struct_text_appearance (a_text_attributes)
 
 			a_font_description := gtk_text_attributes_struct_font_description (a_text_attributes)
-			create a_family.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
+			create a_family.share_from_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_family (a_font_description))
 			font_style := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_style (a_font_description)
 			font_weight := {EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_get_weight (a_font_description)
 			
@@ -517,7 +517,7 @@ feature -- Status report
 				font_style := {EV_FONT_CONSTANTS}.shape_regular
 			end
 
-			Result.set_font_attributes (a_family, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
+			Result.set_font_attributes (a_family.string, {EV_FONT_CONSTANTS}.family_sans, font_size, font_weight, font_style, 0)
 			
 			a_color := gtk_text_appearance_struct_fg_color (a_text_appearance)
 			Result.set_fcolor (

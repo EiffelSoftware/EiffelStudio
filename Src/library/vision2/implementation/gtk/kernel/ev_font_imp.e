@@ -95,9 +95,7 @@ feature -- Element change
 			propvalue: EV_GTK_C_STRING
 		do
 			name := a_face
-			--create propvalue.make (a_face)
 			propvalue := app_implementation.c_string_from_eiffel_string (a_face)
-				-- Change this code back when we get UTF16 support
 			{EV_GTK_DEPENDENT_EXTERNALS}.pango_font_description_set_family (font_description, propvalue.item)	
 			calculate_font_metrics
 		end
@@ -331,9 +329,10 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 			i, l_preferred_families_count: INTEGER
 		do
 			l_preferred_families := preferred_families
-			l_font_names_on_system_as_lower := app_implementation.font_names_on_system_as_lower
+			
 			if not l_preferred_families.is_empty then
 				from
+					l_font_names_on_system_as_lower := app_implementation.font_names_on_system_as_lower
 					l_preferred_families_count := l_preferred_families.count
 					i := 1
 				until
@@ -344,7 +343,7 @@ feature {EV_FONT_IMP, EV_CHARACTER_FORMAT_IMP, EV_RICH_TEXT_IMP, EV_DRAWABLE_IMP
 						Result := l_item_string.twin
 					end
 					i := i + 1
-				end				
+				end
 			end
 			if Result = Void then
 				-- We have not found a preferred family

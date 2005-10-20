@@ -30,6 +30,10 @@ feature {NONE} -- Initialization
 			locale_str: STRING
 		do
 			base_make (an_interface)
+			
+--			if {EV_GTK_DEPENDENT_EXTERNALS}.g_mem_is_system_malloc then
+--				{EV_GTK_DEPENDENT_EXTERNALS}.g_mem_set_vtable ({EV_GTK_EXTERNALS}.glib_mem_profiler_table)
+--			end
 
 			--put ("localhost:0", "DISPLAY")
 				-- This line may be uncommented to allow for display redirection to another machine for debugging purposes
@@ -40,6 +44,9 @@ feature {NONE} -- Initialization
 			if
 				gtk_is_launchable
 			then
+					-- Disable then re-enable the debugger so that its static debugger value gets set correctly
+				disable_debugger
+				enable_debugger
 				enable_ev_gtk_log (0)
 					-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 				{EV_GTK_EXTERNALS}.gdk_set_show_events (False)
@@ -69,16 +76,17 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	launch is
+	 launch is
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
 			if gtk_is_launchable then
 				gtk_dependent_launch_initialize
-				main_loop			
+				main_loop		
 					-- Unhook marshal object.
 				gtk_marshal.destroy			
 			end
+			--{EV_GTK_EXTERNALS}.g_mem_profile
 		end	
 		
 	main_loop is
@@ -98,7 +106,7 @@ feature {NONE} -- Initialization
 						-- All pending resizing has been performed at this point.
 					l_is_destroyed := is_destroyed
 						-- We need to make sure that we only quit the application when all pending events have been processed.
-						-- This is so that 
+						-- This is so that any pending gtk events such as hiding windows gets processed.
 					if not post_launch_actions_called then
 						interface.post_launch_actions.call (Void)
 						post_launch_actions_called := True
@@ -360,13 +368,13 @@ feature -- Implementation
 		end
 
 	enable_debugger is
-			-- Enable the Eiffel debugger
+			-- Enable the Eiffel debugger.
 		do
 			set_debug_mode (1)
 		end
 
 	disable_debugger is
-			-- Disable the Eiffel debugger
+			-- Disable the Eiffel debugger.
 		do
 			set_debug_mode (0)
 		end
@@ -495,6 +503,59 @@ feature {EV_ANY_I, EV_FONT_IMP, EV_STOCK_PIXMAPS_IMP} -- Implementation
 		once
 			create Result.set_with_eiffel_string ("")
 		end
+
+feature {EV_PICK_AND_DROPABLE_IMP} -- Pnd Handling
+
+	x_origin, y_origin: INTEGER
+		-- Temp coordinate values for origin of Pick and Drop.
+
+	set_x_y_origin (a_x_origin, a_y_origin: INTEGER) is
+			-- 
+		do
+			x_origin := a_x_origin
+			y_origin := a_y_origin
+		end
+
+	old_pointer_x,
+	old_pointer_y: INTEGER
+		-- Position of pointer on previous PND draw.
+
+	set_old_pointer_x_y_origin (a_old_pointer_x, a_old_pointer_y: INTEGER) is
+			-- 
+		do
+			old_pointer_x := a_old_pointer_x
+			old_pointer_y := a_old_pointer_y
+		end
+
+	set_pnd_signal_ids (a_motion, a_leave, a_enter: INTEGER) is
+			-- Set the PnD signal ids so that they may be disconnected at a later date.
+		do
+			motion_notify_connection_id := a_motion
+			leave_notify_connection_id := a_leave
+			enter_notify_connection_id := a_enter
+		end
+
+	set_grab_callback_connection_id (a_grab: INTEGER) is
+			-- Set grab connection id to `a_grab'
+		do
+			grab_callback_connection_id := a_grab
+		end
+		
+	grab_callback_connection_id: INTEGER
+			-- GTK signal connection id for motion-notify-event.
+			-- (Used to trigger a global user input grab)
+
+	motion_notify_connection_id: INTEGER
+			-- GTK signal connection id for motion-notify-event.
+			-- (Used to draw rubber band line between pick point and pointer)
+
+	leave_notify_connection_id: INTEGER
+			-- GTK signal connection id for leave-notify-event.
+			-- (Used to suspend leave events during rubber band line drawing)
+
+	enter_notify_connection_id: INTEGER
+			-- GTK signal connection id for enter-notify-event.
+			-- (Used to suspend enter events during rubber band line drawing)
 
 feature {NONE} -- External implementation
 

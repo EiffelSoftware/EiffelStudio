@@ -197,12 +197,13 @@ feature {EV_ANY_IMP}
 			a_key_string: STRING
 			key: EV_KEY
 			a_key_press: BOOLEAN
+			a_cs: EV_GTK_C_STRING
 		do
 			gdkeventkey := {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (p)
 			if {EV_GTK_EXTERNALS}.gdk_event_key_struct_type (gdkeventkey) = {EV_GTK_EXTERNALS}.gdk_key_press_enum then
 				a_key_press := True
-				create a_key_string.make (0)
-				a_key_string.from_c ({EV_GTK_EXTERNALS}.gdk_event_key_struct_string (gdkeventkey))
+				create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gdk_event_key_struct_string (gdkeventkey))
+				a_key_string := a_cs.string
 			end
 			keyval := {EV_GTK_EXTERNALS}.gdk_event_key_struct_keyval (gdkeventkey)
 			if valid_gtk_code (keyval) then

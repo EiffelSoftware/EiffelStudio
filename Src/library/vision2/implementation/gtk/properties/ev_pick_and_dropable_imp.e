@@ -166,8 +166,7 @@ feature -- Implementation
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
 			if pick_x = 0 and pick_y = 0 then
-				x_origin := a_screen_x
-				y_origin := a_screen_y
+				App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 			else
 				if pick_x > width then
 					pick_x := width
@@ -175,8 +174,7 @@ feature -- Implementation
 				if pick_y > height then
 					pick_y := height
 				end
-				x_origin := pick_x + (a_screen_x - a_x)
-				y_origin := pick_y + (a_screen_y - a_y)
+				App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 			end
 		end
 
@@ -204,6 +202,7 @@ feature -- Implementation
 			-- Initialize a pick and drop transport.
 		local
 			app_imp: EV_APPLICATION_IMP
+			l_motion_notify_connection_id, l_enter_notify_connection_id, l_leave_notify_connection_id: INTEGER
 		do
 			call_press_actions (interface, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			if able_to_transport (a_button) or else ready_for_pnd_menu (a_button) then
@@ -231,7 +230,7 @@ feature -- Implementation
 						agent (App_implementation.gtk_marshal).add_grab_cb_intermediary (c_object),
 						App_implementation.default_translate
 					)
-					grab_callback_connection_id := last_signal_connection_id
+					App_implementation.set_grab_callback_connection_id (last_signal_connection_id)
 
 					enable_capture
 					
@@ -278,21 +277,22 @@ feature -- Implementation
 						agent (App_implementation.gtk_marshal).execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
 						App_implementation.default_translate
 					)
-					motion_notify_connection_id := last_signal_connection_id
+					l_motion_notify_connection_id := last_signal_connection_id
 					real_signal_connect (
 						event_widget,
 						"enter_notify_event",
 						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, event_widget, "enter_notify_event"),
 						App_implementation.default_translate
 					)
-					enter_notify_connection_id := last_signal_connection_id
+					l_enter_notify_connection_id := last_signal_connection_id
 					real_signal_connect (
 						event_widget,
 						"leave_notify_event",
 						agent (App_implementation.gtk_marshal).signal_emit_stop_intermediary (internal_id, event_widget, "leave_notify_event"),
 						App_implementation.default_translate
 					)
-					leave_notify_connection_id := last_signal_connection_id
+					l_leave_notify_connection_id := last_signal_connection_id
+					App_implementation.set_pnd_signal_ids (l_motion_notify_connection_id, l_leave_notify_connection_id, l_enter_notify_connection_id)
 					check
 						motion_notify_connected: motion_notify_connection_id > 0
 						enter_notify_connected: enter_notify_connection_id > 0
@@ -342,6 +342,7 @@ feature -- Implementation
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
 			--a_mouse_x, a_mouse_y: INTEGER
 			--a_mouse_window: POINTER
+			l_motion_notify_connection_id, l_enter_notify_connection_id, l_leave_notify_connection_id: INTEGER
 		do
 			check
 				motion_notify_connected: motion_notify_connection_id > 0
@@ -356,19 +357,19 @@ feature -- Implementation
 			end
 			if motion_notify_connection_id > 0 then
 				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, motion_notify_connection_id)
-				motion_notify_connection_id := 0
+				l_motion_notify_connection_id := 0
 			end
 			if enter_notify_connection_id > 0 then
 				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, enter_notify_connection_id)
-				enter_notify_connection_id := 0
+				l_enter_notify_connection_id := 0
 			end
 			if leave_notify_connection_id > 0 then
 				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, leave_notify_connection_id)
-				leave_notify_connection_id := 0
+				l_leave_notify_connection_id := 0
 			end
 			if grab_callback_connection_id > 0 then
 				{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
-				grab_callback_connection_id := 0
+				App_implementation.set_grab_callback_connection_id (0)
 			end
 			if not is_destroyed then
 				if pointer_style /= Void then
@@ -381,6 +382,8 @@ feature -- Implementation
 				{EV_GTK_EXTERNALS}.gtk_widget_draw (c_object, NULL)
 				{EV_GTK_EXTERNALS}.gtk_widget_draw (event_widget, NULL)				
 			end
+			
+			App_implementation.set_pnd_signal_ids (l_motion_notify_connection_id, l_leave_notify_connection_id, l_enter_notify_connection_id)
 			
 				-- Make sure 'in_transport' returns False before firing any drop actions.
 			App_implementation.on_drop (pebble)
@@ -444,8 +447,7 @@ feature -- Implementation
 			if a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
 				signal_emit_stop (event_widget, "button-press-event")
 			end
-			x_origin := 0
-			y_origin := 0
+			App_implementation.set_x_y_origin (0, 0)
 			last_pointed_target := Void
 			if pebble_function /= Void then
 				pebble_function.clear_last_result
@@ -460,7 +462,7 @@ feature -- Implementation
 				grab_callback_connected: grab_callback_connection_id > 0
 			end
 			{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, grab_callback_connection_id)
-			grab_callback_connection_id := 0
+			App_implementation.set_grab_callback_connection_id (0)
 			enable_capture
 		end
 
@@ -469,8 +471,7 @@ feature -- Implementation
 		local
 		do
 				erase_rubber_band
-				old_pointer_x := pointer_x
-				old_pointer_y := pointer_y
+				App_implementation.set_old_pointer_x_y_origin (pointer_x, pointer_y)
 				pnd_screen.draw_segment (x_origin, y_origin, old_pointer_x, old_pointer_y)
 				rubber_band_is_drawn := True
 		end
@@ -488,6 +489,7 @@ feature -- Implementation
 			-- Screen object used for drawing PND transport line
 		once
 			create Result
+			Result.enable_dashed_line_style
 			Result.set_foreground_color ((create {EV_STOCK_COLORS}).white)
 			Result.set_invert_mode
 		end
@@ -526,37 +528,60 @@ feature -- Implementation
 			create Result
 			interface.init_drop_actions (Result)
 		end
-
-feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Implementation
-	
-	pre_pnd_state: INTEGER
 	
 feature {NONE} -- Implementation
 
-	x_origin, y_origin: INTEGER
-		-- Temp coordinate values for origin of Pick and Drop.
+	x_origin: INTEGER is
+			-- Temp coordinate value for origin of Pick and Drop.
+		do
+			Result := app_implementation.x_origin
+		end
 
-	old_pointer_x,
-	old_pointer_y: INTEGER
+	y_origin: INTEGER is
+			-- Temp coordinate value for origin of Pick and Drop.
+		do
+			Result := app_implementation.y_origin
+		end
 
-	draw_rubber_band_calls_ignored: INTEGER
-			-- Number of `draw_rubber_band' calls ignored.
+	old_pointer_x: INTEGER is
+			-- 
+		do
+			Result := app_implementation.old_pointer_x
+		end
+		
+	old_pointer_y: INTEGER is
+			-- 
+		do
+			Result := app_implementation.old_pointer_y
+		end
 
-	grab_callback_connection_id: INTEGER
+	grab_callback_connection_id: INTEGER is
 			-- GTK signal connection id for motion-notify-event.
 			-- (Used to trigger a global user input grab)
+		do
+			Result := app_implementation.grab_callback_connection_id
+		end
 
-	motion_notify_connection_id: INTEGER
+	motion_notify_connection_id: INTEGER is
 			-- GTK signal connection id for motion-notify-event.
 			-- (Used to draw rubber band line between pick point and pointer)
+		do
+			Result := app_implementation.motion_notify_connection_id
+		end
 
-	leave_notify_connection_id: INTEGER
+	leave_notify_connection_id: INTEGER is
 			-- GTK signal connection id for leave-notify-event.
 			-- (Used to suspend leave events during rubber band line drawing)
+		do
+			Result := app_implementation.leave_notify_connection_id
+		end
 
-	enter_notify_connection_id: INTEGER
+	enter_notify_connection_id: INTEGER is
 			-- GTK signal connection id for enter-notify-event.
 			-- (Used to suspend enter events during rubber band line drawing)
+		do
+			Result := app_implementation.enter_notify_connection_id
+		end
 
 	button_press_connection_id: INTEGER
 			-- GTK signal connection id for button-press-event.

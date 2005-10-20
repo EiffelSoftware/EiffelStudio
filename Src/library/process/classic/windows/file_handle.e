@@ -1,6 +1,5 @@
 indexing
 	description: "Manipulate Windows handle to file"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -266,4 +265,4 @@ feature {NONE} -- Implementation
 			"SetFilePointer"
 		end
 
-end -- class FILE_HANDLE
+end

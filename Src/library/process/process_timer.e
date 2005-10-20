@@ -1,13 +1,12 @@
 indexing
 	description: "Timer used to check process status."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
 	PROCESS_TIMER
 	
-feature{PROCESS} -- Control
+feature {PROCESS} -- Control
 	
 	start is
 			-- Start timer.
@@ -46,4 +45,5 @@ feature -- Status reporting
 
 invariant
 	time_interval_positive: time_interval > 0
+
 end

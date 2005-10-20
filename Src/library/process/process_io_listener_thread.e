@@ -9,7 +9,6 @@ indexing
 			arrives, it will call the agent specified in output_handler or
 			error_handler in PROCESS.
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -44,10 +43,7 @@ feature -- Status setting
 		ensure
 			sleep_time = interval
 		end
-		
-		
-	
-		
+
 feature -- Status reporting
 
 	should_thread_exit: BOOLEAN is
@@ -76,8 +72,7 @@ feature {NONE} -- Implementation
 	initial_sleep_time: INTEGER is 1000
 			-- Initial time in nanosecond for this thread to sleep when waiting for data
 		
-			
 invariant
-	mutext_not_null: mutex /= Void
+	mutex_not_null: mutex /= Void
 
 end

@@ -7,7 +7,6 @@ indexing
 			It listens to process's error pipe, if data arrives, 
 			it will call the agent specified in error_handler in PROCESS.
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,7 +34,6 @@ feature{NONE} -- Initialization
 			should_exit_signal_set_to_false: not should_exit_signal			
 			sleep_time_set: sleep_time = initial_sleep_time
 		end
-
 	
 feature -- Run
 

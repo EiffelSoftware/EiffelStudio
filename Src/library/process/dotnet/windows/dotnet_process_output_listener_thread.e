@@ -6,7 +6,6 @@ indexing
 			It listens to process's output pipe, if data arrives, 
 			it will call the agent specified in output_handler in PROCESS.
 		 ]"	
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -44,12 +43,10 @@ feature -- Run
 			output_file: PLAIN_TEXT_FILE
 			done: BOOLEAN
 		do
-
 			if process_launcher.output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_file then
 				create output_file.make_create_read_write (process_launcher.output_file_name)				
 			end
 			from
-				
 			until
 				done	
 			loop

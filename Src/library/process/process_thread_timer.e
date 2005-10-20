@@ -1,6 +1,5 @@
 indexing
 	description: "Process status listening timer implemented with thread."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +19,7 @@ inherit
 create
 	make
 	
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 	
 	make (interval: INTEGER) is
 			-- Set time interval which this timer will be triggered with `interval'.
@@ -57,7 +56,7 @@ feature -- Control
 			launch
 		end		
 		
-feature{NONE} -- Implementation
+feature {NONE} -- Implementation
 	
 	execute is
 		local
@@ -83,4 +82,5 @@ feature{NONE} -- Implementation
 			destroyed := True
 			mutex.unlock
 		end
+
 end

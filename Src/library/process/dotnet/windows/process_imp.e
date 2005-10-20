@@ -1,6 +1,5 @@
 indexing
 	description: "Object that implements PROCESS."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -89,7 +88,7 @@ feature {NONE} -- Initialization
 			make (p_name, args, a_working_directory)
 		end
 
-feature{PROCESS_TIMER}  -- Status checking
+feature {PROCESS_TIMER}  -- Status checking
 
 	check_exit is
 			-- Check whether process has exited.
@@ -343,7 +342,7 @@ feature -- Status report
 		
 	ccc: INTEGER		
 		
-feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
+feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 
 	last_output: STRING
 			-- Last output received from process
@@ -425,7 +424,7 @@ feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 			last_error := Void
 		end		
 
-feature{PROCESS_IMP} -- Implementation
+feature {PROCESS_IMP} -- Implementation
 		
 	in_thread: DOTNET_PROCESS_INPUT_LISTENER_THREAD
 	out_thread: DOTNET_PROCESS_OUTPUT_LISTENER_THREAD
@@ -491,4 +490,5 @@ feature {NONE} -- Implementation
 
 invariant
 	prc_launcher_not_void: prc_launcher /= Void
+
 end

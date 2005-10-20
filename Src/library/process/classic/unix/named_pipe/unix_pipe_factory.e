@@ -1,6 +1,5 @@
 indexing
-	description: "Object that can create different types of pipe on UNIX and LINUX"
-	author: "Jason Wei"
+	description: "Object that can create different types of pipe on Unix."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,6 +18,7 @@ create
 feature 
 
 	new_unnamed_pipe: UNIX_UNNAMED_PIPE is
+			-- Create a new unamed pipe.
 		local
 			read_fd, write_fd: INTEGER
 		do
@@ -28,4 +28,4 @@ feature
 			pipe_created: Result /= Void
 		end
 	
-end -- class UNIX_PIPE_FACTORY
+end

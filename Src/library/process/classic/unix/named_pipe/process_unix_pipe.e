@@ -1,25 +1,19 @@
-
 indexing
-	
-	author: "David Hollenberg";
-	date: "October 8, 1997";
 	description: "An unnamed Unix pipe used for interprocess communication"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PROCESS_UNIX_PIPE
 
 inherit
-	MEMORY
-		export
-			{NONE} all
-		redefine
-			dispose
-		end
-		
 	PROCESS_UNIX_OS
 		export
-			{NONE}all
-			{PROCESS_UNIX_PIPE}close_file_descriptor
+			{NONE} all
+			{PROCESS_UNIX_PIPE} close_file_descriptor
 		end
+
+	DISPOSABLE
+		
 create
 	make
 
@@ -101,4 +95,4 @@ feature {NONE} -- Implementation
 	Invalid_file_descriptor: INTEGER is -1
 			-- File descriptor which is not in valid range
 
-end -- class PROCESS_UNIX_PIPE
+end

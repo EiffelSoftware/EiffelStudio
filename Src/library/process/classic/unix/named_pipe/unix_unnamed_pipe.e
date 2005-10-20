@@ -10,7 +10,6 @@ indexing
 				   after a write_xxx feature.
 			   
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,22 +19,22 @@ class
 inherit
 	PROCESS_UNIX_PIPE
 		undefine
-			dispose,
 			make
 		redefine
+			dispose,
 			close_read_descriptor,
 			close_write_descriptor
 		end
 
 	IO_MEDIUM
-		undefine
+		redefine
 			dispose
 		end
 
 create 
 	make
 
-feature {NONE} 
+feature {NONE} -- Initialization
 
 	make (read_fd, write_fd: INTEGER) is
 		require else
@@ -54,7 +53,7 @@ feature {NONE}
 			write_descriptor_open: is_write_descriptor_open
 		end
 	
-feature 
+feature -- Access
 
 	name: STRING is
 		do
@@ -77,7 +76,7 @@ feature
 			Result := False
 		end
 	
-feature 
+feature -- Removal
 
 	dispose is
 		do
@@ -90,7 +89,7 @@ feature
 			close_write_descriptor
 		end
 	
-feature 
+feature -- Status report
 
 	is_closed: BOOLEAN is
 		do
@@ -142,7 +141,7 @@ feature
 			Result := True
 		end
 	
-feature 
+feature -- Status setting
 
 	close_read_descriptor is
 		local
@@ -172,7 +171,7 @@ feature
 			retry
 		end
 	
-feature 
+feature -- Element change
 
 	general_store (object: ANY) is
 		do
@@ -189,7 +188,7 @@ feature
 			c_basic_store (write_descriptor, $object)
 		end
 	
-feature 
+feature -- Input
 
 	read_real is
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `readreal'.
@@ -436,7 +435,7 @@ feature
 			read_block (read_descriptor, p.item + start_pos, nb_bytes)
 		end
 	
-feature 
+feature -- Output
 
 	put_new_line is
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `new_line'.
@@ -593,7 +592,7 @@ feature
 			write_block (write_descriptor, p.item + start_pos, nb_bytes)
 		end
 	
-feature 
+feature -- Input
 
 	read_block (fildes: INTEGER; buf: POINTER; size: INTEGER) is
 			-- Read `size' byte of data into `buf' from `fildes'.
@@ -719,7 +718,7 @@ feature  -- Status reporting
 	last_write_successful: BOOLEAN
 			-- Is last write operation successful?
 	
-feature {NONE} 
+feature {NONE} -- Implementation
 
 	is_read_descriptor_open: BOOLEAN
 			-- Is read end of pipe open?
@@ -743,4 +742,4 @@ invariant
 	shared_pointer_not_void: shared_mptr /= Void
 	current_platform_not_void: current_platform /= Void
 
-end -- class UNIX_UNNAMED_PIPE
+end

@@ -289,30 +289,35 @@ feature {NONE} -- Implementation
 			end
 			
 			l_full_name := a_type.full_name
-			if a_type.is_array then
-				c := '['
-				i := l_full_name.index_of ('[')
-			elseif a_type.is_by_ref then
-				c := '&'
-				i := l_full_name.index_of ('&')
-			elseif a_type.is_pointer then
-				c := '*'
-				i := l_full_name.index_of ('*')
-			end
-			if i > 1 then
-				l_name := l_full_name.substring (0, i)
-				l_tail := l_full_name.substring (i)
-			else
-				l_name := l_full_name
+			if l_full_name /= Void then
+				if a_type.is_array then
+					c := '['
+					i := l_full_name.index_of ('[')
+				elseif a_type.is_by_ref then
+					c := '&'
+					i := l_full_name.index_of ('&')
+				elseif a_type.is_pointer then
+					c := '*'
+					i := l_full_name.index_of ('*')
+				end
+				if i > 1 then
+					l_name := l_full_name.substring (0, i)
+					l_tail := l_full_name.substring (i)
+				else
+					l_name := l_full_name
+				end
+	
+				Result ?= simple_names.item (l_name)
+			else					
+				Result := "???"
 			end
 
-			Result ?= simple_names.item (l_name)
 			
 			if Result = Void then
 				Result := l_full_name
 			elseif l_tail /= Void then
 				Result := {SYSTEM_STRING}.concat_string_string (Result, l_tail)
-			end	
+			end
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: Result.length > 0
@@ -339,6 +344,7 @@ feature {NONE} -- Implementation
 			Result.add (("System.Single").to_cil, ("single").to_cil)
 			Result.add (("System.Double").to_cil, ("double").to_cil)
 			Result.add (("System.String").to_cil, ("string").to_cil)
+			Result.add (("System.TypedReference").to_cil, ("typedref").to_cil)
 		ensure
 			result_not_void: Result /= Void
 		end

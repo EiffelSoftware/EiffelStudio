@@ -1277,7 +1277,7 @@ feature {NONE}-- Implementation
 		do
 			if current_token /= Void then
 				from
-					if is_string (current_token) then
+					if is_string (current_token) and then not current_token.image.is_empty then
 							-- we check if there is a string split on several lines
 						if current_token.image @ 1 = '%%' then
 							uncomplete_string := True
@@ -1314,7 +1314,7 @@ feature {NONE}-- Implementation
 								current_token := Void
 							end
 						else
-							if is_string (current_token) then
+							if is_string (current_token) and then not current_token.image.is_empty then
 									-- we check if a string is split on several lines
 								if current_token.image @ 1 = '%%' then
 									uncomplete_string := True
@@ -1361,7 +1361,7 @@ feature {NONE}-- Implementation
 		do
 			if current_token /= Void then
 				from
-					if is_string (current_token) then
+					if is_string (current_token) and then not current_token.image.is_empty then
 							-- we check if there is a string split on several lines
 						if current_token.image @ current_token.image.count = '%%' then
 							uncomplete_string := True
@@ -1397,7 +1397,7 @@ feature {NONE}-- Implementation
 								current_token := Void
 							end
 						else
-							if is_string (current_token) then
+							if is_string (current_token) and then not current_token.image.is_empty then
 									-- we check if a string is split on several lines
 								if current_token.image @ 1 = '%%' then
 									uncomplete_string := True

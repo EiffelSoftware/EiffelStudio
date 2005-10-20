@@ -39,9 +39,14 @@ feature {NONE} -- Access
 		-- Is dialog enabled to select multiple files.
 
 	file_name: STRING is
-			-- Retrieve file name selected by user
+			-- Retrieve file name selected by user.
+		local
+			l_file_names: like file_names
 		do
-			Result := file_names.first
+			l_file_names := file_names
+			if not l_file_names.is_empty then
+				Result := l_file_names.first
+			end
 			if Result = Void then
 				Result := Precursor {EV_FILE_DIALOG_IMP}
 			end
@@ -52,7 +57,7 @@ feature {NONE} -- Access
 		local
 			fnlist: POINTER
 			fname: POINTER
-			fnstring: STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create Result.make (1)
 			if selected_button /= Void and then selected_button.is_equal (internal_accept) then
@@ -60,12 +65,13 @@ feature {NONE} -- Access
 			end
 			if fnlist /= Default_pointer then
 				from
+					create a_cs.set_with_eiffel_string ("")
 				until
 					fnlist = default_pointer
 				loop
 					fname := {EV_GTK_EXTERNALS}.gslist_struct_data (fnlist)
-					create fnstring.make_from_c (fname)
-					Result.extend (fnstring)
+					a_cs.share_from_pointer (fname)
+					Result.extend (a_cs.string)
 					{EV_GTK_EXTERNALS}.g_free (fname)
 					fnlist := {EV_GTK_EXTERNALS}.gslist_struct_next (fnlist)
 				end

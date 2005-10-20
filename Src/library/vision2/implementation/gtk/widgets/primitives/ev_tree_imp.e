@@ -471,8 +471,7 @@ feature -- Implementation
 
 			if pnd_row_imp = Void then
 				if (pick_x = 0 and then pick_y = 0) then
-					x_origin := a_screen_x
-					y_origin := a_screen_y
+					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
 						pick_x := width
@@ -480,13 +479,11 @@ feature -- Implementation
 					if pick_y > height then
 						pick_y := height
 					end
-					x_origin := pick_x + (a_screen_x - a_x)
-					y_origin := pick_y + (a_screen_y - a_y)
+					App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 				end
 			else
 				if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
-					x_origin := a_screen_x
-					y_origin := a_screen_y
+					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
 						pick_x := width
@@ -494,11 +491,12 @@ feature -- Implementation
 					if pick_y > row_height then
 						pick_y := row_height
 					end
-					x_origin := pnd_row_imp.pick_x + (a_screen_x - a_x)
-					y_origin := 
+					App_implementation.set_x_y_origin (
+						pnd_row_imp.pick_x + (a_screen_x - a_x),
 						pnd_row_imp.pick_y +
 						(a_screen_y - a_y) + 
 						((child_array.index_of (pnd_row_imp.interface, 1) - 1) * row_height)
+					)
 				end
 			end
 		end
@@ -515,8 +513,7 @@ feature -- Implementation
 						signal_emit_stop (event_widget, "button-press-event")
 				end				
 			end
-			x_origin := 0
-			y_origin := 0
+			App_implementation.set_x_y_origin (0, 0)
 			last_pointed_target := Void	
 
 			if pebble_function /= Void then
@@ -641,13 +638,16 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 		local
 			a_g_value_string_struct: POINTER
 			a_string: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
 			a_g_value_string_struct := g_value_string_struct
 			{EV_GTK_DEPENDENT_EXTERNALS}.g_value_unset (a_g_value_string_struct)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (tree_store, a_tree_node_imp.list_iter.item, 1, a_g_value_string_struct)
 			a_string := {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct)
 			if a_string /= default_pointer then
-				create Result.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct))
+				a_cs := App_implementation.reusable_gtk_c_string
+				a_cs.share_from_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_string (a_g_value_string_struct))
+				Result := a_cs.string
 			else
 				Result := once ""
 			end
@@ -675,8 +675,11 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 
 	update_row_pixmap (a_tree_node_imp: EV_TREE_NODE_IMP) is
 			-- Set the pixmap for `a_tree_node_imp'.
+		local
+			a_pix: POINTER
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_tree_node_imp.list_iter.item, 0, a_tree_node_imp.gdk_pixbuf)
+			a_pix := a_tree_node_imp.gdk_pixbuf
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_tree_node_imp.list_iter.item, 0, a_pix)
 		end
 
 	tree_store: POINTER

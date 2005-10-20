@@ -1,6 +1,5 @@
 indexing
 	description: "Process status listening timer implemented with Vision2 timer."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -66,5 +65,6 @@ feature{NONE} -- Implementation
 	mutex: MUTEX
 
 invariant	
-	muext_not_void: mutex /= Void	
+	mutex_not_void: mutex /= Void
+
 end

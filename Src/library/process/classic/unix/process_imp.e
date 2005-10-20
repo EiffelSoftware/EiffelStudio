@@ -3,7 +3,6 @@ indexing
 		"[
 			Object that implements PROCESS on UNIX
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -80,7 +79,7 @@ feature {NONE} -- Initialization
 			make (p_name, args, a_working_directory)
 		end
 
-feature{PROCESS_TIMER}  -- Status checking
+feature {PROCESS_TIMER}  -- Status checking
 
 	check_exit is
 			-- Check whether process has exited.
@@ -104,6 +103,7 @@ feature{PROCESS_TIMER}  -- Status checking
 		end
 		
 feature  -- Control
+
 	terminate is
 		local
 			retried: BOOLEAN
@@ -289,7 +289,7 @@ feature -- Status reporting
 			retry
 		end	
 	
-feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
+feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 
 	read_output_stream is
 			-- Read output data from process.
@@ -377,4 +377,4 @@ feature {NONE} -- Implementation
 invariant
 	eweasel_process_launcher_not_null: prc_launcher /= Void
 
-end -- class PROCESS_IMP
+end

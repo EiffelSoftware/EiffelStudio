@@ -285,4 +285,4 @@ feature {NONE}
 
 	Invalid_file_descriptor: INTEGER is -1
 	
-end -- class IO_REDIRECTION_PROCESS_LAUNCHER
+end

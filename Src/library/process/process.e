@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			process_not_launched: not launched
 			process_not_terminated: not force_terminated
 			process_not_hidden_on_windows: platform.is_windows implies not hidden
-			has_console_on_Windows: platform.is_windows implies has_console
+			has_console_on_windows: platform.is_windows implies has_console
 			buffer_size_positive: buffer_size > 0
 			operation_succcessful: last_operation_successful	
 			init_succeeded: initialization_successful
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			process_not_launched: not launched
 			process_not_terminated: not force_terminated
 			process_not_hidden_on_windows: platform.is_windows implies not hidden
-			has_console_on_Windows: platform.is_windows implies has_console
+			has_console_on_windows: platform.is_windows implies has_console
 			buffer_size_positive: buffer_size > 0
 			operation_succcessful: last_operation_successful	
 			init_succeeded: initialization_successful
@@ -369,7 +369,7 @@ feature -- Actions setting
 			handler_set: on_successful_launch_handler = handler
 		end
 
-feature{NONE} -- Actions
+feature {NONE} -- Actions
 
 	on_start is
 		-- Agent called when process launched
@@ -535,7 +535,7 @@ feature -- Validation checking
 				((not platform.is_dotnet) and then a_error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output)
 		end
 
-feature{PROCESS_IO_LISTENER_THREAD} -- Output/error handlers
+feature {PROCESS_IO_LISTENER_THREAD} -- Output/error handlers
 
 	output_handler: PROCEDURE [ANY, TUPLE [STRING]]
 			-- Handler called when output from process arrives

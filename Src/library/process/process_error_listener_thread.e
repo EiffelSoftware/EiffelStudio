@@ -7,7 +7,6 @@ indexing
 			It listens to process's error pipe, if data arrives, 
 			it will call the agent specified in error_handler in PROCESS.
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +19,7 @@ inherit
 create
 	make
 		
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 	
 	make (prc_launcher: PROCESS_IMP) is
 		require

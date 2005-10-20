@@ -1,6 +1,5 @@
 indexing
 	description: "Object that implements PROCESS."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -81,7 +80,7 @@ feature {NONE} -- Initialization
 			make (p_name, args, a_working_directory)
 		end
 		
-feature{PROCESS_TIMER}  -- Status checking
+feature {PROCESS_TIMER}  -- Status checking
 
 	check_exit is
 			-- Check whether process has exited.
@@ -298,13 +297,13 @@ feature -- Status report
 			Result := prc_launcher.last_process_result
 		end
 
-feature{PROCESS_IMP} -- Implementation
+feature {PROCESS_IMP} -- Implementation
 
 	out_thread: PROCESS_OUTPUT_LISTENER_THREAD
 	err_thread: PROCESS_ERROR_LISTENER_THREAD
 			-- Threads to listen to output and error from child process.
 
-feature{PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
+feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 
 	last_output: STRING
 			-- Last output received from process
@@ -377,4 +376,5 @@ feature {NONE} -- Implementation
 
 invariant
 	prc_launcher_not_void: prc_launcher /= Void
+
 end

@@ -3,7 +3,6 @@ indexing
 		"[
 			Object used when redirect input of a process to a file.
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,7 +29,6 @@ feature{NONE} -- Initialization
 			should_exit_signal_set_to_false: not should_exit_signal			
 		end
 
-	
 feature -- Run
 
 	execute is

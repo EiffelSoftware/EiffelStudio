@@ -1,14 +1,11 @@
-
 indexing
-	
 	description: "Unix-specific operating system services";
-	author: "David Hollenberg";
-	date: "October 7, 1997"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PROCESS_UNIX_OS
 
 inherit
-
 	UNIX_SIGNALS
 		rename
 			meaning as signal_meaning
@@ -408,4 +405,4 @@ feature {NONE} -- Externals
 			]"
 		end;
 
-end -- class PROCESS_UNIX_OS
+end

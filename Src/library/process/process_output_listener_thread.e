@@ -7,7 +7,6 @@ indexing
 			It listens to process's output pipe, if data arrives, 
 			it will call the agent specified in output_handler in PROCESS.
 		 ]"	
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +19,7 @@ inherit
 create
 	make
 	
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (prc_launcher: PROCESS_IMP) is
 		require
@@ -37,6 +36,7 @@ feature{NONE} -- Initialization
 		end
 	
 feature -- Run
+
 	execute is
 			--
 		local
@@ -61,4 +61,5 @@ feature -- Run
 				end	
 			end
 		end
+
 end

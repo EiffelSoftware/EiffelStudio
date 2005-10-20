@@ -1,9 +1,7 @@
-
 indexing
-	
-	author: "David Hollenberg";
-	date: "October 9, 1997";
 	description: "A Unix process"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class PROCESS_UNIX_PROCESS_MANAGER
 
@@ -541,4 +539,4 @@ invariant
 	valid_stdout_descriptor: valid_file_descriptor (Stdout_descriptor)
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
-end -- class PROCESS_UNIX_PROCESS_MANAGER
+end

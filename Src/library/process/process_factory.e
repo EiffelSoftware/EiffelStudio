@@ -1,6 +1,5 @@
 indexing
 	description: "A factory to generate proper process launcher on different platforms."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,4 +40,5 @@ feature
 		ensure
 			process_launched_created: Result /= Void
 		end
+
 end

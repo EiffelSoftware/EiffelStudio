@@ -1,6 +1,5 @@
 indexing
 	description: "Process launcher on Windows with IO redirection ability."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -79,6 +78,7 @@ feature -- Status setting
 		end
 		
 feature -- Control
+
 	launch (inf, outf, errf: STRING; buffer_size: INTEGER) is
 			-- Launch a process
 			-- inf is the file name of the input stream, if Void,
@@ -553,4 +553,5 @@ feature {NONE} -- Implementation
 		alias
 			"GetStdHandle (STD_ERROR_HANDLE)"
 		end
+
 end

@@ -90,17 +90,20 @@ feature -- Implementation
 			i,format_count: INTEGER
 			format_name: STRING
 			pixbuf_format: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
 			formats := {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_formats
 			format_count := {EV_GTK_EXTERNALS}.g_slist_length (formats)
 			from
 				i := 0
 				create Result.make (0)
+				create a_cs.set_with_eiffel_string ("")
 			until
 				i = format_count
 			loop
-				pixbuf_format := {EV_GTK_EXTERNALS}.g_slist_nth_data (formats, i)				
-				create format_name.make_from_c ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_get_name (pixbuf_format))
+				pixbuf_format := {EV_GTK_EXTERNALS}.g_slist_nth_data (formats, i)
+				a_cs.share_from_pointer ({EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_format_get_name (pixbuf_format))	
+				format_name := a_cs.string
 				if format_name.is_equal (once "jpeg") then
 					format_name := once "jpg"
 				end

@@ -779,6 +779,7 @@
 								<File Id="integer_ref.e" Name="INTEGE~7.E" LongName="integer_ref.e" />
 								<File Id="integer_64_ref.e" Name="INTEGE~8.E" LongName="integer_64_ref.e" />
 								<File Id="integer_interval.e" Name="INTEGE~9.E" LongName="integer_interval.e" />
+								<File Id="integer_natural_information_e" Name="INC83B~1.E" LongName="integer_natural_information.e" />
 								<File Id="io_medium.e" Name="IO_MED~1.E" LongName="io_medium.e" />
 								<File Id="mem_const.e" Name="MEM_CO~1.E" LongName="mem_const.e" />
 								<File Id="natural_8.e" Name="NATURA~1.E" LongName="natural_8.e" />
@@ -790,12 +791,14 @@
 								<File Id="natural_32_ref.e" Name="NATURA~7.E" LongName="natural_32_ref.e" />
 								<File Id="natural_64_ref.e" Name="NATURA~8.E" LongName="natural_64_ref.e" />
 								<File Id="numeric.e" Name="numeric.e" />
+								<File Id="overflow_checker_e" Name="OVERFL~1.E" LongName="overflow_checker.e" />
 								<File Id="part_comparable.e" Name="PART_C~1.E" LongName="part_comparable.e" />
 								<File Id="seq_string.e" Name="SEQ_ST~1.E" LongName="seq_string.e" />
 								<File Id="std_files.e" Name="STD_FI~1.E" LongName="std_files.e" />
 								<File Id="string.e" Name="string.e" />
 								<File Id="string_handler.e" Name="STRING~1.E" LongName="string_handler.e" />
 								<File Id="string_searcher_e" Name="STRING~2.E" LongName="string_searcher.e" />
+								<File Id="string_to_integer_state_machine_e" Name="STRING~3.E" LongName="string_to_integer_state_machine.e" />
 								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
 								<File Id="typed_pointer_e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
 							</Component>
@@ -1103,6 +1106,59 @@
 							<File Id="metalex.e" Name="metalex.e" />
 						</Component>
 					</Directory>
+					<Directory Id="memory_analyzer" LongName="memory_analyzer" Name="MEMORY~1">
+						<Component Id="ma_component0" Guid="77f68fd0-b582-4e17-abb8-758aac73bb8c">
+							<File Id="ma_file0" LongName="ma_arrayed_list_storable.e" Name="MA_ARR~1.E"/>
+							<File Id="ma_file1" LongName="ma_draw_histogram.e" Name="MA_DRA~1.E"/>
+							<File Id="ma_file2" LongName="ma_draw_history.e" Name="MA_DRA~2.E"/>
+							<File Id="ma_file3" LongName="ma_draw_statistic.e" Name="MA_DRA~3.E"/>
+							<File Id="ma_file4" LongName="ma_gc_info_mediator.e" Name="MA_GC_~1.E"/>
+							<File Id="ma_file5" LongName="ma_memory_change_mediator.e" Name="MA_MEM~1.E"/>
+							<File Id="ma_file6" LongName="ma_memory_state.e" Name="MA_MEM~2.E"/>
+							<File Id="ma_file7" LongName="ma_memory_state_manager.e" Name="MA_MEM~3.E"/>
+							<File Id="ma_file8" LongName="ma_object_snapshot_mediator.e" Name="MA_OBJ~1.E"/>
+							<File Id="ma_file9" LongName="memory_analyzer_icon_matrix.png" Name="MEMORY~1.PNG"/>
+						</Component>
+						<Directory Id="ma_directory1" LongName="object_graph" Name="OBJECT~1">
+							<Component Id="ma_component2" Guid="f1ce1095-3dce-4514-8e8d-b8a8b733d06c">
+								<File Id="ma_file13" LongName="ma_figure_factory.e" Name="MA_FIG~1.E"/>
+								<File Id="ma_file14" LongName="ma_object_finder_singleton.e" Name="MA_OBJ~1.E"/>
+								<File Id="ma_file15" LongName="ma_object_graph_mediator.e" Name="MA_OBJ~2.E"/>
+								<File Id="ma_file16" LongName="ma_object_node.e" Name="MA_OBJ~3.E"/>
+								<File Id="ma_file17" LongName="ma_ranged_random.e" Name="MA_RAN~1.E"/>
+								<File Id="ma_file18" LongName="ma_reference_link.e" Name="MA_REF~1.E"/>
+								<File Id="ma_file19" LongName="ma_world_cell.e" Name="MA_WOR~1.E"/>
+							</Component>
+						</Directory>
+						<Directory Id="ma_directory3" LongName="singletons" Name="SINGLE~1">
+							<Component Id="ma_component4" Guid="69aa09b0-6e87-454c-98eb-19d38799dec4">
+								<File Id="ma_file23" LongName="ma_filter_singleton.e" Name="MA_FIL~1.E"/>
+								<File Id="ma_file24" LongName="ma_grid_util_singleton.e" Name="MA_GRI~1.E"/>
+								<File Id="ma_file25" LongName="ma_icons_singleton.e" Name="MA_ICO~1.E"/>
+								<File Id="ma_file26" LongName="ma_shared_pixmap_factory.e" Name="MA_SHA~1.E"/>
+								<File Id="ma_file27" LongName="ma_singleton_factory.e" Name="MA_SIN~1.E"/>
+								<File Id="ma_file28" LongName="ma_system_util_singleton.e" Name="MA_SYS~1.E"/>
+							</Component>
+						</Directory>
+						<Directory Id="ma_directory5" Name="stone">
+							<Component Id="ma_component6" Guid="79fe26a9-9a46-4166-bd2f-2e7a669bbbef">
+								<File Id="ma_file32" LongName="ma_class_stone.e" Name="MA_CLA~1.E"/>
+								<File Id="ma_file33" LongName="ma_object_stone.e" Name="MA_OBJ~1.E"/>
+								<File Id="ma_file34" Name="ma_stone.e"/>
+							</Component>
+						</Directory>
+						<Directory Id="ma_directory7" Name="widgets">
+							<Component Id="ma_component8" Guid="2ea02888-e140-4414-9d27-26df2d4bf69d">
+								<File Id="ma_file38" LongName="ma_constants.e" Name="MA_CON~1.E"/>
+								<File Id="ma_file39" LongName="ma_constants_imp.e" Name="MA_CON~2.E"/>
+								<File Id="ma_file40" LongName="ma_filter_window.e" Name="MA_FIL~1.E"/>
+								<File Id="ma_file41" LongName="ma_filter_window_imp.e" Name="MA_FIL~2.E"/>
+								<File Id="ma_file42" LongName="ma_grid_check_box_item.e" Name="MA_GRI~1.E"/>
+								<File Id="ma_file43" LongName="ma_window.e" Name="MA_WIN~1.E"/>
+								<File Id="ma_file44" LongName="ma_window_imp.e" Name="MA_WIN~2.E"/>
+							</Component>
+						</Directory>
+					</Directory>
 					<Directory Id="parse" Name="parse">
 						<Component Id="parse" Guid="64EF9957-9011-43B6-8CBE-878082BF1A04">
 							<File Id="input.e" Name="input.e" KeyPath="yes" />
@@ -1185,6 +1241,62 @@
 						<Directory Id="directory8" LongName="xml_implementation" Name="XML_IM~1">
 							<Component Id="component9" Guid="3fb2486b-79e8-47bc-b5d1-ae7a33bdcff1" >
 								<File Id="resource_structure_imp_e2" LongName="resource_structure_imp.e" Name="RESOUR~1.E" />
+							</Component>
+						</Directory>
+					</Directory>
+					<Directory Id="process" Name="process">
+						<Component Id="process_component0" Guid="e0912e13-943a-4823-95d0-d7792ae678be">
+							<File Id="process_file0" Name="process.e"/>
+							<File Id="process_file1" LongName="process_error_listener_thread.e" Name="PROCES~1.E"/>
+							<File Id="process_file2" LongName="process_factory.e" Name="PROCES~2.E"/>
+							<File Id="process_file3" LongName="process_io_listener_thread.e" Name="PROCES~3.E"/>
+							<File Id="process_file4" LongName="process_output_listener_thread.e" Name="PROCES~4.E"/>
+							<File Id="process_file5" LongName="process_redirection_constants.e" Name="PR8CEA~1.E"/>
+							<File Id="process_file6" LongName="process_thread_timer.e" Name="PR28DC~1.E"/>
+							<File Id="process_file7" LongName="process_timer.e" Name="PRDFC7~1.E"/>
+						</Component>
+						<Directory Id="process_directory0" Name="classic">
+							<Directory Id="process_directory2" Name="unix">
+								<Component Id="process_component2" Guid="9afe9d4a-3b36-4c1b-94d5-192100184c0f">
+									<File Id="process_file11" LongName="io_redirection_process_launcher.e" Name="IO_RED~1.E"/>
+									<File Id="process_file13" LongName="process_imp.e" Name="PROCES~2.E"/>
+									<File Id="process_file19" LongName="process_unix_os.e" Name="PR8755~1.E"/>
+									<File Id="process_file21" LongName="process_unix_process_manager.e" Name="PR581B~1.E"/>
+								</Component>
+								<Directory Id="process_directory3" Name="Clib">
+									<Component Id="process_component3" Guid="7d36efb2-e428-4cd4-8527-e6345348dda3">
+										<File Id="process_file28" Name="unix_os.h"/>
+									</Component>
+								</Directory>
+								<Directory Id="process_directory6" LongName="named_pipe" Name="NAMED_~1">
+									<Component Id="process_component6" Guid="9b5c671c-1ada-41a9-9d49-8cc0a8ec386c">
+										<File Id="process_file36" LongName="process_unix_pipe.e" Name="PROCES~1.E"/>
+										<File Id="process_file37" LongName="unix_pipe_factory.e" Name="UNIX_P~1.E"/>
+										<File Id="process_file38" LongName="unix_unnamed_pipe.e" Name="UNIX_U~1.E"/>
+									</Component>
+								</Directory>
+							</Directory>
+							<Directory Id="process_directory8" Name="windows">
+								<Component Id="process_component8" Guid="3ab51c8f-2dbc-4d86-b1b4-91bdb128d788">
+									<File Id="process_file42" LongName="file_handle.e" Name="FILE_H~1.E"/>
+									<File Id="process_file43" LongName="io_redirection_process_launcher.e" Name="IO_RED~1.E"/>
+									<File Id="process_file44" LongName="process_imp.e" Name="PROCES~1.E"/>
+								</Component>
+							</Directory>
+						</Directory>
+						<Directory Id="process_directory11" Name="dotnet">
+							<Directory Id="process_directory13" Name="windows">
+								<Component Id="process_component12" Guid="e587d143-6873-4bdb-a8ec-a7512c43441c">
+									<File Id="process_file55" LongName="dotnet_process_error_listener_thread.e" Name="DOTNET~1.E"/>
+									<File Id="process_file56" LongName="dotnet_process_input_listener_thread.e" Name="DOTNET~2.E"/>
+									<File Id="process_file57" LongName="dotnet_process_output_listener_thread.e" Name="DOTNET~3.E"/>
+									<File Id="process_file58" LongName="process_imp.e" Name="PROCES~1.E"/>
+								</Component>
+							</Directory>
+						</Directory>
+						<Directory Id="process_directory15" Name="gui">
+							<Component Id="process_component14" Guid="806f18c4-3008-4d33-8f9a-395d10e9f64a">
+								<File Id="process_file62" LongName="process_vision2_timer.e" Name="PROCES~1.E"/>
 							</Component>
 						</Directory>
 					</Directory>

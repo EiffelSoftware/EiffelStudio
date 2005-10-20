@@ -62,12 +62,14 @@ feature -- Initialization
 			{EV_GTK_EXTERNALS}.gtk_box_pack_end (box, text_label, True, True, 0)
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (c_object, box)
 			
+			set_minimum_width (0)
+			set_maximum_width (32000)
+
+			align_text_left
+			enable_user_resize
 
 				-- Set the default width to 80 pixels wide
 			set_width (80)
-			
-			align_text_left
-			enable_user_resize
 			set_is_initialized (True)
 		end
 
@@ -92,18 +94,47 @@ feature -- Access
 	width: INTEGER
 			-- Width of `Current' in pixels.
 
+	minimum_width: INTEGER
+		-- Lower bound on `width' in pixels.
 
-		-- FIXME IEK Implement
-	minimum_width: INTEGER is 0
-	maximum_width: INTEGER is 32000
+	maximum_width: INTEGER
+		-- Upper bound on `width' in pixels.
+
 	user_can_resize: BOOLEAN
+		-- Can a user resize `Current'?
 	
-	set_maximum_width (a_width: INTEGER) is do end
-	set_minimum_width (a_width: INTEGER) is do end
-	disable_user_resize is do user_can_resize := False end
-	enable_user_resize is do user_can_resize := True end
+
+	disable_user_resize is
+			-- Prevent `Current' from being resized by users.
+		do
+			user_can_resize := False
+			--| FIXME Fully implement
+		end
+
+	enable_user_resize is
+			-- Permit `Current' to be resized by users.
+		do
+			user_can_resize := True
+			--| FIXME Fully implement
+		end
 
 feature -- Status setting
+
+	set_maximum_width (a_width: INTEGER) is
+			-- Assign `a_maximum_width' in pixels to `maximum_width'.
+			-- If `width' is greater than `a_maximum_width', resize.
+		do
+			maximum_width := a_width
+			--| FIXME Fully implement
+		end
+
+	set_minimum_width (a_width: INTEGER) is
+			-- Assign `a_minimum_width' in pixels to `minimum_width'.
+			-- If `width' is less than `a_minimum_width', resize.
+		do
+			minimum_width := a_width
+			--| FIXME Fully implement
+		end
 
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.

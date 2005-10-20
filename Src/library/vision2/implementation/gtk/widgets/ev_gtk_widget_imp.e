@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 	is_parentable: BOOLEAN is
 			-- May Current be parented?
 		do
-			Result := True
+			Result := not {EV_GTK_EXTERNALS}.gtk_is_window (c_object)
 		end
 
 	Gdk_events_mask: INTEGER is

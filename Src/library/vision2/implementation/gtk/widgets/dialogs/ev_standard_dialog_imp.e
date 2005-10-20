@@ -44,14 +44,12 @@ feature -- Access
 
 	title: STRING is
 			-- Title of dialog shown in title bar.
+		local
+			a_cs: EV_GTK_C_STRING
 		do
-			check
-				c_object /= NULL
-			end
-			check
-				{EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object) /= NULL
-			end
-			create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object))
+			a_cs := app_implementation.reusable_gtk_c_string
+			a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object))
+			Result := a_cs.string
 		end
 
 feature -- Status report
@@ -86,6 +84,7 @@ feature -- Status setting
 			else
 				enable_modal
 			end
+				-- Hack - Blocking window needs to be set before and after show otherwise it is not modal.
 			set_blocking_window (a_window)
 			show
 			set_blocking_window (a_window)

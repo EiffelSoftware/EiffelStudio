@@ -71,6 +71,7 @@ feature -- Access
 			-- Path of the current selected file
 		local
 			a_filename: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
 			if
 				selected_button /= Void and then selected_button.is_equal (internal_accept)
@@ -78,7 +79,8 @@ feature -- Access
 				Result := ""
 				a_filename := {EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object)
 				if a_filename /= NULL then
-					Result.from_c (a_filename)
+					create a_cs.share_from_pointer (a_filename)
+					Result := a_cs.string
 					if Result.item (Result.count) /= '/' then
 						Result.append ("/")
 					end

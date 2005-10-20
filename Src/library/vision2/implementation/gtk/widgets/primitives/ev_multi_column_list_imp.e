@@ -930,8 +930,7 @@ feature -- Implementation
 
 			if pnd_row_imp = Void then
 				if (pick_x = 0 and then pick_y = 0) then
-					x_origin := a_screen_x
-					y_origin := a_screen_y
+					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
 						pick_x := width
@@ -939,13 +938,11 @@ feature -- Implementation
 					if pick_y > height then
 						pick_y := height
 					end
-					x_origin := pick_x + (a_screen_x - a_x)
-					y_origin := pick_y + (a_screen_y - a_y)
+					App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 				end
 			else
 				if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
-					x_origin := a_screen_x
-					y_origin := a_screen_y
+					App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 				else
 					if pick_x > width then
 						pick_x := width
@@ -953,11 +950,12 @@ feature -- Implementation
 					if pick_y > row_height then
 						pick_y := row_height
 					end
-					x_origin := pnd_row_imp.pick_x + (a_screen_x - a_x)
-					y_origin := 
+					App_implementation.set_x_y_origin (
+						pnd_row_imp.pick_x + (a_screen_x - a_x),
 						pnd_row_imp.pick_y +
 						(a_screen_y - a_y) + 
 						((ev_children.index_of (pnd_row_imp, 1) - 1) * row_height)
+					)
 				end
 			end
 		end
@@ -974,8 +972,7 @@ feature -- Implementation
 						signal_emit_stop (event_widget, "button-press-event")
 				end				
 			end
-			x_origin := 0
-			y_origin := 0
+			App_implementation.set_x_y_origin (0, 0)
 			last_pointed_target := Void	
 
 			if pebble_function /= Void then

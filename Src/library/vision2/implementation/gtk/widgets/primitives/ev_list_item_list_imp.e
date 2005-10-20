@@ -65,7 +65,6 @@ feature -- Status report
 
 	row_from_y_coord (a_y: INTEGER): EV_PND_DEFERRED_ITEM is
 			-- Retrieve the Current row from `a_y' coordinate
-			-- (export status {EV_ANY_I})
 		do
 		end
 
@@ -145,8 +144,7 @@ feature -- Status report
 				pointer_y := a_screen_y
 				if pnd_row_imp = Void then
 					if (pick_x = 0 and then pick_y = 0) then
-						x_origin := a_screen_x
-						y_origin := a_screen_y
+						App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 					else
 						if pick_x > width then
 							pick_x := width
@@ -154,13 +152,11 @@ feature -- Status report
 						if pick_y > height then
 							pick_y := height
 						end
-						x_origin := pick_x + (a_screen_x - a_x)
-						y_origin := pick_y + (a_screen_y - a_y)
+						App_implementation.set_x_y_origin (pick_x + (a_screen_x - a_x), pick_y + (a_screen_y - a_y))
 					end
 				else
 					if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
-						x_origin := a_screen_x
-						y_origin := a_screen_y
+						App_implementation.set_x_y_origin (a_screen_x, a_screen_y)
 					else
 						if pick_x > width then
 							pick_x := width
@@ -168,8 +164,10 @@ feature -- Status report
 						if pick_y > row_height then
 							pick_y := row_height
 						end
-						x_origin := pnd_row_imp.pick_x + (a_screen_x - a_x)
-						y_origin := pnd_row_imp.pick_y + (a_screen_y - a_y) + ((child_array.index_of (pnd_row_imp.interface, 1) - 1) * row_height)
+						App_implementation.set_x_y_origin (
+							pnd_row_imp.pick_x + (a_screen_x - a_x),
+							pnd_row_imp.pick_y + (a_screen_y - a_y) + ((child_array.index_of (pnd_row_imp.interface, 1) - 1) * row_height)
+						)
 					end
 				end
 			end

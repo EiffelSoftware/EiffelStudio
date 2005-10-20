@@ -2050,15 +2050,19 @@ feature -- Element change
 			parent_of_first := row_internal (i).parent_row_i
 			if a_parent_row /= Void then
 				a_parent_row_i := a_parent_row.implementation
-				if i = j + 1 and parent_of_first = a_parent_row_i then
-						-- It is possible for the parent of a row to change without the index
-						-- changing, so we only keep the same subrow index if the parent
-						-- has not changed.
-					current_subrow_index := row_internal (i).subrow_index
-				elseif row_internal (j) = a_parent_row_i then
-					current_subrow_index := 1
+				if j <= a_parent_row_i.index + a_parent_row_i.subrow_count_recursive then
+						-- Inserting within `a_parent_row'.
+					current_subrow_index := row_internal (j).subrow_index
 				else
-					current_subrow_index := row_internal (j).subrow_index + 1
+						-- Appending to the end of `a_parent_row'
+					if row_internal (i).parent_row_i = a_parent_row_i then
+							-- We are moving an item to the end of its current parent node
+							-- therefore its new index must be the subrow count of the parent.
+						current_subrow_index := a_parent_row_i.subrow_count
+					else
+							-- We are moving an item to the end of a new parent
+						current_subrow_index := a_parent_row_i.subrow_count + 1
+					end
 				end
 			end
 			from

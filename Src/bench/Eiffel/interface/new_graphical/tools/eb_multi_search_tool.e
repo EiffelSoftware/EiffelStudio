@@ -187,6 +187,9 @@ feature -- Access
 	search_subcluster_button: EV_CHECK_BUTTON
 			-- Button to indicate if subcluster of the specific scope will be searched.
 			
+	search_compiled_class_button: EV_CHECK_BUTTON
+			-- Button to indicate if compiled classes will be searched.
+			
 	scope_list: EV_LIST
 			-- List of the specific scope
 			
@@ -238,6 +241,18 @@ feature -- Status report
 			-- Are subclusters searched?
 		do
 			Result := search_subcluster_button.is_selected	
+		end
+		
+	is_current_editor_searched: BOOLEAN is
+			-- Is current editor searched?
+		do
+			Result := current_editor_button.is_selected	
+		end		
+	
+	only_compiled_class_searched: BOOLEAN is
+			-- Only compiled classes are searched?
+		do
+			Result := search_compiled_class_button.is_selected
 		end
 
 feature -- Status setting
@@ -370,10 +385,19 @@ feature -- Action
 			-- Ask for confirmation, then replace all.
 		local
 			cd: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+			hindered: BOOLEAN
 		do
-			create cd.make_initialized (3, preferences.dialog_data.confirm_replace_all_string, warning_messages.w_replace_all, interface_names.l_Discard_replace_all_warning_dialog, preferences.preferences)
-			cd.set_ok_action (agent replace_all)
-			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			if is_current_editor_searched then
+				if not editor.is_editable then
+					hindered := true
+					editor.display_not_editable_warning_message
+				end				
+			end
+			if not hindered then
+				create cd.make_initialized (3, preferences.dialog_data.confirm_replace_all_string, warning_messages.w_replace_all, interface_names.l_Discard_replace_all_warning_dialog, preferences.preferences)
+				cd.set_ok_action (agent replace_all)
+				cd.show_modal_to_window (window_manager.last_focused_development_window.window)	
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -387,20 +411,22 @@ feature {NONE} -- Implementation
 		do
 			if not multi_search_performer.off then
 				l_item := multi_search_performer.item
-				if editor.dev_window.class_name /= l_item.class_name then
-					create class_name.make_from_string (l_item.class_name)
-					class_name.to_upper
-					l_list := editor.dev_window.eiffel_universe.classes_with_name (class_name)
+				create class_name.make_from_string (l_item.class_name)
+				class_name.to_upper
+				l_list := manager.eiffel_universe.classes_with_name (class_name)
+				if manager.class_name /= Void and then not manager.class_name.is_equal (l_item.class_name) then
 					if not l_list.is_empty then
-						editor.dev_window.set_stone (stone_from_class_i (l_list.first))
-						from
-							process_events_and_idle
-						until
-							editor.text_is_fully_loaded
-						loop
-							ev_application.idle_actions.call ([])
-						end
+						manager.set_stone (stone_from_class_i (l_list.first))
 					end
+				elseif not is_current_editor_searched then
+					manager.set_stone (stone_from_class_i (l_list.first))
+				end
+				from
+					process_events_and_idle
+				until
+					editor.text_is_fully_loaded
+				loop
+					ev_application.idle_actions.call ([])
 				end
 			end
 		end
@@ -419,6 +445,7 @@ feature {NONE} -- Implementation
 			else
 				create {CLASSI_STONE}Result.make (a_class_i)
 			end
+			Result.set_pos_container (manager.managed_main_formatters.first)
 		end		
 	
 	search_button_clicked is
@@ -493,26 +520,17 @@ feature {NONE} -- Implementation
 	toggle_scope_detail is
 			-- Show and hide the scope detail according to the scope box's selection.
 		do
-			if scope_button.is_selected then
+			if is_scoped then
 				scope.enable_sensitive
 			else
 				scope.disable_sensitive
 			end
-		end
-		
-	toggle_scope is
-			-- sensible or disable sensitive scope check button and scope detail according to the whole project selection.
-		do
-			if scope /= Void then
-				if is_whole_project_searched then
-					scope.disable_sensitive
-				elseif is_scoped then			
-					scope.enable_sensitive
-				else
-					scope.disable_sensitive
-				end
+			if is_whole_project_searched or is_scoped then
+				search_compiled_class_button.enable_sensitive
+			else
+				search_compiled_class_button.disable_sensitive
 			end
-		end		
+		end
 
 	build_options_box: EV_VERTICAL_BOX is
 			-- Create and return a box containing the search options
@@ -546,13 +564,13 @@ feature {NONE} -- Implementation
 				-- Option "Current Editor"		
 			create current_editor_button.make_with_text (Interface_names.l_Current_editor)
 			current_editor_button.key_press_actions.extend (agent key_pressed (?, True))
-			current_editor_button.select_actions.extend (agent toggle_scope)
+			current_editor_button.select_actions.extend (agent toggle_scope_detail)
 			current_editor_button.select_actions.extend (agent force_new_search)
 
 				-- Option "Whole Project"
 			create whole_project_button.make_with_text (Interface_names.l_Whole_project)
 			whole_project_button.key_press_actions.extend (agent key_pressed (?, True))
-			whole_project_button.select_actions.extend (agent toggle_scope)
+			whole_project_button.select_actions.extend (agent toggle_scope_detail)
 			whole_project_button.select_actions.extend (agent force_new_search)
 				
 				-- Option "Scope"
@@ -562,11 +580,16 @@ feature {NONE} -- Implementation
 			scope_button.select_actions.extend (agent force_new_search)
 			scope_button.drop_actions.extend (agent on_drop_scope_button (?))
 			
-				-- Option "Search Subcluster"
-			create search_subcluster_button.make_with_text (Interface_names.l_Search_subcluster)
+				-- Option "Subcluster"
+			create search_subcluster_button.make_with_text (Interface_names.l_Sub_cluster)
 			search_subcluster_button.key_press_actions.extend (agent key_pressed (?, True))
 			search_subcluster_button.enable_select
 			search_subcluster_button.select_actions.extend (agent force_new_search)
+			
+				-- Option "Compiled class"
+			create search_compiled_class_button.make_with_text (Interface_names.l_Compiled_class)
+			search_compiled_class_button.key_press_actions.extend (agent key_pressed (?, True))
+			search_compiled_class_button.select_actions.extend (agent force_new_search)
 			
 				-- Option list scope
 			create scope_list.default_create
@@ -591,10 +614,15 @@ feature {NONE} -- Implementation
 			
 			create vbox
 			vbox.set_border_width (5)
+			vbox.set_padding_width (2)
 			vbox.extend (case_sensitive_button)
 			vbox.extend (whole_word_button)
 			vbox.extend (use_regular_expression_button)
 			vbox.extend (search_backward_button)
+			vbox.disable_item_expand (case_sensitive_button)
+			vbox.disable_item_expand (whole_word_button)
+			vbox.disable_item_expand (use_regular_expression_button)
+			vbox.disable_item_expand (search_backward_button)
 
 			create options_button.make_with_text (Interface_names.l_Search_options_hide)
 			options_button.select_actions.extend (agent toggle_options)
@@ -617,24 +645,27 @@ feature {NONE} -- Implementation
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)
 			
+			create scope
 			create vbox
 			vbox.set_border_width (5)
+			vbox.set_padding_width (2)
 			vbox.extend (current_editor_button)
 			vbox.extend (whole_project_button)
 			vbox.extend (scope_button)
+			vbox.extend (search_compiled_class_button)
 			vbox.disable_item_expand (current_editor_button)
 			vbox.disable_item_expand (whole_project_button)
-			vbox.disable_item_expand (scope_button)			
+			vbox.disable_item_expand (scope_button)
+			vbox.disable_item_expand (search_compiled_class_button)	
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)
-			current_editor_button.enable_select
+			
 			
 			create vbox
 			vbox.set_border_width (5)
 			vbox.extend (scope_list)
 			scope_list.set_minimum_width (150)
-			
-			create scope
+
 			scope.extend (vbox)
 			scope.disable_item_expand (vbox)
 			
@@ -658,7 +689,7 @@ feature {NONE} -- Implementation
 			options.extend (hbox)
 			Result.extend (options)
 			
-			toggle_scope
+			current_editor_button.enable_select
 			toggle_scope_detail
 		end
 
@@ -698,8 +729,8 @@ feature {NONE} -- Implementation
 	report_button : EV_TOOL_BAR_BUTTON
 			-- Button to hide or show report.
 	
-	sumary_label : EV_LABEL
-			-- Label to show search sumary.
+	summary_label : EV_LABEL
+			-- Label to show search summary.
 		
 	build_report_box : EV_VERTICAL_BOX is
 			-- Create and return a box containing result grid.
@@ -720,9 +751,9 @@ feature {NONE} -- Implementation
 			create hbox
 			frm.extend (hbox)
 			hbox.extend (report_toolbar)
-			create sumary_label.default_create
-			hbox.extend (sumary_label)
-			hbox.disable_item_expand (sumary_label)
+			create summary_label.default_create
+			hbox.extend (summary_label)
+			hbox.disable_item_expand (summary_label)
 			hbox.disable_item_expand (report_toolbar)
 			
 			create search_report_grid
@@ -783,8 +814,8 @@ feature {NONE} -- Implementation
 					incremental_search_strategy.set_data (class_i)
 					incremental_search_strategy.set_date (class_i.date)	
 				end
-				if editor.dev_window.class_name /= Void then
-					incremental_search_strategy.set_class_name (editor.dev_window.class_name)
+				if manager.class_name /= Void then
+					incremental_search_strategy.set_class_name (manager.class_name)
 				end				
 				multi_search_performer.set_search_strategy (incremental_search_strategy)
 				multi_search_performer.do_search
@@ -886,7 +917,7 @@ feature {NONE} -- Implementation
 			l_project_strategy: MSR_SEARCH_WHOLE_PROJECT_STRATEGY
 		do
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
-			create l_project_strategy.make (currently_searched, surrounding_text_number, clusters_in_the_project)
+			create l_project_strategy.make (currently_searched, surrounding_text_number, clusters_in_the_project, only_compiled_class_searched)
 			if is_case_sensitive then
 				l_project_strategy.set_case_sensitive
 			else
@@ -910,7 +941,7 @@ feature {NONE} -- Implementation
 		do
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
 			currently_searched := keyword_field.text
-			create l_scope_strategy.make (currently_searched, surrounding_text_number, scope_list)
+			create l_scope_strategy.make (currently_searched, surrounding_text_number, scope_list, only_compiled_class_searched)
 			if is_case_sensitive then
 				l_scope_strategy.set_case_sensitive
 			else
@@ -1134,7 +1165,7 @@ feature {NONE} -- Implementation
 				if l_item /= Void then
 					create l_class_name.make_from_string (l_item.class_name)
 					l_class_name.to_upper
-					l_list := editor.dev_window.eiffel_universe.classes_with_name (l_class_name)
+					l_list := manager.eiffel_universe.classes_with_name (l_class_name)
 					if l_list /= Void and then not l_list.is_empty then
 						Result := stone_from_class_i (l_list.first)
 					end
@@ -1349,7 +1380,7 @@ feature {NONE} -- Implementation
 		end
 		
 	redraw_grid is
-			-- Redraw grid according to search result and refresh sumary label.
+			-- Redraw grid according to search result and refresh summary label.
 		local
 			x: INTEGER
 			i, j, k: INTEGER
@@ -1367,7 +1398,7 @@ feature {NONE} -- Implementation
 		do
 			if multi_search_performer.is_search_launched then
 				search_report_grid.remove_and_clear_all_rows
-				sumary_label.set_text ("   " +
+				summary_label.set_text ("   " +
 										multi_search_performer.text_found_count.out + 
 										" found(s) in " + 
 										multi_search_performer.class_count.out + 
@@ -1756,7 +1787,7 @@ feature {NONE} -- Implementation
 				search_button_clicked
 			end
 			if multi_search_performer.is_search_launched then
-				create editor_replace_strategy.make (editor.dev_window.editor_tool.text_area)
+				create editor_replace_strategy.make (manager.editor_tool.text_area)
 				multi_search_performer.set_replace_strategy (editor_replace_strategy)
 				multi_search_performer.set_replace_string (currently_replacing)
 				multi_search_performer.replace_all

@@ -250,8 +250,7 @@ feature -- Loacation
 				selected and then
 				stone /= Void and then
 				stone.pos_container = current and then
-				stone.position > 0 and then 
-				stone.position < editor.number_of_lines 
+				stone.position > 0
 			then
 				editor.display_line_at_top_when_ready (stone.position)
 			end

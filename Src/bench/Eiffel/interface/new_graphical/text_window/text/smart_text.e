@@ -258,12 +258,13 @@ feature -- Search
 			tok: EDITOR_TOKEN
 			ln: like line
 			low, low2: STRING
+			feature_stone: FEATURE_STONE
 		do
 			found_feature := False
 			if has_selection then
 				disable_selection
 			end
-			if click_and_complete_is_active and then click_tool.is_ready then
+			if click_and_complete_is_active then --and then click_tool.is_ready then
 				low := a_name.as_lower
 				from
 					ln ?= first_line
@@ -272,7 +273,12 @@ feature -- Search
 					tok = Void or found_feature
 				loop
 					if tok.is_feature_start then
-						low2 := tok.image.as_lower
+						feature_stone ?= tok.pebble
+						if feature_stone /= Void then
+							low2 := feature_stone.e_feature.name.as_lower
+						else
+							low2 := tok.image.as_lower
+						end
 						found_feature := low2.is_equal (low)
 						if found_feature then
 							cursor.make_from_relative_pos (ln, tok, 1, Current)

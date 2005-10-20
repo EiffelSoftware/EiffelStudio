@@ -1964,7 +1964,10 @@ feature -- Element change
 			i_valid: i > 0 and then i <= row_count
 			j_valid: j > 0 and then j <= row_count + 1
 			row_has_no_subrows: row (i).subrow_count = 0
-			not_breaking_existing_subrow_structure: j <= row_count implies row (j).parent_row = Void
+			not_breaking_existing_subrow_structure:
+				j = row_count + 1 or
+				(j = i or (j = i + 1 and (i + 1 <= row_count)) and then row (i + 1).parent_row = Void) or
+				row (j).parent_row = Void
 		do
 			implementation.move_rows_to_parent (i, j, 1, Void)
 		ensure
@@ -1990,7 +1993,10 @@ feature -- Element change
 			n_valid: n > 0 and then i + n <= row_count + 1
 			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
 			rows_may_be_moved: rows_may_be_moved (i, n)
-			not_breaking_existing_subrow_structure: j <= row_count implies row (j).parent_row = Void
+			not_breaking_existing_subrow_structure:
+				j = row_count + 1 or
+				(j = i or (j = i + n and (i + n <= row_count)) and then row (i + n).parent_row = Void) or
+				row (j).parent_row = Void
 		do
 			implementation.move_rows_to_parent (i, j, n, Void)
 		ensure
@@ -2012,6 +2018,7 @@ feature -- Element change
 			row_has_no_subrows: row (i).subrow_count = 0
 			a_parent_row_not_void: a_parent_row /= Void
 			j_valid_for_move_to_a_parent_row:
+				(j = i + 1 implies (i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)) or
 				(j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)
 			rows_may_be_moved: rows_may_be_moved (i, 1)
 			not_inserting_within_existing_subrow_structure: j < a_parent_row.index + a_parent_row.subrow_count_recursive
@@ -2043,7 +2050,8 @@ feature -- Element change
 			rows_may_be_moved: rows_may_be_moved (i, n)
 			a_parent_row_not_void: a_parent_row /= Void
 			j_valid_for_move_to_a_parent_row:
-				(j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)
+					(j = i + n implies (i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)) or
+					(j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)
 			not_inserting_within_existing_subrow_structure: 
 				j <= a_parent_row.index + a_parent_row.subrow_count_recursive implies row (j).parent_row = a_parent_row
 		do

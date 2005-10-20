@@ -72,11 +72,14 @@ feature -- Access
 
 	file_name: STRING is
 			-- Full name of currently selected file including path.
+		local
+			a_cs: EV_GTK_C_STRING
 		do
 			if
 				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
-				create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object))
+				create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object))
+				Result := a_cs.string
 			else
 				Result := ""
 			end
@@ -210,11 +213,13 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			temp_filename: STRING
 			temp_file: RAW_FILE
 			a_filename: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
 			create temp_filename.make (0)
 			a_filename := {EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object)
 			if a_filename /= NULL then
-				temp_filename.from_c (a_filename)
+				create a_cs.share_from_pointer (a_filename)
+				temp_filename := a_cs.string
 				create temp_file.make (temp_filename)
 				if (not temp_file.exists or else not temp_file.is_directory) and not 
 						temp_filename.item (temp_filename.count).is_equal ('/') then

@@ -2719,7 +2719,9 @@ feature {NONE} -- Implementation
 							if l_main_formatter /= pos_container then
 								l_main_formatter.enable_select
 							end
-							editor_tool.text_area.display_line_at_top_when_ready (new_class_stone.position)
+							if new_class_stone.position > 0 then
+								editor_tool.text_area.display_line_at_top_when_ready (new_class_stone.position)
+							end							
 						end
 					end
 					
@@ -2748,6 +2750,15 @@ feature {NONE} -- Implementation
 									if l_flat_formatter /= Void then
 										l_flat_formatter.set_dotnet_mode (True)
 									end
+								end
+							elseif feature_stone /= Void then
+								from
+									managed_main_formatters.start
+								until
+									managed_main_formatters.after
+								loop
+									managed_main_formatters.item.set_stone (new_class_stone)
+									managed_main_formatters.forth
 								end
 							else
 								managed_main_formatters.first.set_stone (new_class_stone)
@@ -2799,8 +2810,9 @@ feature {NONE} -- Implementation
 							if not changed or not same_class then
 									--| Enable all formatters.
 								if
-									not feature_stone_already_processed or
-									not managed_main_formatters.first.selected
+									(not feature_stone_already_processed or
+									not managed_main_formatters.first.selected) and  
+									feature_stone = Void
 								then
 									from
 										managed_main_formatters.start
@@ -3113,13 +3125,10 @@ feature {NONE} -- Implementation
 			tmp_text: STRING
 		do
 			if not feat_as.is_il_external then
-				if feat_as.ast /= Void then
-					begin_index := feat_as.ast.start_position
-					if platform_constants.is_windows then
-						tmp_text := displayed_class.text.substring (1, begin_index)
-						offset := tmp_text.occurrences('%R')
-					end
-					editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
+				if feat_as.ast /= Void then	
+					editor_tool.text_area.text_displayed.enable_click_tool
+					editor_tool.text_area.find_feature_named (feat_as.name)
+					editor_tool.text_area.text_displayed.disable_click_tool
 				end
 			else
 					-- FIXME NC: Doesn't work properly for .NET features

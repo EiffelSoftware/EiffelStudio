@@ -19,7 +19,7 @@ create
 
 feature {NONE} -- Initialization
 		
-	make (a_keyword: STRING; a_range: INTEGER; a_class: CLASS_I) is
+	make (a_keyword: STRING; a_range: INTEGER; a_class: CLASS_I; only_compiled_class: BOOLEAN) is
 			-- Initialization with a class to be searched
 		require
 			a_class_not_void: a_class /= Void
@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		do
 			make_search_strategy (a_keyword, a_range)
 			set_class (a_class)
+			only_compiled_class_searched := only_compiled_class
 		end
 
 feature -- Basic operation
@@ -41,42 +42,44 @@ feature -- Basic operation
 			l_item: MSR_TEXT_ITEM
 		do
 			create item_matched_internal.make (0)
-			create text_strategy.make (keyword, surrounding_text_range_internal, class_i.name, class_i.file_name, class_text)
-			if case_sensitive then 
-				text_strategy.set_case_sensitive 
-			else
-				text_strategy.set_case_insensitive 
-			end
-			text_strategy.set_whole_word_matched (is_whole_word_matched)
-			text_strategy.set_regular_expression_used (is_regular_expression_used)
-			text_strategy.set_data (class_i)
-			text_strategy.set_date (class_i.date)
-			text_strategy.launch
-			if text_strategy.is_launched then
-				if text_strategy.item_matched.count > 0 then
-					create l_class_item.make (text_strategy.class_name, class_i.file_name, text_strategy.text_to_be_searched_adapter)
-					l_class_item.set_data (class_i)
-					l_class_item.set_date (class_i.date)
-					item_matched_internal.extend (l_class_item)
-					
-					l_matched := text_strategy.item_matched
-					create l_children.make (l_matched.count)
-					from
-						l_matched.start
-					until
-						l_matched.after
-					loop
-						l_item ?= l_matched.item
-						check
-							l_item_attached: l_item /= Void
+			if (not only_compiled_class_searched) or else class_i.is_compiled then
+				create text_strategy.make (keyword, surrounding_text_range_internal, class_i.name, class_i.file_name, class_text)
+				if case_sensitive then 
+					text_strategy.set_case_sensitive 
+				else
+					text_strategy.set_case_insensitive 
+				end
+				text_strategy.set_whole_word_matched (is_whole_word_matched)
+				text_strategy.set_regular_expression_used (is_regular_expression_used)
+				text_strategy.set_data (class_i)
+				text_strategy.set_date (class_i.date)
+				text_strategy.launch
+				if text_strategy.is_launched then
+					if text_strategy.item_matched.count > 0 then
+						create l_class_item.make (text_strategy.class_name, class_i.file_name, text_strategy.text_to_be_searched_adapter)
+						l_class_item.set_data (class_i)
+						l_class_item.set_date (class_i.date)
+						item_matched_internal.extend (l_class_item)
+						
+						l_matched := text_strategy.item_matched
+						create l_children.make (l_matched.count)
+						from
+							l_matched.start
+						until
+							l_matched.after
+						loop
+							l_item ?= l_matched.item
+							check
+								l_item_attached: l_item /= Void
+							end
+							if l_item /= Void then
+								l_children.extend (l_item)	
+							end
+							l_matched.forth
 						end
-						if l_item /= Void then
-							l_children.extend (l_item)	
-						end
-						l_matched.forth
+						l_class_item.set_children (l_children)
+						item_matched_internal.append (text_strategy.item_matched)
 					end
-					l_class_item.set_children (l_children)
-					item_matched_internal.append (text_strategy.item_matched)
 				end
 			end
 			launched := true
@@ -92,6 +95,7 @@ feature -- Basic operation
 			text_strategy := Void
 			class_i := Void
 			class_text := Void
+			only_compiled_class_searched := false
 		end
 
 feature -- Status report
@@ -108,7 +112,9 @@ feature -- Status report
 			Result := 
 			Precursor and
 			is_class_set	
-		end	
+		end
+	
+	only_compiled_class_searched: BOOLEAN
 
 feature -- Element change
 

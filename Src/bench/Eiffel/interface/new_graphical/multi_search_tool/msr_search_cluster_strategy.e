@@ -19,7 +19,7 @@ create
 		
 feature {NONE} -- Initialization
 	
-	make (a_keyword: STRING; a_range: INTEGER; a_cluster: CLUSTER_I) is
+	make (a_keyword: STRING; a_range: INTEGER; a_cluster: CLUSTER_I; only_compiled_class: BOOLEAN) is
 			-- Initialization with a cluster
 		require
 			a_cluster_not_void: a_cluster /= Void
@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 		do
 			make_search_strategy (a_keyword, a_range)
 			set_cluster (a_cluster)
+			only_compiled_class_searched := only_compiled_class
 		end
 		
 feature -- Status report
@@ -50,7 +51,10 @@ feature -- Status report
 			Result := 
 			Precursor and
 			is_cluster_set	
-		end		
+		end	
+		
+	only_compiled_class_searched: BOOLEAN
+			-- Only compiled class are searched?
 
 feature -- Element change
 
@@ -77,7 +81,7 @@ feature -- Basic operatioin
 					until
 						subcluster.after
 					loop
-						create cluster_strategy.make (keyword, surrounding_text_range_internal, subcluster.item)
+						create cluster_strategy.make (keyword, surrounding_text_range_internal, subcluster.item, only_compiled_class_searched)
 						if case_sensitive then
 							cluster_strategy.set_case_sensitive
 						else
@@ -102,7 +106,7 @@ feature -- Basic operatioin
 				until
 					classes.after
 				loop
-					create class_strategy.make (keyword, surrounding_text_range_internal, classes.item_for_iteration)
+					create class_strategy.make (keyword, surrounding_text_range_internal, classes.item_for_iteration, only_compiled_class_searched)
 					if case_sensitive then
 						class_strategy.set_case_sensitive
 					else
@@ -132,6 +136,7 @@ feature -- Basic operatioin
 			cluster_strategy := Void
 			cluster_i := Void
 			is_subcluster_searched_internal := false
+			only_compiled_class_searched := false
 		end
 
 feature -- Element change

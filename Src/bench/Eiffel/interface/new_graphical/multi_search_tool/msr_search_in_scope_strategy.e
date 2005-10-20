@@ -20,7 +20,7 @@ create
 
 feature -- Initialization
 
-	make (a_keyword: STRING; a_range: INTEGER; widget: ANY) is
+	make (a_keyword: STRING; a_range: INTEGER; widget: ANY; only_compiled_class: BOOLEAN) is
 			-- Make with a scope container, a list for example
 		require
 			widget_not_void: widget /= Void
@@ -29,8 +29,10 @@ feature -- Initialization
 		do
 			make_search_strategy (a_keyword, a_range)
 			scope_container:= widget
+			only_compiled_class_searched_internal := only_compiled_class
 		ensure
 			scope_container_not_void: scope_container /= Void
+			only_compiled_class_set: only_compiled_class_searched_internal = only_compiled_class
 		end
 		
 feature	-- Status report
@@ -52,6 +54,12 @@ feature	-- Status report
 		do
 			Result := is_subcluster_searched_internal
 		end
+	
+	only_compiled_class_searched: BOOLEAN is
+			-- Only compiled class are searched?
+		do
+			Result := only_compiled_class_searched_internal	
+		end		
 		
 feature -- Basic operation
 
@@ -75,7 +83,7 @@ feature -- Basic operation
 					l_class_i ?= l_list.item.data
 					l_cluster_i ?= l_list.item.data
 					if l_cluster_i /= Void then
-						create l_cluster_strategy.make (keyword, surrounding_text_range_internal, l_cluster_i)
+						create l_cluster_strategy.make (keyword, surrounding_text_range_internal, l_cluster_i, only_compiled_class_searched)
 						if case_sensitive then
 							l_cluster_strategy.set_case_sensitive
 						else
@@ -88,7 +96,7 @@ feature -- Basic operation
 						item_matched.append (l_cluster_strategy.item_matched)
 					end
 					if l_class_i /= Void then
-						create l_class_strategy.make (keyword, surrounding_text_range_internal, l_class_i)
+						create l_class_strategy.make (keyword, surrounding_text_range_internal, l_class_i, only_compiled_class_searched)
 						if case_sensitive then
 							l_class_strategy.set_case_sensitive
 						else
@@ -136,5 +144,8 @@ feature -- Implementation
 			
 	is_subcluster_searched_internal: BOOLEAN
 			-- Are subclusters in `cluster_i' searched.
+			
+	only_compiled_class_searched_internal: BOOLEAN
+			-- Only compiled class are searched?
 
 end

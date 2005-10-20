@@ -31,7 +31,6 @@ inherit
 			default_key_processing_blocked,
 			dispose,
 			destroy,
-			needs_event_box,
 			gdk_events_mask,
 			button_press_switch,
 			initialize,
@@ -46,7 +45,6 @@ inherit
 	EV_DRAWING_AREA_ACTION_SEQUENCES_IMP
 		redefine
 			interface,
-			needs_event_box,
 			process_gdk_event
 		end
 
@@ -54,9 +52,6 @@ create
 	make
 
 feature {NONE} -- Initialization
-
-	needs_event_box: BOOLEAN is False
-		-- Place drawing area inside an event box.
 
 	make (an_interface: like interface) is
 			-- Create an empty drawing area.
@@ -250,7 +245,6 @@ feature {NONE} -- Implementation
 				{EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color_struct, a_color.blue_16_bit)
 				a_success := {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color ({EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, color_struct, False, True)
 				{EV_GTK_EXTERNALS}.gdk_gc_set_rgb_bg_color (gc, color_struct)	
-				{EV_GTK_EXTERNALS}.gdk_window_set_background (drawable, color_struct)
 			end
 		end
 

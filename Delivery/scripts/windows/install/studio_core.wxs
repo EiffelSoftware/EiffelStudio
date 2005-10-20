@@ -386,6 +386,7 @@
 								<File Id="VHAY" Name="VHAY" />
 								<File Id="VHPR" Name="VHPR" />
 								<File Id="VHRC" Name="VHRC" />
+								<File Id="VICA" Name="VICA" />
 								<File Id="VIRW" Name="VIRW" />
 								<File Id="VJAR" Name="VJAR" />
 								<File Id="VJAW" Name="VJAW" />
@@ -610,7 +611,9 @@
 									<File Id="VHRC4" Name="VHRC4" />
 									<File Id="VHRC5" Name="VHRC5" />
 									<File Id="VIAC" Name="VIAC" />
-									<File Id="VICA" Name="VICA" />
+									<File Id="VICA2" Name="VICA2" />
+									<File Id="VICA3" Name="VICA3" />
+									<File Id="VICA4" Name="VICA4" />
 									<File Id="VICF" Name="VICF" />
 									<File Id="VIFC" Name="VIFC" />
 									<File Id="VIFI1" Name="VIFI1" />

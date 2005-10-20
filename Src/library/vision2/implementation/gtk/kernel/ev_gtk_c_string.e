@@ -215,7 +215,8 @@ feature {NONE} -- Implementation
 				-- We compute it ourself since we cannot trust GTK `g_utf8_validate'.
 				-- This is a security risk as we don't know how much we can read, we limit ourself
 				-- to the maximum we can allocate.
-			create l_ptr.share_from_pointer (a_utf8_ptr, {INTEGER}.max_value)
+			l_ptr := shared_pointer_helper
+			l_ptr.set_from_pointer (a_utf8_ptr, {INTEGER}.max_value)
 			from
 				Result := 0
 			until

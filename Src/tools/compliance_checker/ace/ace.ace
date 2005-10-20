@@ -1,5 +1,5 @@
 system
-	"ec_checker"
+	"ecchecker"
 
 root
 	EC_MAIN: make_sta

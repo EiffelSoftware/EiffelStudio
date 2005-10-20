@@ -29,10 +29,13 @@ feature -- Initialization
 			-- Tooltip that has been set.
 		local
 			tip_ptr: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
+			a_cs := app_implementation.reusable_gtk_c_string
 			tip_ptr := {EV_GTK_EXTERNALS}.gtk_tooltips_data_get (visual_widget)
 			if tip_ptr /= NULL then
-				create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_tooltips_data_struct_tip_text (tip_ptr))
+				a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_tooltips_data_struct_tip_text (tip_ptr))
+				Result := a_cs.string
 			else
 				Result := ""
 			end

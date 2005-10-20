@@ -277,7 +277,8 @@ feature {NONE} -- Initialization
 					end				
 				end
 				cnt := cnt + 1
-			end			
+			end
+			root_dir.close
 		end
 
 	build_from_directory_sub_dirs (root_dir: DIRECTORY; include_dirs: ARRAYED_LIST [STRING]; a_parent: TABLE_OF_CONTENTS_NODE) is
@@ -339,7 +340,8 @@ feature {NONE} -- Initialization
 					end				
 				end
 				cnt := cnt + 1
-			end			
+			end
+			root_dir.close
 		end
 
 	build_from_tree (a_tree: EV_TREE_NODE_LIST; a_parent: TABLE_OF_CONTENTS_NODE) is
@@ -507,6 +509,7 @@ feature {NONE} -- Initialization
 				end
 				l_cnt := l_cnt + 1				
 			end
+			a_root.close
 		end		
 
 feature {NONE} -- Implementation

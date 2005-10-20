@@ -2030,11 +2030,16 @@ feature -- Element change
 			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
 			
 				-- Then those from `move_rows' which require `a_parent_row' to be `Void'
-			not_breaking_existing_subrow_structure: a_parent_row = Void and j <= row_count implies row (j).parent_row = Void
+			not_breaking_existing_subrow_structure:
+				j = row_count + 1 or else
+				((a_parent_row = Void and ((j = i or j = i + 1) implies row (i + n).parent_row = Void))) or else
+				((a_parent_row = Void and j <= row_count) implies row (j).parent_row = Void)
 
 				-- Finally those from `move_rows_to_parent' which require `a_parent_row' to be non-Void.
 			j_valid_for_move_to_a_parent_row:
-				a_parent_row /= Void implies (j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)
+					a_parent_row /= Void implies
+					((j = i + n implies (i > a_parent_row.index and i <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1)) or
+					(j > a_parent_row.index and j <= a_parent_row.index + a_parent_row.subrow_count_recursive + 1))
 			not_inserting_within_existing_subrow_structure: 
 				(a_parent_row /= Void and j <= a_parent_row.index + a_parent_row.subrow_count_recursive)
 				implies row (j).parent_row = a_parent_row

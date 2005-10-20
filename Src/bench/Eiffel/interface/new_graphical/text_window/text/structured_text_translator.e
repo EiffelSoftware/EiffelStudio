@@ -191,12 +191,40 @@ feature -- Text processing
 	process_feature_text (t: FEATURE_TEXT) is
 		local
 			tok: EDITOR_TOKEN_FEATURE
+			feature_start: EDITOR_TOKEN_FEATURE_START
 			stone: FEATURE_STONE
+			feature_start_found: BOOLEAN
+			editor_tok: EDITOR_TOKEN
 		do
-			create tok.make (t.image)
 			create stone.make (t.e_feature)
-			tok.set_pebble (stone)
-			last_line.append_token (tok)
+			from
+				last_line.start
+			until
+				last_line.after or feature_start_found
+			loop
+				feature_start ?= last_line.item
+				feature_start_found := (feature_start /= Void)
+				if not feature_start_found then
+					last_line.forth
+				end				
+			end
+			if feature_start_found then
+				editor_tok := last_line.item
+				if editor_tok.previous /= Void then
+					editor_tok.previous.set_next_token (editor_tok.next)
+				end
+				if editor_tok.next /= Void then
+					editor_tok.next.set_previous_token (editor_tok.previous)
+				end
+				create feature_start.make (t.image)
+				feature_start.set_pebble (stone)
+				feature_start.set_text_color_feature
+				last_line.append_token (feature_start)
+			else
+				create tok.make (t.image)
+				tok.set_pebble (stone)
+				last_line.append_token (tok)
+			end
 		end
 
 	process_breakpoint_index (t: BREAKPOINT_TEXT) is
@@ -257,11 +285,39 @@ feature -- Text processing
 		local
 			tok: EDITOR_TOKEN_OPERATOR
 			stone: FEATURE_STONE
+			feature_start: EDITOR_TOKEN_FEATURE_START
+			feature_start_found: BOOLEAN
+			editor_tok: EDITOR_TOKEN
 		do
-			create tok.make (t.image)
 			create stone.make (t.e_feature)
-			tok.set_pebble (stone)
-			last_line.append_token (tok)
+			from
+				last_line.start
+			until
+				last_line.after or feature_start_found
+			loop
+				feature_start ?= last_line.item
+				feature_start_found := (feature_start /= Void)
+				if not feature_start_found then
+					last_line.forth
+				end				
+			end
+			if feature_start_found then
+				editor_tok := last_line.item
+				if editor_tok.previous /= Void then
+					editor_tok.previous.set_next_token (editor_tok.next)
+				end
+				if editor_tok.next /= Void then
+					editor_tok.next.set_previous_token (editor_tok.previous)
+				end
+				create feature_start.make (t.image)
+				feature_start.set_pebble (stone)
+				feature_start.set_text_color_operator
+				last_line.append_token (feature_start)
+			else
+				create tok.make (t.image)
+				tok.set_pebble (stone)
+				last_line.append_token (tok)
+			end
 		end
 
 	process_address_text (t: ADDRESS_TEXT) is
@@ -394,14 +450,24 @@ feature -- Text processing
 
 	process_filter_item (text: FILTER_ITEM) is
 			-- Process information on syntax `text'.
+		local
+			l_feature_dec_item: FEATURE_DEC_ITEM
+			tok: EDITOR_TOKEN_FEATURE_START
 		do
+			l_feature_dec_item ?= text
+			if l_feature_dec_item /= Void then
+				if l_feature_dec_item.is_before then
+					create tok.make (l_feature_dec_item.feature_name)
+					tok.set_text_color_feature
+					last_line.append_token (tok)
+				end
+			end
 		end
 
 	process_before_class (text: BEFORE_CLASS) is
 			-- Process before class `t'.
 		do
 		end
-
 
 feature -- Obsolete
 

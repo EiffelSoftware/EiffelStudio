@@ -471,6 +471,14 @@ feature -- Text status report
 			Result := text_displayed.cursor.x_in_characters
 		end
 
+	cursor_visible_x_position: INTEGER is
+			-- Current visible character position in line.
+		require
+			not_empty: not is_empty
+		do
+			Result := text_displayed.cursor.x_in_visible_characters
+		end
+
 	cursor_y_position: INTEGER is
 			-- Current line number (in the whole text).
 		require

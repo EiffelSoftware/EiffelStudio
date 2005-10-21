@@ -246,6 +246,45 @@ feature -- Basic Operations
 			end
 			ignore_cursor_moves := False
 		end
+		
+	remove_trailed_blanks is
+			-- Remove trailed blanks, this will be recorded in history stack. 
+		local
+			l_token: EDITOR_TOKEN
+			end_loop: BOOLEAN
+			l_cursor: EDITOR_CURSOR
+		do
+			l_cursor := cursor
+			from		
+				start
+			until
+				after
+			loop
+				from
+					l_token := current_line.eol_token.previous
+					end_loop := false
+				until
+					l_token = Void or end_loop
+				loop
+					if l_token.is_blank then
+						if l_token.previous /= Void then
+							l_token.previous.set_next_token (l_token.next)
+						end
+						l_token.next.set_previous_token (l_token.previous)
+						create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
+						history.record_remove_trailed_blank (l_token.image)
+					else
+						end_loop := true
+					end
+					if not end_loop then
+						l_token := l_token.previous
+					end					
+				end
+				current_line.update_token_information
+				forth
+			end
+			cursor := l_cursor
+		end
 
 	insert_char (c: CHARACTER) is
 			-- Insert `c' at the cursor position.

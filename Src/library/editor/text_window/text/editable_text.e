@@ -247,8 +247,8 @@ feature -- Basic Operations
 			ignore_cursor_moves := False
 		end
 		
-	remove_trailed_blanks is
-			-- Remove trailed blanks, this will be recorded in history stack. 
+	remove_trailing_blanks is
+			-- Remove trailing blanks, this will be recorded in history stack. 
 		local
 			l_token: EDITOR_TOKEN
 			end_loop: BOOLEAN
@@ -272,7 +272,7 @@ feature -- Basic Operations
 						end
 						l_token.next.set_previous_token (l_token.previous)
 						create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
-						history.record_remove_trailed_blank (l_token.image)
+						history.record_remove_trailing_blank (l_token.image)
 					else
 						end_loop := true
 					end

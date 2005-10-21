@@ -276,22 +276,22 @@ feature {EDITABLE_TEXT} -- Element change
 			current_status := unsymbol
 		end
 		
-	record_remove_trailed_blank (s: STRING) is
+	record_remove_trailing_blank (s: STRING) is
 			-- Update `Current' as `s' has just been back deleted at cursor position.
 		local
-			undo_rtb_cmd: UNDO_REMOVE_TRAILED_BLANK_CMD
+			undo_rtb_cmd: UNDO_REMOVE_TRAILING_BLANK_CMD
 			undo_delete_cmd: UNDO_DELETE_CMD
 		do
-			if current_status = remove_trailed_blank then
+			if current_status = remove_trailing_blank then
 				undo_rtb_cmd ?= item
 			else
 				create undo_rtb_cmd.make
 			end
 			create undo_delete_cmd.make_from_string (text.cursor, s, text)
 			undo_rtb_cmd.add(undo_delete_cmd)
-			if current_status /= remove_trailed_blank then
+			if current_status /= remove_trailing_blank then
 				put (undo_rtb_cmd)
-				current_status := remove_trailed_blank
+				current_status := remove_trailing_blank
 			end
 			notify_observers
 		end		
@@ -468,7 +468,7 @@ feature {NONE} -- Constants
 	move, insert_char, delete_char, insert_eol, 
 	replace, replace_selection, replace_all, 
 	back_delete, back_delete_combo, cut_selection,
-	paste, symbol, unsymbol, remove_trailed_blank : INTEGER is unique
+	paste, symbol, unsymbol, remove_trailing_blank : INTEGER is unique
 
 feature -- Observer pattern
 

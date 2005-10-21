@@ -5,9 +5,7 @@ root
 	EB_KERNEL: make
 
 default
-	assertion (check)
-	assertion (require)
-	assertion (ensure)
+	assertion (no)
 	disabled_debug (yes)
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
@@ -38,6 +36,7 @@ default
 	disabled_debug ("debugger_hook")
 	disabled_debug ("debugger_interface")
 	disabled_debug ("debugger_trace")
+	disabled_debug ("debugger_trace_breakpoint")
 	disabled_debug ("debugger_trace_callstack")
 	disabled_debug ("debugger_trace_eval")
 	disabled_debug ("debugger_trace_eval_data")
@@ -59,17 +58,19 @@ default
 	disabled_debug ("gelex")
 	disabled_debug ("genericity")
 	disabled_debug ("geyacc")
+	disabled_debug ("grid_layout")
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
+	disabled_debug ("larry")
 	disabled_debug ("lex_output")
 	disabled_debug ("local_feat_adaptation")
-	disabled_debug ("log_exceptions")
 	disabled_debug ("once")
 	disabled_debug ("optimization")
 	disabled_debug ("options")
 	disabled_debug ("parse")
 	disabled_debug ("profile_convert")
 	disabled_debug ("refactor_fixme")
+	disabled_debug ("regexp")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
 	disabled_debug ("server")
@@ -80,7 +81,6 @@ default
 	disabled_debug ("verbose")
 	disabled_debug ("xml_input_stream")
 	disabled_debug ("xml_parser")
-	disabled_debug ("larry")
 	debug (no)
 	line_generation (no)
 	profile (no)
@@ -241,7 +241,7 @@ cluster
 			"CVS"; 
 		end
 
-	all memory_analyzer:	"$EIFFEL_SRC/library/memory_analyzer"
+	all memory_analyzer:		"$EIFFEL_SRC/library/memory_analyzer"
 
 	all process:		"$EIFFEL_SRC/library/process"
 		exclude
@@ -250,7 +250,7 @@ cluster
 
 	all vision2_extension:		"$EIFFEL_SRC/library/vision2_extension/independent"
 		exclude
-			"mswin";
+			"mswin"; 
 		end
 
 	all thread:		"$EIFFEL_SRC/library/thread"
@@ -264,7 +264,8 @@ external
 		"\$(EIFFEL_SRC)/library/vision2/spec/include",
 		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `$EIFFEL_SRC/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --include_path`",
 		"\$(EIFFEL_SRC)/C_library/libpng",
-		"\$(EIFFEL_SRC)/C_library/zlib"
+		"\$(EIFFEL_SRC)/C_library/zlib",
+		"\$(EIFFEL_SRC)/library/process/classic/unix/Clib"
 
 	object:
 		"$(EIFFEL_SRC)/C/bench/libmtcompiler.a",

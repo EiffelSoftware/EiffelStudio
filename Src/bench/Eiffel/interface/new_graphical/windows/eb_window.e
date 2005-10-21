@@ -204,7 +204,7 @@ feature -- Status setting
 			-- Note: The window cannot be moved while update is locked.
 		do
 			if lock_level = 0 then
-				if ev_application.locked_window = Void then
+				if ev_application.locked_window = Void and then window /= Void then
 					window.lock_update
 					unlock_needed := True
 				else

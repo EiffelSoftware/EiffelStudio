@@ -133,9 +133,8 @@ feature {NONE} -- Compilation implementation
 						end
 					end
 				end
-
-				tool_resynchronization
 				Degree_output.finish_degree_output
+				tool_resynchronization				
 			end
 		end
 
@@ -145,14 +144,8 @@ feature {NONE} -- Compilation implementation
 		do
 				-- Clear the format_context buffers.
 			clear_format_tables
-
-				-- Resynchronize windows
-			if progress_dialog /= Void then
-					-- FIXME: maybe this call should be encapsulated in DEGREE_OUTPUT, so
-					-- that we don't need to test against Void.
-				progress_dialog.disable_cancel
-			end
-			Degree_output.put_string (Interface_names.d_Resynchronizing_tools)
+			window_manager.display_message (Interface_names.d_Resynchronizing_tools)
+			window_manager.display_percentage (0)
 			window_manager.synchronize_all
 			if Workbench.successful then
 				window_manager.display_message (Interface_names.E_compilation_succeeded)

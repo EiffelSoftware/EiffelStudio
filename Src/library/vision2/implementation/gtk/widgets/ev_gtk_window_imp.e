@@ -12,7 +12,6 @@ inherit
 		redefine
 			width,
 			height,
-			is_parentable,
 			show
 		end
 
@@ -23,9 +22,6 @@ feature {NONE} -- Implementation
 		do
 			-- Return Void
 		end
-
-	is_parentable: BOOLEAN is False
-			-- Is `Current' parentable, 
 
 	width: INTEGER is
 			-- Horizontal size measured in pixels.

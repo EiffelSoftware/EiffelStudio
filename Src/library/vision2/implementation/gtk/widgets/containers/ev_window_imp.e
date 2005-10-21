@@ -97,10 +97,12 @@ feature  -- Access
 			-- the window manager.
 		local
 			p : POINTER
+			a_cs: EV_GTK_C_STRING
 		do
 			p := {EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object)
 			if p /= NULL then
-				create Result.make_from_c (p)
+				create a_cs.share_from_pointer (p)
+				Result := a_cs.string
 				if Result.is_equal ("%T") then
 					Result := ""
 				end
@@ -390,8 +392,8 @@ feature {NONE} -- Implementation
 			create upper_bar
 			create lower_bar
 
-			maximum_width := 32000
-			maximum_height := 32000
+			maximum_width := interface.maximum_dimension
+			maximum_height := interface.maximum_dimension
 			
 			signal_connect_true (once "delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			initialize_client_area

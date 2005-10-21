@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			eifgen_init: INIT_SERVERS
 			new_resources: TTY_RESOURCES
 			pref_strs: PREFERENCE_CONSTANTS
-			l_app: EB_EV_THREAD_APPLICATION			
+			l_app: EV_APPLICATION
 			fn: FILE_NAME	
 			preference_access: PREFERENCES
 			l_is_gui: BOOLEAN

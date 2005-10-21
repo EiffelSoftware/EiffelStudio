@@ -356,6 +356,12 @@ feature {EV_ANY_I} -- Delegated features
 			interface.implementation.set_size (new_width, new_height)
 		end
 
+	redraw is
+			-- Force `Current' to redraw itself.
+		do
+			-- Do nothing as `Current' cannot be on-screen to be redrawn.
+		end
+
 	clear is
 			-- Erase `Current' with `background_color'.
 		do
@@ -1167,7 +1173,7 @@ feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP} -- Pixmap Filename
 			--  * Void if no file is associated with Current.
 			--  * Empty string for the default pixmap.
 
-feature {EV_PIXMAP_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP_DRAWABLE} -- Pixmap State
+feature {EV_DRAWABLE_IMP, EV_IMAGE_LIST_IMP, EV_PIXMAP_IMP} -- Pixmap State
 
 	private_width: INTEGER
 			-- Current width
@@ -1664,7 +1670,7 @@ feature {
 
 	interface: EV_PIXMAP
 
-feature {EV_PIXMAP_IMP_DRAWABLE} -- Implementation
+feature {EV_DRAWABLE_IMP} -- Implementation
 
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
 			-- Pixmap region of `Current' represented by rectangle `area'

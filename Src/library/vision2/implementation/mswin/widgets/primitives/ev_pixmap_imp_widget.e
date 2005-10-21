@@ -33,7 +33,7 @@ inherit
 			draw_text, draw_segment, draw_straight_line, draw_arc, 
 			draw_pixmap, draw_rectangle, draw_ellipse, draw_polyline, 
 			draw_pie_slice, fill_rectangle, fill_ellipse, fill_polygon, 
-			fill_pie_slice, set_with_default, flush, copy_pixmap
+			fill_pie_slice, set_with_default, flush, copy_pixmap, redraw
 		select
 			width,
 			height,
@@ -216,6 +216,12 @@ feature -- Status setting
 		end
 
 feature -- Clearing and drawing operations
+
+	redraw is
+			-- Force `Current' to redraw itself.
+		do
+			update_display
+		end
 
 	clear is
 			-- Erase `Current' with `background_color'.

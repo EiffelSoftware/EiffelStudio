@@ -78,7 +78,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature -- Initialization	
 
 	make is
 			-- Initialize the command, create a couple of requests and windows.

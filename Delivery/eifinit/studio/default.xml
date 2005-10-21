@@ -162,6 +162,7 @@
 	<PREF NAME="editor.eiffel.auto-complete_quotes" DESCRIPTION="Are quotes closed automatically?"><BOOLEAN>False</BOOLEAN></PREF>	
 	<PREF NAME="editor.eiffel.auto_auto-complete" DESCRIPTION="Should completion window appear automatically after typing a `.'?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.auto_complete_words" DESCRIPTION="Should completion automatically complete words when a single best match is available?"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.auto_remove_trailing_blank_when_saving" DESCRIPTION="Should trailing blanks be auto-removed when saving?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.eiffel.customized_string_1" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 1."><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.customized_string_2" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 2."><STRING></STRING></PREF>
 	<PREF NAME="editor.eiffel.customized_string_3" DESCRIPTION="User customized string inserted when user performs the key combination defined in Editor->Eiffel->Keyboard Shortcuts->Customized insertion 3."><STRING></STRING></PREF>

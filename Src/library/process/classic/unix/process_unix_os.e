@@ -191,7 +191,7 @@ feature {NONE} -- Externals
 			c_str_dup (area, $Result);
 		end
 		
-	c_str_dup (area: POINTER; a_result: POINTER) is
+	c_str_dup (area: POINTER; a_result: TYPED_POINTER [POINTER]) is
 			-- 
 			external
 				"C inline use <string.h>"
@@ -208,7 +208,7 @@ feature {NONE} -- Externals
 				    	enomem();
 					  }
 					  strcpy(result, $area);
-					  $a_result = result;
+					  *$a_result = result;
 					}
 				]"
 			end

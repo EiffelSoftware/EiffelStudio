@@ -45,8 +45,10 @@ feature -- Status setting
 		do
 			update_request_size
 			w_imp ?= a_widget.implementation
-			{EV_GTK_EXTERNALS}.gtk_fixed_move (visual_widget, w_imp.c_object, an_x, a_y)
-			set_minimum_size (minimum_width.max (w_imp.width + an_x), minimum_height.max (w_imp.height + a_y))
+			{EV_GTK_EXTERNALS}.gtk_fixed_move (c_object, w_imp.c_object, an_x, a_y)
+			
+--			print ("X position = " + gtk_fixed_child_struct_x (i_th_fixed_child (1)).out + "%N")
+--			print ("Y position = " + gtk_fixed_child_struct_y (i_th_fixed_child (1)).out + "%N")
 		end
 		
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
@@ -68,11 +70,33 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Precursor (a_widget_imp)
 			a_widget_imp.reset_minimum_size
-		end			
+		end		
+
+	i_th_fixed_child (i: INTEGER): POINTER is
+			-- `i-th' fixed child of `Current'.
+		local
+			glist: POINTER
+		do
+			glist := {EV_GTK_EXTERNALS}.gtk_fixed_struct_children (c_object)
+			Result := {EV_GTK_EXTERNALS}.g_list_nth_data (glist, i - 1)
+		end
+
+	frozen gtk_fixed_child_struct_x (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkFixedChild): EIF_INTEGER"
+		alias
+			"x"
+		end
+
+	frozen gtk_fixed_child_struct_y (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkFixedChild): EIF_INTEGER"
+		alias
+			"y"
+		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
-			--| Do nothing more than calling gtk-reorder.
 		local
 			glist, fixlist, fixitem: POINTER
 			temp_index: INTEGER

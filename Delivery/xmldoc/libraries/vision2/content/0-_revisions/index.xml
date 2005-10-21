@@ -82,6 +82,9 @@
 					<item>
 						<bold>EV_COMBO_BOX</bold> - Fixed bug in `key_press_actions' which were called twice when you pressed the up or down arrow keys.
 					</item>
+					<item>
+						<bold>EV_TITLED_WINDOW</bold> - `title' was returning `Void' if you had not explicitly set a `title'.
+					</item>
 				</list>
 			</item>
 			<item>

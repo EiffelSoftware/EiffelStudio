@@ -28,6 +28,9 @@ inherit
 	EB_SHARED_PREFERENCES
 		export {NONE} all end
 
+	EV_SHARED_APPLICATION
+		export {NONE} all end
+
 create
 	make
 

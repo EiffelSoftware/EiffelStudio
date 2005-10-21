@@ -719,11 +719,8 @@ feature -- Element change
 					disable_force_directed
 				end
 				
-				progress_dialog.set_title ("Building progress")
-				progress_dialog.set_message ("Diagram for " + a_class.name_in_upper)
-				progress_dialog.enable_cancel
-				progress_dialog.set_value (0)
-				progress_dialog.show
+				development_window.status_bar.reset
+				development_window.status_bar.display_message ("Constructing Diagram for " + a_class.name_in_upper + " Class")
 				
 				update_excluded_class_figures
 				world_cell.disable_resize
@@ -759,7 +756,7 @@ feature -- Element change
 				projector.enable_painting
 				world_cell.enable_resize
 				projector.full_project
-				progress_dialog.hide
+				development_window.status_bar.reset
 				crop_diagram
 				if world.is_uml then
 					reset_tool_bar_for_uml_class_view
@@ -784,7 +781,6 @@ feature -- Element change
 		rescue
 			cancelled := True
 			error_handler.error_list.wipe_out
-			progress_dialog.hide
 			projector.enable_painting
 			world_cell.enable_resize
 			clear_area
@@ -862,12 +858,9 @@ feature -- Element change
 				if is_force_directed_used then
 					disable_force_directed
 				end
-				
-				progress_dialog.set_title ("Building progress")
-				progress_dialog.set_message ("Diagram for " + a_cluster.name_in_upper)
-				progress_dialog.enable_cancel
-				progress_dialog.set_value (0)
-				progress_dialog.show
+
+				development_window.status_bar.reset
+				development_window.status_bar.display_message ("Constructing Diagram for " + a_cluster.name_in_upper + " Cluster")
 				
 				update_excluded_class_figures
 				world_cell.disable_resize
@@ -898,7 +891,7 @@ feature -- Element change
 				world.show
 				world_cell.enable_resize
 
-				progress_dialog.hide
+				development_window.status_bar.reset
 				projector.full_project
 				crop_diagram
 				if world.is_uml then
@@ -924,7 +917,6 @@ feature -- Element change
 		rescue
 			cancelled := True
 			error_handler.error_list.wipe_out
-			progress_dialog.hide
 			world.show
 			world_cell.enable_resize
 			clear_area
@@ -1451,15 +1443,10 @@ feature {NONE} -- Events
 			cancelled: BOOLEAN
 		do
 			if not cancelled then--and not view_selector.is_empty then
-				reset_history		
-
-				progress_dialog.set_title ("Loading view")
-				progress_dialog.set_message ("Diagram for " + view_selector.text)
-				progress_dialog.set_degree ("Calculating size:")
-				progress_dialog.enable_cancel
-				progress_dialog.show
+				reset_history
 				
-				progress_dialog.start (0)
+				development_window.status_bar.display_message ("Loading diagram for " + view_selector.text)
+				development_window.status_bar.progress_bar.reset_with_range (0 |..| 0)
 				
 				if is_force_directed_used then
 					disable_force_directed
@@ -1474,7 +1461,7 @@ feature {NONE} -- Events
 				projector.enable_painting
 				world_cell.enable_resize
 				projector.full_project
-				progress_dialog.hide
+				development_window.status_bar.reset
 				crop_diagram
 				
 				if world.is_uml then
@@ -1505,7 +1492,7 @@ feature {NONE} -- Events
 		rescue
 			cancelled := True
 			error_handler.error_list.wipe_out
-			progress_dialog.hide
+			development_window.status_bar.reset
 			projector.enable_painting
 			world_cell.enable_resize
 			clear_area
@@ -1551,10 +1538,10 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 		do
 			if not cancelled then
 				
-				progress_dialog.set_title ("Loading view")
-				progress_dialog.set_message ("Diagram for " + view_selector.text)
-				progress_dialog.enable_cancel
-				progress_dialog.show
+--				progress_dialog.set_title ("Loading view")
+--				progress_dialog.set_message ("Diagram for " + view_selector.text)
+--				progress_dialog.enable_cancel
+--				progress_dialog.show
 				
 				if is_force_directed_used then
 					disable_force_directed
@@ -1571,7 +1558,6 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 				projector.enable_painting
 				world_cell.enable_resize
 				projector.full_project
-				progress_dialog.hide
 				crop_diagram
 
 				if world.is_right_angles then
@@ -1582,7 +1568,6 @@ feature {EB_DELETE_VIEW_COMMAND} -- View selector
 		rescue
 			cancelled := True
 			error_handler.error_list.wipe_out
-			progress_dialog.hide
 			projector.enable_painting
 			world_cell.enable_resize
 			clear_area

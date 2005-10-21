@@ -96,7 +96,7 @@ feature -- Status setting
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.is_empty
 		do
-			implementation.read_from_named_file(file_name)
+			implementation.read_from_named_file (file_name)
 		end
 
 	set_size (a_width, a_height: INTEGER) is
@@ -148,16 +148,6 @@ feature -- Duplication
 				default_create
 			end
 			implementation.copy_pixmap (other)
-		end
-
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
-			-- Return a pixmap region of `Current' represented by rectangle `area'
-		require
-			area_not_void: area /= Void
-		do
-			Result := implementation.sub_pixmap (area)
-		ensure
-			result_not_void: Result /= Void
 		end
 
 feature {EV_ANY_I, EV_IMAGE_LIST_IMP, EV_STOCK_PIXMAPS_IMP, EV_FIGURE_POSTSCRIPT_DRAWER, ANY} -- Implementation

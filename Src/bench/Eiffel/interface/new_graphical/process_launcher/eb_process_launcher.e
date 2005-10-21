@@ -16,6 +16,8 @@ inherit
 	EB_SHARED_MANAGERS
 	
 	EB_SHARED_FLAGS
+	
+	SHARED_PLATFORM_CONSTANTS
 		
 feature -- Launching parameters setting
 
@@ -177,14 +179,19 @@ feature -- Control
 				prc.redirect_input_to_stream
 				prc.redirect_error_to_agent (error_handler)
 				prc.redirect_output_to_agent (output_handler)
-				prc.set_hidden (is_hidden)
-				prc.set_has_console (False)									
+				if platform_constants.is_windows then
+					prc.set_hidden (is_hidden)
+					prc.set_has_console (False)						
+				end							
 			else
 				prc.cancel_error_redirection
 				prc.cancel_input_redirection
 				prc.cancel_output_redirection
-				prc.set_hidden (False)
-				prc.set_has_console (True)
+				if platform_constants.is_windows then
+					prc.set_hidden (False)
+					prc.set_has_console (True)					
+				end
+
 			end
 			
 			if is_gui then

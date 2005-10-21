@@ -90,8 +90,30 @@ feature --{EV_ANY_I} -- Implementation
 			-- dc. Example : EV_DRAWING_AREA_IMP
 		do
 		end
-		
-		
+
+feature -- Access
+
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Return the subpixmap of `Current' described by rectangle `area'.
+		local
+			a_pixmap_imp: EV_PIXMAP_IMP
+			a_private_bitmap: WEL_BITMAP
+			reusable_dc: WEL_MEMORY_DC
+		do
+			create Result
+			a_pixmap_imp ?= Result.implementation
+			create reusable_dc.make_by_dc (dc)
+			create a_private_bitmap.make_compatible (dc, area.width, area.height)
+			reusable_dc.select_bitmap (a_private_bitmap)
+			
+			reusable_dc.bit_blt (0, 0, area.width, area.height, dc, area.x, area.y, srccopy)
+
+			a_pixmap_imp.set_bitmap_and_mask (a_private_bitmap, Void, area.width, area.height)
+			
+				-- Clean up
+			reusable_dc.unselect_bitmap
+			reusable_dc.delete
+		end
 
 feature -- Access
 

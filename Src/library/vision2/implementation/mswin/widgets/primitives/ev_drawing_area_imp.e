@@ -15,7 +15,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			initialize, interface, destroy, get_dc, release_dc
+			initialize, interface, destroy, get_dc, release_dc, redraw
 		end
 
 	EV_PRIMITIVE_IMP

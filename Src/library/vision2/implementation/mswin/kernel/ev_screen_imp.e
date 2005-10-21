@@ -227,6 +227,14 @@ feature -- Measurement
 			Result := get_device_caps (dc.item, logical_pixels_x)
 		end
 
+	redraw is
+			-- Force screen to redraw itself.
+		external
+			"C inline use %"wel.h%""
+		alias
+			"InvalidateRect(NULL, NULL, FALSE)"
+		end
+
 feature -- Status setting
 
 	destroy is

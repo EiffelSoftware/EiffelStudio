@@ -30,7 +30,8 @@ inherit
 			{EV_PIXMAP_IMP_WIDGET} wel_drawing_mode
 		redefine
 			interface,
-			destroy
+			destroy,
+			sub_pixmap
 		end
 
 create
@@ -223,6 +224,36 @@ feature {NONE} -- Saving
 
 feature -- Access
 
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Return the subpixmap of `Current' described by rectangle `area'.
+		local
+			a_pixmap_imp: EV_PIXMAP_IMP
+			a_private_bitmap, a_private_mask_bitmap: WEL_BITMAP
+			reusable_dc: WEL_MEMORY_DC
+		do
+			create Result
+			a_pixmap_imp ?= Result.implementation
+			create reusable_dc.make_by_dc (dc)
+			create a_private_bitmap.make_compatible (dc, area.width, area.height)
+			reusable_dc.select_bitmap (a_private_bitmap)
+			
+			reusable_dc.bit_blt (0, 0, area.width, area.height, dc, area.x, area.y, srccopy)
+			
+			if has_mask then
+				-- Add mask to result
+				reusable_dc.unselect_bitmap
+				create a_private_mask_bitmap.make_compatible (mask_dc, area.width, area.height)
+				reusable_dc.select_bitmap (a_private_mask_bitmap)
+				reusable_dc.bit_blt (0, 0, area.width, area.height, mask_dc, area.x, area.y, srccopy)	
+			end
+
+			a_pixmap_imp.set_bitmap_and_mask (a_private_bitmap, a_private_mask_bitmap, area.width, area.height)
+			
+				-- Clean up
+			reusable_dc.unselect_bitmap
+			reusable_dc.delete
+		end
+
 	dc: WEL_MEMORY_DC
 			-- The device context corresponding to the image
 
@@ -277,37 +308,6 @@ feature -- Access
 
 	transparent_color: EV_COLOR
 			-- Color used as transparent (Void by default).
-
-	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
-			-- Return the subpixmap of `Current' described by rectangle `area'.
-		local
-			a_pixmap_imp: EV_PIXMAP_IMP
-			a_private_bitmap, a_private_mask_bitmap: WEL_BITMAP
-			reusable_dc: WEL_MEMORY_DC
-		do
-			create Result
-			a_pixmap_imp ?= Result.implementation
-			create reusable_dc.make_by_dc (dc)
-			create a_private_bitmap.make_compatible (dc, area.width, area.height)
-			reusable_dc.select_bitmap (a_private_bitmap)
-			
-			reusable_dc.bit_blt (0, 0, area.width, area.height, dc, area.x, area.y, srccopy)
-			
-			if has_mask then
-				-- Add mask to result
-				reusable_dc.unselect_bitmap
-				create a_private_mask_bitmap.make_compatible (mask_dc, area.width, area.height)
-				reusable_dc.select_bitmap (a_private_mask_bitmap)
-				reusable_dc.bit_blt (0, 0, area.width, area.height, mask_dc, area.x, area.y, srccopy)	
-			end
-
-			a_pixmap_imp.set_bitmap_and_mask (a_private_bitmap, a_private_mask_bitmap, area.width, area.height)
-			
-				-- Clean up
-			reusable_dc.unselect_bitmap
-			reusable_dc.delete
-		end
-
 
 feature -- Status setting
 
@@ -942,6 +942,12 @@ feature -- Delegated features
 		do
 			promote_to_widget
 			Result := interface.implementation.y_position
+		end
+
+	redraw is
+			-- Force `Current' to redraw itself.
+		do
+			-- Do nothing as `Current' is not displayed on-screen.
 		end
 
 invariant

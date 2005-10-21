@@ -165,6 +165,30 @@ feature -- Access
 	header_info: EV_VIEWPORT
 			-- Box containing labels representing the history status.
 
+	cluster_label_text: STRING is
+			-- Name of the class as it appears in the cluster label.
+		do
+			if cluster_label /= Void and then not cluster_label.text.is_equal (default_cluster_name) then
+				Result := cluster_label.text
+			end
+		end
+
+	class_label_text: STRING is
+			-- Name of the class as it appears in the class label.
+		do
+			if class_label /= Void and then not class_label.text.is_equal (default_class_name) then
+				Result := class_label.text
+			end
+		end
+
+	feature_label_text: STRING is
+			-- Name of the class as it appears in the feature label.
+		do
+			if feature_label /= Void and then not feature_label.text.is_equal (default_feature_name) then
+				Result := feature_label.text
+			end
+		end
+
 	class_name: STRING
 			-- Name of the class as it appears in the combo box.
 			-- Void if none.
@@ -462,7 +486,7 @@ feature -- Memory management
 			parent := Void
 		end
 
-feature {NONE} -- Vision2 Controls
+feature {EB_DEVELOPMENT_WINDOW} -- Vision2 Controls
 
 	cluster_address: EV_COMBO_BOX
 			-- Cluster part of the address.
@@ -524,7 +548,7 @@ feature -- Updating
 			feature_address.disable_sensitive
 		end
 
-feature {NONE} -- Execution
+feature {EB_DEVELOPMENT_WINDOW} -- Execution
 
 	execute_with_cluster is
 			-- The user just entered a new cluster name, process it.
@@ -545,6 +569,8 @@ feature {NONE} -- Execution
 			choosing_class := False
 			process_user_entry
 		end
+
+feature {NONE} -- Execution
 
 	process_cluster_callback (pos: INTEGER) is
 			-- The choice `pos' has been selected, process the choice.

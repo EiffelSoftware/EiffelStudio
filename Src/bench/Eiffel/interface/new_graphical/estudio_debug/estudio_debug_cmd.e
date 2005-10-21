@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 feature -- Command
 
 	build_menu_bar is
-			-- Add/reomve menu bar base on preference, don't change the prefernce.
+			-- Add/remove menu bar based on preference, don't change the preference.
 		require
 			window_not_void: window /= Void
 		do
@@ -73,9 +73,9 @@ feature -- Command
 					menu := Void
 				end
 		    	if preferences.development_window_data.show_eiffel_studio_debug_preference.value then
-					remove_menu
-			    else    		
 					add_menu
+			    else    		
+					remove_menu
 		    	end
 			end
 		end

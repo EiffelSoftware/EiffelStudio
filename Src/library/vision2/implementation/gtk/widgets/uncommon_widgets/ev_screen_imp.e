@@ -58,7 +58,17 @@ feature -- Status report
 
 	widget_at_position (x, y: INTEGER): EV_WIDGET is
 			-- Widget at position ('x', 'y') if any.
+		local
+			l_pointer_position: like pointer_position
+			l_widget_imp: EV_WIDGET_IMP
 		do
+			l_pointer_position := pointer_position
+			set_pointer_position (x, y)
+			l_widget_imp := widget_imp_at_pointer_position
+			set_pointer_position (l_pointer_position.x, l_pointer_position.y)
+			if l_widget_imp /= Void then
+				Result := l_widget_imp.interface
+			end
 		end
 		
 	widget_imp_at_pointer_position: EV_WIDGET_IMP is
@@ -93,6 +103,12 @@ feature -- Status setting
 		end	
 
 feature -- Basic operation
+
+	redraw is
+			-- Redraw the entire area.
+		do
+			{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+		end
 
 	x_test_capable: BOOLEAN is
 			-- Is current display capable of performing x tests.

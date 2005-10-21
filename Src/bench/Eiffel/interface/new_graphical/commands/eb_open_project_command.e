@@ -269,6 +269,7 @@ feature {NONE} -- Project Initialization
 				window_manager.display_message (title)
 				Recent_projects_manager.save_environment
 	
+				--| IEK With project session handling this code is no longer needed, remove when fully integrated.
 				if l_display_system_info then
 						-- We print text in the project_tool text concerning the system
 						-- because we were successful retrieving the project without

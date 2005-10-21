@@ -1,5 +1,5 @@
 indexing
-	description	: "Smooth progress bar with the percentage written in the middle"
+	description	: "Smooth progress bar with optional percentage written in the middle"
 	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date		: "$Date$"
 	revision	: "$Revision$"
@@ -23,15 +23,23 @@ inherit
 			disable_sensitive
 		end
 
+	EV_SHARED_APPLICATION
+		undefine
+			is_equal,
+			copy,
+			default_create
+		end
+
 create
 	default_create,
 	make_with_size
 
-feature {NONE} -- Initialization
+feature {NONE} -- Initialization		
 
 	initialize is
 		do
 			Precursor {EV_PIXMAP}
+			enable_text_display
 			minimum := 0
 			maximum := 100
 			foreground_color := Default_colors.dark_blue
@@ -83,6 +91,27 @@ feature -- Access
 
 feature -- Status setting
 
+	reset is
+			-- Reset values for percentage.
+		do
+			minimum := 0
+			maximum := 100
+			value := 0
+		end
+		
+
+	enable_text_display is
+			-- Display percentage text.
+		do
+			is_percentage_text_displayed := True
+		end
+
+	disable_text_display is
+			-- Omit display of percentage text.
+		do
+			is_percentage_text_displayed := False
+		end
+		
 	step_forward is
 			-- Increment `value' by `step' if within `range'.
 		do
@@ -140,6 +169,8 @@ feature -- Element change
 		do
 			value := a_value
 			redraw_progress_bar
+			process_events_and_idle
+			
 		ensure
 			a_value_assigned: value = a_value
 		end
@@ -186,7 +217,9 @@ feature -- Element change
 				fill_rectangle (1, 1, x_value - 1, loc_height - 1)
 				set_pixmap_foreground_color (background_color)
 				set_pixmap_background_color (foreground_color)
-				draw_text_top_left (x_percent, y_percent, percent_string)
+				if is_percentage_text_displayed then
+					draw_text_top_left (x_percent, y_percent, percent_string)
+				end
 				
 					-- Draw "Remaining" part ( x% --> 100% )
 				create clip_rect.make (x_value, 1, loc_width - x_value, loc_height - 1)
@@ -195,7 +228,9 @@ feature -- Element change
 				fill_rectangle (x_value, 1, loc_width - x_value, loc_height - 1)
 				set_pixmap_foreground_color (foreground_color)
 				set_pixmap_background_color (background_color)
-				draw_text_top_left (x_percent, y_percent, percent_string)
+				if is_percentage_text_displayed then
+					draw_text_top_left (x_percent, y_percent, percent_string)
+				end
 				remove_clip_area
 			end
 
@@ -236,6 +271,9 @@ feature -- Resizing
 		end
 
 feature {NONE} -- Implementation
+
+	is_percentage_text_displayed: BOOLEAN
+		-- Will the percentage text be displayed?
 
 	percent_value: INTEGER is
 			-- Percentage * 100.

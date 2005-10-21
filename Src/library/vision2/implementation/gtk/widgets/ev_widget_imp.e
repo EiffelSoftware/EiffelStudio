@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 			if a_minimum_height /= -1 then
 				internal_minimum_height := a_minimum_height
 			end
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, a_minimum_width, a_minimum_height)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
 			update_request_size
 		end
 

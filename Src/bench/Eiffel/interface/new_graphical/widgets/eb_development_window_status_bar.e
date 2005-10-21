@@ -105,6 +105,7 @@ feature {NONE} -- Initialization
 				-- Create all widgets.
 			create widget
 			create label
+			create progress_bar
 			create project_label
 			create coordinate_label
 			create compilation_icon.make_with_size (16, 16)
@@ -114,6 +115,7 @@ feature {NONE} -- Initialization
 				
 				-- Set widget properties.
 			project_label.align_text_center
+			progress_bar.disable_text_display
 			label.align_text_left
 				-- 4 characters for the line number, 4 for the column number.
 				-- It should be nine with the separator, but it looks too wide then.
@@ -131,6 +133,14 @@ feature {NONE} -- Initialization
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (vp)
 			widget.extend (f)
+			
+			create f
+			f.set_minimum_width (100)
+			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+			f.extend (progress_bar)
+			widget.extend (f)
+			widget.disable_item_expand (f)
+			
 			create f
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (project_label)
@@ -179,6 +189,13 @@ feature {NONE} -- Initialization
 
 feature -- Status setting
 
+	reset is
+			-- Reset status bar.
+		do
+			label.set_text ("")
+			progress_bar.set_value (0)
+		end
+
 	display_message (mess: STRING) is
 			-- Display `mess'.
 		do
@@ -188,11 +205,11 @@ feature -- Status setting
 	remove_cursor_position is
 			-- Do not display any position for the editor cursor.
 		do
-			set_cursor_position (0, 0)
+			set_cursor_position (0, 0, 0)
 			coordinate_label.disable_sensitive
 		end
 
-	set_cursor_position (l, c: INTEGER) is
+	set_cursor_position (l, c, v: INTEGER) is
 			-- Display a new editor coordinate.
 		require
 			valid_pos: l >= 0 and c >= 0
@@ -203,6 +220,12 @@ feature -- Status setting
 			s.append (l.out)
 			s.append_character (':')
 			s.append (c.out)
+			--| FIXME IEK Uncomment when {TEXT_CURSOR}.x_in_visible_characters
+			--| is fixed to update with keyboard navigation.
+--			if v > c then
+--				s.append_character ('-')
+--				s.append (v.out)
+--			end
 			coordinate_label.set_text (s)
 			coordinate_label.enable_sensitive
 		end
@@ -218,7 +241,9 @@ feature {EB_RECYCLER} -- Status setting
 			
 			mg := Eiffel_project.manager
 			mg.create_agents.prune_all (create_agent)
+
 			mg.load_agents.prune_all (load_agent)
+			
 			mg.close_agents.prune_all (close_agent)
 			mg.edition_agents.prune_all (edition_agent)
 			mg.compile_start_agents.prune_all (compile_start_agent)
@@ -241,6 +266,9 @@ feature -- Access
 	label: EV_LABEL
 			-- Label where messages are displayed.
 			-- Directly accessible.
+
+	progress_bar: EB_PERCENT_PROGRESS_BAR
+			-- Progress bar where completion status is displayed
 
 feature {NONE} -- Implementation: widgets
 

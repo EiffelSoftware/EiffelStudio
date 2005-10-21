@@ -67,6 +67,8 @@ feature -- Access
 		do
 			if internal_title /= Void then
 				Result := internal_title.twin
+			else
+				Result := ""
 			end
 		end
 

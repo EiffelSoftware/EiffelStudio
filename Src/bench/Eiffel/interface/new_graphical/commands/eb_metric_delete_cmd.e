@@ -66,15 +66,18 @@ feature -- Actions
 				selected_items.forth
 			end
 			
-			if not tool.file_manager.metric_file.exists then
-					-- Should not be called, if file does not exist, `tool.multi_column_list' is emptied.
-				tool.file_manager.destroy_file_name
-				tool.set_file_loaded (False)
-				tool.file_handler.load_files
+			if tool.file_manager.metric_file /= Void then
+					-- Make sure that a metric file is available.
+				if not tool.file_manager.metric_file.exists then
+						-- Should not be called, if file does not exist, `tool.multi_column_list' is emptied.
+					tool.file_manager.destroy_file_name
+					tool.set_file_loaded (False)
+					tool.file_handler.load_files
+				end
+				check tool.file_manager.metric_file.exists end
+				tool.file_manager.store
+				tool.file_manager.measure_notify_all_but (tool)				
 			end
-			check tool.file_manager.metric_file.exists end
-			tool.file_manager.store
-			tool.file_manager.measure_notify_all_but (tool)
 		end
 
 end -- class EB_METRIC_DELETE_CMD

@@ -531,7 +531,7 @@ feature {NONE} -- Implementation
 		do				
 			create l_manager.make (preferences, "diagram_tool")
 
-			diagram_background_color_preference := l_manager.new_color_resource_value (l_manager, diagram_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))--255, 255))
+			diagram_background_color_preference := l_manager.new_color_resource_value (l_manager, diagram_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 235))
 			diagram_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, diagram_toolbar_layout_string, <<"Clear_bkpt__visible">>)					
 			subcluster_depth_preference := l_manager.new_integer_resource_value (l_manager, subcluster_depth_string, 1)
 			supercluster_depth_preference := l_manager.new_integer_resource_value (l_manager, supercluster_depth_string, 1)

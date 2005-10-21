@@ -113,6 +113,7 @@ inherit
 
 create {EB_WINDOW_MANAGER}
 	make,
+	make_with_session_data,
 	make_as_context_tool,
 	make_as_editor
 
@@ -150,6 +151,49 @@ feature {NONE} -- Initialization
 				-- must be performed after `current' is displayed.
 			window.show_actions.extend (agent (editor_tool.explorer_bar_item).maximize)
 			window.show_actions.extend (agent close_all_bars_except (right_panel))
+		end
+
+	make_with_session_data (a_session_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA) is
+			-- Recreate a previously existing development window using `a_session_data'.
+		local
+			l_class_i: CLASS_I
+			l_class_c_stone: CLASSC_STONE
+			l_cluster_string, l_class_string, l_feature_string: STRING
+		do
+			internal_development_window_data := a_session_data
+			make	
+				-- Attempt to reload last edited class of `Current'.
+			if a_session_data.file_name /= Void then
+				l_class_i := eiffel_universe.class_with_file_name (a_session_data.file_name)
+				if l_class_i /= Void and then l_class_i.compiled then
+						-- Create compiled class stone and target `Current' to it.
+					create l_class_c_stone.make (l_class_i.compiled_class)
+					set_stone_after_check (l_class_c_stone)
+					if a_session_data.editor_position > 0 then
+						editor_tool.text_area.display_line_when_ready (a_session_data.editor_position, False)
+					end
+				end
+			end
+			if context_tool /= Void then
+					-- Presumption is made that if the strings are not void then they represent
+					-- valid entities in the project.
+				l_cluster_string := a_session_data.context_cluster_string
+				l_class_string := a_session_data.context_class_string
+				l_feature_string := a_session_data.context_feature_string
+				if l_feature_string /= Void then
+					context_tool.address_manager.feature_address.set_text (l_feature_string)
+					context_tool.address_manager.class_address.set_text (l_class_string)
+					context_tool.address_manager.execute_with_feature
+				elseif l_class_string /= Void then
+					context_tool.address_manager.class_address.set_text (l_class_string)
+					context_tool.address_manager.execute_with_class
+				elseif l_cluster_string /= Void then
+					context_tool.address_manager.cluster_address.set_text (l_cluster_string)
+					context_tool.address_manager.execute_with_cluster
+				end
+					-- Set the appropriate notebook tab
+				context_tool.notebook.select_item (context_tool.notebook [a_session_data.context_tab_index])
+			end
 		end
 
 	make is
@@ -212,14 +256,14 @@ feature {NONE} -- Initialization
 		do
 			create screen
 			window.set_size (
-				preferences.development_window_data.width.min (screen.width),
-				preferences.development_window_data.height.min (screen.height))
-			l_x := preferences.development_window_data.x_position
+				development_window_data.width.min (screen.width),
+				development_window_data.height.min (screen.height))
+			l_x := development_window_data.x_position
 			if l_x < screen.virtual_left or l_x > screen.virtual_right then
 					-- Somehow screens have changed, reset it to 0
 				l_x := 0
 			end
-			l_y := preferences.development_window_data.y_position
+			l_y := development_window_data.y_position
 			if l_y < screen.virtual_top or l_y > screen.virtual_bottom then
 					-- Somehow screens have changed, reset it to 0
 				l_y := 0
@@ -230,9 +274,11 @@ feature {NONE} -- Initialization
 	window_displayed is
 			-- `Current' has been displayed on screen.
 		do
-				-- Maximize window if needed.
-			if preferences.development_window_data.is_maximized then
+				-- Minimize or Maximize window if needed.
+			if development_window_data.is_maximized then
 				window.maximize
+			elseif development_window_data.is_minimized then
+				window.minimize
 			end
 		end
 
@@ -930,10 +976,10 @@ feature -- Graphical Interface
 		do
 				-- Create the toolbar.
 			create general_toolbar
-			general_customizable_toolbar := preferences.development_window_data.retrieve_general_toolbar (toolbarable_commands)
-			if preferences.development_window_data.show_text_in_general_toolbar then
+			general_customizable_toolbar := development_window_data.retrieve_general_toolbar (toolbarable_commands)
+			if development_window_data.show_text_in_general_toolbar then
 				general_customizable_toolbar.enable_important_text
-			elseif preferences.development_window_data.show_all_text_in_general_toolbar then
+			elseif development_window_data.show_all_text_in_general_toolbar then
 				general_customizable_toolbar.enable_text_displayed
 			end
 
@@ -959,7 +1005,7 @@ feature -- Graphical Interface
 				-- Create the command to show/hide this toolbar.
 			create show_general_toolbar_command.make (general_toolbar, Interface_names.m_general_toolbar)
 			show_toolbar_commands.extend (show_general_toolbar_command)
-			if preferences.development_window_data.show_general_toolbar then
+			if development_window_data.show_general_toolbar then
 				show_general_toolbar_command.enable_visible
 			else
 				show_general_toolbar_command.disable_visible
@@ -1022,7 +1068,7 @@ feature -- Graphical Interface
 			create show_address_toolbar_command.make (address_toolbar, Interface_names.m_address_toolbar)
 			show_toolbar_commands.extend (show_address_toolbar_command)
 
-			if preferences.development_window_data.show_address_toolbar then
+			if development_window_data.show_address_toolbar then
 				show_address_toolbar_command.enable_visible
 			else
 				show_address_toolbar_command.disable_visible
@@ -1057,7 +1103,7 @@ feature -- Graphical Interface
 				-- Create the command to show/hide this toolbar.
 			create show_project_toolbar_command.make (project_toolbar, Interface_names.m_project_toolbar)
 			show_toolbar_commands.extend (show_project_toolbar_command)
-			if preferences.development_window_data.show_project_toolbar then
+			if development_window_data.show_project_toolbar then
 				show_project_toolbar_command.enable_visible
 			else
 				show_project_toolbar_command.disable_visible
@@ -1582,6 +1628,11 @@ feature {NONE} -- Menu Building
 			command_menu_item := precompilation_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
+			
+				-- Cancel
+			command_menu_item := project_cancel_cmd.new_menu_item
+			add_recyclable (command_menu_item)
+			project_menu.extend (command_menu_item)
 
 				-- Separator -------------------------------------------------
 			project_menu.extend (create {EV_MENU_SEPARATOR})
@@ -2104,29 +2155,29 @@ feature -- Resource Update
 		do
 			lock_update
 				-- Show/hide general toolbar
-			if preferences.development_window_data.show_general_toolbar then
+			if development_window_data.show_general_toolbar then
 				show_general_toolbar_command.enable_visible
 			else
 				show_general_toolbar_command.disable_visible
 			end
 
 				-- Show/hide address toolbar
-			if preferences.development_window_data.show_address_toolbar then
+			if development_window_data.show_address_toolbar then
 				show_address_toolbar_command.enable_visible
 			else
 				show_address_toolbar_command.disable_visible
 			end
 
 				-- Show/hide project toolbar
-			if preferences.development_window_data.show_project_toolbar then
+			if development_window_data.show_project_toolbar then
 				show_project_toolbar_command.enable_visible
 			else
 				show_project_toolbar_command.disable_visible
 			end
 
-			left_panel.load_from_resource (preferences.development_window_data.left_panel_layout)
-			right_panel.load_from_resource (preferences.development_window_data.right_panel_layout)
-			splitter_position := preferences.development_window_data.left_panel_width
+			left_panel.load_from_resource (development_window_data.left_panel_layout)
+			right_panel.load_from_resource (development_window_data.right_panel_layout)
+			splitter_position := development_window_data.left_panel_width
 			update_splitters
 			unlock_update
 		end
@@ -2383,23 +2434,62 @@ feature -- Window management
 	save_layout is
 			-- Store layout of `current'.
 		do
-				-- Now save the windows's layout, but only if the
-				-- debugger is not displayed in `Current'. By saving the layout,
-				-- we ensure that future windows may use exactly the same layout.
-				-- If the debugger is displayed, the previopus layout is already saved,
-				-- and this is the one that must be used, as only one debugger is ever displayed.
-			if (Application.is_running and debugger_manager.debugging_window /= Current) or not application.is_running then
-				preferences.development_window_data.save_left_panel_layout (left_panel.save_to_resource)
-				preferences.development_window_data.save_right_panel_layout (right_panel.save_to_resource)
-				preferences.development_window_data.save_left_panel_width (panel.split_position)
-					-- Save width & height.
-				preferences.development_window_data.save_size (window.width, window.height, window.is_maximized)
-				preferences.development_window_data.save_position (window.x_position, window.y_position)
-			end
-			preferences.development_window_data.save_search_tool_options (search_tool)
+			save_layout_to_window_data (development_window_data)
 				-- Commit saves
 			preferences.preferences.save_resources
 		end
+
+	save_layout_to_session (a_session: ES_SESSION) is
+			-- Save session data of `Current' to session object `a_session'.
+		local
+			a_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
+			a_class_i: CLASSI_STONE
+		do
+			create a_window_data.make_from_window_data (preferences.development_window_data)
+			
+			a_class_i ?= stone
+			if a_class_i /= Void then
+				a_window_data.save_filename (a_class_i.file_name)
+				a_window_data.save_editor_position (editor_tool.text_area.current_cursor_position)
+			end
+			
+			if context_tool /= Void then
+				a_window_data.save_context_data (
+					context_tool.address_manager.cluster_label_text,
+					context_tool.address_manager.class_label_text,
+					context_tool.address_manager.feature_label_text,
+					context_tool.notebook.selected_item_index
+				)
+			end
+
+			save_layout_to_window_data (a_window_data)
+			
+				-- Add the session data of `Current' to the session object.
+			a_session.window_session_data.extend (a_window_data)
+		end
+
+	save_layout_to_window_data (a_window_data: EB_DEVELOPMENT_WINDOW_DATA) is
+			-- Store window data of `Current' in `a_window_data'.
+		require
+			a_window_data_not_void: a_window_data /= Void
+		do
+				-- Now save the windows's layout, but only if the
+				-- debugger is not displayed in `Current'. By saving the layout,
+				-- we ensure that future windows may use exactly the same layout.
+				-- If the debugger is displayed, the previous layout is already saved,
+				-- and this is the one that must be used, as only one debugger is ever displayed.
+			if (Application.is_running and debugger_manager.debugging_window /= Current) or not application.is_running then
+				a_window_data.save_left_panel_layout (left_panel.save_to_resource)
+				a_window_data.save_right_panel_layout (right_panel.save_to_resource)
+				a_window_data.save_left_panel_width (panel.split_position)
+					-- Save width & height.
+				a_window_data.save_size (window.width, window.height)
+				a_window_data.save_window_state (window.is_minimized, window.is_maximized)
+				a_window_data.save_position (window.x_position, window.y_position)
+			end
+			a_window_data.save_show_search_options (search_tool.options_shown)			
+		end
+		
 
 feature -- Tools & Controls
 
@@ -2556,16 +2646,17 @@ feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 				if Application.is_running and then debugger_manager.debugging_window = Current then
 					Application.kill
 				else
-					preferences.development_window_data.save_left_panel_layout (left_panel.save_to_resource)
-					preferences.development_window_data.save_right_panel_layout (right_panel.save_to_resource)
+					development_window_data.save_left_panel_layout (left_panel.save_to_resource)
+					development_window_data.save_right_panel_layout (right_panel.save_to_resource)
 				end
-				preferences.development_window_data.save_left_panel_width (panel.split_position)
+				development_window_data.save_left_panel_width (panel.split_position)
 					-- Save width & height.
-				preferences.development_window_data.save_size (window.width, window.height, window.is_maximized)
-				preferences.development_window_data.save_position (window.x_position, window.y_position)
+				development_window_data.save_size (window.width, window.height)
+				development_window_data.save_window_state (window.is_minimized, window.is_maximized)
+				development_window_data.save_position (window.x_position, window.y_position)
 				left_panel.wipe_out
 				right_panel.wipe_out
-				preferences.development_window_data.save_search_tool_options (search_tool)
+				development_window_data.save_show_search_options (search_tool.options_shown)
 				hide
 
 					-- Commit saves
@@ -3470,11 +3561,12 @@ feature {NONE} -- Implementation: Editor commands
 		require
 			text_loaded: not is_empty
 		local
-			l, c: INTEGER
+			l, c, v: INTEGER
 		do
 			l := editor_tool.text_area.cursor_y_position
 			c := editor_tool.text_area.cursor_x_position
-			status_bar.set_cursor_position (l, c)
+			v := editor_tool.text_area.cursor_visible_x_position
+			status_bar.set_cursor_position (l, c, v)
 		end
 		
 	refresh_context_info is
@@ -3963,5 +4055,20 @@ feature {NONE} -- Execution
 			c_workbench_compilation_cmd.disable_sensitive
 			c_finalized_compilation_cmd.disable_sensitive
 		end
+
+feature {NONE} -- Access
+
+	development_window_data: EB_DEVELOPMENT_WINDOW_DATA is
+			-- Meta data describing `Current'.
+		do
+			if internal_development_window_data /= Void then
+				Result := internal_development_window_data
+			else
+				Result := preferences.development_window_data
+			end
+		end
+
+	internal_development_window_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
+		-- Internal custom meta data for `Current'.
 
 end -- class EB_DEVELOPMENT_WINDOW

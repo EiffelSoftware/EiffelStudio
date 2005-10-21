@@ -221,23 +221,23 @@ feature {NONE} -- Implementation
 			-- 
 		local
 			nb_of_items: INTEGER
-			l_progress_dialog: EB_PROGRESS_DIALOG
+			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if context_editor /= Void then
 				nb_of_items := number_of_superclusters (center_cluster.cluster_i, supercluster_depth) + 
 							   number_of_subclusters (center_cluster.cluster_i, subcluster_depth)
-							   
-				l_progress_dialog := context_editor.progress_dialog			
-				l_progress_dialog.start (nb_of_items)
+				
+				l_progress_bar := context_editor.development_window.status_bar.progress_bar	   			
+				l_progress_bar.reset_with_range (0 |..| nb_of_items)
 			end
 						   
 			if context_editor /= Void then
-				l_progress_dialog.set_message ("Exploring superclusters of " + center_cluster.name)
+				context_editor.development_window.status_bar.display_message ("Exploring superclusters of " + center_cluster.name)
 			end
 			explore_superclusters (center_cluster, supercluster_depth)
 			
 			if context_editor /= Void then
-				l_progress_dialog.set_message ("Exploring subclusters of " + center_cluster.name)
+				context_editor.development_window.status_bar.display_message ("Exploring subclusters of " + center_cluster.name)
 			end
 			explore_subclusters (center_cluster, subcluster_depth)
 		end
@@ -264,6 +264,7 @@ feature {NONE} -- Implementation
 		local
 			new_cluster: CLUSTER_I
 			es_cluster: ES_CLUSTER
+			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if depth > 0 then
 				new_cluster := a_cluster.cluster_i.parent_cluster
@@ -271,7 +272,8 @@ feature {NONE} -- Implementation
 					create es_cluster.make (new_cluster)
 					add_cluster (es_cluster)
 					if context_editor /= Void then
-						context_editor.progress_dialog.set_value (context_editor.progress_dialog.value + 1)
+						l_progress_bar := context_editor.development_window.status_bar.progress_bar
+						l_progress_bar.set_value (l_progress_bar.value + 1)
 					end
 					include_all_classes (es_cluster)
 					es_cluster.extend (a_cluster)
@@ -310,19 +312,23 @@ feature {NONE} -- Implementation
 			sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			new_cluster: CLUSTER_I
 			es_cluster: ES_CLUSTER
+			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if depth > 0 then
 				sub_clusters := a_cluster.cluster_i.sub_clusters
 				from
 					sub_clusters.start
+					if context_editor /= Void then
+						l_progress_bar := context_editor.development_window.status_bar.progress_bar
+					end
 				until
 					sub_clusters.after
 				loop
 					new_cluster := sub_clusters.item
 					create es_cluster.make (new_cluster)
 					add_cluster (es_cluster)
-					if context_editor /= Void then
-						context_editor.progress_dialog.set_value (context_editor.progress_dialog.value + 1)
+					if l_progress_bar /= Void then
+						l_progress_bar.set_value (l_progress_bar.value + 1)
 					end
 					include_all_classes (es_cluster)
 					a_cluster.extend (es_cluster)

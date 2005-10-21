@@ -200,26 +200,26 @@ feature {NONE} -- Implementation
 			-- Explore relations of `center_class'.
 		local
 			nb_of_items: INTEGER
-			l_progress_dialog: EB_PROGRESS_DIALOG
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			nb_of_items := number_of_ancestors (center_class.class_i, ancestor_depth) +
 						   number_of_descendants (center_class.class_i, descendant_depth) +
 						   number_of_clients (center_class.class_i, client_depth) +
 						   number_of_suppliers (center_class.class_i, supplier_depth)
-						   
-			l_progress_dialog := context_editor.progress_dialog
-			l_progress_dialog.start (nb_of_items)
+			
+			l_status_bar := context_editor.development_window.status_bar
+			l_status_bar.progress_bar.reset_with_range (0 |..| nb_of_items)
 
-			l_progress_dialog.set_message ("Exploring ancestors of " + center_class.name)
+			l_status_bar.display_message ("Exploring ancestors of " + center_class.name)
 			explore_ancestors (center_class.class_i, ancestor_depth, True)
 			
-			l_progress_dialog.set_message ("Exploring descendants of " + center_class.name)
+			l_status_bar.display_message ("Exploring descendants of " + center_class.name)
 			explore_descendants (center_class.class_i, descendant_depth, True)
 			
-			l_progress_dialog.set_message ("Exploring clients of " + center_class.name)
+			l_status_bar.display_message ("Exploring clients of " + center_class.name)
 			explore_clients (center_class, client_depth, True)
 			
-			l_progress_dialog.set_message ("Exploring suppliers of " + center_class.name)
+			l_status_bar.display_message ("Exploring suppliers of " + center_class.name)
 			explore_suppliers (center_class, supplier_depth, True)
 		end
 		
@@ -254,6 +254,7 @@ feature {NONE} -- Implementation
 		local
 			l: FIXED_LIST [CL_TYPE_A]
 			ci: CLASS_I
+			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if depth > 0 and then a_class.compiled then
 				l := a_class.compiled_class.parents
@@ -267,7 +268,8 @@ feature {NONE} -- Implementation
 						add_class (ci)
 						explore_ancestors (ci, depth - 1, progress_bar)
 						if progress_bar then
-							context_editor.progress_dialog.set_value (context_editor.progress_dialog.value + 1)
+							l_progress_bar := context_editor.development_window.status_bar.progress_bar
+							l_progress_bar.set_value (l_progress_bar.value + 1)
 						end
 						l.forth
 					end
@@ -305,6 +307,7 @@ feature {NONE} -- Implementation
 			l: ARRAYED_LIST [CLASS_C]
 			ci: CLASS_I
 			i, nb: INTEGER
+			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if depth > 0 and then a_class.compiled then
 				l := a_class.compiled_class.descendants
@@ -317,9 +320,10 @@ feature {NONE} -- Implementation
 					ci := l.i_th (i).lace_class
 					add_class (ci)
 					explore_descendants (ci, depth - 1, progress_bar)
-					if progress_bar then
-						context_editor.progress_dialog.set_value (context_editor.progress_dialog.value + 1)
-					end
+						if progress_bar then
+							l_progress_bar := context_editor.development_window.status_bar.progress_bar
+							l_progress_bar.set_value (l_progress_bar.value + 1)
+						end
 					i := i + 1
 				end
 			end
@@ -358,6 +362,7 @@ feature {NONE} -- Implementation
 			ci: CLASS_I
 			i, nb, c: INTEGER
 			added_class: ES_CLASS
+			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if depth > 0 and then a_class.class_i.is_compiled then
 				l := a_class.class_i.compiled_class.syntactical_clients
@@ -393,9 +398,10 @@ feature {NONE} -- Implementation
 					end
 					if progress_bar then
 						check
-							in_range: context_editor.progress_dialog.range.has (context_editor.progress_dialog.value + c)
+							in_range: l_progress_bar.range.has (l_progress_bar.value + c)
 						end
-						context_editor.progress_dialog.set_value (context_editor.progress_dialog.value + c)
+						l_progress_bar := context_editor.development_window.status_bar.progress_bar
+						l_progress_bar.set_value (l_progress_bar.value + c)
 					end
 					i := i + 1
 				end	
@@ -436,6 +442,7 @@ feature {NONE} -- Implementation
 			ci: CLASS_I
 			i, nb, c: INTEGER
 			added_class: ES_CLASS
+			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if depth > 0 and then a_class.class_i.compiled then
 				l := a_class.class_i.compiled_class.syntactical_suppliers
@@ -474,9 +481,10 @@ feature {NONE} -- Implementation
 					end
 					if progress_bar then
 						check
-							in_range: context_editor.progress_dialog.range.has (context_editor.progress_dialog.value + c)
+							in_range: l_progress_bar.range.has (l_progress_bar.value + c)
 						end
-						context_editor.progress_dialog.set_value (context_editor.progress_dialog.value + c)
+						l_progress_bar := context_editor.development_window.status_bar.progress_bar
+						l_progress_bar.set_value (l_progress_bar.value + c)
 					end
 					i := i + 1
 				end

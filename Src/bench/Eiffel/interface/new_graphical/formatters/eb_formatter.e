@@ -317,7 +317,10 @@ feature {NONE} -- Implementation
 			-- Display a temporary header during the format processing.
 			-- Display a hourglass-shaped cursor.
 		do
-			cur_wid := Window_manager.last_focused_development_window.window
+			if window_manager.last_focused_development_window /= Void then
+					-- Check is needed for session handling.
+				cur_wid := Window_manager.last_focused_development_window.window
+			end		
 			if cur_wid = Void then
 				--| Do nothing.
 			else

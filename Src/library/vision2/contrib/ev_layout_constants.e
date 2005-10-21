@@ -11,13 +11,13 @@ feature -- Access (button size constants)
 
 	Default_button_width: INTEGER is
 			-- Default width for buttons
-		once
+		do
 			Result := layout_implementation.Default_button_width
 		end
 
 	Default_button_height: INTEGER is
 			-- Default height for buttons
-		once
+		do
 			Result := layout_implementation.Default_button_height
 		end
 
@@ -25,25 +25,25 @@ feature -- Access (padding constants)
 
 	Large_border_size: INTEGER is
 			-- Default size for borders
-		once
+		do
 			Result := layout_implementation.Large_border_size
 		end
 
 	Default_padding_size: INTEGER is
 			-- Default size for padding
-		once
+		do
 			Result := layout_implementation.Default_padding_size
 		end
 
 	Small_padding_size: INTEGER is
 			-- Small size for padding
-		once
+		do
 			Result := layout_implementation.Small_padding_size
 		end
 
 	Tiny_padding_size: INTEGER is
 			-- Tiny size for padding
-		once
+		do
 			Result := layout_implementation.Tiny_padding_size
 		end
 
@@ -51,13 +51,13 @@ feature -- Access (border constants)
 
 	Default_border_size: INTEGER is
 			-- Default size for borders
-		once
+		do
 			Result := layout_implementation.Default_border_size
 		end
 
 	Small_border_size: INTEGER is
 			-- Small size for borders
-		once
+		do
 			Result := layout_implementation.Small_border_size
 		end
 

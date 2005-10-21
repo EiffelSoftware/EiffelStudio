@@ -189,10 +189,10 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			Result := auto_complete_words_preference.value
 		end
 		
-	auto_remove_trailed_blank_when_saving: BOOLEAN is
-			-- Should trailed blanks be auto-removed when saving?
+	auto_remove_trailing_blank_when_saving: BOOLEAN is
+			-- Should trailing blanks be auto-removed when saving?
 		do
-			Result := auto_remove_trailed_blank_when_saving_preference.value
+			Result := auto_remove_trailing_blank_when_saving_preference.value
 		end
 
 	filter_completion_list: BOOLEAN is
@@ -290,8 +290,8 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	auto_complete_words_preference: BOOLEAN_PREFERENCE
 			-- Should completion automatically complete words when a single best match is available?
 			
-	auto_remove_trailed_blank_when_saving_preference: BOOLEAN_PREFERENCE
-			-- Should trailed blanks be auto-removed when saving?
+	auto_remove_trailing_blank_when_saving_preference: BOOLEAN_PREFERENCE
+			-- Should trailing blanks be auto-removed when saving?
 
 	filter_completion_list_preference: BOOLEAN_PREFERENCE
 			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
@@ -357,8 +357,8 @@ feature {NONE} -- Preference Strings
 	auto_complete_words_string: STRING is "editor.eiffel.auto_complete_words" 
 			-- Should completion automatically complete words when a single best match is available?
 			
-	auto_remove_trailed_blank_when_saving_string: STRING is "editor.eiffel.auto_remove_trailed_blank_when_saving"
-			-- Should trailed blanks be auto-removed when saving?
+	auto_remove_trailing_blank_when_saving_string: STRING is "editor.eiffel.auto_remove_trailing_blank_when_saving"
+			-- Should trailing blanks be auto-removed when saving?
 
 	filter_completion_list_string: STRING is "editor.eiffel.filter_completion_list" 
 			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
@@ -428,7 +428,7 @@ feature {NONE} -- Initialization
 			syntax_complete_enabled_preference := l_manager.new_boolean_resource_value (l_manager, syntax_complete_enabled_string, True)			
 			auto_auto_complete_preference := l_manager.new_boolean_resource_value (l_manager, auto_auto_complete_string, True)
 			auto_complete_words_preference := l_manager.new_boolean_resource_value (l_manager, auto_complete_words_string, True)
-			auto_remove_trailed_blank_when_saving_preference := l_manager.new_boolean_resource_value (l_manager, auto_remove_trailed_blank_when_saving_string, True)
+			auto_remove_trailing_blank_when_saving_preference := l_manager.new_boolean_resource_value (l_manager, auto_remove_trailing_blank_when_saving_string, True)
 			filter_completion_list_preference := l_manager.new_boolean_resource_value (l_manager, filter_completion_list_string, True)
 			show_completion_signature_preference := l_manager.new_boolean_resource_value (l_manager, show_completion_signature_string, True)
 			show_completion_type_preference := l_manager.new_boolean_resource_value (l_manager, show_completion_type_string, True)
@@ -493,7 +493,7 @@ feature {NONE} -- Initialization
 			quadruple_click_enabled_preference.change_actions.extend (agent update)
 			auto_auto_complete_preference.change_actions.extend (agent update)
 			auto_complete_words_preference.change_actions.extend (agent update)
-			auto_remove_trailed_blank_when_saving_preference.change_actions.extend (agent update)
+			auto_remove_trailing_blank_when_saving_preference.change_actions.extend (agent update)
 			filter_completion_list_preference.change_actions.extend (agent update)
 			show_completion_signature_preference.change_actions.extend (agent update)
 			show_completion_type_preference.change_actions.extend (agent update)
@@ -954,7 +954,7 @@ invariant
 	show_any_features_preference_not_void: show_any_features_preference /= Void
 	auto_auto_complete_preference_not_void: auto_auto_complete_preference /= Void
 	auto_complete_words_preference_not_void: auto_complete_words_preference /= Void
-	auto_remove_trailed_blank_when_saving_preference_not_void: auto_remove_trailed_blank_when_saving_preference /= Void
+	auto_remove_trailing_blank_when_saving_preference_not_void: auto_remove_trailing_blank_when_saving_preference /= Void
 	filter_completion_list_preference_not_void: filter_completion_list_preference /= Void
 	show_completion_signature_preference_not_void: show_completion_signature_preference /= Void
 	show_completion_type_preference_not_void: show_completion_type_preference /= Void

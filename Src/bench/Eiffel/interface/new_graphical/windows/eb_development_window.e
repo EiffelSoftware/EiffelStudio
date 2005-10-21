@@ -2315,8 +2315,8 @@ feature -- Resource Update
 					io.error.put_string ("%N Warning: Attempting to save a non editable format%N")
 				end
 			end
-			if preferences.editor_data.auto_remove_trailed_blank_when_saving then
-				editor_tool.text_area.text_displayed.remove_trailed_blanks
+			if preferences.editor_data.auto_remove_trailing_blank_when_saving then
+				editor_tool.text_area.text_displayed.remove_trailing_blanks
 				editor_tool.text_area.refresh_now
 			end
 			if editor_tool.text_area.open_backup then

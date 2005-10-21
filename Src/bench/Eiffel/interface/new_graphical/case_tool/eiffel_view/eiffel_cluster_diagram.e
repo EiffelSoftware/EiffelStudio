@@ -135,7 +135,7 @@ feature {NONE} -- Implementation
 			saved_x, saved_y: INTEGER
 			l_classes: LIST [CLASS_I]
 			new_class: ES_CLASS
-			l_progress_dialog: EB_PROGRESS_DIALOG
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 			nr_of_items: INTEGER
 			l_item: CLASS_I
 			is_retry: BOOLEAN
@@ -159,16 +159,11 @@ feature {NONE} -- Implementation
 					context_editor.disable_resize
 					context_editor.update_excluded_class_figures
 	
-					l_progress_dialog := context_editor.progress_dialog
-					if l_progress_dialog /= Void then
-						l_progress_dialog.set_title ("Including cluster")
-						l_progress_dialog.enable_cancel
-						nr_of_items := l_classes.count
-						l_progress_dialog.start (nr_of_items)
-						l_progress_dialog.set_value (0)
-						l_progress_dialog.show
-						l_progress_dialog.set_message ("Including classes into Cluster")
-					end
+					l_status_bar := context_editor.development_window.status_bar
+					nr_of_items := l_classes.count
+					l_status_bar.progress_bar.reset_with_range (0 |..| nr_of_items)
+					l_status_bar.progress_bar.set_value (0)
+					l_status_bar.display_message ("Including Cluster: Adding Classes into Cluster")
 					
 					if new_cluster = Void then
 						create new_cluster.make (a_stone.cluster_i)
@@ -183,9 +178,7 @@ feature {NONE} -- Implementation
 								create new_class.make (l_item)
 								new_cluster.extend (new_class)
 							end
-							if l_progress_dialog /= Void then
-								l_progress_dialog.set_value (l_progress_dialog.value + 1)
-							end
+							l_status_bar.progress_bar.set_value (l_status_bar.progress_bar.value + 1)
 							l_classes.forth
 						end
 					elseif not new_cluster.is_needed_on_diagram then
@@ -222,15 +215,11 @@ feature {NONE} -- Implementation
 									end
 								end
 							end
-							if l_progress_dialog /= Void then
-								l_progress_dialog.set_value (l_progress_dialog.value + 1)
-							end
+							l_status_bar.progress_bar.set_value (l_status_bar.progress_bar.value + 1)
 							l_classes.forth
 						end
 					end
-					if l_progress_dialog /= Void then
-						l_progress_dialog.hide
-					end
+					l_status_bar.reset
 					fig ?= figure_from_model (new_cluster)
 					check
 						fig_inserted: fig /= Void
@@ -284,7 +273,7 @@ feature {NONE} -- Implementation
 		rescue
 			is_retry := True
 			context_editor.projector.enable_painting
-			l_progress_dialog.hide
+			l_status_bar.reset
 			context_editor.enable_resize
 			context_editor.clear_area
 			error_handler.error_list.wipe_out

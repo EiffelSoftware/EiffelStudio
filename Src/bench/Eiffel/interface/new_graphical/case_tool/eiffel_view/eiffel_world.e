@@ -32,6 +32,11 @@ inherit
 		undefine
 			default_create
 		end
+
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
 		
 feature {NONE} -- Initialization
 
@@ -190,6 +195,7 @@ feature -- Element change.
 	update is
 			-- Update.
 		do
+			background_color := preferences.diagram_tool_data.diagram_background_color
 			if is_statistics then
 				update_statistic
 			end
@@ -197,6 +203,7 @@ feature -- Element change.
 			if is_cluster_shown then
 				update_fade
 			end
+			full_redraw
 		end
 
 	scale (a_scale: DOUBLE) is
@@ -683,11 +690,13 @@ feature -- Store/Retrive
 							is_uml := False
 						end
 					end
-					if context_editor /= Void and then context_editor.progress_dialog /= Void then
-						context_editor.progress_dialog.start (0)
+					if context_editor /= Void then
+						--context_editor.progress_dialog.start (0)
+						--context_editor.development_window.status_bar.progress_bar.reset_with_range (0 |..| 0)
 						nb_of_tags := xml_routines.number_of_tags (view_input)
-						context_editor.progress_dialog.start (nb_of_tags)
-						context_editor.progress_dialog.set_degree ("Loading:")
+						--context_editor.progress_dialog.start (nb_of_tags)
+						context_editor.development_window.status_bar.progress_bar.reset_with_range (0 |..| nb_of_tags)
+						--context_editor.progress_dialog.set_degree ("Loading:")
 						xml_routines.valid_tag_read_actions.extend (agent on_valid_tag_read)
 					end
 					wipe_out
@@ -1400,9 +1409,9 @@ feature {NONE} -- Implementation
 	on_valid_tag_read is
 			-- A valid tag was read throug xml routines.
 		local
-			lpd: EB_PROGRESS_DIALOG
+			lpd: EB_PERCENT_PROGRESS_BAR
 		do
-			lpd := context_editor.progress_dialog
+			lpd := context_editor.development_window.status_bar.progress_bar
 			if lpd /= Void then
 				if lpd.value < lpd.range.upper then
 					lpd.set_value (lpd.value + 1)

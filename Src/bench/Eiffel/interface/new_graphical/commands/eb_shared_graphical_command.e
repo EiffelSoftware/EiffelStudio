@@ -95,6 +95,13 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	Project_cancel_cmd: EB_PROJECT_CANCEL_COMMAND is
+			-- Command to cancel any ongoing project computation such as compilation and diagram rebuilding.
+		once
+			create Result
+			Result.disable_sensitive
+		end
+
 	Document_cmd: DOCUMENT_CMD is
 			-- Command to generate the HTML documentation
 		once

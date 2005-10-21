@@ -394,7 +394,7 @@ feature {NONE} -- Implementation
 			l_manager: EB_PREFERENCE_MANAGER	
 		do		
 			create l_manager.make (preferences, "development_window")	
-			show_eiffel_studio_debug_preference := l_manager.new_boolean_resource_value (l_manager, show_eiffel_studio_debug_menu, False)
+		
 			width_preference := l_manager.new_integer_resource_value (l_manager, width_string, 490)
 			height_preference := l_manager.new_integer_resource_value (l_manager, height_string, 500)
 			x_position_preference := l_manager.new_integer_resource_value (l_manager, x_position_string, 10)
@@ -403,7 +403,7 @@ feature {NONE} -- Implementation
 			left_panel_use_explorer_style_preference := l_manager.new_boolean_resource_value (l_manager, left_panel_use_explorer_style_string, True)
 			left_panel_width_preference := l_manager.new_integer_resource_value (l_manager, left_panel_width_string, 100)
 			left_panel_layout_preference := l_manager.new_array_resource_value (l_manager, left_panel_layout_string, <<"Features", "visible", "0", "0", "0", "100", "Clusters", "visible", "0", "0", "0", "100">>)
-			right_panel_layout_preference := l_manager.new_array_resource_value (l_manager, right_panel_layout_string, <<"Editor", "visible", "0", "0", "0", "200", "Context", "visible", "0", "0", "0", "200">>)
+			right_panel_layout_preference := l_manager.new_array_resource_value (l_manager, right_panel_layout_string, <<"Search", "visible", "0", "0", "0", "200", "Editor", "visible", "0", "0", "0", "200", "Context", "visible", "0", "0", "0", "200">>)
 			general_toolbar_layout_preference := l_manager.new_array_resource_value (l_manager, general_toolbar_layout_string, <<"New_window__visible;New_editor__hidden;New_context_window__hidden;Open_file__hidden;New_class__visible;New_feature__visible;Save_file__visible;Open_shell__visible;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Clusters__visible;Features__visible;Search__visible;Context__visible;Separator;Send_to_context__visible;New_cluster__hidden;Remove_class_cluster__hidden;Favorites__hidden;Windows__hidden;Toggle_stone__hidden;Raise_all__hidden;Minimize_all__hidden;Print__hidden">>)
 			show_general_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_general_toolbar_string, True)
 			show_text_in_general_toolbar_preference := l_manager.new_boolean_resource_value (l_manager, show_text_in_general_toolbar_string, False)
@@ -424,8 +424,9 @@ feature {NONE} -- Implementation
 			context_unified_stone_preference := l_manager.new_boolean_resource_value (l_manager, context_unified_stone_string, False)
 			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)			
 			use_animated_icons_preference := l_manager.new_boolean_resource_value (l_manager, use_animated_icons_string, True)			
+			show_eiffel_studio_debug_preference := l_manager.new_boolean_resource_value (l_manager, show_eiffel_studio_debug_menu, False)
 		end
-	
+
 	preferences: PREFERENCES
 			-- Preferences
 

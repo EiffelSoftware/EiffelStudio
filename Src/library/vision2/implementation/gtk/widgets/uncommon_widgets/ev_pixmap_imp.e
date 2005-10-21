@@ -98,6 +98,12 @@ feature -- Drawing operations
 			Precursor {EV_DRAWABLE_IMP} (x, y)
 		end
 
+	redraw is
+			-- Force `Current' to redraw itself.
+		do
+			update_if_needed
+		end
+
 	flush is
 			-- Ensure that the appearance of `Current' is updated on screen
 			-- immediately. Any changes that have not yet been reflected will

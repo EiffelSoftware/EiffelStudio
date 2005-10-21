@@ -6,9 +6,32 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class DEGREE_OUTPUT
+class
+	DEGREE_OUTPUT
+
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
+	SHARED_ERROR_HANDLER
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Creation
+
+	default_create is
+			-- Create and initialize degree output.
+		do
+			is_output_quiet := False
+		end
 
 feature -- Access
+
+	cancel_compilation_requested: BOOLEAN
+		-- Has the user requested to cancel the compilation?
 
 	processed: INTEGER;
 			-- Numnber of processed elements
@@ -23,12 +46,24 @@ feature -- Access
 	total_number: INTEGER;
 			-- Number of entities being processed
 
+feature -- Status Report
+
+	is_compilation_cancellable: BOOLEAN is
+			-- May the compilation be cancelled at the current stage/degree?
+		do
+			Result := current_degree > 2 or else current_degree = -2
+					-- Cannot cancel a compilation after end of degree 3, or
+					-- after degree -2 because we need to generate code at
+					-- this stage, and we cannot save what we have generated
+					-- and what we have not generated.		
+		end
+
 feature -- Start output features
 
 	put_new_compilation is
 			-- A new compilation has begun.
 		do
-			
+			cancel_compilation_requested := False
 		end
 
 	put_start_degree_6 (total_nbr: INTEGER) is
@@ -41,12 +76,13 @@ feature -- Start output features
 			current_degree := 6;
 			last_reached_degree := 6;
 			processed := 0
-		end;
+		end
 
 	put_end_degree_6 is
 			-- Put message indicating the end of degree six.
 		do
-			io.error.put_string ("Processing options%N");
+			display_message (once "Processing options");
+			display_new_line
 		end;
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
@@ -60,7 +96,44 @@ feature -- Start output features
 			current_degree := degree_nbr;
 			last_reached_degree := degree_nbr;
 			processed := 0
+			if is_output_quiet then
+				display_message (degree_description (degree_nbr))
+				display_new_line
+			end
 		end;
+
+	degree_description (a_degree: INTEGER): STRING is
+			-- Description for the currently processed degree.
+		require
+			a_degree_valid: a_degree >= -3 and then a_degree <= 6 and then a_degree /= 0
+		local
+			l_degree_str: STRING
+		do
+			inspect
+				a_degree
+			when 6 then
+				l_degree_str := once "Examining Universe"
+			when 5 then
+				l_degree_str := once "Parsing Classes"
+			when 4 then
+				l_degree_str := once "Inheritance Analysis"
+			when 3 then
+				l_degree_str := once "Type Checking"
+			when 2 then
+				l_degree_str := once "Melting code (code)"
+			when 1 then
+				l_degree_str := once "Melting code (metadata)"
+			when -1 then
+				l_degree_str := once "Code Generation"
+			when -2 then
+				l_degree_str := once "Building Polymorphic table"
+			when -3 then
+				l_degree_str := once "Optimized Code Generation"
+			end
+			Result := Degree_output_string + a_degree.out + ": " + l_degree_str
+		ensure	
+			result_not_void: Result /= Void
+		end
 
 	put_end_degree is
 			-- Put message indicating the end of a degree.
@@ -71,22 +144,22 @@ feature -- Start output features
 	put_melting_changes_message  is
 			-- Put message indicating that melting changes is ocurring.
 		do
-			io.error.put_string (melting_changes_message);
-			io.error.put_new_line
+			display_message (melting_changes_message);
+			display_new_line
 		end;
 
 	put_freezing_message is
 			-- Put message indicating that freezing is occurring.
 		do
-			io.error.put_string (freezing_system_message);
-			io.error.put_new_line
+			display_message (freezing_system_message);
+			display_new_line
 		end;
 
 	put_start_dead_code_removal_message  is
 			-- Put message indicating the start of dead code removal.
 		do
-			io.error.put_string (removing_dead_code_message);
-			io.error.put_new_line
+			display_message (removing_dead_code_message);
+			display_new_line
 		end;
 
 	put_end_dead_code_removal_message  is
@@ -96,15 +169,15 @@ feature -- Start output features
 
 	finish_degree_output is
 			-- Process end degree output.
-			-- (Be default, do nothing).
 		do
-		end;
+			cancel_compilation_requested := False
+		end
 
 	put_initializing_documentation is
 			-- Start documentation generation.
 		do
-			io.error.put_string ("Initializing documentation");
-			io.error.put_new_line;
+			display_message ("Initializing documentation");
+			display_new_line;
 		end
 
 	put_start_documentation (total_num: INTEGER; type: STRING) is
@@ -113,17 +186,17 @@ feature -- Start output features
 			valid_type: type /= Void
 		do
 			total_number := total_num;
-			io.error.put_string ("Generating ");
-			io.error.put_string (type);
-			io.error.put_new_line;
+			display_message ("Generating ");
+			display_message (type);
+			display_new_line;
 			processed := 0;
 		end;
 
 	put_string (a_message: STRING) is
 			-- Put `a_message' to output window.
 		do
-			io.error.put_string (a_message)
-			io.error.put_new_line
+			display_message (a_message)
+			display_new_line
 		end
 
 	put_resynchronizing_breakpoints_message is
@@ -135,17 +208,17 @@ feature -- Start output features
 	put_system_compiled is
 			-- Put message indicating that the system has been compiled.
 		do
-			io.error.put_string ("System recompiled.")
-			io.error.put_new_line
+			display_message (once "System recompiled.")
+			display_new_line
 		end
 
 	put_header (displayed_version_number: STRING) is
 		do
-			io.error.put_string (
-				"Eiffel compilation manager%N%
+			display_message (
+				once "Eiffel compilation manager%N%
 				%  (version ")
-			io.error.put_string (displayed_version_number)
-			io.error.put_string (")%N")
+			display_message (displayed_version_number)
+			display_message (")%N")
 		end
 
 feature -- Output on per class
@@ -279,11 +352,11 @@ feature -- Output on per class
 			-- Put message progress the start of dead code removal.
 		do
 			processed := processed + total_nbr
-			io.error.put_string ("Features done: ")
-			io.error.put_integer (processed)
-			io.error.put_string ("%TFeatures to go: ")
-			io.error.put_integer (nbr_to_go)
-			io.error.put_new_line
+			display_message (once "Features done: ")
+			display_message (processed.out)
+			display_message (once "%TFeatures to go: ")
+			display_message (nbr_to_go.out)
+			display_new_line
 		end
 
 	put_case_cluster_message (a_name: STRING) is
@@ -295,9 +368,9 @@ feature -- Output on per class
 			str: STRING
 		do	
 			str := a_name.as_lower
-			io.error.put_string (case_cluster_message)
-			io.error.put_string (str)
-			io.error.put_new_line
+			display_message (case_cluster_message)
+			display_message (str)
+			display_new_line
 		end
 
 	put_case_class_message (a_class: CLASS_C) is
@@ -328,18 +401,63 @@ feature -- Output on per class
 			processed := processed + 1;
 		end
 
-feature -- Other
+feature -- Element Change
+
+	user_has_requested_cancellation is
+			-- Flag current compilation for cancellation.
+		do
+			cancel_compilation_requested := True
+		end
+
+feature {NONE} -- Implementation
+
+	degree_message (a_degree: INTEGER): STRING is 
+			-- Display the message corresponding to degree `a_degree'.
+		do
+			create Result.make (30)
+			Result.append (degree_output_string)
+			Result.append_integer(a_degree)
+			if a_degree = 6 then
+				Result.append (cluster_output_string)
+			else
+				Result.append (class_output_string)
+			end
+		end
+
+feature {SYSTEM_I} -- Implementation
 
 	display_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER) is
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			total_number := total;
-			io.error.put_string (percentage_output (to_go));
-			io.error.put_string (deg_nbr);
-			io.error.put_new_line
+			display_message (percentage_output (to_go));
+			display_message (deg_nbr);
+			display_new_line
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Display implementation for redefinition by descendants.
+
+	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
+			-- Display degree `deg_nbr' with entity `a_class'.
+		do
+			if cancel_compilation_requested and then is_compilation_cancellable then
+					-- The user has requested cancellation of compilation.
+				cancel_compilation_requested := False
+				Error_handler.insert_interrupt_error (True)
+			end
+			if not is_output_quiet then
+				display_message (percentage_output (to_go));
+				display_message (deg_nbr);
+				display_message (a_name);
+				display_new_line
+			end
+		end
+
+	display_percentage (left_to_process: INTEGER) is
+			-- Display percentage of 'total_number' for 'left_to_process'.
+		do
+			display_message (percentage_output (left_to_process))
+		end
 
 	percentage_output (nbr_to_go: INTEGER): STRING is
 			-- Return percentage based on `nbr_to_go' and
@@ -352,38 +470,29 @@ feature {NONE} -- Implementation
 		do
 			total_nbr_out := total_number.out;
 			create Result.make (7);
-			Result.append ("[");
+			Result.append (once "[");
 			perc := percentage_calculation (nbr_to_go);
 			if perc < 10 then
-				Result.append ("  ");
+				Result.append (once "  ");
 			else
 				Result.extend (' ')
 			end;
 			Result.append_integer (perc);
-			Result.append_string ("%% - ");
+			Result.append_string (once "%% - ");
 			to_go_out := nbr_to_go.out;
 			nbr_spaces := total_nbr_out.count - to_go_out.count;
 			inspect nbr_spaces 
 			when 1 then
 				Result.extend (' ')
 			when 2 then
-				Result.append ("  ")
+				Result.append (once "  ")
 			when 3 then
 					-- Limit is about 99000
-				Result.append ("   ")
+				Result.append (once "   ")
 			else
 			end;
 			Result.append (to_go_out)
-			Result.append ("] ")
-		end
-
-	display_degree (deg_nbr: STRING; to_go: INTEGER; a_name: STRING) is
-			-- Display degree `deg_nbr' with entity `a_class'.
-		do
-			io.error.put_string (percentage_output (to_go));
-			io.error.put_string (deg_nbr);
-			io.error.put_string (a_name);
-			io.error.put_new_line
+			Result.append (once "] ")
 		end
 
 	percentage_calculation (to_go: INTEGER): INTEGER is
@@ -395,26 +504,48 @@ feature {NONE} -- Implementation
 			end	
 		end
 
-	degree_message (a_degree: INTEGER): STRING is 
-			-- Display the message corresponding to degree `a_degree'.
+	display_message (a_message: STRING) is
+			-- Display `a_message' to output.
+		require
+			a_message_not_void: a_message /= Void
 		do
-			create Result.make (20)
-			Result.append ("Degree ")
-			Result.append_integer(a_degree)
-			if a_degree = 6 then
-				Result.append (" cluster ")
-			else
-				Result.append (" class ")
-			end
+			io.error.put_string (a_message)
+		end
+
+	display_new_line is
+			-- Display a new line on the output.
+		do
+			io.error.put_new_line
+		end
+
+feature {NONE} -- Implementation
+
+	is_output_quiet: BOOLEAN
+		-- Is the output quiet?
+		-- False by default as verbosity is the default compiler option
+
+	enable_quiet_output is
+			-- Enable quiet output.
+		do
+			is_output_quiet := True
+		end
+
+	disable_quiet_output is
+			-- Disable quiet output.
+		do
+			is_output_quiet := False
 		end
 
 feature {NONE} -- Constants
 
-	melting_changes_message: STRING is "Melting changes";
-	freezing_system_message: STRING is "Freezing system";
-	removing_dead_code_message: STRING is "Removing dead code";
-	case_class_message: STRING is "Analyzing class ";
-	case_cluster_message: STRING is "Analyzing cluster ";
-	document_class_message: STRING is "Generating class ";
+	Melting_changes_message: STRING is "Melting changes";
+	Freezing_system_message: STRING is "Freezing system";
+	Removing_dead_code_message: STRING is "Removing dead code";
+	Case_class_message: STRING is "Analyzing class ";
+	Case_cluster_message: STRING is "Analyzing cluster ";
+	Document_class_message: STRING is "Generating class ";
+	Degree_output_string: STRING is "Degree ";
+	Cluster_output_string: STRING is " cluster ";
+	Class_output_string: STRING is " class ";
 
 end -- class degree_output

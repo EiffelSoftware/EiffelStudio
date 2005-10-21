@@ -108,6 +108,19 @@ feature -- Measurement
 		deferred
 		end
 
+feature -- Duplication
+
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Return a pixmap region of `Current' represented by rectangle `area'
+		require
+			not_destroyed: not is_destroyed
+			area_not_void: area /= Void
+		do
+			Result := implementation.sub_pixmap (area)
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Element change
 
 	set_line_width (a_width: INTEGER) is

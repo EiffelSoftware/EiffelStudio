@@ -71,6 +71,17 @@ feature -- Access
 		deferred
 		end
 
+feature -- Duplication
+
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Pixmap region of `Current' represented by rectangle `area'
+		require
+			area_not_void: area /= Void
+		deferred
+		ensure
+			result_not_void: Result /= Void
+		end
+
 feature -- Element change
 
 	set_line_width (a_width: INTEGER) is
@@ -144,6 +155,11 @@ feature -- Element change
 		end
 
 feature -- Clearing and drawing operations
+
+	redraw is
+			-- Force `Current' to redraw itself.
+		deferred
+		end
 
 	clear is
 			-- Erase `Current' with `background_color'.

@@ -252,7 +252,8 @@ feature -- Basic operations
 							cl.prepend (cmdexe + " /c")
 						end
 					else
-						cl.prepend ("sh -c ")
+						cl.prepend ("/bin/sh -c %'")
+						cl.append ("%'")
 					end	
 					external_launcher.prepare_command_line (cl, wd)
 					external_launcher.set_hidden (False)

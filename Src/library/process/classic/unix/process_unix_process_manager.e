@@ -261,6 +261,7 @@ feature -- Execution
 		local
 			ee: EXECUTION_ENVIRONMENT
 			cur_dir: STRING
+			exceptions: EXCEPTIONS
 		do		
 			build_argument_list
 			open_files_and_pipes	
@@ -279,12 +280,11 @@ feature -- Execution
 				ee.change_working_directory (cur_dir)
 			end
 			is_executing := True
-		ensure
-			process_executing: is_executing
-			process_id_set: process_id /= 0
---			input_pipe_set: input_piped implies input_to_child /= Void
---			output_pipe_set: output_piped implies output_from_child /= Void
---			error_pipe_set: error_piped implies error_from_child /= Void
+		rescue
+			if process_id = 0 then
+				create exceptions
+				exceptions.die (1)
+			end
 		end
 
 	get_status_block is

@@ -85,10 +85,6 @@ feature
 				child_process.spawn_nowait
 				launched := True
 			end
-		rescue
-			retried := True
-			launched := False
-			retry
 		end
 
 	wait_for_exit is

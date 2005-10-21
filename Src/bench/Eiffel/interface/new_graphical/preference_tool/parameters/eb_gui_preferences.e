@@ -43,7 +43,7 @@ feature -- Access
 	debugger_data: EB_DEBUGGER_DATA
 		-- Preference data for debugger.		
 		
-	development_window_data: EB_DEVELOPMENT_WINDOW_DATA
+	development_window_data: EB_DEVELOPMENT_WINDOW_PREFERENCES
 		-- Preference data for the EiffelStudio main development window.
 		
 	recent_projects_data: EB_RECENT_PROJECTS

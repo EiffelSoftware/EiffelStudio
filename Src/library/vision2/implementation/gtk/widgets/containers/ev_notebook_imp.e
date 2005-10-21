@@ -106,6 +106,7 @@ feature -- Access
 		local
 			item_imp: EV_WIDGET_IMP
 			a_tab_label, a_hbox, a_list, a_label: POINTER
+			a_cs: EV_GTK_C_STRING
 		do
 			item_imp ?= an_item.implementation
 			a_tab_label := {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
@@ -121,9 +122,10 @@ feature -- Access
 				a_label := {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 1)
 			end
 
-			create Result.make_from_c ({EV_GTK_EXTERNALS}.gtk_label_struct_label (
+			create a_cs.share_from_pointer ({EV_GTK_EXTERNALS}.gtk_label_struct_label (
 				a_label
 			))
+			Result := a_cs.string
 			{EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
 

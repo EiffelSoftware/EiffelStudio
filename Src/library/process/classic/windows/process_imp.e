@@ -58,26 +58,24 @@ feature {NONE} -- Initialization
 	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
 		local
 			ls: LIST [STRING]
-			p_name :STRING
-			args: ARRAYED_LIST [STRING]
 		do
-			ls := cmd_line.split (' ')
-			create p_name.make_from_string (ls.i_th (1))
-			ls.start
-			ls.remove
-			if ls.count > 0 then
-				create args.make (ls.count)
-				from 
-					ls.start
-				until
-					ls.after
-				loop
-					args.extend (ls.item)	
-					ls.forth
-				end
+			create command_line.make_from_string (cmd_line)
+			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection			
+			buffer_size := initial_buffer_size
+			last_operation_successful := True
+			if a_working_directory = Void then
+				working_directory := ""
 			else
+				create working_directory.make_from_string (a_working_directory)
 			end
-			make (p_name, args, a_working_directory)
+
+			hidden := False
+			has_console := True
+			last_error := Void
+			last_output := Void
+			create prc_launcher.make (command_line, working_directory)
 		end
 		
 feature {PROCESS_TIMER}  -- Status checking

@@ -2032,7 +2032,7 @@ feature -- Element change
 				-- Then those from `move_rows' which require `a_parent_row' to be `Void'
 			not_breaking_existing_subrow_structure:
 				j = row_count + 1 or else
-				((a_parent_row = Void and ((j = i or j = i + 1) implies row (i + n).parent_row = Void))) or else
+				((a_parent_row = Void and j <= row_count and (i + n <= row_count) and ((j = i or j = i + 1) implies row (i + n).parent_row = Void))) or else
 				((a_parent_row = Void and j <= row_count) implies row (j).parent_row = Void)
 
 				-- Finally those from `move_rows_to_parent' which require `a_parent_row' to be non-Void.

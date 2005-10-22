@@ -21,20 +21,43 @@ inherit
 		
 feature -- Launching parameters setting
 
-	prepare_command_line (c_line: STRING; a_working_directory: STRING) is
-			-- Set `a_working_directory' as working directory and 
-			-- `c_line' as command line of the to-be launched process.
+	prepare_command_line (cmd: STRING; args: LIST [STRING]; a_working_directory: STRING) is
+			-- 
 		require
 			process_not_in_action: (not launched) or (launched and has_exited)
-			command_line_not_void: c_line /= Void
-			command_line_not_empty: not c_line.is_empty	
-			working_dir_not_null: a_working_directory /= Void				
+			cmd_not_void: cmd /= Void
+			cmd_not_empty: not cmd.is_empty	
+			a_working_dir_not_null: a_working_directory /= Void	
+		local	
+			s: STRING
 		do
-			command_line := c_line
-			working_directory := a_working_directory
+			create command_line.make_from_string (cmd)
+			if a_working_directory = Void then
+				working_directory := Void
+			else
+				create working_directory.make_from_string (a_working_directory)					
+			end
+			
+			if args = Void then
+				arguments := Void
+			else
+				create arguments.make (args.count)
+				from
+					args.start
+				until
+					args.after
+				loop
+					create s.make_from_string (args.item)
+					arguments.extend (s)
+					args.forth
+				end
+			end			
 		ensure
-			command_line_set: command_line = c_line
-			working_directory_set: working_directory = a_working_directory
+			command_line_set: command_line.is_equal (cmd)
+			working_directory_set: (working_directory /= Void) implies working_directory.is_equal (a_working_directory)
+			arguments_set: 	
+				((args = Void) implies arguments = Void) or
+				((args /= Void) implies arguments.count = args.count)
 		end
 		
 	set_hidden (h: BOOLEAN) is
@@ -147,7 +170,7 @@ feature -- Launching parameters setting
 	
 feature -- Control
 		
-	launch (redirection_needed: BOOLEAN) is
+	launch (redirection_needed: BOOLEAN; use_argument: BOOLEAN) is
 			-- Launch process.
 			-- If `redirection_needed', redirect input, output and error of process.
 		require
@@ -167,10 +190,14 @@ feature -- Control
 			prc_imp: PROCESS_IMP
 			pt: PROCESS_TIMER
 		do
-			idle_printing_manager.initiate_timer
-			
-			create prc_ftry
-			prc := prc_ftry.process_launcher_with_command_line (command_line, working_directory)						
+			idle_printing_manager.initiate_timer			
+			create prc_ftry	
+			if use_argument then
+				prc := prc_ftry.process_launcher (command_line, arguments, working_directory)
+			else	
+				prc := prc_ftry.process_launcher_with_command_line (command_line, working_directory)
+			end
+				
 			prc.redirect_input_to_stream
 			prc_imp ?= prc			
 			create err_thread.make (prc_imp)
@@ -310,11 +337,14 @@ feature -- Status reporting
 		end
 		
 	output_handler: PROCEDURE [ANY, TUPLE [STRING]]
-	
-	error_handler:	PROCEDURE [ANY, TUPLE [STRING]]	
+	error_handler:	PROCEDURE [ANY, TUPLE [STRING]]
+			-- Handlers of output or error from process	
 	
 	command_line: STRING
 			-- Command line (with arguments) of child process
+			
+	arguments: ARRAYED_LIST [STRING]
+			-- Arguments for process
 			
 	working_directory: STRING
 			-- Working directory of child process.

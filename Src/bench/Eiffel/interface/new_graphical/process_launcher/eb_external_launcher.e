@@ -38,7 +38,7 @@ feature{NONE} -- Initialization
 			buffer_size_set: buffer_size = initial_buffer_size
 			time_interval_set: time_interval = initial_time_interval
 		end
-
+		
 feature -- Status reporting
 
 	is_launch_session_over: BOOLEAN
@@ -65,7 +65,7 @@ feature -- Status setting
 			original_command_name_set: original_command_name.is_equal (name)
 		end
 		
-feature
+feature	-- Actions
 
 	on_ouput_print_session_over is
 			-- Agent called when an external command output printing session over

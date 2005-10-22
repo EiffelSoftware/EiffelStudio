@@ -64,31 +64,31 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 				-- Store current working directory
 			cwd := Execution_environment.current_working_directory
 			create f_cmd.make_from_string (freeze_command)
-			f_cmd.append (" -silent")		
+			f_cmd.append (" -silent")
 			
 			Execution_environment.change_working_directory (c_code_dir)
 
 			if is_gui then
 				if asynchronous then
 					if workbench_mode then
-						freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
+						freezing_launcher.prepare_command_line (f_cmd, Void, c_code_dir)
 						freezing_launcher.set_hidden (True)
-						freezing_launcher.launch (is_gui)
+						freezing_launcher.launch (is_gui, False)
 					else
-						finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
+						finalizing_launcher.prepare_command_line (f_cmd, Void, c_code_dir)
 						finalizing_launcher.set_hidden (True)
-						finalizing_launcher.launch (is_gui)
+						finalizing_launcher.launch (is_gui, False)
 					end
 				else
 					if workbench_mode then
-						freezing_launcher.prepare_command_line (f_cmd, c_code_dir)
+						freezing_launcher.prepare_command_line (f_cmd, Void, c_code_dir)
 						freezing_launcher.set_hidden (True)
-						freezing_launcher.launch (is_gui)
+						freezing_launcher.launch (is_gui, False)
 						freezing_launcher.wait_for_exit
 					else
-						finalizing_launcher.prepare_command_line (f_cmd, c_code_dir)
+						finalizing_launcher.prepare_command_line (f_cmd, Void, c_code_dir)
 						finalizing_launcher.set_hidden (True)
-						finalizing_launcher.launch (is_gui)
+						finalizing_launcher.launch (is_gui, False)
 						finalizing_launcher.wait_for_exit
 					end								
 				end				

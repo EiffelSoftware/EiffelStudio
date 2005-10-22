@@ -193,6 +193,9 @@ feature -- Basic operations
 			dlg: EV_WARNING_DIALOG
 			cmdexe: STRING
 			wd: STRING
+			args: LIST [STRING]
+			cmd: STRING
+			use_argument: BOOLEAN
 		do
 			dev := Window_manager.last_focused_development_window
 			if external_launcher.launched and then not external_launcher.has_exited then
@@ -249,15 +252,23 @@ feature -- Basic operations
 						cmdexe := Execution_environment.get ("COMSPEC")
 						if cmdexe /= Void then
 								-- This allows the use of `dir' etc.
-							cl.prepend (cmdexe + " /c")
+							create {ARRAYED_LIST [STRING]}args.make (1)
+							args.extend ("/c%""+cl+"%"")
+							external_launcher.prepare_command_line (cmdexe, args, wd)
+							use_argument := True
+						else
+							external_launcher.prepare_command_line (cl, Void, wd)
+							use_argument := False
 						end
 					else
-						cl.prepend ("/bin/sh -c %'")
-						cl.append ("%'")
+						create {ARRAYED_LIST [STRING]}args.make (2)
+						args.extend ("-c")
+						args.extend ("%'"+cl+"%'")
+						external_launcher.prepare_command_line ("/bin/sh", args, wd)
+						use_argument := True
 					end	
-					external_launcher.prepare_command_line (cl, wd)
 					external_launcher.set_hidden (False)
-					external_launcher.launch (True)				
+					external_launcher.launch (True, use_argument)				
 				end			
 				exec.change_working_directory (od)
 			end

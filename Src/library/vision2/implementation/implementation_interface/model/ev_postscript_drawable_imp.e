@@ -232,6 +232,11 @@ feature -- Element change
 		
 feature -- Clearing and drawing operations
 
+	redraw is 
+			-- Force `Current' to redraw itself. 
+		do 
+		end 
+
 	clear is
 			-- Erase `Current' with `background_color'.
 		do
@@ -364,6 +369,12 @@ feature -- Clearing and drawing operations
 			Result_exists: Result /= Void
 		end
 		
+feature -- Duplication 
+	
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is 
+			-- Pixmap region of `Current' represented by rectangle `area' 
+		do
+		end 
 		
 feature -- Drawing operations
 

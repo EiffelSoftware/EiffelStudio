@@ -80,6 +80,11 @@ feature -- Status setting
 			dc.end_document
 		end
 
+	redraw is 
+			-- Force `Current' to redraw itself. 
+		do 
+		end 
+
 feature -- Implementation
 	
 	interface: EV_PRINTER

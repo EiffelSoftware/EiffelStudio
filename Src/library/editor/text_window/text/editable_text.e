@@ -248,7 +248,7 @@ feature -- Basic Operations
 		end
 		
 	remove_trailing_blanks is
-			-- Remove trailing blanks, this will be recorded in history stack. 
+			-- Remove trailing blanks, this will be recorded in history stack, but invisible to user.
 		local
 			l_token: EDITOR_TOKEN
 			end_loop: BOOLEAN

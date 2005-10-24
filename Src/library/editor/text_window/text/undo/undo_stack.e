@@ -277,23 +277,42 @@ feature {EDITABLE_TEXT} -- Element change
 		end
 		
 	record_remove_trailing_blank (s: STRING) is
-			-- Update `Current' as `s' has just been back deleted at cursor position.
+			-- Update `Current' as `s' has just been removed at cursor position.
 		local
 			undo_rtb_cmd: UNDO_REMOVE_TRAILING_BLANK_CMD
+			convers_undo_rtb_cmd: UNDO_REMOVE_TRAILING_BLANK_CMD
 			undo_delete_cmd: UNDO_DELETE_CMD
 		do
-			if current_status = remove_trailing_blank then
-				undo_rtb_cmd ?= item
-			else
-				create undo_rtb_cmd.make
+			if not undo_list.is_empty or not redo_list.is_empty then
+				if current_status = remove_trailing_blank then
+					if not undo_list.is_empty then
+						undo_rtb_cmd ?= item
+					end
+					if not redo_list.is_empty then
+						undo_rtb_cmd ?= redo_list.first
+					end					
+				end
+				if undo_rtb_cmd = Void then
+					create undo_rtb_cmd.make
+				end
+				create undo_delete_cmd.make_from_string (text.cursor, s, text)
+				undo_rtb_cmd.add(undo_delete_cmd)
+				if current_status /= remove_trailing_blank then
+						-- Add real remove command to undo list and converse remove command to redo list.
+					if not undo_list.is_empty then
+						item.bind_to_next
+						undo_list.put_front (undo_rtb_cmd)
+					end
+					if not redo_list.is_empty then
+						convers_undo_rtb_cmd := undo_rtb_cmd.twin
+						convers_undo_rtb_cmd.set_converse (true)
+						convers_undo_rtb_cmd.bind_to_next
+						redo_list.put_front (convers_undo_rtb_cmd)
+					end
+					current_status := remove_trailing_blank
+				end
+				notify_observers
 			end
-			create undo_delete_cmd.make_from_string (text.cursor, s, text)
-			undo_rtb_cmd.add(undo_delete_cmd)
-			if current_status /= remove_trailing_blank then
-				put (undo_rtb_cmd)
-				current_status := remove_trailing_blank
-			end
-			notify_observers
 		end		
 
 feature {EDITABLE_TEXT} -- Basic operations
@@ -345,7 +364,7 @@ feature {EDITABLE_TEXT} -- Basic operations
 				undo_list.put_front (uc)
 				redo_list.remove
 				from until
-					undo_list.is_empty or else not uc.is_bound_to_next
+					redo_list.is_empty or else not uc.is_bound_to_next
 				loop
 					redo_list.start
 					uc := redo_list.item

@@ -3597,7 +3597,7 @@ feature {NONE} -- Implementation: Editor commands
 			if a_feature /= Void then
 				address_manager.set_feature_text_simply (a_feature.feature_names.first.internal_name)
 				l_class_i := eiffel_universe.class_named (class_name, cluster)
-				if l_class_i.is_compiled then
+				if l_class_i /= Void and then l_class_i.is_compiled then
 					l_classc := l_class_i.compiled_class
 					if l_classc.has_feature_table then
 						l_efeature := l_classc.feature_with_name (a_feature.feature_names.first.internal_name)

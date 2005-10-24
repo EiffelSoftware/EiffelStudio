@@ -38,10 +38,14 @@ remtrace lex
 exprt -r %DEFAULT_CVS_TAG -d lex "Src/library/lex"
 remtrace net
 exprt -r %DEFAULT_CVS_TAG -d net "Src/library/net"
+remtrace memory_analyzer
+exprt -r %DEFAULT_CVS_TAG -d memory_analyzer "Src/library/memory_analyzer"
 remtrace obsolete
 exprt -r %DEFAULT_CVS_TAG -d obsolete "Src/library/obsolete"
 remtrace parse
 exprt -r %DEFAULT_CVS_TAG -d parse "Src/library/parse"
+remtrace process
+exprt -r %DEFAULT_CVS_TAG -d process "Src/library/process"
 remtrace store
 exprt -r %DEFAULT_CVS_TAG -d store "Src/library/store"
 remtrace patterns

@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 			scope_button.drop_actions.extend (agent on_drop_scope_button (?))
 			
 				-- Option "Subcluster"
-			create search_subcluster_button.make_with_text (Interface_names.l_Sub_cluster)
+			create search_subcluster_button.make_with_text (Interface_names.l_Sub_clusters)
 			search_subcluster_button.key_press_actions.extend (agent key_pressed (?, True))
 			search_subcluster_button.enable_select
 			search_subcluster_button.select_actions.extend (agent force_new_search)

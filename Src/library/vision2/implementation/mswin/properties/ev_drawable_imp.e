@@ -485,12 +485,17 @@ feature -- Drawing operations
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw `a_pixmap' with upper-left corner on (`x', `y').
 		local
-			pixmap_imp		: EV_PIXMAP_IMP_STATE
-			bounding_area	: EV_RECTANGLE
+			pixmap_imp : EV_PIXMAP_IMP_STATE
 		do
 			pixmap_imp ?= a_pixmap.implementation
-			create bounding_area.make (0, 0, pixmap_imp.width, pixmap_imp.height)
+			bounding_area.move_and_resize (0, 0, pixmap_imp.width, pixmap_imp.height)
 			draw_sub_pixmap (x, y, a_pixmap, bounding_area)
+		end
+		
+	bounding_area: EV_RECTANGLE is
+			-- Temporary rectangle used internally.
+		once
+			create Result
 		end
 
 	draw_sub_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is

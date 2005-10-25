@@ -38,7 +38,7 @@ class CONSOLE inherit
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
 			close, dispose, end_of_file, back, writer, next_line,
-			read_integer_with_no_type, internal_leading_separators,
+			read_integer_with_no_type, 
 			ctoi_state_machine
 		end
 
@@ -112,13 +112,7 @@ feature -- Removal
 		do
 		end
 		
-feature {NONE} -- Implementation
-
-	internal_leading_separators: STRING is
-			-- Characters that are considered as leading separators
-		do
-			Result := internal_separators
-		end	
+feature {NONE} -- Implementation	
 		
 	internal_trailing_separators: STRING is
 			-- Characters that are considered as trailing separators

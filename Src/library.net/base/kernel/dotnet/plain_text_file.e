@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 	internal_leading_separators: STRING is
 			-- Characters that are considered as leading separators
 		do
-			Result := internal_separators
+			Result := " %N%R%T"
 		end	
 			
 	read_integer_with_no_type is

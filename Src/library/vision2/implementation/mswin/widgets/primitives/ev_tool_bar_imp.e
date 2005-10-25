@@ -1055,7 +1055,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			disable_default_processing
 		end
 
-feature {EV_PND_TRANSPORTER_IMP}
+feature {NONE} -- Implementation
 
 	child_x (button: EV_TOOL_BAR_BUTTON): INTEGER is
 			-- `Result' is relative xcoor of `button' to `parent_imp'.

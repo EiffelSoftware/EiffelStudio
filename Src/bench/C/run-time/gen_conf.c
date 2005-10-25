@@ -327,9 +327,8 @@ doc:		<return>RTUD_INV of `id'</return>
 doc:	</routine>
 */
 rt_public int16 eif_id_for_typarr (int16 id) {
-	REQUIRE ("Valid id", id >= 0);
-
-	return RTUD_INV(id);
+	REQUIRE ("Valid id", (id >= 0) || (id == NONE_TYPE));
+	return (id == NONE_TYPE ? NONE_TYPE : RTUD_INV(id));
 }
 
 
@@ -1493,10 +1492,13 @@ rt_public int eif_gen_conf (int16 stype, int16 ttype)
 		return 1;
 	}
 
-	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ttype])) || (stype < 0)) {
-		/* Expanded target or source of type NONE- no conformance because
-		 * types are different */
+	if (EIF_IS_EXPANDED_TYPE(System(eif_cid_map[ttype]))) {
+		/* Expanded target no conformance because types are different */
 		return 0;
+	} else if (stype < 0) {
+			/* Target is not expanded and source is NONE, then there is conformance. */
+		CHECK("NONE type", stype == NONE_TYPE);
+		return 1;
 	}
 
 	stab = eif_conf_tab[stype];

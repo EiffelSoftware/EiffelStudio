@@ -56,7 +56,7 @@ feature -- Creation
 				l_table.put (Result, class_type)
 			end
 		ensure
-			dynamic_type_from_string_valid: Result = -1 or else Result >= 0
+			dynamic_type_from_string_valid: Result = -1 or Result = none_type or Result >= 0
 		end
 
 	new_instance_of (type_id: INTEGER): ANY is
@@ -147,6 +147,9 @@ feature -- Status report
 
 feature -- Access
 
+	none_type: INTEGER is -2
+			-- Type ID representation for NONE.
+	
 	Pointer_type: INTEGER is 0
 
 	Reference_type: INTEGER is 1

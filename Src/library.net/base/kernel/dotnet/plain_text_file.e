@@ -40,8 +40,8 @@ feature -- Output
 	put_string, putstring (s: STRING) is
 			-- Write `s' at current position.
 		do
-			if s.count /= 0 then			
-				writer.write_string (s.to_cil.replace (eiffel_newline, dotnet_newline))					
+			if s.count /= 0 then
+				writer.write (s.to_cil.replace (eiffel_newline, dotnet_newline))
 			end
 		end
 
@@ -96,7 +96,7 @@ feature -- Output
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write ASCII value of `b' at current position.
 		do
-			writer.write (b)
+			writer.write_boolean (b)
 		end
 
 	put_real, putreal (r: REAL) is
@@ -194,7 +194,6 @@ feature -- Input
 			last_natural_8 := ctoi_state_machine.parsed_natural_8
 		end					
 
-			
 	read_real, readreal is
 			-- Read the ASCII representation of a new real
 			-- from file. Make result available in `last_real'.
@@ -297,12 +296,7 @@ feature -- Input
 			if sign then
 				last_double := - last_double
 			end
-			state := internal_stream.read_byte
-			if state = -1 then				
-				internal_end_of_file := True
-			else
-				go (position - 1)
-			end
+			internal_end_of_file := reader.peek = -1
 		end
 
 	read_character, readchar is
@@ -310,43 +304,28 @@ feature -- Input
 			-- Make result available in `last_character'.
 		local
 			a_code: INTEGER
-			l_bytes: INTEGER
-			l_buffer: NATIVE_ARRAY [NATURAL_8]
-		do			
-			create l_buffer.make (1)
-			l_bytes := internal_stream.read (l_buffer, 0, 1)
-			a_code := l_buffer.item (0)
-			if a_code = 0 then
+		do
+			a_code := reader.read
+			if a_code = - 1 then
 				internal_end_of_file := True
 			else
 					-- If we read `%R', i.e. value 13, then let's
 					-- check if next character is `%N'. If it is '%N'
 					-- then we return '%N', else we return '%R'.
-				if a_code = 13 then
-					l_bytes := internal_stream.read (l_buffer, 0, 1)
-					a_code := l_buffer.item (0)
-					if a_code /= 10 then						
-						a_code := 13
-						back
-					end
+				if a_code = 13 and then reader.peek = 10 then
+					a_code := reader.read
 				end
 				last_character := a_code.to_character
 			end
 		end
-	
-feature {NONE} -- Implementation
 
-	internal_state_machine: STRING_TO_INTEGER_STATE_MACHINE
-			-- Internal state machine used to parse string to integer or natural
+feature {NONE} -- Implementation
 
 	ctoi_state_machine: STRING_TO_INTEGER_STATE_MACHINE is
 			-- State machine used to parse string to integer or natural
-		do
-			if internal_state_machine = Void then
-				create internal_state_machine.make
-				internal_state_machine.set_leading_separators (internal_leading_separators)
-			end
-			Result := internal_state_machine
+		once
+			create Result.make
+			Result.set_leading_separators (internal_leading_separators)
 		end
 
 	platform_indicator: PLATFORM is
@@ -356,9 +335,9 @@ feature {NONE} -- Implementation
 		end
 					
 	internal_leading_separators: STRING is
-			-- 
+			-- Characters that are considered as leading separators
 		do
-			Result := " %N%T"
+			Result := internal_separators
 		end	
 			
 	read_integer_with_no_type is
@@ -370,7 +349,7 @@ feature {NONE} -- Implementation
 		do
 			l_is_integer := True
 			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation)
-			internal_state_machine.set_trailing_separators_acceptable (False)
+			ctoi_state_machine.set_trailing_separators_acceptable (False)
 			
 			from			
 				l_is_integer := True
@@ -390,36 +369,31 @@ feature {NONE} -- Implementation
 					back
 				end
 				back								
-			end				
+			end	
+			internal_end_of_file := reader.peek = -1			
 		end
-		
+
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
-		local		
-			l_pos, i, j: INTEGER			
+		local
+			i, j: INTEGER
+			str_area: NATIVE_ARRAY [CHARACTER]
 		do
-			l_pos := position
-			i := internal_stream.read_byte
-			if i = -1 then				
-				internal_end_of_file := True			
-			end
-			back
+			create str_area.make (nb)
+			Result := reader.read_character_array (str_area, 0, nb)
+			internal_end_of_file := reader.peek = -1
 			from
 				i := 0
 				j := pos
 			until
-				i = nb or end_of_file
+				i >= Result
 			loop
-				read_character
-				if not end_of_file then					
-					a_string.replace_substring (last_character.out, j, j + 1)
-				end				
+				a_string.put (str_area.item (i), j)
 				i := i + 1
 				j := j + 1
 			end
-			go (l_pos)
 		end
 
 	c_open_modifier: INTEGER is 16384

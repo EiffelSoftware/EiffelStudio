@@ -534,8 +534,15 @@ rt_private EIF_TYPE_ID eifcid(struct rt_type *type_entry)
 	REQUIRE("Has type name", type_entry->type_name);
 
 	value = cecil_info_for_entry (type_entry);
-	if ((!value) || (value->nb_param > 0)) {
-			/* Type not found or generic type. */
+	if (!value) {
+			/* Type not found or possibly NONE. */
+		if (strcmp(type_entry->type_name, "NONE") == 0) {
+			return NONE_TYPE;
+		} else {
+			return EIF_NO_TYPE;
+		}
+	} else if (value->nb_param > 0) {
+			/* Generic type when we expected a non-generic one. */
 		return EIF_NO_TYPE;
 	} else {
 			/* The associated type ID */

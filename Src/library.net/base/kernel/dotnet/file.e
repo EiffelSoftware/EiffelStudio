@@ -307,7 +307,9 @@ feature -- Measurement
 			if exists then
 				if not is_open_write then
 					internal_file.refresh
-					Result := internal_file.length.to_integer
+					if not is_directory then
+						Result := internal_file.length.to_integer
+					end
 				else
 					Result := internal_stream.length.to_integer
 				end
@@ -345,9 +347,15 @@ feature -- Status report
 	exists: BOOLEAN is
 			-- Does physical file exist?
 			-- (Uses effective UID.)
+		local
+			l_directory: DIRECTORY
 		do
 			internal_file.refresh
 			Result := internal_file.exists
+			if not Result then -- May return `False' on directories
+				create l_directory.make (name)
+				Result := l_directory.exists
+			end
 		ensure then
 			unchanged_mode: mode = old mode
 		end
@@ -369,7 +377,7 @@ feature -- Status report
 		do
 			if not retried then
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.read,
+				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read,
 					internal_file.full_name)
 				perm.demand
 			end
@@ -388,7 +396,7 @@ feature -- Status report
 		do
 			if not retried then
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.write,
+				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.write,
 					internal_file.full_name)
 				perm.demand
 			end
@@ -416,7 +424,7 @@ feature -- Status report
 			if not retried then
 					-- Is the parent directory writable?
 				internal_file.refresh
-				create perm.make_from_access_and_path (feature {FILE_IO_PERMISSION_ACCESS}.read,
+				create perm.make_from_access_and_path ({FILE_IO_PERMISSION_ACCESS}.read,
 					internal_file.directory_name)
 				perm.demand
 				Result := not exists or else writable
@@ -442,8 +450,8 @@ feature -- Status report
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := (internal_file.attributes & feature {FILE_ATTRIBUTES}.device) = 
-				feature {FILE_ATTRIBUTES}.device
+			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.device) = 
+				{FILE_ATTRIBUTES}.device
 		end
 
 	is_directory: BOOLEAN is
@@ -452,8 +460,8 @@ feature -- Status report
 			file_exists: exists
 		do
 			internal_file.refresh
-			Result := (internal_file.attributes & feature {FILE_ATTRIBUTES}.directory) = 
-				feature {FILE_ATTRIBUTES}.directory
+			Result := (internal_file.attributes & {FILE_ATTRIBUTES}.directory) = 
+				{FILE_ATTRIBUTES}.directory
 		end
 
 	is_symlink: BOOLEAN is
@@ -639,7 +647,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.open, feature {FILE_ACCESS}.write)
+				{FILE_MODE}.create_, {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -654,7 +662,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.append, feature {FILE_ACCESS}.write)
+				{FILE_MODE}.append, {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -668,7 +676,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.open, feature {FILE_ACCESS}.read_write)
+				{FILE_MODE}.open, {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -684,7 +692,7 @@ feature -- Status setting
 		do
 			internal_file.refresh
 			internal_stream := internal_file.open_file_mode_file_access (
-				feature {FILE_MODE}.create_, feature {FILE_ACCESS}.read_write)
+				{FILE_MODE}.create_, {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -712,7 +720,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.read)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.read)
 			mode := Read_file
 		ensure
 			exists: exists
@@ -725,7 +733,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.write)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -738,7 +746,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.write)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -751,7 +759,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.read_write)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -766,7 +774,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			create {FILE_STREAM} internal_stream.make (hdl, feature {FILE_ACCESS}.read_write)
+			create {FILE_STREAM} internal_stream.make (hdl, {FILE_ACCESS}.read_write)
 			mode := Append_read_file
 		ensure
 			exists: exists
@@ -869,13 +877,17 @@ feature -- Status setting
 	close is
 			-- Close file.
 		do
+			if internal_sread /= Void then
+				internal_sread.close
+			end
 			if internal_swrite /= Void then
 				internal_swrite.close
 			end
 			internal_stream.close
 			mode := Closed_file
+			descriptor_available := False
+			internal_sread := Void
 			internal_swrite := Void
-			descriptor_available := False			
 			internal_end_of_file := False
 		ensure then
 			is_closed: is_closed
@@ -890,7 +902,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((0).to_integer_64, feature {SEEK_ORIGIN}.begin)
+			i := internal_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.begin)
 		end
 
 	finish is
@@ -900,7 +912,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((0).to_integer_64, feature {SEEK_ORIGIN}.end_)
+			i := internal_stream.seek ((0).to_integer_64, {SEEK_ORIGIN}.end_)
 		end
 
 	forth is
@@ -910,7 +922,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((1).to_integer_64, feature {SEEK_ORIGIN}.current_)			
+			i := internal_stream.seek ((1).to_integer_64, {SEEK_ORIGIN}.current_)
 		end
 
 	back is
@@ -918,7 +930,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek ((-1).to_integer_64, feature {SEEK_ORIGIN}.current_)
+			i := internal_stream.seek ((-1).to_integer_64, {SEEK_ORIGIN}.current_)
 		end
 
 	move (offset: INTEGER) is
@@ -928,7 +940,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek (offset.to_integer_64, feature {SEEK_ORIGIN}.current_)
+			i := internal_stream.seek (offset.to_integer_64, {SEEK_ORIGIN}.current_)
 		end
 
 	go (abs_position: INTEGER) is
@@ -936,7 +948,7 @@ feature -- Cursor movement
 			-- (New position may be beyond physical length.)
 		require
 			file_opened: not is_closed
-			non_negative_argument: abs_position >= 0		
+			non_negative_argument: abs_position >= 0
 		do
 			internal_stream.set_position (abs_position.to_integer_64)
 		end
@@ -950,7 +962,7 @@ feature -- Cursor movement
 		local
 			i: INTEGER_64
 		do
-			i := internal_stream.seek (-abs_position.to_integer_64, feature {SEEK_ORIGIN}.end_)
+			i := internal_stream.seek (abs_position.to_integer_64, {SEEK_ORIGIN}.end_)
 		end
 
 	next_line is
@@ -969,10 +981,7 @@ feature -- Cursor movement
 				c = eol or c = eof
 			loop
 				c := internal_stream.read_byte
-			end			
-			c := internal_stream.read_byte
-			internal_end_of_file := c = eof
-			back
+			end
 		end
 
 feature -- Element change
@@ -1019,7 +1028,6 @@ feature -- Element change
 			buf: NATIVE_ARRAY [NATURAL_8]
 			bs, rd: INTEGER
 			st, ost: like internal_stream
-			eos: BOOLEAN
 		do
 				-- Open in append mode.
 			open_append
@@ -1030,20 +1038,12 @@ feature -- Element change
 			from
 				st := internal_stream
 				ost := f.internal_stream
-				buf := (create {ARRAY [NATURAL_8]}.make (1, bs)).area.native_array
+				create buf.make (bs + 1)
 			until
 				f.after
 			loop
-				rd := ost.read (buf, 0, 5)
-				eos := buf.item (1) = 0
-			  	if eos then
-					f.read_character
-					f.back
-				else
-					st.write (buf, 0, rd)
-			  	end			  	
-			  		-- Wipe out the buffer for next read operation
-			  	create buf.make (bs)
+				rd := ost.read (buf, 0, bs)
+				st.write (buf, 0, rd)
 			end
 				-- Close both files.
 			close
@@ -1080,7 +1080,7 @@ feature -- Element change
 				writer.write_string (s.to_cil)
 			end
 		end
-		
+
 	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
@@ -1231,7 +1231,7 @@ feature -- Element change
 		local
 			now: SYSTEM_DATE_TIME
 		do
-			now := feature {SYSTEM_DATE_TIME}.now
+			now := {SYSTEM_DATE_TIME}.now
 			internal_file.refresh
 			internal_file.set_last_access_time (now)
 			internal_file.set_last_write_time (now)
@@ -1341,10 +1341,10 @@ feature -- Input
 		require else
 			is_readable: file_readable
 		local
-		  	a_code: INTEGER		  
+		  	a_code: INTEGER
 		do
-			a_code := internal_stream.read_byte	  	
-		  	if a_code = -1 then
+		  	a_code := reader.read
+		  	if a_code = - 1 then
 				internal_end_of_file := True
 		  	else
 				last_character := a_code.to_character
@@ -1366,33 +1366,42 @@ feature -- Input
 		require else
 			is_readable: file_readable
 		local
-			rc, new_line_c: CHARACTER
-		do			
-			new_line_c := '%N'
-
-				-- Clean previous stored string.
+			l_str: SYSTEM_STRING
+		do
+			l_str := reader.read_line
 			if last_string = Void then
 				create_last_string (0)
 			else
 				last_string.clear_all
 			end
-
-			from
-				read_character
-				if not end_of_file then
-					rc := last_character
-				end
-			until
-				end_of_file or else rc = new_line_c
-			loop
-				last_string.extend (rc)
-				read_character
-				if not end_of_file then
-					rc := last_character
-				end
-			end			
+			if l_str /= Void then
+				last_string.append (l_str)
+			end
+			internal_end_of_file := reader.peek = -1
 		end
-		
+
+	read_stream, readstream (nb_char: INTEGER) is
+			-- Read a string of at most `nb_char' bound characters
+			-- or until end of file.
+			-- Make result available in `last_string'.
+		require else
+			is_readable: file_readable
+		local
+			new_count: INTEGER
+			str_area: NATIVE_ARRAY [CHARACTER]
+		do
+			if last_string = Void then
+				create_last_string (nb_char)
+			else
+				last_string.clear_all
+				last_string.grow (nb_char)
+			end
+			str_area := last_string.area.native_array
+			new_count := reader.read_character_array (str_area, 0, nb_char)
+			last_string.set_count (new_count)
+			internal_end_of_file := reader.peek = -1
+		end
+
 	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER) is
 			-- Read at most `nb_bytes' bound bytes and make result
 			-- available in `p' at position `start_pos'.
@@ -1406,7 +1415,7 @@ feature -- Input
 		do
 			from
 				i := start_pos
-				l_stream :=  internal_stream
+				l_stream := reader.base_stream
 			until
 				i = nb_bytes
 			loop
@@ -1419,44 +1428,6 @@ feature -- Input
 				end
 				i := i + 1
 			end
-		end
-
-	read_stream, readstream (nb_char: INTEGER) is
-			-- Read a string of at most `nb_char' bound characters
-			-- or until end of file.
-			-- Make result available in `last_string'.
-		require else
-			is_readable: file_readable
-		local
-			i, new_count: INTEGER
-			str_area: NATIVE_ARRAY [NATURAL_8]
-		do
-			if last_string = Void then
-				create_last_string (nb_char)
-			else
-				last_string.clear_all
-				last_string.grow (nb_char)
-			end
-			create str_area.make (nb_char)
-			new_count := internal_stream.read (str_area, 0, nb_char)
-			if new_count = nb_char then
-				i := internal_stream.read_byte
-				if i = -1 then
-					internal_end_of_file := True
-					back
-				end
-			else
-				internal_end_of_file := new_count = 0
-			end
-			from
-				i := 0
-			until
-				i = str_area.count
-			loop				
-				last_string.append_character (str_area.item (i).to_character)
-				i := i + 1
-			end			
-			last_string.set_count (new_count)
 		end
 
 	read_word, readword is
@@ -1576,15 +1547,24 @@ feature {FILE} -- Implementation
 	internal_end_of_file: BOOLEAN
 			-- Did last call to `reader.read' reach end of file?
 
+	reader: STREAM_READER is
+			-- Stream reader used to read in `Current' (if possible).
+		do
+			if internal_sread = Void and internal_stream.can_read then
+				create {STREAM_READER} internal_sread.make_from_stream_and_encoding (
+					internal_stream, {ENCODING}.default)
+			end
+			Result := internal_sread
+		end
+
 	writer: STREAM_WRITER is
 			-- Stream writer used to write in `Current' (if possible).
 		do
 			if internal_swrite = Void and internal_stream.can_write then
 				create {STREAM_WRITER} internal_swrite.make_from_stream_and_encoding (
-					internal_stream, feature {ENCODING}.default)
-				internal_swrite.set_auto_flush (True)
+					internal_stream, {ENCODING}.default)
 			end
-			Result := internal_swrite			
+			Result := internal_swrite
 		end
 
 feature {NONE} -- Implementation
@@ -1622,6 +1602,9 @@ feature {NONE} -- Implementation
 			nb_char_read_small_enough: Result <= nb
 			character_read: not end_of_file implies Result > 0
 		end
+
+	internal_sread: STREAM_READER
+			-- Stream reader used to read in `Current' (if any).
 
 	internal_swrite: STREAM_WRITER
 			-- Stream writer used to write in `Current' (if any).
@@ -1819,3 +1802,5 @@ indexing
 			]"
 
 end -- class FILE
+
+

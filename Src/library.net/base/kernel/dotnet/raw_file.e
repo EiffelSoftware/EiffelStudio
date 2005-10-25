@@ -13,15 +13,16 @@ inherit
 	FILE
 		rename
 			index as position,
+			reader as text_reader,
 			writer as text_writer
 		redefine
 			read_stream, 
 			readstream,
 			read_character,
 			readchar,
-			put_string, 
+			put_string,
 			putstring,
-			put_character, 
+			put_character,
 			putchar,
 			close
 		end
@@ -118,6 +119,8 @@ feature -- Output
 	put_data (p: POINTER; size: INTEGER) is
 			-- Put `data' of length `size' pointed by `p' at
 			-- current position.
+		obsolete
+			"Use put_managed_pointer instead."
 		local
 			i: INTEGER
 		do
@@ -126,12 +129,11 @@ feature -- Output
 			until
 				i > (size - 1)
 			loop
-				writer.write_natural_8 (feature {MARSHAL}.read_byte (p + i))
-				
+				writer.write ({MARSHAL}.read_byte (p + i))
 				i := i + 1
 			end
 		end
-		
+
 	put_string, putstring (s: STRING) is
 			-- 
 		local
@@ -147,13 +149,13 @@ feature -- Output
 				byte_array.put (str_index, s.item (str_index + 1).code.to_natural_8)
 				str_index := str_index + 1
 			end
-			writer.write_natural_8_array (byte_array)
+			writer.write (byte_array)
 		end
 		
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at current position.
 		do
-			writer.write_natural_8 (c.code.to_natural_8)
+			writer.write (c.code.to_integer.to_natural_8)
 		end
 
 feature -- Input
@@ -176,7 +178,8 @@ feature -- Input
 				last_string.grow (nb_char)
 			end
 			create str_area.make (nb_char)
-			new_count := reader.read_natural_8_array_integer_32_integer_32 (str_area, 0, nb_char) 
+			new_count := reader.read (str_area, 0, nb_char)
+			
 			check
 				valid_new_count: new_count <= nb_char
 			end
@@ -290,6 +293,8 @@ feature -- Input
 			-- Read a string of at most `nb_bytes' bound bytes
 			-- or until end of file.
 			-- Make result available in `p'.
+		obsolete
+			"Use read_to_managed_pointer instead."
 		local
 			i: INTEGER
 			byte: NATURAL_8
@@ -300,12 +305,12 @@ feature -- Input
 				i > (nb_bytes - 1)
 			loop
 				byte := reader.read_byte
-				feature {MARSHAL}.write_byte (p + i, byte)
+				{MARSHAL}.write_byte (p + i, byte)
 				i := i + 1
 			end
 			internal_end_of_file := reader.peek_char = -1
 		end
-		
+
 feature {NONE} -- Implementation
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
@@ -317,7 +322,7 @@ feature {NONE} -- Implementation
 			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			create str_area.make (nb)
-			Result := reader.read_natural_8_array_integer_32_integer_32 (str_area, 0, nb)
+			Result := reader.read (str_area, 0, nb)
 			internal_end_of_file := reader.peek_char = -1
 			from
 				i := 0

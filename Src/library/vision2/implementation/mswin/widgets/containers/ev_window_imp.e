@@ -1146,7 +1146,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
+feature {EV_WIDGET_IMP} -- Implementation
 
 	title_height: INTEGER is
 			-- `Result' is absolute x position of client rect.

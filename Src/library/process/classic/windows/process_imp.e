@@ -56,8 +56,6 @@ feature {NONE} -- Initialization
 		end
 		
 	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
-		local
-			ls: LIST [STRING]
 		do
 			create command_line.make_from_string (cmd_line)
 			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection

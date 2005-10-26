@@ -194,7 +194,6 @@ feature -- Basic operations
 			cmdexe: STRING
 			wd: STRING
 			args: LIST [STRING]
-			cmd: STRING
 			use_argument: BOOLEAN
 		do
 			dev := Window_manager.last_focused_development_window

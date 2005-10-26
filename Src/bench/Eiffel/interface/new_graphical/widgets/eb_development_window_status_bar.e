@@ -115,7 +115,6 @@ feature {NONE} -- Initialization
 				
 				-- Set widget properties.
 			project_label.align_text_center
-			progress_bar.disable_text_display
 			label.align_text_left
 				-- 4 characters for the line number, 4 for the column number.
 				-- It should be nine with the separator, but it looks too wide then.

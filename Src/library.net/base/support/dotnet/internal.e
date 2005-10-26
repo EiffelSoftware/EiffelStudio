@@ -63,7 +63,7 @@ feature -- Creation
 				l_table.put (Result, class_type)
 			end
 		ensure
-			dynamic_type_from_string_valid: Result = -1 or else Result >= 0
+			dynamic_type_from_string_valid: Result = -1 or Result = none_type or Result >= 0
 		end
 
 	new_instance_of (type_id: INTEGER): ANY is
@@ -185,6 +185,9 @@ feature -- Status report
 		
 feature -- Access
 
+	none_type: INTEGER is -2
+			-- Type ID representation for NONE.
+	
 	Pointer_type: INTEGER is 0
 
 	Reference_type: INTEGER is 1
@@ -219,6 +222,7 @@ feature -- Access
 	
 	natural_64_type: INTEGER is 16
 
+	min_predefined_type: INTEGER is -2
 	max_predefined_type: INTEGER is 17
 			-- See non-exported definition of `object_type' below.
 
@@ -1234,15 +1238,19 @@ feature {NONE} -- Implementation
 				if l_obj /= Void then
 					Result ?= l_obj
 				else
-					Result := next_dynamic_type_id.item
-					next_dynamic_type_id.put (Result + 1)
+					if a_class_type.is_none then
+						Result := none_type
+					else
+						Result := next_dynamic_type_id.item
+						next_dynamic_type_id.put (Result + 1)
+					end
 					eiffel_type_to_id.set_item (a_class_type, Result)
 					resize_arrays (Result)
 					id_to_eiffel_type.put (a_class_type, Result)
 				end
 			end
 		ensure
-			dynamic_type_from_rt_class_type: Result = -1 or else Result >= 0
+			dynamic_type_from_rt_class_type: Result = -1 or Result = none_type or Result >= 0
 		end
 
 	internal_field (i: INTEGER; object: ANY; type_id: INTEGER): SYSTEM_OBJECT is
@@ -1669,6 +1677,9 @@ feature {NONE} -- Implementation
 			l_list.extend (l_basic_type)
 			Result.put (l_list, "BOOLEAN")
 
+			create l_list.make (1)
+			l_list.extend (create {RT_NONE_TYPE}.make)
+			Result.put (l_list, "NONE")
 		ensure
 			eiffel_meta_type_mapping_not_void: Result /= Void
 		end
@@ -1798,7 +1809,7 @@ feature {NONE} -- Implementation
 	id_to_eiffel_type: ARRAY [RT_CLASS_TYPE] is
 			-- Mapping between dynamic type id and Eiffel types.
 		once
-			create Result.make (0, array_upper_cell.item)
+			create Result.make (min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_eiffel_type_not_void: Result /= Void
 		end
@@ -1806,7 +1817,7 @@ feature {NONE} -- Implementation
 	id_to_eiffel_implementation_type: ARRAY [RT_CLASS_TYPE] is
 			-- Mapping between dynamic type id and Eiffel implementation types.
 		once
-			create Result.make (0, array_upper_cell.item)
+			create Result.make (min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_eiffel_type_not_void: Result /= Void
 		end
@@ -1814,7 +1825,7 @@ feature {NONE} -- Implementation
 	id_to_fields: ARRAY [NATIVE_ARRAY [FIELD_INFO]] is
 			-- Buffer for `get_members' lookups index by type_id.
 		once
-			create Result.make (0, array_upper_cell.item)
+			create Result.make (min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_not_void: Result /= Void
 		end
@@ -1822,7 +1833,7 @@ feature {NONE} -- Implementation
 	id_to_fields_abstract_type: ARRAY [NATIVE_ARRAY [INTEGER]] is
 			-- Buffer for `field_type_of_type' lookups index by type_id.
 		once
-			create Result.make (0, array_upper_cell.item)
+			create Result.make (min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_abstract_type_not_void: Result /= Void
 		end
@@ -1830,7 +1841,7 @@ feature {NONE} -- Implementation
 	id_to_fields_static_type: ARRAY [NATIVE_ARRAY [INTEGER]] is
 			-- Buffer for `field_static_type_of_type' lookups index by type_id.
 		once
-			create Result.make (0, array_upper_cell.item)
+			create Result.make (min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_static_type_not_void: Result /= Void
 		end
@@ -1838,7 +1849,7 @@ feature {NONE} -- Implementation
 	id_to_fields_name: ARRAY [NATIVE_ARRAY [STRING]] is
 			-- Buffer for `field_name_of_type' lookups index by type_id.
 		once
-			create Result.make (0, array_upper_cell.item)
+			create Result.make (min_predefined_type, array_upper_cell.item)
 		ensure
 			id_to_fields_name_not_void: Result /= Void
 		end

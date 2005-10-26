@@ -80,7 +80,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			
 			a_recent_projects_manager: EB_RECENT_PROJECTS_MANAGER
 			first_window: EB_DEVELOPMENT_WINDOW
-			a_progress_dialog: EB_PROGRESS_DIALOG
 			a_graphical_degree_output: ES_GRAPHICAL_DEGREE_OUTPUT
 		do
 			if license.is_licensed or license.can_run then
@@ -104,8 +103,6 @@ feature {NONE} -- Implementation (preparation of all widgets)
 		
 					-- Create and setup the degree output window.
 				if not preferences.development_window_data.graphical_output_disabled then
-					--create a_progress_dialog
-					--set_progress_dialog (a_progress_dialog)
 					create a_graphical_degree_output.make_with_output_manager (output_manager)
 					Eiffel_project.set_degree_output (a_graphical_degree_output)
 				end

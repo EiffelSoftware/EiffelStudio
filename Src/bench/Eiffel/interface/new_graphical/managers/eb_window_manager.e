@@ -657,23 +657,25 @@ feature -- Actions on all windows
 		require
 			a_value_valid: a_value >= 0 and then a_value <= 100
 		local
+			l_managed_windows: like managed_windows
 			cv_dev: EB_DEVELOPMENT_WINDOW
-			cur: CURSOR
 		do
 			from
-				cur := managed_windows.cursor
-				managed_windows.start
+					-- Make a twin of the list incase window is destroyed during
+					-- indirect call to status bar `process_events_and_idle' which
+					-- is needed to update the label and progress bar display.
+				l_managed_windows := managed_windows.twin
+				l_managed_windows.start
 			until
-				managed_windows.after
+				l_managed_windows.after
 			loop
-				cv_dev ?= managed_windows.item
-				if cv_dev /= Void then
+				cv_dev ?= l_managed_windows.item
+				if cv_dev /= Void and then not cv_dev.destroyed then
 					cv_dev.status_bar.progress_bar.reset
 					cv_dev.status_bar.progress_bar.set_value (a_value)
 				end
-				managed_windows.forth
+				l_managed_windows.forth
 			end
-			managed_windows.go_to (cur)
 		end
 
 	for_all_development_windows (p: PROCEDURE [EB_DEVELOPMENT_WINDOW, TUPLE]) is

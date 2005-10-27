@@ -60,7 +60,7 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (pixmap_path_string)	
 			if element_info /= Void then
 				if element_info.is_constant then
-					pixmap_constant ?= constants.all_constants.item (element_info.data)
+					pixmap_constant ?= components.constants.all_constants.item (element_info.data)
 					create constant_context.make_with_context (pixmap_constant, object, type, pixmap_path_string)
 					pixmap_constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)

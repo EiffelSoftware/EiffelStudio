@@ -9,7 +9,8 @@ class
 inherit
 	GB_EIFFEL_ENV
 		export
-			{NONE} all	
+			{NONE} all
+			{GB_SHARED_INTERNAL_COMPONENTS} eiffel_preferences
 		end
 
 feature -- Initialization
@@ -27,7 +28,7 @@ feature -- Initialization
 		ensure
 			preferences_not_void: preferences /= Void
 			initialized: preferences_initialized
-		end		
+		end
 
 feature -- Access
 
@@ -45,29 +46,25 @@ feature -- Access
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend ("build")
 			Result.extend ("config")
-			Result.extend ("default.xml")			
+			Result.extend ("default.xml")
 		ensure
 			result_not_empty: Result /= Void
 		end
-		
+
 feature -- Query
 
 	preferences_initialized: BOOLEAN is
 			-- Have preferences been initialized?
 		do
 			Result := preferences_cell.item /= Void
-		end		
-		
+		end
+
 feature {NONE} -- Implementation
 
 	preferences_cell: CELL [GB_PREFERENCES] is
 			-- Once cell for global access to preferences.
 		once
 			create Result
-		end		
-
-invariant
-	preferences_not_void: preferences /= Void
-	initialized: preferences_initialized
+		end
 
 end -- class GB_SHARED_RESOURCES

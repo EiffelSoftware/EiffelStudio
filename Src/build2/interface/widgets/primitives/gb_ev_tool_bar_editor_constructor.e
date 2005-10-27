@@ -25,7 +25,7 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create check_button.make_with_text (gb_ev_tool_bar_has_vertical_button_style)
 			check_button.set_tooltip (gb_ev_tool_bar_has_vertical_button_style_tooltip)

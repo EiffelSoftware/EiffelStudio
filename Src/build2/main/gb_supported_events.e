@@ -41,12 +41,6 @@ feature -- Access
 		ensure
 			Result_ok: Result /= Void and Result.count = 23
 		end
-		
-	action_sequence_list: ARRAYED_LIST [STRING] is
-		once
-			
-		end
-		
 
 feature {NONE} -- Implementation
 

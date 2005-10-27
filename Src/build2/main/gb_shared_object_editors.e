@@ -4,44 +4,52 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	GB_SHARED_OBJECT_EDITORS
-	
+class
+	GB_OBJECT_EDITORS
+
 inherit
-	
+
 	GB_CONSTANTS
 		export {NONE}
 			all
 		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		undefine
-			copy, is_equal, default_create
-		end
-		
+
 	GB_WIDGET_UTILITIES
 		undefine
 			copy, is_equal, default_create
 		end
-		
-feature {NONE} -- Implementation
 
-	docked_object_editor: GB_OBJECT_EDITOR is
+feature {GB_INTERNAL_COMPONENTS} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	initialize_editors (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Initialize `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			create docked_object_editor.make_with_components (components)
+			create floating_object_editors.make (0)
+		ensure
+			docked_object_editors_not_void: docked_object_editor /= Void
+			floating_object_editors_not_void: floating_object_editors /= Void
+			components_set: components = a_components
+		end
+
+feature -- Implementation
+
+	docked_object_editor: GB_OBJECT_EDITOR
 			-- Tool for editing properties of widgets.
 			-- Only one in system. This is contained in the main window.
 			-- and is considered to be "docked".
-		once
-			Create Result
-		end
-		
-	floating_object_editors: ARRAYED_LIST [GB_OBJECT_EDITOR] is
+
+	floating_object_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			-- Linked list of tools for editing properties of widgets.
 			-- These are floating, and there is no limit on their number.
 			-- These are considered to be "floating"
-		once
-			Create Result.make (0)
-		end
-		
+
 	all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR] is
 			-- All object editors in system, floating and docked.
 		do
@@ -111,7 +119,7 @@ feature {NONE} -- Implementation
 			end
 			local_all_editors.go_to (cursor)
 		end
-		
+
 	update_all_editors_by_calling_feature (vision2_object: EV_ANY; calling_object_editor: GB_OBJECT_EDITOR; p: PROCEDURE [EV_ANY, TUPLE]) is
 			-- For all editors, update by calling `p' on the editor.
 		local
@@ -137,7 +145,7 @@ feature {NONE} -- Implementation
 			end
 			local_all_editors.go_to (cursor)
 		end
-		
+
 	rebuild_associated_editors (object_id: INTEGER) is
 			-- For all editors referencing an object with id `object_id', rebuild any associated object editors.
 		local
@@ -175,7 +183,7 @@ feature {NONE} -- Implementation
 			end
 			local_all_editors.go_to (cursor)
 		end
-		
+
 	destroy_floating_editors is
 			-- For evey item in `floating_object_editors',
 			-- remove and destroy.
@@ -198,7 +206,7 @@ feature {NONE} -- Implementation
 		ensure
 			no_floating_editors: floating_object_editors.is_empty
 		end
-		
+
 	flush_all is
 			-- For every item in `floating_object_editors', flush their
 			-- contents so that any objects that have been deleted are
@@ -224,7 +232,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	force_name_change_completion_on_all_editors is
 			-- Force all object editors that are editing an object
 			-- to update their object to use either the newly enterd name
@@ -259,12 +267,12 @@ feature {NONE} -- Implementation
 			create window
 			window.close_request_actions.extend (agent remove_floating_object_editor (window))
 			window.close_request_actions.extend (agent window.destroy)
-			create editor
+			create editor.make_with_components (components)
 			window.extend (editor)
 			floating_object_editors.extend (editor)
 			window.show
 		end
-		
+
 	new_object_editor (object: GB_OBJECT) is
 			-- Generate a new object editor containing `object'.
 		local
@@ -272,7 +280,7 @@ feature {NONE} -- Implementation
 			editor: GB_OBJECT_EDITOR
 			button: EV_BUTTON
 		do
-			create object_editor_window
+			create object_editor_window.make_with_components (components)
 				-- We must now temporarily create a new button, and add it to `Current'
 				-- as the default cancel button. We then remove it. This is necessary so
 				-- that we have access to the minimize, maximize and close buttons.
@@ -287,19 +295,19 @@ feature {NONE} -- Implementation
 			object_editor_window.prune_all (button)
 
 			object_editor_window.set_height (Default_floating_object_editor_height)
-			create editor
+			create editor.make_with_components (components)
 			object_editor_window.extend (editor)
 			floating_object_editors.extend (editor)
 			editor.set_object (object)
-			if (create {GB_SHARED_SYSTEM_STATUS}).system_status.tools_always_on_top then
-				object_editor_window.show_relative_to_window ((create {GB_SHARED_TOOLS}).main_window)
-				object_editor_window.set_default_icon				
+			if components.system_status.tools_always_on_top then
+				object_editor_window.show_relative_to_window (components.tools.main_window)
+				object_editor_window.set_default_icon
 			else
 				object_editor_window.show
 				object_editor_window.restore_icon
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	remove_floating_object_editor (a_window: EV_WINDOW) is
@@ -308,7 +316,7 @@ feature {NONE} -- Implementation
 		require
 			a_window_not_void: a_window /= Void
 			-- Object editor is in floating object editors.
-			
+
 		local
 			editor: GB_OBJECT_EDITOR
 			cursor: CURSOR

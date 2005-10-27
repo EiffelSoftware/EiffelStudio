@@ -39,7 +39,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_1
 			create ok_button
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (prompt_label)
 			l_ev_vertical_box_1.extend (change_list)
@@ -60,24 +60,28 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			l_ev_vertical_box_1.set_padding_width (large_padding)
-			l_ev_vertical_box_1.set_border_width (large_padding)
+			integer_constant_set_procedures.extend (agent l_ev_vertical_box_1.set_padding (?))
+			integer_constant_retrieval_functions.extend (agent large_padding)
+			integer_constant_set_procedures.extend (agent l_ev_vertical_box_1.set_border_width (?))
+			integer_constant_retrieval_functions.extend (agent large_padding)
 			l_ev_vertical_box_1.disable_item_expand (prompt_label)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			prompt_label.set_text ("The following naming conflicts were resolved:")
 			prompt_label.align_text_left
 			change_list.disable_edit
 			l_ev_horizontal_box_1.disable_item_expand (ok_button)
-			ok_button.set_text (ok_button_text)
-			ok_button.set_minimum_width (default_button_width)
+			string_constant_set_procedures.extend (agent ok_button.set_text (?))
+			string_constant_retrieval_functions.extend (agent ok_button_text)
+			integer_constant_set_procedures.extend (agent ok_button.set_minimum_width (?))
+			integer_constant_retrieval_functions.extend (agent default_button_width)
 			set_minimum_width (320)
 			set_minimum_height (240)
-			set_title (import_project_title)
+			string_constant_set_procedures.extend (agent set_title (?))
+			string_constant_retrieval_functions.extend (agent import_project_title)
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 			ok_button.select_actions.extend (agent ok_pressed)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.

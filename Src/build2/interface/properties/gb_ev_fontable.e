@@ -78,7 +78,7 @@ feature {GB_XML_STORE} -- Output
 			else
 				element_info := full_information @ font_string
 				if element_info /= Void then
-					font_constant ?= constants.all_constants.item (element_info.data)
+					font_constant ?= components.constants.all_constants.item (element_info.data)
 					create constant_context.make_with_context (font_constant, object, type, font_string)
 					font_constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)

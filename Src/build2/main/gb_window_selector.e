@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"[
 			Objects that allow a user to select/manipulate all the widgets in a project.
 			Each item contained will be generated as a seperate class.
@@ -9,147 +9,114 @@ indexing
 
 class
 	GB_WIDGET_SELECTOR
-	
+
 inherit
-		
+
 	GB_STORABLE_TOOL
 		redefine
 			default_create, as_widget
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-		
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-	
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-		
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	GB_FILE_UTILITIES
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-	
-	GB_SHARED_PREFERENCES	
+
+	GB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	EIFFEL_RESERVED_WORDS
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	BUILD_RESERVED_WORDS
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	GB_WIDGET_SELECTOR_COMMON_ITEM
 		rename
 			name as item_name
 		redefine
 			add_alphabetically, default_create
 		end
-		
-	GB_SHARED_STATUS_BAR
-		export
-			{NONE} all
-		redefine
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
 			default_create
+		ensure
+			components_set: components = a_components
 		end
-		
+
 feature {NONE} -- Implementation
 
 	default_create is
@@ -163,21 +130,21 @@ feature {NONE} -- Implementation
 			widget.drop_actions.extend (agent add_new_directory_direct)
 			widget.key_press_actions.extend (agent check_for_object_delete)
 			widget.select_actions.extend (agent tool_bar.update_select_root_window_command)
-			widget.focus_in_actions.extend (agent command_handler.update)
-			widget.focus_out_actions.extend (agent command_handler.update)
-			widget.select_actions.extend (agent command_handler.update)
+			widget.focus_in_actions.extend (agent (components.commands).update)
+			widget.focus_out_actions.extend (agent (components.commands).update)
+			widget.select_actions.extend (agent (components.commands).update)
 		end
 
 feature -- Access
 
 	widget: EV_TREE
 		-- Widget representing `Current'.
-	
+
 	as_widget: EV_WIDGET is
 			-- `Result' is widget representing `Current'.
 		do
 			Result := widget
-		end	
+		end
 
 	selected_window: GB_WIDGET_SELECTOR_ITEM is
 			-- Window item currently selected or `Void' if none.
@@ -186,7 +153,7 @@ feature -- Access
 				Result := window_object_from_name (path_of_tree_node (widget.selected_item))
 			end
 		end
-		
+
 	selected_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM is
 			-- Directory item currently selected or `Void' if none.
 		do
@@ -194,7 +161,7 @@ feature -- Access
 				Result := directory_object_from_name (path_of_tree_node (widget.selected_item))
 			end
 		end
-	
+
 	objects: ARRAYED_LIST [GB_OBJECT] is
 			-- `Result' is all objects represented in `Current'.
 			-- No paticular order is guaranteed.
@@ -205,16 +172,16 @@ feature -- Access
 			result_not_void: Result /= Void
 			position_not_changed: widget.index = old widget.index
 		end
-		
+
 	tool_bar: GB_WIDGET_SELECTOR_TOOL_BAR is
 			-- A tool bar containing all buttons associated with `Current'.
 		once
-			create Result.make_with_widget_selector (Current)
+			create Result.make_with_widget_selector (Current, components)
 		end
 
 	name: STRING is "Widget Selector"
 			-- Full name used to represent `Current'.
-			
+
 	has_focus: BOOLEAN is
 			-- Does `Current' have focus?
 		do
@@ -222,7 +189,7 @@ feature -- Access
 		end
 
 feature -- Status setting
-		
+
 	add_alphabetically (new_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Add `representation of `new_item' to `Current' alphabetically.
 		local
@@ -237,7 +204,7 @@ feature -- Status setting
 			from
 				children.go_i_th (children.count)
 			until
-				children.off or else children.item.name.as_lower < l_text 
+				children.off or else children.item.name.as_lower < l_text
 			loop
 				children.back
 			end
@@ -245,7 +212,7 @@ feature -- Status setting
 			add_to_tree_node_alphabetically (widget, new_item.tree_item)
 			new_item.set_parent (Current)
 		end
-		
+
 feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 
 	remove_directory (a_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
@@ -291,7 +258,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 				actual_delete_directory (a_directory)
 			end
 		end
-		
+
 	selector_item_is_referenced (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM): BOOLEAN is
 			-- Is `selector_item' a top level object that has instance referers?
 		require
@@ -306,7 +273,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 				end
 			end
 		end
-		
+
 	flatten_associated_instances (selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Flatten all associated instances of `selector_item' if it is
 			-- a widget selector item and has instances.
@@ -320,7 +287,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			widget_selector_item ?= selector_item
 			if widget_selector_item /= Void then
 				check
-					object_is_top_level_object: widget_selector_item.object.is_top_level_object	
+					object_is_top_level_object: widget_selector_item.object.is_top_level_object
 				end
 				if not widget_selector_item.object.instance_referers.is_empty then
 					instance_referers := widget_selector_item.object.instance_referers
@@ -329,12 +296,12 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 						instance_referers.is_empty
 					loop
 						instance_referers.start
-						create command_flatten.make (object_handler.deep_object_from_id (instance_referers.item_for_iteration), False)
+						create command_flatten.make (components.object_handler.deep_object_from_id (instance_referers.item_for_iteration), False, components)
 						command_flatten.execute
 					end
 				end
 			end
-		end		
+		end
 
 	actual_delete_directory (a_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
 			-- Actually delete `a_directory' from system.
@@ -349,7 +316,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			if all_objects.count >= 1 then
 				if all_objects.count = a_directory.count then
 						-- Move the root window out of the directory, as it may not be deleted.
-					add_new_object (object_handler.root_window_object, widget_selector)
+					add_new_object (components.object_handler.root_window_object, components.tools.widget_selector)
 				else
 						-- If the currently selected window is contained within the structure of
 						-- `a_directory', we must unselect it first to prevent us selecting windows
@@ -359,24 +326,24 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 						l_selected.disable_select
 							--| FIXME should really select next one after deselection completes rather
 							--| than hiding/showing the builder windows.
-						command_handler.Show_hide_builder_window_command.safe_disable_selected
-						Command_handler.Show_hide_display_window_command.safe_disable_selected
+						components.commands.Show_hide_builder_window_command.safe_disable_selected
+						components.commands.Show_hide_display_window_command.safe_disable_selected
 					end
-					directory_of_root_window ?= object_handler.root_window_object.widget_selector_item.parent
+					directory_of_root_window ?= components.object_handler.root_window_object.widget_selector_item.parent
 					if directory_of_root_window /= Void and then directory_of_root_window = a_directory then
 						-- We must now select the next root window in the tree, as the root window is contained in
 						-- `a_directory'.
 						mark_next_window_as_root (a_directory.count)
 					end
 				end
-					
+
 					-- Now actually perform the deletion of the directory, all of its sub directories and objects recursively.
 				delete_objects_in_directory (a_directory)
 			end
 
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			components.system_status.mark_as_dirty
 		end
-		
+
 	delete_objects_in_directory (a_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
 			-- Recursively delete all objects within `a_directory'.
 		require
@@ -387,7 +354,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 			directory_children: ARRAYED_LIST [GB_WIDGET_SELECTOR_COMMON_ITEM]
-		do	
+		do
 			from
 				directory_children := a_directory.children
 			until
@@ -402,20 +369,20 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 					check
 						item_was_object: current_object_item /= Void
 					end
-					Command_handler.Delete_object_command.delete_object (current_object_item.object)	
+					components.commands.delete_object_command.delete_object (current_object_item.object)
 				end
 				-- Note that there is no need to traverse the directory as deleting
 				-- the objects contained ensures that we always simply remove the first.
 			end
 			parent_directory ?= a_directory.parent
-			create command_delete_directory.make (a_directory, parent_directory)
+			create command_delete_directory.make (a_directory, parent_directory, components)
 			command_delete_directory.execute
 		ensure
 			directory_empty: a_directory.children.is_empty
 		end
-	
+
 feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
-		
+
 	mark_next_window_as_root (index_to_move: INTEGER) is
 			-- Ensure that next window in `Current' (if any) is marked as root window.
 		local
@@ -425,7 +392,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementati
 			all_objects: ARRAYED_LIST [GB_OBJECT]
 		do
 			all_objects := objects
-			original_root_index := all_objects.index_of (object_handler.root_window_object, 1)
+			original_root_index := all_objects.index_of (components.object_handler.root_window_object, 1)
 			if original_root_index + index_to_move <= all_objects.count then
 				new_root_index := original_root_index + index_to_move
 			else
@@ -433,7 +400,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementati
 			end
 			from
 				current_root_index := new_root_index
-			until			
+			until
 				titled_window_object /= Void or current_root_index = original_root_index
 			loop
 				titled_window_object ?= all_objects.i_th (current_root_index)
@@ -443,7 +410,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementati
 				end
 			end
 			check
-				valid_state: (current_root_index /= original_root_index implies titled_window_object /= Void) and 
+				valid_state: (current_root_index /= original_root_index implies titled_window_object /= Void) and
 				(titled_window_object = Void implies original_root_index = current_root_index)
 			end
 			if titled_window_object /= Void then
@@ -480,7 +447,7 @@ feature {GB_WIDGET_SELECTOR_DIRECTORY_ITEM} -- Implementation
 							-- Do nothing if attempting to move from `Current' to `Current'.
 						if an_object.widget_selector_item.parent /= parent_item then
 							directory_item ?= parent_item
-							create command_move_window.make (an_object, directory_item)
+							create command_move_window.make (an_object, directory_item, components)
 							command_move_window.execute
 							if directory_item /= Void then
 								directory_item.expand
@@ -491,42 +458,42 @@ feature {GB_WIDGET_SELECTOR_DIRECTORY_ITEM} -- Implementation
 					if an_object.layout_item = Void or else an_object.layout_item.parent = Void then
 						window_object ?= an_object
 						if window_object /= Void then
-							object_handler.add_new_window (window_object)
+							components.object_handler.add_new_window (window_object)
 						else
-							object_handler.add_new_object (an_object)
+							components.object_handler.add_new_object (an_object)
 						end
 
 						directory_item ?= parent_item
-						create command_add_window.make (an_object, directory_item)
-				
+						create command_add_window.make (an_object, directory_item, components)
+
 						an_object.set_name (dialog.name.as_lower)
 						command_add_window.execute
 					else
 							-- If the object is an instance of another top level object,
 							-- flatten that representation before converting to a top level object.
 						if an_object.is_instance_of_top_level_object then
-							create flatten_command.make (an_object, False)
+							create flatten_command.make (an_object, False, components)
 							flatten_command.execute
 						end
-						create command_convert_to_top_level.make (an_object, parent_item, dialog.name.as_lower)
-						command_convert_to_top_level.execute	
+						create command_convert_to_top_level.make (an_object, parent_item, dialog.name.as_lower, components)
+						command_convert_to_top_level.execute
 					end
 				end
 			end
 			if dialog /= Void and then dialog.cancelled then
 					-- The adition of the new object has been cancelled so we can delete
 					-- the object as it is not to be used.
-				object_handler.mark_as_deleted (an_object)
+				components.object_handler.mark_as_deleted (an_object)
 			end
 				-- Update project so it may be saved.
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			components.system_status.mark_as_dirty
 		ensure
 --			count_increased: implies old an_object.layout_item = Void implies count = old count + 1
 				-- Only if we were not moving internally as determined by whether the layout item
 				-- is Void, as it will be when picked from the type selector.
 				-- Also must now be implemented without `layout_item' as no longer always corresponds.
 		end
-		
+
 	check_new_object_name (an_object: GB_OBJECT; a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid name for new otp level object `an_object'?
 		require
@@ -534,13 +501,13 @@ feature {GB_WIDGET_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			name_not_void: a_name /= Void
 		do
 			Result := valid_class_name (a_name) and not
-				object_handler.name_in_use (a_name, an_object) and not
+				components.object_handler.name_in_use (a_name, an_object) and not
 				(reserved_words.has (a_name.as_lower)) and not
 				(build_reserved_words.has (a_name.as_lower) and not
-				(Constants.all_constants.item (a_name) /= Void))
+				(components.constants.all_constants.item (a_name) /= Void))
 		end
-		
-		
+
+
 feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 
 	update_class_files_location (window_item: GB_WIDGET_SELECTOR_ITEM; an_original_directory, a_new_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
@@ -590,11 +557,11 @@ feature {GB_COMMAND_MOVE_WINDOW} -- Implementation
 					new_path.forth
 				end
 			end
-			
+
 			move_file_between_directories (original_directory, new_directory, window_item.object.name.as_lower + ".e")
 			move_file_between_directories (original_directory, new_directory, (window_item.object.name + Class_implementation_extension).as_lower + ".e")
 		end
-		
+
 feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 
 	update_for_removal (a_window_item: GB_WIDGET_SELECTOR_ITEM) is
@@ -608,7 +575,7 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 			next_object: GB_OBJECT
 			window_object: GB_OBJECT
 		do
-			
+
 				-- If `a_window_item' is selected, the next item
 				-- in `Current' must be selected.
 			if selected_window = a_window_item then
@@ -632,13 +599,13 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 					check
 						removal_consistent: all_objects.first = window_object
 					end
-					command_handler.Show_hide_builder_window_command.safe_disable_selected
-					Command_handler.Show_hide_display_window_command.safe_disable_selected
+					components.commands.Show_hide_builder_window_command.safe_disable_selected
+					components.commands.Show_hide_display_window_command.safe_disable_selected
 				end
-				Command_handler.update
-			end			
+				components.commands.update
+			end
 		end
-		
+
 	selected_window_changed (selector_item: GB_WIDGET_SELECTOR_ITEM) is
 			-- `selector_item' has become selected so we must update
 			-- `layout_constructor'. Do nothing if a project is loading.
@@ -647,22 +614,22 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 		local
 			root_window_object: GB_OBJECT
 		do
-			if not System_status.loading_project then
+			if not components.system_status.loading_project then
 				root_window_object := selector_item.object
 					-- Only change the selected item, if a project is not loading.
-				layout_constructor.set_root_window (root_window_object)
-				
+				components.tools.layout_constructor.set_root_window (root_window_object)
+
 				update_display_and_builder_windows (root_window_object)
-			
-				if parent_window (Layout_constructor) /= Void then
+
+				if parent_window (components.tools.Layout_constructor) /= Void then
 						-- Protect against a selection being fired before
 						-- `layout_constructor' is parented.
-					layout_constructor.first.enable_select
+					components.tools.layout_constructor.first.enable_select
 				end
-				Command_handler.update
+				components.commands.update
 			end
 		end
-		
+
 feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 
 	item_added_to_directory (directory, new_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
@@ -681,9 +648,9 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 					-- As we know all directories from `Current' up to `directory' must be highlighted
 					-- we simply traverse and update these.
 				from
-					parent_directory ?= directory	
+					parent_directory ?= directory
 				until
-					parent_directory = Void		
+					parent_directory = Void
 				loop
 					if parent_directory.is_grayed_out then
 						parent_directory.display_in_color
@@ -700,7 +667,7 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 				end
 			end
 		end
-		
+
 	item_removed_from_directory (directory: GB_WIDGET_SELECTOR_COMMON_ITEM; item_for_removal: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- `item_for_removal' has been removed from `directory' so update directories to reflect this.
 		require
@@ -712,24 +679,24 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 			top_node, tree_node: GB_WIDGET_SELECTOR_COMMON_ITEM
 			directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
-			main_window.lock_update
+			components.tools.main_window.lock_update
 			create all_branch_nodes.make (20)
 			top_node ?= directory
 				-- Firstly retrieve the root node associated with `directory'.
 			from
 			until
-				top_node.parent = widget_selector or top_node.parent = Void
+				top_node.parent = components.tools.widget_selector or top_node.parent = Void
 			loop
 				top_node ?= top_node.parent
 			end
-			
-				-- Now retrieve a list of all end nodes that contain children. 
+
+				-- Now retrieve a list of all end nodes that contain children.
 			retrieve_all_branch_nodes (top_node, all_branch_nodes)
-			
+
 				-- Gray out all nodes recursively from `top_node'.
 			top_node.recursive_do_all (agent gray_node)
 			gray_node (top_node)
-			
+
 				-- Now highlight all nodes from `top_node' down to each item within `all_branch_nodes'.
 			from
 				all_branch_nodes.start
@@ -741,7 +708,7 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 					tree_node := all_branch_nodes.item
 				until
 						-- We have traversed the structure from the branch node to the root of the tree.
-					tree_node = widget_selector
+					tree_node = components.tools.widget_selector
 				loop
 					directory_item ?= tree_node
 					check
@@ -750,17 +717,17 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 						-- Add color to the node if not already colored. We may
 						-- visit the same node multiple times, as different branch nodes may have the
 						-- same nodes within their path.
-					if directory_item.is_grayed_out then	
+					if directory_item.is_grayed_out then
 						directory_item.display_in_color
 					end
 					tree_node ?= tree_node.parent
 				end
-				
+
 				all_branch_nodes.forth
 			end
-			main_window.unlock_update
+			components.tools.main_window.unlock_update
 		end
-		
+
 	gray_node (node: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Ensure `display_in_gray' is called on `node' it is of type GB_WIDGET_SELECTOR_DIRECTORY_ITEM.
 		require
@@ -773,7 +740,7 @@ feature {GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
 				directory_item.display_in_gray
 			end
 		end
-		
+
 	retrieve_all_branch_nodes (tree_node: GB_WIDGET_SELECTOR_COMMON_ITEM; all_branch_nodes: ARRAYED_LIST [GB_WIDGET_SELECTOR_COMMON_ITEM]) is
 			-- For all items recursively in `tree_node' add all final directory nodes in the tree that contain items
 			-- that are not directories to `all_branch_nodes'. These are the nodes that must be highlighted.
@@ -809,7 +776,7 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 	generated_path: FILE_NAME is
 			-- `Result' is generated directory for current project.
 		do
-			create Result.make_from_string (system_status.current_project_settings.actual_generation_location)
+			create Result.make_from_string (components.system_status.current_project_settings.actual_generation_location)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -846,21 +813,21 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					directory_path.forth
 				end
 			end
-			
+
 				--| FIXME we need a better solution for name changes on windows.
 				--| as undo allows their name to become empty.
 			if not (new_name.is_empty or old_name.is_empty) then
-				
+
 					-- Build file names for accessing files.
 				interface_file_name := file_name.twin
 				interface_file_name.extend (new_name + ".e")
 				implementation_file_name := file_name.twin
 				implementation_file_name.extend (new_name + Class_implementation_extension.as_lower + ".e")
-				
+
 				create l_eiffel_parser.make
-				
+
 				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + ".e", new_name + ".e")
-				
+
 					-- Now parse the contents of the file, and change the class name, and inherited
 					-- name.
 				create file.make (interface_file_name.string)
@@ -874,26 +841,26 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					create l_visitor
 					l_class_as.process (l_visitor)
 					file_contents.replace_substring (new_name.as_upper, l_visitor.name_start_position, l_visitor.name_end_position)
-					
+
 						-- As we are performing two replaces,we must update the character indexes of the second, by the difference
 						-- in characters between what was replaced, and the new string of the first replacement.
 					character_difference := old_name.count - new_name.count
 					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper,
 						l_visitor.parent_start_position - character_difference, l_visitor.parent_end_position - character_difference)
-						
+
 						-- Now replace the class name at end after comment.
 					replace_final_class_name_comment (file_contents, old_name.as_upper, new_name.as_upper)
-						
+
 						-- Open the file, and write the contents back.
 					file.open_write
 					file.put_string (file_contents)
 					file.close
 				end
-					
-			
+
+
 				rename_file_if_exists (create {DIRECTORY}.make (file_name), old_name + Class_implementation_extension.as_lower + ".e",
 					new_name + Class_implementation_extension.as_lower + ".e")
-					
+
 					-- Now parse the contents of the file, and change the class name, and inherited
 					-- name.
 				create file.make (implementation_file_name.string)
@@ -907,8 +874,8 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					create l_visitor
 					l_class_as.process (l_visitor)
 					file_contents.replace_substring ((new_name + Class_implementation_extension).as_upper, l_visitor.name_start_position, l_visitor.name_end_position)
-						
-	
+
+
 						-- Now replace the class name at end after comment.
 					replace_final_class_name_comment (file_contents, (old_name + Class_implementation_extension).as_upper, (new_name + Class_implementation_extension).as_upper)
 					file.open_write
@@ -926,20 +893,20 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 		do
 			widget.recursive_do_all (agent update_name_of_item)
 		end
-		
+
 	select_main_window is
 			-- Select window marked as root of system.
 		local
 			object: GB_TITLED_WINDOW_OBJECT
 		do
-			object := Object_handler.root_window_object
+			object := components.object_handler.root_window_object
 			check
 				object_is_top_level: object.is_top_level_object
 			end
 			object.set_as_root_window
 			object.widget_selector_item.enable_select
 
-			Layout_constructor.set_root_window (object)
+			components.tools.Layout_constructor.set_root_window (object)
 			update_display_and_builder_windows (object)
 		end
 
@@ -952,11 +919,11 @@ feature {GB_COMMAND_ADD_WINDOW, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementati
 		do
 			titled_window_object.set_as_root_window
 				-- Update project so it may be saved.
-			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			components.system_status.mark_as_dirty
 		ensure
-			root_window_set: object_handler.root_window_object = titled_window_object
+			root_window_set: components.object_handler.root_window_object = titled_window_object
 		end
-		
+
 feature {NONE} -- Implementation
 
 	update_name_of_item (node: EV_TREE_NODE) is
@@ -971,7 +938,7 @@ feature {NONE} -- Implementation
 		end
 
 feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
-	
+
 	silent_add_named_directory (directory_name: ARRAYED_LIST [STRING]) is
 			-- Add a new directory named `directory_name' to `Current',
 			-- but do not mark it as a command, simply add a new item in `Current'.
@@ -984,7 +951,7 @@ feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 			parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			parent_name: ARRAYED_LIST [STRING]
 		do
-			create directory_item.make_with_name (directory_name.i_th (directory_name.count))
+			create directory_item.make_with_name (directory_name.i_th (directory_name.count), components)
 			if directory_name.count = 1 then
 				add_alphabetically (directory_item)
 			else
@@ -997,11 +964,11 @@ feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 				parent_directory.add_alphabetically (directory_item)
 			end
 				-- Update project so it may be saved.
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			components.system_status.mark_as_dirty
 		ensure
 			--count_increaed: count = old count + 1
 		end
-		
+
 feature {GB_XML_LOAD} -- Implementation
 
 	mark_first_window_as_root is
@@ -1026,11 +993,11 @@ feature {GB_XML_LOAD} -- Implementation
 				change_root_window_to (found_window_object)
 			end
 		ensure
-			has_root_window_if_not_empty: Object_handler.root_window_object /= Void
+			has_root_window_if_not_empty: components.object_handler.root_window_object /= Void
 		end
-		
-feature {GB_SET_ROOT_WINDOW_COMMAND}		
-		
+
+feature {GB_SET_ROOT_WINDOW_COMMAND}
+
 	change_root_window is
 			-- Ensure that the window selected in the layout constructor is the
 			-- root window of the project.
@@ -1038,16 +1005,16 @@ feature {GB_SET_ROOT_WINDOW_COMMAND}
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			layout_constructor_item := Layout_constructor.root_item
+			layout_constructor_item := components.tools.Layout_constructor.root_item
 			titled_window_object ?= layout_constructor_item.object
 			check
 				root_object_was_window: titled_window_object /= Void
 			end
 			titled_window_object.set_as_root_window
 				-- Update project so it may be saved.
-			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			components.system_status.mark_as_dirty
 		end
-		
+
 feature {GB_OBJECT} -- Implementation
 
 	update_display_and_builder_windows (an_object: GB_OBJECT) is
@@ -1068,32 +1035,32 @@ feature {GB_OBJECT} -- Implementation
 				-- the same window twice.
 			titled_window_object ?= an_object
 				-- Firstly hide the existing windows if shown
-			if builder_window.is_displayed then
-				command_handler.show_hide_builder_window_command.execute
+			if components.tools.builder_window.is_displayed then
+				components.commands.show_hide_builder_window_command.execute
 				builder_shown := True
 			end
-			if display_window.is_displayed then
-				command_handler.Show_hide_display_window_command.execute
+			if components.tools.display_window.is_displayed then
+				components.commands.Show_hide_display_window_command.execute
 				display_shown := True
 			end
-	
+
 			containable ?= an_object.object
 			check
 				object_containable: containable /= Void
 			end
 			display_win ?= parent_window (containable)
-			
+
 			check
 				display_win_not_void: display_win /= Void
 			end
-			set_display_window (display_win)
+			components.tools.set_display_window (display_win)
 			if titled_window_object /= Void then
 				if titled_window_object.display_object /= Void then
 					builder_win ?= titled_window_object.display_object.child
 					check
 						display_object_item_is_window: builder_win /= Void
 					end
-					set_builder_window (builder_win)
+					components.tools.set_builder_window (builder_win)
 				end
 			else
 				containable ?= an_object.display_object
@@ -1101,14 +1068,14 @@ feature {GB_OBJECT} -- Implementation
 					object_containable: containable /= Void
 				end
 				builder_win ?= parent_window (containable)
-				set_builder_window (builder_win)
+				components.tools.set_builder_window (builder_win)
 			end
-	
+
 			if builder_shown then
-				command_handler.Show_hide_builder_window_command.execute
+				components.commands.Show_hide_builder_window_command.execute
 			end
 			if display_shown then
-				Command_handler.Show_hide_display_window_command.execute
+				components.commands.Show_hide_display_window_command.execute
 			end
 			if application.is_launched then
 					-- Force the newly displayed window to redraw immediately.
@@ -1117,7 +1084,7 @@ feature {GB_OBJECT} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-		
+
 	show_invalid_directory_warning (a_dialog: EV_DIALOG; last_dialog_name: STRING) is
 			-- Show a warning dialog modal to `a_dialog', indicating that `last_dialog_name'
 			-- was not a valid directory name.
@@ -1162,10 +1129,10 @@ feature {NONE} -- Implementation
 					-- Without this line, holding an object above a widget selector item that did
 					-- not accept the object and then moving over the widget selector, did not
 					-- clear the status bar and the old message was displayed even though a drop was now permitted.
-				clear_status_bar
+				components.status_bar.clear_status_bar
 			end
 		end
-		
+
 	check_for_object_delete (a_key: EV_KEY) is
 			-- Respond to keypress of `a_key' and delete selected object.
 		require
@@ -1205,7 +1172,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	delete_object (an_object: GB_OBJECT) is
 			-- Delete selected object.
 		require
@@ -1214,10 +1181,10 @@ feature {NONE} -- Implementation
 		local
 			delete_window_object_command: GB_COMMAND_DELETE_WINDOW_OBJECT
 		do
-			create delete_window_object_command.make (an_object)
+			create delete_window_object_command.make_with_components (an_object, components)
 			delete_window_object_command.execute
 		end
-	
+
 	add_object_name_to_hash_table (an_object: GB_OBJECT; hash_table: HASH_TABLE [STRING, STRING]) is
 			-- Add `name' of `an_object' to `hash_table' as both key and corresponding item.
 		require
@@ -1228,7 +1195,7 @@ feature {NONE} -- Implementation
 		ensure
 			object_name_contained: hash_table.item (an_object.name) /= Void and then hash_table.item (an_object.name) = an_object.name
 		end
-		
+
 	internal_return_objects (widget_selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM; list: ARRAYED_LIST [GB_OBJECT]) is
 			-- For all items in `node_list' recursively, add a GB_OBJECT to `list' if the
 			-- item is an instance of GB_WIDGET_SELECTOR_ITEM.
@@ -1258,9 +1225,9 @@ feature {NONE} -- Implementation
 		ensure
 			position_not_changed: widget.index = old widget.index
 		end
-		
+
 feature {GB_WIDGET_SELECTOR_DIRECTORY_ITEM} -- Implementation
-		
+
 	handle_object_drop (object_pebble: GB_OBJECT_STONE; selector_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Respond to the dropping of `object_pebble' onto `selector_item'.
 		require
@@ -1273,7 +1240,7 @@ feature {GB_WIDGET_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			clipboard_stone: GB_CLIPBOARD_OBJECT_STONE
 		do
 			new_object := object_pebble.object
-			
+
 			clipboard_stone ?= object_pebble
 			if clipboard_stone /= Void then
 					-- Special handling for instances of top level objects from the clipboard. If we are
@@ -1281,20 +1248,20 @@ feature {GB_WIDGET_SELECTOR_DIRECTORY_ITEM} -- Implementation
 					-- longer be representations, so we silently flatten them.
 				is_top_level := object_pebble.is_instance_of_top_level_object
 				if is_top_level then
-					create flatten_command.make (new_object, False)
+					create flatten_command.make (new_object, False, components)
 					flatten_command.silent_execute
 				end
 			end
 			add_new_object (new_object, selector_item)
 				-- Ensure that the representations are up to date. This is necessary
 				-- for when we have just flattened an object from the clipboard.
-			if object_handler.objects.has (new_object.id) then
+			if components.object_handler.objects.has (new_object.id) then
 				new_object.update_representations_for_name_or_type_change
 			end
 		end
-		
+
 feature {GB_WIDGET_SELECTOR_TOOL_BAR, GB_WIDGET_SELECTOR_COMMON_ITEM} -- Implementation
-		
+
 	internal_include_all_directories (directory: DIRECTORY; represented_path: ARRAYED_LIST [STRING]) is
 			-- Include all dirs reachable from the project location, to the current project
 		require
@@ -1322,20 +1289,20 @@ feature {GB_WIDGET_SELECTOR_TOOL_BAR, GB_WIDGET_SELECTOR_COMMON_ITEM} -- Impleme
 						-- Set the parent path before we add the current item to `represented_path'.
 					parent_path := represented_path.twin
 					represented_path.extend (items.item)
-					if widget_selector.directory_object_from_name (represented_path) = Void then
+					if components.tools.widget_selector.directory_object_from_name (represented_path) = Void then
 						if parent_path.is_empty then
 								-- We are at the root level.
 							directory_item := Void
 						else
 								-- Retrieve the directory_item matching `parent_path' within `widget_selector'.
-							directory_item := widget_selector.directory_object_from_name (parent_path)
+							directory_item := components.tools.widget_selector.directory_object_from_name (parent_path)
 						end
-						create command_add_directory.make (directory_item, items.item)
+						create command_add_directory.make (directory_item, items.item, components)
 						command_add_directory.supress_warnings
 						command_add_directory.create_new_directory
 						if command_add_directory.directory_added_succesfully then
 							command_add_directory.execute
-							;(create {GB_GLOBAL_STATUS}).mark_as_dirty
+							components.system_status.mark_as_dirty
 						end
 					end
 					internal_include_all_directories (iterated_directory, represented_path)
@@ -1347,13 +1314,13 @@ feature {GB_WIDGET_SELECTOR_TOOL_BAR, GB_WIDGET_SELECTOR_COMMON_ITEM} -- Impleme
 				represented_path.prune_all (represented_path.last)
 			end
 		end
-		
+
 	add_new_directory_direct (directory_pebble: GB_NEW_DIRECTORY_PEBBLE) is
 			--
 		do
 			add_new_directory (Current)
 		end
-		
+
 	add_new_directory_via_pick_and_drop (directory_pebble: GB_NEW_DIRECTORY_PEBBLE) is
 			-- Add a new directory within `Current'.
 			-- `directory_pebble' is used to type the agent for pick and drop purposes.
@@ -1390,7 +1357,7 @@ feature {GB_WIDGET_SELECTOR_TOOL_BAR, GB_WIDGET_SELECTOR_COMMON_ITEM} -- Impleme
 				else
 					l_selected_directory := selected_directory
 				end
-				
+
 				if l_selected_directory = Void then
 					-- We are adding to the root of `Current'
 					l_directory_names := directory_names
@@ -1400,25 +1367,25 @@ feature {GB_WIDGET_SELECTOR_TOOL_BAR, GB_WIDGET_SELECTOR_COMMON_ITEM} -- Impleme
 				create dialog.make_with_values (unique_name_from_array (l_directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name (?, l_selected_directory))
 				dialog.set_icon_pixmap (Icon_build_window @ 1)
 			end
-			
+
 			dialog.show_modal_to_window (parent_window (widget))
-			
+
 			if not dialog.cancelled then
 				last_dialog_name := dialog.name
 				if l_selected_directory /= Void then
-					create command_add_directory.make (l_selected_directory, last_dialog_name)
+					create command_add_directory.make (l_selected_directory, last_dialog_name, components)
 				else
-					create command_add_directory.make (Void, last_dialog_name)
+					create command_add_directory.make (Void, last_dialog_name, components)
 				end
 				command_add_directory.create_new_directory
 				if command_add_directory.directory_added_succesfully then
 					command_add_directory.execute
-					;(create {GB_GLOBAL_STATUS}).mark_as_dirty	
+					components.system_status.mark_as_dirty
 				end
 			end
 		rescue
 			retried := True
 			retry
 		end
-		
+
 end -- class GB_WIDGET_SELECTOR

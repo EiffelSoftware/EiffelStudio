@@ -10,24 +10,46 @@ class
 
 inherit
 	GB_TIP_OF_THE_DAY_DIALOG_IMP
-	
+		export
+			{NONE} show, show_modal_to_window, show_relative_to_window
+		end
+
 	GB_SHARED_PREFERENCES
 		undefine
 			default_create, copy
 		end
-		
+
 	GB_TIPS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
+		end
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
 
 feature {NONE} -- Initialization
@@ -49,10 +71,10 @@ feature {NONE} -- Initialization
 			end
 			tip_label.resize_actions.force_extend (agent show_tip)
 			tip_label.set_minimum_width (100)
-			show_actions.force_extend (agent set_text (all_tips @ tip_counter))
+			show_actions.force_extend (agent show_tip)
 			set_icon_pixmap (Icon_build_window @ 1)
 		end
-		
+
 feature -- Basic operations
 
 	show_modal_and_centered_to_window (a_window: EV_WINDOW) is
@@ -60,6 +82,7 @@ feature -- Basic operations
 		require
 			a_window_not_void: a_window /= Void
 		do
+			tip_counter := preferences.global_data.tip_of_day_index
 			set_position (a_window.x_position + a_window.width // 2 - width // 2,
 					a_window.y_position + a_window.height // 2 - height // 2)
 			show_modal_to_window (a_window)
@@ -76,7 +99,7 @@ feature {NONE} -- Implementation
 			tip_counter := get_next_tip_index (tip_counter)
 			set_text (all_tips @ tip_counter)
 		end
-		
+
 	get_next_tip_index (current_index: INTEGER): INTEGER is
 			-- `Result' is next valid tip index based on `current_index'.
 		do
@@ -94,9 +117,9 @@ feature {NONE} -- Implementation
 			preferences.global_data.show_tip_of_the_day_preference.set_value (show_tips_button.is_selected)
 			preferences.global_data.tip_of_day_index_preference.set_value (get_next_tip_index (tip_counter))
 			preferences.preferences.save_resources
-			destroy
+			hide
 		end
-		
+
 feature {NONE} -- Implementation
 
 	previous_lines: ARRAYED_LIST [STRING] is
@@ -106,7 +129,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (20)
 		end
-		
+
 	show_tip is
 			-- Display current tip on `tip_label'.
 		do
@@ -152,7 +175,7 @@ feature {NONE} -- Implementation
 				end
 				counter := counter + 1
 			end
-			
+
 				-- Perform calculations to determine where wrapping must occur.
 			from
 				start_pos := 1
@@ -166,7 +189,7 @@ feature {NONE} -- Implementation
 					current_width > maximum_string_width or
 					counter > all_space_indexes.count
 				loop
-					
+
 					temp_string := modified_tip.substring (start_pos, all_space_indexes.i_th (counter) - 1)
 					current_width := font.string_width (temp_string)
 					if current_width <= maximum_string_width then
@@ -174,14 +197,14 @@ feature {NONE} -- Implementation
 						counter := counter + 1
 					else
 						counter := counter - 1
-					end	
+					end
 				end
 				if all_space_indexes.valid_index (counter) then
 					start_pos := all_space_indexes.i_th (counter) + 1
 				end
 				lines.extend (last_string)
 			end
-			
+
 				-- Now determine if the contents of the line have actually changed.
 				-- If they have not, then there is no need to set the text again, as it
 				-- causes flicker.
@@ -200,7 +223,7 @@ feature {NONE} -- Implementation
 			if previous_lines.is_empty then
 				lines_changed := True
 			end
-			
+
 				-- Now create and set the text on the label if
 				-- it needs to be changed.
 			if lines_changed then

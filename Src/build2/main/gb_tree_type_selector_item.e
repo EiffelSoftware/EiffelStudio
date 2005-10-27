@@ -5,24 +5,25 @@ indexing
 
 class
 	GB_TREE_TYPE_SELECTOR_ITEM
-	
+
 inherit
 	GB_TYPE_SELECTOR_ITEM
 		redefine
 			item
 		end
-		
+
 create
 	make_with_text
-	
+
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current', assign `a_text' to `text'
-			-- and "EV_" + `a_text' to `type'.
+			-- , "EV_" + `a_text' to `type' and `a_components' to `components'.
 		local
 			pixmaps: GB_SHARED_PIXMAPS
 		do
+			components := a_components
 			create item.make_with_text (a_text)
 			item.set_data (Current)
 			type := "EV_" + a_text
@@ -56,7 +57,7 @@ feature {NONE} -- Implementation
 				tree_node ?= tree_node.parent
 				tree ?= tree_node
 			end
-			digit_checker.begin_processing (tree)
+			components.digit_checker.begin_processing (tree)
 		end
 
 end -- class GB_TREE_TYPE_SELECTOR_ITEM

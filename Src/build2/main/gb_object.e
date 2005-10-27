@@ -6,79 +6,42 @@ indexing
 
 deferred class
 	GB_OBJECT
-	
+
 inherit
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_XML_OBJECT_BUILDER
 		export
 			{NONE} all
-			{ANY} object_handler
 		end
-	
-	GB_SHARED_XML_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		end
-	
+
 	EV_ANY_HANDLER
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_ID
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_STATUS_BAR
-		export
-			{NONE} all
-		end
-		
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_DIGIT_CHECKER
-		export
-			{NONE} all
-			{ANY} generating_type
-		end
 
 feature {GB_OBJECT_HANDLER} -- Initialization
-	
-	make_with_type (a_type: STRING) is
-			-- Create `Current' with type `a_type'.
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_type (a_type: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' with type `a_type' and assign `a_components' to `components'.
 			-- Do not instantiate `object' from type.
 		require
 			a_type_not_void: a_type /= Void
+			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			type := a_type
 				-- The names should never be `Void'.
 			create name.make (0)
@@ -91,16 +54,19 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create children.make (0)
 		ensure
 			type_assigned: type = a_type
+			components_set: components = a_components
 		end
-		
-	make_with_type_and_object (a_type: STRING; an_object: EV_ANY) is
-			-- Create `Current', attach `an_object' to `object' and
-			-- `a_type' to `type'.
+
+	make_with_type_and_object (a_type: STRING; an_object: EV_ANY; a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current', attach `an_object' to `object',
+			-- `a_type' to `type' and `a_components' to `components'.
 		require
 			a_type_not_void: a_type /= Void
 			an_object_not_void: an_object /= Void
 			type_matches_object: type_matches_object (a_type, an_object)
+			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			object := an_object
 			type := a_type
 			build_display_object
@@ -111,10 +77,11 @@ feature {GB_OBJECT_HANDLER} -- Initialization
 			create children.make (0)
 			create all_client_representations.make (0)
 			expanded_in_box := True
-			id := new_id
+			id := components.id_handler.new_id
 		ensure
 			type_assigned: type = a_type
 			object_assigned: object = an_object
+			components_set: components = a_components
 		end
 
 feature -- Access
@@ -122,14 +89,14 @@ feature -- Access
 	id: INTEGER
 		-- A unique id representing `Current'.
 		-- This is stored in the XML.
-		
+
 	is_top_level_object: BOOLEAN is
 			-- Is `Current' a top level object in the structure?
 			-- i.e. is it represented by an individual class?
 		do
 			Result := widget_selector_item /= Void
 		end
-		
+
 	is_instance_of_top_level_object: BOOLEAN is
 			-- Does `Current' represent a top level object within the system.
 		do
@@ -139,40 +106,40 @@ feature -- Access
 	associated_top_level_object: INTEGER
 		-- The id of the top level object `Current' represents,
 		-- or `0' if NONE.
-		
+
 	associated_top_level_object_on_loading: INTEGER
 		-- The associated top level object as retrieved from the XML. This reset to 0 by
 		-- `update_object_as_instance_representation' which then sets `associated_top_level_object' to the same value.
 		-- This is only used temporarily while loading/importing projects.
-		
+
 	widget_selector_item: GB_WIDGET_SELECTOR_ITEM
 		-- Representation of `Current' in `widget_selector'.
-		
+
 	all_client_representations: ARRAYED_LIST [EV_TREE_ITEM]
 		-- All representations of `Current' in the client hierarchy of the `widget_selector'.
 
 	object: EV_ANY
 		-- The vision2 object that `Current' represents.
-		
+
 	display_object: EV_ANY
 		-- The representation of `object' used in `build_window'.
-		
+
 	layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		-- Representation of `object' used in GB_LAYOUT_CONSTRUCTOR.
-		
+
 	name: STRING
 		-- User set name for `Current'.
-		
+
 	events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
 		-- All events connected to `Current'.
-		
+
 	children: ARRAYED_LIST [GB_OBJECT]
 			-- `Result' is all children of `Current', ordered
 			-- as encountered within `Current'.
-		
+
 	constants: HASH_TABLE [GB_CONSTANT_CONTEXT, STRING]
 		-- All constants connected to `Current'.
-		
+
 	instance_referers: HASH_TABLE [INTEGER, INTEGER]
 		-- All instances of `Current' that exist in the current system.
 		-- Only valid for top level objects. The data and the key are both
@@ -180,22 +147,22 @@ feature -- Access
 		-- we must not store the GB_OBJECT, but instead the id so we can simply look up the
 		-- object from this id whenever needed. If the actual associated object has changed,
 		-- this does not matter.
-		
+
 	type: STRING
 		-- A type corresponding to the current vision2 object.
 		-- Contains "EV_" at start.
-		
+
 	expanded_in_box: BOOLEAN
 		-- Does `Current' expand while parented in an EV_BOX?
-		
+
 	is_expanded: BOOLEAN
 		-- Is representation of `Current' currently expanded?
 		-- Used to expand and collapse `layout_constructor_item' as required
-		-- when displaying or hiding `Current'. 
-		
+		-- when displaying or hiding `Current'.
+
 	generate_as_client: BOOLEAN
 		-- Should `Current' be generated as a client of the EiffelVision2 type?
-		
+
 	short_type: STRING is
 			-- Result is a short version of type with "EV_" removed from start.
 		require
@@ -205,11 +172,11 @@ feature -- Access
 		ensure
 			Result_correct : ("EV_" + Result).is_equal (type)
 		end
-		
+
 	parent_object: GB_OBJECT
 			-- `Result' is object containing `Current'.
 			-- `Void' if none.
-		
+
 	top_level_parent_object: GB_OBJECT is
 			-- `Result' is top level object containing `Current'.
 			-- That is, the object that has no parent object of its own.
@@ -231,7 +198,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	all_children_recursive (a_list: ARRAYED_LIST [GB_OBJECT]) is
 			-- Add all children of `Current' recursively, to
 			-- `a_list'.
@@ -254,28 +221,28 @@ feature -- Access
 		ensure
 			children_index_not_changed: old children.index = children.index
 		end
-		
+
 	new_copy: GB_OBJECT is
 			-- `Result' is a copy of `Current' with no link to the original.
 		local
 			xml_store: GB_XML_STORE
 			a_list: ARRAYED_LIST [GB_OBJECT]
 		do
-			create xml_store
+			create xml_store.make_with_components (components)
 			xml_store.store_individual_object (Current)
 			Result := new_object (xml_store.last_stored_individual_object, True)
 					-- Modify id of `Result' so that it is not the same as that of `Current'.
 			create a_list.make (20)
 			Result.all_children_recursive (a_list)
-			Result.set_id (new_id)
-			object_handler.add_object_to_objects (Result)
+			Result.set_id (components.id_handler.new_id)
+			components.object_handler.add_object_to_objects (Result)
 			from
 				a_list.start
 			until
 				a_list.off
 			loop
-				a_list.item.set_id (new_id)
-				object_handler.add_object_to_objects (a_list.item)
+				a_list.item.set_id (components.id_handler.new_id)
+				components.object_handler.add_object_to_objects (a_list.item)
 
 				a_list.forth
 			end
@@ -288,17 +255,17 @@ feature -- Access
 			xml_store: GB_XML_STORE
 			a_list: ARRAYED_LIST [GB_OBJECT]
 		do
-			create xml_store
+			create xml_store.make_with_components (components)
 			xml_store.store_individual_object (Current)
 			Result := new_object (xml_store.last_stored_individual_object, True)
-			
+
 				-- Modify id of `Result' so that it is not the same as that of `Current'.
 			create a_list.make (20)
 			Result.all_children_recursive (a_list)
-			Result.set_id (new_id)
+			Result.set_id (components.id_handler.new_id)
 				-- Only add `Result' to objects now that we have the new id.
-			object_handler.add_object_to_objects (Result)
-			
+			components.object_handler.add_object_to_objects (Result)
+
 				-- Ensure that the new locked object cannot have objects inserted through it's `display_object'.
 				-- Note that you can still pick the object as we do not unconnect the pick events are we do for all
 				-- children recursively.
@@ -308,9 +275,9 @@ feature -- Access
 			until
 				a_list.off
 			loop
-				a_list.item.set_id (new_id)
-				object_handler.add_object_to_objects (a_list.item)
-				
+				a_list.item.set_id (components.id_handler.new_id)
+				components.object_handler.add_object_to_objects (a_list.item)
+
 					-- Now unconnect events from the display object to prevent users
 					-- from modifying the structure of a locked representation.
 				a_list.item.unconnect_display_object_drop_events
@@ -321,7 +288,7 @@ feature -- Access
 			Result.set_name ("")
 				-- Set the text for `layout_item'.
 			Result.represent_as_locked_instance
-			
+
 				-- We must check that we are actually a top level object, as otherwise if
 				-- we have nested representations, it does not need to be done.
 			if is_top_level_object then
@@ -333,7 +300,7 @@ feature -- Access
 --| FIXME is this not implementable/true?
 --			bi_directional_reference: Result.associated_top_level_object /= Void and instance_referers.has (Result.id) and Result.associated_top_level_object = Current
 		end
-		
+
 	new_top_level_representation_strict: GB_OBJECT is
 			-- `Result' is a newly built version of `Current' with all ids
 			-- identical to the originals. This completely replaces `Current'
@@ -349,21 +316,21 @@ feature -- Access
 		do
 			create original_children.make (50)
 			all_children_recursive (original_children)
-			create xml_store
+			create xml_store.make_with_components (components)
 			xml_store.store_individual_object (Current)
 			Result := new_object (xml_store.last_stored_individual_object, True)
-			
+
 				-- Modify id of `Result' so that it is not the same as that of `Current'.
 			create a_list.make (20)
 			Result.all_children_recursive (a_list)
 				-- Only add `Result' to objects now that we have the new id.
-			old_object := object_handler.deep_object_from_id (Result.id)
+			old_object := components.object_handler.deep_object_from_id (Result.id)
 			check
 				old_object_is_current: old_object = Current
 			end
-			object_handler.objects.remove (Result.id)
-			object_handler.deleted_objects.remove (Result.id)
-			object_handler.add_object_to_objects (Result)
+			components.object_handler.objects.remove (Result.id)
+			components.object_handler.deleted_objects.remove (Result.id)
+			components.object_handler.add_object_to_objects (Result)
 			from
 				old_object.instance_referers.start
 			until
@@ -398,7 +365,7 @@ feature -- Access
 				a_list.forth
 				original_children.forth
 			end
-			
+
 				-- Ensure that the new locked object cannot have objects inserted through it's `display_object'.
 				-- Note that you can still pick the object as we do not unconnect the pick events are we do for all
 				-- children recursively.
@@ -408,10 +375,10 @@ feature -- Access
 			until
 				a_list.off
 			loop
-				object_handler.objects.remove (a_list.item.id)
-				object_handler.deleted_objects.remove (a_list.item.id)
-				object_handler.add_object_to_objects (a_list.item)
-				
+				components.object_handler.objects.remove (a_list.item.id)
+				components.object_handler.deleted_objects.remove (a_list.item.id)
+				components.object_handler.add_object_to_objects (a_list.item)
+
 					-- Now unconnect events from the display object to prevent users
 					-- from modifying the structure of a locked representation.
 				a_list.item.unconnect_display_object_drop_events
@@ -422,16 +389,16 @@ feature -- Access
 			Result.set_name ("")
 				-- Set the text for `layout_item'.
 			Result.represent_as_locked_instance
-			
+
 				-- We must check that we are actually an instance of a top level object, as otherwise if
 				-- we have nested representations, it does not need to be done.
 			if is_instance_of_top_level_object then
-				Result.set_associated_top_level_object (object_handler.deep_object_from_id (associated_top_level_object))
+				Result.set_associated_top_level_object (components.object_handler.deep_object_from_id (associated_top_level_object))
 					-- Ensure that all representations of `Result' reflect this change.
 				Result.update_representations_for_name_or_type_change
 			end
-			
-				-- Now destroy all of the original objects that used to represent `Current' as 
+
+				-- Now destroy all of the original objects that used to represent `Current' as
 				-- they are no longer required. If this is not performed, there are
 				-- GDI leaks on Windows.
 			old_object.destroy
@@ -444,10 +411,10 @@ feature -- Access
 				original_children.forth
 			end
 		ensure
-			object_handler_objects_not_changed: old object_handler.objects = object_handler.objects and
-				old object_handler.deleted_objects = object_handler.deleted_objects
+			object_handler_objects_not_changed: old components.object_handler.objects = components.object_handler.objects and
+				old components.object_handler.deleted_objects = components.object_handler.deleted_objects
 		end
-		
+
 	represent_as_locked_instance is
 			-- Ensure pixmap representation of `Current' is that of a locked type.
 		local
@@ -459,13 +426,13 @@ feature -- Access
 			layout_item.set_pixmap (l_pixmap)
 			layout_item.wipe_out
 			layout_item.set_data ("Represents a top level object, so no children may be added.")
-			layout_item.pointer_double_press_actions.force_extend (agent layout_constructor.target_associated_top_object (Current))
+			layout_item.pointer_double_press_actions.force_extend (agent (components.tools.layout_constructor).target_associated_top_object (Current))
 		ensure
 			chidren_index_not_changed: old children.index = children.index
 			layout_item_empty: layout_item.count = 0
 			layout_item_has_data: layout_item.data /= Void
 		end
-		
+
 	represent_as_non_locked_instance is
 			-- Ensure pixmap representation of `Current' is not that of a locked type.
 		local
@@ -491,7 +458,7 @@ feature -- Access
 			layout_item_children_set: layout_item.count = children.count
 			layout_item_has_not_data: layout_item.data = Void
 		end
-		
+
 	connect_instance_referers (original_object, instance_object:GB_OBJECT) is
 			-- Recursively add a similar referring link from evey child in `original_object'
 			-- to every child of `instance_object' that is not part of a nested structure.
@@ -550,7 +517,7 @@ feature -- Access
 				new_linear_representation.forth
 			end
 		end
-		
+
 	update_instances (p: PROCEDURE [EV_ANY, TUPLE]) is
 			-- For all `instance_refers' of `Current', call `p' on
 			-- all representations.
@@ -565,7 +532,7 @@ feature -- Access
 			until
 				instance_referers.off
 			loop
-				current_object := object_handler.deep_object_from_id (instance_referers.item_for_iteration)
+				current_object := components.object_handler.deep_object_from_id (instance_referers.item_for_iteration)
 				p.call ([current_object.object])
 				l_display ?= current_object.display_object
 				if l_display /= Void then
@@ -577,7 +544,7 @@ feature -- Access
 				instance_referers.forth
 			end
 		end
-		
+
 	update_first_instances (p: PROCEDURE [EV_ANY, TUPLE]) is
 			-- For all `instance_refers' of `Current', call `p' on
 			-- the first representation only.
@@ -591,25 +558,25 @@ feature -- Access
 			until
 				instance_referers.off
 			loop
-				current_object := object_handler.deep_object_from_id (instance_referers.item_for_iteration)
+				current_object := components.object_handler.deep_object_from_id (instance_referers.item_for_iteration)
 				p.call ([current_object.object])
 				current_object.update_instances (p)
 				instance_referers.forth
 			end
 		end
-		
+
 	actual_type: STRING is
 			-- `Result' is type of `an_object'.
 		do
 			if is_instance_of_top_level_object then
-				Result := object_handler.deep_object_from_id (associated_top_level_object).name.as_upper	
+				Result := components.object_handler.deep_object_from_id (associated_top_level_object).name.as_upper
 			else
 				Result := type.substring (4, type.count)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	destroy_recursive is
 			-- Destroy `Current' and recursively destroy all children.
 		local
@@ -641,7 +608,7 @@ feature -- Access
 			if widget_selector_item /= Void and then widget_selector_item.object = Current then
 				widget_selector_item.destroy
 			end
-			
+
 			children.wipe_out
 			parent_object := Void
 			events.wipe_out
@@ -671,7 +638,7 @@ feature -- Access
 		end
 
 feature {GB_COMMAND_ADD_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
-		
+
 	build_objects is
 			-- Create display and build objects for `Current'.
 		require
@@ -681,17 +648,17 @@ feature {GB_COMMAND_ADD_OBJECT, GB_OBJECT_HANDLER} -- Basic operation
 			if object = Void then
 				create_object_from_type
 				build_display_object
-				
+
 					-- We must only set up these events for widgets, as items do not have the correct
 					-- events that we can hook to.
 				if type_conforms_to (dynamic_type_from_string (type), dynamic_type_from_string (Ev_widget_string)) then
-					set_up_display_object_events (display_object, object)	
+					set_up_display_object_events (display_object, object)
 				end
 			end
 		ensure
 			object_not_void: object /= Void
 			display_object_not_void: display_object /= Void
-		end		
+		end
 
 feature {GB_EV_BOX_EDITOR_CONSTRUCTOR, GB_COMMAND_CHANGE_TYPE} -- Basic operation
 
@@ -702,7 +669,7 @@ feature {GB_EV_BOX_EDITOR_CONSTRUCTOR, GB_COMMAND_CHANGE_TYPE} -- Basic operatio
 		ensure
 			is_expanded: expanded_in_box
 		end
-		
+
 	disable_expanded_in_box is
 			-- Ensure `expanded_in_box' is `False'.
 		do
@@ -710,7 +677,7 @@ feature {GB_EV_BOX_EDITOR_CONSTRUCTOR, GB_COMMAND_CHANGE_TYPE} -- Basic operatio
 		ensure
 			not_expanded: not expanded_in_box
 		end
-		
+
 feature {GB_OBJECT, GB_OBJECT_HANDLER, GB_COMMAND_ADD_OBJECT, GB_COMMAND_CONVERT_TO_TOP_LEVEL, GB_COMMAND_FLATTEN_OBJECT} -- Status Setting
 
 	set_parent (a_parent_object: GB_OBJECT) is
@@ -721,7 +688,7 @@ feature {GB_OBJECT, GB_OBJECT_HANDLER, GB_COMMAND_ADD_OBJECT, GB_COMMAND_CONVERT
 		ensure
 			parent_set: parent_object = a_parent_object
 		end
-		
+
 	set_associated_top_level_object (an_object: GB_OBJECT) is
 			-- Set `an_object' as `associated_top_level_object'.
 		require
@@ -733,7 +700,7 @@ feature {GB_OBJECT, GB_OBJECT_HANDLER, GB_COMMAND_ADD_OBJECT, GB_COMMAND_CONVERT
 		ensure
 			object_associated: associated_top_level_object = an_object.id
 		end
-		
+
 	remove_associated_top_level_object is
 			-- Reset associated top level object.
 		require
@@ -745,7 +712,7 @@ feature {GB_OBJECT, GB_OBJECT_HANDLER, GB_COMMAND_ADD_OBJECT, GB_COMMAND_CONVERT
 		end
 
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
-			
+
 	delete is
 			-- Perform any necessary pre processing for
 			-- a deletion of `Current' from the system.
@@ -774,7 +741,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 				add_element_containing_boolean (element, client_string, generate_as_client)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update `Current' based on information held in `element'.
 		require
@@ -785,10 +752,10 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Id_String)
-				-- Although every saved object should have an ID, 
+				-- Although every saved object should have an ID,
 				-- we allow there to be none, to maintain backwards compatibility.
 			if element_info /= Void then
-				id := (element_info.data).to_integer	
+				id := (element_info.data).to_integer
 			end
 			element_info := full_information @ (name_string)
 			if element_info /= Void then
@@ -827,25 +794,25 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM, GB_OBJECT_HANDLER, GB_WIDGET_SELECTOR, GB_C
 			layout_item_set: layout_item = a_layout_item
 			layout_item_object_set: layout_item.object = Current
 		end
-		
+
 	remove_child (an_object: GB_OBJECT) is
 			-- Removed `an_object' and all its representations from `Current'.
 		require
 			object_not_void: an_object /= Void
 			contained: children.has (an_object)
-		do				
+		do
 			unparent_ev_object (an_object.object)
 			unparent_ev_object (an_object.display_object)
-	
+
 			layout_item.prune_all (an_object.layout_item)
 			remove_child_from_children (an_object)
-			
+
 				-- Notify the system that we have modified something.
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			components.system_status.mark_as_dirty
 		ensure
 			not_contained: not children.has (an_object)
 		end
-		
+
 feature {GB_OBJECT_EDITOR, GB_PROJECT_SETTINGS} -- Status setting
 
 	enable_client_generation is
@@ -853,13 +820,13 @@ feature {GB_OBJECT_EDITOR, GB_PROJECT_SETTINGS} -- Status setting
 		do
 			generate_as_client := True
 		end
-		
+
 	disable_client_generation is
 			-- Ensure `Current' is generated inheriting from EiffelVision2.
 		do
 			generate_as_client := False
 		end
-	
+
 feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 
 	assign_id is
@@ -867,7 +834,7 @@ feature {GB_OBJECT_HANDLER, GB_ID_COMPRESSOR} -- Status setting
 		require
 			id_not_assigned: id = 0
 		do
-			id := new_id
+			id := components.id_handler.new_id
 		ensure
 			id_set: id >= 0
 		end
@@ -884,10 +851,10 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 		ensure
 			object_initialized: object /= Void
 		end
-		
+
 	can_add_child (object_representation: ANY): BOOLEAN is
 			-- May an object represented by `object_representation' be added
-			-- to `Current'. `object_representation' may be either a GB_COMPONENT or a 
+			-- to `Current'. `object_representation' may be either a GB_COMPONENT or a
 			-- GB_OBJECT. We do not just create an object from the component and use that,
 			-- as this can be very slow, and this feature is called many times during
 			-- a pick and drop.
@@ -910,7 +877,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 			else
 				an_object_stone ?= object_representation
 				new_type := an_object_stone.object_type
-				new_short_type := new_type.substring (4, new_type.count)				
+				new_short_type := new_type.substring (4, new_type.count)
 				Result := True
 
 				create env
@@ -923,13 +890,13 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 					-- Firstly, ensure that we do not drop an object into a representation of a top level object.
 				if local_parent_object /= Void and then local_parent_object.is_instance_of_top_level_object then
 					Result := False
-					set_status_text ("Cannot parent object in locked instance of " + object_handler.deep_object_from_id (local_parent_object.associated_top_level_object).name)
+					components.status_bar.set_status_text ("Cannot parent object in locked instance of " + components.object_handler.deep_object_from_id (local_parent_object.associated_top_level_object).name)
 				end
 
 				if Result and an_object_stone /= Void then
 					Result := has_clashing_dependencies (an_object_stone)
 					if not Result then
-						set_status_text (cyclic_inheritance_error)
+						components.status_bar.set_status_text (cyclic_inheritance_error)
 					end
 				end
 
@@ -944,7 +911,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 						if not funct_result then
 								-- Now display output if we are attempting to insert the object in itself
 								-- or one of its children.
-							display_parent_in_child_message (standard_object_stone.object, local_parent_object, new_type)			
+							display_parent_in_child_message (standard_object_stone.object, local_parent_object, new_type)
 						end
 						Result := Result and funct_result
 					end
@@ -956,11 +923,11 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 					Result := False
 				end
 				if Result then
-					clear_status_bar
+					components.status_bar.clear_status_bar
 				end
 			end
 		end
-		
+
 	has_clashing_dependencies (an_object_stone: GB_OBJECT_STONE): BOOLEAN is
 			-- Does `an_object_stone' represent an object that has nested dependencies so
 			-- that if it were inserted within `Current' it would cause a cyclic inheritance
@@ -980,7 +947,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 			until
 				instance_objects.off
 			loop
-				actual_object := object_handler.deep_object_from_id (instance_objects.item_for_iteration)
+				actual_object := components.object_handler.deep_object_from_id (instance_objects.item_for_iteration)
 				all_dependents.clear_all
 				all_dependents_recursive (actual_object, all_dependents)
 				all_dependents.put (actual_object, actual_object.id)
@@ -1013,9 +980,9 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 				an_object.children.off
 			loop
 				current_object := an_object.children.item
-				
+
 				if current_object.is_instance_of_top_level_object then
-					dependent_object := object_handler.deep_object_from_id (current_object.associated_top_level_object)
+					dependent_object := components.object_handler.deep_object_from_id (current_object.associated_top_level_object)
 					if not dependents.has (dependent_object.id) then
 							-- Only add if it is not already contained as an object may rely on another
 							-- object multiple times in it's structure.
@@ -1030,22 +997,22 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITE
 			an_object.children.go_to (cursor)
 		ensure
 			children_index_not_changed: old an_object.children.index = an_object.children.index
-		end		
+		end
 
 	create_layout_item is
 			-- Create a layout_item associated with `Current'.
 		require
 			no_layout_item_associated: layout_item = Void
 		do
-			create layout_item.make (Current)
+			create layout_item.make (Current, components)
 			build_drop_actions_for_layout_item (layout_item)
 		ensure
 			lyout_item_initialized: layout_item /= Void
 			layout_item_not_parented: layout_item.parent = Void
 		end
-		
+
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Access
-		
+
 	accepts_child (a_type: STRING):BOOLEAN is
 			-- Does `Current' accept `an_object'.
 			-- Redefine in descendents to allow children
@@ -1055,7 +1022,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 		do
 			Result := False
 		end
-		
+
 feature {GB_INPUT_FIELD, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Basic operations
 
 	add_constant_context (context: GB_CONSTANT_CONTEXT) is
@@ -1071,13 +1038,13 @@ feature {GB_INPUT_FIELD, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Basic operation
 		end
 
 feature -- Basic operations
-		
+
 	is_full: BOOLEAN is
 			-- Is `Current' full?
 		do
 			Result := True
 		end
-		
+
 	add_new_component_in_parent (a_component: GB_COMPONENT) is
 			-- Add `a_component' to parent of `Current', before `Current'.
 		require
@@ -1088,7 +1055,7 @@ feature -- Basic operations
 			an_object: GB_OBJECT
 		do
 			an_object := a_component.object
-			object_handler.recursive_do_all (an_object, agent ensure_names_unique (?))
+			components.object_handler.recursive_do_all (an_object, agent ensure_names_unique (?))
 			ensure_names_unique (an_object)
 			add_new_object_in_parent (an_object)
 		ensure
@@ -1107,7 +1074,7 @@ feature -- Basic operations
 			an_object_index, an_index: INTEGER
 		do
 			insert_position := parent_object.children.index_of (Current, 1)
-			
+
 				-- We must now check that the item being inserted before is not contained in the same parent as `Current'.
 				-- If this is the case, and the item is before `Current' in the parent, then we must use an insert_position
 				-- one less than normal.
@@ -1118,13 +1085,13 @@ feature -- Basic operations
 					insert_position := insert_position - 1
 				end
 			end
-			create command_add.make (parent_object, an_object, insert_position)
+			create command_add.make (parent_object, an_object, insert_position, components)
 			command_add.execute
 		ensure
 			object_contained_if_not_top_level: not an_object.is_top_level_object implies parent_object.children.has (an_object)
 			children_count_increased: old an_object.parent_object /= parent_object implies parent_object.children.count = old parent_object.children.count + 1
 		end
-		
+
 	add_new_component (a_component: GB_COMPONENT) is
 			-- Add object representation of `a_component' to `Current'.
 		require
@@ -1134,7 +1101,7 @@ feature -- Basic operations
 			an_object: GB_OBJECT
 		do
 			an_object := a_component.object
-			object_handler.recursive_do_all (an_object, agent ensure_names_unique (?))
+			components.object_handler.recursive_do_all (an_object, agent ensure_names_unique (?))
 			ensure_names_unique (an_object)
 			add_new_object (an_object)
 		ensure
@@ -1153,9 +1120,9 @@ feature -- Basic operations
 				-- If this is the case, then the insert position is the number of
 				-- items held in the layout item, as we are effectively moving it to the end.
 			if children.has (an_object) then
-				create command_add.make (Current, an_object,layout_item.count)
+				create command_add.make (Current, an_object,layout_item.count, components)
 			else
-				create command_add.make (Current, an_object, layout_item.count + 1)
+				create command_add.make (Current, an_object, layout_item.count + 1, components)
 			end
 			command_add.execute
 				-- Now we expand the layout item.
@@ -1167,7 +1134,7 @@ feature -- Basic operations
 			children_count_increased: old an_object.parent_object /= Current implies children.count = old children.count + 1
 			layout_item_not_void: an_object.layout_item /= Void
 		end
-		
+
 	set_id (a_new_id: INTEGER) is
 			-- Assign `new_id' to `id'.
 		require
@@ -1177,7 +1144,7 @@ feature -- Basic operations
 		ensure
 			id_assigned: id = a_new_id
 		end
-		
+
 feature {GB_ID_COMPRESSOR, GB_OBJECT}
 
 	update_internal_id_references (conversion_data: HASH_TABLE [INTEGER, INTEGER]) is
@@ -1190,7 +1157,7 @@ feature {GB_ID_COMPRESSOR, GB_OBJECT}
 			linear: LINEAR [INTEGER]
 		do
 			id := conversion_data @ id
-			
+
 			linear := instance_referers.linear_representation
 			instance_referers.clear_all
 			from
@@ -1227,7 +1194,7 @@ feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WIDGET_SELECTOR} -- Basic 
 			name_assigned: name.is_equal (new_name)
 			edited_name_set: name.is_equal (new_name)
 		end
-		
+
 	update_representations_for_name_or_type_change is
 			-- Update all representations of `Current' to reflect a change
 			-- of name or type.
@@ -1255,7 +1222,7 @@ feature {GB_COMMAND, GB_OBJECT_HANDLER, GB_OBJECT, GB_WIDGET_SELECTOR} -- Basic 
 					-- on the structure of the client heirarchy to determine this, as a top level client
 					-- item must always have at least one child, while the children may have none.
 				if all_client_representations.item.count > 0  then
-					all_client_representations.item.set_text (name.as_upper)	
+					all_client_representations.item.set_text (name.as_upper)
 				else
 					all_client_representations.item.set_text (name_and_type)
 				end
@@ -1279,7 +1246,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 		ensure
 			display_object_not_void: display_object /= Void
 		end
-		
+
 	connect_display_object_events is
 			-- Connect events to `display_object' to permit interactive building.
 		require
@@ -1291,7 +1258,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 			if pick_and_dropable /= Void then
 					-- Firstly remove any previous events
 				pick_and_dropable.drop_actions.wipe_out
-				
+
 					-- Now connect the new events
 				pick_and_dropable.set_pebble_function (agent retrieve_pebble)
 				pick_and_dropable.drop_actions.extend (agent handle_object_drop (?))
@@ -1299,7 +1266,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 				pick_and_dropable.drop_actions.extend (agent set_color)
 			end
 		end
-		
+
 	unconnect_display_object_pick_events is
 			-- Unconnect pick events from `display_object' to restrict interactive building.
 			-- For example we do not permit a user to modify the structure if the object is
@@ -1314,7 +1281,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 				pick_and_dropable.remove_pebble
 			end
 		end
-		
+
 	unconnect_display_object_drop_events is
 			-- Unconnect drop events from `display_object' to restrict interactive building.
 			-- For example we do not permit a user to modify the structure if the object is
@@ -1339,12 +1306,12 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 			if application.ctrl_pressed and application.shift_pressed then
 					-- If ctrl and shift is pressed, we must highlight
 					-- the object in the layout constructor.
-				Layout_constructor.highlight_object (create {GB_STANDARD_OBJECT_STONE}.make_with_object (Current))
+				components.tools.Layout_constructor.highlight_object (create {GB_STANDARD_OBJECT_STONE}.make_with_object (Current))
 			elseif application.ctrl_pressed then
 					-- If the ctrl key is pressed, then we must
 					-- start a new object editor for `Current', instead
 					-- of beginning the pick and drop.
-				new_object_editor (Current)
+				components.object_editors.new_object_editor (Current)
 			else
 				Result := create {GB_STANDARD_OBJECT_STONE}.make_with_object (Current)
 			end
@@ -1377,6 +1344,7 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 				current_type.to_upper
 				if is_instance_of (display_object, dynamic_type_from_string (current_type.substring (4, current_type.count))) then
 					gb_ev_any ?= new_instance_of (dynamic_type_from_string (current_type))
+					gb_ev_any.set_components (components)
 					gb_ev_any.default_create
 					if gb_ev_any.has_user_events then
 						gb_ev_any.set_up_user_events (Current, a_display_object, an_object)
@@ -1385,9 +1353,9 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT, GB_OBJECT, GB_LAYOUT_CONSTR
 				supported_types.forth
 			end
 		end
-		
+
 feature {GB_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Implementation
-		
+
 	override_drop_on_child (an_object: GB_OBJECT): BOOLEAN is
 			-- If `Current' is held within `an_object' or
 			-- `Current' is `an_object' then do not allow drop.
@@ -1395,25 +1363,25 @@ feature {GB_OBJECT, GB_PASTE_OBJECT_COMMAND} -- Implementation
 			an_object_not_void: an_object /= Void
 		do
 			Result := True
-				
+
 				-- If an object is Void then we are transporting a type.
 			if an_object /= Void then
 					-- Check that the object is fully instantiated, and is not still
 					-- representing a type.
 				if an_object.object /= Void then
-					if object_handler.object_contained_in_object (an_object, Current) or
+					if components.object_handler.object_contained_in_object (an_object, Current) or
 					Current = an_object then
 						Result := False
 					end
 				end
 			end
 		end
-		
+
 feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 
 	edited_name: STRING
 		-- The name being entered for `Current' in an object editor.
-		
+
 	set_edited_name (a_name: STRING) is
 			-- Assign `a_name' to `edited_name'.
 		require
@@ -1431,7 +1399,7 @@ feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 			edited_name := name
 			update_representations_for_name_or_type_change
 		end
-		
+
 feature {GB_WIDGET_SELECTOR_ITEM, GB_GENERAL_UTILITIES} -- Implementation
 
 	output_name: STRING is
@@ -1449,7 +1417,7 @@ feature {GB_WIDGET_SELECTOR_ITEM, GB_GENERAL_UTILITIES} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 feature {GB_CODE_GENERATOR} -- Implementation
 
 	extend_xml_representation (child_name: STRING): STRING is
@@ -1462,7 +1430,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature {GB_LAYOUT_CONSTRUCTOR, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 
 	build_drop_actions_for_layout_item (tree_item: EV_TREE_ITEM) is
@@ -1475,7 +1443,7 @@ feature {GB_LAYOUT_CONSTRUCTOR, GB_OBJECT_HANDLER, GB_OBJECT} -- Implementation
 			tree_item.drop_actions.extend (agent handle_object_drop (?))
 			tree_item.drop_actions.set_veto_pebble_function (agent can_add_child (?))
 		end
-		
+
 feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 
 	handle_object_drop (object_pebble: GB_OBJECT_STONE) is
@@ -1512,7 +1480,7 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 			else
 				add_new_object_in_parent (an_object)
 			end
-			if digit_checker.digit_pressed then
+			if components.digit_checker.digit_pressed then
 				new_type := an_object.type
 				if not env.application.shift_pressed then
 					object_full := is_full
@@ -1524,9 +1492,9 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 				until
 						-- Ensure that we do not attempt to insert more items than
 						-- are accepted.
-					counter > digit_checker.digit or object_full
+					counter > components.digit_checker.digit or object_full
 				loop
-					a_new_object := object_handler.build_object_from_string_and_assign_id (new_type)
+					a_new_object := components.object_handler.build_object_from_string_and_assign_id (new_type)
 					if not env.application.shift_pressed then
 						add_new_object (a_new_object)
 						object_full := is_full
@@ -1538,7 +1506,7 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 				end
 			end
 		end
-		
+
 	add_new_component_wrapper (a_component: GB_COMPONENT) is
 			-- If shift pressed then add `a_component' to
 			-- parent of `Current', else add to `Current'.
@@ -1554,7 +1522,7 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 				add_new_component_in_parent (a_component)
 			end
 		end
-		
+
 	set_color (color_stone: GB_COLOR_STONE) is
 			-- Assign color of `color_stone' to `Current'.
 		require
@@ -1586,7 +1554,7 @@ feature {GB_BUILDER_WINDOW, GB_WIDGET_SELECTOR_ITEM} -- Implementation
 				end
 			end
 		end
-		
+
 feature {GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
 
 	register_expand is
@@ -1596,7 +1564,7 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
 		ensure
 			is_expanded: is_expanded
 		end
-		
+
 	register_collapse is
 			-- Assign `False' to `is_expanded'.
 		do
@@ -1604,9 +1572,9 @@ feature {GB_LAYOUT_CONSTRUCTOR_ITEM} -- Implementation
 		ensure
 			not_expanded: not is_expanded
 		end
-		
+
 feature {GB_WIDGET_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
-		
+
 	set_widget_selector_item (a_widget_selector_item: GB_WIDGET_SELECTOR_ITEM) is
 			-- Assign `a_widget_selector_item' to `widget_selector_item'.
 		require
@@ -1618,7 +1586,7 @@ feature {GB_WIDGET_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
 			item_set: widget_selector_item = a_widget_selector_item
 			widget_selector_item_object_set: widget_selector_item.object = Current
 		end
-		
+
 feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WIDGET_SELECTOR} -- Implementation
 
 	add_client_representation (client_object: GB_OBJECT) is
@@ -1676,7 +1644,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WIDGET_SELECTOR} -- Implem
 				parent_item.expand
 			end
 		end
-		
+
 	select_client_object (client_object: GB_OBJECT) is
 			-- Select `client_object' within `layout_constructor'.
 		require
@@ -1686,8 +1654,8 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WIDGET_SELECTOR} -- Implem
 		do
 			if not client_object.layout_item.is_selectable then
 				client_top_level_parent := client_object.top_level_parent_object
-				layout_constructor.set_root_window (client_top_level_parent)				
-				widget_selector.update_display_and_builder_windows (client_top_level_parent)
+				components.tools.layout_constructor.set_root_window (client_top_level_parent)
+				components.tools.widget_selector.update_display_and_builder_windows (client_top_level_parent)
 			end
 			client_object.layout_item.enable_select
 		end
@@ -1699,9 +1667,9 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WIDGET_SELECTOR} -- Implem
 			cursor: CURSOR
 		do
 			if is_instance_of_top_level_object then
-				object_handler.deep_object_from_id (associated_top_level_object).remove_client_representation (Current)
+				components.object_handler.deep_object_from_id (associated_top_level_object).remove_client_representation (Current)
 			else
-				cursor := children.cursor				
+				cursor := children.cursor
 				from
 					children.start
 				until
@@ -1715,7 +1683,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WIDGET_SELECTOR} -- Implem
 		ensure
 			children_index_not_changed: old children.index = children.index
 		end
-		
+
 	add_client_representation_recursively is
 			-- Add all client representations for  `Current' and all children
 			-- recursively.
@@ -1723,7 +1691,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WIDGET_SELECTOR} -- Implem
 			cursor: CURSOR
 		do
 			if is_instance_of_top_level_object then
-				object_handler.deep_object_from_id (associated_top_level_object).add_client_representation (Current)
+				components.object_handler.deep_object_from_id (associated_top_level_object).add_client_representation (Current)
 			else
 				cursor := children.cursor
 				from
@@ -1739,7 +1707,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND, GB_WIDGET_SELECTOR} -- Implem
 		ensure
 			children_index_not_changed: old children.index = children.index
 		end
-		
+
 	remove_client_representation (client_object: GB_OBJECT) is
 			-- Remove a client representation for `client_object' from the `widget_selector_item'
 			-- which it is a representation.
@@ -1788,7 +1756,7 @@ feature -- Contract Support
 		do
 			Result := is_instance_of (an_object, dynamic_type_from_string (a_type))
 		end
-		
+
 feature {NONE} -- Implementation
 
 	vision2_object_from_type (a_type: STRING): EV_ANY is
@@ -1809,7 +1777,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	display_invalid_drop_message (obj2: GB_OBJECT; new_type: STRING; does_accept_child: BOOLEAN) is
 			-- Display message in status bar indicating the invalid drop status of `obj2'.
 			-- `new_type' is the type of the transported object, and `does_accept_child' is
@@ -1828,26 +1796,26 @@ feature {NONE} -- Implementation
 				status_start := "P"
 			end
 			if obj2.is_full and obj2.children.count = 0 then
-				set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children.")
+				components.status_bar.set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children.")
 			elseif not does_accept_child then
-				set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")
+				components.status_bar.set_status_text (status_start + "ointed target (" + obj2.short_type + ") does not accept children of type " + new_type + ".")
 			else
 				titled_window_object ?= obj2
 				if titled_window_object /= Void then
 					if new_type.is_equal (menu_bar_string) then
 						if titled_window_object.object.menu_bar /= Void then
-							set_status_text (status_start + "ointed target (" + obj2.short_type + ") already has a menu bar.")
+							components.status_bar.set_status_text (status_start + "ointed target (" + obj2.short_type + ") already has a menu bar.")
 						end
-					elseif obj2.is_full then					
-						set_status_text (status_start + "ointed target (" + obj2.short_type + ") is full.")
-					end	
+					elseif obj2.is_full then
+						components.status_bar.set_status_text (status_start + "ointed target (" + obj2.short_type + ") is full.")
+					end
 				elseif obj2.is_full then
-					set_status_text (status_start + "ointed target (" + obj2.short_type + ") is full.")
+					components.status_bar.set_status_text (status_start + "ointed target (" + obj2.short_type + ") is full.")
 				end
 			end
 		end
-		
-		
+
+
 	display_parent_in_child_message (obj1, obj2: GB_OBJECT; new_type: STRING) is
 			-- Display message in status bar indicating that `ob1' cannot be parented
 			-- in `obj2' as `ob2' is `obj1' or is parent of `obj1'.
@@ -1857,12 +1825,12 @@ feature {NONE} -- Implementation
 			new_type_not_void: new_type /= Void
 		do
 			if obj1 = obj2 then
-				set_status_text ("Cannot parent " + new_type + " in itself.")
+				components.status_bar.set_status_text ("Cannot parent " + new_type + " in itself.")
 			else
-				set_status_text ("Cannot parent " + new_type + " in one of its children.")
+				components.status_bar.set_status_text ("Cannot parent " + new_type + " in one of its children.")
 			end
 		end
-		
+
 	add_child (an_object: GB_OBJECT; position: INTEGER) is
 			-- Add `an_object' to child list of `Current'.
 		require
@@ -1876,7 +1844,7 @@ feature {NONE} -- Implementation
 		ensure
 			contained: children.has (an_object)
 		end
-		
+
 	ensure_names_unique (an_object: GB_OBJECT) is
 			-- Ensure that name of `an_object' is unique, and does not
 			-- clash with any feature names also.
@@ -1892,8 +1860,8 @@ feature {NONE} -- Implementation
 					temp_name := original_name
 					counter := 1
 				until
-					not object_handler.string_is_feature_name (temp_name, top_level_parent_object) and
-					not object_handler.string_is_object_name (temp_name, top_level_parent_object, False)
+					not components.object_handler.string_is_feature_name (temp_name, top_level_parent_object) and
+					not components.object_handler.string_is_object_name (temp_name, top_level_parent_object, False)
 				loop
 					temp_name := original_name + counter.out
 					counter := counter + 1
@@ -1901,7 +1869,7 @@ feature {NONE} -- Implementation
 				an_object.set_name (temp_name)
 			end
 		end
-		
+
 feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 
 	remove_child_from_children (an_object: GB_OBJECT) is
@@ -1914,7 +1882,7 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 		ensure
 			object_not_parented: an_object.parent_object = Void
 		end
-		
+
 	update_object_as_instance_representation is
 			-- Update `Current' to reflect the fact that it is a representation
 			-- of another top level object, only if `associated_top_level_object' > 0.
@@ -1926,15 +1894,15 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 		do
 			if associated_top_level_object_on_loading > 0 then
 					-- Retrieve the object which `Current' represents.
-				l_object := object_handler.object_from_id (associated_top_level_object_on_loading)
+				l_object := components.object_handler.object_from_id (associated_top_level_object_on_loading)
 					-- Now reset `associated_top_level_object_on_loading'.
 				associated_top_level_object_on_loading := 0
 				check
 					object_not_void: object /= Void
 				end
-					
+
 				from
-					current_parent := parent_object	
+					current_parent := parent_object
 				until
 					current_parent = Void or inside_nested
 				loop
@@ -1958,8 +1926,8 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 				set_associated_top_level_object (l_object)
 				represent_as_locked_instance
 				update_representations_for_name_or_type_change
-				
-				
+
+
 					-- Now update the builder window representations of all children recursively so that
 					-- a user may not build directly within them as they should be locked.
 				unconnect_display_object_drop_events
@@ -1974,7 +1942,7 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 					all_children.item.unconnect_display_object_pick_events
 					all_children.forth
 				end
-				
+
 					-- Special check required for when calling this feature from
 					-- the clipboard. In this situation, the client representation is
 					-- added later.
@@ -1986,7 +1954,7 @@ feature {GB_OBJECT_HANDLER, GB_CLIPBOARD} -- Implementation
 			associated_object_set: old associated_top_level_object_on_loading > 0 implies associated_top_level_object = old associated_top_level_object_on_loading
 			original_associated_object_reset: associated_top_level_object_on_loading = 0
 		end
-		
+
 feature {NONE} -- Contract support
 
 	instance_referers_recursively_unique (an_object: GB_OBJECT; current_result: BOOLEAN_REF; ids: HASH_TABLE [INTEGER, INTEGER]): BOOLEAN is
@@ -2009,14 +1977,14 @@ feature {NONE} -- Contract support
 			loop
 				if ids.has (list.item) then
 					current_result.set_item (False)
-					if system_status.is_in_debug_mode then
-						create instance_viewer.make_with_object (object_handler.object_from_id (list.item))
+					if components.system_status.is_in_debug_mode then
+						create instance_viewer.make_with_object (components.object_handler.object_from_id (list.item))
 					end
 				else
 					ids.put (list.item, list.item)
 				end
 				if current_result.item then
-					referred_object := object_handler.deep_object_from_id (list.item)
+					referred_object := components.object_handler.deep_object_from_id (list.item)
 					if referred_object /= Void then
 						Result := instance_referers_recursively_unique (referred_object, current_result, ids)
 					end
@@ -2043,7 +2011,7 @@ feature {NONE} -- Contract support
 				instance_referers.off or Result = False
 			loop
 				create new_linear_representation.make (20)
-				current_object := object_handler.deep_object_from_id (instance_referers.item_for_iteration)
+				current_object := components.object_handler.deep_object_from_id (instance_referers.item_for_iteration)
 				if current_object.parent_object /= Void then
 
 					current_object.all_children_recursive (new_linear_representation)
@@ -2066,7 +2034,7 @@ feature {NONE} -- Contract support
 							current_linear_representation.forth
 						end
 					end
-					
+
 				end
 				instance_referers.forth
 			end
@@ -2077,7 +2045,7 @@ feature {NONE} -- Contract support
 		ensure
 			index_not_changed: old instance_referers.item_for_iteration = instance_referers.item_for_iteration
 		end
-		
+
 feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
 	real_display_object: EV_ANY is
@@ -2097,10 +2065,10 @@ invariant
 	constants_not_void: constants /= Void
 	events_not_void: events /= Void
 	top_level_object_has_widget_selector_item: is_top_level_object implies (widget_selector_item /= Void)
-	instance_referers_recursively_unique: object_handler.objects.has (id) implies instance_referers_recursively_unique (Current, True, create {HASH_TABLE [INTEGER, INTEGER]}.make (10))
-	nested_structures_equal: ((not system_status.is_object_structure_changing) and (object_handler.deleted_objects.item (id) /= Void)) implies instance_referers_nested_strutures_match	
+	instance_referers_recursively_unique: components.object_handler.objects.has (id) implies instance_referers_recursively_unique (Current, True, create {HASH_TABLE [INTEGER, INTEGER]}.make (10))
+	nested_structures_equal: ((not components.system_status.is_object_structure_changing) and (components.object_handler.deleted_objects.item (id) /= Void)) implies instance_referers_nested_strutures_match
 -- Cannot check this at the moment as when the `associated_top_level_object' is set, the other link is performed seperately. Check calls of `new_top_level_representation'.
---	bi_directional_top_level_object_link: is_instance_of_top_level_object and object_handler.deep_object_from_id (associated_top_level_object) /= Void implies object_handler.deep_object_from_id (associated_top_level_object).instance_referers.has (id)
+--	bi_directional_top_level_object_link: is_instance_of_top_level_object and components.object_handler.deep_object_from_id (associated_top_level_object) /= Void implies components.object_handler.deep_object_from_id (associated_top_level_object).instance_referers.has (id)
 
 -- Not True, any object within the structure may have instance referers, as properties must be updated.
 --	only_top_level_objects_have_instance_referers: not is_top_level_object implies instance_referers.is_empty

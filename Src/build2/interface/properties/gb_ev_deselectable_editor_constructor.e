@@ -27,7 +27,7 @@ feature -- Access
 		local
 			first_object: EV_DESELECTABLE
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			first_object := objects.first
 			create check_button.make_with_text (gb_ev_deselectable_is_selected)

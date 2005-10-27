@@ -42,7 +42,7 @@ feature {NONE}-- Initialization
 			create cancel_button
 			create l_ev_cell_2
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (pixmap_cell)
@@ -66,27 +66,34 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_1.set_padding_width (large_spacing_width)
-			l_ev_horizontal_box_1.set_border_width (large_spacing_width)
+			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_1.set_padding (?))
+			integer_constant_retrieval_functions.extend (agent large_spacing_width)
+			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_1.set_border_width (?))
+			integer_constant_retrieval_functions.extend (agent large_spacing_width)
 			l_ev_horizontal_box_1.disable_item_expand (pixmap_cell)
 			error_label.align_text_left
-			l_ev_horizontal_box_2.set_padding_width (large_spacing_width)
-			l_ev_horizontal_box_2.set_border_width (large_spacing_width)
+			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_2.set_padding (?))
+			integer_constant_retrieval_functions.extend (agent large_spacing_width)
+			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_2.set_border_width (?))
+			integer_constant_retrieval_functions.extend (agent large_spacing_width)
 			l_ev_horizontal_box_2.disable_item_expand (flatten_all_instances_button)
 			l_ev_horizontal_box_2.disable_item_expand (cancel_button)
-			flatten_all_instances_button.set_text (ok_button_text)
-			flatten_all_instances_button.set_minimum_width (default_button_width)
-			cancel_button.set_text (cancel_button_text)
-			cancel_button.set_minimum_width (default_button_width)
+			string_constant_set_procedures.extend (agent flatten_all_instances_button.set_text (?))
+			string_constant_retrieval_functions.extend (agent ok_button_text)
+			integer_constant_set_procedures.extend (agent flatten_all_instances_button.set_minimum_width (?))
+			integer_constant_retrieval_functions.extend (agent default_button_width)
+			string_constant_set_procedures.extend (agent cancel_button.set_text (?))
+			string_constant_retrieval_functions.extend (agent cancel_button_text)
+			integer_constant_set_procedures.extend (agent cancel_button.set_minimum_width (?))
+			integer_constant_retrieval_functions.extend (agent default_button_width)
 			disable_user_resize
 			set_title ("Object still referenced")
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 			flatten_all_instances_button.select_actions.extend (agent flatten_all_instances)
 			cancel_button.select_actions.extend (agent cancel_selected)
 				-- Close the application when an interface close

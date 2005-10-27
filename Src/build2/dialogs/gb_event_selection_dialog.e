@@ -15,75 +15,56 @@ inherit
 		redefine
 			show_modal_to_window
 		end
-	
+
 	GB_SUPPORTED_EVENTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	INTERNAL
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-		
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-	
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			copy, default_create
-		end
-		
+
 	EIFFEL_RESERVED_WORDS
 		export
 			{NONE} all
 		undefine
 			copy, default_create
 		end
-		
-	BUILD_RESERVED_WORDS	
+
+	BUILD_RESERVED_WORDS
 		export
 			{NONE} all
 		undefine
 			copy, default_create
 		end
-		
+
 	GB_EVENT_UTILITIES
 		export
 			{NONE} all
 		undefine
 			copy, default_create
 		end
-		
+
 	EV_STOCK_COLORS
 		rename
 			implementation as stock_colors_implementation
@@ -92,7 +73,7 @@ inherit
 		undefine
 			copy, default_create, is_equal
 		end
-		
+
 	GB_INTERFACE_CONSTANTS
 		export
 			{NONE} all
@@ -102,10 +83,13 @@ inherit
 
 create
 	make_with_object
-	
+
 feature {NONE} -- Initialization
 
-	make_with_object (an_object: GB_OBJECT) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_object (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current', build interface appropriate
 			-- to `an_object.
 		local
@@ -116,6 +100,7 @@ feature {NONE} -- Initialization
 			h_box: EV_HORIZONTAL_BOX
 			separator: EV_HORIZONTAL_SEPARATOR
 		do
+			components := a_components
 			default_create
 			object := an_object
 			if object.name.is_empty then
@@ -126,7 +111,7 @@ feature {NONE} -- Initialization
 			show_actions.extend (agent update_text_field_minimum_width)
 				-- Reset building counter.
 			building_counter := 0
-			
+
 				-- Build structures used internally.
 			create all_check_buttons.make (0)
 			create all_text_fields.make (0)
@@ -134,8 +119,8 @@ feature {NONE} -- Initialization
 			create all_comments.make (0)
 			create all_types.make (0)
 			create all_class_names.make (0)
-			
-			
+
+
 			create temp_box
 			extend (temp_box)
 			create header_label.make_with_text ("Actions to be performed when:")
@@ -160,12 +145,12 @@ feature {NONE} -- Initialization
 			h_box.extend (scroll_bar)
 			h_box.disable_item_expand (scroll_bar)
 			temp_box.extend (h_box)
-			
+
 				-- Build and add a box which will hold all the action sequences.
 			create_main_box
 			viewport.extend (main_vertical_box)
 			create all_labels.make (25)
-			
+
 				-- Now build the interface which will display the
 				-- applicable action sequences.
 			from
@@ -182,14 +167,14 @@ feature {NONE} -- Initialization
 				end
 				action_sequences_list.forth
 			end
-			
+
 			from
 				all_labels.start
 			until
 				all_labels.off
 			loop
 					-- The "5" gives a little spacing between the end of the
-					-- label and the 
+					-- label and the
 				all_labels.item.set_minimum_width (minimum_label_width + 5)
 				all_labels.forth
 			end
@@ -198,8 +183,8 @@ feature {NONE} -- Initialization
 				-- wiped out when the window is closed anyway to be re-filled with
 				-- the current info from `Current'.
 			object.events.wipe_out
-			
-			
+
+
 			create separator
 			temp_box.extend (separator)
 			temp_box.disable_item_expand (separator)
@@ -222,14 +207,14 @@ feature {NONE} -- Initialization
 				-- the controls.
 			scroll_bar.change_actions.extend (agent scroll_bar_moved (?))
 			resize_actions.force_extend (agent update_scroll_bar)
-			
+
 				-- We attempt to set the height relative to the number
 				-- of items displayed, but with a maximum of 400.
 				-- We add 50 as a rough estimate for the items above and below
 				-- the window, and the windows client area to coordinate difference.
 			set_minimum_size (600, (main_vertical_box.minimum_height + 50).min (400))
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
-			
+
 				-- Handle re-sizing
 			resize_actions.force_extend (agent update_text_fields)
 		end
@@ -238,7 +223,7 @@ feature -- Access
 
 	object: GB_OBJECT
 		-- Object associated with `Current'.
-		
+
 feature -- Basic operations
 
 	show_modal_to_window  (window: EV_WINDOW) is
@@ -257,61 +242,61 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	main_vertical_box: EV_VERTICAL_BOX
-		-- Vertical box placed directly in `Current' to hold event 
+		-- Vertical box placed directly in `Current' to hold event
 		-- structure.
-		
+
 	viewport: EV_VIEWPORT
 		-- Scrollable area to hold `main_vertical_box'.
-		
+
 	scroll_bar: EV_VERTICAL_SCROLL_BAR
 		-- A scroll bar to be connected to the viewport
 		-- when required.
-		
+
 	close_button: EV_BUTTON
 		-- Clicking will close `Current'.
-		
+
 	all_check_buttons: ARRAYED_LIST [EV_CHECK_BUTTON]
 		-- All check buttons connected to `Current'.
-		
+
 	all_text_fields: ARRAYED_LIST [EV_TEXT_FIELD]
 		-- All text fields associated with the check buttons.
 		-- Ordered with `all_check_buttons'.
-		
+
 		-- The next few attributes store all the information
 		-- about the action sequences for `object'. We store
 		-- them locally, so that we only have to create the objects
 		-- once in order to retrieve the information.
 		-- `all_names' @ 3 corresponds to `all_types' @ 3 etc etc.
-		
+
 	all_names: ARRAYED_LIST [STRING]
 		-- All action sequence names associated with `object'.
-	
+
 	all_types: ARRAYED_LIST [STRING]
 		-- All action sequence types associated with `object'.
-	
+
 	all_comments: ARRAYED_LIST [STRING]
 		-- All comments associated with each action sequence for `object'.
-	
+
 	all_class_names: ARRAYED_LIST [STRING]
 		-- All class names corresponding to class defining each action sequence name.
-		
+
 	building_counter: INTEGER
 		-- Current action sequence being built.
-		
+
 	temp_event_string: STRING is "Temporary feature name for comparison purposes."
 		-- Used internally. Cannot be entered by user, as contains spaces.
-		
+
 	all_labels: ARRAYED_LIST [EV_LABEL]
 		-- Used to hold all labels displayed before the
 		-- check buttons. When the interface has been
 		-- Created, we must then assign a minimum_width to all
 		-- the labels which will match that of the largest.
 		-- This procedure will ensure that all columns align correctly.
-	
+
 	minimum_label_width: INTEGER
 		-- The largest `minimum_width' of all labels displayed before
 		-- the check buttons.
-		
+
 	right_side_spacing: INTEGER is 30
 		-- Distance from right hand side of text boxes to scroll bar.
 
@@ -347,7 +332,7 @@ feature {NONE} -- Implementation
 				create vertical_box
 				create text_field
 				text_field.set_minimum_width (100)
-				
+
 					-- Add the start label.
 				create start_label
 				start_label.set_background_color (text_background_color)
@@ -361,12 +346,12 @@ feature {NONE} -- Implementation
 				create cell
 				cell.set_background_color (text_background_color)
 				vertical_box.extend (cell)
-				
+
 					-- We must check to see whether `object' has an event linked to
 					-- the current action sequence.
 				create vertical_box
 				vertical_box.set_background_color (text_background_color)
-				
+
 				create cell
 				cell.set_background_color (text_background_color)
 				vertical_box.extend (check_button)
@@ -377,14 +362,14 @@ feature {NONE} -- Implementation
 				horizontal_box.disable_item_expand (vertical_box)
 				main_vertical_box.extend (horizontal_box)
 				main_vertical_box.disable_item_expand (horizontal_box)
-				
-				
+
+
 				create info.make_with_details (an_action_sequence.names @ counter, action_sequences_list.item, an_action_sequence.types @ counter, temp_event_string)
 					-- Adjust event names that have been renamed in Vision2 interface
 				renamed_action_sequence_name := modified_action_sequence_name (object.type, info)
 				feature_name := feature_name_of_object_event (info)
 					-- Display text before the check button.
-					
+
 				action_sequence_comment := (an_action_sequence.comments @ counter).twin
 					-- We prune the `comment_start_string' from the start of the action sequence
 					-- for a description of what the action sequence does.
@@ -395,7 +380,7 @@ feature {NONE} -- Implementation
 				end
 				action_sequence_comment.keep_tail (action_sequence_comment.count - comment_start_string.count)
 				start_label.set_text (action_sequence_comment)
-				
+
 					-- We must store the minimum_width of `start_label' if
 					-- it is greater than the minimum width stored during
 					-- previous calls to `build_events_for_an_action_sequence'.
@@ -433,14 +418,14 @@ feature {NONE} -- Implementation
 					text_field.set_text (feature_name)
 					frame.extend (horizontal_box2)
 				end
-				
-					
-				
+
+
+
 					-- Connect an event to `check_button'.
 				check_button.select_actions.extend (agent check_button_selected (building_counter))
 					-- Connect event to `text_field'.
 				text_field.change_actions.force_extend (agent validate_name_change (building_counter))
-				
+
 					-- Store information locally, for easy updating
 					-- without having to perform interations and
 					-- dynamic object building again.
@@ -450,11 +435,11 @@ feature {NONE} -- Implementation
 				all_comments.extend (an_action_sequence.comments @ counter)
 				all_types.extend (an_action_sequence.types @ counter)
 				all_class_names.extend (action_sequences_list.item)
-	
+
 				counter := counter + 1
 			end
 		end
-		
+
 	toggle_i_th_check_button (an_x, a_y, a_button, index: INTEGER) is
 			-- Toggle `index' check button in `all_check_buttons'.
 		require
@@ -462,7 +447,7 @@ feature {NONE} -- Implementation
 		do
 			if a_button = 1 then
 				all_check_buttons.i_th (index).toggle
-			end	
+			end
 		end
 
 	update_text_field_minimum_width is
@@ -479,25 +464,25 @@ feature {NONE} -- Implementation
 			loop
 				if (all_check_buttons @ (all_text_fields.index)).is_selected then
 					all_text_fields.item.set_minimum_width (x_position_relative_to_window (scroll_bar) -
-					x_position_relative_to_window (all_text_fields.item) - right_side_spacing)			
+					x_position_relative_to_window (all_text_fields.item) - right_side_spacing)
 				end
 				all_text_fields.forth
 			end
-		end	
-		
+		end
+
 	validate_name_change (index: INTEGER) is
-			-- text field, `all_text_fields' @ `index' has been modified, 
+			-- text field, `all_text_fields' @ `index' has been modified,
 			-- so validate, and update display accordingly.
 		local
 			current_text_field: EV_TEXT_FIELD
 		do
 			current_text_field := all_text_fields @ index
 			if valid_class_name (current_text_field.text) or current_text_field.text.is_empty then
-				if object_handler.string_is_object_name (current_text_field.text, object, True) or (reserved_words.has (current_text_field.text.as_lower)) or 
+				if components.object_handler.string_is_object_name (current_text_field.text, object, True) or (reserved_words.has (current_text_field.text.as_lower)) or
 				(build_reserved_words.has (current_text_field.text.as_lower)) then
 					current_text_field.set_foreground_color (red)
-				elseif object_handler.string_is_feature_name (current_text_field.text, object) then
-					if object_handler.existing_feature_matches (current_text_field.text, all_types @ index, object) then
+				elseif components.object_handler.string_is_feature_name (current_text_field.text, object) then
+					if components.object_handler.existing_feature_matches (current_text_field.text, all_types @ index, object) then
 						current_text_field.set_foreground_color (black)
 					else
 						current_text_field.set_foreground_color (red)
@@ -508,13 +493,13 @@ feature {NONE} -- Implementation
 				if current_text_field.foreground_color.is_equal (black) then
 						-- Allow a user to save again, as the text has changed to something valid.
 						-- Checking the color is the easiest way to do this.
-					(create {GB_GLOBAL_STATUS}).mark_as_dirty
+					components.system_status.mark_as_dirty
 				end
 			else
 				undo_last_character (current_text_field)
 			end
 		end
-		
+
 	feature_name_of_object_event (info: GB_ACTION_SEQUENCE_INFO): STRING is
 			-- Does `object' have an event matching `info'. If so, then
 			-- Result is matching name
@@ -524,7 +509,7 @@ feature {NONE} -- Implementation
 		do
 				-- Local verion for fast iteration.
 			events := object.events
-			
+
 			from
 				events.start
 			until
@@ -542,7 +527,7 @@ feature {NONE} -- Implementation
 				events.forth
 			end
 		end
-		
+
 	check_button_selected (index: INTEGER) is
 			-- Check button all_check_buttons @ `index' has been selected.
 			-- We must maximize/minimize the feature name entry depending on
@@ -559,7 +544,7 @@ feature {NONE} -- Implementation
 		do
 			lock_update
 			current_check_button := all_check_buttons @ index
-			current_text_field := all_text_fields @ index	
+			current_text_field := all_text_fields @ index
 			if (current_check_button).is_selected then
 				vertical_box ?= current_check_button.parent
 				horizontal_box ?= vertical_box.parent
@@ -586,7 +571,7 @@ feature {NONE} -- Implementation
 				horizontal_box ?= vertical_box.parent
 				horizontal_box.prune (horizontal_box @ 3)
 				horizontal_box.prune (horizontal_box @ 3)
-				
+
 				create label.make_with_text (all_names @ index)
 				label.set_background_color (text_background_color)
 				label.align_text_left
@@ -608,16 +593,16 @@ feature {NONE} -- Implementation
 				-- the fact that a user modification has taken place.
 				-- This enables us to do things such as enable the save
 				-- options.
-			;(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			components.system_status.mark_as_dirty
 				-- We do this here as when the update is locked,
 				-- there appears to be problems.
-				
+
 			if current_check_button.is_selected then
 				update_single_text_field (current_text_field)
 				current_text_field.set_focus
 			end
 		end
-		
+
 	update_single_text_field (current_text_field: EV_TEXT_FIELD )is
 			-- Update `minimum_size' of `current_text_filed' to force it
 			--  to resize correctly.
@@ -634,8 +619,8 @@ feature {NONE} -- Implementation
 				x_position_relative_to_window (current_text_field) - right_side_spacing)
 			end
 		end
-		
-		
+
+
 	update_text_fields is
 			-- Update size of all displayed text fields, to almost "touch"
 			-- the right hand side of the window, less a border.
@@ -652,8 +637,8 @@ feature {NONE} -- Implementation
 				all_text_fields.forth
 			end
 		end
-		
-		
+
+
 	create_main_box is
 			-- Create `main_vertical_box' and initialize.
 		do
@@ -662,7 +647,7 @@ feature {NONE} -- Implementation
 			main_vertical_box.set_border_width (20)
 			main_vertical_box.set_background_color (text_background_color)
 		end
-		
+
 	update_scroll_bar is
 			-- Update scroll bar to reflect
 			-- current size of the controls.
@@ -671,7 +656,7 @@ feature {NONE} -- Implementation
 				scroll_bar.hide
 			else
 				if not scroll_bar.is_show_requested then
-					scroll_bar.show	
+					scroll_bar.show
 					update_text_fields
 				end
 				scroll_bar.value_range.adapt ((create {INTEGER_INTERVAL}.make (0, main_vertical_box.minimum_height - viewport.height)))
@@ -681,7 +666,7 @@ feature {NONE} -- Implementation
 				scroll_bar_moved (scroll_bar.value)
 			end
 		end
-		
+
 	scroll_bar_moved (new_scroll_bar_value: INTEGER) is
 			-- `scroll_bar' value has changed, so updated
 			-- the position of the controls within `viewport'.
@@ -714,7 +699,7 @@ feature {NONE} -- Implementation
 			viewport.wipe_out
 			viewport.extend (main_vertical_box)
 		end
-		
+
 	update_object_and_destroy is
 			-- Update `object' to reflect changes made during lifetime of
 			-- `Current', and then destroy `Current'.
@@ -728,8 +713,8 @@ feature {NONE} -- Implementation
 			action_sequence1, action_sequence2: GB_EV_ACTION_SEQUENCE
 			first_types, second_types: STRING
 			first_name, second_name: STRING
-		do	
-		
+		do
+
 				-- We must validate all the names contained in the boxes.
 				-- First, we need to find out all selected text fields.
 			from
@@ -753,7 +738,7 @@ feature {NONE} -- Implementation
 						elseif build_reserved_words.has (current_text_field.text.as_lower) then
 							create warning_dialog.make_with_text ("You are using a name for`"+ all_names @ (counter) + "' which will clash with inherited features in the generated code.%NPlease enter a valid feature name or uncheck the action sequence.")
 							warning_dialog.show_modal_to_window (Current)
-						elseif object_handler.string_is_object_name (current_text_field.text, object, True) then
+						elseif components.object_handler.string_is_object_name (current_text_field.text, object, True) then
 							-- Name has already been used as an object name.
 							create warning_dialog.make_with_text ("The feature name you have specified for `"+ all_names @ (counter) + "'%N is already in use as the name of an object in the system.%NPlease specify a unique name or uncheck this action sequence.")
 							warning_dialog.show_modal_to_window (Current)
@@ -763,7 +748,7 @@ feature {NONE} -- Implementation
 						end
 					elseif repeated_name (current_text_field.text.as_lower, counter) then
 						current_type := all_types @ counter
-						
+
 						from
 							counter1 := 1
 						until
@@ -794,19 +779,19 @@ feature {NONE} -- Implementation
 							first_name := all_names @ counter
 							invalid_state := True
 							create warning_dialog.make_with_text ("`" + first_name +"' and `" + second_name +"' have different event data.%NTherefore, it is not possible to have the same feature connected to both of them.%NPlease resolve this discrepency.")
-							warning_dialog.show_modal_to_window (Current)	
+							warning_dialog.show_modal_to_window (Current)
 						end
-					end	
+					end
 				end
 				counter := counter + 1
 			end
 
 			if not invalid_state then
-				
+
 					-- Store the current size and position.
-				previous_position.set (x_position, y_position)	
+				previous_position.set (x_position, y_position)
 				previous_size.set (width, height)
-					
+
 					-- Then insert the new info.
 				from
 					counter := 1
@@ -817,16 +802,16 @@ feature {NONE} -- Implementation
 						create action_info.make_with_details (all_names @ counter,
 							all_class_names @ counter, all_types @ counter,
 							(all_text_fields @ counter).text.as_lower)
-						object.events.extend (action_info)	
+						object.events.extend (action_info)
 
 					end
 					counter := counter + 1
 				end
-			
-				destroy	
+
+				destroy
 			end
 		end
-		
+
 	repeated_name (current_name: STRING; index: INTEGER): BOOLEAN is
 			-- Is `current_name' the text of an expanded feature
 			-- name entry, exluding `index' position?
@@ -846,7 +831,7 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 		end
-		
+
 	text_background_color: EV_COLOR is
 			-- `Result' is EV_COLOR used for
 			-- background of controls.
@@ -857,14 +842,14 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	previous_size: EV_COORDINATE is
 			-- `Result' is previous size of `Current'
 			-- when last displayed.
 		once
 			create Result
 		end
-		
+
 	previous_position: EV_COORDINATE is
 			-- `Result' is previous position of `Current'
 			-- when last displayed.

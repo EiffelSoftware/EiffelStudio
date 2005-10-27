@@ -11,19 +11,28 @@ class
 inherit
 	GB_HISTORY_DIALOG_IMP
 
-	GB_SHARED_HISTORY
-		undefine
-			default_create, copy
-		end
-	
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-		
 	GB_ICONABLE_TOOL
 		undefine
 			default_create, copy
+		end
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
 
 feature {NONE} -- Initialization
@@ -46,7 +55,7 @@ feature {NONE} -- Implementation
 	close_button_selected is
 			-- Called by `select_actions' of `close_button'.
 		do
-			command_handler.show_hide_history_command.execute
+			components.commands.show_hide_history_command.execute
 		end
 
 feature -- Access
@@ -56,7 +65,7 @@ feature -- Access
 		once
 			Result := ((create {GB_SHARED_PIXMAPS}).Icon_cmd_history_title @ 1)
 		end
-		
+
 feature -- Basic operation
 
 	add_command_representation (output: STRING) is
@@ -82,7 +91,7 @@ feature -- Basic operation
 			history_list.count = old history_list.count + 1
 			last_selected_item = history_list.count - 1
 		end
-		
+
 feature {GB_GLOBAL_HISTORY} -- Implementation
 
 	select_item (position: INTEGER) is
@@ -96,8 +105,8 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			last_selected_item := position - 1
 		ensure
 			item_selected: (history_list @ position).is_selected
-		end	
-		
+		end
+
 	remove_selection is
 			-- Remove selection from `history_list'.
 		do
@@ -111,7 +120,7 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 		ensure
 			no_item_selected: history_list.selected_item = Void
 		end
-		
+
 	remove_items_from_position (pos: INTEGER) is
 			-- Remove all items in `history_list' from
 			-- position `pos'.
@@ -125,7 +134,7 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			end
 			last_selected_item := history_list.count - 1
 		end
-		
+
 	remove_all_items is
 			-- Clear `history_list' completely.
 		do
@@ -144,18 +153,18 @@ feature {NONE} -- Implementation
 		do
 			index_of_current_item := history_list.index_of (history_list.selected_item, 1)
 			if last_selected_item > index_of_current_item - 1 then
-				history.step_from (last_selected_item, index_of_current_item - 1)
+				components.history.step_from (last_selected_item, index_of_current_item - 1)
 			elseif last_selected_item < index_of_current_item - 1 then
-				history.step_from (last_selected_item + 1, index_of_current_item - 1)
-			end	
+				components.history.step_from (last_selected_item + 1, index_of_current_item - 1)
+			end
 			last_selected_item := index_of_current_item - 1
 				-- We must now update
-			command_handler.update
+			components.commands.update
 		end
-	
+
 	last_selected_item: INTEGER
 		-- Last item selected in `history_list'.
-		
+
 	add_initial_item is
 			-- Add initial item representing start state to `history_list'.
 		require
@@ -165,7 +174,7 @@ feature {NONE} -- Implementation
 		ensure
 			history_list_has_one_item: history_list.count = 1
 		end
-		
+
 invariant
 	history_list_not_void: history_list /= Void
 

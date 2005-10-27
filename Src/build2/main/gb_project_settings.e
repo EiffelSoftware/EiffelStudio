@@ -6,27 +6,22 @@ indexing
 
 class
 	GB_PROJECT_SETTINGS
-	
+
 inherit
-	
+
 	ANY
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 			{ANY} True_string, False_string, False_optimal_string, False_non_exported_string
 		end
-		
+
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-		
+
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
@@ -34,28 +29,38 @@ inherit
 		end
 
 create
-	default_create,
-	make_envision_with_default_values,
+	make_with_components,
 	make_stand_alone_with_default_values
+
 
 feature {NONE} -- Initialization
 
-	make_envision_with_default_values is
-			-- Create `Current', mark as an Envision project,
-			-- and initialize to default values.
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
 		do
-			set_default_values
-			project_type := envision_project
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
-		
-	make_stand_alone_with_default_values is
+
+	make_stand_alone_with_default_values (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current', mark as a stand alone Build project,
-			-- and intiailize_to_default_values.
+			-- and intiailize_to_default_values. Assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
 		do
 			set_default_values
 			project_type := stand_alone_project
+		ensure
+			components_set: components = a_components
 		end
-		
+
 	set_default_values is
 			-- Initialize default values.
 		do
@@ -75,72 +80,66 @@ feature -- Access
 
 	project_type: INTEGER
 		-- Type of project that `Current' represents.
-		
+
 	is_stand_alone_project: BOOLEAN is
 			-- Does `Current' represent a stand alone project?
 			-- i.e. regular Build, not Envision.
 		do
 			Result := project_type = Stand_alone_project
 		end
-		
-	is_envision_project: BOOLEAN is
-			-- Does `Current' represent an Envision project?
-		do
-			Result := project_type = Envision_project
-		end
 
 	project_location: STRING
 		-- Project location.
 		-- Maybe this should be assigned when loaded.
-		
+
 	main_window_class_name: STRING
 		-- Class name to be given to the main window in the generated code.
-		
+
 	application_class_name: STRING
 		-- Class name to be given to the application in the generated code.
-		
+
 	constants_class_name: STRING
 		-- Class name used for generated constants file.
-		
+
 	complete_project: BOOLEAN
 		-- Should we generate an ace file and an application class to
 		-- complete a system involving the newly generated class.
-		
+
 	grouped_locals: BOOLEAN
 		-- Should local variables be grouped by type, or declared on a separate line
 		-- for each?
-		
+
 	debugging_output: BOOLEAN
 		-- Should debugging output be generated for each feature connected to an
 		-- action sequence?
-		
+
 	attributes_local: STRING
 		-- Should attributes be generated as locals?
-		
+
 	project_name: STRING
 		-- Name of project.
-		
+
 	load_constants: BOOLEAN
 		-- Should generated constants be loaded from a text file,
 		-- or hard coded into the generated constants file?
-		
+
 	rebuild_ace_file: BOOLEAN
 		-- Should we rebuild ace file every time?
-		
+
 	load_cancelled: BOOLEAN
 		-- Was last call to `load' cancelled by user?
 		-- This can only occur if the file was in an old format, and
 		-- they selected not to update to current format.
-		
+
 	loaded_project_had_client_information: BOOLEAN
 		-- Was client information for the project contained directly in the project file?
 		-- This is only true for older projects. In this case, we must now set the client
 		-- information for all windows to match the original setting from the file.
-		
+
 	generation_location: STRING
 		-- Location for generation of all files and structure. If empty,
 		-- generation is performed at the current project location.
-		
+
 	actual_generation_location: STRING is
 			-- Actual location for generated files.
 		do
@@ -152,7 +151,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 feature -- Basic operation
 
 	save is
@@ -178,10 +177,10 @@ feature -- Basic operation
 			if not generation_location.is_empty then
 				data.extend ([generation_location_string, generation_location])
 			end
-			
+
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
-			create file_handler
+			create file_handler.make_with_components (components)
 			file_handler.create_file ("Project_settings", file_name, data)
 		end
 
@@ -235,11 +234,11 @@ feature -- Basic operation
 				if data.count < 11 or data.count > 14 then
 					create dialog.make_with_text (invalid_bpr_file)
 					dialog.button ((create {EV_DIALOG_CONSTANTS}).ev_abort).select_actions.extend (agent cancel_load)
-					dialog.show_modal_to_window (main_window)
+					dialog.show_modal_to_window (components.tools.main_window)
 				end
 			end
 		end
-		
+
 	cancel_load is
 			-- Assign `true' to `load_cancelled'.
 		do
@@ -265,7 +264,7 @@ feature -- Status Setting
 		ensure
 			project_location.is_equal (location)
 		end
-		
+
 	set_main_window_class_name (name: STRING) is
 			-- Assign `name' to `main_window_class_name'.
 		require
@@ -276,7 +275,7 @@ feature -- Status Setting
 		ensure
 			main_window_class_name.is_equal (name)
 		end
-		
+
 	set_application_class_name (name: STRING) is
 			-- Assign `name' to `application_class_name'.
 		require
@@ -287,7 +286,7 @@ feature -- Status Setting
 		ensure
 			application_class_name.is_equal (name)
 		end
-		
+
 	set_constants_class_name (name: STRING) is
 			-- Assign `name' to `constants_class_name'.
 		require
@@ -308,43 +307,43 @@ feature -- Status Setting
 		ensure
 			project_name.is_equal (name)
 		end
-		
+
 	enable_complete_project is
 			-- Assign `True' to `complete_project'.
 		do
 			complete_project := True
 		end
-		
+
 	disable_complete_project is
 			-- Assign `False' to `complete_project'.
 		do
 			complete_project := False
 		end
-		
+
 	enable_grouped_locals is
 			-- Assign `True' to `grouped_locals'.
 		do
 			grouped_locals := True
 		end
-		
+
 	disable_grouped_locals is
 			-- Assign `False' to `grouped_locals'.
 		do
 			grouped_locals := False
 		end
-		
+
 	enable_debugging_output is
 			-- Assign `True' to `debugging_output'.
 		do
 			debugging_output := True
 		end
-		
+
 	disable_debugging_output is
 			-- Assign `False' to `debugging_output'.
 		do
 			debugging_output := False
 		end
-		
+
 	set_attributes_locality (locality: STRING) is
 			-- Assign `locality' to `attributes_local'.
 		require
@@ -359,25 +358,25 @@ feature -- Status Setting
 		do
 			rebuild_ace_file := True
 		end
-		
+
 	disable_rebuild_ace_file is
 			-- Assign `False' to `rebuild_ace_file'.
 		do
 			rebuild_ace_file := False
 		end
-		
+
 	enable_constant_loading is
 			-- Assign `True' to `load_constants'.
 		do
 			load_constants := True
 		end
-		
+
 	disable_constant_loading is
 			-- Assign `False' to `load_constants'.
 		do
 			load_constants := False
 		end
-		
+
 	set_generation_location (location: STRING) is
 			-- Assign `location' to `generation_location'.
 		do
@@ -385,7 +384,7 @@ feature -- Status Setting
 		ensure
 			location_set: generation_location.is_equal (location)
 		end
-		
+
 feature {GB_FILE_OPEN_COMMAND}
 
 	set_object_as_client (an_object: GB_OBJECT) is
@@ -400,10 +399,9 @@ feature {NONE} -- Constants
 
 	stand_alone_project: INTEGER is 1
 		-- Project was created in stand alone version of Build.
-	
+
 	envision_project: INTEGER is 2
 		-- Project was created as an Envision project.
-		
 
 feature {NONE} --Implementation
 
@@ -411,35 +409,35 @@ feature {NONE} --Implementation
 	project_location_string: STRING is "Project_location"
 
 	main_window_class_name_string: STRING is "Main_window_class_name"
-		
+
 	application_class_name_string: STRING is "Application_class_name"
-	
+
 	constants_class_name_string: STRING is "Constants_class_name"
-		
+
 	complete_project_string: STRING is "Complete_project"
-	
+
 	grouped_locals_string: STRING is "Group_locals"
-	
+
 	debugging_output_string: STRING is "Generate_debugging_output"
-	
+
 	attributes_local_string: STRING is "Attributes_local"
-	
+
 	project_name_string: STRING is "Project_name"
-	
+
 	client_of_window_string: STRING is "Client_of_window"
-	
+
 	rebuild_ace_file_string: STRING is "Rebuild_ace_file"
-	
+
 	load_constants_string: STRING is "Load_constants_from_file"
-	
+
 	project_type_string: STRING is "Project_type"
-	
+
 	generation_location_string: STRING is "Generation_location"
-	
+
 		-- Type of Current project. We must store this information
 		-- in the save file, so we know what sort of processing to perform
 		-- when we double click on the .bpr file.
-		
+
 	set_integer_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [INTEGER]]) is
 			-- Call `an_agent' with `a_string' converted to an INTEGER.
 		require
@@ -449,8 +447,8 @@ feature {NONE} --Implementation
 		do
 			an_agent.call ([a_string.to_integer])
 		end
-		
-	
+
+
 	set_string_attribute (a_string: STRING; an_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
 			-- Call `an_agent' with `a_string'.
 		require
@@ -459,7 +457,7 @@ feature {NONE} --Implementation
 		do
 			an_agent.call ([a_string])
 		end
-		
+
 	set_boolean_attribute (a_string: STRING; true_agent, false_agent: PROCEDURE [ANY, TUPLE]) is
 			-- If `a_string' is `True_string' then call `true_agent', else call `false_agent'.
 		require
@@ -474,5 +472,5 @@ feature {NONE} --Implementation
 				false_agent.call ([])
 			end
 		end
-	
+
 end -- class GB_PROJECT_SETTINGS

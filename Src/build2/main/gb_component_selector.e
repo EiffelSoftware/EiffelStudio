@@ -14,63 +14,49 @@ inherit
 		redefine
 			initialize
 		end
-		
+
 	GB_DEFAULT_STATE
-	
+
 	GB_STORABLE_TOOL
 		undefine
 			default_create, is_equal, copy
 		end
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
-		
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		undefine
-			default_create, is_equal, copy
-		end
-		
-	GB_SHARED_XML_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-		
+
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-	
-	GB_SHARED_PREFERENCES	
+
+	GB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
@@ -79,9 +65,23 @@ inherit
 		end
 
 create
-	default_create
-	
+	make_with_components
+
 feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
+		end
 
 	initialize is
 			-- Initialize `Current'.
@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			drop_actions.set_veto_pebble_function (agent is_valid_object)
 			key_press_actions.extend (agent check_for_component_delete)
 		end
-		
+
 feature -- Access
 
 	tool_bar: EV_TOOL_BAR is
@@ -100,12 +100,12 @@ feature -- Access
 		do
 			create Result
 		end
-		
+
 	name: STRING is "Component Selector"
 			-- Full name used to represent `Current'.
 
 feature -- Basic operation
-		
+
 	add_new_component (object_stone: GB_OBJECT_STONE) is
 			-- Add a new component representing `object_stone'.
 		require
@@ -120,12 +120,12 @@ feature -- Basic operation
 				create dialog.make_with_values (unique_name_from_array (all_component_names, "component"), "New component", "Please specify the component name:", Component_invalid_name_warning, agent valid_component_name)
 				dialog.show_modal_to_window (parent_window (Current))
 				if not dialog.cancelled then
-					create component_item.make_from_object (standard_object_stone.object, dialog.name)	
+					create component_item.make_from_object (standard_object_stone.object, dialog.name, components)
 					extend (component_item)
 				end
 			end
 		end
-		
+
 	valid_component_name (a_name: STRING): BOOLEAN is
 			-- Is `a_name' a valid component name?
 		local
@@ -148,7 +148,7 @@ feature -- Basic operation
 			found: BOOLEAN
 			component: GB_COMPONENT
 		do
-			xml_handler.remove_component (component_name)
+			components.xml_handler.remove_component (component_name)
 				-- We must now remove the child of `Current' representing
 				-- the component named `component_name'.
 			from
@@ -166,9 +166,9 @@ feature -- Basic operation
 					forth
 				end
 			end
-			component := component_viewer.component
+			component := components.tools.component_viewer.component
 			if component /= Void and then component.name.is_equal (component_name) then
-				Component_viewer.clear
+				components.tools.component_viewer.clear
 			end
 			check
 				component_matched_correctly: found
@@ -185,7 +185,7 @@ feature -- Basic operation
 		do
 			standard_object_stone ?= object_stone
 			if standard_object_stone /= Void then
-			
+
 				-- Checks that we are not transporting from the type
 				-- selector tool.
 			if standard_object_stone.object.object /= Void then
@@ -217,14 +217,14 @@ feature {GB_XML_HANDLER} -- Basic operation
 			until
 				list.off
 			loop
-				create component_item.make_with_name (list.item)
+				create component_item.make_with_name (list.item, components)
 				extend (component_item)
 				list.forth
 			end
 		ensure
 			count_increased_correctly: count = old count + list.count
 		end
-		
+
 feature {NONE} -- Implementation
 
 	check_for_component_delete (a_key: EV_KEY) is
@@ -271,6 +271,6 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 			comparing_objects: Result.object_comparison
-		end		
-		
+		end
+
 end -- class GB_COMPONENT_SELECTOR

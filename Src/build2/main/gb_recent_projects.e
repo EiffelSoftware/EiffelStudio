@@ -3,27 +3,26 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GB_RECENT_PROJECTS
-	
+
 inherit
 	GB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-			{ANY} system_status
-		end
 
 feature -- Basic operations
+
+	components: GB_INTERNAL_COMPONENTS is
+			-- Access to a set of internal components for an EiffelBuild instance.
+		deferred
+		end
 
 	add_project_to_recent_projects is
 			-- Added currently open project to recent project in resources.
 		require
-			project_open: system_status.project_open
+			project_open: components.system_status.project_open
 		local
 			recent_projects: ARRAY [STRING]
 			counter: INTEGER
@@ -35,8 +34,8 @@ feature -- Basic operations
 		do
 			recent_projects := preferences.global_data.recent_projects_string
 			number_of_projects := preferences.global_data.number_of_recent_projects
-			lower_location ?= system_status.current_project_settings.project_location.as_lower
-			
+			lower_location ?= components.system_status.current_project_settings.project_location.as_lower
+
 				-- Determine if the project is already included in the list of recent projects.
 			from
 				counter := 1
@@ -49,7 +48,7 @@ feature -- Basic operations
 				end
 				counter := counter + 1
 			end
-			
+
 			if not has_project then
 					-- Add the project to the list, at position one, dropping
 					-- the last project from the list if necessary.
@@ -64,7 +63,7 @@ feature -- Basic operations
 					recent_projects.put (recent_projects.item (counter), counter + 1)
 					counter := counter - 1
 				end
-				recent_projects.put (system_status.current_project_settings.project_location, 1)
+				recent_projects.put (components.system_status.current_project_settings.project_location, 1)
 			elseif project_index /= 1 then
 					-- Now move an already existing project to the first location.
 				l_string := recent_projects.item (project_index)
@@ -81,7 +80,7 @@ feature -- Basic operations
 			preferences.global_data.recent_projects_string_preference.set_value (recent_projects)
 			preferences.preferences.save_resources
 		end
-		
+
 	clip_recent_projects is
 			-- Clip stored recent projects to number stored in preferences.
 		local

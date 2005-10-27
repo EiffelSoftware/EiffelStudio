@@ -44,7 +44,7 @@ feature {NONE}-- Initialization
 			create l_ev_horizontal_separator_1
 			create component_holder
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_tool_bar_1)
@@ -70,17 +70,19 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			l_ev_vertical_box_1.set_padding_width (2)
+			l_ev_vertical_box_1.set_padding (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_1)
 			component_button.set_tooltip ("Target component into tool")
-			component_button.set_pixmap (icon_component_viewer_color_png)
+			pixmap_constant_set_procedures.extend (agent component_button.set_pixmap (?))
+			pixmap_constant_retrieval_functions.extend (agent icon_component_viewer_color_png)
 			display_button.set_tooltip ("Display view")
-			display_button.set_pixmap (icon_component_display_view_color_png)
+			pixmap_constant_set_procedures.extend (agent display_button.set_pixmap (?))
+			pixmap_constant_retrieval_functions.extend (agent icon_component_display_view_color_png)
 			builder_button.set_tooltip ("Builder view")
-			builder_button.set_pixmap (icon_component_build_view_color_png)
+			pixmap_constant_set_procedures.extend (agent builder_button.set_pixmap (?))
+			pixmap_constant_retrieval_functions.extend (agent icon_component_build_view_color_png)
 			type_display.align_text_left
 			set_minimum_width (300)
 			set_minimum_height (400)
@@ -88,7 +90,7 @@ feature {NONE}-- Initialization
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 			component_button.select_actions.extend (agent show_usage_dialog)
 			display_button.select_actions.extend (agent set_display_view)
 			builder_button.select_actions.extend (agent set_build_view)

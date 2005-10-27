@@ -10,28 +10,28 @@ class
 
 inherit
 	NO_DIRECTORY_SPECIFIED_WARNING_DIALOG_IMP
-	
+
 	EIFFEL_RESERVED_WORDS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-	
+
 	BUILD_RESERVED_WORDS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	EV_STOCK_COLORS
 		rename
 			implementation as stock_colors_implementation
@@ -40,19 +40,24 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
 
 feature {NONE} -- Initialization
@@ -71,19 +76,19 @@ feature {NONE} -- Initialization
 			pixmap_cell.extend (pixmap)
 			set_default_cancel_button (cancel_button)
 		end
-		
+
 feature -- Access
 
 	cancelled: BOOLEAN
 			-- Has `Current' been cancelled?
-		
+
 	directory_name: STRING
 			-- `Result' is name of directory entered by user, or `Void'
 			-- if `cancelled'.
 
 feature {NONE} -- Implementation
 
-	
+
 	text_changed is
 			-- Called by `change_actions' of `l_text_field_1'.
 		local
@@ -92,8 +97,8 @@ feature {NONE} -- Implementation
 			current_text := directory_name_field.text.as_lower
 			if valid_class_name (current_text) and not Reserved_words.has (current_text) and not
 				Build_reserved_words.has (current_text) and not
-				object_handler.string_used_globally_as_object_or_feature_name (current_text)
-				and not constants.all_constants.has (current_text) then
+				components.object_handler.string_used_globally_as_object_or_feature_name (current_text)
+				and not components.constants.all_constants.has (current_text) then
 				directory_name_field.set_foreground_color (black)
 				ok_button.enable_sensitive
 			else
@@ -101,7 +106,7 @@ feature {NONE} -- Implementation
 				ok_button.disable_sensitive
 			end
 		end
-		
+
 	return_pressed is
 			-- Called by `return_actions' of `directory_name_field'.
 		do

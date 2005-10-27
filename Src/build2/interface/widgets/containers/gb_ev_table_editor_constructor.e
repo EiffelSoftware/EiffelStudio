@@ -33,18 +33,18 @@ feature -- Access
 			horizontal_box: EV_HORIZONTAL_BOX
 			tool_bar: EV_TOOL_BAR
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create rows_entry.make (Current, Result, rows_string, gb_ev_table_rows, gb_ev_table_rows_tooltip,
-				agent set_rows (?), agent valid_row_value (?))
+				agent set_rows (?), agent valid_row_value (?), components)
 			create columns_entry.make (Current, Result, columns_string, gb_ev_table_columns, gb_ev_table_columns_tooltip,
-				agent set_columns (?), agent valid_column_value (?))
+				agent set_columns (?), agent valid_column_value (?), components)
 			create row_spacing_entry.make (Current, Result, row_spacing_string, gb_ev_table_row_spacing, gb_ev_table_row_spacing_tooltip,
-				agent set_row_spacing (?), agent valid_spacing (?))
+				agent set_row_spacing (?), agent valid_spacing (?), components)
 			create column_spacing_entry.make (Current, Result, column_spacing_string, gb_ev_table_column_spacing, gb_ev_table_column_spacing_tooltip,
-				agent set_column_spacing (?), agent valid_spacing (?))
+				agent set_column_spacing (?), agent valid_spacing (?), components)
 			create border_width_entry.make (Current, Result, border_width_string, gb_ev_table_border_width, gb_ev_table_border_width_tooltip,
-				agent set_border_width (?), agent valid_spacing (?))
+				agent set_border_width (?), agent valid_spacing (?), components)
 			create homogeneous_button.make_with_text ("Is_homogeneous?")
 			homogeneous_button.select_actions.extend (agent toggle_homogeneous)
 			homogeneous_button.select_actions.extend (agent update_editors)
@@ -186,7 +186,7 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 			-- Display window allowing placement of widgets.
 		do
 			if layout_window = Void then
-				create layout_window.make_with_editor (Current)
+				create layout_window.make_with_editor (Current, components)
 			end
 			layout_window.show_modal_to_window (parent_window (parent_editor))
 		end

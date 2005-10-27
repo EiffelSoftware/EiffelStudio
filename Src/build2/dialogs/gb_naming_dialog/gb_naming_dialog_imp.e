@@ -44,7 +44,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_3
 			create cancel_button
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_vertical_box_2)
 			l_ev_vertical_box_2.extend (prompt_label)
@@ -70,29 +70,36 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
-			l_ev_vertical_box_1.set_padding_width (large_spacing_width)
-			l_ev_vertical_box_1.set_border_width (small_padding)
+			integer_constant_set_procedures.extend (agent l_ev_vertical_box_1.set_padding (?))
+			integer_constant_retrieval_functions.extend (agent large_spacing_width)
+			integer_constant_set_procedures.extend (agent l_ev_vertical_box_1.set_border_width (?))
+			integer_constant_retrieval_functions.extend (agent small_padding)
 			l_ev_vertical_box_2.disable_item_expand (prompt_label)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
 			prompt_label.align_text_left
-			l_ev_cell_1.set_minimum_height (small_padding)
+			integer_constant_set_procedures.extend (agent l_ev_cell_1.set_minimum_height (?))
+			integer_constant_retrieval_functions.extend (agent small_padding)
 			l_ev_horizontal_box_2.disable_item_expand (ok_button)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_3)
 			l_ev_horizontal_box_2.disable_item_expand (cancel_button)
-			ok_button.set_text (ok_button_text)
-			ok_button.set_minimum_width (default_button_width)
-			l_ev_cell_3.set_minimum_width (small_padding)
-			cancel_button.set_text (cancel_button_text)
-			cancel_button.set_minimum_width (default_button_width)
+			string_constant_set_procedures.extend (agent ok_button.set_text (?))
+			string_constant_retrieval_functions.extend (agent ok_button_text)
+			integer_constant_set_procedures.extend (agent ok_button.set_minimum_width (?))
+			integer_constant_retrieval_functions.extend (agent default_button_width)
+			integer_constant_set_procedures.extend (agent l_ev_cell_3.set_minimum_width (?))
+			integer_constant_retrieval_functions.extend (agent small_padding)
+			string_constant_set_procedures.extend (agent cancel_button.set_text (?))
+			string_constant_retrieval_functions.extend (agent cancel_button_text)
+			integer_constant_set_procedures.extend (agent cancel_button.set_minimum_width (?))
+			integer_constant_retrieval_functions.extend (agent default_button_width)
 			set_minimum_width (250)
 			set_minimum_height (120)
 			set_title ("Display window")
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -128,7 +135,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

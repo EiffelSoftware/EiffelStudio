@@ -27,7 +27,7 @@ feature -- Access
 		local
 			label: EV_LABEL
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create label.make_with_text (gb_ev_notebook_tab_position)
 			label.set_tooltip (gb_ev_notebook_tab_position_tooltip)
@@ -58,7 +58,7 @@ feature -- Access
 				first.off
 			loop
 				create text_entry.make (Current, Result, item_text_string + first.index.out, Gb_ev_textable_text + first.index.out, Gb_ev_textable_text_tooltip,
-				agent set_text (?, first.index), agent validate_true (?), single_line_entry)
+				agent set_text (?, first.index), agent validate_true (?), single_line_entry, components)
 				text_entry.hide_label
 				text_entries.extend (text_entry)
 				first.forth
@@ -73,7 +73,7 @@ feature -- Access
 			until
 				first.off
 			loop
-				create pixmap_entry.make (Current, Result, Item_pixmap_string + first.index.out, "", "Pixmap", agent set_pixmap (?, ?, first.index), agent validate (?, ?), agent return_pixmap (first.index), agent return_pixmap_path (first.index))
+				create pixmap_entry.make (Current, Result, Item_pixmap_string + first.index.out, "", "Pixmap", agent set_pixmap (?, ?, first.index), agent validate (?, ?), agent return_pixmap (first.index), agent return_pixmap_path (first.index), components)
 				pixmap_entries.extend (pixmap_entry)
 				first.forth
 			end

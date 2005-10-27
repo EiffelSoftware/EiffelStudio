@@ -4,11 +4,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class		
+class
 	GB_MAIN_WINDOW
 
 inherit
-	
+
 	EV_TITLED_WINDOW
 		export
 			{NONE} all
@@ -19,179 +19,127 @@ inherit
 		select
 			dispose
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-		
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-	
-	GB_SHARED_XML_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
 
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-		
 	GB_RECENT_PROJECTS
 		export
 			{NONE} all
-			{ANY} system_status
 			{GB_PREFERENCES_WINDOW} clip_recent_projects
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	EV_LAYOUT_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
-	GB_SHARED_STATUS_BAR
-		undefine
-			copy, default_create
-		end
-		
+
 	GB_SHARED_PREFERENCES
 		undefine
 			copy, default_create
 		end
-		
+
 	GB_WIDGET_UTILITIES
 		undefine
 			copy, default_create
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		undefine
 			copy, default_create
 		end
-		
+
 	MEMORY
 		rename
 			dispose as memory_dispose
 		export
-			{NONE} all	
+			{NONE} all
 		undefine
 			copy, default_create
 		end
-		
+
 	INTERNAL
 		undefine
 			copy, default_create
 		end
-		
-	GB_SHARED_CLIPBOAD
-		export
-			{NONE} all
-		undefine
-			copy, default_create	
-		end
-		
+
 create
-	default_create
-	
+	make_with_components
+
 feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+			components.events.close_project_start_actions.extend (agent rebuild_recent_projects_menu)
+			components.events.close_project_start_actions.extend (agent hide_tools)
+			components.events.close_project_finish_actions.extend (agent update_title)
+			components.events.open_project_finish_actions.extend (agent show_tools)
+			components.events.new_project_actions.extend (agent update_title)
+			components.events.new_project_actions.extend (agent show_tools)
+			components.events.project_cleaned_actions.extend (agent update_title)
+			components.events.project_dirtied_actions.extend (agent update_title)
+			components.events.import_project_start_actions.extend (agent smart_disable_sensitive)
+			components.events.import_project_finish_actions.extend (agent smart_enable_sensitive)
+			components.events.open_project_start_actions.extend (agent disable_menus)
+			components.events.open_project_finish_actions.extend (agent enable_menus)
+			build_interface
+		ensure
+			components_set: components = a_components
+		end
 
 	initialize is
 			-- Initialize `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_icon_pixmap (icon_build_window @ 1)
+			create multiple_split_area
 			add_debug_shortcuts
 		end
 
-feature -- Basic operation
+feature {NONE} -- Implementation
 
-	build_interface is
-			-- Create user interface in `Current'.
-		do
-			set_title (Product_name)
-				-- Initialize the menu bar for `Current'.
-			create main_menu_bar
-			set_menu_bar (main_menu_bar)
-				-- Initialize menu
-			initialize_menu
-				-- Build the menu
-			build_menu
-				-- Build the tools and other widgets within `Current'.
-			build_widget_structure (Void)
-			set_minimum_size (640, 480)
-			set_width (preferences.global_data.build_window_width)
-			set_height (preferences.global_data.build_window_height)
-			set_x_position (preferences.global_data.build_window_x_position)
-			set_y_position (preferences.global_data.build_window_y_position)
-			
-				-- Register an event that clips recent projects with the preferences.
-				-- This permits the update of particular properties in the system after a preferences
-				-- value has changed.
---			Preferences.register_preference_window_post_display_event (agent clip_recent_projects)
-			
-				-- When an attempt to close `Current' is made, call `close_requested'.
-			close_request_actions.extend (agent close_requested)
-		end
-		
-	build_non_once_windows is
-			-- Create windows that must be explicitly created before use
-			-- i.e. non once features.
-			-- (export status {NONE})
-		do
-			set_display_window (create {GB_DISPLAY_WINDOW})
-			set_builder_window (create {GB_BUILDER_WINDOW})
-		end
-
-	generate_interface (vb: EV_VERTICAL_BOX) is
-			-- Build interface of `Current' into `vb'.
-			-- This is used in Wizard mode.
-		require
-			box_exists: vb /= Void
+	rebuild_recent_projects_menu is
+			-- Update contents of `recent_projects_menu' with all recent projects.
 		local
-			preference_access: PREFERENCES
-			supported_widgets: GB_SUPPORTED_WIDGETS
+			recent_projects: ARRAY [STRING]
+			recent_project_item: EV_MENU_ITEM
+			counter: INTEGER
 		do
-				-- Initialization of preferences.
-			create preference_access.make_with_defaults_and_location (<<default_xml_file>>, eiffel_preferences)
-			initialize_preferences (preference_access)
-			build_non_once_windows
-			build_widget_structure (vb)
-				-- Must ensure the top level window is visible before calling `ensure_top_item_visible'.
-			if is_show_requested then
-				type_selector.ensure_top_item_visible
+				-- Clear any existing items.
+			recent_projects_menu.wipe_out
+				-- Now make menu entries for the recent projects.
+			recent_projects := preferences.global_data.recent_projects_string
+			from
+				counter := 1
+			until
+				counter > recent_projects.count
+			loop
+				create recent_project_item.make_with_text (recent_projects.item (counter))
+				recent_project_item.select_actions.extend (agent open_named_project (
+					recent_project_item.text + operating_environment.Directory_separator.out + "build_project.bpr"))
+				recent_projects_menu.extend (recent_project_item)
+				counter := counter + 1
 			end
-				-- Now place tools within `multiple_split_area'.
-			multiple_split_area.extend (type_selector, type_selector.name)
-			multiple_split_area.customizeable_area_of_widget (type_selector).extend (type_selector.tool_bar)
-			multiple_split_area.extend (component_selector, component_selector.name)
-			multiple_split_area.customizeable_area_of_widget (component_selector).extend (component_selector.tool_bar)			
-			multiple_split_area.extend (widget_selector.widget, widget_selector.name)
-			multiple_split_area.customizeable_area_of_widget (widget_selector.widget).extend (widget_selector.tool_bar)
-			
-			initialize_split_areas
-			command_handler.update
+			if recent_projects_menu.is_empty then
+				recent_projects_menu.disable_sensitive
+			end
 		end
-		
 
 	show_tools is
 			-- Place tools in `Current'.
@@ -211,39 +159,27 @@ feature -- Basic operation
 				vertical_box.remove
 				vertical_box.put_left (tool_holder)
 				build_menu
-				
+
 					-- Ensure `recent_projects_menu' is sensitive.
 				recent_projects_menu.disable_sensitive
-				
+
 					-- Now restore from preferences
 				if horizontal_split_area.full then
 					set_split_position (horizontal_split_area, preferences.global_data.main_split_position)
 				end
 				initialize_tool_positions (preferences.global_data.tool_order)
 				initialize_external_tool_positions (preferences.global_data.external_tool_order)
-				
+
 					-- This will update the tool interface if `multiple_split_area' has no items contained,
 					-- effectively hiding `multiple_split_area'.
 				widget_removed_from_multiple_split_area
-		
+
 				unlock_update
-			end			
+			end
 		ensure
 			has_item: item /= Void
 		end
-		
-	hide_all_floating_tools is
-			-- Hide all windows displayed to `Current'.
-			-- i.e. display window, all floarint object editors etc etc.
-		do
-			command_handler.show_hide_builder_window_command.safe_disable_selected
-			command_handler.show_hide_component_viewer_command.safe_disable_selected
-			command_handler.show_hide_display_window_command.safe_disable_selected
-			command_handler.show_hide_history_command.safe_disable_selected
-			hide_external_tools
-			destroy_floating_editors
-		end	
-		
+
 	hide_tools is
 			-- Remove tools from `Current'.
 		require
@@ -255,7 +191,7 @@ feature -- Basic operation
 				-- Now store to preferences
 			preferences.global_data.main_split_position_preference.set_value (horizontal_split_area.split_position)
 			store_tool_positions
-			
+
 				-- Now unparent tools from `multiple_split_area'.
 			linear_rep := multiple_split_area.linear_representation.twin
 			from
@@ -290,54 +226,391 @@ feature -- Basic operation
 		ensure
 			has_item: item /= Void
 		end
-		
-	update_recent_projects is
-			-- Update contents of `recent_projects_menu' with all recent projects.
-		local
-			recent_projects: ARRAY [STRING]
-			recent_project_item: EV_MENU_ITEM
-			counter: INTEGER
-		do
-				-- Clear any existing items.
-			recent_projects_menu.wipe_out
-				-- Now make menu entries for the recent projects.
-			recent_projects := preferences.global_data.recent_projects_string
-			from
-				counter := 1
-			until
-				counter > recent_projects.count
-			loop
-				create recent_project_item.make_with_text (recent_projects.item (counter))
-				recent_project_item.select_actions.extend (agent open_named_project (
-					recent_project_item.text + operating_environment.Directory_separator.out + "build_project.bpr"))
-				recent_projects_menu.extend (recent_project_item)
-				counter := counter + 1
-			end
-			if recent_projects_menu.is_empty then
-				recent_projects_menu.disable_sensitive
-			end
-		end
-		
+
 	update_title is
 			-- Update title displayed in `Current' to include project location
 			-- if necessary.
 		local
 			temp_title: STRING
 		do
-			if system_status.project_modified then
+			if components.system_status.project_modified then
 				temp_title := "* "
 			else
 				temp_title := ""
 			end
-			if system_status.project_open then
+			if components.system_status.project_open then
 					-- No project location is displayed for the visual studio wizard.
-				temp_title.append ("EiffelBuild - " + system_status.current_project_settings.project_location)
+				temp_title.append ("EiffelBuild - " + components.system_status.current_project_settings.project_location)
 			else
 				temp_title.append ("EiffelBuild")
 			end
 			if not title.is_equal (temp_title) then
 				set_title (temp_title)
 			end
+		end
+
+	open_named_project (project_name: STRING) is
+			-- Open project named `project_name', which must include full path.
+		require
+			project_name_not_void: project_name /= Void
+		local
+			warning_dialog: EV_WARNING_DIALOG
+			raw_file: RAW_FILE
+		do
+			create raw_file.make (project_name)
+			if raw_file.exists then
+				components.commands.Open_project_command.execute_with_name (project_name)
+			else
+				create warning_dialog.make_with_text ("Unable to load the project, as the project file is missing.%N%NPlease restore the project file, before attempting to open this project again.")
+				warning_dialog.show_modal_to_window (Current)
+			end
+		ensure
+			-- Not possible to always guarantee this, as if problems are encountered with the
+			-- specified files, EiffelBuild must exit gracefully, with no open project.
+			--project_open: System_status.project_open
+		end
+
+	initialize_split_areas is
+			-- Set splitters to default positions.
+		do
+			if horizontal_split_area.full then
+				horizontal_split_area.set_split_position (Default_width_of_type_selector.max (horizontal_split_area.minimum_split_position))
+			end
+		end
+
+	initialize_menu is
+			-- Initialize menus.
+			-- Create menu items, and place in `menu_items'.
+		require
+			menus_not_initialized: menus_initialized = False
+		local
+			help_about, help_tip_of_day, file_exit: EV_MENU_ITEM
+			view_preferences, view_tools: EV_MENU
+			menu_separator: EV_MENU_SEPARATOR
+			menu_item: EV_MENU_ITEM
+		do
+				-- Initialize the file menu.
+			create file_menu.make_with_text (Gb_file_menu_text)
+			create menu_separator
+			file_menu.extend (components.commands.new_project_command.new_menu_item)
+			file_menu.extend (components.commands.open_project_command.new_menu_item)
+
+			create recent_projects_menu.make_with_text ("Recent Projects")
+			rebuild_recent_projects_menu
+			file_menu.extend (recent_projects_menu)
+			file_menu.extend (components.commands.import_project_command.new_menu_item)
+			file_menu.extend (create {EV_MENU_SEPARATOR})
+			file_menu.extend (components.commands.save_command.new_menu_item)
+			file_menu.extend (components.commands.close_project_command.new_menu_item)
+			file_menu.extend (menu_separator)
+			create file_exit.make_with_text (Gb_file_exit_menu_text)
+			file_menu.extend (file_exit)
+			file_exit.select_actions.extend (agent close_requested)
+
+				-- Initialize the view menu.
+			create view_menu.make_with_text (Gb_view_menu_text)
+			main_menu_bar.extend (view_menu)
+			create view_tools.make_with_text (Gb_view_tools_text)
+			view_menu.extend (view_tools)
+			view_tools.extend (components.commands.show_hide_builder_window_command.new_menu_item)
+			view_tools.extend (components.commands.show_hide_display_window_command.new_menu_item)
+			view_tools.extend (components.commands.show_hide_component_viewer_command.new_menu_item)
+			view_tools.extend (components.commands.show_hide_history_command.new_menu_item)
+			create menu_separator
+			view_menu.extend (menu_separator)
+			view_menu.extend (components.commands.expand_layout_tree_command.new_menu_item)
+			view_menu.extend (components.commands.collapse_layout_tree_command.new_menu_item)
+			create menu_separator
+			view_menu.extend (menu_separator)
+			create view_preferences.make_with_text (Gb_view_preferences_text)
+			view_menu.extend (view_preferences)
+
+
+			view_preferences.extend (components.commands.tools_always_on_top_command.new_menu_item)
+			create menu_item.make_with_text ("Preferences...")
+			menu_item.select_actions.extend (agent preferences.show_preference_window (Current))
+			view_preferences.extend (menu_item)
+
+				-- Initialize the project menu.
+			create project_menu.make_with_text (Gb_project_menu_text)
+			project_menu.extend (components.commands.project_settings_command.new_menu_item)
+			project_menu.extend (components.commands.generation_command.new_menu_item)
+
+				-- Initialize the help menu.
+			create help_menu.make_with_text (Gb_help_menu_text)
+			create help_about.make_with_text (Gb_help_about_menu_text)
+			help_menu.extend (help_about)
+			help_about.select_actions.extend (agent show_about_dialog)
+			help_menu.extend (create {EV_MENU_SEPARATOR})
+			create help_tip_of_day.make_with_text (Gb_help_tip_of_day_menu_text)
+			help_menu.extend (help_tip_of_day)
+			help_tip_of_day.select_actions.extend (agent show_tip_of_day)
+
+
+			assign_command_accelerators_to_window
+
+				-- Assign `True' to `menus_initialized'.
+			menus_initialized := True
+		end
+
+	build_menu is
+			-- Generate menu for `Current'.
+		require
+			menus_intitialized : menus_initialized
+		do
+			main_menu_bar.wipe_out
+			main_menu_bar.extend (file_menu)
+			if components.system_status.project_open then
+				main_menu_bar.extend (view_menu)
+				main_menu_bar.extend (project_menu)
+			end
+			main_menu_bar.extend (help_menu)
+		end
+
+	build_widget_structure (a_tool_holder: EV_VERTICAL_BOX) is
+			-- create and layout "widgets" within `Current'.
+			-- if `a_tool_holder' not Void then build widgets into
+			-- `a_tool_holder', else build widgets into `tool_holder'.
+		local
+			separator: EV_HORIZONTAL_SEPARATOR
+			horizontal_box: EV_HORIZONTAL_BOX
+			the_tool_holder: EV_VERTICAL_BOX
+			vertical_box: EV_VERTICAL_BOX
+			constructor_box: EV_HORIZONTAL_BOX
+			temp_tool_bar: EV_TOOL_BAR
+		do
+				-- Now we perform a large hack. In Wizard, mode, the
+				-- fourth state may be re-built, if we go back and change a setting
+				-- in another window. This means that the widget structure built in
+				-- "here", is still contained in another box. So we must now remove all
+				-- `once' controls, from their current parents, so thay can be rebuilt correctly
+				-- again.
+				-- Another fix would have to been modify some of the Wizard classes, but I chose not to
+				-- do this, as we want to modify as few library classes as possible, as it becomes
+				-- difficult to track. Therefore, the fix is here.
+			if tool_bar.parent /= Void then
+					check
+						parenting_consistent: components.tools.type_selector.parent /= Void and
+						components.tools.component_selector.parent /= Void and
+						components.tools.layout_constructor.parent /= Void and
+						components.object_editors.docked_object_editor.parent /= Void
+					end
+				tool_bar.parent.prune_all (tool_bar)
+				components.tools.type_selector.parent.prune_all (components.tools.type_selector)
+				components.tools.component_selector.parent.prune_all (components.tools.component_selector)
+				components.tools.layout_constructor.parent.prune_all (components.tools.layout_constructor)
+				components.object_editors.docked_object_editor.parent.prune_all (components.object_editors.docked_object_editor)
+			end
+
+			if a_tool_holder /= Void then
+				the_tool_holder := a_tool_holder
+			else
+				create tool_holder
+				the_tool_holder := tool_holder
+			end
+			create separator
+			the_tool_holder.extend (separator)
+			the_tool_holder.disable_item_expand (separator)
+			the_tool_holder.extend (tool_bar)
+			the_tool_holder.disable_item_expand (tool_bar)
+			create separator
+			the_tool_holder.extend (separator)
+			the_tool_holder.disable_item_expand (separator)
+			create horizontal_box
+			the_tool_holder.extend (horizontal_box)
+
+				-- Add the multiple split area, located to the left.
+			multiple_split_area.enable_top_widget_resizing
+			multiple_split_area.set_close_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_close @ 1)
+			multiple_split_area.set_maximize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
+			multiple_split_area.set_minimize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
+			multiple_split_area.set_restore_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)
+			multiple_split_area.docked_out_actions.force_extend (agent widget_removed_from_multiple_split_area)
+			multiple_split_area.docked_in_actions.force_extend (agent widget_inserted_into_multiple_split_area)
+
+			create constructor_box
+			create horizontal_split_area.make_with_tools (multiple_split_area, components.tools.layout_constructor, "Layout constructor")
+			create temp_tool_bar
+			temp_tool_bar.extend (components.commands.expand_layout_tree_command.tool_bar_button)
+			temp_tool_bar.extend (components.tools.Layout_constructor.view_object_button)
+			horizontal_split_area.tool_holder.add_command_tool_bar (temp_tool_bar)
+			horizontal_box.extend (horizontal_split_area)
+			horizontal_box.extend (components.object_editors.docked_object_editor)
+			horizontal_box.disable_item_expand (components.object_editors.docked_object_editor)
+
+			create vertical_box
+			extend (vertical_box)
+			create filler
+			vertical_box.extend (filler)
+			vertical_box.extend (status_bar)
+			vertical_box.disable_item_expand (status_bar)
+		end
+
+	widget_removed_from_multiple_split_area is
+			-- Respond to a widget being removed from `multiple_split_area'
+		local
+			split_area_parent: EV_HORIZONTAL_BOX
+			external_representation: ARRAYED_LIST [EV_WIDGET]
+			widget: EV_WIDGET
+		do
+				-- This loop is a bit of a hack, as we are re-setting the
+				-- icon for all external windows, each time that one is removed.
+				-- This is because there is currently no nice method of
+				-- knowing which widget was just removed.
+			external_representation := Multiple_split_area.external_representation
+			from
+				external_representation.start
+			until
+				external_representation.off
+			loop
+				widget := external_representation.item
+				parent_dialog (widget).set_icon_pixmap (Icon_build_window @ 1)
+				external_representation.forth
+			end
+
+			if multiple_split_area.count = 0 then
+				split_area_parent ?= horizontal_split_area.parent
+				if split_area_parent /= Void then
+						-- The non Void check is a hack to get around a bug in
+						-- `docked_out_actions' which is fired when you drag a
+						-- dockable item that is already external.
+					split_area_parent.prune_all (horizontal_split_area)
+					components.tools.Layout_constructor.parent.prune_all (components.tools.Layout_constructor)
+					split_area_parent.go_i_th (1)
+					split_area_parent.put_left (components.tools.layout_constructor)
+					multiple_split_area.parent.prune_all (multiple_split_area)
+				end
+			end
+		end
+
+	widget_inserted_into_multiple_split_area is
+			-- Respond to a widget being inserted into `multiple_split_area'.
+		local
+			layout_constructor_parent: EV_HORIZONTAL_BOX
+		do
+			if multiple_split_area.count = 1 then
+				layout_constructor_parent ?= components.tools.layout_constructor.parent
+				layout_constructor_parent.prune_all (components.tools.layout_constructor)
+				create horizontal_split_area.make_with_tools (multiple_split_area, components.tools.layout_constructor, "Layout constructor")
+				layout_constructor_parent.go_i_th (1)
+				layout_constructor_parent.put_left (horizontal_split_area)
+			end
+		end
+
+
+	status_bar: EV_VERTICAL_BOX is
+			-- `Result' is status bar displayed in `Current'.
+		local
+			padding_box: EV_HORIZONTAL_BOX
+			horizontal_box: EV_HORIZONTAL_BOX
+			frame: EV_FRAME
+		once
+			create Result
+			create horizontal_box
+			create frame
+			horizontal_box.extend (frame)
+			frame.set_style (1)
+			create padding_box
+			padding_box.set_minimum_height (2)
+			Result.extend (padding_box)
+			Result.disable_item_expand (padding_box)
+			Result.extend (horizontal_box)
+			Result.disable_item_expand (horizontal_box)
+			frame.extend (components.status_bar.widget)
+			frame.set_minimum_height (frame.minimum_height + 3)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+
+	tool_bar: EV_TOOL_BAR is
+			-- Tool bar of `Current'.
+		local
+			separator: EV_TOOL_BAR_SEPARATOR
+		once
+			create Result
+			Result.extend (components.commands.delete_object_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.save_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.object_editor_command.new_toolbar_item (True, False))
+			create separator
+			Result.extend (separator)
+			Result.extend (components.commands.undo_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.show_hide_history_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.redo_command.new_toolbar_item (True, False))
+			create separator
+			Result.extend (separator)
+			Result.extend (components.commands.generation_command.new_toolbar_item (True, False))
+			create separator
+			Result.extend (separator)
+			Result.extend (components.commands.project_settings_command.new_toolbar_item (True, False))
+
+			Result.extend (components.commands.show_hide_builder_window_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.show_hide_display_window_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.show_hide_component_viewer_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.show_hide_constants_dialog_command.new_toolbar_item (True, False))
+			Result.pointer_button_press_actions.force_extend (agent enter_debug_mode)
+			Result.pointer_leave_actions.extend (agent clear_debug_mode_entry)
+			create separator
+			Result.extend (separator)
+			Result.extend (components.commands.cut_object_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.copy_object_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.paste_object_command.new_toolbar_item (True, False))
+			Result.extend (components.commands.clipboard_command.new_toolbar_item (True, False))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	show_about_dialog is
+			-- Display an about dialog.
+		local
+			about_dialog: GB_ABOUT_DIALOG
+		do
+			create about_dialog.make
+			about_dialog.show_modal_to_window (Current)
+		end
+
+	disable_menus is
+			-- Ensure all items of `main_menu_bar' are disabled.
+		do
+			if main_menu_bar /= Void then
+				main_menu_bar.do_all (agent update_menu_sensitivity (?, False))
+			end
+		end
+
+	enable_menus is
+			-- Ensure all items of `main_menu_bar' are enabled.
+		do
+			if main_menu_bar /= Void then
+				main_menu_bar.do_all (agent update_menu_sensitivity (?, True))
+			end
+		end
+
+	build_interface is
+			-- Create user interface in `Current'.
+		do
+			set_title (Product_name)
+				-- Initialize the menu bar for `Current'.
+			create main_menu_bar
+			set_menu_bar (main_menu_bar)
+				-- Initialize menu
+			initialize_menu
+				-- Build the menu
+			build_menu
+				-- Build the tools and other widgets within `Current'.
+			build_widget_structure (Void)
+			set_minimum_size (640, 480)
+			set_width (preferences.global_data.build_window_width)
+			set_height (preferences.global_data.build_window_height)
+			set_x_position (preferences.global_data.build_window_x_position)
+			set_y_position (preferences.global_data.build_window_y_position)
+
+				-- Register an event that clips recent projects with the preferences.
+				-- This permits the update of particular properties in the system after a preferences
+				-- value has changed.
+--			Preferences.register_preference_window_post_display_event (agent clip_recent_projects)
+
+				-- When an attempt to close `Current' is made, call `close_requested'.
+			close_request_actions.extend (agent close_requested)
 		end
 
 	smart_disable_sensitive is
@@ -363,7 +636,7 @@ feature -- Basic operation
 				menu_bar.forth
 			end
 		end
-		
+
 	smart_enable_sensitive is
 			-- Enable all contents of `Current', except the status bar.
 		local
@@ -388,388 +661,6 @@ feature -- Basic operation
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	open_named_project (project_name: STRING) is
-			-- Open project named `project_name', which must include full path.
-		require
-			project_name_not_void: project_name /= Void
-		local
-			warning_dialog: EV_WARNING_DIALOG
-			raw_file: RAW_FILE
-		do
-			create raw_file.make (project_name)
-			if raw_file.exists then
-				command_handler.Open_project_command.execute_with_name (project_name)
-			else
-				create warning_dialog.make_with_text ("Unable to load the project, as the project file is missing.%N%NPlease restore the project file, before attempting to open this project again.")
-				warning_dialog.show_modal_to_window (Current)
-			end
-		ensure
-			-- Not possible to always guarantee this, as if problems are encountered with the
-			-- specified files, EiffelBuild must exit gracefully, with no open project.
-			--project_open: System_status.project_open
-		end
-	
-	initialize_split_areas is
-			-- Set splitters to default positions.
-		do
-			if horizontal_split_area.full then
-				horizontal_split_area.set_split_position (Default_width_of_type_selector.max (horizontal_split_area.minimum_split_position))
-			end
-		end
-
-	initialize_menu is
-			-- Initialize menus.
-			-- Create menu items, and place in `menu_items'.
-		require
-			menus_not_initialized: menus_initialized = False
-		local
-			help_about, help_tip_of_day, file_exit: EV_MENU_ITEM
-			view_preferences, view_tools: EV_MENU
-			menu_separator: EV_MENU_SEPARATOR
-			menu_item: EV_MENU_ITEM
-		do
-				-- Initialize the file menu.
-			create file_menu.make_with_text (Gb_file_menu_text)
-			create menu_separator
-			file_menu.extend (command_handler.new_project_command.new_menu_item)
-			file_menu.extend (command_handler.open_project_command.new_menu_item)
-			
-			create recent_projects_menu.make_with_text ("Recent Projects")
-			update_recent_projects
-			file_menu.extend (recent_projects_menu)
-			file_menu.extend (command_handler.import_project_command.new_menu_item)
-			file_menu.extend (create {EV_MENU_SEPARATOR})
-			file_menu.extend (command_handler.save_command.new_menu_item)
-			file_menu.extend (command_handler.close_project_command.new_menu_item)
-			file_menu.extend (menu_separator)
-			create file_exit.make_with_text (Gb_file_exit_menu_text)
-			file_menu.extend (file_exit)
-			file_exit.select_actions.extend (agent close_requested)
-
-				-- Initialize the view menu.
-			create view_menu.make_with_text (Gb_view_menu_text)
-			main_menu_bar.extend (view_menu)
-			create view_tools.make_with_text (Gb_view_tools_text)
-			view_menu.extend (view_tools)
-			view_tools.extend (command_handler.show_hide_builder_window_command.new_menu_item)
-			view_tools.extend (command_handler.show_hide_display_window_command.new_menu_item)
-			view_tools.extend (command_handler.show_hide_component_viewer_command.new_menu_item)
-			view_tools.extend (command_handler.show_hide_history_command.new_menu_item)
-			create menu_separator
-			view_menu.extend (menu_separator)
-			view_menu.extend (command_handler.expand_layout_tree_command.new_menu_item)
-			view_menu.extend (command_handler.collapse_layout_tree_command.new_menu_item)
-			create menu_separator
-			view_menu.extend (menu_separator)
-			create view_preferences.make_with_text (Gb_view_preferences_text)
-			view_menu.extend (view_preferences)
-			
-			
-			view_preferences.extend (command_handler.tools_always_on_top_command.new_menu_item)
-			create menu_item.make_with_text ("Preferences...")
-			menu_item.select_actions.extend (agent preferences.show_preference_window (Current))
-			view_preferences.extend (menu_item)
-
-				-- Initialize the project menu.
-			create project_menu.make_with_text (Gb_project_menu_text)
-			project_menu.extend (command_handler.project_settings_command.new_menu_item)
-			project_menu.extend (command_handler.generation_command.new_menu_item)		
-			
-				-- Initialize the help menu.
-			create help_menu.make_with_text (Gb_help_menu_text)
-			create help_about.make_with_text (Gb_help_about_menu_text)
-			help_menu.extend (help_about)
-			help_about.select_actions.extend (agent show_about_dialog)
-			help_menu.extend (create {EV_MENU_SEPARATOR})
-			create help_tip_of_day.make_with_text (Gb_help_tip_of_day_menu_text)
-			help_menu.extend (help_tip_of_day)
-			help_tip_of_day.select_actions.extend (agent show_tip_of_day)
-			
-			
-			assign_command_accelerators_to_window
-				
-				-- Assign `True' to `menus_initialized'.
-			menus_initialized := True
-		end	
-
-	build_menu is
-			-- Generate menu for `Current'.
-		require
-			menus_intitialized : menus_initialized
-		do
-			main_menu_bar.wipe_out
-			main_menu_bar.extend (file_menu)	
-			if system_status.project_open then
-				main_menu_bar.extend (view_menu)
-				main_menu_bar.extend (project_menu)	
-			end
-			main_menu_bar.extend (help_menu)
-		end
-	
-	build_widget_structure (a_tool_holder: EV_VERTICAL_BOX) is
-			-- create and layout "widgets" within `Current'.
-			-- if `a_tool_holder' not Void then build widgets into
-			-- `a_tool_holder', else build widgets into `tool_holder'.
-		local
-			separator: EV_HORIZONTAL_SEPARATOR
-			horizontal_box: EV_HORIZONTAL_BOX
-			the_tool_holder: EV_VERTICAL_BOX
-			vertical_box: EV_VERTICAL_BOX
-			constructor_box: EV_HORIZONTAL_BOX
-			temp_tool_bar: EV_TOOL_BAR
-		do
-				-- Now we perform a large hack. In Wizard, mode, the
-				-- fourth state may be re-built, if we go back and change a setting
-				-- in another window. This means that the widget structure built in
-				-- "here", is still contained in another box. So we must now remove all
-				-- `once' controls, from their current parents, so thay can be rebuilt correctly
-				-- again.
-				-- Another fix would have to been modify some of the Wizard classes, but I chose not to
-				-- do this, as we want to modify as few library classes as possible, as it becomes
-				-- difficult to track. Therefore, the fix is here.
-			if tool_bar.parent /= Void then
-					check
-						parenting_consistent: type_selector.parent /= Void and
-						component_selector.parent /= Void and
-						layout_constructor.parent /= Void and
-						docked_object_editor.parent /= Void
-					end
-				tool_bar.parent.prune_all (tool_bar)
-				type_selector.parent.prune_all (type_selector)
-				component_selector.parent.prune_all (component_selector)
-				layout_constructor.parent.prune_all (layout_constructor)
-				docked_object_editor.parent.prune_all (docked_object_editor)
-			end
-
-			if a_tool_holder /= Void then
-				the_tool_holder := a_tool_holder
-			else
-				create tool_holder
-				the_tool_holder := tool_holder
-			end
-			create separator
-			the_tool_holder.extend (separator)
-			the_tool_holder.disable_item_expand (separator)
-			the_tool_holder.extend (tool_bar)
-			the_tool_holder.disable_item_expand (tool_bar)
-			create separator
-			the_tool_holder.extend (separator)
-			the_tool_holder.disable_item_expand (separator)
-			create horizontal_box
-			the_tool_holder.extend (horizontal_box)
-			
-				-- Add the multiple split area, located to the left.
-			multiple_split_area.enable_top_widget_resizing
-			multiple_split_area.set_close_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_close @ 1)
-			multiple_split_area.set_maximize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
-			multiple_split_area.set_minimize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
-			multiple_split_area.set_restore_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)
-			multiple_split_area.docked_out_actions.force_extend (agent widget_removed_from_multiple_split_area)
-			multiple_split_area.docked_in_actions.force_extend (agent widget_inserted_into_multiple_split_area)
-
-			create constructor_box
-			create horizontal_split_area.make_with_tools (multiple_split_area, layout_constructor, "Layout constructor")
-			create temp_tool_bar
-			temp_tool_bar.extend (Command_handler.Expand_layout_tree_command.tool_bar_button)
-			temp_tool_bar.extend (Layout_constructor.view_object_button)
-			horizontal_split_area.tool_holder.add_command_tool_bar (temp_tool_bar)
-			horizontal_box.extend (horizontal_split_area)
-			horizontal_box.extend (docked_object_editor)
-			horizontal_box.disable_item_expand (docked_object_editor)
-			
-			create vertical_box
-			extend (vertical_box)
-			create filler
-			vertical_box.extend (filler)
-			vertical_box.extend (status_bar)
-			vertical_box.disable_item_expand (status_bar)
-		end
-		
-	widget_removed_from_multiple_split_area is
-			-- Respond to a widget being removed from `multiple_split_area'
-		local
-			split_area_parent: EV_HORIZONTAL_BOX
-			external_representation: ARRAYED_LIST [EV_WIDGET]
-			widget: EV_WIDGET
-		do
-				-- This loop is a bit of a hack, as we are re-setting the
-				-- icon for all external windows, each time that one is removed.
-				-- This is because there is currently no nice method of
-				-- knowing which widget was just removed.
-			external_representation := Multiple_split_area.external_representation
-			from
-				external_representation.start
-			until
-				external_representation.off
-			loop
-				widget := external_representation.item
-				parent_dialog (widget).set_icon_pixmap (Icon_build_window @ 1)
-				external_representation.forth
-			end
-			
-			if multiple_split_area.count = 0 then
-				split_area_parent ?= horizontal_split_area.parent
-				if split_area_parent /= Void then
-						-- The non Void check is a hack to get around a bug in
-						-- `docked_out_actions' which is fired when you drag a
-						-- dockable item that is already external.
-					split_area_parent.prune_all (horizontal_split_area)
-					Layout_constructor.parent.prune_all (Layout_constructor)
-					split_area_parent.go_i_th (1)
-					split_area_parent.put_left (layout_constructor)
-					multiple_split_area.parent.prune_all (multiple_split_area)
-				end
-			end
-		end
-	
-	widget_inserted_into_multiple_split_area is
-			-- Respond to a widget being inserted into `multiple_split_area'.
-		local
-			layout_constructor_parent: EV_HORIZONTAL_BOX
-		do
-			if multiple_split_area.count = 1 then
-				layout_constructor_parent ?= layout_constructor.parent
-				layout_constructor_parent.prune_all (layout_constructor)
-				create horizontal_split_area.make_with_tools (multiple_split_area, layout_constructor, "Layout constructor")
-				layout_constructor_parent.go_i_th (1)
-				layout_constructor_parent.put_left (horizontal_split_area)
-			end
-		end
-		
-		
-	status_bar: EV_VERTICAL_BOX is
-			-- `Result' is status bar displayed in `Current'.
-		local
-			padding_box: EV_HORIZONTAL_BOX
-			horizontal_box: EV_HORIZONTAL_BOX
-			frame: EV_FRAME
-		once
-			create Result
-			create horizontal_box
-			create frame
-			horizontal_box.extend (frame)
-			frame.set_style (1)
-			create padding_box
-			padding_box.set_minimum_height (2)
-			Result.extend (padding_box)
-			Result.disable_item_expand (padding_box)
-			Result.extend (horizontal_box)
-			Result.disable_item_expand (horizontal_box)
-			frame.extend (status_bar_label)
-			frame.set_minimum_height (frame.minimum_height + 3)
-		ensure
-			result_not_void: Result /= Void
-		end
-		
-
-	tool_bar: EV_TOOL_BAR is
-			-- Tool bar of `Current'.
-		local
-			separator: EV_TOOL_BAR_SEPARATOR
-		once
-			create Result
-			Result.extend (command_handler.delete_object_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.save_command.new_toolbar_item (True, False))	
-			Result.extend (command_handler.object_editor_command.new_toolbar_item (True, False))
-			create separator
-			Result.extend (separator)
-			Result.extend (command_handler.undo_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.show_hide_history_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.redo_command.new_toolbar_item (True, False))
-			create separator
-			Result.extend (separator)
-			Result.extend (command_handler.generation_command.new_toolbar_item (True, False))		
-			create separator
-			Result.extend (separator)
-			Result.extend (command_handler.project_settings_command.new_toolbar_item (True, False))
-			
-			Result.extend (command_handler.show_hide_builder_window_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.show_hide_display_window_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.show_hide_component_viewer_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.show_hide_constants_dialog_command.new_toolbar_item (True, False))
-			Result.pointer_button_press_actions.force_extend (agent enter_debug_mode)
-			Result.pointer_leave_actions.extend (agent clear_debug_mode_entry)
-			create separator
-			Result.extend (separator)
-			Result.extend (command_handler.cut_object_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.copy_object_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.paste_object_command.new_toolbar_item (True, False))
-			Result.extend (command_handler.clipboard_command.new_toolbar_item (True, False))
-		ensure
-			Result_not_void: Result /= Void
-		end
-		
-	show_about_dialog is
-			-- Display an about dialog.
-		local
-			about_dialog: GB_ABOUT_DIALOG
-		do
-			create about_dialog.make
-			about_dialog.show_modal_to_window (Current)
-		end
-		
-feature {GB_XML_HANDLER} -- Implementation
-
-	disable_menus is
-			-- Ensure all items of `main_menu_bar' are disabled.
-		do
-			if main_menu_bar /= Void then
-				main_menu_bar.do_all (agent update_menu_sensitivity (?, False))
-			end
-		end
-		
-	enable_menus is
-			-- Ensure all items of `main_menu_bar' are enabled.
-		do
-			if main_menu_bar /= Void then
-				main_menu_bar.do_all (agent update_menu_sensitivity (?, True))
-			end
-		end
-		
-feature {WIZARD_STATE_WINDOW}
-
-	hide_external_tools is
-			-- Hide all tools external to `multiple_split_area'.
-		local
-			external_tools: ARRAYED_LIST [EV_WIDGET]
-			dialog: EV_DIALOG
-		do
-			external_tools := Multiple_split_area.external_representation
-			from
-				external_tools.start
-			until
-				external_tools.off
-			loop
-				dialog := parent_dialog (external_tools.item)
-					-- There appears to be a bug where showing a window again
-					-- will not restore it to its last actual position unless
-					-- `set_position' has been called explicitly.
-				dialog.set_position (dialog.x_position, dialog.y_position)
-				dialog.hide
-				external_tools.forth
-			end
-		end
-		
-	show_external_tools (a_window: EV_TITLED_WINDOW) is
-			-- Show all tools external to `multiple_split_area', relative to `a_window'.
-		local
-			external_tools: ARRAYED_LIST [EV_WIDGET]
-		do
-			external_tools := Multiple_split_area.external_representation
-			from
-				external_tools.start
-			until
-				external_tools.off
-			loop
-				parent_dialog (external_tools.item).show_relative_to_window (a_window)
-				external_tools.forth
-			end
-		end
-
-feature {NONE} -- Implementation
-
 	update_menu_sensitivity (a_menu_item: EV_MENU_ITEM; enabled: BOOLEAN) is
 			-- Update sensitive state of `a_menu_item', to `enabled'.
 		require
@@ -785,7 +676,7 @@ feature {NONE} -- Implementation
 	show_tip_of_day is
 			-- Display tip of day dialog.
 		do
-			(create {GB_TIP_OF_THE_DAY_DIALOG}).show_modal_and_centered_to_window (main_window)
+			components.tools.tip_of_the_day_dialog.show_modal_and_centered_to_window (components.tools.main_window)
 		end
 
 	initialize_tool_positions (info: ARRAY [STRING]) is
@@ -818,11 +709,11 @@ feature {NONE} -- Implementation
 				index := info_string.index_of ('_', 1)
 				tool_name := info_string.substring (1, index - 1)
 				info_string := info_string.substring (index + 1, info_string.count)
-				
+
 				index := info_string.index_of ('_', 1)
 				state := info_string.substring (1, index - 1)
 				if state.is_equal ("maximized") then
-					maximized_index := counter					
+					maximized_index := counter
 				end
 				if state.is_equal ("minimized") then
 					minimized_items.extend (True)
@@ -830,17 +721,17 @@ feature {NONE} -- Implementation
 					minimized_items.extend (False)
 				end
 				info_string := info_string.substring (index + 1, info_string.count)
-				
+
 				index := info_string.index_of ('_', 1)
 				stored_heights.extend (info_string.substring (1, index - 1).to_integer)
 				info_string := info_string.substring (index + 1, info_string.count)
-				
+
 				index := info_string.index_of ('_', 1)
 				stored_widths.extend (info_string.to_integer)
 				info_string := info_string.substring (index + 1, info_string.count)
-				
-				
-				storable_tool := tool_by_name (tool_name)
+
+
+				storable_tool := components.tools.tool_by_name (tool_name)
 				tool ?= storable_tool.as_widget
 				check
 					tool_was_widget: tool /= Void
@@ -881,7 +772,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	initialize_external_tool_positions (info: ARRAY [STRING]) is
 			-- Initialize external tools of `multiple_split_area', based on `info'.
 		require
@@ -890,7 +781,7 @@ feature {NONE} -- Implementation
 			tool_name, info_string: STRING
 			index, an_x, a_y, a_width, a_height, counter, a_position: INTEGER
 			tool: EV_WIDGET
-			storable_tool: GB_STORABLE_TOOL		
+			storable_tool: GB_STORABLE_TOOL
 		do
 			from
 				counter := 1
@@ -898,31 +789,31 @@ feature {NONE} -- Implementation
 				counter > info.count
 			loop
 				info_string := info @ counter
-				
+
 				index := info_string.index_of ('_', 1)
 				tool_name := info_string.substring (1, index - 1)
 				info_string := info_string.substring (index + 1, info_string.count)
-				
+
 				index := info_string.index_of ('_', 1)
 				an_x := info_string.substring (1, index - 1).to_integer
 				info_string := info_string.substring (index + 1, info_string.count)
-				
+
 				index := info_string.index_of ('_', 1)
 				a_y := info_string.substring (1, index - 1).to_integer
 				info_string := info_string.substring (index + 1, info_string.count)
-				
+
 				index := info_string.index_of ('_', 1)
 				a_width := info_string.substring (1, index - 1).to_integer
 				info_string := info_string.substring (index + 1, info_string.count)
-				
+
 				index := info_string.index_of ('_', 1)
 				a_height :=  info_string.substring (1, index - 1).to_integer
 				info_string := info_string.substring (index + 1, info_string.count)
-				
+
 				a_position := info_string.to_integer
 
-				tool := tool_by_name (tool_name).as_widget
-				storable_tool := tool_by_name (tool_name)
+				tool := components.tools.tool_by_name (tool_name).as_widget
+				storable_tool := components.tools.tool_by_name (tool_name)
 					-- Remove `tool' from its parent if any.
 				if tool.parent /= Void then
 					tool.parent.prune_all (tool)
@@ -933,8 +824,8 @@ feature {NONE} -- Implementation
 				multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)
 				counter := counter + 1
 			end
-		end	
-		
+		end
+
 	store_tool_positions is
 			-- Store positions of all tools in `multiple_split_area'
 			-- into preferences.
@@ -963,11 +854,11 @@ feature {NONE} -- Implementation
 			until
 				linear_rep.off
 			loop
-				storable_tool := tool_by_widget (linear_rep.item)
+				storable_tool := components.tools.tool_by_widget (linear_rep.item)
 				check
 					widget_was_storable_tool: storable_tool /= Void
 				end
-				output := storable_name_by_tool (storable_tool)
+				output := components.tools.storable_name_by_tool (storable_tool)
 				output := output + "_"
 				if multiple_split_area.is_item_maximized (linear_rep.item) then
 					output := output + "maximized"
@@ -984,39 +875,39 @@ feature {NONE} -- Implementation
 			preferences.global_data.tool_order_preference.set_value (info)
 			linear_rep := multiple_split_area.external_representation.twin
 			create info.make (1, linear_rep.count)
-			from	
-				linear_rep.start				
+			from
+				linear_rep.start
 			until
 				linear_rep.off
 			loop
-				storable_tool ?= tool_by_widget (linear_rep.item)
+				storable_tool ?= components.tools.tool_by_widget (linear_rep.item)
 				check
 					widget_was_storable_tool: storable_tool /= Void
 				end
-				output := storable_name_by_tool (storable_tool)
+				output := components.tools.storable_name_by_tool (storable_tool)
 				a_dialog ?= parent_dialog (linear_rep.item)
 				check
 					dialog_not_void: a_dialog /= Void
 				end
-				
+
 				output := output + "_" + a_dialog.x_position.out
 				output := output + "_" + a_dialog.y_position.out
 				output := output + "_" + a_dialog.width.out
 				output := output + "_" + a_dialog.height.out
-				output := output + "_" + Multiple_split_area.original_index_of_external_item (linear_rep.item).out
+				output := output + "_" + multiple_split_area.original_index_of_external_item (linear_rep.item).out
 				info.put (output, linear_rep.index)
 				linear_rep.forth
 			end
 			preferences.global_data.external_tool_order_preference.set_value (info)
 		end
-		
+
 	assign_command_accelerators_to_window is
 			-- For all command accelerators,
 			-- add them to the accelerators of `Current'.
 		local
 			local_commands: ARRAYED_LIST [GB_STANDARD_CMD]
 		do
-			local_commands := command_handler.all_standard_commands
+			local_commands := components.commands.all_standard_commands
 			from
 				local_commands.start
 			until
@@ -1029,7 +920,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	close_requested is 
+	close_requested is
 			-- End the current application.
 		local
 			question: EV_QUESTION_DIALOG
@@ -1037,7 +928,7 @@ feature {NONE} -- Implementation
 			constants: EV_DIALOG_CONSTANTS
 		do
 			create constants
-			if system_status.project_modified then
+			if components.system_status.project_modified then
 				create question.make_with_text (Exit_save_warning)
 				question.show_modal_to_window (Current)
 				if question.selected_button.is_equal (constants.ev_yes) then
@@ -1056,22 +947,21 @@ feature {NONE} -- Implementation
 --				end
 			end
 			if must_save then
-				command_handler.save_command.execute
+				components.commands.save_command.execute
 			end
 			if must_exit then
-				if System_status.project_open then
+				if components.System_status.project_open then
 					add_project_to_recent_projects
-					update_recent_projects
 						-- Now store to preferences, but only if the project is open.
 						-- If it is closed, these preferences will have already been saved
 						-- at the point the project was closed, as they are subsequently hidden.
 					preferences.global_data.main_split_position_preference.set_value (horizontal_split_area.split_position)
 					store_tool_positions
 				end
-				
+
 					-- Save all the user generated components.
-				xml_handler.save_components
-				
+				components.xml_handler.save_components
+
 					-- Now store current window settings into preferences.
 				preferences.global_data.build_window_width_preference.set_value (width)
 				preferences.global_data.build_window_height_preference.set_value (height)
@@ -1079,38 +969,41 @@ feature {NONE} -- Implementation
 				preferences.global_data.build_window_y_position_preference.set_value (y_position)
 
 					-- Actually save the preferences.
-				preferences.preferences.save_resources;				
-				
+				preferences.preferences.save_resources;
+
 					-- Destroy the application.
 				application.destroy
 			end
 		end
-		
+
 	tool_holder: EV_VERTICAL_BOX
 		-- Holds all the tools to be placed in `Current'.
-			
+
 	filler: EV_TREE
 		-- To be placed in `Current' when we do not want
 		-- the tools to be available.
-		
+
 	main_menu_bar: EV_MENU_BAR
 		-- The menu bar of `Current'.
-		
+
 	file_menu, project_menu, view_menu, help_menu: EV_MENU
 		-- Top level menus used in `Current'.
-		
+
 	recent_projects_menu: EV_MENU
 		-- Menu for recent project entries.
-		
+
 	menus_initialized: BOOLEAN
 		-- Has `initialize_menus' been called?
-		
+
 	horizontal_split_area: GB_HORIZONTAL_SPLIT_AREA_TOOL_HOLDER
 		-- Horizontal split area holding main tools.
-		
+
 	vertical_split_area: GB_VERTICAL_SPLIT_AREA_TOOL_HOLDER
 		-- Vertical split area holding main tools.
-		
+
+	multiple_split_area: MULTIPLE_SPLIT_AREA
+			-- `Result' is multiple slit area to hold tools.
+
 feature {NONE} -- Debugging Implementation
 
 	add_debug_shortcuts is
@@ -1131,25 +1024,25 @@ feature {NONE} -- Debugging Implementation
 			accelerator.actions.extend (agent check_nesting)
 			accelerators.extend (accelerator)
 		end
-		
+
 	check_nesting is
 			-- Check the nesting structures of all top level objects in `Current'.
 		local
 			checker: GB_NESTING_CHECKER
 		do
-			create checker
+			create checker.make_with_components (components)
 			checker.check_nesting
 		end
 
 	full_garbage_collect is
 			-- Perform a full garbage collection
 		do
-			if system_status.is_in_debug_mode then
+			if components.system_status.is_in_debug_mode then
 				collect
 				full_collect
 			end
 		end
-		
+
 	write_all_objects is
 			-- Display memory info to files on disk, named sequentially.
 		local
@@ -1160,11 +1053,11 @@ feature {NONE} -- Debugging Implementation
 			current_object: GB_OBJECT
 			object_counter: INTEGER
 		do
-			if system_status.is_in_debug_mode then
+			if components.system_status.is_in_debug_mode then
 				objects_file_count.set_item (objects_file_count.item + 1)
-				all_objects := (create {GB_SHARED_OBJECT_HANDLER}).object_handler.objects
+				all_objects := components.object_handler.objects
 				output := ""
-				
+
 				from
 					object_counter := 1
 				until
@@ -1187,9 +1080,9 @@ feature {NONE} -- Debugging Implementation
 						end
 						output.append ("%N")
 					end
-					object_counter := object_counter + 1				
+					object_counter := object_counter + 1
 				end
-								
+
 				create directory.make ("C:\Documents and Settings\rogers\Desktop\")
 				if directory.exists then
 					create file.make_create_read_write ("C:\Documents and Settings\rogers\Desktop\Build_referers" + objects_file_count.item.out + ".txt")
@@ -1200,7 +1093,7 @@ feature {NONE} -- Debugging Implementation
 				file.close
 			end
 		end
-		
+
 	mem_info is
 			-- Display memory info to files on disk, named sequentially.
 		local
@@ -1210,7 +1103,7 @@ feature {NONE} -- Debugging Implementation
 			file: PLAIN_TEXT_FILE
 			directory: DIRECTORY
 		do
-			if system_status.is_in_debug_mode then
+			if components.system_status.is_in_debug_mode then
 				file_count.set_item (file_count.item + 1)
 				collect
 				full_collect
@@ -1235,19 +1128,19 @@ feature {NONE} -- Debugging Implementation
 				file.close
 			end
 		end
-		
+
 	file_count: INTEGER_REF is
 			-- Count used to append to end of file name for `mem_info' output.
 		once
 			create Result
 		end
-		
+
 	objects_file_count: INTEGER_REF is
 			-- Count used to append to end of file name for `write_all_objects' output.
 		once
 			create Result
 		end
-		
+
 	enter_debug_mode (an_x, a_y, a_button: INTEGER) is
 			-- Record mouse input and enter debug mode if buttons pressed in certain order.
 		do
@@ -1258,22 +1151,22 @@ feature {NONE} -- Debugging Implementation
 				debug_entry_key.append (a_button.out)
 			end
 			if debug_entry_key.is_equal ("131311") then
-				set_timed_status_text ("Debug mode entered")
-				system_status.enable_debug_mode
+				components.status_bar.set_timed_status_text ("Debug mode entered")
+				components.system_status.enable_debug_mode
 			end
 		end
-		
+
 	clear_debug_mode_entry is
 			-- Reset the current debug entry record.
 		do
 			debug_entry_key := ""
 		end
-		
+
 	debug_entry_key: STRING
 		-- The current key for entering debug mode.
 
 invariant
-	
+
 	menus_initalized_so_top_level_menu_items_not_void: menus_initialized implies file_menu /= Void
 		and project_menu /= Void and view_menu /= Void and help_menu /= Void
 

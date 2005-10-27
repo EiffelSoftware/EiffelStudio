@@ -25,18 +25,18 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create value_entry.make (Current, Result, value_string, gb_ev_gauge_value, gb_ev_gauge_value_tooltip,
-				agent set_value (?), agent valid_value (?))
+				agent set_value (?), agent valid_value (?), components)
 			create step_entry.make (Current, Result, step_string, gb_ev_gauge_step, gb_ev_gauge_step_tooltip,
-				agent set_step (?), agent positive_value (?))
+				agent set_step (?), agent positive_value (?), components)
 			create leap_entry.make (Current, Result, leap_string, gb_ev_gauge_leap, gb_ev_gauge_leap_tooltip,
-				agent set_leap (?), agent positive_value (?))
+				agent set_leap (?), agent positive_value (?), components)
 			create upper_entry.make (Current, Result, upper_string, gb_ev_gauge_upper, gb_ev_gauge_upper_tooltip,
-				agent set_upper (?), agent valid_upper (?))
+				agent set_upper (?), agent valid_upper (?), components)
 			create lower_entry.make (Current, Result, lower_string, gb_ev_gauge_lower, gb_ev_gauge_lower_tooltip,
-				agent set_lower (?), agent valid_lower (?))
+				agent set_lower (?), agent valid_lower (?), components)
 			
 			update_attribute_editor
 			

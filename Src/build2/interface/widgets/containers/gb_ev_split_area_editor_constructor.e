@@ -30,7 +30,7 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (result)
 			create first_expanded.make_with_text ("Is first expanded?")
 

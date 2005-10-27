@@ -10,41 +10,43 @@ class
 
 inherit
 	GB_SYSTEM_WINDOW_IMP
-	
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		undefine
-			default_create, copy, is_equal
-		end
-		
+
 	GB_NAMING_UTILITIES
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_CONSTANTS
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	EIFFEL_RESERVED_WORDS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
-		
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -54,14 +56,14 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			display_project_information
 				-- Set up default buttons.
 			set_default_cancel_button (cancel_button)
-			
+
 				-- Closing window
 			close_request_actions.wipe_out
 			close_request_actions.put_front (agent cancel_pressed)
 			show_actions.extend (agent set_focus_to_notebook)
+			show_actions.extend (agent display_project_information)
 		end
 
 feature {NONE} -- Events
@@ -71,7 +73,7 @@ feature {NONE} -- Events
 		do
 			attribute_class_box.disable_sensitive
 		end
-	
+
 	attributes_class_selected is
 			-- Called by `select_actions' of `attributes_class_check_button'.
 		do
@@ -103,10 +105,10 @@ feature {NONE} -- Events
 					-- settings.
 				store_project_information
 					-- Save the current project settings to disk.
-				system_status.current_project_settings.save
+				components.system_status.current_project_settings.save
 				hide
 			end
-			command_handler.update
+			components.commands.update
 		end
 
 
@@ -114,9 +116,9 @@ feature {NONE} -- Events
 			-- Called by `select_actions' of `cancel_button'.
 		do
 			hide
-			command_handler.update
+			components.commands.update
 		end
-		
+
 	generate_to_current_project_location_radio_button_selected is
 			-- Called by `select_actions' of `generate_to_current_project_location_radio_button'.
 		do
@@ -125,7 +127,7 @@ feature {NONE} -- Events
 				-- Now set the generation location back to empty.
 			project_settings.set_generation_location ("")
 		end
-	
+
 	generate_to_specified_location_radio_button_selected is
 			-- Called by `select_actions' of `generate_to_specified_location_radio_button'.
 		do
@@ -134,7 +136,7 @@ feature {NONE} -- Events
 				-- Now set the generation location to the contents of `generation_location_display'.
 			project_settings.set_generation_location (generation_location_display.text)
 		end
-	
+
 	browse_for_generation_location_button_selected is
 			-- Called by `select_actions' of `browse_for_generation_location_button'.
 		local
@@ -147,7 +149,7 @@ feature {NONE} -- Events
 				generation_location_display.set_tooltip (generation_location_display.text)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	display_project_information is
@@ -155,12 +157,12 @@ feature {NONE} -- Implementation
 			-- details held in project currently being developed
 			-- in the system.
 		require else
-			project_open: system_status.project_open
+			project_open: components.system_status.project_open
 		do
 				-- Firstly displaying the project location.
 			location_field.set_text (project_settings.project_location)
 			location_field.set_tooltip ("%"" + location_field.text + "%" (This entry is the location of the project, and may not be modified)")
-			
+
 				-- Then display all information for "Build" tab.
 			application_class_name_field.set_text (project_settings.application_class_name)
 			project_class_name_field.set_text (project_settings.project_name)
@@ -175,7 +177,7 @@ feature {NONE} -- Implementation
 			else
 				rebuild_ace_file_check_button.disable_select
 			end
-			
+
 				-- Then display all information for "Generation" tab
 			if project_settings.grouped_locals then
 				local_check_button.enable_select
@@ -204,7 +206,7 @@ feature {NONE} -- Implementation
 			else
 				load_constants_check_button.disable_select
 			end
-			
+
 			if project_settings.generation_location.is_empty then
 				generate_to_current_project_location_radio_button.enable_select
 			else
@@ -212,12 +214,12 @@ feature {NONE} -- Implementation
 				generate_to_specified_location_radio_button.enable_select
 			end
 		end
-		
+
 	store_project_information is
 			-- Update project settings to reflect information
 			-- entered into `Current'.
 		require
-			project_open: system_status.project_open
+			project_open: components.system_status.project_open
 		do
 				-- Firstly stors all information from "Build" tab.
 				--	project_settings.set_main_window_class_name (main_window_class_name_field.text.as_upper)
@@ -234,7 +236,7 @@ feature {NONE} -- Implementation
 			else
 				project_settings.disable_rebuild_ace_file
 			end
-			
+
 				-- Now store all information from "Generation" tab.
 			if local_check_button.is_selected then
 				project_settings.enable_grouped_locals
@@ -310,8 +312,8 @@ feature {NONE} -- Implementation
 			else
 				invalid_text := "'" + invalid_text
 			end
-			
-			windows := widget_selector.objects
+
+			windows := components.tools.widget_selector.objects
 			from
 				windows.start
 			until
@@ -330,18 +332,18 @@ feature {NONE} -- Implementation
 			if not add_hashed_name (project_name_lower) then
 				invalid_text := "The project class name %"" + project_name_lower + "%""
 			end
-			
+
 			if invalid_text /= Void then
 			--	select_in_parent
 				create warning_dialog.make_with_text (invalid_text + warning_message)
-				warning_dialog.show_modal_to_window (main_window)
-				last_validation_successful := False				
+				warning_dialog.show_modal_to_window (components.tools.main_window)
+				last_validation_successful := False
 			end
 		end
-		
+
 	hashed_names: HASH_TABLE [STRING, STRING]
 		-- All names that current class names are not permitted to use.
-		
+
 	add_hashed_name (a_name: STRING): BOOLEAN is
 			-- Add `a_name' to `hashed_names', with `Result' indicating if
 			-- the name was already included.
@@ -353,11 +355,11 @@ feature {NONE} -- Implementation
 	last_validation_successful: BOOLEAN
 		-- Was last call to `validate_settings' succesful?
 		-- True if all valication succeeded.
-		
+
 	project_settings: GB_PROJECT_SETTINGS is
 			-- `Result' is access to current project settings.
 		do
-			Result := System_status.current_project_settings
+			Result := components.system_status.current_project_settings
 		end
 
 	set_focus_to_notebook is

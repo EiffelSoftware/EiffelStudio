@@ -3,44 +3,42 @@ indexing
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	GB_RADIO_GROUP_LINK
-	
+
 inherit
 	EV_LIST_ITEM
 		undefine
 			is_in_default_state
-		redefine
-			initialize
 		end
-	
+
 	GB_DEFAULT_STATE
-	
-	GB_SHARED_TOOLS
-		undefine
-			default_create, 
-			copy
-		end
-	
+
 create
-	default_create
-	
+	make_with_components
+
 feature {NONE} -- Initialization
 
-	initialize is
-			-- Initialize `Current'.
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
 		do
-			Precursor {EV_LIST_ITEM}
-			pointer_button_press_actions.force_extend (agent start_animation (?, ?, ?))
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
-		
 
 feature -- Access
 
 	object: GB_OBJECT
 			-- Object linked by `Current'.
-			
+
 	gb_ev_container: GB_EV_CONTAINER
 			-- Creator of `Current'.
 
@@ -56,7 +54,7 @@ feature -- Status setting
 		ensure
 			object_set: object = an_object
 		end
-		
+
 	set_gb_ev_container (a_container: GB_EV_CONTAINER) is
 			-- Assign `a_container' to `gb_ev_container'.
 		require
@@ -66,7 +64,7 @@ feature -- Status setting
 		ensure
 			container_set: gb_ev_container = a_container
 		end
-		
+
 feature {GB_EV_CONTAINER} -- Implementation
 
 	update_displayed_text is
@@ -80,7 +78,7 @@ feature {GB_EV_CONTAINER} -- Implementation
 		ensure
 			text_not_empty: not text.is_empty
 		end
-		
+
 feature {NONE} -- Implementation
 
 	start_animation (x, y, button: INTEGER) is
@@ -98,11 +96,11 @@ feature {NONE} -- Implementation
 					create timer.make_with_interval (25)
 					timer.actions.extend (agent animate)
 					original_pixmap := layout_item.pixmap
-					layout_constructor.ensure_object_visible (object)
+					components.tools.layout_constructor.ensure_object_visible (object)
 				end
 			end
 		end
-		
+
 	animate is
 			-- `animate' layout_item' of `obejct'.
 		local
@@ -133,13 +131,13 @@ feature {NONE} -- Implementation
 				layout_item.set_pixmap (new_pixmap)
 			end
 		end
-		
+
 	original_pixmap: EV_PIXMAP
 		-- Orignal pixmap of layout item that is being animated.
 		-- Needed for animation and finally restoration purposes.
 
-		
+
 	timer: EV_TIMEOUT
 		-- Timer for layout constructor animation.
-		
+
 end -- class GB_RADIO_GROUP_LINK

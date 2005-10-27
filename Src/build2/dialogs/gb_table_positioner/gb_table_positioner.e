@@ -10,14 +10,14 @@ class
 
 inherit
 	GB_TABLE_POSITIONER_IMP
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-	
+
 	EV_STOCK_COLORS
 		rename
 			implementation as stock_color_implementation
@@ -26,14 +26,14 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 create
 	make_with_editor
 
@@ -49,13 +49,19 @@ feature {NONE} -- Initialization
 			set_icon_pixmap (Icon_build_window @ 1)
 			set_title ("EV_TABLE child positioner")
 		end
-		
-	make_with_editor (an_editor: GB_EV_TABLE_EDITOR_CONSTRUCTOR) is
-			-- Create `Current' and assign `an_editor' to `editor'.
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_editor (an_editor: GB_EV_TABLE_EDITOR_CONSTRUCTOR; a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `an_editor' to `editor' and `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
 		local
 			list_item: EV_LIST_ITEM
 			table_content: LINEAR [EV_WIDGET]
 		do
+			components := a_components
 			default_create
 			editor := an_editor
 			first := editor.first
@@ -73,9 +79,9 @@ feature {NONE} -- Initialization
 			split_area.disable_item_expand (split_area.second)
 
 			create layout_rows_entry.make (editor, rows_parent, rows_string, gb_ev_table_rows, gb_ev_table_rows_tooltip,
-				agent set_rows_and_draw (?), agent valid_row_value (?))
+				agent set_rows_and_draw (?), agent valid_row_value (?), components)
 			create layout_columns_entry.make (editor, columns_parent, columns_string, gb_ev_table_columns, gb_ev_table_columns_tooltip,
-				agent set_columns_and_draw (?), agent valid_column_value (?))
+				agent set_columns_and_draw (?), agent valid_column_value (?), components)
 			layout_rows_entry.set_text (first.rows.out)
 			layout_columns_entry.set_text (first.columns.out)
 
@@ -98,10 +104,12 @@ feature {NONE} -- Initialization
 			ok_button.select_actions.extend (agent hide)
 			show_actions.extend (agent initialize_sizing)
 			selected_item_color := red
+		ensure
+			components_set: components = a_components
 		end
-		
+
 		editor: GB_EV_TABLE_EDITOR_CONSTRUCTOR
-		
+
 		first: EV_TABLE
 
 feature {GB_EV_TABLE_EDITOR_CONSTRUCTOR} -- Implementation
@@ -115,7 +123,7 @@ feature {GB_EV_TABLE_EDITOR_CONSTRUCTOR} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-		
+
 
 	initialize_sizing is
 			-- Set up automatic re-sizing when window is re-sized.
@@ -124,27 +132,27 @@ feature {NONE} -- Implementation
 			adjust_scrollable_area
 			scrollable_area.resize_actions.force_extend (agent adjust_scrollable_area)
 		end
-		
-		
+
+
 	adjust_scrollable_area is
 			-- Set initial size of `drawing_area' relative to `scrollable_area'
 		do
 			drawing_area.set_minimum_size (scrollable_area.width.max (first.columns * grid_size + diagram_border * 2),
 				scrollable_area.height.max (first.rows * grid_size + diagram_border * 2))
 		end
-		
-		
+
+
 	update_pixmap_size (x, y, a_width, a_height: INTEGER) is
 			-- Resize `pixmap' to `width', `height'.
 		do
-				-- A pixmap is 1x1 as default, 
+				-- A pixmap is 1x1 as default,
 				-- and you can not set the size to 0x0.
 				-- Why is this?
 			if a_width >= 1 and a_height >=1 then
-				pixmap.set_size (width, height)	
+				pixmap.set_size (width, height)
 			end
 		end
-		
+
 	draw_widgets is
 			-- Draw representation of all widgets and grid if shown.
 		local
@@ -156,8 +164,8 @@ feature {NONE} -- Implementation
 				-- Remove all previous figures from `world'.
 			world.wipe_out
 				-- We must  draw the grid if necessary.
-			draw_grid	
-			
+			draw_grid
+
 			widgets := first.linear_representation
 			from
 				widgets.start
@@ -194,7 +202,7 @@ feature {NONE} -- Implementation
 			end
 			projector.project
 		end
-		
+
 	draw_grid is
 			-- Draw snap to grid in `world'.
 		local
@@ -206,11 +214,11 @@ feature {NONE} -- Implementation
 		do
 				-- Create a light green for the grid color.
 			create color.make_with_8_bit_rgb (196, 244, 204)
-			
+
 				-- compute commonly requested values.
 			rows_size := first.rows * grid_size
 			columns_size := first.columns * grid_size
-			
+
 			from
 				counter := 0
 			until
@@ -220,7 +228,7 @@ feature {NONE} -- Implementation
 				figure_line.set_foreground_color (color)
 				create relative_point.make_with_position (drawing_area.width + diagram_border, counter + diagram_border)
 				world.extend (figure_line)
-				counter := counter + grid_size	
+				counter := counter + grid_size
 			end
 			from
 				counter := 0
@@ -233,7 +241,7 @@ feature {NONE} -- Implementation
 				counter := counter + grid_size
 			end
 		end
-		
+
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER) is
 			-- Move `v' to `a_column', `a_row' and resize to `columns', `rows'.
 		do
@@ -255,36 +263,36 @@ feature {NONE} -- Implementation
 				-- Transform coordinates to take into account offset of actual diagram.
 			x := a_x_position - diagram_border
 			y := a_y_position - diagram_border
-				
+
 			if selected_item /= Void and not resizing_widget and not moving_widget then
 				column_position := (first.item_column_position (selected_item) - 1) * grid_size
 				row_position := (first.item_row_position (selected_item) - 1) * grid_size
 				end_column_position := column_position + first.item_column_span (selected_item) * grid_size
-				end_row_position := row_position + first.item_row_span (selected_item) * grid_size				
+				end_row_position := row_position + first.item_row_span (selected_item) * grid_size
 
 				if close_to (x, y, end_column_position, end_row_position) or
 					close_to (x, y, column_position, row_position) then
 					if not resizing_widget then
-						set_all_pointer_styles (sizenwse_cursor)	
+						set_all_pointer_styles (sizenwse_cursor)
 					end
 				elseif close_to (x, y, column_position, end_row_position) or
 					close_to (x, y, end_column_position, row_position) then
 					if not resizing_widget then
-						set_all_pointer_styles (sizenesw_cursor)	
+						set_all_pointer_styles (sizenesw_cursor)
 					end
 				elseif close_to_line (x, y, end_row_position, column_position + accuracy_value, end_column_position - accuracy_value) or
 					close_to_line (x, y, row_position, column_position + accuracy_value, end_column_position - accuracy_value) then
 					if not resizing_widget then
-						set_all_pointer_styles (sizens_cursor)	
+						set_all_pointer_styles (sizens_cursor)
 					end
 				elseif close_to_line (y, x, column_position, row_position + accuracy_value, end_row_position - accuracy_value) or
 					close_to_line (y, x, end_column_position, row_position + accuracy_value, end_row_position - accuracy_value) then
 					if not resizing_widget then
-						set_all_pointer_styles (sizewe_cursor)	
+						set_all_pointer_styles (sizewe_cursor)
 					end
 				elseif x > column_position and x < end_column_position and y > row_position and y < end_row_position then
 					if not resizing_widget then
-						set_all_pointer_styles (sizeall_cursor)	
+						set_all_pointer_styles (sizeall_cursor)
 					end
 				else
 					if not resizing_widget or not moving_widget then
@@ -292,9 +300,9 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-			
+
 			if resizing_widget then
-				
+
 					-- Store original values so that we only need to set
 					-- any values that changed during the resizing. These
 					-- four values will be changed during the resizing as necessary,
@@ -303,7 +311,7 @@ feature {NONE} -- Implementation
 				row_pos := first.item_row_position (selected_item)
 				column_span := first.item_column_span (selected_item)
 				row_span := first.item_row_span (selected_item)
-				
+
 					-- Store the original values for comparing with the values above.
 					-- if one or more have changed, then we can reposition the
 					-- selected item.
@@ -311,8 +319,8 @@ feature {NONE} -- Implementation
 				orig_row_pos := row_pos
 				orig_column_span := column_span
 				orig_row_span := row_span
-				
-				
+
+
 				if x_scale /= 0 then
 					if x_offset = 0 then
 						end_position := (original_column + original_column_span)
@@ -325,14 +333,14 @@ feature {NONE} -- Implementation
 						column_span := end_position - current_x_position
 					else
 						x := x - column_position
-						new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)						
+						new_x := x + half_grid_size - ((x + half_grid_size) \\ grid_size)
 						new_column := ((new_x // grid_size) - first.item_column_position (selected_item) + 1).min (first.columns - first.item_column_position (selected_item) + 1).max (1)
 						if first.item_column_span (selected_item)/= new_column and first.area_clear_excluding_widget (selected_item, first.item_column_position (selected_item), first.item_row_position (selected_item), new_column, first.item_row_span (selected_item)) then --new_column.max (1).min (first.columns - first.item_column_position (selected_item) + 1), first.item_row_span (selected_item)) then
 							column_span := new_column
 						end
 					end
 				end
-				
+
 				if y_scale /= 0 then
 					if y_offset = 0 then
 						end_position := (original_row + original_row_span)
@@ -351,19 +359,19 @@ feature {NONE} -- Implementation
 							row_span := new_row
 						end
 					end
-				end				
+				end
 					-- Now actually perform the placing of the widget.
 
 				if orig_column_pos /= column_pos or orig_row_pos /= row_pos or orig_row_span /= row_span
 					or orig_column_span /= column_span then
 						-- We only position and redraw if the size or position has really changed.
-					set_item_position_and_span (selected_item, column_pos, row_pos, column_span, row_span)			
+					set_item_position_and_span (selected_item, column_pos, row_pos, column_span, row_span)
 					draw_widgets
 				end
 			end
-			if moving_widget then	
+			if moving_widget then
 				new_x := x - ((x - x_offset) \\ grid_size)
-				new_y := y - ((y - y_offset) \\ grid_size)	
+				new_y := y - ((y - y_offset) \\ grid_size)
 				x := ((new_x - x_offset) // grid_size + 1).min (first.columns - first.item_column_span (selected_item) + 1).max (1)
 				y := ((new_y - y_offset) // grid_size + 1).min (first.rows - first.item_row_span (selected_item) + 1).max (1)
 				if (first.item_column_position (selected_item) /= x or first.item_row_position (selected_item) /= y) then
@@ -383,7 +391,7 @@ feature {NONE} -- Implementation
 			end
 			update_editors
 		end
-		
+
 	first_filled_horizontal_space (widget: EV_WIDGET; a_column, a_row, a_row_span: INTEGER): INTEGER is
 			-- `Result' is lowest column value, counting down from `a_column' which has the rows
 			-- `a_row' to `a_row' + `a_row_span' free from items.
@@ -408,7 +416,7 @@ feature {NONE} -- Implementation
 				column_counter := column_counter - 1
 			end
 		end
-		
+
 	first_filled_vertical_space (widget: EV_WIDGET; a_row, a_column, a_column_span: INTEGER): INTEGER is
 			-- `Result' is lowest row value, counting down from `a_row' which has the columns
 			-- `a_column' to `a_column' + `a_column_span' free from items.
@@ -448,13 +456,13 @@ feature {NONE} -- Implementation
 				Result := True
 			end
 		end
-		
+
 	half_grid_size: INTEGER is
 			-- Half size of current grid.
 		do
 			Result := grid_size // 2
 		end
-		
+
 	button_pressed (a_x_position, a_y_position, a_button: INTEGER) is
 			-- A button has been pressed. If `a_button' = 1 then
 			-- check for movement/resizing.
@@ -476,11 +484,11 @@ feature {NONE} -- Implementation
 					-- the current cursor position against the position of `selected_item'
 					-- when the resizing began.
 				original_column := first.item_column_position (selected_item)
-				original_row := first.item_row_position (selected_item)	
+				original_row := first.item_row_position (selected_item)
 				original_column_span := first.item_column_span (selected_item)
 				original_row_span := first.item_row_span (selected_item)
-				
-				
+
+
 					-- Now perform some calculations just once ready for later.
 				column_position := (first.item_column_position (selected_item) - 1) * grid_size
 				row_position := (first.item_row_position (selected_item) - 1) * grid_size
@@ -534,10 +542,10 @@ feature {NONE} -- Implementation
 						resizing_widget := False
 					end
 					if resizing_widget or moving_widget then
-						drawing_area.enable_capture	
+						drawing_area.enable_capture
 					end
 				end
-			
+
 			end
 				-- We need to highlight a widget if the action is
 				-- to select a widget.
@@ -555,7 +563,7 @@ feature {NONE} -- Implementation
 				draw_widgets
 			end
 		end
-		
+
 	button_released (x, y, a_button: INTEGER) is
 			-- A button has been released on `drawing_area'
 			-- If `a_button' = 1, check for end of resize/movement.
@@ -574,13 +582,13 @@ feature {NONE} -- Implementation
 			draw_widgets
 			end
 		end
-		
+
 	update_editors is
 			-- Update all editors referencing `object'.
 		do
 			editor.update_editors
 		end
-		
+
 	set_all_pointer_styles (cursor: EV_CURSOR) is
 			-- Assign a pointer style to all figures in
 			-- `world' and `drawing_area'.
@@ -588,7 +596,7 @@ feature {NONE} -- Implementation
 			from
 				world.start
 			until
-				world.off				
+				world.off
 			loop
 				world.item.set_pointer_style (cursor)
 				world.forth
@@ -602,14 +610,14 @@ feature {NONE} -- Implementation
 			editor.set_rows (row_value)
 			update_editors
 		end
-		
+
 	set_columns (column_value: INTEGER) is
 			-- Resize table to accomodate `column_value' columns.
 		do
 			editor.set_columns (column_value)
 			update_editors
 		end
-		
+
 	set_rows_and_draw (row_value: INTEGER) is
 			-- Resize table to accomodate `row_value' rows.
 		do
@@ -620,7 +628,7 @@ feature {NONE} -- Implementation
 			draw_widgets
 			update_prompt
 		end
-		
+
 	set_columns_and_draw (column_value: INTEGER) is
 			-- Resize table to accomodate `column_value' columns.
 		do
@@ -631,19 +639,19 @@ feature {NONE} -- Implementation
 			draw_widgets
 			update_prompt
 		end
-		
+
 	valid_row_value (new_value: INTEGER): BOOLEAN is
 			-- Is `new_value' a valid row size for table.
 		do
 			Result := first.rows_resizable_to (new_value)
 		end
-		
+
 	valid_column_value (new_value: INTEGER): BOOLEAN is
 			-- Is `new_value' a valid column size for table.
 		do
 			Result := first.columns_resizable_to (new_value)
 		end
-		
+
 	valid_spacing (new_value: INTEGER): BOOLEAN is
 			-- Is `new_value' a valid spacing value?
 		do
@@ -658,7 +666,7 @@ feature {NONE} -- Implementation
 			selected_item := widget
 			draw_widgets
 		end
-		
+
 	check_unselect is
 			-- If no item is selected in `list' any more,
 			-- then we must remove the highlighting from
@@ -669,14 +677,14 @@ feature {NONE} -- Implementation
 				draw_widgets
 			end
 		end
-	
+
 	table_minimal_full: BOOLEAN is
-			-- Is table represented by `Current', 
+			-- Is table represented by `Current',
 			-- 1x1 and full?
 		do
-			Result := first.count = 1 and first.rows = 1 and first.columns = 1			
+			Result := first.count = 1 and first.rows = 1 and first.columns = 1
 		end
-	
+
 	update_prompt is
 			-- Update `prompt_label'.
 		do
@@ -690,13 +698,13 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Attributes
-		
+
 	resizing_widget: BOOLEAN
 		-- Is a widget currently being resized?
-		
+
 	moving_widget: BOOLEAN
 		-- Is a widget currently being moved?
-	
+
 	x_offset, y_offset: INTEGER
 		-- Offsets used to hold cursor distance from
 		-- point being targeted.
@@ -705,62 +713,62 @@ feature {NONE} -- Attributes
 		-- Amount to scale movement in the X or Y axis by.
 		-- Should be 1 or 0. 1 means full movement, 0 means
 		-- that axis is ignored.
-	
+
 	accuracy_value: INTEGER is 3
 			-- Value which determines how close pointer must be
 			-- to lines/points for resizing.
 
 	projector: EV_DRAWING_AREA_PROJECTOR
 		-- Projector used for `world'
-	
+
 	pixmap: EV_PIXMAP
 		-- Pixmap for double buffering `world'.
-			
+
 	world: EV_FIGURE_WORLD
 		-- Figure world containg all widget representations.
-		
+
 	grid_size: INTEGER is 20
 		-- Size of grid representing the table.
-		
+
 	highlighted_width: INTEGER is 3
 		-- Width of line used to draw highlighted item.
-		
+
 	selected_item: EV_WIDGET
 		-- Item that is currently selected for movement.
-		
+
 	selected_item_color: EV_COLOR
 		-- Color used to draw `selected_item'.
-	
+
 	diagram_border: INTEGER is 25
 		-- Size of border around table representation in diagram.
-	
+
 	draw_greyed_widget: BOOLEAN
 		-- Should a greyed representation of the desired widget position/
 		-- size be drawn
-		
+
 	grey_x, grey_y, grey_x_span, grey_y_span: INTEGER
 		-- Table coordinates for `draw_greyed_widget'.
-		
+
 	original_column, original_row, original_column_span, original_row_span: INTEGER
 		-- Temporary variables used to keep original position of `selected_item'
 		-- when button was pressed. These values are used in `track_movement' to
 		-- calculate new size/position of `selected_item', based on the current mouse
 		-- position.
-		
+
 	select_prompt: STRING is "Please select desired widget."
 		-- Prompt to help user.
-		
+
 	full_prompt: STRING is "Child fills table. Resize table to manipulate."
 		-- Prompt when table is full.
-		
+
 	position_prompt: STRING is "Position highlighted widget."
 		-- Prompt when widget is selected.
-		
+
 	rows_string: STRING is "Rows"
-	
+
 	columns_string: STRING is "Columns"
-	
+
 	layout_rows_entry, layout_columns_entry: GB_INTEGER_INPUT_FIELD
-		
+
 end -- class GB_TABLE_POSITIONER
 

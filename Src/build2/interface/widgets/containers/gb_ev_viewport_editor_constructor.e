@@ -25,17 +25,17 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			
 			create x_offset_entry.make (Current, Result, x_offset_string, gb_ev_viewport_x_offset, gb_ev_viewport_x_offset_tooltip,
-				agent set_x_offset (?), agent valid_position (?))
+				agent set_x_offset (?), agent valid_position (?), components)
 			create y_offset_entry.make (Current, Result, y_offset_string, gb_ev_viewport_y_offset, gb_ev_viewport_y_offset_tooltip,
-				agent set_y_offset (?), agent valid_position (?))
+				agent set_y_offset (?), agent valid_position (?), components)
 			create item_width_entry.make (Current, Result, item_width_string, gb_ev_viewport_item_width, gb_ev_viewport_item_width_tooltip,
-				agent set_item_width (?), agent valid_item_width (?))
+				agent set_item_width (?), agent valid_item_width (?), components)
 			create item_height_entry.make (Current, Result, item_height_string, gb_ev_viewport_item_height, gb_ev_viewport_item_height_tooltip,
-				agent set_item_height (?), agent valid_item_height (?))
+				agent set_item_height (?), agent valid_item_height (?), components)
 			
 			update_attribute_editor
 			

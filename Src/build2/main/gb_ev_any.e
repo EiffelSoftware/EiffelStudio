@@ -12,21 +12,14 @@ inherit
 		redefine
 			default_create
 		end
-		
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
+
 	INTERNAL
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
@@ -41,37 +34,13 @@ inherit
 		undefine
 			default_create
 		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_XML_UTILITIES
 		undefine
 			default_create
 		end
-		
-	GB_SHARED_CONSTANTS
-		undefine
-			default_create
-		end
-		
+
 	GB_GENERAL_UTILITIES
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
-	GB_SHARED_OBJECT_HANDLER
 		export
 			{NONE} all
 		undefine
@@ -79,7 +48,20 @@ inherit
 		end
 
 feature -- Initialization
-		
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	set_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+		ensure
+			components_set: components = a_components
+		end
+
 	default_create is
 			-- Create `Current'.
 			-- Create `objects' to hold 2 items.
@@ -89,26 +71,26 @@ feature -- Initialization
 			create execution_agents.make (2)
 			initialize_agents
 		end
-		
+
 feature -- Access
-	
+
 	initialize_agents is
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		deferred
 		end
-	
+
 	validate_agents: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], STRING]
 			-- Agents to query if a property modification is permitted, accessible
 			-- via their associated name.
-	
+
 	execution_agents: HASH_TABLE [PROCEDURE [ANY, TUPLE], STRING]
 			-- Agents to execute a property modification, accessible
 			-- via their associated name.
 
 	parent_editor: GB_OBJECT_EDITOR
 		-- Object editor containing `Current'.
-		
+
 	object: GB_OBJECT
 			-- Object referenced by `Current'. May be Void when generating code.
 
@@ -116,7 +98,7 @@ feature -- Access
 			-- String representation of object_type modifyable by `Current'.
 		deferred
 		end
-		
+
 	first: like ev_type is
 			-- First entry in `objects'. This corresponds to
 			-- the display component.
@@ -127,7 +109,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	initialize_attribute_editor (editor: GB_OBJECT_EDITOR_ITEM) is
 			-- Perform necessary initialization on `editor'.
 		require
@@ -136,7 +118,7 @@ feature -- Access
 			editor.set_type_represented (type)
 			editor.set_creating_class (Current)
 		end
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -146,19 +128,19 @@ feature -- Access
 			objects_not_void: objects /= Void
 			objects_has_at_least_one_item: objects.count >= 1
 		do
-			create Result
+			create Result.make_with_components (components)
 			Result.set_type_represented (type)
 			Result.set_creating_class (Current)
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		deferred
 		end
-		
+
 
 	objects: ARRAYED_LIST [like ev_type]
 		-- All objects to which `Current' represents.
@@ -176,7 +158,7 @@ feature -- Status setting
 		ensure
 			objects.has (an_object)
 		end
-		
+
 	set_object (an_object: GB_OBJECT) is
 			-- Assign `an_object' to `object'.
 		require
@@ -186,8 +168,8 @@ feature -- Status setting
 		ensure
 			object_set: object = an_object
 		end
-		
-		
+
+
 	set_parent_editor (an_editor: GB_OBJECT_EDITOR) is
 			-- Assign `an_editor' to `parent_editor'.
 		require
@@ -197,11 +179,11 @@ feature -- Status setting
 		ensure
 			object_editor_assigned: parent_editor = an_editor
 		end
-		
-		
+
+
 feature {GB_XML_STORE} -- Output
 
-	
+
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		require
@@ -221,9 +203,9 @@ feature {GB_XML_STORE} -- Output
 				-- For now, remove.
 				--	at_least_one_element_added: element.count > old element.count
 		end
-		
+
 feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT, GB_OBJECT_HANDLER} -- Status setting
-		
+
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		require
@@ -231,9 +213,9 @@ feature {GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT, GB_OBJECT_HANDLER} -
 			has_associated_object: object /= Void
 		deferred
 		end
-		
+
 feature {GB_DEFERRED_BUILDER} -- Status setting
-		
+
 	modify_from_xml_after_build (element: XM_ELEMENT) is
 			-- Redefine in any descendents that must perform part of
 			-- their building at the end of the load/build cycle.
@@ -261,7 +243,7 @@ feature {GB_CODE_GENERATOR} -- Status setting
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 
 feature {GB_OBJECT} -- Status setting
 
@@ -283,7 +265,7 @@ feature {GB_OBJECT} -- Status setting
 			object_set: object = actual_object
 			objects_count_is_two: objects.count = 2 and objects.has (vision2_object) and objects.has (an_object)
 		end
-		
+
 	has_user_events: BOOLEAN is
 			-- Does `Current' have user events which must be set?
 		once
@@ -293,7 +275,7 @@ feature {GB_OBJECT} -- Status setting
 feature {NONE} -- Implementation
 
 	ev_type: EV_ANY is
-		
+
 		-- Vision2 type represented by `Current'.
 		-- Only used with `like' in descendents.
 		-- Always `Void'.
@@ -314,7 +296,7 @@ feature {NONE} -- Implementation
 			object.update_instances (p)
 			enable_project_modified
 		end
-		
+
 	for_first_object (p: Procedure [EV_ANY, TUPLE]) is
 			-- Call `p' on the first_item in `objects'.
 		do
@@ -323,7 +305,7 @@ feature {NONE} -- Implementation
 			object.update_first_instances (p)
 			enable_project_modified
 		end
-		
+
 	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is
 			-- For all instance referers recursively of `an_object', call `p' with the current
 			-- instance referer filled as the open argument. Used in places where `for_all_objects'
@@ -340,7 +322,7 @@ feature {NONE} -- Implementation
 			until
 				an_object.instance_referers.off
 			loop
-				current_object := object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
+				current_object := components.object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
 				p.call ([current_object])
 				for_all_instance_referers (current_object, p)
 				an_object.instance_referers.forth
@@ -350,9 +332,9 @@ feature {NONE} -- Implementation
 	update_editors is
 			-- Short version for calling everywhere.
 		do
-			update_editors_for_property_change (objects.first, type, parent_editor)			
+			components.object_editors.update_editors_for_property_change (objects.first, type, parent_editor)
 		end
-		
+
 	strip_leading_indent (s: STRING): STRING is
 			-- If `s' starts with `indent' then strip this indent.
 			-- This is used in the code generation routines.
@@ -363,14 +345,14 @@ feature {NONE} -- Implementation
 				Result := s
 			end
 		end
-		
+
 	enable_project_modified is
 			-- Call enable_project_modified on `system_status' and
 			-- update commands to reflect this.
-		do	
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
+		do
+			components.system_status.mark_as_dirty
 		end
-		
+
 	is_type_a_constant (a_type_name: STRING): BOOLEAN is
 			-- Is data associated with `a_type_name' in `full_information',
 			-- a constant?
@@ -384,14 +366,14 @@ feature {NONE} -- Implementation
 				if element_info.is_constant then
 					Result := True
 				end
-			end	
+			end
 		end
-		
+
 	retrieve_and_set_integer_value (a_type_name: STRING): INTEGER is
 			-- Result is integer data associated with `a_type_name'.
 			-- If the data of `a_type_name' is a constant, then create a new constant_context
 			-- within the system, and return the integer data of the constant.
-			-- Should only be user while loading a project from XML, and after a call to 
+			-- Should only be user while loading a project from XML, and after a call to
 			-- `get_unique_full_info'.
 		require
 			a_type_name_not_void: a_type_name /= Void
@@ -403,7 +385,7 @@ feature {NONE} -- Implementation
 			element_info := full_information @ a_type_name
 			if element_info /= Void then
 				if element_info.is_constant then
-					integer_constant ?= Constants.all_constants.item (element_info.data)
+					integer_constant ?= components.constants.all_constants.item (element_info.data)
 					create constant_context.make_with_context (integer_constant, object, type, a_type_name)
 					integer_constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
@@ -413,7 +395,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	retrieve_string_setting (a_type_name: STRING): STRING is
 			-- Result is string representation of data associated with `a_type_name''.
 		require
@@ -425,16 +407,16 @@ feature {NONE} -- Implementation
 			element_info := full_information @ a_type_name
 			if element_info /= Void then
 				if element_info.is_constant then
-					constant ?= Constants.all_constants.item (element_info.data)
+					constant ?= components.constants.all_constants.item (element_info.data)
 					Result := constant.name
 				else
 					Result := "%"" + escape_special_characters (element_info.data) + "%""
 				end
-			end	
+			end
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	retrieve_integer_setting (a_type_name: STRING): STRING is
 			-- Result is string representation of data associated with `a_type_name''.
 		require
@@ -446,19 +428,19 @@ feature {NONE} -- Implementation
 			element_info := full_information @ a_type_name
 			if element_info /= Void then
 				if element_info.is_constant then
-					constant ?= Constants.all_constants.item (element_info.data)
+					constant ?= components.constants.all_constants.item (element_info.data)
 					Result := constant.name
 				else
 					Result := element_info.data
 				end
-			end				
+			end
 		end
-		
+
 	retrieve_and_set_string_value (a_type_name: STRING): STRING is
 			-- Result is string data associated with `a_type_name'.
 			-- If the data of `a_type_name' is a constant, then create a new constant_context
 			-- within the system, and return the integer data of the constant.
-			-- Should only be user while loading a project from XML, and after a call to 
+			-- Should only be user while loading a project from XML, and after a call to
 			-- `get_unique_full_info'.
 		require
 			a_type_name_not_void: a_type_name /= Void
@@ -470,7 +452,7 @@ feature {NONE} -- Implementation
 			element_info := full_information @ a_type_name
 			if element_info /= Void then
 				if element_info.is_constant then
-					string_constant ?= Constants.all_constants.item (element_info.data)
+					string_constant ?= components.constants.all_constants.item (element_info.data)
 					create constant_context.make_with_context (string_constant, object, type, a_type_name)
 					string_constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
@@ -478,14 +460,14 @@ feature {NONE} -- Implementation
 				else
 					Result := element_info.data
 				end
-			end				
+			end
 		end
-		
+
 	retrieve_and_set_color_value (a_type_name: STRING): EV_COLOR is
 			-- Result is string data associated with `a_type_name'.
 			-- If the data of `a_type_name' is a constant, then create a new constant_context
 			-- within the system, and return the integer data of the constant.
-			-- Should only be user while loading a project from XML, and after a call to 
+			-- Should only be user while loading a project from XML, and after a call to
 			-- `get_unique_full_info'.
 		require
 			a_type_name_not_void: a_type_name /= Void
@@ -497,7 +479,7 @@ feature {NONE} -- Implementation
 			element_info := full_information @ a_type_name
 			if element_info /= Void then
 				if element_info.is_constant then
-					color_constant ?= Constants.all_constants.item (element_info.data)
+					color_constant ?= components.constants.all_constants.item (element_info.data)
 					create constant_context.make_with_context (color_constant, object, type, a_type_name)
 					color_constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
@@ -505,9 +487,9 @@ feature {NONE} -- Implementation
 				else
 					Result := build_color_from_string (element_info.data)
 				end
-			end				
+			end
 		end
-		
+
 	add_integer_element (element: XM_ELEMENT; name: STRING; current_value: INTEGER) is
 			-- Add an element containing an INTEGER to `element', with name `name' and
 			-- value `current_value' if no constant is specified, of the value of the constant
@@ -515,14 +497,14 @@ feature {NONE} -- Implementation
 		require
 			element_not_void: element /= Void
 			name_not_void: name /= Void
-		do	
+		do
 			if uses_constant (name) then
 				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
 			else
 				add_element_containing_integer (element, name, current_value)
 			end
 		end
-		
+
 	add_font_element (element: XM_ELEMENT; name: STRING; font: EV_FONT) is
 			-- Add an element containing an EV_FONT to `element' with value `font'.
 			-- if no constant is specified, of the value of the constant
@@ -539,15 +521,15 @@ feature {NONE} -- Implementation
 				add_element_containing_integer (element, font_weight_string, font.weight)
 				add_element_containing_integer (element, font_shape_string, font.shape)
 				add_element_containing_integer (element, font_height_points_string, font.height_in_points)
-				
+
 					--|FIXME the `is_empty' check on the following line is to fix the bug reported by Guy Fokou
 					--|KB entry 4203. Not yet sure why `preferred_families' would have an empty entry.
 				if not font.preferred_families.is_empty and not (font.preferred_families @ 1).is_empty then
-					add_element_containing_string (element, font_preferred_family_string, font.preferred_families @ 1)	
+					add_element_containing_string (element, font_preferred_family_string, font.preferred_families @ 1)
 				end
 			end
 		end
-		
+
 	add_color_element (element: XM_ELEMENT; name: STRING; color: EV_COLOR) is
 			-- Add an element containing an EV_COLOR to `element' with value `color'.
 			-- if no constant is specified, of the value of the constant
@@ -563,7 +545,7 @@ feature {NONE} -- Implementation
 				add_element_containing_string (element, name, build_string_from_color (color))
 			end
 		end
-		
+
 	add_string_element (element: XM_ELEMENT; name: STRING; current_value: STRING) is
 			-- Add an element containing a STRING to `element', with name `name' and
 			-- value `current_value' if no constant is specified, of the value of the constant
@@ -571,14 +553,14 @@ feature {NONE} -- Implementation
 		require
 			element_not_void: element /= Void
 			name_not_void: name /= Void
-		do	
+		do
 			if uses_constant (name) then
 				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
 			else
 				add_element_containing_string (element, name, current_value)
 			end
 		end
-		
+
 	uses_constant (an_attribute: STRING): BOOLEAN is
 			-- Does attribute named `an_attribute' use a constant?
 		require
@@ -586,7 +568,7 @@ feature {NONE} -- Implementation
 		do
 			Result := object.constants.item (type + an_attribute) /= Void
 		end
-		
+
 	attribute_set (an_attribute: STRING): BOOLEAN is
 			-- Has attribute named `an_attribute' been set?
 		require
@@ -598,7 +580,7 @@ feature {NONE} -- Implementation
 
 	full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 		-- Result of last call to `get_unique_full_info'.
-		
+
 	build_set_code_for_string (item_text, access_string, feature_call: STRING): ARRAYED_LIST [STRING] is
 			-- Generate code for a string property represented by `item_text' within `full_information'
 			-- called on an object named `access_string' with the property features call represented by `feature_call'.
@@ -617,7 +599,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	build_set_code_for_integer (item_text, access_string, feature_call: STRING): ARRAYED_LIST [STRING] is
 			-- Generate code for an integer property represented by `item_text' within `full_information'
 			-- called on an object named `access_string' with the property features call represented by `feature_call'.

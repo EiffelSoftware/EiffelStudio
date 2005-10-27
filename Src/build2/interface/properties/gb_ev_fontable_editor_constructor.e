@@ -35,7 +35,7 @@ feature -- Access
 			label: EV_LABEL
 			tool_bar: EV_TOOL_BAR
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create label.make_with_text (gb_ev_fontable_font)
 			label.align_text_left
@@ -43,7 +43,7 @@ feature -- Access
 			Result.disable_item_expand (label)
 			create horizontal_box
 			create font_entry.make (Current, horizontal_box, font_string, "", gb_ev_fontable_font_tooltip,
-				agent set_font (?), agent valid_font (?))
+				agent set_font (?), agent valid_font (?), components)
 			create reset_button
 			create tool_bar
 			tool_bar.extend (reset_button)

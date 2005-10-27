@@ -4,48 +4,49 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GB_XML_OBJECT_BUILDER
-	
+
 inherit
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_SHARED_DEFERRED_BUILDER
 		export
 			{NONE} all
 		end
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 			{ANY} item_string
 		end
-		
+
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	GB_EVENT_UTILITIES
 		export
 			{NONE} all
 		end
-	
+
 	INTERNAL
 		export
 			{NONE} all
 		end
-		
+
 	GB_XML_UTILITIES
 		export
 			{NONE} all
 		end
 
 feature -- Access
+
+	components: GB_INTERNAL_COMPONENTS is
+			-- Access to a set of internal components for an EiffelBuild instance.
+		deferred
+		end
+
 
 	new_object (element: XM_ELEMENT; is_component: BOOLEAN): GB_OBJECT is
 			-- `Result' is an object generated from `xml_element'.
@@ -61,10 +62,10 @@ feature -- Access
 			display_object: GB_DISPLAY_OBJECT
 			xml_element: XM_ELEMENT
 		do
-			xml_element ?= element.first	
-			
-			a_new_object := object_handler.build_object_from_string (xml_element.attribute_by_name (type_string).value)
-			object_handler.build_object (a_new_object)
+			xml_element ?= element.first
+
+			a_new_object := components.object_handler.build_object_from_string (xml_element.attribute_by_name (type_string).value)
+			components.object_handler.build_object (a_new_object)
 			from
 				xml_element.start
 			until
@@ -76,18 +77,18 @@ feature -- Access
 					if current_name.is_equal (Item_string) then
 						-- Add the new objects as children.
 						build_new_object (current_element, a_new_object, is_component)
-						
+
 					else
 						if current_name.is_equal (Internal_properties_string) then
 							a_new_object.modify_from_xml (current_element)
 						elseif current_name.is_equal (Events_string) then
 							extract_event_information (current_element, a_new_object)
-						else	
+						else
 							gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
-						
-							-- Call default_create on `gb_ev_any'
+							gb_ev_any.set_components (components)
+								-- Call default_create on `gb_ev_any'
 							gb_ev_any.default_create
-						
+
 							-- Ensure that the new class exists.
 						check
 							new_instance_exists: gb_ev_any /= Void
@@ -100,10 +101,10 @@ feature -- Access
 						else
 							gb_ev_any.add_object (display_object.child)
 						end
-						
+
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
-						
+
 						end
 					end
 				end
@@ -125,9 +126,9 @@ feature -- Access
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
 		do
-			a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
-			
-			object_handler.add_object (object, a_new_object, object.children.count + 1)
+			a_new_object := components.object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
+
+			components.object_handler.add_object (object, a_new_object, object.children.count + 1)
 			from
 				element.start
 			until
@@ -146,13 +147,13 @@ feature -- Access
 						elseif current_name.is_equal (Events_string) then
 							-- No events handled.
 						else
-						
+
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
-						
+						gb_ev_any.set_components (components)
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
-						
+
 							-- Ensure that the new class exists.
 						check
 							new_instance_exists: gb_ev_any /= Void
@@ -174,7 +175,7 @@ feature -- Access
 				element.forth
 			end
 		end
-		
+
 	replace_all_instances_with_up_to_date_xml (element: XM_ELEMENT) is
 			-- For all elements contained within then structure of `element' which represent top
 			-- level objects, replace with a new representation of the associated top level object.
@@ -203,7 +204,7 @@ feature -- Access
 					top_id := element_info.data.to_integer
 				end
 			end
-			
+
 				-- We perform this loop so that if we are flattening instances of top level structures
 				-- that no longer exist, and the flattened versions reference other top level structures
 				-- that no longer exist the flattening is performed recusively.
@@ -216,7 +217,7 @@ feature -- Access
 				create all_elements.make (10)
 				create all_ids.make (10)
 				update_xml (element, all_elements, all_ids)
-				create xml_store
+				create xml_store.make_with_components (components)
 				from
 					all_ids.start
 					all_elements.start
@@ -224,35 +225,35 @@ feature -- Access
 					all_ids.off
 				loop
 					current_id := all_ids.item
-						
+
 						-- In this case we are a top level instance but are deleted, so
 						-- we must create a new instance of the top level object, not a
 						-- new reference.
-					if current_id = top_id and object_handler.deleted_objects.has (current_id) then
-						top_level_object := object_handler.deep_object_from_id (current_id)
+					if current_id = top_id and components.object_handler.deleted_objects.has (current_id) then
+						top_level_object := components.object_handler.deep_object_from_id (current_id)
 						xml_store.store_individual_object (top_level_object)
 						new_element ?= xml_store.last_stored_individual_object.first
 					else
-						top_level_object := object_handler.objects @ current_id
+						top_level_object := components.object_handler.objects @ current_id
 						if top_level_object /= Void then
 								-- The top level object still exists, so simply create a new instance.
 							xml_store.store_individual_object (top_level_object)
 							new_element ?= xml_store.last_stored_individual_object.first
 							convert_element_to_instance (new_element, current_id, 1)
-						else	
+						else
 								-- Only must increase the deleted count if the id is not the
 								-- root object id. i.e. The root node of `element' as `element'
 								-- is representing a top level object and not an instance.
 								deleted_count := deleted_count + 1
-								
+
 								-- If the object thas been deleted, we simply retrieve it without
 								-- converting it to an instance.
-							top_level_object := object_handler.deleted_objects @ current_id
+							top_level_object := components.object_handler.deleted_objects @ current_id
 							xml_store.store_individual_object (top_level_object)
 							new_element ?= xml_store.last_stored_individual_object.first
 						end
 					end
-				
+
 						-- Now replace the old element representing the object with the
 						-- new and up to date version.
 					current_element := all_elements.item
@@ -272,7 +273,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	convert_element_to_instance (element: XM_ELEMENT; id, depth: INTEGER) is
 			-- Convert a `element' representing a copy of a top level object `id'
 			-- to a representation of the top level object. `id' must match the
@@ -309,7 +310,7 @@ feature -- Access
 							full_information := get_unique_full_info (current_element)
 							if depth = 1 then
 								add_element_containing_integer (current_element, reference_id_string, id)
-							else							
+							else
 								element_info := full_information @ reference_id_string
 								if element_info /= Void then
 									referenced_id := element_info.data.to_integer
@@ -340,8 +341,8 @@ feature -- Access
 				end
 				element.forth
 			end
-		end		
-		
+		end
+
 	update_xml (element: XM_ELEMENT; all_elements: ARRAYED_LIST [XM_ELEMENT]; all_ids: ARRAYED_LIST [INTEGER]) is
 			-- For the representation of a widget structure in `element', return all elements that represent a top level
 			-- instance within `all_elements' and the corresponding id of the top level object within `all_ids'.

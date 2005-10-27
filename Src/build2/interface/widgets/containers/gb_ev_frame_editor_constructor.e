@@ -30,7 +30,7 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create label.make_with_text ("Style")
 			Result.extend (label)

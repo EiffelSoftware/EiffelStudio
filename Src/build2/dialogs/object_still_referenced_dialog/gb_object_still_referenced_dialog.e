@@ -12,21 +12,7 @@ inherit
 		redefine
 			destroy
 		end
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
@@ -39,11 +25,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_object (an_object: GB_OBJECT) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_object (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' and associate `an_object'.
 		require
 			an_object_not_void: an_object /= Void
 		do
+			components := a_components
 			object := an_object
 			default_create
 			object.instance_referers.start
@@ -91,22 +81,22 @@ feature {NONE} -- Implementation
 			until
 				linear_rep.off
 			loop
-				current_object := object_handler.deep_object_from_id (linear_rep.item)
-				if not object_handler.deleted_objects.has (current_object.id) then
-					create command_flatten.make (current_object, False)
+				current_object := components.object_handler.deep_object_from_id (linear_rep.item)
+				if not components.object_handler.deleted_objects.has (current_object.id) then
+					create command_flatten.make (current_object, False, components)
 					command_flatten.execute
 				end
 				linear_rep.forth
 			end
 			destroy
 		end
-	
+
 	cancel_selected is
 			-- Called by `select_actions' of `cancel_button'.
 		do
 			destroy
 		end
-		
+
 	destroy is
 			-- Destroy `Current'.
 		do
@@ -115,7 +105,7 @@ feature {NONE} -- Implementation
 		ensure then
 			is_destroying: is_destroying
 		end
-	
+
 	is_destroying: BOOLEAN
 		-- Is `Current' in the process of destroying?
 

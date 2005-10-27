@@ -27,11 +27,6 @@ inherit
 			{NONE} all
 		end
 		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		end
-		
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
@@ -43,12 +38,12 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 				-- Tool bar and menu separators do inherit from EV_PIXMAPABLE,
 				-- however, the facilities are not exported.
 			if not (object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") or object.type.is_equal ("EV_MENU_SEPARATOR")) then
-				create pixmap_input_field.make (Current, Result, pixmap_path_string, "Pixmap", "Pixmap", agent execute (?, ?), agent validate (?, ?), agent return_pixmap, agent return_pixmap_path)
+				create pixmap_input_field.make (Current, Result, pixmap_path_string, "Pixmap", "Pixmap", agent execute (?, ?), agent validate (?, ?), agent return_pixmap, agent return_pixmap_path, components)
 				update_attribute_editor
 			end
 		end

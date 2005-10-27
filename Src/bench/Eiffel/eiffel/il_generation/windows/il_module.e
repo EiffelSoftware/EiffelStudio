@@ -1148,6 +1148,8 @@ feature -- Metadata description
 			l_class_type: CLASS_TYPE
 			l_single_inheritance_parent_id: like single_inheritance_parent_id
 			l_has_an_eiffel_parent: BOOLEAN
+			reference_type_a: CL_TYPE_A
+			interface_class_type: CLASS_TYPE
 		do
 			l_class_type := byte_context.class_type
 			parents := class_c.parents
@@ -1202,28 +1204,6 @@ feature -- Metadata description
 				parents.forth
 			end
 
-			if l_single_inheritance_parent_id = 0 then
-				if for_interface then
-					single_inheritance_parent_id := 0
-					single_inheritance_token := 0
-				else
-						-- We are not a single class.
-					if class_type.is_expanded then
-							-- If we are expanded, we need to explicitely inherit
-							-- from System.ValueType
-						single_inheritance_parent_id := value_type_id
-						single_inheritance_token := value_type_token
-					else
-							-- We are not expanded, simply inherit from System.Object
-						single_inheritance_parent_id := object_type_id
-						single_inheritance_token := object_type_token
-					end
-				end
-			else
-				single_inheritance_token := actual_class_type_token (l_single_inheritance_parent_id)
-				single_inheritance_parent_id := l_single_inheritance_parent_id
-			end
-
 				-- Element after last added should be 0.
 			if i = 0 then
 					-- Let's add the necessary interfaces so that we have a proper Eiffel type.
@@ -1235,7 +1215,19 @@ feature -- Metadata description
 					else
 							-- We are in the implementation, therefore we simply for
 							-- the associated interface.
-						last_parents := << actual_class_type_token (class_type.static_type_id), 0 >>
+						if class_type.is_expanded then
+								-- For expanded types we use interface of the reference counterpart.
+							reference_type_a := class_type.type.type_a
+							reference_type_a.set_is_expanded (False)
+							check
+								has_reference_class_type: class_c.types.has_type (reference_type_a.type_i)
+							end
+							interface_class_type := class_c.types.search_item (reference_type_a.type_i)
+						else
+								-- For reference types the corresponding interface is used.
+							interface_class_type := class_type
+						end
+						last_parents := << actual_class_type_token (interface_class_type.static_type_id), 0 >>
 					end
 				else
 						-- We inherit from a .NET class or an Eiffel single class.
@@ -1261,13 +1253,45 @@ feature -- Metadata description
 					end
 					i := i + 1
 				else
-					if not for_interface then
+					if class_type.is_expanded then
+							-- For expanded types we use interface of the reference counterpart.
+						reference_type_a := class_type.type.type_a
+						reference_type_a.set_is_expanded (False)
+						check
+							has_reference_class_type: class_c.types.has_type (reference_type_a.type_i)
+						end
+						interface_class_type := class_c.types.search_item (reference_type_a.type_i)
+						l_parents.force (actual_class_type_token (interface_class_type.static_type_id), i)
+						i := i + 1
+					elseif not for_interface then
 						l_parents.force (actual_class_type_token (class_type.static_type_id), i)
 						i := i + 1
 					end
 				end
 				l_parents.force (0, i)
 				last_parents := l_parents
+			end
+
+				-- Single inheritance parent should be set after all calls to `actual_class_type_token'
+				-- because the latter can recursively call `update_parents' and change the attributes.
+			if l_single_inheritance_parent_id = 0 then
+				if class_type.is_expanded then
+						-- If we are expanded, we need to explicitely inherit
+						-- from System.ValueType
+					single_inheritance_parent_id := value_type_id
+					single_inheritance_token := value_type_token
+				elseif for_interface then
+					single_inheritance_parent_id := 0
+					single_inheritance_token := 0
+				else
+						-- We are not a single class.
+						-- We are not expanded, simply inherit from System.Object
+					single_inheritance_parent_id := object_type_id
+					single_inheritance_token := object_type_token
+				end
+			else
+				single_inheritance_token := actual_class_type_token (l_single_inheritance_parent_id)
+				single_inheritance_parent_id := l_single_inheritance_parent_id
 			end
 
 				-- Restore byte context if any.

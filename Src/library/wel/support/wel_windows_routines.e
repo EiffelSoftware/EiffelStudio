@@ -9,7 +9,7 @@ class
 
 inherit
 	WEL_IDENTIFIED
-	
+
 	WEL_MB_CONSTANTS
 		export
 			{NONE} all
@@ -20,7 +20,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
@@ -130,10 +130,11 @@ feature -- Status report
 					l_pointer := cwin_get_window_thread_process_id (hwnd, $window_process_id)
 						-- Retereive the process id of the current process.
 					current_process_id := cwin_get_current_process_id
-	
-						-- If the process of the window is that of the current id then
+
+						-- If the process of the window is that of the current id and that it is not
+						-- the DOS prompt associated with the current process then
 						-- we know it must be one of our windows.
-					if window_process_id = current_process_id then
+					if window_process_id = current_process_id and l_data /= cwin_console_window_data then
 						Result := eif_id_object ({WEL_INTERNAL_DATA}.object_id (l_data))
 					end
 				end
@@ -154,7 +155,7 @@ feature -- Status report
 			retried := True
 			retry
 		end
-		
+
 	key_state (virtual_key: INTEGER): BOOLEAN is
 		obsolete "Use key_down or key_locked instead"
 		do
@@ -234,7 +235,7 @@ feature -- Status report
 				Result := window_of_item (p)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	wr_main_args: WEL_MAIN_ARGUMENTS is
@@ -383,7 +384,7 @@ feature {NONE} -- Externals
 		alias
 			"RedrawWindow"
 		end
-	
+
 	cwin_get_window_thread_process_id (hwnd: POINTER; a_pointer: TYPED_POINTER [POINTER]): POINTER is
 			--
 		external
@@ -399,6 +400,37 @@ feature {NONE} -- Externals
 		alias
 			"GetCurrentProcessId()"
 		end
+
+	cwin_console_window_data: POINTER is
+			--
+		local
+			l_hwnd: POINTER
+		once
+			cwin_get_console_hwnd ($l_hwnd)
+			if l_hwnd /= default_pointer then
+				Result := cwin_get_window_long (l_hwnd, gwlp_userdata)
+			end
+		end
+
+	cwin_get_console_hwnd (a_result: TYPED_POINTER [POINTER]) is
+			-- Get HWND from console window if any.
+		external
+			"C inline use <windows.h>"
+		alias
+			"[
+			{
+				FARPROC get_console_window_proc = NULL;
+				HMODULE kernel32_module = LoadLibrary ("kernel32.dll");
+				if (kernel32_module) {
+					get_console_window_proc = GetProcAddress (kernel32_module, "GetConsoleWindow");
+					if (get_console_window_proc) {
+						*$a_result = (FUNCTION_CAST_TYPE(HWND,WINAPI,(void)) get_console_window_proc) ();
+					}
+				}
+			}
+			]"
+		end
+
 
 end -- class WEL_WINDOWS_ROUTINES
 

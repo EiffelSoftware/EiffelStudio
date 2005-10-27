@@ -133,19 +133,15 @@ feature {NONE} -- Properties
 						if l.item.is_attribute then
 							print ("attribute%N")
 						else
-							if e_class.types.count = 1 then
-								print (l.item.real_body_id.out + "%N")
-							else
-								tl := e_class.types
-								from tl.start until tl.after loop
-									if tl.item.type_id - 1 = dtype then
-										print (
-											System.Execution_table.real_body_index (l.item.body_index, tl.item).out
-											+ "%N"
-										)
-									end
-									tl.forth
+							tl := e_class.types
+							from tl.start until tl.after loop
+								if tl.item.type_id - 1 = dtype then
+									print (
+										System.Execution_table.real_body_index (l.item.body_index, tl.item).out
+										+ "%N"
+									)
 								end
+								tl.forth
 							end
 						end
 						if l.item.is_constant then

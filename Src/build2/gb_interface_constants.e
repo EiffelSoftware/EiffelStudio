@@ -14,5 +14,5 @@ class
 
 inherit
 	GB_INTERFACE_CONSTANTS_IMP
-	
+
 end -- class GB_INTERFACE_CONSTANTS

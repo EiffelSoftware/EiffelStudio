@@ -7,8 +7,6 @@ class
 	AST_FEATURE_I_GENERATOR
 
 inherit
-	AST_NULL_FACTORY
-
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all

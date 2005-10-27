@@ -25,7 +25,7 @@ feature {NONE} -- IL code generation
 	is_any_feature: BOOLEAN is True
 			-- Is Current an instance of ANY_FEATURE_B?
 			
-	generate_il_any_call (written_type, target_type: TYPE_I; is_virtual: BOOLEAN) is
+	generate_il_any_call (written_type, target_type: CL_TYPE_I; is_virtual: BOOLEAN) is
 			-- Generate call to routine of ANY that works for both ANY and SYSTEM_OBJECT.
 			-- Arguments and target of the call are already pushed on the stack.
 		local
@@ -271,7 +271,7 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_default_routine (written_type, target_type: TYPE_I) is
+	generate_default_routine (written_type, target_type: CL_TYPE_I) is
 			-- Generate inlined call to routines of ANY returning a STRING object:
 			-- `generator', `generating_type', `out' and `tagged_out'.
 		require
@@ -355,7 +355,7 @@ feature {NONE} -- IL code generation
 			l_extension.generate_call (False)
 		end
 
-	generate_io (written_type, target_type: TYPE_I) is
+	generate_io (written_type, target_type: CL_TYPE_I) is
 			-- Generate inlined call to `io'.
 		require
 			written_type_not_void: written_type /= Void
@@ -376,7 +376,7 @@ feature {NONE} -- IL code generation
 			generate_il_normal_call (written_type, True)
 		end
 
-	generate_operating_environment (written_type, target_type: TYPE_I) is
+	generate_operating_environment (written_type, target_type: CL_TYPE_I) is
 			-- Generate inlined call to `operating_environment'.
 		require
 			written_type_not_void: written_type /= Void
@@ -397,7 +397,7 @@ feature {NONE} -- IL code generation
 			generate_il_normal_call (written_type, True)
 		end
 		
-	generate_string_routine (written_type: TYPE_I) is
+	generate_string_routine (written_type: CL_TYPE_I) is
 			-- Generate inlined call to routines of ANY returning a STRING object:
 			-- `generator', `generating_type', `out' and `tagged_out'.
 		require

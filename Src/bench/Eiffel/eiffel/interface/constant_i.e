@@ -222,7 +222,7 @@ feature -- C code generation
 						buffer.put_string ("RTOTC (")
 						buffer.put_string (internal_name)
 						buffer.put_character (',')
-						buffer.put_integer (real_body_id)
+						buffer.put_integer (real_body_id (class_type))
 					elseif System.has_multithreaded then
 						buffer.put_string ("RTOUC (")
 						buffer.put_integer (local_byte_context.thread_relative_once_index (body_index))

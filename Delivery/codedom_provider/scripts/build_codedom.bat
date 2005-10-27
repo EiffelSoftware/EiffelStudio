@@ -34,7 +34,7 @@ CD codedom
 REM in delivery\codedom
 
 MKDIR configs
-COPY ..\..\default.ecd configs\
+COPY ..\..\files\default.ecd configs\
 
 MKDIR bin
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CodeDom.CacheBrowser.dll bin\

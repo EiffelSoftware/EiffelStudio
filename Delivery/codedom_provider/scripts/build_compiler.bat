@@ -24,7 +24,7 @@ IF NOT EXIST EIFGEN\F_Code\ecdpc.exe GOTO END
 CD ..\..\
 REM in "checkout"
 IF EXIST c:\ecdpc RD /Q /S C:\ecdpc
-IF EXIST C:\ecdpc ECHO Could not cleanup c:\ecpdc
+IF EXIST C:\ecdpc ECHO Could not cleanup c:\ecpdc, exiting.
 IF EXIST C:\ecdpc GOTO END
 MKDIR C:\ecdpc
 COPY Eiffel\ace\EIFGEN\F_Code\ecdpc.exe C:\ecdpc
@@ -78,6 +78,8 @@ REM in "delivery"
 MKDIR compiler
 CD compiler
 REM in "delivery\compiler"
+MKDIR eifinit
+MKDIR eifinit\studio
 MKDIR library\base
 MKDIR library.net\base
 MKDIR studio
@@ -96,9 +98,13 @@ ECHO Copying delivery files
 XCOPY /S ..\..\..\checkout\compiler_delivery\help\errors "help\errors"
 COPY ..\..\..\checkout\Eiffel\ace\EIFGEN\F_Code\ecdpc.exe spec\windows\bin\
 COPY ..\..\..\checkout\dotnet\consumer\ace\EIFGEN\F_Code\EiffelSoftware.MetadataConsumer.dll spec\windows\bin\
+COPY ..\..\..\checkout\dotnet\consumer\ace\EIFGEN\F_Code\libEiffelSoftware.MetadataConsumer.dll spec\windows\bin\
 COPY ..\..\..\checkout\Eiffel\eiffel\com_il_generation\Core\run-time\EiffelSoftware.Runtime.dll spec\windows\bin\
 XCOPY /S ..\..\..\checkout\compiler_delivery\config\windows\msc config\windows\msc
 XCOPY /S ..\..\..\checkout\compiler_delivery\config\windows\templates config\windows\templates
+CD ..\eifinit
+REM in "delivery\compiler\eifinit"
+XCOPY /S ..\..\..\checkout\eifinit_delivery\studio studio\
 CD ..\library
 REM in "delivery\compiler\library"
 XCOPY /S ..\..\..\checkout\library\base base\

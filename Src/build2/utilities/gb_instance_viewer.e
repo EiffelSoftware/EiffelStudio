@@ -5,41 +5,29 @@ indexing
 
 class
 	GB_INSTANCE_VIEWER
-	
-inherit
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-	
+
 create
 	make_with_object_and_parent,
 	make_with_object
-	
+
 feature {NONE} -- Initialization
 
-	make_with_object_and_parent (an_object: GB_OBJECT; a_parent: EV_CONTAINER) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_object_and_parent (an_object: GB_OBJECT; a_parent: EV_CONTAINER; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create instance viewer for object `an_object' parented in `a_parent'.
 		require
 			an_object_not_void: an_object /= Void
 			parent_not_void: a_parent /= Void
 			parent_not_full: not a_parent.full
 		do
+			components := a_components
 			object := an_object
 			initialize
 			a_parent.extend (drawing_area)
 		end
-		
+
 	make_with_object (an_object: GB_OBJECT) is
 			-- Create instance viewer for object `an_object' shown modally to `main_window'.
 		require
@@ -65,8 +53,8 @@ feature {NONE} -- Initialization
 			horizontal_box.extend (close_button)
 			horizontal_box.disable_item_expand (close_button)
 			dialog.set_default_cancel_button (close_button)
-			dialog.set_minimum_size (640, 480)			
-			dialog.show_modal_to_window (main_window)
+			dialog.set_minimum_size (640, 480)
+			dialog.show_modal_to_window (components.tools.main_window)
 		end
 
 feature {NONE} -- Implementation
@@ -78,10 +66,10 @@ feature {NONE} -- Implementation
 
 	drawing_area: EV_DRAWING_AREA
 		-- Canvas for all drawing operations
-		
+
 	world: EV_FIGURE_WORLD
 		-- World containing all figures.
-	
+
 	rectangle_width: INTEGER is 40
 	spacing: INTEGER is 30
 		-- Default sizing for the  figures.
@@ -96,10 +84,10 @@ feature {NONE} -- Implementation
 			fill_world
 			drawing_area.expose_actions.force_extend (agent projector.project)
 		end
-			
+
 	projector: EV_DRAWING_AREA_PROJECTOR
 		-- Projector for drawing.
-		
+
 	fill_world is
 			-- Fill all figures into `world'.
 		local
@@ -130,7 +118,7 @@ feature {NONE} -- Implementation
 			list.extend (1)
 			fill_world_internal (object, 2, list, rectangle)
 		end
-		
+
 	fill_world_internal (an_object: GB_OBJECT; depth: INTEGER; counts: ARRAYED_LIST [INTEGER]; parent_rect: EV_FIGURE_RECTANGLE) is
 			-- Add `instance_referers' for `an_object' to `world' with a depth of `depth', a horizontal position given by `counts'
 			-- and a parent rectangle to associate a line with given by `parent_rect'.
@@ -152,14 +140,14 @@ feature {NONE} -- Implementation
 				counts.extend (0)
 			end
 			from
-				an_object.instance_referers.start				
+				an_object.instance_referers.start
 			until
 				an_object.instance_referers.off
 			loop
-				current_object := object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
+				current_object := components.object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
 				all_objects.search (current_object.id)
 				do_not_recurse := all_objects.found
-				
+
 				create move_handle
 				create rectangle
 				create coor1.make_with_position (20 + (counts.i_th (depth) * (rectangle_width + spacing)), depth * (rectangle_width + spacing))
@@ -175,7 +163,7 @@ feature {NONE} -- Implementation
 				move_handle.extend (text)
 				move_handle.move_actions.force_extend (agent drawing_area.clear)
 				move_handle.move_actions.force_extend (agent projector.full_project)
-				
+
 				if parent_rect /= Void then
 					create figure_line.make_with_points (parent_rect.point_b, rectangle.point_a)
 					figure_line.set_line_width (3)
@@ -189,8 +177,8 @@ feature {NONE} -- Implementation
 				an_object.instance_referers.forth
 			end
 		end
-		
+
 invariant
-	is_in_debug_mode: system_status.is_in_debug_mode
+	is_in_debug_mode: components.system_status.is_in_debug_mode
 
 end -- class GB_INSTANCE_VIEWER

@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING]];
 		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP], BOOLEAN]; a_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP];
-		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]) is
+		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 		local
 			tool_bar: EV_TOOL_BAR
 		do
+			components := a_components
 			call_default_create (any)
 			internal_type := a_type
 			object ?= internal_gb_ev_any.object
@@ -280,7 +281,7 @@ feature {NONE} -- Implementation
 		do
 			constants_combo_box.wipe_out
 			lookup_string := internal_gb_ev_any.type + internal_type
-			pixmap_constants := constants.pixmap_constants
+			pixmap_constants := components.constants.pixmap_constants
 			from
 				pixmap_constants.start
 			until

@@ -20,7 +20,7 @@ create
 	
 feature {NONE} -- Initialization
 	
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- If `label_text' `is_empty', do not display a label.
@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
 		do
+			components := a_components
 			call_default_create (any)
 			if not label_text.is_empty then
 				add_label (label_text, tooltip)
@@ -249,7 +250,7 @@ feature {NONE} -- Implementation
 		do
 			constants_combo_box.wipe_out
 			lookup_string := internal_gb_ev_any.type + internal_type
-			integer_constants := Constants.integer_constants
+			integer_constants := components.constants.integer_constants
 			from
 				integer_constants.start
 			until

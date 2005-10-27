@@ -26,8 +26,8 @@ feature -- Initialization
 			common_make
 				-- Remove all information from previous
 				-- prepass stage.
-		--	names_by_id.clear_all
-		--	generated_info_by_id.clear_all
+			names_by_id.clear_all
+			generated_info_by_id.clear_all
 		end
 		
 	make_child (a_parent: GB_GENERATED_INFO) is

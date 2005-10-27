@@ -5,38 +5,24 @@ indexing
 
 deferred class
 	GB_INPUT_FIELD
-	
+
 inherit
 	EV_VERTICAL_BOX
-	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-	
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			is_equal, copy, default_create
-		end
-		
+
 	INTERNAL
 		export
 			{NONE} all
@@ -50,15 +36,22 @@ inherit
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	GB_EV_PIXMAP_HANDLER
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	GB_INTERFACE_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			is_equal, copy, default_create
+		end
+
+	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
@@ -67,26 +60,29 @@ inherit
 
 feature -- Access
 
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
 	constants_combo_box: EV_COMBO_BOX
 		-- Combo box which will contain all INTEGER constants.
-		
+
 	type: STRING is
 			-- Type of constant represented.
 		deferred
 		end
-		
+
 	constants_button: EV_TOOL_BAR_TOGGLE_BUTTON
 		-- Button to switch between constants or values.
-		
+
 	object: GB_OBJECT
 		-- Object referenced by `Current'.
-		
+
 	internal_gb_ev_any: GB_EV_ANY
 		-- instance of GB_EV_ANY that is client of `Current'.
-		
+
 	label: EV_LABEL
 		-- Label used to display title tag.
-		
+
 	internal_type: STRING
 		--| The type of the property as it will appear in a constant context.
 		--| For example "EV_BUTTONText" is how the constant may appear in an object
@@ -112,7 +108,7 @@ feature -- Status setting
 		ensure
 			list_count_increased: constants_combo_box.count = old constants_combo_box.count + 1
 		end
-		
+
 	constant_changed (constant: GB_CONSTANT) is
 			-- `constant' has changed, so update representation in `Current'.
 		require
@@ -125,7 +121,7 @@ feature -- Status setting
 				list_item_not_void: list_item /= Void
 			end
 		end
-		
+
 	constant_removed (constant: GB_CONSTANT) is
 			-- Update `Current' to reflect removal of `constant' from system.
 		require
@@ -147,7 +143,7 @@ feature -- Status setting
 		ensure
 			list_count_decreased: constants_combo_box.count = old constants_combo_box.count - 1
 		end
-		
+
 	list_item_selected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been selected from `constants_combo_box'.
 		require
@@ -155,7 +151,7 @@ feature -- Status setting
 			list_item_has_data: list_item.data /= Void
 		deferred
 		end
-		
+
 	list_item_deselected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been deselected from `constants_combo_box'.
 		require
@@ -180,7 +176,7 @@ feature {NONE} -- Implementation
 			internal_gb_ev_any := gb_ev_any
 			default_create
 		end
-		
+
 	add_label (label_text, tooltip: STRING) is
 			-- Add a label to `Current' with `text' `label_text' and
 			-- tooltip `tooltip'.
@@ -193,7 +189,7 @@ feature {NONE} -- Implementation
 			disable_item_expand (label)
 			label.align_text_left
 		end
-		
+
 	create_constants_button is
 			-- Create and initialize `constants_button'.
 		do
@@ -205,7 +201,7 @@ feature {NONE} -- Implementation
 		ensure
 			constants_button_not_void: constants_button /= Void
 		end
-		
+
 	update_editors_when_unselected is
 			-- Call `update_editors' only if `constants_button' is not selected.
 		do
@@ -224,12 +220,12 @@ feature {NONE} -- Implementation
 				disable_constant_mode
 			end
 		end
-		
+
 	enable_constant_mode is
 			-- Ensure constant entry fields are displayed.
 		deferred
 		end
-		
+
 	disable_constant_mode is
 			-- Ensure constant entry fields are hidden.
 		deferred
@@ -238,9 +234,9 @@ feature {NONE} -- Implementation
 	update_editors is
 			-- Update editors.
 		do
-			update_editors_for_property_change (internal_gb_ev_any.objects.first, internal_gb_ev_any.type, internal_gb_ev_any.parent_editor)
+			components.object_editors.update_editors_for_property_change (internal_gb_ev_any.objects.first, internal_gb_ev_any.type, internal_gb_ev_any.parent_editor)
 		end
-		
+
 		add_select_item is
 			-- Add an initial item to `constants_combo_box' prompting for item selection.
 		require
@@ -256,7 +252,7 @@ feature {NONE} -- Implementation
 			count_increased: constants_combo_box.count = old constants_combo_box.count + 1
 			has_select_item: has_select_item
 		end
-		
+
 	remove_select_item is
 			-- Remove initial item which prompts for item selection from `constants_combo_box'.
 		require
@@ -267,7 +263,7 @@ feature {NONE} -- Implementation
 			count_decreased: constants_combo_box.count = old constants_combo_box.count - 1
 			not_has_select_item: not has_select_item
 		end
-		
+
 	has_select_item: BOOLEAN is
 			-- Does `constants_combo_box' contain the select item entry?
 		do

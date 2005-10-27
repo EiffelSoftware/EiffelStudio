@@ -5,16 +5,24 @@ indexing
 
 class
 	GB_NESTING_CHECKER
-	
-inherit
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Access
@@ -26,7 +34,7 @@ feature -- Access
 		local
 			top_objects: ARRAYED_LIST [GB_OBJECT]
 		do
-			top_objects := widget_selector.objects
+			top_objects := components.tools.widget_selector.objects
 			from
 				top_objects.start
 			until
@@ -36,7 +44,7 @@ feature -- Access
 				top_objects.forth
 			end
 		end
-		
+
 	check_object (an_object: GB_OBJECT) is
 			--
 		require
@@ -54,7 +62,7 @@ feature -- Access
 			until
 				an_object.instance_referers.off
 			loop
-				instance_object := object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
+				instance_object := components.object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
 				create all_instance_children.make (20)
 				instance_object.all_children_recursive (all_instance_children)
 				all_instance_children.extend (instance_object)

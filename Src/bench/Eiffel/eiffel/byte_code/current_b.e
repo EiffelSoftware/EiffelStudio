@@ -1,6 +1,6 @@
 -- Access to Current
 
-class CURRENT_B 
+class CURRENT_B
 
 inherit
 
@@ -10,7 +10,7 @@ inherit
 			register_name, pre_inlined_code, print_register, generate_il_address, generate_il_value,
 			is_fast_as_local
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -18,8 +18,8 @@ feature -- Visitor
 		do
 			v.process_current_b (Current)
 		end
-	
-feature 
+
+feature
 
 	type: TYPE_I is
 			-- Current type
@@ -69,8 +69,6 @@ feature -- IL code generation
 
 	generate_il_call_access (is_target_of_call: BOOLEAN) is
 			-- Generate IL code for an access to Current
-		local
-			type_i: TYPE_I
 		do
 			if is_target_of_call then
 				il_generator.generate_current
@@ -78,7 +76,7 @@ feature -- IL code generation
 				generate_il_value
 			end
 		end
-		
+
 	generate_il_address is
 			-- Generate address of Current.
 		do

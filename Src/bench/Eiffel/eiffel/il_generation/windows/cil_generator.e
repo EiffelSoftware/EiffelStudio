@@ -497,6 +497,8 @@ feature {NONE} -- Type description
 						class_c.lace_class = root_class_routine.lace_class)
 					types := class_c.types
 					if not types.is_empty then
+							-- Generate reference classes first, because their interface class
+							-- may be required to generate expanded classes.
 						from
 							types.start
 						until
@@ -505,7 +507,22 @@ feature {NONE} -- Type description
 							cl_type := types.item
 								-- Generate correspondance between Eiffel IDs and
 								-- CIL information.
-							if cl_type.is_generated then
+							if cl_type.is_generated and then not cl_type.is_expanded then
+								cil_generator.set_current_module_with (cl_type)
+								cil_generator.generate_class_mappings (cl_type, for_interface)
+							end
+
+							types.forth
+						end
+						from
+							types.start
+						until
+							types.after
+						loop
+							cl_type := types.item
+								-- Generate correspondance between Eiffel IDs and
+								-- CIL information.
+							if cl_type.is_generated and then cl_type.is_expanded then
 								cil_generator.set_current_module_with (cl_type)
 								cil_generator.generate_class_mappings (cl_type, for_interface)
 							end

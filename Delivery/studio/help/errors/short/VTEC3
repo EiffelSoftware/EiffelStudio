@@ -1,0 +1,3 @@
+Error: expanded type is based on class with external ancestor.
+What to do: make type non-expanded, or remove ancestry links to external
+    class(es).

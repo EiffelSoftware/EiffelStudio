@@ -97,7 +97,7 @@ inherit
 		end
 
 	WEL_RETURN_VALUE
-		
+
 feature -- Access
 
 	parent: WEL_WINDOW
@@ -114,7 +114,7 @@ feature -- Status report
 			Result := flag_set (style, Ws_child)
 		end
 
-	default_processing_enabled: BOOLEAN is 
+	default_processing_enabled: BOOLEAN is
 		obsolete
 			"Use `default_processing' instead"
 			-- Is the default window processing enabled?
@@ -688,18 +688,18 @@ feature -- Status setting
 	update_cached_style(new_ex_style, old_ex_style: INTEGER) is
 			-- Update Window cache buffer for Window style.
 			--|
-			--| Certain window data is cached, so changes you make using 
-			--| SetWindowLong will not take effect until you call the 
-			--| SetWindowPos function. Specifically, if you change any 
-			--| of the frame styles, you must call SetWindowPos with 
-			--| the SWP_FRAMECHANGED flag for the cache to be updated 
-			--| properly. 
+			--| Certain window data is cached, so changes you make using
+			--| SetWindowLong will not take effect until you call the
+			--| SetWindowPos function. Specifically, if you change any
+			--| of the frame styles, you must call SetWindowPos with
+			--| the SWP_FRAMECHANGED flag for the cache to be updated
+			--| properly.
 		local
 			Hwnd_const: POINTER
 			Swp_const: INTEGER
 		do
 			if flag_set (new_ex_style, Ws_ex_topmost) then
-				-- The new style specify "Top most", 
+				-- The new style specify "Top most",
 				-- so we change the current Z order to "Top most".
 				Hwnd_const := Hwnd_topmost
 			else
@@ -751,10 +751,10 @@ feature -- Element change
 		ensure
 			text_set_when_not_void: a_text /= Void implies
 				equal (text, a_text)
-			text_set_when_void: a_text = Void implies	
+			text_set_when_void: a_text = Void implies
 				text.count = 0
 		end
-		
+
 	set_placement (a_placement: WEL_WINDOW_PLACEMENT) is
 			-- Set `placement' with `a_placement'
 		require
@@ -810,7 +810,7 @@ feature -- Element change
 			cwin_set_timer (item, timer_id, time_out,
 				default_pointer)
 		end
-		
+
 	has_system_window_locked: BOOLEAN is
 			-- Is there any window locked ?
 		local
@@ -824,10 +824,10 @@ feature -- Element change
 				end
 			end
 		end
-		
+
 	lock_window_update is
 			-- Disables drawing in the current window. A locked window cannot be moved.
-			-- Only one window can be locked at a time. To unlock a window locked with 
+			-- Only one window can be locked at a time. To unlock a window locked with
 			-- `lock_window_update' , call 'unlock_window_update'.
 		require
 			exists: exists
@@ -848,23 +848,23 @@ feature -- Element change
 		do
 			success := c_lock_window_update (default_pointer)
 		end
-		
+
 	enable_redraw is
 			-- Ensure `Current' is redrawn as required.
 		require
 			exists: exists
 		do
-			cwin_send_message (item, wm_setredraw, to_wparam (1), default_pointer)	
+			cwin_send_message (item, wm_setredraw, to_wparam (1), default_pointer)
 		end
-		
+
 	disable_redraw is
 			-- Disable redrawing of `Current' until next call to `enable_redraw'.
 		require
 			exists: exists
 		do
-			cwin_send_message (item, wm_setredraw, default_pointer, default_pointer)			
+			cwin_send_message (item, wm_setredraw, default_pointer, default_pointer)
 		end
-		
+
 
 feature -- Basic operations
 
@@ -952,11 +952,11 @@ feature -- Basic operations
 		end
 
 	bring_to_top is
-			-- Bring this window to the top of the Z order. 
-			-- 
-			-- Note: 
-			--  * If the window is a top-level window, it is activated. 
-			--  * If the window is a child window, the top-level parent window 
+			-- Bring this window to the top of the Z order.
+			--
+			-- Note:
+			--  * If the window is a top-level window, it is activated.
+			--  * If the window is a child window, the top-level parent window
 			--    associated with the child window is activated.
 		require
 			exists: exists
@@ -1192,7 +1192,7 @@ feature -- Basic operations
 			cwin_invalidate_rgn (item, region.item,
 				erase_background)
 		end
-		
+
 	validate is
 			-- Validate the entire client area of the window.
 		require
@@ -1200,7 +1200,7 @@ feature -- Basic operations
 		do
 			cwin_validate_rect (item, default_pointer)
 		end
-		
+
 
 	validate_rect (rect: WEL_RECT) is
 			-- Validate the area `rect'.
@@ -1261,10 +1261,10 @@ feature -- Basic operations
 			-- Replace the current icon for the class which this window
 			-- belongs to.
 			--
-			-- The SetClassLong function replaces the specified 32-bit (long) 
-			-- value at the specified offset into the extra class memory 
-			-- or the WNDCLASSEX structure for the class to which the 
-			-- specified window belongs. 
+			-- The SetClassLong function replaces the specified 32-bit (long)
+			-- value at the specified offset into the extra class memory
+			-- or the WNDCLASSEX structure for the class to which the
+			-- specified window belongs.
 		do
 			cwin_set_class_long (item, Wel_gcl_constants.Gclp_hicon, new_icon.item)
 		end
@@ -1273,10 +1273,10 @@ feature -- Basic operations
 			-- Replace the current icon for the class which this window
 			-- belongs to.
 			--
-			-- The SetClassLong function replaces the specified 32-bit (long) 
-			-- value at the specified offset into the extra class memory 
-			-- or the WNDCLASSEX structure for the class to which the 
-			-- specified window belongs. 
+			-- The SetClassLong function replaces the specified 32-bit (long)
+			-- value at the specified offset into the extra class memory
+			-- or the WNDCLASSEX structure for the class to which the
+			-- specified window belongs.
 		do
 			cwin_set_class_long (item, Wel_gcl_constants.Gclp_hiconsm, new_icon.item)
 		end
@@ -1364,7 +1364,7 @@ feature {NONE} -- Messages
 			exists: exists
 		do
 		end
-		
+
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
@@ -1396,7 +1396,7 @@ feature {NONE} -- Messages
 			exists: exists
 		do
 		end
-		
+
 	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousewheel message
 		require
@@ -1544,7 +1544,7 @@ feature {NONE} -- Messages
 			-- Called when window receives WM_GETDLGCODE message.
 		do
 		end
-		
+
 	on_wm_theme_changed is
 			-- Called when window receives WM_THEMECHANGED message.
 		do
@@ -1661,7 +1661,7 @@ feature {WEL_WINDOW} -- Implementation
 		do
 			on_destroy
 		end
-		
+
 	on_wm_nc_destroy is
 			--  Wm_ncdestroy message.
 		do
@@ -1670,7 +1670,7 @@ feature {WEL_WINDOW} -- Implementation
 			destroyed: not exists
 			unregistered: not registered (Current)
 		end
-		
+
 	on_wm_notify (wparam, lparam: POINTER) is
 			-- Wm_notify message
 		require
@@ -1899,7 +1899,7 @@ feature {NONE} -- Removal
 			end
 
 			eif_object_id_free (object_id)
-			
+
 			{WEL_INTERNAL_DATA}.set_object_id (l_data, 0)
 			{WEL_INTERNAL_DATA}.set_default_window_procedure (l_data, null)
 			l_data.memory_free
@@ -1910,7 +1910,7 @@ feature {NONE} -- Removal
 				-- Clean `item' C pointer.
 			item := default_pointer
 		end
-	
+
 	frozen gc_destroy_item is
 			-- Called by GC and `item' is still not equal to default_pointer,
 			-- meaning that `destroy' has not been called. We need to call it.
@@ -1940,7 +1940,7 @@ feature {NONE} -- Removal
 						-- that the current windows was not destroyed, thus the C code
 						-- of `disptchr.c' did not free the allocated `internal_data'.
 						-- We need to free `internal_data' by calling `destroy_item'.
-						-- To ensure that the window will be destroyed, we send a 
+						-- To ensure that the window will be destroyed, we send a
 						-- WM_CLOSE message which by default calls `DestroyWindow'
 						-- but this time it will be done in the proper thread. Indeed our
 						-- handler will not be called because we will have no more trace
@@ -1980,23 +1980,23 @@ feature {NONE} -- Windows bug workaround
 				-- Reset `internal_wm_size_called'. It is set to True in `process_message'
 				-- when receiving a WM_SIZE message.
 			internal_wm_size_called := False
-			
+
 				-- Find out if a size change was requested.
 			l_diff := a_width /= width or a_height /= height
-			
+
 				-- Perform call to `MoveWindow'.
 			cwin_move_window (item, a_x, a_y, a_width, a_height, repaint)
-			
+
 			if not internal_wm_size_called and l_diff then
 					-- Bug showed up as we should had receive a WM_SIZE message but did not and
-					-- the previous size was different from the requested size, thus we are sending 
+					-- the previous size was different from the requested size, thus we are sending
 					-- the WM message ourself to `item'.
 					-- Thanks to `l_diff' we are able to catch cases where a WM_SIZE message
 					-- was not sent because it did not need to.
 				cwin_send_message (item, wm_size, to_wparam (0), cwin_make_long (a_width, a_height))
 			end
 		end
-		
+
 	internal_wm_size_called: BOOLEAN
 			-- Was `WM_SIZE' message received just after a call to `MoveWindow'?
 			-- See comments on `move_and_resize_internal' for more details.
@@ -2006,7 +2006,7 @@ feature {NONE} -- Constants
 	Wel_gcl_constants: WEL_GCL_CONSTANTS is
 		once
 			create Result
-		end	
+		end
 
 feature {NONE} -- Externals
 
@@ -2031,7 +2031,7 @@ feature {NONE} -- Externals
 			"C [macro <winuser.h>] (HWND, HWND)"
 		alias
 			"SetParent"
-		end 
+		end
 
 	cwin_destroy_window (hwnd: POINTER): INTEGER is
 			-- SDK DestroyWindow
@@ -2362,7 +2362,7 @@ feature {NONE} -- Externals
 		alias
 			"((short)HIWORD($wparam))"
 		end
-		
+
 	x_position_from_lparam (lparam: POINTER): INTEGER is
 		external
 			"C inline use <windows.h>"

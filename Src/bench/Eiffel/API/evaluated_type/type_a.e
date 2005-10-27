@@ -479,6 +479,19 @@ feature {COMPILER_EXPORTER} -- Access
 			end
 		end
 
+	is_ancestor_valid: BOOLEAN is
+			-- Is type ancestor valid?
+			-- (This is currently checked only for expanded types that have 
+			-- an external ancestor, that is not supported by CIL code generation.)
+		require
+			il_generation: system.il_generation
+		do
+			Result := True
+			if is_expanded and then not is_external and then associated_class.has_external_ancestor_class then
+				Result := False
+			end
+		end
+
 	create_info: CREATE_INFO is
 			-- Byte code information for entity type creation
 		require

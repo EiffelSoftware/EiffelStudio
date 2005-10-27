@@ -472,10 +472,16 @@ feature -- Inherited Assertions
 				i > assert_id_set.count
 			loop
 				inh_f := assert_id_set.item (i)
+					-- Do not include assertions with the same `body_index'
+					-- as current feature, because they are generated as
+					-- non-inherited ones. This situation happens when
+					-- the feature code is regenerated in the context of a 
+					-- descendant (e.g., in the expanded class).
 					--| Only generate precondition if the origin of 
 					--| the feature has a precondition
-				has_assertion := inh_f.has_postcondition or else
-								 (inh_f.has_precondition and then gen_prec)
+				has_assertion := inh_f.body_index /= body_index and then
+					(inh_f.has_postcondition or else
+					(inh_f.has_precondition and then gen_prec))
 				if has_assertion then
 					--! Has assertion
 					inh_c := System.class_of_id (inh_f.written_in)

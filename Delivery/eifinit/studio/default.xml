@@ -176,22 +176,6 @@
 	<PREF NAME="editor.eiffel.editor" DESCRIPTION="Command to open an external editor."><STRING>notepad</STRING></PREF>
 	<PREF NAME="editor.eiffel.underscore_is_separator" DESCRIPTION="Is underscore `_' used as a word separator?"><BOOLEAN>False</BOOLEAN></PREF>
 
-	<PREF NAME="editor.eiffel.colors.normal_text_color" DESCRIPTION="Foreground color for normal text."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.normal_background_color" DESCRIPTION="Background color for normal text."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.selection_text_color" DESCRIPTION="Foreground color for selected text."><COLOR>255;255;128</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.selection_background_color" DESCRIPTION="Background color for selected text."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.string_text_color" DESCRIPTION="Foreground color for manifest strings."><COLOR>0;128;128</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.string_background_color" DESCRIPTION="Background color for manifest strings."><COLOR>255;255;255</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.keyword_text_color" DESCRIPTION="Foreground color for keywords."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.keyword_background_color" DESCRIPTION="Background color for keywords."><COLOR>auto</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.spaces_text_color" DESCRIPTION="Foreground color for spaces."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.spaces_background_color" DESCRIPTION="Background color for spaces."><COLOR>auto</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.comments_text_color" DESCRIPTION="Foreground color for comments."><COLOR>128;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.comments_background_color" DESCRIPTION="Background color for comments."><COLOR>auto</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.number_text_color" DESCRIPTION="Foreground color for numbers."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.number_background_color" DESCRIPTION="Background color for numbers."><COLOR>auto</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.operator_text_color" DESCRIPTION="Foreground color for operators."><COLOR>0;0;0</COLOR></PREF>
-	<PREF NAME="editor.eiffel.colors.operator_background_color" DESCRIPTION="Background color for operators."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.breakpoint_background_color" DESCRIPTION="Color for breakable marks and breakpoints."><COLOR>212;208;200</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.assertion_tag_text_color" DESCRIPTION="Foreground color for assertion tags."><COLOR>64;0;0</COLOR></PREF>
 	<PREF NAME="editor.eiffel.colors.assertion_tag_background_color" DESCRIPTION="Background color for assertion tags."><COLOR>auto</COLOR></PREF>
@@ -568,15 +552,15 @@
 	<PREF NAME="editor.general.colors.string_text_color" DESCRIPTION="Color of string text."><COLOR>0;128;128</COLOR></PREF>	
 	<PREF NAME="editor.general.colors.string_background_color" DESCRIPTION="Background color of string text."><COLOR>255;255;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.keyword_text_color" DESCRIPTION="Color of keyword text."><COLOR>0;0;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>255;255;255</COLOR></PREF>	
+	<PREF NAME="editor.general.colors.keyword_background_color" DESCRIPTION="Background color of keyword text."><COLOR>auto</COLOR></PREF>	
 	<PREF NAME="editor.general.colors.spaces_text_color" DESCRIPTION="Color of space characters."><COLOR>128;128;128</COLOR></PREF>
-	<PREF NAME="editor.general.colors.spaces_background_color" DESCRIPTION="Background color of space characters."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.spaces_background_color" DESCRIPTION="Background color of space characters."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.comments_text_color" DESCRIPTION="Color of comments text."><COLOR>128;0;0</COLOR></PREF>
-	<PREF NAME="editor.general.colors.comments_background_color" DESCRIPTION="Background color of coments text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.comments_background_color" DESCRIPTION="Background color of coments text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.operator_text_color" DESCRIPTION="Color of operator text."><COLOR>255;0;0</COLOR></PREF>
-	<PREF NAME="editor.general.colors.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
-	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>255;255;255</COLOR></PREF>
+	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.use_buffered_line" DESCRIPTION="Indicates if editor line drawing is first buffered and then drawn, or just drawn directly to the screen.  If set to True, content will not flicker, but drawing performance will be reduced."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="editor.general.show_line_numbers" DESCRIPTION="Indicates if editor displays the line numbers by default."><BOOLEAN>False</BOOLEAN></PREF>
 	

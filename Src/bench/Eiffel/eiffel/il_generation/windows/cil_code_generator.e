@@ -1905,6 +1905,9 @@ feature -- Features info
 			elseif not is_single_class then
 				generate_feature (local_feature, False, False, False)
 			end
+			if current_class_type.is_expanded and then local_feature.is_attribute then
+				generate_feature (local_feature, False, True, False)
+			end
 		end
 
 	generate_type_feature_description (type_feature: TYPE_FEATURE_I) is
@@ -2200,7 +2203,7 @@ feature -- Features info
 			l_signature.compare_references
 
 			l_return_type := result_type (feat)
-			l_is_attribute_generated_as_field := ((is_single_class and not is_override_or_c_external) or
+			l_is_attribute_generated_as_field := ((is_single_class and not current_class_type.is_expanded and not is_override_or_c_external) or
 				(not in_interface and is_static)) and l_is_attribute
 			if l_is_attribute_generated_as_field then
 				l_field_sig := field_sig
@@ -3008,8 +3011,8 @@ feature -- IL Generation
 		do
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				runtime_class_name,
-				"standard_equal", Static_type,
-				<<system_object_class_name, system_object_class_name, system_object_class_name>>,
+				"is_equal", Static_type,
+				<<system_object_class_name, system_object_class_name>>,
 				"System.Boolean", False)
 		end
 
@@ -3150,7 +3153,12 @@ feature -- IL Generation
 						-- perform the MethodImpl.
 					method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldfld, attribute_token (current_type_id,
 						cur_feat.feature_id))
+				elseif current_class_type.is_expanded then
+						-- Call feature directly.
+					method_body.put_call ({MD_OPCODES}.Call, feature_token (current_type_id,
+						cur_feat.feature_id), nb, cur_feat.has_return_value)
 				else
+						-- Call feature polymorphically.
 					method_body.put_call ({MD_OPCODES}.Callvirt, feature_token (current_type_id,
 						cur_feat.feature_id), nb, cur_feat.has_return_value)
 				end

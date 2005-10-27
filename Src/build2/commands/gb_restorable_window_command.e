@@ -15,13 +15,6 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_TOOLS
 
 feature -- Access
 
@@ -47,8 +40,8 @@ feature -- Status setting
 					-- become very annoying.
 					
 				iconable_tool ?= window
-				if system_status.tools_always_on_top then
-					window.show_relative_to_window (main_window)
+				if components.system_status.tools_always_on_top then
+					window.show_relative_to_window (components.tools.main_window)
 				else
 					window.show
 				end

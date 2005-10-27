@@ -6,42 +6,23 @@ indexing
 
 class
 	GB_UNDO_COMMAND
-	
+
 inherit
 	GB_STANDARD_CMD
 		redefine
-			make, execute, executable
-		end
-		
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
+			execute, executable
 		end
 
 create
-	make
-	
+	make_with_components
+
 feature {NONE} -- Initialization
 
-	make is
-			-- Create `Current'.
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
 		do
-			Precursor {GB_STANDARD_CMD}
+			components := a_components
+			make
 			set_tooltip ("Undo")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_undo)
 			set_name ("Undo")
@@ -52,24 +33,24 @@ feature {NONE} -- Initialization
 				create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_z),
 				True, False, False))
 		end
-		
+
 feature -- Access
 
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
 		do
-			Result :=  history.current_position > 0
+			Result :=  components.history.current_position > 0
 		end
 
 feature -- Basic operations
-	
+
 		execute is
 				-- Execute `Current'.
 			do
-				force_name_change_completion_on_all_editors
+				components.object_editors.force_name_change_completion_on_all_editors
 				if executable then
-					history.undo
-					command_handler.update
+					components.history.undo
+					components.commands.update
 				end
 			end
 

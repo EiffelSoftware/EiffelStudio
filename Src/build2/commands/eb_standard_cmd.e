@@ -5,7 +5,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	GB_STANDARD_CMD
 
 inherit
@@ -14,17 +14,22 @@ inherit
 			mini_pixmap
 		end
 
-create
-	make
-
 feature -- Initialization
 
 	make is
 			-- Initialize `Current'.
 		do
 			create execute_agents.make
-			--pixmap := Pixmaps.Icon_run
 			name := "Default_command_name_Please_change_it"
+		end
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		deferred
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Access
@@ -49,6 +54,9 @@ feature -- Access
 
 	name: STRING
 			-- Internal string identifier of `Current'.
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
 
 feature -- Status setting
 
@@ -126,7 +134,7 @@ feature -- Basic operations
 				execute_agents.forth
 			end
 		end
-		
+
 	execute_if_executable is
 			-- Call all agents associated with `Current' if
 			-- executable.
@@ -139,9 +147,9 @@ feature -- Basic operations
 				loop
 					execute_agents.item.call ([])
 					execute_agents.forth
-				end	
+				end
 			end
 		end
-		
+
 
 end -- class EB_STANDARD_CMD

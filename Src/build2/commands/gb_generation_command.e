@@ -6,60 +6,36 @@ indexing
 
 class
 	GB_GENERATION_COMMAND
-	
+
 inherit
 	GB_STANDARD_CMD
 		redefine
-			make, execute, executable
+			execute, executable
 		end
 
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_XML_HANDLER
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-		
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		end
 
+	GB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
-	make
-	
+	make_with_components
+
 feature {NONE} -- Initialization
 
-	make is
-			-- Create `Current'.
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
 		local
 			acc: EV_ACCELERATOR
 			key: EV_KEY
 		do
-			Precursor {GB_STANDARD_CMD}
+			components := a_components
+			make
 			set_tooltip ("Generate code")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_code_generation)
 			set_name ("generate code")
@@ -74,7 +50,7 @@ feature {NONE} -- Initialization
 			create acc.make_with_key_combination (key, True, False, False)
 			set_accelerator (acc)
 		end
-		
+
 feature -- Access	
 
 	executable: BOOLEAN is
@@ -83,7 +59,7 @@ feature -- Access
 			objects: ARRAYED_LIST [GB_OBJECT]
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
-			objects ?= widget_selector.objects
+			objects ?= components.tools.widget_selector.objects
 			from
 				objects.start
 			until
@@ -94,38 +70,38 @@ feature -- Access
 			end
 				-- Only executable if there is at least one window within the system in project mode.
 				-- If in class generation mode, then you can generate at any time.
-			Result := system_status.project_open
-			if Result and system_status.current_project_settings.complete_project then
+			Result := components.system_status.project_open
+			if Result and components.system_status.current_project_settings.complete_project then
 				Result := Result  and titled_window_object /= Void
 			end
 		end
 
 feature -- Basic operations
-	
+
 	execute is
 				-- Execute `Current'.
 		local
 			objects: ARRAYED_LIST [GB_OBJECT]
 			confirmation_dialog: EV_CONFIRMATION_DIALOG
 		do
-			force_name_change_completion_on_all_editors
-			objects := widget_selector.objects
-			if not object_handler.objects_all_named (objects) then
+			components.object_editors.force_name_change_completion_on_all_editors
+			objects := components.tools.widget_selector.objects
+			if not components.object_handler.objects_all_named (objects) then
 				create confirmation_dialog.make_with_text (Not_all_windows_named_string)
 				confirmation_dialog.set_icon_pixmap (Icon_build_window @ 1)
-				confirmation_dialog.show_modal_to_window (main_window)
+				confirmation_dialog.show_modal_to_window (components.tools.main_window)
 				if confirmation_dialog.selected_button.is_equal ("OK") then
-					object_handler.add_default_names (objects)
+					components.object_handler.add_default_names (objects)
 				end
 			end
-			if object_handler.objects_all_named (objects) then
+			if components.object_handler.objects_all_named (objects) then
 					-- We check to see if the generation should begin, by the
 					-- status of the naming.
-				create dialog.make_default
-				dialog.show_modal_to_window (main_window)
+				create dialog.make_default (components)
+				dialog.show_modal_to_window (components.tools.main_window)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	dialog: GB_CODE_GENERATION_DIALOG
@@ -138,10 +114,10 @@ feature {NONE} -- Implementation
 			object_is_top_level: object_stone.object.is_top_level_object
 			object_named: object_stone.object.name /= Void and then not object_stone.object.name.is_empty
 		do
-			create dialog.make_for_single_generation (object_stone.object.name)
-			dialog.show_modal_to_window (main_window)
+			create dialog.make_for_single_generation (object_stone.object.name, components)
+			dialog.show_modal_to_window (components.tools.main_window)
 		end
-		
+
 	veto_drop (pebble: ANY): BOOLEAN is
 			-- Veto dropping for `generate_single_window' as the object
 			-- must be a named top level object.

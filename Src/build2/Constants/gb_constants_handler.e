@@ -8,44 +8,52 @@ indexing
 
 class
 	GB_CONSTANTS_HANDLER
-	
+
 inherit
 	ANY
 		redefine
 			default_create
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-		
+
 	GB_XML_UTILITIES
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-		
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		redefine
 			default_create
 		end
-	
+
 create
 	default_create
-	
+
+feature -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	initialize_constants (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Initialize `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+		ensure
+			components_set: components = a_components
+		end
+
 feature {NONE} -- Initialzation
 
 	default_create is
@@ -86,31 +94,31 @@ feature -- Access
 		ensure
 			obejct_comparison_on: Result.object_comparison
 		end
-		
-	all_constants: HASH_TABLE [GB_CONSTANT, STRING]	
+
+	all_constants: HASH_TABLE [GB_CONSTANT, STRING]
 		-- All constants accessible by name.
 
 	integer_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All integer constants in system.
-		
+
 	string_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All string constants in system.
 
 	directory_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All directory constants in system.
-	
+
 	pixmap_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All pixmap constants in system.
-		
+
 	color_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All color constants in system.
-		
+
 	font_constants: ARRAYED_LIST [GB_FONT_CONSTANT]
 		-- All font constants in system.
-		
+
 	deleted_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All constants that are currently flagged as deleted.
-	
+
 	string_is_constant_name (a_string: STRING): BOOLEAN is
 			-- Is `a_string' already used as a constant name?
 		require
@@ -169,7 +177,7 @@ feature -- Access
 				directory_constants.forth
 			end
 		end
-		
+
 	matching_directory_constant_names (a_file_path: STRING): ARRAYED_LIST [STRING] is
 			-- `Result' is name of directory constant with `value'
 			-- matching `a_file_path'. Case insensitive.
@@ -196,7 +204,7 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	directory_constant_by_name (directory_constant_name: STRING): GB_DIRECTORY_CONSTANT is
 			-- `Result' is directory_constant named `directory_constant_name',
 			-- or `Void' if none.
@@ -228,11 +236,11 @@ feature -- Element change
 			a_constant_not_void: a_constant /= Void
 		do
 			remove_constant_no_update (a_constant)
-			constants_dialog.update_for_removal (a_constant)
+			components.tools.constants_dialog.update_for_removal (a_constant)
 		ensure
 			constant_deleted: deleted_constants.has (a_constant)
 		end
-		
+
 	remove_constant_no_update (a_constant: GB_CONSTANT) is
 			-- Remove `a_constant' from all constants in system.
 			-- Flag as deleted. No graphical update of `constants_dialog'
@@ -266,7 +274,7 @@ feature -- Element change
 			end
 			all_constants.remove (a_constant.name)
 			all_constant_names.prune_all (a_constant.name)
-			
+
 				-- Now remove all referers.
 			referers := a_constant.referers
 			from
@@ -276,7 +284,7 @@ feature -- Element change
 				referers.start
 				referers.item.destroy
 			end
-			
+
 			deleted_constants.extend (a_constant)
 		ensure
 			constant_deleted: deleted_constants.has (a_constant)
@@ -292,13 +300,13 @@ feature -- Element change
 			if deleted_constants.has (integer_constant) then
 				deleted_constants.prune_all (integer_constant)
 			end
-			Constants_dialog.update_for_addition (integer_constant)
+			components.tools.constants_dialog.update_for_addition (integer_constant)
 			all_constants.put (integer_constant, integer_constant.name)
 		ensure
 			contained: integer_constants.has (integer_constant)
 			count_increased: integer_constants.count = old integer_constants.count + 1
 		end
-		
+
 	add_string (string_constant: GB_STRING_CONSTANT) is
 			-- Add `string_constant' to `string_constants'
 		require
@@ -309,13 +317,13 @@ feature -- Element change
 			if deleted_constants.has (string_constant) then
 				deleted_constants.prune_all (string_constant)
 			end
-			Constants_dialog.update_for_addition (string_constant)
+			components.tools.constants_dialog.update_for_addition (string_constant)
 			all_constants.put (string_constant, string_constant.name)
 		ensure
 			contained: string_constants.has (string_constant)
 			count_increased: string_constants.count = old string_constants.count + 1
 		end
-		
+
 	add_directory (directory_constant: GB_DIRECTORY_CONSTANT) is
 			-- Add `directory_constant' to `directory_constants'
 		require
@@ -326,13 +334,13 @@ feature -- Element change
 			if deleted_constants.has (directory_constant) then
 				deleted_constants.prune_all (directory_constant)
 			end
-			Constants_dialog.update_for_addition (directory_constant)
+			components.tools.constants_dialog.update_for_addition (directory_constant)
 			all_constants.put (directory_constant, directory_constant.name)
 		ensure
 			contained: directory_constants.has (directory_constant)
 			count_increased: directory_constants.count = old directory_constants.count + 1
 		end
-		
+
 	add_color (color_constant: GB_COLOR_CONSTANT) is
 			-- Add `color_constant' to `color_constants'
 		require
@@ -343,13 +351,13 @@ feature -- Element change
 			if deleted_constants.has (color_constant) then
 				deleted_constants.prune_all (color_constant)
 			end
-			Constants_dialog.update_for_addition (color_constant)
+			components.tools.constants_dialog.update_for_addition (color_constant)
 			all_constants.put (color_constant, color_constant.name)
 		ensure
 			contained: color_constants.has (color_constant)
 			count_increased: color_constants.count = old color_constants.count + 1
 		end
-		
+
 	add_font (font_constant: GB_FONT_CONSTANT) is
 			-- Add `font_constant' to `font_constants'
 		require
@@ -360,13 +368,13 @@ feature -- Element change
 			if deleted_constants.has (font_constant) then
 				deleted_constants.prune_all (font_constant)
 			end
-			Constants_dialog.update_for_addition (font_constant)
+			components.tools.constants_dialog.update_for_addition (font_constant)
 			all_constants.put (font_constant, font_constant.name)
 		ensure
 			contained: font_constants.has (font_constant)
 			count_increased: font_constants.count = old font_constants.count + 1
 		end
-	
+
 	add_pixmap (pixmap_constant: GB_PIXMAP_CONSTANT) is
 			-- Add `pixmap_constant' to `pixmap_constants'.
 		require
@@ -377,9 +385,9 @@ feature -- Element change
 			if deleted_constants.has (pixmap_constant) then
 				deleted_constants.prune_all (pixmap_constant)
 			end
-			Constants_dialog.update_for_addition (pixmap_constant)
+			components.tools.constants_dialog.update_for_addition (pixmap_constant)
 			all_constants.put (pixmap_constant, pixmap_constant.name)
-			
+
 				-- Now update cross referers if any.
 			if not pixmap_constant.is_absolute then
 				directory_constant_by_name (pixmap_constant.directory).add_cross_referer (pixmap_constant)
@@ -387,8 +395,8 @@ feature -- Element change
 		ensure
 			contained: pixmap_constants.has (pixmap_constant)
 			count_increased: pixmap_constants.count = old pixmap_constants.count + 1
-		end		
-		
+		end
+
 	build_constant_from_xml (element: XM_ELEMENT) is
 			-- Add a constant based on information in `element'.
 		local
@@ -437,14 +445,14 @@ feature -- Element change
 					if value = Void then
 						value := ""
 					end
-					create pixmap_constant.make_with_name_and_value (name, value, directory, filename, is_absolute)
+					create pixmap_constant.make_with_name_and_value (name, value, directory, filename, is_absolute, components)
 					add_pixmap (pixmap_constant)
 				else
 					new_constant_from_data (name, type, value)
 				end
 			end
 		end
-		
+
 	flatten_constants (element: XM_ELEMENT) is
 			-- Recurse through `element', and convert all constant values to manifest values
 			-- in the XML.
@@ -465,7 +473,7 @@ feature -- Element change
 				if current_element /= Void then
 					current_name := current_element.name
 					if current_name.is_equal (Constant_string) then
-	
+
 						full_information := get_unique_full_info (element)
 						constant := all_constants.item ((full_information @ Constant_string).data)
 						element.wipe_out
@@ -475,7 +483,7 @@ feature -- Element change
 					end
 				end
 				if not element.off then
-					element.forth	
+					element.forth
 				end
 			end
 		end
@@ -490,7 +498,7 @@ feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 			all_constant_names.wipe_out
 			pixmap_constants.wipe_out
 			directory_constants.wipe_out
-			Constants_dialog.reset_contents
+			components.tools.constants_dialog.reset_contents
 			all_constants.clear_all
 		end
 
@@ -520,7 +528,7 @@ feature {NONE} -- Implementation
 	deferred_elements: ARRAYED_LIST [XM_ELEMENT]
 		-- All XM_ELEMENT that must be created last, due to their
 		-- dependencies on other constants.	
-		
+
 	deferred_building: BOOLEAN
 		-- Is deferred building currently executing.
 		-- If so, actually create the type that will be deferred,

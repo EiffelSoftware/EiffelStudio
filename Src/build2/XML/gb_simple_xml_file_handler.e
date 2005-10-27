@@ -7,34 +7,48 @@ indexing
 
 class
 	GB_SIMPLE_XML_FILE_HANDLER
-	
+
 inherit
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 	GB_XML_UTILITIES
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_TOOLS
+
+	XM_CALLBACKS_FILTER_FACTORY
 		export
 			{NONE} all
 		end
-		
-	XM_CALLBACKS_FILTER_FACTORY
-		export
-			{NONE} all 
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
-	
+
 feature -- Basic operations
 
 	create_file (root_node_name: STRING; file_name: STRING; data: ARRAY [TUPLE [STRING, STRING]]) is
@@ -43,7 +57,7 @@ feature -- Basic operations
 		require
 			data_not_void: data /= Void
 			root_node_name_not_void: root_node_name /= Void
-			
+
 		local
 			document: XM_DOCUMENT
 			root_element: XM_ELEMENT
@@ -57,7 +71,7 @@ feature -- Basic operations
 			create namespace.make_default
 			create document.make_with_root_named (root_node_name, namespace)
 			root_element := document.root_element
-			add_attribute_to_element (root_element, "xsi", "xmlns", Schema_instance)	
+			add_attribute_to_element (root_element, "xsi", "xmlns", Schema_instance)
 				-- Add information in `names' and `data' to the file.
 			from
 				counter := 1
@@ -70,10 +84,10 @@ feature -- Basic operations
 					data_not_void: a_name_string /= Void and a_data_string /= Void
 				end
 				add_element_containing_string (root_element, a_name_string, a_data_string)
-				
+
 				counter := counter + 1
 			end
-			
+
 				-- Save document.
 			create file.make (file_name)
 			file.open_write
@@ -82,12 +96,12 @@ feature -- Basic operations
 				file.close
 			else
 				create warning_dialog.make_with_text (unable_to_save_part1 + file_name + unable_to_save_part2)
-				warning_dialog.show_modal_to_window (main_window)
+				warning_dialog.show_modal_to_window (components.tools.main_window)
 			end
 		end
-		
+
 	load_file (file_name: STRING): HASH_TABLE [STRING, STRING] is
-			-- Load file `file_name. `Result' contains the 
+			-- Load file `file_name. `Result' contains the
 			-- information contained in the file.
 			-- Do nothing if the file is a directory.
 		require
@@ -102,7 +116,7 @@ feature -- Basic operations
 				-- 54 is completely arbitary, but enough to validate.
 			create file.make_open_read (file_name)
 			if not file.is_directory and not file.is_device then
-				create buffer.make (file.count) 
+				create buffer.make (file.count)
 				file.start
 				file.read_stream (file.count)
 				file.close
@@ -127,12 +141,12 @@ feature -- Basic operations
 		ensure
 			result_not_void_if_loaded: last_load_successful implies result /= Void
 		end
-		
+
 	last_load_successful: BOOLEAN
 		-- Was the last call to `load file' successful?
-		
+
 feature {NONE} -- Implementation
-		
+
 	load_and_parse_xml_file (a_filename:STRING): HASH_TABLE [STRING, STRING] is
 			-- Load file `a_filename' and parse.
 			-- `Result' is all information in `a_filename'.
@@ -161,7 +175,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-				
+
 	pipe_callback: XM_TREE_CALLBACKS_PIPE is
 			-- Create unique callback pipe.
 		once
@@ -183,9 +197,9 @@ feature {NONE} -- Implementation
 				parser.parse_from_stream (file)
 			end
 		end
-				
+
 	parser: XM_EIFFEL_PARSER
-		
+
 	show_warning_dialog is
 			-- Show a warning with notification that the file
 			-- was not a valid build file.
@@ -194,7 +208,7 @@ feature {NONE} -- Implementation
 		do
 			last_load_successful := False
 			create dialog.make_with_text (Invalid_project_warning)
-			dialog.show_modal_to_window (main_window)
+			dialog.show_modal_to_window (components.tools.main_window)
 		end
 
 end -- class GB_SIMPLE_XML_FILE_HANDLER

@@ -6,70 +6,59 @@ indexing
 
 class
 	GB_COMMAND_ADD_DIRECTORY
-	
+
 inherit
-	
+
 	GB_COMMAND
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-		
+
 	GB_FILE_UTILITIES
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
-		
+
 	GB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		end
-		
+
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_directory: STRING) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make (directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_directory: STRING; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with directory named `a_directory'.
 		require
 			a_directory_not_void: a_directory /= Void
 		do
-			history.cut_off_at_current_position
+			components := a_components
+			components.history.cut_off_at_current_position
 			directory_name := a_directory
 			if directory_item /= Void then
 					-- `directory_item' may be `Void' if we are parenting at the root level
@@ -93,12 +82,12 @@ feature -- Basic Operation
 			l_path: STRING
 		do
 			create created_directories.make (4)
-			l_path := system_status.current_project_settings.actual_generation_location
+			l_path := components.system_status.current_project_settings.actual_generation_location
 			create temp_file_name.make_from_string (l_path)
 			create root_directory.make_open_read (l_path)
 			create test_directory_name.make_from_string (l_path)
 			test_directory_name.extend (unique_name_from_array (root_directory.linear_representation, "TEMP"))
-			
+
 			from
 				parent_directory_path.start
 			until
@@ -127,7 +116,7 @@ feature -- Basic Operation
 				directory.delete
 				test_directory.delete
 				test_directory := Void
-					-- If it was not a valid name, then an exception is raised and this 
+					-- If it was not a valid name, then an exception is raised and this
 				directory_added_succesfully := True
 			elseif not executed_once then
 					-- `executed_once' checks  that we only show the add to project warning the first time we add it and not when
@@ -137,13 +126,13 @@ feature -- Basic Operation
 									"The directory already exists on the disk. Do you wish to include it in the project?", "Always include, and do not show this warning again.", preferences.preferences)
 					directory_exists_dialog.set_icon_pixmap (Icon_build_window @ 1)
 					directory_exists_dialog.set_ok_action (agent set_directory_added_succesfully)
-					directory_exists_dialog.show_modal_to_window (main_window)
+					directory_exists_dialog.show_modal_to_window (components.tools.main_window)
 				else
 					directory_added_succesfully := True
 				end
 			end
 		end
-		
+
 	set_directory_added_succesfully is
 			-- Assign `True' to `directory_added_succesfully'
 		do
@@ -152,7 +141,7 @@ feature -- Basic Operation
 
 	directory_added_succesfully: BOOLEAN
 		-- Was last call to `create_directory' successful?
-		
+
 	test_directory: DIRECTORY
 		-- Temporary directory created and used to check the current file name.
 
@@ -168,11 +157,11 @@ feature -- Basic Operation
 					-- See comment of `executed_once'.
 				create_new_directory
 			end
-			create directory_item.make_with_name (directory_name)
+			create directory_item.make_with_name (directory_name, components)
 			if parent_directory_path.is_empty then
-				widget_selector.add_alphabetically (directory_item)
+				components.tools.widget_selector.add_alphabetically (directory_item)
 			else
-				parent_directory := widget_selector.directory_object_from_name (parent_directory_path)
+				parent_directory := components.tools.widget_selector.directory_object_from_name (parent_directory_path)
 				check
 					parent_directory_not_void: parent_directory /= Void
 				end
@@ -180,14 +169,14 @@ feature -- Basic Operation
 					-- Ensure `directory_item' is now visible.
 				parent_directory.expand
 			end
-			
-			if not history.command_list.has (Current) then
-				history.add_command (Current)
+
+			if not components.history.command_list.has (Current) then
+				components.history.add_command (Current)
 			end
-			command_handler.update
+			components.commands.update
 			executed_once := True
 		end
-		
+
 	undo is
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
@@ -198,12 +187,12 @@ feature -- Basic Operation
 		do
 			directory_path := parent_directory_path.twin
 			directory_path.extend (directory_name)
-			directory_item := widget_selector.directory_object_from_name (directory_path)
+			directory_item := components.tools.widget_selector.directory_object_from_name (directory_path)
 			check
-				directory_item_not_void: directory_item /= Void				
+				directory_item_not_void: directory_item /= Void
 			end
 			if not parent_directory_path.is_empty then
-				parent_directory_item := widget_selector.directory_object_from_name (parent_directory_path)
+				parent_directory_item := components.tools.widget_selector.directory_object_from_name (parent_directory_path)
 				check
 					parent_directory_not_void: parent_directory_item /= Void
 					parent_has_directory: directory_item.parent = parent_directory_item
@@ -211,19 +200,19 @@ feature -- Basic Operation
 				parent_directory_item.prune_all (directory_item)
 			else
 				check
-					contained_in_widget_selector: directory_item.parent = widget_selector
+					contained_in_widget_selector: directory_item.parent = components.tools.widget_selector
 				end
-				widget_selector.prune_all (directory_item)
+				components.tools.widget_selector.prune_all (directory_item)
 			end
-			command_handler.update
+			components.commands.update
 		end
-	
+
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		do
 			Result := "directory %"" + directory_name + "%" added to project."
 		end
-		
+
 	supress_warnings is
 			-- Ensure no warning is displayed when adding a directory
 			-- that already exists.
@@ -241,13 +230,13 @@ feature {NONE} -- Implementation
 	directory_name: STRING
 		-- Name of directory that was added. Only the actual name,
 		-- and not the full name, as all directories are relative to the project.
-		
+
 	parent_directory_path: ARRAYED_LIST [STRING]
 		-- Full path to parent_directory.
-		
+
 	warnings_supressed: BOOLEAN
 		-- Are warnings being supressed?
-		
+
 invariant
 	parent_directory_path_not_void: parent_directory_path /= Void
 	directory_name_not_void: directory_name /= Void and not directory_name.is_empty

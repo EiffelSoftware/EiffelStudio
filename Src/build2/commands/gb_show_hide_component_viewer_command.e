@@ -10,20 +10,15 @@ inherit
 
 	GB_RESTORABLE_WINDOW_COMMAND
 
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-
 create
-	default_create
+	make_with_components
 
 feature {GB_COMMAND_HANDLER} -- Initialization
 
-	make is
-			-- Create `Current'.
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
 		do
-			is_selected := component_viewer.is_show_requested
+			components := a_components
 			drop_agent := agent component_dropped
 		end
 
@@ -40,14 +35,14 @@ feature -- Access
 		do
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_component_viewer
 		end
-		
+
 	window: EV_DIALOG is
 			-- Result is window referenced by
 			-- `Current' command.
 		do
-			Result := component_viewer	
+			Result := components.tools.component_viewer
 		end
-		
+
 feature {NONE} -- Implementation
 
 	component_dropped (object_stone: GB_COMPONENT_OBJECT_STONE) is
@@ -57,7 +52,7 @@ feature {NONE} -- Implementation
 					-- Show `component_viewer' if not already shown.
 				execute
 			end
-			component_viewer.set_component (object_stone.component)
+			components.tools.component_viewer.set_component (object_stone.component)
 		end
 
 end -- class GB_SHOW_HIDE_COMPONENT_VIEWER_COMMAND

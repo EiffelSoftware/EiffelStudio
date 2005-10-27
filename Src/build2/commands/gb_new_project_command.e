@@ -7,65 +7,41 @@ indexing
 
 class
 	GB_NEW_PROJECT_COMMAND
-	
+
 inherit
 	GB_STANDARD_CMD
 		redefine
-			make, execute, executable
+			execute, executable
 		end
-		
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_XML_HANDLER
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		end
 
 create
-	make
-	
+	make_with_components
+
 feature {NONE} -- Initialization
 
-	make is
-			-- Create `Current'.
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
 		local
 			acc: EV_ACCELERATOR
 			key: EV_KEY
 		do
-			Precursor {GB_STANDARD_CMD}
+			components := a_components
+			make
 			set_tooltip ("New Project...")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_new_editor)
 			set_name ("New Project...")
@@ -78,18 +54,18 @@ feature {NONE} -- Initialization
 			create acc.make_with_key_combination (key, True, False, False)
 			set_accelerator (acc)
 		end
-		
+
 feature -- Access
 
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
 		do
 				-- Only can execute if there is no project open.
-			Result := not (system_status.project_open)
+			Result := not (components.system_status.project_open)
 		end
 
 feature -- Basic operations
-	
+
 		execute is
 				-- Execute `Current'.
 			local
@@ -108,7 +84,7 @@ feature -- Basic operations
 					cancelled or created_project
 				loop
 					create_project := True
-					dialog.show_modal_to_window (main_window)
+					dialog.show_modal_to_window (components.tools.main_window)
 					if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
 						cancelled := True
 					end
@@ -120,7 +96,7 @@ feature -- Basic operations
 						if raw_file.exists then
 							create conf_dialog.make_with_text (Project_exists_warning)
 							conf_dialog.set_icon_pixmap (Icon_build_window @ 1)
-							conf_dialog.show_modal_to_window (main_window)
+							conf_dialog.show_modal_to_window (components.tools.main_window)
 							if not conf_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 								create_project := False
 							end
@@ -130,28 +106,26 @@ feature -- Basic operations
 							if not directory.exists then
 								create directory_conf.make_with_text (Directory_exists_warning)
 								directory_conf.set_icon_pixmap (Icon_build_window @ 1)
-								directory_conf.show_modal_to_window (main_window)
+								directory_conf.show_modal_to_window (components.tools.main_window)
 								if directory_conf.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 									directory.create_dir
 								end
 							end
 							if directory.exists then
 								created_project := True
-								create settings.make_stand_alone_with_default_values
+								create settings.make_stand_alone_with_default_values (components)
 								settings.set_project_location (dialog.directory)
-								system_status.set_current_project (settings)
-								main_window.show_tools
-								command_handler.update
+								components.system_status.set_current_project (settings)
+								components.commands.update
 							end
 						end
 					end
 				end
-				
+
 				if created_project then
 						-- We must now initailize the tools for a new empty project.
-					object_handler.add_initial_window
-						-- Update title of `main_window' to reflect new state. 
-					main_window.update_title 
+					components.object_handler.add_initial_window
+					components.events.new_project_actions.call (Void)
 				end
 			end
 

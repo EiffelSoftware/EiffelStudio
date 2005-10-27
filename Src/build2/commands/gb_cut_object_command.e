@@ -5,41 +5,26 @@ indexing
 
 class
 	GB_CUT_OBJECT_COMMAND
-	
+
 inherit
 	GB_STANDARD_CMD
 		redefine
-			make, execute, executable
-		end
-		
-	GB_SHARED_TOOLS
-		export
-			{ANY} layout_constructor
-			{NONE} all
-		end
-		
-	GB_SHARED_CLIPBOAD
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
+			execute, executable
 		end
 
 create
-	make
-	
+	make_with_components
+
 feature {NONE} -- Initialization
 
-	make is
-			-- Create `Current'.
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `a_components'.
 		local
 			acc: EV_ACCELERATOR
 			key: EV_KEY
 		do
-			Precursor {GB_STANDARD_CMD}
+			components := a_components
+			make
 			set_tooltip ("Cut")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_cut)
 			set_name ("Cut")
@@ -53,18 +38,18 @@ feature {NONE} -- Initialization
 			create acc.make_with_key_combination (key, True, False, False)
 			set_accelerator (acc)
 		end
-		
+
 feature -- Access	
 
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
 		do
-			Result := (layout_constructor.has_focus and layout_constructor.selected_item /= Void) or
-				(widget_selector.has_focus and widget_selector.selected_window /= Void)
+			Result := (components.tools.layout_constructor.has_focus and components.tools.layout_constructor.selected_item /= Void) or
+				(components.tools.widget_selector.has_focus and components.tools.widget_selector.selected_window /= Void)
 		end
 
 feature -- Basic operations
-	
+
 		execute is
 				-- Execute `Current'.
 			local
@@ -73,24 +58,24 @@ feature -- Basic operations
 				cut_object: GB_OBJECT
 				selector_item: GB_WIDGET_SELECTOR_ITEM
 			do
-				if layout_constructor.has_focus then
-					layout_item ?= layout_constructor.selected_item
+				if components.tools.layout_constructor.has_focus then
+					layout_item ?= components.tools.layout_constructor.selected_item
 					cut_object := layout_item.object
 				else
-					selector_item ?= widget_selector.selected_window
+					selector_item ?= components.tools.widget_selector.selected_window
 					check
 						selected_item_was_object: selector_item /= Void
 					end
 					cut_object := selector_item.object
 				end
-				clipboard.set_object (cut_object)
-				
-				create command_delete.make
+				components.clipboard.set_object (cut_object)
+
+				create command_delete.make_with_components (components)
 				command_delete.delete_object (cut_object)
-				
-				command_handler.update
+
+				components.commands.update
 			end
-			
+
 		execute_with_object (object_stone: GB_STANDARD_OBJECT_STONE) is
 				-- Execute `Current' directly with object `object_stone'.
 			require
@@ -98,12 +83,12 @@ feature -- Basic operations
 			local
 				command_delete: GB_DELETE_OBJECT_COMMAND
 			do
-				clipboard.set_object (object_stone.object)
-				
-				create command_delete.make
+				components.clipboard.set_object (object_stone.object)
+
+				create command_delete.make_with_components (components)
 				command_delete.delete_object (object_stone.object)
-				
-				command_handler.update
+
+				components.commands.update
 			end
 
 end -- class GB_CUT_OBJECT_COMMAND

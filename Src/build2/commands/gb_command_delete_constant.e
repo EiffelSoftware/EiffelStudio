@@ -12,33 +12,8 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		end
 		
 	GB_CONSTANTS
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_OBJECT_EDITORS
 		export
 			{NONE} all
 		end
@@ -50,13 +25,16 @@ feature {NONE} -- Initialization
 
 	--| FIXME, constants are now no longer undoable.
 	--| Hence the commented sections in this class.
+	
+	components: GB_INTERNAL_COMPONENTS
 
-	make (constant: GB_CONSTANT) is
+	make (constant: GB_CONSTANT; a_component: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
 		require
 			constant_not_void: constant /= Void
 		do
+			components := a_component
 		--	history.cut_off_at_current_position
 			internal_constant := constant
 		ensure
@@ -75,7 +53,7 @@ feature -- Basic Operation
 --			if not history.command_list.has (Current) then
 --				history.add_command (Current)
 --			end
-			editors := all_editors
+			editors := components.object_editors.all_editors
 			from
 				editors.start
 			until
@@ -84,8 +62,8 @@ feature -- Basic Operation
 				editors.i_th (editors.index).constant_removed (internal_constant)
 				editors.forth
 			end
-			Constants.remove_constant (internal_constant)			
-			command_handler.update
+			components.constants.remove_constant (internal_constant)			
+			components.commands.update
 		end
 
 	undo is

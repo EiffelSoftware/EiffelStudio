@@ -10,39 +10,30 @@ inherit
 
 	GB_STANDARD_CMD
 		redefine
-			make, execute
+			execute
 		end
 
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-	
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		end
 
 create
-	make
+	make_with_components
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create `Current'.
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
 		do
-			Precursor {GB_STANDARD_CMD}
+			components := a_components
+			make
 				-- Retrieve top level window of `layout_constructor'.
 			set_menu_name ("Expand layout tree")
 			add_agent (agent execute)
 			enable_sensitive
 		end
-		
+
 feature -- Access
 
 	tool_bar_button: EV_TOOL_BAR_BUTTON is
@@ -55,7 +46,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 
 feature -- Execution
 
@@ -64,9 +55,9 @@ feature -- Execution
 		local
 			top_window: EV_WINDOW
 		do
-			top_window := parent_window (layout_constructor)
+			top_window := parent_window (components.tools.layout_constructor)
 			top_window.lock_update
-			expand_tree_recursive (layout_constructor)
+			expand_tree_recursive (components.tools.layout_constructor)
 			top_window.unlock_update
 		end
 

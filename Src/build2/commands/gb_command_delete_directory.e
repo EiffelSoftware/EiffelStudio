@@ -5,47 +5,36 @@ indexing
 
 class
 	GB_COMMAND_DELETE_DIRECTORY
-	
+
 inherit
-	
+
 	GB_COMMAND
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-		
+
 	GB_FILE_UTILITIES
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (a_directory, parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make (a_directory, parent_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with directory named `a_directory'.
 		require
 			a_directory_not_void: a_directory /= Void
-			void_parent_implies_widget_selector: parent_directory = Void implies a_directory.parent = widget_selector
-			non_void_parent_correct: parent_directory /= Void implies a_directory.parent /= widget_selector
+			void_parent_implies_widget_selector: parent_directory = Void implies a_directory.parent = components.tools.widget_selector
+			non_void_parent_correct: parent_directory /= Void implies a_directory.parent /= components.tools.widget_selector
 		do
-			History.cut_off_at_current_position
+			components := a_components
+			components.history.cut_off_at_current_position
 			directory_name := a_directory.path
 			if parent_directory /= Void then
 				parent_directory_name := parent_directory.path
@@ -62,7 +51,7 @@ feature -- Basic Operation
 			directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
 				-- Now actually remove the directory from the disk.
-			create temp_file_name.make_from_string (system_status.current_project_settings.actual_generation_location)
+			create temp_file_name.make_from_string (components.system_status.current_project_settings.actual_generation_location)
 			from
 				directory_name.start
 			until
@@ -78,18 +67,18 @@ feature -- Basic Operation
 				delete_directory (directory)
 			end
 				-- Now remove the representation from the directory selector.
-			directory_item := widget_selector.directory_object_from_name (directory_name)
+			directory_item := components.tools.widget_selector.directory_object_from_name (directory_name)
 			check
 				directory_item_found: directory_item /= Void
 			end
 			directory_item.unparent
-			
-			if not history.command_list.has (Current) then
-				history.add_command (Current)
+
+			if not components.history.command_list.has (Current) then
+				components.history.add_command (Current)
 			end
-			command_handler.update
+			components.commands.update
 		end
-		
+
 	undo is
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
@@ -100,7 +89,7 @@ feature -- Basic Operation
 		do
 				-- Only restore the directory to the disk if it was actually
 				-- removed previously.
-			create temp_file_name.make_from_string (system_status.current_project_settings.actual_generation_location)
+			create temp_file_name.make_from_string (components.system_status.current_project_settings.actual_generation_location)
 			from
 				directory_name.start
 			until
@@ -111,12 +100,12 @@ feature -- Basic Operation
 			end
 			create directory.make (temp_file_name)
 			if not directory.exists then
-				create_directory (directory)	
+				create_directory (directory)
 			end
-			widget_selector.silent_add_named_directory (directory_name)
-			command_handler.update
+			components.tools.widget_selector.silent_add_named_directory (directory_name)
+			components.commands.update
 		end
-	
+
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		do

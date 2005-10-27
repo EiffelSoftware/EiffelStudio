@@ -9,53 +9,46 @@ class
 	GB_XML_HANDLER
 
 inherit
-	
+
 	INTERNAL
 		export
 			{NONE} all
 		end
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 	GB_XML_UTILITIES
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-		
+
 	EV_DIALOG_CONSTANTS
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_STATUS_BAR
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_CONSTANTS
 		export
 			{NONE} all
 		end
 
 feature -- Access
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	initialize_xml_handler (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Initialize `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+		ensure
+			components_set: components = a_components
+		end
 
 	components_loaded: BOOLEAN is
 			-- Are components loaded?
@@ -70,26 +63,22 @@ feature -- Basic operations
 		local
 			xml_store: GB_XML_STORE
 		do
-			create xml_store
+			create xml_store.make_with_components (components)
 			xml_store.register_object_written_agent (agent display_save_progress)
 			xml_store.store
 		end
-		
+
 	load is
 			-- Retrieve the current built window from XML
 		local
 			xml_load: GB_XML_LOAD
 		do
-			system_status.set_object_structure_changing
-			main_window.disable_menus
-				-- During loading, menus must be disabled, as otherwise selections can be
-				-- made during the load.
-			create xml_load
+			components.system_status.set_object_structure_changing
+			create xml_load.make_with_components (components)
 			xml_load.load
-			main_window.enable_menus
-			system_status.set_object_structure_changed
+			components.system_status.set_object_structure_changed
 		end
-		
+
 	import (file_name: STRING) is
 			-- Import Build file `file_name'.
 		require
@@ -97,7 +86,7 @@ feature -- Basic operations
 		local
 			xml_load: GB_XML_IMPORT
 		do
-			create xml_load
+			create xml_load.make_with_components (components)
 			xml_load.import (file_name)
 		end
 
@@ -127,8 +116,8 @@ feature -- Basic operations
 				component_document := pipe_callback.document
 				an_element ?= component_document.first
 				component_element ?= an_element.first
-				
-				component_selector.add_components (all_child_element_names (an_element))
+
+				components.tools.component_selector.add_components (all_child_element_names (an_element))
 			else
 					-- Create `component_document'.
 				create component_document.make_with_root_named ("Components", create {XM_NAMESPACE}.make_default)
@@ -151,14 +140,14 @@ feature -- Basic operations
 			component_element: XM_ELEMENT
 			new_element: XM_ELEMENT
 		do
-			create xml_store
+			create xml_store.make_with_components (components)
 			first_element ?= component_document.first
 			component_element := new_child_element (first_element, component_name, "Component")
 			first_element.force_last (component_element)
 			new_element := create_widget_instance (component_element, an_object.type)
 			component_element.force_last (new_element)
 			xml_store.add_new_object_to_output (an_object, new_element, create {GB_GENERATION_SETTINGS})
-			Constants.flatten_constants (component_element)
+			components.constants.flatten_constants (component_element)
 		end
 
 	save_components is
@@ -178,23 +167,23 @@ feature -- Basic operations
 				file.is_writable or cancelled
 			loop
 				create error_dialog.make_with_text ("Unable to write to file : " + component_filename + ".%NPlease check file permissions and try again.")
-				error_dialog.show_modal_to_window (main_window)
+				error_dialog.show_modal_to_window (components.tools.main_window)
 				if error_dialog.selected_button.is_equal (ev_abort) then
 					cancelled := True
 				end
 			end
 			if not cancelled then
-				actual_save_components	
+				actual_save_components
 			end
 		end
-		
+
 	actual_save_components is
 			-- Actually perform saving of components.
 		local
 			file: KL_TEXT_OUTPUT_FILE
 			formater: XM_FORMATTER
 		do
-			create file.make (component_filename)			
+			create file.make (component_filename)
 			file.open_write
 			file.put_string (xml_format)
 			create formater.make
@@ -202,7 +191,7 @@ feature -- Basic operations
 			formater.process_document (component_document)
 			file.close
 		end
-		
+
 	remove_component (component_name: STRING) is
 			-- Removed component named `name' from `component_document'.
 		require
@@ -229,7 +218,7 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	component_root_element_type (a_name: STRING): STRING is
 			-- `Result' is the type of object representing the root element
 			-- of the component. i.e. "EV_BUTTON".
@@ -256,8 +245,8 @@ feature {GB_COMPONENT_SELECTOR_ITEM, GB_COMPONENT, GB_OBJECT} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
-		
+
+
 feature {NONE} -- Implementation
 
 	component_filename: FILE_NAME is
@@ -270,15 +259,15 @@ feature {NONE} -- Implementation
 		ensure
 			Result_exists: Result /= Void and not Result.is_empty
 		end
-		
+
 	display_save_progress (total, written: INTEGER) is
 			-- Display current save progress as percentage of `total' based on `written',
 			-- unless Build is running in Wizard mode.
 		do
-			set_status_text ("Saving : " + (((written / total) * 95).truncated_to_integer.out) + "%%")
+			components.status_bar.set_status_text ("Saving : " + (((written / total) * 95).truncated_to_integer.out) + "%%")
 			environment.application.process_events
 		end
-		
+
 	pipe_callback: XM_TREE_CALLBACKS_PIPE is
 			-- Create unique callback pipe.
 		once

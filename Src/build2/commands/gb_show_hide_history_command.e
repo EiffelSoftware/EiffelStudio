@@ -6,26 +6,22 @@ indexing
 
 class
 	GB_SHOW_HIDE_HISTORY_COMMAND
-	
+
 inherit
 
 	GB_RESTORABLE_WINDOW_COMMAND
-		
-	GB_SHARED_COMMAND_HANDLER
-	
-	GB_SHARED_TOOLS
 
 create
-	default_create
-	
+	make_with_components
+
 feature {GB_COMMAND_HANDLER} -- Initialization
 
-	make is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current'.
 		do
-			is_selected := history_dialog.is_show_requested
+			components := a_components
 		end
-		
+
 feature -- Access
 
 	menu_name: STRING is
@@ -33,7 +29,7 @@ feature -- Access
 		do
 			Result := Show_hide_history_window_menu_text
 		end
-		
+
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmap representing the item (for buttons)
 		do
@@ -41,12 +37,12 @@ feature -- Access
 		end
 
 feature -- Basic operations
-	
+
 	window: EV_DIALOG is
 			-- Result is window referenced by
 			-- `Current' command.
 		do
-			Result := history_dialog
+			Result := components.tools.history_dialog
 		end
 
 end -- class GB_SHOW_HIDE_HISTORY_COMMAND

@@ -86,7 +86,7 @@ feature -- Status Setting
 		do
 			auto_preference := a_pref
 			a_pref.change_actions.extend (agent try_to_set_value_to_auto)
-			try_to_set_value_to_auto
+			set_value_to_auto
 		ensure
 			auto_set: auto_preference = a_pref
 		end

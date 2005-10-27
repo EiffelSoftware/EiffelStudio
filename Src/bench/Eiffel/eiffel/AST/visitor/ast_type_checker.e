@@ -169,8 +169,7 @@ feature -- Special checking
 		require
 			a_type_node_not_void: a_type_node /= Void
 		local
-			l_vtec1: VTEC1
-			l_vtec2: VTEC2
+			l_vtec: VTEC
 			l_vtug: VTUG
 			l_vtcg3: VTCG3
 			l_vgcc3: VGCC3
@@ -190,17 +189,19 @@ feature -- Special checking
 			else
 				if a_type.has_expanded then
 					if a_type.expanded_deferred then
-						create l_vtec1
-						context.init_error (l_vtec1)
-						l_vtec1.set_location (a_type_node.start_location)
-						l_has_error := True
-						Error_handler.insert_error (l_vtec1)
+						create {VTEC1} l_vtec
 					elseif not a_type.valid_expanded_creation (current_class) then
-						create l_vtec2
-						context.init_error (l_vtec2)
-						l_vtec2.set_location (a_type_node.start_location)
+						create {VTEC2} l_vtec
+					elseif system.il_generation and then not a_type.is_ancestor_valid then
+							-- Expanded type cannot be based on a class with external ancestor.
+						create {VTEC3} l_vtec
+					end
+					if l_vtec /= Void then
+							-- Report error.
+						context.init_error (l_vtec)
+						l_vtec.set_location (a_type_node.start_location)
+						Error_handler.insert_error (l_vtec)
 						l_has_error := True
-						Error_handler.insert_error (l_vtec2)
 					end
 				end
 				if not l_has_error then

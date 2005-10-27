@@ -1630,8 +1630,6 @@
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_VIEWPORT><X_offset>0</X_offset>
 	<Y_offset>0</Y_offset>
-	<Item_width>-1</Item_width>
-	<Item_height>-1</Item_height>
 	</EV_VIEWPORT>
 <EV_CONTAINER></EV_CONTAINER>
 </item>

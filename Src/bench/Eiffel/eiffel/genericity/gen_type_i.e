@@ -332,7 +332,7 @@ feature -- Status Report
 					true_gen.put (create {FORMAL_I}.make (True, False, i), i)
 				else
 						-- We have an expanded type
-					if l_type.is_true_expanded then
+					if l_type.is_true_expanded and then not system.il_generation then
 						true_gen.put (create {FORMAL_I}.make (True, False, i), i)
 					else
 							-- We have a basic type, as an optimization, we

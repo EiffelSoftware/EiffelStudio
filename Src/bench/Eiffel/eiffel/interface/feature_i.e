@@ -1276,7 +1276,7 @@ feature -- Byte code computation
 			byte_context.set_current_feature (Current)
 
 			Byte_array.clear
-			byte_code.set_real_body_id (real_body_id)
+			byte_code.set_real_body_id (exec.real_body_id)
 			byte_code.make_byte_code (Byte_array)
 			byte_context.clear_feature_data
 
@@ -1519,8 +1519,7 @@ feature -- Signature checking
 			type /= Void
 		local
 			solved_type: TYPE_A
-			vtec1: VTEC1
-			vtec2: VTEC2
+			vtec: VTEC
 		do
 debug ("CHECK_EXPANDED")
 	io.error.put_string ("Check expanded of ")
@@ -1535,17 +1534,19 @@ end
 				solved_type ?= type.actual_type
 				if	solved_type.has_expanded then
 					if 	solved_type.expanded_deferred then
-						create vtec1
-						vtec1.set_class (written_class)	
-						vtec1.set_feature (Current)
-						vtec1.set_entity_name (feature_name)
-						Error_handler.insert_error (vtec1)
+						create {VTEC1} vtec
 					elseif not solved_type.valid_expanded_creation (class_c) then
-						create vtec2
-						vtec2.set_class (written_class)	
-						vtec2.set_feature (Current)
-						vtec2.set_entity_name (feature_name)
-						Error_handler.insert_error (vtec2)
+						create {VTEC2} vtec
+					elseif system.il_generation and then not solved_type.is_ancestor_valid then
+							-- Expanded type cannot be based on a class with external ancestor.
+						create {VTEC3} vtec
+					end
+					if vtec /= Void then
+							-- Report error
+						vtec.set_class (written_class)
+						vtec.set_feature (Current)
+						vtec.set_entity_name (feature_name)
+						Error_handler.insert_error (vtec)
 					end
 				end
 				if solved_type.has_generics then
@@ -2203,7 +2204,7 @@ feature -- C code generation
 					-- Generation of the C routine
 				byte_context.set_current_feature (Current)
 				byte_code.analyze
-				byte_code.set_real_body_id (real_body_id)
+				byte_code.set_real_body_id (real_body_id (class_type))
 				byte_code.generate
 				byte_context.clear_feature_data
 
@@ -2271,21 +2272,19 @@ feature -- Debugging
 			end
 		end
 
-	real_body_id: INTEGER is
-			-- Real body id at compilation time. This id might be
-			-- obsolete after supermelting this feature.
+	real_body_id (class_type: CLASS_TYPE): INTEGER is
+			-- Real body id at compilation time for `class_type'.
+			-- This id might be obsolete after supermelting this feature.
 			--| In latter case, new real body id is kept
 			--| in DEBUGGABLE objects.
 		require
 			valid_body_id: valid_body_id
 		local
 			exec_unit: EXECUTION_UNIT
-			class_type: CLASS_TYPE
 			old_cluster: CLUSTER_I
 		do
 			old_cluster := Inst_context.cluster
 			Inst_context.set_cluster (written_class.cluster)
-			class_type := written_class.types.first
 
 				-- Search for associated EXECUTION_UNIT
 			create exec_unit.make (class_type)

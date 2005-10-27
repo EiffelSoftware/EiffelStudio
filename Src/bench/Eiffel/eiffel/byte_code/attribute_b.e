@@ -142,6 +142,7 @@ feature -- IL code generation
 			r_type: TYPE_I
 			cl_type: CL_TYPE_I
 			target_type: TYPE_I
+			target_attribute_id: INTEGER
 			l_feature_call: FEATURE_B
 			l_cancel_attribute_generation: BOOLEAN
 		do
@@ -154,7 +155,14 @@ feature -- IL code generation
 			else
 					-- Type of class which defines current attribute.
 				cl_type ?= context_type
-				target_type := il_generator.implemented_type (written_in, cl_type)
+				if cl_type.is_expanded then
+						-- Access attribute directly.
+					target_type := cl_type
+					target_attribute_id := cl_type.base_class.feature_of_rout_id (routine_id).feature_id
+				else
+					target_type := il_generator.implemented_type (written_in, cl_type)
+					target_attribute_id := attribute_id
+				end
 
 				check
 					valid_type: cl_type /= Void
@@ -198,13 +206,13 @@ feature -- IL code generation
 						-- We push code to access Current attribute.
 					if address_required then
 						il_generator.generate_attribute_address (target_type,
-							r_type, attribute_id)
+							r_type, target_attribute_id)
 					else
 						if target_type.is_generated_as_single_type then
-							il_generator.generate_attribute (need_target, target_type, attribute_id)
+							il_generator.generate_attribute (need_target, target_type, target_attribute_id)
 						else
 							il_generator.generate_feature_access (target_type,
-								attribute_id, 0, True, True)
+								target_attribute_id, 0, True, True)
 						end
 
 							-- Generate cast if we have to generate verifiable code

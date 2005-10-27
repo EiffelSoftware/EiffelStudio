@@ -1,0 +1,3 @@
+Error: expanded class is not allowed to inherit from classes that are
+    .NET external classes or that inherit from .NET external classes.
+What to do: Remove inheritance from classes listed in error message.

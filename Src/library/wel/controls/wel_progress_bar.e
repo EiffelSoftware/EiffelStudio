@@ -1,7 +1,9 @@
 indexing
-	description: "Control to indicate the progress of a lengthy operation."
-	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
-		%be loaded to use this control."
+	description: "[
+		Control to indicate the progress of a lengthy operation.
+		Note: The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to
+			be loaded to use this control.
+		]"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

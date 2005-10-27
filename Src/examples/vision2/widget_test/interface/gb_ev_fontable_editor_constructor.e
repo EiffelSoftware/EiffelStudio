@@ -12,7 +12,7 @@ inherit
 		undefine
 			default_create
 		end
-		
+
 	DEFAULT_OBJECT_STATE_CHECKER
 		undefine
 			default_create
@@ -22,10 +22,10 @@ feature -- Access
 
 	ev_type: EV_FONTABLE
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING is "EV_FONTABLE"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -34,7 +34,7 @@ feature -- Access
 			reset_button: EV_BUTTON
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create horizontal_box
 			create font_button.make_with_text ("Select font...")
@@ -49,7 +49,7 @@ feature -- Access
 			Result.extend (horizontal_box)
 			update_attribute_editor
 		end
-		
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 				for_all_objects (agent {EV_FONTABLE}.set_font (font_dialog.font))
 			end
 		end
-		
+
 	reset_font is
 			-- Reset font of `object' in `Current' to default.
 		local
@@ -87,8 +87,8 @@ feature {NONE} -- Implementation
 			fontable ?= default_object_by_type (class_name (first))
 			for_all_objects (agent {EV_FONTABLE}.set_font (fontable.font))
 		end
-		
-		
+
+
 	font_dialog: EV_FONT_DIALOG
 		-- Dialog for user font choices.
 

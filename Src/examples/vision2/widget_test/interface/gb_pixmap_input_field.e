@@ -6,24 +6,24 @@ indexing
 
 class
 	GB_PIXMAP_INPUT_FIELD
-	
+
 inherit
 	EV_VERTICAL_BOX
-	
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	INTERNAL
 		export
 			{NONE} all
@@ -37,29 +37,29 @@ inherit
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	GB_EV_PIXMAP_HANDLER
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	GB_INTERFACE_CONSTANTS_IMP
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP, STRING]];
 		a_validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP], BOOLEAN]; a_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP];
-		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]) is
+		a_pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -120,7 +120,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 			return_pixmap_agent.call (Void)
 			pixmap := return_pixmap_agent.last_result
 			has_pixmap := pixmap /= Void
-		
+
 			if has_pixmap then
 				add_pixmap_to_pixmap_container (pixmap)
 				modify_button.set_text (Remove_button_text)
@@ -165,38 +165,38 @@ feature {NONE} -- Implementation
 		do
 			default_create
 		end
-		
+
 	modify_button: EV_BUTTON
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
-		
+
 	pixmap_path_string: STRING is "Pixmap_path"
-	
+
 	Remove_tooltip: STRING is "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
-		
+
 	Select_tooltip: STRING is "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
-		
+
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
-		
+
 	execution_agent: PROCEDURE [ANY, TUPLE [EV_PIXMAP]]
 		-- Agent to execute command associated with value entered into `Current'.
-		
+
 	validate_agent: FUNCTION [ANY, TUPLE [EV_PIXMAP], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
-		
+
 	return_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP]
-	
+
 	pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]
-		
+
 	frame: EV_FRAME
 		-- Frame used for displaying title around `Current'.
-		
+
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main horizontal box used in construction of `Current'.
-		
+
 	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
 			-- Add `pixmap' to `pixmap_container'.
 		local
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			end
 			x_ratio := pixmap.width / minimum_width_of_object_editor
 			y_ratio := pixmap.height / minimum_width_of_object_editor
-			if x_ratio > 1 and y_ratio < 1 then 
+			if x_ratio > 1 and y_ratio < 1 then
 				new_x := minimum_width_of_object_editor
 				new_y := (pixmap.height / x_ratio).truncated_to_integer
 			end
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 				new_y := (pixmap.height / biggest_ratio).truncated_to_integer
 			end
 			if new_x /= 0 and new_y /= 0 then
-				pixmap.stretch (new_x, new_y)	
+				pixmap.stretch (new_x, new_y)
 			end
 			if pixmap.width < 32 then
 				filler_label.wipe_out
@@ -290,43 +290,43 @@ feature {NONE} -- Implementation
 				filler_label.wipe_out
 				modify_button.set_text (select_button_text)
 				modify_button.set_tooltip (set_with_named_file_tooltip)
-			end	
+			end
 		end
-		
+
 	execute_agent (new_value: EV_PIXMAP; new_path: STRING) is
 			-- call `execution_agent'. `new_value' may be Void
 			-- in the case where we must remove the pixmap.
 		do
 			execution_agent.call ([new_value, new_path])
 		end
-		
+
 	update_editors is
 			-- Update all editors. Nothing to perform here, as required by EiffelBuild classes.
 		do
 		end
 
 	filler_label: EV_CELL
-		
+
 	environment: EV_ENVIRONMENT is
 			-- Once access to instance of EV_ENVIRONMENT.
 		once
 			create Result
 		end
-		
+
 	minimum_width_of_object_editor: INTEGER is 165
-	
+
 	remove_button_text: STRING is "Remove"
-	
+
 	select_button_text: STRING is "Select"
-	
+
 	set_with_named_file_tooltip: STRING is "Set pixmap image with named file"
-	
+
 	pixmap_missing_string: STRING is "Error - named pixmap missing."
-	
+
 	clear_text: STRING is "Clear"
 
 	clear_tooltip: STRING is "Clear pixmap image"
-	
+
 	object_editor_padding_width: INTEGER is 3
 
 invariant

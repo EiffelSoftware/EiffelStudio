@@ -6,28 +6,28 @@ indexing
 
 deferred class
 	GB_EV_PIXMAP_EDITOR_CONSTRUCTOR
-	
+
 inherit
 	GB_EV_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
 		end
-		
+
 	GB_EV_PIXMAP_HANDLER
 		undefine
 			default_create
 		end
-		
+
 	GB_CONSTANTS
-		
+
 feature -- Access
 
 	ev_type: EV_PIXMAP
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING is "EV_PIXMAP"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -36,7 +36,7 @@ feature -- Access
 			frame: EV_FRAME
 			frame_box: EV_VERTICAL_BOX
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create horizontal_box
 			create frame_box
@@ -55,7 +55,7 @@ feature -- Access
 			Result.extend (frame)
 			update_attribute_editor
 		end
-		
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -63,7 +63,7 @@ feature -- Access
 			if first.pixmap_exists then
 				add_pixmap_to_pixmap_container (first.twin)
 				for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
-			elseif first.pixmap_path = Void then 
+			elseif first.pixmap_path = Void then
 				-- `pixmap_path' is Void when we have not assigned a path yet,
 				-- so we do nothing.
 			else
@@ -73,13 +73,13 @@ feature -- Access
 				for_all_objects (agent {EV_PIXMAP}.disable_pixmap_exists)
 			end
 		end
-		
+
 	initialize_agents is
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
 		end
-		
+
 feature {NONE} -- Implementation
 
 	modify_pixmap is
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			end
 			x_ratio := pixmap.width / minimum_width_of_object_editor
 			y_ratio := pixmap.height / minimum_width_of_object_editor
-			if x_ratio > 1 and y_ratio < 1 then 
+			if x_ratio > 1 and y_ratio < 1 then
 				new_x := minimum_width_of_object_editor
 				new_y := (pixmap.height / x_ratio).truncated_to_integer
 			end
@@ -144,9 +144,9 @@ feature {NONE} -- Implementation
 				new_x := (pixmap.width / biggest_ratio).truncated_to_integer
 				new_y := (pixmap.height / biggest_ratio).truncated_to_integer
 			end
-			
+
 			if new_x /= 0 and new_y /= 0 then
-				pixmap.stretch (new_x, new_y)	
+				pixmap.stretch (new_x, new_y)
 			end
 			pixmap_container.wipe_out
 			pixmap_container.extend (pixmap)
@@ -155,23 +155,23 @@ feature {NONE} -- Implementation
 
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
-		
+
 	filler_label: EV_LABEL
-	
+
 	error_label: EV_LABEL
-		
+
 	modify_button: EV_BUTTON
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
 
 	pixmap_path_string: STRING is "Pixmap_path"
-	
+
 	Remove_string: STRING is "Remove"
 		-- String on `modify_button' when able to remove pixmap.
 
 	Remove_tooltip: STRING is "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
-		
+
 	Select_tooltip: STRING is "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
 

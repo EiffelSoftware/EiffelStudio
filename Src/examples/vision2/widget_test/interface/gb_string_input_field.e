@@ -10,34 +10,34 @@ class
 inherit
 	EV_VERTICAL_BOX
 
-	
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	INTERNAL
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			is_equal, copy, default_create
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
-	
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]; multiple_line_text_entry: BOOLEAN) is
+
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]; multiple_line_text_entry: BOOLEAN; components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 			check
 				object_was_editor_constructor: editor_constructor /= Void
 			end
-			
+
 			has_multiple_line_entry := multiple_line_text_entry
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
 		ensure
@@ -75,17 +75,17 @@ feature -- Basic operations
 			-- get infinite recursion.
 		require
 			a_text_not_void: a_text /= Void
-		do		
+		do
 			text_entry.change_actions.block
 			text_entry.set_text (a_text)
 			text_entry.change_actions.resume
 		ensure
 			text_set: text_entry.text.is_equal (a_text)
 		end
-		
-	has_multiple_line_entry: BOOLEAN	
+
+	has_multiple_line_entry: BOOLEAN
 		-- Does `Current' permit the entering of multiple lines of text?
-		
+
 	hide_label is
 			-- Ensure that label is hidden.
 		do
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 
 	validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
-		
+
 	label: EV_LABEL
 		-- Label used to display text associated with `Current'.
 
@@ -140,12 +140,12 @@ feature {NONE} -- Implementation
 		do
 			execution_agent.call ([new_value])
 		end
-		
+
 	update_editors is
 			-- Short version for calling everywhere.
 		do
 		end
-		
+
 	set_initial is
 			-- Assign text of text field to `value_on_entry'.
 		require
@@ -153,7 +153,7 @@ feature {NONE} -- Implementation
 		do
 			value_on_entry := text_entry.text
 		end
-		
+
 	process is
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 				text_entry.set_text (value_on_entry)
 			end
 		end
-		
+
 	call_default_create (any: ANY) is
 			-- Call `default_create' and assign `any' to `internal_gb_ev_any'.
 		require
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 		do
 			default_create
 		end
-		
+
 	add_label (label_text, tooltip: STRING) is
 			-- Add a label to `Current' with `text' `label_text' and
 			-- tooltip `tooltip'.
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 			disable_item_expand (label)
 			label.align_text_left
 		end
-		
+
 	setup_text_field (a_parent: EV_CONTAINER; tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
 			-- Initialize text field for entry.
 		require
@@ -200,12 +200,12 @@ feature {NONE} -- Implementation
 				-- Store `an_exection_agent' internally.
 			execution_agent := an_execution_agent
 				-- Store `a_validate_agent'.
-				
+
 			validate_agent := a_validate_agent
 			a_parent.extend (Current)
 			create horizontal_box
 			extend (horizontal_box)
-			
+
 			if has_multiple_line_entry = multiple_line_entry then
 					-- Create a text component that supports multiple lines of text if necessary.
 				create {EV_TEXT} text_entry
@@ -225,5 +225,5 @@ feature {NONE} -- Implementation
 			entry_widget.focus_in_actions.extend (agent set_initial)
 			entry_widget.focus_out_actions.extend (agent process)
 		end
-		
+
 end -- class GB_STRING_INPUT_FIELD

@@ -9,19 +9,19 @@ class
 
 inherit
 	EV_VERTICAL_BOX
-	
+
 	GB_GENERAL_UTILITIES
 		undefine
 			copy, is_equal, default_create
 		end
-	
+
 create
 	make,
 	make_without_label
 
 feature {NONE} -- Initialization
-	
-	make (any: ANY; a_parent: EV_CONTAINER;  a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
+
+	make (any: ANY; a_parent: EV_CONTAINER;  a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]; components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			text_field.return_actions.extend (agent process)
 			text_field.focus_in_actions.extend (agent set_initial)
 			text_field.focus_out_actions.extend (agent process)
-			
+
 				-- Store `an_exection_agent' internally.
 			execution_agent := an_execution_agent
 
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			execution_agent_not_void: execution_agent /= Void
 			validate_agent_not_void: validate_agent /= Void
 		end
-		
+
 	make_without_label (any: ANY; a_parent: EV_CONTAINER;  a_type, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [INTEGER]]; a_validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			text_field.return_actions.extend (agent process)
 			text_field.focus_in_actions.extend (agent set_initial)
 			text_field.focus_out_actions.extend (agent process)
-			
+
 				-- Store `an_exection_agent' internally.
 			execution_agent := an_execution_agent
 
@@ -101,7 +101,7 @@ feature -- Basic operations
 		do
 			text_field.set_text (a_text)
 		end
-		
+
 feature -- Access
 
 	text: STRING is
@@ -109,7 +109,7 @@ feature -- Access
 		do
 			Result := text_field.text
 		end
-		
+
 feature {GB_EV_EDITOR_CONSTRUCTOR}
 
 	update_constant_display (a_value: STRING) is
@@ -124,10 +124,10 @@ feature {NONE} -- Implementation
 
 	text_field: EV_TEXT_FIELD
 		-- Text field usd for user input.
-	
+
 	value_on_entry: STRING
 		-- Contents of `text_field' when focus in is received.
-	
+
 	validate_agent: FUNCTION [ANY, TUPLE [INTEGER], BOOLEAN]
 		-- Is integer a valid integer for `execution_agent'.
 
@@ -136,12 +136,12 @@ feature {NONE} -- Implementation
 		do
 			execution_agent.call ([new_value])
 		end
-		
+
 	update_editors is
 			-- Short version for calling everywhere.
 		do
 		end
-		
+
 	set_initial is
 			-- Assign text of text field to `value_on_entry'.
 		require
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 		do
 			value_on_entry := text_field.text
 		end
-		
+
 	process is
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.

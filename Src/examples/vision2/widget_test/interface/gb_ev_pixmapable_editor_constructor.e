@@ -6,28 +6,28 @@ indexing
 
 deferred class
 	GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR
-	
+
 inherit
 	GB_EV_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
 		end
-		
+
 	GB_EV_PIXMAP_HANDLER
 		undefine
 			default_create
 		end
-		
+
 	GB_CONSTANTS
-		
+
 feature -- Access
 
 	ev_type: EV_PIXMAPABLE
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING is "EV_PIXMAPABLE"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -36,7 +36,7 @@ feature -- Access
 			frame: EV_FRAME
 			frame_box: EV_VERTICAL_BOX
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create horizontal_box
 			create frame_box
@@ -55,7 +55,7 @@ feature -- Access
 			Result.extend (frame)
 			update_attribute_editor
 		end
-		
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -83,7 +83,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	initialize_agents is
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 					-- as the pixmap will no be no longer visible.
 				filler_label.remove_tooltip
 				rebuild_associated_editors (first)
-			end	
+			end
 		end
 
 	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			filler_label.set_tooltip (first.internal_pixmap_path)
 			x_ratio := pixmap.width / minimum_width_of_object_editor
 			y_ratio := pixmap.height / minimum_width_of_object_editor
-			if x_ratio > 1 and y_ratio < 1 then 
+			if x_ratio > 1 and y_ratio < 1 then
 				new_x := minimum_width_of_object_editor
 				new_y := (pixmap.height / x_ratio).truncated_to_integer
 			end
@@ -165,9 +165,9 @@ feature {NONE} -- Implementation
 				new_x := (pixmap.width / biggest_ratio).truncated_to_integer
 				new_y := (pixmap.height / biggest_ratio).truncated_to_integer
 			end
-			
+
 			if new_x /= 0 and new_y /= 0 then
-				pixmap.stretch (new_x, new_y)	
+				pixmap.stretch (new_x, new_y)
 			end
 			pixmap_container.wipe_out
 			pixmap_container.extend (pixmap)
@@ -176,22 +176,22 @@ feature {NONE} -- Implementation
 
 	pixmap_container: EV_CELL
 		-- Holds a representation of the loaded pixmap.
-		
+
 	filler_label: EV_LABEL
-		
+
 	modify_button: EV_BUTTON
 		-- Is either "Select" or "Remove"
 		-- depending on current context.
 
 	pixmap_path_string: STRING is "Pixmap_path"
-	
+
 	Remove_string: STRING is "Remove"
 		-- String on `modify_button' when able to remove pixmap.
 
 	Remove_tooltip: STRING is "Remove pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
-		
+
 	Select_tooltip: STRING is "Select pixmap"
 		-- Tooltip on `modify_button' when able to remove pixmap.
-		
+
 end -- class GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR

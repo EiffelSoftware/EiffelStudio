@@ -13,42 +13,26 @@ inherit
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-
-		-- We only inherit this to get access to the parent.
-		-- We could recursively find the tree containing `Current',
-		-- and do a reverse assignment onto a GB_TYPE_SELECTOR.
-		-- Which is better?
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
 
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_DIGIT_CHECKER
-		export
-			{NONE} all
-		end
-		
+
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_text (a_text: STRING; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current', assign `a_text' to `text'
-			-- and "EV_" + `a_text' to `type'.
+			-- , "EV_" + `a_text' to `type' and `a_components' to `components'.
+		require
+			a_text_not_void_or_empty: a_text /= Void or not a_text.is_empty
+			a_components_not_void: a_components /= Void
 		deferred
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Access
@@ -72,27 +56,27 @@ feature -- Access
 			primitive: GB_PRIMITIVE_OBJECT
 			menu_bar: GB_MENU_BAR_OBJECT
 			object: GB_OBJECT
-		do	
+		do
 			--| Note that the checks in this feature check for the state that we do not want
 			--| and then if this is not the case, perform an action. It is simpler to do it this
 			--| way, as there are so many other cases that we would allow.
 			object ?= object_stone.object
-			
-			current_type := dynamic_type_from_string (type)	
+
+			current_type := dynamic_type_from_string (type)
 			Result := True
-			
+
 			Result := object.object /= Void
 				-- This check ensures that we do nothing if we have just picked an object from
 				-- the type selector as it may not be replaced.
 			if result then
-			
+
 				container ?= object
 					-- We may only replace an EV_CONTAINER with a primitive if the container is empty.
 				if container /= Void and container.object.count > 0 and
 					type_conforms_to (current_type, dynamic_type_from_string (Ev_primitive_string)) then
 					Result := False
 				end
-				
+
 				primitive ?= object
 				if primitive /= Void  then
 						-- We cannot directly query the count of a primitive
@@ -102,8 +86,8 @@ feature -- Access
 						Result := False
 					end
 				end
-				
-				
+
+
 				cell ?= object
 				if cell /= Void then
 						-- We may only replace an EV_CELL with an EV_PRIMITIVE if the cell is empty.
@@ -111,7 +95,7 @@ feature -- Access
 						Result := False
 					end
 				end
-				
+
 				container ?= object
 				if container /= Void then
 						-- We may only replace an EV_CONTAINER with an EV_SPLIT_AREA if the container
@@ -129,17 +113,17 @@ feature -- Access
 							Result := True
 						else
 							Result := False
-						end		
+						end
 					elseif type_conforms_to (current_type, dynamic_type_from_string (Ev_primitive_string)) then
 						if container.object.is_empty then
 							Result := True
 						else
 							Result := False
 						end
-						
+
 					end
 				end
-					
+
 					-- Special case for menu bar.
 					-- Menu bars are not widgets, or items, and can only
 					-- be replaced by other menu bars.
@@ -148,7 +132,7 @@ feature -- Access
 					if menu_bar = Void then
 						Result := False
 					end
-				end	
+				end
 
 				if object.parent_object = Void then
 						-- This prevents top level objects from being replaced.
@@ -156,16 +140,16 @@ feature -- Access
 				elseif not object.parent_object.accepts_child (type) then
 					Result := False
 				end
-	
+
 					-- We must override if the type represented by `object' is a window
 					-- or `Current' represents a window, as nothing may be replaced by a window.
 					-- Currently, windows are fixed and may not be replaced.
-					
+
 				if object.type.is_equal (Ev_window_string) or object.type.is_equal (Ev_titled_window_string) or object.type.is_equal (Ev_dialog_string) or
 					type.is_equal (Ev_window_string) or type.is_equal (Ev_titled_window_string) or type.is_equal (Ev_dialog_string) then
 					Result := False
 				end
-				
+
 					-- This prevents the type of an object being changed if it is a representation
 					-- of a top level object.
 				if object.is_instance_of_top_level_object then
@@ -178,23 +162,23 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 
 	generate_transportable: GB_OBJECT_STONE is
 			-- `Result' is a GB_OBJECT matching `text' of `Current'.
-		do			
+		do
 			process_number_key
-			
+
 				-- Note that this generates a new id, so if the pnd is cancelled, we
 				-- will have used an other id, although this should not be a problem.
 				-- As the ids will be compacted when the project is next loaded.
-			Result := create {GB_STANDARD_OBJECT_STONE}.make_with_object (object_handler.build_object_from_string_and_assign_id (type))
+			Result := create {GB_STANDARD_OBJECT_STONE}.make_with_object (components.object_handler.build_object_from_string_and_assign_id (type))
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	process_number_key is
 			-- Begin processing by `digit_checker', so that
 			-- it can be determined if a digit key is held down.
 		deferred
 		end
-		
+
 	replace_layout_item (object_stone: GB_STANDARD_OBJECT_STONE) is
 			-- Replace `an_object' with a new object of
 			-- type `text'.
@@ -202,13 +186,13 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			object_stone_not_void: object_stone /= Void
 		local
 			command: GB_COMMAND_CHANGE_TYPE
-		do	
-			create command.make (object_stone.object, object_stone.object.type, type)
+		do
+			create command.make (object_stone.object, object_stone.object.type, type, components)
 			command.execute
 		end
 
 invariant
 	type_not_void: type /= Void
 	item_not_void: item /= Void
-		
+
 end -- class GB_TYPE_SELECTOR_ITEM

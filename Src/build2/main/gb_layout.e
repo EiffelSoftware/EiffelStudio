@@ -19,13 +19,6 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
 
 feature -- Access
 

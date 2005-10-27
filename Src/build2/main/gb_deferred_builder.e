@@ -34,15 +34,14 @@ feature {GB_XML_LOAD, GB_COMPONENT, GB_OBJECT_HANDLER, GB_XML_IMPORT, GB_XML_OBJ
 			from
 				all_gb_ev.start
 				all_element.start
+			invariant
+				lists_have_same_count: all_element.count = all_gb_ev.count
 			until
 				all_gb_ev.is_empty
 			loop
 				all_gb_ev.item.modify_from_xml_after_build (all_element.item)
 				all_gb_ev.remove
 				all_element.remove
-				check
-					all_element.count = all_gb_ev.count
-				end
 			end
 		ensure
 			all_gb_ev_is_empty: all_gb_ev.is_empty

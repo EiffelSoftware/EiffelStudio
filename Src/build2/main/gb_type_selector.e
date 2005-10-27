@@ -8,7 +8,7 @@ class
 	GB_TYPE_SELECTOR
 
 inherit
-	
+
 	EV_CELL
 		export
 			{ANY} parent, is_displayed
@@ -27,14 +27,14 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 	GB_STORABLE_TOOL
 		undefine
 			default_create, copy, is_equal
 		redefine
 			default_create
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
@@ -43,37 +43,51 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 	GB_DEFAULT_STATE
 		export
 			{NONE} all
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-	
+
 create
-	default_create
+	make_with_components
 
 feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
+		end
 
 	initialize is
 			-- Initialize `Current'.
@@ -87,12 +101,12 @@ feature {NONE} -- Initialization
 				build_icon_view
 				view_mode_button.enable_select
 				extend (drawing_area)
-				
+
 			end
 		end
-		
+
 feature -- Access
-		
+
 	tool_bar: EV_TOOL_BAR is
 			-- A tool bar containing all buttons associated with `Current'.
 		once
@@ -102,10 +116,10 @@ feature -- Access
 			view_mode_button.select_actions.extend (agent switch_view_mode)
 			Result.extend (view_mode_button)
 		end
-		
+
 	name: STRING is "Type Selector"
 			-- Full name used to represent `Current'.
-		
+
 	is_in_classic_view_mode: BOOLEAN is
 			-- Is `Current' in the classic view mode?
 		do
@@ -143,18 +157,18 @@ feature {NONE} -- Implementation
 			until
 				counter = list.count + 1
 			loop
-				create new_item.make_with_text ((list @ counter).substring (4, (list @ counter).count))
+				create new_item.make_with_text ((list @ counter).substring (4, (list @ counter).count), components)
 				tree_item.extend (new_item.item)
 				counter := counter + 1
 			end
 		end
-		
+
 	build_classic_view is
 			-- Build classic view mode.
 		local
 			tree_item1, tree_item2, tree_item3, tree_item4: EV_TREE_ITEM
 		do
-			create tree			
+			create tree
 			tree.set_minimum_height (tool_minimum_height)
 			create tree_item1.make_with_text ("Widgets")
 			tree_item1.set_pixmap (pixmap_by_name ("widgets"))
@@ -177,7 +191,7 @@ feature {NONE} -- Implementation
 			tree_item1.expand
 			tree_item4.expand
 		end
-		
+
 
 	build_icon_view is
 			-- Build icon view mode.
@@ -206,7 +220,7 @@ feature {NONE} -- Implementation
 			add_figure_items (items, figure_world)
 			drawing_area.resize_actions.extend (agent drawing_area_resized)
 		end
-		
+
 	add_figure_items (list: ARRAY [STRING]; a_world: EV_FIGURE_WORLD) is
 			-- Add items corresponding to contents of `list' to `table'.
 		local
@@ -218,12 +232,12 @@ feature {NONE} -- Implementation
 			until
 				counter = list.count + 1
 			loop
-				create new_item.make_with_text (list @ counter)
+				create new_item.make_with_text (list @ counter, components)
 				a_world.extend (new_item.item)
 				counter := counter + 1
 			end
 		end
-		
+
 	drawing_area_resized (an_x, a_y, a_width, a_height: INTEGER) is
 			-- Respond to `drawing_area' resizing by re-positioning all figures
 			-- and re-projecting.
@@ -236,7 +250,7 @@ feature {NONE} -- Implementation
 			maximum_line_width: INTEGER
 			image_height: INTEGER
 		do
-			
+
 				-- Calculate if the text and icons must be displayed on a single line.
 			figure_text ?= figure_world.i_th (primitive_offset + 1)
 			figure_picture ?= figure_world.i_th (primitive_offset + 2)
@@ -249,7 +263,7 @@ feature {NONE} -- Implementation
 				maximum_line_width := maximum_line_width - figure_text.width
 			end
 			maximum_line_width := maximum_line_width - 10
-			
+
 			y_counter := spacing
 			x_counter := spacing
 			from
@@ -319,44 +333,44 @@ feature {NONE} -- Implementation
 		ensure
 			mode_toggled: is_in_classic_view_mode = not old is_in_classic_view_mode
 		end
-		
+
 	view_mode_button: EV_TOOL_BAR_TOGGLE_BUTTON is
 			-- A button to switch between view modes,
 			-- either the standard view, or the compressed view.
 		once
 			create Result
 		end
-		
+
 	figure_world: EV_FIGURE_WORLD
 		-- Figure world in which all items are contained when using figures.
-	
+
 	projector: EV_DRAWING_AREA_PROJECTOR
 		-- Projector to project `figure_world' to `drawing_area'.
-		
+
 	buffer_pixmap: EV_PIXMAP
 		-- Pixmap into which buffering is performed.
-		
+
 	tree: EV_TREE
 		-- Tree Representation of `Current'.
 
 	spacing: INTEGER is 4
 		-- Spacing used around the figures when not `is_inclassic_view_mode'.
-	
+
 	containers_offset: INTEGER is 1
 		-- Index of first container figure within `figure_world'.
-		
+
 	primitive_offset: INTEGER is
 			-- Index of first primitive figure within `figure_world'.
 		once
 			Result := containers.count + 2
 		end
-		
+
 	items_offset: INTEGER is
 			-- Index of first item figure within `figure_world'.
 		once
 			Result := containers.count + primitives.count + 4
 		end
-		
+
 feature {GB_FIGURE_TYPE_SELECTOR_ITEM} -- Implementation
 
 	drawing_area: EV_DRAWING_AREA

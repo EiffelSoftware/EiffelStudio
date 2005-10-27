@@ -62,12 +62,12 @@ feature -- Access
 				-- Set up maximum_width and maximum_height.
 			
 			create maximum_width_input.make (Current, Result, Maximum_width_string ,gb_ev_window_maximum_width, gb_ev_window_maximum_width_tooltip,
-				agent set_maximum_width (?), agent valid_maximum_width (?))
+				agent set_maximum_width (?), agent valid_maximum_width (?), components)
 			create maximum_height_input.make (Current, Result, Maximum_height_string, gb_ev_window_maximum_height,gb_ev_window_maximum_height_tooltip,
-				agent set_maximum_height (?), agent valid_maximum_height (?))
+				agent set_maximum_height (?), agent valid_maximum_height (?), components)
 			
 			create title_entry.make (Current, Result, title_string, Gb_ev_window_title, Gb_ev_window_title_tooltip,
-				agent set_title (?), agent validate_true (?), Single_line_entry)	
+				agent set_title (?), agent validate_true (?), Single_line_entry, components)	
 			
 			update_attribute_editor
 			

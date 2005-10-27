@@ -28,11 +28,6 @@ inherit
 			{NONE} all
 		end
 		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		end
-		
 feature -- Access
 
 	ev_type: EV_PIXMAP

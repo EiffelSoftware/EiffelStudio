@@ -148,7 +148,7 @@ feature {GB_XML_STORE} -- Output
 							element_info := full_information @ (Item_pixmap_string + counter.out)
 							if element_info /= Void then
 								if element_info.is_constant then
-									pixmap_constant ?= constants.all_constants.item (element_info.data)
+									pixmap_constant ?= components.constants.all_constants.item (element_info.data)
 									create constant_context.make_with_context (pixmap_constant, object, type, Item_pixmap_string + counter.out)
 									pixmap_constant.add_referer (constant_context)
 									object.add_constant_context (constant_context)
@@ -189,7 +189,7 @@ feature {GB_XML_STORE} -- Output
 				loop
 					first.set_item_text (first.i_th (names.index), names.item)
 					(objects @ 2).set_item_text ((objects @ 2).i_th (names.index), names.item)
-					(create {GB_GLOBAL_STATUS}).mark_as_dirty
+					components.system_status.mark_as_dirty
 
 					names.forth
 				end

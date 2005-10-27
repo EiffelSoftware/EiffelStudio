@@ -54,7 +54,7 @@ feature {NONE}-- Initialization
 			create l_ev_table_1
 			create l_ev_scrollable_area_1
 			
-				-- Build_widget_structure.
+				-- Build widget structure.
 			extend (l_ev_vertical_box_1)
 			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (split_area)
@@ -89,8 +89,9 @@ feature {NONE}-- Initialization
 			create pixmap_constant_retrieval_functions.make (10)
 			create color_constant_set_procedures.make (10)
 			create color_constant_retrieval_functions.make (10)
-			
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
+			split_area.disable_item_expand (scrollable_area)
+			split_area.enable_item_expand (l_ev_vertical_box_2)
 			scrollable_area.set_minimum_width (100)
 			scrollable_area.set_minimum_height (100)
 			scrollable_area.set_item_width (0)
@@ -98,12 +99,16 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_2.disable_item_expand (l_ev_cell_1)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_cell_3)
-			l_ev_cell_1.set_minimum_height (small_padding)
+			integer_constant_set_procedures.extend (agent l_ev_cell_1.set_minimum_height (?))
+			integer_constant_retrieval_functions.extend (agent small_padding)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_cell_2)
-			l_ev_cell_2.set_minimum_width (small_padding)
+			integer_constant_set_procedures.extend (agent l_ev_cell_2.set_minimum_width (?))
+			integer_constant_retrieval_functions.extend (agent small_padding)
 			l_ev_frame_1.set_text ("Table properties")
-			l_ev_cell_3.set_minimum_height (small_padding)
-			l_ev_horizontal_box_3.set_padding_width (small_padding)
+			integer_constant_set_procedures.extend (agent l_ev_cell_3.set_minimum_height (?))
+			integer_constant_retrieval_functions.extend (agent small_padding)
+			integer_constant_set_procedures.extend (agent l_ev_horizontal_box_3.set_padding (?))
+			integer_constant_retrieval_functions.extend (agent small_padding)
 			l_ev_horizontal_box_3.disable_item_expand (ok_button)
 			l_ev_frame_2.set_style (1)
 			ok_button.set_text ("Done")
@@ -114,7 +119,7 @@ feature {NONE}-- Initialization
 			
 			set_all_attributes_using_constants
 			
-				--Connect events.
+				-- Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -158,7 +163,7 @@ feature {NONE} -- Implementation
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-		
+	
 feature {NONE} -- Constant setting
 
 	set_attributes_using_string_constants is

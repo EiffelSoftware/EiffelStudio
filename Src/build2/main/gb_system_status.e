@@ -6,13 +6,28 @@ indexing
 
 class
 	GB_SYSTEM_STATUS
-	
+
+feature -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	initialize_system_status (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Initialize `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+		ensure
+			components_set: components = a_components
+		end
+
 feature -- Access
 
 	current_project_settings: GB_PROJECT_SETTINGS
 		-- Information regarding the current project in the system.
 		-- `Void' if none.
-		
+
 	project_open: BOOLEAN is
 			-- Is there a project currently in the system?
 		do
@@ -23,16 +38,16 @@ feature -- Access
 		-- Has `Current' been modified?
 		-- Used to enable/disable the save button and other
 		-- operations dependent on the user having modified something.
-		
+
 	tools_always_on_top: BOOLEAN
 		-- Should all windows containing tools be shown modelessly
 		-- to the main window. Otherwise, they are independent.
-		
+
 	loading_project: BOOLEAN
 		-- Is the loading of a project currently underway?
-		
+
 	pick_and_drop_pebble: ANY
-		
+
 feature -- Status setting
 
 	enable_loading_project is
@@ -42,7 +57,7 @@ feature -- Status setting
 		ensure
 			project_loading: loading_project
 		end
-		
+
 	disable_loading_project is
 			-- Ensure `loading_project' is False
 		do
@@ -58,7 +73,7 @@ feature -- Status setting
 		do
 			current_project_settings := new_project_settings
 		end
-		
+
 	close_current_project is
 			-- Assign `Void' to `current_project_settings'.
 		require
@@ -67,31 +82,31 @@ feature -- Status setting
 			current_project_settings := Void
 			disable_project_modified
 		end
-		
+
 	enable_project_modified is
 			-- Assign `True' to `project_modified'.
 		do
 			project_modified := True
 		end
-		
+
 	disable_project_modified is
 			-- Assign `False' to `project_modfied'.
 		do
 			project_modified := False
 		end
-		
+
 	enable_tools_always_on_top is
 			-- Assign `True' to `tools_always_on_top'.
 		do
 			tools_always_on_top := True
 		end
-		
+
 	disable_tools_always_on_top is
 			-- Assign `False' to `tools_always_on_top'.
 		do
 			tools_always_on_top := False
 		end
-		
+
 	is_object_structure_changing: BOOLEAN is
 			-- Are we currently in the process of changing the structure of an object?
 			-- Some assertions may only be checked if we are not currently changing
@@ -107,7 +122,7 @@ feature -- Status setting
 		ensure
 			is_object_structure_changing: is_object_structure_changing
 		end
-		
+
 	set_object_structure_changed is
 			-- Ensure `is_object_structure_changing' returns `False'.
 		do
@@ -115,10 +130,10 @@ feature -- Status setting
 		ensure
 			not_is_object_structure_changing: not is_object_structure_changing
 		end
-		
+
 	is_in_debug_mode: BOOLEAN
 		-- Is `EiffelBuild' currently enabled for debugging?
-		
+
 	enable_debug_mode is
 			-- Ensure `is_in_debug_mode' is `True'.
 		do
@@ -126,7 +141,7 @@ feature -- Status setting
 		ensure
 			is_in_debug_mode: is_in_debug_mode
 		end
-		
+
 	set_pick_and_drop_pebble (a_pebble: ANY) is
 			-- Assign `a_pebble' to `pick_and_drop_pebble'.
 		require
@@ -136,13 +151,55 @@ feature -- Status setting
 		ensure
 			pebble_set: pick_and_drop_pebble = a_pebble
 		end
-		
+
 	remove_pick_and_drop_pebble is
 			-- Ensure `pick_and_drop_pebble' = Void
 		do
 			pick_and_drop_pebble := Void
 		ensure
 			pebble_void: pick_and_drop_pebble = Void
+		end
+
+feature -- Access
+
+	is_blocked: BOOLEAN
+
+feature -- Status setting
+
+	block is
+			-- Block all further changes to status until `resume' is called.
+		do
+			is_blocked := True
+		ensure
+			is_blocked: is_blocked
+		end
+
+	resume is
+			-- Resume changes to status (undo a call to `block')
+		do
+			is_blocked := False
+		ensure
+			not_is_blocked: not is_blocked
+		end
+
+	mark_as_dirty is
+			-- If not `is_blocked' then mark project as modified.
+		do
+			if not is_blocked then
+				enable_project_modified
+				components.commands.update
+				components.events.project_cleaned_actions.call (Void)
+			end
+		end
+
+	mark_as_clean is
+			-- If not `is_blocked' then mark project as unmodified.
+		do
+			if not is_blocked then
+				disable_project_modified
+				components.commands.update
+				components.events.project_cleaned_actions.call (Void)
+			end
 		end
 
 feature {NONE} -- Implementation

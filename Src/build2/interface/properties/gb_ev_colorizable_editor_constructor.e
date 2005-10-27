@@ -38,7 +38,7 @@ feature -- Access
 			tool_bar: EV_TOOL_BAR
 			reset_pixmap: EV_PIXMAP
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			
 			reset_pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_recycle_bin_color")
@@ -49,7 +49,7 @@ feature -- Access
 			Result.set_padding_width (object_editor_vertical_padding_width)
 			create horizontal_box
 			create foreground_color_entry.make (Current, horizontal_box, foreground_color_string, "", gb_ev_colorizable_foreground_color_tooltip,
-				agent actually_set_foreground_color (?), agent valid_color (?))
+				agent actually_set_foreground_color (?), agent valid_color (?), components)
 			foreground_color_entry.color_area.set_pebble_function (agent retrieve_color (foreground_color_entry.color_area, True))
 			create reset_button
 			create tool_bar
@@ -66,7 +66,7 @@ feature -- Access
 			Result.disable_item_expand (label)
 			create horizontal_box
 			create background_color_entry.make (Current, horizontal_box, background_color_string, "", gb_ev_colorizable_background_color_tooltip,
-				agent actually_set_background_color (?), agent valid_color (?))
+				agent actually_set_background_color (?), agent valid_color (?), components)
 			background_color_entry.color_area.set_pebble_function (agent retrieve_color (background_color_entry.color_area, False))
 			create reset_button
 			create tool_bar

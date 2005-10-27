@@ -6,18 +6,11 @@ indexing
 
 deferred class
 	GB_EV_WIDGET_EDITOR_CONSTRUCTOR
-	
+
 inherit
 	GB_EV_EDITOR_CONSTRUCTOR
-	
+
 	GB_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-	
-	GB_SHARED_OBJECT_HANDLER	
 		export
 			{NONE} all
 		undefine
@@ -26,14 +19,19 @@ inherit
 
 feature -- Access
 
+	components: GB_INTERNAL_COMPONENTS is
+			-- Access to a set of internal components for an EiffelBuild instance.
+		deferred
+		end
+
 	ev_type: EV_WIDGET
-	
+
 	type: STRING is
 			-- String representation of object_type modifyable by `Current'.
 		once
 			Result := Ev_widget_string
 		end
-		
+
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `first'.
@@ -43,14 +41,14 @@ feature -- Access
 				is_show_requested_check_button.enable_select
 				is_show_requested_check_button.select_actions.resume
 			end
-			
+
 			minimum_width_entry.update_constant_display (first.minimum_width.out)
 			if first.minimum_width_set_by_user then
 				reset_width_button.enable_sensitive
 			else
 				reset_width_button.disable_sensitive
 			end
-			minimum_height_entry.update_constant_display (first.minimum_height.out)	
+			minimum_height_entry.update_constant_display (first.minimum_height.out)
 			if first.minimum_height_set_by_user then
 				reset_height_button.enable_sensitive
 			else
@@ -67,9 +65,9 @@ feature -- Access
 			reset_pixmap: EV_PIXMAP
 			tool_bar: EV_TOOL_BAR
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
-			
+
 			create is_show_requested_check_button.make_with_text (gb_ev_widget_is_show_requested)
 			is_show_requested_check_button.set_tooltip (gb_ev_widget_is_show_requested_tooltip)
 			is_show_requested_check_button.select_actions.extend (agent toggle_visibility)
@@ -79,16 +77,16 @@ feature -- Access
 				Result.extend (is_show_requested_check_button)
 				Result.disable_item_expand (is_show_requested_check_button)
 			end
-			
+
 			reset_pixmap := (create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_recycle_bin_color")
-			
+
 			create label.make_with_text (Gb_ev_widget_minimum_width)
 			Result.extend (label)
 			Result.disable_item_expand (label)
 			create horizontal_box
 			horizontal_box.set_padding_width (object_editor_padding_width)
 			create minimum_width_entry.make (Current, horizontal_box, minimum_width_string, "", gb_ev_widget_minimum_width_tooltip,
-				agent set_minimum_width (?), agent valid_minimum_dimension (?))
+				agent set_minimum_width (?), agent valid_minimum_dimension (?), components)
 			create reset_width_button
 			create tool_bar
 			tool_bar.extend (reset_width_button)
@@ -98,14 +96,14 @@ feature -- Access
 			horizontal_box.extend (tool_bar)
 			horizontal_box.disable_item_expand (tool_bar)
 			Result.extend (horizontal_box)
-			
+
 			create label.make_with_text (Gb_ev_widget_minimum_height)
 			Result.extend (label)
 			Result.disable_item_expand (label)
 			create horizontal_box
 			horizontal_box.set_padding_width (object_editor_padding_width)
 			create minimum_height_entry.make (Current, horizontal_box, minimum_height_string, "", gb_ev_widget_minimum_height_tooltip,
-				agent set_minimum_height (?), agent valid_minimum_dimension (?))
+				agent set_minimum_height (?), agent valid_minimum_dimension (?), components)
 			create reset_height_button
 			create tool_bar
 			tool_bar.extend (reset_height_button)
@@ -115,9 +113,9 @@ feature -- Access
 			horizontal_box.extend (tool_bar)
 			horizontal_box.disable_item_expand (tool_bar)
 			Result.extend (horizontal_box)
-			
+
 			update_attribute_editor
-			
+
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
@@ -128,13 +126,13 @@ feature {NONE} -- Implementation
 			-- Initialize `validate_agents' and `execution_agents' to
 			-- contain all agents required for modification of `Current.
 		do
-			
+
 			execution_agents.put (agent set_minimum_height (?), Minimum_height_string)
 			validate_agents.put (agent valid_minimum_dimension (?), Minimum_height_string)
 			execution_agents.put (agent set_minimum_width (?), Minimum_width_string)
 			validate_agents.put (agent valid_minimum_dimension (?), Minimum_width_string)
 		end
-		
+
 	toggle_visibility is
 			-- Update is_displayed state.
 		do
@@ -161,15 +159,15 @@ feature {NONE} -- Implementation
 				-- Although the editor will be rebuilt, doing this gives the
 				-- impression of instant feedback, even if there is a small delay
 				-- before rebuilding.
-			original_id := Object_handler.object_from_display_widget (first).id
+			original_id := components.object_handler.object_from_display_widget (first).id
 				-- Store the original id so that we can restore the object afterwards.
 			actual_reset_width (object)
 			for_all_instance_referers (object, agent actual_reset_width)
-				
-			parent_editor.set_object (object_handler.object_from_id (original_id))
+
+			parent_editor.set_object (components.object_handler.object_from_id (original_id))
 				-- Update `parent_editor' to reflect the change.
 		end
-		
+
 	actual_reset_width (an_object: GB_OBJECT) is
 			-- Reset `minimum_width' of `object' of `an_object'.
 		require
@@ -182,7 +180,7 @@ feature {NONE} -- Implementation
 				object_was_widget: widget /= Void
 			end
 			widget.reset_minimum_width
-			Object_handler.reset_object (an_object)
+			components.object_handler.reset_object (an_object)
 		end
 
 	reset_height is
@@ -201,14 +199,14 @@ feature {NONE} -- Implementation
 				-- Although the editor will be rebuilt, doing this gives the
 				-- impression of instant feedback, even if there is a small delay
 				-- before rebuilding.
-		
-		
-			original_id := Object_handler.object_from_display_widget (first).id
+
+
+			original_id := components.object_handler.object_from_display_widget (first).id
 				-- Store the original id so that we can restore the object afterwards.
-	
+
 			actual_reset_height (object)
 			for_all_instance_referers (object, agent actual_reset_height)
-			parent_editor.set_object (object_handler.object_from_id (original_id))
+			parent_editor.set_object (components.object_handler.object_from_id (original_id))
 				-- Update `parent_editor' to reflect the change.
 		end
 
@@ -224,12 +222,12 @@ feature {NONE} -- Implementation
 				object_was_widget: widget /= Void
 			end
 			widget.reset_minimum_height
-			Object_handler.reset_object (an_object)
+			components.object_handler.reset_object (an_object)
 		end
 
 	minimum_width_entry, minimum_height_entry: GB_INTEGER_INPUT_FIELD
 		-- Input widgets for `minimum_width' and `minimum_height'.
-		
+
 	set_minimum_width (integer: INTEGER) is
 			-- Update property `minimum_width' on the first of `objects'.
 		require
@@ -238,13 +236,13 @@ feature {NONE} -- Implementation
 			for_first_object (agent {EV_WIDGET}.set_minimum_width (integer))
 			update_editors
 		end
-		
+
 	valid_minimum_dimension (value: INTEGER): BOOLEAN is
 			-- Is `value' a valid minimum_width or minimum_height?
 		do
 			Result := value >= 0
 		end
-		
+
 	set_minimum_height (integer: INTEGER) is
 			-- Update property `minimum_height' on first of `objects'.
 		require
@@ -256,15 +254,15 @@ feature {NONE} -- Implementation
 
 	Minimum_width_string: STRING is "Minimum_width"
 	Minimum_height_string: STRING is "Minimum_height"
-	
+
 	Is_show_requested_string: STRING is "Is_show_requested"
 
 	reset_width_button, reset_height_button: EV_TOOL_BAR_BUTTON
 		-- Buttons that allow you to reset the minimum sizes on objects.
-		
+
 	is_show_requested_check_button: EV_CHECK_BUTTON
 		-- Button allowing control of a widgets visible state.
-		
+
 invariant
 	--first.minimum_width_set_by_user implies not reset_width_button.is_sensitive else reset_button.is_sensitive
 	--And other

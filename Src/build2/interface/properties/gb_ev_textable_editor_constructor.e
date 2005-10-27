@@ -31,7 +31,7 @@ feature -- Access
 		local
 			line_entry_type: BOOLEAN
 		do
-			create Result
+			create Result.make_with_components (components)
 			
 			if is_instance_of (first, dynamic_type_from_string ("EV_TEXT")) or is_instance_of (first, dynamic_type_from_string ("EV_LABEL")) then
 				line_entry_type := multiple_line_entry	
@@ -40,7 +40,7 @@ feature -- Access
 			end
 			initialize_attribute_editor (Result)
 			create text_entry.make (Current, Result, text_string, Gb_ev_textable_text, Gb_ev_textable_text_tooltip,
-				agent set_text (?), agent validate_true (?), line_entry_type)
+				agent set_text (?), agent validate_true (?), line_entry_type, components)
 				
 				-- Menu separators have the textable features not exported, to prevent
 				-- calling, so if the obejct represented by `Current' is a menu separator,

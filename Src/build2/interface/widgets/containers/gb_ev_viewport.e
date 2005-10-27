@@ -6,14 +6,14 @@ indexing
 
 class
 	GB_EV_VIEWPORT
-	
+
 	-- The following properties from EV_VIEWPORT are manipulated by `Current'.
 	-- X_offset - Performed on the real object and the display_object.
 	-- Y_offset - Performed on the real object and the display_object.
 	-- Set_item_height and Set_item_width are both manipulated on both objects.
 
 inherit
-	
+
 	GB_EV_ANY
 		undefine
 			attribute_editor
@@ -21,16 +21,16 @@ inherit
 			modify_from_xml_after_build,
 			ev_type
 		end
-		
+
 	GB_EV_VIEWPORT_EDITOR_CONSTRUCTOR
 
 	GB_SHARED_DEFERRED_BUILDER
 		undefine
 			default_create
 		end
-		
+
 feature {GB_XML_STORE} -- Output
-	
+
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		do
@@ -46,14 +46,14 @@ feature {GB_XML_STORE} -- Output
 				add_integer_element (element, item_height_string, -1)
 			end
 		end
-		
+
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		do
 				-- We set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
 		end
-		
+
 	modify_from_xml_after_build (element: XM_ELEMENT) is
 			-- Build from XML any information that was
 			-- deferred during the load/build cycle.
@@ -63,24 +63,20 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Item_width_string)
 			if element_info /= Void then
-				if element_info.data.to_integer >= 0 then
-					set_item_width (retrieve_and_set_integer_value (Item_width_string))	
-				end
+				set_item_width (retrieve_and_set_integer_value (Item_width_string))
 			end
 			element_info := full_information @ (Item_height_string)
 			if element_info /= Void then
-				if element_info.data.to_integer >= 0 then
-					set_item_height (retrieve_and_set_integer_value (Item_height_string))	
-				end
+				set_item_height (retrieve_and_set_integer_value (Item_height_string))
 			end
 			if full_information @ (X_offset_string) /= Void then
 				set_x_offset (retrieve_and_set_integer_value (X_offset_string))
 			end
 			if full_information @ (Y_offset_string) /= Void then
 				set_y_offset (retrieve_and_set_integer_value (Y_offset_string))
-			end			
+			end
 		end
-		
+
 feature {GB_CODE_GENERATOR} -- Output
 
 	generate_code (element: XM_ELEMENT; info: GB_GENERATED_INFO): ARRAYED_LIST [STRING] is
@@ -92,22 +88,22 @@ feature {GB_CODE_GENERATOR} -- Output
 		do
 			create Result.make (2)
 			full_information := get_unique_full_info (element)
-						
+
 			element_info := full_information @ item_width_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
 				Result.append (build_set_code_for_integer (item_width_string, info.actual_name_for_feature_call, "set_item_width ("))
 			end
-			
+
 			element_info := full_information @ item_height_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
 				Result.append (build_set_code_for_integer (item_height_string, info.actual_name_for_feature_call, "set_item_height ("))
 			end
-			
+
 			element_info := full_information @ X_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
 				Result.append (build_set_code_for_integer (x_offset_string, info.actual_name_for_feature_call, "set_x_offset ("))
 			end
-			
+
 			element_info := full_information @ Y_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
 				Result.append (build_set_code_for_integer (y_offset_string, info.actual_name_for_feature_call, "set_y_offset ("))

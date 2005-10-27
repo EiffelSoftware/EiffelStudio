@@ -20,7 +20,7 @@ inherit
 		select
 			implementation
 		end
-		
+
 	GB_STORABLE_TOOL
 		undefine
 			default_create, copy, is_equal
@@ -32,58 +32,60 @@ inherit
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-		
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
 
 create
-	default_create
+	make_with_components
 
 feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
+		end
 
 	initialize is
 			-- Initialize `Current' and add a root
@@ -91,11 +93,11 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TREE}
 			key_press_actions.extend (agent check_for_object_delete)
-			select_actions.extend (agent command_handler.update)
-			focus_in_actions.extend (agent command_handler.update)
-			focus_out_actions.extend (agent command_handler.update)
+			select_actions.extend (agent (components.commands).update)
+			focus_in_actions.extend (agent (components.commands).update)
+			focus_out_actions.extend (agent (components.commands).update)
 		end
-		
+
 feature -- Basic operation
 
 	ensure_object_visible (an_object: GB_OBJECT) is
@@ -106,9 +108,9 @@ feature -- Basic operation
 			an_object_not_void: an_object /= Void
 			object_contained: has_recursively (an_object.layout_item)
 		do
-			ensure_item_visible (an_object.layout_item)	
+			ensure_item_visible (an_object.layout_item)
 		end
-		
+
 	target_associated_top_object (an_object: GB_OBJECT) is
 			-- Target associated top level object of `an_object' to `Current'.
 		require
@@ -117,12 +119,12 @@ feature -- Basic operation
 		local
 			top_object: GB_OBJECT
 		do
-			top_object := object_handler.object_from_id (an_object.associated_top_level_object)
+			top_object := components.object_handler.object_from_id (an_object.associated_top_level_object)
 			top_object.widget_selector_item.enable_select
 		ensure
-			root_item_set: root_item = object_handler.object_from_id (an_object.associated_top_level_object).layout_item
+			root_item_set: root_item = components.object_handler.object_from_id (an_object.associated_top_level_object).layout_item
 		end
-		
+
 feature -- Access
 
 	root_item: GB_LAYOUT_CONSTRUCTOR_ITEM is
@@ -135,7 +137,7 @@ feature -- Access
 		ensure
 			not_empty_implies_has_root_object: not is_empty implies Result /= Void
 		end
-		
+
 	view_object_button: EV_TOOL_BAR_BUTTON is
 			-- `Result' is a tool bar button that highlights an object in `Current'.
 		local
@@ -150,13 +152,13 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	tool_bar: EV_TOOL_BAR is
 			-- A tool bar containing all buttons associated with `Current'.
 		do
 			create Result
 		end
-		
+
 	name: STRING is "Layout Constructor"
 			-- Full name used to represent `Current'.
 
@@ -167,10 +169,10 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 			-- recursively, from information held in each associated object.
 		do
 			if root_item /= Void then
-				Object_handler.recursive_do_all (root_item.object, agent expand_layout_item)
+				components.object_handler.recursive_do_all (root_item.object, agent expand_layout_item)
 			end
 		end
-	
+
 feature {GB_OBJECT_HANDLER} -- Implementation
 
 	add_root_item (layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
@@ -182,7 +184,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		ensure
 			has_layout_item: has (layout_item)
 		end
-		
+
 feature {GB_WIDGET_SELECTOR, GB_OBJECT} -- Implementation
 
 	set_root_window (a_window: GB_OBJECT) is
@@ -192,7 +194,7 @@ feature {GB_WIDGET_SELECTOR, GB_OBJECT} -- Implementation
 		do
 			wipe_out
 			add_root_item (a_window.layout_item)
-			Object_handler.recursive_do_all (a_window, agent expand_layout_item)
+			components.object_handler.recursive_do_all (a_window, agent expand_layout_item)
 		ensure
 			has_one_item: count = 1
 		end
@@ -237,10 +239,10 @@ feature {NONE} -- Implementation
 			an_object_not_void: an_object /= Void
 		do
 			if an_object.is_expanded and an_object.layout_item.is_expandable then
-				an_object.layout_item.expand				
+				an_object.layout_item.expand
 			end
 		end
-		
+
 	check_for_object_delete (a_key: EV_KEY) is
 			-- Respond to keypress of `a_key' and delete selected object.
 		require
@@ -261,7 +263,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	delete_object is
 			-- Delete selected object.
 		require
@@ -281,14 +283,14 @@ feature {NONE} -- Implementation
 			titled_window_object ?= selected_object
 			if titled_window_object /= Void then
 					-- window objects must be handled seperately.
-				create delete_window_object_command.make (titled_window_object)
+				create delete_window_object_command.make_with_components (titled_window_object, components)
 				delete_window_object_command.execute
 			else
-				create delete_object_command.make (selected_object)
+				create delete_object_command.make (selected_object, components)
 				delete_object_command.execute
 			end
 		end
-		
+
 invariant
 	has_only_one_root: count <= 1
 

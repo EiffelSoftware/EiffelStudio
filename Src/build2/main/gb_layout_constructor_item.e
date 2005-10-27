@@ -17,7 +17,7 @@ inherit
 		select
 			implementation
 		end
-		
+
 	GB_LAYOUT_NODE
 		rename
 			implementation as old_imp
@@ -28,27 +28,6 @@ inherit
 			destroy
 		end
 
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			copy, default_create, is_equal
-		end
-		
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		undefine
-			copy, default_create, is_equal
-		end
-		
 	GB_CONSTANTS
 		export
 			{NONE} all
@@ -61,11 +40,15 @@ create
 
 feature {GB_TITLED_WINDOW_OBJECT} -- Initialization
 
-	make (an_object: GB_OBJECT) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' and assign `an_object' to `object'.
 		require
 			an_object_not_void: an_object /= Void
 		do
+			components := a_components
 			default_create
 			set_object (an_object)
 			set_pebble_function (agent object.retrieve_pebble)
@@ -77,7 +60,7 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Initialization
 			object_assigned: object = an_object
 			text_assigned: text.is_equal (object.type.substring (4, object.type.count))
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 			-- Assign `Current' to `pebble'.
@@ -87,7 +70,7 @@ feature {GB_TITLED_WINDOW_OBJECT} -- Initialization
 				-- tansport.
 			select_actions.extend (agent update_docked_object_editor)
 		end
-		
+
 feature {GB_RADIO_GROUP_LINK} -- Access
 
 	is_animated: BOOLEAN
@@ -100,7 +83,7 @@ feature {GB_RADIO_GROUP_LINK}-- Status setting
 		do
 			is_animated := True
 		end
-		
+
 	disable_animation is
 			-- Assign `False' to `is_animated'.
 		do
@@ -108,7 +91,7 @@ feature {GB_RADIO_GROUP_LINK}-- Status setting
 		end
 
 feature {GB_OBJECT} -- Implementation
-		
+
 	set_object (an_object: GB_OBJECT) is
 			-- Assign `an_object' to `object'
 		do
@@ -116,15 +99,15 @@ feature {GB_OBJECT} -- Implementation
 		ensure
 			object_set: object = an_object
 		end
-		
+
 	destroy is
 			-- Destroy `Current'.
 		do
 			object := Void
 			Precursor {EV_TREE_ITEM}
 		end
-		
-		
+
+
 feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 
 	update_pixmap is
@@ -138,7 +121,7 @@ feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 			create pixmaps
 			set_pixmap (pixmaps.pixmap_by_name (object.type.as_lower))
 		end
-		
+
 feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
 
 	unparent is
@@ -155,7 +138,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_OBJECT, GB_COMMAND_ADD_WINDOW} -- I
 					--parent_item_not_void: parent_item /= Void
 					--item_contained_in_parent: parent_item.has (layout_item)
 				end
-				parent_item.prune (Current)			
+				parent_item.prune (Current)
 			end
 		ensure
 			not_parented: parent = Void
@@ -168,26 +151,26 @@ feature {NONE} -- Implementation
 		do
 			object.register_expand
 		end
-		
+
 	register_collapse is
 			-- Flag `obejct' as collapsed.
 		do
 			object.register_collapse
 		end
-		
+
 	update_docked_object_editor is
 			-- update `docked_object_editor' to reflect `Current'
 		do
-			if system_status.project_open then
+			if components.system_status.project_open then
 					-- If there is no project open, then there is
 					-- nothing to update. The reason that we must protect,
 					-- is that when rebuilding new projects, it seems that
 					-- selection change events from the layout tree items
 					-- are somewhat unusual. There will be no side
 					-- effect from performing this protection. Julian.				
-				force_name_change_completion_on_all_editors
-				docked_object_editor.set_object (object)
+				components.object_editors.force_name_change_completion_on_all_editors
+				components.object_editors.docked_object_editor.set_object (object)
 			end
 		end
-		
+
 end -- class GB_LAYOUT_CONSTRUCTOR_ITEM

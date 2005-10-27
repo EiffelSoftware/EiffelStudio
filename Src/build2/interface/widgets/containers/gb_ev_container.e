@@ -31,22 +31,7 @@ inherit
 		undefine
 			default_create
 		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
 
-		
 feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XM_ELEMENT) is
@@ -64,7 +49,7 @@ feature {GB_XML_STORE} -- Output
 				until
 					counter > groups.count
 				loop
-					groups_string.append (object_handler.object_from_display_widget (groups @ counter).id.out)
+					groups_string.append (components.object_handler.object_from_display_widget (groups @ counter).id.out)
 					if counter < groups.count then
 						groups_string.append (" ")
 					end
@@ -111,7 +96,7 @@ feature {GB_CODE_GENERATOR} -- Output
 				until
 					linked_groups.off
 				loop
-					if object_handler.object_from_id (linked_groups.item).is_top_level_object then
+					if components.object_handler.object_from_id (linked_groups.item).is_top_level_object then
 						other_info := info.generated_info_by_id.item (linked_groups.item)
 						if other_info.generate_as_client then
 							if other_info.type.is_equal (ev_titled_window_string) or other_info.type.is_equal (ev_dialog_string) then
@@ -163,7 +148,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 					elseif counter = temp_string.count then
 						found_id := (temp_string.substring (last_space, counter)).to_integer
 					end
-					merged_object ?= object_handler.object_from_id (found_id)
+					merged_object ?= components.object_handler.object_from_id (found_id)
 					
 --					check
 --						merged_object_was_container: merged_object /= Void
@@ -194,7 +179,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			check
 				an_object_not_void: an_object /= Void
 			end
-			create radio_group_link
+			create radio_group_link.make_with_components (components)
 			radio_group_link.set_pebble (radio_group_link)
 			radio_group_link.set_object (an_object)
 			radio_group_link.set_gb_ev_container (Current)
@@ -211,11 +196,11 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 				until
 					counter > other_groups.count
 				loop
-					other_object := object_handler.object_from_display_widget (other_groups @ counter)
+					other_object := components.object_handler.object_from_display_widget (other_groups @ counter)
 					check
 						object_not_void: other_object /= Void
 					end
-					create radio_group_link
+					create radio_group_link.make_with_components (components)
 					radio_group_link.set_object (other_object)
 					radio_group_link.set_gb_ev_container (Current)
 					radio_group_link.set_pebble (radio_group_link)
@@ -303,7 +288,7 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			editor_container: EV_CONTAINER
 		do
-			editors := all_editors
+			editors := components.object_editors.all_editors
 			from
 				editors.start
 			until
@@ -343,8 +328,8 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 				until
 					counter > groups.count
 				loop
-					other_object := object_handler.object_from_display_widget (groups @ counter)
-					create radio_group_link
+					other_object := components.object_handler.object_from_display_widget (groups @ counter)
+					create radio_group_link.make_with_components (components)
 					radio_group_link.set_object (other_object)
 					radio_group_link.set_gb_ev_container (Current)
 					radio_group_link.set_pebble (radio_group_link)

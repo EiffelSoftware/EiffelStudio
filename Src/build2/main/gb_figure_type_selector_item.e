@@ -5,7 +5,7 @@ indexing
 
 class
 	GB_FIGURE_TYPE_SELECTOR_ITEM
-	
+
 inherit
 	GB_TYPE_SELECTOR_ITEM
 		export
@@ -13,23 +13,19 @@ inherit
 		redefine
 			item
 		end
-		
-	GB_SHARED_STATUS_BAR
-		export
-			{NONE} all
-		end
-		
+
 create
 	make_with_text
-	
+
 feature {NONE} -- Initialization
 
-	make_with_text (a_text: STRING) is
+	make_with_text (a_text: STRING; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current', assign `a_text' to `text'
-			-- and "EV_" + `a_text' to `type'.
+			-- , "EV_" + `a_text' to `type' and `a_components' to `components'.
 		local
 			pixmaps: GB_SHARED_PIXMAPS
 		do
+			components := a_components
 			type := a_text
 			create pixmaps
 			create item.make_with_pixmap (pixmaps.pixmap_by_name (type.as_lower))
@@ -51,13 +47,13 @@ feature {NONE} -- Implementation
 			-- Begin processing by `digit_checker', so that
 			-- it can be determined if a digit key is held down.
 		do
-			digit_checker.begin_processing (type_selector.drawing_area)
+			components.digit_checker.begin_processing (components.tools.type_selector.drawing_area)
 		end
-		
+
 	display_type is
 			-- Display type of `Current' on status bar.
 		do
-			set_timed_status_text (type)
+			components.status_bar.set_timed_status_text (type)
 		end
 
 end -- class GB_FIGURE_TYPE_SELECTOR_ITEM

@@ -32,13 +32,6 @@ inherit
 		undefine
 			default_create
 		end
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
 
 feature {GB_CODE_GENERATOR} -- Output
 

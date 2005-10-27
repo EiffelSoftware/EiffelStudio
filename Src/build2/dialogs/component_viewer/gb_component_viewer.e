@@ -9,55 +9,51 @@ class
 
 inherit
 	GB_COMPONENT_VIEWER_IMP
-	
-	GB_COMMAND_HANDLER
-		export {NONE}
-			all
-		undefine
-			copy, default_create
-		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			copy, default_create
-		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		undefine
-			default_create, copy
-		end
-	
+
 	GB_EIFFEL_ENV
 		export
 			{NONE} all
 		undefine
 			copy, default_create
 		end
-		
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		undefine
 			copy, default_create
 		end
-		
+
 	GB_ICONABLE_TOOL
 		undefine
 			default_create, copy
 		end
 
+create
+	make_with_components
 
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
+		end
 
 feature {NONE} -- Initialization
 
@@ -70,31 +66,31 @@ feature {NONE} -- Initialization
 		do
 			set_icon_pixmap (icon)
 				-- Set up cancel actions on `Current'.
-			fake_cancel_button (Current, agent show_hide_component_viewer_command.execute)
+			fake_cancel_button (Current, agent (components.commands.show_hide_component_viewer_command).execute)
 			component_button.drop_actions.extend (agent handle_component_drop)
 			display_view_enabled := True
 		end
-		
+
 feature -- Access
 
 	component: GB_COMPONENT
 		-- Component in `Current'.
-		
+
 	display_view_enabled: BOOLEAN
 		-- Is `Current' in display view?
-		
+
 	build_view_enabled: BOOLEAN is
 			-- Is `Current' in build view?
 		do
 			Result := not display_view_enabled
 		end
-		
+
 	icon: EV_PIXMAP is
 			-- Icon displayed in title of `Current'.
 		once
 			Result := ((create {GB_SHARED_PIXMAPS}).Icon_component_viewer @ 1)
 		end
-		
+
 feature -- Basic operation
 
 	clear is
@@ -107,17 +103,17 @@ feature -- Basic operation
 			set_title ("Component viewer")
 			type_display.remove_text
 		end
-		
-		
+
+
 	set_component (a_component: GB_COMPONENT) is
 			-- Assign `a_component' to `Current'
 		require
 			component_not_void: a_component /= Void
 		do
-			(create {GB_GLOBAL_STATUS}).block
+			components.system_status.block
 			-- We have to handle all items seperately. There may be a better
 			-- way to do this at some point.
-			
+
 				-- Reset our previous widgets, as `component'
 				-- has now changed.
 			display_widget := Void
@@ -130,23 +126,23 @@ feature -- Basic operation
 			type_display.set_text ("Type : " + component.root_element_type)
 			lock_update
 			show_object (a_component.object)
-			system_status.disable_project_modified
-			update
+			components.system_status.disable_project_modified
+			components.commands.update
 			unlock_update
-			;(create {GB_GLOBAL_STATUS}).resume
+			components.system_status.resume
 		ensure
-			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
+			objects_not_changed: components.object_handler.objects.is_equal (old components.object_handler.objects)
 		end
-		
+
 feature -- Status setting
-	
+
 	set_display_view is
 			-- Set `display_view' to `True' and reflect in `Current'.
 		do
 			if not display_view_enabled then
 				display_view_enabled := True
 				if component /= Void then
-					(create {GB_GLOBAL_STATUS}).block
+					components.system_status.block
 					lock_update
 					component_holder.wipe_out
 					if display_widget = Void then
@@ -155,21 +151,21 @@ feature -- Status setting
 						component_holder.extend (display_widget)
 					end
 					unlock_update
-					;(create {GB_GLOBAL_STATUS}).resume
+					components.system_status.resume
 				end
 			end
 		ensure then
 			display_view_set: display_view_enabled
-			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
+			objects_not_changed: components.object_handler.objects.is_equal (old components.object_handler.objects)
 		end
-		
+
 	set_build_view is
 			-- Set `display_view' to `False' and reflect in `Current'.
 		do
 			if display_view_enabled then
 				display_view_enabled := False
 				if component /= Void then
-					(create {GB_GLOBAL_STATUS}).block
+					components.system_status.block
 					lock_update
 					component_holder.wipe_out
 					if builder_widget = Void then
@@ -178,17 +174,17 @@ feature -- Status setting
 						component_holder.extend (builder_widget)
 					end
 					unlock_update
-					;(create {GB_GLOBAL_STATUS}).resume
+					components.system_status.resume
 				end
-				
+
 			end
 		ensure then
 			build_view_set: not display_view_enabled
-			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
+			objects_not_changed: components.object_handler.objects.is_equal (old components.object_handler.objects)
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	force_object_to_component (an_object: GB_OBJECT) is
 			-- Remove `an_object' from the object list,
 			-- and remove the pebbles from current
@@ -203,9 +199,9 @@ feature {NONE} -- Implementation
 			pick_and_dropable: EV_PICK_AND_DROPABLE
 			widget: EV_WIDGET
 		do
-			object_handler.objects.remove (an_object.id)
+			components.object_handler.objects.remove (an_object.id)
 			display_object ?= an_object.display_object
-	
+
 			if display_object /= Void then
 				pick_and_dropable ?= display_object.child
 				pick_and_dropable.remove_pebble
@@ -221,7 +217,7 @@ feature {NONE} -- Implementation
 			end
 			widget ?= an_object.display_object
 		end
-		
+
 	show_usage_dialog is
 				-- Show an information dialog explaining usage
 				-- of the component button.
@@ -236,12 +232,12 @@ feature {NONE} -- Implementation
 		-- Display widget of `component'. Used so that if a user
 		-- keeps toggling between the display and builder views, we only
 		-- have to build the display widget once as it is slow.
-		
+
 	builder_widget: EV_WIDGET
 		-- Builder widget of `component'. Used so that if a user
 		-- keeps toggling between the display and builder views, we only
 		-- have to build the builder widget once as it is slow.
-		
+
 	show_object (an_object: GB_OBJECT) is
 			-- Display object in `Current', based on `display_view_enabled'.
 		require
@@ -276,7 +272,7 @@ feature {NONE} -- Implementation
 				if tool_bar_item /= Void then
 					create tool_bar
 					component_holder.extend (tool_bar)
-					tool_bar.extend (tool_bar_item)	
+					tool_bar.extend (tool_bar_item)
 				end
 				tree_item ?= an_item
 				if tree_item /= Void then
@@ -329,10 +325,10 @@ feature {NONE} -- Implementation
 				keep_menu_bar := True
 			else
 				display_button.enable_sensitive
-				builder_button.enable_sensitive	
-				object_handler.recursive_do_all (an_object, agent force_object_to_component)
+				builder_button.enable_sensitive
+				components.object_handler.recursive_do_all (an_object, agent force_object_to_component)
 				if display_view_enabled then
-					widget ?= an_object.object	
+					widget ?= an_object.object
 				else
 					widget ?= an_object.display_object
 				end
@@ -353,9 +349,9 @@ feature {NONE} -- Implementation
 				remove_menu_bar
 			end
 		ensure
-			objects_not_changed: object_handler.objects.is_equal (old object_handler.objects)
+			objects_not_changed: components.object_handler.objects.is_equal (old components.object_handler.objects)
 		end
-		
+
 	handle_component_drop (component_stone: GB_COMPONENT_OBJECT_STONE) is
 			-- Respond to a drop of `component_stone'.
 		require

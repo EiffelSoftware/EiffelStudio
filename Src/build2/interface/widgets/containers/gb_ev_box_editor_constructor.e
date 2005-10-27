@@ -37,7 +37,7 @@ feature -- Access
 			label: EV_LABEL
 		do
 			create check_buttons.make (0)
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (result)
 				-- We need the child of the display objects here,
 				-- not the actual object itself.
@@ -49,9 +49,9 @@ feature -- Access
 			is_homogeneous_check.select_actions.extend (agent update_editors)
 			
 			create padding_entry.make (Current, Result, padding_string, gb_ev_box_padding_width, gb_ev_box_padding_width_tooltip,
-				agent set_padding (?), agent valid_input (?))
+				agent set_padding (?), agent valid_input (?), components)
 			create border_entry.make (Current, Result, border_string, gb_ev_box_border_width, gb_ev_box_border_width_tooltip,
-				agent set_border (?), agent valid_input (?))
+				agent set_border (?), agent valid_input (?), components)
 
 				-- We only add the is_expandable label if there are children
 			if not first.is_empty then

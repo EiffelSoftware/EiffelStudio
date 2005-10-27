@@ -12,54 +12,35 @@ inherit
 		undefine
 			copy
 		end
-		
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create, copy, is_equal
-		end
-	
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-	
+
 	GB_ICONABLE_TOOL
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EIFFEL_RESERVED_WORDS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	BUILD_RESERVED_WORDS
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
-		end	
-		
+		end
+
 	EV_STOCK_COLORS
 		rename
 			implementation as stock_colors_implementation
@@ -68,40 +49,52 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
-		
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			copy, is_equal, default_create
 		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	GB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		undefine
 			default_create
+		end
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
 
 feature {NONE} -- Initialization
@@ -138,18 +131,18 @@ feature {NONE} -- Initialization
 			constants_list.set_column_titles (<<"Name", "Type", "Value">>)
 			set_icon_pixmap (icon)
 		end
-		
+
 feature -- Access
 
 	sorted_by_name: BOOLEAN
 		-- Are items in `constants_list' sorted by name?
-		
+
 	sorted_by_type: BOOLEAN
 		-- Are items in `constants_list' sorted by type?
-		
+
 	sorted_by_value: BOOLEAN
 		-- Are items in `constants_list' sorted by value?
-		
+
 feature -- Basic operation
 
 	update_for_addition (constant: GB_CONSTANT) is
@@ -158,9 +151,9 @@ feature -- Basic operation
 		do
 			constants_list.extend (constant.as_multi_column_list_row)
 		end
-		
+
 	update_for_removal (constant: GB_CONSTANT) is
-			-- Update constants displayed in `Current' to reflect 
+			-- Update constants displayed in `Current' to reflect
 		require
 			constant_not_void: constant /= Void
 		local
@@ -175,7 +168,7 @@ feature -- Basic operation
 					constants_list.remove
 					removed := True
 				else
-					constants_list.forth	
+					constants_list.forth
 				end
 			end
 		end
@@ -205,29 +198,29 @@ feature {NONE} -- Implementation
 
 	modify_constant: GB_CONSTANT
 		-- Constant that is to be modified.
-		
+
 	modify_constant_index: INTEGER
 		-- Index of `modify_constant', only valid if
 		-- `modify_constant' /= Void.
 
 	string_input: EV_TEXT_FIELD
 		-- Input field for STRING constants.
-		
+
 	integer_input: EV_SPIN_BUTTON
 		-- Input field for INTEGER constants.
-		
+
 	directory_input: EV_TEXT_FIELD
 		-- Input field for DIRECTORY constants.
-		
+
 	filename_input: EV_TEXT_FIELD
 		-- Input field for FILENAME constants.
-		
+
 	color_input: EV_TEXT_FIELD
 		-- Input field for COLOR constants.
-		
+
 	font_input: EV_TEXT_FIELD
 		-- Input field for FONT constants.
-		
+
 	remove_displayed_input_field is
 			-- Ensure that `entry_selection_parent' is empty
 		do
@@ -235,16 +228,16 @@ feature {NONE} -- Implementation
 		ensure
 			is_empty: entry_selection_parent.is_empty
 		end
-		
+
 	validate_constant_name is
 			-- Called by `change_actions' of `name_field'.
 		local
 			current_text: STRING
 		do
 			current_text := name_field.text.as_lower
-			if not valid_class_name (current_text) or not object_handler.valid_constant_name (current_text) or
+			if not valid_class_name (current_text) or not components.object_handler.valid_constant_name (current_text) or
 				reserved_words.has (current_text) or Build_reserved_words.has (current_text) or
-				(Constants.string_is_constant_name (current_text) and then not constants.all_constants.item (current_text).type.is_equal (type_combo_box.text)) then
+				(components.constants.string_is_constant_name (current_text) and then not components.constants.all_constants.item (current_text).type.is_equal (type_combo_box.text)) then
 				name_field.set_foreground_color (red)
 				new_button.disable_sensitive
 				modify_button.disable_sensitive
@@ -253,14 +246,14 @@ feature {NONE} -- Implementation
 				update_buttons
 			end
 		end
-		
+
 	name_field_valid: BOOLEAN is
 			-- Are contents of `name_field' valid?
 			-- The quick method is to check the color.
 		do
 			Result := name_field.foreground_color.is_equal (Black)
 		end
-		
+
 	entry_valid: BOOLEAN is
 			-- Is current entry valid?
 		do
@@ -274,8 +267,8 @@ feature {NONE} -- Implementation
 				Result := True
 			end
 		end
-		
-	update_buttons is 
+
+	update_buttons is
 			-- Update status of `add_button' based on state of current input.
 		do
 			if modify_constant /= Void then
@@ -290,7 +283,7 @@ feature {NONE} -- Implementation
 					else
 						new_button.enable_sensitive
 						modify_button.disable_sensitive
-					end					
+					end
 				elseif type_combo_box.selected_item.text.is_equal (Integer_constant_type) and modify_constant /= Void then
 					if modify_constant.name.is_equal (name_field.text) then
 						new_button.disable_sensitive
@@ -331,7 +324,7 @@ feature {NONE} -- Implementation
 					new_button.enable_sensitive
 					modify_button.enable_sensitive
 				end
-			elseif name_field_valid and entry_valid and Constants.all_constants.item (name_field.text.as_lower) = Void then
+			elseif name_field_valid and entry_valid and components.constants.all_constants.item (name_field.text.as_lower) = Void then
 				new_button.enable_sensitive
 				modify_button.disable_sensitive
 			else
@@ -374,13 +367,13 @@ feature {NONE} -- Implementation
 				integer_input.set_value (0)
 			end
 			remove_displayed_input_field
-			entry_selection_parent.extend (integer_input)	
+			entry_selection_parent.extend (integer_input)
 			if not display_all_types.is_selected and not currently_selected_type.is_equal (Integer_constant_type) then
 				rebuild_for_selected_type (integer_item.text)
 			end
 			currently_selected_type := Integer_constant_type
 		end
-		
+
 	color_item_selected is
 			-- Called by `select_actions' of `color_item'.
 		do
@@ -400,7 +393,7 @@ feature {NONE} -- Implementation
 			end
 			currently_selected_type := Color_constant_type
 		end
-		
+
 	font_item_selected is
 			-- Called by `select_actions' of `font_item'.
 		do
@@ -440,7 +433,7 @@ feature {NONE} -- Implementation
 			end
 			currently_selected_type := Directory_constant_type
 		end
-	
+
 	pixmap_item_selected is
 			-- Called by `select_actions' of `pixmap_item'.
 		local
@@ -472,16 +465,16 @@ feature {NONE} -- Implementation
 				create box
 				box.extend (pixmap)
 				pixmap.set_minimum_size (pixmap.width, pixmap.height)
-				box.disable_item_expand (box.first)	
+				box.disable_item_expand (box.first)
 				entry_selection_parent.extend (box)
 			end
-			
+
 			if not display_all_types.is_selected and not currently_selected_type.is_equal (Pixmap_constant_type) then
 				rebuild_for_selected_type (pixmap_item.text)
 			end
 			currently_selected_type := Pixmap_constant_type
 		end
-		
+
 	new_button_selected is
 			-- `new_button' has been selected, so add a new constant accordingly.
 		local
@@ -493,19 +486,19 @@ feature {NONE} -- Implementation
 				-- As only one entry field may be parented, we check the
 				-- `parent' to determine which one must be validated
 			if string_input.parent /= Void then
-				create add_constant_command.make (create {GB_STRING_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, string_input.text))
+				create add_constant_command.make (create {GB_STRING_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, string_input.text), components)
 				add_constant_command.execute
 				string_input.remove_text
 				new_button.disable_sensitive
 			elseif integer_input.parent /= Void then
-				create add_constant_command.make (create {GB_INTEGER_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, integer_input.value))
+				create add_constant_command.make (create {GB_INTEGER_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, integer_input.value), components)
 				add_constant_command.execute
 				new_button.disable_sensitive
 			elseif directory_input.parent /= Void then
 				create a_directory_dialog
 				a_directory_dialog.show_modal_to_window (Current)
 				if not a_directory_dialog.directory.is_empty then
-					create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_directory_dialog.directory))
+					create add_constant_command.make (create {GB_DIRECTORY_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_directory_dialog.directory), components)
 					add_constant_command.execute
 					name_field.remove_text
 				end
@@ -513,7 +506,7 @@ feature {NONE} -- Implementation
 				create a_color_dialog
 				a_color_dialog.show_modal_to_window (Current)
 				if not a_color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-					create add_constant_command.make (create {GB_COLOR_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_color_dialog.color))	
+					create add_constant_command.make (create {GB_COLOR_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_color_dialog.color), components)
 					add_constant_command.execute
 					name_field.remove_text
 				end
@@ -521,13 +514,13 @@ feature {NONE} -- Implementation
 				create a_font_dialog
 				a_font_dialog.show_modal_to_window (Current)
 				if not a_font_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
-					create add_constant_command.make (create {GB_FONT_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_font_dialog.font))
+					create add_constant_command.make (create {GB_FONT_CONSTANT}.make_with_name_and_value (name_field.text.as_lower, a_font_dialog.font), components)
 					add_constant_command.execute
 					name_field.remove_text
 				end
 			elseif type_combo_box.selected_item.text.is_equal (Pixmap_constant_type) then
 				select_pixmap
-			end	
+			end
 		end
 
 	modify_button_selected is
@@ -564,7 +557,7 @@ feature {NONE} -- Implementation
 				row := constants_list.i_th (modify_constant_index)
 				row.put_i_th (a_string_constant.value_as_string, 3)
 			elseif pixmap_constant /= Void then
-				create pixmap_dialog.make_in_modify_mode (pixmap_constant.name)
+				create pixmap_dialog.make_in_modify_mode (pixmap_constant.name, components)
 				pixmap_dialog.show_modal_to_window (Current)
 				row := constants_list.i_th (modify_constant_index)
 				row.set_pixmap (pixmap_constant.small_pixmap)
@@ -621,9 +614,9 @@ feature {NONE} -- Implementation
 				error_dialog.show_modal_to_window (Current)
 			end
 				-- Update system to reflect a change.
-			(create {GB_GLOBAL_STATUS}).mark_as_dirty
+			components.system_status.mark_as_dirty
 		end
-		
+
 	key_pressed_on_constants_list (a_key: EV_KEY) is
 			-- Called by `key_press_actions' of `constants_list'.
 		do
@@ -631,7 +624,7 @@ feature {NONE} -- Implementation
 				remove_selected_constant
 			end
 		end
-	
+
 	remove_selected_constant is
 			-- Called by `select_actions' of `remove_button'.
 		require else
@@ -683,7 +676,7 @@ feature {NONE} -- Implementation
 						ordered_selected_items.force (constant)
 					end
 				end
-				
+
 				selected_items.forth
 			end
 			if ordered_selected_items.count /= 1 then
@@ -718,7 +711,7 @@ feature {NONE} -- Implementation
 					end
 					ordered_selected_items.forth
 				end
-				
+
 				if not cancelled.item then
 					from
 						ordered_selected_items.start
@@ -729,7 +722,7 @@ feature {NONE} -- Implementation
 						check
 							data_was_constant: constant /= Void
 						end
-						create delete_constant_command.make (constant)
+						create delete_constant_command.make (constant, components)
 						delete_constant_command.execute
 						ordered_selected_items.forth
 					end
@@ -758,7 +751,7 @@ feature {NONE} -- Implementation
 					warning_dialog.show_modal_to_window (Current)
 				end
 				if not cancelled.item then
-					create delete_constant_command.make (constant)
+					create delete_constant_command.make (constant, components)
 					delete_constant_command.execute
 				end
 			end
@@ -767,12 +760,12 @@ feature {NONE} -- Implementation
 				name_field.remove_text
 				string_input.remove_text
 				integer_input.remove_text
-	
+
 					-- Update system to reflect a change.
-				;(create {GB_GLOBAL_STATUS}).mark_as_dirty
+				components.system_status.mark_as_dirty
 			end
 		end
-		
+
 	directory_constant_deletable (directory_constant: GB_DIRECTORY_CONSTANT; all_pixmaps_for_deletion: ARRAYED_LIST [GB_CONSTANT]): BOOLEAN is
 			-- Is `directory_constant' deletable if contents of `all_pixmaps_for_deletion' are also deleted at the same time?
 			-- Checks that no cross referers still exist that are not being deleted.
@@ -799,7 +792,7 @@ feature {NONE} -- Implementation
 				counted_refers_less_than_referers: directory_constant.cross_referers.count >= counted_referers
 			end
 		end
-		
+
 	display_all_types_changed is
 			-- Called by `select_actions' of `display_all_types'.
 		do
@@ -809,7 +802,7 @@ feature {NONE} -- Implementation
 				rebuild_for_selected_type (type_combo_box.text)
 			end
 		end
-		
+
 	column_clicked (a_column: INTEGER) is
 			-- Called by `column_title_click_actions' of `constants_list'.
 		do
@@ -817,7 +810,7 @@ feature {NONE} -- Implementation
 			sorted_by_type := False
 			sorted_by_name := False
 			sorted_by_value := False
-			
+
 				-- Set sorted by corresponding to `a_column'.
 			inspect a_column
 			when 1 then
@@ -830,10 +823,10 @@ feature {NONE} -- Implementation
 			end
 			perform_sort (a_column)
 		end
-		
+
 	perform_sort (a_column: INTEGER) is
 			-- Perform sort of information displayed in `constants_list',
-			-- sorted by column index `a_column', 
+			-- sorted by column index `a_column',
 		local
 			sorter: DS_ARRAY_QUICK_SORTER [EV_MULTI_COLUMN_LIST_ROW]
 			comparator: MULTI_COLUMN_LIST_ROW_STRING_COMPARATOR
@@ -850,7 +843,7 @@ feature {NONE} -- Implementation
 				-- Lock window updates, and display a wait cursor.
 			constants_list.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 			parent_window (constants_list).lock_update
-			
+
 			create lconstants.make (constants_list.count)
 				-- Place all items in `lconstants' ready for sorting.
 			from
@@ -860,17 +853,17 @@ feature {NONE} -- Implementation
 			loop
 				lconstants.force (constants_list.i_th (lconstants.count + 1))
 			end
-			
+
 				-- Initialize `sorter' and `comparator'
 			create comparator
 			comparator.set_sort_column (a_column)
 			create sorter.make (comparator)
 			if reverse_sort then
-				sorter.reverse_sort (lconstants)	
+				sorter.reverse_sort (lconstants)
 			else
 				sorter.sort (lconstants)
 			end
-	
+
 				-- Clear `constants_list' and rebuild rows in sorted order.		
 			constants_list.wipe_out
 			from
@@ -881,18 +874,18 @@ feature {NONE} -- Implementation
 				constants_list.extend (lconstants.item)
 				lconstants.forth
 			end
-			
+
 				-- Unlock window, and restore cursor.
 			parent_window (constants_list).unlock_update
 			constants_list.set_pointer_style ((create {EV_STOCK_PIXMAPS}).standard_cursor)
 		end
-		
+
 	last_selected_column: INTEGER
 		-- Last column selected by user.
-	
+
 	reverse_sort: BOOLEAN
 		-- Should sort opertion be reversed?
-		
+
 	currently_selected_type: STRING
 		-- Type currently selected in `Current'.
 
@@ -901,22 +894,22 @@ feature {NONE} -- Implementation
 		local
 			pixmap_dialog: GB_PIXMAP_SETTINGS_DIALOG
 		do
-			create pixmap_dialog
+			create pixmap_dialog.make (components)
 			pixmap_dialog.show_modal_to_window (Current)
 		end
-		
+
 	cancel_pressed is
 			-- Called by `select_actions' of `cancel_button'.
 		do
-			Command_handler.Show_hide_constants_dialog_command.execute
+			components.commands.Show_hide_constants_dialog_command.execute
 		end
-		
+
 	ok_pressed is
 			-- Called by `select_actions' of `ok_button'.
 		do
-			Command_handler.Show_hide_constants_dialog_command.execute
+			components.commands.Show_hide_constants_dialog_command.execute
 		end
-		
+
 	item_selected_in_list (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `select_actions' of `constants_list'.
 		do
@@ -939,7 +932,7 @@ feature {NONE} -- Implementation
 			elseif modify_constant.type.is_equal (Integer_constant_type) then
 				integer_item_selected
 			elseif modify_constant.type.is_equal (Directory_constant_type) then
-				directory_item_selected 
+				directory_item_selected
 			elseif modify_constant.type.is_equal (Pixmap_constant_type) then
 				pixmap_item_selected
 			elseif modify_constant.type.is_equal (Color_constant_type) then
@@ -969,13 +962,13 @@ feature {NONE} -- Implementation
 			end
 			unlock_update
 		end
-	
+
 	item_deselected_in_list (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `deselect_actions' of `constants_list'.
 		do
 			modify_constant := Void
 			if constants_list.selected_items.is_empty then
-				remove_button.disable_sensitive	
+				remove_button.disable_sensitive
 			end
 		end
 
@@ -984,17 +977,17 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_format_onces @ 1
 		end
-		
+
 	rebuild_for_selected_type (a_type: STRING) is
 			-- Rebuild `constants_list' to only show types corresponding to `a_type'.
 		require
-			type_valid: a_type.is_equal (all_constant_type) or Constants.Supported_types.has (a_type)
+			type_valid: a_type.is_equal (all_constant_type) or components.constants.Supported_types.has (a_type)
 		local
 			temp_constants: HASH_TABLE [GB_CONSTANT, STRING]
 		do
 			parent_window (constants_list).lock_update
 			constants_list.wipe_out
-			temp_constants := Constants.all_constants
+			temp_constants := components.constants.all_constants
 			from
 				temp_constants.start
 			until

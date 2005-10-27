@@ -5,25 +5,23 @@ indexing
 
 class
 	GB_WIDGET_SELECTOR_COMMON_ITEM
-	
+
 inherit
-	
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		end
-		
+
 	GB_GENERAL_UTILITIES
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_TOOLS
 		export
 			{NONE} all
 		end
 
 feature -- Access
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
 
 	parent: GB_WIDGET_SELECTOR_COMMON_ITEM
 		-- Parent of `Current' or `Void' if none.
@@ -31,13 +29,13 @@ feature -- Access
 
 	children: ARRAYED_LIST [GB_WIDGET_SELECTOR_COMMON_ITEM]
 		-- All children contained in `Current'.
-	
+
 	tree_item: EV_TREE_ITEM
 		-- Representation of `Current' as a tree item.
-		
+
 	name: STRING
 		-- Name of `Current'.
-		
+
 	count: INTEGER is
 			-- Number of items in `Current'.
 		do
@@ -57,7 +55,7 @@ feature -- Status report
 		do
 			cursor := children.cursor
 			from
-				children.start	
+				children.start
 			until
 				children.off or Result
 			loop
@@ -67,7 +65,7 @@ feature -- Status report
 					Result := children.item.has_recursive (selector_item)
 				end
 				children.forth
-			end		
+			end
 			children.go_to (cursor)
 		ensure
 			index_not_changed: old children.index = children.index
@@ -85,7 +83,7 @@ feature -- Status setting
 		ensure
 			name_set: name.is_equal (a_name)
 		end
-		
+
 	set_parent (new_parent: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Assign `new_parent' to `parent'.
 		do
@@ -101,17 +99,17 @@ feature -- Status setting
 			window_item: GB_WIDGET_SELECTOR_ITEM
 		do
 			parent_item := parent
-			
+
 				--|FIXME not clean Redefine in descendent when change is complete.
 			if parent /= Void then
 				parent := Void
-				
+
 				window_item ?= Current
 				if window_item /= Void then
-					widget_selector.update_for_removal (window_item)
+					components.tools.widget_selector.update_for_removal (window_item)
 					parent_item.children.prune_all (Current)
-					if parent_item /= widget_selector then
-						widget_selector.item_removed_from_directory (parent_item, window_item)
+					if parent_item /= components.tools.widget_selector then
+						components.tools.widget_selector.item_removed_from_directory (parent_item, window_item)
 					end
 				else
 					-- Only for directories.
@@ -124,7 +122,7 @@ feature -- Status setting
 		ensure
 			parent_void: parent = Void
 		end
-		
+
 	directory_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_DIRECTORY_ITEM is
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from `Current'.
@@ -140,7 +138,7 @@ feature -- Status setting
 		ensure
 			Cursor_not_moved: old children.index = children.index
 		end
-		
+
 	window_object_from_name (path_name: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_ITEM is
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from `Current'.
@@ -162,7 +160,7 @@ feature -- Status setting
 		do
 			v.unparent
 		end
-		
+
 	wipe_out is
 			-- Remove all items from `Current'.
 		do
@@ -174,7 +172,7 @@ feature -- Status setting
 				children.item.unparent
 			end
 		end
-		
+
 	add_alphabetically (new_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Add `representation of `new_item' to `Current' alphabetically.
 		require
@@ -192,16 +190,16 @@ feature -- Status setting
 			from
 				children.go_i_th (children.count)
 			until
-				children.off or else children.item.name.as_lower < l_text 
+				children.off or else children.item.name.as_lower < l_text
 			loop
 				children.back
 			end
 			children.put_right (new_item)
 			add_to_tree_node_alphabetically (tree_item, new_item.tree_item)
 			new_item.set_parent (Current)
-			widget_selector.item_added_to_directory (Current, new_item)
+			components.tools.widget_selector.item_added_to_directory (Current, new_item)
 		end
-		
+
 	recursive_do_all (action: PROCEDURE [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM]]) is
 			-- Apply `action' to very item recusively.
 		do
@@ -215,7 +213,7 @@ feature -- Status setting
 				children.forth
 			end
 		end
-		
+
 	recursive_check_all (action: FUNCTION [ANY, TUPLE [GB_WIDGET_SELECTOR_COMMON_ITEM], BOOLEAN]): BOOLEAN is
 			-- For all items in `Current' recursively, call `action'.
 			-- `Result' is True if one call to `action' returns True, False otherwise.
@@ -234,7 +232,7 @@ feature -- Status setting
 						Result := children.item.recursive_check_all (action)
 					end
 				end
-				children.forth	
+				children.forth
 			end
 		end
 
@@ -247,7 +245,7 @@ feature -- Status setting
 		ensure
 			tree_item_is_selected: tree_item.is_selected
 		end
-		
+
 	disable_select is
 			-- Unselect `Current'
 		do
@@ -255,7 +253,7 @@ feature -- Status setting
 		ensure
 			tree_item_is_not_selected: not tree_item.is_selected
 		end
-		
+
 	expand is
 			-- Expand `Current'.
 		do
@@ -263,7 +261,7 @@ feature -- Status setting
 				tree_item.expand
 			end
 		end
-		
+
 	expand_recursive is
 			-- Expand `Current'.
 		do
@@ -274,7 +272,7 @@ feature -- Status setting
 		ensure
 			(tree_item /= Void and then tree_item.is_expandable) implies tree_item.is_expanded
 		end
-		
+
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Assign `a_pixmap' to graphical representations of `Current'.
 		require
@@ -282,7 +280,7 @@ feature -- Status setting
 		do
 			tree_item.set_pixmap (a_pixmap)
 		end
-		
+
 	directory_names: ARRAYED_LIST [STRING] is
 			-- `Result' is names of all directories contained in `Current'.
 		local
@@ -301,14 +299,14 @@ feature -- Status setting
 				children.forth
 			end
 		end
-		
+
 	destroy is
 			-- Destroy `Current'.
 		do
 			tree_item.destroy
 		end
-		
-		
+
+
 feature {NONE} -- Implementation
 
 	common_make is
@@ -318,7 +316,7 @@ feature {NONE} -- Implementation
 			create children.make (5)
 			name := ""
 		end
-		
+
 	internal_directory_object_from_name (parent_object: GB_WIDGET_SELECTOR_COMMON_ITEM; texts: ARRAYED_LIST [STRING]): GB_WIDGET_SELECTOR_COMMON_ITEM is
 			-- `Result' is directory item returned by traversing the directory path `path_name'
 			-- from the current `index' of `texts' from directory object `parent_object'.
@@ -355,7 +353,7 @@ feature {NONE} -- Implementation
 		ensure
 			children_index_unchanged: old parent_object.children.index = parent_object.children.index
 		end
-		
+
 	internal_expand_recursive (widget_selector_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Expand `Current' .
 		require

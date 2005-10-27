@@ -6,55 +6,51 @@ indexing
 
 class
 	GB_COMPONENT
-	
+
 inherit
-	
+
 	GB_XML_OBJECT_BUILDER
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_ID
-		export
-			{NONE} all
-		end
-	
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_NAMING_UTILITIES
 		export
 			{NONE} all
 		end
 
 create
-	
+
 	make_with_name
-	
+
 feature {NONE} -- Initialization
 
-	make_with_name (a_name: STRING) is
-			-- Create `Current' and assign `a_name' to `name'.
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_name (a_name: STRING; a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_name' to `name' and `a_components' to `components'.
 		require
 			name_not_empty_or_void: a_name /= Void and then not a_name.is_empty
+			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			set_name (a_name)
 		ensure
 			name_set: name.is_equal (a_name)
+			components_set: components = a_components
 		end
 
 feature -- Access
 
 	name: STRING
 		-- Name of `Current'.
-		
+
 	object: GB_OBJECT is
 			-- `Result' is representation of `Current'
 			-- unique each time.
@@ -67,19 +63,19 @@ feature -- Access
 			current_element: XM_ELEMENT
 			all_new_objects: ARRAYED_LIST [GB_OBJECT]
 		do
-			current_element := (create {GB_SHARED_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name)
+			current_element := components.xml_handler.xml_element_representing_named_component (name)
 --			id_compressor.shift_all_ids_upwards
 			Result := (new_object (current_element, True))
 			id_compressor.shift_object_ids_updwards (Result)
 			create all_new_objects.make (50)
 			Result.all_children_recursive (all_new_objects)
-			object_handler.add_object_to_objects (Result)
+			components.object_handler.add_object_to_objects (Result)
 			from
 				all_new_objects.start
 			until
 				all_new_objects.off
 			loop
-				object_handler.add_object_to_objects (all_new_objects.item)
+				components.object_handler.add_object_to_objects (all_new_objects.item)
 				all_new_objects.forth
 			end
 			id_compressor.compress_all_id
@@ -146,7 +142,7 @@ feature -- Access
 --			end
 --			
 --			
-				
+
 				-- Now execute the deferred building.	
 			deferred_builder.build
 
@@ -155,11 +151,11 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	root_element_type: STRING is
 			-- `Result' is type of root element.
 		do
-			Result := ((create {GB_SHARED_XML_HANDLER}).xml_handler.component_root_element_type (name))
+			Result := components.xml_handler.component_root_element_type (name)
 		end
 
 feature -- Status Setting
@@ -173,14 +169,14 @@ feature -- Status Setting
 		ensure
 			name_set: name = a_name
 		end
-		
+
 feature {NONE} -- Implementation
 
 	id_compressor: GB_ID_COMPRESSOR is
 			-- Once instance of GB_ID_COMPRESSOR
 			-- for compressing saved Ids.
 		once
-			create Result
+			create Result.make_with_components (components)
 		end
 
 end -- class GB_COMPONENT

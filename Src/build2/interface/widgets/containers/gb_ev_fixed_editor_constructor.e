@@ -43,7 +43,7 @@ feature -- Access
 			if first.is_empty then
 				button.parent.disable_sensitive
 			end
-			create result
+			create result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create horizontal_box
 			horizontal_box.extend (tool_bar)

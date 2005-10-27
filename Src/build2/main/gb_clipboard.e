@@ -5,55 +5,40 @@ indexing
 
 class
 	GB_CLIPBOARD
-	
+
 inherit
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
-		
+
 	GB_COMMAND_ADD_OBJECT
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
+
 	GB_XML_OBJECT_BUILDER
 		export
 			{NONE} all
-		undefine
-			default_create
 		end
-		
-	GB_SHARED_ID
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
-feature {NONE} --Initialization
-	
-	default_create is
-			-- Create `Current'.
+
+feature -- Initialization
+
+	initialize_clipboard (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Initialize `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
 		do
+			components := a_components
 			create content_change_actions
-			history.change_actions.extend (agent history_changed)
+			components.history.change_actions.extend (agent history_changed)
 			object_stone_dirty := True
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Access
-		
+
 	object: GB_OBJECT is
 			-- `Result' is a new object representation of the contents.
 		local
@@ -73,8 +58,8 @@ feature -- Access
 						-- of keeping the original names as we perform a replace for all objects that
 						-- are top level instances within the XML. Can be done, but may be tricky. For later.
 					a_list.item.set_name ("")
-					a_list.item.set_id (new_id)
-					object_handler.add_object_to_objects (a_list.item)
+					a_list.item.set_id (components.id_handler.new_id)
+					components.object_handler.add_object_to_objects (a_list.item)
 					a_list.forth
 				end
 					-- Perform the connection of the instance referers afterwards as
@@ -85,12 +70,12 @@ feature -- Access
 				until
 					a_list.off
 				loop
-					if a_list.item.associated_top_level_object_on_loading > 0 and not object_handler.deleted_objects.has (a_list.item.associated_top_level_object_on_loading) then
+					if a_list.item.associated_top_level_object_on_loading > 0 and not components.object_handler.deleted_objects.has (a_list.item.associated_top_level_object_on_loading) then
 						a_list.item.update_object_as_instance_representation
 					end
 					a_list.forth
 				end
-				
+
 			end
 		end
 
@@ -111,13 +96,13 @@ feature -- Access
 					check
 						clipboard_not_empty: contents_cell.item /= Void
 					end
-					create Result
+					create Result.make_with_components (components)
 					parent_element := contents_cell.item.deep_twin
 					contents ?= parent_element.first
 					replace_all_instances_with_up_to_date_xml (contents)
 					contents ?= parent_element.first
 					remove_nodes_recursive (contents, root_window_string)
-					
+
 						-- Now determine if the top level object is an instance of another
 						-- object and if so, set the associated object for `Result'.
 					contents ?= parent_element.first
@@ -129,11 +114,11 @@ feature -- Access
 							data_is_integer:element_info.data.is_integer
 						end
 						temp_object_id := element_info.data.to_integer
-						if object_handler.objects.has (temp_object_id) then
+						if components.object_handler.objects.has (temp_object_id) then
 							Result.set_associated_top_level_object (temp_object_id)
 						end
 					end
-					
+
 						-- Now return `all_contained_instances' of `Result' so that we can
 						-- correctly determine if a drop is permitted.
 						-- Must perform special handling if the instance is a top level object
@@ -152,7 +137,7 @@ feature -- Access
 								data_is_integer:data.content.is_integer
 							end
 							temp_object_id := data.content.to_integer
-							if object_handler.objects.has (temp_object_id) then
+							if components.object_handler.objects.has (temp_object_id) then
 								Result.all_contained_instances.put (temp_object_id, temp_object_id)
 							end
 						end
@@ -164,17 +149,17 @@ feature -- Access
 						-- Simply return the previously computed value.
 					Result := object_stone_internal
 				end
-			end			
+			end
 
 	object_type: STRING
 			-- Type of `object' or Void if `is_empty'.
-		
+
 	is_empty: BOOLEAN is
 			-- Is clipboard empty?
 		do
 			Result := contents_cell.item = Void
 		end
-		
+
 	content_change_actions: EV_NOTIFY_ACTION_SEQUENCE
 		-- Action sequence executed when contents of clipboard change.
 
@@ -189,19 +174,19 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 		do
 			if contents_cell.item /= Void then
 				contents := contents_cell.item.deep_twin
-				;(create {GB_GLOBAL_STATUS}).block	
-				if system_status.is_in_debug_mode then
-					show_element (contents, main_window)
-				end				
+				components.system_status.block
+--				if system_status.is_in_debug_mode then
+--					show_element (main_window)
+--				end				
 				replace_all_instances_with_up_to_date_xml (contents)
 				remove_nodes_recursive (contents, root_window_string)
-				if system_status.is_in_debug_mode then
-					show_element (contents, main_window)
-				end				
+--				if system_status.is_in_debug_mode then
+--					show_element (contents, main_window)
+--				end				
 
 				Result := new_object (contents, True)
 					-- Modify id of `Result' so that it is not the same as that of `Current'.
-				(create {GB_GLOBAL_STATUS}).resume
+				components.system_status.resume
 			end
 		end
 
@@ -220,17 +205,17 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND, GB
 				an_object.build_objects
 			end
 			object_type := an_object.type
-			create xml_store
+			create xml_store.make_with_components (components)
 			xml_store.store_individual_object (an_object)
 			xm_element := xml_store.last_stored_individual_object
-			
+
 			if an_object.is_top_level_object then
 				-- We must now parse the XML and set the first object as a reference
 				-- object and remove the deeper references.
 				element ?= xm_element.first
 				convert_element_to_instance (element, an_object.id, 1)
 			end
-			
+
 			contents_cell.put (xm_element)
 			if not content_change_actions.is_empty then
 				content_change_actions.call (Void)
@@ -244,9 +229,9 @@ feature {GB_CUT_OBJECT_COMMAND, GB_COPY_OBJECT_COMMAND, GB_CLIPBOARD_COMMAND, GB
 			-- A cell to hold the contents of `Current'.
 			-- Whenver the contents are requested, this must be copied.
 		once
-			create Result	
+			create Result
 		end
-		
+
 feature {NONE} -- Implementation
 
 		object_stone_internal: GB_CLIPBOARD_OBJECT_STONE
@@ -254,10 +239,10 @@ feature {NONE} -- Implementation
 			-- `object_stone'. This should only be used by `object_stone' and
 			-- permits optimization when calling `object_stone' if we know the
 			-- structures have not changed.
-		
+
 		object_stone_dirty: BOOLEAN
 			-- Should `object_stone_internal' be recomputed?
-			
+
 		history_changed is
 				-- Index of history has changed, so flag `object_stone_internal'
 				-- for recomputation. If the history position changes, it is possible
@@ -267,8 +252,8 @@ feature {NONE} -- Implementation
 			ensure
 				object_stone_dirty: object_stone_dirty = True
 			end
-		
+
 invariant
-	content_change_actions_not_void: content_change_actions /= Void
+--	content_change_actions_not_void: content_change_actions /= Void
 
 end -- class GB_CLIPBOARD

@@ -13,13 +13,6 @@ inherit
 			default_create
 		end
 		
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
 feature -- Access
 
 	ev_type: EV_CONTAINER
@@ -37,7 +30,7 @@ feature -- Access
 			pixmap: EV_PIXMAP
 			tool_bar1, tool_bar2: EV_TOOL_BAR
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create label.make_with_text (gb_ev_container_radio_groups)
 			label.set_tooltip (gb_ev_container_radio_groups_tooltip)
@@ -268,7 +261,7 @@ feature {NONE} -- Implementation
 				end
 			end
 				-- Ensure that any existing object editors are updated to reflect this change.
-			update_editors_for_property_change (an_object.object, colorizable_type, parent_editor)
+			components.object_editors.update_editors_for_property_change (an_object.object, colorizable_type, parent_editor)
 		end
 		
 	colorizable_editor_item: GB_OBJECT_EDITOR_ITEM

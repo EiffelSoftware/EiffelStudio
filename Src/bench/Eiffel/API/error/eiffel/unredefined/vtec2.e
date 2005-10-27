@@ -2,7 +2,7 @@ indexing
 
 	description: 
 		"Error for expanded that does not have `default_create' from ANY as %
-		%creation procedure";
+		%creation procedure.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -10,13 +10,11 @@ class VTEC2
 
 inherit
 
-	VTEC1
-		redefine
-			subcode
-		end;
+	VTEC
 
 feature -- Properties
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER is 2
+			-- Error subcode
 
-end -- class VTEC2
+end

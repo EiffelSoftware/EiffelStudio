@@ -21,7 +21,7 @@ SET COMPILER_RELEASE=%2
 ECHO COMPILER_RELEASE=%COMPILER_RELEASE%
 SET CODEDOM_RELEASE=%1
 ECHO CODEDOM_RELEASE=%CODEDOM_RELEASE%
-SET GOBO_SRC=C:\Sources\library\gobo
+SET GOBO_SRC=E:\Sources\library\gobo
 ECHO GOBO_SRC=%GOBO_SRC%
 SET EIFFEL_SRC=%CD%\checkout
 ECHO EIFFEL_SRC=%EIFFEL_SRC%
@@ -32,21 +32,23 @@ ECHO ECLOP=%ECLOP%
 ECHO ***********************************
 
 ECHO Setting up folders
+SET ECPOriginalPath=%CD%
 IF EXIST delivery RD /Q /S delivery
+IF EXIST delivery ECHO Could not delete delivery folder, existing.
 IF EXIST delivery GOTO END
 MKDIR delivery
 IF EXIST checkout GOTO COMPILER
 MKDIR checkout
-CALL checkout.bat
-CALL setup.bat %3
+CALL scripts\checkout.bat
+CALL scripts\setup.bat %3
 
 :COMPILER
 ECHO Building compiler
-CALL build_compiler.bat %3
+CALL "%ECPOriginalPath%\scripts\build_compiler.bat" %3
 IF "%COMPILER_BUILT%"=="" GOTO END
 
 ECHO Building codedom
-CALL build_codedom.bat %3
+CALL "%ECPOriginalPath%\scripts\build_codedom.bat" %3
 IF "%CODEDOM_BUILT%"=="" GOTO END
 
 ECHO Building installer
@@ -57,17 +59,22 @@ SET ISE_CFLAGS=-D WINVER=0x500
 "%3\studio\spec\windows\bin\ec" -finalize -c_compile -ace ace.codedom.ace
 IF NOT EXIST EIFGEN\F_Code\installer.exe ECHO Build failed, could not find EIFGEN\F_Code\installer.exe!!
 IF NOT EXIST EIFGEN\F_Code\installer.exe GOTO END
-COPY EIFGEN\F_Code\installer.exe ..\..\..\delivery
+COPY EIFGEN\F_Code\installer.exe ..\..\..\files
 
-CD ..\..\..\..
+ECHO Building MSI
+CD %ECPOriginalPath%\scripts
+CALL make_msi.bat
+CD ..
 GOTO END
 
 :USAGE
-ECHO Usage: build.bat BRANCH COMP_BRANCH $ISE_EIFFEL
+ECHO Usage: build.bat BRANCH COMP_BRANCH $ISE_EIFFEL DESTINATION
 ECHO --
 ECHO BRANCH: CVS branch for codedom sources (e.g. HEAD)
 ECHO COMP_BRANCH: CVS branch of delivery compiler (e.g. Eiffel_55_new_consumer)
 ECHO $ISE_EIFFEL: ES Installation used to build delivery (e.g. C:\Eiffel55)
+ECHO DESTINATION: Folder where to generate installation (current folder by default)
 
 :END
+CD %ECPOriginalPath%
 ECHO Done.

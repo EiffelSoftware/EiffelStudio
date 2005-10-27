@@ -7,23 +7,30 @@ indexing
 
 class
 	GB_ID_COMPRESSOR
-	
+
 inherit
-	GB_SHARED_OBJECT_HANDLER
-	
-	GB_SHARED_ID
-		export
-			{NONE} all
-		end
-	
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
+
+create
+	make_with_components
+
+feature {NONE} -- Creation
+
+	components: GB_INTERNAL_COMPONENTS
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Basic operation
@@ -38,12 +45,12 @@ feature -- Basic operation
 			current_object: GB_OBJECT
 			original_id: INTEGER
 		do
-			system_status.set_object_structure_changing
+			components.system_status.set_object_structure_changing
 				-- First, intialization.
 			create existing_ids.make (50)
 			create deleted_ids.make (50)
-			objects := object_handler.objects.linear_representation
-			objects.merge_right (object_handler.deleted_objects.linear_representation)
+			objects := components.object_handler.objects.linear_representation
+			objects.merge_right (components.object_handler.deleted_objects.linear_representation)
 				-- Firstly, store all ids into an array
 			objects.do_all (agent record_id)
 				-- Now create lookup table.
@@ -64,21 +71,21 @@ feature -- Basic operation
 				end
 				counter := counter + 1
 			end
-			
+
 			from
 				objects.start
 			until
 				objects.off
 			loop
-				if object_handler.deleted_objects.has (objects.item.id) then
+				if components.object_handler.deleted_objects.has (objects.item.id) then
 					deleted_ids.put (objects.item.id, objects.item.id)
 				end
 				objects.forth
 			end
-			
-			object_handler.objects.clear_all
-			object_handler.deleted_objects.clear_all
-			
+
+			components.object_handler.objects.clear_all
+			components.object_handler.deleted_objects.clear_all
+
 				-- Now update all ids stored in objects.
 			from
 				objects.start
@@ -88,18 +95,18 @@ feature -- Basic operation
 				current_object := objects.item
 				original_id := current_object.id
 				current_object.update_internal_id_references (lookup)
-			
+
 				if deleted_ids.has (original_id) then
-					object_handler.deleted_objects.put (current_object, current_object.id)
+					components.object_handler.deleted_objects.put (current_object, current_object.id)
 				else
-					object_handler.objects.put (current_object, current_object.id)
+					components.object_handler.objects.put (current_object, current_object.id)
 				end
-					
+
 				objects.forth
 			end
-			set_current_id_counter (objects.count + 1)
-			
-			
+			components.id_handler.set_current_id_counter (objects.count + 1)
+
+
 				-- Now, if `objects_without_ids' is `True', it means
 				-- that some of the objects referenced in the save file
 				-- do not have ids (an old save file). So we must now add ids
@@ -115,12 +122,12 @@ feature -- Basic operation
 				end
 				objects.forth
 			end
-			system_status.set_object_structure_changed
+			components.system_status.set_object_structure_changed
 		ensure
-			lists_not_changed: old object_handler.objects.count = object_handler.objects.count and
-				old object_handler.deleted_objects.count = object_handler.deleted_objects.count
+			lists_not_changed: old components.object_handler.objects.count = components.object_handler.objects.count and
+				old components.object_handler.deleted_objects.count = components.object_handler.deleted_objects.count
 		end
-		
+
 	shift_all_ids_upwards is
 			-- For every id in system, shift higher.
 			-- Used when importing projects, so we do not get
@@ -128,7 +135,7 @@ feature -- Basic operation
 		local
 			linear_objects: LINEAR [GB_OBJECT]
 		do
-			linear_objects := object_handler.objects.linear_representation
+			linear_objects := components.object_handler.objects.linear_representation
 			from
 				linear_objects.start
 			until
@@ -139,13 +146,13 @@ feature -- Basic operation
 				linear_objects.forth
 			end
 		end
-		
+
 	shift_object_ids_updwards (an_object: GB_OBJECT) is
 			-- For `an_object' and all child objects recursively, shift their
 			-- ids upwards by `amount_to_shift_ids_during_import'.
 		require
 			an_object_not_void: an_object /= Void
-			is_new_object: not object_handler.objects.has_item (an_object) and not object_handler.deleted_objects.has_item (an_object)
+			is_new_object: not components.object_handler.objects.has_item (an_object) and not components.object_handler.deleted_objects.has_item (an_object)
 			no_instance_referers: an_object.instance_referers.is_empty
 		local
 			recursive_children: ARRAYED_LIST [GB_OBJECT]
@@ -195,21 +202,21 @@ feature -- Basic operation
 			-- Adjust id of `an_object' upwards by `amount_to_shift_ids_during_import'.
 		require
 			an_object_not_void: an_object /= Void
-			object_already_exists: object_handler.objects.has (an_object.id) or object_handler.deleted_objects.has (an_object.id)
+			object_already_exists: components.object_handler.objects.has (an_object.id) or components.object_handler.deleted_objects.has (an_object.id)
 		local
 			in_objects: BOOLEAN
 		do
-			in_objects := object_handler.objects.has (an_object.id)
+			in_objects := components.object_handler.objects.has (an_object.id)
 			if in_objects then
-				object_handler.objects.remove (an_object.id)
+				components.object_handler.objects.remove (an_object.id)
 			else
-				object_handler.deleted_objects.remove (an_object.id)
+				components.object_handler.deleted_objects.remove (an_object.id)
 			end
 			an_object.set_id (an_object.id + amount_to_shift_ids_during_import)
 			if in_objects then
-				object_handler.objects.put (an_object, an_object.id)
+				components.object_handler.objects.put (an_object, an_object.id)
 			else
-				object_handler.deleted_objects.put (an_object, an_object.id)
+				components.object_handler.deleted_objects.put (an_object, an_object.id)
 			end
 		end
 
@@ -231,7 +238,7 @@ feature -- Basic operation
 				create objects.make (50)
 				objects.extend (an_object)
 				an_object.all_children_recursive (objects)
-				
+
 					-- Firstly, store all ids into an array
 				objects.do_all (agent record_id)
 					-- Now create lookup table.
@@ -245,7 +252,7 @@ feature -- Basic operation
 					lookup.put (counter + start_value - 1, existing_ids @ counter)
 					counter := counter + 1
 				end
-	
+
 					-- Now update all ids stored in objects.
 				from
 					objects.start
@@ -255,24 +262,24 @@ feature -- Basic operation
 					objects.item.update_internal_id_references (lookup)
 					objects.forth
 				end
-				set_current_id_counter (current_id_counter + objects.count)
+				components.id_handler.set_current_id_counter (components.id_handler.current_id_counter + objects.count)
 			end
 		end
-		
+
 feature {GB_COMPONENT} -- implementation
 
 	lookup: HASH_TABLE [INTEGER, INTEGER]
 			-- All ids original position in `exising_ids',
 			-- hashed on the id.
-			
+
 	existing_ids: ARRAYED_LIST [INTEGER]
 			-- All ids before compression
-			
+
 	deleted_ids: HASH_TABLE [INTEGER, INTEGER]
 		-- All ids that are contained within `deleted_objects' at start.
 
 feature {NONE} -- Implementation
-		
+
 	record_id (an_object: GB_OBJECT) is
 			-- Add `id' of `an_object' to `existing_ids'.
 		require
@@ -283,5 +290,5 @@ feature {NONE} -- Implementation
 		ensure
 			added: existing_ids.has (an_object.id)
 		end
-			
+
 end -- class GB_ID_COMPRESSOR

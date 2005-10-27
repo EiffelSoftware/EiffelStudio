@@ -5,27 +5,30 @@ indexing
 
 class
 	GB_CLIPBOARD_OBJECT_STONE
-	
+
 inherit
 	GB_OBJECT_STONE
 		redefine
-			object,
-			default_create
+			object
 		end
-		
-	GB_SHARED_CLIPBOAD
-		export
-			{NONE} all
-		redefine
-			default_create
-		end
-		
+
+create
+	make_with_components
+
 feature {NONE} -- Initialization
 
-	default_create is
-			-- Create `Current' and initialize `all_contained_instances'.
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
 		do
-			create all_contained_instances.make (10)
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Access
@@ -35,17 +38,17 @@ feature -- Access
 			-- Warning this builds new objects, so do not call
 			-- from a veto pebble function, only on the drop.
 		do
-			Result := clipboard.object
+			Result := components.clipboard.object
 		end
-		
+
 	object_type: STRING is
 			-- EiffelVision2 Type of object represented.
 		do
-			Result := clipboard.object_type
+			Result := components.clipboard.object_type
 		end
-		
+
 feature {GB_CLIPBOARD} -- Implementation
-		
+
 	set_associated_top_level_object (an_id: INTEGER) is
 			-- Assign `an_id' to `associated_top_level_object'.
 		require

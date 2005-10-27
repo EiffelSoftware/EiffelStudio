@@ -14,15 +14,15 @@ inherit
 			make,
 			on_close
 		end
-		
+
 	GB_EIFFEL_ENV
 		export
-			{NONE} all	
+			{NONE} all
 		undefine
 			copy, default_create
 		end
-		
-	GB_SHARED_TOOLS
+
+	GB_RECENT_PROJECTS
 		undefine
 			copy, default_create
 		end
@@ -32,23 +32,26 @@ create
 
 feature -- Access
 
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
 	make (a_preferences: like view_preferences; a_parent_window: like parent_window) is
 			-- New window.  Redefined to register EiffelStudio specific resource widgets for
 			-- special resource types.
-		do						
+		do
 			set_root_icon (icon_preference_root)
 			set_folder_icon (icon_preference_folder)
 			Precursor {PREFERENCES_WINDOW} (a_preferences, a_parent_window)
-			set_icon_pixmap (icon_preference_root)			
-			close_request_actions.extend (agent on_close)			
+			set_icon_pixmap (icon_preference_root)
+			close_request_actions.extend (agent on_close)
 		end
 
 	on_close is
 			-- Window was closed
 		do
-			main_window.clip_recent_projects
+			clip_recent_projects
 			Precursor
-		end		
+		end
 
 feature {NONE} -- Implementation
 
@@ -56,24 +59,24 @@ feature {NONE} -- Implementation
 			-- Icon for preferences root node
 		local
 			l_filename: FILE_NAME
-		do						
-			create l_filename.make_from_string (bitmaps_path.twin)			
+		do
+			create l_filename.make_from_string (bitmaps_path.twin)
 			l_filename.extend ("png")
 			l_filename.extend ("icon_preferences_root.png")
 			create Result
-			Result.set_with_named_file (l_filename.string)			
+			Result.set_with_named_file (l_filename.string)
 		end
-		
+
 	icon_preference_folder: EV_PIXMAP is
 			-- Icon for preferences folder node
 		local
 			l_filename: FILE_NAME
-		do					
-			create l_filename.make_from_string (bitmaps_path.twin)			
+		do
+			create l_filename.make_from_string (bitmaps_path.twin)
 			l_filename.extend ("png")
 			l_filename.extend ("icon_preferences_folder.png")
 			create Result
-			Result.set_with_named_file (l_filename.string)			
-		end	
+			Result.set_with_named_file (l_filename.string)
+		end
 
 end -- class GB_PREFERENCES_WINDOW

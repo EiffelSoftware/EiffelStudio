@@ -1,6 +1,6 @@
 indexing
 	description: "[
-			Objects that allow you to temporarily store and retrieve the exanded state of all items in the
+			Objects that allow you to temporarily store and retrieve the expanded state of all items in the
 			GB_LAYOUT_CONSTRUCTOR.
 				]"
 	author: ""
@@ -9,9 +9,25 @@ indexing
 
 class
 	GB_LAYOUT_CONSTRUCTOR_STATE_HANDLER
-	
-inherit
-	GB_SHARED_TOOLS
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
+		end
 
 feature -- Access
 
@@ -23,25 +39,25 @@ feature -- Access
 		do
 			create state_tree
 			create tree_item
-			layout_constructor_item ?= Layout_constructor.first
+			layout_constructor_item ?= components.tools.layout_constructor.first
 			check
 				not_void: layout_constructor_item /= Void
 			end
 			store_item (tree_item, layout_constructor_item)
 			state_tree.set_root_node (tree_item)
 		end
-		
+
 	restore_layout_constructor is
 			-- Restore representation of `layout_constructor' from `state_tree'.
 		local
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			layout_constructor_item ?= Layout_constructor.first
+			layout_constructor_item ?= components.tools.layout_constructor.first
 			reset_item (state_tree.root_node, layout_constructor_item)
 		end
-		
+
 feature {NONE} -- Implementation
-		
+
 	reset_item (tree_item: GB_BOOLEAN_TREE_ITEM; layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
 			-- Reset state of `layout_item' from `tree_item'.
 		local
@@ -72,8 +88,8 @@ feature {NONE} -- Implementation
 				tree_item.forth
 			end
 		end
-		
-		
+
+
 	store_item (tree_item: GB_BOOLEAN_TREE_ITEM; layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM) is
 			-- Store representation of `layout_item' into `tree_item'.
 		local
@@ -105,9 +121,9 @@ feature {NONE} -- Implementation
 				layout_item.forth
 			end
 		end
-		
+
 	state_tree: GB_BOOLEAN_TREE
 		-- An internal representation of layout_constructor.
 		-- Void unless `store_layout_constructor' called.
-		
+
 end -- class GB_LAYOUT_CONSTRUCTOR_STATE_HANDLER

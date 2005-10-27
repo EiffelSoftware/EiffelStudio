@@ -166,7 +166,7 @@ feature {GB_COMMAND_NAME_CHANGE, GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE
 		do
 			Precursor {GB_PARENT_OBJECT}
 			if is_instance_of_top_level_object then
-				display_object.set_text (object_handler.deep_object_from_id (associated_top_level_object).name.as_upper)
+				display_object.set_text (components.object_handler.deep_object_from_id (associated_top_level_object).name.as_upper)
 			else
 				display_object.set_text (type)
 			end

@@ -94,44 +94,6 @@ feature -- Access: file name
 			Result.extend_from_array (<<short_build_name, "bitmaps">>)
 		end
 
-	Cursor_path: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "bitmaps", "cursor">>)
-		end
-
-	Help_path: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "help", "errors">>)
-		end
-
-	Bin_path: FILE_NAME is
-			-- Partial file name that points to bin directory of Eiffel installation.
-			-- Therefore it is not a once function since we need to create 
-			-- a new instance each time it is called so that caller can then
-			-- calls `set_file_name' on returned object.
-		do
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
-		end
-
-	Default_precompiled_location: DIRECTORY_NAME is
-			-- Default location for the precompiled base
-			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"precomp", "spec", Eiffel_platform>>)
-		end
-
-	Default_precompiled_base_location: DIRECTORY_NAME is
-			-- Default location for the precompiled base
-			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"precomp", "spec", Eiffel_platform, "base">>)
-		end
-
 	filter_path: DIRECTORY_NAME is
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)

@@ -14,22 +14,8 @@ inherit
 			add_new_object_wrapper, add_new_component_wrapper, can_add_child, add_child_object, accepts_child,
 			generate_xml, modify_from_xml
 		end
-
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		undefine
-			copy
-		end
 		
 	GB_SHARED_PIXMAPS
-		export
-			{NONE} all
-		undefine
-			copy
-		end
-
-	GB_SHARED_OBJECT_HANDLER
 		export
 			{NONE} all
 		undefine
@@ -130,10 +116,10 @@ feature -- Access
 			-- Reset `object' and `display_object' to be up to
 			-- date with `display_window' and `builder_window'.
 		do
-			set_display_window (create {GB_DISPLAY_WINDOW})
-			set_builder_window (create {GB_BUILDER_WINDOW})
-			object := display_window
-			display_object.set_child (Builder_window)
+			components.tools.set_display_window (create {GB_DISPLAY_WINDOW}.make_with_components (components))
+			components.tools.set_builder_window (create {GB_BUILDER_WINDOW}.make_with_components (components))
+			object := components.tools.display_window
+			display_object.set_child (components.tools.Builder_window)
 		end
 		
 	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
@@ -233,7 +219,7 @@ feature -- Access
 				-- is already contained in `Current', as it will be impossible
 				-- to drop in this case.
 				-- `menu_object' is already contained in current.
-			create command_add.make (Current, menu_object, layout_item.count + 1)
+			create command_add.make (Current, menu_object, layout_item.count + 1, components)
 			command_add.execute
 				-- Now we expand the layout item.
 			if not layout_item.is_expanded then
@@ -249,7 +235,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- Bas
 			-- (export status {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER})
 		do
 			Precursor {GB_CELL_OBJECT} (element)
-			if object_handler.root_window_object = Current then
+			if components.object_handler.root_window_object = Current then
 				add_element_containing_boolean (element, root_window_string, True)
 			end
 		end
@@ -275,13 +261,13 @@ feature {GB_WIDGET_SELECTOR, GB_TITLED_WINDOW_OBJECT, GB_OBJECT_HANDLER} -- Basi
 			-- Ensure `Current' is the root window of the project,
 			-- which will be launched by the generated application.
 		do
-			if object_handler.root_window_object /= Void then
+			if components.object_handler.root_window_object /= Void then
 					-- We only attempt to update the previous main window object, if there was one.
-				object_handler.root_window_object.update_as_root_window_changing
+				components.object_handler.root_window_object.update_as_root_window_changing
 			end
 			layout_item.set_pixmap (Icon_titled_window_main @ 1)
 			widget_selector_item.set_pixmap (Icon_titled_window_main @ 1)
-			object_handler.set_root_window (Current)
+			components.object_handler.set_root_window (Current)
 		end
 		
 	update_as_root_window_changing is
@@ -310,7 +296,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		local
 			builder_win: GB_BUILDER_WINDOW
 		do
-			create builder_win
+			create builder_win.make_with_components (components)
 			builder_win.set_size (Default_window_dimension, Default_window_dimension)
 			set_display_object (builder_win)
 			connect_display_object_events

@@ -19,7 +19,7 @@ create
 	
 feature {NONE} -- Initialization
 	
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_COLOR]]; a_validate_agent: FUNCTION [ANY, TUPLE [EV_COLOR], BOOLEAN]) is
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [EV_COLOR]]; a_validate_agent: FUNCTION [ANY, TUPLE [EV_COLOR], BOOLEAN]; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- If `label_text' `is_empty', do not display a label.
@@ -35,6 +35,7 @@ feature {NONE} -- Initialization
 		local
 			tool_bar: EV_TOOL_BAR
 		do
+			components := a_components
 			call_default_create (any)
 			if not label_text.is_empty then
 				add_label (label_text, tooltip)
@@ -216,7 +217,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 		do
 			constants_combo_box.wipe_out
 			lookup_string := internal_gb_ev_any.type + internal_type
-			color_constants := Constants.color_constants
+			color_constants := components.constants.color_constants
 			from
 				color_constants.start
 			until

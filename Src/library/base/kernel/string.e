@@ -687,6 +687,7 @@ feature -- Status report
 			l_c: CHARACTER;
 			l_area: like area
 			i, nb, l_state: INTEGER;
+			l_needs_digit: BOOLEAN
 		do
 				-- l_state = 0 : waiting sign or double value.
 				-- l_state = 1 : sign read, waiting double value.
@@ -717,6 +718,7 @@ feature -- Status report
 					elseif l_c = ' ' then
 					elseif l_c = '.' then
 						l_state := 3
+						l_needs_digit := True
 					else
 						l_state := 8
 					end
@@ -726,6 +728,7 @@ feature -- Status report
 						l_state := 2
 					elseif l_c = '.' then
 						l_state := 3
+						l_needs_digit := True
 					else
 						l_state := 8
 					end
@@ -734,6 +737,7 @@ feature -- Status report
 					if l_c.is_digit then
 					elseif l_c = '.' then
 						l_state := 3
+						l_needs_digit := False
 					elseif l_c = ' ' then
 						l_state := 7
 					elseif l_c.as_lower = 'e' then
@@ -747,7 +751,7 @@ feature -- Status report
 						l_state := 7
 					elseif l_c.is_digit then
 						l_state := 4
-					elseif l_c.as_lower = 'e' then
+					elseif l_c.as_lower = 'e' and not l_needs_digit then
 						l_state := 5
 					else
 						l_state := 8

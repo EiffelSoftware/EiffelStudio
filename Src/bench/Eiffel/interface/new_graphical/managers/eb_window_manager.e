@@ -673,7 +673,6 @@ feature -- Actions on all windows
 			loop
 				cv_dev ?= l_managed_windows.item
 				if cv_dev /= Void and then not cv_dev.destroyed then
-					cv_dev.status_bar.progress_bar.reset
 					cv_dev.status_bar.progress_bar.set_value (a_value)
 				end
 				l_managed_windows.forth

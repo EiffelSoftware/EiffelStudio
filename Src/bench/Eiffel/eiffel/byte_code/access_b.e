@@ -575,8 +575,15 @@ feature {NONE} -- Il code generation
 			if is_attribute then
 				attr ?= Current
 				cl_type ?= attr.context_type
-				il_generator.generate_attribute_assignment (attr.need_target,
-					il_generator.implemented_type (attr.written_in, cl_type), attr.attribute_id)
+				if cl_type.is_expanded then
+						-- Generate direct assignment.
+					il_generator.generate_attribute_assignment (attr.need_target,
+						cl_type, cl_type.base_class.feature_of_rout_id (attr.routine_id).feature_id)
+				else
+						-- Generate assignment to the potentially inherited attribute.
+					il_generator.generate_attribute_assignment (attr.need_target,
+						il_generator.implemented_type (attr.written_in, cl_type), attr.attribute_id)
+				end
 			elseif is_local then
 				loc ?= Current
 				il_generator.generate_local_assignment (loc.position)

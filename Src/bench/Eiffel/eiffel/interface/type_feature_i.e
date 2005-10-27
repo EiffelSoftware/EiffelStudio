@@ -76,6 +76,7 @@ feature -- Checking
 			solved_type: TYPE_A
 			vtec1: VTEC1
 			vtec2: VTEC2
+			vtec3: VTEC3
 			vlec: VLEC
 		do
 			if class_c.class_id = written_in then
@@ -100,6 +101,13 @@ feature -- Checking
 						vtec2.set_feature (Current)
 						vtec2.set_entity_name (feature_name)
 						Error_handler.insert_error (vtec2)
+					elseif system.il_generation and then not solved_type.is_ancestor_valid then
+							-- Expanded type cannot be based on a class with external ancestor.
+						create vtec3
+						vtec3.set_class (written_class)	
+						vtec3.set_feature (Current)
+						vtec3.set_entity_name (feature_name)
+						Error_handler.insert_error (vtec3)
 					elseif
 						solved_type.is_expanded and then
 						solved_type.associated_class = class_c

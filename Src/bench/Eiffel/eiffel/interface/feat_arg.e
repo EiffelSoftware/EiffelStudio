@@ -222,8 +222,7 @@ feature -- Checking
 		local
 			solved_type: TYPE_A
 			argument_name: STRING
-			vtec1: VTEC1
-			vtec2: VTEC2
+			vtec: VTEC
 			a_area: like argument_names
 			l_area: SPECIAL [TYPE_AS]
 			i, nb: INTEGER
@@ -247,17 +246,20 @@ feature -- Checking
 						-- Check validity of an expanded type
 					if 	solved_type.has_expanded then
 						if 	solved_type.expanded_deferred then
-							create vtec1
-							vtec1.set_class (associated_class)
-							vtec1.set_feature (f)
-							vtec1.set_entity_name (argument_name)
-							Error_handler.insert_error (vtec1)
+							create {VTEC1} vtec
 						elseif not solved_type.valid_expanded_creation (associated_class) then
-							create vtec2
-							vtec2.set_class (associated_class)
-							vtec2.set_feature (f)
-							vtec2.set_entity_name (argument_name)
-							Error_handler.insert_error (vtec2)
+							create {VTEC2} vtec
+						elseif system.il_generation and then not solved_type.is_ancestor_valid then
+								-- Expanded type cannot be based on a class with external ancestor.
+							create {VTEC3} vtec
+						end
+						if vtec /= Void then
+								-- Report error.
+							vtec.set_class (associated_class)
+							vtec.set_feature (f)
+							vtec.set_entity_name (argument_name)
+							Error_handler.insert_error (vtec)
+							vtec := Void
 						end
 					end
 					if solved_type.has_generics then

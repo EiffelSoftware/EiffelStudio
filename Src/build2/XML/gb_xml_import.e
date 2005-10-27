@@ -17,12 +17,7 @@ inherit
 	GB_EVENT_UTILITIES
 		export
 			{NONE} all
-		end	
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end	
+		end
 	
 	INTERNAL
 		export
@@ -38,29 +33,12 @@ inherit
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
-		end	
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end	
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create, is_equal, copy
 		end
 		
 	GB_SHARED_DEFERRED_BUILDER
 		export
 			{NONE} all
 		end	
-	
-	GB_SHARED_STATUS_BAR
-		export
-			{NONE} all
-		end
 		
 	GB_WIDGET_UTILITIES
 		export
@@ -77,11 +55,6 @@ inherit
 			{NONE} all 
 		end
 		
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-		end
-		
 	GB_ID_COMPRESSOR
 		export
 			{NONE} all
@@ -91,6 +64,9 @@ inherit
 		export
 			{NONE} all
 		end
+		
+create
+	make_with_components
 
 feature -- Basic operation
 		
@@ -101,22 +77,18 @@ feature -- Basic operation
 		local
 			a_file_name: FILE_NAME
 			initial_selection: GB_WIDGET_SELECTOR_ITEM
-			global_status: GB_GLOBAL_STATUS
 		do
 			create import_dialog
-			system_status.enable_loading_project
-			create global_status
-			global_status.block
-			initial_selection := widget_selector.selected_window
-				-- Disable item in `main_window' so that a user may not modify anything while
-				-- an import is taking place.
-			Main_window.smart_disable_sensitive;
+			components.system_status.enable_loading_project
+			components.system_status.block
+			components.events.import_project_start_actions.call (Void)
+			initial_selection := components.tools.widget_selector.selected_window
 			application.process_events
 			initialize_load_output
 				-- Clear History, as it is no longer possible to go back
 				-- after importing a system.
-			Object_handler.reset_deleted_objects
-			History_dialog.History.wipe_out
+			components.object_handler.reset_deleted_objects
+			components.history.wipe_out
 
 				-- Update all ids, to avoid clashes between the two sets.
 			shift_all_ids_upwards
@@ -125,27 +97,26 @@ feature -- Basic operation
 			load_and_parse_xml_file (a_file_name)			
 			if parser.is_correct then
 				import_system
-				object_handler.update_all_associated_objects
+				components.object_handler.update_all_associated_objects
 			end
 				-- Build deferred parts.
 			deferred_builder.build
-			main_window.smart_enable_sensitive;
 			application.process_events
 			if initial_selection /= Void then
 				initial_selection.tree_item.enable_select
 			end
 			
-			system_status.disable_loading_project
-			global_status.resume
-			global_status.mark_as_dirty
-			
+			components.system_status.disable_loading_project
+			components.system_status.resume
+			components.system_status.mark_as_dirty
+			components.events.import_project_finish_actions.call (Void)
 			
 			if import_dialog.change_list.text.is_empty then
 				remove_load_output	
 			else
 				load_timer.destroy
-				set_status_text ("")
-				import_dialog.show_modal_to_window (Main_window)
+				components.status_bar.set_status_text ("")
+				import_dialog.show_modal_to_window (components.tools.main_window)
 			end
 		end
 
@@ -180,7 +151,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			a_display_object: GB_DISPLAY_OBJECT
 		do
-			an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
+			an_object := components.object_handler.add_root_window (window.attribute_by_name (type_string).value)
 			from
 				window.start
 			until
@@ -208,7 +179,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 								current_element.go_to (cursor)
 							end
 							an_object.modify_from_xml (current_element)
-							object_handler.add_object_to_objects (an_object)
+							components.object_handler.add_object_to_objects (an_object)
 							an_object.widget_selector_item.unparent
 							parent_common_item.add_alphabetically (an_object.widget_selector_item)
 							parent_common_item.expand
@@ -222,7 +193,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
-						
+						gb_ev_any.set_components (components)
 						gb_ev_any.set_object (an_object)
 						
 							-- Ensure that the new class exists.
@@ -260,9 +231,9 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		local
 			new_object: GB_OBJECT
 		do
-			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
+			new_object := components.object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			Result := new_object
-			object_handler.add_object (object, new_object, pos)
+			components.object_handler.add_object (object, new_object, pos)
 			modify_from_xml (element, new_object)
 		end
 		
@@ -308,10 +279,10 @@ feature {NONE} -- Implementation
 		local
 			new_object: GB_OBJECT
 		do
-			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
-			object_handler.add_object (object, new_object, object.children.count + 1)
+			new_object := components.object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
+			components.object_handler.add_object (object, new_object, object.children.count + 1)
 			modify_from_xml (element, new_object)
-			object_handler.add_object_to_objects (new_object)
+			components.object_handler.add_object_to_objects (new_object)
 		end
 		
 	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
@@ -353,6 +324,7 @@ feature {NONE} -- Implementation
 						
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
+						gb_ev_any.set_components (components)
 						gb_ev_any.set_object (object)
 						
 							-- Ensure that the new class exists.
@@ -452,7 +424,7 @@ feature {NONE} -- Implementation
 			create all_constant_names.make (100)
 			create all_names_post_import.make (100)
 			create renamed_constants.make (20)
-			objects := Object_handler.objects.linear_representation
+			objects := components.object_handler.objects.linear_representation
 			from
 				objects.start
 			until
@@ -461,7 +433,7 @@ feature {NONE} -- Implementation
 				all_names_pre_import.put (objects.item.name, objects.item.name)
 				objects.forth
 			end
-			constant_names := Constants.all_constant_names
+			constant_names := components.constants.all_constant_names
 			from
 				constant_names.start
 			until
@@ -622,15 +594,15 @@ feature {NONE} -- Implementation
 				-- At this point, all prepass stages of the XML have been completed, and the XML
 				-- representation of the imported project has been updated to avoid any clashes.
 			application_element := pipe_callback.document.root_element
-			build_window_structure (application_element, widget_selector)
+			build_window_structure (application_element, components.tools.widget_selector)
 
 				-- Update all names in `widget_selector' to ensure that
 				-- they are current after the load.
 				--| FIXME why is this needed?
-			widget_selector.update_displayed_names
+			components.tools.widget_selector.update_displayed_names
 			
 				-- Build any constants that were deferred.
-			constants.build_deferred_elements
+			components.constants.build_deferred_elements
 		end
 		
 	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
@@ -682,9 +654,9 @@ feature {NONE} -- Implementation
 											-- We now retrieve an existing directory item matching the path of the
 											-- new directory. This ensures that if we are importing a project that has
 											-- the same directory structure, these directories are used.
-										directory_item := widget_selector.directory_object_from_name (tree_node_path)
+										directory_item := components.tools.widget_selector.directory_object_from_name (tree_node_path)
 										if directory_item = Void then
-											create directory_item.make_with_name ("")
+											create directory_item.make_with_name ("", components)
 											directory_item.modify_from_xml (window_element)
 											parent_common_item.add_alphabetically (directory_item)
 										end
@@ -701,7 +673,7 @@ feature {NONE} -- Implementation
 							loop
 								constant_item_element ?= current_element.item_for_iteration
 								if constant_item_element /= Void then
-									constants.build_constant_from_xml (constant_item_element)	
+									components.constants.build_constant_from_xml (constant_item_element)	
 								end
 								current_element.forth
 							end
@@ -869,7 +841,7 @@ feature {NONE} -- Implementation
 		do
 			create load_timer.make_with_interval (250)
 			load_timer.actions.extend (agent update_status_bar)
-		 	set_status_text ("Importing    -")
+		 	components.status_bar.set_status_text ("Importing    -")
 		 	environment.application.process_events
 		end
 		
@@ -879,15 +851,15 @@ feature {NONE} -- Implementation
 		local
 			last_character: CHARACTER
 		do
-			last_character := status_text.item (status_text.count)
+			last_character := components.status_bar.status_text.item (components.status_bar.status_text.count)
 			if last_character = '-' then
-				set_status_text (status_text.substring (1, status_text.count - 2) + "\")
+				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 2) + "\")
 			elseif last_character.is_equal ('\') then
-				set_status_text (status_text.substring (1, status_text.count - 1) + "|")
+				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 1) + "|")
 			elseif last_character.is_equal ('|') then
-				set_status_text (status_text.substring (1, status_text.count - 1) + "/")
+				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 1) + "/")
 			elseif last_character.is_equal ('/') then
-				set_status_text (status_text.substring (1, status_text.count - 1) + "--")
+				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 1) + "--")
 			end
 		end
 		
@@ -896,7 +868,7 @@ feature {NONE} -- Implementation
 			-- timed message on the status bar.
 		do
 			load_timer.destroy
-			set_timed_status_text ("Import successful")			
+			components.status_bar.set_timed_status_text ("Import successful")			
 		end
 		
 	is_processing_window: BOOLEAN

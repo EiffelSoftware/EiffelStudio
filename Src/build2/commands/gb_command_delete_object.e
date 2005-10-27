@@ -9,26 +9,6 @@ class
 	
 inherit
 	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_COMMAND_HANDLER
-		export
-			{NONE} all
-		end
-	
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
@@ -51,10 +31,11 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (an_object: GB_OBJECT) is
+	make (an_object: GB_OBJECT; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `an_object' to be deleted.
 		do
-			history.cut_off_at_current_position
+			components := a_components
+			components.history.cut_off_at_current_position
 			child_id := an_object.id
 			parent_id := an_object.parent_object.id
 			insert_position := an_object.parent_object.children.index_of (an_object, 1)
@@ -67,10 +48,10 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		do
 			internal_execute (child_id, previous_parent_id, parent_id, previous_position_in_parent, insert_position)
-			if not history.command_list.has (Current) then
-				history.add_command (Current)
+			if not components.history.command_list.has (Current) then
+				components.history.add_command (Current)
 			end
-			command_handler.update
+			components.commands.update
 		end
 		
 	undo is
@@ -79,7 +60,7 @@ feature -- Basic Operation
 			-- the system to its previous state.
 		do
 			internal_execute (child_id, parent_id, 0, insert_position, 0)
-			command_handler.update
+			components.commands.update
 		end
 		
 	textual_representation: STRING is
@@ -88,8 +69,8 @@ feature -- Basic Operation
 			child_name, parent_name: STRING
 			child_object, parent_object: GB_OBJECT
 		do
-			child_object := Object_handler.deep_object_from_id (child_id)
-			parent_object := Object_handler.deep_object_from_id (parent_id)
+			child_object := components.object_handler.deep_object_from_id (child_id)
+			parent_object := components.object_handler.deep_object_from_id (parent_id)
 
 			if not child_object.name.is_empty then
 				child_name := child_object.name

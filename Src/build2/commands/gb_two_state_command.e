@@ -9,7 +9,7 @@ deferred class
 	GB_TWO_STATE_COMMAND
 		-- Note that there is no support for changing pixmaps for the different
 		-- states. This can easily be added if necessary.
-	
+
 inherit
 
 	GB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -17,14 +17,20 @@ inherit
 			new_toolbar_item,
 			new_menu_item
 		end
-		
-	GB_SHARED_COMMAND_HANDLER
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create `Current' and initialize.
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current', assign `a_components' to `components' and initialize.
+		require
+			components_not_void: a_components /= Void
 		deferred
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Access
@@ -79,7 +85,7 @@ feature -- Execution
 			update_controls (is_selected)
 			--set_selected (False)
 		end
-		
+
 	safe_disable_selected is
 			-- Set `is_selected' to False
 			-- only if `is_selected' currently True.
@@ -88,7 +94,7 @@ feature -- Execution
 				execute
 			end
 		end
-		
+
 	reverse_is_selected is
 			-- Assign not `is_selected' to
 			-- `is_selected'.
@@ -97,8 +103,8 @@ feature -- Execution
 		ensure
 			reversed: old is_selected /= is_selected
 		end
-		
-		
+
+
 
 feature -- Basic operations
 
@@ -229,7 +235,7 @@ feature {NONE} -- Implementation
 
 	safety_flag: BOOLEAN
 			-- Are we changing the `is_selected' attribute? (To prevent stack overflows)
-			
+
 	is_selected: BOOLEAN
 		-- Is current selected?
 

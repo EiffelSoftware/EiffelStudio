@@ -16,7 +16,6 @@ feature -- Generation constants
 			Result.extend ("templates")
 		end
 		
-
 	window_template_file_name: FILE_NAME is
 			-- `Result' is location of build template file,
 			-- including the name.
@@ -85,16 +84,6 @@ feature -- Generation constants
 			-- String constant for class file extension to be used.
 
 feature -- XML saving
-
-	filename: FILE_NAME is
-			-- File to be generated.
-		local
-			accessible_status: GB_SHARED_SYSTEM_STATUS
-		do
-			create accessible_status
-			create Result.make_from_string (accessible_status.system_status.current_project_settings.project_location)
-			Result.extend ("system_interface.xml")
-		end
 		
 	unix_ace_name: STRING is "ace.Unix.ace"
 	

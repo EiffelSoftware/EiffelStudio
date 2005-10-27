@@ -22,12 +22,6 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_CONSTANTS
-		export
-			{NONE} all
-			{ANY} constants
-		end
 		
 create
 	make_with_name_and_value
@@ -37,11 +31,12 @@ create {GB_PIXMAP_SETTINGS_DIALOG}
 	
 feature {NONE} -- Initialization
 
-	make_with_name_and_value (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN) is
+	make_with_name_and_value (a_name, a_value, a_directory, a_filename: STRING; absolute: BOOLEAN; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Assign `a_name' to `name' and `a_value' to value.
 		require
 			a_name_valid: a_name /= Void
 		do
+			components := a_components
 			name := a_name.twin
 			value := a_value.twin
 			directory := a_directory.twin
@@ -78,12 +73,12 @@ feature {GB_PIXMAP_SETTINGS_DIALOG}
 			-- Convert representation of a pixmap constant, `Current', into
 			-- a fully referenced constant with a context.
 		require
-			directory_is_constant: not is_absolute implies Constants.directory_constant_by_name (directory) /= Void
+			directory_is_constant: not is_absolute implies components.constants.directory_constant_by_name (directory) /= Void
 		local
 			file_name: FILE_NAME
 		do
 			if not is_absolute then
-				directory := Constants.directory_constant_by_name (directory).name
+				directory := components.constants.directory_constant_by_name (directory).name
 				check
 					directory_matched: directory /= Void
 				end
@@ -133,7 +128,7 @@ feature -- Access
 			if is_absolute then
 				Result := value.twin
 			else
-				directory_constant ?= constants.all_constants.item (directory)
+				directory_constant ?= components.constants.all_constants.item (directory)
 				check
 					directory_constant_not_void: directory_constant /= Void
 				end
@@ -232,7 +227,7 @@ feature {NONE} -- Implementation
 					small_pixmap := pixmap.twin
 				end
 			else
-				directory_constant := constants.directory_constant_by_name (directory)	
+				directory_constant := components.constants.directory_constant_by_name (directory)	
 				check
 					directory_constant_found: directory_constant /= Void
 				end

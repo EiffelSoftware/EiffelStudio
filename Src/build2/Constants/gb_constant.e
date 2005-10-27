@@ -9,26 +9,29 @@ indexing
 
 deferred class
 	GB_CONSTANT
-	
+
 inherit
 	GB_CONSTANTS
-		
+
 	GB_XML_UTILITIES
 		export
 			{NONE} all
 		end
-		
+
 	GB_SHARED_PIXMAPS
 		export
 			{NONE} all
 		end
-		
+
 	INTERNAL
 		export
 			{NONE} all
 		end
 
 feature -- Access
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
 
 	type: STRING is
 			-- Type of `Current'.
@@ -37,18 +40,18 @@ feature -- Access
 
 	name: STRING
 			-- Name of `Current'.
-			
+
 	value_as_string: STRING is
 			-- Value represented by `Current' as a STRING.
 		deferred
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	small_pixmap: EV_PIXMAP
 			-- Representation of `Current' as a small pixmap. Used in representations
 			-- of `Current'. May be Void for some descendents.
-			
+
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
 			-- Representation of `Current' as a multi column list row.
 		deferred
@@ -56,7 +59,7 @@ feature -- Access
 			Result_not_void: Result /= Void
 			data_points_to_current: Result.data = Current
 		end
-		
+
 	referers: ARRAYED_LIST [GB_CONSTANT_CONTEXT]
 			-- All contexts in which `Current' is specified.
 
@@ -71,7 +74,7 @@ feature -- Element change
 		ensure
 			name_assigned: name = a_name
 		end
-		
+
 	add_referer (referer: GB_CONSTANT_CONTEXT) is
 			-- Add `referer' to `referers'.
 		require
@@ -81,7 +84,7 @@ feature -- Element change
 		ensure
 			has_referer: referers.has (referer)
 		end
-	
+
 	remove_referer (referer: GB_CONSTANT_CONTEXT) is
 			-- Remove `referer' from `referers'.
 		require
@@ -103,7 +106,7 @@ feature -- Miscellaneous
 			add_element_containing_string (element, constant_name_string, name)
 			add_element_containing_string (element, Constant_value_string, value_as_string)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	new_gb_ev_any (constant_context: GB_CONSTANT_CONTEXT): GB_EV_ANY is
@@ -116,24 +119,25 @@ feature {NONE} -- Implementation
 		do
 			Result ?= new_instance_of (dynamic_type_from_string ("GB_" + constant_context.property))
 			Result.default_create
+			Result.set_components (components)
 			Result.set_object (constant_context.object)
 			check
 				Result_exists: Result /= Void
 			end
 			Result.add_object (constant_context.object.object)
-					
+
 				-- We need to check that the display_object is not of type `GB_DISPLAY_OBJECT'.
 				-- If it is, we must add its child, as this is the object that must be modified.
 			display_object ?= constant_context.object.display_object
 			if display_object /= Void then
-				Result.add_object (display_object.child)	
+				Result.add_object (display_object.child)
 			else
 				Result.add_object (constant_context.object.display_object)
 			end
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 invariant
 	name_not_void: name /= Void and not name.is_empty
 	type_not_void: type /= Void and not type.is_empty

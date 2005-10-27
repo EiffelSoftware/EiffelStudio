@@ -5,20 +5,10 @@ indexing
 
 class
 	GB_COMMAND_MOVE_WINDOW
-	
+
 inherit
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_COMMAND
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_HISTORY
 		export
 			{NONE} all
 		end
@@ -27,18 +17,16 @@ inherit
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
-	
-create	
+
+create
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (object: GB_OBJECT; a_new_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make (object: GB_OBJECT; a_new_directory: GB_WIDGET_SELECTOR_DIRECTORY_ITEM; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `window' to be moved from its current directory, to `new_directory'.
 			-- If `a_new_directory' is Void, then move to root of project.
 		require
@@ -47,7 +35,8 @@ feature {NONE} -- Initialization
 		local
 			dir: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
-			history.cut_off_at_current_position
+			components := a_components
+			components.history.cut_off_at_current_position
 			original_id := object.id
 			dir ?= object.widget_selector_item.parent
 			if dir /= Void then
@@ -67,7 +56,7 @@ feature -- Basic Operation
 			original_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			new_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
-			object ?= Object_handler.deep_object_from_id (original_id)
+			object ?= components.object_handler.deep_object_from_id (original_id)
 			check
 				object_not_void: object /= Void
 				object_was_top_level: object.is_top_level_object = True
@@ -75,25 +64,25 @@ feature -- Basic Operation
 
 				-- Retrieve the directories via their names.
 			if original_directory /= Void then
-				original_directory_item := widget_selector.directory_object_from_name (original_directory)
+				original_directory_item := components.tools.widget_selector.directory_object_from_name (original_directory)
 			end
 			if new_directory /= Void then
-				new_directory_item := widget_selector.directory_object_from_name (new_directory)
+				new_directory_item := components.tools.widget_selector.directory_object_from_name (new_directory)
 			end
-			
+
 			object.widget_selector_item.unparent
 			if new_directory_item /= Void then
 				new_directory_item.add_alphabetically (object.widget_selector_item)
 			else
-				widget_selector.add_alphabetically (object.widget_selector_item)
+				components.tools.widget_selector.add_alphabetically (object.widget_selector_item)
 			end
-			
-			widget_selector.update_class_files_location (object.widget_selector_item, original_directory_item, new_directory_item)
+
+			components.tools.widget_selector.update_class_files_location (object.widget_selector_item, original_directory_item, new_directory_item)
 				-- Record `Current' in the history list.
-			if not history.command_list.has (Current) then
-				history.add_command (Current)
-			end	
-			command_handler.update
+			if not components.history.command_list.has (Current) then
+				components.history.add_command (Current)
+			end
+			components.commands.update
 		end
 
 	undo is
@@ -105,36 +94,36 @@ feature -- Basic Operation
 			original_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 			new_directory_item: GB_WIDGET_SELECTOR_DIRECTORY_ITEM
 		do
-			object ?= Object_handler.deep_object_from_id (original_id)
+			object ?= components.object_handler.deep_object_from_id (original_id)
 			check
 				object_not_void: object /= Void
 				object_was_top_level: object.is_top_level_object = True
 			end
-			
+
 				-- Retrieve the directories via their names.
 			if original_directory /= Void then
-				original_directory_item := widget_selector.directory_object_from_name (original_directory)
+				original_directory_item := components.tools.widget_selector.directory_object_from_name (original_directory)
 			end
 			if new_directory /= Void then
-				new_directory_item := widget_selector.directory_object_from_name (new_directory)
+				new_directory_item :=components.tools.widget_selector.directory_object_from_name (new_directory)
 			end
-			
+
 			object.widget_selector_item.unparent
 			if original_directory_item /= Void then
 				original_directory_item.add_alphabetically (object.widget_selector_item)
 			else
-				widget_selector.add_alphabetically (object.widget_selector_item)
+				components.tools.widget_selector.add_alphabetically (object.widget_selector_item)
 			end
-			widget_selector.update_class_files_location (object.widget_selector_item, new_directory_item, original_directory_item)
+			components.tools.widget_selector.update_class_files_location (object.widget_selector_item, new_directory_item, original_directory_item)
 		end
-		
+
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		local
 			object: GB_OBJECT
 			current_text: STRING
 		do
-			object ?= Object_handler.deep_object_from_id (original_id)
+			object ?= components.object_handler.deep_object_from_id (original_id)
 			check
 				object_not_void: object /= Void
 				object_was_top_level: object.is_top_level_object = True
@@ -151,16 +140,16 @@ feature -- Basic Operation
 				Result := current_text + " moved from %"" + original_directory.last + "%" to directory %"" + new_directory.last + "%""
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	original_id: INTEGER
 		-- id of object that was deleted.
-		
+
 	original_directory: ARRAYED_LIST [STRING]
 		-- String representing the original directory holding the window
 		-- empty if root of project.
-	
+
 	new_directory: ARRAYED_LIST [STRING]
 		-- String representing the directory into which the window was moved.
 		-- `empty' if root of project.

@@ -12,20 +12,16 @@ inherit
 		redefine
 			executable
 		end
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
 
-feature {GB_COMMAND_HANDLER} -- Initialization
+create
+	make_with_components
 
-	make is
-			-- Create `Current'.
+feature {NONE} -- Initialization
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
 		do
-			if builder_window /= Void then
-				is_selected := window.is_show_requested
-			end
+			components := a_components
 		end
 
 feature -- Access
@@ -33,9 +29,8 @@ feature -- Access
 	executable: BOOLEAN is
 			-- Is executable?
 		do
-			Result := not widget_selector.objects.is_empty
+			Result := not components.tools.widget_selector.objects.is_empty
 		end
-		
 
 	menu_name: STRING is
 			-- Name as it appears in menus.
@@ -48,12 +43,12 @@ feature -- Access
 		do
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_builder_window
 		end
-		
+
 	window: EV_DIALOG is
 			-- Result is window referenced by
 			-- `Current' command.
 		do
-			Result := builder_window	
+			Result := components.tools.builder_window
 		end
 
 end -- class GB_SHOW_HIDE_BUILDER_WINDOW_COMMAND

@@ -5,46 +5,31 @@ indexing
 
 class
 	GB_PASTE_OBJECT_COMMAND
-	
+
 inherit
 	GB_STANDARD_CMD
 		redefine
-			make, execute, executable
+			execute, executable
 		end
-		
-	GB_SHARED_TOOLS
-		export
-			{ANY} layout_constructor
-			{NONE} all
-		end
-		
-	GB_SHARED_CLIPBOAD
-		export
-			{NONE} all
-		end
-		
+
 	GB_XML_UTILITIES
-		export
-			{NONE} all
-		end
-		
-	GB_SHARED_OBJECT_HANDLER
 		export
 			{NONE} all
 		end
 
 create
-	make
-	
+	make_with_components
+
 feature {NONE} -- Initialization
 
-	make is
-			-- Create `Current'.
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
 		local
 			acc: EV_ACCELERATOR
 			key: EV_KEY
 		do
-			Precursor {GB_STANDARD_CMD}
+			components := a_components
+			make
 			set_tooltip ("Paste")
 			set_pixmaps ((create {GB_SHARED_PIXMAPS}).icon_paste)
 			set_name ("Paste")
@@ -57,7 +42,7 @@ feature {NONE} -- Initialization
 			create acc.make_with_key_combination (key, True, False, False)
 			set_accelerator (acc)
 		end
-		
+
 feature -- Access	
 
 	executable: BOOLEAN is
@@ -67,32 +52,32 @@ feature -- Access
 			parent_object: GB_OBJECT
 			selected_window: GB_WIDGET_SELECTOR_ITEM
 		do
-			Result := not clipboard.is_empty and ((layout_constructor.has_focus and layout_constructor.selected_item /= Void) or (widget_selector.has_focus))
-			if layout_constructor.has_focus then
-				layout_item ?= layout_constructor.selected_item
+			Result := not components.clipboard.is_empty and ((components.tools.layout_constructor.has_focus and components.tools.layout_constructor.selected_item /= Void) or (components.tools.widget_selector.has_focus))
+			if components.tools.layout_constructor.has_focus then
+				layout_item ?= components.tools.layout_constructor.selected_item
 				if layout_item /= Void then
 					parent_object ?= layout_item.object
 				end
 			else
-				selected_window ?= widget_selector.selected_window
+				selected_window ?= components.tools.widget_selector.selected_window
 				if selected_window /= Void then
 					parent_object ?= selected_window.object
 				end
 			end
 			Result := Result and parent_object /= Void
 			if Result then
-				Result := Result and parent_object.accepts_child (clipboard.object_type) and not parent_object.is_full and not parent_object.is_instance_of_top_level_object
-				
+				Result := Result and parent_object.accepts_child (components.clipboard.object_type) and not parent_object.is_full and not parent_object.is_instance_of_top_level_object
+
 					-- Now ensure that we do not nest an instance of a top level widget in a structure
 					-- that does not permit such nesting, thereby preventing nested inheritance cycles.
 				if Result then
-					Result := Result and parent_object.has_clashing_dependencies (clipboard.object_stone)
+					Result := Result and parent_object.has_clashing_dependencies (components.clipboard.object_stone)
 				end
 			end
 		end
 
 feature -- Basic operations
-	
+
 		execute is
 				-- Execute `Current'.
 			local
@@ -101,9 +86,9 @@ feature -- Basic operations
 				parent_object: GB_PARENT_OBJECT
 			do
 					--|FIXME handle widget selector.
-				layout_item ?= layout_constructor.selected_item
+				layout_item ?= components.tools.layout_constructor.selected_item
 				parent_object ?= layout_item.object
-				create command_add.make (parent_object, clipboard.object, parent_object.children.count + 1)
+				create command_add.make (parent_object, components.clipboard.object, parent_object.children.count + 1, components)
 				command_add.execute
 			end
 

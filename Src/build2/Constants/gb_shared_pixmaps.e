@@ -16,11 +16,6 @@ inherit
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end
 
 feature -- Pngs
 
@@ -63,14 +58,14 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("cmd_history")
 		end
-		
+
 	Icon_cmd_history_title: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
 		once
 			Result := build_classic_pixmap ("cmd_history_title")
 		end
-		
+
 
 	Icon_redo: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
@@ -85,7 +80,7 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("new_editor")
 		end
-		
+
 	Icon_open_file: ARRAY [EV_PIXMAP] is
 			-- Array containing both the color & the gray pixmap
 			-- Color is at index 1, gray at index 2
@@ -109,92 +104,92 @@ feature -- Pngs
 		once
 			Result := pixmap_file_content ("icon_system_color")
 		end
-		
+
 	Icon_component_display_view: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_component_display_view_color")
 		end
-		
+
 	Icon_component_build_view: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_component_build_view_color")
 		end
-		
+
 	Icon_display_window: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("display_window")
 		end
-		
+
 	Icon_builder_window: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("builder_window")
 		end
-		
+
 	Icon_object_editor: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("object_editor")
 		end
-		
+
 	Icon_component_viewer: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("component_viewer")
 		end
-	
+
 	Icon_component_window: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("component_window")
 		end
-		
+
 	Icon_object_window: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("object_window")
 		end
-		
+
 	Icon_code_generation: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("code_generation")
 		end
-		
+
 	Icon_build_window: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("build_window")
 		end
-		
+
 	Icon_format_onces: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("format_onces")
 		end
-	
+
 	Icon_minimize: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("minimize")
 		end
-		
+
 	Icon_maximize: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("maximize")
 		end
-		
+
 	Icon_restore: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("restore")
 		end
-		
+
 	Icon_close: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("close")
 		end
-		
+
 	Icon_directory: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("cluster_symbol")
 		end
-		
+
 	Icon_string: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("string_small")
 		end
-		
+
 	Icon_integer: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("integer_small")
@@ -204,47 +199,47 @@ feature -- Pngs
 		once
 			Result := build_classic_pixmap ("titled_window_main")
 		end
-		
+
 	Icon_titled_window_main_small: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("titled_window_main_small")
 		end
-		
+
 	Icon_missing_pixmap_small: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("missing_pixmap_small")
 		end
-		
+
 	Icon_locked: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("locked")
 		end
-		
+
 	Icon_paste: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("past")
-		end		
-		
+		end
+
 	Icon_cut: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("cut")
-		end		
-		
+		end
+
 	Icon_copy: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("copy")
 		end
-		
+
 	Icon_clipboard: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("clipboard")
 		end
-		
+
 	Icon_mini_back: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("mini_back")
 		end
-		
+
 	Icon_mini_forth: ARRAY [EV_PIXMAP] is
 		once
 			Result := build_classic_pixmap ("mini_forth")
@@ -283,7 +278,7 @@ feature -- Pngs
 				else
 					update_warning_dialog_text (pixmap_file_name (a_name))
 					if not pixmap_warning_dialog.is_destroyed and then not pixmap_warning_dialog.is_show_requested then
-						pixmap_warning_dialog.show	
+						pixmap_warning_dialog.show
 					end
 					Result := icon_delete_small @ 1
 				end
@@ -291,7 +286,7 @@ feature -- Pngs
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	png_location: STRING is
 			-- `Result' is directory containing png files.
 		once
@@ -344,7 +339,7 @@ feature {NONE} -- Update
 			--
 			-- `pixmap_name' is the core name of the pixmap.
 		do
-				-- Read the pixmaps 
+				-- Read the pixmaps
 			create Result.make (1,1)
 			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
 		ensure
@@ -359,7 +354,7 @@ feature {NONE} -- Update
 			--
 			-- `pixmap_name' is the core name of the pixmap.
 		do
-				-- Read the pixmaps 
+				-- Read the pixmaps
 			create Result.make (1,2)
 			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
 			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_text_color"), 2)
@@ -380,7 +375,7 @@ feature {NONE} -- Update
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	all_missing_files: HASH_TABLE [STRING, STRING] is
@@ -396,14 +391,14 @@ feature {NONE} -- Implementation
 			create Result.make_with_text ("Cannot read pixmap files:%NPlease make sure the installation is not corrupted.")
 			Result.show
 		end
-		
+
 	update_warning_dialog_text (new_text: STRING) is
 			-- Add `new_text' to text of warning dialog, one
 			-- line before the end.
 		require
 			new_text_not_void: new_text /= Void
 		local
-			new_line_index: INTEGER 
+			new_line_index: INTEGER
 		do
 			if not pixmap_warning_dialog.is_destroyed then
 				if not all_missing_files.has (new_text) then
@@ -414,6 +409,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 
 end -- Class GB_SHARED_PIXMAPS

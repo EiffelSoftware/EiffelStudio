@@ -7,43 +7,31 @@ class
 	GB_COMMAND_ADD_OBJECT
 
 inherit
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		end
-	
+
 	GB_COMMAND
 		export
 			{NONE} all
 		end
-	
-	GB_SHARED_HISTORY
-		export
-			{NONE} all
-		end
-	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		end
-	
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
 		end
-		
+
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
-	make (parent, child: GB_OBJECT; an_insert_position: INTEGER) is
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make (parent, child: GB_OBJECT; an_insert_position: INTEGER; a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' with `child' to be inserted in `parent' at
 			-- position `position'.
 		require
@@ -53,6 +41,7 @@ feature {NONE} -- Initialization
 		local
 			previous_parent_object: GB_OBJECT
 		do
+			components := a_components
 			parent_id := parent.id
 			child_id := child.id
 			previous_parent_object ?= child.parent_object
@@ -62,7 +51,7 @@ feature {NONE} -- Initialization
 			end
 			insert_position := an_insert_position
 
-			history.cut_off_at_current_position
+			components.history.cut_off_at_current_position
 			insert_position := an_insert_position
 
 			create new_parent_child_objects.make (100)
@@ -74,29 +63,29 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		do
 			internal_execute (child_id, parent_id, previous_parent_id, insert_position, previous_position_in_parent)
-			if not history.command_list.has (Current) then
-				history.add_command (Current)
+			if not components.history.command_list.has (Current) then
+				components.history.add_command (Current)
 			end
-			command_handler.update
-		end			
-		
+			components.commands.update
+		end
+
 	undo is
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
 		do
 			internal_execute (child_id, previous_parent_id, parent_id, previous_position_in_parent, insert_position)
-			command_handler.update
+			components.commands.update
 		end
-		
+
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
 		local
 			child_name, parent_name: STRING
 			child_object, parent_object: GB_OBJECT
 		do
-			child_object := Object_handler.deep_object_from_id (child_id)
-			parent_object := Object_handler.deep_object_from_id (parent_id)
+			child_object := components.object_handler.deep_object_from_id (child_id)
+			parent_object := components.object_handler.deep_object_from_id (parent_id)
 
 			if not child_object.name.is_empty then
 				child_name := child_object.name
@@ -119,19 +108,19 @@ feature {NONE} -- Implementation
 
 	parent_id: INTEGER
 		-- Id of parent object into which child is inserted.
-		
+
 	previous_parent_id: INTEGER
 		-- Id of parent object which contained the child object
 		-- previously. 0 if none.
-		
+
 	actual_child_id: INTEGER
 		-- Actual id of child. For example, if a top level is being created,
 		-- this is the id of the new representation.
-	
+
 	previous_position_in_parent: INTEGER
 		-- If `previous_parent_id' /= 0 then this is
 		-- the index of `child_object' within `previous_parent_object'.
-	
+
 	insert_position: INTEGER
 		-- The position `execute' will insert `child_object'
 		-- in `parent_object'.
@@ -142,22 +131,22 @@ feature {NONE} -- Implementation
 			editor: GB_OBJECT_EDITOR
 			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
-			editors := all_editors
+			editors := components.object_editors.all_editors
 			from
 				editors.start
 			until
 				editors.off
 			loop
-				editor := editors.item		
+				editor := editors.item
 					-- If the parent of `an_object' is in the object editor then we must
 					-- update it accordingly.
 				if a_parent_object /= Void and then a_parent_object = editor.object then
 					editor.update_current_object
-				end	
+				end
 				editors.forth
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	internal_execute (a_child_id, a_parent_id, an_original_parent_id, an_insert_position, an_original_insert_pos: INTEGER) is
@@ -172,24 +161,24 @@ feature {NONE} -- Implementation
 			real_child: GB_OBJECT
 		do
 				-- Retrieve the parent and child objects
-			child_object := Object_handler.deep_object_from_id (a_child_id)
-			parent_object ?= Object_handler.deep_object_from_id (a_parent_id)
+			child_object := components.object_handler.deep_object_from_id (a_child_id)
+			parent_object ?= components.object_handler.deep_object_from_id (a_parent_id)
 				-- Note that `parent_object' may be Void in the case that we are performing an undo.
 			check
 				child_object_exists: child_object /= Void
 			end
-			
+
 				-- Flag that the object structure is in the process of changing.
-			system_status.set_object_structure_changing
-			
-			
+			components.system_status.set_object_structure_changing
+
+
 			if an_original_parent_id /= 0 then
 					-- As `an_original_parent_id' /= O we must remove the old representations of the child
 					-- before moving it.
 				if actual_child_id = 0 then
 					real_child := child_object
 				else
-					real_child := Object_handler.deep_object_from_id (actual_child_id)
+					real_child := components.object_handler.deep_object_from_id (actual_child_id)
 					check
 						child_object_has_real_child_as_referer: child_object.instance_referers.has (actual_child_id)
 					end
@@ -197,7 +186,7 @@ feature {NONE} -- Implementation
 				real_child.remove_client_representation_recursively
 				unparent_children (real_child)
 			end
-			
+
 			if parent_object /= Void then
 					-- Now parent the object associated with `child_id' into the object associated with `parent_id'
 				if child_object.object = Void then
@@ -212,7 +201,7 @@ feature {NONE} -- Implementation
 					if new_parent_child_objects.has (parent_object.id) then
 							-- If we have already created a new version of `real_child', then we must now
 							-- create a new strict version which is an exact copy of the original, including ids.
-						real_child := object_handler.deep_object_from_id (new_parent_child_objects.item (parent_object.id)).new_top_level_representation_strict
+						real_child := components.object_handler.deep_object_from_id (new_parent_child_objects.item (parent_object.id)).new_top_level_representation_strict
 					else
 							-- Create a new representation of `child_object'.
 						real_child := child_object.new_top_level_representation
@@ -223,35 +212,35 @@ feature {NONE} -- Implementation
 						real_child.connect_instance_referers (child_object, real_child)
 					end
 					actual_child_id := real_child.id
-					
+
 					real_child.set_associated_top_level_object (child_object)
 				else
 						-- If not a top level object, simply use the child as is.
 					real_child := child_object
-				end	
+				end
 
 					-- Add `real_child' to it's new parent, `parent_object' at position `an_insert_position'.
-				object_handler.add_object (parent_object, real_child, an_insert_position)
+				components.object_handler.add_object (parent_object, real_child, an_insert_position)
 
 					-- Create and add new representations of `real_child' to representations of `parent_object'
 					-- as position `an_insert_position'.
-				
+
 				create_new_representations (parent_object, real_child, an_insert_position)
-				system_status.set_object_structure_changing
+				components.system_status.set_object_structure_changing
 				real_child.add_client_representation_recursively
-				if object_handler.deleted_objects.has (real_child.id) then
-					object_handler.mark_existing (real_child)
+				if components.object_handler.deleted_objects.has (real_child.id) then
+					components.object_handler.mark_existing (real_child)
 				end
 
-				system_status.set_object_structure_changed
+				components.system_status.set_object_structure_changed
 			end
-			
+
 				-- Update all object editors to reflect the change.
 			update_parent_object_editors (real_child, a_previous_parent)
-			
-			system_status.set_object_structure_changed
+
+			components.system_status.set_object_structure_changed
 		end
-		
+
 	unparent_children (a_child: GB_OBJECT) is
 			-- For all instance referers of `parent' recursively, remove child
 			-- at position `child_index'.
@@ -264,13 +253,13 @@ feature {NONE} -- Implementation
 				-- It is possible that the object has already been deleted by an undo
 				-- as we keep all instance referers even though they have been undone. This
 				-- ensures that we are able to keep the properties up to date.
-				
+
 				-- FIXME if we go back in the history and change something, all referers that
 				-- are no longer reachable are still kept. We must find a way to remove these
 				-- at some point. Maybe each object could have a history index of when it was created
 				-- and when cutting off the history, we could determine which objects are no
 				-- longer usable.
-			if object_handler.objects.has (a_child.id) then
+			if components.object_handler.objects.has (a_child.id) then
 				old_parent := a_child.parent_object
 					-- Actually perform the unparenting.
 				if not new_parent_child_objects.has (a_child.parent_object.id) then
@@ -278,10 +267,10 @@ feature {NONE} -- Implementation
 				end
 				a_child.parent_object.remove_child (a_child)
 				check
-					a_child_exists: object_handler.deep_object_from_id (a_child.id) /= Void
-					a_child_not_delted: not object_handler.deleted_objects.has (a_child.id)
+					a_child_exists: components.object_handler.deep_object_from_id (a_child.id) /= Void
+					a_child_not_delted: not components.object_handler.deleted_objects.has (a_child.id)
 				end
-				object_handler.mark_as_deleted (a_child)
+				components.object_handler.mark_as_deleted (a_child)
 				update_parent_object_editors (a_child, old_parent)
 			end
 				-- Now iterate through the `instance_referers'.
@@ -291,20 +280,20 @@ feature {NONE} -- Implementation
 			until
 				list.off
 			loop
-				unparent_children (object_handler.deep_object_from_id (list.item))
+				unparent_children (components.object_handler.deep_object_from_id (list.item))
 				list.forth
 			end
 		ensure
 			instance_referers_not_changed: old a_child.instance_referers = a_child.instance_referers
 		end
-		
+
 	create_new_representations (parent_object: GB_PARENT_OBJECT; child_object: GB_OBJECT; insert_pos: INTEGER) is
 			-- Recursivley create new representations of `child_object' for each `parent_object'
 			-- and link new representations to `child_object'.
 		require
 			parent_object_not_void: parent_object /= Void
 			child_object_not_void: child_object /= Void
-			insert_pos_valid: 
+			insert_pos_valid:
 		local
 			new_object: GB_OBJECT
 			iterated_parent_object: GB_PARENT_OBJECT
@@ -312,38 +301,38 @@ feature {NONE} -- Implementation
 			current_instance_referer: GB_OBJECT
 		do
 				-- Always retrieve the original child that must be copied.
-			actual_child := Object_handler.deep_object_from_id (child_id)
+			actual_child := components.object_handler.deep_object_from_id (child_id)
 			from
 				parent_object.instance_referers.start
 			until
 				parent_object.instance_referers.off
 			loop
 				if new_parent_child_objects.has (parent_object.instance_referers.item_for_iteration) then
-					current_instance_referer := object_handler.deep_object_from_id (new_parent_child_objects.item (parent_object.instance_referers.item_for_iteration))
+					current_instance_referer := components.object_handler.deep_object_from_id (new_parent_child_objects.item (parent_object.instance_referers.item_for_iteration))
 					new_object := current_instance_referer.new_top_level_representation_strict
 				else
-					if not object_handler.deleted_objects.has (parent_object.instance_referers.item_for_iteration) then
+					if not components.object_handler.deleted_objects.has (parent_object.instance_referers.item_for_iteration) then
 						new_object := actual_child.new_top_level_representation
 						new_parent_child_objects.put (new_object.id, parent_object.instance_referers.item_for_iteration)
 						child_object.instance_referers.put (new_object.id, new_object.id)
 						new_object.connect_instance_referers (actual_child, new_object)
 					end
 				end
-				if not object_handler.deleted_objects.has (parent_object.instance_referers.item_for_iteration) then
-					if object_handler.deleted_objects.has (new_object.id) then
-						object_handler.mark_existing (new_object)
+				if not components.object_handler.deleted_objects.has (parent_object.instance_referers.item_for_iteration) then
+					if components.object_handler.deleted_objects.has (new_object.id) then
+						components.object_handler.mark_existing (new_object)
 					end
-					iterated_parent_object ?= object_handler.deep_object_from_id (parent_object.instance_referers.item_for_iteration)
+					iterated_parent_object ?= components.object_handler.deep_object_from_id (parent_object.instance_referers.item_for_iteration)
 
 					iterated_parent_object.add_child_object (new_object, insert_pos)
-				
+
 					-- Perform this recursively.
 					create_new_representations (iterated_parent_object, new_object, insert_pos)
 				end
 				parent_object.instance_referers.forth
 			end
 		end
-		
+
 	new_parent_child_objects: HASH_TABLE [INTEGER, INTEGER]
 		-- All newly created child object ids hashed by their associated parent.
 		-- As `Current' executes, we must create new instances of each object if not contained in `here',

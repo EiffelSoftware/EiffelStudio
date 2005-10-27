@@ -10,11 +10,6 @@ class
 inherit
 	GB_CONSTANT
 	
-	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all	
-		end
-	
 create
 	make_with_name_and_value
 	
@@ -117,7 +112,7 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 					only_pixmaps_cross_reference_directories: pixmap_constant /= Void
 				end
 				pixmap_constant.update
-				editors := all_editors
+				editors := components.object_editors.all_editors
 				from
 					editors.start
 				until

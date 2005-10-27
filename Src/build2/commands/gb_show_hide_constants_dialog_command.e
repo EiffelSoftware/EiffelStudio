@@ -9,23 +9,16 @@ class
 inherit
 
 	GB_RESTORABLE_WINDOW_COMMAND
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end
 
 create
-	make
+	make_with_components
 
-feature {GB_COMMAND_HANDLER} -- Initialization
+feature {NONE} -- Initialization
 
-	make is
-			-- Create `Current'.
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
 		do
-			if builder_window /= Void then
-				is_selected := window.is_show_requested
-			end
+			components := a_components
 		end
 
 feature -- Access
@@ -41,12 +34,12 @@ feature -- Access
 		do
 			Result := (create {GB_SHARED_PIXMAPS}).Icon_format_onces
 		end
-		
+
 	window: EV_DIALOG is
 			-- Result is window referenced by
 			-- `Current' command.
 		do
-			Result := constants_dialog
+			Result := components.tools.constants_dialog
 		end
 
 end -- class GB_SHOW_HIDE_CONSTANTS_DIALOG_COMMAND

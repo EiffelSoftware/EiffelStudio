@@ -7,62 +7,40 @@ indexing
 
 class
 	GB_XML_LOAD
-	
+
 inherit
-	
+
 	GB_XML_UTILITIES
 		export
 			{NONE} all
-		end	
-	
+		end
+
 	GB_EVENT_UTILITIES
 		export
 			{NONE} all
-		end	
-	
-	GB_SHARED_TOOLS
-		export
-			{NONE} all
-		end	
-	
+		end
+
 	INTERNAL
 		export
 			{NONE} all
-		end	
-	
+		end
+
 	GB_CONSTANTS
 		export
 			{NONE} all
 			{ANY} item_string
-		end	
-	
+		end
+
 	GB_FILE_CONSTANTS
 		export
 			{NONE} all
-		end	
-	
-	GB_SHARED_SYSTEM_STATUS
-		export
-			{NONE} all
-		end	
-	
-	GB_SHARED_OBJECT_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create, is_equal, copy
 		end
-		
+
 	GB_SHARED_DEFERRED_BUILDER
 		export
 			{NONE} all
-		end	
-	
-	GB_SHARED_STATUS_BAR
-		export
-			{NONE} all
 		end
-		
+
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
@@ -72,15 +50,29 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	XM_CALLBACKS_FILTER_FACTORY
 		export
-			{NONE} all 
-		end
-		
-	GB_SHARED_CONSTANTS
-		export
 			{NONE} all
+		end
+
+create
+	make_with_components
+
+feature {NONE} -- Initialization
+
+	components: GB_INTERNAL_COMPONENTS
+		-- Access to a set of internal components for an EiffelBuild instance.
+
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
+			-- Create `Current' and assign `a_components' to `components'.
+		require
+			a_components_not_void: a_components /= Void
+		do
+			components := a_components
+			default_create
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Basic operation
@@ -89,52 +81,59 @@ feature -- Basic operation
 			-- Load the system.
 		do
 				-- Flag to the system that a load is now underway.
-			System_status.enable_loading_project
-			;(create {GB_GLOBAL_STATUS}).block
-			
+			components.system_status.enable_loading_project
+			components.system_status.block
+
 			initialize_load_output
 
 		check
-			display_window_hidden: not display_window.is_show_requested
-			builder_window_hidden: not builder_window.is_show_requested
-		end		
+			display_window_hidden: not components.tools.display_window.is_show_requested
+			builder_window_hidden: not components.tools.builder_window.is_show_requested
+		end
 				-- Load and parse file `filename'.
-			load_and_parse_xml_file (filename)
-			
-			object_handler.update_all_associated_objects
-			
+			load_and_parse_xml_file (system_interface_filename)
+
+			components.object_handler.update_all_associated_objects
+
 				-- Build deferred parts.
 			deferred_builder.build
 
 				-- As we have just loaded the project, the
 				-- system should know that it has not been modifified
 				-- by the user.
-			system_status.disable_project_modified
-			
+			components.system_status.disable_project_modified
+
 			remove_load_output
-			
+
 				-- Now mark one window as the main window of the system if it is
 				-- `Void' which will occur when you load an old project that did not
 				-- have a root window.
-			if Object_handler.root_window_object = Void and not widget_selector.objects.is_empty then
-				widget_selector.mark_first_window_as_root
-				System_status.disable_project_modified
+			if components.object_handler.root_window_object = Void and not components.tools.widget_selector.objects.is_empty then
+				components.tools.widget_selector.mark_first_window_as_root
+				components.system_status.disable_project_modified
 			end
 
 				-- Only select a main window if there is at least one window
 				-- in the system. It is possible to save a project after having
 				-- deleted all windows.
-			if object_handler.root_window_object /= Void then
-				widget_selector.select_main_window
+			if components.object_handler.root_window_object /= Void then
+				components.tools.widget_selector.select_main_window
 			end
-			
+
 				-- Flag to the system that a load is no longer underway.
-			System_status.disable_loading_project
-			;(create {GB_GLOBAL_STATUS}).resume
+			components.system_status.disable_loading_project
+			components.system_status.resume
+		end
+
+	system_interface_filename: FILE_NAME is
+			-- File to be generated.
+		do
+			create Result.make_from_string (components.system_status.current_project_settings.project_location)
+			Result.extend ("system_interface.xml")
 		end
 
 feature {GB_OBJECT_HANDLER} -- Implementation
-		
+
 	build_window (window: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Build a new window representing `window', represented in
 			-- directory representation `parent_list'.
@@ -162,7 +161,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			if object = Void then
 					-- As `object' = Void, it means that we are building a new object,
 					-- and hence we must create it accordingly.
-				an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
+				an_object := components.object_handler.add_root_window (window.attribute_by_name (type_string).value)
 			else
 				an_object := object
 			end
@@ -184,27 +183,28 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 							-- We must check for internal properties, else set the properties of the component
 						if current_name.is_equal (Internal_properties_string) then
 							an_object.modify_from_xml (current_element)
-							object_handler.add_object_to_objects (an_object)
+							components.object_handler.add_object_to_objects (an_object)
 							an_object.widget_selector_item.unparent
 							parent_common_item.add_alphabetically (an_object.widget_selector_item)
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
-							extract_event_information (current_element, an_object)						
-						else						
+							extract_event_information (current_element, an_object)
+						else
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
-						
+
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
-						
+						gb_ev_any.set_components (components)
+
 						gb_ev_any.set_object (an_object)
-						
+
 							-- Ensure that the new class exists.
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-						
+
 							-- Add the appropriate objects to `objects'.
 						gb_ev_any.add_object (an_object.object)
 							-- Now that we support widgets at the top level, we must
@@ -215,7 +215,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						else
 							gb_ev_any.add_object (an_object.display_object)
 						end
-						
+
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
 						end
@@ -234,14 +234,14 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 		local
 			new_object: GB_OBJECT
 		do
-			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
+			new_object := components.object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			Result := new_object
-			object_handler.add_object (object, new_object, pos)
+			components.object_handler.add_object (object, new_object, pos)
 			modify_from_xml (element, new_object)
 		end
 
 feature {NONE} -- Implementation
-		
+
 	build_new_object (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Build a new object from information in `element' into `object'.
 		require
@@ -250,14 +250,14 @@ feature {NONE} -- Implementation
 		local
 			new_object: GB_OBJECT
 		do
-			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
-			object_handler.add_object (object, new_object, object.children.count + 1)
+			new_object := components.object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
+			components.object_handler.add_object (object, new_object, object.children.count + 1)
 			modify_from_xml (element, new_object)
-			object_handler.add_object_to_objects (new_object)
+			components.object_handler.add_object_to_objects (new_object)
 		end
-		
+
 feature {GB_OBJECT_HANDLER} -- Implementation
-		
+
 	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Update properties of `object' based on information in `element'.
 		local
@@ -287,19 +287,20 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						if current_name.is_equal (Internal_properties_string) then
 							object.modify_from_xml (current_element)
 						else
-						
+
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
-						
+
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
+						gb_ev_any.set_components (components)
 						gb_ev_any.set_object (object)
-						
+
 							-- Ensure that the new class exists.
 						check
 							new_instance_exists: gb_ev_any /= Void
 						end
-						
+
 							-- Add the appropriate objects to `objects'.
 						gb_ev_any.add_object (object.object)
 						display_object ?= object.display_object
@@ -308,7 +309,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						else
 							gb_ev_any.add_object (display_object.child)
 						end
-						
+
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
 						end
@@ -317,7 +318,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				element.forth
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT) is
@@ -365,22 +366,22 @@ feature {NONE} -- Implementation
 			application_element: XM_ELEMENT
 		do
 			application_element := pipe_callback.document.root_element
-			build_window_structure (application_element, widget_selector)
+			build_window_structure (application_element, components.tools.widget_selector)
 				-- Building the project causes the project to be marked as
 				-- modified. We do not want this, as it should only
 				-- be marked as so when the user does something.
-			system_status.disable_project_modified
+			components.system_status.disable_project_modified
 				-- Update all names in `widget_selector' to ensure that
 				-- they are current after the load.
 				--| FIXME, why is this required?
-			widget_selector.update_displayed_names
+			components.tools.widget_selector.update_displayed_names
 				-- Now expand the layout selector item, so that the window is displayed as
 				-- it was when last edited.
-			Layout_constructor.update_expanded_state_from_root_object		
-			
-			constants.build_deferred_elements
+			components.tools.layout_constructor.update_expanded_state_from_root_object
+
+			components.constants.build_deferred_elements
 		end
-		
+
 	build_window_structure (an_element: XM_ELEMENT; parent_common_item: GB_WIDGET_SELECTOR_COMMON_ITEM) is
 			-- Build window represented by `an_element into `parent_common_item'.
 			-- If `parent_common_item' is `Void', build directly into `widget_selector'.
@@ -413,7 +414,7 @@ feature {NONE} -- Implementation
 								if window_element /= Void then
 									current_name := window_element.name
 									if current_name.is_equal (Internal_properties_string)  then
-										create new_directory_item.make_with_name ("")
+										create new_directory_item.make_with_name ("", components)
 										new_directory_item.modify_from_xml (window_element)
 										parent_common_item.add_alphabetically (new_directory_item)
 									end
@@ -429,12 +430,12 @@ feature {NONE} -- Implementation
 							loop
 								constant_item_element ?= current_element.item_for_iteration
 								if constant_item_element /= Void then
-									constants.build_constant_from_xml (constant_item_element)	
+									components.constants.build_constant_from_xml (constant_item_element)
 								end
 								current_element.forth
 							end
 						else
-							build_window (current_element, parent_common_item)							
+							build_window (current_element, parent_common_item)
 						end
 					end
 				end
@@ -474,47 +475,47 @@ feature {NONE} -- Implementation
 				parser.parse_from_stream (file)
 			end
 		end
-		
+
 	pipe_callback: XM_TREE_CALLBACKS_PIPE is
 			-- Create unique callback pipe.
 		once
 			create Result.make
 		end
-		
+
 	initialize_load_output is
 			-- Create `load_timer' and associate an
 			-- action with it.
 		do
 			create load_timer.make_with_interval (250)
 			load_timer.actions.extend (agent update_status_bar)
-		 	set_status_text ("Loading    -")
+		 	components.status_bar.set_status_text ("Loading    -")
 		 	environment.application.process_events
 		end
-		
+
 	update_status_bar is
 			-- Refresh message displayed on status bar, to show
 			-- that processing is still occurring.
 		local
 			last_character: CHARACTER
 		do
-			last_character := status_text.item (status_text.count)
+			last_character := components.status_bar.status_text.item (components.status_bar.status_text.count)
 			if last_character = '-' then
-				set_status_text (status_text.substring (1, status_text.count - 2) + "\")
+				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 2) + "\")
 			elseif last_character.is_equal ('\') then
-				set_status_text (status_text.substring (1, status_text.count - 1) + "|")
+				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 1) + "|")
 			elseif last_character.is_equal ('|') then
-				set_status_text (status_text.substring (1, status_text.count - 1) + "/")
+				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 1) + "/")
 			elseif last_character.is_equal ('/') then
-				set_status_text (status_text.substring (1, status_text.count - 1) + "--")
+				components.status_bar.set_status_text (components.status_bar.status_text.substring (1, components.status_bar.status_text.count - 1) + "--")
 			end
 		end
-		
+
 	remove_load_output is
 			--  Destroy `load_timer' and display a final
 			-- timed message on the status bar.
 		do
 			load_timer.destroy
-			set_timed_status_text ("Load successful")			
+			components.status_bar.set_timed_status_text ("Load successful")
 		end
 
 	load_timer: EV_TIMEOUT
@@ -522,7 +523,7 @@ feature {NONE} -- Implementation
 
 	parser: XM_EIFFEL_PARSER
 		-- XML tree parser.
-		
+
 	document: XM_DOCUMENT
 		-- XML document generated from created window.
 

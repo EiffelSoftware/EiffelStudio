@@ -12,22 +12,22 @@ inherit
 		undefine
 			default_create
 		end
-	
+
 	GB_CONSTANTS
-	
+
 	INTERNAL
 		undefine
 			default_create
 		end
-	
+
 feature -- Access
 
 	ev_type: EV_COLORIZABLE
 		-- Vision2 type represented by `Current'.
-		
+
 	type: STRING is "EV_COLORIZABLE"
 		-- String representation of object_type modifyable by `Current'.
-		
+
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
@@ -40,13 +40,13 @@ feature -- Access
 			frame: EV_FRAME
 			cell: EV_CELL
 		do
-			create Result
+			create Result.make_with_components (components)
 			initialize_attribute_editor (Result)
 			create color_dialog
 			first_object := objects.first
 			create bounding_frame.make_with_text (gb_ev_colorizable_background_color)
 			Result.extend (bounding_frame)
-			
+
 			create horizontal_box
 			create vertical_box
 			bounding_frame.extend (vertical_box)
@@ -59,7 +59,7 @@ feature -- Access
 			b_area.set_tooltip (gb_ev_colorizable_background_color_tooltip)
 			create button.make_with_text (Select_button_text)
 			button.set_tooltip ("Select background color")
-			background_color := first_object.background_color	
+			background_color := first_object.background_color
 			frame.extend (b_area)
 			horizontal_box.set_padding (2)
 			create cell
@@ -81,8 +81,8 @@ feature -- Access
 			horizontal_box.disable_item_expand (button1)
 				-- Add two for the padding of the box
 			button1.set_minimum_width (button.minimum_width + frame.minimum_width + 2)
-			
-			
+
+
 
 			create bounding_frame.make_with_text (gb_ev_colorizable_foreground_color)
 			Result.extend (bounding_frame)
@@ -99,7 +99,7 @@ feature -- Access
 			f_area.set_tooltip (gb_ev_colorizable_foreground_color_tooltip)
 			create button.make_with_text (Select_button_text)
 			button.set_tooltip ("Select foreground color")
-			foreground_color := first_object.foreground_color	
+			foreground_color := first_object.foreground_color
 			frame.extend (f_area)
 			horizontal_box.set_padding (2)
 			create cell
@@ -120,13 +120,13 @@ feature -- Access
 			vertical_box.extend (horizontal_box)
 			horizontal_box.disable_item_expand (button1)
 			button1.set_minimum_width (button.minimum_width + frame.minimum_width + 2)
-			
+
 			update_attribute_editor
 
 			disable_all_items (Result)
 			align_labels_left (Result)
 		end
-		
+
 		update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 		do
 			actually_set_foreground_color (stone.color)
 		end
-		
+
 	accept_background_color_stone (stone: GB_COLOR_STONE) is
 			-- Set background color, based on settings of `stone'.
 		require
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 			update_editors
 			update_background_display
 		end
-		
+
 	restore_foreground_color is
 			-- Restore `foreground_color' of objects to originals.
 		local
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 				actually_set_background_color (color_dialog.color)
 			end
 		end
-		
+
 	actually_set_background_color (color: EV_COLOR) is
 			-- Actually update the background colors.
 		local
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			b_area.set_background_color (first.background_color)
 			b_area.clear
 		end
-		
+
 	update_foreground_display is
 			-- Update area displaying the background color of the EV_COLORIZABLE.
 		do
@@ -255,7 +255,7 @@ feature {NONE} -- Implementation
 				actually_set_foreground_color (color_dialog.color)
 			end
 		end
-		
+
 	actually_set_foreground_color (color: EV_COLOR) is
 			-- Actually update the foreground colors.
 		local
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			update_editors
 			update_foreground_display
 		end
-		
+
 	build_string_from_color (color: EV_COLOR): STRING is
 			-- `Result' is string representation of `color'.
 		require
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append_string (color.blue_8_bit.out)
 		end
-		
+
 	build_color_from_string (a_string: STRING): EV_COLOR is
 			-- `Result' is an EV_COLOR built from contents of `a_string'.
 		require
@@ -301,8 +301,8 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
-		
+
+
 	add_leading_zeros (count: INTEGER): STRING is
 			-- `Result' is `a_string' with `count' '0's added.
 		require
@@ -326,9 +326,9 @@ feature {NONE} -- Implementation
 
 	foreground_color: EV_COLOR
 	background_color: EV_COLOR
-	
+
 	b_area, f_area: EV_DRAWING_AREA
-	
+
 	color_dialog: EV_COLOR_DIALOG
 
 end -- class GB_EV_COLORIZABLE_EDITOR_CONSTRUCTOR

@@ -737,7 +737,7 @@ feature -- Implementation
 				-- `f' can be Void when there is an error
 				-- and user wants to get a flat view
 			if f /= Void then
-				Result := f.real_body_id
+				Result := f.real_body_id (f.written_class.types.first)
 			end
 		end
 

@@ -358,6 +358,10 @@ feature -- IL Generation
 								current_class_type.type).associated_class_type.implementation_id,
 								feat.written_feature_id)
 						end
+					elseif is_expanded and then feat.is_attribute then
+						generate_feature_il (feat,
+							current_class_type.implementation_id,
+							feat.feature_id)
 					else
 						generate_feature_code (feat, True)
 					end
@@ -413,10 +417,14 @@ feature -- IL Generation
 				check
 					valid: is_single_class and then inh_feat = Void
 				end
-				generate_feature_il (feat,
-					implemented_type (feat.written_in,
-						current_class_type.type).associated_class_type.implementation_id,
-						feat.written_feature_id)
+				if current_class_type.is_expanded then
+					generate_feature_code (feat, False)
+				else
+					generate_feature_il (feat,
+						implemented_type (feat.written_in,
+							current_class_type.type).associated_class_type.implementation_id,
+							feat.written_feature_id)
+				end
 			end
 		end
 

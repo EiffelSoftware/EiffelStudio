@@ -621,6 +621,27 @@ feature -- IL code generation
 			l_class_type: CLASS_TYPE
 			l_native_array_class_type: NATIVE_ARRAY_CLASS_TYPE
 		do
+				-- Get `native_array' field info.
+			l_native_array ?= associated_class.feature_table.item_id ({PREDEFINED_NAMES}.internal_native_array_name_id)
+			check
+				l_native_array_not_void: l_native_array /= Void
+			end
+
+				-- Let's evaluate type of NATIVE_ARRAY			
+			l_class_type := Byte_context.class_type
+			Byte_context.set_class_type (Current)
+			l_native_array_type ?= Byte_context.real_type (l_native_array.type.actual_type.type_i)
+			check
+				l_native_array_type_not_void: l_native_array_type /= Void
+			end
+			Byte_context.set_class_type (l_class_type)
+			
+				-- Call feature from NATIVE_ARRAY
+			l_native_array_class_type ?= l_native_array_type.associated_class_type
+			check
+				l_native_array_class_not_void: l_native_array_type /= Void
+			end
+
 			if name_id = {PREDEFINED_NAMES}.Put_name_id then
 					-- Because `put' from SPECIAL and `put' from NATIVE_ARRAY
 					-- have their argument inverted, we need to swap the two
@@ -640,27 +661,8 @@ feature -- IL code generation
 				Il_generator.generate_local_assignment (l_index)
 				Il_generator.generate_local_assignment (l_element)
 				Il_generator.generate_local (l_index)
+				l_native_array_class_type.generate_il_put_preparation (l_native_array_type)
 				Il_generator.generate_local (l_element)
-			end
-				-- Get `native_array' field info.
-			l_native_array ?= associated_class.feature_table.item_id ({PREDEFINED_NAMES}.internal_native_array_name_id)
-			check
-				l_native_array_not_void: l_native_array /= Void
-			end
-			
-				-- Let's evaluate type of NATIVE_ARRAY			
-			l_class_type := Byte_context.class_type
-			Byte_context.set_class_type (Current)
-			l_native_array_type ?= Byte_context.real_type (l_native_array.type.actual_type.type_i)
-			check
-				l_native_array_type_not_void: l_native_array_type /= Void
-			end
-			Byte_context.set_class_type (l_class_type)
-			
-				-- Call feature from NATIVE_ARRAY
-			l_native_array_class_type ?= l_native_array_type.associated_class_type
-			check
-				l_native_array_class_not_void: l_native_array_type /= Void
 			end
 			l_native_array_class_type.generate_il (name_id, l_native_array_type)
 		end

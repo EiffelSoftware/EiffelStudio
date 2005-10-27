@@ -347,12 +347,14 @@ feature
 			target_type := context.real_type (target.type)
 			source_type := context.real_type (source.type)
 			if target_type.is_expanded and source_type.is_none then
+					-- Assigning Void to expanded.
 				buf.put_string ("RTEC(EN_VEXP);")
 				buf.put_new_line
 			elseif target_type.is_true_expanded then
+					-- Reattachment of expanded types.
 				generate_regular_assignment (Copy_assignment)
 			else
-					-- Basic types or reference types
+					-- Reattachment of basic or reference types.
 				generate_regular_assignment (Simple_assignment)
 			end
 		end

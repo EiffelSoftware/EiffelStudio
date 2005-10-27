@@ -264,6 +264,32 @@ feature -- Status report
 	has_externals: BOOLEAN
 			-- Does current class have external declarations in its text?
 
+	has_external_ancestor_class: BOOLEAN is
+			-- Does current class have an external ancestor which is a class (not interface)?
+		local
+			p: like parents_classes
+			parent_class: CLASS_C
+		do
+			p := parents_classes
+			if p /= Void then
+				from
+					p.start
+				until
+					p.after
+				loop
+					parent_class := p.item
+					if
+						not parent_class.is_interface and then
+						(parent_class.is_external or else parent_class.has_external_ancestor_class)
+					then
+						Result := True
+						p.finish
+					end
+					p.forth
+				end
+			end
+		end
+
 feature -- Action
 
 	remove_c_generated_files is
@@ -2303,6 +2329,7 @@ feature -- Parent checking
 			l_client: CLASS_C
 			l_tuple: TUPLE [BOOLEAN, BOOLEAN]
 			l_compiled_parent_generator: AST_PARENT_C_GENERATOR
+			l_parent_type: CL_TYPE_A
 		do
 				-- Reset flag
 			need_new_parents := False
@@ -2347,7 +2374,13 @@ feature -- Parent checking
 					else
 						l_parent_c := l_compiled_parent_generator.compiled_parent (Current, l_parent_as)
 						computed_parents.extend (l_parent_c)
-						parents.extend (l_parent_c.parent_type)
+							-- Use reference class type as a parent.
+						l_parent_type := l_parent_c.parent_type
+						if l_parent_type.is_expanded then
+							l_parent_type := l_parent_type.duplicate
+							l_parent_type.set_is_expanded (False)
+						end
+						parents.extend (l_parent_type)
 
 						l_parent_class := clickable_info.associated_eiffel_class (lace_class,
 							l_parent_as.type).compiled_class
@@ -2504,6 +2537,14 @@ feature -- Parent checking
 				vifi2.set_parent_classes (l_single_classes)
 				fixme ("Shouldn't we be able to provide a location?")
 				Error_handler.insert_error (vifi2)
+			end
+			if l_single_classes /= Void and then is_expanded then
+					-- External classes are inherited by expanded class.
+				check
+					l_single_classes_not_empty: not l_single_classes.is_empty
+				end
+				fixme ("Shouldn't we be able to provide a location?")
+				Error_handler.insert_error (create {VIFI3}.make (Current, l_single_classes))
 			end
 
 				-- Only classes that explicitely inherit from an external class only once
@@ -3316,7 +3357,21 @@ end
 
 	new_type (data: CL_TYPE_I): CLASS_TYPE is
 			-- New class type for current class
+		local
+			c: CL_TYPE_I
+			g: GEN_TYPE_I
 		do
+			if data.is_true_expanded and then not data.is_external then
+					-- Add reference counterpart.
+				g ?= data
+				if g = Void then
+					c := data.twin
+				else
+					c := g.duplicate
+				end
+				c.set_is_expanded (False)
+				update_types (c)
+			end
 			create Result.make (data)
 			if has_externals then
 					-- When a new generic derivation of a class that
@@ -3370,7 +3425,12 @@ feature -- Meta-type
 		do
 			if generics = Void then
 					-- No instantiation for non-generic class
-				Result := types.first
+				if class_type.type.class_id = class_id then
+						-- Use supplied `class_type' to preserve expandedness status
+					Result := class_type
+				else
+					Result := types.first
+				end
 			else
 				actual_class_type := class_type.associated_class.actual_type
 					-- General instantiation of the actual class type where

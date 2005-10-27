@@ -273,8 +273,8 @@ feature -- Status
 			Result := is_external
 			if not Result then
 					-- Classes that inherits from external classes
-					-- have only one generated type.
-				Result := base_class.is_single
+					-- have only one generated type as well as expanded types.
+				Result := base_class.is_single or else is_expanded
 			end
 		end
 

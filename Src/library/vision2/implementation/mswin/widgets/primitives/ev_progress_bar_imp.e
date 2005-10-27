@@ -1,4 +1,4 @@
-indexing 
+indexing
 	description:
 		"Eiffel Vision progress bar. Mswindows implementation."
 	status: "See notice at end of class"
@@ -128,7 +128,7 @@ feature -- Status setting
 					-- If we have an older version, we do nothing.
 					new_style := clear_flag (style, Pbs_smooth)
 						-- Remove `Pbs_smooth' from the style of `Current'.
-					recreate_current (new_style)	
+					recreate_current (new_style)
 				end
 			end
 		end
@@ -163,7 +163,7 @@ feature -- Status setting
 				-- all the attributes within these variables so the control
 				-- can be completely restored.
 		do
-			wel_imp ?= parent_imp
+			wel_imp := wel_parent
 			old_x := x_position
 			old_y := y_position
 			old_width := width

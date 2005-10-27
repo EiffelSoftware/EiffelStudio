@@ -286,16 +286,25 @@ feature -- IL code generation
 							parameters_count_is_two: parameters.count = 2
 						end
 						parameters.i_th (1).generate_il
-						if parameters.i_th (2).type.is_true_expanded then
+						if real_type (parameters.i_th (2).type).is_true_expanded then
 							native_array_class_type.generate_il_put_preparation (cl_type)
 						end
 						parameters.i_th (2).generate_il
+					elseif is_call_on_any then
+							-- Run-time features work on arguments of reference type only
+						from
+							parameters.start
+						until
+							parameters.after
+						loop
+							parameters.item.generate_il
+							if real_type (parameters.item.attachment_type).is_expanded then
+								il_generator.generate_metamorphose (real_type (parameters.item.attachment_type))
+							end
+							parameters.forth
+						end
 					else
 						parameters.generate_il
-						if is_call_on_any and then parameters.count > 0 and then real_type (parameters.last.attachment_type).is_expanded then
-								-- Run-time features work on arguments of reference type only
-							il_generator.generate_metamorphose (real_type (parameters.last.attachment_type))
-						end
 					end
 					l_count := parameters.count
 				end
@@ -336,13 +345,12 @@ feature -- IL code generation
 						generate_il_any_call (target_type, cl_type,
 							cl_type.is_reference or else real_metamorphose)
 					else
-						if target_type.is_reference and then cl_type.is_true_expanded then
-								-- Box value object
-							il_generator.generate_load_from_address (cl_type)
-							il_generator.generate_metamorphose (cl_type)
+						if cl_type.is_true_expanded then
+							generate_il_normal_call (cl_type, False)
+						else
+							generate_il_normal_call (target_type,
+								cl_type.is_reference or else real_metamorphose) 
 						end
-						generate_il_normal_call (target_type,
-							cl_type.is_reference or else real_metamorphose) 
 					end
 				end
 				if invariant_checked then
@@ -353,7 +361,7 @@ feature -- IL code generation
 
 feature {NONE} -- IL code generation
 
-	generate_il_any_call (written_type, target_type: TYPE_I; is_virtual: BOOLEAN) is
+	generate_il_any_call (written_type, target_type: CL_TYPE_I; is_virtual: BOOLEAN) is
 			-- Generate call to routine of ANY that works for both ANY and SYSTEM_OBJECT
 		require
 			il_generation: System.il_generation
@@ -364,13 +372,14 @@ feature {NONE} -- IL code generation
 		do
 		end
 
-	generate_il_normal_call (target_type: TYPE_I; is_virtual: BOOLEAN) is
+	generate_il_normal_call (target_type: CL_TYPE_I; is_virtual: BOOLEAN) is
 			-- Normal feature call.
 		require
 			target_type_not_void: target_type /= Void
 		local
 			l_count: INTEGER
 			l_return_type: TYPE_I
+			target_feature_id: like feature_id
 		do
 			if parameters /= Void then
 				l_count := parameters.count
@@ -378,15 +387,22 @@ feature {NONE} -- IL code generation
 
 			l_return_type := context.real_type (type)
 
+			if target_type.is_expanded then
+					-- Generate direct call.
+				target_feature_id := target_type.base_class.feature_of_rout_id (routine_id).feature_id
+			else
+				target_feature_id := feature_id
+			end
+
 			if precursor_type /= Void then
 					-- In IL, if you can call Precursor, it means that parent is
 					-- not expanded and therefore we can safely generate a static
 					-- call to Precursor feature.
 				il_generator.generate_precursor_feature_access (
-					target_type, feature_id, l_count, not l_return_type.is_void)
+					target_type, target_feature_id, l_count, not l_return_type.is_void)
 			else
 				il_generator.generate_feature_access (
-					target_type, feature_id, l_count, not l_return_type.is_void,
+					target_type, target_feature_id, l_count, not l_return_type.is_void,
 					is_virtual)
 			end
 			if System.il_verifiable then

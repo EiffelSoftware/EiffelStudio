@@ -82,6 +82,7 @@ feature -- Access
 				other_gen_type /= Void
 				and then other_gen_type.class_id = class_id
 				and then is_expanded = other_gen_type.is_expanded
+				and then is_separate = other_gen_type.is_separate
 			then
 				from
 					i := 1
@@ -329,6 +330,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 			create Result.make (class_id, meta_generic, true_generics)
 			Result.set_is_expanded (is_expanded)
+			Result.set_is_separate (is_separate)
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): like Current is

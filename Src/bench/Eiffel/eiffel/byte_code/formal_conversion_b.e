@@ -85,14 +85,10 @@ feature -- IL code generation
 			l_expr_type := context.real_type (expr.type)
 
 			if is_conversion_needed (l_expr_type, l_type) then
-				if is_boxing then
+				if is_boxing or else not l_expr_type.is_basic then
 					il_generator.generate_metamorphose (l_expr_type)
 				else
-						-- FIXME: We only handle metamorphose of basic types here.
-					if l_expr_type.is_basic then
-						generate_il_eiffel_metamorphose (l_expr_type)
-					else
-					end
+					generate_il_eiffel_metamorphose (l_expr_type)
 				end
 			end
 		end

@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 			l_precompiler: CODE_PRECOMPILER
 			l_precompile_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
 			l_references_list: CODE_REFERENCES_LIST
-			l_assembly_name: ASSEMBLY_NAME
+			l_assembly_name, l_name: ASSEMBLY_NAME
 		do
 			if not l_retried then
 				-- First create temporary directory if needed
@@ -442,7 +442,10 @@ feature {NONE} -- Implementation
 					until
 						l_references_list.after
 					loop
-						Referenced_assemblies.remove_name (l_references_list.item.assembly.get_name)
+						l_name := l_references_list.item.assembly.get_name
+						if Referenced_assemblies.has_name (l_name) then
+							Referenced_assemblies.remove_name (l_name)
+						end
 						l_references_list.forth
 					end
 				end

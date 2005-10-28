@@ -215,7 +215,11 @@ feature -- Basic Operations
 							l_rel_dir.append_character ('_')
 							l_rel_dir.append (l_counter.out)
 						end
-						add_precompile (ace_file_name, l_rel_dir)
+						if has_directory (ace_file_name) then
+							change_precompile_directory (ace_file_name, l_rel_dir)
+						else
+							add_precompile (ace_file_name, l_rel_dir)
+						end
 					else
 						-- Clean up
 						safe_directory_delete (l_abs_dir)

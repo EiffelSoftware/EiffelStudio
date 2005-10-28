@@ -53,12 +53,14 @@ feature -- Basic Operations
 				create l_writer.make (l_raw_file)
 				l_writer.set_for_writing
 				independent_store (a, l_writer, False)
-				l_raw_file.close
 				last_file_position := l_raw_file.count
 				successful := True
 			else
 				successful := False
 				error_message := "Cannot store into " + path
+			end
+			if l_raw_file /= Void and then not l_raw_file.is_closed then
+				l_raw_file.close
 			end
 		rescue
 			debug ("log_exceptions")

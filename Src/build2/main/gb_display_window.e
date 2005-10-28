@@ -59,8 +59,14 @@ feature -- Initialization
 		do
 			Precursor {EV_DIALOG}
 			set_title (gb_display_window_title)
-				-- Set up cancel actions on `Current'.
-			fake_cancel_button (Current, agent (components.commands.show_hide_display_window_command).execute)
+			if components /= Void then
+					-- We protect against `components' being Void for the special case where we create `Current'
+					-- from DEFAULT_OBJECT_STATE_CHECKER `default_object_by_type'. In this case the feature returns an
+					-- on object of type EV_ANY and so it is not possible to directly call `set_components' after
+					-- calling `default_create'. We do not need `components' in this case as the only use for
+					-- `Current' in that case is to query some of the default properties.
+				fake_cancel_button (Current, agent (components.commands.show_hide_display_window_command).execute)
+			end
 			set_icon_pixmap (icon)
 		end
 

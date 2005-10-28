@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			a_components_not_void: a_components /= Void
 		do
 			components := a_components
-			default_create
+			create all_contained_instances.make (10)
 		ensure
 			components_set: components = a_components
 		end

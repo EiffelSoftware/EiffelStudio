@@ -48,9 +48,11 @@ feature -- Basic Operations
 				l_reader.set_for_reading
 				deserialized_object := retrieved (l_reader, True)
 				successful := deserialized_object /= Void
-				l_raw_file.close
 			else
 				successful := False
+			end
+			if l_raw_file /= Void and then not l_raw_file.is_closed then
+				l_raw_file.close
 			end
 		ensure
 			deserialized_object_set_if_no_error: successful implies deserialized_object /= Void

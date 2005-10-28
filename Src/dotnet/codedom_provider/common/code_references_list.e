@@ -231,7 +231,7 @@ feature -- Basic Operations
 								l_location := l_assembly.location
 							end
 						end
-						if l_location /= Void then
+						if l_location /= Void and not has_file (l_location) then
 							extend_file (l_location)
 							l_location := Void
 						end

@@ -1989,7 +1989,7 @@ feature -- Stone process
 						-- except if it is during a resynchronization, in which case we do not scroll at all.
 					if editor_tool.text_area.text_is_fully_loaded then
 						if not during_synchronization then
-							editor_tool.text_area.find_feature_named (feature_stone.origin_name)
+							scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
 							feature_stone_already_processed := editor_tool.text_area.found_feature
 						else
 							feature_stone_already_processed := True
@@ -3220,12 +3220,22 @@ feature {NONE} -- Implementation
 			tmp_text: STRING
 		do
 			if not feat_as.is_il_external then
-				if feat_as.ast /= Void then	
-					editor_tool.text_area.text_displayed.enable_click_tool
-					editor_tool.text_area.find_feature_named (feat_as.name)
-					editor_tool.text_area.text_displayed.disable_click_tool
+				if not managed_main_formatters.first.selected then
+					if feat_as.ast /= Void then
+						editor_tool.text_area.find_feature_named (feat_as.name)
+					end
+				else
+					begin_index := feat_as.ast.start_position
+					if platform_constants.is_windows then
+						tmp_text := displayed_class.text.substring (1, begin_index)
+						offset := tmp_text.occurrences('%R')
+					end
+					editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
 				end
 			else
+				if not managed_main_formatters.first.selected then
+					managed_main_formatters.first.execute
+				end
 					-- FIXME NC: Doesn't work properly for .NET features
 					-- .NET formatted feature.
 				begin_index := feature_positions.item (feat_as)

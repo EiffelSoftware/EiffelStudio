@@ -123,7 +123,6 @@ feature {MSR_SEARCH_STRATEGY, MSR_REPLACE_STRATEGY} -- Element Change
 			-- Set what exactly is found.
 		require
 			a_text_attached: a_text /= Void
-			not_a_text_is_empty: not a_text.is_empty
 		do
 			text := a_text
 		ensure

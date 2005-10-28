@@ -203,10 +203,10 @@ feature -- Text processing
 				last_line.after or feature_start_found
 			loop
 				feature_start ?= last_line.item
-				feature_start_found := (feature_start /= Void)
+				feature_start_found := (feature_start /= Void and then feature_start.pebble = Void)
 				if not feature_start_found then
 					last_line.forth
-				end				
+				end
 			end
 			if feature_start_found then
 				editor_tok := last_line.item
@@ -296,10 +296,10 @@ feature -- Text processing
 				last_line.after or feature_start_found
 			loop
 				feature_start ?= last_line.item
-				feature_start_found := (feature_start /= Void)
+				feature_start_found := (feature_start /= Void and then feature_start.pebble = Void)
 				if not feature_start_found then
 					last_line.forth
-				end				
+				end
 			end
 			if feature_start_found then
 				editor_tok := last_line.item

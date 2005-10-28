@@ -7,29 +7,25 @@ indexing
 
 class
 	GB_GENERATED_INFO
-	
+
 inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
 		end
-	
+
 create
 	make_child,
 	make_root
-		
+
 feature -- Initialization
 
 	make_root is
 			-- Create `Current' as root node of generated info.
 		do
 			common_make
-				-- Remove all information from previous
-				-- prepass stage.
-			names_by_id.clear_all
-			generated_info_by_id.clear_all
 		end
-		
+
 	make_child (a_parent: GB_GENERATED_INFO) is
 			-- Create `Current' as child of `a_parent'.
 		do
@@ -37,7 +33,7 @@ feature -- Initialization
 			parent := a_parent
 			parent.add_child (Current)
 		end
-		
+
 feature {NONE} -- Initialization
 
 	common_make is
@@ -48,35 +44,35 @@ feature {NONE} -- Initialization
 			create supported_type_elements.make (10)
 			create events.make (3)
 		end
-		
+
 
 feature -- Access
 
 	parent: GB_GENERATED_INFO
 		-- Parent of `Current'
-	
+
 	children: ARRAYED_LIST [GB_GENERATED_INFO]
 		-- All children of `Current'.
-	
+
 	type: STRING
 		-- Type of `Current', i.e. EV_BUTTON
-	
+
  	supported_types: ARRAYED_LIST [STRING]
  		-- All supported GB_EV_ types that `Current'
  		-- requires for re-building.
- 		
+
  	events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
  		-- All events of `Current'.
- 		
+
  	supported_type_elements: ARRAYED_LIST [XM_ELEMENT]
  		-- All xml elements matching `supported_types'.
- 		
+
  	names_by_id: HASH_TABLE [STRING, INTEGER] is
 			-- All names found during prepass, referenced by id.
 		once
 			create Result.make (40)
 		end
-		
+
 	generated_info_by_id: HASH_TABLE [GB_GENERATED_INFO, INTEGER] is
 			--  All generated infos referenced by id.
 		once
@@ -89,30 +85,30 @@ feature -- Access
 		once
 			Result := ""
 		end
-		
+
 	pixmaps_set: STRING is
 			-- Have one or more pixmaps been set
 			-- in the system?
 		once
 			Result := ""
 		end
-		
+
 	generate_as_client: BOOLEAN
 		-- Should `Current' be generated using EiffelVision as a client?
-		
+
 	is_root_object: BOOLEAN
 		-- Is object root of a generated window?
-		
+
 	associated_root_object_id: INTEGER
 		-- If the object represented by `Current' is an instance of a top level
 		-- object, this is the `id' of the actual object.
-	
+
 	id: INTEGER
 		-- Id of associated with object.
-	
+
 	name: STRING
 		-- Name associated with object.
-		
+
 	actual_name: STRING is
 			-- Actual name to be applied to object represented by `Current'
 			-- in the generated code.
@@ -124,14 +120,14 @@ feature -- Access
 					else
 						Result := client_widget_string.twin
 					end
-				else	
+				else
 					Result := ""
 				end
-			else	
+			else
 				Result := name.twin
 			end
 		end
-		
+
 	actual_name_for_feature_call: STRING is
 			-- Return `actual_name' with a "." appended if not
 			-- empty. Permits a feature call to be appended directly
@@ -142,14 +138,14 @@ feature -- Access
 				Result.append (".")
 			end
 		end
-		
+
 	generated_name: BOOLEAN
 		-- Was `name' generated during generation? Names
 		-- are generated if an object was not named by a user.
-	
+
 	element: XM_ELEMENT
 		-- XML element that was representing object.
-	
+
 	child_names: ARRAYED_LIST [STRING] is
 			-- `Result' is all `name' of `children'.
 		do
@@ -166,7 +162,7 @@ feature -- Access
 			end
 			Result := internal_child_names
 		end
-		
+
 	ev_any_access_name: STRING is
 			-- `Result' is the access name for object represented by `Current'.
 		do
@@ -177,7 +173,7 @@ feature -- Access
 				Result.append ("." + client_widget_string)
 			end
 		end
-		
+
 	all_children_recursive (list: ARRAYED_LIST [GB_GENERATED_INFO]) is
 			-- Add all children of `Current' to `list' recursively.
 		require
@@ -193,25 +189,25 @@ feature -- Status setting
 		do
 			type := a_type
 		end
-		
+
 	set_id (an_id: INTEGER) is
 			-- Assign `an_id' to `id'.
 		do
 			id := an_id
 		end
-		
+
 	set_name (a_name: STRING) is
 			-- Assign `a_name' to `name'.
 		do
 			name := a_name
 		end
-		
+
 	set_as_root_object is
 			-- Assign `True' to `is_root_object'.
 		do
 			is_root_object := True
 		end
-		
+
 	set_associated_root_object_id (an_id: INTEGER) is
 			-- Assign `an_id' to `associated_root_object_id'.
 		do
@@ -229,19 +225,19 @@ feature -- Status setting
 		do
 			element := an_element
 		end
-		
+
 	add_new_supported_type (a_type: STRING) is
 			-- Add `a_type' to `supported_types'.
 		do
 			supported_types.extend (a_type)
 		end
-		
+
 	add_new_type_element (an_element: XM_ELEMENT) is
 			-- Add `an_element' to `supported_type_elements'.
 		do
 			supported_type_elements.extend (an_element)
 		end
-		
+
 	add_new_event (event: GB_ACTION_SEQUENCE_INFO) is
 			-- Add `event' to `events'.
 		do
@@ -253,13 +249,13 @@ feature -- Status setting
 		do
 			fonts_set.append_string ("1")
 		end
-		
+
 	enable_pixmaps_set is
 			-- Make `pixmaps_set' not `is_empty'.
 		do
 			pixmaps_set.append_string ("1")
 		end
-		
+
 	reset_after_generation is
 			-- Restore once attributes that need to be reset
 			-- for each generation.
@@ -267,13 +263,13 @@ feature -- Status setting
 			fonts_set.wipe_out
 			pixmaps_set.wipe_out
 		end
-		
+
 	enable_generate_as_client is
 			-- Ensure `generate_as_client' is `True'.
 		do
 			generate_as_client := True
 		end
-		
+
 	disable_generate_as_client is
 			-- Ensure `generate_as_client' is `False'.
 		do
@@ -304,12 +300,12 @@ feature {GB_GENERATED_INFO} -- Implementation
 			child_added: children.has (child)
 			children_count_increased: children.count = old children.count + 1
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_child_names: ARRAYED_LIST [STRING]
 		-- Internal representation of all child names.
-		
+
 	all_children_recursive_internal (info: GB_GENERATED_INFO; list: ARRAYED_LIST [GB_GENERATED_INFO]) is
 			-- Add all children of `Current' to `list' recursively.
 		require

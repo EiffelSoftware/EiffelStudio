@@ -8,8 +8,14 @@ class
 
 feature -- Access
 
-	Saved_settings_key: STRING is "Software\ISE\Eiffel Codedom Provider\Manager\Settings"
+	Saved_settings_key: STRING is
 			-- Key holding graphical interface settings values
+		once
+			Result :=  "Software\ISE\Eiffel Codedom Provider\Manager\" + Version + "\Settings"
+		end
+
+	Version: STRING is "2.0"
+			-- Version, change when different set of registry keys are needed.
 
 end -- class ECDM_REGISTRY_KEYS
 

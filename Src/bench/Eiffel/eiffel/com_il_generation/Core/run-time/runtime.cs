@@ -558,9 +558,6 @@ feature -- Status report
 		// System.String representation of `o' if it is an Eiffel STRING instance.
 	{
 		String Result = null;
-		Type eiffel_string_type;
-		FieldInfo string_builder_info;
-		StringBuilder builder;
 
 		if (is_eiffel_string (o)) {
 			Result = "\"" + o.ToString () + "\"";

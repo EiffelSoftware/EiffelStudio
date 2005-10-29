@@ -1,0 +1,31 @@
+<?xml version='1.0'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
+	<Module Id='SamplesModule' Guid='D735FAD4-FC48-4f07-AF53-1F121284F039' Language='1033' Version='2.0'>
+		<Package Id='9FCD4C77-8978-4a88-A6DD-59CFD230EDFD' Description='Eiffel for ASP.NET Samples Merge Module' Comments='Samples files.' Manufacturer='Eiffel Software' InstallerVersion='200' Compressed='yes' />
+
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+			<Directory Id='MergeRedirectFolder'>
+				<Component Id='SamplesFiles' Guid='02C848A4-FCEA-40d2-B5B5-15BA59F07063'>
+					<File Id='DataBindAspx' Name='databind.asp' LongName='data_bind.aspx'/>
+					<File Id='DefaultAspx' Name='default.asp' LongName='default.aspx'/>
+					<File Id='DefaultCss' Name='default.css' LongName='default.css'/>
+					<File Id='SamplesHtm' Name='samples.htm' LongName='samples.htm'/>
+					<File Id='SummaryAspx' Name='summary.asp' LongName='summary.aspx'/>
+					<File Id='ValidationAspx' Name='valid.asp' LongName='validation.aspx'/>
+				</Component>
+
+				<Component Id='WebVirtualDirComponent' Guid='898BC72C-6C55-492a-B7C1-B7BAB793A096'>
+					<CreateFolder />
+					<RemoveFolder Id='MergeRedirectFolder' On='uninstall'/>
+					<WebVirtualDir Id='EiffelSampleWebVirtualDir' Alias='EiffelForAspNet' Directory='MergeRedirectFolder' WebSite='DefaultWebSite'>
+					  <WebApplication Id='WebApplication' Name='Eiffel for ASP.NET 2.0 Samples' />
+					</WebVirtualDir>
+				</Component>
+			</Directory>
+		</Directory>
+
+		<WebSite Id='DefaultWebSite' Description='Default Web Site'>
+			<WebAddress Id='AllUnassigned' Port='80' />
+		</WebSite>
+	</Module>
+</Wix>

@@ -1,0 +1,89 @@
+<?xml version='1.0'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
+	<Module Id='CodedomModule' Guid='A3418211-1F67-43a8-8739-BD2BD2E16FD4' Language='1033' Version='2.0'>
+		<Package Id='34A46346-0CEB-46b9-ACE2-26E149EA1751' Description='Eiffel Codedom Provider Merge Module' Comments='Codedom files.' Manufacturer='Eiffel Software' InstallerVersion='200' Compressed='yes' />
+
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+			<Directory Id='MergeRedirectFolder'>
+				<Directory Id='BinDir' Name='bin'>
+					<Directory Id='IconsDir' Name='icons'>
+						<Component Id='IconsDirFiles' Guid='96DB79CA-FEC5-4f60-99E2-6C83F2F2CFEA'>
+							<File Id='application_png' Name='app.png' LongName='application.png'/>
+							<File Id='configuration_png' Name='conf.png' LongName='configuration.png'/>
+							<File Id='configuration_properties_png' Name='conf_p.png' LongName='configuration_properties.png'/>
+							<File Id='delete_png' Name='delete.png'/>
+							<File Id='eiffel_software_png' Name='eif.png' LongName='eiffel_software.png'/>
+							<File Id='help_png' Name='help.png'/>
+							<File Id='info_png' Name='info.png'/>
+							<File Id='new_png' Name='new.png'/>
+							<File Id='new_wizard_png' Name='neww.png' LongName='new_wizard.png'/>
+							<File Id='revert_png' Name='revert.png'/>
+							<File Id='save_png' Name='save.png'/>
+						</Component>
+					</Directory>
+					<Component Id='Ecdpman' Guid='EB610709-975B-4ac8-8F23-4FAD4416F306'>
+						<File Id='ecdpman_exe' Name='ecdpman.exe'/>
+						<Registry Id='Registry4' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\2.0\Configurations' />
+						<Registry Id='Registry6' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\2.0\Configurations' Type='string' Value='[INSTALLDIR]CodeDom\configs\default.ecd' />
+					</Component>
+					<Component Id='EiffelSoftware_CodeDom_Base_gac' Guid='4B71B57C-C09B-4e9b-914B-084460E727B3'>
+						<File Id='EiffelSoftware_CodeDom_Base_dll_gac' Name='Basegac.dll' LongName='EiffelSoftware.CodeDom.Base.dll' Assembly='.net' KeyPath='yes'/>
+					</Component>
+					<Component Id='EiffelSoftware_CodeDom_Base' Guid='33D1A299-2E73-4972-9613-95E6C49A38DA'>
+						<File Id='EiffelSoftware_CodeDom_Base_dll' Name='Base.dll' LongName='EiffelSoftware.CodeDom.Base.dll'/>
+					</Component>
+					<Component Id='EiffelSoftware_CodeDom_CacheBrowser_gac' Guid='348C459D-A861-4261-9AF1-5E1A089E50B4'>
+						<File Id='EiffelSoftware_CodeDom_CacheBrowser_dll_gac' Name='Browserg.dll' LongName='EiffelSoftware.CodeDom.CacheBrowser.dll' Assembly='.net' KeyPath='yes'/>
+					</Component>
+					<Component Id='EiffelSoftware_CodeDom_CacheBrowser' Guid='178D2523-169E-4277-9052-09C8760011D1'>
+						<File Id='EiffelSoftware_CodeDom_CacheBrowser_dll' Name='Browser.dll' LongName='EiffelSoftware.CodeDom.CacheBrowser.dll' />
+					</Component>
+					<Component Id='EiffelSoftware_CodeDom_gac' Guid='1C6D208E-62FB-4256-B4FE-626D0E6B2EE9'>
+						<File Id='EiffelSoftware_CodeDom_dll_gac' Name='Codedomg.dll' LongName='EiffelSoftware.CodeDom.dll' Assembly='.net' KeyPath='yes'/>
+					</Component>
+					<Component Id='EiffelSoftware_CodeDom' Guid='C93D25B9-9E68-4372-A6B1-1AF61DB8F25A'>
+						<File Id='EiffelSoftware_CodeDom_dll' Name='Codedom.dll' LongName='EiffelSoftware.CodeDom.dll' />
+						<Registry Id='Registry5' Root='HKLM' Key='SOFTWARE\ISE\Eiffel CodeDom Provider\2.0\Setup' Name='InstallDir' Type='string' Value='[INSTALLDIR]' />
+					</Component>
+					<Component Id='EiffelSoftware_CodeDom_Splitter' Guid='F2435D8F-9504-4a57-B80B-E65FD56A14FC'>
+						<File Id='EiffelSoftware_CodeDom_Splitter_dll' Name='Splitter.dll' LongName='EiffelSoftware.CodeDom.Splitter.dll'/>
+					</Component>
+					<Component Id='EiffelSoftware_CodeDom_Vision2' Guid='F5247055-25A0-4a89-8A5D-9E8F99C213BE'>
+						<File Id='EiffelSoftware_CodeDom_Vision2_dll' Name='Vision2.dll' LongName='EiffelSoftware.CodeDom.Vision2.dll'/>
+					</Component>
+					<Component Id='EiffelSoftware_Runtime_gac' Guid='2FC982F7-A125-4c65-BBD0-AD521E747A9C'>
+						<File Id='EiffelSoftware_Runtime_dll_gac' Name='Runtimeg.dll' LongName='EiffelSoftware.Runtime.dll' Assembly='.net' KeyPath='yes'/>
+					</Component>
+					<Component Id='EiffelSoftware_Runtime' Guid='E671CB6A-BCBA-4595-B9F0-481B3B1A91A3'>
+						<File Id='EiffelSoftware_Runtime_dll' Name='Runtime.dll' LongName='EiffelSoftware.Runtime.dll'/>
+					</Component>
+					<Component Id='Esplit' Guid='C749D622-AEE1-48d2-AAEF-D4FD803515D1'>
+						<File Id='esplit_exe' Name='esplit.exe'/>
+					</Component>
+					<Component Id='Esplitter' Guid='8550F83E-761C-4a42-9B6A-F23188CA7A91'>
+						<File Id='esplitter_exe' Name='espliter.exe' LongName='esplitter.exe'/>
+					</Component>
+					<Component Id='libEiffelSoftware_CodeDom_Base' Guid='88BEB354-4ADF-41e3-8F5E-B95AB10C2367'>
+						<File Id='libEiffelSoftware_CodeDom_Base_dll' Name='libBase.dll' LongName='libEiffelSoftware.CodeDom.Base.dll'/>
+					</Component>
+					<Component Id='Nmap' Guid='032DA0AE-DE06-4e97-9179-C4D0F9057748'>
+						<File Id='nmap_exe' Name='nmap.exe'/>
+					</Component>
+				</Directory>
+				<Directory Id='ConfigsDir' Name='configs'>
+					<Component Id='Default' Guid='3753E9FC-85FE-40cd-8E50-967DDD681C62'>
+						<File Id='Default_ecd' Name='Default.ecd'/>
+					</Component>
+				</Directory>
+			</Directory>
+			<Directory Id='SystemFolder' Name='System32'>
+				<Component Id='libEiffelSoftware.CodeDom.Base.dll' Guid='F2626166-66BE-4bb7-9D38-72FC73D2D32A'>
+					<File Id='libeiffelsoftware.codedom.ba' Name='LIBEIF1.DLL' LongName='libEiffelSoftware.CodeDom.Base.dll' src='..\delivery\codedom\bin\libEiffelSoftware.CodeDom.Base.dll' />
+				</Component>
+				<Component Id='libEiffelSoftware.CodeDom.Vision2.dll' Guid='C8B9C12D-22E2-40ac-B582-5AB9B4BA06FB'>
+					<File Id='libeiffelsoftware.codedom.vi' Name='LIBEIF2.DLL' LongName='libEiffelSoftware.CodeDom.Vision2.dll' src='..\delivery\codedom\bin\libEiffelSoftware.CodeDom.Vision2.dll' />
+				</Component>
+			</Directory>
+		</Directory>
+	</Module>
+</Wix>

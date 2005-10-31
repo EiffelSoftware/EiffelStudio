@@ -95,6 +95,7 @@ feature -- Basic operations
 				error_dialog: EV_ERROR_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
 				discardable_error_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
+				id_compressor: GB_ID_COMPRESSOR
 			do
 				create project_settings.make_with_components (components)
 				create file_handler.make_with_components (components)
@@ -128,6 +129,7 @@ feature -- Basic operations
 								components.xml_handler.load
 								components.commands.update
 									-- Compress all used ids.
+								create id_compressor.make_with_components (components)
 								id_compressor.compress_all_id
 							end
 							update_client_information
@@ -160,6 +162,7 @@ feature -- Basic operations
 				error_dialog: EV_ERROR_DIALOG
 				discardable_error_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
+				id_compressor: GB_ID_COMPRESSOR
 			do
 					-- Reset this value.
 				location_update_cancelled := False
@@ -222,6 +225,7 @@ feature -- Basic operations
 										add_project_to_recent_projects
 										components.commands.update
 											-- Compress all used ids.
+										create id_compressor.make_with_components (components)
 										id_compressor.compress_all_id
 										update_client_information
 										components.events.open_project_finish_actions.call (Void)
@@ -294,13 +298,6 @@ feature {NONE} -- Implementation
 			if project_settings.loaded_project_had_client_information then
 				components.tools.widget_selector.objects.do_all (agent project_settings.set_object_as_client)
 			end
-		end
-
-	id_compressor: GB_ID_COMPRESSOR is
-			-- Once instance of GB_ID_COMPRESSOR
-			-- for compressing saved Ids.
-		once
-			create Result.make_with_components (components)
 		end
 
 end -- class GB_FILE_OPEN_COMMAND

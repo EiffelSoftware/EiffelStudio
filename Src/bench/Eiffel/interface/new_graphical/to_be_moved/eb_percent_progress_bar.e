@@ -35,8 +35,13 @@ feature -- Status setting
 
 	reset is
 			-- Reset values for percentage.
+		local
+			l_range: like range
 		do
-			reset_with_range (0 |..| 100)
+			l_range := range
+			if l_range.lower /= 0 or else l_range.upper /= 100 then
+				l_range.adapt (0 |..| 100)
+			end
 		end
 
 feature -- Element change

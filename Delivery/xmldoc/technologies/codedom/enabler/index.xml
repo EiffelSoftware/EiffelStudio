@@ -9,14 +9,14 @@
 					<url>installation.xml</url>
 					<label>Installation</label> 
 				</link>
-				describes the steps involved in installing EiffelASP.NET.
+				describes the steps involved in installing Eiffel for ASP.NET.
 			</item>
 			<item>
 				<link>
 					<url>getting_started.xml</url>
 					<label>Getting started</label>
 				</link> 
-				lists resources that will help getting started with EiffelASP.NET.
+				lists resources that will help getting started with Eiffel for ASP.NET.
 			</item>
 			<item>
 				<link>

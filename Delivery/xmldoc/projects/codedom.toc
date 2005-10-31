@@ -1,7 +1,7 @@
 <table_of_contents xmlns="" xmlns:ns1="">
-	<topic id="1" title="EiffelASP.NET Documentation" url="E:/xmldoc/technologies/codedom/index.xml"></topic>
+	<topic id="1" title="Eiffel for ASP.NET Documentation" url="E:/xmldoc/technologies/codedom/index.xml"></topic>
 	<heading id="12" title="Writing ASP.NET pages in Eiffel" url="E:/xmldoc/technologies/codedom/enabler/index.xml">
-		<topic id="14" title="EiffelASP.NET Installation" url="E:/xmldoc/technologies/codedom/enabler/installation.xml"></topic>
+		<topic id="14" title="Eiffel for ASP.NET Installation" url="E:/xmldoc/technologies/codedom/enabler/installation.xml"></topic>
 		<topic id="13" title="Getting Started" url="E:/xmldoc/technologies/codedom/enabler/getting_started.xml"></topic>
 		<topic id="16" title="Using Eiffel (to write ASP.NET pages)" url="E:/xmldoc/technologies/codedom/enabler/using_eiffel.xml"></topic>
 		<topic id="15" title="Names Mappings" url="E:/xmldoc/technologies/codedom/enabler/names_mapping.xml"></topic>
@@ -17,7 +17,7 @@
 		<topic id="9" title="Required Permissions" url="E:/xmldoc/technologies/codedom/codedom/required_permissions.xml"></topic>
 		<topic id="7" title="Limitations" url="E:/xmldoc/technologies/codedom/codedom/limitations.xml"></topic>
 	</heading>
-	<heading id="17" title="EiffelASP.NET Tools &amp; Administration" url="E:/xmldoc/technologies/codedom/tools/index.xml">
+	<heading id="17" title="Eiffel for ASP.NET Tools &amp; Administration" url="E:/xmldoc/technologies/codedom/tools/index.xml">
 		<topic id="18" title="eSplitter" url="E:/xmldoc/technologies/codedom/tools/esplitter.xml"></topic>
 		<topic id="19" title="Eiffel CodeDom Provider Manager" url="E:/xmldoc/technologies/codedom/tools/manager.xml"></topic>
 		<topic id="20" title="Name Mapper" url="E:/xmldoc/technologies/codedom/tools/name_mapper.xml"></topic>

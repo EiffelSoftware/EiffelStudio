@@ -62,6 +62,7 @@ feature -- Access
 --			full_information1: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			current_element: XM_ELEMENT
 			all_new_objects: ARRAYED_LIST [GB_OBJECT]
+			id_compressor: GB_ID_COMPRESSOR
 		do
 			current_element := components.xml_handler.xml_element_representing_named_component (name)
 --			id_compressor.shift_all_ids_upwards
@@ -78,6 +79,7 @@ feature -- Access
 				components.object_handler.add_object_to_objects (all_new_objects.item)
 				all_new_objects.forth
 			end
+			create id_compressor.make_with_components (components)
 			id_compressor.compress_all_id
 
 --| FIXME Must convert to the new implementation so that linked radio buttons still work correctly. This
@@ -168,15 +170,6 @@ feature -- Status Setting
 			name := a_name
 		ensure
 			name_set: name = a_name
-		end
-
-feature {NONE} -- Implementation
-
-	id_compressor: GB_ID_COMPRESSOR is
-			-- Once instance of GB_ID_COMPRESSOR
-			-- for compressing saved Ids.
-		once
-			create Result.make_with_components (components)
 		end
 
 end -- class GB_COMPONENT

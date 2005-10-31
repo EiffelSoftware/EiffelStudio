@@ -90,6 +90,14 @@ rt_public EIF_BOOLEAN eequal(register EIF_REFERENCE target, register EIF_REFEREN
 	uint32 s_flags;							/* Source object flags */
 	uint32 t_flags;							/* Target object flags */
 
+	REQUIRE ("source_not_null", source);
+	REQUIRE ("target_not_null", target);
+
+	if (source == target) {
+			/* Minor optimization, if references are equal then it is the same object. */
+		return EIF_TRUE;
+	}
+
 	s_flags = HEADER(source)->ov_flags;
 	t_flags = HEADER(target)->ov_flags;
 

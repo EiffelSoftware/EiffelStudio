@@ -16,7 +16,7 @@
 		<italic>Assemblies</italic> subfolder of the Eiffel CodeDom Provider directory.
 		
 		<note>
-			<bold>Note:</bold> The EiffelASP.NET installation program will grant read and write access 
+			<bold>Note:</bold> The Eiffel for ASP.NET installation program will grant read and write access 
 			to the Eiffel Metadata Cache folder for the <italic>ASPNET</italic> (default ASP.NET worker process account 
 			on Windows XP Professional) and the <italic>IIS_WPG</italic> (default ASP.NET worker process account on
 			Windows Server 2003) accounts.
@@ -36,7 +36,7 @@
 		in the <italic>Precompile</italic> subfolder of the Eiffel CodeDom directory.
 
 		<note>
-			<bold>Note:</bold> The EiffelASP.NET installation program will grant read and write access 
+			<bold>Note:</bold> The Eiffel for ASP.NET installation program will grant read and write access 
 			to the Precompile Cache folder for the <italic>ASPNET</italic> (default ASP.NET worker process account 
 			on Windows XP Professional) and the <italic>IIS_WPG</italic> (default ASP.NET worker process account 
 			on Windows Server 2003) accounts.

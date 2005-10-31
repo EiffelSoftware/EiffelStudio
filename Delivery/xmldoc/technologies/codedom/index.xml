@@ -1,6 +1,6 @@
-<document title="Code Document Object Model (CodeDom)">
+<document title="Eiffel for ASP.NET Documentation">
 	<meta_data></meta_data>
-	<paragraph>CodeDom is a Microsoft .NET technology which allows representing source code programatically so that it may be rendered in different languages. The Eiffel CodeDom Provider is installed through EiffelASP.NET which is available for download for free on the Eiffel Software web site (
+	<paragraph>CodeDom is a Microsoft .NET technology which allows representing source code programatically so that it may be rendered in different languages. The Eiffel CodeDom Provider is installed through Eiffel for ASP.NET which is available for download for free on the Eiffel Software web site (
 		<link>
 			<label>http://www.eiffel.com</label> 
 			<url>http://www.eiffel.com</url> 
@@ -23,8 +23,8 @@
 			<item>Finally,  
 				<link>
 					<url>tools/index.xml</url>
-					<label>EiffelASP.NET Tools and Administration</label>
-				</link> covers the Eiffel CodeDom Provider Manager, the eSplitter and the Name Mapper tools that are included in the EiffelASP.NET delivery.
+					<label>Eiffel for ASP.NET Tools and Administration</label>
+				</link> covers the Eiffel CodeDom Provider Manager, the eSplitter and the Name Mapper tools that are included in the Eiffel for ASP.NET delivery.
 			</item>
 		</list>
 	</paragraph>

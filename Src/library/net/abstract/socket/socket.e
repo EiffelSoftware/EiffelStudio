@@ -990,16 +990,16 @@ feature -- socket options
 feature {NONE} -- Externals
 
 	integer_buffer: MANAGED_POINTER is
-			-- buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
-		once
-			create Result.make (initial_integer_buffer_size)
+			-- Buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
+		do
+			if internal_integer_buffer = Void then
+				create internal_integer_buffer.make (16)	
+			end
+			Result := internal_integer_buffer			
 		end
 		
-	initial_integer_buffer_size: INTEGER is 
-			-- Initial size of `integer_buffer'
-		once
-			Result := 16
-		end
+	internal_integer_buffer: MANAGED_POINTER
+			-- Internal integer buffer
 	
 	c_socket (add_family, a_type, protoc: INTEGER): INTEGER is
 			-- External c routine to create the socket descriptor

@@ -18,20 +18,17 @@ feature -- Initialization
 			a_components_not_void: a_components /= Void
 		do
 			components := a_components
+			create command_list.make (0)
+			create change_actions
 		ensure
 			components_set: components = a_components
 		end
 
 feature -- Access
 
-	command_list: ARRAYED_LIST [GB_COMMAND] is
+	command_list: ARRAYED_LIST [GB_COMMAND]
 			-- All commands currently referenced by
 			-- the history.
-		once
-			create result.make (0)
-		ensure
-			Result /= Void
-		end
 
 	is_empty: BOOLEAN is
 			-- Is the history empty?
@@ -162,21 +159,14 @@ feature -- Basic operation
 		end
 
 
-	current_position: INTEGER is
+	current_position: INTEGER
 			-- Position `Current' refers to.
 			-- i.e. as users step forewards or backwards in
 			-- the history, this points to where they are.
-		do
-			Result := internal_current_position.item
-		end
 
-	change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	change_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- `Result' is an action sequence fired each time
 			-- the position in the history changes.
-		once
-			create Result
-		end
-
 
 feature {GB_HISTORY_DIALOG} -- Status setting
 
@@ -185,18 +175,10 @@ feature {GB_HISTORY_DIALOG} -- Status setting
 		require
 			position_valid: a_value >= -1 and a_value <= command_list.count
 		do
-			internal_current_position.set_item (a_value)
+			current_position := a_value
 			change_actions.call (Void)
 		ensure
-			current_position_set: internal_current_position.item = a_value
-		end
-
-feature {NONE} -- Implementation
-
-	internal_current_position: INTEGER_REF is
-			-- The implementation for `current_position'.
-		once
-			create Result
+			current_position_set: current_position = a_value
 		end
 
 end -- class GLOBAL_HISTORY

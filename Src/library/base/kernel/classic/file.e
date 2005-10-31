@@ -1831,6 +1831,12 @@ feature {FILE} -- Implementation
 		do
 			mode := Write_file
 		end
+		
+	platform_indicator: PLATFORM is
+			-- Platform indicator
+		once
+			create Result
+		end
 
 invariant
 

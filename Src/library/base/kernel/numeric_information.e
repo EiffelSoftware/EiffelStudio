@@ -1,13 +1,14 @@
 indexing
-	description: "Information about integer and natural type in Eiffel"
+	description: "Information about integer, natural and real type in Eiffel"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	INTEGER_NATURAL_INFORMATION
+	NUMERIC_INFORMATION
 
-feature
+feature -- Types
+
 	max_integer_type: INTEGER_64
 			-- INTEGER type of max word length
 			
@@ -32,8 +33,12 @@ feature
 	type_natural, type_natural_32: INTEGER is 13
 	type_natural_64: INTEGER is 14
 			-- Integer/natural type indicators
+			
+	type_real: INTEGER is 100
+	type_double: INTEGER is 101
+			-- Real/Double type indicators
 	
-feature -- Status reporting
+feature -- Type checking
 
 	integer_type_valid (type: INTEGER): BOOLEAN is
 			-- Is `type' a valid integer type?
@@ -53,7 +58,7 @@ feature -- Status reporting
 					  (type = type_natural_64)			
 		end
 		
-	type_valid (type: INTEGER): BOOLEAN is
+	integer_natural_type_valid (type: INTEGER): BOOLEAN is
 			-- Is `type' a valid integer/natural type?
 		do
 			Result := (type = type_no_limitation) or
@@ -66,5 +71,25 @@ feature -- Status reporting
 					  (type = type_natural_32) or
 					  (type = type_natural_64)					  
 		end
+		
+	real_double_type_valid (type: INTEGER): BOOLEAN is
+			-- Is `type' a valid real/double type?
+		do
+			Result := (type = type_no_limitation) or
+					  (type = type_real) or
+					  (type = type_double)	
+		end
 	
+	read_type_valid (type: INTEGER): BOOLEAN is
+			-- Is `type' a valid real type?
+		do
+			Result := (type = type_real)
+		end
+		
+	double_type_valid (type: INTEGER): BOOLEAN is
+			-- Is `type' a valid double type?
+		do
+			Result := (type = type_double)
+		end		
+		
 end

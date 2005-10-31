@@ -15,7 +15,8 @@ inherit
 			index as position
 		redefine
 			is_plain_text, put_string, putstring,
-			read_character, readchar, read_stream, readstream
+			read_character, readchar, read_stream, readstream,
+			put_new_line, new_line
 		end
 
 create
@@ -37,78 +38,108 @@ feature -- Status report
 
 feature -- Output
 
-	put_string, putstring (s: STRING) is
-			-- Write `s' at current position.
+	put_new_line, new_line is
+		local
+			i: INTEGER
+			l_cnt: INTEGER
 		do
-			if s.count /= 0 then
-				writer.write (s.to_cil.replace (eiffel_newline, dotnet_newline))
+			from 
+				i := 1
+				l_cnt := dotnet_newline.count
+			until
+				i > l_cnt
+			loop
+				internal_stream.write_byte (dotnet_newline.item (i).code.to_natural_8)				
+				i := i + 1
 			end
 		end
+
+	put_string (s: STRING) is
+			-- Write `s' at current position.
+		local
+			l_str: STRING
+		do
+			if s.count /= 0 then
+				create l_str.make_from_string (s)
+				l_str.replace_substring_all (eiffel_newline, dotnet_newline)
+				Precursor (l_str)
+			end
+		end
+		
+	putstring (s: STRING) is
+			-- Write `s' at current position.
+		do
+			put_string (s)
+		end		
 
 	put_integer, putint, put_integer_32 (i: INTEGER) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_integer_32 (i)
+			put_string (i.out)
 		end
 		
 	put_integer_8 (i: INTEGER_8) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_string (i.out)
+			put_string (i.out)
 		end
 		
 	put_integer_16 (i: INTEGER_16) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_string (i.out)
+			put_string (i.out)
 		end
 		
 	put_integeR_64 (i: INTEGER_64) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_integer_64 (i)
+			put_string (i.out)
 		end
 		
 	put_natural_8 (i: NATURAL_8) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_string (i.out)
+			put_string (i.out)
 		end
 		
 	put_natural_16 (i: NATURAL_16) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_string (i.out)
+			put_string (i.out)
 		end
 		
 	put_natural, put_natural_32 (i: NATURAL_32) is
 			-- Write ASCII value of `i' at current position.
 		do
-			writer.write_string (i.out)
+			put_string (i.out)
 		end
 		
 	put_natural_64 (i: NATURAL_64) is
 			-- Write ASCII value of `i' at current position. 
 		do
-			writer.write_string (i.out)
+			put_string (i.out)
 		end
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write ASCII value of `b' at current position.
 		do
-			writer.write_boolean (b)
+			if b then
+				put_string (true_string)
+			else
+				put_string (false_string)
+			end
 		end
 
 	put_real, putreal (r: REAL) is
 			-- Write ASCII value of `r' at current position.
 		do
-			writer.write_real (r)
+			put_string (r.out)
 		end
 
 	put_double, putdouble (d: DOUBLE) is
 			-- Write ASCII value `d' at current position.
 		do
-			writer.write_double (d)
+			put_string (d.out)
 		end
 
 feature -- Input
@@ -134,7 +165,7 @@ feature -- Input
 			-- 
 		do
 			read_integer_with_no_type
-			last_integer_64 := ctoi_state_machine.parsed_integer_64
+			last_integer_64 := ctoi_convertor.parsed_integer_64
 		end
 		
 	read_integer, readint, read_integer_32 is
@@ -142,7 +173,7 @@ feature -- Input
 			-- from file. Make result available in `last_integer'.
 		do
 			read_integer_with_no_type
-			last_integer := ctoi_state_machine.parsed_integer_32		
+			last_integer := ctoi_convertor.parsed_integer_32		
 		end
 		
 	read_integer_16 is
@@ -150,7 +181,7 @@ feature -- Input
 			-- from file. Make result available in `last_integer_16'.
 		do
 			read_integer_with_no_type
-			last_integer_16 := ctoi_state_machine.parsed_integer_16
+			last_integer_16 := ctoi_convertor.parsed_integer_16
 		end
 		
 	read_integer_8 is
@@ -158,7 +189,7 @@ feature -- Input
 			-- from file. Make result available in `last_integer_8'. 
 		do
 			read_integer_with_no_type
-			last_integer_8 := ctoi_state_machine.parsed_integer_8
+			last_integer_8 := ctoi_convertor.parsed_integer_8
 		end
 		
 	read_natural_64 is
@@ -166,7 +197,7 @@ feature -- Input
 			-- from file. Make result available in `last_natural_64'.
 		do
 			read_integer_with_no_type
-			last_natural_64 := ctoi_state_machine.parsed_natural_64
+			last_natural_64 := ctoi_convertor.parsed_natural_64
 
 		end
 		
@@ -175,7 +206,7 @@ feature -- Input
 			-- from file. Make result available in `last_natural'.
 		do
 			read_integer_with_no_type
-			last_natural := ctoi_state_machine.parsed_natural_32
+			last_natural := ctoi_convertor.parsed_natural_32
 		end
 		
 	read_natural_16 is
@@ -183,7 +214,7 @@ feature -- Input
 			-- from file. Make result available in `last_natural_16'.
 		do
 			read_integer_with_no_type
-			last_natural_16 := ctoi_state_machine.parsed_natural_16
+			last_natural_16 := ctoi_convertor.parsed_natural_16
 		end
 		
 	read_natural_8 is
@@ -191,7 +222,7 @@ feature -- Input
 			-- from file. Make result available in `last_natural_8'.
 		do
 			read_integer_with_no_type
-			last_natural_8 := ctoi_state_machine.parsed_natural_8
+			last_natural_8 := ctoi_convertor.parsed_natural_8
 		end					
 
 	read_real, readreal is
@@ -205,98 +236,30 @@ feature -- Input
 	read_double, readdouble is
 			-- Read the ASCII representation of a new double
 			-- from file. Make result available in `last_double'.
-			-- Taken from the SmallEiffel distribution:
-			--		Copyright (C) 1994-98 LORIA - UHP - CRIN - INRIA - FRANCE
-			--		Dominique COLNET and Suzanne COLLIN - colnet@loria.fr
-			--		http://SmallEiffel.loria.fr
 		local
-			state: INTEGER
-			sign: BOOLEAN
-			l_buf, blanks: STRING
+			l_is_double: BOOLEAN
 		do
-				-- state = 0 : waiting sign or first digit.
-				-- state = 1 : sign read, waiting first digit.
-				-- state = 2 : in the integral part.
-				-- state = 3 : in the fractional part.
-				-- state = 4 : end state.
-				-- state = 5 : error state.
-
+			ctor_convertor.reset ({NUMERIC_INFORMATION}.type_double)
 			from
-				blanks := internal_separators
-				create l_buf.make (20)
+				l_is_double := True
 			until
-				state >= 4
+				end_of_file or not l_is_double
 			loop
 				read_character
-				inspect
-					state
-				when 0 then
-					if blanks.has (last_character) then
-					elseif last_character.is_digit then
-						l_buf.extend (last_character)
-						state := 2
-					elseif last_character = '-' then
-						sign := True
-						state := 1
-					elseif last_character = '+' then
-						state := 1
-					elseif last_character = '.' then
-						l_buf.extend (last_character)
-						state := 3
-					else
-						state := 5
-					end
-				when 1 then
-					if blanks.has (last_character) then
-					elseif last_character.is_digit then
-						l_buf.extend (last_character)
-						state := 2
-					else
-						state := 5
-					end
-				when 2 then
-					if last_character.is_digit then
-						l_buf.extend (last_character)
-					elseif last_character = '.' then
-						l_buf.extend (last_character)
-						state := 3
-					else
-						state := 4
-					end
-				else
-					if last_character.is_digit then
-						l_buf.extend (last_character)
-					else
-						state := 4
-					end
-				end
-				if end_of_file then
-					inspect
-						state
-					when 2 .. 4 then
-						state := 4
-					else
-						state := 5
-					end
+				if not end_of_file then
+					ctor_convertor.parse_character (last_character)
+					l_is_double := ctor_convertor.is_part_of_double
 				end
 			end
-			if not end_of_file then
-				back
-			end
-
-			if state = 5 then
-				-- FIXME: Generate an exception here
-			end
-
-			if l_buf.count > 0 then
-				last_double := l_buf.to_double
-			else
-				last_double := 0; -- NaN
-			end
-			if sign then
-				last_double := - last_double
-			end
-			internal_end_of_file := reader.peek = -1
+			
+			if not l_is_double then		
+				if last_character = '%N' and platform_indicator.is_windows then
+					back
+				end
+				back								
+			end	
+			last_double := ctor_convertor.parsed_double			
+			internal_end_of_file := peek = -1
 		end
 
 	read_character, readchar is
@@ -305,15 +268,15 @@ feature -- Input
 		local
 			a_code: INTEGER
 		do
-			a_code := reader.read
+			a_code := internal_stream.read_byte
 			if a_code = - 1 then
 				internal_end_of_file := True
 			else
 					-- If we read `%R', i.e. value 13, then let's
 					-- check if next character is `%N'. If it is '%N'
 					-- then we return '%N', else we return '%R'.
-				if a_code = 13 and then reader.peek = 10 then
-					a_code := reader.read
+				if a_code = 13 and then peek = 10 then
+					a_code := internal_stream.read_byte
 				end
 				last_character := a_code.to_character
 			end
@@ -321,24 +284,26 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	ctoi_state_machine: STRING_TO_INTEGER_STATE_MACHINE is
-			-- State machine used to parse string to integer or natural
+	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
+			-- Convertor used to parse string to integer or natural
 		once
 			create Result.make
 			Result.set_leading_separators (internal_leading_separators)
+			Result.set_leading_separators_acceptable (True)
+			Result.set_trailing_separators_acceptable (False)
 		end
-
-	platform_indicator: PLATFORM is
-			-- Platform indicator
+		
+	ctor_convertor: STRING_TO_REAL_CONVERTOR is
+			-- Convertor used to parse string to double or real
 		once
-			create Result
-		end
+			create Result.make
+			Result.set_leading_separators (internal_leading_separators)
+			Result.set_leading_separators_acceptable (True)	
+			Result.set_trailing_separators_acceptable (False)					
+		end		
 					
-	internal_leading_separators: STRING is
+	internal_leading_separators: STRING is " %N%R%T"
 			-- Characters that are considered as leading separators
-		do
-			Result := " %N%R%T"
-		end	
 			
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
@@ -348,8 +313,7 @@ feature {NONE} -- Implementation
 			cnt: INTEGER
 		do
 			l_is_integer := True
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation)
-			ctoi_state_machine.set_trailing_separators_acceptable (False)
+			ctoi_convertor.reset ({NUMERIC_INFORMATION}.type_no_limitation)
 			
 			from			
 				l_is_integer := True
@@ -359,8 +323,8 @@ feature {NONE} -- Implementation
 			loop
 				read_character
 				if not end_of_file then
-					ctoi_state_machine.parse_character (last_character)
-					l_is_integer := ctoi_state_machine.is_part_of_integer
+					ctoi_convertor.parse_character (last_character)
+					l_is_integer := ctoi_convertor.is_part_of_integer
 				end
 			end
 			
@@ -370,7 +334,7 @@ feature {NONE} -- Implementation
 				end
 				back								
 			end	
-			internal_end_of_file := reader.peek = -1			
+			internal_end_of_file := peek = -1			
 		end
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
@@ -379,18 +343,18 @@ feature {NONE} -- Implementation
 			-- Return the number of characters actually read.
 		local
 			i, j: INTEGER
-			str_area: NATIVE_ARRAY [CHARACTER]
+			str_area: NATIVE_ARRAY [NATURAL_8]
 		do
 			create str_area.make (nb)
-			Result := reader.read_character_array (str_area, 0, nb)
-			internal_end_of_file := reader.peek = -1
+			Result := internal_stream.read (str_area, 0, nb)
+			internal_end_of_file := peek = -1
 			from
 				i := 0
 				j := pos
 			until
 				i >= Result
 			loop
-				a_string.put (str_area.item (i), j)
+				a_string.put (str_area.item (i).to_character, j)
 				i := i + 1
 				j := j + 1
 			end
@@ -398,12 +362,6 @@ feature {NONE} -- Implementation
 
 	c_open_modifier: INTEGER is 16384
 			-- File should be opened in plain text mode.
-
-	eiffel_newline: STRING is "%N"
-			-- Representation of Eiffel `%N' character as a SYSTEM_STRING.
-			
-	dotnet_newline: STRING is "%R%N"
-			-- Representation of a .NET newline as a SYSTEM_STRING.
 
 invariant
 

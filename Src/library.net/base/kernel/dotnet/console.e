@@ -37,9 +37,9 @@ class CONSOLE inherit
 				dispose
 		redefine
 			make_open_stdin, make_open_stdout, count, is_empty, exists,
-			close, dispose, end_of_file, back, writer, next_line,
-			read_integer_with_no_type, 
-			ctoi_state_machine
+			close, dispose, end_of_file, next_line,
+			read_integer_with_no_type, read_double, readdouble,
+			read_character, readchar, back
 		end
 
 create {STD_FILES}
@@ -76,7 +76,7 @@ feature -- Cursor movement
 	next_line is
 			-- Move to next input line.
 		do
-			if reader.peek /= -1 then
+			if peek /= -1 then
 				Precursor {PLAIN_TEXT_FILE}
 			end
 		end
@@ -112,21 +112,62 @@ feature -- Removal
 		do
 		end
 		
-feature {NONE} -- Implementation	
-		
-	internal_trailing_separators: STRING is
-			-- Characters that are considered as trailing separators
+feature -- Input
+
+	read_character, readchar is
+			-- Read a new character.
+			-- Make result available in `last_character'.
+		local
+			a_code: INTEGER
 		do
-			Result := " %R%T%U"
+			a_code := internal_stream.read_byte
+			if a_code = - 1 then
+				internal_end_of_file := True
+			else
+					-- FIXME: If %R is not followed by %N,
+					--        we will lost the following character.
+					--        we always assume that %R is followed by %N.
+				if a_code = 13 then
+						a_code := internal_stream.read_byte
+						if a_code = -1 then
+							internal_end_of_file := True
+						end
+						a_code := 10	
+				end
+				last_character := a_code.to_character
+			end
+		end
+
+	read_double, readdouble is
+			-- Read the ASCII representation of a new double
+			-- from file. Make result available in `last_double'.
+		local
+			l_is_double: BOOLEAN
+		do
+			ctor_convertor.reset ({NUMERIC_INFORMATION}.type_double)
+			from
+				l_is_double := True
+			until
+				end_of_file or not l_is_double
+			loop
+				read_character
+				if not end_of_file then
+					ctor_convertor.parse_character (last_character)
+					l_is_double := ctor_convertor.is_part_of_double					
+				end
+			end
+				-- Consume all left characters until we meet a new-line character.
+			from
+				
+			until
+				end_of_file or last_character = '%N' 
+			loop
+				read_character
+			end
+			last_double := ctor_convertor.parsed_double
 		end
 		
-	ctoi_state_machine: STRING_TO_INTEGER_STATE_MACHINE is
-			-- State machine used to parse string to integer or natural
-		once
-			create Result.make
-			Result.set_leading_separators (internal_leading_separators)
-			Result.set_trailing_separators (internal_trailing_separators)
-		end
+feature {NONE} -- Implementation	
 		
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
@@ -135,17 +176,16 @@ feature {NONE} -- Implementation
 			l_is_integer: BOOLEAN
 		do
 			l_is_integer := True
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation )
+			ctoi_convertor.reset ({NUMERIC_INFORMATION}.type_no_limitation )
 			from			
 				l_is_integer := True
-
 			until
-				end_of_file or else not l_is_integer
+				end_of_file or not l_is_integer
 			loop
 				read_character
 				if not end_of_file then
-					ctoi_state_machine.parse_character (last_character)
-					l_is_integer := ctoi_state_machine.is_part_of_integer
+					ctoi_convertor.parse_character (last_character)
+					l_is_integer := ctoi_convertor.is_part_of_integer
 				end
 			end
 				-- Consume all left characters until we meet a new-line character.
@@ -167,20 +207,6 @@ feature {NONE} -- Inapplicable
 	is_empty: BOOLEAN is False;
 			-- Useless for CONSOLE class.
 			--| `empty' is false not to invalidate invariant clauses.
-
-	writer: STREAM_WRITER is
-			-- Stream writer used to write in `Current' (if possible).
-		local
-			l_stream: STREAM_WRITER
-		do
-			if internal_swrite = Void and internal_stream.can_write then
-				create l_stream.make_from_stream_and_encoding (
-					internal_stream, {ENCODING}.default)
-				l_stream.set_auto_flush (True)
-				internal_swrite := l_stream
-			end
-			Result := internal_swrite
-		end
 
 indexing
 

@@ -102,10 +102,10 @@ feature {NONE} -- Basic Operations
 				loop
 					l_type := l_types.item (i)
 					process_type (l_printer, l_type)
-					--sleep (1)
 					l_stop := should_stop
 					i := i + 1
 					l_printer.notify_percentage_complete (((i / l_count) * 100).truncated_to_integer.to_natural_8)
+					sleep (1)
 				end
 				l_printer.notify_end (True)
 			elseif l_started then

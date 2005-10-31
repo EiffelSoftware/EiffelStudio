@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	OVERFLOW_CHECKER
+	INTEGER_OVERFLOW_CHECKER
 	
 inherit
-	INTEGER_NATURAL_INFORMATION
+	NUMERIC_INFORMATION
 
 create
 	make
@@ -54,11 +54,11 @@ feature{NONE} -- Initialization
 
 feature -- Overflow checking
 		
-	will_overflow (part1: like max_natural_type; part2: like max_natural_type; type: INTEGER;	sign: INTEGER): BOOLEAN is
+	will_overflow (part1: like max_natural_type; part2: like max_natural_type; type: INTEGER; sign: INTEGER): BOOLEAN is
 			-- Will `part1' * 10 + `part2' with `sign' overflow 
 			-- if we convert it to an number of `type'?			
 		require
-			type_valid: type_valid (type)
+			type_valid: integer_natural_type_valid (type)
 		local
 			l_index: INTEGER
 		do	

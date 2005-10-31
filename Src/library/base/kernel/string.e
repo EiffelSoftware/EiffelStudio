@@ -637,7 +637,7 @@ feature -- Status report
 	is_number_sequence: BOOLEAN is
 			-- Does `Current' represent a number sequence?
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_no_limitation)			
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_no_limitation)			
 		ensure
 			syntax_and_range:
 				-- Result is true if and only if the following two
@@ -683,121 +683,9 @@ feature -- Status report
 
 	is_double: BOOLEAN is
 			-- Does `Current' represent a DOUBLE?
-		local
-			l_c: CHARACTER;
-			l_area: like area
-			i, nb, l_state: INTEGER;
-			l_needs_digit: BOOLEAN
 		do
-				-- l_state = 0 : waiting sign or double value.
-				-- l_state = 1 : sign read, waiting double value.
-				-- l_state = 2 : in the number.
-				-- l_state = 3 : decimal point read
-				-- l_state = 4 : in fractional part
-				-- l_state = 5 : read 'E' or 'e' for scientific notation
-				-- l_state = 6 : in exponent
-				-- l_state = 7 : after the number.
-				-- l_state = 8 : error state.
-			from
-				nb := count
-				l_area := area
-			until
-				i = nb or l_state = 8
-			loop
-				l_c := l_area.item (i)
-				inspect
-					l_state
-				when 0 then
-						-- Let's find beginning of double.
-					if l_c.is_digit then
-						l_state := 2
-					elseif l_c = '+' then
-						l_state := 1
-					elseif l_c = '-' then
-						l_state := 1
-					elseif l_c = ' ' then
-					elseif l_c = '.' then
-						l_state := 3
-						l_needs_digit := True
-					else
-						l_state := 8
-					end
-				when 1 then
-						-- Let's find first digit after sign.
-					if l_c.is_digit then
-						l_state := 2
-					elseif l_c = '.' then
-						l_state := 3
-						l_needs_digit := True
-					else
-						l_state := 8
-					end
-				when 2 then
-						-- Let's find more digit for mantissa.
-					if l_c.is_digit then
-					elseif l_c = '.' then
-						l_state := 3
-						l_needs_digit := False
-					elseif l_c = ' ' then
-						l_state := 7
-					elseif l_c.as_lower = 'e' then
-						l_state := 5
-					else
-						l_state := 8
-					end
-				when 3 then
-						-- We are done with mantissa, now reads decimal part
-					if l_c = ' ' then
-						l_state := 7
-					elseif l_c.is_digit then
-						l_state := 4
-					elseif l_c.as_lower = 'e' and not l_needs_digit then
-						l_state := 5
-					else
-						l_state := 8
-					end
-				when 4 then
-						-- Continue reading decimal part
-					if l_c.is_digit then
-					elseif l_c = ' ' then
-						l_state := 7
-					elseif l_c.as_lower = 'e' then
-						l_state := 5
-					else
-						l_state := 8
-					end
-				when 5 then
-						-- Found `e' or `E'. Read signs of exponent if any.
-					if l_c = '-' or l_c = '+' then
-						i := i + 1
-						if l_area.valid_index (i) then
-							l_c := l_area.item (i)
-						end
-					end
-					if l_c.is_digit then
-						l_state := 6
-					else
-							-- We get here if after reading the sign we do not
-							-- find a digit, or if there is no sign there was no
-							-- digit.
-						l_state := 8
-					end
-				when 6 then
-						-- Continue reading exponent
-					if l_c.is_digit then
-					elseif l_c = ' ' then
-						l_state := 7
-					else
-						l_state := 8
-					end
-				when 7 then
-					if l_c /= ' ' then
-						l_state := 8
-					end
-				end
-				i := i + 1
-			end
-			Result := l_state > 1 and l_state < 8
+			ctor_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_double)
+			Result := ctor_convertor.is_integral_double
 		ensure
 			syntax_and_range:
 				-- 'Result' is True if and only if the following two
@@ -839,50 +727,50 @@ feature -- Status report
 	is_integer_8: BOOLEAN is
 			-- Does `Current' represent an INTEGER_8?
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_8)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_8)		
 		end
 		
 	is_integer_16: BOOLEAN is
 			-- Does `Current' represent an INTEGER_16?
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_16)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_16)		
 		end
 		
 	is_integer, is_integer_32: BOOLEAN is
 			-- Does `Current' represent an INTEGER?
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_32)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_32)		
 		end
 		
 	is_integer_64: BOOLEAN is
 			-- Does `Current' represent an INTEGER_64? 
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_integer_64)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_integer_64)		
 		end
 		
 	is_natural_8: BOOLEAN is
 			-- Does `Current' represent a NATURAL_8?
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_natural_8)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_8)		
 		end
 		
 	is_natural_16: BOOLEAN is
 			-- Does `Current' represent a NATURAL_16?
 
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_natural_16)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_16)		
 		end
 		
 	is_natural, is_natural_32: BOOLEAN is
 			-- Does `Current' represent a NATURAL_32?
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_natural_32)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_32)		
 		end
 		
 	is_natural_64: BOOLEAN is
 			-- Does `Current' represent a NATURAL_64?
 		do
-			Result := is_valid_number ({INTEGER_NATURAL_INFORMATION}.type_natural_64)		
+			Result := is_valid_integer_or_natural ({NUMERIC_INFORMATION}.type_natural_64)		
 		end
 
 feature -- Element change
@@ -2027,8 +1915,8 @@ feature -- Conversion
 		require
 			is_integer_8: is_integer_8
 		do
-			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_integer_8)
-			Result := ctoi_state_machine.parsed_integer_8	
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_8)
+			Result := ctoi_convertor.parsed_integer_8	
 		end
 		
 	to_integer_16: INTEGER_16 is
@@ -2036,8 +1924,8 @@ feature -- Conversion
 		require
 			is_integer_16: is_integer_16
 		do	
-			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_integer_16)			
-			Result := ctoi_state_machine.parsed_integer_16
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_16)			
+			Result := ctoi_convertor.parsed_integer_16
 		end		
 		
 	to_integer, to_integer_32: INTEGER is
@@ -2045,8 +1933,8 @@ feature -- Conversion
 		require		
 			is_integer: is_integer_32
 		do
-			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_integer_32)			
-			Result := ctoi_state_machine.parsed_integer
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_32)			
+			Result := ctoi_convertor.parsed_integer
 		end		
 		
 	to_integer_64: INTEGER_64 is
@@ -2054,8 +1942,8 @@ feature -- Conversion
 		require		
 			is_integer_64: is_integer_64
 		do
-			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_integer_64)			
-			Result := ctoi_state_machine.parsed_integer_64
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_integer_64)			
+			Result := ctoi_convertor.parsed_integer_64
 		end	
 		
 	to_natural_8: NATURAL_8 is		
@@ -2063,8 +1951,8 @@ feature -- Conversion
 		require
 			is_natural_8: is_natural_8
 		do
-			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_natural_8)
-			Result := ctoi_state_machine.parsed_natural_8
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_8)
+			Result := ctoi_convertor.parsed_natural_8
 		end
 		
 	to_natural_16: NATURAL_16 is		
@@ -2072,8 +1960,8 @@ feature -- Conversion
 		require	
 			is_natural_16: is_natural_16
 		do
-			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_natural_16)			
-			Result := ctoi_state_machine.parsed_natural_16	
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_16)			
+			Result := ctoi_convertor.parsed_natural_16	
 		end
 		
 	to_natural, to_natural_32: NATURAL_32 is		
@@ -2081,8 +1969,8 @@ feature -- Conversion
 		require	
 			is_natural: is_natural
 		do
-			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_natural_32)			
-			Result := ctoi_state_machine.parsed_natural_32
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_32)			
+			Result := ctoi_convertor.parsed_natural_32
 		end	
 		
 	to_natural_64: NATURAL_64 is		
@@ -2090,8 +1978,8 @@ feature -- Conversion
 		require		
 			is_natural_64: is_natural_64
 		do
-			ctoi_state_machine.parse_string_with_type (Current, {INTEGER_NATURAL_INFORMATION}.type_natural_64)			
-			Result := ctoi_state_machine.parsed_natural_64
+			ctoi_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_natural_64)			
+			Result := ctoi_convertor.parsed_natural_64
 		end
 
 	to_real: REAL is
@@ -2108,129 +1996,9 @@ feature -- Conversion
 			-- for example, when applied to "123.0", will yield 123.0 (double)
 		require
 			represents_a_double: is_double
-		local
-			l_c: CHARACTER;
-			l_area: like area
-			i, nb, l_state: INTEGER;
-			l_natural_part, l_fractional_part, l_fractional_divider: DOUBLE;
-			l_exponent: INTEGER
-			l_is_negative, l_has_negative_exponent, l_has_fractional_part: BOOLEAN
 		do
-			-- l_state = 0: waiting sign or double value.
-			-- l_state = 1: sign read, waiting double value.
-			-- l_state = 2: in the number.
-			-- l_state = 3: decimal point read
-			-- l_state = 4: in fractional part
-			-- l_state = 5: read 'E' or 'e' for scientific notation
-			-- l_state = 6: in exponent
-			-- l_state = 7: after the number.
-			from
-				nb := count
-				l_area := area
-			until
-				i = nb
-			loop
-				l_c := l_area.item (i)
-				inspect
-					l_state
-				when 0 then
-						-- Let's find beginning of double.
-					if l_c.is_digit then
-						l_natural_part := l_c.code - 48
-						l_state := 2
-					elseif l_c = '+' then
-						l_state := 1
-					elseif l_c = '-' then
-						l_is_negative := True
-						l_state := 1
-					elseif l_c = ' ' then
-					else
-						check l_c = '.' end
-						l_state := 3
-					end
-				when 1 then
-						-- Let's find first digit after sign.
-					if l_c.is_digit then
-						l_natural_part := l_c.code - 48
-						l_state := 2
-					else
-						check l_c = '.' end
-						l_state := 3
-					end
-				when 2 then
-						-- Let's find more digit for mantissa.
-					if l_c.is_digit then
-						l_natural_part := l_natural_part * 10.0 + l_c.code - 48
-					elseif l_c = '.' then
-						l_state := 3
-					elseif l_c = ' ' then
-						l_state := 7
-					else
-						check l_c.as_lower = 'e' end
-						l_state := 5
-					end
-				when 3 then
-						-- We are done with mantissa, now reads decimal part
-					if l_c = ' ' then
-						l_state := 7
-					elseif l_c.as_lower = 'e' then
-						l_state := 5
-					else
-						check l_c.is_digit end
-						l_has_fractional_part := True
-						l_fractional_part := l_c.code - 48
-						l_fractional_divider := 10.0
-						l_state := 4
-					end
-				when 4 then
-						-- Continue reading decimal part
-					if l_c.is_digit then
-						l_fractional_part := l_fractional_part * 10.0 + (l_c.code - 48)
-						l_fractional_divider := l_fractional_divider * 10.0
-					elseif l_c = ' ' then
-						l_state := 7
-					else
-						check l_c.as_lower = 'e' end
-						l_state := 5
-					end
-				when 5 then
-						-- Found `e' or `E'. Read signs of exponent if any.
-					if l_c = '-' then
-						l_has_negative_exponent := True
-						i := i + 1
-						l_c := l_area.item (i)
-					elseif l_c = '+' then
-						i := i + 1
-						l_c := l_area.item (i)
-					end
-					check l_c.is_digit end
-					l_exponent := l_c.code - 48
-					l_state := 6
-				when 6 then
-						-- Continue reading exponent
-					if l_c.is_digit then
-						l_exponent := l_exponent * 10 + l_c.code - 48
-					else
-						check l_c = ' ' end
-						l_state := 7
-					end
-				when 7 then
-					check l_c = ' ' end
-					i := nb - 1 -- Jump out of loop
-				end
-				i := i + 1
-			end
-			if l_has_negative_exponent then
-				l_exponent := -l_exponent
-			end
-			if l_has_fractional_part then
-				l_natural_part := l_natural_part + l_fractional_part / l_fractional_divider
-			end
-			if l_is_negative then
-				Result := -l_natural_part * (10.0 ^ l_exponent)
-			else
-				Result := l_natural_part * (10.0 ^ l_exponent)
-			end
+			ctor_convertor.parse_string_with_type (Current, {NUMERIC_INFORMATION}.type_double)
+			Result := ctor_convertor.parsed_double
 		end
 
 	to_boolean: BOOLEAN is
@@ -2491,13 +2259,12 @@ feature {NONE} -- Transformation
 		
 feature {NONE} -- Implementation
 
-	is_valid_number (type: INTEGER) : BOOLEAN is
+	is_valid_integer_or_natural (type: INTEGER) : BOOLEAN is
 			-- Is `Current' a valid number according to given `type'?
 		do
-			ctoi_state_machine.reset (type)
-			ctoi_state_machine.parse_string_with_type (Current, type)
-			Result := ctoi_state_machine.is_integral_integer and then
-					  (not ctoi_state_machine.overflowed)		
+			ctoi_convertor.reset (type)
+			ctoi_convertor.parse_string_with_type (Current, type)
+			Result := ctoi_convertor.is_integral_integer
 		end
 
 	str_strict_cmp (this, other: like area; nb: INTEGER): INTEGER is
@@ -2551,10 +2318,24 @@ feature {NONE} -- Implementation
 			empty_area_not_void: Result /= Void
 		end
 		
-	ctoi_state_machine: STRING_TO_INTEGER_STATE_MACHINE is
-			-- State machine used to parse string to integer or natural
+	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
+			-- Convertor used to convert string to integer or natural
 		once
 			create Result.make
+			Result.set_leading_separators (" ")
+			Result.set_trailing_separators (" ")			
+			Result.set_leading_separators_acceptable (True)
+			Result.set_trailing_separators_acceptable (True)			
+		end
+		
+	ctor_convertor: STRING_TO_REAL_CONVERTOR is
+			-- Convertor used to convert string to real or double
+		once
+			create Result.make
+			Result.set_leading_separators (" ")
+			Result.set_trailing_separators (" ")			
+			Result.set_leading_separators_acceptable (True)
+			Result.set_trailing_separators_acceptable (True)						
 		end
 
 invariant

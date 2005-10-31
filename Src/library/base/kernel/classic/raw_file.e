@@ -227,15 +227,15 @@ feature {NONE} -- Implementation
 
 	integer_buffer: MANAGED_POINTER is
 			-- Buffer used to read INTEGER_64, INTEGER_16, INTEGER_8
-		once
-			create Result.make (initial_integer_buffer_size)
+		do
+			if internal_integer_buffer = Void then
+				create internal_integer_buffer.make (16)	
+			end
+			Result := internal_integer_buffer			
 		end
 		
-	initial_integer_buffer_size: INTEGER is
-			-- Initial size of `integer_buffer'
-		once
-			Result := 16
-		end
+	internal_integer_buffer: MANAGED_POINTER
+			-- Internal integer buffer
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at

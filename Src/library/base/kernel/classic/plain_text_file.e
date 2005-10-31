@@ -117,7 +117,7 @@ feature -- Input
 			-- 
 		do
 			read_integer_with_no_type
-			last_integer_64 := ctoi_state_machine.parsed_integer_64
+			last_integer_64 := ctoi_convertor.parsed_integer_64
 		end
 		
 	read_integer, readint, read_integer_32 is
@@ -125,7 +125,7 @@ feature -- Input
 			-- from file. Make result available in `last_integer'.
 		do
 			read_integer_with_no_type
-			last_integer := ctoi_state_machine.parsed_integer_32		
+			last_integer := ctoi_convertor.parsed_integer_32		
 		end
 		
 	read_integer_16 is
@@ -133,7 +133,7 @@ feature -- Input
 			-- from file. Make result available in `last_integer_16'.
 		do
 			read_integer_with_no_type
-			last_integer_16 := ctoi_state_machine.parsed_integer_16
+			last_integer_16 := ctoi_convertor.parsed_integer_16
 		end
 		
 	read_integer_8 is
@@ -141,7 +141,7 @@ feature -- Input
 			-- from file. Make result available in `last_integer_8'. 
 		do
 			read_integer_with_no_type
-			last_integer_8 := ctoi_state_machine.parsed_integer_8
+			last_integer_8 := ctoi_convertor.parsed_integer_8
 		end
 		
 	read_natural_64 is
@@ -149,7 +149,7 @@ feature -- Input
 			-- from file. Make result available in `last_natural_64'.
 		do
 			read_integer_with_no_type
-			last_natural_64 := ctoi_state_machine.parsed_natural_64
+			last_natural_64 := ctoi_convertor.parsed_natural_64
 
 		end
 		
@@ -158,7 +158,7 @@ feature -- Input
 			-- from file. Make result available in `last_natural'.
 		do
 			read_integer_with_no_type
-			last_natural := ctoi_state_machine.parsed_natural_32
+			last_natural := ctoi_convertor.parsed_natural_32
 		end
 		
 	read_natural_16 is
@@ -166,7 +166,7 @@ feature -- Input
 			-- from file. Make result available in `last_natural_16'.
 		do
 			read_integer_with_no_type
-			last_natural_16 := ctoi_state_machine.parsed_natural_16
+			last_natural_16 := ctoi_convertor.parsed_natural_16
 		end
 		
 	read_natural_8 is
@@ -174,7 +174,7 @@ feature -- Input
 			-- from file. Make result available in `last_natural_8'.
 		do
 			read_integer_with_no_type
-			last_natural_8 := ctoi_state_machine.parsed_natural_8
+			last_natural_8 := ctoi_convertor.parsed_natural_8
 		end					
 
 	read_real, readreal is
@@ -193,30 +193,17 @@ feature -- Input
 
 feature {NONE} -- Implementation
 
-	internal_state_machine: STRING_TO_INTEGER_STATE_MACHINE
-			-- Internal state machine used to parse string to integer or natural
-
-	ctoi_state_machine: STRING_TO_INTEGER_STATE_MACHINE is
-			-- State machine used to parse string to integer or natural
-		do
-			if internal_state_machine = Void then
-				create internal_state_machine.make
-				internal_state_machine.set_leading_separators (internal_leading_separators)
-			end
-			Result := internal_state_machine
-		end
-
-	platform_indicator: PLATFORM is
-			-- Platform indicator
+	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
+			-- Convertor used to parse string to integer or natural
 		once
-			create Result
+			create Result.make
+			Result.set_leading_separators (internal_leading_separators)
+			Result.set_leading_separators_acceptable (True)
+			Result.set_trailing_separators_acceptable (False)
 		end
 					
-	internal_leading_separators: STRING is
-			-- 
-		do
-			Result := " %N%T"
-		end	
+	internal_leading_separators: STRING is " %N%R%T"
+			-- Characters that are considered as leading separators
 			
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
@@ -226,8 +213,7 @@ feature {NONE} -- Implementation
 			cnt: INTEGER
 		do
 			l_is_integer := True
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation)
-			internal_state_machine.set_trailing_separators_acceptable (False)
+			ctoi_convertor.reset ({NUMERIC_INFORMATION}.type_no_limitation)
 			
 			from			
 				l_is_integer := True
@@ -237,8 +223,8 @@ feature {NONE} -- Implementation
 			loop
 				read_character
 				if not end_of_file then
-					ctoi_state_machine.parse_character (last_character)
-					l_is_integer := ctoi_state_machine.is_part_of_integer
+					ctoi_convertor.parse_character (last_character)
+					l_is_integer := ctoi_convertor.is_part_of_integer
 				end
 			end
 			

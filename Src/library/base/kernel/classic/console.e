@@ -36,7 +36,8 @@ class CONSOLE inherit
 			readreal, readdouble, readchar, readline, readstream,
 			readword, putbool, putreal, putdouble, putstring, putchar,
 			dispose, read_to_string, back,
-			internal_leading_separators, read_integer_with_no_type
+			read_integer_with_no_type,
+			ctoi_convertor
 			
 		end
 
@@ -299,18 +300,15 @@ feature {NONE} -- Inapplicable
 			--| `empty' is false not to invalidate invariant clauses.
 
 feature {NONE} -- Implementation
-
-	internal_leading_separators: STRING is
-			-- 
-		do
-			Result := " %N%T"
-		end	
 		
-	internal_trailing_separators: STRING is
-			-- 
-		do
-			Result := " %T"
-		end
+	ctoi_convertor: STRING_TO_INTEGER_CONVERTOR is
+			-- Convertor used to parse string to integer or natural
+		once
+			create Result.make
+			Result.set_leading_separators (internal_leading_separators)
+			Result.set_leading_separators_acceptable (True)
+			Result.set_trailing_separators_acceptable (False)
+		end		
 		
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
@@ -319,9 +317,7 @@ feature {NONE} -- Implementation
 			l_is_integer: BOOLEAN
 		do
 			l_is_integer := True
-			ctoi_state_machine.reset ({INTEGER_NATURAL_INFORMATION}.type_no_limitation )
-			ctoi_state_machine.set_leading_separators (internal_leading_separators)
-			ctoi_state_machine.set_trailing_separators (internal_trailing_separators)
+			ctoi_convertor.reset ({NUMERIC_INFORMATION}.type_no_limitation )
 			from			
 				l_is_integer := True
 			until
@@ -329,8 +325,8 @@ feature {NONE} -- Implementation
 			loop
 				read_character
 				if not end_of_file then
-					ctoi_state_machine.parse_character (last_character)
-					l_is_integer := ctoi_state_machine.is_part_of_integer
+					ctoi_convertor.parse_character (last_character)
+					l_is_integer := ctoi_convertor.is_part_of_integer
 				end
 			end
 				-- Consume all left characters.

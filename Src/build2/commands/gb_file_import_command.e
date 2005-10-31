@@ -70,6 +70,7 @@ feature -- Basic operations
 				error_dialog: EV_ERROR_DIALOG
 				dialog_constants: EV_DIALOG_CONSTANTS
 				file_name: FILE_NAME
+				id_compressor: GB_ID_COMPRESSOR
 			do
 				create dialog
 				dialog.filters.extend ([project_file_filter, "Files of type (" + project_file_filter + ")"])
@@ -106,6 +107,7 @@ feature -- Basic operations
 									add_project_to_recent_projects
 									components.commands.update
 										-- Compress all used ids.
+									create id_compressor.make_with_components (components)
 									id_compressor.compress_all_id
 								end
 							end
@@ -142,13 +144,6 @@ feature {NONE} -- Implementation
 				create file.make (file_name)
 				Result := file.exists and not file.is_directory
 			end
-		end
-
-	id_compressor: GB_ID_COMPRESSOR is
-			-- Once instance of GB_ID_COMPRESSOR
-			-- for compressing saved Ids.
-		once
-			create Result.make_with_components (components)
 		end
 
 end -- class GB_FILE_OPEN_COMMAND

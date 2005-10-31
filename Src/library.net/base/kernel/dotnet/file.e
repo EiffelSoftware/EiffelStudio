@@ -1099,14 +1099,17 @@ feature -- Element change
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
 			-- current position.
 		local
-			i: INTEGER
+			i, nb: INTEGER
+			l_stream: like internal_stream
 		do
 			from
 				i := start_pos
+				nb := i + nb_bytes
+				l_stream := internal_stream
 			until
-				i = nb_bytes
+				i = nb
 			loop
-				internal_stream.write_byte (p.read_natural_8 (i))
+				l_stream.write_byte (p.read_natural_8 (i))
 				i := i + 1
 			end
 		end
@@ -1464,17 +1467,20 @@ feature -- Input
 			p_large_enough: p.count >= nb_bytes + start_pos
 			is_readable: file_readable
 		local
-			i, l_byte: INTEGER
+			i, nb, l_byte: INTEGER
+			l_stream: like internal_stream
 		do
 			from
 				i := start_pos
+				nb := nb_bytes + i
+				l_stream := internal_stream
 			until
-				i = nb_bytes
+				i = nb
 			loop
-			   	l_byte := internal_stream.read_byte
+			   	l_byte := l_stream.read_byte
 				if l_byte = -1 then
 					internal_end_of_file := True
-					i := nb_bytes - 1 -- Jump out of loop
+					i := nb - 1 -- Jump out of loop
 				else
 					p.put_natural_8 (l_byte.as_natural_8, i)
 				end

@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 	action_timer: EV_TIMEOUT
 			-- Idle action timer.
 			
-	interval: INTEGER is 100
+	interval: INTEGER is 20
 			-- Timer interval.
 			
 	mutex_guard: MUTEX

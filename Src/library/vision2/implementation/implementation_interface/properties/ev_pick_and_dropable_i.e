@@ -259,11 +259,11 @@ feature {EV_ANY_I} -- Implementation
 				application.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
 			end
 			
-				-- Optimization to avoid having to set the same cursor over and over
-				-- (mostly useful on slow Unix X servers).
-			if target /= last_pointed_target then
-				update_pointer_style (target)
-			end
+				-- Cursor needs to be constantly updated so for widgets that handle
+				-- Pick and Drop themselves such as EV_GRID.
+				--| FIXME IEK This could be refactored to only update cursor for widgets that
+				--| need constant updating
+			update_pointer_style (target)
 		end
 
 	update_pointer_style (target: EV_ABSTRACT_PICK_AND_DROPABLE) is

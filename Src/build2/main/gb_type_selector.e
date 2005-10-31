@@ -94,6 +94,12 @@ feature {NONE} -- Initialization
 			-- Fill with supported Widgets.
 		do
 			Precursor {EV_CELL}
+			create tool_bar
+			create view_mode_button
+			view_mode_button.set_pixmap (pixmap_by_name ("icon_icon_view_color"))
+			view_mode_button.set_tooltip ("Icon View Mode")
+			view_mode_button.select_actions.extend (agent switch_view_mode)
+			tool_bar.extend (view_mode_button)
 			if preferences.global_data.type_selector_classic_mode then
 				build_classic_view
 				extend (tree)
@@ -107,15 +113,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	tool_bar: EV_TOOL_BAR is
+	tool_bar: EV_TOOL_BAR
 			-- A tool bar containing all buttons associated with `Current'.
-		once
-			create Result
-			view_mode_button.set_pixmap (pixmap_by_name ("icon_icon_view_color"))
-			view_mode_button.set_tooltip ("Icon View Mode")
-			view_mode_button.select_actions.extend (agent switch_view_mode)
-			Result.extend (view_mode_button)
-		end
 
 	name: STRING is "Type Selector"
 			-- Full name used to represent `Current'.
@@ -334,12 +333,9 @@ feature {NONE} -- Implementation
 			mode_toggled: is_in_classic_view_mode = not old is_in_classic_view_mode
 		end
 
-	view_mode_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+	view_mode_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- A button to switch between view modes,
 			-- either the standard view, or the compressed view.
-		once
-			create Result
-		end
 
 	figure_world: EV_FIGURE_WORLD
 		-- Figure world in which all items are contained when using figures.
@@ -354,7 +350,7 @@ feature {NONE} -- Implementation
 		-- Tree Representation of `Current'.
 
 	spacing: INTEGER is 4
-		-- Spacing used around the figures when not `is_inclassic_view_mode'.
+		-- Spacing used around the figures when not `is_in_classic_view_mode'.
 
 	containers_offset: INTEGER is 1
 		-- Index of first container figure within `figure_world'.

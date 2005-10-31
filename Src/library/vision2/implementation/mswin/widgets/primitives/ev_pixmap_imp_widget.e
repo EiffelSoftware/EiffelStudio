@@ -11,16 +11,16 @@ class
 inherit
 	EV_PIXMAP_IMP_DRAWABLE
 		undefine
-			has_focus, is_sensitive, is_displayed, set_focus, x_position, 
+			has_focus, is_sensitive, is_displayed, set_focus, x_position,
 			y_position, on_parented, on_orphaned, disable_sensitive,
-			enable_sensitive, show, pointed_target, 
+			enable_sensitive, show, pointed_target,
 			set_minimum_width, set_tooltip, screen_x, screen_y, set_size,
-			parent, is_show_requested, minimum_width, draw_rubber_band, 
-			set_pointer_style, erase_rubber_band, disable_transport, 
+			parent, is_show_requested, minimum_width, draw_rubber_band,
+			set_pointer_style, erase_rubber_band, disable_transport,
 			destroy, set_minimum_height, set_minimum_size,
-			disable_capture, pointer_position, start_transport, 
+			disable_capture, pointer_position, start_transport,
 			enable_transport, pointer_style, tooltip, has_capture,
-			end_transport, enable_capture, minimum_height, 
+			end_transport, enable_capture, minimum_height,
 			hide, set_pebble, create_drop_actions, real_pointed_target,
 			set_actual_drop_target_agent, has_parent, parent_is_sensitive,
 			internal_set_pointer_style, widget_imp_at_pointer_position,
@@ -28,11 +28,11 @@ inherit
 			update_buttons
 		redefine
 			interface, initialize,
-			read_from_named_file, 
+			read_from_named_file,
 			clear, stretch, set_size, clear_rectangle, draw_point,
-			draw_text, draw_segment, draw_straight_line, draw_arc, 
-			draw_pixmap, draw_rectangle, draw_ellipse, draw_polyline, 
-			draw_pie_slice, fill_rectangle, fill_ellipse, fill_polygon, 
+			draw_text, draw_segment, draw_straight_line, draw_arc,
+			draw_pixmap, draw_rectangle, draw_ellipse, draw_polyline,
+			draw_pie_slice, fill_rectangle, fill_ellipse, fill_polygon,
 			fill_pie_slice, set_with_default, flush, copy_pixmap, redraw
 		select
 			width,
@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			end
 			private_font := other.private_font
 			private_wel_font := other.private_wel_font
-			internal_initialized_background_brush := 
+			internal_initialized_background_brush :=
 				other.internal_initialized_background_brush
 			internal_background_brush := other.internal_background_brush
 			if internal_background_brush /= Void then
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
  			if titled_window /= void then
  				show
  			end
- 			
+
  				-- update events from `other'.
 			copy_events_from_other (other)
 
@@ -169,7 +169,7 @@ feature -- Loading/Saving
 	read_from_named_file (file_name: STRING) is
 			-- Load the pixmap described in 'file_name'. 
 			--
-			-- Exceptions "Unable to retrieve icon information", 
+			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
 		do
 				-- If we have already loaded, an icon, then
@@ -180,7 +180,7 @@ feature -- Loading/Saving
 				-- png would be corrupted/system crash.
 			if internal_mask_bitmap /= Void then
 				internal_mask_bitmap.decrement_reference
-				internal_mask_bitmap := Void	
+				internal_mask_bitmap := Void
 			end
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (file_name)
 			update_display
@@ -190,7 +190,7 @@ feature -- Loading/Saving
 			-- Initialize `Current' with the default
 			-- pixmap (vision2 logo).
 			--
-			-- Exceptions "Unable to retrieve icon information", 
+			-- Exceptions "Unable to retrieve icon information",
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE}
 			update_display
@@ -199,7 +199,7 @@ feature -- Loading/Saving
 feature -- Status setting
 
 	stretch (new_width, new_height: INTEGER) is
-			-- Stretch `Current' to fit in size 
+			-- Stretch `Current' to fit in size
 			-- `new_width' by `new_height'.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (new_width, new_height)
@@ -287,9 +287,9 @@ feature -- Drawing operations
 			-- Angles are measured in radians.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (
-				x, y, 
-				a_vertical_radius, a_horizontal_radius, 
-				a_start_angle, 
+				x, y,
+				a_vertical_radius, a_horizontal_radius,
+				a_start_angle,
 				an_aperture
 				)
 			update_display
@@ -334,17 +334,17 @@ feature -- Drawing operations
 	) is
 			-- Draw a part of an ellipse centered on (`x', `y') with
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
-			-- Start at `a_start_angle' and stop at `a_start_angle' + 
+			-- Start at `a_start_angle' and stop at `a_start_angle' +
 			-- `an_aperture'.
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (
-				x, 
-				y, 
-				a_vertical_radius, 
-				a_horizontal_radius, 
-				a_start_angle, 
+				x,
+				y,
+				a_vertical_radius,
+				a_horizontal_radius,
+				a_start_angle,
 				an_aperture
 				)
 			update_display
@@ -358,7 +358,7 @@ feature -- Filling operations
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (x, y, a_width, a_height)
 			update_display
-		end 
+		end
 
 	fill_ellipse (x, y, a_vertical_radius, a_horizontal_radius: INTEGER) is
 			-- Draw an ellipse centered on (`x', `y') with
@@ -366,7 +366,7 @@ feature -- Filling operations
 			-- Fill with `background_color'.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (
-				x, y, 
+				x, y,
 				a_vertical_radius, a_horizontal_radius
 				)
 			update_display
@@ -392,9 +392,9 @@ feature -- Filling operations
 			-- Angles are measured in radians.
 		do
 			Precursor {EV_PIXMAP_IMP_DRAWABLE} (
-				x, y, 
-				a_vertical_radius, a_horizontal_radius, 
-				a_start_angle, 
+				x, y,
+				a_vertical_radius, a_horizontal_radius,
+				a_start_angle,
 				an_aperture
 				)
 			update_display
@@ -455,7 +455,7 @@ feature {NONE} -- Implementation
 				-- (To avoid using the DC outside paint msg)
 			display_dc := Void
 		end
-		
+
 	call_expose_actions (invalid_rect: WEL_RECT) is
 			-- Call `expose_actions' with `invalid_rect' defining
 			-- the invalid area and repaint bitmap image.
@@ -476,13 +476,13 @@ feature {NONE} -- Implementation
 					])
 			end
 		end
-		
+
 
 	paint_bitmap (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Paint the bitmap onto the screen (i.e. the display_dc).
 		local
 			bitmap_top, bitmap_left: INTEGER
-				-- Coordinates of the top-left corner of the 
+				-- Coordinates of the top-left corner of the
 				-- bitmap inside the drawn area
 			bitmap_right, bitmap_bottom: INTEGER
 				-- Coordinates of the bottom-right corner of the
@@ -513,13 +513,13 @@ feature {NONE} -- Implementation
 			bitmap_top := (window_height - bitmap_height) // 2
 			bitmap_right := bitmap_left + bitmap_width
 			bitmap_bottom := bitmap_top + bitmap_height
-						
+
 				-- Draw the bitmap (If it is larger than the displayed
 				-- area, it will be clipped by Windows.
 			if has_mask then
-					-- Create the mask and image used for display. 
-					-- They are different than the real image because 
-					-- we need to apply logical operation in order 
+					-- Create the mask and image used for display.
+					-- They are different than the real image because
+					-- we need to apply logical operation in order
 					-- to display the masked bitmap.
 				display_mask_bitmap := get_mask_bitmap
 				create display_mask_dc.make
@@ -531,10 +531,10 @@ feature {NONE} -- Implementation
 				display_bitmap_dc.select_bitmap (display_bitmap)
 				display_bitmap_dc.bit_blt (0, 0, bitmap_width, bitmap_height, display_mask_dc, 0, 0, Srcand)
 
-					-- Erase the background (otherwise we cannot apply 
+					-- Erase the background (otherwise we cannot apply
 					-- the mask).
 				wel_rect.set_rect (bitmap_left, bitmap_top, bitmap_right, bitmap_bottom)
-				display_dc.fill_rect(wel_rect, container_background_brush)
+				theme_drawer.draw_widget_background (Current, display_dc, wel_rect, container_background_brush)
 
 					-- Paint the bitmap using mask.
 				display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, display_mask_dc, 0, 0, Maskpaint)
@@ -548,9 +548,9 @@ feature {NONE} -- Implementation
 			else
 				display_dc.bit_blt (bitmap_left, bitmap_top, bitmap_width, bitmap_height, dc, 0, 0, Srccopy)
 			end
-			
 
-				--|  If the displayed area is larger than the bitmap, 
+
+				--|  If the displayed area is larger than the bitmap,
 				--|  we erase the background that is outside the bitmap
 				--|  (i.e: AREA 1, 2, 3 & 4)
 				--|
@@ -659,7 +659,7 @@ feature {NONE} -- Private Implementation
 
 	parented: BOOLEAN
 			-- Is the pixmap in a container?
-	
+
 	on_parented is
 			-- `Current' has just been added to a container
 			-- This has been redefined, as the Precursor updates
@@ -667,7 +667,7 @@ feature {NONE} -- Private Implementation
 		do
 			parented := True
 		end
-	
+
 	on_orphaned is
 			-- `Current' has just been removed from a container
 			-- This has been redefined, as the Precursor updates
@@ -689,10 +689,10 @@ feature {NONE} -- Private Implementation
    			-- (from WEL_FRAME_WINDOW)
    		once
 			Result :=
-				cs_hredraw + 
-				cs_vredraw + 
-				cs_dblclks + 
-				Cs_owndc + 
+				cs_hredraw +
+				cs_vredraw +
+				cs_dblclks +
+				Cs_owndc +
 				Cs_savebits
  		end
 

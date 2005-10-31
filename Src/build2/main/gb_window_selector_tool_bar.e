@@ -58,6 +58,31 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize `Current'.
 		do
+			create include_directory_button
+			include_directory_button.set_pixmap (pixmap_by_name ("directory_search_small"))
+			include_directory_button.select_actions.extend (agent include_all_directories)
+			include_directory_button.set_tooltip (include_directory_button_tooltip)
+
+			root_window_button := components.commands.set_root_window_command.new_toolbar_item (True, False)
+
+			create show_hide_empty_directories_button
+			show_hide_empty_directories_button.set_pixmap (pixmap_by_name ("icon_show_hide_directory_color"))
+			show_hide_empty_directories_button.select_actions.extend (agent show_hide_all_empty_directories)
+			show_hide_empty_directories_button.set_tooltip (show_hide_empty_directories_tooltip)
+
+			create new_directory_button
+			new_directory_button.select_actions.extend (agent widget_selector.add_new_directory (Void))
+			new_directory_button.set_pixmap (pixmap_by_name ("icon_new_cluster_small_color"))
+			new_directory_button.set_tooltip (new_directory_button_tooltip)
+			new_directory_button.set_pebble (create {GB_NEW_DIRECTORY_PEBBLE})
+
+			create expand_all_button
+			expand_all_button.select_actions.extend (agent expand_tree_recursive (widget_selector.widget))
+			expand_all_button.select_actions.extend (agent (components.status_bar).set_timed_status_text (all_expanded_text))
+			expand_all_button.set_pixmap (pixmap_by_name ("icon_expand_all_small_color"))
+			expand_all_button.set_tooltip (expand_all_button_tooltip)
+			expand_all_button.drop_actions.extend (agent expand_subtree_recursive)
+
 			extend (new_directory_button)
 			extend (expand_all_button)
 			extend (root_window_button)
@@ -71,71 +96,22 @@ feature -- Access
 	widget_selector: GB_WIDGET_SELECTOR
 		-- Widget selector to which `Current' is associated.
 
-	include_directory_button: EV_TOOL_BAR_BUTTON is
+	include_directory_button: EV_TOOL_BAR_BUTTON
 			-- A button which is used to add all directories within the current
 			-- directory structure to the current project.
-		once
-			create Result
-			Result.set_pixmap (pixmap_by_name ("directory_search_small"))
-			Result.select_actions.extend (agent include_all_directories)
-			Result.set_tooltip (include_directory_button_tooltip)
-		ensure
-			result_not_void: result /= Void
-		end
 
-	root_window_button: EV_TOOL_BAR_BUTTON is
+	root_window_button: EV_TOOL_BAR_BUTTON
 			-- A button used to select the root window of the project.
-		once
-			Result := components.commands.set_root_window_command.new_toolbar_item (True, False)
-		ensure
-			result_not_void: result /= Void
-		end
 
-	show_hide_empty_directories_button: EV_TOOL_BAR_TOGGLE_BUTTON is
+	show_hide_empty_directories_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- A button used to show/hide all empty directories within `Current'.
-		once
-			create Result
 
-			Result.set_pixmap (pixmap_by_name ("icon_show_hide_directory_color"))
-			Result.select_actions.extend (agent show_hide_all_empty_directories)
-			Result.set_tooltip (show_hide_empty_directories_tooltip)
-		ensure
-			result_not_void: result /= Void
-		end
-
-	new_directory_button: EV_TOOL_BAR_BUTTON is
+	new_directory_button: EV_TOOL_BAR_BUTTON
 			-- `Result' is a tool bar button that
 			-- calls `add_new_directory'.
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			create Result
-			Result.select_actions.extend (agent widget_selector.add_new_directory (Void))
-				-- Assign the appropriate pixmap.
-			create pixmaps
-			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_new_cluster_small_color"))
-			Result.set_tooltip (new_directory_button_tooltip)
-			Result.set_pebble (create {GB_NEW_DIRECTORY_PEBBLE})
-		ensure
-			result_not_void: Result /= Void
-		end
 
-	expand_all_button: EV_TOOL_BAR_BUTTON is
+	expand_all_button: EV_TOOL_BAR_BUTTON
 			-- `Result' is a tool bar button that expands contents of `Current'
-		local
-			pixmaps: GB_SHARED_PIXMAPS
-		do
-			create Result
-			Result.select_actions.extend (agent expand_tree_recursive (widget_selector.widget))
-			Result.select_actions.extend (agent (components.status_bar).set_timed_status_text (all_expanded_text))
-				-- Assign the appropriate pixmap.
-			create pixmaps
-			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
-			Result.set_tooltip (expand_all_button_tooltip)
-			Result.drop_actions.extend (agent expand_subtree_recursive)
-		ensure
-			result_not_void: Result /= Void
-		end
 
 feature {GB_SET_ROOT_WINDOW_COMMAND, GB_WIDGET_SELECTOR} -- Status Setting
 

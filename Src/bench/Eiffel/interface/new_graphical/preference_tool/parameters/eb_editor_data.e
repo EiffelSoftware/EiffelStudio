@@ -23,7 +23,7 @@ inherit
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
-		redefine		
+		redefine
 			default_create
 		end
 
@@ -36,10 +36,10 @@ feature {EB_PREFERENCES} -- Initialization
 			-- Create
 		do
 			Precursor {EDITOR_DATA} (a_preferences)
-		end	
-		
+		end
+
 feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
-		
+
 	breakpoint_background_color: EV_COLOR is
 			-- Background color used to display breakpoints		
 		do
@@ -50,97 +50,97 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 		do
 			Result := assertion_tag_text_color_preference.value
 		end
-		
+
 	assertion_tag_background_color: EV_COLOR is
 		do
 			Result := assertion_tag_background_color_preference.value
 		end
-		
+
 	indexing_tag_text_color: EV_COLOR is
 		do
 			Result := indexing_tag_text_color_preference.value
-		end		
-		
+		end
+
 	indexing_tag_background_color: EV_COLOR is
 		do
 			Result := indexing_tag_background_color_preference.value
 		end
-		
+
 	reserved_text_color: EV_COLOR is
 		do
 			Result := reserved_text_color_preference.value
 		end
-		
+
 	reserved_background_color: EV_COLOR is
 		do
 			Result := reserved_background_color_preference.value
 		end
-		
+
 	generic_text_color: EV_COLOR is
 		do
 			Result := generic_text_color_preference.value
 		end
-		
+
 	generic_background_color: EV_COLOR is
 		do
 			Result := generic_background_color_preference.value
 		end
-		
+
 	local_text_color: EV_COLOR is
 		do
 			Result := local_text_color_preference.value
 		end
-		
+
 	local_background_color: EV_COLOR is
 		do
 			Result := local_background_color_preference.value
 		end
-		
+
 	class_text_color: EV_COLOR is
 		do
 			Result := class_text_color_preference.value
 		end
-	
+
 	class_background_color: EV_COLOR is
 		do
 			Result := class_background_color_preference.value
 		end
-		
+
 	feature_text_color: EV_COLOR is
 		do
 			Result := feature_text_color_preference.value
-		end 
-	
+		end
+
 	feature_background_color: EV_COLOR is
 		do
 			Result := feature_background_color_preference.value
 		end
-		
+
 	cluster_text_color: EV_COLOR is
 		do
 			Result := cluster_text_color_preference.value
-		end 
-	
+		end
+
 	cluster_background_color: EV_COLOR is
 		do
 			Result := cluster_background_color_preference.value
 		end
-		
+
 	error_text_color: EV_COLOR is
 		do
 			Result := error_text_color_preference.value
-		end 
-	
+		end
+
 	error_background_color: EV_COLOR is
 		do
 			Result := error_background_color_preference.value
 		end
-		
+
 	object_text_color: EV_COLOR is
 		do
 			Result := object_text_color_preference.value
 		end
-	
+
 	object_background_color: EV_COLOR is
 		do
 			Result := object_background_color_preference.value
@@ -150,7 +150,7 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			-- Is first letter of once or constant in upper case?
 		do
 			Result := once_and_constant_in_upper_preference.value
-		end		
+		end
 
 	underscore_is_separator: BOOLEAN is
 			-- Should '_' be considered a word separator (used for word by word
@@ -182,13 +182,13 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 		do
 			Result := auto_auto_complete_preference.value
 		end
-		
+
 	auto_complete_words: BOOLEAN is
 			-- Should completion automatically complete words when a single best match is available?
 		do
 			Result := auto_complete_words_preference.value
 		end
-		
+
 	auto_remove_trailing_blank_when_saving: BOOLEAN is
 			-- Should trailing blanks be auto-removed when saving?
 		do
@@ -201,13 +201,13 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 		do
 			Result := filter_completion_list_preference.value
 		end
-			
+
 	show_completion_signature: BOOLEAN is
 			-- Should feature signature be shown in completion list?
 		do
 			Result := show_completion_signature_preference.value
 		end
-	
+
 	show_completion_type: BOOLEAN is
 			-- Should feature type be shown in completion list?
 		do
@@ -224,26 +224,26 @@ feature {EB_SHARED_PREFERENCES, EDITOR_TOKEN} -- Value
 			-- strings defined by the user.
 		do
 			Result := customized_string_1_preference.value
-		end			
-	
+		end
+
 	customized_string_2: STRING is
 			-- strings defined by the user.
 		do
 			Result := customized_string_2_preference.value
-		end			
-		
+		end
+
 	customized_string_3: STRING is
 			-- strings defined by the user.
 		do
 			Result := customized_string_3_preference.value
-		end			
-	
+		end
+
 	left_side: BOOLEAN
-	
+
 	maximized: BOOLEAN
-	
+
 feature {EB_SHARED_PREFERENCES} -- Preference
-		
+
 	breakpoint_background_color_preference: COLOR_PREFERENCE
 			-- Background color used to display breakpoints		
 
@@ -286,31 +286,31 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	auto_auto_complete_preference: BOOLEAN_PREFERENCE
 			-- Should completion window show automatically after valid '.' calls?
-			
+
 	auto_complete_words_preference: BOOLEAN_PREFERENCE
 			-- Should completion automatically complete words when a single best match is available?
-			
+
 	auto_remove_trailing_blank_when_saving_preference: BOOLEAN_PREFERENCE
 			-- Should trailing blanks be auto-removed when saving?
 
 	filter_completion_list_preference: BOOLEAN_PREFERENCE
 			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
 			-- the list will always contain possible completion options and closest match will be selected during typing.
-			
+
 	show_completion_signature_preference: BOOLEAN_PREFERENCE
 			-- Should feature signature be shown in completion list?
-	
+
 	show_completion_type_preference: BOOLEAN_PREFERENCE
 			-- Should feature type be shown in completion list?
 
 	syntax_complete_enabled_preference: BOOLEAN_PREFERENCE
 			-- should main keywords be completed ?
-			
+
 	customized_string_1_preference: STRING_PREFERENCE
 	customized_string_2_preference: STRING_PREFERENCE
 	customized_string_3_preference: STRING_PREFERENCE
 			-- strings defined by the user.			
-	
+
 feature {NONE} -- Preference Strings
 
 	assertion_tag_text_color_string: STRING is "editor.eiffel.colors.assertion_tag_text_color"
@@ -335,44 +335,44 @@ feature {NONE} -- Preference Strings
 	object_background_color_string: STRING is "editor.eiffel.colors.object_background_color"
 	breakpoint_background_color_string: STRING is "editor.eiffel.colors.breakpoint_background_color"
 
-	once_and_constant_in_upper_string: STRING is "editor.eiffel.once_and_constant_in_upper" 
+	once_and_constant_in_upper_string: STRING is "editor.eiffel.once_and_constant_in_upper"
 			-- Is first letter of once or constant in upper case?
 
-	underscore_is_separator_string: STRING is "editor.eiffel.underscore_is_separator" 
+	underscore_is_separator_string: STRING is "editor.eiffel.underscore_is_separator"
 			-- Should '_' be considered a word separator (used for word by word
 			-- moves and selection)
 
-	autocomplete_brackets_and_parentheses_string: STRING is "editor.eiffel.auto-complete_brackets_and_parentheses" 
+	autocomplete_brackets_and_parentheses_string: STRING is "editor.eiffel.auto-complete_brackets_and_parentheses"
 			-- Should we close the brackets and parentheses automatically?
 
-	autocomplete_quotes_string: STRING is "editor.eiffel.auto-complete_quotes" 
+	autocomplete_quotes_string: STRING is "editor.eiffel.auto-complete_quotes"
 			-- Should we close the quotes automatically?
 
-	show_any_features_string: STRING is "editor.eiffel.show_ANY_features" 
+	show_any_features_string: STRING is "editor.eiffel.show_ANY_features"
 			-- Should autocomplete show features inherited from any ?
 
-	auto_auto_complete_string: STRING is "editor.eiffel.auto_auto-complete" 
+	auto_auto_complete_string: STRING is "editor.eiffel.auto_auto-complete"
 			-- Should completion window show automatically after valid '.' calls?
-			
-	auto_complete_words_string: STRING is "editor.eiffel.auto_complete_words" 
+
+	auto_complete_words_string: STRING is "editor.eiffel.auto_complete_words"
 			-- Should completion automatically complete words when a single best match is available?
-			
+
 	auto_remove_trailing_blank_when_saving_string: STRING is "editor.eiffel.auto_remove_trailing_blank_when_saving"
 			-- Should trailing blanks be auto-removed when saving?
 
-	filter_completion_list_string: STRING is "editor.eiffel.filter_completion_list" 
+	filter_completion_list_string: STRING is "editor.eiffel.filter_completion_list"
 			-- Indicates if completion list matches should be filtered down based on current matches.  If not then
 			-- the list will always contain possible completion options and closest match will be selected during typing.
-			
-	show_completion_signature_string: STRING is "editor.eiffel.show_completion_signature" 
+
+	show_completion_signature_string: STRING is "editor.eiffel.show_completion_signature"
 			-- Should feature signature be shown in completion list?
-	
-	show_completion_type_string: STRING is "editor.eiffel.show_completion_type" 
+
+	show_completion_type_string: STRING is "editor.eiffel.show_completion_type"
 			-- Should feature type be shown in completion list?
 
-	syntax_complete_enabled_string: STRING is "editor.eiffel.syntax_complete_enabled" 
+	syntax_complete_enabled_string: STRING is "editor.eiffel.syntax_complete_enabled"
 			-- should main keywords be completed ?
-			
+
 	customized_string_1_string: STRING is "editor.eiffel.customized_string_1"
 	customized_string_2_string: STRING is "editor.eiffel.customized_string_2"
 	customized_string_3_string: STRING is "editor.eiffel.customized_string_3"
@@ -387,15 +387,15 @@ feature -- Update
 		end
 
 feature {NONE} -- Initialization
-		
+
 	initialize_preferences is
 			-- Initialize preference values.
 		local
-			l_manager: EB_PREFERENCE_MANAGER	
-		do		
+			l_manager: EB_PREFERENCE_MANAGER
+		do
 			Precursor {EDITOR_DATA}
-			create l_manager.make (preferences, "editor.eiffel")	
-				
+			create l_manager.make (preferences, "editor.eiffel")
+
 				-- Colors
 			breakpoint_background_color_preference := l_manager.new_color_resource_value (l_manager, breakpoint_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			assertion_tag_text_color_preference := l_manager.new_color_resource_value (l_manager, assertion_tag_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
@@ -418,14 +418,14 @@ feature {NONE} -- Initialization
 			error_background_color_preference := l_manager.new_color_resource_value (l_manager, error_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			object_text_color_preference := l_manager.new_color_resource_value (l_manager, object_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0))
 			object_background_color_preference := l_manager.new_color_resource_value (l_manager, object_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			
+
 				-- Booleans			
 			underscore_is_separator_preference := l_manager.new_boolean_resource_value (l_manager, underscore_is_separator_string, False)
 			once_and_constant_in_upper_preference := l_manager.new_boolean_resource_value (l_manager, once_and_constant_in_upper_string, False)
 			autocomplete_brackets_and_parentheses_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_brackets_and_parentheses_string, False)
 			autocomplete_quotes_preference := l_manager.new_boolean_resource_value (l_manager, autocomplete_quotes_string, False)
 			show_any_features_preference := l_manager.new_boolean_resource_value (l_manager, show_any_features_string, False)
-			syntax_complete_enabled_preference := l_manager.new_boolean_resource_value (l_manager, syntax_complete_enabled_string, True)			
+			syntax_complete_enabled_preference := l_manager.new_boolean_resource_value (l_manager, syntax_complete_enabled_string, True)
 			auto_auto_complete_preference := l_manager.new_boolean_resource_value (l_manager, auto_auto_complete_string, True)
 			auto_complete_words_preference := l_manager.new_boolean_resource_value (l_manager, auto_complete_words_string, True)
 			auto_remove_trailing_blank_when_saving_preference := l_manager.new_boolean_resource_value (l_manager, auto_remove_trailing_blank_when_saving_string, True)
@@ -438,13 +438,13 @@ feature {NONE} -- Initialization
 			customized_strings.extend (customized_string_2_preference)
 			customized_string_3_preference := l_manager.new_string_resource_value (l_manager, customized_string_3_string, "")
 			customized_strings.extend (customized_string_3_preference)
-			
+
 				-- Auto colors
 			indexing_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
 			assertion_tag_background_color_preference.set_auto_preference (normal_background_color_preference)
 			reserved_background_color_preference.set_auto_preference (normal_background_color_preference)
-			local_background_color_preference.set_auto_preference (normal_background_color_preference)			
-			
+			local_background_color_preference.set_auto_preference (normal_background_color_preference)
+
 			keyword_font_preference.change_actions.extend (agent update)
 			normal_text_color_preference.change_actions.extend (agent update)
 			normal_background_color_preference.change_actions.extend (agent update)
@@ -482,7 +482,7 @@ feature {NONE} -- Initialization
 			error_text_color_preference.change_actions.extend (agent update)
 			error_background_color_preference.change_actions.extend (agent update)
 			object_text_color_preference.change_actions.extend (agent update)
-			object_background_color_preference.change_actions.extend (agent update)			
+			object_background_color_preference.change_actions.extend (agent update)
 			smart_identation_preference.change_actions.extend (agent update)
 			underscore_is_separator_preference.change_actions.extend (agent update)
 			once_and_constant_in_upper_preference.change_actions.extend (agent update)
@@ -500,8 +500,8 @@ feature {NONE} -- Initialization
 			customized_string_1_preference.change_actions.extend (agent update)
 			customized_string_2_preference.change_actions.extend (agent update)
 			customized_string_3_preference.change_actions.extend (agent update)
-			normal_text_color_preference.change_actions.extend (agent update)			
-			
+			normal_text_color_preference.change_actions.extend (agent update)
+
 			initialize_autocomplete_prefs
 			initialize_shortcuts_prefs
 		end
@@ -546,12 +546,12 @@ feature {NONE} -- Initialization
 					l_child_name := id.twin
 
 					id := l_child_name + ".autocomplete_" + keyword_name
-					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)					
+					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
 					id := l_child_name + ".use_default_" + keyword_name
-					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)					
+					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
 
-					complete_keywords.put (l_b_pref.value, i)			
-					
+					complete_keywords.put (l_b_pref.value, i)
+
 					if l_b_pref.value then
 						insert_after_keyword.put (default_insert @ i, i)
 
@@ -640,7 +640,7 @@ feature {NONE} -- Build preferences for autocomplete
 	default_insert: ARRAY [ARRAY [STRING]] is
 			-- default strings to be inserted after keywords
 		once
-			Result := <<	
+			Result := <<
 						-- indexing
 					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$$cursor$">>,
 						-- class
@@ -676,7 +676,7 @@ feature {NONE} -- Build preferences for autocomplete
 					<<" $cursor$", "%N$indent$%%T$cursor$", " $cursor$", "%N$indent$%T$cursor$">>,
 						-- alias
 					<<" %"$cursor$%"", "%N$indent$%%T%"$cursor$%"", " $cursor$", "%N$indent$$cursor$">>,
-	
+
 
 
 						-- if
@@ -758,7 +758,7 @@ feature {NONE} -- Build preferences for autocomplete
 				end
 			end
 		end
-		
+
 feature -- Syntax Completion Customization
 
 	completed_keywords: ARRAYED_LIST [STRING] is
@@ -800,8 +800,8 @@ feature -- Syntax Completion Customization
 			create Result.make_from_array (<<"if", "then", "elseif", "else", "inspect", "when", "from", "variant", "until", "loop", "debug", "check">>)
 			Result.compare_objects
 		end
-	
-	
+
+
 	other_completed_keywords: ARRAYED_LIST [STRING] is
 			-- list of completed keywords
 		once
@@ -835,19 +835,19 @@ feature -- Syntax Completion Customization
 feature -- Keybord shortcuts Customization
 
 	customized_strings: ARRAYED_LIST [STRING_PREFERENCE] is
-			-- 
+			--
 		once
 			create Result.make (3)
-		end		
+		end
 
 	customizable_shortcuts: ARRAY [STRING] is
 			-- list of customizable shortcuts
 		once
-			Result := 
+			Result :=
 					<<
-				"autocomplete", 
-				"class_autocomplete", 
-				"show_search_panel", 
+				"autocomplete",
+				"class_autocomplete",
+				"show_search_panel",
 				"show_search_and_replace_panel",
 				"search_selection",
 				"search_last",
@@ -904,7 +904,7 @@ feature -- Keybord shortcuts Customization
 				Result.prepend ("Ctrl+")
 			end
 		end
-		
+
 invariant
 	consistent_shortcut_arrays:	customizable_shortcuts.count = key_codes_for_actions.count and customizable_shortcuts.count = ctrl_alt_shift_for_actions.count
 	preferences_not_void: preferences /= Void
@@ -958,7 +958,7 @@ invariant
 	filter_completion_list_preference_not_void: filter_completion_list_preference /= Void
 	show_completion_signature_preference_not_void: show_completion_signature_preference /= Void
 	show_completion_type_preference_not_void: show_completion_type_preference /= Void
-	syntax_complete_enabled_preference_not_void: syntax_complete_enabled_preference /= Void	
+	syntax_complete_enabled_preference_not_void: syntax_complete_enabled_preference /= Void
 	customized_string_1_preference_not_void: customized_string_1_preference /= Void
 	customized_string_2_preference_not_void: customized_string_2_preference /= Void
 	customized_string_3_preference_not_void: customized_string_3_preference /= Void

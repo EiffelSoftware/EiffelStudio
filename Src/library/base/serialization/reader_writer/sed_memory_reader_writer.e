@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 	make_with_buffer (a_buffer: like buffer) is
 			-- Initialize current to read or write from `a_medium' using a buffer of size `a_buffer_size'.
-			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used 
+			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used
 			-- when writing.
 		require
 			a_buffer_not_void: a_buffer /= Void
@@ -49,6 +49,7 @@ feature {NONE} -- Buffer update
 		do
 			if n + buffer_position > buffer_size then
 				buffer.resize (buffer.count + buffer.count // 2)
+				buffer_size := buffer.count
 			end
 		end
 

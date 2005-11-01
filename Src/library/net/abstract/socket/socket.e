@@ -708,9 +708,15 @@ feature -- Input
 			socket_exists: exists
 			opened_for_read: is_open_read
 		local
-			return_val: INTEGER
+			l_read: INTEGER
 		do
-			return_val := c_read_stream (descriptor, nb_bytes, p.item + start_pos);
+			from
+			until
+				l_read = nb_bytes
+			loop
+				l_read := l_read + c_read_stream (descriptor, nb_bytes - l_read,
+					p.item + start_pos + l_read);
+			end
 		end
 
 	read_line, readline is

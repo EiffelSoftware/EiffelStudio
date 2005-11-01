@@ -790,10 +790,11 @@ feature -- Generation Structure
 			end
 		end
 
-	end_assembly_generation is
+	end_assembly_generation (a_signing: MD_STRONG_NAME) is
 			-- Finish creation of current assembly.
 		require
-			hashing_present: (create {MD_STRONG_NAME}.make).exists
+			a_signing_not_void: a_signing /= Void
+			a_signing_exists: a_signing.exists
 		local
 			l_types: like class_types
 			l_type: CLASS_TYPE
@@ -828,7 +829,7 @@ feature -- Generation Structure
 							else
 								l_file_token := define_file (main_module,
 									l_module.module_file_name, l_module.module_name,
-									{MD_FILE_FLAGS}.Has_meta_data)
+									{MD_FILE_FLAGS}.Has_meta_data, a_signing)
 								file_token.put (l_file_token, l_module)
 							end
 
@@ -860,7 +861,7 @@ feature -- Generation Structure
 
 			define_assembly_attributes
 
-			main_module.save_to_disk
+			main_module.save_to_disk (a_signing)
 
 			--| End recording session, (then Save IL Information used for eStudio .NET debugger)
 			Il_debug_info_recorder.end_recording_session
@@ -877,7 +878,7 @@ feature -- Generation Structure
 			l_resource_generator.generate
 		end
 
-	define_file (a_module: IL_MODULE; a_file, a_name: STRING; file_flags: INTEGER): INTEGER is
+	define_file (a_module: IL_MODULE; a_file, a_name: STRING; file_flags: INTEGER; a_signing: MD_STRONG_NAME): INTEGER is
 			-- Add `a_file' of name `a_name' in list of files referenced by `a_module'.
 		require
 			a_module_not_void: a_module /= Void
@@ -889,25 +890,16 @@ feature -- Generation Structure
 			file_flags_valid:
 				(file_flags = {MD_FILE_FLAGS}.Has_meta_data) or
 				(file_flags = {MD_FILE_FLAGS}.Has_no_meta_data)
+			a_signing_not_void: a_signing /= Void
+			a_signing_exists: a_signing.exists
 		local
 			l_uni_string: UNI_STRING
-			l_hash: MANAGED_POINTER
 			l_hash_res: MANAGED_POINTER
-			l_alg_id, l_result: INTEGER
-			l_size: INTEGER
 		do
 			create l_uni_string.make (a_file)
-
-			create l_hash.make (1024)
-			l_result := {MD_STRONG_NAME}.get_hash_from_file (
-				l_uni_string.item, $l_alg_id, l_hash.item, l_hash.count, $l_size)
-
-			check
-				l_result_ok: l_result = 0
-			end
+			l_hash_res := a_signing.hash_of_file (l_uni_string)
 
 			l_uni_string.set_string (a_name)
-			create l_hash_res.make_from_pointer (l_hash.item, l_size)
 			Result := a_module.md_emit.define_file (l_uni_string, l_hash_res, file_flags)
 		ensure
 			valid_result: Result & {MD_TOKEN_TYPES}.Md_mask =
@@ -963,8 +955,11 @@ feature -- Generation Structure
 				current_module.ise_interface_type_attr_ctor_token, l_assert_ca)
 		end
 
-	end_module_generation (has_root_class: BOOLEAN) is
+	end_module_generation (has_root_class: BOOLEAN; a_signing: MD_STRONG_NAME) is
 			-- Finish creation of current module.
+		require
+			a_signing_not_void: a_signing /= Void
+			a_signing_exists: a_signing.exists
 		local
 			a_class: CLASS_C
 			root_feat: FEATURE_I
@@ -993,7 +988,7 @@ feature -- Generation Structure
 					end
 				end
 					-- Save module.
-				current_module.save_to_disk
+				current_module.save_to_disk (a_signing)
 			end
 		end
 

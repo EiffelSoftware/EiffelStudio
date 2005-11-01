@@ -9,7 +9,7 @@ class
 
 inherit
 	IL_GENERATOR
-	
+
 	SHARED_WORKBENCH
 
 	SHARED_IL_CODE_GENERATOR
@@ -17,7 +17,7 @@ inherit
 	SHARED_BYTE_CONTEXT
 
 	SHARED_ERROR_HANDLER
-	
+
 	EXCEPTIONS
 		export
 			{NONE} all
@@ -70,6 +70,9 @@ feature {NONE} -- Implementation: Access
 	has_root_class: BOOLEAN
 			-- Does current module has a root class specification?
 
+	signing: MD_STRONG_NAME
+			-- Object used for signing assemblies.
+
 feature -- Generation
 
 	generate is
@@ -83,7 +86,6 @@ feature -- Generation
 			l_last_error_msg: STRING
 			l_key_file_name: STRING
 			l_public_key: MD_PUBLIC_KEY
-			l_signing: MD_STRONG_NAME
 		do
 			if not retried then
 					-- At this point the COM component should be properly instantiated.
@@ -91,7 +93,7 @@ feature -- Generation
 
 					-- Let's check that we can retrieve an error if any, we do not care
 					-- about the value, we just want to make sure that the call does not
-					-- raise any exception, if it does `is_error_available' will be 
+					-- raise any exception, if it does `is_error_available' will be
 					-- False which will cause not to be used in case of an exception
 					-- (See rescue clause below).
 				l_last_error_msg := cil_generator.last_error
@@ -99,38 +101,38 @@ feature -- Generation
 
 					-- Compute name of generated file if any.
 				file_name := System.name + "." + System.msil_generation_type
-				
+
 				if is_finalizing then
 					location := Final_generation_path
 				else
 					location := Workbench_generation_path
 				end
-				
+
 					-- Set information about current assembly.
 				create assembly_info.make (System.name)
 				if System.msil_version /= Void and then not System.msil_version.is_empty then
 					assembly_info.set_version (System.msil_version)
 				end
 
-				create l_signing.make
-				if not l_signing.exists then
+				create signing.make_with_version (System.clr_runtime_version)
+				if not signing.exists then
 						-- We cannot continue as incremental recompilation needs access
 						-- to `MD_STRONG_NAME'.
 					Error_handler.insert_error (create {VIAC})
 					Error_handler.checksum
 				end
-				
+
 				check
-					l_signing_exists: l_signing.exists
+					signing_exists: signing.exists
 				end
-				
+
 					-- Sign assembly only if we are allowed to.
 				if {EIFFEL_ENV}.has_signable_generation then
 					l_key_file_name := System.msil_key_file_name
 				end
 
 				if l_key_file_name /= Void then
-					create l_public_key.make_from_file (l_key_file_name)
+					create l_public_key.make_from_file (l_key_file_name, signing)
 					if not l_public_key.is_valid then
 						l_public_key := Void
 							-- Introduce error saying that public key cannot be read.
@@ -160,7 +162,7 @@ feature -- Generation
 				else
 					cil_generator.set_window_application
 				end
-				
+
 				cil_generator.set_verifiability (System.il_verifiable)
 				cil_generator.set_cls_compliant (System.cls_compliant)
 
@@ -200,11 +202,11 @@ feature -- Generation
 
 					-- Generate resources if any
 				if System.dotnet_resources_names /= Void then
-					cil_generator.generate_resources (System.dotnet_resources_names)				
+					cil_generator.generate_resources (System.dotnet_resources_names)
 				end
 					-- Finish code generation.
-				cil_generator.end_assembly_generation
-				
+				cil_generator.end_assembly_generation (signing)
+
 					-- Perform cleanup of underlying external objects
 				cil_generator.cleanup
 			else
@@ -224,7 +226,7 @@ feature -- Generation
 						l_last_error_msg := cil_generator.last_error
 						if l_last_error_msg = Void or else l_last_error_msg.is_empty then
 							Error_handler.insert_error (create {VIGE}.make (Error_handler.exception_trace))
-						else						
+						else
 							Error_handler.insert_error (create {VIGE}.make (l_last_error_msg))
 						end
 					else
@@ -288,7 +290,7 @@ feature -- Generation
 							create l_viop.make (l_precomp.name)
 							error_handler.insert_warning (l_viop)
 						end
-						
+
 						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp))
 						copy_to_local (l_precomp.assembly_helper_driver (l_use_optimized_precomp))
 						if not l_use_optimized_precomp or l_precomp.line_generation then
@@ -297,24 +299,24 @@ feature -- Generation
 
 						Workbench.Precompilation_directories.forth
 					end
-				end	
-				
+				end
+
 					-- Copy configuration file to be able to load up local assembly.
 				if l_has_local then
 						-- Compute name of configuration file: It is `system_name.xxx.config'
 						-- where `xxx' is either `exe' or `dll'.
 					l_file_name := System.name + "." + System.msil_generation_type + ".config"
-					
+
 					l_source_name := (create {EIFFEL_ENV}).Generation_templates_path.twin
 					l_source_name.set_file_name ("assembly_config.xml")
-		
+
 					if is_finalizing then
 						create l_target_name.make_from_string (Final_generation_path)
 					else
 						create l_target_name.make_from_string (workbench_generation_path)
 					end
 					l_target_name.set_file_name (l_file_name)
-		
+
 					create l_source.make_open_read (l_source_name)
 					create l_target.make_open_write (l_target_name)
 					l_source.copy_to (l_target)
@@ -333,13 +335,14 @@ feature -- Generation
 				retry
 			end
 		end
-		
+
 feature {NONE} -- Type description
 
 	generate_all_types (classes: ARRAY [CLASS_C]) is
 			-- Generate all classes in compiled system.
 		require
 			valid_system: System.classes /= Void
+			signing_not_void: signing /= Void
 		do
 			compute_root_class
 
@@ -356,7 +359,7 @@ feature {NONE} -- Type description
 			loop
 				cil_generator.start_module_generation (ordered_classes.key_for_iteration)
 				generate_types (ordered_classes.item_for_iteration)
-				cil_generator.end_module_generation (has_root_class)
+				cil_generator.end_module_generation (has_root_class, signing)
 				ordered_classes.forth
 			end
 			if not is_single_module then
@@ -397,7 +400,7 @@ feature {NONE} -- Type description
 			generate_class_mappings (classes, True)
 			generate_class_mappings (classes, False)
 			generate_class_attributes (classes)
-			
+
 			if is_single_module then
 					-- Generate run-time helper.
 				cil_generator.generate_runtime_helper
@@ -549,7 +552,7 @@ feature {NONE} -- Type description
 			from
 				i := classes.lower
 				nb := classes.upper
-				j := compiled_classes_count				
+				j := compiled_classes_count
 			variant
 				nb - i + 1
 			until
@@ -722,7 +725,7 @@ feature {NONE} -- Type description
 					if not class_c.is_precompiled and then not class_c.is_external then
 						cil_generator.generate_once_data (class_c)
 						class_c.set_assembly_info (assembly_info)
-					end					
+					end
 				end
 				i := i + 1
 			end
@@ -802,7 +805,7 @@ feature {NONE} -- Type description
 					root_feat.written_feature_id, root_feat.has_arguments)
 			end
 		end
-		
+
 feature {NONE} -- Sort
 
 	ordered_classes: HASH_TABLE [ARRAY [CLASS_C], INTEGER]
@@ -851,7 +854,7 @@ feature {NONE} -- Sort
 				end
 				i := i + 1
 			end
-			
+
 			create ordered_classes.make (l_max_packet)
 			from
 				l_classes.start
@@ -860,11 +863,11 @@ feature {NONE} -- Sort
 			loop
 				l_list := l_classes.item_for_iteration
 				l_packet := l_classes.key_for_iteration
-				
+
 				ordered_classes.put (sorted_array_from_list (l_list), l_packet)
 				l_classes.forth
 			end
-			
+
 			force_recompilation
 		ensure
 			ordered_classes_not_void: ordered_classes /= Void
@@ -950,7 +953,7 @@ feature {NONE} -- Sort
 				end
 			end
 		end
-		
+
 	sorted_array_from_list (a_list: ARRAYED_LIST [CLASS_C]): SORTABLE_ARRAY [CLASS_C] is
 			-- Initialize a sorted array of CLASS_C from `a_list'.
 		require
@@ -1022,26 +1025,26 @@ feature {NONE} -- File copying
 			if not l_retried then
 				create_local_assemblies_directory
 				l_path := a_source
-		
+
 				l_pos := l_path.last_index_of (
 					Platform_constants.Directory_separator, l_path.count)
-					
+
 				create l_source.make (l_path)
 				if is_finalizing then
 					create l_target_name.make_from_string (Final_bin_generation_path)
 				else
 					create l_target_name.make_from_string (Workbench_bin_generation_path)
 				end
-		
+
 				if l_pos > 0 then
 					l_target_name.set_file_name (l_path.substring (l_pos + 1,
 						l_path.count))
 				else
 					l_target_name.set_file_name (l_path)
 				end
-			
+
 				create l_target.make (l_target_name)
-				
+
 					-- Only copy the file if it is not already there or if the original
 					-- file is more recent.
 				if not l_target.exists or else l_target.date < l_source.date then
@@ -1058,7 +1061,7 @@ feature {NONE} -- File copying
 				else
 					create l_vicf.make (a_source, "Unknown target")
 				end
-				error_handler.insert_warning (l_vicf)	
+				error_handler.insert_warning (l_vicf)
 			end
 		rescue
 			l_retried := True
@@ -1084,7 +1087,7 @@ feature {NONE} -- Progression
 			Result := (a_class /= Void and then (a_class.is_basic or not a_class.is_external))
 				and then (is_finalizing or else a_class.degree_minus_1_needed)
 		end
-		
+
 invariant
 	system_exists: System /= Void
 

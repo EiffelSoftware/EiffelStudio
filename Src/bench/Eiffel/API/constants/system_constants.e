@@ -98,7 +98,7 @@ feature {NONE}
 	Esize: STRING is "esize"
 
 	Eskelet: STRING is "eskelet"
-	
+
 	Estructure: STRING is "estructure"
 
 	Evisib: STRING is "evisib"
@@ -160,7 +160,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Major_version_number: INTEGER is 5
 	Minor_version_number: INTEGER is 7
-	Build_version_number: STRING is "0313"
+	Build_version_number: STRING is "0331"
 			-- Version number
 
 	Version_number: STRING is
@@ -182,5 +182,5 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 	Version_type_name: STRING is "Enterprise Edition"
 			-- Name of version, e.g. Free edition, Enterprise Edition,...
 			-- Default: "Enterprise Edition"
-		
+
 end -- class SYSTEM_CONSTANTS

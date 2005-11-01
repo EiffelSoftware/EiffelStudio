@@ -8,7 +8,7 @@ class
 
 create
 	make_from_file
-	
+
 feature {NONE} -- Initialization
 
 	make_from_file (a_file_name: STRING) is
@@ -24,12 +24,12 @@ feature {NONE} -- Initialization
 		do
 				-- Read key pair data from `a_file_name'
 			key_pair := read_key_pair_from_file (a_file_name)
-			
+
 			if is_valid then
 					-- Read public key from `l_orig_key' key pair.
 				l_result := {MD_STRONG_NAME}.strong_name_get_public_key (default_pointer,
 					key_pair.item, key_pair.count, $l_ptr, $l_key_size)
-	
+
 					-- Initializes `item' with retrieved data.		
 				create item.make (l_key_size)
 				item.item.memory_copy (l_ptr, l_key_size)
@@ -55,10 +55,10 @@ feature -- Access
 
 	item: MANAGED_POINTER
 			-- Store public key data.
-			
+
 	key_pair: MANAGED_POINTER
 			-- Key pair that generated Current.
-			
+
 	public_key_token: MANAGED_POINTER
 			-- Public key token of Current.
 
@@ -86,7 +86,7 @@ feature -- Access
 			end
 			Result.to_lower
 		end
-		
+
 feature {NONE} -- Implementation
 
 	read_key_pair_from_file (a_file_name: STRING): MANAGED_POINTER is
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 			else
 					-- We could not read key pair.
 				is_valid := False
-				
+
 					--| FIXME: Manu 05/21/2002: we need to generate an error.
 				check
 					not_yet_implemented: False
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 invariant
 	item_not_void: item /= Void
 	key_pair_not_void: key_pair /= Void

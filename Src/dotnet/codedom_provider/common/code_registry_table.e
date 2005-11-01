@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_value_hive, a_key_hive: STRING) is
 			-- Set `value_hive' and `key_hive'.
 			-- These are paths under `HKCU'/`HKLM' where values and keys will be stored.
-			-- E.g. 'Software\ISE\Eiffel CodeDom Provider\2.0\Configurations' and 'Software\ISE\Eiffel CodeDom Provider\2.0\Applications'
+			-- E.g. 'Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' and 'Software\ISE\Eiffel CodeDom Provider\5.6\Applications'
 		require
 			non_void_value_hive: a_value_hive /= Void
 			non_void_key_hive: a_key_hive /= Void

@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
-	<Module Id='CodedomModule' Guid='A3418211-1F67-43a8-8739-BD2BD2E16FD4' Language='1033' Version='2.0'>
+	<Module Id='CodedomModule' Guid='A3418211-1F67-43a8-8739-BD2BD2E16FD4' Language='1033' Version='5.6'>
 		<Package Id='34A46346-0CEB-46b9-ACE2-26E149EA1751' Description='Eiffel Codedom Provider Merge Module' Comments='Codedom files.' Manufacturer='Eiffel Software' InstallerVersion='200' Compressed='yes' />
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
@@ -23,8 +23,8 @@
 					</Directory>
 					<Component Id='Ecdpman' Guid='EB610709-975B-4ac8-8F23-4FAD4416F306'>
 						<File Id='ecdpman_exe' Name='ecdpman.exe'/>
-						<Registry Id='Registry4' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\2.0\Configurations' />
-						<Registry Id='Registry6' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\2.0\Configurations' Type='string' Value='[INSTALLDIR]CodeDom\configs\default.ecd' />
+						<Registry Id='Registry4' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' />
+						<Registry Id='Registry6' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' Type='string' Value='[INSTALLDIR]CodeDom\configs\default.ecd' />
 					</Component>
 					<Component Id='EiffelSoftware_CodeDom_Base_gac' Guid='4B71B57C-C09B-4e9b-914B-084460E727B3'>
 						<File Id='EiffelSoftware_CodeDom_Base_dll_gac' Name='Basegac.dll' LongName='EiffelSoftware.CodeDom.Base.dll' Assembly='.net' KeyPath='yes'/>
@@ -43,7 +43,7 @@
 					</Component>
 					<Component Id='EiffelSoftware_CodeDom' Guid='C93D25B9-9E68-4372-A6B1-1AF61DB8F25A'>
 						<File Id='EiffelSoftware_CodeDom_dll' Name='Codedom.dll' LongName='EiffelSoftware.CodeDom.dll' />
-						<Registry Id='Registry5' Root='HKLM' Key='SOFTWARE\ISE\Eiffel CodeDom Provider\2.0\Setup' Name='InstallDir' Type='string' Value='[INSTALLDIR]' />
+						<Registry Id='Registry5' Root='HKLM' Key='SOFTWARE\ISE\Eiffel CodeDom Provider\5.6\Setup' Name='InstallDir' Type='string' Value='[INSTALLDIR]' />
 					</Component>
 					<Component Id='EiffelSoftware_CodeDom_Splitter' Guid='F2435D8F-9504-4a57-B80B-E65FD56A14FC'>
 						<File Id='EiffelSoftware_CodeDom_Splitter_dll' Name='Splitter.dll' LongName='EiffelSoftware.CodeDom.Splitter.dll'/>

@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='windows-1252'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
-	<Product Name='Eiffel for ASP.NET 2.0' Id='A38836D0-CB97-4208-91CD-D568B8D02739'
-			Language='1033' Codepage='1252' Version='2.0' Manufacturer='Eiffel Software' UpgradeCode='67C540C0-8055-4abe-B1FF-68EFF446D120'>
+	<Product Name='Eiffel for ASP.NET 5.6' Id='A38836D0-CB97-4208-91CD-D568B8D02739'
+			Language='1033' Codepage='1252' Version='5.6' Manufacturer='Eiffel Software' UpgradeCode='67C540C0-8055-4abe-B1FF-68EFF446D120'>
 
-		<Package Id='????????-????-????-????-????????????' Keywords='Installer' Description='Eiffel for ASP.NET 2.0 Installer'
+		<Package Id='????????-????-????-????-????????????' Keywords='Installer' Description='Eiffel for ASP.NET 5.6 Installer'
 			Comments='Eiffel for ASP.NET is a trademark of Eiffel Software' Manufacturer='Eiffel Software'
 			InstallerVersion='200' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
 
@@ -12,13 +12,13 @@
 		<Condition Message='This product can only be installed on Windows 2000 or newer operating system.'>VersionNT >= 500</Condition>
 
 		<Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt='CD-ROM #1' />
-		<Property Id='DiskPrompt' Value='Eiffel for ASP.NET 2.0 Installation [1]' />
+		<Property Id='DiskPrompt' Value='Eiffel for ASP.NET 5.6 Installation [1]' />
 		<Property Id='FRAMEWORKPATH'>empty<RegistrySearch Id='AppReg1' Root='HKLM' Key='SOFTWARE\Microsoft\.NETFramework' Name='InstallRoot' Type='raw' /></Property>
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
 			<Directory Id='ProgramFilesFolder' Name='PFiles'>
 				<Directory Id='ES' Name='ES' LongName='Eiffel Software'>
-					<Directory Id='INSTALLDIR' Name='EfA' LongName='Eiffel for ASP.NET 2.0'>
+					<Directory Id='INSTALLDIR' Name='EfA' LongName='Eiffel for ASP.NET 5.6'>
 						<Component Id='InstallerFiles' Guid='CC1838C5-12CD-460d-BD4B-716EBCFFE08B'>
 							<File Id='InstallerExe' Name='install.exe' LongName='Installer.exe' src='..\files\installer.exe' DiskId='1'/>
 							<File Id='XCACLSvbs' Name='XCACLS.vbs' src='..\files\XCACLS.vbs' DiskId='1'/>
@@ -82,7 +82,7 @@
 			</Directory>
 		</Directory>
 
-		<Feature Id='Complete' Title='Eiffel for ASP.NET 2.0' Description='The complete package.'
+		<Feature Id='Complete' Title='Eiffel for ASP.NET 5.6' Description='The complete package.'
 				TypicalDefault='install' Display='expand' Level='3' ConfigurableDirectory='INSTALLDIR'>
 
 			<Feature Id='MainProgram' Title='Program' TypicalDefault='install' Level='3' Display='hidden'>

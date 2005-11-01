@@ -57,7 +57,7 @@ feature -- Access
 	Compiler_file_name: STRING is "ecdpc.exe"
 			-- Compiler file name
 
-	Version: STRING is "2.0"
+	Version: STRING is "5.6"
 			-- Version number, change when different set of registry keys are needed.
 
 end -- class CODE_REGISTRY_KEYS

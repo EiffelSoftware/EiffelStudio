@@ -35,7 +35,7 @@ feature -- Initialization
 			set_folder (a_config_folder)
 			save
 		end
-	
+
 	load (a_config_file: STRING) is
 			-- Load configuration file `a_config_file'.
 			-- Set `name' and `folder'.
@@ -88,7 +88,7 @@ feature -- Access
 			Result.append (name)
 			Result.append (Configuration_file_extension)
 		end
-		
+
 	last_save_successful: BOOLEAN
 			-- Was last call to `save' successful?
 
@@ -155,6 +155,11 @@ feature -- Basic Operations
 					l_config_file.put_string ("%T%T<metadata_cache>")
 					l_config_file.put_string (metadata_cache)
 					l_config_file.put_string ("</metadata_cache>%N")
+				end
+				if compiler_metadata_cache /= Void then
+					l_config_file.put_string ("%T%T<compiler_metadata_cache>")
+					l_config_file.put_string (compiler_metadata_cache)
+					l_config_file.put_string ("</compiler_metadata_cache>%N")
 				end
 				if precompile_ace_file /= Void then
 					l_config_file.put_string ("%T%T<precompile_ace_file>")
@@ -227,7 +232,7 @@ feature -- Element Settings
 		do
 			config_values.force (a_value, "log_server_name")
 		end
-	
+
 	set_log_name (a_value: STRING) is
 			-- Set `log_name' with `a_value'.
 		require
@@ -254,6 +259,12 @@ feature -- Element Settings
 			config_values.force (a_value, "metadata_cache")
 		end
 
+	set_compiler_metadata_cache (a_value: STRING) is
+			-- Set `compiler_metadata_cache' with `a_value'.
+		do
+			config_values.force (a_value, "compiler_metadata_cache")
+		end
+
 	set_default_root_class (a_value: STRING) is
 			-- set `default_root_class' with `a_value'.
 		require
@@ -272,7 +283,7 @@ feature -- Element Settings
 		ensure
 			added: prefixes.has (a_assembly) and then assembly_prefix (a_assembly).is_equal (a_prefix)
 		end
-	
+
 	remove_prefix (a_assembly: STRING) is
 			-- Remove `a_assembly' from list of prefixed assemblies.
 		require
@@ -282,7 +293,7 @@ feature -- Element Settings
 		ensure
 			removed: not prefixes.has (a_assembly)
 		end
-		
+
 invariant
 	non_void_configuration_folder: folder /= Void
 	valid_configuration_folder: not folder.is_empty and then folder.count > 3 implies (folder.item (folder.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator)

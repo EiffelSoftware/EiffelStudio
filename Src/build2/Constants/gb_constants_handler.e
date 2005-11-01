@@ -11,54 +11,36 @@ class
 
 inherit
 	ANY
-		redefine
-			default_create
-		end
 
 	GB_CONSTANTS
 		export
 			{NONE} all
-		redefine
-			default_create
 		end
 
 	GB_XML_UTILITIES
 		export
 			{NONE} all
-		redefine
-			default_create
 		end
 
 	GB_WIDGET_UTILITIES
 		export
 			{NONE} all
-		redefine
-			default_create
 		end
 
 create
-	default_create
+	make_with_components
 
 feature -- Initialization
 
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	initialize_constants (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
 		do
 			components := a_components
-		ensure
-			components_set: components = a_components
-		end
-
-feature {NONE} -- Initialzation
-
-	default_create is
-			-- Create and initialize `Current'.
-		do
 			create String_constants.make (4)
 			create Integer_constants.make (4)
 			create directory_constants.make (4)
@@ -70,6 +52,8 @@ feature {NONE} -- Initialzation
 			create all_constants.make (4)
 			create deferred_elements.make (4)
 			all_constant_names.compare_objects
+		ensure
+			components_set: components = a_components
 		end
 
 feature -- Access

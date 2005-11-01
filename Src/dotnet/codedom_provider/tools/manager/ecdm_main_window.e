@@ -44,9 +44,9 @@ feature {NONE} -- Initialization
 		ensure
 			manager_set: manager = a_manager
 		end
-		
+
 	user_initialization is
-			-- called by `initialize'. 
+			-- called by `initialize'.
 			-- Any custom user initialization that
 			-- could not be performed in `initialize',
 			-- (due to regeneration of implementation class)
@@ -99,7 +99,7 @@ feature {NONE} -- Initialization
 			create l_item.make_with_text (l_constants.All_logging)
 			l_item.set_data (Full_log)
 			log_level_combo.extend (l_item)
-			configurations_list.set_focus
+			show_actions.extend (agent configurations_list.set_focus)
 			l_configs := manager.all_configurations
 			from
 				l_configs.start
@@ -118,6 +118,7 @@ feature {NONE} -- Initialization
 			prefixes_list.set_column_titles (<<"Prefix", "Assembly File Name">>)
 			initialize_combo (precompile_ace_file_combo_box, Precompile_ace_files)
 			initialize_combo (metadata_cache_combo_box, Metadata_cache_paths)
+			initialize_combo (compiler_metadata_cache_combo_box, Compiler_metadata_cache_paths)
 			initialize_combo (precompile_cache_combo_box, Precompile_cache_paths)
 			show_actions.extend (agent on_column_resize (1))
 			initialize_from_configuration
@@ -128,7 +129,7 @@ feature -- Access
 
 	manager: ECDM_MANAGER
 			-- Associated manager
-	
+
 	initialized: BOOLEAN
 			-- Was interface initialized?
 
@@ -194,7 +195,7 @@ feature {NONE} -- Events
 			save_button_disabled: active_configuration /= Void and then {SYSTEM_FILE}.exists (active_configuration.path) implies not save_button.is_sensitive
 			revert_button_disabled: active_configuration /= Void and then {SYSTEM_FILE}.exists (active_configuration.path) implies not revert_button.is_sensitive
 		end
-		
+
 	on_config_info is
 			-- Called by `select_actions' of `info_button'.
 			-- Show selected configuration properties dialog.
@@ -292,7 +293,7 @@ feature {NONE} -- Events
 				from
 					applications_list.start
 				until
-					applications_list.after	or l_done			
+					applications_list.after	or l_done
 				loop
 					l_done := applications_list.item.text.item (1).is_equal (a_key.out.item (1))
 					if l_done then
@@ -347,7 +348,7 @@ feature {NONE} -- Events
 					log_server_combo_box.set_text (active_configuration.log_server_name) -- Log server name cannot be empty
 				elseif not l_server.is_equal (active_configuration.log_server_name) then
 					active_configuration.set_log_server_name (l_server)
-					set_dirty					
+					set_dirty
 				end
 			end
 		end
@@ -426,7 +427,27 @@ feature {NONE} -- Events
 				end
 			end
 		end
-	
+
+	on_compiler_metadata_cache_change is
+			-- Save new compiler metadata cache path.
+		local
+			l_metadata_cache: STRING
+		do
+			if active_configuration /= Void then
+				l_metadata_cache := compiler_metadata_cache_combo_box.text
+				if not (l_metadata_cache.is_empty or l_metadata_cache.is_equal ("(none)")) then
+					if active_configuration.compiler_metadata_cache = Void or else not l_metadata_cache.is_equal (active_configuration.compiler_metadata_cache) then
+						active_configuration.set_compiler_metadata_cache (l_metadata_cache)
+						set_dirty
+					end
+				elseif active_configuration.compiler_metadata_cache /= Void then
+					active_configuration.set_compiler_metadata_cache (Void)
+					compiler_metadata_cache_combo_box.set_text ("(none)")
+					set_dirty
+				end
+			end
+		end
+
 	on_metadata_cache_browse is
 			-- Called by `select_actions' of `metadata_cache_browse_button'.
 			-- Browse for Eiffel Metadata cache.
@@ -440,6 +461,23 @@ feature {NONE} -- Events
 				l_path := l_dialog.directory
 				if not l_path.is_empty then
 					metadata_cache_combo_box.set_text (l_path)
+				end
+			end
+		end
+
+	on_compiler_metadata_cache_browse is
+			-- Called by `select_actions' of `compiler_metadata_cache_browse_button'.
+			-- Browse for Compiler Eiffel Metadata cache.
+		local
+			l_dialog: EV_DIRECTORY_DIALOG
+			l_path: STRING
+		do
+			if active_configuration /= Void then
+				create l_dialog.make_with_title ("Browse for Compiler Eiffel Metadata Cache folder")
+				l_dialog.show_modal_to_window (Current)
+				l_path := l_dialog.directory
+				if not l_path.is_empty then
+					compiler_metadata_cache_combo_box.set_text (l_path)
 				end
 			end
 		end
@@ -462,7 +500,7 @@ feature {NONE} -- Events
 				end
 			end
 		end
-		
+
 	on_precompile_cache_browse is
 			-- Called by `select_actions' of `precompile_cache_browse_button'.
 			-- Browse for precompile cache.
@@ -479,7 +517,7 @@ feature {NONE} -- Events
 				end
 			end
 		end
-	
+
 	on_add_application is
 			-- Called by `select_actions' of `add_button'.
 			-- Browse for application.
@@ -522,7 +560,7 @@ feature {NONE} -- Events
 		do
 			l_item := applications_list.selected_item
 			if active_configuration /= Void and l_item /= Void then
-				manager.add_application_to_delete (l_item.text, active_configuration)	
+				manager.add_application_to_delete (l_item.text, active_configuration)
 				applications_list.prune_all (l_item)
 				if applications_list.count = 1 then
 					remove_button.disable_sensitive
@@ -536,7 +574,7 @@ feature {NONE} -- Events
 			-- Enable `remove' button.
 		do
 			if applications_list.count > 1 then
-				remove_button.enable_sensitive			
+				remove_button.enable_sensitive
 			end
 		end
 
@@ -560,13 +598,13 @@ feature {NONE} -- Events
 			l_retried := True
 			retry
 		end
-	
+
 	on_close is
 			-- Save graphical settings for next start.
 		do
 			check_should_save
 			if selection_cancelled then
-				selection_cancelled := False	
+				selection_cancelled := False
 			else
 				save_height (height)
 				save_width (width)
@@ -588,7 +626,7 @@ feature {NONE} -- Events
 				tool_bars_box.set_minimum_height (22)
 			end
 		end
-		
+
 	on_show_tooltips is
 			-- Called by `select_actions' of `show_tooltips_item'.
 			-- Show or hide menu tooltips
@@ -609,7 +647,7 @@ feature {NONE} -- Events
 				help_button.remove_tooltip
 			end
 		end
-		
+
 	on_assembly_file_name_select (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `select_actions' of `prefixes_list'.
 		do
@@ -617,7 +655,7 @@ feature {NONE} -- Events
 			prefix_text_field.set_text (an_item.i_th (1))
 			assembly_file_name_text_field.set_text (an_item.i_th (2))
 		end
-	
+
 	on_assembly_file_name_deselect (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `deselect_actions' of `prefixes_list'.
 		do
@@ -636,7 +674,7 @@ feature {NONE} -- Events
 		do
 			check_can_add_prefix
 		end
-	
+
 	on_assembly_file_name_browse is
 			-- Called by `select_actions' of `assembly_file_name_browse_button'.
 		local
@@ -657,7 +695,7 @@ feature {NONE} -- Events
 				assembly_file_name_text_field.set_text (l_file_name)
 			end
 		end
-	
+
 	on_add_assembly_file_name is
 			-- Called by `select_actions' of `assembly_file_name_add_button'.
 		local
@@ -679,7 +717,7 @@ feature {NONE} -- Events
 				set_dirty
 			end
 		end
-	
+
 	on_remove_assembly_file_name is
 			-- Called by `select_actions' of `assembly_file_name_remove_button'.
 		do
@@ -742,6 +780,11 @@ feature {NONE} -- Implementation
 				else
 					metadata_cache_combo_box.set_text ("(none)")
 				end
+				if l_config.compiler_metadata_cache /= Void and then not l_config.compiler_metadata_cache.is_empty then
+					compiler_metadata_cache_combo_box.set_text (l_config.compiler_metadata_cache)
+				else
+					compiler_metadata_cache_combo_box.set_text ("(none)")
+				end
 				if l_config.precompile_cache /= Void and then not l_config.precompile_cache.is_empty then
 					precompile_cache_combo_box.set_text (l_config.precompile_cache)
 				else
@@ -792,7 +835,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				if not properties_button.is_sensitive then
-					properties_button.enable_sensitive				
+					properties_button.enable_sensitive
 				end
 				l_assemblies := l_config.prefixed_assemblies
 				from
@@ -828,10 +871,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	active_configuration: ECDM_CONFIGURATION
 			-- Currently selected configuration if any.
-	
+
 	log_level (a_level: INTEGER): STRING is
 			-- Text corresponding to log level `a_level'
 		require
@@ -854,7 +897,7 @@ feature {NONE} -- Implementation
 		ensure
 			has_text: Result /= Void
 		end
-	
+
 	check_should_save is
 			-- Check whether there has been unsaved changes and prompt for saving if needed.
 		local
@@ -872,7 +915,7 @@ feature {NONE} -- Implementation
 			save_button_disabled: not save_button.is_sensitive
 			revert_button_disabled: not revert_button.is_sensitive
 		end
-	
+
 	check_can_remove_prefix is
 			-- Check whether `Remove' button from prefix list should be enabled.
 		local
@@ -889,7 +932,7 @@ feature {NONE} -- Implementation
 				assembly_file_name_remove_button.disable_sensitive
 			end
 		end
-		
+
 	check_can_add_prefix is
 			-- Check whether `Add' button from prefix list should be enabled.
 		do
@@ -909,7 +952,7 @@ feature {NONE} -- Implementation
 		do
 			selection_cancelled := True
 		end
-	
+
 	selection_cancelled: BOOLEAN
 			-- Was last selection cancelled by user?
 
@@ -919,10 +962,10 @@ feature {NONE} -- Implementation
 			if is_dirty then
 				is_dirty := False
 				if save_button.is_sensitive then
-					save_button.disable_sensitive					
+					save_button.disable_sensitive
 				end
 				if revert_button.is_sensitive then
-					revert_button.disable_sensitive					
+					revert_button.disable_sensitive
 				end
 			end
 		ensure
@@ -930,7 +973,7 @@ feature {NONE} -- Implementation
 			save_button_disabled: not save_button.is_sensitive
 			revert_button_disabled: not revert_button.is_sensitive
 		end
-		
+
 	set_dirty is
 			-- Set `is_dirty' to true and enable save and revert button.
 		do
@@ -948,7 +991,7 @@ feature {NONE} -- Implementation
 			save_button_enabled: save_button.is_sensitive
 			revert_button_enabled: revert_button.is_sensitive
 		end
-		
+
 	is_dirty: BOOLEAN
 			-- Was configuration object changed since it was last loaded/saved?
 

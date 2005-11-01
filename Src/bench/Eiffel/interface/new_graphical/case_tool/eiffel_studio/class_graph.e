@@ -12,10 +12,10 @@ inherit
 		redefine
 			synchronize
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_tool: like context_editor) is
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			descendant_depth := 1
 			client_depth := 0
 			supplier_depth := 0
-			
+
 			include_all_classes_of_cluster := False
 			include_only_classes_of_cluster := False
 		ensure
@@ -39,20 +39,20 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	center_class: ES_CLASS
-			-- Center class of this graph. 
-	
+			-- Center class of this graph.
+
 	ancestor_depth: INTEGER
 			-- Depth of ancestor links.
-			
+
 	descendant_depth: INTEGER
 			-- Depth of descendant links.
-			
+
 	client_depth: INTEGER
 			-- Depth of client links.
 
 	supplier_depth: INTEGER
 			-- Depth of supplier links.
-			
+
 feature -- Status report.
 
 	include_all_classes_of_cluster: BOOLEAN
@@ -60,7 +60,7 @@ feature -- Status report.
 
 	include_only_classes_of_cluster: BOOLEAN
 			-- Do all the classes in `Current' have to be in same cluster as `center_class'?
-			
+
 feature -- Status settings.
 
 	set_include_all_classes_of_cluster (b: BOOLEAN) is
@@ -70,7 +70,7 @@ feature -- Status settings.
 		ensure
 			set: include_all_classes_of_cluster = b
 		end
-		
+
 	set_include_only_classes_of_cluster (b: BOOLEAN) is
 			-- Set `include_only_classes_in_cluster' to `b'.
 		do
@@ -90,7 +90,7 @@ feature -- Element change
 		ensure
 			assigned: ancestor_depth = i
 		end
-		
+
 	set_descendant_depth (i: INTEGER) is
 			-- Set `descendant_depth' to `i'.
 		require
@@ -130,7 +130,7 @@ feature -- Element change
 		ensure
 			center_class_set: center_class = a_center_class
 		end
-		
+
 	explore_center_class is
 			-- Explore relations according to `center_class'.
 		require
@@ -144,7 +144,7 @@ feature -- Element change
 			explore_relations
 			remove_unneeded_items
 		end
-		
+
 	set_new_center_class (a_center_class: like center_class) is
 			-- Set `center_class' to `a_center_class' add not
 			-- relations not yet there, remove relations too
@@ -168,13 +168,13 @@ feature -- Element change
 				add_client_relations (center_class)
 				add_supplier_relations (center_class)
 			end
-			
+
 			explore_ancestors (center_class.class_i, ancestor_depth, False)
 			explore_descendants (center_class.class_i, descendant_depth, False)
 			explore_clients (center_class, client_depth, False)
 			explore_suppliers (center_class, supplier_depth, False)
 		end
-		
+
 feature {EB_CONTEXT_EDITOR} -- Synchronization
 
 	synchronize is
@@ -206,23 +206,23 @@ feature {NONE} -- Implementation
 						   number_of_descendants (center_class.class_i, descendant_depth) +
 						   number_of_clients (center_class.class_i, client_depth) +
 						   number_of_suppliers (center_class.class_i, supplier_depth)
-			
+
 			l_status_bar := context_editor.development_window.status_bar
 			l_status_bar.progress_bar.reset_with_range (0 |..| nb_of_items)
 
 			l_status_bar.display_message ("Exploring ancestors of " + center_class.name)
 			explore_ancestors (center_class.class_i, ancestor_depth, True)
-			
+
 			l_status_bar.display_message ("Exploring descendants of " + center_class.name)
 			explore_descendants (center_class.class_i, descendant_depth, True)
-			
+
 			l_status_bar.display_message ("Exploring clients of " + center_class.name)
 			explore_clients (center_class, client_depth, True)
-			
+
 			l_status_bar.display_message ("Exploring suppliers of " + center_class.name)
 			explore_suppliers (center_class, supplier_depth, True)
 		end
-		
+
 	number_of_ancestors (a_class: CLASS_I; depth: INTEGER): INTEGER is
 			-- Calculate number of ancestors of `a_class' until `depth' is reached.
 		require
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	explore_ancestors (a_class: CLASS_I; depth: INTEGER; progress_bar: BOOLEAN) is
 			-- Add ancestors of `a_class' until `depth' is reached.
 		require
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	number_of_descendants (a_class: CLASS_I; depth: INTEGER): INTEGER is
 			-- Add descendants of `a_class' until `depth' is reached.
 		require
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	explore_descendants (a_class: CLASS_I; depth: INTEGER; progress_bar: BOOLEAN) is
 			-- Add descendants of `a_class' until `depth' is reached.
 		require
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	number_of_clients (a_class: CLASS_I; depth: INTEGER): INTEGER is
 			-- Add clients of `a_class' until `depth' is reached.
 		require
@@ -397,17 +397,17 @@ feature {NONE} -- Implementation
 						end
 					end
 					if progress_bar then
+						l_progress_bar := context_editor.development_window.status_bar.progress_bar
 						check
 							in_range: l_progress_bar.range.has (l_progress_bar.value + c)
 						end
-						l_progress_bar := context_editor.development_window.status_bar.progress_bar
 						l_progress_bar.set_value (l_progress_bar.value + c)
 					end
 					i := i + 1
-				end	
+				end
 			end
 		end
-		
+
 
 	number_of_suppliers (a_class: CLASS_I; depth: INTEGER): INTEGER is
 			-- Add suppliers of `a_class' until `depth' is reached.
@@ -521,7 +521,7 @@ feature {NONE} -- Disable relations
 			disable_reachable_ancestors (a_center, ancestor_depth)
 			disable_reachable_descendants (a_center, descendant_depth)
 		end
-		
+
 	disable_reachable_clients (a_class: ES_CLASS; a_depth: INTEGER) is
 			-- Disable needed on diagram for all reachable clients from `a_class'.
 		require
@@ -544,7 +544,7 @@ feature {NONE} -- Disable relations
 					cs_link ?= l_links.item
 					if cs_link /= Void and then cs_link.supplier = a_class then
 						disable_reachable_clients (cs_link.client, a_depth - 1)
-						
+
 						if cs_link.client.is_needed_on_diagram then
 							cs_link.client.disable_needed_on_diagram
 							disable_all_links (cs_link.client.internal_links)
@@ -554,7 +554,7 @@ feature {NONE} -- Disable relations
 				end
 			end
 		end
-		
+
 	disable_reachable_suppliers (a_class: ES_CLASS; a_depth: INTEGER) is
 			-- Disable needed on diagram for all reachable suppliers from `a_class'.
 		require
@@ -582,9 +582,9 @@ feature {NONE} -- Disable relations
 					l_links.forth
 				end
 			end
-				
+
 		end
-		
+
 	disable_reachable_ancestors (a_class: ES_CLASS; a_depth: INTEGER) is
 			-- Disable needed on diagram for all reachable ancestors from `a_class'.
 		require
@@ -612,8 +612,8 @@ feature {NONE} -- Disable relations
 					l_links.forth
 				end
 			end
-		end		
-		
+		end
+
 	disable_reachable_descendants (a_class: ES_CLASS; a_depth: INTEGER) is
 			-- Disable needed on diagram for all reachable descendants from `a_class'.
 		require
@@ -641,7 +641,7 @@ feature {NONE} -- Disable relations
 					l_links.forth
 				end
 			end
-		end		
+		end
 
 	disable_class (a_class: ES_CLASS) is
 			-- Remove `a_class' and its links
@@ -649,7 +649,7 @@ feature {NONE} -- Disable relations
 			a_class.disable_needed_on_diagram
 			disable_all_links (a_class.internal_links)
 		end
-		
+
 	disable_all_links (a_links: LIST [EG_LINK]) is
 			-- Disable `is_needed_on_diagram' for all links in `a_links'
 		require
@@ -669,7 +669,7 @@ feature {NONE} -- Disable relations
 				a_links.forth
 			end
 		end
-		
+
 	add_class (a_class: CLASS_I) is
 			-- Include `a_class' in the diagram.
 			-- Add any relations `a_class' may have with
@@ -681,7 +681,7 @@ feature {NONE} -- Disable relations
 		do
 			last_added_class := Void
 			if not context_editor.is_excluded_in_preferences (a_class.name_in_upper) then
-				
+
 				if not include_only_classes_of_cluster or else a_class.cluster = center_class.class_i.cluster then
 					es_class := class_from_interface (a_class)
 					if es_class = Void then
@@ -707,14 +707,14 @@ feature {NONE} -- Disable relations
 				end
 			end
 		end
-		
+
 	last_added_class: ES_CLASS
-	
-feature {EIFFEL_CLASS_FIGURE} 	
-	
+
+feature {EIFFEL_CLASS_FIGURE}
+
 	last_created_classes: ARRAYED_LIST [ES_CLASS]
 			-- Last created classes by `add_class' if not Void.
-	
+
 	reset_last_created_classes is
 			-- Set `last_created_classes' to Void.
 		do

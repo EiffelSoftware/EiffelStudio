@@ -37,12 +37,12 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	EB_SHARED_GRAPHICAL_COMMANDS
 		export
 			{NONE} all
 		end
-	
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
@@ -110,7 +110,7 @@ feature -- Basic operations
 		do
 			create Result.make (Current)
 		end
-	
+
 	create_window is
 			-- Create a new development window and update `last_created_window'.
 		local
@@ -128,7 +128,7 @@ feature -- Basic operations
 			a_session_data_not_void: a_session_data /= Void
 		local
 			a_window: EB_DEVELOPMENT_WINDOW
-		do 
+		do
 			create a_window.make_with_session_data (a_session_data)
 			initialize_window (a_window)
 		end
@@ -142,7 +142,7 @@ feature -- Basic operations
 			store_last_focused_window
 			create a_window.make_as_editor
 			initialize_window (a_window)
-		end	
+		end
 
 	create_context_window is
 			-- Create a new context window and update `last_created_window'.
@@ -157,7 +157,7 @@ feature -- Basic operations
 
 	initialize_window (a_window: EB_DEVELOPMENT_WINDOW) is
 			-- Initialize `a_window'.
-		require 
+		require
 			a_window_not_void: a_window /= Void
 		do
 			managed_windows.extend (a_window)
@@ -175,7 +175,7 @@ feature -- Basic operations
 				-- Update the splitters (can't be done before window is visible
 				-- otherwise it does not work).
 			a_window.update_splitters
-		end	
+		end
 
 	create_dynamic_lib_window is
 			-- Create a new dynamic library window if necessary and display it.
@@ -261,7 +261,7 @@ feature -- Status report
 				managed_windows.forth
 			end
 			managed_windows.go_to (cur)
-		end	
+		end
 
 	has_active_development_windows: BOOLEAN is
 			-- Are there any active development window up?
@@ -292,7 +292,7 @@ feature -- Status report
 			end
 			managed_windows.go_to (cur)
 		end
-				
+
 	is_class_opened (cl_name: STRING): BOOLEAN is
 			-- Return True if the class is already opened in a development window.
 			-- return False otherwise.
@@ -438,7 +438,7 @@ feature -- Actions on a given window
 			if last_created_window = a_window then
 				last_created_window := Void
 			end
-			
+
 				-- Notify the observers
 			notify_observers (a_window, Notify_removed_window)
 
@@ -511,7 +511,7 @@ feature -- Actions on all windows
 		do
 			for_all (agent quick_refresh_margin_action)
 		end
-		
+
 	quick_refresh_all_editors is
 			-- Redraws the editors of all the windows.
 		do
@@ -539,10 +539,10 @@ feature -- Actions on all windows
 				end
 			end
 		end
-		
+
 	synchronize_all_about_breakpoints is
 		do
-			quick_refresh_all_margins			
+			quick_refresh_all_margins
 			for_all (agent synchronize_breakpoints_action)
 		end
 
@@ -560,41 +560,41 @@ feature -- Actions on all windows
 			if not Eiffel_project.compilation_modes.is_precompiling then
 				if  (freezing_launcher.launched and then not freezing_launcher.has_exited)
 					 or
-					(finalizing_launcher.launched and then not finalizing_launcher.has_exited) 				
+					(finalizing_launcher.launched and then not finalizing_launcher.has_exited)
 				then
 					melt_project_cmd.disable_sensitive
 					Quick_melt_project_cmd.disable_sensitive
 					freeze_project_cmd.disable_sensitive
 					precompilation_cmd.disable_sensitive
-					Finalize_project_cmd.disable_sensitive	
-					terminate_c_compilation_cmd.enable_sensitive				
-				else	
+					Finalize_project_cmd.disable_sensitive
+					terminate_c_compilation_cmd.enable_sensitive
+				else
 					precompilation_cmd.disable_sensitive
 					melt_project_cmd.enable_sensitive
 					Quick_melt_project_cmd.enable_sensitive
 					freeze_project_cmd.enable_sensitive
 					Finalize_project_cmd.enable_sensitive
-					terminate_c_compilation_cmd.disable_sensitive										
+					terminate_c_compilation_cmd.disable_sensitive
 				end
 			else
 				if  (freezing_launcher.launched and then not freezing_launcher.has_exited)
 					 or
-					(finalizing_launcher.launched and then not finalizing_launcher.has_exited) 				
+					(finalizing_launcher.launched and then not finalizing_launcher.has_exited)
 				then
 					melt_project_cmd.disable_sensitive
 					Quick_melt_project_cmd.disable_sensitive
 					freeze_project_cmd.disable_sensitive
 					precompilation_cmd.disable_sensitive
 					Finalize_project_cmd.disable_sensitive
-					terminate_c_compilation_cmd.enable_sensitive			    	
-				else	
+					terminate_c_compilation_cmd.enable_sensitive
+				else
 					melt_project_cmd.enable_sensitive
 					Quick_melt_project_cmd.enable_sensitive
 					freeze_project_cmd.disable_sensitive
 					precompilation_cmd.enable_sensitive
 					Finalize_project_cmd.disable_sensitive
-					terminate_c_compilation_cmd.disable_sensitive			
-				end				
+					terminate_c_compilation_cmd.disable_sensitive
+				end
 			end
 			project_cancel_cmd.disable_sensitive
 			for_all (agent synchronize_action)
@@ -854,9 +854,9 @@ feature -- Events
 					l_raw_file.close
 
 						-- Recreate previous session from retrieved session data.
-					if l_session /= Void then	
+					if l_session /= Void then
 							-- Remove any existing managed windows.
-						l_managed_windows := managed_windows.twin	
+						l_managed_windows := managed_windows.twin
 
 						from
 							i := 1
@@ -879,7 +879,7 @@ feature -- Events
 							i := i + 1
 						end
 					end
-				end			
+				end
 			end
 		rescue
 			retried := True
@@ -908,7 +908,7 @@ feature -- Events
 				l_writer.set_for_writing
 				create l_sed_facilities
 				l_sed_facilities.basic_store (l_session, l_writer, False)
-				l_raw_file.close			
+				l_raw_file.close
 			end
 		rescue
 			retried := True
@@ -1101,7 +1101,7 @@ feature {NONE} -- Implementation
 					tmp_name := conv_dev.file_name.twin
 					tmp_name.add_extension ("swp")
 					create tmp_file.make (tmp_name)
-					if 
+					if
 						not tmp_file.exists and then
 						tmp_file.is_creatable
 					then
@@ -1147,7 +1147,7 @@ feature {NONE} -- Implementation
 			a_dev: EB_DEVELOPMENT_WINDOW
 		do
 			a_textable_window ?= a_window
-			if a_textable_window /= Void and then 
+			if a_textable_window /= Void and then
 			   a_textable_window.text_area.changed
 			then
 				a_window.raise
@@ -1171,13 +1171,13 @@ feature {NONE} -- Implementation
 			conv_dll: EB_DYNAMIC_LIB_WINDOW
 		do
 			a_textable_window ?= a_window
-			if a_textable_window /= Void and then 
+			if a_textable_window /= Void and then
 			   a_textable_window.text_area.changed
 			then
 				a_textable_window.save_text
 			end
 			a_dev_window ?= a_window
-			if a_dev_window /= Void and then 
+			if a_dev_window /= Void and then
 			   a_dev_window.changed
 			then
 				a_dev_window.save_text
@@ -1194,7 +1194,7 @@ feature {NONE} -- Implementation
 			a_dev_window: EB_DEVELOPMENT_WINDOW
 		do
 			a_dev_window ?= a_window
-			if a_dev_window /= Void and then 
+			if a_dev_window /= Void and then
 			   a_dev_window.changed
 			then
 				a_dev_window.save_before_compiling
@@ -1291,9 +1291,9 @@ feature {EB_WINDOW} -- Implementation / Observer pattern
 	notify_observers (an_item: EB_WINDOW; item_change: INTEGER) is
 			-- Notify all observers about the change of `an_item'.
 		require
-		--	valid_item_change: 
-		--		item_change = Notify_removed_window or 
-		--		item_change = Notify_added_window or 
+		--	valid_item_change:
+		--		item_change = Notify_removed_window or
+		--		item_change = Notify_added_window or
 		--		item_change = Notify_changed_window
 			valid_item: an_item /= Void
 		do
@@ -1353,7 +1353,7 @@ feature {NONE} -- Implementation
 			until
 				managed_windows.after
 			loop
-				window_titles.extend (managed_windows.item.title) 
+				window_titles.extend (managed_windows.item.title)
 				managed_windows.forth
 			end
 			managed_windows.go_to (saved_cursor)
@@ -1377,13 +1377,13 @@ feature {NONE} -- Implementation
 		do
 			ev_application.destroy
 		end
-		
+
 	store_last_focused_window is
 			-- Store layout of last focused window so new windows may be initialized
 			-- to match.
 		local
 			a_window: EB_DEVELOPMENT_WINDOW
-		do		
+		do
 			a_window := last_focused_development_window
 			if a_window /= Void then
 				a_window.save_layout

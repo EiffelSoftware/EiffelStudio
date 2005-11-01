@@ -161,7 +161,7 @@ feature {NONE} -- Initialization
 			l_cluster_string, l_class_string, l_feature_string: STRING
 		do
 			internal_development_window_data := a_session_data
-			make	
+			make
 				-- Attempt to reload last edited class of `Current'.
 			if a_session_data.file_name /= Void then
 				l_class_i := eiffel_universe.class_with_file_name (a_session_data.file_name)
@@ -632,7 +632,7 @@ feature {NONE} -- Initialization
 			show_tool_commands.extend (show_cmd)
 			toolbarable_commands.extend (show_cmd)
 			add_recyclable (windows_tool)
-			
+
 				-- Build the search tool
 			create {EB_MULTI_SEARCH_TOOL}search_tool.make (Current)
 			search_tool.attach_to_explorer_bar (right_panel)
@@ -806,7 +806,7 @@ feature -- Pulldown Menus
 
 	debug_menu: EV_MENU
 			-- Debug ID menu.
-			
+
 	debugging_tools_menu: EV_MENU
 			-- Debugging tools menu item
 
@@ -825,7 +825,7 @@ feature -- Pulldown Menus
 		do
 			compile_menu.disable_sensitive
 		end
-		
+
 	update_debug_menu is
 			-- Update debug menu
 		do
@@ -871,7 +871,7 @@ feature -- Update
 			address_manager.refresh
 			during_synchronization := False
 		end
-		
+
 	synchronize_routine_tool_to_default is
 			-- Synchronize the editor tool to the debug format.
 		do
@@ -896,7 +896,7 @@ feature -- Update
 			build_debug_menu
 			build_tools_menu
 			build_window_menu
-			build_help_menu	
+			build_help_menu
 				-- Build the menu bar.
 			build_menu_bar
 		end
@@ -1345,7 +1345,7 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			edit_menu.extend (command_menu_item)
 			window.accelerators.extend (ln_cmd.accelerator)
-			
+
 
 				-- Separator --------------------------------------
 			edit_menu.extend (create {EV_MENU_SEPARATOR})
@@ -1628,7 +1628,7 @@ feature {NONE} -- Menu Building
 			command_menu_item := precompilation_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
-			
+
 				-- Cancel
 			command_menu_item := project_cancel_cmd.new_menu_item
 			add_recyclable (command_menu_item)
@@ -1653,7 +1653,7 @@ feature {NONE} -- Menu Building
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
 			-- Jason Wei
-			
+
 				-- Execute Finalized code
 			command_menu_item := run_finalized_cmd.new_menu_item
 			add_recyclable (command_menu_item)
@@ -1874,7 +1874,7 @@ feature {NONE} -- Menu Building
 
 			rebuild_tools_menu
 		end
-		
+
 feature -- Stone process
 
 	stone: STONE
@@ -1954,16 +1954,16 @@ feature -- Stone process
 			ef_stone ?= a_stone
 			new_class_stone ?= a_stone
 			cluster_st ?= a_stone
-			
+
 				-- Update the history.
 			conv_brkstone ?= a_stone
 			conv_errst ?= a_stone
 			conv_ace ?= a_stone
-			if 
+			if
 				conv_brkstone = Void and
 				conv_errst = Void and
 				conv_ace = Void and
-				ef_stone = Void 
+				ef_stone = Void
 			then
 				if
 					new_class_stone /= Void
@@ -1975,7 +1975,7 @@ feature -- Stone process
 					history_manager.extend (cluster_st)
 				end
 			end
-			
+
 			if old_class_stone /= Void then
 				create test_stone.make (old_class_stone.class_i)
 				same_class := test_stone.same_as (a_stone)
@@ -2128,8 +2128,8 @@ feature -- Position provider
 			-- Currently shown text position in the editor
 		do
 			Result := editor_tool.text_area.first_line_displayed
-		end	
-		
+		end
+
 	pos_container: like pos_container_internal is
 			-- Current selected formatter
 		local
@@ -2229,7 +2229,7 @@ feature -- Resource Update
 			end
 			ms := Edit_external_commands_cmd.menus
 			number_of_displayed_external_commands := ms.count
-			
+
 			if not ms.is_empty and not tools_menu.is_empty then
 				l_sep ?= tools_menu.last
 				if l_sep = Void then
@@ -2446,13 +2446,13 @@ feature -- Window management
 			a_class_i: CLASSI_STONE
 		do
 			create a_window_data.make_from_window_data (preferences.development_window_data)
-			
+
 			a_class_i ?= stone
 			if a_class_i /= Void then
 				a_window_data.save_filename (a_class_i.file_name)
 				a_window_data.save_editor_position (editor_tool.text_area.current_cursor_position)
 			end
-			
+
 			if context_tool /= Void then
 				a_window_data.save_context_data (
 					context_tool.address_manager.cluster_label_text,
@@ -2463,7 +2463,7 @@ feature -- Window management
 			end
 
 			save_layout_to_window_data (a_window_data)
-			
+
 				-- Add the session data of `Current' to the session object.
 			a_session.window_session_data.extend (a_window_data)
 		end
@@ -2487,9 +2487,9 @@ feature -- Window management
 				a_window_data.save_window_state (window.is_minimized, window.is_maximized)
 				a_window_data.save_position (window.x_position, window.y_position)
 			end
-			a_window_data.save_show_search_options (search_tool.options_shown)			
+			a_window_data.save_show_search_options (search_tool.options_shown)
 		end
-		
+
 
 feature -- Tools & Controls
 
@@ -2502,8 +2502,8 @@ feature -- Tools & Controls
 	search_tool: EB_SEARCH_TOOL
 
 	features_tool: EB_FEATURES_TOOL
-	
-	breakpoints_tool: ES_BREAKPOINTS_TOOL	
+
+	breakpoints_tool: ES_BREAKPOINTS_TOOL
 
 	windows_tool: EB_WINDOWS_TOOL
 
@@ -2800,26 +2800,26 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
-					
+
 					conv_classc ?= new_class_stone
 
 						-- First choose possible formatter
 					l_main_formatter ?= new_class_stone.pos_container
 					if l_main_formatter /= Void and not during_synchronization then
-						if 
+						if
 							not (conv_classc /= Void and class_text_exists and (not changed or not same_class))
 						then
 							l_main_formatter.enable_select
-						elseif feature_stone = Void then				
+						elseif feature_stone = Void then
 							if l_main_formatter /= pos_container then
 								l_main_formatter.enable_select
 							end
 							if new_class_stone.position > 0 then
 								editor_tool.text_area.display_line_at_top_when_ready (new_class_stone.position)
-							end							
+							end
 						end
 					end
-					
+
 					if conv_classc = Void or else
 						conv_classc.e_class.is_external or else
 						feature_stone /= Void and not
@@ -2906,7 +2906,7 @@ feature {NONE} -- Implementation
 									--| Enable all formatters.
 								if
 									(not feature_stone_already_processed or
-									not managed_main_formatters.first.selected) and  
+									not managed_main_formatters.first.selected) and
 									feature_stone = Void
 								then
 									from
@@ -3028,14 +3028,14 @@ feature {NONE} -- Implementation
 			l_format_context: FORMAT_CONTEXT
 			l_indexes: INDEXING_CLAUSE_AS
 			l_classes: LIST [CLASS_I]
-			l_subclu: LIST [EB_SORTED_CLUSTER]			
+			l_subclu: LIST [EB_SORTED_CLUSTER]
 			l_cl_i: CLASS_I
 			l_list_cl_i: LIST [CLASS_I]
 			l_cluster: CLUSTER_I
 			l_assert_level: ASSERTION_I
 		do
 			create l_format_context.make_for_case
-			
+
 			l_format_context.put_text_item (ti_indexing_keyword)
 			l_format_context.put_new_line
 			l_format_context.indent
@@ -3052,7 +3052,7 @@ feature {NONE} -- Implementation
 				l_format_context.put_space
 				l_format_context.put_quoted_string_item (l_assembly.assembly_path)
 				l_format_context.put_new_line
-				
+
 			end
 			l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("cluster"))
 			l_format_context.put_text_item_without_tabs (ti_colon)
@@ -3068,16 +3068,16 @@ feature {NONE} -- Implementation
 			l_indexes := a_cluster.indexes
 			if l_indexes /= Void then
 				l_format_context.format_indexing_with_no_keyword (l_indexes)
-				l_format_context.put_new_line							
+				l_format_context.put_new_line
 			end
-			
+
 			if a_cluster.parent_cluster /= Void then
 				l_format_context.put_text_item (create {INDEXING_TAG_TEXT}.make ("parent cluster"))
 				l_format_context.put_text_item_without_tabs (ti_colon)
 				l_format_context.put_new_line
 				l_format_context.indent
 				l_format_context.put_manifest_string (" - ")
-				
+
 				l_format_context.put_clusteri (a_cluster.parent_cluster)
 				l_format_context.put_new_line
 				l_format_context.exdent
@@ -3102,7 +3102,7 @@ feature {NONE} -- Implementation
 					l_format_context.put_space
 					l_format_context.put_text_item_without_tabs (ti_L_parenthesis)
 					l_format_context.put_comment_text (l_cluster.classes.count.out)
-					l_format_context.put_text_item_without_tabs (ti_R_parenthesis)					
+					l_format_context.put_text_item_without_tabs (ti_R_parenthesis)
 					l_format_context.put_new_line
 					l_subclu.forth
 				end
@@ -3209,7 +3209,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	scroll_to_feature (feat_as: E_FEATURE; displayed_class: CLASS_I) is
 			-- highlight the feature correspnding to `feat_as' in the class represented by `displayed_class'
 		require
@@ -3397,7 +3397,7 @@ feature {NONE} -- Implementation
 			refresh_cursor_position
 			text_edited := False
 		end
-		
+
 	on_text_back_to_its_last_saved_state is
 		local
 			str: STRING
@@ -3460,7 +3460,7 @@ feature {NONE} -- Implementation
 					context_tool.history_manager.forth_command.execute
 				end
 			elseif history_manager.is_forth_possible then
-				history_manager.forth_command.execute								
+				history_manager.forth_command.execute
 			end
 		end
 
@@ -3578,7 +3578,7 @@ feature {NONE} -- Implementation: Editor commands
 			v := editor_tool.text_area.cursor_visible_x_position
 			status_bar.set_cursor_position (l, c, v)
 		end
-		
+
 	refresh_context_info is
 			-- Refresh address bar and features tool to relect
 			-- where in the code the cursor is located.
@@ -3596,7 +3596,7 @@ feature {NONE} -- Implementation: Editor commands
 				end
 			end
 		end
-	
+
 	set_editing_location_by_feature (a_feature: FEATURE_AS) is
 			-- Set editing location, feature tool and combo box changes according to `a_feature'.
 		local
@@ -3618,7 +3618,7 @@ feature {NONE} -- Implementation: Editor commands
 			end
 			seek_item_in_feature_tool (l_efeature)
 		end
-		
+
 	seek_item_in_feature_tool (a_feature: E_FEATURE) is
 			-- Seek and select item contains data of `a_feature' in features tool.
 			-- If `a_feature' is void, deselect item in features tool.
@@ -3884,7 +3884,7 @@ feature{EB_TOOL}
 
 	show_favorites_menu_item: EV_MENU_ITEM
 			-- Show/Hide favorites menu item.
-			
+
 	update_show_favorites_menu_item is
 			-- Update `show_favorites_menu_item' menu label.
 		do

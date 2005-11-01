@@ -50,6 +50,7 @@ feature {NONE} -- Implementation
 			l_int: like internal
 			l_table: like dynamic_type_table
 			l_old_dtype, l_new_dtype: INTEGER
+			l_type_str: STRING
 		do
 			l_int := internal
 			l_deser := deserializer
@@ -71,7 +72,8 @@ feature {NONE} -- Implementation
 
 					-- Read type string associated to `l_old_dtype' and find dynamic type
 					-- in current system.
-				l_new_dtype := l_int.dynamic_type_from_string (l_deser.read_string_8)
+				l_type_str := l_deser.read_string_8
+				l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
 				if l_new_dtype = -1 then
 					set_has_error
 					i := nb - 1 -- Jump out of loop
@@ -98,7 +100,8 @@ feature {NONE} -- Implementation
 	
 						-- Read type string associated to `l_old_dtype' and find dynamic type
 						-- in current system.
-					l_new_dtype := l_int.dynamic_type_from_string (l_deser.read_string_8)
+					l_type_str := l_deser.read_string_8
+					l_new_dtype := l_int.dynamic_type_from_string (l_type_str)
 					if l_new_dtype = -1 then
 						set_has_error
 						i := nb - 1 -- Jump out of loop

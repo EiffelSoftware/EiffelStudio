@@ -120,6 +120,7 @@ feature -- Access
 	strong_name_directory: CLI_DIRECTORY
 	strong_name_info: MANAGED_POINTER
 	public_key: MD_PUBLIC_KEY
+	signing: MD_STRONG_NAME
 			-- Hold data for strong name signature.
 
 	resources: CLI_RESOURCES
@@ -189,19 +190,23 @@ feature -- Settings
 			debug_info_set: debug_info = a_debug_info
 		end
 
-	set_public_key (a_key: like public_key) is
+	set_public_key (a_key: like public_key; a_signing: like signing) is
 			-- Set `public_key' to `a_key'.
 		require
 			key_not_void: a_key /= Void
 			key_valid: a_key.item.count > 0
+			a_signing_not_void: a_signing /= Void
+			a_signing_exists: a_signing.exists
 		do
 			public_key := a_key
 			has_strong_name := True
 			cli_header.set_flags ({CLI_HEADER}.il_only |
 				{CLI_HEADER}.strong_name_signed)
+			signing := a_signing
 		ensure
 			public_key_set: public_key = a_key
 			has_strong_name_set: has_strong_name
+			signing_set: signing = a_signing
 			cli_header_flags_set: cli_header.flags =
 				{CLI_HEADER}.il_only | {CLI_HEADER}.strong_name_signed
 		end
@@ -222,9 +227,8 @@ feature -- Saving
 			--
 		local
 			l_pe_file: RAW_FILE
-			l_padding: MANAGED_POINTER
-			l_ptr: POINTER
-			l_strong_name_location, l_result, l_size: INTEGER
+			l_padding, l_signature: MANAGED_POINTER
+			l_strong_name_location, l_size: INTEGER
 			l_uni_string: UNI_STRING
 		do
 				-- First compute size of PE file headers and sections.
@@ -305,28 +309,19 @@ feature -- Saving
 			is_valid := False
 
 			if has_strong_name then
-				check
-						-- Signing should be available as it is checked
-						-- by caller.
-					Signing_should_be_present: (create {MD_STRONG_NAME}.make).exists
-				end
 				create l_pe_file.make_open_read (file_name)
 				create l_padding.make (l_pe_file.count)
 				l_pe_file.read_data (l_padding.item, l_padding.count)
 				l_pe_file.close
 
 				create l_uni_string.make (file_name)
-				l_result := {MD_STRONG_NAME}.strong_name_signature_generation (
-					l_uni_string.item, default_pointer, public_key.key_pair.item,
-					public_key.key_pair.count, $l_ptr, $l_size)
-
-				(l_padding.item + l_strong_name_location).memory_copy (l_ptr, l_size)
+				l_signature := signing.assembly_signature (l_uni_string, public_key.key_pair)
+				(l_padding.item + l_strong_name_location).memory_copy (l_signature.item,
+					l_signature.count)
 
 				create l_pe_file.make_open_write (file_name)
 				l_pe_file.put_data (l_padding.item, l_padding.count)
 				l_pe_file.close
-
-				{MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
 			end
 
 		ensure
@@ -338,9 +333,6 @@ feature {NONE} -- Saving
 	compute_sizes is
 			-- Compute sizes and basic locations of headers and sections,
 			-- both real, on disk and in memory.
-		local
-			l_size: INTEGER
-			l_result: INTEGER
 		do
 				-- Size of meta data and code.
 			meta_data_size := emitter.save_size
@@ -358,9 +350,7 @@ feature {NONE} -- Saving
 			end
 
 			if has_strong_name then
-				l_result := {MD_STRONG_NAME}.strong_name_signature_size (
-					public_key.item.item, public_key.item.count, $l_size)
-				strong_name_size := l_size
+				strong_name_size := signing.assembly_signature_size (public_key.item)
 			else
 				strong_name_size := 0
 			end

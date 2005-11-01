@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make (n: NATURAL_32) is
 			-- Initialize current instance
 		do
-			create table.make (n.to_integer_32)
+			create table.make (n.to_integer_32, Void, create {RT_REFERENCE_COMPARER}.make)
 			last_index := 0
 		end
 

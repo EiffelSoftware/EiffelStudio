@@ -7,12 +7,15 @@ indexing
 class
 	GB_STATUS_BAR
 
+create
+	make_with_components
+
 feature -- Initialization
 
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	initialize_status_bar (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Initialize all action sequences and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void

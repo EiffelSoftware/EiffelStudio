@@ -19,12 +19,15 @@ inherit
 			copy, is_equal, default_create
 		end
 
-feature {GB_INTERNAL_COMPONENTS} -- Initialization
+create
+	make_with_components
+
+feature {NONE} -- Initialization
 
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	initialize_editors (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void

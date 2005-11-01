@@ -7,9 +7,12 @@ indexing
 class
 	GB_COMMAND_HANDLER
 
+create
+	make_with_components
+
 feature -- Access
 
-	initialize_commands (components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (components: GB_INTERNAL_COMPONENTS) is
 			-- Initialize current with `components'.
 		require
 			components_not_void: components /= Void

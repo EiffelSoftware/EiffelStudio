@@ -124,6 +124,7 @@ feature {NONE} -- Implementation
 		do
 			create widget
 			common_make
+			create tool_bar.make_with_widget_selector (Current, components)
 			widget.set_minimum_height (tool_minimum_height)
 			widget.drop_actions.set_veto_pebble_function (agent veto_object_drop)
 			widget.drop_actions.extend (agent handle_object_drop (?, Current))
@@ -173,11 +174,8 @@ feature -- Access
 			position_not_changed: widget.index = old widget.index
 		end
 
-	tool_bar: GB_WIDGET_SELECTOR_TOOL_BAR is
+	tool_bar: GB_WIDGET_SELECTOR_TOOL_BAR
 			-- A tool bar containing all buttons associated with `Current'.
-		once
-			create Result.make_with_widget_selector (Current, components)
-		end
 
 	name: STRING is "Widget Selector"
 			-- Full name used to represent `Current'.

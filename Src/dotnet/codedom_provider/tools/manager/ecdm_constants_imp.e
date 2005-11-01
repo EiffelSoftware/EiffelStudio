@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	help_button_text: STRING is
-			-- `Result' is STRING constant named `help_button_text'.
+	no_logging: STRING is
+			-- `Result' is STRING constant named `no_logging'.
 		once
-			Result := "Help"
+			Result := "Log nothing"
 		end
 
 	new_button_tooltip: STRING is
@@ -41,203 +41,13 @@ feature -- Access
 			Result := "Create new configuration"
 		end
 
-	help_button_tooltip: STRING is
-			-- `Result' is STRING constant named `help_button_tooltip'.
-		once
-			Result := "Display Eiffel Codedom Provider Configuration Manager help topics"
-		end
-
-	eiffel_software_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("eiffel_software.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	application_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("application.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	info_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("info.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	warning_logging: STRING is
-			-- `Result' is STRING constant named `warning_logging'.
-		once
-			Result := "Log errors and warnings"
-		end
-
-	configuration_properties_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("configuration_properties.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	save_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("save.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	delete_button_text: STRING is
-			-- `Result' is STRING constant named `delete_button_text'.
-		once
-			Result := "Delete"
-		end
-
-	error_logging: STRING is
-			-- `Result' is STRING constant named `error_logging'.
-		once
-			Result := "Log errors"
-		end
-
-	save_button_tooltip: STRING is
-			-- `Result' is STRING constant named `save_button_tooltip'.
-		once
-			Result := "Save changes to selected configuration"
-		end
-
-	revert_button_text: STRING is
-			-- `Result' is STRING constant named `revert_button_text'.
-		once
-			Result := "Revert"
-		end
-
-	revert_button_tooltip: STRING is
-			-- `Result' is STRING constant named `revert_button_tooltip'.
-		once
-			Result := "Cancel all changes done to selected configuration and reload settings from file"
-		end
-
-	icons_directory: STRING is
-			-- `Result' is DIRECTORY constant named `icons_directory'.
-		once
-			Result := "E:\Sources\dotnet\codedom_provider\manager\icons"
-		end
-
-	no_logging: STRING is
-			-- `Result' is STRING constant named `no_logging'.
-		once
-			Result := "Log nothing"
-		end
-
-	new_wizard_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("new_wizard.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	product_title: STRING is
-			-- `Result' is STRING constant named `product_title'.
-		once
-			Result := "Eiffel Codedom Provider Manager"
-		end
-
-	help_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("help.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
 	revert_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
-		Once
+		once
 			create Result
 			create a_file_name.make_from_string (icons_directory)
 			a_file_name.set_file_name ("revert.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	all_logging: STRING is
-			-- `Result' is STRING constant named `all_logging'.
-		once
-			Result := "Log everything"
-		end
-
-	product_version: STRING is
-			-- `Result' is STRING constant named `product_version'.
-		once
-			Result := "1.0.0130"
-		end
-
-	properties_button_tooltip: STRING is
-			-- `Result' is STRING constant named `properties_button_tooltip'.
-		once
-			Result := "Display properties of selected configuration"
-		end
-
-	configuration_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("configuration.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	delete_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("delete.png")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	new_button_text: STRING is
-			-- `Result' is STRING constant named `new_button_text'.
-		once
-			Result := "New"
-		end
-
-	save_button_text: STRING is
-			-- `Result' is STRING constant named `save_button_text'.
-		once
-			Result := "Save"
-		end
-
-	new_png: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("new.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -247,10 +57,200 @@ feature -- Access
 			Result := "Delete selected configuration"
 		end
 
+	new_button_text: STRING is
+			-- `Result' is STRING constant named `new_button_text'.
+		once
+			Result := "New"
+		end
+
+	application_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("application.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	save_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("save.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	save_button_text: STRING is
+			-- `Result' is STRING constant named `save_button_text'.
+		once
+			Result := "Save"
+		end
+
+	all_logging: STRING is
+			-- `Result' is STRING constant named `all_logging'.
+		once
+			Result := "Log everything"
+		end
+
+	icons_directory: STRING is
+			-- `Result' is DIRECTORY constant named `icons_directory'.
+		once
+			Result := "E:\Sources\dotnet\codedom_provider\manager\icons"
+		end
+
+	revert_button_tooltip: STRING is
+			-- `Result' is STRING constant named `revert_button_tooltip'.
+		once
+			Result := "Cancel all changes done to selected configuration and reload settings from file"
+		end
+
+	properties_button_tooltip: STRING is
+			-- `Result' is STRING constant named `properties_button_tooltip'.
+		once
+			Result := "Display properties of selected configuration"
+		end
+
+	error_logging: STRING is
+			-- `Result' is STRING constant named `error_logging'.
+		once
+			Result := "Log errors"
+		end
+
+	warning_logging: STRING is
+			-- `Result' is STRING constant named `warning_logging'.
+		once
+			Result := "Log errors and warnings"
+		end
+
+	configuration_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("configuration.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	help_button_tooltip: STRING is
+			-- `Result' is STRING constant named `help_button_tooltip'.
+		once
+			Result := "Display Eiffel Codedom Provider Configuration Manager help topics"
+		end
+
+	help_button_text: STRING is
+			-- `Result' is STRING constant named `help_button_text'.
+		once
+			Result := "Help"
+		end
+
 	properties_button_text: STRING is
 			-- `Result' is STRING constant named `properties_button_text'.
 		once
 			Result := "Properties"
+		end
+
+	delete_button_text: STRING is
+			-- `Result' is STRING constant named `delete_button_text'.
+		once
+			Result := "Delete"
+		end
+
+	save_button_tooltip: STRING is
+			-- `Result' is STRING constant named `save_button_tooltip'.
+		once
+			Result := "Save changes to selected configuration"
+		end
+
+	info_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("info.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	product_version: STRING is
+			-- `Result' is STRING constant named `product_version'.
+		once
+			Result := "1.0.0130"
+		end
+
+	new_wizard_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("new_wizard.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	revert_button_text: STRING is
+			-- `Result' is STRING constant named `revert_button_text'.
+		once
+			Result := "Revert"
+		end
+
+	help_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("help.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	configuration_properties_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("configuration_properties.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	product_title: STRING is
+			-- `Result' is STRING constant named `product_title'.
+		once
+			Result := "Eiffel Codedom Provider Manager"
+		end
+
+	new_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("new.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	delete_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("delete.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	eiffel_software_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("eiffel_software.png")
+			set_with_named_file (Result, a_file_name)
 		end
 
 

@@ -26,9 +26,7 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local 
-			l_ev_horizontal_separator_1, l_ev_horizontal_separator_2, l_ev_horizontal_separator_3, 
-			l_ev_horizontal_separator_4: EV_HORIZONTAL_SEPARATOR
+		local
 			internal_font: EV_FONT
 		do
 			Precursor {EV_DIALOG}
@@ -80,10 +78,6 @@ feature {NONE}-- Initialization
 			buttons_box.extend (ok_button)
 			buttons_box.extend (right_button_cell)
 			
-			set_minimum_width (300)
-			set_minimum_height (400)
-			disable_user_resize
-			set_title ("Configuration Properties")
 			main_box.disable_item_expand (top_box)
 			main_box.disable_item_expand (l_ev_horizontal_separator_1)
 			main_box.disable_item_expand (location_box)
@@ -100,10 +94,10 @@ feature {NONE}-- Initialization
 			configuration_pixmap.set_minimum_width (40)
 			configuration_pixmap.copy (configuration_properties_png)
 			create internal_font
-			internal_font.set_family (3)
-			internal_font.set_weight (8)
-			internal_font.set_shape (10)
-			internal_font.set_height (13)
+			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
+			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
+			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_height_in_points (10)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			name_text_label.set_font (internal_font)
 			name_text_label.align_text_left
@@ -138,6 +132,10 @@ feature {NONE}-- Initialization
 			buttons_box.disable_item_expand (ok_button)
 			ok_button.set_text ("OK")
 			ok_button.set_minimum_width (100)
+			set_minimum_width (300)
+			set_minimum_height (400)
+			disable_user_resize
+			set_title ("Configuration Properties")
 			
 				--Connect events.
 			ok_button.select_actions.extend (agent on_ok)
@@ -150,16 +148,22 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	main_box, applications_box: EV_VERTICAL_BOX
-	top_box, location_box, buttons_box: EV_HORIZONTAL_BOX
-	configuration_pixmap: EV_PIXMAP
-	name_text_label, location_title_label, created_title_label, created_label, modified_title_label, 
-	modified_label, applications_label: EV_LABEL
-	location_text_field: EV_TEXT_FIELD
-	file_properties_table: EV_TABLE
 	applications_list: EV_LIST
 	left_button_cell, right_button_cell: EV_CELL
+	file_properties_table: EV_TABLE
 	ok_button: EV_BUTTON
+	configuration_pixmap: EV_PIXMAP
+	top_box,
+	location_box, buttons_box: EV_HORIZONTAL_BOX
+	main_box, applications_box: EV_VERTICAL_BOX
+	name_text_label, location_title_label,
+	created_title_label, created_label, modified_title_label, modified_label, applications_label: EV_LABEL
+	location_text_field: EV_TEXT_FIELD
+
+feature {NONE} -- Implementation
+
+	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2, l_ev_horizontal_separator_3,
+	l_ev_horizontal_separator_4: EV_HORIZONTAL_SEPARATOR
 
 feature {NONE} -- Implementation
 

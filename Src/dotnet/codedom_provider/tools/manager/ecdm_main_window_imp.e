@@ -26,10 +26,7 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local 
-			l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3: EV_MENU_SEPARATOR
-			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-			l_ev_cell_1, l_ev_cell_2: EV_CELL
+		local
 			internal_font: EV_FONT
 		do
 			Precursor {EV_TITLED_WINDOW}
@@ -90,6 +87,7 @@ feature {NONE}-- Initialization
 			create default_root_clas_label
 			create precompile_ace_file_label
 			create metadata_cache_label
+			create compiler_metadata_cache_label
 			create precompile_cache_label
 			create compiler_values_box
 			create root_class_combo_box
@@ -101,6 +99,10 @@ feature {NONE}-- Initialization
 			create metadata_cache_combo_box
 			create metadata_cache_cell
 			create metadata_cache_browse_button
+			create compiler_metadata_cache_box
+			create compiler_metadata_cache_combo_box
+			create compiler_metadata_cache_cell
+			create compiler_metadata_cache_browse_button
 			create precompile_cache_box
 			create precompile_cache_combo_box
 			create precompile_cache_cell
@@ -181,6 +183,7 @@ feature {NONE}-- Initialization
 			compiler_titles_box.extend (default_root_clas_label)
 			compiler_titles_box.extend (precompile_ace_file_label)
 			compiler_titles_box.extend (metadata_cache_label)
+			compiler_titles_box.extend (compiler_metadata_cache_label)
 			compiler_titles_box.extend (precompile_cache_label)
 			compiler_box.extend (compiler_values_box)
 			compiler_values_box.extend (root_class_combo_box)
@@ -192,6 +195,10 @@ feature {NONE}-- Initialization
 			metadata_cache_box.extend (metadata_cache_combo_box)
 			metadata_cache_box.extend (metadata_cache_cell)
 			metadata_cache_box.extend (metadata_cache_browse_button)
+			compiler_values_box.extend (compiler_metadata_cache_box)
+			compiler_metadata_cache_box.extend (compiler_metadata_cache_combo_box)
+			compiler_metadata_cache_box.extend (compiler_metadata_cache_cell)
+			compiler_metadata_cache_box.extend (compiler_metadata_cache_browse_button)
 			compiler_values_box.extend (precompile_cache_box)
 			precompile_cache_box.extend (precompile_cache_combo_box)
 			precompile_cache_box.extend (precompile_cache_cell)
@@ -217,10 +224,6 @@ feature {NONE}-- Initialization
 			buttons_box.extend (remove_button)
 			buttons_box.extend (right_buttons_padding_cell)
 			
-			set_minimum_width (500)
-			set_minimum_height (580)
-			set_title (product_title)
-			set_background_pixmap (new_png)
 			file_menu.set_text ("File")
 			new_menu_item.set_text (new_button_text)
 			new_menu_item.set_pixmap (new_png)
@@ -295,10 +298,10 @@ feature {NONE}-- Initialization
 			warning_box.set_padding_width (5)
 			warning_box.set_border_width (5)
 			create internal_font
-			internal_font.set_family (3)
-			internal_font.set_weight (8)
-			internal_font.set_shape (10)
-			internal_font.set_height (11)
+			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
+			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
+			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			warning_title_label.set_font (internal_font)
 			warning_title_label.set_text ("Warning: Logging requires registry access rights.")
@@ -308,7 +311,7 @@ feature {NONE}-- Initialization
 			compiler_frame.set_text ("Compiler Settings")
 			compiler_box.set_border_width (5)
 			compiler_box.disable_item_expand (compiler_titles_box)
-			compiler_titles_box.set_minimum_width (120)
+			compiler_titles_box.set_minimum_width (135)
 			compiler_titles_box.set_padding_width (5)
 			compiler_titles_box.set_border_width (5)
 			default_root_clas_label.set_text ("Default root class")
@@ -317,6 +320,8 @@ feature {NONE}-- Initialization
 			precompile_ace_file_label.align_text_left
 			metadata_cache_label.set_text ("Metadata cache")
 			metadata_cache_label.align_text_left
+			compiler_metadata_cache_label.set_text ("Compiler metadata cache")
+			compiler_metadata_cache_label.align_text_left
 			precompile_cache_label.set_text ("Precompile cache")
 			precompile_cache_label.align_text_left
 			compiler_values_box.set_padding_width (5)
@@ -331,6 +336,11 @@ feature {NONE}-- Initialization
 			metadata_cache_cell.set_minimum_width (5)
 			metadata_cache_browse_button.set_text ("...")
 			metadata_cache_browse_button.set_minimum_width (40)
+			compiler_metadata_cache_box.disable_item_expand (compiler_metadata_cache_cell)
+			compiler_metadata_cache_box.disable_item_expand (compiler_metadata_cache_browse_button)
+			compiler_metadata_cache_cell.set_minimum_width (5)
+			compiler_metadata_cache_browse_button.set_text ("...")
+			compiler_metadata_cache_browse_button.set_minimum_width (40)
 			precompile_cache_box.disable_item_expand (precompile_cache_cell)
 			precompile_cache_box.disable_item_expand (precompile_cache_browse_button)
 			precompile_cache_cell.set_minimum_width (5)
@@ -368,9 +378,12 @@ feature {NONE}-- Initialization
 			add_button.set_minimum_width (100)
 			remove_button.set_text ("Remove")
 			remove_button.set_minimum_width (100)
+			set_minimum_width (550)
+			set_minimum_height (580)
+			set_title (product_title)
+			set_background_pixmap (new_png)
 			
 				--Connect events.
-			resize_actions.extend (agent on_resize (?, ?, ?, ?))
 			new_menu_item.select_actions.extend (agent on_config_new)
 			save_menu_item.select_actions.extend (agent on_config_save)
 			revert_menu_item.select_actions.extend (agent on_revert)
@@ -398,6 +411,8 @@ feature {NONE}-- Initialization
 			browse_button.select_actions.extend (agent on_precompile_ace_file_browse)
 			metadata_cache_combo_box.change_actions.extend (agent on_metadata_cache_change)
 			metadata_cache_browse_button.select_actions.extend (agent on_metadata_cache_browse)
+			compiler_metadata_cache_combo_box.change_actions.extend (agent on_compiler_metadata_cache_change)
+			compiler_metadata_cache_browse_button.select_actions.extend (agent on_compiler_metadata_cache_browse)
 			precompile_cache_combo_box.change_actions.extend (agent on_precompile_cache_change)
 			precompile_cache_browse_button.select_actions.extend (agent on_precompile_cache_browse)
 			prefixes_list.select_actions.extend (agent on_assembly_file_name_select (?))
@@ -412,6 +427,7 @@ feature {NONE}-- Initialization
 			applications_list.deselect_actions.extend (agent on_application_deselect)
 			add_button.select_actions.extend (agent on_add_application)
 			remove_button.select_actions.extend (agent on_remove_application)
+			resize_actions.extend (agent on_resize (?, ?, ?, ?))
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -421,31 +437,48 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	menu: EV_MENU_BAR
-	file_menu, edit_menu, options_menu, help_menu: EV_MENU
-	new_menu_item, save_menu_item, revert_menu_item, properties_menu_item, exit_menu_item, 
-	delete_menu_item, help_content_menu_item, about_menu_item: EV_MENU_ITEM
 	show_text_menu_item, show_tooltips_menu_item: EV_CHECK_MENU_ITEM
-	window_box, configurations_box, edit_box, general_box, general_titles_box, general_values_box, 
-	warning_box, compiler_titles_box, compiler_values_box, prefixes_box, applications_box: EV_VERTICAL_BOX
-	tool_bars_box, main_box, general_entries_box, compiler_box, precompile_ace_file_box, 
-	metadata_cache_box, precompile_cache_box, prefix_components_box, assembly_file_name_buttons_box, 
-	buttons_box: EV_HORIZONTAL_BOX
-	main_tool_bar, help_tool_bar: EV_TOOL_BAR
-	new_button, save_button, revert_button, properties_button, delete_button, help_button: EV_TOOL_BAR_BUTTON
-	tool_bars_padding_cell, precompile_padding_cell, metadata_cache_cell, precompile_cache_cell, 
-	left_buttons_padding_cell, right_buttons_padding_cell: EV_CELL
-	configurations_list, applications_list: EV_LIST
-	general_frame, compiler_frame, prefixes_frame, applications_frame: EV_FRAME
-	fail_on_error_label, log_server_label, log_level_label, warning_title_label, warning_content_label, 
-	default_root_clas_label, precompile_ace_file_label, metadata_cache_label, precompile_cache_label: EV_LABEL
-	fail_on_error_check_button: EV_CHECK_BUTTON
-	log_server_combo_box, log_level_combo, root_class_combo_box, precompile_ace_file_combo_box, 
-	metadata_cache_combo_box, precompile_cache_combo_box: EV_COMBO_BOX
-	browse_button, metadata_cache_browse_button, precompile_cache_browse_button, assembly_file_name_browse_button, 
-	assembly_file_name_add_button, assembly_file_name_remove_button, add_button, remove_button: EV_BUTTON
-	prefixes_list: EV_MULTI_COLUMN_LIST
 	prefix_text_field, assembly_file_name_text_field: EV_TEXT_FIELD
+	prefixes_list: EV_MULTI_COLUMN_LIST
+	file_menu,
+	edit_menu, options_menu, help_menu: EV_MENU
+	tool_bars_padding_cell, precompile_padding_cell,
+	metadata_cache_cell, compiler_metadata_cache_cell, precompile_cache_cell, left_buttons_padding_cell,
+	right_buttons_padding_cell: EV_CELL
+	browse_button, metadata_cache_browse_button, compiler_metadata_cache_browse_button,
+	precompile_cache_browse_button, assembly_file_name_browse_button, assembly_file_name_add_button,
+	assembly_file_name_remove_button, add_button, remove_button: EV_BUTTON
+	main_tool_bar, help_tool_bar: EV_TOOL_BAR
+	configurations_list,
+	applications_list: EV_LIST
+	log_server_combo_box, log_level_combo, root_class_combo_box, precompile_ace_file_combo_box,
+	metadata_cache_combo_box, compiler_metadata_cache_combo_box, precompile_cache_combo_box: EV_COMBO_BOX
+	new_button,
+	save_button, revert_button, properties_button, delete_button, help_button: EV_TOOL_BAR_BUTTON
+	tool_bars_box,
+	main_box, general_entries_box, compiler_box, precompile_ace_file_box, metadata_cache_box,
+	compiler_metadata_cache_box, precompile_cache_box, prefix_components_box, assembly_file_name_buttons_box,
+	buttons_box: EV_HORIZONTAL_BOX
+	window_box, configurations_box, edit_box, general_box, general_titles_box,
+	general_values_box, warning_box, compiler_titles_box, compiler_values_box, prefixes_box,
+	applications_box: EV_VERTICAL_BOX
+	fail_on_error_check_button: EV_CHECK_BUTTON
+	fail_on_error_label, log_server_label,
+	log_level_label, warning_title_label, warning_content_label, default_root_clas_label,
+	precompile_ace_file_label, metadata_cache_label, compiler_metadata_cache_label, precompile_cache_label: EV_LABEL
+	new_menu_item,
+	save_menu_item, revert_menu_item, properties_menu_item, exit_menu_item, delete_menu_item,
+	help_content_menu_item, about_menu_item: EV_MENU_ITEM
+	menu: EV_MENU_BAR
+	general_frame, compiler_frame, prefixes_frame,
+	applications_frame: EV_FRAME
+
+feature {NONE} -- Implementation
+
+	l_ev_menu_separator_1, l_ev_menu_separator_2, l_ev_menu_separator_3: EV_MENU_SEPARATOR
+	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+	l_ev_cell_1,
+	l_ev_cell_2: EV_CELL
 
 feature {NONE} -- Implementation
 
@@ -459,11 +492,6 @@ feature {NONE} -- Implementation
 	
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
-		deferred
-		end
-	
-	on_resize (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Called by `resize_actions' of `Current'.
 		deferred
 		end
 	
@@ -567,6 +595,16 @@ feature {NONE} -- Implementation
 		deferred
 		end
 	
+	on_compiler_metadata_cache_change is
+			-- Called by `change_actions' of `compiler_metadata_cache_combo_box'.
+		deferred
+		end
+	
+	on_compiler_metadata_cache_browse is
+			-- Called by `select_actions' of `compiler_metadata_cache_browse_button'.
+		deferred
+		end
+	
 	on_precompile_cache_change is
 			-- Called by `change_actions' of `precompile_cache_combo_box'.
 		deferred
@@ -634,6 +672,11 @@ feature {NONE} -- Implementation
 	
 	on_remove_application is
 			-- Called by `select_actions' of `remove_button'.
+		deferred
+		end
+	
+	on_resize (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Called by `resize_actions' of `Current'.
 		deferred
 		end
 	

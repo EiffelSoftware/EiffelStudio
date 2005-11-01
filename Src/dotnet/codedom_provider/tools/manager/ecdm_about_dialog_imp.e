@@ -26,8 +26,7 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local 
-			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+		local
 			internal_font: EV_FONT
 		do
 			Precursor {EV_DIALOG}
@@ -75,9 +74,6 @@ feature {NONE}-- Initialization
 			bottom_box.extend (ok_button)
 			bottom_box.extend (right_bottom_cell)
 			
-			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			disable_user_resize
-			set_title (product_title)
 			inside_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			inside_box.disable_item_expand (left_box)
 			inside_box.disable_item_expand (right_box)
@@ -99,10 +95,10 @@ feature {NONE}-- Initialization
 			right_box.disable_item_expand (content_box)
 			title_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			create internal_font
-			internal_font.set_family (3)
-			internal_font.set_weight (8)
-			internal_font.set_shape (10)
-			internal_font.set_height (13)
+			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
+			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
+			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_height_in_points (10)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			title_label.set_font (internal_font)
 			title_label.set_text ("Eiffel Codedom Provider Manager")
@@ -116,7 +112,7 @@ feature {NONE}-- Initialization
 			content_box.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			content_box.set_padding_width (5)
 			copyright_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			copyright_label.set_text ("Copyright 2004 Eiffel Software")
+			copyright_label.set_text ("Copyright (C) 2005 Eiffel Software")
 			copyright_label.align_text_left
 			web_address_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			web_address_label.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 128))
@@ -127,6 +123,9 @@ feature {NONE}-- Initialization
 			bottom_box.disable_item_expand (ok_button)
 			ok_button.set_text ("OK")
 			ok_button.set_minimum_width (100)
+			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			disable_user_resize
+			set_title (product_title)
 			
 				--Connect events.
 			web_address_label.pointer_button_release_actions.extend (agent on_web_click (?, ?, ?, ?, ?, ?, ?, ?))
@@ -142,12 +141,18 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	main_box, left_box, right_box, content_box: EV_VERTICAL_BOX
-	inside_box, version_box, bottom_box: EV_HORIZONTAL_BOX
 	left_top_padding_cell, left_bottom_padding_cell, left_bottom_cell, right_bottom_cell: EV_CELL
-	es_logo_pixmap: EV_PIXMAP
-	title_label, version_title, version_label, copyright_label, web_address_label: EV_LABEL
 	ok_button: EV_BUTTON
+	es_logo_pixmap: EV_PIXMAP
+	inside_box,
+	version_box, bottom_box: EV_HORIZONTAL_BOX
+	main_box, left_box, right_box, content_box: EV_VERTICAL_BOX
+	title_label,
+	version_title, version_label, copyright_label, web_address_label: EV_LABEL
+
+feature {NONE} -- Implementation
+
+	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 
 feature {NONE} -- Implementation
 

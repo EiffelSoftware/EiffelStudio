@@ -26,8 +26,7 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local 
-			l_ev_horizontal_separator_1, l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
+		local
 			internal_font: EV_FONT
 		do
 			Precursor {EV_DIALOG}
@@ -107,10 +106,6 @@ feature {NONE}-- Initialization
 			buttons_box.extend (ok_button)
 			buttons_box.extend (cancel_button)
 			
-			set_minimum_width (520)
-			set_minimum_height (440)
-			disable_user_resize
-			set_title ("New Configuration")
 			main_box.disable_item_expand (top_box)
 			main_box.disable_item_expand (l_ev_horizontal_separator_1)
 			main_box.disable_item_expand (l_ev_horizontal_separator_2)
@@ -126,10 +121,10 @@ feature {NONE}-- Initialization
 			title_box.disable_item_expand (subtitle_box)
 			title_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			create internal_font
-			internal_font.set_family (3)
-			internal_font.set_weight (8)
-			internal_font.set_shape (10)
-			internal_font.set_height (11)
+			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_sans)
+			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_bold)
+			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_height_in_points (8)
 			internal_font.preferred_families.extend ("Microsoft Sans Serif")
 			title_label.set_font (internal_font)
 			title_label.set_text ("New Configuration")
@@ -186,6 +181,10 @@ feature {NONE}-- Initialization
 			ok_button.set_minimum_width (100)
 			cancel_button.set_text ("Cancel")
 			cancel_button.set_minimum_width (100)
+			set_minimum_width (520)
+			set_minimum_height (440)
+			disable_user_resize
+			set_title ("New Configuration")
 			
 				--Connect events.
 			config_name_text_field.change_actions.extend (agent on_name_change)
@@ -205,17 +204,25 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	main_box, title_box, bottom_box, config_info_box, applications_box: EV_VERTICAL_BOX
-	top_box, subtitle_box, config_name_edit_box, configuration_folder_box, applications_buttons_box, 
-	buttons_box: EV_HORIZONTAL_BOX
-	title_label, subtitle_label, config_name_label, configuration_folder_label, applications_label: EV_LABEL
-	subtitle_padding_cell, top_padding_cell, config_name_padding_cell, config_info_padding_cell, 
-	buttons_padding_cell, bottom_buttons_padding_cell: EV_CELL
-	new_configuration_pixmap: EV_PIXMAP
-	config_info_frame, applications_frame: EV_FRAME
-	config_name_text_field, configuration_folder_text_field: EV_TEXT_FIELD
-	browse_button, add_button, remove_button, ok_button, cancel_button: EV_BUTTON
 	applications_list: EV_LIST
+	subtitle_padding_cell, top_padding_cell, config_name_padding_cell,
+	config_info_padding_cell, buttons_padding_cell, bottom_buttons_padding_cell: EV_CELL
+	browse_button,
+	add_button, remove_button, ok_button, cancel_button: EV_BUTTON
+	new_configuration_pixmap: EV_PIXMAP
+	top_box,
+	subtitle_box, config_name_edit_box, configuration_folder_box, applications_buttons_box,
+	buttons_box: EV_HORIZONTAL_BOX
+	main_box, title_box, bottom_box, config_info_box, applications_box: EV_VERTICAL_BOX
+	title_label,
+	subtitle_label, config_name_label, configuration_folder_label, applications_label: EV_LABEL
+	config_name_text_field,
+	configuration_folder_text_field: EV_TEXT_FIELD
+	config_info_frame, applications_frame: EV_FRAME
+
+feature {NONE} -- Implementation
+
+	l_ev_horizontal_separator_1, l_ev_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 
 feature {NONE} -- Implementation
 

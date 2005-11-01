@@ -26,11 +26,7 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local 
-			l_ev_vertical_box_1: EV_VERTICAL_BOX
-			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
-			l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
-			l_ev_cell_1, l_ev_cell_2: EV_CELL
+		local
 			internal_font: EV_FONT
 		do
 			Precursor {EV_DIALOG}
@@ -54,25 +50,25 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_1.extend (ok_button)
 			l_ev_horizontal_box_1.extend (l_ev_cell_2)
 			
-			set_minimum_width (605)
-			set_minimum_height (200)
-			disable_user_resize
-			set_title ("Eiffel Codedom Provider Manager Output")
 			l_ev_vertical_box_1.set_padding_width (5)
 			l_ev_vertical_box_1.set_border_width (5)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			create internal_font
-			internal_font.set_family (4)
-			internal_font.set_weight (7)
-			internal_font.set_shape (10)
-			internal_font.set_height (12)
+			internal_font.set_family (feature {EV_FONT_CONSTANTS}.Family_typewriter)
+			internal_font.set_weight (feature {EV_FONT_CONSTANTS}.Weight_regular)
+			internal_font.set_shape (feature {EV_FONT_CONSTANTS}.Shape_regular)
+			internal_font.set_height_in_points (9)
 			internal_font.preferred_families.extend ("Lucida Console")
 			output.set_font (internal_font)
 			output.disable_edit
 			l_ev_horizontal_box_1.disable_item_expand (ok_button)
 			ok_button.set_text ("OK")
 			ok_button.set_minimum_width (100)
+			set_minimum_width (605)
+			set_minimum_height (200)
+			disable_user_resize
+			set_title ("Eiffel Codedom Provider Manager Output")
 			
 				--Connect events.
 				-- Close the application when an interface close
@@ -84,8 +80,15 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	output: EV_TEXT
 	ok_button: EV_BUTTON
+	output: EV_TEXT
+
+feature {NONE} -- Implementation
+
+	l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
+	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	l_ev_vertical_box_1: EV_VERTICAL_BOX
 
 feature {NONE} -- Implementation
 

@@ -203,6 +203,9 @@ feature -- Access
 	search_compiled_class_button: EV_CHECK_BUTTON
 			-- Button to indicate if compiled classes will be searched.
 			
+	incremental_search_button: EV_CHECK_BUTTON
+			-- Button to control incremental search.
+			
 	scope_list: EV_LIST
 			-- List of the specific scope
 			
@@ -250,6 +253,12 @@ feature -- Status report
 			Result := use_regular_expression_button.is_selected
 		end
 		
+	is_incremental_search: BOOLEAN is
+			-- Is incremental search enabled?
+		do
+			Result := incremental_search_button.is_selected
+		end
+		
 	is_sub_cluster_searched: BOOLEAN is
 			-- Are subclusters searched?
 		do
@@ -267,6 +276,24 @@ feature -- Status report
 		do
 			Result := search_compiled_class_button.is_selected
 		end
+		
+	item_selected (a_editor: EB_EDITOR): BOOLEAN is
+			-- If item in report is selected in a_editor.
+		local
+			l_text_item: MSR_TEXT_ITEM
+		do
+			if multi_search_performer.is_search_launched and not multi_search_performer.off then
+				l_text_item ?= multi_search_performer.item
+				if 	
+					l_text_item /= Void and then
+					is_current_editor_searched implies old_editor = editor and 
+					a_editor.text_displayed.selection_start.pos_in_text = l_text_item.start_index_in_unix_text and
+					a_editor.text_displayed.selection_end.pos_in_text = l_text_item.end_index_in_unix_text + 1
+				then
+					Result := true
+				end
+			end
+		end
 
 feature -- Status setting
 
@@ -275,6 +302,18 @@ feature -- Status setting
 		do
 			new_search_set := true
 		end
+		
+	enable_incremental_search is
+			-- Enable incremental search.
+		do
+			incremental_search_button.enable_select
+		end
+			
+	disable_incremental_search is
+			-- Disable increamental search	
+		do
+			incremental_search_button.disable_select
+		end
 
 feature -- Action
 
@@ -282,11 +321,12 @@ feature -- Action
 			-- Highlight next found item if possible, possibly go back.
 			-- If search is not launched, launch it.
 		do
-			if old_editor /= editor and is_current_editor_searched then
+			if new_search_set or (old_editor /= editor and is_current_editor_searched) then
 				force_new_search
-				search_button_clicked
+				dispatch_search
+			else
+				extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
 			end
-			extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
 			select_and_show
 		end
 
@@ -344,10 +384,10 @@ feature -- Action
 							else
 								extend_and_run_loaded_action (agent replace_current_perform)
 							end
-							go_to_next_found
-							redraw_grid
-							select_current_row
-							new_search_set := false
+							extend_and_run_loaded_action (agent go_to_next_found)
+							extend_and_run_loaded_action (agent redraw_grid)
+							extend_and_run_loaded_action (agent select_current_row)
+							extend_and_run_loaded_action (agent force_not_changed)
 						end
 					end
 				else
@@ -440,7 +480,7 @@ feature {NONE} -- Implementation
 					end
 				elseif not is_current_editor_searched then
 					manager.set_stone (stone_from_class_i (l_list.first))
-					is_text_changed_in_editor := false
+--					is_text_changed_in_editor := false
 				end
 				if not is_current_editor_searched then
 					manager.editor_tool.text_area.set_focus
@@ -455,6 +495,7 @@ feature {NONE} -- Implementation
 		do
 			loaded_actions.extend (a_pro)
 			if editor.text_is_fully_loaded then
+				block_actions
 				from
 					loaded_actions.start
 				until
@@ -462,10 +503,9 @@ feature {NONE} -- Implementation
 				loop
 					l_pro := loaded_actions.item
 					loaded_actions.remove
-					block_actions
 					l_pro.call ([])
-					resume_actions
 				end
+				resume_actions
 			end
 		end
 		
@@ -490,7 +530,7 @@ feature {NONE} -- Implementation
 			if is_current_editor_searched then
 				force_new_search
 			end
-			is_text_changed_in_editor := true
+--			is_text_changed_in_editor := true
 		end
 		
 	stone_from_class_i (a_class_i: CLASS_I): STONE is
@@ -514,26 +554,7 @@ feature {NONE} -- Implementation
 			-- Invokes when search button is clicked.
 		do
 			if new_search_set or not multi_search_performer.is_search_launched then
-				if is_whole_project_searched then
-					search_whole_project
-				elseif is_scoped then
-					search_in_scope
-				else
-					if shown then
-						if search_button.is_sensitive then
-							if new_search_set or not multi_search_performer.is_search_launched then
-								search
-							end
-							if not editor.has_focus then
-								editor.set_focus
-							end
-						end
-					else
-						if new_search_set or not multi_search_performer.is_search_launched then
-							default_search
-						end
-					end
-				end
+				dispatch_search
 				select_and_show
 			else
 				go_to_next_found
@@ -636,6 +657,10 @@ feature {NONE} -- Implementation
 				-- Option "Search backward"
 			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
 			search_backward_button.key_press_actions.extend (agent key_pressed (?, True))
+				
+				-- Option "Incremental search"
+			create incremental_search_button.make_with_text ("Have not added to search panel")
+			incremental_search_button.enable_select
 			
 				-- Option "Current Editor"		
 			create current_editor_button.make_with_text (Interface_names.l_Current_editor)
@@ -654,7 +679,7 @@ feature {NONE} -- Implementation
 			scope_button.key_press_actions.extend (agent key_pressed (?, True))
 			scope_button.select_actions.extend (agent toggle_scope_detail)
 			scope_button.select_actions.extend (agent force_new_search)
-			scope_button.drop_actions.extend (agent on_drop_scope_button (?))
+			scope_button.drop_actions.extend (agent on_drop_scope_button (?))		
 			
 				-- Option "Subcluster"
 			create search_subcluster_button.make_with_text (Interface_names.l_Sub_clusters)
@@ -858,6 +883,31 @@ feature {NONE} -- Implementation
 			Result.extend (report)
 			
 		end
+		
+	dispatch_search is
+			-- Dispatch search.
+		do
+			if is_whole_project_searched then
+				search_whole_project
+			elseif is_scoped then
+				search_in_scope
+			else
+				if shown then
+					if search_button.is_sensitive then
+						if new_search_set or not multi_search_performer.is_search_launched then
+							search
+						end
+						if not editor.has_focus then
+							editor.set_focus
+						end
+					end
+				else
+					if new_search_set or not multi_search_performer.is_search_launched then
+						default_search
+					end
+				end
+			end
+		end		
 		
 	incremental_search (a_word: STRING) is
 			-- Incremental search in the editor displayed text
@@ -1317,7 +1367,7 @@ feature {NONE} -- Implementation
 					replace_button.enable_sensitive
 					replace_all_click_button.enable_sensitive
 				end
-				if not editor.is_empty then
+				if not editor.is_empty and then is_incremental_search then
 					incremental_search (keyword_field.text)
 					if not multi_search_performer.off then
 						select_in_current_editor
@@ -1770,7 +1820,7 @@ feature {NONE} -- Implementation
 			-- Do actual `select_and_show'.
 		do
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then	
-				select_in_current_editor
+				select_in_current_editor_perform
 				select_current_row
 			end
 		end

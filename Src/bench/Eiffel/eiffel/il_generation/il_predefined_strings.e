@@ -28,7 +28,7 @@ feature -- Access
 	eiffel_name_attribute: STRING is "EiffelSoftware.Runtime.CA.EIFFEL_NAME_ATTRIBUTE"
 	type_feature_attribute: STRING is "EiffelSoftware.Runtime.CA.TYPE_FEATURE_ATTRIBUTE"
 	assertion_level_class_name_attribute: STRING is "EiffelSoftware.Runtime.CA.ASSERTION_LEVEL_ATTRIBUTE"
-	interface_type_class_name_attribute: STRING is "EiffelSoftware.Runtime.CA.INTERFACE_TYPE_ATTRIBUTE"
+	interface_type_class_name_attribute: STRING is "EiffelSoftware.Runtime.CA.RT_INTERFACE_TYPE_ATTRIBUTE"
 	assertion_level_enum_class_name: STRING is "EiffelSoftware.Runtime.Enums.ASSERTION_LEVEL_ENUM"
 	eiffel_exception_class_name: STRING is "EiffelSoftware.Runtime.EIFFEL_EXCEPTION"
 			-- Type used by code generation.

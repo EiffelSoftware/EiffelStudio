@@ -286,6 +286,7 @@ feature -- Basic operations
 		local
 			c: CHARACTER
 			l_new_target: STRING
+			l_index: INTEGER
 		do
 			if target.substring (1, Agent_keyword_length).is_equal (Agent_keyword) then
 				-- Agent
@@ -351,6 +352,27 @@ feature -- Basic operations
 				if target.count > 2 then -- Minimum static call construct is "{T}"
 					Result := type_from_type_name (target.substring (target.index_of ('{', 1) + 1, target.index_of ('}', 2) - 1))
 				end
+			elseif target.item (1).is_equal ('(') then
+					-- Bracketed expression
+				l_new_target := target.twin
+				l_new_target.prune_all (' ')
+				l_new_target.prune_all ('%T')
+				if l_new_target.count > 4  then
+					if l_new_target.substring (1, 2).is_equal ("({") then
+						l_index := l_new_target.substring_index_in_bounds ("})", 3, l_new_target.count)
+						if l_index > 0 then
+							l_new_target := l_new_target.substring (3, l_index - 1)
+							Result := type_from_type_name ("TYPE [" + l_new_target + "]")
+						end
+					elseif l_new_target.count > 9 and then l_new_target.substring (1, 8).is_equal ("(create{") then
+						l_index := l_new_target.index_of ('}', 3)
+						if l_index > 0 then
+							l_new_target := l_new_target.substring (9, l_index - 1)
+							Result := type_from_type_name (l_new_target)
+						end
+					end
+				end
+				set_standard_call
 			end
 		end
 

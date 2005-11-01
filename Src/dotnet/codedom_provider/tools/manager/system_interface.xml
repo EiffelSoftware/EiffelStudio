@@ -1,100 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?><application xmlns="" xmlns:ns1="" xsi="http://www.w3.org/1999/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
 <item type="Constants"><Constant><type>STRING</type>
-		<Name>help_button_text</Name>
-		<Value>Help</Value>
+		<Name>no_logging</Name>
+		<Value>Log nothing</Value>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>new_button_tooltip</Name>
 		<Value>Create new configuration</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>help_button_tooltip</Name>
-		<Value>Display Eiffel Codedom Provider Configuration Manager help topics</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>eiffel_software_png</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\eiffel_software.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>icons_directory</Directory>
-		<Filename>eiffel_software.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>application_png</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\application.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>icons_directory</Directory>
-		<Filename>application.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>info_png</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\info.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>icons_directory</Directory>
-		<Filename>info.png</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>warning_logging</Name>
-		<Value>Log errors and warnings</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>configuration_properties_png</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\configuration_properties.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>icons_directory</Directory>
-		<Filename>configuration_properties.png</Filename>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>save_png</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\save.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>icons_directory</Directory>
-		<Filename>save.png</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>delete_button_text</Name>
-		<Value>Delete</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>error_logging</Name>
-		<Value>Log errors</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>save_button_tooltip</Name>
-		<Value>Save changes to selected configuration</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>revert_button_text</Name>
-		<Value>Revert</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>revert_button_tooltip</Name>
-		<Value>Cancel all changes done to selected configuration and reload settings from file</Value>
-		</Constant>
-	<Constant><type>DIRECTORY</type>
-		<Name>icons_directory</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons</Value>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>no_logging</Name>
-		<Value>Log nothing</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>new_wizard_png</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\new_wizard.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>icons_directory</Directory>
-		<Filename>new_wizard.png</Filename>
-		</Constant>
-	<Constant><type>STRING</type>
-		<Name>product_title</Name>
-		<Value>Eiffel Codedom Provider Manager</Value>
-		</Constant>
-	<Constant><type>PIXMAP</type>
-		<Name>help_png</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\help.png</Value>
-		<is_absolute>False</is_absolute>
-		<Directory>icons_directory</Directory>
-		<Filename>help.png</Filename>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>revert_png</Name>
@@ -104,16 +15,54 @@
 		<Filename>revert.png</Filename>
 		</Constant>
 	<Constant><type>STRING</type>
+		<Name>delete_button_tooltip</Name>
+		<Value>Delete selected configuration</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>new_button_text</Name>
+		<Value>New</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>application_png</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\application.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>application.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>save_png</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\save.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>save.png</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>save_button_text</Name>
+		<Value>Save</Value>
+		</Constant>
+	<Constant><type>STRING</type>
 		<Name>all_logging</Name>
 		<Value>Log everything</Value>
 		</Constant>
+	<Constant><type>DIRECTORY</type>
+		<Name>icons_directory</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons</Value>
+		</Constant>
 	<Constant><type>STRING</type>
-		<Name>product_version</Name>
-		<Value>1.0.0130</Value>
+		<Name>revert_button_tooltip</Name>
+		<Value>Cancel all changes done to selected configuration and reload settings from file</Value>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>properties_button_tooltip</Name>
 		<Value>Display properties of selected configuration</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>error_logging</Name>
+		<Value>Log errors</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>warning_logging</Name>
+		<Value>Log errors and warnings</Value>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>configuration_png</Name>
@@ -122,20 +71,65 @@
 		<Directory>icons_directory</Directory>
 		<Filename>configuration.png</Filename>
 		</Constant>
+	<Constant><type>STRING</type>
+		<Name>help_button_tooltip</Name>
+		<Value>Display Eiffel Codedom Provider Configuration Manager help topics</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>help_button_text</Name>
+		<Value>Help</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>properties_button_text</Name>
+		<Value>Properties</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>delete_button_text</Name>
+		<Value>Delete</Value>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>save_button_tooltip</Name>
+		<Value>Save changes to selected configuration</Value>
+		</Constant>
 	<Constant><type>PIXMAP</type>
-		<Name>delete_png</Name>
-		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\delete.png</Value>
+		<Name>info_png</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\info.png</Value>
 		<is_absolute>False</is_absolute>
 		<Directory>icons_directory</Directory>
-		<Filename>delete.png</Filename>
+		<Filename>info.png</Filename>
 		</Constant>
 	<Constant><type>STRING</type>
-		<Name>new_button_text</Name>
-		<Value>New</Value>
+		<Name>product_version</Name>
+		<Value>1.0.0130</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>new_wizard_png</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\new_wizard.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>new_wizard.png</Filename>
 		</Constant>
 	<Constant><type>STRING</type>
-		<Name>save_button_text</Name>
-		<Value>Save</Value>
+		<Name>revert_button_text</Name>
+		<Value>Revert</Value>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>help_png</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\help.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>help.png</Filename>
+		</Constant>
+	<Constant><type>PIXMAP</type>
+		<Name>configuration_properties_png</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\configuration_properties.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>configuration_properties.png</Filename>
+		</Constant>
+	<Constant><type>STRING</type>
+		<Name>product_title</Name>
+		<Value>Eiffel Codedom Provider Manager</Value>
 		</Constant>
 	<Constant><type>PIXMAP</type>
 		<Name>new_png</Name>
@@ -144,13 +138,19 @@
 		<Directory>icons_directory</Directory>
 		<Filename>new.png</Filename>
 		</Constant>
-	<Constant><type>STRING</type>
-		<Name>delete_button_tooltip</Name>
-		<Value>Delete selected configuration</Value>
+	<Constant><type>PIXMAP</type>
+		<Name>delete_png</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\delete.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>delete.png</Filename>
 		</Constant>
-	<Constant><type>STRING</type>
-		<Name>properties_button_text</Name>
-		<Value>Properties</Value>
+	<Constant><type>PIXMAP</type>
+		<Name>eiffel_software_png</Name>
+		<Value>E:\Sources\dotnet\codedom_provider\manager\icons\eiffel_software.png</Value>
+		<is_absolute>False</is_absolute>
+		<Directory>icons_directory</Directory>
+		<Filename>eiffel_software.png</Filename>
 		</Constant>
 	</item>
 <item type="EV_DIALOG"><Internal_properties>
@@ -164,7 +164,7 @@
 	<Minimum_height>200</Minimum_height>
 	</EV_WIDGET>
 <EV_WINDOW><User_can_resize>False</User_can_resize>
-	<Title><![CDATA[Eiffel Codedom Provider Manager Output]]></Title>
+	<Title>Eiffel Codedom Provider Manager Output</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -238,7 +238,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[OK]]></Text>
+<EV_TEXTABLE><Text>OK</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -384,7 +384,7 @@
 	<Preferred_family>Microsoft Sans Serif</Preferred_family>
 	</EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Eiffel Codedom Provider Manager]]></Text>
+<EV_TEXTABLE><Text>Eiffel Codedom Provider Manager</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -411,7 +411,7 @@
 	</EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[v]]></Text>
+<EV_TEXTABLE><Text>v</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -427,7 +427,7 @@
 	</EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[1.0.0130]]></Text>
+<EV_TEXTABLE><Text>1.0.0130</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -458,7 +458,7 @@
 	</EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Copyright (C) 2005 Eiffel Software]]></Text>
+<EV_TEXTABLE><Text>Copyright (C) 2005 Eiffel Software</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -475,7 +475,7 @@
 	</EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[http://www.eiffel.com]]></Text>
+<EV_TEXTABLE><Text>http://www.eiffel.com</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -531,7 +531,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[OK]]></Text>
+<EV_TEXTABLE><Text>OK</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -566,7 +566,7 @@
 	<Minimum_height>400</Minimum_height>
 	</EV_WIDGET>
 <EV_WINDOW><User_can_resize>False</User_can_resize>
-	<Title><![CDATA[Configuration Properties]]></Title>
+	<Title>Configuration Properties</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -663,7 +663,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Location:]]></Text>
+<EV_TEXTABLE><Text>Location:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -722,7 +722,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Created:]]></Text>
+<EV_TEXTABLE><Text>Created:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -751,7 +751,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Modified:]]></Text>
+<EV_TEXTABLE><Text>Modified:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -804,7 +804,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Configured applications:]]></Text>
+<EV_TEXTABLE><Text>Configured applications:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -864,7 +864,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[OK]]></Text>
+<EV_TEXTABLE><Text>OK</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -899,7 +899,7 @@
 	<Minimum_height>440</Minimum_height>
 	</EV_WIDGET>
 <EV_WINDOW><User_can_resize>False</User_can_resize>
-	<Title><![CDATA[New Configuration]]></Title>
+	<Title>New Configuration</Title>
 	</EV_WINDOW>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -959,7 +959,7 @@
 	<Preferred_family>Microsoft Sans Serif</Preferred_family>
 	</EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[New Configuration]]></Text>
+<EV_TEXTABLE><Text>New Configuration</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1001,7 +1001,7 @@
 	</EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Fill in the following information to create a new Eiffel Codedom Provider configuration]]></Text>
+<EV_TEXTABLE><Text>Fill in the following information to create a new Eiffel Codedom Provider configuration</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1069,7 +1069,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Configuration Information]]></Text>
+<EV_TEXTABLE><Text>Configuration Information</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -1098,7 +1098,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Type the name for the new configuration:]]></Text>
+<EV_TEXTABLE><Text>Type the name for the new configuration:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1125,7 +1125,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[new_config]]></Text>
+<EV_TEXTABLE><Text>new_config</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>150</Minimum_width>
@@ -1166,7 +1166,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Type the location of the folder where the configuration file will be created:]]></Text>
+<EV_TEXTABLE><Text>Type the location of the folder where the configuration file will be created:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1207,7 +1207,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Browse]]></Text>
+<EV_TEXTABLE><Text>Browse</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -1228,7 +1228,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Configured Applications]]></Text>
+<EV_TEXTABLE><Text>Configured Applications</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -1257,7 +1257,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[List applications that will use this configuration:]]></Text>
+<EV_TEXTABLE><Text>List applications that will use this configuration:</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1298,7 +1298,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Add]]></Text>
+<EV_TEXTABLE><Text>Add</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -1317,7 +1317,7 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
 	</EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Remove]]></Text>
+<EV_TEXTABLE><Text>Remove</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -1385,7 +1385,7 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
 	</EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[OK]]></Text>
+<EV_TEXTABLE><Text>OK</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -1403,7 +1403,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Cancel]]></Text>
+<EV_TEXTABLE><Text>Cancel</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -1424,7 +1424,7 @@
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Minimum_width>500</Minimum_width>
+<EV_WIDGET><Minimum_width>550</Minimum_width>
 	<Minimum_height>580</Minimum_height>
 	</EV_WIDGET>
 <EV_WINDOW><Title><Constant>product_title</Constant>
@@ -1447,7 +1447,7 @@
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[File]]></Text>
+<EV_TEXTABLE><Text>File</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_MENU_ITEM"><Internal_properties>
@@ -1532,7 +1532,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Exit]]></Text>
+<EV_TEXTABLE><Text>Exit</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_close</Event>
@@ -1545,7 +1545,7 @@
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Edit]]></Text>
+<EV_TEXTABLE><Text>Edit</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_MENU_ITEM"><Internal_properties>
@@ -1554,7 +1554,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Delete]]></Text>
+<EV_TEXTABLE><Text>Delete</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE><Pixmap_path><Constant>delete_png</Constant>
 		</Pixmap_path>
@@ -1569,7 +1569,7 @@
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Options]]></Text>
+<EV_TEXTABLE><Text>Options</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_CHECK_MENU_ITEM"><Internal_properties>
@@ -1580,7 +1580,7 @@
 <EV_DESELECTABLE><Is_selected>True</Is_selected>
 	</EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Show text]]></Text>
+<EV_TEXTABLE><Text>Show text</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_show_text</Event>
@@ -1594,7 +1594,7 @@
 <EV_DESELECTABLE><Is_selected>True</Is_selected>
 	</EV_DESELECTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Show tooltips]]></Text>
+<EV_TEXTABLE><Text>Show tooltips</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_show_tooltips</Event>
@@ -1607,7 +1607,7 @@
 	<Expanded>1</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Help]]></Text>
+<EV_TEXTABLE><Text>Help</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <item type="EV_MENU_ITEM"><Internal_properties>
@@ -1616,7 +1616,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Help content]]></Text>
+<EV_TEXTABLE><Text>Help content</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE><Pixmap_path><Constant>help_png</Constant>
 		</Pixmap_path>
@@ -1638,7 +1638,7 @@
 	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[About]]></Text>
+<EV_TEXTABLE><Text>About</Text>
 	</EV_TEXTABLE>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <Events><Event>select_actions EV_MENU_ITEM_ACTION_SEQUENCES on_about</Event>
@@ -1887,7 +1887,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[General Settings]]></Text>
+<EV_TEXTABLE><Text>General Settings</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -1942,7 +1942,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Fail on error]]></Text>
+<EV_TEXTABLE><Text>Fail on error</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1957,7 +1957,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Log Server]]></Text>
+<EV_TEXTABLE><Text>Log Server</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -1972,7 +1972,7 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Log level]]></Text>
+<EV_TEXTABLE><Text>Log level</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2073,7 +2073,7 @@
 	<Preferred_family>Microsoft Sans Serif</Preferred_family>
 	</EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Warning: Logging requires registry access rights.]]></Text>
+<EV_TEXTABLE><Text>Warning: Logging requires registry access rights.</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2088,10 +2088,10 @@
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[The default configuration for applications such as ASP.NET might
+<EV_TEXTABLE><Text>The default configuration for applications such as ASP.NET might
 not authorize access to the required registry entries. If your system
 requires logging, configure the application accordingly by granting 
-the proper security access rights.]]></Text>
+the proper security access rights.</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2109,7 +2109,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Compiler Settings]]></Text>
+<EV_TEXTABLE><Text>Compiler Settings</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -2136,11 +2136,11 @@ the proper security access rights.]]></Text>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Minimum_width>120</Minimum_width>
+<EV_WIDGET><Minimum_width>135</Minimum_width>
 	</EV_WIDGET>
 <EV_BOX><Padding>5</Padding>
 	<Border>5</Border>
-	<Is_item_expanded>1111</Is_item_expanded>
+	<Is_item_expanded>11111</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -2152,7 +2152,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Default root class]]></Text>
+<EV_TEXTABLE><Text>Default root class</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2167,7 +2167,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Precompile ace file]]></Text>
+<EV_TEXTABLE><Text>Precompile ace file</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2182,7 +2182,22 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Metadata cache]]></Text>
+<EV_TEXTABLE><Text>Metadata cache</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_ALIGNABLE><Text_alignment>Left</Text_alignment>
+	</EV_TEXT_ALIGNABLE>
+</item>
+<item type="EV_LABEL"><Internal_properties>
+	<id>179</id>
+	<name>compiler_metadata_cache_label</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>Compiler metadata cache</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2197,7 +2212,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Precompile cache]]></Text>
+<EV_TEXTABLE><Text>Precompile cache</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET></EV_WIDGET>
@@ -2215,7 +2230,7 @@ the proper security access rights.]]></Text>
 <EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>5</Padding>
 	<Border>5</Border>
-	<Is_item_expanded>1111</Is_item_expanded>
+	<Is_item_expanded>11111</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -2237,7 +2252,7 @@ the proper security access rights.]]></Text>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
 	<id>58</id>
 	<name>precompile_ace_file_box</name>
-	<Expanded>1</Expanded>
+	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -2281,7 +2296,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[...]]></Text>
+<EV_TEXTABLE><Text>...</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>40</Minimum_width>
@@ -2339,7 +2354,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[...]]></Text>
+<EV_TEXTABLE><Text>...</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>40</Minimum_width>
@@ -2351,9 +2366,67 @@ the proper security access rights.]]></Text>
 </item>
 </item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
+	<id>183</id>
+	<name>compiler_metadata_cache_box</name>
+	<Expanded>1</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET></EV_WIDGET>
+<EV_BOX><Is_item_expanded>100</Is_item_expanded>
+	</EV_BOX>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+<item type="EV_COMBO_BOX"><Internal_properties>
+	<id>180</id>
+	<name>compiler_metadata_cache_combo_box</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE></EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET></EV_WIDGET>
+<EV_TEXT_COMPONENT></EV_TEXT_COMPONENT>
+<Events><Event>change_actions EV_TEXT_COMPONENT_ACTION_SEQUENCES on_compiler_metadata_cache_change</Event>
+	</Events>
+</item>
+<item type="EV_CELL"><Internal_properties>
+	<id>181</id>
+	<name>compiler_metadata_cache_cell</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_WIDGET><Minimum_width>5</Minimum_width>
+	</EV_WIDGET>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<EV_CONTAINER></EV_CONTAINER>
+</item>
+<item type="EV_BUTTON"><Internal_properties>
+	<id>182</id>
+	<name>compiler_metadata_cache_browse_button</name>
+	<Expanded>0</Expanded>
+	</Internal_properties>
+<EV_COLORIZABLE></EV_COLORIZABLE>
+<EV_FONTABLE></EV_FONTABLE>
+<EV_SENSITIVE></EV_SENSITIVE>
+<EV_TEXTABLE><Text>...</Text>
+	</EV_TEXTABLE>
+<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
+<EV_WIDGET><Minimum_width>40</Minimum_width>
+	</EV_WIDGET>
+<EV_TEXT_ALIGNABLE></EV_TEXT_ALIGNABLE>
+<EV_PIXMAPABLE></EV_PIXMAPABLE>
+<Events><Event>select_actions EV_BUTTON_ACTION_SEQUENCES on_compiler_metadata_cache_browse</Event>
+	</Events>
+</item>
+</item>
+<item type="EV_HORIZONTAL_BOX"><Internal_properties>
 	<id>66</id>
 	<name>precompile_cache_box</name>
-	<Expanded>1</Expanded>
+	<Expanded>0</Expanded>
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
@@ -2397,7 +2470,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[...]]></Text>
+<EV_TEXTABLE><Text>...</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>40</Minimum_width>
@@ -2419,7 +2492,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Assembly Prefixes]]></Text>
+<EV_TEXTABLE><Text>Assembly Prefixes</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET></EV_WIDGET>
 <EV_FRAME></EV_FRAME>
@@ -2506,7 +2579,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[...]]></Text>
+<EV_TEXTABLE><Text>...</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>40</Minimum_width>
@@ -2549,7 +2622,7 @@ the proper security access rights.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
 	</EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Add]]></Text>
+<EV_TEXTABLE><Text>Add</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -2568,7 +2641,7 @@ the proper security access rights.]]></Text>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE><Is_sensitive>False</Is_sensitive>
 	</EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Remove]]></Text>
+<EV_TEXTABLE><Text>Remove</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -2599,7 +2672,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Configuration used by]]></Text>
+<EV_TEXTABLE><Text>Configuration used by</Text>
 	</EV_TEXTABLE>
 <EV_WIDGET><Is_show_requested>False</Is_show_requested>
 	</EV_WIDGET>
@@ -2666,7 +2739,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Add]]></Text>
+<EV_TEXTABLE><Text>Add</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>
@@ -2684,7 +2757,7 @@ the proper security access rights.]]></Text>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_TEXTABLE><Text><![CDATA[Remove]]></Text>
+<EV_TEXTABLE><Text>Remove</Text>
 	</EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
 <EV_WIDGET><Minimum_width>100</Minimum_width>

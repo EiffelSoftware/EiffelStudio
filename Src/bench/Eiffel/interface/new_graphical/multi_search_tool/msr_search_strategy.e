@@ -16,7 +16,6 @@ feature {NONE} -- Initialization
 		do
 			create pcre_regex.make
 			reset_all
-			pcre_regex.set_multiline (true)
 			keyword_internal := a_keyword
 			surrounding_text_range_internal := a_range
 		ensure
@@ -163,6 +162,8 @@ feature -- Basic operations
 			set_whole_word_matched (false)			
 			launched := false
 			pcre_regex.reset
+			pcre_regex.set_multiline (true)
+			pcre_regex.set_empty_allowed (false)
 			keyword_internal := Void
 			surrounding_text_range_internal := 20
 		ensure

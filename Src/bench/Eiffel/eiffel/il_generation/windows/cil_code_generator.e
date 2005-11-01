@@ -27,7 +27,7 @@ inherit
 
 	SHARED_WORKBENCH
 		export
-			{NONE} all 
+			{NONE} all
 		end
 
 	COMPILER_EXPORTER
@@ -71,12 +71,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_TYPE_I
 		export
 			{NONE} all
 		end
-	
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -301,7 +301,7 @@ feature -- Access
 
 	generic_conformance_type_id: INTEGER
 			-- Identifier for class EiffelSoftware.Runtime.GENERIC_CONFORMANCE.
-			
+
 	assertion_level_enum_type_id: INTEGER
 			-- Identifier for class EiffelSoftware.Runtime.Enums.ASSERTION_LEVEL_ENUM.
 
@@ -491,7 +491,7 @@ feature -- Cleanup
 		do
 			Il_debug_info_recorder.clean_class_type_info_for (a_class_type)
 		end
-		
+
 	cleanup is
 			-- Clean up all data structures that were used for this code generation.
 		local
@@ -512,7 +512,7 @@ feature -- Cleanup
 					end
 					i := i + 1
 				end
-				
+
 					-- Now all underlying COM objects should have been unreferenced, so we
 					-- can safely collect them. We really have to collect them now because
 					-- some cannot wait. For example if you still have an instance of
@@ -546,11 +546,11 @@ feature -- Generation Structure
 		do
 				--| Initialize recording of IL Information used for eStudio .NET debugger			
 			Il_debug_info_recorder.start_recording_session (debug_mode)
-			
+
 				--| beginning of assembly generation
 			location_path := location
 			assembly_name := a_assembly_name
-			
+
 				-- Set CLR host to proper version if not yet done.
 			l_host := (create {CLR_HOST_FACTORY}).runtime_host (System.clr_runtime_version)
 			check
@@ -593,7 +593,7 @@ feature -- Generation Structure
 				l_assembly_flags := {MD_ASSEMBLY_FLAGS}.public_key
 			end
 
-			is_debug_info_enabled := debug_mode 
+			is_debug_info_enabled := debug_mode
 			-- FIXME jfiat [2003/10/10 - 16:41] try without debug_mode, for no pdb info
 
 			create output_file_name.make_from_string (location)
@@ -620,7 +620,7 @@ feature -- Generation Structure
 			if is_dll then
 				main_module.set_dll
 			end
-			
+
 			main_module.prepare (md_dispenser, type_count)
 
 			is_single_module := System.in_final_mode or else Compilation_modes.is_precompiling
@@ -704,7 +704,7 @@ feature -- Generation Structure
 				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, array_type_token)
 				method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 				array_copy_method_token := helper_emit.define_member_ref (create {UNI_STRING}.make ("Copy"), array_type_token, method_sig)
-				
+
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_cil_token)
 				method_body.put_opcode ({MD_OPCODES}.dup)
 				branch_on_true (check_body_index_range_label)
@@ -821,7 +821,7 @@ feature -- Generation Structure
 						end
 						if l_type.is_generated then
 							l_module := il_module (l_type)
-							
+
 							file_token.search (l_module)
 							if file_token.found then
 								l_file_token := file_token.found_item
@@ -831,11 +831,11 @@ feature -- Generation Structure
 									{MD_FILE_FLAGS}.Has_meta_data)
 								file_token.put (l_file_token, l_module)
 							end
-							
+
 							l_uni_string.set_string (l_type.full_il_type_name)
 							l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
 								l_type.last_type_token, {MD_TYPE_ATTRIBUTES}.Public)
-							
+
 							if l_type.implementation_id /= l_type.static_type_id then
 								l_uni_string.set_string (l_type.full_il_implementation_type_name)
 								l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
@@ -843,7 +843,7 @@ feature -- Generation Structure
 									{MD_TYPE_ATTRIBUTES}.Public)
 							end
 
-							l_class := l_type.associated_class	
+							l_class := l_type.associated_class
 							if
 								not l_class.is_deferred and
 								(l_class.creators = Void or else not l_class.creators.is_empty)
@@ -859,11 +859,11 @@ feature -- Generation Structure
 			end
 
 			define_assembly_attributes
-		
+
 			main_module.save_to_disk
-			
+
 			--| End recording session, (then Save IL Information used for eStudio .NET debugger)
-			Il_debug_info_recorder.end_recording_session			
+			Il_debug_info_recorder.end_recording_session
 		end
 
 	generate_resources (a_resources: LIST [STRING]) is
@@ -901,11 +901,11 @@ feature -- Generation Structure
 			create l_hash.make (1024)
 			l_result := {MD_STRONG_NAME}.get_hash_from_file (
 				l_uni_string.item, $l_alg_id, l_hash.item, l_hash.count, $l_size)
-				
+
 			check
 				l_result_ok: l_result = 0
 			end
-			
+
 			l_uni_string.set_string (a_name)
 			create l_hash_res.make_from_pointer (l_hash.item, l_size)
 			Result := a_module.md_emit.define_file (l_uni_string, l_hash_res, file_flags)
@@ -913,7 +913,7 @@ feature -- Generation Structure
 			valid_result: Result & {MD_TOKEN_TYPES}.Md_mask =
 				{MD_TOKEN_TYPES}.Md_file
 		end
-		
+
 	define_assertion_level (class_type: CLASS_TYPE) is
 			-- Define assertion level for `class_type'.
 		require
@@ -942,7 +942,7 @@ feature -- Generation Structure
 				main_module.ise_assertion_level_attr_ctor_token, l_assert_ca)
 		end
 
-	define_interface_type (class_type: CLASS_TYPE) is
+	define_interface_type (class_type: CLASS_TYPE; parent_token: INTEGER) is
 			-- Define creation type for `class_type' in module generated for `class_type'.
 			-- Needed for creating proper type in a formal generic creation.
 		require
@@ -959,10 +959,10 @@ feature -- Generation Structure
 			end
 			l_assert_ca.put_string (l_type_name)
 			l_assert_ca.put_integer_16 (0)
-			define_custom_attribute (actual_class_type_token (class_type.implementation_id),
+			define_custom_attribute (parent_token,
 				current_module.ise_interface_type_attr_ctor_token, l_assert_ca)
 		end
-		
+
 	end_module_generation (has_root_class: BOOLEAN) is
 			-- Finish creation of current module.
 		local
@@ -1167,7 +1167,7 @@ feature -- Class info
 						actual_class_type_token (class_type.static_type_id), l_attributes)
 				end
 			end
-	
+
 				-- Then we generate only class or interface specific attribute if we indeed
 				-- generate a class and an interface associated to an Eiffel class.
 			if class_type.static_type_id /= class_type.implementation_id then
@@ -1182,7 +1182,7 @@ feature -- Class info
 						actual_class_type_token (class_type.static_type_id), l_attributes)
 				end
 			end
-			define_interface_type (class_type)
+			define_interface_type (class_type, actual_class_type_token (class_type.implementation_id))
 		end
 
 	define_assembly_attributes is
@@ -1208,7 +1208,7 @@ feature -- Class info
 				end
 				current_module := l_cur_mod
 			end
-			
+
 			if is_cls_compliant then
 				define_custom_attribute (main_module.associated_assembly_token,
 					main_module.cls_compliant_ctor_token, cls_compliant_ca)
@@ -1280,7 +1280,7 @@ feature -- Class info
 					l_class_name := l_class_type.full_il_type_name
 					if l_ext_class = Void then
 							-- Case of an Eiffel class (including basic type)
-						if 
+						if
 							l_class_type.is_precompiled and then
 							not l_class_type.is_external
 						then
@@ -1411,6 +1411,7 @@ feature -- Class info
 				generate_return (True)
 				method_writer.write_current_body
 
+
 					-- Define `____standard_twin'
 				l_sig.reset
 				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -1509,7 +1510,7 @@ feature -- Class info
 			l_feat_tbl := class_type.associated_class.feature_table
 			l_select_tbl := l_feat_tbl.origin_table
 			l_class_id := class_type.associated_class.class_id
-			
+
 				-- Process `equals'
 			if l_select_tbl.has (equals_rout_id) then
 				l_feat := l_select_tbl.found_item
@@ -1649,7 +1650,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 				l_meth_attr := {MD_METHOD_ATTRIBUTES}.public |
 					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
 					{MD_METHOD_ATTRIBUTES}.virtual
-				
+
 				l_sig := method_sig
 				l_sig.reset
 				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
@@ -1720,17 +1721,17 @@ feature {NONE} -- SYSTEM_OBJECT features
 					l_meth_attr := {MD_METHOD_ATTRIBUTES}.public |
 						{MD_METHOD_ATTRIBUTES}.hide_by_signature |
 						{MD_METHOD_ATTRIBUTES}.virtual
-					
+
 					l_sig := method_sig
 					l_sig.reset
 					l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 					l_sig.set_parameter_count (0)
 					l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
-					
+
 					uni_string.set_string ("GetHashCode")
 					l_meth_token := md_emit.define_method (uni_string, l_class_token,
 						l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
-		
+
 					start_new_body (l_meth_token)
 					generate_current
 					generate_feature_access (type_i, feature_i.feature_id, 0, True, True)
@@ -1780,19 +1781,19 @@ feature {NONE} -- SYSTEM_OBJECT features
 				l_meth_attr := {MD_METHOD_ATTRIBUTES}.public |
 					{MD_METHOD_ATTRIBUTES}.hide_by_signature |
 					{MD_METHOD_ATTRIBUTES}.virtual
-				
+
 				l_sig := method_sig
 				l_sig.reset
 				l_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.has_current)
 				l_sig.set_parameter_count (0)
 				l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_string, 0)
-				
+
 				uni_string.set_string ("ToString")
 				l_meth_token := md_emit.define_method (uni_string, l_class_token,
 					l_meth_attr, l_sig, {MD_METHOD_ATTRIBUTES}.managed)
-	
+
 				start_new_body (l_meth_token)
-				
+
 				generate_current
 				generate_feature_access (type_i, feature_i.feature_id, 0, True, True)
 				internal_generate_feature_access (string_type_id, to_cil_feat_id, 0, True, True)
@@ -1847,7 +1848,7 @@ feature -- Features info
 			current_class_token := actual_class_type_token (current_type_id)
 
 			debug ("debugger_il_info_trace")
-				print ("### SINGLE CLEANING " + class_type.associated_class.name_in_upper + "---%N")				
+				print ("### SINGLE CLEANING " + class_type.associated_class.name_in_upper + "---%N")
 			end
 			clean_debug_information (class_type)
 
@@ -1860,7 +1861,7 @@ feature -- Features info
 				type_feature_processor := agent generate_type_feature_description
 			end
 				-- Define implementation features on Eiffel classes
-			generate_il_features (class_c, class_type, 
+			generate_il_features (class_c, class_type,
 				Void,
 				agent generate_local_feature_description,
 				agent generate_inherited_feature_description,
@@ -1938,7 +1939,7 @@ feature -- Features info
 				generate_feature (select_tbl.item (features.item_for_iteration), is_interface, False, False)
 				features.forth
 			end
-			
+
 				-- Generate type features for formal generic parameters.
 			if class_c.generic_features /= Void then
 				generate_type_features (class_c.generic_features, class_c.class_id, is_interface)
@@ -2060,7 +2061,7 @@ feature -- Features info
 			end
 
 			if not l_feat.is_type_feature then
-					-- Only for not automatically generated feature do we use the 
+					-- Only for not automatically generated feature do we use the
 					-- naming convention chosen by user.
 				l_naming_convention := l_class_type.is_dotnet_name
 			end
@@ -2089,7 +2090,7 @@ feature -- Features info
 						end
 					else
 						l_name := il_casing.pascal_casing (
-							l_naming_convention, l_feat.feature_name, 
+							l_naming_convention, l_feat.feature_name,
 							{IL_CASING_CONVERSION}.lower_case)
 					end
 				end
@@ -2260,7 +2261,7 @@ feature -- Features info
 			end
 
 			if not feat.is_type_feature then
-					-- Only for not automatically generated feature do we use the 
+					-- Only for not automatically generated feature do we use the
 					-- naming convention chosen by user.
 				l_naming_convention := System.dotnet_naming_convention
 			end
@@ -2280,7 +2281,7 @@ feature -- Features info
 				end
 			else
 				l_name := il_casing.pascal_casing (
-					l_naming_convention, feat.feature_name, 
+					l_naming_convention, feat.feature_name,
 					{IL_CASING_CONVERSION}.lower_case)
 			end
 
@@ -2314,6 +2315,11 @@ feature -- Features info
 					l_name_ca.put_integer_16 (0)
 					define_custom_attribute (l_meth_token,
 						current_module.ise_type_feature_attr_ctor_token, l_name_ca)
+				elseif l_type_a.associated_class.lace_class = system.any_class then
+						-- Type is ANY, so because we actually generate a field of type SYSTEM_OBJECT
+						-- we generate a special custom attribute that says it is actually ANY, and not
+						-- a field of type SYSTEM_OBJECT
+					define_interface_type (l_type_a.associated_class.types.first, l_meth_token)
 				end
 
 				insert_attribute (l_meth_token, current_type_id, feat.feature_id)
@@ -2968,10 +2974,10 @@ feature -- IL Generation
 
 
 						--| feature is not attribute |--
-						-- we assume the feature concerned by `generate_feature_code' 
+						-- we assume the feature concerned by `generate_feature_code'
 						-- here are static and not in_interface
-					Il_debug_info_recorder.set_record_context (is_single_class, False, True, False)	
-					Il_debug_info_recorder.record_il_feature_info (current_module, 
+					Il_debug_info_recorder.set_record_context (is_single_class, False, True, False)
+					Il_debug_info_recorder.record_il_feature_info (current_module,
 								current_class_type, feat, current_class_token, l_meth_token)
 				end
 			end
@@ -3101,7 +3107,7 @@ feature -- IL Generation
 			l_parent_type_id := parent_type.static_type_id
 			l_cur_sig := signatures (current_type_id, cur_feat.feature_id)
 			l_inh_sig := signatures (l_parent_type_id, inh_feat.feature_id)
-			
+
 				-- Notion of same signature depends on wether or not we handle an attribute which is directly implemented
 				-- as a field rather than a function when it occurs in class generated as `is_single_class'.
 			l_same_signature := l_cur_sig.is_equal (l_inh_sig) and (not is_single_class or else not cur_feat.is_attribute)
@@ -3700,7 +3706,7 @@ feature -- Variables access
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldtoken,
 				actual_class_type_token (a_type_id))
 		end
-		
+
 	put_type_instance (a_type: TYPE_I) is
 			-- Put instance of System.Type corresponding to `a_type' on stack.
 		do
@@ -4027,7 +4033,7 @@ feature -- Assignments
 					method_body.put_opcode_integer_8 ({MD_OPCODES}.Stloc_s,
 						l_pos.to_integer_8)
 				else
-					method_body.put_opcode_integer_16 ({MD_OPCODES}.Stloc, 
+					method_body.put_opcode_integer_16 ({MD_OPCODES}.Stloc,
 						l_pos.to_integer_16)
 				end
 			end
@@ -4274,7 +4280,7 @@ feature -- Once management
 			-- its value if computed.
 			-- Ok to use token in a non-module specific code here, because they
 			-- are only local to current feature generation.
-			
+
 	ready_token, sync_token: INTEGER
 			-- Token for static fields holding ready-to-use flag and synchronization object
 			-- for process-relative once routines.
@@ -4424,7 +4430,7 @@ feature -- Once management
 				--       raise (exception)
 				--    end
 				--    return result -- if required
-				
+
 				-- Process-relative code uses double-check algorithm and looks like
 				--    if not volatile ready then
 				--       try {
@@ -4530,7 +4536,7 @@ feature -- Once management
 				method_body.put_opcode ({MD_OPCODES}.volatile)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, ready_token)
 			end
-			
+
 				-- Close "if not done" block:
 				--       end
 			mark_label (once_done_label)
@@ -4551,7 +4557,7 @@ feature -- Once management
 				method_body.once_finally_block.set_handler_end (method_body.count)
 				mark_label (once_ready_label)
 			end
-			
+
 				-- Check if there was an exception:
 				--    if exception /= Void then
 				--       raise (exception)
@@ -4562,7 +4568,7 @@ feature -- Once management
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, exception_token)
 			method_body.put_throw
 			mark_label (return_label)
-			
+
 			if result_token /= 0 then
 				has_result := True
 					-- Load result of a feature:
@@ -4652,7 +4658,7 @@ feature -- Once manifest string manipulation
 
 	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN) is
 			-- Generate code for once string in a current routine with the given
-			-- `number' and `value' using CIL string type if `is_cil_string' is `true' 
+			-- `number' and `value' using CIL string type if `is_cil_string' is `true'
 			-- or Eiffel string type otherwise.
 		local
 			once_string_field_token: INTEGER
@@ -4734,7 +4740,7 @@ feature -- Array manipulation
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldelema,
 				actual_class_type_token (a_type_id))
 		end
-		
+
 	generate_array_write (kind: INTEGER; a_type_id: INTEGER) is
 			-- Generate call to `put' of NATIVE_ARRAY.
 		local
@@ -4758,7 +4764,7 @@ feature -- Array manipulation
 						not_reached: False
 					end
 				end
-				method_body.put_opcode (l_opcode)			
+				method_body.put_opcode (l_opcode)
 			end
 		end
 
@@ -4769,7 +4775,7 @@ feature -- Array manipulation
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Newarr,
 				actual_class_type_token (a_type_id))
 		end
-		
+
 	generate_generic_array_creation (a_formal: FORMAL_I) is
 			-- Create a new NATIVE_ARRAY [X] where X is a formal type `a_formal'.
 		do
@@ -5034,7 +5040,7 @@ feature -- Assertions
 			generate_return (False)
 			method_writer.write_current_body
 		end
-		
+
 	generate_inherited_invariants is
 			-- Generate call to all directly inherited invariant features.
 		local
@@ -5132,7 +5138,7 @@ feature -- Constants generation
 		end
 
 	put_manifest_string_from_system_string_local (n: INTEGER) is
-			-- Create a manifest string by using local at position `n' which 
+			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
 		do
 			create_object (string_implementation_id)
@@ -5140,7 +5146,7 @@ feature -- Constants generation
 			generate_local (n)
 			internal_generate_feature_access (string_type_id, string_make_feat_id, 1, False, True)
 		end
-	
+
 	put_manifest_string (s: STRING) is
 			-- Put `s' on IL stack.
 		do
@@ -5296,7 +5302,7 @@ feature -- Labels and branching
 		do
 			method_body.put_opcode_label ({MD_OPCODES}.Br, label.id)
 		end
-		
+
 	branch_on_condition (comparison: INTEGER_16; label: IL_LABEL) is
 			-- Generate a branch instruction to `label' if two top-level operands on
 			-- IL stack when compared using conditional instruction `comparison' yield True.
@@ -5562,7 +5568,7 @@ feature -- Line info
 				method_body.put_nop
 			end
 		end
-		
+
 	put_silent_line_info (n: INTEGER) is
 			-- Generate debug information at line `n'.			
 			-- But in case of dotnet debugger inside eStudio
@@ -5570,10 +5576,10 @@ feature -- Line info
 		do
 			if is_debug_info_enabled then
 				Il_debug_info_recorder.ignore_next_debug_info
-				put_line_info (n)			
+				put_line_info (n)
 			end
 		end
-		
+
 	put_debug_info (location: LOCATION_AS) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.
@@ -5588,9 +5594,9 @@ feature -- Line info
 				dbg_end_lines.force (location.line, l_pos)
 				dbg_end_columns.force (location.final_column, l_pos)
 				dbg_offsets_count := l_pos + 1
-				
+
 				Il_debug_info_recorder.record_line_info (current_class_type,
-					Byte_context.current_feature, method_body.count, location.line)			
+					Byte_context.current_feature, method_body.count, location.line)
 				method_body.put_nop
 			end
 		end
@@ -5604,7 +5610,7 @@ feature -- Line info
 				Il_debug_info_recorder.record_ghost_debug_infos (current_class_type, Byte_context.current_feature, method_body.count, a_line_n, a_nb)
 			end
 		end
-		
+
 	put_silent_debug_info (location: LOCATION_AS) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.
@@ -5613,7 +5619,7 @@ feature -- Line info
 		do
 			if is_debug_info_enabled then
 				Il_debug_info_recorder.ignore_next_debug_info
-				put_debug_info (location)				
+				put_debug_info (location)
 			end
 		end
 
@@ -5671,7 +5677,7 @@ feature -- Convenience
 			if class_id = implemented_in then
 				Result := current_type
 			else
-				written_class := System.class_of_id (implemented_in) 
+				written_class := System.class_of_id (implemented_in)
 					-- We go through the hierarchy only when `written_class'
 					-- is generic, otherwise for the most general case where
 					-- `written_class' is not generic it will take a long
@@ -5693,7 +5699,7 @@ feature -- Convenience
 				"generate_call_on_void_target_exception",
 				static_type, <<>>, Void, False)
 		end
-		
+
 feature -- Generic conformance
 
 	generate_class_type_instance (cl_type: CL_TYPE_I) is
@@ -5756,7 +5762,7 @@ feature -- Generic conformance
 			-- Given elements on stack, compute associated type and set it to
 			-- newly created object.
 		do
-				-- First object on stack is newly created object on which we 
+				-- First object on stack is newly created object on which we
 				-- want to assign the computed type.
 				-- Second object is the array containing the type array.
 				-- Last, we push current object to the stack.
@@ -5819,7 +5825,7 @@ feature {NONE} -- Implementation: generation
 
 			start_new_body (feature_token (current_type_id, a_type_feature.feature_id))
 
-				-- Set position of `result' local variable. Does not make sense to 
+				-- Set position of `result' local variable. Does not make sense to
 				-- call `put_result_info' as we don't know its associated CL_TYPE_I.
 			result_position := 0
 
@@ -5931,7 +5937,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 		once
 			Result := system.any_class.compiled_class.actual_type.type_i
 		end
-		
+
 	any_type_id: INTEGER is
 			-- Type of ANY interface.
 		once
@@ -6016,7 +6022,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 		ensure
 			out_feat_id_positive: Result > 0
 		end
-		
+
 	to_cil_feat_id: INTEGER is
 			-- Feature ID of `to_cil' of STRING.
 		once
@@ -6050,7 +6056,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 				create Result.make (hashable_class_id)
 			end
 		end
-		
+
 	hash_code_rout_id: INTEGER is
 			-- Routine ID of `hash_code' from HASHABLE if found,
 			-- otherwise `0'.
@@ -6086,7 +6092,7 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 		ensure
 			hash_code_feat_id_non_negative: Result >= 0
 		end
-		
+
 feature {CIL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom attribute definition
 
 	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE) is

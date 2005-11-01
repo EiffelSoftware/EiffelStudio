@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 	make_with_buffer (a_medium: IO_MEDIUM; a_buffer_size: INTEGER) is
 			-- Initialize current to read or write from `a_medium' using a buffer of size `a_buffer_size'.
-			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used 
+			-- `buffer_size' will be overriden during read operation by the value of `buffer_size' used
 			-- when writing.
 		require
 			a_medium_not_void: a_medium /= Void
@@ -55,39 +55,36 @@ feature -- Header/Footer
 	read_header is
 			-- Retrieve configuration of how data was stored.
 		do
-				-- Read header
-			medium.read_to_managed_pointer (buffer, 0, header_size)
-			is_little_endian_storable := buffer.read_boolean (0)
-			is_pointer_value_stored := buffer.read_boolean (natural_8_bytes)
-			buffer_size := buffer.read_integer_32_le (2 * natural_8_bytes)
-			stored_pointer_bytes := buffer.read_integer_32_le (2 * natural_8_bytes + integer_32_bytes)
+				-- Read data from medium
+			read_buffer_from_medium
 
-				-- Initialize buffer for next read operation
-			medium.read_to_managed_pointer (buffer, 0, buffer_size)
-			buffer_position := 0
-		ensure then
-			buffer_position_reset: buffer_position = 0
+				-- Read header telling how data is stored.
+			is_little_endian_storable := read_boolean
+			is_pointer_value_stored := read_boolean
+
+				-- Note: it is ok here to call `read_integer_32' because
+				-- `is_little_endian_storable' is set two lines above.
+			stored_pointer_bytes := read_integer_32
 		end
 
 	write_header is
 			-- Store configuration on how data will be stored.
 		do
+				-- Before doing any writing we need to setup the attributes
+				-- that control how the data will be stored. So far just one
+			buffer_position := integer_32_bytes
 			is_little_endian_storable := is_little_endian
-			buffer.put_boolean (is_little_endian_storable, 0)
-			buffer.put_boolean (is_pointer_value_stored, natural_8_bytes)
-			buffer.put_integer_32_le (buffer_size, 2 * natural_8_bytes)
-			buffer.put_integer_32_le (pointer_bytes, 2 * natural_8_bytes + integer_32_bytes)
 
-			medium.put_managed_pointer (buffer, 0, header_size)
-			buffer_position := 0
-		ensure then
-			buffer_position_reset: buffer_position = 0
+				-- Write the header describing how the data is stored.
+			write_boolean (is_little_endian_storable)
+			write_boolean (is_pointer_value_stored)
+			write_integer_32 (pointer_bytes)
 		end
 
 	write_footer is
 			-- Store last buffered data.
 		do
-			medium.put_managed_pointer (buffer, 0, buffer_position)
+			flush_buffer_to_medium
 		end
 
 feature -- Status report
@@ -111,18 +108,6 @@ feature {NONE} -- Implementation: Access
 	medium: IO_MEDIUM
 			-- Medium used for read/write operations
 
-feature {NONE} -- Implementation: Status report
-
-	header_size: INTEGER is
-			-- Size for header storing properties of data stored in `medium'
-		do
-			Result := 
-				natural_8_bytes 		-- `is_little_endian_storable'
-				+ natural_8_bytes		-- `is_pointer_value_stored'
-				+ integer_32_bytes	-- `buffer_size'
-				+ integer_32_bytes	-- `stored_pointer_bytes'
-		end
-
 feature {NONE} -- Buffer update
 
 	check_buffer (n: INTEGER) is
@@ -131,12 +116,44 @@ feature {NONE} -- Buffer update
 		do
 			if n + buffer_position > buffer_size then
 				if is_for_reading then
-					medium.read_to_managed_pointer (buffer, 0, buffer_size)
+					read_buffer_from_medium
 				else
-					medium.put_managed_pointer (buffer, 0, buffer_size)
+					flush_buffer_to_medium
 				end
-				buffer_position := 0
 			end
+		end
+
+	read_buffer_from_medium is
+			-- Read next chunk of data.
+		require
+			is_ready: is_ready_for_reading
+		do
+				-- Read the amount of data we are suppose to read
+			medium.read_to_managed_pointer (buffer, 0, integer_32_bytes)
+			buffer_size := buffer.read_integer_32_be (0)
+				-- Resize `buffer' if necessary.
+			if buffer.count < buffer_size then
+				buffer.resize (buffer_size)
+			end
+				-- Read the data.
+			medium.read_to_managed_pointer (buffer, integer_32_bytes, buffer_size - integer_32_bytes)
+
+				-- Put the position at the right place.
+			buffer_position := integer_32_bytes
+		end
+
+	flush_buffer_to_medium is
+			-- Write next chunk of data to `medium'.
+		require
+			is_ready: is_ready_for_writing
+		do
+				-- Write the amount of bytes we are actually writting
+			buffer.put_integer_32_be (buffer_position, 0)
+				-- Write the data.
+			medium.put_managed_pointer (buffer, 0, buffer_position)
+
+				-- Put the position at the right place.
+			buffer_position := integer_32_bytes
 		end
 
 invariant

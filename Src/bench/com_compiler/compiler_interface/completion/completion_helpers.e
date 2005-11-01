@@ -285,6 +285,7 @@ feature -- Basic operations
 			valid_target: not target.is_empty
 		local
 			c: CHARACTER
+			l_new_target: STRING
 		do
 			if target.substring (1, Agent_keyword_length).is_equal (Agent_keyword) then
 				-- Agent
@@ -339,8 +340,17 @@ feature -- Basic operations
 				end
 			elseif target.substring (1, Precursor_keyword_length).is_equal (Precursor_keyword) then
 				-- Precursor call
+				if target.index_of ('{', Precursor_keyword_length) > 0 then
+					l_new_target := target.substring (target.index_of ('{', Precursor_keyword_length), target.count)
+					Result := type_of_target (l_new_target, table, ids, class_i)
+				end
+				set_precursor_call
 			elseif target.item (1).is_equal ('{') then
-				-- Precursor call
+				-- New static call
+				set_static_call
+				if target.count > 2 then -- Minimum static call construct is "{T}"
+					Result := type_from_type_name (target.substring (target.index_of ('{', 1) + 1, target.index_of ('}', 2) - 1))
+				end
 			end
 		end
 

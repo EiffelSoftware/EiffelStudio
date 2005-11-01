@@ -22,15 +22,22 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
-		
+
 	EB_FILE_DIALOG_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+
+	REFACTORING_HELPER
 		export
 			{NONE} all
 		undefine
@@ -52,22 +59,22 @@ feature -- MSIL options
 
 	dll_check: EV_CHECK_BUTTON
 			-- Will generated assembly be a DLL?
-			
+
 	cls_compliant_check: EV_CHECK_BUTTON
 			-- Will generated assembly be CLS compliant?
-			
+
 	dotnet_naming_convention_check: EV_CHECK_BUTTON
 			-- Will names generated in assembly follow the .NET guideline?
-			
+
 	cluster_name_check: EV_CHECK_BUTTON
 			-- Will we generate names with cluster name?
-			
+
 	full_cluster_name_check: EV_CHECK_BUTTON
 			-- Will we generate full names with cluster name?
-			
+
 	signing_key_field: EV_PATH_FIELD
 			-- Filename of the cryptographic assembly key
-			
+
 	generate_key_button: EV_BUTTON
 			-- Button to generate a public/private key pair for assembly
 
@@ -79,13 +86,13 @@ feature -- MSIL options
 
 	company_field: EV_TEXT_FIELD
 			-- Name of company with assembly ownership, if any
-			
+
 	product_field: EV_TEXT_FIELD
 			-- Name of product to which assembly belongs, if any
-			
+
 	trademark_field: EV_TEXT_FIELD
 			-- Name of trademark information
-			
+
 	copyright_field: EV_TEXT_FIELD
 			-- Name of copyright information
 
@@ -94,7 +101,7 @@ feature -- MSIL options
 
 	compatibility_combo: EV_COMBO_BOX
 			-- Compatibility status of current assembly.
-			
+
 	clr_runtime_version_combo: EV_COMBO_BOX
 			-- Enable user to target a specific version of the run-time.
 
@@ -102,7 +109,7 @@ feature -- Parent access
 
 	system_window: EB_SYSTEM_WINDOW
 			-- Graphical parent of Current.
-			
+
 feature -- Actions
 
 	show_key_dialog is
@@ -121,7 +128,7 @@ feature -- Actions
 			fd.show_modal_to_window (system_window.window)
 			l_env.change_working_directory (l_dir)
 		end
-			
+
 feature -- Store/Retrieve
 
 	store (root_ast: ACE_SD) is
@@ -136,9 +143,9 @@ feature -- Store/Retrieve
 					create defaults.make (10)
 					root_ast.set_defaults (defaults)
 				end
-	
+
 				defaults.finish
-	
+
 					-- Save check box options
 				defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.il_verifiable,
 					Void, verifiable_check.is_selected))
@@ -153,7 +160,7 @@ feature -- Store/Retrieve
 				defaults.extend (new_special_option_sd (
 					{FREE_OPTION_SD}.use_all_cluster_name_as_namespace, Void,
 					full_cluster_name_check.is_selected))
-				
+
 				if dll_check.is_selected then
 					defaults.extend (new_special_option_sd (
 						{FREE_OPTION_SD}.msil_generation_type, "dll", False))
@@ -161,41 +168,41 @@ feature -- Store/Retrieve
 					defaults.extend (new_special_option_sd (
 						{FREE_OPTION_SD}.msil_generation_type, "exe", False))
 				end
-			
+
 					-- Save text field values
 				if not full_name_field.text.is_empty then
-					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Namespace, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Namespace,
 						full_name_field.text, False))
 				end
 				if not version_field.text.is_empty then
-					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Version, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Version,
 						version_field.text, False))
 				end
 				if not company_field.text.is_empty then
-					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Company, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Company,
 						company_field.text, False))
 				end
 				if not product_field.text.is_empty then
-					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Product, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Product,
 						product_field.text, False))
 				end
 				if not trademark_field.text.is_empty then
-					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Trademark, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Trademark,
 						trademark_field.text, False))
 				end
 				if not copyright_field.text.is_empty then
-					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Copyright, 
+					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Copyright,
 						copyright_field.text, False))
 				end
 				if not signing_key_field.text.is_empty then
 					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_key_file_name, signing_key_field.text, False))
 				end
-	
+
 					-- Save combobox selections
-				if not culture_combo.selected_item.text.substring 
+				if not culture_combo.selected_item.text.substring
 					(1, culture_combo.selected_item.text.index_of (',', 1) - 1).is_equal ("n/a") then
-						defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_culture, 
-							culture_combo.selected_item.text.substring 
+						defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_culture,
+							culture_combo.selected_item.text.substring
 							(1, culture_combo.selected_item.text.index_of (',', 1) - 1), False))
 				end
 
@@ -203,7 +210,7 @@ feature -- Store/Retrieve
 					defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_clr_version,
 						clr_runtime_version_combo.text, False))
 				end
-		
+
 				defaults.extend (new_special_option_sd ({FREE_OPTION_SD}.Msil_assembly_compatibility, compatibility_combo.text, False))
 			end
 		end
@@ -226,7 +233,7 @@ feature {NONE} -- Filling
 			defaults: LACE_LIST [D_OPTION_SD]
 			precomp_opt: D_PRECOMPILED_SD
 			opt: D_OPTION_SD
-		do	
+		do
 				-- Retrieve default options.
 			defaults := root_ast.defaults
 			if defaults /= Void then
@@ -270,7 +277,7 @@ feature {NONE} -- Filling
 			if opt.is_free_option then
 				free_option ?= opt
 				is_item_removable := True
-				inspect free_option.code	
+				inspect free_option.code
 				when {FREE_OPTION_SD}.Namespace then
 					full_name_field.set_text (val.value)
 				when {FREE_OPTION_SD}.Version then
@@ -292,7 +299,7 @@ feature {NONE} -- Filling
 				when {FREE_OPTION_SD}.Il_verifiable then
 					set_selected (verifiable_check, val.is_yes)
 				when {FREE_OPTION_SD}.Msil_generation_type then
-					set_selected (dll_check, val.value.is_equal (new_id_sd ("dll", True))) 
+					set_selected (dll_check, val.value.is_equal (new_id_sd ("dll", True)))
 				when {FREE_OPTION_SD}.Cls_compliant then
 					set_selected (cls_compliant_check, val.is_yes)
 				when {FREE_OPTION_SD}.Dotnet_naming_convention then
@@ -348,7 +355,7 @@ feature {NONE} -- Initialization
 			system_window := top
 			tab_make
 			default_create
-			
+
 			extend (msil_info_frame (".NET application information"))
 			extend (options_box)
 
@@ -381,7 +388,7 @@ feature {NONE} -- Initialization
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
-			
+
 			create hbox
 			create vbox2
 			vbox2.set_minimum_width (0)
@@ -396,7 +403,7 @@ feature {NONE} -- Initialization
 			item_box.extend (full_name_field)
 			vbox2.extend (item_box)
 			vbox2.disable_item_expand (item_box)
-			
+
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			create label.make_with_text ("Version: ")
@@ -433,8 +440,8 @@ feature {NONE} -- Initialization
 			vbox2.extend (item_box)
 			vbox2.disable_item_expand (item_box)
 			load_culture
-			
-			
+
+
 			create item_box
 			create label.make_with_text (".NET runtime version: ")
 			label.align_text_left
@@ -445,21 +452,21 @@ feature {NONE} -- Initialization
 			item_box.disable_item_expand (clr_runtime_version_combo)
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			load_runtime_version
-			
+
 				-- As soon as we do a successful compilation we cannot
 				-- change some options.
 			widgets_set_before_has_compilation_started.extend (clr_runtime_version_combo)
-		
+
 			vbox2.extend (item_box)
 			vbox2.disable_item_expand (item_box)
-			
+
 			hbox.extend (vbox2)
-			
+
 			create vbox2
 			vbox2.set_minimum_width (15)
 			hbox.extend (vbox2)
 			hbox.disable_item_expand (vbox2)
-			
+
 			create vbox2
 			vbox2.set_minimum_width (0)
 			vbox2.set_padding (Layout_constants.Small_padding_size)
@@ -472,7 +479,7 @@ feature {NONE} -- Initialization
 			item_box.extend (company_field)
 			vbox2.extend (item_box)
 			vbox2.disable_item_expand (item_box)
-			
+
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			create label.make_with_text ("Product: ")
@@ -482,7 +489,7 @@ feature {NONE} -- Initialization
 			item_box.extend (product_field)
 			vbox2.extend (item_box)
 			vbox2.disable_item_expand (item_box)
-			
+
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			create label.make_with_text ("Trademark: ")
@@ -492,7 +499,7 @@ feature {NONE} -- Initialization
 			item_box.extend (trademark_field)
 			vbox2.extend (item_box)
 			vbox2.disable_item_expand (item_box)
-			
+
 			create item_box
 			item_box.set_padding (Layout_constants.Tiny_padding_size)
 			create label.make_with_text ("Copyright: ")
@@ -507,7 +514,7 @@ feature {NONE} -- Initialization
 			vbox.extend (hbox)
 			vbox.disable_item_expand (hbox)
 
-	
+
 			create vbox2
 			create h_item_box
 			create item_box
@@ -527,7 +534,7 @@ feature {NONE} -- Initialization
 			item_box.extend (generate_key_button)
 			h_item_box.extend (item_box)
 			h_item_box.disable_item_expand (item_box)
-			
+
 			vbox2.extend (h_item_box)
 			vbox2.disable_item_expand (h_item_box)
 			vbox.extend (vbox2)
@@ -545,20 +552,20 @@ feature {NONE} -- Initialization
 			vbox, item_box: EV_VERTICAL_BOX
 		do
 			create Result.make_with_text (st)
-			
+
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
-			
+
 			create item_box
 			cls_compliant_check := new_check_button (item_box, "CLS compliant", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
-			
+
 			create item_box
 			verifiable_check := new_check_button (item_box, "Verifiable", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
-			
+
 			create item_box
 			dll_check := new_check_button (item_box, "Generate DLL", False)
 			vbox.extend (item_box)
@@ -566,7 +573,7 @@ feature {NONE} -- Initialization
 
 			Result.extend (vbox)
 		end
-		
+
 	name_options_frame (st: STRING): EV_FRAME is
 			-- MSIL specific options
 		require
@@ -576,24 +583,24 @@ feature {NONE} -- Initialization
 			vbox, item_box: EV_VERTICAL_BOX
 		do
 			create Result.make_with_text (st)
-			
+
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
-			
+
 			create item_box
 			dotnet_naming_convention_check := new_check_button (item_box,
 				"Follow .NET naming guidelines", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
 			widgets_set_before_has_compilation_started.extend (dotnet_naming_convention_check)
-			
+
 			create item_box
 			cluster_name_check := new_check_button (item_box,
 				"Use cluster names", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
 			widgets_set_before_has_compilation_started.extend (cluster_name_check)
-			
+
 			create item_box
 			full_cluster_name_check := new_check_button (item_box, "Use full cluster names", False)
 			vbox.extend (item_box)
@@ -602,7 +609,7 @@ feature {NONE} -- Initialization
 
 			Result.extend (vbox)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	load_runtime_version is
@@ -629,7 +636,7 @@ feature {NONE} -- Implementation
 			end
 			select_runtime_version (l_il_environment.default_version)
 		end
-		
+
 	load_culture is
 			-- Fill `culture_combo' with list of available cultures		
 		require
@@ -659,7 +666,7 @@ feature {NONE} -- Implementation
 			-- Select version in 'clr_runtime_version_combo' associated with 'a_version'
 		require
 			a_version_not_void: a_version /= Void
-			clr_runtime_version_combo_not_void: clr_runtime_version_combo /= Void			
+			clr_runtime_version_combo_not_void: clr_runtime_version_combo /= Void
 		local
 			match_found: BOOLEAN
 			l_version: STRING
@@ -688,7 +695,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-	
+
 	select_culture (a_culture: STRING) is
 			-- Select culture in 'culture_combo' associated with 'a_culture'
 		require
@@ -697,7 +704,7 @@ feature {NONE} -- Implementation
 			match_found: BOOLEAN
 			curr_culture: STRING
 		do
-			from 
+			from
 				culture_combo.start
 			until
 				culture_combo.after or match_found
@@ -713,8 +720,8 @@ feature {NONE} -- Implementation
 			if not match_found then
 				culture_combo.i_th (1).enable_select
 			end
-		end	
-			
+		end
+
 	select_assembly_compatibility (a_comp_type: STRING) is
 			-- Select a compatiblity type associated with 'a_comp_type'
 		require
@@ -739,7 +746,7 @@ feature {NONE} -- Implementation
 				compatibility_combo.i_th (1).enable_select
 			end
 		end
-		
+
 	generate_and_save_key (fd: EB_FILE_SAVE_DIALOG) is
 			-- Generate a new signing key in the chosen file from 'fd'
 			--and set as new assembly key
@@ -750,7 +757,8 @@ feature {NONE} -- Implementation
 			l_error: EV_INFORMATION_DIALOG
 		do
 			create ilkg
-			ilkg.generate_key (fd.file_name)
+			fixme ("If version is changed, then we are screwed because the code below will load the incorrect version of the .NET runtime")
+			ilkg.generate_key (fd.file_name, clr_runtime_version_combo.text)
 			if ilkg.successful then
 				signing_key_field.set_text (fd.file_name)
 			else
@@ -758,21 +766,21 @@ feature {NONE} -- Implementation
 				l_error.show_modal_to_window (system_window.window)
 			end
 		end
-		
+
 
 invariant
-	verifiable_check_not_void: verifiable_check /= Void 
-	dll_check_not_void: dll_check /= Void 		
-	cls_compliant_check_not_void: cls_compliant_check /= Void 
-	dotnet_naming_convention_check_not_void: dotnet_naming_convention_check /= Void 
-	signing_key_field_not_void:	signing_key_field /= Void 
-	full_name_field_not_void: full_name_field /= Void 
-	version_field_not_void:	version_field /= Void 
-	company_field_not_void:	company_field /= Void 
-	product_field_not_void:	product_field /= Void 
-	trademark_field_not_void: trademark_field /= Void 
-	copyright_field_not_void: copyright_field /= Void 
-	culture_combo_not_void:	culture_combo /= Void 
+	verifiable_check_not_void: verifiable_check /= Void
+	dll_check_not_void: dll_check /= Void
+	cls_compliant_check_not_void: cls_compliant_check /= Void
+	dotnet_naming_convention_check_not_void: dotnet_naming_convention_check /= Void
+	signing_key_field_not_void:	signing_key_field /= Void
+	full_name_field_not_void: full_name_field /= Void
+	version_field_not_void:	version_field /= Void
+	company_field_not_void:	company_field /= Void
+	product_field_not_void:	product_field /= Void
+	trademark_field_not_void: trademark_field /= Void
+	copyright_field_not_void: copyright_field /= Void
+	culture_combo_not_void:	culture_combo /= Void
 	compatibility_combo_not_void: compatibility_combo /= Void
 
 end -- class EB_SYSTEM_MSIL_TAB

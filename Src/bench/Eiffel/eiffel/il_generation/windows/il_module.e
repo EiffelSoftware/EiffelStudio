@@ -908,10 +908,11 @@ feature -- Code generation
 			method_writer.write_current_body
 		end
 
-	save_to_disk is
+	save_to_disk (a_signing: MD_STRONG_NAME) is
 			-- Save byte code and metadata to file `module_file_name'.
 		require
 			is_generated: is_generated
+			a_signing_not_void: public_key /= Void implies a_signing /= Void
 		local
 			l_pe_file: CLI_PE_FILE
 			l_debug_info: MANAGED_POINTER
@@ -925,7 +926,7 @@ feature -- Code generation
 				dbg_writer.close
 			end
 			if public_key /= Void then
-				l_pe_file.set_public_key (public_key)
+				l_pe_file.set_public_key (public_key, a_signing)
 			end
 			l_pe_file.set_emitter (md_emit)
 			l_pe_file.set_method_writer (method_writer)

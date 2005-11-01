@@ -8,39 +8,36 @@ class
 
 create
 	default_create
-	
+
 feature -- Initialization
 
-	generate_key (a_filename: STRING) is
-			-- Generate a new key pair with 'a_filename' as filename
+	generate_key (a_filename, a_runtime_version: STRING) is
+			-- Generate a new key pair with 'a_filename' as filename for the specified
+			-- .NET version
 		require
 			filename_not_void: a_filename /= Void
-			filename_not_empty: not a_filename.is_empty	
+			filename_not_empty: not a_filename.is_empty
+			a_runtime_version_not_void: a_runtime_version /= Void
 		local
-			l_result, key_size: INTEGER
 			a_file: RAW_FILE
-			public_key: POINTER
+			l_public_key: MANAGED_POINTER
 			retried: BOOLEAN
 			l_status: INTEGER
+			l_signing: MD_STRONG_NAME
 		do
 			if not retried then
 				status := No_error
-				if (create {MD_STRONG_NAME}.make).exists then
-					l_result := {MD_STRONG_NAME}.strong_name_key_gen (default_pointer,
-						0, $public_key, $key_size)
-					if l_result /= 1 then
-						status := Could_not_generate_key
-					else
-						create a_file.make (a_filename)
-						l_status := 2
-						a_file.open_write
-						l_status := 3
-						a_file.put_data (public_key, key_size)
-						l_status := 4
-						a_file.close
-						l_status := 5
-						{MD_STRONG_NAME}.strong_name_free_buffer (public_key)
-					end
+				create l_signing.make_with_version (a_runtime_version)
+				if l_signing.exists then
+					l_public_key := l_signing.new_public_private_key_pair
+					create a_file.make (a_filename)
+					l_status := 2
+					a_file.open_write
+					l_status := 3
+					a_file.put_managed_pointer (l_public_key, 0, l_public_key.count)
+					l_status := 4
+					a_file.close
+					l_status := 5
 				else
 					status := Could_not_load_mscorsn_dll
 				end
@@ -52,7 +49,7 @@ feature -- Initialization
 			when 1 then status := Could_not_generate_key
 			when 2 then status := Could_not_open_in_write_mode
 			when 3 then status := Could_not_write_to_file
-			when 4 then status := Could_not_close_file	
+			when 4 then status := Could_not_close_file
 			when 5 then status := Could_not_free_data
 			else
 				status := Unknown_error

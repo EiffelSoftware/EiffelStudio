@@ -7,12 +7,15 @@ indexing
 class
 	GB_GLOBAL_HISTORY
 
+create
+	make_with_components
+
 feature -- Initialization
 
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	initialize_history (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void

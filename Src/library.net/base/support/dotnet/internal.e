@@ -41,7 +41,7 @@ feature -- Conformance
 						id_to_eiffel_type.item (type1).dotnet_type)
 			end
 		end
-		
+
 feature -- Creation
 
 	dynamic_type_from_string (class_type: STRING): INTEGER is
@@ -82,7 +82,7 @@ feature -- Creation
 					-- Create `native_array' field from TUPLE, otherwise we would violate
 					-- TUPLE invariant.
 					-- Since TUPLE has only one attribute, thus `1' as position for `native_array'.
-				tuple_native_array_field_info.set_value (l_tuple, 
+				tuple_native_array_field_info.set_value (l_tuple,
 					create {NATIVE_ARRAY [SYSTEM_OBJECT]}.make (generic_count (l_tuple)))
 			end
 		ensure
@@ -98,13 +98,9 @@ feature -- Creation
 			count_valid: count >= 0
 			type_id_nonnegative: type_id >= 0
 			special_type: is_special_any_type (type_id)
-		local
-			l_gen_type, l_current_gen_type: RT_GENERIC_TYPE
 		do
-			create Result.make (count)
-			l_gen_type ?= id_to_eiffel_type.item (type_id)
-			l_current_gen_type := {ISE_RUNTIME}.generic_type (Result)
-			l_current_gen_type.set_generics (l_gen_type.generics)
+			Result ?= {ISE_RUNTIME}.create_type (pure_implementation_type (type_id))
+			Result.make (count)
 		ensure
 			special_type: is_special (Result)
 			dynamic_type_set: dynamic_type (Result) = type_id
@@ -121,6 +117,9 @@ feature -- Status report
 		local
 			l_gen_type: RT_GENERIC_TYPE
 		do
+				-- Unlike `is_special_type' we need to take the interface type,
+				-- as the {SPECIAL [ANY]}.to_cil will yield the interface type, not
+				-- the implementation type.
 			l_gen_type ?= id_to_eiffel_type.item (type_id)
 			if l_gen_type /= Void and then l_gen_type.count = 1 then
 				Result := l_gen_type.dotnet_type.equals (({SPECIAL [ANY]}).to_cil)
@@ -145,7 +144,7 @@ feature -- Status report
 
 	is_special (object: ANY): BOOLEAN is
 			-- Is `object' a special object?
-			-- It only recognized a special object 
+			-- It only recognized a special object
 			-- initialized within a TO_SPECIAL object.
 		require
 			object_not_void: object /= Void
@@ -182,12 +181,12 @@ feature -- Status report
 		do
 			Result := Marked_objects.contains (obj)
 		end
-		
+
 feature -- Access
 
 	none_type: INTEGER is -2
 			-- Type ID representation for NONE.
-	
+
 	Pointer_type: INTEGER is 0
 
 	Reference_type: INTEGER is 1
@@ -197,7 +196,7 @@ feature -- Access
 	Boolean_type: INTEGER is 3
 
 	Integer_type, integer_32_type: INTEGER is 4
-	
+
 	Real_type, real_32_type: INTEGER is 5
 
 	Double_type, real_64_type: INTEGER is 6
@@ -213,13 +212,13 @@ feature -- Access
 	Integer_64_type: INTEGER is 11
 
 	Wide_character_type: INTEGER is 12
-	
+
 	natural_8_type: INTEGER is 13
-	
+
 	natural_16_type: INTEGER is 14
-	
+
 	natural_32_type: INTEGER is 15
-	
+
 	natural_64_type: INTEGER is 16
 
 	min_predefined_type: INTEGER is -2
@@ -233,7 +232,7 @@ feature -- Access
 		do
 			Result := object.generator
 		end
-		
+
 	class_name_of_type (type_id: INTEGER): STRING is
 			-- Name of class associated with dynamic type `type_id'.
 		require
@@ -429,7 +428,7 @@ feature -- Access
 			when real_64_type then
 				l_double ?= l_obj
 				Result := l_double
-			
+
 			else
 					-- A reference, so nothing to be done
 				Result := l_obj
@@ -484,7 +483,7 @@ feature -- Access
 						l_name := l_eiffel_name.name
 					else
 						l_name := l_field.name
-					end					
+					end
 					l_native_array.put (k, l_name)
 					k := k + 1
 				end
@@ -531,7 +530,7 @@ feature -- Access
 			l_abstract_type: INTEGER
 			k, nb: INTEGER
 		do
-			l_native_array := id_to_fields_abstract_type.item (type_id)	
+			l_native_array := id_to_fields_abstract_type.item (type_id)
 			if l_native_array = Void then
 				from
 					l_members := get_members (type_id)
@@ -580,6 +579,7 @@ feature -- Access
 			l_members: NATIVE_ARRAY [FIELD_INFO]
 			l_field: FIELD_INFO
 			l_meth: METHOD_INFO
+			l_type_attr: RT_INTERFACE_TYPE_ATTRIBUTE
 		do
 			l_dtypes := id_to_fields_static_type.item (type_id)
 			if l_dtypes = Void then
@@ -637,12 +637,21 @@ feature -- Access
 						l_type := interface_type (l_field.field_type)
 						if l_type.is_value_type then
 								-- Case of an expanded type.
-							l_dtype := 
+							l_dtype :=
 								dynamic_type_from_rt_class_type (associated_runtime_type (l_type))
 						else
 								-- Normal case, we handle a non-generic class type.
 							create l_class_type.make
-							l_class_type.set_type (l_type.type_handle)
+							l_attributes := l_field.get_custom_attributes_type ({RT_INTERFACE_TYPE_ATTRIBUTE}, False)
+							if l_attributes.count > 0 then
+								l_type_attr ?= l_attributes.item (0)
+								check
+									l_type_attr_not_void: l_type_attr /= Void
+								end
+								l_class_type.set_type (l_type_attr.class_type.type_handle)
+							else
+								l_class_type.set_type (l_type.type_handle)
+							end
 							l_dtype := dynamic_type_from_rt_class_type (l_class_type)
 						end
 					end
@@ -829,9 +838,9 @@ feature -- Element change
 			index_small_enough: i <= field_count (object)
 			reference_field: field_type (i, object) = Reference_type
 			value_conforms_to_field_static_type:
-				value /= Void implies 
-					type_conforms_to (dynamic_type (value), 
-						field_static_type_of_type (i, dynamic_type (object))) 
+				value /= Void implies
+					type_conforms_to (dynamic_type (value),
+						field_static_type_of_type (i, dynamic_type (object)))
 		do
 			internal_set_reference_field (i, object, value)
 		end
@@ -1018,7 +1027,7 @@ feature -- Marking
 		ensure
 			marked: is_marked (obj)
 		end
-		
+
 	unmark (obj: ANY) is
 			-- Unmark `obj'.
 		require
@@ -1047,7 +1056,7 @@ feature {NONE} -- Implementation
 
 	private_type_field_name: SYSTEM_STRING is "$$____type"
 			-- .NET name for fields that stores generic types if any.
-	
+
 	next_dynamic_type_id: CELL [INTEGER] is
 			-- ID for dynamic type (each generic derivation get a new ID)
 		once
@@ -1132,7 +1141,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	internal_pure_interface_type (a_class_type: RT_CLASS_TYPE): RT_CLASS_TYPE is
 			-- Given `a_class_type' which might include some reference to implementation type,
 			-- returns the corresponding interface type.
@@ -1210,7 +1219,7 @@ feature {NONE} -- Implementation
 		ensure
 			interface_type_not_void: Result /= Void
 		end
-		
+
 	implementation_type (a_type: SYSTEM_TYPE): SYSTEM_TYPE is
 			-- Implementation type of Eiffel type `a_type' if it exists, otherwise `a_type'.
 		require
@@ -1225,7 +1234,7 @@ feature {NONE} -- Implementation
 		ensure
 			interface_type_not_void: Result /= Void
 		end
-		
+
 	dynamic_type_from_rt_class_type (a_class_type: RT_CLASS_TYPE): INTEGER is
 			-- Dynamic type of `a_class_type'.
 		local
@@ -1451,7 +1460,7 @@ feature {NONE} -- Implementation
 				load_eiffel_types_from_assembly (args.loaded_assembly)
 			end
 		end
-		
+
 	load_eiffel_types_from_assembly (an_assembly: ASSEMBLY) is
 			-- Load all Eiffel types from `an_assembly'.
 		require
@@ -1558,7 +1567,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 	associated_runtime_type (a_type: SYSTEM_TYPE): RT_CLASS_TYPE is
 			-- Associated Eiffel runtime type for an expanded `a_type'.
 		require
@@ -1683,7 +1692,7 @@ feature {NONE} -- Implementation
 		ensure
 			eiffel_meta_type_mapping_not_void: Result /= Void
 		end
-	
+
 	interface_to_implementation: HASHTABLE is
 			-- Mapping from interface to associated implementation.
 		once
@@ -1691,7 +1700,7 @@ feature {NONE} -- Implementation
 		ensure
 			interface_to_implementation_not_void: Result /= Void
 		end
-		
+
 	implementation_to_interface: HASHTABLE is
 			-- Mapping from implementation to associated interface.
 		once
@@ -1722,7 +1731,7 @@ feature {NONE} -- Implementation
 		ensure
 			abstract_types_not_void: Result /= Void
 		end
-	
+
 	get_members (type_id: INTEGER): NATIVE_ARRAY [FIELD_INFO] is
 			-- Retrieve all members of type `type_id'.
 			-- We need permission to retrieve non-public members.
@@ -1737,7 +1746,7 @@ feature {NONE} -- Implementation
 			l_type: SYSTEM_TYPE
 			l_fields: ARRAYED_LIST [FIELD_INFO]
 		do
-			Result := id_to_fields.item (type_id)	
+			Result := id_to_fields.item (type_id)
 			if Result = Void then
 				if is_tuple_type (type_id) or is_special_type (type_id) then
 						-- To match classic behavior, SPECIAL and TUPLE are seen as if they
@@ -1748,7 +1757,7 @@ feature {NONE} -- Implementation
 					allm := l_type.get_members_binding_flags ({BINDING_FLAGS}.instance |
 						{BINDING_FLAGS}.public | {BINDING_FLAGS}.non_public)
 					from
-						nb := allm.count 
+						nb := allm.count
 						create l_fields.make (nb)
 					until
 						i = nb
@@ -1845,7 +1854,7 @@ feature {NONE} -- Implementation
 		ensure
 			id_to_fields_static_type_not_void: Result /= Void
 		end
-		
+
 	id_to_fields_name: ARRAY [NATIVE_ARRAY [STRING]] is
 			-- Buffer for `field_name_of_type' lookups index by type_id.
 		once
@@ -1857,7 +1866,7 @@ feature {NONE} -- Implementation
 	marked_objects: HASHTABLE is
 			-- Contains all objects marked.
 		once
-			create Result.make_from_capacity (chunk_size)
+			create Result.make (chunk_size, Void, create {RT_REFERENCE_COMPARER}.make)
 		end
 
 	chunk_size: INTEGER is 50;

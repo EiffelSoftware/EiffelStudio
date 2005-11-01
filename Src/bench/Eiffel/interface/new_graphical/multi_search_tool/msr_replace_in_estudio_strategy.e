@@ -165,7 +165,6 @@ feature {NONE} -- Implementation
 					l.after
 				loop
 					l_editor := l.item.editor_tool.text_area
-					l.item.window.set_pointer_style (default_pixmaps.wait_cursor)
 					from
 						process_events_and_idle
 					until
@@ -173,7 +172,6 @@ feature {NONE} -- Implementation
 					loop
 						ev_application.idle_actions.call ([])
 					end
-					l.item.window.set_pointer_style (default_pixmaps.standard_cursor)
 					if l_editor.is_editable then
 						if l.item.changed then
 							changed_editor := l.item

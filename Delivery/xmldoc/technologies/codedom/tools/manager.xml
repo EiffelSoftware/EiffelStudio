@@ -66,13 +66,13 @@
 			</item>
 			<item>
 				<bold>Metadata cache</bold>: Both the Eiffel CodeDom Provider and the Eiffel compiler require 
-				reading from and writing to the Eiffel Metadata Cache. This cache contains XML files mapping the 
+				reading from and writing to an Eiffel Metadata Cache. These caches contain information about mapping the 
 				.NET types and members names to valid Eiffel identifiers. Because read and write access are required, the 
 				application that uses the CodeDom Provider must have write access rights to the Eiffel Metadata Cache folder.
 
 				<note>
 					<bold>Note:</bold> The Eiffel for ASP.NET installation program will grant write access rights to the
-					 Eiffel Metadata Cache folder to the ASPNET and IIS_WPG users if they exist. ASPNET is the 
+					 Eiffel Metadata Cache folder to the ASPNET user and IIS_WPG group if they exist. ASPNET is the 
 					default user account used by the ASP.NET process (aspnet_wp.exe) under Windows XP while 
 					IIS_WPG is the default user account used by the ASP.NET process (w3wp.exe) under Windows 
 					2003 Server.
@@ -87,6 +87,11 @@
 					ASP.NET page containing Eiffel code to be loaded (this can be done by setting the 
 					<italic>HttpServerUtility.ScriptTimeout</italic> property).
 				</warning>
+			</item>
+			<item>
+				<bold>Compiler metadata cache</bold>: This cache is used by the Eiffel Codedom Provider Compiler to map
+				.NET types and members names to valid Eiffel identifiers. Please consult <bold>Metadata cache</bold> for 
+				additional information (the same note and warning apply).
 			</item>
 			<item>
 				<bold>Precompile cache</bold>: If the configuration defines a precompile ace file then the Eiffel CodeDom 

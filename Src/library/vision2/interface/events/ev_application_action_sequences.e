@@ -55,7 +55,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	cancel_actions: EV_PND_ACTION_SEQUENCE is
 			-- Actions to be performed when a PND is cancelled.
 			-- A cancel may be initiated in a number of ways depending on the transport
@@ -66,7 +66,7 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	pnd_motion_actions: EV_PND_MOTION_ACTION_SEQUENCE is
 			-- Actions to be performed when screen pointer is moved,
 			-- during a pick and drop. The "pick and drop" argument
@@ -80,12 +80,84 @@ feature -- Event handling
 		end
 
 	uncaught_exception_actions: ACTION_SEQUENCE [TUPLE [EXCEPTION]] is
-		-- Actions to be performed when an
-		-- action sequence called via callback
-		-- from the underlying toolkit raises an
-		-- exception that is not caught
+			-- Actions to be performed when an
+			-- action sequence called via callback
+			-- from the underlying toolkit raises an
+			-- exception that is not caught
 		do
 			Result := implementation.uncaught_exception_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	pointer_motion_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER]] is
+			-- Actions to be performed when screen pointer moves with open arguments
+			-- widget: EV_WIDGET; screen_x, screen_y: INTEGER
+		do
+			Result := implementation.pointer_motion_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	pointer_button_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+			-- Actions to be performed when screen pointer button is pressed with open arguments
+			-- widget: EV_WIDGET; button, screen_x, screen_y: INTEGER
+		do
+			Result := implementation.pointer_button_press_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	pointer_double_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+			-- Actions to be performed when screen pointer is double clicked with open arguments
+			-- widget: EV_WIDGET; button, screen_x, screen_y: INTEGER
+		do
+			Result := implementation.pointer_double_press_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	pointer_button_release_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]] is
+			-- Actions to be performed when screen pointer button is released with open arguments
+			-- widget: EV_WIDGET; button, screen_x, screen_y: INTEGER
+		do
+			Result := implementation.pointer_button_release_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	mouse_wheel_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, INTEGER]] is
+			-- Actions to be performed when mouse wheel is rotated with open arguments
+			-- widget: EV_WIDGET; delta: INTEGER
+		do
+			Result := implementation.mouse_wheel_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	key_press_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
+			-- Actions to be performed when a keyboard key is pressed with open arguments
+			-- widget: EV_WIDGET; key: EV_KEY
+		do
+			Result := implementation.key_press_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	key_press_string_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, STRING]] is
+			-- Actions to be performed when a keyboard press generates a displayable character with
+			-- open arguments widget: EV_WIDGET; string: STRING
+		do
+			Result := implementation.key_press_string_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	key_release_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]] is
+			-- Actions to be performed when a keyboard key is released with open arguments
+			-- widget: EV_WIDGET; key: EV_KEY
+		do
+			Result := implementation.key_release_actions
 		ensure
 			not_void: Result /= Void
 		end

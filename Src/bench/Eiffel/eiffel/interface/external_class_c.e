@@ -58,7 +58,7 @@ feature -- Initialization
 				is_expanded := external_class.is_expanded
 				is_enum := external_class.is_enum
 				is_frozen := external_class.is_frozen
-				
+
 					-- Initializes inheritance structure
 				process_parents
 
@@ -102,9 +102,9 @@ feature -- Initialization
 					create {LOCATION_AS}.make_null
 					)
 				l_ast.set_class_id (class_id)
-					
+
 				Tmp_ast_server.put (l_ast)
-				
+
 					-- Remove further processing except degree_4 since we assume that
 					-- imported XML is correct.
 				degree_3.remove_class (Current)
@@ -333,7 +333,7 @@ feature {NONE} -- Implementation: Overloading
 								-- Find if `l_feat' and `l_other' have the same parameter
 								-- signature. If they do, we should not insert them in the
 								-- overloading resolution list.
-							l_is_overloaded := 
+							l_is_overloaded :=
 								(not l_feat.has_arguments and not l_other.has_arguments) or else
 								((l_feat.has_arguments and l_other.has_arguments) and then
 								(l_feat.arguments.count = l_other.arguments.count) and then
@@ -385,7 +385,7 @@ feature -- Query
 			done: BOOLEAN
 		do
 			l_consumed_type := lace_class.external_consumed_type
-			
+
 				-- It should not be Void, since we were able to parse it before, but it
 				-- is possible that someone might remove the file or other external
 				-- events, so we protect our call.
@@ -408,9 +408,9 @@ feature -- Query
 				end
 			end
 		end
-		
+
 feature {NONE} -- Initialization
-		
+
 	process_parents is
 			-- Initialize inheritance clause of Current using `external_class'
 		require
@@ -470,7 +470,7 @@ feature {NONE} -- Initialization
 					external_class.interfaces.forth
 				end
 			end
-			
+
 			if class_id = System.system_object_id then
 					-- Add ANY as a parent class of SYSTEM_OBJECT, and therefore
 					-- of all .NET classes
@@ -888,13 +888,13 @@ feature {NONE} -- Initialization
 
 				l_written_type := internal_type_from_consumed_type (True, l_member.declared_type)
 				l_feat.set_written_in (l_written_type.class_id)
-				
+
 					-- Let's update `l_feat' with info from parent classes.
 				update_feature_with_parents (a_feat_tbl, l_feat, l_member)
 
 					-- Insert `l_feat' in feature tables
 				insert_feature (l_feat, a_feat_tbl)
-				
+
 					-- Process the types of the external routines, no doing it would
 					-- cause the compiler to miss certain derivation of NATIVE_ARRAY
 					-- that are necessary to get the right associated NATIVE_ARRAY_CLASS_TYPE
@@ -963,7 +963,7 @@ feature {NONE} -- Implementation
 				-- We need to look up parents of current class to find if some routine IDs
 				-- have been assigned or not. At this stage `a_feat' contains valid data,
 				-- only `rout_id_set' of `a_feat' has not yet been set.
-				-- 
+				--
 				-- Note: Manu 08/13/2002
 				-- In most cases the below alogorithm is going to find an inherited
 				-- routine id, however in the case where a MethodImpl has been done in current
@@ -973,7 +973,7 @@ feature {NONE} -- Implementation
 				-- be the .NET behavior anyway.
 
 			create l_rout_id_set.make
-				
+
 			if not a_member.is_virtual then
 					-- Either it is a new feature of current or an inherited one,
 					-- in the first case we create a new routine id, otherwise we reuse the
@@ -1014,18 +1014,17 @@ feature {NONE} -- Implementation
 					end
 					parents.forth
 				end
-			end
-		
-			if l_feat = Void and l_parent_class /= Void then
-					-- Let's check the main parent now.
-				l_feat := matching_external_feature_in (a_feat, l_parent_class, a_member)
-				if l_feat /= Void then
-					l_rout_id_set.merge (l_feat.rout_id_set)
-					if l_feat.written_in = a_feat.written_in then
-							-- Inherited feature is written in same class as `a_feat'
-							-- therefore we can safely store inherited `written_feature_id'
-							-- into `a_feat'.
-						a_feat.set_written_feature_id (l_feat.written_feature_id)
+				if l_rout_id_set.is_empty and l_parent_class /= Void then
+						-- Let's check the main parent now.
+					l_feat := matching_external_feature_in (a_feat, l_parent_class, a_member)
+					if l_feat /= Void then
+						l_rout_id_set.merge (l_feat.rout_id_set)
+						if l_feat.written_in = a_feat.written_in then
+								-- Inherited feature is written in same class as `a_feat'
+								-- therefore we can safely store inherited `written_feature_id'
+								-- into `a_feat'.
+							a_feat.set_written_feature_id (l_feat.written_feature_id)
+						end
 					end
 				end
 			end
@@ -1130,7 +1129,7 @@ feature {NONE} -- Implementation
 								loop
 									l_found := l_other_ext.argument_types.item (i) =
 										l_feat_ext.argument_types.item (i)
-									
+
 									i := i + 1
 								end
 							end
@@ -1156,7 +1155,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	internal_type_from_consumed_type (
 			force_compilation: BOOLEAN; c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A
 		is
@@ -1208,7 +1207,7 @@ feature {NONE} -- Implementation
 					create l_generics.make (1, 1)
 					l_generics.put (l_type_a, 1)
 					create {NATIVE_ARRAY_TYPE_A} Result.make (
-						System.native_array_class.compiled_class.class_id, l_generics)				
+						System.native_array_class.compiled_class.class_id, l_generics)
 				end
 			else
 				l_result := an_assembly.dotnet_classes.item (l_type_name)
@@ -1220,9 +1219,9 @@ feature {NONE} -- Implementation
 					end
 					l_result := lace_class.basic_type_mapping.item (l_type_name)
 				end
-				
+
 				if l_result = Void then
-						-- Type could not be found. Something must be inconsistent in 
+						-- Type could not be found. Something must be inconsistent in
 						-- this assembly.
 					create vtct
 					vtct.set_class (Current)
@@ -1246,7 +1245,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: force_compilation implies Result /= Void
 		end
-	
+
 	set_constant_value (a_constant: CONSTANT_I; a_external_type: CL_TYPE_A; a_value: STRING) is
 			-- Set `value' of `a_constant' with data of `a_value' using `a_external_type'
 			-- to find out type of constant.

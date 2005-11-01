@@ -152,7 +152,33 @@ feature -- Status report
 			-- The search launched?
 		do
 			Result := search_strategy_internal.is_launched	
-		end	
+		end
+		
+	is_first_text_item: BOOLEAN is
+			-- Is `item' the first text item?
+		local
+			l_text_item: MSR_TEXT_ITEM
+			l_index, l_first_text_index: INTEGER
+			l_end_loop: BOOLEAN
+		do
+			l_index := index
+			l_first_text_index := -1
+			from
+				start
+				l_end_loop := false
+			until
+				after or l_end_loop
+			loop
+				l_text_item ?= item
+				if l_text_item /= Void then
+					l_end_loop := true
+					l_first_text_index := index
+				end
+				forth
+			end
+			go_i_th (l_index)
+			Result := (l_index = l_first_text_index)
+		end		
 	
 	count: INTEGER is
 			-- Number of items, all class and text items included
@@ -247,8 +273,26 @@ feature -- Status report
 		do
 			Result := item_matched.index_of (p_item, i)
 		end
-		
 	
+	contain_data (a_data: ANY) : BOOLEAN is
+			-- Does `item_matches' contain `a_data'?
+		local
+			l_cursor: ARRAYED_LIST_CURSOR
+		do
+			if is_search_launched then
+				l_cursor := item_matched.cursor
+				from
+					item_matched.start
+				until
+					item_matched.after
+				loop
+					Result := (item_matched.item.data = a_data)
+					item_matched.forth
+				end
+				item_matched.go_to (l_cursor)
+			end
+		end
+
 feature -- Status setting
 
 	set_search_strategy (p_strategy: MSR_SEARCH_STRATEGY) is
@@ -394,6 +438,26 @@ feature -- Cursor movement
 		do
 			search_strategy_internal.item_matched.start
 		end
+		
+	go_to_first_text_item is
+			-- Go to first text item, if none, off.
+		require
+			is_search_launched: is_search_launched
+		local
+			l_text_item: MSR_TEXT_ITEM
+		do
+			if not is_empty then
+				from
+					start
+					l_text_item ?= item
+				until
+					after or l_text_item /= Void
+				loop
+					forth
+					l_text_item ?= item
+				end
+			end
+		end		
 
 	go_to_next_text_item (reverse: BOOLEAN) is
 			-- Go to next text item if exists, if reverse go to previous text item.
@@ -402,41 +466,181 @@ feature -- Cursor movement
 		do
 			if is_search_launched then
 				if reverse then
-					if not item_matched.isfirst and not before then
-						from
-							back
-							if not off then
+					if item_matched.isfirst or is_first_text_item then
+						item_matched.finish
+					else
+						if not before then
+							from
+								back
 								l_text_item ?= item
+							until
+								item_matched.isfirst or is_first_text_item or l_text_item /= Void or off
+							loop
+								back
+								if not off then
+									l_text_item ?= item
+								end
 							end
-						until
-							item_matched.isfirst or l_text_item /= Void or off
-						loop
-							back
-							if not off then
-								l_text_item ?= item
+							if off then
+								go_to_first_text_item
+								if off then
+									start
+								end
 							end
-						end
-						if off then
-							item_matched.start
 						end
 					end
-				else	
-					if not item_matched.islast and not after then
-						from
-							forth
-							if not off then
-								l_text_item ?= item
+				else
+					if item_matched.islast then
+						go_to_first_text_item
+					else
+						if not item_matched.islast and not after then
+							from
+								forth
+								if not off then
+									l_text_item ?= item
+								end
+							until
+								item_matched.islast or l_text_item /= Void or off
+							loop
+								forth
+								if not off then
+									l_text_item ?= item
+								end
 							end
-						until
-							item_matched.islast or l_text_item /= Void or off
-						loop
-							forth
-							if not off then
-								l_text_item ?= item
+							if off then
+								item_matched.finish
 							end
 						end
-						if off then
+					end
+				end
+			end
+		end
+		
+	go_to_closest_item (a_position: INTEGER; backwards: BOOLEAN; a_data: ANY; compare_data: BOOLEAN) is
+			-- Go to the item closest to `a_position', if compare_data compare data.
+		local
+			l_cursor: INTEGER
+			l_start, l_end, last_encounter: INTEGER
+			l_text_item: MSR_TEXT_ITEM
+			l_end_loop: BOOLEAN
+		do
+			if is_search_launched then
+				l_start := 0
+				l_end := {INTEGER}.max_value
+				
+				l_cursor := item_matched.index
+				if compare_data then
+					if a_data = Void then
+						go_to_next_text_item (backwards)
+					else
+						if backwards then
+							from
+								item_matched.start
+								l_end_loop := false
+								last_encounter := 0
+							until
+								item_matched.after or l_end_loop
+							loop
+								l_text_item ?= item_matched.item
+								if l_text_item /= Void and then l_text_item.data = a_data then
+									last_encounter := index
+									if a_position <= l_text_item.end_index_in_unix_text then
+										l_cursor := index
+										l_end_loop := true
+									end
+								end
+								item_matched.forth
+							end
+							if contain_data (a_data) then
+								if l_end_loop then
+									go_i_th (l_cursor)
+									go_to_next_text_item (backwards)
+								else
+									go_i_th (last_encounter)
+								end
+							else
+								go_i_th (l_cursor)
+								go_to_next_text_item (backwards)
+							end						
+						else
+							from
+								item_matched.finish
+								l_end_loop := false
+								last_encounter := 0
+							until
+								item_matched.before or l_end_loop
+							loop
+								l_text_item ?= item_matched.item
+								if l_text_item /= Void and then l_text_item.data = a_data then
+									last_encounter := index
+									if a_position > l_text_item.start_index_in_unix_text then
+										l_cursor := index
+										l_end_loop := true
+									end
+								end
+								item_matched.back
+							end
+							if contain_data (a_data) then
+								if l_end_loop then
+									go_i_th (l_cursor)
+									go_to_next_text_item (backwards)
+								else
+									go_i_th (last_encounter)
+								end
+							else
+								go_i_th (l_cursor)
+								go_to_next_text_item (backwards)
+							end	
+						end
+					end
+				else
+					if backwards then
+						from
+							item_matched.start
+							l_end_loop := false
+							last_encounter := 0
+						until
+							item_matched.after or l_end_loop
+						loop
+							l_text_item ?= item_matched.item
+							if l_text_item /= Void then
+								last_encounter := index
+								if a_position <= l_text_item.end_index_in_unix_text then
+									l_cursor := index
+									l_end_loop := true
+								end
+							end
+							item_matched.forth
+						end
+						if l_end_loop then
+							go_i_th (l_cursor)
+							go_to_next_text_item (backwards)
+						else
+							go_i_th (last_encounter)
+						end			
+					else
+						from
 							item_matched.finish
+							l_end_loop := false
+							last_encounter := 0
+						until
+							item_matched.before or l_end_loop
+						loop
+							l_text_item ?= item_matched.item
+							if l_text_item /= Void then
+								last_encounter := index
+								if a_position > l_text_item.start_index_in_unix_text then
+									l_cursor := index
+									l_end_loop := true
+								end
+							end
+							item_matched.back
+						end
+						if l_end_loop then
+							go_i_th (l_cursor)
+							go_to_next_text_item (backwards)
+						else
+							go_i_th (last_encounter)
 						end
 					end
 				end

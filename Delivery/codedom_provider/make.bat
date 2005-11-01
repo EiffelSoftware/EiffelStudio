@@ -21,7 +21,7 @@ SET COMPILER_RELEASE=%2
 ECHO COMPILER_RELEASE=%COMPILER_RELEASE%
 SET CODEDOM_RELEASE=%1
 ECHO CODEDOM_RELEASE=%CODEDOM_RELEASE%
-SET GOBO_SRC=E:\Sources\library\gobo
+SET GOBO_SRC=\Sources\library\gobo
 ECHO GOBO_SRC=%GOBO_SRC%
 SET EIFFEL_SRC=%CD%\checkout
 ECHO EIFFEL_SRC=%EIFFEL_SRC%
@@ -65,6 +65,9 @@ ECHO Building MSI
 CD %ECPOriginalPath%\scripts
 CALL make_msi.bat
 CD ..
+
+CD %ECPOriginalPath%
+CALL scripts\build_docs.bat
 GOTO END
 
 :USAGE
@@ -76,5 +79,4 @@ ECHO $ISE_EIFFEL: ES Installation used to build delivery (e.g. C:\Eiffel55)
 ECHO DESTINATION: Folder where to generate installation (current folder by default)
 
 :END
-CD %ECPOriginalPath%
 ECHO Done.

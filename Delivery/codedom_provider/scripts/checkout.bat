@@ -81,4 +81,12 @@ cvs -z3 -Q export -r%RELEASE% -d eac_browser Src/dotnet/eac_browser
 ECHO Exporting codedom_provider (%CODEDOM_RELEASE%) in checkout\dotnet...
 cvs -z3 -Q export -r%CODEDOM_RELEASE% -d codedom_provider Src/dotnet/codedom_provider
 
+CD ..\
+REM in checkout
+MKDIR docs
+CD docs
+REM in checkout\docs
+cvs -z3 -Q export -r%RELEASE% -d xmldoc Delivery/xmldoc
+cvs -z3 -Q export -r%RELEASE% -d doc_builder Src/tools/doc_builder
+
 CD ..\..

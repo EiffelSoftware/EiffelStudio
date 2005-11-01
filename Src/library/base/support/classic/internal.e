@@ -32,7 +32,7 @@ feature -- Conformance
 		do
 			Result := c_type_conforms_to (type1, type2)
 		end
-		
+
 feature -- Creation
 
 	dynamic_type_from_string (class_type: STRING): INTEGER is
@@ -136,7 +136,7 @@ feature -- Status report
 		do
 			Result := c_eif_is_tuple_type (type_id)
 		end
-		
+
 	is_marked (obj: ANY): BOOLEAN is
 			-- Is `obj' marked?
 		require
@@ -149,7 +149,7 @@ feature -- Access
 
 	none_type: INTEGER is -2
 			-- Type ID representation for NONE.
-	
+
 	Pointer_type: INTEGER is 0
 
 	Reference_type: INTEGER is 1
@@ -159,7 +159,7 @@ feature -- Access
 	Boolean_type: INTEGER is 3
 
 	Integer_type, integer_32_type: INTEGER is 4
-	
+
 	Real_type, real_32_type: INTEGER is 5
 
 	Double_type, real_64_type: INTEGER is 6
@@ -175,13 +175,13 @@ feature -- Access
 	Integer_64_type: INTEGER is 11
 
 	Wide_character_type: INTEGER is 12
-	
+
 	natural_8_type: INTEGER is 13
-	
+
 	natural_16_type: INTEGER is 14
-	
+
 	natural_32_type: INTEGER is 15
-	
+
 	natural_64_type: INTEGER is 16
 
 	max_predefined_type: INTEGER is 16
@@ -193,7 +193,7 @@ feature -- Access
 		do
 			Result := object.generator
 		end
-		
+
 	class_name_of_type (type_id: INTEGER): STRING is
 			-- Name of class associated with dynamic type `type_id'.
 		require
@@ -258,7 +258,7 @@ feature -- Access
 		ensure
 			dynamic_type_nonnegative: Result >= 0
 		end
-		
+
 	generic_dynamic_type_of_type (type_id: INTEGER; i: INTEGER): INTEGER is
 			-- Dynamic type of generic parameter of `type_id' at position `i'.
 		require
@@ -352,7 +352,7 @@ feature -- Access
 		ensure
 			field_type_nonnegative: Result >= 0
 		end
-		
+
 	expanded_field_type (i: INTEGER; object: ANY): STRING is
 			-- Class name associated with the `i'-th
 			-- expanded field of `object'
@@ -529,8 +529,8 @@ feature -- Element change
 			reference_field: field_type (i, object) = Reference_type
 			value_conforms_to_field_static_type:
 				value /= Void implies
-					type_conforms_to (dynamic_type (value), 
-						field_static_type_of_type (i, dynamic_type (object))) 
+					type_conforms_to (dynamic_type (value),
+						field_static_type_of_type (i, dynamic_type (object)))
 		do
 			c_set_reference_field (i - 1, $object, $value)
 		end
@@ -713,7 +713,7 @@ feature -- Marking
 			-- Mark object `obj'
 		require
 			object_not_void: obj /= Void
-			object_not_marked: not is_marked (obj)		
+			object_not_marked: not is_marked (obj)
 		do
 			c_mark ($obj)
 		ensure
@@ -724,7 +724,7 @@ feature -- Marking
 			-- Unmark object `obj'
 		require
 			object_not_void: obj /= Void
-			object_marked: is_marked (obj)		
+			object_marked: is_marked (obj)
 		do
 			c_unmark ($obj)
 		ensure
@@ -740,7 +740,7 @@ feature {NONE} -- Cached data
 		ensure
 			internal_dynamic_type_string_table_not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	c_is_instance_of (type1: INTEGER; obj: POINTER): BOOLEAN is
@@ -1056,7 +1056,7 @@ feature {NONE} -- Implementation
 		alias
 			"RTLNSMART"
 		end
-		
+
 	c_set_dynamic_type (obj: POINTER; dtype: INTEGER) is
 			-- Set `obj' dynamic type to `dtype'.
 		external
@@ -1099,7 +1099,7 @@ feature {NONE} -- Implementation
 		alias
 			"eif_gen_conf"
 		end
-		
+
 	c_is_marked (obj: POINTER): BOOLEAN is
 		external
 			"C macro signature (EIF_REFERENCE): EIF_BOOLEAN use %"eif_internal.h%""

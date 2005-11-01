@@ -6,6 +6,9 @@ indexing
 class
 	ECDM_REGISTRY_KEYS
 
+inherit
+	CODE_REGISTRY_KEYS
+
 feature -- Access
 
 	Saved_settings_key: STRING is
@@ -13,9 +16,6 @@ feature -- Access
 		once
 			Result :=  "Software\ISE\Eiffel Codedom Provider\Manager\" + Version + "\Settings"
 		end
-
-	Version: STRING is "2.0"
-			-- Version, change when different set of registry keys are needed.
 
 end -- class ECDM_REGISTRY_KEYS
 

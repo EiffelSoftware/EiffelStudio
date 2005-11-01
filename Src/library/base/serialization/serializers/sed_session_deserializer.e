@@ -961,12 +961,14 @@ feature {NONE} -- Implementation
 						l_list.finish
 					end
 				end
-				l_list_stack := list_stack
-				if l_list_stack = Void then
-					create l_list_stack.make (1)
-					list_stack := l_list_stack
+				if l_list /= Void then
+					l_list_stack := list_stack
+					if l_list_stack = Void then
+						create l_list_stack.make (1)
+						list_stack := l_list_stack
+					end
+					l_list_stack.extend (l_list)
 				end
-				l_list_stack.extend (l_list)
 				l_missing_references.put (Void, an_index)
 			end
 		end

@@ -697,7 +697,8 @@
 								<Component Id="reader_writer" Guid="5098EFF0-B7AE-4bd8-B14B-14CD03893539">
 									<File Id="sed_binary_reader_writer_e" Name="SED_BI~1.E" LongName="sed_binary_reader_writer.e" />
 									<File Id="sed_medium_reader_writer_e" Name="SED_ME~1.E" LongName="sed_medium_reader_writer.e" />
-									<File Id="sed_memory_reader_writer_e" Name="SED_ME~2.E" LongName="sed_memory_reader_writer.e" />
+									<File Id="sed_medium_reader_writer_1_e" Name="SED_ME~2.E" LongName="sed_medium_reader_writer_1.e" />
+									<File Id="sed_memory_reader_writer_e" Name="SED_ME~3.E" LongName="sed_memory_reader_writer.e" />
 									<File Id="sed_reader_writer_e" Name="SED_RE~1.E" LongName="sed_reader_writer.e" />
 								</Component>
 							</Directory>
@@ -779,7 +780,6 @@
 								<File Id="integer_ref.e" Name="INTEGE~7.E" LongName="integer_ref.e" />
 								<File Id="integer_64_ref.e" Name="INTEGE~8.E" LongName="integer_64_ref.e" />
 								<File Id="integer_interval.e" Name="INTEGE~9.E" LongName="integer_interval.e" />
-								<File Id="integer_natural_information_e" Name="INC83B~1.E" LongName="integer_natural_information.e" />
 								<File Id="io_medium.e" Name="IO_MED~1.E" LongName="io_medium.e" />
 								<File Id="mem_const.e" Name="MEM_CO~1.E" LongName="mem_const.e" />
 								<File Id="natural_8.e" Name="NATURA~1.E" LongName="natural_8.e" />
@@ -791,14 +791,17 @@
 								<File Id="natural_32_ref.e" Name="NATURA~7.E" LongName="natural_32_ref.e" />
 								<File Id="natural_64_ref.e" Name="NATURA~8.E" LongName="natural_64_ref.e" />
 								<File Id="numeric.e" Name="numeric.e" />
-								<File Id="overflow_checker_e" Name="OVERFL~1.E" LongName="overflow_checker.e" />
+								<File Id="numeric_information" Name="NUMERI~1.E" LongName="numeric_information.e" />
+								<File Id="integer_overflow_checker_e" Name="IN375A~1.E" LongName="integer_overflow_checker.e" />
 								<File Id="part_comparable.e" Name="PART_C~1.E" LongName="part_comparable.e" />
 								<File Id="seq_string.e" Name="SEQ_ST~1.E" LongName="seq_string.e" />
 								<File Id="std_files.e" Name="STD_FI~1.E" LongName="std_files.e" />
 								<File Id="string.e" Name="string.e" />
 								<File Id="string_handler.e" Name="STRING~1.E" LongName="string_handler.e" />
 								<File Id="string_searcher_e" Name="STRING~2.E" LongName="string_searcher.e" />
-								<File Id="string_to_integer_state_machine_e" Name="STRING~3.E" LongName="string_to_integer_state_machine.e" />
+								<File Id="string_to_integer_convertor_e" Name="STRING~3.E" LongName="string_to_integer_convertor.e" />
+								<File Id="string_to_numeric_convertor_e" Name="STRING~4.E" LongName="string_to_numeric_convertor.e" />
+								<File Id="string_to_real_convertor_e" Name="STRING~5.E" LongName="string_to_real_convertor.e" />
 								<File Id="to_special.e" Name="TO_SPE~1.E" LongName="to_special.e" />
 								<File Id="typed_pointer_e" Name="TYPED_~1.E" LongName="typed_pointer.e" />
 							</Component>

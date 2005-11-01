@@ -618,6 +618,7 @@
 									<File Id="VIFC" Name="VIFC" />
 									<File Id="VIFI1" Name="VIFI1" />
 									<File Id="VIFI2" Name="VIFI2" />
+									<File Id="VIFI3" Name="VIFI3" />
 									<File Id="VIIC" Name="VIIC" />
 									<File Id="VIIK" Name="VIIK" />
 									<File Id="VIOF" Name="VIOF" />
@@ -683,6 +684,7 @@
 									<File Id="VTCT2" Name="VTCT" />
 									<File Id="VTEC1" Name="VTEC1" />
 									<File Id="VTEC2" Name="VTEC2" />
+									<File Id="VTEC3" Name="VTEC3" />
 									<File Id="VTUG1" Name="VTUG1" />
 									<File Id="VTUG2" Name="VTUG2" />
 									<File Id="VUAR1" Name="VUAR1" />

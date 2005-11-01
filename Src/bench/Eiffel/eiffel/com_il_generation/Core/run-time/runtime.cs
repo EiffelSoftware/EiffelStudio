@@ -435,11 +435,16 @@ feature -- Status report
 
 		result = interface_type_mapping [a_type] as Type;
 		if (result == null) {
-			l_attributes = a_type.GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false);
+			l_attributes = a_type.GetCustomAttributes (typeof (RT_INTERFACE_TYPE_ATTRIBUTE), false);
 			if (l_attributes != null && l_attributes.Length > 0) {
-				result = ((INTERFACE_TYPE_ATTRIBUTE) l_attributes [0]).class_type;
+				result = ((RT_INTERFACE_TYPE_ATTRIBUTE) l_attributes [0]).class_type;
 			} else {
-				result = a_type;
+				l_attributes = a_type.GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false);
+				if (l_attributes != null && l_attributes.Length > 0) {
+					result = ((INTERFACE_TYPE_ATTRIBUTE) l_attributes [0]).class_type;
+				} else {
+					result = a_type;
+				}
 			}
 			interface_type_mapping [a_type] = result;
 		}

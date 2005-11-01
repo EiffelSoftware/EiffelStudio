@@ -16,7 +16,7 @@ inherit
 			{NONE} all
 			{ANY} system, workbench
 		end
-	
+
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
@@ -55,7 +55,7 @@ inherit
 
 create {CIL_CODE_GENERATOR}
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (
@@ -118,7 +118,7 @@ feature -- Access
 
 	md_emit: MD_EMIT
 			-- Metadata emitter.
-			
+
 	method_writer: MD_METHOD_WRITER
 			-- Store byte code of features in memory.
 
@@ -133,7 +133,7 @@ feature -- Access
 
 	c_module_name: STRING
 			-- Name of DLL where C externals used by Current module are stored.
-			
+
 	assembly_info: ASSEMBLY_INFO
 			-- Assembly information if current is an assembly manifest.
 		--require
@@ -143,7 +143,7 @@ feature -- Access
 			-- Public key if used and if current is an assembly manifest.
 		--require
 		--	is_assembly_module: is_assembly_module
-		
+
 	resources: CLI_RESOURCES
 			-- List of resources used by this module.
 
@@ -157,12 +157,12 @@ feature -- Status report
 
 	is_debug_info_enabled: BOOLEAN
 			-- Is debug information generated along with Current?
-			
+
 	is_assembly_module: BOOLEAN
 			-- Does current represent an assembly manifest?
 			-- I.e. an assembly is made of modules and of one assembly manifest which
 			-- is a module with `Assembly' table metadata.
-			
+
 	is_dll, is_console_application: BOOLEAN
 			-- Nature of generated module.
 
@@ -502,7 +502,7 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 			l_method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 			l_method_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_i4, 0)
 			once_string_allocation_routine_token_value := md_emit.define_method (
-				once_string_allocation_routine_name, 
+				once_string_allocation_routine_name,
 				helper_class_token,
 				{MD_METHOD_ATTRIBUTES}.public |
 				{MD_METHOD_ATTRIBUTES}.static |
@@ -549,7 +549,7 @@ feature {NONE} -- Once manifest strings: tokens
 			-- of CIL type "string" or 0 if it is not computed yet
 
 	once_string_field_eiffel_token: INTEGER
-			-- Token of a field that is used to store values of once manifest strings 
+			-- Token of a field that is used to store values of once manifest strings
 			-- of Eiffel type "STRING" or 0 if it is not computed yet
 
 	once_string_allocation_routine_token_value: INTEGER
@@ -617,7 +617,7 @@ feature {NONE} -- Access: metadata generation
 	single_inheritance_token: INTEGER
 			-- Token of parent class when no interface is being generated:
 			-- either if `is_single_inheritance_implementation' or if class `is_single'.
-			
+
 	is_single_inheritance_implementation: BOOLEAN is
 			-- Is current generation of type SINGLE_IL_CODE_GENERATOR?
 		do
@@ -679,7 +679,7 @@ feature -- Settings
 		ensure
 			resources_set: resources = r
 		end
-		
+
 feature -- Settings: signature
 
 	set_method_return_type (a_sig: MD_METHOD_SIGNATURE; a_type: TYPE_I) is
@@ -758,7 +758,7 @@ feature -- Cleanup
 			end
 			dbg_writer := Void
 		end
-		
+
 feature -- Code generation
 
 	prepare (a_dispenser: MD_DISPENSER; a_count: INTEGER) is
@@ -774,10 +774,10 @@ feature -- Code generation
 		do
 				-- Mark Current has being generated.
 			is_generated := True
-			
+
 			md_emit := a_dispenser.emitter
 			create method_writer.make
-			
+
 				-- Create unicode string buffer.
 			create uni_string.make_empty (1024)
 
@@ -810,7 +810,7 @@ feature -- Code generation
 					ass.set_build_number (l_version.build.to_integer_16)
 					ass.set_revision_number (l_version.revision.to_integer_16)
 				end
-				
+
 				if public_key /= Void then
 					l_assembly_flags := {MD_ASSEMBLY_FLAGS}.public_key
 				end
@@ -876,7 +876,7 @@ feature -- Code generation
 			end
 
 			il_code_generator.start_new_body (entry_point_token)
-			
+
 				-- Initialize assertions for runtime in workbench mode.
 			if not System.in_final_mode then
 				il_code_generator.put_type_token (l_type_id)
@@ -1093,7 +1093,7 @@ feature -- Metadata description
 					{MD_TYPE_ATTRIBUTES}.Ansi_class |
 					{MD_TYPE_ATTRIBUTES}.Is_class |
 					{MD_TYPE_ATTRIBUTES}.Serializable
-				
+
 				if class_c.is_deferred then
 					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Abstract
 				end
@@ -1101,7 +1101,7 @@ feature -- Metadata description
 				if class_c.is_frozen or class_type.is_expanded then
 					l_attributes := l_attributes | {MD_TYPE_ATTRIBUTES}.Sealed
 				end
-			
+
 				update_parents (class_type, class_c, False)
 				single_parent_mapping.put (single_inheritance_parent_id,
 					class_type.implementation_id)
@@ -1115,7 +1115,7 @@ feature -- Metadata description
 						class_type.set_last_type_token (l_type_token)
 					end
 				end
-				
+
 				if
 					is_debug_info_enabled and then
 					internal_dbg_documents.item (class_c.class_id) = Void
@@ -1238,7 +1238,7 @@ feature -- Metadata description
 						last_parents := << actual_class_type_token (any_type_id), 0 >>
 					else
 						last_parents := Void
-					end	
+					end
 				end
 			else
 				if not l_has_an_eiffel_parent then
@@ -1315,7 +1315,7 @@ feature -- Metadata description
 				-- Do not use `uni_string' as it might be used by `xxx_class_type_token'.
 			create l_uni_string.make (".ctor")
 			l_sig := default_sig
-			
+
 			l_class := class_type.associated_class
 
 			if
@@ -1339,7 +1339,7 @@ feature -- Metadata description
 				if not class_type.is_expanded then
 						-- Call constructor from super-class for reference type
 					il_code_generator.generate_current
-					il_code_generator.method_body.put_call ({MD_OPCODES}.Call, 
+					il_code_generator.method_body.put_call ({MD_OPCODES}.Call,
 						constructor_token (single_parent_mapping.item (class_type.implementation_id)),
 						0, False)
 				end
@@ -1535,7 +1535,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		ensure
 			invariant_token_valid: Result /= 0
 		end
-	
+
 	internal_invariant_token: ARRAY [INTEGER]
 			-- Array of invariant feature indexed by `type_id' of class in
 			-- which they are defined.
@@ -1570,7 +1570,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		ensure
 			class_token_valid: Result /= 0
 		end
-		
+
 	mapped_class_type_token (a_type_id: INTEGER): INTEGER is
 			-- Given `a_type_id' returns its associated metadata token
 			-- to be used in signatures and code generation token where
@@ -1682,7 +1682,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			end
 		ensure
 			is_token_defined: Result /= 0
-			is_type_token: 
+			is_type_token:
 				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_def or else
 				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_ref or else
 				Result & {MD_TOKEN_TYPES}.md_mask = {MD_TOKEN_TYPES}.md_type_spec
@@ -2182,7 +2182,7 @@ feature {NONE} -- Once per modules being generated.
 				actual_class_type_token (il_code_generator.none_type_id) = ise_none_type_token and
 				actual_class_type_token (il_code_generator.eiffel_type_info_type_id) = ise_eiffel_type_info_type_token
 		end
-	
+
 	initialize_tokens is
 			-- Recompute all tokens in context of newly created module.
 		require
@@ -2243,12 +2243,12 @@ feature {NONE} -- Once per modules being generated.
 				-- in the Ace file.
 			l_system_object := System.system_object_class
 			l_mscorlib := l_system_object.assembly
-			
+
 			create l_version
 			check
 				version_valid: l_version.is_version_valid (l_mscorlib.version)
 			end
-			
+
 			l_version.set_version (l_mscorlib.version)
 			create l_ass_info.make
 			l_ass_info.set_major_version (l_version.major.to_integer_16)
@@ -2438,7 +2438,7 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (1)
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 
 			ise_set_in_assertion_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("set_in_assertion"), ise_runtime_type_token, l_meth_sig)
@@ -2508,7 +2508,7 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Has_current)
 			l_meth_sig.set_parameter_count (1)
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, 
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class,
 				ise_generic_type_token)
 
 			ise_set_type_token := md_emit.define_member_ref (
@@ -2520,8 +2520,8 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_sig.set_method_type ({MD_SIGNATURE_CONSTANTS}.Default_sig)
 			l_meth_sig.set_parameter_count (2)
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0) 
-			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 			ise_check_invariant_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("check_invariant"), ise_runtime_type_token, l_meth_sig)
 
@@ -2531,7 +2531,7 @@ feature {NONE} -- Once per modules being generated.
 			l_meth_sig.set_parameter_count (1)
 			l_meth_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 			l_meth_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
-				runtime_type_handle_token) 
+				runtime_type_handle_token)
 			ise_is_invariant_checked_for_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("is_invariant_checked_for"),
 				ise_runtime_type_token, l_meth_sig)
@@ -2622,13 +2622,13 @@ feature {NONE} -- Implementation
 			check
 				has_routine: l_root /= Void
 			end
-			
+
 			il_code_generator.create_object (l_arg_type.implementation_id)
 			il_code_generator.generate_feature_access (
 				il_code_generator.implemented_type (l_root.origin_class_id, l_arg_type.type),
 				l_root.origin_feature_id, 0, True, True)
 		end
-		
+
 feature {NONE} -- Convenience
 
 	is_by_ref_type (a_type: TYPE_I): BOOLEAN is
@@ -2663,7 +2663,7 @@ feature {NONE} -- Convenience
 		ensure
 			typed_pointer_class_id_positive: Result > 0
 		end
-		
+
 feature {NONE} -- Cleaning
 
 	wipe_out is

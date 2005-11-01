@@ -31,6 +31,13 @@ feature -- Basic Operations
 			l_target_type: TYPE_AS
 			l_lookup_name: STRING
 			l_new_target: like target
+			l_type: TYPE_AS
+			l_feature_id: INTEGER
+			l_parents: FIXED_LIST [CLASS_C]
+			l_feature: FEATURE_I
+			l_actually_type: TYPE_A
+			l_class: CLASS_C
+			l_retriever: FEATURE_RETRIEVER
 		do
 			found := False
 			qualified_call := False
@@ -44,13 +51,54 @@ feature -- Basic Operations
 			if feature_i /= void then
 				qualified_call := l_targets.count > 1
 				if not qualified_call then
-					l_new_target := feature_name_from_target (target)
-					if l_new_target /= Void and not l_new_target.is_empty then
-						found_item := completion_feature_from_name (l_new_target, a_ignore_call_type, a_fetch_description)
-						if found_item = Void then
-							found_item := uncompiled_completion_feature (l_new_target)
-							found := found_item /= Void
-						end	
+					if target.count >= precursor_keyword_length and then target.substring (1, precursor_keyword_length).is_equal (precursor_keyword) then
+							-- Precursor call
+						l_type := target_type (target)
+						l_feature_id := feature_i.feature_name_id
+						if l_type = Void then
+								-- Call is not typed (i.e. Precursor {ANY})
+							if class_i.is_compiled then
+								l_parents := class_i.compiled_class.parents_classes
+								from
+									l_parents.start	
+								until
+									l_parents.after or l_feature /= Void
+								loop
+									l_class := l_parents.item
+									l_feature := l_class.feature_named (feature_name)
+									if l_feature /= Void and then l_feature.is_deferred or else l_feature_id /= l_feature.feature_name_id then
+										l_feature := Void
+									end
+									l_parents.forth
+								end
+							end
+						else
+							l_actually_type := l_type.actual_type
+							if l_actually_type /= Void then
+								l_class := l_actually_type.associated_class
+								if l_class /= Void then
+									l_feature := l_class.feature_named (feature_name)
+								end
+							end
+						end
+						if l_class /= Void and l_feature /= Void then
+							create l_retriever.make (l_class.file_name)
+							l_retriever.set_feature_name (l_feature.feature_name)
+							l_retriever.find (l_feature.feature_name, use_overloading, a_ignore_call_type, a_fetch_description)
+							if l_retriever.found then
+								found_item := l_retriever.found_item
+								found := found_item /= Void
+							end
+						end
+					else
+						l_new_target := feature_name_from_target (target)
+						if l_new_target /= Void and not l_new_target.is_empty then
+							found_item := completion_feature_from_name (l_new_target, a_ignore_call_type, a_fetch_description)
+							if found_item = Void then
+								found_item := uncompiled_completion_feature (l_new_target)
+								found := found_item /= Void
+							end	
+						end
 					end
 				else
 					l_targets.finish

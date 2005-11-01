@@ -35,12 +35,15 @@ inherit
 			{NONE} all
 		end
 
+create
+	make_with_components
+
 feature -- Access
 
 	components: GB_INTERNAL_COMPONENTS
 		-- Access to a set of internal components for an EiffelBuild instance.
 
-	initialize_xml_handler (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_components (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Initialize `Current' and assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void

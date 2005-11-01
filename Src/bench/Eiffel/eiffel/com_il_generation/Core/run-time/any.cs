@@ -209,7 +209,8 @@ feature -- Comparison
 	
 		if (Current == null) {
 			generate_call_on_void_target_exception ();
-		} else{
+		} else {
+				// Optimization: if objects are the same, then they are equal.
 			Result = (Current == other);
 			if (!Result) {
 				if (same_type (Current, other)) {
@@ -289,17 +290,19 @@ feature -- Comparison
 	
 		if (Current == null) {
 			generate_call_on_void_target_exception ();
+		} else if (some == null) {
+			Result = (other == null);
 		} else {
-			if (some == null) {
-				Result = (other == null);
-			} else {
-				Result = (other != null);
-				if (Result) {
+			Result = (other != null);
+			if (Result) {
+					// Optimization: if objects are the same, then they are equal.
+				Result = other == some;
+				if (!Result) {
 						// `traversed_objects' is a correspondance between processed
 						// objects reachable from `obj' and newly created one that
 						// are reachable from `target'.
-					traversed_objects = new Hashtable (100);
-					
+					traversed_objects = new Hashtable (100, null, new RT_REFERENCE_COMPARER ());
+
 						// Add `other' and associates it with `some' to
 						// resolve future references to `other' into `some'.
 					traversed_objects.Add (other, some);
@@ -614,7 +617,7 @@ feature {NONE} -- Implementation: Deep equality
 					} else {
 						for
 							(i = source_array.GetLowerBound (0);
-							i > source_array.GetUpperBound (0);
+							i <= source_array.GetUpperBound (0);
 							i++)
 						{
 							source_attribute = source_array.GetValue (i);
@@ -687,24 +690,15 @@ feature {NONE} -- Implementation: Deep equality
 
 		if (source_attribute == null) {
 			Result = target_attribute == null;
+		} else if (target_attribute == null) {
+			Result = false;
+		} else if (source_attribute.GetType ().IsValueType) {
+			Result = target_attribute.Equals (source_attribute);
+		} else if (traversed_objects.Contains (source_attribute)) {
+			Result = target_attribute == traversed_objects [source_attribute];
 		} else {
-			if (target_attribute == null) {
-				Result = false;
-			} else {
-				if (traversed_objects.Contains (source_attribute)) {
-					if (source_attribute.GetType().IsValueType) {
-						Result = 
-							target_attribute.Equals (source_attribute);
-					} else {
-						Result =
-							target_attribute == traversed_objects [source_attribute];
-					}
-				} else {
-					traversed_objects.Add (source_attribute, target_attribute);
-					Result = internal_deep_equal (target_attribute,
-						source_attribute, traversed_objects);
-				}
-			}
+			traversed_objects.Add (source_attribute, target_attribute);
+			Result = internal_deep_equal (target_attribute, source_attribute, traversed_objects);
 		}
 
 		return Result;

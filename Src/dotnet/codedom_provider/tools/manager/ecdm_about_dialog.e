@@ -10,6 +10,13 @@ class
 inherit
 	ECDM_ABOUT_DIALOG_IMP
 
+	CODE_REGISTRY_KEYS
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
 
 feature {NONE} -- Initialization
 
@@ -20,7 +27,7 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
-			version_label.set_text ("2.0.1.1402")
+			version_label.set_text (Version)
 		end
 
 feature {NONE} -- Implementation

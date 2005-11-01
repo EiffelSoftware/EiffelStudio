@@ -1,6 +1,6 @@
 -- Byte code for reverse assignment
 
-class REVERSE_B 
+class REVERSE_B
 
 inherit
 	ASSIGN_B
@@ -15,7 +15,7 @@ feature -- Visitor
 		do
 			v.process_reverse_b (Current)
 		end
-	
+
 feature -- Access
 
 	info: CREATE_INFO
@@ -68,7 +68,7 @@ feature -- IL code generation
 				-- find out the real type of the generic
 				-- parameter, so we cheat.
 			if target_type.has_formal then
-				target_type ?= real_type (target_type)
+				target_type := real_type (target_type)
 			end
 
 				-- Generate expression byte code
@@ -84,10 +84,10 @@ feature -- IL code generation
 
 				-- Generate Test on type
 			il_generator.generate_is_instance_of (target_type)
-			
+
 			if target_type.is_expanded then
 				il_generator.duplicate_top
-	
+
 				success_label := il_label_factory.new_label
 				il_generator.branch_on_true (success_label)
 
@@ -101,9 +101,9 @@ feature -- IL code generation
 
 				failure_label := il_label_factory.new_label
 				il_generator.branch_to (failure_label)
-	
+
 				il_generator.mark_label (success_label)
-	
+
 				il_generator.generate_unmetamorphose (target_type)
 
 				il_generator.mark_label (failure_label)

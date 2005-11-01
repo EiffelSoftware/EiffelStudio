@@ -1928,17 +1928,29 @@ feature -- Features info
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
+			sorted_array: SORTABLE_ARRAY [FEATURE_I]
+			i: INTEGER
 		do
+				-- Features have to be generated in alphabetical order
+				-- as this order is expected by COM Interop that defines
+				-- the virtual table this way.
 			from
 				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
+				i := features.count
+				create sorted_array.make (1, i)
 				features.start
+			invariant
+				consistent_index: (i = 0) = features.after
 			until
-				features.after
+				i = 0
 			loop
-				generate_feature (select_tbl.item (features.item_for_iteration), is_interface, False, False)
+				sorted_array.put (select_tbl.item (features.item_for_iteration), i)
 				features.forth
+				i := i - 1
 			end
+			sorted_array.sort
+			sorted_array.do_all (agent generate_feature (?, is_interface, False, False))
 
 				-- Generate type features for formal generic parameters.
 			if class_c.generic_features /= Void then
@@ -2482,14 +2494,12 @@ feature -- Features info
 		require
 			a_type_not_void: a_type /= Void
 		do
-			if not a_type.has_formal then
-				if not a_type.is_none then
-					Result := a_type
-				else
-					Result := System.any_class.compiled_class.types.first.type
-				end
-			else
+			if a_type.has_formal then
 				Result := byte_context.real_type (a_type)
+			elseif a_type.is_none then
+				Result := System.any_class.compiled_class.types.first.type
+			else
+				Result := a_type
 			end
 		ensure
 			valid_result: Result /= Void

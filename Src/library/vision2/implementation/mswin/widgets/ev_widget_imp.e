@@ -2,7 +2,7 @@ indexing
 	description: "[
 		EiffelVision widget, mswindows implementation.
 
-		Note: 
+		Note:
 		1 - The parent of a widget cannot be void, except for a
 			window. Therefore, each feature that call the parent
 			here need to be redefine by EV_TITLED_WINDOW to check if
@@ -33,10 +33,10 @@ inherit
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
-		redefine	
+		redefine
 			interface, enable_capture, disable_capture
 		end
-		
+
 	EV_DOCKABLE_SOURCE_IMP
 		redefine
 			interface
@@ -64,7 +64,7 @@ inherit
 		export
 			{NONE} all
 		end
-			
+
 feature {NONE} -- Initialization
 
 	initialize  is
@@ -147,7 +147,7 @@ feature -- Access
 
 	Cursor_on_widget: CELL [EV_WIDGET_IMP] is
 			-- This cell contains the widget_imp that currently
-			-- has the pointer of the mouse. As it is a once 
+			-- has the pointer of the mouse. As it is a once
 			-- feature, it is a shared data.
 			-- it is used for the `mouse_enter' and `mouse_leave'
 			-- events.
@@ -218,8 +218,8 @@ feature -- Access
 		end
 
 	screen_y: INTEGER is
-			-- Vertical offset of `Current' relative to screen. 
-		local 
+			-- Vertical offset of `Current' relative to screen.
+		local
 			l_wind: EV_WINDOW_IMP
 			l_parent: like parent_imp
 		do
@@ -245,13 +245,13 @@ feature -- Access
 	x_position: INTEGER is
 			-- `Result' is x_position of `Current' in pixels.
 			-- If `wel_parent' not Void then `Result' is relative to `wel_parent' else
-			-- `Result' is relative to screen. 
+			-- `Result' is relative to screen.
 			--| This has been redefined as the version from WEL_WINDOW would not return
 			--| Correct result if `Current' is contained in a split area.
 		local
 			rect: WEL_RECT
 			point: WEL_POINT
-		do	
+		do
 			if is_show_requested then
 				if wel_parent /= Void then
 					rect := window_rect
@@ -269,7 +269,7 @@ feature -- Access
 	y_position: INTEGER is
 			-- `Result' is x_position of `Current' in pixels.
 			-- If `wel_parent' not Void then `Result' is relative to `wel_parent' else
-			-- `Result' is relative to screen. 
+			-- `Result' is relative to screen.
 			--| This has been redefined as the version from WEL_WINDOW would not return
 			--| Correct result if `Current' is contained in a split area.
 		local
@@ -405,7 +405,7 @@ feature -- Status setting
 		do
 			ev_set_minimum_size (0, 0)
 		end
-		
+
 	enable_capture is
 			-- Enable capture.
 			--| Accessible through the interface of widget.
@@ -436,7 +436,7 @@ feature -- Element change
 					-- If the widget is not hidden then invalidate.
 				invalidate
 			end
-		end	
+		end
 
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of `Current'.
@@ -510,6 +510,9 @@ feature {NONE} -- Implementation, mouse_button_events
 			--| a pick and drop starts, but after a pick and drop ends.
 			t := translate_coordinates (x_pos, y_pos)
 			if not is_dnd_in_transport and not is_pnd_in_transport and not is_dock_executing then
+				if application_imp.pointer_button_press_actions_internal /= Void then
+					application_imp.pointer_button_press_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+				end
 				call_pointer_actions (
 					pointer_button_press_actions_internal,
 					t.integer_item (1),
@@ -540,6 +543,9 @@ feature {NONE} -- Implementation, mouse_button_events
 					t.integer_item (4))
 			end
 			if not actions_called then
+				if application_imp.pointer_button_press_actions_internal /= Void then
+					application_imp.pointer_button_press_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+				end
 				call_pointer_actions (
 					pointer_button_press_actions_internal,
 					t.integer_item (1),
@@ -557,6 +563,9 @@ feature {NONE} -- Implementation, mouse_button_events
 			t: TUPLE [INTEGER, INTEGER, INTEGER, INTEGER]
 		do
 			t := translate_coordinates (x_pos, y_pos)
+			if application_imp.pointer_button_release_actions_internal /= Void then
+					application_imp.pointer_button_release_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+				end
 			call_pointer_actions (
 				pointer_button_release_actions_internal,
 				t.integer_item (1),
@@ -575,6 +584,9 @@ feature {NONE} -- Implementation, mouse_button_events
 		do
 			t := translate_coordinates (x_pos, y_pos)
 			if not is_dnd_in_transport and not is_pnd_in_transport then
+				if application_imp.pointer_double_press_actions_internal /= Void then
+					application_imp.pointer_double_press_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+				end
 				call_pointer_actions (
 					pointer_double_press_actions_internal,
 					t.integer_item (1),
@@ -594,6 +606,9 @@ feature {NONE} -- Implementation, mouse_button_events
 				t.integer_item (4))
 
 			if not actions_called then
+				if application_imp.pointer_double_press_actions_internal /= Void then
+					application_imp.pointer_double_press_actions_internal.call ([interface, button, t.integer_item (3), t.integer_item (4)])
+				end
 				call_pointer_actions (
 					pointer_double_press_actions_internal,
 					t.integer_item (1),
@@ -622,7 +637,7 @@ feature {NONE} -- Implementation, mouse_button_events
 		do
 			on_button_down (x_pos, y_pos, 2)
 		end
-	
+
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is pressed.
 		do
@@ -666,18 +681,18 @@ feature {NONE} -- Implementation, mouse_button_events
 		do
 			on_button_double_click (x_pos, y_pos, 3)
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
-		
+
 	update_for_pick_and_drop (starting: BOOLEAN) is
 			-- Pick and drop status has changed so update appearance of
 			-- `Current' to reflect available targets.
 		deferred
 		end
-		
+
 
 feature {NONE} -- Implementation
-		
+
 	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
@@ -716,7 +731,7 @@ feature {NONE} -- Implementation
 	track_mouse_event (info: WEL_TRACK_MOUSE_EVENT): BOOLEAN is
 		deferred
 		end
-		
+
 	is_dockable_source (x_pos, y_pos: INTEGER): BOOLEAN is
 			-- Is current `enabled as dockable?
 			-- Redefined in descendents such as EV_TOOL_BAR_IMP to
@@ -724,7 +739,7 @@ feature {NONE} -- Implementation
 		do
 			Result := is_dockable
 		end
-		
+
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
@@ -749,9 +764,9 @@ feature {NONE} -- Implementation
 				check
 					mouse_successfully_tracking: track_mouse_successful = True
 				end
-		
+
 				on_mouse_enter
-				Cursor_on_widget.replace (Current)	
+				Cursor_on_widget.replace (Current)
 				track_mouse.dispose
 			end
 			t := translate_coordinates (x_pos, y_pos)
@@ -775,6 +790,14 @@ feature {NONE} -- Implementation
 					t.integer_item (4)
 				)
 			end
+			if application_imp.pointer_motion_actions_internal /= Void then
+				if t = Void then
+					t := translate_coordinates (x_pos, y_pos)
+				end
+				if last_x /= t.integer_item (1) or last_y /= t.integer_item (2) then
+					application_imp.pointer_motion_actions_internal.call ([interface, t.integer_item (3), t.integer_item (4)])
+				end
+			end
 			if pointer_motion_actions_internal /= Void then
 				if t = Void then
 					t := translate_coordinates (x_pos, y_pos)
@@ -792,7 +815,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	last_x, last_y: INTEGER
 
 	on_mouse_enter is
@@ -826,13 +849,14 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 		do
 				-- If escape or tab has been pressed then end pick and drop.
 				--| This is to stop the user from ever using Alt + tab
+
 				--| to switch between applications while in PND.
 			if virtual_key = vk_menu or virtual_key = vk_escape then
 				escape_pnd
 			end
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
-				
+
 				if propagate_key_to_dialog (True) then
 						-- Windows does not seem to generate any messages when a key is
 						-- pressed in a modal or modeless dialog, so if `Current' is parented
@@ -845,12 +869,15 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 						common_dialog_imp.key_press_actions.call ([key])
 					end
 				end
+				if application_imp.key_press_actions_internal /= Void then
+					application_imp.key_press_actions_internal.call ([interface, key])
+				end
 				if key_press_actions_internal /= Void then
 					key_press_actions_internal.call ([key])
 				end
 			end
 		end
-		
+
 	process_standard_key_release (virtual_key: INTEGER) is
 			-- Process key release represented by `virtual_key'.
 		local
@@ -860,7 +887,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 		do
 			if valid_wel_code (virtual_key) then
 				create key.make_with_code (key_code_from_wel (virtual_key))
-				
+
 				if propagate_key_to_dialog (False) then
 						-- Windows does not seem to generate any messages when a key is
 						-- pressed in a modal or modeless dialog, so if `Current' is parented
@@ -872,6 +899,9 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 					if common_dialog_imp /= Void and common_dialog_imp /= l_current then
 						common_dialog_imp.key_release_actions.call ([key])
 					end
+				end
+				if application_imp.key_release_actions_internal /= Void then
+					application_imp.key_release_actions_internal.call ([interface, key])
 				end
 				if key_release_actions_internal /= Void then
 					key_release_actions_internal.call ([key])
@@ -887,7 +917,7 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-	
+
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is pressed.
 		do
@@ -912,25 +942,33 @@ feature {NONE} -- Implementation
 		end
 
 	on_char (character_code, key_data: INTEGER) is
-			-- Executed when a key is pressed. 
+			-- Executed when a key is pressed.
 			--| Now outputs all displayable characters, previously
 			--| depended on process_standard_key returning a valid EV_KEY.
 		local
 			character_string: STRING
 		do
-			if key_press_string_actions_internal /= Void then
-				inspect character_code
-				when 8, 27, 127 then
-					-- Do not fire `key_press_string_actions' if Backspace, Esc or del
-					-- are pressed as they are not displayable charcters.
-				when 13 then
-						-- On Windows, the Enter key gives us "%R" but we need to
-						-- substitute this with "%N" which is the Eiffel newline character.
-					character_string := "%N"
+			inspect character_code
+			when 8, 27, 127 then
+				-- Do not fire `key_press_string_actions' if Backspace, Esc or del
+				-- are pressed as they are not displayable charcters.
+			when 13 then
+					-- On Windows, the Enter key gives us "%R" but we need to
+					-- substitute this with "%N" which is the Eiffel newline character.
+				character_string := "%N"
+				if application_imp.key_press_string_actions_internal /= Void then
+					application_imp.key_press_string_actions_internal.call ([interface, character_string])
+				end
+				if key_press_string_actions_internal /= Void then
 					key_press_string_actions_internal.call ([character_string])
-				else
-					create character_string.make(1)
-					character_string.append_character(character_code.to_character)
+				end
+			else
+				create character_string.make(1)
+				character_string.append_character(character_code.to_character)
+				if application_imp.key_press_string_actions_internal /= Void then
+					application_imp.key_press_string_actions_internal.call ([interface, character_string])
+				end
+				if key_press_string_actions_internal /= Void then
 					key_press_string_actions_internal.call ([character_string])
 				end
 			end
@@ -938,9 +976,18 @@ feature {NONE} -- Implementation
 
 	on_mouse_wheel (delta, keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mousewheel received.
+		local
+			l_fired: BOOLEAN
 		do
+			if application_imp.mouse_wheel_actions_internal /= Void then
+				application_imp.mouse_wheel_actions_internal.call ([interface, delta // 120])
+				l_fired := True
+			end
 			if mouse_wheel_actions_internal /= Void then
 				mouse_wheel_actions_internal.call ([delta // 120])
+				l_fired := True
+			end
+			if l_fired then
 					-- Only return 0 if the mouse wheel actions are not empty,
 					-- as this overrides intellipoint software if installed.
 				set_message_return_value (to_lresult (0))
@@ -963,7 +1010,7 @@ feature {NONE} -- Implementation, focus event
 				-- why `on_set_focus' gets called is another issue, as we are
 				-- not really sure why at the moment.
 			if top_level_window_imp /= Void then
-				top_level_window_imp.set_last_focused_widget (wel_item)	
+				top_level_window_imp.set_last_focused_widget (wel_item)
 				top_level_titled_window ?= top_level_window_imp.interface
 				application_imp.set_window_with_focus (top_level_titled_window)
 			end
@@ -979,7 +1026,7 @@ feature {NONE} -- Implementation, focus event
 				update_current_push_button
 			end
 		end
-		
+
 	on_kill_focus is
 			-- Called when a `Wm_killfocus' message is recieved.
 		do
@@ -1032,19 +1079,19 @@ feature {NONE} -- Implementation, cursor of the widget
 				-- This is because the setting of the cursor should only
 				-- be performed by us, not windows when in transport.
 			if application_imp.pick_and_drop_source /= Void then
-				disable_default_processing	
+				disable_default_processing
 			elseif
 				(hit_code = ({WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = ({WEL_HT_CONSTANTS}.Htclient))
 				and then cursor_pixmap /= Void
 			then
-				internal_on_set_cursor		
+				internal_on_set_cursor
 				set_message_return_value (to_lresult (1))
 				disable_default_processing
 			end
 		end
-		
+
 feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
-	
+
 	internal_on_set_cursor is
 			-- Called as a result of a `Wm_setcursor' message is received.
 			-- This was extracted from `on_set_cursor' as if we are a combo box,
@@ -1056,13 +1103,13 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementati
 		do
 			cursor_imp ?= cursor_pixmap.implementation
 				wel_cursor := cursor_imp.cursor
-				if wel_cursor = Void then	
+				if wel_cursor = Void then
 					wel_cursor := cursor_imp.build_cursor
 					wel_cursor.enable_reference_tracking
 				else
 					wel_cursor.increment_reference
 				end
-				
+
 				if current_wel_cursor /= Void then
 					current_wel_cursor.decrement_reference
 					current_wel_cursor := Void
@@ -1174,7 +1221,7 @@ feature -- Deferred features
 
 	wel_destroy is
 		deferred
-		end	
+		end
 
 	disable_default_processing is
 		deferred
@@ -1205,7 +1252,7 @@ feature -- Deferred features
 				create Result.make_rgb (0, 0, 0)
 			end
 		end
-		
+
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,
 			-- because we cannot do a deferred feature become an
@@ -1215,15 +1262,15 @@ feature -- Deferred features
 		do
 				-- Reset the start widget searched flag.
 			start_widget_searched_cell.put (-1)
-			
+
 			if not previous then
-				l_widget := next_tabstop_widget (interface, 0, False)				
+				l_widget := next_tabstop_widget (interface, 0, False)
 			else
 				l_widget := next_tabstop_widget (interface, 1, True)
 			end
 			Result := l_widget.wel_item
 		end
-		
+
 	start_widget_searched_cell: CELL [INTEGER] is
 			-- A cell to hold the seach index that the item tabbed from started with.
 			-- This is necessary to prevent infinite recursion in the
@@ -1232,7 +1279,7 @@ feature -- Deferred features
 		once
 			create Result
 		end
-		
+
 	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
@@ -1255,7 +1302,7 @@ feature -- Deferred features
 					w ?= start_widget.implementation
 					Result := w
 				elseif start_widget_searched_cell.item = -1 then
-					
+
 					-- Record the fact that we have reached the original
 					-- widget at least once.
 					start_widget_searched_cell.put (search_pos)
@@ -1268,7 +1315,7 @@ feature -- Deferred features
 			Result_not_void: Result /= Void
 				-- If there is no next tabstop widget, then simply return `start_widget'.
 		end
-		
+
 	return_current_if_next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
 			-- If `Current' is not equal to `start_widget' then return `Current' but only if `search_pos' is 1 and `forwards' or
 			-- `search_pos' is 0 and not `forwards. This ensures that we return a container in the correct order (before or after)
@@ -1298,7 +1345,7 @@ feature -- Deferred features
 				end
 			end
 		end
-		
+
 	next_tabstop_widget_from_parent (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
 			-- Return the next widget that may be tabbed to as a result of pressing the tab key from `start_widget'
 			-- by visiting the parent of `Current' with a search index determined by `search_pos' and `forwards'.
@@ -1318,19 +1365,19 @@ feature -- Deferred features
 			Result_not_void: Result /= Void
 				-- If there is no next tabstop widget, then simply return `start_widget'.
 		end
-				
+
 	has_tabstop: BOOLEAN is
 			-- Does `Current' exhibit all attributes to permit it to receive the
 			-- focus while tabbing?
 		do
 			Result :=  flag_set (style, {WEL_WINDOW_CONSTANTS}.ws_tabstop) and is_sensitive and is_displayed
 		end
-		
+
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- SDK GetNextDlgGroupItem
 		deferred
 		end
-		
+
 	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgGroupItem,
 			-- because we cannot do a deferred feature become an
@@ -1345,7 +1392,7 @@ feature -- Deferred features
 			-- external feature.
 		deferred
 		end
-		
+
 feature -- Feature that should be directly implemented by externals
 
 	show_window (hwnd: POINTER; cmd_show: INTEGER) is
@@ -1356,7 +1403,7 @@ feature -- Feature that should be directly implemented by externals
 		do
 			cwin_show_window (hwnd, cmd_show)
 		end
-		
+
 	cwin_show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- SDK ShowWindow
 			-- (from WEL_WINDOW)

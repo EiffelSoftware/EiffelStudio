@@ -1,11 +1,11 @@
-<?xml version="1.0"?>
-<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-	<Module Id="DocumentationModule" Guid="1BBC26AD-FEAC-45f1-A259-59DCE1353B4D" Language="1033" Version="2.0">
-		<Package Id="B9D69CDE-4771-4b78-B7D5-6B8DF0035EE8" Description="Eiffel for ASP.NET Documentation Merge Module" Comments="Documentation files." Manufacturer="Eiffel Software" InstallerVersion="200" Compressed="yes" />
+<?xml version='1.0'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
+	<Module Id='DocumentationModule' Guid='1BBC26AD-FEAC-45f1-A259-59DCE1353B4D' Language='1033' Version='5.6'>
+		<Package Id='B9D69CDE-4771-4b78-B7D5-6B8DF0035EE8' Description='Eiffel for ASP.NET Documentation Merge Module' Comments='Documentation files.' Manufacturer='Eiffel Software' InstallerVersion='200' Compressed='yes' />
 
-		<Directory Id="TARGETDIR" Name="SourceDir">
-			<Directory Id="MergeRedirectFolder">
-				<Component Id="DocumentationFiles" Guid="DEFCDFE8-23E3-4a05-ACB2-6654D3407711">
+		<Directory Id='TARGETDIR' Name='SourceDir'>
+			<Directory Id='MergeRedirectFolder'>
+				<Component Id='DocumentationFiles' Guid='DEFCDFE8-23E3-4a05-ACB2-6654D3407711'>
 					<File Id='EiffelForAspNetChm' Name='eiffel.chm' LongName='Eiffel for ASP.NET.chm'/>
 				</Component>
 			</Directory>

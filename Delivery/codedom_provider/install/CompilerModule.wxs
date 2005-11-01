@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
-	<Module Id='CompilerModule' Guid='7CB4249B-E5C5-4b0f-847C-D68A48A81C0B' Language='1033' Version='2.0'>
+	<Module Id='CompilerModule' Guid='7CB4249B-E5C5-4b0f-847C-D68A48A81C0B' Language='1033' Version='5.6'>
 		<Package Id='37BF50AB-6464-46d2-AB23-C93B34DE0678' Description='Eiffel for ASP.NET Compiler Merge Module' Comments='Compiler files.' Manufacturer='Eiffel Software' InstallerVersion='200' Compressed='yes' />
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>

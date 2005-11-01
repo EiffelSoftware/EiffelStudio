@@ -1,6 +1,6 @@
 <?xml version='1.0'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'>
-	<Module Id='LibrariesModule' Guid='FE4571B2-3D73-438f-A084-6B058CE4FE7A' Language='1033' Version='2.0'>
+	<Module Id='LibrariesModule' Guid='FE4571B2-3D73-438f-A084-6B058CE4FE7A' Language='1033' Version='5.6'>
 		<Package Id='D3089A45-631E-437a-85C4-F693E20F0D9C' Description='Eiffel Libraries Merge Module' Comments='Libraries files.' Manufacturer='Eiffel Software' InstallerVersion='200' Compressed='yes'/>
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>

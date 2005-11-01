@@ -77,7 +77,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item (row, column: INTEGER): G is
+	item alias "[]" (row, column: INTEGER): G is
 			-- Entry at coordinates (`row', `column')
 		require
 			valid_row: (1 <= row) and (row <= height)

@@ -29,8 +29,8 @@ feature -- Status report
 		end
 
 	is_for_reading: BOOLEAN
-			-- Will current do a read operation? 
-		
+			-- Will current do a read operation?
+
 feature -- Settings
 
 	set_for_reading is
@@ -382,12 +382,11 @@ feature {NONE} -- Buffer update
 
 	check_buffer (n: INTEGER) is
 			-- If there is enough space in `buffer' to read `n' bytes, do nothing.
-			-- Otherwise, read/write to `medium' to free some space.
+			-- Otherwise, read/write to `medium' to free some space and reset `buffer_position'
+			-- to an appropriate position.
 		require
 			n_non_negative: n >= 0
 		deferred
-		ensure
-			buffer_position_valid: buffer_position = 0 or buffer_position = old buffer_position
 		end
 
 invariant

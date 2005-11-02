@@ -113,7 +113,7 @@ feature -- Access
 	default_view_name: STRING is
 			-- Name for the default view.
 		do
-			Result := "DEFAULT"
+			Result := once "DEFAULT"
 		ensure
 			Result_not_Void: Result /= Void
 		end
@@ -178,9 +178,9 @@ feature -- Access
 				loop
 					node ?= a_cursor.item
 					if node /= Void then
-						if node.name.is_equal ("VIEW") then
-							view_name := node.attribute_by_name ("NAME").value 
-							if node.attribute_by_name ("IS_UML").value.is_equal ("False") then
+						if node.name.is_equal (once "VIEW") then
+							view_name := node.attribute_by_name (once "NAME").value 
+							if node.attribute_by_name (once "IS_UML").value.is_equal (once "False") then
 								Result.extend (view_name)	
 							end
 						end
@@ -652,6 +652,7 @@ feature -- Store/Retrive
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			nb_of_tags: INTEGER
 			view_name: STRING
+			l_name_str, l_view_str: STRING
 		do
 			diagram_input := Xml_routines.deserialize_document (f.name)
 			if diagram_input /= Void then
@@ -662,15 +663,17 @@ feature -- Store/Retrive
 				a_cursor := diagram_input.root_element.new_cursor
 				from
 					a_cursor.start
+					l_name_str := "NAME"
+					l_view_str := "VIEW"
 				until
 					a_cursor.after
 				loop
 					node ?= a_cursor.item
 					if node /= Void then
-						if node.name.is_equal ("VIEW") then
-							view_name := node.attribute_by_name ("NAME").value
+						if node.name.is_equal (l_view_str) then
+							view_name := node.attribute_by_name (l_name_str).value
 							available_views.extend (view_name)
-							if view_input = Void or else node.attribute_by_name ("NAME").value.is_equal (current_view) then
+							if view_input = Void or else node.attribute_by_name (l_name_str).value.is_equal (current_view) then
 								view_input := node
 							end
 						end
@@ -695,7 +698,7 @@ feature -- Store/Retrive
 						--context_editor.development_window.status_bar.progress_bar.reset_with_range (0 |..| 0)
 						nb_of_tags := xml_routines.number_of_tags (view_input)
 						--context_editor.progress_dialog.start (nb_of_tags)
-						context_editor.development_window.status_bar.progress_bar.reset_with_range (0 |..| nb_of_tags)
+						context_editor.development_window.status_bar.reset_progress_bar_with_range (0 |..| nb_of_tags)
 						--context_editor.progress_dialog.set_degree ("Loading:")
 						xml_routines.valid_tag_read_actions.extend (agent on_valid_tag_read)
 					end
@@ -712,21 +715,21 @@ feature -- Store/Retrive
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
-			Result := "EIFFEL_WORLD"
+			Result := once "EIFFEL_WORLD"
 		end
 
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
 		do
-			node.put_last (Xml_routines.xml_node (node, "INHERITANCE_LINKS_DISPLAYED", is_inheritance_links_shown.out))
-			node.put_last (Xml_routines.xml_node (node, "CLIENT_LINKS_DISPLAYED", is_client_supplier_links_shown.out))
-			node.put_last (Xml_routines.xml_node (node, "LABELS_SHOWN", is_labels_shown.out))
-			node.put_last (Xml_routines.xml_node (node, "CLUSTER_SHOWN", is_cluster_shown.out))
-			node.put_last (Xml_routines.xml_node (node, "HIGH_QUALITY", is_high_quality.out))
-			node.put_last (Xml_routines.xml_node (node, "LEGEND_SHOWN", is_legend_shown.out))
-			node.put_last (Xml_routines.xml_node (node, "LEGEND_X_POS", cluster_legend.point_x.out))
-			node.put_last (Xml_routines.xml_node (node, "LEGEND_Y_POS", cluster_legend.point_y.out))
-			node.put_last (xml_routines.xml_node (node, "IS_RIGHT_ANGLES", is_right_angles.out))
+			node.put_last (Xml_routines.xml_node (node, once "INHERITANCE_LINKS_DISPLAYED", is_inheritance_links_shown.out))
+			node.put_last (Xml_routines.xml_node (node, once "CLIENT_LINKS_DISPLAYED", is_client_supplier_links_shown.out))
+			node.put_last (Xml_routines.xml_node (node, once "LABELS_SHOWN", is_labels_shown.out))
+			node.put_last (Xml_routines.xml_node (node, once "CLUSTER_SHOWN", is_cluster_shown.out))
+			node.put_last (Xml_routines.xml_node (node, once "HIGH_QUALITY", is_high_quality.out))
+			node.put_last (Xml_routines.xml_node (node, once "LEGEND_SHOWN", is_legend_shown.out))
+			node.put_last (Xml_routines.xml_node (node, once "LEGEND_X_POS", cluster_legend.point_x.out))
+			node.put_last (Xml_routines.xml_node (node, once "LEGEND_Y_POS", cluster_legend.point_y.out))
+			node.put_last (xml_routines.xml_node (node, once "IS_RIGHT_ANGLES", is_right_angles.out))
 			
 			Result := Precursor {EG_FIGURE_WORLD} (node)
 		end
@@ -736,43 +739,43 @@ feature -- Store/Retrive
 		local
 			ax, ay: INTEGER
 		do
-			if xml_routines.xml_boolean (node, "INHERITANCE_LINKS_DISPLAYED") then
+			if xml_routines.xml_boolean (node, once "INHERITANCE_LINKS_DISPLAYED") then
 				show_inheritance_links
 			else
 				hide_inheritance_links
 			end
-			if xml_routines.xml_boolean (node, "CLIENT_LINKS_DISPLAYED") then
+			if xml_routines.xml_boolean (node, once "CLIENT_LINKS_DISPLAYED") then
 				show_client_supplier_links
 			else
 				hide_client_supplier_links
 			end
-			if xml_routines.xml_boolean (node, "LABELS_SHOWN") then
+			if xml_routines.xml_boolean (node, once "LABELS_SHOWN") then
 				show_labels
 			else
 				hide_labels
 			end
-			if xml_routines.xml_boolean (node, "CLUSTER_SHOWN") then
+			if xml_routines.xml_boolean (node, once "CLUSTER_SHOWN") then
 				show_clusters
 			else
 				hide_clusters
 			end
-			if xml_routines.xml_boolean (node, "HIGH_QUALITY") then
+			if xml_routines.xml_boolean (node, once "HIGH_QUALITY") then
 				enable_high_quality
 			else
 				disable_high_quality
 			end
-			if xml_routines.xml_boolean (node, "LEGEND_SHOWN") then
+			if xml_routines.xml_boolean (node, once "LEGEND_SHOWN") then
 				show_legend
-				ax := xml_routines.xml_integer (node, "LEGEND_X_POS")
-				ay := xml_routines.xml_integer (node, "LEGEND_Y_POS")
+				ax := xml_routines.xml_integer (node, once "LEGEND_X_POS")
+				ay := xml_routines.xml_integer (node, once "LEGEND_Y_POS")
 				cluster_legend.set_point_position (ax, ay)
 			else
 				hide_legend
-				ax := xml_routines.xml_integer (node, "LEGEND_X_POS")
-				ay := xml_routines.xml_integer (node, "LEGEND_Y_POS")
+				ax := xml_routines.xml_integer (node, once "LEGEND_X_POS")
+				ay := xml_routines.xml_integer (node, once "LEGEND_Y_POS")
 				cluster_legend.set_point_position (ax, ay)
 			end
-			if xml_routines.xml_boolean (node, "IS_RIGHT_ANGLES") then
+			if xml_routines.xml_boolean (node, once "IS_RIGHT_ANGLES") then
 				enable_right_angles
 			else
 				disable_right_angles
@@ -940,8 +943,8 @@ feature {NONE} -- Implementation
 					node ?= a_cursor.item
 					if
 						node /= Void and then
-						node.name.is_equal ("VIEW") and then
-						equal (node.attribute_by_name ("NAME").value, a_name)
+						node.name.is_equal (once "VIEW") and then
+						equal (node.attribute_by_name (once "NAME").value, a_name)
 					then
 						diagram_output.root_element.remove_at_cursor (a_cursor)
 					end
@@ -974,8 +977,8 @@ feature {NONE} -- Implementation
 				loop
 					node ?= a_cursor.item
 					if node /= Void then
-						if node.name.is_equal ("VIEW") then
-							view_name := node.attribute_by_name ("NAME").value
+						if node.name.is_equal (once "VIEW") then
+							view_name := node.attribute_by_name (once "NAME").value
 							Result := view_name.is_equal (a_name)
 						end
 					end
@@ -1407,7 +1410,7 @@ feature {NONE} -- Implementation
 		end
 		
 	on_valid_tag_read is
-			-- A valid tag was read throug xml routines.
+			-- A valid tag was read through xml routines.
 		local
 			lpd: EB_PERCENT_PROGRESS_BAR
 		do

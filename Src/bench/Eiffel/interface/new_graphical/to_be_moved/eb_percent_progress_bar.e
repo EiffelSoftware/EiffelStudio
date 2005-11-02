@@ -64,7 +64,6 @@ feature -- Element change
 			-- Assign `a_value' to `value'.
 		do
 			Precursor (a_value)
-			process_events_and_idle
 		end
 
 end -- class EB_PERCENT_PROGRESS_BAR

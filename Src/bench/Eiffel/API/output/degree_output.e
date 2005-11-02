@@ -111,7 +111,7 @@ feature -- Start output features
 	degree_description (a_degree: INTEGER): STRING is
 			-- Description for the currently processed degree.
 		require
-			a_degree_valid: a_degree >= -3 and then a_degree <= 6 and then a_degree /= 0
+			a_degree_valid: a_degree >= -3 and then a_degree <= 6
 		local
 			l_degree_str: STRING
 		do
@@ -129,6 +129,8 @@ feature -- Start output features
 				l_degree_str := once "Melting code (code)"
 			when 1 then
 				l_degree_str := once "Melting code (metadata)"
+			when 0 then
+				l_degree_str := once "Processing"
 			when -1 then
 				l_degree_str := once "Code Generation"
 			when -2 then

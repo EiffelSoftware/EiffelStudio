@@ -11,8 +11,13 @@ create
 	
 feature -- Initialization
 
-	generate_key (a_filename: STRING) is
-			-- Generate a new key pair with 'a_filename' as filename
+	generate_key (a_filename, a_runtime_version: STRING) is
+			-- Generate a new key pair with 'a_filename' as filename for the specified
+			-- .NET version
+		require
+			filename_not_void: a_filename /= Void
+			filename_not_empty: not a_filename.is_empty
+			a_runtime_version_not_void: a_runtime_version /= Void
 		do
 			check
 				False

@@ -227,8 +227,7 @@ feature {NONE} -- Implementation
 				nb_of_items := number_of_superclusters (center_cluster.cluster_i, supercluster_depth) + 
 							   number_of_subclusters (center_cluster.cluster_i, subcluster_depth)
 				
-				l_progress_bar := context_editor.development_window.status_bar.progress_bar	   			
-				l_progress_bar.reset_with_range (0 |..| nb_of_items)
+				context_editor.development_window.status_bar.reset_progress_bar_with_range (0 |..| nb_of_items)
 			end
 						   
 			if context_editor /= Void then
@@ -264,7 +263,6 @@ feature {NONE} -- Implementation
 		local
 			new_cluster: CLUSTER_I
 			es_cluster: ES_CLUSTER
-			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if depth > 0 then
 				new_cluster := a_cluster.cluster_i.parent_cluster
@@ -272,8 +270,9 @@ feature {NONE} -- Implementation
 					create es_cluster.make (new_cluster)
 					add_cluster (es_cluster)
 					if context_editor /= Void then
-						l_progress_bar := context_editor.development_window.status_bar.progress_bar
-						l_progress_bar.set_value (l_progress_bar.value + 1)
+						context_editor.development_window.status_bar.display_progress_value (
+							context_editor.development_window.status_bar.current_progress_value + 1
+						)
 					end
 					include_all_classes (es_cluster)
 					es_cluster.extend (a_cluster)
@@ -312,14 +311,14 @@ feature {NONE} -- Implementation
 			sub_clusters: ARRAYED_LIST [CLUSTER_I]
 			new_cluster: CLUSTER_I
 			es_cluster: ES_CLUSTER
-			l_progress_bar: EB_PERCENT_PROGRESS_BAR
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			if depth > 0 then
 				sub_clusters := a_cluster.cluster_i.sub_clusters
 				from
 					sub_clusters.start
 					if context_editor /= Void then
-						l_progress_bar := context_editor.development_window.status_bar.progress_bar
+						l_status_bar := context_editor.development_window.status_bar
 					end
 				until
 					sub_clusters.after
@@ -327,8 +326,10 @@ feature {NONE} -- Implementation
 					new_cluster := sub_clusters.item
 					create es_cluster.make (new_cluster)
 					add_cluster (es_cluster)
-					if l_progress_bar /= Void then
-						l_progress_bar.set_value (l_progress_bar.value + 1)
+					if l_status_bar /= Void then
+						l_status_bar.display_progress_value (
+							l_status_bar.current_progress_value + 1
+						)
 					end
 					include_all_classes (es_cluster)
 					a_cluster.extend (es_cluster)

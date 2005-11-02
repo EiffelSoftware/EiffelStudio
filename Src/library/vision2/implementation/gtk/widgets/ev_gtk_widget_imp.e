@@ -63,27 +63,49 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	minimum_width: INTEGER is
+	width_request_string: EV_GTK_C_STRING is
+			-- 
+		once
+			Result := "width-request"
+		end
+
+	height_request_string: EV_GTK_C_STRING is
+			-- 
+		once
+			Result := "height-request"
+		end
+
+	minimum_width, real_minimum_width: INTEGER is
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
+			a_cs: EV_GTK_C_STRING
 		do	
 			if not is_destroyed then
-				update_request_size
-				gr := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
-				Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
+				a_cs := width_request_string
+				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, a_cs.item, $Result)
+				if Result = -1 then
+					update_request_size
+					gr := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
+					Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
+				end
 			end
 		end
 		
-	minimum_height: INTEGER is
+	minimum_height, real_minimum_height: INTEGER is
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
-		do
+			a_cs: EV_GTK_C_STRING
+		do	
 			if not is_destroyed then
-				update_request_size
-				gr := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
-				Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
+				a_cs := height_request_string
+				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, a_cs.item, $Result)
+				if Result = -1 then
+					update_request_size
+					gr := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
+					Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
+				end
 			end
 		end
 
@@ -200,12 +222,8 @@ feature {EV_ANY_I} -- Implementation
 
 	width: INTEGER is
 			-- Horizontal size measured in pixels.
-		local
-			a_min_width: INTEGER
 		do
-			update_parent_size
-			a_min_width := minimum_width
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (a_min_width)
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_width ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_width)
 		end
 
 	update_parent_size is
@@ -222,12 +240,8 @@ feature {EV_ANY_I} -- Implementation
 		
 	height: INTEGER is
 			-- Vertical size measured in pixels.
-		local
-			a_min_height: INTEGER
 		do
-			update_parent_size
-			a_min_height := minimum_height
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (a_min_height)
+			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_height)
 		end
 
 	update_request_size is

@@ -28,6 +28,8 @@ ECHO Exporting silent_launcher (%CODEDOM_RELEASE%) in checkout\tools...
 cvs -z3 -Q export -r%CODEDOM_RELEASE% -d silent_launcher Src/tools/silent_launcher
 ECHO Exporting compliance_checker (%RELEASE%) in checkout\tools...
 cvs -z3 -Q export -r%COMPILER_RELEASE% -d compliance_checker Src/tools/compliance_checker
+ECHO Exporting doc_builder (%RELEASE%) in checkout\tools...
+cvs -z3 -Q export -r%RELEASE% -d doc_builder Src/tools/doc_builder
 CD ..
 REM in checkout
 
@@ -66,6 +68,8 @@ ECHO Exporting preferences (%RELEASE%) in checkout\library...
 cvs -z3 -Q export -r%RELEASE% -d preferences Src/library/preferences
 ECHO Exporting editor (%RELEASE%) in checkout\library...
 cvs -z3 -Q export -r%RELEASE% -d editor Src/library/editor
+ECHO Exporting pattern (%RELEASE%) in checkout\library...
+cvs -z3 -Q export -r%RELEASE% -d patterns Src/library/patterns
 CD ..
 REM in checkout
 
@@ -87,6 +91,5 @@ MKDIR docs
 CD docs
 REM in checkout\docs
 cvs -z3 -Q export -r%RELEASE% -d xmldoc Delivery/xmldoc
-cvs -z3 -Q export -r%RELEASE% -d doc_builder Src/tools/doc_builder
 
 CD ..\..

@@ -46,6 +46,7 @@
 			<item>
 				<bold>EV_COMBO_BOX</bold> - Added `is_list_shown', `list_hidden_actions' and renamed `drop_down_actions' to `list_shown_actions'.
 			</item>
+			<item><bold>EV_APPLICATION</bold> - Added `pointer_motion_actions', `pointer_button_press_actions', `pointer_button_release_actions', `pointer_double_press_actions', `mouse_wheel_actions', `key_press_actions', `key_press_string_actions' and `key_release_actions'. Each of these action sequences pass the applicable widget as part of the event data.</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>

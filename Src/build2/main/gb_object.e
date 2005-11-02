@@ -1145,7 +1145,7 @@ feature -- Basic operations
 			id_assigned: id = a_new_id
 		end
 
-feature {GB_ID_COMPRESSOR, GB_OBJECT}
+feature {GB_ID_COMPRESSOR, GB_OBJECT} -- Basic operations
 
 	update_internal_id_references (conversion_data: HASH_TABLE [INTEGER, INTEGER]) is
 			-- For all ids, used in `Current', including `id', and ids used in any

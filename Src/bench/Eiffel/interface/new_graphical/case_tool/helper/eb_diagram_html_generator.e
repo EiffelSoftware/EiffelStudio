@@ -306,8 +306,8 @@ feature {NONE} -- Implementation
 						item_file.append (path)
 					end
 					item_file.append_character ('/')
-					item_file.append (cf.model.class_i.name+ "_chart")
-					item_file.append (".html")
+					item_file.append (cf.model.class_i.name.as_lower)
+					item_file.append ("_chart.html")
 					bbox := cf.bounding_box
 					Result.append ("<area shape=rect coords=%""
 						+ (bbox.left - bounds.x).out + ","

@@ -456,7 +456,7 @@ feature {NONE} -- Implementation
 				elseif l_text.cursor /= Void then
 					l_pos := l_text.cursor.pos_in_characters
 				end
-				multi_search_performer.go_to_closest_item (l_pos, b, l_class_i, is_main_editor or not is_current_editor_searched)
+				multi_search_performer.go_to_closest_item (l_pos, b, l_class_i, (is_main_editor and manager.class_name /= Void) or not is_current_editor_searched)
 			end
 		end
 	

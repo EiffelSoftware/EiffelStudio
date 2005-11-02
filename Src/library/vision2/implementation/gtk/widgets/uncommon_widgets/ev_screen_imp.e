@@ -108,6 +108,7 @@ feature -- Basic operation
 			-- Redraw the entire area.
 		do
 			{EV_GTK_EXTERNALS}.gdk_window_invalidate_rect (drawable, default_pointer, True)
+			{EV_GTK_EXTERNALS}.gdk_window_process_updates (drawable, True)
 		end
 
 	x_test_capable: BOOLEAN is

@@ -24,7 +24,8 @@ inherit
 	EV_WIDGET_I
 		redefine
 			interface,
-			set_default_colors
+			set_default_colors,
+			refresh_now
 		end
 
 	EV_SIZEABLE_IMP
@@ -82,6 +83,14 @@ feature {NONE} -- Initialization
 				show
 			end
 			set_is_initialized (True)
+		end
+
+feature -- Basic Operations
+
+	refresh_now is
+			--
+		do
+			update
 		end
 
 feature -- Access
@@ -1211,6 +1220,11 @@ feature -- Deferred features
 
 	client_rect: WEL_RECT is
 			-- Area used by `Current'.
+		deferred
+		end
+
+	update is
+			-- Update the client area by sending a Wm_paint message.
 		deferred
 		end
 

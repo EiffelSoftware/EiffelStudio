@@ -43,6 +43,8 @@ inherit
 			on_application_stopped
 		end
 
+	EV_SHARED_APPLICATION
+
 create
 	make
 
@@ -199,6 +201,22 @@ feature -- Status setting
 			-- Display `mess'.
 		do
 			label.set_text (mess)
+			process_events_and_idle
+		end
+
+	reset_progress_bar_with_range (a_range: INTEGER_INTERVAL) is
+			-- Reset `progress_bar' to use range `a_range'.
+		require
+			a_range_not_void: a_range /= Void
+		do
+			progress_bar.reset_with_range (a_range)
+		end
+
+	display_progress_value (a_value: INTEGER) is
+			-- Display `a_value' in `progress_bar'.
+		do
+			progress_bar.set_value (a_value)
+			process_events_and_idle
 		end
 
 	remove_cursor_position is
@@ -261,6 +279,16 @@ feature -- Access
 
 	widget: EV_STATUS_BAR
 			-- Widget representing `Current'.
+
+feature -- Access
+
+	current_progress_value: INTEGER is
+			-- Current value display by `progress_bar'.
+		do
+			Result := progress_bar.value
+		end
+
+feature {EIFFEL_WORLD, EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW} -- Access
 
 	label: EV_LABEL
 			-- Label where messages are displayed.

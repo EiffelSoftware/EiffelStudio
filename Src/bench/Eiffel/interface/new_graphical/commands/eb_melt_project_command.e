@@ -141,17 +141,25 @@ feature {NONE} -- Compilation implementation
 	tool_resynchronization is
 			-- Resynchronize class, feature and system tools.
 			-- Clear the format_context buffers.
+		local
+			output_text: STRUCTURED_TEXT
 		do
 				-- Clear the format_context buffers.
 			clear_format_tables
 			window_manager.display_message (Interface_names.d_Resynchronizing_tools)
 			window_manager.display_percentage (0)
 			window_manager.synchronize_all
+			create output_text.make
 			if Workbench.successful then
 				window_manager.display_message (Interface_names.E_compilation_succeeded)
+				if not eiffel_project.freezing_occurred then
+					output_text.add_string (Interface_names.E_compilation_succeeded)
+				end
 			else
 				window_manager.display_message (Interface_names.E_compilation_failed)
+				output_text.add_string (Interface_names.e_compilation_failed)
 			end
+			output_manager.process_text (output_text)
 			Debugger_manager.on_compile_stop
 
 			if dynamic_lib_window_is_valid and then dynamic_lib_window.is_visible then

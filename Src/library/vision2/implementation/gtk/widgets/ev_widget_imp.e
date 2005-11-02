@@ -68,9 +68,11 @@ feature {NONE} -- Initialization
 			a_event_widget: POINTER
 			a_c_object: POINTER
 			app_imp: like app_implementation
+			l_gtk_marshal: EV_GTK_CALLBACK_MARSHAL
 		do
 			Precursor {EV_PICK_AND_DROPABLE_IMP}
 			app_imp := app_implementation
+			l_gtk_marshal := app_imp.gtk_marshal
 			a_event_widget := event_widget
 			a_c_object := c_object
 			
@@ -78,20 +80,20 @@ feature {NONE} -- Initialization
 			internal_minimum_width := -1
 			internal_minimum_height := -1
 	
-			-- Key events are handled by EV_WINDOW_IMP and propagated to the appropriate widget.
+				-- Key events are handled by EV_WINDOW_IMP and propagated to the appropriate widget.
 				
-			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (App_imp.gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, True)
-			signal_connect (a_event_widget, app_imp.focus_out_event_string, agent (App_imp.gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
+			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (l_gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, True)
+			signal_connect (a_event_widget, app_imp.focus_out_event_string, agent (l_gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
 				
-			connect_button_press_switch_agent := agent (App_imp.gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
+			connect_button_press_switch_agent := agent (l_gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
 				connect_button_press_switch
-			end
+			end			
 			set_is_initialized (True)
 		end
-		
+			
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
 	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -377,16 +379,22 @@ feature -- Measurement
 		local
 			a_aux_info: POINTER
 			tmp_struct_x: INTEGER
+			a_fixed_imp: EV_FIXED_IMP
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_x ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
-			a_aux_info := aux_info_struct
-			if a_aux_info /= NULL then
-				tmp_struct_x := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
-				if tmp_struct_x >= 0 then
-					Result := tmp_struct_x
+			a_fixed_imp ?= parent_imp
+			if a_fixed_imp /= Void then
+				Result := a_fixed_imp.x_position_of_child (Current)
+			else
+				Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_x ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+				a_aux_info := aux_info_struct
+				if a_aux_info /= NULL then
+					tmp_struct_x := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_x (a_aux_info)
+					if tmp_struct_x >= 0 then
+						Result := tmp_struct_x
+					end
 				end
+				Result := Result.max (0)
 			end
-			Result := Result.max (0)
 		end
 
 	y_position: INTEGER is
@@ -395,16 +403,22 @@ feature -- Measurement
 		local
 			a_aux_info: POINTER
 			tmp_struct_y: INTEGER
+			a_fixed_imp: EV_FIXED_IMP
 		do
-			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_y ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
-			a_aux_info := aux_info_struct
-			if a_aux_info /= NULL then
-				tmp_struct_y := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
-				if tmp_struct_y >= 0 then
-					Result := tmp_struct_y
+			a_fixed_imp ?= parent_imp
+			if a_fixed_imp /= Void then
+				Result := a_fixed_imp.y_position_of_child (Current)
+			else
+				Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_y ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object))
+				a_aux_info := aux_info_struct
+				if a_aux_info /= NULL then
+					tmp_struct_y := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
+					if tmp_struct_y >= 0 then
+						Result := tmp_struct_y
+					end
 				end
+				Result := Result.max (0)
 			end
-			Result := Result.max (0)
 		end	
 		
 	minimum_width: INTEGER is
@@ -435,7 +449,18 @@ feature {EV_ANY_I} -- Implementation
 		do
 			internal_set_minimum_size (internal_minimum_width, internal_minimum_height)
 		end
-	
+
+	refresh_now is
+			-- Flush any pending redraws due for `Current'.
+		do
+			if {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object) /= default_pointer then
+				{EV_GTK_EXTERNALS}.gdk_window_process_updates (
+					{EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+					False
+				)
+			end
+		end
+		
 feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
 
 	store_minimum_size is

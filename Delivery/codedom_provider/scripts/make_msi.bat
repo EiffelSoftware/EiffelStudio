@@ -1,6 +1,6 @@
 @ECHO OFF
 REM Compile Eiffel for ASP.NET Wix project and produce msi
-SET ECPOriginalPath=%CD%
+SET ECPOriginalPath2=%CD%
 CD ..\install
 
 IF EXIST Modules RD /Q /S Modules
@@ -20,19 +20,19 @@ COPY ..\files\efa_license.rtf Binary\
 
 REM DO THIS IF CLSID OF METADATA CONSUMER CHANGED!!! MERGE REGISTRY ENTRIES IN CompilerModule.wxs
 REM tallow  -nologo -c ..\delivery\Compiler\studio\spec\windows\bin\EiffelSoftware.MetadataConsumer.dll > Consumer.wxs
-CALL %ECPOriginalPath%\make_module.bat CompilerModule ..\delivery\compiler\
+CALL %ECPOriginalPath2%\make_module.bat CompilerModule ..\delivery\compiler\
 IF "%MMSUCCESS%"=="" GOTO END
 
-CALL %ECPOriginalPath%\make_module.bat LibrariesModule ..\delivery\compiler\
+CALL %ECPOriginalPath2%\make_module.bat LibrariesModule ..\delivery\compiler\
 IF "%MMSUCCESS%"=="" GOTO END
 
-CALL %ECPOriginalPath%\make_module.bat CodedomModule ..\delivery\codedom\
+CALL %ECPOriginalPath2%\make_module.bat CodedomModule ..\delivery\codedom\
 IF "%MMSUCCESS%"=="" GOTO END
 
-CALL %ECPOriginalPath%\make_module.bat DocumentationModule ..\documentation\
+CALL %ECPOriginalPath2%\make_module.bat DocumentationModule ..\documentation\
 IF "%MMSUCCESS%"=="" GOTO END
 
-CALL %ECPOriginalPath%\make_module.bat SamplesModule ..\samples\
+CALL %ECPOriginalPath2%\make_module.bat SamplesModule ..\samples\
 IF "%MMSUCCESS%"=="" GOTO END
 
 candle -nologo Product.wxs
@@ -46,5 +46,5 @@ DEL Product.wixobj
 COPY "Eiffel for ASP.NET.msi" ..\
 
 :END
-CD %ECPOriginalPath%
+CD %ECPOriginalPath2%
 ECHO Done.

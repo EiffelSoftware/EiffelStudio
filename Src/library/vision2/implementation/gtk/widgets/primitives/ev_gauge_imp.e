@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Create the horizontal scroll bar.
 		do
 			base_make (an_interface)
-			adjustment := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100, 1, 10, 0)
+			adjustment := {EV_GTK_EXTERNALS}.gtk_adjustment_new (0.0, 0.0, 100.0, 1.0, 10.0, 0.0)
 		end
 
 	initialize is
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 			value_range.change_actions.extend (agent set_range)
 			real_signal_connect (
 				adjustment,
-				"value-changed",
+				once "value-changed",
 				agent (App_implementation.gtk_marshal).on_gauge_value_changed_intermediary (c_object),
 				Void
 			)
@@ -58,23 +58,19 @@ feature -- Access
 	value: INTEGER is
 			-- Current value of the gauge.
 		do
-			Result := ({EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (adjustment) + 0.5).truncated_to_integer
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (adjustment).rounded
 		end
 
 	step: INTEGER is
 			-- Value by which `value' is increased after `step_forward'.
 		do
-			Result := ({EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (
-				adjustment
-			) + 0.5).truncated_to_integer
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (adjustment).rounded
 		end
 
 	leap: INTEGER is
 			-- Value by which `value' is increased after `leap_forward'.
 		do
-			Result := ({EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_increment (
-				adjustment
-			) + 0.5).truncated_to_integer
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_increment (adjustment).rounded
 		end
 
 	page_size: INTEGER is
@@ -82,7 +78,7 @@ feature -- Access
 			--| We define it here to add to the internal maximum. 
 			--| Value should be zero for ranges but not for scrollbars.
 		do
-			Result := ({EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_size (adjustment) + 0.5).truncated_to_integer
+			Result := {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_size (adjustment).rounded
 		end
 
 feature -- Status setting
@@ -117,6 +113,8 @@ feature -- Element change
 			-- Set `value' to `a_value'.
 		do
 			internal_set_value (a_value)
+				-- Make sure value is immediately displayed on screen.
+			refresh_now
 		ensure then
 			step_same: step = old step
 			leap_same: leap = old leap
@@ -148,7 +146,6 @@ feature -- Element change
 
 	set_range is
 			-- Update widget range from `value_range'
-			--| FIXME this should be an inline agent.
 		local
 			temp_value: INTEGER
 		do
@@ -158,7 +155,7 @@ feature -- Element change
 			elseif temp_value < value_range.lower then
 				temp_value := value_range.lower
 			end
-			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower)
+			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower.to_real)
 			internal_set_upper
 			internal_set_value (temp_value)	
 			{EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
@@ -171,7 +168,7 @@ feature {NONE} -- Implementation
 		do
 			{EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
 				adjustment,
-				value_range.upper
+				value_range.upper.to_real
 			)			
 		end
 
@@ -187,7 +184,7 @@ feature {NONE} -- Implementation
 			-- Set `value' to `a_value'.
 		do
 			if value /= a_value then
-				{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (adjustment, a_value)
+				{EV_GTK_EXTERNALS}.gtk_adjustment_set_value (adjustment, a_value.to_real)
 			end
 		end
 			

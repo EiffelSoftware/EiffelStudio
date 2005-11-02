@@ -648,10 +648,11 @@ feature -- Actions on all windows
 			loop
 				cv_dev ?= l_managed_windows.item
 				if cv_dev /= Void and then not cv_dev.destroyed then
-					cv_dev.status_bar.display_message (m)
+					cv_dev.status_bar.label.set_text (m)
 				end
 				l_managed_windows.forth
 			end
+			process_events_and_idle
 		end
 
 	display_percentage (a_value: INTEGER) is

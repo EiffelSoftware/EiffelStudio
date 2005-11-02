@@ -61,13 +61,14 @@ IF NOT EXIST EIFGEN\F_Code\installer.exe ECHO Build failed, could not find EIFGE
 IF NOT EXIST EIFGEN\F_Code\installer.exe GOTO END
 COPY EIFGEN\F_Code\installer.exe ..\..\..\files
 
+CD "%ECPOriginalPath%"
+CALL scripts\build_docs.bat %3
+IF "%DOCS_BUILT%"=="" GOTO END
+
 ECHO Building MSI
-CD %ECPOriginalPath%\scripts
+CD scripts
 CALL make_msi.bat
 CD ..
-
-CD %ECPOriginalPath%
-CALL scripts\build_docs.bat
 GOTO END
 
 :USAGE

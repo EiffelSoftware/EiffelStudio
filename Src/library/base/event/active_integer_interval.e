@@ -29,7 +29,7 @@ feature -- Initialization
 	adapt (other: INTEGER_INTERVAL) is
 			-- Reset to be the same interval as `other'.
 		do
-			Precursor {INTEGER_INTERVAL} (other)
+			Precursor (other)
 			on_change
 		end
 
@@ -39,16 +39,20 @@ feature -- Element change
 			-- Make sure that interval goes all the way
 			-- to `v' (up or down).
 		do
-			Precursor {INTEGER_INTERVAL}(v)
-			on_change
+			put (v)
 		end
 
 	put (v: INTEGER) is
 			-- Make sure that interval goes all the way
 			-- to `v' (up or down).
+		local
+			l_change: BOOLEAN
 		do
-			Precursor {INTEGER_INTERVAL}(v)
-			on_change
+			l_change := v < lower_internal or else v > upper_internal
+			Precursor (v)
+			if l_change then
+				on_change				
+			end
 		end
 
 feature -- Resizing
@@ -57,17 +61,27 @@ feature -- Resizing
 			-- Rearrange interval to go from at most
 			-- `min_index' to at least `max_index',
 			-- encompassing previous bounds.
-		do	 
-			Precursor {INTEGER_INTERVAL} (min_index, max_index)
-			on_change
+		local
+			l_change: BOOLEAN
+		do
+			l_change := lower_internal /= min_index or else upper_internal /= max_index
+			Precursor (min_index, max_index)
+			if l_change then
+				on_change	
+			end
 		end
 
 	resize_exactly (min_index, max_index: INTEGER) is
 			-- Rearrange interval to go from
 			-- `min_index' to `max_index'.
+		local
+			l_change: BOOLEAN
 		do	 
-			Precursor {INTEGER_INTERVAL} (min_index, max_index)
-			on_change
+			l_change := lower_internal /= min_index or else upper_internal /= max_index
+			Precursor (min_index, max_index)
+			if l_change then
+				on_change
+			end
 		end
 
 feature -- Duplication
@@ -75,7 +89,7 @@ feature -- Duplication
 	copy (other: like Current) is
 			-- Reset to be the same interval as `other'.
 		do
-			Precursor {INTEGER_INTERVAL} (other)
+			Precursor (other)
 			on_change
 		end
 

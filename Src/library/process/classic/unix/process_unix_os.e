@@ -36,7 +36,7 @@ feature -- File descriptor operations
 			valid_old_descriptor: valid_file_descriptor (old_fd)
 			valid_new_descriptor: valid_file_descriptor (new_fd)
 		external
-			"C inline use <unistd.h>"
+			"C inline use <unistd.h>,%"unix_os.h%""
 		alias
 			"[
 				{
@@ -54,7 +54,7 @@ feature -- File descriptor operations
 		require
 			valid_descriptor: valid_file_descriptor (fd)
 		external
-			"C inline use <unistd.h>"
+			"C inline use <unistd.h>,%"unix_os.h%""
 		alias
 			"[
 				{

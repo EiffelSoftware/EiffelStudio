@@ -3,6 +3,14 @@ Fedora Core 3 (AMD64 3500+ at 2.2GHz and 512KB of cache)
 5.7
 ===
 
+5.7.0331 non-RTEA (multithreaded version):
+312.674u 9.423s 5:50.30 91.9%   0+0k 0+0io 0pf+0w
+312.344u 9.404s 5:48.47 92.3%   0+0k 0+0io 0pf+0w
+
+5.7.0331 RTEA (multithreaded version):
+382.606u 9.615s 6:48.63 95.9%   0+0k 0+0io 0pf+0w
+382.041u 9.798s 6:48.02 96.0%   0+0k 0+0io 0pf+0w
+
 5.7.0223 RTEA (multithreaded version):
 359.784u 9.060s 6:25.73 95.6%   0+0k 0+0io 0pf+0w
 359.651u 8.905s 6:24.52 95.8%   0+0k 0+0io 0pf+0w

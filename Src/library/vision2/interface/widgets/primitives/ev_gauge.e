@@ -33,8 +33,6 @@ feature {NONE} -- Initialization
 			a_value_range_not_empty: not a_value_range.is_empty
 		do
 			default_create
-			value_range.resize_exactly (value_range.lower, a_value_range.upper)
-			set_value (a_value_range.lower)
 			value_range.resize_exactly (a_value_range.lower, a_value_range.upper)
 		end
 
@@ -138,7 +136,7 @@ feature -- Status setting
 		ensure
 			decremented: value = value_range.lower.max (old value - leap)
 		end
-		
+
 	set_proportion (a_proportion: REAL) is
 			-- Move `value' to `a_proportion' within `value_range'.
 		require
@@ -182,7 +180,7 @@ feature -- Element change
 		ensure
 			a_leap_assigned: leap = a_leap
 		end
-		
+
 feature {EV_ANY} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -196,7 +194,7 @@ feature {EV_ANY} -- Contract support
 				proportion = 0
 		end
 
-	delta: REAL is 
+	delta: REAL is
 			-- Amount by which `proportion' can differ from expected value
 			-- and still be considered correct.
 		do

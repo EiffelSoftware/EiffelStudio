@@ -135,7 +135,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_UDN_CONSTANTS
 		export
 			{NONE} all
@@ -184,7 +184,7 @@ feature {EV_ANY_I} -- Access
 	leap: INTEGER
 			-- Size of leap. Default: 10.
 
-	value: INTEGER is 
+	value: INTEGER is
 			-- Current value.
 		do
 			Result := internal_arrows_control.position
@@ -213,7 +213,7 @@ feature {EV_ANY_I} -- Access
 		do
 			Result := internal_text_field.text
 		end
-	
+
 feature -- Setting
 
 	set_minimum_width (v: INTEGER) is
@@ -288,7 +288,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 		do
 			leap := i
 		end
-		
+
 	wel_set_step (i :INTEGER) is
 			-- Assign `i' to `step'.
 		do
@@ -296,7 +296,7 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 		end
 
 	wel_set_value (i :INTEGER) is
-			-- Assign `i`' to `value'. 
+			-- Assign `i`' to `value'.
 		do
 			internal_arrows_control.set_position (i)
 				-- We must now store the value
@@ -305,8 +305,11 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 
 	wel_set_range (i, j: INTEGER) is
 			-- Assign `i' and `j' as
-			-- bounds of `Current'. 
+			-- bounds of `Current'.
 		do
+				-- Adapt interval
+			internal_arrows_control.set_range (i, j)
+
 				-- Set value so that it is within bound [i..j].
 			if value < i then
 				wel_set_value (i)
@@ -314,10 +317,8 @@ feature {EV_SPIN_BUTTON_I} -- Status setting.
 				wel_set_value (j)
 			end
 
-				-- Adapt interval
-			internal_arrows_control.set_range (i, j)
 		end
-		
+
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		local
@@ -515,13 +516,13 @@ feature -- EV_TEXT_COMPONENT_I implementation
 		do
 			internal_text_field.insert_text (txt)
 		end
-	
+
 	append_text (txt: STRING) is
 			-- append 'txt' into `Current'.
 		do
 			internal_text_field.append_text (txt)
 		end
-	
+
 	prepend_text (txt: STRING) is
 			-- prepend 'txt' into `Current'.
 		do
@@ -536,12 +537,12 @@ feature -- EV_TEXT_COMPONENT_I implementation
 		end
 
 	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
+			-- Select (hilight) the text between
 			-- `start_pos' and `end_pos'. Both `start_pos' and
 			-- `end_pos' are selected.
 		do
 			internal_text_field.select_region (start_pos, end_pos)
-		end	
+		end
 
 	deselect_all is
 			-- Unselect the current selection.
@@ -571,9 +572,9 @@ feature -- EV_TEXT_COMPONENT_I implementation
 		end
 
 	paste (index: INTEGER) is
-			-- Insert the contents of the clipboard 
+			-- Insert the contents of the clipboard
 			-- at `index' postion of `text'.
-			-- If the Clipboard is empty, it does nothing. 
+			-- If the Clipboard is empty, it does nothing.
 		do
 			internal_text_field.paste (index)
 		end
@@ -592,12 +593,12 @@ feature {EV_TEXT_FIELD_IMP} -- Implementation
 				if last_change_value /= value then
 					if change_actions_internal /= Void then
 						last_change_value := value
-						change_actions_internal.call ([value])	
+						change_actions_internal.call ([value])
 					end
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_set_focus is
@@ -607,7 +608,7 @@ feature {NONE} -- Implementation
 				-- on the text will call the focus_in action sequence.
 			internal_text_field.set_focus
 		end
-		
+
 	translate_text is
 			-- Take a string and translate it to the corresponding
 			-- integer value. If it is not in the range or if it
@@ -632,7 +633,7 @@ feature {NONE} -- Implementation
 				set_text (internal_arrows_control.minimum.out)
 			end
 		end
-		
+
 	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
 			-- A `wm_notify' message has been received by `Current'
 		local
@@ -723,7 +724,7 @@ feature {NONE} -- Implementation
 			internal_text_field.ev_apply_new_size
 				(0, 0, a_width - spin_width, a_height, repaint)
 		end
-		
+
 	tooltip_window: WEL_WINDOW is
 			-- `Result' is WEL_WINDOW of `Current' used
 			-- to trigger tooltip events.
@@ -767,7 +768,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SPIN_BUTTON
-	
+
 invariant
 	internal_text_field_not_void: internal_text_field /= Void
 	internal_arrows_control_not_void:  is_initialized implies internal_arrows_control /= Void

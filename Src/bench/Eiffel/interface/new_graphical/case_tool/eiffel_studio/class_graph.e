@@ -208,7 +208,7 @@ feature {NONE} -- Implementation
 						   number_of_suppliers (center_class.class_i, supplier_depth)
 
 			l_status_bar := context_editor.development_window.status_bar
-			l_status_bar.progress_bar.reset_with_range (0 |..| nb_of_items)
+			l_status_bar.reset_progress_bar_with_range (0 |..| nb_of_items)
 
 			l_status_bar.display_message ("Exploring ancestors of " + center_class.name)
 			explore_ancestors (center_class.class_i, ancestor_depth, True)
@@ -254,12 +254,15 @@ feature {NONE} -- Implementation
 		local
 			l: FIXED_LIST [CL_TYPE_A]
 			ci: CLASS_I
-			l_progress_bar: EB_PERCENT_PROGRESS_BAR
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			if depth > 0 and then a_class.compiled then
 				l := a_class.compiled_class.parents
 				if l /= Void then
 					from
+						if progress_bar then
+							l_status_bar := context_editor.development_window.status_bar
+						end
 						l.start
 					until
 						l.after
@@ -268,8 +271,9 @@ feature {NONE} -- Implementation
 						add_class (ci)
 						explore_ancestors (ci, depth - 1, progress_bar)
 						if progress_bar then
-							l_progress_bar := context_editor.development_window.status_bar.progress_bar
-							l_progress_bar.set_value (l_progress_bar.value + 1)
+							l_status_bar.display_progress_value (
+								l_status_bar.current_progress_value + 1
+							)
 						end
 						l.forth
 					end
@@ -307,13 +311,16 @@ feature {NONE} -- Implementation
 			l: ARRAYED_LIST [CLASS_C]
 			ci: CLASS_I
 			i, nb: INTEGER
-			l_progress_bar: EB_PERCENT_PROGRESS_BAR
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			if depth > 0 and then a_class.compiled then
 				l := a_class.compiled_class.descendants
 				from
 					i := 1
 					nb := l.count
+					if progress_bar then
+						l_status_bar := context_editor.development_window.status_bar
+					end
 				until
 					i > nb
 				loop
@@ -321,8 +328,9 @@ feature {NONE} -- Implementation
 					add_class (ci)
 					explore_descendants (ci, depth - 1, progress_bar)
 						if progress_bar then
-							l_progress_bar := context_editor.development_window.status_bar.progress_bar
-							l_progress_bar.set_value (l_progress_bar.value + 1)
+							l_status_bar.display_progress_value (
+								l_status_bar.current_progress_value + 1
+							)
 						end
 					i := i + 1
 				end
@@ -362,13 +370,16 @@ feature {NONE} -- Implementation
 			ci: CLASS_I
 			i, nb, c: INTEGER
 			added_class: ES_CLASS
-			l_progress_bar: EB_PERCENT_PROGRESS_BAR
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			if depth > 0 and then a_class.class_i.is_compiled then
 				l := a_class.class_i.compiled_class.syntactical_clients
 				from
 					i := 1
 					nb := l.count
+					if progress_bar then
+						l_status_bar := context_editor.development_window.status_bar
+					end
 				until
 					i > nb
 				loop
@@ -397,11 +408,9 @@ feature {NONE} -- Implementation
 						end
 					end
 					if progress_bar then
-						l_progress_bar := context_editor.development_window.status_bar.progress_bar
-						check
-							in_range: l_progress_bar.range.has (l_progress_bar.value + c)
-						end
-						l_progress_bar.set_value (l_progress_bar.value + c)
+						l_status_bar.display_progress_value (
+							l_status_bar.current_progress_value + c
+						)
 					end
 					i := i + 1
 				end
@@ -442,13 +451,16 @@ feature {NONE} -- Implementation
 			ci: CLASS_I
 			i, nb, c: INTEGER
 			added_class: ES_CLASS
-			l_progress_bar: EB_PERCENT_PROGRESS_BAR
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
 			if depth > 0 and then a_class.class_i.compiled then
 				l := a_class.class_i.compiled_class.syntactical_suppliers
 				from
 					i := 1
 					nb := l.count
+					if progress_bar then
+						l_status_bar := context_editor.development_window.status_bar
+					end
 				until
 					i > nb
 				loop
@@ -480,11 +492,9 @@ feature {NONE} -- Implementation
 						end
 					end
 					if progress_bar then
-						check
-							in_range: l_progress_bar.range.has (l_progress_bar.value + c)
-						end
-						l_progress_bar := context_editor.development_window.status_bar.progress_bar
-						l_progress_bar.set_value (l_progress_bar.value + c)
+						l_status_bar.display_progress_value (
+							l_status_bar.current_progress_value + c
+						)
 					end
 					i := i + 1
 				end

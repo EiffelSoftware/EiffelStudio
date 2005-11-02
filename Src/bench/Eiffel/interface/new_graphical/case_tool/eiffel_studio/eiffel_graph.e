@@ -210,15 +210,14 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 			context_editor.development_window.window.set_pointer_style (wait_cursor)
 			if not is_cancelled then
 				l_status_bar := context_editor.development_window.status_bar
-				l_progress_bar := l_status_bar.progress_bar
 				
 				nr_of_items := 1 + nodes.count + clusters.count + links.count + 1 + 1
-				l_status_bar.progress_bar.reset_with_range (0 |..| nr_of_items)
-				l_status_bar.progress_bar.set_value (0)
+				l_status_bar.reset_progress_bar_with_range (0 |..| nr_of_items)
+				l_status_bar.display_progress_value (0)
 				l_status_bar.display_message ("Synchronizing diagram tool: Removing unneeded items")
 				remove_unneeded_items
 				
-				l_status_bar.progress_bar.set_value (1)
+				l_status_bar.display_progress_value (1)
 				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing clusters")	
 				synchronize_clusters (l_progress_bar)
 
@@ -228,16 +227,15 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing links")			
 				synchronize_links (l_progress_bar)
 
-				l_status_bar.progress_bar.set_value (nr_of_items - 1)
+				l_status_bar.display_progress_value (nr_of_items - 1)
 				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing class relations")
 				add_classes_relations
 
-				l_status_bar.progress_bar.set_value (nr_of_items)
+				l_status_bar.display_progress_value (nr_of_items)
 				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing cluster relations")
 				add_clusters_relations
 
-				l_status_bar.display_message ("")
-				l_status_bar.progress_bar.set_value (0)
+				l_status_bar.reset
 			end
 			context_editor.development_window.window.set_pointer_style (standard_cursor)
 		rescue

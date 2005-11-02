@@ -721,7 +721,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
 			-- special processing for a delete.
 		end
 
-feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT}
+feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER, GB_XML_IMPORT} -- XML handling
 
 	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of specific attributes of `Current'

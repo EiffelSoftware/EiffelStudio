@@ -62,6 +62,7 @@ SET ISE_CFLAGS=-D WINVER=0x500
 IF NOT EXIST EIFGEN\F_Code\installer.exe ECHO Build failed, could not find EIFGEN\F_Code\installer.exe!!
 IF NOT EXIST EIFGEN\F_Code\installer.exe GOTO END
 COPY EIFGEN\F_Code\installer.exe ..\..\..\files
+SET ISE_CFLAGS=
 
 CD "%ECPOriginalPath%"
 CALL scripts\build_docs.bat %3

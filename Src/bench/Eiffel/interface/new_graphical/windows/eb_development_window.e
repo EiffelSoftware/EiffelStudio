@@ -3371,7 +3371,7 @@ feature {NONE} -- Implementation
 				set_title (str)
 			end
 			address_manager.disable_formatters
-			status_bar.display_message ("")
+			status_bar.reset
 			status_bar.remove_cursor_position
 			text_edited := False
 		end
@@ -3390,7 +3390,7 @@ feature {NONE} -- Implementation
 			update_paste_cmd
 			update_formatters
 			if editor_tool.text_area.syntax_is_correct then
-				status_bar.display_message ("")
+				status_bar.reset
 			else
 				status_bar.display_message (Interface_names.L_syntax_error)
 			end

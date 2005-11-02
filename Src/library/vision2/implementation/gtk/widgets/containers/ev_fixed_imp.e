@@ -43,12 +43,8 @@ feature -- Status setting
 		local
 			w_imp: EV_WIDGET_IMP
 		do
-			update_request_size
 			w_imp ?= a_widget.implementation
 			{EV_GTK_EXTERNALS}.gtk_fixed_move (c_object, w_imp.c_object, an_x, a_y)
-			
---			print ("X position = " + gtk_fixed_child_struct_x (i_th_fixed_child (1)).out + "%N")
---			print ("Y position = " + gtk_fixed_child_struct_y (i_th_fixed_child (1)).out + "%N")
 		end
 		
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
@@ -60,7 +56,6 @@ feature -- Status setting
 			w_imp ?= a_widget.implementation
 			w_imp.store_minimum_size
 			{EV_GTK_EXTERNALS}.gtk_widget_set_usize (w_imp.c_object, a_width, a_height)
-			update_request_size
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -70,7 +65,19 @@ feature {EV_ANY_I} -- Implementation
 		do
 			Precursor (a_widget_imp)
 			a_widget_imp.reset_minimum_size
-		end		
+		end
+
+	x_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER is
+			-- X position of `a_widget_imp' within `Current'.
+		do
+			Result := gtk_fixed_child_struct_x (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
+		end
+
+	y_position_of_child (a_widget_imp: EV_WIDGET_IMP): INTEGER is
+			-- Y position of `a_widget_imp' within `Current'.
+		do
+			Result := gtk_fixed_child_struct_y (i_th_fixed_child (index_of (a_widget_imp.interface, 1)))
+		end	
 
 	i_th_fixed_child (i: INTEGER): POINTER is
 			-- `i-th' fixed child of `Current'.

@@ -109,9 +109,7 @@ feature -- Drawing operations
 			-- immediately. Any changes that have not yet been reflected will
 			-- become visible.
 		do
-			if is_displayed then
-				{EV_GTK_EXTERNALS}.gtk_widget_draw (visual_widget, NULL)
-			end
+			refresh_now
 		end
 
 	update_if_needed is

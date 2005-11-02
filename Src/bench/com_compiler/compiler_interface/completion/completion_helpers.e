@@ -357,19 +357,17 @@ feature -- Basic operations
 				l_new_target := target.twin
 				l_new_target.prune_all (' ')
 				l_new_target.prune_all ('%T')
-				if l_new_target.count > 4  then
-					if l_new_target.substring (1, 2).is_equal ("({") then
-						l_index := l_new_target.substring_index_in_bounds ("})", 3, l_new_target.count)
-						if l_index > 0 then
-							l_new_target := l_new_target.substring (3, l_index - 1)
-							Result := type_from_type_name ("TYPE [" + l_new_target + "]")
-						end
-					elseif l_new_target.count > 9 and then l_new_target.substring (1, 8).is_equal ("(create{") then
-						l_index := l_new_target.index_of ('}', 3)
-						if l_index > 0 then
-							l_new_target := l_new_target.substring (9, l_index - 1)
-							Result := type_from_type_name (l_new_target)
-						end
+				if l_new_target.count > 4 and then l_new_target.substring (1, 2).is_equal ("({") then
+					l_index := l_new_target.substring_index_in_bounds ("})", 3, l_new_target.count)
+					if l_index > 0 then
+						l_new_target := l_new_target.substring (3, l_index - 1)
+						Result := type_from_type_name ("TYPE [" + l_new_target + "]")
+					end
+				elseif l_new_target.count > 2 and then l_new_target.item (1) = '(' then
+					l_index := l_new_target.last_index_of (')', 3)
+					if l_index > 0 then
+						l_new_target := l_new_target.substring (9, l_index - 1)
+						Result := type_of_target (l_new_target, table, ids, class_i)
 					end
 				end
 				set_standard_call

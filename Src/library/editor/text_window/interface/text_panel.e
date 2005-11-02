@@ -1,5 +1,5 @@
 indexing
-	description: "[		
+	description: "[
 		Editable: no
 		Scroll bars: yes
 		Cursor: no
@@ -13,45 +13,45 @@ class
 	TEXT_PANEL
 
 inherit
-	TEXT_PANEL_IMP		
+	TEXT_PANEL_IMP
 		rename
 			file_name as const_file_name,
 			initialized_cell as constants_initialized_cell
 		redefine
 			default_create
 		end
-	
+
 	TEXT_OBSERVER
-		undefine 
-			copy, 
-			is_equal, 
+		undefine
+			copy,
+			is_equal,
 			default_create
 		redefine
 			on_text_loaded,
 			on_text_block_loaded,
-			on_text_fully_loaded	
+			on_text_fully_loaded
 		end
 
-	EV_FONT_CONSTANTS		
+	EV_FONT_CONSTANTS
 		export
 			{NONE} all
-		undefine 
-			copy, 
-			is_equal, 
+		undefine
+			copy,
+			is_equal,
 			default_create
 		end
-		
+
 	DOCUMENT_TYPE_MANAGER
-		undefine 
-			copy, 
-			is_equal, 
+		undefine
+			copy,
+			is_equal,
 			default_create
 		end
-			
-	SHARED_EDITOR_DATA		
-		undefine 
-			copy, 
-			is_equal, 
+
+	SHARED_EDITOR_DATA
+		undefine
+			copy,
+			is_equal,
 			default_create
 		redefine
 			is_equal
@@ -65,7 +65,7 @@ feature -- Initialization
 			create widget
 			initialize
 			is_initialized := True
-		end		
+		end
 
 feature {NONE} -- Initialization
 
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 				-- First display the first line...
-			first_line_displayed := 1	
+			first_line_displayed := 1
 			line_numbers_enabled := True
 			panel_manager.add_panel (Current)
 			initialize_editor_context
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			editor_width := buffered_drawable_width
 			main_vbox.set_background_color (editor_preferences.normal_background_color)
 			inner_hbox.set_background_color (editor_preferences.normal_background_color)
-			
+
 			create margin.make_with_panel (Current)
 			editor_drawing_area.set_minimum_size (buffered_drawable_width, buffered_drawable_height)
 
@@ -94,9 +94,9 @@ feature {NONE} -- Initialization
 			editor_drawing_area.expose_actions.extend (agent on_repaint)
 			editor_drawing_area.resize_actions.extend (agent on_size)
 			editor_drawing_area.mouse_wheel_actions.extend (agent on_mouse_wheel)
-			editor_drawing_area.focus_in_actions.extend (agent on_focus)	
+			editor_drawing_area.focus_in_actions.extend (agent on_focus)
 			editor_viewport.resize_actions.extend (agent on_viewport_size)
-				
+
 				-- Scrollbar Events		
 			vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
 			horizontal_scrollbar.change_actions.extend (agent on_horizontal_scroll)
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 			last_vertical_scroll_bar_value := 1
 
 				-- Set up the screen.
-			buffered_line.set_background_color (editor_preferences.normal_background_color)	
+			buffered_line.set_background_color (editor_preferences.normal_background_color)
 
 				-- Ensure line numbers are displayed
 			refresh_line_number_agent := agent refresh_line_number_display
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			-- Here initialize editor contextual settings.  For example, set location of cursor
 			-- pixmaps.
 		do
-		end		
+		end
 
 feature -- Access
 
@@ -134,7 +134,7 @@ feature -- Access
 		ensure
 			new_text_not_void: Result /= Void
 		end
-		
+
 	text: STRING is
 			-- Image of the text being displayed.
 		do
@@ -144,19 +144,19 @@ feature -- Access
 				Result := text_displayed.text
 			end
 		end
-		
+
 	text_displayed: TEXT
 			-- Text currently displayed on the screen.
-		
+
 	file_name: FILE_NAME
 			-- Name of the currently opened file, if any.
 
 	date_of_file_when_loaded: INTEGER
 			-- Date of current file when it was loaded.
-		
+
 	margin: MARGIN_WIDGET
 			-- Margin.
-		
+
 	first_line_displayed: INTEGER
 			-- First line currently displayed on the screen.
 
@@ -168,13 +168,13 @@ feature -- Access
 
 	cursors: EDITOR_CURSORS
 			-- Editor cursors
-		
+
 	icons: EDITOR_ICONS
 			-- Editor icons
-		
+
 	syntax_files_path: DIRECTORY_NAME
 			-- Path containing syntax definition files for highlighting
-			
+
 feature -- Status Setting
 
 	set_cursors (a_cursors: like cursors) is
@@ -183,7 +183,7 @@ feature -- Status Setting
 			a_cursors_not_void: a_cursors /= Void
 		do
 			cursors := a_cursors
-		ensure	
+		ensure
 			cursors_set: cursors = a_cursors
 		end
 
@@ -193,7 +193,7 @@ feature -- Status Setting
 			a_icons_not_void: a_icons /= Void
 		do
 			icons := a_icons
-		ensure	
+		ensure
 			icons_set: icons = a_icons
 		end
 
@@ -202,17 +202,17 @@ feature -- Status Setting
 			-- `a_filename' should be that file.
 		require
 			text_not_void: a_text /= Void
-		do		
+		do
 				-- Here we make sure observers of `text_displayed' also observers the new text.
 			a_text.edition_observer_list.append (text_displayed.edition_observer_list)
 			a_text.selection_observer_list.append (text_displayed.selection_observer_list)
 			a_text.lines_observer_list.append (text_displayed.lines_observer_list)
 			a_text.cursor_observer_list.append (text_displayed.cursor_observer_list)
-			
-			text_displayed := a_text			
+
+			text_displayed := a_text
 			create file_name.make_from_string (a_filename)
-		end		
-		
+		end
+
 	display_line_with_context (l_number: INTEGER) is
 			-- display line number `l_number' in the editor
 			-- center display on this line if it is not yet displayed
@@ -234,8 +234,8 @@ feature -- Status Setting
 					set_first_line_displayed (fld.max (1).min (maximum_top_line_index), True)
 				end
 			end
-		end	
-		
+		end
+
 	setup_editor (first_line_to_display: INTEGER) is
 			-- Update `Current' to display at line `first_line_to_display' on current text.
 		do
@@ -248,30 +248,24 @@ feature -- Status Setting
 			update_horizontal_scrollbar
 			update_width
 			set_editor_width (editor_width)
-			update_horizontal_scrollbar						
+			update_horizontal_scrollbar
 			refresh_now
-			margin.setup_margin			
-		end	
-		
+			margin.setup_margin
+		end
+
 	on_focus is
 			-- Editor received focus
 		local
 
 		do
 			editor_drawing_area.focus_in_actions.block
-			
-			if not is_checking_modifications and file_loaded then
-				check_document_modifications_and_reload	
-			end
-			
-			editor_drawing_area.focus_in_actions.resume
-		end	
 
-	set_internal_focus (a_flag: BOOLEAN) is
-			-- 
-		do
-			internal_focus_requested := a_flag
-		end		
+			if not is_checking_modifications and file_loaded then
+				check_document_modifications_and_reload
+			end
+
+			editor_drawing_area.focus_in_actions.resume
+		end
 
 feature -- Query
 
@@ -280,25 +274,25 @@ feature -- Query
 		do
 			Result := file_name /= Void and then not file_name.is_empty
 		end
-		
+
 	editor_x: INTEGER is
 			-- editor_viewport absolute position.
 		do
 			Result := editor_viewport.screen_x
 		end
-	
+
 	editor_y: INTEGER is
 			-- editor_viewport absolute position.
 		do
 			Result := editor_viewport.screen_y
 		end
-	
+
 	has_focus: BOOLEAN is
 			-- Does the text panel have focus?
 		do
 			Result := editor_drawing_area.has_focus
 		end
-		
+
 	has_margin: BOOLEAN is
 			-- Should margin be displayed?
 		do
@@ -322,17 +316,17 @@ feature -- Query
 		do
 			Result := editor_preferences.show_line_numbers
 		end
-		
+
 	view_invisible_symbols: BOOLEAN
 			-- Are the spaces, the tabulations and the end_of_line characters visible?			
-		
+
 	is_unix_file: BOOLEAN
 			-- Is current file a unix file? (i.e. is "%N" line separator?)	
-	
+
 	is_in_editor_panel (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Is point at absolute coordinates (`a_screen_x', `a_screeny') in the editor?
 		do
-			Result := 
+			Result :=
 						a_screen_x > editor_x
 							and then
 						a_screen_x < editor_x + editor_drawing_area.width
@@ -341,7 +335,7 @@ feature -- Query
 							and then
 						a_screen_y < editor_y + editor_drawing_area.height
 		end
-	
+
 	number_of_lines: INTEGER is
 		do
 			Result := text_displayed.number_of_lines
@@ -372,7 +366,7 @@ feature -- Pick and Drop
 			-- Actions performed when user drops a stone on the text_area.
 		do
 			Result := editor_drawing_area.drop_actions
-		end	
+		end
 
 feature -- File Properties
 
@@ -395,7 +389,7 @@ feature -- File Properties
 				file_date_already_checked := True
 			else
 				Result := True
-			end			
+			end
 		rescue
 			retried := True
 			retry
@@ -408,11 +402,11 @@ feature -- File Properties
 		end
 
 feature -- Status setting
-		
+
 	refresh_line_number_display is
 	        -- Refresh line number display in Current and update display
 		do
-			if has_margin then 
+			if has_margin then
 				if margin_container.is_empty then
 					-- One of line numbers or breakpoints must be visible
 					margin_container.put (margin.widget)
@@ -426,8 +420,8 @@ feature -- Status setting
 			refresh_now
 	   	ensure
 	   		widget_displayed: has_margin implies not margin_container.is_empty
-	   	end		
-	   	
+	   	end
+
 	enable_line_numbers is
 			-- Enable line numbers
 		do
@@ -435,8 +429,8 @@ feature -- Status setting
 			refresh_line_number_display
 		ensure
 			line_numbers_enabled: line_numbers_enabled = True
-		end		
-	   	
+		end
+
 	disable_line_numbers is
 			-- Disable line numbers
 		do
@@ -445,7 +439,7 @@ feature -- Status setting
 		ensure
 			line_numbers_disabled: line_numbers_enabled = False
 		end
-	   	
+
 	toggle_view_invisible_symbols is
 			-- Toggle `view_invisible_symbols'.
 		do
@@ -453,7 +447,7 @@ feature -- Status setting
 			refresh_now
 		ensure
 			view_invisible_symbols_set: view_invisible_symbols = not old view_invisible_symbols
-		end	
+		end
 
 	set_focus is
 			-- Give the focus to the editor area.
@@ -470,14 +464,14 @@ feature -- Status setting
 				internal_focus_requested := True
 			end
 		end
-	
+
 feature -- Basic Operations
 
 	refresh is
-			-- Update display. 
+			-- Update display.
 		do
 			in_scroll := True
-			editor_drawing_area.redraw			
+			editor_drawing_area.redraw
 			margin.refresh
 		end
 
@@ -508,12 +502,12 @@ feature -- Basic Operations
 			first_line_displayed := 1
 			vertical_scrollbar.set_value (1)
 		end
-		
+
 	redraw_current_screen is
 			-- Redraw the current screen.  Do not scroll or move the cursor, just redraw.
 		do
 			set_first_line_displayed (first_line_displayed, True)
-		end		
+		end
 
 	load_file (a_filename: STRING) is
 	        -- Load contents of `a_filename'
@@ -531,13 +525,13 @@ feature -- Basic Operations
 			else
 			    set_current_document_class (default_document_class)
   	   		end
-  	   		
+
   	   		create l_file.make (a_filename)
   	   		if l_file.exists then
   	   		    l_file.open_read
   	   		    if l_file.is_empty then
   	   		    	load_text ("")
-  	   		    else  	   		    	
+  	   		    else
 	  	   		    l_file.read_stream (l_file.count)
 	  	   		    load_text (l_file.last_string)
   	   		    end
@@ -549,7 +543,7 @@ feature -- Basic Operations
   	   			load_text ("")
   	   		end
   	  	end
-		
+
 	load_text (s: STRING) is
 			-- Display `s'.			
 		do
@@ -569,13 +563,13 @@ feature -- Basic Operations
 
 				-- Setup the editor to load first page
 			setup_editor (1)
-		end	
-			
+		end
+
 	on_font_changed is
 			-- Recompute token information for for loaded text.
 		local
 			l_line_index: INTEGER
-		do			
+		do
 				-- Recompute token information for for loaded text.
 			from
 				l_line_index := 1
@@ -585,14 +579,14 @@ feature -- Basic Operations
 				text_displayed.update_line (l_line_index)
 				l_line_index := l_line_index + 1
 			end
-			
+
 			buffered_line.set_size (buffered_line.width, line_height)
 			update_horizontal_scrollbar
 			update_vertical_scrollbar
 			margin.on_font_changed
 			redraw_current_screen
 		end
-		
+
 	check_document_modifications_and_reload is
 			-- Check document modifications and reload as necessary.
 		require
@@ -602,7 +596,7 @@ feature -- Basic Operations
 			dialog: EV_INFORMATION_DIALOG
 			button_labels: ARRAY [STRING]
 			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
-		do	
+		do
 			is_checking_modifications := True
 
 			if not file_is_up_to_date then
@@ -624,12 +618,12 @@ feature -- Basic Operations
 					reload
 				end
 			end
-		
+
 			is_checking_modifications := False
 		ensure
 			is_checking_modifications_is_false: is_checking_modifications = False
 		end
-			
+
 feature -- Graphical interface
 
 	pointer_style: EV_CURSOR is
@@ -653,7 +647,7 @@ feature -- Graphical interface
 	reference_window: EV_WINDOW is
 			-- Window which error dialogs will be shown relative to.  Void if not set using `set_reference_window'.
 		do
-			Result := internal_reference_window		
+			Result := internal_reference_window
 		end
 
 	show_warning_message (a_message: STRING) is
@@ -665,7 +659,7 @@ feature -- Graphical interface
 			wd.pointer_button_release_actions.force_extend (agent wd.destroy)
 			wd.key_press_actions.force_extend (agent wd.destroy)
 			wd.show_modal_to_window (reference_window)
-		end	
+		end
 
 feature {MARGIN_WIDGET} -- Private properties of the text window
 
@@ -674,20 +668,20 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 		do
 			Result := editor_viewport.x_offset
 		end
-	
+
 	number_of_lines_displayed: INTEGER is
 			-- Number of lines currently displayed on the screen.	
 		do
 			Result := viewable_height // line_height
 		end
-		
+
 	number_of_lines_displayed_from_text: INTEGER is
 			-- Number of lines currently displayed on the screen, excluding the white space visible below the actual text.	
 		do
 			Result := number_of_lines_displayed
 			if (first_line_displayed + Result) > text_displayed.number_of_lines then
 				Result := text_displayed.number_of_lines - first_line_displayed + 1
-			end			
+			end
 		end
 
 	number_of_lines_in_block: INTEGER is
@@ -697,7 +691,7 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 		ensure
 			number_of_lines_computed_non_negative: Result >= 0
 		end
-		
+
 	editor_width: INTEGER
 			-- Width of the text. (i.e. minimum width of the panel
 			-- for which no scroll bar is needed)
@@ -712,7 +706,7 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 	show_vertical_scrollbar: BOOLEAN is
 			-- Is it necessary to show the vertical scroll bar ?
 		do
-			Result := text_displayed /= Void and then (number_of_lines_displayed_from_text < text_displayed.number_of_lines) 
+			Result := text_displayed /= Void and then (number_of_lines_displayed_from_text < text_displayed.number_of_lines)
 		end
 
 	horizontal_scrollbar_needs_updating: BOOLEAN
@@ -736,7 +730,7 @@ feature -- Status Setting
 		do
 			l_old_width := editor_width
 			editor_width := a_width.max (editor_width)
-			if editor_width > l_old_width then				
+			if editor_width > l_old_width then
 				editor_drawing_area.redraw_rectangle (0, editor_viewport.y_offset, viewable_width, viewable_height)
 				update_horizontal_scrollbar
 			end
@@ -747,14 +741,14 @@ feature -- Status Setting
 		require
 			fld_large_enough: fld > 0
 			fld_small_enough: fld <= text_displayed.number_of_lines.max (1)
-		do	
-			first_line_displayed := fld	
+		do
+			first_line_displayed := fld
 			vertical_scrollbar.set_value (fld)
 		end
 
 	set_offset (an_offset: INTEGER) is
 			-- Assign `an_offset' to `offset' and update scrollbar if necessary.
-		do	
+		do
 			editor_viewport.set_x_offset (an_offset)
 			check
 				offset_within_bounds: horizontal_scrollbar.value_range.has (an_offset)
@@ -776,7 +770,7 @@ feature {NONE} -- Scroll bars Management
 			if editor_width > w and w > 0 and then not is_empty then
 				horizontal_scrollbar.value_range.resize_exactly (0, editor_width - w)
 				horizontal_scrollbar.set_leap (w)
-				if horizontal_scrollbar.is_show_requested then 
+				if horizontal_scrollbar.is_show_requested then
 					if not platform_is_windows then
 						horizontal_scrollbar_needs_updating := False
 					end
@@ -810,8 +804,8 @@ feature {NONE} -- Scroll bars Management
 		local
 			nol: INTEGER
 		do
-			if not in_resize then				
-				in_resize := True	
+			if not in_resize then
+				in_resize := True
 
 				if show_vertical_scrollbar then
 					nol := text_displayed.number_of_lines
@@ -906,7 +900,7 @@ feature {NONE} -- Scroll bars Management
 			end
 			if ev_application.idle_actions.has (update_scroll_agent) then
 				ev_application.idle_actions.prune_all (update_scroll_agent)
-			end			
+			end
 		end
 
 	update_width is
@@ -922,7 +916,7 @@ feature {NONE} -- Scroll bars Management
 				editor_width := editor_width.max (text_displayed.line (i).width)
 				i := i + 1
 			end
-		end		
+		end
 
 	on_vertical_scroll (vscroll_pos: INTEGER) is
  			-- Process vertical scroll event. `vertical_scrollbar.value' has changed.
@@ -940,7 +934,7 @@ feature {NONE} -- Scroll bars Management
  			view_y_offset := editor_viewport.y_offset
  			l_line_height := line_height
  			l_buff_height := buffered_drawable_height
- 			
+
  			if l_diff < 0 then
  					-- Scroll up
  				l_top_line_y := vscroll_pos * l_line_height -- pixel y offset of NEW vertical scrollbar value 				
@@ -950,7 +944,7 @@ feature {NONE} -- Scroll bars Management
  					editor_viewport.set_y_offset (l_buff_height - viewable_height - ((l_buff_height - viewable_height) \\ l_line_height))
  					flip_count := flip_count - 1
 					margin.synch_with_panel
- 					refresh_now 					
+ 					refresh_now
  				else
  					editor_viewport.set_y_offset (view_y_offset + (l_diff * l_line_height))
  					check
@@ -962,7 +956,7 @@ feature {NONE} -- Scroll bars Management
  					-- Scroll down
  				l_bottom_line_y := viewable_height + view_y_offset + (l_diff * l_line_height)
  				if l_bottom_line_y > l_buff_height then
- 					editor_viewport.set_y_offset (0) 				
+ 					editor_viewport.set_y_offset (0)
  					flip_count := flip_count + 1
 					margin.synch_with_panel
  					refresh_now
@@ -970,9 +964,9 @@ feature {NONE} -- Scroll bars Management
  					editor_viewport.set_y_offset (view_y_offset + (l_diff * l_line_height))
 					margin.synch_with_panel
  				end
- 			end 			
+ 			end
 			last_vertical_scroll_bar_value := vscroll_pos
-			
+
 			check
  				not_too_high: editor_viewport.y_offset >= 0
  				not_too_low: (editor_viewport.y_offset + viewable_height) <= buffered_drawable_height
@@ -986,7 +980,7 @@ feature {NONE} -- Scroll bars Management
 			set_offset (scroll_pos)
 			buffered_line.set_size ((viewable_width + offset).max (buffered_line.width), line_height)
 		end
-		
+
 	on_mouse_wheel (delta: INTEGER) is
 			-- Mouse wheel has been moved `delta' units, adjust `Current' accordingly.
 		local
@@ -997,7 +991,7 @@ feature {NONE} -- Scroll bars Management
 					first_line_displayed - scrolling_quantum * delta)
 			else
 				l_offset := (maximum_top_line_index).min (
-					first_line_displayed - scrolling_quantum * delta) 
+					first_line_displayed - scrolling_quantum * delta)
 			end
 			set_first_line_displayed (l_offset, True)
 		end
@@ -1021,7 +1015,7 @@ feature {NONE} -- Display functions
 			-- Repaint the part of the panel between in the viewable area between
 			-- (`x', `y') and (`x' + `a_width', `y' + `a_height').
 			--| Actually, rectangle defined by (0, y) -> (editor_drawing_area.width, y + height) is redrawn.
-		do	
+		do
 			on_paint := True
 			if a_width /= 0 and a_height /= 0 then
 				update_area (x, y, a_width, y + a_height, x, not in_scroll)
@@ -1031,12 +1025,12 @@ feature {NONE} -- Display functions
 
 	on_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
 			-- Refresh the panel after it has been resized (and moved) to new coordinates (`a_x', `a_y') and
-			-- new size (`a_width', `a_height'). 
+			-- new size (`a_width', `a_height').
 			--| Note: This feature is called during the creation of the window
 		do
 			update_vertical_scrollbar
 			update_horizontal_scrollbar
-		end	
+		end
 
 	on_viewport_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
 			-- Viewport was resized.
@@ -1056,47 +1050,47 @@ feature {NONE} -- Display functions
 	last_viewport_height: INTEGER
 
 	update_viewport_after_resize is
-			-- 
+			--
 		do
 			if editor_viewport.y_offset + viewable_height > buffered_drawable_height then
-					-- The viewport needs to be moved up because it is too low down to display 
+					-- The viewport needs to be moved up because it is too low down to display
 				editor_viewport.set_y_offset (editor_viewport.y_offset - (editor_viewport.height - last_viewport_height))
 				margin.margin_viewport.set_y_offset (editor_viewport.y_offset)
-			end	
-		end		
+			end
+		end
 
 	update_area (x_pos, top, a_width, bottom: INTEGER; x: INTEGER; buffered: BOOLEAN) is
  			-- Update drawing area between `top' and `bottom' and `x' and `a_width'.  If `buffered' then draw to `buffered_line'
  			-- before drawing to screen, otherwise draw straight to screen.
  		require
- 			range_valid: bottom >= top 			
+ 			range_valid: bottom >= top
  			on_paint: on_paint
  		local
  			first_line_to_draw,
  			last_line_to_draw,
  			y_offset,
  			view_y_offset: INTEGER
- 		do 			 					
+ 		do
  			view_y_offset := editor_viewport.y_offset
 
  				-- Draw all lines
  			first_line_to_draw := (first_line_displayed + (top - view_y_offset) // line_height).max (1)
  			last_line_to_draw := ((first_line_displayed + (bottom - view_y_offset) // line_height).min (text_displayed.number_of_lines))
 
-			check 
+			check
 				not_too_many_lines: (bottom = top) implies first_line_to_draw = last_line_to_draw
 				lines_valid: first_line_to_draw <= last_line_to_draw or last_line_to_draw = text_displayed.number_of_lines
 			end
-			
+
 			if text_displayed.number_of_lines > 0 then
 				if first_line_to_draw > last_line_to_draw then
 					update_lines (last_line_to_draw, last_line_to_draw, x_pos, a_width, buffered)
 				else
-					update_lines (first_line_to_draw, last_line_to_draw, x_pos, a_width, buffered)	
-				end			
+					update_lines (first_line_to_draw, last_line_to_draw, x_pos, a_width, buffered)
+				end
 			end
 
- 			if last_line_to_draw = text_displayed.number_of_lines or text_displayed.number_of_lines = 0 then 				
+ 			if last_line_to_draw = text_displayed.number_of_lines or text_displayed.number_of_lines = 0 then
 	 				-- The file is too small for the screen, so we fill in the last portion of the screen.
 	 			y_offset := editor_viewport.y_offset + (((last_line_to_draw + 1) - first_line_displayed) * line_height)
 	 			if (editor_viewport.y_offset + viewable_height) > y_offset then
@@ -1106,9 +1100,9 @@ feature {NONE} -- Display functions
 					end
 					editor_drawing_area.clear_rectangle (x_pos, y_offset, viewable_width, (editor_viewport.y_offset + viewable_height) - y_offset)
 				end
- 			end	
+ 			end
  			in_scroll := False
- 		end		
+ 		end
 
 	update_lines (first, last, start_pos, end_pos: INTEGER; buffered: BOOLEAN) is
 			-- Draw the lines `first' to `'last' between `start_pos' and `end_pos'.
@@ -1126,18 +1120,18 @@ feature {NONE} -- Display functions
 			l_text := text_displayed
 			if not l_text.is_empty then
 				l_text.go_i_th (first)
-				
+
 				if buffered then
 					buffered_line.set_background_color (editor_preferences.normal_background_color)
-				end		
-				
+				end
+
 				from
 	 				curr_line := first
 	 			until
 	 				curr_line > last or else l_text.after
 	 			loop
 	 				y_offset := editor_viewport.y_offset + ((curr_line - first_line_displayed) * line_height)
-	
+
 					if buffered then
 	 		--			draw_line_to_buffered_line (curr_line, l_text.current_line)
 			--			draw_buffered_line_to_screen (0, y_offset)
@@ -1149,10 +1143,10 @@ feature {NONE} -- Display functions
 	 				l_text.forth
 	 			end
 			end
-			
+
  			updating_line := False
 		end
-		
+
 	invalidate_block (first, last: INTEGER; flush_screen: BOOLEAN) is
 			-- Update the lines from `first' to `last'.  If `buffered' then draw to `buffered_line'
  			-- before drawing to screen, otherwise draw straight to screen.
@@ -1170,8 +1164,8 @@ feature {NONE} -- Display functions
 			if flush_screen then
 				editor_drawing_area.flush
 			end
-		end		
-		
+		end
+
 	draw_buffered_line_to_screen (start_pos, end_pos, x, y: INTEGER) is
 			-- Draw to the screen the data in `buffered_line' between `start_pos' x-coordinate and `end_pos' x-coordinate.
 			-- Draw to y position `y' in the drawing area and x position `x'.
@@ -1182,12 +1176,12 @@ feature {NONE} -- Display functions
 				draw_flash (x, y, end_pos - start_pos, line_height, True)
 			end
 			editor_drawing_area.draw_sub_pixmap (x, y, buffered_line, create {EV_RECTANGLE}.make (start_pos, 0, end_pos - start_pos, line_height))
-			draw_margin (y)	
+			draw_margin (y)
 		end
-		
+
 	draw_line_to_screen (start_pos, end_pos, y: INTEGER; a_line: EDITOR_LINE) is
-			-- Draw to the screen the tokens in the line that are between `start_pos' and `end_pos'. 
-			-- Draw to y position `y' in the drawing area and draw from x position `start_pos + left_margin_width' in the 
+			-- Draw to the screen the tokens in the line that are between `start_pos' and `end_pos'.
+			-- Draw to y position `y' in the drawing area and draw from x position `start_pos + left_margin_width' in the
 			-- drawing area.
 		require
 			on_paint: on_paint
@@ -1229,7 +1223,7 @@ feature {NONE} -- Display functions
 				eol_token.display_with_offset (curr_token.position + left_margin_width, y, da, Current)
 			end
 		end
- 
+
  	draw_margin (y: INTEGER) is
  			-- Draw the left margin space (not the line margin)
  		do
@@ -1238,21 +1232,21 @@ feature {NONE} -- Display functions
 			end
 			editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
 			editor_drawing_area.clear_rectangle (0, y, left_margin_width, line_height)
- 		end 		
- 
+ 		end
+
  	draw_flash (x, y, width, height: INTEGER; buffered: BOOLEAN) is
- 			-- 
+ 			--
  		do
  			if buffered then
  				editor_drawing_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (200, 20, 20))
  			else
  				editor_drawing_area.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (20, 20, 200))
- 			end 			
- 			editor_drawing_area.clear_rectangle (x, y, 1000, height)	
+ 			end
+ 			editor_drawing_area.clear_rectangle (x, y, 1000, height)
  			ev_application.sleep (50)
  			editor_drawing_area.set_background_color (editor_preferences.normal_background_color)
- 		end 		
- 
+ 		end
+
  	draw_line_to_buffered_line (xline: INTEGER; a_line: EDITOR_LINE) is
 			-- Draw onto the buffered line the tokens in `a_line'.
 		require
@@ -1261,18 +1255,18 @@ feature {NONE} -- Display functions
  		local
  			curr_token	: EDITOR_TOKEN
  			curr_y		: INTEGER
- 		do 			
+ 		do
    			curr_y := (xline - first_line_displayed) * line_height
-  			from				
-				a_line.start				
+  			from
+				a_line.start
 				curr_token := a_line.item
-				buffered_line.clear				
+				buffered_line.clear
  			until
  				a_line.after or else curr_token = a_line.eol_token or else curr_token.position > editor_width
  			loop
 					-- Normally Display the token.
-				if not curr_token.is_margin_token then					
-					curr_token.display (0, buffered_line, Current)	
+				if not curr_token.is_margin_token then
+					curr_token.display (0, buffered_line, Current)
 				end
 
 					-- Prepare next iteration
@@ -1312,7 +1306,7 @@ feature {NONE} -- Text loading
 	reload is
 			-- Reload the opened file from disk.
 		do
-			if file_name /= Void and then not file_name.is_empty then				
+			if file_name /= Void and then not file_name.is_empty then
 				load_file (file_name.string)
 			end
 		end
@@ -1333,33 +1327,30 @@ feature {NONE} -- Text loading
 			set_editor_width (editor_width)
 			vertical_scrollbar.enable_sensitive
 			update_vertical_scrollbar
-			update_horizontal_scrollbar		
+			update_horizontal_scrollbar
 			editor_drawing_area.enable_sensitive
 			refresh
-			if editor_drawing_area.is_sensitive then	 
-				set_focus	 
-			end
 		end
 
 	on_text_block_loaded (was_first_block: BOOLEAN) is
 			-- Update scroll bar as a new block of text as been loaded.
 		do
 			update_vertical_scrollbar
-		end	
+		end
 
 	on_text_fully_loaded is
 			-- Text has been fully loaded
 		do
-			if internal_focus_requested then				
+			if internal_focus_requested then
 				set_focus
 				internal_focus_requested := False
 			end
-		end		
+		end
 
 	file_loading_setup is
 			-- Setup before file loading
-		do		
-		end		
+		do
+		end
 
 feature {MARGIN} -- Implementation
 
@@ -1380,7 +1371,7 @@ feature {MARGIN} -- Implementation
 		once
 			Result := (create {PLATFORM}).is_windows
 		end
-		
+
 	updating_line: BOOLEAN
 			-- Is buffered line currently being updated?
 
@@ -1396,7 +1387,7 @@ feature {NONE} -- Implementation
 
 	refresh_line_number_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent called when `show_line_numbers' preferences is changed.
-	
+
 feature -- Memory management
 
 	recycle is
@@ -1413,10 +1404,10 @@ feature -- Memory management
 				-- Remove `refresh_line_number_agent' from `change_actions' for `show_line_numbers'.
 			editor_preferences.show_line_numbers_preference.change_actions.prune_all (refresh_line_number_agent)
 			refresh_line_number_agent := Void
-			
+
 				-- Reset scrolling agent.
 			update_scroll_agent := Void
-						
+
 			if editor_drawing_area /= Void then
 				editor_drawing_area.destroy
 				editor_drawing_area := Void
@@ -1458,18 +1449,18 @@ feature -- Implementation
 
 	buffered_drawable_height: INTEGER is 32000
 		-- Default size of `drawable' used for scrolling purposes.
-		
+
 	last_vertical_scroll_bar_value: INTEGER
 		-- Last value of `vertical_scroll_bar' used within `vertical_scroll_bar_changed'. See
 		-- comment of `last_horizontal_scroll_bar_value' for details of it's use.
-		
+
 	viewable_width: INTEGER is
 			-- Width of `Current' available to view displayed items. Does
 			-- not include width of any displayed scroll bars.
 		do
 			Result := editor_viewport.width
 		end
-		
+
 	viewable_height: INTEGER is
 			-- Height of `Current' available to view displayed items. Does
 			-- not include width of any displayed scroll bars and/or header if shown.
@@ -1487,7 +1478,7 @@ feature -- Implementation
 		do
 			Result := editor_preferences.scrolling_common_line_count
 		end
-		
+
 	file_date_ticks: INTEGER is
 			-- Retrieve file last modified date in the number of ticks
 		require
@@ -1500,7 +1491,7 @@ feature -- Implementation
 				Result := l_file.date
 			end
 		end
-		
+
 	continue_editing is
 			-- Continue editing document
 			-- Note: Called from the reload request prompt

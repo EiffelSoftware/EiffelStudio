@@ -322,6 +322,7 @@ feature -- Search commands
 			-- Find next occurrence of last searched pattern.
 		do
 			if search_tool /= Void then
+				prepare_search_selection
 				search_tool.go_to_next_found
 				check_cursor_position
 			end
@@ -331,6 +332,7 @@ feature -- Search commands
 			-- Find next occurrence of last searched pattern.
 		do
 			if search_tool /= Void then
+				prepare_search_selection
 				search_tool.go_to_previous_found
 				check_cursor_position
 			end
@@ -755,6 +757,26 @@ feature {NONE} -- Implementation
 		do
 			resume_cursor_blinking
 		end
+		
+	prepare_search_selection is
+			-- Prepare search selection.
+		local
+			l_search_tool: EB_MULTI_SEARCH_TOOL
+			l_incremental_search: BOOLEAN
+		do
+			l_search_tool ?= search_tool
+			if l_search_tool /= Void and then text_displayed.has_selection then
+				if l_search_tool.currently_searched = Void or else (not l_search_tool.item_selected (current)) then
+					l_search_tool.force_new_search
+					l_incremental_search := l_search_tool.is_incremental_search
+					l_search_tool.disable_incremental_search
+					l_search_tool.set_current_searched (text_displayed.selected_string)
+					if l_incremental_search then
+						l_search_tool.enable_incremental_search
+					end
+				end
+			end
+		end		
 
 feature -- Memory management
 

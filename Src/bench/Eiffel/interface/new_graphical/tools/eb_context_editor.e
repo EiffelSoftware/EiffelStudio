@@ -1446,7 +1446,7 @@ feature {NONE} -- Events
 				reset_history
 				
 				development_window.status_bar.display_message ("Loading diagram for " + view_selector.text)
-				development_window.status_bar.progress_bar.reset_with_range (0 |..| 0)
+				development_window.status_bar.reset_progress_bar_with_range (0 |..| 0)
 				
 				if is_force_directed_used then
 					disable_force_directed

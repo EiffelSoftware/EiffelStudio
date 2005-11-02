@@ -13,7 +13,8 @@ inherit
 			value_range as range
 		redefine
 			initialize,
-			set_value
+			set_value,
+			is_in_default_state
 		end
 
 	EV_SHARED_APPLICATION
@@ -64,6 +65,14 @@ feature -- Element change
 			-- Assign `a_value' to `value'.
 		do
 			Precursor (a_value)
+		end
+
+feature {NONE} -- Implementation
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := True
 		end
 
 end -- class EB_PERCENT_PROGRESS_BAR

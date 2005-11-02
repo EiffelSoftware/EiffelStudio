@@ -76,13 +76,19 @@ feature -- Start output features
 			current_degree := 6;
 			last_reached_degree := 6;
 			processed := 0
+			if is_output_quiet then
+				display_message (degree_description (6))
+				display_new_line
+			end
 		end
 
 	put_end_degree_6 is
 			-- Put message indicating the end of degree six.
 		do
-			display_message (once "Processing options");
-			display_new_line
+			if not is_output_quiet then
+				display_message (once "Processing options");
+				display_new_line				
+			end
 		end;
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is

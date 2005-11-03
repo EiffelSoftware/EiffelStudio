@@ -663,6 +663,9 @@ feature -- Element change
 			disable_toolbar
 
 			if not cancelled then
+				development_window.status_bar.reset
+				development_window.status_bar.display_message ("Constructing Diagram for " + a_class.name_in_upper + " Class")
+
 				graph.wipe_out
 				
 				world.drop_actions.wipe_out
@@ -718,9 +721,6 @@ feature -- Element change
 				if is_force_directed_used then
 					disable_force_directed
 				end
-				
-				development_window.status_bar.reset
-				development_window.status_bar.display_message ("Constructing Diagram for " + a_class.name_in_upper + " Class")
 				
 				update_excluded_class_figures
 				world_cell.disable_resize
@@ -807,6 +807,10 @@ feature -- Element change
 			disable_toolbar
 
 			if not cancelled then
+
+				development_window.status_bar.reset
+				development_window.status_bar.display_message ("Constructing Diagram for " + a_cluster.name_in_upper + " Cluster")
+
 				graph.wipe_out
 				
 				world.drop_actions.wipe_out
@@ -858,9 +862,6 @@ feature -- Element change
 				if is_force_directed_used then
 					disable_force_directed
 				end
-
-				development_window.status_bar.reset
-				development_window.status_bar.display_message ("Constructing Diagram for " + a_cluster.name_in_upper + " Cluster")
 				
 				update_excluded_class_figures
 				world_cell.disable_resize

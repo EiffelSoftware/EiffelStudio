@@ -5,12 +5,6 @@
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
 			<Directory Id='MergeRedirectFolder'>
-				<Directory Id='DotnetDir' Name='dotnet'>
-					<Component Id='DotnetDir' Guid='BF2B6B04-AAAD-4a84-8CA6-DB22F69736BA'>
-						<CreateFolder />
-						<RemoveFolder Id='DotnetDir' On='uninstall'/>
-					</Component>
-				</Directory>
 				<Directory Id='EifinitDir' Name='eifinit'>
 					<Directory Id='EifinitStudioDir' Name='studio'>
 						<Component Id='EifinitStudioDirFiles' Guid='37BF50AB-6464-46d2-AB23-C93B34DE0678'>
@@ -50,6 +44,7 @@
 									<File Id='emain_separate_template' Name='emain.ate' LongName='emain.separate_template'/>
 									<File Id='emain_template' Name='emain.tem' LongName='emain.template'/>
 									<File Id='emain_template_gnu' Name='emaing.tem' LongName='emain.template-gnu'/>
+									<File Id='assembly_config.xml' Name='ASSEMB1.XML' LongName='assembly_config.xml' />
 								</Component>
 							</Directory>
 						</Directory>
@@ -443,7 +438,7 @@
 								<Component Id='Ecdpc' Guid='D55FF889-9EBD-4cc4-881D-CFA1F17893AF'>
 									<File Id='ecdpc_exe' Name='ecdpc.exe' />
 									<Registry Id="registry14" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ecdpc" Name="ISE_C_COMPILER" Type="string" Value="msc" />
-									<Registry Id="registry15" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ecdpc" Name="ISE_EIFFEL" Type="string" Value="[INSTALLDIR]Compiler" />
+									<Registry Id="registry15" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ecdpc" Name="ISE_EIFFEL" Type="string" Value="[MergeRedirectFolder]" />
 									<Registry Id="registry16" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ecdpc" Name="ISE_PLATFORM" Type="string" Value="windows" />
 								</Component>
 							</Directory>

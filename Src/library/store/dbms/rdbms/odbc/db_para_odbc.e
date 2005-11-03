@@ -28,18 +28,18 @@ feature -- Status Setting
 		require
 			array_exist: ptr /= Void
 		do
-			ptr.conservative_resize(1, size)
+			ptr.conservative_resize (1, size)
 			count := size
-		end	
+		end
 
-	set (val: POINTER; pos: INTEGER) is
+	set (val: MANAGED_POINTER; pos: INTEGER) is
 		do
 			ptr.put(val, pos)
 		end
 
 	get (pos: INTEGER): POINTER is
 		do
-			Result := ptr @ pos
+			Result := (ptr @ pos).item
 		end
 
 	release is
@@ -51,10 +51,7 @@ feature -- Status Setting
 			until 
 				i > count
 			loop
-				if ptr.item(i)  /= default_pointer then
-					odbc_c_free (ptr @ i)
-				end
-				ptr.put (default_pointer, i)
+				ptr.put (Void, i)
 				i := i + 1
 			end		
 			count := 0
@@ -65,7 +62,7 @@ feature  -- Status
 	
 	count: INTEGER
 	
-	ptr: ARRAY[POINTER]
+	ptr: ARRAY[MANAGED_POINTER]
 
 	
 feature { NONE} -- External Features

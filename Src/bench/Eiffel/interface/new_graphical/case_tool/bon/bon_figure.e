@@ -35,6 +35,8 @@ feature -- Status settings
 		
 feature {NONE} -- Implementation
 
+	is_needed_on_diagram_string: STRING is "IS_NEEDED_ON_DIAGRAM"
+
 	set_is_high_quality (a_high_quality: like is_high_quality) is
 			-- Set `is_high_quality' to `a_high_quality'.
 		deferred

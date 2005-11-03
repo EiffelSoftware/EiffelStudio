@@ -141,30 +141,11 @@ feature -- Input
 	read_double, readdouble is
 			-- Read the ASCII representation of a new double
 			-- from file. Make result available in `last_double'.
-		local
-			l_is_double: BOOLEAN
 		do
-			ctor_convertor.reset ({NUMERIC_INFORMATION}.type_double)
-			from
-				l_is_double := True
-			until
-				end_of_file or not l_is_double
-			loop
-				read_character
-				if not end_of_file then
-					ctor_convertor.parse_character (last_character)
-					l_is_double := ctor_convertor.is_part_of_double					
-				end
-			end
+			read_number_sequence (ctor_convertor, {NUMERIC_INFORMATION}.type_double)
+			last_double := ctor_convertor.parsed_double			
 				-- Consume all left characters until we meet a new-line character.
-			from
-				
-			until
-				end_of_file or last_character = '%N' 
-			loop
-				read_character
-			end
-			last_double := ctor_convertor.parsed_double
+			consume_characters
 		end
 		
 feature {NONE} -- Implementation	
@@ -172,31 +153,25 @@ feature {NONE} -- Implementation
 	read_integer_with_no_type is
 			-- Read a ASCII representation of number of `type'
 			-- at current position.
-		local
-			l_is_integer: BOOLEAN
 		do
-			l_is_integer := True
-			ctoi_convertor.reset ({NUMERIC_INFORMATION}.type_no_limitation )
-			from			
-				l_is_integer := True
-			until
-				end_of_file or not l_is_integer
-			loop
-				read_character
-				if not end_of_file then
-					ctoi_convertor.parse_character (last_character)
-					l_is_integer := ctoi_convertor.is_part_of_integer
-				end
-			end
+			read_number_sequence (ctoi_convertor, {NUMERIC_INFORMATION}.type_no_limitation)
 				-- Consume all left characters until we meet a new-line character.
+			consume_characters
+		end
+		
+	consume_characters is
+			-- Consume all characters from current position 
+			-- until we meet a new-line character.
+		do
 			from
 				
 			until
 				end_of_file or last_character = '%N' 
 			loop
 				read_character
-			end
+			end			
 		end
+		
 
 feature {NONE} -- Inapplicable
 

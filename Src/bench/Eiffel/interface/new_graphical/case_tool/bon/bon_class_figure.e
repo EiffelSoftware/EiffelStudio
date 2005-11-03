@@ -179,41 +179,61 @@ feature -- Access
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
 		do
-			Result := "BON_CLASS_FIGURE"
+			Result := once "BON_CLASS_FIGURE"
 		end
+
+	is_default_bg_color_used_string: STRING is "IS_DEFAULT_BG_COLOR_USED"
+	cluster_name_string: STRING is "CLUSTER_NAME"
+	background_color_string: STRING is "BACKGROUND_COLOR"
+	generics_color_string: STRING is "GENERICS_COLOR"
+	class_name_color_string: STRING is "CLASS_NAME_COLOR"
 		
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml element representing `Current's state.
+		local
+			colon_string: STRING
+			l_color: EV_COLOR
+			l_xml_routines: like xml_routines
+			l_model: like model
 		do
+			colon_string := ";"
+			l_xml_routines := xml_routines
+			l_model := model
 			Result := Precursor {EIFFEL_CLASS_FIGURE} (node)
-			Result.add_attribute ("CLUSTER_NAME", xml_namespace, model.class_i.cluster.cluster_name)
-			Result.put_last (Xml_routines.xml_node (Result, "IS_DEFAULT_BG_COLOR_USED", is_default_background_color_used.out))
+			Result.add_attribute (cluster_name_string, xml_namespace, l_model.class_i.cluster.cluster_name)
+			Result.put_last (l_xml_routines.xml_node (Result, is_default_bg_color_used_string, is_default_background_color_used.out))
 			if not is_default_background_color_used then
-				Result.put_last (Xml_routines.xml_node (Result, "BACKGROUND_COLOR", 
-					background_color.red_8_bit.out + ";" +
-					background_color.green_8_bit.out + ";" +
-					background_color.blue_8_bit.out))
-				Result.put_last (Xml_routines.xml_node (Result, "GENERICS_COLOR", 
-					generics_color.red_8_bit.out + ";" +
-					generics_color.green_8_bit.out + ";" +
-					generics_color.blue_8_bit.out))
-				Result.put_last (Xml_routines.xml_node (Result, "CLASS_NAME_COLOR", 
-					class_name_color.red_8_bit.out + ";" +
-					class_name_color.green_8_bit.out + ";" +
-					class_name_color.blue_8_bit.out))
+				l_color := background_color
+				Result.put_last (l_xml_routines.xml_node (Result, background_color_string, 
+					l_color.red_8_bit.out + colon_string +
+					l_color.green_8_bit.out + colon_string +
+					l_color.blue_8_bit.out))
+				l_color := generics_color
+				Result.put_last (l_xml_routines.xml_node (Result, generics_color_string, 
+					l_color.red_8_bit.out + colon_string +
+					l_color.green_8_bit.out + colon_string +
+					l_color.blue_8_bit.out))
+				l_color := class_name_color
+				Result.put_last (l_xml_routines.xml_node (Result, class_name_color_string, 
+					l_color.red_8_bit.out + colon_string +
+					l_color.green_8_bit.out + colon_string +
+					l_color.blue_8_bit.out))
 			end
-			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
+			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, l_model.is_needed_on_diagram.out))
 		end
 		
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
+		local
+			l_xml_routines: like xml_routines
 		do
+			l_xml_routines := xml_routines
 			node.forth
 			Precursor {EIFFEL_CLASS_FIGURE} (node)
-			if not xml_routines.xml_boolean (node, "IS_DEFAULT_BG_COLOR_USED") then
-				set_background_color (xml_routines.xml_color (node, "BACKGROUND_COLOR"))
-				set_generics_color (xml_routines.xml_color (node, "GENERICS_COLOR"))
-				set_class_name_color (xml_routines.xml_color (node, "CLASS_NAME_COLOR"))
+			if not l_xml_routines.xml_boolean (node, is_default_bg_color_used_string) then
+				set_background_color (l_xml_routines.xml_color (node, background_color_string))
+				set_generics_color (l_xml_routines.xml_color (node, generics_color_string))
+				set_class_name_color (l_xml_routines.xml_color (node, class_name_color_string))
 			else
 				if is_high_quality then
 					if background_color /= Void then
@@ -226,7 +246,7 @@ feature -- Access
 				set_class_name_properties
 				is_default_background_color_used := True
 			end
-			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
+			if l_xml_routines.xml_boolean (node, is_needed_on_diagram_string) then
 				model.enable_needed_on_diagram
 			else
 				model.disable_needed_on_diagram

@@ -204,36 +204,47 @@ feature {NONE} -- Implementation
 					
 	internal_leading_separators: STRING is " %N%R%T"
 			-- Characters that are considered as leading separators
-			
-	read_integer_with_no_type is
-			-- Read a ASCII representation of number of `type'
-			-- at current position.
-		local
-			l_is_integer: BOOLEAN
-			cnt: INTEGER
+
+	is_sequence_an_expected_numeric: BOOLEAN
+			-- Is last number sequence read by `read_number_sequence' an expected numeric?
+
+	read_number_sequence (convertor: STRING_TO_NUMERIC_CONVERTOR; conversion_type: INTEGER) is
+			-- Read a number sequence from current position and parse this
+			-- sequence using `convertor' to see if it is a valid numeric.
+			-- Set `is_sequence_an_expected_numeric' with True if it is valid.
 		do
-			l_is_integer := True
-			ctoi_convertor.reset ({NUMERIC_INFORMATION}.type_no_limitation)
-			
+			convertor.reset (conversion_type)
 			from			
-				l_is_integer := True
-				cnt := 0
+				is_sequence_an_expected_numeric := True
 			until
-				end_of_file or else not l_is_integer
+				end_of_file or else not is_sequence_an_expected_numeric
 			loop
 				read_character
 				if not end_of_file then
-					ctoi_convertor.parse_character (last_character)
-					l_is_integer := ctoi_convertor.is_part_of_integer
+					convertor.parse_character (last_character)
+					is_sequence_an_expected_numeric := convertor.parse_successful
 				end
 			end
-			
-			if not l_is_integer then		
-				if last_character = '%N' and platform_indicator.is_windows then
-					back
-				end
-				back								
+		end
+		
+	read_integer_with_no_type is
+			-- Read a ASCII representation of number of `type'
+			-- at current position.
+		do
+			read_number_sequence (ctoi_convertor, {NUMERIC_INFORMATION}.type_no_limitation)
+				-- Return character(s) if necessary.
+			if not is_sequence_an_expected_numeric then	
+				return_characters	
 			end				
+		end
+		
+	return_characters is
+			-- Return character(s)
+		do
+			if last_character = '%N' and platform_indicator.is_windows then
+				back
+			end
+			back								
 		end
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is

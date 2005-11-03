@@ -571,6 +571,7 @@ feature -- Store/Retrive
 			view_output, node: XM_ELEMENT
 			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			root: XM_ELEMENT
+			l_view_str, l_name_str: STRING
 		do
 			if ptf.is_open_read then
 					-- Remove any previous save of `current_view'.
@@ -583,6 +584,8 @@ feature -- Store/Retrive
 			if diagram_output /= Void then
 				a_cursor := diagram_output.root_element.new_cursor
 				from
+					l_view_str := "VIEW"
+					l_name_str := "NAME"
 					a_cursor.start
 				until
 					a_cursor.after
@@ -590,8 +593,8 @@ feature -- Store/Retrive
 					node ?= a_cursor.item
 					if
 						node /= Void and then
-						node.name.is_equal ("VIEW") and then
-						equal (node.attribute_by_name ("NAME").value, current_view)
+						node.name.is_equal (l_view_str) and then
+						equal (node.attribute_by_name (l_name_str).value, current_view)
 					then
 						diagram_output.root_element.remove_at_cursor (a_cursor)
 					end

@@ -104,6 +104,32 @@ feature {ICOR_EXPORTER} -- Access
 			end
 		end
 
+--	set_all_threads_debug_state_as_running (a_except_thread: ICOR_DEBUG_THREAD) is
+--		do
+--			set_all_threads_debug_state ({ICOR_DEBUG_THREAD}.enum_cor_debug_thread_state__thread_run , a_except_thread)
+--		end
+--		
+--	set_all_threads_debug_state_as_suspended (a_except_thread: ICOR_DEBUG_THREAD) is
+--		do
+--			set_all_threads_debug_state ({ICOR_DEBUG_THREAD}.enum_cor_debug_thread_state__thread_suspend , a_except_thread)
+--		end		
+--
+--	set_all_threads_debug_state (a_state: INTEGER; a_except_thread: ICOR_DEBUG_THREAD) is
+--			-- SetAllThreadsDebugState sets the current debug state of each thread.
+--			-- See ICorDebugThread::SetDebugState for details.
+--			--
+--			-- The pExceptThisThread parameter allows you to specify one
+--			-- thread which is exempted from the debug state change. Pass NULL
+--			-- if you want to affect all threads.
+--		local
+--			p_except_th: POINTER
+--		do
+--			if a_except_thread /= Void then
+--				p_except_th := a_except_thread.item
+--			end
+--			last_call_success := cpp_set_all_threads_debug_state (item, a_state, p_except_th)
+--		end
+
 	detach is
 		do
 			last_call_success := cpp_detach (item)
@@ -197,6 +223,16 @@ feature {NONE} -- Implementation
 		alias
 			"EnumerateThreads"
 		end
+
+--	cpp_set_all_threads_debug_state (obj: POINTER; a_state: INTEGER; a_p_except_thread: POINTER): INTEGER is
+--		external
+--			"[
+--				C++ ICorDebugController signature(CorDebugThreadState, ICorDebugThread*): EIF_INTEGER 
+--				use "cli_headers.h"
+--			]"
+--		alias
+--			"SetAllThreadsDebugState"
+--		end
 
 feature {EIFNET_DEBUGGER} -- Query
 

@@ -1,13 +1,13 @@
 indexing
-	description: 
+	description:
 		"Eiffel Vision fixed. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_FIXED_I
-	
+
 inherit
 	EV_WIDGET_LIST_I
 		redefine
@@ -20,7 +20,6 @@ feature -- Element change
 			-- Set `a_widget.x_position' to `an_x'.
 		require
 			has_a_widget: has (a_widget)
-			an_x_non_negative: an_x >= 0
 		do
 			set_item_position (a_widget, an_x, a_widget.y_position)
 		ensure
@@ -31,7 +30,6 @@ feature -- Element change
 			-- Set `a_widget.y_position' to `a_y'.
 		require
 			has_a_widget: has (a_widget)
-			a_y_non_negative: a_y >= 0
 		do
 			set_item_position (a_widget, a_widget.x_position, a_y)
 		ensure
@@ -43,8 +41,6 @@ feature -- Element change
 			-- Set `a_widget.y_position' to `a_y'.
 		require
 			has_a_widget: has (a_widget)
-			an_x_non_negative: an_x >= 0
-			a_y_non_negative: a_y >= 0
 		deferred
 		ensure
 			a_widget_x_position_assigned: a_widget.x_position = an_x

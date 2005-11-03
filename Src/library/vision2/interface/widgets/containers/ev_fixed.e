@@ -20,7 +20,7 @@ indexing
 	keywords: "container, fixed, custom"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_FIXED
 
@@ -41,7 +41,6 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
-			an_x_non_negative: an_x >= 0
 		do
 			implementation.set_item_x_position (a_widget, an_x)
 		ensure
@@ -53,7 +52,6 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
-			a_y_non_negative: a_y >= 0
 		do
 			implementation.set_item_y_position (a_widget, a_y)
 		ensure
@@ -66,8 +64,6 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
-			an_x_non_negative: an_x >= 0
-			a_y_non_negative: a_y >= 0
 		do
 			implementation.set_item_position (a_widget, an_x, a_y)
 		ensure
@@ -119,7 +115,7 @@ feature -- Element change
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
-	
+
 	implementation: EV_FIXED_I
 			-- Responsible for interaction with native graphics toolkit.
 

@@ -1,4 +1,4 @@
-deferred 
+deferred
 class ES_OBJECTS_GRID_MANAGER
 
 inherit
@@ -21,14 +21,14 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 				litem.set_related_line (a_line)
 			end
 			litem.attach_to_row (a_row)
-		end		
+		end
 
 	attach_debug_value_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE) is
 		require
 			dv /= Void
 		do
 			attach_debug_value_from_line_to_grid_row (a_row, dv, Void)
-		end		
+		end
 
 	objects_grid_item (add: STRING): ES_OBJECTS_GRID_LINE is
 		require
@@ -36,7 +36,7 @@ feature {ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_C
 		deferred
 		ensure
 			valid_result: Result /= Void implies (
-					Result.object_address /= Void 
+					Result.object_address /= Void
 					and then add.is_equal (Result.object_address)
 				)
 		end
@@ -64,19 +64,36 @@ feature {NONE} -- Layout managment
 		local
 			lab: EV_GRID_LABEL_ITEM
 		do
-			lab ?= a_row.item (Col_name_index)
-			if lab /= Void then
-				Result := lab.text
+			if a_row.parent /= Void then
+				if Col_name_index <= a_row.count then
+					lab ?= a_row.item (Col_name_index)
+					if lab /= Void then
+						Result := lab.text
+					end
+				end
 			end
 		end
-		
+
 	grid_objects_id_value_from_row (a_row: EV_GRID_ROW): ANY is
 		local
 			lab: EV_GRID_LABEL_ITEM
+			s: STRING
 		do
-			lab ?= a_row.item (Col_value_index)
-			if lab /= Void then
-				Result := lab.text
+			if a_row.parent /= Void then
+				if Col_value_index <= a_row.count then
+					s := ""
+					lab ?= a_row.item (Col_value_index)
+					if lab /= Void then
+						s.append_string (lab.text)
+					end
+					if Col_address_index <= a_row.count then
+						lab ?= a_row.item (Col_address_index)
+						if lab /= Void then
+							s.append_string (lab.text)
+						end
+					end
+					Result := s
+				end
 			end
 		end
 
@@ -144,7 +161,7 @@ feature -- Clipboard related
 		local
 			dv: ABSTRACT_DEBUG_VALUE
 			text_data: STRING
-			lrow: EV_GRID_ROW			
+			lrow: EV_GRID_ROW
 			gline: ES_OBJECTS_GRID_LINE
 		do
 			lrow := grid.selected_rows.first
@@ -167,7 +184,7 @@ feature -- Clipboard related
 				ev_application.clipboard.remove_text
 			end
 		end
-		
+
 	set_expression_from_clipboard (grid: ES_OBJECTS_GRID) is
 			-- Sets an expression from text held in clipboard
 		local
@@ -181,7 +198,7 @@ feature -- Clipboard related
 				rows := grid_selected_top_rows (grid)
 				if not rows.is_empty then
 					row := rows.first
-					if 
+					if
 						col_name_index <= row.count
 					then
 						empty_expression_cell ?= row.item (col_name_index)
@@ -192,7 +209,7 @@ feature -- Clipboard related
 				end
 			end
 		end
-		
+
 feature -- numerical related processing
 
 	hexadecimal_mode_enabled: BOOLEAN is
@@ -217,7 +234,7 @@ feature -- Graphical look
 	name_label_item (s: STRING): EV_GRID_LABEL_ITEM is
 		do
 			create Result
-			grid_cell_set_text (Result, s)			
+			grid_cell_set_text (Result, s)
 		end
 
 	folder_row_fg_color: EV_COLOR is
@@ -252,7 +269,7 @@ feature -- Graphical look
 
 feature -- Constants
 
-	Col_pixmap_index: INTEGER is 
+	Col_pixmap_index: INTEGER is
 		deferred
 		end
 	Col_name_index: INTEGER is
@@ -270,9 +287,9 @@ feature -- Constants
 	Col_context_index: INTEGER is
 		deferred
 		end
-		
+
 	Col_titles: ARRAY [STRING] is
 		deferred
 		end
-		
+
 end

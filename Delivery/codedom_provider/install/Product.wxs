@@ -82,7 +82,7 @@
 						</Directory>
 
 						<Directory Id='ProgramMenuFolder' Name='Programs'>
-							<Directory Id='StartMenuDir' Name='EfASP.NET' LongName='Eiffel for ASP.NET' />
+							<Directory Id='StartMenuDir' Name='EfASP.NET' LongName='Eiffel for ASP.NET 5.6' />
 							<Component Id='Shortcuts' Guid='0B0F1B93-6908-4ccb-837A-240E3288645B'>
 								<RemoveFolder Id='StartMenuDir' On='uninstall'/>
 								<Shortcut Id='ManagerShortcut' Directory='StartMenuDir' WorkingDirectory='BinDir' Name='Manager' LongName='Eiffel CodeDom Provider Manager' Target='[INSTALLDIR]Codedom\bin\ecdpman.exe' Description='Eiffel CodeDom Provider Manager' Icon='ecdpman.exe' IconIndex='0' Show='normal' />

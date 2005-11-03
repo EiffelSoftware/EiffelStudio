@@ -423,17 +423,15 @@
 								</Component>
 								<Component Id='Consumer' Guid='804DF7A8-A595-4513-A24C-1ECE24472C0D'>
 									<File Id='EiffelSoftware_MetadataConsumer_dll' Name='Eiffel3.dll' LongName='EiffelSoftware.MetadataConsumer.dll'/>
-									<Registry Id="registry0" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
-									<Registry Id="registry1" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\Implemented Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" />
-									<Registry Id="registry2" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\InprocServer32" Value="mscoree.dll" Type="string" />
-									<Registry Id="registry3" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\InprocServer32" Name="ThreadingModel" Value="Both" Type="string" />
-									<Registry Id="registry4" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\InprocServer32" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
-									<Registry Id="registry5" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\InprocServer32" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.6.1308.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
-									<Registry Id="registry6" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\InprocServer32" Name="RuntimeVersion" Value="v1.1.4322" Type="string" />
-									<Registry Id="registry8" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\InprocServer32\5.6.1308.0" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
-									<Registry Id="registry9" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\InprocServer32\5.6.1308.0" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.6.1308.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
-									<Registry Id="registry10" Root="HKCR" Key="CLSID\{E1FFE1AC-3446-4197-86AB-D08803231204}\InprocServer32\5.6.1308.0" Name="RuntimeVersion" Value="v1.1.4322" Type="string" />
-									<Registry Id="registry13" Root="HKCR" Key="Component Categories\{62C8FE65-4EBB-45e7-B440-6E39B2CDBF29}" Name="0" Value=".NET Category" Type="string" />
+									<Registry Id="registry0" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
+									<Registry Id="registry2" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}\InprocServer32" Value="mscoree.dll" Type="string" />
+									<Registry Id="registry3" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}\InprocServer32" Name="ThreadingModel" Value="Both" Type="string" />
+									<Registry Id="registry4" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}\InprocServer32" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
+									<Registry Id="registry5" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}\InprocServer32" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.6.1308.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
+									<Registry Id="registry6" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}\InprocServer32" Name="RuntimeVersion" Value="v1.1.4322" Type="string" />
+									<Registry Id="registry8" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}\InprocServer32\5.6.1308.0" Name="Class" Value="EiffelSoftware.MetadataConsumer.Interop.Impl.COM_CACHE_MANAGER" Type="string" />
+									<Registry Id="registry9" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}\InprocServer32\5.6.1308.0" Name="Assembly" Value="EiffelSoftware.MetadataConsumer, Version=5.6.1308.0, Culture=neutral, PublicKeyToken=def26f296efef469" Type="string" />
+									<Registry Id="registry10" Root="HKCR" Key="CLSID\{E1FFE185-67CA-4EC0-B000-4D73C1D2977F}\InprocServer32\5.6.1308.0" Name="RuntimeVersion" Value="v1.1.4322" Type="string" />
 								</Component>
 								<Component Id='Ecdpc' Guid='D55FF889-9EBD-4cc4-881D-CFA1F17893AF'>
 									<File Id='ecdpc_exe' Name='ecdpc.exe' />

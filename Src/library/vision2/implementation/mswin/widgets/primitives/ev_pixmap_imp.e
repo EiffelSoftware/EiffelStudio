@@ -55,6 +55,14 @@ feature {NONE} -- Initialization
 			set_is_initialized (True)
 		end
 
+feature -- Basic Operation
+
+	refresh_now is
+			-- Force `Current' to be redrawn immediately.
+		do
+			-- No implementation needed as `Current' is always offscreen
+		end
+
 feature {EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Loading/Saving
 
 	set_with_resource (a_resource: WEL_GRAPHICAL_RESOURCE) is

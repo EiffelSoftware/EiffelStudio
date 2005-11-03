@@ -267,7 +267,9 @@ feature {NONE} -- Implementation
 			internal_config_values.extend ("NONE", "default_root_class")
 			if Default_metadata_cache_path /= Void then
 				internal_config_values.extend (Default_metadata_cache_path, "metadata_cache")
-				internal_config_values.extend (Default_metadata_cache_path.twin, "compiler_metadata_cache")
+			end
+			if Default_compiler_metadata_cache_path /= Void then
+				internal_config_values.extend (Default_compiler_metadata_cache_path, "compiler_metadata_cache")
 			end
 			if Default_precompile_ace_file /= Void then
 				internal_config_values.extend (Default_precompile_ace_file, "precompile_ace_file")

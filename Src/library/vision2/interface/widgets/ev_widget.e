@@ -59,6 +59,16 @@ inherit
 			is_in_default_state
 		end
 
+feature -- Basic operations
+
+	refresh_now is
+			-- Force an immediate redraw of `Current'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.refresh_now
+		end
+
 feature -- Access
 
 	parent: EV_CONTAINER is

@@ -135,7 +135,7 @@
 		<CustomAction Id='UninstallAction' FileKey='InstallerExe' ExeCommand='-u -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>
 	
 		<Icon Id='generic.exe' src='..\files\ecdp.ico'/>
-		<Icon Id='ecdpman.exe' src='..\delivery\codedom\bin\icons\configuration.png'/>
+		<Icon Id='ecdpman.exe' src='..\files\ecdpman.ico'/>
 
 		<UI>
 			<Property Id='DefaultUIFont'>DlgFont8</Property>

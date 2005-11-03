@@ -186,6 +186,12 @@ feature {NONE} -- Initialization
 			adapt_from_simple (simple_pixmap)
 		end
 
+	refresh_now is
+			-- Force `Current' to be redrawn immediately.
+		do
+			-- No implementation needed as `Current' is always offscreen
+		end
+
 	set_with_default is
 			-- Initialize the pixmap with the default
 			-- pixmap (Vision2 logo)

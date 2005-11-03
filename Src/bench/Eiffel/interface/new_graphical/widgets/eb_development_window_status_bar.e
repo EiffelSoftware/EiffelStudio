@@ -193,15 +193,15 @@ feature -- Status setting
 	reset is
 			-- Reset status bar.
 		do
-			label.set_text ("")
-			progress_bar.set_value (0)
+			display_message ("")
+			display_progress_value (0)
 		end
 
 	display_message (mess: STRING) is
 			-- Display `mess'.
 		do
 			label.set_text (mess)
-			process_events_and_idle
+			label.refresh_now
 		end
 
 	reset_progress_bar_with_range (a_range: INTEGER_INTERVAL) is
@@ -216,7 +216,6 @@ feature -- Status setting
 			-- Display `a_value' in `progress_bar'.
 		do
 			progress_bar.set_value (a_value)
-			process_events_and_idle
 		end
 
 	remove_cursor_position is

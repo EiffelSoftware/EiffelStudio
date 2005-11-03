@@ -370,6 +370,13 @@
 					</Directory>
 				</Directory>
 				<Directory Id='library.net' Name='LIBRAR1' LongName='library.net'>
+					<Directory Id='netcodedom' Name='codedom'>
+						<Directory Id='netcsupport' Name='support'>
+							<Component Id='manifest_array_converter.e' Guid='CE7F6C4C-4F98-4ee5-8C2C-6EAA21136D52'>
+								<File Id='manifest_array_converter_e' Name='MANIF.E' LongName='manifest_array_converter.e'/>
+							</Component>
+						</Directory>
+					</Directory>
 					<Directory Id='netbase' Name='base'>
 						<Directory Id='netserialization' Name='SERIAL1' LongName='serialization'>
 							<Directory Id='nettraversing' Name='TRAVER1' LongName='traversing'>

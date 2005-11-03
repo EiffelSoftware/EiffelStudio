@@ -15,7 +15,7 @@
 		<prefix value="WEB_" assembly="system.web.services.dll"/>
 		<prefix value="WINFORMS_" assembly="system.windows.forms.dll"/>
 		<prefix value="WEB_" assembly="system.web.dll"/>
-		<prefix value="WEB_" assembly="system.web.mobile.dll"/>
+		<prefix value="MOBILE_" assembly="system.web.mobile.dll"/>
 		<prefix value="SYSTEM_DLL_" assembly="system.dll"/>
 		<prefix value="DATA_" assembly="system.data.dll"/>
 		<prefix value="VB_" assembly="Microsoft.VisualBasic.dll"/>

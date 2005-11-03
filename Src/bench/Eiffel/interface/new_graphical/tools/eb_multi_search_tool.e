@@ -1725,6 +1725,7 @@ feature {NONE} -- Implementation
 				a_row.parent_row.expand
 				adjust_grid_column_width
 			end
+			a_row.ensure_visible
 			l_item ?= a_row.data
 			if l_item /= Void then
 				multi_search_performer.start

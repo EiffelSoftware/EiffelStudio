@@ -221,7 +221,6 @@ feature {NONE} -- Implementation
 			-- 
 		local
 			nb_of_items: INTEGER
-			l_progress_bar: EB_PERCENT_PROGRESS_BAR
 		do
 			if context_editor /= Void then
 				nb_of_items := number_of_superclusters (center_cluster.cluster_i, supercluster_depth) + 

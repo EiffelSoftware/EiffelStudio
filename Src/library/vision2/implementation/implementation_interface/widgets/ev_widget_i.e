@@ -44,6 +44,13 @@ inherit
 			on_help_context_changed
 		end
 
+feature -- Basic operations
+
+	refresh_now is
+			-- Force an immediate redraw of `Current'.
+		deferred
+		end
+
 feature -- Access
 
 	parent: EV_CONTAINER is

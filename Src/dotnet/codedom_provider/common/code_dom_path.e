@@ -54,7 +54,19 @@ feature -- Access
 			if Codedom_installation_path /= Void then
 				create Result.make_from_string (Codedom_installation_path)
 				Result.append_character (Directory_separator)
-				Result.append ("assemblies")
+				Result.append ("Assemblies")
+			end
+		ensure
+			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator
+		end
+
+	Default_compiler_metadata_cache_path: STRING is
+			-- Default path to Compiler metadata cache
+		once
+			if Codedom_installation_path /= Void then
+				create Result.make_from_string (Codedom_installation_path)
+				Result.append_character (Directory_separator)
+				Result.append ("CompilerAssemblies")
 			end
 		ensure
 			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= Directory_separator

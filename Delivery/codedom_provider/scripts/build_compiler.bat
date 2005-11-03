@@ -111,6 +111,7 @@ XCOPY /S ..\..\..\checkout\library\base base\
 CD ..\library.net
 REM in "delivery\compiler\library.net"
 XCOPY /S ..\..\..\checkout\library.net\base base\
+XCOPY /S ..\..\..\checkout\library.net\codedom codedom\
 
 CD ..\..\..
 REM in "\"

@@ -40,7 +40,7 @@ feature -- Access
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
 		do
-			Result := "EG_CLUSTER_FIGURE"
+			Result := once "EG_CLUSTER_FIGURE"
 		end
 		
 	subclusters: ARRAYED_LIST [EG_CLUSTER_FIGURE] is
@@ -71,7 +71,7 @@ feature -- Access
 			fig, elements: XM_ELEMENT
 		do
 			Result := Precursor {EG_LINKABLE_FIGURE} (node)
-			create elements.make (node, "ELEMENTS", xml_namespace)
+			create elements.make (node, once "ELEMENTS", xml_namespace)
 			from
 				start
 			until

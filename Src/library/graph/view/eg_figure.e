@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			if model.name /= Void then
 				set_name_label_text (model.name)
 			else
-				name_label.set_text ("")
+				name_label.set_text (once "")
 				name_label.hide
 			end
 			model.name_change_actions.extend (agent on_name_change)
@@ -59,27 +59,32 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		do
 			if model.name /= Void then
-				node.add_attribute ("NAME", xml_namespace, model.name)
+				node.add_attribute (name_string, xml_namespace, model.name)
 			end
-			node.put_last (Xml_routines.xml_node (node, "IS_SELECTED", is_selected.out))
-			node.put_last (Xml_routines.xml_node (node, "IS_LABEL_SHOWN", is_label_shown.out))
+			node.put_last (Xml_routines.xml_node (node, is_selected_string, is_selected.out))
+			node.put_last (Xml_routines.xml_node (node, is_label_shown_string, is_label_shown.out))
 			Result := node
 		end
+
+	is_selected_string: STRING is "IS_SELECTED"
+	is_label_shown_string: STRING is "IS_LABEL_SHOWN"
+	name_string: STRING is "NAME"
+		-- XML String constants.
 		
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		local
 			l_name: STRING
 		do
-			if node.has_attribute_by_name ("NAME") then
-				l_name := node.attribute_by_name ("NAME").value
+			if node.has_attribute_by_name (name_string) then
+				l_name := node.attribute_by_name (name_string).value
 				if model.name = Void or else not model.name.is_equal (l_name) then
 					model.set_name (l_name)
 				end
 				node.forth
 			end
-			set_is_selected (xml_routines.xml_boolean (node, "IS_SELECTED"))
-			if xml_routines.xml_boolean (node, "IS_LABEL_SHOWN") then
+			set_is_selected (xml_routines.xml_boolean (node, is_selected_string))
+			if xml_routines.xml_boolean (node, is_label_shown_string) then
 				if not is_label_shown then
 					show_label
 				end
@@ -93,7 +98,7 @@ feature -- Access
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
-			Result := "EG_FIGURE"
+			Result := once "EG_FIGURE"
 		end
 
 feature -- Status report

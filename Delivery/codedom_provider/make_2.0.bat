@@ -1,1 +1,0 @@
-CALL make.bat HEAD Eiffel_56_new_consumer D:\Dev\Eiffel56 "%CD%\generated"

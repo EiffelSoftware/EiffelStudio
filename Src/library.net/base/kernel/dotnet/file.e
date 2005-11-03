@@ -1396,10 +1396,13 @@ feature -- Input
 			i, c: INTEGER
 			str_cap: INTEGER
 			done: BOOLEAN
-			chr: CHARACTER
 		do
 			from
-				create_last_string (1024)
+				if last_string = Void then
+					create_last_string (1024)
+				else	
+					last_string.clear_all
+				end
 				done := False
 				i := 0
 				str_cap := last_string.capacity
@@ -1407,8 +1410,8 @@ feature -- Input
 				done
 			loop
 				c := internal_stream.read_byte
-				if c = -1 then
-					internal_end_of_file := True
+				if c = -1 or c = 10 then
+					internal_end_of_file := (c = -1)
 					done := True
 				else
 					i := i + 1
@@ -1420,13 +1423,8 @@ feature -- Input
 							last_string.automatic_grow
 							str_cap := last_string.capacity
 						end
-					end
-					chr := c.to_character
-					if chr ='%N' then
-						done := True					
-					else
-						last_string.append_character (chr)
-					end
+					end						
+					last_string.append_character (c.to_character)				
 				end
 			end
 		end
@@ -1802,19 +1800,30 @@ feature {NONE} -- Implementation
 			buf_not_void: buf /= Void
 			offset_not_nagetive: offset >= 0
 			nb_positive: nb > 0
+			buf_count_large_enought: offset + nb <= buf.count
 			str_not_void: str /= Void
 			str_large_enough: str.capacity >= nb
 		local
 			i: INTEGER
 			j: INTEGER
+			l: INTEGER
+			should_append: BOOLEAN
 		do
 			from
 				j := offset
 				i := 1
+				l := str.count
 			until
 				i > nb
 			loop
-				str.put (buf.item (j).to_character, i)
+				if (not should_append) and then (i>l) then
+					should_append := True
+				end
+				if should_append then
+					str.append_character (buf.item (j).to_character)
+				else
+					str.put (buf.item (j).to_character, i)
+				end				
 				i := i + 1
 				j := j + 1
 			end

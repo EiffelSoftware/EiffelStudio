@@ -115,14 +115,14 @@ feature -- Output
 	put_real, putreal (r: REAL) is
 			-- Write binary value of `r' at current position.
 		do
-			internal_managed_pointer.put_real (r, 0)
+			internal_managed_pointer.put_real_32 (r, 0)
 			put_managed_pointer (internal_managed_pointer, 0, platform_indicator.real_bytes)
 		end
 
 	put_double, putdouble (d: DOUBLE) is
 			-- Write binary value `d' at current position.
 		do
-			internal_managed_pointer.put_double (d, 0)
+			internal_managed_pointer.put_real_64 (d, 0)
 			put_managed_pointer (internal_managed_pointer, 0, platform_indicator.double_bytes)
 
 		end
@@ -275,7 +275,7 @@ feature -- Input
 			-- from file. Make result available in `last_real'.
 		do
 			read_to_managed_pointer (internal_managed_pointer, 0, platform_indicator.real_bytes)
-			last_real := internal_managed_pointer.read_real (0)			
+			last_real := internal_managed_pointer.read_real_32 (0)			
 		end
 
 	read_double, readdouble is
@@ -283,7 +283,7 @@ feature -- Input
 			-- from file. Make result available in `last_double'.
 		do
 			read_to_managed_pointer (internal_managed_pointer, 0, platform_indicator.double_bytes)
-			last_double := internal_managed_pointer.read_double (0)			
+			last_double := internal_managed_pointer.read_real_64 (0)		
 		end
 
 	read_character, readchar is

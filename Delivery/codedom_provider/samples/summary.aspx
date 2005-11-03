@@ -25,7 +25,7 @@
 				l_retried: BOOLEAN
 			do
 				if not l_retried then
-					l_key := feature {REGISTRY}.local_machine.open_sub_key ("Software\ISE\Eiffel CodeDom Provider\Setup", False)
+					l_key := feature {REGISTRY}.local_machine.open_sub_key ("Software\ISE\Eiffel CodeDom Provider\5.6\Setup", False)
 					if l_key /= Void then
 						l_path ?= l_key.get_value ("InstallDir")
 						if l_path /= Void then
@@ -33,10 +33,10 @@
 							samples_path := l_path + "Samples"
 							samples_path_found := True
 						else
-							error_message := "No 'InstallDir' key in 'HKEY_LOCAL_MACHINE\Software\ISE\Eiffel CodeDom Provider\Setup'"
+							error_message := "No 'InstallDir' key in 'HKEY_LOCAL_MACHINE\Software\ISE\Eiffel CodeDom Provider\5.6\Setup'"
 						end
 					else
-						error_message := "Could not open key HKEY_LOCAL_MACHINE\Software\ISE\Eiffel CodeDom Provider\Setup'"
+						error_message := "Could not open key 'HKEY_LOCAL_MACHINE\Software\ISE\Eiffel CodeDom Provider\5.6\Setup'"
 					end
 				end
 			rescue

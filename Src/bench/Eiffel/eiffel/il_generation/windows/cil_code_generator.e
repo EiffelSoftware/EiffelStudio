@@ -1995,19 +1995,21 @@ feature -- Features info
 			l_current_class_type := byte_context.class_type
 			byte_context.set_class_type (l_class_type)
 
+			l_is_attribute := l_feat.is_attribute
+			l_is_c_external := l_feat.is_c_external
+
 			if l_feat.is_il_external then
 				l_ext ?= l_feat.extension
 				check
 					has_extension: l_ext /= Void
 				end
 				l_is_static := not l_ext.need_current (l_ext.type)
-			else
-				if not l_class_type.is_generated_as_single_type then
-					l_is_static := is_static
-				end
+			elseif l_class_type.is_expanded and then l_is_attribute then
+				l_is_static := True
+			elseif not l_is_single_class then
+				l_is_static := is_static
 			end
-			l_is_attribute := l_feat.is_attribute
-			l_is_c_external := l_feat.is_c_external
+
 			l_parameter_count := l_feat.argument_count
 
 			create l_signature.make (0, l_parameter_count)
@@ -2322,7 +2324,10 @@ feature -- Features info
 					l_name_ca.put_integer_16 (0)
 					define_custom_attribute (l_meth_token,
 						current_module.ise_type_feature_attr_ctor_token, l_name_ca)
-				elseif l_type_a.associated_class.lace_class = system.any_class then
+				elseif
+					l_type_a.has_associated_class and then
+					l_type_a.associated_class.lace_class = system.any_class
+				then
 						-- Type is ANY, so because we actually generate a field of type SYSTEM_OBJECT
 						-- we generate a special custom attribute that says it is actually ANY, and not
 						-- a field of type SYSTEM_OBJECT

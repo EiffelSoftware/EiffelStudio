@@ -23,8 +23,6 @@
 					</Directory>
 					<Component Id='Ecdpman' Guid='EB610709-975B-4ac8-8F23-4FAD4416F306'>
 						<File Id='ecdpman_exe' Name='ecdpman.exe'/>
-						<Registry Id='Registry4' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' />
-						<Registry Id='Registry6' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' Type='string' Value='[INSTALLDIR]CodeDom\configs\default.ecd' />
 					</Component>
 					<Component Id='EiffelSoftware_CodeDom_Base_gac' Guid='4B71B57C-C09B-4e9b-914B-084460E727B3'>
 						<File Id='EiffelSoftware_CodeDom_Base_dll_gac' Name='Basegac.dll' LongName='EiffelSoftware.CodeDom.Base.dll' Assembly='.net' KeyPath='yes'/>
@@ -43,7 +41,6 @@
 					</Component>
 					<Component Id='EiffelSoftware_CodeDom' Guid='C93D25B9-9E68-4372-A6B1-1AF61DB8F25A'>
 						<File Id='EiffelSoftware_CodeDom_dll' Name='Codedom.dll' LongName='EiffelSoftware.CodeDom.dll' />
-						<Registry Id='Registry5' Root='HKLM' Key='SOFTWARE\ISE\Eiffel CodeDom Provider\5.6\Setup' Name='InstallDir' Type='string' Value='[INSTALLDIR]' />
 					</Component>
 					<Component Id='EiffelSoftware_CodeDom_Splitter' Guid='F2435D8F-9504-4a57-B80B-E65FD56A14FC'>
 						<File Id='EiffelSoftware_CodeDom_Splitter_dll' Name='Splitter.dll' LongName='EiffelSoftware.CodeDom.Splitter.dll'/>
@@ -75,14 +72,6 @@
 						<File Id='Default_ecd' Name='Default.ecd'/>
 					</Component>
 				</Directory>
-			</Directory>
-			<Directory Id='SystemFolder' Name='System32'>
-				<Component Id='libEiffelSoftware.CodeDom.Base.dll' Guid='F2626166-66BE-4bb7-9D38-72FC73D2D32A'>
-					<File Id='libeiffelsoftware.codedom.ba' Name='LIBEIF1.DLL' LongName='libEiffelSoftware.CodeDom.Base.dll' src='..\delivery\codedom\bin\libEiffelSoftware.CodeDom.Base.dll' />
-				</Component>
-				<Component Id='libEiffelSoftware.CodeDom.Vision2.dll' Guid='C8B9C12D-22E2-40ac-B582-5AB9B4BA06FB'>
-					<File Id='libeiffelsoftware.codedom.vi' Name='LIBEIF2.DLL' LongName='libEiffelSoftware.CodeDom.Vision2.dll' src='..\delivery\codedom\bin\libEiffelSoftware.CodeDom.Vision2.dll' />
-				</Component>
 			</Directory>
 		</Directory>
 	</Module>

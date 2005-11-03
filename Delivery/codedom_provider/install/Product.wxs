@@ -16,6 +16,14 @@
 		<Property Id='FRAMEWORKPATH'>empty<RegistrySearch Id='AppReg1' Root='HKLM' Key='SOFTWARE\Microsoft\.NETFramework' Name='InstallRoot' Type='raw' /></Property>
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
+			<Directory Id='SystemFolder' Name='System32'>
+				<Component Id='libEiffelSoftware.CodeDom.Base.dll' Guid='F2626166-66BE-4bb7-9D38-72FC73D2D32A'>
+					<File Id='libeiffelsoftware.codedom.ba' Name='LIBEIF1.DLL' LongName='libEiffelSoftware.CodeDom.Base.dll' src='..\delivery\codedom\bin\libEiffelSoftware.CodeDom.Base.dll' DiskId='1'/>
+				</Component>
+				<Component Id='libEiffelSoftware.CodeDom.Vision2.dll' Guid='C8B9C12D-22E2-40ac-B582-5AB9B4BA06FB'>
+					<File Id='libeiffelsoftware.codedom.vi' Name='LIBEIF2.DLL' LongName='libEiffelSoftware.CodeDom.Vision2.dll' src='..\delivery\codedom\bin\libEiffelSoftware.CodeDom.Vision2.dll' DiskId='1'/>
+				</Component>
+			</Directory>
 			<Directory Id='ProgramFilesFolder' Name='PFiles'>
 				<Directory Id='ES' Name='ES' LongName='Eiffel Software'>
 					<Directory Id='INSTALLDIR' Name='EfA' LongName='Eiffel for ASP.NET 5.6'>
@@ -26,6 +34,12 @@
   						
   						<Component Id='DisplayIcon' Guid='787B635D-E9E5-4a94-85C8-BBB7129FDED1'>
 							<Registry Id='Registry' Root='HKLM' Key='Software\Microsoft\Windows\CurrentVersion\Uninstall\[ProductCode]' Name='DisplayIcon' Type='string' Value='[INSTALLDIR]compiler\spec\windows\bin\ecdpc.exe,0' />
+						</Component>
+
+						<Component Id='RegistryKeys' Guid='3378F750-61A6-4d27-8498-8A7F5A9653B9'>
+							<Registry Id='Registry4' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' />
+							<Registry Id='Registry5' Root='HKLM' Key='SOFTWARE\ISE\Eiffel CodeDom Provider\5.6\Setup' Name='InstallDir' Type='string' Value='[INSTALLDIR]' />
+							<Registry Id='Registry6' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' Type='string' Value='[INSTALLDIR]Codedom\configs\default.ecd' />
 						</Component>
 
 						<Directory Id='AssembliesDir' Name='Asm' LongName='Assemblies' >
@@ -92,6 +106,9 @@
 				<ComponentRef Id='DisplayIcon' />
 				<ComponentRef Id='PrecompileDir' />
 				<ComponentRef Id='Shortcuts' />
+				<ComponentRef Id='RegistryKeys' />
+				<ComponentRef Id='libEiffelSoftware.CodeDom.Base.dll' />
+				<ComponentRef Id='libEiffelSoftware.CodeDom.Vision2.dll' />
 			</Feature>
 	
 			<Feature Id='CodedomFeat' Title='Codedom' TypicalDefault='install' Level='3' Display='hidden'>

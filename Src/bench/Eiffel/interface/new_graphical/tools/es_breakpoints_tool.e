@@ -35,8 +35,8 @@ inherit
 	SHARED_WORKBENCH
 		export
 			{NONE} all
-		end		
-		
+		end
+
 create
 	make
 
@@ -48,20 +48,20 @@ feature {NONE} -- Initialization
 			box: EV_VERTICAL_BOX
 		do
 			row_highlight_bg_color := Preferences.debug_tool_data.row_highlight_background_color
-			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (agent set_row_highlight_bg_color) 
+			Preferences.debug_tool_data.row_highlight_background_color_preference.change_actions.extend (agent set_row_highlight_bg_color)
 
 			create box
 			box.set_padding (3)
-			
+
 			create grid
 			grid.enable_tree
 			grid.enable_single_row_selection
 			grid.enable_border
-			
+
 			grid.set_column_count_to (3)
 			grid.column (1).set_title ("Data")
 			grid.column (2).set_title ("Details")
-			grid.column (3).set_title ("condition")
+			grid.column (3).set_title ("Condition")
 
 			grid.pointer_double_press_actions.force_extend (agent on_row_double_clicked)
 			grid.set_auto_resizing_column (1, True)
@@ -71,14 +71,16 @@ feature {NONE} -- Initialization
 			grid.row_collapse_actions.force_extend (agent grid.request_columns_auto_resizing)
 
 			grid.set_item_pebble_function (agent on_item_pebble_function)
-			
+			grid.set_item_accept_cursor_function (agent on_item_pebble_accept_cursor)
+			grid.set_item_deny_cursor_function (agent on_item_pebble_deny_cursor)
+
 			box.extend (grid)
-			
+
 			grid.build_delayed_cleaning
 			grid.set_delayed_cleaning_action (agent clean_breakpoints_info)
 			widget := box
 		end
-		
+
 	build_mini_toolbar is
 			-- Build the associated tool bar
 		local
@@ -86,16 +88,16 @@ feature {NONE} -- Initialization
 			tb: EV_TOOL_BAR_BUTTON
 		do
 			create mini_toolbar
-			
+
 			create scmd.make
 			scmd.set_mini_pixmaps (pixmaps.small_pixmaps.icon_on_off)
 			scmd.set_tooltip ("Display breakpoints separated by status")
 			scmd.enable_sensitive
 			tb := scmd.new_mini_toolbar_item
-			scmd.add_agent (agent toggle_breakpoint_layout_mode (tb))			
+			scmd.add_agent (agent toggle_breakpoint_layout_mode (tb))
 			mini_toolbar.extend (tb)
 			toggle_layout_cmd := scmd
-			
+
 		ensure
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
@@ -130,7 +132,7 @@ feature -- Access
 	widget: EV_WIDGET
 			-- Widget representing Current.
 
-	title: STRING is 
+	title: STRING is
 			-- Title of the tool.
 		do
 			Result := Interface_names.t_Breakpoints_tool
@@ -160,7 +162,27 @@ feature -- Events
 				Result ?= gi.data
 			end
 		end
-		
+
+	on_item_pebble_accept_cursor (gi: EV_GRID_ITEM): EV_CURSOR is
+		local
+			st: STONE
+		do
+			st := on_item_pebble_function (gi)
+			if st /= Void then
+				Result := st.stone_cursor
+			end
+		end
+
+	on_item_pebble_deny_cursor (gi: EV_GRID_ITEM): EV_CURSOR is
+		local
+			st: STONE
+		do
+			st := on_item_pebble_function (gi)
+			if st /= Void then
+				Result := st.x_stone_cursor
+			end
+		end
+
 	on_row_double_clicked is
 		local
 			row: EV_GRID_ROW
@@ -175,20 +197,20 @@ feature -- Events
 		do
 			update
 		end
-		
+
 	synchronize	is
 		do
 			update
 		end
-		
+
 	on_project_loaded is
 		do
 			update
 		end
-		
+
 	on_shown is
 		do
-			update			
+			update
 		end
 
 	update is
@@ -227,7 +249,7 @@ feature -- Memory management
 feature {NONE} -- Grid layout Implementation
 
 	grid_layout_manager: ES_GRID_LAYOUT_MANAGER
-	
+
 	record_grid_layout is
 		do
 			if grid_layout_manager = Void then
@@ -235,7 +257,7 @@ feature {NONE} -- Grid layout Implementation
 			end
 			grid_layout_manager.record
 		end
-		
+
 	restore_grid_layout is
 		do
 			if grid_layout_manager /= Void then
@@ -251,7 +273,7 @@ feature {NONE} -- Implementation
 			breakpoints_separated_by_status := not breakpoints_separated_by_status
 			if breakpoints_separated_by_status then
 				tt.set_tooltip ("Display breakpoints separated by status")
-			else				
+			else
 				tt.set_tooltip ("All breakpoints together")
 			end
 			refresh_breakpoints_info
@@ -273,16 +295,16 @@ feature {NONE} -- Implementation
 		local
 			row: EV_GRID_ROW
 			lab: EV_GRID_LABEL_ITEM
-			f_list: LIST[E_FEATURE]	
+			f_list: LIST[E_FEATURE]
 			col: EV_COLOR
 		do
 			if shown then
 				class_color := preferences.editor_data.class_text_color
 				feature_color := preferences.editor_data.feature_text_color
 				condition_color := preferences.editor_data.string_text_color
-				
+
 				col := preferences.editor_data.comments_text_color
-				
+
 				grid.call_delayed_clean
 				if not application.has_breakpoints then
 					grid.insert_new_row (1)
@@ -304,20 +326,20 @@ feature {NONE} -- Implementation
 							row.set_item (1, lab)
 							row.set_item (2, create {EV_GRID_ITEM})
 							row.set_item (3, create {EV_GRID_ITEM})
-							
+
 							f_list := application.features_with_breakpoint_set
 							insert_bp_features_list (f_list, row, True, False)
 							row.expand
 						end
 						if application.has_disabled_breakpoints then
 							row := grid.extended_new_row
-							row.set_background_color (bg_separator_color)							
+							row.set_background_color (bg_separator_color)
 							create lab.make_with_text ("Disabled")
 							lab.set_foreground_color (col)
 							row.set_item (1, lab)
 							row.set_item (2, create {EV_GRID_ITEM})
 							row.set_item (3, create {EV_GRID_ITEM})
-													
+
 							f_list := application.features_with_breakpoint_set
 							insert_bp_features_list (f_list, row, False, True)
 							row.expand
@@ -325,7 +347,7 @@ feature {NONE} -- Implementation
 					end
 				end
 				grid.request_columns_auto_resizing
-				restore_grid_layout				
+				restore_grid_layout
 			end
 		end
 
@@ -346,9 +368,10 @@ feature {NONE} -- Impl bp
 			c: CLASS_C
 			bp_list: LIST [INTEGER]
 			has_bp: BOOLEAN
-			cs: CLASSI_STONE
+--			cs: CLASSI_STONE
+			cs: CLASSC_STONE
 		do
-				--| Prepare data .. mainly sorting 
+				--| Prepare data .. mainly sorting
 			from
 				create table.make (5)
 				routine_list.start
@@ -365,7 +388,7 @@ feature {NONE} -- Impl bp
 				stwl.extend (f)
 				routine_list.forth
 			end
-			
+
 				--| Process insertion
 			from
 				table.start
@@ -393,18 +416,18 @@ feature {NONE} -- Impl bp
 					has_bp := not bp_list.is_empty
 					stwl.forth
 				end
-				
+
 				if has_bp then
 					create lab.make_with_text (c.name_in_upper) --c.lace_class
 					lab.set_foreground_color (class_color)
-					create cs.make (c.lace_class)
+					create cs.make (c)
 					lab.set_data (cs)
-					
+
 					if a_row = Void then
 						r := grid.row_count + 1
 						grid.insert_new_row (r)
 						subrow := grid.row (r)
-					else						
+					else
 						a_row.insert_subrow (r)
 						subrow := a_row.subrow (r)
 						r := r + 1
@@ -414,7 +437,7 @@ feature {NONE} -- Impl bp
 					subrow.set_item (1, lab)
 					subrow.set_item (2, create {EV_GRID_ITEM})
 					subrow.set_item (3, create {EV_GRID_ITEM})
-					
+
 					from
 						stwl.start
 					until
@@ -459,7 +482,7 @@ feature {NONE} -- Impl bp
 				sr := a_row.subrow_count + 1
 				a_row.insert_subrow (sr)
 				subrow := a_row.subrow (sr)
-				
+
 				create lab.make_with_text (f.name) -- f
 				lab.set_foreground_color (feature_color)
 				create fs.make (f)
@@ -479,7 +502,7 @@ feature {NONE} -- Impl bp
 					bp_list.after
 				loop
 					i := bp_list.item
-					
+
 					if application.is_breakpoint_set (f, i) then
 						bp := application.debug_info.breakpoint (f, i)
 						if not first_bp then
@@ -510,7 +533,7 @@ feature {NONE} -- Impl bp
 						end
 						lab.pointer_button_press_actions.force_extend (agent on_line_cell_right_clicked (f, i, lab, ?, ?, ?))
 						subrow.subrow (ir).set_item (2, lab)
-						
+
 						s.append_string (i.out)
 						if bp.has_condition then
 							s.append_string ("*")
@@ -534,11 +557,11 @@ feature {NONE} -- Impl bp
 				end
 				create lab.make_with_text (s)
 				subrow.set_item (2, lab)
-				subrow.set_item (3, create {EV_GRID_ITEM})				
+				subrow.set_item (3, create {EV_GRID_ITEM})
 				subrow.ensure_expandable
 			end
 		end
-		
+
 	on_line_cell_right_clicked (f: E_FEATURE; i: INTEGER; gi: EV_GRID_ITEM; x, y, button: INTEGER) is
 		require
 			f /= Void
@@ -561,7 +584,7 @@ feature {NONE} -- Implementation, cosmetic
 		once
 			create Result
 		end
-		
+
 	bg_separator_color: EV_COLOR is
 		once
 			create Result.make_with_8_bit_rgb (220, 220, 240)

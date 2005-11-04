@@ -246,10 +246,10 @@ feature {NONE} -- Implementation: State
 	is_in_creation_expression: BOOLEAN
 			-- Are we type checking a creation expression?
 			-- Usefull, for not checking VAPE error in precondition
-			-- using creation expression, since type checking 
+			-- using creation expression, since type checking
 			-- on CREATION_EXPR_AS will report a not sufficiently
 			-- exported creation routine.
-			
+
 	is_target_of_creation_instruction: BOOLEAN
 			-- Are we type checking the call to the creation routine?
 
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation: State
 
 	is_assigner_call: BOOLEAN
 			-- Is an assigner call being processed?
-			
+
 	is_checking_cas: BOOLEAN
 			-- Is a custom attribute being processed?
 
@@ -843,7 +843,7 @@ feature -- Implementation
 					-- constrained to a class which is also generic
 					-- Result id a FORMAL_A object with no more information
 					-- than the position of the formal in the generic parameter
-					-- list of the class in which the feature "l_feature_name" is 
+					-- list of the class in which the feature "l_feature_name" is
 					-- declared.
 					-- Example:
 					--
@@ -890,7 +890,7 @@ feature -- Implementation
 				l_result_type := l_result_type.instantiation_in (l_last_type, l_last_id).actual_type
 					-- Export validity
 				if
-					not context.is_ignoring_export and is_qualified and 
+					not context.is_ignoring_export and is_qualified and
 					not l_feature.is_exported_for (context.current_class)
 				then
 					create l_vuex
@@ -1307,7 +1307,7 @@ feature -- Implementation
 				l_feat_type ?= current_feature.type
 				l_has_error := l_feat_type.actual_type.conform_to (Void_type)
 			end
-					
+
 			if l_has_error then
 				create l_vrle3
 				context.init_error (l_vrle3)
@@ -1402,7 +1402,7 @@ feature -- Implementation
 						l_local.set_position (l_local_info.position)
 						last_byte_node := l_local
 					end
-		
+
 					if is_checking_postcondition or else is_checking_precondition then
 							-- Local in post- or precondition
 							--|Note: this should not happen since
@@ -1515,7 +1515,7 @@ feature -- Implementation
 				error_handler.raise_error
 			end
 
-				-- Create table of routine ids of all parents which have 
+				-- Create table of routine ids of all parents which have
 				-- an effective precursor of the current feature.
 			l_pre_table := precursor_table (l_as)
 
@@ -1716,7 +1716,7 @@ feature -- Implementation
 					is_in_rescue := False
 				end
 			end
-			
+
 			if l_as.locals /= Void then
 				check_unused_locals (context.locals)
 			end
@@ -1941,7 +1941,7 @@ feature -- Implementation
 				context.init_error (l_vkcn3)
 				l_vkcn3.set_location (l_as.call.end_location)
 				error_handler.insert_error (l_vkcn3)
-				error_handler.raise_error	
+				error_handler.raise_error
 			end
 
 			-- Nothing to be done for `last_byte_node' as it was computed in previous call
@@ -2056,7 +2056,7 @@ feature -- Implementation
 						l_local.set_position (l_local_info.position)
 						create {HECTOR_B} last_byte_node.make_with_type (l_local, last_type.type_i)
 					end
-		
+
 					if is_checking_postcondition or else is_checking_precondition then
 							-- Local in post- or precondition
 							--|Note: this should not happen since
@@ -2899,7 +2899,7 @@ feature -- Implementation
 		do
 				-- Init type stack
 			reset_for_unqualified_call_checking
-   
+
 				-- Type check the target
 			set_is_in_assignment (True)
 			last_access_writable := False
@@ -3090,7 +3090,7 @@ feature -- Implementation
 		do
 				-- Init type stack
 			reset_for_unqualified_call_checking
-   
+
 				-- Type check the target
 			set_is_in_assignment (True)
 			last_access_writable := False
@@ -3162,7 +3162,7 @@ feature -- Implementation
 						end
 					end
 				elseif l_source_type.is_formal then
-						-- Special case `ref ?= formal' where we force 
+						-- Special case `ref ?= formal' where we force
 						-- a conversion of the formal to its associated reference
 						-- type when `formal' will be instantiated as an expanded
 						-- type. Then after the conversion we perform the normal
@@ -3192,7 +3192,7 @@ feature -- Implementation
 				else
 					l_create_info := l_target_type.create_info
 				end
-				
+
 				l_reverse.set_info (l_create_info)
 				last_byte_node := l_reverse
 			end
@@ -3267,7 +3267,7 @@ feature -- Implementation
 					context.init_error (l_vgcc1)
 					l_vgcc1.set_target_name (a_name)
 					l_vgcc1.set_location (a_location)
-					error_handler.insert_error (l_vgcc1);					
+					error_handler.insert_error (l_vgcc1);
 				end
 			end
 
@@ -3386,7 +3386,7 @@ feature -- Implementation
 					context.init_error (l_vgcc1)
 					l_vgcc1.set_target_name (a_name)
 					l_vgcc1.set_location (a_location)
-					error_handler.insert_error (l_vgcc1);				
+					error_handler.insert_error (l_vgcc1);
 				end
 			end
 			error_handler.checksum
@@ -3402,7 +3402,7 @@ feature -- Implementation
 			l_creation_expr: CREATION_EXPR_B
 			l_assign: ASSIGN_B
 			l_attribute: ATTRIBUTE_B
-			l_target_type, l_explicit_type, l_creation_type: TYPE_A 
+			l_target_type, l_explicit_type, l_creation_type: TYPE_A
 			l_create_info: CREATE_INFO
 			l_vgcc3: VGCC3
 			l_vgcc31: VGCC31
@@ -3444,7 +3444,7 @@ feature -- Implementation
 						not l_explicit_type.same_as (l_target_type))))
 				then
 						-- Cannot create instance of NONE.
-						-- Cannot create an expanded type which is different from 
+						-- Cannot create an expanded type which is different from
 						-- the declared type of `l_as.target'.
 					create l_vgcc3
 					context.init_error (l_vgcc3)
@@ -3504,7 +3504,7 @@ feature -- Implementation
 					l_creation_expr.set_info (l_create_info)
 					l_creation_expr.set_type (l_creation_type.type_i)
 					l_creation_expr.set_line_number (l_as.target.start_location.line)
-					
+
 					create l_assign
 					l_assign.set_target (l_access)
 					l_assign.set_source (l_creation_expr)
@@ -3520,7 +3520,7 @@ feature -- Implementation
 		local
 			l_call_access: CALL_ACCESS_B
 			l_creation_expr: CREATION_EXPR_B
-			l_creation_type: TYPE_A 
+			l_creation_type: TYPE_A
 			l_create_info: CREATE_INFO
 			l_vgcc3: VGCC3
 			l_needs_byte_node: BOOLEAN
@@ -3557,7 +3557,7 @@ feature -- Implementation
 					l_creation_expr.set_info (l_create_info)
 					l_creation_expr.set_type (l_creation_type.type_i)
 					l_creation_expr.set_line_number (l_as.type.start_location.line)
-					
+
 					last_byte_node := l_creation_expr
 				end
 				last_type := l_creation_type
@@ -3568,7 +3568,7 @@ feature -- Implementation
 		local
 			l_debug: DEBUG_B
 			l_list: BYTE_LIST [BYTE_NODE]
-			l_node_keys: ARRAYED_LIST [STRING]			
+			l_node_keys: ARRAYED_LIST [STRING]
 		do
 			if l_as.compound /= Void then
 				l_as.compound.process (Current)
@@ -3617,7 +3617,7 @@ feature -- Implementation
 				l_expr ?= last_byte_node
 				l_if.set_condition (l_expr)
 			end
-	
+
 				-- Check conformance to boolean
 			if not last_type.actual_type.is_boolean then
 				create l_vwbe1
@@ -3635,7 +3635,7 @@ feature -- Implementation
 					l_if.set_compound (l_list)
 				end
 			end
-			
+
 				-- Type check on alternaltives compounds
 			if l_as.elsif_list /= Void then
 				l_as.elsif_list.process (Current)
@@ -3893,7 +3893,7 @@ feature -- Implementation
 			end
 			if context.current_class.is_generic then
 				error_handler.insert_warning (
-					create {ONCE_IN_GENERIC_WARNING}.make (context.current_class, current_feature)) 
+					create {ONCE_IN_GENERIC_WARNING}.make (context.current_class, current_feature))
 			end
 			if l_needs_byte_node then
 				create l_once_byte_code
@@ -4037,7 +4037,7 @@ feature -- Implementation
 					l_elsif.set_compound (l_list)
 				end
 			end
-		
+
 			if l_needs_byte_node and l_elsif /= Void then
 					-- `l_elsif' can be Void if a VWBE2 error was found.
 				l_elsif.set_line_number (l_as.expr.start_location.line)
@@ -4090,8 +4090,11 @@ feature -- Implementation
 				end
 				if j <= nb then
 						-- Array of intervals is not empty
-						-- Remove voids (if any)
-					l_intervals.conservative_resize (j, nb)
+					if j > 1 then
+							-- Remove voids
+						fixme ("Replace the following instruction with a call to ARRAY.resize as soon as it allows to shrink.")
+						l_intervals := l_intervals.subarray (j, nb)
+					end
 						-- Sort an array
 					l_intervals.sort
 						-- Copy intervals to `l_tmp' merging adjacent intervals
@@ -4159,12 +4162,12 @@ feature -- Implementation
 		do
 			-- Nothing to be done
 		end
-		
+
 	process_use_list_as (l_as: USE_LIST_AS) is
 		do
 			-- Nothing to be done
 		end
-		
+
 	process_void_as (l_as: VOID_AS) is
 		local
 			l_class: CLASS_C
@@ -4274,7 +4277,7 @@ feature {NONE} -- Implementation
 			last_byte_node_valid: is_byte_node_enabled implies
 				((old last_byte_node /= last_byte_node) and then last_byte_node /= Void)
 		end
-		
+
 	process_expressions_list_for_tuple (l_as: EIFFEL_LIST [EXPR_AS]) is
 			-- Process `l_as' as an EIFFEL_LIST but also set `last_expressions_type' accordingly.
 			-- Use `current_target_type' for proper evaluation of manifest arrays.
@@ -4349,7 +4352,7 @@ feature {NONE} -- Implementation
 			last_byte_node_valid: is_byte_node_enabled implies
 				((old last_byte_node /= last_byte_node) and then last_byte_node /= Void)
 		end
-		
+
 	check_tuple_validity_for_ca (a_creation_type: CL_TYPE_A; a_tuple: TUPLE_AS; a_ca_b: CUSTOM_ATTRIBUTE_B) is
 			-- Check validity of `a_tuple' in context of Current.
 			-- i.e. it should be a tuple of tuple whose elements are
@@ -4524,7 +4527,7 @@ feature {NONE} -- Implementation
 			l_arg_type: TYPE_A
 		do
 			last_infix_error := Void
-				-- No need for `a_left_type.actual_type' since it is done in callers of 
+				-- No need for `a_left_type.actual_type' since it is done in callers of
 				-- `is_infix_valid'.
 			l_class := constrained_type (a_left_type).associated_class
 			l_infix := l_class.feature_table.alias_item (a_name)
@@ -4546,7 +4549,7 @@ feature {NONE} -- Implementation
 				else
 					if
 						not System.do_not_check_vape and then is_checking_precondition and then
-						not current_feature.export_status.is_subset (l_infix.export_status) 
+						not current_feature.export_status.is_subset (l_infix.export_status)
 					then
 							-- In precondition and checking for vape
 						create l_vape
@@ -4565,7 +4568,7 @@ feature {NONE} -- Implementation
 								last_infix_argument_conversion_info := context.last_conversion_info
 								last_infix_arg_type := l_arg_type
 							else
-									-- No conformance on argument of infix 
+									-- No conformance on argument of infix
 								create l_vwoe1
 								context.init_error (l_vwoe1)
 								l_vwoe1.set_other_class (l_class)
@@ -4808,7 +4811,7 @@ feature {NONE} -- Implementation: overloading
 				end
 				a_features.forth
 			end
-			
+
 			if Result.is_empty then
 			elseif Result.count = 1 then
 			elseif a_arg_types /= Void then
@@ -4940,7 +4943,7 @@ feature {NONE} -- Implementation: overloading
 				end
 				a_features.forth
 			end
-			Result := l_set.linear_representation	
+			Result := l_set.linear_representation
 		ensure
 			applicable_overloaded_features_not_void: Result /= Void
 		end
@@ -5003,7 +5006,7 @@ feature {NONE} -- Implementation: overloading
 							end
 						else
 								-- We had already assigned `Result', so we
-								-- really have a better feature, so we need to ensure the new 
+								-- really have a better feature, so we need to ensure the new
 								-- better conversion matches the better found feature.
 							if Result = a_feat1 then
 								l_done := l_better = l_target2
@@ -5021,7 +5024,7 @@ feature {NONE} -- Implementation: overloading
 		ensure
 			better_function_valid: Result = Void or Result = a_feat1 or Result = a_feat2
 		end
-		
+
 	better_conversion (source_type, target1, target2: TYPE_A): TYPE_A is
 			-- Using C# ECMA 14.4.2.3 terminology, given `source_type' find which of `target1'
 			-- or `target2' is a better conversion.
@@ -5152,7 +5155,7 @@ feature {NONE} -- Agents
 
 			l_feat_args := a_feature.arguments
 
-				-- Compute `operands_tuple' and type of TUPLE needed to determine current 
+				-- Compute `operands_tuple' and type of TUPLE needed to determine current
 				-- ROUTINE type.
 
 				-- Create `l_argtypes', array used to initialize type of `operands_tuple'.
@@ -5291,7 +5294,7 @@ feature {NONE} -- Agents
 					-- Generate `VOID_B' instance that corresponds to
 					-- a non-initialized value of `l_argtypes'.
 				create l_void
-				
+
 				if a_target_node /= Void then
 						-- A target was specified, we need to check if it is an open argument or not
 						-- by simply checking that its byte node is not an instance of OPERAND_B.
@@ -5348,7 +5351,7 @@ feature {NONE} -- Agents
 						l_last_open_positions.forth
 					end
 
-						-- Create ARRAY_CONST_B which holds all open positions in 
+						-- Create ARRAY_CONST_B which holds all open positions in
 						-- above generated tuple.
 					l_expressions.start
 					create l_array_of_opens.make (l_expressions, integer_array_type.type_i,
@@ -5372,7 +5375,7 @@ feature {NONE} -- Agents
 	integer_array_type : GEN_TYPE_A is
 			-- Representation of an array of INTEGER
 		local
-			generics : ARRAY [TYPE_A]        
+			generics : ARRAY [TYPE_A]
 			int_a: INTEGER_A
 		once
 			create generics.make (1,1)
@@ -5452,7 +5455,7 @@ feature {NONE} -- Precursor handling
 					loop
 						rout_id   := rout_id_set.item (i)
 						a_feature := a_parent.feature_with_rout_id (rout_id)
-						   
+
 						if a_feature /= Void and then not a_feature.is_deferred  then
 								-- Ok, add parent.
 							create pair
@@ -5561,7 +5564,7 @@ feature {NONE} -- Implementation: checking locals
 						if l_track_local then
 							Instantiator.dispatch (l_solved_type, context.current_class)
 						end
-	
+
 						l_id_list := l_as.locals.item.id_list
 						l_id_list.start
 					until
@@ -5590,7 +5593,7 @@ feature {NONE} -- Implementation: checking locals
 						i := i + 1
 						create l_local_info
 							-- Check an expanded local type
-	
+
 						l_local_info.set_type (l_solved_type)
 						l_local_info.set_position (i)
 						if l_context_locals.has (l_local_name) then
@@ -5610,13 +5613,13 @@ feature {NONE} -- Implementation: checking locals
 							-- Update instantiator for changed class
 						l_id_list.forth
 					end
-	
+
 					l_local_class_c := l_solved_type.associated_class
 					if l_local_class_c /= Void then
 							-- Add the supplier in the feature_dependance list
 						context.supplier_ids.add_supplier (l_local_class_c)
 					end
-	
+
 					if l_solved_type /= Void then
 						l_solved_type.check_for_obsolete_class (context.current_class)
 					end

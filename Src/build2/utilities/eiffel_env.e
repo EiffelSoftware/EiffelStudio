@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Environment for bitmaps, help, binaries, scripts...."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature -- Access: environment variable
 		once
 			Result := Execution_environment.get ("ISE_C_COMPILER")
 		end
-		
+
 	Eiffel_platform: STRING is
 			-- ISE_PLATFORM name.
 		once
@@ -52,7 +52,7 @@ feature -- Access: environment variable
 		once
 			Result := Execution_environment.get ("ISE_PROJECTS")
 		end
-		
+
 	Eiffel_preferences: STRING is
 			-- Preferences location
 		local
@@ -75,10 +75,10 @@ feature -- Access: environment variable
 
 	short_studio_name: STRING is "studio"
 			-- Short version of EiffelStudio name.
-	
+
 	short_build_name: STRING is "build"
 			-- Short version of Build name.
-			
+
 feature -- Access: file name
 
 	Templates_path: FILE_NAME is
@@ -105,27 +105,6 @@ feature -- Access: file name
 		once
 			create Result.make_from_string (Eiffel_installation_dir_name)
 			Result.extend_from_array(<<short_studio_name, "profiler">>)
-		end
-
-	New_project_wizards_path: DIRECTORY_NAME is
-			-- Location of new project wizards.
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "wizards", "new_projects">>)
-		end
-
-	precompilation_wizard_command_name: FILE_NAME is
-			-- Command to be executed to launch the precompilation wizard.
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "wizards", "precompile", "spec", Eiffel_platform>>)
-			Result.set_file_name ("wizard")
-		end
-
-	precompilation_wizard_resources_directory: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<short_studio_name, "wizards", "precompile">>)
 		end
 
 	last_opened_projects_resource_name: STRING is "studio_recent_files"

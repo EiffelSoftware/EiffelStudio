@@ -28,12 +28,12 @@ feature {NONE} -- Initialization
 feature {NONE} -- Constants
 
 	Read_mode_id, Write_mode_id: INTEGER is unique
-	
+
 feature -- Access
 
 	address: FTP_URL
 			-- Associated address
-			
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -41,7 +41,7 @@ feature -- Measurement
 		do
 			if is_count_valid then Result := resource_size end
 		end
-				
+
 	Default_buffer_size: INTEGER is 16384
 			-- Default size of read buffer
 
@@ -53,14 +53,14 @@ feature -- Status report
 			if is_proxy_used then
 				Result := proxy_connection.is_open
 			else
-				Result := (main_socket /= Void) and then not 
+				Result := (main_socket /= Void) and then not
 					main_socket.is_closed
 			end
 		end
-	 
+
 	is_logged_in: BOOLEAN
 			-- Logged in to a server?
-			
+
 	read_mode: BOOLEAN is
 			-- Is read mode set?
 		do
@@ -78,13 +78,13 @@ feature -- Status report
 		do
 			Result := (Read_mode_id <= n) and (n <= Write_mode_id)
 		end
-	 
+
 	is_binary_mode: BOOLEAN
 			-- Is binary transfer mode selected?
-			
+
 	passive_mode: BOOLEAN
 			-- Is passive mode used?
-			
+
 	Supports_multiple_transactions: BOOLEAN is True
 			-- Does resource support multiple transactions per connection?
 			-- (Answer: yes)
@@ -115,8 +115,8 @@ feature -- Status setting
 			else
 				main_socket.close
 				main_socket := Void
-				if accepted_socket /= Void and then 
-					(accepted_socket.is_open_read or 
+				if accepted_socket /= Void and then
+					(accepted_socket.is_open_read or
 					accepted_socket.is_open_write) then
 					accepted_socket.close
 					accepted_socket := Void
@@ -133,7 +133,7 @@ feature -- Status setting
 		rescue
 			error_code := Transmission_error
 		end
-	
+
 	initiate_transfer is
 			-- Initiate transfer.
 		do
@@ -168,19 +168,19 @@ feature -- Status setting
 		rescue
 			error_code := Connection_refused
 		end
-	
+
 	set_read_mode is
 			-- Set read mode.
 		do
 			mode := Read_mode_id
 		end
-	 
+
 	set_write_mode is
 	 		-- Set write mode.
 		do
 			mode := Write_mode_id
 		end
-	
+
 	set_text_mode is
 			-- Set ASCII text transfer mode.
 		do
@@ -196,7 +196,7 @@ feature -- Status setting
 		ensure
 			binary_mode_set: is_binary_mode
 		end
-		
+
 	set_active_mode is
 			-- Switch FTP client to active mode.
 		do
@@ -255,21 +255,16 @@ feature -- Output
 			if is_proxy_used then
 				proxy_connection.put (other)
 			else
-				from 
-				until 
-					error or else not other.is_packet_pending 
+				from
+				until
+					error or else not other.is_packet_pending
 				loop
 					check_socket (accepted_socket, Write_only)
 					if not error then
 						other.read
 						accepted_socket.put_string (other.last_packet)
-						if accepted_socket.socket_ok then
-							last_packet_size := other.last_packet.count
-						else
-							last_packet_size := 0
-						end
-						bytes_transferred := bytes_transferred + 
-							last_packet_size
+						last_packet_size := other.last_packet.count
+						bytes_transferred := bytes_transferred + last_packet_size
 						if last_packet_size /= other.last_packet_size then
 							error_code := Write_error
 						end
@@ -291,16 +286,10 @@ feature -- Input
 				check_socket (accepted_socket, Read_only)
 				if not error then
 					accepted_socket.read_stream (read_buffer_size)
-					if accepted_socket.socket_ok then
-						last_packet := accepted_socket.last_string
-						last_packet_size := last_packet.count
-					else
-						error_code := Transfer_failed
-						last_packet := Void
-						last_packet_size := 0
-					end
+					last_packet := accepted_socket.last_string
+					last_packet_size := last_packet.count
 					bytes_transferred := bytes_transferred + last_packet_size
-					if not error and last_packet_size = 0 then 
+					if last_packet_size = 0 then
 						is_packet_pending := False
 						receive (main_socket)
 						if not reply_code_ok (<<226>>) then
@@ -311,6 +300,8 @@ feature -- Input
 			end
 		rescue
 			error_code := Transfer_failed
+			last_packet := Void
+			last_packet_size := 0
 		end
 
 feature {DATA_RESOURCE} -- Implementation
@@ -331,7 +322,7 @@ feature {NONE} -- Implementation
 
 	last_reply: STRING
 			-- Last received server reply
-			
+
 	send (s: NETWORK_SOCKET; str: STRING) is
 			-- Send string `str' to socket `s'.
 		require
@@ -356,9 +347,9 @@ feature {NONE} -- Implementation
 		local
 			go_on: BOOLEAN
 		do
-			from 
+			from
 				last_reply := Void
-			until 
+			until
 				error or else (last_reply /= Void and not go_on)
 			loop
 				check_socket (s, Read_only)
@@ -367,8 +358,8 @@ feature {NONE} -- Implementation
 					last_reply := s.last_string.twin
 					last_reply.append ("%N")
 					debug
-						if not last_reply.is_empty then 
-							io.put_string (last_reply) 
+						if not last_reply.is_empty then
+							io.put_string (last_reply)
 						end
 					end
 					if has_num (last_reply) then
@@ -429,17 +420,17 @@ feature {NONE} -- Implementation
 				else
 					Result.append (str)
 				end
-				if divisor > 1 then 
-					if low_first then 
-						Result.prepend (",") 
+				if divisor > 1 then
+					if low_first then
+						Result.prepend (",")
 					else
-						Result.append (",") 
+						Result.append (",")
 					end
 				end
 				divisor := divisor // 256
 			end
 		end
-		
+
 	has_num (str: STRING): BOOLEAN is
 			-- Check for response code.
 		require
@@ -454,8 +445,8 @@ feature {NONE} -- Implementation
 				if s.count >=3 then
 					Result := True
 					from i := 1 until i = 4 or not Result loop
-						if i <= s.count and then not s.item (i).is_digit then 
-							Result := False 
+						if i <= s.count and then not s.item (i).is_digit then
+							Result := False
 						end
 						i := i + 1
 					end
@@ -476,7 +467,7 @@ feature {NONE} -- Implementation
 				if s.count >= 4 then Result := (s.item (4) = '-') end
 			end
 		end
-	
+
 	reply_code_ok (codes: ARRAY[INTEGER]): BOOLEAN is
 			-- Is reply code in `codes`?
 		require
@@ -493,10 +484,10 @@ feature {NONE} -- Implementation
 			pos := str.index_of (' ', 1)
 			str.keep_head (pos - 1)
 			code := str.to_integer
-			from 
-				i := 1 
-			until 
-				Result or i = codes.count + 1 
+			from
+				i := 1
+			until
+				Result or i = codes.count + 1
 			loop
 				Result := (codes @ i = code)
 				i := i + 1
@@ -551,10 +542,10 @@ feature {NONE} -- Implementation
 			port_str := ip_address.substring (comma + 1, ip_address.count)
 			ip_address := ip_address.substring (1, comma - 1)
 			comma := port_str.index_of ('.', 1)
-			port_number := 256 * 
+			port_number := 256 *
 				port_str.substring (1, comma - 1).to_integer +
 				port_str.substring (comma + 1, port_str.count).to_integer
-		
+
 			create Result.make_client_by_port (port_number, ip_address)
 		ensure
 			socket_created_if_no_error: not error implies Result /= Void
@@ -579,7 +570,7 @@ feature {NONE} -- Implementation
 		ensure
 			logged_in: is_logged_in
 		end
-		
+
 	send_username: BOOLEAN is
 			-- Send username. Did it work?
 		local
@@ -607,7 +598,7 @@ feature {NONE} -- Implementation
 			Result := reply_code_ok (<<202, 230>>)
 			if not Result then
 				error_code := Access_denied
-			end	
+			end
 		end
 
 	send_passive_mode_command: BOOLEAN is
@@ -652,7 +643,7 @@ feature {NONE} -- Implementation
 				Result := send_text_mode_command
 			end
 		end
-		
+
 	send_port_command: BOOLEAN is
 			-- Send PORT command. Did it work?
 		require
@@ -700,10 +691,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-invariant
-
-	data_socket_ok: data_socket /= Void implies data_socket.socket_ok
 
 end -- class FTP_PROTOCOL
 

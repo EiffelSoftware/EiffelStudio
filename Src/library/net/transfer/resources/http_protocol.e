@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class HTTP_PROTOCOL 
+class HTTP_PROTOCOL
 
 inherit
 	NETWORK_RESOURCE
@@ -14,7 +14,7 @@ inherit
 			is_writable, location
 		end
 
-create 
+create
 
 	make
 
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Constants
 
 	Read_mode_id: INTEGER is unique
-	
+
 feature -- Access
 
 	location: STRING is
@@ -46,10 +46,10 @@ feature -- Measurement
 		do
 			if is_count_valid then Result := content_length end
 		end
-		 
+
 	Default_buffer_size: INTEGER is 16384
 			-- Default size of read buffer.
-			
+
 feature -- Status report
 
 	read_mode: BOOLEAN is
@@ -64,13 +64,13 @@ feature -- Status report
 	Is_writable: BOOLEAN is False
 			-- Is it possible to open in write mode currently? (Answer: no)
 			-- (HTTP resources are read-only.)
-	
+
 	valid_mode (n: INTEGER): BOOLEAN is
 			-- Is mode `n' valid?
 		do
 			Result := n = Read_mode_id
 		end
-	 
+
 	Supports_multiple_transactions: BOOLEAN is False
 			-- Does resource support multiple tranactions per connection?
 			-- (Answer: no)
@@ -82,10 +82,10 @@ feature -- Status setting
 		do
 			if not is_open then
 				if address.is_proxy_used then
-					create main_socket.make_client_by_port 
+					create main_socket.make_client_by_port
 						(address.proxy_port, address.proxy_host)
 				else
-					create main_socket.make_client_by_port 
+					create main_socket.make_client_by_port
 							(address.port, address.host)
 				end
 				main_socket.set_timeout (timeout)
@@ -99,8 +99,6 @@ feature -- Status setting
 				is_packet_pending := False
 				content_length := 0
 			end
-		ensure then
-			correct_socket_if_not_error: not error = main_socket.socket_ok
 		rescue
 			error_code := Connection_refused
 		end
@@ -116,7 +114,7 @@ feature -- Status setting
 		rescue
 			error_code := Transmission_error
 		end
-	
+
 	initiate_transfer is
 			-- Initiate transfer.
 		local
@@ -140,7 +138,7 @@ feature -- Status setting
 			end
 			if not address.username.is_empty then
 				str.append (Http_end_of_header_line)
-				str.append (Http_Authorization_header + ": Basic " 
+				str.append (Http_Authorization_header + ": Basic "
 						+ base64_encoded (address.username + ":" + address.password))
 			end
 			str.append (Http_end_of_command)
@@ -156,18 +154,18 @@ feature -- Status setting
 		rescue
 			error_code := Transfer_failed
 		end
-	
+
 	set_read_mode is
 			-- Set read mode.
 		do
 			mode := Read_mode_id
 		end
-	 
+
 	 set_write_mode is
 	 		-- Set write mode.
 		do
 		end
-	
+
 feature {NONE} -- Status setting
 
 	open_connection is
@@ -175,12 +173,12 @@ feature {NONE} -- Status setting
 		do
 			open
 		end
-	 
+
 feature {NONE} -- Implementation
 
 	headers: LINKED_LIST[STRING]
 			-- HTTP headers
-	
+
 	content_length: INTEGER
 			-- Cached value of 'Content-Length:'
 
@@ -204,8 +202,8 @@ feature {NONE} -- Implementation
 							Io.error.put_string (str)
 							Io.error.put_new_line
 						end
-					if not str.is_empty then 
-						headers.extend (str) 
+					if not str.is_empty then
+						headers.extend (str)
 					end
 				end
 			end
@@ -225,7 +223,7 @@ feature {NONE} -- Implementation
 			from
 				headers.start
 			until
-				headers.after or else 
+				headers.after or else
 					headers.item.substring_index ("Content-Length:", 1) > 0
 			loop
 				headers.forth
@@ -244,7 +242,7 @@ feature {NONE} -- Implementation
 				is_count_valid := False
 			end
 		end
-		
+
 	check_error is
 			-- Check for error.
 		do
@@ -328,7 +326,7 @@ invariant
 	headers_list_exists: headers /= Void
 	count_constraint: (is_count_valid and count > 0) implies
 				(is_packet_pending = (bytes_transferred < count))
-	
+
 end -- class HTTP_PROTOCOL
 
 --|----------------------------------------------------------------

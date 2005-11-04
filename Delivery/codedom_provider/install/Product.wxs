@@ -16,14 +16,6 @@
 		<Property Id='FRAMEWORKPATH'>empty<RegistrySearch Id='AppReg1' Root='HKLM' Key='SOFTWARE\Microsoft\.NETFramework' Name='InstallRoot' Type='raw' /></Property>
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
-			<Directory Id='SystemFolder' Name='System32'>
-				<Component Id='libEiffelSoftware.CodeDom.Base.dll' Guid='F2626166-66BE-4bb7-9D38-72FC73D2D32A'>
-					<File Id='libeiffelsoftware.codedom.ba' Name='LIBEIF1.DLL' LongName='libEiffelSoftware.CodeDom.Base.dll' src='..\delivery\codedom\bin\libEiffelSoftware.CodeDom.Base.dll' DiskId='1'/>
-				</Component>
-				<Component Id='libEiffelSoftware.CodeDom.Vision2.dll' Guid='C8B9C12D-22E2-40ac-B582-5AB9B4BA06FB'>
-					<File Id='libeiffelsoftware.codedom.vi' Name='LIBEIF2.DLL' LongName='libEiffelSoftware.CodeDom.Vision2.dll' src='..\delivery\codedom\bin\libEiffelSoftware.CodeDom.Vision2.dll' DiskId='1'/>
-				</Component>
-			</Directory>
 			<Directory Id='ProgramFilesFolder' Name='PFiles'>
 				<Directory Id='ES' Name='ES' LongName='Eiffel Software'>
 					<Directory Id='INSTALLDIR' Name='EfA' LongName='Eiffel for ASP.NET 5.6'>

@@ -107,7 +107,7 @@ feature -- Basic operations
 								-- If the main window class name is Void, then it means that
 								-- the settings were not loaded (As they were not compatible),
 								-- so we fill in the location, and use the default_values.
-							create project_settings.make_stand_alone_with_default_values (components)
+							create project_settings.make_with_default_values (components)
 								-- Set the location to the current file location.
 							project_settings.set_project_location (directory_of_file (file_name))
 						end
@@ -198,7 +198,7 @@ feature -- Basic operations
 										-- If the main window class name is Void, then it means that
 										-- the settings were not loaded (As they were not compatible),
 										-- so we fill in the location, and use the default_values.
-									create project_settings.make_stand_alone_with_default_values (components)
+									create project_settings.make_with_default_values (components)
 									project_settings.set_project_location (dialog.file_path)
 								end
 								components.system_status.set_current_project (project_settings)

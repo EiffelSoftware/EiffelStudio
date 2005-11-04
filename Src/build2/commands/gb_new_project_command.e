@@ -113,7 +113,7 @@ feature -- Basic operations
 							end
 							if directory.exists then
 								created_project := True
-								create settings.make_stand_alone_with_default_values (components)
+								create settings.make_with_default_values (components)
 								settings.set_project_location (dialog.directory)
 								components.system_status.set_current_project (settings)
 								components.commands.update

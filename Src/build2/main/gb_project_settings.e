@@ -30,7 +30,7 @@ inherit
 
 create
 	make_with_components,
-	make_stand_alone_with_default_values
+	make_with_default_values
 
 
 feature {NONE} -- Initialization
@@ -49,14 +49,13 @@ feature {NONE} -- Initialization
 			components_set: components = a_components
 		end
 
-	make_stand_alone_with_default_values (a_components: GB_INTERNAL_COMPONENTS) is
+	make_with_default_values (a_components: GB_INTERNAL_COMPONENTS) is
 			-- Create `Current', mark as a stand alone Build project,
 			-- and intiailize_to_default_values. Assign `a_components' to `components'.
 		require
 			a_components_not_void: a_components /= Void
 		do
 			set_default_values
-			project_type := stand_alone_project
 		ensure
 			components_set: components = a_components
 		end
@@ -80,13 +79,6 @@ feature -- Access
 
 	project_type: INTEGER
 		-- Type of project that `Current' represents.
-
-	is_stand_alone_project: BOOLEAN is
-			-- Does `Current' represent a stand alone project?
-			-- i.e. regular Build, not Envision.
-		do
-			Result := project_type = Stand_alone_project
-		end
 
 	project_location: STRING
 		-- Project location.
@@ -394,14 +386,6 @@ feature {GB_FILE_OPEN_COMMAND}
 		do
 			an_object.enable_client_generation
 		end
-
-feature {NONE} -- Constants
-
-	stand_alone_project: INTEGER is 1
-		-- Project was created in stand alone version of Build.
-
-	envision_project: INTEGER is 2
-		-- Project was created as an Envision project.
 
 feature {NONE} --Implementation
 

@@ -333,7 +333,7 @@ feature -- Basic operation
 			end
 		end
 
-feature {WIZARD_FOURTH_STATE, WIZARD_FINAL_STATE, GB_CODE_GENERATION_DIALOG, GB_GENERATION_COMMAND} -- Implementation
+feature {GB_CODE_GENERATION_DIALOG, GB_GENERATION_COMMAND} -- Implementation
 
 	set_progress_bar (bar: EV_PROGRESS_BAR) is
 			-- Assign `bar' to `progress_bar'

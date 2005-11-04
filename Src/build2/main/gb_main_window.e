@@ -379,29 +379,6 @@ feature {NONE} -- Implementation
 			constructor_box: EV_HORIZONTAL_BOX
 			temp_tool_bar: EV_TOOL_BAR
 		do
-				-- Now we perform a large hack. In Wizard, mode, the
-				-- fourth state may be re-built, if we go back and change a setting
-				-- in another window. This means that the widget structure built in
-				-- "here", is still contained in another box. So we must now remove all
-				-- `once' controls, from their current parents, so thay can be rebuilt correctly
-				-- again.
-				-- Another fix would have to been modify some of the Wizard classes, but I chose not to
-				-- do this, as we want to modify as few library classes as possible, as it becomes
-				-- difficult to track. Therefore, the fix is here.
-			if tool_bar.parent /= Void then
-					check
-						parenting_consistent: components.tools.type_selector.parent /= Void and
-						components.tools.component_selector.parent /= Void and
-						components.tools.layout_constructor.parent /= Void and
-						components.object_editors.docked_object_editor.parent /= Void
-					end
-				tool_bar.parent.prune_all (tool_bar)
-				components.tools.type_selector.parent.prune_all (components.tools.type_selector)
-				components.tools.component_selector.parent.prune_all (components.tools.component_selector)
-				components.tools.layout_constructor.parent.prune_all (components.tools.layout_constructor)
-				components.object_editors.docked_object_editor.parent.prune_all (components.object_editors.docked_object_editor)
-			end
-
 			if a_tool_holder /= Void then
 				the_tool_holder := a_tool_holder
 			else

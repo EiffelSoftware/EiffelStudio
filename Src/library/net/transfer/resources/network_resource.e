@@ -25,15 +25,15 @@ deferred class NETWORK_RESOURCE inherit
 
 feature -- Access
 
-	last_packet_size: INTEGER 
+	last_packet_size: INTEGER
 			-- Size of last packet
-	 
+
 	bytes_transferred: INTEGER
 	 		-- Number of transferred bytes
-	 
+
 	read_buffer_size: INTEGER
 	 		-- Size of read buffer
-	 
+
 	address: NETWORK_RESOURCE_URL
 			-- Address of URL
 
@@ -45,7 +45,7 @@ feature -- Status report
 			Result := main_socket /= Void and then
 				(main_socket.is_open_read or main_socket.is_open_write)
 		end
-	 
+
 	is_readable: BOOLEAN is
 			-- Is it possible to open in read mode currently?
 		local
@@ -79,7 +79,7 @@ feature -- Status report
 				retry
 			end
 		end
-	
+
 	is_writable: BOOLEAN is
 			-- Is it possible to open in write mode currently?
 		local
@@ -113,10 +113,10 @@ feature -- Status report
 				retry
 			end
 		end
-	
+
 	is_packet_pending: BOOLEAN
 			-- Can another packet currently be read out?
-	
+
 	is_count_valid: BOOLEAN
 			-- Is value in `count' valid?
 
@@ -125,7 +125,7 @@ feature -- Status report
 		do
 			Result := address.is_correct
 		end
-	 
+
 	is_proxy_used: BOOLEAN is
 			-- Is a proxy used?
 		do
@@ -139,7 +139,7 @@ feature -- Status setting
 		do
 			read_buffer_size := n
 		end
-		
+
 	reuse_connection (other: DATA_RESOURCE) is
 			-- Reuse connection of `other'.
 		local
@@ -165,7 +165,7 @@ feature {NONE} -- Status setting
 			closed: not is_open
 		deferred
 		end
-	 
+
 feature -- Output
 
 	put (other: DATA_RESOURCE) is
@@ -176,13 +176,8 @@ feature -- Output
 				if not error then
 					other.read
 					main_socket.put_string (other.last_packet)
-					if main_socket.socket_ok then
-						last_packet := other.last_packet
-						last_packet_size := last_packet.count
-					else
-						last_packet := Void
-						last_packet_size := 0
-					end
+					last_packet := other.last_packet
+					last_packet_size := last_packet.count
 					if last_packet_size /= other.last_packet_size then
 						error_code := Write_error
 					end
@@ -200,33 +195,28 @@ feature -- Input
 			check_socket (main_socket, Read_only)
 			if not error then
 				main_socket.read_stream (read_buffer_size)
-				if main_socket.socket_ok then
-					last_packet := main_socket.last_string
-					last_packet_size := last_packet.count
-				else
-					error_code := Transfer_failed
-					last_packet := Void
-					last_packet_size := 0
-				end
+				last_packet := main_socket.last_string
+				last_packet_size := last_packet.count
 				bytes_transferred := bytes_transferred + last_packet_size
-				if not error and then last_packet_size = 0 or 
-					(is_count_valid and bytes_transferred = count) then
-					is_packet_pending := False 
+				if last_packet_size = 0 or (is_count_valid and bytes_transferred = count) then
+					is_packet_pending := False
 				end
 			end
 		rescue
 			error_code := Transfer_failed
+			last_packet := Void
+			last_packet_size := 0
 		end
 
 feature {NONE} -- Constants
 
 	Read_only, Write_only: INTEGER is unique
 			-- Constants determinint the transfer direction for `check_socket'
-			
+
 feature {DATA_RESOURCE} -- Implementation
 
 	main_socket: NETWORK_STREAM_SOCKET
-	
+
 feature {NONE} -- Implementation
 
 	readable: BOOLEAN
@@ -254,14 +244,9 @@ feature {NONE} -- Implementation
 		do
 			m := (transfer_mode = Read_only)
 			if not s.ready_for_reading then
-				error_code := Connection_timeout 
+				error_code := Connection_timeout
 			end
 		end
-
-invariant
-
-	main_socket_ok: (main_socket /= Void and not error) implies 
-			main_socket.socket_ok
 
 end -- class NETWORK_RESOURCE
 

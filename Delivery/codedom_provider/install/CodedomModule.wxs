@@ -63,6 +63,9 @@
 					<Component Id='libEiffelSoftware_CodeDom_Base' Guid='88BEB354-4ADF-41e3-8F5E-B95AB10C2367'>
 						<File Id='libEiffelSoftware_CodeDom_Base_dll' Name='libBase.dll' LongName='libEiffelSoftware.CodeDom.Base.dll'/>
 					</Component>
+					<Component Id='libEiffelSoftware_CodeDom_Vision2' Guid='0121BB50-D605-4076-ACC1-D927938D5CEA'>
+						<File Id='libEiffelSoftware_CodeDom_Vision2_dll' Name='libvis2.dll' LongName='libEiffelSoftware.CodeDom.Vision2.dll'/>
+					</Component>
 					<Component Id='Nmap' Guid='032DA0AE-DE06-4e97-9179-C4D0F9057748'>
 						<File Id='nmap_exe' Name='nmap.exe'/>
 					</Component>

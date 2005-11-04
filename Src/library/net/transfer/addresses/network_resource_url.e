@@ -27,9 +27,7 @@ feature {NONE} -- Initialization
 		do
 			create username.make (0)
 			create password.make (0)
-			path_charset := Host_charset.twin
-			path_charset.add ("%%/_")
-			Precursor (a)
+			Precursor {URL} (a)
 		end
 		
 feature -- Access
@@ -138,21 +136,21 @@ feature {NONE} -- Basic operations
 			-- Analyze address.
 		local
 			pos, pos2: INTEGER
+			l_sep_pos: INTEGER
 		do
-			if not address.has ('/') then
-				address.extend ('/')
-			end
 			pos := address.index_of ('/', 1)
-				check
-					has_slash: pos > 0
-						-- Because we added a slash if there was none 
-				end
-			if pos > 1 and address.substring_index ("//", 1) = 0 and
+			if pos = 0 then
+					-- Make sure there is a `/'
+				address.extend ('/')
+				pos := address.count
+			end
+			l_sep_pos := address.substring_index ("//", 1)
+			if pos > 1 and l_sep_pos = 0 and
 				address.substring_index (Service + ":", 1) = 0 then
 				host := address.substring (1, pos - 1)
 				address.remove_head (pos)
 				path := address.twin
-			elseif address.substring_index ("//", 1) > 0 and 
+			elseif l_sep_pos > 0 and 
 				address.substring_index (Service + ":", 1) > 0 then
 				pos2 := address.index_of ('/', pos + 2)
 				host := address.substring (pos + 2, pos2 - 1)
@@ -189,13 +187,17 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	path_charset: CHARACTER_SET
+	path_charset: CHARACTER_SET is
 			-- Character set for path names
+		once
+			Result := Host_charset.twin
+			Result.add ("%%/_")
+		ensure
+			path_charset_not_void: Result /= Void
+			path_charset_not_empty: not path_charset.is_empty
+		end
 	
 invariant
-
-	path_charset_defined: path_charset /= Void and then 
-				not path_charset.is_empty
 	username_exists: username /= Void
 	password_exists: password /= Void
 	password_constraint: not password.is_empty implies not username.is_empty

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			read_buffer_size := Default_buffer_size
 			set_overwrite_mode
 		end
-		 
+
 feature {NONE} -- Constants
 
 	Read_mode_id, Write_mode_id, Append_mode_id: INTEGER is unique
@@ -35,12 +35,12 @@ feature {NONE} -- Constants
 
 	Default_buffer_size: INTEGER is 65535
 			-- Default read buffer size
-			
+
 feature -- Access
 
 	address: FILE_URL
 			-- Associated address
-			
+
 feature -- Measurement
 
 	read_buffer_size: INTEGER
@@ -48,16 +48,16 @@ feature -- Measurement
 
 	last_packet_size: INTEGER
 			-- Size of last packet
-	 
+
 	count: INTEGER is
 			-- Size of data resource
 		do
 			Result := file.count
 		end
-		 
+
 	 bytes_transferred: INTEGER
 	 		-- Number of transferred bytes
-	 
+
 feature -- Status report
 
 	is_open: BOOLEAN is
@@ -70,10 +70,10 @@ feature -- Status report
 	is_readable: BOOLEAN is
 			-- Is it possible to open in read mode currently?
 		do
-			Result := file.is_open_read or else 
+			Result := file.is_open_read or else
 				(file.exists and then file.is_readable)
 		end
-	
+
 	is_writable: BOOLEAN is
 			-- Is it possible to open in write mode currently?
 		do
@@ -85,7 +85,7 @@ feature -- Status report
 				Result := not file.exists
 			end
 		end
-	
+
 	address_exists: BOOLEAN is
 			-- Does address exist?
 		do
@@ -94,7 +94,7 @@ feature -- Status report
 
 	Is_local: BOOLEAN is True
 			-- Is protocol not networked? (Answer: yes)
-	
+
 	is_proxy_used: BOOLEAN is False
 			-- Does resource use a proxy? (Answer: no)
 
@@ -103,14 +103,14 @@ feature -- Status report
 		do
 			Result := Read_mode_id <= n and n <= Append_mode_id
 		end
-	 
+
 	is_packet_pending: BOOLEAN is
 			-- Can another packet currently be read out?
 		do
 			Result := not error and then file.is_open_read and then
 				not file.after
 		end
-	
+
 	read_mode: BOOLEAN is
 			-- Is read mode set?
 		do
@@ -157,13 +157,13 @@ feature -- Status setting
 			file.close
 			transfer_initiated := False
 		end
-	
+
 	initiate_transfer is
 			-- Initiate transfer.
 		do
 			transfer_initiated := True
 		end
-	
+
 	set_read_buffer_size (n: INTEGER) is
 			-- Set size of read buffer.
 		do
@@ -172,7 +172,7 @@ feature -- Status setting
 		ensure then
 			buffer_size_correct: buffer.count = read_buffer_size
 		end
-		
+
 	set_overwrite_mode is
 			-- Switch on file overwrite mode on.
 		do
@@ -190,13 +190,13 @@ feature -- Status setting
 		do
 			mode := Read_mode_id
 		end
-	
+
 	set_write_mode is
 			-- Set write mode.
 		do
 			mode := Write_mode_id
 		end
-		
+
 	reuse_connection (other: DATA_RESOURCE) is
 			-- Reuse connection of `other'.
 		do
@@ -227,6 +227,10 @@ feature -- Input
 			last_packet := file.last_string
 			last_packet_size := last_packet.count
 			bytes_transferred := bytes_transferred + last_packet_size
+		rescue
+			error_code := transfer_failed
+			last_packet := Void
+			last_packet_size := 0
 		end
 
 feature {NONE} -- Implementation

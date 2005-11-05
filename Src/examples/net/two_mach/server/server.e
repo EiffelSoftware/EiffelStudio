@@ -13,7 +13,7 @@ inherit
 
 	SOCKET_RESOURCES
 
-	STORABLE
+	SED_STORABLE_FACILITIES
 
 create
 
@@ -53,10 +53,13 @@ feature
 			-- Receive a message, extend it, and send it back.
 		local
 			our_new_list: OUR_MESSAGE
+			l_medium: SED_MEDIUM_READER_WRITER
 		do
 			soc1.accept
 			soc2 ?= soc1.accepted
-			our_new_list ?= retrieved (soc2)
+			create l_medium.make (soc2)
+			l_medium.set_for_reading
+			our_new_list ?= retrieved (l_medium, True)
 			from
 				our_new_list.start
 			until
@@ -66,9 +69,10 @@ feature
 				our_new_list.forth
 				io.new_line
 			end
-			
+
 			our_new_list.extend ("%N I'm back.%N")
-			our_new_list.independent_store (soc2)
+			l_medium.set_for_writing
+			independent_store (our_new_list, l_medium, True)
 			soc2.close
 		end
 
@@ -78,7 +82,7 @@ end
 --| EiffelNet: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

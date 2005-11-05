@@ -13,11 +13,6 @@ inherit
 
 	LINKED_LIST [STRING]
 
-	STORABLE
-		undefine
-			is_equal, copy
-		end
-
 create
 
 	make
@@ -28,7 +23,7 @@ end
 --| EiffelNet: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

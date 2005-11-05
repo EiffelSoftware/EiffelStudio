@@ -13,6 +13,8 @@ inherit
 
 	SOCKET_RESOURCES
 
+	SED_STORABLE_FACILITIES
+
 create
 
 	make
@@ -43,15 +45,19 @@ feature
 			-- modified message from that answer, and print it.
 		local
 			our_list, our_new_list: OUR_MESSAGE
+			l_medium: SED_MEDIUM_READER_WRITER
 		do
 			create our_list.make
 			our_list.extend ("This ")
 			our_list.extend ("is ")
 			our_list.extend ("our ")
 			our_list.extend ("test.")
-						
-			our_list.independent_store (soc1)
-			our_new_list ?= our_list.retrieved (soc1)
+
+			create l_medium.make (soc1)
+			l_medium.set_for_writing
+			independent_store (our_list, l_medium, True)
+			l_medium.set_for_reading
+			our_new_list ?= retrieved (l_medium, True)
 			from
 				our_new_list.start
 			until
@@ -69,7 +75,7 @@ end
 --| EiffelNet: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

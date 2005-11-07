@@ -95,7 +95,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (l: CLASS_I) is
@@ -219,7 +219,7 @@ feature -- Access
 	propagators: PASS3_CONTROL
 			-- Set of class ids of the classes responsible for
 			-- a type check of the current class
-	
+
 	creators: HASH_TABLE [EXPORT_I, STRING]
 			-- Creation procedure names
 
@@ -235,7 +235,7 @@ feature -- Access
 
 	changed: BOOLEAN is
 			-- Is the class syntactically changed ?
-		do	
+		do
 			Result := lace_class.changed
 		end
 
@@ -250,7 +250,7 @@ feature -- Access: Convertibility
 
 	convert_to: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			-- Set of feature name IDs indexed by type to which they convert to.
-	
+
 	convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			-- Set of feature name IDs indexed by type to which they convert from.
 
@@ -307,7 +307,7 @@ feature -- Action
 		do
 			if not retried and System.makefile_generator /= Void and then has_types then
 				create generation_dir.make_from_string (Workbench_generation_path)
-				
+
 				from
 					l_types := types
 					l_types.start
@@ -505,7 +505,7 @@ if System.class_of_id (class_id) /= Void then
 					-- Compute the values of the unique constants
 				l_class_info.set_unique_values (unique_values)
 			end
- 
+
 				-- Save index left by the temporary ast server into the
 				-- class information.
 			l_class_info.set_index (Tmp_ast_server.index.twin)
@@ -789,7 +789,7 @@ feature -- Third pass: byte code production and type check
 			from
 					-- Initialization for actual types evaluation
 				Inst_context.set_cluster (cluster)
-				
+
 					-- For a changed class, the supplier list has
 					-- to be updated
 				if Tmp_depend_server.has (class_id) then
@@ -835,7 +835,7 @@ feature -- Third pass: byte code production and type check
 
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name_id)
-					
+
 					if not feature_changed then
 							-- Force a change on all feature of current class if line
 							-- debugging is turned on. Not doing so could make obsolete
@@ -867,13 +867,13 @@ feature -- Third pass: byte code production and type check
 							end
 						end
 					end
-			
-					if feature_i.is_attribute then	
+
+					if feature_i.is_attribute then
 							-- Redefinitions of functions into attributes are
 							-- always melted
 						feature_changed := True
 					end
-	
+
 					ast_context.set_current_feature (feature_i)
 
 						-- No type check for constants and attributes.
@@ -902,7 +902,7 @@ feature -- Third pass: byte code production and type check
 									new_suppliers.remove_occurrence (f_suppliers)
 									dependances.remove (feature_i.body_index)
 								end
-										
+
 									-- Dependances update: add new
 									-- dependances for `feature_name'.
 								f_suppliers := ast_context.supplier_ids
@@ -1372,7 +1372,7 @@ feature -- Melting
 				-- Forget melted list
 			melted_set := Void
 		end
-	
+
 	update_execution_table is
 			-- Update execution table.
 		require
@@ -1532,10 +1532,10 @@ feature
 
 			dir_name.extend (subdirectory)
 			create dir.make (dir_name)
-			if not dir.exists then	
+			if not dir.exists then
 				dir.create_dir
 			end
-				
+
 			create base_name.make (12)
 			base_name.append (base_file_name)
 			base_name.append_integer (feature_table_file_id)
@@ -1548,7 +1548,7 @@ feature
 			finished_file_name.set_file_name (Finished_file_for_make)
 			create finished_file.make (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
-				finished_file.delete	
+				finished_file.delete
 			end
 		ensure
 			feature_table_file_name_not_void: Result /= Void
@@ -1557,7 +1557,7 @@ feature
 
 	base_file_name: STRING is
 			-- Generated base file name prefix. Keep first two letters
-			-- of class `name'. 
+			-- of class `name'.
 			--| Once per object: meaning that even if `name' changes
 			--| we keep same C generated file name.
 		do
@@ -1835,7 +1835,7 @@ feature {NONE} -- Class initialization
 							until
 								changed_generics or else gens.after
 							loop
-								if not gens.item.equiv (old_generics.item) then	
+								if not gens.item.equiv (old_generics.item) then
 									changed_generics := True
 								end
 								gens.forth
@@ -1918,7 +1918,7 @@ feature {NONE} -- Class initialization
 				o_area := a_old_parents.area
 				l_count := a_new_parents.count - 1
 				o_count := a_old_parents.count - 1
-				
+
 					-- Check if all types used in new parents clauses were also used in previous
 					-- compilation (possibly in different order and with different number of
 					-- occurrences)
@@ -2034,7 +2034,7 @@ feature
 					supplier_clients.compare_references
 					supplier_clients.search (Current)
 					if not supplier_clients.after then
-						supplier_clients.remove	
+						supplier_clients.remove
 					end
 				end
 				old_syntactical_suppliers.forth
@@ -2333,7 +2333,7 @@ feature -- Parent checking
 		do
 				-- Reset flag
 			need_new_parents := False
-			
+
 				-- Initialize context
 			Inst_context.set_cluster (cluster)
 			l_parents_as := a_class_info.parents
@@ -2852,7 +2852,7 @@ feature -- Order relation for inheritance and topological sort
 
  				if Result and then (not is_class_none) and then (not other.is_class_any) then
  					dep_class := System.current_class
- 
+
  					if dep_class /= Void and then dep_class /= Current then
  						add_dep_class (dep_class)
  					end
@@ -3211,7 +3211,7 @@ debug ("ACTIVITY")
 end
 			changed_features.put (feature_name_id)
 		end
-	
+
 	constraint (i: INTEGER): TYPE_A is
 			-- I-th constraint of the class
 		require
@@ -3282,7 +3282,7 @@ end
 			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
 				derivations.insert_derivation (class_id, data)
-				
+
 debug ("GENERICITY")
 	io.error.put_string ("Update_types%N")
 	io.error.put_string (name)
@@ -3338,7 +3338,7 @@ debug ("GENERICITY")
 end
 						-- We need to store cursor position because when you
 						-- have an expanded class used as a reference or vice versa
-						-- and that this class has some `like Current' then 
+						-- and that this class has some `like Current' then
 						-- we are going to traverse recursively the `filters' list.
 					l_cursor := filters.cursor
 					filter.base_class.update_types (filter)
@@ -3394,11 +3394,11 @@ end
 		do
 			-- Do nothing
 		end
-		
+
 	is_tuple: BOOLEAN is
 			-- Is class TUPLE?
 		do
-			
+
 		end
 
 	is_typed_pointer: BOOLEAN is
@@ -3470,7 +3470,7 @@ feature -- Type evaluation
 			if class_id = implemented_in then
 				Result := current_type
 			else
-				written_class := System.class_of_id (implemented_in) 
+				written_class := System.class_of_id (implemented_in)
 					-- We go through the hierarchy only when `written_class'
 					-- is generic, otherwise for the most general case where
 					-- `written_class' is not generic it will take a long
@@ -3495,12 +3495,12 @@ feature -- Validity class
 					-- We are checking ANY.
 				l_cor_mism := feature_table.item_id (names_heap.Internal_correct_mismatch_name_id)
 				if
-					l_cor_mism = Void or else 
+					l_cor_mism = Void or else
 					not l_cor_mism.is_routine or l_cor_mism.argument_count > 0
 				then
 					error_handler.insert_error (
 						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments", Current))
-				end				
+				end
 			end-- Do nothing
 		end
 
@@ -3540,7 +3540,7 @@ feature -- default_create routine
 				-- Answer is NO if class is deferred
 			if not is_deferred then
 				dcr_feat := default_create_feature
-					-- Answer is NO if the class has no 
+					-- Answer is NO if the class has no
 					-- 'default_create'
 				Result := dcr_feat /= Void and then (
 					(creators = Void) or else (not creators.is_empty and then creators.has (dcr_feat.feature_name)))
@@ -3574,7 +3574,7 @@ feature -- Cecil
 			has_visible: has_visible
 		do
 				-- Reset hash-table size which will be computed during
-				-- generation. 
+				-- generation.
 			set_visible_table_size (0)
 			visible_level.generate_cecil_table (Current)
 		end
@@ -3594,7 +3594,7 @@ feature -- Invariant feature
 		do
 			Result := invariant_feature /= Void
 		end
-			
+
 feature -- Process the creation feature
 
 	process_creation_feature is
@@ -3606,7 +3606,7 @@ feature -- Process the creation feature
 			if allows_default_creation then
 				creation_feature := default_create_feature
 			else
-				creation_feature := Void	
+				creation_feature := Void
 			end
 		end
 
@@ -3665,7 +3665,7 @@ feature -- Initialization
 feature -- Properties
 
 	lace_class: CLASS_I
-			-- Lace class 
+			-- Lace class
 
 	main_parent: CLASS_C
 			-- Parent of current class which has most features.
@@ -3708,7 +3708,7 @@ feature -- Properties
 			-- attempt in current or in an inherited class.
 			-- Indexed by `rout_id' of feature on which anchor is done.
 			-- Updated before each IL code generation.
-	
+
 	type_set: SEARCH_TABLE [INTEGER]
 			-- Set of routine IDs used for anchored type in current class.
 			-- It does not take into accounts inherited one.
@@ -3744,7 +3744,7 @@ feature -- Properties
 	is_external: BOOLEAN
 			-- Is class an external one?
 			-- If yes, we do not generate it.
-			
+
 	is_true_external: BOOLEAN is
 			-- Is class an instance of EXTERNAL_CLASS_C?
 			-- If yes, we do not generate it.
@@ -3933,7 +3933,7 @@ feature -- Access
 				Result := Tmp_ast_server.item (class_id)
 			end
 		ensure
-			non_void_result_if: has_ast implies Result /= Void 
+			non_void_result_if: has_ast implies Result /= Void
 		end
 
 	most_recent_ast: CLASS_AS is
@@ -3945,7 +3945,7 @@ feature -- Access
 				Result := Ast_server.item (class_id)
 			end
 		ensure
-			non_void_result_if: has_ast implies Result /= Void 
+			non_void_result_if: has_ast implies Result /= Void
 		end
 
 	invariant_ast: INVARIANT_AS is
@@ -4119,7 +4119,7 @@ feature -- Access
 			end
 		end
 
-	api_feature_table: E_FEATURE_TABLE is	
+	api_feature_table: E_FEATURE_TABLE is
 			-- Feature table for current class
 			--| Can be Void when `feature_table' has not yet
 			--| been computed (for example, error at degree 5).
@@ -4158,7 +4158,7 @@ feature -- Access
 
 	is_valid: BOOLEAN is
 			-- Is the current class valid?
-			-- (After a compilation Current may become 
+			-- (After a compilation Current may become
 			-- invalid)
 		do
 			Result := class_id > 0 and then class_id <= System.classes.array_count
@@ -4185,7 +4185,7 @@ feature -- Precompilation Access
 
 	is_precompiled: BOOLEAN is
 			-- Is class precompiled?
-		do	
+		do
 			Result := System.class_counter.is_precompiled (class_id)
 		end
 
@@ -4219,7 +4219,7 @@ feature -- Server Access
 			f: PLAIN_TEXT_FILE
 		do
 			create f.make (file_name)
-			Result := f.is_readable	
+			Result := f.is_readable
 		end
 
 	has_syntax_error: BOOLEAN is
@@ -4582,7 +4582,7 @@ feature -- Genericity
 								-- generic parameter.
 							l_formal.set_written_in (class_id)
 						end
-						
+
 						extend_generic_features (l_formal)
 						l_generic_features.forth
 					end
@@ -4591,7 +4591,7 @@ feature -- Genericity
 			end
 
 			l_generic_features := generic_features
-			
+
 			if is_generic then
 				create l_inherited_formals.make (generics.count)
 				if l_generic_features = Void then
@@ -4604,7 +4604,7 @@ feature -- Genericity
 						l_generic_features.after
 					loop
 						l_formal := l_generic_features.item_for_iteration
-						if l_formal.is_formal then	
+						if l_formal.is_formal then
 							l_formal_type ?= l_formal.type
 							l_inherited_formals.put (l_formal_type.position)
 						end
@@ -4622,13 +4622,13 @@ feature -- Genericity
 						l_formal_dec := generics.i_th (i)
 						create l_formal_type.make (l_formal_dec.is_reference,
 							l_formal_dec.is_expanded, i)
-						
+
 						create l_formal
 						l_formal.set_feature_name ("_" + name + "_Formal#" + i.out)
 						l_formal.set_type (l_formal_type)
 						l_formal.set_written_in (class_id)
 						l_formal.set_origin_class_id (class_id)
-					
+
 						create l_rout_id_set.make
 						l_rout_id_set.put (l_formal.new_rout_id)
 						l_formal.set_rout_id_set (l_rout_id_set)
@@ -4652,7 +4652,7 @@ feature -- Genericity
 					-- that all FORMAL_ATTRIBUTE_I.type of `l_generic_features'
 					-- are not instances of FORMAL_I.
 			end
-		
+
  			debug ("FORMAL_GENERIC")
 				if l_generic_features /= Void then
 					print ("%NFor class " + name + ": " + l_generic_features.count.out)
@@ -4660,7 +4660,7 @@ feature -- Genericity
 				end
  			end
 		end
-		
+
 feature {NONE} -- Genericity
 
 	extend_generic_features (an_item: TYPE_FEATURE_I) is
@@ -4678,7 +4678,7 @@ feature {NONE} -- Genericity
 				create l_generic_features.make (5)
 				generic_features := l_generic_features
 			end
-			
+
 			from
 				l_rout_id_set := an_item.rout_id_set
 				i := 1
@@ -4695,10 +4695,10 @@ feature {NONE} -- Genericity
 						-- some repeated inheritance of generic parameters.
 				end
 
-				i := i + 1	
+				i := i + 1
 			end
 		end
-	
+
 feature -- Anchored types
 
 	update_anchors is
@@ -4753,7 +4753,7 @@ feature -- Anchored types
 				end
 				l_feat_tbl.forth
 			end
-			
+
 				-- Create `anchored_features' if needed and fill it with inherited
 				-- anchors.
 			from
@@ -4774,7 +4774,7 @@ feature -- Anchored types
 					create l_anchor
 					l_anchor.set_type (l_feat.type.actual_type)
 					l_anchor.set_written_in (class_id)
-				
+
 					create l_rout_id_set.make
 					l_rout_id_set.put (l_rout_id)
 					l_anchor.set_rout_id_set (l_rout_id_set)
@@ -4790,7 +4790,7 @@ feature -- Anchored types
 						l_anchor.set_origin_class_id (l_previous_anchor.origin_class_id)
 						l_anchor.set_origin_feature_id (l_previous_anchor.origin_feature_id)
 						l_anchor.set_feature_name_id (l_previous_anchor.feature_name_id, 0)
-						l_anchor.set_is_origin (False)				
+						l_anchor.set_is_origin (False)
 					else
 						l_anchor.set_is_origin (True)
 						l_anchor.set_origin_class_id (class_id)
@@ -4802,7 +4802,7 @@ feature -- Anchored types
 				end
 				l_select.forth
 			end
-		
+
  			debug ("ANCHORED_FEATURES")
 				if l_anchored_features /= Void then
 					print ("%NFor class " + name + ": " + l_anchored_features.count.out)
@@ -5166,9 +5166,9 @@ invariant
 	descendants_exists: descendants /= Void
 	suppliers_exisis: suppliers /= Void
 	clients_exists: clients /= Void
-	
+
 		-- Invariants IL versus normal generation.
-	anchored_features_void_in_non_il_generation: 
+	anchored_features_void_in_non_il_generation:
 		not System.il_generation implies anchored_features = Void
 
 	-- True after proper initialization of Current instance.

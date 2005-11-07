@@ -16,7 +16,8 @@ inherit
 			display_degree,
 			put_start_degree,
 			put_end_degree,
-			finish_degree_output
+			finish_degree_output,
+			flush_output
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -25,6 +26,11 @@ inherit
 		end
 
 	EB_SHARED_GRAPHICAL_COMMANDS
+		undefine
+			default_create
+		end
+
+	EV_SHARED_APPLICATION
 		undefine
 			default_create
 		end
@@ -47,6 +53,12 @@ feature {NONE} -- Implementation
 
 	output_manager: EB_OUTPUT_MANAGER
 			-- Output manager used to display messages of `Current'.
+
+	flush_output is
+			-- Flush any pending messages to the display.
+		do
+			process_events_and_idle
+		end
 
 	put_new_compilation is
 			-- A new compilation has begun.

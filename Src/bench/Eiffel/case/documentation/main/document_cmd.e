@@ -52,6 +52,8 @@ feature {NONE} -- Implementation
 			doc: DOCUMENTATION
 			dial: EV_WARNING_DIALOG
 			retried: BOOLEAN
+			output_text: STRUCTURED_TEXT
+			l_str: STRING
 		do
 			if not retried then
 				create doc.make
@@ -71,7 +73,14 @@ feature {NONE} -- Implementation
 				if wizard.cluster_diagrams_selected then
 					doc.set_diagram_views (wizard.diagram_views)
 				end
+				output_manager.clear
+				window_manager.display_message ("")
 				doc.generate (Degree_output)
+				create output_text.make
+				l_str := "Documentation Generated in " + wizard.directory.name
+				output_text.add_string (l_str)
+				output_manager.process_text (output_text)
+				window_manager.display_message (l_str)
 			end
 		rescue
 			create dial.make_with_text (

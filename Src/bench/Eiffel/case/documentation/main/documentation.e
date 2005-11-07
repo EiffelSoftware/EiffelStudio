@@ -134,6 +134,7 @@ feature -- Actions
 							clusters.after
 						loop
 							deg.put_string ("Building cluster chart for " + clusters.item.cluster_name)
+							deg.flush_output
 							if filter.is_html then
 								filter.set_keyword ("html_meta", html_meta_for_cluster (clusters.item))
 							end
@@ -152,6 +153,7 @@ feature -- Actions
 							clusters.after
 						loop
 							deg.put_string ("Building cluster diagram for " + clusters.item.cluster_name)
+							deg.flush_output
 							generate_cluster_diagram (clusters.item)
 							clusters.forth
 						end
@@ -165,6 +167,7 @@ feature -- Actions
 							classes.after
 						loop
 							deg.put_case_class_message (classes.item.compiled_class)
+							deg.flush_output
 							set_base_cluster (classes.item.cluster)
 							cl_name := classes.item.name.as_lower
 							set_class_name (cl_name)

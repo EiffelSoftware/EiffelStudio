@@ -76,7 +76,7 @@ feature -- Sort
 				-- Perform sort
 			perform_sort
 
-				-- Check validity: there must be no cycle in the 
+				-- Check validity: there must be no cycle in the
 				-- inheritance graph
 			check_validity
 		end
@@ -117,11 +117,11 @@ feature {NONE} -- Filling
 			end
 
 			count := 0
-			from 
+			from
 				nb := Class_counter.count
-				i := 1 
-			until 
-				i > nb 
+				i := 1
+			until
+				i > nb
 			loop
 				a_class := class_array.item (i)
 				if a_class /= Void then
@@ -150,7 +150,7 @@ feature {NONE} -- Filling
 			loop
 				from
 					succ := successors.item (i)
-					check 
+					check
 						successor_exists: succ /= Void
 							-- Data structure `successors' for id `i'
 							-- must exist.
@@ -452,7 +452,7 @@ feature {NONE} -- Implementation
 			correct_bounds: min <= max
 		local
 			up, down: INTEGER
-			x, temp: CLASS_C 
+			x, temp: CLASS_C
 		do
 				-- Define the pivot value as the first element of table
 			x := order.item (min)
@@ -475,7 +475,7 @@ feature {NONE} -- Implementation
 				loop
 					up := up + 1
 				end
-			
+
 					-- Decrement down until it selects the first element
 					-- lesser than or equal to the pivot
 				from
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 			order.put (temp, min)
 			Result := down
 		end
-	
+
 invariant
 	order_not_void: order /= Void
 	precursor_count_not_void: precursor_count /= Void

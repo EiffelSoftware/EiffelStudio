@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ATTRIBUTE_B 
+class ATTRIBUTE_B
 
 inherit
 
@@ -27,8 +27,8 @@ feature -- Visitor
 		do
 			v.process_attribute_b (Current)
 		end
-	
-feature 
+
+feature
 
 	type: TYPE_I
 			-- Attribute type
@@ -117,7 +117,7 @@ feature -- IL code generation
 				Context.real_type (type),
 				attribute_id)
 		end
-		
+
 	generate_il_call_access (is_target_of_call: BOOLEAN) is
 			-- Generate IL code for an access to an attribute variable.
 		local
@@ -155,7 +155,7 @@ feature -- IL code generation
 			else
 					-- Type of class which defines current attribute.
 				cl_type ?= context_type
-				if cl_type.is_expanded then
+				if cl_type.is_expanded and then not cl_type.is_external then
 						-- Access attribute directly.
 					target_type := cl_type
 					target_attribute_id := cl_type.base_class.feature_of_rout_id (routine_id).feature_id
@@ -337,7 +337,7 @@ feature -- Byte code generation
 
 	code_first: CHARACTER is
 			-- Byte code when access is first (no invariant)
-		once	
+		once
 			Result := Bc_attribute
 		end
 

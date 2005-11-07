@@ -120,9 +120,19 @@ feature -- Access
 			l_points: like point_array
 			i, nb: INTEGER
 			l_item: EV_COORDINATE
+			l_x_pos_string: STRING
+			l_y_pos_string: STRING
+			l_xml_routines: like xml_routines
+			l_xml_namespace: like xml_namespace
+			l_foreground_color: like foreground_color
 		do
+			l_foreground_color := foreground_color
+			l_x_pos_string := x_pos_string
+			l_y_pos_string := y_pos_string
+			l_xml_routines := xml_routines
+			l_xml_namespace := xml_namespace
 			Result := Precursor {EG_LINK_FIGURE} (node)
-			create edges.make (Result, "EDGES", xml_namespace)
+			create edges.make (Result, once "EDGES", xml_namespace)
 			from
 				l_points := line.point_array
 				i := 1
@@ -131,19 +141,25 @@ feature -- Access
 				i >= nb
 			loop
 				l_item := l_points.item (i)
-				create edge_xml_element.make (edges, "EDGE", xml_namespace)
-				edge_xml_element.put_last (Xml_routines.xml_node (edge_xml_element, "X_POS", l_item.x.out))
-				edge_xml_element.put_last (Xml_routines.xml_node (edge_xml_element, "Y_POS", l_item.y.out))
+				create edge_xml_element.make (edges, edge_string, l_xml_namespace)
+				edge_xml_element.put_last (l_xml_routines.xml_node (edge_xml_element, l_x_pos_string, l_item.x.out))
+				edge_xml_element.put_last (l_xml_routines.xml_node (edge_xml_element, l_y_pos_string, l_item.y.out))
 				edges.put_last (edge_xml_element)
 				i := i + 1
 			end
 			Result.put_last (edges)
-			Result.put_last (Xml_routines.xml_node (Result, "LINE_WIDTH", line_width.out))
-			Result.put_last (Xml_routines.xml_node (Result, "LINE_COLOR", 
-				foreground_color.red_8_bit.out + ";" +
-				foreground_color.green_8_bit.out + ";" +
-				foreground_color.blue_8_bit.out))
+			Result.put_last (l_xml_routines.xml_node (Result, line_width_string, line_width.out))
+			Result.put_last (l_xml_routines.xml_node (Result, line_color_string, 
+				l_foreground_color.red_8_bit.out + ";" +
+				l_foreground_color.green_8_bit.out + ";" +
+				l_foreground_color.blue_8_bit.out))
 		end
+
+	edge_string: STRING is "EDGE"
+	x_pos_string: STRING is "X_POS"
+	y_pos_string: STRING is "Y_POS"
+	line_width_string: STRING is "LINE_WIDTH"
+	line_color_string: STRING is "LINE_COLOR"
 		
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
@@ -151,8 +167,14 @@ feature -- Access
 			edges, l_item: XM_ELEMENT
 			l_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
 			ax, ay: INTEGER
+			l_x_pos_string, l_y_pos_string: STRING
+			l_xml_routines: like xml_routines
+			l_edges_count: INTEGER
 		do
 			Precursor {EG_LINK_FIGURE} (node)
+			l_x_pos_string := x_pos_string
+			l_y_pos_string := y_pos_string
+			l_xml_routines := xml_routines
 			
 			reset
 			edges ?= node.item_for_iteration
@@ -165,15 +187,15 @@ feature -- Access
 				if not l_cursor.after then
 					l_item ?= l_cursor.item
 					l_item.start
-					ax := xml_routines.xml_integer (l_item, "X_POS")
-					ay := xml_routines.xml_integer (l_item, "Y_POS")
+					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
+					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
 					line.point_array.item (1).set (ax, ay)
 					
 					l_cursor.forth
 					l_item ?= l_cursor.item
 					l_item.start
-					ax := xml_routines.xml_integer (l_item, "X_POS")
-					ay := xml_routines.xml_integer (l_item, "Y_POS")
+					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
+					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
 					line.point_array.item (2).set (ax, ay)
 				end
 			else
@@ -183,18 +205,19 @@ feature -- Access
 				loop
 					l_item ?= l_cursor.item
 					l_item.start
-					add_point_between (edges_count + 1, edges_count + 2)
-					ax := xml_routines.xml_integer (l_item, "X_POS")
-					ay := xml_routines.xml_integer (l_item, "Y_POS")
-					set_i_th_point_position (edges_count + 1, ax, ay)
+					l_edges_count := edges_count
+					add_point_between (l_edges_count + 1, l_edges_count + 2)
+					ax := l_xml_routines.xml_integer (l_item, l_x_pos_string)
+					ay := l_xml_routines.xml_integer (l_item, l_y_pos_string)
+					set_i_th_point_position (l_edges_count + 1, ax, ay)
 					l_cursor.forth
 				end
 			end
 
 			line.point_array.item (line.point_array.count - 1).set (target.port_x, target.port_y)
 			
-			set_line_width (xml_routines.xml_integer (node, "LINE_WIDTH"))
-			set_foreground_color (xml_routines.xml_color (node, "LINE_COLOR"))
+			set_line_width (l_xml_routines.xml_integer (node, once "LINE_WIDTH"))
+			set_foreground_color (l_xml_routines.xml_color (node, once "LINE_COLOR"))
 		end
 		
 	xml_node_name: STRING is

@@ -101,24 +101,33 @@ feature -- Access
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
 		do
-			Result := "EG_RESIZABLE_CLUSTER_FIGURE"
+			Result := once "EG_RESIZABLE_CLUSTER_FIGURE"
 		end
 		
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml element representing `Current's state.
+		local
+			l_colon: STRING
+			l_user_size: like user_size
 		do
 			Result := Precursor {EG_CLUSTER_FIGURE} (node)
-			if user_size = Void then
-				Result.put_last (Xml_routines.xml_node (Result, "IS_USER_SIZED", (False).out))
+			l_colon := ";"
+			l_user_size := user_size
+			if l_user_size = Void then
+				Result.put_last (Xml_routines.xml_node (Result, is_user_sized_string, boolean_representation (False)))
 			else
-				Result.put_last (Xml_routines.xml_node (Result, "IS_USER_SIZED", (True).out))
-				Result.put_last (Xml_routines.xml_node (Result, "USER_SIZE", 
-					user_size.left.out + ";" +
-					user_size.top.out + ";" +
-					user_size.width.out + ";" +
-					user_size.height.out + ";"))
+				Result.put_last (Xml_routines.xml_node (Result, is_user_sized_string, boolean_representation (True)))
+				Result.put_last (Xml_routines.xml_node (Result, user_size_string, 
+					l_user_size.left.out + l_colon +
+					l_user_size.top.out + l_colon +
+					l_user_size.width.out + l_colon +
+					l_user_size.height.out + l_colon))
 			end
 		end
+
+	is_user_sized_string: STRING is "IS_USER_SIZED"
+	user_size_string: STRING is "USER_SIZE"
+		-- String constants for XML handling.
 		
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
@@ -126,8 +135,8 @@ feature -- Access
 			size_str: STRING
 		do
 			Precursor {EG_CLUSTER_FIGURE} (node)
-			if xml_routines.xml_boolean (node, "IS_USER_SIZED") then
-				size_str := xml_routines.xml_string (node, "USER_SIZE")
+			if xml_routines.xml_boolean (node, is_user_sized_string) then
+				size_str := xml_routines.xml_string (node, user_size_string)
 				user_size := rectangle_from_string (size_str)
 			end
 		end

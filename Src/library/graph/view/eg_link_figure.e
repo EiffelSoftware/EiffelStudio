@@ -49,11 +49,14 @@ feature -- Access
 			
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
+		local
+			l_model: like model
 		do
+			l_model := model
 			Result := Precursor {EG_FIGURE} (node)
-			Result.add_attribute ("SOURCE", xml_namespace, model.source.name)
-			Result.add_attribute ("TARGET", xml_namespace, model.target.name)
-			Result.put_last (Xml_routines.xml_node (Result, "IS_DIRECTED", model.is_directed.out))
+			Result.add_attribute (once "SOURCE", xml_namespace, l_model.source.name)
+			Result.add_attribute (once "TARGET", xml_namespace, l_model.target.name)
+			Result.put_last (Xml_routines.xml_node (Result, is_directed_string, boolean_representation (l_model.is_directed)))
 		end
 		
 	set_with_xml_element (node: XM_ELEMENT) is
@@ -62,13 +65,15 @@ feature -- Access
 			node.forth
 			node.forth
 			Precursor {EG_FIGURE} (node)
-			model.set_is_directed (xml_routines.xml_boolean (node, "IS_DIRECTED"))
+			model.set_is_directed (xml_routines.xml_boolean (node, is_directed_string))
 		end
+
+	is_directed_string: STRING is "IS_DIRECTED"
 		
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
-			Result := "EG_LINK_FIGURE"
+			Result := once "EG_LINK_FIGURE"
 		end
 		
 feature -- Element change

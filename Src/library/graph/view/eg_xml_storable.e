@@ -45,6 +45,16 @@ feature -- Element change
 		
 feature {NONE} -- Implementation
 
+	boolean_representation (a_boolean: BOOLEAN): STRING is
+			-- Optimized string representation of `a_boolean'.
+		do
+			if a_boolean then
+				Result := once "True"
+			else
+				Result := once "False"
+			end
+		end
+
 	xml_namespace: XM_NAMESPACE is
 		once
 			create Result.make_default

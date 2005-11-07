@@ -9,6 +9,8 @@ class
 
 inherit
 	EIFFEL_CLASS_FIGURE
+		undefine
+			is_storable
 		redefine
 			default_create,
 			update,
@@ -20,7 +22,8 @@ inherit
 			xml_element,
 			set_with_xml_element,
 			set_is_fixed,
-			recycle
+			recycle,
+			is_storable
 		end
 		
 	BON_FIGURE
@@ -201,7 +204,7 @@ feature -- Access
 			l_model := model
 			Result := Precursor {EIFFEL_CLASS_FIGURE} (node)
 			Result.add_attribute (cluster_name_string, xml_namespace, l_model.class_i.cluster.cluster_name)
-			Result.put_last (l_xml_routines.xml_node (Result, is_default_bg_color_used_string, is_default_background_color_used.out))
+			Result.put_last (l_xml_routines.xml_node (Result, is_default_bg_color_used_string, boolean_representation (is_default_background_color_used)))
 			if not is_default_background_color_used then
 				l_color := background_color
 				Result.put_last (l_xml_routines.xml_node (Result, background_color_string, 
@@ -219,7 +222,7 @@ feature -- Access
 					l_color.green_8_bit.out + colon_string +
 					l_color.blue_8_bit.out))
 			end
-			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, l_model.is_needed_on_diagram.out))
+			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
 		end
 		
 	set_with_xml_element (node: XM_ELEMENT) is

@@ -9,6 +9,8 @@ class
 
 inherit
 	EIFFEL_INHERITANCE_FIGURE
+		undefine
+			is_storable
 		redefine
 			update,
 			recursive_transform,
@@ -62,12 +64,19 @@ feature -- Access
 
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
+		local
+			l_xml_namespace: like xml_namespace
+			l_xml_routines: like xml_routines
+			l_model: like model
 		do
+			l_xml_namespace := xml_namespace
+			l_xml_routines := xml_routines
+			l_model := model
 			Result := Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
-			Result.add_attribute ("SOURCE_CLUSTER", xml_namespace, model.descendant.class_i.cluster.cluster_name)
-			Result.add_attribute ("TARGET_CLUSTER", xml_namespace, model.ancestor.class_i.cluster.cluster_name)
-			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
-			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
+			Result.add_attribute (once "SOURCE_CLUSTER", l_xml_namespace, l_model.descendant.class_i.cluster.cluster_name)
+			Result.add_attribute (once "TARGET_CLUSTER", l_xml_namespace, l_model.ancestor.class_i.cluster.cluster_name)
+			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
+			Result.put_last (l_xml_routines.xml_node (Result, real_line_width_string, (real_line_width * 100).rounded.out))
 		end
 		
 	set_with_xml_element (node: XM_ELEMENT) is
@@ -76,12 +85,12 @@ feature -- Access
 			node.forth
 			node.forth
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (node)
-			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
+			if xml_routines.xml_boolean (node, is_needed_on_diagram_string) then
 				model.enable_needed_on_diagram
 			else
 				model.disable_needed_on_diagram
 			end
-			real_line_width := xml_routines.xml_integer (node, "REAL_LINE_WIDTH") / 100
+			real_line_width := xml_routines.xml_integer (node, real_line_width_string) / 100
 			if real_line_width.rounded.max (1) /= line_width then
 				line.set_line_width (real_line_width.rounded.max (1))
 			end
@@ -90,7 +99,7 @@ feature -- Access
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
-			Result := "BON_INHERITANCE_FIGURE"
+			Result := once "BON_INHERITANCE_FIGURE"
 		end
 		
 feature -- Element change
@@ -172,6 +181,8 @@ feature {NONE} -- Implementation
 
 	real_line_width: REAL
 			-- Real line width.
+
+	real_line_width_string: STRING is "REAL_LINE_WIDTH"
 			
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.

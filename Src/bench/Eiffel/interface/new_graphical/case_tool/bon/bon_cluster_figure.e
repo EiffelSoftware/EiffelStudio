@@ -9,6 +9,8 @@ class
 
 inherit
 	EIFFEL_CLUSTER_FIGURE
+		undefine
+			is_storable
 		redefine
 			default_create,
 			update,
@@ -243,15 +245,18 @@ feature -- Access
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
 		do
-			Result := "BON_CLUSTER_FIGURE"
+			Result := once "BON_CLUSTER_FIGURE"
 		end
+
+	is_iconified_string: STRING is "IS_ICONIFIED"
+		-- Xml string constant.
 		
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml element representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_CLUSTER_FIGURE} (node)
-			Result.put_last (Xml_routines.xml_node (Result, "IS_ICONIFIED", is_iconified.out))
-			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
+			Result.put_last (Xml_routines.xml_node (Result, is_iconified_string, boolean_representation (is_iconified)))
+			Result.put_last (Xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (model.is_needed_on_diagram)))
 			
 			Result := polyline_label_xml_element (node)
 		end
@@ -260,7 +265,7 @@ feature -- Access
 			-- Retrive state from `node'.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE} (node)
-			if xml_routines.xml_boolean (node, "IS_ICONIFIED") then
+			if xml_routines.xml_boolean (node, is_iconified_string) then
 				if not is_iconified then
 					collapse
 					if bon_cluster_iconified_fill_color /= Void then
@@ -281,7 +286,7 @@ feature -- Access
 					is_iconified := False
 				end
 			end
-			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
+			if xml_routines.xml_boolean (node, is_needed_on_diagram_string) then
 				model.enable_needed_on_diagram
 			else
 				model.disable_needed_on_diagram

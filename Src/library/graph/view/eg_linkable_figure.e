@@ -132,23 +132,28 @@ feature -- Access
 		
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml element representing `Current's state.
+		local
+			l_xml_routines: like xml_routines
 		do
+			l_xml_routines := xml_routines
 			Result := Precursor {EG_FIGURE} (node)
-			Result.put_last (Xml_routines.xml_node (Result, is_fixed_string, is_fixed.out))
-			Result.put_last (xml_routines.xml_node (Result, port_x_string, port_x.out))
-			Result.put_last (xml_routines.xml_node (Result, port_y_string, port_y.out))
+			Result.put_last (l_xml_routines.xml_node (Result, is_fixed_string, boolean_representation (is_fixed)))
+			Result.put_last (l_xml_routines.xml_node (Result, port_x_string, port_x.out))
+			Result.put_last (l_xml_routines.xml_node (Result, port_y_string, port_y.out))
 		end
 		
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		local
 			ax, ay: INTEGER
+			l_xml_routines: like xml_routines
 		do
 			Precursor {EG_FIGURE} (node)
-			set_is_fixed (xml_routines.xml_boolean (node, is_fixed_string))
+			l_xml_routines := xml_routines
+			set_is_fixed (l_xml_routines.xml_boolean (node, is_fixed_string))
 			
-			ax := xml_routines.xml_integer (node, port_x_string)
-			ay := xml_routines.xml_integer (node, port_y_string)
+			ax := l_xml_routines.xml_integer (node, port_x_string)
+			ay := l_xml_routines.xml_integer (node, port_y_string)
 			set_port_position (ax, ay)
 		end
 

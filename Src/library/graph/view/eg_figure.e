@@ -46,6 +46,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	is_storable: BOOLEAN is
+			-- Does `Current' need to be persistently stored?
+			-- True by default.
+		do
+			Result := True
+		end
+
 	model: EG_ITEM
 			-- The model for `Current'
 	
@@ -57,12 +64,15 @@ feature -- Access
 		
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
+		local
+			l_xml_routines: like xml_routines
 		do
+			l_xml_routines := xml_routines
 			if model.name /= Void then
 				node.add_attribute (name_string, xml_namespace, model.name)
 			end
-			node.put_last (Xml_routines.xml_node (node, is_selected_string, is_selected.out))
-			node.put_last (Xml_routines.xml_node (node, is_label_shown_string, is_label_shown.out))
+			node.put_last (l_xml_routines.xml_node (node, is_selected_string, boolean_representation (is_selected)))
+			node.put_last (l_xml_routines.xml_node (node, is_label_shown_string, boolean_representation (is_label_shown)))
 			Result := node
 		end
 
@@ -75,16 +85,20 @@ feature -- Access
 			-- Retrive state from `node'.
 		local
 			l_name: STRING
+			l_xml_routines: like xml_routines
+			l_model: like model
 		do
+			l_xml_routines := xml_routines
 			if node.has_attribute_by_name (name_string) then
 				l_name := node.attribute_by_name (name_string).value
-				if model.name = Void or else not model.name.is_equal (l_name) then
-					model.set_name (l_name)
+				l_model := model
+				if l_model.name = Void or else not l_model.name.is_equal (l_name) then
+					l_model.set_name (l_name)
 				end
 				node.forth
 			end
-			set_is_selected (xml_routines.xml_boolean (node, is_selected_string))
-			if xml_routines.xml_boolean (node, is_label_shown_string) then
+			set_is_selected (l_xml_routines.xml_boolean (node, is_selected_string))
+			if l_xml_routines.xml_boolean (node, is_label_shown_string) then
 				if not is_label_shown then
 					show_label
 				end

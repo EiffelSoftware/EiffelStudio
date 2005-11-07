@@ -756,8 +756,10 @@ feature -- Save/Restore
 				l_root_cluster.after
 			loop
 				l_item := l_root_cluster.item
-				create fig.make (root_elements, l_item.xml_node_name, xml_namespace)
-				root_elements.put_last (l_item.xml_element (fig))
+				if l_item.is_storable then
+					create fig.make (root_elements, l_item.xml_node_name, xml_namespace)
+					root_elements.put_last (l_item.xml_element (fig))					
+				end
 				l_root_cluster.forth
 			end
 			from
@@ -767,8 +769,10 @@ feature -- Save/Restore
 				l_links.after
 			loop
 				l_item := l_links.item
-				create fig.make (root_elements, l_item.xml_node_name, xml_namespace)
-				root_elements.put_last (l_item.xml_element (fig))
+				if l_item.is_storable then
+					create fig.make (root_elements, l_item.xml_node_name, xml_namespace)
+					root_elements.put_last (l_item.xml_element (fig))					
+				end
 				l_links.forth
 			end
 			node.put_last (root_elements)

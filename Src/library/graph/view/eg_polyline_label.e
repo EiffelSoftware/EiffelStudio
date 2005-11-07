@@ -63,10 +63,10 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		do
 			Result := node
-			Result.put_last (xml_routines.xml_node (Result, "LABEL_POSITION", (position_on_line * 100).rounded.out))
-			Result.put_last (xml_routines.xml_node (Result, "LABEL_START_NB", point_number (label_line_start_point).out))
-			Result.put_last (xml_routines.xml_node (Result, "LABEL_END_NB", point_number (label_line_end_point).out))
-			Result.put_last (xml_routines.xml_node (Result, "IS_LEFT", is_left.out))
+			Result.put_last (xml_routines.xml_node (Result, once "LABEL_POSITION", (position_on_line * 100).rounded.out))
+			Result.put_last (xml_routines.xml_node (Result, once "LABEL_START_NB", point_number (label_line_start_point).out))
+			Result.put_last (xml_routines.xml_node (Result, once "LABEL_END_NB", point_number (label_line_end_point).out))
+			Result.put_last (xml_routines.xml_node (Result, once "IS_LEFT", boolean_representation (is_left)))
 		end
 		
 	set_with_xml_element (node: XM_ELEMENT) is
@@ -74,12 +74,12 @@ feature -- Access
 		local
 			p, q: EV_COORDINATE
 		do
-			position_on_line := xml_routines.xml_integer (node, "LABEL_POSITION") / 100
-			p := polyline_points.item (xml_routines.xml_integer (node, "LABEL_START_NB"))
-			q := polyline_points.item (xml_routines.xml_integer (node, "LABEL_END_NB"))
+			position_on_line := xml_routines.xml_integer (node, once "LABEL_POSITION") / 100
+			p := polyline_points.item (xml_routines.xml_integer (node, once "LABEL_START_NB"))
+			q := polyline_points.item (xml_routines.xml_integer (node, once "LABEL_END_NB"))
 			label_line_start_point := p
 			label_line_end_point := q
-			is_left := xml_routines.xml_boolean (node, "IS_LEFT")
+			is_left := xml_routines.xml_boolean (node, once "IS_LEFT")
 		end	
 		
 feature -- Element change

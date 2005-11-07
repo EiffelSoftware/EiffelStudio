@@ -9,6 +9,8 @@ class
 	
 inherit
 	EIFFEL_CLIENT_SUPPLIER_FIGURE
+		undefine
+			is_storable
 		redefine
 			update,
 			remove_i_th_point,
@@ -129,18 +131,24 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		local
 			was_low: BOOLEAN
+			l_xml_namespace: like xml_namespace
+			l_xml_routines: like xml_routines
+			l_model: like model
 		do
+			l_xml_namespace := xml_namespace
+			l_xml_routines := xml_routines
+			l_model := model
 			if not is_high_quality then
 				enable_high_quality
 				was_low := True
 			end
 			Result := Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
-			Result.add_attribute ("SOURCE_CLUSTER", xml_namespace, model.client.class_i.cluster.cluster_name)
-			Result.add_attribute ("TARGET_CLUSTER", xml_namespace, model.supplier.class_i.cluster.cluster_name)
-			Result.remove_attribute_by_name ("NAME")
-			Result.put_last (Xml_routines.xml_node (Result, "IS_LABEL_EXPANDED", is_label_expanded.out))
-			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
-			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
+			Result.add_attribute (once "SOURCE_CLUSTER", l_xml_namespace, l_model.client.class_i.cluster.cluster_name)
+			Result.add_attribute (once "TARGET_CLUSTER", l_xml_namespace, l_model.supplier.class_i.cluster.cluster_name)
+			Result.remove_attribute_by_name (name_string)
+			Result.put_last (l_xml_routines.xml_node (Result, once "IS_LABEL_EXPANDED", boolean_representation (is_label_expanded)))
+			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
+			Result.put_last (l_xml_routines.xml_node (Result, once "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 			
 			Result := polyline_label_xml_element (Result)
 			if was_low then
@@ -152,7 +160,9 @@ feature -- Access
 			-- Retrive state from `node'.
 		local
 			was_low: BOOLEAN
+			l_xml_routines: like xml_routines
 		do
+			l_xml_routines := xml_routines
 			if not is_high_quality then
 				enable_high_quality
 				was_low := True
@@ -160,19 +170,19 @@ feature -- Access
 			node.forth
 			node.forth
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (node)
-			if xml_routines.xml_boolean (node, "IS_LABEL_EXPANDED") then
+			if l_xml_routines.xml_boolean (node, once "IS_LABEL_EXPANDED") then
 				is_label_expanded := True
 				on_name_change
 			else
 				is_label_expanded := False
 				on_name_change
 			end
-			if xml_routines.xml_boolean (node, "IS_NEEDED_ON_DIAGRAM") then
+			if l_xml_routines.xml_boolean (node, once "IS_NEEDED_ON_DIAGRAM") then
 				model.enable_needed_on_diagram
 			else
 				model.disable_needed_on_diagram
 			end
-			real_line_width := xml_routines.xml_integer (node, "REAL_LINE_WIDTH") / 100
+			real_line_width := l_xml_routines.xml_integer (node, once "REAL_LINE_WIDTH") / 100
 			if real_line_width.rounded.max (1) /= line_width then
 				line.set_line_width (real_line_width.rounded.max (1))
 			end

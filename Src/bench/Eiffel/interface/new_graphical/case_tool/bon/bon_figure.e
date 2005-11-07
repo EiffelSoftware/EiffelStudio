@@ -35,6 +35,17 @@ feature -- Status settings
 		
 feature {NONE} -- Implementation
 
+	is_storable: BOOLEAN is
+			-- 
+		do
+			Result := model.is_needed_on_diagram
+		end
+
+	model: ES_ITEM is
+			-- Model for `Current'.
+		deferred
+		end
+
 	is_needed_on_diagram_string: STRING is "IS_NEEDED_ON_DIAGRAM"
 
 	set_is_high_quality (a_high_quality: like is_high_quality) is

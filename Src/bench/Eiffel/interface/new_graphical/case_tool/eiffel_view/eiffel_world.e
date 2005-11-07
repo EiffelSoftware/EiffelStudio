@@ -194,8 +194,14 @@ feature -- Element change.
 
 	update is
 			-- Update.
+		local
+			l_background_color: like background_color
 		do
-			background_color := preferences.diagram_tool_data.diagram_background_color
+			l_background_color := preferences.diagram_tool_data.diagram_background_color
+			if background_color /= l_background_color then
+				background_color := l_background_color
+				full_redraw
+			end
 			if is_statistics then
 				update_statistic
 			end
@@ -203,7 +209,6 @@ feature -- Element change.
 			if is_cluster_shown then
 				update_fade
 			end
-			full_redraw
 		end
 
 	scale (a_scale: DOUBLE) is

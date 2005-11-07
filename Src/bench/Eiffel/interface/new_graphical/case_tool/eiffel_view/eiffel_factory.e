@@ -33,6 +33,14 @@ feature -- Access
 
 	world: EIFFEL_WORLD
 	
+	name_string: STRING is "NAME"
+	cluster_name_string: STRING is "CLUSTER_NAME"
+	source_string: STRING is "SOURCE"
+	target_string: STRING is "TARGET"
+	source_cluster_string: STRING is "SOURCE_CLUSTER"
+	target_cluster_string: STRING is "TARGET_CLUSTER"
+		-- Xml string constants
+	
 	model_from_xml (node: XM_ELEMENT): EG_ITEM is
 			-- Create an EG_ITEM from `node' if possible.
 		local
@@ -41,18 +49,22 @@ feature -- Access
 			class_found, target_found, source_found: CLASS_I
 			source, target, new_class: ES_CLASS
 			new_cluster: ES_CLUSTER
+			l_world: like world
+			l_universe: like universe
 		do
+			l_world := world
+			l_universe := universe
 			node_name := node.name
 			if node_name.is_equal (xml_class_figure_node_name) then
-				class_name := node.attribute_by_name ("NAME").value
+				class_name := node.attribute_by_name (name_string).value
 				if class_name /= Void then				
-					cluster_name := node.attribute_by_name ("CLUSTER_NAME").value
+					cluster_name := node.attribute_by_name (cluster_name_string).value
 					if cluster_name /= Void then
-						cluster_found := universe.cluster_of_name (cluster_name)
+						cluster_found := l_universe.cluster_of_name (cluster_name)
 						if cluster_found /= Void then
-							class_found := universe.class_named (class_name, cluster_found)
+							class_found := l_universe.class_named (class_name, cluster_found)
 							if class_found /= Void then
-								new_class := world.model.class_from_interface (class_found)
+								new_class := l_world.model.class_from_interface (class_found)
 								if new_class = Void then
 									create {ES_CLASS} Result.make (class_found)
 								else
@@ -71,11 +83,11 @@ feature -- Access
 					xml_routines.display_error_message ("class? NAME attribute expected")
 				end
 			elseif node_name.is_equal (xml_cluster_figure_node_name) then
-				cluster_name := node.attribute_by_name ("NAME").value
+				cluster_name := node.attribute_by_name (name_string).value
 				if cluster_name /= Void then
-					cluster_found := universe.cluster_of_name (cluster_name)
+					cluster_found := l_universe.cluster_of_name (cluster_name)
 					if cluster_found /= Void then
-						new_cluster := world.model.cluster_from_interface (cluster_found)
+						new_cluster := l_world.model.cluster_from_interface (cluster_found)
 						if new_cluster = Void then
 							create {ES_CLUSTER} Result.make (cluster_found)
 						else
@@ -89,32 +101,32 @@ feature -- Access
 					xml_routines.display_error_message ("cluster? NAME attribute expected")
 				end
 			elseif node_name.is_equal (xml_client_supplier_figure_node_name) or else node_name.is_equal (xml_inheritance_figure_node_name) then
-				source_name := node.attribute_by_name ("SOURCE").value
+				source_name := node.attribute_by_name (source_string).value
 				if source_name /= Void then
-					target_name := node.attribute_by_name ("TARGET").value
+					target_name := node.attribute_by_name (target_string).value
 					if target_name /= Void then
-						source_cluster_name := node.attribute_by_name ("SOURCE_CLUSTER").value
+						source_cluster_name := node.attribute_by_name (source_cluster_string).value
 						if source_cluster_name /= Void then
-							target_cluster_name := node.attribute_by_name ("TARGET_CLUSTER").value
+							target_cluster_name := node.attribute_by_name (target_cluster_string).value
 							if target_cluster_name /= Void then
-								source_cluster := universe.cluster_of_name (source_cluster_name)
-								target_cluster := universe.cluster_of_name (target_cluster_name)
+								source_cluster := l_universe.cluster_of_name (source_cluster_name)
+								target_cluster := l_universe.cluster_of_name (target_cluster_name)
 								if source_cluster /= Void and target_cluster /= Void then
-									source_found := universe.class_named (source_name, source_cluster)
-									target_found := universe.class_named (target_name, target_cluster)
+									source_found := l_universe.class_named (source_name, source_cluster)
+									target_found := l_universe.class_named (target_name, target_cluster)
 									if source_found /= Void and target_found /= Void then
-										source := world.model.class_from_interface (source_found)
-										target := world.model.class_from_interface (target_found)
+										source := l_world.model.class_from_interface (source_found)
+										target := l_world.model.class_from_interface (target_found)
 										if source /= Void and then target /= Void then
 											if node_name.is_equal (xml_client_supplier_figure_node_name) then
 												if source.has_supplier (target) then
-													Result := world.model.client_supplier_link_connecting (source, target)
+													Result := l_world.model.client_supplier_link_connecting (source, target)
 													if Result = Void then
 														create {ES_CLIENT_SUPPLIER_LINK} Result.make (source, target)
 													end
 												end
 											else
-												Result := world.model.inheritance_link_connecting (source, target)
+												Result := l_world.model.inheritance_link_connecting (source, target)
 												if Result = Void then
 													create {ES_INHERITANCE_LINK} Result.make_with_classes (source, target)
 												end

@@ -115,6 +115,7 @@ feature -- Start output features
 		local
 			l_degree_str: STRING
 		do
+			create Result.make (35)
 			inspect
 				a_degree
 			when 6 then
@@ -130,6 +131,7 @@ feature -- Start output features
 			when 1 then
 				l_degree_str := once "Melting code (metadata)"
 			when 0 then
+					-- Used when generating documentation
 				l_degree_str := once "Processing"
 			when -1 then
 				l_degree_str := once "Code Generation"
@@ -138,7 +140,10 @@ feature -- Start output features
 			when -3 then
 				l_degree_str := once "Optimized Code Generation"
 			end
-			Result := Degree_output_string + a_degree.out + ": " + l_degree_str
+			if a_degree /= 0 then
+				Result.append (Degree_output_string + a_degree.out + ": ")
+			end
+			Result.append (l_degree_str)
 		ensure	
 			result_not_void: Result /= Void
 		end
@@ -409,6 +414,12 @@ feature -- Output on per class
 			processed := processed + 1;
 		end
 
+	flush_output is
+			-- Make sure any pending output is flushed to display.
+		do
+			-- By default do nothing
+		end
+		
 feature -- Element Change
 
 	user_has_requested_cancellation is

@@ -19,7 +19,8 @@ inherit
 	
 	SHARED_PLATFORM_CONSTANTS
 	
-	SHARED_EXEC_ENVIRONMENT	
+	PROJECT_CONTEXT
+		
 			
 feature{NONE}  -- Actions
 
@@ -52,27 +53,7 @@ feature{NONE} -- Implementation
 
 	open_console is 
 			-- Open a command line console if c-compilation failed.
-		local
-			cmdexe: STRING
-			str: STRING
-			cl: STRING
-		do
-			cl := ""
-			if platform_constants.is_windows then
-				cmdexe := Execution_environment.get ("COMSPEC")
-				if cmdexe /= Void then
-						-- This allows the use of `dir' etc.
-					cl.append (cmdexe)
-				else
-					cl.append ("cmd")
-				end
-			else
-				cl.prepend ("sh -c")	
-			end
-			str := execution_environment.current_working_directory
-			execution_environment.change_working_directory (working_directory)
-			execution_environment.launch (cl)
-			execution_environment.change_working_directory (str)
+		deferred
 		end
 		
 	do_not_open_console is

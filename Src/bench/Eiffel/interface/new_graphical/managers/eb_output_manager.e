@@ -21,15 +21,7 @@ feature -- Basic Operations / Generic purpose
 	process_text (st: STRUCTURED_TEXT) is
 			-- Print `st' on all output tools.
 		deferred
-		end	
-		
--- Jason Wei
-	text_is_fully_loaded:BOOLEAN is
-			-- Has text loading finished?
-		deferred
-		end
-		
--- Jason Wei	
+		end		
 
 	clear_and_process_text (st: STRUCTURED_TEXT) is
 			-- Clear window and print `st' on all output tools.

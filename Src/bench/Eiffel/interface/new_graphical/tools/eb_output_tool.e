@@ -132,15 +132,6 @@ feature -- Status setting
 			text_area.set_focus
 		end
 
--- Jason Wei
-feature -- Status reporting
-	text_is_fully_loaded: BOOLEAN is
-			-- Has text loading finished?
-		do
-			Result := text_area.text_is_fully_loaded
-		end		
--- Jason Wei
-
 feature -- Access
 
 	widget: EV_WIDGET

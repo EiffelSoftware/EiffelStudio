@@ -42,6 +42,12 @@ feature -- Status report
 			Result := external_output_manager_cell.item
 		end	
 
+	c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER is
+			-- 
+		do
+			Result := c_compilation_output_manager_cell.item
+		end
+		
 
 	output_manager: EB_OUTPUT_MANAGER is
 			-- Output manager for all output messages.
@@ -87,5 +93,11 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (Void)
 		end	
+		
+	C_compilation_output_manager_cell: CELL [EB_C_COMPILATION_OUTPUT_MANAGER] is
+			--
+		once
+			create Result.put (Void)
+		end
 
 end -- class EB_SHARED_MANAGERS

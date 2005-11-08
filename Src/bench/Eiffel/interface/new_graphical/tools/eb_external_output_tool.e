@@ -45,7 +45,6 @@ feature{NONE} -- Initialization
 	initialization (a_tool: EB_DEVELOPMENT_WINDOW) is
 			--
 		local
-			--lst_item: EV_LIST_ITEM
 			l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
 			l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
 			l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
@@ -64,7 +63,6 @@ feature{NONE} -- Initialization
 			clear_output_toolbar: EV_TOOL_BAR
 			input_toolbar: EV_TOOL_BAR
 			tbs: EV_TOOL_BAR_SEPARATOR
-			--ext_cmd: EB_EXTERNAL_COMMAND
 		do
 			create del_cmd_btn
 			create tbs.default_create
@@ -189,7 +187,6 @@ feature{NONE} -- Initialization
 			send_input_btn.set_tooltip (f_send_input_button)
 			send_input_btn.select_actions.extend (agent on_send_input_btn_pressed)
 
-			save_output_btn.set_text ("Save")
 			output_toolbar.disable_vertical_button_style
 			save_output_btn.set_tooltip (f_save_output_button)
 			save_output_btn.set_pixmap (icon_save.item (1))
@@ -264,7 +261,7 @@ feature -- Basic operation
 	clear is
 			-- Clear window
 		do
-			console.clear
+			console.set_text ("")
 		end
 
 	print_command_name (name: STRING) is
@@ -563,80 +560,15 @@ feature{NONE} -- Actions
 	on_save_output_to_file is
 			-- Called when user press Save output button.
 		local
-
-			ew: EV_WARNING_DIALOG
+			save_tool: EB_SAVE_STRING_TOOL
 		do
-			if console.text.count = 0 then
-				create ew.make_with_text ("No output data.")
-				ew.show_modal_to_window (owner.window)
-			else
-				create save_file_dlg.make_with_title ("Save output to file")
-				save_file_dlg.save_actions.extend (agent on_save_file_selected)
-				save_file_dlg.show_modal_to_window (owner.window)
-				save_file_dlg.destroy
-			end
-		end
-
-	on_save_file_selected is
-			-- Called when user chosed a file to store process output.
-		require
-			save_file_dlg_not_null: save_file_dlg /= Void
-		local
-			f: PLAIN_TEXT_FILE
-			wd: EV_CONFIRMATION_DIALOG
-			dlg: EV_WARNING_DIALOG
-			retried: BOOLEAN
-			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
-			str: STRING
-		do
-			if not retried then
-
-				create f.make (save_file_dlg.file_name)
-				create str.make_from_string (save_file_dlg.file_name)
-				save_file_dlg.destroy
-				if f.exists then
-					create actions.make (1,1)
-					actions.put (agent on_overwrite_file (str), 1)
-					create wd.make_with_text_and_actions (Warning_messages.w_File_exists (str), actions)
-					--create wd.make_with_text ("abcd")
-					wd.show_modal_to_window (owner.window)
-					wd.destroy
-				else
-					on_overwrite_file (save_file_dlg.file_name)
-				end
-			end
-		rescue
-			retried := True
-			create dlg.make_with_text ("Save failed.")
-			dlg.show_modal_to_window (owner.window)
-			dlg.destroy
-			retry
-		end
-
-	on_overwrite_file (file_name: STRING) is
-			-- Agent called when save text from `console' to an existing file
-		local
-			f: PLAIN_TEXT_FILE
-			dlg: EV_WARNING_DIALOG
-			retried: BOOLEAN
-		do
-			if not retried then
-				create f.make_create_read_write (file_name)
-				f.put_string (console.text)
-				f.close
-			end
-		rescue
-			retried := True
-			create dlg.make_with_text ("Save failed.")
-			dlg.show_modal_to_window (owner.window)
-			dlg.destroy
-			retry
+			create save_tool.make_and_save (console.text, owner.window)
 		end
 
 	on_clear_output_window is
 			-- Clear `console'.
 		do
-			console.clear
+			clear
 		end
 
 	on_delete_command is
@@ -704,7 +636,7 @@ feature -- Status reporting
 			-- Has text been fully loaded, only then,
 			-- we can print new data into `console'	
 		do
-			Result := console.text_fully_loaded
+			Result := True
 		end
 
 feature -- State setting
@@ -746,7 +678,7 @@ feature{NONE} -- Implementation
 	hidden_btn: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to set whether or not external command should be run hidden.
 
-	console: EB_EXTERNAL_OUTPUT_PANEL
+	console: EV_TEXT
 			-- Panel to display output from process and waits for user input.
 
 	input_field: EV_COMBO_BOX
@@ -760,9 +692,6 @@ feature{NONE} -- Implementation
 
 	clear_output_btn: EV_TOOL_BAR_BUTTON
 			-- Button to clear output window.
-
-	save_file_dlg: EV_FILE_SAVE_DIALOG
-			-- File dialog to let user choose a file.
 
 	del_cmd_btn: EV_TOOL_BAR_BUTTON
 

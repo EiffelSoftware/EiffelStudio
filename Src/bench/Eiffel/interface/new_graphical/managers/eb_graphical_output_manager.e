@@ -88,28 +88,6 @@ feature -- Basic Operations / Generic purpose
 				managed_output_tools.forth
 			end
 		end
-		
--- Jason Wei
-	text_is_fully_loaded: BOOLEAN is
-		local 
-			done: BOOLEAN
-		do
-			from
-				managed_output_tools.start
-				done := False
-				Result := True
-			until
-				managed_output_tools.after
-			loop
-				if not managed_output_tools.item.text_is_fully_loaded then
-					done := True
-					Result := False
-				end
-				managed_output_tools.forth
-			end			
-		end
-		
--- Jason Wei
 
 	clear_and_process_text (st: STRUCTURED_TEXT) is
 			-- Clear window and print `st' on all output tools.

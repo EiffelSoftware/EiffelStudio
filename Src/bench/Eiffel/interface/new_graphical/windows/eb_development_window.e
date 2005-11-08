@@ -1990,7 +1990,7 @@ feature -- Stone process
 					if editor_tool.text_area.text_is_fully_loaded then
 						if not during_synchronization then
 							scroll_to_feature (feature_stone.e_feature, new_class_stone.class_i)
-							feature_stone_already_processed := editor_tool.text_area.found_feature
+							feature_stone_already_processed := True
 						else
 							feature_stone_already_processed := True
 						end
@@ -2919,14 +2919,16 @@ feature {NONE} -- Implementation
 									end
 								end
 							else
-								address_manager.disable_formatters
-								from
-									managed_main_formatters.start
-								until
-									managed_main_formatters.after
-								loop
-									managed_main_formatters.item.set_stone (new_class_stone)
-									managed_main_formatters.forth
+								if not feature_stone_already_processed then
+									address_manager.disable_formatters
+									from
+										managed_main_formatters.start
+									until
+										managed_main_formatters.after
+									loop
+										managed_main_formatters.item.set_stone (new_class_stone)
+										managed_main_formatters.forth
+									end
 								end
 							end
 						end
@@ -3225,12 +3227,14 @@ feature {NONE} -- Implementation
 						editor_tool.text_area.find_feature_named (feat_as.name)
 					end
 				else
-					begin_index := feat_as.ast.start_position
-					if platform_constants.is_windows then
-						tmp_text := displayed_class.text.substring (1, begin_index)
-						offset := tmp_text.occurrences('%R')
+					if feat_as.ast /= Void then
+						begin_index := feat_as.ast.start_position
+						if platform_constants.is_windows then
+							tmp_text := displayed_class.text.substring (1, begin_index)
+							offset := tmp_text.occurrences('%R')
+						end
+						editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
 					end
-					editor_tool.text_area.scroll_to_when_ready (begin_index.item - offset)
 				end
 			else
 				if not managed_main_formatters.first.selected then

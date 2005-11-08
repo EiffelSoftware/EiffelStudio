@@ -2409,6 +2409,8 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_RESERVE\n");
 #endif
 		last = iget();
+		last->type = SK_POINTER;
+		last->it_ptr = NULL;
 		break;
 	/*
 	 * Object address operator.

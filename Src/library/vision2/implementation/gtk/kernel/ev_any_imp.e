@@ -197,6 +197,10 @@ feature {NONE} -- Implementation
 						-- Disconnect dispose signal for `c_object'.
 					{EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect_by_data (l_c_object, internal_id)
 						-- Unref `c_object' so that is may get collected by gtk.
+					if {EV_GTK_EXTERNALS}.gtk_is_window (l_c_object) then
+							-- Windows need to be explicitly destroyed.
+						{EV_GTK_DEPENDENT_EXTERNALS}.object_destroy (l_c_object)
+					end
 					{EV_GTK_DEPENDENT_EXTERNALS}.object_unref (l_c_object)
 				end
 			end

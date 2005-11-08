@@ -25,7 +25,7 @@ class
 
 inherit
 	PRODUCT_NAMES
-	
+
 feature -- Button texts
 
 	b_Abort: STRING is							"Abort"
@@ -122,7 +122,7 @@ feature -- Button texts
 	-- Jason Wei added the following line on Aug 31 2005
 	b_Terminate_c_compilation: STRING is 		"Terminate C Compilation"
 	-- Jason Wei added the above line on Aug 31 2005
-	
+
 feature -- Graphical degree output
 
 	d_Classes_to_go: STRING is					"Classes to Go:"
@@ -608,7 +608,7 @@ feature -- Label texts
 	l_Subquery: STRING is				"Define new subquery"
 	l_Suppliers: STRING is				"suppliers"
 	l_Switch_num_format: STRING is 		"Switch numerical formating"
-	l_Switch_num_format_desc: STRING is "Display numerical value as Hexadecimal or Decimal formating"	
+	l_Switch_num_format_desc: STRING is "Display numerical value as Hexadecimal or Decimal formating"
 	l_Syntax_error: STRING is			"Class text has syntax error"
 	l_System_name: STRING is			"System name: "
 	l_System_properties: STRING is		"System properties"
@@ -738,98 +738,98 @@ feature -- Title part
 	t_Diagram_link_tool: STRING is				"Link Tool"
 	t_Diagram_delete_client_link: STRING is 	"Choose Feature(s) to Delete"
 	t_Diagram_history_tool: STRING is			"History Tool"
-	
+
 	t_Diagram_move_class_cmd (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
 			Result := "Move Class '" + a_name + "'"
 		end
-	
-	t_Diagram_move_cluster_cmd (a_name: STRING): STRING is	
+
+	t_Diagram_move_cluster_cmd (a_name: STRING): STRING is
 		require
-			exists: a_name /= Void	
+			exists: a_name /= Void
 		do
 			Result := "Move Cluster '" + a_name + "'"
 		end
-		
+
 	t_Diagram_move_midpoint_cmd: STRING is		"Move Midpoint"
-	
-	t_Diagram_add_cs_link_cmd (client_name, supplier_name: STRING): STRING is	
+
+	t_Diagram_add_cs_link_cmd (client_name, supplier_name: STRING): STRING is
 		require
 			exists: client_name /= Void	and supplier_name /= Void
 		do
 			Result := "Add Client-Supplier Relation Between '" + client_name + "' and '" + supplier_name  + "'"
 		end
-	
+
 	t_Diagram_add_inh_link_cmd (ancestor_name, descendant_name: STRING): STRING is
 		require
 			exists: ancestor_name /= Void and descendant_name /= Void
 		do
 			Result := "Add Inheritance Relation Between '" + ancestor_name + "' and '" + descendant_name + "'"
 		end
-		
-	t_Diagram_include_class_cmd (a_name: STRING): STRING is		
+
+	t_Diagram_include_class_cmd (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
 			Result := "Include Class '" + a_name + "'"
 		end
-		
-	t_Diagram_include_cluster_cmd (a_name: STRING): STRING is	
+
+	t_Diagram_include_cluster_cmd (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
 			Result := "Include Cluster '" + a_name + "'"
 		end
-		
+
 	t_Diagram_insert_midpoint_cmd: STRING is	"Insert Midpoint"
 	t_Diagram_change_color_cmd: STRING is		"Change Class Color"
-	
-	t_Diagram_rename_class_locally_cmd (old_name, new_name: STRING): STRING is 	
+
+	t_Diagram_rename_class_locally_cmd (old_name, new_name: STRING): STRING is
 		require
 			exists: old_name /= Void and new_name /= Void
 		do
 			Result := "Rename Class '" + old_name + "' Locally to '" + new_name + "'"
 		end
-		
-	t_Diagram_rename_class_globally_cmd (old_name, new_name: STRING): STRING is 
+
+	t_Diagram_rename_class_globally_cmd (old_name, new_name: STRING): STRING is
 		require
-			exists: old_name /= Void and new_name /= Void	
+			exists: old_name /= Void and new_name /= Void
 		do
 			Result := "Rename Class '" + old_name + "' Globally to '" + new_name + "'"
 		end
-		
-	t_Diagram_delete_client_link_cmd (a_name: STRING): STRING is 	
+
+	t_Diagram_delete_client_link_cmd (a_name: STRING): STRING is
 		require
-			exists: a_name /= Void	
+			exists: a_name /= Void
 		do
 			Result := "Delete Client Link '" + a_name + "'"
 		end
-		
+
 	t_Diagram_delete_inheritance_link_cmd (an_ancestor, a_descendant: STRING): STRING is
 		require
 			exists: an_ancestor /= Void and a_descendant /= Void
 		do
 			Result := "Delete Inheritance Link Between '" + an_ancestor + "' and '" + a_descendant + "'"
 		end
-		
+
 	t_Diagram_erase_cluster_cmd (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
 			Result := "Erase Cluster '" + a_name + "'"
 		end
-		
+
 	t_Diagram_delete_midpoint_cmd: STRING is	"Erase Midpoint"
-	
+
 	t_Diagram_erase_class_cmd (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
 			Result := "Erase Class '" + a_name + "'"
 		end
-		
+
 	t_Diagram_erase_classes_cmd: STRING is		"Erase Classes"
 	t_Diagram_put_right_angles_cmd: STRING is	"Put Right Angles"
 	t_Diagram_remove_right_angles_cmd: STRING is	"Remove Right Angles"
@@ -841,21 +841,21 @@ feature -- Title part
 	t_Diagram_zoom_in_cmd: STRING is			"Zoom In"
 	t_Diagram_zoom_out_cmd: STRING is			"Zoom Out"
 	t_Diagram_zoom_cmd: STRING is				"Zoom"
-	
+
 	t_Diagram_cluster_expand (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
 			Result := "Expand cluster '" + a_name + "'"
 		end
-	
+
 	t_Diagram_cluster_collapse (a_name: STRING): STRING is
 		require
 			exists: a_name /= Void
 		do
 			Result := "Collapse Cluster '" + a_name + "'"
 		end
-		
+
 	t_Diagram_disable_high_quality: STRING is	"Disable High Quality"
 	t_Diagram_enable_high_quality: STRING is	"Enable High Quality"
 
@@ -921,6 +921,7 @@ feature -- Description texts
 	e_Remove_expressions: STRING is		"Remove selected expressions"
 	e_Remove_object: STRING is			"Remove currently selected object"
 	e_Running: STRING is				"Application is running"
+	e_Running_no_stop_points: STRING is	"Application is running (ignoring breakpoints)"
 	e_Save_call_stack: STRING is		"Save call stack to a text file"
 	e_Save_dynamic_lib_definition: STRING is "Save this dynamic library definition"
 	e_Show_class_cluster: STRING is		"Locate currently edited class or cluster"
@@ -941,7 +942,7 @@ feature -- Description texts
 feature -- Wizard texts
 
 	wt_Profiler_welcome: STRING is "Welcome to the Profiler Wizard"
-	wb_Profiler_welcome: STRING is 
+	wb_Profiler_welcome: STRING is
 				"Using this wizard you can analyze the result of a profiling.%N%
 				%%N%
 				%Profiling a system is used to analyze its run-time properties%N%
@@ -958,17 +959,17 @@ feature -- Wizard texts
 
 	wt_Compilation_mode: STRING is "Compilation mode"
 	ws_Compilation_mode: STRING is "Select the Compilation mode."
-	
+
 	wt_Execution_Profile: STRING is "Execution Profile"
 	ws_Execution_Profile: STRING is "Reuse or Generate an Execution Profile."
 	wb_Execution_Profile: STRING is
 			"You can generate the Execution Profile from a Run-time Information Record%N%
 			%created by a profiler, or you can reuse an existing Execution Profile if you%N%
 			%have already generated one for this system."
-	
+
 	wt_Execution_Profile_Generation: STRING is "Execution Profile Generation"
 	ws_Execution_Profile_Generation: STRING is "Select a Run-time information record to generate the Execution profile"
-	wb_Execution_Profile_Generation: STRING is 
+	wb_Execution_Profile_Generation: STRING is
 				"Once an execution of an instrumented system has generated the proper file,%N%
 				%you must process it through a profile converter to produce the Execution%N%
 				%Profile. The need for the converter comes from the various formats that%N%
@@ -978,17 +979,17 @@ feature -- Wizard texts
 				%select the profiler used to create this record.%
 				%%N%
 				%The Execution Profile will be generated under the file %"profinfo.pfi%"."
-				
+
 	wt_Switches_and_query: STRING is "Switches and Query"
 	ws_Switches_and_query: STRING is "Select the information you need and formulate your query."
-	
+
 	wt_Generation_error: STRING is "Generation Error"
 	wb_Click_back_and_correct_error: STRING is "Click Back if you can correct the problem or Click Abort."
 
 	wt_Runtime_information_record_error: STRING is "Runtime Information Record Error"
 	wb_Runtime_information_record_error (generation_path: STRING): STRING is
 		do
-			Result := 
+			Result :=
 				"The file you have supplied as Runtime Information Record%N%
 				%does not exist or is not valid.%N%
 				%Do not forget that the Runtime Information Record has to%N%
@@ -1000,7 +1001,7 @@ feature -- Wizard texts
 				%%N%
 				%Click Back and select a valid file or Click Abort."
 		end
-		
+
 	wt_Execution_profile_error: STRING is "Execution Profile Error"
 	wb_Execution_profile_error: STRING is
 				"The file you have supplied as existring Execution Provide does%N%
@@ -1115,7 +1116,7 @@ feature -- Metric constants (tooltips)
 	metric_ratio_unit: STRING is			"Ratio"
 	metric_compilation_unit: STRING is		"Compilation"
 	metric_local_unit: STRING is			"Local"
-	
+
 	metric_calculate: STRING is				"&Calculate"
 	metric_add: STRING is					"&Add"
 	metric_delete: STRING is				"&Delete"
@@ -1125,5 +1126,5 @@ feature -- Metric constants (tooltips)
 	metric_archive: STRING is				"A&rchive"
 
 end -- class INTERFACE_NAMES
-	
+
 

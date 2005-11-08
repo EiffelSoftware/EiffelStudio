@@ -98,6 +98,19 @@ MT_LOBJ = \
 	MT!f:\.c=.o \
 -expand \\
 
+MT_EOBJ = \
+	$(MTIDRS_OBJ) \
+|expand f!$(WADD)!
+	MT!f:\.c=.o \
+-expand
+|expand f!$(LSRC)!
+	MTw!f:\.c=.o \
+-expand
+|expand f!$(OTHER)!
+	MTb!f:\.c=.o \
+-expand \\
+
+
 /* How to build a 'w' and `MT' and `MTw' file from a normal file. 
  */
 
@@ -146,6 +159,7 @@ CustomLibraryTarget(mtwkbench,$(MT_WOBJ))
 CustomLibraryTarget(finalized,$(LOBJ))
 CustomLibraryTarget(wkbench,$(WOBJ))
 CustomLibraryTarget(ebench,$(EOBJ))
+CustomLibraryTarget(mtebench,$(MT_EOBJ))
 
 CustomSharedLibraryTarget(mtfinalized,$(MT_LOBJ))
 CustomSharedLibraryTarget(mtwkbench,$(MT_WOBJ))
@@ -189,7 +203,8 @@ final: libfinalized.a
 mtfinal: libmtfinalized.a
 work: libwkbench.a
 mtwork: libmtwkbench.a
-mt: mtwork mtfinal
+mtebench: libmtebench.a
+mt: mtwork mtfinal mtebench
 
 /*
  * The network object is pre-linked with all the needed libraries.

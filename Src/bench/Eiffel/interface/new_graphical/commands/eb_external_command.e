@@ -262,7 +262,7 @@ feature -- Basic operations
 					else
 						create {ARRAYED_LIST [STRING]}args.make (2)
 						args.extend ("-c")
-						args.extend ("%'"+cl+"%'")
+						args.extend ("%'%'"+cl+"%'%'")
 						external_launcher.prepare_command_line ("/bin/sh", args, wd)
 						use_argument := True
 					end	

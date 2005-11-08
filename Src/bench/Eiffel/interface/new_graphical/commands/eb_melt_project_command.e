@@ -167,7 +167,6 @@ feature {NONE} -- Compilation implementation
 			end
 		end
 
-	-- Jason Wei modified the following feature on Aug 29 2005
 	launch_c_compilation is
 			-- Launch the C compilation.
 		local
@@ -190,33 +189,6 @@ feature {NONE} -- Compilation implementation
 				Eiffel_project.call_finish_freezing (True)
 			end
 		end
-
--------- This is the original version---------------------------------
---	launch_c_compilation is
---			-- Launch the C compilation.
---		local
---			output_text: STRUCTURED_TEXT
---		do
---			create output_text.make
---			if Eiffel_project.freezing_occurred then
---				output_text.add_string ("System had to be frozen to include new externals and/or new agents.")
---				output_text.add_new_line
---			end
---			output_text.add_string ("Eiffel system recompiled")
---			output_text.add_new_line
---	
---			if start_c_compilation and then Eiffel_project.freezing_occurred then
---					output_text.add_string ("Background C compilation launched.")
---					output_text.add_new_line
---					Eiffel_project.call_finish_freezing (True)
---			end
---
---				-- Display message.
---			output_manager.process_text (output_text)
---		end
-
-	-- Jason Wei modified the above feature on Aug 29 2005		
-
 
 	perform_compilation is
 			-- The real compilation. (This is melting.)

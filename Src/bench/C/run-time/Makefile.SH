@@ -64,7 +64,7 @@ SED = $sed
 
 USRINC = $usrinc
 LSCRIPTS =  eif_size.h
-OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) \$(EOBJ) x2c.o
+OBJECTS =  \$(MT_LOBJ) \$(MT_WOBJ) \$(LOBJ) \$(WOBJ) \$(EOBJ) \$(MT_EOBJ) x2c.o
 SOURCES =  \$(LSRC) \$(OTHER) \$(WADD) x2c.c
 
 ########################################################################
@@ -259,57 +259,6 @@ EOBJ = \
 	       bmain.o \
 	       bexcept.o 
 
-MT_EOBJ = \
-	       $(IDRS_OBJ) \
-	       MTdebug.o \
-	       MTinterp.o \
-	       MTupdate.o \
-	       MTwbench.o \
-	       MTwmalloc.o \
-	       MTwgarcol.o \
-	       MTwlocal.o \
-	       MTwstore.o \
-	       MTwretrieve.o \
-	       MTwhash.o \
-	       MTwtraverse.o \
-	       MTwhashin.o \
-	       MTwtools.o \
-	       MTwinternal.o \
-	       MTwplug.o \
-	       MTwcopy.o \
-	       MTwequal.o \
-	       MTwlmalloc.o \
-	       MTwout.o \
-	       MTwtimer.o \
-	       MTwurgent.o \
-	       MTwsig.o \
-	       MTwhector.o \
-	       MTwcecil.o \
-	       MTwbits.o \
-	       MTwfile.o \
-	       MTwdir.o \
-	       MTwmisc.o \
-	       MTwerror.o \
-	       MTwumain.o \
-	       MTwmemory.o \
-	       MTwargv.o \
-	       MTwboolstr.o \
-	       MTwsearch.o \
-	       MTwrun_idr.o \
-	       MTwpath_name.o \
-	       MTwobject_id.o \
-	       MTweif_threads.o \
-	       MTweif_project.o \
-	       MTweif_rw_lock.o \
-	       MTwgen_conf.o \
-	       MTweif_type_id.o \
-	       MTwrout_obj.o \
-	       MTwoption.o \
-	       MTwcompress.o \
-	       MTwconsole.o \
-	       MTbmain.o \
-	       MTbexcept.o 
-
 MT_WOBJ = \
 	       $(MTIDRS_OBJ) \
 	       $(MTNETWORK_OBJ) \
@@ -408,6 +357,57 @@ MT_LOBJ = \
 	       MTconsole.o \
 	       MTmain.o \
 	       MTexcept.o 
+
+MT_EOBJ = \
+	       $(MTIDRS_OBJ) \
+	       MTdebug.o \
+	       MTinterp.o \
+	       MTupdate.o \
+	       MTwbench.o \
+	       MTwmalloc.o \
+	       MTwgarcol.o \
+	       MTwlocal.o \
+	       MTwstore.o \
+	       MTwretrieve.o \
+	       MTwhash.o \
+	       MTwtraverse.o \
+	       MTwhashin.o \
+	       MTwtools.o \
+	       MTwinternal.o \
+	       MTwplug.o \
+	       MTwcopy.o \
+	       MTwequal.o \
+	       MTwlmalloc.o \
+	       MTwout.o \
+	       MTwtimer.o \
+	       MTwurgent.o \
+	       MTwsig.o \
+	       MTwhector.o \
+	       MTwcecil.o \
+	       MTwbits.o \
+	       MTwfile.o \
+	       MTwdir.o \
+	       MTwmisc.o \
+	       MTwerror.o \
+	       MTwumain.o \
+	       MTwmemory.o \
+	       MTwargv.o \
+	       MTwboolstr.o \
+	       MTwsearch.o \
+	       MTwrun_idr.o \
+	       MTwpath_name.o \
+	       MTwobject_id.o \
+	       MTweif_threads.o \
+	       MTweif_project.o \
+	       MTweif_rw_lock.o \
+	       MTwgen_conf.o \
+	       MTweif_type_id.o \
+	       MTwrout_obj.o \
+	       MTwoption.o \
+	       MTwcompress.o \
+	       MTwconsole.o \
+	       MTbmain.o \
+	       MTbexcept.o 
 
 wmalloc.o: malloc.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
@@ -1021,7 +1021,8 @@ final: libfinalized.a
 mtfinal: libmtfinalized.a
 work: libwkbench.a
 mtwork: libmtwkbench.a
-mt: mtwork mtfinal
+mtebench: libmtebench.a
+mt: mtwork mtfinal mtebench
 
 .FORCE:
 

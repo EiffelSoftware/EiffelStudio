@@ -259,6 +259,57 @@ EOBJ = \
 	       bmain.o \
 	       bexcept.o 
 
+MT_EOBJ = \
+	       $(IDRS_OBJ) \
+	       MTdebug.o \
+	       MTinterp.o \
+	       MTupdate.o \
+	       MTwbench.o \
+	       MTwmalloc.o \
+	       MTwgarcol.o \
+	       MTwlocal.o \
+	       MTwstore.o \
+	       MTwretrieve.o \
+	       MTwhash.o \
+	       MTwtraverse.o \
+	       MTwhashin.o \
+	       MTwtools.o \
+	       MTwinternal.o \
+	       MTwplug.o \
+	       MTwcopy.o \
+	       MTwequal.o \
+	       MTwlmalloc.o \
+	       MTwout.o \
+	       MTwtimer.o \
+	       MTwurgent.o \
+	       MTwsig.o \
+	       MTwhector.o \
+	       MTwcecil.o \
+	       MTwbits.o \
+	       MTwfile.o \
+	       MTwdir.o \
+	       MTwmisc.o \
+	       MTwerror.o \
+	       MTwumain.o \
+	       MTwmemory.o \
+	       MTwargv.o \
+	       MTwboolstr.o \
+	       MTwsearch.o \
+	       MTwrun_idr.o \
+	       MTwpath_name.o \
+	       MTwobject_id.o \
+	       MTweif_threads.o \
+	       MTweif_project.o \
+	       MTweif_rw_lock.o \
+	       MTwgen_conf.o \
+	       MTweif_type_id.o \
+	       MTwrout_obj.o \
+	       MTwoption.o \
+	       MTwcompress.o \
+	       MTwconsole.o \
+	       MTbmain.o \
+	       MTbexcept.o 
+
 MT_WOBJ = \
 	       $(MTIDRS_OBJ) \
 	       $(MTNETWORK_OBJ) \
@@ -864,6 +915,16 @@ local_realclean::
 libebench.a: $(EOBJ)
 	$(RM) $@
 	$(AR) $@ $(EOBJ)
+	$(RANLIB) $@
+
+all:: libmtebench.a
+
+local_realclean::
+	$(RM) libmtebench.a
+
+libmtebench.a: $(MT_EOBJ)
+	$(RM) $@
+	$(AR) $@ $(MT_EOBJ)
 	$(RANLIB) $@
 
 all:: libmtfinalized.so

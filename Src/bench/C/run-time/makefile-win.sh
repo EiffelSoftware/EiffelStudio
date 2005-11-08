@@ -185,6 +185,60 @@ EOBJECTS = \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\console\wwinconsole.$lib
 
+MT_EOBJECTS = \
+	$(INDIR)\MTwlmalloc.$obj \
+	$(INDIR)\MTwmalloc.$obj \
+	$(INDIR)\MTwgarcol.$obj \
+	$(INDIR)\MTwlocal.$obj \
+	$(INDIR)\MTbexcept.$obj \
+	$(INDIR)\MTwstore.$obj \
+	$(INDIR)\MTwretrieve.$obj \
+	$(INDIR)\MTwhash.$obj \
+	$(INDIR)\MTwtraverse.$obj \
+	$(INDIR)\MTwhashin.$obj \
+	$(INDIR)\MTwtools.$obj \
+	$(INDIR)\MTwinternal.$obj \
+	$(INDIR)\MTwplug.$obj \
+	$(INDIR)\MTwcopy.$obj \
+	$(INDIR)\MTwequal.$obj \
+	$(INDIR)\MTwout.$obj \
+	$(INDIR)\MTwtimer.$obj \
+	$(INDIR)\MTwurgent.$obj \
+	$(INDIR)\MTwsig.$obj \
+	$(INDIR)\MTwhector.$obj \
+	$(INDIR)\MTwcecil.$obj \
+	$(INDIR)\MTwbits.$obj \
+	$(INDIR)\MTwfile.$obj \
+	$(INDIR)\MTwdir.$obj \
+	$(INDIR)\MTwmisc.$obj \
+	$(INDIR)\MTwerror.$obj \
+	$(INDIR)\MTwumain.$obj \
+	$(INDIR)\MTwmemory.$obj \
+	$(INDIR)\MTwargv.$obj \
+	$(INDIR)\MTwboolstr.$obj \
+	$(INDIR)\MTwsearch.$obj \
+	$(INDIR)\MTbmain.$obj \
+	$(INDIR)\MTdebug.$obj \
+	$(INDIR)\MTinterp.$obj \
+	$(INDIR)\MTwoption.$obj \
+	$(INDIR)\MTupdate.$obj \
+	$(INDIR)\MTwbench.$obj \
+	$(INDIR)\MTwconsole.$obj \
+	$(TOP)\idrs\MTidrs.$obj \
+	$(INDIR)\MTwrun_idr.$obj \
+	$(INDIR)\MTwpath_name.$obj \
+	$(INDIR)\MTwobject_id.$obj \
+	$(INDIR)\MTcompress.$obj \
+	$(INDIR)\MTweif_threads.$obj \
+	$(INDIR)\MTweif_cond_var.$obj \
+	$(INDIR)\MTeif_rw_lock.$obj \
+	$(INDIR)\MTweif_project.$obj \
+	$(INDIR)\MTwgen_conf.$obj \
+	$(INDIR)\MTweif_type_id.$obj \
+	$(INDIR)\MTwrout_obj.$obj \
+	$(TOP)\ipc\shared\MTnetworku.$obj \
+	$(TOP)\console\MTwwinconsole.$lib
+
 MT_FINAL_OBJECTS = \
 	$(INDIR)\MTlmalloc.$obj \
 	$(INDIR)\MTmalloc.$obj \
@@ -299,7 +353,7 @@ all:: eif_size.h
 all:: $output_libraries
 
 standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib freestandard
-mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib mtfreestandard
+mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib $(OUTDIR)\mtebench.lib mtfreestandard
 
 $(OUTDIR)\finalized.$lib: $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.$lib
@@ -410,6 +464,10 @@ $(FREEOUTDIR)\mtfinalized.dll : $(FREEOUTDIR) $(MT_FREE_OBJECTS)
 
 $(OUTDIR)\ebench.$lib: $(EOBJECTS)
 	$(RM) $(OUTDIR)\ebench.$lib
+	$link_line
+
+$(OUTDIR)\mtebench.$lib: $(MT_EOBJECTS)
+	$(RM) $(OUTDIR)\mtebench.$lib
 	$link_line
 
 all:: x2c.exe
@@ -1002,6 +1060,12 @@ $(INDIR)\MTwumain.$obj: $(RTSRC)\umain.c
 
 $(INDIR)\MTwurgent.$obj: $(RTSRC)\urgent.c
 	$(CC) $(JMTCFLAGS) -DWORKBENCH $(RTSRC)\urgent.c
+
+$(INDIR)\MTbmain.$obj: $(RTSRC)\main.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\main.c
+
+$(INDIR)\MTbexcept.$obj: $(RTSRC)\except.c
+	$(CC) $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\except.c
 
 TESTS = mram gram lram eram sram
 

@@ -18,6 +18,8 @@ inherit
 	EB_SHARED_FLAGS
 	
 	SHARED_PLATFORM_CONSTANTS
+	
+	SHARED_EXEC_ENVIRONMENT
 		
 feature -- Launching parameters setting
 
@@ -279,6 +281,35 @@ feature -- Control
 			end
 		ensure
 			process_terminated: launched implies has_exited
+		end
+		
+feature -- Unmanaged process launch
+
+	open_console_in_dir (dir: STRING) is 
+			-- Open console in `dir'.
+		require
+			dir_not_void: dir /= VOid
+		local
+			cmdexe: STRING
+			str: STRING
+			cl: STRING
+		do
+			cl := ""
+			if platform_constants.is_windows then
+				cmdexe := Execution_environment.get ("COMSPEC")
+				if cmdexe /= Void then
+						-- This allows the use of `dir' etc.
+					cl.append (cmdexe)
+				else
+					cl.append ("cmd")
+				end
+			else
+				cl.prepend ("/bin/sh -c xterm")	
+			end
+			str := execution_environment.current_working_directory
+			execution_environment.change_working_directory (dir)
+			execution_environment.launch (cl)
+			execution_environment.change_working_directory (str)
 		end
 
 feature -- Status reporting

@@ -41,7 +41,9 @@ feature{NONE} -- Actions
 			if is_gui then
 				terminate_c_compilation_cmd.enable_sensitive				
 				debugger_manager.on_compile_start				
-				notify_development_windows_on_c_compilation_start						
+				notify_development_windows_on_c_compilation_start	
+				c_compilation_output_manager.clear
+				c_compilation_output_manager.force_display									
 			end
 		end
 		
@@ -104,6 +106,12 @@ feature{NONE} -- Actions
 		do
 			create sb.make (s, True, False)
 			finalizing_storage.extend_block (sb)
+		end			
+		
+	open_console is 
+			-- Open a command line console if c-compilation failed.
+		do
+			open_console_in_dir (final_generation_path)
 		end			
 		
 end

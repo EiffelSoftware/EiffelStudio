@@ -557,44 +557,29 @@ feature -- Actions on all windows
 			favorites.refresh
 
 				-- Update the state of some commands.
-			if not Eiffel_project.compilation_modes.is_precompiling then
-				if  (freezing_launcher.launched and then not freezing_launcher.has_exited)
-					 or
-					(finalizing_launcher.launched and then not finalizing_launcher.has_exited)
-				then
-					melt_project_cmd.disable_sensitive
-					Quick_melt_project_cmd.disable_sensitive
-					freeze_project_cmd.disable_sensitive
-					precompilation_cmd.disable_sensitive
-					Finalize_project_cmd.disable_sensitive
-					terminate_c_compilation_cmd.enable_sensitive
-				else
-					precompilation_cmd.disable_sensitive
-					melt_project_cmd.enable_sensitive
-					Quick_melt_project_cmd.enable_sensitive
-					freeze_project_cmd.enable_sensitive
-					Finalize_project_cmd.enable_sensitive
-					terminate_c_compilation_cmd.disable_sensitive
-				end
+			if  (freezing_launcher.launched and then not freezing_launcher.has_exited)
+				 or
+				(finalizing_launcher.launched and then not finalizing_launcher.has_exited)
+			then
+				melt_project_cmd.disable_sensitive
+				Quick_melt_project_cmd.disable_sensitive
+				freeze_project_cmd.disable_sensitive
+				precompilation_cmd.disable_sensitive
+				Finalize_project_cmd.disable_sensitive
+				terminate_c_compilation_cmd.enable_sensitive
 			else
-				if  (freezing_launcher.launched and then not freezing_launcher.has_exited)
-					 or
-					(finalizing_launcher.launched and then not finalizing_launcher.has_exited)
-				then
-					melt_project_cmd.disable_sensitive
-					Quick_melt_project_cmd.disable_sensitive
-					freeze_project_cmd.disable_sensitive
+				if not Eiffel_project.compilation_modes.is_precompiling then
+					freeze_project_cmd.enable_sensitive
 					precompilation_cmd.disable_sensitive
-					Finalize_project_cmd.disable_sensitive
-					terminate_c_compilation_cmd.enable_sensitive
+					Finalize_project_cmd.enable_sensitive
 				else
-					melt_project_cmd.enable_sensitive
-					Quick_melt_project_cmd.enable_sensitive
 					freeze_project_cmd.disable_sensitive
 					precompilation_cmd.enable_sensitive
 					Finalize_project_cmd.disable_sensitive
-					terminate_c_compilation_cmd.disable_sensitive
 				end
+				melt_project_cmd.enable_sensitive
+				Quick_melt_project_cmd.enable_sensitive
+				terminate_c_compilation_cmd.disable_sensitive
 			end
 			project_cancel_cmd.disable_sensitive
 			for_all (agent synchronize_action)
@@ -636,6 +621,7 @@ feature -- Actions on all windows
 		local
 			l_managed_windows: like managed_windows
 			cv_dev: EB_DEVELOPMENT_WINDOW
+			lab: EV_LABEL
 		do
 			from
 					-- Make a twin of the list incase window is destroyed during
@@ -648,11 +634,12 @@ feature -- Actions on all windows
 			loop
 				cv_dev ?= l_managed_windows.item
 				if cv_dev /= Void and then not cv_dev.destroyed then
-					cv_dev.status_bar.label.set_text (m)
+					lab := cv_dev.status_bar.label
+					lab.set_text (m)
+					lab.refresh_now
 				end
 				l_managed_windows.forth
 			end
-			process_events_and_idle
 		end
 
 	display_percentage (a_value: INTEGER) is

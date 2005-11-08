@@ -67,7 +67,6 @@ feature {NONE} -- Implementation
 			compile
 		end
 
-	-- Jason Wei modified the following feature on Aug 29 2005
 	launch_c_compilation is
 			-- Launch the C compilation in the background.
 		local
@@ -90,31 +89,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-------- This is the original version		
---		launch_c_compilation is
---			-- Launch the C compilation in the background.
---		local
---			output_text: STRUCTURED_TEXT
---		do
---			create output_text.make
---			output_text.add_string ("Eiffel system recompiled")
---			output_text.add_new_line
---	
---			if start_c_compilation then
---				output_text.add_string ("Launching C compilation in background...")
---				output_text.add_new_line
---				Eiffel_project.call_finish_freezing (True)
---				if finalize_precompile then
---					Eiffel_project.call_finish_freezing (False)	
---				end
---			end
---
---				-- Display message.
---			output_manager.process_text (output_text)
---		end
-
-	-- Jason Wei modified the above feature on Aug 29 2005
 
 	perform_compilation is
 			-- The actual compilation process.

@@ -114,7 +114,6 @@ feature {NONE} -- Implementation
 			finalization_error := not Eiffel_project.successful
 		end
 
-	-- Jason Wei modified the following feature on Aug 29 2005
 	launch_c_compilation is
 			-- Launch the C compilation in the background.
 		local
@@ -147,42 +146,6 @@ feature {NONE} -- Implementation
 			end
 
 		end
-
-------- This is the original version		
---	launch_c_compilation is
---			-- Launch the C compilation in the background.
---		local
---			output_text: STRUCTURED_TEXT
---		do
---				-- Create message.
---			create output_text.make
---			output_text.add_string ("Eiffel System recompiled")
---			output_text.add_new_line
---
---			if start_c_compilation then
---					output_text.add_string ("Background C compilation launched.")
---					output_text.add_new_line
---				Eiffel_project.call_finish_freezing (False)
---			end
---
---			if not Eiffel_project.is_final_code_optimal then
---				output_text.add_new_line
---				output_text.add_string ("Warning: the finalized system might not be optimal")
---				output_text.add_new_line
---				output_text.add_string ("in size and speed. In order to produce an optimal")
---				output_text.add_new_line
---				output_text.add_string ("executable, finalize from a new project and do")
---				output_text.add_new_line
---				output_text.add_string ("not use precompilation or assertions.")
---				output_text.add_new_line
---			end
---
---				-- Display message.
---			output_manager.process_text (output_text)
---		end
-		
-	-- Jason Wei modified the above feature on Aug 29 2005
-
 
 feature {NONE} -- Implementation
 

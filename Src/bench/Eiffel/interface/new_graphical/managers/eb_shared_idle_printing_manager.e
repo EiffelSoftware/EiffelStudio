@@ -48,9 +48,10 @@ feature -- Printing
 	print_freezing is	
 			-- Print output and error, if any, of the c compiler which is working on workbench mode.
 		local
-			gm: EB_GRAPHICAL_OUTPUT_MANAGER
-			st: STRUCTURED_TEXT			
+			gm: EB_C_COMPILATION_OUTPUT_MANAGER
+			data_block:	EB_PROCESS_IO_DATA_BLOCK			
 		do
+			gm := c_compilation_output_manager
 			if not is_printing_finalizing then
 				if 
 				   (not freezing_storage.has_new_block)
@@ -58,33 +59,26 @@ feature -- Printing
 					if freezing_launcher.has_exited then 
 						is_printing_freezing := False
 						if has_printed_anything then
-							gm ?= output_manager
-							if gm /= Void then
-								gm.scroll_to_end
-							end	
+							gm.scroll_to_end
 							has_printed_anything := False						
 						end
 					end
 				else
-					if output_manager.text_is_fully_loaded then
-						st ?= freezing_storage.first_block (True).data
-						if st /= Void then
-							output_manager.process_text (st)					
-						end
-						has_printed_anything := True
-						is_printing_freezing := True													
-					end
+					data_block := freezing_storage.all_blocks (True)
+					gm.process_block_text (data_block)
+					has_printed_anything := True
+					is_printing_freezing := True													
 				end					
 			end
-			
 		end
 		
 	print_finalizing is	
 			-- Print output and error, if any, of the c compiler which is working on finalization mode.
 		local
-			gm: EB_GRAPHICAL_OUTPUT_MANAGER
-			st: STRUCTURED_TEXT
+			gm: EB_C_COMPILATION_OUTPUT_MANAGER
+			data_block:	EB_PROCESS_IO_DATA_BLOCK
 		do
+			gm := c_compilation_output_manager
 			if not is_printing_freezing then
 				if 
 				   (not finalizing_storage.has_new_block)
@@ -92,26 +86,17 @@ feature -- Printing
 					if finalizing_launcher.has_exited then 
 						is_printing_finalizing := False
 						if has_printed_anything then
-							gm ?= output_manager
-							if gm /= Void then
-								gm.scroll_to_end
-							end	
+							gm.scroll_to_end
 							has_printed_anything := False							
 						end
-					
 					end
 				else
-					if output_manager.text_is_fully_loaded then
-						st ?= finalizing_storage.first_block (True).data
-						if st /= Void then
-							output_manager.process_text (st)							
-						end
-						has_printed_anything := True
-						is_printing_finalizing := True							
-					end
+					data_block := finalizing_storage.all_blocks (True)
+					gm.process_block_text (data_block)
+					has_printed_anything := True
+					is_printing_finalizing := True							
 				end					
 			end
-			
 		end		
 		
 	print_external is
@@ -120,12 +105,10 @@ feature -- Printing
 			b: EB_PROCESS_IO_DATA_BLOCK
 		do
 			if external_storage.has_new_block then
-				if external_output_manager.all_text_fully_loaded then
-					b := external_storage.all_blocks (True)					
-					external_output_manager.process_block_text (b)
-					if b.is_end then
-						external_launcher.on_ouput_print_session_over
-					end
+				b := external_storage.all_blocks (True)					
+				external_output_manager.process_block_text (b)
+				if b.is_end then
+					external_launcher.on_ouput_print_session_over
 				end
 			end	
 		end
@@ -140,7 +123,6 @@ feature{NONE} -- Implementation
 	
 	has_printed_anything: BOOLEAN
 			-- Has anything from c-compiler been printed already?
-			feature{NONE}
 
 feature{NONE}
 

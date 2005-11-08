@@ -1,11 +1,11 @@
 indexing
-	description	: "Manager for all external output tools. Can be instanciated on the fly."
+	description	: "Manager for all c compilation output tools. Can be instanciated on the fly."
 	date		: "$Date$"
 	revision	: "$Revision$"
 	author		: ""
 
 class
-	EB_EXTERNAL_OUTPUT_MANAGER
+	EB_C_COMPILATION_OUTPUT_MANAGER
 
 inherit
 	EB_OUTPUT_MANAGER
@@ -41,14 +41,6 @@ create
 	default_create
 
 feature -- Basic Operations
-	
-	set_target_development_window (dev_window: EB_DEVELOPMENT_WINDOW) is
-			-- set `target_development_window' to `dev_window'.
-		do
-			target_development_window := dev_window
-		ensure
-			target_development_window_set: target_development_window = dev_window
-		end
 		
 	force_display is
 			-- Make the output tools visible (to ensure the user sees what we print).
@@ -88,67 +80,11 @@ feature -- Basic Operations
 				managed_output_tools.forth
 			end
 		end
-		
-	synchronize_on_process_starts (cmd_line: STRING) is
-			-- Synchronize states when launch external command `cmd_line'.
-		local
-			eo: EB_EXTERNAL_OUTPUT_TOOL			
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				eo ?= managed_output_tools.item
-				if eo /= Void then
-					eo.force_display
-					eo.synchronize_on_process_starts (cmd_line)
-				end
-				managed_output_tools.forth
-			end					
-		end
-		
-	synchronize_on_process_exits is
-			-- Synchronize states when an external command exits.
-		local
-			eo: EB_EXTERNAL_OUTPUT_TOOL			
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				eo ?= managed_output_tools.item
-				if eo /= Void then
-					eo.synchronize_on_process_exits
-				end
-				managed_output_tools.forth
-			end					
-		end	
-		
-	display_state (s: STRING; warning: BOOLEAN) is
-			-- Display process state `s' to external command output panel.
-			-- If `warning' is True, display in red color, otherwise in black color.
-		local
-			eo: EB_EXTERNAL_OUTPUT_TOOL
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				eo ?= managed_output_tools.item
-				if eo /= Void then
-					eo.display_state (s, warning)					
-				end
-				managed_output_tools.forth
-			end			
-		end
 				
 	process_block_text (text: EB_PROCESS_IO_DATA_BLOCK) is
-			-- Print `text' on `target_development_window'.
+			-- Print `text' in all output tools.
 		local
-			eo: EB_EXTERNAL_OUTPUT_TOOL		
+			eo: EB_C_COMPILATION_OUTPUT_TOOL		
 		do			
 			from
 				managed_output_tools.start
@@ -156,14 +92,8 @@ feature -- Basic Operations
 				managed_output_tools.after
 			loop
 				eo ?= managed_output_tools.item
-				if eo /= Void then
-					if target_development_window /= Void then
-						if eo.owner_development_window = target_development_window then
-							eo.process_block_text (text)
-						end	
-					else					
-						eo.process_block_text (text)
-					end
+				if eo /= Void then					
+					eo.process_block_text (text)
 				end
 				managed_output_tools.forth
 			end
@@ -173,33 +103,7 @@ feature -- Basic Operations
 	process_text (st: STRUCTURED_TEXT) is
 			-- Print `st' on all output tools.
 		do		
-		end
-		
-	synchronize_command_list (selected_cmd: EB_EXTERNAL_COMMAND) is
-			-- Make sure that command list box in external command output panel
-			-- contains right external command list.
-			-- If `selected_cmd' not Void, make it a default selection in
-			-- external command list.
-		local
-			et: EB_EXTERNAL_OUTPUT_TOOL
-		do
-			from
-				managed_output_tools.start
-			until
-				managed_output_tools.after
-			loop
-				et ?= managed_output_tools.item
-				if et /= Void then
-					et.synchronize_command_list	(selected_cmd)
-				end
-				managed_output_tools.forth
-			end			
-		end
-		
-feature -- Status reporting
-
-	target_development_window: EB_DEVELOPMENT_WINDOW
-			-- Development windows where current external command is launcheds		
+		end		
 
 feature -- Basic Operations / Information message
 	
@@ -285,4 +189,4 @@ feature  -- Implementation / Private attributes
 			create Result.make (10)
 		end
 
-end -- class EB_EXTERNAL_OUTPUT_MANAGER
+end -- class EB_C_COMPILATION_OUTPUT_MANAGER

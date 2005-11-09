@@ -2,6 +2,7 @@
 REM Compile Eiffel for ASP.NET Wix project and produce msi
 SET ECPOriginalPath2=%CD%
 CD ..\install
+REM in Delivery/codedom_provider/install
 
 IF EXIST Modules RD /Q /S Modules
 IF EXIST Modules ECHO Could not delete 'Modules' folder, exiting.
@@ -39,11 +40,11 @@ candle -nologo Product.wxs
 IF NOT EXIST Product.wixobj ECHO Could not compile Product.wxs, exiting.
 IF NOT EXIST Product.wixobj GOTO END
 
-light -nologo Product.wixobj -out "Eiffel for ASP.NET.msi"
-IF NOT EXIST "Eiffel for ASP.NET.msi" ECHO Could not compile Product.wixobj, exiting.
-IF NOT EXIST "Eiffel for ASP.NET.msi" GOTO END
+light -nologo Product.wixobj -out "Eiffel for ASP.NET 5.6.msi"
+IF NOT EXIST "Eiffel for ASP.NET 5.6.msi" ECHO Could not compile Product.wixobj, exiting.
+IF NOT EXIST "Eiffel for ASP.NET 5.6.msi" GOTO END
 DEL Product.wixobj
-COPY "Eiffel for ASP.NET.msi" ..\
+COPY "Eiffel for ASP.NET 5.6.msi" ..\
 
 :END
 CD %ECPOriginalPath2%

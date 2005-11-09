@@ -132,7 +132,7 @@ feature -- Access
 
 feature -- Set Position
 
-	set_docking_position_relative (a_relative: SD_CONTENT; a_direction: INTEGER) is
+	set_relative (a_relative: SD_CONTENT; a_direction: INTEGER) is
 			-- 
 		require
 			a_relative_not_void: a_relative /= Void
@@ -142,7 +142,7 @@ feature -- Set Position
    			state.change_zone_split_area (a_relative.state.zone, a_direction)
    		end
    	
-	set_docking_position_top (a_direction: INTEGER) is
+	set_top (a_direction: INTEGER) is
 			--
 		require
 			a_direction_valid: four_direction (a_direction)

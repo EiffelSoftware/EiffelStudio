@@ -99,8 +99,6 @@
 				<ComponentRef Id='PrecompileDir' />
 				<ComponentRef Id='Shortcuts' />
 				<ComponentRef Id='RegistryKeys' />
-				<ComponentRef Id='libEiffelSoftware.CodeDom.Base.dll' />
-				<ComponentRef Id='libEiffelSoftware.CodeDom.Vision2.dll' />
 			</Feature>
 	
 			<Feature Id='CodedomFeat' Title='Codedom' TypicalDefault='install' Level='3' Display='hidden'>

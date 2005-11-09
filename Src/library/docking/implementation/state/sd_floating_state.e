@@ -26,13 +26,14 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 			internal_content := a_content
-			create internal_zone.make 
-			internal_zone.set_size (internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
-			internal_zone.set_title (internal_content.title)
---			l_window.close_request_actions.extend (agent handle_close_window)
 			if internal_content.user_widget.parent /= Void then
 				internal_content.user_widget.parent.prune (internal_content.user_widget)
 			end
+			create internal_zone.make (internal_content)
+			internal_zone.set_size (internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
+			internal_zone.set_title (internal_content.title)
+--			l_window.close_request_actions.extend (agent handle_close_window)
+
 --			internal_zone.extend (internal_content.user_widget)
 			internal_zone.show
 			internal_zone.move_actions.extend (agent handle_move_window)

@@ -10,7 +10,8 @@ inherit
 	SD_HOT_ZONE
 		redefine
 			has_x_y,
-			internal_zone	
+			internal_zone,
+			pointer_out
 		end
 create
 	make
@@ -33,7 +34,6 @@ feature
 	
 	apply_change  (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
 			-- Apply change when user dragging a window on a position
-
 		do
 			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
 				caller.content.state.change_zone_split_area (internal_zone, {SD_SHARED}.dock_top)
@@ -53,6 +53,16 @@ feature
 			end
 		end
 		
+	pointer_out is
+			-- 
+		do
+			Precursor {SD_HOT_ZONE}
+			internal_mouse_in := False
+		end
+		
+	internal_mouse_in: BOOLEAN
+			-- Remember whether mouse pointer is in `Current' hot zone.
+	
 	update_for_pointer_position (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER):BOOLEAN is
 			-- Update feedback when user move the mouse.
 		local
@@ -62,8 +72,11 @@ feature
 			drawn := False
 			
 			if internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
-						
-				draw_drag_window_indicator
+				if not internal_mouse_in then
+					draw_drag_window_indicator
+					internal_mouse_in := True
+				end
+				
 				
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_left)
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_right)

@@ -134,59 +134,124 @@ feature -- Set Position
 
 	set_docking_position_relative (a_relative: SD_CONTENT; a_direction: INTEGER) is
 			-- 
+		require
+			a_relative_not_void: a_relative /= Void
+			manager_have_content: manager_has_content (a_relative)
+			a_direction_valid: four_direction (a_direction)
 		do
-   			
+   			state.change_zone_split_area (a_relative.state.zone, a_direction)
    		end
    	
 	set_docking_position_top (a_direction: INTEGER) is
-			-- 
+			--
+		require
+			a_direction_valid: four_direction (a_direction)
 		do
-	   		
+	   		state.dock_at_top_level (internal_shared.docking_manager.inner_container (state.zone))
 		end
    	
 	set_auto_hide (a_direction: INTEGER) is
 			-- 
+		require
+			a_direction_valid: four_direction (a_direction)
 		do
-			
+			state.stick_window (a_direction)
 		end
    	
 	set_floating (a_screen_x, a_screen_y: INTEGER) is
 			-- 
 		do
-			
+			state.float_window (a_screen_x, a_screen_y)
 		end
    	
 	set_tab_with (a_content: SD_CONTENT) is
 			-- 
+		local
+			l_tab_zone: SD_TAB_ZONE
+			l_docking_zone: SD_DOCKING_ZONE
+		do
+			l_tab_zone ?= a_content.state.zone
+			if l_tab_zone /= Void then
+				state.move_to_tab_zone (l_tab_zone)
+			else
+				l_docking_zone ?= a_content.state.zone
+				check l_docking_zone /= Void end
+				state.move_to_docking_zone (l_docking_zone)
+			end
+		end
+	
+feature -- Actions
+
+	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when keyboard focus is gained.
+		do
+			if internal_focus_in_actions = Void then
+				create internal_focus_in_actions
+			end
+			Result := internal_focus_in_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions to be performed when keyboard focus is lost.
+		do
+			if internal_focus_out_actions = Void then
+				create internal_focus_out_actions
+			end
+			Result := internal_focus_out_actions
+		ensure
+			not_void: Result /= Void
+		end		
+	
+feature -- 
+	
+	set_close_behavior (a_destroy: BOOLEAN) is
+			-- set `internal_default_destroy'.
+		do
+			internal_default_destroy := a_destroy
+		ensure
+			a_destroy_set: internal_default_destroy = a_destroy
+		end
+	
+	destroy is	
+			-- Destroy `Current' from docking library.
+		do
+			internal_shared.docking_manager.contents.prune_all (Current)
+		end
+		
+	hide is
+			-- Hide `Current'.
 		do
 			
 		end
+
+feature -- States report
+
+	manager_has_content (a_content: SD_CONTENT): BOOLEAN is
+			-- If docking manager has `a_content'.
+		require
+			a_content_not_void: a_content /= Void
+		do
+			Result := internal_shared.docking_manager.has_content (a_content) 
+		end
 	
-	
+	four_direction (a_direction: INTEGER): BOOLEAN is
+			-- If `a_direction' is one of four direction?
+		do
+			Result := a_direction = {SD_SHARED}.dock_left or a_direction = {SD_SHARED}.dock_right or
+				 a_direction = {SD_SHARED}.dock_top or a_direction = {SD_SHARED}.dock_bottom
+		end
 		
-feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG, SD_ZONE, SD_DOCKING_MANAGER} -- Access
+		
+feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT} -- Access
 	
 	state: like internal_state is
 			-- Current state
 		do
 			Result := internal_state
 		end
-		
-feature {SD_DOCKING_MANAGER} -- Restore issues.
-	
-	save_config (a_file: IO_MEDIUM) is
-			-- Remember current state which is used for restore.
-		do
---			state.basic_store (a_file)
-		end
-	
-	open_config (a_file: IO_MEDIUM) is
-			-- Restore the states from the xml file.
-		do
---			internal_state ?= state.retrieved (a_file)
---			check internal_state /= Void end
-		end
-		
+				
 feature {NONE} -- Restore issues implementation
 	
 	internal_state: SD_STATE
@@ -220,7 +285,16 @@ feature {NONE}  -- Implemention
 			-- All singletons.
 	
 	internal_type: INTEGER
-			-- The type of `Current'. One value from SD_SHARED.			
+			-- The type of `Current'. One value from SD_SHARED.	
+	
+	internal_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Keyboard focus in actions.
+	
+	internal_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Keyboard focus out actions.
+	
+	internal_default_destroy: BOOLEAN
+			-- If user click 'X' button, close `Current' or hide `Current'?
 	
 invariant
 	the_user_widget_not_void: internal_user_widget /= Void

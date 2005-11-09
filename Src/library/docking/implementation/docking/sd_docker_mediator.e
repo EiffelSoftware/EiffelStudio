@@ -110,7 +110,7 @@ feature -- Hanlde pointer events
 			
 --			hot_zones.finish
 --			if l_hot_zone /= hot_zones.item then
-				l_drawed := hot_zones.item.update_for_pointer_position (Current, a_screen_x, a_screen_y)
+--				l_drawed := hot_zones.item.update_for_pointer_position (Current, a_screen_x, a_screen_y)
 --			end
 			
 		end

@@ -9,7 +9,9 @@ class
 inherit
 	SD_MULTI_CONTENT_ZONE
 		redefine
-			extend	
+			extend,
+			handle_focus_in,
+			handle_zone_focus_out
 		end
 		
 	EV_VERTICAL_BOX
@@ -65,7 +67,7 @@ feature {NONE} -- Initlization
 			
 			
 			
-			init_focus_in (Current)
+--			init_focus_in (Current)
 			
 		end
 		
@@ -122,6 +124,7 @@ feature {NONE} -- Implementation
 	handle_focus_in is
 			-- 
 		do
+			Precursor {SD_MULTI_CONTENT_ZONE} 
 			internal_shared.docking_manager.disable_all_zones_focus_color
 			internal_shared.docking_manager.remove_auto_hide_zones
 			internal_title_bar.enable_focus_color
@@ -130,6 +133,7 @@ feature {NONE} -- Implementation
 	handle_zone_focus_out is
 			-- 
 		do
+			Precursor {SD_MULTI_CONTENT_ZONE}
 			internal_title_bar.disable_focus_color
 		end
 		

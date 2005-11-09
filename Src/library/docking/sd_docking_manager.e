@@ -19,6 +19,7 @@ feature {NONE} -- Initialization
 			a_container_not_full: not a_container.full
 		local
 			l_inner_container: SD_MULTI_DOCK_AREA
+			l_app: EV_ENVIRONMENT
 		do
 			create internal_shared
 			
@@ -68,7 +69,10 @@ feature {NONE} -- Initialization
 --			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_QUICK_FACTORY})
 			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_TRIANGLE_FACTORY})
 			
-			create menu_manager.make						
+			create menu_manager.make	
+			
+			create l_app
+			l_app.application.pointer_button_press_actions.extend (agent set_zone_focus_internal)	
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
 		end
@@ -82,7 +86,32 @@ feature {NONE} -- Initialization
 		do
 			
 		end
+	
+	set_zone_focus_internal (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER) is
+			-- 
+		local
+			l_container: EV_CONTAINER
+		do
+			from 
+			
+				internal_zones.start
+			until
+				internal_zones.after
+			loop
+				l_container ?= internal_zones.item
+				check l_container /= Void end
+				if l_container.has_recursive (a_widget) then
+					internal_zones.item.handle_focus_in
+				end
+				
+				if not internal_zones.after then -- FIXIT: Why should check? ACTIVE LIST's bug?
+					internal_zones.forth	
+				end
+				
+			end
+		end
 		
+	
 feature -- Properties
 
 	remove_empty_split_area  is
@@ -218,7 +247,7 @@ feature {SD_STATE, SD_DOCKER_MEDIATOR, SD_CONFIG} -- Properties
 			Result := internal_auto_hide_panel_bottom
 		end
 
-feature {SD_HOT_ZONE, SD_STATE, SD_DOCKER_MEDIATOR, SD_CONFIG}
+feature {SD_HOT_ZONE, SD_STATE, SD_DOCKER_MEDIATOR, SD_CONFIG, SD_CONTENT}
 
 	inner_container (a_zone: SD_ZONE): SD_MULTI_DOCK_AREA is
 			-- The split area which is at topmost area.

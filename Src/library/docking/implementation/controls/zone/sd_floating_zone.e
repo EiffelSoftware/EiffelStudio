@@ -7,7 +7,7 @@ class
 	SD_FLOATING_ZONE
 
 inherit
-	SD_ZONE
+	SD_SINGLE_CONTENT_ZONE
 		rename
 			internal_shared as internal_shared_zone
 		undefine
@@ -19,12 +19,9 @@ inherit
 			default_create, copy	
 		end
 		
-	SD_RESIZE_FLOATING_WINDOW
+	EV_UNTITLED_DIALOG
 		rename
-			extend as extend_resize_window,
-			make as make_resize_window,
-			handle_pointer_motion as handle_pointer_motion_resize_window,
-			count as count_floating_window,
+			extend as extend_dialog,
 			show as show_allow_to_back
 		end
 		
@@ -33,7 +30,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make (a_content: SD_CONTENT) is
 			-- Creation method.
 		require
 --			a_content_not_void: a_content /= Void
@@ -41,15 +38,15 @@ feature {NONE} -- Initlization
 			create internal_shared
 --			create internal_shared_zone
 			
-			make_resize_window	
---			internal_content := a_content
+			default_create	
+			internal_content := a_content
 
 			create internal_vertical_box
 			internal_vertical_box.set_border_width (2)
 			internal_vertical_box.set_background_color ((create {EV_STOCK_COLORS}).grey)
-			extend_resize_window (internal_vertical_box)
+			extend_dialog (internal_vertical_box)
 			
-			create internal_title_bar.make (internal_shared.icons.default_icon, " Floating ")
+			create internal_title_bar.make (internal_content.pixmap, internal_content.title)
 			internal_vertical_box.extend (internal_title_bar)
 			internal_title_bar.pointer_button_press_actions.extend (agent handle_title_bar_pointer_button_press)
 			internal_title_bar.close_actions.extend (agent handle_close_window)
@@ -60,9 +57,11 @@ feature {NONE} -- Initlization
 			pointer_motion_actions.extend (agent handle_pointer_motion)
 --			internal_title_bar.drag_actions.extend (agent handle_drag_action)
 --			internal_title_bar.pointer_button_release_actions.extend (agent handle_title_bar_pointer_release)
---			init_focus_in (Current)
+
 			create internal_inner_container.make
 			internal_vertical_box.extend (internal_inner_container)
+			
+			internal_inner_container.extend (internal_content.user_widget)
 
 		end
 	
@@ -72,17 +71,7 @@ feature -- Command
 		do
 --			internal_inner_container.extend (a_zone)
 		end
-	
-	content: SD_CONTENT is
-			-- The content which current holded.
-		do
-		end
-
-	set_content (a_content: SD_CONTENT) is
-
-		do
-		end
-	
+		
 	show is
 			-- 
 		do
@@ -142,7 +131,7 @@ feature {NONE} -- Implementation
 					io.put_string ("%N SD_FLOATING_ZONE handle_pointer_motion. set_position " + (a_screen_x - pointer_press_offset_x).out + " " + (a_screen_y - pointer_press_offset_y).out)
 				end
 			end
-			invalidate
+			
 		end
 	
 	handle_close_window is
@@ -202,16 +191,6 @@ feature {NONE} -- Implementation
 	pointer_pressed: BOOLEAN
 	pointer_press_offset_x, pointer_press_offset_y: INTEGER
 	
-	handle_focus_in is
-			-- 
-		do
-			
-		end
-		
-	handle_zone_focus_out is
-			-- 
-		do
-			
-		end
+
 		
 end

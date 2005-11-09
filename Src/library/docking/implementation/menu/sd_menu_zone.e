@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 			init_a_dot
 			internal_drag_area.set_minimum_size (10, 10)
 			internal_drag_area.set_background_color (background_color_internal)
-			internal_drag_area.expose_actions.extend (agent handle_redraw_drag_area)
-			internal_drag_area.pointer_button_press_actions.extend (agent handle_drag_area_pressed)
-			internal_drag_area.pointer_motion_actions.force_extend (agent handle_drag_area_motion)
-			internal_drag_area.pointer_button_release_actions.extend (agent handle_drag_area_release)
+			internal_drag_area.expose_actions.extend (agent on_redraw_drag_area)
+			internal_drag_area.pointer_button_press_actions.extend (agent on_drag_area_pressed)
+			internal_drag_area.pointer_motion_actions.force_extend (agent on_drag_area_motion)
+			internal_drag_area.pointer_button_release_actions.extend (agent on_drag_area_release)
 			internal_drag_area.set_pointer_style (default_pixmaps.sizeall_cursor)
 			extend_hor_ver_box (internal_drag_area)
 			disable_item_expand (internal_drag_area)
@@ -48,8 +48,8 @@ feature {NONE} -- Initialization
 			end			
 			
 
-			pointer_motion_actions.extend (agent handle_pointer_motion)
-			pointer_button_release_actions.extend (agent handle_pointer_release)
+			pointer_motion_actions.extend (agent on_pointer_motion)
+			pointer_button_release_actions.extend (agent on_pointer_release)
 		end
 
 feature -- Basic operation
@@ -59,9 +59,7 @@ feature -- Basic operation
 		local
 			l_tool_bar_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
 		do
-			debug ("larry")
-				io.put_string ("%N SD_MENU_ZONE change direction")
-			end			
+	
 			
 			l_tool_bar_items := tool_bar_items
 			wipe_out
@@ -109,15 +107,19 @@ feature -- Basic operation
 			internal_floating_menu.destroy
 			internal_floating_menu := Void
 		end
+	
+	set_row_position (a_x_or_y: INTEGER) is
+			-- Set position when `Current' not floating.
+		do
+			
+		end
 		
 	set_position (a_screen_x, a_screen_y: INTEGER) is
 			-- 
 		require
 			is_floating: is_floating
 		do
-			debug ("larry")
-				io.put_string ("%N SD_MENU_ZONE set_position " + a_screen_x.out + " " + a_screen_y.out)
-			end				
+		
 			internal_floating_menu.set_position (a_screen_x, a_screen_y)
 		end
 
@@ -148,9 +150,6 @@ feature -- Access
 				
 				extend_hor_ver_box (l_tool_bar)
 				
-				debug ("larry")
-					io.put_string ("%N SD_MENU_ZONE extend")
-				end
 			else
 				internal_horizontal_bar.extend (a_item)
 			end
@@ -176,8 +175,6 @@ feature -- Access
 					a_items.item.parent.prune (a_items.item)
 				end
 				extend (a_items.item)
-				
-				io.put_string ("%N SD_MENU_ZONE a" + a_items.count.out)
 				
 				a_items.forth
 			end
@@ -205,7 +202,7 @@ feature -- States reports
 		
 feature {NONE} -- Implementation for agents
 
-	handle_redraw_drag_area (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_redraw_drag_area (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- 
 		local
 			i, l_height : INTEGER
@@ -222,27 +219,25 @@ feature {NONE} -- Implementation for agents
 			end
 		end
 	
-	handle_drag_area_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_drag_area_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- 
 		do
 			if a_button = 1 then
 				internal_pointer_pressed := True				
 				internal_docker_mediator := Void
 			end
-
 		end
 	
-	handle_drag_area_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_drag_area_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- 
 		do
 			if a_button = 1 then
 				internal_pointer_pressed := False				
 				internal_docker_mediator := Void
 			end
-
 		end
 	
-	handle_drag_area_motion is
+	on_drag_area_motion is
 			-- 
 		do
 			if internal_pointer_pressed then
@@ -253,15 +248,13 @@ feature {NONE} -- Implementation for agents
 		
 	internal_pointer_pressed: BOOLEAN
 	
-	handle_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- 
 		do
-
-			internal_docker_mediator.handle_pointer_motion (a_screen_x, a_screen_y)
-
+			internal_docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
 		end
 		
-	handle_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- 
 		do
 			disable_capture
@@ -298,6 +291,8 @@ feature {NONE} -- Implmentation
 	internal_floating_menu: SD_FLOATING_MENU_ZONE	
 			-- Floating menu zone which contain `Current' when floating.
 			
+feature {NONE} -- Drawing.
+
 	init_a_dot is
 			-- Init colors of a shadowed dot.
 		local
@@ -405,6 +400,5 @@ feature {NONE} -- Implmentation
 			else
 				bar_dot.draw_point (2, 2)				
 			end
-			
 		end	
 end

@@ -41,14 +41,14 @@ feature {NONE} -- Initialization
 
 feature -- Basic operations
 		
-	handle_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
 			-- Handle user drag menu events.
 		local
 			l_in_four_side: BOOLEAN
 --			l_floating_menu: SD_FLOATING_MENU_ZONE
 		do
 				
-			l_in_four_side := handle_motion_in_four_side (a_screen_x, a_screen_y)
+			l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y)
 
 			if not l_in_four_side then
 				
@@ -91,22 +91,22 @@ feature {NONE} -- Implementation
 	internal_last_floating: BOOLEAN
 			-- 
 				
-	handle_motion_in_four_side (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- 
 		local
 			l_changed: BOOLEAN
 		do
 			if internal_left_manager.area_managed.has_x_y (a_screen_x, a_screen_y) then
-				l_changed := internal_left_manager.handle_pointer_motion (a_screen_x)
+				l_changed := internal_left_manager.on_pointer_motion (a_screen_x)
 				Result := True
 			elseif internal_right_manager.area_managed.has_x_y (a_screen_x, a_screen_y)	then
-				l_changed := internal_right_manager.handle_pointer_motion (a_screen_x)
+				l_changed := internal_right_manager.on_pointer_motion (a_screen_x)
 				Result := True
 			elseif internal_top_manager.area_managed.has_x_y (a_screen_x, a_screen_y)  then
-				l_changed := internal_top_manager.handle_pointer_motion (a_screen_y)
+				l_changed := internal_top_manager.on_pointer_motion (a_screen_y)
 				Result := True
 			elseif internal_bottom_manager.area_managed.has_x_y (a_screen_x, a_screen_y) then
-				l_changed := internal_bottom_manager.handle_pointer_motion (a_screen_y)
+				l_changed := internal_bottom_manager.on_pointer_motion (a_screen_y)
 				Result := True
 			end		
 			if Result then

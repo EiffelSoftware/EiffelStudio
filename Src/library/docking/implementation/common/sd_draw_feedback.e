@@ -54,7 +54,7 @@ feature -- Basic operations
 	clear_screen is
 			-- Maximum amount of bytes the run-time can allocate.
 		do
-			screen.redraw
+--			screen.redraw
 		end
 	
 	draw_red_rectangle (left, top, width, height: INTEGER) is
@@ -92,7 +92,7 @@ feature -- Basic operations
 			l_pixmap: EV_PIXMAP
 		do
 			create l_pixmap
-			l_pixmap.set_with_named_file (".\docking_library\blue.png")
+			l_pixmap.set_with_named_file (".\docking_library\implementation\images\blue.png")
 			l_pixmap.set_size (a_width, a_height)
 			screen.set_and_mode
 			screen.draw_pixmap (a_left, a_top, l_pixmap)

@@ -163,24 +163,16 @@ feature -- Perform Restore
 	float_window (a_x, a_y: INTEGER) is
 			-- Make current window floating.
 		local
-
---			l_multi_area: SD_MULTI_DOCK_AREA
 			l_floating_zone: SD_FLOATING_ZONE
-			l_docking_state: SD_DOCKING_STATE
+			l_floating_state: SD_FLOATING_STATE
 		do
 			internal_shared.docking_manager.lock_update
---			l_multi_area := internal_shared.docking_manager.inner_container (internal_zone)
-			
+		
 			internal_shared.docking_manager.prune_zone (internal_zone)
-			create l_floating_zone.make
-			l_floating_zone.show
-			l_floating_zone.set_size (internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
-			l_floating_zone.set_position (a_x, a_y)
-			internal_shared.docking_manager.add_inner_container (l_floating_zone.inner_container)
-			
-			create l_docking_state.make (internal_content, {SD_SHARED}.dock_left, 0)
-			l_docking_state.dock_at_top_level (l_floating_zone.inner_container)
-			change_state (l_docking_state)
+
+			create l_floating_state.make_with_position (internal_content, a_x, a_y)
+
+			change_state (l_floating_state)
 			
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update

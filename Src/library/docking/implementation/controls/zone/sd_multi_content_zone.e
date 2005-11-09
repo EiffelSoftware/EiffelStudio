@@ -36,7 +36,7 @@ feature
 			internal_notebook.item_tab (a_content.user_widget).enable_select
 
 			
-			init_focus_in (a_content.user_widget)			
+--			init_focus_in (a_content.user_widget)			
 			
 		end
 		

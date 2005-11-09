@@ -55,7 +55,7 @@ feature -- Status report
 		
 feature -- Basic operation
 
-	handle_pointer_motion (a_screen_y_or_x: INTEGER): BOOLEAN is
+	on_pointer_motion (a_screen_y_or_x: INTEGER): BOOLEAN is
 			-- 
 		do
 			Result := move_in (a_screen_y_or_x)

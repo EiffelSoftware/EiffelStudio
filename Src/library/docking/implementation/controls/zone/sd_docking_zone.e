@@ -13,7 +13,8 @@ inherit
 		rename
 			internal_shared as internal_shared_not_used
 		undefine
-			copy, is_equal, default_create
+			copy, is_equal, default_create,
+			handle_focus_in, handle_zone_focus_out
 		end	
 		
 	SD_DOCKER_SOURCE
@@ -48,7 +49,7 @@ feature	{NONE} -- Initlization
 			window.set_stick (True)
 			extend (window)
 			
-			init_focus_in (Current)
+--			init_focus_in (Current)
 			handle_focus_in
 			
 		end
@@ -88,15 +89,21 @@ feature {NONE} -- Implementation
 	handle_focus_in is
 			-- 
 		do
+			Precursor {SD_SINGLE_CONTENT_ZONE}
 			internal_shared.docking_manager.disable_all_zones_focus_color
 			internal_shared.docking_manager.remove_auto_hide_zones
 			window.title_bar.enable_focus_color
 			
+			if window.is_displayed then
+				window.set_focus
+			end
+		
 		end
 		
 	handle_zone_focus_out is
 			-- 
 		do
+			Precursor {SD_SINGLE_CONTENT_ZONE}
 			window.title_bar.disable_focus_color
 		end
 		

@@ -26,45 +26,37 @@ feature {NONE}  -- Implementation
 			-- Catch all widgets actions in `Current'.
 		local
 			l_container: EV_CONTAINER
-			l_linear: LINEAR [EV_WIDGET]
 		do
-			l_container ?= a_widget
-			if l_container /= Void then
-				l_linear := l_container.linear_representation
-				from 
-					l_linear.start
-				until
-					l_linear.after
-				loop
-					init_focus_in (l_linear.item)
-					l_linear.forth
-				end
-			end
+			l_container ?= Current
+			check l_container /= Void end
 			
-			a_widget.pointer_button_press_actions.force_extend (agent handle_focus_in)
+--			a_widget.pointer_button_press_actions.force_extend (agent handle_focus_in)
 		end
 		
-	handle_focus_in is
-			-- 
-		deferred
-		end
+
 		
 feature {SD_DOCKING_MANAGER} 
 	handle_zone_focus_out is
 			-- 
-		deferred
+		do
+			content.focus_out_actions.call ([])
 		end
-
+		
+	handle_focus_in is
+			-- 
+		do
+			content.focus_in_actions.call ([])
+		end
+		
 feature {SD_DOCKING_MANAGER, SD_STATE}
 
 	destroy_focus_in is
 			-- Destory all widgets actions in `Current'.
 		local
-			l_widget: EV_WIDGET
+			l_app: EV_APPLICATION
 		do
-			l_widget ?= Current
-			check l_widget /= Void end
-			destroy_focus_in_imp (l_widget)
+--			create l_app
+--			l_app.pointer_button_press_actions.prune_all (agent handle_focus_in)
 		end
 		
 feature {NONE} -- Implementation

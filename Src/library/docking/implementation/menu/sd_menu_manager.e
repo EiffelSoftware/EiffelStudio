@@ -13,8 +13,7 @@ feature {NONE} -- Initialization
 	make is
 			-- 
 		require
-
-
+			
 		do
 			create internal_shared
 			create internal_all_menu_zone_items.make (0)

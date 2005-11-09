@@ -10,7 +10,8 @@ inherit
 	SD_HOR_VER_BOX
 	SD_SINGLE_CONTENT_ZONE
 		undefine
-			copy, is_equal, default_create	
+			copy, is_equal, default_create,
+			handle_focus_in,handle_zone_focus_out
 		end
 	SD_RESIZE_SOURCE
 		undefine
@@ -58,7 +59,7 @@ feature	{NONE} -- Initlization
 			content.user_widget.set_minimum_size (internal_shared.icons.stick.width * 3, internal_shared.icons.stick.height)
 --			set_minimum_size (icons.stick.width * 3, icons.stick.height)
 
-			init_focus_in (Current)
+--			init_focus_in (Current)
 		end
 
 feature {NONE} -- Implementation
@@ -146,6 +147,7 @@ feature {NONE} -- For user docking
 	handle_focus_in is
 			-- 
 		do
+			Precursor {SD_SINGLE_CONTENT_ZONE}
 			internal_shared.docking_manager.disable_all_zones_focus_color
 			window.title_bar.enable_focus_color
 		end
@@ -153,6 +155,7 @@ feature {NONE} -- For user docking
 	handle_zone_focus_out is
 			-- 
 		do
+			Precursor {SD_SINGLE_CONTENT_ZONE}
 			window.title_bar.disable_focus_color
 		end
 	

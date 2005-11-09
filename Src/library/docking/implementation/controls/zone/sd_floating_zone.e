@@ -7,7 +7,7 @@ class
 	SD_FLOATING_ZONE
 
 inherit
-	SD_SINGLE_CONTENT_ZONE
+	SD_ZONE
 		rename
 			internal_shared as internal_shared_zone
 		undefine
@@ -39,14 +39,17 @@ feature {NONE} -- Initlization
 --			create internal_shared_zone
 			
 			default_create	
-			internal_content := a_content
+			create internal_contents
+			internal_contents.add_actions.extend (agent on_add_action)
+			internal_contents.remove_actions.extend (agent on_remove_action)
+			internal_contents.extend (a_content)
 
 			create internal_vertical_box
 			internal_vertical_box.set_border_width (2)
 			internal_vertical_box.set_background_color ((create {EV_STOCK_COLORS}).grey)
 			extend_dialog (internal_vertical_box)
 			
-			create internal_title_bar.make (internal_content.pixmap, internal_content.title)
+			create internal_title_bar.make (a_content.pixmap, a_content.title)
 			internal_vertical_box.extend (internal_title_bar)
 			internal_title_bar.pointer_button_press_actions.extend (agent handle_title_bar_pointer_button_press)
 			internal_title_bar.close_actions.extend (agent handle_close_window)
@@ -57,15 +60,39 @@ feature {NONE} -- Initlization
 			pointer_motion_actions.extend (agent handle_pointer_motion)
 --			internal_title_bar.drag_actions.extend (agent handle_drag_action)
 --			internal_title_bar.pointer_button_release_actions.extend (agent handle_title_bar_pointer_release)
-
-			create internal_inner_container.make
-			internal_vertical_box.extend (internal_inner_container)
+			internal_vertical_box.extend (a_content.user_widget)
+		end
+		
+	on_add_action (a_content: SD_CONTENT) is
+			-- If `Current' contain zone more then one, add `Current''s title bar.
+		do
+						
+		end
+		
+	on_remove_action (a_content: SD_CONTENT) is
+			-- If 'Current' contain zone only one, add `Current''s title bar.
+		do
 			
-			internal_inner_container.extend (internal_content.user_widget)
-
+		end
+		
+		
+feature -- Command
+	
+	content: SD_CONTENT is
+			-- 
+		do
+			
 		end
 	
-feature -- Command
+	set_content (a_content: SD_CONTENT) is
+			-- 
+		do
+			
+		end
+	
+	internal_contents: ACTIVE_LIST [SD_CONTENT]
+			-- All contents in `Current'.
+		
 	extend (a_zone: SD_ZONE) is
 			-- 
 		do

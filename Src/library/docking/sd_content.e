@@ -5,13 +5,13 @@ indexing
 
 class
 	SD_CONTENT
-	
+
 create
 	make_with_widget_title_pixmap,
 	make_with_widget
-		
+
 feature {NONE} -- Initialization
-	
+
 	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_title: STRING; a_pixmap: EV_PIXMAP) is
 			-- Creation method.
 		require
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			internal_user_widget := a_widget
 			internal_title := a_title
 			internal_pixmap := a_pixmap
-			
+
 			-- By default, dock left.
 			create l_state.make (Current, {SD_SHARED}.dock_left)
 			l_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			a_pixmap_set: a_pixmap = internal_pixmap
 			state_not_void: internal_state /= Void
 		end
-		
+
 	make_with_widget (a_widget: EV_WIDGET) is
 			-- Creation method.
 		require
@@ -50,9 +50,9 @@ feature {NONE} -- Initialization
 			l_icon.set_minimum_size (20, 20)
 			make_with_widget_title_pixmap (a_widget, "Untitled", l_icon)
 		end
-	
+
 feature -- Access
-		
+
 	user_widget: like internal_user_widget is
 			-- Client programmer's widget.
 		do
@@ -60,7 +60,7 @@ feature -- Access
 		ensure
 			result_valid: Result = internal_user_widget
 		end
-		
+
 	title: like internal_title is
 			-- Client programmer's widget's title.
 		do
@@ -68,7 +68,7 @@ feature -- Access
 		ensure
 			result_valid: Result = internal_title
 		end
-		
+
 	set_title (a_title: like internal_title) is
 			-- Set the widget's title
 		require
@@ -79,7 +79,7 @@ feature -- Access
 		ensure
 			a_title_set: a_title = internal_title
 		end
-		
+
 	pixmap: like internal_pixmap is
 			-- Client programmer's widget's pixmap.
 		do
@@ -87,7 +87,7 @@ feature -- Access
 		ensure
 			result_valid: Result = internal_pixmap
 		end
-	
+
 	set_pixmap (a_pixmap: like internal_pixmap) is
 			-- Set the pixmap which shown on title bar.
 		require
@@ -97,7 +97,7 @@ feature -- Access
 		ensure
 			a_pixmap_set: a_pixmap = internal_pixmap
 		end
-		
+
 	mini_toolbar: like internal_mini_toolbar is
 			-- Mini toolbar.
 		do
@@ -105,7 +105,7 @@ feature -- Access
 		ensure
 			result_valid: Result = internal_mini_toolbar
 		end
-	
+
 	set_mini_toolbar (a_bar: like internal_mini_toolbar) is
 			-- Set mini toolbar.
 		require
@@ -115,25 +115,25 @@ feature -- Access
 		ensure
 			a_bar_set: a_bar = internal_mini_toolbar
 		end
-		
+
 	type: INTEGER is
-			-- 
+			--
 		do
 			Result := internal_type
 		end
-	
+
 	set_type (a_type: INTEGER) is
 			--
 		require
 			a_type_valid: a_type = {SD_SHARED}.type_normal or a_type = {SD_SHARED}.type_editor
 		do
 			internal_type := a_type
-		end		
+		end
 
 feature -- Set Position
 
 	set_relative (a_relative: SD_CONTENT; a_direction: INTEGER) is
-			-- 
+			--
 		require
 			a_relative_not_void: a_relative /= Void
 			manager_have_content: manager_has_content (a_relative)
@@ -141,7 +141,7 @@ feature -- Set Position
 		do
    			state.change_zone_split_area (a_relative.state.zone, a_direction)
    		end
-   	
+
 	set_top (a_direction: INTEGER) is
 			--
 		require
@@ -149,23 +149,23 @@ feature -- Set Position
 		do
 	   		state.dock_at_top_level (internal_shared.docking_manager.inner_container (state.zone))
 		end
-   	
+
 	set_auto_hide (a_direction: INTEGER) is
-			-- 
+			--
 		require
 			a_direction_valid: four_direction (a_direction)
 		do
 			state.stick_window (a_direction)
 		end
-   	
+
 	set_floating (a_screen_x, a_screen_y: INTEGER) is
-			-- 
+			--
 		do
 			state.float_window (a_screen_x, a_screen_y)
 		end
-   	
+
 	set_tab_with (a_content: SD_CONTENT) is
-			-- 
+			--
 		local
 			l_tab_zone: SD_TAB_ZONE
 			l_docking_zone: SD_DOCKING_ZONE
@@ -179,7 +179,7 @@ feature -- Set Position
 				state.move_to_docking_zone (l_docking_zone)
 			end
 		end
-	
+
 feature -- Actions
 
 	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -202,63 +202,77 @@ feature -- Actions
 			Result := internal_focus_out_actions
 		ensure
 			not_void: Result /= Void
-		end		
-	
-feature -- 
-	
+		end
+
+	close_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Actions perfromed before close.
+		do
+			if internal_close_actions = Void then
+				create internal_close_actions
+			end
+			Result := internal_close_actions
+		end
+
+feature --
+
 	set_close_behavior (a_destroy: BOOLEAN) is
-			-- set `internal_default_destroy'.
+			-- set `default_destroy'.
 		do
-			internal_default_destroy := a_destroy
+			default_destroy := a_destroy
 		ensure
-			a_destroy_set: internal_default_destroy = a_destroy
+			a_destroy_set: default_destroy = a_destroy
 		end
-	
-	destroy is	
-			-- Destroy `Current' from docking library.
+
+	close is
+			-- Destroy `Current' from docking library if `default_destroy', otherwise hide.
 		do
-			internal_shared.docking_manager.contents.prune_all (Current)
-		end
-		
-	hide is
-			-- Hide `Current'.
-		do
-			
+			if internal_close_actions /= Void then
+				internal_close_actions.call ([])
+			end
+			if default_destroy then
+				internal_shared.docking_manager.contents.prune_all (Current)
+			else
+--				state.hide
+			end
+
 		end
 
 feature -- States report
+
+	default_destroy: BOOLEAN
+			-- If user click 'X' button, close `Current' or hide `Current'?
 
 	manager_has_content (a_content: SD_CONTENT): BOOLEAN is
 			-- If docking manager has `a_content'.
 		require
 			a_content_not_void: a_content /= Void
 		do
-			Result := internal_shared.docking_manager.has_content (a_content) 
+			Result := internal_shared.docking_manager.has_content (a_content)
 		end
-	
+
 	four_direction (a_direction: INTEGER): BOOLEAN is
 			-- If `a_direction' is one of four direction?
 		do
 			Result := a_direction = {SD_SHARED}.dock_left or a_direction = {SD_SHARED}.dock_right or
 				 a_direction = {SD_SHARED}.dock_top or a_direction = {SD_SHARED}.dock_bottom
 		end
-		
-		
+
+
 feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT} -- Access
-	
+
 	state: like internal_state is
 			-- Current state
 		do
 			Result := internal_state
 		end
-				
+
 feature {NONE} -- Restore issues implementation
-	
+
 	internal_state: SD_STATE
 			-- The SD_STATE instacne, which will change itself base on different states. States pattern.
 
 feature {SD_STATE, SD_DOCKING_MANAGER} -- Change the SD_STATE base on the states
-	
+
 	change_state (a_state: SD_STATE) is
 			-- Called by SD_RESOTRE, change current state object.
 		require
@@ -268,34 +282,34 @@ feature {SD_STATE, SD_DOCKING_MANAGER} -- Change the SD_STATE base on the states
 		end
 
 feature {NONE}  -- Implemention
-	
+
 	internal_user_widget: EV_WIDGET
 			-- Client programmer's widget.
-	
+
 	internal_title: STRING
 			-- The internal_user_widget's internal_title.
-	
+
 	internal_pixmap: EV_PIXMAP
 			-- The internal_pixmap at the head of internal_title.
-	
+
 	internal_mini_toolbar: EV_TOOL_BAR
 			-- Mini toolbar at the titlt bar.
 
 	internal_shared: SD_SHARED
 			-- All singletons.
-	
+
 	internal_type: INTEGER
 			-- The type of `Current'. One value from SD_SHARED.	
-	
+
 	internal_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Keyboard focus in actions.
-	
+
 	internal_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Keyboard focus out actions.
-	
-	internal_default_destroy: BOOLEAN
-			-- If user click 'X' button, close `Current' or hide `Current'?
-	
+
+	internal_close_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions perfromed before close.
+
 invariant
 	the_user_widget_not_void: internal_user_widget /= Void
 end

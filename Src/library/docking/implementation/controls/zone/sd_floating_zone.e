@@ -12,6 +12,9 @@ inherit
 			internal_shared as internal_shared_zone
 		undefine
 			default_create, copy
+		redefine
+			type,
+			state
 		end
 
 	SD_DOCKER_SOURCE
@@ -30,40 +33,47 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT) is
+	make is
 			-- Creation method.
 		require
---			a_content_not_void: a_content /= Void
+
 		do
 			create internal_shared
---			create internal_shared_zone
-
 			default_create
-			create internal_contents
-			internal_contents.add_actions.extend (agent on_add_action)
-			internal_contents.remove_actions.extend (agent on_remove_action)
-			internal_contents.extend (a_content)
 
 			create internal_vertical_box
 			internal_vertical_box.set_border_width (2)
 			internal_vertical_box.set_background_color ((create {EV_STOCK_COLORS}).grey)
 			extend_dialog (internal_vertical_box)
 
-			create internal_title_bar.make (a_content.pixmap, a_content.title)
+			create internal_title_bar.make (internal_shared.icons.default_icon, "Floating")
 			internal_vertical_box.extend (internal_title_bar)
 			internal_title_bar.pointer_button_press_actions.extend (agent on_title_bar_pointer_button_press)
 			internal_title_bar.pointer_motion_actions.extend (agent on_title_bar_pointer_motion)
 			internal_title_bar.pointer_button_release_actions.extend (agent on_title_bar_pointer_button_release)
+			internal_title_bar.close_actions.extend (agent on_close_window)
 
-			internal_title_bar.close_actions.extend (agent handle_close_window)
 			internal_vertical_box.disable_item_expand (internal_title_bar)
+
 			pointer_button_release_actions.extend (agent handle_pointer_button_release)
 
-			pointer_motion_actions.extend (agent handle_pointer_motion)
+			pointer_motion_actions.extend (agent on_pointer_motion)
 --			internal_title_bar.drag_actions.extend (agent handle_drag_action)
 --			internal_title_bar.pointer_button_release_actions.extend (agent handle_title_bar_pointer_release)
-			internal_vertical_box.extend (a_content.user_widget)
+--			internal_vertical_box.extend (a_content.user_widget)
+
+			create internal_inner_container.make
+			internal_vertical_box.extend (internal_inner_container)
+			internal_inner_container.set_parent_floating_zone (Current)
+
+--			internal_vertical_box.start
+--			internal_vertical_box.put_left (internal_title_bar)
+--			internal_vertical_box.disable_item_expand (internal_title_bar)
+
 		end
+
+
+
 
 	on_add_action (a_content: SD_CONTENT) is
 			-- If `Current' contain zone more then one, add `Current''s title bar.
@@ -77,14 +87,56 @@ feature {NONE} -- Initlization
 
 		end
 
-
 feature -- Command
+
+	update_title_bar is
+			-- Remove/add title bar if `Current' content count changed.
+		local
+			l_zone: SD_ZONE
+			l_title_zone: SD_TITLE_BAR_REMOVEABLE
+			l_split_area: EV_SPLIT_AREA
+		do
+			if internal_inner_container.readable then
+				l_zone ?= internal_inner_container.item
+				if l_zone /= Void then
+					--  l_zone should not have title bar.
+					l_title_zone ?= l_zone
+					check l_title_zone /= Void end
+					l_title_zone.set_title_bar (False)
+
+				else
+					--  l_zone should have title bar
+					l_split_area ?= internal_inner_container.item
+					check l_split_area /= Void end
+					l_title_zone ?= l_split_area.first
+					if l_title_zone /= Void then
+						l_title_zone.set_title_bar (True)
+						l_title_zone := Void
+					end
+					l_title_zone ?= l_split_area.second
+					if l_title_zone /= Void then
+						l_title_zone.set_title_bar (True)
+					end
+				end
+			else
+				-- No widget in `Current'.
+				internal_shared.docking_manager.internal_inner_containers.prune_all (internal_inner_container)
+				internal_shared.docking_manager.internal_zones.prune (Current)
+				destroy
+			end
+		end
 
 	content: SD_CONTENT is
 			--
+		local
+			l_zone: SD_ZONE
 		do
-			internal_contents.start
-			Result := internal_contents.item
+--			internal_contents.start
+--			Result := internal_contents.item
+			l_zone ?= internal_inner_container.item
+			if l_zone /= Void then
+				Result := l_zone.content
+			end
 		end
 
 	set_content (a_content: SD_CONTENT) is
@@ -93,8 +145,8 @@ feature -- Command
 
 		end
 
-	internal_contents: ACTIVE_LIST [SD_CONTENT]
-			-- All contents in `Current'.
+--	internal_contents: ACTIVE_LIST [SD_CONTENT]
+--			-- All contents in `Current'.
 
 	extend (a_zone: SD_ZONE) is
 			--
@@ -112,7 +164,20 @@ feature -- Command
 			end
 		end
 
+	type: INTEGER is
+			--
+		do
+			Result := internal_shared.hot_zone_factory.hot_zone_main.type
+		end
+
+	state: SD_STATE is
+			--
+		do
+			Result := internal_floating_state
+		end
+
 feature --
+
 	inner_container: like internal_inner_container is
 			--
 		do
@@ -127,6 +192,9 @@ feature {NONE}  -- Docking implementation
 feature -- States report
 
 feature {NONE} -- Implementation
+
+	internal_floating_state: SD_FLOATING_STATE
+			--
 	internal_vertical_box: EV_VERTICAL_BOX
 
 	internal_inner_container: SD_MULTI_DOCK_AREA
@@ -140,7 +208,7 @@ feature {NONE} -- Implementation
 	last_x, last_y: INTEGER
 	recorded: BOOLEAN
 
-	handle_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
 --			set_pointer_style (default_pixmaps.sizeall_cursor)
@@ -154,17 +222,17 @@ feature {NONE} -- Implementation
 					create docker_mediator.make (Current)
 					docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
 				else
-					docker_mediator.handle_pointer_motion (a_screen_x, a_screen_y)
+					docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
 				end
 
 				debug ("larry")
-					io.put_string ("%N SD_FLOATING_ZONE handle_pointer_motion. set_position " + (a_screen_x - pointer_press_offset_x).out + " " + (a_screen_y - pointer_press_offset_y).out)
+					io.put_string ("%N SD_FLOATING_ZONE on_pointer_motion. set_position " + (a_screen_x - pointer_press_offset_x).out + " " + (a_screen_y - pointer_press_offset_y).out)
 				end
 			end
 
 		end
 
-	handle_close_window is
+	on_close_window is
 			--
 		do
 

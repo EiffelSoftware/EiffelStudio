@@ -21,7 +21,10 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
-
+	SD_TITLE_BAR_REMOVEABLE
+		undefine
+			copy, is_equal, default_create
+		end
 create
 	make
 
@@ -44,7 +47,7 @@ feature	{NONE} -- Initlization
 			window.min_max_action.extend (agent handle_min_max_window)
 			window.pointer_double_press_title_bar_actions.extend (agent handle_title_bar_double_press)
 
-			pointer_motion_actions.extend (agent handle_pointer_motion)
+			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent handle_pointer_release)
 			window.set_stick (True)
 			extend (window)
@@ -82,7 +85,7 @@ feature {NONE} -- Implementation
 	stick_window is
 			-- When user clicked the stick button.
 		do
-			internal_content.state.stick_window ({SD_SHARED}.dock_left)
+			internal_content.state.stick_window ({SD_DOCKING_MANAGER}.dock_left)
 		end
 
 	handle_title_bar_double_press is
@@ -130,11 +133,11 @@ feature {NONE} -- For redocker.
 			end
 		end
 
-	handle_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
 			if docker_mediator /= Void then
-				docker_mediator.handle_pointer_motion (a_screen_x,  a_screen_y)
+				docker_mediator.on_pointer_motion (a_screen_x,  a_screen_y)
 				debug ("larry")
 					io.put_string ("%N hot zone for docking ! yeah~" + a_screen_x.out + " " + a_screen_y.out)
 				end
@@ -145,6 +148,17 @@ feature {NONE} -- For redocker.
 			-- The mediator perform dock.	
 
 feature -- Access
+
+	set_title_bar (a_show: BOOLEAN) is
+			-- Set whether to show title bar?
+		do
+			if a_show then
+				window.set_title_bar (a_show)
+			else
+				window.set_title_bar (a_show)
+			end
+		end
+
 	is_parent_split: BOOLEAN is
 			--
 		local

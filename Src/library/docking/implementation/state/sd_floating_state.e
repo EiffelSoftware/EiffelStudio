@@ -16,58 +16,66 @@ inherit
 		end
 
 create
-	make, make_with_position
+	make
+--	, make_with_position
 
 feature {NONE} -- Initlization
-	make (a_content: SD_CONTENT) is
+	make (a_screen_x, a_screen_y: INTEGER) is
 			-- Creation method.
 		require
-			a_content_not_void: a_content /= Void
+
 		do
 			create internal_shared
-			internal_content := a_content
-			if internal_content.user_widget.parent /= Void then
-				internal_content.user_widget.parent.prune (internal_content.user_widget)
-			end
-			create internal_zone.make (internal_content)
-			internal_zone.set_size (internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
-			internal_zone.set_title (internal_content.title)
---			l_window.close_request_actions.extend (agent handle_close_window)
 
---			internal_zone.extend (internal_content.user_widget)
+			create internal_zone.make
+
 			internal_zone.show
-			internal_zone.move_actions.extend (agent on_move_window)
-
-	--FIXIT: should add a new SD_MULTI_DOCK_AREA here.					
---			internal_shared.docking_manager.add_zone (internal_zone)
+			internal_zone.set_size (internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
+			internal_zone.set_position (a_screen_x, a_screen_y)
+			internal_shared.docking_manager.add_inner_container (internal_zone.inner_container)
 		end
 
-	make_with_position (a_content: SD_CONTENT; a_x, a_y: INTEGER) is
-			--
-		do
-			make (a_content)
-			internal_zone.set_position (a_x, a_y)
-		end
+--	make_with_position (a_x, a_y: INTEGER) is
+--			--
+--		do
+--			make
+--			internal_zone.set_position (a_x, a_y)
+--		end
 
-	make_with_contens (a_contents: ARRAYED_LIST [SD_CONTENT]; a_x, a_y: INTEGER) is
-			--
-		require
-			a_contents_not_void: a_contents /= Void
-			a_contents_count_large_enough: a_contents.count > 1
-		do
-			a_contents.start
-			make (a_contents.item)
-			from
-
-			until
-				a_contents.after
-			loop
---				if a_contents then
+--	make_with_contens (a_contents: ARRAYED_LIST [SD_CONTENT]; a_x, a_y: INTEGER) is
+--			--
+--		require
+--			a_contents_not_void: a_contents /= Void
+--			a_contents_count_large_enough: a_contents.count > 1
+--		do
+--			a_contents.start
+--			make (a_contents.item)
+--			from
 --
---				end
-				a_contents.forth
-			end
+--			until
+--				a_contents.after
+--			loop
+----				if a_contents then
+----
+----				end
+--				a_contents.forth
+--			end
+--		end
+
+feature
+
+	inner_container: SD_MULTI_DOCK_AREA is
+			--
+		do
+			Result := internal_zone.inner_container
 		end
+
+	update_title_bar is
+			--
+		do
+			internal_zone.update_title_bar
+		end
+
 
 feature -- Perform Restore
 	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
@@ -86,7 +94,7 @@ feature -- Perform Restore
 			-- FIXIT: shoudl prune the SD_MULTI_DOCK_AREA here.
 --			internal_shared.docking_manager.prune_zone (internal_zone)
 			internal_zone.destroy
-			if 	internal_direction	= {SD_SHARED}.dock_left or internal_direction = {SD_SHARED}.dock_right then
+			if 	internal_direction	= {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_width_height := (a_multi_dock_area.width * internal_shared.default_docking_width_rate).ceiling
 			else
 				l_width_height := (a_multi_dock_area.height * internal_shared.default_docking_height_rate).ceiling
@@ -107,7 +115,7 @@ feature {NONE} -- Implementation
 
 	internal_zone: SD_FLOATING_ZONE
 
-	handle_close_window is
+	on_close_window is
 			-- Handle user clicked the close button on the floating window.
 		do
 
@@ -189,7 +197,7 @@ feature {NONE} -- Implementation
 			-- FIXIT: shoudl prune the SD_MULTI_DOCK_AREA here.
 --			internal_shared.docking_manager.prune_zone (internal_zone)
 
-			if a_direction = {SD_SHARED}.dock_left or a_direction = {SD_SHARED}.dock_right then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_old_zone_width_height := l_old_width
 			else
 				l_old_zone_width_height := l_old_height

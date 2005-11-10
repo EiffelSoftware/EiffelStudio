@@ -5,7 +5,7 @@ indexing
 
 class
 	SD_WINDOW
-	
+
 inherit
 	EV_CELL
 
@@ -31,15 +31,15 @@ feature {NONE} -- Initlization
 			internal_title_bar.pointer_double_press_actions.extend (agent handle_pointer_double_press)
 			pointer_button_release_actions.extend (agent pointer_release)
 			pointer_motion_actions.extend (agent pointer_motion)
-			
+
 			vbox.extend (internal_title_bar)
 			vbox.disable_item_expand (internal_title_bar)
-						
+
 			extend (vbox)
-		
+
 			set_minimum_size (20 * 3, 16)
 		end
-		
+
 feature   -- Access
 
 	set_stick (a_bool: BOOLEAN) is
@@ -47,25 +47,25 @@ feature   -- Access
 		do
 			internal_title_bar.set_stick (a_bool)
 		end
-		
+
 	title_bar: like internal_title_bar is
 			-- Get the title bar which above client programmer's widget.
 		do
 			Result := internal_title_bar
 		end
-	
+
 	user_widget: like internal_user_widget assign set_user_widget is
 			-- Get/set the client programmer's widget.
 		do
-			Result := internal_user_widget 
+			Result := internal_user_widget
 		end
-	
+
 	set_user_widget (a_widget: like internal_user_widget) is
 			-- Set the client programmer's widget.
 		require
 			a_widget_not_void: a_widget /= Void
 		do
-			
+
 			internal_user_widget := a_widget
 			if vbox.count = 2 then
 				vbox.prune (vbox [2])
@@ -79,14 +79,33 @@ feature   -- Access
 			contain_right_number_widget: vbox.count = 2
 			contain_user_wiget: vbox.has (a_widget)
 		end
-		
+
 feature {NONE} -- Two widgets
-	
+
 	internal_title_bar: SD_TITLE_BAR
 			-- The title bar which above client programmer's widget.
-			
+
 	internal_user_widget: EV_WIDGET
 			-- The client programmer's widget.
+
+feature -- Basic operation
+
+	set_title_bar (a_show: BOOLEAN) is
+			-- Set show or not show `internal_title_bar'.
+		do
+			if a_show then
+				if not vbox.has (internal_title_bar) then
+					vbox.start
+					vbox.put_left (internal_title_bar)
+					vbox.disable_item_expand (internal_title_bar)
+				end
+			else
+				vbox.start
+				if vbox.has (internal_title_bar) then
+					vbox.prune_all (internal_title_bar)
+				end
+			end
+		end
 
 feature -- Actions
 
@@ -100,7 +119,7 @@ feature -- Actions
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	stick_actions: like internal_stick_actions is
 			-- `internal_stick_actions'
 		do
@@ -111,7 +130,7 @@ feature -- Actions
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	drag_actions: like internal_drag_actions is
 			-- `internal_drag_actions'
 		do
@@ -122,7 +141,7 @@ feature -- Actions
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	min_max_action: like internal_min_max_action is
 			-- `internal_min_max_action'
 		do
@@ -133,7 +152,7 @@ feature -- Actions
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	pointer_double_press_title_bar_actions: like internal_pointer_double_press_title_bar_actions is
 			-- `internal_pointer_double_press_title_bar_actions'
 		do
@@ -144,45 +163,45 @@ feature -- Actions
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implemention
 
 	close_window is
-			-- 
+			--
 		do
 			close_actions.call ([])
 		end
-		
+
 	min_max_window is
-			-- 
+			--
 		do
 			min_max_action.call ([])
 		end
-		
+
 	stick_window is
-			-- 
+			--
 		do
 			stick_actions.call ([])
 		end
-		
+
 	drag_window (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- 
+			--
 		do
 			drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
 		end
-	
+
 	pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- 
+			--
 		do
 		end
-		
+
 	pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- 
+			--
 		do
 		end
-	
+
 	handle_pointer_double_press is
-			-- 
+			--
 		do
 			if internal_pointer_double_press_title_bar_actions /= Void then
 				internal_pointer_double_press_title_bar_actions.call ([])
@@ -193,25 +212,25 @@ feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons.
-			
+
 	internal_close_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when close the window.
-			
+
 	internal_stick_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when stick the window.
-			
+
 	internal_drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Actions performed when drag the window.
-			
+
 	internal_min_max_action: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions perfromed when min/max window.
-			
+
 	internal_pointer_double_press_title_bar_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions perfromed when pointer double pressed `internal_title_bar'.
 
 	vbox: EV_VERTICAL_BOX
 			-- The vertical box to hold SD_TITLE_BAR and user_widget.
-	
+
 invariant
 
 	internal_title_bar_not_void: internal_title_bar /= Void

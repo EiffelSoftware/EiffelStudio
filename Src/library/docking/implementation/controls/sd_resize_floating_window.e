@@ -89,7 +89,7 @@ feature {NONE} -- Implementation for resizing.
 			internal_resize_bar_bottom.pointer_button_press_actions.extend (agent handle_pointer_press_bottom)
 			internal_resize_bar_left.pointer_button_press_actions.extend (agent handle_pointer_press_left)
 			internal_resize_bar_right.pointer_button_press_actions.extend (agent handle_pointer_press_right)
-			pointer_motion_actions.extend (agent handle_pointer_motion)
+			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent handle_pointer_release)
 		end
 		
@@ -150,7 +150,7 @@ feature {NONE}  -- Implementation for agents.
 			end
 		end	
 	
-	handle_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- 
 		do
 			if internal_pointer_pressed_top or internal_pointer_pressed_bottom then

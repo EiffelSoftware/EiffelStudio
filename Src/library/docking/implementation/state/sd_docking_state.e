@@ -89,7 +89,7 @@ feature -- Perform Restore
 				a_multi_dock_area.prune (l_old_stuff)
 			end
 
-			if internal_direction = {SD_SHARED}.dock_left or internal_direction = {SD_SHARED}.dock_right then
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				create {EV_HORIZONTAL_SPLIT_AREA} l_new_container
 			else
 				create {EV_VERTICAL_SPLIT_AREA} l_new_container
@@ -97,14 +97,14 @@ feature -- Perform Restore
 
 			a_multi_dock_area.extend (l_new_container)
 
-			if internal_direction = {SD_SHARED}.dock_left or internal_direction = {SD_SHARED}.dock_top then
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_top then
 				l_new_container.set_first (internal_zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_second (l_old_stuff)
 --					if l_new_container.maximum_split_position >= internal_width_height and l_new_container.minimum_split_position <= internal_width_height then
 --						l_new_container.set_split_position (internal_width_height)
 --					end	
-					if internal_direction = {SD_SHARED}.dock_left then
+					if internal_direction = {SD_DOCKING_MANAGER}.dock_left then
 						l_new_container.set_split_position ((l_new_container.maximum_split_position * internal_shared.default_docking_width_rate).ceiling)
 					else
 						l_new_container.set_split_position ((l_new_container.maximum_split_position * internal_shared.default_docking_height_rate).ceiling)
@@ -119,7 +119,7 @@ feature -- Perform Restore
 --					if l_new_container.maximum_split_position >= internal_width_height and l_new_container.minimum_split_position <= internal_width_height then
 --						l_new_container.set_split_position (l_new_container.maximum_split_position - internal_width_height)
 --					end
-					if internal_direction = {SD_SHARED}.dock_right then
+					if internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 						l_new_container.set_split_position ((l_new_container.maximum_split_position * (1 - internal_shared.default_docking_width_rate)).ceiling)
 					else
 						l_new_container.set_split_position ((l_new_container.maximum_split_position * (1 - internal_shared.default_docking_height_rate)).ceiling)
@@ -145,7 +145,7 @@ feature -- Perform Restore
 			-- Change current content's internal_zone to a SD_AUTO_HIDE_ZONE.
 			internal_shared.docking_manager.prune_zone (internal_zone)
 
-			if a_direction = {SD_SHARED}.dock_left or a_direction = {SD_SHARED}.dock_right then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_width_height := internal_zone.width
 			else
 				l_width_height := (internal_shared.docking_manager.inner_container_main.height * 0.2).ceiling
@@ -163,17 +163,24 @@ feature -- Perform Restore
 	float_window (a_x, a_y: INTEGER) is
 			-- Make current window floating.
 		local
-			l_floating_zone: SD_FLOATING_ZONE
+
+--			l_multi_area: SD_MULTI_DOCK_AREA
 			l_floating_state: SD_FLOATING_STATE
+--			l_docking_state: SD_DOCKING_STATE
+			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
 			internal_shared.docking_manager.lock_update
+			l_orignal_multi_dock_area := internal_shared.docking_manager.inner_container (internal_zone)
 
-			internal_shared.docking_manager.prune_zone (internal_zone)
+--			internal_shared.docking_manager.prune_zone (internal_zone)
 
-			create l_floating_state.make_with_position (internal_content, a_x, a_y)
+			create l_floating_state.make (a_x, a_y)
 
-			change_state (l_floating_state)
+			dock_at_top_level (l_floating_state.inner_container)
 
+			l_floating_state.update_title_bar
+
+			l_orignal_multi_dock_area.update_title_bar
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
 		end
@@ -183,8 +190,10 @@ feature -- Perform Restore
 		local
 			l_docking_zone: SD_DOCKING_ZONE
 			a_tab_zone: SD_TAB_ZONE
+			l_multi_area: SD_MULTI_DOCK_AREA
 		do
 			internal_shared.docking_manager.lock_update
+			l_multi_area := internal_shared.docking_manager.inner_container (internal_zone)
 			l_docking_zone ?= a_target_zone
 			if l_docking_zone /= Void then
 				change_zone_split_area_to_docking_zone (l_docking_zone, a_direction)
@@ -193,6 +202,10 @@ feature -- Perform Restore
 			if a_tab_zone /= Void then
 				change_zone_split_area_to_tab_zone (a_tab_zone, a_direction)
 			end
+
+
+			internal_shared.docking_manager.inner_container (a_target_zone).update_title_bar
+			l_multi_area.update_title_bar
 			internal_shared.docking_manager.unlock_update
 		end
 
@@ -265,6 +278,7 @@ feature {NONE} -- Implementation
 			l_old_spliter_position: INTEGER
 			l_old_parent_split: EV_SPLIT_AREA
 			l_target_zone_parent: EV_CONTAINER
+			l_target_zone_split: EV_SPLIT_AREA
 		do
 			-- First, remove current internal_zone from old parent split area.
 			if internal_zone.parent /= Void then
@@ -272,14 +286,17 @@ feature {NONE} -- Implementation
 			end
 			 l_target_zone_parent := a_target_zone.parent
 			 l_old_parent_split ?= a_target_zone.parent
-			 check l_old_parent_split /= Void end
-			l_old_spliter_position := l_old_parent_split.split_position
+
+			 if l_old_parent_split /= Void then
+			 	l_old_spliter_position := l_old_parent_split.split_position
+			 end
+
 			a_target_zone.parent.prune (a_target_zone)
 
 			-- Then, insert current internal_zone to new split area base on  `a_direction'.
-			if a_direction = {SD_SHARED}.dock_top or a_direction = {SD_SHARED}.dock_bottom then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
 				create {EV_VERTICAL_SPLIT_AREA} l_new_split_area
-			elseif a_direction = {SD_SHARED}.dock_left or a_direction = {SD_SHARED}.dock_right then
+			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
 				create {EV_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
 
@@ -291,7 +308,7 @@ feature {NONE} -- Implementation
 				a_target_zone.parent.prune (a_target_zone)
 			end
 --			check a_target_zone.parent.extendible end
-			if a_direction = {SD_SHARED}.dock_top or a_direction = {SD_SHARED}.dock_left then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_left then
 				l_new_split_area.set_first (internal_zone)
 				l_new_split_area.set_second (a_target_zone)
 			else
@@ -303,9 +320,11 @@ feature {NONE} -- Implementation
 
 			-- Maybe the parent split area not full when there is only two user widgets in `inner_container'
 			-- And so at this time, there is only one widget in parent's area.
-			if l_old_parent_split.full then
---			if a_target_zone.parent.full then
-				l_old_parent_split.set_proportion (0.5)
+--			if l_old_parent_split /= Void l_old_parent_split.full then
+			if a_target_zone.parent.full then
+				l_target_zone_split ?= a_target_zone.parent
+
+				l_target_zone_split.set_proportion (0.5)
 			end
 
 			l_new_split_area.set_proportion (0.5)
@@ -357,13 +376,13 @@ feature {NONE} -- Move to new split area implementation.
 			check not l_target_zone_parent.full end
 
 			-- Then, insert current internal_zone to new split area base on  `a_direction'.
-			if a_direction = {SD_SHARED}.dock_top or a_direction = {SD_SHARED}.dock_bottom then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
 				create {EV_VERTICAL_SPLIT_AREA} l_new_split_area
-			elseif a_direction = {SD_SHARED}.dock_left or a_direction = {SD_SHARED}.dock_right then
+			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
 				create {EV_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
 
-			if a_direction = {SD_SHARED}.dock_top or a_direction = {SD_SHARED}.dock_left then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_left then
 				l_new_split_area.set_first (internal_zone)
 				l_new_split_area.set_second (a_target_zone)
 			else

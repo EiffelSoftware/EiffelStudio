@@ -8,6 +8,12 @@ deferred class
 
 feature -- Propoties
 
+	state: SD_STATE is
+			--
+		do
+			Result := content.state
+		end
+
 	content: SD_CONTENT is
 			-- The content which current holded.
 		deferred
@@ -20,6 +26,12 @@ feature -- Propoties
 			a_content_not_void: a_content /= Void
 			a_content_parent_void: a_content.user_widget.parent = Void
 		deferred
+		end
+
+	type: INTEGER is
+			--
+		do
+			Result := content.type
 		end
 
 feature {NONE}  -- Implementation

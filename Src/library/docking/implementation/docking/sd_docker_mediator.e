@@ -45,7 +45,7 @@ feature -- Access
 			l_zone_list := internal_shared.docking_manager.zones
 			create hot_zones.make (1)
 			generate_hot_zones_imp (l_zone_list)
-			if internal_shared.hot_zone_factory.hot_zone_main.type = internal_caller.content.type  then
+			if internal_shared.hot_zone_factory.hot_zone_main.type = internal_caller.type  then
 				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main)
 			end
 
@@ -94,7 +94,7 @@ feature -- Hanlde pointer events
 
 	-- There is no pointer press events, because the caller response for this.
 
-	handle_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
 			-- When user dragging something for docking, show hot zone which allow to dock.
 		local
 			l_drawed: BOOLEAN
@@ -103,7 +103,7 @@ feature -- Hanlde pointer events
 --			feedback.clear_screen
 			notify_outside_pointer_zone (a_screen_x, a_screen_y)
 			debug ("larry")
-				io.put_string ("%N in docker mediator. handle_pointer_motion. caller_type: " + internal_caller.content.type.out)
+				io.put_string ("%N in docker mediator. on_pointer_motion. caller_type: " + internal_caller.type.out)
 			end
 			from
 				hot_zones.start
@@ -213,9 +213,14 @@ feature {NONE} -- Implementation
 
 	add_hot_zone_on_type (a_zone: SD_ZONE; a_source: SD_DOCKER_SOURCE)is
 			--
+		local
+			l_floating_zone: SD_FLOATING_ZONE
 		do
-			if a_zone.content.type = internal_caller.content.type then
-				a_source.add_hot_zones (Current, hot_zones)
+			l_floating_zone ?= a_zone
+			if l_floating_zone = Void then
+				if a_zone.type = internal_caller.type then
+					a_source.add_hot_zones (Current, hot_zones)
+				end
 			end
 		end
 

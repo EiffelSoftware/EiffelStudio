@@ -29,7 +29,7 @@ feature {NONE} -- Initlization
 			extend (internal_title)
 			internal_title.pointer_button_press_actions.extend (agent handle_pointer_press_title)
 			internal_title.pointer_button_release_actions.extend (agent handle_pointer_release_title)
-			internal_title.pointer_motion_actions.extend (agent handle_pointer_motion_title)
+			internal_title.pointer_motion_actions.extend (agent on_pointer_motion_title)
 			create l_toolbar
 			extend (l_toolbar)
 			disable_item_expand (l_toolbar)
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			pointer_button_release_actions.call ([a_x, a_y,a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 		end
 	
-	handle_pointer_motion_title (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_motion_title (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- 
 		do
 			pointer_motion_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])

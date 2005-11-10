@@ -7,11 +7,11 @@ indexing
 class APPLICATION_EXECUTION_DOTNET
 
 inherit
-	
+
 	SHARED_EIFNET_DEBUGGER
 
 	EB_SHARED_MANAGERS
-	
+
 	APPLICATION_EXECUTION_IMP
 		redefine
 			make, recycle, load_system_dependent_debug_info
@@ -21,7 +21,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	SHARED_IL_DEBUG_INFO_RECORDER
 		export
 			{NONE} all
@@ -31,12 +31,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	ICOR_EXPORTER -- debug trace purpose
 		export
 			{NONE} all
 		end
-		
+
 	EIFNET_EXPORTER
 		export
 			{NONE} all
@@ -48,21 +48,21 @@ inherit
 		end
 
 	EV_SHARED_APPLICATION
-		export 
+		export
 			{NONE} all
-		end	
+		end
 
 create {SHARED_APPLICATION_EXECUTION}
 	make
-	
+
 feature {SHARED_APPLICATION_EXECUTION} -- Initialization
-	
+
 	make is
 			-- Create Current
 		do
 			Precursor
 			Eifnet_debugger.init
-			agent_update_notify_on_after_stopped :=	agent real_update_notify_on_after_stopped			
+			agent_update_notify_on_after_stopped :=	agent real_update_notify_on_after_stopped
 		end
 
 feature -- recycling data
@@ -94,7 +94,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 					end
 				end
 				Eifnet_debugger.set_callback_notification_processing (True)
-				if Eifnet_debugger /= Void then 
+				if Eifnet_debugger /= Void then
 					l_status := status
 					if
 						l_status.is_stopped
@@ -123,7 +123,7 @@ feature {EIFNET_DEBUGGER, EIFNET_EXPORTER} -- Trigger eStudio done
 			else
 				io.error.put_string ("ERROR : during APPLICATION_EXECUTION_DOTNET.estudio_callback_notify %N")
 				io.error.flush
-				Eifnet_debugger.set_callback_notification_processing (False)				
+				Eifnet_debugger.set_callback_notification_processing (False)
 			end
 		rescue
 			retried := True
@@ -137,11 +137,11 @@ feature {EIFNET_EXPORTER, EB_EXPRESSION_EVALUATOR_TOOL, EV_SHARED_APPLICATION}  
 		do
 			Result := Eifnet_debugger.callback_notification_processing
 		end
-		
+
 feature {APPLICATION_EXECUTION} -- load and save
 
 	load_dotnet_debug_info is
-			-- Load debug information (so far only the breakpoints)
+			-- Load debug information
 		local
 			w_dlg: EV_WARNING_DIALOG
 		do
@@ -155,7 +155,20 @@ feature {APPLICATION_EXECUTION} -- load and save
 				end
 			end
 		end
-		
+
+	reload_dotnet_debug_info_if_needed is
+			-- Reload debug information if last mode was finalized
+			-- since for debugging we need the workbench info
+			-- we force the reload
+		do
+			if not Il_debug_info_recorder.last_loading_is_workbench then
+				print ("Reload IL debug info for dotnet %N")
+				load_dotnet_debug_info
+			else
+				print ("Keep current IL debug info for dotnet %N")
+			end
+		end
+
 feature -- Properties
 
 	status: APPLICATION_STATUS_DOTNET is
@@ -172,13 +185,13 @@ feature {APPLICATION_EXECUTION} -- Properties
 		do
 			Result := Eifnet_debugger.know_about_kept_object (addr)
 		end
-		
+
 feature -- Bridge to Debugger
 
 	exit_process_occurred: BOOLEAN is
 			-- Did the exit_process occurred ?
 		require
-			eifnet_debugger_exists: Eifnet_debugger /= Void			
+			eifnet_debugger_exists: Eifnet_debugger /= Void
 		do
 			Result := Eifnet_debugger.exit_process_occurred
 		end
@@ -189,7 +202,7 @@ feature -- Bridge to Debugger
 			Result := status.exception_occurred
 		end
 
-	
+
 feature -- Execution
 
 	run (args, cwd: STRING) is
@@ -203,6 +216,7 @@ feature -- Execution
 		local
 			app: STRING
 		do
+			reload_dotnet_debug_info_if_needed
 			Eifnet_debugger.initialize_debugger_session (debugger_manager.debugging_window)
 			if Eifnet_debugger.is_debugging then
 				app := Eiffel_system.application_name (True)
@@ -213,36 +227,36 @@ feature -- Execution
 
 				process_before_running
 				Application.build_status
-				
+
 				Eifnet_debugger.do_run
-				
+
 				if not Eifnet_debugger.last_dbg_call_succeed then
 						-- This means we had issue creating process
 					Application.destroy_status
 					Eifnet_debugger.terminate_debugger_session
 					Eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
 				end
-				
+
 				if Application.is_running then
 						-- Application was able to be started
 					Application.status.set_is_stopped (False)
 				end
 			end
 		end
-		
+
 	continue_ignoring_kept_objects is
 		do
 			inspect application.execution_mode
-			when {EXEC_MODES}.step_into then 
+			when {EXEC_MODES}.step_into then
 				step_into
-			when {EXEC_MODES}.step_by_step then 
+			when {EXEC_MODES}.step_by_step then
 				step_next
-			when {EXEC_MODES}.out_of_routine then 
+			when {EXEC_MODES}.out_of_routine then
 				step_out
 			else
 				process_before_running
 				Eifnet_debugger.set_last_control_mode_is_continue
-				
+
 				status.set_is_stopped (False)
 				Eifnet_debugger.do_continue
 			end
@@ -251,13 +265,13 @@ feature -- Execution
 	interrupt is
 			-- Send an interrupt to the application
 			-- which will stop at the next breakable line number
-		do	
+		do
 			if Eifnet_debugger.icor_debug_controller /= Void then
 				debug ("debugger_eifnet_data")
 					print ("IsRunning :: " + Eifnet_debugger.icor_debug_controller.is_running.out + "%N")
 				end
 
-				process_before_running	
+				process_before_running
 				Eifnet_debugger.set_last_control_mode_is_stop
 				Eifnet_debugger.stop_dbg_timer
 				Eifnet_debugger.do_stop
@@ -268,7 +282,7 @@ feature -- Execution
 
 				--| Here debugger may not be synchronized |--
 				Eifnet_debugger.reset_current_callstack
-				Eifnet_debugger.init_current_callstack	
+				Eifnet_debugger.init_current_callstack
 				debug ("debugger_eifnet_data_extra")
 					debug_display_threads
 				end
@@ -278,7 +292,7 @@ feature -- Execution
 				status.refresh_current_thread_id
 				Eifnet_debugger.do_global_step_into
 			end
-		end		
+		end
 
 	notify_newbreakpoint is
 			-- Send an interrupt to the application
@@ -287,7 +301,7 @@ feature -- Execution
 			-- automatically resuming its execution.
 		do
 			send_breakpoints
-		end		
+		end
 
 	kill is
 			-- Ask the application to terminate itself.
@@ -305,14 +319,14 @@ feature -- Execution
 		do
 			Eifnet_debugger.reset_debugging_data
 			Eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
-			
+
 --			Eifnet_debugger.terminate_debugger_session
 -- this is now called directly from EIFNET_DEBUGGER.on_exit_process
 		end
 
 	load_system_dependent_debug_info is
 		do
-			if 
+			if
 				Eiffel_system.workbench.system_defined
 			then
 				load_dotnet_debug_info
@@ -344,19 +358,21 @@ feature -- Controle execution
 		local
 			l_entry_point_feature: E_FEATURE
 		do
+			check il_debug_info_recorder.last_loading_is_workbench end
+
 			debug ("debugger_trace_operation")
 				print ("%N%N")
-				print ("/\/\/\/\/\/\  Process before running  /\/\/\/\/\/\/\/\/\%N")				
+				print ("/\/\/\/\/\/\  Process before running  /\/\/\/\/\/\/\/\/\%N")
 				print ("%N%N")
 			end
-			
+
 			Application.debug_info.update
 			inspect Application.execution_mode
-			when {EXEC_MODES}.no_stop_points then 
+			when {EXEC_MODES}.no_stop_points then
 				send_no_breakpoints
-			when {EXEC_MODES}.step_by_step, {EXEC_MODES}.step_into then 
+			when {EXEC_MODES}.step_by_step, {EXEC_MODES}.step_into then
 				if not Application.is_running then
-					debug ("DEBUGGER_TRACE_STEPPING")
+					debug ("debugger_trace_stepping")
 						print ("Let's add a breakpoint at the entry point of the system%N")
 					end
 					l_entry_point_feature := Il_debug_info_recorder.entry_point_feature_i.e_feature
@@ -369,7 +385,7 @@ feature -- Controle execution
 			else
 				send_breakpoints
 			end
-			
+
 			debug ("debugger_eifnet_data_extra")
 				debug_display_threads
 			end
@@ -380,7 +396,7 @@ feature -- Controle execution
 		end
 
 	debug_display_threads is
-			-- 
+			--
 		local
 			l_controller: ICOR_DEBUG_CONTROLLER
 			l_enum_thread: ICOR_DEBUG_THREAD_ENUM
@@ -424,26 +440,26 @@ feature -- Stepping
 			-- Stepping out of the routine
 		do
 			process_before_running
-			
+
 			debug ("debugger_trace_stepping")
-				print ("++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")				
+				print ("++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 				print ("++ OPERATION :: APPLICATION_EXECUTION_DOTNET::step_out%N")
 				print ("++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 			end
 			raw_step_out
 		end
-		
+
 	step_into is
 			-- Stepping into next routine
 		do
 			process_before_running
-			
+
 			debug ("debugger_trace_stepping")
-				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")				
+				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 				print ("++ OPERATION :: APPLICATION_EXECUTION_DOTNET::step_into%N")
 				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
-			end			
-			Eifnet_debugger.set_last_control_mode_is_into	
+			end
+			Eifnet_debugger.set_last_control_mode_is_into
 			raw_step_range (True)
 		end
 
@@ -455,10 +471,10 @@ feature -- Stepping
 			process_before_running
 
 			debug ("debugger_trace_stepping")
-				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")				
+				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
 				print ("++ OPERATION :: APPLICATION_EXECUTION_DOTNET::step_next%N")
 				print ("+++++++++++++++++++++++++++++++++++++++++++++++++++++++%N")
-			end			
+			end
 
 			l_status := status
 			if
@@ -473,9 +489,9 @@ feature -- Stepping
 				raw_step_range (False)
 			end
 		end
-		
+
 feature {NONE} -- Stepping
-		
+
 	raw_step_out is
 			-- Effective call to step out
 			-- without calling `process_before_running'
@@ -487,7 +503,7 @@ feature {NONE} -- Stepping
 				status.set_is_stopped (False)
 			end
 		end
-		
+
 	raw_step_range (a_bstep_in: BOOLEAN) is
 			-- Step over the next range
 			-- faster than stepping next for each dotnet step.
@@ -498,7 +514,7 @@ feature {NONE} -- Stepping
 			l_ranges:  ARRAY [TUPLE [INTEGER,INTEGER]]
 			l_origin_cc: CLASS_C
 			l_impl_ct: CLASS_TYPE
-		do		
+		do
 			do_not_use_range := False
 			if do_not_use_range then
 				if a_bstep_in then
@@ -520,7 +536,7 @@ feature {NONE} -- Stepping
 						if l_origin_cc /= csed.dynamic_class then
 							l_impl_ct := il_debug_info_recorder.implemented_type (l_origin_cc, l_impl_ct)
 						end
-						
+
 						l_ranges := Il_debug_info_recorder.next_feature_breakable_il_range_for (
 										l_impl_ct,
 										csed.routine.associated_feature_i,
@@ -530,19 +546,19 @@ feature {NONE} -- Stepping
 					if l_ranges /= Void then
 						debug ("debugger_trace_stepping")
 							print ("[>] Go for next point %N")
-						end					
+						end
 						Eifnet_debugger.do_step_range (a_bstep_in, l_ranges)
 					else
 						debug ("debugger_trace_stepping")
 							print ("[>] Go out of routine (from "+curr_il_offset.to_hex_string+")%N")
 						end
-						Eifnet_debugger.do_step_out					
+						Eifnet_debugger.do_step_out
 --						Eifnet_debugger.do_step_range (a_bstep_in, <<[0 , curr_il_offset]>>)
 					end
 					status.set_is_stopped (False)
 				end
 			end
-		end		
+		end
 
 feature -- Breakpoints controller
 
@@ -552,6 +568,9 @@ feature -- Breakpoints controller
 			l_bp_list: BREAK_LIST
 			l_bp_item: BREAKPOINT
 		do
+			debug ("debugger_trace_breakpoint")
+				print (generator + ".send_breakpoints %N")
+			end
 			l_bp_list := Application.debug_info.breakpoints
 
 			from
@@ -574,15 +593,15 @@ feature -- Breakpoints controller
 						print ("DEL BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
 					end
 					remove_dotnet_breakpoint (l_bp_item)
-					l_bp_item.set_application_not_set					
+					l_bp_item.set_application_not_set
 				when {BREAKPOINT}.Breakpoint_do_nothing then
 					debug ("debugger_trace_breakpoint")
-						print ("NADA BP %N")					
+						print ("NADA BP %N")
 					end
 				end
 				l_bp_list.forth
 			end
-		end		
+		end
 
 	send_no_breakpoints is
 			-- Remove BreakPoints from the application ones in execution
@@ -604,12 +623,12 @@ feature -- Breakpoints controller
 						print ("REMOVE APPLICATION BP :: " + l_bp_item.routine.associated_class.name_in_upper +"."+ l_bp_item.routine.name +" @ " + l_bp_item.breakable_line_number.out + "%N")
 					end
 					remove_dotnet_breakpoint (l_bp_item)
-					l_bp_item.set_application_not_set					
+					l_bp_item.set_application_not_set
 					-- then next time we go with StopPoint enable ... we'll add them again
 				end
 				l_bp_list.forth
 			end
-		end		
+		end
 
 feature -- BreakPoints
 
@@ -628,7 +647,7 @@ feature -- BreakPoints
 			l_module_name: STRING
 			l_class_c: CLASS_C
 			l_class_token: INTEGER
-			
+
 			l_class_type_list: TYPE_LIST
 			l_class_type: CLASS_TYPE
 			i, upper: INTEGER
@@ -639,8 +658,8 @@ feature -- BreakPoints
 				print ("setBreakpoint (" + a_state.out + ") " + f.name + " index=" + ln.out + "%N")
 				display_feature_info (f)
 			end
-			
-			l_class_c := f.written_class			
+
+			l_class_c := f.written_class
 
 				--| loop on the different derivation of a generic class
 			l_class_type_list := l_class_c.types
@@ -674,7 +693,7 @@ feature -- BreakPoints
 							Eifnet_debugger.request_breakpoint_remove (bp, l_module_name, l_class_token, l_feature_token, l_il_offset)
 						end
 						i := i + 1
-					end		
+					end
 				else
 					check False end -- Should not occurs, unless data are corrupted
 				end
@@ -688,13 +707,13 @@ feature -- BreakPoints
 		do
 			set_dotnet_breakpoint (bp, True)
 		end
-		
+
 	remove_dotnet_breakpoint (bp: BREAKPOINT) is
 			-- remove the `i'-th breakpoint of `f'
 			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
 		do
 			set_dotnet_breakpoint (bp, False)
-		end		
+		end
 
 feature {NONE} -- Implementation
 
@@ -705,7 +724,7 @@ feature {NONE} -- Implementation
 			f /= Void
 		local
 			l_class_c: CLASS_C
-			
+
 			l_str: STRING
 			l_types: TYPE_LIST
 			l_class_type: CLASS_TYPE
@@ -715,12 +734,12 @@ feature {NONE} -- Implementation
 		do
 			l_str := "----%N"
 			l_str.append_string ("%TFeature :: ")
-						
+
 			l_class_c := f.written_class
 
 			l_str.append_string ("%N%T Associated class="+ f.associated_class.name_in_upper + "%T")
 			l_str.append_string ("%N%T Written class="+ f.written_class.name_in_upper )
-			
+
 			if l_class_c /= Void then
 				l_str.append_string ("%N%T class id=" + l_class_c.class_id.out + " [" + l_class_c.name_in_upper)
 
@@ -734,7 +753,7 @@ feature {NONE} -- Implementation
 					loop
 						l_class_type := l_types.item
 						l_module_name := Il_debug_info_recorder.module_file_name_for_class_type (l_class_type)
-						
+
 						l_class_token := Il_debug_info_recorder.class_token (l_module_name, l_class_type)
 						l_str.append_string ("%T" + l_class_token.out)
 						l_str.append_string (" ~ 0x" + l_class_token.to_hex_string)
@@ -754,7 +773,7 @@ feature {NONE} -- Implementation
 
 				l_str.append_string ("%T module_name="+Il_debug_info_recorder.module_file_name_for_class (l_class_c) )
 			end
-			
+
 			print (l_str)
 			print ("%N")
 		end
@@ -776,12 +795,12 @@ feature {NONE} -- Events on notification
 		do
 			--| We need to stop
 			--| Already "stopped" but let's be sure ..
-	
+
 			status.set_is_stopped (True)
 			Eifnet_debugger.on_exit_process
 			Eifnet_debugger.notify_exit_process_occurred
 		end
-		
+
 	notify_execution_on_debugger_error is
 			-- Notify the system is exiting on debugger error
 		local
@@ -795,8 +814,8 @@ feature {NONE} -- Events on notification
 			dbg_info := Eifnet_debugger.info
 			l_err_msg := "The dotnet debugger has encountered a fatal error.%N"
 						+ " - error_hr   = 0x" + dbg_info.debugger_error_hr.to_hex_string + "%N"
-						+ " - error_code = 0x" + dbg_info.debugger_error_code.to_hex_string + "%N" 
-			
+						+ " - error_code = 0x" + dbg_info.debugger_error_code.to_hex_string + "%N"
+
 -- FIXME JFIAT: removed because it is not used the good way
 -- assertion violation
 --			create st.make
@@ -808,8 +827,8 @@ feature {NONE} -- Events on notification
 
 			status.set_is_stopped (True)
 			Eifnet_debugger.terminate_debugging
-		end		
-		
+		end
+
 	notify_execution_on_stopped (cb_id: INTEGER) is
 		local
 			need_to_continue: BOOLEAN
@@ -821,7 +840,7 @@ feature {NONE} -- Events on notification
 				print ("%T Callback = " + Eifnet_debugger.managed_callback_name (cb_id) +"%N")
 			end -- debug
 			dbg_info := Eifnet_debugger.info
-			
+
 --| Useless, but we may need it one day
 --			Application.on_application_before_stopped
 
@@ -837,7 +856,7 @@ feature {NONE} -- Events on notification
 
 				--| CallStack
 			l_status.reload_current_call_stack --| since we stop, let's reload the whole callstack
-			
+
 			debug ("debugger_trace_callstack")
 				io.put_new_line
 				print (" ############################# %N")
@@ -857,7 +876,7 @@ feature {NONE} -- Events on notification
 					l_status.set_reason_as_step
 				elseif Eifnet_debugger.managed_callback_is_breakpoint (cb_id) then
 					l_status.set_reason_as_break
-					need_to_continue := not do_stop_on_breakpoint				
+					need_to_continue := not do_stop_on_breakpoint
 				elseif Eifnet_debugger.managed_callback_is_exception (cb_id) then
 					l_status.set_reason_as_raise
 
@@ -868,14 +887,14 @@ feature {NONE} -- Events on notification
 					end
 				end
 			end
-				
+
 --| not true in case of empty stack .. when exception occurs during launching
 --			set_current_execution_stack (1)
 			Application.set_current_execution_stack_number (Application.number_of_stack_elements)
 
 			if need_to_continue then
 				debug ("debugger_trace_callstack")
-					print ("Nota: Continue on stopped status (need_to_continue = True)%N")				
+					print ("Nota: Continue on stopped status (need_to_continue = True)%N")
 					print ("Nota: last managed callback = " + Eifnet_debugger.managed_callback_name (cb_id) + "%N")
 				end
 				Application.release_all_but_kept_object
@@ -885,7 +904,7 @@ feature {NONE} -- Events on notification
 				update_notify_on_after_stopped
 			end
 		end
-		
+
 	do_stop_on_breakpoint: BOOLEAN is
 			-- In case of conditional breakpoint, do we really stop on it ?
 		local
@@ -914,13 +933,13 @@ feature {NONE} -- Events on notification
 							Result := evaluator.final_result_is_true_boolean_value
 						end
 					else
-						Result := True						
+						Result := True
 					end
 				else
 					Result := True
-				end					
-			end		
-		end	
+				end
+			end
+		end
 
 	display_breakpoint_info (icd_bp: ICOR_DEBUG_BREAKPOINT) is
 			-- display information related to `icd_bp'
@@ -939,21 +958,21 @@ feature {NONE} -- Events on notification
 				print ("%T   - Function = " + l_function.to_string + "%N")
 			end
 		end
-		
+
 feature -- update processing
 
 	agent_update_notify_on_after_stopped: PROCEDURE [ANY, TUPLE]
 			-- Procedure used as agent for `update_notify_on_after_stopped'
-		
+
 	update_notify_on_after_stopped is
 			-- Ask to notify studio right after the execution is stopped
 			-- but in the studio graphical loop
 		do
 				--FIXME jfiat: may be we should move this EV_... to another class
-			ev_application.idle_actions.prune_all (agent_update_notify_on_after_stopped)			
+			ev_application.idle_actions.prune_all (agent_update_notify_on_after_stopped)
 			ev_application.idle_actions.extend (agent_update_notify_on_after_stopped)
 		end
-		
+
 	real_update_notify_on_after_stopped is
 			-- Proceed effective notification to studio
 			-- make sure we are outside the callback notification
@@ -984,7 +1003,7 @@ feature -- update processing
 		rescue
 			retried := True
 			retry
-		end			
+		end
 
 feature -- Call stack related
 
@@ -1006,14 +1025,14 @@ feature -- Call stack related
 			l_class_name: STRING
 			l_feature_i : FEATURE_I
 			l_feature_name: STRING
-			
+
 			l_eiffel_bp_slot: INTEGER
 			l_il_offset: INTEGER
 		do
 			create l_output.make (100)
 			if a_frame = Void then
 				--| FIXME: JFIAT
-				l_output := "Debugger not synchronized => no information available%N" 
+				l_output := "Debugger not synchronized => no information available%N"
 			else
 				l_frame_il := a_frame.query_interface_icor_debug_il_frame
 				if a_frame.last_call_succeed and then l_frame_il /= Void then
@@ -1024,11 +1043,11 @@ feature -- Call stack related
 					l_module := l_func.get_module
 					l_module_name := l_module.get_name
 
-	
+
 					l_module_display := l_module_name.twin
 					l_module_display.keep_tail (20)
 					l_module_display.prepend_string (" ..")
-	
+
 					if il_debug_info_recorder.has_info_about_module (l_module_name) then
 						l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
 						l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
@@ -1043,20 +1062,20 @@ feature -- Call stack related
 					else
 						l_feature_name := "<?"+ l_feature_token.out + "?>"
 					end
-	
+
 					if l_class_type /= Void and then l_feature_i /= Void then
 						l_il_offset := l_frame_il.get_ip
 						l_eiffel_bp_slot := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset(l_class_type, l_feature_i, l_il_offset)
-						l_output.append_string ("  + <" 
+						l_output.append_string ("  + <"
 							+ l_eiffel_bp_slot.out
-							+ " | " 
+							+ " | "
 							+ l_il_offset.out + ":0x" + l_il_offset.to_hex_string + "> "
 							+ l_class_name + "." + l_feature_name + "%N"
 							+ "%T0x"+l_class_token.to_hex_string
 							+ " :: 0x"+ l_feature_token.to_hex_string
 							+ "%N%T Module=" + l_module_display
 							)
-	
+
 						l_output.append_string ("%N")
 					else
 						l_output.append_string ("  - <"+ l_frame_il.get_ip.out + ":0x" + l_frame_il.get_ip.to_hex_string + "> ")
@@ -1067,7 +1086,7 @@ feature -- Call stack related
 						if l_feature_i /= Void then
 							l_output.append_string ("." + l_feature_name)
 						end
-							
+
 						l_output.append_string ("%N")
 						l_output.append_string ("%T0x" + l_class_token.to_hex_string )
 						l_output.append_string (" :: 0x" + l_feature_token.to_hex_string)
@@ -1084,7 +1103,7 @@ feature -- Call stack related
 			-- Called by `select_actions' of `but_callstack_update'.
 		local
 			l_active_thread: ICOR_DEBUG_THREAD
-			l_enum_chain: ICOR_DEBUG_CHAIN_ENUM			
+			l_enum_chain: ICOR_DEBUG_CHAIN_ENUM
 			l_chain: ICOR_DEBUG_CHAIN
 			l_enum_frames: ICOR_DEBUG_FRAME_ENUM
 			l_chains: ARRAY [ICOR_DEBUG_CHAIN]
@@ -1108,11 +1127,11 @@ feature -- Call stack related
 				loop
 					l_chain := l_chains @ c
 					if l_chain /= Void then
-						
+
 						l_output := "%N ###################################################### %N"
 						l_output.append_string (" Callstack from Chain : " + l_chain.item.out + "%N")
 						l_output.append_string (" ###################################################### %N%N")
-					
+
 						l_enum_frames := l_chain.enumerate_frames
 						if l_chain.last_call_succeed and then l_enum_frames.get_count > 0 then
 							l_enum_frames.reset
@@ -1136,7 +1155,7 @@ feature -- Call stack related
 				end
 				l_enum_chain.clean_on_dispose
 			end
-			
+
 			io.put_new_line
 			io.put_new_line
 			io.put_string (l_output)

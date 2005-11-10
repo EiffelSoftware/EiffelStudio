@@ -6,7 +6,7 @@ indexing
 
 deferred class
 	EIFNET_DEBUGGER_BREAKPOINT_INFO
-	
+
 inherit
 	ICOR_EXPORTER
 
@@ -20,7 +20,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			create l_bp.make (Void, resolved_module_key (a_module_name), a_class_token, a_feature_token, a_line)
 			if breakpoints.has (l_bp) then
 				Result := breakpoints.item (l_bp)
-			end			
+			end
 		end
 
 	request_breakpoint_add (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
@@ -29,7 +29,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			l_bp: EIFNET_BREAKPOINT
 			l_succeed: BOOLEAN
 		do
-			debug ("debugger_bp_trace")
+			debug ("debugger_trace_breakpoint")
 				io.error.put_string ("Request Add BP - line=" + a_line.to_hex_string+ "%N")
 				io.error.put_string ("%T Module = "+a_module_name+" %N")
 				io.error.put_string ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
@@ -43,7 +43,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			l_succeed := process_breakpoint_addition (l_bp)
 			if l_succeed then
 				move_bp_to_active_breakpoints (l_bp)
-			end			
+			end
 		end
 
 	request_breakpoint_remove (a_bp: BREAKPOINT; a_module_name: STRING; a_class_token: INTEGER; a_feature_token: INTEGER; a_line: INTEGER_64) is
@@ -52,7 +52,7 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 			l_bp: EIFNET_BREAKPOINT
 			l_icd_bp: ICOR_DEBUG_BREAKPOINT
 		do
-			debug ("debugger_bp_trace")
+			debug ("debugger_trace_breakpoint")
 				io.error.put_string ("Request Remove BP - line=" + a_line.to_hex_string+ "%N")
 				io.error.put_string ("%T Module = "+a_module_name+" %N")
 				io.error.put_string ("%T ClassToken = "+ a_class_token.out + "~0x" + a_class_token.to_hex_string+" %N")
@@ -70,9 +70,9 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 				end
 			elseif breakpoints.has (l_bp) then
 				--| The breakpoint has been enabled on the dotnet side
-				--| so we have to remove it from the list 
+				--| so we have to remove it from the list
 				--| and also unactivate and release the `ICorDebugBreakpoint'
-				
+
 				l_bp := breakpoints.item (l_bp)
 
 				l_icd_bp := l_bp.icor_breakpoint
@@ -82,11 +82,11 @@ feature {EIFNET_DEBUGGER_INFO_ACCESSOR} -- Access
 				check
 					bp_removed: not breakpoints.has (l_bp)
 				end
-			
-				debug ("debugger_bp_trace") io.error.put_string ("BreakPoint REMOVED ! %N") end
+
+				debug ("debugger_trace_breakpoint") io.error.put_string ("BreakPoint REMOVED ! %N") end
 			end
 		end
-	
+
 feature {NONE} -- Initialization
 
 	init is
@@ -98,7 +98,7 @@ feature {NONE} -- Initialization
 			create breakpoints.make	 (10)
 			breakpoints.compare_objects
 		end
-		
+
 	reset is
 			-- Reset the Current data containers.
 		do
@@ -189,7 +189,7 @@ feature {NONE} -- List operation
 
 
 feature {NONE} -- Notification
-		
+
 	notify_new_module (a_mod_key: STRING) is
 			-- Notify system a new module is loaded
 		require
@@ -201,7 +201,7 @@ feature {NONE} -- Notification
 		do
 			if is_module_waiting_for_addition (a_mod_key) then
 				l_bp_for_addition := breakpoints_for_addition_by_module.item (a_mod_key)
-				debug ("debugger_bp_trace")
+				debug ("debugger_trace_breakpoint")
 					io.error.put_string (" - EifnetBreakPoint: " + l_bp_for_addition.count.out + " to be added for this module.%N")
 				end
 				from
@@ -223,14 +223,14 @@ feature {NONE} -- Notification
 					breakpoints_for_addition_by_module.remove (a_mod_key)
 				end
 
-				debug ("DEBUGGER_TRACE_BREAKPOINT")
+				debug ("debugger_trace_breakpoint")
 					debug_display_bp_list_status
 				end
 			end
-		end	
+		end
 
 	refresh_module_for_breakpoints (a_module: ICOR_DEBUG_MODULE; a_mod_key: STRING) is
-			-- 
+			--
 		local
 			l_bp: EIFNET_BREAKPOINT
 			l_icd_module: ICOR_DEBUG_MODULE
@@ -250,17 +250,17 @@ feature {NONE} -- Notification
 				end
 				breakpoints.forth
 			end
-		end	
-		
+		end
+
 feature -- module utils
 
 	resolved_module_key (a_module_name: STRING): STRING is
 			-- Key for module_name
 		deferred
 		ensure
-			Result_valid: Result /= Void and then not Result.is_empty		
+			Result_valid: Result /= Void and then not Result.is_empty
 		end
-		
+
 feature {NONE} -- Implementation
 
 	process_breakpoint_addition (a_bp: EIFNET_BREAKPOINT): BOOLEAN is
@@ -278,24 +278,24 @@ feature {NONE} -- Implementation
 				l_icd_module := loaded_modules.item (l_module_key_name)
 				l_icd_class := l_icd_module.get_class_from_token (a_bp.class_token)
 				if not l_icd_module.last_call_succeed or else l_icd_class = Void then
-					debug ("debugger_bp_trace")
+					debug ("debugger_trace_breakpoint")
 						io.error.put_string ("[ERROR] During Breakpoint addition, eStudio got confused with Module ...%N")
-						io.error.put_string ("        class_token is not inside module %N")
+						io.error.put_string ("        class_token 0x" + a_bp.class_token.to_hex_string + " is not inside module %N")
 						io.error.put_string ("        " + l_icd_module.module_name + "%N")
 					end
 					l_icd_module := Void
 				end
 			end
-			
+
 				--| Let set the BP now we have all the information access we need
 			if l_icd_module /= Void then
 				Result := process_breakpoint_addition_on_module (a_bp, l_icd_module)
 			else
-				debug ("debugger_bp_trace")
-					io.error.put_string ("Information not yet available, wait for class loading during JIT execution (" 
-							+ a_bp.class_token.out 
+				debug ("debugger_trace_breakpoint")
+					io.error.put_string ("Information not yet available, wait for class loading during JIT execution ("
+							+ a_bp.class_token.out
 							+ "."
-							+ a_bp.feature_token.out 
+							+ a_bp.feature_token.out
 							+ " @ module "
 							+ l_module_key_name
 							+ ")%N"
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			if l_icd_func /= Void  and then a_icd_module.last_call_succeed then
 				l_icd_code := l_icd_func.get_il_code
 				if l_icd_code = Void then
-					l_icd_code := l_icd_func.get_native_code				
+					l_icd_code := l_icd_func.get_native_code
 				end
 				if l_icd_code /= Void then
 					--| Let create the BreakPoint with offset
@@ -326,16 +326,16 @@ feature {NONE} -- Implementation
 
 						debug ("debugger_trace_breakpoint") io.error.put_string ("BreakPoint ADDED ! %N") end
 					else
-						debug ("debugger_trace_breakpoint") 
-							io.error.put_string ("Error[" + l_icd_code.last_error_code_id 
-									+ "] in ICorDebugCode->CreateBreakpoint for (" 
-									+ a_bp.feature_token.out + ")%N") 
+						debug ("debugger_trace_breakpoint")
+							io.error.put_string ("Error[" + l_icd_code.last_error_code_id
+									+ "] in ICorDebugCode->CreateBreakpoint for ("
+									+ a_bp.feature_token.out + ")%N")
 						end
-					end		
+					end
 				end
 			else
-				debug ("debugger_trace_breakpoint") 
-					io.error.put_string ("Error while retrieving function_by_token (" + a_bp.feature_token.out + ")%N") 
+				debug ("debugger_trace_breakpoint")
+					io.error.put_string ("Error while retrieving function_by_token (" + a_bp.feature_token.out + ")%N")
 				end
 			end
 		end
@@ -344,7 +344,7 @@ feature {NONE} -- Classes informations
 
 	loaded_modules: HASH_TABLE [ICOR_DEBUG_MODULE, STRING] is
 			-- ICorDebugModule loaded so far.
-		deferred 
+		deferred
 		end
 
 feature {NONE} -- Breakpoints informations
@@ -381,10 +381,10 @@ feature -- debug purpose only
 					l_bp_for_addition.after
 				loop
 					l_bp := l_bp_for_addition.item
-					l_output.append_string ("    - " 
-							+ l_bp.class_token.to_hex_string 
+					l_output.append_string ("    - "
+							+ l_bp.class_token.to_hex_string
 							+ "::"
-							+ l_bp.feature_token.to_hex_string 
+							+ l_bp.feature_token.to_hex_string
 							+ " [" + l_bp.break_index.out + "] "
 						)
 					if l_bp.is_active and then l_bp.icor_breakpoint /= Void then
@@ -407,10 +407,10 @@ feature -- debug purpose only
 				breakpoints.after
 			loop
 				l_bp := breakpoints.item_for_iteration
-				l_output.append_string ("    - " 
-						+ l_bp.class_token.to_hex_string 
+				l_output.append_string ("    - "
+						+ l_bp.class_token.to_hex_string
 						+ "::"
-						+ l_bp.feature_token.to_hex_string 
+						+ l_bp.feature_token.to_hex_string
 						+ " [" + l_bp.break_index.out + "] "
 					)
 				if l_bp.is_active and then l_bp.icor_breakpoint /= Void then

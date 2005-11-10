@@ -10,7 +10,7 @@ inherit
 	SD_MULTI_CONTENT_ZONE
 		redefine
 			extend,
-			handle_focus_in,
+			on_focus_in,
 			handle_zone_focus_out
 		end
 		
@@ -121,7 +121,7 @@ feature {NONE} -- Implementation
 				
 	internal_title_bar: SD_TITLE_BAR
 	
-	handle_focus_in is
+	on_focus_in is
 			-- 
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} 

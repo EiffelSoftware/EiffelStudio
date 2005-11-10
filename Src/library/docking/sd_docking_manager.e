@@ -101,7 +101,7 @@ feature {NONE} -- Initialization
 				l_container ?= internal_zones.item
 				check l_container /= Void end
 				if l_container.has_recursive (a_widget) then
-					internal_zones.item.handle_focus_in
+					internal_zones.item.on_focus_in
 				end
 				
 				if not internal_zones.after then -- FIXIT: Why should check? ACTIVE LIST's bug?

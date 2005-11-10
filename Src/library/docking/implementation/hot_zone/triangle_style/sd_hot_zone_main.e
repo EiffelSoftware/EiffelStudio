@@ -9,7 +9,7 @@ class
 inherit
 	SD_HOT_ZONE
 		redefine
-			
+
 			has_x_y
 		end
 
@@ -33,13 +33,15 @@ feature {NONE} -- Initlization
 			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - internal_shared.icons.arrow_indicator_left.height // 2, internal_shared.icons.arrow_indicator_left.width, internal_shared.icons.arrow_indicator_left.height)
 			create right_rectangle.make (l_area.right - internal_shared.icons.arrow_indicator_right.width, l_area.top + l_area.height // 2 - internal_shared.icons.arrow_indicator_right.height // 2, internal_shared.icons.arrow_indicator_right.width, internal_shared.icons.arrow_indicator_right.height)
 		end
-		
+
 feature  -- Implementation for inheritance.
 
 	apply_change (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
 			-- Apply change when user dragging a window on a position
 --		require
 --			caller_state_not_void: caller
+		local
+			l_floating_zone: SD_FLOATING_ZONE
 		do
 			if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
 				caller.content.state.set_direction ({SD_SHARED}.dock_top)
@@ -50,18 +52,19 @@ feature  -- Implementation for inheritance.
 				caller.content.state.set_direction ({SD_SHARED}.dock_bottom)
 				caller.content.state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
 				Result := True
-			end			
+			end
 			if left_rectangle.has_x_y (a_screen_x, a_screen_y) then
 				caller.content.state.set_direction ({SD_SHARED}.dock_left)
 				caller.content.state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
-				Result := True				
+				Result := True
 			end
 			if right_rectangle.has_x_y (a_screen_x, a_screen_y) then
 				caller.content.state.set_direction ({SD_SHARED}.dock_right)
-				caller.content.state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)			
+				caller.content.state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
 				Result := True
 			end
-			if not Result then
+			l_floating_zone ?= caller
+			if not Result and  l_floating_zone = Void then
 				debug ("larry")
 					io.put_string ("%N caller: " + caller.out)
 				end
@@ -83,7 +86,7 @@ feature  -- Implementation for inheritance.
 			pointer_y := a_screen_y
 			l_drawn := update_indicator_area (top_rectangle, internal_shared.icons.arrow_indicator_up)
 			if not l_drawn then
-				l_drawn := update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down)	
+				l_drawn := update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down)
 			end
 			if not l_drawn then
 				l_drawn := update_indicator_area (left_rectangle, internal_shared.icons.arrow_indicator_left)
@@ -97,9 +100,9 @@ feature  -- Implementation for inheritance.
 				internal_pointer_last_in_area := internal_pointer_in_main_area
 			end
 		end
-	
 
-		
+
+
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- If `Current' area has pointer position `a_screen_x', `a_screen_y'.
 		do
@@ -109,9 +112,9 @@ feature {NONE} -- Implementation
 
 	pointer_x, pointer_y: INTEGER
 			-- Current pointer position on the screen.
-		
 
-	
+
+
 	update_indicator_area (a_rect: like top_rectangle; a_pixmap: EV_PIXMAP): BOOLEAN is
 			-- Update indicator area which is the area in the area's rectangle.
 		local
@@ -119,7 +122,7 @@ feature {NONE} -- Implementation
 		do
 			if a_rect.has_x_y (pointer_x, pointer_y) then
 				l_rect := internal_shared.docking_manager.container_rectangle_screen
-				
+
 				if a_rect = top_rectangle then
 					-- |
 					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
@@ -127,11 +130,11 @@ feature {NONE} -- Implementation
 					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
 					--   |
 					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
-					
+
 					if internal_pointer_last_in_area /= internal_pointer_in_top_area then
 						internal_shared.feedback.clear_screen
 						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
-						internal_pointer_last_in_area := internal_pointer_in_top_area						
+						internal_pointer_last_in_area := internal_pointer_in_top_area
 					end
 
 					Result := True
@@ -142,13 +145,13 @@ feature {NONE} -- Implementation
 					internal_shared.feedback.draw_line (a_rect.left, a_rect.bottom, a_rect.right, a_rect.bottom)
 					--   |
 					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
-					
+
 					if internal_pointer_last_in_area /= internal_pointer_in_bottom_area then
 						internal_shared.feedback.clear_screen
 						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.bottom - (l_rect.height * internal_shared.default_docking_height_rate).ceiling, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
-						internal_pointer_last_in_area := internal_pointer_in_bottom_area						
+						internal_pointer_last_in_area := internal_pointer_in_bottom_area
 					end
-					
+
 					Result := True
 				elseif a_rect = left_rectangle then
 					--  -
@@ -157,13 +160,13 @@ feature {NONE} -- Implementation
 					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.top + a_rect.height)
 					--  _
 					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
-					
+
 					if internal_pointer_last_in_area /= internal_pointer_in_left_area then
 						internal_shared.feedback.clear_screen
 						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
-						internal_pointer_last_in_area := internal_pointer_in_left_area						
+						internal_pointer_last_in_area := internal_pointer_in_left_area
 					end
-					
+
 					Result := True
 				elseif a_rect = right_rectangle then
 					-- -
@@ -172,22 +175,22 @@ feature {NONE} -- Implementation
 					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.top + a_rect.height)
 					-- _
 					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
-					
+
 					if internal_pointer_last_in_area /= internal_pointer_in_right_area then
 						internal_shared.feedback.clear_screen
 						internal_shared.feedback.draw_transparency_rectangle (l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
-						internal_pointer_last_in_area := internal_pointer_in_right_area						
+						internal_pointer_last_in_area := internal_pointer_in_right_area
 					end
-					
+
 					Result := True
 				end
 			else
 				internal_shared.feedback.draw_pixmap (a_rect.left, a_rect.top, a_pixmap)
 			end
 		end
-		
+
 	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
 			-- The area which contain the top indicator.
-	
-	
+
+
 end

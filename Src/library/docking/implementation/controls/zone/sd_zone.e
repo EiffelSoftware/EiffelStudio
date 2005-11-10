@@ -11,8 +11,10 @@ feature -- Propoties
 	content: SD_CONTENT is
 			-- The content which current holded.
 		deferred
+		ensure
+			not_void: Result /= Void
 		end
-	
+
 	set_content (a_content: SD_CONTENT) is
 		require
 			a_content_not_void: a_content /= Void
@@ -29,25 +31,26 @@ feature {NONE}  -- Implementation
 		do
 			l_container ?= Current
 			check l_container /= Void end
-			
---			a_widget.pointer_button_press_actions.force_extend (agent handle_focus_in)
-		end
-		
 
-		
-feature {SD_DOCKING_MANAGER} 
+--			a_widget.pointer_button_press_actions.force_extend (agent on_focus_in)
+		end
+
+
+
+feature {SD_DOCKING_MANAGER}
 	handle_zone_focus_out is
-			-- 
+			--
 		do
 			content.focus_out_actions.call ([])
 		end
-		
-	handle_focus_in is
-			-- 
+
+feature {SD_DOCKING_MANAGER, SD_CONTENT}
+	on_focus_in is
+			--
 		do
 			content.focus_in_actions.call ([])
 		end
-		
+
 feature {SD_DOCKING_MANAGER, SD_STATE}
 
 	destroy_focus_in is
@@ -56,11 +59,11 @@ feature {SD_DOCKING_MANAGER, SD_STATE}
 			l_app: EV_APPLICATION
 		do
 --			create l_app
---			l_app.pointer_button_press_actions.prune_all (agent handle_focus_in)
+--			l_app.pointer_button_press_actions.prune_all (agent on_focus_in)
 		end
-		
+
 feature {NONE} -- Implementation
-	
+
 	destroy_focus_in_imp (a_widget: EV_WIDGET) is
 			-- Destory all widgets actions in `Current'.
 		local
@@ -70,7 +73,7 @@ feature {NONE} -- Implementation
 			l_container ?= a_widget
 			if l_container /= Void then
 				l_linear := l_container.linear_representation
-				from 
+				from
 					l_linear.start
 				until
 					l_linear.after
@@ -79,10 +82,10 @@ feature {NONE} -- Implementation
 					l_linear.forth
 				end
 			end
-			
+
 			a_widget.pointer_button_press_actions.wipe_out
 		end
-	
+
 	internal_shared: SD_SHARED
 			-- All singletons.
 
@@ -99,5 +102,5 @@ feature {SD_HOT_ZONE}
 --			l_container.wipe_out
 --			l_container.replace (l_widget)
 		end
-		
+
 end

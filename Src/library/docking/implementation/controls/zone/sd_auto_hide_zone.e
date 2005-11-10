@@ -11,7 +11,7 @@ inherit
 	SD_SINGLE_CONTENT_ZONE
 		undefine
 			copy, is_equal, default_create,
-			handle_focus_in,handle_zone_focus_out
+			on_focus_in,handle_zone_focus_out
 		end
 	SD_RESIZE_SOURCE
 		undefine
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 	
 feature {NONE} -- For user docking
 
-	handle_focus_in is
+	on_focus_in is
 			-- 
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}

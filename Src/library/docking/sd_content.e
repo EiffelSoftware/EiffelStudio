@@ -229,12 +229,14 @@ feature --
 			if internal_close_actions /= Void then
 				internal_close_actions.call ([])
 			end
-			if default_destroy then
-				internal_shared.docking_manager.contents.prune_all (Current)
-			else
---				state.hide
-			end
+			state.close_window
 
+		end
+
+	set_focus is
+			-- Set focus to `Current'.
+		do
+			state.zone.on_focus_in
 		end
 
 feature -- States report

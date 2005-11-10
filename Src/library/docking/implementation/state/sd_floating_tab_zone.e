@@ -36,7 +36,7 @@ feature {NONE} -- Initlization
 feature {NONE} -- Implementation
 --	internal_title_bar: SD_
 	
-	handle_focus_in is
+	on_focus_in is
 			-- 
 		do
 			internal_shared.docking_manager.disable_all_zones_focus_color

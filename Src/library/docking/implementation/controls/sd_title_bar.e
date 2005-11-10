@@ -41,7 +41,7 @@ feature {NONE} -- Initlization
 			internal_title.pointer_button_press_actions.force_extend (agent handle_pointer_press)
 			internal_title.pointer_button_release_actions.force_extend (agent handle_pointer_release)
 			internal_title.pointer_leave_actions.force_extend (agent handle_pointer_leave)
-			internal_title.pointer_motion_actions.extend (agent handle_pointer_motion)
+			internal_title.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_title.pointer_double_press_actions.force_extend (agent handle_pointer_double_press)
 			
 			
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation for agents
 			pressed := False
 		end
 		
-	handle_pointer_motion (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_motion (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- 
 		do
 			if pressed then

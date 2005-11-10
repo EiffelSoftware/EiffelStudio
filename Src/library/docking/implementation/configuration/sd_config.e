@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_CONFIG -- FIXIT: a name should not be a verb. What about SD_CONFIG_MEDIATOR ? 
+	SD_CONFIG -- FIXIT: a name should not be a verb. What about SD_CONFIG_MEDIATOR ?
 
 create
 	make
@@ -15,7 +15,7 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 		end
-		
+
 feature -- Save/Open inner container data.
 
 	save_config (a_file: STRING) is
@@ -26,11 +26,11 @@ feature -- Save/Open inner container data.
 			l_facility: SED_STORABLE_FACILITIES
 			l_writer: SED_MEDIUM_READER_WRITER
 		do
-			
+
 			debug ("larry")
 				io.put_string ("%N ================= SD_CONFIG save config ===============")
 			end
-			
+
 			create l_config_data.make
 			create l_file.make_create_read_write (a_file)
 --			if l_file.exists then
@@ -40,17 +40,17 @@ feature -- Save/Open inner container data.
 			save_all_inner_containers_data (l_config_data)
 
 			-- Second save auto hide zones data.
-			save_auto_hide_zone_config (l_config_data.auto_hide_zones_data)	
-							
+			save_auto_hide_zone_config (l_config_data.auto_hide_zones_data)
+
 			create l_writer.make (l_file)
 			create l_facility
 			l_facility.basic_store (l_config_data, l_writer, True)
 			l_file.close
-			
+
 		end
-		
+
 	open_config (a_file: STRING) is
-			-- 
+			--
 		local
 			l_file: RAW_FILE
 			l_config_data: SD_CONFIG_DATA
@@ -67,20 +67,20 @@ feature -- Save/Open inner container data.
 			internal_shared.docking_manager.lock_update
 			-- First clear all areas.
 			clear_up_containers
-			
+
 			open_all_inner_containers_data (l_config_data)
 
 			-- Restore auto hide zone.
 			open_auto_hide_zone_data (l_config_data.auto_hide_zones_data)
-			
+
 			l_file.close
 			internal_shared.docking_manager.unlock_update
 		end
-		
+
 feature {NONE} -- Implementation for save config.
 
 	save_inner_container_data (a_widget: EV_WIDGET; a_config_data: SD_INNER_CONTAINER_DATA) is
-			-- 
+			--
 		require
 			a_widget_not_void: a_widget /= Void
 			a_config_data_not_void: a_config_data /= Void
@@ -114,9 +114,9 @@ feature {NONE} -- Implementation for save config.
 					create l_temp
 					a_config_data.set_children_right (l_temp)
 					l_temp.set_parent (a_config_data)
-					save_inner_container_data (l_split_area.second, l_temp)				
+					save_inner_container_data (l_split_area.second, l_temp)
 				end
-				
+
 				if l_split_area.full then
 					a_config_data.set_split_position (l_split_area.split_position)
 				end
@@ -132,8 +132,8 @@ feature {NONE} -- Implementation for save config.
 					io.put_string ("%N  zone: " + l_zone.content.title)
 				end
 			end
-		end	
-	
+		end
+
 	save_auto_hide_zone_config (a_data: SD_AUTO_HIDE_ZONE_DATA)is
 			-- Save config informations about auto hide zones.
 		do
@@ -142,25 +142,25 @@ feature {NONE} -- Implementation for save config.
 			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel_right.tab_stubs, a_data.zone_right, False)
 			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel_top.tab_stubs, a_data.zone_top, True)
 		end
-		
+
 	save_one_auto_hide_panel_data (a_stubs: ARRAYED_LIST [SD_TAB_STUB]; a_target: ARRAYED_LIST [TUPLE [STRING, INTEGER]]; a_horizontal: BOOLEAN) is
-			-- 
+			--
 		local
 			l_title: STRING
 			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_auto_hide: SD_AUTO_HIDE_ZONE
 			l_width_height: INTEGER
 		do
-			from 
+			from
 				a_stubs.start
 			until
 				a_stubs.after
 			loop
 				l_title := a_stubs.item.title
-				
+
 				-- Find out zone's width/height.
 				l_zones := internal_shared.docking_manager.zones
-				from 
+				from
 					l_zones.start
 				until
 					l_zones.after
@@ -177,25 +177,25 @@ feature {NONE} -- Implementation for save config.
 					end
 					l_zones.forth
 				end
-				
+
 				a_target.extend ([l_title, l_width_height])
 				a_stubs.forth
-			end			
+			end
 		end
 
 feature -- Contract support
-		
-	
+
+
 feature {NONE} -- Implementation for open config.
 
 	open_all_inner_containers_data (a_config_data: SD_CONFIG_DATA) is
-			-- 
+			--
 		local
 			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
 			l_split: EV_SPLIT_AREA
 		do
 			l_datas := a_config_data.inner_container_datas
-			from 
+			from
 				l_datas.start
 			until
 				l_datas.after
@@ -206,22 +206,22 @@ feature {NONE} -- Implementation for open config.
 					if l_split /= Void then
 						open_inner_container_data_split_position (l_datas.item, l_split)
 					end
-					
+
 					-- FIXIT: should create new floating areas.
 				end
 				l_datas.forth
 			end
 		end
-		
+
 	save_all_inner_containers_data (a_config_data: SD_CONFIG_DATA) is
-			-- 
+			--
 		local
 			l_inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 			l_data: SD_INNER_CONTAINER_DATA
 			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
 		do
 			l_inner_containers := internal_shared.docking_manager.internal_inner_containers
-			from 
+			from
 				l_inner_containers.start
 				create l_datas.make (1)
 			until
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation for open config.
 			end
 			a_config_data.set_inner_container_datas (l_datas)
 		end
-		
+
 	clear_up_containers is
 			-- Wipe out all containers in SD_DOCKING_MANAGER.
 		local
@@ -246,9 +246,9 @@ feature {NONE} -- Implementation for open config.
 
 		do
 			internal_shared.docking_manager.remove_auto_hide_zones
-			
+
 			l_all_main_containers := internal_shared.docking_manager.internal_inner_containers
-			from 
+			from
 				l_all_main_containers.start
 			until
 				l_all_main_containers.after
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation for open config.
 				l_all_main_containers.forth
 			end
 			-- FIXIT: should only have one SD_MULTI_DOCK_AREA in l_all_main_containers.
-	
+
 			internal_shared.docking_manager.internal_auto_hide_panel_bottom.wipe_out
 			internal_shared.docking_manager.internal_auto_hide_panel_bottom.tab_stubs.wipe_out
 			internal_shared.docking_manager.internal_auto_hide_panel_bottom.set_minimum_height (0)
@@ -271,9 +271,9 @@ feature {NONE} -- Implementation for open config.
 			internal_shared.docking_manager.internal_auto_hide_panel_right.wipe_out
 			internal_shared.docking_manager.internal_auto_hide_panel_right.tab_stubs.wipe_out
 			internal_shared.docking_manager.internal_auto_hide_panel_right.set_minimum_width (0)
-			internal_shared.docking_manager.internal_zones.wipe_out			
+			internal_shared.docking_manager.internal_zones.wipe_out
 		end
-		
+
 	open_inner_container_data (a_config_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
 			-- Preorder recursive. (Postorder is hard to think about....)
 		local
@@ -307,15 +307,15 @@ feature {NONE} -- Implementation for open config.
 				if a_config_data.children_left /= Void then
 					open_inner_container_data (a_config_data.children_left, l_temp_spliter)
 				end
-				
+
 				if a_config_data.children_right /= Void then
 					open_inner_container_data (a_config_data.children_right, l_temp_spliter)
-				end					
-			end	
+				end
+			end
 		end
-	
+
 	open_inner_container_data_split_position (a_config_data: SD_INNER_CONTAINER_DATA; a_split: EV_SPLIT_AREA) is
-			-- After set all zone's postion in split area, this time is set all EV_SPLIT_AREAs' split position. 
+			-- After set all zone's postion in split area, this time is set all EV_SPLIT_AREAs' split position.
 		local
 			l_split, l_split_2: EV_SPLIT_AREA
 		do
@@ -332,22 +332,22 @@ feature {NONE} -- Implementation for open config.
 					open_inner_container_data_split_position (a_config_data.children_right, l_split_2)
 				end
 			end
-		end	
-	
+		end
+
 	open_auto_hide_zone_data (a_data: SD_AUTO_HIDE_ZONE_DATA) is
-			-- 
+			--
 
 		do
 
-			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_bottom, a_data.zone_bottom, internal_shared.dock_bottom)
-			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_left, a_data.zone_left, internal_shared.dock_left)
-			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_right, a_data.zone_right, internal_shared.dock_right)						
-			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_top, a_data.zone_top, internal_shared.dock_top)			
+			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_bottom, a_data.zone_bottom, {SD_DOCKING_MANAGER}.dock_bottom)
+			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_left, a_data.zone_left, {SD_DOCKING_MANAGER}.dock_left)
+			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_right, a_data.zone_right, {SD_DOCKING_MANAGER}.dock_right)
+			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_top, a_data.zone_top, {SD_DOCKING_MANAGER}.dock_top)
 
 		end
-		
+
 	open_one_auto_hide_panel (a_panel: SD_AUTO_HIDE_PANEL; a_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]; a_direction: INTEGER) is
-			-- 
+			--
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_content: SD_CONTENT
@@ -361,9 +361,9 @@ feature {NONE} -- Implementation for open config.
 				create l_auto_hide_state.make (l_content, a_direction)
 				l_auto_hide_state.restore (l_content, a_panel)
 				a_data.forth
-			end		
+			end
 		end
-		
+
 	internal_shared: SD_SHARED
 			-- All singletons.
 end

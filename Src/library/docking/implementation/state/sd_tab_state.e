@@ -14,7 +14,8 @@ inherit
 			float_window,
 			move_to_tab_zone,
 			move_to_docking_zone,
-			dock_at_top_level
+			dock_at_top_level,
+			content
 		end
 create
 	make,
@@ -112,18 +113,34 @@ feature
 			--
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
-
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
+--			l_tab_group:
 		do
-			create l_auto_hide_state.make (internal_content, a_direction)
-			l_auto_hide_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+--			create l_auto_hide_state.make (internal_content, a_direction)
+--			l_auto_hide_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+--
+--			change_state (l_auto_hide_state)
+--
+--			internal_tab_zone.disable_handle_select_tab
+--			internal_tab_zone.prune (internal_content)
+--			internal_tab_zone.enable_handle_select_tab
+--			update_last_content_state
 
-			change_state (l_auto_hide_state)
+			internal_shared.docking_manager.prune_zone (internal_tab_zone)
 
-			internal_tab_zone.disable_handle_select_tab
-			internal_tab_zone.prune (internal_content)
-			internal_tab_zone.enable_handle_select_tab
-			update_last_content_state
+			l_contents := internal_tab_zone.contents
+			from
+				l_contents.start
+			until
+				l_contents.after
+			loop
+				create l_auto_hide_state.make (l_contents.item, a_direction)
+				l_contents.item.change_state (l_auto_hide_state)
+				l_contents.forth
+			end
 
+--			l_auto_hide_panel:= internal_shared.docking_manager.au
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
@@ -131,8 +148,10 @@ feature
 		local
 			l_docking_state: SD_DOCKING_STATE
 			l_docking_zone: SD_DOCKING_ZONE
+			l_multi_area: SD_MULTI_DOCK_AREA
 		do
 			internal_shared.docking_manager.lock_update
+			l_multi_area := internal_shared.docking_manager.inner_container (internal_tab_zone)
 			if not internal_drag_title_bar then
 				internal_tab_zone.disable_handle_select_tab
 				internal_tab_zone.prune (internal_content)
@@ -150,6 +169,9 @@ feature
 				end
 
 			end
+
+			internal_shared.docking_manager.inner_container (a_target_zone).update_title_bar
+			l_multi_area.update_title_bar
 			internal_shared.docking_manager.unlock_update
 		end
 
@@ -187,23 +209,19 @@ feature
 	float_window (a_x, a_y: INTEGER) is
 			--
 		local
-			l_float_state: SD_FLOATING_STATE
+			l_docking_state: SD_DOCKING_STATE
+			l_floating_state: SD_FLOATING_STATE
+			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
 			internal_shared.docking_manager.lock_update
+			l_orignal_multi_dock_area := internal_shared.docking_manager.inner_container (internal_tab_zone)
 
-			if not internal_drag_title_bar then
-				internal_tab_zone.prune (internal_content)
+			create l_floating_state.make (a_x, a_y)
 
+			dock_at_top_level (l_floating_state.inner_container)
 
-
-				create l_float_state.make_with_position (internal_content, a_x, a_y)
-				change_state (l_float_state)
-
-
-				update_last_content_state
-
-			end
-
+			l_floating_state.update_title_bar
+			l_orignal_multi_dock_area.update_title_bar
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
 		end
@@ -271,6 +289,12 @@ feature {SD_TAB_STATE}
 		end
 
 feature -- Properties
+	content: SD_CONTENT is
+			--
+		do
+			Result := internal_tab_zone.content
+		end
+
 	zone: SD_TAB_ZONE is
 			--
 		do
@@ -336,13 +360,13 @@ feature {NONE}  -- Implementation
 			check not l_target_zone_parent.full end
 
 			-- Then, insert current internal_zone to new split area base on  `a_direction'.
-			if a_direction = {SD_SHARED}.dock_top or a_direction = {SD_SHARED}.dock_bottom then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
 				create {EV_VERTICAL_SPLIT_AREA} l_new_split_area
-			elseif a_direction = {SD_SHARED}.dock_left or a_direction = {SD_SHARED}.dock_right then
+			elseif a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
 				create {EV_HORIZONTAL_SPLIT_AREA} l_new_split_area
 			end
 
-			if a_direction = {SD_SHARED}.dock_top or a_direction = {SD_SHARED}.dock_left then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_left then
 				l_new_split_area.set_first (internal_tab_zone)
 				l_new_split_area.set_second (a_target_zone)
 			else
@@ -454,13 +478,13 @@ feature {NONE}  -- Implementation
 				a_multi_dock_area.prune (l_old_stuff)
 			end
 
-			if internal_direction = {SD_SHARED}.dock_left or internal_direction = {SD_SHARED}.dock_right then
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				create {EV_HORIZONTAL_SPLIT_AREA} l_new_container
 			else
 				create {EV_VERTICAL_SPLIT_AREA} l_new_container
 			end
 
-			if internal_direction = {SD_SHARED}.dock_left or internal_direction = {SD_SHARED}.dock_top then
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_top then
 				l_new_container.set_first ( internal_tab_zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_second (l_old_stuff)
@@ -470,7 +494,7 @@ feature {NONE}  -- Implementation
 				l_new_container.set_second (internal_tab_zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_first (l_old_stuff)
-					if internal_direction = {SD_SHARED}.dock_right then
+					if internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 						-- maximum_split_position NOT work at the time.
 --						l_new_container.set_split_position (l_new_container.maximum_split_position - internal_width_height)
 --						l_new_container.set_split_position (internal_shared.docking_manager.inner_container.width - internal_width_height)
@@ -496,7 +520,7 @@ feature {NONE}  -- Implementation
 		do
 			internal_tab_zone.disable_handle_select_tab
 
-			if internal_direction = {SD_SHARED}.dock_left or internal_direction = {SD_SHARED}.dock_right then
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_width_height := (a_multi_dock_area.width * 0.2).ceiling
 			else
 				l_width_height := (a_multi_dock_area.height * 0.2).ceiling

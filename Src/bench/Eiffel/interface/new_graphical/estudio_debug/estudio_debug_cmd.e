@@ -68,7 +68,7 @@ feature -- Command
 		require
 			window_not_void: window /= Void
 		do
-			if window.menu_bar /= Void then
+			if not window.is_destroyed and then window.menu_bar /= Void then
 				if menu /= Void and then menu.is_destroyed then
 					menu := Void
 				end
@@ -79,7 +79,25 @@ feature -- Command
 		    	end
 			end
 		end
-
+	
+	build_menu_bar_by_accelerator is
+			-- Add/remove menu bar by build_menu_bar_by_accelerator when `show_eiffel_studio_debug_preference' is True.
+		require
+			preference_set: preference_set
+		do
+			if menu /= Void then
+				window.menu_bar.prune (menu)
+		    	menu.wipe_out
+		    	menu := Void			
+		    	preferences.development_window_data.show_debug_menu_with_accelerator_preference.set_value (False)
+	    	else
+				create menu.make_with_window (window)
+	    		window.menu_bar.extend (menu)
+	    		preferences.development_window_data.show_debug_menu_with_accelerator_preference.set_value (True)
+			end
+				
+		end
+		
 	add_accelerator is
 			-- Add accelerator related to Current command.
 		require
@@ -89,7 +107,7 @@ feature -- Command
 					create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_d) ,
 					True, True, False
 				)
-			accelerator.actions.extend (agent build_menu_bar)				
+			accelerator.actions.extend (agent build_menu_bar_by_accelerator)				
 			window.accelerators.extend (accelerator)
 
 		end	
@@ -110,15 +128,26 @@ feature -- Command
 		    	menu.wipe_out
 		    	menu := Void	    			
     		end		
-			preferences.development_window_data.show_eiffel_studio_debug_preference.set_value (False)	
+			preferences.development_window_data.show_eiffel_studio_debug_preference.set_value (False)
+			preferences.development_window_data.show_debug_menu_with_accelerator_preference.set_value (True)	
 		end
 		
 	add_menu is
 			-- Add menu to menu bar then change the preference.
 		do
-    		create menu.make_with_window (window)
-	    	window.menu_bar.extend (menu)
+			if preferences.development_window_data.show_debug_menu_with_accelerator_preference.value then
+	    		create menu.make_with_window (window)
+		    	window.menu_bar.extend (menu)				
+			end
 			preferences.development_window_data.show_eiffel_studio_debug_preference.set_value (True)	    				
+		end
+		
+feature -- States report
+
+	preference_set: BOOLEAN is
+			-- If user preference want to show debug menu?
+		do
+			Result := preferences.development_window_data.show_eiffel_studio_debug_preference.value
 		end
 		
 invariant

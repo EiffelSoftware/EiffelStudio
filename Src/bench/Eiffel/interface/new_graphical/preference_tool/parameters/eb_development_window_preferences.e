@@ -202,7 +202,10 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 
 	show_eiffel_studio_debug_preference: BOOLEAN_PREFERENCE
  			-- Should Eiffel Studio Debug menu be shown?
-
+	
+	show_debug_menu_with_accelerator_preference: BOOLEAN_PREFERENCE
+			-- When `show_eiffel_studio_debug_preference' is Ture, whether show eiffel studio debug menu by accelerator?
+	
 	width_preference: INTEGER_PREFERENCE
 			-- Width for the development window
 
@@ -357,6 +360,7 @@ feature -- Basic operations
 feature {NONE} -- Preference Strings
 	
 	show_eiffel_studio_debug_menu: STRING is "interface.development_window.show_eiffel_studio_debug_menu"
+	show_debug_menu_with_accelerator: STRING is "interface.development_window.show_debug_menu_with_accelerator"
 	width_string: STRING is "interface.development_window.width"
 	height_string: STRING is "interface.development_window.height"
 	x_position_string: STRING is "interface.development_window.x_position"
@@ -425,6 +429,7 @@ feature {NONE} -- Implementation
 			graphical_output_disabled_preference := l_manager.new_boolean_resource_value (l_manager, graphical_output_disabled_string, False)			
 			use_animated_icons_preference := l_manager.new_boolean_resource_value (l_manager, use_animated_icons_string, True)			
 			show_eiffel_studio_debug_preference := l_manager.new_boolean_resource_value (l_manager, show_eiffel_studio_debug_menu, False)
+			show_debug_menu_with_accelerator_preference :=  l_manager.new_boolean_resource_value (l_manager, show_debug_menu_with_accelerator, True)
 		end
 
 	preferences: PREFERENCES

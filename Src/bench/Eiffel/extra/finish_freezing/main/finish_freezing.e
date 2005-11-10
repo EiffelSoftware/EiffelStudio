@@ -104,14 +104,12 @@ feature -- Initialization
 					end
 				end
 			end
-			if index_of_word_option ("vs") /= 0 then
-				if retried or else (c_error and not gen_only) then
-						-- Make the application return a non-zero value to OS to flag an error
-						-- to calling process.
-					create l_exception
-					l_exception.die (1)
-				end
-			end	
+			if retried or else (c_error and not gen_only) then
+					-- Make the application return a non-zero value to OS to flag an error
+					-- to calling process.
+				create l_exception
+				l_exception.die (1)
+			end
 		rescue
 			retried := True
 			retry

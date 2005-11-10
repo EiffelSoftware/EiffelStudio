@@ -38,8 +38,8 @@ inherit
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
-		end	
-		
+		end
+
 	SYSTEM_CONSTANTS
 		export
 			{NONE} all
@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 
 			reset_debugging_live_data
 		end
-		
+
 feature {EIFNET_DEBUGGER} -- reset live data
 
 	reset_debugging_live_data is
@@ -98,7 +98,7 @@ feature {CIL_CODE_GENERATOR} -- Access
 
 	is_debug_info_enabled: BOOLEAN
 			-- Are we generating debug information ?
-			
+
 	is_recording: BOOLEAN
 			-- Are we inside a recording session ?
 
@@ -115,7 +115,7 @@ feature {CIL_CODE_GENERATOR} -- Access
 					load_workbench_data
 				elseif context.final_mode and then last_loading_is_workbench then
 					load_final_data
-				end				
+				end
 			else
 					-- Load corresponding mode
 				if context.workbench_mode then
@@ -129,12 +129,12 @@ feature {CIL_CODE_GENERATOR} -- Access
 			Il_debug_info.reset
 				--| Enable/Disable debug info
 			is_debug_info_enabled := debug_mode
-				--| Reset Internal attributes used for optimisation 
+				--| Reset Internal attributes used for optimisation
 			internal_reset
 		ensure
-			is_inside_recording_session: is_recording			
+			is_inside_recording_session: is_recording
 		end
-		
+
 	end_recording_session is
 			-- End recording session
 		require
@@ -143,12 +143,17 @@ feature {CIL_CODE_GENERATOR} -- Access
 			if context.workbench_mode then
 				save (il_info_file_name)
 			else
-				save (final_il_info_file_name)				
+				save (final_il_info_file_name)
+					--| Switch back current IL debug info to Workbench
+					--| since it is more likely ES will use it for debugging
+					--| Now we checked the current info are related to workbench
+					--| but it is safer to reload workbench version here too.
+				load_workbench_data
 			end
 			is_recording := False
 		ensure
 			is_outside_recording: not is_recording
-		end		
+		end
 
 feature -- Queries : eStudio data
 
@@ -202,7 +207,7 @@ feature -- Queries : eStudio data from debugger data
 	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: INTEGER): CLASS_TYPE is
 			-- CLASS_TYPE identified by `a_module_filename' and `a_class_token'
 		require
-			module_filename_valid: a_module_filename /= Void 
+			module_filename_valid: a_module_filename /= Void
 								and then not a_module_filename.is_empty
 			token_not_null: a_class_token /= 0
 		local
@@ -218,7 +223,7 @@ feature -- Queries : eStudio data from debugger data
 			-- Compiled CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_valid: a_class_token > 0
-			module_filename_valid: a_module_filename /= Void and then not a_module_filename.is_empty 
+			module_filename_valid: a_module_filename /= Void and then not a_module_filename.is_empty
 		local
 			l_type: CLASS_TYPE
 		do
@@ -232,7 +237,7 @@ feature -- Queries : eStudio data from debugger data
 			-- Class name for CLASS_C identified by `class_token' and `a_module_filename'
 		require
 			class_token_positive: a_class_token > 0
-			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty 
+			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
 		local
 			l_class_c: CLASS_C
 		do
@@ -282,14 +287,14 @@ feature -- Access to module name computing
 			l_type_id: INTEGER
 			l_is_single_module: BOOLEAN
 		do
-				--| Please make sure this computing is similar to 
+				--| Please make sure this computing is similar to
 				--| the one inside IL_CODE_GENERATOR.il_module
 			if a_class_c.is_precompiled then
 					--| it is is precompiled, this mean we are using it, not compiling
 					--| so no recording process
 				l_assembly_name := a_class_c.assembly_info.assembly_name
 
--- FIXME: when we debug .. we load the W_code\assemblies\...dll 
+-- FIXME: when we debug .. we load the W_code\assemblies\...dll
 --				if system.msil_use_optimized_precompile then
 --					Result := finalized_precompilation_module_filename (l_assembly_name)					
 --				else
@@ -297,7 +302,7 @@ feature -- Access to module name computing
 --				end					
 			else
 					--| Compute module file name
-					--| WARNING : Please make sure this computing is similar to 
+					--| WARNING : Please make sure this computing is similar to
 					--| the one inside IL_CODE_GENERATOR.il_module
 				if is_recording then
 						-- The context is pertinent only in recording context
@@ -305,8 +310,8 @@ feature -- Access to module name computing
 						l_is_single_module := False
 						create Result.make_from_string (workbench_module_directory_path_name)
 					else
-						l_is_single_module := True					
-						create Result.make_from_string (finalized_module_directory_path_name)					
+						l_is_single_module := True
+						create Result.make_from_string (finalized_module_directory_path_name)
 					end
 				else
 						--| We assume, we are debugging only Workbench application for now.
@@ -337,14 +342,14 @@ feature -- Access to module name computing
 			l_type_id: INTEGER
 			l_is_single_module: BOOLEAN
 		do
-				--| Please make sure this computing is similar to 
+				--| Please make sure this computing is similar to
 				--| the one inside IL_CODE_GENERATOR.il_module
 			if a_class_type.is_precompiled then
 					--| it is is precompiled, this mean we are using it, not compiling
 					--| so no recording process
 				l_assembly_name := a_class_type.assembly_info.assembly_name
 
--- FIXME: when we debug .. we load the W_code\assemblies\...dll 
+-- FIXME: when we debug .. we load the W_code\assemblies\...dll
 --				if system.msil_use_optimized_precompile then
 --					Result := finalized_precompilation_module_filename (l_assembly_name)					
 --				else
@@ -352,7 +357,7 @@ feature -- Access to module name computing
 --				end					
 			else
 					--| Compute module file name
-					--| WARNING : Please make sure this computing is similar to 
+					--| WARNING : Please make sure this computing is similar to
 					--| the one inside IL_CODE_GENERATOR.il_module
 				if is_recording then
 						-- The context is pertinent only in recording context
@@ -360,8 +365,8 @@ feature -- Access to module name computing
 						l_is_single_module := False
 						create Result.make_from_string (workbench_module_directory_path_name)
 					else
-						l_is_single_module := True					
-						create Result.make_from_string (finalized_module_directory_path_name)					
+						l_is_single_module := True
+						create Result.make_from_string (finalized_module_directory_path_name)
 					end
 				else
 						--| We assume, we are debugging only Workbench application for now.
@@ -453,8 +458,8 @@ feature -- Queries : dotnet data from estudio data
 			end
 		end
 
-feature {EIFFEL_CALL_STACK_DOTNET, 
-		APPLICATION_STATUS_DOTNET, 
+feature {EIFFEL_CALL_STACK_DOTNET,
+		APPLICATION_STATUS_DOTNET,
 		APPLICATION_EXECUTION_DOTNET,
 		EIFNET_DEBUGGER} -- Queries : IL Offset data
 
@@ -526,7 +531,7 @@ feature {EIFFEL_CALL_STACK_DOTNET,
 		end
 
 	approximate_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER is
-			-- Approximate IL offset for the il offset `a_current_il_offset' 
+			-- Approximate IL offset for the il offset `a_current_il_offset'
 			-- previous or current offset if on a breakable point
 		require
 			class_type_not_void: a_class_type /= Void
@@ -550,7 +555,7 @@ feature {EIFFEL_CALL_STACK_DOTNET,
 
 feature {APPLICATION_EXECUTION_DOTNET} -- Queries : IL Offset data
 
-	feature_breakable_il_line_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; 
+	feature_breakable_il_line_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
 				a_breakable_line_number: INTEGER): IL_OFFSET_SET is
 			-- IL offset for the bp slot index `a_breakable_line_number'
 			-- Return Void if index out of range
@@ -564,9 +569,9 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Queries : IL Offset data
 			l_index := a_breakable_line_number + 1
 			l_list := feature_breakable_il_offsets (a_class_type, a_feat)
 
-			if 
-				l_list /= Void 
-				and then l_list.valid_index (l_index) 
+			if
+				l_list /= Void
+				and then l_list.valid_index (l_index)
 			then
 				Result ?= l_list.i_th (l_index).item (2)
 			else
@@ -574,7 +579,7 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Queries : IL Offset data
 			end
 		end
 
-	next_feature_breakable_il_range_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; 
+	next_feature_breakable_il_range_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
 				a_current_il_offset: INTEGER): ARRAY [TUPLE [INTEGER, INTEGER]] is
 			-- IL range offset for the Eiffel line `a_line' in the step next
 		require
@@ -609,7 +614,7 @@ feature {APPLICATION_EXECUTION_DOTNET} -- Queries : IL Offset data
 
 			debug ("debugger_il_info_trace")
 				if Result /= Void then
-					from 
+					from
 						i := Result.lower
 					until
 						i > Result.upper
@@ -636,7 +641,7 @@ feature {NONE} -- line debug exploitation
 			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
 			if l_il_offset_list /= Void then
 				from
-					create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make 
+					create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make
 						--| +2 : in case we have loop with variant + invariant
 					l_il_offset_list.start
 				until
@@ -712,8 +717,8 @@ feature {CIL_CODE_GENERATOR} -- line debug recording
 	ignoring_next_debug_info: BOOLEAN
 			-- Do we ignore recording of debug info (nop) for next recording ?
 
-	record_ghost_debug_infos (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; 
-								a_il_line: INTEGER; a_eiffel_line: INTEGER; 
+	record_ghost_debug_infos (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
+								a_il_line: INTEGER; a_eiffel_line: INTEGER;
 								a_nb: INTEGER) is
 			-- Record potential IL offset stoppable without any IL generation
 			-- this is used for non generated debug clauses
@@ -751,7 +756,7 @@ feature {CIL_CODE_GENERATOR} -- line debug recording
 					debug ("debugger_il_info_trace")
 						print (" - " + a_feat.written_class.name_in_upper
 								+ "."
-								+ a_feat.feature_name 
+								+ a_feat.feature_name
 								+ " -> "
 								+ " Il Offset=" + a_il_line.to_hex_string
 								+ " Eiffel Line=" + a_eiffel_line.out
@@ -767,7 +772,7 @@ feature {CIL_CODE_GENERATOR} -- line debug recording
 
 feature {CIL_CODE_GENERATOR} -- Token recording
 
-	record_once_info_for_class (a_data_class_token: INTEGER; 
+	record_once_info_for_class (a_data_class_token: INTEGER;
 					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
 					a_feature: FEATURE_I; a_class_c: CLASS_C) is
 			--  Record `_done' `_result' and `_exception' tokens for once `a_once_name' from `a_class_type'.
@@ -780,24 +785,24 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 						This would implies a new storage indexed by CLASS_C.
 						However, this is optimisation for generic classes
 					]")
-			if 
+			if
 				is_debug_info_enabled
 			then
 				from
 					l_class_types := a_class_c.types
 					l_class_types.start
 				until
-					l_class_types.after						
+					l_class_types.after
 				loop
-					record_once_info_for_class_type	(a_data_class_token, 
+					record_once_info_for_class_type	(a_data_class_token,
 							a_once_done_token, a_once_result_token, a_once_exception_token,
-							a_feature, l_class_types.item)				
+							a_feature, l_class_types.item)
 					l_class_types.forth
 				end
 			end
 		end
-		
-	record_once_info_for_class_type (a_data_class_token: INTEGER; 
+
+	record_once_info_for_class_type (a_data_class_token: INTEGER;
 					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
 					a_feature_i: FEATURE_I; a_class_type: CLASS_TYPE) is
 		require
@@ -805,13 +810,13 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 		local
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 		do
-			if 
+			if
 				is_debug_info_enabled
 			then
 				debug ("debugger_il_info_trace")
 					print ("[>] Recording Once : "
-							+ a_class_type.associated_class.name_in_upper 
-							+ "." + a_feature_i.feature_name 
+							+ a_class_type.associated_class.name_in_upper
+							+ "." + a_feature_i.feature_name
 							+ " -> "
 							+ "Data=0x" + a_data_class_token.to_hex_string
 							+ "::"
@@ -821,10 +826,10 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 							+ "::"
 							+ "Exception=0x" + a_once_exception_token.to_hex_string
 							+ "%N")
-				end			
+				end
 				l_info_from_class_type := info_from_class_type (a_class_type, True)
-				l_info_from_class_type.record_once_tokens (a_data_class_token, 
-						a_once_done_token, a_once_result_token, a_once_exception_token, 
+				l_info_from_class_type.record_once_tokens (a_data_class_token,
+						a_once_done_token, a_once_result_token, a_once_exception_token,
 						a_feature_i)
 			end
 		end
@@ -855,7 +860,7 @@ feature {NONE} -- Record processing
 			-- Last recorded class type
 
 	ignore_feature (a_feat: FEATURE_I): BOOLEAN is
-			-- Ignore non Eiffel feature name 
+			-- Ignore non Eiffel feature name
 			-- for now, ignore all '^_.*' feature_name
 		require
 			a_feat_not_void: a_feat /= Void
@@ -867,7 +872,7 @@ feature {NONE} -- Record processing
 				--| and then not a_feat.feature_name.is_equal ("_invariant")
 		end
 
-	process_il_feature_info_recording (a_module: IL_MODULE; a_class_type: CLASS_TYPE; 
+	process_il_feature_info_recording (a_module: IL_MODULE; a_class_type: CLASS_TYPE;
 				a_feature: FEATURE_I; a_class_token, a_feature_token: INTEGER) is
 			-- Record feature information regarding token
 		require
@@ -891,9 +896,9 @@ feature {NONE} -- Record processing
 				end
 
 				debug ("debugger_il_info_trace")
-					print ("[>] Recording : " 
-							+ a_class_type.associated_class.name_in_upper 
-							+ "." + a_feature.feature_name 
+					print ("[>] Recording : "
+							+ a_class_type.associated_class.name_in_upper
+							+ "." + a_feature.feature_name
 							+ " -> "
 							+ "0x" + a_class_token.to_hex_string
 							+ "::"
@@ -922,7 +927,7 @@ feature {NONE} -- Class Specific info
 			internal_record_class_type (a_module.module_file_name, a_module.module_name, a_class_type, a_class_token)
 		end
 
-	internal_record_class_type (a_module_filename: STRING; a_module_name: STRING; 
+	internal_record_class_type (a_module_filename: STRING; a_module_name: STRING;
 			a_class_type: CLASS_TYPE; a_class_token: INTEGER) is
 				--| New mecanism
 		require
@@ -934,7 +939,7 @@ feature {NONE} -- Class Specific info
 		do
 			debug ("debugger_il_info_trace")
 				print ("[>] Recording Class: "
-						+ a_class_type.associated_class.name_in_upper 
+						+ a_class_type.associated_class.name_in_upper
 						+ "::" + a_class_type.static_type_id.out
 						+ " -> "
 						+ "0x" + a_class_token.to_hex_string
@@ -970,8 +975,8 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 			if last_class_type_info_cleaned /= l_class_type then
 				last_class_type_info_cleaned := l_class_type
 				debug ("debugger_il_info_trace")
-					print ("Cleaning : "+ l_class_type.associated_class.name_in_upper 
-										+ " ID=" + l_class_type.static_type_id.out 
+					print ("Cleaning : "+ l_class_type.associated_class.name_in_upper
+										+ " ID=" + l_class_type.static_type_id.out
 										+ "%N")
 				end
 
@@ -987,7 +992,7 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 
 				--| Clean Module Info     |--
 			l_module_filename := module_file_name_for_class_type (l_class_type)
-			if 
+			if
 				(last_module_info_cleaned = Void) or else
 				not (last_module_info_cleaned.is_equal (l_module_filename))
 			 then
@@ -1014,7 +1019,7 @@ feature {NONE} -- Debugger Info List Access
 
 	last_info_from_module: like info_from_module
  			-- Last IL_DEBUG_INFO_FROM_MODULE used
- 			
+
 	first_info_from_class_c (a_class_c: CLASS_C): IL_DEBUG_INFO_FROM_CLASS_TYPE is
 			-- Info from any Class_type	 from `a_class_c'.
 		require
@@ -1041,7 +1046,7 @@ feature {NONE} -- Debugger Info List Access
 			l_class_static_type_id: INTEGER
 		do
 			l_class_static_type_id := a_class_type.static_type_id
-			if 
+			if
 				last_info_from_class_type /= Void and then
 				last_info_from_class_type.static_type_id = l_class_static_type_id
 			then
@@ -1079,7 +1084,7 @@ feature {NONE} -- Debugger Info List Access
 
 	info_from_module (a_module_filename: STRING; a_create_if_not_found: BOOLEAN): IL_DEBUG_INFO_FROM_MODULE is
 			-- Info from Module_filename
-			--| Should not be called directly anymore, 
+			--| Should not be called directly anymore,
 			--| use `info_from_module_or_create' or `info_from_module_if_exists'
 		require
 			module_filename_not_empty: a_module_filename /= Void and then not a_module_filename.is_empty
@@ -1090,13 +1095,13 @@ feature {NONE} -- Debugger Info List Access
 					--| This means we are recording, so we need to record
 					--| the true computed module name
 				l_module_key := direct_module_key (a_module_filename)
-			else				
+			else
 					--| This means we are query data, not recording
 					--| so we need to resolve the module name
 					--| in case it comes from the GAC from instance (for precomp)
 				l_module_key := resolved_module_key (a_module_filename)
 			end
-			if 
+			if
 				last_info_from_module /= Void and then
 				last_info_from_module.module_filename.is_equal (l_module_key)
 			then
@@ -1129,7 +1134,7 @@ feature {CIL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_I
 			is_recording := False
 			load_workbench_data
 		end
-	
+
 	load_workbench_data is
 			-- Load workbench data (mainly for debugging)
 		do
@@ -1143,7 +1148,7 @@ feature {CIL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_I
 			load (final_il_info_file_name)
 			last_loading_is_workbench := False
 		end
-		
+
 	last_loading_is_workbench: BOOLEAN
 			-- Is last loading for workbench mode ?
 
@@ -1170,7 +1175,7 @@ feature {CIL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_I
 			Result.append_string ("   Please reload, until you do not get this message.%N")
 			Result.append_string ("%N")
 		end
-		
+
 
 feature {NONE}-- Implementation for save and load task
 
@@ -1192,7 +1197,7 @@ feature {NONE}-- Implementation for save and load task
 				if context.workbench_mode then
 					l_project_path := workbench_module_directory_path_name
 				else
-					l_project_path := finalized_module_directory_path_name					
+					l_project_path := finalized_module_directory_path_name
 				end
 				l_object_to_save.set_project_path (direct_module_key (l_project_path))
 				l_object_to_save.set_modules_debugger_info (dbg_info_modules)
@@ -1211,7 +1216,7 @@ feature {NONE}-- Implementation for save and load task
 			l_pfn: FILE_NAME
 		do
 			debug ("debugger_il_info_trace")
-				print ("Loading IL Info  %N")
+				print ("Loading IL Info from [" + a_il_info_file_name + "] %N")
 			end
 
 			load_successful := True
@@ -1323,13 +1328,13 @@ feature {NONE}-- Implementation for save and load task
 							end
 
 								--| First, we check if the project didn't moved to a new location
-							if 
-								l_dbg_info_project_path /= Void and then 
+							if
+								l_dbg_info_project_path /= Void and then
 								not l_dbg_info_project_path.is_equal (l_current_project_path)
 							then
 									--| This is the current project, since it is not a precompilation
 									--| We need to update these data, since the location changed
-								check 
+								check
 									l_dbg_system_name /= Void
 									l_dbg_info_project_path /= Void
 								end
@@ -1353,11 +1358,11 @@ feature {NONE}-- Implementation for save and load task
 									update_imported_project_info_module (l_current_project_path, l_info_module)
 
 									check
-										item_not_already_inside: 
+										item_not_already_inside:
 											not l_patched_dbg_info_modules.has (l_info_module.module_filename)
 									end
 									l_patched_dbg_info_modules.put (l_info_module, l_info_module.module_filename)
-									check 
+									check
 										item_inserted: l_patched_dbg_info_modules.inserted
 									end
 
@@ -1436,7 +1441,7 @@ feature {NONE}-- Implementation for save and load task
 --			else
 				l_mod_fn := workbench_precompilation_module_filename (a_info_module.system_name)
 --			end
-			a_info_module.update_module_filename (direct_module_key (l_mod_fn))			
+			a_info_module.update_module_filename (direct_module_key (l_mod_fn))
 		end
 
 feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
@@ -1450,8 +1455,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Module indexer implementation
 			Result := internal_module_key (Result)
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
-			Result_is_lower_case: Result.as_lower.is_equal (Result)			
-		end	
+			Result_is_lower_case: Result.as_lower.is_equal (Result)
+		end
 
 feature {NONE} -- Module indexer implementation
 
@@ -1464,7 +1469,7 @@ feature {NONE} -- Module indexer implementation
 			Result := a_mod_filename.as_lower -- So this is a twin lowered
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
-			Result_is_lower_case: Result.as_lower.is_equal (Result)			
+			Result_is_lower_case: Result.as_lower.is_equal (Result)
 		end
 
 	internal_module_key (a_mod_key: STRING): STRING is
@@ -1490,15 +1495,15 @@ feature {NONE} -- Module indexer implementation
 						--|   Then we have an issue, but at worst we will see Eiffel type name
 						--|   as dotnet type name
 						--|
-						--|   How does estudio manage 2 assemblies with the same filename ? 
+						--|   How does estudio manage 2 assemblies with the same filename ?
 						--|   When it copies them into EIFGEN/W_code/assemblies ??
-						
+
 						--| Get an potential identifier for module						
 					l_pos_dll := a_mod_key.substring_index (".dll", 1)
 					if l_pos_dll > 0 then
 						l_pos_sep := a_mod_key.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, l_pos_dll)
 						if l_pos_sep > 0 then
-							l_module_id := a_mod_key.substring (l_pos_sep + 1, l_pos_dll + 3) 
+							l_module_id := a_mod_key.substring (l_pos_sep + 1, l_pos_dll + 3)
 						end
 					end
 					if l_module_id /= Void then
@@ -1519,18 +1524,18 @@ feature {NONE} -- Module indexer implementation
 						end
 					end
 					if Result = Void then
-						Result := a_mod_key							
+						Result := a_mod_key
 						internal_module_key_table.force (Result, a_mod_key)
-					end	
+					end
 				end
 			end
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
-			Result_is_lower_case: Result.as_lower.is_equal (Result)			
+			Result_is_lower_case: Result.as_lower.is_equal (Result)
 		end
-		
+
 	internal_module_key_table: HASH_TABLE [STRING, STRING]
-			-- Table to make relation between external module name, 
+			-- Table to make relation between external module name,
 			-- and internal key for module
 
-end -- class IL_DEBUG_INFO_RECORDER
+end

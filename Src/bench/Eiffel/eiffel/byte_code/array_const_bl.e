@@ -8,8 +8,8 @@ class ARRAY_CONST_BL
 inherit
 	ARRAY_CONST_B
 		redefine
-			analyze, generate, 
-			register, set_register, 
+			analyze, generate,
+			register, set_register,
 			free_register, unanalyze
 		end;
 	SHARED_TABLE;
@@ -18,37 +18,48 @@ inherit
 create
 	make
 
-feature 
+feature
 
 	register: REGISTRABLE;
 			-- Register for array
+
+	item_register: REGISTER
+			-- Register for array item
 
 	array_area_reg: REGISTER;
 			-- Register for array area
 
 	set_register (r: REGISTRABLE) is
-			-- Set `register' to `r' 
+			-- Set `register' to `r'
 		do
-			register := r;	
+			register := r;
 		end;
 
 	analyze is
 			-- Analyze expression
 		local
-			expr: EXPR_B;
+			expr: EXPR_B
+			real_ty: GEN_TYPE_I
+			target_gen_type: TYPE_I
 		do
 			-- We need 'Current'
 			context.add_dftype_current;
 			info.analyze
+
+			real_ty ?= context.real_type (type);
+			target_gen_type := real_ty.meta_generic.item (1);
 
 			get_register;
 			create array_area_reg.make (Reference_c_type.c_type);
 			from
 				expressions.start
 			until
-				expressions.after 
+				expressions.after
 			loop
 				expr ?= expressions.item;
+				if item_register = Void and then expr.is_register_required (target_gen_type) then
+					create item_register.make (target_gen_type.c_type)
+				end
 				expr.analyze;
 				expr.free_register;
 				expressions.forth
@@ -61,7 +72,7 @@ feature
 			expr: EXPR_B;
 		do
 			array_area_reg := Void;
-			set_register (Void)	
+			set_register (Void)
 			from
 				expressions.start
 			until
@@ -71,6 +82,7 @@ feature
 				expr.unanalyze;
 				expressions.forth
 			end;
+			item_register := Void
 		end;
 
 	free_register is
@@ -80,6 +92,9 @@ feature
 			if array_area_reg /= Void then
 				array_area_reg.free_register
 			end;
+			if item_register /= Void then
+				item_register.free_register
+			end
 		end;
 
 	generate is
@@ -104,7 +119,7 @@ feature
 feature {NONE} -- C code generation
 
 	generate_array_creation (real_ty: GEN_TYPE_I; workbench_mode: BOOLEAN) is
-			-- Generate the object creation of 
+			-- Generate the object creation of
 			-- manifest array.
 		local
 			buf: GENERATION_BUFFER
@@ -160,11 +175,11 @@ feature {NONE} -- C code generation
 			loop
 				expr ?= expressions.item;
 				actual_type := context.real_type (expr.type);
-				expr.generate;
+				expr.generate_for_type (item_register, target_type)
 				if is_expanded then
 					if context.workbench_mode then
 						buf.put_string ("ecopy(");
-						expr.print_register;
+						item_print_register (expr, target_type)
 						buf.put_string (gc_comma);
 						array_area_reg.print_register;
 						buf.put_string (" + OVERHEAD + elem_size * ");
@@ -178,7 +193,7 @@ feature {NONE} -- C code generation
 						l_exp_class_type := l_target_type.associated_class_type
 						if l_exp_class_type.skeleton.has_references then
 							buf.put_string ("ecopy(");
-							expr.print_register;
+							item_print_register (expr, target_type)
 							buf.put_string (gc_comma);
 							array_area_reg.print_register;
 							buf.put_string (" + OVERHEAD + elem_size * ");
@@ -192,7 +207,7 @@ feature {NONE} -- C code generation
 							buf.put_string (" * ")
 							l_exp_class_type.skeleton.generate_size (buf)
 							buf.put_string (",")
-							expr.print_register
+							item_print_register (expr, target_type)
 							buf.put_string (", ")
 							l_exp_class_type.skeleton.generate_size (buf)
 							buf.put_character (')')
@@ -208,7 +223,7 @@ feature {NONE} -- C code generation
 					buf.put_character (')');
 					buf.put_string (" = ");
 					target_type.c_type.generate_cast (buf);
-					expr.print_register;
+					item_print_register (expr, target_type)
 						-- Generation of the RTAR protection
 						-- if the array contains references
 					if target_type.is_reference or target_type.is_bit then
@@ -217,7 +232,7 @@ feature {NONE} -- C code generation
 						buf.put_string ("RTAR(");
 						array_area_reg.print_register;
 						buf.put_character (',');
-						expr.print_register;
+						item_print_register (expr, target_type)
 						buf.put_character (')');
 					end
 				end
@@ -234,7 +249,7 @@ feature {NONE} -- C code generation
 		end
 
 	generate_final_array_make (real_ty: GEN_TYPE_I)	is
-				-- Generate code to call the make routine 
+				-- Generate code to call the make routine
 				-- of the manifest array in final mode.
 		local
 			rout_table: ROUT_TABLE
@@ -266,7 +281,7 @@ feature {NONE} -- C code generation
 		end;
 
 	generate_wk_array_make (real_ty: GEN_TYPE_I)	is
-				-- Generate code to call the make routine 
+				-- Generate code to call the make routine
 				-- of the manifest array in workbench mode.
 		local
 			f_table: FEATURE_TABLE;
@@ -281,7 +296,7 @@ feature {NONE} -- C code generation
 			feat_i := f_table.item_id (make_name_id);
 			buf := buffer
 			buf.put_string ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))");
-			if 
+			if
 				Compilation_modes.is_precompiling or else
 				base_class.is_precompiled
 			then
@@ -318,5 +333,20 @@ feature {NONE} -- C code generation
 			buf.put_string ("L);");
 			buf.put_new_line;
 		end;
+
+	item_print_register (expr: EXPR_B; target_type: TYPE_I) is
+			-- Print register for `expr' taking into account
+			-- that its value may be stored in `item_register'.
+		require
+			expr_not_void: expr /= Void
+			target_type_not_void: target_type /= Void
+			item_register_not_void: expr.is_register_required (target_type) implies item_register /= Void
+		do
+			if expr.is_register_required (target_type) then
+				item_register.print_register
+			else
+				expr.print_register
+			end
+		end
 
 end

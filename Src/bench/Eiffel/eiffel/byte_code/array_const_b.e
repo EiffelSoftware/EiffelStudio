@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ARRAY_CONST_B 
+class ARRAY_CONST_B
 
 inherit
 	EXPR_B
@@ -44,7 +44,7 @@ feature {NONE} -- Initialize
 			type_set: type = t
 			info_set: info = i
 		end
-		
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -52,7 +52,7 @@ feature -- Visitor
 		do
 			v.process_array_const_b (Current)
 		end
-	
+
 feature -- Access
 
 	expressions: BYTE_LIST [BYTE_NODE];
@@ -168,7 +168,7 @@ feature -- IL generation
 			feat_tbl := base_class.feature_table
 			make_feat := feat_tbl.item_id (make_name_id)
 			l_decl_type := il_generator.implemented_type (make_feat.origin_class_id, real_ty)
-			
+
 				-- Creation of Array
  			context.add_local (real_ty)
  			local_array := context.local_list.count
@@ -195,21 +195,21 @@ feature -- IL generation
  			loop
  				expr ?= expressions.item
  				actual_type ?= context.real_type (expr.type)
- 
+
  					-- Prepare call to `put'.
  				il_generator.generate_local (local_array)
 
  					-- Generate expression
- 				expr.generate_il
+ 				expr.generate_il_for_type (target_type)
 
  				il_generator.put_integer_32_constant (i)
- 
+
  				il_generator.generate_feature_access (l_decl_type, put_feat.origin_feature_id,
  					put_feat.argument_count, put_feat.has_return_value, True)
  				i := i + 1
  				expressions.forth
  			end
- 
+
  			il_generator.generate_local (local_array)
 		end
 
@@ -242,16 +242,16 @@ feature -- Byte code generation
 			until
 				expressions.before
 			loop
-				expr ?= expressions.item;
-				expr.make_byte_code (ba);
-				expressions.back;
+				expr ?= expressions.item
+				expr.make_byte_code_for_type (ba, target_type)
+				expressions.back
 			end;
 			if base_class.is_precompiled then
 				ba.append (Bc_parray);
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
 				ba.append_integer (rout_info.origin);
-				ba.append_integer (rout_info.offset);	
+				ba.append_integer (rout_info.offset);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer (context.class_type.static_type_id - 1)
 				real_ty.make_gen_type_byte_code (ba, True)

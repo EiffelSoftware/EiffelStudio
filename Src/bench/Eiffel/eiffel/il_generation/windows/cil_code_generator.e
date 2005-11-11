@@ -2494,12 +2494,10 @@ feature -- Features info
 		require
 			a_type_not_void: a_type /= Void
 		do
-			if a_type.has_formal then
-				Result := byte_context.real_type (a_type)
-			elseif a_type.is_none then
+			if a_type.is_none then
 				Result := System.any_class.compiled_class.types.first.type
 			else
-				Result := a_type
+				Result := byte_context.real_type (a_type)
 			end
 		ensure
 			valid_result: Result /= Void
@@ -2704,6 +2702,7 @@ feature -- IL Generation
 			method_body.put_call ({MD_OPCODES}.callvirt,
 				feature_token (implemented_type (feat.origin_class_id, current_class_type.type).static_type_id, feat.origin_feature_id),
 				nb, False)
+			fixme ("Generate class invariant check (if enabled).")
 			if current_class_type.is_expanded then
 					-- Unbox expanded object
 				generate_unmetamorphose (current_class_type.type)
@@ -3793,9 +3792,7 @@ feature -- Variables access
 			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
 		do
-				-- See comment on `generate_metamorphose' on why we chose `implementation_id'.
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Unbox,
-				actual_class_type_token (type_i.implementation_id))
+			generate_load_address (type_i)
 			generate_load_from_address (type_i)
 		end
 
@@ -3871,10 +3868,28 @@ feature -- Addresses
 
 	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate address of routine of `a_feature_id' in class `type_i'.
+		local
+			opcode: INTEGER_16
+			type_id: INTEGER
 		do
-			method_body.put_opcode ({MD_OPCODES}.Dup)
-			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldvirtftn,
-				feature_token (type_i.static_type_id, a_feature_id))
+			if type_i.is_expanded then
+				opcode := {MD_OPCODES}.ldftn
+				type_id := type_i.implementation_id
+			else
+				opcode := {MD_OPCODES}.ldvirtftn
+				type_id := type_i.static_type_id
+					-- Target object is used to calculate address.
+				method_body.put_opcode ({MD_OPCODES}.Dup)
+			end
+			method_body.put_opcode_mdtoken (opcode, feature_token (type_id, a_feature_id))
+		end
+
+	generate_load_address (type_i: TYPE_I) is
+			-- Generate code that takes address of a boxed value object of type `type_i'.
+		do
+				-- See comment on `generate_metamorphose' on why we chose `implementation_id'.
+			method_body.put_opcode_mdtoken ({MD_OPCODES}.Unbox,
+				actual_class_type_token (type_i.implementation_id))
 		end
 
 	generate_load_from_address (a_type: TYPE_I) is

@@ -124,9 +124,9 @@ feature
 --
 --			change_state (l_auto_hide_state)
 --
---			internal_tab_zone.disable_handle_select_tab
+--			internal_tab_zone.disable_on_select_tab
 --			internal_tab_zone.prune (internal_content)
---			internal_tab_zone.enable_handle_select_tab
+--			internal_tab_zone.enable_on_select_tab
 --			update_last_content_state
 
 			internal_shared.docking_manager.prune_zone (internal_tab_zone)
@@ -157,7 +157,7 @@ feature
 			internal_shared.docking_manager.lock_update
 			l_multi_area := internal_shared.docking_manager.inner_container (internal_tab_zone)
 			if not internal_drag_title_bar then
-				internal_tab_zone.disable_handle_select_tab
+				internal_tab_zone.disable_on_select_tab
 				internal_tab_zone.prune (internal_content)
 															-- FIXIT: should be the size base on a_direction
 				create l_docking_state.make (internal_content, a_direction, internal_tab_zone.width)
@@ -165,7 +165,7 @@ feature
 				change_state (l_docking_state)
 
 				update_last_content_state
-				internal_tab_zone.enable_handle_select_tab
+				internal_tab_zone.enable_on_select_tab
 			else
 				l_docking_zone ?= a_target_zone
 				if l_docking_zone /= Void then
@@ -237,7 +237,7 @@ feature
 			l_tab_state: SD_TAB_STATE
 		do
 			internal_shared.docking_manager.lock_update
-			internal_tab_zone.disable_handle_select_tab
+			internal_tab_zone.disable_on_select_tab
 			if internal_drag_title_bar then
 				internal_shared.docking_manager.prune_zone (internal_tab_zone)
 
@@ -260,7 +260,7 @@ feature
 				move_tab_to_tab_zone (a_target_zone)
 			end
 
-			internal_tab_zone.enable_handle_select_tab
+			internal_tab_zone.enable_on_select_tab
 			internal_shared.docking_manager.unlock_update
 		end
 
@@ -441,7 +441,7 @@ feature {NONE}  -- Implementation
 		local
 			l_tab_state: SD_TAB_STATE
 		do
-			internal_tab_zone.disable_handle_select_tab
+			internal_tab_zone.disable_on_select_tab
 			internal_tab_zone.prune (internal_content)
 			if internal_content.user_widget.parent /= Void then
 				internal_content.user_widget.parent.prune (internal_content.user_widget)
@@ -449,7 +449,7 @@ feature {NONE}  -- Implementation
 			create l_tab_state.make (internal_content, a_target_zone)
 			change_state (l_tab_state)
 			update_last_content_state
-			internal_tab_zone.enable_handle_select_tab
+			internal_tab_zone.enable_on_select_tab
 		end
 
 	move_tab_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
@@ -457,12 +457,12 @@ feature {NONE}  -- Implementation
 		local
 			l_tab_state: SD_TAB_STATE
 		do
-			internal_tab_zone.disable_handle_select_tab
+			internal_tab_zone.disable_on_select_tab
 			internal_tab_zone.prune (internal_content)
 			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone)
 			change_state (l_tab_state)
 			update_last_content_state
-			internal_tab_zone.enable_handle_select_tab
+			internal_tab_zone.enable_on_select_tab
 		end
 
 	dock_whole_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
@@ -522,7 +522,7 @@ feature {NONE}  -- Implementation
 			l_width_height: INTEGER
 			l_docking_state: SD_DOCKING_STATE
 		do
-			internal_tab_zone.disable_handle_select_tab
+			internal_tab_zone.disable_on_select_tab
 
 			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_width_height := (a_multi_dock_area.width * 0.2).ceiling
@@ -537,7 +537,7 @@ feature {NONE}  -- Implementation
 
 			update_last_content_state
 
-			internal_tab_zone.enable_handle_select_tab
+			internal_tab_zone.enable_on_select_tab
 		end
 
 end

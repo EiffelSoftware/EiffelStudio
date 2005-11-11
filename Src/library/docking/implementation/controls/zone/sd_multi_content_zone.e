@@ -43,10 +43,10 @@ feature
 	prune (a_content: SD_CONTENT) is
 			--
 		do
-			disable_handle_select_tab
+			disable_on_select_tab
 			internal_contents.prune_all (a_content)
 			internal_notebook.prune_all (a_content.user_widget)
-			enable_handle_select_tab
+			enable_on_select_tab
 		end
 
 	count: INTEGER is
@@ -73,16 +73,16 @@ feature
 
 feature {SD_STATE}
 
-	disable_handle_select_tab is
+	disable_on_select_tab is
 			-- If `Current' pruning a zone?
 		do
-			internal_diable_handle_select_tab := True
+			internal_diable_on_select_tab := True
 		end
 
-	enable_handle_select_tab is
+	enable_on_select_tab is
 			--
 		do
-			internal_diable_handle_select_tab := False
+			internal_diable_on_select_tab := False
 		end
 
 feature {NONE} -- Implementation
@@ -96,6 +96,6 @@ feature {NONE} -- Implementation
 	internal_notebook: EV_NOTEBOOK
 			-- Container which `Current' in.
 
-	internal_diable_handle_select_tab: BOOLEAN
+	internal_diable_on_select_tab: BOOLEAN
 			-- If `Current' pruning a zone?
 end

@@ -11,17 +11,17 @@ class
 
 inherit
 	COMPILER_EXPORTER
-	
+
 	SHARED_ERROR_HANDLER
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		end
-		
+
 	KL_EQUALITY_TESTER [NAMED_TYPE_A]
 		export
 			{NONE} all
@@ -59,7 +59,7 @@ feature -- Initialization/Checking
 			if a_convertors /= Void then
 					-- Check it is valid to have a convert clause in Current.
 				check_class_validity (a_class)
-		
+
 					-- Check convert clause content and initialize `a_class'.
 					-- We simply iterate through all conversion feature mentionned
 					-- and check their type, we stop checking as soon as an error is found.
@@ -83,11 +83,11 @@ feature -- Initialization/Checking
 					else
 							-- Mark current routine processed.
 						l_processed.put (l_name_id)
-						
+
 							-- Check `l_feat' to ensure it is a valid feature from current
 							-- class with a correct signature for a conversion routine.
 						check_feature_basic_validity (a_class, a_feat_tbl, l_feat)
-						
+
 						if not has_error then
 								-- Iterate through all specified type to ensure their correctness
 								-- and that they match conversion routines specification.
@@ -129,7 +129,7 @@ feature -- Initialization/Checking
 											has_error := True
 										else
 											l_named_type.check_for_obsolete_class (a_class)
-											
+
 												-- Check that specified routine argument or return
 												-- type matches conversion type `l_named_type'.
 											check_conversion_type (a_class, a_feat_tbl, l_feat,
@@ -210,7 +210,7 @@ feature -- Initialization/Checking
 				end
 				i := i + 1
 			end
-			
+
 				-- Now check all convertible classes between themself to ensure that
 				-- between two classes, there is no ambiguity when trying to convert from one
 				-- to the other.
@@ -241,7 +241,7 @@ feature -- Initialization/Checking
 				i := i + 1
 			end
 		end
-	
+
 	check_conversion (a_context_class: CLASS_C; a_source_type, a_target_type: TYPE_A) is
 			-- In context of `a_context_class' check if `a_source_type' converts to `a_target_type'.
 			-- If so set `last_conversion_check_successful' to True and set `last_conversion_info'
@@ -262,7 +262,7 @@ feature -- Initialization/Checking
 				-- Reset previous computation
 			last_conversion_check_successful := False
 			last_conversion_info := Void
-			
+
 			l_target_class := a_target_type.associated_class
 			if l_target_class /= Void then
 				l_convert_table := l_target_class.convert_from
@@ -352,27 +352,27 @@ feature -- Initialization/Checking
 				end
 			end
 
-			if not l_success then
-					-- Could not find a conversion routine. Search now for an implicit
-					-- conversion
-				if
-					System.il_generation and then
-					(not a_source_type.is_external or a_source_type.is_expanded)
-				then
-						-- Special conversion between eiffel types/expanded types and SYSTEM_OBJECT/ANY.
-					l_cl_type ?= a_target_type
-					if l_cl_type /= Void and then l_cl_type.is_system_object_or_any then
-						if a_source_type.is_expanded then
-								-- Case of passing an expanded to .NET
-							create {BOX_CONVERSION_INFO} last_conversion_info.make (a_target_type)
-						else
-								-- Case of passing a reference to .NET
-							create {ANY_OBJECT_CONVERSION_INFO} last_conversion_info.make (a_target_type)
-						end
-						l_success := True
-					end
-				end
-			end
+--			if not l_success then
+--					-- Could not find a conversion routine. Search now for an implicit
+--					-- conversion
+--				if
+--					System.il_generation and then
+--					(not a_source_type.is_external or a_source_type.is_expanded)
+--				then
+--						-- Special conversion between eiffel types/expanded types and SYSTEM_OBJECT/ANY.
+--					l_cl_type ?= a_target_type
+--					if l_cl_type /= Void and then l_cl_type.is_system_object_or_any then
+--						if a_source_type.is_expanded then
+--								-- Case of passing an expanded to .NET
+--							create {BOX_CONVERSION_INFO} last_conversion_info.make (a_target_type)
+--						else
+--								-- Case of passing a reference to .NET
+--							create {ANY_OBJECT_CONVERSION_INFO} last_conversion_info.make (a_target_type)
+--						end
+--						l_success := True
+--					end
+--				end
+--			end
 			last_conversion_check_successful := l_success
 		end
 
@@ -417,7 +417,7 @@ feature -- Status report
 
 	last_conversion_check_successful: BOOLEAN
 			-- Was last call to `check_conversion' or `check_formal_conversion' successful?
-	
+
 	last_conversion_info: CONVERSION_INFO
 			-- Information about last successful conversion checking
 
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation: checking
 		do
 			-- No checking. A convert clause can appear in a deferred class.
 		end
-		
+
 	check_feature_basic_validity (
 			a_class: CLASS_C;
 			a_feat_tbl: FEATURE_TABLE;
@@ -560,7 +560,7 @@ feature {NONE} -- Implementation: checking
 					has_error := True
 				end
 			end
-			
+
 -- FIXME: Manu: 01/22/2004: If we say that we always take conformance over convertibility
 -- then we do not need this test
 --				-- Check non-conformance of `a_type' to `a_class'.
@@ -574,7 +574,7 @@ feature {NONE} -- Implementation: checking
 --				has_error := True
 --			end
 		end
-		
+
 feature {NONE} -- Implementation: status report
 
 	is_conversion_ambiguous (a, b: CLASS_C): BOOLEAN is
@@ -597,7 +597,7 @@ feature {NONE} -- Implementation: status report
 					l_convert.forth
 				end
 			end
-			
+
 			if Result then
 					-- If conversion found, then check that there are no
 					-- conversions from `a' in `b'.
@@ -643,7 +643,7 @@ feature {NONE} -- Implementation: access
 				Result := False
 			else
 				Result := u.same_as (v)
-			end			
+			end
 		end
 
 end -- class CONVERTIBILITY_CHECKER

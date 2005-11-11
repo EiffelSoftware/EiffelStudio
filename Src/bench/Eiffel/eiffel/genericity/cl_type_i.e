@@ -47,7 +47,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (id: INTEGER) is
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 		ensure
 			class_id_set: class_id = id
 		end
-		
+
 feature -- Access
 
 	class_id: INTEGER
@@ -99,7 +99,7 @@ feature -- Access
 		do
 			Result := Current
 		end
-		
+
 	type_a: CL_TYPE_A is
 		do
 			create Result.make (class_id)
@@ -112,13 +112,13 @@ feature -- Access
 		do
 			Result := base_name
 		end
-		
+
 	instantiation_in (other: CLASS_TYPE): CL_TYPE_I is
 			-- Instantation of Current in `other'
 		do
 			Result := Current
 		end
-		
+
 	il_type_name (a_prefix: STRING): STRING is
 			-- Class name of current type.
 		local
@@ -218,7 +218,7 @@ feature -- Status
 			-- Void element type
 		do
 			if is_expanded then
-				Result := {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype				
+				Result := {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype
 			else
 				if class_id = System.system_string_class.compiled_class.class_id then
 					Result := {MD_SIGNATURE_CONSTANTS}.Element_type_string
@@ -237,7 +237,7 @@ feature -- Status
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
-		
+
 	is_expanded: BOOLEAN
 			-- Is the type expanded?
 
@@ -264,9 +264,9 @@ feature -- Status
 			l_base_class := base_class
 			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
 		end
-		
+
 	is_generated_as_single_type: BOOLEAN is
-			-- Is associated type generated as a single type or as an interface type and 
+			-- Is associated type generated as a single type or as an interface type and
 			-- an implementation type.
 		do
 				-- External classes have only one type.
@@ -288,10 +288,10 @@ feature -- Status
 		end
 
 	is_reference: BOOLEAN is
-			-- Is the type a reference type ?
+			-- Is the type a reference type?
 		do
 			Result := not is_expanded
-		end; 
+		end
 
 	is_explicit: BOOLEAN is
 			-- Is Current type fixed at compile time?
@@ -410,7 +410,7 @@ feature -- Generic conformance
 				use_info and then (cr_info /= Void)
 				and then not is_expanded
 			then
-					-- It's an anchored type 
+					-- It's an anchored type
 				cr_info.generate_cid (buffer, final_mode)
 			else
 				buffer.put_integer (generated_id (final_mode))
@@ -424,14 +424,14 @@ feature -- Generic conformance
 				use_info and then (cr_info /= Void)
 				and then not is_expanded
 			then
-				-- It's an anchored type 
+				-- It's an anchored type
 				cr_info.make_gen_type_byte_code (ba)
 			else
 				ba.append_short_integer (generated_id (False))
 			end
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER; 
+	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER
@@ -440,7 +440,7 @@ feature -- Generic conformance
 				use_info and then (cr_info /= Void)
 				and then not is_expanded
 			then
-					-- It's an anchored type 
+					-- It's an anchored type
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
 				buffer.put_integer (generated_id (final_mode))
@@ -451,7 +451,7 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; 
+	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER
@@ -460,7 +460,7 @@ feature -- Generic conformance
 				use_info and then (cr_info /= Void)
 				and then not is_expanded
 			then
-				-- It's an anchored type 
+				-- It's an anchored type
 				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)
 			else
 				dummy := idx_cnt.next
@@ -470,17 +470,17 @@ feature -- Generic conformance
 feature -- Generic conformance for IL
 
 	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN) is
-			-- `use_info' is true iff we generate code for a 
+			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
 			if use_info and then cr_info /= Void then
 					-- It's an anchored type, we call feature
-					-- that will tell us the real type of the 
+					-- that will tell us the real type of the
 					-- anchor in the context of Current.
 				cr_info.generate_il_type
 			else
 				il_generator.generate_class_type_instance (Current)
-			end	
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	CLASS_TYPE 
+	CLASS_TYPE
 
 inherit
 	SHARED_COUNTER
@@ -53,12 +53,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_IL_CASING
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_CODE_FILES
 		export
 			{NONE} all
@@ -76,6 +76,7 @@ feature {NONE} -- Initialization
 			-- `t', type of actual CLASS_C as used in Eiffel code.
 		require
 			good_argument: t /= Void
+			not_anchored: not t.is_anchored
 			not_formal: t.base_class.lace_class /= system.native_array_class implies not t.has_formal
 		do
 			type := t.generic_derivation
@@ -93,7 +94,7 @@ feature {NONE} -- Initialization
 			end
 			System.reset_melted_conformance_table
 		end
-	
+
 feature -- Access
 
 	static_type_id: INTEGER
@@ -102,7 +103,7 @@ feature -- Access
 			--| which has to be dynamic type (`type_id') independant.
 			--| Remeber that after during each freezing, dynamic types
 			--| are reprocessed.
-	
+
 	implementation_id: INTEGER
 			-- Same as `static_type_id' but used in IL mode only to
 			-- give a different ID wether we are handling interface
@@ -169,7 +170,7 @@ feature -- Access
 			l_class := associated_class
 			Result := l_class.is_external and (l_class.is_basic implies type.is_basic)
 		end
-		
+
 	is_generated_as_single_type: BOOLEAN is
 			-- Is associated type generated as a single type or as an interface type and
 			-- an implementation type.
@@ -178,7 +179,7 @@ feature -- Access
 		do
 			Result := type.is_generated_as_single_type
 		end
-		
+
 	has_cpp_externals: BOOLEAN
 			-- Does current class_type contain C++ externals
 
@@ -235,7 +236,7 @@ feature -- Status report
 			conform_to_definition:
 				Result implies associated_class.conform_to (other.associated_class)
 		end
-		
+
 feature -- Settings
 
 	set_is_changed (b: BOOLEAN) is
@@ -350,7 +351,7 @@ feature -- Update
 		ensure
 			conformance_table_reset: conformance_table = Void
 		end
-		
+
 	build_conformance_table is
 			-- Build conformance table for current type.
 		do
@@ -397,7 +398,7 @@ feature -- Update
 				end
 			end
 		end
-		
+
 feature -- Conveniences
 
 	full_il_type_name: STRING is
@@ -411,7 +412,7 @@ feature -- Conveniences
 			full_il_create_type_name_not_void: Result /= Void
 			full_il_create_type_name_not_empty: not Result.is_empty
 		end
-		
+
 	full_il_implementation_type_name: STRING is
 			-- Full type name of implementation of Current in IL code generation
 			-- with namespace specification.
@@ -480,10 +481,7 @@ feature -- Conveniences
 			until
 				parents.after
 			loop
-				parent_type := parents.item.type_i
-				if parent_type.has_formal then
-					parent_type := parent_type.instantiation_in (Current)
-				end
+				parent_type := parents.item.type_i.instantiation_in (Current)
 				from
 						-- Check if the parent type is not already in
 						-- the list (repeated inheritance ...).
@@ -498,7 +496,7 @@ feature -- Conveniences
 				if not already_in then
 					Result.extend (System.class_type_of_id (parent_type.type_id))
 				end
-			
+
 				parents.forth
 			end
 		end
@@ -672,7 +670,7 @@ feature -- Generation
 				else
 					file := open_generation_file (byte_context.has_cpp_externals_calls)
 				end
-				
+
 				if not final_mode then
 					Header_generation_buffer.put_in_file (file)
 				else
@@ -983,7 +981,7 @@ feature -- Generation
 			buffer.indent
 
 			use_init := not gen_type.is_explicit
-			
+
 				-- Optimize: Use static array only when `typarr' is
 				-- not modified by generated code in multithreaded mode only.
 				-- It is safe in monothreaded code as we are guaranteed that
@@ -1056,7 +1054,7 @@ feature -- Generation
 				end
 			end
 		end
-		
+
 feature -- IL code generation
 
 	generate_il_feature (f: FEATURE_I) is
@@ -1072,7 +1070,7 @@ feature -- IL code generation
 feature -- Byte code generation
 
 	update_execution_table is
-			-- Update the execution table using melted features 
+			-- Update the execution table using melted features
 		require
 			good_context: associated_class.has_features_to_melt
 			Not_precompiled: not is_precompiled
@@ -1135,7 +1133,7 @@ feature -- Byte code generation
 
 feature -- Parent table generation
 
-	generate_parent_table (buffer: GENERATION_BUFFER; 
+	generate_parent_table (buffer: GENERATION_BUFFER;
 						   final_mode   : BOOLEAN) is
 			-- Generate parent table
 		require
@@ -1150,7 +1148,7 @@ feature -- Parent table generation
 			a_class  := associated_class
 
 			if gen_type /= Void and then gen_type.meta_generic /= Void then
-				Par_table.init (type.generated_id (final_mode), 
+				Par_table.init (type.generated_id (final_mode),
 								gen_type.meta_generic.count,
 								a_class.name, a_class.is_expanded);
 			else
@@ -1187,7 +1185,7 @@ feature -- Parent table generation
 			a_class  := associated_class
 
 			if gen_type /= Void and then gen_type.meta_generic /= Void then
-				Par_table.init (type.generated_id (False), 
+				Par_table.init (type.generated_id (False),
 								gen_type.meta_generic.count,
 								a_class.name, a_class.is_expanded);
 			else
@@ -1246,8 +1244,8 @@ feature -- Skeleton generation
 				Byte_context.set_class_type (Current)
 				skeleton.generate_generic_type_arrays (type_id)
 
-				if byte_context.final_mode then	
-	
+				if byte_context.final_mode then
+
 						-- Generate attribute offset table pointer array
 					buffer.put_string ("static long offsets")
 					buffer.put_integer (type_id)
@@ -1362,7 +1360,7 @@ feature -- Skeleton generation
 					buffer.put_string ("(int32 *) 0")
 				end
 				buffer.put_string (",%N")
-						
+
 					-- Skeleton size
 				skeleton.generate_workbench_size (buffer)
 				buffer.put_string (",%N")
@@ -1385,7 +1383,7 @@ feature -- Skeleton generation
 						buffer.put_integer (0)
 					end
 
-						-- Static type id 
+						-- Static type id
 					buffer.put_string (",(int32) ")
 					buffer.put_static_type_id (static_type_id)
 				else
@@ -1402,7 +1400,7 @@ feature -- Skeleton generation
 					end
 				end
 				buffer.put_string (",%N")
-					
+
 				if
 					not Compilation_modes.is_precompiling and
 					not associated_class.is_precompiled
@@ -1425,7 +1423,7 @@ feature -- Skeleton generation
 		end
 
 feature -- Structure generation
-		
+
 	generate_expanded_structure_declaration (buffer: GENERATION_BUFFER; a_name: STRING) is
 			-- Declaration of variable `a_name' for current expanded type in `buffer'.
 		require
@@ -1439,7 +1437,7 @@ feature -- Structure generation
 			buffer.put_string (a_name)
 			buffer.put_string (";")
 		end
-		
+
 	generate_expanded_structure_definition (buffer: GENERATION_BUFFER) is
 			-- Define associated expanded structure if current is expanded.
 		require
@@ -1547,7 +1545,7 @@ feature -- Structure generation
 			end
 			buffer.put_new_line
 		end
-	
+
 	generate_expanded_initialization (buffer: GENERATION_BUFFER; a_target_name, a_parent_name: STRING; needs_initialization: BOOLEAN) is
 			-- If `needs_initialization', initialize expanded attributes of `a_target_name'
 			-- which is located in `a_parent_name' object.
@@ -1584,7 +1582,7 @@ feature -- Structure generation
 						buffer.put_character (',')
 						buffer.put_string (a_parent_name)
 						buffer.put_string (");")
-						buffer.put_new_line						
+						buffer.put_new_line
 					end
 				end
 			end
@@ -1595,17 +1593,17 @@ feature -- Structure generation
 				buffer.put_string (");")
 				buffer.put_new_line
 			else
-					-- Manually call creation procedure on `a_target_name' only if 
+					-- Manually call creation procedure on `a_target_name' only if
 					-- it is not the version of ANY or if it is not empty.
 				creation_feature := associated_class.creation_feature
-				if 
+				if
 					creation_feature /= Void and then
 					(creation_feature.is_external or not creation_feature.is_empty)
 				then
 					l_written_class := System.class_of_id (creation_feature.written_in)
 					l_written_type := l_written_class.meta_type (Current)
 					c_name := Encoder.feature_name (l_written_type.static_type_id,
-						creation_feature.body_index)					
+						creation_feature.body_index)
 					buffer.put_string (c_name)
 					buffer.put_character ('(')
 					buffer.put_string (a_target_name)
@@ -1616,7 +1614,7 @@ feature -- Structure generation
 				end
 			end
 		end
-		
+
 	expanded_structure_name: STRING is
 			-- Name of associated structure.
 		require
@@ -1627,7 +1625,7 @@ feature -- Structure generation
 		ensure
 			expanded_structure_name_not_void: Result /= Void
 		end
-		
+
 feature -- Cecil generation
 
 	generate_cecil (buffer: GENERATION_BUFFER) is
@@ -1708,7 +1706,7 @@ feature -- Byte code generation
 
 				-- 8. Reference number
 			ba.append_integer (skeleton.nb_reference + skeleton.nb_expanded)
-			
+
 				-- 9. Skeleton size
 			skeleton.make_size_byte_code (ba)
 
@@ -1742,7 +1740,7 @@ feature -- Cleaning
 		do
 			if not retried and not is_precompiled and System.makefile_generator /= Void then
 				create generation_dir.make_from_string (Workbench_generation_path)
-				
+
 				packet_nb := packet_number
 
 					-- Descriptor file removal
@@ -1814,7 +1812,7 @@ feature -- Cleaning
 			retried := True
 			retry
 		end
-	
+
 feature -- Debug
 
 	trace is
@@ -1834,17 +1832,17 @@ feature {NONE} -- Convenience
 
 				-- From bit 0 to bit 3: we store `tuple_code'.
 			Result := type.tuple_code
-			
+
 				-- Bit 8: Store `is_declared_as_expanded'
 			if l_class.is_expanded then
 				Result := Result | 0x0100
 			end
-			
+
 				-- Bit 9: Store `is_expanded'
 			if is_expanded then
 				Result := Result | 0x0200
 			end
-			
+
 				-- Bit 10: Store `has_dispose'
 			if System.disposable_descendants.has (l_class) then
 				Result := Result | 0x0400
@@ -1854,20 +1852,20 @@ feature {NONE} -- Convenience
 			if has_creation_routine then
 				Result := Result | 0x0800
 			end
-			
+
 				-- Bit 12: Store `is_deferred'
 			if l_class.is_deferred then
 				Result := Result | 0x1000
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_namespace: STRING
 	internal_type_name: STRING
 			-- Internal storage to help us reconstruct names of classes and features
 			-- from a precompiled library.
-		
+
 invariant
 	type_not_void: type /= Void
 	valid_type_id: type_id > 0

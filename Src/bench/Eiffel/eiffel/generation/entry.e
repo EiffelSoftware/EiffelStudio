@@ -1,4 +1,4 @@
--- Abstract description of an entry in a routine table (instance of 
+-- Abstract description of an entry in a routine table (instance of
 -- POLY_TABLE)
 
 deferred class ENTRY
@@ -12,7 +12,7 @@ inherit
 	SHARED_WORKBENCH
 
 	COMPILER_EXPORTER
-	
+
 	SHARED_BYTE_CONTEXT
 		export
 			{NONE} all
@@ -23,7 +23,7 @@ feature -- comparison
 	infix "<" (other: ENTRY): BOOLEAN is
 			-- Is `other' greater than Current?
 		do
-			Result := type_id < other.type_id	
+			Result := type_id < other.type_id
 		end
 
 feature -- from ENTRY
@@ -52,10 +52,10 @@ feature -- for dead code removal
 			-- is the feature_i associated an attribute ?
 		do
 		end
-	
+
 	feature_id: INTEGER
 			-- feature id of the feature associated to the entry
-	
+
 	set_feature_id (i: INTEGER) is
 		do
 			feature_id := i
@@ -103,7 +103,7 @@ feature -- previously in POLY_UNIT
 			good_argument: class_type /= Void
 		do
 			Result := type_a.actual_type.type_i
-			if not Result.is_formal and Result.has_formal then
+			if not Result.is_formal then
 				Result := Result.instantiation_in (class_type)
 			end
 		end

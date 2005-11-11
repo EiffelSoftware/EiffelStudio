@@ -22,7 +22,7 @@ feature -- Access
 			check False end
 		end
 
-	level: INTEGER is 
+	level: INTEGER is
 			-- Sort level
 		do
 			Result := Formal_level
@@ -81,9 +81,6 @@ feature -- Instantiation
 			l_ref: REFERENCE_DESC
 			l_exp: EXPANDED_DESC
 		do
-			check
-				is_generic: class_type.is_generic
-			end
 			l_type := type_i.instantiation_in (class_type)
 			Result := l_type.description
 			l_ref ?= Result

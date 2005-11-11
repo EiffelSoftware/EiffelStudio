@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class ATTRIBUTE_I 
+class ATTRIBUTE_I
 
 inherit
 	ENCAPSULATED_I
@@ -22,8 +22,8 @@ inherit
 
 create
 	make
-	
-feature 
+
+feature
 
 	type: TYPE_AS
 			-- Attribute type
@@ -158,10 +158,7 @@ feature -- Element Change
 			array_index: INTEGER
 		do
 			generate_header (buffer)
-			result_type := type.actual_type.type_i
-			if result_type.has_formal then
-				result_type := result_type.instantiation_in (class_type)
-			end
+			result_type := type.actual_type.type_i.instantiation_in (class_type)
 			internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 			add_in_log (class_type, internal_name)
 
@@ -183,7 +180,7 @@ feature -- Element Change
 				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False)
 				if array_index >= 0 then
 					table_name := Encoder.table_name (rout_id)
-					
+
 						-- Generate following dispatch:
 						-- table [Actual_offset - base_offset]
 					buffer.put_string (" + ")
@@ -191,7 +188,7 @@ feature -- Element Change
 					buffer.put_string ("[Dtype(Current) - ")
 					buffer.put_integer (array_index)
 					buffer.put_character (']')
-					
+
 						-- Mark attribute offset table used.
 					Eiffel_table.mark_used (rout_id)
 						-- Remember external attribute offset declaration
@@ -271,7 +268,7 @@ feature -- Element Change
 		do
 			ba := Byte_array
 			ba.clear
-	
+
 				-- Once mark
 			ba.append ('%U')
 				-- Start	
@@ -315,10 +312,10 @@ feature -- Element Change
 				-- Attribute meta-type
 			ba.append_uint32_integer (result_type.sk_value)
 			ba.append (Bc_rassign)
-			
+
 				-- End mark
 			ba.append (Bc_null)
-				
+
 			melted_feature := ba.melted_feature
 			melted_feature.set_real_body_id (exec.real_body_id)
 			if not System.freeze then

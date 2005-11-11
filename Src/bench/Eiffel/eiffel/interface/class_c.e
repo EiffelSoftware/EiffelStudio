@@ -3421,7 +3421,6 @@ feature -- Meta-type
 			conformance: class_type.associated_class.conform_to (Current)
 		local
 			actual_class_type, written_actual_type: CL_TYPE_A
-			l_type: CL_TYPE_I
 		do
 			if generics = Void then
 					-- No instantiation for non-generic class
@@ -3439,15 +3438,7 @@ feature -- Meta-type
 				written_actual_type ?= actual_type.instantiation_in
 											(actual_class_type, class_id)
 					-- Ask for the meta-type
-				l_type := written_actual_type.type_i
-					-- Meta instantiation
-				if l_type.has_formal then
-					check
-						class_type_is_generic: class_type.is_generic
-					end
-					l_type := l_type.instantiation_in (class_type)
-				end
-				Result := l_type.associated_class_type
+				Result := written_actual_type.type_i.instantiation_in (class_type).associated_class_type
 			end
 		ensure
 			meta_type_not_void: Result /= Void

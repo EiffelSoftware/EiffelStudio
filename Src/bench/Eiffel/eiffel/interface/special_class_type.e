@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 
-class SPECIAL_CLASS_TYPE 
+class SPECIAL_CLASS_TYPE
 
 inherit
 	CLASS_TYPE
@@ -17,12 +17,12 @@ inherit
 	SHARED_IL_CODE_GENERATOR
 
 	IL_CONST
-	
+
 	BYTE_CONST
 		export
 			{NONE} all
 		end
-	
+
 create
 	make
 
@@ -61,7 +61,7 @@ feature -- Access
 feature -- Byte code generation
 
 	make_creation_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for creation of a special instance. 
+			-- Generate byte code for creation of a special instance.
 		require
 			ba_not_void: ba /= Void
 		local
@@ -229,7 +229,7 @@ feature -- C code generation
 			f_name_id: INTEGER
 		do
 			f_name_id := feat.feature_name_id
-			
+
 			inspect feat.feature_name_id
 			when {PREDEFINED_NAMES}.put_name_id then
 					-- Generate built-in feature `put' of class SPECIAL
@@ -240,17 +240,17 @@ feature -- C code generation
 			then
 					-- Generate built-in feature `item' of class SPECIAL
 				generate_item (feat, buffer)
-			
+
 			when {PREDEFINED_NAMES}.Item_address_name_id then
 					-- Temporary code generation of `item_address' so
 					-- that it is thread safe (no GC sync calls in body).
 				generate_item_address (feat, buffer)
-				
+
 			when {PREDEFINED_NAMES}.base_address_name_id then
 					-- Temporary code generation of `base_address'
 					-- so that it is thread safe (no GC sync calls in body).
 				generate_base_address (feat, buffer)
-				
+
 			else
 					-- Basic generation
 				Precursor {CLASS_TYPE} (feat, buffer);
@@ -440,10 +440,7 @@ feature {NONE} -- C code generation
 
 			buffer.put_string ("/* item_address */%N");
 
-			result_type := feat.type.actual_type.type_i
-			if result_type.has_formal then
-				result_type := result_type.instantiation_in (Current)
-			end
+			result_type := feat.type.actual_type.type_i.instantiation_in (Current)
 
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);
 
@@ -506,10 +503,7 @@ feature {NONE} -- C code generation
 
 			buffer.put_string ("/* base_address */%N");
 
-			result_type := feat.type.actual_type.type_i
-			if result_type.has_formal then
-				result_type := result_type.instantiation_in (Current)
-			end
+			result_type := feat.type.actual_type.type_i.instantiation_in (Current)
 
 			encoded_name := Encoder.feature_name (static_type_id, feat.body_index);
 
@@ -584,7 +578,7 @@ feature -- IL code generation
 			valid_name_id:
 				name_id = {PREDEFINED_NAMES}.Item_name_id or
 				name_id = {PREDEFINED_NAMES}.Infix_at_name_id or
-				name_id = {PREDEFINED_NAMES}.Put_name_id 
+				name_id = {PREDEFINED_NAMES}.Put_name_id
 			special_type_not_void: special_type /= Void
 			has_generics: type.true_generics /= Void
 			good_generic_count: type.true_generics.count = 1
@@ -597,7 +591,7 @@ feature -- IL code generation
 			check
 				l_native_array_not_void: l_native_array /= Void
 			end
-			
+
 				-- Load `native_array' on stack.
 			Il_generator.generate_attribute (True, special_type, l_native_array.feature_id)
 		end
@@ -609,7 +603,7 @@ feature -- IL code generation
 			valid_name_id:
 				name_id = {PREDEFINED_NAMES}.Item_name_id or
 				name_id = {PREDEFINED_NAMES}.Infix_at_name_id or
-				name_id = {PREDEFINED_NAMES}.Put_name_id 
+				name_id = {PREDEFINED_NAMES}.Put_name_id
 			special_type_not_void: special_type /= Void
 			has_generics: type.true_generics /= Void
 			good_generic_count: type.true_generics.count = 1
@@ -635,7 +629,7 @@ feature -- IL code generation
 				l_native_array_type_not_void: l_native_array_type /= Void
 			end
 			Byte_context.set_class_type (l_class_type)
-			
+
 				-- Call feature from NATIVE_ARRAY
 			l_native_array_class_type ?= l_native_array_type.associated_class_type
 			check
@@ -647,17 +641,17 @@ feature -- IL code generation
 					-- have their argument inverted, we need to swap the two
 					-- elements on top of the stack.
 				l_element_type := first_generic
-				
+
 					-- Variable to store element to be stored in SPECIAL
 				Byte_context.add_local (l_element_type)
 				l_element := Byte_context.local_list.count
 				il_generator.put_dummy_local_info (l_element_type, l_element)
-				
+
 					-- Variable to store index where element will be stored in SPECIAL.
 				Byte_context.add_local (int32_c_type)
 				l_index := Byte_context.local_list.count
 				il_generator.put_dummy_local_info (int32_c_type, l_index)
-				
+
 				Il_generator.generate_local_assignment (l_index)
 				Il_generator.generate_local_assignment (l_element)
 				Il_generator.generate_local (l_index)

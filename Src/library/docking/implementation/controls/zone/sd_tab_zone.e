@@ -69,7 +69,7 @@ feature {NONE} -- Initlization
 			disable_item_expand (internal_title_bar)
 
 
-			internal_notebook.selection_actions.extend (agent handle_select_tab)
+			internal_notebook.selection_actions.extend (agent on_select_tab)
 
 			extend_vertical_box (internal_notebook)
 
@@ -135,23 +135,24 @@ feature {SD_TAB_STATE} -- Internal issues.
 
 feature {NONE} -- Implementation
 
-
-
-	handle_select_tab is
+	on_select_tab is
 			-- Handle user click a new tab in `internal_notebook'.
 		local
 			l_content: SD_CONTENT
 		do
 
-			if not internal_diable_handle_select_tab then
+			if not internal_diable_on_select_tab then
 				l_content := internal_contents.i_th (internal_notebook.selected_item_index)
 				internal_title_bar.set_title (l_content.title)
+
+				if l_content.internal_focus_in_actions /= Void then
+					l_content.internal_focus_in_actions.call ([])
+				end
 
 				debug ("larry")
 					io.put_string ("%N select tab index:" + internal_notebook.index.out)
 				end
 			end
-
 
 		end
 

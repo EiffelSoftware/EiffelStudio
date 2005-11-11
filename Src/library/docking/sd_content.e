@@ -311,11 +311,13 @@ feature {NONE}  -- Implemention
 	internal_type: INTEGER
 			-- The type of `Current'. One value from SD_SHARED.	
 
-	internal_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Keyboard focus in actions.
-
 	internal_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Keyboard focus out actions.
+			-- Mouse focus out actions.
+
+feature {SD_TAB_ZONE}
+
+	internal_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Mouse focus in actions.
 
 feature {SD_STATE} -- Implementation
 

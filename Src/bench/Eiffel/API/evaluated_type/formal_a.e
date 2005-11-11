@@ -21,7 +21,7 @@ inherit
 			is_reference,
 			is_expanded
 		end
-		
+
 create
 	make
 
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			is_expanded_set: is_expanded = is_exp
 			position_set: position = i
 		end
-		
+
 feature -- Property
 
 	is_formal: BOOLEAN is True
@@ -47,7 +47,7 @@ feature -- Property
 
 	is_full_named_type: BOOLEAN is True
 			-- Current is a named type.
-			
+
 	is_reference: BOOLEAN
 			-- Is current constrained to be always a reference?
 
@@ -55,11 +55,11 @@ feature -- Property
 			-- Is current constrained to be always an expanded?
 
 	hash_code: INTEGER is
-			-- 
+			--
 		do
 			Result := position
 		end
-		
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -178,15 +178,19 @@ feature {COMPILER_EXPORTER}
 					-- We do not treat the case `is_expanded' as if it is an
 					-- expanded then it does not conform to anything but itself
 					-- so this is automatically taken care by `same_as' above.
-				if is_reference then
-						-- We are always a reference, we can check conformance
-						-- of constrained generic type to `other'.
+				if not is_expanded then
+						-- Check conformance of constrained generic type to `other'.
 					check
 						has_generics: System.current_class.generics /= Void
 						count_ok: System.current_class.generics.count >= position
 					end
 					l_constraint := System.current_class.constraint (position)
-					Result := l_constraint.conform_to (other)
+						-- Ensure that there is no recursive call
+						-- when the formal generic is constrained to itself
+						-- like in "A [G -> G]"
+					if not same_as (l_constraint) then
+						Result := l_constraint.conform_to (other)
+					end
 				end
 			end
 		end
@@ -203,7 +207,7 @@ feature {COMPILER_EXPORTER}
 				has_generics: System.current_class.generics /= Void
 				count_ok: System.current_class.generics.count >= position
 			end
-			
+
 			create l_checker
 			l_checker.check_formal_conversion (System.current_class, Current, a_target_type)
 			Result := l_checker.last_conversion_check_successful

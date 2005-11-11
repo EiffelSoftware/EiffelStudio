@@ -52,15 +52,17 @@ feature {NONE} -- Initlization
 			a_target_zone.content.change_state (l_target_zone_tab_state)
 			-- At the end, add `a_content', so `a_content' is selected on SD_TAB_ZONE.
 			internal_tab_zone.extend (a_content)
-			internal_shared.docking_manager.remove_empty_split_area
+
 			if l_old_parent_split  then
 				l_split_parent ?= internal_tab_zone.parent
 				check l_split_parent /= Void end
-				if l_split_parent.minimum_split_position <= l_old_split_position and l_split_parent.maximum_split_position >= l_old_split_position then
+				if l_split_parent.full and then l_split_parent.minimum_split_position <= l_old_split_position and l_split_parent.maximum_split_position >= l_old_split_position then
 					l_split_parent.set_split_position (l_old_split_position)
 				end
 
 			end
+
+			internal_shared.docking_manager.remove_empty_split_area
 		ensure
 			a_content_set: a_content = internal_content
 		end

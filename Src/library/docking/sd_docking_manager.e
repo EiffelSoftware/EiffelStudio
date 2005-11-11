@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			create menu_manager.make
 
 			create l_app
-			l_app.application.pointer_button_release_actions.extend (agent set_zone_focus_internal)
+			l_app.application.pointer_button_press_actions.extend (agent set_zone_focus_internal)
 		ensure
 			a_container_filled: a_container.has (internal_viewport)
 		end
@@ -91,6 +91,7 @@ feature {NONE} -- Initialization
 			--
 		local
 			l_container: EV_CONTAINER
+			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
 		do
 			from
 
@@ -105,6 +106,14 @@ feature {NONE} -- Initialization
 						internal_last_focus_zone := internal_zones.item
 						internal_zones.item.on_focus_in
 
+						debug ("larry")
+							io.put_string ("%N on focus in")
+						end
+					else
+						l_auto_hide_zone ?= internal_last_focus_zone
+						if l_auto_hide_zone = Void then
+							remove_auto_hide_zones
+						end
 					end
 				end
 
@@ -129,6 +138,25 @@ feature -- Properties
 					internal_inner_containers.item.remove_empty_split_area
 				end
 				internal_inner_containers.forth
+			end
+		end
+
+	update_title_bar  is
+		-- Update all title bar.
+		do
+		-- FIXIT: should get a SD_MULTI_DOCK_AREA base on SD_ZONE.
+			from
+				internal_inner_containers.start
+			until
+				internal_inner_containers.after
+			loop
+				if internal_inner_containers.item /= Void then
+					internal_inner_containers.item.update_title_bar
+				end
+				if not internal_inner_containers.after then
+					internal_inner_containers.forth
+				end
+
 			end
 		end
 
@@ -162,7 +190,7 @@ feature {SD_FLOATING_ZONE, SD_FLOATING_MENU_ZONE, SD_MENU_ZONE}
 
 
 
-feature {SD_CONFIG}
+feature {SD_CONFIG, SD_AUTO_HIDE_STATE}
 
 	content_by_title (a_title: STRING): SD_CONTENT is
 			-- Content by `a_title'.
@@ -264,6 +292,7 @@ feature {SD_HOT_ZONE, SD_STATE, SD_DOCKER_MEDIATOR, SD_CONFIG, SD_CONTENT}
 			until
 				internal_inner_containers.after or Result /= Void
 			loop
+
 				if internal_inner_containers.item.has_zone (a_zone) then
 					Result := internal_inner_containers.item
 				end
@@ -327,7 +356,7 @@ feature {SD_STATE, SD_ZONE, SD_HOT_ZONE} -- Command
 			-- Prune a zone which was managed by docking manager.
 		require
 			a_zone_not_void: a_zone /= Void
-			a_zone_widget_parent_not_void: a_zone.content.user_widget.parent /= Void
+--			a_zone_widget_parent_not_void: a_zone.content.user_widget.parent /= Void
 			a_zone_parent_not_void: not zone_parent_void (a_zone)
 		local
 			l_container: EV_CONTAINER
@@ -342,9 +371,9 @@ feature {SD_STATE, SD_ZONE, SD_HOT_ZONE} -- Command
 			internal_zones.prune (a_zone)
 			-- FIXIT: call prune_all from ACTIVE_LIST contract broken
 --			internal_zones.prune_all (a_zone)
---			if a_zone.content.user_widget.parent /= Void then
+			if a_zone.content.user_widget.parent /= Void then
 				a_zone.content.user_widget.parent.prune (a_zone.content.user_widget)
---			end
+			end
 
 		ensure
 			a_zone_pruned: not internal_zones.has (a_zone)

@@ -87,56 +87,25 @@ feature -- States report
 		end
 
 	is_content_in_group (a_content: SD_CONTENT): BOOLEAN is
-			--
-		do
-
-		end
-
-
-feature {NONE} -- Implementation
-
-	update_tab_group is
-			-- Update tab stubs layout by tab group.
+			-- If `a_content' in a tab group?
+		local
+			l_group: like internal_tab_group
 		do
 			from
 				tab_groups.start
 			until
-				tab_groups.after
+				tab_groups.after or Result
 			loop
-				-- Remove stub seperator by group
-				update_one_tab_group (tab_groups.item)
-
+				l_group := tab_groups.item
+				from
+					l_group.start
+				until
+					l_group.after or Result
+				loop
+					Result := l_group.item.title.is_equal (a_content.title)
+					l_group.forth
+				end
 				tab_groups.forth
-			end
-		end
-
-	update_one_tab_group (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]) is
-			-- Only leave one text show in a group.
-		local
-			l_seperator: SD_AUTO_HIDE_SEPERATOR
-		do
-			from
-				a_tab_group.start
-			until
-				a_tab_group.after
-			loop
-				if a_tab_group.index /= a_tab_group.count then
-						a_tab_group.item.set_show_text (False)
-				end
-
-				start
-				search (a_tab_group.item)
-				check found: not after end
-				if a_tab_group.index /= a_tab_group.count then
-					-- Remove seperator
-					forth
-					l_seperator ?= item
-					if l_seperator /= Void then
-						prune_all (l_seperator)
-					end
-				end
-
-				a_tab_group.forth
 			end
 		end
 
@@ -169,6 +138,55 @@ feature {NONE} -- Implementation
 		ensure
 			not_void: Result /= Void
 		end
+
+feature {NONE} -- Implementation
+
+	update_tab_group is
+			-- Update tab stubs layout by tab group.
+		do
+			from
+				tab_groups.start
+			until
+				tab_groups.after
+			loop
+				-- Remove stub seperator by group
+				update_one_tab_group (tab_groups.item)
+
+				tab_groups.forth
+			end
+		end
+
+	update_one_tab_group (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]) is
+			-- Only leave one text show in a group.
+		local
+			l_seperator: SD_AUTO_HIDE_SEPERATOR
+		do
+			from
+				a_tab_group.start
+			until
+				a_tab_group.after
+			loop
+				if a_tab_group.index /= a_tab_group.count then
+						a_tab_group.item.set_show_text (False)
+				end
+
+--				start
+--				search (a_tab_group.item)
+--				check found: not after end
+				if a_tab_group.index /= a_tab_group.count then
+					-- Remove seperator
+					forth
+					l_seperator ?= item
+					if l_seperator /= Void then
+						prune_all (l_seperator)
+					end
+				end
+
+				a_tab_group.forth
+			end
+		end
+
+
 
 	tab_by_content (a_content: SD_CONTENT): SD_TAB_STUB is
 			--

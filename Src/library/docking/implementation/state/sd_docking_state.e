@@ -15,7 +15,8 @@ inherit
 			move_to_docking_zone,
 			move_to_tab_zone,
 			restore,
-			close_window
+			close_window,
+			zone
 		end
 
 create
@@ -190,10 +191,10 @@ feature -- Perform Restore
 		local
 			l_docking_zone: SD_DOCKING_ZONE
 			a_tab_zone: SD_TAB_ZONE
-			l_multi_area: SD_MULTI_DOCK_AREA
+--			l_multi_area: SD_MULTI_DOCK_AREA
 		do
 			internal_shared.docking_manager.lock_update
-			l_multi_area := internal_shared.docking_manager.inner_container (internal_zone)
+--			l_multi_area := internal_shared.docking_manager.inner_container (internal_zone)
 			l_docking_zone ?= a_target_zone
 			if l_docking_zone /= Void then
 				change_zone_split_area_to_docking_zone (l_docking_zone, a_direction)
@@ -205,7 +206,8 @@ feature -- Perform Restore
 
 
 			internal_shared.docking_manager.inner_container (a_target_zone).update_title_bar
-			l_multi_area.update_title_bar
+
+			internal_shared.docking_manager.update_title_bar
 			internal_shared.docking_manager.unlock_update
 		end
 
@@ -337,7 +339,7 @@ feature -- Properties
 	internal_width_height: INTEGER
 			-- Width of internal_zone if dock_left or dock_right.
 			-- Height of internal_zone if dock_top or dock_bottom.
-	zone: SD_ZONE is
+	zone: SD_DOCKING_ZONE is
 			--
 		do
 			Result := internal_zone

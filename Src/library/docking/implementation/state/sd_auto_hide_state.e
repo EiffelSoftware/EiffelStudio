@@ -218,7 +218,7 @@ feature -- Perform Restore
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
 		ensure then
-			tab_stubs_pruned: auto_hide_panel.tab_stubs.count = old auto_hide_panel.tab_stubs.count - 1
+			tab_stubs_pruned: auto_hide_panel.tab_stubs.count < old auto_hide_panel.tab_stubs.count
 		end
 
 	change_title (a_title: STRING) is
@@ -239,7 +239,42 @@ feature {NONE} -- Implementation
 
 	stick_zones (a_direction: INTEGER) is
 			--
+		local
+			l_docking_state: SD_DOCKING_STATE
+			l_tab_state: SD_TAB_STATE
+			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_content: SD_CONTENT
+
+			l_last_tab_zone: SD_TAB_ZONE
 		do
+			l_tab_group := auto_hide_panel.tab_group (internal_tab_stub)
+			from
+				l_tab_group.start
+			until
+				l_tab_group.after
+			loop
+				auto_hide_panel.tab_stubs.start
+				auto_hide_panel.tab_stubs.prune (l_tab_group.item)
+
+				l_content := internal_shared.docking_manager.content_by_title (l_tab_group.item.title)
+--				internal_shared.docking_manager.prune_zone_by_content (l_content)
+				if l_tab_group.index = 1 then
+					create l_docking_state.make (l_content, a_direction, 60)
+					l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+				else
+					if l_content.user_widget.parent /= Void then
+						l_content.user_widget.parent.prune (l_content.user_widget)
+					end
+					if l_last_tab_zone = Void then
+						create l_tab_state.make (l_content, l_docking_state.zone)
+					else
+						create l_tab_state.make_with_tab_zone (l_content, l_last_tab_zone)
+					end
+					l_last_tab_zone := l_tab_state.zone
+				end
+
+				l_tab_group.forth
+			end
 
 		end
 

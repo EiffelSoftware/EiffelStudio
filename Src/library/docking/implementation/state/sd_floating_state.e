@@ -161,7 +161,6 @@ feature {NONE} -- Implementation
 --			internal_shared.docking_manager.prune_zone (internal_zone)
 			internal_zone.destroy
 			create l_tab_state.make (internal_content, a_target_zone)
---			l_tab_state.dock_at_top_level
 			change_state (l_tab_state)
 			internal_shared.docking_manager.unlock_update
 		end

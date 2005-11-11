@@ -45,13 +45,13 @@ feature -- Evaluation
 		ensure
 			evaluate_not_void: Result /= Void
 		end
-		
+
 feature -- Il code generation
 
 	is_fast_as_local: BOOLEAN is
 			-- Is expression calculation as fast as loading a local?
 			-- In other words: does it make sense to store a result of the expression
-			-- in a temporary local variable for multiple uses or is it equivalent 
+			-- in a temporary local variable for multiple uses or is it equivalent
 			-- in performance to "recalculating" the expression every time?
 			-- (In the latter case it's better to avoid creating a temporary
 			-- variable to reduce stack memory footprint and register pressure.)
@@ -63,6 +63,27 @@ feature -- Il code generation
 			-- (rather than a pointer to it) to the evaluation stack.
 		do
 			generate_il
+		end
+
+	generate_il_for_type (target_type: TYPE_I) is
+			-- Generate IL code for `expression' that is attached
+			-- or compared to the target of type `target_type'.
+		local
+			expression_type: TYPE_I
+		do
+			generate_il_value
+			expression_type := context.real_type (type)
+			if target_type.is_reference and then expression_type.is_expanded then
+				if expression_type.is_basic and then not target_type.is_external then
+						-- Basic type is attached to Eiffel reference type,
+						-- so basic type has to be represented by Eiffel type
+						-- rather than by built-in IL type.
+					generate_il_eiffel_metamorphose (expression_type)
+				else
+						-- Simply box the object.
+					il_generator.generate_metamorphose (expression_type)
+				end
+			end
 		end
 
 	generate_il_metamorphose (a_type, target_type: TYPE_I; real_metamorphose: BOOLEAN) is
@@ -82,7 +103,7 @@ feature -- Il code generation
 					local_number := context.local_list.count
 					il_generator.put_dummy_local_info (a_type, local_number)
 					il_generator.generate_local_assignment (local_number)
-					il_generator.generate_local_address (local_number)			
+					il_generator.generate_local_address (local_number)
 				end
 			else
 				if a_type.is_basic and then not target_type.is_external then
@@ -93,7 +114,7 @@ feature -- Il code generation
 						local_number := context.local_list.count
 						il_generator.put_dummy_local_info (a_type, local_number)
 						il_generator.generate_local_assignment (local_number)
-						il_generator.generate_local_address (local_number)	
+						il_generator.generate_local_address (local_number)
 					else
 						il_generator.generate_metamorphose (a_type)
 					end
@@ -128,20 +149,20 @@ feature -- Il code generation
 			else
 				il_generator.pop
 			end
-			
+
 				-- Create reference class
 			(create {CREATE_TYPE}.make (l_cl_type.reference_type)).generate_il
 
 			if l_is_basic then
 				il_generator.duplicate_top
-				
+
 					-- Call `set_item' from the _REF class
 				ref_class := l_cl_type.reference_type.base_class
 				feat := ref_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
 
 				l_decl_type := il_generator.implemented_type (feat.origin_class_id,
 					l_cl_type.reference_type)
-				
+
 				il_generator.generate_local (local_number)
 				il_generator.generate_feature_access (l_decl_type,
 					feat.origin_feature_id, feat.argument_count, feat.has_return_value, False)
@@ -157,7 +178,7 @@ feature -- Status report
 		do
 			-- Default: False
 		end
-		
+
 feature -- C generation
 
 	get_register is
@@ -257,7 +278,70 @@ feature -- C generation
 		do
 		end
 
-feature  -- Array optimization
+	is_register_required (target_type: TYPE_I): BOOLEAN is
+			-- Is register required if expression is about
+			-- to be assigned or compared to the type `target_type'?
+		do
+			Result := target_type.is_reference and then context.real_type (type).is_expanded
+		end
+
+	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_I) is
+			-- Generate expression which is about
+			-- to be assigned or compared to the type `target_type'.
+		require
+			target_type_not_void: target_type /= Void
+			target_register_not_void: is_register_required (target_type) implies target_register /= Void
+		local
+			expression_type: TYPE_I
+			basic_i: BASIC_I
+			buf: GENERATION_BUFFER
+		do
+			generate
+			expression_type := context.real_type (type)
+			if target_type.is_reference and then expression_type.is_expanded then
+				buf := buffer
+				if expression_type.is_basic then
+					basic_i ?= expression_type
+					basic_i.metamorphose (target_register, Current, buf, context.workbench_mode)
+				else
+					target_register.print_register
+					buf.put_string (" = ")
+					buf.put_string ("RTCL(")
+					print_register
+					buf.put_character (')')
+				end
+				buf.put_character (';')
+				buf.put_new_line
+			end
+		end
+
+feature -- Byte code generation
+
+	make_byte_code_for_type (ba: BYTE_ARRAY; target_type: TYPE_I) is
+			-- Generate byte code for the expression which is about
+			-- to be assigned or compared to the type `target_type'.
+		require
+			ba_not_void: ba /= Void
+			target_type_not_void: target_type /= Void
+		local
+			expression_type: TYPE_I
+		do
+			make_byte_code (ba)
+			expression_type := context.real_type (type)
+			if target_type.is_reference and then expression_type.is_expanded then
+				if expression_type.is_basic then
+						-- Source is basic and target is a reference:
+						-- metamorphose
+					ba.append (Bc_metamorphose)
+				else
+						-- Source is expanded and target is a reference:
+						-- clone
+					ba.append (Bc_clone)
+				end
+			end
+		end
+
+feature -- Array optimization
 
 	optimized_byte_node: EXPR_B is
 			-- Redefined for type check

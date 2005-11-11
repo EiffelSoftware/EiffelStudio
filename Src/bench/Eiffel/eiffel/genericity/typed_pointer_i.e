@@ -11,7 +11,7 @@ inherit
 			make as old_make
 		undefine
 			is_equal, generate_cid, il_type_name, generate_cid_array,
-			generate_cid_init, is_explicit, is_valid,
+			generate_cid_init, is_anchored, is_explicit, is_valid,
 			has_true_formal, is_identical, generate_gen_type_il,
 			has_formal, same_as, make_gen_type_byte_code,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,
@@ -21,7 +21,7 @@ inherit
 			description, sk_value,
 			element_type, reference_type, tuple_code
 		end
-		
+
 	ONE_GEN_TYPE_I
 		undefine
 			is_basic, is_reference, cecil_value, is_void, c_type, generate_cecil_value, dump
@@ -110,7 +110,7 @@ feature
 			Result.append_character ('*')
 			Result.append_character (' ')
 		end
-		
+
 	union_tag: STRING is "parg"
 
 	sk_value: INTEGER is
@@ -131,18 +131,18 @@ feature
 		do
 			buffer.put_string ("SK_POINTER")
 		end
-	
+
 	type_a: TYPED_POINTER_A is
 		do
 			create {TYPED_POINTER_A} Result.make_typed (true_generics.item (1).type_a)
 		end
-		
+
 feature
 
 	make_default_byte_code (ba: BYTE_ARRAY) is
 			-- Generate default value of basic type on stack.
 		do
 			ba.append (Bc_null_pointer)
-		end 
+		end
 
 end

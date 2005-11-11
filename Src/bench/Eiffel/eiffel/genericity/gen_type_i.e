@@ -16,6 +16,7 @@ inherit
 			same_as, is_equal,
 			is_identical,
 			is_valid,
+			is_anchored,
 			is_explicit,
 			has_formal,
 			has_true_formal,
@@ -123,6 +124,23 @@ feature -- Status Report
 				meta_gen.put (l_meta.item (i).instantiation_in (other), i)
 				true_gen.put (l_true.item (i).complete_instantiation_in (other), i)
 				i := i + 1
+			end
+		end
+
+	is_anchored: BOOLEAN is
+			-- Does type contain anchored type?
+		local
+			i: INTEGER
+			l_true: like true_generics
+		do
+			from
+				l_true := true_generics
+				i := l_true.count
+			until
+				i <= 0 or else Result
+			loop
+				Result := l_true.item (i).is_anchored
+				i := i - 1
 			end
 		end
 
@@ -277,9 +295,9 @@ feature -- Status Report
 			end
 			if not l_is_precompiled then
 				Result := l_class_c.name.twin
-		
+
 				l_meta := meta_generic
-		
+
 					-- Append generic information.
 				count := l_meta.count
 				if count > 0 then
@@ -296,7 +314,7 @@ feature -- Status Report
 						i := i + 1
 					end
 				end
-				
+
 				Result := internal_il_type_name (Result, a_prefix)
 			end
 		end
@@ -326,7 +344,7 @@ feature -- Status Report
 				else
 					meta_gen.put (l_type.generic_derivation, i)
 				end
-				
+
 				l_type := l_true.item (i)
 				if l_type.is_reference then
 					true_gen.put (create {FORMAL_I}.make (True, False, i), i)
@@ -345,7 +363,7 @@ feature -- Status Report
 				i := i + 1
 			end
 		end
-		
+
 	type_a: GEN_TYPE_A is
 		local
 			i: INTEGER
@@ -374,12 +392,12 @@ feature -- Generic conformance
 			i, up : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-				-- It's an ancored type 
+				-- It's an ancored type
 				cr_info.generate_cid (buffer, final_mode)
 			else
 				buffer.put_integer (generated_id (final_mode))
 				buffer.put_character (',')
-	
+
 				from
 					i  := true_generics.lower
 					up := true_generics.upper
@@ -398,11 +416,11 @@ feature -- Generic conformance
 			i, up : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-				-- It's an ancored type 
+				-- It's an ancored type
 				cr_info.make_gen_type_byte_code (ba)
 			else
 				ba.append_short_integer (generated_id (False))
-	
+
 				from
 					i  := true_generics.lower
 					up := true_generics.upper
@@ -415,53 +433,53 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER; 
+	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			i, up, dummy : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-					-- It's an anchored type 
+					-- It's an anchored type
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
 				buffer.put_integer (generated_id (final_mode))
 				buffer.put_character (',')
-	
+
 					-- Increment counter
 				dummy := idx_cnt.next
-	
+
 				from
 					i  := true_generics.lower
 					up := true_generics.upper
 				until
 					i > up
 				loop
-					true_generics.item (i).generate_cid_array (buffer, 
+					true_generics.item (i).generate_cid_array (buffer,
 													final_mode, use_info, idx_cnt)
 					i := i + 1
 				end
 			end
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; 
+	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			i, up, dummy : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-					-- It's an anchored type 
+					-- It's an anchored type
 				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)
 			else
 					-- Increment counter
 				dummy := idx_cnt.next
-	
+
 				from
 					i  := true_generics.lower
 					up := true_generics.upper
 				until
 					i > up
 				loop
-					true_generics.item (i).generate_cid_init (buffer, 
+					true_generics.item (i).generate_cid_init (buffer,
 													final_mode, use_info, idx_cnt)
 					i := i + 1
 				end
@@ -471,7 +489,7 @@ feature -- Generic conformance
 feature -- Generic conformance for IL
 
 	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN) is
-			-- `use_info' is true iff we generate code for a 
+			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		local
 			i, up : INTEGER
@@ -480,7 +498,7 @@ feature -- Generic conformance for IL
 				cr_info.generate_il_type
 			else
 				generate_gen_type_instance (il_generator, true_generics.count)
-				
+
 				from
 					i  := true_generics.lower
 					check
@@ -496,7 +514,7 @@ feature -- Generic conformance for IL
 					il_generator.generate_array_write ({IL_CONST}.il_ref, 0)
 					i := i + 1
 				end
-				
+
 				il_generator.generate_generic_type_settings (Current)
 			end
 		end

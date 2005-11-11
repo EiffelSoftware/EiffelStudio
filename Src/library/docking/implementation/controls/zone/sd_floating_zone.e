@@ -172,8 +172,15 @@ feature -- Command
 
 	state: SD_STATE is
 			--
+		local
+			l_zone: SD_ZONE
 		do
-			Result := internal_floating_state
+			l_zone ?= internal_inner_container.item
+			if l_zone /= Void then
+				Result := content.state
+			else
+				Result := internal_floating_state
+			end
 		end
 
 feature --

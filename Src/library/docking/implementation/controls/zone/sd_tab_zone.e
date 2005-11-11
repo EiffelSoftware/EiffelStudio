@@ -77,6 +77,7 @@ feature {NONE} -- Initlization
 			internal_notebook.pointer_button_release_actions.extend (agent handle_notebook_pointer_release)
 			internal_notebook.pointer_motion_actions.extend (agent handle_notebook_notebook_pointer_motion)
 
+--			internal_notebook.set_
 
 
 --			init_focus_in (Current)
@@ -87,7 +88,11 @@ feature -- Access
 	extend (a_content: SD_CONTENT) is
 			--
 		do
+			if a_content.user_widget.parent /= Void then
+				a_content.user_widget.parent.prune (a_content.user_widget)
+			end
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
+
 			internal_title_bar.set_title (a_content.title)
 		end
 
@@ -141,7 +146,13 @@ feature {NONE} -- Implementation
 			if not internal_diable_handle_select_tab then
 				l_content := internal_contents.i_th (internal_notebook.selected_item_index)
 				internal_title_bar.set_title (l_content.title)
+
+				debug ("larry")
+					io.put_string ("%N select tab index:" + internal_notebook.index.out)
+				end
 			end
+
+
 		end
 
 	internal_title_bar: SD_TITLE_BAR

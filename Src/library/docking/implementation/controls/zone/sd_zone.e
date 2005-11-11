@@ -24,7 +24,7 @@ feature -- Propoties
 	set_content (a_content: SD_CONTENT) is
 		require
 			a_content_not_void: a_content /= Void
-			a_content_parent_void: a_content.user_widget.parent = Void
+--			a_content_parent_void: a_content.user_widget.parent = Void
 		deferred
 		end
 

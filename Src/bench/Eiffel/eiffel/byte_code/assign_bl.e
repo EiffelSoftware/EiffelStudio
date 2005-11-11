@@ -20,7 +20,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (other: ASSIGN_B) is
@@ -49,6 +49,10 @@ feature
 			-- assigned to a manifest string. Usually those are expanded
 			-- inline, but the RTAP macro for aging test evaluates its
 			-- arguments more than once.
+
+	register_for_metamorphosis: BOOLEAN
+			-- Is register used to held metamorphosed value as opposed to the
+			-- result of RTMS (for manifest strings)?
 
 	print_register is
 			-- Print register
@@ -94,7 +98,7 @@ feature
 				last_in_result :=
 					not target_type.is_true_expanded and
 						-- No optimization if metamorphosis
-					(target_type.is_basic or else (not source_type.is_basic))
+					(target_type.is_basic or else source_type.is_reference)
 			else
 				last_in_result := False
 			end
@@ -202,6 +206,7 @@ feature
 							-- to be performed.
 						source.propagate (No_register)
 						register := target
+						register_for_metamorphosis := True
 					elseif target_type.is_bit and then source_type.is_bit then
 						is_bit_assignment := True
 					else
@@ -233,6 +238,7 @@ feature
 							-- to be performed.
 						source.propagate (No_register)
 						get_register
+						register_for_metamorphosis := True
 					elseif target_type.is_bit then
 						is_bit_assignment := True
 					else
@@ -254,6 +260,9 @@ feature
 				-- Analyze the source given the current propagations.
 			source.analyze
 			source.free_register
+			if register_for_metamorphosis then
+				register.free_register
+			end
 				-- If the source is a string constant and the target is not
 				-- predefined, then a RTAP will be generated and the RTMS
 				-- must NOT be expanded in line (side effect in macro).
@@ -333,8 +342,24 @@ feature
 	Simple_assignment: INTEGER is unique
 			-- Simple assignment wanted
 
+	Metamorphose_assignment: INTEGER is unique
+			-- Metamorphose of source is necessary
+
+	Clone_assignment: INTEGER is unique
+			-- Clone of source is needed
+
 	Copy_assignment: INTEGER is unique
 			-- Copy source into target, raise exception if source is Void
+
+	source_print_register is
+			-- Generate source (the True one or the metamorphosed one)
+		do
+			if register_for_metamorphosis then
+				print_register
+			else
+				source.print_register
+			end
+		end
 
 	generate_assignment is
 			-- Generate a non-optimized assignment
@@ -353,9 +378,16 @@ feature
 			elseif target_type.is_true_expanded then
 					-- Reattachment of expanded types.
 				generate_regular_assignment (Copy_assignment)
-			else
-					-- Reattachment of basic or reference types.
+			elseif target_type.is_basic or else source_type.is_reference then
+					-- Reattachment of basic type to basic type or
+					-- of reference type to reference type.
 				generate_regular_assignment (Simple_assignment)
+			elseif source_type.is_basic then
+					-- Reattachment of basic type to reference.
+				generate_regular_assignment (Metamorphose_assignment)
+			else
+					-- Reattachment of expanded type to reference.
+				generate_regular_assignment (Clone_assignment)
 			end
 		end
 
@@ -373,6 +405,29 @@ feature
 			end
 		end
 
+	generate_special (how: INTEGER) is
+			-- Generate special pre-treatment
+		local
+			basic_source_type: BASIC_I
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			if how = Metamorphose_assignment then
+				basic_source_type ?= context.real_type (source.type)
+				basic_source_type.metamorphose
+					(register, source, buf, context.workbench_mode)
+				buf.put_character (';')
+				buf.put_new_line
+			elseif how = Clone_assignment then
+				print_register
+				buf.put_string (" = ")
+				buf.put_string ("RTCL(")
+				source.print_register
+				buf.put_string (gc_rparan_semi_c)
+				buf.put_new_line
+			end
+		end
+
 	generate_normal_assignment (how: INTEGER) is
 			-- Genrate assignment not taken care of by target propagation
 		local
@@ -382,6 +437,7 @@ feature
 			target_type: CL_TYPE_I
 		do
 			buf := buffer
+			generate_special (how)
 
 				-- Find out C type of `target'.
 			target_c_type := target.c_type
@@ -391,13 +447,13 @@ feature
 				-- If it is an assignment copy, RTXA will take care of the
 				-- aging test for references within the expanded
 			need_aging_tests :=
-				how /= copy_assignment and 
+				how /= copy_assignment and
 				not target.is_predefined and target_c_type.is_pointer
 			if need_aging_tests then
 					-- For strings constants, we have to be careful. Put its
 					-- address in a temporary register before RTAR can
 					-- handle it (it evaluates its arguments more than once).
-				if register /= Void then
+				if register /= Void and not register_for_metamorphosis then
 					print_register
 					buf.put_string (" = ")
 					source.print_register
@@ -414,7 +470,7 @@ feature
 					buf.put_string ("RTAR(")
 					context.Current_register.print_register
 					buf.put_string (gc_comma)
-					source.print_register
+					source_print_register
 					buf.put_character (')')
 					buf.put_character (';')
 					buf.put_new_line
@@ -438,7 +494,7 @@ feature
 	                target.print_register
 	                buf.put_character (')')
 	                buf.put_character (';')
-	                buf.put_new_line					
+	                buf.put_new_line
 				else
 						-- FIXME: Manu: 05/24/2004: We need to call `copy' if it
 						-- is redefined, not the equivalent of `standard_copy'.
@@ -473,7 +529,7 @@ feature
 						-- Otherwize, copy bit since I know that
 						-- bits have a default value.
 						buf.put_string ("RTXB(")
-						source.print_register
+						source_print_register
 					else
 						target.print_register
 						buf.put_string (" = ")
@@ -484,7 +540,7 @@ feature
 					end
 				end
 				if need_aging_tests then
-					if register /= Void then
+					if register /= Void and not register_for_metamorphosis then
 						print_register
 					else
 						if is_bit_assignment then
@@ -492,7 +548,7 @@ feature
 							target.print_register
 							buf.put_character (')')
 						else
-							source.print_register
+							source_print_register
 						end
 					end
 					buf.put_character (';')
@@ -504,7 +560,7 @@ feature
 							target.print_register
 							buf.put_character (')')
 						else
-							source.print_register
+							source_print_register
 						end
 						buf.put_character (';')
 						buf.put_new_line
@@ -530,8 +586,16 @@ feature
 				buf := buffer
 				buf.put_string ("RTEC(EN_VEXP);")
 				buf.put_new_line
-			else
+			elseif target_type.is_basic or else source_type.is_reference then
+					-- Reattachment of basic type to basic type or
+					-- of reference type to reference type.
 				generate_last_assignment (Simple_assignment)
+			elseif source_type.is_basic then
+					-- Reattachment of basic type to reference type.
+				generate_last_assignment (Metamorphose_assignment)
+			else
+					-- Reattachment of expanded type to reference type.
+				generate_last_assignment (Clone_assignment)
 			end
 		end
 
@@ -542,11 +606,11 @@ feature
 		do
 			buf := buffer
 			source.generate
+			generate_special (how)
 			context.byte_code.finish_compound
 				-- Add a blank line before the return only if it
 				-- is the last instruction.
-			if last_instruction and context.byte_code.compound.count > 1
-			then
+			if last_instruction and context.byte_code.compound.count > 1 then
 				buf.put_new_line
 			end
 			buf.put_string ("return ")
@@ -554,7 +618,7 @@ feature
 				-- Cast in case of basic type will never loose information
 				-- as it has been validated by the Eiffel compiler.
 			target.c_type.generate_cast (buf)
-			source.print_register
+			source_print_register
 			buf.put_character (';')
 			buf.put_new_line
 		end

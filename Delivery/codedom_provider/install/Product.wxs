@@ -1150,8 +1150,8 @@ If you do not wish to use the .NET facilities, you can continue this installatio
 			<RemoveExistingProducts After='InstallFinalize' />
 		</InstallExecuteSequence>
 
-		<Binary Id='bannrbmp' src='Binary\banner.jpg' />
-		<Binary Id='dlgbmp' src='Binary\dialog.jpg' />
+		<Binary Id='bannrbmp' src='Binary\eiffel_for_asp_net_top.bmp' />
+		<Binary Id='dlgbmp' src='Binary\eiffel_for_asp_net_left.bmp' />
 		<Binary Id='exclamic' src='Binary\Exclam.ico' />
 		<Binary Id='info' src='Binary\Info.ico' />
 		<Binary Id='New' src='Binary\New.ico' />

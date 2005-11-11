@@ -1,6 +1,6 @@
 -- Information about pattern
 
-class PATTERN_INFO 
+class PATTERN_INFO
 
 inherit
 
@@ -21,7 +21,7 @@ create
 
 	make
 
-feature 
+feature
 
 	pattern_id: INTEGER;
 			-- Pattern unique identifier
@@ -81,15 +81,15 @@ feature
 			-- Instantiation of `pattern' in the context of `type'.
 		require
 			good_argument: type /= Void
+			type_is_standalone: not type.type.is_anchored and not type.type.has_formal
 			consistency1: type.associated_class.conform_to (associated_class)
-			consistency2: pattern.has_formal implies associated_class.meta_type (type).is_generic
+			consistency2: pattern.has_formal (associated_class.actual_type) implies associated_class.meta_type (type).is_generic
 		do
 			Result := pattern
-			if Result.has_formal then
-				Result := Result.instantiation_in (associated_class.meta_type (type))
-			end
+			Result := Result.instantiation_in (associated_class.meta_type (type))
 		ensure
-			no_formal: not Result.has_formal
+			result_not_void: Result /= Void
+			result_is_standalone: Result.is_standalone
 		end
 
 	trace is

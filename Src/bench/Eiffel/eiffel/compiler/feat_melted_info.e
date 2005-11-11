@@ -35,8 +35,6 @@ feature {NONE} -- Implementation
 
 	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is
 			-- Create new EXECUTION_UNIT corresponding to Current type.
-		local
-			res: TYPE_I
 		do
 			if is_encapsulated_call then
 				create {ENCAPSULATED_EXECUTION_UNIT} Result.make (class_type)
@@ -47,12 +45,7 @@ feature {NONE} -- Implementation
 			Result.set_pattern_id (pattern_id)
 			Result.set_written_in (written_in)
 
-			res := result_type
-			if res.has_formal then
-				res := res.instantiation_in (class_type) 
-			end
-
-			Result.set_type (res.c_type)
+			Result.set_type (result_type.instantiation_in (class_type).c_type)
 		end
 
 	associated_feature (feat_tbl: FEATURE_TABLE): FEATURE_I is

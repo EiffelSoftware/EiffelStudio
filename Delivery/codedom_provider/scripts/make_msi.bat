@@ -15,8 +15,8 @@ IF EXIST Binary ECHO Could not delete 'Binary' folder, exiting.
 IF EXIST Binary GOTO END
 MKDIR Binary
 XCOPY /Q /S ..\..\scripts\windows\install\Binary\* Binary\
-COPY /Y ..\files\banner.jpg Binary\
-COPY /Y ..\files\dialog.jpg Binary\
+COPY /Y ..\files\eiffel_for_asp_net_left.bmp Binary\
+COPY /Y ..\files\eiffel_for_asp_net_top.bmp Binary\
 COPY ..\files\efa_license.rtf Binary\
 
 REM DO THIS IF CLSID OF METADATA CONSUMER CHANGED!!! MERGE REGISTRY ENTRIES IN CompilerModule.wxs

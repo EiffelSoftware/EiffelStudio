@@ -1,6 +1,6 @@
 -- Parameter expression
 
-class PARAMETER_B 
+class PARAMETER_B
 
 inherit
 
@@ -13,7 +13,7 @@ inherit
 			pre_inlined_code, inlined_byte_code,
 			allocates_memory, generate_il
 		end;
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -21,8 +21,8 @@ feature -- Visitor
 		do
 			v.process_parameter_b (Current)
 		end
-	
-feature 
+
+feature
 
 	expression: EXPR_B;
 			-- Expression
@@ -65,7 +65,7 @@ feature
 		do
 			Result := expression.is_simple_expr;
 		end;
-	
+
 	has_gcable_variable: BOOLEAN is
 			-- Does the expression have a GCable variable ?
 		do
@@ -100,20 +100,8 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for `expression'
-		local
-			source_type: TYPE_I
-			target_type: TYPE_I
-			box_b: BOX_B
 		do
-			expression.generate_il_value
-			target_type := context.real_type (attachment_type)
-			source_type := context.real_type (expression.type)
-			if target_type.is_reference and then source_type.is_expanded then
-				box_b ?= expression
-				if box_b = Void then
-					il_generator.generate_metamorphose (source_type)
-				end
-			end
+			expression.generate_il_for_type (context.real_type (attachment_type))
 		end
 
 feature -- Byte code generation
@@ -121,36 +109,15 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for the expression
 		local
-			target_type, source_type: TYPE_I;
-			basic_type: BASIC_I;
+			target_type, source_type: TYPE_I
 		do
-			expression.make_byte_code (ba);
-			target_type := context.real_type (attachment_type);
-			source_type := context.real_type (expression.type);
-
-			if target_type.is_none then
-					-- Do nothing
-			elseif target_type.is_true_expanded then
-					-- The feature called with this actual parameter
-					-- will do the copy and trigger a possible exception
-					-- Do nothing here.
-			elseif target_type.is_basic then
-				if source_type.is_none then
-					ba.append (Bc_exp_excep);
-				end;
-			else
-				if source_type.is_basic then
-						-- Source is basic and target is a reference:
-						-- metamorphose
-					basic_type ?= source_type;
-					ba.append (Bc_metamorphose);
-				elseif source_type.is_true_expanded then
-						-- Source is expanded and target is a reference:
-						-- clone
-					ba.append (Bc_clone);
-				end;
-			end;
-		end;
+			target_type := context.real_type (attachment_type)
+			source_type := context.real_type (expression.type)
+			expression.make_byte_code_for_type (ba, target_type)
+			if target_type.is_expanded and then source_type.is_none then
+				ba.append (Bc_exp_excep)
+			end
+		end
 
 feature -- Array optimization
 

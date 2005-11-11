@@ -1,6 +1,6 @@
 -- Enlarged parameter expression
 
-class PARAMETER_BL 
+class PARAMETER_BL
 
 inherit
 
@@ -9,8 +9,8 @@ inherit
 			analyze, generate, unanalyze, register, set_register,
 			free_register, print_register, propagate, c_type
 		end;
-	
-feature 
+
+feature
 
 	register: REGISTRABLE;
 			-- Register used to store metamorphosed value
@@ -60,37 +60,32 @@ feature
 			-- Analyze expression
 		do
 			expression.analyze;
-			if need_metamorphosis then
-				get_register;
-			end;
-		end;
-	
+			if expression.is_register_required (real_type (attachment_type)) then
+				get_register
+			end
+		end
+
 	unanalyze is
 			-- Undo the analysis of the expression
 		do
 			expression.unanalyze;
 			register := Void;
 		end;
-	
+
 	generate is
 			-- Generate expression
 		local
-			target_type, source_type: TYPE_I;
-			buf: GENERATION_BUFFER
+			target_type, source_type: TYPE_I
 		do
-			buf := buffer
-			target_type := real_type (attachment_type);
-			source_type := real_type (expression.type);
-			if source_type.is_none and target_type.is_basic then
-				buf.put_string ("RTEC(EN_VEXP);");
-				buf.put_new_line;
+			target_type := real_type (attachment_type)
+			source_type := real_type (expression.type)
+			if source_type.is_none and target_type.is_expanded then
+				buffer.put_string ("RTEC(EN_VEXP);")
+				buffer.put_new_line
 			else
-				expression.generate;
-				if need_metamorphosis then
-					generate_metamorphose;
-				end;
-			end;
-		end;
+				expression.generate_for_type (register, target_type)
+			end
+		end
 
 	generate_metamorphose is
 			-- Change value of parameter by running a metamorphose
@@ -117,7 +112,7 @@ feature
 			buf.put_character(';');
 			buf.put_new_line;
 		end;
-			
+
 	print_register is
 			-- Print expression value
 		local

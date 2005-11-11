@@ -1,6 +1,6 @@
 -- Byte code for assignment
 
-class ASSIGN_B 
+class ASSIGN_B
 
 inherit
 
@@ -19,8 +19,8 @@ feature -- Visitor
 		do
 			v.process_assign_b (Current)
 		end
-	
-feature 
+
+feature
 
 	target: ACCESS_B;
 			-- Target of the assignment
@@ -63,19 +63,10 @@ feature -- IL code generation
 			target.generate_il_start_assignment
 
 				-- Generate expression byte code
-			source.generate_il_value
-			
-				-- Generate assignment header depending of the type
-				-- of the target (local, attribute or result).
-			source_type ?= context.real_type (source.type)
-
-				-- Convert expanded type to reference if required
-			if source_type.is_expanded and then target.type.is_reference then
-				il_generator.generate_metamorphose (source_type)
-			end
+			source.generate_il_for_type (context.real_type (target.type))
 
 				-- Generate assignment
-			target.generate_il_assignment (source_type)
+			target.generate_il_assignment (context.real_type (source.type))
 		end
 
 feature -- Byte code generation

@@ -1,7 +1,7 @@
 -- Pattern of a feature: it is constitued of the meta types of the
 -- arguments and result.
 
-class PATTERN 
+class PATTERN
 
 inherit
 
@@ -18,7 +18,7 @@ create
 
 	make
 
-feature 
+feature
 
 	result_type: TYPE_I;
 			-- Meta type of the result
@@ -67,9 +67,32 @@ feature
 			end;
 		end;
 
-	has_formal: BOOLEAN is
-			-- Are some formal generic parameter in the current
-			-- pattern ?
+	is_standalone: BOOLEAN is
+			-- Is pattern described only in terms of standalone types,
+			-- i.e. types that involve only class types without either
+			-- anchored types or formal generics?
+		local
+			type: TYPE_I
+			i: INTEGER
+		do
+			type := result_type
+			Result := not type.has_formal and then not type.is_anchored
+			if Result then
+				from
+					i := argument_count
+				until
+					i <= 0 or else not Result
+				loop
+					type := argument_types.item (i)
+					Result := not type.has_formal and then not type.is_anchored
+					i := i - 1
+				end
+			end
+		end
+
+	has_formal (class_a: CL_TYPE_A): BOOLEAN is
+			-- Are there some formal generic parameters in the current
+			-- pattern consirered relative to class type `class_a'?
 		local
 			i, nb: INTEGER;
 		do
@@ -101,36 +124,60 @@ feature
 			-- `gen_type'.
 		require
 			gen_type_not_void: gen_type /= Void
-			gen_type_is_generic: gen_type.is_generic
-			has_formal: has_formal;
+			gen_type_is_standalone: not gen_type.type.is_anchored and not gen_type.type.has_formal
 		local
 			i, n: INTEGER;
 			new_arguments: like argument_types;
 			type: TYPE_I;
+			argument_type: TYPE_I
 		do
-			create Result.make (result_type.instantiation_in (gen_type));
+				-- New pattern is created only when it is different
+				-- from the current one in `gen_type'.
+			type := result_type.instantiation_in (gen_type)
+			if type /= result_type then
+				create Result.make (type)
+			end
 			n := argument_count;
 			if n > 0 then
+					-- Create `new_arguments' as soon as it is discovered
+					-- that `Result' is different from `Current'.
 				from
-					i := 1;
-					create new_arguments.make (1, n);
-					Result.set_argument_types (new_arguments);
+					i := 1
+					if Result /= Void then
+						create new_arguments.make (1, n)
+					end
 				until
 					i > n
 				loop
-					type := argument_types.item (i).instantiation_in (gen_type);
-					new_arguments.put (type, i);
-					i := i + 1;
-				end;
-			end;
+					argument_type := argument_types.item (i)
+					type := argument_type.instantiation_in (gen_type)
+					if type /= argument_type and then new_arguments = Void then
+						new_arguments := argument_types.twin
+					end
+					if new_arguments /= Void then
+						new_arguments.put (type, i)
+					end
+					i := i + 1
+				end
+				if new_arguments /= Void then
+					if Result = Void then
+						create Result.make (result_type)
+					end
+					Result.set_argument_types (new_arguments)
+				end
+			end
+			if Result = Void then
+				Result := Current
+			end
 		ensure
-			no_formal: not Result.has_formal;
-		end;
+			result_not_void: Result /= Void
+			result_is_standalone: Result.is_standalone
+		end
 
 	c_pattern: C_PATTERN is
 			-- C pattern
 		require
-			no_formal: not has_formal
+			is_standalone: is_standalone
 		local
 			new_arguments: ARRAY [TYPE_C];
 			i, arg_count: INTEGER;
@@ -218,7 +265,7 @@ feature {NONE} -- Implementation
 					else
 						Result := True
 					end
-					
+
 					other_cl_type_i ?= other_type
 					Result := Result and then deep_equal (cl_type_i.class_id, other_cl_type_i.class_id)
 					Result := Result and then (cl_type_i.is_expanded = other_cl_type_i.is_expanded)
@@ -233,7 +280,7 @@ feature {NONE} -- Implementation
 						-- There is no attributes to compare in the case of
 						-- VOID_I, REFERENCE_I and NONE_I
 						-- and only one attribute in case of FORMAL_I
-					Result := deep_equal (first_type, other_type)	
+					Result := deep_equal (first_type, other_type)
 				end
 			end
 		end

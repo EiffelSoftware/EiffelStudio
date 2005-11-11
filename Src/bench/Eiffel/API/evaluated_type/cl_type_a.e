@@ -46,13 +46,13 @@ feature -- Properties
 		do
 			Result := associated_class /= Void
 		end
-		
+
 	is_full_named_type: BOOLEAN is
 			-- Current is a full named type.
 		do
 			Result := True
 		end
-		
+
 	is_external: BOOLEAN is
 			-- Is current type based on an external calss?
 		local
@@ -75,7 +75,7 @@ feature -- Properties
 			Result := l_class_id = l_system.system_object_class.compiled_class.class_id or
 				l_class_id = l_system.any_class.compiled_class.class_id
 		end
-		
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -87,7 +87,7 @@ feature -- Comparison
 		end
 
 feature -- Access
-		
+
 	hash_code: INTEGER is
 			-- Hash code value.
 		do
@@ -235,13 +235,20 @@ feature {COMPILER_EXPORTER} -- Conformance
 					Result := is_expanded and then class_id = other_class_type.class_id
 						and then other_class_type.valid_generic (Current)
 				else
-					Result := not is_expanded
-						and then associated_class.conform_to (other_class_type.associated_class)
+					Result :=
+						associated_class.conform_to (other_class_type.associated_class)
 						and then other_class_type.valid_generic (Current)
+					if not Result and then system.il_generation and then system.system_object_class /= Void then
+							-- Any type in .NET conforms to System.Object
+						check
+							system.system_object_class.is_compiled
+						end
+						Result := other_class_type.class_id = system.system_object_id
+					end
 				end
 			end
 		end
-		
+
 	is_conformant_to (other: TYPE_A): BOOLEAN is
 			-- Does Current inherit from other?
 			-- Most of the time, it is equivalent to `conform_to' except
@@ -263,9 +270,9 @@ feature {COMPILER_EXPORTER} -- Conformance
 				if l_other_is_exp then
 					l_other_class_type.set_is_expanded (False)
 				end
-				
+
 				Result := conform_to (other)
-				
+
 				if l_is_exp then
 					set_is_expanded (True)
 				end
@@ -396,7 +403,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 						-- Class `c' is found
 					Result ?= parent_type (parent)
 				elseif parent_class.conform_to (c) then
-						-- Iterate in the inheritance graph and 
+						-- Iterate in the inheritance graph and
 						-- conformance tables help to take the good
 						-- way in the parents
 					parent_class_type ?= parent_type (parent)

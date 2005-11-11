@@ -136,7 +136,7 @@ feature -- Access
 
 	is_new_precondition_block: BOOLEAN
 			-- Is this the start of a new precondition block?
-			
+
 	is_argument_protected: BOOLEAN
 			-- Does current call need to protect some of its arguments?
 
@@ -420,7 +420,7 @@ feature -- C code generation: once features
 				buf.put_new_line
 					-- Initialize process-relative once routine fields
 					-- FIXME: Manu: 02/11/2003: Mutex are created but they are never freed,
-					-- thus a memory leak if upon program termination the system does not 
+					-- thus a memory leak if upon program termination the system does not
 					-- get back the resources allocated for the mutex.
 				once_indexes := global_onces
 				initialization_macro := "RTOPI("
@@ -447,7 +447,7 @@ feature {NONE} -- Access: once manifest strings
 	once_manifest_string_table: HASH_TABLE [ARRAY [STRING], INTEGER]
 			-- Once manifest strings to be created for the given routine body index;
 			-- actual for the current class
-			
+
 feature -- Access: once manifest strings
 
 	is_static_system_data_safe: BOOLEAN is
@@ -640,7 +640,7 @@ feature -- Access: once manifest strings
 			is_static_system_data_safe: is_static_system_data_safe
 			non_void_value: value /= Void
 			valid_number: number > 0 and number <= once_manifest_string_count
-			same_if_registered: 
+			same_if_registered:
 				once_manifest_string_value (number) /= Void implies
 				once_manifest_string_value (number) = value
 		local
@@ -777,11 +777,7 @@ feature -- Access
 		require
 			class_type_exists: class_type /= Void
 		do
-			if type.has_formal then
-				Result := type.instantiation_in (class_type)
-			else
-				Result := type
-			end
+			Result := type.instantiation_in (class_type)
 		end
 
 	constrained_type (type: TYPE_I): TYPE_I is
@@ -867,7 +863,7 @@ feature -- Access
 		do
 			class_type := t
 			current_type := t.type
-				-- Decide whether once routines can be optimized so that their results 
+				-- Decide whether once routines can be optimized so that their results
 				-- can be retrieved directly from memory without making actual calls.
 			if
 				workbench_mode or else assertion_level.check_precond or else
@@ -895,7 +891,7 @@ feature -- Access
 			current_feature_set: current_feature = f
 			original_body_index_set: original_body_index = f.body_index
 		end
-		
+
 	set_original_body_index (new_original_body_index: like original_body_index) is
 			-- Set `original_body_index' to `new_original_body_index'.
 		do
@@ -933,7 +929,7 @@ feature -- Access
 				dt_current := dt_current + 1
 			end
 		end
-		
+
 	add_dftype_current is
 			-- On more time we need to compute Current's full dynamic type.
 		do
@@ -1142,7 +1138,7 @@ feature -- Access
 			tmp := has_rescue or byte_code.has_inlined_code or has_assertions_checking_enabled
 
 			if not tmp and then assertion_type /= In_invariant then
-				tmp := True	
+				tmp := True
 					-- Not in an invariant generation
 				compound := byte_code.compound
 				if compound /= Void and then compound.count = 1 then
@@ -1176,7 +1172,7 @@ feature -- Access
 											-- no metamorphosis occurs on source.
 										tmp := not real_type (l_assign.target.type).is_basic and
 											real_type (call.type).is_basic
-										
+
 										if not tmp then
 											attribute_b ?= call
 											if attribute_b /= Void then
@@ -1609,7 +1605,7 @@ feature -- Debugger
 			breakpoint_slots_number := breakpoint_slots_number + 1
 			Result := breakpoint_slots_number
 		end
-	
+
 	get_breakpoint_slot: INTEGER is
 			-- Return the current number of breakpoint slots. It is used
 			-- to get a "line number" when recording a breakable point

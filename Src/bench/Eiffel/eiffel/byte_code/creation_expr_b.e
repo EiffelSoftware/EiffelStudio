@@ -22,7 +22,7 @@ feature -- Visitor
 		do
 			v.process_creation_expr_b (Current)
 		end
-	
+
 feature -- Register
 
 	register: REGISTRABLE
@@ -33,7 +33,7 @@ feature -- Register
 		do
 			create {REGISTER} register.make (Reference_c_type)
 		end
-		
+
 	count_register: REGISTER
 			-- Store size of SPECIAL instance to create is stored if needed.
 
@@ -49,7 +49,7 @@ feature -- C code generation
 				Result.set_call (call.enlarged)
 			end
 		end
-	
+
 feature -- Analyze
 
 	analyze is
@@ -95,7 +95,7 @@ feature -- Analyze
 						check
 							is_special_call_valid: is_special_call_valid
 						end
-						l_call.parameters.first.unanalyze	
+						l_call.parameters.first.unanalyze
 					else
 						l_call.unanalyze
 					end
@@ -105,7 +105,7 @@ feature -- Analyze
 
 feature -- Status report
 
-	has_call: BOOLEAN is 
+	has_call: BOOLEAN is
 			-- Does current node include a call?
 		do
 			Result := call /= Void
@@ -138,7 +138,7 @@ feature -- Access
 
 	line_number: INTEGER
 			-- Line number where construct begins in the Eiffel source.
-		
+
 	nested_b: NESTED_B is
 			-- Create a fake nested so that `call.is_first' is False.
 		do
@@ -185,15 +185,19 @@ feature -- Settings
 		ensure
 			type_set: type = t
 		end
-		
+
 feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for creation instruction
 		local
 			ext_call: EXTERNAL_B
+			creation_type: TYPE_I
 		do
-			if type.is_external then
+			creation_type := real_type (type)
+			if creation_type.is_basic then
+				il_generator.put_default_value (creation_type)
+			elseif creation_type.is_external then
 					-- Creation call on external class.
 				if call /= Void then
 					call.set_parent (nested_b)
@@ -211,16 +215,21 @@ feature -- IL code generation
 					info.generate_il
 				end
 			else
-				if real_type (type).is_basic then
-					il_generator.put_default_value (real_type (type))
-				else
-						-- Standard creation call
-					info.generate_il
-					if call /= Void then
-						il_generator.duplicate_top
-						call.set_parent (nested_b)
-						call.generate_il_call (False)
-						call.set_parent (Void)
+					-- Standard creation call
+				info.generate_il
+				if call /= Void then
+					if creation_type.is_expanded then
+							-- Box expanded object and take its address.
+						il_generator.generate_metamorphose (creation_type)
+						il_generator.generate_load_address (creation_type)
+					end
+					il_generator.duplicate_top
+					call.set_parent (nested_b)
+					call.generate_il_call (False)
+					call.set_parent (Void)
+					if creation_type.is_expanded then
+							-- Load expanded object.
+						il_generator.generate_load_from_address (creation_type)
 					end
 				end
 			end
@@ -265,10 +274,10 @@ feature -- Byte code generation
 						-- after its creation. This information is used by the runtime
 						-- to do this duplication.
 					ba.append_boolean (l_call /= Void)
-					
+
 						-- Create associated object.
 					info.make_byte_code (ba)
-					
+
 						-- Call creation procedure if any.
 					if l_call /= Void then
 						l_call.set_parent (nested_b)
@@ -350,14 +359,14 @@ feature -- Generation
 				buf.put_character (';')
 				buf.put_new_line
 				info.generate_end (Current)
-	
+
 				if call /= Void then
 					call.set_parent (nested_b)
 					call.generate_parameters (register)
 					call.generate_on (register)
 					call.set_parent (Void)
 					buf.put_character (';')
-					buf.put_new_line				
+					buf.put_new_line
 					generate_frozen_debugger_hook_nested
 				end
 				if
@@ -380,7 +389,7 @@ feature -- Inlining
 				-- has a creation instruction
 			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 		end
-	
+
 feature {NONE} -- Assertion support
 
 	is_special_call_valid: BOOLEAN is
@@ -393,5 +402,5 @@ feature {NONE} -- Assertion support
 				(call /= Void and then call.parameters /= Void and then
 				call.parameters.count = 1)
 		end
-		
+
 end -- class CREATION_EXPR_B

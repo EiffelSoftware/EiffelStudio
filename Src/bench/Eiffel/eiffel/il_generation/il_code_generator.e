@@ -15,7 +15,7 @@ feature -- Access
 
 	local_count: INTEGER
 			-- Number of locals for feature being generated
-		
+
 feature -- Generation type
 
 	set_console_application is
@@ -139,7 +139,7 @@ feature -- Object creation
 			-- Load on stack type of object on top of stack.
 		deferred
 		end
-		
+
 	create_type is
 			-- Given info on stack, it will create a new instance of a generic formal
 			-- parameter.
@@ -288,6 +288,14 @@ feature -- Addresses
 		deferred
 		end
 
+	generate_load_address (type_i: TYPE_I) is
+			-- Generate code that takes address of a boxed value object of type `type_i'.
+		require
+			type_i_not_void: type_i /= Void
+			type_i_is_expanded: type_i.is_expanded
+		deferred
+		end
+
 	generate_load_from_address (a_type: TYPE_I) is
 			-- Load value of `a_type' type from address pushed on stack.
 		require
@@ -363,17 +371,17 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		deferred
 		end
-		
+
 	convert_to_integer_8, convert_to_boolean is
 			-- Convert top of stack into appropriate type.
 		deferred
 		end
-		
+
 	convert_to_integer_16, convert_to_character is
 			-- Convert top of stack into appropriate type.
 		deferred
 		end
-		
+
 	convert_to_integer_32 is
 			-- Convert top of stack into appropriate type.
 		deferred
@@ -388,12 +396,12 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		deferred
 		end
-		
+
 	convert_to_natural_16 is
 			-- Convert top of stack into appropriate type.
 		deferred
 		end
-		
+
 	convert_to_natural_32 is
 			-- Convert top of stack into appropriate type.
 		deferred
@@ -403,12 +411,12 @@ feature -- Conversion
 			-- Convert top of stack into appropriate type.
 		deferred
 		end
-		
+
 	convert_to_real_64 is
 			-- Convert top of stack into appropriate type.
 		deferred
 		end
-		
+
 	convert_to_real_32 is
 			-- Convert top of stack into appropriate type.
 		deferred
@@ -455,7 +463,7 @@ feature -- Once manifest string manipulation
 
 	generate_once_string (number: INTEGER; value: STRING; is_cil_string: BOOLEAN) is
 			-- Generate code for once string in a current routine with the given
-			-- `number' and `value' using CIL string type if `is_cil_string' is `true' 
+			-- `number' and `value' using CIL string type if `is_cil_string' is `true'
 			-- or Eiffel string type otherwise.
 		require
 			valid_number: number >= 0
@@ -635,7 +643,7 @@ feature -- Constants generation
 		end
 
 	put_manifest_string_from_system_string_local (n: INTEGER) is
-			-- Create a manifest string by using local at position `n' which 
+			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
 		require
 			valid_n: n >= 0
@@ -659,7 +667,7 @@ feature -- Constants generation
 	put_numeric_integer_constant (type: TYPE_I; i: INTEGER) is
 			-- Put `i' as a constant of type `type'.
 		require
-			type_not_void: type /= Void 
+			type_not_void: type /= Void
 			type_is_valid: type.is_integer or type.is_natural or type.is_real_32 or type.is_real_64
 		deferred
 		end
@@ -670,7 +678,7 @@ feature -- Constants generation
 			-- Put `i' as INTEGER_8, INTEGER_16, INTEGER on IL stack
 		deferred
 		end
-		
+
 	put_integer_64_constant (i: INTEGER_64) is
 			-- Put `i' as INTEGER_64 on IL stack
 		deferred
@@ -845,13 +853,13 @@ feature -- Basic feature
 			-- Generate call on `ToString'.
 		deferred
 		end
-	
+
 	generate_hash_code is
 			-- Given an INTEGER on top of stack, put on stack
 			-- a positive INTEGER.
 		deferred
 		end
-		
+
 	generate_out (type: TYPE_I) is
 			-- Generate `out' on basic types.
 		require
@@ -859,7 +867,7 @@ feature -- Basic feature
 			basic_type: type.is_basic
 		deferred
 		end
-		
+
 feature -- Line info
 
 	put_line_info (n: INTEGER) is

@@ -1,4 +1,4 @@
-deferred class BIN_EQUAL_B 
+deferred class BIN_EQUAL_B
 
 inherit
 	BINARY_B
@@ -20,7 +20,7 @@ feature -- Status
 	is_commutative: BOOLEAN is True
 			-- Operation is commutative.
 
-feature 
+feature
 
 	set_register: ANY is do end;
 
@@ -71,7 +71,7 @@ feature
 			-- Where metamorphosed right value is kept
 		do
 		end;
-	
+
 	set_right_register (r: REGISTRABLE) is
 			-- Assign `r' to `right_register'
 		do
@@ -109,7 +109,7 @@ feature
 			right_type := context.real_type (right.type);
 			left.analyze;
 			right.analyze;
-			if (left_type.is_basic and not (right_type.is_none or 
+			if (left_type.is_basic and not (right_type.is_none or
 				right_type.is_basic)) or (right_type.is_basic and not
 				(left_type.is_none or left_type.is_basic))
 			then
@@ -177,7 +177,7 @@ feature
 		do
 			left_type := context.real_type (left.type);
 			right_type := context.real_type (right.type);
-			
+
 			if
 				(left_type.is_none and right_type.is_basic) or
 				(left_type.is_basic and right_type.is_none)
@@ -215,12 +215,13 @@ feature -- IL code generation
 		local
 			left_type: TYPE_I
 			right_type: TYPE_I
+			comparison_type: TYPE_I
 			continue_label: IL_LABEL
 			end_label: IL_LABEL
 		do
 			left_type := context.real_type (left.type)
 			right_type := context.real_type (right.type)
-			
+
 			if
 				(left_type.is_none and right_type.is_expanded) or
 				(left_type.is_expanded and right_type.is_none)
@@ -234,15 +235,34 @@ feature -- IL code generation
 				il_generator.pop
 				generate_il_boolean_constant
 			else
-				if left_type.is_expanded or else right_type.is_expanded then
+				if
+					(left_type.is_expanded or else right_type.is_expanded) and then
+					not (left_type.is_basic and then right_type.is_basic)
+				then
 						-- Object (value) equality.
 
-						-- Generate left operand.
-					left.generate_il_value
+						-- Select reference type to which expanded types will be converted
+						-- for comparison that expects arguments of type System.Object.
 					if left_type.is_expanded then
-							-- Convert it to reference.
-						il_generator.generate_metamorphose (left_type)
-					else
+						comparison_type := right_type
+						if comparison_type.is_expanded then
+								-- Both type are expanded. If either of them is external
+								-- but not basic, the comparison type is System.Object.
+								-- Otherwise it is ANY.
+							if
+								left_type.is_external and then not left_type.is_basic or else
+								right_type.is_external and then not right_type.is_basic
+							then
+								create {CL_TYPE_I} comparison_type.make (system.system_object_id)
+							else
+								create {CL_TYPE_I} comparison_type.make (system.any_id)
+							end
+						end
+					end
+
+						-- Generate left operand.
+					left.generate_il_for_type (comparison_type)
+					if left_type.is_reference then
 							-- Check for voidness.
 						continue_label := il_generator.create_label
 						end_label := il_generator.create_label
@@ -255,11 +275,8 @@ feature -- IL code generation
 					end
 
 						-- Generate right operand.
-					right.generate_il_value
-					if right_type.is_expanded then
-							-- Convert it to reference.
-						il_generator.generate_metamorphose (right_type)
-					else
+					right.generate_il_for_type (comparison_type)
+					if right_type.is_reference then
 							-- Check for voidness.
 						continue_label := il_generator.create_label
 						end_label := il_generator.create_label
@@ -283,7 +300,7 @@ feature -- IL code generation
 						il_generator.mark_label (end_label)
 					end
 				else
-						-- Reference equality.
+						-- Reference or basic type equality.
 					generate_converted_standard_il
 				end
 			end
@@ -294,7 +311,7 @@ feature -- IL code generation
 			-- an equality or an inequality operator.
 		deferred
 		end
-		
+
 	generate_il_modifier_opcode is
 			-- Generate a `not' opcode in case of BIN_NE_B
 		do
@@ -319,7 +336,7 @@ feature -- Byte code generation
 		deferred
 		end;
 
-	obvious_operator_constant: CHARACTER is 
+	obvious_operator_constant: CHARACTER is
 			-- Byte code operator associated to an obvious false
 			-- comparison
 		deferred
@@ -357,7 +374,7 @@ feature -- Byte code generation
 				make_expanded_eq_test (ba);
 			elseif (lt.is_bit and then rt.is_bit) then
 					-- Bit equality
-				make_bit_eq_test (ba)	
+				make_bit_eq_test (ba)
 			elseif	(lt.is_basic and then rt.is_none)
 					or else
 					(lt.is_none and then rt.is_basic)

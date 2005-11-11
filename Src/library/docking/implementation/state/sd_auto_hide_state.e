@@ -35,18 +35,10 @@ feature {NONE} -- Initlization
 			else
 				internal_width_height := (internal_shared.docking_manager.internal_fixed.height * 0.2).ceiling
 			end
-
-			if internal_direction = {SD_DOCKING_MANAGER}.dock_left then
-				auto_hide_panel := internal_shared.docking_manager.auto_hide_panel_left
+			auto_hide_panel := internal_shared.docking_manager.auto_hide_panel (a_direction)
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				create internal_tab_stub.make (internal_content.title, internal_content.pixmap, True)
-			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_right then
-				auto_hide_panel := internal_shared.docking_manager.auto_hide_panel_right
-				create internal_tab_stub.make (internal_content.title, internal_content.pixmap, True)
-			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_top then
-				auto_hide_panel := internal_shared.docking_manager.auto_hide_panel_top
-				create internal_tab_stub.make (internal_content.title, internal_content.pixmap, False)
-			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-				auto_hide_panel := internal_shared.docking_manager.auto_hide_panel_bottom
+			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_top or internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
 				create internal_tab_stub.make (internal_content.title, internal_content.pixmap, False)
 			end
 			debug ("larry")
@@ -90,7 +82,6 @@ feature -- Perform Restore
 			else
 				internal_width_height := zone.height
 			end
-
 
 		end
 
@@ -212,27 +203,17 @@ feature -- Perform Restore
 
 	stick_window (a_direction: INTEGER) is
 			-- `a_direction' is useless, it's only used for SD_DOCKING_STATE.
-		local
-			l_docking_state: SD_DOCKING_STATE
+
 		do
 			internal_shared.docking_manager.lock_update
 			close_window
 			internal_shared.docking_manager.remove_auto_hide_zones
-			-- Remove tab stub from the SD_AUTO_HIDE_PANEL
-			auto_hide_panel.tab_stubs.start
-			auto_hide_panel.tab_stubs.prune (internal_tab_stub)
 
-			-- Change the zone from SD_AUTO_HIDE_ZONE to SD_DOCKING_ZONE
-			internal_shared.docking_manager.prune_zone_by_content (internal_content)
-			-- Change the state.
-			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				create l_docking_state.make (internal_content, internal_direction, zone.width - internal_shared.resize_bar_width_height)
+			if auto_hide_panel.is_content_in_group (internal_content) then
+				stick_zones (a_direction)
 			else
-				create l_docking_state.make (internal_content, internal_direction, zone.height - internal_shared.resize_bar_width_height)
+				stick_on_zone (a_direction)
 			end
-
-			l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
-			change_state (l_docking_state)
 
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
@@ -255,6 +236,34 @@ feature -- Propoties
 		end
 
 feature {NONE} -- Implementation
+
+	stick_zones (a_direction: INTEGER) is
+			--
+		do
+
+		end
+
+	stick_on_zone (a_direction: INTEGER) is
+			--
+		local
+			l_docking_state: SD_DOCKING_STATE
+		do
+			-- Remove tab stub from the SD_AUTO_HIDE_PANEL
+			auto_hide_panel.tab_stubs.start
+			auto_hide_panel.tab_stubs.prune (internal_tab_stub)
+
+			-- Change the zone from SD_AUTO_HIDE_ZONE to SD_DOCKING_ZONE
+			internal_shared.docking_manager.prune_zone_by_content (internal_content)
+			-- Change the state.
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+				create l_docking_state.make (internal_content, internal_direction, zone.width - internal_shared.resize_bar_width_height)
+			else
+				create l_docking_state.make (internal_content, internal_direction, zone.height - internal_shared.resize_bar_width_height)
+			end
+
+			l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+			change_state (l_docking_state)
+		end
 
 --	show_window_animition
 

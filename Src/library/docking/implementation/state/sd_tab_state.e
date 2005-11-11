@@ -140,7 +140,9 @@ feature
 				l_contents.forth
 			end
 
---			l_auto_hide_panel:= internal_shared.docking_manager.au
+			l_auto_hide_panel:= internal_shared.docking_manager.auto_hide_panel (a_direction)
+			l_auto_hide_panel.set_tab_group (l_contents)
+
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is

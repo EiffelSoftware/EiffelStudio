@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 			internal_main_container.center_area.extend (l_inner_container)
 			create internal_inner_containers.make (1)
 			internal_inner_containers.extend (l_inner_container)
-			l_inner_container.set_background_color ((create {EV_STOCK_COLORS}).black)
+
 
 
 --			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_QUICK_FACTORY})
@@ -144,6 +144,13 @@ feature -- Properties
 			Result := internal_contents.has (a_content)
 		end
 
+feature -- Basic operation
+
+	set_main_area_background_color (a_color: EV_COLOR) is
+			--
+		do
+			 inner_container_main.set_background_color (a_color)
+		end
 
 
 feature {SD_FLOATING_ZONE, SD_FLOATING_MENU_ZONE, SD_MENU_ZONE}
@@ -243,30 +250,6 @@ feature {SD_STATE, SD_DOCKER_MEDIATOR, SD_CONFIG} -- Properties
 			end
 		ensure
 			not_void: Result /= Void
-		end
-
-	auto_hide_panel_left: like internal_auto_hide_panel_left is
-			-- Get auto hide panel at left.
-		do
-			Result := internal_auto_hide_panel_left
-		end
-
-	auto_hide_panel_right: like internal_auto_hide_panel_right is
-			-- Get auto hide panel at right.
-		do
-			Result := internal_auto_hide_panel_right
-		end
-
-	auto_hide_panel_top: like internal_auto_hide_panel_top is
-			-- Get auto hide panel at top.
-		do
-			Result := internal_auto_hide_panel_top
-		end
-
-	auto_hide_panel_bottom: like internal_auto_hide_panel_bottom is
-			-- Get auto hide panel at bottom.
-		do
-			Result := internal_auto_hide_panel_bottom
 		end
 
 feature {SD_HOT_ZONE, SD_STATE, SD_DOCKER_MEDIATOR, SD_CONFIG, SD_CONTENT}
@@ -486,7 +469,7 @@ feature {SD_STATE, SD_ZONE, SD_HOT_ZONE} -- State report
 	container_rectangle: EV_RECTANGLE is
 			-- The rectangle area of the `internal_fixed'.
 		do
-			create Result.make (internal_main_container.center_area.x_position, internal_main_container.center_area.y_position + auto_hide_panel_top.height, internal_main_container.center_area.width, internal_main_container.center_area.height)
+			create Result.make (internal_main_container.center_area.x_position, internal_main_container.center_area.y_position + internal_auto_hide_panel_top.height, internal_main_container.center_area.width, internal_main_container.center_area.height)
 		end
 
 	container_rectangle_screen: EV_RECTANGLE is

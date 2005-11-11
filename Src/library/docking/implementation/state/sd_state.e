@@ -80,7 +80,9 @@ feature -- Commands
 		do
 
 			internal_shared.docking_manager.prune_zone_by_content (internal_content)
-
+			if internal_content.internal_close_actions /= Void then
+				internal_content.internal_close_actions.call ([])
+			end
 		end
 
 	min_max_window is

@@ -2,7 +2,7 @@ indexing
 	description: "Representation of a type during code generation."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class TYPE_I
 
 inherit
@@ -18,7 +18,7 @@ inherit
 	COMPILER_EXPORTER
 	SHARED_GEN_CONF_LEVEL
 
-	
+
 	DEBUG_OUTPUT
 		export
 			{NONE} all
@@ -67,10 +67,10 @@ feature -- Access
 		end
 
 	instantiation_in (other: CLASS_TYPE): TYPE_I is
-			-- Instantiation of Current in context of `other' generic derivation.
+			-- Instantiation of Current in context of `other' class type.
 		require
 			other_not_void: other /= Void
-			other_is_generic: other.is_generic
+			other_is_generic: has_formal implies other.is_generic
 		do
 			Result := Current
 		ensure
@@ -83,7 +83,7 @@ feature -- Access
 			-- parameters of Current in `other'.
 		require
 			other_not_void: other /= Void
-			other_is_generic: other.is_generic
+			other_is_generic: has_formal implies other.is_generic
 		do
 			Result := instantiation_in (other)
 		end
@@ -116,7 +116,7 @@ feature -- Access
 			-- all possible values.
 		deferred
 		end
-		
+
 	description: ATTR_DESC is
 			-- Descritpion of type for skeletons
 		deferred
@@ -138,7 +138,7 @@ feature -- Access
 		ensure
 			name_not_void: Result /= Void
 		end
-		
+
 feature -- Status report
 
 	is_valid: BOOLEAN is
@@ -164,21 +164,21 @@ feature -- Status report
 		do
 			-- Do nothing
 		end
-		
+
 	is_external: BOOLEAN is
 			-- Is current type based on an external class?
 		do
 			-- Do nothing
 		end
-	
+
 	is_generated_as_single_type: BOOLEAN is
-			-- Is associated type generated as a single type or as an interface type and 
+			-- Is associated type generated as a single type or as an interface type and
 			-- an implementation type.
 		require
 			il_generation: System.il_generation
 		do
 		end
-		
+
 	is_boolean: BOOLEAN is
 			-- Is the type a boolean type
 		do
@@ -220,7 +220,7 @@ feature -- Status report
 		do
 			-- Do nothing
 		end
-	
+
 	is_none: BOOLEAN is
 			-- Is the type a none type ?
 		do
@@ -260,6 +260,12 @@ feature -- Status report
 			-- is the type a simple numeric one ?
 		do
 			-- Do nothing
+		end
+
+	is_anchored: BOOLEAN is
+			-- Does type contain anchored type?
+		do
+			Result := False
 		end
 
 	is_explicit: BOOLEAN is
@@ -340,7 +346,7 @@ feature -- Code generation
 			target_name_not_empty: not target_name.is_empty
 		do
 		end
-		
+
 	sk_value: INTEGER is
 			-- Generate SK value associated to the current type.
 		deferred
@@ -351,7 +357,7 @@ feature -- Code generation
 		do
 			Result := sk_value
 		end
-		
+
 	tuple_code: INTEGER_8 is
 			-- Code for TUPLE type.
 		deferred
@@ -395,12 +401,12 @@ feature -- Generic conformance
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY; use_info : BOOLEAN) is
 			-- Put type id's in byte array.
-			-- `use_info' is true iff we generate code for a 
+			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		do
 			ba.append_short_integer (generated_id (False))
 		end
-		
+
 	generated_id (final_mode : BOOLEAN) : INTEGER is
 			-- Mode dependent type id - just for convenience
 		do
@@ -412,7 +418,7 @@ feature -- Generic conformance
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is
 			-- Generate mode dependent sequence of type id's 
-			-- separated by commas. `use_info' is true iff 
+			-- separated by commas. `use_info' is true iff
 			-- we generate code for a creation instruction.
 		require
 			valid_file : buffer /= Void
@@ -421,10 +427,10 @@ feature -- Generic conformance
 			buffer.put_character (',')
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER; 
+	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 			-- Generate mode dependent sequence of type id's 
-			-- separated by commas. `use_info' is true iff 
+			-- separated by commas. `use_info' is true iff
 			-- we generate code for a creation instruction.
 			-- 'idx_cnt' holds the index in the array for
 			-- this entry.
@@ -440,10 +446,10 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; 
+	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
-			-- Generate mode dependent initialization of 
-			-- cid array. `use_info' is true iff 
+			-- Generate mode dependent initialization of
+			-- cid array. `use_info' is true iff
 			-- we generate code for a creation instruction.
 			-- 'idx_cnt' holds the index in the array for
 			-- this entry.
@@ -460,13 +466,13 @@ feature -- Generic conformance
 feature -- Generic conformance for IL
 
 	generate_gen_type_il (il_generator: IL_CODE_GENERATOR; use_info : BOOLEAN) is
-			-- `use_info' is true iff we generate code for a 
+			-- `use_info' is true iff we generate code for a
 			-- creation instruction.
 		require
 			il_generator_not_void: il_generator /= Void
 		do
 		end
-		
+
 feature {NONE} -- Debug output
 
 	debug_output: STRING is
@@ -474,5 +480,5 @@ feature {NONE} -- Debug output
 		do
 			Result := name
 		end
-		
+
 end -- class TYPE_I

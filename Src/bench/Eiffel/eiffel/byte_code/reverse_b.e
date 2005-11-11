@@ -67,9 +67,7 @@ feature -- IL code generation
 				-- FIXME: At the moment we don't know how to
 				-- find out the real type of the generic
 				-- parameter, so we cheat.
-			if target_type.has_formal then
-				target_type := real_type (target_type)
-			end
+			target_type := real_type (target_type)
 
 				-- Generate expression byte code
 			source.generate_il_value

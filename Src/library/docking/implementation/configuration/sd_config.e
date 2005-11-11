@@ -137,10 +137,10 @@ feature {NONE} -- Implementation for save config.
 	save_auto_hide_zone_config (a_data: SD_AUTO_HIDE_ZONE_DATA)is
 			-- Save config informations about auto hide zones.
 		do
-			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel_bottom.tab_stubs, a_data.zone_bottom, True)
-			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel_left.tab_stubs, a_data.zone_left, False)
-			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel_right.tab_stubs, a_data.zone_right, False)
-			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel_top.tab_stubs, a_data.zone_top, True)
+			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).tab_stubs, a_data.zone_bottom, True)
+			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).tab_stubs, a_data.zone_left, False)
+			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).tab_stubs, a_data.zone_right, False)
+			save_one_auto_hide_panel_data (internal_shared.docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).tab_stubs, a_data.zone_top, True)
 		end
 
 	save_one_auto_hide_panel_data (a_stubs: ARRAYED_LIST [SD_TAB_STUB]; a_target: ARRAYED_LIST [TUPLE [STRING, INTEGER]]; a_horizontal: BOOLEAN) is
@@ -339,19 +339,21 @@ feature {NONE} -- Implementation for open config.
 
 		do
 
-			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_bottom, a_data.zone_bottom, {SD_DOCKING_MANAGER}.dock_bottom)
-			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_left, a_data.zone_left, {SD_DOCKING_MANAGER}.dock_left)
-			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_right, a_data.zone_right, {SD_DOCKING_MANAGER}.dock_right)
-			open_one_auto_hide_panel (internal_shared.docking_manager.auto_hide_panel_top, a_data.zone_top, {SD_DOCKING_MANAGER}.dock_top)
+			open_one_auto_hide_panel (a_data.zone_bottom, {SD_DOCKING_MANAGER}.dock_bottom)
+			open_one_auto_hide_panel (a_data.zone_left, {SD_DOCKING_MANAGER}.dock_left)
+			open_one_auto_hide_panel (a_data.zone_right, {SD_DOCKING_MANAGER}.dock_right)
+			open_one_auto_hide_panel (a_data.zone_top, {SD_DOCKING_MANAGER}.dock_top)
 
 		end
 
-	open_one_auto_hide_panel (a_panel: SD_AUTO_HIDE_PANEL; a_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]; a_direction: INTEGER) is
+	open_one_auto_hide_panel ( a_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]; a_direction: INTEGER) is
 			--
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_content: SD_CONTENT
+			l_panel: SD_AUTO_HIDE_PANEL
 		do
+			l_panel := internal_shared.docking_manager.auto_hide_panel (a_direction)
 			from
 				a_data.start
 			until
@@ -359,7 +361,7 @@ feature {NONE} -- Implementation for open config.
 			loop
 				l_content := internal_shared.docking_manager.content_by_title ((a_data.item[1]).out)
 				create l_auto_hide_state.make (l_content, a_direction)
-				l_auto_hide_state.restore (l_content, a_panel)
+				l_auto_hide_state.restore (l_content, l_panel)
 				a_data.forth
 			end
 		end

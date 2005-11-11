@@ -63,6 +63,24 @@ feature -- Properties
 			internal_label.set_text (a_title)
 		end
 
+feature -- Basic operation
+
+	set_show_text (a_show: BOOLEAN) is
+			--
+		do
+			if a_show then
+				start
+				if not has (internal_label) then
+					extend (internal_label)
+				end
+			else
+				start
+				if has (internal_label) then
+					prune_all (internal_label)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	l_label: EV_LABEL

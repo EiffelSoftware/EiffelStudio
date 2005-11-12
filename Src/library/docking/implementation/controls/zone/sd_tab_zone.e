@@ -110,6 +110,23 @@ feature -- Basic operation
 			end
 		end
 
+	set_title (a_title: STRING; a_content: SD_CONTENT) is
+			--
+		require
+			has_content:
+		do
+			internal_notebook.set_item_text (a_content.user_widget, a_title)
+			if internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget, 1) then
+				internal_title_bar.set_title (a_title)
+			end
+		end
+
+	set_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
+			--
+		do
+			internal_notebook.item_tab (a_content.user_widget).set_pixmap (a_pixmap)
+		end
+
 feature {SD_TAB_STATE} -- Internal issues.
 
 	contents: like internal_contents is

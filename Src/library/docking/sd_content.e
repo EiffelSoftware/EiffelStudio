@@ -75,7 +75,7 @@ feature -- Access
 			a_title_not_void: a_title /= Void
 		do
 			internal_title := a_title
-			internal_state.change_title (a_title)
+			internal_state.change_title (a_title, Current)
 		ensure
 			a_title_set: a_title = internal_title
 		end
@@ -94,6 +94,7 @@ feature -- Access
 			a_pixmap_not_void: a_pixmap /= Void
 		do
 			internal_pixmap := a_pixmap
+			internal_state.change_pixmap (a_pixmap, Current)
 		ensure
 			a_pixmap_set: a_pixmap = internal_pixmap
 		end

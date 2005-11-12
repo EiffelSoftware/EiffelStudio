@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			create internal_contents.make (1)
 			create internal_zones
 
-			internal_zones.add_actions.extend (agent handle_inserted_zone)
+			internal_zones.add_actions.extend (agent on_added_zone)
 			internal_zones.remove_actions.extend (agent handle_pruned_zone)
 
 			internal_shared.set_docking_manager (Current)
@@ -562,7 +562,7 @@ feature {NONE}
 			end
 		end
 
-	handle_inserted_zone (a_zone: SD_ZONE) is
+	on_added_zone (a_zone: SD_ZONE) is
 			-- Handle inserted a zone event.
 		local
 			l_auto_hide_zone: SD_AUTO_HIDE_ZONE

@@ -128,6 +128,9 @@ feature -- Commands
 
 		end
 
+
+feature {SD_CONTENT} -- Called by client programmer from SD_CONTENT.
+
 	change_title (a_title: STRING; a_content: SD_CONTENT) is
 			--
 		require

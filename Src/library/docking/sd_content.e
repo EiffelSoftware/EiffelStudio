@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 			a_title_not_void: a_title /= Void
 			a_pixmap_not_void: a_pixmap /= Void
 		local
-			l_state: SD_AUTO_HIDE_STATE
+			l_state: SD_STATE_VOID
 		do
 			create internal_shared
 			internal_user_widget := a_widget
@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			internal_pixmap := a_pixmap
 
 			-- By default, dock left.
-			create l_state.make (Current, {SD_DOCKING_MANAGER}.dock_left)
-			l_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+			create l_state.make (Current)
+--			l_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
 			internal_state := l_state
 			internal_type := {SD_SHARED}.type_normal
 		ensure
@@ -150,7 +150,8 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 		do
-	   		state.dock_at_top_level (internal_shared.docking_manager.inner_container (state.zone))
+--	   		state.dock_at_top_level (internal_shared.docking_manager.inner_container (state.zone))
+			state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
 		end
 
 	set_auto_hide (a_direction: INTEGER) is

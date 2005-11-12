@@ -3,10 +3,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	ODBC
 
-inherit 
+inherit
 	DATABASE
 
 		redefine
@@ -21,7 +21,7 @@ inherit
 			pre_immediate,
 			sql_adapt_db,
 			Max_char_size,
---			bind_parameter,
+			bind_parameter,
 			support_proc,
 			store_proc_not_supported,
 			drop_proc_not_supported,
@@ -32,7 +32,7 @@ inherit
 
 	STRING_HANDLER
 
-feature 
+feature
 
 	database_handle_name: STRING is "ODBC"
 
@@ -52,10 +52,10 @@ feature -- For DATABASE_STATUS
 			odbc_clear_error
 		end
 
-feature -- For DATABASE_CHANGE 
+feature -- For DATABASE_CHANGE
 
 
-	descriptor_is_available: BOOLEAN is 
+	descriptor_is_available: BOOLEAN is
 		do
 			Result := odbc_available_descriptor /= 0
 		end
@@ -76,7 +76,7 @@ feature -- For DATABASE_CHANGE
 		end
 
 feature -- For DATABASE_FORMAT
-	
+
 	date_to_str (object: DATE_TIME): STRING is
 			-- String representation in SQL of `object'
 		do
@@ -84,8 +84,8 @@ feature -- For DATABASE_FORMAT
 			Result.from_c (odbc_date_to_str (object.year, object.month, object.day, object.hour, object.minute, object.second, 2))
 			Result.prepend ("{ts %'")
 			Result.append ("%'}")
-		end		
-	
+		end
+
 	string_format (object: STRING): STRING is
 			-- String representation in SQL of `object'.
 		do
@@ -109,7 +109,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 	normal_parse: BOOLEAN is False
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
+	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
 		local
 			tmp_str: STRING
 			c_temp: C_STRING
@@ -133,8 +133,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					else
 						create para.make (uht.count)
 					end
---
-					bind_args_value (descriptor, uht, ht_order) -- PGC: Pourquoi ???
+					bind_args_value (descriptor, uht) -- PGC: Pourquoi ???
 				end
 --				if para /= Void then
 --					para.release
@@ -154,7 +153,6 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			tmp_date: DATE_TIME
 			type: INTEGER
 			ptr : POINTER_REF
-			l_managed_pointer: MANAGED_POINTER
 		do
 			if para /= Void then
 				para.release
@@ -163,16 +161,16 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 				create para.make (table.count)
 			end
 			create tmp_str.make (1)
-			from 
+			from
 				i := table.lower
-			until 
+			until
 				i > table.upper
 			loop
 				type := -1
 				object := table.item (i)
 				ptr ?= object
 				if ptr /= Void then -- NULL value
-					para.set (Void, i)
+					para.set (default_pointer, i)
 				else
 					if obj_is_string (object) then
 						type := c_string_type
@@ -192,60 +190,49 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 					end
 					tmp_str.wipe_out
 					if type = c_date_type  then
-						create l_managed_pointer.make (c_timestamp_struct_size)
-						odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month,
-							tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
-						para.set (l_managed_pointer, i)
+						para.set (odbc_stru_of_date (tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
 					else
 						tmp_str.append ( (object).out)
+						para.set (default_pointer, i)
 						create tmp_c.make (tmp_str)
-						para.set (tmp_c.managed_data, i)
+						para.set (odbc_str_from_str (tmp_c.item), i)
 					end
 				end -- Null value
-				odbc_set_parameter (descriptor, i, 1, type,  odbc_get_col_len (descriptor, i), 0, para.get (i))
+				odbc_set_parameter (descriptor, i, 1, type, para.get (i))
 				is_error_updated := False
 				i := i + 1
 			end
 		end
 
-  
+
 feature -- For DATABASE_STORE
 
-	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]; obj: ANY): STRING is
+	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]): STRING is
 		local
 			i, j: INTEGER
-			table: DB_TABLE
 		do
 			create Result.make (1)
 			Result.append (" (")
-			i := 0		
-			table ?= obj	
-			from 
+			i := 0
+			from
 				j := 1
 			until
 				j > repository.dimension
 			loop
-				if (map_table.item (j) > 0) then				
-					if (i > 0) then						
+				if (map_table.item (j) > 0) then
+					if (i > 0) then
 						Result.append (", ")
-					end
-		
-					if table /= Void then 
-						if not (table.table_description.identity_column = j) then
-							Result.append (repository.column_name (j))
-							i := 1
-						end
 					else
-						Result.append (repository.column_name (j))
 						i := 1
-					end					
+					end
+					Result.append (repository.column_name (j))
 				end
 				j := j + 1
  			end
 			Result.append (") ")
 		end
 
-	update_map_table_error (uhandle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is 
+	update_map_table_error (uhandle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is
 		do
 			map_table.put (0, ind)
 		end
@@ -254,9 +241,9 @@ feature -- DATABASE_STRING
 
 	sql_name_string: STRING is
 		once
-			Result := "varchar (50)"
+			Result := "char ("
 		ensure then
-			Result.is_equal ("varchar (50)")
+			Result.is_equal ("char (")
 		end
 
 feature -- DATABASE_REAL
@@ -279,7 +266,7 @@ feature -- DATABASE_DATETIME
 			if sep.substring_index ("Oracle", 1) /= 0 or sep.substring_index ("INGRES", 1) /= 0 then
 				Result := " date"
 			else
-				Result := " datetime"
+				Result := " timestamp"
 			end
 		end
 
@@ -338,7 +325,7 @@ feature -- LOGIN and DATABASE_APPL only for password_ok and user_name_ok
 
 feature -- For DATABASE_PROC
 
-	support_sql_of_proc: BOOLEAN is True
+	support_sql_of_proc: BOOLEAN is False
 
 	text_not_supported: STRING is
 		local
@@ -385,12 +372,12 @@ feature -- For DATABASE_PROC
 			io.put_string ("======================================================================")
 			io.new_line
 		end
- 
+
 	sql_as: STRING is " as "
 
 	sql_end: STRING is ""
 
-	sql_creation: STRING is "CREATE PROC "
+	sql_creation: STRING is "CREATE PROC"
 
 	sql_execution: STRING is "{CALL "
 
@@ -435,18 +422,7 @@ feature -- For DATABASE_PROC
 
 	map_var_between: STRING is "@"
 
-	map_var_name (par_name: STRING): STRING is
-			-- Map variable string for late bound stored procedure execution
-		once
-			Result := "?"
-		end
-
-	Select_text (proc_name: STRING): STRING is 
-			--
-		do
-			Result := "SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_NAME = '" +
-				proc_name + "' ORDER BY ROUTINE_NAME"
-		end
+	Select_text: STRING is ""
 
 	Select_exists (name: STRING): STRING is
 		do
@@ -486,7 +462,7 @@ feature -- For DATABASE_REPOSITORY
 feature -- For DATABASE_DYN_STORE
 
 	unset_catalog_flag (desc:INTEGER) is
-		do	
+		do
 			odbc_unset_catalog_flag (desc)
 		end
 
@@ -563,7 +539,7 @@ feature -- External
 			i: INTEGER
 		do
 			create l_area.make (max_len)
-			
+
 			Result := odbc_put_col_name (no_descriptor, index, l_area.item)
 
 			check
@@ -571,7 +547,7 @@ feature -- External
 			end
 
 			ar.set_count (Result)
-		
+
 			from
 				i := 1
 			until
@@ -590,7 +566,7 @@ feature -- External
 			create l_area.make (max_len)
 
 			Result := odbc_put_data (no_descriptor, index, l_area.item)
-			
+
 			check
 				Result <= max_len
 			end
@@ -618,7 +594,7 @@ feature -- External
 			Result.from_c (odbc_identifier_quoter)
 		end
 
-	qualifier_seperator: STRING is 
+	qualifier_seperator: STRING is
 		do
 			create Result.make (1)
 			Result.from_c (odbc_qualifier_seperator)
@@ -670,7 +646,7 @@ feature -- External
 		end
 
 	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
-			-- Is last retrieved data null? 
+			-- Is last retrieved data null?
 		do
 			Result := odbc_is_null_data (no_descriptor, ind)
 		end
@@ -761,7 +737,6 @@ feature -- External
 			create c_temp3.make (data_source)
 			odbc_connect (c_temp1.item, c_temp2.item, c_temp3.item)
 			is_error_updated := False
---			initialize_date_type_values
 		end
 
 	disconnect is
@@ -772,7 +747,7 @@ feature -- External
 		end
 
 	commit is
-		do			
+		do
 			odbc_commit
 			is_error_updated := False
 		end
@@ -796,11 +771,6 @@ feature -- External
 	support_proc: INTEGER is
 		do
 			Result := odbc_support_proc
-		end
-
-	support_information_schema: INTEGER is
-		do
-			Result := odbc_support_information_schema
 		end
 
 feature {NONE} -- External features
@@ -879,7 +849,7 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_qualifier_seperator: POINTER is 
+	odbc_qualifier_seperator: POINTER is
 		external
 			"C use %"odbc.h%""
 		end
@@ -1059,11 +1029,6 @@ feature {NONE} -- External features
 			"C use %"odbc.h%""
 		end
 
-	odbc_support_information_schema: INTEGER is
-		external
-			"C use %"odbc.h%""
-		end
-
 	odbc_connect (user_name, user_passwd, dbName: POINTER) is
 		external
 			"C use %"odbc.h%""
@@ -1113,164 +1078,73 @@ feature {NONE} -- External features
 
 	para: DB_PARA_ODBC
 
-	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]) is
+	bind_args_value (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING])   is
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 		require
 			arguments_mapped: not uht.is_empty
-		local 
-			i,
+		local
+			i: INTEGER
+			tmp_str: STRING
+			tmp_c: C_STRING
+			tmp_date: DATE_TIME
 			type: INTEGER
-			tmp_str,
-			l_string: STRING
-			l_any: ANY
-			tmp_date: DATE_TIME			
-			
-			l_managed_pointer: MANAGED_POINTER
-			l_c_string: C_STRING			
-			l_platform: PLATFORM
-			
-			l_val_string: STRING
-			l_val_int: INTEGER_REF
-			l_val_double: DOUBLE_REF
-			l_val_real: REAL_REF
-			l_val_bool: BOOLEAN_REF
-			l_val_char: CHARACTER_REF
-			
-			l_value_count: INTEGER			
 		do
 			create tmp_str.make (1)
-			create l_platform
 			i := 1
 			from
-				ht_order.start
-				pointers.wipe_out
+				uht.start
 			until
-				ht_order.off
+				uht.off
 			loop
 				type := -1
-				l_string := ht_order.item
-				l_any := uht.item (l_string)
-				if obj_is_string (l_any) then
+				if obj_is_string (uht.item (uht.key_for_iteration)) then
 					type := c_string_type
-					l_val_string ?= l_any
-					create l_c_string.make (l_val_string)
-					pointers.extend (l_c_string.item)
-					l_value_count := l_c_string.count
-					l_managed_pointer := l_c_string.managed_data
-				elseif obj_is_integer (l_any) then
+				elseif obj_is_integer (uht.item (uht.key_for_iteration)) then
 					type := c_integer_type
-					l_val_int ?= l_any
-					create l_managed_pointer.make (l_platform.integer_bytes)				
-					l_managed_pointer.put_integer_32 (l_val_int.item, 0)
-					pointers.extend (l_managed_pointer.item)
-					l_value_count := l_platform.integer_bytes
-				elseif obj_is_date (l_any) then
+				elseif obj_is_date (uht.item (uht.key_for_iteration)) then
 					type := c_date_type
-					tmp_date ?= l_any
-					create l_managed_pointer.make (c_timestamp_struct_size)
-					odbc_stru_of_date (l_managed_pointer.item, tmp_date.year, tmp_date.month, tmp_date.day,
-						 tmp_date.hour, tmp_date.minute, tmp_date.second, tmp_date.fractional_second.truncated_to_integer)
-					l_value_count := c_timestamp_struct_size
-				elseif obj_is_double (l_any) then
-					type := c_float_type					
-					l_val_double ?= l_any
-					create l_managed_pointer.make (l_platform.double_bytes)
-					l_managed_pointer.put_real_64 (l_val_double.item, 0)
-					pointers.extend (l_managed_pointer.item)
-					l_value_count := l_platform.double_bytes 
-				elseif obj_is_real (l_any) then
+					tmp_date ?= uht.item (uht.key_for_iteration)
+				elseif obj_is_double (uht.item (uht.key_for_iteration)) then
+					type := c_float_type
+				elseif obj_is_real (uht.item (uht.key_for_iteration)) then
 					type := c_real_type
-					l_val_real ?= l_any
-					create l_managed_pointer.make (l_platform.real_bytes)
-					l_managed_pointer.put_real_32 (l_val_real.item, 0)
-					pointers.extend (l_managed_pointer.item)
-					l_value_count := l_platform.real_bytes
-				elseif obj_is_character (l_any) then
+				elseif obj_is_character (uht.item (uht.key_for_iteration)) then
 					type := c_character_type
-					l_val_char ?= l_any
-					create l_managed_pointer.make (l_platform.character_bytes)
-					l_managed_pointer.put_character (l_val_char.item, 0)
-					pointers.extend (l_managed_pointer.item)
-					l_value_count := l_platform.character_bytes
-				elseif obj_is_boolean (l_any) then
+				elseif obj_is_boolean (uht.item (uht.key_for_iteration)) then
 					type := c_boolean_type
-					l_val_bool ?= l_any
-					create l_managed_pointer.make (l_platform.boolean_bytes)
-					l_managed_pointer.put_boolean (l_val_bool.item, 0)
-					pointers.extend (l_managed_pointer.item)
-					l_value_count := l_platform.boolean_bytes
-				else
-					 -- Should we attempt to insert NULL here since the type was not found and hence value was
-					 -- most likely Void?
 				end
-				
-				if type = -1 then
-					print ("stop please")
-				end
-				
-				check
-					valid_type: type > 0
-				end
-				
 				tmp_str.wipe_out
-				
-				para.set (l_managed_pointer, i)
-				
-				if l_value_count = 0 then
-					l_value_count := 1
+				if type = c_date_type  then
+					para.set (odbc_stru_of_date (tmp_date.year, tmp_date.month, tmp_date.day, tmp_date.hour, tmp_date.minute, tmp_date.second, 2), i)
+				else
+					tmp_str.append ( (uht.item (uht.key_for_iteration)).out)
+					create tmp_c.make (tmp_str)
+					para.set (odbc_str_from_str (tmp_c.item), i)
 				end
-				
-				odbc_set_parameter (descriptor, i, 1, type, 100, l_value_count, para.get (i))
-				
+			--	odbc_set_parameter (descriptor, i, 1, type, para.get (i))
+				odbc_set_parameter (descriptor, uht.key_for_iteration.to_integer, 1, type, para.get (i))
 				is_error_updated := False
 				i := i + 1
-				ht_order.forth
+				uht.forth
 			end
 		end
 
-
-	pointers: ARRAYED_LIST [POINTER] is
-			-- 
-		do
-			create Result.make (10)
-		end
-		
-
 feature {NONE} -- External features
 
-   	odbc_set_parameter (no_desc, seri, direction, type, collength, value_count: INTEGER; value: POINTER) is
+   	odbc_set_parameter (no_desc, seri, direction, type: INTEGER; value: POINTER) is
 		external
 		    "C use %"odbc.h%""
 		end
 
-	odbc_stru_of_date (a_date: POINTER; year, mon, day, hour, minute, sec, fraction: INTEGER) is
+	odbc_stru_of_date (year, mon, day, hour, minute, sec, mode: INTEGER): POINTER is
 		external
-		    "C inline use %"sql.h%""
-		alias
-			"[
-				{
-					((TIMESTAMP_STRUCT *)$a_date)->year = $year;
-					((TIMESTAMP_STRUCT *)$a_date)->month = $mon;
-					((TIMESTAMP_STRUCT *)$a_date)->day = $day;
-					((TIMESTAMP_STRUCT *)$a_date)->hour = $hour;
-					((TIMESTAMP_STRUCT *)$a_date)->minute = $minute;
-					((TIMESTAMP_STRUCT *)$a_date)->second = $sec;
-					((TIMESTAMP_STRUCT *)$a_date)->fraction = $fraction;
-				}
-			]"
-		end
-		
-	c_timestamp_struct_size: INTEGER is
-		external
-			"C inline use %"sql.h%""
-		alias
-			"sizeof(TIMESTAMP_STRUCT)"
+		    "C use %"odbc.h%""
 		end
 
 	odbc_str_from_str (ptr: POINTER): POINTER is
 		external
-			"C use %"odbc.h%""
+		    "C use %"odbc.h%""
 		end
 
 	odbc_str_len (val: POINTER): INTEGER is
@@ -1391,7 +1265,7 @@ end -- class ODBC
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

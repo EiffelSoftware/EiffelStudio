@@ -81,40 +81,31 @@ feature -- Basic operations
 			r_date: DATE_TIME
 			r_bool: BOOLEAN_REF
 			r_double: DOUBLE_REF
-			l_table: DB_TABLE
 		do
-				-- NOTE:  This function seems happy to insert null values.  Unfortunately it does this without
-				-- knowing whether or not the correspoding table column accepts null values, so very often this
-				-- just won't fly.  I have removed the insertion of null values for now and replaced them with 
-				-- default values instead to avoid this problem.  Of course though it is not correct and we must support 
-				-- null values properly by querying of the column allows for nulls.  NC.
-			
-			l_table ?= obj
 			if is_void (obj) then
---				str.append (Null_string)
-				str.append (empty_db_string)
+				str.append (Null_string)
 			else
 				if is_integer (obj) then
 					r_int ?= obj
---					if r_int.item = numeric_null_value.truncated_to_integer then
---						str.append (Null_string)
---					else
+					if r_int.item = numeric_null_value.truncated_to_integer then
+						str.append (Null_string)
+					else
 						str.append (r_int.out)
---					end
+					end
 				elseif is_double (obj) then
 					r_double ?= obj
---					if r_double.item = numeric_null_value then
---						str.append (Null_string)
---					else
+					if r_double.item = numeric_null_value then
+						str.append (Null_string)
+					else
 						str.append (r_double.out)
---					end
+					end
 				elseif is_real (obj) then
 					r_real ?= obj
---					if r_real.item = numeric_null_value.truncated_to_real then
---						str.append (Null_string)
---					else
+					if r_real.item = numeric_null_value.truncated_to_real then
+						str.append (Null_string)
+					else
 						str.append (r_real.out)
---					end
+					end
 				elseif is_character (obj) then
 					r_character ?= obj
 					str.extend ('%'')
@@ -126,8 +117,7 @@ feature -- Basic operations
 						buffer.copy (r_string)
 						str.append (string_format (buffer))
 					else
---						str.append (Null_string)
-						str.append (empty_db_string)
+						str.append (Null_string)
 					end
 				elseif is_boolean (obj) then
 					r_bool ?= obj
@@ -155,43 +145,37 @@ feature -- Basic operations
 			r_character: CHARACTER
 			i_obj_field: ANY
 			ind: INTEGER
-			table: DB_TABLE
 		do
 			from
 				start (obj)
 				ind := 1
-				table ?= obj
 			until
 				ind > max_index
-			loop				
-				if not (table /= Void and then table.table_description.identity_column = ind) then
-					i := next_index (ind)
-					i_obj_type := field_type (i, obj) 
-					if i_obj_type = Integer_type then
-						r_int := integer_field (i, obj)
-						get_value (r_int, str)
-					elseif i_obj_type = Real_type then
-						r_real := real_field (i, obj)
-						get_value (r_real, str)
-					elseif i_obj_type = Character_type then
-						r_character := character_field (i, obj)
-						get_value (r_character, str)
-					elseif i_obj_type = Boolean_type then
-						r_bool := boolean_field (i, obj)
-						get_value (r_bool, str)
-					elseif i_obj_type = Double_type then
-						r_double := double_field (i, obj)
-						get_value (r_double, str)
-					else
-						i_obj_field := field (i, obj)
-						get_value (i_obj_field, str)
-					end
-					ind := ind + 1
-					if ind <= max_index then
-						str.extend (',')
-					end
+			loop
+				i := next_index (ind)
+				i_obj_type := field_type (i, obj) 
+				if i_obj_type = Integer_type then
+					r_int := integer_field (i, obj)
+					get_value (r_int, str)
+				elseif i_obj_type = Real_type then
+					r_real := real_field (i, obj)
+					get_value (r_real, str)
+				elseif i_obj_type = Character_type then
+					r_character := character_field (i, obj)
+					get_value (r_character, str)
+				elseif i_obj_type = Boolean_type then
+					r_bool := boolean_field (i, obj)
+					get_value (r_bool, str)
+				elseif i_obj_type = Double_type then
+					r_double := double_field (i, obj)
+					get_value (r_double, str)
 				else
-					ind := ind + 1
+					i_obj_field := field (i, obj)
+					get_value (i_obj_field, str)
+				end
+				ind := ind + 1
+				if ind <= max_index then
+					str.extend (',')
 				end
 			end
 		end
@@ -270,9 +254,6 @@ feature {NONE} -- Status report
 	
 	Null_string: STRING is "NULL"
 			-- SQL null value constant
-
-	Empty_db_string: STRING is "''"
-			-- A string ofr inserting an empty database string into a SQLCHAR or SQLVARCHAR type column
 
 	buffer: STRING is
 			-- Constant temporary string
@@ -377,8 +358,7 @@ feature {NONE} -- Status setting
 			if object /= Void then
 				get_value (object, destination)
 			else
---				destination.append (Null_string)
-				destination.append (empty_db_string)
+				destination.append (Null_string)
 			end
 		end
 

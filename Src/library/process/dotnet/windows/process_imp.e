@@ -67,25 +67,31 @@ feature {NONE} -- Initialization
 		local
 			ls: LIST [STRING]
 			p_name :STRING
-			args: ARRAYED_LIST [STRING]
+			cmd_arg: LIST [STRING]
 		do
-			ls := cmd_line.split (' ')
-			create p_name.make_from_string (ls.i_th (1))
-			ls.start
-			ls.remove
-			if ls.count > 0 then
-				create args.make (ls.count)
-				from 
-					ls.start
-				until
-					ls.after
-				loop
-					args.extend (ls.item)	
-					ls.forth
-				end
+			executable := ""
+			argument_line := ""
+				
+			cmd_arg := parse_command_line (cmd_line)
+			
+			executable := cmd_arg.i_th (1)
+			argument_line := cmd_arg.i_th (2)
+
+			if a_working_directory = Void then
+				working_directory := ""
 			else
+				create working_directory.make_from_string (a_working_directory)
 			end
-			make (p_name, args, a_working_directory)
+			
+			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			set_buffer_size (initial_buffer_size)
+			last_operation_successful := True
+			
+			hidden := False
+			has_console := True
+			create prc_launcher.make
 		end
 
 feature {PROCESS_TIMER}  -- Status checking
@@ -240,7 +246,7 @@ feature	-- Control
 					if timer /= Void then
 						timer.start
 					else
-						create {PROCESS_THREAD_TIMER}timer.make (initial_timer_interval // 1000)
+						create {PROCESS_THREAD_TIMER}timer.make (initial_time_interval // 1000)
 						timer.set_process_launcher (Current)
 						timer.start
 					end
@@ -309,13 +315,13 @@ feature	-- Control
 				create output_buffer.make (0, size + 10)
 			else
 				output_buffer.clear_all
-				output_buffer.resize (0, size+ 10)							
+				output_buffer.conservative_resize (0, size+ 10)							
 			end
 			if error_buffer = Void then
 				create error_buffer.make (0, size+ 10)
 			else
 				error_buffer.clear_all
-				error_buffer.resize (0, size+ 10)				
+				error_buffer.conservative_resize (0, size+ 10)				
 			end
 		end		
 
@@ -431,7 +437,7 @@ feature {PROCESS_IMP} -- Implementation
 	err_thread: DOTNET_PROCESS_ERROR_LISTENER_THREAD
 			-- Threads to listen to input, output and error from child process
 	
-feature {NONE} -- Implementation
+feature{NONE} -- Implementation
 
 	output_buffer: ARRAY [CHARACTER]
 			-- Buffer used to read output from process
@@ -484,6 +490,67 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	parse_command_line (a_cmd_line: STRING): LIST [STRING] is	
+			-- Parse command line `a_cmd_line' and return a list 
+			-- of 2 items, the first item is program name, the second 
+			-- item is argument list (if any).
+		require
+			a_cmd_line_not_void: a_cmd_line /= Void
+			a_cmd_line_not_empty: not a_cmd_line.is_empty
+		local
+			i: INTEGER
+			done: BOOLEAN
+			cnt: INTEGER
+			in_quote: BOOLEAN
+			c: CHARACTER
+			cmd_line: STRING
+			cmd: ARRAYED_LIST [STRING]
+		do
+			from
+				i := 1
+				create cmd_line.make_from_string (a_cmd_line)
+				cmd_line.left_adjust
+				cnt := cmd_line.count
+				done := False
+				in_quote := False
+			until
+				i > cnt or done
+			loop
+				c := cmd_line.item (i)
+				inspect
+					c
+				when '%"' then
+					if in_quote then
+						in_quote := False
+					else
+						in_quote := True
+					end	
+					i := i + 1
+				when ' ' then
+					if not in_quote then
+						done := True
+					else
+						i := i + 1
+					end
+				else
+					i := i + 1
+				end
+			end
+			create cmd.make (2)
+			if not done then
+				cmd.extend (cmd_line)
+				cmd.extend ("")
+			else
+				cmd.extend (cmd_line.substring (1, i-1))
+				if i < cnt then
+					cmd.extend (cmd_line.substring (i + 1, cnt))
+				else
+					cmd.extend ("")
+				end
+			end
+			Result := cmd
+		end	
 		
 	prc_launcher: SYSTEM_DLL_PROCESS
 		-- Class used to manipulate a process on .Net

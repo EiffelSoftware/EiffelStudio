@@ -244,7 +244,7 @@ feature --
 	set_focus is
 			-- Set focus to `Current'.
 		do
-			state.zone.on_focus_in
+			state.zone.on_focus_in (Current)
 		end
 
 feature -- States report

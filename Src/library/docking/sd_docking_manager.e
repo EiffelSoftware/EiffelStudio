@@ -104,7 +104,7 @@ feature {NONE} -- Initialization
 				if l_container.has_recursive (a_widget) then
 					if internal_last_focus_zone /= internal_zones.item then
 						internal_last_focus_zone := internal_zones.item
-						internal_zones.item.on_focus_in
+						internal_zones.item.on_focus_in (Void)
 
 						debug ("larry")
 							io.put_string ("%N on focus in")
@@ -452,7 +452,7 @@ feature {SD_STATE, SD_ZONE, SD_HOT_ZONE} -- Command
 			until
 				internal_zones.after
 			loop
-				internal_zones.item.handle_zone_focus_out
+				internal_zones.item.on_zone_focus_out
 				internal_zones.forth
 			end
 		end

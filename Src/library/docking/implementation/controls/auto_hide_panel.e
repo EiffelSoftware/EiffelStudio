@@ -170,9 +170,9 @@ feature {NONE} -- Implementation
 						a_tab_group.item.set_show_text (False)
 				end
 
---				start
---				search (a_tab_group.item)
---				check found: not after end
+				start
+				search (a_tab_group.item)
+				check found: not after end
 				if a_tab_group.index /= a_tab_group.count then
 					-- Remove seperator
 					forth

@@ -14,7 +14,7 @@ inherit
 			internal_shared as internal_shared_not_used
 		undefine
 			copy, is_equal, default_create,
-			on_focus_in, handle_zone_focus_out
+			on_focus_in, on_zone_focus_out
 		end
 
 	SD_DOCKER_SOURCE
@@ -48,21 +48,21 @@ feature	{NONE} -- Initlization
 			window.pointer_double_press_title_bar_actions.extend (agent handle_title_bar_double_press)
 
 			pointer_motion_actions.extend (agent on_pointer_motion)
-			pointer_button_release_actions.extend (agent handle_pointer_release)
+			pointer_button_release_actions.extend (agent on_pointer_release)
 			window.set_stick (True)
 			extend (window)
 
 --			init_focus_in (Current)
-			on_focus_in
+			on_focus_in (Void)
 
 		end
 
 feature {SD_CONTENT}
 
-	on_focus_in is
+	on_focus_in (a_content: SD_CONTENT) is
 		--
 		do
-			Precursor {SD_SINGLE_CONTENT_ZONE}
+			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
 			internal_shared.docking_manager.disable_all_zones_focus_color
 			internal_shared.docking_manager.remove_auto_hide_zones
 			window.title_bar.enable_focus_color
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 
 
 
-	handle_zone_focus_out is
+	on_zone_focus_out is
 			--
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
@@ -123,7 +123,7 @@ feature {NONE} -- For redocker.
 			enable_capture
 		end
 
-	handle_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
 			if docker_mediator /= Void then

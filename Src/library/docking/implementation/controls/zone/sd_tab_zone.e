@@ -11,7 +11,7 @@ inherit
 		redefine
 			extend,
 			on_focus_in,
-			handle_zone_focus_out
+			on_zone_focus_out
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -63,7 +63,7 @@ feature {NONE} -- Initlization
 			internal_title_bar.drag_actions.extend (agent handle_drag_title_bar)
 			internal_title_bar.stick_select_actions.extend (agent on_stick)
 
-			pointer_button_release_actions.extend (agent handle_pointer_release)
+			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			extend_vertical_box (internal_title_bar)
 			disable_item_expand (internal_title_bar)
@@ -158,16 +158,21 @@ feature {NONE} -- Implementation
 
 	internal_title_bar: SD_TITLE_BAR
 
-	on_focus_in is
+	on_focus_in (a_content: SD_CONTENT) is
 			--
+
 		do
-			Precursor {SD_MULTI_CONTENT_ZONE}
+			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
 			internal_shared.docking_manager.disable_all_zones_focus_color
 			internal_shared.docking_manager.remove_auto_hide_zones
 			internal_title_bar.enable_focus_color
+
+			if a_content /= Void then
+				internal_notebook.select_item (a_content.user_widget)
+			end
 		end
 
-	handle_zone_focus_out is
+	on_zone_focus_out is
 			--
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE}
@@ -196,7 +201,7 @@ feature {NONE} -- Implementation
 			content.state.stick_window ({SD_DOCKING_MANAGER}.dock_left)
 		end
 
-	handle_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
 			if internal_docker_mediator /= Void then

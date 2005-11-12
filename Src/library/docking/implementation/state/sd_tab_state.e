@@ -15,7 +15,8 @@ inherit
 			move_to_tab_zone,
 			move_to_docking_zone,
 			dock_at_top_level,
-			content
+			content,
+			change_title
 		end
 create
 	make,
@@ -83,6 +84,12 @@ feature {NONE} -- Initlization
 		end
 
 feature
+
+	change_title (a_title: STRING) is
+			--
+		do
+--			intern
+		end
 
 	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
 			--
@@ -152,10 +159,10 @@ feature
 		local
 			l_docking_state: SD_DOCKING_STATE
 			l_docking_zone: SD_DOCKING_ZONE
-			l_multi_area: SD_MULTI_DOCK_AREA
+--			l_multi_area: SD_MULTI_DOCK_AREA
 		do
 			internal_shared.docking_manager.lock_update
-			l_multi_area := internal_shared.docking_manager.inner_container (internal_tab_zone)
+--			l_multi_area := internal_shared.docking_manager.inner_container (internal_tab_zone)
 			if not internal_drag_title_bar then
 				internal_tab_zone.disable_on_select_tab
 				internal_tab_zone.prune (internal_content)
@@ -174,8 +181,7 @@ feature
 
 			end
 
-			internal_shared.docking_manager.inner_container (a_target_zone).update_title_bar
-			l_multi_area.update_title_bar
+			internal_shared.docking_manager.update_title_bar
 			internal_shared.docking_manager.unlock_update
 		end
 

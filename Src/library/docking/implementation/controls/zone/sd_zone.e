@@ -50,18 +50,21 @@ feature {NONE}  -- Implementation
 
 
 feature {SD_DOCKING_MANAGER}
-	handle_zone_focus_out is
+	on_zone_focus_out is
 			--
 		do
 			content.focus_out_actions.call ([])
 		end
 
 feature {SD_DOCKING_MANAGER, SD_CONTENT}
-	on_focus_in is
+	on_focus_in (a_content: SD_CONTENT) is
 			--
+		require
+			has_content:
 		do
 			content.focus_in_actions.call ([])
 		end
+
 
 feature {SD_DOCKING_MANAGER, SD_STATE}
 

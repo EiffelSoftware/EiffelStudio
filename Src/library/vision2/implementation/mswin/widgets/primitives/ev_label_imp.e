@@ -99,7 +99,7 @@ inherit
 		redefine
 			default_style
 		end
-		
+
 	WEL_ODS_CONSTANTS
 		export
 			{NONE} all
@@ -213,7 +213,7 @@ feature {NONE} -- WEL Implementation
  			Result := Ws_visible | Ws_child | Ss_notify | Ss_ownerdraw
  				| Ws_clipchildren | Ws_clipsiblings
  		end
- 		
+
 feature {EV_CONTAINER_IMP} -- WEL Implementation
 
 	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
@@ -235,7 +235,7 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 				-- Assign local variable for faster access
 			draw_dc := draw_item_struct.dc
 			draw_item_struct_rect := draw_item_struct.rect_item
-			
+
 			if internal_text /= Void then
 					-- Retrieve the font used to draw the text
 				draw_font := private_wel_font
@@ -258,19 +258,19 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 					end
 				end
 				draw_flags := draw_flags | Dt_expandtabs
-	
+
 				-- Compute the bounding rectangle where the text need
 				-- to be displayed.
-	
+
 				create draw_rect.make (
-					draw_item_struct_rect.left, draw_item_struct_rect.top + 
+					draw_item_struct_rect.left, draw_item_struct_rect.top +
 						(draw_item_struct_rect.height - text_height) // 2,
 					draw_item_struct_rect.right, draw_item_struct_rect.bottom)
-	
-	
+
+
 					-- Need to first clear the area to the background color of `parent_imp'
 				theme_drawer.draw_widget_background (Current, draw_dc, draw_item_struct_rect, bk_brush)
-				
+
 					-- Draw the text
 				draw_dc.select_font (draw_font)
 				color_imp ?= foreground_color.implementation
@@ -290,20 +290,9 @@ feature {EV_CONTAINER_IMP} -- WEL Implementation
 			end
 			bk_brush.delete
 		end
-		
+
 feature {NONE} -- Implementation
 
-	erase_background (a_dc: WEL_DC; a_rect: WEL_RECT) is
-			-- Erase the background for the rectangle `a_rect' using the
-			-- Device context `a_dc'.
-		local
-			a_background_brush: WEL_BRUSH
-		do
-			create a_background_brush.make_solid (wel_background_color)
-			a_dc.fill_rect (a_rect, a_background_brush)
-			a_background_brush.delete
-		end
-	
 	text_height: INTEGER
 			-- Height in pixels of the current text.
 

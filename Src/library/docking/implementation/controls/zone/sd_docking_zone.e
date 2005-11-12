@@ -21,6 +21,7 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
+
 	SD_TITLE_BAR_REMOVEABLE
 		undefine
 			copy, is_equal, default_create
@@ -157,6 +158,12 @@ feature -- Access
 			else
 				window.set_title_bar (a_show)
 			end
+		end
+
+	set_title (a_title: STRING) is
+			--
+		do
+			window.title_bar.set_title (a_title)
 		end
 
 	is_parent_split: BOOLEAN is

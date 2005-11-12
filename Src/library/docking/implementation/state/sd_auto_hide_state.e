@@ -199,6 +199,8 @@ feature -- Perform Restore
 			--
 		do
 			record_state
+			Precursor {SD_STATE}
+
 		end
 
 	stick_window (a_direction: INTEGER) is
@@ -221,7 +223,7 @@ feature -- Perform Restore
 			tab_stubs_pruned: auto_hide_panel.tab_stubs.count < old auto_hide_panel.tab_stubs.count
 		end
 
-	change_title (a_title: STRING) is
+	change_title (a_title: STRING; a_content: SD_CONTENT) is
 			--
 		do
 			internal_tab_stub.set_title (a_title)

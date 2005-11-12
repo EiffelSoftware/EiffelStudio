@@ -16,7 +16,8 @@ inherit
 			move_to_docking_zone,
 			dock_at_top_level,
 			content,
-			change_title
+			change_title,
+			change_pixmap
 		end
 create
 	make,
@@ -85,11 +86,8 @@ feature {NONE} -- Initlization
 
 feature
 
-	change_title (a_title: STRING) is
-			--
-		do
---			intern
-		end
+
+
 
 	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
 			--
@@ -285,8 +283,20 @@ feature
 			internal_shared.docking_manager.unlock_update
 		end
 
+feature -- Called by client programmer.
 
+	change_title (a_title: STRING; a_content: SD_CONTENT) is
+			--
+		do
+			internal_tab_zone.set_title (a_title, a_content)
 
+		end
+
+	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
+			--
+		do
+			internal_tab_zone.set_pixmap (a_pixmap, a_content)
+		end
 
 feature {SD_TAB_STATE}
 

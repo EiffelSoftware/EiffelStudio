@@ -83,6 +83,7 @@ feature -- Commands
 			if internal_content.internal_close_actions /= Void then
 				internal_content.internal_close_actions.call ([])
 			end
+			internal_shared.docking_manager.remove_empty_split_area
 		end
 
 	min_max_window is
@@ -127,12 +128,18 @@ feature -- Commands
 
 		end
 
-	change_title (a_title: STRING) is
+	change_title (a_title: STRING; a_content: SD_CONTENT) is
 			--
 		require
 			a_title_not_void: a_title /= Void
 		do
+		end
 
+	change_pixmap (a_pixmap: EV_PIXMAP; a_content: SD_CONTENT) is
+			--
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+		do
 		end
 
 feature  -- States report

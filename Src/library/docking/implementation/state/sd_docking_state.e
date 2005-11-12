@@ -16,7 +16,8 @@ inherit
 			move_to_tab_zone,
 			restore,
 			close_window,
-			zone
+			zone,
+			change_title
 		end
 
 create
@@ -67,6 +68,14 @@ feature -- Perform Restore
 		do
 
 		end
+
+
+	change_title (a_title: STRING; a_content: SD_CONTENT) is
+			--
+		do
+			internal_zone.set_title (a_title)
+		end
+
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
 			-- Perform a restore.
@@ -262,8 +271,7 @@ feature {NONE} -- Implementation
 			--
 		do
 			internal_shared.docking_manager.lock_update
-			internal_shared.docking_manager.prune_zone (internal_zone)
-			internal_shared.docking_manager.remove_empty_split_area
+			Precursor {SD_INNER_STATE}
 			internal_shared.docking_manager.unlock_update
 		end
 

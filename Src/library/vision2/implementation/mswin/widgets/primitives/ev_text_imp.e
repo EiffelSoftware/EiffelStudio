@@ -16,12 +16,12 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_FONTABLE_IMP
 		redefine
 			interface
 		end
-		
+
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			append_text,
@@ -121,7 +121,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_LOCK
 		export
 			{NONE} all
@@ -142,7 +142,7 @@ feature -- Initialization
 				-- `Current'. Default is 32,767.
 			cwin_send_message (wel_item, Em_limittext, to_wparam (0), to_lparam (0))
 		end
-		
+
 	initialize is
 			-- Initialize `Current'.
 		do
@@ -200,13 +200,13 @@ feature -- Access
 			end
 			wel_set_text (exp)
 		end
-		
+
 	line_count: INTEGER is
 			-- Number of lines of text in `Current'.
 		do
 			Result := wel_line_count
 		end
-		
+
 	caret_position: INTEGER is
 			-- Current position of caret.
 		local
@@ -222,7 +222,7 @@ feature -- Access
 				Result := internal_pos - new_lines_to_caret_position + 2
 			end
 		end
-		
+
 	insert_text (txt: STRING) is
 			-- Insert `txt' at `caret_position'.
 		local
@@ -254,7 +254,7 @@ feature -- Status Report
 			Result := wel_current_line_number + 1
 		end
 
-	first_position_from_line_number (a_line: INTEGER): INTEGER is	
+	first_position_from_line_number (a_line: INTEGER): INTEGER is
 			-- Position of the first character on the `i'-th line.
 		local
 			new_lines_to_first_position: INTEGER
@@ -275,22 +275,22 @@ feature -- Status Report
 				Result := first_position_from_line_number (a_line + 1) - 1
 			else
 				new_lines_to_first_position := wel_text.substring (1, wel_line_index (a_line - 1)).occurrences ('%R')
-				Result := wel_text_length - new_lines_to_first_position			
+				Result := wel_text_length - new_lines_to_first_position
 			end
 		end
-		
+
 	line_number_from_position (i: INTEGER): INTEGER is
 			-- Line containing caret position `i'.
 		do
 			Result := cwin_send_message_result_integer (wel_item, em_linefromchar,
 				to_wparam (i + 1), to_lparam (0)) + 1
 		end
-		
+
 	selection_start: INTEGER is
 			-- Index of first character selected.
 		local
 			new_lines_to_start: INTEGER
-			
+
 		do
 			new_lines_to_start := wel_text.substring (1, wel_selection_start).occurrences ('%R')
 			Result := wel_selection_start + 1 - new_lines_to_start
@@ -304,7 +304,7 @@ feature -- Status Report
 			new_lines_to_end := wel_text.substring (1, wel_selection_end).occurrences ('%R')
 			Result := wel_selection_end - new_lines_to_end
 		end
-	
+
 feature -- Status Settings
 
 	enable_word_wrapping is
@@ -323,7 +323,7 @@ feature -- Status Settings
 				parent_imp.notify_change (2 + 1, Current)
 			end
 		end
-		
+
 	disable_word_wrapping is
 			-- Ensure `has_word_wrap' is False.
 		local
@@ -355,7 +355,7 @@ feature -- Status Settings
 			replace_selection (a_string)
 			internal_set_caret_position (previous_caret_position)
 		end
-		
+
 	set_caret_position (pos: INTEGER) is
 			-- set current caret position.
 			--| This position is used for insertions.
@@ -403,15 +403,53 @@ feature {NONE} -- Implementation
 			-- Replace all "%N" with "%R%N" which is the Windows new line
 			-- character symbol.
 		require
-			a_string /= Void
+			a_string_not_void: a_string /= Void
 		local
-			index: INTEGER
+			i, j, nb, l_count : INTEGER
+			l_null : CHARACTER
+			l_string : STRING
 		do
-			index := a_string.index_of ('%N', 1)
-				-- Doing the convertion this way will stop us from walking down a string
-				-- twice when there is no %N nor %R%N in the string.
-			if index > 0 and then (index = 1 or else a_string.item (index - 1) /= '%R') then
-				a_string.replace_substring_all ("%N", "%R%N")
+				-- Count how many occurrences of `%N' not preceded by '%R' we have in `a_string'.
+			from
+				i := 2
+				nb := a_string.count
+				if nb > 0 and then a_string.item (1) = '%N' then
+					l_count := 1
+				end
+			until
+				i > nb
+			loop
+				if a_string.item (i) = '%N' and a_string.item (i - 1) /= '%R' then
+					l_count := l_count + 1
+				end
+				i := i + 1
+			end
+
+				-- Replace all found occurrences with '%R%N'.
+			if l_count > 0 then
+				create l_string.make_filled (l_null, nb + l_count)
+				from
+					i := 2
+					j := 1
+					if nb > 0 then
+						if a_string.item (1) = '%N' then
+							l_string.put ('%R', j)
+							j := j + 1
+						end
+						l_string.put (a_string.item (1), j)
+					end
+				until
+					i > nb
+				loop
+					if a_string.item (i) = '%N' and a_string.item (i - 1) /= '%R' then
+						j := j + 1
+						l_string.put ('%R', j)
+					end
+					j := j + 1
+					l_string.put (a_string.item (i), j)
+					i := i + 1
+				end
+				a_string.share (l_string)
 			end
 		end
 
@@ -435,11 +473,11 @@ feature {NONE} -- WEL Implementation
 			end
 			create Result.make_solid (back)
 		end
- 
+
 	default_style: INTEGER is
 			-- Default windows style used to create `Current'.
 		do
-			Result := Ws_child + Ws_visible + Ws_group 
+			Result := Ws_child + Ws_visible + Ws_group
 					+ Ws_tabstop + Ws_border + Es_left
 					+ Es_multiline + Es_wantreturn
 					+ Es_autovscroll + Ws_clipchildren
@@ -482,7 +520,7 @@ feature {NONE} -- WEL Implementation
 			cwin_enable_window (wel_item, False)
 			set_background_color (default_colors.Color_read_only)
 		end
-		
+
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- Executed when a key is pressed.
 		local

@@ -49,11 +49,6 @@ inherit
             {NONE} all
         end
 
-    ECOM_EIF_ENTITY_IMAGES_ENUM
-        export
-            {NONE} all
-        end
-
 create
     make
 
@@ -490,50 +485,53 @@ feature {NONE} -- Implementation
         do
             create l_bool_ref
             entry.is_feature (l_bool_ref)
-            Result := Eif_entity_images_variable
+            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_locals
             if l_bool_ref.item then
                 l_feature_descriptor ?= entry
                 if l_feature_descriptor /= Void then
                     if l_feature_descriptor.is_constant or l_feature_descriptor.is_unique then
-                        Result := Eif_entity_images_frozen_once
+                        Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_once_frozen
                     elseif l_feature_descriptor.is_attribute then
                         if l_feature_descriptor.is_obsolete then
-                            Result := Eif_entity_images_obsolete
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_attribute_obsolete
                         elseif l_feature_descriptor.is_frozen then
-                            Result := Eif_entity_images_frozen_attribute
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_attribute_frozen
                         else
-                            Result := Eif_entity_images_attribute
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_attribute
                         end
                     elseif l_feature_descriptor.is_once then
                         if l_feature_descriptor.is_obsolete then
-                            Result := Eif_entity_images_obsolete
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_once_obsolete
                         elseif l_feature_descriptor.is_frozen then
-                            Result := Eif_entity_images_frozen_once
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_once_frozen
                         else
-                            Result := Eif_entity_images_once
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_once
+                        end
+                    elseif l_feature_descriptor.is_external then
+                        if l_feature_descriptor.is_obsolete then
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_external_obsolete
+                        elseif l_feature_descriptor.is_frozen then
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_external_frozen
+                        else
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_external
+                        end
+                    elseif l_feature_descriptor.is_attribute then
+                        if l_feature_descriptor.is_obsolete then
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_attribute_obsolete
+                        elseif l_feature_descriptor.is_frozen then
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_attribute_frozen
+                        else
+                            Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_attribute
                         end
                     elseif l_feature_descriptor.is_obsolete then
-                        Result := Eif_entity_images_obsolete
-                    elseif l_feature_descriptor.is_frozen and l_feature_descriptor.is_external then
-                        Result := Eif_entity_images_frozen_external
-                    elseif l_feature_descriptor.is_frozen then
-                        Result := Eif_entity_images_frozen_feature
-                    elseif l_feature_descriptor.is_external then
-                        Result := Eif_entity_images_external_feature
-                    elseif l_feature_descriptor.is_deferred then
-                        Result := Eif_entity_images_deferred
-                    else
-                        Result := Eif_entity_images_feature
+						Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_obsolete
+					elseif l_feature_descriptor.is_frozen then
+                    	Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature_frozen
+					else
+                    	Result := {ECOM_LSICONINDEX_ENUM}.lsicon_feature
                     end
                 end
             end
-        ensure
-            valid_image_index: Result = eif_entity_images_frozen_once or Result = eif_entity_images_obsolete or
-                    Result = eif_entity_images_frozen_attribute or Result = eif_entity_images_attribute or
-                    Result = eif_entity_images_once or Result = eif_entity_images_frozen_external or
-                    Result = eif_entity_images_frozen_feature or Result = eif_entity_images_external_feature or
-                    Result = eif_entity_images_deferred or Result = eif_entity_images_feature or
-                    Result = eif_entity_images_variable
         end
 
 	class_from_name (a_name: STRING): CLASS_I is

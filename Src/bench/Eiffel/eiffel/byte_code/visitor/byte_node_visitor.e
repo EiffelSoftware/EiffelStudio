@@ -221,13 +221,6 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
-	process_box_b (a_node: BOX_B) is
-			-- Process `a_node'.
-		require
-			a_node_not_void: a_node /= Void
-		deferred
-		end
-
 	process_byte_list (a_node: BYTE_LIST [BYTE_NODE]) is
 			-- Process `a_node'.
 		require
@@ -402,7 +395,7 @@ feature {BYTE_NODE} -- Visitors
 			a_node_not_void: a_node /= Void
 		deferred
 		end
-	
+
 	process_local_b (a_node: LOCAL_B) is
 			-- Process `a_node'.
 		require

@@ -156,11 +156,6 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
-	process_box_b (a_node: BOX_B) is
-			-- Process `a_node'.
-		do
-		end
-
 	process_byte_list (a_node: BYTE_LIST [BYTE_NODE]) is
 			-- Process `a_node'.
 		do
@@ -285,7 +280,7 @@ feature {BYTE_NODE} -- Visitors
 			-- Process `a_node'.
 		do
 		end
-	
+
 	process_local_b (a_node: LOCAL_B) is
 			-- Process `a_node'.
 		do

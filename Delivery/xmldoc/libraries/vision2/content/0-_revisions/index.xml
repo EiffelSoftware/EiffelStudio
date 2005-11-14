@@ -19,12 +19,12 @@
 				<bold>EV_FIXED</bold> - Now item positions may be set to negative values within the fixed widget
 			</item>
 			<item>
-				<bold>EV_WIDGET</bold> - Added 'refresh_now' that allows for immediate redraw of a widget without having to wait for the event loop to repaint.  A useful example of this is when calling 'set_text' on EV_LABEL during heavy computation 
+				<bold>EV_WIDGET</bold> - Added 'refresh_now' that allows for immediate redraw of a widget without having to wait for the event loop to repaint it.  A useful example of this is when calling 'set_text' on EV_LABEL during heavy computation 
 			</item>
 			<item>
 				<bold>EV_GRID</bold>
 				<list ordered="false">
-					<item>Changed semantic of `move_row' and `move_rows' so that destination position is now an insertion index before a row instead of placing as the row index itself.  This allows for easier insertion of rows. Any code using these features will need to be rechecked as this is a breaking change for rows that are moved down the grud</item>
+					<item>Changed semantic of `move_row' and `move_rows' so that destination position is now an insertion index before a row instead of placing as the row index itself.  This allows for easier insertion of rows. Any code using these features will need to be rechecked as this is a breaking change for rows that are moved down the grid</item>
 					<item>Altered `move_rows' so that it will now unparent the top level nodes from the first row being moved whilst keeping any subtree structure</item>
 					<item>Added `move_rows_to_parent' that allows moving a block of parented rows from one parent to another</item>
 					<item>Added `insert_new_rows' and `insert_new_rows_parented' which permit you to add insert multiple rows at once. This is far quicker than adding rows individually.</item>

@@ -351,28 +351,6 @@ feature -- Initialization/Checking
 					end
 				end
 			end
-
---			if not l_success then
---					-- Could not find a conversion routine. Search now for an implicit
---					-- conversion
---				if
---					System.il_generation and then
---					(not a_source_type.is_external or a_source_type.is_expanded)
---				then
---						-- Special conversion between eiffel types/expanded types and SYSTEM_OBJECT/ANY.
---					l_cl_type ?= a_target_type
---					if l_cl_type /= Void and then l_cl_type.is_system_object_or_any then
---						if a_source_type.is_expanded then
---								-- Case of passing an expanded to .NET
---							create {BOX_CONVERSION_INFO} last_conversion_info.make (a_target_type)
---						else
---								-- Case of passing a reference to .NET
---							create {ANY_OBJECT_CONVERSION_INFO} last_conversion_info.make (a_target_type)
---						end
---						l_success := True
---					end
---				end
---			end
 			last_conversion_check_successful := l_success
 		end
 

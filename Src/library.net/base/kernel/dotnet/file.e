@@ -1410,8 +1410,15 @@ feature -- Input
 				done
 			loop
 				c := internal_stream.read_byte
-				if c = -1 or c = 10 then
-					internal_end_of_file := (c = -1)
+				if c = 13 and then peek = 10 then
+						-- Discard end of line in the form "%R%N".
+					c := internal_stream.read_byte
+					done := True
+				elseif c = 10 then
+						-- Discard end of line in the form "%N".
+					done := True
+				elseif c = -1 then
+					internal_end_of_file := True
 					done := True
 				else
 					i := i + 1

@@ -2403,8 +2403,8 @@ feature {NONE} -- Once per modules being generated.
 				-- Define `ise_runtime_token'.
 			create l_ass_info.make
 			l_ass_info.set_major_version (5)
-			l_ass_info.set_minor_version (6)
-			l_ass_info.set_build_number (1127)
+			l_ass_info.set_minor_version (7)
+			l_ass_info.set_build_number (414)
 
 			create l_pub_key.make_from_array (
 				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)

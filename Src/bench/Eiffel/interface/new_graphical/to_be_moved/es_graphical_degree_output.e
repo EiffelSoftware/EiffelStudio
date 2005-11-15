@@ -70,8 +70,8 @@ feature {NONE} -- Implementation
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
 			Precursor (deg_nbr, to_go, a_name)
-			window_manager.display_message (degree_description (current_degree) + " " + a_name)
-			window_manager.display_percentage (percentage_calculation (to_go))
+			window_manager.display_message_and_percentage (degree_description (current_degree) + once " " + a_name, percentage_calculation (to_go))
+			flush_output
 		end
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is

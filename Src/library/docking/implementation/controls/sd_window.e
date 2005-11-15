@@ -22,7 +22,7 @@ feature {NONE} -- Initlization
 			create vbox
 
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_type, a_zone)
-			internal_title_bar.set_minimum_height (16)
+			internal_title_bar.set_minimum_height (18)
 			internal_title_bar.close_actions.extend (agent close_window)
 			internal_title_bar.stick_select_actions.extend (agent stick_window)
 			internal_title_bar.min_max_actions.extend (agent min_max_window)

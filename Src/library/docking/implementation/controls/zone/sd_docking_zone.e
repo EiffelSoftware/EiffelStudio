@@ -44,9 +44,9 @@ feature	{NONE} -- Initlization
 			window.title_bar.set_title (internal_content.title)
 			window.close_actions.extend (agent close_window)
 			window.stick_actions.extend (agent stick_window)
-			window.drag_actions.extend (agent handle_drag_started)
-			window.min_max_action.extend (agent handle_min_max_window)
-			window.pointer_double_press_title_bar_actions.extend (agent handle_title_bar_double_press)
+			window.drag_actions.extend (agent on_drag_started)
+			window.min_max_action.extend (agent on_min_max_window)
+			window.pointer_double_press_title_bar_actions.extend (agent on_title_bar_double_press)
 
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			internal_content.state.close_window
 		end
 
-	handle_min_max_window is
+	on_min_max_window is
 			--
 		do
 			internal_content.state.min_max_window
@@ -89,10 +89,10 @@ feature {NONE} -- Implementation
 			internal_content.state.stick_window ({SD_DOCKING_MANAGER}.dock_left)
 		end
 
-	handle_title_bar_double_press is
+	on_title_bar_double_press is
 			--
 		do
-			handle_min_max_window
+			on_min_max_window
 		end
 
 	resize_bar: SD_RESIZE_BAR
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- For redocker.
 
-	handle_drag_started (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_drag_started (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Create a SD_DOCKER_MEDIATOR draw feedbacks for user to look where to docking.
 		do
 			debug ("larry")
@@ -120,7 +120,7 @@ feature {NONE} -- For redocker.
 			end
 
 			create docker_mediator.make (Current)
-			docker_mediator.start_tracing_pointer (screen_x -  a_screen_x, screen_y - a_screen_y)
+			docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 			enable_capture
 		end
 

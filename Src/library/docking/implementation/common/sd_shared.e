@@ -144,6 +144,9 @@ feature -- Constants
 	Type_editor: INTEGER is 2
 		-- Editor hot zones which editor zones have.
 
+	Title_bar_height: INTEGER is 18
+		-- Size of zone's title bar.
+
 	Menu_size: INTEGER is 23
 		-- Size of menu.
 
@@ -156,6 +159,7 @@ feature -- Constants
 	Default_docking_width_rate: REAL is 0.2
 			-- When change from floating to docking, width := main container width * `default_docking_width_rate'.
 
+	Auto_hide_delay: INTEGER is 2000
 feature {NONE} -- Implementation
 
 	internal_docking_manager: SD_DOCKING_MANAGER

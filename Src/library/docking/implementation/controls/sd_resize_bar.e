@@ -3,12 +3,15 @@ indexing
 
 
 
+
 	description: "This is the resize bar when user dragging to resize a window."
 
 
 
 
+
 	date: "$Date$"
+
 
 
 
@@ -23,7 +26,10 @@ indexing
 
 
 
+
+
 class
+
 
 
 
@@ -33,12 +39,15 @@ class
 
 
 
+
 	
 
 
 
 
+
 inherit
+
 
 
 
@@ -53,7 +62,10 @@ inherit
 
 
 
+
+
 create 
+
 
 
 
@@ -63,7 +75,9 @@ create
 
 
 
+
 	
+
 
 
 
@@ -73,7 +87,9 @@ feature -- Access
 
 
 
+
 	
+
 
 
 
@@ -83,7 +99,9 @@ feature -- Access
 
 
 
+
 			-- Creation method. a_direction use one enumeration of SD_STATE.
+
 
 
 
@@ -93,7 +111,9 @@ feature -- Access
 
 
 
+
 			l_background_color: EV_GRID
+
 
 
 
@@ -103,7 +123,9 @@ feature -- Access
 
 
 
+
 			create internal_shared
+
 
 
 
@@ -113,12 +135,15 @@ feature -- Access
 
 
 
+
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
 
 
 
 
+
 				set_minimum_size (internal_shared.resize_bar_width_height, internal_shared.resize_bar_width_height)
+
 
 
 
@@ -128,7 +153,9 @@ feature -- Access
 
 
 
+
 				set_minimum_size (internal_shared.resize_bar_width_height, internal_shared.resize_bar_width_height)
+
 
 
 
@@ -138,7 +165,9 @@ feature -- Access
 
 
 
+
 			
+
 
 
 
@@ -148,7 +177,9 @@ feature -- Access
 
 
 
-			pointer_button_release_actions.extend (agent handle_pointer_button_release)
+
+			pointer_button_release_actions.extend (agent on_pointer_button_release)
+
 
 
 
@@ -158,12 +189,15 @@ feature -- Access
 
 
 
-			pointer_button_press_actions.extend (agent handle_pointer_button_press)
+
+			pointer_button_press_actions.extend (agent on_pointer_button_press)
+
 
 
 
 
 			
+
 
 
 
@@ -173,7 +207,9 @@ feature -- Access
 
 
 
+
 				set_pointer_style (default_pixmaps.sizewe_cursor)
+
 
 
 
@@ -183,7 +219,9 @@ feature -- Access
 
 
 
+
 				
+
 
 
 
@@ -193,7 +231,9 @@ feature -- Access
 
 
 
+
 			end
+
 
 
 
@@ -203,12 +243,15 @@ feature -- Access
 
 
 
+
 			resize_source := a_source
 
 
 
 
-			expose_actions.extend (agent handle_expose_action)
+
+			expose_actions.extend (agent on_expose_action)
+
 
 
 
@@ -218,7 +261,9 @@ feature -- Access
 
 
 
+
 			set_background_color (l_background_color.non_focused_selection_color)
+
 
 
 
@@ -228,7 +273,9 @@ feature -- Access
 
 
 
+
 			a_source_set: resize_source = a_source
+
 
 
 
@@ -238,12 +285,15 @@ feature -- Access
 
 
 
+
 		end
 
 
 
 
+
 		
+
 
 
 
@@ -258,12 +308,16 @@ feature {NONE} -- Implementation
 
 
 
+
+
 	internal_direction: INTEGER 
 
 
 
 
+
 	
+
 
 
 
@@ -273,12 +327,15 @@ feature {NONE} -- Implementation
 
 
 
+
 			-- Is user press pointer button and then we resizing?
 
 
 
 
+
 			
+
 
 
 
@@ -288,7 +345,9 @@ feature {NONE} -- Implementation
 
 
 
+
 			-- The resizable window.
+
 
 
 
@@ -298,7 +357,9 @@ feature {NONE} -- Implementation
 
 
 
-	handle_pointer_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+
+	on_pointer_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+
 
 
 
@@ -308,7 +369,9 @@ feature {NONE} -- Implementation
 
 
 
+
 		do
+
 
 
 
@@ -318,7 +381,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				if not resizing then
+
 
 
 
@@ -328,7 +393,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					create screen_boundary
+
 
 
 
@@ -338,7 +405,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					debug ("larry")
+
 
 
 
@@ -348,7 +417,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					end
+
 
 
 
@@ -358,7 +429,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right  then
+
 
 
 
@@ -368,7 +441,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					else
+
 
 
 
@@ -378,7 +453,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					end
+
 
 
 
@@ -388,7 +465,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					enable_capture
+
 
 
 
@@ -398,7 +477,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					old_screen_y := a_screen_y;						
+
 
 
 
@@ -408,7 +489,9 @@ feature {NONE} -- Implementation
 
 
 
+
 			
+
 
 
 
@@ -418,7 +501,9 @@ feature {NONE} -- Implementation
 
 
 
+
 		end
+
 
 
 
@@ -428,7 +513,9 @@ feature {NONE} -- Implementation
 
 
 
-	handle_expose_action (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+
+	on_expose_action (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+
 
 
 
@@ -438,7 +525,9 @@ feature {NONE} -- Implementation
 
 
 
+
 		do
+
 
 
 
@@ -448,12 +537,15 @@ feature {NONE} -- Implementation
 
 
 
+
 			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 
 
 
 
+
 				set_foreground_color ((create {EV_STOCK_COLORS}).white)
+
 
 
 
@@ -463,7 +555,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				set_foreground_color ((create {EV_STOCK_COLORS}).black)
+
 
 
 
@@ -473,7 +567,9 @@ feature {NONE} -- Implementation
 
 
 
+
 			else
+
 
 
 
@@ -483,7 +579,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				draw_segment (0, height, width, height)
+
 
 
 
@@ -493,7 +591,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				draw_segment (0, height - 1, width - 1, height - 1)				
+
 
 
 
@@ -503,7 +603,9 @@ feature {NONE} -- Implementation
 
 
 
+
 		end
+
 
 
 
@@ -513,7 +615,9 @@ feature {NONE} -- Implementation
 
 
 
+
 	screen_boundary: EV_RECTANGLE
+
 
 
 
@@ -523,7 +627,9 @@ feature {NONE} -- Implementation
 
 
 
+
 	
+
 
 
 
@@ -533,7 +639,9 @@ feature {NONE} -- Implementation
 
 
 
+
 			-- The screen pointer position when user press.
+
 
 
 
@@ -543,7 +651,9 @@ feature {NONE} -- Implementation
 
 
 
+
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+
 
 
 
@@ -553,12 +663,15 @@ feature {NONE} -- Implementation
 
 
 
+
 		do
 
 
 
 
+
 			if resizing then
+
 
 
 
@@ -573,7 +686,10 @@ feature {NONE} -- Implementation
 
 
 
+
+
 				clear_graph_last_drawn
+
 
 
 
@@ -583,7 +699,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
+
 
 
 
@@ -593,7 +711,9 @@ feature {NONE} -- Implementation
 
 
 
+
 						last_screen_pointer_position := a_screen_x 
+
 
 
 
@@ -603,7 +723,9 @@ feature {NONE} -- Implementation
 
 
 
+
 						last_screen_pointer_position := screen_boundary.left 
+
 
 
 
@@ -613,12 +735,15 @@ feature {NONE} -- Implementation
 
 
 
+
 						last_screen_pointer_position := screen_boundary.right
 
 
 
 
+
 					end
+
 
 
 
@@ -628,7 +753,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				else
+
 
 
 
@@ -638,7 +765,9 @@ feature {NONE} -- Implementation
 
 
 
+
 						last_screen_pointer_position := a_screen_y
+
 
 
 
@@ -648,7 +777,9 @@ feature {NONE} -- Implementation
 
 
 
+
 						last_screen_pointer_position := screen_boundary.top
+
 
 
 
@@ -658,7 +789,9 @@ feature {NONE} -- Implementation
 
 
 
+
 						last_screen_pointer_position := screen_boundary.bottom
+
 
 
 
@@ -668,7 +801,9 @@ feature {NONE} -- Implementation
 
 
 
+
 					internal_shared.feedback.draw_shadow_rectangle (screen_x, last_screen_pointer_position, width, height)
+
 
 
 
@@ -678,7 +813,9 @@ feature {NONE} -- Implementation
 
 
 
+
 			end
+
 
 
 
@@ -688,7 +825,9 @@ feature {NONE} -- Implementation
 
 
 
+
 	
+
 
 
 
@@ -698,12 +837,15 @@ feature {NONE} -- Implementation
 
 
 
+
 			-- Clear the graph last drawn on the screen.
 
 
 
 
+
 		do
+
 
 
 
@@ -713,7 +855,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				internal_shared.feedback.draw_shadow_rectangle (last_screen_pointer_position, screen_y, width, height)
+
 
 
 
@@ -723,7 +867,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				internal_shared.feedback.draw_shadow_rectangle (screen_x, last_screen_pointer_position, width, height)
+
 
 
 
@@ -733,12 +879,15 @@ feature {NONE} -- Implementation
 
 
 
+
 		end
 
 
 
 
+
 		
+
 
 
 
@@ -748,7 +897,9 @@ feature {NONE} -- Implementation
 
 
 
+
 			-- The screen position last drawn.
+
 
 
 
@@ -758,7 +909,9 @@ feature {NONE} -- Implementation
 
 
 
-	handle_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+
+	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+
 
 
 
@@ -768,7 +921,9 @@ feature {NONE} -- Implementation
 
 
 
+
 		do
+
 
 
 
@@ -778,12 +933,15 @@ feature {NONE} -- Implementation
 
 
 
+
 				clear_graph_last_drawn
 
 
 
 
+
 	
+
 
 
 
@@ -793,7 +951,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				disable_capture
+
 
 
 
@@ -803,7 +963,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				if internal_direction = {SD_DOCKING_MANAGER}.dock_left then
+
 
 
 
@@ -813,7 +975,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_right then
+
 
 
 
@@ -823,7 +987,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_top then
+
 
 
 
@@ -833,7 +999,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+
 
 
 
@@ -843,7 +1011,9 @@ feature {NONE} -- Implementation
 
 
 
+
 				end				
+
 
 
 
@@ -853,7 +1023,9 @@ feature {NONE} -- Implementation
 
 
 
+
 		end
+
 
 
 
@@ -863,12 +1035,15 @@ feature {NONE} -- Implementation
 
 
 
+
 	internal_pixmap: EV_PIXMAP
 
 
 
 
+
 	
+
 
 
 
@@ -878,7 +1053,9 @@ feature -- Properties
 
 
 
+
 	
+
 
 
 
@@ -888,7 +1065,9 @@ feature -- Properties
 
 
 
+
 			-- Get the direction
+
 
 
 
@@ -898,12 +1077,16 @@ feature -- Properties
 
 
 
+
 			Result := internal_direction
 
 
 
 
+
 		end
+
+
 
 
 
@@ -923,7 +1106,10 @@ feature {NONE}  -- Implemenetation
 
 
 
+
+
 	internal_shared: SD_SHARED
+
 
 
 
@@ -938,7 +1124,10 @@ feature {NONE}  -- Implemenetation
 
 
 
+
+
 end
+
 
 
 

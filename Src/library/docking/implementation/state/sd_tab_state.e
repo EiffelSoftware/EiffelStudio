@@ -179,7 +179,6 @@ feature
 
 			end
 
-			internal_shared.docking_manager.update_title_bar
 			internal_shared.docking_manager.unlock_update
 		end
 
@@ -217,7 +216,7 @@ feature
 	float_window (a_x, a_y: INTEGER) is
 			--
 		local
-			l_docking_state: SD_DOCKING_STATE
+--			l_docking_state: SD_DOCKING_STATE
 			l_floating_state: SD_FLOATING_STATE
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
@@ -485,7 +484,7 @@ feature {NONE}  -- Implementation
 			--
 		local
 			l_old_stuff: EV_WIDGET
-			l_old_spliter: EV_SPLIT_AREA
+--			l_old_spliter: EV_SPLIT_AREA
 			l_new_container: EV_SPLIT_AREA
 		do
 			internal_tab_zone.parent.prune (internal_tab_zone)

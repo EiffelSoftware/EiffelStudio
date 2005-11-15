@@ -8,10 +8,15 @@ class
 
 inherit
 	SD_MULTI_CONTENT_ZONE
+		undefine
+			copy,
+			is_equal,
+			default_create
 		redefine
 			extend,
 			on_focus_in,
 			on_zone_focus_out
+
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -35,10 +40,6 @@ inherit
 			default_create
 		end
 
-	SD_TITLE_BAR_REMOVEABLE
-		undefine
-			copy, is_equal, default_create
-		end
 create
 	make
 
@@ -60,7 +61,7 @@ feature {NONE} -- Initlization
 
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_content.type, Current)
 			internal_title_bar.set_stick (True)
-			internal_title_bar.drag_actions.extend (agent handle_drag_title_bar)
+			internal_title_bar.drag_actions.extend (agent on_drag_title_bar)
 			internal_title_bar.stick_select_actions.extend (agent on_stick)
 
 			pointer_button_release_actions.extend (agent on_pointer_release)
@@ -68,14 +69,13 @@ feature {NONE} -- Initlization
 			extend_vertical_box (internal_title_bar)
 			disable_item_expand (internal_title_bar)
 
-
 			internal_notebook.selection_actions.extend (agent on_select_tab)
 
 			extend_vertical_box (internal_notebook)
 
-			internal_notebook.pointer_button_press_actions.extend (agent handle_notebook_pointer_press)
-			internal_notebook.pointer_button_release_actions.extend (agent handle_notebook_pointer_release)
-			internal_notebook.pointer_motion_actions.extend (agent handle_notebook_notebook_pointer_motion)
+			internal_notebook.pointer_button_press_actions.extend (agent on_notebook_pointer_press)
+			internal_notebook.pointer_button_release_actions.extend (agent on_notebook_pointer_release)
+			internal_notebook.pointer_motion_actions.extend (agent on_notebook_notebook_pointer_motion)
 
 --			internal_notebook.set_
 
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 
 	internal_docker_mediator: SD_DOCKER_MEDIATOR
 
-	handle_drag_title_bar (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_drag_title_bar (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		local
 			l_tab_state: SD_TAB_STATE
@@ -232,13 +232,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_notebook_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_notebook_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
 			internal_notebook_pressed := False
 		end
 
-	handle_notebook_pointer_press (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_notebook_pointer_press (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
 			internal_notebook_pressed := True
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 
 	internal_notebook_pressed: BOOLEAN
 
-	handle_notebook_notebook_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_notebook_notebook_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		local
 			l_tab_state: SD_TAB_STATE

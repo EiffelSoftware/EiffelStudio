@@ -25,8 +25,8 @@ feature {NONE} -- Initlization
 			create internal_tab_stubs
 			set_minimum_size (0, 0)
 
-			internal_tab_stubs.add_actions.extend (agent handle_insert_tab_stub)
-			internal_tab_stubs.remove_actions.extend (agent handle_pruned_tab_stub)
+			internal_tab_stubs.add_actions.extend (agent on_insert_tab_stub)
+			internal_tab_stubs.remove_actions.extend (agent on_pruned_tab_stub)
 
 			create tab_groups.make (0)
 		end
@@ -186,8 +186,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-
 	tab_by_content (a_content: SD_CONTENT): SD_TAB_STUB is
 			--
 		require
@@ -208,7 +206,7 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	handle_insert_tab_stub (a_stub: SD_TAB_STUB) is
+	on_insert_tab_stub (a_stub: SD_TAB_STUB) is
 			-- Handle insert a tab stub event.
 		local
 			l_spacer: SD_AUTO_HIDE_SEPERATOR
@@ -230,7 +228,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_pruned_tab_stub (a_stub: SD_TAB_STUB) is
+	on_pruned_tab_stub (a_stub: SD_TAB_STUB) is
 			-- Handle prune a tab sutb event.
 		require
 			a_stub_not_void: a_stub /= Void

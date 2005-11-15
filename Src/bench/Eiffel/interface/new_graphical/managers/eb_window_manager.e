@@ -614,6 +614,36 @@ feature -- Actions on all windows
 --		end
 		-- Jason Wei modified the above		
 
+	display_message_and_percentage (m: STRING; a_value: INTEGER) is
+			-- Display message `m' and `a_value' percentage in status bars of all development windows.
+		require
+			one_line_message: m /= Void and then (not m.has ('%N') and not m.has ('%R'))
+			a_value_valid: a_value >= 0 and then a_value <= 100
+		local
+			l_managed_windows: like managed_windows
+			cv_dev: EB_DEVELOPMENT_WINDOW
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
+		do
+			from
+					-- Make a twin of the list incase window is destroyed during
+					-- indirect call to status bar `process_events_and_idle' which
+					-- is needed to update the label and progress bar display.
+				l_managed_windows := managed_windows.twin
+				l_managed_windows.start
+			until
+				l_managed_windows.after
+			loop
+				cv_dev ?= l_managed_windows.item
+				if cv_dev /= Void and then not cv_dev.destroyed then
+					l_status_bar := cv_dev.status_bar
+					l_status_bar.display_message (m)
+					l_status_bar.progress_bar.reset
+					l_status_bar.progress_bar.set_value (a_value)
+				end
+				l_managed_windows.forth
+			end
+		end
+
 	display_message (m: STRING) is
 			-- Display a message in status bars of all development windows.
 		require
@@ -634,9 +664,7 @@ feature -- Actions on all windows
 			loop
 				cv_dev ?= l_managed_windows.item
 				if cv_dev /= Void and then not cv_dev.destroyed then
-					lab := cv_dev.status_bar.label
-					lab.set_text (m)
-					lab.refresh_now
+					cv_dev.status_bar.display_message (m)
 				end
 				l_managed_windows.forth
 			end

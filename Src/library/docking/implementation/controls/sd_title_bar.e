@@ -19,12 +19,76 @@ feature {NONE} -- Initlization
 	make is
 			-- Creation method.
 		local
-			l_cell: EV_CELL
+			l_cell, temp_cell: EV_CELL
+			l_color_helper: SD_COLOR_HELPER
+			frame: EV_FRAME
+			main_box, vertical_box: EV_VERTICAL_BOX
+			minimum_size_cell: EV_CELL
+			tool_bar_button: EV_TOOL_BAR_BUTTON
+			l_label: EV_LABEL
+
 		do
 			create internal_shared
 			default_create
-			create internal_title.make_with_text ("untitled")
-			internal_title.align_text_left
+			build_hightlight_area
+
+			create main_box
+			extend (main_box)
+			create minimum_size_cell
+			extend (minimum_size_cell)
+			disable_item_expand (minimum_size_cell)
+			create container
+			create frame
+			frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
+			main_box.extend (frame)
+			create vertical_box
+			frame.extend (vertical_box)
+			create frame
+			frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_raised)
+			vertical_box.extend (frame)
+			frame.extend (container)
+
+			container.extend (internal_leading_hightlight_area)
+			container.disable_item_expand (internal_leading_hightlight_area)
+
+			create temp_cell
+			temp_cell.set_minimum_width (8)
+			container.extend (temp_cell)
+			container.disable_item_expand (temp_cell)
+
+			create internal_title.make_with_text ("Untitled")
+			container.extend (internal_title)
+			container.disable_item_expand (internal_title)
+
+			create temp_cell
+			temp_cell.set_minimum_width (8)
+			container.extend (temp_cell)
+			container.disable_item_expand (temp_cell)
+
+			create vertical_box
+			container.extend (vertical_box)
+			container.disable_item_expand (vertical_box)
+
+			create custom_area
+			vertical_box.extend (custom_area)
+			vertical_box.disable_item_expand (custom_area)
+
+			---------------- Remove this to remove Demo button ----------------
+			create internal_tool_bar
+			custom_area.extend (internal_tool_bar)
+			create tool_bar_button
+			tool_bar_button.set_pixmap (internal_shared.icons.maximize)
+			internal_tool_bar.extend (tool_bar_button)
+			create tool_bar_button
+			tool_bar_button.set_pixmap (internal_shared.icons.maximize)
+			internal_tool_bar.extend (tool_bar_button)
+			-------------------------------------------------------------------
+
+			create l_label.default_create
+			l_label.set_minimum_width (8)
+			container.extend (l_label)
+			container.enable_item_expand (l_label)
+
 			create stick
 			stick.set_pixmap (internal_shared.icons.unstick)
 
@@ -44,26 +108,25 @@ feature {NONE} -- Initlization
 			internal_title.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_title.pointer_double_press_actions.force_extend (agent handle_pointer_double_press)
 
+			l_label.pointer_button_press_actions.force_extend (agent handle_pointer_press)
+			l_label.pointer_button_release_actions.force_extend (agent on_pointer_release)
+			l_label.pointer_leave_actions.force_extend (agent handle_pointer_leave)
+			l_label.pointer_motion_actions.extend (agent on_pointer_motion)
+			l_label.pointer_double_press_actions.force_extend (agent handle_pointer_double_press)
 
-			internal_title.set_minimum_width (0)
-			extend (internal_title)
-			enable_item_expand (internal_title)
 			create internal_tool_bar
 			internal_tool_bar.extend (stick)
 			internal_tool_bar.extend (min_max)
 			internal_tool_bar.extend (close)
 
-			-- If we don't put the tool bar into the cell, the bottom border of the toolbar will disappear.
-			create l_cell
-			l_cell.extend (internal_tool_bar)
+			container.extend (internal_tool_bar)
+			container.disable_item_expand (internal_tool_bar)
 
-			extend (l_cell)
-			disable_item_expand (l_cell)
+			container.extend (internal_ending_hightlight_area)
+			container.disable_item_expand (internal_ending_hightlight_area)
 
 			-- default setting
-			set_border_width (1)
 		 	disable_focus_color
-
 		end
 
 feature -- Access
@@ -71,7 +134,7 @@ feature -- Access
 	set_title (a_title: STRING) is
 			-- Set the title on the title bar.
 		do
-			internal_title.set_text (a_title)
+--			internal_title.set_text (a_title)
 		end
 
 	set_stick (a_bool: BOOLEAN) is
@@ -87,40 +150,23 @@ feature -- Access
 	enable_focus_color is
 			--
 		local
-			focus_background_color: EV_GRID
-			l_text_color: EV_COLOR
 		do
-			create focus_background_color
-			set_background_color (focus_background_color.focused_selection_color )
-			internal_title.set_background_color (focus_background_color.focused_selection_color)
-			if focus_background_color.focused_selection_color.lightness > 0.5 then
-				create l_text_color.make_with_rgb (0, 0, 0)
-			else
-				create l_text_color.make_with_rgb (1, 1, 1)
-			end
-			internal_title.set_foreground_color (l_text_color)
---			stick.set_background_color (focus_background_color.focused_selection_color)
---			min_max.set_background_color (focus_background_color.focused_selection_color)
---			close.set_background_color (focus_background_color.background_color)
+			exposing_color := hightlight_color
+			internal_leading_hightlight_area.expose_actions.call ([0, 0, internal_leading_hightlight_area.width, internal_leading_hightlight_area.height])
+			internal_ending_hightlight_area.expose_actions.call ([0, 0, internal_ending_hightlight_area.width, internal_ending_hightlight_area.height])
 		end
 
 	disable_focus_color is
 			--
 		local
-			unfocus_background_color: EV_GRID
-			l_text_color: EV_COLOR
 		do
-			create unfocus_background_color
-
-			internal_title.set_background_color (unfocus_background_color.non_focused_selection_color)
-			if unfocus_background_color.non_focused_selection_color.lightness > 0.5 then
-				create l_text_color.make_with_rgb (0, 0, 0)
-			else
-				create l_text_color.make_with_rgb (1, 1, 1)
-			end
-			internal_title.set_foreground_color (l_text_color)
-			set_background_color (l_text_color)
+			exposing_color := hightlight_gray_color
+			internal_leading_hightlight_area.expose_actions.call ([0, 0, internal_leading_hightlight_area.width, internal_leading_hightlight_area.height])
+			internal_ending_hightlight_area.expose_actions.call ([0, 0, internal_ending_hightlight_area.width, internal_ending_hightlight_area.height])
 		end
+
+	custom_area: EV_HORIZONTAL_BOX
+			-- Contains custom widget.
 
 feature -- Actions
 
@@ -244,6 +290,30 @@ feature {NONE} -- Implementation for agents
 			end
 		end
 
+feature {NONE} -- Implemetation
+
+	build_hightlight_area is
+			--
+		do
+			create internal_leading_hightlight_area
+			create internal_ending_hightlight_area
+
+			internal_leading_hightlight_area.set_minimum_width (7)
+			internal_ending_hightlight_area.set_minimum_width (2)
+
+			internal_leading_hightlight_area.expose_actions.extend (agent expose_hightlight_area)
+			internal_ending_hightlight_area.expose_actions.extend (agent expose_hightlight_area)
+		end
+
+	expose_hightlight_area (a, b, c, d: INTEGER) is
+			--
+		do
+			internal_leading_hightlight_area.set_foreground_color (exposing_color)
+			internal_leading_hightlight_area.fill_rectangle (0, 0, internal_leading_hightlight_area.width, internal_leading_hightlight_area.height)
+			internal_ending_hightlight_area.set_foreground_color (exposing_color)
+			internal_ending_hightlight_area.fill_rectangle (0, 0, internal_ending_hightlight_area.width, internal_ending_hightlight_area.height)
+		end
+
 feature {NONE} -- Implementation
 	is_stick: BOOLEAN
 			-- If the stick button selected ?
@@ -263,10 +333,76 @@ feature {NONE} -- Implementation
 	internal_shared: SD_SHARED
 			-- All singletons
 
+	container: EV_HORIZONTAL_BOX
+
 	internal_pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE
 
 	internal_stick_select_actions, internal_close_actions, internal_min_max_actions: EV_NOTIFY_ACTION_SEQUENCE
 
 	internal_drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
+
+	internal_leading_hightlight_area: EV_DRAWING_AREA
+
+	internal_ending_hightlight_area: EV_DRAWING_AREA
+
+feature {NONE} -- Implementation (Colors)
+
+	hightlight_color: EV_COLOR is
+			--
+		local
+			unfocus_background_color: EV_GRID
+		do
+			if hightlight_color_internal = Void then
+				create unfocus_background_color
+				hightlight_color_internal := unfocus_background_color.focused_selection_color
+			end
+			Result := hightlight_color_internal
+		end
+
+	hightlight_color_up: EV_COLOR is
+			--
+		local
+			l_color_helper: SD_COLOR_HELPER
+		do
+			if hightlight_color_shadow_up_internal = Void then
+				create l_color_helper
+				hightlight_color_shadow_up_internal := l_color_helper.build_color_with_lightness (hightlight_color, 0.7)
+			end
+			Result := hightlight_color_shadow_up_internal
+		end
+
+	hightlight_color_low: EV_COLOR is
+			--
+		local
+			l_color_helper: SD_COLOR_HELPER
+		do
+			if hightlight_color_shadow_low_internal = Void then
+				create l_color_helper
+				hightlight_color_shadow_low_internal := l_color_helper.build_color_with_lightness (hightlight_color, - 0.7)
+			end
+			Result := hightlight_color_shadow_low_internal
+		end
+
+	hightlight_gray_color: EV_COLOR is
+			--
+		local
+			l_color_helper: SD_COLOR_HELPER
+		do
+			if hightlight_gray_color_internal = Void then
+				create l_color_helper
+				hightlight_gray_color_internal := l_color_helper.build_color_with_lightness (hightlight_color, 0.6)
+			end
+			Result := hightlight_gray_color_internal
+		end
+
+	exposing_color: EV_COLOR
+
+	hightlight_color_internal: EV_COLOR
+
+	hightlight_gray_color_internal: EV_COLOR
+
+	hightlight_color_shadow_up_internal: EV_COLOR
+
+	hightlight_color_shadow_low_internal: EV_COLOR
 
 end

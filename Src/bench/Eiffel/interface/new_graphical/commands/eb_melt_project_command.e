@@ -146,8 +146,7 @@ feature {NONE} -- Compilation implementation
 		do
 				-- Clear the format_context buffers.
 			clear_format_tables
-			window_manager.display_message (Interface_names.d_Resynchronizing_tools)
-			window_manager.display_percentage (0)
+			window_manager.display_message_and_percentage (Interface_names.d_Resynchronizing_tools, 0)
 			window_manager.synchronize_all
 			create output_text.make
 			if Workbench.successful then

@@ -56,9 +56,11 @@ feature -- Access
 				l_tab := tab_by_content (a_contents.item)
 				if l_tab_group = Void then
 					l_tab_group := tab_group (l_tab)
+				else
+					l_tab_group.extend (l_tab)
 				end
-				l_tab_group.extend (l_tab)
 				a_contents.forth
+
 			end
 
 			update_tab_group

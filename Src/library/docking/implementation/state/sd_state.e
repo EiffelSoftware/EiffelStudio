@@ -42,8 +42,10 @@ feature -- Properties
 
 feature {SD_CONFIG}
 
-	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
-			--
+	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
+			-- `titles' is content name. `a_container' is zone parent.
+		require
+			more_than_one_title: content_count_valid (a_titles)
 		deferred
 		end
 
@@ -151,6 +153,14 @@ feature  -- States report
 			-- If current a_content void?
 		do
 			Result := internal_content = Void
+		end
+
+	content_count_valid (a_titles: ARRAYED_LIST [STRING]): BOOLEAN is
+			-- If
+		require
+			a_titles_not_void: a_titles /= Void
+		do
+			Result := a_titles.count = 1
 		end
 
 feature {NONE} -- State changing

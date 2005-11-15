@@ -27,7 +27,11 @@ feature {NONE} -- Initlization
 			create notebook.make (internal_notebook)
 
 			extend_vertical_box (notebook)
+			notebook.close_actions.extend (agent on_close)
 		end
+
+feature {NONE}  -- Implementation
+
 
 feature {NONE} -- Redefine
 
@@ -36,11 +40,14 @@ feature {NONE} -- Redefine
 		local
 			l_content: SD_CONTENT
 		do
-			Precursor {SD_TAB_ZONE}
-			l_content := internal_contents.i_th (internal_notebook.selected_item_index)
-			if l_content.mini_toolbar /= Void then
-				notebook.set_mini_tool_bar (l_content.mini_toolbar)
+			if not internal_diable_on_select_tab then
+				Precursor {SD_TAB_ZONE}
+				l_content := internal_contents.i_th (internal_notebook.selected_item_index)
+				if l_content.mini_toolbar /= Void then
+					notebook.set_mini_tool_bar (l_content.mini_toolbar)
+				end
 			end
+
 
 		end
 

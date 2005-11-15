@@ -86,46 +86,19 @@ feature {NONE} -- Implementation for save config.
 			a_config_data_not_void: a_config_data /= Void
 		local
 			l_split_area: EV_SPLIT_AREA
-			l_hor: EV_HORIZONTAL_SPLIT_AREA
+
 			l_zone: SD_ZONE
-			l_temp: SD_INNER_CONTAINER_DATA
+
 		do
 			l_split_area ?= a_widget
 			if l_split_area /= Void then
-				debug ("larry")
-					io.put_string ("%N SD_DOCKING_MANAGER ")
-					io.put_string ("%N  split area first : " + (l_split_area.first /= Void).out)
-					io.put_string ("%N  split area second: " + (l_split_area.second /= Void).out)
-				end
-				l_hor ?= l_split_area
-				if l_hor /= Void then
-					a_config_data.set_is_horizontal_split_area (True)
-				else
-					a_config_data.set_is_horizontal_split_area (False)
-				end
-				a_config_data.set_is_split_area (True)
-				if l_split_area.first /= Void then
-					create l_temp
-					a_config_data.set_children_left (l_temp)
-					l_temp.set_parent (a_config_data)
-					save_inner_container_data (l_split_area.first, l_temp)
-				end
-				if l_split_area.second /= Void then
-					create l_temp
-					a_config_data.set_children_right (l_temp)
-					l_temp.set_parent (a_config_data)
-					save_inner_container_data (l_split_area.second, l_temp)
-				end
-
-				if l_split_area.full then
-					a_config_data.set_split_position (l_split_area.split_position)
-				end
-
+				save_inner_container_data_split_area (l_split_area, a_config_data)
 			else -- It must be a zone area
 				l_zone ?= a_widget
 				check l_zone /= Void end
 				a_config_data.set_is_split_area (False)
-				a_config_data.set_title (l_zone.content.title)
+				a_config_data.add_title (l_zone.content.title)
+
 				a_config_data.set_state (l_zone.content.state.generating_type)
 				debug ("larry")
 					io.put_string ("%N SD_DOCKING_MANAGER zone")
@@ -133,6 +106,44 @@ feature {NONE} -- Implementation for save config.
 				end
 			end
 		end
+
+
+	save_inner_container_data_split_area (a_split_area: EV_SPLIT_AREA; a_config_data: SD_INNER_CONTAINER_DATA) is
+			-- `save_inner_container_data' split area part.
+		local
+			l_hor: EV_HORIZONTAL_SPLIT_AREA
+			l_temp: SD_INNER_CONTAINER_DATA
+		do
+				debug ("larry")
+					io.put_string ("%N SD_DOCKING_MANAGER ")
+					io.put_string ("%N  split area first : " + (a_split_area.first /= Void).out)
+					io.put_string ("%N  split area second: " + (a_split_area.second /= Void).out)
+				end
+				l_hor ?= a_split_area
+				if l_hor /= Void then
+					a_config_data.set_is_horizontal_split_area (True)
+				else
+					a_config_data.set_is_horizontal_split_area (False)
+				end
+				a_config_data.set_is_split_area (True)
+				if a_split_area.first /= Void then
+					create l_temp
+					a_config_data.set_children_left (l_temp)
+					l_temp.set_parent (a_config_data)
+					save_inner_container_data (a_split_area.first, l_temp)
+				end
+				if a_split_area.second /= Void then
+					create l_temp
+					a_config_data.set_children_right (l_temp)
+					l_temp.set_parent (a_config_data)
+					save_inner_container_data (a_split_area.second, l_temp)
+				end
+
+				if a_split_area.full then
+					a_config_data.set_split_position (a_split_area.split_position)
+				end
+		end
+
 
 	save_auto_hide_zone_config (a_data: SD_AUTO_HIDE_ZONE_DATA)is
 			-- Save config informations about auto hide zones.
@@ -282,15 +293,24 @@ feature {NONE} -- Implementation for open config.
 			l_state: SD_STATE
 			l_internal: INTERNAL
 			l_type_id: INTEGER
+--			l_tab_state: SD_TAB_STATE
 		do
 			-- If it's a zone.
 			if not a_config_data.is_split_area then
-				l_content := internal_shared.docking_manager.content_by_title (a_config_data.title)
+
 				create l_internal
 				l_type_id := l_internal.dynamic_type_from_string (a_config_data.state)
 				check a_type_exist: l_type_id /= -1 end
 				l_state ?= l_internal.new_instance_of (l_type_id)
-				l_state.restore (l_content, a_container)
+--				l_tab_state ?= l_state
+--				if l_tab_state = Void then
+					-- It SD_DOCKING_STATE
+--					a_config_data.titles.start
+--					l_content := internal_shared.docking_manager.content_by_title (a_config_data.titles.item)
+--				else
+					-- It's SD_TAB_STATE
+--				end
+				l_state.restore (a_config_data.titles, a_container)
 
 --				debug ("larry")
 --					io.put_string ("%N SD_DOCKING_MANAGER l_content: " + l_content.title + " first? " + (a_config_data.parent.children_left = a_config_data).out)
@@ -352,6 +372,7 @@ feature {NONE} -- Implementation for open config.
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_content: SD_CONTENT
 			l_panel: SD_AUTO_HIDE_PANEL
+			l_list: ARRAYED_LIST [STRING]
 		do
 			l_panel := internal_shared.docking_manager.auto_hide_panel (a_direction)
 			from
@@ -361,7 +382,9 @@ feature {NONE} -- Implementation for open config.
 			loop
 				l_content := internal_shared.docking_manager.content_by_title ((a_data.item[1]).out)
 				create l_auto_hide_state.make (l_content, a_direction)
-				l_auto_hide_state.restore (l_content, l_panel)
+				create l_list.make (1)
+				l_list.extend ((a_data.item[1]).out)
+				l_auto_hide_state.restore (l_list, l_panel)
 				a_data.forth
 			end
 		end

@@ -42,7 +42,7 @@ feature -- Access
 
 		end
 
-	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
+	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
 			--
 		do
 

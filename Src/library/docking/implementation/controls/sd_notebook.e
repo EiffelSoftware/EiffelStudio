@@ -51,9 +51,22 @@ feature {NONE} -- Initialization
 			close_button_bar.set_minimum_size (shared.title_bar_height - 2, shared.title_bar_height - 2)
 			extend (close_button_bar)
 
+			close_button.pointer_button_press_actions.extend (agent on_close_button_pointer_press)
+
 			resize_actions.extend (agent on_fixed_resize)
 		ensure
 			set: a_notebook = notebook
+		end
+
+feature -- Actions
+
+	close_actions: like internal_close_actions is
+			-- `internal_close_actions'.
+		do
+			if internal_close_actions = Void then
+				create internal_close_actions
+			end
+			Result := internal_close_actions
 		end
 
 feature -- Basic operation
@@ -80,8 +93,19 @@ feature {NONE} -- Implementation
 	tool_bar_cell: EV_CELL
 			-- Container for a EV_TOOL_BAR.
 
+	internal_close_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions when user press close button.
+
 	shared: SD_SHARED
 feature {NONE} -- actions
+
+	on_close_button_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			--
+		do
+			if internal_close_actions /= Void then
+				internal_close_actions.call ([])
+			end
+		end
 
 	on_fixed_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			--

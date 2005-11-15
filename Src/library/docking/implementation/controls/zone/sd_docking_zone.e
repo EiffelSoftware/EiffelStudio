@@ -42,6 +42,9 @@ feature	{NONE} -- Initlization
 			internal_content := a_content
 			window.set_user_widget (internal_content.user_widget)
 			window.title_bar.set_title (internal_content.title)
+			if a_content.mini_toolbar /= Void then
+				window.title_bar.custom_area.extend (a_content.mini_toolbar)
+			end
 			window.close_actions.extend (agent close_window)
 			window.stick_actions.extend (agent stick_window)
 			window.drag_actions.extend (agent on_drag_started)
@@ -150,13 +153,13 @@ feature {NONE} -- For redocker.
 
 feature -- Access
 
-	set_title_bar (a_show: BOOLEAN) is
+	set_show_stick_min_max (a_show: BOOLEAN) is
 			-- Set whether to show title bar?
 		do
 			if a_show then
-				window.set_title_bar (a_show)
+				window.set_show_stick_min_max (a_show)
 			else
-				window.set_title_bar (a_show)
+				window.set_show_stick_min_max (a_show)
 			end
 		end
 

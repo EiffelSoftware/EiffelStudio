@@ -12,7 +12,8 @@ inherit
 			change_zone_split_area,
 			stick_window,
 			move_to_docking_zone,
-			move_to_tab_zone
+			move_to_tab_zone,
+			content_void
 		end
 
 create
@@ -48,7 +49,7 @@ feature
 		end
 
 feature -- Perform Restore
-	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
+	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
 			--
 		do
 		end
@@ -59,19 +60,47 @@ feature -- Perform Restore
 --			l_old_widget: EV_WIDGET
 			l_docking_state: SD_DOCKING_STATE
 			l_width_height: INTEGER
+			l_widget: EV_WIDGET
+			l_split_area: EV_SPLIT_AREA
+			l_main_container_widget: EV_WIDGET
 		do
 			internal_shared.docking_manager.lock_update
+
 			-- FIXIT: shoudl prune the SD_MULTI_DOCK_AREA here.
 --			internal_shared.docking_manager.prune_zone (internal_zone)
+			l_widget := internal_zone.inner_container.item
+			internal_zone.inner_container.wipe_out
 			internal_zone.destroy
 			if 	internal_direction	= {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_width_height := (a_multi_dock_area.width * internal_shared.default_docking_width_rate).ceiling
+				l_split_area := create {EV_HORIZONTAL_SPLIT_AREA}
 			else
 				l_width_height := (a_multi_dock_area.height * internal_shared.default_docking_height_rate).ceiling
+				l_split_area := create {EV_VERTICAL_SPLIT_AREA}
 			end
-			create l_docking_state.make (internal_content, internal_direction, l_width_height)
-			l_docking_state.dock_at_top_level (a_multi_dock_area)
-			change_state (l_docking_state)
+--			create l_docking_state.make (internal_content, internal_direction, l_width_height)
+--			l_docking_state.dock_at_top_level (a_multi_dock_area)
+--			change_state (l_docking_state)
+			l_main_container_widget := internal_shared.docking_manager.inner_container_main.item
+			internal_shared.docking_manager.inner_container_main.save_spliter_position (l_main_container_widget)
+			internal_shared.docking_manager.inner_container_main.wipe_out
+			internal_shared.docking_manager.inner_container_main.extend (l_split_area)
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_top then
+				l_split_area.set_first (l_widget)
+				l_split_area.set_second (l_main_container_widget)
+				if l_width_height >= l_split_area.minimum_split_position and l_width_height <= l_split_area.maximum_split_position then
+					l_split_area.set_split_position (l_width_height)
+				end
+
+			else
+				l_split_area.set_second (l_widget)
+				l_split_area.set_first (l_main_container_widget)
+				if l_width_height >= l_split_area.minimum_split_position and l_width_height <= l_split_area.maximum_split_position then
+					l_split_area.set_split_position (l_split_area.maximum_split_position - l_width_height)
+				end
+			end
+
+			internal_shared.docking_manager.inner_container_main.restore_spliter_position (l_main_container_widget)
 			internal_shared.docking_manager.unlock_update
 		end
 
@@ -79,6 +108,14 @@ feature -- Perform Restore
 			--
 		do
 
+		end
+
+feature -- States report
+
+	content_void: BOOLEAN is
+			--
+		do
+			Result := not internal_zone.inner_container.readable
 		end
 
 feature {NONE} -- Implementation

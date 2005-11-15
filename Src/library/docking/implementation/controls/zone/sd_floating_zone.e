@@ -48,14 +48,16 @@ feature {NONE} -- Initlization
 			internal_vertical_box.set_background_color ((create {EV_STOCK_COLORS}).grey)
 			extend_dialog (internal_vertical_box)
 
-			create internal_title_bar.make (internal_shared.icons.default_icon, "Floating")
-			internal_vertical_box.extend (internal_title_bar)
-			internal_title_bar.pointer_button_press_actions.extend (agent on_title_bar_pointer_button_press)
-			internal_title_bar.pointer_motion_actions.extend (agent on_title_bar_pointer_motion)
-			internal_title_bar.pointer_button_release_actions.extend (agent on_title_bar_pointer_button_release)
+			create internal_title_bar.make
+--			internal_vertical_box.extend (internal_title_bar)
+--			internal_title_bar.pointer_button_press_actions.extend (agent on_title_bar_pointer_button_press)
+--			internal_title_bar.pointer_motion_actions.extend (agent on_title_bar_pointer_motion)
+			internal_title_bar.drag_actions.extend (agent on_title_bar_drag)
+--			internal_title_bar.pointer_button_release_actions.extend (agent on_title_bar_pointer_button_release)
 			internal_title_bar.close_actions.extend (agent on_close_window)
-
-			internal_vertical_box.disable_item_expand (internal_title_bar)
+			internal_title_bar.set_show_min_max (False)
+			internal_title_bar.set_show_stick (False)
+--			internal_vertical_box.disable_item_expand (internal_title_bar)
 
 			pointer_button_release_actions.extend (agent on_pointer_button_release)
 
@@ -73,9 +75,6 @@ feature {NONE} -- Initlization
 --			internal_vertical_box.disable_item_expand (internal_title_bar)
 
 		end
-
-
-
 
 	on_add_action (a_content: SD_CONTENT) is
 			-- If `Current' contain zone more then one, add `Current''s title bar.
@@ -101,23 +100,32 @@ feature -- Command
 			if internal_inner_container.readable then
 				l_zone ?= internal_inner_container.item
 				if l_zone /= Void then
-					--  l_zone should not have title bar.
+
+					--  l_zone should not have min\max stick button.
 					l_title_zone ?= l_zone
 					check l_title_zone /= Void end
-					l_title_zone.set_title_bar (False)
-					internal_title_bar.set_title (l_zone.content.title)
+					l_title_zone.set_show_stick_min_max (False)
+--					internal_title_bar.set_title (l_zone.content.title)
+					if internal_vertical_box.has (internal_title_bar) then
+						internal_vertical_box.prune_all (internal_title_bar)
+					end
 				else
+					if not internal_vertical_box.has (internal_title_bar) then
+						internal_vertical_box.start
+						internal_vertical_box.put_left (internal_title_bar)
+						internal_vertical_box.disable_item_expand (internal_title_bar)
+					end
 					--  l_zone should have title bar
 					l_split_area ?= internal_inner_container.item
 					check l_split_area /= Void end
 					l_title_zone ?= l_split_area.first
 					if l_title_zone /= Void then
-						l_title_zone.set_title_bar (True)
+						l_title_zone.set_show_stick_min_max (True)
 						l_title_zone := Void
 					end
 					l_title_zone ?= l_split_area.second
 					if l_title_zone /= Void then
-						l_title_zone.set_title_bar (True)
+						l_title_zone.set_show_stick_min_max (True)
 					end
 				end
 			else
@@ -208,7 +216,7 @@ feature {NONE} -- Implementation
 
 	internal_inner_container: SD_MULTI_DOCK_AREA
 
-	internal_title_bar: SD_FLOATING_TITLE_BAR
+	internal_title_bar: SD_TITLE_BAR
 
 	pointer_last_position: EV_COORDINATE
 
@@ -222,22 +230,21 @@ feature {NONE} -- Implementation
 		do
 --			set_pointer_style (default_pixmaps.sizeall_cursor)
 
-			if internal_title_bar_pressed then
+--			if internal_title_bar_pressed then
 --				debug ("larry")
 --					io.put_string ("%N SD_FLOATING_ZONE before set position")
 --				end
 --				set_position (a_screen_x - pointer_press_offset_x, a_screen_y - pointer_press_offset_y)
-				if docker_mediator = Void or not docker_mediator.capture_enabled  then
-					create docker_mediator.make (Current)
-					docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
-				else
+--				if docker_mediator = Void or not docker_mediator.capture_enabled  then
+
+--				else
 					docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
-				end
+--				end
 
 --				debug ("larry")
 --					io.put_string ("%N SD_FLOATING_ZONE on_pointer_motion. set_position " + (a_screen_x - pointer_press_offset_x).out + " " + (a_screen_y - pointer_press_offset_y).out)
 --				end
-			end
+--			end
 
 		end
 
@@ -270,42 +277,49 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_title_bar_pointer_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+--	on_title_bar_pointer_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+--			--
+--		do
+----			if a_button = 1 then
+----				internal_title_bar_pressed := True
+----			end
+--
+--		end
+--
+--	on_title_bar_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+--			--
+--		do
+----			if a_button = 1 then
+----				internal_title_bar_pressed := False
+----			end
+--
+--		end
+
+--	internal_title_bar_pressed: BOOLEAN
+--
+--	on_title_bar_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+--			--
+--		do
+--			if internal_title_bar_pressed then
+--
+--			end
+--		end
+
+	on_title_bar_drag (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
-			if a_button = 1 then
-				internal_title_bar_pressed := True
-			end
-
-		end
-
-	on_title_bar_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
-		do
-			if a_button = 1 then
-				internal_title_bar_pressed := False
-			end
-
-		end
-
-	internal_title_bar_pressed: BOOLEAN
-
-	on_title_bar_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
-		do
-
-			if internal_title_bar_pressed then
 				pointer_press_offset_x := a_screen_x - screen_x
 				pointer_press_offset_y := a_screen_y - screen_y
 				enable_capture
-			end
+				create docker_mediator.make (Current)
+				docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
 		end
 
 	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
 			if a_button = 1 and docker_mediator /= Void then
-				internal_title_bar_pressed := False
+--				internal_title_bar_pressed := False
 				disable_capture
 				debug ("larry")
 					io.put_string ("%N SD_FLOATING_ZONE: yeah, released! ")

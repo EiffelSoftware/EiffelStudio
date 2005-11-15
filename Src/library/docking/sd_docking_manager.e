@@ -173,7 +173,7 @@ feature {SD_FLOATING_ZONE, SD_FLOATING_MENU_ZONE, SD_MENU_ZONE}
 
 
 
-feature {SD_CONFIG, SD_AUTO_HIDE_STATE}
+feature {SD_CONFIG, SD_STATE}
 
 	content_by_title (a_title: STRING): SD_CONTENT is
 			-- Content by `a_title'.

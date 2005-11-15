@@ -17,7 +17,8 @@ inherit
 			dock_at_top_level,
 			content,
 			change_title,
-			change_pixmap
+			change_pixmap,
+			close_window
 		end
 create
 	make,
@@ -61,7 +62,6 @@ feature {NONE} -- Initlization
 				if l_split_parent.full and then l_split_parent.minimum_split_position <= l_old_split_position and l_split_parent.maximum_split_position >= l_old_split_position then
 					l_split_parent.set_split_position (l_old_split_position)
 				end
-
 			end
 
 			internal_shared.docking_manager.remove_empty_split_area
@@ -85,13 +85,13 @@ feature {NONE} -- Initlization
 		end
 
 feature
-
-
-
-
-	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
+	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
+--	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER; a_tab_friend: SD_CONTENT) is
 			--
 		do
+--			if a_tab_friend = Void then
+--				
+--			end
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
@@ -150,6 +150,20 @@ feature
 			l_auto_hide_panel:= internal_shared.docking_manager.auto_hide_panel (a_direction)
 			l_auto_hide_panel.set_tab_group (l_contents)
 
+		end
+
+	close_window is
+			-- When close window, do this.
+		do
+			internal_shared.docking_manager.lock_update
+			internal_tab_zone.prune (content)
+			if internal_content.internal_close_actions /= Void then
+				internal_content.internal_close_actions.call ([])
+			end
+
+			update_last_content_state
+			internal_shared.docking_manager.remove_empty_split_area
+			internal_shared.docking_manager.unlock_update
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
@@ -218,17 +232,26 @@ feature
 		local
 --			l_docking_state: SD_DOCKING_STATE
 			l_floating_state: SD_FLOATING_STATE
-			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
+			l_docking_state: SD_DOCKING_STATE
+			l_content: SD_CONTENT
 		do
 			internal_shared.docking_manager.lock_update
-			l_orignal_multi_dock_area := internal_shared.docking_manager.inner_container (internal_tab_zone)
 
 			create l_floating_state.make (a_x, a_y)
 
-			dock_at_top_level (l_floating_state.inner_container)
+			if internal_drag_title_bar then
+				dock_at_top_level (l_floating_state.inner_container)
+				l_floating_state.update_title_bar
+			else
+				l_content := content
+				internal_tab_zone.prune (l_content)
+				create l_docking_state.make (l_content, {SD_DOCKING_MANAGER}.dock_left, {SD_SHARED}.title_bar_height)
+				l_docking_state.dock_at_top_level (l_floating_state.inner_container)
+				l_content.change_state (l_docking_state)
 
-			l_floating_state.update_title_bar
-			l_orignal_multi_dock_area.update_title_bar
+				update_last_content_state
+			end
+
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
 		end
@@ -398,7 +421,11 @@ feature {NONE}  -- Implementation
 				l_new_split_area.set_proportion (0.5)
 
 			if l_target_zone_parent_spliter /= Void and then l_target_zone_parent_spliter.full then
-				l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
+				if l_target_zone_parent_spliter.maximum_split_position >= l_target_zone_parent_split_position and
+					l_target_zone_parent_spliter.minimum_split_position <= l_target_zone_parent_split_position then
+						l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
+				end
+
 			end
 
 			internal_shared.docking_manager.inner_container (internal_tab_zone).remove_empty_split_area
@@ -486,39 +513,40 @@ feature {NONE}  -- Implementation
 			l_old_stuff: EV_WIDGET
 --			l_old_spliter: EV_SPLIT_AREA
 			l_new_container: EV_SPLIT_AREA
+			l_new_split_position: INTEGER
 		do
 			internal_tab_zone.parent.prune (internal_tab_zone)
 			if a_multi_dock_area.full then
+
 				l_old_stuff := a_multi_dock_area.item
---				l_old_spliter ?= l_old_stuff
---				if l_old_spliter /= Void then
---					internal_shared.docking_manager.inner_container.save_spliter_position (l_old_spliter)	
---				end
+				a_multi_dock_area.save_spliter_position (l_old_stuff)
 				a_multi_dock_area.prune (l_old_stuff)
 			end
 
 			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				create {EV_HORIZONTAL_SPLIT_AREA} l_new_container
+				l_new_split_position := (internal_shared.docking_manager.container_rectangle.width * internal_shared.default_docking_width_rate).ceiling
 			else
 				create {EV_VERTICAL_SPLIT_AREA} l_new_container
+				l_new_split_position := (internal_shared.docking_manager.container_rectangle.height * internal_shared.default_docking_height_rate).ceiling
 			end
 
 			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_top then
 				l_new_container.set_first ( internal_tab_zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_second (l_old_stuff)
---					l_new_container.set_split_position (internal_width_height)
 				end
 			else
 				l_new_container.set_second (internal_tab_zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_first (l_old_stuff)
-					if internal_direction = {SD_DOCKING_MANAGER}.dock_right then
+					if internal_direction = {SD_DOCKING_MANAGER}.dock_right or internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
 						-- maximum_split_position NOT work at the time.
 --						l_new_container.set_split_position (l_new_container.maximum_split_position - internal_width_height)
---						l_new_container.set_split_position (internal_shared.docking_manager.inner_container.width - internal_width_height)
+						l_new_container.set_split_position (l_new_container.maximum_split_position - l_new_split_position)
 					else
 --						l_new_container.set_split_position (internal_shared.docking_manager.inner_container.height - internal_width_height)
+						l_new_container.set_split_position (l_new_split_position)
 					end
 
 				end
@@ -526,9 +554,9 @@ feature {NONE}  -- Implementation
 			end
 
 			a_multi_dock_area.extend (l_new_container)
---			if l_old_spliter /= Void then
---				internal_shared.docking_manager.inner_container.restore_spliter_position (l_old_spliter)	
---			end						
+			if l_old_stuff /= Void then
+				a_multi_dock_area.restore_spliter_position (l_old_stuff)
+			end
 		end
 
 	dock_tab_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is

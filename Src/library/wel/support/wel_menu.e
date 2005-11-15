@@ -538,7 +538,7 @@ feature {NONE} -- Implementation
 	default_track_option: INTEGER is
 			-- Default option used for `show_track'
 		once
-			Result := Tpm_leftbutton
+			Result := Tpm_rightbutton
 		end
 
 	load_item (hinstance, id: POINTER) is

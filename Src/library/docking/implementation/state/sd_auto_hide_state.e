@@ -96,6 +96,8 @@ feature -- Perform Restore
 		local
 			l_rect: EV_RECTANGLE
 --			l_timer: EV_TIMEOUT
+			l_env: EV_ENVIRONMENT
+
 		do
 			internal_shared.docking_manager.lock_update
 			if not internal_shared.docking_manager.has_zone_by_content (internal_content) then
@@ -105,13 +107,17 @@ feature -- Perform Restore
 				internal_shared.docking_manager.remove_auto_hide_zones
 
 				internal_shared.docking_manager.add_zone (zone)
-
+			create internal_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
+			internal_timer.actions.extend (agent on_timer_for_moving)
+			create l_env
+			l_env.application.pointer_motion_actions.extend (agent on_pointer_motion)
+			internal_motion_procudure := l_env.application.pointer_motion_actions.last
 				-- First, put the zone in a viewport, make a animation here.
 
 				internal_shared.docking_manager.internal_fixed.extend (zone)
 				-- FIXIT: Below line is used when EV_FIXED removed contract.
 --				create l_timer
---				l_timer.actions.extend (agent handle_timer (l_timer))
+--				l_timer.actions.extend (agent on_timer (l_timer))
 --				l_timer.set_interval (20)
 
 				l_rect := internal_shared.docking_manager.container_rectangle
@@ -164,13 +170,64 @@ feature -- Perform Restore
 			internal_shared.docking_manager.unlock_update
 		end
 
+feature -- Impementation for auto hide.
+
+	internal_timer: EV_TIMEOUT
+
+	pointer_outside: BOOLEAN
+
+	internal_motion_procudure: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
+
+	on_timer is
+			--
+		require
+			internal_timer_not_void: internal_timer /= Void
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			if pointer_outside and not zone.has_focus then
+				internal_timer.actions.wipe_out
+				internal_timer := Void
+				zone.content.state.close_window
+
+				create l_env
+				l_env.application.pointer_motion_actions.prune_all (internal_motion_procudure)
+
+				debug ("larry")
+					io.put_string ("%N SD_AUTO_HIDE_STATE on_pointer_motion actions pruned")
+				end
+			end
+
+		ensure
+			timer_wipe_out:
+		end
+
+--	pointer_motion_agent: PROCEDURE [ANY, EV_WIDGET, INTEGER, INTEGER]
+
+	on_pointer_motion (a_widget: EV_WIDGET; a_screen_x, a_screen_y: INTEGER) is
+			--
+		do
+			-- FIXIT: has_recursive not work ?
+			if not internal_tab_stub.has_recursive (a_widget) and not zone.has_recursive (a_widget) then
+				pointer_outside := True
+
+				debug ("larry")
+					io.put_string ("%N SD_AUTO_HIDE_STATE on_pointer_motion pointer_outside := True " + a_screen_x.out + " " + a_screen_y.out)
+				end
+			else
+				pointer_outside := False
+			end
+		end
+
+feature
+
 	show_step: INTEGER is 6
 			-- Step when tear-off window appear.
 
 	final_position: INTEGER
 			-- Final position when a tear-off window should at.
 
-	handle_timer (a_timer: EV_TIMEOUT) is
+	on_timer_for_moving (a_timer: EV_TIMEOUT) is
 			-- Use timer to play a animation.
 		do
 
@@ -197,10 +254,17 @@ feature -- Perform Restore
 
 	close_window is
 			--
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			record_state
 			Precursor {SD_STATE}
-
+			if internal_timer /= Void then
+				internal_timer.actions.wipe_out
+				internal_timer := Void
+			end
+			create l_env
+			l_env.application.pointer_motion_actions.prune_all (internal_motion_procudure)
 		end
 
 	stick_window (a_direction: INTEGER) is

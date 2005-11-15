@@ -216,7 +216,6 @@ feature -- Perform Restore
 
 			internal_shared.docking_manager.inner_container (a_target_zone).update_title_bar
 
-			internal_shared.docking_manager.update_title_bar
 			internal_shared.docking_manager.unlock_update
 		end
 
@@ -224,9 +223,9 @@ feature -- Perform Restore
 			--
 		local
 			l_tab_state: SD_TAB_STATE
-			l_split_area: EV_SPLIT_AREA
-			l_split_position: INTEGER
-			l_widget: EV_WIDGET
+--			l_split_area: EV_SPLIT_AREA
+--			l_split_position: INTEGER
+--			l_widget: EV_WIDGET
 		do
 			internal_shared.docking_manager.lock_update
 

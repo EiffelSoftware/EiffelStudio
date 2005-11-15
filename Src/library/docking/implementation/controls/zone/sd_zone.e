@@ -6,6 +6,9 @@ indexing
 deferred class
 	SD_ZONE
 
+--inherit
+--	EV_WIDGET
+
 feature -- Propoties
 
 	state: SD_STATE is
@@ -33,6 +36,8 @@ feature -- Propoties
 		do
 			Result := content.type
 		end
+
+
 
 feature {NONE}  -- Implementation
 
@@ -71,7 +76,7 @@ feature {SD_DOCKING_MANAGER, SD_STATE}
 	destroy_focus_in is
 			-- Destory all widgets actions in `Current'.
 		local
-			l_app: EV_APPLICATION
+--			l_app: EV_APPLICATION
 		do
 --			create l_app
 --			l_app.pointer_button_press_actions.prune_all (agent on_focus_in)

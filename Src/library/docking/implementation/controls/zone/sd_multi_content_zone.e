@@ -10,8 +10,7 @@ inherit
 		rename
 			set_content as extend,
 			internal_shared as internal_shared_not_used
-		undefine
-			is_equal, copy, default_create
+
 		end
 feature
 

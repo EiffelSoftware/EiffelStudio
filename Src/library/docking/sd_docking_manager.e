@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			internal_window := a_window
 
 			create internal_viewport
-			internal_viewport.resize_actions.extend (agent handle_resize)
+			internal_viewport.resize_actions.extend (agent on_resize)
 
 			top_container.extend (internal_viewport)
 
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			create internal_zones
 
 			internal_zones.add_actions.extend (agent on_added_zone)
-			internal_zones.remove_actions.extend (agent handle_pruned_zone)
+			internal_zones.remove_actions.extend (agent on_pruned_zone)
 
 			internal_shared.set_docking_manager (Current)
 
@@ -123,6 +123,8 @@ feature {NONE} -- Initialization
 			end
 		end
 
+
+
 feature -- Properties
 
 	remove_empty_split_area  is
@@ -138,25 +140,6 @@ feature -- Properties
 					internal_inner_containers.item.remove_empty_split_area
 				end
 				internal_inner_containers.forth
-			end
-		end
-
-	update_title_bar  is
-		-- Update all title bar.
-		do
-		-- FIXIT: should get a SD_MULTI_DOCK_AREA base on SD_ZONE.
-			from
-				internal_inner_containers.start
-			until
-				internal_inner_containers.after
-			loop
-				if internal_inner_containers.item /= Void then
-					internal_inner_containers.item.update_title_bar
-				end
-				if not internal_inner_containers.after then
-					internal_inner_containers.forth
-				end
-
 			end
 		end
 
@@ -226,6 +209,7 @@ feature {SD_STATE, SD_CONFIG, SD_HOT_ZONE, SD_ZONE}
 	unlock_update is
 			--
 		do
+			update_title_bar
 			lock_call_time := lock_call_time - 1
 			if lock_call_time = 0 then
 				internal_window.unlock_update
@@ -533,8 +517,26 @@ feature {SD_AUTO_HIDE_STATE, SD_ZONE, MAIN_WINDOW, SD_CONFIG} -- Zone operation
 		end
 
 feature {NONE}
+	update_title_bar  is
+		-- Update all title bar.
+		do
+		-- FIXIT: should get a SD_MULTI_DOCK_AREA base on SD_ZONE.
+			from
+				internal_inner_containers.start
+			until
+				internal_inner_containers.after
+			loop
+				if internal_inner_containers.item /= Void then
+					internal_inner_containers.item.update_title_bar
+				end
+				if not internal_inner_containers.after then
+					internal_inner_containers.forth
+				end
 
-	handle_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+			end
+		end
+
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize zone event. Resize all the widgets in internal_fixed (EV_FIXED).
 		do
 			remove_auto_hide_zones
@@ -572,7 +574,7 @@ feature {NONE}
 			-- If this is a zone auto hide
 		end
 
-	handle_pruned_zone (a_zone: SD_ZONE) is
+	on_pruned_zone (a_zone: SD_ZONE) is
 			-- Handle pruned a zone event.
 		require
 			a_zone_not_void: a_zone /= Void

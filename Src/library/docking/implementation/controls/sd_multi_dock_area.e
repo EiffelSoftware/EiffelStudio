@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 
 
 
-			if l_temp_spliter /= Void then
+			if l_temp_spliter /= Void and l_temp_spliter.full then
 --				-- There should by only one, because Postorder, so NO recursive needed.
 --				-- The split area must full, because Postorder recursive.
 					l_temp_spliter.set_split_position (l_spliter_position)

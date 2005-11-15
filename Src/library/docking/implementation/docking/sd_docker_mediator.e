@@ -14,7 +14,9 @@ feature -- Initlization
 	make (a_caller: like internal_caller) is
 			-- Creation method
 		do
+
 			create internal_shared
+			internal_shared.hot_zone_factory.set_docker_mediator (Current)
 			create hot_zones.make (1)
 --			internal_drag_window_width := a_window_width
 --			internal_drag_window_height := a_window_height		
@@ -43,6 +45,7 @@ feature -- Access
 			l_zone_list: ARRAYED_LIST [SD_ZONE]
 		do
 			l_zone_list := internal_shared.docking_manager.zones
+
 			create hot_zones.make (1)
 			generate_hot_zones_imp (l_zone_list)
 			if internal_shared.hot_zone_factory.hot_zone_main.type = internal_caller.type  then
@@ -82,7 +85,7 @@ feature -- Tracing pointer events
 
 			l_floating_zone ?= internal_caller
 			if not changed and l_floating_zone /= Void then
-				l_floating_zone.set_position (a_screen_x, a_screen_y)
+				l_floating_zone.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
 				debug ("larry")
 					io.put_string ("%N SD_DOCKER_MEDIATOR not changed and set floating position")
 				end
@@ -98,13 +101,13 @@ feature -- Hanlde pointer events
 			-- When user dragging something for docking, show hot zone which allow to dock.
 		local
 			l_drawed: BOOLEAN
-			l_hot_zone: SD_HOT_ZONE
+--			l_hot_zone: SD_HOT_ZONE
 		do
 --			feedback.clear_screen
 			notify_outside_pointer_zone (a_screen_x, a_screen_y)
-			debug ("larry")
-				io.put_string ("%N in docker mediator. on_pointer_motion. caller_type: " + internal_caller.type.out)
-			end
+--			debug ("larry")
+--				io.put_string ("%N in docker mediator. on_pointer_motion. caller_type: " + internal_caller.type.out)
+--			end
 			from
 				hot_zones.start
 			until

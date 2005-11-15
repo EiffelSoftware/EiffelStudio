@@ -33,11 +33,13 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make (a_floating_state: SD_FLOATING_STATE) is
 			-- Creation method.
 		require
-
+			a_floating_state_not_void: a_floating_state /= Void
 		do
+			internal_floating_state := a_floating_state
+
 			create internal_shared
 			default_create
 
@@ -55,11 +57,11 @@ feature {NONE} -- Initlization
 
 			internal_vertical_box.disable_item_expand (internal_title_bar)
 
-			pointer_button_release_actions.extend (agent handle_pointer_button_release)
+			pointer_button_release_actions.extend (agent on_pointer_button_release)
 
 			pointer_motion_actions.extend (agent on_pointer_motion)
---			internal_title_bar.drag_actions.extend (agent handle_drag_action)
---			internal_title_bar.pointer_button_release_actions.extend (agent handle_title_bar_pointer_release)
+--			internal_title_bar.drag_actions.extend (agent on_drag_action)
+--			internal_title_bar.pointer_button_release_actions.extend (agent on_title_bar_pointer_release)
 --			internal_vertical_box.extend (a_content.user_widget)
 
 			create internal_inner_container.make
@@ -103,7 +105,7 @@ feature -- Command
 					l_title_zone ?= l_zone
 					check l_title_zone /= Void end
 					l_title_zone.set_title_bar (False)
-
+					internal_title_bar.set_title (l_zone.content.title)
 				else
 					--  l_zone should have title bar
 					l_split_area ?= internal_inner_container.item
@@ -221,9 +223,9 @@ feature {NONE} -- Implementation
 --			set_pointer_style (default_pixmaps.sizeall_cursor)
 
 			if internal_title_bar_pressed then
-				debug ("larry")
-					io.put_string ("%N SD_FLOATING_ZONE before set position")
-				end
+--				debug ("larry")
+--					io.put_string ("%N SD_FLOATING_ZONE before set position")
+--				end
 --				set_position (a_screen_x - pointer_press_offset_x, a_screen_y - pointer_press_offset_y)
 				if docker_mediator = Void or not docker_mediator.capture_enabled  then
 					create docker_mediator.make (Current)
@@ -232,9 +234,9 @@ feature {NONE} -- Implementation
 					docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
 				end
 
-				debug ("larry")
-					io.put_string ("%N SD_FLOATING_ZONE on_pointer_motion. set_position " + (a_screen_x - pointer_press_offset_x).out + " " + (a_screen_y - pointer_press_offset_y).out)
-				end
+--				debug ("larry")
+--					io.put_string ("%N SD_FLOATING_ZONE on_pointer_motion. set_position " + (a_screen_x - pointer_press_offset_x).out + " " + (a_screen_y - pointer_press_offset_y).out)
+--				end
 			end
 
 		end
@@ -299,7 +301,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_pointer_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--
 		do
 			if a_button = 1 and docker_mediator /= Void then

@@ -29,7 +29,7 @@ feature {NONE} -- Initlization
 --			internal_title := a_title
 
 			create internal_drawing_area
-			internal_drawing_area.expose_actions.extend (agent handle_redraw)
+			internal_drawing_area.expose_actions.extend (agent on_redraw)
 			internal_drawing_area.set_minimum_size (internal_pixmap.minimum_width, internal_pixmap.minimum_height)
 			extend (internal_drawing_area)
 			create internal_label.make_with_text (a_title)
@@ -38,9 +38,9 @@ feature {NONE} -- Initlization
 --			create pointer_enter_actions
 
 --			pointer_enter_actions.merge_right (internal_pixmap.pointer_enter_actions)
-			internal_label.pointer_enter_actions.extend (agent handle_pointer_enter)
+			internal_label.pointer_enter_actions.extend (agent on_pointer_enter)
 --			-- | FIXIT: Why enable agent below, there'll be behavior unexcepted?
-			internal_drawing_area.pointer_enter_actions.extend (agent handle_pointer_enter)
+			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
 		end
 
 feature -- Properties
@@ -96,13 +96,16 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implemention
 
-	handle_pointer_enter is
+	on_pointer_enter is
 			-- Handle pointer enter event.
+		local
+--			l_timer: EV_TIMEOUT
 		do
 			pointer_enter_actions.call ([])
+
 		end
 
-	handle_redraw (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_redraw (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			--
 		do
 			internal_drawing_area.clear

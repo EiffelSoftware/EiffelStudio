@@ -8,6 +8,9 @@ class
 
 inherit
 	SD_HOR_VER_BOX
+		rename
+			has_focus as has_focus_hor_ver_box
+		end
 	SD_SINGLE_CONTENT_ZONE
 		undefine
 			copy, is_equal, default_create,
@@ -69,6 +72,8 @@ feature {NONE} -- Implementation
 
 	close_window is
 			-- When user clicked the close button.
+		local
+--			l_env: EV_ENVIRONMENT
 		do
 			internal_content.state.close_window
 		end
@@ -84,7 +89,6 @@ feature {NONE} -- Implementation
 		do
 --			internal_content.state.drag_window
 		end
-
 
 	resize_bar: SD_RESIZE_BAR
 			-- The resize bar at the side.
@@ -150,6 +154,7 @@ feature {NONE} -- For user docking
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
 			internal_shared.docking_manager.disable_all_zones_focus_color
 			window.title_bar.enable_focus_color
+--			window.title_bar.fo
 		end
 
 	on_zone_focus_out is
@@ -157,6 +162,14 @@ feature {NONE} -- For user docking
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
 			window.title_bar.disable_focus_color
+		end
+
+feature -- Query
+
+	has_focus: BOOLEAN is
+			--
+		do
+			Result := window.title_bar.is_focus_color_enable
 		end
 
 end

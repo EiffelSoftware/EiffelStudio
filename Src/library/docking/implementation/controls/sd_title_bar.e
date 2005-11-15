@@ -151,6 +151,7 @@ feature -- Access
 			--
 		local
 		do
+			is_focus_color_enable := True
 			exposing_color := hightlight_color
 			internal_leading_hightlight_area.expose_actions.call ([0, 0, internal_leading_hightlight_area.width, internal_leading_hightlight_area.height])
 			internal_ending_hightlight_area.expose_actions.call ([0, 0, internal_ending_hightlight_area.width, internal_ending_hightlight_area.height])
@@ -160,10 +161,14 @@ feature -- Access
 			--
 		local
 		do
+			is_focus_color_enable := False
 			exposing_color := hightlight_gray_color
 			internal_leading_hightlight_area.expose_actions.call ([0, 0, internal_leading_hightlight_area.width, internal_leading_hightlight_area.height])
 			internal_ending_hightlight_area.expose_actions.call ([0, 0, internal_ending_hightlight_area.width, internal_ending_hightlight_area.height])
 		end
+
+
+	is_focus_color_enable: BOOLEAN
 
 	custom_area: EV_HORIZONTAL_BOX
 			-- Contains custom widget.
@@ -406,3 +411,4 @@ feature {NONE} -- Implementation (Colors)
 	hightlight_color_shadow_low_internal: EV_COLOR
 
 end
+

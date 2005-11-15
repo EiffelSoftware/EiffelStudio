@@ -8,6 +8,9 @@ class
 
 inherit
 	EV_CELL
+		rename
+			has_focus as has_focus_cell
+		end
 
 create
 	make
@@ -28,7 +31,7 @@ feature {NONE} -- Initlization
 			internal_title_bar.min_max_actions.extend (agent min_max_window)
 			internal_title_bar.drag_actions.extend (agent drag_window)
 			internal_title_bar.pointer_button_release_actions.extend (agent pointer_release)
-			internal_title_bar.pointer_double_press_actions.extend (agent handle_pointer_double_press)
+			internal_title_bar.pointer_double_press_actions.extend (agent on_pointer_double_press)
 			pointer_button_release_actions.extend (agent pointer_release)
 			pointer_motion_actions.extend (agent pointer_motion)
 
@@ -37,10 +40,16 @@ feature {NONE} -- Initlization
 
 			extend (vbox)
 
-			set_minimum_size (20 * 3, 16)
+			set_minimum_size (internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
 		end
 
 feature   -- Access
+
+	has_focus: BOOLEAN is
+			--
+		do
+			Result := internal_title_bar.is_focus_color_enable
+		end
 
 	set_stick (a_bool: BOOLEAN) is
 			-- Set whether current is sticked.
@@ -200,7 +209,7 @@ feature {NONE} -- Implemention
 		do
 		end
 
-	handle_pointer_double_press is
+	on_pointer_double_press is
 			--
 		do
 			if internal_pointer_double_press_title_bar_actions /= Void then

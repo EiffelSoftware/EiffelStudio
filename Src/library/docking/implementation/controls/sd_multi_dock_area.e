@@ -26,7 +26,8 @@ feature -- Command
 		do
 			if internal_parent_floating_zone /= Void then
 				internal_parent_floating_zone.update_title_bar
-			else
+			elseif readable then
+
 				set_all_title_bar (item)
 			end
 		end
@@ -54,22 +55,32 @@ feature -- Command
 			end
 		end
 
-	save_spliter_position (a_spliter: EV_SPLIT_AREA) is
+	save_spliter_position (a_widget: EV_WIDGET) is
 			--
 		require
-			a_spliter_not_void: a_spliter /= Void
+			a_widget_not_void: a_widget /= Void
+		local
+			l_split: EV_SPLIT_AREA
 		do
-			create spliters.make (1)
-			save_spliter_position_imp (a_spliter)
+			l_split ?= a_widget
+			if l_split /= Void then
+				create spliters.make (1)
+				save_spliter_position_imp (l_split)
+			end
 		end
 
-	restore_spliter_position (a_spliter: EV_SPLIT_AREA) is
+	restore_spliter_position (a_widget: EV_WIDGET) is
 			--
 		require
-			a_spliter_not_void: a_spliter /= Void
+			a_widget_not_void: a_widget /= Void
+		local
+			l_split: EV_SPLIT_AREA
 		do
-			spliters.start
-			restore_spliter_position_imp (a_spliter)
+			l_split ?= a_widget
+			if l_split /= Void then
+				spliters.start
+				restore_spliter_position_imp (l_split)
+			end
 		end
 
 	has_zone (a_zone: SD_ZONE): BOOLEAN is
@@ -113,7 +124,7 @@ feature {NONE} -- Implementation
 			end
 			l_zone ?= a_widget
 			if l_zone /= Void then
-				l_zone.set_title_bar (True)
+				l_zone.set_show_stick_min_max (True)
 			end
 	 	end
 

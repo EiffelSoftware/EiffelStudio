@@ -8,7 +8,7 @@ deferred class
 
 feature -- Basic operation
 
-	set_title_bar (a_show: BOOLEAN) is
+	set_show_stick_min_max (a_show: BOOLEAN) is
 		deferred
 		end
 

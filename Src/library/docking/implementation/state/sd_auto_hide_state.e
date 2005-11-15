@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 
 feature -- Perform Restore
 
-	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
+	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
 			--
 		do
 			-- This class can created by make (not like SD_DOCKING_STATE, created by INTERNAL), so this routine do less work.
@@ -108,7 +108,7 @@ feature -- Perform Restore
 
 				internal_shared.docking_manager.add_zone (zone)
 			create internal_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
-			internal_timer.actions.extend (agent on_timer_for_moving)
+			internal_timer.actions.extend (agent on_timer)
 			create l_env
 			l_env.application.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_motion_procudure := l_env.application.pointer_motion_actions.last
@@ -278,7 +278,7 @@ feature
 			if auto_hide_panel.is_content_in_group (internal_content) then
 				stick_zones (a_direction)
 			else
-				stick_on_zone (a_direction)
+				stick_zone (a_direction)
 			end
 
 			internal_shared.docking_manager.remove_empty_split_area
@@ -327,6 +327,7 @@ feature {NONE} -- Implementation
 				if l_tab_group.index = 1 then
 					create l_docking_state.make (l_content, a_direction, 60)
 					l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+					l_content.change_state (l_docking_state)
 				else
 					if l_content.user_widget.parent /= Void then
 						l_content.user_widget.parent.prune (l_content.user_widget)
@@ -337,14 +338,15 @@ feature {NONE} -- Implementation
 						create l_tab_state.make_with_tab_zone (l_content, l_last_tab_zone)
 					end
 					l_last_tab_zone := l_tab_state.zone
+					l_content.change_state (l_tab_state)
 				end
 
 				l_tab_group.forth
 			end
-
+			auto_hide_panel.tab_groups.prune_all (l_tab_group)
 		end
 
-	stick_on_zone (a_direction: INTEGER) is
+	stick_zone (a_direction: INTEGER) is
 			--
 		local
 			l_docking_state: SD_DOCKING_STATE

@@ -99,21 +99,11 @@ feature {NONE} -- Two widgets
 
 feature -- Basic operation
 
-	set_title_bar (a_show: BOOLEAN) is
+	set_show_stick_min_max (a_show: BOOLEAN) is
 			-- Set show or not show `internal_title_bar'.
 		do
-			if a_show then
-				if not vbox.has (internal_title_bar) then
-					vbox.start
-					vbox.put_left (internal_title_bar)
-					vbox.disable_item_expand (internal_title_bar)
-				end
-			else
-				vbox.start
-				if vbox.has (internal_title_bar) then
-					vbox.prune_all (internal_title_bar)
-				end
-			end
+			internal_title_bar.set_show_stick (a_show)
+			internal_title_bar.set_show_min_max (a_show)
 		end
 
 feature -- Actions

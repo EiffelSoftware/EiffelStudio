@@ -16,6 +16,7 @@ create
 	make
 
 feature {NONE} -- Initlization
+
 	make is
 			-- Creation method.
 		local
@@ -51,17 +52,18 @@ feature {NONE} -- Initlization
 			container.extend (internal_leading_hightlight_area)
 			container.disable_item_expand (internal_leading_hightlight_area)
 
-			create temp_cell
-			temp_cell.set_minimum_width (8)
-			container.extend (temp_cell)
-			container.disable_item_expand (temp_cell)
+--			create temp_cell
+--			temp_cell.set_minimum_width (0)
+--			container.extend (temp_cell)
+--			container.disable_item_expand (temp_cell)
 
 			create internal_title.make_with_text ("Untitled")
+--			internal_title.set_minimum_width (0)
 			container.extend (internal_title)
 			container.disable_item_expand (internal_title)
 
 			create temp_cell
-			temp_cell.set_minimum_width (8)
+--			temp_cell.set_minimum_width (0)
 			container.extend (temp_cell)
 			container.disable_item_expand (temp_cell)
 
@@ -74,18 +76,20 @@ feature {NONE} -- Initlization
 			vertical_box.disable_item_expand (custom_area)
 
 			---------------- Remove this to remove Demo button ----------------
-			create internal_tool_bar
-			custom_area.extend (internal_tool_bar)
-			create tool_bar_button
-			tool_bar_button.set_pixmap (internal_shared.icons.maximize)
-			internal_tool_bar.extend (tool_bar_button)
-			create tool_bar_button
-			tool_bar_button.set_pixmap (internal_shared.icons.maximize)
-			internal_tool_bar.extend (tool_bar_button)
+--			create internal_tool_bar
+--			custom_area.extend (internal_tool_bar)
+--
+--			create tool_bar_button
+--			tool_bar_button.set_pixmap (internal_shared.icons.maximize)
+--			internal_tool_bar.extend (tool_bar_button)
+--			create tool_bar_button
+--			tool_bar_button.set_pixmap (internal_shared.icons.maximize)
+--			internal_tool_bar.extend (tool_bar_button)
+----			internal_tool_bar.set_minimum_width (0)
 			-------------------------------------------------------------------
 
 			create l_label.default_create
-			l_label.set_minimum_width (8)
+			l_label.set_minimum_width (0)
 			container.extend (l_label)
 			container.enable_item_expand (l_label)
 
@@ -134,7 +138,7 @@ feature -- Access
 	set_title (a_title: STRING) is
 			-- Set the title on the title bar.
 		do
---			internal_title.set_text (a_title)
+			internal_title.set_text (a_title)
 		end
 
 	set_stick (a_bool: BOOLEAN) is
@@ -146,6 +150,42 @@ feature -- Access
 				stick.set_pixmap (internal_shared.icons.unstick)
 			end
 		end
+
+	set_show_min_max (a_show: BOOLEAN) is
+			--
+		do
+			if a_show then
+				if not internal_tool_bar.has (min_max) then
+					internal_tool_bar.start
+					internal_tool_bar.put_right (min_max)
+				end
+			else
+				if internal_tool_bar.has (min_max) then
+					internal_tool_bar.prune_all (min_max)
+				end
+			end
+		end
+
+--	show_min_max: BOOLEAN
+--			-- Show min\max button?
+
+	set_show_stick (a_show: BOOLEAN) is
+			--
+		do
+			if a_show then
+				if not internal_tool_bar.has (stick) then
+					internal_tool_bar.start
+					internal_tool_bar.put_left (stick)
+				end
+			else
+				if internal_tool_bar.has (stick) then
+					internal_tool_bar.prune_all (stick)
+				end
+			end
+		end
+
+--	show_stick: BOOLEAN
+--			-- Show stick button?
 
 	enable_focus_color is
 			--
@@ -166,7 +206,6 @@ feature -- Access
 			internal_leading_hightlight_area.expose_actions.call ([0, 0, internal_leading_hightlight_area.width, internal_leading_hightlight_area.height])
 			internal_ending_hightlight_area.expose_actions.call ([0, 0, internal_ending_hightlight_area.width, internal_ending_hightlight_area.height])
 		end
-
 
 	is_focus_color_enable: BOOLEAN
 

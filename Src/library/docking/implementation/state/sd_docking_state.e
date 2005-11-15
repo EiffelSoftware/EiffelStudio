@@ -55,10 +55,16 @@ feature {NONE}-- Initlization
 
 feature -- Perform Restore
 
-	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER) is
+	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
 			--
+
+		local
+			l_content: SD_CONTENT
 		do
-			make (a_content, 1, 1)
+--			create internal_shared
+			a_titles.start
+			l_content := internal_shared.docking_manager.content_by_title (a_titles.item)
+			make (l_content, {SD_DOCKING_MANAGER}.dock_left, 1)
 			a_container.extend (internal_zone)
 			change_state (Current)
 		end
@@ -200,10 +206,9 @@ feature -- Perform Restore
 		local
 			l_docking_zone: SD_DOCKING_ZONE
 			a_tab_zone: SD_TAB_ZONE
---			l_multi_area: SD_MULTI_DOCK_AREA
 		do
 			internal_shared.docking_manager.lock_update
---			l_multi_area := internal_shared.docking_manager.inner_container (internal_zone)
+
 			l_docking_zone ?= a_target_zone
 			if l_docking_zone /= Void then
 				change_zone_split_area_to_docking_zone (l_docking_zone, a_direction)
@@ -213,9 +218,7 @@ feature -- Perform Restore
 				change_zone_split_area_to_tab_zone (a_tab_zone, a_direction)
 			end
 
-
 			internal_shared.docking_manager.inner_container (a_target_zone).update_title_bar
-
 			internal_shared.docking_manager.unlock_update
 		end
 
@@ -284,20 +287,21 @@ feature {NONE} -- Implementation
 			--
 		local
 			l_new_split_area: EV_SPLIT_AREA
-			l_old_spliter_position: INTEGER
-			l_old_parent_split: EV_SPLIT_AREA
+			l_target_parent_spliter_position: INTEGER
+			l_target_parent_split: EV_SPLIT_AREA
 			l_target_zone_parent: EV_CONTAINER
 			l_target_zone_split: EV_SPLIT_AREA
 		do
+			internal_shared.docking_manager.lock_update
 			-- First, remove current internal_zone from old parent split area.
 			if internal_zone.parent /= Void then
 				internal_zone.parent.prune (internal_zone)
 			end
 			 l_target_zone_parent := a_target_zone.parent
-			 l_old_parent_split ?= a_target_zone.parent
+			 l_target_parent_split ?= a_target_zone.parent
 
-			 if l_old_parent_split /= Void then
-			 	l_old_spliter_position := l_old_parent_split.split_position
+			 if l_target_parent_split /= Void then
+			 	l_target_parent_spliter_position := l_target_parent_split.split_position
 			 end
 
 			a_target_zone.parent.prune (a_target_zone)
@@ -329,16 +333,25 @@ feature {NONE} -- Implementation
 
 			-- Maybe the parent split area not full when there is only two user widgets in `inner_container'
 			-- And so at this time, there is only one widget in parent's area.
---			if l_old_parent_split /= Void l_old_parent_split.full then
-			if a_target_zone.parent.full then
-				l_target_zone_split ?= a_target_zone.parent
+--			if l_target_parent_split /= Void l_target_parent_split.full then
 
-				l_target_zone_split.set_proportion (0.5)
-			end
 
+
+--			if a_target_zone.parent.full then
+--				l_target_zone_split ?= a_target_zone.parent
+--
+--				l_target_zone_split.set_proportion (0.5)
+--			end
+
+			 if l_target_parent_split /= Void and l_target_parent_split.full then
+--			 	l_target_parent_spliter_position := l_target_parent_split.split_position
+			 	l_target_parent_split.set_split_position (l_target_parent_spliter_position)
+
+			 end
 			l_new_split_area.set_proportion (0.5)
 
 			internal_shared.docking_manager.inner_container (internal_zone).remove_empty_split_area
+			internal_shared.docking_manager.unlock_update
 		end
 
 feature -- Properties
@@ -351,6 +364,10 @@ feature -- Properties
 		do
 			Result := internal_zone
 		end
+
+feature -- States report
+
+
 
 feature {NONE} -- Move to new split area implementation.
 

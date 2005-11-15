@@ -14,41 +14,54 @@ inherit
 			set_title,
 			set_stick,
 			enable_focus_color,
-			disable_focus_color
+			disable_focus_color,
+			set_show_min_max,
+			set_show_stick
 		end
 
 create
 	make
-	
+
 feature {NONE} -- Initlization method.
 
 	make is
 			-- Creation method.
 		do
 			default_create
+			create custom_area
 			set_minimum_height (0)
 		end
 
 feature -- Redefine
-	
+
 	set_title (a_title: STRING) is
 			-- Do nothing.
 		do
 		end
-	
+
 	set_stick (a_bool: BOOLEAN) is
 			-- Do nothing.
 		do
 		end
-	
+
 	enable_focus_color is
 			-- Do nothing.
-		do	
+		do
 		end
-	
+
 	disable_focus_color is
 			-- Do nothing.
 		do
 		end
-		
+
+	set_show_min_max (a_show: BOOLEAN) is
+			--
+		do
+		end
+
+	set_show_stick (a_show: BOOLEAN) is
+			--
+		do
+		end
+
 end

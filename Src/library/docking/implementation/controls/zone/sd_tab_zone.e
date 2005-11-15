@@ -63,6 +63,12 @@ feature {NONE} -- Initlization
 			internal_title_bar.set_stick (True)
 			internal_title_bar.drag_actions.extend (agent on_drag_title_bar)
 			internal_title_bar.stick_select_actions.extend (agent on_stick)
+			internal_title_bar.pointer_double_press_actions.extend (agent on_min_max)
+			internal_title_bar.min_max_actions.extend (agent on_min_max)
+			internal_title_bar.close_actions.extend (agent on_close)
+			if a_content.mini_toolbar /= Void then
+				internal_title_bar.custom_area.extend (a_content.mini_toolbar)
+			end
 
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
@@ -94,20 +100,20 @@ feature -- Access
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
 
 			internal_title_bar.set_title (a_content.title)
+			if a_content.mini_toolbar /= Void then
+				internal_title_bar.custom_area.extend (a_content.mini_toolbar)
+			else
+				internal_title_bar.custom_area.wipe_out
+			end
 		end
 
 feature -- Basic operation
 
-	set_title_bar (a_show: BOOLEAN) is
+	set_show_stick_min_max (a_show: BOOLEAN) is
 			--
 		do
-			if a_show and then not has (internal_title_bar) then
-				start
-				put_left (internal_title_bar)
-				disable_item_expand (internal_title_bar)
-			elseif has (internal_title_bar) then
-				prune_all (internal_title_bar)
-			end
+			internal_title_bar.set_show_min_max (a_show)
+			internal_title_bar.set_show_stick (a_show)
 		end
 
 	set_title (a_title: STRING; a_content: SD_CONTENT) is
@@ -161,7 +167,11 @@ feature {NONE} -- Implementation
 			if not internal_diable_on_select_tab then
 				l_content := internal_contents.i_th (internal_notebook.selected_item_index)
 				internal_title_bar.set_title (l_content.title)
-
+				if l_content.mini_toolbar /= Void then
+					internal_title_bar.custom_area.extend (l_content.mini_toolbar)
+				else
+					internal_title_bar.custom_area.wipe_out
+				end
 				if l_content.internal_focus_in_actions /= Void then
 					l_content.internal_focus_in_actions.call ([])
 				end
@@ -216,6 +226,18 @@ feature {NONE} -- Implementation
 		do
 --			content.state.stick_window (content.state.direction)
 			content.state.stick_window ({SD_DOCKING_MANAGER}.dock_left)
+		end
+
+	on_min_max is
+			--
+		do
+			content.state.min_max_window
+		end
+
+	on_close is
+			--
+		do
+			content.state.close_window
 		end
 
 	on_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

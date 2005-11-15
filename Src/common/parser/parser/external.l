@@ -74,7 +74,6 @@ N		[0-9]
 				last_token := TE_BLOCKING
 			}
 [bB][uU][iI][lL][tT]_[iI][nN]	{
-				current_position.go_to (8)
 				last_token := TE_BUILT_IN
 			}
 [cC]		{

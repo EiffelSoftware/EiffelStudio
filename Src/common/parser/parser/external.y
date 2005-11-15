@@ -23,7 +23,7 @@ create
 
 %start		External_declaration
 
-%token	TE_COLON, TE_LPARAN, TE_RPARAN, TE_COMMA
+%token	TE_COLON, TE_LPARAN, TE_RPARAN, TE_COMMA, TE_BUILT_IN
 %token	TE_ADDRESS, TE_BLOCKING, TE_STAR, TE_LT, TE_GT, TE_DQUOTE
 %token	TE_ACCESS, TE_C_LANGUAGE, TE_CPP_LANGUAGE, TE_INLINE
 %token	TE_DELETE, TE_DLL_LANGUAGE, TE_DLLWIN_LANGUAGE, TE_ENUM
@@ -73,6 +73,10 @@ External_declaration:
 			{
 				root_node := $2
 				root_node.set_is_blocking_call ($1)
+			}
+	|	TE_BUILT_IN
+			{
+				create {INLINE_EXTENSION_AS} root_node.initialize (True, Void)
 			}
 	|	IL_specification
 			{

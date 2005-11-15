@@ -549,7 +549,7 @@ feature -- Access
     is_external: BOOLEAN is
             -- Is external feature?
         do
-            Result := compiler_feature.is_external
+            Result := compiler_feature.is_external and then not compiler_feature.is_il_external
         end
 
     is_deferred: BOOLEAN is

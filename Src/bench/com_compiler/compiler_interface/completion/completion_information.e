@@ -60,6 +60,7 @@ feature {NONE} -- Initialization
             create locals.make (10)
             create arguments.make (5)
             create completion_features.make (5)
+            completion_features.compare_objects
             create listers_table.make (5)
         end
 
@@ -244,7 +245,10 @@ feature -- Access
 					l_cf := internal_target_feature (bstr_target, bstr_feature, l_class.file_name, False, True, False)	
 				end
 				if l_cf /= Void then
-					l_class := eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (l_cf.file_name))
+					l_class := l_cf.declaring_class
+					if l_class = Void then
+						l_class := eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (l_cf.file_name))	
+					end					
 					if l_class /= Void and l_class.is_compiled then
 						l_feature := l_class.compiled_class.feature_named (l_cf.feature_name)
 						if l_feature /= Void then
@@ -358,9 +362,9 @@ feature -- Basic Operations
 						end
 					end
 					if a_return_type = Void then
-						create l_feature.make (a_name, l_arguments, a_feature_type, "", a_file_name, a_row)
+						create l_feature.make (a_name, l_ci, l_arguments, a_feature_type, "", a_file_name, a_row)
 					else
-						create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, "", a_file_name, a_row)
+						create l_feature.make_with_return_type (a_name, l_ci, l_arguments, a_return_type, a_feature_type, "", a_file_name, a_row)
 					end
 					completion_features.search (a_file_name.as_lower)
 					if completion_features.found then
@@ -368,7 +372,7 @@ feature -- Basic Operations
 					else
 						create feature_list.make (5)
 						feature_list.extend (l_feature)
-						completion_features.put (feature_list, a_file_name)
+						completion_features.put (feature_list, a_file_name.as_lower)
 					end
 				end
 			end

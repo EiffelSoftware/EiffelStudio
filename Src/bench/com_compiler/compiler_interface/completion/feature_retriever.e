@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 							create extracted_description.make_empty
 						end
 						if Result = Void then
-							create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description.twin, l_feature_i.written_class.file_name, feature_location (l_feature_i))
+							create Result.make_with_return_type (a_name, l_class_i, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description.twin, l_feature_i.written_class.file_name, feature_location (l_feature_i))
 						else
 							Result.add_overload (create {PARAMETER_ENUMERATOR}.make (parameter_descriptors (l_feature_i)), l_feature_i.type.dump, extracted_description.twin)
 						end
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 						else
 							create extracted_description.make_empty
 						end
-						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description.twin, l_feature_i.written_class.file_name, feature_location (l_feature_i))
+						create Result.make_with_return_type (l_feature_i.feature_name, l_class_i, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description.twin, l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					end
 				end
 			end

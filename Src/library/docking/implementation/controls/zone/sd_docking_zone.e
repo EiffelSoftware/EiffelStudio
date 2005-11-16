@@ -57,7 +57,9 @@ feature	{NONE} -- Initlization
 			extend (window)
 
 --			init_focus_in (Current)
-			on_focus_in (Void)
+
+--			a_content.change_state (Current)
+--			on_focus_in (Void)
 
 		end
 

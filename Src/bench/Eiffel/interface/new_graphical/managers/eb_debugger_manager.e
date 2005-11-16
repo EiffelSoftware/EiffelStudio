@@ -13,9 +13,9 @@ inherit
 	EB_CONSTANTS
 
 	EB_SHARED_INTERFACE_TOOLS
-	
+
 	EB_SHARED_GRAPHICAL_COMMANDS
-	
+
 	IPC_SHARED
 		export
 			{NONE} all
@@ -25,9 +25,9 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
-	
+
 create
 	make
 
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 			objects_split_proportion := preferences.debug_tool_data.local_vs_object_proportion
 			debug_splitter_position := preferences.debug_tool_data.main_splitter_position
-			
+
 			create watch_tool_list.make
 
 			create observers.make (10)
@@ -124,7 +124,7 @@ feature -- Access
 			create sep
 			Result.extend (sep)
 			Result.extend (exception_handler_cmd.new_menu_item)
-				
+
 			debug ("DEBUGGER_INTERFACE")
 					-- Separator.
 				create sep
@@ -155,7 +155,7 @@ feature -- Access
 		ensure
 			Result /= Void
 		end
-		
+
 	update_debugging_tools_menu_from (w: EB_DEVELOPMENT_WINDOW) is
 			-- Update the debugging_tools_menu related to `w'	
 		require
@@ -175,11 +175,11 @@ feature -- Access
 					create mit.make_with_text ("Show/Hide tools")
 					mit.disable_sensitive
 					m.extend (mit)
-		
+
 					create {EV_MENU_SEPARATOR} mit
 					mit.disable_sensitive
 					m.extend (mit)
-					
+
 					from
 						i := l_tools.lower
 					until
@@ -198,17 +198,17 @@ feature -- Access
 					end
 					m.enable_sensitive
 				end
-			else				
+			else
 				m.disable_sensitive
 			end
 		end
-	
+
 	update_all_debugging_tools_menu is
 			-- Update all debugging_tools_menu in all development windows
 		do
 			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.update_debug_menu)
 		end
-		
+
 	show_hide_debugging_tools (mit: EV_MENU_ITEM) is
 			-- Toggle display status of Tool related to `mit'
 		require
@@ -286,7 +286,7 @@ feature -- Status report
 	maximum_stack_depth: INTEGER
 			-- Maximum number of call stack elements displayed.
 			-- -1 means display all elements.
-			
+
 feature -- Access
 
 	toggle_display_breakpoints is
@@ -306,7 +306,7 @@ feature -- Access
 						bp_tool.refresh
 					end
 				end
-			end			
+			end
 		end
 
 	display_breakpoints (show_tool_if_closed: BOOLEAN) is
@@ -327,7 +327,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	notify_breakpoints_changes is
 		do
 			display_breakpoints (False)
@@ -370,7 +370,7 @@ feature -- Status setting
 				Application.status.set_max_depth (nb)
 				if Application.is_stopped then
 					pos := Application.current_execution_stack_number
-					Application.status.reload_current_call_stack					
+					Application.status.reload_current_call_stack
 					ecs := Application.status.current_call_stack
 					if ecs = Void or else ecs.is_empty then
 						--| Nothing to display, maybe debugger had an issue getting call stack ..
@@ -402,47 +402,23 @@ feature -- Status setting
 			into_cmd.disable_sensitive
 		end
 
-	-- Jason Wei modified the following feature on Aug 30 2005
 	on_compile_stop is
 			-- A compilation is over. Make all run* commands sensitive.
 		do
 			if
-				((not freezing_launcher.launched) or (freezing_launcher.launched and freezing_launcher.has_exited))
-				and
-				((not finalizing_launcher.launched) or (finalizing_launcher.launched and finalizing_launcher.has_exited))
-					-- If eight `freezing_launcher' or `finalizing_launcher' is working,
-					-- do not enable relative widgets.
+				not (freezing_launcher.is_running or finalizing_launcher.is_running)
 			then
 				if is_msil_dll_system then
 					disable_debugging_commands (True)
 				else
 					step_cmd.enable_sensitive
-	
 					into_cmd.enable_sensitive
-					no_stop_cmd.enable_sensitive			
+					no_stop_cmd.enable_sensitive
 					debug_cmd.enable_sensitive
 					enable_debug
-				end					
+				end
 			end
 		end
-
------- This is the original version		
---	on_compile_stop is
---			-- A compilation is over. Make all run* commands sensitive.
---		do
---			if is_msil_dll_system then
---				disable_debugging_commands (True)
---			else
---				step_cmd.enable_sensitive
---				into_cmd.enable_sensitive
---				no_stop_cmd.enable_sensitive
---				debug_cmd.enable_sensitive
---				enable_debug
---			end
---		end
-		
-	-- Jason Wei modified the above feature on Aug 30 2005
-
 
 	raise is
 			-- Make the debug tools appear in `debugging_window'.
@@ -622,7 +598,7 @@ feature -- Status setting
 			debug_left_layout := debugging_window.left_panel.save_to_resource
 			debug_right_layout := debugging_window.right_panel.save_to_resource
 			debug_splitter_position := debugging_window.panel.split_position
-			
+
 			split ?= objects_tool.widget
 			if split /= Void then
 				objects_split_proportion := split.split_position / split.width
@@ -631,7 +607,7 @@ feature -- Status setting
 			preferences.debug_tool_data.right_debug_layout_preference.set_value (debug_right_layout)
 			preferences.debug_tool_data.main_splitter_position_preference.set_value (debug_splitter_position)
 			preferences.debug_tool_data.set_local_vs_object_proportion (objects_split_proportion)
-			
+
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("Right debug layout: %N")
 	 			from
@@ -690,14 +666,14 @@ feature -- Status setting
 		ensure
 			not raised
 		end
-		
+
 	recycle_tools is
 			-- Recycle tools to free unused data
 		do
 			threads_tool.recycle
 			call_stack_tool.recycle
 			objects_tool.recycle
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.recycle)				
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.recycle)
 			application.recycle
 		end
 
@@ -711,13 +687,13 @@ feature -- Status setting
 				if cst /= Void then
 					Application.set_current_execution_stack_number (cst.level_number)
 				end
-			
+
 				call_stack_tool.set_stone (st)
 				objects_tool.set_stone (st)
 				watch_tool_list.do_all (agent {ES_WATCH_TOOL}.set_stone (st))
 			end
 		end
-		
+
 	set_current_thread_id (tid: INTEGER) is
 			-- Set Current thread id to `tid'
 		do
@@ -785,7 +761,7 @@ feature -- Debugging events
 			status: APPLICATION_STATUS
 			call_stack_elem	: CALL_STACK_ELEMENT
 		do
-			debug("debugger_trace_synchro") 
+			debug("debugger_trace_synchro")
 				io.put_string(generator + "a.on_application_before_stopped %N")
 			end
 			status := Application.status
@@ -845,7 +821,7 @@ feature -- Debugging events
 				end
 			end
 			objects_tool.enable_refresh
-			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)				
+			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.enable_refresh)
 
 			window_manager.quick_refresh_all_margins
 
@@ -881,7 +857,7 @@ feature -- Debugging events
 				create cd.make_with_text_and_actions (Warning_messages.w_Overflow_detected, <<agent do_nothing, agent relaunch_application>>)
 				cd.show_modal_to_window (debugging_window.window)
 			end
-			
+
 			debug ("debugger_interface")
 				io.put_string ("Application Stopped End (dixit EB_DEBUGGER_MANAGER)%N")
 			end
@@ -894,7 +870,7 @@ feature -- Debugging events
 		do
 			debug ("debugger_trace_synchro")
 				io.put_string (generator + ".on_application_resumed%N")
-			end		
+			end
 			Window_manager.display_message (Interface_names.E_running)
 			stop_cmd.enable_sensitive
 			no_stop_cmd.disable_sensitive
@@ -903,7 +879,7 @@ feature -- Debugging events
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
-			
+
 				-- Reset
 			Application.on_resumed
 
@@ -913,7 +889,7 @@ feature -- Debugging events
 			call_stack_tool.update
 				-- Fill in the objects tool.
 			objects_tool.update
-			
+
 				-- Update Watch tool
 			watch_tool_list.do_all (agent {ES_WATCH_TOOL}.update)
 
@@ -952,11 +928,11 @@ feature -- Debugging events
 				window_manager.quick_refresh_all_margins
 				debugging_window := Void
 				output_manager.display_system_info
-				
+
 				if application.is_running then
 					Application.status.kept_objects.wipe_out
 				end
-				
+
 				from
 					observers.start
 				until
@@ -972,14 +948,14 @@ feature -- Debugging events
 				no_stop_cmd.enable_sensitive
 				debug_cmd.enable_sensitive
 				debug_cmd.set_launched (False)
-				
+
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
 				out_cmd.disable_sensitive
 				set_critical_stack_depth_cmd.enable_sensitive
 			end
 		end
-		
+
 	first_valid_call_stack_stone: CALL_STACK_STONE is
 			-- Stone of the first call stack valid for EiffelStudio.
 		require
@@ -1021,7 +997,7 @@ feature {EB_DEBUGGER_OBSERVER} -- Manager implementation
 
 	observers: ARRAYED_LIST [EB_DEBUGGER_OBSERVER]
 			-- List of observers of `Current'.
-			
+
 feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 
 	save_original_layout is
@@ -1043,7 +1019,7 @@ feature -- One time action
 			has_stopped_action_definition:
 				Result = (stopped_actions /= Void and then not stopped_actions.is_empty)
 		end
-		
+
 	set_on_stopped_action (p: PROCEDURE [ANY, TUPLE]) is
 			-- Add `p' to `stopped_actions' with `p'.
 		require
@@ -1065,7 +1041,7 @@ feature {NONE} -- Implementation
 
 	saved_minimized: BOOLEAN
 			-- Was the editor in the debugging window minimized before the debug session started?
-			
+
 	debug_right_layout, debug_left_layout: ARRAY [STRING]
 			-- Used to save the display of the debugging window during debugging sessions.
 
@@ -1092,7 +1068,7 @@ feature {NONE} -- Implementation
 
 	set_critical_stack_depth_cmd: EB_STANDARD_CMD
 			-- Command that changes the depth at which we warn the user against a stack overflow.
-			
+
 	exception_handler_cmd: EB_EXCEPTION_HANDLER_CMD
 
 	stop_cmd: EB_EXEC_STOP_CMD
@@ -1115,9 +1091,9 @@ feature {NONE} -- Implementation
 
 	no_stop_cmd: EB_EXEC_NO_STOP_CMD
 			-- Run without stop points command.
-			
 
-	
+
+
 	init_commands is
 			-- Create a new project toolbar.
 		do
@@ -1183,7 +1159,7 @@ feature {NONE} -- Implementation
 			toolbarable_commands.extend (stop_cmd)
 			create quit_cmd.make
 			toolbarable_commands.extend (quit_cmd)
-			
+
 			step_cmd.enable_sensitive
 			into_cmd.enable_sensitive
 			out_cmd.enable_sensitive
@@ -1237,11 +1213,11 @@ feature {NONE} -- Implementation
 				enable_bkpt.enable_sensitive
 				disable_bkpt.enable_sensitive
 				bkpt_info_cmd.enable_sensitive
-				
+
 				step_cmd.enable_sensitive
 				into_cmd.enable_sensitive
-				out_cmd.disable_sensitive					
-			end			
+				out_cmd.disable_sensitive
+			end
 		end
 
 	disable_commands_on_project_unloaded is
@@ -1256,9 +1232,9 @@ feature {NONE} -- Implementation
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
-			display_error_help_cmd.disable_sensitive			
+			display_error_help_cmd.disable_sensitive
 		end
-		
+
 	disable_debugging_commands (full: BOOLEAN) is
 			-- Disable commands related to debugging.
 			-- If `full' disable also commands for manipulating breakpoints.
@@ -1269,13 +1245,13 @@ feature {NONE} -- Implementation
 				disable_bkpt.disable_sensitive
 				bkpt_info_cmd.disable_sensitive
 			end
-			
+
 			debug_cmd.disable_sensitive
 			no_stop_cmd.disable_sensitive
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			out_cmd.disable_sensitive
-		end		
+		end
 
 	force_raise is
 			-- Debug feature.
@@ -1330,7 +1306,7 @@ feature {NONE} -- Implementation
 			create element_nb.make_with_value_range (1 |..| 30000)
 			create okb.make_with_text (Interface_names.b_Ok)
 			create cancelb.make_with_text (Interface_names.b_Cancel)
-			
+
 				-- Organize widgets.
 			create vb
 			vb.set_border_width (Layout_constants.Default_border_size)
@@ -1345,7 +1321,7 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (l)
 			hb.extend (create {EV_CELL})
 			vb.extend (hb)
-			
+
 			create hb
 			hb.set_padding (Layout_constants.Small_padding_size)
 			hb.extend (create {EV_CELL})
@@ -1355,7 +1331,7 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (cancelb)
 			hb.extend (create {EV_CELL})
 			vb.extend (hb)
-			
+
 			dialog.extend (vb)
 
 				-- Set widget properties.
@@ -1375,7 +1351,7 @@ feature {NONE} -- Implementation
 				element_nb.set_value (preferences.debugger_data.critical_stack_depth)
 			end
 			element_nb.set_minimum_width (100)
-			
+
 				-- Set up actions.
 			cancelb.select_actions.extend (agent close_dialog)
 			okb.select_actions.extend (agent accept_dialog)
@@ -1386,7 +1362,7 @@ feature {NONE} -- Implementation
 			if element_nb.is_sensitive then
 				dialog.show_actions.extend (agent element_nb.set_focus)
 			end
-			
+
 			dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 		end
 
@@ -1438,18 +1414,18 @@ feature {NONE} -- Implementation
 		ensure
 			debugging_window_set: debugging_window /= Void
 		end
-		
+
 feature {NONE} -- MSIL system implementation
 
 	is_msil_dll_system: BOOLEAN is
 			-- Is a MSIL DLL system ?
 		do
-			Result := Eiffel_project.initialized 
+			Result := Eiffel_project.initialized
 					and then Eiffel_project.system_defined
 					and then Eiffel_system.System.il_generation
-					and then Eiffel_system.System.msil_generation_type.is_equal (dll_type)			
+					and then Eiffel_system.System.msil_generation_type.is_equal (dll_type)
 		end
-		
+
 	dll_type: STRING is "dll"
 			-- DLL type constant for MSIL system
 

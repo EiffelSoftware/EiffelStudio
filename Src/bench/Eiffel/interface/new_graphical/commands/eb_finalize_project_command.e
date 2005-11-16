@@ -49,7 +49,7 @@ feature -- Callbacks
 			cd.set_no_action (agent set_assertion_flag_and_compile (True))
 			cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
- 
+
 	set_assertion_flag_and_compile (keep_assertions: BOOLEAN) is
 		do
 			assertions_included := keep_assertions
@@ -127,7 +127,7 @@ feature {NONE} -- Implementation
 			if start_c_compilation then
 					output_text.add_string ("Background C compilation launched.")
 					output_text.add_new_line
-					
+
 				if not Eiffel_project.is_final_code_optimal then
 					create output_text.make
 					output_text.add_string ("Warning: the finalized system might not be optimal")
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 				end
 					-- Display message.
 				output_manager.process_text (output_text)
-							
+
 				Eiffel_project.call_finish_freezing (False)
 			end
 

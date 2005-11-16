@@ -546,7 +546,6 @@ feature -- Actions on all windows
 			for_all (agent synchronize_breakpoints_action)
 		end
 
-	-- Jason Wei modified the following
 	synchronize_all is
 			-- A compilation is over. Warn all windows and tools.
 		do
@@ -557,9 +556,8 @@ feature -- Actions on all windows
 			favorites.refresh
 
 				-- Update the state of some commands.
-			if  (freezing_launcher.launched and then not freezing_launcher.has_exited)
-				 or
-				(finalizing_launcher.launched and then not finalizing_launcher.has_exited)
+			if
+				freezing_launcher.is_running or finalizing_launcher.is_running
 			then
 				melt_project_cmd.disable_sensitive
 				Quick_melt_project_cmd.disable_sensitive
@@ -584,35 +582,6 @@ feature -- Actions on all windows
 			project_cancel_cmd.disable_sensitive
 			for_all (agent synchronize_action)
 		end
-
------ This is the original version		
---	synchronize_all is
---			-- A compilation is over. Warn all windows and tools.
---		do
---				-- Reload the cluster tree in the cluster manager.
---			manager.refresh
---
---				-- Get rid of all dead classes in the favorites.
---			favorites.refresh
---
---				-- Update the state of some commands.
---			if not Eiffel_project.compilation_modes.is_precompiling then
---				precompilation_cmd.disable_sensitive
---				melt_project_cmd.enable_sensitive
---				Quick_melt_project_cmd.enable_sensitive
---				freeze_project_cmd.enable_sensitive
---				Finalize_project_cmd.enable_sensitive
---			else
---				melt_project_cmd.enable_sensitive
---				Quick_melt_project_cmd.enable_sensitive
---				freeze_project_cmd.disable_sensitive
---				precompilation_cmd.enable_sensitive
---				Finalize_project_cmd.disable_sensitive
---			end
---
---			for_all (agent synchronize_action)
---		end
-		-- Jason Wei modified the above		
 
 	display_message_and_percentage (m: STRING; a_value: INTEGER) is
 			-- Display message `m' and `a_value' percentage in status bars of all development windows.
@@ -1339,12 +1308,7 @@ feature {EB_WINDOW} -- Implementation / Observer pattern
 	observers: ARRAYED_LIST [EB_WINDOW_MANAGER_OBSERVER]
 			-- All observers for Current.
 
--- Jason Wei modified the following line on Aug 31 2005
 feature {EB_C_COMPILER_LAUNCHER, EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU, EB_EXEC_FORMAT_CMD} -- Implementation
-
--- This is the original line
---feature {EB_WINDOW_MANAGER_LIST, EB_WINDOW_MANAGER_MENU, EB_EXEC_FORMAT_CMD} -- Implementation
--- Jason Wei modified the above line on Aug 31 2005
 
 	managed_windows: ARRAYED_LIST [EB_WINDOW]
 			-- Managed windows.

@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"[
 			Process launcher used in EiffelStudio.
 			It will redirect the input of the process to a stream of its parent process and
@@ -14,32 +14,32 @@ class
 
 inherit
 	EB_SHARED_MANAGERS
-	
+
 	EB_SHARED_FLAGS
-	
+
 	SHARED_PLATFORM_CONSTANTS
-	
+
 	SHARED_EXEC_ENVIRONMENT
-		
+
 feature -- Launching parameters setting
 
 	prepare_command_line (cmd: STRING; args: LIST [STRING]; a_working_directory: STRING) is
-			-- 
+			--
 		require
 			process_not_in_action: (not launched) or (launched and has_exited)
 			cmd_not_void: cmd /= Void
-			cmd_not_empty: not cmd.is_empty	
-			a_working_dir_not_null: a_working_directory /= Void	
-		local	
+			cmd_not_empty: not cmd.is_empty
+			a_working_dir_not_null: a_working_directory /= Void
+		local
 			s: STRING
 		do
 			create command_line.make_from_string (cmd)
 			if a_working_directory = Void then
 				working_directory := Void
 			else
-				create working_directory.make_from_string (a_working_directory)					
+				create working_directory.make_from_string (a_working_directory)
 			end
-			
+
 			if args = Void then
 				arguments := Void
 			else
@@ -53,46 +53,46 @@ feature -- Launching parameters setting
 					arguments.extend (s)
 					args.forth
 				end
-			end			
+			end
 		ensure
 			command_line_set: command_line.is_equal (cmd)
 			working_directory_set: (working_directory /= Void) implies working_directory.is_equal (a_working_directory)
-			arguments_set: 	
+			arguments_set:
 				((args = Void) implies arguments = Void) or
 				((args /= Void) implies arguments.count = args.count)
 		end
-		
+
 	set_hidden (h: BOOLEAN) is
 			-- Set `is_hidden' with `h'.
 		do
 			is_hidden := h
-		ensure	
+		ensure
 			is_hidden_set: is_hidden = h
 		end
-		
+
 
 	set_buffer_size (size: INTEGER) is
 			-- Set buffer_size to `size'
 		require
-			process_not_in_action: (not launched) or (launched and has_exited)		
+			process_not_in_action: (not launched) or (launched and has_exited)
 			size_positive: size > 0
 		do
 			buffer_size := size
 		ensure
 			buffer_size_set: buffer_size = size
 		end
-		
+
 	set_time_interval (itv: INTEGER) is
 			-- Set time interval to `itv'
 		require
 			process_not_in_action: (not launched) or (launched and has_exited)
-			interval_not_nagetive: itv > 0 
+			interval_not_nagetive: itv > 0
 		do
 			time_interval := itv
 		ensure
 			time_interval_set: time_interval = itv
 		end
-							
+
 	set_output_handler (handler: PROCEDURE [ANY, TUPLE [STRING]]) is
 			-- Set the agent handler used when output from the child process arrives.
 		require
@@ -103,18 +103,18 @@ feature -- Launching parameters setting
 		ensure
 			output_handler_set: output_handler = handler
 		end
-		
+
 	set_error_handler (handler: PROCEDURE [ANY, TUPLE [STRING]]) is
 			-- Set the agent handler used when error from the child process arrives.
 		require
-			process_not_in_action: (not launched) or (launched and has_exited)		
-			error_handler_not_null: handler /= Void			
+			process_not_in_action: (not launched) or (launched and has_exited)
+			error_handler_not_null: handler /= Void
 		do
 			error_handler := handler
 		ensure
-			error_handler_set: error_handler = handler						
+			error_handler_set: error_handler = handler
 		end
-		
+
 	set_on_start_handler (handler: ROUTINE [ANY, TUPLE]) is
 			-- Set a `handler' which will be called when process starts.
 			-- if `handler' is Void, on_start_handler will be disabled
@@ -125,7 +125,7 @@ feature -- Launching parameters setting
 		ensure
 			handler_set: on_start_handler = handler
 		end
-				
+
 	set_on_fail_launch_handler (handler: ROUTINE [ANY, TUPLE]) is
 			-- Set a `handler' which will be called when process launch failed.
 			-- if `handler' is Void, on_launch_failed_handler will be disabled			
@@ -135,8 +135,8 @@ feature -- Launching parameters setting
 			on_fail_launch_handler := handler
 		ensure
 			handler_set: on_fail_launch_handler = handler
-		end	
-		
+		end
+
 	set_on_successful_launch_handler (handler: ROUTINE [ANY, TUPLE]) is
 			-- Set a `handler' which will be called when process launch successed.
 			-- if `handler' is Void, on_launch_successed_handler will be disabled						
@@ -146,8 +146,8 @@ feature -- Launching parameters setting
 			on_successful_launch_handler := handler
 		ensure
 			handler_set: on_successful_launch_handler = handler
-		end			
-				
+		end
+
 	set_on_exit_handler (handler: ROUTINE [ANY, TUPLE]) is
 			-- Set a `handler' which will be called when process exits.
 			-- if `handler' is Void, on_exit_handler will be disabled						
@@ -158,7 +158,7 @@ feature -- Launching parameters setting
 		ensure
 			handler_set: on_exit_handler = handler
 		end
-			
+
 	set_on_terminate_handler (handler: ROUTINE [ANY, TUPLE]) is
 			-- Set a `handler' which will be called when process has been terminated.
 			-- if `handler' is Void, on_terminate_handler will be disabled									
@@ -169,9 +169,9 @@ feature -- Launching parameters setting
 		ensure
 			handler_set: on_terminate_handler = handler
 		end
-	
+
 feature -- Control
-		
+
 	launch (redirection_needed: BOOLEAN; use_argument: BOOLEAN) is
 			-- Launch process.
 			-- If `redirection_needed', redirect input, output and error of process.
@@ -192,16 +192,16 @@ feature -- Control
 			prc_imp: PROCESS_IMP
 			pt: PROCESS_TIMER
 		do
-			idle_printing_manager.initiate_timer			
-			create prc_ftry	
+			idle_printing_manager.initiate_timer
+			create prc_ftry
 			if use_argument then
 				prc := prc_ftry.process_launcher (command_line, arguments, working_directory)
-			else	
+			else
 				prc := prc_ftry.process_launcher_with_command_line (command_line, working_directory)
 			end
-				
+
 			prc.redirect_input_to_stream
-			prc_imp ?= prc			
+			prc_imp ?= prc
 			create err_thread.make (prc_imp)
 			create out_thread.make (prc_imp)
 			if redirection_needed then
@@ -210,49 +210,49 @@ feature -- Control
 				prc.redirect_output_to_agent (output_handler)
 				if platform_constants.is_windows then
 					prc.set_hidden (is_hidden)
-					prc.set_has_console (False)						
-				end							
+					prc.set_has_console (False)
+				end
 			else
 				prc.cancel_error_redirection
 				prc.cancel_input_redirection
 				prc.cancel_output_redirection
 				if platform_constants.is_windows then
 					prc.set_hidden (False)
-					prc.set_has_console (True)					
+					prc.set_has_console (True)
 				end
 
 			end
-			
+
 			if is_gui then
 				pt := create {PROCESS_VISION2_TIMER}.make (time_interval)
 			else
 				pt := create {PROCESS_THREAD_TIMER}.make (time_interval)
 			end
 			prc.set_timer (pt)
-	
+
 			prc.set_on_start_handler (on_start_handler)
-			prc.set_on_exit_handler (on_exit_handler)			
+			prc.set_on_exit_handler (on_exit_handler)
 			prc.set_on_terminate_handler (on_terminate_handler)
 			prc.set_on_fail_launch_handler (on_fail_launch_handler)
 			prc.set_on_successful_launch_handler (on_successful_launch_handler)
-			
+
 			prc.set_buffer_size (buffer_size)
-			
+
 			ee := Void
-			
+
 			if not working_directory.is_empty then
 				create ee
-				dir := ee.current_working_directory	
-				ee.change_working_directory (working_directory)									
-			end		
+				dir := ee.current_working_directory
+				ee.change_working_directory (working_directory)
+			end
 			prc.launch
-			
+
 			if ee /= Void then
-				ee.change_working_directory (dir)				
-			end		
+				ee.change_working_directory (dir)
+			end
 		end
-		
-	wait_for_exit is	
+
+	wait_for_exit is
 			-- Wait for process to exit.
 		do
 			if launched and not has_exited then
@@ -260,19 +260,19 @@ feature -- Control
 			end
 		ensure
 			process_has_exited: launched implies has_exited
-		end				
-	
+		end
+
 	put_string (s: STRING) is
 			-- Sent a string to child process' input.
 		require
 			string_not_null: s /= Void
 		do
 			if prc.launched and not prc.has_exited then
-				prc.put_string (s)				
+				prc.put_string (s)
 			end
 
-		end	
-		
+		end
+
 	terminate is
 			-- Terminate child process.
 		do
@@ -282,10 +282,10 @@ feature -- Control
 		ensure
 			process_terminated: launched implies has_exited
 		end
-		
+
 feature -- Unmanaged process launch
 
-	open_console_in_dir (dir: STRING) is 
+	open_console_in_dir (dir: STRING) is
 			-- Open console in `dir'.
 		require
 			dir_not_void: dir /= VOid
@@ -304,7 +304,7 @@ feature -- Unmanaged process launch
 					cl.append ("cmd")
 				end
 			else
-				cl.prepend ("/bin/sh -c xterm")	
+				cl.prepend ("/bin/sh -c xterm")
 			end
 			str := execution_environment.current_working_directory
 			execution_environment.change_working_directory (dir)
@@ -313,7 +313,7 @@ feature -- Unmanaged process launch
 		end
 
 feature -- Status reporting
-	
+
 	exit_code: INTEGER is
 			-- Exit code of process
 		require
@@ -322,17 +322,17 @@ feature -- Status reporting
 		do
 			Result := prc.exit_code
 		end
-		
+
 	launched: BOOLEAN is
 			-- Has c compiler been launched?
 		do
 			if prc /= Void then
-				Result := prc.launched				
+				Result := prc.launched
 			else
 				Result := False
 			end
 		end
-		
+
 	has_exited: BOOLEAN is
 			-- Has c compiler exited?
 		do
@@ -340,13 +340,19 @@ feature -- Status reporting
 				if not prc.launched then
 					Result := True
 				else
-					Result := prc.has_exited				
+					Result := prc.has_exited
 				end
 			else
 				Result := True
 			end
 		end
-		
+
+	is_running: BOOLEAN is
+			-- Is process running?
+		do
+			Result := launched and then (not has_exited)
+		end
+
 	last_operation_successful: BOOLEAN is
 			-- Is last operation successful?
 		do
@@ -354,9 +360,9 @@ feature -- Status reporting
 				Result := prc.last_operation_successful
 			else
 				Result := True
-			end			
+			end
 		end
-		
+
 	force_terminated: BOOLEAN is
 			-- Is child process terminated by user?
 		do
@@ -366,33 +372,33 @@ feature -- Status reporting
 				Result := False
 			end
 		end
-		
+
 	output_handler: PROCEDURE [ANY, TUPLE [STRING]]
 	error_handler:	PROCEDURE [ANY, TUPLE [STRING]]
 			-- Handlers of output or error from process	
-	
+
 	command_line: STRING
 			-- Command line (with arguments) of child process
-			
+
 	arguments: ARRAYED_LIST [STRING]
 			-- Arguments for process
-			
+
 	working_directory: STRING
 			-- Working directory of child process.
-			
+
 	time_interval: INTEGER
 			-- Time interval for a timer to check the status of child process
 	buffer_size: INTEGER
 			-- Internal buffer size used to get output and error from child process
-		
+
 feature {NONE} -- Implementation
-	
+
 	prc: PROCESS
 			-- Process launcher implementation class
 	is_hidden: BOOLEAN
 			-- Should process be launched hidden?
-			
-	on_start_handler: ROUTINE [ANY, TUPLE]		
+
+	on_start_handler: ROUTINE [ANY, TUPLE]
 	on_exit_handler: ROUTINE [ANY, TUPLE]
 	on_terminate_handler: ROUTINE [ANY, TUPLE]
 	on_fail_launch_handler: ROUTINE [ANY, TUPLE]
@@ -401,5 +407,5 @@ feature {NONE} -- Implementation
 
 	initial_time_interval: INTEGER is 10
 	initial_buffer_size: INTEGER is 50
-				
+
 end

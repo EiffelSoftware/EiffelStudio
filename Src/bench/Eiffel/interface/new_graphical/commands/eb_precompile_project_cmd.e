@@ -21,7 +21,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -75,17 +75,17 @@ feature {NONE} -- Implementation
 			create output_text.make
 			output_text.add_string ("Eiffel system recompiled")
 			output_text.add_new_line
-	
+
 			if start_c_compilation then
 				output_text.add_string ("Launching C compilation in background...")
 				output_text.add_new_line
 					-- Display message.
-				output_manager.process_text (output_text)				
+				output_manager.process_text (output_text)
 
 				Eiffel_project.call_finish_freezing (True)
-				
+
 				if finalize_precompile then
-					Eiffel_project.call_finish_freezing (False)	
+					Eiffel_project.call_finish_freezing (False)
 				end
 			end
 		end
@@ -119,11 +119,11 @@ feature {NONE} -- Attributes
 
 	is_precompiling: BOOLEAN is True
 			-- We are doing a precompilation here.
-			
+
 	finalize_precompile: BOOLEAN
 			-- should precompile be finalized also?
-		
-			
+
+
 feature {NONE} -- Implementation
 
 	is_dotnet_project: BOOLEAN is

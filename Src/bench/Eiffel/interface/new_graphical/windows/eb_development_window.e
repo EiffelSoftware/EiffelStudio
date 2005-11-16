@@ -3539,6 +3539,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				Precursor {EB_TOOL_MANAGER}
+				context_refreshing_timer.destroy
 			end
 		end
 
@@ -3564,7 +3565,7 @@ feature {NONE} -- Implementation
 		do
 			Window_manager.create_dynamic_lib_window
 		end
-		
+
 	context_refreshing_timer: EV_TIMEOUT
 
 	recycle is

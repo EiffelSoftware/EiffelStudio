@@ -3385,7 +3385,11 @@ feature {NONE} -- Implementation
 			-- And reflect location editing in the text in features tool and address bar.
 		do
 			refresh_cursor_position
-			refresh_context_info
+			if context_refreshing_timer = Void then
+				create context_refreshing_timer.make_with_interval (100)
+				context_refreshing_timer.actions.extend (agent refresh_context_info)
+			end
+			context_refreshing_timer.set_interval (100)
 		end
 
 	on_text_fully_loaded is
@@ -3560,6 +3564,8 @@ feature {NONE} -- Implementation
 		do
 			Window_manager.create_dynamic_lib_window
 		end
+		
+	context_refreshing_timer: EV_TIMEOUT
 
 	recycle is
 			-- Call the precursors.
@@ -3590,6 +3596,7 @@ feature {NONE} -- Implementation: Editor commands
 			l_feature: FEATURE_AS
 			l_classc_stone: CLASSC_STONE
 		do
+			context_refreshing_timer.set_interval (0)
 			l_classc_stone ?= stone
 			if l_classc_stone /= Void then
 				l_feature := editor_tool.text_area.text_displayed.current_feature_containing

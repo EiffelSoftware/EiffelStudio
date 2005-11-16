@@ -150,7 +150,7 @@ feature{NONE} -- Implementation
 			create maps
 			dlg.set_icon_pixmap (maps.warning_pixmap)
 			dlg.set_pixmap (maps.warning_pixmap)
-			dlg.show
+			dlg.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 
 	show_compiler_launch_fail_dialog (win: EV_WINDOW) is

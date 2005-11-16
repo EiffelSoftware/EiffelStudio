@@ -278,7 +278,14 @@ feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTE
 			Result := internal_state
 		end
 
-feature {NONE} -- Restore issues implementation
+feature {SD_STATE} -- implementation
+	notify_focus_in is
+			--
+		do
+			if internal_focus_in_actions /= Void then
+				internal_focus_in_actions.call ([])
+			end
+		end
 
 	internal_state: SD_STATE
 			-- The SD_STATE instacne, which will change itself base on different states. States pattern.

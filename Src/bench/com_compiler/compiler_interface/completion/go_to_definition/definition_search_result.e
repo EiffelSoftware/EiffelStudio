@@ -13,6 +13,8 @@ inherit
 			namespace,
 			class_descriptor
 		end
+		
+	COMPILER_EXPORTER
 
 create
 	make
@@ -34,12 +36,10 @@ feature {NONE} -- Initialization
 			if assembly_i /= Void then
 				module_name := clone (assembly_i.assembly_name)
 				if class_descriptor.is_true_external then
-					if a_class.compiled_class /= Void then
-						dot_pos := a_class.compiled_class.external_name.last_index_of ('.', a_class.compiled_class.external_name.count)
-						if dot_pos > 1  then
-							namespace := a_class.compiled_class.external_name.substring (1, dot_pos - 1)
-						end		
-					end		
+					dot_pos := a_class.external_name.last_index_of ('.', a_class.external_name.count)
+					if dot_pos > 1  then
+						namespace := a_class.external_name.substring (1, dot_pos - 1)
+					end	
 				else
 					namespace := clone (cluster_i.cluster_name)
 				end

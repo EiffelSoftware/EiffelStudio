@@ -8,6 +8,10 @@ class
 	
 inherit
 	FEATURE_DESCRIPTOR
+		rename
+			compiler_class as declaring_class
+		export
+			{COMPLETION_INFORMATION} declaring_class
 		redefine
 			all_callers,
 			all_callers_count,
@@ -53,7 +57,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make (a_name: like name; a_arguments: like arguments_internal; a_feature_type: INTEGER; a_description: like description; a_file_name: like file_name; a_start_position: like start_position) is
+	make (a_name: like name; a_class: like declaring_class; a_arguments: like arguments_internal; a_feature_type: INTEGER; a_description: like description; a_file_name: like file_name; a_start_position: like start_position) is
 			-- create an instance
 		require
 			non_void_name: a_name /= Void
@@ -62,6 +66,7 @@ feature {NONE} -- Initialization
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: not a_file_name.is_empty
 		do
+			declaring_class := a_class
 			internal_name := a_name
 			feature_name := a_name
 			file_name := a_file_name.as_lower
@@ -81,6 +86,7 @@ feature {NONE} -- Initialization
 			create {ARRAYED_LIST [STRING]} overloads_return_types.make (0)
 			create {ARRAYED_LIST [STRING]} overloads_descriptions.make (0)
 		ensure
+			declaring_class_set: declaring_class = a_class
 			name_set: internal_name = a_name
 			feature_name_set: feature_name = a_name
 			file_name_set: file_name.is_equal (a_file_name.as_lower)
@@ -88,7 +94,7 @@ feature {NONE} -- Initialization
 			arguments_set: a_arguments /= Void implies arguments_internal = a_arguments
 		end
 		
-	make_with_return_type (a_name: like name; a_arguments: like arguments_internal; a_return_type: like return_type; a_feature_type: INTEGER; a_description: like description; a_file_name: like file_name; a_start_position: like start_position) is
+	make_with_return_type (a_name: like name; a_class: like declaring_class; a_arguments: like arguments_internal; a_return_type: like return_type; a_feature_type: INTEGER; a_description: like description; a_file_name: like file_name; a_start_position: like start_position) is
 			-- create an instance with a return type
 		require
 			non_void_name: a_name /= Void
@@ -99,7 +105,7 @@ feature {NONE} -- Initialization
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: not a_file_name.is_empty
 		do
-			make (a_name, a_arguments, a_feature_type, a_description, a_file_name, a_start_position) 
+			make (a_name, a_class, a_arguments, a_feature_type, a_description, a_file_name, a_start_position) 
 			return_type := a_return_type
 		ensure
 			return_type_set: return_type = a_return_type

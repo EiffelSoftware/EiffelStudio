@@ -45,10 +45,8 @@ feature -- Status setting
 	set_interval (an_interval: INTEGER) is
 			-- Assign `an_interval' in milliseconds to `interval'.
 		do
-			if interval /= an_interval then
-				interval := an_interval
-				Internal_timeout.change_interval (id, interval)
-			end
+			interval := an_interval
+			Internal_timeout.change_interval (id, interval)
 		end
 
 feature -- Implementation

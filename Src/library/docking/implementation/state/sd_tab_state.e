@@ -214,6 +214,7 @@ feature
 				internal_shared.docking_manager.prune_zone (internal_tab_zone)
 				create l_docking_state.make_for_tab_zone (internal_tab_zone.last_content, l_parent)
 				internal_tab_zone.last_content.change_state (l_docking_state)
+				internal_tab_zone.last_content.notify_focus_in
 
 				if l_split_area /= Void then
 					l_widget ?= l_docking_state.zone

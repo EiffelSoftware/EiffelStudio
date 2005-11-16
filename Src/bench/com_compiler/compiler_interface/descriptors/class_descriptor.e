@@ -486,11 +486,16 @@ feature -- Access
 		
     is_true_external: BOOLEAN is
             -- Is true external class?
+		local
+			l_file_name: STRING
         do
 			if compiler_class.compiled_class /= Void then
 				Result := compiler_class.compiled_class.is_true_external
 			else
-				Result := compiler_class.file_name.out.substring (compiler_class.file_name.out.count - 3, compiler_class.file_name.out.count).is_equal (".xml")
+				l_file_name := compiler_class.file_name.out
+				if l_file_name.count > 5 then
+					Result := l_file_name.substring (l_file_name.count - 4, l_file_name.count).is_equal (".info")
+				end
 			end          
         end
 

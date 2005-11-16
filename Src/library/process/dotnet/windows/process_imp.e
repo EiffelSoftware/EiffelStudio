@@ -50,10 +50,10 @@ feature {NONE} -- Initialization
 			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
 			set_buffer_size (initial_buffer_size)
 			last_operation_successful := True
-			if a_working_directory = Void then
-				working_directory := ""
-			else
+			if a_working_directory /= Void then
 				create working_directory.make_from_string (a_working_directory)
+			else
+				working_directory := Void
 			end
 			hidden := False
 			has_console := True
@@ -77,10 +77,10 @@ feature {NONE} -- Initialization
 			executable := cmd_arg.i_th (1)
 			argument_line := cmd_arg.i_th (2)
 
-			if a_working_directory = Void then
-				working_directory := ""
-			else
+			if a_working_directory /= Void then
 				create working_directory.make_from_string (a_working_directory)
+			else
+				working_directory := Void
 			end
 			
 			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
@@ -172,8 +172,9 @@ feature	-- Control
 				on_start
 				create prc_launcher.make
 				create startup_info.make_from_file_name_and_arguments (executable, argument_line)
-				startup_info.set_working_directory (working_directory)				
-				
+				if working_directory /= Void then
+					startup_info.set_working_directory (working_directory)				
+				end
 				if hidden then
 					startup_info.set_window_style ({SYSTEM_DLL_PROCESS_WINDOW_STYLE}.hidden)
 				else

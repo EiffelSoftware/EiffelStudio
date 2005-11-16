@@ -119,9 +119,7 @@ feature -- Button texts
 	b_Raise_all: STRING is						"Raise Windows"
 	b_Remove_class_cluster: STRING is			"Remove Class/CLuster"
 	b_Minimize_all: STRING is					"Minimize All"
-	-- Jason Wei added the following line on Aug 31 2005
 	b_Terminate_c_compilation: STRING is 		"Terminate C Compilation"
-	-- Jason Wei added the above line on Aug 31 2005
 
 feature -- Graphical degree output
 
@@ -643,9 +641,7 @@ feature -- Label texts
 	l_Windows_only: STRING is			"(Windows only)"
 	l_Workbench_mode: STRING is 		"Workbench mode"
 	l_Working_formatter: STRING is		"Extracting "
-	-- Jason Wei
 	l_Tab_external_output: STRING is    "External output"
-	-- Jason Wei
 feature -- Stone names
 
 	s_Class_stone: STRING is			"Class "
@@ -864,8 +860,13 @@ feature -- Description texts
 	e_Add_exported_feature: STRING is	"Add a new feature to this dynamic library definition"
 	e_Bkpt_info: STRING is				"Show/Hide information about breakpoints"
 	e_Check_exports: STRING is			"Check the validity of the library definition"
-	e_Compilation_failed: STRING is		"Compilation failed"
-	e_Compilation_succeeded: STRING is	"Compilation succeeded"
+	e_Compilation_failed: STRING is		"Eiffel compilation failed"
+	e_Compilation_succeeded: STRING is	"Eiffel compilation succeeded"
+	e_C_compilation_failed: STRING is 	"C compilation failed"
+	e_C_compilation_launch_failed: STRING is "C compilation launch failed"
+	e_C_compilation_terminated: STRING is "C compilation has been terminated by user"
+	e_C_compilation_successed: STRING is "C compilation successed"
+	e_C_compilation_running: STRING is  "C compilation on progress"
 	e_Compiling: STRING is				"System is being compiled"
 	e_Cursor_position: STRING is		"Cursor position (line:column)"
 	e_Diagram_hole: STRING is			"Please drop a class or a cluster on this button %N%

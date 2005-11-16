@@ -57,11 +57,13 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_FORMAT_TABLES
 		export
 			{NONE} all
 		end
+
+	EB_SHARED_FLAGS
 
 create
 	make
@@ -78,7 +80,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties		
-		
+
 	is_precompiling: BOOLEAN is
 			-- Is this compilation a precompilation?
 		do
@@ -134,7 +136,7 @@ feature {NONE} -- Compilation implementation
 					end
 				end
 				Degree_output.finish_degree_output
-				tool_resynchronization				
+				tool_resynchronization
 			end
 		end
 
@@ -151,8 +153,16 @@ feature {NONE} -- Compilation implementation
 			create output_text.make
 			if Workbench.successful then
 				window_manager.display_message (Interface_names.E_compilation_succeeded)
-				if not eiffel_project.freezing_occurred then
-					output_text.add_string (Interface_names.E_compilation_succeeded)
+
+				if freezing_launcher.is_running or finalizing_launcher.is_running then
+					window_manager.display_message (Interface_names.e_C_compilation_running)
+				else
+					if not eiffel_project.freezing_occurred then
+						output_text.add_string (Interface_names.E_compilation_succeeded)
+					end
+				end
+				if not last_c_compilation_successful then
+					window_manager.display_message (Interface_names.e_c_compilation_launch_failed)
 				end
 			else
 				window_manager.display_message (Interface_names.E_compilation_failed)
@@ -178,13 +188,12 @@ feature {NONE} -- Compilation implementation
 			end
 			output_text.add_string ("Eiffel system recompiled")
 			output_text.add_new_line
-	
+
 			if start_c_compilation and then Eiffel_project.freezing_occurred then
 				output_text.add_string ("Background C compilation launched.")
 				output_text.add_new_line
 					-- Display message.
-				output_manager.process_text (output_text)					
-					
+				output_manager.process_text (output_text)
 				Eiffel_project.call_finish_freezing (True)
 			end
 		end
@@ -222,9 +231,9 @@ feature {NONE} -- Attributes
 			-- of the execution of this command. After a warning or
 			-- confirmation panel has been popped up, this value
 			-- can be cleared by the caller. To prevent that, we
-			-- keep track of that value in `run_after_melt' at the 
-			-- beginning of the execution, so that we can still 
-			-- rely on it after a confirmation when we resume 
+			-- keep track of that value in `run_after_melt' at the
+			-- beginning of the execution, so that we can still
+			-- rely on it after a confirmation when we resume
 			-- (i.e. re-execute) the command
 
 	retried: BOOLEAN
@@ -242,8 +251,11 @@ feature -- Execution
 			-- Recompile the project, start C compilation if necessarry.
 		do
 			if is_sensitive then
+				output_manager.clear
+				output_manager.force_display
 				execute_with_c_compilation_flag (True)
 			end
+
 		end
 
 	execute_without_c_compilation is
@@ -332,10 +344,10 @@ feature {NONE} -- Execution
 			-- to run ability and `run_after_melt' flag.
 		do
 			compile
-			if 
+			if
 				run_after_melt and then
 				Eiffel_ace.file_name /= Void and then
-				Eiffel_project.successful and 
+				Eiffel_project.successful and
 				not Eiffel_project.freezing_occurred
 			then
 					-- The system has been successfully melted.
@@ -383,7 +395,7 @@ feature {NONE} -- Implementation
 			Result := Interface_names.f_Melt
 		end
 
-	name: STRING is 
+	name: STRING is
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 		do

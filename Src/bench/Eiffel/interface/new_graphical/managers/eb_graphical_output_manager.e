@@ -34,9 +34,9 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 feature -- Basic Operations / Generic purpose
-		
+
 	force_display is
 			-- Make the output tools visible (to ensure the user sees what we print).
 		do
@@ -150,7 +150,7 @@ feature -- Basic Operations / Information message
 			else
 				st.add_string ("System not launched")
 				st.add_new_line
-				st_syst := structured_system_info 
+				st_syst := structured_system_info
 				if st_syst /= Void then
 					st.append (st_syst)
 				end
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 	structured_system_info: STRUCTURED_TEXT is
 			-- Information text about current project.
 		do
-			if Eiffel_project.system /= Void then	
+			if Eiffel_project.system /= Void then
 				create Result.make
 				append_system_info (Result)
 			end
@@ -469,7 +469,7 @@ feature {NONE} -- Implementation / Private attributes
 	managed_output_tools: ARRAYED_LIST [EB_OUTPUT_TOOL] is
 			-- Managed output tools
 		indexing
-			once_status: global		
+			once_status: global
 		once
 			create Result.make (10)
 		end

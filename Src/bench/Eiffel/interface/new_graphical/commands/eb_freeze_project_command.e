@@ -15,7 +15,7 @@ inherit
 			perform_compilation, name,
 			make, description, tooltext
 		end
- 
+
 create
 	make
 
@@ -61,14 +61,13 @@ feature {NONE} -- Implementation
 			create output_text.make
 			output_text.add_string ("Eiffel system recompiled")
 			output_text.add_new_line
-	
+
 			if start_c_compilation then
 				output_text.add_string ("Background C compilation launched.")
 				output_text.add_new_line
 					-- Display message.
 				output_manager.clear
-				output_manager.process_text (output_text)				
-				
+				output_manager.process_text (output_text)
 				Eiffel_project.call_finish_freezing (True)
 			end
 		end

@@ -178,7 +178,7 @@ feature{NONE} -- Initialization
 			cmd_lst.change_actions.extend (agent on_cmd_lst_text_change)
 			cmd_lst.set_text ("")
 
-			edit_cmd_detail_btn.set_pixmap (Icon_edited)
+			edit_cmd_detail_btn.set_pixmap (icon_add_new_external_cmd)
 			edit_cmd_detail_btn.select_actions.extend (agent on_edit_command_detail)
 
 			input_field.key_press_actions.extend (agent on_key_pressed_in_input_field (?))

@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 		do
 			parent.on_middle_button_down (keys, x_pos, y_pos)
 		end
-	
+
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is pressed.
 			-- We verify that there is indeed a command to avoid
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 			disable_default_processing
 			set_message_return_value (to_lresult (1))
 		end
-		
+
 	default_process_message (msg: INTEGER; wparam, lparam: POINTER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
@@ -222,7 +222,7 @@ feature {NONE} -- Implementation
 				Precursor {WEL_SINGLE_LINE_EDIT} (msg, wparam, lparam)
 			end
 		end
-		
+
 	allow_pick_and_drop is
 			-- Override context menu on `Current' if pick and drop
 			-- should be handled instead. We must handle two cases :-
@@ -238,11 +238,11 @@ feature {NONE} -- Implementation
 			end
 			parent.enable_context_menu
 		end
-		
+
 	on_getdlgcode is
 			-- Called when window receives WM_GETDLGCODE message.
 		do
-			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_tab))
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
 end -- class EV_INTERNAL_COMBO_FIELD_IMP

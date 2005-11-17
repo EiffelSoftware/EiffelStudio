@@ -12,7 +12,7 @@ class
 
 inherit
 	WEL_COMBO_BOX
-		rename 
+		rename
 			parent as wel_parent
 		redefine
 			on_left_button_down,
@@ -35,17 +35,17 @@ inherit
 			process_message,
 			on_getdlgcode
 		end
-		
+
 	WEL_WM_CTLCOLOR_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EV_SHARED_GDI_OBJECTS
 		export
 			{NONE} all
 		end
-	
+
 	EV_STOCK_COLORS_IMP
 		export
 			{NONE} all
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 		do
 			parent.on_middle_button_down (keys, x_pos, y_pos)
 		end
-	
+
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the right button is pressed.
 			-- We verify that there is indeed a command to avoid
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 			disable_default_processing
 			set_message_return_value (to_lresult (1))
 		end
-		
+
 	cwin_get_wm_command_hwnd (wparam, lparam: POINTER): POINTER is
 		external
 			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 		end
 
 	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
-			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox 
+			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox
 			-- and Wm_ctlcolorscrollbar messages.
 			-- To change its default colors, the color-control `control'
 			-- needs :
@@ -262,14 +262,14 @@ feature {NONE} -- Implementation
 			w: EV_COMBO_BOX_IMP
 			background_color: EV_COLOR_IMP
 			foreground_color: EV_COLOR_IMP
-			
+
 		do
-			int ?= control			
+			int ?= control
 			w ?= int.parent
 			check
 				is_a_combo_box: w /= Void
 			end
-			if w.background_color_imp /= Void or 
+			if w.background_color_imp /= Void or
 				w.foreground_color_imp /= Void
 			then
 					-- Not the default color, we need to do something here
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 				disable_default_processing
 			end
 		end
-		
+
 	process_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER): POINTER is
 			-- Call the routine `on_*' corresponding to the
 			-- message `msg'.
@@ -298,11 +298,11 @@ feature {NONE} -- Implementation
 				Result := Precursor {WEL_COMBO_BOX} (hwnd, msg, wparam, lparam)
 			end
 		end
-		
+
 	on_getdlgcode is
 			-- Called when window receives WM_GETDLGCODE message.
 		do
-			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_tab))
+			set_message_return_value (to_lresult ({WEL_DLGC_CONSTANTS}.dlgc_want_all_keys))
 		end
 
 feature {NONE} -- Implementation

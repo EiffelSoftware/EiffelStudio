@@ -5,7 +5,7 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_POPUP_MENU_HANDLER
 
@@ -18,7 +18,7 @@ inherit
 			default_process_message,
 			class_requires_icon
 		end
-		
+
 	EV_MENU_CONTAINER_IMP
 		export
 			{NONE} all
@@ -67,7 +67,7 @@ feature {NONE} -- WEL Implementation
 			set_message_return_value (
 				menu_item_list.on_menu_char (char_code, corresponding_menu))
 		end
-		
+
 	class_requires_icon: BOOLEAN is
 			-- Does `Current' require an icon to be registered?
 			-- If `True' `register_class' assigns a class icon, otherwise

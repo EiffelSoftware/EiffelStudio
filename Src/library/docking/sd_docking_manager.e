@@ -34,12 +34,12 @@ feature {NONE} -- Initialization
 			create menu_container
 			internal_viewport.extend (menu_container)
 
-			create internal_fixed
-			menu_container.center.extend (internal_fixed)
-
-
 			create internal_main_container
-			internal_fixed.extend (internal_main_container)
+			menu_container.center.extend (internal_main_container)
+
+			create internal_fixed
+			internal_main_container.center_area.extend (internal_fixed)
+
 			-- Insert auto hide panels.
 			create internal_auto_hide_panel_left.make (True)
 			create internal_auto_hide_panel_right.make (True)
@@ -60,11 +60,9 @@ feature {NONE} -- Initialization
 
 			-- Insert inner contianer
 			create l_inner_container.make
-			internal_main_container.center_area.extend (l_inner_container)
+			internal_fixed.extend (l_inner_container)
 			create internal_inner_containers.make (1)
 			internal_inner_containers.extend (l_inner_container)
-
-
 
 --			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_QUICK_FACTORY})
 			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_TRIANGLE_FACTORY})
@@ -507,7 +505,7 @@ feature {SD_AUTO_HIDE_STATE, SD_ZONE, MAIN_WINDOW, SD_CONFIG} -- Zone operation
 				l_auto_hide_zone ?= internal_zones.item
 				if l_auto_hide_zone /= Void then
 					internal_zones.prune (l_auto_hide_zone)
---					l_auto_hide_zone.content.state.close_window
+					l_auto_hide_zone.content.state.record_state
 					internal_fixed.prune (l_auto_hide_zone)
 				end
 				if not internal_zones.after then
@@ -541,26 +539,22 @@ feature {NONE}
 		do
 			remove_auto_hide_zones
 			menu_container.set_minimum_size (0, 0)
-			internal_main_container.set_minimum_size (0, 0)
+--			internal_main_container.set_minimum_size (0, 0)
 			internal_fixed.set_minimum_size (0, 0)
 			if a_width > 0 then
---				if a_width > menu_container.minimum_width then
 
-
---				end
 					internal_viewport.set_item_width (a_width)
---				if internal_fixed.width > internal_main_container.minimum_width then
-					internal_fixed.set_item_width (internal_main_container, internal_fixed.width)
---				end
+
+					internal_fixed.set_item_width (inner_container_main , internal_fixed.width)
+
 			end
 
 			if a_height > 0 then
---				if a_height > menu_container .minimum_height then
+
 					internal_viewport.set_item_height (a_height)
---				end
---				if internal_fixed.height > internal_main_container.minimum_height then
-					internal_fixed.set_item_height (internal_main_container, internal_fixed.height)
---				end
+
+					internal_fixed.set_item_height (inner_container_main, internal_fixed.height)
+
 			end
 		end
 
@@ -629,11 +623,10 @@ feature -- Enumeration
 	Dock_bottom: INTEGER is 2
 	Dock_left: INTEGER is 3
 	Dock_right: INTEGER is 4
---	Dock_in: INTEGER is 5
 
 feature {SD_AUTO_HIDE_STATE, SD_AUTO_HIDE_ZONE, MAIN_WINDOW} --Implementation
 
-	internal_fixed: SD_FIXED
+	internal_fixed: EV_FIXED
 			-- The internal_fixed for DOCKING_MANAGER manage widgets.
 
 feature {SD_MENU_DOCKER_MEDIATOR, MAIN_WINDOW}

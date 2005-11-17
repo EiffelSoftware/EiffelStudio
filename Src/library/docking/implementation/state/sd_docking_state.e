@@ -161,12 +161,22 @@ feature -- Perform Restore
 			-- Change current content's internal_zone to a SD_AUTO_HIDE_ZONE.
 			internal_shared.docking_manager.prune_zone (internal_zone)
 
-			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_width_height := internal_zone.width
 			else
-				l_width_height := (internal_shared.docking_manager.inner_container_main.height * 0.2).ceiling
-			end
+				l_width_height := internal_zone.height
+				if internal_zone.height > (internal_shared.docking_manager.inner_container_main.height * 0.5).ceiling then
+					l_width_height := (internal_shared.docking_manager.inner_container_main.height * 0.2).ceiling
+				end
 
+				debug ("larry")
+					io.put_string ("%N SD_DOCKING_STATE stick window. l_width_height " + l_width_height.out)
+				end
+
+			end
+				debug ("larry")
+					io.put_string ("%N SD_DOCKING_STATE stick window. a_direction " + a_direction.out)
+				end
 			-- Change state.
 			create l_auto_hide_state.make_with_size (internal_content, internal_direction, l_width_height)
 --			l_auto_hide_state.dock_at_top_level

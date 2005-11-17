@@ -82,7 +82,8 @@ feature -- Perform Restore
 			else
 				internal_width_height := zone.height
 			end
-
+			remove_close_timer
+			remove_moving_timer
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
@@ -108,22 +109,26 @@ feature -- Perform Restore
 
 				internal_shared.docking_manager.add_zone (zone)
 			create internal_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
-			internal_timer.actions.extend (agent on_timer)
+			internal_timer.actions.extend (agent on_timer_for_close)
 			create l_env
 			l_env.application.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_motion_procudure := l_env.application.pointer_motion_actions.last
 				-- First, put the zone in a viewport, make a animation here.
 
 				internal_shared.docking_manager.internal_fixed.extend (zone)
+--				internal_shared.docking_manager.internal_fixed.search (v: [like item] EV_WIDGET)
 
-				create l_timer
-				l_timer.actions.extend (agent on_timer_for_moving (l_timer))
-				l_timer.set_interval (20)
+				create internal_moving_timer
+				internal_moving_timer.actions.extend (agent on_timer_for_moving )
+				internal_moving_timer.set_interval (20)
 
-				l_rect := internal_shared.docking_manager.container_rectangle
+
+				create l_rect.make (internal_shared.docking_manager.internal_fixed.x_position, internal_shared.docking_manager.internal_fixed.y_position,
+					internal_shared.docking_manager.internal_fixed.width, internal_shared.docking_manager.internal_fixed.height)
+
+
 
 				if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
-					-- Slide here. not implemented.
 					if internal_width_height > zone.minimum_width then
 						internal_shared.docking_manager.internal_fixed.set_item_width (zone, internal_width_height)
 					end
@@ -137,30 +142,29 @@ feature -- Perform Restore
 					end
 					if internal_width_height > zone.minimum_height then
 						internal_shared.docking_manager.internal_fixed.set_item_height (zone, internal_width_height)
+
+						debug ("larry")
+							io.put_string ("%N SD_AUTO_HIDE_STATE show_window internal_width_height " + internal_width_height.out)
+						end
 					end
 				end
 
 				if internal_direction = {SD_DOCKING_MANAGER}.dock_left then
--- FIXIT: Below line is used when EV_FIXED removed contract.
 					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left - zone.width, l_rect.top)
 					final_position := l_rect.left
 
---					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top)
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.right, l_rect.top)
 					final_position := l_rect.right - zone.width
 
---					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.right - zone.width, l_rect.top)
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_top then
 					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top - zone.height)
 					final_position := l_rect.top
 
---					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top)
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
 					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.bottom)
 					final_position := l_rect.bottom - zone.height
 
---					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.bottom - zone.height)
 				end
 
 			end
@@ -176,28 +180,49 @@ feature -- Impementation for auto hide.
 
 	internal_motion_procudure: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER]]
 
-	on_timer is
+	on_timer_for_close is
 			--
 		require
 			internal_timer_not_void: internal_timer /= Void
 		local
-			l_env: EV_ENVIRONMENT
+
 		do
 			if pointer_outside and not zone.has_focus then
+				remove_close_timer
+			end
+
+		ensure
+			timer_wipe_out:
+		end
+
+	remove_moving_timer is
+			--
+		do
+			if internal_moving_timer /= Void then
+					internal_moving_timer.actions.wipe_out
+					internal_moving_timer := Void
+			end
+		end
+
+	remove_close_timer is
+			--
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			if internal_timer /= Void then
 				internal_timer.actions.wipe_out
 				internal_timer := Void
 				zone.content.state.close_window
 
 				create l_env
-				l_env.application.pointer_motion_actions.prune_all (internal_motion_procudure)
+				l_env.application.pointer_motion_actions.start
+				l_env.application.pointer_motion_actions.prune (internal_motion_procudure)
 
 				debug ("larry")
 					io.put_string ("%N SD_AUTO_HIDE_STATE on_pointer_motion actions pruned")
 				end
 			end
 
-		ensure
-			timer_wipe_out:
 		end
 
 --	pointer_motion_agent: PROCEDURE [ANY, EV_WIDGET, INTEGER, INTEGER]
@@ -219,41 +244,53 @@ feature -- Impementation for auto hide.
 
 feature
 
-	show_step: INTEGER is 6
+	show_step: INTEGER is 20
 			-- Step when tear-off window appear.
 
 	final_position: INTEGER
 			-- Final position when a tear-off window should at.
 
-	on_timer_for_moving (a_timer: EV_TIMEOUT) is
+	on_timer_for_moving  is
 			-- Use timer to play a animation.
 		do
 
 			inspect
 				internal_direction
 			when {SD_DOCKING_MANAGER}.dock_left then
-
 					if zone.x_position + show_step >= final_position then
-						a_timer.actions.wipe_out
-						internal_shared.docking_manager.internal_fixed.set_item_position (zone, final_position, zone.y_position)
-					else
-						internal_shared.docking_manager.internal_fixed.set_item_position (zone, zone.x_position + show_step, zone.y_position)
-					end
+						remove_moving_timer
 
-			when {SD_DOCKING_MANAGER}.dock_right then
-					if zone.x_position - show_step >= final_position then
-						a_timer.actions.wipe_out
-						internal_shared.docking_manager.internal_fixed.set_item_position (zone, final_position, zone.y_position)
+						internal_shared.docking_manager.internal_fixed.set_item_x_position (zone, final_position)
 					else
-						internal_shared.docking_manager.internal_fixed.set_item_position (zone, zone.x_position + show_step, zone.y_position)
+						internal_shared.docking_manager.internal_fixed.set_item_x_position (zone, zone.x_position + show_step)
+					end
+			when {SD_DOCKING_MANAGER}.dock_right then
+					if zone.x_position - show_step <= final_position then
+						remove_moving_timer
+						internal_shared.docking_manager.internal_fixed.set_item_x_position (zone, final_position)
+					else
+						internal_shared.docking_manager.internal_fixed.set_item_x_position (zone, zone.x_position - show_step)
 					end
 			when {SD_DOCKING_MANAGER}.dock_top then
-
+					if zone.y_position + show_step >= final_position then
+						remove_moving_timer
+						internal_shared.docking_manager.internal_fixed.set_item_y_position (zone, final_position)
+					else
+						internal_shared.docking_manager.internal_fixed.set_item_y_position (zone, zone.y_position + show_step)
+					end
 			when {SD_DOCKING_MANAGER}.dock_bottom then
-
+					if zone.y_position - show_step <= final_position then
+						remove_moving_timer
+						internal_shared.docking_manager.internal_fixed.set_item_y_position (zone, final_position)
+					else
+						internal_shared.docking_manager.internal_fixed.set_item_y_position (zone, zone.y_position - show_step)
+					end
 			end
-
 		end
+
+
+
+	internal_moving_timer: EV_TIMEOUT
 
 	close_window is
 			--

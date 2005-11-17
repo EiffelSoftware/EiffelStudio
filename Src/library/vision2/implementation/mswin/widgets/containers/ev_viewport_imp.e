@@ -120,11 +120,14 @@ feature {NONE} -- Implementation
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
+		local
+			t: like resize_actions_internal
 		do
 			if size_type /= Wel_window_constants.Size_minimized then
-				interface.resize_actions.call (
-					[screen_x, screen_y, a_width, a_height]
-				)
+				t := resize_actions_internal
+				if t /= Void then
+					t.call ([screen_x, screen_y, a_width, a_height])
+				end
 				if item /= Void then
 					on_size_requested (True)
 				end

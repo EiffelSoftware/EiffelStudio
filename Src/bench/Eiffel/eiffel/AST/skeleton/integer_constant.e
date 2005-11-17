@@ -12,7 +12,7 @@ inherit
 		redefine
 			type_mask
 		end
-		
+
 	VALUE_I
 		redefine
 			generate, is_integer, inspect_value,
@@ -28,12 +28,12 @@ inherit
 		export
 			{NONE} byte_real_type, byte_generate, byte_size
 		redefine
-			print_register, make_byte_code,
+			print_register,
 			is_simple_expr, is_predefined, generate_il,
 			is_fast_as_local, is_constant_expression,
 			evaluate
 		end;
-	
+
 create
 	make_with_value, make_from_string, make_from_hexa_string
 
@@ -67,7 +67,7 @@ feature -- Visitor
 		do
 			v.process_integer_constant (Current)
 		end
-	
+
 feature -- Properties
 
 	is_integer: BOOLEAN is True
@@ -284,7 +284,7 @@ feature -- Generation
 				buf.put_character ('L')
 			when integer_16_mask then
 				buf.put_string (integer_16_cast)
-				buf.put_integer (integer_16_value)				
+				buf.put_integer (integer_16_value)
 				buf.put_character ('L')
 			when integer_32_mask then
 					-- Special treatment of `min_value' so that the C compiler

@@ -507,7 +507,7 @@ feature {SD_AUTO_HIDE_STATE, SD_ZONE, MAIN_WINDOW, SD_CONFIG} -- Zone operation
 				l_auto_hide_zone ?= internal_zones.item
 				if l_auto_hide_zone /= Void then
 					internal_zones.prune (l_auto_hide_zone)
-					l_auto_hide_zone.content.state.close_window
+--					l_auto_hide_zone.content.state.close_window
 					internal_fixed.prune (l_auto_hide_zone)
 				end
 				if not internal_zones.after then
@@ -640,7 +640,7 @@ feature {SD_MENU_DOCKER_MEDIATOR, MAIN_WINDOW}
 	top_container: EV_CONTAINER
 			-- The topest level container. It contains EV_VIWEPORT which contains internal_fixed.	
 
-feature {SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, MAIN_WINDOW}
+feature {SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, MAIN_WINDOW, SD_CONFIG}
 	menu_container: SD_MENU_CONTAINER
 			-- Container for menus on four sides.	
 

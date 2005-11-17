@@ -18,7 +18,8 @@ inherit
 			content,
 			change_title,
 			change_pixmap,
-			close_window
+			close_window,
+			content_count_valid
 		end
 create
 	make,
@@ -64,7 +65,7 @@ feature {NONE} -- Initlization
 				end
 			end
 
-			internal_shared.docking_manager.remove_empty_split_area
+--			internal_shared.docking_manager.remove_empty_split_area
 		ensure
 			a_content_set: a_content = internal_content
 		end
@@ -85,13 +86,37 @@ feature {NONE} -- Initlization
 		end
 
 feature
-	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
---	restore (a_content: SD_CONTENT; a_container: EV_CONTAINER; a_tab_friend: SD_CONTENT) is
-			--
+	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
+		local
+			l_content: SD_CONTENT
+			l_tab_state: SD_TAB_STATE
+			l_first_tab: BOOLEAN
+			l_docking_state: SD_DOCKING_STATE
+			l_third_time: BOOLEAN
 		do
---			if a_tab_friend = Void then
---				
---			end
+			create internal_shared
+			from
+				a_titles.start
+				l_first_tab := True
+			until
+				a_titles.after
+			loop
+				l_content := internal_shared.docking_manager.content_by_title (a_titles.item)
+				if l_first_tab then
+					create l_docking_state.make_for_tab_zone (l_content, a_container)
+					l_content.change_state (l_docking_state)
+					l_first_tab := False
+				elseif not l_third_time then
+ 					create l_tab_state.make (l_content, l_docking_state.zone)
+					l_content.change_state (l_tab_state)
+					l_third_time := True
+				elseif l_third_time then
+					create l_tab_state.make_with_tab_zone (l_content, l_tab_state.zone)
+					l_content.change_state (l_tab_state)
+				end
+
+				a_titles.forth
+			end
 		end
 
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
@@ -304,6 +329,13 @@ feature
 			end
 
 			internal_shared.docking_manager.unlock_update
+		end
+
+feature -- States report
+
+	content_count_valid (a_titles: ARRAYED_LIST [STRING]): BOOLEAN is
+		do
+			Result := a_titles.count > 1
 		end
 
 feature -- Called by client programmer.

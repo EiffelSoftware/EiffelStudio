@@ -1,266 +1,124 @@
 indexing
-
 	description: "Objects that manage all menus."
-
 	date: "$Date$"
-
 	revision: "$Revision$"
 
-
-
 class
-
 	SD_MENU_MANAGER
 
-
-
 create
-
 	make
-
-
 
 feature {NONE} -- Initialization
 
 	make is
-
-			-- 
-
+			--
 		require
 
-			
-
 		do
-
 			create internal_shared
-
-			create internal_all_menu_zone_items.make (0)
-
+			create menu_contents
+			menu_contents.add_actions.extend (agent on_add_menu_content)
+			menu_contents.remove_actions.extend (agent on_remove_menu_content)
 		end
 
-		
+feature -- Access
+
+	menu_contents: ACTIVE_LIST [SD_MENU_CONTENT]
+			-- All menu contents.
+
+
+	menu_container (a_direction: INTEGER): EV_CONTAINER is
+			--
+		require
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+		do
+			inspect
+				a_direction
+			when {SD_DOCKING_MANAGER}.dock_top then
+				Result := internal_shared.docking_manager.menu_container.top
+			when {SD_DOCKING_MANAGER}.dock_bottom then
+				Result := internal_shared.docking_manager.menu_container.bottom
+			when {SD_DOCKING_MANAGER}.dock_left then
+				Result := internal_shared.docking_manager.menu_container.left
+			when {SD_DOCKING_MANAGER}.dock_right then
+				Result := internal_shared.docking_manager.menu_container.right
+			end
+		ensure
+			not_void: Result /= Void
+		end
 
 feature -- Basic operations
 
-
-
-	add_tool_bar (a_tool_bar: EV_TOOL_BAR) is
-
-			-- 
-
+	content_by_title (a_title: STRING): SD_MENU_CONTENT is
+			--
 		require
-
-			a_tool_bar_not_void: a_tool_bar /= Void
-
-			a_tool_bar_has_item: a_tool_bar.count >= 1
-
-		local
-
-			l_menu: SD_MENU_ZONE
-
-			l_row: SD_MENU_ROW
-
+			a_title_not_void: a_title /= Void
 		do
-
-			extend (a_tool_bar)
-
-			create l_menu.make (False)
-
-			menu_items_finish
-
-			l_menu.extend_items (menu_items_one_zone)
-
-			create l_row.make (False)
-
-			l_row.extend (l_menu)
-
-			internal_shared.docking_manager.menu_container.top.extend (l_row)
-
-		end
-
-	
-
---	add_tool_bar_with_position (a_tool_bar: EV_TOOL_BAR; a_direcition: INTEGER) is
-
---			-- 
-
---		require
-
---			a_tool_bar_not_void: a_tool_bar /= Void
-
---		local
-
---			l_menu: SD_MENU_ZONE
-
---			l_row: SD_MENU_ROW
-
---		do
-
---			extend (a_tool_bar)
-
---			
-
---			inspect 
-
---				a_direcition
-
---			when {SD_DOCKING_MANAGER}.dock_top then
-
---				create l_menu.make (False)
-
-----				l_menu.extend_tool_bar (a_tool_bar)
-
---				create l_row.make (False)
-
---				l_row.extend (l_menu)
-
-----				internal_shared. .top.extend (l_row)	
-
---			when {SD_DOCKING_MANAGER}.dock_left then
-
---				create l_menu.make (True)
-
-----				l_menu.extend_tool_bar (a_tool_bar)
-
---				create l_row.make (True)
-
---				l_row.extend (l_menu)
-
-----				internal_menu_container.left.extend (l_row)							
-
---			else
-
---				
-
---			end
-
-
-
---			internal_menu_zones.extend (l_menu)
-
---		end
-
-		
-
-	extend (a_tool_bar: EV_TOOL_BAR) is
-
-			-- 
-
-		require
-
-			a_tool_bar_not_void: a_tool_bar /= Void
-
-		local
-
-			l_item: EV_TOOL_BAR_ITEM
-
-			l_one_menu_zone_items: like internal_one_menu_zone_items
-
-		do
-
-			from 
-
-				a_tool_bar.start
-
-				create l_one_menu_zone_items.make (0)
-
+			from
+				menu_contents.start
 			until
-
-				a_tool_bar.after
-
+				menu_contents.after or Result /= Void
 			loop
-
-				l_item := a_tool_bar.item
-
-				if a_tool_bar.parent /= Void then
-
-					a_tool_bar.item.parent.prune (a_tool_bar.item)
-
+				if menu_contents.item.title.is_equal (a_title) then
+					Result := menu_contents.item
 				end
-
-				l_one_menu_zone_items.extend (l_item)
-
-				a_tool_bar.forth
-
+				menu_contents.forth
 			end
-
-			internal_all_menu_zone_items.extend (l_one_menu_zone_items)
-
 		end
 
-	
+--feature {SD_MENU_ROW} -- Implementation
 
-	menu_items_one_zone: like internal_one_menu_zone_items is
-
-			-- 
-
-		do
-
-			Result := internal_all_menu_zone_items.item
-
-		end
-
-	
-
-	menu_items_finish is
-
-			-- Go to last menu item.
-
-		do
-
-			internal_all_menu_zone_items.finish
-
-		end
-
-		
-
-feature {SD_MENU_DOCKER_MEDIATOR}
-
-	menus: like internal_menu_zones is
-
-			--  
-
-		do
-
-			Result := internal_menu_zones
-
-		end
-
-		
+--	content_by_menu_items (a_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]): SD_MENU_CONTENT is
+--			--
+--		do
+--			from
+--				menu_contents.start
+--			until
+--				menu_contents.after or Result /= Void
+--			loop
+--				-- Only compare address
+--				if menu_contents.item.menu_items = a_items then
+--					Result := menu_contents.item
+--				end
+--				menu_contents.forth
+--			end
+--		end
 
 feature {NONE} -- Implementation
 
-
-
-	internal_one_menu_zone_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM] is
-
-			-- Anchor type.
-
+	on_add_menu_content (a_menu_item: SD_MENU_CONTENT) is
+			--
 		require
+			a_menu_item_not_void: a_menu_item /= Void
+		local
+			l_menu_zone: SD_MENU_ZONE
+			l_menu_row: SD_MENU_ROW
+		do
+			create l_menu_zone.make (False)
+			l_menu_zone.extend (a_menu_item)
+			create l_menu_row.make (False)
+			l_menu_row.extend (l_menu_zone)
+			internal_shared.docking_manager.menu_container.top.extend (l_menu_row)
+		end
 
-			False
-
+	on_remove_menu_content (a_menu_item: SD_MENU_CONTENT) is
+			--
 		do
 
 		end
 
-		
-
-	internal_all_menu_zone_items: ARRAYED_LIST [like internal_one_menu_zone_items]
-
-			-- All menu zone items.
+feature -- States report
 
 
+feature {SD_MENU_DOCKER_MEDIATOR}
 
-	internal_menu_zones: ARRAYED_LIST [SD_MENU_ZONE]
-
+	menus: ARRAYED_LIST [SD_MENU_ZONE]
 			-- All SD_MENU_ZONEs in system
 
-	
+feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
-
 			-- All singletons.
-
 end
-

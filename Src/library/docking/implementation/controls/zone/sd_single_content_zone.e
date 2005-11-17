@@ -8,7 +8,7 @@ deferred class
 
 inherit
 	SD_ZONE
-		
+
 
 feature
 
@@ -17,13 +17,22 @@ feature
 		do
 			Result := internal_content
 		end
-	
+
 	set_content (a_content: SD_CONTENT) is
 		do
 			internal_content := a_content
 		end
 
+feature {SD_CONFIG}
+
+	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
+			--
+		do
+			a_config_data.add_title (internal_content.title)
+		end
+
 feature {NONE} -- Implementation
-	internal_content: SD_CONTENT 
+
+	internal_content: SD_CONTENT
 			-- The content which current holded.
 end

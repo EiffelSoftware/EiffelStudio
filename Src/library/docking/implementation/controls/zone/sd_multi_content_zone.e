@@ -69,6 +69,19 @@ feature
 			Result := internal_contents.count = 1
 		end
 
+feature {SD_CONFIG}
+
+	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
+		do
+			from
+				internal_contents.start
+			until
+				internal_contents.after
+			loop
+				a_config_data.add_title (internal_contents.item.title)
+				internal_contents.forth
+			end
+		end
 
 feature {SD_STATE}
 

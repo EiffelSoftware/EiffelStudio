@@ -88,6 +88,11 @@ feature {NONE} -- Initlization
 
 		end
 
+feature {SD_CONFIG}
+	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
+		do
+			a_config_data.add_title ("SD_FLOATING_ZONE")
+		end
 feature -- Command
 
 	update_title_bar is

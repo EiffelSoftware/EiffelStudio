@@ -7,6 +7,21 @@ class
 	SD_INNER_CONTAINER_DATA
 
 feature -- Properties
+	set_screen_x (a_screen_x: INTEGER) is
+			--
+		do
+			screen_x := a_screen_x
+		end
+
+	set_screen_y (a_screen_y: INTEGER) is
+			--
+		do
+			screen_y := a_screen_y
+		end
+
+
+	screen_x, screen_y: INTEGER
+
 
 	titles: ARRAYED_LIST [STRING]
 			-- All titles. If it's a docking zone, there is only one title.

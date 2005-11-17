@@ -120,7 +120,7 @@ feature -- Perform Restore
 
 				create internal_moving_timer
 				internal_moving_timer.actions.extend (agent on_timer_for_moving )
-				internal_moving_timer.set_interval (20)
+				internal_moving_timer.set_interval (10)
 
 
 				create l_rect.make (internal_shared.docking_manager.internal_fixed.x_position, internal_shared.docking_manager.internal_fixed.y_position,

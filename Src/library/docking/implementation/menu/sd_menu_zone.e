@@ -92,9 +92,11 @@ feature -- Basic operation
 	float is
 			--
 		do
-			row.prune (Current)
-			if row.count = 0 then
-				row.parent.prune (row)
+			if row /= Void then
+				row.prune (Current)
+				if row.count = 0 then
+					row.parent.prune (row)
+				end
 			end
 
 			if internal_vertical then
@@ -104,6 +106,7 @@ feature -- Basic operation
 			create internal_floating_menu.make
 			internal_floating_menu.extend (Current)
 			internal_floating_menu.show
+			internal_shared.docking_manager.menu_manager.floating_menus.extend (internal_floating_menu)
 		end
 
 	dock is
@@ -111,6 +114,7 @@ feature -- Basic operation
 		require
 			is_floating: is_floating
 		do
+			internal_shared.docking_manager.menu_manager.floating_menus.prune_all (internal_floating_menu)
 			internal_floating_menu.prune (Current)
 			internal_floating_menu.destroy
 			internal_floating_menu := Void

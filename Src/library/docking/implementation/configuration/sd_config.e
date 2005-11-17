@@ -210,6 +210,8 @@ feature {NONE} -- Implementation for save config.
 			a_menu_datas_not_void: a_menu_datas /= Void
 		local
 			l_menu_data: SD_MENU_DATA
+			l_float_menus: ARRAYED_LIST [SD_FLOATING_MENU_ZONE]
+			l_menu_zone: SD_MENU_ZONE
 		do
 			-- Top
 			l_menu_data := save_one_menu_data ({SD_DOCKING_MANAGER}.dock_top)
@@ -223,6 +225,22 @@ feature {NONE} -- Implementation for save config.
 			-- Right	
 			l_menu_data := save_one_menu_data ({SD_DOCKING_MANAGER}.dock_right)
 			a_menu_datas.extend (l_menu_data)
+
+			l_float_menus := internal_shared.docking_manager.menu_manager.floating_menus
+			from
+				l_float_menus.start
+			until
+				l_float_menus.after
+			loop
+				l_menu_zone ?= l_float_menus.item.item
+				check floating_menu_zone_only_has_menu_zone: l_menu_zone/= Void end
+				create l_menu_data.make
+				l_menu_data.set_floating (True)
+				l_menu_data.set_title (l_menu_zone.content.title)
+				l_menu_data.set_screen_x_y (l_float_menus.item.screen_x, l_float_menus.item.screen_y)
+				a_menu_datas.extend (l_menu_data)
+				l_float_menus.forth
+			end
 		ensure
 
 		end
@@ -281,6 +299,9 @@ feature {NONE} -- Implementation for save config.
 			-- Open four area menu datas.
 		require
 			a_menu_datas_not_void: a_menu_datas /= Void
+		local
+			l_menu_on_floating: SD_MENU_ZONE
+			l_content: SD_MENU_CONTENT
 		do
 			-- Top
 			a_menu_datas.start
@@ -294,6 +315,22 @@ feature {NONE} -- Implementation for save config.
 			-- Right
 			a_menu_datas.forth
 			open_one_menu_data ({SD_DOCKING_MANAGER}.dock_right, a_menu_datas.item)
+
+			-- Floating menus
+			from
+				a_menu_datas.forth
+			until
+				a_menu_datas.after
+			loop
+				check is_floating_menu_data: a_menu_datas.item.is_floating end
+				create l_menu_on_floating.make (False)
+				l_content := internal_shared.docking_manager.menu_manager.content_by_title (a_menu_datas.item.title)
+				l_menu_on_floating.extend (l_content)
+				l_menu_on_floating.float
+				l_menu_on_floating.set_position (a_menu_datas.item.screen_x, a_menu_datas.item.screen_y)
+
+				a_menu_datas.forth
+			end
 		end
 
 	open_one_menu_data (a_direction: INTEGER; a_menu_data: SD_MENU_DATA) is
@@ -416,6 +453,7 @@ feature {NONE} -- Implementation for open config.
 		local
 			l_all_main_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 			l_all_contents: ARRAYED_LIST [SD_CONTENT]
+			l_floating_menu_zones: ARRAYED_LIST [SD_FLOATING_MENU_ZONE]
 		do
 			internal_shared.docking_manager.remove_auto_hide_zones
 
@@ -450,6 +488,17 @@ feature {NONE} -- Implementation for open config.
 			internal_shared.docking_manager.menu_container.bottom.wipe_out
 			internal_shared.docking_manager.menu_container.left.wipe_out
 			internal_shared.docking_manager.menu_container.right.wipe_out
+
+			l_floating_menu_zones := internal_shared.docking_manager.menu_manager.floating_menus
+			from
+				l_floating_menu_zones.start
+			until
+				l_floating_menu_zones.after
+			loop
+				l_floating_menu_zones.item.destroy
+				l_floating_menu_zones.forth
+			end
+			l_floating_menu_zones.wipe_out
 
 			l_all_contents := internal_shared.docking_manager.contents
 			from

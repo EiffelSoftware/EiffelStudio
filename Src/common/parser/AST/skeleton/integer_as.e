@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_from_hexa_string (a_type: like constant_type; sign: CHARACTER; s: STRING) is
-			-- Create a new INTEGER AST node from `s' string representing 
+			-- Create a new INTEGER AST node from `s' string representing
 			-- an integer in hexadecimal starting with the following sequence "0x"
 			-- and given `sign'.
 			-- Set `is_initialized' to true if the string denotes a value that is
@@ -210,7 +210,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := value = other.value and then default_type = other.default_type and then 
+			Result := value = other.value and then default_type = other.default_type and then
 				types = other.types
 		end
 
@@ -310,7 +310,7 @@ feature {NONE} -- Translation
 				end
 				i := i + 1
 			end
-			
+
 				-- Count leading zeroes
 			from
 				i := 3
@@ -329,7 +329,7 @@ feature {NONE} -- Translation
 				value := last_nat_64
 				compute_type
 				if sign = '%U' then
-						-- Allow for integers to be specified using a hexadecimal representation regardless 
+						-- Allow for integers to be specified using a hexadecimal representation regardless
 						-- of their value provided that number of digits matches integer length.
 					inspect i
 					when 2 then types := types | integer_8_mask
@@ -375,7 +375,7 @@ feature {NONE} -- Translation
 			i := i - 1
 			s.remove_head (i)
 			nb := nb - i
-			
+
 			if nb > 20 or else nb = 20 and then s > largest_natural_64 then
 					-- Number is too large
 				types := 0

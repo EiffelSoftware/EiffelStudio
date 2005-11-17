@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	VALUE_I 
+	VALUE_I
 
 inherit
 	ANY
@@ -23,7 +23,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -47,7 +47,7 @@ feature -- Status report
 			-- Is the constant an integer or natural constant ?
 		do
 		end
-		
+
 	is_boolean: BOOLEAN is
 			-- Is the constant a real constant ?
 		do
@@ -66,7 +66,7 @@ feature -- Status report
 		ensure
 			is_real_definition: Result = (is_real_32 or is_real_64)
 		end
-		
+
 	is_real_32: BOOLEAN is
 			-- is the constant a real 32 bits constant ?
 		do
@@ -95,7 +95,7 @@ feature -- Status report
 			-- Is current representing no value?
 		do
 		end
-		
+
 	is_numeric: BOOLEAN is
 			-- Is current a numeric value?
 		do
@@ -103,7 +103,7 @@ feature -- Status report
 		ensure
 			is_numeric_definition: is_integer or is_real_32 or is_real_64
 		end
-		
+
 
 	is_propagation_equivalent (other: like Current): BOOLEAN is
 			-- Is `Current' equivalent for propagation of pass2/pass3?

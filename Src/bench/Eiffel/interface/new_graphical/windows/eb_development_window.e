@@ -3539,7 +3539,10 @@ feature {NONE} -- Implementation
 				end
 			else
 				Precursor {EB_TOOL_MANAGER}
-				context_refreshing_timer.destroy
+				if context_refreshing_timer /= Void then
+					context_refreshing_timer.destroy
+					context_refreshing_timer := Void
+				end
 			end
 		end
 

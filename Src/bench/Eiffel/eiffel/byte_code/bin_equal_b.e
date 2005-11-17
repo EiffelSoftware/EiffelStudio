@@ -258,6 +258,8 @@ feature -- IL code generation
 								create {CL_TYPE_I} comparison_type.make (system.any_id)
 							end
 						end
+					else
+						comparison_type := left_type
 					end
 
 						-- Generate left operand.

@@ -20,13 +20,15 @@ feature {NONE} -- Initialization
 			create menu_contents
 			menu_contents.add_actions.extend (agent on_add_menu_content)
 			menu_contents.remove_actions.extend (agent on_remove_menu_content)
+			create floating_menus.make (1)
 		end
 
 feature -- Access
 
+	floating_menus: ARRAYED_LIST [SD_FLOATING_MENU_ZONE]
+
 	menu_contents: ACTIVE_LIST [SD_MENU_CONTENT]
 			-- All menu contents.
-
 
 	menu_container (a_direction: INTEGER): EV_CONTAINER is
 			--

@@ -68,6 +68,8 @@ feature -- Il code generation
 	generate_il_for_type (target_type: TYPE_I) is
 			-- Generate IL code for `expression' that is attached
 			-- or compared to the target of type `target_type'.
+		require
+			target_type_not_void: target_type /= Void
 		local
 			expression_type: TYPE_I
 		do

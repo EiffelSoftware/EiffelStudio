@@ -154,7 +154,7 @@ feature -- IL generation
 		local
 			real_ty: GEN_TYPE_I
 			l_decl_type: CL_TYPE_I
-			actual_type, target_type: CL_TYPE_I
+			target_type: TYPE_I
 			expr: EXPR_B
 			base_class: CLASS_C
 			local_array: INTEGER
@@ -163,7 +163,7 @@ feature -- IL generation
 			make_feat, put_feat: FEATURE_I
 		do
 			real_ty ?= context.real_type (type)
-			target_type ?= real_ty.true_generics.item (1)
+			target_type := real_ty.true_generics.item (1)
 			base_class := real_ty.base_class
 			feat_tbl := base_class.feature_table
 			make_feat := feat_tbl.item_id (make_name_id)
@@ -194,7 +194,6 @@ feature -- IL generation
  				expressions.after
  			loop
  				expr ?= expressions.item
- 				actual_type ?= context.real_type (expr.type)
 
  					-- Prepare call to `put'.
  				il_generator.generate_local (local_array)

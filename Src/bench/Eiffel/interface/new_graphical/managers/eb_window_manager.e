@@ -620,7 +620,6 @@ feature -- Actions on all windows
 		local
 			l_managed_windows: like managed_windows
 			cv_dev: EB_DEVELOPMENT_WINDOW
-			lab: EV_LABEL
 		do
 			from
 					-- Make a twin of the list incase window is destroyed during

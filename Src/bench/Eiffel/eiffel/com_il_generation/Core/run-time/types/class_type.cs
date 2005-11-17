@@ -72,7 +72,7 @@ feature -- Status Report
 	public override int GetHashCode()
 		// Associated hash_code
 	{
-		return (int) type.Value;
+		return type.Value.GetHashCode();
 	}
 
 	public override String class_name ()

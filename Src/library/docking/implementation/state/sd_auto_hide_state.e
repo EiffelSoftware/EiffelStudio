@@ -95,7 +95,7 @@ feature -- Perform Restore
 			-- Add zone which contain user widget.
 		local
 			l_rect: EV_RECTANGLE
---			l_timer: EV_TIMEOUT
+			l_timer: EV_TIMEOUT
 			l_env: EV_ENVIRONMENT
 
 		do
@@ -115,10 +115,10 @@ feature -- Perform Restore
 				-- First, put the zone in a viewport, make a animation here.
 
 				internal_shared.docking_manager.internal_fixed.extend (zone)
-				-- FIXIT: Below line is used when EV_FIXED removed contract.
---				create l_timer
---				l_timer.actions.extend (agent on_timer (l_timer))
---				l_timer.set_interval (20)
+
+				create l_timer
+				l_timer.actions.extend (agent on_timer_for_moving (l_timer))
+				l_timer.set_interval (20)
 
 				l_rect := internal_shared.docking_manager.container_rectangle
 
@@ -127,8 +127,6 @@ feature -- Perform Restore
 					if internal_width_height > zone.minimum_width then
 						internal_shared.docking_manager.internal_fixed.set_item_width (zone, internal_width_height)
 					end
-
-
 
 					if l_rect.height > zone.minimum_height then
 						internal_shared.docking_manager.internal_fixed.set_item_height (zone, l_rect.height)
@@ -144,25 +142,25 @@ feature -- Perform Restore
 
 				if internal_direction = {SD_DOCKING_MANAGER}.dock_left then
 -- FIXIT: Below line is used when EV_FIXED removed contract.
---					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left - zone.width, l_rect.top)
---					final_position := l_rect.left
+					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left - zone.width, l_rect.top)
+					final_position := l_rect.left
 
-					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top)
+--					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top)
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_right then
---					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.right, l_rect.top)
---					final_position := l_rect.right - zone.width
+					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.right, l_rect.top)
+					final_position := l_rect.right - zone.width
 
-					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.right - zone.width, l_rect.top)
+--					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.right - zone.width, l_rect.top)
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_top then
---					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top - zone.height)
---					final_position := l_rect.top
+					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top - zone.height)
+					final_position := l_rect.top
 
-					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top)
+--					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.top)
 				elseif internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
---					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.bottom)
---					final_position := l_rect.bottom - zone.height
+					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.bottom)
+					final_position := l_rect.bottom - zone.height
 
-					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.bottom - zone.height)
+--					internal_shared.docking_manager.internal_fixed.set_item_position (zone, l_rect.left, l_rect.bottom - zone.height)
 				end
 
 			end
@@ -243,7 +241,12 @@ feature
 					end
 
 			when {SD_DOCKING_MANAGER}.dock_right then
-
+					if zone.x_position - show_step >= final_position then
+						a_timer.actions.wipe_out
+						internal_shared.docking_manager.internal_fixed.set_item_position (zone, final_position, zone.y_position)
+					else
+						internal_shared.docking_manager.internal_fixed.set_item_position (zone, zone.x_position + show_step, zone.y_position)
+					end
 			when {SD_DOCKING_MANAGER}.dock_top then
 
 			when {SD_DOCKING_MANAGER}.dock_bottom then

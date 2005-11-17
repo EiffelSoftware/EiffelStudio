@@ -61,7 +61,7 @@ feature -- Perform Restore
 		local
 			l_content: SD_CONTENT
 		do
---			create internal_shared
+			create internal_shared
 			a_titles.start
 			l_content := internal_shared.docking_manager.content_by_title (a_titles.item)
 			make (l_content, {SD_DOCKING_MANAGER}.dock_left, 1)

@@ -52,7 +52,14 @@ feature {NONE}  -- Implementation
 --			a_widget.pointer_button_press_actions.force_extend (agent on_focus_in)
 		end
 
+feature {SD_CONFIG}
 
+	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
+			--
+		require
+			a_config_data_not_void: a_config_data /= Void
+		deferred
+		end
 
 feature {SD_DOCKING_MANAGER}
 	on_zone_focus_out is

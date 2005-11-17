@@ -15,17 +15,18 @@ feature {NONE} -- Initlization
 		do
 			create internal_inner_container_datas.make (1)
 			create internal_auto_hide_zones_data.make
+			create menu_datas.make (1)
 		end
-		
+
 feature -- Properties
 	inner_container_datas: like internal_inner_container_datas is
-			-- 
+			--
 		do
 			Result := internal_inner_container_datas
 		end
-	
+
 	set_inner_container_datas (a_data: like internal_inner_container_datas) is
-			-- 
+			--
 		require
 			a_data_not_void: a_data /= Void
 		do
@@ -33,32 +34,21 @@ feature -- Properties
 		ensure
 			a_data_set: a_data = internal_inner_container_datas
 		end
-		
+
 	auto_hide_zones_data: like internal_auto_hide_zones_data is
-			-- 
+			--
 		do
 			Result := internal_auto_hide_zones_data
 		end
-		
---	set_inner_container_void (a_value: BOOLEAN) is
---			-- 
-----		require
-----			a_value_not_void: a_value /= Void
---		do
---			internal_inner_container_void := a_value
---		end
---	
---	inner_container_void: BOOLEAN is
---			-- 
---		do
---			Result := internal_inner_container_void
---		end
-		
+
+	menu_datas: ARRAYED_LIST [SD_MENU_DATA]
+			-- Four direction menu data. 1 is top, 2 is bottom, 3 is left, 4 is right.
+
 feature {NONE}  -- Implementation
-	
+
 	internal_inner_container_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
-	
+
 	internal_auto_hide_zones_data: SD_AUTO_HIDE_ZONE_DATA
-	
+
 --	internal_inner_container_void: BOOLEAN
 end

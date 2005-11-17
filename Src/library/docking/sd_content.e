@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 			-- Creation method.
 		require
 			a_widget_not_void: a_widget /= Void
+			a_widget_valid: user_widget_valid (a_widget)
 			a_title_not_void: a_title /= Void
 			a_pixmap_not_void: a_pixmap /= Void
 		local
@@ -250,6 +251,34 @@ feature --
 		end
 
 feature -- States report
+
+	user_widget_valid (a_widget: EV_WIDGET): BOOLEAN is
+			-- Dose a_widget alreay in docking library?
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+			l_container: EV_CONTAINER
+			l_found: BOOLEAN
+		do
+			l_contents := internal_shared.docking_manager.contents
+			from
+				l_contents.start
+			until
+				l_contents.after or l_found
+			loop
+				l_container ?= l_contents.item.user_widget
+				if l_container /= Void then
+					if l_container.has_recursive (a_widget) then
+						l_found := True
+					end
+				else
+					if a_widget = l_contents.item.user_widget then
+						l_found := True
+					end
+				end
+				l_contents.forth
+			end
+			Result := not l_found
+		end
 
 	default_destroy: BOOLEAN
 			-- If user click 'X' button, close `Current' or hide `Current'?

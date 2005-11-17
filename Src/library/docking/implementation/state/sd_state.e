@@ -46,6 +46,8 @@ feature {SD_CONFIG}
 			-- `titles' is content name. `a_container' is zone parent.
 		require
 			more_than_one_title: content_count_valid (a_titles)
+			a_container_not_void: a_container /= Void
+			a_container_not_full: not a_container.full
 		deferred
 		end
 

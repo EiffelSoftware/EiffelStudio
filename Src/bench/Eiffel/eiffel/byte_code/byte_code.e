@@ -511,25 +511,23 @@ feature -- Inherited Assertions
 feature -- IL code generation
 
 	generate_il is
-			-- Generate IL byte code
+			-- Generate IL byte code.
 		do
 				-- Put a breakable point on feature name.
 			il_generator.put_line_info (start_line_number)
 			il_generator.flush_sequence_points (context.class_type)
-
 			if once_manifest_string_count > 0 then
 				il_generator.generate_once_string_allocation (once_manifest_string_count)
 			end
-
 			generate_il_body
-
 			il_generator.put_debug_info (end_location)
-
-			generate_il_return (not context.real_type(result_type).is_void)
+			generate_il_return
 		end
 
+feature {NONE} -- IL code generation
+
 	generate_il_body is
-			-- Generate IL byte code
+			-- Generate IL byte code.
 		local
 			r_type: TYPE_I
 			local_list: LINKED_LIST [TYPE_I]
@@ -683,11 +681,14 @@ feature -- IL code generation
 			inh_assert.wipe_out
 		end
 
-	generate_il_return (has_return_value: BOOLEAN) is
+	generate_il_return is
 			-- Generate IL final return statement
+		local
+			has_return_value: BOOLEAN
 		do
-			if has_return_value then
+			if not context.real_type(result_type).is_void then
 				il_generator.generate_result
+				has_return_value := True
 			end
 			il_generator.generate_return (has_return_value)
 		end

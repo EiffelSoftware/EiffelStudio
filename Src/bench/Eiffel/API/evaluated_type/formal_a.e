@@ -173,7 +173,7 @@ feature {COMPILER_EXPORTER}
 		local
 			l_constraint: TYPE_A
 		do
-			Result := same_as (other.actual_type)
+			Result := same_as (other.conformance_type)
 			if not Result then
 					-- We do not treat the case `is_expanded' as if it is an
 					-- expanded then it does not conform to anything but itself
@@ -232,7 +232,7 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	instantiated_in (class_type: CL_TYPE_A): TYPE_A is
+	instantiated_in (class_type: TYPE_A): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.

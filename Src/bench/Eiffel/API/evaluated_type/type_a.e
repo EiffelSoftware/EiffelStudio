@@ -48,7 +48,7 @@ feature -- Location
 		do
 			Result := null_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -74,7 +74,7 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-		
+
 	is_natural: BOOLEAN is
 			-- Is current actual type a natural type?
 		do
@@ -122,13 +122,13 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-		
+
 	is_reference: BOOLEAN is
 			-- Is current actual type a reference one?
 		do
 			Result := not is_expanded
 		end
-		
+
 	is_true_expanded: BOOLEAN is
 			-- Is current actual type an expanded one which is not basic?
 		do
@@ -140,7 +140,7 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-		
+
 	is_external: BOOLEAN is
 			-- Is current type based on an external one?
 		do
@@ -151,7 +151,7 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-		
+
 	is_none: BOOLEAN is
 			-- Is the current actual type a none type ?
 		do
@@ -181,7 +181,7 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-		
+
 	is_typed_pointer: BOOLEAN is
 			-- Is current type a typed pointer type ?
 		do
@@ -193,7 +193,7 @@ feature -- Properties
 		do
 			-- Do nothing
 		end
-		
+
 	is_named_type: BOOLEAN is
 			-- Is it a named type?
 		do
@@ -219,7 +219,7 @@ feature -- Access
 		do
 			Result := not (is_void or else is_formal or else is_none)
 		ensure
-			Yes_if_is: Result implies not (is_void or else 
+			Yes_if_is: Result implies not (is_void or else
 								is_formal or else is_none)
 		end
 
@@ -233,6 +233,12 @@ feature -- Access
 			--| *** FIXME this will become obsolete
 		do
 			Result := Current
+		end
+
+	conformance_type: TYPE_A is
+			-- Type which is used to check conformance
+		do
+			Result := actual_type
 		end
 
 	deep_actual_type: TYPE_A is
@@ -335,7 +341,7 @@ feature {COMPILER_EXPORTER} -- Access
 			other_not_void: other /= Void
 		deferred
 		end
-		
+
 	is_conformant_to (other: TYPE_A): BOOLEAN is
 			-- Does Current inherit from other?
 			-- Most of the time, it is equivalent to `conform_to' except
@@ -358,7 +364,7 @@ feature {COMPILER_EXPORTER} -- Access
 		ensure
 			context_set: Result implies context.last_conversion_info /= Void
 		end
-		
+
 	valid_generic (type: TYPE_A): BOOLEAN is
 			-- Do the generic parameter of `type' conform to those of
 			-- Current ?
@@ -393,7 +399,7 @@ feature {COMPILER_EXPORTER} -- Access
 			Result := Current
 		end
 
-	instantiated_in (class_type: CL_TYPE_A): TYPE_A is
+	instantiated_in (class_type: TYPE_A): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
@@ -481,7 +487,7 @@ feature {COMPILER_EXPORTER} -- Access
 
 	is_ancestor_valid: BOOLEAN is
 			-- Is type ancestor valid?
-			-- (This is currently checked only for expanded types that have 
+			-- (This is currently checked only for expanded types that have
 			-- an external ancestor, that is not supported by CIL code generation.)
 		require
 			il_generation: system.il_generation

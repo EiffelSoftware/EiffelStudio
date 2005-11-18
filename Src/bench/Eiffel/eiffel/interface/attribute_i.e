@@ -101,7 +101,7 @@ feature -- Element Change
 			solved_type: TYPE_A
 		do
 			Precursor {ENCAPSULATED_I} (class_c)
-			solved_type ?= type.actual_type
+			solved_type ?= type.actual_type.conformance_type
 			if
 				solved_type.is_true_expanded and then
 				solved_type.associated_class = class_c and then

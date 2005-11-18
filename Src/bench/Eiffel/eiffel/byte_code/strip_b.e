@@ -1,18 +1,18 @@
 -- Byte code for strip expression
 
-class STRIP_B 
+class STRIP_B
 
 inherit
-
 	EXPR_B
 		redefine
-			make_byte_code, enlarged, size, generate_il
+			enlarged, size, generate_il
 		end
+
 	SHARED_INSTANTIATOR
 
 create
 	make
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -20,8 +20,8 @@ feature -- Visitor
 		do
 			v.process_strip_b (Current)
 		end
-	
-feature 
+
+feature
 
 	feature_ids: LINKED_SET [INTEGER]
 			-- Set of attributes feature ids to strip from the current
@@ -78,30 +78,6 @@ feature -- IL code generation
 		do
 			check False end
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a strip expression
-		local
-			cl_type: CLASS_TYPE;
-			attr_names: LINKED_LIST [STRING];
-		do
-			cl_type := Context.class_type;
-			attr_names := attribute_names;
-			from
-				attr_names.start
-			until
-				attr_names.after
-			loop
-				ba.append (Bc_add_strip);
-				ba.append_raw_string (attr_names.item);
-				attr_names.forth
-			end;
-			ba.append (Bc_end_strip);
-			ba.append_short_integer (cl_type.type_id - 1);
-			ba.append_integer (attr_names.count);
-		end;
 
 feature -- Inlining
 

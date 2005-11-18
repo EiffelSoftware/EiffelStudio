@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class BYTE_CODE 
+deferred class BYTE_CODE
 
 inherit
 	IDABLE
@@ -15,9 +15,14 @@ inherit
 			{ANY} body_index, set_body_index
 		end
 
+	BYTE_CONST
+		export
+			{NONE} all
+		end
+
 	BYTE_NODE
 		redefine
-			make_byte_code, enlarge_tree, generate_il
+			enlarge_tree, generate_il
 		end
 
 	SHARED_C_LEVEL
@@ -31,6 +36,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_BN_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -38,7 +48,7 @@ feature -- Visitor
 		do
 			-- Do nothing as BYTE_CODE is not really a BYTE_NODE.
 		end
-		
+
 feature -- Access
 
 	real_body_id: INTEGER
@@ -53,7 +63,7 @@ feature -- Access
 
 	end_location: LOCATION_AS
 			-- Position where `end' keyword is located.
-			
+
 	feature_name: STRING is
 			-- Final name of the feature
 		require
@@ -265,7 +275,7 @@ feature -- Settings
 			end
 			if old_expressions /= Void then
 				--! Wipe out old expression and rebuild
-				--! it with enlarged function through 
+				--! it with enlarged function through
 				--! postconditions enlargement.
 				--! (Look at enlarged in class UN_OLD_B)
 				old_expressions.wipe_out
@@ -413,7 +423,7 @@ feature -- Settings
 					buf.put_new_line
 					buf.indent
 				else
-					buf.put_string ("if (~in_assertion) {");					
+					buf.put_string ("if (~in_assertion) {");
 					buf.put_new_line
 					buf.indent
 				end
@@ -437,7 +447,7 @@ feature -- Settings
 
 				buf.put_string ("in_assertion = 0;")
 				buf.put_new_line
-				
+
 				buf.exdent
 				buf.put_character ('}')
 				buf.put_new_line
@@ -475,9 +485,9 @@ feature -- Inherited Assertions
 					-- Do not include assertions with the same `body_index'
 					-- as current feature, because they are generated as
 					-- non-inherited ones. This situation happens when
-					-- the feature code is regenerated in the context of a 
+					-- the feature code is regenerated in the context of a
 					-- descendant (e.g., in the expanded class).
-					--| Only generate precondition if the origin of 
+					--| Only generate precondition if the origin of
 					--| the feature has a precondition
 				has_assertion := inh_f.body_index /= body_index and then
 					(inh_f.has_postcondition or else
@@ -539,7 +549,7 @@ feature -- IL code generation
 			inh_assert.init
 			Context.set_origin_has_precondition (True)
 			if not Context.associated_class.is_basic and then
-				feat.assert_id_set /= Void 
+				feat.assert_id_set /= Void
 			then
 					--! Do not get inherited pre & post for basic types
 				formulate_inherited_assertions (feat.assert_id_set)
@@ -570,7 +580,7 @@ feature -- IL code generation
 				il_generator.put_dummy_local_info (Boolean_c_type, l_saved_in_assertion)
 				il_generator.generate_in_assertion_status
 				il_generator.generate_local_assignment (l_saved_in_assertion)
-				
+
 					-- Create retry label.
 				il_label_factory.create_retry_label
 				il_generator.mark_label (il_label_factory.retry_label)
@@ -579,7 +589,7 @@ feature -- IL code generation
 				-- Make IL code for preconditions
 			if precondition /= Void or inh_assert.has_precondition then
 				if (context.workbench_mode or class_c.assertion_level.check_precond) then
-					generate_il_precondition					
+					generate_il_precondition
 				elseif System.is_precompile_finalized then
 					l_nb_precond := 0
 					if precondition /= Void then
@@ -588,7 +598,7 @@ feature -- IL code generation
 					if inh_assert.has_precondition then
 						l_nb_precond := l_nb_precond + inh_assert.precondition_list_count
 					end
-					generate_ghost_debug_infos (l_nb_precond)					
+					generate_ghost_debug_infos (l_nb_precond)
 				end
 			end
 
@@ -658,7 +668,7 @@ feature -- IL code generation
 				il_generator.generate_set_assertion_status
 				il_generator.mark_label (end_of_assertion)
 			end
-			
+
 			if rescue_clause /= Void then
 				il_generator.generate_start_rescue
 					-- Restore assertion level.
@@ -672,7 +682,7 @@ feature -- IL code generation
 			end
 			inh_assert.wipe_out
 		end
-	
+
 	generate_il_return (has_return_value: BOOLEAN) is
 			-- Generate IL final return statement
 		do
@@ -772,7 +782,7 @@ feature -- IL code generation
 							from
 								id_list := rout_locals.item.id_list
 								id_list.start
-							until	
+							until
 								id_list.after
 							loop
 								il_generator.put_local_info (local_list.item, id_list.item)
@@ -793,7 +803,7 @@ feature -- IL code generation
 					debug_generation := False
 				end
 			end
-			
+
 			if not debug_generation then
 					-- Generation of local variable without debug information
 				from
@@ -804,7 +814,7 @@ feature -- IL code generation
 					il_generator.put_nameless_local_info (local_list.item, i)
 					i := i + 1
 					local_list.forth
-				end				
+				end
 			end
 		end
 
@@ -817,7 +827,7 @@ feature -- Byte code generation
 			valid_class_type: Context.class_type /= Void
 		local
 			i, nb: INTEGER
-			r_type, formal_type: TYPE_I;	
+			r_type, formal_type: TYPE_I;
 			local_list: LINKED_LIST [TYPE_I]
 			bit_i: BIT_I
 			expanded_type: CL_TYPE_I
@@ -832,7 +842,7 @@ feature -- Byte code generation
 			inh_assert.init
 			Context.set_origin_has_precondition (True)
 			if not Context.associated_class.is_basic and then
-				feat.assert_id_set /= Void 
+				feat.assert_id_set /= Void
 			then
 					--! Do not get inherited pre & post for basic types
 				formulate_inherited_assertions (feat.assert_id_set)
@@ -842,7 +852,7 @@ feature -- Byte code generation
 
 				-- Once mark and reserved space for once key.
 			append_once_mark (Temp_byte_code_array)
-			
+
 				-- Header for byte code.
 			Temp_byte_code_array.append (Bc_start)
 
@@ -880,14 +890,14 @@ feature -- Byte code generation
 			ba.mark_retry
 
 				-- Compound byte code
-			make_body_code (ba)
+			make_body_code (ba, melted_generator)
 
 			ba.append (Bc_null)
 
 			if rescue_clause /= Void then
 				ba.write_forward
 				ba.append (Bc_rescue)
-				rescue_clause.make_byte_code (ba)
+				melted_generator.generate (ba, rescue_clause)
 				ba.append (Bc_end_rescue)
 			end
 
@@ -945,7 +955,7 @@ feature -- Byte code generation
 
 							if gen_type /= Void then
 								Temp_byte_code_array.append_short_integer (context.current_type.generated_id (False))
-								gen_type.make_gen_type_byte_code 
+								gen_type.make_gen_type_byte_code
 										(Temp_byte_code_array, True)
 							end
 							Temp_byte_code_array.append_short_integer(-1)
@@ -1013,7 +1023,7 @@ end
 				position > nb
 			loop
 					-- Local SK value
-				Context.add_local 
+				Context.add_local
 						(context.real_type (locals.item (position)))
 				position := position + 1
 			end
@@ -1022,7 +1032,7 @@ end
 			if
 				(not l_il_generation and then l_old_expressions /= Void) or else
 				(l_il_generation and then l_old_expressions /= Void and then
-				(context.workbench_mode or 
+				(context.workbench_mode or
 				context.class_type.associated_class.assertion_level.check_postcond))
 			then
 				from
@@ -1044,10 +1054,11 @@ end
 			Context.inherited_assertion.setup_local_variables (position)
 		end
 
-	make_body_code (ba: BYTE_ARRAY) is
+	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR) is
 			-- Generate compound byte code
 		require
 			good_argument: ba /= Void
+			a_generator_not_void: a_generator /= Void
 		deferred
 		end
 

@@ -1,9 +1,8 @@
-class BIN_POWER_B 
+class BIN_POWER_B
 
 inherit
 	NUM_BINARY_B
 		rename
-			Bc_power as operator_constant,
 			il_power as il_operator_constant
 		redefine
 			print_register,
@@ -14,7 +13,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -27,7 +26,7 @@ feature -- Visitor
 		do
 			v.process_bin_power_b (Current)
 		end
-	
+
 feature -- IL code generation
 
 	generate_standard_il is
@@ -43,7 +42,7 @@ feature -- IL code generation
 			l_power_nb ?= right
 			if l_power_nb /= Void then
 				l_power_value := l_power_nb.value.to_double
-				
+
 				if l_power_value = 0.0 then
 						-- Removed value, since not needed.
 					il_generator.pop

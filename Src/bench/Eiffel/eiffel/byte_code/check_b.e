@@ -1,9 +1,9 @@
-class CHECK_B 
+class CHECK_B
 
 inherit
 	INSTR_B
 		redefine
-			enlarge_tree, analyze, generate, make_byte_code,
+			enlarge_tree, analyze, generate,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size, inlined_byte_code,
 			pre_inlined_code, generate_il
@@ -13,7 +13,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -21,7 +21,7 @@ feature -- Visitor
 		do
 			v.process_check_b (Current)
 		end
-	
+
 feature -- Access
 
 	check_list: BYTE_LIST [BYTE_NODE];
@@ -57,7 +57,7 @@ feature -- Code generation
 				check_list.enlarge_tree
 			end
 		end
-	
+
 	analyze is
 			-- Analyze the assertions
 		local
@@ -135,26 +135,6 @@ feature -- IL code generation
 					end_location_not_void: end_location /= Void
 				end
 				il_generator.put_silent_debug_info (end_location)
-			end
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a check instruction.
-		do
-			if check_list /= Void then
-					-- Set assertion type
-				context.set_assertion_type (In_check)
-
-				ba.append (Bc_check)
-					-- In case, the check assertions won't be checked, we
-					-- have to put a jump offset
-				ba.mark_forward
-					-- Assertion byte code
-				check_list.make_byte_code (ba)
-					-- Jump offset evaluation
-				ba.write_forward
 			end
 		end
 

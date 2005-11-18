@@ -6,7 +6,7 @@ inherit
 
 	EXPR_B
 		redefine
-			enlarged, is_hector, make_byte_code,
+			enlarged, is_hector,
 			is_simple_expr, has_gcable_variable, has_call,
 			stored_register, is_unsafe, optimized_byte_node,
 			calls_special_features, size,
@@ -102,21 +102,6 @@ feature -- IL code generation
 			-- Generate IL code for `expression'
 		do
 			expression.generate_il_for_type (context.real_type (attachment_type))
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for the expression
-		local
-			target_type, source_type: TYPE_I
-		do
-			target_type := context.real_type (attachment_type)
-			source_type := context.real_type (expression.type)
-			expression.make_byte_code_for_type (ba, target_type)
-			if target_type.is_expanded and then source_type.is_none then
-				ba.append (Bc_exp_excep)
-			end
 		end
 
 feature -- Array optimization

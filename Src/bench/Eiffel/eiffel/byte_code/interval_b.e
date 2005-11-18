@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class INTERVAL_B 
+deferred class INTERVAL_B
 
 inherit
 	BYTE_NODE
@@ -28,7 +28,7 @@ inherit
 		redefine
 			is_equal
 		end
-	
+
 feature {INTERVAL_B} -- Creation
 
 	make (i: like lower; j: like upper) is
@@ -85,7 +85,7 @@ feature  -- Access
 		do
 			Result := 	lower > other.upper
 						or else
-						upper < other.lower 
+						upper < other.lower
 		end
 
 feature -- Comparison
@@ -93,8 +93,8 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is `other' greater than Current?
 		do
-			Result := 
-				lower < other.lower or else 
+			Result :=
+				lower < other.lower or else
 				lower.is_equal (other.lower) and then upper < other.upper
 		end
 
@@ -140,7 +140,7 @@ feature -- Modification
 		ensure
 			case_index_set: case_index = i
 		end
-		
+
 feature -- Output
 
 	display (st: STRUCTURED_TEXT) is
@@ -148,18 +148,6 @@ feature -- Output
 			lower.display (st)
 			st.add_string ("..")
 			upper.display (st)
-		end
-
-feature -- Byte code generation
-
-	make_range (ba: BYTE_ARRAY) is
-			-- Generate byte code for interval range.
-		require
-			ba_not_void: ba /= Void
-		do
-			lower.make_byte_code (ba)
-			upper.make_byte_code (ba)
-			ba.append (Bc_range)
 		end
 
 feature -- C code generation

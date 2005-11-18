@@ -3,7 +3,7 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class STD_BYTE_CODE 
+class STD_BYTE_CODE
 
 inherit
 	BYTE_CODE
@@ -17,7 +17,7 @@ inherit
 	SHARED_ERROR_HANDLER
 
 	SHARED_DECLARATIONS
-	
+
 feature -- Access
 
 	compound: BYTE_LIST [BYTE_NODE]
@@ -102,7 +102,7 @@ feature -- Analyzis
 				end
 				if inh_assert.has_precondition then
 					inh_assert.analyze_precondition
-				end	
+				end
 				if precondition /= Void then
 					precondition.analyze
 				end
@@ -129,7 +129,7 @@ feature -- Analyzis
 				end
 				if inh_assert.has_postcondition then
 					inh_assert.analyze_old_expressions
-				end	
+				end
 			end
 
 				-- If result is expanded or a bit, we need to create it anyway
@@ -161,7 +161,7 @@ feature -- Analyzis
 				end
 				if inh_assert.has_postcondition then
 					inh_assert.analyze_postcondition
-				end	
+				end
 			end
 			if rescue_clause /= Void then
 				rescue_clause.analyze
@@ -212,7 +212,7 @@ feature -- Analyzis
 				end
 			end
 		end
-			
+
 	add_in_log (encoded_name: STRING) is
 		do
 			System.used_features_log_file.add (Context.class_type, feature_name, encoded_name)
@@ -298,7 +298,7 @@ feature -- Analyzis
 
 				-- Record the locals, arguments and Current address for debugging.
 			generate_push_db
-			
+
 				-- Generate execution trace information (RTEAA)
 			generate_execution_trace
 
@@ -727,7 +727,7 @@ end
 
 	generate_save_args is
 			-- Push the addresses of the arguments on the local variable stack.
-		local	
+		local
 			i		: INTEGER
 			count	: INTEGER
 			type_i	: TYPE_I
@@ -771,7 +771,7 @@ end
 					DEBUG ("C_DEBUGGER")
 						buf.put_string ("arguments is void%N")
 					end
-				end	
+				end
 				DEBUG ("C_DEBUGGER")
 					buf.put_string ("END OF GENERATION%N%N%N")
 				end
@@ -781,7 +781,7 @@ end
 
 	generate_save_locals is
 			-- Push the addresses of the local variables on the local variable stack.
-		local	
+		local
 			i		: INTEGER
 			count	: INTEGER
 			type_i	: TYPE_I
@@ -798,7 +798,7 @@ end
 						i := locals.lower
 						DEBUG ("C_DEBUGGER")
 							buf.put_string ("/* The number of locals is ")
-							buf.put_integer (count)		
+							buf.put_integer (count)
 							buf.put_string ("*/%N/* The lower bound is ")
 							buf.put_integer (i)
 							buf.put_string ("*/%N%N")
@@ -821,7 +821,7 @@ end
 					DEBUG ("C_DEBUGGER")
 						buf.put_string ("locals is void%N")
 					end
-				end	
+				end
 				DEBUG ("C_DEBUGGER")
 					buf.put_string ("END OF GENERATION%N%N%N")
 				end
@@ -835,7 +835,7 @@ end
 		do
 			if context.workbench_mode then
 				buf := buffer
-				buf.put_string ("RTLU (SK_REF, &Current);")	
+				buf.put_string ("RTLU (SK_REF, &Current);")
 				buf.put_new_line
 			end
 		end
@@ -867,7 +867,7 @@ end
 		local
 			buf	: GENERATION_BUFFER
 		do
-			if context.workbench_mode then 
+			if context.workbench_mode then
 					-- first we save the Result register
 				generate_save_result
 					-- then we push the arguments of the function
@@ -885,7 +885,7 @@ end
 					buf.put_new_line
 				end
 			end
-		end			
+		end
 
 	generate_locals is
 			-- Declare C local variables
@@ -908,7 +908,7 @@ end
 			wkb_mode := context.workbench_mode
 			has_rescue := rescue_clause /= Void
 			l_is_once := is_once
-			
+
 			if locals /= Void then
 				from
 					count := locals.count
@@ -924,7 +924,7 @@ end
 					else
 						used_local := context.local_vars.item(i)
 					end
-					
+
 							-- Generate only if variable used
 					if wkb_mode or (used_local or type_i.is_true_expanded) then
 							-- Local reference variable are declared via
@@ -966,7 +966,7 @@ end
 					i := i + 1
 				end
 			end
-			
+
 			generate_expanded_arguments
 
 				-- Generate temporary locals under the control of the GC
@@ -974,7 +974,7 @@ end
 
 				-- Result is declared only if needed. For onces, it is
 				-- accessed via a key allowing us to have them per thread.
-			if (not result_type.is_void) and then (wkb_mode or else context.result_used) then 
+			if (not result_type.is_void) and then (wkb_mode or else context.result_used) then
 				generate_result_declaration (has_rescue and then not wkb_mode)
 			end
 
@@ -1117,7 +1117,7 @@ end
 					buf.put_new_line
 					buf.indent
 				end
-			
+
 				if inh_assert.has_precondition then
 					inh_assert.generate_precondition
 				end
@@ -1126,7 +1126,7 @@ end
 					Context.set_new_precondition_block (True)
 					precondition.generate
 				end
-	
+
 				buf.put_string ("RTJB;")
 				Context.generate_current_label_definition
 
@@ -1322,7 +1322,7 @@ end
 		end
 
 	generate_pop_debug_locals is
-			-- Generate the cleaning of the locals stack used by the debugger 
+			-- Generate the cleaning of the locals stack used by the debugger
 			-- when stopped in a C function
 		local
 			buf: GENERATION_BUFFER
@@ -1471,7 +1471,7 @@ end
 
 feature -- Byte code generation
 
-	make_body_code (ba: BYTE_ARRAY) is
+	make_body_code (ba: BYTE_ARRAY; a_generator: MELTED_GENERATOR) is
 			-- Generate compound byte code
 		local
 			have_assert, has_old: BOOLEAN
@@ -1493,12 +1493,12 @@ feature -- Byte code generation
 
 			if Context.origin_has_precondition then
 				if inh_assert.has_precondition then
-					inh_assert.make_precondition_byte_code (ba)
+					inh_assert.make_precondition_byte_code (a_generator, ba)
 				end
 
 				if precondition /= Void then
 					Context.set_new_precondition_block (True)
-					precondition.make_byte_code (ba)
+					a_generator.generate (ba, precondition)
 				end
 			end
 
@@ -1513,7 +1513,7 @@ feature -- Byte code generation
 				ba.append (Bc_raise_prec)
 				if inh_assert.has_precondition then
 					inh_assert.write_forward (ba)
-				
+
 					if precondition /= Void then
 						ba.write_forward
 					end
@@ -1527,7 +1527,7 @@ feature -- Byte code generation
 				ba.mark_forward
 			end
 
-			if postcondition /= Void and then 	
+			if postcondition /= Void and then
 				old_expressions /= Void then
 					-- Make byte code for old expression
 					--! Order is important since interpretor pops expression
@@ -1537,7 +1537,7 @@ feature -- Byte code generation
 				until
 					old_expressions.after
 				loop
-					old_expressions.item.make_initial_byte_code (ba)
+					a_generator.generate_old_expression_initialization (ba, old_expressions.item)
 					old_expressions.forth
 				end
 			end
@@ -1546,7 +1546,7 @@ feature -- Byte code generation
 			have_assert := postcondition /= Void or else inh_assert.has_postcondition
 			if have_assert then
 				if inh_assert.has_postcondition then
-					inh_assert.make_old_exp_byte_code (ba)
+					inh_assert.make_old_exp_byte_code (a_generator, ba)
 				end
 			end
 
@@ -1557,7 +1557,7 @@ feature -- Byte code generation
 				-- Go to point for old expressions
 
 			if compound /= Void then
-				compound.make_byte_code (ba)
+				a_generator.generate (ba, compound)
 			end
 
 				-- Make byte code for postcondition
@@ -1568,11 +1568,11 @@ feature -- Byte code generation
 			end
 
 			if inh_assert.has_postcondition then
-				inh_assert.make_postcondition_byte_code (ba)
+				inh_assert.make_postcondition_byte_code (a_generator, ba)
 			end
 
 			if postcondition /= Void then
-				postcondition.make_byte_code (ba)
+				a_generator.generate (ba, postcondition)
 			end
 
 			if have_assert then

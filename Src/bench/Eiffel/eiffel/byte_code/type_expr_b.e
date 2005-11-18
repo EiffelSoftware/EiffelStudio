@@ -3,14 +3,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TYPE_EXPR_B 
+class TYPE_EXPR_B
 
 inherit
 	EXPR_B
 		redefine
 			register, set_register, analyze, generate,
 			propagate, print_register, unanalyze,
-			make_byte_code, generate_il,
+			generate_il,
 			is_simple_expr, allocates_memory, is_constant_expression
 		end
 
@@ -41,7 +41,7 @@ feature -- Visitor
 		do
 			v.process_type_expr_b (Current)
 		end
-	
+
 feature -- Access
 
 	type_data: GEN_TYPE_I
@@ -110,26 +110,6 @@ feature -- IL code generation
 				create l_type_creator.make (context.real_type (type_data))
 				l_type_creator.generate_il
 			end
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a manifest type
-		local
-			l_type_creator: CREATE_TYPE
-		do
-			fixme ("Instance should be unique.")
-			ba.append (Bc_create)
-				-- There is no feature call:
-			ba.append_boolean (False)
-
-			create l_type_creator.make (context.real_type (type_data))
-			l_type_creator.make_byte_code (ba)
-
-				-- Runtime is in charge to make sure that newly created object
-				-- has been duplicated so that we can check the invariant.
-			ba.append (bc_create_inv)			
 		end
 
 feature -- Code analyzis

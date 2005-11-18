@@ -1,10 +1,8 @@
-class BIN_NE_B 
+class BIN_NE_B
 
 inherit
 	BIN_EQUAL_B
 		rename
-			Bc_ne as operator_constant,
-			Bc_true_compar as obvious_operator_constant,
 			il_ne as il_operator_constant
 		redefine
 			generate_equal,
@@ -12,7 +10,7 @@ inherit
 			generate_bit_equal,
 			generate_il_modifier_opcode
 		end;
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -20,7 +18,7 @@ feature -- Visitor
 		do
 			v.process_bin_ne_b (Current)
 		end
-	
+
 feature
 
 	generate_operator is
@@ -34,7 +32,7 @@ feature
 		do
 			buffer.put_string ("EIF_TRUE");
 		end;
-	
+
 	generate_equal is
 			-- Generate non-equality.
 		do
@@ -91,21 +89,5 @@ feature -- IL code generation
 		do
 			il_generator.generate_unary_operator (Il_not)
 		end
-		
-feature -- Byte code generation
-	
-    make_expanded_eq_test (ba: BYTE_ARRAY) is
-            -- Make byte code for current expanded equality
-        do
-            ba.append (Bc_standard_equal);
-			ba.append (Bc_not);
-        end;
- 
-    make_bit_eq_test (ba: BYTE_ARRAY) is
-            -- Make byte code for current bit equality
-        do
-            ba.append (Bc_bit_standard_equal);
-			ba.append (Bc_not);
-        end;
- 
+
 end

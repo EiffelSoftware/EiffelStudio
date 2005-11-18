@@ -3,19 +3,18 @@ indexing
 	date: "$date: $"
 	revision: "$revision: $"
 
-class BIN_DIV_B 
+class BIN_DIV_B
 
 inherit
 
 	NUM_BINARY_B
 		rename
-			Bc_div as operator_constant,
 			il_div as il_operator_constant
 		redefine
 			generate_operator, is_simple,
 			generate_simple, is_built_in
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -23,7 +22,7 @@ feature -- Visitor
 		do
 			v.process_bin_div_b (Current)
 		end
-	
+
 feature -- Status report
 
 	is_simple: BOOLEAN is

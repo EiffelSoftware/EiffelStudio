@@ -1,15 +1,14 @@
-class UN_NOT_B 
+class UN_NOT_B
 
 inherit
 	UNARY_B
 		rename
-			Bc_not as operator_constant,
 			Il_not as il_operator_constant
 		redefine
 			generate_operator, is_built_in, print_register,
 			enlarged
 		end;
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -17,7 +16,7 @@ feature -- Visitor
 		do
 			v.process_un_not_b (Current)
 		end
-	
+
 feature
 
 	print_register is

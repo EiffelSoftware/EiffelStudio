@@ -3,12 +3,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CHAR_CONST_B 
+class CHAR_CONST_B
 
 inherit
 	EXPR_B
 		redefine
-			print_register, make_byte_code, evaluate,
+			print_register, evaluate,
 			is_simple_expr, is_predefined, generate_il,
 			is_fast_as_local, is_constant_expression
 		end
@@ -33,7 +33,7 @@ feature -- Visitor
 		do
 			v.process_char_const_b (Current)
 		end
-	
+
 feature -- Access
 
 	value: CHARACTER
@@ -91,15 +91,6 @@ feature -- IL code generation
 			-- Generate IL code for character constant
 		do
 			il_generator.put_character_constant (value)
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a manifest character constant
-		do
-			ba.append (Bc_char)
-			ba.append (value)
 		end
 
 end -- class CHAR_CONST_B

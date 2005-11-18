@@ -1,13 +1,13 @@
 -- Block of invariant assertions
 
-class INVARIANT_B 
+class INVARIANT_B
 
 inherit
 	ASSERT_TYPE
 
 	BYTE_NODE
 		redefine
-			make_byte_code, generate_il
+			generate_il
 		end
 
 	IDABLE
@@ -86,7 +86,7 @@ feature
 			context.mark_current_used;
 
 				-- Routine's name				
-			if context.final_mode then	
+			if context.final_mode then
 				body_index := Invariant_body_index;
 			else
 				body_index := associated_class.invariant_feature.body_index;
@@ -136,7 +136,7 @@ feature
 			context.generate_once_manifest_string_allocation (once_manifest_string_count)
 
 			byte_list.generate;
-		
+
 				-- Remove gc hooks
 			i := context.ref_var_used;
 			if i > 0 then
@@ -176,73 +176,7 @@ feature -- IL code generation
 			il_generator.generate_return (False)
 		end
 
-feature -- Byte code geenration
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a class invariant clause.
-		local
-			local_list: LINKED_LIST [TYPE_I];
-			body_index: INTEGER
-		do
-			local_list := context.local_list;
-			local_list.wipe_out;
-			Temp_byte_code_array.clear;
-				-- Default precond- and postcondition offsets
-			--Temp_byte_code_array.append_integer (0);
-			--Temp_byte_code_array.append_integer (0);
-
-				-- This is not once routine.		
-			Temp_byte_code_array.append ('%U')
-
-			Temp_byte_code_array.append (Bc_start);
-
-				-- no Routine id
-			Temp_byte_code_array.append_integer (0)
-				-- no Real body id ( -1 because it's an invariant. We can't set a breakpoint )
-			Temp_byte_code_array.append_integer (-1)
-
-				-- Void result type
-			Temp_byte_code_array.append_integer (Void_c_type.sk_value);
-				-- No arguments
-			Temp_byte_code_array.append_short_integer (0);
-
-				-- No rescue
-			ba.append ('%U');
-			context.set_assertion_type (In_invariant);
-
-			body_index := associated_class.invariant_feature.body_index
-			context.set_original_body_index (body_index)
-
-				-- Allocate memory for once manifest strings if required
-			context.make_once_string_allocation_byte_code (ba, once_manifest_string_count)
-
-			byte_list.make_byte_code (ba);
-			ba.append (Bc_inv_null);
-
-			from
-				Temp_byte_code_array.append_short_integer (local_list.count);
-				local_list.start
-			until
-				local_list.after
-			loop
-				Temp_byte_code_array.append_integer (local_list.item.sk_value);
-				local_list.forth;
-			end;
-
-			Temp_byte_code_array.append (Bc_no_clone_arg);
-
-			context.byte_prepend (ba, Temp_byte_code_array);
-		end;
-
-	
-	Temp_byte_code_array: BYTE_ARRAY is
-			-- Temporary byte code array
-		once
-			create Result.make
-		end
-
 invariant
-
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 end

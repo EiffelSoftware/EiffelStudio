@@ -8,7 +8,7 @@ class ASSERT_B
 inherit
 	EXPR_B
 		redefine
-			analyze, generate, unanalyze, enlarged, make_byte_code,
+			analyze, generate, unanalyze, enlarged,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code,
 			generate_il, line_number, set_line_number
@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} generate_assertion_code, buffer
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -26,7 +26,7 @@ feature -- Visitor
 		do
 			v.process_assert_b (Current)
 		end
-	
+
 feature -- Access
 
 	tag: STRING
@@ -78,7 +78,7 @@ feature -- Line number setting
 			expr.analyze
 			expr.free_register
 		end
-	
+
 	generate is
 			-- Generate assertion C code.
 		local
@@ -133,7 +133,7 @@ feature -- Line number setting
 			buf.put_new_line
 			buf.exdent
 		end
-	
+
 	unanalyze is
 			-- Undo the analysis
 		do
@@ -195,66 +195,6 @@ feature -- IL Code generation
 			il_generator.generate_precondition_check (tag, failure_block)
 		end
 
-feature -- Byte Code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an assertion
-		do
-			check
-				expr_exists: expr /= Void
-			end
-
-				-- Assertion mark
-			inspect
-				context.assertion_type
-			when In_precondition then
-				make_precondition_byte_code (ba)
-			when In_postcondition then
-					-- generate a debugger hook
-				generate_melted_debugger_hook (ba)
-				ba.append (Bc_assert)
-				ba.append (Bc_pst)
-			when In_check then
-					-- generate a debugger hook
-				generate_melted_debugger_hook (ba)
-				ba.append (Bc_assert)
-				ba.append (Bc_chk)
-			when In_loop_invariant then
-					-- generate a debugger hook
-				generate_melted_debugger_hook (ba)
-				ba.append (Bc_assert)
-				ba.append (Bc_linv)
-			when In_loop_variant then
-					-- generate a debugger hook
-				generate_melted_debugger_hook (ba)
-				ba.append (Bc_assert)
-				ba.append (Bc_lvar)
-			when In_invariant then
-					-- Do not generate a hook.
-				ba.append (Bc_assert)
-				ba.append (Bc_inv)
-			end
-			if context.assertion_type /= In_precondition then
-				if tag = Void then
-					ba.append (Bc_notag)
-				else
-					ba.append (Bc_tag)
-					ba.append_raw_string (tag)
-				end
-					-- Assertion byte code
-				expr.make_byte_code (ba)
-
-					-- End assertion mark
-				ba.append (byte_for_end)
-			end
-		end
-			
-	byte_for_end: CHARACTER is
-			-- Byte mark for end of assertion
-		do
-			Result := Bc_end_assert
-		end
-
 feature -- Array optimization
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
@@ -291,46 +231,6 @@ feature -- Inlining
 		do
 			Result := Current
 			expr := expr.inlined_byte_code
-		end
-
-feature {NONE} -- Implementation 
-
-	make_precondition_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a precondition
-		do
-			if Context.is_new_precondition_block then
-				Context.set_new_precondition_block (False)
-				if Context.is_first_precondition_block_generated then
-					from
-					until
-						ba.forward_marks4.count = 0
-					loop
-						ba.write_forward4
-					end
-					ba.append (Bc_goto_body)
-					ba.mark_forward
-				else
-					Context.set_first_precondition_block_generated (True)
-				end
-			end
-
-				-- generate a debugger hook
-			generate_melted_debugger_hook (ba)
-
-			ba.append (Bc_assert)
-			ba.append (Bc_pre)
-			if tag = Void then
-				ba.append (Bc_notag)
-			else
-				ba.append (Bc_tag)
-				ba.append_raw_string (tag)
-			end
-
-				-- Assertion byte code
-			expr.make_byte_code (ba)
-			ba.append (Bc_end_pre)
-			ba.mark_forward4
-
 		end
 
 end

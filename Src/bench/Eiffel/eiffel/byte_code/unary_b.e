@@ -4,7 +4,7 @@ indexing
 	revision: "$Date$"
 
 deferred class
-	UNARY_B 
+	UNARY_B
 
 inherit
 	EXPR_B
@@ -12,7 +12,7 @@ inherit
 			analyze, unanalyze, generate,
 			print_register, free_register,
 			propagate, enlarged,
-			has_gcable_variable, has_call, make_byte_code,
+			has_gcable_variable, has_call,
 			allocates_memory,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
@@ -156,13 +156,13 @@ feature -- C code generation
 			expr.propagate (No_register)
 			expr.analyze
 		end
-	
+
 	unanalyze is
 			-- Undo the analysis of the expression
 		do
 			expr.unanalyze
 		end
-	
+
 	generate is
 			-- Generate expression
 		do
@@ -206,28 +206,6 @@ feature -- IL code generation
 		end
 
 	il_operator_constant: INTEGER is
-			-- Byte code constant associated to current binary
-			-- operation
-		deferred
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an unary expression
-		do
-			if is_built_in then
-					-- Polish notation
-				expr.make_byte_code (ba)
-
-					-- Write unary operator
-				ba.append (operator_constant)
-			else
-				nested_b.make_byte_code (ba)
-			end
-		end
-
-	operator_constant: CHARACTER is
 			-- Byte code constant associated to current binary
 			-- operation
 		deferred

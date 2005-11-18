@@ -1,4 +1,4 @@
-class BIN_FREE_B 
+class BIN_FREE_B
 
 inherit
 
@@ -11,7 +11,7 @@ feature -- Visitor
 		do
 			v.process_bin_free_b (Current)
 		end
-	
+
 feature -- Status
 
 	is_built_in: BOOLEAN is
@@ -27,16 +27,6 @@ feature -- IL code generation
 			-- operation
 		do
 			check False end
-		end
-
-feature -- Byte code generation
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-		ensure then
-			False
 		end
 
 end

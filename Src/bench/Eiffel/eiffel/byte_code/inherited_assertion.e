@@ -12,7 +12,7 @@ inherit
 	SHARED_IL_CODE_GENERATOR
 
 	BYTE_CONST
-	
+
 create
 	make
 
@@ -52,7 +52,7 @@ feature -- Assertion
 	saved_old_expressions: LINKED_LIST [UN_OLD_B]
 			-- Saved old expressions
 
-	restore_current_context is 
+	restore_current_context is
 			-- Restore details of current context.
 		do
 			Context.set_class_type (saved_class_type)
@@ -106,7 +106,7 @@ feature -- Assertion
 		end
 
 	enlarge_tree is
-			-- Enlarges inherited assertion byte code 
+			-- Enlarges inherited assertion byte code
 			-- tree for C code generation.
 		require
 			types_and_assert_count_same: valid_count
@@ -128,7 +128,7 @@ feature -- Assertion
 			from
 				postcondition_start
 			until
-				postcondition_after	
+				postcondition_after
 			loop
 				postcondition_context_init
 				old_expr := old_expression_list.item
@@ -176,12 +176,12 @@ feature -- Assertion
 	restored: BOOLEAN is
 			-- Was Byte Context restored?
 		do
-			Result := (Context.class_type = saved_class_type) 
+			Result := (Context.class_type = saved_class_type)
 						and then (Context.original_body_index = saved_body_index)
 						and then (Context.byte_code.arguments = saved_arguments)
 						and then (Context.byte_code.result_type = saved_result_type)
 		end
-		
+
 	precondition_list_count: INTEGER is
 			-- Number of inherited precondition.
 		local
@@ -206,7 +206,7 @@ feature -- Assertion
 feature -- Inherited precondition
 
 	precondition_list: LINKED_LIST [BYTE_LIST [BYTE_NODE]]
-			-- List of inherited precondition 
+			-- List of inherited precondition
 
 	prec_arg_list: LINKED_LIST [ARRAY[TYPE_I]]
 			-- List of inherited arguments corresponding to assertion
@@ -235,7 +235,7 @@ feature -- Inherited precondition
 			valid_prec: bc.precondition /= Void
 			not_duplicated: not precondition_body_indices.has (bc.body_index)
 				-- The same `ct' can be added as a precondition class type
-				-- multiple times when several features of `ct' are merged 
+				-- multiple times when several features of `ct' are merged
 				-- into one, so check only that the precondition comes from
 				-- different features regardless of `ct'.
 		do
@@ -300,7 +300,7 @@ feature -- Inherited precondition
 			context_restored: restored
 		end
 
-	make_precondition_byte_code (ba: BYTE_ARRAY) is
+	make_precondition_byte_code (a_generator: MELTED_GENERATOR; ba: BYTE_ARRAY) is
 			-- Make byte code for inherited precondition.
 		require
 			types_and_assert_count_same: valid_prec_count
@@ -313,7 +313,7 @@ feature -- Inherited precondition
 			loop
 				precondition_context_init
 				context.make_once_string_allocation_byte_code (ba, precondition_oms_counts.item)
-				precondition_list.item.make_byte_code (ba)
+				a_generator.generate (ba, precondition_list.item)
 				precondition_forth
 			end
 			restore_current_context
@@ -330,7 +330,7 @@ feature -- Inherited precondition
 				count := precondition_types.count - 1
 				i := 1
 			until
-				i > count	
+				i > count
 			loop
 				ba.write_forward
 				i := i + 1
@@ -345,7 +345,7 @@ feature -- Inherited precondition
 			from
 				precondition_start
 			until
-				precondition_after	
+				precondition_after
 			loop
 				precondition_context_init
 				precondition_list.item.analyze
@@ -365,7 +365,7 @@ feature -- Inherited precondition
 			from
 				precondition_start
 			until
-				precondition_after	
+				precondition_after
 			loop
 				precondition_context_init
 				context.generate_once_manifest_string_allocation (precondition_oms_counts.item)
@@ -394,7 +394,7 @@ feature -- Inherited precondition
 		end
 
 	precondition_forth is
-			-- Move cursor one position to right 
+			-- Move cursor one position to right
 			-- for precondition details lists.
 		do
 			precondition_list.forth
@@ -446,7 +446,7 @@ feature -- inherited postcondition
 			valid_post: bc.postcondition /= Void
 			not_duplicated: not postcondition_body_indices.has (bc.body_index)
 				-- The same `ct' can be added as a postcondition class type
-				-- multiple times when several features of `ct' are merged 
+				-- multiple times when several features of `ct' are merged
 				-- into one, so check only that the postcondition comes from
 				-- different features regardless of `ct'.
 		do
@@ -495,7 +495,7 @@ feature -- inherited postcondition
 			from
 				postcondition_start
 			until
-				postcondition_after	
+				postcondition_after
 			loop
 				postcondition_context_init
 				old_expressions := old_expression_list.item
@@ -527,7 +527,7 @@ feature -- inherited postcondition
 			from
 				postcondition_start
 			until
-				postcondition_after	
+				postcondition_after
 			loop
 				postcondition_context_init
 				postcondition_list.item.analyze
@@ -546,7 +546,7 @@ feature -- inherited postcondition
 			from
 				postcondition_start
 			until
-				postcondition_after	
+				postcondition_after
 			loop
 				postcondition_context_init
 				context.generate_once_manifest_string_allocation (postcondition_oms_counts.item)
@@ -610,7 +610,7 @@ feature -- inherited postcondition
 			context_restored: restored
 		end
 
-	make_postcondition_byte_code (ba: BYTE_ARRAY) is
+	make_postcondition_byte_code (a_generator: MELTED_GENERATOR; ba: BYTE_ARRAY) is
 			-- Make byte code for inherited postcondition.
 		require
 			types_and_assert_count_same: valid_post_count
@@ -622,7 +622,7 @@ feature -- inherited postcondition
 			loop
 				postcondition_context_init
 				context.make_once_string_allocation_byte_code (ba, postcondition_oms_counts.item)
-				postcondition_list.item.make_byte_code (ba)
+				a_generator.generate (ba, postcondition_list.item)
 				postcondition_forth
 			end
 			restore_current_context
@@ -630,7 +630,7 @@ feature -- inherited postcondition
 
 	setup_local_variables (pos: INTEGER) is
 			-- Set up the local variable type for
-			-- old expressions. 
+			-- old expressions.
 		local
 			old_expressions: LINKED_LIST [UN_OLD_B]
 			item: UN_OLD_B
@@ -666,7 +666,7 @@ feature -- inherited postcondition
 			context_restored: restored
 		end
 
-	make_old_exp_byte_code (ba: BYTE_ARRAY) is
+	make_old_exp_byte_code (a_generator: MELTED_GENERATOR; ba: BYTE_ARRAY) is
 			-- Make byte code for inherited old expressions.
 		require
 			types_and_assert_count_same: valid_post_count
@@ -688,7 +688,7 @@ feature -- inherited postcondition
 					until
 						old_expressions.after
 					loop
-						old_expressions.item.make_initial_byte_code (ba)
+						a_generator.generate_old_expression_initialization (ba, old_expressions.item)
 						old_expressions.forth
 					end
 				end
@@ -742,7 +742,7 @@ feature -- inherited postcondition
 			postcondition_types.start
 			postcondition_body_indices.start
 			postcondition_oms_counts.start
-			old_expression_list.start	
+			old_expression_list.start
 			post_result_list.start
 		end
 
@@ -753,7 +753,7 @@ feature -- inherited postcondition
 		end
 
 	postcondition_forth is
-			-- Move cursor one position to right 
+			-- Move cursor one position to right
 			-- for postondition details lists.
 		do
 			postcondition_list.forth
@@ -787,7 +787,7 @@ feature -- inherited postcondition
 				from
 					precondition_start
 				until
-					precondition_after	
+					precondition_after
 				loop
 					precondition_context_init
 					c := precondition_types.item.associated_class
@@ -804,7 +804,7 @@ feature -- inherited postcondition
 				from
 					postcondition_start
 				until
-					postcondition_after	
+					postcondition_after
 				loop
 					postcondition_context_init
 					c := postcondition_types.item.associated_class

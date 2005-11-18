@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	BINARY_B 
+	BINARY_B
 
 inherit
 	EXPR_B
@@ -12,7 +12,7 @@ inherit
 			propagate, print_register,
 			analyze, unanalyze, generate, enlarged,
 			free_register, has_gcable_variable,
-			has_call, allocates_memory, make_byte_code,
+			has_call, allocates_memory,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code,
 			generate_il, is_simple_expr
@@ -68,7 +68,7 @@ feature -- Settings
 		do
 			access := a
 		end
-			
+
 	set_attachment (a: TYPE_I) is
 			-- Set `attachment' to `a'.
 		do
@@ -221,7 +221,7 @@ feature -- C code generation
 			left.analyze
 			right.analyze
 		end
-	
+
 	unanalyze is
 			-- Undo the previous analysis
 		local
@@ -322,39 +322,11 @@ feature -- IL code generation
 					il_generator.convert_to (l_type)
 				end
 			end
-			
+
 			il_generator.generate_binary_operator (il_operator_constant)
 		end
 
 	il_operator_constant: INTEGER is
-			-- Byte code constant associated to current binary
-			-- operation
-		deferred
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for binary expression
-		do
-			if is_built_in then
-				make_standard_byte_code (ba)
-			else
-					-- Make byte code with call to infix feature
-				nested_b.make_byte_code (ba)
-			end
-		end
-	
-	make_standard_byte_code (ba: BYTE_ARRAY) is
-			-- Generate standard byte code for binary expression
-		do
-			left.make_byte_code (ba)
-			right.make_byte_code (ba)
-				-- Write binary operator
-			ba.append (operator_constant)
-		end
-
-	operator_constant: CHARACTER is
 			-- Byte code constant associated to current binary
 			-- operation
 		deferred
@@ -412,5 +384,5 @@ feature -- Inlining
 				right := right.inlined_byte_code
 			end
 		end
-	
+
 end

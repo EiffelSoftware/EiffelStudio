@@ -7,7 +7,7 @@ inherit
 			set_register as set_left_register
 		redefine
 			free_register, unanalyze, generate_il,
-			make_byte_code, is_commutative, print_register, type,
+			is_commutative, print_register, type,
 			generate, analyze, is_unsafe, optimized_byte_node,
 			calls_special_features, pre_inlined_code, inlined_byte_code
 		end
@@ -319,74 +319,6 @@ feature -- IL code generation
 		do
 			-- Do nothing by default.
 		end
-
-feature -- Byte code generation
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		deferred
-		end;
-
-	make_bit_eq_test (ba: BYTE_ARRAY) is
-			-- Make byte code for current bit equality
-		deferred
-		end;
-
-	make_expanded_eq_test (ba: BYTE_ARRAY) is
-			-- Make byte code for current expaned equality
-		deferred
-		end;
-
-	obvious_operator_constant: CHARACTER is
-			-- Byte code operator associated to an obvious false
-			-- comparison
-		deferred
-		end;
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an equality test
-		local
-			lt, rt: TYPE_I;
-			basic_type: BASIC_I;
-			flag: BOOLEAN;
-		do
-			lt := context.real_type (left.type);
-			rt := context.real_type (right.type);
-
-			left.make_byte_code (ba);
-			if (lt.is_basic and then rt.is_reference) then
-				basic_type ?= lt;
-				ba.append (Bc_metamorphose);
-				flag := True;
-			end;
-
-			right.make_byte_code (ba);
-			if (lt.is_reference and then rt.is_basic) then
-				basic_type ?= rt;
-				ba.append (Bc_metamorphose);
-				flag := true;
-			end;
-
-			if 	(lt.is_true_expanded or else rt.is_true_expanded)
-				or else
-				flag
-			then
-					-- Standard equality
-				make_expanded_eq_test (ba);
-			elseif (lt.is_bit and then rt.is_bit) then
-					-- Bit equality
-				make_bit_eq_test (ba)
-			elseif	(lt.is_basic and then rt.is_none)
-					or else
-					(lt.is_none and then rt.is_basic)
-			then
-					-- A basic type is neither Void
-				ba.append (obvious_operator_constant);
-			else
-				ba.append (operator_constant);
-			end;
-		end;
 
 feature -- Array optimization
 

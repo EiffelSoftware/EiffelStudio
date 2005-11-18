@@ -3,15 +3,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class REVERSE_BL 
+class REVERSE_BL
 
 inherit
 	REVERSE_B
 		undefine
-			make_byte_code, find_assign_result, mark_last_instruction,
+			find_assign_result, mark_last_instruction,
 			last_all_in_result, analyze, generate_il, generate
 		end
-		
+
 	ASSIGN_BL
 		rename
 			target_propagated as register_propagated
@@ -24,7 +24,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (other: REVERSE_B) is
@@ -33,8 +33,8 @@ feature {NONE} -- Initialization
 			Precursor {ASSIGN_BL} (other)
 			set_info (other.info)
 		end
-		
-feature 
+
+feature
 
 	analyze is
 			-- Analyze reverse assignment
@@ -105,7 +105,7 @@ feature
 				source.print_register;
 			end;
 		end;
-	
+
 	generate_last_assignment (how: INTEGER) is
 			-- Generate last assignment in Result
 		do

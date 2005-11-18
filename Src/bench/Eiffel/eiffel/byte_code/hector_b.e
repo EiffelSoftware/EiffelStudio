@@ -3,12 +3,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class HECTOR_B 
+class HECTOR_B
 
 inherit
 	UNARY_B
 		redefine
-			expr, enlarged, is_hector, type, make_byte_code,
+			expr, enlarged, is_hector, type,
 			calls_special_features, is_unsafe, optimized_byte_node,
 			pre_inlined_code, inlined_byte_code,
 			analyze, print_register,
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		ensure
 			expr_set: expr = a
 		end
-	
+
 	make_with_type (a: like expr; t: like type) is
 			-- Initialization
 		require
@@ -50,7 +50,7 @@ feature -- Visitor
 		do
 			v.process_hector_b (Current)
 		end
-	
+
 feature -- Access
 
 	is_pointer: BOOLEAN is True
@@ -58,7 +58,7 @@ feature -- Access
 			-- Always True in 5.4. In 5.5 it will be only True for converted
 			-- expression $x to POINTER. If of type TYPED_POINTER, then it
 			-- will be False.
-	
+
 	expr: ACCESS_B
 			-- Access on which we do `$'.
 
@@ -127,40 +127,7 @@ feature -- IL code generation
 			expr.generate_il_address
 		end
 
-feature -- Byte code generation
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-		ensure then
-			False
-		end
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an unprotected external call argument
-		do
-			if not is_pointer or else expr.type.is_basic then
-					-- Getting the address of a basic type can be done
-					-- only once all the expressions have been evaluated
-				ba.append (Bc_reserve)
-			else
-				expr.make_byte_code (ba)
-				if expr.type.is_reference then
-					ba.append (Bc_ref_to_ptr)
-				end
-			end
-		end
-
-	make_protected_byte_code (ba: BYTE_ARRAY; pos: INTEGER) is
-			-- Generate byte code for an unprotected external call argument
-		do
-			if not is_pointer or else expr.type.is_basic then
-				ba.append (Bc_object_addr)
-				ba.append_uint32_integer (pos)
-				expr.make_byte_code (ba)
-			end
-		end
+feature -- C code generation
 
 	print_register is
 			-- Print expression value
@@ -187,7 +154,7 @@ feature -- Byte code generation
 			-- Generate expression
 		do
 			if
-				expr.is_attribute and then 
+				expr.is_attribute and then
 				(not is_pointer or else (expr.type.is_basic and not expr.type.is_bit))
 			then
 					-- We don't need to do anything now,
@@ -216,7 +183,7 @@ feature -- Array optimization
 feature -- Inlining
 
 	pre_inlined_code: like Current is
-		do  
+		do
 				-- We now return Current even if usually byte code contains an
 				-- HECTOR_B node cannot be inlined. This is to make the manual
 				-- inlining of `element_address' and `base_address' of SPECIAL

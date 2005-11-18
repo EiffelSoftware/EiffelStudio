@@ -1,4 +1,4 @@
-class PARAN_B 
+class PARAN_B
 
 inherit
 
@@ -7,7 +7,7 @@ inherit
 			analyze, unanalyze, generate,
 			print_register, propagate,
 			free_register, enlarged, allocates_memory,
-			has_gcable_variable, has_call, make_byte_code,
+			has_gcable_variable, has_call,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
@@ -36,7 +36,7 @@ feature -- Visitor
 		do
 			v.process_paran_b (Current)
 		end
-	
+
 feature -- Properties
 
 	is_constant_expression: BOOLEAN is
@@ -44,7 +44,7 @@ feature -- Properties
 		do
 			Result := expr.is_constant_expression
 		end
-		
+
 feature
 
 	expr: EXPR_B;
@@ -107,13 +107,13 @@ feature
 		do
 			expr.analyze;
 		end;
-	
+
 	unanalyze is
 			-- Undo the analysis of the expression
 		do
 			expr.unanalyze;
 		end;
-	
+
 	generate is
 			-- Generate expression
 		do
@@ -154,14 +154,6 @@ feature -- IL code generation
 		do
 			expr.generate_il_value
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for parenthesized expression.
-		do
-			expr.make_byte_code (ba);
-		end;
 
 feature -- Array optimization
 

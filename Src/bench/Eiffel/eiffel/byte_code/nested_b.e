@@ -1,12 +1,12 @@
 -- Byte code for nested call
 
-class NESTED_B 
+class NESTED_B
 
 inherit
 
 	CALL_B
 		redefine
-			enlarged, make_byte_code,
+			enlarged,
 			need_invariant, set_need_invariant,
 			is_unsafe, calls_special_features, optimized_byte_node,
 			is_special_feature, size, pre_inlined_code,
@@ -20,8 +20,8 @@ feature -- Visitor
 		do
 			v.process_nested_b (Current)
 		end
-	
-feature 
+
+feature
 
 	target: ACCESS_B;
 			-- Target of the call
@@ -102,7 +102,7 @@ feature -- IL code generation
 		do
 			Result := target.need_target
 		end
-		
+
 	generate_il is
 			-- Generate IL code for a nested call.
 		local
@@ -130,9 +130,9 @@ feature -- IL code generation
 			else
 				is_target_generated := True
 			end
-			
+
 			if is_target_generated then
-					-- We pass `True' to force a special treatment on 
+					-- We pass `True' to force a special treatment on
 					-- generation of `target' if it is an expanded object.
 					-- Namely if `target' is predefined we will load
 					-- the address of `target' instead of `target' itself.
@@ -147,7 +147,7 @@ feature -- IL code generation
 				l_attr ?= target
 				if l_attr /= Void then
 					l_need_attribute_to_be_assigned_back :=  l_attr.need_address (True) and then
-						l_attr.is_first and then not context.associated_class.is_single 
+						l_attr.is_first and then not context.associated_class.is_single
 					if l_need_attribute_to_be_assigned_back then
 						il_generator.duplicate_top
 					end
@@ -194,23 +194,6 @@ feature -- IL code generation
 				end
 			end
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a nested call.
-		do
-				-- generate the target byte code
-			target.make_byte_code (ba);
-
-			if target.is_feature then
-					-- insert a debugger hook without increasing the line number
-				generate_melted_debugger_hook_nested (ba); 
-			end
-	
-				-- generate the call byte code
-			message.make_byte_code (ba);
-		end;
 
 feature -- Array optimization
 

@@ -1,15 +1,14 @@
-class BIN_STAR_B 
+class BIN_STAR_B
 
 inherit
 	NUM_BINARY_B
 		rename
-			Bc_star as operator_constant,
 			il_star as il_operator_constant
 		redefine
 			generate_operator, is_commutative,
 			is_simple, generate_simple
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -17,7 +16,7 @@ feature -- Visitor
 		do
 			v.process_bin_star_b (Current)
 		end
-	
+
 feature -- Status report
 
 	is_commutative: BOOLEAN is true

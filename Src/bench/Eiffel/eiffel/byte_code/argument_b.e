@@ -1,18 +1,18 @@
 -- Access to an argument
 
-class ARGUMENT_B 
+class ARGUMENT_B
 
 inherit
 
 	ACCESS_B
 		redefine
 			enlarged, type, is_argument, is_local, is_creatable,
-			make_byte_code, register_name, array_descriptor,
+			register_name, array_descriptor,
 			pre_inlined_code, print_register, generate_il_call_access,
 			generate_il_address,
 			is_fast_as_local, is_predefined
 		end;
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -20,12 +20,12 @@ feature -- Visitor
 		do
 			v.process_argument_b (Current)
 		end
-	
-feature 
+
+feature
 
 	position: INTEGER;
 			-- Position of the argument.
-	
+
 	set_position (i: INTEGER) is
 			-- Set `position' to `i'
 		do
@@ -107,21 +107,12 @@ feature -- IL code generation
 				il_generator.generate_argument (position)
 			end
 		end
-		
+
 	generate_il_address is
 			-- Generate address of argument.
 		do
 			il_generator.generate_argument_address (position)
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an access to an argument
-		do
-			ba.append (Bc_arg);
-			ba.append_short_integer (position);
-		end;
 
 feature -- Array optimization
 

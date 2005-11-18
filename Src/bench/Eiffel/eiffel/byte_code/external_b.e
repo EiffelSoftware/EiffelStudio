@@ -1,21 +1,18 @@
 -- Access to a C external
 
-class EXTERNAL_B 
+class EXTERNAL_B
 
 inherit
 	CALL_ACCESS_B
 		rename
 			precursor_type as static_class_type,
-			set_precursor_type as set_static_class_type,
-			make_precursor_byte_code as make_static_call_byte_code
+			set_precursor_type as set_static_class_type
 		redefine
 			same, is_external, set_parameters, parameters, enlarged,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			make_end_byte_code, make_end_precomp_byte_code,
-			make_static_call_byte_code, need_target,
-			standard_make_code, is_constant_expression
+			need_target, is_constant_expression
 		end
 
 	SHARED_INCLUDE
@@ -34,8 +31,8 @@ feature -- Visitor
 		do
 			v.process_external_b (Current)
 		end
-	
-feature 
+
+feature
 
 	type: TYPE_I;
 			-- Type of the call
@@ -67,7 +64,7 @@ feature -- Attributes for externals
 
 	is_external: BOOLEAN is True;
 			-- Access is an external call
-			
+
 	is_static_call: BOOLEAN
 			-- Is current external call made through a static access?
 
@@ -90,7 +87,7 @@ feature -- Status report
 			l_ext ?= extension
 			Result := l_ext /= Void
 		end
-		
+
 feature -- Routines for externals
 
 	set_extension (e: like extension) is
@@ -104,7 +101,7 @@ feature -- Routines for externals
 		do
 			parameters := p;
 		end;
- 
+
 	set_type (t: TYPE_I) is
 			-- Assign `t' to `type'.
 		do
@@ -135,7 +132,7 @@ feature -- Routines for externals
 				written_in := f.origin_class_id
 			else
 				feature_id := f.feature_id
-				written_in := f.written_in		
+				written_in := f.written_in
 			end
 		end;
 
@@ -255,7 +252,7 @@ feature -- IL code generation
 
 			invariant_checked := (context.workbench_mode or class_c.assertion_level.check_invariant)
 				and then (not is_first or inv_checked)
-			
+
 			if cl_type.is_expanded then
 					-- Current type is expanded. We need to find out if
 					-- we need to generate a box operation, meaning that
@@ -271,7 +268,7 @@ feature -- IL code generation
 					if is_static_call then
 							-- Bug fix until we generate direct static access
 							-- to C external.
-						(create {CREATE_TYPE}.make (il_generator.implemented_type 
+						(create {CREATE_TYPE}.make (il_generator.implemented_type
 							(written_in, cl_type))).generate_il
 					else
 						il_generator.generate_current
@@ -302,7 +299,7 @@ feature -- IL code generation
 			return_type := real_type (type)
 
 			need_generation := True
-				
+
 			if need_generation then
 					-- Perform call to feature
 					-- FIXME: performance problem here since we are retrieving the
@@ -322,7 +319,7 @@ feature -- IL code generation
 						cl_type.is_reference or else real_metamorphose)
 				end
 				if System.il_verifiable then
-					if 
+					if
 						not return_type.is_expanded and then
 						not return_type.is_none and then
 						not return_type.is_void
@@ -413,13 +410,13 @@ feature {NONE} -- Implementation
 								-- In all other cases we will generate the metamorphose.
 							if written_in = cl_type.class_id then
 --								generate_il_metamorphose (cl_type, cl_type, real_metamorphose)
-							else							
+							else
 								generate_il_metamorphose (cl_type, Void, real_metamorphose)
 							end
 						end
 					end
 				end
-				
+
 				if parameters /= Void then
 						-- Generate parameters if any.
 					parameters.generate_il
@@ -446,141 +443,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-feature -- Byte code generation
-
-	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
-			-- Generate byte code for a call to an external. If not `flag',
-			-- generate an invariant check before the call.
-		local
-			i: INTEGER;
-			param: EXPR_B;
-			has_hector: BOOLEAN;
-			parameter_b: PARAMETER_B;
-			hector_b: HECTOR_B;
-			expr_address_b: EXPR_ADDRESS_B;
-			nb_expr_address: INTEGER
-			pos: INTEGER
-		do
-			if parameters /= Void then
-					-- Generate the expression address byte code
-				from
-					parameters.start
-				until
-					parameters.after
-				loop
-					parameter_b ?= parameters.item;
-					if parameter_b /= Void and then parameter_b.is_hector then
-						has_hector := True;
-						expr_address_b ?= parameter_b.expression;
-						if expr_address_b /= Void and then expr_address_b.is_protected then
-							expr_address_b.generate_expression_byte_code (ba);
-							nb_expr_address := nb_expr_address + 1;
-						end
-					end
-					parameters.forth;
-				end
-
-				from
-					parameters.start
-				until
-					parameters.after
-				loop
-					param := parameters.item;
-					param.make_byte_code (ba);
-					parameters.forth;
-				end;
-			end;
-
-			if has_hector then
-				from
-					 parameters.start
-				until
-					parameters.after
-				loop
-					pos := pos + 1;
-					parameter_b ?= parameters.item;
-					if parameter_b /= Void and then parameter_b.is_hector then
-						hector_b ?= parameter_b.expression;
-						if hector_b /= Void then
-							hector_b.make_protected_byte_code (ba, parameters.count - pos);
-						else
-								-- Cannot be Void
-							expr_address_b ?= parameter_b.expression;
-							if expr_address_b.is_protected then
-								i := i + 1;
-								expr_address_b.make_protected_byte_code (ba,
-									parameters.count - pos,
-									parameters.count + nb_expr_address - i);
-							end
-						end
-					end
-					parameters.forth;
-				end
-			end
-
-			standard_make_code (ba, flag);
-
-			if nb_expr_address > 0 then
-				ba.append (Bc_pop)
-				ba.append_uint32_integer (nb_expr_address)
-			end
-		end;
-
-	make_static_call_byte_code (ba: BYTE_ARRAY) is
-			-- Add dynamic type of parent.
-		local
-			l_typ: like static_class_type
-		do
-			if is_static_call then
-				l_typ ?= real_type (static_class_type)
-				ba.append_short_integer (l_typ.associated_class_type.static_type_id - 1)
-			else
-				ba.append_short_integer (-1)
-			end
-		end
-
-	standard_make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
-			-- Generate byte code for a feature call. If not `flag', generate
-			-- an invariant check before the call.
-			-- Doesn't process the parameters
-		local
-			l_typ: like static_class_type
-		do
-			if is_static_call then
-					-- Push a fake Object on execution stack.
-				ba.append (bc_current)
-				l_typ ?= real_type (static_class_type)
-				make_end_byte_code (ba, flag,
-					real_feature_id, l_typ.associated_class_type.static_type_id - 1)
-			else
-				Precursor {CALL_ACCESS_B} (ba, flag)
-			end
-		end
-
-	code_first: CHARACTER is
-			-- Code when external call is first (no invariant)
-		do
-			Result := Bc_extern;
-		end;
-
-	code_next: CHARACTER is
-			-- Code when external call is nested (invariant)
-		do
-			Result := Bc_extern_inv;
-		end;
-
-	precomp_code_first: CHARACTER is
-			-- Code when external precompiled call is first (no invariant)
-		do
-			Result := Bc_pextern;
-		end;
-
-	precomp_code_next: CHARACTER is
-			-- Code when external precompiled call is nested (invariant)
-		do
-			Result := Bc_pextern_inv;
-		end;
 
 feature -- Array optimization
 
@@ -656,48 +518,4 @@ feature -- Inlining
 			end
 		end
 
-	make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
-					real_feat_id: INTEGER; static_type: INTEGER) is
-			-- Make final portion of the standard byte code.
-		local
-			my_code: CHARACTER;
-		do
-			if  is_first or flag then
-				my_code := code_first;
-			else
-				my_code := code_next;
-			end;
-			ba.append (my_code);
-			if  my_code = Bc_extern_inv then
-					-- Generate feature name for test of void reference
-				ba.append_raw_string (feature_name);
-			end;
-				-- Generate feature id
-			ba.append_integer (real_feat_id);
-			ba.append_short_integer (static_type);
-			make_static_call_byte_code (ba)
-		end;
-
-	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
-					origin: INTEGER; offset: INTEGER) is
-			-- Make final portion of the standard byte code
-			-- for a precompiled call.
-		local
-			my_code: CHARACTER;
-		do
-			if  is_first or flag then
-				my_code := precomp_code_first;
-			else
-				my_code := precomp_code_next;
-			end;
-			ba.append (my_code);
-			if  my_code = Bc_pextern_inv  then
-					-- Generate feature name for test of void reference
-				ba.append_raw_string (feature_name);
-			end;
-			ba.append_integer (origin);
-			ba.append_integer (offset);
-			make_static_call_byte_code (ba)
-		end;
-																	  
 end

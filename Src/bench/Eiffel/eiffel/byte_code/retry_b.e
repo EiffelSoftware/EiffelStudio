@@ -1,6 +1,6 @@
 -- Byte code for retry instruction
 
-class RETRY_B 
+class RETRY_B
 
 inherit
 
@@ -8,7 +8,7 @@ inherit
 		rename
 			set_line_number as make
 		redefine
-			generate, make_byte_code, generate_il
+			generate, generate_il
 		end
 
 create
@@ -21,7 +21,7 @@ feature -- Visitor
 		do
 			v.process_retry_b (Current)
 		end
-	
+
 feature -- C code generation
 
 	generate is
@@ -60,16 +60,6 @@ feature -- IL code generation
 		do
 			il_generator.put_line_info (line_number)
 			il_generator.generate_leave_to (il_label_factory.retry_label)
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a retry instruction
-		do
-			generate_melted_debugger_hook (ba)
-			ba.append (Bc_retry)
-			ba.write_retry
 		end
 
 end

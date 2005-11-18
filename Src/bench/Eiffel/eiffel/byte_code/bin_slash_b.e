@@ -1,10 +1,9 @@
-class BIN_SLASH_B 
+class BIN_SLASH_B
 
 inherit
 
 	NUM_BINARY_B
 		rename
-			Bc_slash as operator_constant,
 			il_slash as il_operator_constant
 		redefine
 			generate_operator, is_simple,
@@ -19,7 +18,7 @@ feature -- Visitor
 		do
 			v.process_bin_slash_b (Current)
 		end
-	
+
 feature -- Access
 
 	is_simple: BOOLEAN is
@@ -62,13 +61,13 @@ feature -- C code generation
 		do
 			l_buf := buffer
 			type.c_type.generate_cast (l_buf)
-			
+
 			l_buf.put_character ('(')
 			l_type := context.real_type (left.type)
 			l_type.c_type.generate_conversion_to_real_64 (l_buf)
 			left.print_register
 			l_buf.put_character (')')
-			
+
 			generate_operator
 
 			l_buf.put_character (' ')

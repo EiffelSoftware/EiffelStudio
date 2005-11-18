@@ -3,12 +3,12 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class INSPECT_B 
+class INSPECT_B
 
 inherit
 	INSTR_B
 		redefine
-			analyze, generate, enlarge_tree, make_byte_code,
+			analyze, generate, enlarge_tree,
 			assigns_to, is_unsafe, generate_il,
 			optimized_byte_node, calls_special_features,
 			size, inlined_byte_code, pre_inlined_code
@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -26,7 +26,7 @@ feature -- Visitor
 		do
 			v.process_inspect_b (Current)
 		end
-	
+
 feature -- Access
 
 	switch: EXPR_B
@@ -205,58 +205,12 @@ feature -- IL code generation
 					-- for case comparison.
 				il_generator.pop
 			end
-			
+
 			check
 				end_location_not_void: end_location /= Void
 			end
-			
+
 			il_generator.put_silent_debug_info (end_location)
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a multi-branch instruction
-		local
-			i: INTEGER
-			case: CASE_B
-		do
-			generate_melted_debugger_hook (ba)
-
-				-- Generate switch expression byte code
-			switch.make_byte_code (ba)
-			if case_list /= Void then
-				from
-					i := case_list.count
-				until
-					i < 1
-				loop
-					case ?= case_list.i_th (i)
-					case.make_range (ba)
-					i := i - 1
-				end
-				ba.append (Bc_jmp)
-				ba.mark_forward3		-- To else part
-				case_list.make_byte_code (ba)
-				ba.write_forward3
-			end
-			if else_part /= Void then
-				else_part.make_byte_code (ba)
-			else
-				ba.append (Bc_inspect_excep)
-			end
-				-- Jumps for cases compounds
-			if case_list /= Void then
-				from
-					i := case_list.count
-				until
-					i < 1
-				loop
-					ba.write_forward
-					i := i - 1
-				end
-			end
-			ba.append (Bc_inspect)
 		end
 
 feature -- Array optimization

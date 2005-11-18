@@ -5,7 +5,7 @@ class REVERSE_B
 inherit
 	ASSIGN_B
 		redefine
-			enlarged, make_byte_code, generate_il, process
+			enlarged, generate_il, process
 		end
 
 feature -- Visitor
@@ -112,61 +112,5 @@ feature -- IL code generation
 			target.generate_il_reverse_assignment (source_type)
 		end
 
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a reverse assignment
-		local
-			source_type: TYPE_I
-		do
-			generate_melted_debugger_hook (ba)
-
-				-- Generate expression byte code
-			source.make_byte_code (ba)
-
-			source_type := context.real_type (source.type)
-			make_reverse_code (ba, source_type)
-		end
-
-feature {NONE} -- Implementation
-
-	make_reverse_code (ba: BYTE_ARRAY; source_type: TYPE_I) is
-			-- Generate source reverse assignment byte code
-		require
-			target.is_creatable
-			ba_not_void: ba /= Void
-			good_argument: source_type /= Void
-			consistency: not source_type.is_void
-		local
-			basic_type: BASIC_I
-			target_type: TYPE_I
-		do
-			target_type := context.creation_type (target.type)
-
-			check
-				not_expanded: not target_type.is_true_expanded
-				not_basic: not target_type.is_basic
-			end
-			if target_type.is_none then
-				ba.append (Bc_none_assign)
-			else
-					-- Target is a reference
-				if source_type.is_basic then
-						-- Source is basic and target is a reference:
-						-- metamorphose and simple attachment
-					basic_type ?= source_type
-					ba.append (Bc_metamorphose)
-				elseif source_type.is_true_expanded then
-						-- Source is expanded and target is a reference: clone
-						-- and simple attachment
-					ba.append (Bc_clone)
-				end
-				ba.append (target.reverse_code)
-				target.make_end_reverse_assignment (ba)
-
-					-- Generate type of target
-				info.make_byte_code (ba)
-			end
-		end
 
 end

@@ -3,20 +3,19 @@ indexing
 	date: "$date: $"
 	revision: "$revision: $"
 
-class BIN_MINUS_B 
+class BIN_MINUS_B
 
 inherit
 
 	NUM_BINARY_B
 		rename
-			Bc_minus as operator_constant,
 			il_minus as il_operator_constant
 		redefine
 			generate_operator, is_simple,
 			generate_simple, generate_plus_plus,
 			is_additive
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -24,7 +23,7 @@ feature -- Visitor
 		do
 			v.process_bin_minus_b (Current)
 		end
-	
+
 feature -- Status report
 
 	is_simple: BOOLEAN is
@@ -35,7 +34,7 @@ feature -- Status report
 
 	is_additive: BOOLEAN is True
 			-- Operation is additive (in the mathematical sense).
-	
+
 feature -- C code generation
 
 	generate_operator is

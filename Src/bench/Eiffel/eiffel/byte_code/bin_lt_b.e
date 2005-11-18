@@ -1,10 +1,9 @@
-class BIN_LT_B 
+class BIN_LT_B
 
 inherit
 
 	COMP_BINARY_B
 		rename
-			Bc_lt as operator_constant,
 			il_lt as il_operator_constant
 		redefine
 			generate_operator
@@ -17,7 +16,7 @@ feature -- Visitor
 		do
 			v.process_bin_lt_b (Current)
 		end
-	
+
 feature
 
 	generate_operator is

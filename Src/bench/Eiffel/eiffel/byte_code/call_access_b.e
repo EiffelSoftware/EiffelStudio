@@ -4,12 +4,12 @@ indexing
 	version: "$Revision$"
 
 deferred class
-	CALL_ACCESS_B 
+	CALL_ACCESS_B
 
 inherit
 	ACCESS_B
 		redefine
-			make_byte_code, generate_il
+			generate_il
 		end
 
 	SHARED_NAMES_HEAP
@@ -136,7 +136,7 @@ feature -- IL code generation
 				il_generator.generate_local (local_number)
 			end
 		end
-	
+
 	need_real_metamorphose (a_type: CL_TYPE_I): BOOLEAN is
 			-- Does call originate from a reference type?
 		require
@@ -151,173 +151,9 @@ feature -- IL code generation
 
 feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a feature call
-		do
-			make_code (ba, False)
-		end
-
-	make_creation_byte_code (ba: BYTE_ARRAY) is
-			-- Generate call as a creation procedure
-		do
-			make_code (ba, True)
-		end
-
-	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
-			-- Generate byte code for a feature call. 
-			-- If not `flag', generate
-			-- an invariant check before the call.
-			-- Doesn't process the parameters
-		require
-			ba_not_void: ba /= Void
-		deferred
-		end
-
-	standard_make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
-			-- Generate byte code for a feature call. If not `flag', generate
-			-- an invariant check before the call.
-			-- if `meta', metamorphose the feature call.
-			-- Doesn't process the parameters
-		require
-			ba_not_void: ba /= Void
-		local
-			basic_type: BASIC_I
-			cl_type: CL_TYPE_I
-			static_type: INTEGER
-			real_feat_id: INTEGER
-			associated_class: CLASS_C
-			feat_tbl: FEATURE_TABLE
-			inst_cont_type: TYPE_I
-			metamorphosed: BOOLEAN
-			origin, offset: INTEGER
-			r_id: INTEGER
-			rout_info: ROUT_INFO
-		do
-			inst_cont_type := context_type
-			metamorphosed := inst_cont_type.is_basic 
-							and then not inst_cont_type.is_bit
-				-- Note: Manu 08/08/2002: if `precursor_type' is not Void, it can only means
-				-- that we are currently performing a static access call on a feature
-				-- from a basic class. Assuming otherwise is not correct as you
-				-- cannot seriously inherit from a basic class.
-			if metamorphosed and precursor_type = Void then
-				basic_type ?= inst_cont_type
-				if is_feature_special (False, basic_type) then
-					make_special_byte_code (ba, basic_type)
-				else
-						-- Process the feature id of `feature_name' in the
-						-- associated reference type
-					associated_class :=
-								basic_type.reference_type.base_class
-					feat_tbl := associated_class.feature_table
-debug ("BYTE_CODE")
-io.error.put_string ("Associated class: ")
-io.error.put_string (associated_class.name)
-io.error.put_string (", feature name: ")
-io.error.put_string (feature_name)
-io.error.put_string ("%NFEATURE_TABLE: ")
-feat_tbl.trace
-io.error.put_new_line
-end
-					if parameters /= Void then
-						ba.append (Bc_rotate)
-						ba.append_short_integer (parameters.count + 1)
-					end
-					ba.append (Bc_metamorphose)
-					if associated_class.is_precompiled then
-						r_id := feat_tbl.item_id (feature_name_id).rout_id_set.first
-						rout_info := System.rout_info_table.item (r_id)
-						origin := rout_info.origin
-						offset := rout_info.offset
-						make_end_precomp_byte_code (ba, flag, origin, offset)
-					else
-						real_feat_id := feat_tbl.item_id (feature_name_id).feature_id
-						static_type := basic_type.associated_reference_class_type.static_type_id - 1
-						make_end_byte_code (ba, flag, real_feat_id, static_type)
-					end
-				end
-			else
-				cl_type ?= inst_cont_type
-				if is_first then 
-						--! Cannot melt basic calls hence is_first
-						--! is not used in the above if meta statement.
-					ba.append (Bc_current)
-				else
-					if parameters /= Void then
-						ba.append (Bc_rotate)
-						ba.append_short_integer (parameters.count + 1)
-					end
-				end
-				associated_class := cl_type.base_class
-				if associated_class.is_precompiled then
-					r_id := associated_class.feature_table.item_id
-						(feature_name_id).rout_id_set.first
-					rout_info := System.rout_info_table.item (r_id)
-					origin := rout_info.origin
-					offset := rout_info.offset
-					make_end_precomp_byte_code (ba, flag, origin, offset)
-				else
-					static_type := cl_type.associated_class_type.static_type_id - 1
-					real_feat_id := real_feature_id
-					make_end_byte_code (ba, flag, real_feat_id, static_type)
-				end
-			end
-		end
-
-	make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
-					real_feat_id: INTEGER; static_type: INTEGER) is
-			-- Make final portion of the standard byte code.
-		require
-			ba_not_void: ba /= Void
-		do
-			if 	is_first or flag then
-				ba.append (code_first)
-			else
-				ba.append (code_next)
-					-- Generate feature name for test of void reference
-				ba.append_raw_string (feature_name)
-			end
-				-- Generate feature id
-			ba.append_integer (real_feat_id)
-			ba.append_short_integer (static_type)
-			make_precursor_byte_code (ba)
-		end
-
-	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
-					origin: INTEGER; offset: INTEGER) is
-			-- Make final portion of the standard byte code
-			-- for a precompiled call.
-		require
-			ba_not_void: ba /= Void
-		do
-			if 	is_first or flag then
-				ba.append (precomp_code_first)
-			else
-				ba.append (precomp_code_next)
-					-- Generate feature name for test of void reference
-				ba.append_raw_string (feature_name)
-			end
-			ba.append_integer (origin)
-			ba.append_integer (offset)
-			make_precursor_byte_code (ba)
-		end
-
-	make_precursor_byte_code (ba: BYTE_ARRAY) is
-			-- Add dynamic type of parent, if necessary.
-		require
-			ba_not_void: ba /= Void
-		do
-			-- Nothing by default.
-		end
-
 	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
 			-- Make byte code for special calls.
-			-- (To be redefined in FEATURE_B).
-		require
-			ba_not_void: ba /= Void
-			basic_type_not_void: basic_type /= Void
 		do
-			-- Do nothing
 		end
 
 	real_feature_id: INTEGER is
@@ -350,7 +186,7 @@ end
 				else
 						-- A generic parameter of current class has been derived
 						-- into an expanded type, so we need to find the `feature_id'
-						-- of the feature we want to call in the context of the 
+						-- of the feature we want to call in the context of the
 						-- expanded class.
 						-- FIXME: Manu 01/24/2000
 						-- We do the search even for a generic class which do not
@@ -366,26 +202,6 @@ end
 					end
 				end
 			end
-		end
-
-	code_first: CHARACTER is
-			-- Byte code when call is first (no invariant)
-		deferred
-		end
-
-	code_next: CHARACTER is
-			-- Byte code when call is nested (invariant)
-		deferred
-		end
-
-	precomp_code_first: CHARACTER is
-			-- Byte code when precompiled call is first (no invariant)
-		deferred
-		end
-
-	precomp_code_next: CHARACTER is
-			-- Byte code when precompiled call is nested (invariant)
-		deferred
 		end
 
 	basic_register: REGISTRABLE is

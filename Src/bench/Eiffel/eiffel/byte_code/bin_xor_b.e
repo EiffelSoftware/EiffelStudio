@@ -1,10 +1,9 @@
-class BIN_XOR_B 
+class BIN_XOR_B
 
 inherit
 
 	BOOL_BINARY_B
 		rename
-			Bc_xor as operator_constant,
 			il_xor as il_operator_constant
 		redefine
 			is_commutative, print_register, built_in_enlarged
@@ -17,7 +16,7 @@ feature -- Visitor
 		do
 			v.process_bin_xor_b (Current)
 		end
-	
+
 feature -- Enlarging
 
 	built_in_enlarged: EXPR_B is
@@ -42,7 +41,7 @@ feature -- Enlarging
 			end
 		end
 
-feature 
+feature
 
 	is_commutative: BOOLEAN is True;
 			-- Operation is commutative.

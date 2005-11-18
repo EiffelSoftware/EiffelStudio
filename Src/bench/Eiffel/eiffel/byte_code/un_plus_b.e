@@ -1,14 +1,13 @@
-class UN_PLUS_B 
+class UN_PLUS_B
 
 inherit
 	UNARY_B
 		rename
-			Bc_uplus as operator_constant,
 			Il_uplus as il_operator_constant
 		redefine
 			generate_operator, is_built_in
 		end;
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -16,7 +15,7 @@ feature -- Visitor
 		do
 			v.process_un_plus_b (Current)
 		end
-	
+
 feature
 
 	generate_operator is

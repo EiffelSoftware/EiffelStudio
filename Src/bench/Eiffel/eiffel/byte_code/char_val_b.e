@@ -4,13 +4,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	CHAR_VAL_B 
+	CHAR_VAL_B
 
 inherit
 	TYPED_INTERVAL_VAL_B [CHARACTER]
-		redefine
-			make_byte_code
-		end
 
 create
 	make
@@ -38,7 +35,7 @@ feature -- Measurement
 		do
 			Result := other.value |-| value
 		end
-		
+
 feature -- Error reporting
 
 	display (st: STRUCTURED_TEXT) is
@@ -70,16 +67,6 @@ feature -- Iteration
 				action.call (Void)
 				i := i - 1
 			end
-		end
-
-feature --- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a character constant in an
-			-- interval
-		do
-			ba.append (Bc_char)
-			ba.append (value)
 		end
 
 feature -- IL code generation

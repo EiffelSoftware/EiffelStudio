@@ -1,12 +1,12 @@
 -- Call as an instruction
 
-class INSTR_CALL_B 
+class INSTR_CALL_B
 
 inherit
 
 	INSTR_B
 		redefine
-			enlarge_tree, analyze, generate, make_byte_code,
+			enlarge_tree, analyze, generate,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, inlined_byte_code, pre_inlined_code, generate_il
 		end
@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 			call_set: call = c
 			line_number_set: line_number = l
 		end
-		
-feature 
+
+feature
 
 	enlarge_tree is
 			-- Enlarge byte code tree
@@ -53,7 +53,7 @@ feature
 		do
 			call.analyze;
 		end;
-	
+
 	generate is
 			-- Generate the call
 		do
@@ -70,15 +70,6 @@ feature -- IL code generation
 			generate_il_line_info (True)
 			call.generate_il
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an intruction call
-		do
-			generate_melted_debugger_hook (ba);
-			call.make_byte_code (ba);
-		end;
 
 feature -- Array optimization
 

@@ -4,13 +4,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	NAT_VAL_B 
+	NAT_VAL_B
 
 inherit
 	TYPED_INTERVAL_VAL_B [NATURAL_32]
 		redefine
-			is_allowed_unique_value,
-			make_byte_code
+			is_allowed_unique_value
 		end
 
 create
@@ -45,7 +44,7 @@ feature -- Measurement
 		do
 			Result := other.value - value
 		end
-		
+
 feature -- Error reporting
 
 	display (st: STRUCTURED_TEXT) is
@@ -83,15 +82,6 @@ feature -- Iteration
 					action.call (Void)
 				end
 			end
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a natural constant in an interval.
-		do
-			ba.append (Bc_uint32)
-			ba.append_natural_32 (value)
 		end
 
 feature -- IL code generation

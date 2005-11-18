@@ -589,6 +589,8 @@ feature -- Assertions
 			-- exception object and go check next block of inherited
 			-- preconditions and check them. If no more block, we raise
 			-- an exception with exception object.
+		require
+			failure_block_not_void: failure_block /= Void
 		deferred
 		end
 

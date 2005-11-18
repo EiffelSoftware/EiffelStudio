@@ -527,20 +527,7 @@ feature {COMPILER_EXPORTER} -- Access
 
 	update_dependance (feat_depend: FEATURE_DEPENDANCE) is
 			-- Update dependency for Dead Code Removal
-		local
-			a_class: CLASS_C
-			like_feat: LIKE_FEATURE
-			depend_unit: DEPEND_UNIT
-			feature_i: FEATURE_I
 		do
-			like_feat ?= Current
-			if like_feat /= Void then
-					-- we must had a dependance to the anchor feature
-				a_class := System.class_of_id (like_feat.class_id)
-				feature_i := a_class.feature_table.item_id (like_feat.feature_name_id)
-				create depend_unit.make (like_feat.class_id, feature_i)
-				feat_depend.extend (depend_unit)
-			end
 		end
 
 feature {COMPILER_EXPORTER}

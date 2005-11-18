@@ -8,6 +8,9 @@ class
 
 inherit
 	LIKE_TYPE_A
+		redefine
+			update_dependance
+		end
 
 	SHARED_NAMES_HEAP
 		export
@@ -16,7 +19,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (f: FEATURE_I) is
@@ -29,7 +32,7 @@ feature {NONE} -- Initialization
 			feature_name_id := f.feature_name_id
 			class_id := System.current_class.class_id
 		end
-		
+
 feature -- Properties
 
 	feature_name_id: INTEGER
@@ -65,6 +68,20 @@ feature -- Access
 			Result := 	other_like_feat /= Void
 					and then other_like_feat.routine_id = routine_id
 					and then other_like_feat.feature_id = feature_id
+		end
+
+	update_dependance (feat_depend: FEATURE_DEPENDANCE) is
+			-- Update dependency for Dead Code Removal
+		local
+			a_class: CLASS_C
+			depend_unit: DEPEND_UNIT
+			feature_i: FEATURE_I
+		do
+				-- we must had a dependance to the anchor feature
+			a_class := System.class_of_id (class_id)
+			feature_i := a_class.feature_table.item_id (feature_name_id)
+			create depend_unit.make (class_id, feature_i)
+			feat_depend.extend (depend_unit)
 		end
 
 feature -- Output
@@ -129,7 +146,7 @@ feature -- Primitives
 				debug
 					io.error.put_string ("LIKE_FEATURE solved_type origin_table%N")
 				end
-				
+
 				origin_table := feat_table.origin_table
 				orig_feat := System.class_of_id (class_id).feature_table.item_id (feature_name_id)
 				if orig_feat = Void then
@@ -137,7 +154,7 @@ feature -- Primitives
 				end
 				routine_id := orig_feat.rout_id_set.first
 				anchor_feature := origin_table.item (routine_id)
-				
+
 				debug
 					if anchor_feature = Void then
 						io.error.put_string ("Void feature%N")
@@ -251,4 +268,9 @@ feature -- Comparison
 				feature_name_id = other.feature_name_id
 		end
 
-end -- class LIKE_FEATURE
+feature {LIKE_FEATURE} -- Implementation
+
+	class_id: INTEGER
+			-- Class ID of the class where the anchor is referenced
+
+end

@@ -23,7 +23,7 @@ feature -- Properties
 
 	actual_type: TYPE_A
 			-- Actual type of the anchored type in a given class
-			
+
 	is_like: BOOLEAN is True
 			-- Is the type anchored one ?
 
@@ -33,21 +33,18 @@ feature -- Properties
 	is_loose: BOOLEAN is True
 			-- Does type depend on formal generic parameters and/or anchors?
 
-	class_id: INTEGER
-			-- Class ID of the class where the anchor is referenced
-
 	is_basic: BOOLEAN is
 			-- Is the current actual type a basic one ?
 		do
 			Result := actual_type.is_basic
 		end
-		
+
 	is_external: BOOLEAN is
 			-- Is current type based on an external class?
 		do
 			Result := actual_type.is_external
 		end
-		
+
 	is_reference: BOOLEAN is
 			-- Is current actual type a reference one?
 		do
@@ -59,7 +56,7 @@ feature -- Properties
 		do
 			Result := actual_type.is_expanded
 		end
-	
+
 	is_none: BOOLEAN is
 			-- Is current actual type NONE?
 		do
@@ -100,32 +97,35 @@ feature -- Primitives
 		deferred
 		end
 
-	instantiation_in (type: TYPE_A written_id: INTEGER): like Current is
+	instantiation_in (type: TYPE_A written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		deferred
 		end
 
-	instantiated_in (class_type: CL_TYPE_A): like Current is
+	instantiated_in (class_type: TYPE_A): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
+		local
+			t: like Current
 		do
-			Result := twin
-			Result.set_actual_type (actual_type.instantiated_in (class_type))
+			t := twin
+			t.set_actual_type (actual_type.instantiated_in (class_type))
+			Result := t
 		end
 
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does `actual_type' conform to `other'?
 		do
-			Result := actual_type.conform_to (other.actual_type)
+			Result := actual_type.conform_to (other.conformance_type)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
 			-- Does current convert to `a_target_type' in `a_context_class'?
 			-- Update `last_conversion_info' of AST_CONTEXT.
 		do
-			Result := actual_type.convert_to (a_context_class, a_target_type)		
+			Result := actual_type.convert_to (a_context_class, a_target_type)
 		end
 
 	type_i: TYPE_I is

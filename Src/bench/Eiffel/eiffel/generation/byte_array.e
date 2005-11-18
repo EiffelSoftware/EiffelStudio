@@ -18,10 +18,6 @@ inherit
 		export
 			{NONE} all
 		end
-	BYTE_CONST
-		export
-			{NONE} all
-		end
 
 	REFACTORING_HELPER
 		export
@@ -253,7 +249,7 @@ feature -- Element change
 			fixme ("Should we update callers to use `append_integer_32' ?")
 			append_integer_32 (i)
 		end
-		
+
 	append_integer_32 (i: INTEGER) is
 			-- Append long integer `i' in the array
 		local
@@ -354,7 +350,7 @@ feature -- Element change
 			if new_position >= count then
 				resize ((new_position \\ Chunk + 1) * Chunk)
 			end
-				
+
 				-- Write bit representation in `area'
 			ptr := s.to_c
 			ca_wbit ($area, $ptr, position, s.count)
@@ -449,7 +445,7 @@ feature -- Forward and backward jump managment
 
 	forward_marks2: ARRAYED_STACK [INTEGER]
 			-- Forward jump stack
-	
+
 	mark_forward2 is
 			-- Mark a forward offset
 		do
@@ -581,7 +577,7 @@ feature -- Debugger
 			-- Write continue mark (where breakpoint may be set).
 			-- lnr is the current breakable line number index.
 		do
-			append (Bc_hook)
+			append ({BYTE_CONST}.bc_hook)
 			append_integer_32 (lnr)
 		end
 
@@ -589,7 +585,7 @@ feature -- Debugger
 			-- Write continue mark (where breakpoint may be set).
 			-- lnr is the current breakable line number index (nested call).
 		do
-			append (Bc_nhook)
+			append ({BYTE_CONST}.bc_nhook)
 			append_integer_32 (lnr)
 		end
 

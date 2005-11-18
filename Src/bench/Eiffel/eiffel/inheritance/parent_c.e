@@ -1,6 +1,6 @@
 -- Compiled representation of a parent
 
-class PARENT_C 
+class PARENT_C
 
 inherit
 
@@ -30,7 +30,7 @@ inherit
 			{NONE} all
 		end
 
-feature 
+feature
 
 	parent_type: CL_TYPE_A
 			-- Actual type of the parent
@@ -69,7 +69,7 @@ feature
 			Result := parent.name;
 		end;
 
-	set_parent_type (t: CL_TYPE_A) is
+	set_parent_type (t: like parent_type) is
 			-- Assign `parent_type' to `parent_type'.
 		do
 			parent_type := t;
@@ -296,7 +296,7 @@ feature
 					local_selecting.start
 				until
 					local_selecting.after
-				loop	
+				loop
 					feature_name_id := local_selecting.item_for_iteration
 						-- Take care of renaming
 					real_name_id := renaming_of (feature_name_id)
@@ -317,7 +317,7 @@ feature
 			if local_undefining /= Void then
 				from
 					local_undefining.start
-				until	
+				until
 					local_undefining.after
 				loop
 					feature_name_id := local_undefining.item_for_iteration
@@ -331,7 +331,7 @@ feature
 						vdus1.set_feature_name (names_heap.item (feature_name_id))
 						Error_handler.insert_error (vdus1)
 					end
-	
+
 					local_undefining.forth
 				end
 			end
@@ -346,7 +346,7 @@ feature
 					feature_name_id := local_exports.key_for_iteration
 						-- Take care of renamings
 					real_name_id := renaming_of (feature_name_id)
-	
+
 					if real_name_id <= 0 or else not parent_table.has_id (real_name_id) then
 						create vlel2
 						vlel2.set_class (System.current_class)

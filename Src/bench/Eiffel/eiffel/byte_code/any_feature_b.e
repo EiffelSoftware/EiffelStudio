@@ -5,26 +5,26 @@ indexing
 
 class
 	ANY_FEATURE_B
-	
+
 inherit
 	FEATURE_B
 		redefine
 			is_any_feature, generate_il_any_call
 		end
-		
+
 	IL_PREDEFINED_STRINGS
 		export
 			{NONE} all
 		end
-	
+
 create
 	make
-	
+
 feature {NONE} -- IL code generation
 
 	is_any_feature: BOOLEAN is True
 			-- Is Current an instance of ANY_FEATURE_B?
-			
+
 	generate_il_any_call (written_type, target_type: CL_TYPE_I; is_virtual: BOOLEAN) is
 			-- Generate call to routine of ANY that works for both ANY and SYSTEM_OBJECT.
 			-- Arguments and target of the call are already pushed on the stack.
@@ -121,7 +121,7 @@ feature {NONE} -- IL code generation
 						-- New routine of ANY, or `print' or `internal_correct_mismatch' applied
 						-- to a .NET object, we raise an exception as they should not be called
 						-- on .NET object.
-						
+
 						-- Remove arguments and target from stack.
 					from
 					until
@@ -160,7 +160,7 @@ feature {NONE} -- IL code generation
 			l_extension.set_return_type ({PREDEFINED_NAMES}.system_boolean_name_id)
 			l_extension.set_base_class (runtime_class_name)
 			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
-			
+
 			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			inspect
 				feature_name_id
@@ -174,9 +174,9 @@ feature {NONE} -- IL code generation
 				{PREDEFINED_NAMES}.deep_equal_name_id,
 				{PREDEFINED_NAMES}.standard_equal_name_id
 			then
-				l_extension.set_argument_types (<<l_id, l_id, l_id>>)				
+				l_extension.set_argument_types (<<l_id, l_id, l_id>>)
 			end
-			
+
 				-- Call routine
 			l_extension.generate_call (False)
 		end
@@ -202,13 +202,13 @@ feature {NONE} -- IL code generation
 			l_extension.set_return_type ({PREDEFINED_NAMES}.system_object_name_id)
 			l_extension.set_base_class (runtime_class_name)
 			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
-			
+
 			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			l_extension.set_argument_types (<<l_id, l_id>>)
-			
+
 				-- Call routine
 			l_extension.generate_call (False)
-			
+
 				-- Unbox result if required
 			if real_type (a_result_type).is_expanded then
 				il_generator.generate_unmetamorphose (real_type (a_result_type))
@@ -237,14 +237,14 @@ feature {NONE} -- IL code generation
 			l_extension.set_alias_name_id (feature_name_id)
 			l_extension.set_base_class (runtime_class_name)
 			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
-			
+
 			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			l_extension.set_argument_types (<<l_id, l_id>>)
-			
+
 				-- Call routine
 			l_extension.generate_call (False)
 		end
-		
+
 	generate_default (target_type, return_type: TYPE_I) is
 			-- Generate inlined call to `default'.
 		require
@@ -252,7 +252,7 @@ feature {NONE} -- IL code generation
 		do
 				-- Check validity of target
 			generate_call_on_void_target (target_type, False)
-			
+
 			if target_type.is_expanded then
 				if target_type.is_basic then
 						-- Put default value for basic type
@@ -296,9 +296,9 @@ feature {NONE} -- IL code generation
 
 				-- Check validity of target for .NET case
 			generate_call_on_void_target (target_type, False)
-			
+
 				-- Nothing to be done for .NET since their content is empty.
-			
+
 			il_generator.mark_label (l_end_label)
 		end
 
@@ -306,7 +306,7 @@ feature {NONE} -- IL code generation
 			-- Generate inlined call to `default_pointer'.
 		require
 			target_type_not_void: target_type /= Void
-		do	
+		do
 				-- Check validity of target
 			generate_call_on_void_target (target_type, False)
 
@@ -319,7 +319,7 @@ feature {NONE} -- IL code generation
 			-- Generate inlined call to `do_nothing'.
 		require
 			target_type_not_void: target_type /= Void
-		do	
+		do
 				-- Check validity of target
 			generate_call_on_void_target (target_type, False)
 		end
@@ -343,14 +343,14 @@ feature {NONE} -- IL code generation
 			l_extension.set_return_type ({PREDEFINED_NAMES}.system_boolean_name_id)
 			l_extension.set_base_class (runtime_class_name)
 			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
-			
+
 			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			if feature_name_id = {PREDEFINED_NAMES}.is_equal_name_id then
 				l_extension.set_argument_types (<<l_id, l_id>>)
 			else
 				l_extension.set_argument_types (<<l_id, l_id, l_id>>)
 			end
-			
+
 				-- Call routine
 			l_extension.generate_call (False)
 		end
@@ -362,10 +362,10 @@ feature {NONE} -- IL code generation
 			target_type_not_void: target_type /= Void
 		local
 			l_io_label: IL_LABEL
-		do	
+		do
 				-- Check validity of target
 			generate_call_on_void_target (target_type, True)
-			
+
 			l_io_label := il_generator.create_label
 			il_generator.generate_is_true_instance_of (any_type)
 			il_generator.duplicate_top
@@ -383,10 +383,10 @@ feature {NONE} -- IL code generation
 			target_type_not_void: target_type /= Void
 		local
 			l_oe_label: IL_LABEL
-		do	
+		do
 				-- Check validity of target
 			generate_call_on_void_target (target_type, True)
-			
+
 			l_oe_label := il_generator.create_label
 			il_generator.generate_is_true_instance_of (any_type)
 			il_generator.duplicate_top
@@ -396,7 +396,7 @@ feature {NONE} -- IL code generation
 			il_generator.mark_label (l_oe_label)
 			generate_il_normal_call (written_type, True)
 		end
-		
+
 	generate_string_routine (written_type: CL_TYPE_I) is
 			-- Generate inlined call to routines of ANY returning a STRING object:
 			-- `generator', `generating_type', `out' and `tagged_out'.
@@ -425,7 +425,7 @@ feature {NONE} -- IL code generation
 				il_generator.branch_to (l_end_label)
 				il_generator.mark_label (l_out_label)
 			end
-			
+
 				-- No need to check validity of target, it is done by the runtime
 				-- routine we are calling.
 
@@ -436,16 +436,16 @@ feature {NONE} -- IL code generation
 			l_extension.set_base_class (runtime_class_name)
 			l_extension.set_argument_types (<<{PREDEFINED_NAMES}.system_object_name_id>>)
 			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
-			
+
 				-- Call routine
 			l_extension.generate_call (False)
-			
+
 				-- Store result in temporary variable
 			context.add_local (system_string_type)
 			l_local := context.local_list.count
 			il_generator.put_dummy_local_info (system_string_type, l_local)
 			il_generator.generate_local_assignment (l_local)
-			
+
 				-- Generate Eiffel STRING object from SYSTEM_STRING object
 			il_generator.put_manifest_string_from_system_string_local (l_local)
 
@@ -475,10 +475,10 @@ feature {NONE} -- IL code generation
 			l_extension.set_return_type ({PREDEFINED_NAMES}.system_object_name_id)
 			l_extension.set_base_class (runtime_class_name)
 			l_extension.set_type ({SHARED_IL_CONSTANTS}.static_type)
-			
+
 			l_id := {PREDEFINED_NAMES}.system_object_name_id
 			l_extension.set_argument_types (<<l_id>>)
-			
+
 				-- Call routine
 			l_extension.generate_call (False)
 
@@ -506,13 +506,13 @@ feature {NONE} -- Convenience
 
 			if target_type.is_reference then
 				l_not_void_label := il_generator.create_label
-	
+
 					-- Check that target is not Void.			
 				il_generator.branch_on_true (l_not_void_label)
-	
+
 					-- If target of call is Void, throw an exception.
 				il_generator.generate_call_on_void_target_exception
-				
+
 					-- Else we procede normally
 				il_generator.mark_label (l_not_void_label)
 			else
@@ -520,7 +520,7 @@ feature {NONE} -- Convenience
 				il_generator.pop
 			end
 		end
-		
+
 	any_type: CL_TYPE_I is
 			-- Actual type of ANY
 		require
@@ -543,15 +543,4 @@ feature {NONE} -- Convenience
 			system_string_type_not_void: Result /= Void
 		end
 
-	string_type: CL_TYPE_I is
-			-- Actual type of SYSTEM_STRING
-		require
-			has_string: system.string_class /= Void
-			has_string_compiled: system.string_class.is_compiled
-		once
-			Result := system.string_class.compiled_class.actual_type.type_i
-		ensure
-			string_type_not_void: Result /= Void
-		end
-		
 end -- class ANY_FEATURE_B

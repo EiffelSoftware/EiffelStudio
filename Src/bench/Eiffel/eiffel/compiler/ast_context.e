@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	AST_CONTEXT 
+	AST_CONTEXT
 
 inherit
 	SHARED_SERVER
@@ -33,14 +33,14 @@ feature {NONE} -- Initialization
 			create locals.make (10)
 			create supplier_ids.make
 		end
-	
+
 feature -- Access
 
 	current_class: CLASS_C
 			-- Current analyzed class.
 
-	current_class_type: CL_TYPE_A
-			-- Actual type of `current_class'.
+	current_class_type: LIKE_CURRENT
+			-- Actual type of `current_class'
 
 	current_feature_table: FEATURE_TABLE
 			-- Current feature table
@@ -65,7 +65,7 @@ feature -- Status report
 
 feature -- Setting
 
-	initialize (a_class: like current_class; a_type: like current_class_type; a_feat_tbl: like current_feature_table) is
+	initialize (a_class: like current_class; a_type: CL_TYPE_A; a_feat_tbl: like current_feature_table) is
 			-- Initialize current context for class analyzis.
 		require
 			a_class_not_void: a_class /= Void
@@ -73,11 +73,12 @@ feature -- Setting
 			a_type_not_void: a_type /= Void
 		do
 			current_class := a_class
-			current_class_type := a_type
+			create current_class_type
+			current_class_type.set_actual_type (a_type)
 			current_feature_table := a_feat_tbl
 		ensure
 			current_class_set: current_class = a_class
-			current_class_type_set: current_class_type = a_type
+			current_class_type_set: current_class_type.conformance_type = a_type
 			current_feature_table_set: current_feature_table = a_feat_tbl
 		end
 

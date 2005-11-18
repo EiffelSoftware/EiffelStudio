@@ -187,7 +187,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
+			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "free_elks";
 		default
 			assertion (no)
 			assertion (require)

@@ -9,7 +9,7 @@ inherit
 			is_once, is_global_once,
 			pre_inlined_code, inlined_byte_code, generate_once_declaration,
 			generate_once_data, generate_once_prologue, generate_once_epilogue,
-			generate_il
+			generate_il_return
 		end
 
 	REFACTORING_HELPER
@@ -39,17 +39,12 @@ feature -- Setting
 		ensure
 			internal_is_global_once_set: internal_is_global_once = v
 		end
-		
-feature -- IL code generation
 
-	generate_il is
-			-- Generate IL byte code
+feature {NONE} -- IL code generation
+
+	generate_il_return is
+			-- Generate IL final return statement.
 		do
-				-- Put a breakable point on feature name.
-			il_generator.put_line_info (start_line_number)
-			il_generator.flush_sequence_points (context.class_type)
-			generate_il_body
-			il_generator.put_debug_info (end_location)
 			il_generator.generate_once_epilogue
 		end
 
@@ -213,7 +208,7 @@ feature -- C code generation
 			init_dftype
 			init_dtype
 		end
-	
+
 	generate_once_prologue (name: STRING) is
 			-- Generate test at the head of once routines
 		local
@@ -298,7 +293,7 @@ feature -- C code generation
 			end
 			buf.put_new_line
 		end
-		
+
 feature -- Inlining
 
 	pre_inlined_code: like Current is
@@ -355,5 +350,5 @@ feature {NONE} -- Convenience
 		ensure
 			mutex_name_not_void: Result /= Void
 		end
-		
+
 end

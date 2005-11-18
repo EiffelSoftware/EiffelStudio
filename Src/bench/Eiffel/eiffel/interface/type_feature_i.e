@@ -3,7 +3,7 @@ indexing
 		Representation of a feature used to represent the type of either a
 		formal generic parameter or an anchored type from the point of view of
 		inheritance. Instances of TYPE_FEATURE_I are used in CLASS_C.
-		
+
 		In the case of a formal generic parameter:
 		Class A that has a formal generic parameter or that inherits one
 		(i.e. class B which inherits from class A [STRING], in B it inherits
@@ -39,12 +39,12 @@ inherit
 		redefine
 			new_entry, is_type_feature, check_expanded, is_valid
 		end
-	
+
 feature -- Access
 
 	type: TYPE_A
 			-- Type of current.
-			
+
 	position: INTEGER
 			-- Position of formal first time it introduced.
 
@@ -55,10 +55,10 @@ feature -- Status report
 		do
 			Result := type.is_valid
 		end
-		
+
 	is_type_feature: BOOLEAN is True
 			-- Current represents a type feature.
-			
+
 	is_formal: BOOLEAN is
 			-- Is `type' a formal generic parameter?
 		local
@@ -91,20 +91,20 @@ feature -- Checking
 				if solved_type.has_expanded then
 					if solved_type.expanded_deferred then
 						create vtec1
-						vtec1.set_class (written_class)	
+						vtec1.set_class (written_class)
 						vtec1.set_feature (Current)
 						vtec1.set_entity_name (feature_name)
 						Error_handler.insert_error (vtec1)
 					elseif not solved_type.valid_expanded_creation (class_c) then
 						create vtec2
-						vtec2.set_class (written_class)	
+						vtec2.set_class (written_class)
 						vtec2.set_feature (Current)
 						vtec2.set_entity_name (feature_name)
 						Error_handler.insert_error (vtec2)
 					elseif system.il_generation and then not solved_type.is_ancestor_valid then
 							-- Expanded type cannot be based on a class with external ancestor.
 						create vtec3
-						vtec3.set_class (written_class)	
+						vtec3.set_class (written_class)
 						vtec3.set_feature (Current)
 						vtec3.set_entity_name (feature_name)
 						Error_handler.insert_error (vtec3)
@@ -138,7 +138,7 @@ feature -- Settings
 		ensure
 			type_set: a_type = type
 		end
-		
+
 	set_position (a_pos: like position) is
 			-- Set `a_pos' to `position'.
 		require
@@ -148,7 +148,7 @@ feature -- Settings
 		ensure
 			position_set: position = a_pos
 		end
-		
+
 feature -- Polymorphism
 
 	new_entry (rout_id: INTEGER): ATTR_ENTRY is
@@ -158,7 +158,7 @@ feature -- Polymorphism
 			Result.set_type_a (type.actual_type)
 			Result.set_feature_id (feature_id)
 		end
-		
+
 feature {NONE} -- Implementation
 
 	new_api_feature: E_FEATURE is
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		do
 			create {E_FUNCTION} Result.make (feature_name, alias_name, has_convert_mark, feature_id)
 		end
-		
+
 feature {NONE} -- Replication
 
 	replicated: FEATURE_I is
@@ -178,7 +178,7 @@ feature {NONE} -- Replication
 				not_called: False
 			end
 		end
-		
+
 	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature.
 			-- Cannot be called in Current context.

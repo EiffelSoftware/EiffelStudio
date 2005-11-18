@@ -1995,8 +1995,7 @@ feature -- Implementation
 		local
 			l_like_current: LIKE_CURRENT
 		do
-			create l_like_current
-			l_like_current.set_actual_type (context.current_class_type)
+			l_like_current := context.current_class_type
 			create {TYPED_POINTER_A} last_type.make_typed (l_like_current)
 			if is_byte_node_enabled then
 				create {HECTOR_B} last_byte_node.make (create {CURRENT_B})

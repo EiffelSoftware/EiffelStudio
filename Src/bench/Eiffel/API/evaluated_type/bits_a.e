@@ -10,7 +10,7 @@ inherit
 		rename
 			make as cl_make
 		redefine
-			is_bits, conform_to, 
+			is_bits, conform_to,
 			associated_class, dump,
 			same_as, ext_append_to,
 			format, is_equivalent
@@ -89,7 +89,7 @@ feature {COMPILER_EXPORTER}
 		local
 			other_bits: BITS_A
 		do
-			other_bits ?= other.actual_type
+			other_bits ?= other.conformance_type
 			if other_bits /= Void then
 				Result := other_bits.bit_count >= bit_count
 			else

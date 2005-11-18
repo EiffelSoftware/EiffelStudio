@@ -52,7 +52,7 @@ feature {COMPILER_EXPORTER}
 	conform_to (other: TYPE_A): BOOLEAN is
 			-- Does Current conform to `other'?
 		do
-			Result := other.actual_type.is_void
+			Result := other.conformance_type.is_void
 		end
 
 	type_i: VOID_I is

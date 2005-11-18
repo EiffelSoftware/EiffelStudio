@@ -9,13 +9,34 @@ class
 inherit
 	LIKE_TYPE_A
 		redefine
-			has_associated_class, is_like_current, instantiated_in
+			actual_type, associated_class, conform_to, conformance_type, convert_to,
+			generics, has_associated_class, instantiated_in,
+			is_basic, is_expanded, is_like_current, is_none, is_reference,
+			meta_type, set_actual_type, type_i
 		end
 
 feature -- Properties
 
+	actual_type: LIKE_CURRENT
+			-- Actual type of the anchored type in a given class
+
+	conformance_type: TYPE_A
+			-- Type of the anchored type as specified in `set_actual_type'
+
 	is_like_current: BOOLEAN is True
 			-- Is the current type an anchored type on Current ?
+
+	is_expanded: BOOLEAN is False
+			-- Is type expanded?
+
+	is_reference: BOOLEAN is False
+			-- Is type reference?
+
+	is_none: BOOLEAN is False
+			-- Is current actual type NONE?
+
+	is_basic: BOOLEAN is False
+			-- Is the current actual type a basic one?
 
 feature -- Access
 
@@ -28,7 +49,23 @@ feature -- Access
 	has_associated_class: BOOLEAN is
 			-- Does Current have an associated class?
 		do
-			Result := actual_type /= Void
+			Result :=
+				conformance_type /= Void and then
+				conformance_type.has_associated_class
+		end
+
+	associated_class: CLASS_C is
+			-- Associated class
+		do
+			Result := conformance_type.associated_class
+		end
+
+	generics: ARRAY [TYPE_A] is
+			-- Actual generic types
+		do
+			if conformance_type /= Void then
+				Result := conformance_type.generics
+			end
 		end
 
 feature -- Comparison
@@ -36,7 +73,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := equivalent (actual_type, other.actual_type)
+			Result := same_as (other)
 		end
 
 feature -- Output
@@ -46,7 +83,7 @@ feature -- Output
 		local
 			actual_dump: STRING
 		do
-			actual_dump := actual_type.dump
+			actual_dump := conformance_type.dump
 			create Result.make (15 + actual_dump.count)
 			Result.append ("[like Current] ")
 			Result.append (actual_dump)
@@ -60,10 +97,17 @@ feature -- Output
 			st.add (ti_Current)
 			st.add (ti_R_bracket)
 			st.add_space
-			actual_type.ext_append_to (st, f)
+			conformance_type.ext_append_to (st, f)
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives
+
+	set_actual_type (a: TYPE_A) is
+			-- Assign `a' to `original_actual_type'.
+		do
+			conformance_type := a
+			actual_type := Current
+		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): LIKE_CURRENT is
 			-- Calculated type in function of the feature `f' which has
@@ -73,11 +117,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 			Result.set_actual_type (feat_table.associated_class.actual_type)
 		end
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_CURRENT is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
-			create Result
 				-- Special cases for calls on a target which is a manifest integer
 				-- that might be compatible with _8 or _16. The returned
 				-- `actual_type' should not take into consideration the
@@ -95,16 +138,15 @@ feature {COMPILER_EXPORTER} -- Primitives
 				-- i16 := (0x00FF).to_integer_16 & i8
 				-- or
 				-- i16 := (0x00FF & i8).to_integer_16
-			Result.set_actual_type (type.intrinsic_type)
+			Result := type.intrinsic_type
 		end
 
-	instantiated_in (class_type: CL_TYPE_A): like Current is
+	instantiated_in (class_type: TYPE_A): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		do
-			create Result
-			Result.set_actual_type (class_type)
+			Result := class_type
 		end
 
 	create_info: CREATE_CURRENT is
@@ -113,4 +155,38 @@ feature {COMPILER_EXPORTER} -- Primitives
 			create Result
 		end
 
-end -- class LIKE_CURRENT
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does `Current' conform to `other'?
+		do
+			Result := other.is_like_current or else conformance_type.conform_to (other.conformance_type)
+		end
+
+	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN is
+			-- Does current convert to `a_target_type' in `a_context_class'?
+			-- Update `last_conversion_info' of AST_CONTEXT.
+		do
+			Result := conformance_type.convert_to (a_context_class, a_target_type)
+		end
+
+	type_i: TYPE_I is
+			-- C type.
+		local
+			cl_type : CL_TYPE_I
+		do
+			Result := conformance_type.type_i
+			cl_type ?= Result
+
+			if cl_type /= Void and then not cl_type.is_expanded then
+					-- Remember that it's an anchored type, not needed
+					-- when handling expanded types.
+				cl_type.set_cr_info (create_info)
+			end
+		end
+
+	meta_type: TYPE_I is
+			-- Meta type.
+		do
+			Result := conformance_type.meta_type
+		end
+
+end

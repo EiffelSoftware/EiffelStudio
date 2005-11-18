@@ -120,7 +120,7 @@ feature -- Access
 				-- Clear sign if it becomes negative
 			Result := 0x7FFFFFFF & Result
 		end
-		
+
 feature -- Output
 
 	dump: STRING is
@@ -435,14 +435,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	instantiated_in (class_type: CL_TYPE_A): like Current is
+	instantiated_in (class_type: TYPE_A): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		local
 			i, count: INTEGER
 			new_generics: like generics
-		do	
+		do
 			from
 				Result := duplicate
 				i := 1
@@ -486,7 +486,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				Result := type.generic_conform_to (Current)
 			end
 		end
-				
+
 	parent_type (parent: CL_TYPE_A): TYPE_A is
 			-- Parent actual type in the current context
 		do
@@ -658,7 +658,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			until
 				i > count
 			loop
-					-- Take the current studied parameter of A [G,...] 
+					-- Take the current studied parameter of A [G,...]
 				gen_param := generics.item (i).actual_type
 				if gen_param.is_formal then
 						-- Check if the associated constraint conforms to the
@@ -715,12 +715,12 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- is the case when you wrote something like:
 						-- A [K -> TOTO, H -> ARRAY [K],...] we need to do the substitution
 						-- on the second generic parameter of A in order to have
-						-- ARRAY [TOTO] and not ARRAY [K]. 
+						-- ARRAY [TOTO] and not ARRAY [K].
 					gen_type ?= constraint_type.deep_twin
 					gen_type.substitute (generics)
 					constraint_type := gen_type
 				end
-				
+
 					-- Check the conformance in the case the constraint_type was not a formal one.
 				if not conformance_on_formal then
 					if not to_check.conform_to (constraint_type) then
@@ -740,7 +740,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 									agent delayed_convert_constraint_check (
 										context_class, Current, to_check, constraint_type, i, False))
 							end
-						else 
+						else
 							generate_constraint_error (Current, to_check, constraint_type, i)
 							is_conform := False
 						end
@@ -779,7 +779,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				end
 
 					-- Recursion Part:
-					
+
 					-- Check a generic local type
 				if not gen_param.good_generics then
 					l_vtug := gen_param.error_generics
@@ -788,7 +788,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					l_vtug.set_feature (context.current_feature)
 					Error_handler.insert_error (l_vtug)
 				else
-						
+
 						-- It is a valid generic, so we can recurse
 					gen_param.check_constraints (context_class)
 				end
@@ -823,7 +823,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					gen_type ?= constraint_type
 					gen_type.substitute (new_generics)
 				end
-			
+
 				i := i + 1
 			end
 		end
@@ -903,7 +903,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						-- constraint of PROCEDURE which is `TUPLE create default_create end'.
 					creators_table := class_c.creators
 				end
-	
+
 					-- A creation procedure has to be specified, so if none is
 					-- specified or if there is no creation procedure in the class
 					-- corresponding to `to_check', this is not valid.
@@ -928,7 +928,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 						creators_table.search (other_feature_i.feature_name)
 						matched := creators_table.found
 							and then creators_table.found_item.valid_for (associated_class)
-	
+
 						crc_list.forth
 					end
 				else
@@ -940,7 +940,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					matched := creators_table = Void and then
 						(crc_list.count = 1 and then formal_dec_as.has_default_create)
 				end
-	
+
 				if not matched then
 					generate_constraint_error (Current, to_check, constraint_type, i)
 				end

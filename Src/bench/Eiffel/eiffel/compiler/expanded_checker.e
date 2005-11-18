@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EXPANDED_CHECKER 
+class EXPANDED_CHECKER
 
 inherit
 	SHARED_WORKBENCH
@@ -61,11 +61,8 @@ feature -- Checking
 	check_actual_type (a_type: TYPE_A) is
 		require
 			type_has_generics: a_type.has_generics
-		local
-			gen_type: GEN_TYPE_A
 		do
-			gen_type ?= a_type
-			recursive_check_type (gen_type)
+			recursive_check_type (a_type.conformance_type)
 			Error_handler.checksum
 			id_set.wipe_out
 		end

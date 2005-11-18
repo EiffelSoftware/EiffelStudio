@@ -3,12 +3,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class BOOL_CONST_B 
+class BOOL_CONST_B
 
 inherit
 	EXPR_B
 		redefine
-			print_register, make_byte_code, generate_il,
+			print_register, generate_il,
 			is_simple_expr, is_predefined, evaluate,
 			is_fast_as_local, is_constant_expression
 		end
@@ -33,7 +33,7 @@ feature -- Visitor
 		do
 			v.process_bool_const_b (Current)
 		end
-	
+
 feature -- Access
 
 	value: BOOLEAN
@@ -90,19 +90,6 @@ feature -- IL code generation
 			-- Generate IL code for boolean constant.
 		do
 			il_generator.put_boolean_constant (value)
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a boolean constant
-		do
-			ba.append (Bc_bool)
-			if value then
-				ba.append ('%/001/')
-			else
-				ba.append ('%U')
-			end
 		end
 
 end -- class BOOL_CONST_B

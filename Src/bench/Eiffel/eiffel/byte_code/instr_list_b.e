@@ -12,12 +12,12 @@ inherit
 		redefine
 			analyze, generate, generate_il, size, pre_inlined_code, inlined_byte_code,
 			assigns_to, calls_special_features, is_unsafe,
-			optimized_byte_node, enlarge_tree, make_byte_code
+			optimized_byte_node, enlarge_tree
 		end
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (l: like compound) is
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		ensure
 			compound_set: compound = l
 		end
-		
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -37,7 +37,7 @@ feature -- Visitor
 		do
 			v.process_instr_list_b (Current)
 		end
-	
+
 feature -- Access
 
 	compound: BYTE_LIST [BYTE_NODE]
@@ -66,14 +66,6 @@ feature -- IL code generation
 			-- Loop over `list' and generate IL code for each item
 		do
 			compound.generate_il
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generates byte code for element in the list
-		do
-			compound.make_byte_code (ba)
 		end
 
 feature -- Tree enlargment
@@ -126,5 +118,5 @@ feature -- Inlining
 invariant
 	compound_not_void: compound /= Void
 	in_final_mode: context.final_mode
-	
+
 end -- class INSTR_LIST_B

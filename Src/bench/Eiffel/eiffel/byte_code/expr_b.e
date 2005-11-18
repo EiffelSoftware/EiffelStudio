@@ -317,32 +317,6 @@ feature -- C generation
 			end
 		end
 
-feature -- Byte code generation
-
-	make_byte_code_for_type (ba: BYTE_ARRAY; target_type: TYPE_I) is
-			-- Generate byte code for the expression which is about
-			-- to be assigned or compared to the type `target_type'.
-		require
-			ba_not_void: ba /= Void
-			target_type_not_void: target_type /= Void
-		local
-			expression_type: TYPE_I
-		do
-			make_byte_code (ba)
-			expression_type := context.real_type (type)
-			if target_type.is_reference and then expression_type.is_expanded then
-				if expression_type.is_basic then
-						-- Source is basic and target is a reference:
-						-- metamorphose
-					ba.append (Bc_metamorphose)
-				else
-						-- Source is expanded and target is a reference:
-						-- clone
-					ba.append (Bc_clone)
-				end
-			end
-		end
-
 feature -- Array optimization
 
 	optimized_byte_node: EXPR_B is

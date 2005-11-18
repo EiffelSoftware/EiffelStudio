@@ -1,6 +1,6 @@
 -- Access to Result
 
-class RESULT_B 
+class RESULT_B
 
 inherit
 
@@ -8,7 +8,6 @@ inherit
 		redefine
 			enlarged, read_only, is_result, is_creatable,
 			register_name,
-			make_byte_code,
 			assign_code, expanded_assign_code, reverse_code,
 			assigns_to, pre_inlined_code, generate_il_call_access,
 			generate_il_address,
@@ -22,8 +21,8 @@ feature -- Visitor
 		do
 			v.process_result_b (Current)
 		end
-	
-feature 
+
+feature
 
 	read_only: BOOLEAN is False;
 			-- Is Result a read-only entity ?
@@ -82,38 +81,32 @@ feature -- IL code generation
 				il_generator.generate_result
 			end
 		end
-		
+
 	generate_il_address is
 			-- Generate address of Result.
 		do
 			il_generator.generate_result_address
 		end
-		
-feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an access to Result.
-		do
-			ba.append (Bc_result);
-		end;
+feature -- Byte code generation
 
 	assign_code: CHARACTER is
 			-- Assignment code
 		once
-			Result := Bc_rassign;
-		end;
+			Result := {BYTE_CONST}.bc_rassign
+		end
 
 	expanded_assign_code: CHARACTER is
 			-- Expanded assignment code
 		once
-			Result := Bc_rexp_assign;
-		end;
+			Result := {BYTE_CONST}.bc_rexp_assign
+		end
 
 	reverse_code: CHARACTER is
 			-- Reverse assignment code
 		once
-			Result := Bc_rreverse;
-		end; -- reverse_code
+			Result := {BYTE_CONST}.bc_rreverse
+		end
 
 feature -- Array optimization
 

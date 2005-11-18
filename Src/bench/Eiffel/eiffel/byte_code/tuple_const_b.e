@@ -3,12 +3,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TUPLE_CONST_B 
+class TUPLE_CONST_B
 
 inherit
 	EXPR_B
 		redefine
-			make_byte_code, enlarged, enlarge_tree, is_unsafe,
+			enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
 			pre_inlined_code, inlined_byte_code, generate_il,
 			allocates_memory, has_call, is_constant_expression
@@ -44,7 +44,7 @@ feature -- Visitor
 		do
 			v.process_tuple_const_b (Current)
 		end
-	
+
 feature -- Access
 
 	expressions: BYTE_LIST [BYTE_NODE];
@@ -169,7 +169,7 @@ feature -- IL generation
 			feat_tbl := base_class.feature_table
 			make_feat := feat_tbl.item_id (Default_create_name_id)
 			l_decl_type := il_generator.implemented_type (make_feat.origin_class_id, real_ty)
-			
+
 				-- Creation of Array
  			context.add_local (real_ty)
  			local_tuple := context.local_list.count
@@ -194,71 +194,27 @@ feature -- IL generation
  			loop
  				expr ?= expressions.item
  				actual_type ?= context.real_type (expr.type)
- 
+
  					-- Prepare call to `put'.
  				il_generator.generate_local (local_tuple)
 
  					-- Generate expression
  				expr.generate_il
- 				if actual_type /= Void and then actual_type.is_expanded then 
+ 				if actual_type /= Void and then actual_type.is_expanded then
  						-- We generate a metamorphosed version of type.
  					expr.generate_il_metamorphose (actual_type, Void, True)
  				end
 
  				il_generator.put_integer_32_constant (i)
- 
+
  				il_generator.generate_feature_access (l_decl_type, put_feat.origin_feature_id,
  					put_feat.argument_count, put_feat.has_return_value, True)
  				i := i + 1
  				expressions.forth
  			end
- 
+
  			il_generator.generate_local (local_tuple)
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a manifest tuple
-		local
-			real_ty: TUPLE_TYPE_I;
-			expr: EXPR_B;
-			base_class: CLASS_C;
-		do
-			real_ty ?= context.real_type (type);
-			base_class := real_ty.base_class;
-				-- Need to insert expression into
-				-- the stack back to front in order
-				-- to be inserted into the area correctly
-			from
-				expressions.finish;
-			until
-				expressions.before
-			loop
-				expr ?= expressions.item
-				expr.make_byte_code (ba)
-				expressions.back;
-			end;
-			if base_class.is_precompiled then
-				ba.append (Bc_ptuple);
-				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-				ba.append_short_integer (context.class_type.static_type_id-1)
-				real_ty.make_gen_type_byte_code (ba, True)
-				ba.append_short_integer (-1);
-			else
-				ba.append (Bc_tuple);
-				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-				ba.append_short_integer (context.class_type.static_type_id - 1)
-				real_ty.make_gen_type_byte_code (ba, True)
-				ba.append_short_integer (-1);
-			end;
-			ba.append_integer (expressions.count + 1);
-			if real_ty.is_basic_uniform then
-				ba.append_integer (1)
-			else
-				ba.append_integer (0)
-			end			
-		end;
 
 feature -- Array optimization
 

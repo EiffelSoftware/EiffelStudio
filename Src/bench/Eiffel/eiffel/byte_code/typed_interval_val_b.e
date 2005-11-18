@@ -35,7 +35,7 @@ feature -- Comparison
 			Result := other.value = next_value (value)
 		end
 
-feature {TYPED_INTERVAL_B, TYPED_INTERVAL_VAL_B} -- Data
+feature {TYPED_INTERVAL_B, TYPED_INTERVAL_VAL_B, BYTE_NODE_VISITOR} -- Data
 
 	value: H
 			-- Constant value
@@ -87,5 +87,5 @@ feature {NONE} -- Implementation: C code generation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 end

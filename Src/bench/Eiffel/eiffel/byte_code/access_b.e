@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class ACCESS_B 
+deferred class ACCESS_B
 
 inherit
 	CALL_B
@@ -13,12 +13,12 @@ inherit
 			optimized_byte_node, inlined_byte_code,
 			generate_il
 		end
-		
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
 		end
-	
+
 feature -- Access
 
 	parameters: BYTE_LIST [PARAMETER_B] is
@@ -41,7 +41,7 @@ feature -- Access
 				Result := context.current_type
 			elseif is_message then
 				Result := parent.target.type
-			else 
+			else
 				a_parent := parent.parent
 				if a_parent = Void then
 					Result := context.current_type
@@ -134,7 +134,7 @@ feature -- Status
 				end
 			end
 		end
-	
+
 	is_single: BOOLEAN is
 			-- Is access a single one ?
 		local
@@ -291,7 +291,7 @@ feature -- C generation
 			set_register (Void)
 			unanalyze_parameters
 		end
-	
+
 	Current_register: REGISTRABLE is
 			-- The "Current" entity
 		do
@@ -334,7 +334,7 @@ feature -- C generation
 			-- Generation of the C code for access
 		do
 		end
-	
+
 	generate_parameters (reg: REGISTRABLE) is
 			-- Generate code for parameters computation.
 			-- `reg' ("Current") is not used except for
@@ -383,6 +383,30 @@ feature -- Conveniences
 		do
 		end
 
+	is_first: BOOLEAN is
+			-- Is the access the first one in a multi-dot expression ?
+		local
+			p: like parent
+			p_target: ACCESS_B
+			constant_b: CONSTANT_B
+		do
+			p := parent
+			if p = Void then
+				Result := True
+			else
+				p_target := p.target
+				if (p_target = Current and then p.parent = Void) then
+					Result := True
+				else
+						-- Bug fix: CONSTANT_B has a special construct
+						-- for nested calls
+					constant_b ?= p_target
+					Result := constant_b /= Void and then
+						constant_b.access = Current and then p.parent = Void
+				end
+			end
+		end
+
 feature -- Code generation
 
 	argument_types: ARRAY [STRING] is
@@ -416,7 +440,7 @@ feature -- Code generation
 						type_c := real_type (param.attachment_type).c_type
 					end
 					Result.put (type_c.c_string, j)
-					
+
 					i := i +1
 					j := j +1
 				end
@@ -455,7 +479,7 @@ feature -- IL code generation
 				-- not `is_predefined' descendants will stop
 				-- recursion when it occurs because current
 				-- feature is redefined.
-			generate_il_call_access (False)	
+			generate_il_call_access (False)
 		end
 
 	need_address (is_target_of_call: BOOLEAN): BOOLEAN is
@@ -470,7 +494,7 @@ feature -- IL code generation
 		do
 			cl_type ?= real_type (type)
 			Result := is_target_of_call and then cl_type.is_true_expanded
-			
+
 			if Result then
 				call_access ?= parent.message
 
@@ -497,7 +521,7 @@ feature -- IL code generation
 					l_ext ?= call_access
 					if l_ext /= Void then
 						l_il_ext ?= l_ext.extension
-						Result := l_il_ext = Void or else l_il_ext.type /= 
+						Result := l_il_ext = Void or else l_il_ext.type /=
 							{SHARED_IL_CONSTANTS}.Operator_type
 					end
 				end
@@ -595,66 +619,11 @@ feature {NONE} -- Il code generation
 
 feature -- Byte code generation
 
-	make_assignment_code (ba: BYTE_ARRAY; source_type: TYPE_I) is
-			-- Generate source assignment byte code
-		require
-			is_creatable
-			good_argument: source_type /= Void
-			consistency: not source_type.is_void
-		local
-			basic_type: BASIC_I
-			assignment: BOOLEAN
-			target_type: TYPE_I
-		do
-			target_type := Context.real_type (type)
-			if target_type.is_expanded and source_type.is_none then
-				ba.append (Bc_exp_excep)
-			elseif target_type.is_bit then
-				ba.append (bit_assign_code);	
-				assignment := True
-			elseif target_type.is_basic then
-					-- Target is basic: simple attachment if source type
-					-- is not none
-				ba.append (assign_code)
-				assignment := True
-			elseif target_type.is_expanded then
-					-- Target is expanded: copy with possible exeception
-				ba.append (expanded_assign_code)
-				assignment := True
-			else
-					-- Target is a reference
-				if source_type.is_basic then
-						-- Source is basic and target is a reference:
-						-- metamorphose and simple attachment
-					basic_type ?= source_type
-					ba.append (Bc_metamorphose)
-				elseif source_type.is_true_expanded then
-						-- Source is expanded and target is a reference: clone
-						-- and simple attachment
-					ba.append (Bc_clone)
-				end
-				ba.append (assign_code)
-				assignment := True
-			end
-
-			if assignment then
-				make_end_assignment (ba)
-			end
-		end
-	
-	make_end_assignment (ba: BYTE_ARRAY) is
-			-- Finish the assignment to the current access
-		require
-			is_creatable
-		do
-			-- Do nothing
-		end
-
 	bit_assign_code: CHARACTER is
 			-- Bits assignment byte code
 			-- (By default it is the assign_code)
 		do
-			Result := assign_code	
+			Result := assign_code
 		end
 
 	assign_code: CHARACTER is
@@ -668,44 +637,11 @@ feature -- Byte code generation
 		do
 			-- Do nothing
 		end
-	
-	make_end_reverse_assignment (ba: BYTE_ARRAY) is
-			-- Finish the reverse assignment byte code on the 
-			-- current access
-		require
-			is_creatable
-		do
-			-- Do nothing
-		end
 
 	reverse_code: CHARACTER is
 			-- Reverse assignment byte code	
 		do
 			-- Do nothing
-		end
-
-	is_first: BOOLEAN is
-			-- Is the access the first one in a multi-dot expression ?
-		local
-			p: like parent
-			p_target: ACCESS_B
-			constant_b: CONSTANT_B
-		do
-			p := parent
-			if p = Void then
-				Result := True
-			else
-				p_target := p.target
-				if (p_target = Current and then p.parent = Void) then
-					Result := True
-				else
-						-- Bug fix: CONSTANT_B has a special construct
-						-- for nested calls
-					constant_b ?= p_target
-					Result := constant_b /= Void and then
-						constant_b.access = Current and then p.parent = Void
-				end
-			end
 		end
 
 feature -- Array optimization

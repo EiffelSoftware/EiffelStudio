@@ -3,12 +3,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class REAL_CONST_B 
+class REAL_CONST_B
 
 inherit
 	EXPR_B
 		redefine
-			print_register, make_byte_code, evaluate,
+			print_register, evaluate,
 			is_simple_expr, is_predefined, generate_il,
 			is_fast_as_local, is_constant_expression
 		end
@@ -44,7 +44,7 @@ feature -- Visitor
 		do
 			v.process_real_const_b (Current)
 		end
-	
+
 feature -- Access
 
 	value: STRING
@@ -117,19 +117,6 @@ feature -- IL code generation
 			else
 				il_generator.put_real_32_constant (value.to_real)
 			end
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a real manifest constant.
-		do
-			if real_size = 64 then
-				ba.append (Bc_real64)
-			else
-				ba.append (Bc_real32)
-			end
-			ba.append_double (value.to_double)
 		end
 
 invariant

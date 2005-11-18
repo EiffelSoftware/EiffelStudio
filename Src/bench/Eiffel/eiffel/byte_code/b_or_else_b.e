@@ -1,18 +1,17 @@
 -- Byte code for "or else"
 
-class B_OR_ELSE_B 
+class B_OR_ELSE_B
 
 inherit
 
 	BOOL_BINARY_B
 		rename
-			Bc_or as operator_constant,
 			il_or as il_operator_constant
 		redefine
-			built_in_enlarged, generate_operator, make_standard_byte_code,
+			built_in_enlarged, generate_operator,
 			is_commutative, generate_standard_il
 		end;
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -20,7 +19,7 @@ feature -- Visitor
 		do
 			v.process_bin_or_else_b (Current)
 		end
-	
+
 feature -- Status report
 
 	is_or: BOOLEAN is
@@ -85,7 +84,7 @@ feature -- Enlarging
 			else
 				l_is_normal := True
 			end
-			
+
 			if l_is_normal then
 					-- Normal code transformation.
 				create l_b_or_else_bl
@@ -137,18 +136,5 @@ feature -- IL code generation
 			il_generator.branch_on_true (or_else_label)
 			right.generate_il
 		end
-
-feature -- Byte code generation
-
-	make_standard_byte_code (ba: BYTE_ARRAY) is
-			-- Generate standard byte code for binary expression
-		do
-			left.make_byte_code (ba);
-			ba.append (Bc_or_else);
-			ba.mark_forward;
-			right.make_byte_code (ba);
-			ba.append (operator_constant); -- Bc_or
-			ba.write_forward;
-		end;
 
 end

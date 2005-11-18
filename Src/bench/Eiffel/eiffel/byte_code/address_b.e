@@ -8,7 +8,7 @@ class ADDRESS_B
 inherit
 	EXPR_B
 		redefine
-			print_register, make_byte_code, generate_il
+			print_register, generate_il
 		end
 
 	SHARED_C_LEVEL
@@ -182,18 +182,6 @@ feature -- IL code generation
 				target_feature_id := feature_id
 			end
 			il_generator.generate_routine_address (target_type, target_feature_id)
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a function pointer address
-		do
-			ba.append (Bc_addr)
-			ba.append_integer (feature_id)
-			ba.append_short_integer (context.class_type.static_type_id - 1)
-				-- Use RTWPP
-			ba.append_short_integer (0)
 		end
 
 feature {NONE} -- Implementation: access

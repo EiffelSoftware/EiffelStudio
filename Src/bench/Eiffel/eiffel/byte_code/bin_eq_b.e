@@ -1,15 +1,13 @@
-class BIN_EQ_B 
+class BIN_EQ_B
 
 inherit
 	BIN_EQUAL_B
 		rename
-			Bc_eq as operator_constant,
-			Bc_false_compar as obvious_operator_constant,
 			il_eq as il_operator_constant
 		redefine
 			enlarged, generate_operator
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -17,7 +15,7 @@ feature -- Visitor
 		do
 			v.process_bin_eq_b (Current)
 		end
-	
+
 feature
 
 	generate_operator is
@@ -68,19 +66,5 @@ feature -- IL code generation
 		do
 			il_generator.put_boolean_constant (False)
 		end
-
-feature -- Byte code generation
-
-    make_expanded_eq_test (ba: BYTE_ARRAY) is
-            -- Make byte code for current expanded equality
-		do
-			ba.append (Bc_standard_equal);
-		end;
-
-    make_bit_eq_test (ba: BYTE_ARRAY) is
-            -- Make byte code for current bit equality
-		do
-			ba.append (Bc_bit_standard_equal);
-		end;
 
 end

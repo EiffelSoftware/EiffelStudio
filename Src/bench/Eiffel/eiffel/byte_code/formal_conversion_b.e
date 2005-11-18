@@ -13,12 +13,12 @@ inherit
 		redefine
 			generate_il, analyze, unanalyze, register,
 			set_register, print_register, generate, enlarged,
-			make_byte_code, pre_inlined_code
+			pre_inlined_code
 		end
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (an_expr: EXPR_B; a_type: like type; a_is_boxing: BOOLEAN) is
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			type_set: type = a_type
 			is_boxing_set: is_boxing = a_is_boxing
 		end
-		
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -44,7 +44,7 @@ feature -- Visitor
 		do
 			v.process_formal_conversion_b (Current)
 		end
-	
+
 feature -- Access
 
 	expr: EXPR_B
@@ -52,7 +52,7 @@ feature -- Access
 
 	type: TYPE_I
 			-- Type to which expression should be converted if needed
-			
+
 	is_boxing: BOOLEAN
 			-- Does conversion if needed requires boxing?
 
@@ -92,26 +92,6 @@ feature -- IL code generation
 				end
 			end
 		end
-		
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for expression `expr'.
-		local
-			l_type, l_expr_type: TYPE_I
-		do
-			expr.make_byte_code (ba)
-			
-			l_type := context.real_type (type)
-			l_expr_type := context.real_type (expr.type)
-			if is_conversion_needed (l_expr_type, l_type) then
-				if l_expr_type.is_basic then
-					ba.append (bc_metamorphose)
-				else
-					ba.append (bc_clone)
-				end
-			end
-		end
 
 feature -- C code generation
 
@@ -135,7 +115,7 @@ feature -- C code generation
 				get_register
 			end
 		end
-	
+
 	unanalyze is
 			-- Undo the analysis of the expression
 		do
@@ -149,7 +129,7 @@ feature -- C code generation
 			expr := expr.enlarged
 			Result := Current
 		end
-		
+
 	generate is
 			-- Generate expression
 		local
@@ -181,7 +161,7 @@ feature -- C code generation
 				buf.put_new_line
 			end
 		end
-		
+
 	print_register is
 			-- Print expression value
 		do
@@ -203,7 +183,7 @@ feature -- Inlining
 			create Result.make (expr.pre_inlined_code, context.real_type (type), is_boxing)
 		end
 
-feature {NONE} -- Convenience
+feature {BYTE_NODE_VISITOR} -- Convenience
 
 	is_conversion_needed (a_source, a_target: TYPE_I): BOOLEAN is
 			-- Is conversion needed from `a_source' to `a_target'?

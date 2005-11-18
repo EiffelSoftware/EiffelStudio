@@ -4,14 +4,9 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-deferred class BYTE_NODE 
+deferred class BYTE_NODE
 
 inherit
-	BYTE_CONST
-		export
-			{NONE} all
-		end
-
 	SHARED_BYTE_CONTEXT
 		export
 			{ANY} all
@@ -38,10 +33,10 @@ feature -- Visitor
 			v_not_void: v /= Void
 		deferred
 		end
-		
+
 feature -- Eiffel source line information
 
-	line_number: INTEGER is     
+	line_number: INTEGER is
 			-- Position where construct is located in Eiffel source.
 		do
 				-- Unknown by default.
@@ -84,7 +79,7 @@ feature -- Eiffel source line information
 				end
 			end
 		end
-		
+
 	generate_ghost_debug_infos (n: INTEGER) is
 			-- Generate `a_nb' ghost debug informations,
 			-- this is to deal, for instance, with the not generated debug clauses
@@ -156,10 +151,10 @@ feature -- Eiffel source line information
 			l_buffer: like buffer
 		do
 				-- used to generate a debugger hook in the middle of nested call
-				-- to be able to enter in the function applicated to the object 
+				-- to be able to enter in the function applicated to the object
 				-- with the debugger.
 				--
-				-- Example: a:A is 
+				-- Example: a:A is
 				--            do
 				--            	if ... then
 				--					Result := a1
@@ -225,14 +220,14 @@ feature -- Eiffel source line information
 			ba.generate_melted_debugger_hook (context.current_feature.number_of_breakpoint_slots)
 		end
 
-feature 
+feature
 
 	null_byte_node: BYTE_LIST [BYTE_NODE] is
 			-- Null instructions
 		once
 			create Result.make (0)
 		end
-	
+
 	buffer: GENERATION_BUFFER is
 			-- Generated file
 		do
@@ -273,7 +268,7 @@ feature
 			-- First pass to build a proper context
 		do
 		end
-	
+
 	generate is
 			-- Generate C code in `buffer'
 		do
@@ -302,14 +297,6 @@ feature
 			-- Are all the exit points in a function occupied
 			-- by an assignment in Result ?
 		do
-		end
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Build byte code array for Current byte node
-		require
-			ba_not_void: ba /= Void
-		do
-			-- Do nothing
 		end
 
 feature -- Array optimization
@@ -402,7 +389,7 @@ feature -- Generic conformance
 		do
 			l_buffer := buffer
 			use_init := not gtype.is_explicit
-			
+
 				-- Optimize: Use static array only when `typarr' is
 				-- not modified by generated code in multithreaded mode only.
 				-- It is safe in monothreaded code as we are guaranteed that

@@ -6,7 +6,7 @@ inherit
 
 	INSTR_B
 		redefine
-			need_enlarging, enlarged, make_byte_code,
+			need_enlarging, enlarged,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, inlined_byte_code,
 			pre_inlined_code, generate_il
@@ -53,8 +53,6 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for an assignment.
-		local
-			source_type: TYPE_I
 		do
 			generate_il_line_info (True)
 
@@ -68,30 +66,6 @@ feature -- IL code generation
 				-- Generate assignment
 			target.generate_il_assignment (context.real_type (source.type))
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an assignment
-		local
-			source_type: TYPE_I
-			hector_b: HECTOR_B
-		do
-			generate_melted_debugger_hook (ba);
-
-				-- Generate expression byte code
-			source.make_byte_code (ba);
-
-			if source.is_hector then
-				hector_b ?= source
-				hector_b.make_protected_byte_code (ba, 0)
-			end
-
-				-- Generate assignment header depending of the type
-				-- of the target (local, attribute or result).
-			source_type ?= context.real_type (source.type);
-			target.make_assignment_code (ba, source_type);
-		end;
 
 feature -- Array optimization
 

@@ -9,7 +9,7 @@ class
 inherit
 	ACCESS_B
 		redefine
-			make_byte_code, analyze, unanalyze,
+			analyze, unanalyze,
 			generate, register, get_register,
 			enlarged, size, generate_il, is_simple_expr, is_single,
 			line_number, set_line_number, has_call, allocates_memory
@@ -235,62 +235,6 @@ feature -- IL code generation
 			end
 		end
 
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a creation instruction
-		local
-			l_basic_type: BASIC_I
-			l_special_type: GEN_TYPE_I
-			l_class_type: SPECIAL_CLASS_TYPE
-			l_call: like call
-		do
-			l_basic_type ?= real_type (type)
-			if l_basic_type /= Void then
-					-- Special cases for basic types where nothing needs to be created, we
-					-- simply need to push a default value as their creation procedure
-					-- is `default_create' and it does nothing.
-				l_basic_type.make_default_byte_code (ba)
-			else
-				l_call := call
-				if l_call /= Void and then l_call.routine_id = system.special_make_id then
-					l_special_type ?= context.creation_type (type)
-					check
-						is_special_call_valid: is_special_call_valid
-						is_special_type: l_special_type /= Void and then
-							l_special_type.base_class.lace_class = system.special_class
-					end
-					l_class_type ?= l_special_type.associated_class_type
-					check
-						l_class_type_not_void: l_class_type /= Void
-					end
-					l_call.parameters.first.make_byte_code (ba)
-					ba.append (Bc_spcreate)
-					info.make_byte_code (ba)
-					l_class_type.make_creation_byte_code (ba)
-				else
-					ba.append (Bc_create)
-						-- If there is a call, we need to duplicate newly created object
-						-- after its creation. This information is used by the runtime
-						-- to do this duplication.
-					ba.append_boolean (l_call /= Void)
-
-						-- Create associated object.
-					info.make_byte_code (ba)
-
-						-- Call creation procedure if any.
-					if l_call /= Void then
-						l_call.set_parent (nested_b)
-						l_call.make_creation_byte_code (ba)
-						l_call.set_parent (Void)
-					end
-				end
-					-- Runtime is in charge to make sure that newly created object
-					-- has been duplicated so that we can check the invariant.
-				ba.append (Bc_create_inv)
-			end
-		end
-
 feature -- Comparisons
 
 	same (other: ACCESS_B): BOOLEAN is
@@ -390,7 +334,7 @@ feature -- Inlining
 			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
 		end
 
-feature {NONE} -- Assertion support
+feature {BYTE_NODE_VISITOR} -- Assertion support
 
 	is_special_call_valid: BOOLEAN is
 			-- Is current creation call a call to SPECIAL.make?

@@ -2,14 +2,13 @@ indexing
 	description: "+ operator"
 	date: "$date: $"
 	revision: "$revision: $"
-	
-class BIN_PLUS_B 
+
+class BIN_PLUS_B
 
 inherit
 
 	NUM_BINARY_B
 		rename
-			Bc_plus as operator_constant,
 			il_plus as il_operator_constant
 		redefine
 			generate_operator, is_commutative,
@@ -24,7 +23,7 @@ feature -- Visitor
 		do
 			v.process_bin_plus_b (Current)
 		end
-	
+
 feature -- Status report
 
 	is_commutative: BOOLEAN is True

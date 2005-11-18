@@ -9,8 +9,7 @@ class
 inherit
 	TYPED_INTERVAL_VAL_B [INTEGER_64]
 		redefine
-			is_allowed_unique_value,
-			make_byte_code
+			is_allowed_unique_value
 		end
 
 create
@@ -47,7 +46,7 @@ feature -- Measurement
 			Result := other.value
 			Result := Result - value
 		end
-		
+
 feature -- Error reporting
 
 	display (st: STRUCTURED_TEXT) is
@@ -85,15 +84,6 @@ feature -- Iteration
 					action.call (Void)
 				end
 			end
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an integer constant in an interval.
-		do
-			ba.append (Bc_int64)
-			ba.append_integer_64 (value)
 		end
 
 feature -- IL code generation

@@ -1,16 +1,15 @@
 -- Byte code for "and then"
 
-class B_AND_THEN_B 
+class B_AND_THEN_B
 
 inherit
 
 	BOOL_BINARY_B
 		rename
-			Bc_and as operator_constant,
 			il_and as il_operator_constant
 		redefine
 			built_in_enlarged, generate_operator,
-			is_commutative, make_standard_byte_code,
+			is_commutative,
 			generate_standard_il
 		end
 
@@ -21,7 +20,7 @@ feature -- Visitor
 		do
 			v.process_bin_and_then_b (Current)
 		end
-	
+
 feature -- Status report
 
 	is_and: BOOLEAN is
@@ -79,7 +78,7 @@ feature -- Enlarging
 			else
 				l_is_normal := True
 			end
-			
+
 			if l_is_normal then
 					-- Normal code transformation.
 				create l_b_and_thn_bl
@@ -88,7 +87,7 @@ feature -- Enlarging
 				l_b_and_thn_bl.set_right (right)
 				Result := l_b_and_thn_bl
 			end
-		end			
+		end
 
 	generate_operator is
 			-- Generate the operator
@@ -96,7 +95,7 @@ feature -- Enlarging
 			buffer.put_string (" && ");
 		end;
 
-	
+
 	is_commutative: BOOLEAN is
 			-- Is operation commutative ?
 		do
@@ -133,17 +132,4 @@ feature -- IL code generation
 			right.generate_il
 		end
 
-feature -- Byte code generation
-	
-	make_standard_byte_code (ba: BYTE_ARRAY) is
-			-- Generate standard byte code for binary expression
-		do
-			left.make_byte_code (ba);
-			ba.append (Bc_and_then);
-			ba.mark_forward;
-			right.make_byte_code (ba);
-			ba.append (operator_constant); -- Bc_and
-			ba.write_forward;
-		end;
-			
 end

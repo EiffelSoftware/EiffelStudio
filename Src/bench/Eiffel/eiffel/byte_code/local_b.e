@@ -5,22 +5,21 @@ indexing
 	revision: "$Revision$"
 
 class
-	LOCAL_B 
+	LOCAL_B
 
 inherit
 	ACCESS_B
 		redefine
 			enlarged, read_only, is_local, is_creatable,
-			make_byte_code, register_name,
+			register_name,
 			print_register,
 			assign_code, expanded_assign_code, reverse_code,
-			make_end_assignment, make_end_reverse_assignment,
 			bit_assign_code, assigns_to, array_descriptor,
 			pre_inlined_code, generate_il_call_access,
 			generate_il_address,
 			is_fast_as_local, is_predefined
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -28,11 +27,11 @@ feature -- Visitor
 		do
 			v.process_local_b (Current)
 		end
-	
-feature 
+
+feature
 
 	position: INTEGER
-			-- Position of the local in the list `locals' of the root 
+			-- Position of the local in the list `locals' of the root
 			-- byte code
 
 	read_only: BOOLEAN is false
@@ -106,57 +105,38 @@ feature -- IL code generation
 				il_generator.generate_local (position)
 			end
 		end
-		
+
 	generate_il_address is
 			-- Generate address of current local.
 		do
 			il_generator.generate_local_address (position)
 		end
-		
+
 
 feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an access to a local variable.
-		do
-			ba.append (Bc_local)
-			ba.append_short_integer (position)
-		end
-
-	make_end_assignment (ba: BYTE_ARRAY) is
-			-- Finish the assignment to the current access
-		do
-			ba.append_short_integer (position)
-		end
-
 	bit_assign_code: CHARACTER is
-			-- Bits assignment code 
+			-- Bits assignment code
 		do
-			Result := Bc_lbit_assign
+			Result := {BYTE_CONST}.bc_lbit_assign
 		end
 
 	assign_code: CHARACTER is
 			-- Simple assignment code
 		do
-			Result := Bc_lassign
+			Result := {BYTE_CONST}.bc_lassign
 		end
 
 	expanded_assign_code: CHARACTER is
 			-- Expanded assignment code
 		do
-			Result := Bc_lexp_assign
-		end
-
-	make_end_reverse_assignment (ba: BYTE_ARRAY) is
-			-- Generate reverse assignment byte code
-		do
-			ba.append_short_integer (position)
+			Result := {BYTE_CONST}.bc_lexp_assign
 		end
 
 	reverse_code: CHARACTER is
 			-- Reverse assignment code
 		do
-			Result := Bc_lreverse
+			Result := {BYTE_CONST}.bc_lreverse
 		end
 
 feature -- Array optimization

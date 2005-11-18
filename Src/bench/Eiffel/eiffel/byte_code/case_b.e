@@ -3,12 +3,12 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class CASE_B 
+class CASE_B
 
 inherit
 	BYTE_NODE
 		redefine
-			analyze, generate, enlarge_tree, make_byte_code,
+			analyze, generate, enlarge_tree,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
 			inlined_byte_code, line_number, set_line_number
@@ -43,7 +43,7 @@ feature  -- Status Report
 
 	compound: BYTE_LIST [BYTE_NODE]
 			-- Associated compound {list of INSTR_B}: can be Void
-	
+
 	set_interval (i: like interval) is
 			-- Assign `i' to `interval'.
 		do
@@ -91,47 +91,6 @@ feature -- C generation
 			buf.put_string ("break;")
 			buf.put_new_line
 			buf.exdent
-		end
-
-feature -- Byte code generation
-
-	make_range (ba: BYTE_ARRAY) is
-			-- Generate range byte code
-		local
-			i: INTEGER
-			inter: INTERVAL_B
-		do
-			from
-				i := interval.count
-			until
-				i < 1
-			loop
-				inter := interval.i_th (i)
-				inter.make_range (ba)
-				ba.mark_forward2
-				i := i - 1
-			end
-		end
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate compound byte code
-		local
-			i: INTEGER
-		do
-			from
-				i := interval.count
-			until
-				i < 1
-			loop
-				ba.write_forward2
-				i := i - 1
-			end
-			if compound /= Void then
-				compound.make_byte_code (ba)
-			end
-				-- To end of inspect
-			ba.append (Bc_jmp)
-			ba.mark_forward
 		end
 
 feature -- Array optimization

@@ -1,6 +1,6 @@
 -- Byte code for constants (hardwired in final mode)
 
-class CONSTANT_B 
+class CONSTANT_B
 
 inherit
 
@@ -10,7 +10,7 @@ inherit
 			has_gcable_variable, is_single, enlarged, is_constant,
 			propagate, print_register, free_register,
 			unanalyze, analyze, analyze_on, generate, generate_on,
-			make_byte_code, allocates_memory, generate_il, need_target,
+			allocates_memory, generate_il, need_target,
 			evaluate, is_constant_expression
 		end
 
@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			value := v
 		ensure
 			value_set: value = v
-		end	
-	
+		end
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -36,7 +36,7 @@ feature -- Visitor
 		do
 			v.process_constant_b (Current)
 		end
-	
+
 feature -- Evaluation
 
 	evaluate: VALUE_I is
@@ -44,12 +44,12 @@ feature -- Evaluation
 		do
 			Result := value
 		end
-		
+
 feature -- Access
 
 	value: VALUE_I;
 			-- Constant value for hardwiring
-	
+
 	access: ACCESS_B;
 			-- Accessing constant when hardwiring not possible
 
@@ -111,7 +111,7 @@ feature -- Comparison
 				Result := access.has_gcable_variable;
 			end;
 		end;
-	
+
 	is_single: BOOLEAN is
 			-- Is access a single one ?
 		do
@@ -130,7 +130,7 @@ feature -- Comparison
 				access.propagate (r);
 			end;
 		end;
-	
+
 	print_register is
 			-- Print register value (generates constant)
 		do
@@ -148,7 +148,7 @@ feature -- Comparison
 				access.free_register;
 			end;
 		end;
-	
+
 	unanalyze is
 			-- Undo the analysis
 		do
@@ -164,7 +164,7 @@ feature -- Comparison
 				access.analyze;
 			end;
 		end;
-	
+
 	analyze_on (reg: REGISTRABLE) is
 			-- Analyze constant access on `reg'
 		do
@@ -212,13 +212,5 @@ feature -- IL code generation
 		do
 			value.generate_il
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a call to a constant
-		do
-			access.make_byte_code (ba);
-		end;
 
 end

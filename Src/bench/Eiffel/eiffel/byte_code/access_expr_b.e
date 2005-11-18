@@ -1,6 +1,6 @@
 -- Byte code for access to an expression
 
-class ACCESS_EXPR_B 
+class ACCESS_EXPR_B
 
 inherit
 
@@ -11,7 +11,7 @@ inherit
 			free_register, enlarged, used,
 			has_gcable_variable, has_call,
 			allocates_memory,
-			make_byte_code, is_unsafe,
+			is_unsafe,
 			calls_special_features,
 			optimized_byte_node, size,
 			pre_inlined_code,
@@ -19,7 +19,7 @@ inherit
 			register_name, generate_il,
 			is_hector
 		end;
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -27,8 +27,8 @@ feature -- Visitor
 		do
 			v.process_access_expr_b (Current)
 		end
-	
-feature 
+
+feature
 
 	expr: EXPR_B;
 			-- The expression
@@ -107,13 +107,13 @@ feature -- Status
 		do
 			expr.analyze;
 		end;
-	
+
 	unanalyze is
 			-- Undo the analysis of the expression
 		do
 			expr.unanalyze;
 		end;
-	
+
 	generate is
 			-- Generate expression
 		do
@@ -150,17 +150,6 @@ feature -- IL code generation
 		do
 			expr.generate_il
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an expression access
-		do
-			check
-				expr_exists: expr /= Void
-			end;
-			expr.make_byte_code (ba);
-		end;
 
 feature -- Array optimization
 

@@ -3,12 +3,12 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class VARIANT_B 
+class VARIANT_B
 
 inherit
 	ASSERT_B
 		redefine
-			enlarged, byte_for_end, process
+			enlarged, process
 		end
 
 feature -- Visitor
@@ -18,7 +18,7 @@ feature -- Visitor
 		do
 			v.process_variant_b (Current)
 		end
-	
+
 feature -- Access
 
 	enlarged: VARIANT_BL is
@@ -27,12 +27,6 @@ feature -- Access
 			create Result
 			Result.fill_from (Current)
 		end
-
-	byte_for_end: CHARACTER is
-            -- Byte mark for end of assertion
-        do
-            Result := Bc_end_variant
-        end
 
 feature -- IL code generation
 
@@ -55,7 +49,7 @@ feature -- IL code generation
 			il_generator.generate_local_assignment (a_local)
 			il_generator.put_integer_32_constant (0)
 			il_generator.generate_binary_operator ({IL_CONST}.il_ge)
-			
+
 			if tag = Void then
 				il_generator.generate_assertion_check (context.assertion_type, "")
 			else
@@ -84,7 +78,7 @@ feature -- IL code generation
 				-- 3 - to make sure it is a positive value.
 			il_generator.duplicate_top
 			il_generator.duplicate_top
-			
+
 			il_generator.generate_local (a_local)
 			il_generator.generate_binary_operator ({IL_CONST}.Il_lt)
 
@@ -97,12 +91,12 @@ feature -- IL code generation
 			il_generator.generate_local_assignment (a_local)
 			il_generator.put_integer_32_constant (0)
 			il_generator.generate_binary_operator ({IL_CONST}.il_ge)
-			
+
 			if tag = Void then
 				il_generator.generate_assertion_check (context.assertion_type, "")
 			else
 				il_generator.generate_assertion_check (context.assertion_type, tag)
 			end
 		end
-		
+
 end

@@ -3,12 +3,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class STRING_B 
+class STRING_B
 
 inherit
 	EXPR_B
 		redefine
-			enlarged, make_byte_code, generate_il,
+			enlarged, generate_il,
 			is_simple_expr, allocates_memory, is_constant_expression
 		end
 
@@ -34,7 +34,7 @@ feature -- Visitor
 		do
 			v.process_string_b (Current)
 		end
-	
+
 feature -- Access
 
 	value: STRING
@@ -95,16 +95,6 @@ feature -- IL code generation
 			else
 				il_generator.put_manifest_string (value)
 			end
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a manifest string
-		do
-			ba.append (Bc_string)
-			ba.append_integer (value.count)
-			ba.append_raw_string (value)
 		end
 
 feature {NONE} -- Implementation: types

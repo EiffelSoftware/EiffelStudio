@@ -3,12 +3,12 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class LOOP_B 
+class LOOP_B
 
 inherit
 	INSTR_B
 		redefine
-			need_enlarging, enlarged, make_byte_code,
+			need_enlarging, enlarged,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, inlined_byte_code,
 			pre_inlined_code, generate_il
@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -26,7 +26,7 @@ feature -- Visitor
 		do
 			v.process_loop_b (Current)
 		end
-	
+
 feature -- Access
 
 	from_part: BYTE_LIST [BYTE_NODE]
@@ -111,7 +111,7 @@ feature -- IL code generation
 		do
 			check_assertion := context.workbench_mode or
 				Context.class_type.associated_class.assertion_level.check_loop
-			
+
 			if from_part /= Void then
 					-- Generate IL code for the from part
 				from_part.generate_il
@@ -130,7 +130,7 @@ feature -- IL code generation
 				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_loop)
 				il_generator.branch_on_false (l_label)
 				il_generator.put_boolean_constant (True)
-				il_generator.generate_set_assertion_status					
+				il_generator.generate_set_assertion_status
 				if invariant_part /= Void then
 					context.set_assertion_type (In_loop_invariant)
 					invariant_part.generate_il
@@ -154,7 +154,7 @@ feature -- IL code generation
 
 				-- Generate byte code for exit expression
 			il_generator.mark_label (test_label)
-			
+
 			stop.generate_il
 
 				-- Generate a test
@@ -169,7 +169,7 @@ feature -- IL code generation
 				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_loop)
 				il_generator.branch_on_false (l_label)
 				il_generator.put_boolean_constant (True)
-				il_generator.generate_set_assertion_status					
+				il_generator.generate_set_assertion_status
 
 					-- Invariant loop byte code
 				if invariant_part /= Void then
@@ -184,7 +184,7 @@ feature -- IL code generation
 				end
 				il_generator.put_boolean_constant (False)
 				il_generator.generate_set_assertion_status
-				il_generator.mark_label (l_label)					
+				il_generator.mark_label (l_label)
 			end
 
 			il_generator.branch_to (test_label)
@@ -193,117 +193,8 @@ feature -- IL code generation
 			check
 				end_location_not_void: end_location /= Void
 			end
-			
+
 			il_generator.put_silent_debug_info (end_location)
-		end
-
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for Eiffel loop
-		local
-			local_list: LINKED_LIST [TYPE_I]
-			variant_local_number: INTEGER
-			invariant_breakpoint_slot: INTEGER
-			body_breakpoint_slot: INTEGER
-		do
-			if from_part /= Void then
-					-- Generate byte code for the from part
-				from_part.make_byte_code (ba)
-			end
-
-			if variant_part /= Void then
-					-- Initialization of the variant control variable
-				local_list := context.local_list
-				context.add_local (int32_c_type)
-				variant_local_number := local_list.count
-				ba.append (Bc_init_variant)
-				ba.append_short_integer (variant_local_number)
-			end
-
-				-- Record context.
-			invariant_breakpoint_slot := context.get_breakpoint_slot
-
-			if not (invariant_part = Void and then variant_part = Void) then
-					-- Set the assertion type
-				context.set_assertion_type (In_loop_invariant)
-
-				ba.append (Bc_loop)
-					-- In case the loop assertion are not checked, we
-					-- have to put a jump value.
-				ba.mark_forward
-
-					-- Invariant loop byte code
-				if invariant_part /= Void then
-					context.set_assertion_type (In_loop_invariant)
-					invariant_part.make_byte_code (ba)
-				end
-					-- Variant loop byte code
-				if variant_part /= Void then
-					context.set_assertion_type (In_loop_variant)
-					variant_part.make_byte_code (ba)
-					ba.append_short_integer (variant_local_number)
-				end
-
-					-- Evaluation of the jump value
-				ba.write_forward
-			end
-
-				-- Generate byte code for exit expression
-			ba.mark_backward
-			generate_melted_debugger_hook (ba)
-			stop.make_byte_code (ba)
-
-				-- Generate a test
-			ba.append (Bc_jmp_t)
-
-				-- Deferred writing of the jump relative value
-			ba.mark_forward
-
-			if compound /= Void then
-				compound.make_byte_code (ba)
-			end
-
-				-- Save hook context & restore recorded context.
-			body_breakpoint_slot := context.get_breakpoint_slot
-			context.set_breakpoint_slot (invariant_breakpoint_slot)
-
-			if not (invariant_part = Void and then variant_part = Void) then
-					-- Set the assertion type
-				context.set_assertion_type (In_loop_invariant)
-
-				ba.append (Bc_loop)
-					-- In case the loop assertion are not checked, we
-					-- have to put a jump value.
-				ba.mark_forward
-
-					-- Invariant loop byte code
-				if invariant_part /= Void then
-					context.set_assertion_type (In_loop_invariant)
-					invariant_part.make_byte_code (ba)
-				end
-					-- Variant loop byte code
-				if variant_part /= Void then
-					context.set_assertion_type (In_loop_variant)
-					variant_part.make_byte_code (ba)
-					ba.append_short_integer (variant_local_number)
-				end
-
-					-- Evaluation of the jump value
-				ba.write_forward
-			end
-
-				-- Restore hook context
-			context.set_breakpoint_slot (body_breakpoint_slot)
-
-				-- Generate an unconditional jump
-			ba.append (Bc_jmp)
-				-- Write offset value for unconditinal jump
-			ba.write_backward
-
-				-- Write jump value for conditional exit
-			ba.write_forward
 		end
 
 feature -- Array optimization

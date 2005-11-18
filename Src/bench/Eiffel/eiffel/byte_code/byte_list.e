@@ -1,14 +1,14 @@
 -- List used in the byte code generation.
 -- Defines some of the commonly used iterations.
 
-class BYTE_LIST [reference T -> BYTE_NODE] 
+class BYTE_LIST [reference T -> BYTE_NODE]
 
 inherit
 	BYTE_NODE
 		undefine
 			copy, is_equal
 		redefine
-			enlarge_tree, analyze, generate, generate_il, make_byte_code,
+			enlarge_tree, analyze, generate, generate_il,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
 			inlined_byte_code
@@ -29,7 +29,7 @@ feature -- Visitor
 		do
 			v.process_byte_list (Current)
 		end
-		
+
 feature -- Code analyzis
 
 	analyze is
@@ -83,25 +83,6 @@ feature -- IL code generation
 				i = nb
 			loop
 				l_area.item (i).generate_il
-				i := i + 1
-			end
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generates byte code for element in the list
-		local
-			l_area: SPECIAL [T]
-			i, nb: INTEGER
-		do
-			from
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				l_area.item (i).make_byte_code (ba)
 				i := i + 1
 			end
 		end

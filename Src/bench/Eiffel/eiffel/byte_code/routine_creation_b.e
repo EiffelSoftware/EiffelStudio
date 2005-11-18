@@ -2,13 +2,13 @@ indexing
 	description: "Byte code associated to agent creation"
 	date: "$Date$"
 	revision: "$Revision$"
-	
-class ROUTINE_CREATION_B 
+
+class ROUTINE_CREATION_B
 
 inherit
 	EXPR_B
 		redefine
-			make_byte_code, enlarged, generate_il,
+			enlarged, generate_il,
 			has_gcable_variable, has_call, size,
 			allocates_memory
 		end
@@ -20,10 +20,10 @@ feature -- Visitor
 		do
 			v.process_routine_creation_b (Current)
 		end
-	
+
 feature  -- Initialization
 
-	init (cl_type: CL_TYPE_I; cl_id: INTEGER; f: FEATURE_I; 
+	init (cl_type: CL_TYPE_I; cl_id: INTEGER; f: FEATURE_I;
 		  r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
 		  omap: ARRAY_CONST_B) is
 			-- Initialization
@@ -64,7 +64,7 @@ feature  -- Initialization
 			arguments := args
 			open_positions := omap
 		end
-	
+
 feature -- Attributes
 
 	class_type: CL_TYPE_I
@@ -72,7 +72,7 @@ feature -- Attributes
 
 	feature_id: INTEGER
 			-- Feature id of the addressed feature
-			
+
 	class_id: INTEGER
 			-- Class ID which defines current feature.
 
@@ -203,73 +203,6 @@ feature -- IL code generation
 
 			il_generator.generate_feature_access (l_decl_type, set_rout_disp_feat.origin_feature_id,
 				set_rout_disp_feat.argument_count, set_rout_disp_feat.has_return_value, True)
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a routine creation.
-		local
-			cl_type_i: CL_TYPE_I
-			gen_type : GEN_TYPE_I
-		do
-				-- Arguments
-			if arguments /= Void then
-				arguments.make_byte_code (ba)
-			end
-
-				-- Open map
-			if open_positions /= Void then
-				open_positions.make_byte_code (ba)
-			end
-
-				-- Get address of routine
-			ba.append (Bc_addr)
-			ba.append_integer (feature_id)
-
-			cl_type_i ?= context.real_type (class_type)
-			ba.append_short_integer (cl_type_i.associated_class_type.static_type_id - 1)
-				-- Use RTWPPR
-			ba.append_short_integer (1)
-
-				-- Get address of true Eiffel routine
-			ba.append (Bc_addr)
-			ba.append_integer (feature_id)
-
-			cl_type_i ?= context.real_type (class_type)
-			ba.append_short_integer (cl_type_i.associated_class_type.static_type_id - 1)
-				-- Use RTWPP
-			ba.append_short_integer (0)
-
-				-- Now create routine object
-			ba.append (Bc_rcreate)
-
-			if arguments /= Void then
-					-- We have arguments (a TUPLE) on the stack
-				ba.append_short_integer (1)
-			else
-					-- We don't have arguments on the stack
-				ba.append_short_integer (0)
-			end
-
-			if open_positions /= Void then
-					-- We have an open map
-				ba.append_short_integer (1)
-			else
-					-- We don't have an open map
-				ba.append_short_integer (0)
-			end
-
-			cl_type_i ?= context.real_type (type)
-			gen_type  ?= cl_type_i
-			ba.append_short_integer (cl_type_i.type_id - 1)
-
-			if gen_type /= Void then
-				ba.append_short_integer (context.current_type.generated_id (False))
-				gen_type.make_gen_type_byte_code (ba, True)
-			end
-
-			ba.append_short_integer (-1)
 		end
 
 feature -- Inlining

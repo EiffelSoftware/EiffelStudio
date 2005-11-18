@@ -6,7 +6,7 @@ inherit
 
 	ACCESS_B
 		redefine
-			enlarged, is_current, make_byte_code, generate_il_call_access,
+			enlarged, is_current, generate_il_call_access,
 			register_name, pre_inlined_code, print_register, generate_il_address, generate_il_value,
 			is_fast_as_local
 		end
@@ -95,14 +95,6 @@ feature -- IL code generation
 				il_generator.generate_load_from_address (type_i)
 			end
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an access to Current
-		do
-			ba.append (Bc_current);
-		end;
 
 feature -- Inlining
 

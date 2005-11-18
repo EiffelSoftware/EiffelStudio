@@ -14,7 +14,6 @@ inherit
 			feature_name as attribute_name
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
-			make_end_assignment, make_end_reverse_assignment,
 			enlarged, is_creatable, is_attribute, read_only,
 			assigns_to, pre_inlined_code, generate_il_call_access,
 			need_target, generate_il_address
@@ -241,9 +240,9 @@ feature -- Byte code generation
 		do
 			cl_type ?= context_type
 			if cl_type /= Void and then cl_type.base_class.is_precompiled then
-				Result := Bc_passign
+				Result := {BYTE_CONST}.bc_passign
 			else
-				Result := Bc_assign
+				Result := {BYTE_CONST}.bc_assign
 			end
 		end
 
@@ -254,36 +253,10 @@ feature -- Byte code generation
 		do
 			cl_type ?= context_type
 			if cl_type /= Void and then cl_type.base_class.is_precompiled then
-				Result := Bc_pexp_assign
+				Result := {BYTE_CONST}.bc_pexp_assign
 			else
-				Result := Bc_exp_assign
+				Result := {BYTE_CONST}.bc_exp_assign
 			end
-		end
-
-	make_end_assignment (ba: BYTE_ARRAY) is
-			-- Finish the assignment to the current access
-		local
-			instant_context_type: CL_TYPE_I
-			base_class: CLASS_C
-			r_id: INTEGER
-			rout_info: ROUT_INFO
-		do
-			instant_context_type ?= context_type
-			base_class := instant_context_type.base_class
-			if base_class.is_precompiled then
-				r_id := base_class.feature_table.item_id (attribute_name_id).rout_id_set.first
-				rout_info := System.rout_info_table.item (r_id)
-				ba.append_integer (rout_info.origin)
-				ba.append_integer (rout_info.offset)
-			else
-					-- Generate attribute id
-				ba.append_integer (attribute_id)
-					-- Generate static type of the call
-				ba.append_short_integer
-					(instant_context_type.associated_class_type.static_type_id - 1)
-			end
-				-- Generate attribute meta-type
-			ba.append_uint32_integer (Context.real_type (type).sk_value)
 		end
 
 	reverse_code: CHARACTER is
@@ -293,70 +266,10 @@ feature -- Byte code generation
 		do
 			cl_type ?= context_type
 			if cl_type /= Void and then cl_type.base_class.is_precompiled then
-				Result := Bc_preverse
+				Result := {BYTE_CONST}.bc_preverse
 			else
-				Result := Bc_reverse
+				Result := {BYTE_CONST}.bc_reverse
 			end
-		end
-
-	make_end_reverse_assignment (ba: BYTE_ARRAY) is
-			-- Generate source reverse assignment byte code
-		local
-			instant_context_type: CL_TYPE_I
-			base_class: CLASS_C
-			r_id: INTEGER
-			rout_info: ROUT_INFO
-		do
-			instant_context_type ?= context_type
-			base_class := instant_context_type.base_class
-			if base_class.is_precompiled then
-				r_id := base_class.feature_table.item_id (attribute_name_id).rout_id_set.first
-				rout_info := System.rout_info_table.item (r_id)
-				ba.append_integer (rout_info.origin)
-				ba.append_integer (rout_info.offset)
-			else
-					-- Generate attribute id
-				ba.append_integer (attribute_id)
-					-- Generate static type of the call
-				ba.append_short_integer
-					(instant_context_type.associated_class_type.static_type_id - 1)
-			end
-				-- Generate attribute meta-type
-			ba.append_uint32_integer (Context.real_type (type).sk_value)
-		end
-
-	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
-			-- Generate byte code for an access to an attribute
-		local
-			r_type: TYPE_I
-		do
-			r_type := Context.real_type (type)
-			standard_make_code (ba, flag)
-			ba.append_uint32_integer (r_type.sk_value)
-		end
-
-	code_first: CHARACTER is
-			-- Byte code when access is first (no invariant)
-		once
-			Result := Bc_attribute
-		end
-
-	code_next: CHARACTER is
-			-- Byte code when access is nested (invariant)
-		once
-			Result := Bc_attribute_inv
-		end
-
-	precomp_code_first: CHARACTER is
-			-- Byte code when precompiled access is first (no invariant)
-		once
-			Result := Bc_pattribute
-		end
-
-	precomp_code_next: CHARACTER is
-			-- Byte code when precompiled access is nested (invariant)
-		once
-			Result := Bc_pattribute_inv
 		end
 
 feature -- Array optimization

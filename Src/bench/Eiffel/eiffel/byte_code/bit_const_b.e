@@ -4,12 +4,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	BIT_CONST_B 
+	BIT_CONST_B
 
 inherit
 	EXPR_B
 		redefine
-			enlarged, make_byte_code, generate_il, is_simple_expr, allocates_memory,
+			enlarged, generate_il, is_simple_expr, allocates_memory,
 			is_constant_expression
 		end
 
@@ -33,7 +33,7 @@ feature -- Visitor
 		do
 			v.process_bit_const_b (Current)
 		end
-	
+
 feature -- Access
 
 	value: STRING;
@@ -75,15 +75,5 @@ feature -- IL code generation
 		do
 			check False end
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a bit constant
-		do
-			ba.append (Bc_bit);
-			ba.append_integer (value.count)
-			ba.append_bit (value)
-		end;
 
 end

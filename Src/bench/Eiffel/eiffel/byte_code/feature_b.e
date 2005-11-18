@@ -3,19 +3,18 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class FEATURE_B 
+class FEATURE_B
 
 inherit
 	CALL_ACCESS_B
 		redefine
-			is_feature, set_parameters, 
+			is_feature, set_parameters,
 			parameters, enlarged, context_type,
 			is_feature_special, make_special_byte_code,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
 			is_il_feature_special,
-			size, pre_inlined_code, inlined_byte_code,
-			make_precursor_byte_code
+			size, pre_inlined_code, inlined_byte_code
 		end
 
 	SHARED_TABLE
@@ -79,7 +78,7 @@ feature -- Visitor
 		do
 			v.process_feature_b (Current)
 		end
-	
+
 feature -- Access
 
 	type: TYPE_I
@@ -103,7 +102,7 @@ feature -- Access
 			-- Assign `p' to `parameters'.
 		do
 			parameters := p
-		end 
+		end
 
 	set_type (t: TYPE_I) is
 			-- Assign `t' to `type'.
@@ -225,11 +224,11 @@ feature -- IL code generation
 						native_array_class_type_not_void: native_array_class_type /= Void
 					end
 				end
-				
+
 				invariant_checked := (context.workbench_mode or
 					class_c.assertion_level.check_invariant) and then (not is_first or inv_checked)
 					and then (native_array_class_type = Void)
-				
+
 				if cl_type.is_expanded then
 						-- Current type is expanded. We need to find out if
 						-- we need to generate a box operation, meaning that
@@ -249,7 +248,7 @@ feature -- IL code generation
 				if invariant_checked then
 					generate_il_call_invariant_leading (cl_type, inv_checked)
 				end
-				
+
 					-- Box value type if the call is made to the predefined feature from ANY
 					-- This has to be done before calculating feature arguments
 				is_call_on_any := is_any_feature and precursor_type = Void
@@ -317,7 +316,7 @@ feature -- IL code generation
 					need_generation := False
 					native_array_class_type.generate_il (feature_name_id, cl_type)
 					if System.il_verifiable then
-						if 
+						if
 							not return_type.is_expanded and then
 							not return_type.is_none and then
 							not return_type.is_void
@@ -329,7 +328,7 @@ feature -- IL code generation
 					special_array_class_type.generate_il (feature_name_id, cl_type)
 					need_generation := False
 					if System.il_verifiable then
-						if 
+						if
 							not return_type.is_expanded and then
 							not return_type.is_none and then
 							not return_type.is_void
@@ -338,7 +337,7 @@ feature -- IL code generation
 						end
 					end
 				end
-				
+
 				if need_generation then
 						-- Perform call to feature
 					if is_call_on_any then
@@ -349,7 +348,7 @@ feature -- IL code generation
 							generate_il_normal_call (cl_type, False)
 						else
 							generate_il_normal_call (target_type,
-								cl_type.is_reference or else real_metamorphose) 
+								cl_type.is_reference or else real_metamorphose)
 						end
 					end
 				end
@@ -406,7 +405,7 @@ feature {NONE} -- IL code generation
 					is_virtual)
 			end
 			if System.il_verifiable then
-				if 
+				if
 					not l_return_type.is_expanded and then
 					not l_return_type.is_none and then
 					not l_return_type.is_void
@@ -423,157 +422,10 @@ feature {NONE} -- IL code generation
 
 feature -- Byte code generation
 
-	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
-			-- Generate byte code for a feature call. If not `flag', generate
-			-- an invariant check before the call.
-		local
-			i, pos, nb_expr_address: INTEGER
-			param: EXPR_B
-			has_hector: BOOLEAN
-			parameter_b: PARAMETER_B
-			hector_b: HECTOR_B
-			expr_address_b: EXPR_ADDRESS_B
-			access_expression_b: ACCESS_EXPR_B
-		do
-			if parameters /= Void then
-					-- Generate the expression address byte code
-				from
-					parameters.start
-				until
-					parameters.after
-				loop
-					parameter_b ?= parameters.item
-					if parameter_b /= Void and then parameter_b.is_hector then
-						has_hector := True
-						expr_address_b ?= parameter_b.expression
-						if expr_address_b /= Void and then expr_address_b.is_protected then
-							expr_address_b.generate_expression_byte_code (ba)
-							nb_expr_address := nb_expr_address + 1
-						end
-					end
-					parameters.forth
-				end
-
-				has_hector := has_hector or else (parent /= Void and then parent.target.is_hector)
-
-					-- Generate byte code for parameters
-				from
-					parameters.start
-				until
-					parameters.after
-				loop
-					param := parameters.item
-					param.make_byte_code (ba)
-					parameters.forth
-				end
-			end
-
-			if has_hector then
-				if (parent /= Void and then parent.target.is_hector) then
-						-- We are in the case of a nested calls which have
-						-- a target using the `$' operator. It can only be the case
-						-- of `($a).f (..)'. where `($a)' represents an
-						-- ACCESS_EXPR_B object which contains an HECTOR_B
-						-- or an EXPR_ADDESS_B object.
-					access_expression_b ?= parent.target
-					check
-						has_access_expression: access_expression_b /= Void
-					end
-					hector_b ?= access_expression_b.expr
-					if hector_b /= Void then
-						hector_b.make_protected_byte_code (ba, parameters.count)
-					else
-						expr_address_b ?= parameter_b.expression
-						check
-							expr_address_b_not_void: expr_address_b /= Void
-						end
-						if expr_address_b.is_protected then
-							i := i + 1
-							expr_address_b.make_protected_byte_code (ba,
-								parameters.count,
-								parameters.count + nb_expr_address - i)
-						end
-					end
-				end
-				from
-					parameters.start
-				until
-					parameters.after
-				loop
-					pos := pos + 1
-					parameter_b ?= parameters.item
-					if parameter_b /= Void and then parameter_b.is_hector then
-						hector_b ?= parameter_b.expression
-						if hector_b /= Void then
-							hector_b.make_protected_byte_code (ba, parameters.count - pos)
-						else
-								-- Cannot be Void
-							expr_address_b ?= parameter_b.expression
-							if expr_address_b.is_protected then
-								i := i + 1
-								expr_address_b.make_protected_byte_code (ba,
-									parameters.count - pos,
-									parameters.count + nb_expr_address - i)
-							end
-						end
-					end
-					parameters.forth
-				end
-			end
-
-			standard_make_code (ba, flag)
-
-			if nb_expr_address > 0 then
-				ba.append (Bc_pop)
-				ba.append_uint32_integer (nb_expr_address)
-			end
-		end
-
 	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
 			-- Make byte code for special calls.
 		do
 			special_routines.make_byte_code (ba, basic_type)
-		end
-
-	make_precursor_byte_code (ba: BYTE_ARRAY) is
-			-- Add dynamic type of parent.
-		local
-			cl_type_i: CL_TYPE_I
-		do
-			if precursor_type /= Void then
-					if context.class_type.is_generic then
-						cl_type_i := precursor_type.instantiation_in (context.class_type)
-						ba.append_short_integer (cl_type_i.associated_class_type.static_type_id - 1)
-					else
-						ba.append_short_integer (precursor_type.associated_class_type.static_type_id - 1)
-					end
-			else
-				ba.append_short_integer (-1)
-			end
-		end
-
-	code_first: CHARACTER is
-			-- Code when Eiffel call is first (no invariant)
-		once
-			Result := Bc_feature
-		end
-
-	code_next: CHARACTER is
-			-- Code when Eiffel call is nested (invariant)
-		once
-			Result := Bc_feature_inv
-		end
-
-	precomp_code_first: CHARACTER is
-			-- Code when Eiffel precompiled call is first (no invariant)
-		once
-			Result := Bc_pfeature
-		end
-
-	precomp_code_next: CHARACTER is
-			-- Code when Eiffel precompiled call is nested (invariant)
-		once
-			Result := Bc_pfeature_inv
 		end
 
 feature -- Array optimization
@@ -778,7 +630,7 @@ feature -- Inlining
 						else
 							constraint := written_class.constraint (i)
 							m.put (constraint.type_i, i)
-						end						
+						end
 						true_gen.put (actual_type.type_i, i)
 						i := i + 1
 					end

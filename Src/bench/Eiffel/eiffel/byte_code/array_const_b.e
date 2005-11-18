@@ -8,7 +8,7 @@ class ARRAY_CONST_B
 inherit
 	EXPR_B
 		redefine
-			make_byte_code, enlarged, enlarge_tree, is_unsafe,
+			enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
 			pre_inlined_code, inlined_byte_code, generate_il,
 			allocates_memory, has_call, is_constant_expression
@@ -211,62 +211,6 @@ feature -- IL generation
 
  			il_generator.generate_local (local_array)
 		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a manifest array
-		local
-			real_ty: GEN_TYPE_I;
-			f_table: FEATURE_TABLE;
-			feat_i: FEATURE_I;
-			feat_id: INTEGER;
-			expr: EXPR_B;
-			target_type: TYPE_I;
-			base_class: CLASS_C;
-			r_id: INTEGER;
-			rout_info: ROUT_INFO
-		do
-			fixme ("We should use `info' to create byte code")
-			real_ty ?= context.real_type (type);
-			target_type := real_ty.meta_generic.item (1);
-			base_class := real_ty.base_class;
-			f_table := base_class.feature_table;
-			feat_i := f_table.item_id (make_name_id);
-				-- Need to insert  into
-				-- the stack back to front in order
-				-- to be inserted into the area correctly
-			from
-				expressions.finish;
-			until
-				expressions.before
-			loop
-				expr ?= expressions.item
-				expr.make_byte_code_for_type (ba, target_type)
-				expressions.back
-			end;
-			if base_class.is_precompiled then
-				ba.append (Bc_parray);
-				r_id := feat_i.rout_id_set.first;
-				rout_info := System.rout_info_table.item (r_id);
-				ba.append_integer (rout_info.origin);
-				ba.append_integer (rout_info.offset);
-				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-				ba.append_short_integer (context.class_type.static_type_id - 1)
-				real_ty.make_gen_type_byte_code (ba, True)
-				ba.append_short_integer (-1);
-			else
-				ba.append (Bc_array);
-				ba.append_short_integer (real_ty.associated_class_type.static_type_id - 1);
-				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-				ba.append_short_integer (context.class_type.static_type_id - 1)
-				real_ty.make_gen_type_byte_code (ba, True)
-				ba.append_short_integer (-1);
-				feat_id := feat_i.feature_id;
-				ba.append_short_integer (feat_id);
-			end;
-			ba.append_integer (expressions.count);
-		end;
 
 feature -- Array optimization
 

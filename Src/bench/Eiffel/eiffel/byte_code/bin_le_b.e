@@ -1,15 +1,14 @@
-class BIN_LE_B 
+class BIN_LE_B
 
 inherit
 
 	COMP_BINARY_B
 		rename
-			Bc_le as operator_constant,
 			il_le as il_operator_constant
 		redefine
 			generate_operator
 		end;
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -17,7 +16,7 @@ feature -- Visitor
 		do
 			v.process_bin_le_b (Current)
 		end
-	
+
 feature
 
 	generate_operator is

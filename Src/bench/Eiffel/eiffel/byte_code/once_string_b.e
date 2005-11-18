@@ -10,7 +10,7 @@ class
 inherit
 	EXPR_B
 		redefine
-			enlarged, make_byte_code, generate_il,
+			enlarged, generate_il,
 			is_simple_expr, allocates_memory, size
 		end
 
@@ -50,7 +50,7 @@ feature -- Visitor
 		do
 			v.process_once_string_b (Current)
 		end
-	
+
 feature -- Properties
 
 	type: CL_TYPE_I is
@@ -109,18 +109,6 @@ feature -- IL code generation
 			il_generator.generate_once_string (number - 1, value, is_dotnet_string)
 		end
 
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a once manifest string.
-		do
-			ba.append (Bc_once_string)
-			ba.append_integer (body_index - 1)
-			ba.append_integer (number - 1)
-			ba.append_integer (value.count)
-			ba.append_raw_string (value)
-		end
-
 feature {NONE} -- Implementation: types
 
 	string_type: CL_TYPE_I is
@@ -141,7 +129,7 @@ feature {NONE} -- Implementation: types
 			system_string_type_not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation: numbering
+feature {BYTE_NODE_VISITOR} -- Implementation: numbering
 
 	body_index: INTEGER is
 			-- Original body index with this once manifest string

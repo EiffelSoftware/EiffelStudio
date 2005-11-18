@@ -10,7 +10,7 @@ inherit
 	EXPR_B
 		redefine
 			is_simple_expr, is_predefined, generate_il,
-			make_byte_code, print_register, is_fast_as_local,
+			print_register, is_fast_as_local,
 			is_constant_expression
 		end
 
@@ -21,7 +21,7 @@ feature -- Visitor
 		do
 			v.process_void_b (Current)
 		end
-	
+
 feature -- Access
 
 	type: TYPE_I is
@@ -61,15 +61,7 @@ feature -- IL code generation
 		do
 			il_generator.put_void
 		end
-		
-feature -- Byte code generation
 
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for Void value.
-		do
-			ba.append (bc_void)
-		end
-		
 feature -- C code generation
 
 	print_register is
@@ -77,5 +69,5 @@ feature -- C code generation
 		do
 			buffer.put_string ("NULL")
 		end
-		
+
 end -- class VOID_B

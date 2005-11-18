@@ -3,18 +3,18 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class DEBUG_B 
+class DEBUG_B
 
 inherit
 	INSTR_B
 		redefine
-			make_byte_code, enlarge_tree, analyze, generate,
+			enlarge_tree, analyze, generate,
 			assigns_to, is_unsafe,
 			optimized_byte_node, calls_special_features,
 			size, inlined_byte_code, pre_inlined_code,
 			generate_il
 		end
-	
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR) is
@@ -22,7 +22,7 @@ feature -- Visitor
 		do
 			v.process_debug_b (Current)
 		end
-	
+
 feature -- Access
 
 	compound: BYTE_LIST [BYTE_NODE]
@@ -76,7 +76,7 @@ feature -- Basic Operations
 			end
 		end
 
-feature -- C Code generation 
+feature -- C Code generation
 
 	is_debug_clause_enabled: BOOLEAN is
 			-- Has the debug compound to be generated in final mode?
@@ -147,9 +147,9 @@ feature -- C Code generation
 					buf.put_string (") {")
 					buf.put_new_line
 					buf.indent
-								
+
 					compound.generate
-	
+
 					buf.exdent
 					buf.put_character ('}')
 					buf.put_new_line
@@ -173,33 +173,6 @@ feature -- IL code generation
 				else
 					il_generator.put_ghost_debug_infos (line_number, compound.count)
 				end
-			end
-		end
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a debug clause
-		do
-			if compound /= Void then
-				ba.append (Bc_debug)
-				if keys = Void then
-					ba.append_integer (0)
-				else
-					ba.append_integer (keys.count)
-					from
-						keys.start
-					until
-						keys.after
-					loop
-						ba.append_integer (keys.item.count)
-						ba.append_raw_string (keys.item)
-						keys.forth
-					end
-				end
-				ba.mark_forward
-				compound.make_byte_code (ba)
-				ba.write_forward
 			end
 		end
 

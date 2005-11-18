@@ -304,17 +304,15 @@ feature {NONE} -- Visitors
 
 	process_bin_implies_b (a_node: B_IMPLIES_B) is
 			-- Process `a_node'.
-		local
-			l_unary_not: UN_NOT_B
-			l_binary_or_else: B_OR_ELSE_B
 		do
 			if a_node.is_built_in then
-				create l_unary_not
-				l_unary_not.set_expr (a_node.left)
-				create l_binary_or_else
-				l_binary_or_else.set_left (l_unary_not)
-				l_binary_or_else.set_right (a_node.right)
-				l_binary_or_else.process (Current)
+				a_node.left.process (Current)
+				ba.append (bc_not)
+				ba.append (bc_or_else)
+				ba.mark_forward
+				a_node.right.process (Current)
+				ba.append (bc_or)
+				ba.write_forward
 			else
 				a_node.nested_b.process (Current)
 			end

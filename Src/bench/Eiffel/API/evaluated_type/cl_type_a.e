@@ -228,7 +228,7 @@ feature {COMPILER_EXPORTER} -- Conformance
 		local
 			other_class_type: CL_TYPE_A
 		do
-			other_class_type ?= other.actual_type
+			other_class_type ?= other.conformance_type
 			if other_class_type /= Void then
 				if other_class_type.is_expanded then
 						-- It should be the exact same base class for expanded.

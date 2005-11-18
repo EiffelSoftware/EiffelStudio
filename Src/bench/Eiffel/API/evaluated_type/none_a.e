@@ -73,7 +73,7 @@ feature {COMPILER_EXPORTER}
 				-- If `other' is expanded, then it does not conform to NONE.
 				-- But it should not be `VOID_A' since VOID_A is only used as
 				-- return type for procedure
-			l_type := other.actual_type
+			l_type := other.conformance_type
 			Result := not l_type.is_expanded and not l_type.is_void
 		end
 

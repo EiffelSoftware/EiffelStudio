@@ -27,7 +27,6 @@ feature -- Initialization
 			create local_index_table.make (10)
 			create associated_register_table.make (10)
 			create local_list.make
-			create old_expressions.make
 			create inherited_assertion.make
 			create global_onces.make (5)
 			create onces.make (5)
@@ -78,9 +77,6 @@ feature -- Access
 
 	byte_code: BYTE_CODE
 			-- Current root of processed byte code
-
-	old_expressions: LINKED_LIST [UN_OLD_B]
-			-- Used to record old expressions in Pass 3.
 
 	local_vars: ARRAY [BOOLEAN]
 			-- Local variables used have their flag set to True.
@@ -1509,14 +1505,6 @@ feature -- Access
 		end
 
 feature -- Clearing
-
-	clear_old_expressions is
-			-- Clear old expressions.
-		do
-				--! Did this so it won't effect any old_expression
-				--! referencing this object.
-			create old_expressions.make
-		end
 
 	array_opt_clear is
 			-- Clear during the array optimization

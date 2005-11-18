@@ -8,7 +8,7 @@ indexing
 	date: "$Date$"
 	version: "$Revision$"
 
-deferred class FEATURE_I 
+deferred class FEATURE_I
 
 inherit
 	SHARED_WORKBENCH
@@ -73,7 +73,7 @@ inherit
 		export
 			{NONE} all
 		end
-			
+
 feature -- Access
 
 	feature_name: STRING is
@@ -325,7 +325,7 @@ feature -- Debugger access
 			loc_assert_id_set		: ASSERT_ID_SET
 			inh_assert_info			: INH_ASSERT_INFO
 			i						: INTEGER
-			l_body: like body			
+			l_body: like body
 		do
 				-- Get the number of breakpoint slots in the body + rescue +
 				-- inner preconditions and inner postconditions
@@ -333,7 +333,7 @@ feature -- Debugger access
 			if l_body /= Void then
 					-- May be Void in case of Invariant_feature_i
 				Result := l_body.number_of_breakpoint_slots
-			end				
+			end
 
 				-- Add the number of breakpoint slots for inherited
 				-- pre & postconditions.
@@ -403,7 +403,7 @@ feature -- Debugger access
 			end
 		end
 
-	number_of_precondition_slots: INTEGER is 
+	number_of_precondition_slots: INTEGER is
 			-- Number of preconditions
 			-- (inherited assertions are not taken into account)
 		local
@@ -415,7 +415,7 @@ feature -- Debugger access
 			end
 		end
 
-	number_of_postcondition_slots: INTEGER is 
+	number_of_postcondition_slots: INTEGER is
 			-- Number of postconditions
 			-- (inherited assertions are not taken into account)
 		local
@@ -446,7 +446,7 @@ feature -- Status
 		end
 
 	frozen to_implement_in (a_class: CLASS_C): BOOLEAN is
-			-- Does Current feature need to be exposed in interface 
+			-- Does Current feature need to be exposed in interface
 			-- used for IL generation?
 		require
 			a_class_not_void: a_class /= Void
@@ -578,7 +578,7 @@ feature -- Setting
 		end
 
 	frozen set_is_infix (b: BOOLEAN) is
-			-- Assign `b' to `is_infix'. 
+			-- Assign `b' to `is_infix'.
 		do
 			feature_flags := feature_flags.set_bit_with_mask (b, is_infix_mask)
 		ensure
@@ -594,7 +594,7 @@ feature -- Setting
 		end
 
 	frozen set_is_bracket (b: BOOLEAN) is
-			-- Assign `b' to `is_bracket'. 
+			-- Assign `b' to `is_bracket'.
 		do
 			feature_flags := feature_flags.set_bit_with_mask (b, is_bracket_mask)
 		ensure
@@ -798,7 +798,7 @@ end
 --										or else	other.export_status = Void)
 		do
 				-- Still an attribute
-			Result := is_attribute = other.is_attribute 
+			Result := is_attribute = other.is_attribute
 
 				-- Same alias
 			if Result then
@@ -842,7 +842,7 @@ feature -- creation of default rescue clause
 		do
 			if
 				not (is_attribute or is_constant or
-				is_external or is_deferred) 
+				is_external or is_deferred)
 			then
 				my_body := body
 				if (my_body /= Void) then
@@ -854,7 +854,7 @@ feature -- creation of default rescue clause
 feature -- Type id
 
 	written_type (class_type: CLASS_TYPE): CLASS_TYPE is
-			-- Written type of feature in context of 
+			-- Written type of feature in context of
 			-- type `class_type'.
 		require
 			good_argument: class_type /= Void
@@ -1020,7 +1020,7 @@ feature -- Conveniences
 				end
 			end
 		end
-		
+
 	frozen has_precondition: BOOLEAN is
 			-- Is feature declaring some preconditions ?
 		do
@@ -1213,7 +1213,7 @@ feature -- Check
 -- Note: `require else' can be used even if feature has no
 -- precursor. There is no problem to raise an error in normal case,
 -- only case  where we cannot do anything is when aliases are used
--- and one name references a feature with a predecessor and not 
+-- and one name references a feature with a predecessor and not
 -- other one
 
 -- Used to be called from `type_check':
@@ -1282,7 +1282,7 @@ feature -- Byte code computation
 
 			melted_feature := Byte_array.melted_feature
 			melted_feature.set_real_body_id (exec.real_body_id)
-	
+
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature)
 			end
@@ -1297,7 +1297,7 @@ feature -- Polymorphism
  		do
  			Result := True
  		end
- 
+
  	new_entry (rout_id: INTEGER): ENTRY is
  			-- New polymorphic unit
  		require
@@ -1309,7 +1309,7 @@ feature -- Polymorphism
  				Result := new_attr_entry
  			end
  		end
- 
+
  	new_rout_entry: ROUT_ENTRY is
  			-- New routine unit
  		require
@@ -1322,7 +1322,7 @@ feature -- Polymorphism
  			Result.set_pattern_id (pattern_id)
 			Result.set_feature_id (feature_id)
  		end
- 
+
  	new_attr_entry: ATTR_ENTRY is
  			-- New attribute unit
  		require
@@ -1332,9 +1332,9 @@ feature -- Polymorphism
  			Result.set_type_a (type.actual_type)
  			Result.set_feature_id (feature_id)
  		end
- 
+
  	poly_equiv (other: FEATURE_I): BOOLEAN is
- 			-- Is `other' equivalent to Current from polymorphic table 
+ 			-- Is `other' equivalent to Current from polymorphic table
 			-- implementation point of view ?
  		require
  			good_argument: other /= Void
@@ -1358,7 +1358,7 @@ feature -- Polymorphism
 
 feature -- Signature instantiation
 
-	instantiate (parent_type: CL_TYPE_A) is
+	instantiate (parent_type: TYPE_A) is
 			-- Instantiated signature in context of `parent_type'.
 		require
 			good_argument: parent_type /= Void
@@ -1384,7 +1384,7 @@ feature -- Signature instantiation
 		end
 
 feature -- Signature checking
-	
+
 	check_argument_names (feat_table: FEATURE_TABLE) is
 			-- Check argument names
 		require
@@ -1408,7 +1408,7 @@ feature -- Signature checking
 			loop
 				arg_id := args.item_id (i)
 					-- Searching to find after the current item another one
-					-- with the same name. 
+					-- with the same name.
 					-- We do `i + 1' for the start index because we need to go
 					-- one step further (+ 1)
 				if args.argument_position_id (arg_id, i + 1) /= 0 then
@@ -1483,8 +1483,8 @@ feature -- Signature checking
 			end
 			solved_type.check_for_obsolete_class (feat_table.associated_class)
 
-			if 
-				is_infix and then 
+			if
+				is_infix and then
 				((argument_count /= 1) or else (type = Void_type))
 			then
 					-- Infixed features should have only one argument
@@ -1494,8 +1494,8 @@ feature -- Signature checking
 				vffd6.set_feature_name (feature_name)
 				Error_handler.insert_error (vffd6)
 			end
-			if 
-				is_prefix and then 
+			if
+				is_prefix and then
 				((argument_count /= 0) or else (type = Void_type))
 			then
 					-- Prefixed features shouldn't have any argument
@@ -1600,8 +1600,8 @@ end
 				vdrd7.init (old_feature, Current)
 				Error_handler.insert_error (vdrd7)
 			end
-	
-			old_type ?= old_feature.type	
+
+			old_type ?= old_feature.type
 			old_type := old_type.actual_argument_type (special_arguments).actual_type
 				-- `new_type' is the actual type of the redefinition already
 				-- instantiated
@@ -1802,7 +1802,7 @@ end
 			old_arguments: like arguments
 		do
 			id := a_written_type.class_id
-			old_type ?= old_feature.type	
+			old_type ?= old_feature.type
 			old_type := old_type.actual_argument_type (special_arguments).
 				instantiation_in (a_written_type, a_written_type.class_id).actual_type
 
@@ -1901,7 +1901,7 @@ end
 					-- Lookup feature in `feature_table' as feature table in the current class is not set yet.
 				assigner := feature_table.item_id (assigner_name_id)
 			else
-				assigner := feature_table.origin_table.item 
+				assigner := feature_table.origin_table.item
 					(written_class.feature_named (assigner_name).rout_id_set.first)
 			end
 			if assigner = Void or else assigner.has_return_value then
@@ -2094,7 +2094,7 @@ feature -- Genericity
 				arg_count := argument_count
 			until
 				i > arg_count
-			loop	
+			loop
 				Instantiator.dispatch (arguments.i_th (i).actual_type, a_class)
 				i := i + 1
 			end
@@ -2120,7 +2120,7 @@ feature -- Pattern
 			p.insert (generation_class_id, pattern)
 			pattern_id := p.last_pattern_id
 		end
-			
+
 feature -- Dead code removal
 
 	used: BOOLEAN is
@@ -2129,7 +2129,7 @@ feature -- Dead code removal
 					-- In final mode dead code removal process is on.
 					-- In workbench mode all features are considered
 					-- used.
-			Result := 	byte_context.workbench_mode 
+			Result := 	byte_context.workbench_mode
 						or else
 						System.is_used (Current)
 		end
@@ -2334,7 +2334,7 @@ feature -- Api creation
 			Result.set_is_prefix (is_prefix)
 			Result.set_rout_id_set (rout_id_set)
 			Result.set_is_il_external (is_il_external)
-		end		
+		end
 
 feature {NONE} -- Implementation
 
@@ -2385,7 +2385,7 @@ feature {NONE} -- Debug output
 	debug_output: STRING is
 			-- Textual representation of current feature for debugging.
 		do
-			Result := feature_name 
+			Result := feature_name
 			if Result = Void then
 				Result := "Name not yet assigned"
 			end

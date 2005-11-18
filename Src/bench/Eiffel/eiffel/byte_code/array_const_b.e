@@ -163,7 +163,7 @@ feature -- IL generation
 			make_feat, put_feat: FEATURE_I
 		do
 			real_ty ?= context.real_type (type)
-			target_type := real_ty.true_generics.item (1)
+			target_type := context.real_type (real_ty.true_generics.item (1))
 			base_class := real_ty.base_class
 			feat_tbl := base_class.feature_table
 			make_feat := feat_tbl.item_id (make_name_id)

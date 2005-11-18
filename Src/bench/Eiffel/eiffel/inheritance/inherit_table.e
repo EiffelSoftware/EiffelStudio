@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	INHERIT_TABLE 
+	INHERIT_TABLE
 
 inherit
 	HASH_TABLE [INHERIT_FEAT, INTEGER]
@@ -260,16 +260,16 @@ feature
 				-- Check the redefine and select clause, and kepp track
 				-- of possible joins between deferred features
 			check_validity2;
-			
+
 				-- Computes a good size for the feature table
 			resulting_table := inherited_features.twin
-			
+
 				-- Check redeclarations into an attribute
 			check_redeclarations (resulting_table);
-			
+
 				-- Check sum
 			Error_handler.checksum;
-			
+
 				-- Compute selection table
 			Origin_table.compute_feature_table (parents, feature_table, resulting_table);
 			resulting_table.set_origin_table (Origin_table.computed);
@@ -517,19 +517,23 @@ end;
 			-- Merge feature table of parent `cl' into
 			-- a data structure to analyse.
 		local
-			parent: CLASS_C;
+			parent: CLASS_C
 				-- Parent class
 			parent_table: FEATURE_TABLE;
 				-- Feature table of the parent `parent_c'
-			info: INHERIT_INFO;
+			info: INHERIT_INFO
 				-- Information on one inherited feature
-			feature_i: FEATURE_I;
+			feature_i: FEATURE_I
 				-- Inherited feature
+			parent_type: LIKE_CURRENT
+				-- "like Current" type of `parent_c'
 		do
 			from
-				parent := parent_c.parent;
+				parent := parent_c.parent
+				create parent_type
+				parent_type.set_actual_type (parent_c.parent_type)
 					-- Look for the parent table on the disk
-				parent_table := Feat_tbl_server.item (parent.class_id);
+				parent_table := Feat_tbl_server.item (parent.class_id)
 				check
 					parent_table_exists: parent_table /= Void;
 						-- Because of topological sort, the parents are
@@ -545,22 +549,22 @@ end;
 			until
 				parent_table.after
 			loop
-					-- Take one feature 
+					-- Take one feature
 				feature_i := parent_table.item_for_iteration.duplicate
 
 					-- Instantiation of the feature in its parent
-				feature_i.instantiate (parent_c.parent_type);
+				feature_i.instantiate (parent_type)
 
 					-- Creation of an inherited feature information unit	
 				create info.make (feature_i)
-				info.set_parent (parent_c);
+				info.set_parent (parent_c)
 
 					-- Add the information to the concerned instance of
 					-- INHERIT_FEAT
-				add_inherited_feature (info, feature_i.feature_name_id);
+				add_inherited_feature (info, feature_i.feature_name_id)
 				parent_table.forth
-			end;
-		end;
+			end
+		end
 
 	add_inherited_feature (info: INHERIT_INFO; feature_name_id: INTEGER) is
 				-- Add an inherited feature in the table.
@@ -634,7 +638,7 @@ end;
 					init_inherited_feature (feature_i, inherit_feat);
 						-- Insertion in the origin table
 					inherited_info.set_a_feature (feature_i);
-					if 	not feature_i.is_deferred 
+					if 	not feature_i.is_deferred
 						and then
 						inherit_feat.nb_deferred > 0
 					then
@@ -706,7 +710,7 @@ end;
 							feature_i.set_export_status (l_export_status);
 							name_list.forth;
 						end;
-						
+
 						features.forth;
 					end;
 					clauses.forth;
@@ -740,7 +744,7 @@ end;
 				feature_table.forth;
 			end;
 		end;
-				
+
 	analyze_local (feature_i: FEATURE_I; feature_name_id: INTEGER) is
 			-- Analyze local declaration of class `a_class' named
 			-- `feat_name' which abstract representation is `yacc_feature'.
@@ -891,7 +895,7 @@ end;
 							(feature_i.is_attribute and old_feature.is_attribute and
 								feature_i.is_origin /= old_feature.is_origin)
 						then
-							System.execution_table.add_dead_function (old_feature.body_index)	
+							System.execution_table.add_dead_function (old_feature.body_index)
 						end
 					end;
 				end;
@@ -1100,7 +1104,7 @@ end;
 			origins.wipe_out;
 			invariant_changed := False;
 			invariant_removed := False;
-			assert_prop_list := Void; 
+			assert_prop_list := Void;
 
 			clear_all
 			extend_tbl_make (default_size)
@@ -1184,7 +1188,7 @@ end;
 			-- Take into account incremental changes in `convert' clauses.
 		require
 			a_class_not_void: a_class /= Void
-			a_old_convert_not_void: a_old_convert /= Void	
+			a_old_convert_not_void: a_old_convert /= Void
 			a_resulting_table_not_void: a_resulting_table /= Void
 		local
 			l_feat_name_id: INTEGER
@@ -1332,7 +1336,7 @@ end;
 				then
 						-- If it is an attribute that was generated in `a_class',
 						-- we have to redo mark it dead as an encapsulation. `is_valid'
-						-- on its execution unit will tell us if we still need the 
+						-- on its execution unit will tell us if we still need the
 						-- encapsulation or not.
 					system.execution_table.add_dead_function (old_feature.body_index)
 				end
@@ -1447,7 +1451,7 @@ end;
 			old_clause_exists: BOOLEAN;
 		do
 				-- First: check is the invariant clause of the current
-				-- class has syntactically changed. If yes, flag 
+				-- class has syntactically changed. If yes, flag
 				-- `changed5' of `a_class' is set to True.
 			class_id := a_class.class_id;
 			invariant_info := class_info.invariant_info;
@@ -1461,7 +1465,7 @@ end;
 						-- to see if it has changed
 					old_invar_clause := Inv_ast_server.server_item (class_id);
 					invar_clause := Tmp_inv_ast_server.item (class_id);
-				
+
 						-- Incrementality test on invariant clause
 					if invar_clause = Void then
 						invariant_changed := old_invar_clause /= Void

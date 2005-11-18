@@ -543,8 +543,11 @@ feature {NONE} -- Initialization
 			l_any_tbl: like feature_table
 			l_orig_tbl: SELECT_TABLE
 			l_feat: FEATURE_I
+			any_parent_type: LIKE_CURRENT
 		do
 			l_any_tbl := feat_tbl_server.item (system.any_id)
+			create any_parent_type
+			any_parent_type.set_actual_type (any_type)
 			check
 				l_any_tbl_not_void: l_any_tbl /= Void
 			end
@@ -556,7 +559,7 @@ feature {NONE} -- Initialization
 			loop
 				l_feat := l_any_tbl.item_for_iteration.duplicate
 					-- Update `l_feat' in context of current class.
-				l_feat.instantiate (any_type)
+				l_feat.instantiate (any_parent_type)
 				l_feat.check_types (a_feat_tbl)
 				l_feat.set_feature_id (feature_id_counter.next)
 				l_feat.set_is_origin (False)

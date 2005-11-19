@@ -223,10 +223,14 @@ feature {NONE} -- Implementation
 			cnr_not_void: cnr /= Void
 			names_not_void: new_name /= Void and old_name /= Void
 			a_class_not_void: a_class /= Void
+		local
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
+			l_status_bar := tool.development_window.status_bar
 			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
 			change_name_locally (a_class, new_name, new_generics)
-			cnr.global_compiled_class_name_replace (old_name, new_name)
+			l_status_bar.display_message ("Updating references in compiled classes")
+			cnr.global_class_name_replace (old_name, new_name, True, l_status_bar)
 			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 		end
 
@@ -236,10 +240,14 @@ feature {NONE} -- Implementation
 			cnr_not_void: cnr /= Void
 			names_not_void: new_name /= Void and old_name /= Void
 			a_class_not_void: a_class /= Void
+		local
+			l_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 		do
+			l_status_bar := tool.development_window.status_bar
 			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
 			change_name_locally (a_class, new_name, new_generics)
-			cnr.global_class_name_replace (old_name, new_name)
+			l_status_bar.display_message ("Updating references in cluster universe")
+			cnr.global_class_name_replace (old_name, new_name, False, tool.development_window.status_bar)
 			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 		end
 

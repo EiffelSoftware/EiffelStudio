@@ -15,12 +15,15 @@ inherit
 	SHARED_API_ROUTINES
 
 	EB_SHARED_INTERFACE_TOOLS
+	
+	EV_SHARED_APPLICATION
 
 feature -- Search and replace
 
-	global_compiled_class_name_replace (a_search_string, a_replace_string: STRING) is
+	global_class_name_replace (a_search_string, a_replace_string: STRING; compiled_classes_only: BOOLEAN; a_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR) is
 			-- Replace in all compiled classes in the system all class name
 			-- `a_search_string' occurrences of `a_search_string' with `a_replace_string'.
+			-- Outputted messages are performed via `a_status_bar'.
 		require
 			a_search_string_not_void: a_search_string /= Void
 			a_replace_string_not_void: a_replace_string /= Void
@@ -29,6 +32,8 @@ feature -- Search and replace
 			classes: HASH_TABLE [CLASS_I, STRING]
 			clusters: LIST [CLUSTER_I]
 			cl: LINKED_LIST [CLASS_I]
+			l_changed_count: INTEGER
+			l_ctm: CLASS_TEXT_MODIFIER
 		do
 			create cl.make
 			clusters := Eiffel_universe.clusters
@@ -44,52 +49,40 @@ feature -- Search and replace
 				until
 					classes.after
 				loop
-					if classes.item_for_iteration.compiled then
+					if not compiled_classes_only or else classes.item_for_iteration.compiled then
 						cl.extend (classes.item_for_iteration)
 					end
 					classes.forth
 				end
+				process_events_and_idle
 				clusters.forth
 			end
 			clusters.go_to (cur)
-			Progress_dialog.set_title ("Renaming in compiled classes")
-			perform_replacing (cl, a_search_string, a_replace_string)
-		end
-
-	global_class_name_replace (a_search_string, a_replace_string: STRING) is
-			-- Replace in all classes in the system all class name
-			-- `a_search_string' occurrences of `a_search_string' with `a_replace_string'.
-		require
-			a_search_string_not_void: a_search_string /= Void
-			a_replace_string_not_void: a_replace_string /= Void
-		local
-			cur: CURSOR
-			classes: HASH_TABLE [CLASS_I, STRING]
-			clusters: LIST [CLUSTER_I]
-			cl: LINKED_LIST [CLASS_I]
-		do
-			create cl.make
-			clusters := Eiffel_universe.clusters
-			cur := clusters.cursor
+			a_status_bar.reset_progress_bar_with_range (0 |..| cl.count)
+			
 			from
-				clusters.start
+				cl.start
 			until
-				clusters.after
+				cl.after
 			loop
-				classes := clusters.item.classes
-				from
-					classes.start
-				until
-					classes.after
-				loop
-					cl.extend (classes.item_for_iteration)
-					classes.forth
+				a_status_bar.display_progress_value (cl.index)
+				l_ctm := search_replace_modifier (cl.item, a_search_string, a_replace_string)
+				if l_ctm /= Void then
+					l_ctm.commit_modification
+					a_status_bar.display_message (cl.item.name_in_upper + " updated, continuing search and replace")
+					l_changed_count := l_changed_count + 1
 				end
-				clusters.forth
+				cl.forth
+				process_events_and_idle
 			end
-			clusters.go_to (cur)
-			Progress_dialog.set_title ("Renaming in universe")
-			perform_replacing (cl, a_search_string, a_replace_string)
+			a_status_bar.reset_progress_bar_with_range (0 |..| 100)
+			if l_changed_count > 1 then
+				a_status_bar.display_message (l_changed_count.out + " classes updated")
+			elseif l_changed_count = 1 then
+				a_status_bar.display_message (l_changed_count.out + " class updated")
+			else
+				a_status_bar.display_message ("0 classes updated")
+			end		
 		end
 
 feature -- Status report
@@ -111,34 +104,11 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	perform_replacing (cl: LIST [CLASS_I]; s, r: STRING) is
-			-- Perform search/replace on `cl'.
-		do
-			Progress_dialog.set_title ("Progress")
-			Progress_dialog.set_degree ("Renaming:")
-			Progress_dialog.set_current_degree (s + " to " + r)
-			Progress_dialog.set_entity ("Class:")
-			Progress_dialog.set_to_go_label ("Classes to go:")
-			Progress_dialog.set_to_go (cl.count.out)
-			Progress_dialog.disable_cancel
-			Progress_dialog.start (cl.count)
-			from
-				cl.start
-			until
-				cl.after
-			loop
-				Progress_dialog.set_current_entity (cl.item.name_in_upper)
-				Progress_dialog.set_value (cl.index)
-				Progress_dialog.set_to_go ((cl.count - cl.index).out)
-				search_replace (cl.item, s, r)
-				cl.forth
-			end
-			Progress_dialog.hide
-		end
-
-	search_replace (a_class: CLASS_I; a_search_string, a_replace_string: STRING) is
+	search_replace_modifier (a_class: CLASS_I; a_search_string, a_replace_string: STRING): CLASS_TEXT_MODIFIER is
 			-- Replace in `a_class' all class name occurrences of
 			-- `a_search_string' with `a_replace_string'.
+			-- Call 'commit_modification' on `Result' to update class text.
+			-- If result is Void then no text has to be modified.
 		local
 			ctm: CLASS_TEXT_MODIFIER
 			click_list: CLICK_LIST
@@ -212,7 +182,7 @@ feature {NONE} -- Implementation
 					click_list.forth
 				end
 				if is_occurrence_found then
-					ctm.commit_modification
+					Result := ctm
 				end
 			end
 		end

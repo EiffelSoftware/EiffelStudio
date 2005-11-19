@@ -365,11 +365,6 @@ feature -- Access
 		do
 			create Result
 		end
-
-	progress_dialog: EB_PROGRESS_DIALOG is
-		once
-			create Result
-		end
 			
 	development_window: EB_DEVELOPMENT_WINDOW is
 			-- Application main window.

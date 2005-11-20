@@ -12,7 +12,7 @@ OBJECTS =  $(OBJS) $(WOBJS)
 all:: clean net.lib
 
 .c.obj:
-	$(CC) -o $@ -c $(CFLAGS) $<
+	$(CC) -c $(CFLAGS) $<
 
 SMODE = network.c network_r.c hostname.c syncpoll.c storable.c
 

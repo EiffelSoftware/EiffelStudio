@@ -1499,6 +1499,7 @@ feature -- Implementation
 			l_parent_class: CLASS_C
 			l_feat_ast: FEATURE_AS
 			l_precursor_id: ID_AS
+			l_instatiation_type: LIKE_CURRENT
 		do
 			l_feat_ast := context.current_class.feature_with_name (current_feature.feature_name).ast
 
@@ -1563,7 +1564,9 @@ feature -- Implementation
 				-- Adapt `l_feature_i' to context of current class (e.g. if `l_parent_type' is
 				-- generic then we need to resolve formals used in `l_feature_i' but the one from
 				-- the instantiation `l_parent_type'.
-			l_feature_i.instantiate (l_parent_type)
+			create l_instatiation_type
+			l_instatiation_type.set_actual_type (l_parent_type)
+			l_feature_i.instantiate (l_instatiation_type)
 				-- Now that we have the fully instantiated type, we need to adapt it to
 				-- the current class type (e.g. like Current).
 			l_feature_i.instantiate (context.current_class_type)

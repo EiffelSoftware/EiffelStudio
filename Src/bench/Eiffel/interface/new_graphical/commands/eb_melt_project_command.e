@@ -161,7 +161,7 @@ feature {NONE} -- Compilation implementation
 						output_text.add_string (Interface_names.E_compilation_succeeded)
 					end
 				end
-				if not last_c_compilation_successful then
+				if not last_c_compiler_launch_successful then
 					window_manager.display_message (Interface_names.e_c_compilation_launch_failed)
 				end
 			else

@@ -15,7 +15,7 @@ feature{EB_KERNEL}
 			gui_cell.put (b)
 		end
 
-	set_last_c_compilation_successful (b: BOOLEAN) is
+	set_last_c_compiler_launch_successful (b: BOOLEAN) is
 			-- 	Set `c_compilation_cell' with `b'.
 		do
 			c_compilation_cell.put (b)
@@ -30,7 +30,7 @@ feature -- Status reporting
 			Result := gui_cell.item
 		end
 
-	last_c_compilation_successful: BOOLEAN is
+	last_c_compiler_launch_successful: BOOLEAN is
 			-- Is last c compilation successful?
 		do
 			Result := c_compilation_cell.item
@@ -48,7 +48,7 @@ feature{NONE} -- Implementation
 	c_compilation_cell: CELL [BOOLEAN] is
 			-- GUI mode cell
 		once
-			create Result.put (False)
+			create Result.put (True)
 		end
 
 end

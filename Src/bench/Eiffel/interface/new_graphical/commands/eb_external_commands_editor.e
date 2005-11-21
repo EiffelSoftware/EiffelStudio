@@ -9,20 +9,18 @@ class
 
 inherit
 	EB_MENUABLE_COMMAND
-    
+
 	EB_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
-		
-	-- Jason Wei
+
 	EB_SHARED_MANAGERS
-	-- Jason Wei
 
 create
 	make
@@ -102,7 +100,7 @@ feature{EB_EXTERNAL_OUTPUT_TOOL} -- Synchronizing features used by EB_EXTERNAL_O
 			-- Refresh command list from EB_EXTERNAL_OUTPUT_TOOL
 		do
 			if list /= Void then
-				refresh_list				
+				refresh_list
 			end
 		end
 	update_menus_from_outside is
@@ -110,7 +108,7 @@ feature{EB_EXTERNAL_OUTPUT_TOOL} -- Synchronizing features used by EB_EXTERNAL_O
 		do
 			update_menus
 		end
-		
+
 feature {NONE} -- Widgets
 
 	dialog: EV_DIALOG
@@ -147,7 +145,7 @@ feature {NONE} -- Implementation
 			create edit_button.make_with_text (Interface_names.b_Edit_command)
 			create delete_button.make_with_text (Interface_names.b_Delete_command)
 			create close_button.make_with_text (Interface_names.b_Close)
-			
+
 				-- Organize widgets.
 			create vb
 			vb.set_padding (Layout_constants.Default_padding_size)
@@ -160,21 +158,21 @@ feature {NONE} -- Implementation
 			vb.extend (create {EV_CELL})
 			vb.extend (close_button)
 			vb.disable_item_expand (close_button)
-			
+
 			create hb
 			hb.set_padding (Layout_constants.Default_padding_size)
 			hb.set_border_width (Layout_constants.Default_border_size)
-			
+
 			create f
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			f.extend (list)
-			
+
 			hb.extend (f)
 			hb.extend (vb)
 			hb.disable_item_expand (vb)
-			
+
 			dialog.extend (hb)
-			
+
 				-- Set widget properties.
 			refresh_list
 			update_edit_buttons
@@ -193,7 +191,7 @@ feature {NONE} -- Implementation
 			Layout_constants.set_default_size_for_button (edit_button)
 			Layout_constants.set_default_size_for_button (delete_button)
 			dialog.set_size (300, 200)
-			
+
 				-- Set up events.
 			list.select_actions.extend (agent update_edit_buttons)
 			list.deselect_actions.extend (agent update_edit_buttons)
@@ -202,7 +200,7 @@ feature {NONE} -- Implementation
 			add_button.select_actions.extend (agent add_command)
 			edit_button.select_actions.extend (agent edit_command)
 			delete_button.select_actions.extend (agent delete_command)
-			
+
 			if commands.has (Void) then
 					-- It is not full
 				dialog.show_actions.extend (agent add_button.set_focus)
@@ -328,9 +326,7 @@ feature {NONE} -- Implementation
 			update_edit_buttons
 			add_button.enable_sensitive
 			add_button.set_focus
-			-- Jason Wei
 			external_output_manager.synchronize_command_list (Void)
-			-- Jason Wei
 		end
 
 	on_key (k: EV_KEY) is

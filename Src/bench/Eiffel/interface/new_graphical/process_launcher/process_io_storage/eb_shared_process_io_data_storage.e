@@ -7,13 +7,10 @@ indexing
 class
 	EB_SHARED_PROCESS_IO_DATA_STORAGE
 
---inherit
---	EB_IDLE_PRINTING_MANAGER
-
 feature
-		
+
 	freezing_storage: EB_PROCESS_IO_STORAGE is
-			-- 
+			--
 		indexing
 			once_status: global
 		once
@@ -21,19 +18,19 @@ feature
 		end
 
 	finalizing_storage: EB_PROCESS_IO_STORAGE is
-			-- 
+			--
 		indexing
 			once_status: global
 		once
 			create Result.make
-		end	
-		
-	external_storage: EB_PROCESS_IO_STORAGE is	
-			-- 
+		end
+
+	external_storage: EB_PROCESS_IO_STORAGE is
+			--
 		indexing
 			once_status: global
 		once
 			create Result.make
-		end		
+		end
 
 end

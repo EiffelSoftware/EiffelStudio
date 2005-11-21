@@ -10,44 +10,48 @@ class
 inherit
 	EB_SHARED_WINDOW_MANAGER
 
+	EB_SHARED_PROCESS_IO_DATA_STORAGE
+
+	PROJECT_CONTEXT
+
 feature -- Status report
 
-	external_launcher: EB_EXTERNAL_LAUNCHER is	
-			-- 
+	external_launcher: EB_EXTERNAL_LAUNCHER is
+			--
 		once
-			create Result.make
+			create Result.initialize
 		end
-		
+
 	freezing_launcher: EB_FREEZING_LAUNCHER is
-			-- 
+			--
 		once
-			create Result.make
+			create Result.make (freezing_storage, workbench_generation_path)
 		end
-		
+
 	finalizing_launcher: EB_FINALIZING_LAUNCHER is
-			-- 
+			--
 		once
-			create Result.make
+			create Result.make (finalizing_storage, final_generation_path)
 		end
-		
+
 	idle_printing_manager: EB_IDLE_PRINTING_MANAGER is
-			-- 
+			--
 		once
 			create Result.make
 		end
 
 	external_output_manager: EB_EXTERNAL_OUTPUT_MANAGER is
-			-- 
+			--
 		do
 			Result := external_output_manager_cell.item
-		end	
+		end
 
 	c_compilation_output_manager: EB_C_COMPILATION_OUTPUT_MANAGER is
-			-- 
+			--
 		do
 			Result := c_compilation_output_manager_cell.item
 		end
-		
+
 
 	output_manager: EB_OUTPUT_MANAGER is
 			-- Output manager for all output messages.
@@ -87,13 +91,13 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (Void)
 		end
-			
+
 	External_output_manager_cell: CELL [EB_EXTERNAL_OUTPUT_MANAGER] is
-			-- 
+			--
 		once
 			create Result.put (Void)
-		end	
-		
+		end
+
 	C_compilation_output_manager_cell: CELL [EB_C_COMPILATION_OUTPUT_MANAGER] is
 			--
 		once

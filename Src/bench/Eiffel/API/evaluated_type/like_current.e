@@ -26,11 +26,21 @@ feature -- Properties
 	is_like_current: BOOLEAN is True
 			-- Is the current type an anchored type on Current ?
 
-	is_expanded: BOOLEAN is False
+	is_expanded: BOOLEAN is
 			-- Is type expanded?
+		do
+			if conformance_type /= Void then
+				Result := conformance_type.is_expanded
+			end
+		end
 
-	is_reference: BOOLEAN is False
+	is_reference: BOOLEAN is
 			-- Is type reference?
+		do
+			if conformance_type /= Void then
+				Result := conformance_type.is_reference
+			end
+		end
 
 	is_none: BOOLEAN is False
 			-- Is current actual type NONE?

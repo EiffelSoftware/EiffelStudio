@@ -519,7 +519,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				check
 					l_like_type_not_void: l_like_type /= Void
 				end
-				l_like_type.set_actual_type (instantiate (l_like_type.actual_type))
+				l_like_type.set_actual_type (instantiate (l_like_type.conformance_type))
 				Result := l_like_type
 			elseif type.has_generics then
 					-- Instantiation of the generic parameter of `type'

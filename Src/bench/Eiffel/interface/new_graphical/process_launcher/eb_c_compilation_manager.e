@@ -4,15 +4,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EB_C_COMPILER_LAUNCHER
 
 
 inherit
 	EB_PROCESS_LAUNCHER
-		redefine
-			data_storage
-		end
 
 	EB_SHARED_PROCESS_IO_DATA_STORAGE
 
@@ -28,18 +25,14 @@ inherit
 
 	EB_SHARED_FLAGS
 
-create
-	make
 
 feature{NONE}	-- Initialization
 
-	make (l_storage: EB_PROCESS_IO_STORAGE; gen_path: STRING) is
+	make is
 			-- Set up c compiler launch parameters.
 			-- `l_storage' is storage for output and error from c compilation.
 			-- `gen_path' is directory on which c compiler will be launched.
 		do
-			data_storage := l_storage
-			generation_path := gen_path
 			set_buffer_size (initial_buffer_size)
 			set_time_interval (initial_time_interval)
 			set_output_handler (agent output_dispatch_handler (?))
@@ -51,17 +44,17 @@ feature{NONE}	-- Initialization
 			set_on_fail_launch_handler (agent on_launch_failed)
 			set_on_successful_launch_handler (agent on_launch_successed)
 		ensure
-			data_storage_set: data_storage = l_storage
-			generation_path_set: generation_path = gen_path
 			buffer_size_set: buffer_size = initial_buffer_size
 			time_interval_set: time_interval = initial_time_interval
 		end
 
 feature -- Path
 
-	generation_path: STRING
+	generation_path: STRING is
 			-- Path on which c compiler will be launched.
 			-- Used when we need to open a console there.
+		deferred
+		end
 
 feature{NONE} -- Agents
 
@@ -280,8 +273,5 @@ feature{NONE} -- Implementation
 			dlg.set_pixmap (maps.warning_pixmap)
 			dlg.show_modal_to_window (win)
 		end
-
-	data_storage: EB_PROCESS_IO_STORAGE
-			-- Data storage to store output and error from launched process
 
 end

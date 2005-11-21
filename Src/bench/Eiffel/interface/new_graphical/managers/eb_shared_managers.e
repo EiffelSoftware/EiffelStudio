@@ -25,13 +25,13 @@ feature -- Status report
 	freezing_launcher: EB_FREEZING_LAUNCHER is
 			--
 		once
-			create Result.make (freezing_storage, workbench_generation_path)
+			create Result.make
 		end
 
 	finalizing_launcher: EB_FINALIZING_LAUNCHER is
 			--
 		once
-			create Result.make (finalizing_storage, final_generation_path)
+			create Result.make
 		end
 
 	idle_printing_manager: EB_IDLE_PRINTING_MANAGER is

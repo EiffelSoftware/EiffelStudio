@@ -9,7 +9,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EB_PROCESS_LAUNCHER
 
 inherit
@@ -192,7 +192,6 @@ feature -- Control
 			prc_imp: PROCESS_IMP
 			pt: PROCESS_TIMER
 		do
-			idle_printing_manager.initiate_timer
 			create prc_ftry
 			if use_argument then
 				prc := prc_ftry.process_launcher (command_line, arguments, working_directory)
@@ -312,6 +311,38 @@ feature -- Unmanaged process launch
 			execution_environment.change_working_directory (str)
 		end
 
+	launch_prcocess (cmd: STRING; dir: STRING) is
+			-- Launch process `cmd' in directory `dir' without io redirection.
+		require
+			cmd_not_void: cmd /= Void
+			cmd_not_empty: not cmd.is_empty
+		local
+			l_dir: STRING
+			cmdexe: STRING
+			cl: STRING
+		do
+			if platform_constants.is_windows then
+				cmdexe := Execution_environment.get ("COMSPEC")
+				if cmdexe /= Void then
+						-- This allows the use of `dir' etc.
+					cl := cmdexe
+				else
+					cl := "cmd /c"
+				end
+			else
+				cl.prepend ("/bin/sh -c xterm")
+			end
+			cl.append_string (cmd)
+			if dir /= Void then
+				l_dir := execution_environment.current_working_directory
+				execution_environment.change_working_directory (dir)
+			end
+			execution_environment.launch (cl)
+			if l_dir /= Void then
+				execution_environment.change_working_directory (l_dir)
+			end
+		end
+
 feature -- Status reporting
 
 	exit_code: INTEGER is
@@ -391,6 +422,13 @@ feature -- Status reporting
 	buffer_size: INTEGER
 			-- Internal buffer size used to get output and error from child process
 
+feature{NONE} -- Process data storage
+
+	data_storage: EB_PROCESS_IO_STORAGE is
+			-- Data storage used to store output and error that come from the launched process
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	prc: PROCESS
@@ -407,5 +445,8 @@ feature {NONE} -- Implementation
 
 	initial_time_interval: INTEGER is 10
 	initial_buffer_size: INTEGER is 50
+
+invariant
+	data_storage_not_void: data_storage /= Void
 
 end

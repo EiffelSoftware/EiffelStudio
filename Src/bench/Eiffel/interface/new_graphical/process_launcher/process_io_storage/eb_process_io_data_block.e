@@ -16,22 +16,24 @@ inherit
 feature -- State reporting
 
 	data: ANY is
-			-- 
-		deferred
-		end	
-		
-	string_representation: STRING is
-			-- 
+			-- Data that is stored in this block
 		deferred
 		end
-		
-	
-	count: INTEGER
+
+	string_representation: STRING is
+			-- String representation of `data'
+		deferred
+		end
+
+
+	count: INTEGER is
 		-- Length of stored data in bytes.
-				
+		deferred
+		end
+
 	is_error: BOOLEAN
 		-- Does data stored in `structured_image' come from error stream of process?
-	
+
 	is_end: BOOLEAN
 		-- Does it the last block of data?
 end

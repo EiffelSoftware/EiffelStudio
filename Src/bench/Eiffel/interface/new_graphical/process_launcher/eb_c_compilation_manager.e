@@ -4,12 +4,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
+class
 	EB_C_COMPILER_LAUNCHER
 
 
 inherit
 	EB_PROCESS_LAUNCHER
+		redefine
+			data_storage
+		end
 
 	EB_SHARED_PROCESS_IO_DATA_STORAGE
 
@@ -25,38 +28,137 @@ inherit
 
 	EB_SHARED_FLAGS
 
+create
+	make
+
+feature{NONE}	-- Initialization
+
+	make (l_storage: EB_PROCESS_IO_STORAGE; gen_path: STRING) is
+			-- Set up c compiler launch parameters.
+			-- `l_storage' is storage for output and error from c compilation.
+			-- `gen_path' is directory on which c compiler will be launched.
+		do
+			data_storage := l_storage
+			generation_path := gen_path
+			set_buffer_size (initial_buffer_size)
+			set_time_interval (initial_time_interval)
+			set_output_handler (agent output_dispatch_handler (?))
+			set_error_handler (agent error_dispatch_handler (?))
+
+			set_on_start_handler (agent on_start)
+			set_on_exit_handler (agent on_exit)
+			set_on_terminate_handler (agent on_terminate)
+			set_on_fail_launch_handler (agent on_launch_failed)
+			set_on_successful_launch_handler (agent on_launch_successed)
+		ensure
+			data_storage_set: data_storage = l_storage
+			generation_path_set: generation_path = gen_path
+			buffer_size_set: buffer_size = initial_buffer_size
+			time_interval_set: time_interval = initial_time_interval
+		end
+
+feature -- Path
+
+	generation_path: STRING
+			-- Path on which c compiler will be launched.
+			-- Used when we need to open a console there.
+
+feature{NONE} -- Agents
+
+	output_dispatch_handler (s: STRING) is
+			-- Agent called to store output `s' from c compiler
+		local
+			sblock: EB_PROCESS_IO_STRING_BLOCK
+		do
+			create sblock.make (s, False, False)
+			data_storage.extend_block (sblock)
+		end
+
+	error_dispatch_handler (s: STRING) is
+			-- Agent called to store error `s' from c compiler	
+		local
+			sblock: EB_PROCESS_IO_STRING_BLOCK
+		do
+			create sblock.make (s, True, False)
+			data_storage.extend_block (sblock)
+		end
+
 feature{NONE}  -- Actions
 
+	synchronize_on_c_compilation_start is
+			-- Synchronize before launch c compiler.
+		do
+			data_storage.reset_output_byte_count
+			data_storage.reset_error_byte_count
+			debugger_manager.on_compile_start
+
+			terminate_c_compilation_cmd.enable_sensitive
+			notify_development_windows_on_c_compilation_start
+			c_compilation_output_manager.clear
+			c_compilation_output_manager.force_display
+		end
+
+	synchronize_on_c_compilation_exit is
+			-- Synchronize when c compiler exits.
+		do
+			debugger_manager.on_compile_stop
+			terminate_c_compilation_cmd.disable_sensitive
+			window_manager.synchronize_all
+			notify_development_windows_on_c_compilation_stop
+			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make ("", False, True))
+		end
+
 	on_start is
-			-- Handler called when c compiler starts
-		deferred
+			-- Handler called before c compiler starts
+		do
+			synchronize_on_c_compilation_start
 		end
 
 	on_exit is
 			-- Handler called when c compiler exits
-		deferred
+		do
+			synchronize_on_c_compilation_exit
+			if launched then
+				if exit_code /= 0 then
+					window_manager.display_message (Interface_names.e_c_compilation_failed)
+					show_compilation_error_dialog
+				else
+					window_manager.display_message (Interface_names.e_c_compilation_successed)
+				end
+			end
 		end
 
 	on_launch_successed is
 			-- Handler called when c compiler launch successed
-		deferred
+		do
+			set_last_c_compiler_launch_successful (True)
 		end
 
 	on_launch_failed is
 			-- Handler called when c compiler launch failed
-		deferred
+		do
+			set_last_c_compiler_launch_successful (False)
+			synchronize_on_c_compilation_exit
+			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
+			show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
 		end
 
 	on_terminate is
 			-- Handler called when c compiler has been terminated
-		deferred
+		do
+			data_storage.wipe_out
+			synchronize_on_c_compilation_exit
+			window_manager.display_message (Interface_names.e_c_compilation_terminated)
 		end
 
 feature{NONE} -- Implementation
 
 	open_console is
 			-- Open a command line console if c-compilation failed.
-		deferred
+		require
+			generation_path_not_void: generation_path /= Void
+		do
+			open_console_in_dir (generation_path)
 		end
 
 	do_not_open_console is
@@ -179,13 +281,7 @@ feature{NONE} -- Implementation
 			dlg.show_modal_to_window (win)
 		end
 
-	output_dispatch_handler (s: STRING) is
-			-- Agent called when output from process arrives.
-		deferred
-		end
+	data_storage: EB_PROCESS_IO_STORAGE
+			-- Data storage to store output and error from launched process
 
-	error_dispatch_handler (s: STRING) is
-			-- Agent called when error from process arrives.
-		deferred
-		end
 end

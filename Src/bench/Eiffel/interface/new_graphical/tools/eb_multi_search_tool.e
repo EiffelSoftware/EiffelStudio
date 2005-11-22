@@ -11,11 +11,12 @@ inherit
 	EB_SEARCH_TOOL
 		rename
 			replace as replace_current
+		export
+			{MSR_REPLACE_IN_ESTUDIO_STRATEGY} editor
 		redefine
 			make,
 			build_interface,
 			build_options_box,
-			build_buttons_box,
 			search,
 			replace_current,
 			switch_mode,
@@ -30,9 +31,9 @@ inherit
 			on_text_reset,
 			on_text_fully_loaded
 		end
-	
+
 	MSR_FORMATTER
-	
+
 	EB_SHARED_MANAGERS
 		undefine
 			default_create
@@ -49,7 +50,7 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
-		
+
 create
 	make
 
@@ -62,6 +63,8 @@ feature {NONE} -- Initialization
 			create multi_search_performer.make
 			new_search_set := true
 			is_text_new_loaded := true
+			check_class_succeed := true
+			create report_summary_string.make_empty
 			create changed_classes.make (0)
 			create loaded_actions
 		end
@@ -72,31 +75,46 @@ feature {NONE} -- Initialization
 			vbox: EV_VERTICAL_BOX
 			search_box: EV_VERTICAL_BOX
 			replace_box: EV_VERTICAL_BOX
-			label: EV_LABEL
+			label, label_search: EV_LABEL
 			size: INTEGER
-			buttons_box: EV_BOX
 			options_box: EV_BOX
 			report_box: EV_BOX
 			frame: EV_FRAME
+			hbox: EV_HORIZONTAL_BOX
+			cell: EV_CELL
 		do
-			create label.make_with_text (Interface_names.l_Search_for)
-			label.align_text_left
-			size := label.minimum_width
+			create label_search.make_with_text (Interface_names.l_Search_for)
+			label_search.align_text_left
+			size := label_search.minimum_width
 
 			create keyword_field
 			keyword_field.change_actions.extend (agent enable_disable_search_button)
 			keyword_field.key_press_actions.extend (agent key_pressed (?, True))
-			keyword_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (100))
+			keyword_field.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (290))
 			keyword_field.drop_actions.extend (agent display_stone_signature (keyword_field, ?))
 
 			create search_box
 			search_box.set_padding (3)
-			search_box.extend (label)
-			search_box.extend (keyword_field)
-			
+			create hbox
+			hbox.set_padding_width (3)
+			search_box.extend (hbox)
+			hbox.extend (label_search)
+			hbox.disable_item_expand (label_search)
+
+			hbox.extend (keyword_field)
+			hbox.disable_item_expand (keyword_field)
+			create cell
+			cell.set_minimum_width (3)
+			hbox.extend (cell)
+			hbox.disable_item_expand (cell)
+			create search_button.make_with_text_and_action (interface_names.b_search, agent search_button_clicked)
+			search_button.disable_sensitive
+			hbox.extend (search_button)
+			hbox.disable_item_expand (search_button)
+
 			create replace_combo_box
 			replace_combo_box.key_press_actions.extend (agent key_pressed (?, False))
-			replace_combo_box.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (100))
+			replace_combo_box.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (290))
 			replace_combo_box.drop_actions.extend (agent display_stone_signature (replace_combo_box, ?))
 
 			create replace_check_button.make_with_text (Interface_names.l_Replace_with)
@@ -107,18 +125,48 @@ feature {NONE} -- Initialization
 			create replace_text.make (0)
 
 			create replace_box
-			replace_box.extend (replace_check_button)
-			replace_box.disable_item_expand (replace_check_button)
-			replace_box.extend (replace_combo_box)
+			replace_box.set_padding (3)
+			create hbox
+			hbox.set_padding_width (3)
+			replace_box.extend (hbox)
+			replace_box.disable_item_expand (hbox)
+			create label.make_with_text (interface_names.l_replace_with)
+
+			hbox.extend (label)
+			hbox.disable_item_expand (label)
+			label_search.set_minimum_width (label.width)
+
+			hbox.extend (replace_check_button)
+			replace_check_button.enable_select
+			replace_check_button.hide
+			hbox.disable_item_expand (replace_check_button)
+			hbox.extend (replace_combo_box)
+			hbox.disable_item_expand (replace_combo_box)
+
+			create cell
+			cell.set_minimum_width (3)
+			hbox.extend (cell)
+			hbox.disable_item_expand (cell)
+
+			create replace_button.make_with_text_and_action (interface_names.b_replace, agent replace_current)
+			create replace_all_click_button.make_with_text_and_action (interface_names.b_replace_all, agent confirm_and_replace_all)
+			hbox.extend (replace_button)
+			hbox.disable_item_expand (replace_button)
+			replace_button.set_minimum_width (replace_all_click_button.width)
+			hbox.extend (replace_all_click_button)
+			replace_button.set_minimum_width (replace_all_click_button.width)
+			search_button.set_minimum_width (replace_all_click_button.width)
+			hbox.disable_item_expand (replace_all_click_button)
+			replace_button.disable_sensitive
+			replace_all_click_button.disable_sensitive
 
 			options_box := build_options_box
-			buttons_box := build_buttons_box
 			report_box := build_report_box
-			
+
 			if not preferences.development_window_data.show_search_options then
 				toggle_options
 			end
-			
+
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_border_size)
@@ -126,12 +174,10 @@ feature {NONE} -- Initialization
 			vbox.disable_item_expand (search_box)
 			vbox.extend (replace_box)
 			vbox.disable_item_expand (replace_box)
-			vbox.extend (buttons_box)
-			vbox.disable_item_expand (buttons_box)
 			vbox.extend (options_box)
 			vbox.disable_item_expand (options_box)
 			vbox.extend (report_box)
-			
+
 			create frame
 			frame.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_raised)
 			frame.extend (vbox)
@@ -142,25 +188,25 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	grid_head_class: STRING is				"Class"	
+	grid_head_class: STRING is				"Class"
 	grid_head_found: STRING is				"Found"
 	grid_head_context: STRING is			"Context"
 	grid_head_file_location: STRING is		"File location"
 			-- Grid header texts
-	
+
 	header_width: ARRAYED_LIST [INTEGER] is
 			-- List of header width.
-		once		
+		once
 			create Result.make (4)
 			Result.extend (label_font.string_width (grid_head_class) + column_border_space)
 			Result.extend (label_font.string_width (grid_head_found) + column_border_space)
 			Result.extend (label_font.string_width (grid_head_context) + column_border_space)
 			Result.extend (label_font.string_width (grid_head_file_location) + column_border_space)
 		end
-	
+
 	surrounding_text_number: INTEGER is 	20
 			-- Maximal number of characters on one side of found text in the report.
-	
+
 	column_border_space: INTEGER is 8
 			-- Padding space for column content	
 
@@ -172,43 +218,43 @@ feature -- Access
 
 	multi_search_performer: MSR
 			-- Tool that actually performs the search
-			
+
 	replace_all_click_button: EV_BUTTON
 			-- Replace all button
-			
+
 	add_button: EV_BUTTON
 			-- Add button
-	
+
 	remove_button: EV_BUTTON
 			-- Remove button
-			
+
 	remove_all_button: EV_BUTTON
 			-- Remove all button
 
 	use_regular_expression_button: EV_CHECK_BUTTON
 			-- Button to tell if pattern contains wild card.
-			
+
 	current_editor_button: EV_RADIO_BUTTON
 			-- Button to search in editor
-			
+
 	whole_project_button: EV_RADIO_BUTTON
 			-- Button to search in whole project
-			
+
 	scope_button: EV_RADIO_BUTTON
 			-- Button to search in a specific scope
-			
+
 	search_subcluster_button: EV_CHECK_BUTTON
 			-- Button to indicate if subcluster of the specific scope will be searched.
-			
+
 	search_compiled_class_button: EV_CHECK_BUTTON
 			-- Button to indicate if compiled classes will be searched.
-			
+
 	incremental_search_button: EV_CHECK_BUTTON
 			-- Button to control incremental search.
-			
+
 	scope_list: EV_LIST
 			-- List of the specific scope
-			
+
 	search_report_grid: ES_GRID
 			-- Grid to contain search report
 
@@ -222,13 +268,13 @@ feature -- Status report
 		do
 			Result := search_backward_button.is_selected or temp_reverse
 		end
-		
+
 	is_whole_project_searched : BOOLEAN is
 			-- Is the whole project searched?
 		do
-			Result := whole_project_button.is_selected	
+			Result := whole_project_button.is_selected
 		end
-		
+
 	is_scoped : BOOLEAN is
 			-- Is search scoped?
 		do
@@ -240,43 +286,43 @@ feature -- Status report
 		do
 			Result := case_sensitive_button.is_selected
 		end
-	
-	is_whole_word_matched: BOOLEAN is	
+
+	is_whole_word_matched: BOOLEAN is
 			-- Is search whole word matched?
 		do
 			Result := whole_word_button.is_selected
 		end
-		
+
 	is_regular_expression_used: BOOLEAN is
 			-- Is regular expression used in search?
 		do
 			Result := use_regular_expression_button.is_selected
 		end
-		
+
 	is_incremental_search: BOOLEAN is
 			-- Is incremental search enabled?
 		do
 			Result := incremental_search_button.is_selected
 		end
-		
+
 	is_sub_cluster_searched: BOOLEAN is
 			-- Are subclusters searched?
 		do
-			Result := search_subcluster_button.is_selected	
+			Result := search_subcluster_button.is_selected
 		end
-		
+
 	is_current_editor_searched: BOOLEAN is
 			-- Is current editor searched?
 		do
-			Result := current_editor_button.is_selected	
-		end		
-	
+			Result := current_editor_button.is_selected
+		end
+
 	only_compiled_class_searched: BOOLEAN is
 			-- Only compiled classes are searched?
 		do
 			Result := search_compiled_class_button.is_selected
 		end
-		
+
 	item_selected (a_editor: EB_EDITOR): BOOLEAN is
 			-- If item in report is selected in a_editor.
 		local
@@ -284,12 +330,15 @@ feature -- Status report
 		do
 			if multi_search_performer.is_search_launched and not multi_search_performer.off then
 				l_text_item ?= multi_search_performer.item
-				if 	
+				if
 					l_text_item /= Void and then
-					is_current_editor_searched implies old_editor = editor and 
-					a_editor.text_displayed.selection_start.pos_in_text = l_text_item.start_index_in_unix_text and
-					a_editor.text_displayed.selection_end.pos_in_text = l_text_item.end_index_in_unix_text + 1
+					(is_current_editor_searched implies old_editor = editor) and
+					(a_editor.text_displayed.selection_start.pos_in_text = l_text_item.start_index_in_unix_text) and
+					(a_editor.text_displayed.selection_end.pos_in_text = l_text_item.end_index_in_unix_text + 1)
 				then
+					Result := true
+				end
+				if l_text_item = Void then
 					Result := true
 				end
 			end
@@ -302,13 +351,13 @@ feature -- Status setting
 		do
 			new_search_set := true
 		end
-		
+
 	enable_incremental_search is
 			-- Enable incremental search.
 		do
 			incremental_search_button.enable_select
 		end
-			
+
 	disable_incremental_search is
 			-- Disable increamental search	
 		do
@@ -321,13 +370,14 @@ feature -- Action
 			-- Highlight next found item if possible, possibly go back.
 			-- If search is not launched, launch it.
 		do
-			if new_search_set or (old_editor /= editor and is_current_editor_searched) then
+			if new_search_set or (old_editor /= editor and is_current_editor_searched) or (is_current_editor_searched and is_text_changed_in_editor) then
 				force_new_search
 				dispatch_search
+				select_and_show
 			else
 				extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
+				extend_and_run_loaded_action (agent go_to_next_found_select_and_show)
 			end
-			select_and_show
 		end
 
 	go_to_previous_found is
@@ -347,20 +397,21 @@ feature -- Action
 			l_end: INTEGER
 			l_class_i : CLASS_I
 			l_check: BOOLEAN
-		do			
+		do
 			l_start := 0
-			l_end := 1			
+			l_end := 1
+			check_class_succeed := true
 			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
 				l_item ?= multi_search_performer.item
 				if l_item /= Void then
 					l_start := l_item.start_index_in_unix_text
 					l_end := l_item.end_index_in_unix_text + 1
-				end				
+				end
 			end
 			if new_search_set or else
 				not multi_search_performer.is_search_launched or else
 				(not multi_search_performer.off and then
-				(editor.text_displayed.cursor /= Void and then 
+				(editor.text_displayed.cursor /= Void and then
 				(editor.text_displayed.cursor.pos_in_text > l_end or
 				editor.text_displayed.cursor.pos_in_text < l_start)))
 			then
@@ -375,7 +426,7 @@ feature -- Action
 				 end
 			end
 			if editor.number_of_lines /= 0 then
-				if editor.is_editable then	
+				if editor.is_editable then
 					if not multi_search_performer.off and not multi_search_performer.is_empty then
 						l_item ?= multi_search_performer.item
 						if l_item /= Void and then not is_item_source_changed (l_item) then
@@ -395,7 +446,7 @@ feature -- Action
 				end
 			end
 		end
-		
+
 	confirm_and_replace_all is
 			-- Ask for confirmation, then replace all.
 		local
@@ -406,228 +457,78 @@ feature -- Action
 				if not editor.is_editable then
 					hindered := true
 					editor.display_not_editable_warning_message
-				end				
+				end
 			end
 			if not hindered then
-				create cd.make_initialized (3, preferences.dialog_data.confirm_replace_all_string, warning_messages.w_replace_all, interface_names.l_Discard_replace_all_warning_dialog, preferences.preferences)
-				cd.set_ok_action (agent replace_all)
-				cd.show_modal_to_window (window_manager.last_focused_development_window.window)	
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	replace_current_perform is
-			-- Do actual `replace_current'.
-		local
-			editor_replace_strategy: MSR_REPLACE_IN_ESTUDIO_STRATEGY
-		do
-			create editor_replace_strategy.make (editor)
-			currently_replacing := replace_combo_box.text
-			multi_search_performer.set_replace_strategy (editor_replace_strategy)
-			multi_search_performer.set_replace_string (currently_replacing)
-			multi_search_performer.replace
-			update_combo_box_specific (replace_combo_box, currently_replacing)
-			force_not_changed
-		end
-		
-	go_to_next_found_perform (b: BOOLEAN) is
-			-- Do actual `go_to_next_found'. 
-		local
-			l_list: LIST [CLASS_I]
-			l_class_i: CLASS_I
-			l_pos: INTEGER
-			l_text: EDITABLE_TEXT
-		do
-			if multi_search_performer.is_search_launched and then not multi_search_performer.item_matched.is_empty then
-				if manager.class_name /= Void then
-					l_list := manager.eiffel_universe.classes_with_name (manager.class_name)
-					if not l_list.is_empty then
-						l_class_i := l_list.first
-					end
-				end
-				l_text := editor.text_displayed
-				if editor.text_displayed.has_selection then
-					if b then
-						l_pos := l_text.selection_start.pos_in_text
-					else
-						l_pos := l_text.selection_end.pos_in_text
-					end					
-				elseif l_text.cursor /= Void then
-					l_pos := l_text.cursor.pos_in_characters
-				end
-				multi_search_performer.go_to_closest_item (l_pos, b, l_class_i, (is_main_editor and manager.class_name /= Void) or not is_current_editor_searched)
-			end
-		end
-	
-	check_class_file is
-			-- Check if class of current selected item is loaded. If not, load it.
-			-- After check run `a_pro'.
-		local
-			l_item: MSR_ITEM
-			l_list: LIST [CLASS_I]
-			class_name: STRING
-		do
-			if not multi_search_performer.off then
-				l_item := multi_search_performer.item
-				create class_name.make_from_string (l_item.class_name)
-				class_name.to_upper
-				l_list := manager.eiffel_universe.classes_with_name (class_name)
-				if manager.class_name /= Void and then not manager.class_name.is_equal (l_item.class_name) then
-					if not l_list.is_empty then
-						manager.set_stone (stone_from_class_i (l_list.first))
-						is_text_changed_in_editor := false
-					end
-				elseif not is_current_editor_searched then
-					manager.set_stone (stone_from_class_i (l_list.first))
---					is_text_changed_in_editor := false
-				end
 				if not is_current_editor_searched then
-					manager.editor_tool.text_area.set_focus
+					create cd.make_initialized (3, preferences.dialog_data.confirm_replace_all_string, warning_messages.w_replace_all, interface_names.l_Discard_replace_all_warning_dialog, preferences.preferences)
+					cd.set_ok_action (agent replace_all)
+					cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				else
+					replace_all
 				end
-			end
-		end
-		
-	extend_and_run_loaded_action (a_pro: PROCEDURE [ANY, TUPLE]) is
-			-- Insert `a_pro' to loaded_actions and run all actions in it.
-		local
-			l_pro: PROCEDURE [ANY, TUPLE]
-		do
-			loaded_actions.extend (a_pro)
-			if editor.text_is_fully_loaded then
-				block_actions
-				from
-					loaded_actions.start
-				until
-					loaded_actions.count = 0
-				loop
-					l_pro := loaded_actions.item
-					loaded_actions.remove
-					l_pro.call ([])
-				end
-				resume_actions
-			end
-		end
-		
-	check_class_file_and_do (a_pro: PROCEDURE [ANY, TUPLE]) is
-			-- Check class before insert `a_pro' to loaded_actions and run all actions in it.
-		do
-			extend_and_run_loaded_action (agent check_class_file)
-			extend_and_run_loaded_action (a_pro)
-		end		
-		
-	loaded_actions: EV_NOTIFY_ACTION_SEQUENCE
-			-- Actions that are invoked sequently when text is fully loaded
-	
-	on_text_fully_loaded is
-			-- Text observer, runs when text is fully loaded.
-		do
-			Precursor {EB_SEARCH_TOOL}
-			if not loaded_actions.is_empty then
-				loaded_actions.call ([])
-				loaded_actions.wipe_out
-			end
-			if is_current_editor_searched then
-				force_new_search
-			end
---			is_text_changed_in_editor := true
-		end
-		
-	stone_from_class_i (a_class_i: CLASS_I): STONE is
-			-- Make a stone from a_class_i. 
-			-- If a_class_i compiled returns CLASSC_STONE , or a CLASSI_STONE.
-		require
-			a_class_i_not_void: a_class_i /= Void
-		local
-			l_class_c: CLASS_C
-		do
-			l_class_c := a_class_i.compiled_class
-			if l_class_c /= Void then
-				create {CLASSC_STONE}Result.make (l_class_c )
-			else
-				create {CLASSI_STONE}Result.make (a_class_i)
-			end
-			Result.set_pos_container (manager.managed_main_formatters.first)
-		end		
-	
-	search_button_clicked is
-			-- Invokes when search button is clicked.
-		do
-			if new_search_set or not multi_search_performer.is_search_launched then
-				dispatch_search
-				select_and_show
-			else
-				go_to_next_found
 			end
 		end
 
-	key_pressed (k: EV_KEY; search_only: BOOLEAN) is
-			-- Key `k' was pressed in the interface.
-			-- If k is Enter then launch the search, if it is Esc then hide the search interface.
-		local
-			meta_keys: ARRAY [BOOLEAN]
+feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR} -- Implementation
+
+	check_class_succeed: BOOLEAN
+			-- `check_class_file' makes file changed if needed?
+
+	set_check_class_succeed (a_succeed : BOOLEAN) is
+			-- Set `check_class_succeed' with `a_succeed'.
 		do
-			if k /= Void then
-				if k.code = Key_enter then
-					if not keyword_field.text.is_empty and then search_is_possible then
-						if search_only then
-							search_button_clicked
+			check_class_succeed := a_succeed
+		end
+
+	is_item_source_changed (a_item: MSR_ITEM): BOOLEAN is
+			-- Source in a_item changed?
+		require
+			a_item_attached: a_item /= Void
+		local
+			l_class_i: CLASS_I
+		do
+			l_class_i ?= a_item.data
+			if old_editor = Void or old_editor = editor then
+				if l_class_i /= Void then
+	--				Result := is_text_changed_in_editor or a_item.date /= l_class_i.date or changed_classes.has (l_class_i)
+					if is_current_editor_searched then
+						Result := is_text_changed_in_editor
+					else
+						if editor.changed then
+							Result := not changed_by_replace or changed_classes.has (l_class_i) or a_item.date /= l_class_i.date
 						else
-							replace_current
+							Result := is_text_changed_in_editor or changed_classes.has (l_class_i) or a_item.date /= l_class_i.date
 						end
+	--					if is_text_changed_in_editor then
+	--						Result := editor.changed and Result
+	--					else
+	--						Result := editor.changed or Result
+	--					end
 					end
-				elseif k.code = Key_escape then
-					close
-					ev_application.do_once_on_idle (agent editor.set_focus)
 				else
-					meta_keys := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
-					if 
-						(preferences.editor_data.key_codes_for_actions @ 5) = k.code and then
-						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 5)
-					then
-						if not keyword_field.text.is_empty and then search_only then
-							search_button_clicked
-						end
-					elseif
-						(preferences.editor_data.key_codes_for_actions @ 6) = k.code and then
-						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 6)
-					then
-						if not keyword_field.text.is_empty and then search_only then
-							temp_reverse := true
-							search_button_clicked
-							temp_reverse := false
-						end
-					end
+					Result := true
 				end
 			end
 		end
-		
-	toggle_search_report is
-			-- Hide report if it is shown, show it if it is hidden.
+
+	changed_by_replace: BOOLEAN
+			-- Changed by replace?
+
+	set_changed_by_replace (a_changed: BOOLEAN) is
+			-- Set `changed_by_replace'
 		do
-			if report.is_show_requested then
-				report.hide
-				report_button.set_text (Interface_names.l_Search_report_show)
-			else
-				report.show
-				report_button.set_text (Interface_names.l_Search_report_hide)
-			end
+			changed_by_replace:= a_changed
 		end
-		
-	toggle_scope_detail is
-			-- Show and hide the scope detail according to the scope box's selection.
+
+	force_not_changed is
+			-- Set `new_search' and `is_text_changed_in_editor' to false.
 		do
-			if is_scoped then
-				scope.enable_sensitive
-			else
-				scope.disable_sensitive
-			end
-			if is_whole_project_searched or is_scoped then
-				search_compiled_class_button.enable_sensitive
-			else
-				search_compiled_class_button.disable_sensitive
-			end
+			new_search_set := false
+			is_text_changed_in_editor := false
 		end
+
+feature {NONE} -- Build interface
 
 	build_options_box: EV_VERTICAL_BOX is
 			-- Create and return a box containing the search options
@@ -657,11 +558,11 @@ feature {NONE} -- Implementation
 				-- Option "Search backward"
 			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
 			search_backward_button.key_press_actions.extend (agent key_pressed (?, True))
-				
+
 				-- Option "Incremental search"
 			create incremental_search_button.make_with_text ("Have not added to search panel")
 			incremental_search_button.enable_select
-			
+
 				-- Option "Current Editor"		
 			create current_editor_button.make_with_text (Interface_names.l_Current_editor)
 			current_editor_button.key_press_actions.extend (agent key_pressed (?, True))
@@ -673,46 +574,46 @@ feature {NONE} -- Implementation
 			whole_project_button.key_press_actions.extend (agent key_pressed (?, True))
 			whole_project_button.select_actions.extend (agent toggle_scope_detail)
 			whole_project_button.select_actions.extend (agent force_new_search)
-				
+
 				-- Option "Scope"
 			create scope_button.make_with_text (Interface_names.l_Scope)
 			scope_button.key_press_actions.extend (agent key_pressed (?, True))
 			scope_button.select_actions.extend (agent toggle_scope_detail)
 			scope_button.select_actions.extend (agent force_new_search)
-			scope_button.drop_actions.extend (agent on_drop_scope_button (?))		
-			
+			scope_button.drop_actions.extend (agent on_drop_scope_button (?))
+
 				-- Option "Subcluster"
 			create search_subcluster_button.make_with_text (Interface_names.l_Sub_clusters)
 			search_subcluster_button.key_press_actions.extend (agent key_pressed (?, True))
 			search_subcluster_button.enable_select
 			search_subcluster_button.select_actions.extend (agent force_new_search)
-			
+
 				-- Option "Compiled class"
 			create search_compiled_class_button.make_with_text (Interface_names.l_Compiled_class)
 			search_compiled_class_button.key_press_actions.extend (agent key_pressed (?, True))
 			search_compiled_class_button.select_actions.extend (agent force_new_search)
-			
+
 				-- Option list scope
 			create scope_list.default_create
 			scope_list.key_press_actions.extend (agent key_pressed (?, True))
 			scope_list.enable_multiple_selection
 			scope_list.set_pick_and_drop_mode
 			scope_list.drop_actions.extend (agent on_drop_add (?))
-				
+
 				-- Add button
 			create add_button.make_with_text (interface_names.b_Add)
 			add_button.select_actions.extend (agent add_scope)
 			add_button.drop_actions.extend (agent on_drop_add (?))
-			
+
 				-- Remove button
-			create remove_button.make_with_text (interface_names.b_Remove)	
+			create remove_button.make_with_text (interface_names.b_Remove)
 			remove_button.select_actions.extend (agent remove_scope)
 			remove_button.drop_actions.extend (agent on_drop_remove (?))
-			
+
 				-- Remove all button
-			create remove_all_button.make_with_text (interface_names.b_Remove_all)	
-			remove_all_button.select_actions.extend (agent remove_all)				
-			
+			create remove_all_button.make_with_text (interface_names.b_Remove_all)
+			remove_all_button.select_actions.extend (agent remove_all)
+
 			create vbox
 			vbox.set_border_width (5)
 			vbox.set_padding_width (2)
@@ -740,12 +641,12 @@ feature {NONE} -- Implementation
 			create Result
 			Result.extend (frm)
 			Result.disable_item_expand (frm)
-			
+
 			create hbox
 
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)
-			
+
 			create scope
 			create vbox
 			vbox.set_border_width (5)
@@ -757,11 +658,11 @@ feature {NONE} -- Implementation
 			vbox.disable_item_expand (current_editor_button)
 			vbox.disable_item_expand (whole_project_button)
 			vbox.disable_item_expand (scope_button)
-			vbox.disable_item_expand (search_compiled_class_button)	
+			vbox.disable_item_expand (search_compiled_class_button)
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)
-			
-			
+
+
 			create vbox
 			vbox.set_border_width (5)
 			vbox.extend (scope_list)
@@ -769,70 +670,55 @@ feature {NONE} -- Implementation
 
 			scope.extend (vbox)
 			scope.disable_item_expand (vbox)
-			
+
 			create vbox
 			vbox.set_border_width (5)
 			vbox.set_padding_width (2)
 
 			vbox.extend (add_button)
 			vbox.disable_item_expand (add_button)
-			vbox.extend (remove_button)			
+			vbox.extend (remove_button)
 			vbox.extend (remove_all_button)
 			vbox.disable_item_expand (remove_button)
 			vbox.extend (search_subcluster_button)
 			vbox.disable_item_expand (search_subcluster_button)
 			scope.extend (vbox)
 			scope.disable_item_expand (vbox)
-			
-			hbox.extend (scope)		
-			
+
+			hbox.extend (scope)
+
 			create options
 			options.extend (hbox)
 			Result.extend (options)
-			
+
 			current_editor_button.enable_select
 			toggle_scope_detail
 		end
 
-	build_buttons_box: EV_HORIZONTAL_BOX is
-			-- Create and return a box containing the search buttons
-		local
-			cell: EV_CELL
-		do
-			create search_button.make_with_text_and_action (Interface_names.b_Search,agent search_button_clicked)
-			search_button.disable_sensitive
-			create replace_button.make_with_text_and_action (Interface_names.b_Replace,agent replace_current)
-			create replace_all_click_button.make_with_text_and_action (Interface_names.b_Replace_all, agent confirm_and_replace_all)
-
-			create Result
-			Result.set_padding (Layout_constants.Small_padding_size)
-		
-			create cell
-			Result.extend (cell)
-
-			Result.extend (search_button)
-			Result.disable_item_expand (search_button)
-			search_button.set_minimum_width (replace_all_click_button.width)
-			Result.extend (replace_button)
-			Result.disable_item_expand (replace_button)
-			replace_button.set_minimum_width (replace_all_click_button.width)
-			
-			Result.extend (replace_all_click_button)
-			Result.disable_item_expand (replace_all_click_button)
-			
-			create cell
-			Result.extend (cell)
-		end
-	
 	report : EV_FRAME
 			-- Report container
-		
+
 	report_button : EV_TOOL_BAR_BUTTON
 			-- Button to hide or show report.
-	
+
 	summary_label : EV_LABEL
 			-- Label to show search summary.
-		
+
+	shortcut_tool_bar: EV_TOOL_BAR
+			-- Tool bar contains expand all button etc.
+
+	new_search_tool_bar: EV_TOOL_BAR
+			-- Tool bar contains new search button.
+
+	new_search_button: EV_TOOL_BAR_BUTTON
+			-- Button to force a new search.
+
+	expand_all_button: EV_TOOL_BAR_BUTTON
+			-- Button to expand all.
+
+	collapse_all_button: EV_TOOL_BAR_BUTTON
+			-- Button to collapse all.
+
 	build_report_box : EV_VERTICAL_BOX is
 			-- Create and return a box containing result grid.
 		local
@@ -856,7 +742,29 @@ feature {NONE} -- Implementation
 			hbox.extend (summary_label)
 			hbox.disable_item_expand (summary_label)
 			hbox.disable_item_expand (report_toolbar)
-			
+
+			create new_search_tool_bar
+			hbox.extend (new_search_tool_bar)
+			hbox.disable_item_expand (new_search_tool_bar)
+			create new_search_button.make_with_text (interface_names.b_new_search)
+			new_search_tool_bar.extend (new_search_button)
+			new_search_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
+			new_search_button.select_actions.extend (agent new_search)
+			new_search_tool_bar.hide
+
+			create shortcut_tool_bar
+			hbox.extend (create {EV_CELL})
+			hbox.extend (shortcut_tool_bar)
+			hbox.disable_item_expand (shortcut_tool_bar)
+			shortcut_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
+			create expand_all_button.make_with_text (interface_names.b_expand_all)
+			create collapse_all_button.make_with_text (interface_names.b_collapse_all)
+			shortcut_tool_bar.extend (expand_all_button)
+			shortcut_tool_bar.extend (create {EV_TOOL_BAR_SEPARATOR})
+			shortcut_tool_bar.extend (collapse_all_button)
+			expand_all_button.select_actions.extend (agent expand_all)
+			collapse_all_button.select_actions.extend (agent collapse_all)
+
 			create search_report_grid
 			search_report_grid.enable_row_height_fixed
 			search_report_grid.enable_single_row_selection
@@ -867,23 +775,340 @@ feature {NONE} -- Implementation
 			search_report_grid.column (2).set_title (grid_head_found)
 			search_report_grid.column (3).set_title (grid_head_context)
 			search_report_grid.column (4).set_title (grid_head_file_location)
+
+			search_report_grid.column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
+			search_report_grid.column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
+
 			search_report_grid.row_select_actions.extend (agent on_grid_row_selected (?))
 			search_report_grid.set_item_pebble_function (agent grid_pebble_function (?))
 			search_report_grid.set_accept_cursor (Cursors.cur_class)
 			search_report_grid.set_deny_cursor (Cursors.cur_x_class)
 			search_report_grid.set_minimum_width (100)
-			
+
 			create Result
 			Result.extend (frm)
 			Result.disable_item_expand (frm)
 
 			create report
-			
+
 			report.extend (search_report_grid)
 			Result.extend (report)
-			
+
 		end
-		
+
+	scope : EV_HORIZONTAL_BOX
+			-- Scope widget container.
+
+	choose_dialog: EB_CHOOSE_MULTI_CLUSTER_N_CLASS_DIALOG
+			-- Dialog used to add classes or clusters to scope
+
+feature {NONE} -- Shortcut button actions
+
+	new_search is
+			--
+		do
+			force_new_search
+			search_button_clicked
+		end
+
+	expand_all is
+			--
+		local
+			i: INTEGER
+			l_row: EV_GRID_ROW
+		do
+			from
+				i := 1
+			until
+				i > search_report_grid.row_count
+			loop
+				l_row := search_report_grid.row (i)
+				if l_row.is_expandable then
+					l_row.expand
+				end
+				i := i + 1
+			end
+		end
+
+	collapse_all is
+			--
+		local
+			i: INTEGER
+			l_row: EV_GRID_ROW
+		do
+			from
+				i := 1
+			until
+				i > search_report_grid.row_count
+			loop
+				l_row := search_report_grid.row (i)
+				l_row.collapse
+				i := i + 1
+			end
+		end
+
+feature {NONE} -- Sort data
+
+	on_grid_header_click (a_column_index: INTEGER) is
+			-- User click on the column header of index `a_column_index'.
+		require
+			a_column_index_valid: column_index_valid (a_column_index)
+			output_grid_not_destroyed: not search_report_grid.is_destroyed
+		local
+			l_item: MSR_TEXT_ITEM
+		do
+			if search_report_grid.header.pointed_divider_index = 0 then
+				if sorted_column = a_column_index then
+						-- We invert the sorting.
+					sorting_order := not sorting_order
+				else
+					sorted_column := a_column_index
+					sorting_order := False
+				end
+				if search_report_grid.row_count > 0 then
+					l_item ?= multi_search_performer.item_matched.first
+					if l_item = Void then
+						if a_column_index = 1 then
+							multi_search_performer.sort_on (multi_search_performer.sort_by_class_name, sorting_order)
+							redraw_grid
+							select_current_row
+						elseif a_column_index = 2 then
+							multi_search_performer.sort_on (multi_search_performer.sort_by_found, sorting_order)
+							redraw_grid
+							select_current_row
+						end
+					end
+				end
+			end
+		end
+
+	sorted_column: INTEGER
+			-- Column on which sorting is done.	
+
+	column_index_valid (a_column_index: INTEGER): BOOLEAN  is
+			-- Validate a column index.
+		do
+			Result := a_column_index > 0 and a_column_index <= search_report_grid.column_count
+		end
+
+	sorting_order: BOOLEAN
+			-- If True, sort from the smaller to the larger.
+
+feature {NONE} -- Actions handler
+
+	search_button_clicked is
+			-- Invokes when search button is clicked.
+		do
+			check_class_succeed := true
+			if new_search_set or not multi_search_performer.is_search_launched then
+				dispatch_search
+				select_and_show
+			else
+				go_to_next_found
+			end
+		end
+
+	on_text_fully_loaded is
+			-- Text observer, runs when text is fully loaded.
+		do
+			Precursor {EB_SEARCH_TOOL}
+			if not loaded_actions.is_empty then
+				loaded_actions.call ([])
+				loaded_actions.wipe_out
+			end
+			if is_current_editor_searched then
+				force_new_search
+			end
+		end
+
+	key_pressed (k: EV_KEY; search_only: BOOLEAN) is
+			-- Key `k' was pressed in the interface.
+			-- If k is Enter then launch the search, if it is Esc then hide the search interface.
+		local
+			meta_keys: ARRAY [BOOLEAN]
+		do
+			if k /= Void then
+				if k.code = Key_enter then
+					if not keyword_field.text.is_empty and then search_is_possible then
+						if search_only then
+							search_button_clicked
+						else
+							replace_current
+						end
+					end
+				elseif k.code = Key_escape then
+					close
+					ev_application.do_once_on_idle (agent editor.set_focus)
+				else
+					meta_keys := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
+					if
+						(preferences.editor_data.key_codes_for_actions @ 5) = k.code and then
+						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 5)
+					then
+						if not keyword_field.text.is_empty and then search_only then
+							search_button_clicked
+						end
+					elseif
+						(preferences.editor_data.key_codes_for_actions @ 6) = k.code and then
+						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 6)
+					then
+						if not keyword_field.text.is_empty and then search_only then
+							temp_reverse := true
+							search_button_clicked
+							temp_reverse := false
+						end
+					end
+				end
+			end
+		end
+
+	toggle_search_report is
+			-- Hide report if it is shown, show it if it is hidden.
+		do
+			if report.is_show_requested then
+				report.hide
+				report_button.set_text (Interface_names.l_Search_report_show)
+			else
+				report.show
+				report_button.set_text (Interface_names.l_Search_report_hide)
+			end
+		end
+
+	toggle_scope_detail is
+			-- Show and hide the scope detail according to the scope box's selection.
+		do
+			if is_scoped then
+				scope.enable_sensitive
+			else
+				scope.disable_sensitive
+			end
+			if is_whole_project_searched or is_scoped then
+				search_compiled_class_button.enable_sensitive
+			else
+				search_compiled_class_button.disable_sensitive
+			end
+		end
+
+	add_scope is
+			-- Add a new scope from a choose dialog to the list.
+		do
+			if choose_dialog = Void or else choose_dialog.is_destroyed then
+				create choose_dialog.make
+				choose_dialog.set_class_add_action (agent add_class_item (?))
+				choose_dialog.set_cluster_add_action (agent add_cluster_item (?))
+				choose_dialog.show_relative_to_window (manager.window)
+				choose_dialog.default_push_button.select_actions.extend (agent force_new_search)
+			end
+			choose_dialog.set_focus
+		end
+
+	on_drop_scope_button (a_any: ANY) is
+			-- Invoke hen dropping on the scope check button.
+		do
+			scope_button.enable_select
+			on_drop_add (a_any)
+		end
+
+	on_drop_add (a_any: ANY) is
+			-- Invoke when dropping a pebble to add an item to the scope.
+		require
+			a_any_not_void: a_any /= Void
+		local
+			l_classi_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+		do
+			l_classi_stone ?= a_any
+			l_cluster_stone ?= a_any
+			if l_classi_stone /= Void then
+				add_class_item (l_classi_stone.class_i)
+			end
+			if l_cluster_stone /= Void then
+				add_cluster_item (l_cluster_stone.cluster_i)
+			end
+		end
+
+	on_drop_remove (a_any: ANY) is
+			-- Invoke when dropping a pebble on remove button.
+		require
+			a_any_not_void: a_any /= Void
+		local
+			l_classi_stone: CLASSI_STONE
+			l_cluster_stone: CLUSTER_STONE
+		do
+			l_classi_stone ?= a_any
+			l_cluster_stone ?= a_any
+			if l_classi_stone /= Void then
+				remove_class_item (l_classi_stone.class_i)
+			end
+			if l_cluster_stone /= Void then
+				remove_cluster_item (l_cluster_stone.cluster_i)
+			end
+		end
+
+	on_text_edited (directly_edited: BOOLEAN) is
+			-- Notify observers that some text has been modified.
+			-- If `directly_edited', the user has modified the text in the editor,
+			-- not via another tool or wizard.
+		local
+			l_class_stone: CLASSI_STONE
+		do
+			force_new_search
+			is_text_changed_in_editor := true
+			if is_text_new_loaded and then multi_search_performer.is_search_launched and then not multi_search_performer.is_empty then
+				l_class_stone ?= manager.stone
+				if l_class_stone /= Void and not changed_by_replace then
+					class_changed (l_class_stone.class_i)
+				end
+				is_text_new_loaded := false
+			end
+			set_changed_by_replace (false)
+		end
+
+	on_text_reset is
+			-- Obsever reset action.
+		do
+			is_text_changed_in_editor := false
+			is_text_new_loaded := true
+		end
+
+	enable_disable_search_button is
+			-- disable the search buton if the search field is empty, incremental search if it is possible.
+		do
+			if search_is_possible then
+				search_button.enable_sensitive
+				replace_button.enable_sensitive
+				replace_all_click_button.enable_sensitive
+				if not editor.is_empty and then is_incremental_search then
+					incremental_search (keyword_field.text)
+					if not multi_search_performer.off then
+						select_in_current_editor
+					else
+						editor.deselect_all
+					end
+				end
+			else
+				editor.deselect_all
+				search_button.disable_sensitive
+				replace_button.disable_sensitive
+				replace_all_click_button.disable_sensitive
+			end
+			if old_search_key_value /= Void and then not old_search_key_value.is_equal (keyword_field.text) then
+				force_new_search
+			end
+		end
+
+feature {EB_DEVELOPMENT_WINDOW} -- Notification
+
+	class_changed (a_class: CLASS_I) is
+			-- Remenber `a_class' as a user changed class since last search.
+		do
+			if a_class /= Void and then not changed_classes.has (a_class) then
+				changed_classes.extend (a_class)
+			end
+		end
+
+feature {NONE} -- Search perform
+
 	dispatch_search is
 			-- Dispatch search.
 		do
@@ -907,8 +1132,8 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end		
-		
+		end
+
 	incremental_search (a_word: STRING) is
 			-- Incremental search in the editor displayed text
 		local
@@ -927,7 +1152,7 @@ feature {NONE} -- Implementation
 					class_name := manager.class_name
 				else
 					create file_name.make
-				end		
+				end
 				if editor.text_displayed.reading_text_finished then
 					create incremental_search_strategy.make (currently_searched, surrounding_text_number, class_name, file_name, editor.text_displayed.text)
 					if case_sensitive_button.is_selected then
@@ -939,21 +1164,20 @@ feature {NONE} -- Implementation
 					incremental_search_strategy.set_whole_word_matched (whole_word_button.is_selected)
 					if class_i /= Void then
 						incremental_search_strategy.set_data (class_i)
-						incremental_search_strategy.set_date (class_i.date)	
+						incremental_search_strategy.set_date (class_i.date)
 					end
 					if manager.class_name /= Void then
 						incremental_search_strategy.set_class_name (manager.class_name)
-					end				
+					end
 					multi_search_performer.set_search_strategy (incremental_search_strategy)
 					multi_search_performer.do_search
 					multi_search_performer.start
 					force_new_search
-	--				changed_classes.wipe_out
 				end
 			end
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
-		end		
-		
+		end
+
 	search is
 			-- Search in editor.
 		local
@@ -987,18 +1211,17 @@ feature {NONE} -- Implementation
 				text_strategy.set_whole_word_matched (whole_word_button.is_selected)
 				if class_i /= Void then
 					text_strategy.set_data (class_i)
-					text_strategy.set_date (class_i.date)	
+					text_strategy.set_date (class_i.date)
 				end
 				multi_search_performer.do_search
 				update_combo_box_specific (keyword_field, currently_searched)
 				after_search
 				extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
---				check_class_file_and_do
 				update_combo_box_specific (keyword_field, currently_searched)
 			end
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
-		end	
-	
+		end
+
 	default_search is
 			-- Search with default options.
 		local
@@ -1031,19 +1254,18 @@ feature {NONE} -- Implementation
 					text_strategy.set_whole_word_matched (false)
 					if class_i /= Void then
 						text_strategy.set_data (class_i)
-						text_strategy.set_date (class_i.date)	
+						text_strategy.set_date (class_i.date)
 					end
 					multi_search_performer.do_search
 					update_combo_box_specific (keyword_field, currently_searched)
 					after_search
 					extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
---					check_class_file_and_do
 				end
 			end
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
-		
-	search_whole_project is	
+
+	search_whole_project is
 			-- Search the whole project.
 		local
 			l_project_strategy: MSR_SEARCH_WHOLE_PROJECT_STRATEGY
@@ -1055,7 +1277,7 @@ feature {NONE} -- Implementation
 				l_project_strategy.set_case_sensitive
 			else
 				l_project_strategy.set_case_insensitive
-			end 
+			end
 			l_project_strategy.set_regular_expression_used (is_regular_expression_used)
 			l_project_strategy.set_whole_word_matched (is_whole_word_matched)
 			multi_search_performer.set_search_strategy (l_project_strategy)
@@ -1066,7 +1288,7 @@ feature {NONE} -- Implementation
 			extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
-	
+
 	search_in_scope is
 			-- Search in scope.
 		local
@@ -1082,319 +1304,29 @@ feature {NONE} -- Implementation
 			end
 			l_scope_strategy.set_regular_expression_used (is_regular_expression_used)
 			l_scope_strategy.set_subcluster_searched (is_sub_cluster_searched)
-			l_scope_strategy.set_whole_word_matched (is_whole_project_searched)
+			l_scope_strategy.set_whole_word_matched (is_whole_word_matched)
 			multi_search_performer.set_search_strategy (l_scope_strategy)
 			multi_search_performer.do_search
 			update_combo_box_specific (keyword_field, currently_searched)
 			after_search
 			old_editor := Void
-			extend_and_run_loaded_action (agent go_to_next_found_perform (reverse))
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
-		end		
-		
+		end
+
 	after_search is
 			-- When a search done, go here. Incremental search excluded.
 		do
 			if multi_search_performer.is_search_launched then
-				old_search_key_value := currently_searched				
+				old_search_key_value := currently_searched
 				old_editor := editor
 				redraw_grid
 				changed_classes.wipe_out
 				extend_and_run_loaded_action (agent force_not_changed)
 			end
 		end
-		
-	scope : EV_HORIZONTAL_BOX
-			-- Scope widget container.
-	
-	choose_dialog: EB_CHOOSE_MULTI_CLUSTER_N_CLASS_DIALOG
-			-- Dialog used to add classes or clusters to scope
-	
-	add_scope is
-			-- Add a new scope from a choose dialog to the list.
-		do
-			if choose_dialog = Void or else choose_dialog.is_destroyed then
-				create choose_dialog.make
-				choose_dialog.set_class_add_action (agent add_class_item (?))
-				choose_dialog.set_cluster_add_action (agent add_cluster_item (?))
-				choose_dialog.show_relative_to_window (manager.window)
-				choose_dialog.default_push_button.select_actions.extend (agent force_new_search)
-			end
-			choose_dialog.set_focus
-		end
-		
-	on_drop_scope_button (a_any: ANY) is
-			-- Invoke hen dropping on the scope check button.
-		do
-			scope_button.enable_select
-			on_drop_add (a_any)
-		end		
-	
-	on_drop_add (a_any: ANY) is
-			-- Invoke when dropping a pebble to add an item to the scope.
-		require
-			a_any_not_void: a_any /= Void
-		local
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-		do
-			l_classi_stone ?= a_any
-			l_cluster_stone ?= a_any
-			if l_classi_stone /= Void then
-				add_class_item (l_classi_stone.class_i)
-			end
-			if l_cluster_stone /= Void then
-				add_cluster_item (l_cluster_stone.cluster_i)
-			end
-		end
-	
-	on_drop_remove (a_any: ANY) is
-			-- Invoke when dropping a pebble on remove button.
-		require
-			a_any_not_void: a_any /= Void
-		local
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
-		do
-			l_classi_stone ?= a_any
-			l_cluster_stone ?= a_any
-			if l_classi_stone /= Void then
-				remove_class_item (l_classi_stone.class_i)
-			end
-			if l_cluster_stone /= Void then
-				remove_cluster_item (l_cluster_stone.cluster_i)
-			end	
-		end
-		
-	one_replaced_in_all (a_item: MSR_ITEM) is
-			-- Invoke when replacing all, one matched item replaced.
-		do
-			new_search_set := false
-		end		
-		
-	on_text_edited (directly_edited: BOOLEAN) is
-			-- Notify observers that some text has been modified.
-			-- If `directly_edited', the user has modified the text in the editor,
-			-- not via another tool or wizard.
-		local
-			l_class_stone: CLASSI_STONE
-		do
-			force_new_search
-			is_text_changed_in_editor := true
-			if is_text_new_loaded and then multi_search_performer.is_search_launched and then not multi_search_performer.is_empty then
-				l_class_stone ?= manager.stone
-				if l_class_stone /= Void then
-					changed_classes.extend (l_class_stone.actual_class_i)
-				end
-				is_text_new_loaded := false
-			end
-		end
 
-	on_text_reset is
-			-- Obsever reset action.
-		do
-			is_text_changed_in_editor := false
-			is_text_new_loaded := true
-		end
-		
-	is_text_changed_in_editor: BOOLEAN
-			-- Text changed in the editor?
-			
-	is_text_new_loaded: BOOLEAN
-			-- Text loaded in the editor?
-	
-	add_class_item (a_class: CLASS_I) is
-			-- Add a class item to the tree.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			l_item := scope_list.retrieve_item_by_data (a_class, false)
-			if l_item = Void then
-				create l_item.make_with_text (a_class.name)
-				l_item.set_pixmap (pixmap_from_class_i (a_class))
-				scope_list.extend (l_item)
-				l_item.set_data (a_class)
-				l_item.set_pebble_function (agent scope_pebble_function (a_class))
-				l_item.set_accept_cursor (Cursors.cur_class)
-				l_item.set_deny_cursor (Cursors.cur_x_class)
-				force_new_search
-			end
-		end
-		
-	remove_class_item (a_class: CLASS_I) is
-			-- Remove a class item from the list.
-		require
-			a_class_not_void: a_class /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			l_item := scope_list.retrieve_item_by_data (a_class, false)
-			scope_list.prune_all (l_item)
-			force_new_search
-		end
-		
-	remove_cluster_item (a_cluster: CLUSTER_I) is
-			-- Remove a class item from the list.
-		require
-			a_cluster_not_void: a_cluster /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			l_item := scope_list.retrieve_item_by_data (a_cluster, false)
-			scope_list.prune_all (l_item)
-			force_new_search
-		end
-		
-	add_cluster_item (a_cluster: CLUSTER_I) is
-			-- Add a cluster item to the list.
-		require
-			a_cluster_not_void: a_cluster /= Void
-		local
-			l_item: EV_LIST_ITEM
-		do
-			l_item := scope_list.retrieve_item_by_data (a_cluster, false)
-			if l_item = Void then
-				create l_item.make_with_text (a_cluster.display_name)
-				l_item.set_pixmap (pixmap_from_cluster_i (a_cluster))
-				scope_list.extend (l_item)
-				l_item.set_data (a_cluster)
-				l_item.set_pebble_function (agent scope_pebble_function (a_cluster))
-				l_item.set_accept_cursor (Cursors.cur_cluster)
-				l_item.set_deny_cursor (Cursors.cur_x_class)
-				force_new_search
-			end
-		end
-	
-	scope_pebble_function (a_data: ANY) : STONE is
-			-- Scope pebble function
-		local
-			l_class_i: CLASS_I
-			l_cluster_i: CLUSTER_I
-		do
-			l_class_i ?= a_data
-			l_cluster_i ?= a_data
-			if l_class_i /= Void then
-				Result := stone_from_class_i (l_class_i)
-			end
-			if l_cluster_i /= Void then
-				create {CLUSTER_STONE}Result.make (l_cluster_i)
-			end
-		end	
-		
-	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE is
-			-- Grid pebble function
-		local
-			l_row: EV_GRID_ROW
-			l_item: MSR_ITEM
-			l_class_name: STRING
-			l_list: LIST [CLASS_I]
-		do
-			if a_item /= Void then			
-				l_row := a_item.row
-				l_item ?= l_row.data
-				if l_item /= Void then
-					create l_class_name.make_from_string (l_item.class_name)
-					l_class_name.to_upper
-					l_list := manager.eiffel_universe.classes_with_name (l_class_name)
-					if l_list /= Void and then not l_list.is_empty then
-						Result := stone_from_class_i (l_list.first)
-					end
-				end
-			end
-		end
-	
-	clusters_in_the_project: EB_CLUSTERS is
-			-- Clusters in the project
-		do
-			Result:= manager.cluster_manager.manager	
-		end		
-		
-	remove_scope is
-			-- Remove a scope from the list
-		local
-			test: DYNAMIC_LIST [EV_LIST_ITEM]
-		do
-			test := scope_list.selected_items
-			from
-				test.start
-			until
-				test.after
-			loop
-				scope_list.prune (test.item)
-				test.forth
-			end
-			if scope_list.selected_items.count /= 0 then
-				force_new_search
-			end			
-		end
-		
-	remove_all is
-			-- Remove all from scope
-		do
-			scope_list.wipe_out
-		end
-		
-	switch_mode is
-			-- Switch from the normal mode to the replace mode
-			-- or the opposite
-		do
-			if not replace_check_button.is_selected then
-				replace_text := replace_combo_box.text
-				replace_combo_box.remove_text
-				replace_combo_box.hide
-				replace_check_button.set_text (Interface_names.l_Replace_with_ellipsis)
-				replace_button.disable_sensitive
-				replace_all_click_button.disable_sensitive
-			else
-				replace_combo_box.set_text (replace_text)
-				replace_combo_box.show
-				replace_check_button.set_text (Interface_names.l_Replace_with)
-				if search_is_possible then
-					replace_button.enable_sensitive
-					replace_all_click_button.enable_sensitive
-				end
-			end
-		end
+feature {NONE} -- Search report
 
-	enable_disable_search_button is
-			-- disable the search buton if the search field is empty, incremental search if it is possible.
-		do
-			if search_is_possible then
-				search_button.enable_sensitive
-				if replace_check_button.is_selected then
-					replace_button.enable_sensitive
-					replace_all_click_button.enable_sensitive
-				end
-				if not editor.is_empty and then is_incremental_search then
-					incremental_search (keyword_field.text)
-					if not multi_search_performer.off then
-						select_in_current_editor
-					else
-						editor.deselect_all
-					end
-				end
-			else
-				editor.deselect_all
-				search_button.disable_sensitive
-				replace_button.disable_sensitive
-				replace_all_click_button.disable_sensitive
-			end
-			if old_search_key_value /= Void and then not old_search_key_value.is_equal (keyword_field.text) then
-				force_new_search
-			end
-		end
-
-	search_is_possible: BOOLEAN is
-			-- Is it possible to look for the current content of the "search for:" field?
-		local
-			for_test: STRING
-		do
-			for_test := keyword_field.text
-			Result := not for_test.is_empty
-		end
-		
 	compute_adjust_vertical (a_font: EV_FONT; a_label_item: EV_GRID_ITEM) is
 			-- Compute `adjust_vertical'
 		require
@@ -1421,10 +1353,10 @@ feature {NONE} -- Implementation
 					end
 					vertical_text_offset_into_available_space := vertical_text_offset_into_available_space.max (0)
 					adjust_vertical := vertical_text_offset_into_available_space + label_item.top_border
-				end					
-			end			
+				end
+			end
 		end
-		
+
 	new_label_item (a_string: STRING): EV_GRID_LABEL_ITEM is
 			-- Create uniformed label item
 		require
@@ -1438,7 +1370,7 @@ feature {NONE} -- Implementation
 		ensure
 			new_item_not_void: Result /= Void
 		end
-		
+
 	label_font: EV_FONT is
 			-- Font of report text.
 		local
@@ -1447,13 +1379,13 @@ feature {NONE} -- Implementation
 			create l_label
 			Result := l_label.font
 		end
-		
+
 	adjust_vertical: INTEGER
 			-- Offset between top of a row and top of charactors in it, buffer for effiency enhancement
-			
+
 	text_height: INTEGER
 			-- Height of the text in the `search_report_grid', buffer for effiency enhancement
-		
+
 	expose_drawable_action (drawable: EV_DRAWABLE; a_item: MSR_ITEM; query_grid_row: EV_GRID_ROW) is
 			-- Draw grid item, to make the text colorfull.
 			-- return width of current drawable item.
@@ -1471,7 +1403,7 @@ feature {NONE} -- Implementation
 				compute_adjust_vertical (font, query_grid_row.item (1))
 			end
 			drawable.clear
-			drawable.set_font (font)		
+			drawable.set_font (font)
 			row_selected := query_grid_row.is_selected
 			focused := search_report_grid.has_focus
 			if row_selected then
@@ -1484,31 +1416,31 @@ feature {NONE} -- Implementation
 				drawable.set_foreground_color (search_report_grid.background_color)
 			end
 			l_color := row_text_color (drawable.foreground_color)
-			
+
 			drawable.fill_rectangle (0, 0, drawable.width,drawable.height)
 			l_item ?= a_item
 			if l_item /= Void then
 				drawable.set_foreground_color (l_color)
-				drawable.draw_text_top_left (0, adjust_vertical, 
+				drawable.draw_text_top_left (0, adjust_vertical,
 											l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
 				if not row_selected then
 					drawable.set_foreground_color (preferences.editor_data.operator_text_color)
 				end
 				offset := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text - 1))
-				
+
 				drawable.draw_text_top_left (offset, adjust_vertical, replace_rnt_to_space (l_item.text))
 				drawable.set_foreground_color (l_color)
 				offset := font.string_width (l_item.context_text.substring (1, l_item.start_index_in_context_text + l_item.text.count - 1))
-				
-				drawable.draw_text_top_left (offset, 
+
+				drawable.draw_text_top_left (offset,
 											adjust_vertical,
 											l_item.context_text.substring (l_item.start_index_in_context_text + l_item.text.count,
-																			l_item.context_text.count))	
+																			l_item.context_text.count))
 			else
 				drawable.draw_text (0, adjust_vertical, "-")
-			end		
+			end
 		end
-		
+
 	row_text_color (a_bg_color: EV_COLOR): EV_COLOR is
 			-- Text color according to its background color `a_bg_color'
 		require
@@ -1520,7 +1452,9 @@ feature {NONE} -- Implementation
 				create Result.make_with_rgb (1, 1, 1)
 			end
 		end
-		
+
+	report_summary_string: STRING
+
 	redraw_grid is
 			-- Redraw grid according to search result and refresh summary label.
 		local
@@ -1540,15 +1474,17 @@ feature {NONE} -- Implementation
 		do
 			if multi_search_performer.is_search_launched then
 				search_report_grid.remove_and_clear_all_rows
-				summary_label.set_text ("   " +
-										multi_search_performer.text_found_count.out + 
-										" found(s) in " + 
-										multi_search_performer.class_count.out + 
-										" class(es)")
-				
+				report_summary_string := "   " +
+										multi_search_performer.text_found_count.out +
+										" found(s) in " +
+										multi_search_performer.class_count.out +
+										" class(es)"
+				summary_label.set_text (report_summary_string)
+				new_search_tool_bar.hide
+
 				l_index := multi_search_performer.index
 				font := label_font
-				from 
+				from
 					arrayed_list := multi_search_performer.item_matched
 					arrayed_list.start
 					row_count := search_report_grid.row_count + 1
@@ -1559,7 +1495,7 @@ feature {NONE} -- Implementation
 					arrayed_list.after
 				loop
 					l_item := arrayed_list.item
-	
+
 					l_class_item ?= arrayed_list.item
 					if l_class_item /= Void then
 						j := j + 1
@@ -1578,11 +1514,11 @@ feature {NONE} -- Implementation
 							l_grid_label_item.set_pixmap (pixmap_from_class_i (l_class_i))
 						end
 						search_report_grid.set_item (1, row_count, l_grid_label_item)
-						search_report_grid.set_item (3, 
-													row_count, 
+						search_report_grid.set_item (3,
+													row_count,
 													new_label_item (once "-"))
-						search_report_grid.set_item (4, 
-													row_count, 
+						search_report_grid.set_item (4,
+													row_count,
 													new_label_item (l_item.path))
 						k := 0
 					else
@@ -1599,11 +1535,11 @@ feature {NONE} -- Implementation
 								l_new_row := search_report_grid.row (row_count)
 								l_new_row.set_data (l_text_item)
 							end
-							search_report_grid.set_item (1, 
-														row_count, 
+							search_report_grid.set_item (1,
+														row_count,
 														new_label_item ("Line " + l_text_item.line_number.out + ":"))
 							search_report_grid.set_item (2,
-														row_count, 
+														row_count,
 														new_label_item (replace_rnt_to_space (l_text_item.text)))
 							search_report_grid.item (2, row_count).set_foreground_color (preferences.editor_data.operator_text_color)
 							create l_grid_drawable_item
@@ -1622,13 +1558,13 @@ feature {NONE} -- Implementation
 								loop
 									row_count := row_count + 1
 									search_report_grid.insert_new_row_parented (row_count, search_report_grid.row (submatch_parent))
-									search_report_grid.set_item (1, 
-																row_count, 
-																new_label_item ("Capture " + 
-																				l_text_item.captured_submatches.index.out + 
-																				": " + 
+									search_report_grid.set_item (1,
+																row_count,
+																new_label_item ("Capture " +
+																				l_text_item.captured_submatches.index.out +
+																				": " +
 																				l_text_item.captured_submatches.item))
-									l_text_item.captured_submatches.forth								
+									l_text_item.captured_submatches.forth
 								end
 							end
 						end
@@ -1661,7 +1597,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	on_grid_row_clicked (a, b, c : INTEGER; d, e, f: DOUBLE; g, h: INTEGER; a_row: EV_GRID_ROW) is
 			-- A row is clicked by mouse pointer.
 		do
@@ -1670,7 +1606,7 @@ feature {NONE} -- Implementation
 					on_grid_row_selected (a_row)
 				end
 			end
-		end		
+		end
 
 	adjust_grid_column_width is
 			-- Adjust grid column width to best fit visible area.
@@ -1694,7 +1630,7 @@ feature {NONE} -- Implementation
 					l_required_width.extend (col.required_width_of_item_span (1, col.parent.row_count))
 					full_width := full_width + (header_width @ i).max (l_required_width @ i)
 					i := i + 1
-				end			
+				end
 				l_grid_width := search_report_grid.width
 				from
 					i := 1
@@ -1710,10 +1646,10 @@ feature {NONE} -- Implementation
 					l_width := l_width + column_border_space
 					col.set_width (l_width)
 					i := i + 1
-				end				
+				end
 			end
 		end
-	
+
 	on_grid_row_selected (a_row: EV_GRID_ROW) is
 			-- Invoke when a row of the report grid selected
 		require
@@ -1721,6 +1657,7 @@ feature {NONE} -- Implementation
 		local
 			l_item: MSR_ITEM
 		do
+			check_class_succeed := true
 			if a_row.parent /= Void and then a_row.parent_row /= Void and then a_row.parent_row.is_expandable and then not a_row.parent_row.is_expanded then
 				a_row.parent_row.expand
 				adjust_grid_column_width
@@ -1735,7 +1672,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_grid_row_selected_perform is
 			-- Do actual `on_grid_row_selected'
 		local
@@ -1745,12 +1682,12 @@ feature {NONE} -- Implementation
 			new_search_set := false
 			l_text_item ?= multi_search_performer.item
 			if l_text_item /= Void then
-				if not is_main_editor or not is_item_source_changed (l_text_item) then
-					if old_editor /= Void then
-						l_editor := old_editor
-					else
-						l_editor := editor
-					end
+				if old_editor /= Void then
+					l_editor := old_editor
+				else
+					l_editor := editor
+				end
+				if old_editor /= editor implies (not is_item_source_changed (l_text_item)) then
 					if l_text_item.end_index_in_unix_text + 1 > l_text_item.start_index_in_unix_text then
 						if l_editor.text_is_fully_loaded then
 							l_editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)
@@ -1763,28 +1700,21 @@ feature {NONE} -- Implementation
 						l_editor.show_selection (False)
 					end
 					l_editor.refresh_now
+					summary_label.set_text (report_summary_string)
+					new_search_tool_bar.hide
+				else
+					summary_label.set_text (report_summary_string + "   Item selected has expired.")
+					new_search_tool_bar.show
 				end
-			end	
-		end		
-	
-	is_item_source_changed (a_item: MSR_TEXT_ITEM): BOOLEAN is
-			-- Source in a_item changed?
-		require
-			a_item_attached: a_item /= Void
-		local
-			l_class_i: CLASS_I
-		do
-			l_class_i ?= a_item.data
-			if l_class_i /= Void then	
-				Result := is_text_changed_in_editor or a_item.date /= l_class_i.date or changed_classes.has (l_class_i)
 			else
-				Result := true
+				summary_label.set_text (report_summary_string)
+				new_search_tool_bar.hide
 			end
 		end
-		
+
 	changed_classes: ARRAYED_LIST [CLASS_I]
 			-- Keep a record of modified class by editor.
-	
+
 	select_current_row is
 			-- Select current row in the grid
 		require
@@ -1795,7 +1725,7 @@ feature {NONE} -- Implementation
 			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 		do
 			if not multi_search_performer.off then
-				l_row := grid_row_by_data (search_report_grid, multi_search_performer.item)	
+				l_row := grid_row_by_data (search_report_grid, multi_search_performer.item)
 			end
 			if l_row /= Void then
 				l_row_index := l_row.index
@@ -1808,56 +1738,7 @@ feature {NONE} -- Implementation
 			end
 			search_report_grid.select_row (l_row_index)
 		end
-		
-	select_and_show is
-			-- Select and show in the editor
-		do
-			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
-				check_class_file_and_do (agent select_and_show_perform)
-			end
-		end
-	
-	select_and_show_perform is 
-			-- Do actual `select_and_show'.
-		do
-			if multi_search_performer.is_search_launched and then not multi_search_performer.off then	
-				select_in_current_editor_perform
-				select_current_row
-			end
-		end
-		
-	select_in_current_editor is
-			-- Select in the editor
-		do
-			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
-				extend_and_run_loaded_action (agent select_in_current_editor_perform)
-			end
-		end
-	
-	select_in_current_editor_perform is
-			-- Do actual `select_in_current_editor'.
-		local
-			l_text_item: MSR_TEXT_ITEM
-		do
-			if multi_search_performer.is_search_launched and then not multi_search_performer.off then	
-				l_text_item ?= multi_search_performer.item
-				if l_text_item /= Void then
-					if l_text_item.end_index_in_unix_text + 1 > l_text_item.start_index_in_unix_text then
-						if editor.text_is_fully_loaded then
-							editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)
-						end
-					elseif l_text_item.end_index_in_unix_text + 1 = l_text_item.start_index_in_unix_text then
-						editor.text_displayed.cursor.go_to_position (l_text_item.end_index_in_unix_text + 1)
-						editor.deselect_all
-					end
-					if editor.has_selection then
-						editor.show_selection (False)
-					end
-					editor.refresh_now
-				end
-			end			
-		end	
-	
+
 	grid_row_by_data (a_grid: ES_GRID; a_data: ANY) : EV_GRID_ROW is
 			-- Find a row in a_grid that include a_data
 		local
@@ -1880,18 +1761,429 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Replacement Implementation
+
+	replace_current_perform is
+			-- Do actual `replace_current'.
+		local
+			editor_replace_strategy: MSR_REPLACE_IN_ESTUDIO_STRATEGY
+		do
+			create editor_replace_strategy.make (current)
+			currently_replacing := replace_combo_box.text
+			multi_search_performer.set_replace_strategy (editor_replace_strategy)
+			multi_search_performer.set_replace_string (currently_replacing)
+			multi_search_performer.replace
+			update_combo_box_specific (replace_combo_box, currently_replacing)
+			force_not_changed
+		end
+
+	replace_all is
+			-- Replace all matches in specified scale.
+		local
+			editor_replace_strategy: MSR_REPLACE_IN_ESTUDIO_STRATEGY
+		do
+			check_class_succeed := true
+			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
+			currently_replacing := replace_combo_box.text
+			if is_current_editor_searched then
+				search_button_clicked
+			else
+				if
+					new_search_set or else
+					not multi_search_performer.is_search_launched
+				then
+					search_button_clicked
+				end
+			end
+			if multi_search_performer.is_search_launched then
+				create editor_replace_strategy.make (current)
+				multi_search_performer.set_replace_strategy (editor_replace_strategy)
+				multi_search_performer.set_replace_string (currently_replacing)
+				multi_search_performer.replace_all
+				update_combo_box_specific (replace_combo_box, currently_replacing)
+				redraw_grid
+			end
+			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
+		end
+
+feature {NONE} -- Implementation
+
+	go_to_next_found_perform (b: BOOLEAN) is
+			-- Do actual `go_to_next_found'.
+		local
+			l_list: LIST [CLASS_I]
+			l_class_i: CLASS_I
+			l_pos: INTEGER
+			l_text: EDITABLE_TEXT
+			l_text_item: MSR_TEXT_ITEM
+			l_selected: BOOLEAN
+		do
+			if multi_search_performer.is_search_launched and then not multi_search_performer.item_matched.is_empty then
+				if manager.class_name /= Void then
+					l_list := manager.eiffel_universe.classes_with_name (manager.class_name)
+					if not l_list.is_empty then
+						l_class_i := l_list.first
+					end
+				end
+				l_text := editor.text_displayed
+				if editor.text_displayed.has_selection then
+					if b then
+						l_pos := l_text.selection_start.pos_in_text
+					else
+						l_pos := l_text.selection_end.pos_in_text
+					end
+				elseif l_text.cursor /= Void then
+					l_pos := l_text.cursor.pos_in_characters
+				end
+				if not multi_search_performer.off then
+					l_text_item ?= multi_search_performer.item
+					if l_text_item /= Void and then ((old_editor = Void or old_editor = editor) implies is_item_source_changed (l_text_item)) then
+						multi_search_performer.go_to_next_text_item (b)
+						select_current_row
+						l_selected := true
+					end
+				end
+				if not l_selected then
+					multi_search_performer.go_to_closest_item (l_pos, b, l_class_i, (is_main_editor and manager.class_name /= Void) or not is_current_editor_searched)
+					go_to_next_need_select_and_show := true
+					if (not multi_search_performer.off) and then is_item_source_changed (multi_search_performer.item) then
+						multi_search_performer.start
+						if l_text_item /= Void then
+							multi_search_performer.search (l_text_item)
+						end
+						multi_search_performer.go_to_next_text_item (b)
+						go_to_next_need_select_and_show := false
+						select_current_row
+					end
+				end
+			end
+		end
+
+	go_to_next_found_select_and_show is
+			--
+		do
+			if go_to_next_need_select_and_show then
+				select_and_show
+				go_to_next_need_select_and_show := false
+			end
+		end
+
+	go_to_next_need_select_and_show : BOOLEAN
+
+	check_class_file is
+			-- Check if class of current selected item is loaded. If not, load it.
+			-- After check run `a_pro'.
+		local
+			l_item: MSR_ITEM
+			l_list: LIST [CLASS_I]
+			class_name: STRING
+			l_stone: STONE
+		do
+			check_class_succeed := true
+			if not multi_search_performer.off then
+				l_stone := manager.stone
+				l_item := multi_search_performer.item
+				create class_name.make_from_string (l_item.class_name)
+				class_name.to_upper
+				l_list := manager.eiffel_universe.classes_with_name (class_name)
+				if manager.class_name /= Void and then not manager.class_name.is_equal (l_item.class_name) then
+					if not l_list.is_empty then
+						manager.set_stone (stone_from_class_i (l_list.first))
+						if l_stone /= manager.stone then
+							is_text_changed_in_editor := false
+						else
+							loaded_actions.wipe_out
+							check_class_succeed := false
+						end
+					end
+				elseif not is_current_editor_searched then
+					manager.set_stone (stone_from_class_i (l_list.first))
+					if l_stone = manager.stone then
+						loaded_actions.wipe_out
+						check_class_succeed := false
+					end
+				end
+				if not is_current_editor_searched and l_stone /= manager.stone then
+					manager.editor_tool.text_area.set_focus
+				end
+			end
+		end
+
+	extend_and_run_loaded_action (a_pro: PROCEDURE [ANY, TUPLE]) is
+			-- Insert `a_pro' to loaded_actions and run all actions in it.
+		local
+			l_pro: PROCEDURE [ANY, TUPLE]
+			loop_end : BOOLEAN
+		do
+			if check_class_succeed then
+				loaded_actions.extend (a_pro)
+				block_actions
+				from
+					loaded_actions.start
+				until
+					loaded_actions.count = 0 or loop_end
+				loop
+					if editor.text_is_fully_loaded or editor.is_empty then
+						l_pro := loaded_actions.item
+						loaded_actions.remove
+						l_pro.call ([])
+					else
+						loop_end := true
+					end
+				end
+				resume_actions
+			end
+		end
+
+	check_class_file_and_do (a_pro: PROCEDURE [ANY, TUPLE]) is
+			-- Check class before insert `a_pro' to loaded_actions and run all actions in it.
+		do
+			extend_and_run_loaded_action (agent check_class_file)
+			extend_and_run_loaded_action (a_pro)
+		end
+
+	loaded_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions that are invoked sequently when text is fully loaded
+
+
+	stone_from_class_i (a_class_i: CLASS_I): STONE is
+			-- Make a stone from a_class_i.
+			-- If a_class_i compiled returns CLASSC_STONE , or a CLASSI_STONE.
+		require
+			a_class_i_not_void: a_class_i /= Void
+		local
+			l_class_c: CLASS_C
+		do
+			l_class_c := a_class_i.compiled_class
+			if l_class_c /= Void then
+				create {CLASSC_STONE}Result.make (l_class_c )
+			else
+				create {CLASSI_STONE}Result.make (a_class_i)
+			end
+			Result.set_pos_container (manager.managed_main_formatters.first)
+		end
+
+	is_text_changed_in_editor: BOOLEAN
+			-- Text changed in the editor?
+
+	is_text_new_loaded: BOOLEAN
+			-- Text loaded in the editor?
+
+	add_class_item (a_class: CLASS_I) is
+			-- Add a class item to the tree.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_class, false)
+			if l_item = Void then
+				create l_item.make_with_text (a_class.name)
+				l_item.set_pixmap (pixmap_from_class_i (a_class))
+				scope_list.extend (l_item)
+				l_item.set_data (a_class)
+				l_item.set_pebble_function (agent scope_pebble_function (a_class))
+				l_item.set_accept_cursor (Cursors.cur_class)
+				l_item.set_deny_cursor (Cursors.cur_x_class)
+				force_new_search
+			end
+		end
+
+	remove_class_item (a_class: CLASS_I) is
+			-- Remove a class item from the list.
+		require
+			a_class_not_void: a_class /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_class, false)
+			scope_list.prune_all (l_item)
+			force_new_search
+		end
+
+	remove_cluster_item (a_cluster: CLUSTER_I) is
+			-- Remove a class item from the list.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_cluster, false)
+			scope_list.prune_all (l_item)
+			force_new_search
+		end
+
+	add_cluster_item (a_cluster: CLUSTER_I) is
+			-- Add a cluster item to the list.
+		require
+			a_cluster_not_void: a_cluster /= Void
+		local
+			l_item: EV_LIST_ITEM
+		do
+			l_item := scope_list.retrieve_item_by_data (a_cluster, false)
+			if l_item = Void then
+				create l_item.make_with_text (a_cluster.display_name)
+				l_item.set_pixmap (pixmap_from_cluster_i (a_cluster))
+				scope_list.extend (l_item)
+				l_item.set_data (a_cluster)
+				l_item.set_pebble_function (agent scope_pebble_function (a_cluster))
+				l_item.set_accept_cursor (Cursors.cur_cluster)
+				l_item.set_deny_cursor (Cursors.cur_x_class)
+				force_new_search
+			end
+		end
+
+	scope_pebble_function (a_data: ANY) : STONE is
+			-- Scope pebble function
+		local
+			l_class_i: CLASS_I
+			l_cluster_i: CLUSTER_I
+		do
+			l_class_i ?= a_data
+			l_cluster_i ?= a_data
+			if l_class_i /= Void then
+				Result := stone_from_class_i (l_class_i)
+			end
+			if l_cluster_i /= Void then
+				create {CLUSTER_STONE}Result.make (l_cluster_i)
+			end
+		end
+
+	grid_pebble_function (a_item: EV_GRID_ITEM) : STONE is
+			-- Grid pebble function
+		local
+			l_row: EV_GRID_ROW
+			l_item: MSR_ITEM
+			l_class_name: STRING
+			l_list: LIST [CLASS_I]
+		do
+			if a_item /= Void then
+				l_row := a_item.row
+				l_item ?= l_row.data
+				if l_item /= Void then
+					create l_class_name.make_from_string (l_item.class_name)
+					l_class_name.to_upper
+					l_list := manager.eiffel_universe.classes_with_name (l_class_name)
+					if l_list /= Void and then not l_list.is_empty then
+						Result := stone_from_class_i (l_list.first)
+					end
+				end
+			end
+		end
+
+	clusters_in_the_project: EB_CLUSTERS is
+			-- Clusters in the project
+		do
+			Result:= manager.cluster_manager.manager
+		end
+
+	remove_scope is
+			-- Remove a scope from the list
+		local
+			test: DYNAMIC_LIST [EV_LIST_ITEM]
+		do
+			test := scope_list.selected_items
+			from
+				test.start
+			until
+				test.after
+			loop
+				scope_list.prune (test.item)
+				test.forth
+			end
+			if scope_list.selected_items.count /= 0 then
+				force_new_search
+			end
+		end
+
+	remove_all is
+			-- Remove all from scope
+		do
+			scope_list.wipe_out
+		end
+
+	switch_mode is
+			-- Switch from the normal mode to the replace mode
+			-- or the opposite
+		do
+		end
+
+	search_is_possible: BOOLEAN is
+			-- Is it possible to look for the current content of the "search for:" field?
+		local
+			for_test: STRING
+		do
+			for_test := keyword_field.text
+			Result := not for_test.is_empty
+		end
+
+	select_and_show is
+			-- Select and show in the editor
+		do
+			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
+				check_class_file_and_do (agent select_and_show_perform)
+			end
+		end
+
+	select_and_show_perform is
+			-- Do actual `select_and_show'.
+		do
+			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
+				select_in_current_editor_perform
+				select_current_row
+			end
+		end
+
+	select_in_current_editor is
+			-- Select in the editor
+		do
+			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
+				extend_and_run_loaded_action (agent select_in_current_editor_perform)
+			end
+		end
+
+	select_in_current_editor_perform is
+			-- Do actual `select_in_current_editor'.
+		local
+			l_text_item: MSR_TEXT_ITEM
+			l_editor: EB_EDITOR
+		do
+			if old_editor /= Void then
+				l_editor := old_editor
+			else
+				l_editor := editor
+			end
+			if multi_search_performer.is_search_launched and then not multi_search_performer.off then
+				l_text_item ?= multi_search_performer.item
+				if l_text_item /= Void then
+					if l_text_item.end_index_in_unix_text + 1 > l_text_item.start_index_in_unix_text then
+						if l_editor.text_is_fully_loaded then
+							l_editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)
+						end
+					elseif l_text_item.end_index_in_unix_text + 1 = l_text_item.start_index_in_unix_text then
+						l_editor.text_displayed.cursor.go_to_position (l_text_item.end_index_in_unix_text + 1)
+						l_editor.deselect_all
+					end
+					if l_editor.has_selection then
+						l_editor.show_selection (False)
+					end
+					l_editor.refresh_now
+				end
+			end
+		end
+
 	new_search_set: BOOLEAN
 			-- Will a new search be launched? (Incremental search excluded)
-	
+
 	old_search_key_value: STRING
 			-- Last search keyword.
-	
+
 	old_editor: EB_EDITOR
 			-- In which last search did.
-	
+
 	temp_reverse: BOOLEAN
 			-- Go upwards or forwards to next match in report?
-		
+
 	is_class_i_editing (a_class : CLASS_I): BOOLEAN is
 			-- If class_i is being edited in the editor.
 		require
@@ -1900,7 +2192,7 @@ feature {NONE} -- Implementation
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			l_editor: EB_SMART_EDITOR
 		do
-			l := window_manager.development_windows_with_class (a_class.name) 
+			l := window_manager.development_windows_with_class (a_class.name)
 			if not l.is_empty then
 				from
 					l.start
@@ -1915,7 +2207,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	update_combo_box_specific (box: EV_COMBO_BOX; word: STRING) is
 			-- Add word to combo box list.
 		local
@@ -1936,45 +2228,13 @@ feature {NONE} -- Implementation
 				box.set_text (word)
 			end
 		end
-		
-	replace_all is
-			-- Replace all matches in specified scale.
-		local
-			editor_replace_strategy: MSR_REPLACE_IN_ESTUDIO_STRATEGY
-		do
-			manager.window.set_pointer_style (default_pixmaps.wait_cursor)	
-			currently_replacing := replace_combo_box.text					
-			if 
-				new_search_set or else
-				not multi_search_performer.is_search_launched
-			then
-				search_button_clicked
-			end
-			if multi_search_performer.is_search_launched then
-				create editor_replace_strategy.make (manager.editor_tool.text_area)
-				multi_search_performer.set_replace_strategy (editor_replace_strategy)
-				multi_search_performer.set_replace_string (currently_replacing)
-				multi_search_performer.replace_all
-				update_combo_box_specific (replace_combo_box, currently_replacing)
-				redraw_grid
-				extend_and_run_loaded_action (agent force_not_changed)
-			end
-			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
-		end
-		
+
 	is_main_editor: BOOLEAN is
 			-- Is `editor' main editor?
 		do
 			Result := (manager.editor_tool.text_area = editor)
 		end
 
-	force_not_changed is
-			-- Set `new_search' and `is_text_changed_in_editor' to false.
-		do
-			new_search_set := false
-			is_text_changed_in_editor := false
-		end
-		
 	block_actions is
 			-- Block actions.
 		do
@@ -1995,7 +2255,7 @@ feature {NONE} -- Implementation
 			replace_button.select_actions.block
 			replace_all_click_button.select_actions.block
 		end
-		
+
 	resume_actions is
 			-- Resume actions.
 		do

@@ -73,6 +73,7 @@ feature -- Button texts
 	b_Remove_text: STRING is 					"<- Remove"
 	b_Retry: STRING is							"Retry"
 	b_Search: STRING is							"Search"
+	b_New_search: STRING is 					"New Search?"
 	b_Save: STRING is							"Save"
 	b_Total_time: STRING is						"Total Time"
 	b_Up_text: STRING is 						"Up"
@@ -120,6 +121,8 @@ feature -- Button texts
 	b_Remove_class_cluster: STRING is			"Remove Class/CLuster"
 	b_Minimize_all: STRING is					"Minimize All"
 	b_Terminate_c_compilation: STRING is 		"Terminate C Compilation"
+	b_Expand_all: STRING is 					"Expand all"
+	b_Collapse_all: STRING is 					"Collapse All"
 
 feature -- Graphical degree output
 

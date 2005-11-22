@@ -1,7 +1,7 @@
 indexing
 	description: "[
 			Objects that is a factory for scaled fonts.
-			Reduces memory usage and speed up systems with only a few diffrend fonts and a
+			Reduces memory usage and speed up systems with only a few different fonts and a
 			lot of EV_MODEL_TEXT objects which uses this fonts and get uniformly scaled.
 	]"
 	status: "See notice at end of class"

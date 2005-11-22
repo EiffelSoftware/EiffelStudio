@@ -763,7 +763,6 @@ feature {NONE} -- Implementation
 		local
 			l_search_tool: EB_MULTI_SEARCH_TOOL
 			l_incremental_search: BOOLEAN
-			l_item: MSR_TEXT_ITEM
 		do
 			l_search_tool ?= search_tool
 			check

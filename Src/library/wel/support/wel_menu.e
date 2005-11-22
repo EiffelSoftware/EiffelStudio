@@ -324,10 +324,8 @@ feature -- Basic operations
 			not_empty: count > 0
 			window_not_void: window /= Void
 			window_exists: window.exists
-		local
-			a_default_pointer: POINTER
 		do
-			cwin_track_popup_menu (item, default_track_option, x, y, 0, window.item, a_default_pointer)
+			show_track_with_option (x, y, window, default_track_option, Void)
 		end
 
 	show_track_with_option (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW;
@@ -347,13 +345,29 @@ feature -- Basic operations
 			window_not_void: window /= Void
 			window_exists: window.exists
 		local
-			a_default_pointer: POINTER
+			l_null: POINTER
 		do
+				-- From CodeProject:
+				--
+				-- Many people have had troubles using TrackPopupMenu. They have reported
+				-- that the popup menu will often not disappear once the mouse is clicked
+				-- outside of the menu, even though they have set the last parameter of
+				-- TrackPopupMenu() as NULL. This is a Microsoft "feature", and is by design.
+				-- The mind boggles, doesn't it?
+
+				-- Anyway - to workaround this "feature", one must set the current window
+				-- as the foreground window before calling TrackPopupMenu. This then causes
+				-- a second problem - namely that the next time the menu is displayed it
+				-- displays then immediately disappears. To fix this problem, you must
+				-- make the currernt application active after the menu disappears.
+				-- This can be done by sending a benign message such as WM_NULL to the current window.
+			{WEL_API}.set_foreground_window (window.item).do_nothing
 			if rect /= Void then
-				cwin_track_popup_menu (item, option, x, y, 0, window.item, rect.item)
+				{WEL_API}.track_popup_menu (item, option, x, y, 0, window.item, rect.item)
 			else
-				cwin_track_popup_menu (item, option, x, y, 0, window.item, a_default_pointer)
+				{WEL_API}.track_popup_menu (item, option, x, y, 0, window.item, l_null)
 			end
+			{WEL_API}.post_message (window.item, {WEL_WM_CONSTANTS}.wm_null, l_null, l_null)
 		end
 
 feature -- Measurement
@@ -681,16 +695,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HMENU)"
 		alias
 			"DestroyMenu"
-		end
-
-	cwin_track_popup_menu (hmenu: POINTER; flags, x, y,
-			reserved: INTEGER; hwnd, rect: POINTER) is
-			-- SDK TrackPopupMenu
-		external
-			"C [macro <wel.h>] (HMENU, UINT, int, int, int, %
-				%HWND, RECT *)"
-		alias
-			"TrackPopupMenu"
 		end
 
 	cwin_modify_menu (hmenu: POINTER; id, flags: INTEGER; new_id, new_name: POINTER) is

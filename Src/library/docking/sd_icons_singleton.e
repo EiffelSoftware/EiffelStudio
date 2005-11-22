@@ -1,5 +1,5 @@
 indexing
-	description: "All the icons used in the docking library. Client programmer should inherit this."
+	description: "All icons used in the docking library. Client programmer should inherit this."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,55 +12,84 @@ feature -- Icons
 	unstick: EV_PIXMAP is
 				-- Unstick icon pixmap.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
-	
+
 	stick: 	EV_PIXMAP is
 				-- Stick icon pixmap.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
-		
+
 	maximize: EV_PIXMAP is
 				-- Maximize icon pixmap.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
-		
+
 	minimize: EV_PIXMAP is
 				-- Minimize icon pixmap.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
-	
+
 	close: EV_PIXMAP is
-				-- close icon pixmap.
+				-- Close icon pixmap.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
+
 	default_icon: EV_PIXMAP is
-				-- default window icon.
+				-- Default window icon.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
-			
+
 	pebble: EV_PIXMAP is
-				-- The pebble.
+				-- Pebble.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
-	
+
 	arrow_indicator_up: EV_PIXMAP is
-				-- The indicator draw on the screen when user dragging a window.
+				-- Indicator draw on the screen when user dragging a window.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
+
 	arrow_indicator_down: EV_PIXMAP is
-				-- The indicator draw on the screen when user dragging a window.
+				-- Indicator draw on the screen when user dragging a window.
 			deferred
-			end	
-	arrow_indicator_left: EV_PIXMAP is
-				-- The indicator draw on the screen when user dragging a window.
-			deferred
+			ensure
+				not_void: Result /= Void
 			end
+
+	arrow_indicator_left: EV_PIXMAP is
+				-- Indicator draw on the screen when user dragging a window.
+			deferred
+			ensure
+				not_void: Result /= Void
+			end
+
 	arrow_indicator_right: EV_PIXMAP is
-				-- The indicator draw on the screen when user dragging a window.
+				-- Indicator draw on the screen when user dragging a window.
 			deferred
-			end 
+			ensure
+				not_void: Result /= Void
+			end
+
 	arrow_indicator_center: EV_PIXMAP is
-				-- The center indicator draw on the screen when user dragging a window.
+				-- Center indicator draw on the screen when user dragging a window.
 			deferred
+			ensure
+				not_void: Result /= Void
 			end
 end

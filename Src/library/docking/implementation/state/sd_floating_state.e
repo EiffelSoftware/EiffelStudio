@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that remember resotre information when floating."
+	description: "SD_STATE that manage SD_FLOATING_ZONE."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,14 +20,12 @@ create
 	make
 
 feature {NONE} -- Initlization
+
 	make (a_screen_x, a_screen_y: INTEGER) is
 			-- Creation method.
-		require
-
 		do
 			create internal_shared
 			create internal_zone.make (Current)
-
 			internal_zone.show
 			internal_zone.set_size (internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
 			internal_zone.set_position (a_screen_x, a_screen_y)
@@ -49,7 +47,7 @@ feature
 		end
 
 feature -- Perform Restore
-	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
+	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
 			--
 		do
 		end
@@ -58,7 +56,7 @@ feature -- Perform Restore
 			--
 		local
 --			l_old_widget: EV_WIDGET
-			l_docking_state: SD_DOCKING_STATE
+--			l_docking_state: SD_DOCKING_STATE
 			l_width_height: INTEGER
 			l_widget: EV_WIDGET
 			l_split_area: EV_SPLIT_AREA
@@ -71,27 +69,26 @@ feature -- Perform Restore
 			l_widget := internal_zone.inner_container.item
 			internal_zone.inner_container.wipe_out
 			internal_zone.destroy
-			if 	internal_direction	= {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
+			if 	direction	= {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
 				l_width_height := (a_multi_dock_area.width * internal_shared.default_docking_width_rate).ceiling
 				l_split_area := create {EV_HORIZONTAL_SPLIT_AREA}
 			else
 				l_width_height := (a_multi_dock_area.height * internal_shared.default_docking_height_rate).ceiling
 				l_split_area := create {EV_VERTICAL_SPLIT_AREA}
 			end
---			create l_docking_state.make (internal_content, internal_direction, l_width_height)
+--			create l_docking_state.make (internal_content, direction, l_width_height)
 --			l_docking_state.dock_at_top_level (a_multi_dock_area)
 --			change_state (l_docking_state)
 			l_main_container_widget := internal_shared.docking_manager.inner_container_main.item
 			internal_shared.docking_manager.inner_container_main.save_spliter_position (l_main_container_widget)
 			internal_shared.docking_manager.inner_container_main.wipe_out
 			internal_shared.docking_manager.inner_container_main.extend (l_split_area)
-			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_top then
+			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_top then
 				l_split_area.set_first (l_widget)
 				l_split_area.set_second (l_main_container_widget)
 				if l_width_height >= l_split_area.minimum_split_position and l_width_height <= l_split_area.maximum_split_position then
 					l_split_area.set_split_position (l_width_height)
 				end
-
 			else
 				l_split_area.set_second (l_widget)
 				l_split_area.set_first (l_main_container_widget)
@@ -187,7 +184,7 @@ feature {NONE} -- Implementation
 			-- FIXIT: shoudl prune the SD_MULTI_DOCK_AREA here.
 --			internal_shared.docking_manager.prune_zone (internal_zone)
 			internal_zone.destroy
-			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone)
+			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, direction)
 --			l_tab_state.dock_at_top_level
 			change_state (l_tab_state)
 			internal_shared.docking_manager.unlock_update

@@ -1,133 +1,92 @@
 indexing
-	description: "Objects that used to hold SD_WINDOW(s) and SD_RESIZE_BAR(s)."
+	description: "Objects that used to hold SD_CONTENT's user widgets."
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
 	SD_ZONE
 
---inherit
---	EV_WIDGET
-
-feature -- Propoties
+feature -- Query
 
 	state: SD_STATE is
-			--
+			-- State which `Current' is.
 		do
 			Result := content.state
+		ensure
+			not_void: Result /= Void
 		end
 
 	content: SD_CONTENT is
-			-- The content which current holded.
+			-- Content which `Current' holded.
 		deferred
 		ensure
 			not_void: Result /= Void
 		end
 
-	set_content (a_content: SD_CONTENT) is
+	extend (a_content: SD_CONTENT) is
+			-- Set `a_content'.
 		require
 			a_content_not_void: a_content /= Void
---			a_content_parent_void: a_content.user_widget.parent = Void
 		deferred
 		end
 
 	type: INTEGER is
-			--
+			-- type.
 		do
 			Result := content.type
 		end
 
-
-
-feature {NONE}  -- Implementation
-
-	init_focus_in (a_widget: EV_WIDGET) is
-			-- Catch all widgets actions in `Current'.
-		local
-			l_container: EV_CONTAINER
-		do
-			l_container ?= Current
-			check l_container /= Void end
-
---			a_widget.pointer_button_press_actions.force_extend (agent on_focus_in)
+	has (a_content: SD_CONTENT): BOOLEAN is
+			-- `Current' has `a_content'?
+		require
+			a_content_not_void: a_content /= Void
+		deferred
 		end
 
-feature {SD_CONFIG}
+feature {SD_CONFIG_MEDIATOR} -- Save config.
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
-			--
+			-- save content(s) title(s) to `a_config_data'.
 		require
 			a_config_data_not_void: a_config_data /= Void
 		deferred
 		end
 
-feature {SD_DOCKING_MANAGER}
-	on_zone_focus_out is
-			--
+feature {SD_DOCKING_MANAGER} -- Focus out
+
+	on_focus_out is
+			-- Handle focus out.
 		do
 			content.focus_out_actions.call ([])
 		end
 
-feature {SD_DOCKING_MANAGER, SD_CONTENT}
+feature {SD_DOCKING_MANAGER, SD_CONTENT}  -- Focus in
+
 	on_focus_in (a_content: SD_CONTENT) is
-			--
+			-- Handle focus in.
 		require
-			has_content:
+			has: a_content /= Void implies has (a_content)
 		do
 			content.focus_in_actions.call ([])
 		end
 
-
-feature {SD_DOCKING_MANAGER, SD_STATE}
-
-	destroy_focus_in is
-			-- Destory all widgets actions in `Current'.
-		local
---			l_app: EV_APPLICATION
-		do
---			create l_app
---			l_app.pointer_button_press_actions.prune_all (agent on_focus_in)
-		end
-
 feature {NONE} -- Implementation
-
-	destroy_focus_in_imp (a_widget: EV_WIDGET) is
-			-- Destory all widgets actions in `Current'.
-		local
-			l_container: EV_CONTAINER
-			l_linear: LINEAR [EV_WIDGET]
-		do
-			l_container ?= a_widget
-			if l_container /= Void then
-				l_linear := l_container.linear_representation
-				from
-					l_linear.start
-				until
-					l_linear.after
-				loop
-					destroy_focus_in_imp (l_linear.item)
-					l_linear.forth
-				end
-			end
-
-			a_widget.pointer_button_press_actions.wipe_out
-		end
 
 	internal_shared: SD_SHARED
 			-- All singletons.
 
-feature {SD_HOT_ZONE}
+feature {SD_HOT_ZONE} -- Redraw
+
 	invalidate is
 			-- Redraw current.
 		local
---			l_container: EV_CONTAINER
---			l_widget: EV_WIDGET
+
 		do
---			l_container ?= Current
---			check l_container /= Void end
---			l_widget := l_container.item
---			l_container.wipe_out
---			l_container.replace (l_widget)
+
 		end
+
+invariant
+
+	internal_shared_not_void: internal_shared /= Void
 
 end

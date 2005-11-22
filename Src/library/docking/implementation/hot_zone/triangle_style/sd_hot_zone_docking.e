@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent hot zones when docking in the main container."
+	description: "SD_HOT_ZONE when pointer in SD_MULTI_DOCK_AREA."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,10 +13,12 @@ inherit
 			internal_zone,
 			pointer_out
 		end
+
 create
 	make
 
 feature {NONE} -- Initlization
+
 	make (a_zone: SD_DOCKING_ZONE; a_rect: EV_RECTANGLE) is
 			-- Creation method.
 		require
@@ -27,13 +29,10 @@ feature {NONE} -- Initlization
 			set_rectangle (a_rect)
 		end
 
-	split_area: EV_SPLIT_AREA
-
-	internal_zone: SD_DOCKING_ZONE
-feature
+feature -- Redefine
 
 	apply_change  (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
-			-- Apply change when user dragging a window on a position
+			-- Redefine.
 		do
 			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
 				caller.state.change_zone_split_area (internal_zone, {SD_DOCKING_MANAGER}.dock_top)
@@ -54,30 +53,25 @@ feature
 		end
 
 	pointer_out is
-			--
+			-- Redefine.
 		do
 			Precursor {SD_HOT_ZONE}
 			internal_mouse_in := False
+		ensure then
+			mouse_not_in: internal_mouse_in = False
 		end
 
-	internal_mouse_in: BOOLEAN
-			-- Remember whether mouse pointer is in `Current' hot zone.
-
-	update_for_pointer_position (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER):BOOLEAN is
-			-- Update feedback when user move the mouse.
+	update_for_pointer_position (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- Redefine.
 		local
 			l_x, l_y, l_width, l_height: INTEGER
 		do
---			internal_shared.docking_manager.lock_update
 			drawn := False
-
 			if internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
 				if not internal_mouse_in then
 					draw_drag_window_indicator
 					internal_mouse_in := True
 				end
-
-
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_left)
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_right)
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_top)
@@ -89,16 +83,18 @@ feature
 					l_y := a_screen_y + a_mediator.offset_y
 					l_width := a_mediator.drag_window_width
 					l_height := a_mediator.drag_window_height
---					feedback.draw_line (l_x, l_y, l_width, l_height)			
 				end
 
 				Result := True
 			end
---			internal_shared.docking_manager.unlock_update
 		end
 
+feature {NONE} -- Implementation functions.
+
 	update_feedback (a_screen_x, a_screen_y: INTEGER; a_rect: EV_RECTANGLE) is
-			-- Update the feedback when pointer in or out the five rectangle area. If pointer in a rectangle area return True.
+			-- Update the feedback when pointer in or out the five rectangle area.
+		require
+			a_rect_not_void: a_rect /= Void
 		do
 			if a_rect.has_x_y (a_screen_x, a_screen_y) then
 				if a_rect = internal_rectangle_left then
@@ -168,26 +164,23 @@ feature
 				end
 				drawn := True
 			end
+		ensure
+			drawn: a_rect.has_x_y (a_screen_x, a_screen_y) implies drawn = True
 		end
 
-	drawn: BOOLEAN
-			-- If alreay drawn the feedback rectangle which represent the window area.
 	draw_drag_window_indicator is
 			-- Draw dragged window feedback which represent window position.
 		do
---			create l_pic.make_with_pixmap (a_pixmap)
 			internal_shared.feedback.draw_pixmap (internal_rectangle.left + internal_rectangle.width // 2 - internal_shared.icons.arrow_indicator_center.width // 2,
 			 internal_rectangle.top + internal_rectangle.height // 2 - internal_shared.icons.arrow_indicator_center.height // 2,
 			  internal_shared.icons.arrow_indicator_center)
 		end
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
-			--
+			-- Does `internal_rectangle' has `a_screen_x' and `a_screen_y'?
 		do
 			Result := internal_rectangle.has_x_y (a_screen_x, a_screen_y)
 		end
-
-feature {NONE} -- Access
 
 	set_rectangle (a_rect: like internal_rectangle) is
 			-- Set the rectangle which allow user to dock.
@@ -195,30 +188,48 @@ feature {NONE} -- Access
 			a_rect_not_void: a_rect /= Void
 		do
 			internal_rectangle := a_rect
-
 			-- Calculate five rectangle area where allow user to dock a window in this zone.
 			create internal_rectangle_left.make (internal_rectangle.left + internal_rectangle.width // 2 - pixmap_center_width // 2 - pixmap_corner_width, internal_rectangle.top + internal_rectangle.height // 2 - pixmap_corner_width // 2, pixmap_corner_width, pixmap_corner_width)
 			create internal_rectangle_right.make (internal_rectangle_left.left + pixmap_corner_width + pixmap_center_width - 1, internal_rectangle_left.top, pixmap_corner_width, pixmap_corner_width)
 			create internal_rectangle_top.make (internal_rectangle_left.left + pixmap_corner_width - 2, internal_rectangle_left.top - pixmap_corner_width + 1, pixmap_corner_width, pixmap_corner_width)
 			create internal_rectangle_bottom.make (internal_rectangle_left.left + pixmap_corner_width - 2, internal_rectangle_left.top + pixmap_corner_width - 2, pixmap_corner_width, pixmap_corner_width)
 			create internal_rectangle_center.make (internal_rectangle_left.right, internal_rectangle_top.bottom, internal_rectangle_right.left - internal_rectangle_left.right, internal_rectangle_bottom.top - internal_rectangle_top.bottom)
-
 		ensure
-			a_rect_set: a_rect = internal_rectangle
+			set: a_rect = internal_rectangle
+			left_rectangle_created: internal_rectangle_left /= Void
+			right_rectangle_created: internal_rectangle_right /= Void
+			top_rectangle_created: internal_rectangle_top /= Void
+			bottom_rectangle_created: internal_rectangle_bottom /= Void
+			center_rectangle_created: internal_rectangle_center /= Void
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation attributes.
 
+	drawn: BOOLEAN
+			-- If alreay drawn the feedback rectangle which represent the window area?
+
+	internal_mouse_in: BOOLEAN
+			-- Whether mouse pointer is in `Current' hot zone.
+
+	internal_zone: SD_DOCKING_ZONE
+			-- Dokcing zone `Current' belong to.
 
 	pixmap_center_width: INTEGER is 27
-			-- The width and height of the area in the center figure area.
+			-- Width and height of the area in center figure area.
+
 	pixmap_corner_width: INTEGER is 30
-			-- The width and height of the area in the four corner figure areas.
+			-- Width and height of the area in four corner figure areas.
 
 	internal_rectangle: EV_RECTANGLE
-			-- The rectangle which allow user to dock.
+			-- Rectangle which allow user to dock.
 
 	internal_rectangle_left, internal_rectangle_right, internal_rectangle_top, internal_rectangle_bottom, internal_rectangle_center: EV_RECTANGLE
-			-- The five rectangle areas which allow user dock a window in this zone.
+			-- Five rectangle areas which allow user dock a window in this zone.
+
+invariant
+
+	internal_shared_not_void: internal_shared /= Void
+	internal_zone_not_void: internal_zone /= Void
+	internal_rectangle_not_void: internal_rectangle /= Void
 
 end

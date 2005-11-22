@@ -1,29 +1,27 @@
 indexing
-	description: "Objects that manage one of menu area"
+	description: "Menu hot zone of four menu area."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	SD_MENU_AREA_MANAGER
-		-- FIXIT: should rename to SD_MENU_HOT_ZONE ?
+	SD_MENU_HOT_ZONE
+
 create
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_menu_box: EV_BOX; a_vertical: BOOLEAN; a_menu_dock_mediator: like internal_menu_dock_mediator) is
-			--
+			-- Creation method.
 		require
 			a_menu_box_not_void: a_menu_box /= Void
-			a_menu_dock_mediator /= Void
+			a_menu_dock_mediator_not_void: a_menu_dock_mediator /= Void
 		do
-
+			create internal_shared
 			internal_box := a_menu_box
 			internal_vertical := a_vertical
 			internal_menu_dock_mediator := a_menu_dock_mediator
-			create internal_area.make (internal_box.screen_x, internal_box.screen_y, internal_box.width, internal_box.height)
-
-
+			create area.make (internal_box.screen_x, internal_box.screen_y, internal_box.width, internal_box.height)
 		ensure
 			internal_box_set: a_menu_box = internal_box
 			internal_menu_dock_mediator_set: a_menu_dock_mediator = internal_menu_dock_mediator
@@ -32,11 +30,11 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	area_managed: EV_RECTANGLE is
-			-- Menu area EV_RECTANGLE. Different from internal_area, it's bigger.
+			-- Managed area. Different from `area', it's bigger.
 		local
 			l_area: EV_RECTANGLE
 		do
-			l_area := internal_area.twin
+			l_area := area.twin
 			if internal_vertical then
 				l_area.set_left (l_area.left - {SD_SHARED}.menu_size)
 				l_area.set_right (l_area.right + {SD_SHARED}.menu_size)
@@ -45,29 +43,24 @@ feature -- Status report
 				l_area.set_bottom (l_area.bottom + {SD_SHARED}.menu_size)
 			end
 			Result := l_area
-		end
-
-	area: EV_RECTANGLE is
-			--
-		do
-			Result := internal_area
+		ensure
+			not_void: Result /= Void
 		end
 
 feature -- Basic operation
 
 	on_pointer_motion (a_screen_y_or_x: INTEGER): BOOLEAN is
-			--
+			-- Handle pointer motion.
 		do
 			Result := move_in (a_screen_y_or_x)
 
 			if not Result then
 				Result := move_out (a_screen_y_or_x)
-
 			end
 		end
 
 	start_drag is
-			--
+			-- Start drag.
 		local
 			l_menu_row: SD_MENU_ROW
 		do
@@ -82,10 +75,11 @@ feature -- Basic operation
 				l_menu_row.start_drag (internal_menu_dock_mediator.caller)
 				internal_box.forth
 			end
-
+		ensure
+			every_row_notifyed:
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation functions.
 
 	move_in (a_screen_y_or_x: INTEGER): BOOLEAN is
 			--
@@ -120,8 +114,9 @@ feature {NONE} -- Implementation
 		end
 
 	move_out (a_screen_y_or_x: INTEGER): BOOLEAN is
-			--
+			-- Handle pointer in
 		do
+			internal_shared.docking_manager.lock_update
 			if not caller_in_current_area or not caller_in_single_row then
 				if internal_menu_dock_mediator.caller.is_floating then
 					internal_menu_dock_mediator.caller.dock
@@ -129,21 +124,70 @@ feature {NONE} -- Implementation
 				create_new_row_by_position (a_screen_y_or_x)
 				Result := True
 			end
+			internal_shared.docking_manager.unlock_update
 		end
 
+	create_new_row_by_position (a_screen_y_or_x: INTEGER) is
+			-- Create new row base on `a_screen_or_x'.
+		do
+			if (not internal_vertical and a_screen_y_or_x < area.top) or (internal_vertical and a_screen_y_or_x < area.left) then
+				prune_internal_caller_from_parent
+				create_new_row (True)
+			elseif (not internal_vertical and a_screen_y_or_x > area.bottom) or (internal_vertical and a_screen_y_or_x > area.right) then
+				prune_internal_caller_from_parent
+				create_new_row (False)
+			end
+		ensure
+			row_first_pruned_then_added:
+		end
+
+	create_new_row (a_start: BOOLEAN) is
+			-- Create a new row at top if a_start is True, otherwise create a new row at bottom.
+		local
+			l_new_row: SD_MENU_ROW
+		do
+			create l_new_row.make (internal_vertical)
+			if a_start then
+				internal_box.start
+				internal_box.put_left (l_new_row)
+			else
+				internal_box.extend (l_new_row)
+			end
+			l_new_row.extend (internal_menu_dock_mediator.caller)
+			debug ("larry")
+				io.put_string ("%N SD_MENU_HOT_ZONE new row created, and zone inserted.")
+			end
+		ensure
+			extended: old internal_box.count = internal_box.count - 1
+		end
+
+	prune_internal_caller_from_parent is
+			-- Prune `caller' from parent.
+		do
+			if internal_menu_dock_mediator.caller.row /= Void then
+				if caller_in_single_row then
+					internal_menu_dock_mediator.caller.row.parent.prune (internal_menu_dock_mediator.caller.row)
+				end
+				internal_menu_dock_mediator.caller.row.prune (internal_menu_dock_mediator.caller)
+			end
+		ensure
+			pruned: internal_menu_dock_mediator.caller.row /= Void implies
+				 not old internal_menu_dock_mediator.caller.row.has (internal_menu_dock_mediator.caller)
+		end
+
+feature {NONE}  -- Implementation query
+
 	caller_in_single_row: BOOLEAN is
-			--
+			-- If caller's SD_MENU_ROW only has caller?
 		do
 			Result := internal_menu_dock_mediator.caller.row.count = 1
 		end
 
 	caller_in_current_area: BOOLEAN is
-			--
+			-- If caller already in `Current'?
 		local
---			l_in_current_area: BOOLEAN
 			l_menu_row: SD_MENU_ROW
 		do
-
 			from
 				internal_box.start
 			until
@@ -156,66 +200,25 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	create_new_row_by_position (a_screen_y_or_x: INTEGER) is
-			--
-		do
-			if (not internal_vertical and a_screen_y_or_x < internal_area.top) or (internal_vertical and a_screen_y_or_x < internal_area.left) then
-				prune_internal_caller_from_parent
-				create_new_row (True)
+feature {NONE} -- Implementation arrtibutes
 
-			elseif (not internal_vertical and a_screen_y_or_x > internal_area.bottom) or (internal_vertical and a_screen_y_or_x > internal_area.right) then
-				prune_internal_caller_from_parent
-				create_new_row (False)
-
-			end
-		end
-
-	create_new_row (a_start: BOOLEAN) is
-			-- Create a new row at top if a_start is True, otherwise create a new row at bottom.
-		local
-			l_new_row: SD_MENU_ROW
---			l_tool_bar_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
---			l_new_zone: SD_MENU_ZONE
---			l_drawable_test: EV_DRAWING_AREA
-		do
---				-- Should create a new row	
---			
-
---			
-			create l_new_row.make (internal_vertical)
-
-			if a_start then
-				internal_box.start
-				internal_box.put_left (l_new_row)
-			else
-				internal_box.extend (l_new_row)
-			end
-
-			l_new_row.extend (internal_menu_dock_mediator.caller)
-			debug ("larry")
-				io.put_string ("%N SD_MENU_AREA_MANAGER new row created, and zone inserted.")
-			end
-		end
-
-	prune_internal_caller_from_parent is
-			--
-		do
-			if internal_menu_dock_mediator.caller.row /= Void then
-				if caller_in_single_row then
-					internal_menu_dock_mediator.caller.row.parent.prune (internal_menu_dock_mediator.caller.row)
-				end
-				internal_menu_dock_mediator.caller.row.prune (internal_menu_dock_mediator.caller)
-			end
-		end
-
-	internal_area: EV_RECTANGLE
+	area: EV_RECTANGLE
+			-- Menu area.
 
 	internal_box: EV_BOX
-
---	internal_menu_rows: ARRAYED_LIST [SD_MENU_ROW]
+			-- Menu container which contain SD_MENU_ROW.
 
 	internal_vertical: BOOLEAN
+			-- If `Current' vertical?
 
 	internal_menu_dock_mediator: SD_MENU_DOCKER_MEDIATOR
+			-- Menu docker mediator.
+
+	internal_shared: SD_SHARED
+			-- All singletons.
+
+invariant
+
+	internal_shared_not_void: internal_shared /= Void
 
 end

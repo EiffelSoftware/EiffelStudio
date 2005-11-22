@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that contain datas about menu in the docking library"
+	description: "Objects that contain datas about menus in docking library."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -86,19 +86,15 @@ feature -- Docking datas
 				end
 				rows.forth
 			end
-		ensure
---			not_void: Result /= Void
 		end
 
-
-feature  {NONE}
+feature  {NONE} -- Implementation
 
 	menu_data: ARRAYED_LIST [TUPLE [STRING, INTEGER]]
-			-- 1st is menu content's title, 2nd is this menu position in menu row.
-
-feature -- States report
+			-- When `Current' is docking mene data, 1st is menu content's title, 2nd is this menu position in menu row.
 
 invariant
 
+	rows_not_void: rows /= Void
 
 end

@@ -1,5 +1,5 @@
 indexing
-	description: "This is the window used to hold SD_TITLE_BAR and client programmer's EV_WIDET."
+	description: "Container used for hold SD_TITLE_BAR and SD_CONTENT's widget."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,36 +17,42 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_type: INTEGER; a_zone: SD_ZONE) is
+	make (a_style: INTEGER; a_zone: SD_ZONE) is
 			-- Creation method.
+		require
+			a_zone_not_void: a_zone /= Void
+			a_style_valid: a_style = {SD_WIDGET_FACTORY}.style_all_same or a_style = {SD_WIDGET_FACTORY}.style_different
 		do
 			default_create
 			create internal_shared
-			create vbox
+			create internal_vertical_box
 
-			internal_title_bar := internal_shared.widget_factory.title_bar (a_type, a_zone)
+			internal_title_bar := internal_shared.widget_factory.title_bar (a_style, a_zone)
 			internal_title_bar.set_minimum_height (18)
 			internal_title_bar.close_actions.extend (agent close_window)
 			internal_title_bar.stick_select_actions.extend (agent stick_window)
-			internal_title_bar.min_max_actions.extend (agent min_max_window)
+			internal_title_bar.min_max_actions.extend (agent on_normal_max_window)
 			internal_title_bar.drag_actions.extend (agent drag_window)
 			internal_title_bar.pointer_button_release_actions.extend (agent pointer_release)
 			internal_title_bar.pointer_double_press_actions.extend (agent on_pointer_double_press)
 			pointer_button_release_actions.extend (agent pointer_release)
 			pointer_motion_actions.extend (agent pointer_motion)
 
-			vbox.extend (internal_title_bar)
-			vbox.disable_item_expand (internal_title_bar)
+			internal_vertical_box.extend (internal_title_bar)
+			internal_vertical_box.disable_item_expand (internal_title_bar)
 
-			extend (vbox)
+			extend (internal_vertical_box)
 
 			set_minimum_size (internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
+		ensure
+			extended: has (internal_vertical_box)
+			extended: internal_vertical_box.has (internal_title_bar)
 		end
 
 feature   -- Access
 
 	has_focus: BOOLEAN is
-			--
+			-- Has focus?
 		do
 			Result := internal_title_bar.is_focus_color_enable
 		end
@@ -55,16 +61,18 @@ feature   -- Access
 			-- Set whether current is sticked.
 		do
 			internal_title_bar.set_stick (a_bool)
+		ensure
+			set: a_bool = internal_title_bar.is_stick
 		end
 
 	title_bar: like internal_title_bar is
-			-- Get the title bar which above client programmer's widget.
+			-- Title bar which on the top.
 		do
 			Result := internal_title_bar
 		end
 
 	user_widget: like internal_user_widget assign set_user_widget is
-			-- Get/set the client programmer's widget.
+			-- Client programmer's widget.
 		do
 			Result := internal_user_widget
 		end
@@ -74,28 +82,27 @@ feature   -- Access
 		require
 			a_widget_not_void: a_widget /= Void
 		do
-
 			internal_user_widget := a_widget
-			if vbox.count = 2 then
-				vbox.prune (vbox [2])
+			if internal_vertical_box.count = 2 then
+				internal_vertical_box.prune (internal_vertical_box [2])
 			end
 			if a_widget.parent /= Void then
 				a_widget.parent.prune (a_widget)
 			end
-			vbox.extend (a_widget)
+			internal_vertical_box.extend (a_widget)
 
 		ensure
-			contain_right_number_widget: vbox.count = 2
-			contain_user_wiget: vbox.has (a_widget)
+			contain_right_number_widget: internal_vertical_box.count = 2
+			contain_user_wiget: internal_vertical_box.has (a_widget)
 		end
 
 feature {NONE} -- Two widgets
 
 	internal_title_bar: SD_TITLE_BAR
-			-- The title bar which above client programmer's widget.
+			-- Title bar which above at top.
 
 	internal_user_widget: EV_WIDGET
-			-- The client programmer's widget.
+			-- SD_CONTENT's user_widget.
 
 feature -- Basic operation
 
@@ -166,41 +173,41 @@ feature -- Actions
 feature {NONE} -- Implemention
 
 	close_window is
-			--
+			-- Handle close window,
 		do
 			close_actions.call ([])
 		end
 
-	min_max_window is
-			--
+	on_normal_max_window is
+			-- Handle normal\max window.
 		do
 			min_max_action.call ([])
 		end
 
 	stick_window is
-			--
+			-- Handle stick window.
 		do
 			stick_actions.call ([])
 		end
 
 	drag_window (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			--
+			-- Handle drag window.
 		do
 			drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
 		end
 
 	pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
+			-- Handle pointer motion.
 		do
 		end
 
 	pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
+			-- Handle pointer release.
 		do
 		end
 
 	on_pointer_double_press is
-			--
+			-- Handle pointer double press.
 		do
 			if internal_pointer_double_press_title_bar_actions /= Void then
 				internal_pointer_double_press_title_bar_actions.call ([])
@@ -227,12 +234,13 @@ feature {NONE} -- Implementation
 	internal_pointer_double_press_title_bar_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions perfromed when pointer double pressed `internal_title_bar'.
 
-	vbox: EV_VERTICAL_BOX
-			-- The vertical box to hold SD_TITLE_BAR and user_widget.
+	internal_vertical_box: EV_VERTICAL_BOX
+			-- Vertical box to hold SD_TITLE_BAR and user_widget.
 
 invariant
 
+	internal_shared_not_void: internal_shared /= Void
 	internal_title_bar_not_void: internal_title_bar /= Void
-	vbox_not_void: vbox /= Void
+	internal_vertical_box_not_void: internal_vertical_box /= Void
 
 end

@@ -1,11 +1,11 @@
 indexing
-	description: "Objects that hold EV_TOOL_BAR_BUTTONs."
+	description: "Zone that hold EV_TOOL_BAR_BUTTONs."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	SD_MENU_ZONE
--- Do NOT need to inherit from SD_ZONE. It's another system.
+
 inherit
 	SD_HOR_VER_BOX
 		rename
@@ -19,15 +19,12 @@ create
 feature {NONE} -- Initialization
 
 	make (a_vertical: BOOLEAN) is
-			-- Creation method
-		local
---			l_test_item: EV_TOOL_BAR_BUTTON
+			-- Creation method.
 		do
 			create internal_shared
 			init (a_vertical)
-			internal_vertical := a_vertical
+			is_vertical := a_vertical
 			create internal_tool_bar_items.make (1)
-
 			create internal_drag_area
 
 			background_color_internal := background_color
@@ -47,50 +44,49 @@ feature {NONE} -- Initialization
 				extend_hor_ver_box (internal_horizontal_bar)
 			end
 
-
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
+		ensure
+			set: is_vertical = a_vertical
+			actions_added: internal_drag_area.expose_actions.count = 1 and internal_drag_area.pointer_button_press_actions.count = 1
+				and internal_drag_area.pointer_motion_actions.count = 1 and internal_drag_area.pointer_button_release_actions.count = 1
+				and pointer_motion_actions.count = 1 and pointer_button_release_actions.count = 1
+			pointer_style_set: internal_drag_area.pointer_style = default_pixmaps.sizeall_cursor
+			extended: has (internal_horizontal_bar)
 		end
 
 feature -- Basic operation
 
 	change_direction is
-			--
-		local
---			l_tool_bar_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
+			-- Change layout direction.
 		do
-
-
---			l_tool_bar_items := tool_bar_items
 			wipe_out
 			change_direction_hor_ver_box
 			extend_hor_ver_box (internal_drag_area)
 			disable_item_expand (internal_drag_area)
 
-			if internal_vertical then
+			if is_vertical then
 				-- Change to horizontal
 				create internal_horizontal_bar
 				extend_hor_ver_box (internal_horizontal_bar)
-
 			else
 				-- Change to vertical
-
 			end
-			internal_vertical := not internal_vertical
-
+			is_vertical := not is_vertical
 			debug ("larry")
 				io.put_string ("%N SD_MENU_ZONE change direction &&&&&&&&&&&&&&&&&&&&&&&&&&")
 				io.put_string ("Manu is here%N")
 			end
 			extend (content)
-
 			debug ("larry")
 				io.put_string ("%N SD_MENU_ZONE change direction after")
 			end
+		ensure
+			direction_changed: old is_vertical /= is_vertical
 		end
 
 	float is
-			--
+			-- Float.
 		do
 			if row /= Void then
 				row.prune (Current)
@@ -99,7 +95,7 @@ feature -- Basic operation
 				end
 			end
 
-			if internal_vertical then
+			if is_vertical then
 				change_direction
 			end
 
@@ -107,10 +103,13 @@ feature -- Basic operation
 			internal_floating_menu.extend (Current)
 			internal_floating_menu.show
 			internal_shared.docking_manager.menu_manager.floating_menus.extend (internal_floating_menu)
+		ensure
+			pruned: not row.has (Current)
+			extended: internal_floating_menu.has (Current)
 		end
 
 	dock is
-			-- Change from float state to dock state.
+			-- Dock to a menu area.
 		require
 			is_floating: is_floating
 		do
@@ -118,53 +117,38 @@ feature -- Basic operation
 			internal_floating_menu.prune (Current)
 			internal_floating_menu.destroy
 			internal_floating_menu := Void
-		end
-
-	set_row_position (a_x_or_y: INTEGER) is
-			-- Set position when `Current' not floating.
-		do
-
+		ensure
+			pruned: internal_floating_menu =  Void
 		end
 
 	set_position (a_screen_x, a_screen_y: INTEGER) is
-			--
+			-- Set position when `is_floating'.
 		require
 			is_floating: is_floating
 		do
-
 			internal_floating_menu.set_position (a_screen_x, a_screen_y)
-		end
-
-feature -- States report
-
-	is_floating: BOOLEAN is
-			--
-		do
-			Result := internal_floating_menu /= Void
-		end
-
-feature -- Access
-
-	content: SD_MENU_CONTENT
-		--
-
-	tool_bar_items: like internal_tool_bar_items is
-			--
-		do
-			Result := internal_tool_bar_items
 		ensure
-			not_void: Result /= Void
+			set: internal_floating_menu.screen_x = a_screen_x and internal_floating_menu.screen_y = a_screen_y
+		end
+
+	set_row (a_row: like row) is
+			-- Set `row'
+		require
+			a_row_not_void: a_row /= Void
+		do
+			row := a_row
+		ensure
+			set: row = a_row
 		end
 
 	extend (a_content: SD_MENU_CONTENT) is
-			--
+			-- Extend `a_content'.
 		require
 			a_content_not_void: a_content /= Void
 			content_not_set: content = Void or a_content = content
 		local
 			l_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
 		do
-			io.put_string ("Manu is here too%N")
 			debug ("larry")
 				io.put_string ("%N SD_MENU_ZONE extend IGNINIDNIGDIG START")
 			end
@@ -189,30 +173,35 @@ feature -- Access
 			set: content = a_content
 		end
 
-	row: like internal_row is
-			--
+feature -- States report
+
+	is_floating: BOOLEAN is
+			-- If `Current' floating?
 		do
-			Result := internal_row
+			Result := internal_floating_menu /= Void
 		end
 
-	set_row (a_row: like internal_row) is
-			--
+	is_vertical: BOOLEAN
+		-- Is `Current' vertical layout or horizontal layout?
+
+	content: SD_MENU_CONTENT
+		-- Content in `Current'.
+
+	tool_bar_items: like internal_tool_bar_items is
+			-- Tool bar items on `Current'.
 		do
-			internal_row := a_row
+			Result := internal_tool_bar_items
+		ensure
+			not_void: Result /= Void
 		end
 
-feature -- States reports
+	row: SD_MENU_ROW
+			-- Parent which containe `Current'.
 
-	is_vertical: BOOLEAN is
-			-- `internal_vertical'
-		do
-			Result := internal_vertical
-		end
-
-feature {NONE} -- Implementation for agents
+feature {NONE} -- Agents
 
 	on_redraw_drag_area (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
-			--
+			-- Handle redraw drag area.
 		local
 			i, l_height : INTEGER
 		do
@@ -229,51 +218,62 @@ feature {NONE} -- Implementation for agents
 		end
 
 	on_drag_area_pressed (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
+			-- Handle drag area pressed.
 		do
 			if a_button = 1 then
 				internal_pointer_pressed := True
 				internal_docker_mediator := Void
 			end
+		ensure
+			pointer_press_set: a_button = 1 implies internal_pointer_pressed = True
+			docker_mediaot_void: internal_docker_mediator = Void
 		end
 
 	on_drag_area_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
+			-- Handle drag area release.
 		do
 			if a_button = 1 then
 				internal_pointer_pressed := False
 				internal_docker_mediator := Void
 			end
+		ensure
+			pointer_press_set: a_button = 1 implies internal_pointer_pressed = False
+			docker_mediaot_void: internal_docker_mediator = Void
 		end
 
 	on_drag_area_motion is
-			--
+			-- Handle drag area motion.
 		do
 			if internal_pointer_pressed then
 				enable_capture
 				create internal_docker_mediator.make (Current)
 			end
+		ensure
+			capture_enable: internal_pointer_pressed implies has_capture and internal_docker_mediator /= Void
 		end
 
-	internal_pointer_pressed: BOOLEAN
-
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
+			-- Handle pointer motion.
 		do
 			internal_docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
+		ensure
+			pointer_motion_forwarded:
 		end
 
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--
+			-- Handle pointer release.
 		do
 			disable_capture
 			internal_pointer_pressed := False
+		ensure
+			disable_capture: not has_capture
+			not_pointer_pressed: not internal_pointer_pressed
 		end
 
 feature {NONE} -- Implmentation
 
 	extend_one_item (a_item: EV_TOOL_BAR_ITEM) is
-			--
+			-- Extend `a_item'.
 		require
 			a_item_not_void: a_item /= Void
 		local
@@ -286,31 +286,34 @@ feature {NONE} -- Implmentation
 				internal_tool_bar_items.extend (a_item)
 			end
 
-			if internal_vertical then
+			if is_vertical then
 				create l_tool_bar
 				l_tool_bar.extend (a_item)
 				extend_hor_ver_box (l_tool_bar)
 			else
 				internal_horizontal_bar.extend (a_item)
 			end
+		ensure
+			extended: not is_vertical implies internal_horizontal_bar.has (a_item)
 		end
 
+	internal_pointer_pressed: BOOLEAN
+			-- If pointer pressed?
+
 	internal_shared: SD_SHARED
+			-- All singletons.
 
 	internal_docker_mediator: SD_MENU_DOCKER_MEDIATOR
-
-	internal_vertical: BOOLEAN
-			-- Is `Current' vertically or horizontal?
+			-- Docker mediator.
 
 	internal_tool_bar_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
+			-- Tool bar items.
 
 	internal_horizontal_bar: EV_TOOL_BAR
 			-- When `Current' is horizontal, use this to hold EV_TOOL_BAR_ITEM.
 
 	internal_drag_area: EV_DRAWING_AREA
-
-	internal_row: SD_MENU_ROW
-			-- SD_MENU_ROW which containe `Current'.
+			-- Drag area which at beginning.
 
 	bar_dot: EV_PIXMAP
 			-- 9 colors on a dot.
@@ -318,8 +321,6 @@ feature {NONE} -- Implmentation
 	background_color_internal: EV_COLOR
 			-- Backgroud color
 
---	internal_floating_menu: EV_UNTITLED_DIALOG
---	internal_floating_menu: EV_POPUP_WINDOW
 	internal_floating_menu: SD_FLOATING_MENU_ZONE
 			-- Floating menu zone which contain `Current' when floating.
 
@@ -338,19 +339,18 @@ feature {NONE} -- Drawing.
 			l_blue := background_color_internal.blue * 0.95
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (0, 0)
 			else
 				bar_dot.draw_point (0, 0)
 			end
-
 
 			l_red := background_color_internal.red * 0.83
 			l_green := background_color_internal.green * 0.83
 			l_blue := background_color_internal.blue * 0.83
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (0, 1)
 			else
 				bar_dot.draw_point (1, 0)
@@ -361,7 +361,7 @@ feature {NONE} -- Drawing.
 			l_blue := background_color_internal.blue * 0.94
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (0, 2)
 			else
 				bar_dot.draw_point (2, 0)
@@ -372,7 +372,7 @@ feature {NONE} -- Drawing.
 			l_blue := background_color_internal.blue * 0.80
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (1, 0)
 			else
 				bar_dot.draw_point (0, 1)
@@ -383,7 +383,7 @@ feature {NONE} -- Drawing.
 			l_blue := 1 - background_color_internal.blue * 0.45
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (1, 1)
 			else
 				bar_dot.draw_point (1, 1)
@@ -394,7 +394,7 @@ feature {NONE} -- Drawing.
 			l_blue := 1
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (1, 2)
 			else
 				bar_dot.draw_point (2, 1)
@@ -405,7 +405,7 @@ feature {NONE} -- Drawing.
 			l_blue := background_color_internal.blue * 0.96
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (2, 0)
 			else
 				bar_dot.draw_point (0, 2)
@@ -416,7 +416,7 @@ feature {NONE} -- Drawing.
 			l_blue := 1
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (2, 1)
 			else
 				bar_dot.draw_point (1, 2)
@@ -427,10 +427,17 @@ feature {NONE} -- Drawing.
 			l_blue := 1
 			create l_color.make_with_rgb (l_red, l_green, l_blue)
 			bar_dot.set_foreground_color (l_color)
-			if not internal_vertical then
+			if not is_vertical then
 				bar_dot.draw_point (2, 2)
 			else
 				bar_dot.draw_point (2, 2)
 			end
 		end
+
+invariant
+
+		internal_shared_not_void: internal_shared /= Void
+		internal_tool_bar_items_not_void:	internal_tool_bar_items /= Void
+		internal_drag_area_not_void: internal_drag_area /= Void
+
 end

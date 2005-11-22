@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent the seperator in SD_AUTO_HIDE_PANEL"
+	description: "Objects that represent the seperator in SD_AUTO_HIDE_PANEL. A sign type."
 	date: "$Date$"
 	revision: "$Revision$"
 

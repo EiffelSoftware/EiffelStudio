@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that control SD_MENU_ZONEs when user drag a SD_MENU_ZONE."
+	description: "Manager that control SD_MENU_ZONE and SD_MENU_HOT_ZONE when user drag a SD_MENU_ZONE."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,120 +18,112 @@ feature {NONE} -- Initialization
 		do
 			create internal_shared
 			internal_menus := internal_shared.docking_manager.menu_manager.menus
-			
-			internal_caller := a_caller
-			
-			create internal_top_manager.make (internal_shared.docking_manager.menu_container.top, False, Current)
-			create internal_bottom_manager.make (internal_shared.docking_manager.menu_container.bottom, False, Current)
-			create internal_left_manager.make (internal_shared.docking_manager.menu_container.left, True, Current)
-			create internal_right_manager.make (internal_shared.docking_manager.menu_container.right, True, Current)
-			
-			internal_top_manager.start_drag 
-			internal_bottom_manager.start_drag 
-			internal_left_manager.start_drag
-			internal_right_manager.start_drag
-			
+
+			caller := a_caller
+
+			create internal_top_hot_zone.make (internal_shared.docking_manager.menu_container.top, False, Current)
+			create internal_bottom_hot_zone.make (internal_shared.docking_manager.menu_container.bottom, False, Current)
+			create internal_left_hot_zone.make (internal_shared.docking_manager.menu_container.left, True, Current)
+			create internal_right_hot_zone.make (internal_shared.docking_manager.menu_container.right, True, Current)
+
+			internal_top_hot_zone.start_drag
+			internal_bottom_hot_zone.start_drag
+			internal_left_hot_zone.start_drag
+			internal_right_hot_zone.start_drag
+
 			if a_caller.is_floating then
 				internal_last_floating := True
 			end
-
 		ensure
-			a_caller_set: a_caller = internal_caller
+			a_caller_set: a_caller = caller
 		end
 
-feature -- Basic operations
-		
+feature -- Docking issues.
+
 	on_pointer_motion (a_screen_x, a_screen_y: INTEGER) is
 			-- Handle user drag menu events.
 		local
 			l_in_four_side: BOOLEAN
---			l_floating_menu: SD_FLOATING_MENU_ZONE
 		do
-				
+
 			l_in_four_side := on_motion_in_four_side (a_screen_x, a_screen_y)
 
 			if not l_in_four_side then
-				
+
 				if not internal_last_floating then
-					caller.float			
+					internal_shared.docking_manager.lock_update
+					caller.float
+					internal_shared.docking_manager.unlock_update
 				end
 
 				internal_last_floating := True
 				caller.set_position (a_screen_x, a_screen_y)
-			
+
 			else
 				internal_last_floating := False
 			end
-					
+
 		end
 
 	apply_change (a_screen_x, a_screen_y: INTEGER) is
-			-- 
-		local
---			l_menu_container: EV_BOX
+			-- Apply change.
 		do
 			notify_row (internal_shared.docking_manager.menu_container.top)
 			notify_row (internal_shared.docking_manager.menu_container.bottom)
 			notify_row (internal_shared.docking_manager.menu_container.left)
 			notify_row (internal_shared.docking_manager.menu_container.right)
 		end
-	
+
 feature -- Access
 
-	caller: like internal_caller is
-			-- 
-		do
-			Result := internal_caller
-		ensure
-			not_void: Result /= Void
-		end
-		
+	caller: SD_MENU_ZONE
+			-- Caller.
+
 feature {NONE} -- Implementation
-	
-	internal_last_floating: BOOLEAN
-			-- 
-				
+
 	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
-			-- 
+			-- Handle pointer in four menu area.
 		local
 			l_changed: BOOLEAN
 		do
-			if internal_left_manager.area_managed.has_x_y (a_screen_x, a_screen_y) then
-				l_changed := internal_left_manager.on_pointer_motion (a_screen_x)
+			if internal_left_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y) then
+				l_changed := internal_left_hot_zone.on_pointer_motion (a_screen_x)
 				Result := True
-			elseif internal_right_manager.area_managed.has_x_y (a_screen_x, a_screen_y)	then
-				l_changed := internal_right_manager.on_pointer_motion (a_screen_x)
+			elseif internal_right_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y)	then
+				l_changed := internal_right_hot_zone.on_pointer_motion (a_screen_x)
 				Result := True
-			elseif internal_top_manager.area_managed.has_x_y (a_screen_x, a_screen_y)  then
-				l_changed := internal_top_manager.on_pointer_motion (a_screen_y)
+			elseif internal_top_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y)  then
+				l_changed := internal_top_hot_zone.on_pointer_motion (a_screen_y)
 				Result := True
-			elseif internal_bottom_manager.area_managed.has_x_y (a_screen_x, a_screen_y) then
-				l_changed := internal_bottom_manager.on_pointer_motion (a_screen_y)
+			elseif internal_bottom_hot_zone.area_managed.has_x_y (a_screen_x, a_screen_y) then
+				l_changed := internal_bottom_hot_zone.on_pointer_motion (a_screen_y)
 				Result := True
-			end		
+			end
 			if Result then
-				if not internal_caller.row.is_vertical then
-					internal_caller.row.set_item_position (internal_caller, a_screen_x)			
+				if not caller.row.is_vertical then
+					caller.row.set_item_position (caller, a_screen_x)
 				else
-					internal_caller.row.set_item_position (internal_caller, a_screen_y)
-				end				
-			end	
+					caller.row.set_item_position (caller, a_screen_y)
+				end
+			end
 			debug ("larry")
-				internal_shared.feedback.draw_red_rectangle (internal_top_manager.area_managed.left, internal_top_manager.area_managed.top, internal_top_manager.area_managed.width, internal_top_manager.area_managed.height)
-				internal_shared.feedback.draw_red_rectangle (internal_bottom_manager.area_managed.left, internal_bottom_manager.area_managed.top, internal_bottom_manager.area_managed.width, internal_bottom_manager.area_managed.height)
-				
-				internal_shared.feedback.draw_red_rectangle (internal_left_manager.area_managed.left, internal_left_manager.area_managed.top, internal_left_manager.area_managed.width, internal_left_manager.area_managed.height)
-				internal_shared.feedback.draw_red_rectangle (internal_right_manager.area_managed.left, internal_right_manager.area_managed.top, internal_right_manager.area_managed.width, internal_right_manager.area_managed.height)
-			end	
-			
+				internal_shared.feedback.draw_red_rectangle (internal_top_hot_zone.area_managed.left, internal_top_hot_zone.area_managed.top, internal_top_hot_zone.area_managed.width, internal_top_hot_zone.area_managed.height)
+				internal_shared.feedback.draw_red_rectangle (internal_bottom_hot_zone.area_managed.left, internal_bottom_hot_zone.area_managed.top, internal_bottom_hot_zone.area_managed.width, internal_bottom_hot_zone.area_managed.height)
+				internal_shared.feedback.draw_red_rectangle (internal_left_hot_zone.area_managed.left, internal_left_hot_zone.area_managed.top, internal_left_hot_zone.area_managed.width, internal_left_hot_zone.area_managed.height)
+				internal_shared.feedback.draw_red_rectangle (internal_right_hot_zone.area_managed.left, internal_right_hot_zone.area_managed.top, internal_right_hot_zone.area_managed.width, internal_right_hot_zone.area_managed.height)
+			end
+		ensure
+			changed:
 		end
-		
+
 	notify_row (a_box: EV_BOX) is
-			-- 
+			-- Notify a SD_MENU_ROW to apply change.
+		require
+			a_box_not_void: a_box /= Void
 		local
 			l_menu_row: SD_MENU_ROW
 		do
-			from 
+			from
 				a_box.start
 			until
 				a_box.after
@@ -140,16 +132,27 @@ feature {NONE} -- Implementation
 				check l_menu_row /= Void end
 				l_menu_row.apply_change
 				a_box.forth
-			end			
+			end
 		end
-		
+
+	internal_last_floating: BOOLEAN
+			-- If last pointer motion `caller' is floating?
+
 	internal_menus: ARRAYED_LIST [SD_MENU_ZONE]
-			-- All SD_MENU_ZONEs in current system
+			-- All SD_MENU_ZONEs in current system.
+
 	internal_shared: SD_SHARED
-			-- All singletons
-	internal_caller: SD_MENU_ZONE
-			-- Caller
-	
-	internal_top_manager, internal_bottom_manager, internal_left_manager, internal_right_manager: SD_MENU_AREA_MANAGER
+			-- All singletons.
+
+	internal_top_hot_zone, internal_bottom_hot_zone, internal_left_hot_zone, internal_right_hot_zone: SD_MENU_HOT_ZONE
+			-- Four area hot zone.
+
+invariant
+
+	internal_shared_not_void: internal_shared /= Void
+	internal_top_hot_zone_not_void: internal_top_hot_zone /= Void
+	internal_bottom_hot_zone_not_void: internal_bottom_hot_zone /= Void
+	internal_left_hot_zone_not_void: internal_left_hot_zone /= Void
+	internal_right_hot_zone_not_void: internal_right_hot_zone /= Void
 
 end

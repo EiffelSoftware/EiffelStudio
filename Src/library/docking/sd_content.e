@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent a client's widget which docking issues are managed"
+	description: "A content which has client prgrammer's widgets managed by docking library."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,9 +27,7 @@ feature {NONE} -- Initialization
 			internal_title := a_title
 			internal_pixmap := a_pixmap
 
-			-- By default, dock left.
 			create l_state.make (Current)
---			l_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
 			internal_state := l_state
 			internal_type := {SD_SHARED}.type_normal
 		ensure
@@ -70,6 +68,33 @@ feature -- Access
 			result_valid: Result = internal_title
 		end
 
+	pixmap: like internal_pixmap is
+			-- Client programmer's widget's pixmap.
+		do
+			Result := internal_pixmap
+		ensure
+			result_valid: Result = internal_pixmap
+		end
+
+	mini_toolbar: like internal_mini_toolbar is
+			-- Mini toolbar.
+		do
+			Result := internal_mini_toolbar
+		ensure
+			result_valid: Result = internal_mini_toolbar
+		end
+
+	type: INTEGER is
+			--
+		do
+			Result := internal_type
+		end
+
+	is_default_destroy: BOOLEAN
+			-- If user click 'X' button, close `Current' or hide `Current'?
+
+feature -- Set
+
 	set_title (a_title: like internal_title) is
 			-- Set the widget's title
 		require
@@ -79,14 +104,6 @@ feature -- Access
 			internal_state.change_title (a_title, Current)
 		ensure
 			a_title_set: a_title = internal_title
-		end
-
-	pixmap: like internal_pixmap is
-			-- Client programmer's widget's pixmap.
-		do
-			Result := internal_pixmap
-		ensure
-			result_valid: Result = internal_pixmap
 		end
 
 	set_pixmap (a_pixmap: like internal_pixmap) is
@@ -100,14 +117,6 @@ feature -- Access
 			a_pixmap_set: a_pixmap = internal_pixmap
 		end
 
-	mini_toolbar: like internal_mini_toolbar is
-			-- Mini toolbar.
-		do
-			Result := internal_mini_toolbar
-		ensure
-			result_valid: Result = internal_mini_toolbar
-		end
-
 	set_mini_toolbar (a_bar: like internal_mini_toolbar) is
 			-- Set mini toolbar.
 		require
@@ -118,18 +127,26 @@ feature -- Access
 			a_bar_set: a_bar = internal_mini_toolbar
 		end
 
-	type: INTEGER is
-			--
-		do
-			Result := internal_type
-		end
-
 	set_type (a_type: INTEGER) is
-			--
+			-- Set `internal_type'.
 		require
 			a_type_valid: a_type = {SD_SHARED}.type_normal or a_type = {SD_SHARED}.type_editor
 		do
 			internal_type := a_type
+		end
+
+	set_close_behavior (a_destroy: BOOLEAN) is
+			-- Set `is_default_destroy'.
+		do
+			is_default_destroy := a_destroy
+		ensure
+			a_destroy_set: is_default_destroy = a_destroy
+		end
+
+	set_focus is
+			-- Set focus to `Current'.
+		do
+			state.zone.on_focus_in (Current)
 		end
 
 feature -- Set Position
@@ -151,7 +168,6 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 		do
---	   		state.dock_at_top_level (internal_shared.docking_manager.inner_container (state.zone))
 			state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
 		end
 
@@ -224,30 +240,15 @@ feature -- Actions
 			Result := internal_close_actions
 		end
 
-feature --
-
-	set_close_behavior (a_destroy: BOOLEAN) is
-			-- set `default_destroy'.
-		do
-			default_destroy := a_destroy
-		ensure
-			a_destroy_set: default_destroy = a_destroy
-		end
+feature -- Command
 
 	close is
-			-- Destroy `Current' from docking library if `default_destroy', otherwise hide.
+			-- Destroy `Current' from docking library if `is_default_destroy', otherwise hide.
 		do
 			if internal_close_actions /= Void then
 				internal_close_actions.call ([])
 			end
 			state.close_window
-
-		end
-
-	set_focus is
-			-- Set focus to `Current'.
-		do
-			state.zone.on_focus_in (Current)
 		end
 
 feature -- States report
@@ -280,9 +281,6 @@ feature -- States report
 			Result := not l_found
 		end
 
-	default_destroy: BOOLEAN
-			-- If user click 'X' button, close `Current' or hide `Current'?
-
 	manager_has_content (a_content: SD_CONTENT): BOOLEAN is
 			-- If docking manager has `a_content'.
 		require
@@ -298,8 +296,7 @@ feature -- States report
 				 a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 		end
 
-
-feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT} -- Access
+feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT} -- State
 
 	state: like internal_state is
 			-- Current state
@@ -308,8 +305,9 @@ feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTE
 		end
 
 feature {SD_STATE} -- implementation
+
 	notify_focus_in is
-			--
+			-- Notify focus in actions.
 		do
 			if internal_focus_in_actions /= Void then
 				internal_focus_in_actions.call ([])
@@ -317,7 +315,7 @@ feature {SD_STATE} -- implementation
 		end
 
 	internal_state: SD_STATE
-			-- The SD_STATE instacne, which will change itself base on different states. States pattern.
+			-- SD_STATE instacne, which will changed base on different states.
 
 feature {SD_STATE, SD_DOCKING_MANAGER} -- Change the SD_STATE base on the states
 
@@ -329,7 +327,7 @@ feature {SD_STATE, SD_DOCKING_MANAGER} -- Change the SD_STATE base on the states
 			internal_state := a_state
 		end
 
-feature {NONE}  -- Implemention
+feature {NONE}  -- Implemention attributes.
 
 	internal_user_widget: EV_WIDGET
 			-- Client programmer's widget.
@@ -352,16 +350,19 @@ feature {NONE}  -- Implemention
 	internal_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Mouse focus out actions.
 
-feature {SD_TAB_ZONE}
+feature {SD_TAB_ZONE}  -- Actions for SD_TAB_ZONE
 
 	internal_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Mouse focus in actions.
 
-feature {SD_STATE} -- Implementation
+feature {SD_STATE} -- Actions for SD_STATE
 
 	internal_close_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions perfromed before close.
 
 invariant
+
 	the_user_widget_not_void: internal_user_widget /= Void
+	internal_shared_not_void: internal_shared /= Void
+
 end

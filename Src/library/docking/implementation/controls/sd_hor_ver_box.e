@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that wrapper EV_HORIZONTAL_BOX and EV_VERTICAL_BOX. Actually this is EV_VERTICAL_BOX contain a EV_HORIZONTAL_BOX."
+	description: "EV_BOX that wrapper EV_HORIZONTAL_BOX and EV_VERTICAL_BOX. Actually this is EV_VERTICAL_BOX contain a EV_HORIZONTAL_BOX."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +21,9 @@ inherit
 			search as search_vertical_box,
 			pointer_enter_actions as pointer_enter_actions_vertical_box,
 			wipe_out as wipe_out_vertical_box,
-			linear_representation as linear_representation_vertical_box
+			linear_representation as linear_representation_vertical_box,
+			off as off_vertical_box,
+			remove as remove_vertical_box
 		end
 
 feature {NONE} -- Initlization
@@ -38,27 +40,19 @@ feature {NONE} -- Initlization
 				init_horizontal_style
 			end
 			create pointer_enter_actions.default_create
+		ensure
+			set: internal_vertical_style = a_vertical_style
 		end
 
 	init_horizontal_style is
-			--
+			-- If internal_vertical_style false, add horizontal box.
 		do
-				-- First change the style, so the horizontal_box can be added in.
-				internal_vertical_style := not internal_vertical_style
-				extend (horizontal_box)
-				-- Then change the style back.
-				internal_vertical_style := not internal_vertical_style
+			-- First change the style, so the horizontal_box can be added in.
+			internal_vertical_style := not internal_vertical_style
+			extend (horizontal_box)
+			-- Then change the style back.
+			internal_vertical_style := not internal_vertical_style
 		end
-
-
-feature {NONE} -- Implementation
-
-	internal_vertical_style: BOOLEAN
-			-- If current box show vertically? Otherwise is show horizontally.
-
-	horizontal_box: EV_HORIZONTAL_BOX
-			-- The horizontal box in the Current when show horizontally.
-
 
 feature -- Basic operations
 
@@ -76,15 +70,11 @@ feature -- Basic operations
 				l_items.extend (item)
 				forth
 			end
-
 			internal_vertical_style := not internal_vertical_style
-
 			wipe_out
-
 			if not internal_vertical_style then
 				init_horizontal_style
 			end
-
 			from
 				l_items.start
 			until
@@ -93,16 +83,18 @@ feature -- Basic operations
 				extend (l_items.item)
 				l_items.forth
 			end
+		ensure
+			style_changed: old internal_vertical_style = not internal_vertical_style
 		end
 
-feature
+feature -- Actions
 
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
 
 feature -- Redefine
 
 	extend (v: like item) is
-			-- Extend the item base on the direction.
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				extend_vertical_box (v)
@@ -112,7 +104,7 @@ feature -- Redefine
 		end
 
 	prune (v: like item) is
-			-- Prune the item base on the direction.
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				prune_vertical_box (v)
@@ -122,7 +114,7 @@ feature -- Redefine
 		end
 
 	start is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				start_vertical_box
@@ -133,7 +125,7 @@ feature -- Redefine
 
 
 	after: BOOLEAN is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				Result := after_vertical_box
@@ -143,7 +135,7 @@ feature -- Redefine
 		end
 
 	forth is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				forth_vertical_box
@@ -153,7 +145,7 @@ feature -- Redefine
 		end
 
 	item: EV_WIDGET is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				Result := item_vertical_box
@@ -163,7 +155,7 @@ feature -- Redefine
 		end
 
 	count: INTEGER is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				Result := count_vertical_box
@@ -173,7 +165,7 @@ feature -- Redefine
 		end
 
 	disable_item_expand (an_item: EV_WIDGET) is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				disable_item_expand_vertical_box (an_item)
@@ -183,7 +175,7 @@ feature -- Redefine
 		end
 
 	has (v: like item): BOOLEAN is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				Result := has_vertical_box (v)
@@ -193,7 +185,7 @@ feature -- Redefine
 		end
 
 	search (v: like item) is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				search_vertical_box (v)
@@ -203,7 +195,7 @@ feature -- Redefine
 		end
 
 	wipe_out is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				wipe_out_vertical_box
@@ -213,7 +205,7 @@ feature -- Redefine
 		end
 
 	linear_representation: LINEAR [EV_WIDGET] is
-			--
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				Result := linear_representation_vertical_box
@@ -221,5 +213,33 @@ feature -- Redefine
 				Result := horizontal_box.linear_representation
 			end
 		end
+
+	off: BOOLEAN is
+			-- Redefine.
+		do
+			if internal_vertical_style then
+				Result := off_vertical_box
+			else
+				Result := horizontal_box.off
+			end
+		end
+
+	remove is
+			-- Redefine.
+		do
+			if internal_vertical_style then
+				remove_vertical_box
+			else
+				horizontal_box.remove
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	internal_vertical_style: BOOLEAN
+			-- If current box show vertically? Otherwise is show horizontally.
+
+	horizontal_box: EV_HORIZONTAL_BOX
+			-- Horizontal box in the Current when show horizontally.
 
 end

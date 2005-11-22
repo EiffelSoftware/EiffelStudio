@@ -31,13 +31,13 @@ feature -- Saturation
 feature {NONE} -- Implementation
 
 	light_increase (a_color: INTEGER; a_lightness_increase: REAL): INTEGER is
-			--
+			-- Increas light.
 		do
 			Result := (a_color * (1 - a_lightness_increase) + 255 * a_lightness_increase).rounded
 		end
 
 	light_decrease (a_color: INTEGER; a_lightness_increase: REAL): INTEGER is
-			--
+			-- Decrease light.
 		do
 			Result := a_color * (1 - a_lightness_increase).rounded
 		end

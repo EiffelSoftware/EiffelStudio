@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent a menu client programmer supplied."
+	description: "Contents that have a menu items client programmer want to managed by docking library."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,15 +16,17 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		require
 			a_title_not_void: a_title /= Void
+			a_items_not_void: a_items /= Void
 		do
 			title := a_title
 			menu_items := a_items
 		ensure
 			set: title = a_title
+			set: menu_items = a_items
 		end
 
 	make_with_tool_bar (a_title: STRING; a_tool_bar: EV_TOOL_BAR) is
-			--
+			-- Creation method.
 		require
 			a_title_not_void: a_title /= Void
 			a_tool_bar_not_void: a_tool_bar /= Void
@@ -46,12 +48,15 @@ feature {NONE} -- Initlization
 				a_tool_bar.forth
 			end
 			make (a_title, l_temp_items)
+		ensure
+			set: a_title = title
+			set: a_tool_bar.count = menu_items.count
 		end
 
 feature -- Properties
 
 	title: STRING
-		-- Menu title.
+			-- Menu title.
 
 	menu_items: ARRAYED_LIST [EV_TOOL_BAR_ITEM]
 			-- All 	EV_TOOL_BAR_ITEM in `Current'.

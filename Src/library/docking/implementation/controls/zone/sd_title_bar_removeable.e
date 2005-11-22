@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "SD_ZONE which title bar is removeable (such as: SD_DOCKING_ZONE, SD_TAB_ZONE) inherited this object."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,12 +11,5 @@ feature -- Basic operation
 	set_show_stick_min_max (a_show: BOOLEAN) is
 		deferred
 		end
-
-feature -- Query
-
---	title: STRING is
---			--
---		deferred
---		end
 
 end

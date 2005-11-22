@@ -1,5 +1,5 @@
 indexing
-	description: "This is the tab stub on the SD_AUTO_HIDE_PANEL."
+	description: "Tab stubs on SD_AUTO_HIDE_PANEL."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,12 +21,10 @@ feature {NONE} -- Initlization
 			a_pixmap_not_void: a_pixmap /= Void
 		do
 			init (a_vertical)
---			create internal_contents.make (1)
 			set_background_color ((create {EV_STOCK_COLORS}).grey)
 			set_border_width (1)
 
 			internal_pixmap := a_pixmap
---			internal_title := a_title
 
 			create internal_drawing_area
 			internal_drawing_area.expose_actions.extend (agent on_redraw)
@@ -35,38 +33,28 @@ feature {NONE} -- Initlization
 			create internal_label.make_with_text (a_title)
 			extend (internal_label)
 
---			create pointer_enter_actions
-
---			pointer_enter_actions.merge_right (internal_pixmap.pointer_enter_actions)
 			internal_label.pointer_enter_actions.extend (agent on_pointer_enter)
---			-- | FIXIT: Why enable agent below, there'll be behavior unexcepted?
 			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
+		ensure
+			set: internal_pixmap = a_pixmap
+			set: internal_label.text.is_equal (a_title)
+			actions_added: internal_label.pointer_enter_actions.count = 1 and internal_drawing_area.pointer_enter_actions.count = 1
+			label_added: has (internal_label)
+			drawing_area_added: has (internal_drawing_area)
 		end
 
-feature -- Properties
-
-	add_tab (a_title: STRING; a_pixmap: EV_PIXMAP) is
-			-- Add a tab to `Current'.
-		do
-
-		end
+feature -- Query
 
 	title: STRING is
-			--
+			-- Title.
 		do
 			Result := internal_label.text
 		end
 
-	set_title (a_title: STRING) is
-			--
-		do
-			internal_label.set_text (a_title)
-		end
-
-feature -- Basic operation
+feature -- Command
 
 	set_show_text (a_show: BOOLEAN) is
-			--
+			-- If `a_show' True, show title. Vice visa.
 		do
 			if a_show then
 				start
@@ -81,35 +69,41 @@ feature -- Basic operation
 			end
 		end
 
-feature {NONE} -- Implementation
+	set_title (a_title: STRING) is
+			-- Set `title'.
+		do
+			internal_label.set_text (a_title)
+		end
 
-	l_label: EV_LABEL
-
---	internal_title: STRING
-			-- Title of SD_CONTENT.
-
-	internal_pixmap: EV_PIXMAP
-
-	internal_drawing_area: EV_DRAWING_AREA
-
-	internal_label: EV_LABEL
-
-feature {NONE} -- Implemention
+feature {NONE} -- Agents
 
 	on_pointer_enter is
-			-- Handle pointer enter event.
-		local
---			l_timer: EV_TIMEOUT
+			-- Handle pointer enter.
 		do
 			pointer_enter_actions.call ([])
-
 		end
 
 	on_redraw (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
-			--
+			-- Handle redraw.
 		do
 			internal_drawing_area.clear
 			internal_drawing_area.draw_pixmap (0, 0, internal_pixmap)
 		end
+
+feature {NONE} -- Implementation
+
+	internal_pixmap: EV_PIXMAP
+		-- Pixmap on `Current'.
+
+	internal_drawing_area: EV_DRAWING_AREA
+		-- Drawing area draw `internal_pixmap'.
+
+	internal_label: EV_LABEL
+		-- Lable which has title.
+
+invariant
+
+	internal_drawing_area_not_void: internal_drawing_area /= Void
+	internal_label_not_void: internal_label /= Void
 
 end

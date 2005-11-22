@@ -22,7 +22,7 @@ feature -- Project file/directory warnings
 	w_Select_project_to_create: STRING is
 		"Please select the kind of project you want to create."
 
-	w_Cannot_open_project: STRING is 
+	w_Cannot_open_project: STRING is
 		"Project is not readable. Check permissions."
 
 	w_Cannot_create_project_directory (dir_name: STRING): STRING is
@@ -70,7 +70,7 @@ feature -- Project file/directory warnings
 			Result.append (dir_name)
 			Result.append ("%Nis corrupted. Cannot continue.")
 		end
-		
+
 	w_Project_incompatible (dir_name: STRING; comp_version, incomp_version: STRING): STRING is
 		require
 			dir_name_not_void: dir_name /= Void
@@ -94,7 +94,7 @@ feature -- Project file/directory warnings
 				Result.append (".")
 			end
 		end
-		
+
 	w_Project_incompatible_version (dir_name: STRING; comp_version, incomp_version: STRING): STRING is
 		require
 			dir_name_not_void: dir_name /= Void and then not dir_name.is_empty
@@ -115,7 +115,7 @@ feature -- Project file/directory warnings
 			Result.append (comp_version)
 			Result.append (".%N")
 		end
-		
+
 	w_Project_interrupted (dir_name: STRING): STRING is
 		require
 			dir_name_not_void: dir_name /= Void
@@ -125,7 +125,7 @@ feature -- Project file/directory warnings
 			Result.append (dir_name)
 			Result.append ("%Nwas interrupted. Cannot continue.")
 		end
-		
+
 	w_None_system: STRING is "A system whose root class is NONE is not runnable."
 
 feature -- File warnings
@@ -191,7 +191,7 @@ feature -- File warnings
 			Result.append (dir_name)
 			Result.append ("%Ndoes not exist.")
 		end
-			
+
 	w_Not_a_plain_file (file_name: STRING): STRING is
 		require
 			file_name_not_void: file_name /= Void
@@ -220,7 +220,7 @@ feature -- File warnings
 			Result.append (file_name)
 			Result.append ("%Nis not writable.%NPlease check permissions.")
 		end
-		
+
 	w_Still_referenced (a_class_name: STRING; referenced_classes: STRING): STRING is
 		require
 			a_class_name_not_void: a_class_name /= Void
@@ -232,7 +232,7 @@ feature -- File warnings
 			Result.append (referenced_classes)
 			Result.append ("%N%NIf this is not the case recompile the system and try again.")
 		end
-		
+
 	w_File_modified_by_another_editor: STRING is "This file has been modified by another editor."
 
 	w_File_exists (file_name: STRING): STRING is
@@ -293,7 +293,7 @@ feature -- Project settings warnings
 	w_cluster_name_not_valid: STRING is "Cluster name is not valid."
 
 	w_cluster_path_not_valid: STRING is "Cluster path is not valid."
-			
+
 feature -- Debug warnings
 
 	w_Cannot_debug: STRING is "Current version of system has not been successfully compiled.%N%
@@ -383,7 +383,7 @@ feature -- Cluster tree warnings
 			Result.append ("%Nbecause it is either a precompiled%N%
 							%or a library cluster.")
 		end
-		
+
 	w_Cannot_delete_none_empty_cluster (cluster_name: STRING): STRING is
 		require
 			cluster_name_not_void: cluster_name /= Void
@@ -432,7 +432,7 @@ feature -- Cluster tree warnings
 	w_Class_already_in_cluster (base_name: STRING): STRING is
 		require
 			base_name_not_void: base_name /= Void
-		do	
+		do
 			create Result.make (30)
 			Result.append ("Class with file name ")
 			Result.append (base_name)
@@ -442,7 +442,7 @@ feature -- Cluster tree warnings
 	w_Class_still_in_cluster (base_name: STRING): STRING is
 		require
 			base_name_not_void: base_name /= Void
-		do	
+		do
 			create Result.make (30)
 			Result.append ("A class with file name ")
 			Result.append (base_name)
@@ -458,7 +458,7 @@ feature -- Cluster tree warnings
 			Result.append (class_name)
 			Result.append ("' already exists.%NPlease select a different class name.")
 		end
-		
+
 	w_Class_already_exists_info (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void
@@ -530,7 +530,7 @@ feature -- Cluster tree warnings
 	w_Cluster_path_already_exists (path: STRING): STRING is
 		require
 			path_not_void: path /= Void
-		do	
+		do
 			create Result.make (70);
 			Result.append ("Cluster with path ");
 			Result.append (path.as_upper);
@@ -540,7 +540,7 @@ feature -- Cluster tree warnings
 	w_Cluster_name_already_exists (name: STRING): STRING is
 		require
 			name_not_void: name /= Void
-		do	
+		do
 			create Result.make (70);
 			Result.append ("Cluster with name ");
 			Result.append (name.as_upper);
@@ -560,7 +560,7 @@ feature -- Cluster tree warnings
 						%removed from the system.%N%N%
 						%Are you sure this is what you want?"
 		end
-	
+
 	w_Could_not_locate (cl_name: STRING): STRING is
 			-- Class/cluster could not be found in the cluster tree.
 		do
@@ -577,12 +577,12 @@ feature -- Cluster tree warnings
 						%goes through degree " + degree.out + "."
 		end
 
-	w_Project_not_compiled: STRING is 
+	w_Project_not_compiled: STRING is
 			"Command cannot be executed because the project%N%
 			%has never been compiled.%N%
 			%Please compile the project before calling this command."
 
-	w_Feature_is_not_compiled: STRING is 
+	w_Feature_is_not_compiled: STRING is
 			"An error occurred on breakpoints because a feature%N%
 			%was not correctly compiled.%N%N%
 			%Recompiling the project completely will solve the problem."
@@ -614,7 +614,7 @@ feature -- Cluster tree warnings
 
 feature -- Backup warnings
 
-	w_Crashed: STRING is 
+	w_Crashed: STRING is
 		once
 			Result := "An unexpected error occurred.%N"+
 					WorkBench_name+" will now make an attempt to create%N%
@@ -764,7 +764,7 @@ feature -- Ace/Project settings warnings
 
 	w_Could_not_parse_ace: STRING is "An error occurred while parsing the Ace file.%N%
 									%Please try using the system configuration tool."
-	
+
 	w_Incorrect_ace_configuration: STRING is "Some values are invalid, %
 									%please correct the corresponding entries"
 
@@ -789,7 +789,7 @@ feature -- Profiler messages
 			Result.append ("You can also combine subqueries with 'and' and 'or', for example:%N")
 			Result.append ("%Tcalls > 2 and self <= 3.4 or percentage in 2.3 - 3.5")
 		end
-		
+
 	w_Profiler_select_one_output_switch: STRING is "Select at least one output switch."
 
 	w_Profiler_select_one_language: STRING is "Select at least one language."
@@ -797,28 +797,28 @@ feature -- Profiler messages
 feature -- Project creation, retrieval, ...
 
 	w_Unable_to_retrieve_project: STRING is "Unable to retrieve the project, it may be corrupted."
-	
+
 	w_Fill_in_location_field: STRING is "Please fill in the 'Location' field."
-	
+
 	w_Fill_in_project_name_field: STRING is "Please fill in the 'Project Name' field."
-	
+
 	w_Fill_in_ace_field: STRING is "Please fill in the 'Ace file' field."
-	
-	w_Unable_to_load_ace_file (an_ace_name: STRING): STRING is 
+
+	w_Unable_to_load_ace_file (an_ace_name: STRING): STRING is
 		do
 			Result := "Unable to load the ace file `" + an_ace_name + "'."
 		end
-		
+
 	w_Invalid_directory_or_cannot_be_created (a_directory_name: STRING): STRING is
 		do
 			Result := "'" + a_directory_name + "' is not a valid directory and/or cannot be created%N%
 				%Please choose a valid and writable directory."
 		end
-		
+
 
 feature -- Warning messages
 
-	w_Assertion_warning: STRING is 
+	w_Assertion_warning: STRING is
 		"By default assertions enabled in the Ace file are kept%N%
 		%in final mode.%N%
 		%%N%
@@ -831,12 +831,12 @@ feature -- Warning messages
 		%finalized executable?"
 
 	w_Backup_file_not_editable: STRING is "Backup file cannot be modified.%NTo edit it, save it first."
-	
-	w_Cannot_move_favorite_to_a_child: STRING is 
+
+	w_Cannot_move_favorite_to_a_child: STRING is
 		"Moving a folder to one of its children%N%
 		%is not possible."
 
-	w_Cannot_move_feature_alone: STRING is 
+	w_Cannot_move_feature_alone: STRING is
 		"Moving a feature favorite is not supported by the favorite manager."
 
 	w_Class_not_modifiable: STRING is "The text of this class cannot be modified."
@@ -846,7 +846,7 @@ feature -- Warning messages
 	w_Could_not_save_all: STRING is "Some files could not be saved.%N%
 									%Exit was cancelled."
 
-	w_cannot_save_png_file (a_file_name: STRING): STRING is 
+	w_cannot_save_png_file (a_file_name: STRING): STRING is
 		do
 			if a_file_name /= Void then
 				Result := "Could not save diagram to " + a_file_name
@@ -854,16 +854,16 @@ feature -- Warning messages
 				Result := "Could not save diagram to specified location."
 			end
 		end
-	
+
 	w_cannot_generate_png: STRING is "Could not generate PNG file.%NInsufficient video memory."
-	
+
 	w_does_not_have_enclosing_cluster: STRING is "This cluster does not have an enclosing cluster."
 
 	w_No_internet_browser_selected: STRING is "No browser was given in the preferences"
-	
+
 	w_No_url_to_replace: STRING is "There is no $url part in the browser preference.%N%
 									%Please fix your preferences."
-	
+
 	w_No_ise_eiffel: STRING is "Environment variable ISE_EIFFEL is not defined."
 
 	w_Page_not_exist: STRING is "The requested page does not exist.%N%
@@ -871,14 +871,14 @@ feature -- Warning messages
 
 	w_Environment_not_initialized: STRING is "$ISE_EIFFEL is not initialized. Execution impossible%N"
 
-	w_Freeze_warning: STRING is 
+	w_Freeze_warning: STRING is
 		"Freezing implies some C compilation and linking.%N%
 		% - Click Yes to compile the Eiffel system (including C compilation)%N%
 		% - Click No  to compile the Eiffel system (no C compilation)%N%
 		% - Click Cancel to abort%N%
 		%%N"
 
-	w_Finalize_warning: STRING is 
+	w_Finalize_warning: STRING is
 		"Finalizing implies some C compilation and linking.%N%
 		% - Click Yes to compile the C code after finalizing the system%N%
 		% - Click No  to skip the C compilation (no executable will be generated)%N%
@@ -912,7 +912,7 @@ feature -- Warning messages
 			Result.append (" is more recent than the system.%N")
 			Result.append ("Do you want to compile the generated C code?")
 		end
-		
+
 	w_Makefile_does_not_exist (make_file: STRING): STRING is
 		require
 			make_file_not_void: make_file /= Void
@@ -928,7 +928,7 @@ feature -- Warning messages
 	w_Must_compile_first: STRING is "You must compile a project first."
 
 	w_Must_finalize_first: STRING is "You must finalize your project first."
-	
+
 	w_No_class_matches: STRING is "No class in any cluster matches this name."
 
 	w_No_cluster_matches: STRING is "No cluster in the system matches this name."
@@ -986,7 +986,7 @@ feature -- Warning messages
 										%to have it removed."
 
 	w_Text_not_editable: STRING is "Current text is not editable."
-	
+
 	w_Class_header_syntax_error (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void
@@ -994,7 +994,7 @@ feature -- Warning messages
 			Result := "Syntax error in class "
 			Result.append (class_name)
 		end
-		
+
 	w_Class_syntax_error_before_generation (class_name: STRING): STRING is
 		require
 			class_name_not_void: class_name /= Void
@@ -1002,28 +1002,28 @@ feature -- Warning messages
 			Result := "Class " + class_name + " has syntax error.%N"
 			Result.append ("Code generation cancelled.")
 		end
-		
+
 	w_Class_modified_outside_diagram: STRING is "Class was modified outside the diagram.%N%
 												%Previous commands are not undoable any longer."
-												
+
 	w_Inheritance_from_any: STRING is "Cannot remove inheritance from ANY."
-		
+
 	w_Class_syntax_error: STRING is "Current class text has a syntax error.%NCode generation was cancelled."
-		
+
 	w_New_feature_syntax_error: STRING is "New feature has syntax error.%NCode generation cancelled."
-		
+
 	w_Wrong_class_name: STRING is "Syntax error in name or generics"
 
 	w_Class_name_changed: STRING is "Class name has changed since last compilation.%NCurrent text will not be clickable.%N%
 						%Recompile to make it clickable again."
-						
+
 	w_Unable_to_execute_wizard (wizard_file: STRING): STRING is
 		do
-			Result := 
+			Result :=
 				"Unable to execute the wizard.%N%
-				%Check that `"+wizard_file+"' exists and is executable.%N"	
+				%Check that `"+wizard_file+"' exists and is executable.%N"
 		end
-	
+
 	w_short_internal_error (a_code: STRING): STRING is
 			-- Short internal error using `a_code'.
 		require
@@ -1041,7 +1041,7 @@ feature -- Warning messages
 		%     delete your EIFGEN and recompile from scratch.%N%N%
 		%Follow the instructions at http://support.eiffel.com/submit.html in%N%
 		%order to submit a bug report at http://support.eiffel.com"
-		
+
 	w_Class_already_edited: STRING is "This class is already being edited%N%
 										%in another editor.%N%
 										%Editing a class in several editors%N%
@@ -1057,13 +1057,18 @@ feature -- Warning messages
 
 	w_Command_needs_file: STRING is "This command requires a file name.%N%
 									%It cannot be executed."
-									
+
+	w_Command_needs_directory: STRING is "This command requires a directory.%N%
+									%It cannot be executed."
+
 	w_Finalize_precompile: STRING is    ".NET precompiled libraries can be finalized to create%N%
 									%an optimized version as well as a workbench version.%N%
 									%Would you like to create a finalized verion?"
-									
+
 	w_Replace_all: STRING is "This operation can not be undone %N%
 									%to files not loaded to the editor.%N%
 									%Would you like to continue replacing all?"
+
+	w_No_system_defined: STRING is "No system was defined.%N"
 
 end -- class WARNING_MESSAGES

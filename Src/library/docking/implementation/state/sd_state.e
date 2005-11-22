@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent the states which used for restore, can change window layout. A state pattern."
+	description: "SD_STATE which manage SD_ZONE baes on different states. A state pattern."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,29 +9,25 @@ deferred class
 feature -- Properties
 
 	content: like internal_content is
-			-- `internal_content'
+			-- `internal_content'.
 		do
 			Result := internal_content
 		end
 
-	set_content (a_content: like internal_content) is
-			-- Set a_content.
+	extend (a_content: like internal_content) is
+			-- Set `internal_content'.
 		do
 			internal_content := a_content
 		end
 
-	direction: like internal_direction is
-			-- `internal_direction'
-		do
-			Result := internal_direction
-		end
+	direction: INTEGER
+			-- Dock top or dock bottom or dock left or dock right? One emueration from {SD_DOCKING_MANAGER}.
 
 	set_direction (a_direction: INTEGER) is
-			--
+			-- Set `direction'.
 		do
-			internal_direction := a_direction
+			direction := a_direction
 		end
-
 
 	zone: SD_ZONE is
 			-- Zone which is managed by `Current'.
@@ -40,27 +36,32 @@ feature -- Properties
 			not_void: Result /= Void
 		end
 
-feature {SD_CONFIG}
+	is_maximized: BOOLEAN
+			-- If SD_ZONE managed by `Current' maximized?
 
-	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER) is
+feature {SD_CONFIG_MEDIATOR}  -- Restore
+
+	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
 			-- `titles' is content name. `a_container' is zone parent.
 		require
 			more_than_one_title: content_count_valid (a_titles)
 			a_container_not_void: a_container /= Void
 			a_container_not_full: not a_container.full
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		deferred
+		ensure
+			set: direction = a_direction
 		end
 
-feature {NONE} -- Implementation
-
-	internal_content: SD_CONTENT
-
-	internal_direction: INTEGER
-			-- Dock top or dock bottom or dock left or dock right?
-	internal_shared: SD_SHARED
-			-- All singletons.
-
 feature -- Commands
+
+	recover_to_normal_state is
+			-- If `Current' `maximized', return to normal zone size.
+		do
+		ensure
+			normal_state: not is_maximized
+		end
 
 	record_state is
 			-- Record current state.
@@ -75,14 +76,13 @@ feature -- Commands
 		end
 
 	show_window is
-			-- Show window.
+			-- Handle show window.
 		do
 		end
 
 	close_window is
-			-- When close window, do this.
+			-- Handle close window.
 		do
-
 			internal_shared.docking_manager.prune_zone_by_content (internal_content)
 			if internal_content.internal_close_actions /= Void then
 				internal_content.internal_close_actions.call ([])
@@ -90,16 +90,8 @@ feature -- Commands
 			internal_shared.docking_manager.remove_empty_split_area
 		end
 
-	min_max_window is
-			--
-		do
-
-		end
-
 	stick_window (a_direction: INTEGER) is
 			-- Stick/Unstick a window.
---		require
---			a_direction_valid: internal_shared.direction_valid (a_direction)
 		do
 		end
 
@@ -109,10 +101,9 @@ feature -- Commands
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
-			--
+			-- Change zone position to `a_target_zone''s parent at `a_direction'.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
---			a_direction_valid: direction_valid (a_direction)
 		do
 		end
 
@@ -121,19 +112,21 @@ feature -- Commands
 		require
 			a_target_zone_not_void: a_target_zone /= Void
 		do
-
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
-			--
+			-- Move to a tab zone.
 		require
 			a_target_zone_not_void: a_target_zone /= Void
 		do
-
 		end
 
+	on_normal_max_window is
+			-- Handle normal\max window.
+		do
+		end
 
-feature {SD_CONTENT} -- Called by client programmer from SD_CONTENT.
+feature {SD_CONTENT} -- SD_CONTENT called functions.
 
 	change_title (a_title: STRING; a_content: SD_CONTENT) is
 			--
@@ -165,20 +158,40 @@ feature  -- States report
 			Result := a_titles.count = 1
 		end
 
-feature {NONE} -- State changing
+	is_dock_at_top (a_multi_dock_area: SD_MULTI_DOCK_AREA): BOOLEAN is
+			-- If `zone' dock at top level of `a_multi_dock_area'?
+		local
+			l_container: EV_CONTAINER
+			l_widget: EV_WIDGET
+		do
+			l_container ?= a_multi_dock_area.item
+			l_widget ?= zone
+			check all_zone_is_widget: l_widget /= Void end
+			if l_container /= Void then
+				Result := l_container.has (l_widget)
+			end
+		end
+
+feature {NONE} -- Implementation
 
 	change_state (a_state: SD_STATE) is
-			-- Changed the resotre base on different states.
+			-- Changed `content' state to `a_state'.
+		require
+			a_state_not_void: a_state /= Void
 		do
 			internal_content.change_state (a_state)
+		ensure
+			changed: internal_content.state = a_state
 		end
 
-feature {SD_DOCKING_MANAGER} -- Save/open config issues.
+	internal_content: SD_CONTENT
+			-- Content managed by `Current'.
 
-	store_data (a_data: SD_CONFIG_DATA) is
-			--
-		do
+	internal_shared: SD_SHARED
+			-- All singletons.
 
-		end
+invariant
+
+	internal_shared_not_void: internal_shared /= Void
 
 end

@@ -14,7 +14,7 @@ create
 
 feature {NONE} -- Initlization
 	make is
-			--
+			-- Creation method.
 		do
 			default_create
 		end
@@ -27,13 +27,12 @@ feature -- Command
 			if internal_parent_floating_zone /= Void then
 				internal_parent_floating_zone.update_title_bar
 			elseif readable then
-
 				set_all_title_bar (item)
 			end
 		end
 
 	set_parent_floating_zone (a_floating_zone: SD_FLOATING_ZONE) is
-			--
+			-- Set `internal_parent_floating_zone'.
 		require
 			a_floating_zone_not_void: a_floating_zone /= Void
 		do
@@ -53,10 +52,12 @@ feature -- Command
 					remove_empty_split_area_imp (l_item)
 				end
 			end
+		ensure
+			not_has_empty_split_area:
 		end
 
 	save_spliter_position (a_widget: EV_WIDGET) is
-			--
+			-- Save a_widget split position recursively if a_widget is EV_SPLIT_AREA.
 		require
 			a_widget_not_void: a_widget /= Void
 		local
@@ -70,7 +71,7 @@ feature -- Command
 		end
 
 	restore_spliter_position (a_widget: EV_WIDGET) is
-			--
+			-- Restore a_widget split postion which just saved by save_spliter_position.
 		require
 			a_widget_not_void: a_widget /= Void
 		local
@@ -83,27 +84,15 @@ feature -- Command
 			end
 		end
 
+feature -- Query
+
 	has_zone (a_zone: SD_ZONE): BOOLEAN is
-			--
+			-- Does `a_zone' in `Current' recursively.
 		require
 			a_zone_not_void: a_zone /= Void
 		local
---			l_zone: SD_ZONE
---			l_split_area: EV_SPLIT_AREA
 			l_widget: EV_WIDGET
 		do
---			if readable then
---				l_zone ?= item
---				if l_zone /= Void then
---					if l_zone = a_zone then
---						Result := True
---					end
---				else
---					l_split_area ?= item
---					check l_split_area /= Void end
---					Result := has_zone_internal (a_zone, l_split_area)
---				end
---			end
 			l_widget ?= a_zone
 			check l_widget /= Void end
 			Result := has_recursive (l_widget)
@@ -112,7 +101,9 @@ feature -- Command
 feature {NONE} -- Implementation
 
 	 set_all_title_bar (a_widget: EV_WIDGET) is
-	 		--
+	 		-- Set all SD_ZONE's title bar in `Current'.
+	 	require
+	 		a_widget_not_void: a_widget /= Void
 	 	local
 	 		l_zone: SD_TITLE_BAR_REMOVEABLE
 	 		l_split_area: EV_SPLIT_AREA
@@ -127,41 +118,6 @@ feature {NONE} -- Implementation
 				l_zone.set_show_stick_min_max (True)
 			end
 	 	end
-
---	has_zone_internal (a_zone: SD_ZONE; a_split_area: EV_SPLIT_AREA): BOOLEAN is
---			--
---		require
---			a_zone_not_void: a_zone /= Void
---			a_split_area_not_void: a_split_area /= Void
---		local
---			l_zone: SD_ZONE
---			l_split_area: EV_SPLIT_AREA
---		do
---			l_zone ?= a_split_area.first
---			if l_zone /= Void then
---				Result := l_zone = a_zone
---			else
---				l_split_area ?= a_split_area.first
---				if l_split_area /= Void then
---					Result := has_zone_internal (a_zone, l_split_area)
---				end
---			end
---
---			if not Result then
---				l_zone := Void
---				l_zone ?= a_split_area.second
---				if l_zone /= Void then
---					Result := l_zone = a_zone
---				else
---					l_split_area := Void
---					l_split_area ?= a_split_area.second
---					if l_split_area /= Void then
---						Result := has_zone_internal (a_zone, l_split_area)
---					end
---				end
---			end
---
---		end
 
 	remove_empty_split_area_imp (a_split_area: EV_SPLIT_AREA) is
 			-- Remove all empty split area in `inner_container' recursively. Postorder traversal.
@@ -199,11 +155,12 @@ feature {NONE} -- Implementation
 			elseif a_split_area.first = Void then
 				up_spliter_level (a_split_area, False)
 			end
-
 		end
 
 	up_spliter_level (a_split_area: EV_SPLIT_AREA; a_first: BOOLEAN) is
-			-- If EV_SPLIT_AREA not full, then prune it from its parent, insert only one item to parent.
+			-- If EV_SPLIT_AREA not full, then prune it from its parent, insert only one child widget to parent.
+		require
+			a_split_area_not_void: a_split_area /= Void
 		local
 			l_widget: EV_WIDGET
 			l_widget_split: EV_SPLIT_AREA
@@ -236,23 +193,24 @@ feature {NONE} -- Implementation
 			a_split_area.prune (l_widget)
 			l_parent.extend (l_widget)
 
-
-
 			if l_temp_spliter /= Void and l_temp_spliter.full then
---				-- There should by only one, because Postorder, so NO recursive needed.
---				-- The split area must full, because Postorder recursive.
+				-- There should by only one, because Postorder, so NO recursive needed.
+				-- The split area must full, because Postorder recursive.
 					l_temp_spliter.set_split_position (l_spliter_position)
 			end
 
 			if l_widget_split /= Void then
 				restore_spliter_position (l_widget_split)
 			end
-
-
+		ensure
+			a_split_area_child_pruned: a_split_area.count = 0
+			spliter_level_up_done:
 		end
 
 	save_spliter_position_imp (a_spliter: EV_SPLIT_AREA) is
 			-- Save spliter position before prune it.
+		require
+			a_spliter_not_void: a_spliter /= Void
 		local
 			l_left, l_right: EV_SPLIT_AREA
 			l_left_zone, l_right_zone: SD_ZONE
@@ -275,11 +233,12 @@ feature {NONE} -- Implementation
 					io.put_string ("%N SD_MULIT_DOCK_AREA spliter position: save " + a_spliter.split_position.out)
 				end
 			end
-
 		end
 
 	restore_spliter_position_imp (a_spliter: EV_SPLIT_AREA) is
 			-- Restore spliter position.
+		require
+			a_spliter_not_void: a_spliter /= Void
 		local
 			l_left, l_right: EV_SPLIT_AREA
 			l_left_zone, l_right_zone: SD_ZONE
@@ -307,12 +266,6 @@ feature {NONE} -- Implementation
 				l_old_spliter ?= spliters.item [1]
 				check l_old_spliter /= Void and then l_old_spliter = a_spliter end
 
---				if l_spliter_position < a_spliter.minimum_split_position then
---					l_spliter_position := a_spliter.minimum_split_position
---				end
---				if l_spliter_position > a_spliter.maximum_split_position then
---					l_spliter_position := a_spliter.maximum_split_position
---				end
 				check a_spliter.full end
 
 				debug ("larry")

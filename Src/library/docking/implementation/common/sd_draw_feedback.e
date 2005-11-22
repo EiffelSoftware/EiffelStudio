@@ -10,24 +10,12 @@ feature -- Basic operations
 
 	draw_pixmap (a_screen_x, a_screen_y: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Draw a pixmap at desktop.
+		require
+			a_pixmap_not_void: a_pixmap /= Void
 		do
 			screen.set_copy_mode
 			screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
 		end
-
---	draw_pixmap_2 (a_screen_x, a_screen_y: INTEGER; a_pixmap: EV_PIXMAP) is
---			-- Draw a pixmap at desktop.
---		do
---			screen.set_or_mode
---			screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
---		end
---
---	draw_pixmap_3 (a_screen_x, a_screen_y: INTEGER; a_pixmap: EV_PIXMAP) is
---			-- Draw a pixmap at desktop.
---		do
---			screen.set_and_mode
---			screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
---		end
 
 	draw_shadow_rectangle (a_start_x, a_start_y, a_width, a_height: INTEGER) is
 			-- Draw a vertical line on the screen.
@@ -38,7 +26,6 @@ feature -- Basic operations
 			end
 			screen.set_invert_mode
 			screen.draw_pixmap (a_start_x, a_start_y, last_half_tone_pixmap)
-
 		end
 
 	draw_line (a_x_1, a_y_1, a_x_2, a_y_2: INTEGER) is
@@ -48,17 +35,13 @@ feature -- Basic operations
 			screen.draw_segment (a_x_1, a_y_1, a_x_2, a_y_2)
 		end
 
-
-	test_drawing_count: INTEGER
-
 	clear_screen is
 			-- Maximum amount of bytes the run-time can allocate.
 		do
---			screen.redraw
 		end
 
 	draw_red_rectangle (left, top, width, height: INTEGER) is
-			--
+			-- Draw red rectangle.
 		do
 			screen.set_foreground_color ((create {EV_STOCK_COLORS}).red)
 			screen.draw_rectangle (left, top, width, height)
@@ -66,6 +49,8 @@ feature -- Basic operations
 
 	draw_rectangle (left, top, width, height, line_width: INTEGER) is
 			-- Draw a rectangle on the screen which center is blank.
+		require
+			line_width_valid: line_width > 0
 		do
 			-- Draw window area, top one.
 			draw_shadow_rectangle (left, top, width, line_width)
@@ -77,30 +62,23 @@ feature -- Basic operations
 			draw_shadow_rectangle (left + width - line_width, top, line_width, height)
 		end
 
-	test (a_text: STRING) is
-			--
-		local
-			l_test: EV_PIXMAP
-		do
-			screen.draw_ellipsed_text (0, 0, a_text, 1)
-		end
-
 	draw_transparency_rectangle (a_left, a_top, a_width, a_height: INTEGER) is
-			--
+			-- Draw transparency rectangle.
 		local
---			l_light_blue: EV_COLOR
 			l_pixmap: EV_PIXMAP
 		do
---			create l_pixmap
---			l_pixmap.set_with_named_file ("D:\Projects\NewDocking\images\blue.png")
 			l_pixmap := internal_blue_pixmap
-			l_pixmap.set_size (a_width, a_height)
+			l_pixmap.stretch (a_width, a_height)
+
+			debug ("larry")
+				io.put_string ("SD_FEEDBACK_DRAWER: draw_transparency_rectangle " + a_width.out + " " + a_height.out)
+			end
 			screen.set_and_mode
 			screen.draw_pixmap (a_left, a_top, l_pixmap)
 		end
 
 	internal_blue_pixmap: EV_PIXMAP is
-			--
+			-- Feedback pixmap when user dragging a SD_ZONE.
 		do
 			if internal_blue_pixmap_cell.item = Void then
 				create Result
@@ -109,20 +87,23 @@ feature -- Basic operations
 			else
 				Result := internal_blue_pixmap_cell.item
 			end
-
+		ensure
+			not_void: Result /= Void
 		end
 
 	internal_blue_pixmap_cell: CELL [EV_PIXMAP] is
-			--
+			-- Singleton cell of internal blue pixmap
 		once
 			create Result
+		ensure
+			not_void: Result /= Void
 		end
-
 
 feature {NONE} -- Implementation
 
-	screen: SD_SCREEN_ADAPTER is
-			-- The utility to draw things on screen.
+	screen: EV_SCREEN is
+			-- Utility to draw things on screen.
+			-- FIXIT: should use once, but it not work when relogin to Windows.
 		once
 			create Result
 		ensure
@@ -162,11 +143,13 @@ feature {NONE} -- Implementation
 				l_x := l_x + 1
 			end
 			Result := l_pixmap
+		ensure
+			not_void: Result /= Void
 		end
 
 	last_half_tone_pixmap: EV_PIXMAP
-			-- The half tone pixmap last drawn.
+			-- Half tone pixmap last time drawn.
 invariant
-	invariant_clause: True -- Your invariant here
+
 
 end

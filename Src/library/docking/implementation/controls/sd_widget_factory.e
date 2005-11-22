@@ -18,7 +18,7 @@ feature {NONE} -- Initlization
 		ensure
 			default_style_set: internal_style = style_different
 		end
-		
+
 feature -- Status setting
 
 	set_style (a_style: INTEGER) is
@@ -30,7 +30,7 @@ feature -- Status setting
 		ensure
 			a_style_set: a_style = internal_style
 		end
-		
+
 feature -- Status report
 
 	style_valid (a_style: INTEGER): BOOLEAN is
@@ -38,11 +38,14 @@ feature -- Status report
 		do
 			Result := a_style = style_all_same or a_style = style_different
 		end
-		
+
 feature -- Factory method.
-	
-	title_bar (a_type: INTEGER; a_zone: SD_ZONE): SD_TITLE_BAR is
-			-- 
+
+	title_bar (a_style: INTEGER; a_zone: SD_ZONE): SD_TITLE_BAR is
+			-- Title bar.
+		require
+			a_style_valid: style_valid (a_style)
+			a_zone_not_void: a_zone /= Void
 		local
 			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
 			l_docking_zone: SD_DOCKING_ZONE
@@ -56,24 +59,23 @@ feature -- Factory method.
 				if l_auto_hide_zone /= Void or l_docking_zone /= Void then
 					create Result.make
 				end
-				
 				l_tab_zone ?= a_zone
 				if l_tab_zone /= Void then
-					
-					if a_type = {SD_SHARED}.type_editor then
-						Result := create {SD_VOID_TITLE_BAR}.make	
-					elseif a_type = {SD_SHARED}.type_normal then
+
+					if a_style = {SD_SHARED}.type_editor then
+						Result := create {SD_TITLE_BAR}.make
+						Result.hide
+					elseif a_style = {SD_SHARED}.type_normal then
 						create Result.make
 					end
-					
-				end				
+				end
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
 	tab_zone (a_content: SD_CONTENT; a_target_zone: SD_DOCKING_ZONE): SD_TAB_ZONE is
-			-- 
+			-- Tab zone.
 		require
 			a_content_not_void: a_content /= Void
 			a_target_zone_not_void: a_target_zone /= Void
@@ -81,27 +83,27 @@ feature -- Factory method.
 			if internal_style = style_all_same then
 				create Result.make (a_content, a_target_zone)
 			elseif internal_style = style_different then
+			    check style_valid: style_valid (a_content.type) end
 				if a_content.type = {SD_SHARED}.type_normal then
 					create Result.make (a_content, a_target_zone)
 				elseif a_content.type = {SD_SHARED}.type_editor then
-					Result := create {SD_TAB_ZONE_UPPER}.make (a_content, a_target_zone)	
+					Result := create {SD_TAB_ZONE_UPPER}.make (a_content, a_target_zone)
 				end
 			end
-			
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
-	
+
 	internal_style: INTEGER
 			-- One value from style enumeration.
 
 feature -- Enumeration
-	
+
 	style_all_same: INTEGER is 1
-			-- Look and feel which like Eclipse.
+			-- Look and feel which all the same.
 	style_different: INTEGER is 2
-			-- Look and feel which like Visual Studio 2003.
-				
+			-- Look and feel which different.
+
 end

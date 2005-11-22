@@ -12,7 +12,7 @@ inherit
 			make as make_title_bar
 		redefine
 			set_title,
-			set_stick,
+--			set_stick,
 			enable_focus_color,
 			disable_focus_color,
 			set_show_min_max,
@@ -39,10 +39,10 @@ feature -- Redefine
 		do
 		end
 
-	set_stick (a_bool: BOOLEAN) is
-			-- Do nothing.
-		do
-		end
+--	set_stick (a_bool: BOOLEAN) is
+--			-- Do nothing.
+--		do
+--		end
 
 	enable_focus_color is
 			-- Do nothing.
@@ -55,13 +55,16 @@ feature -- Redefine
 		end
 
 	set_show_min_max (a_show: BOOLEAN) is
-			--
+			-- Do nothing.
 		do
 		end
 
 	set_show_stick (a_show: BOOLEAN) is
-			--
+			-- Do nothing.
 		do
 		end
+
+invariant
+	custom_area_not_void: custom_area /= Void
 
 end

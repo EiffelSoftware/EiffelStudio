@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that get all the singletons in the super docking system."
+	description: "Objects that contain all the singletons in the smart docking library."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,11 +9,11 @@ class
 feature -- Access
 
 	icons: SD_ICONS_SINGLETON is
-			-- Get the SD_ICONS_SINGLETON instance.
+			-- SD_ICONS_SINGLETON instance.
 		once
 			Result := internal_icons
 		ensure
-			result_not_void: Result /= Void
+			not_void: Result /= Void
 		end
 
 	set_icons (a_icons: like internal_icons) is
@@ -27,27 +27,27 @@ feature -- Access
 			-- Set the once function
 			l_dummy := icons
 		ensure
-			a_icons_set: internal_icons = a_icons
+			set: internal_icons = a_icons
 		end
 
 	feedback: SD_FEEDBACK_DRAWER is
-			-- Get the SD_DRAW_FEEDBACK instance which is draw things on the desktop.
+			-- SD_DRAW_FEEDBACK instance which is draw things on the desktop.
 		once
 			create Result
 		ensure
-			result_not_void: Result /= Void
+			not_void: Result /= Void
 		end
 
 	docking_manager: SD_DOCKING_MANAGER is
-			-- Get the SD_DOCKING_MANAGER instance.
+			-- SD_DOCKING_MANAGER instance.
 		once
 			Result := internal_docking_manager
 		ensure
-			result_not_void: Result /= Void
+			not_void: Result /= Void
 		end
 
 	set_docking_manager (a_manager: like internal_docking_manager) is
-			-- Set the docking manager instance.
+			-- Set `internal_docking_manager'.
 		require
 			a_manager_not_void: a_manager /= Void
 			docking_manager_not_set: not docking_manager_set
@@ -58,7 +58,7 @@ feature -- Access
 			-- Init the once function
 			l_dummy := docking_manager
 		ensure
-			a_manager_set: a_manager = internal_docking_manager
+			set: a_manager = internal_docking_manager
 		end
 
 	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY is
@@ -66,37 +66,45 @@ feature -- Access
 		do
 			Result := hot_zone_factory_cell.item
 		ensure
-			result_not_void: Result /= Void
+			not_void: Result /= Void
 		end
 
 	set_hot_zone_factory (a_factory: like hot_zone_factory) is
-			--
+			-- Set `hot_zone_factory'.
 		require
 			a_factory_not_void: a_factory /= Void
 		do
 			hot_zone_factory_cell.put (a_factory)
+		ensure
+			set: hot_zone_factory = a_factory
 		end
 
 	hot_zone_factory_cell: CELL [SD_HOT_ZONE_ABSTRACT_FACTORY] is
-			-- Singleton factory cell.
+			-- Hot zone factory cell.
 		once
 			create Result
+		ensure
+			not_void: Result /= Void
 		end
 
 	allow_window_to_back_cell: CELL [BOOLEAN] is
-			--
+			-- Cell hold `allow_window_to_back'.
 		once
 			create Result
+		ensure
+			not_void: Result /= Void
 		end
 
 	widget_factory: SD_WIDGET_FACTORY is
-			--
+			-- SD_WIDGET_FACTORY instance.
 		once
 			create Result.make
+		ensure
+			not_void: Result /= Void
 		end
 
 	allow_window_to_back: BOOLEAN is
-			--
+			-- Does allow SD_FLOATING_ZONE or SD_FLOATING_MENU_ZONE to go to back of main window?
 		do
 			Result := allow_window_to_back_cell.item
 		end
@@ -104,22 +112,16 @@ feature -- Access
 feature -- Contract Support
 
 	docking_manager_set: BOOLEAN is
-			-- Is `internal_docking_manager' attached?
+			-- Is `internal_docking_manager' setted?
 		do
 			Result := internal_docking_manager /= Void
 		end
 
 	icons_set: BOOLEAN is
-			-- Is `icons' attached?
+			-- Is `icons' setted?
 		do
 			Result := internal_icons /= Void
 		end
-
---	direction_valid (a_direction: INTEGER): BOOLEAN is
---			-- If `a_direction' valid?
---		do
---			Result := a_direction ={SD_DOCKING_MANAGER}. dock_top or a_direction = dock_bottom or a_direction = dock_left or a_direction = dock_right or a_direction = dock_in
---		end
 
 	type_valid (a_type: INTEGER): BOOLEAN is
 			-- If `a_type' valid?
@@ -128,19 +130,19 @@ feature -- Contract Support
 		end
 
 feature -- Constants
+
 	Auto_hide_panel_width: INTEGER is 25
-			-- The width of auto hide panel.
+			-- Width of auto hide panel.
+
 	Line_width: INTEGER is 5
-			-- The width of feedback line.
+			-- Width of feedback line.
 
 	Resize_bar_width_height: INTEGER is 5
 			-- Resize bar width or height which is used by SD_RESIZE_BAR.
 
-
---	dock_last_direction: INTEGER is 6
-
 	Type_normal: INTEGER is 1
 		-- Normal hot zones which normal zones have.
+
 	Type_editor: INTEGER is 2
 		-- Editor hot zones which editor zones have.
 
@@ -151,21 +153,26 @@ feature -- Constants
 		-- Size of menu.
 
 	Default_floating_window_width: INTEGER is 300
+		-- Default floating window width.
 
 	Default_floating_window_height: INTEGER is 300
+		-- Default floating window height.
 
 	Default_docking_height_rate: REAL is 0.25
 			-- When change from floating to docking, height := main container height * `default_docking_height_rate'.
+
 	Default_docking_width_rate: REAL is 0.2
 			-- When change from floating to docking, width := main container width * `default_docking_width_rate'.
 
 	Auto_hide_delay: INTEGER is 2000
+			-- When SD_AUTO_HIDE_ZONE show but no focused, time to hide SD_AUTO_HIDE_ZONE.
+
 feature {NONE} -- Implementation
 
 	internal_docking_manager: SD_DOCKING_MANAGER
-			-- The docking manager.
+			-- Docking manager.
 
 	internal_icons: SD_ICONS_SINGLETON
-			-- The icons.
+			-- Icons.
 
 end

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "SD_ZONE that contains only one SD_CONTENT."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,23 +10,30 @@ inherit
 	SD_ZONE
 
 
-feature
+feature -- Content issues.
 
 	content: SD_CONTENT is
-			-- The content which current holded.
+			-- Redefine.
 		do
 			Result := internal_content
 		end
 
-	set_content (a_content: SD_CONTENT) is
+	extend (a_content: SD_CONTENT) is
+			-- Redefine.
 		do
 			internal_content := a_content
 		end
 
-feature {SD_CONFIG}
+	has (a_content: SD_CONTENT): BOOLEAN is
+			-- Redefine.
+		do
+			Result := internal_content = a_content
+		end
+
+feature {SD_CONFIG_MEDIATOR} -- Save config.
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
-			--
+			-- Redefine.
 		do
 			a_config_data.add_title (internal_content.title)
 		end
@@ -34,5 +41,5 @@ feature {SD_CONFIG}
 feature {NONE} -- Implementation
 
 	internal_content: SD_CONTENT
-			-- The content which current holded.
+			-- Content which current holded.
 end

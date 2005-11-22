@@ -9,12 +9,14 @@ class
 inherit
 	SD_HOR_VER_BOX
 		rename
-			has_focus as has_focus_hor_ver_box
+			has_focus as has_focus_hor_ver_box,
+			has as has_hor_ver_box,
+			extend as extend_hor_ver_box
 		end
 	SD_SINGLE_CONTENT_ZONE
 		undefine
 			copy, is_equal, default_create,
-			on_focus_in,on_zone_focus_out
+			on_focus_in,on_focus_out
 		end
 	SD_RESIZE_SOURCE
 		undefine
@@ -26,110 +28,96 @@ create
 
 feature	{NONE} -- Initlization
 
-	make (a_content: SD_CONTENT; a_dock_position: INTEGER) is
-			-- Creation method. for_dock use enumeration in SD_STATE.
+	make (a_content: SD_CONTENT; a_direction: INTEGER) is
+			-- Creation method.
 		require
 			a_content_not_void: a_content /= Void
---			for_dock_valid: for_dock_valid (for_dock)
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		do
 			create internal_shared
-			if a_dock_position = {SD_DOCKING_MANAGER}.dock_left or a_dock_position = {SD_DOCKING_MANAGER}.dock_right then
+			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
 				init (False)
 			else
 				init (True)
 			end
-
-			dock_position := a_dock_position
+			internal_direction := a_direction
 			create window.make (a_content.type, Current)
 			internal_content := a_content
 			window.set_user_widget (internal_content.user_widget)
 			window.title_bar.set_title (internal_content.title)
+			window.title_bar.set_show_min_max (False)
 			window.close_actions.extend (agent close_window)
 			window.stick_actions.extend (agent stick_window)
 
-			create resize_bar.make (a_dock_position, Current)
+			create resize_bar.make (a_direction, Current)
 
-			if a_dock_position = {SD_DOCKING_MANAGER}.dock_left or a_dock_position = {SD_DOCKING_MANAGER}.dock_top then
-				extend (window)
-				extend (resize_bar)
-			elseif a_dock_position = {SD_DOCKING_MANAGER}.dock_right or a_dock_position = {SD_DOCKING_MANAGER}.dock_bottom then
-				extend (resize_bar)
-				extend (window)
+			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_top then
+				extend_hor_ver_box (window)
+				extend_hor_ver_box (resize_bar)
+			elseif a_direction = {SD_DOCKING_MANAGER}.dock_right or a_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+				extend_hor_ver_box (resize_bar)
+				extend_hor_ver_box (window)
 			end
 			disable_item_expand (resize_bar)
 
 			-- The minimum width is the width of two buttons on the title bar.
 			content.user_widget.set_minimum_size (internal_shared.icons.stick.width * 3, internal_shared.icons.stick.height)
---			set_minimum_size (icons.stick.width * 3, icons.stick.height)
-
---			init_focus_in (Current)
 		end
 
 feature {NONE} -- Implementation
 
-	dock_position: INTEGER
-			-- One enumeration from SD_STATE
+	internal_direction: INTEGER
+			-- Direction.
 
 	close_window is
-			-- When user clicked the close button.
-		local
---			l_env: EV_ENVIRONMENT
+			-- Close zone.
 		do
 			internal_content.state.close_window
 		end
 
 	stick_window is
-			-- When user clicked the stick button.
+			-- Stick zone.
 		do
 			internal_content.state.stick_window (content.state.direction)
 		end
 
-	drag_window is
-			-- When user drag the window.
-		do
---			internal_content.state.drag_window
-		end
-
 	resize_bar: SD_RESIZE_BAR
-			-- The resize bar at the side.
+			-- Resize bar at side.
 
 	window: SD_WINDOW
-			-- The window.
+			-- Window.
 
 	start_resize_operation (a_bar: SD_RESIZE_BAR; a_screen_boundary: EV_RECTANGLE) is
-			-- Start resize operation.
+			-- Redefine.
 		do
-				-- Set the area which allow user to resize the window.
-				if dock_position = {SD_DOCKING_MANAGER}.dock_left then
-					a_screen_boundary.set_right (internal_shared.docking_manager.container_rectangle_screen.right)
-					a_screen_boundary.set_left (window.screen_x + minimum_width)
-				elseif dock_position = {SD_DOCKING_MANAGER}.dock_right then
-					a_screen_boundary.set_right (window.screen_x + window.width - minimum_width)
-					a_screen_boundary.set_left (internal_shared.docking_manager.container_rectangle_screen.left)
-				elseif dock_position = {SD_DOCKING_MANAGER}.dock_top then
-					a_screen_boundary.set_bottom (internal_shared.docking_manager.container_rectangle_screen.bottom)
-					a_screen_boundary.set_top (window.screen_y + minimum_height)
-				elseif dock_position = {SD_DOCKING_MANAGER}.dock_bottom then
-					a_screen_boundary.set_bottom (window.screen_y - minimum_height)
-					a_screen_boundary.set_top (internal_shared.docking_manager.container_rectangle_screen.top)
-				end
-
-				debug ("larry")
-					io.put_string ("%N allow resize area is: " + a_screen_boundary.out)
-				end
+			-- Set the area which allow user to resize the window.
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left then
+				a_screen_boundary.set_right (internal_shared.docking_manager.container_rectangle_screen.right)
+				a_screen_boundary.set_left (window.screen_x + minimum_width)
+			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_right then
+				a_screen_boundary.set_right (window.screen_x + window.width - minimum_width)
+				a_screen_boundary.set_left (internal_shared.docking_manager.container_rectangle_screen.left)
+			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_top then
+				a_screen_boundary.set_bottom (internal_shared.docking_manager.container_rectangle_screen.bottom)
+				a_screen_boundary.set_top (window.screen_y + minimum_height)
+			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
+				a_screen_boundary.set_bottom (window.screen_y - minimum_height)
+				a_screen_boundary.set_top (internal_shared.docking_manager.container_rectangle_screen.top)
+			end
+			debug ("larry")
+				io.put_string ("%N allow resize area is: " + a_screen_boundary.out)
+			end
 		end
 
 	end_resize_operation (a_bar: SD_RESIZE_BAR; a_delta: INTEGER) is
-			-- End resize operaion.
+			-- Redefine.
 		do
 			disable_item_expand (resize_bar)
-
-			if dock_position = {SD_DOCKING_MANAGER}.dock_left or dock_position = {SD_DOCKING_MANAGER}.dock_right then
-
+			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				internal_shared.docking_manager.set_zone_size (Current, width + a_delta, height)
-
 				if a_bar.direction = {SD_DOCKING_MANAGER}.dock_right then
-					internal_shared.docking_manager.internal_fixed.set_item_position (Current, x_position - a_delta, y_position)
+					internal_shared.docking_manager.fixed_area.set_item_position (Current, x_position - a_delta, y_position)
 				end
 			else
 				debug ("larry")
@@ -140,25 +128,23 @@ feature {NONE} -- Implementation
 					io.put_string ("%N SD_AUTO_HIDE_ZONE after set zone height: " + height.out)
 				end
 				if a_bar.direction = {SD_DOCKING_MANAGER}.dock_bottom then
-					internal_shared.docking_manager.internal_fixed.set_item_position (Current, x_position, y_position - a_delta)
+					internal_shared.docking_manager.fixed_area.set_item_position (Current, x_position, y_position - a_delta)
 				end
 			end
-
 		end
 
 feature {NONE} -- For user docking
 
 	on_focus_in (a_content: SD_CONTENT)is
-			--
+			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
 			internal_shared.docking_manager.disable_all_zones_focus_color
 			window.title_bar.enable_focus_color
---			window.title_bar.fo
 		end
 
-	on_zone_focus_out is
-			--
+	on_focus_out is
+			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
 			window.title_bar.disable_focus_color
@@ -167,9 +153,13 @@ feature {NONE} -- For user docking
 feature -- Query
 
 	has_focus: BOOLEAN is
-			--
+			-- If `Current' has focus?
 		do
 			Result := window.title_bar.is_focus_color_enable
 		end
+
+invariant
+
+	internal_shared_not_void: internal_shared /= Void
 
 end

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that represent the main container's hot zone."
+	description: "SD_HOT_ZONE that represent SD_MULTI_DOCK_AREA's hot zone."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +9,6 @@ class
 inherit
 	SD_HOT_ZONE
 		redefine
-
 			has_x_y
 		end
 
@@ -21,27 +20,26 @@ feature {NONE} -- Initlization
 	make (a_docker_mediator: SD_DOCKER_MEDIATOR)  is
 			-- Creation method.
 		require
---			a_owner_not_void: a_owner /= Void
 			a_docker_mediator_not_void: a_docker_mediator /= Void
 		local
 			l_area: EV_RECTANGLE
 		do
 			internal_mediator := a_docker_mediator
---			internal_zone := a_owner
 			create internal_shared
 			l_area := internal_shared.docking_manager.container_rectangle_screen
 			create top_rectangle.make (l_area.left + l_area.width // 2 - internal_shared.icons.arrow_indicator_up.width // 2, l_area.top, internal_shared.icons.arrow_indicator_up.width, internal_shared.icons.arrow_indicator_up.height)
 			create bottom_rectangle.make (l_area.left + l_area.width // 2 - internal_shared.icons.arrow_indicator_down.width // 2, l_area.bottom - internal_shared.icons.arrow_indicator_down.height, internal_shared.icons.arrow_indicator_down.width, internal_shared.icons.arrow_indicator_down.height)
 			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - internal_shared.icons.arrow_indicator_left.height // 2, internal_shared.icons.arrow_indicator_left.width, internal_shared.icons.arrow_indicator_left.height)
 			create right_rectangle.make (l_area.right - internal_shared.icons.arrow_indicator_right.width, l_area.top + l_area.height // 2 - internal_shared.icons.arrow_indicator_right.height // 2, internal_shared.icons.arrow_indicator_right.width, internal_shared.icons.arrow_indicator_right.height)
+			type := {SD_SHARED}.type_normal
+		ensure
+			set: a_docker_mediator = internal_mediator
 		end
 
-feature  -- Implementation for inheritance.
+feature  -- Redefine
 
 	apply_change (a_screen_x, a_screen_y: INTEGER; caller: SD_ZONE): BOOLEAN is
-			-- Apply change when user dragging a window on a position
---		require
---			caller_state_not_void: caller
+			-- Redefine.
 		local
 			l_floating_zone: SD_FLOATING_ZONE
 		do
@@ -74,13 +72,13 @@ feature  -- Implementation for inheritance.
 				caller.state.float_window (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
 				Result := True
 			end
-
+		ensure then
+			must_process: Result = True
 		end
 
 	update_for_pointer_position (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
-			-- Update feedback when user move the mouse.
+			-- Redefine.
 		local
---			l_area: EV_RECTANGLE
 			l_drawn: BOOLEAN
 		do
 --			internal_shared.feedback.clear_screen
@@ -98,28 +96,25 @@ feature  -- Implementation for inheritance.
 				l_drawn := update_indicator_area (right_rectangle, internal_shared.icons.arrow_indicator_right)
 			end
 			if not l_drawn then
---				internal_shared.feedback.clear_screen
 				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - a_mediator.offset_x, a_screen_y - a_mediator.offset_y, internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
 				internal_pointer_last_in_area := internal_pointer_in_main_area
 			end
+		ensure then
+			must_process:
 		end
-
-
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
-			-- If `Current' area has pointer position `a_screen_x', `a_screen_y'.
+			-- Redefine.
 		do
 			Result := True
+		ensure then
+			must_true: Result = True
 		end
+
 feature {NONE} -- Implementation
 
-	pointer_x, pointer_y: INTEGER
-			-- Current pointer position on the screen.
-
-
-
 	update_indicator_area (a_rect: like top_rectangle; a_pixmap: EV_PIXMAP): BOOLEAN is
-			-- Update indicator area which is the area in the area's rectangle.
+			-- Update feedback area when pointer in `a_rect'.
 		local
 			l_rect: EV_RECTANGLE
 		do
@@ -190,10 +185,23 @@ feature {NONE} -- Implementation
 			else
 				internal_shared.feedback.draw_pixmap (a_rect.left, a_rect.top, a_pixmap)
 			end
+		ensure
+			must_process:
 		end
 
-	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
-			-- The area which contain the top indicator.
+	pointer_x, pointer_y: INTEGER
+			-- Pointer position.
 
+
+	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
+			-- Areas which contain four indicator.
+
+invariant
+
+	internal_shared_not_void: internal_shared /= Void
+	top_rectangle_not_void: top_rectangle /= Void
+	bottom_rectangle_not_void: bottom_rectangle /= Void
+	left_rectangle_not_void: left_rectangle /= Void
+	right_rectangle_not_void: right_rectangle /= Void
 
 end

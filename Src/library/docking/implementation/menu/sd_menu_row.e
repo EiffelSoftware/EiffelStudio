@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that is a row when at top/bottom or column at left/right."
+	description: "A menu container that is a row when at top/bottom or column at left/right menu area. It contain SD_MENU_ZONE."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,24 +22,24 @@ feature {NONE} -- Initialization
 			-- Creation method
 		do
 			default_create
-			internal_vertical := a_vertical
+			is_vertical := a_vertical
+		ensure
+			set: is_vertical = a_vertical
 		end
 
 feature -- Basic operation
 
 	extend (a_menu: SD_MENU_ZONE) is
-			--
+			-- Extend `a_menu'.
 		require
 			a_menu_not_void: a_menu /= Void
 		do
-
-			if a_menu.is_vertical /= internal_vertical then
+			if a_menu.is_vertical /= is_vertical then
 				a_menu.change_direction
-
 			end
 			extend_fixed (a_menu)
 
-			if internal_vertical then
+			if is_vertical then
 				if a_menu.minimum_width > {SD_SHARED}.menu_size then
 					a_menu.set_minimum_width ({SD_SHARED}.menu_size)
 				end
@@ -52,53 +52,56 @@ feature -- Basic operation
 			end
 
 			set_item_position_fixed (a_menu, 0, 0)
-
 			a_menu.set_row (Current)
-		end
-
-	has_screen_y (a_screen_y: INTEGER): BOOLEAN is
-			-- If a_screen_y in `Current' area?
-		do
-			Result := a_screen_y >= screen_y and a_screen_y <= (screen_y + height)
+		ensure
+			extended: has (a_menu)
+			direction_changed: a_menu.is_vertical = is_vertical
+			menu_row_set: a_menu.row = Current
 		end
 
 	set_item_position (a_widget: EV_WIDGET; a_screen_x_y: INTEGER) is
-			--
+			-- Set `a_widget' position with screen position.
+		require
+			a_widget_not_void: a_widget /= Void
 		local
 			l_x_y: INTEGER
 		do
-			if not internal_vertical then
+			if not is_vertical then
 				l_x_y := a_screen_x_y - screen_x
 			else
 				l_x_y := a_screen_x_y - screen_y
 			end
-
-			if not internal_vertical then
-				set_item_position_horizontal (a_widget, l_x_y)
-			else
-				set_item_y_position (a_widget, l_x_y)
-			end
+			set_item_position_relative (a_widget, l_x_y)
+		ensure
+			set: is_vertical implies a_widget.y_position =  a_screen_x_y - screen_y or
+				not is_vertical implies a_widget.x_position =  a_screen_x_y - screen_x
 		end
 
-	set_item_position_relative (a_widget: EV_WIDGET; a_releative_x_y: INTEGER) is
-			--
+	set_item_position_relative (a_widget: EV_WIDGET; a_relative_x_y: INTEGER) is
+			-- Set `a_widget' position with relative position.
+		require
+			a_widget_not_void: a_widget /= Void
 		do
-			if not internal_vertical then
-				set_item_x_position (a_widget, a_releative_x_y)
+			if not is_vertical then
+				set_item_x_position (a_widget, a_relative_x_y)
 			else
-				set_item_y_position (a_widget, a_releative_x_y)
+				set_item_y_position (a_widget, a_relative_x_y)
 			end
+		ensure
+			set: is_vertical implies a_widget.y_position = a_relative_x_y
+			set: not is_vertical implies a_widget.x_position = a_relative_x_y
 		end
-
 
 	apply_change is
-			-- Call when user stopped dragging.
+			-- Handle user stopped dragging.
 		do
 			internal_item_positions_except_current := Void
 		end
 
 	start_drag (a_dragged_item: EV_WIDGET) is
-			--
+			-- Handle user start dragging.
+		require
+			a_dragged_item_not_void: a_dragged_item /= Void
 		do
 			debug ("larry")
 				io.put_string ("%N SD_MENU_ROW start_drag")
@@ -110,12 +113,11 @@ feature -- Basic operation
 				after
 			loop
 				if item /= a_dragged_item then
-					if not internal_vertical then
+					if not is_vertical then
 						internal_item_positions_except_current.extend (item.x_position)
 					else
 						internal_item_positions_except_current.extend (item.y_position)
 					end
-
 				end
 				forth
 			end
@@ -123,11 +125,14 @@ feature -- Basic operation
 
 feature -- States report
 
-	is_vertical: BOOLEAN is
-			-- If `Current' vertical?
+	has_screen_y (a_screen_y: INTEGER): BOOLEAN is
+			-- If a_screen_y in `Current' area?
 		do
-			Result := internal_vertical
+			Result := a_screen_y >= screen_y and a_screen_y <= (screen_y + height)
 		end
+
+	is_vertical: BOOLEAN
+			-- If `Current' is_vertical?
 
 feature {NONE} -- Implementation
 
@@ -155,27 +160,18 @@ feature {NONE} -- Implementation
 							set_item_x_position (item, internal_item_positions_except_current.item)
 						end
 					end
-
-
 					--#################### Test
 					debug ("larry")
 						io.put_string ("%N SD_MENU_ROW test " + internal_item_positions_except_current.item.out)
 					end
 					--#################### Test	
-
 					internal_item_positions_except_current.forth
-
-
 				end
-
 				forth
 			end
 		end
 
 	internal_item_positions_except_current: ARRAYED_LIST [INTEGER]
 			-- Before drag a meun bar, we should remember all positions of the menu bar.
-
-	internal_vertical: BOOLEAN
-			-- If `Current' vertical style?
 
 end

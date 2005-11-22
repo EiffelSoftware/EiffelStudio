@@ -121,7 +121,7 @@ feature -- Button texts
 	b_Remove_class_cluster: STRING is			"Remove Class/CLuster"
 	b_Minimize_all: STRING is					"Minimize All"
 	b_Terminate_c_compilation: STRING is 		"Terminate C Compilation"
-	b_Expand_all: STRING is 					"Expand all"
+	b_Expand_all: STRING is 					"Expand All"
 	b_Collapse_all: STRING is 					"Collapse All"
 
 feature -- Graphical degree output
@@ -466,7 +466,7 @@ feature -- Label texts
 	l_Command_error_output: STRING is	"Command error output:%N"
 	l_Command_line: STRING is			"Command line:"
 	l_Command_normal_output: STRING is	"Command output:%N"
-	l_Compiled_class: STRING is			"Only compiled class"
+	l_Compiled_class: STRING is			"Only compiled classes"
 	l_Compile_first: STRING is			"Compile to have information"
 	l_Compile_generated_project: STRING is "Compile the generated project"
 	l_Condition: STRING is				"Condition"

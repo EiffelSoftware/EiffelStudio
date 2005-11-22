@@ -26,7 +26,7 @@ inherit
 create
 
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -73,7 +73,7 @@ feature -- Status Report
 			-- is there anything in the undo stack ?
 		do
 			Result := (not is_empty) and then history.undo_is_possible
-		end	
+		end
 
 feature -- Status setting
 
@@ -87,7 +87,7 @@ feature -- Status setting
 				history.set_mark
 			end
 			Precursor (value, directly_edited)
-		end	
+		end
 
 feature -- Basic Operations
 
@@ -102,7 +102,7 @@ feature -- Basic Operations
 			history.undo
 			ignore_cursor_moves := False
 		end
-	
+
 	redo is
 			-- redo last command
 		do
@@ -135,7 +135,7 @@ feature -- Basic Operations
 					cursor.make_from_character_pos (char_num, line_number, Current)
 					history.record_delete_selection (removed)
 					set_selection_cursor (cursor)
-					
+
 				end
 				disable_selection
 				ignore_cursor_moves := False
@@ -246,16 +246,18 @@ feature -- Basic Operations
 			end
 			ignore_cursor_moves := False
 		end
-		
+
 	remove_trailing_blanks is
 			-- Remove trailing blanks, this will be recorded in history stack, but invisible to user.
+			-- Blanks before the cursor are not removed.
 		local
-			l_token: EDITOR_TOKEN
+			l_token, cursor_token: EDITOR_TOKEN
 			end_loop: BOOLEAN
 			l_cursor: EDITOR_CURSOR
 		do
 			l_cursor := cursor
-			from		
+			cursor_token := l_cursor.token.previous
+			from
 				start
 			until
 				after
@@ -267,18 +269,22 @@ feature -- Basic Operations
 					l_token = Void or end_loop
 				loop
 					if l_token.is_blank then
-						if l_token.previous /= Void then
-							l_token.previous.set_next_token (l_token.next)
+						if cursor_token = l_token then
+							end_loop := true
+						else
+							if l_token.previous /= Void then
+								l_token.previous.set_next_token (l_token.next)
+							end
+							l_token.next.set_previous_token (l_token.previous)
+							create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
+							history.record_remove_trailing_blank (l_token.image)
 						end
-						l_token.next.set_previous_token (l_token.previous)
-						create cursor.make_from_relative_pos (current_line, l_token.next, 1, Current)
-						history.record_remove_trailing_blank (l_token.image)
 					else
 						end_loop := true
 					end
 					if not end_loop then
 						l_token := l_token.previous
-					end					
+					end
 				end
 				current_line.update_token_information
 				forth
@@ -315,7 +321,7 @@ feature -- Basic Operations
 				delete_selection
 				history.bind_current_item_to_next
 			end
-			ignore_cursor_moves := True			
+			ignore_cursor_moves := True
 			history.record_paste (txt)
 			insert_string_at_cursor_pos (txt)
 			ignore_cursor_moves := False
@@ -423,8 +429,8 @@ feature -- Basic Operations
 		do
 			if not selection_is_empty then
 					delete_selection
-			elseif	(cursor.line.previous /= Void) 
-					or else 
+			elseif	(cursor.line.previous /= Void)
+					or else
 				(cursor.token /= cursor.line.first_token)
 					or else
 				(cursor.pos_in_token > 1)
@@ -470,7 +476,7 @@ feature -- Basic Operations
 		end
 
 	move_selection_to_pos (i:INTEGER) is
-			-- 
+			--
 		require
 			selection_exists: has_selection
 		local
@@ -492,7 +498,7 @@ feature -- Basic Operations
 		end
 
 	copy_selection_to_pos (i:INTEGER) is
-			-- 
+			--
 		require
 			selection_exists: has_selection
 		local
@@ -688,7 +694,7 @@ feature {UNDO_CMD} -- Operations on selected text
 				ln := start_selection.line
 			until
 				ln = end_selection.line or ln.index = end_selection.y_in_lines
-			loop				
+			loop
 					-- Retrieve the string representation of the line
 				line_image := ln.image
 
@@ -705,7 +711,7 @@ feature {UNDO_CMD} -- Operations on selected text
 					else
 						lexer.execute (line_image)
 						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
-					end					
+					end
 
 						-- reset pos_in_file values of tokens if possible
 					restore_tokens_properties_one_line (ln)
@@ -836,14 +842,14 @@ feature {UNDO_CMD} -- Operations on selected text
 			end
 				-- Rebuild line with previously collected parts.				
 			lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
-			
+
 			if s.is_empty then
-				ln.make_empty_line					
+				ln.make_empty_line
 			else
-				lexer.execute (s)						
-				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)						
+				lexer.execute (s)
+				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 			end
-			
+
 			cursor.make_from_character_pos (x, ln.index, Current)
 
 				-- reset pos_in_file values of tokens if possible
@@ -910,10 +916,10 @@ feature {UNDO_CMD} -- Basic Text changes
 					--| New line parsing.
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
-					ln.make_empty_line					
+					ln.make_empty_line
 				else
-					lexer.execute (s)						
-					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)						
+					lexer.execute (s)
+					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 				end
 
 					-- reset pos_in_file values of tokens if possible
@@ -1040,7 +1046,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				else
 					lexer.execute (aux.substring (i + 1, aux.count) + last_image)
 					create new_line.make_from_lexer (lexer)
-				end			
+				end
 				cline.add_right (new_line)
 				on_line_modified (new_line.index)
 				end_pos := aux.count - i + 1
@@ -1113,17 +1119,17 @@ feature {UNDO_CMD} -- Basic Text changes
 			end_pos := cursor.x_in_characters + aux.count
 			if not ln.part_of_verbatim_string then
 				if first_image.is_empty then
-					ln.make_empty_line					
+					ln.make_empty_line
 				else
-					lexer.execute (first_image)						
-					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)						
+					lexer.execute (first_image)
+					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 				end
-				
+
 				lexer.execute (aux)
 				create tokens_group.make_from_lexer (lexer)
 				ln.insert_token (tokens_group, ln.count - 1)
-				
-				on_line_modified (cursor.y_in_lines)					
+
+				on_line_modified (cursor.y_in_lines)
 
 				-- reset pos_in_file values of tokens if possible
 				restore_tokens_properties (ln, ln)
@@ -1163,10 +1169,10 @@ feature {UNDO_CMD} -- Basic Text changes
 					s := ln.image + ln.next.image
 					lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 					if s.is_empty then
-						ln.make_empty_line					
+						ln.make_empty_line
 					else
-						lexer.execute (s)						
-						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)						
+						lexer.execute (s)
+						ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
 					end
 					on_line_modified (cursor.y_in_lines)
 					ln.next.delete
@@ -1201,11 +1207,11 @@ feature {UNDO_CMD} -- Basic Text changes
 				end
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
-					ln.make_empty_line					
+					ln.make_empty_line
 				else
-					lexer.execute (s)						
-					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)						
-				end									
+					lexer.execute (s)
+					ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
+				end
 				on_line_modified (cursor.y_in_lines)
 			end
 				-- reset pos_in_file values of tokens if possible
@@ -1235,7 +1241,7 @@ feature {UNDO_CMD} -- Basic Text changes
 
 			cursor.update_current_char
 			char_pos := cursor.x_in_characters
-			ln := cursor.line			
+			ln := cursor.line
 			tok := cursor.token
 
 			record_first_modified_line (ln, tok)
@@ -1290,9 +1296,9 @@ feature {UNDO_CMD} -- Basic Text changes
 					end
 				end
 			end
-			
+
 			record_last_modified_line (cline, t)
-	
+
 				--| Retrieving line after last position (given by `cline', `t', `pos').
 			if t /= Void and then t /= cline.eol_token then
 				from
@@ -1313,11 +1319,11 @@ feature {UNDO_CMD} -- Basic Text changes
 				-- Rebuild line with previously collected parts.
 			lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 			if s.is_empty then
-				ln.make_empty_line					
+				ln.make_empty_line
 			else
-				lexer.execute (s)						
-				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)						
-			end			
+				lexer.execute (s)
+				ln.rebuild_from_lexer (lexer, ln.part_of_verbatim_string)
+			end
 			on_line_modified(cursor.y_in_lines)
 
 				-- reset pos_in_file values of tokens if possible
@@ -1354,11 +1360,11 @@ feature {UNDO_CMD} -- Basic Text changes
 				s := ln.image + c.out
 				lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 				if s.is_empty then
-					ln.make_empty_line					
+					ln.make_empty_line
 				else
-					lexer.execute (s)		
+					lexer.execute (s)
 					ln.make_from_lexer (lexer)
-				end					
+				end
 				on_line_modified (cursor.y_in_lines)
 					-- reset pos_in_file values of tokens if possible
 				restore_tokens_properties (ln, ln)
@@ -1392,9 +1398,9 @@ feature {UNDO_CMD} -- Basic Text changes
 			end
 			lexer.set_in_verbatim_string (ln.part_of_verbatim_string)
 			if s.is_empty then
-				ln.make_empty_line					
+				ln.make_empty_line
 			else
-				lexer.execute (s)		
+				lexer.execute (s)
 				ln.make_from_lexer (lexer)
 			end
 			on_line_modified (cursor.y_in_lines)
@@ -1444,11 +1450,11 @@ insert_eol_at_cursor_pos is
 					aux.keep_head (cursor.x_in_characters - 1)
 				end
 				new_pos := aux.count + 1
-				
+
 				if aux.is_empty then
-					create new_line.make_empty_line					
+					create new_line.make_empty_line
 				else
-					lexer.execute (aux)		
+					lexer.execute (aux)
 					create new_line.make_from_lexer (lexer)
 				end
 				new_line.set_auto_indented (True)
@@ -1484,9 +1490,9 @@ insert_eol_at_cursor_pos is
 			end
 			delete_after_cursor
 			if s.is_empty then
-				create new_line.make_empty_line					
+				create new_line.make_empty_line
 			else
-				lexer.execute (s)		
+				lexer.execute (s)
 				create new_line.make_from_lexer (lexer)
 			end
 			ln.add_right (new_line)
@@ -1533,10 +1539,10 @@ delete_after_cursor is
 			end
 			lexer.set_tab_size (editor_preferences.tabulation_spaces)
 			if s.is_empty then
-				ln.make_empty_line					
+				ln.make_empty_line
 			else
-				lexer.execute (s)						
-				ln.rebuild_from_lexer (lexer, lexer.in_verbatim_string)						
+				lexer.execute (s)
+				ln.rebuild_from_lexer (lexer, lexer.in_verbatim_string)
 			end
 			on_line_modified (cursor.y_in_lines)
 
@@ -1593,7 +1599,7 @@ record_first_modified_line (ln: like line; modified_token: EDITOR_TOKEN) is
 		tok: EDITOR_TOKEN
 	do
 		create begin_line_tokens.make
-		from 
+		from
 			tok := ln.first_token
 		until
 			tok = modified_token or else tok = Void
@@ -1616,7 +1622,7 @@ record_last_modified_line (ln: like line; modified_token: EDITOR_TOKEN) is
 		tok: EDITOR_TOKEN
 	do
 		create end_line_tokens.make
-		from 
+		from
 			tok := ln.eol_token
 		until
 			tok = modified_token or else tok = Void
@@ -1629,7 +1635,7 @@ record_last_modified_line (ln: like line; modified_token: EDITOR_TOKEN) is
 		end
 	end
 
-record_modified_line (ln: like line) is							
+record_modified_line (ln: like line) is
 		-- store token reference before new line with new tokens is created
 		-- this information will be used by `restore_tokens_properties' to restore
 		-- some token properties (position, beginning of a feature)
@@ -1638,7 +1644,7 @@ record_modified_line (ln: like line) is
 	do
 		create begin_line_tokens.make
 		create end_line_tokens.make
-		from 
+		from
 			tok := ln.first_token
 		until
 			tok = ln.eol_token

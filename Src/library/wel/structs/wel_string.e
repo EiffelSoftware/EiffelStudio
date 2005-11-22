@@ -15,7 +15,9 @@ inherit
 create
 	make,
 	make_empty,
-	make_by_pointer
+	make_by_pointer,
+	share_from_pointer,
+	share_from_pointer_and_count
 
 feature -- Access
 
@@ -51,7 +53,7 @@ feature -- Access
 		do
 			create long_string.make_from_c (item)
 			create Result.make
-			
+
 				-- Add each "word" of the long_string to the Result-list
 			from
 				curr_space := 1
@@ -92,7 +94,7 @@ feature -- Status report
 
 	exists: BOOLEAN is True
 			-- `item' is always valid.
-		
+
 feature -- Element change
 
 	set_null_character (offset: INTEGER) is
@@ -115,7 +117,7 @@ feature -- Element change
 		do
 			managed_data.put_integer_16 (n.to_integer_16, 0)
 		end
-		
+
 	initialize is
 			-- Fill Current with zeros.
 		obsolete

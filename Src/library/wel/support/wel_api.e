@@ -65,4 +65,14 @@ feature -- Windows
 			"SetForegroundWindow ((HWND)$hwnd)"
 		end
 
+feature -- Shell
+
+	frozen shell_notify_icon (a_message: INTEGER; a_notify_icon_data_ptr: POINTER): INTEGER is
+			-- Sends a message to the taskbar's status area.
+		external
+			"C inline use <shellapi.h>"
+		alias
+			"Shell_NotifyIcon((DWORD) $a_message, (PNOTIFYICONDATA) $a_notify_icon_data_ptr)"
+		end
+
 end

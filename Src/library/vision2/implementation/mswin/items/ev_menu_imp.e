@@ -6,7 +6,7 @@ indexing
 
 class
 	EV_MENU_IMP
-	
+
 inherit
 	EV_MENU_I
 		undefine
@@ -108,12 +108,20 @@ feature {EV_ANY_I} -- Basic operations
 			-- Pop up on the current pointer position.
 		local
 			wel_point: WEL_POINT
+			l_popup: EV_POPUP_MENU_HANDLER
 		do
 			if count > 0 then
 				create wel_point.make (0, 0)
 				wel_point.set_cursor_position
-				show_track (wel_point.x, wel_point.y,
-					create {EV_POPUP_MENU_HANDLER}.make_with_menu (Current))
+				create l_popup.make_with_menu (Current)
+				show_track (wel_point.x, wel_point.y, l_popup)
+					-- If we do not process events now, the fact we remove the
+					-- menu from `l_popup' will prevent the action to be executed.
+				application_imp.process_events
+					-- We need to remove menu from `l_popup' as destroying the
+					-- window would also destroy the menu and we do not want that.
+				l_popup.unset_menu
+				l_popup.destroy
 			end
 		end
 
@@ -155,6 +163,7 @@ feature {EV_ANY_I} -- Basic operations
 		local
 			wel_point: WEL_POINT
 			wel_win: WEL_WINDOW
+			l_popup: EV_POPUP_MENU_HANDLER
 		do
 			if count > 0 then
 				create wel_point.make (a_x, a_y)
@@ -165,8 +174,15 @@ feature {EV_ANY_I} -- Basic operations
 				else
 					create wel_point.make (0, 0)
 				end
-				show_track (wel_point.x, wel_point.y,
-					create {EV_POPUP_MENU_HANDLER}.make_with_menu (Current))
+				create l_popup.make_with_menu (Current)
+				show_track (wel_point.x, wel_point.y, l_popup)
+					-- If we do not process events now, the fact we remove the
+					-- menu from `l_popup' will prevent the action to be executed.
+				application_imp.process_events
+					-- We need to remove menu from `l_popup' as destroying the
+					-- window would also destroy the menu and we do not want that.
+				l_popup.unset_menu
+				l_popup.destroy
 			end
 		end
 
@@ -200,10 +216,10 @@ feature {EV_ANY_I} -- Implementation
 					max_pixmap_width := max_pixmap_width.max (a_menu_item_imp.pixmap_imp.width)
 				end
 				max_height := max_height.max (a_menu_item_imp.desired_height)
-				
+
 				ev_children.forth
 			end
-			
+
 			if max_pixmap_width = 0 then
 				plain_text_pos := border_width
 				if max_accel_text_width = 0 then
@@ -226,7 +242,7 @@ feature {EV_ANY_I} -- Implementation
 			max_width := max_width - 2 * menu_font.string_width ("B")
 			measure_item_struct.set_item_width (max_width)
 			measure_item_struct.set_item_height (max_height)
-			
+
 				-- Update the tabulation margins
 			from
 				ev_children.start
@@ -238,7 +254,7 @@ feature {EV_ANY_I} -- Implementation
 				ev_children.forth
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	update_parent_size is
@@ -253,7 +269,7 @@ feature {NONE} -- Implementation
 			wel_string: WEL_STRING
 			pos: INTEGER
 		do
-			
+
 			real_text := a_text.twin
 			if has_parent then
 				create wel_string.make (real_text)
@@ -310,7 +326,7 @@ feature {NONE} -- Implementation
 			-- Vertical offset of `Current' relative to screen.
 		do
 		end
-		
+
 	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
@@ -319,14 +335,14 @@ feature {NONE} -- Implementation
 			-- as for widgets that contain items, there are correct implementations. It is
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
-		
+
 	check_dragable_release (x_pos, y_pos: INTEGER) is
 			-- End transport if in drag and drop.
 		do
 			-- Not applicable. Required by implementation of EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 			-- as for widgets that contain items, there are correct implementations. It is
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
-		end	
+		end
 
 	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
 			-- `Result' is absolute screen coordinates in pixels
@@ -337,7 +353,7 @@ feature {NONE} -- Implementation
 				to_be_implemented: False
 			end
 		end
-		
+
 	dispose is
 			-- Destroy the inner structure of `Current'.
 			--
@@ -362,7 +378,7 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
-	interface: EV_MENU	
+	interface: EV_MENU
 
 end -- class EV_MENU_IMP
 

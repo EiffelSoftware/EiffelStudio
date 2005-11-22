@@ -2345,8 +2345,18 @@ feature -- Resource Update
 
 	process is
 			-- process the user entry in the address bar
+		local
+			l_class_stone: CLASSI_STONE
+			l_multi_search_tool: EB_MULTI_SEARCH_TOOL
 		do
 			save_canceled := False
+			l_class_stone ?= stone
+			if l_class_stone /= Void then
+				l_multi_search_tool ?= search_tool
+				if l_multi_search_tool /= Void then
+					l_multi_search_tool.class_changed (l_class_stone.class_i)
+				end
+			end
 		end
 
 	on_text_saved is

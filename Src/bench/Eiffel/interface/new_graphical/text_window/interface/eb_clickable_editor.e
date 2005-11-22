@@ -11,10 +11,10 @@ class
 	EB_CLICKABLE_EDITOR
 
 inherit
-	EB_EDITOR		
+	EB_EDITOR
 		rename
 			make as make_editor
-		export			
+		export
 			{EB_COMPLETION_CHOICE_WINDOW} unwanted_characters
 			{EB_ROUTINE_FLAT_FORMATTER} invalidate_line
 		redefine
@@ -24,7 +24,7 @@ inherit
 			on_click_in_text, handle_extended_key,
 			handle_extended_ctrled_key,
 			text_displayed,
-			copy_selection,			
+			copy_selection,
 			recycle,
 			margin,
 			has_margin
@@ -33,7 +33,7 @@ inherit
 	EB_FORMATTED_TEXT
 		export
 			{NONE} All
-		undefine 
+		undefine
 			clear_window, reset, default_create
 		redefine
 			process_text
@@ -52,7 +52,7 @@ create
 feature {NONE}-- Initialization
 
 	make (a_dev_window: EB_DEVELOPMENT_WINDOW) is
-			-- Initialize the editor. 
+			-- Initialize the editor.
 		do
 			make_editor
 			dev_window := a_dev_window
@@ -62,12 +62,12 @@ feature {NONE}-- Initialization
 				text_displayed.add_selection_observer (dev_window)
 			end
 			create after_reading_text_actions.make
-			initialize_customizable_commands	
-			
+			initialize_customizable_commands
+
 			editor_drawing_area.set_pebble_function (agent pebble_from_x_y)
 			editor_drawing_area.enable_pebble_positioning
 			editor_drawing_area.drop_actions.extend (agent resume_cursor_for_drop)
-		end	
+		end
 
 	initialize_customizable_commands is
 			-- Create array of customizable commands.
@@ -121,11 +121,11 @@ feature -- Access
 				Result := text_displayed.structured_text
 			end
 		end
-			
+
 	margin: EB_CLICKABLE_MARGIN
 			-- Margin widget for breakpoints, line numbers, etc. This is different to the left margin
 			-- used in the editor for spacing purposes.		
-			
+
 feature -- Content Change
 
 	process_text (str_text: STRUCTURED_TEXT) is
@@ -161,18 +161,18 @@ feature -- Status report
 		do
 			Result := (line_numbers_enabled and line_numbers_visible) or not hidden_breakpoints
 		end
-		
+
 feature -- Status setting
 
 	enable_has_breakable_slots is
 			-- Set `has_breakable_slots' to `True' and update display.
-		do			
+		do
 			margin.show_breakpoints
 			if margin_container.is_empty then
 				margin_container.put (margin.widget)
-			end	
+			end
 			margin.refresh_now
-		end	
+		end
 
 	disable_has_breakable_slots is
 			-- Set `has_breakable_slots' to `False' and update display.
@@ -215,7 +215,7 @@ feature -- Possibly delayed operations
 					refresh_now
 				else
 					after_reading_text_actions.extend(agent display_line_at_top_when_ready (l_num))
-				end		
+				end
 		end
 
 	highlight_when_ready (a, b: INTEGER) is
@@ -243,7 +243,7 @@ feature -- Possibly delayed operations
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded
 		local
-			cursor: EDITOR_CURSOR			
+			cursor: EDITOR_CURSOR
 		do
 			if text_is_fully_loaded then
 				cursor := text_displayed.cursor
@@ -524,7 +524,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			old_offset	: INTEGER
 		do
 			if not (ctrled_key or else mouse_copy_cut) then
-				if not text_displayed.is_empty then					
+				if not text_displayed.is_empty then
 					x_pos := x_pos_with_margin - left_margin_width
 					y_pos := abs_y_pos - editor_viewport.y_offset
 
@@ -564,8 +564,8 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 								if Result.x_stone_cursor /= Void then
 									editor_drawing_area.set_deny_cursor (Result.x_stone_cursor)
 								end
-								set_pick_and_drop_status (pnd_pick)								
-								
+								set_pick_and_drop_status (pnd_pick)
+
 								invalidate_line (l_number, True)
 							else
 								Result := Void
@@ -582,11 +582,11 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 			-- Set status of pick and drop
 		require
 			status_valid: a_status = pnd_pick or a_status = no_pnd
-		do		
+		do
 			if a_status = pnd_pick then
 				suspend_cursor_blinking
 			end
-		end		
+		end
 
 	pick_n_drop_status: INTEGER
 			-- Step of the pick n drop where the editor is.
@@ -731,7 +731,7 @@ feature {NONE} -- Implementation
 			if bp_count = bp_number then
 					-- Only scroll when necessary
 				if first_line_displayed > line_index or first_line_displayed + number_of_lines_displayed <= line_index then
-					display_line_with_context (line_index)					
+					display_line_with_context (line_index)
 				end
 			else
 				debug ("EDITOR")
@@ -751,21 +751,26 @@ feature {NONE} -- Implementation
 		end
 
 	in_feature_click: BOOLEAN
-	
+
 	resume_cursor_for_drop (a: ANY) is
 			-- Resumes cursor on drop from pick and drop
 		do
 			resume_cursor_blinking
 		end
-		
+
 	prepare_search_selection is
 			-- Prepare search selection.
 		local
 			l_search_tool: EB_MULTI_SEARCH_TOOL
 			l_incremental_search: BOOLEAN
+			l_item: MSR_TEXT_ITEM
 		do
 			l_search_tool ?= search_tool
-			if l_search_tool /= Void and then text_displayed.has_selection then
+			check
+				l_search_tool /= Void
+			end
+			l_search_tool.set_check_class_succeed (true)
+			if text_displayed.has_selection then
 				if l_search_tool.currently_searched = Void or else (not l_search_tool.item_selected (current)) then
 					l_search_tool.force_new_search
 					l_incremental_search := l_search_tool.is_incremental_search
@@ -776,7 +781,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end		
+		end
 
 feature -- Memory management
 

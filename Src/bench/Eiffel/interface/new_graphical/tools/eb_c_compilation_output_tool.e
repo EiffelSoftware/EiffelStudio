@@ -210,7 +210,7 @@ feature{NONE} -- Actions
 		local
 			wd: EV_WARNING_DIALOG
 		do
-			create wd.make_with_text ("No Eiffel system is opened.")
+			create wd.make_with_text (Warning_messages.w_No_system_defined)
 			wd.show_modal_to_window (owner.window)
 		end
 

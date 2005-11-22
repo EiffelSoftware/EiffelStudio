@@ -2339,6 +2339,7 @@
 								<File Id="wel_main_dialog.e" Name="WEL_MA~2.E" LongName="wel_main_dialog.e" />
 								<File Id="wel_control_window.e" Name="WEL_CO~E.E" LongName="wel_control_window.e" />
 								<File Id="wel_composite_window.e" Name="WEL_CO~I.E" LongName="wel_composite_window.e" />
+								<File Id="wel_notify_window_e" Name="WEL_NO~1.E" LongName="wel_notify_window.e" />
 							</Component>
 						</Directory>
 						<Directory Id="support46" Name="support">
@@ -2355,6 +2356,7 @@
 							</Directory>
 							<Component Id="wel_system_parameters_info.e" Guid="BC44338C-CBE7-4DF8-A3C6-8BAFA5824038">
 								<File Id="wel_abstract_dispatcher_e" Name="WEL_AB~1.E" LongName="wel_abstract_dispatcher.e" />
+								<File Id="wel_api_e" Name="wel_api.e" />
 								<File Id="wel_c_externals.e" Name="WEL_C_~1.E" LongName="wel_c_externals.e" />
 								<File Id="wel_system_parameters_info.e" Name="WEL_SY~2.E" LongName="wel_system_parameters_info.e" KeyPath="yes" />
 								<File Id="wel_data_type.e" Name="WEL_DA~1.E" LongName="wel_data_type.e" />
@@ -2421,6 +2423,7 @@
 							</Directory>
 							<Component Id="wel_wnd_class.e" Guid="F1847E60-D390-4F03-81C3-88EDED7EA0ED">
 								<File Id="wel_wnd_class.e" Name="WEL_WN~1.E" LongName="wel_wnd_class.e" KeyPath="yes" />
+								<File Id="wel_notify_icon_data_e" Name="WEL_NO~2.E" LongName="wel_notify_icon_data.e" />
 								<File Id="wel_abc_struct.e" Name="WEL_AB~1.E" LongName="wel_abc_struct.e" />
 								<File Id="wel_tool_info.e" Name="WEL_TO~3.E" LongName="wel_tool_info.e" />
 								<File Id="wel_rich_edit_buffer_loader.e" Name="WEL_RI~1.E" LongName="wel_rich_edit_buffer_loader.e" />
@@ -2483,7 +2486,7 @@
 								<File Id="wel_array.e" Name="WEL_AR~1.E" LongName="wel_array.e" />
 								<File Id="wel_tv_keydown.e" Name="WEL_TV~6.E" LongName="wel_tv_keydown.e" />
 								<File Id="wel_size.e" Name="wel_size.e" />
-								<File Id="wel_non_client_metrics.e" Name="WEL_NO~2.E" LongName="wel_non_client_metrics.e" />
+								<File Id="wel_non_client_metrics.e" Name="WEL_NO~1.E" LongName="wel_non_client_metrics.e" />
 								<File Id="wel_nm_tree_view_getinfotip.e" Name="WEB626~1.E" LongName="wel_nm_tree_view_getinfotip.e" />
 								<File Id="wel_measure_item_struct.e" Name="WEL_ME~5.E" LongName="wel_measure_item_struct.e" />
 								<File Id="wel_enum_log_font.e" Name="WEL_EN~1.E" LongName="wel_enum_log_font.e" />
@@ -2512,7 +2515,7 @@
 								<File Id="wel_character_format2.e" Name="WEL_CH~A.E" LongName="wel_character_format2.e" />
 								<File Id="wel_paragraph_format2.e" Name="WEL_PA~6.E" LongName="wel_paragraph_format2.e" />
 								<File Id="wel_nm_list_view_getinfotip.e" Name="WE1FF9~1.E" LongName="wel_nm_list_view_getinfotip.e" />
-				<File Id="wel_tc_hittestinfo.e" Name="WEL_TC~1.E" LongName="wel_tc_hittestinfo.e" />
+								<File Id="wel_tc_hittestinfo.e" Name="WEL_TC~1.E" LongName="wel_tc_hittestinfo.e" />
 								<File Id="wel_tc_keydown.e" Name="WEL_TC~2.E" LongName="wel_tc_keydown.e" />
 								<File Id="wel_nm_custom_draw_e" Name="WED58B~1.E" LongName="wel_nm_custom_draw.e" />
 							</Component>
@@ -2606,6 +2609,10 @@
 						<Directory Id="consts" Name="consts">
 							<Component Id="wel_swp_constants.e" Guid="AFEB6CFB-3C86-4EFC-9A48-AD1E5720BB87">
 								<File Id="wel_swp_constants.e" Name="WEL_SW~2.E" LongName="wel_swp_constants.e" KeyPath="yes" />
+								<File Id="wel_nif_constants_e" Name="WEL_NI~1.E" LongName="wel_nif_constants.e" />
+								<File Id="wel_niif_constants_e" Name="WEL_NI~2.E" LongName="wel_niif_constants.e" />
+								<File Id="wel_nim_constants_e" Name="WEL_NI~3.E" LongName="wel_nim_constants.e" />
+								<File Id="wel_nis_constants_e" Name="WEL_NI~4.E" LongName="wel_nis_constants.e" />
 								<File Id="wel_dlgc_constants.e" Name="WEL_DL~1.E" LongName="wel_dlgc_constants.e" />
 								<File Id="wel_registry_access_mode.e" Name="WEL_RE~1.E" LongName="wel_registry_access_mode.e" />
 								<File Id="wel_rdw_constants.e" Name="WEL_RD~1.E" LongName="wel_rdw_constants.e" />

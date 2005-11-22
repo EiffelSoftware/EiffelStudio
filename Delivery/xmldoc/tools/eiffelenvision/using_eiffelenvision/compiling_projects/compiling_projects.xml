@@ -38,7 +38,7 @@
     <paragraph>
       <bold>Pre-Build Tasks</bold>
       <line_break />
-			During this stage of the build, EiffelEnvision prepares the project and your system for the Main Compilation.
+			During this stage of the build, EiffelEnvision prepares the project and your system for the Main Compilation. This stage is also where any specified <link><url>../eiffelenvision_projects/configuring/project_configuration/build_events.xml</url><anchor_name>pre_build_event_command_line</anchor_name><label>Pre-build Events</label></link> are executed.
 		</paragraph>
     <paragraph>
       <bold>Main Compilation</bold>
@@ -50,7 +50,7 @@
       <bold>Post-Build Tasks</bold>
       <line_break />
 			After the main compilation has succeeded, the post-build actions will be performed. In this stage, EiffelEnvision is preparing the project for execution using the <link><url>../debugging/index.xml</url><label>Debugger</label></link> or for 
-			external execution.
+			external execution. This stage is also where any specified and applicable <link><url>../eiffelenvision_projects/configuring/project_configuration/build_events.xml</url><anchor_name>prost_build_event_command_line</anchor_name><label>Post-build Events</label></link> are executed.
 		</paragraph>
     <anchor>compilation_modes</anchor>
     <heading>

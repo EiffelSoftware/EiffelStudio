@@ -162,10 +162,14 @@ feature {APPLICATION_EXECUTION} -- load and save
 			-- we force the reload
 		do
 			if not Il_debug_info_recorder.last_loading_is_workbench then
-				print ("Reload IL debug info for dotnet %N")
+				debug ("debugger_trace")
+					print ("Reload IL debug info for dotnet %N")
+				end
 				load_dotnet_debug_info
 			else
-				print ("Keep current IL debug info for dotnet %N")
+				debug ("debugger_trace")
+					print ("Keep current IL debug info for dotnet %N")
+				end
 			end
 		end
 

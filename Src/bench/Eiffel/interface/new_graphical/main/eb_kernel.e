@@ -40,22 +40,21 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_LICENSE
 		export
 			{NONE} all
 		end
 
 	EB_SHARED_PREFERENCES
-	
+
 	EB_SHARED_FLAGS
-	
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	-- Jason Wei on Sep 6
 	make is
 			-- Create and map the first window: the system window.
 		local
@@ -64,13 +63,13 @@ feature {NONE} -- Initialization
 			new_resources: TTY_RESOURCES
 			pref_strs: PREFERENCE_CONSTANTS
 			l_app: EV_APPLICATION
-			fn: FILE_NAME	
+			fn: FILE_NAME
 			preference_access: PREFERENCES
 			l_is_gui: BOOLEAN
-			--| uncomment the following line when profiling 
+			--| uncomment the following line when profiling
 			--prof_setting: PROFILING_SETTING
 		do
-			--| uncomment the following lines when profiling 
+			--| uncomment the following lines when profiling
 			--create prof_setting.make
 			--prof_setting.stop_profiling
 
@@ -94,25 +93,25 @@ feature {NONE} -- Initialization
 			pref_strs.Pixmaps_path_cell.put (fn)
 
 			l_is_gui := argument_count > 0 and then
-				(argument (1).is_equal ("-bench") or else argument (1).is_equal ("-from_bench"))			
-			
-			set_gui (l_is_gui)		
+				(argument (1).is_equal ("-bench") or else argument (1).is_equal ("-from_bench"))
+
+			set_gui (l_is_gui)
 			if l_is_gui then
 					-- Create EV_APPLICATION object even if running in batch mode as it is required
 					-- for preference initialization
 				create l_app
-			end			
+			end
 
 				-- Initialization of compiler resources.
 			create preference_access.make_with_defaults_and_location (
 				<<general_preferences, platform_preferences>>, eiffel_preferences)
 			initialize_preferences (preference_access, l_is_gui)
 
-			create new_resources.initialize			
+			create new_resources.initialize
 			if not new_resources.error_occurred then
 				Eiffel_project.set_batch_mode (not l_is_gui)
 				if l_is_gui then
-					
+
 						-- Initialize debugger communication
 					if argument (1).is_equal ("-bench") then
 							-- True is for binary
@@ -126,9 +125,9 @@ feature {NONE} -- Initialization
 
 						-- Launch graphical compiler
 					l_app.launch
-				else					
+				else
 					if
-						(argument_count > 1 and then 
+						(argument_count > 1 and then
 						argument (1).is_equal ("-precompile") and then
 						argument (2).is_equal ("-ace"))
 					then
@@ -144,7 +143,7 @@ feature {NONE} -- Initialization
 				eifgen_init.dispose
 			end
 
-			--| uncomment the following line when profiling 
+			--| uncomment the following line when profiling
 			--prof_setting.start_profiling
 		end
 

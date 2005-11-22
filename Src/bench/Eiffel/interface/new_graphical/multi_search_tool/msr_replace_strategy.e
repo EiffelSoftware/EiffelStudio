@@ -13,7 +13,7 @@ class
 	MSR_REPLACE_STRATEGY
 
 feature -- Access
-	
+
 	replace_items: ARRAYED_LIST [MSR_ITEM] is
 			-- Replace items upon which replacing will be done.
 		require
@@ -30,7 +30,7 @@ feature -- Access
 			is_replace_string_set: is_replace_string_set
 		do
 			Result := replace_string_internal
-		ensure	
+		ensure
 			replace_string_not_void: Result = replace_string_internal
 		end
 
@@ -45,15 +45,15 @@ feature -- Element change
 		ensure
 			is_replace_items_set: is_replace_items_set
 		end
-		
+
 	set_surrounding_text_range (n: INTEGER) is
 			-- Set `surrounding_text_range_internal' with n.
 		require
 			larger_equal_than_zero: n >= 0
 		do
 			surrounding_text_range_internal := n
-		end		
-	
+		end
+
 	set_replace_string (string: STRING) is
 			-- Set `replace_string_internal' with string.
 		require
@@ -63,31 +63,32 @@ feature -- Element change
 		ensure
 			is_replace_string_set: is_replace_string_set
 		end
-	
+
 feature -- Status report
-	
+
 	is_replace_items_set: BOOLEAN is
 			-- Is `replace_items' set?
 		do
 			Result := (replace_item_internal /= Void)
-		end	
-	
+		end
+
 	is_replace_string_set: BOOLEAN is
 			-- Is replace_string set?
 		do
-			Result := (replace_string_internal /= Void)	
-		end	
-		
+			Result := (replace_string_internal /= Void)
+		end
+
 	is_replace_launched : BOOLEAN is
 			-- Is replacing launched
 		do
 			Result := is_replace_launched_internal
 		ensure
 			is_replace_launched_internal: Result = is_replace_launched_internal
-		end		
-	
+		end
+
 feature -- Basic operations
-	
+
+
 	replace is
 			-- Launch replacement, one time. Other items are freshed.
 		require
@@ -102,7 +103,7 @@ feature -- Basic operations
 			is_replace_launched: is_replace_launched
 			replace_items_current_in_the_same_place: old replace_items.index = replace_items.index
 		end
-		
+
 	replace_all is
 			-- All items will be replaced, cluster mode is used by default.
 		local
@@ -129,7 +130,7 @@ feature -- Basic operations
 								-- Let a way to deal with items in the same cluster. (i.e Save to files)
 							one_cluster_item_replaced (l_item)
 							l_last_item := l_item
-						end						
+						end
 					else
 						replace
 					end
@@ -142,8 +143,8 @@ feature -- Basic operations
 				refresh_item_text
 			end
 			is_replace_launched_internal := true
-		end		
-	
+		end
+
 feature {NONE} -- Implementation
 
 	string_formatter: MSR_FORMATTER is
@@ -154,20 +155,20 @@ feature {NONE} -- Implementation
 
 	replace_item_internal: ARRAYED_LIST [MSR_ITEM]
 			-- Items to be replaced
-			
+
 	replace_string_internal: STRING
 			-- Replacement string.
 
 	surrounding_text_range_internal : INTEGER
 			-- maximal number of charactors by oneside of text in a item's context text.
-	
+
 	one_cluster_item_replaced (a_item : MSR_TEXT_ITEM) is
 			-- Consequent text items that come from the same text are replaced, a_item is one of them.
 		require
 			a_item_not_void: a_item /= Void
 		do
 		end
-		
+
 	is_current_replaced_as_cluster (a_item: MSR_TEXT_ITEM) : BOOLEAN  is
 			-- When replacing all, should a_item be replaced as in a cluster as a fast way? Once Result returns
 			-- true, text items surrounding a_item will be replaced in cluster as fast way. Former replacing
@@ -175,9 +176,9 @@ feature {NONE} -- Implementation
 		do
 			Result := true
 		end
-			
+
 	replace_current_item (refresh_finding: BOOLEAN) is
-			-- Replace current_item. If refresh_finding, 
+			-- Replace current_item. If refresh_finding,
 			-- surrounding and line number will be freshed in all items.
 		local
 			l_item : MSR_TEXT_ITEM
@@ -185,11 +186,11 @@ feature {NONE} -- Implementation
 		do
 			l_item ?= replace_items.item
 			if l_item /= Void then
-			 	l_item.source_text.replace_substring (actual_replacement (l_item), 
+			 	l_item.source_text.replace_substring (actual_replacement (l_item),
 			 													l_item.start_index,
 			 													l_item.end_index)
-				l_item.context_text.replace_substring (actual_replacement (l_item), 
-																l_item.start_index_in_context_text, 
+				l_item.context_text.replace_substring (actual_replacement (l_item),
+																l_item.start_index_in_context_text,
 																l_item.text.count + l_item.start_index_in_context_text - 1)
 				l_offset := actual_replacement (l_item).count - l_item.text.count
 				l_item.set_end_index (l_item.end_index + l_offset)
@@ -202,54 +203,26 @@ feature {NONE} -- Implementation
 			 	end
 			end
 		end
-		
-	refresh_item_text is	
+
+	refresh_item_text is
 			-- Refresh all item context, according to start and end index.
 		require
 			replace_items_set: is_replace_items_set
 			replace_string_set : is_replace_string_set
 		local
-			l_text_item, last_item: MSR_TEXT_ITEM
+			l_text_item: MSR_TEXT_ITEM
 			l_current_position: INTEGER
-			present_start, present_end: INTEGER
-			line_number, start_count_line_position: INTEGER
 		do
 			l_current_position := replace_items.index
-			from 
+			last_item := Void
+			from
 				replace_items.start
 			until
 				replace_items.after
 			loop
 				l_text_item ?= replace_items.item
 				if l_text_item /= Void then
-						
-					if replace_items.index > 1 then
-						last_item ?= replace_items [replace_items.index - 1]
-					end
-					if last_item /= Void and then l_text_item.source_text = last_item.source_text then
-						start_count_line_position := last_item.start_index
-						line_number := last_item.line_number + string_formatter.occurrences_in_bound('%N', l_text_item.source_text, start_count_line_position, l_text_item.start_index)
-						l_text_item.set_percent_r_count (last_item.percent_r_count + string_formatter.occurrences_in_bound ('%R', l_text_item.source_text, start_count_line_position, l_text_item.start_index))			
-					else
-						start_count_line_position := 1
-						line_number := string_formatter.occurrences_in_bound('%N', l_text_item.source_text, start_count_line_position, l_text_item.start_index) + 1
-						l_text_item.set_percent_r_count (string_formatter.occurrences_in_bound ('%R', l_text_item.source_text, start_count_line_position, l_text_item.start_index))			
-					end
-					l_text_item.set_line_number (line_number)
-								
-					if l_text_item.start_index - surrounding_text_range_internal > 0 then
-						present_start := l_text_item.start_index - surrounding_text_range_internal
-						l_text_item.set_start_index_in_context_text (surrounding_text_range_internal + 1)
-					else
-						present_start := 1
-						l_text_item.set_start_index_in_context_text (l_text_item.start_index)
-					end
-					if l_text_item.end_index + surrounding_text_range_internal < l_text_item.source_text.count then
-						present_end := l_text_item.end_index + surrounding_text_range_internal
-					else
-						present_end := l_text_item.source_text.count
-					end
-					l_text_item.set_context_text (l_text_item.source_text.substring (present_start,present_end))
+					refresh_item_text_perform_item (l_text_item)
 				end
 				replace_items.forth
 			end
@@ -257,7 +230,44 @@ feature {NONE} -- Implementation
 		ensure
 			replace_items_current_in_the_same_place: old replace_items.index = replace_items.index
 		end
-		
+
+	refresh_item_text_perform_item (l_text_item: MSR_TEXT_ITEM) is
+			-- Refresh all item context, according to start and end index.
+		local
+			present_start, present_end: INTEGER
+			line_number, start_count_line_position: INTEGER
+		do
+			if replace_items.index > 1 then
+				last_item ?= replace_items [replace_items.index - 1]
+			end
+			if last_item /= Void and then l_text_item.source_text = last_item.source_text then
+				start_count_line_position := last_item.start_index
+				line_number := last_item.line_number + string_formatter.occurrences_in_bound('%N', l_text_item.source_text, start_count_line_position, l_text_item.start_index)
+				l_text_item.set_percent_r_count (last_item.percent_r_count + string_formatter.occurrences_in_bound ('%R', l_text_item.source_text, start_count_line_position, l_text_item.start_index))
+			else
+				start_count_line_position := 1
+				line_number := string_formatter.occurrences_in_bound('%N', l_text_item.source_text, start_count_line_position, l_text_item.start_index) + 1
+				l_text_item.set_percent_r_count (string_formatter.occurrences_in_bound ('%R', l_text_item.source_text, start_count_line_position, l_text_item.start_index))
+			end
+			l_text_item.set_line_number (line_number)
+
+			if l_text_item.start_index - surrounding_text_range_internal > 0 then
+				present_start := l_text_item.start_index - surrounding_text_range_internal
+				l_text_item.set_start_index_in_context_text (surrounding_text_range_internal + 1)
+			else
+				present_start := 1
+				l_text_item.set_start_index_in_context_text (l_text_item.start_index)
+			end
+			if l_text_item.end_index + surrounding_text_range_internal < l_text_item.source_text.count then
+				present_end := l_text_item.end_index + surrounding_text_range_internal
+			else
+				present_end := l_text_item.source_text.count
+			end
+			l_text_item.set_context_text (l_text_item.source_text.substring (present_start,present_end))
+		end
+
+	last_item: MSR_TEXT_ITEM
+
 	refresh_item_capture_positions is
 			-- Calculate new positions and refresh the rest items' start and end index.
 		require
@@ -274,7 +284,7 @@ feature {NONE} -- Implementation
 				l_offset := replace_string.count - l_text_item.text.count
 			end
 			l_cursor := replace_items.cursor
-			from 
+			from
 				replace_items.forth
 				l_text_item := Void
 			until
@@ -288,12 +298,12 @@ feature {NONE} -- Implementation
 					l_stop := True
 				end
 				replace_items.forth
-			end	
+			end
 			replace_items.go_to (l_cursor)
 		ensure
 			not_replace_items_moved: old replace_items.index = replace_items.index
 		end
-	
+
 	append_replacement_to_string (a_string, a_replacement: STRING; a_text_item: MSR_TEXT_ITEM) is
 			-- Append to `a_string' a copy of `a_replacement' where all occurrences
 			-- of \n\ have been replaced by the corresponding n-th captured substrings
@@ -349,7 +359,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	actual_replacement (a_item: MSR_TEXT_ITEM): STRING is
 			-- All /n/ have been replaced by the corresponding n-th captured substrings if any
 		require
@@ -362,10 +372,10 @@ feature {NONE} -- Implementation
 				append_replacement_to_string (re, replace_string, a_item)
 			else
 				re := replace_string
-			end			
+			end
 			Result := re
 		end
-		
+
 	on_new_position_yielded (a_start, a_end : INTEGER; a_item : MSR_TEXT_ITEM) is
 			-- When replacing all, start and end indexes will be yielded one by one.
 			-- a_item is the item replacing.
@@ -384,18 +394,17 @@ feature {NONE} -- Implementation
 						l_item.set_end_index (a_end)
 						l_item.set_text (actual_replacement (l_item))
 						s := l_item.source_text
-						print (replace_items.index.out + "%N")
 					end
 				end
 				if not replace_items.islast then
-					replace_items.forth	
+					replace_items.forth
 				end
 			end
-		end	
-	
+		end
+
 	is_replace_launched_internal : BOOLEAN
 		-- Is replace launched?
-	
+
 invariant
 
 	invariant_clause: True -- Your invariant here

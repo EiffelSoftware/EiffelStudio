@@ -367,8 +367,6 @@ feature{NONE}
 
 	prepare_command (cmd: STRING; dir: STRING) is
 			-- Prepare external command `cmd', do stirng substitution if needed.
-		local
-			i: INTEGER
 		do
 			from
 				set_is_command_ok (True)

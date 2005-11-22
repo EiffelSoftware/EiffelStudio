@@ -19,7 +19,7 @@
 			The <bold>Eiffel for .NET Compliance Checker</bold> tool is for verification only! It will allow you, a developer or component vendor, to ensure any number of .NET assemblies can be used from within Eiffel. In addition it also highlights potential problems CLS-strict languages will have consuming assemblies you yourselves have developed. You may then go back to your code and mark assemblies, types and members with the <bold>System.ClsCompliantAttribute</bold> attribute, with the appropriate state flag. The tool will also indicate illegal compliance, indicating a <bold>System.ClsCompliantAttribute</bold> state flag is incorrectly specified or a require System.ClsCompliantAttribute attribute is missing.
 		</paragraph>
 		<note>
-			<bold>Note</bold>: The current version of this tool will only check .NET framework version 1.0 and 1.1 and who's Eiffel-compliancy relates to the following product versions: <bold>EiffelEnvision 2.6</bold>, <bold>Eiffel for ASP.NET 2.1</bold>, <bold>EiffelStudio 5.7</bold>
+			<bold>Note</bold>: The current version of this tool will only check .NET framework version 1.0 and 1.1 and who's Eiffel-compliancy relates to the following product versions: <bold>EiffelEnvision 2.6</bold>, <bold>Eiffel for ASP.NET 5.6</bold>, <bold>EiffelStudio 5.7</bold>
 		</note>
 		
 		<anchor>in_this_section</anchor>

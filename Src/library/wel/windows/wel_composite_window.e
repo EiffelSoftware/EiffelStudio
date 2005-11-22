@@ -35,7 +35,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_SHARED_FONTS
 		export
 			{NONE} all
@@ -60,7 +60,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	menu: WEL_MENU is
 			-- Associated menu
 		require
@@ -191,7 +191,7 @@ feature -- Status report
 		ensure
 			result_small_enough: Result <= maximal_vertical_position
 		end
-		
+
 	child_window_from_point (point: WEL_POINT): POINTER is
 			-- `Result' is pointer to child window as position `point'.
 			-- Only checks children and their children and returns a child even
@@ -211,8 +211,11 @@ feature -- Status setting
 			exists: exists
 			a_menu_not_void: a_menu /= Void
 			a_menu_exists: a_menu.exists
+		local
+			l_result: INTEGER
 		do
-			cwin_set_menu (item, a_menu.item)
+			l_result := {WEL_API}.set_menu (item, a_menu.item)
+			check l_result /= 0 end
 		ensure
 			has_menu: has_menu
 			menu_set: menu.item = a_menu.item
@@ -222,8 +225,11 @@ feature -- Status setting
 			-- Unset the current menu associated to the window.
 		require
 			exists: exists
+		local
+			l_result: INTEGER
 		do
-			cwin_set_menu (item, default_pointer)
+			l_result := {WEL_API}.set_menu (item, default_pointer)
+			check l_result /= 0 end
 		ensure
 			menu_unset: not has_menu
 		end
@@ -548,7 +554,7 @@ feature {NONE}-- Messages
 		end
 
 	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
-			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox 
+			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox
 			-- and Wm_ctlcolorscrollbar messages.
 			-- To change its default colors, the color-control `control'
 			-- needs :
@@ -658,7 +664,7 @@ feature {NONE} -- Implementation
 			create info.make_by_pointer (lparam)
 			on_notify (wparam.to_integer_32, info)
 			control ?= info.window_from
-			
+
 			if control /= Void and then control.exists then
 				control.increment_level
 				control.process_notification_info (info)
@@ -904,7 +910,7 @@ feature {NONE} -- Implementation
 				cwin_post_quit_message (0)
 			end
 		end
-	
+
 	on_wm_setting_change is
 			-- Wm_settingchange message
 			-- Update the system fonts.
@@ -946,7 +952,7 @@ feature {NONE} -- Implementation
 			system_color_btntext_cell.put (Void)
 			system_color_inactivecaptiontext_cell.put (Void)
 			system_color_btnhighlight_cell.put (Void)
-			
+
 			 -- Propagate the message to the children
 			child_wnd := children
 			from
@@ -970,7 +976,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature {WEL_DISPATCHER}
 
 	frozen composite_process_message, process_message (hwnd: POINTER;
@@ -1033,19 +1039,11 @@ feature {WEL_DISPATCHER}
 				   commands.has (msg)
 				then
 					commands.item (msg).execute (Current, msg, wparam, lparam)
-				end		
+				end
 			end
 		end
 
 feature {NONE} -- Externals
-
-	cwin_set_menu (hwnd, hmenu: POINTER) is
-			-- SDK SetMenu
-		external
-			"C [macro <wel.h>] (HWND, HMENU)"
-		alias
-			"SetMenu"
-		end
 
 	cwin_draw_menu_bar (hwnd: POINTER) is
 			-- SDK DrawMenuBar
@@ -1158,13 +1156,13 @@ feature {NONE} -- Externals
 		alias
 			"GET_WM_HSCROLL_HWND"
 		end
-		
+
 	cwin_child_window_from_point (hwnd: POINTER; point: POINTER): POINTER is
 		external
 			"C inline use <windows.h>"
 		alias
 			"ChildWindowFromPoint ((HWND) $hwnd, *(POINT *) $point)"
-		end		
+		end
 
 end -- class WEL_COMPOSITE_WINDOW
 

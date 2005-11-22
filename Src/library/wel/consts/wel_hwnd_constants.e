@@ -9,35 +9,35 @@ class
 
 feature -- Access
 
-	Hwnd_top: POINTER is
+	frozen Hwnd_top: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_TOP"
 		end
 
-	Hwnd_bottom: POINTER is
+	frozen Hwnd_bottom: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_BOTTOM"
 		end
 
-	Hwnd_topmost: POINTER is
+	frozen Hwnd_topmost: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_TOPMOST"
 		end
 
-	Hwnd_notopmost: POINTER is
+	frozen Hwnd_notopmost: POINTER is
 		external
 			"C [macro %"wel.h%"] : EIF_POINTER"
 		alias
 			"HWND_NOTOPMOST"
 		end
 
-	Hwnd_broadcast: POINTER is
+	frozen Hwnd_broadcast: POINTER is
 		external
 			"C [macro <windows.h>] : EIF_POINTER"
 		alias

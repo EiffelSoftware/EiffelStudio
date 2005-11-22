@@ -128,83 +128,94 @@
         <legend>Eiffel Feature Icons</legend>
         <row>
           <cell>
-            <image>
-              <url>images/feature/feature.ico</url>
-            </image>
+            <image><url>images/feature/locals.ico</url></image>
           </cell>
-          <cell>Feature</cell>
+          <cell>Argument or Local Variable</cell>
         </row>
         <row>
           <cell>
-            <image>
-              <url>images/feature/feature_frozen.ico</url>
-            </image>
+            <image><url>images/feature/feature.ico</url></image>
           </cell>
-          <cell>Frozen Feature</cell>
+          <cell>Basic Feature</cell>
         </row>
         <row>
           <cell>
-            <image>
-              <url>images/feature/feature_attribute.ico</url>
-            </image>
+            <image><url>images/feature/feature_frozen.ico</url></image>
           </cell>
-          <cell>Attribute</cell>
+          <cell>Frozen Basic Feature</cell>
         </row>
         <row>
           <cell>
-            <image>
-              <url>images/feature/feature_attribute_frozen.ico</url>
-            </image>
+            <image><url>images/feature/feature_obsolete.ico</url></image>
           </cell>
-          <cell>Frozen Attribute</cell>
+          <cell>Obsolete Basic Feature</cell>
         </row>
         <row>
           <cell>
-            <image>
-              <url>images/feature/feature_once.ico</url>
-            </image>
-          </cell>
-          <cell>Once Function/Constant</cell>
-        </row>
-        <row>
-          <cell>
-            <image>
-              <url>images/feature/feature_once_frozen.ico</url>
-            </image>
-          </cell>
-          <cell>Frozen Once Function/Constant</cell>
-        </row>
-        <row>
-          <cell>
-            <image>
-              <url>images/feature/feature_deferred.ico</url>
-            </image>
+            <image><url>images/feature/feature_deferred.ico</url></image>
           </cell>
           <cell>Deferred Feature</cell>
         </row>
         <row>
           <cell>
-            <image>
-              <url>images/feature/feature_external.ico</url>
-            </image>
+            <image><url>images/feature/feature_deferred_obsolete.ico</url></image>
           </cell>
-          <cell>External Feature</cell>
+          <cell>Obsolete Deferred Feature</cell>
+        </row>        
+        <row>
+          <cell>
+            <image><url>images/feature/feature_attribute.ico</url></image>
+          </cell>
+          <cell>Attribute</cell>
         </row>
         <row>
           <cell>
-            <image>
-              <url>images/feature/feature_external_frozen.ico</url>
-            </image>
+            <image><url>images/feature/feature_attribute_frozen.ico</url></image>
+          </cell>
+          <cell>Frozen Attribute</cell>
+        </row>
+        <row>
+          <cell>
+            <image><url>images/feature/feature_attribute_obsolete.ico</url></image>
+          </cell>
+          <cell>Obsolete Attribute</cell>
+        </row>
+        <row>
+          <cell>
+            <image><url>images/feature/feature_once.ico</url></image>
+          </cell>
+          <cell>Once Funcion</cell>
+        </row>
+        <row>
+          <cell>
+            <image><url>images/feature/feature_once_frozen.ico</url></image>
+          </cell>
+          <cell>Frozen Once Funcion</cell>
+        </row>
+        <row>
+          <cell>
+            <image><url>images/feature/feature_once_obsolete.ico</url></image>
+          </cell>
+          <cell>Obsolete Once Funcion</cell>
+        </row>
+        <row>
+          <cell>
+            <image><url>images/feature/feature_external.ico</url></image>
+          </cell>
+          <cell>External Feature</cell>
+        </row>
+
+        <row>
+          <cell>
+            <image><url>images/feature/feature_external_frozen.ico</url></image>
           </cell>
           <cell>Frozen External Feature</cell>
         </row>
         <row>
           <cell>
-            <image>
-              <url>images/feature/feature_obsolete.ico</url>
-            </image>
+            <image><url>images/feature/feature_external_obsolete.ico</url></image>
           </cell>
-          <cell>Obsolete Feature</cell>
+          <cell>Obsolete External Feature</cell>
         </row>
       </table>
     </paragraph>

@@ -49,9 +49,9 @@
 			A report in generated in a dual-level tree, with a type being the topmost item and its children being members of the type. Every type and member has a name followed by three columns, with one of three marker icons:
 		</paragraph>
 		<list ordered="false">
-			<item><image><url>/images/check.ico</url></image> Compliant<line_break/><line_break/></item>
-			<item><image><url>/images/cross.ico</url></image> Non-Compliant<line_break/><line_break/></item>
-			<item><image><url>/images/caution.ico</url></image> Illegally Compliant<line_break/><line_break/></item>
+			<item><image><url>../images/check.ico</url></image> Compliant<line_break/><line_break/></item>
+			<item><image><url>../images/cross.ico</url></image> Non-Compliant<line_break/><line_break/></item>
+			<item><image><url>../images/caution.ico</url></image> Illegally Compliant<line_break/><line_break/></item>
 		</list>
 		<paragraph>
 			<bold>Compliant</bold> refers to types and members that are Eiffel/CLS-compliant, <bold>Non-Compliant</bold> refers to those types and members that are not Eiffel/CLS-compliant and <bold>Illegally Compliant</bold> refers to those types and members that are marked or are assumed to be Eiffel/CLS-compliant but are not!

@@ -76,7 +76,7 @@ inherit
 	COMPILER_EXPORTER
 		undefine
 			copy, is_equal
-		end	
+		end
 
 	SHARED_NAMES_HEAP
 		export
@@ -143,7 +143,7 @@ feature -- Access: compatibility
 				Result := item_id (id)
 			end
 		end
-		
+
 	overloaded_items (s: STRING): LIST [FEATURE_I] is
 			-- List of features matching overloaded name `s'.
 		require
@@ -238,7 +238,7 @@ feature -- Settings
 		ensure
 			origin_table_set: origin_table = t
 		end
-		
+
 	set_overloaded_names (o: like overloaded_names) is
 			-- Assign `o' to `overloaded_names'.
 		do
@@ -358,7 +358,7 @@ feature -- Comparison
 							create depend_unit.make (feat_tbl_id, f2)
 							pass2_ctrl.propagators.extend (depend_unit)
 						else
-							f1.set_code_id (f2.code_id)			
+							f1.set_code_id (f2.code_id)
 						end
 					end
 					forth
@@ -507,7 +507,7 @@ end
 				end
 
 				depend_unit := Void
-	
+
 				forth
 			end
 
@@ -595,7 +595,7 @@ debug ("ACTIVITY")
 	io.error.put_string (" removed%N")
 end
 					Tmp_body_server.desactive (f.body_index)
-						
+
 					-- There is no need for a corresponding "reactivate" here
 					-- since it will be done in by pass2 in `feature_unit' if need be
 
@@ -777,9 +777,7 @@ end
 			-- Skeleton of the associated class
 		local
 			feature_i: FEATURE_I
-			attr_type: TYPE_I
 			desc: ATTR_DESC
-			generic_desc: GENERIC_DESC
 			attribute_type: TYPE_A
 			l_ext: IL_EXTENSION_I
 		do
@@ -798,14 +796,7 @@ end
 						(l_ext = Void or else l_ext.type /= {SHARED_IL_CONSTANTS}.static_field_type)
 					then
 							-- We do not take IL static fields, only attributes of a class.
-						attr_type := attribute_type.type_i
-						if attr_type.has_formal then
-							create generic_desc
-							generic_desc.set_type_i (attr_type)
-							desc := generic_desc
-						else
-							desc := attr_type.description
-						end
+						desc := attribute_type.type_i.description
 						desc.set_feature_id (feature_i.feature_id)
 						desc.set_attribute_name_id (feature_i.feature_name_id)
 						desc.set_rout_id (feature_i.rout_id_set.first)
@@ -833,7 +824,7 @@ end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Make routine id array byte code
-		local	
+		local
 			tab: ARRAY [FEATURE_I]
 			feat: FEATURE_I
 			i, nb: INTEGER
@@ -872,7 +863,7 @@ end
 				ba.append ('%U')
 			end
 		end
-			
+
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate routine id array in `buffer'.
 		require
@@ -968,7 +959,7 @@ feature -- Case stuff
 			from
 				start
 			until
-				Result or else after 
+				Result or else after
 			loop
 				feat := item_for_iteration
 				Result := feat.is_external and then feat.written_in = feat_tbl_id
@@ -990,7 +981,7 @@ feature -- API
 					Result.compare_objects
 				else
 					Result.compare_references
-				end	
+				end
 				c_id := feat_tbl_id
 				Result.set_class_id (c_id)
 				start
@@ -1010,7 +1001,7 @@ feature -- API
 		local
 			c_id: like feat_tbl_id
 			list: LINKED_LIST [E_FEATURE]
-		do  
+		do
 			from
 				c_id := feat_tbl_id
 				create list.make

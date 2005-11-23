@@ -82,7 +82,13 @@ feature -- Basic Operations
 				if l_target_type = Void then
 					l_target_type := type_of_target (l_targets.first, feature_table, feature_variables (locals, arguments, feature_i, feature_table), class_i)
 				end
+				if target.occurrences ('.') > 1 and then call_type = static_call or call_type = precursor_call then
+					set_standard_call
+				end
 				if l_target_type /= Void and then not l_target_type.is_void then
+					if target.occurrences ('.') > 1 and then call_type = static_call or call_type = precursor_call then
+						set_standard_call
+					end
 					l_targets.start
 					l_targets.remove
 					l_feature_table := recursive_lookup (class_i, instantiated_type (class_i, Void, l_target_type), l_targets, feature_table, False)

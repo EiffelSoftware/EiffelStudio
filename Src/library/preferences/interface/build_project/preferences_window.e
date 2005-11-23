@@ -126,7 +126,7 @@ feature {NONE} -- Events
 				l_default_item ?= grid.selected_rows.first.item (3)
 			
 				if a_pref.is_default_value then
-					l_default_item.set_text (default_value)
+					l_default_item.set_text (p_default_value)
 					l_default_item.set_font (default_font)				
 				else	
 					l_default_item.set_text (user_value)
@@ -157,7 +157,7 @@ feature {NONE} -- Events
 			l_font: FONT_PREFERENCE
 		do
 			a_pref.reset
-			a_item.set_text (default_value)
+			a_item.set_text (p_default_value)
 			a_item.set_font (default_font)
 			if a_pref.is_auto then
 				a_item.set_text (a_item.text + " (" + auto_value + ")")
@@ -499,7 +499,7 @@ feature {NONE} -- Implementation
 						grid_default_item.pointer_button_press_actions.extend (agent on_default_item_selected (grid_default_item, l_resource, ?, ?, ?, ?, ?, ?, ?, ?))
 						grid.set_item (3, curr_row, grid_default_item)
 						if l_resource.is_default_value then							
-							grid_default_item.set_text (default_value)
+							grid_default_item.set_text (p_default_value)
 							grid_default_item.set_font (default_font)	
 						else
 							grid_default_item.set_text (user_value)
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation
 				l_resource := visible_preferences.item
 				grid_default_item ?= grid.row (curr_row).item (3)
 				if grid_default_item /= Void and then l_resource.is_default_value then
-					grid_default_item.set_text (default_value)
+					grid_default_item.set_text (p_default_value)
 					grid_default_item.set_font (default_font)	
 				else
 					grid_default_item.set_text (user_value)
@@ -662,12 +662,14 @@ feature {NONE} -- Implementation
 			l_font: FONT_PREFERENCE
 			l_color: COLOR_PREFERENCE
 			l_array: ARRAY_PREFERENCE
+			l_shortcut: SHORTCUT_PREFERENCE
 			
 			l_bool_widget: BOOLEAN_PREFERENCE_WIDGET
 			l_edit_widget: STRING_PREFERENCE_WIDGET
 			l_choice_widget: CHOICE_PREFERENCE_WIDGET
-			l_font_widget: FONT_PREFERENCE_WIDGET
+			l_font_widget: FONT_PREFERENCE_WIDGET		
 			l_color_widget: COLOR_PREFERENCE_WIDGET
+			l_shortcut_widget: SHORTCUT_PREFERENCE_WIDGET
 		do
 			l_bool ?= l_resource
 			if l_bool /= Void then
@@ -711,6 +713,15 @@ feature {NONE} -- Implementation
 							l_color_widget.set_caller (Current)
 							grid.set_item (4, row_index, l_color_widget.change_item_widget)
 							grid.item (4, row_index).set_data (l_color_widget)
+						else
+							l_shortcut ?= l_resource
+							if l_shortcut /= Void then
+									-- Shortcut
+								create l_shortcut_widget.make_with_resource (l_resource)
+								l_shortcut_widget.change_actions.extend (agent on_preference_changed)
+								grid.set_item (4, row_index, l_shortcut_widget.change_item_widget)				
+								grid.item (4, row_index).set_data (l_shortcut_widget)
+							end
 						end
 					end
 				end

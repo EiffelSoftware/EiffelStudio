@@ -1,4 +1,4 @@
-<document title="Supported Constructs">
+<document output="codedom" title="Supported Constructs">
 	<meta_data/>
 	<paragraph>
 		Since not every language might support all the constructs CodeDom can represent, there needs to be a way for

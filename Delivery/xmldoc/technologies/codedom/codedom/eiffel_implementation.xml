@@ -1,4 +1,4 @@
-<document title="Eiffel Implementation">
+<document output="codedom" title="Eiffel Implementation">
 	<meta_data/>
 	<paragraph>
 		There are a few topics specific to the implementation of the Eiffel CodeDom Provider that are worth mentioning.

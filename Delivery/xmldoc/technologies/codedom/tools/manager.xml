@@ -1,4 +1,4 @@
-<document title="Eiffel CodeDom Provider Manager" output="studio">
+<document output="codedom" title="Eiffel CodeDom Provider Manager" output="studio">
 	<meta_data/>
 	<paragraph>
 		The Eiffel Codedom Provider Manager allows to graphically configure the Eiffel CodeDom Provider. There can 

@@ -1,7 +1,7 @@
 -- List of attribute sorted by category or skeleton of a class type (instance
 -- of CLASS_TYPE).
 
-class SKELETON 
+class SKELETON
 
 inherit
 	SHARED_LEVEL
@@ -74,7 +74,7 @@ feature -- Access
 		require
 			good_range: position >= 0 and then position < count
 		do
-			Result := area.item (position)	
+			Result := area.item (position)
 		end
 
 feature {SKELETON} -- Implementation: Access
@@ -95,7 +95,7 @@ feature -- Status Report
 		do
 			Result := (nb_reference + nb_expanded) > 0
 		end
-		
+
 feature -- Comparison
 
 	equiv (old_skeletons: ARRAY [SKELETON]; other: SKELETON): BOOLEAN is
@@ -146,37 +146,36 @@ feature -- Comparison
 						not Result or else i > nb
 					loop
 						l_exp_desc ?= current_area.item (i)
-						check
-							l_exp_desc_not_void: l_exp_desc /= Void
-						end
-						l_old_skel := old_skeletons.item (l_exp_desc.class_type.type_id)
-						if l_old_skel /= Void then
-								-- We now checks the old skeleton associated to `l_exp_desc' with a
-								-- new one that we generate on the fly. It is definitely not the
-								-- most efficient way because of the creation of a skeleton we will
-								-- not use, but at least do the correct job at finding if a skeleton
-								-- of a class having expanded attributes has changed.
-							if l_exp_desc.class_type.associated_class.skeleton /= Void then
-								Result := l_old_skel.equiv (old_skeletons,
-									l_exp_desc.class_type.associated_class.skeleton.
-										instantiation_in (l_exp_desc.class_type))
+						if l_exp_desc /= Void then
+							l_old_skel := old_skeletons.item (l_exp_desc.class_type.type_id)
+							if l_old_skel /= Void then
+									-- We now checks the old skeleton associated to `l_exp_desc' with a
+									-- new one that we generate on the fly. It is definitely not the
+									-- most efficient way because of the creation of a skeleton we will
+									-- not use, but at least do the correct job at finding if a skeleton
+									-- of a class having expanded attributes has changed.
+								if l_exp_desc.class_type.associated_class.skeleton /= Void then
+									Result := l_old_skel.equiv (old_skeletons,
+										l_exp_desc.class_type.associated_class.skeleton.
+											instantiation_in (l_exp_desc.class_type))
+								else
+										-- Most likeley an external class, therefore its skeleton
+										-- did not change.
+										-- FIXME: Manu: 08/05/2003: Should we create a skeleton even
+										-- for external classes, to avoid this particular case of
+										-- checking voidness of `skeleton' from CLASS_C.
+								end
 							else
-									-- Most likeley an external class, therefore its skeleton
-									-- did not change.
-									-- FIXME: Manu: 08/05/2003: Should we create a skeleton even
-									-- for external classes, to avoid this particular case of
-									-- checking voidness of `skeleton' from CLASS_C.
-							end
-						else
-							if l_exp_desc.class_type.associated_class.is_external then
-									-- A .NET external class so we cannot tell if the skeleton
-									-- changed
-									-- FIXME: Manu: 10/27/2003: What if we handle incremental
-									-- changes of external classes?
-								Result := True
-							else
-									-- Previous skeleton did not exist, then it definitely changed.
-								Result := False
+								if l_exp_desc.class_type.associated_class.is_external then
+										-- A .NET external class so we cannot tell if the skeleton
+										-- changed
+										-- FIXME: Manu: 10/27/2003: What if we handle incremental
+										-- changes of external classes?
+									Result := True
+								else
+										-- Previous skeleton did not exist, then it definitely changed.
+									Result := False
+								end
 							end
 						end
 						i := i + 1
@@ -757,7 +756,7 @@ feature -- Status
 							i := i + 1
 						end
 					end
-					
+
 					if nb_expanded > 0 then
 						from
 							current_area := area
@@ -822,7 +821,7 @@ feature -- Status
 				nb_int16 := nb_integer_16
 				nb_int32 := nb_integer_32;
 				Result := r32off (nb_ref + nb_expanded, nb_char, nb_int16, nb_int32) +
-							r32acs (index - nb_ref - nb_char - nb_int16 - nb_int32); 
+							r32acs (index - nb_ref - nb_char - nb_int16 - nb_int32);
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
@@ -911,7 +910,7 @@ feature -- Status
 		end;
 
 feature -- Skeleton byte code
-	
+
 	make_names_byte_code (ba: BYTE_ARRAY) is
 			-- Generate attribute names in `ba'.
 		require
@@ -963,7 +962,7 @@ feature -- Skeleton byte code
 			from
 				current_area := area
 				i := 0
-				nb := count - 1	
+				nb := count - 1
 			until
 				i > nb
 			loop
@@ -983,7 +982,7 @@ feature -- Skeleton byte code
 			from
 				current_area := area
 				i := 0
-				nb := count - 1	
+				nb := count - 1
 			until
 				i > nb
 			loop
@@ -1194,7 +1193,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 			correct_bounds: min <= max
 		local
 			up, down: INTEGER
-			x, temp: ATTR_DESC 
+			x, temp: ATTR_DESC
 			current_area: SPECIAL [ATTR_DESC]
 		do
 			current_area := area
@@ -1219,7 +1218,7 @@ feature {NONE} -- Implementation of quick sort algorithm
 				loop
 					up := up + 1
 				end
-			
+
 					-- Decrement down until it selects the first element
 					-- lesser than or equal to the pivot
 				from

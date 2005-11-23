@@ -15,10 +15,17 @@ feature -- Access
 	l_literal_value: STRING is		"Literal Value"
 	l_status: STRING is				"Status"
 	l_type: STRING is				"Type"
-	default_value: STRING is		"default"
+	p_default_value: STRING is		"default"
 	user_value: STRING is			"user set"
 	auto_value: STRING is		"auto"
 	no_description_text: STRING is	"No description available for this preference."
+	preferences_title: STRING is "Preferences"
+	restore_preference_string: STRING is "This will reset ALL preferences to their default values%N and all previous settings will be overwritten.  Are you sure?"	
+	
+	Alt_text: STRING is "Alt"	
+	Ctrl_text: STRING is "Ctrl"	
+	Shift_text: STRING is "Shift"
+	Shortcut_delimiter: STRING is "+"
 
 	w_Preferences_delayed_resources: STRING is
 			-- Texts used in the dialog that tells the user

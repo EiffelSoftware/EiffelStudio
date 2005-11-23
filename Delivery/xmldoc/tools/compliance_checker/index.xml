@@ -1,10 +1,18 @@
 <document output="eiffel_compliance_checker" title="Eiffel for .NET Compliance Checker">  
-	<meta_data>    
+	<meta_data>
 		<help>
+			<toc>
+				<envision_title>Eiffel for .NET Compliance Checker</envision_title>
+				<envision_location>EiffelEnvision\Tools</envision_location>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
 			<xml>
-				<xmlkeyword>Overview</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Eiffel for .NET Compliance Checker</term>
+				</xmlkeyword>
 			</xml>
-		</help>  
+		</help>
 	</meta_data>  
 	<paragraph>
 		<anchor>overview</anchor>

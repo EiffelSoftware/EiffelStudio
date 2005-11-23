@@ -1,14 +1,35 @@
  <document output="eiffel_compliance_checker" title="Compliance Checker">  
-	<meta_data>    
+	<meta_data>
 		<help>
+			<toc>
+				<envision_title>Compliance Checker</envision_title>
+				<envision_location>EiffelEnvision\Tools\Eiffel for .NET Compliance Checker\Using the Compliance Checker</envision_location>
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
 			<xml>
-				<xmlkeyword>Compliance checker</xmlkeyword>
-				<xmlkeyword>User interface, Compliance checker</xmlkeyword>
-				<xmlkeyword>Reports, Creating</xmlkeyword>
-				<xmlkeyword>Reports, Exporting</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Eiffel for .NET Compliance Checker, Compliance checker</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Eiffel for .NET Compliance Checker. Reports</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>User interface, Compliance checker</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Reports, Creating</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Reports, Exporting</term>
+				</xmlkeyword>
 			</xml>
-		</help>  
-	</meta_data>  
+		</help>
+	</meta_data> 
 	<paragraph>
 		<paragraph>
 			The <bold>Compliance Checker</bold> tab is used to built and view a compliance report. If your <link><url>20_project_settings.xml</url><label>Project Settings</label></link> are in order you can prompt the tool to build a compliance report by selecting the <bold>Check</bold> toolbar button or selecting the <bold>Check</bold> button, in the <bold>Report generation</bold> section of the page.

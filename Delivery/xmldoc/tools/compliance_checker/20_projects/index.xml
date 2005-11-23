@@ -1,11 +1,19 @@
 <document output="eiffel_compliance_checker" title="Compliance Checker Projects">  
-	<meta_data>    
+	<meta_data>
 		<help>
+			<toc>
+				<envision_title>Compliance Checker Projects</envision_title>
+				<envision_location>EiffelEnvision\Tools\Eiffel for .NET Compliance Checker</envision_location>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
 			<xml>
-				<xmlkeyword>Project</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Eiffel for .NET Compliance Checker, Projects</term>
+				</xmlkeyword>
 			</xml>
-		</help>  
-	</meta_data>  
+		</help>
+	</meta_data>
 	<paragraph>
 		<anchor>launching</anchor>
 		<heading>

@@ -72,12 +72,12 @@ feature {NONE}-- Initialization
 	initialize_customizable_commands is
 			-- Create array of customizable commands.
 		do
-			create customizable_commands.make (3, 7)
-			customizable_commands.put (agent search, 3)
-			customizable_commands.put (agent replace, 4)
-			customizable_commands.put (agent find_selection, 5)
-			customizable_commands.put (agent find_next, 6)
-			customizable_commands.put (agent find_previous, 7)
+			create customizable_commands.make (5)
+			customizable_commands.put (agent search, "show_search_panel")
+			customizable_commands.put (agent replace, "show_search_and_replace_panel")
+			customizable_commands.put (agent find_selection, "search_selection")
+			customizable_commands.put (agent find_next, "search_last")
+			customizable_commands.put (agent find_previous, "search_backward")
 		end
 
 feature -- Access
@@ -463,22 +463,11 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 	handle_extended_key (ev_key: EV_KEY) is
  			-- Process the push on an extended key.
 		local
-			index: LINKED_LIST [INTEGER]
-			executed_command: BOOLEAN
+			l_shortcuts: like matching_customizable_commands
 		do
-			index := index_of_customizable_commands (ev_key.code, False, alt_key, shifted_key)
-			from
-				index.start
-			until
-				index.after or executed_command
-			loop
-				if customizable_commands.valid_index (index.item) then
-					(customizable_commands @ (index.item)).apply
-					executed_command := True
-				end
-				index.forth
-			end
-			if executed_command then
+			l_shortcuts := matching_customizable_commands (ev_key.code, False, alt_key, shifted_key)
+			if not l_shortcuts.is_empty then
+				l_shortcuts.first.apply
 				check_cursor_position
 			else
 				Precursor {EB_EDITOR} (ev_key)
@@ -488,22 +477,11 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 	handle_extended_ctrled_key (ev_key: EV_KEY) is
  			-- Process the push on Ctrl + an extended key.
 		local
-			index: LINKED_LIST [INTEGER]
-			executed_command: BOOLEAN
+			l_shortcuts: like matching_customizable_commands
 		do
-			index := index_of_customizable_commands (ev_key.code, True, alt_key, shifted_key)
-			from
-				index.start
-			until
-				index.after or executed_command
-			loop
-				if customizable_commands.valid_index (index.item) then
-					(customizable_commands @ (index.item)).apply
-					executed_command := True
-				end
-				index.forth
-			end
-			if executed_command then
+			l_shortcuts := matching_customizable_commands (ev_key.code, True, alt_key, shifted_key)
+			if not l_shortcuts.is_empty then
+				l_shortcuts.first.apply
 				check_cursor_position
 			else
 				Precursor {EB_EDITOR} (ev_key)
@@ -654,8 +632,8 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_SEARCH_PERFORMER, EB_CLICKABLE_MA
 
 feature {NONE} -- Implementation
 
-	customizable_commands: ARRAY [PROCEDURE [like Current, TUPLE]]
-			-- Array of customizable commands
+	customizable_commands: HASH_TABLE [PROCEDURE [like Current, TUPLE], STRING]
+			-- Hash of customizable commands (agent hashed by shortcut name)
 
 	after_reading_text_actions: LINKED_LIST [PROCEDURE [EB_CLICKABLE_EDITOR, TUPLE]]
 			-- Procedures to be applied when the text is completely loaded.
@@ -663,30 +641,30 @@ feature {NONE} -- Implementation
 	hidden_breakpoints: BOOLEAN
 			-- Are brekpoints hidden ?
 
-	index_of_customizable_commands (key_code: INTEGER; ctrl, alt, shift: BOOLEAN): LINKED_LIST[INTEGER] is
-			-- List of indexes in `customizable_commands' of commands that correspond to the shortcut
+	matching_customizable_commands (key_code: INTEGER; ctrl, alt, shift: BOOLEAN): ACTION_SEQUENCE [TUPLE] is
+			-- List of shortcuts agents in `customizable_commands' that correspond to the shortcut
 			-- defined by key of code `key_code' and Ctrl if `ctrl', Shift if `shift' and Alt if `alt'.
 		local
-			index, i: INTEGER
-			meta: ARRAY [BOOLEAN]
+			l_shortcut: SHORTCUT_PREFERENCE
+			l_shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING]
 		do
 			create Result.make
+			l_shortcuts := preferences.editor_data.shortcuts
 			from
-				i := 1
-				index := preferences.editor_data.key_codes_for_actions.index_of (key_code, 1)
+				l_shortcuts.start
 			until
-				index = 0
+				l_shortcuts.after
 			loop
-				create meta.make (1,3)
-				meta.put (ctrl, 1)
-				meta.put (alt, 2)
-				meta.put (shift, 3)
-				if meta.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions.item (index)) then
-					Result.extend (index)
+				l_shortcut := l_shortcuts.item_for_iteration
+				if l_shortcut.key.code = key_code then
+					if l_shortcut.is_alt = alt and l_shortcut.is_ctrl = ctrl and l_shortcut.is_shift = shift then
+						Result.extend (customizable_commands.item (l_shortcuts.key_for_iteration))
+					end
 				end
-				i := i + 1
-				index := preferences.editor_data.key_codes_for_actions.index_of (key_code, i)
+				l_shortcuts.forth
 			end
+		ensure
+			matching_customizable_commands_not_void: Result /= Void
 		end
 
 	prepare_search_tool is
@@ -789,7 +767,7 @@ feature -- Memory management
 		do
 			Precursor {EB_EDITOR}
 			if customizable_commands /= Void then
-				customizable_commands.discard_items
+				customizable_commands.wipe_out
 				customizable_commands := Void
 			end
 			if after_reading_text_actions /= Void then

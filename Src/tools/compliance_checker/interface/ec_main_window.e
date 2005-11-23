@@ -54,7 +54,13 @@ feature {NONE} -- Initialization
 			tbtn_open.select_actions.extend (agent on_open_project)
 			tbtn_save.select_actions.extend (agent on_save_project)
 			tbtn_check.select_actions.extend (agent on_check_project)
-			tbtn_help.select_actions.extend (agent on_show_help)
+			
+			if is_help_available then
+				tbtn_help.select_actions.extend (agent on_show_help)
+			else	
+				tbtn_help.remove_pixmap
+				tbtn_help.disable_sensitive
+			end			
 		
 			btn_close.select_actions.extend (agent on_close)
 			close_request_actions.extend (agent on_close)
@@ -276,6 +282,12 @@ feature {NONE} -- Agent Handlers
 		end
 		
 feature {NONE} -- Implementation
+		
+	is_help_available: BOOLEAN is
+			-- Is compiled help available?
+		do
+			Result := (create {RAW_FILE}.make (help_file)).exists
+		end
 		
 	query_clean_project: BOOLEAN is
 			-- Queries project state to see if a project can be cleaned?

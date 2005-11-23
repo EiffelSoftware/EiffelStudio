@@ -105,6 +105,9 @@ feature -- Basic Operations
 					l_lookup_name := l_targets.item
 					l_targets.remove
 					l_target_type := target_type (l_targets.first)
+					if target.occurrences ('.') > 1 and then call_type = static_call or call_type = precursor_call then
+						set_standard_call
+					end
 					if l_target_type /= void and then not l_target_type.is_void then
 						l_targets.start
 						l_targets.remove

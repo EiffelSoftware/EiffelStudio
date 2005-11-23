@@ -1,4 +1,4 @@
-<document title="Writing ASP.NET pages in Eiffel">
+<document output="codedom" title="Writing ASP.NET pages in Eiffel">
 	<meta_data/>
 	<paragraph>
 		Eiffel for ASP.NET allows running ASP.NET pages written in Eiffel. It should be installed on both the web server 

@@ -1,4 +1,4 @@
-<document title="Names Mappings">
+<document output="codedom" title="Names Mappings">
 	<meta_data/>
 	<paragraph>
 		Maybe the most striking difference when writing pages in Eiffel comes from the name of the .NET types and methods. 

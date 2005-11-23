@@ -1,4 +1,4 @@
-<document title="Installation">
+<document output="codedom" title="Installation">
 	<meta_data/>
 	<paragraph>
 		For certain tools (including ASP.NET) to detect the availability of a CodeDom Provider, the corresponding

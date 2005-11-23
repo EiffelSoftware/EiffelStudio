@@ -1,4 +1,4 @@
-<document title="Configuration">
+<document output="codedom" title="Configuration">
 	<meta_data/>
 	<paragraph>
 		The Eiffel Codedom Provider uses XML configuration files that define additional settings specific to Eiffel. 

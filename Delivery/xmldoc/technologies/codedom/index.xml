@@ -1,4 +1,4 @@
-<document title="Eiffel for ASP.NET Documentation">
+<document output="codedom" title="Eiffel for ASP.NET Documentation">
 	<meta_data></meta_data>
 	<paragraph>CodeDom is a Microsoft .NET technology which allows representing source code programatically so that it may be rendered in different languages. The Eiffel CodeDom Provider is installed through Eiffel for ASP.NET which is available for download for free on the Eiffel Software web site (
 		<link>

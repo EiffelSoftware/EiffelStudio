@@ -1,4 +1,4 @@
-<document title="Required Permissions">
+<document output="codedom" title="Required Permissions">
 	<meta_data/>
 	<paragraph>
 		The account running the Eiffel CodeDom Provider might have restricted permissions such as when 

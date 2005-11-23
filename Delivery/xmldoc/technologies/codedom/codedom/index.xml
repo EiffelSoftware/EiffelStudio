@@ -1,4 +1,4 @@
-<document title="The Eiffel CodeDom Provider">
+<document output="codedom" title="The Eiffel CodeDom Provider">
 	<meta_data/>
 	<paragraph>
 		The Eiffel CodeDom Provider provides an implementation of the CodeDom Provider generation and compilation interfaces 

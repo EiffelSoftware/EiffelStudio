@@ -1,4 +1,4 @@
-<document title="About the Code Document Object Model (CodeDom)">
+<document output="codedom" title="About the Code Document Object Model (CodeDom)">
 	<meta_data/>
 	<paragraph>
 		CodeDom stands for the <bold>Code Document Object Model</bold>. CodeDom allows for representing source code

@@ -1,4 +1,4 @@
-<document title="Logging">
+<document output="codedom" title="Logging">
 	<meta_data/>
 	<paragraph>
 		The Eiffel CodeDom Provider may be configured (via the 

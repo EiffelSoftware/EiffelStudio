@@ -940,18 +940,11 @@ feature {NONE} -- Actions handler
 					close
 					ev_application.do_once_on_idle (agent editor.set_focus)
 				else
-					meta_keys := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
-					if
-						(preferences.editor_data.key_codes_for_actions @ 5) = k.code and then
-						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 5)
-					then
+					if search_selection_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
 						if not keyword_field.text.is_empty and then search_only then
 							search_button_clicked
 						end
-					elseif
-						(preferences.editor_data.key_codes_for_actions @ 6) = k.code and then
-						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 6)
-					then
+					elseif search_last_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
 						if not keyword_field.text.is_empty and then search_only then
 							temp_reverse := true
 							search_button_clicked

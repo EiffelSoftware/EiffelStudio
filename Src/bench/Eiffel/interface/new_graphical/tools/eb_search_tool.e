@@ -28,19 +28,19 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		end
-		
+
 	REFACTORING_HELPER
-	
+
 	TEXT_OBSERVER
 		rename
 			set_manager as set_text_observer_manager
@@ -102,11 +102,11 @@ feature {NONE} -- Initialization
 
 			options_box := build_options_box
 			buttons_box := build_buttons_box
-			
+
 			if not preferences.development_window_data.show_search_options then
 				toggle_options
 			end
-			
+
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_border_size)
@@ -118,7 +118,7 @@ feature {NONE} -- Initialization
 			vbox.disable_item_expand (options_box)
 			vbox.extend (buttons_box)
 			vbox.disable_item_expand (buttons_box)
-			
+
 			create frame
 			frame.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_raised)
 			frame.extend (vbox)
@@ -140,11 +140,11 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	manager: EB_DEVELOPMENT_WINDOW
-	
+
 	widget: EV_WIDGET
 			-- Widget representing Current
 
-	title: STRING is 
+	title: STRING is
 			-- Title of the tool
 		do
 			Result := Interface_names.t_Search_tool
@@ -187,7 +187,7 @@ feature {NONE}-- Controls
 
 	replace_check_button : EV_CHECK_BUTTON
 			-- Replace check button
-	
+
 	replace_all_button: EV_CHECK_BUTTON
 			-- Replace check button
 
@@ -267,7 +267,7 @@ feature -- Status setting
 		do
 			search_performer.force_search
 		end
- 
+
 feature -- Action
 
 	set_focus is
@@ -293,7 +293,7 @@ feature -- Action
 			end
 			if currently_replacing /= Void and then currently_replacing.is_empty then
 				replace_field.set_text (currently_replacing)
-			end	
+			end
 			keyword_field.set_focus
 		end
 
@@ -377,17 +377,11 @@ feature {NONE} -- Implementation
 					ev_application.do_once_on_idle (agent editor.set_focus)
 				else
 					meta_keys := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
-					if 
-						(preferences.editor_data.key_codes_for_actions @ 5) = k.code and then
-						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 5)
-					then
+					if search_selection_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
 						if not keyword_field.text.is_empty and then search_only then
 							search
 						end
-					elseif
-						(preferences.editor_data.key_codes_for_actions @ 6) = k.code and then
-						meta_keys.is_equal (preferences.editor_data.ctrl_alt_shift_for_actions @ 6)
-					then
+					elseif search_last_shortcut.matches (k, ev_application.alt_pressed, ev_application.ctrl_pressed, ev_application.shift_pressed) then
 						if not keyword_field.text.is_empty and then search_only then
 							search_performer.go_reverse
 							search
@@ -397,12 +391,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	search_selection_shortcut: SHORTCUT_PREFERENCE is
+			--
+		once
+			Result := preferences.editor_data.shortcuts.item ("search_selection")
+		end
+
+	search_last_shortcut: SHORTCUT_PREFERENCE is
+			--
+		once
+			Result := preferences.editor_data.shortcuts.item ("search_last")
+		end
+
+	search_backward_shortcut: SHORTCUT_PREFERENCE is
+			--
+		once
+			Result := 	preferences.editor_data.shortcuts.item ("search_backward")
+		end
+
 	options: EV_FRAME
 
 	options_button: EV_TOOL_BAR_BUTTON
-	
+
 	toggle_options is
-			-- Hide options if they are shown, show them if they are hidden. 
+			-- Hide options if they are shown, show them if they are hidden.
 		do
 			if options.is_show_requested then
 				options.hide
@@ -470,7 +482,7 @@ feature {NONE} -- Implementation
 			create options
 			options.extend (vbox)
 			Result.extend (options)
-			
+
 --			create option_box
 --			option_box.set_padding (0)
 --			create hb
@@ -525,7 +537,7 @@ feature {NONE} -- Implementation
 
 			create Result
 			Result.set_padding (Layout_constants.Small_padding_size)
-		
+
 			create cell
 			Result.extend (cell)
 
@@ -641,7 +653,7 @@ feature {NONE} -- Implementation
 		do
 			Result := manager.current_editor
 		end
-		
+
 	search_is_possible: BOOLEAN is
 			-- Is it possible to look for the current content of the "search for:" field?
 		local
@@ -654,7 +666,7 @@ feature {NONE} -- Implementation
 			end
 			Result := not for_test.is_empty
 		end
-		
+
 	display_stone_signature (textable: EV_TEXTABLE; a_stone: FILED_STONE) is
 			-- Display signature name of `a_stone' in `textable'.
 		require
@@ -667,7 +679,7 @@ feature {NONE} -- Implementation
 					-- FIXME Protected against Void, as there is no postcondition
 					-- on `stone_signature', although it appears it should never be Void,
 					-- it must be protected for now. Julian 07/22/03
-					
+
 				stone_signature := a_stone.stone_signature
 				if stone_signature.has (' ') then
 						-- Generic classes, and features with arguments have their arguments

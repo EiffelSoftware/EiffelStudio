@@ -193,6 +193,23 @@
 					</cell>
 				</row>
 				<row>
+					<cell>
+						Eiffel for .NET Compliance Checker Tool
+					</cell>
+					<cell>
+						<alignment>center</alignment>
+						<image>
+							<url>images/check.png</url>
+						</image>
+					</cell>
+					<cell>
+						<alignment>center</alignment>
+						<image>
+							<url>images/check.png</url>
+						</image>
+					</cell>
+				</row>
+				<row>
 					<cell>Documentation Generation</cell>
 					<cell/>
 					<cell>

@@ -66,13 +66,15 @@ feature {NONE} -- Commands
 	update_changes is
 			-- Commit the result of Font Tool.
 		local
-			font: EV_FONT
+			l_font: EV_FONT
 		do
-			font := font_tool.font
-			last_selected_value := font
+			last_selected_value := font_tool.font
+			l_font := last_selected_value.twin
 			if last_selected_value /= Void then
 				resource.set_value (last_selected_value)
-				change_item_widget.set_font (last_selected_value)
+				l_font := resource.value.twin
+				l_font.set_height_in_points (default_font_height)
+				change_item_widget.set_font (l_font)
 				change_item_widget.set_text (resource.string_value)
 			end
 			Precursor {PREFERENCE_WIDGET}
@@ -102,10 +104,15 @@ feature {NONE} -- Implementation
 
 	build_change_item_widget is
 			-- Create and setup `change_item_widget'.
+		local
+			l_font: EV_FONT
 		do
 			create change_item_widget
 			change_item_widget.set_text (resource.string_value)
-			change_item_widget.set_font (resource.value)
+			
+			l_font := resource.value.twin
+			l_font.set_height_in_points (default_font_height)
+			change_item_widget.set_font (l_font)
 			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
 		end
 		
@@ -117,5 +124,8 @@ feature {NONE} -- Implementation
 
 	font_tool: EV_FONT_DIALOG
 			-- Dialog from which we can select a font.
+
+	default_font_height: INTEGER is 9
+			-- Default font height in points (for display only)
 
 end -- class FONT_PREFERENCE_WIDGET

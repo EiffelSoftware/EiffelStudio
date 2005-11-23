@@ -1,12 +1,19 @@
  <document output="eiffel_compliance_checker" title="Project Settings">  
-	<meta_data>    
+	<meta_data>
 		<help>
+			<toc>
+				<envision_title>Project Settings</envision_title>
+				<envision_location>EiffelEnvision\Tools\Eiffel for .NET Compliance Checker\Using the Compliance Checker</envision_location>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
 			<xml>
-				<xmlkeyword>Project settings</xmlkeyword>
-				<xmlkeyword>User interface, Project settings</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Eiffel for .NET Compliance Checker, Project settings</term>
+				</xmlkeyword>
 			</xml>
-		</help> 
-	</meta_data>  
+		</help>
+	</meta_data> 
 	<paragraph>
 		<paragraph>
 			The <bold>Project Settings</bold> tab is used to specify a compliance-checker project's settings. There are only two configurable project settings:		</paragraph>

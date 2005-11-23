@@ -1,12 +1,23 @@
-<document output="eiffel_compliance_checker" title="Getting Started">  
-	<meta_data>    
+<document output="eiffel_compliance_checker" title="Getting Started">
+	<meta_data>
 		<help>
+			<toc>
+				<envision_title>Getting Started</envision_title>
+				<envision_location>EiffelEnvision\Tools\Eiffel for .NET Compliance Checker</envision_location>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
 			<xml>
-				<xmlkeyword>Getting started</xmlkeyword>
-				<xmlkeyword>Command-line options</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Eiffel for .NET Compliance Checker, Getting started</term>
+				</xmlkeyword>
+				<xmlkeyword>
+					<index>K</index>
+					<term>Eiffel for .NET Compliance Checker, Command-line options</term>
+				</xmlkeyword>
 			</xml>
-		</help>  
-	</meta_data>  
+		</help>
+	</meta_data> 
 	<paragraph>
 		<anchor>launching</anchor>
 		<heading>

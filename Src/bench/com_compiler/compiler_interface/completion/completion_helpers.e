@@ -79,7 +79,7 @@ feature -- Basic operations
 								if l_description /= Void then
 									l_docs := l_description.summary
 									if l_docs /= Void and then not l_docs.is_empty then
-										l_extracted_description.append_character ('%N')
+--										l_extracted_description.append_character ('%N')
 										l_extracted_description.append (l_docs)
 									end
 								end
@@ -279,7 +279,14 @@ feature -- Basic operations
 		end
 
 	type_of_target (target: STRING; table: FEATURE_TABLE; ids: HASH_TABLE [TYPE_AS, STRING]; class_i: CLASS_I): TYPE_AS is
+	
+		do
+			Result := type_of_target_internal (target, table, ids, class_i, False)
+		end
+
+	type_of_target_internal (target: STRING; table: FEATURE_TABLE; ids: HASH_TABLE [TYPE_AS, STRING]; class_i: CLASS_I; a_recursive: BOOLEAN): TYPE_AS is
 			-- Type of expression `target'
+			-- `a_recursive' indicates that `type_of_target_internal' is calling itself an no call type is to be set.
 		require
 			non_void_target: target /= Void
 			valid_target: not target.is_empty
@@ -289,8 +296,8 @@ feature -- Basic operations
 			l_index: INTEGER
 		do
 			if target.substring (1, Agent_keyword_length).is_equal (Agent_keyword) then
-				-- Agent
-				set_agent_call
+					-- Agent
+				set_agent_call	
 				if target.count > Agent_keyword_length + 1 then -- Minimum agent construct is "agent?."
 					extract_type (target, Agent_keyword)
 					if type_extracted then
@@ -309,9 +316,14 @@ feature -- Basic operations
 				end
 			elseif target.substring (1, Feature_keyword_length).is_equal (Feature_keyword) then
 				-- Static call
-				set_static_call
+				
 				if target.count > Feature_keyword_length + 3 then -- Minimum static call construct is "feature{T}."
 					Result := type_from_type_name (target.substring (target.index_of ('{', 1) + 1, target.index_of ('}', 2) - 1))
+				end
+				if target.occurrences ('.') > 1 then
+					set_standard_call
+				else
+					set_static_call
 				end
 			elseif target.substring (1, Create_keyword_length).is_equal (Create_keyword) then
 				-- Creation call
@@ -343,14 +355,22 @@ feature -- Basic operations
 				-- Precursor call
 				if target.index_of ('{', Precursor_keyword_length) > 0 then
 					l_new_target := target.substring (target.index_of ('{', Precursor_keyword_length), target.count)
-					Result := type_of_target (l_new_target, table, ids, class_i)
+					Result := type_of_target_internal (l_new_target, table, ids, class_i, True)
 				end
-				set_precursor_call
+				if target.occurrences ('.') > 1 then
+					set_standard_call
+				else
+					set_precursor_call
+				end
 			elseif target.item (1).is_equal ('{') then
-				-- New static call
-				set_static_call
+					-- New static call
 				if target.count > 2 then -- Minimum static call construct is "{T}"
 					Result := type_from_type_name (target.substring (target.index_of ('{', 1) + 1, target.index_of ('}', 2) - 1))
+				end
+				if target.occurrences ('.') > 1 then
+					set_standard_call
+				else
+					set_static_call
 				end
 			elseif target.item (1).is_equal ('(') then
 					-- Bracketed expression
@@ -364,12 +384,16 @@ feature -- Basic operations
 						Result := type_from_type_name ("TYPE [" + l_new_target + "]")
 					end
 				elseif l_new_target.count > 2 and then l_new_target.item (1) = '(' then
-					l_index := l_new_target.last_index_of (')', 3)
+					l_index := l_new_target.last_index_of (')', l_new_target.count)
 					if l_index > 0 then
-						l_new_target := l_new_target.substring (9, l_index - 1)
-						Result := type_of_target (l_new_target, table, ids, class_i)
+						l_new_target := l_new_target.substring (2, l_index - 1)
+						Result := type_of_target_internal (l_new_target, table, ids, class_i, True)
 					end
 				end
+				set_standard_call
+			end
+			
+			if a_recursive then
 				set_standard_call
 			end
 		end

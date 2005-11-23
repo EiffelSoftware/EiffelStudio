@@ -11,25 +11,28 @@ inherit
 		rename
 			make as old_make
 		redefine
-			meta_generic,
-			true_generics,
-			same_as, is_equal,
-			is_identical,
-			is_valid,
-			is_anchored,
-			is_explicit,
-			has_formal,
-			has_true_formal,
-			instantiation_in,
-			il_type_name,
-			type_a,
-			generic_derivation,
-			generate_cid,
-			make_gen_type_byte_code,
+			description,
+			dump,
 			generate_cid_array,
 			generate_cid_init,
 			generate_gen_type_il,
-			name, dump
+			generic_derivation,
+			generate_cid,
+			has_formal,
+			has_true_formal,
+			il_type_name,
+			instantiation_in,
+			is_anchored,
+			is_equal,
+			is_explicit,
+			is_identical,
+			is_valid,
+			make_gen_type_byte_code,
+			meta_generic,
+			name,
+			same_as,
+			true_generics,
+			type_a
 		end
 
 create
@@ -61,6 +64,20 @@ feature -- Access
 
 	true_generics : ARRAY [TYPE_I]
 			-- True generic types.
+
+	description: ATTR_DESC is
+			-- Descritpion of type for skeletons.
+		local
+			gen_desc: GENERIC_DESC
+		do
+			if has_formal then
+				create gen_desc
+				gen_desc.set_type_i (Current)
+				Result := gen_desc
+			else
+				Result := Precursor
+			end
+		end
 
 feature {GEN_TYPE_I} -- Settings
 

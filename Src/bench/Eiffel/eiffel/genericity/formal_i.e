@@ -2,7 +2,7 @@ indexing
 	description: "Representation of a compiled formal parameter."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class FORMAL_I
 
 inherit
@@ -22,7 +22,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (is_ref: like is_reference; is_exp: like is_expanded; i: like position) is
@@ -76,6 +76,13 @@ feature -- Access
 			Result := Other_code + position
 		end
 
+	description: GENERIC_DESC is
+			-- Descritpion of type for skeletons.
+		do
+			create Result
+			Result.set_type_i (Current)
+		end
+
 feature -- Status report
 
 	is_formal: BOOLEAN is True
@@ -119,7 +126,7 @@ feature -- Status report
 		end
 
 feature -- Comparison
- 
+
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		local
@@ -184,13 +191,13 @@ feature -- Generic conformance for IL
 			l_formal: TYPE_FEATURE_I
 		do
 			l_gen_type ?= context.current_type
-			
+
 				-- We must be in a generic class otherwise having a formal creation
 				-- does not make sense.
 			check
 				l_gen_type_not_void: l_gen_type /= Void
 			end
-			
+
 				-- Generate call to feature, defined in every descendant of
 				-- generic class represented by `l_gen_type', that will
 				-- create the corresponding runtime type associated with formal
@@ -218,12 +225,6 @@ feature {NONE} -- Not applicable
 				-- FIXME: we should not call it, but in case we have decided that it
 				-- will always return a reference type
 			Result := Reference_c_type
-		end
-
-	description: ATTR_DESC is
-		do
-		ensure then
-			False
 		end
 
 	sk_value: INTEGER is

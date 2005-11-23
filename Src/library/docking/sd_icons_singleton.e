@@ -30,7 +30,7 @@ feature -- Icons
 				not_void: Result /= Void
 			end
 
-	minimize: EV_PIXMAP is
+	normal: EV_PIXMAP is
 				-- Minimize icon pixmap.
 			deferred
 			ensure

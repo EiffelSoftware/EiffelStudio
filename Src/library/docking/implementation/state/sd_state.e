@@ -36,9 +36,6 @@ feature -- Properties
 			not_void: Result /= Void
 		end
 
-	is_maximized: BOOLEAN
-			-- If SD_ZONE managed by `Current' maximized?
-
 feature {SD_CONFIG_MEDIATOR}  -- Restore
 
 	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
@@ -55,13 +52,6 @@ feature {SD_CONFIG_MEDIATOR}  -- Restore
 		end
 
 feature -- Commands
-
-	recover_to_normal_state is
-			-- If `Current' `maximized', return to normal zone size.
-		do
-		ensure
-			normal_state: not is_maximized
-		end
 
 	record_state is
 			-- Record current state.

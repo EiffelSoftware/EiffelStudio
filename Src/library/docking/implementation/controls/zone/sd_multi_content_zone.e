@@ -9,7 +9,8 @@ deferred class
 inherit
 	SD_ZONE
 		rename
-			internal_shared as internal_shared_not_used
+			internal_shared as internal_shared_not_used,
+			prune as prune_widget
 		redefine
 			extend
 		end

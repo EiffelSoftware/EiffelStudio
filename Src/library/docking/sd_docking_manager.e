@@ -452,6 +452,19 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 			no_auto_hide_zone_left: fixed_area.count = 1
 		end
 
+	recover_normal_state is
+			-- Recover all zone's state to normal state.
+		do
+			from
+				zones.start
+			until
+				zones.after
+			loop
+				zones.item.recover_to_normal_state
+				zones.forth
+			end
+		end
+
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
 	 SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW, SD_MENU_DOCKER_MEDIATOR,
 	 SD_MENU_MANAGER} -- Library internal attributes.

@@ -17,6 +17,7 @@ feature -- Initlization
 			a_caller_not_void: a_caller /= Void
 		do
 			create internal_shared
+			internal_shared.docking_manager.recover_normal_state
 			internal_shared.hot_zone_factory.set_docker_mediator (Current)
 			create hot_zones
 			internal_caller := a_caller

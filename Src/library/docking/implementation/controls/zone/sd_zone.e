@@ -6,6 +6,94 @@ indexing
 deferred class
 	SD_ZONE
 
+inherit
+	EV_CONTAINER
+		rename
+			extend as extend_widget,
+			has as has_widget,
+			implementation as implementation_container
+		undefine
+			extend_widget,
+			copy,
+			is_equal,
+			put,
+			item,
+			prune_all,
+			replace,
+			is_in_default_state,
+			cl_extend,
+			cl_put,
+			fill
+		end
+
+feature -- Command
+
+	on_normal_max_window is
+			-- Normal or max `Current'.
+		local
+			l_split_area: EV_SPLIT_AREA
+		do
+			internal_shared.docking_manager.lock_update
+			main_area := internal_shared.docking_manager.inner_container (Current)
+
+			if not is_maximized then
+				main_area_widget := main_area.item
+				internal_parent := parent
+				l_split_area ?= internal_parent
+				if l_split_area /= Void then
+					internal_parent_split_position := l_split_area.split_position
+				end
+				internal_parent.prune (Current)
+				main_area.wipe_out
+				main_area.extend (Current)
+				set_max (True)
+			else
+				recover_to_normal_state
+			end
+			internal_shared.docking_manager.unlock_update
+		end
+
+	close_window is
+			-- Close window.
+		do
+			internal_shared.docking_manager.lock_update
+			if is_maximized then
+				main_area.wipe_out
+				main_area.extend (main_area_widget)
+				main_area := Void
+			end
+
+			internal_shared.docking_manager.unlock_update
+		end
+
+	recover_to_normal_state is
+			-- If Current maximized, then normal Current.
+		local
+			l_split_area: EV_SPLIT_AREA
+		do
+			if is_maximized then
+				internal_shared.docking_manager.lock_update
+				main_area.wipe_out
+				internal_parent.extend (Current)
+				main_area.extend (main_area_widget)
+				main_area := Void
+
+				l_split_area ?= internal_parent
+				if l_split_area /= Void then
+					l_split_area.set_split_position (internal_parent_split_position)
+				end
+				main_area_widget := Void
+				internal_parent := Void
+				set_max (False)
+				internal_shared.docking_manager.unlock_update
+			end
+		end
+
+	set_max (a_max: BOOLEAN) is
+			-- Set if current is maximized.
+		do
+		end
+
 feature -- Query
 
 	state: SD_STATE is
@@ -71,6 +159,24 @@ feature {SD_DOCKING_MANAGER, SD_CONTENT}  -- Focus in
 		end
 
 feature {NONE} -- Implementation
+
+	is_maximized: BOOLEAN is
+			-- If current maximized?
+		do
+			Result := False
+		end
+
+	internal_parent_split_position: INTEGER
+			-- Parent split position.
+
+	main_area_widget: EV_WIDGET
+			-- Other user widgets when `Current' is maximized.
+
+	internal_parent: EV_CONTAINER
+			-- Parent.
+
+	main_area: SD_MULTI_DOCK_AREA
+			-- SD_MULTI_DOCK_AREA current zone belong to.
 
 	internal_shared: SD_SHARED
 			-- All singletons.

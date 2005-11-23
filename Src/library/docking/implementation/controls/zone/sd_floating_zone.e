@@ -9,9 +9,13 @@ class
 inherit
 	SD_ZONE
 		rename
-			internal_shared as internal_shared_zone
+			internal_shared as internal_shared_zone,
+			extend_widget as extend_dialog,
+			has_widget as has_untitled_dialog,
+			is_maximized as is_maximized_zone
 		undefine
-			default_create, copy
+			initialize,
+			show
 		redefine
 			type,
 			state
@@ -27,6 +31,9 @@ inherit
 			extend as extend_dialog,
 			show as show_allow_to_back,
 			has as has_untitled_dialog
+		select
+			implementation,
+			show_allow_to_back
 		end
 
 create
@@ -50,7 +57,7 @@ feature {NONE} -- Initlization
 			create internal_title_bar.make
 			internal_title_bar.drag_actions.extend (agent on_title_bar_drag)
 			internal_title_bar.close_actions.extend (agent on_close_window)
-			internal_title_bar.set_show_min_max (False)
+			internal_title_bar.set_show_normal_max (False)
 			internal_title_bar.set_show_stick (False)
 			pointer_button_release_actions.extend (agent on_pointer_button_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
@@ -121,7 +128,7 @@ feature -- Command
 			else
 				show_relative_to_window (internal_shared.docking_manager.main_window)
 			end
-		ensure
+		ensure then
 			showed: is_displayed
 		end
 

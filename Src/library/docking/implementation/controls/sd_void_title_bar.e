@@ -15,7 +15,7 @@ inherit
 --			set_stick,
 			enable_focus_color,
 			disable_focus_color,
-			set_show_min_max,
+			set_show_normal_max,
 			set_show_stick
 		end
 
@@ -54,7 +54,7 @@ feature -- Redefine
 		do
 		end
 
-	set_show_min_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN) is
 			-- Do nothing.
 		do
 		end

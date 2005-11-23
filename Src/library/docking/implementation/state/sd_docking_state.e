@@ -56,6 +56,19 @@ feature {NONE}-- Initlization
 			extended: a_container.has (zone)
 		end
 
+feature {SD_TAB_STATE} -- Initlization
+
+	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER) is
+			-- Set widget and main area which used for normal window.
+		require
+			a_widget_not_void: a_widget /= Void
+			a_main_area_not_void: a_main_area /= Void
+			a_parent_not_void: a_parent /= Void
+		do
+			zone.set_max (True)
+			zone.set_widget_main_area (a_widget, a_main_area, a_parent, a_split_position)
+		end
+
 feature -- Redefine.
 
 	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is

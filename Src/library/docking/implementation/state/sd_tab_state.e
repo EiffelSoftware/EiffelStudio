@@ -616,10 +616,9 @@ feature {NONE}  -- Implementation functions.
 				l_parent := tab_zone.parent
 				internal_shared.docking_manager.prune_zone (tab_zone)
 				create l_docking_state.make_for_tab_zone (tab_zone.last_content, l_parent, direction)
---				if is_maximized then
---					l_docking_state.set_maximized (is_maximized)
---					l_docking_state.set_main_area_widget_main_area (main_area_widget, main_area)
---				end
+				if zone.is_maximized then
+					l_docking_state.set_widget_main_area (zone.main_area_widget , zone.main_area, zone.internal_parent, zone.internal_parent_split_position)
+				end
 
 				tab_zone.last_content.change_state (l_docking_state)
 				tab_zone.last_content.notify_focus_in

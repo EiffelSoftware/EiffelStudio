@@ -14,7 +14,8 @@ inherit
 			on_focus_out,
 			on_normal_max_window,
 			is_maximized,
-			set_max
+			set_max,
+			close_window
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -233,8 +234,9 @@ feature {NONE} -- Agents for user
 	on_close is
 			-- Handle user click close button.
 		do
-			close_window
+
 			content.state.close_window
+			close_window
 		end
 
 feature {NONE} -- Agents for docker
@@ -342,6 +344,12 @@ feature {NONE} -- Agents for docker
 		end
 
 feature {NONE} -- Implementation
+
+	close_window is
+			-- Redefine
+		do
+
+		end
 
 	internal_title_bar: SD_TITLE_BAR
 			-- Title bar.

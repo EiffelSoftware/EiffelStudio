@@ -8,14 +8,13 @@ class
 
 inherit
 	SD_MULTI_CONTENT_ZONE
-		undefine
-			copy,
-			is_equal,
-			default_create
 		redefine
 			extend,
 			on_focus_in,
-			on_focus_out
+			on_focus_out,
+			on_normal_max_window,
+			is_maximized,
+			set_max
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -27,11 +26,16 @@ inherit
 
 	EV_VERTICAL_BOX
 		rename
-			extend as extend_vertical_box,
-			prune as prune_vertical_box,
-			count as count_vertical_box,
-			has as has_vertical_box,
-			index_of as index_of_vertical_box
+			extend as extend_widget,
+			prune as prune_widget,
+			count as count_widget,
+			has as has_widget,
+			index_of as index_of_widget
+		select
+			implementation,
+			count_widget,
+			set_extend,
+			put
 		end
 
 	SD_DOCKER_SOURCE
@@ -55,6 +59,7 @@ feature {NONE} -- Initlization
 			a_content_parent_void: a_content.user_widget.parent = Void
 		do
 			create internal_shared
+			create internal_shared_not_used
 			default_create
 			create internal_contents.make (1)
 			create internal_notebook
@@ -65,8 +70,7 @@ feature {NONE} -- Initlization
 			internal_title_bar.set_stick (True)
 			internal_title_bar.drag_actions.extend (agent on_drag_title_bar)
 			internal_title_bar.stick_select_actions.extend (agent on_stick)
-			internal_title_bar.pointer_double_press_actions.extend (agent on_min_max)
-			internal_title_bar.min_max_actions.extend (agent on_min_max)
+			internal_title_bar.normal_max_actions.extend (agent on_normal_max_window)
 			internal_title_bar.close_actions.extend (agent on_close)
 			if a_content.mini_toolbar /= Void then
 				internal_title_bar.custom_area.extend (a_content.mini_toolbar)
@@ -74,15 +78,23 @@ feature {NONE} -- Initlization
 
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
-			extend_vertical_box (internal_title_bar)
+			extend_widget (internal_title_bar)
 			disable_item_expand (internal_title_bar)
 
 			internal_notebook.selection_actions.extend (agent on_select_tab)
-			extend_vertical_box (internal_notebook)
+			extend_widget (internal_notebook)
 
 			internal_notebook.pointer_button_press_actions.extend (agent on_notebook_pointer_press)
 			internal_notebook.pointer_button_release_actions.extend (agent on_notebook_pointer_release)
 			internal_notebook.pointer_motion_actions.extend (agent on_notebook_notebook_pointer_motion)
+		end
+
+feature -- Query
+
+	is_maximized: BOOLEAN is
+			-- Redefine.
+		do
+			Result := internal_title_bar.is_max
 		end
 
 feature -- Command
@@ -105,10 +117,10 @@ feature -- Command
 	set_show_stick_min_max (a_show: BOOLEAN) is
 			-- Redefine.
 		do
-			internal_title_bar.set_show_min_max (a_show)
+			internal_title_bar.set_show_normal_max (a_show)
 			internal_title_bar.set_show_stick (a_show)
 		ensure then
-			set: a_show = internal_title_bar.is_show_min_max
+			set: a_show = internal_title_bar.is_show_normal_max
 			set: a_show = internal_title_bar.is_show_stick
 		end
 
@@ -139,6 +151,12 @@ feature -- Command
 			internal_notebook.item_tab (a_content.user_widget).set_pixmap (a_pixmap)
 		ensure
 			set: internal_notebook.item_tab (a_content.user_widget).pixmap = a_pixmap
+		end
+
+	set_max (a_max: BOOLEAN) is
+			-- Redefine.
+		do
+			internal_title_bar.set_max (a_max)
 		end
 
 feature {SD_TAB_STATE} -- Internal issues.
@@ -204,19 +222,18 @@ feature {NONE} -- Agents for user
 			state_changed:
 		end
 
-	on_min_max is
+	on_normal_max_window is
 			-- Handle user click min max button.
 		do
-			if internal_title_bar.is_show_min_max then
-				content.state.on_normal_max_window
+			if internal_title_bar.is_show_normal_max then
+				Precursor {SD_MULTI_CONTENT_ZONE}
 			end
-		ensure
-			min_or_maxed: internal_title_bar.is_show_min_max implies old content.state.is_maximized /= content.state.is_maximized
 		end
 
 	on_close is
 			-- Handle user click close button.
 		do
+			close_window
 			content.state.close_window
 		end
 
@@ -250,7 +267,6 @@ feature {NONE} -- Agents for docker
 		local
 			l_tab_state: SD_TAB_STATE
 		do
-			state.recover_to_normal_state
 			create internal_docker_mediator.make (Current)
 			internal_docker_mediator.start_tracing_pointer (screen_x - a_screen_x, screen_y - a_screen_y)
 			enable_capture
@@ -303,7 +319,6 @@ feature {NONE} -- Agents for docker
 				io.put_string ("%N SD_TAB_ZONE internal_notebook_pressed: " + internal_notebook_pressed.out)
 			end
 			if internal_notebook_pressed then
-				state.recover_to_normal_state
 				create internal_docker_mediator.make (Current)
 				internal_docker_mediator.start_tracing_pointer (screen_x - a_screen_x, screen_y - a_screen_y)
 				enable_capture
@@ -331,12 +346,8 @@ feature {NONE} -- Implementation
 	internal_title_bar: SD_TITLE_BAR
 			-- Title bar.
 
-
-
 	internal_docker_mediator: SD_DOCKER_MEDIATOR
 			-- Docker mediator.
-
-
 
 	internal_notebook_pressed: BOOLEAN
 			-- If user clicked notebook? Used for detect whether clicked notebook tabs.

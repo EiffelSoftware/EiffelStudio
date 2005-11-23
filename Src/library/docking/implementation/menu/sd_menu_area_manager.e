@@ -172,7 +172,7 @@ feature {NONE} -- Implementation functions.
 			end
 		ensure
 			pruned: internal_menu_dock_mediator.caller.row /= Void implies
-				 not old internal_menu_dock_mediator.caller.row.has (internal_menu_dock_mediator.caller)
+				 not internal_menu_dock_mediator.caller.row.has (internal_menu_dock_mediator.caller)
 		end
 
 feature {NONE}  -- Implementation query

@@ -31,7 +31,7 @@ feature {NONE}-- Initlization
 			a_content_not_void: a_content /= Void
 		do
 			create internal_shared
-			normal_max_able := True
+--			normal_max_able := True
 			direction := a_direction
 			internal_width_height := a_width_height
 			internal_content := a_content
@@ -47,6 +47,7 @@ feature {NONE}-- Initlization
 			-- Creation method for SD_TAB_STATE.
 		require
 			a_content_not_void: a_content /= Void
+			a_container_not_void: a_container /= Void
 			a_container_not_full: not a_container.full
 		do
 			make (a_content, a_direction, 0)
@@ -299,8 +300,10 @@ feature {NONE} -- Implementation
 			end
 			l_target_zone_parent.extend (l_new_split_area)
 			 if l_target_parent_split /= Void and l_target_parent_split.full then
-			 	l_target_parent_split.set_split_position (l_target_parent_spliter_position)
-
+			 	if l_target_parent_spliter_position >= l_target_parent_split.minimum_split_position and
+			 		l_target_parent_spliter_position <= l_target_parent_split.maximum_split_position then
+			 		l_target_parent_split.set_split_position (l_target_parent_spliter_position)
+			 	end
 			 end
 			l_new_split_area.set_proportion (0.5)
 

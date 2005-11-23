@@ -95,30 +95,30 @@ feature {NONE} -- Initlization
 
 			set_stick (False)
 
-			create min_max
-			min_max.set_pixmap (internal_shared.icons.maximize)
+			create normal_max
+			normal_max.set_pixmap (internal_shared.icons.maximize)
 			create close
 			close.set_pixmap (internal_shared.icons.close)
 
 			stick.pointer_button_press_actions.force_extend (agent on_stick_select)
-			min_max.pointer_button_press_actions.force_extend (agent on_min_max)
+			normal_max.pointer_button_press_actions.force_extend (agent on_normal_max)
 			close.pointer_button_press_actions.force_extend (agent on_close)
 
 			internal_title.pointer_button_press_actions.force_extend (agent on_pointer_press)
 			internal_title.pointer_button_release_actions.force_extend (agent on_pointer_release)
 			internal_title.pointer_leave_actions.force_extend (agent on_pointer_leave)
 			internal_title.pointer_motion_actions.extend (agent on_pointer_motion)
-			internal_title.pointer_double_press_actions.force_extend (agent on_pointer_double_press)
+			internal_title.pointer_double_press_actions.force_extend (agent on_normal_max)
 
-			l_label.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			l_label.pointer_button_release_actions.force_extend (agent on_pointer_release)
-			l_label.pointer_leave_actions.force_extend (agent on_pointer_leave)
-			l_label.pointer_motion_actions.extend (agent on_pointer_motion)
-			l_label.pointer_double_press_actions.force_extend (agent on_pointer_double_press)
+--			l_label.pointer_button_press_actions.force_extend (agent on_pointer_press)
+--			l_label.pointer_button_release_actions.force_extend (agent on_pointer_release)
+--			l_label.pointer_leave_actions.force_extend (agent on_pointer_leave)
+--			l_label.pointer_motion_actions.extend (agent on_pointer_motion)
+--			l_label.pointer_double_press_actions.force_extend (agent on_pointer_double_press)
 
 			create internal_tool_bar
 			internal_tool_bar.extend (stick)
-			internal_tool_bar.extend (min_max)
+			internal_tool_bar.extend (normal_max)
 			internal_tool_bar.extend (close)
 
 			container.extend (internal_tool_bar)
@@ -152,46 +152,59 @@ feature -- Access
 		end
 
 	set_stick (a_stick: BOOLEAN) is
-			-- Set if current is sticked.
+			-- Set `is_stick'.
 		do
 			if a_stick then
 				stick.set_pixmap (internal_shared.icons.stick)
 			else
 				stick.set_pixmap (internal_shared.icons.unstick)
 			end
+			is_stick := a_stick
 		ensure
-			set: a_stick implies stick.pixmap.is_equal (internal_shared.icons.stick)
-				or not a_stick implies stick.pixmap.is_equal (internal_shared.icons.unstick)
+			set: a_stick = is_stick
 		end
 
-	is_stick: BOOLEAN is
-			-- If sticked?
+	is_stick: BOOLEAN
+			-- If current sticked?
+
+	set_max (a_max: BOOLEAN) is
+			-- Set `is_max'.
 		do
-			Result := stick.pixmap.is_equal (internal_shared.icons.stick)
+			if a_max then
+				normal_max.set_pixmap (internal_shared.icons.normal)
+			else
+				normal_max.set_pixmap (internal_shared.icons.maximize)
+			end
+			is_max := a_max
+		ensure
+			set: is_max = a_max
 		end
 
-	set_show_min_max (a_show: BOOLEAN) is
+	is_max: BOOLEAN
+			-- If current maximized?
+
+	set_show_normal_max (a_show: BOOLEAN) is
 			-- Set show normal\max button?
 		do
 			if a_show then
-				if not internal_tool_bar.has (min_max) then
+				if not internal_tool_bar.has (normal_max) then
 					internal_tool_bar.start
-					internal_tool_bar.put_right (min_max)
+					internal_tool_bar.put_right (normal_max)
 				end
 			else
-				if internal_tool_bar.has (min_max) then
-					internal_tool_bar.prune_all (min_max)
+				if internal_tool_bar.has (normal_max) then
+					internal_tool_bar.prune_all (normal_max)
 				end
 			end
 		ensure
-			set: a_show = internal_tool_bar.has (min_max)
+			set: a_show = internal_tool_bar.has (normal_max)
 
 		end
 
-	is_show_min_max: BOOLEAN is
+	is_show_normal_max: BOOLEAN is
 			-- Show normal\max button?
 		do
-			Result := internal_tool_bar.has (min_max)
+			Result := internal_tool_bar.has (normal_max)
 		end
 
 	set_show_stick (a_show: BOOLEAN) is
@@ -271,13 +284,13 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	min_max_actions: like internal_min_max_actions is
+	normal_max_actions: like internal_normal_max_actions is
 			-- Min max select actions.
 		do
-			if internal_min_max_actions = Void then
-				create internal_min_max_actions
+			if internal_normal_max_actions = Void then
+				create internal_normal_max_actions
 			end
-			Result := internal_min_max_actions
+			Result := internal_normal_max_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -293,16 +306,16 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE is
-			-- Pointer double press actions.
-		do
-			if internal_pointer_double_press_actions = Void then
-				create internal_pointer_double_press_actions
-			end
-			Result := internal_pointer_double_press_actions
-		ensure
-			not_void: Result /= Void
-		end
+--	pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE is
+--			-- Pointer double press actions.
+--		do
+--			if internal_pointer_double_press_actions = Void then
+--				create internal_pointer_double_press_actions
+--			end
+--			Result := internal_pointer_double_press_actions
+--		ensure
+--			not_void: Result /= Void
+--		end
 
 feature {NONE} -- Agents
 
@@ -317,10 +330,16 @@ feature {NONE} -- Agents
 			stick_select_actions.call ([])
 		end
 
-	on_min_max is
-			-- Handle `min_max_actions'.
+	on_normal_max is
+			-- Handle `normal_max_actions'.
 		do
-			min_max_actions.call ([])
+			if is_max then
+				normal_max.set_pixmap (internal_shared.icons.maximize)
+			else
+				normal_max.set_pixmap (internal_shared.icons.normal)
+			end
+
+			normal_max_actions.call ([])
 		end
 
 	on_close is
@@ -362,13 +381,13 @@ feature {NONE} -- Agents
 			end
 		end
 
-	on_pointer_double_press is
-			-- Handle pointer double press.
-		do
-			if pointer_double_press_actions /= Void then
-				pointer_double_press_actions.call ([])
-			end
-		end
+--	on_pointer_double_press is
+--			-- Handle pointer double press.
+--		do
+--			if pointer_double_press_actions /= Void then
+--				pointer_double_press_actions.call ([])
+--			end
+--		end
 
 feature {NONE} -- Implemetation
 
@@ -400,10 +419,10 @@ feature {NONE} -- Implementation
 			-- Internal_title
 
 	internal_tool_bar: EV_TOOL_BAR
-			-- Tool bar which hold `stick', `min_max', `close' buttons.
+			-- Tool bar which hold `stick', `normal_max', `close' buttons.
 	stick: EV_TOOL_BAR_BUTTON
 			-- Sitck button
-	min_max: EV_TOOL_BAR_BUTTON
+	normal_max: EV_TOOL_BAR_BUTTON
 			-- Minimize and maxmize button
 	close: EV_TOOL_BAR_BUTTON
 			-- Close button
@@ -415,7 +434,7 @@ feature {NONE} -- Implementation
 
 	internal_pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer double press actions.
-	internal_stick_select_actions, internal_close_actions, internal_min_max_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_stick_select_actions, internal_close_actions, internal_normal_max_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Title bar actions.
 	internal_drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Drag actions.

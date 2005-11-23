@@ -21,12 +21,12 @@ feature {NONE} -- Initlization
 			-- Redefine.
 		do
 			Precursor {SD_TAB_ZONE} (a_content, a_target_zone)
-			prune_vertical_box (internal_notebook)
+			prune_widget (internal_notebook)
 			create notebook.make (internal_notebook)
-			extend_vertical_box (notebook)
+			extend_widget (notebook)
 			notebook.close_actions.extend (agent on_close)
 		ensure then
-			notebook_added: has_vertical_box (notebook)
+			notebook_added: has_widget (notebook)
 		end
 
 

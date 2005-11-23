@@ -9,15 +9,33 @@ class
 inherit
 	SD_HOR_VER_BOX
 		rename
-			has_focus as has_focus_hor_ver_box,
 			has as has_hor_ver_box,
-			extend as extend_hor_ver_box
+			extend as extend_hor_ver_box,
+			has_focus as has_focus_vertical_box
+		select
+			pointer_enter_actions,
+			implementation,
+			item_vertical_box,
+			count_vertical_box,
+			linear_representation_vertical_box,
+			set_extend,
+			prune_vertical_box,
+			wipe_out_vertical_box,
+			cl_put
 		end
+
 	SD_SINGLE_CONTENT_ZONE
+		rename
+			extend_widget as extend_vertical_box,
+			has_widget as has_vertical_box,
+			has_focus as has_focus_vertical_box
 		undefine
-			copy, is_equal, default_create,
-			on_focus_in,on_focus_out
+			on_focus_in,
+			on_focus_out,
+			pointer_enter_actions,
+			close_window
 		end
+
 	SD_RESIZE_SOURCE
 		undefine
 			copy, is_equal, default_create
@@ -46,7 +64,7 @@ feature	{NONE} -- Initlization
 			internal_content := a_content
 			window.set_user_widget (internal_content.user_widget)
 			window.title_bar.set_title (internal_content.title)
-			window.title_bar.set_show_min_max (False)
+			window.title_bar.set_show_normal_max (False)
 			window.close_actions.extend (agent close_window)
 			window.stick_actions.extend (agent stick_window)
 

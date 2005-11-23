@@ -11,14 +11,22 @@ inherit
 		rename
 			has as has_cell,
 			extend as extend_cell
+		select
+			implementation
 		end
 
 	SD_SINGLE_CONTENT_ZONE
 		rename
-			internal_shared as internal_shared_not_used
+			internal_shared as internal_shared_not_used,
+			extend_widget as extend_cell,
+			has_widget as has_cell
 		undefine
-			copy, is_equal, default_create,
-			on_focus_in, on_focus_out
+			on_focus_in,
+			on_focus_out,
+			close_window
+		redefine
+			set_max,
+			is_maximized
 		end
 
 	SD_DOCKER_SOURCE
@@ -53,8 +61,8 @@ feature	{NONE} -- Initlization
 			window.close_actions.extend (agent close_window)
 			window.stick_actions.extend (agent stick_window)
 			window.drag_actions.extend (agent on_drag_started)
-			window.min_max_action.extend (agent on_normal_max_window)
-			window.pointer_double_press_title_bar_actions.extend (agent on_title_bar_double_press)
+			window.normal_max_action.extend (agent on_normal_max_window)
+--			window.pointer_double_press_title_bar_actions.extend (agent on_title_bar_double_press)
 
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
@@ -75,7 +83,7 @@ feature {SD_CONTENT}
 			window.title_bar.enable_focus_color
 		end
 
-feature -- Access
+feature -- Command
 
 	set_show_stick_min_max (a_show: BOOLEAN) is
 			-- Set whether to show title bar?
@@ -92,6 +100,14 @@ feature -- Access
 		do
 			window.title_bar.set_title (a_title)
 		end
+
+	set_max (a_max: BOOLEAN) is
+			-- Redefine.
+		do
+			window.title_bar.set_max (a_max)
+		end
+
+feature -- Query
 
 	title: STRING is
 			-- Title.
@@ -119,6 +135,12 @@ feature -- Access
 			Result := l_split_area.split_position
 		end
 
+	is_maximized: BOOLEAN is
+			-- Redefine.
+		do
+			Result := window.title_bar.is_max
+		end
+
 feature {NONE} -- For redocker.
 
 	on_drag_started (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -127,7 +149,6 @@ feature {NONE} -- For redocker.
 			debug ("larry")
 				io.put_string ("%N ******** draging window in SD_DOCKING_ZONE " + a_screen_x.out + " " + a_screen_y.out + "and window width height is: " + width.out + " " + height.out)
 			end
-			state.recover_to_normal_state
 			create docker_mediator.make (Current)
 			docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 
@@ -160,30 +181,27 @@ feature {NONE} -- For redocker.
 
 feature {NONE} -- Implementation
 
-	close_window is
-			-- Close window.
-		do
-			internal_content.state.close_window
-		end
-
-	on_normal_max_window is
-			-- Normal or max `Current'.
-		do
-			internal_content.state.on_normal_max_window
-		end
-
 	stick_window is
 			-- Stick window.
 		do
 			internal_content.state.stick_window ({SD_DOCKING_MANAGER}.dock_left)
 		end
 
-	on_title_bar_double_press is
-			-- Min max widow if is allowed.
+--	on_title_bar_double_press is
+--			-- Min max widow if is allowed.
+--		do
+--			if window.title_bar.is_show_normal_max then
+--				on_normal_max_window
+--			end
+--		end
+
+	close_window is
+			-- Redefine
 		do
-			if window.title_bar.is_show_min_max then
-				on_normal_max_window
-			end
+			internal_shared.docking_manager.lock_update
+			Precursor {SD_SINGLE_CONTENT_ZONE}
+			internal_shared.docking_manager.prune_zone (Current)
+			internal_shared.docking_manager.unlock_update
 		end
 
 	resize_bar: SD_RESIZE_BAR

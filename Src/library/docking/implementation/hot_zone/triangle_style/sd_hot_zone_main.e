@@ -73,7 +73,7 @@ feature  -- Redefine
 				Result := True
 			end
 		ensure then
-			must_process: Result = True
+--			must_process: Result = True
 		end
 
 	update_for_pointer_position (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is

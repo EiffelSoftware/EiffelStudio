@@ -32,9 +32,9 @@ feature {NONE} -- Initlization
 			internal_content := a_content
 			direction := a_direction
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				internal_width_height := (internal_shared.docking_manager.fixed_area.width * 0.2).ceiling
+				internal_width_height := (internal_shared.docking_manager.fixed_area.width * internal_shared.default_docking_width_rate).ceiling
 			else
-				internal_width_height := (internal_shared.docking_manager.fixed_area.height * 0.2).ceiling
+				internal_width_height := (internal_shared.docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
 			end
 			auto_hide_panel := internal_shared.docking_manager.auto_hide_panel (a_direction)
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
@@ -100,7 +100,7 @@ feature {NONE} -- Auto hide functions.
 			if internal_close_timer /= Void then
 				internal_close_timer.actions.wipe_out
 				internal_close_timer := Void
-				internal_shared.docking_manager.fixed_area.prune_all (zone)
+				internal_shared.docking_manager.prune_zone (zone)
 				create l_env
 				l_env.application.pointer_motion_actions.start
 				l_env.application.pointer_motion_actions.prune (internal_motion_procudure)
@@ -225,8 +225,8 @@ feature -- Redefine.
 			-- Redefine. `a_direction' is useless, it's only used for SD_DOCKING_STATE.
 		do
 			internal_shared.docking_manager.lock_update
-			close_window
 			internal_shared.docking_manager.remove_auto_hide_zones
+			internal_shared.docking_manager.recover_normal_state
 			if auto_hide_panel.is_content_in_group (internal_content) then
 				stick_zones (a_direction)
 			else
@@ -409,6 +409,8 @@ feature {NONE} -- Implementation functions.
 		local
 			l_docking_state: SD_DOCKING_STATE
 		do
+			auto_hide_panel.tab_stubs.start
+			auto_hide_panel.tab_stubs.prune (internal_tab_stub)
 			-- Change the zone from SD_AUTO_HIDE_ZONE to SD_DOCKING_ZONE
 			internal_shared.docking_manager.prune_zone_by_content (internal_content)
 			-- Change the state.

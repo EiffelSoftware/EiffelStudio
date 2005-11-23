@@ -260,6 +260,7 @@ feature -- States report
 			l_container: EV_CONTAINER
 			l_found: BOOLEAN
 		do
+			create internal_shared
 			l_contents := internal_shared.docking_manager.contents
 			from
 				l_contents.start
@@ -296,7 +297,7 @@ feature -- States report
 				 a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 		end
 
-feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT} -- State
+feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR} -- State
 
 	state: like internal_state is
 			-- Current state

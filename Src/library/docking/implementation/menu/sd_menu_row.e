@@ -73,8 +73,8 @@ feature -- Basic operation
 			end
 			set_item_position_relative (a_widget, l_x_y)
 		ensure
-			set: is_vertical implies a_widget.y_position =  a_screen_x_y - screen_y or
-				not is_vertical implies a_widget.x_position =  a_screen_x_y - screen_x
+			set: is_vertical implies a_widget.y_position =  a_screen_x_y - screen_y
+			set: not is_vertical implies a_widget.x_position =  a_screen_x_y - screen_x
 		end
 
 	set_item_position_relative (a_widget: EV_WIDGET; a_relative_x_y: INTEGER) is

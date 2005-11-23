@@ -581,57 +581,29 @@ feature {NONE} -- Initialization
 		end
 
 	initialize_shortcuts_prefs is
+			-- Initialize shortcuts.  Create with default values stored in `default_shortcut_actions'.
 		local
-			i: INTEGER
-			count: INTEGER
 			action_name: STRING
-			default_meta, meta: ARRAY [BOOLEAN]
-			id: STRING
-			key_code: INTEGER
-			l_s_pref: STRING_PREFERENCE
-			l_b_pref: BOOLEAN_PREFERENCE
+			default_value: ARRAYED_LIST [STRING]
+			l_name: STRING
+			l_s_pref: SHORTCUT_PREFERENCE
 			l_manager: EB_PREFERENCE_MANAGER
+			l_default_shortcut_actions: HASH_TABLE [ARRAY [STRING], STRING]
 		do
 			create l_manager.make (preferences, "editor.eiffel.keyboard_shortcuts")
-			count := customizable_shortcuts.count
-			create key_codes_for_actions.make (count)
-			create ctrl_alt_shift_for_actions.make (1, count)
+			l_default_shortcut_actions := default_shortcut_actions
 			from
-				i := 1
+				l_default_shortcut_actions.start
 			until
-				i > count
+				l_default_shortcut_actions.after
 			loop
-				default_meta := default_ctrl_alt_shift.item (i)
-				action_name := customizable_shortcuts.item (i)
-
-				id := "editor.eiffel.keyboard_shortcuts." + action_name + ".shortcut_key"
-				l_s_pref := l_manager.new_string_resource_value (l_manager, id, "")
+				action_name := default_shortcut_actions.key_for_iteration
+				create default_value.make_from_array (default_shortcut_actions.item (action_name))
+				l_name := once "editor.eiffel.keyboard_shortcuts." + action_name
+				l_s_pref := l_manager.new_shortcut_resource_value (l_manager, l_name, default_value)
 				l_s_pref.change_actions.extend (agent update)
-				key_code := key_with_name (l_s_pref.value)
-
-				if key_code >= Key_strings.lower then
-					create meta.make (1, 3)
-					key_codes_for_actions.extend (key_code)
-					id := "editor.eiffel.keyboard_shortcuts." + action_name + ".shortcut_ctrl"
-					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
-					l_b_pref.change_actions.extend (agent update)
-					meta.put (l_b_pref.value, 1)
-					id := "editor.eiffel.keyboard_shortcuts." + action_name + ".shortcut_alt"
-					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
-					l_b_pref.change_actions.extend (agent update)
-					meta.put (l_b_pref.value, 2)
-					id := "editor.eiffel.keyboard_shortcuts." + action_name + ".shortcut_shift"
-					l_b_pref := l_manager.new_boolean_resource_value (l_manager, id, True)
-					l_b_pref.change_actions.extend (agent update)
-					meta.put (l_b_pref.value, 3)
-				else
-					key_codes_for_actions.extend (default_key_codes @ i)
-					meta := default_meta
-				end
-
-				ctrl_alt_shift_for_actions.put (meta, i)
-
-				i := i + 1
+				shortcuts.put (l_s_pref, action_name)
+				l_default_shortcut_actions.forth
 			end
 		end
 
@@ -840,73 +812,29 @@ feature -- Keybord shortcuts Customization
 			create Result.make (3)
 		end
 
-	customizable_shortcuts: ARRAY [STRING] is
-			-- list of customizable shortcuts
+	shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING] is
+			-- Shortcuts
 		once
-			Result :=
-					<<
-				"autocomplete",
-				"class_autocomplete",
-				"show_search_panel",
-				"show_search_and_replace_panel",
-				"search_selection",
-				"search_last",
-				"search_backward",
-				"customized_insertion_1",
-				"customized_insertion_2",
-				"customized_insertion_3"
-					>>
+			create Result.make (default_shortcut_actions.count)
 		end
 
-	default_key_codes: ARRAY [INTEGER] is
-			-- default key codes
+	default_shortcut_actions: HASH_TABLE [ARRAY [STRING], STRING] is
+			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 		once
-			Result := <<Key_space, Key_space, Key_f, Key_h, Key_F3, Key_F3, Key_F3, key_g, Key_F2, Key_F2, Key_F2>>
-		end
-
-	default_ctrl_alt_shift: ARRAY [ARRAY [BOOLEAN]] is
-			-- default ctrl/alt/shift status associated with actions above
-		once
-			Result := << 	<<True, False, False>>,
-					<<True, False, True>>,
-					<<True, False, False>>,
-					<<True, False, False>>,
-					<<False, False, False>>,
-					<<False, False, False>>,
-					<<False, False, True>>,
-					<<True, False, False>>,
-					<<False, False, False>>,
-					<<True, False, False>>,
-					<<False, False, True>>	>>
-		end
-
-	key_codes_for_actions: ARRAYED_LIST [INTEGER]
-			-- array of key codes associated with actions : for keybord shortcut customization
-
-	ctrl_alt_shift_for_actions: ARRAY [ARRAY [BOOLEAN]]
-			-- array of flags (ctrled / alted / shifted key or not ?) associated with actions : for keybord shortcut customization
-
-	shortcut_name_for_action (action_number: INTEGER):STRING is
-			-- description shortcut corresponding to `action_number'-th action
-		local
-			meta: ARRAY [BOOLEAN]
-		do
-			Result := key_strings.item (key_codes_for_actions.i_th(action_number)).twin
-			Result.put (Result.item(1).upper, 1)
-			meta := ctrl_alt_shift_for_actions.item (action_number)
-			if meta.item (3) then
-				Result.prepend ("Shift+")
-			end
-			if meta.item (2) then
-				Result.prepend ("Alt+")
-			end
-			if meta.item (1) then
-				Result.prepend ("Ctrl+")
-			end
+			create Result.make (10)
+			Result.put (<<"False", "Ctrl", "False", key_strings.item (Key_space).twin>>, "autocomplete")
+			Result.put (<<"False", "True", "True", key_strings.item (Key_space).twin>>, "class_autocomplete")
+			Result.put (<<"False", "True", "False", key_strings.item (Key_f).twin>>, "show_search_panel")
+			Result.put (<<"False", "False", "False", key_strings.item (Key_h).twin>>, "show_search_and_replace_panel")
+			Result.put (<<"False", "False", "False", key_strings.item (Key_F3).twin>>, "search_selection")
+			Result.put (<<"False", "False", "True", key_strings.item (Key_F3).twin>>, "search_last")
+			Result.put (<<"False", "True", "False", key_strings.item (key_F3).twin>>, "search_backward")
+			Result.put (<<"False", "False", "False", key_strings.item (Key_F2).twin>>, "customized_insertion_1")
+			Result.put (<<"False", "True", "False", key_strings.item (Key_F2).twin>>, "customized_insertion_2")
+			Result.put (<<"False", "False", "True", key_strings.item (Key_F2).twin>>, "customized_insertion_3")
 		end
 
 invariant
-	consistent_shortcut_arrays:	customizable_shortcuts.count = key_codes_for_actions.count and customizable_shortcuts.count = ctrl_alt_shift_for_actions.count
 	preferences_not_void: preferences /= Void
 	keyword_font_preference_not_void: keyword_font_preference /= Void
 	smart_identation_preference_not_void: smart_identation_preference /= Void

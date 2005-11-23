@@ -1352,7 +1352,7 @@ feature {NONE} -- Menu Building
 
 				-- Search
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_search + "%T" + preferences.editor_data.shortcut_name_for_action (3))
+			cmd.set_menu_name (Interface_names.m_search + "%T" + preferences.editor_data.shortcuts.item ("show_search_panel").display_string)
 			cmd.add_agent (agent search)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
@@ -1371,7 +1371,7 @@ feature {NONE} -- Menu Building
 
 				-- Replace
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_replace + "%T" + preferences.editor_data.shortcut_name_for_action (4))
+			cmd.set_menu_name (Interface_names.m_replace + "%T" + preferences.editor_data.shortcuts.item ("show_search_and_replace_panel").display_string)
 			cmd.add_agent (agent editor.replace)
 			cmd.set_needs_editable (True)
 			command_menu_item := cmd.new_menu_item
@@ -1385,7 +1385,7 @@ feature {NONE} -- Menu Building
 
 				-- Find next
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_find_next + "%T" + preferences.editor_data.shortcut_name_for_action (6))
+			cmd.set_menu_name (Interface_names.m_find_next + "%T" + preferences.editor_data.shortcuts.item ("search_last").display_string)
 			cmd.add_agent (agent find_next)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
@@ -1394,7 +1394,7 @@ feature {NONE} -- Menu Building
 
 				-- Find previous
 			create cmd.make
-			cmd.set_menu_name (Interface_names.m_find_previous + "%T" + preferences.editor_data.shortcut_name_for_action (7))
+			cmd.set_menu_name (Interface_names.m_find_previous + "%T" + preferences.editor_data.shortcuts.item ("search_backward").display_string)
 			cmd.add_agent (agent find_previous)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
@@ -1403,7 +1403,7 @@ feature {NONE} -- Menu Building
 
 				-- Find selection
 			create os_cmd.make (Current)
-			os_cmd.set_menu_name (Interface_names.m_find_selection + "%T" + preferences.editor_data.shortcut_name_for_action (5))
+			os_cmd.set_menu_name (Interface_names.m_find_selection + "%T" + preferences.editor_data.shortcuts.item ("search_selection").display_string)
 			os_cmd.add_agent (agent find_selection)
 			command_menu_item := os_cmd.new_menu_item
 			command_controller.add_selection_command (os_cmd)
@@ -1502,7 +1502,7 @@ feature {NONE} -- Menu Building
 				-- Complete word
 			create cmd.make
 			cmd.set_needs_editable (True)
-			cmd.set_menu_name (Interface_names.m_complete_word + "%T" + preferences.editor_data.shortcut_name_for_action (1))
+			cmd.set_menu_name (Interface_names.m_complete_word + "%T" + preferences.editor_data.shortcuts.item ("autocomplete").display_string)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			cmd.add_agent (agent editor.complete_feature_name)
@@ -1513,7 +1513,7 @@ feature {NONE} -- Menu Building
 				-- Complete class name
 			create cmd.make
 			cmd.set_needs_editable (True)
-			cmd.set_menu_name (Interface_names.m_complete_class_name + "%T" + preferences.editor_data.shortcut_name_for_action (2))
+			cmd.set_menu_name (Interface_names.m_complete_class_name + "%T" + preferences.editor_data.shortcuts.item ("class_autocomplete").display_string)
 			command_menu_item := cmd.new_menu_item
 			command_controller.add_edition_command (cmd)
 			cmd.add_agent (agent editor.complete_class_name)

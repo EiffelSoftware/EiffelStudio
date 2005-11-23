@@ -62,7 +62,6 @@ feature	{NONE} -- Initlization
 			window.stick_actions.extend (agent stick_window)
 			window.drag_actions.extend (agent on_drag_started)
 			window.normal_max_action.extend (agent on_normal_max_window)
---			window.pointer_double_press_title_bar_actions.extend (agent on_title_bar_double_press)
 
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
@@ -70,6 +69,23 @@ feature	{NONE} -- Initlization
 			extend_cell (window)
 		ensure
 			added: has_cell (window)
+		end
+
+feature {SD_DOCKING_STATE} -- Initlization
+
+	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER) is
+			-- Set widget and main area which used for normal window.
+		require
+			a_widget_not_void: a_widget /= Void
+			a_main_area_not_void: a_main_area /= Void
+			a_parent_not_void: a_parent /= Void
+		do
+			main_area_widget := a_widget
+			main_area := a_main_area
+			internal_parent := a_parent
+			internal_parent_split_position := a_split_position
+		ensure
+			set: main_area_widget = a_widget and main_area = a_main_area and internal_parent = a_parent and internal_parent_split_position = a_split_position
 		end
 
 feature {SD_CONTENT}

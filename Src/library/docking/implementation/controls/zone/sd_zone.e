@@ -158,6 +158,20 @@ feature {SD_DOCKING_MANAGER, SD_CONTENT}  -- Focus in
 			content.focus_in_actions.call ([])
 		end
 
+feature {SD_TAB_STATE} -- Maximum issues.
+
+	main_area_widget: EV_WIDGET
+			-- Other user widgets when `Current' is maximized.
+
+	main_area: SD_MULTI_DOCK_AREA
+			-- SD_MULTI_DOCK_AREA current zone belong to.
+
+	internal_parent_split_position: INTEGER
+			-- Parent split position.
+
+	internal_parent: EV_CONTAINER
+			-- Parent.
+
 feature {NONE} -- Implementation
 
 	is_maximized: BOOLEAN is
@@ -165,18 +179,6 @@ feature {NONE} -- Implementation
 		do
 			Result := False
 		end
-
-	internal_parent_split_position: INTEGER
-			-- Parent split position.
-
-	main_area_widget: EV_WIDGET
-			-- Other user widgets when `Current' is maximized.
-
-	internal_parent: EV_CONTAINER
-			-- Parent.
-
-	main_area: SD_MULTI_DOCK_AREA
-			-- SD_MULTI_DOCK_AREA current zone belong to.
 
 	internal_shared: SD_SHARED
 			-- All singletons.

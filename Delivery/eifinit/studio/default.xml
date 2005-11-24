@@ -471,58 +471,16 @@
 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_space_later" DESCRIPTION="Customized autocomplete (Space, other cases)"><STRING> $cursor$</STRING></PREF>
 	<PREF NAME="editor.eiffel.autocomplete.other_keywords.end.custom_end_return_later" DESCRIPTION="Customized autocomplete (Return, other cases)"><STRING>%N$indent$$cursor$</STRING></PREF>
 	
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete.shortcut_key" DESCRIPTION="Key"><STRING>Space</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete.shortcut_key" DESCRIPTION="Key">class_autocomplete_shortcut_key<STRING>Space</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_key" DESCRIPTION="Key"><STRING>F3</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_key" DESCRIPTION="Key"><STRING>F3</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward.shortcut_key" DESCRIPTION="Key"><STRING>F3</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_key" DESCRIPTION="Key"><STRING>F</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_key" DESCRIPTION="Key"><STRING>H</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_1.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>True</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_2.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>False</BOOLEAN></PREF>
-
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted." RESTART="True"><STRING></STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_key" DESCRIPTION="Key"><STRING>F2</STRING></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_ctrl" DESCRIPTION="+ Ctrl"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_alt" DESCRIPTION="+ Alt"><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_insertion_3.shortcut_shift" DESCRIPTION="+ Shift"><BOOLEAN>True</BOOLEAN></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.autocomplete" DESCRIPTION="Feature autocompletion"><SHORTCUT Ctrl="True" Alt="False" Shift="False" >Space</SHORTCUT></PREF>	
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.class_autocomplete" DESCRIPTION="Class autocompletion"><SHORTCUT Ctrl="True" Alt="False" Shift="True" >Space</SHORTCUT></PREF>	
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_selection" DESCRIPTION=""><SHORTCUT Ctrl="False" Alt="False" Shift="False" >F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_last" DESCRIPTION=""><SHORTCUT Ctrl="False" Alt="False" Shift="False" >F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.search_backward" DESCRIPTION=""><SHORTCUT Ctrl="False" Alt="False" Shift="True" >F3</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_panel" DESCRIPTION=""><SHORTCUT Ctrl="True" Alt="False" Shift="False" >F</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.show_search_and_replace_panel" DESCRIPTION=""><SHORTCUT Ctrl="True" Alt="False" Shift="False" >H</SHORTCUT></PREF>
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_1" DESCRIPTION="String to be inserted." RESTART="True"><SHORTCUT Ctrl="False" Alt="False" Shift="False" >F2</SHORTCUT></PREF>	
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_2" DESCRIPTION="String to be inserted." RESTART="True"><SHORTCUT Ctrl="True" Alt="False" Shift="False" >F2</SHORTCUT></PREF>	
+	<PREF NAME="editor.eiffel.keyboard_shortcuts.customized_string_3" DESCRIPTION="String to be inserted." RESTART="True"><SHORTCUT Ctrl="False" Alt="False" Shift="True" >F2</SHORTCUT></PREF>
 	
 
 	<PREF NAME="editor.general.automatic_update" DESCRIPTION="Should we reload the content of a file automatically if no change has been made here and the file has been modified by an external editor?"><BOOLEAN>True</BOOLEAN></PREF>

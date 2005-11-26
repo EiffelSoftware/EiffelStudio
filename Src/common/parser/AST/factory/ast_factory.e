@@ -735,8 +735,7 @@ feature -- Access
 			-- New FEATURE AST node
 		do
 			if
-				(f /= Void and then not f.is_empty) and b /= Void and
-				(i = Void or else f.count = 1)
+				(f /= Void and then not f.is_empty) and b /= Void
 			then
 				create Result.initialize (f, b, i, 0, next_pos)
 			end

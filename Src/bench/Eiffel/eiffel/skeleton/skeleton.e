@@ -125,7 +125,10 @@ feature -- Comparison
 					not Result or else i = nb
 				loop
 					Result := current_area.item (i).same_as (other_area.item (i))
-					if expanded_pos = -1 and then current_area.item (i).level >= Expanded_level then
+					check
+						attribute_not_formal: current_area.item (i).level /= Formal_level
+					end
+					if expanded_pos = -1 and then current_area.item (i).level = Expanded_level then
 						expanded_pos := i
 					end
 					i := i + 1
@@ -134,48 +137,49 @@ feature -- Comparison
 					-- skeleton for the expanded type did not change. And we do it recursively
 					-- until we do not find anymore expanded attributes. Fixes eweasel test melt015
 					-- and possibly others.
-				if
-					Result and then
-					expanded_pos >= 0 and then expanded_pos < nb and then
-					current_area.item (expanded_pos).level >= Expanded_level
-				then
+				if Result and then expanded_pos >= 0 then
+					check
+						expanded_pos_in_range: expanded_pos < nb
+					end
 					from
 						i := expanded_pos
-						nb := count - 1
+					invariant
+						expanded_attribute: i < nb implies current_area.item (i).level = Expanded_level
 					until
-						not Result or else i > nb
+						not Result or else i = nb
 					loop
 						l_exp_desc ?= current_area.item (i)
-						if l_exp_desc /= Void then
-							l_old_skel := old_skeletons.item (l_exp_desc.class_type.type_id)
-							if l_old_skel /= Void then
-									-- We now checks the old skeleton associated to `l_exp_desc' with a
-									-- new one that we generate on the fly. It is definitely not the
-									-- most efficient way because of the creation of a skeleton we will
-									-- not use, but at least do the correct job at finding if a skeleton
-									-- of a class having expanded attributes has changed.
-								if l_exp_desc.class_type.associated_class.skeleton /= Void then
-									Result := l_old_skel.equiv (old_skeletons,
-										l_exp_desc.class_type.associated_class.skeleton.
-											instantiation_in (l_exp_desc.class_type))
-								else
-										-- Most likeley an external class, therefore its skeleton
-										-- did not change.
-										-- FIXME: Manu: 08/05/2003: Should we create a skeleton even
-										-- for external classes, to avoid this particular case of
-										-- checking voidness of `skeleton' from CLASS_C.
-								end
+						check
+							l_exp_desc_not_void: l_exp_desc /= Void
+						end
+						l_old_skel := old_skeletons.item (l_exp_desc.class_type.type_id)
+						if l_old_skel /= Void then
+								-- We now checks the old skeleton associated to `l_exp_desc' with a
+								-- new one that we generate on the fly. It is definitely not the
+								-- most efficient way because of the creation of a skeleton we will
+								-- not use, but at least do the correct job at finding if a skeleton
+								-- of a class having expanded attributes has changed.
+							if l_exp_desc.class_type.associated_class.skeleton /= Void then
+								Result := l_old_skel.equiv (old_skeletons,
+									l_exp_desc.class_type.associated_class.skeleton.
+										instantiation_in (l_exp_desc.class_type))
 							else
-								if l_exp_desc.class_type.associated_class.is_external then
-										-- A .NET external class so we cannot tell if the skeleton
-										-- changed
-										-- FIXME: Manu: 10/27/2003: What if we handle incremental
-										-- changes of external classes?
-									Result := True
-								else
-										-- Previous skeleton did not exist, then it definitely changed.
-									Result := False
-								end
+									-- Most likeley an external class, therefore its skeleton
+									-- did not change.
+									-- FIXME: Manu: 08/05/2003: Should we create a skeleton even
+									-- for external classes, to avoid this particular case of
+									-- checking voidness of `skeleton' from CLASS_C.
+							end
+						else
+							if l_exp_desc.class_type.associated_class.is_external then
+									-- A .NET external class so we cannot tell if the skeleton
+									-- changed
+									-- FIXME: Manu: 10/27/2003: What if we handle incremental
+									-- changes of external classes?
+								Result := True
+							else
+									-- Previous skeleton did not exist, then it definitely changed.
+								Result := False
 							end
 						end
 						i := i + 1

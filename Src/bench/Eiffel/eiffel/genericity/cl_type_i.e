@@ -25,6 +25,7 @@ inherit
 			generate_gen_type_il,
 			generate_expanded_creation,
 			generate_expanded_initialization,
+			instantiated_description,
 			instantiation_in,
 			generic_derivation,
 			is_generated_as_single_type
@@ -154,7 +155,7 @@ feature -- Access
 			end
 		end
 
-	description: ATTR_DESC is
+	description, instantiated_description: ATTR_DESC is
 			-- Type description for skeletons
 		local
 			exp: EXPANDED_DESC

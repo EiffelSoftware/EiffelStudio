@@ -82,7 +82,7 @@ feature -- Instantiation
 			l_exp: EXPANDED_DESC
 		do
 			l_type := type_i.instantiation_in (class_type)
-			Result := l_type.description
+			Result := l_type.instantiated_description
 			l_ref ?= Result
 			if l_ref /= Void then
 					-- Override type in case we handle an attribute

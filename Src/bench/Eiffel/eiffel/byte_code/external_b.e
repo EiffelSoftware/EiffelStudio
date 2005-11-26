@@ -379,23 +379,17 @@ feature {NONE} -- Implementation
 						end
 					end
 				elseif cl_type.is_expanded then
-						-- No need to do anything special in case of a call to
-						-- a constructor. The generation of `target' of current call already
-						-- did any special transformation to perfom call.
-						-- Same goes with `operators' as the result of the previous
-						-- call will be used as target of the current one.
-					if
-						il_ext.type /= creator_type and
-						il_ext.type /= operator_type and parent /= Void
-					then
-						if is_message then
+					if il_ext.type = operator_type then
+							-- Operators are static functions, so a value has to be passed rather than an address.
+						il_generator.generate_load_from_address (cl_type)
+					elseif il_ext.type /= creator_type and parent /= Void then
+							-- No need to do anything special in case of a call to
+							-- a constructor. The generation of `target' of current call already
+							-- did any special transformation to perfom call.
+						if is_message or else parent.parent = Void then
 							real_target := parent.target
 						else
-							if parent.parent = Void then
-								real_target := parent.target
-							else
-								real_target := parent.parent.target
-							end
+							real_target := parent.parent.target
 						end
 						if real_target.is_predefined or real_target.is_attribute then
 								-- For same reason we don't do anything for a call to
@@ -406,13 +400,9 @@ feature {NONE} -- Implementation
 									-- expanded class. We need to box.
 								il_generator.generate_metamorphose (cl_type)
 							end
-						else
-								-- In all other cases we will generate the metamorphose.
-							if written_in = cl_type.class_id then
---								generate_il_metamorphose (cl_type, cl_type, real_metamorphose)
-							else
-								generate_il_metamorphose (cl_type, Void, real_metamorphose)
-							end
+						elseif written_in /= cl_type.class_id then
+								-- A call to a parent routine.
+							generate_il_metamorphose (cl_type, Void, real_metamorphose)
 						end
 					end
 				end

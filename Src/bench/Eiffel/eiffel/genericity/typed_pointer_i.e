@@ -23,6 +23,8 @@ inherit
 		end
 
 	ONE_GEN_TYPE_I
+		rename
+			instantiated_description as description
 		undefine
 			is_basic, is_reference, cecil_value, is_void, c_type, generate_cecil_value, dump
 		redefine

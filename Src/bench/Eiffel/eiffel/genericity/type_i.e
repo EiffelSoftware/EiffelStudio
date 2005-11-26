@@ -122,6 +122,15 @@ feature -- Access
 		deferred
 		end
 
+	instantiated_description: ATTR_DESC is
+			-- Descritpion of type for skeletons without any formal generics
+		do
+			Result := description
+		ensure
+			result_not_void: Result /= Void
+			result_without_formal: not Result.has_formal
+		end
+
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type in IL generation.
 		require

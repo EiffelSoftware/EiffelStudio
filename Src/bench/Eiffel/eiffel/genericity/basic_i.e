@@ -7,8 +7,10 @@ deferred class BASIC_I
 
 inherit
 	CL_TYPE_I
+		rename
+			instantiated_description as description
 		undefine
-			type_a
+			description, type_a
 		redefine
 			is_basic, is_reference, c_type, is_valid,
 			generate_cecil_value
@@ -33,7 +35,7 @@ feature -- Access
 		do
 			Result := Current
 		end
-		
+
 	reference_type: CL_TYPE_I is
 			-- Assocated reference type of Current.
 		deferred
@@ -108,7 +110,7 @@ feature -- C code generation
 			-- Generate cecil value
 		do
 			generate_sk_value (buffer)
-		end	
+		end
 
 	generate_default_value (buffer : GENERATION_BUFFER) is
 			-- Generate default value associated to current basic type.
@@ -119,14 +121,14 @@ feature -- C code generation
 			generate_cast (buffer)
 			buffer.put_string ("0)")
 		end
-	
+
 	make_default_byte_code (ba: BYTE_ARRAY) is
 			-- Generate default value of basic type on stack.
 		require
 			valid_array: ba /= Void
 		deferred
-		end 
-		
+		end
+
 	generate_conversion_to_real_64 (buffer: GENERATION_BUFFER) is
 			-- Generate conversion to `REAL_64', needed because
 			-- for some descendants, it is not enough to just to a cast to EIF_REAL_64.
@@ -140,7 +142,7 @@ feature -- C code generation
 		do
 			buffer.put_string ("(EIF_REAL_32) (")
 		end
-	
+
 invariant
 	is_basic: is_basic
 	is_expanded: is_expanded

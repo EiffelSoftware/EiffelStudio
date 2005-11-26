@@ -4711,15 +4711,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-					-- Generate a syntax error when `feature_indexes' is not
-					-- Void and it applies to synonyms of the current feature
-					-- declaration.
-				if
-					(il_parser and feature_indexes /= Void and
-					(yyvs81.item (yyvsp81) /= Void and then yyvs81.item (yyvsp81).count /= 1))
-				then
-					raise_error
-				end
 				yyval38 := ast_factory.new_feature_as (yyvs81.item (yyvsp81), yyvs20.item (yyvsp20), feature_indexes, position)
 				feature_indexes := Void
 			

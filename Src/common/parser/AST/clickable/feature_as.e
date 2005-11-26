@@ -4,7 +4,7 @@ indexing
 	revision	: "$Revision$"
 
 class FEATURE_AS
-		
+
 inherit
 	AST_EIFFEL
 		redefine
@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 			f_not_void: f /= Void
 			f_not_empty: not f.is_empty
 			b_not_void: b /= Void
-			can_have_indexes: i /= Void implies f.count = 1
 			a_pos_non_negative: a_pos >= 0
 		do
 			feature_names := f
@@ -73,14 +72,6 @@ feature -- Access
 	indexes: INDEXING_CLAUSE_AS
 			-- Indexing clause for IL to specify `custom attributes' and `alias' name.
 
-	external_name: STRING is
-			-- External name if any of current feature.
-		do
-			if indexes /= Void then
-				Result := indexes.external_name
-			end
-		end
-
 feature -- Location
 
 	start_location: LOCATION_AS is
@@ -88,7 +79,7 @@ feature -- Location
 		do
 			Result := feature_names.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -97,11 +88,11 @@ feature -- Location
 				Result := feature_names.end_location
 			end
 		end
-		
+
 	next_position: INTEGER
 			-- Position for the following construct after current.
 			-- Useful to extract comments of an attribute
-		
+
 feature -- Property
 
 	is_feature: BOOLEAN is True
@@ -185,7 +176,7 @@ feature -- Access
 		end
 
 	feature_name: ID_AS is
-			-- Feature name representing AST 
+			-- Feature name representing AST
 		do
 			Result := feature_names.first.internal_name
 		end
@@ -224,7 +215,7 @@ feature -- Access
 				Result := feature_names.item >= n and feature_names.item <= n
 				feature_names.forth
 			end
-	
+
 			feature_names.go_to (cur)
 		end
 
@@ -289,7 +280,7 @@ feature -- default rescue
 feature {COMPILER_EXPORTER} -- Conveniences
 
 	infix "<" (other: like Current): BOOLEAN is
-		do	
+		do
 			if feature_names = Void then
 				Result := False
 			elseif other.feature_names = Void then
@@ -320,7 +311,7 @@ feature {COMPILER_EXPORTER} -- Incrementality
 				Result := is_process_context = other_is_process_context
 			end
 		end
- 
+
 	is_assertion_equiv (other: like Current): BOOLEAN is
 			-- Is the current feature equivalent to `other' ?
 		require
@@ -333,7 +324,6 @@ invariant
 	feature_names_not_void: feature_names /= Void
 	feature_names_not_empty: not feature_names.is_empty
 	body_not_void: body /= Void
-	can_have_indexing_clause: indexes /= Void implies feature_names.count = 1
 	next_position_non_negative: next_position >= 0
 
 end -- class FEATURE_AS

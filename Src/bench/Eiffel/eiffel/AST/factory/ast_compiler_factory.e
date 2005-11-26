@@ -145,8 +145,7 @@ feature -- Access
 			vfav: VFAV_SYNTAX
 		do
 			if
-				(f /= Void and then not f.is_empty) and b /= Void and
-				(i = Void or else f.count = 1)
+				(f /= Void and then not f.is_empty) and b /= Void
 			then
 					-- Check if there are any operator names that violate VFAV rules
 				is_query := b.type /= Void

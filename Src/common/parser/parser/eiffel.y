@@ -559,15 +559,6 @@ ASemi: -- Empty
 
 Feature_declaration: { add_counter } New_feature_list { remove_counter } Declaration_body Optional_semicolons
 			{
-					-- Generate a syntax error when `feature_indexes' is not
-					-- Void and it applies to synonyms of the current feature
-					-- declaration.
-				if
-					(il_parser and feature_indexes /= Void and
-					($2 /= Void and then $2.count /= 1))
-				then
-					raise_error
-				end
 				$$ := ast_factory.new_feature_as ($2, $4, feature_indexes, position)
 				feature_indexes := Void
 			}

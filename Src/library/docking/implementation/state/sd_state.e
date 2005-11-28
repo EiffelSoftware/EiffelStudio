@@ -29,6 +29,30 @@ feature -- Properties
 			direction := a_direction
 		end
 
+	width_height: INTEGER
+				-- Width of zone if dock_left or dock_right.
+				-- Height of zone if dock_top or dock_bottom.
+
+	width_height_by_direction: INTEGER is
+			-- Width of zone if dock left/right, Height of zone if dock top/bottom.
+		do
+			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
+				Result := zone.width
+			else
+				Result := zone.height
+			end
+		end
+
+	set_width_height (a_width_height: INTEGER) is
+			-- Set `width_height'.
+		require
+			a_widht_height_valid: a_width_height >= 0
+		do
+			width_height := a_width_height
+		ensure
+			set: width_height = a_width_height
+		end
+
 	zone: SD_ZONE is
 			-- Zone which is managed by `Current'.
 		deferred
@@ -74,8 +98,8 @@ feature -- Commands
 			-- Handle close window.
 		do
 			internal_shared.docking_manager.prune_zone_by_content (internal_content)
-			if internal_content.internal_close_actions /= Void then
-				internal_content.internal_close_actions.call ([])
+			if internal_content.internal_close_request_actions /= Void then
+				internal_content.internal_close_request_actions.call ([])
 			end
 			internal_shared.docking_manager.remove_empty_split_area
 		end
@@ -172,6 +196,69 @@ feature {NONE} -- Implementation
 			internal_content.change_state (a_state)
 		ensure
 			changed: internal_content.state = a_state
+		end
+
+	top_split_position (a_direction: INTEGER; a_spliter: EV_SPLIT_AREA): INTEGER is
+			-- Calculate top split position  when dock at top.
+		require
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_spliter_not_void: a_spliter /= Void
+			a_spliter_full: a_spliter.full
+		local
+			l_main_rect: EV_RECTANGLE
+		do
+
+			l_main_rect := internal_shared.docking_manager.container_rectangle
+			inspect
+				a_direction
+			when {SD_DOCKING_MANAGER}.dock_top then
+				if width_height > a_spliter.minimum_split_position and width_height < a_spliter.maximum_split_position then
+					Result := width_height
+				else
+					if l_main_rect.height /= 0 then
+						Result := (l_main_rect.height * internal_shared.default_docking_height_rate).ceiling
+					else
+						Result := a_spliter.minimum_split_position
+					end
+				end
+			when {SD_DOCKING_MANAGER}.dock_bottom then
+				if l_main_rect.height -width_height > a_spliter.minimum_split_position and l_main_rect.height - width_height < a_spliter.maximum_split_position then
+					Result := l_main_rect.height -width_height
+				else
+					if l_main_rect.height /= 0 then
+						Result := (l_main_rect.height * (1 - internal_shared.default_docking_height_rate)).ceiling
+					else
+						Result := a_spliter.maximum_split_position
+					end
+				end
+			when {SD_DOCKING_MANAGER}.dock_left then
+				if width_height > a_spliter.minimum_split_position and width_height < a_spliter.maximum_split_position then
+					Result :=width_height
+				else
+					if l_main_rect.width /= 0 then
+						Result := (l_main_rect.width * internal_shared.default_docking_width_rate).ceiling
+					else
+						Result := a_spliter.minimum_split_position
+					end
+				end
+			when {SD_DOCKING_MANAGER}.dock_right then
+				if l_main_rect.width - width_height > a_spliter.minimum_split_position and l_main_rect.width - width_height < a_spliter.maximum_split_position then
+					Result :=  l_main_rect.width -width_height
+				else
+					if l_main_rect.width /= 0 then
+						Result := (l_main_rect.width * (1 - internal_shared.default_docking_width_rate)).ceiling
+					else
+						Result := a_spliter.maximum_split_position
+					end
+				end
+			end
+			debug ("larry")
+				io.put_string ("%N SD_STATE top_split_position: a_spliter.minimum_split_position " + a_spliter.minimum_split_position.out + " a_spliter.maximum_split_position " + a_spliter.maximum_split_position.out)
+				io.put_string ("%N                      Result: " + Result.out)
+			end
+		ensure
+			result_valid: Result >= a_spliter.minimum_split_position and Result <= a_spliter.maximum_split_position
 		end
 
 	internal_content: SD_CONTENT

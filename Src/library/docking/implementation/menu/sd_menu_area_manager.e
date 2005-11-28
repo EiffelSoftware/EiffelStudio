@@ -154,6 +154,7 @@ feature {NONE} -- Implementation functions.
 				internal_box.extend (l_new_row)
 			end
 			l_new_row.extend (internal_menu_dock_mediator.caller)
+			internal_shared.docking_manager.resize
 			debug ("larry")
 				io.put_string ("%N SD_MENU_HOT_ZONE new row created, and zone inserted.")
 			end
@@ -167,6 +168,7 @@ feature {NONE} -- Implementation functions.
 			if internal_menu_dock_mediator.caller.row /= Void then
 				if caller_in_single_row then
 					internal_menu_dock_mediator.caller.row.parent.prune (internal_menu_dock_mediator.caller.row)
+					internal_shared.docking_manager.resize
 				end
 				internal_menu_dock_mediator.caller.row.prune (internal_menu_dock_mediator.caller)
 			end

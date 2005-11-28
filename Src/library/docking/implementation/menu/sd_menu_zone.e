@@ -92,6 +92,7 @@ feature -- Basic operation
 				row.prune (Current)
 				if row.count = 0 then
 					row.parent.prune (row)
+					internal_shared.docking_manager.resize
 				end
 			end
 

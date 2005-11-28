@@ -8,6 +8,9 @@ class
 
 inherit
 	AST_LACE
+		redefine
+			is_equal
+		end
 	
 create
 	initialize
@@ -50,6 +53,12 @@ feature -- Access
 			-- Specification of current assembly.
 			
 feature -- Equality
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Are `other' and `Current' identical?
+		do
+			Result := same_as (other)
+		end
 
 	same_as (other: like Current): BOOLEAN is
 			-- Are `other' and `Current' identical?

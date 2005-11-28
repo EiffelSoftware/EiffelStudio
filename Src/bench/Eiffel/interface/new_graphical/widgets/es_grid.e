@@ -17,7 +17,7 @@ inherit
 		undefine
 			default_create, copy
 		end
-	
+
 	EV_GRID_HELPER
 		undefine
 			default_create, copy
@@ -27,13 +27,15 @@ create
 	default_create
 
 feature {NONE} -- Initialization
-		
-	initialize is		
+
+	initialize is
 		do
 			Precursor {EV_GRID}
+
+			build_delayed_columns_auto_resizing
 			create auto_resized_columns.make
 			auto_resized_columns.compare_objects
-			
+
 			enable_solid_resizing_divider
 			set_separator_color (color_separator)
 			set_tree_node_connector_color (color_tree_node_connector)
@@ -43,28 +45,33 @@ feature {NONE} -- Initialization
 			mouse_wheel_scroll_size := 3 --| default value
 			mouse_wheel_actions.extend (agent on_mouse_wheel_action)
 			key_press_actions.extend (agent on_key_pressed)
-			
+
+			build_delayed_last_column_auto_resizing
+			resize_actions.force_extend (agent delayed_last_column_auto_resizing.request_call)
+			virtual_size_changed_actions.extend (agent on_virtual_size_changed_action)
+			last_column_use_all_width_enabled := True
+
 			cleaning_delay := 500
 		end
-		
+
 	color_separator: EV_COLOR is
 		once
 			create Result.make_with_8_bit_rgb (210, 210, 210)
 		end
-		
+
 	color_tree_node_connector: EV_COLOR is
 		once
 			create Result.make_with_8_bit_rgb (0, 0, 0)
-		end		
+		end
 
 feature -- properties
-			
+
 	mouse_wheel_scroll_size: INTEGER
 			-- Number of rows to scroll if we are not on a page by page scrolling.
-	
+
 	mouse_wheel_scroll_full_page: BOOLEAN
 			-- Should we scroll by page rather by a fixed amount of rows?
-	
+
 	scrolling_common_line_count: INTEGER
 			-- On a page by page scrolling, number of rows that will be common
 			-- between the two pages.
@@ -72,7 +79,7 @@ feature -- properties
 	border_enabled: BOOLEAN
 			-- Is border enabled ?
 			-- i.e: the pre draw cell's border, alias cell separators
-	
+
 feature -- Change
 
 	enable_border is
@@ -109,19 +116,19 @@ feature -- Change
 			-- Set `scrolling_common_line_count' with `v'.
 		do
 			scrolling_common_line_count := v
-		ensure	
+		ensure
 			scrolling_common_line_count_set: scrolling_common_line_count = v
 		end
 
 feature -- Grid item Activation
-	
+
 	grid_activate (a_item: EV_GRID_ITEM) is
 		require
 			a_item /= Void
 		do
 			a_item.activate
 		end
-		
+
 feature -- Scrolling
 
 	scroll_rows (a_step: INTEGER; is_full_page_scrolling: BOOLEAN) is
@@ -225,7 +232,7 @@ feature -- Scrolling
 						end
 					end
 						-- Code below do the adjustment to the type of scrolling decided by user.
-					if vy_now /= vy then			
+					if vy_now /= vy then
 						if vy < 0 then
 							vy := 0
 						else
@@ -235,13 +242,13 @@ feature -- Scrolling
 					end
 				end
 			end
-		end		
+		end
 
 feature {NONE} -- Actions implementation
 
 	on_key_pressed (k: EV_KEY) is
 		do
-			if 
+			if
 				not ev_application.shift_pressed
 				and not ev_application.alt_pressed
 			then
@@ -264,29 +271,29 @@ feature {NONE} -- Actions implementation
 				end
 			end
 		end
-		
+
 	on_mouse_wheel_action (a_step: INTEGER) is
 		do
 			scroll_rows (a_step, mouse_wheel_scroll_full_page or ev_application.ctrl_pressed)
 		end
-		
+
 	on_header_clicked (ax, ay, abutton: INTEGER; ax_tilt, ay_tilt, apressure: DOUBLE; ascreen_x, ascreen_y: INTEGER) is
 		local
 			m: EV_MENU
 			col: EV_GRID_COLUMN
-			hi: EV_HEADER_ITEM			
+			hi: EV_HEADER_ITEM
 			c: INTEGER
 			l_x: INTEGER
 		do
 			if abutton = 3 then
 				fixme ("[
-						we use this hack, because on linux/GTK, 
+						we use this hack, because on linux/GTK,
 						the `ax' is related to the current header item's widget
 						and not as for windows, related to the full header's widget.
 						This way, we have a portable solution.
 					]")
 				l_x := ascreen_x - header.screen_x
-				
+
 					--| Find the column whom header is clicked
 				from
 					c := 1
@@ -309,7 +316,7 @@ feature {NONE} -- Actions implementation
 				m.show_at (header, l_x, ay)
 			end
 		end
-		
+
 	header_menu_on_column (col: EV_GRID_COLUMN): EV_MENU is
 			-- Menu related to `col'.
 		local
@@ -323,9 +330,9 @@ feature {NONE} -- Actions implementation
 			create mi.make_with_text (hi.text)
 			mi.disable_sensitive
 			Result.extend (mi)
-			
+
 			Result.extend (create {EV_MENU_SEPARATOR})
-			
+
 			create mci.make_with_text ("Auto resize")
 			if column_has_auto_resizing (col.index) then
 				mci.enable_select
@@ -335,14 +342,14 @@ feature {NONE} -- Actions implementation
 				mci.select_actions.extend (agent set_auto_resizing_column (col.index, True))
 			end
 			Result.extend (mci)
-			
+
 			gm := grid_menu
 			if gm /= Void then
 				Result.extend (create {EV_MENU_SEPARATOR})
 				Result.extend (gm)
 			end
 		end
-		
+
 	grid_menu: EV_MENU is
 			-- Menu related to current grid.
 		do
@@ -363,7 +370,7 @@ feature {NONE} -- Actions implementation
 						col.set_width (col.required_width_of_item_span (1, col.parent.row_count) + Additional_pixels_for_column_width)
 					end
 				end
-			end			
+			end
 		end
 
 feature {NONE} -- Borders drawing
@@ -450,7 +457,35 @@ feature {NONE} -- Borders drawing
 			-- Storage for `last_width_of_header_during_resize'.
 
 feature -- column resizing access
-		
+
+	last_column_use_all_width_enabled: BOOLEAN
+
+	ensure_last_column_use_all_width is
+		local
+			last_col: EV_GRID_COLUMN
+			last_col_minimal_width, col_left_x: INTEGER
+		do
+			if last_column_use_all_width_enabled then
+				if not implementation.is_header_item_resizing then
+					debug
+						print (generator + ".ensure_last_column_use_all_width %N")
+					end
+					if row_count > 0 and column_count > 0 then
+						last_col := column (column_count)
+						last_col_minimal_width := last_col.required_width_of_item_span (1, row_count)
+						col_left_x := (last_col.virtual_x_position - virtual_x_position)
+						if col_left_x + last_col_minimal_width < viewable_width then
+							resize_actions.block
+							virtual_size_changed_actions.block
+							last_col.set_width (viewable_width - col_left_x)-- - 1)
+							virtual_size_changed_actions.resume
+							resize_actions.resume
+						end
+					end
+				end
+			end
+		end
+
 	set_auto_resizing_column (c: INTEGER; auto: BOOLEAN) is
 		do
 			if column_has_auto_resizing (c) then
@@ -460,37 +495,50 @@ feature -- column resizing access
 			elseif auto then
 				auto_resized_columns.extend (c)
 			end
-			request_columns_auto_resizing			
+			request_columns_auto_resizing
 		end
 
 	request_columns_auto_resizing is
 		do
 			if not auto_resized_columns.is_empty then
-				if timer_columns_auto_resizing = Void then
-					create timer_columns_auto_resizing.make_with_interval (500)
-					timer_columns_auto_resizing.actions.extend (agent process_columns_auto_resizing)
-				else
-					timer_columns_auto_resizing.set_interval (500)
-				end
+				delayed_columns_auto_resizing.request_call
 			end
 		end
 
 feature {NONE} -- column resizing impl
 
+	delayed_columns_auto_resizing: ES_DELAYED_ACTION
+
+	build_delayed_columns_auto_resizing is
+		do
+			if delayed_columns_auto_resizing = Void then
+				create delayed_columns_auto_resizing.make (
+									agent process_columns_auto_resizing,
+									500
+							)
+			end
+		end
+
+	delayed_last_column_auto_resizing: ES_DELAYED_ACTION
+
+	build_delayed_last_column_auto_resizing is
+		do
+			if delayed_last_column_auto_resizing = Void then
+				create delayed_last_column_auto_resizing.make (
+									agent ensure_last_column_use_all_width,
+									50
+							)
+			end
+		end
+
+	on_virtual_size_changed_action (w,h: INTEGER) is
+		do
+			delayed_last_column_auto_resizing.request_call
+		end
+
 	Additional_pixels_for_column_width: INTEGER is 5
 			-- Additional width to add the column's content width during resizing
 			-- for better reading.
-
-	timer_columns_auto_resizing: EV_TIMEOUT
-
-	cancel_timer_columns_auto_resizing is
-		do
-			if timer_columns_auto_resizing /= Void then
-				timer_columns_auto_resizing.actions.wipe_out
-				timer_columns_auto_resizing.destroy
-				timer_columns_auto_resizing := Void
-			end
-		end
 
 	process_columns_auto_resizing is
 		local
@@ -498,7 +546,6 @@ feature {NONE} -- column resizing impl
 			c: INTEGER
 			w: INTEGER
 		do
-			cancel_timer_columns_auto_resizing
 			if row_count > 0 then
 				from
 					auto_resized_columns.start
@@ -521,9 +568,10 @@ feature {NONE} -- column resizing impl
 					end
 					auto_resized_columns.forth
 				end
+				delayed_last_column_auto_resizing.request_call
 			end
 		end
-	
+
 	column_has_auto_resizing (c: INTEGER): BOOLEAN is
 		do
 			Result := auto_resized_columns.has (c)
@@ -542,14 +590,14 @@ feature -- Grid helpers
 		do
 			Result := grid_extended_new_row (Current)
 		end
-		
+
 	extended_new_subrow (a_row: EV_GRID_ROW): EV_GRID_ROW is
 		require
 			a_row /= Void
 			row_related_to_current: a_row.parent = Current
 		do
 			Result := grid_extended_new_subrow (a_row)
-		end	
+		end
 
 	remove_and_clear_subrows_from (a_row: EV_GRID_ROW) is
 		require
@@ -567,7 +615,7 @@ feature -- Grid helpers
 			grid_remove_and_clear_all_rows (Current)
 			is_processing_remove_and_clear_all_rows := False
 		end
-		
+
 	is_processing_remove_and_clear_all_rows: BOOLEAN
 
 	select_all_rows is
@@ -586,7 +634,7 @@ feature -- Grid helpers
 				end
 			end
 		end
-		
+
 	single_selected_row: EV_GRID_ROW is
 		require
 			is_single_row_selection_enabled: is_single_row_selection_enabled
@@ -610,23 +658,23 @@ feature -- Delayed cleaning
 		require
 			delayed_cleaning_exists
 		do
-			delayed_cleaning.request_call_delayed_action
+			delayed_cleaning.request_call
 		end
 
 	call_delayed_clean is
 		require
 			delayed_cleaning_exists
 		do
-			delayed_cleaning.call_delayed_action			
+			delayed_cleaning.call
 		end
 
 	cancel_delayed_clean is
 		require
 			delayed_cleaning_exists
 		do
-			delayed_cleaning.cancel_delayed_action			
+			delayed_cleaning.cancel
 		end
-		
+
 	set_cleaning_delay (v: INTEGER) is
 		require
 			v_positive_or_zero: v >= 0

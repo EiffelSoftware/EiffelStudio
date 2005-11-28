@@ -33,14 +33,14 @@ feature {NONE}-- Initlization
 			create internal_shared
 --			normal_max_able := True
 			direction := a_direction
-			internal_width_height := a_width_height
+			width_height := a_width_height
 			internal_content := a_content
 			create zone.make (a_content)
 			internal_shared.docking_manager.add_zone (zone)
 		ensure
 			set: internal_content = a_content
 			set: direction = a_direction
-			set: internal_width_height = a_width_height
+			set: width_height = a_width_height
 		end
 
 	make_for_tab_zone (a_content: SD_CONTENT; a_container: EV_CONTAINER; a_direction: INTEGER) is
@@ -133,22 +133,40 @@ feature -- Redefine.
 				l_new_container.set_first (zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_second (l_old_stuff)
-					if direction = {SD_DOCKING_MANAGER}.dock_left then
-						l_new_container.set_split_position ((l_new_container.maximum_split_position * internal_shared.default_docking_width_rate).ceiling)
-					else
-						l_new_container.set_split_position ((l_new_container.maximum_split_position * internal_shared.default_docking_height_rate).ceiling)
+
+					debug ("larry")
+						io.put_string ("%N SD_DOCKING_STATE dock_at_top_level l_new_container.minimum_width " + l_new_container.minimum_width.out + " l_new_container.maximum_split_position " + l_new_container.maximum_split_position.out)
+						io.put_string ("%N                  width_height " + width_height.out)
+						-- FIXIT: l_new_container.minimum_width not correct here? It's always bigger then actual.
 					end
+--					if width_height > 0 and width_height <= l_new_container.maximum_split_position then
+--						l_new_container.set_split_position (width_height)
+--					else
+--						if direction = {SD_DOCKING_MANAGER}.dock_left then
+--							l_new_container.set_split_position ((l_new_container.maximum_split_position * internal_shared.default_docking_width_rate).ceiling)
+--						else
+--							l_new_container.set_split_position ((l_new_container.maximum_split_position * internal_shared.default_docking_height_rate).ceiling)
+--						end
+--					end
 				end
 			else
 				l_new_container.set_second (zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_first (l_old_stuff)
-					if direction = {SD_DOCKING_MANAGER}.dock_right then
-						l_new_container.set_split_position ((l_new_container.maximum_split_position * (1 - internal_shared.default_docking_width_rate)).ceiling)
-					else
-						l_new_container.set_split_position ((l_new_container.maximum_split_position * (1 - internal_shared.default_docking_height_rate)).ceiling)
-					end
+
+--					if width_height > 0 and width_height <= l_new_container.maximum_split_position then
+--						l_new_container.set_split_position (l_new_container.maximum_split_position - width_height)
+--					else
+--						if direction = {SD_DOCKING_MANAGER}.dock_right then
+--							l_new_container.set_split_position ((l_new_container.maximum_split_position * (1 - internal_shared.default_docking_width_rate)).ceiling)
+--						else
+--							l_new_container.set_split_position ((l_new_container.maximum_split_position * (1 - internal_shared.default_docking_height_rate)).ceiling)
+--						end
+--					end
 				end
+			end
+			if l_new_container.full then
+				l_new_container.set_split_position (top_split_position (direction, l_new_container))
 			end
 			if l_old_spliter /= Void then
 				a_multi_dock_area.restore_spliter_position (l_old_spliter)
@@ -169,22 +187,9 @@ feature -- Redefine.
 			-- Change current content's zone to a SD_AUTO_HIDE_ZONE.
 			internal_shared.docking_manager.prune_zone (zone)
 
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-				l_width_height := zone.width
-			else
-				l_width_height := zone.height
-				if zone.height > (internal_shared.docking_manager.inner_container_main.height * 0.5).ceiling then
-					l_width_height := (internal_shared.docking_manager.inner_container_main.height * 0.2).ceiling
-				end
-				debug ("larry")
-					io.put_string ("%N SD_DOCKING_STATE stick window. l_width_height " + l_width_height.out)
-				end
-			end
-				debug ("larry")
-					io.put_string ("%N SD_DOCKING_STATE stick window. a_direction " + a_direction.out)
-				end
 			-- Change state.
 			create l_auto_hide_state.make_with_size (internal_content, direction, l_width_height)
+			l_auto_hide_state.set_width_height (width_height_by_direction)
 			change_state (l_auto_hide_state)
 			internal_shared.docking_manager.inner_container_main.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
@@ -374,10 +379,6 @@ feature {NONE} -- Implementation
 		ensure
 			changed:
 		end
-
-	internal_width_height: INTEGER
-			-- Width of zone if dock_left or dock_right.
-			-- Height of zone if dock_top or dock_bottom.
 
 invariant
 

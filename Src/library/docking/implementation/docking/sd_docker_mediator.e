@@ -171,7 +171,7 @@ feature {NONE} -- Implementation functions
 			a_list_not_void: a_list /= Void
 		local
 			l_hot_zone_source: SD_DOCKER_SOURCE
-			l_mutli_zone: SD_MULTI_CONTENT_ZONE
+			l_mutli_zone: SD_TAB_ZONE
 		do
 			from
 				a_list.start
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation functions
 				-- Ingore the classes we don't care.
 				if l_hot_zone_source /= Void then
 					l_mutli_zone ?= a_list.item
-					if l_mutli_zone /= Void then
+					if l_mutli_zone /= Void and then not l_mutli_zone.is_drag_title_bar then
 						add_hot_zone_on_type (a_list.item, l_hot_zone_source)
 					elseif a_list.item /= internal_caller then
 						add_hot_zone_on_type (a_list.item, l_hot_zone_source)

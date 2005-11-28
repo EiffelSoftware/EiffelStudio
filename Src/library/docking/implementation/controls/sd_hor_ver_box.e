@@ -23,7 +23,8 @@ inherit
 			wipe_out as wipe_out_vertical_box,
 			linear_representation as linear_representation_vertical_box,
 			off as off_vertical_box,
-			remove as remove_vertical_box
+			remove as remove_vertical_box,
+			prune_all as prune_all_vertical_box
 		end
 
 feature {NONE} -- Initlization
@@ -231,6 +232,16 @@ feature -- Redefine
 				remove_vertical_box
 			else
 				horizontal_box.remove
+			end
+		end
+
+	prune_all (a_item: EV_WIDGET) is
+			-- Redefine
+		do
+			if internal_vertical_style then
+				prune_all_vertical_box (a_item)
+			else
+				horizontal_box.prune_all (a_item)
 			end
 		end
 

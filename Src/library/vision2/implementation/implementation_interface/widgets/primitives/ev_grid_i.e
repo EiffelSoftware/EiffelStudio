@@ -4129,7 +4129,7 @@ feature {EV_GRID_DRAWABLE_ITEM_I} -- Implementation
 	drawer: EV_GRID_DRAWER_I
 		-- Drawer which is able to redraw `Current'.
 
-feature {EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_DRAWER_I, EV_GRID} -- Implementation
 
 	is_header_item_resizing: BOOLEAN
 		-- Is a header item currently in the process of resizing?

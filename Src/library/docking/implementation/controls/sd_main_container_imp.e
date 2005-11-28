@@ -12,7 +12,7 @@ inherit
 		redefine
 			initialize, is_in_default_state
 		end
-			
+
 	SD_CONSTANTS
 		undefine
 			is_equal, default_create, copy
@@ -29,7 +29,7 @@ feature {NONE}-- Initialization
 		do
 			Precursor {EV_VERTICAL_BOX}
 			initialize_constants
-			
+
 				-- Create all widgets.
 			create l_ev_horizontal_box_1
 			create l_ev_cell_1
@@ -43,7 +43,7 @@ feature {NONE}-- Initialization
 			create l_ev_cell_3
 			create bottom_bar
 			create l_ev_cell_4
-			
+
 				-- Build_widget_structure.
 			extend (l_ev_horizontal_box_1)
 			l_ev_horizontal_box_1.extend (l_ev_cell_1)
@@ -57,7 +57,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_3.extend (l_ev_cell_3)
 			l_ev_horizontal_box_3.extend (bottom_bar)
 			l_ev_horizontal_box_3.extend (l_ev_cell_4)
-			
+
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_2)
 			l_ev_cell_1.set_minimum_width (auto_hide_bar_width)
@@ -70,7 +70,7 @@ feature {NONE}-- Initialization
 			l_ev_cell_4.set_minimum_width (auto_hide_bar_width)
 			disable_item_expand (l_ev_horizontal_box_1)
 			disable_item_expand (l_ev_horizontal_box_3)
-			
+
 				--Connect events.
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
@@ -98,10 +98,10 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
-	
+
 end -- class SD_MAIN_CONTAINER_IMP

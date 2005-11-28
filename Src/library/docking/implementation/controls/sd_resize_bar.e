@@ -54,7 +54,7 @@ feature -- Access
 feature {NONE} -- Agents
 
 	on_pointer_button_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			--
+			-- Handle pointer button press.
 		do
 			if a_button = 1 then
 				if not resizing then
@@ -80,7 +80,7 @@ feature {NONE} -- Agents
 		end
 
 	on_expose_action (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
-			--
+			-- Handle expose action.
 		do
 			clear
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then

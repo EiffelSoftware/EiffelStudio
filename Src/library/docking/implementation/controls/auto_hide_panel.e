@@ -27,7 +27,7 @@ feature {NONE} -- Initlization
 			set_minimum_size (0, 0)
 			internal_tab_stubs.add_actions.extend (agent on_add_tab_stub)
 			internal_tab_stubs.remove_actions.extend (agent on_pruned_tab_stub)
-			create tab_groups.make (0)
+			create tab_groups
 		ensure
 
 		end
@@ -40,8 +40,8 @@ feature -- Query
 			Result := internal_tab_stubs
 		end
 
-	tab_groups: ARRAYED_LIST [like internal_tab_group]
-			-- All tab groups.
+	tab_groups: ACTIVE_LIST [like internal_tab_group]
+			-- All tab groups, 2nd integer is tab group width.
 
 	has (a_tab: SD_TAB_STUB): BOOLEAN is
 			-- If `Current' has a_tab ?
@@ -252,6 +252,7 @@ feature {NONE} -- Implementation functions.
 				else
 					set_minimum_height (internal_shared.auto_hide_panel_width)
 				end
+			internal_shared.docking_manager.resize
 			end
 		ensure
 			added_stub_and_space: old count = count - 2 and has (a_stub)
@@ -285,7 +286,9 @@ feature {NONE} -- Implementation functions.
 				else
 					set_minimum_height (0)
 				end
+				internal_shared.docking_manager.resize
 			end
+
 		ensure
 			removed: not has (a_stub)
 		end

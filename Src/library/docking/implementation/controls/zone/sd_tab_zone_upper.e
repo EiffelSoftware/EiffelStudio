@@ -24,7 +24,7 @@ feature {NONE} -- Initlization
 			prune_widget (internal_notebook)
 			create notebook.make (internal_notebook)
 			extend_widget (notebook)
-			notebook.close_actions.extend (agent on_close)
+			notebook.close_request_actions.extend (agent on_close)
 		ensure then
 			notebook_added: has_widget (notebook)
 		end

@@ -72,8 +72,11 @@ feature {NONE} -- Initlization
 			internal_title_bar.drag_actions.extend (agent on_drag_title_bar)
 			internal_title_bar.stick_select_actions.extend (agent on_stick)
 			internal_title_bar.normal_max_actions.extend (agent on_normal_max_window)
-			internal_title_bar.close_actions.extend (agent on_close)
+			internal_title_bar.close_request_actions.extend (agent on_close)
 			if a_content.mini_toolbar /= Void then
+				if a_content.mini_toolbar.parent /= Void then
+					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+				end
 				internal_title_bar.custom_area.extend (a_content.mini_toolbar)
 			end
 
@@ -98,6 +101,9 @@ feature -- Query
 			Result := internal_title_bar.is_max
 		end
 
+	is_drag_title_bar: BOOLEAN
+			-- If user dragging title bar?
+
 feature -- Command
 
 	extend (a_content: SD_CONTENT) is
@@ -109,6 +115,9 @@ feature -- Command
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
 			internal_title_bar.set_title (a_content.title)
 			if a_content.mini_toolbar /= Void then
+				if a_content.mini_toolbar.parent /= Void then
+					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+				end
 				internal_title_bar.custom_area.extend (a_content.mini_toolbar)
 			else
 				internal_title_bar.custom_area.wipe_out
@@ -260,8 +269,8 @@ feature {NONE} -- Agents for docker
 			end
 		ensure
 			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (internal_contents.i_th (internal_notebook.selected_item_index).title)
-			mini_tool_bar_added: not internal_diable_on_select_tab implies (internal_contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies
-				internal_title_bar.custom_area.item = internal_contents.i_th (internal_notebook.selected_item_index).mini_toolbar)
+--			mini_tool_bar_added: not internal_diable_on_select_tab implies (internal_contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies
+--				internal_title_bar.custom_area.item = internal_contents.i_th (internal_notebook.selected_item_index).mini_toolbar)
 		end
 
 	on_drag_title_bar (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -269,12 +278,12 @@ feature {NONE} -- Agents for docker
 		local
 			l_tab_state: SD_TAB_STATE
 		do
+			is_drag_title_bar := True
 			create internal_docker_mediator.make (Current)
 			internal_docker_mediator.start_tracing_pointer (screen_x - a_screen_x, screen_y - a_screen_y)
 			enable_capture
 			l_tab_state ?= content.state
 			check l_tab_state /= Void end
-			l_tab_state.set_drag_title_bar (True)
 		ensure
 			internal_docker_mediator_not_void: internal_docker_mediator /= Void
 			internal_docker_mediator_tracing_pointer: internal_docker_mediator.is_tracing_pointer
@@ -289,8 +298,10 @@ feature {NONE} -- Agents for docker
 				end
 				internal_notebook_pressed := False
 				disable_capture
+
 				internal_docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
 				internal_docker_mediator := Void
+				is_drag_title_bar := False
 			end
 		ensure
 			internal_docker_mediator_stop: old internal_docker_mediator /= Void implies internal_docker_mediator = Void
@@ -326,7 +337,6 @@ feature {NONE} -- Agents for docker
 				enable_capture
 				l_tab_state ?= content.state
 				check l_tab_state /= Void end
-				l_tab_state.set_drag_title_bar (False)
 			end
 		ensure
 			docker_mediator_created: internal_notebook_pressed implies internal_docker_mediator /= Void

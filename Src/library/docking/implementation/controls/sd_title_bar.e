@@ -273,13 +273,13 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	close_actions: like internal_close_actions is
+	close_request_actions: like internal_close_request_actions is
 			-- Close button select actions.
 		do
-			if internal_close_actions = Void then
-				create internal_close_actions
+			if internal_close_request_actions = Void then
+				create internal_close_request_actions
 			end
-			Result := internal_close_actions
+			Result := internal_close_request_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -343,9 +343,9 @@ feature {NONE} -- Agents
 		end
 
 	on_close is
-			-- Handle `close_actions'.
+			-- Handle `close_request_actions'.
 		do
-			close_actions.call ([])
+			close_request_actions.call ([])
 		end
 
 	pressed: BOOLEAN
@@ -411,6 +411,10 @@ feature {NONE} -- Implemetation
 			internal_leading_hightlight_area.fill_rectangle (0, 0, internal_leading_hightlight_area.width, internal_leading_hightlight_area.height)
 			internal_ending_hightlight_area.set_foreground_color (exposing_color)
 			internal_ending_hightlight_area.fill_rectangle (0, 0, internal_ending_hightlight_area.width, internal_ending_hightlight_area.height)
+			internal_title.set_background_color (exposing_color)
+			custom_area.set_background_color (exposing_color)
+			internal_tool_bar.set_background_color (exposing_color)
+			set_background_color (exposing_color)
 		end
 
 feature {NONE} -- Implementation
@@ -434,7 +438,7 @@ feature {NONE} -- Implementation
 
 	internal_pointer_double_press_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Pointer double press actions.
-	internal_stick_select_actions, internal_close_actions, internal_normal_max_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_stick_select_actions, internal_close_request_actions, internal_normal_max_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Title bar actions.
 	internal_drag_actions: EV_POINTER_MOTION_ACTION_SEQUENCE
 			-- Drag actions.

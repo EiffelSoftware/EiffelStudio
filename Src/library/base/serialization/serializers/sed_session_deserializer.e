@@ -53,8 +53,8 @@ feature -- Settings
 			deserializer := a_deserializer
 		ensure
 			deserializer_set: deserializer = a_deserializer
-		end		
-		
+		end
+
 feature -- Basic operations
 
 	decode (a_is_gc_enabled: BOOLEAN) is
@@ -135,7 +135,7 @@ feature {NONE} -- Cleaning
 				list_stack := Void
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	read_header (a_count: NATURAL_32) is
@@ -143,7 +143,7 @@ feature {NONE} -- Implementation
 		do
 			read_object_table (a_count)
 		end
-		
+
 	read_object_table (a_count: NATURAL_32) is
 			-- Read object table if any, which has `a_count' objects.
 		local
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation
 		end
 
 	new_attribute_offset (a_new_type_id, a_old_offset: INTEGER): INTEGER is
-			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id 
+			-- Given attribute offset `a_old_offset' in the stored object whose dynamic type id
 			-- is now `a_new_type_id', retrieve new offset in `a_new_type_id'.
 		require
 			a_new_type_id_non_negative: a_new_type_id >= 0
@@ -231,7 +231,7 @@ feature {NONE} -- Implementation
 		ensure
 			new_attribute_offset_positive: Result > 0
 		end
-		
+
 	decode_objects (a_count: NATURAL_32) is
 			-- Decode `a_count' object from `deserializer' and store root object in `last_decoded_object'.
 		require
@@ -363,10 +363,10 @@ feature {NONE} -- Implementation
 				inspect l_int.field_type_of_type (l_new_offset, a_dtype)
 				when {INTERNAL}.boolean_type then
 					l_int.set_boolean_field (l_new_offset, an_obj, l_deser.read_boolean)
-	
+
 				when {INTERNAL}.character_type then
 					l_int.set_character_field (l_new_offset, an_obj, l_deser.read_character_8)
-	
+
 				when {INTERNAL}.natural_8_type then
 					l_int.set_natural_8_field (l_new_offset, an_obj, l_deser.read_natural_8)
 				when {INTERNAL}.natural_16_type then
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 					l_int.set_natural_32_field (l_new_offset, an_obj, l_deser.read_natural_32)
 				when {INTERNAL}.natural_64_type then
 					l_int.set_natural_64_field (l_new_offset, an_obj, l_deser.read_natural_64)
-	
+
 				when {INTERNAL}.integer_8_type then
 					l_int.set_integer_8_field (l_new_offset, an_obj, l_deser.read_integer_8)
 				when {INTERNAL}.integer_16_type then
@@ -384,18 +384,18 @@ feature {NONE} -- Implementation
 					l_int.set_integer_32_field (l_new_offset, an_obj, l_deser.read_integer_32)
 				when {INTERNAL}.integer_64_type then
 					l_int.set_integer_64_field (l_new_offset, an_obj, l_deser.read_integer_64)
-	
+
 				when {INTERNAL}.real_32_type then
 					l_int.set_real_32_field (l_new_offset, an_obj, l_deser.read_real_32)
 				when {INTERNAL}.real_64_type then
 					l_int.set_real_64_field (l_new_offset, an_obj, l_deser.read_real_64)
-	
+
 				when {INTERNAL}.pointer_type then
 					l_int.set_pointer_field (l_new_offset, an_obj, l_deser.read_pointer)
-	
+
 				when {INTERNAL}.reference_type then
 					decode_reference (an_obj, an_index, l_new_offset)
-	
+
 				else
 					check
 						False
@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 				l_spec_boolean ?= an_obj
 				check l_spec_boolean_not_void: l_spec_boolean /= Void end
 				decode_special_boolean (l_spec_boolean)
-			
+
 			when {INTERNAL}.character_type then
 				l_spec_character ?= an_obj
 				check l_spec_character_not_void: l_spec_character /= Void end
@@ -843,10 +843,8 @@ feature {NONE} -- Implementation
 			an_index_non_negative: an_index >= 0
 		local
 			i, nb: INTEGER
-			l_deser: like deserializer
 		do
 			from
-				l_deser := deserializer
 				nb := a_spec.count
 			until
 				i = nb

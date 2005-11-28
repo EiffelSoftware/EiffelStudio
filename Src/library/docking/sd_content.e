@@ -146,7 +146,9 @@ feature -- Set
 	set_focus is
 			-- Set focus to `Current'.
 		do
-			state.zone.on_focus_in (Current)
+			if state.zone /= Void then
+				state.zone.on_focus_in (Current)
+			end
 		end
 
 feature -- Set Position
@@ -160,6 +162,7 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
    			state.change_zone_split_area (a_relative.state.zone, a_direction)
+   			set_focus
    		end
 
 	set_top (a_direction: INTEGER) is
@@ -169,6 +172,7 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
 			state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+			set_focus
 		end
 
 	set_auto_hide (a_direction: INTEGER) is
@@ -178,6 +182,7 @@ feature -- Set Position
 			a_direction_valid: four_direction (a_direction)
 		do
 			state.stick_window (a_direction)
+			set_focus
 		end
 
 	set_floating (a_screen_x, a_screen_y: INTEGER) is
@@ -186,6 +191,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 		do
 			state.float_window (a_screen_x, a_screen_y)
+			set_focus
 		end
 
 	set_tab_with (a_content: SD_CONTENT) is
@@ -193,6 +199,7 @@ feature -- Set Position
 		require
 			manager_has_content: manager_has_content (Current)
 			manager_has_content: manager_has_content (a_content)
+			target_content_shown: target_content_shown (a_content)
 		local
 			l_tab_zone: SD_TAB_ZONE
 			l_docking_zone: SD_DOCKING_ZONE
@@ -205,6 +212,7 @@ feature -- Set Position
 				check l_docking_zone /= Void end
 				state.move_to_docking_zone (l_docking_zone)
 			end
+			set_focus
 		end
 
 feature -- Actions
@@ -231,13 +239,13 @@ feature -- Actions
 			not_void: Result /= Void
 		end
 
-	close_actions: EV_NOTIFY_ACTION_SEQUENCE is
+	close_request_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions perfromed before close.
 		do
-			if internal_close_actions = Void then
-				create internal_close_actions
+			if internal_close_request_actions = Void then
+				create internal_close_request_actions
 			end
-			Result := internal_close_actions
+			Result := internal_close_request_actions
 		end
 
 feature -- Command
@@ -245,8 +253,8 @@ feature -- Command
 	close is
 			-- Destroy `Current' from docking library if `is_default_destroy', otherwise hide.
 		do
-			if internal_close_actions /= Void then
-				internal_close_actions.call ([])
+			if internal_close_request_actions /= Void then
+				internal_close_request_actions.call ([])
 			end
 			state.close_window
 		end
@@ -295,6 +303,12 @@ feature -- States report
 		do
 			Result := a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right or
 				 a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+		end
+
+	target_content_shown (a_target_content: SD_CONTENT): BOOLEAN is
+			-- If `a_target_content' shown ?
+		do
+			Result := a_target_content.state.zone.parent /= Void
 		end
 
 feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR} -- State
@@ -358,7 +372,7 @@ feature {SD_TAB_ZONE}  -- Actions for SD_TAB_ZONE
 
 feature {SD_STATE} -- Actions for SD_STATE
 
-	internal_close_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions perfromed before close.
 
 invariant

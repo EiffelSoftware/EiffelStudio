@@ -32,9 +32,9 @@ feature {NONE} -- Initlization
 			internal_content := a_content
 			direction := a_direction
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				internal_width_height := (internal_shared.docking_manager.fixed_area.width * internal_shared.default_docking_width_rate).ceiling
+				width_height := (internal_shared.docking_manager.fixed_area.width * internal_shared.default_docking_width_rate).ceiling
 			else
-				internal_width_height := (internal_shared.docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
+				width_height := (internal_shared.docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
 			end
 			auto_hide_panel := internal_shared.docking_manager.auto_hide_panel (a_direction)
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
@@ -60,9 +60,9 @@ feature {NONE} -- Initlization
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		do
 			make (a_content, a_direction)
-			internal_width_height := a_width_height
+			width_height := a_width_height
 		ensure
-			set: internal_width_height = a_width_height
+			set: width_height = a_width_height
 		end
 
 feature {NONE} -- Auto hide functions.
@@ -258,17 +258,17 @@ feature -- Redefine.
 			-- Redefine.
 		do
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-				internal_width_height := zone.width
+				width_height := zone.width
 			else
-				internal_width_height := zone.height
+				width_height := zone.height
 			end
 			remove_close_timer
 			remove_moving_timer
 		ensure then
 			width_height_set: direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right
-				implies internal_width_height = zone.width
+				implies width_height = zone.width
 			width_height_set: direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom
-				implies internal_width_height = zone.height
+				implies width_height = zone.height
 			timer_removed: internal_moving_timer = Void and internal_close_timer = Void
 		end
 
@@ -307,8 +307,8 @@ feature -- Redefine.
 				internal_shared.docking_manager.fixed_area.width, internal_shared.docking_manager.fixed_area.height)
 
 				if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-					if internal_width_height > zone.minimum_width then
-						internal_shared.docking_manager.fixed_area.set_item_width (zone, internal_width_height)
+					if width_height > zone.minimum_width then
+						internal_shared.docking_manager.fixed_area.set_item_width (zone, width_height)
 					end
 					if l_rect.height > zone.minimum_height then
 						internal_shared.docking_manager.fixed_area.set_item_height (zone, l_rect.height)
@@ -317,10 +317,10 @@ feature -- Redefine.
 					if l_rect.width > zone.minimum_width then
 						internal_shared.docking_manager.fixed_area.set_item_width (zone, l_rect.width)
 					end
-					if internal_width_height > zone.minimum_height then
-						internal_shared.docking_manager.fixed_area.set_item_height (zone, internal_width_height)
+					if width_height > zone.minimum_height then
+						internal_shared.docking_manager.fixed_area.set_item_height (zone, width_height)
 						debug ("larry")
-							io.put_string ("%N SD_AUTO_HIDE_STATE show_window internal_width_height " + internal_width_height.out)
+							io.put_string ("%N SD_AUTO_HIDE_STATE show_window width_height " + width_height.out)
 						end
 					end
 				end
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation functions.
 
 				l_content := internal_shared.docking_manager.content_by_title (l_tab_group.item.title)
 				if l_tab_group.index = 1 then
-					create l_docking_state.make (l_content, direction, 1)
+					create l_docking_state.make (l_content, direction, width_height)
 					l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
 					l_content.change_state (l_docking_state)
 				else
@@ -384,9 +384,11 @@ feature {NONE} -- Implementation functions.
 					end
 					if l_last_tab_zone = Void then
 						create l_tab_state.make (l_content, l_docking_state.zone, direction)
+						l_tab_state.set_width_height (width_height)
 						l_tab_state.set_direction (l_docking_state.direction)
 					else
 						create l_tab_state.make_with_tab_zone (l_content, l_last_tab_zone, direction)
+						l_tab_state.set_width_height (width_height)
 						l_tab_state.set_direction (l_last_tab_zone.state.direction)
 					end
 
@@ -396,7 +398,8 @@ feature {NONE} -- Implementation functions.
 
 				l_tab_group.forth
 			end
-			auto_hide_panel.tab_groups.prune_all (l_tab_group)
+			auto_hide_panel.tab_groups.start
+			auto_hide_panel.tab_groups.prune (l_tab_group)
 		ensure
 			state_changed: content.state /= Current
 		end
@@ -429,9 +432,6 @@ feature {NONE} -- Implementation attributes.
 
 	zone: SD_AUTO_HIDE_ZONE
 			-- Zone which current is in.
-
-	internal_width_height: INTEGER
-			-- Width or height when user close_window.
 
 	auto_hide_panel: SD_AUTO_HIDE_PANEL
 			-- Auto hide panel which current is in.

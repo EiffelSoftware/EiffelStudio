@@ -1,6 +1,8 @@
 indexing
-	description: "Interface of a multi-platform process launcher(on Win32, .Net and Unix/Linux)"
-	note: "This library is not thread safe."
+	description: "[
+		Interface of a multi-platform process launcher(on Win32, .Net and Unix/Linux)
+		note: This library is not thread safe.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 

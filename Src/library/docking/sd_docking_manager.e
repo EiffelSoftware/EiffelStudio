@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			top_container.extend (internal_viewport)
 			create menu_container
 			internal_viewport.extend (menu_container)
+			menu_container.set_minimum_size (0, 0)
 			create internal_main_container
 			menu_container.center.extend (internal_main_container)
 			create fixed_area
@@ -50,6 +51,7 @@ feature {NONE} -- Initialization
 			-- Insert inner contianer
 			create l_inner_container.make
 			fixed_area.extend (l_inner_container)
+			l_inner_container.set_minimum_size (0, 0)
 			create inner_containers.make (1)
 			inner_containers.extend (l_inner_container)
 			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_TRIANGLE_FACTORY})
@@ -271,7 +273,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW,
-	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER} -- Library internals querys.
+	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_MENU_ZONE} -- Library internals querys.
 
 	auto_hide_panel (a_direction: INTEGER): SD_AUTO_HIDE_PANEL is
 			-- Auto hide panel at `a_direction'.
@@ -373,7 +375,13 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW,
-	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER} -- Library internals commands.
+	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_MENU_ZONE} -- Library internals commands.
+
+	resize is
+			--
+		do
+			on_resize (internal_viewport.x_position, internal_viewport.y_position, internal_viewport.width, internal_viewport.height)
+		end
 
 	lock_update is
 			-- Lock window update.
@@ -522,9 +530,13 @@ feature {NONE}  -- Agents
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED).
 		do
+			debug ("larry")
+				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
+			end
 			remove_auto_hide_zones
 			menu_container.set_minimum_size (0, 0)
 			fixed_area.set_minimum_size (0, 0)
+			inner_container_main.set_minimum_size (0, 0)
 			if a_width > 0 then
 				internal_viewport.set_item_width (a_width)
 				fixed_area.set_item_width (inner_container_main , fixed_area.width)

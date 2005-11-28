@@ -40,7 +40,7 @@ feature -- Creation
 
 feature -- Access
 
-	value : STRING is
+	value: STRING is
 		do
 			create Result.make (0)
 			Result.append (operator)
@@ -49,7 +49,7 @@ feature -- Access
 			end
 			Result.append (subquery)
 		end
-	
+
 	set_number (idx: INTEGER) is
 		do
 			number := idx

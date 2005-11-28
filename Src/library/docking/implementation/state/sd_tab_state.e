@@ -1,5 +1,5 @@
 indexing
-	description: "SD_STATE which manage a SD_TAB_ZONE.
+	description: "SD_STATE which manage a SD_TAB_ZONE."
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -18,8 +18,8 @@ feature -- Redefine.
 	on_normal_max_window is
 			-- Redefine.
 		local
-			l_split_area: EV_SPLIT_AREA
-			l_zone_widget: EV_WIDGET
+--			l_split_area: EV_SPLIT_AREA
+--			l_zone_widget: EV_WIDGET
 		do
 --			internal_shared.docking_manager.lock_update
 --			main_area := internal_shared.docking_manager.inner_container (zone)
@@ -47,7 +47,7 @@ feature -- Redefine.
 			-- Redefine.
 		do
 --			internal_shared.docking_manager.lock_update
---			Precursor {SD_STATE}
+			Precursor {SD_STATE}
 --			if is_maximized then
 --				main_area.extend (main_area_widget)
 --				main_area := Void
@@ -59,8 +59,8 @@ feature -- Redefine.
 	recover_to_normal_state is
 			-- Redefine.
 		local
-			l_zone_widget: EV_WIDGET
-			l_split_area: EV_SPLIT_AREA
+--			l_zone_widget: EV_WIDGET
+--			l_split_area: EV_SPLIT_AREA
 		do
 --			if is_maximized then
 --				internal_shared.docking_manager.lock_update

@@ -12,7 +12,7 @@ inherit
 		undefine
 			dispose
 		end
-		
+
 	WEL_BIT_OPERATIONS
 		export
 			{NONE} all
@@ -65,18 +65,18 @@ inherit
 		export
 			{NONE} all
 		end
-	
+
 	WEL_DRAWING_CONSTANTS
 		export
 			{NONE} all
 			{ANY} valid_rop2_constant
 		end
-		
+
 	WEL_SHARED_TEMPORARY_OBJECTS
 		export
 			{NONE} all
 		end
-		
+
 feature -- Access
 
 	pen: WEL_PEN
@@ -384,7 +384,7 @@ feature -- Status report
 			positive_width: Result.width >= 0
 			positive_height: Result.height >= 0
 		end
-		
+
 	char_abc_widths (first_char_index, last_char_index: INTEGER): ARRAYED_LIST [WEL_ABC_STRUCT] is
 			-- `Result' is a list of Windows ABC structures corresponding to the currently
 			-- selected truetype font, with an entry for each character contained within the
@@ -529,7 +529,7 @@ feature -- Status setting
 		ensure
 			text_alignment_set: flag_set (text_alignment, an_alignment)
 		end
-		
+
 	 set_hv_text_alignment (h, v: INTEGER) is
                -- Set the text alignment using the horizontal and
                -- vertical components in `h' and `v'.
@@ -692,7 +692,7 @@ feature -- Status setting
 			cwin_set_rop2 (item, a_rop2)
 		ensure
 			rop2_set: rop2 = a_rop2
-		end	
+		end
 
 	set_stretch_blt_mode (a_mode: INTEGER) is
 			-- Set the bitmap stretching mode with `a_mode'.
@@ -1031,7 +1031,7 @@ feature -- Basic operations
 		end
 
 	draw_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
-			-- Draw the text `string' inside 
+			-- Draw the text `string' inside
 			-- the `rect' using `format'
 			-- See class WEL_DT_CONSTANTS for `format' value.
 		require
@@ -1054,14 +1054,14 @@ feature -- Basic operations
 			rect_not_void: rect /= Void
 		local
 			a_wel_string: WEL_STRING
-		do			
+		do
 			a_wel_string := wel_string_from_string (string)
 			Result := cwin_draw_text (item, a_wel_string.item,
 				string.count, rect.item, format)
 		end
-		
+
 	draw_disabled_text (string: STRING; rect: WEL_RECT; format: INTEGER) is
-			-- Draw the text `string' in disabled mode inside 
+			-- Draw the text `string' in disabled mode inside
 			-- the `rect' using `format'
 			-- See class WEL_DT_CONSTANTS for `format' value.
 		require
@@ -1070,7 +1070,7 @@ feature -- Basic operations
 			rect_not_void: rect /= Void
 		local
 			a_wel_string: WEL_STRING
-		do			
+		do
 			a_wel_string := wel_string_from_string (string)
 			cwin_draw_disabled_text (item, a_wel_string.item, string.count, rect.item, format)
 		end
@@ -1079,7 +1079,7 @@ feature -- Basic operations
 			-- Draw the text `string' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
-			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for 
+			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for
 			-- `format' value.
 		require
 			exists: exists
@@ -1111,7 +1111,7 @@ feature -- Basic operations
 			-- Draw the bitmap `a_bitmap' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
-			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for 
+			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for
 			-- `format' value.
 		require
 			exists: exists
@@ -1131,7 +1131,7 @@ feature -- Basic operations
 			-- Draw the icon/cursor `an_icon' using `format' at the
 			-- location (`x',`y') using the brush `a_brush' if `format' include `Dss_mono'.
 			--
-			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for 
+			-- See class DSS_xxx and DST_xxx constants in WEL_DRAWING_CONSTANTS for
 			-- `format' value.
 		require
 			exists: exists
@@ -1170,7 +1170,7 @@ feature -- Basic operations
 			end
 			bitmap_dc.delete
 		end
-		
+
 	draw_bitmap_with_raster_operation (a_bitmap: WEL_BITMAP; x, y, a_width, a_height, raster_operation: INTEGER) is
 			-- Draw `bitmap' using `raster_operation' at position `x', `y'
 			-- using `a_width' and `a_height'.
@@ -1215,7 +1215,7 @@ feature -- Basic operations
 		local
 			ffdraw: POINTER
 		do
-			if flicker_free_background /= Void then 
+			if flicker_free_background /= Void then
 				ffdraw := flicker_free_background.item
 			end
 
@@ -1506,7 +1506,7 @@ feature -- Basic operations
 			dc_source: WEL_DC; x_source, y_source: INTEGER;
 			mask_bitmap: WEL_BITMAP; x_mask, y_mask,
 			raster_operation: INTEGER) is
-		-- Combines the color data for the source and destination bitmaps using the specified mask and raster operation. 
+		-- Combines the color data for the source and destination bitmaps using the specified mask and raster operation.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
 			-- `raster_operation' values.
 		require
@@ -1525,7 +1525,7 @@ feature -- Basic operations
 				a_width, a_height, dc_source.item, x_source, y_source,
 				mask_bitmap.item, x_mask, y_mask, raster_operation)
 		end
-		
+
 	make_rop4 (fore, back: INTEGER): INTEGER is
 			-- `Result' is raster operation code corresponding to
 			-- `fore' and `back' for argument `raster_operation' code
@@ -1589,10 +1589,10 @@ feature -- Basic operations
 
 	pat_blt (x_destination, y_destination, a_width, a_height: INTEGER;
 			raster_operation: INTEGER) is
-			-- Paint the rectangle specified by `x_destination', 
+			-- Paint the rectangle specified by `x_destination',
 			-- `y_destination', `a_width', `a_height' using the brush
 			-- that is currently selected into this device context.
-			-- The brush color and the surface color or colors are 
+			-- The brush color and the surface color or colors are
 			-- combined by using the `raster_operation'.
 			-- See class WEL_RASTER_OPERATIONS_CONSTANTS for
 			-- `raster_operation' values.
@@ -1746,7 +1746,7 @@ feature {NONE} -- Removal
 		local
 			a_default_pointer: POINTER	-- Default_pointer
 		do
-				-- Protect the call to DeleteDC, because `destroy_item' can 
+				-- Protect the call to DeleteDC, because `destroy_item' can
 				-- be called by the GC so without assertions.
 			if item /= a_default_pointer then
 				unselect_all
@@ -1910,7 +1910,7 @@ feature {NONE} -- Externals
 		alias
 			"Rectangle"
 		end
-		
+
 	cwin_invert_rect (hdc: POINTER; rect: POINTER) is
 			-- SDK InvertRect
 		external
@@ -2287,7 +2287,7 @@ feature {NONE} -- Externals
 		alias
 			"SetROP2"
 		end
-		
+
 	cwin_make_rop4 (fore, back: INTEGER): INTEGER is
 			-- SDK MakeROP4
 		external
@@ -2295,7 +2295,7 @@ feature {NONE} -- Externals
 		alias
 			"MAKEROP4"
 		end
-		
+
 
 	cwin_get_rop2 (hdc: POINTER): INTEGER is
 			-- SDK GetROP2
@@ -2304,7 +2304,7 @@ feature {NONE} -- Externals
 		alias
 			"GetROP2"
 		end
-		
+
 	cwin_get_tabbed_text_extent (hdc: POINTER; s: POINTER;
 			len, tab_count: INTEGER; tabs: POINTER): INTEGER is
 			-- SDK GetTabbedTextExtent
@@ -2448,10 +2448,10 @@ feature {NONE} -- Externals
 			create function_name_ptr.make ("MaskBlt")
 			internal_mask_blt_funcaddr := cwin_get_function_address(module_name_ptr.item, function_name_ptr.item)
 		end
-		
+
 feature {WEL_FONT} -- Externals
-	
-	cwin_draw_text (hdc: POINTER; string: POINTER; length: INTEGER; 
+
+	cwin_draw_text (hdc: POINTER; string: POINTER; length: INTEGER;
 			rect: POINTER; format: INTEGER): INTEGER is
 			-- SDK DrawText
 		external
@@ -2459,7 +2459,7 @@ feature {WEL_FONT} -- Externals
 		alias
 			"DrawText"
 		end
-		
+
 	cwel_get_char_abc_widths (hdc: POINTER; first, last: INTEGER; array: POINTER) is
 		external
 			"C [macro <wingdi.h>] (HDC, UINT, UINT, LPABC)"

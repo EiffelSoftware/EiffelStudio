@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (	a_delayed_action: like delayed_action; 
+	make (	a_delayed_action: like delayed_action;
 			a_delay: like delay
 			) is
 		require
@@ -55,34 +55,34 @@ feature -- Delayed action access
 			Result := delayed_action /= Void
 		end
 
-	call_delayed_action is
+	call is
 		require
 			delayed_action_exists: delayed_action_exists
 		do
-			cancel_delayed_action
+			cancel
 			delayed_action.call (Void)
 		ensure
-			delayed_action_timer_destroyed: delayed_action_timer = Void			
+			delayed_action_timer_destroyed: delayed_action_timer = Void
 		end
 
-	request_call_delayed_action is
+	request_call is
 		require
 			delayed_action_exists: delayed_action_exists
 		do
 			if delay = 0 then
-				call_delayed_action
+				call
 			elseif delayed_action_timer = Void then
 				if starting_delayed_action /= Void then
 					starting_delayed_action.call ([])
 				end
 				create delayed_action_timer.make_with_interval (delay)
-				delayed_action_timer.actions.extend (agent call_delayed_action)
+				delayed_action_timer.actions.extend (agent call)
 			end
 		ensure
 			delayed_action_timer_created: delay >0 implies delayed_action_timer /= Void
 		end
 
-	cancel_delayed_action is
+	cancel is
 		require
 			delayed_action_exists: delayed_action_exists
 		do
@@ -95,7 +95,7 @@ feature -- Delayed action access
 				end
 			end
 		ensure
-			delayed_action_timer_destroyed: delayed_action_timer = Void			
+			delayed_action_timer_destroyed: delayed_action_timer = Void
 		end
 
 feature {NONE} -- Delayed cleaning implementation
@@ -103,7 +103,7 @@ feature {NONE} -- Delayed cleaning implementation
 	delay: INTEGER
 			-- Number of milliseconds waited before clearing grid
 			-- By waiting for a short period of time, the flicker is removed
-		
+
 	starting_delayed_action: PROCEDURE [ANY, TUPLE]
 	ending_delayed_action: PROCEDURE [ANY, TUPLE]
 

@@ -112,7 +112,7 @@ feature	-- Control
 				from
 
 				until
-					prc_launcher.has_process_exited = True
+					prc_launcher.has_process_exited
 				loop
 					prc_launcher.terminate
 				end

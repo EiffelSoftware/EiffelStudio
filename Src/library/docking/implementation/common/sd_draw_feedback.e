@@ -141,6 +141,9 @@ feature {NONE} -- Implementation
 					l_black_or_white := not l_black_or_white
 				end
 				l_x := l_x + 1
+				if a_height \\ 2 /= 0 then
+					l_black_or_white := not l_black_or_white
+				end
 			end
 			Result := l_pixmap
 		ensure

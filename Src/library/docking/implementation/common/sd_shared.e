@@ -141,22 +141,22 @@ feature -- Constants
 			-- Resize bar width or height which is used by SD_RESIZE_BAR.
 
 	Type_normal: INTEGER is 1
-		-- Normal hot zones which normal zones have.
+			-- Normal hot zones which normal zones have.
 
 	Type_editor: INTEGER is 2
-		-- Editor hot zones which editor zones have.
+			-- Editor hot zones which editor zones have.
 
 	Title_bar_height: INTEGER is 18
-		-- Size of zone's title bar.
+			-- Size of zone's title bar.
 
 	Menu_size: INTEGER is 23
-		-- Size of menu.
+			-- Size of menu.
 
 	Default_floating_window_width: INTEGER is 300
-		-- Default floating window width.
+			-- Default floating window width.
 
 	Default_floating_window_height: INTEGER is 300
-		-- Default floating window height.
+			-- Default floating window height.
 
 	Default_docking_height_rate: REAL is 0.25
 			-- When change from floating to docking, height := main container height * `default_docking_height_rate'.

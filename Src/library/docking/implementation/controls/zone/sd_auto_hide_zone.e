@@ -21,7 +21,8 @@ inherit
 			set_extend,
 			prune_vertical_box,
 			wipe_out_vertical_box,
-			cl_put
+			cl_put,
+			prune_all
 		end
 
 	SD_SINGLE_CONTENT_ZONE
@@ -65,9 +66,14 @@ feature	{NONE} -- Initlization
 			window.set_user_widget (internal_content.user_widget)
 			window.title_bar.set_title (internal_content.title)
 			window.title_bar.set_show_normal_max (False)
-			window.close_actions.extend (agent close_window)
+			window.close_request_actions.extend (agent close_window)
 			window.stick_actions.extend (agent stick_window)
-
+			if a_content.mini_toolbar /= Void then
+				if a_content.mini_toolbar.parent /= Void then
+					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+				end
+				window.title_bar.custom_area.extend (a_content.mini_toolbar)
+			end
 			create resize_bar.make (a_direction, Current)
 
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_top then
@@ -120,7 +126,7 @@ feature {NONE} -- Implementation
 				a_screen_boundary.set_bottom (internal_shared.docking_manager.container_rectangle_screen.bottom)
 				a_screen_boundary.set_top (window.screen_y + minimum_height)
 			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
-				a_screen_boundary.set_bottom (window.screen_y - minimum_height)
+				a_screen_boundary.set_bottom ((window.screen_y + window.height) - minimum_height)
 				a_screen_boundary.set_top (internal_shared.docking_manager.container_rectangle_screen.top)
 			end
 			debug ("larry")

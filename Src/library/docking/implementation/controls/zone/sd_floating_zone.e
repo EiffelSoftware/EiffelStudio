@@ -56,7 +56,7 @@ feature {NONE} -- Initlization
 			extend_dialog (internal_vertical_box)
 			create internal_title_bar.make
 			internal_title_bar.drag_actions.extend (agent on_title_bar_drag)
-			internal_title_bar.close_actions.extend (agent on_close_window)
+			internal_title_bar.close_request_actions.extend (agent on_close_window)
 			internal_title_bar.set_show_normal_max (False)
 			internal_title_bar.set_show_stick (False)
 			pointer_button_release_actions.extend (agent on_pointer_button_release)

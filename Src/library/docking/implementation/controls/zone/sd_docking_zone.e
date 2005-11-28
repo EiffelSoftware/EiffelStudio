@@ -56,9 +56,12 @@ feature	{NONE} -- Initlization
 			window.set_user_widget (internal_content.user_widget)
 			window.title_bar.set_title (internal_content.title)
 			if a_content.mini_toolbar /= Void then
+				if a_content.mini_toolbar.parent /= Void then
+					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
+				end
 				window.title_bar.custom_area.extend (a_content.mini_toolbar)
 			end
-			window.close_actions.extend (agent close_window)
+			window.close_request_actions.extend (agent close_window)
 			window.stick_actions.extend (agent stick_window)
 			window.drag_actions.extend (agent on_drag_started)
 			window.normal_max_action.extend (agent on_normal_max_window)

@@ -74,13 +74,13 @@ feature -- Basic operation
 
 feature -- Query
 
-	close_actions: like internal_close_actions is
-			-- `internal_close_actions'.
+	close_request_actions: like internal_close_request_actions is
+			-- `internal_close_request_actions'.
 		do
-			if internal_close_actions = Void then
-				create internal_close_actions
+			if internal_close_request_actions = Void then
+				create internal_close_request_actions
 			end
-			Result := internal_close_actions
+			Result := internal_close_request_actions
 		ensure
 			not_void: Result /= Void
 		end
@@ -102,8 +102,8 @@ feature {NONE} -- Agents
 	on_close_button_pointer_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle when close button pressed.
 		do
-			if internal_close_actions /= Void then
-				internal_close_actions.call ([])
+			if internal_close_request_actions /= Void then
+				internal_close_request_actions.call ([])
 			end
 		end
 
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 	tool_bar_cell: EV_CELL
 			-- Container for a EV_TOOL_BAR.
 
-	internal_close_actions: EV_NOTIFY_ACTION_SEQUENCE
+	internal_close_request_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions when user press close button.
 
 	internal_shared: SD_SHARED

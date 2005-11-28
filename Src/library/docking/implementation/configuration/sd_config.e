@@ -461,7 +461,10 @@ feature {NONE} -- Implementation for open config.
 			l_split, l_split_2: EV_SPLIT_AREA
 		do
 			if a_config_data.is_split_area then
-				a_split.set_split_position (a_config_data.split_position)
+				if a_split.minimum_split_position < a_config_data.split_position and a_split.maximum_split_position > a_config_data.split_position then
+					a_split.set_split_position (a_config_data.split_position)
+				end
+
 				if a_config_data.children_left.is_split_area then
 					l_split ?= a_split.first
 					check l_split /= Void end

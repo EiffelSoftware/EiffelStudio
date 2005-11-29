@@ -31,7 +31,7 @@ feature -- Access
 
 	argument_list: ARRAYED_LIST [STRING]
 			-- List of command line arguments stored in Ace file.
-	
+
 	application_working_directory: STRING
 			-- Current directory stored in Ace file.
 
@@ -126,7 +126,7 @@ feature -- Status setting
 					Error_handler.insert_error (vd21)
 					Error_handler.raise_error
 				end
-					
+
 					-- If last compilation was not successful, we have to trigger
 					-- the parse again even though the `date' on file did not change.
 				if
@@ -168,7 +168,7 @@ feature -- Status setting
 					--| We can't just save the contents of `root_ast' because at this point `all' clusters are expanded.
 				tmp_ast := root_ast
 				root_ast := parsed_ast
-				
+
 				if root_ast /= Void and then root_ast.defaults /= Void then
 					from
 						root_ast.defaults.start
@@ -187,7 +187,7 @@ feature -- Status setting
 				root_ast := tmp_ast
 			end
 		end
-	
+
 	parent_of_cluster (c: CLUSTER_SD): CLUSTER_SD is
 			-- Parent of `c'.
 		local
@@ -198,7 +198,7 @@ feature -- Status setting
 				root_ast.clusters /= Void and then
 				c.parent_name /= Void
 			then
-				from 
+				from
 					cluster_list := root_ast.clusters
 					cu := cluster_list.cursor
 					cluster_list.start
@@ -216,7 +216,7 @@ feature -- Status setting
 				cluster_list.go_to (cu)
 			end
 		end
-	
+
 	path_of_cluster (c: CLUSTER_SD): STRING is
 			-- Full path of `c'.
 		local
@@ -248,10 +248,10 @@ feature -- Status setting
 				end
 			end
 		end
-	
+
 	dependency_dates: HASH_TABLE [INTEGER, STRING]
 			-- Dates that files changed last.
-	
+
 	process_external_dependencies is
 			-- Process `dependencies'.
 		local
@@ -274,7 +274,7 @@ feature -- Status setting
 			end
 			if root_ast.clusters /= Void then
 				create new_dates.make (dependency_dates.count)
-				from 
+				from
 					cluster_list := root_ast.clusters
 					cluster_list.start
 				until
@@ -468,7 +468,7 @@ feature -- Status setting
 			Error_handler.checksum
 
 			add_missing_assemblies
-			
+
 			old_universe := Void
 
 			successful := True
@@ -484,7 +484,7 @@ feature -- Status setting
 				successful := False
 			end
 		end
-		
+
 	compile_all_classes: BOOLEAN is
 			-- Is the root class NONE, i.e. all the classes must be compiled
 		require
@@ -529,7 +529,7 @@ feature {NONE} -- Implementation
 			end
 
 			ast := root_ast.duplicate
-			
+
 			create st.make (2048)
 			ast.save (st)
 			if Eiffel_ace.file_name /= Void then
@@ -555,14 +555,14 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				l_missing := Universe.assemblies_to_be_added
-				
+
 				if l_missing /= Void then
 					ast := parsed_ast
 
 					check
 						has_assemblies: ast.assemblies /= Void
 					end
-					
+
 					from
 						l_missing.start
 						create l_factory
@@ -579,9 +579,9 @@ feature {NONE} -- Implementation
 						ast.assemblies.extend (l_assembly)
 						l_missing.forth
 					end
-					
+
 					Universe.reset_assemblies_to_be_added
-	
+
 					create st.make (2048)
 					ast.save (st)
 					if Eiffel_ace.file_name /= Void then
@@ -669,18 +669,15 @@ feature {NONE} -- Implementation
 			l_runtime_version: STRING
 		do
 			create l_shared
-			if
-				l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False)
-			then
-				l_runtime_version :=
-					l_shared.configure_resources.get_string ("clr_version", Void)
+			if l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False) then
+				l_runtime_version := l_shared.configure_resources.get_string ("clr_version", Void)
 
 				l_defaults := a_root.defaults
 				if l_defaults = Void then
 					create l_defaults.make (1)
 					a_root.set_defaults (l_defaults)
 				end
-				
+
 				create l_factory
 				l_option := l_factory.new_special_option_sd (
 					{FREE_OPTION_SD}.msil_generation, Void, True)
@@ -688,7 +685,7 @@ feature {NONE} -- Implementation
 				if compilation_modes.is_precompiling then
 					l_option := l_factory.new_special_option_sd (
 						{FREE_OPTION_SD}.msil_generation_type, "dll", True)
-				else				
+				else
 					l_option := l_factory.new_special_option_sd (
 						{FREE_OPTION_SD}.msil_generation_type, "exe", True)
 				end
@@ -702,29 +699,43 @@ feature {NONE} -- Implementation
 				l_option := l_factory.new_special_option_sd (
 					{FREE_OPTION_SD}.console_application, Void, True)
 				l_defaults.extend (l_option)
-				
+
 				l_assemblies := a_root.assemblies
 				if l_assemblies = Void then
 					create l_assemblies.make (3)
 					a_root.set_assemblies (l_assemblies)
 				end
+				check
+					compare_references: not l_assemblies.object_comparison
+				end
+				l_assemblies.compare_objects
+
 				create l_assembly.initialize (
 					l_factory.new_id_sd ("mscorlib", True),
 					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\mscorlib.dll", True),
 					Void, Void, Void, Void)
-				l_assemblies.extend (l_assembly)
+				if not l_assemblies.has (l_assembly) then
+					l_assemblies.extend (l_assembly)
+				end
 
 				create l_assembly.initialize (
 					l_factory.new_id_sd ("system", True),
 					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\System.dll", True),
 					l_factory.new_id_sd ("system_dll_", False), Void, Void, Void)
-				l_assemblies.extend (l_assembly)
+				if not l_assemblies.has (l_assembly) then
+					l_assemblies.extend (l_assembly)
+				end
 
 				create l_assembly.initialize (
 					l_factory.new_id_sd ("system_xml", True),
 					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\System.Xml.dll", True),
 					l_factory.new_id_sd ("system_xml_", False), Void, Void, Void)
-				l_assemblies.extend (l_assembly)
+				if not l_assemblies.has (l_assembly) then
+					l_assemblies.extend (l_assembly)
+				end
+
+					-- Restore previous comparison to ensure we do not break code.
+				l_assemblies.compare_references
 			end
 		end
 

@@ -69,7 +69,7 @@ feature  -- Redefine
 				debug ("larry")
 					io.put_string ("%N caller: " + caller.out)
 				end
-				caller.state.float_window (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
+				caller.state.float (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y)
 				Result := True
 			end
 		ensure then

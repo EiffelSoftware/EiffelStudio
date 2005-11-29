@@ -53,7 +53,7 @@ feature -- Command
 			internal_shared.docking_manager.unlock_update
 		end
 
-	close_window is
+	close is
 			-- Close window.
 		do
 			internal_shared.docking_manager.lock_update
@@ -173,6 +173,12 @@ feature {SD_TAB_STATE} -- Maximum issues.
 			-- Parent.
 
 feature {NONE} -- Implementation
+
+	on_close_request is
+			-- Handle close request actions.
+		do
+			content.close_request_actions.call ([])
+		end
 
 	is_maximized: BOOLEAN is
 			-- If current maximized?

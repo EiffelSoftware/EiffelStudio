@@ -56,7 +56,7 @@ feature {NONE} -- Initlization
 			extend_dialog (internal_vertical_box)
 			create internal_title_bar.make
 			internal_title_bar.drag_actions.extend (agent on_title_bar_drag)
-			internal_title_bar.close_request_actions.extend (agent on_close_window)
+			internal_title_bar.close_request_actions.extend (agent on_close)
 			internal_title_bar.set_show_normal_max (False)
 			internal_title_bar.set_show_stick (False)
 			pointer_button_release_actions.extend (agent on_pointer_button_release)
@@ -204,29 +204,27 @@ feature {NONE} -- Implementation
 			-- When user clicked title bar, x y offset.
 
 
-	prune_all_zone (a_widget: EV_WIDGET) is
+	all_zones_in_current (a_widget: EV_WIDGET; a_zones: ARRAYED_LIST [SD_ZONE]) is
 			-- Prune all zone in `Current'
 		require
 			a_widget_not_void: a_widget /= Void
+			a_zones_not_void: a_zones /= Void
 		local
 			l_zone: SD_ZONE
 			l_split_area: EV_SPLIT_AREA
 		do
 			l_zone ?= a_widget
 			if l_zone /= Void then
-				internal_shared.docking_manager.prune_zone (l_zone)
+				a_zones.extend (l_zone)
 			end
-
 			l_split_area ?= a_widget
 			if l_split_area /= Void then
-				prune_all_zone (l_split_area.first)
-				prune_all_zone (l_split_area.second)
+				all_zones_in_current (l_split_area.first, a_zones)
+				all_zones_in_current (l_split_area.second, a_zones)
 			end
 		end
 
-
-
-feature -- Agents
+feature {NONE} -- Agents
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Forward pointer motion actions to docker mediator.
@@ -234,12 +232,37 @@ feature -- Agents
 			docker_mediator.on_pointer_motion (a_screen_x, a_screen_y)
 		end
 
-	on_close_window is
-			-- Destroy `Current'.
+	on_close is
+			-- Handle close request.
+		local
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_multi_zone: SD_MULTI_CONTENT_ZONE
+			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			prune_all_zone (inner_container.item)
-			wipe_out
-			destroy
+			create l_zones.make (1)
+			all_zones_in_current (inner_container.item, l_zones)
+			from
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				l_multi_zone ?= l_zones.item
+				if l_multi_zone /= Void then
+					l_contents := l_multi_zone.contents.twin
+					from
+						l_contents.start
+					until
+						l_contents.after
+					loop
+						l_contents.item.close_request_actions.call ([])
+						l_contents.forth
+					end
+				else
+					l_zones.item.content.close_request_actions.call ([])
+				end
+
+				l_zones.forth
+			end
 		end
 
 	on_title_bar_drag (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

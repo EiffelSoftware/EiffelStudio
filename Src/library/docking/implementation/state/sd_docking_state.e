@@ -7,10 +7,10 @@ class
 	SD_DOCKING_STATE
 
 inherit
-	SD_INNER_STATE
+	SD_STATE
 		redefine
-			stick_window,
-			float_window,
+			stick,
+			float,
 			change_zone_split_area,
 			move_to_docking_zone,
 			move_to_tab_zone,
@@ -177,7 +177,7 @@ feature -- Redefine.
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
 		end
 
-	stick_window (a_direction: INTEGER) is
+	stick (a_direction: INTEGER) is
 			-- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
@@ -197,23 +197,28 @@ feature -- Redefine.
 			state_changed: content.state /= Current
 		end
 
-	float_window (a_x, a_y: INTEGER) is
+	float (a_x, a_y: INTEGER) is
 			-- Redefine.
 		local
 			l_floating_state: SD_FLOATING_STATE
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			internal_shared.docking_manager.lock_update
-			l_orignal_multi_dock_area := internal_shared.docking_manager.inner_container (zone)
 
-			create l_floating_state.make (a_x, a_y)
-			dock_at_top_level (l_floating_state.inner_container)
-			l_floating_state.update_title_bar
-			l_orignal_multi_dock_area.update_title_bar
-			internal_shared.docking_manager.remove_empty_split_area
-			internal_shared.docking_manager.unlock_update
+			l_orignal_multi_dock_area := internal_shared.docking_manager.inner_container (zone)
+			if l_orignal_multi_dock_area.has (zone) and l_orignal_multi_dock_area.parent_floating_zone /= Void then
+				l_orignal_multi_dock_area.parent_floating_zone.set_position (a_x, a_y)
+			else
+				internal_shared.docking_manager.lock_update
+				create l_floating_state.make (a_x, a_y)
+				dock_at_top_level (l_floating_state.inner_container)
+				l_floating_state.update_title_bar
+				l_orignal_multi_dock_area.update_title_bar
+				internal_shared.docking_manager.remove_empty_split_area
+				internal_shared.docking_manager.unlock_update
+			end
+
 		ensure then
-			floated: old zone.parent /= zone.parent
+--			floated: old zone.parent /= zone.parent
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is

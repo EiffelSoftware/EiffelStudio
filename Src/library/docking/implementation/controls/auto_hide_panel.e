@@ -28,8 +28,6 @@ feature {NONE} -- Initlization
 			internal_tab_stubs.add_actions.extend (agent on_add_tab_stub)
 			internal_tab_stubs.remove_actions.extend (agent on_pruned_tab_stub)
 			create tab_groups
-		ensure
-
 		end
 
 feature -- Query
@@ -41,7 +39,7 @@ feature -- Query
 		end
 
 	tab_groups: ACTIVE_LIST [like internal_tab_group]
-			-- All tab groups, 2nd integer is tab group width.
+			-- All tab groups.
 
 	has (a_tab: SD_TAB_STUB): BOOLEAN is
 			-- If `Current' has a_tab ?
@@ -60,7 +58,7 @@ feature -- Query
 			until
 				tab_stubs.after or Result
 			loop
-				Result := tab_stubs.item.title.is_equal (a_content.title)
+				Result := tab_stubs.item.text.is_equal (a_content.title)
 				tab_stubs.forth
 			end
 		end
@@ -83,7 +81,7 @@ feature -- Query
 				until
 					l_group.after or Result
 				loop
-					Result := l_group.item.title.is_equal (a_content.title)
+					Result := l_group.item.text.is_equal (a_content.title)
 					l_group.forth
 				end
 				tab_groups.forth
@@ -98,7 +96,7 @@ feature -- Command
 			a_contents_not_void: a_contents /= Void
 			a_contents_more_than_one: a_contents.count > 1
 		local
-			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_tab_group, l_tab_group_prune: ARRAYED_LIST [SD_TAB_STUB]
 			l_tab: SD_TAB_STUB
 		do
 			from
@@ -108,9 +106,13 @@ feature -- Command
 			loop
 				l_tab := tab_by_content (a_contents.item)
 				if l_tab_group = Void then
-					l_tab_group := tab_group (l_tab)
+					l_tab_group := tab_group_internal (l_tab)
 				else
+					l_tab_group_prune := tab_group_internal (l_tab)
+					tab_groups.start
+					tab_groups.prune (l_tab_group_prune)
 					l_tab_group.extend (l_tab)
+					l_tab.set_tab_group (l_tab_group)
 				end
 				a_contents.forth
 			end
@@ -120,12 +122,10 @@ feature -- Command
 		end
 
 	tab_group (a_tab: SD_TAB_STUB):like internal_tab_group  is
-			-- Get the group contain `a_tab', If not found, create a new one.
+			-- Get the group contain `a_tab'.
 		require
 			a_tab_not_void: a_tab /= Void
 			has_tab: has (a_tab)
-		local
-			l_tab_group: like internal_tab_group
 		do
 			from
 				tab_groups.start
@@ -134,17 +134,11 @@ feature -- Command
 			loop
 				tab_groups.item.start
 				if tab_groups.item.has (a_tab) then
-					Result := tab_groups.item
+					Result := tab_groups.item.twin
 				end
 				tab_groups.forth
 			end
 
-			if Result = Void then
-				create 	l_tab_group.make (1)
-				l_tab_group.extend (a_tab)
-				tab_groups.extend (l_tab_group)
-				Result := l_tab_group
-			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -165,18 +159,39 @@ feature -- States report
 
 feature {NONE} -- Implementation functions.
 
+	tab_group_max_size (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]): INTEGER is
+			-- Tab group max size.
+		require
+			a_tab_group_not_void: a_tab_group /= Void
+			has: tab_groups.has (a_tab_group)
+		do
+			from
+				a_tab_group.start
+			until
+				a_tab_group.after
+			loop
+				if Result <= a_tab_group.item.text_width then
+					Result := a_tab_group.item.text_width
+				end
+				a_tab_group.forth
+			end
+		end
+
 	update_tab_group is
 			-- Update tab stubs layout by tab group.
 		do
 			from
+				create tab_groups_max_size.make (1)
 				tab_groups.start
 			until
 				tab_groups.after
 			loop
 				-- Remove stub seperator by group
 				update_one_tab_group (tab_groups.item)
+				tab_groups_max_size.extend (tab_group_max_size (tab_groups.item))
 				tab_groups.forth
 			end
+			update_tab_group_max_size
 		end
 
 	update_one_tab_group (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]) is
@@ -211,6 +226,37 @@ feature {NONE} -- Implementation functions.
 			only_one_tab_have_text:
 		end
 
+	update_tab_group_max_size is
+			-- Update tab group max size.
+		local
+			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+		do
+			from
+				tab_groups.start
+				tab_groups_max_size.start
+			until
+				tab_groups.after
+			loop
+				l_tab_group := tab_groups.item
+				from
+					l_tab_group.start
+				until
+					l_tab_group.after
+				loop
+					l_tab_group.item.set_text_size (tab_groups_max_size.item)
+
+					l_tab_group.forth
+				end
+
+				debug ("larry")
+					io.put_string ("%N SD_AUTO_HIDE_PANEL group max size " + tab_groups_max_size.item.out)
+				end
+
+				tab_groups.forth
+				tab_groups_max_size.forth
+			end
+		end
+
 	tab_by_content (a_content: SD_CONTENT): SD_TAB_STUB is
 			-- SD_TAB_STUB which represent `a_content'.
 		require
@@ -222,7 +268,7 @@ feature {NONE} -- Implementation functions.
 			until
 				internal_tab_stubs.after or Result /= Void
 			loop
-				if internal_tab_stubs.item.title.is_equal (a_content.title) then
+				if internal_tab_stubs.item.text.is_equal (a_content.title) then
 					Result := internal_tab_stubs.item
 				end
 				internal_tab_stubs.forth
@@ -237,9 +283,15 @@ feature {NONE} -- Implementation functions.
 			a_stub_not_void: a_stub /= Void
 		local
 			l_spacer: SD_AUTO_HIDE_SEPERATOR
+			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 			extend (a_stub)
 			disable_item_expand (a_stub)
+			create l_tab_group.make (1)
+			l_tab_group.extend (a_stub)
+			a_stub.set_tab_group (l_tab_group)
+			tab_groups.extend (l_tab_group)
+
 			-- Add spacer.
 			create l_spacer
 			l_spacer.set_minimum_size (spacer_size, spacer_size)
@@ -265,7 +317,18 @@ feature {NONE} -- Implementation functions.
 			has: has (a_stub)
 		local
 			l_seperator: SD_AUTO_HIDE_SEPERATOR
+			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
+
+			-- Update Tab group
+			l_tab_group := tab_group_internal (a_stub)
+			l_tab_group.start
+			l_tab_group.prune (a_stub)
+			if l_tab_group.count = 0 then
+				tab_groups.start
+				tab_groups.prune (l_tab_group)
+			end
+
 			start
 			search (a_stub)
 			check not off end
@@ -293,7 +356,32 @@ feature {NONE} -- Implementation functions.
 			removed: not has (a_stub)
 		end
 
+	tab_group_internal (a_tab: SD_TAB_STUB):like internal_tab_group  is
+			-- Get the group contain `a_tab'.
+		require
+			a_tab_not_void: a_tab /= Void
+			has_tab: has (a_tab)
+		do
+			from
+				tab_groups.start
+			until
+				tab_groups.after or Result /= Void
+			loop
+				tab_groups.item.start
+				if tab_groups.item.has (a_tab) then
+					Result := tab_groups.item
+				end
+				tab_groups.forth
+			end
+
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {NONE} -- Impelementation attributes.
+
+	tab_groups_max_size: ARRAYED_LIST [INTEGER]
+			-- Max size of correspond tab group.
 
 	internal_tab_stubs: ACTIVE_LIST [SD_TAB_STUB]
 			-- All tab stubs.

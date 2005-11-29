@@ -21,7 +21,7 @@ feature -- Query
 			-- Redefine
 		do
 			if internal_notebook.selected_item_index /= 0 then
-				Result := internal_contents.i_th (internal_notebook.selected_item_index)
+				Result := contents.i_th (internal_notebook.selected_item_index)
 			else
 				Result := last_content
 			end
@@ -29,10 +29,13 @@ feature -- Query
 			not_void: Result /= Void
 		end
 
+	contents: ARRAYED_LIST [SD_CONTENT]
+			-- SD_CONTENTs managed by `Current'.
+
 	count: INTEGER is
 			-- How many SD_CONTENT in `Current'?
 		do
-			Result := internal_contents.count
+			Result := contents.count
 		end
 
 	last_content: SD_CONTENT is
@@ -40,8 +43,8 @@ feature -- Query
 		require
 --			only_one_content: only_one_content
 		do
-			internal_contents.start
-			Result := internal_contents.item
+			contents.start
+			Result := contents.item
 		ensure
 			not_void: Result /= Void
 		end
@@ -51,13 +54,15 @@ feature -- Command
 	extend (a_content: SD_CONTENT) is
 			-- Redefine
 		do
-			internal_contents.extend (a_content)
+			disable_on_select_tab
+			contents.extend (a_content)
 			internal_notebook.extend (a_content.user_widget)
 			internal_notebook.set_item_text (a_content.user_widget, a_content.title)
 			internal_notebook.item_tab (a_content.user_widget).set_pixmap (a_content.pixmap)
 			internal_notebook.item_tab (a_content.user_widget).enable_select
+			enable_on_select_tab
 		ensure then
-			extended: internal_contents.has (a_content)
+			extended: contents.has (a_content)
 			internal_notebook.has (a_content.user_widget)
 			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget, 1)
 		end
@@ -69,7 +74,7 @@ feature -- Command
 			has_content: has (a_content)
 		do
 			disable_on_select_tab
-			internal_contents.prune_all (a_content)
+			contents.prune_all (a_content)
 			internal_notebook.prune_all (a_content.user_widget)
 			enable_on_select_tab
 		ensure
@@ -83,12 +88,12 @@ feature {SD_CONFIG_MEDIATOR} -- Save config
 			-- Redefine.
 		do
 			from
-				internal_contents.start
+				contents.start
 			until
-				internal_contents.after
+				contents.after
 			loop
-				a_config_data.add_title (internal_contents.item.title)
-				internal_contents.forth
+				a_config_data.add_title (contents.item.title)
+				contents.forth
 			end
 		end
 
@@ -115,14 +120,14 @@ feature -- States report
 	has (a_content: SD_CONTENT): BOOLEAN is
 			-- Redefine.
 		do
-			internal_contents.start
-			Result := internal_contents.has (a_content)
+			contents.start
+			Result := contents.has (a_content)
 		end
 
 	only_one_content: BOOLEAN is
 			-- If there only one SD_CONTENT in `Current'.
 		do
-			Result := internal_contents.count = 1
+			Result := contents.count = 1
 		end
 
 	index_of (a_content: SD_CONTENT; i: INTEGER): INTEGER is
@@ -135,9 +140,6 @@ feature -- States report
 		end
 
 feature {NONE} -- Implementation
-
-	internal_contents: ARRAYED_LIST [SD_CONTENT]
-			-- SD_CONTENTs managed by `Current'.
 
 	internal_notebook: EV_NOTEBOOK
 			-- Container which `Current' in.

@@ -12,8 +12,8 @@ inherit
 	redefine
 		dock_at_top_level,
 		change_zone_split_area,
-		stick_window,
-		float_window,
+		stick,
+		float,
 		move_to_tab_zone,
 		move_to_docking_zone
 	end
@@ -84,7 +84,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	stick_window (a_direction: INTEGER) is
+	stick (a_direction: INTEGER) is
 			-- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
@@ -97,7 +97,7 @@ feature -- Redefine.
 			state_changed: internal_content.state /= Current
 		end
 
-	float_window (a_x, a_y: INTEGER) is
+	float (a_x, a_y: INTEGER) is
 			-- Redefine.
 		local
 			l_docking_state: SD_DOCKING_STATE

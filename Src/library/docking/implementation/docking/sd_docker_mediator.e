@@ -62,7 +62,6 @@ feature -- Hanlde pointer events
 		do
 --			feedback.clear_screen
 			tracing := False
-
 			from
 				hot_zones.start
 			until
@@ -166,7 +165,34 @@ feature {NONE} -- Implementation functions
 		end
 
 	generate_hot_zones_imp (a_list: ARRAYED_LIST [SD_ZONE]) is
-			-- Generate all the hot zones for the windows.
+			-- Filte zone in same SD_MULTI_DOCK_AREA.
+		require
+			a_list_not_void: a_list /= Void
+		local
+			l_floating_zone: SD_FLOATING_ZONE
+			l_zones_filted: like a_list
+		do
+			l_zones_filted := a_list.twin
+			l_floating_zone ?= internal_caller
+			if l_floating_zone /= Void then
+				from
+					a_list.start
+				until
+					a_list.after
+				loop
+					if l_floating_zone.inner_container.has_zone (a_list.item) then
+						l_zones_filted.start
+						l_zones_filted.prune (a_list.item)
+					end
+					a_list.forth
+				end
+			end
+
+			generate_hot_zone_in_area (l_zones_filted)
+		end
+
+	generate_hot_zone_in_area (a_list: ARRAYED_LIST [SD_ZONE]) is
+			-- Generate all hot zones for a SD_MULIT_DOCK_AREA.
 		require
 			a_list_not_void: a_list /= Void
 		local

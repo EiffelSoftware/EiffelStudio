@@ -29,8 +29,8 @@ feature {NONE} -- Initlization
 
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_style, a_zone)
 			internal_title_bar.set_minimum_height (18)
-			internal_title_bar.close_request_actions.extend (agent close_window)
-			internal_title_bar.stick_select_actions.extend (agent stick_window)
+			internal_title_bar.close_request_actions.extend (agent close)
+			internal_title_bar.stick_select_actions.extend (agent stick)
 			internal_title_bar.normal_max_actions.extend (agent on_normal_max_window)
 			internal_title_bar.drag_actions.extend (agent drag_window)
 			internal_title_bar.pointer_button_release_actions.extend (agent pointer_release)
@@ -172,7 +172,7 @@ feature -- Actions
 
 feature {NONE} -- Implemention
 
-	close_window is
+	close is
 			-- Handle close window,
 		do
 			close_request_actions.call ([])
@@ -184,7 +184,7 @@ feature {NONE} -- Implemention
 			normal_max_action.call ([])
 		end
 
-	stick_window is
+	stick is
 			-- Handle stick window.
 		do
 			stick_actions.call ([])

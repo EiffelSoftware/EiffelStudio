@@ -33,8 +33,7 @@ inherit
 		undefine
 			on_focus_in,
 			on_focus_out,
-			pointer_enter_actions,
-			close_window
+			pointer_enter_actions
 		end
 
 	SD_RESIZE_SOURCE
@@ -66,8 +65,8 @@ feature	{NONE} -- Initlization
 			window.set_user_widget (internal_content.user_widget)
 			window.title_bar.set_title (internal_content.title)
 			window.title_bar.set_show_normal_max (False)
-			window.close_request_actions.extend (agent close_window)
-			window.stick_actions.extend (agent stick_window)
+			window.close_request_actions.extend (agent on_close_request)
+			window.stick_actions.extend (agent stick)
 			if a_content.mini_toolbar /= Void then
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
@@ -94,16 +93,10 @@ feature {NONE} -- Implementation
 	internal_direction: INTEGER
 			-- Direction.
 
-	close_window is
-			-- Close zone.
-		do
-			internal_content.state.close_window
-		end
-
-	stick_window is
+	stick is
 			-- Stick zone.
 		do
-			internal_content.state.stick_window (content.state.direction)
+			internal_content.state.stick (content.state.direction)
 		end
 
 	resize_bar: SD_RESIZE_BAR

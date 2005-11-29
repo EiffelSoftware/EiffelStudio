@@ -181,7 +181,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 		do
-			state.stick_window (a_direction)
+			state.stick (a_direction)
 			set_focus
 		end
 
@@ -190,7 +190,7 @@ feature -- Set Position
 		require
 			manager_has_content: manager_has_content (Current)
 		do
-			state.float_window (a_screen_x, a_screen_y)
+			state.float (a_screen_x, a_screen_y)
 			set_focus
 		end
 
@@ -253,10 +253,7 @@ feature -- Command
 	close is
 			-- Destroy `Current' from docking library if `is_default_destroy', otherwise hide.
 		do
-			if internal_close_request_actions /= Void then
-				internal_close_request_actions.call ([])
-			end
-			state.close_window
+			state.close
 		end
 
 feature -- States report

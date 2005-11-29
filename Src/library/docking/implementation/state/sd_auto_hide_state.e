@@ -9,9 +9,9 @@ class
 inherit
 	SD_STATE
 		redefine
-			show_window,
-			close_window,
-			stick_window,
+			show,
+			close,
+			stick,
 			change_title
 		end
 
@@ -45,7 +45,7 @@ feature {NONE} -- Initlization
 			debug ("larry")
 				io.put_string ("%N ************************** SD_AUTO_HIDE_STATE: insert tab stubs.")
 			end
-			internal_tab_stub.pointer_enter_actions.extend (agent show_window)
+			internal_tab_stub.pointer_enter_actions.extend (agent show)
 			auto_hide_panel.tab_stubs.extend (internal_tab_stub)
 		ensure
 			set: internal_content = a_content
@@ -192,11 +192,10 @@ feature {NONE} -- Auto hide attributes.
 
 feature -- Redefine.
 
-	close_window is
+	close is
 			-- Redefine.
 		local
 			l_env: EV_ENVIRONMENT
-			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 			record_state
 			Precursor {SD_STATE}
@@ -208,20 +207,14 @@ feature -- Redefine.
 			l_env.application.pointer_motion_actions.prune_all (internal_motion_procudure)
 
 			-- Remove tab stub from the SD_AUTO_HIDE_PANEL
-			if auto_hide_panel.is_content_in_group (internal_content) then
-				l_tab_group := auto_hide_panel.tab_group (internal_tab_stub)
-				l_tab_group.start
-				l_tab_group.prune (internal_tab_stub)
-			else
-				auto_hide_panel.tab_stubs.start
-				auto_hide_panel.tab_stubs.prune (internal_tab_stub)
-			end
+			auto_hide_panel.tab_stubs.start
+			auto_hide_panel.tab_stubs.prune (internal_tab_stub)
 		ensure then
 			internal_close_timer_void: internal_close_timer = Void
 			tab_group_pruned: not auto_hide_panel.has (internal_tab_stub)
 		end
 
-	stick_window (a_direction: INTEGER) is
+	stick (a_direction: INTEGER) is
 			-- Redefine. `a_direction' is useless, it's only used for SD_DOCKING_STATE.
 		do
 			internal_shared.docking_manager.lock_update
@@ -238,12 +231,12 @@ feature -- Redefine.
 			tab_stubs_pruned: auto_hide_panel.tab_stubs.count < old auto_hide_panel.tab_stubs.count
 		end
 
-	change_title (a_title: STRING; a_content: SD_CONTENT) is
+ 	change_title (a_title: STRING; a_content: SD_CONTENT) is
 			-- Redefine.
 		do
-			internal_tab_stub.set_title (a_title)
+			internal_tab_stub.set_text (a_title)
 		ensure then
-			set: internal_tab_stub.title = a_title
+			set: internal_tab_stub.text = a_title
 		end
 
 	restore (titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
@@ -278,7 +271,7 @@ feature -- Redefine.
 
 		end
 
-	show_window is
+	show is
 			-- Redefine.
 		local
 			l_rect: EV_RECTANGLE
@@ -320,7 +313,7 @@ feature -- Redefine.
 					if width_height > zone.minimum_height then
 						internal_shared.docking_manager.fixed_area.set_item_height (zone, width_height)
 						debug ("larry")
-							io.put_string ("%N SD_AUTO_HIDE_STATE show_window width_height " + width_height.out)
+							io.put_string ("%N SD_AUTO_HIDE_STATE show width_height " + width_height.out)
 						end
 					end
 				end
@@ -360,6 +353,7 @@ feature {NONE} -- Implementation functions.
 			l_docking_state: SD_DOCKING_STATE
 			l_tab_state: SD_TAB_STATE
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_tab_stub: SD_TAB_STUB
 			l_content: SD_CONTENT
 
 			l_last_tab_zone: SD_TAB_ZONE
@@ -370,10 +364,11 @@ feature {NONE} -- Implementation functions.
 			until
 				l_tab_group.after
 			loop
+				l_tab_stub := l_tab_group.item
 				auto_hide_panel.tab_stubs.start
-				auto_hide_panel.tab_stubs.prune (l_tab_group.item)
+				auto_hide_panel.tab_stubs.prune (l_tab_stub)
 
-				l_content := internal_shared.docking_manager.content_by_title (l_tab_group.item.title)
+				l_content := internal_shared.docking_manager.content_by_title (l_tab_stub.text)
 				if l_tab_group.index = 1 then
 					create l_docking_state.make (l_content, direction, width_height)
 					l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)

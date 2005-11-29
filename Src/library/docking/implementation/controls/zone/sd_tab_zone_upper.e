@@ -24,7 +24,7 @@ feature {NONE} -- Initlization
 			prune_widget (internal_notebook)
 			create notebook.make (internal_notebook)
 			extend_widget (notebook)
-			notebook.close_request_actions.extend (agent on_close)
+			notebook.close_request_actions.extend (agent on_close_request)
 		ensure then
 			notebook_added: has_widget (notebook)
 		end
@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 		do
 			if not internal_diable_on_select_tab then
 				Precursor {SD_TAB_ZONE}
-				l_content := internal_contents.i_th (internal_notebook.selected_item_index)
+				l_content := contents.i_th (internal_notebook.selected_item_index)
 				if l_content.mini_toolbar /= Void then
 					notebook.set_mini_tool_bar (l_content.mini_toolbar)
 				end

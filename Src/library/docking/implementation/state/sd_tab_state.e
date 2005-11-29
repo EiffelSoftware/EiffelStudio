@@ -7,18 +7,18 @@ class
 	SD_TAB_STATE
 
 inherit
-	SD_INNER_STATE
+	SD_STATE
 		redefine
-			stick_window,
+			stick,
 			change_zone_split_area,
-			float_window,
+			float,
 			move_to_tab_zone,
 			move_to_docking_zone,
 			dock_at_top_level,
 			content,
 			change_title,
 			change_pixmap,
-			close_window,
+			close,
 			content_count_valid,
 			is_dock_at_top
 		end
@@ -158,13 +158,14 @@ feature -- Redefine
 		do
 		end
 
-	stick_window (a_direction: INTEGER) is
+	stick (a_direction: INTEGER) is
 			-- Redefine.
 		local
 			l_auto_hide_state: SD_AUTO_HIDE_STATE
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
 		do
+			internal_shared.docking_manager.lock_update
 			internal_shared.docking_manager.prune_zone (tab_zone)
 			l_contents := tab_zone.contents
 			from
@@ -180,18 +181,16 @@ feature -- Redefine
 			end
 			l_auto_hide_panel:= internal_shared.docking_manager.auto_hide_panel (direction)
 			l_auto_hide_panel.set_tab_group (l_contents)
+			internal_shared.docking_manager.unlock_update
 		ensure then
 			pruned: not internal_shared.docking_manager.has_zone (tab_zone)
 		end
 
-	close_window is
+	close is
 			-- Redefine.
 		do
 			internal_shared.docking_manager.lock_update
-			tab_zone.prune (content)
-			if internal_content.internal_close_request_actions /= Void then
-				internal_content.internal_close_request_actions.call ([])
-			end
+			tab_zone.prune (internal_content)
 			update_last_content_state
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
@@ -223,32 +222,20 @@ feature -- Redefine
 			parent_changed:
 		end
 
-	float_window (a_x, a_y: INTEGER) is
+	float (a_x, a_y: INTEGER) is
 			-- Redefine.
 		local
-			l_floating_state: SD_FLOATING_STATE
-			l_docking_state: SD_DOCKING_STATE
-			l_content: SD_CONTENT
+			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			internal_shared.docking_manager.lock_update
-			create l_floating_state.make (a_x, a_y)
-
-			if zone.is_drag_title_bar then
-				dock_at_top_level (l_floating_state.inner_container)
-				l_floating_state.update_title_bar
+			l_orignal_multi_dock_area := internal_shared.docking_manager.inner_container (zone)
+			if l_orignal_multi_dock_area.has (zone) and l_orignal_multi_dock_area.parent_floating_zone /= Void
+				and zone.is_drag_title_bar then
+				l_orignal_multi_dock_area.parent_floating_zone.set_position (a_x, a_y)
 			else
-				l_content := content
-				tab_zone.prune (l_content)
-				create l_docking_state.make (l_content, {SD_DOCKING_MANAGER}.dock_left, {SD_SHARED}.title_bar_height)
-				l_docking_state.dock_at_top_level (l_floating_state.inner_container)
-				l_content.change_state (l_docking_state)
-
-				update_last_content_state
+				float_internal (a_x, a_y)
 			end
-			internal_shared.docking_manager.remove_empty_split_area
-			internal_shared.docking_manager.unlock_update
 		ensure then
-			whole_floated:
+--			whole_floated:
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
@@ -401,6 +388,32 @@ feature -- Properties redefine.
 
 feature {NONE}  -- Implementation functions.
 
+	float_internal (a_x, a_y: INTEGER) is
+			-- Float window.
+		local
+			l_floating_state: SD_FLOATING_STATE
+			l_docking_state: SD_DOCKING_STATE
+			l_content: SD_CONTENT
+		do
+			internal_shared.docking_manager.lock_update
+			create l_floating_state.make (a_x, a_y)
+
+			if zone.is_drag_title_bar then
+				dock_at_top_level (l_floating_state.inner_container)
+				l_floating_state.update_title_bar
+			else
+				l_content := content
+				tab_zone.prune (l_content)
+				create l_docking_state.make (l_content, {SD_DOCKING_MANAGER}.dock_left, {SD_SHARED}.title_bar_height)
+				l_docking_state.dock_at_top_level (l_floating_state.inner_container)
+				l_content.change_state (l_docking_state)
+
+				update_last_content_state
+			end
+			internal_shared.docking_manager.remove_empty_split_area
+			internal_shared.docking_manager.unlock_update
+		end
+
 	change_zone_split_area_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_direction: INTEGER) is
 			-- Change zone split area to docking zone.
 			-- This routine copy from SD_DOCKING_STATE, only change internal_zone to tab_zone.
@@ -526,7 +539,7 @@ feature {NONE}  -- Implementation functions.
 			update_last_content_state
 			tab_zone.enable_on_select_tab
 		ensure
-			moved: a_target_zone.parent.has (internal_content.state.zone)
+--			moved: a_target_zone.parent.has (internal_content.state.zone)
 		end
 
 	move_tab_to_tab_zone (a_target_zone: SD_TAB_ZONE) is

@@ -10,7 +10,7 @@ inherit
 	SD_STATE
 		redefine
 			change_zone_split_area,
-			stick_window,
+			stick,
 			move_to_docking_zone,
 			move_to_tab_zone,
 			content_void
@@ -83,7 +83,7 @@ feature -- Redefine.
 
 		end
 
-	stick_window (a_direction: INTEGER) is
+	stick (a_direction: INTEGER) is
 			-- Redefine.
 		do
 		end

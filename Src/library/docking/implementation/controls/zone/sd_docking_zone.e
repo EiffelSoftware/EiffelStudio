@@ -23,7 +23,7 @@ inherit
 		undefine
 			on_focus_in,
 			on_focus_out,
-			close_window
+			close
 		redefine
 			set_max,
 			is_maximized
@@ -61,8 +61,8 @@ feature	{NONE} -- Initlization
 				end
 				window.title_bar.custom_area.extend (a_content.mini_toolbar)
 			end
-			window.close_request_actions.extend (agent close_window)
-			window.stick_actions.extend (agent stick_window)
+			window.close_request_actions.extend (agent on_close_request)
+			window.stick_actions.extend (agent stick)
 			window.drag_actions.extend (agent on_drag_started)
 			window.normal_max_action.extend (agent on_normal_max_window)
 
@@ -200,10 +200,10 @@ feature {NONE} -- For redocker.
 
 feature {NONE} -- Implementation
 
-	stick_window is
+	stick is
 			-- Stick window.
 		do
-			internal_content.state.stick_window ({SD_DOCKING_MANAGER}.dock_left)
+			internal_content.state.stick ({SD_DOCKING_MANAGER}.dock_left)
 		end
 
 --	on_title_bar_double_press is
@@ -214,7 +214,7 @@ feature {NONE} -- Implementation
 --			end
 --		end
 
-	close_window is
+	close is
 			-- Redefine
 		do
 			internal_shared.docking_manager.lock_update

@@ -14,8 +14,7 @@ inherit
 			on_focus_out,
 			on_normal_max_window,
 			is_maximized,
-			set_max,
-			close_window
+			set_max
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -62,7 +61,7 @@ feature {NONE} -- Initlization
 			create internal_shared
 			create internal_shared_not_used
 			default_create
-			create internal_contents.make (1)
+			create contents.make (1)
 			create internal_notebook
 			internal_notebook.set_minimum_size (0, 0)
 			internal_notebook.set_tab_position ({EV_NOTEBOOK}.tab_bottom)
@@ -72,7 +71,7 @@ feature {NONE} -- Initlization
 			internal_title_bar.drag_actions.extend (agent on_drag_title_bar)
 			internal_title_bar.stick_select_actions.extend (agent on_stick)
 			internal_title_bar.normal_max_actions.extend (agent on_normal_max_window)
-			internal_title_bar.close_request_actions.extend (agent on_close)
+			internal_title_bar.close_request_actions.extend (agent on_close_request)
 			if a_content.mini_toolbar /= Void then
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
@@ -171,14 +170,6 @@ feature -- Command
 
 feature {SD_TAB_STATE} -- Internal issues.
 
-	contents: like internal_contents is
-			-- `internal_contents'.
-		do
-			Result := internal_contents
-		ensure
-			not_void: Result /= Void
-		end
-
 	selected_item_index: INTEGER is
 			-- Selected item index.
 		do
@@ -227,7 +218,7 @@ feature {NONE} -- Agents for user
 	on_stick is
 			-- Handle user click button.
 		do
-			content.state.stick_window ({SD_DOCKING_MANAGER}.dock_left)
+			content.state.stick ({SD_DOCKING_MANAGER}.dock_left)
 		ensure
 			state_changed:
 		end
@@ -240,13 +231,13 @@ feature {NONE} -- Agents for user
 			end
 		end
 
-	on_close is
-			-- Handle user click close button.
-		do
-
-			content.state.close_window
-			close_window
-		end
+--	on_close is
+--			-- Handle user click close button.
+--		do
+--
+--			content.state.close
+--			close
+--		end
 
 feature {NONE} -- Agents for docker
 
@@ -256,7 +247,7 @@ feature {NONE} -- Agents for docker
 			l_content: SD_CONTENT
 		do
 			if not internal_diable_on_select_tab then
-				l_content := internal_contents.i_th (internal_notebook.selected_item_index)
+				l_content := contents.i_th (internal_notebook.selected_item_index)
 				internal_title_bar.set_title (l_content.title)
 				if l_content.mini_toolbar /= Void then
 					internal_title_bar.custom_area.extend (l_content.mini_toolbar)
@@ -268,9 +259,9 @@ feature {NONE} -- Agents for docker
 				end
 			end
 		ensure
-			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (internal_contents.i_th (internal_notebook.selected_item_index).title)
---			mini_tool_bar_added: not internal_diable_on_select_tab implies (internal_contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies
---				internal_title_bar.custom_area.item = internal_contents.i_th (internal_notebook.selected_item_index).mini_toolbar)
+			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).title)
+--			mini_tool_bar_added: not internal_diable_on_select_tab implies (contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies
+--				internal_title_bar.custom_area.item = contents.i_th (internal_notebook.selected_item_index).mini_toolbar)
 		end
 
 	on_drag_title_bar (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
@@ -280,7 +271,7 @@ feature {NONE} -- Agents for docker
 		do
 			is_drag_title_bar := True
 			create internal_docker_mediator.make (Current)
-			internal_docker_mediator.start_tracing_pointer (screen_x - a_screen_x, screen_y - a_screen_y)
+			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 			enable_capture
 			l_tab_state ?= content.state
 			check l_tab_state /= Void end
@@ -333,7 +324,7 @@ feature {NONE} -- Agents for docker
 			end
 			if internal_notebook_pressed then
 				create internal_docker_mediator.make (Current)
-				internal_docker_mediator.start_tracing_pointer (screen_x - a_screen_x, screen_y - a_screen_y)
+				internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
 				enable_capture
 				l_tab_state ?= content.state
 				check l_tab_state /= Void end
@@ -354,12 +345,6 @@ feature {NONE} -- Agents for docker
 		end
 
 feature {NONE} -- Implementation
-
-	close_window is
-			-- Redefine
-		do
-
-		end
 
 	internal_title_bar: SD_TITLE_BAR
 			-- Title bar.

@@ -89,27 +89,27 @@ feature -- Commands
 		deferred
 		end
 
-	show_window is
+	show is
 			-- Handle show window.
 		do
 		end
 
-	close_window is
+	close is
 			-- Handle close window.
 		do
+			internal_shared.docking_manager.lock_update
+			zone.close
 			internal_shared.docking_manager.prune_zone_by_content (internal_content)
-			if internal_content.internal_close_request_actions /= Void then
-				internal_content.internal_close_request_actions.call ([])
-			end
 			internal_shared.docking_manager.remove_empty_split_area
+			internal_shared.docking_manager.unlock_update
 		end
 
-	stick_window (a_direction: INTEGER) is
+	stick (a_direction: INTEGER) is
 			-- Stick/Unstick a window.
 		do
 		end
 
-	float_window (a_x, a_y: INTEGER) is
+	float (a_x, a_y: INTEGER) is
 			-- Make current window floating.
 		do
 		end
@@ -256,6 +256,11 @@ feature {NONE} -- Implementation
 			debug ("larry")
 				io.put_string ("%N SD_STATE top_split_position: a_spliter.minimum_split_position " + a_spliter.minimum_split_position.out + " a_spliter.maximum_split_position " + a_spliter.maximum_split_position.out)
 				io.put_string ("%N                      Result: " + Result.out)
+			end
+			if Result < a_spliter.minimum_split_position then
+				Result := a_spliter.minimum_split_position
+			elseif Result > a_spliter.maximum_split_position then
+				Result := a_spliter.maximum_split_position
 			end
 		ensure
 			result_valid: Result >= a_spliter.minimum_split_position and Result <= a_spliter.maximum_split_position

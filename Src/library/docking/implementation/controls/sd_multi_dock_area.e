@@ -24,21 +24,21 @@ feature -- Command
 	update_title_bar is
 			-- If `Current' parent is a SD_FLOATING_ZONE, update title bar.
 		do
-			if internal_parent_floating_zone /= Void then
-				internal_parent_floating_zone.update_title_bar
+			if parent_floating_zone /= Void then
+				parent_floating_zone.update_title_bar
 			elseif readable then
 				set_all_title_bar (item)
 			end
 		end
 
 	set_parent_floating_zone (a_floating_zone: SD_FLOATING_ZONE) is
-			-- Set `internal_parent_floating_zone'.
+			-- Set `parent_floating_zone'.
 		require
 			a_floating_zone_not_void: a_floating_zone /= Void
 		do
-			internal_parent_floating_zone := a_floating_zone
+			parent_floating_zone := a_floating_zone
 		ensure
-			set: internal_parent_floating_zone = a_floating_zone
+			set: parent_floating_zone = a_floating_zone
 		end
 
 	remove_empty_split_area is
@@ -97,6 +97,9 @@ feature -- Query
 			check l_widget /= Void end
 			Result := has_recursive (l_widget)
 		end
+
+	parent_floating_zone: SD_FLOATING_ZONE
+			-- If `Current' is in a SD_FLOATING_ZONE, this is parent. Otherwise it should be Void.
 
 feature {NONE} -- Implementation
 
@@ -284,6 +287,4 @@ feature {NONE} -- Implementation
 	spliters: ARRAYED_LIST [TUPLE [EV_SPLIT_AREA, INTEGER]]
 			-- Split areas used for save/restore spliter positions.
 
-	internal_parent_floating_zone: SD_FLOATING_ZONE
-			-- If `Current' is in a SD_FLOATING_ZONE, this is parent. Otherwise it should be Void.
 end

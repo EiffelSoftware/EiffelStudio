@@ -173,7 +173,7 @@ feature {NONE} -- Implementation for save config.
 			until
 				a_stubs.after
 			loop
-				l_title := a_stubs.item.title
+				l_title := a_stubs.item.text
 				-- Find out zone's width/height.
 				l_zones := internal_shared.docking_manager.zones
 				from

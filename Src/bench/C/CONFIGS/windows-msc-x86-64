@@ -17,14 +17,14 @@ lib='lib'
 #
 # Standard runtime:
 #------------------
-ccflags='$warning_level $debug -nologo -MT'
-mtccflags='$warning_level $debug -nologo -MT -DEIF_THREADS'
+ccflags='$warning_level $debug -nologo -MT -GS-'
+mtccflags='$warning_level $debug -nologo -MT -GS- -DEIF_THREADS'
 output_libraries='standard mtstandard'
 #
 #-- DLL:
 #--------
-#ccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT'
-#mtccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT -DEIF_THREADS'
+#ccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT -GS-'
+#mtccflags='-DEIF_MAKE_DLL $warning_level -nologo $debug -MT -GS- -DEIF_THREADS'
 #output_libraries='dll mtdll'
 #
 #

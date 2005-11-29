@@ -76,32 +76,32 @@ if not exist LIB mkdir LIB
 if not exist FREELIB mkdir FREELIB
 cd ..
 rem
-rem Call the converter tranforming the makefile-win.sh to makefile
+rem Call the converter tranforming the makefile-win.sh to Makefile
 rem
 cd ipc\shared
-..\..\rt_converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh Makefile
 cd ..\..\run-time
-..\rt_converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh Makefile
 cd ..\platform
-..\rt_converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh Makefile
 cd ..\idrs
-..\rt_converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh Makefile
 cd ..\console
-..\rt_converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh Makefile
 cd ..\bench
-..\rt_converter.exe makefile-win.sh makefile
+..\rt_converter.exe makefile-win.sh Makefile
 if not "%remove_desc%" == "1" (
 	cd ..\desc
-	..\rt_converter.exe makefile-win.sh makefile
+	..\rt_converter.exe makefile-win.sh Makefile
 )
 cd ..\ipc\daemon
-..\..\rt_converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh Makefile
 cd ..\ewb
-..\..\rt_converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh Makefile
 cd ..\app
-..\..\rt_converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh Makefile
 cd ..\shared
-..\..\rt_converter.exe makefile-win.sh makefile
+..\..\rt_converter.exe makefile-win.sh Makefile
 cd ..\..
 rem
 rem Call make
@@ -155,7 +155,7 @@ echo del *.tds >> cleanup.bat
 echo del *.o >> cleanup.bat
 echo del *.il? >> cleanup.bat
 echo del config.sh >> cleanup.bat
-echo del makefile >> cleanup.bat
+echo del Makefile >> cleanup.bat
 echo del make.bat >> cleanup.bat
 echo del cleanup.bat >> cleanup.bat
 

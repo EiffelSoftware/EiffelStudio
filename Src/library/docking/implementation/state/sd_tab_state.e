@@ -181,6 +181,7 @@ feature -- Redefine
 			end
 			l_auto_hide_panel:= internal_shared.docking_manager.auto_hide_panel (direction)
 			l_auto_hide_panel.set_tab_group (l_contents)
+			l_auto_hide_panel.select_tab (internal_content)
 			internal_shared.docking_manager.unlock_update
 		ensure then
 			pruned: not internal_shared.docking_manager.has_zone (tab_zone)
@@ -243,12 +244,13 @@ feature -- Redefine
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_tab_state: SD_TAB_STATE
+			l_orignal_direction: INTEGER
 		do
 			internal_shared.docking_manager.lock_update
 			tab_zone.disable_on_select_tab
 			if zone.is_drag_title_bar then
 				internal_shared.docking_manager.prune_zone (tab_zone)
-
+				l_orignal_direction := a_target_zone.state.direction
 				l_contents := tab_zone.contents
 				from
 					l_contents.start
@@ -258,7 +260,7 @@ feature -- Redefine
 					if l_contents.item.user_widget.parent /= Void then
 						l_contents.item.user_widget.parent.prune (l_contents.item.user_widget)
 					end
-					create l_tab_state.make_with_tab_zone (l_contents.item, a_target_zone, direction)
+					create l_tab_state.make_with_tab_zone (l_contents.item, a_target_zone, l_orignal_direction)
 					l_contents.item.change_state (l_tab_state)
 					l_contents.forth
 				end
@@ -481,8 +483,10 @@ feature {NONE}  -- Implementation functions.
 			l_is_split: BOOLEAN
 			l_split_position: INTEGER
 			l_split: EV_SPLIT_AREA
+			l_orignal_direction: INTEGER
 		do
 			internal_shared.docking_manager.prune_zone (zone)
+			l_orignal_direction := a_target_zone.state.direction
 			if a_target_zone.is_parent_split then
 				l_is_split := True
 				l_split_position := a_target_zone.parent_split_position
@@ -498,14 +502,14 @@ feature {NONE}  -- Implementation functions.
 					if l_contents.item.user_widget.parent /= Void then
 						l_contents.item.user_widget.parent.prune (l_contents.item.user_widget)
 					end
-					create l_tab_state.make (l_contents.item, a_target_zone, direction)
+					create l_tab_state.make (l_contents.item, a_target_zone, l_orignal_direction)
 					l_contents.item.change_state (l_tab_state)
 					first_move_to_docking_zone := False
 				else
 					l_tab_zone ?= l_tab_state.zone
-					create l_tab_state.make_with_tab_zone (l_contents.item, l_tab_zone, direction)
+					create l_tab_state.make_with_tab_zone (l_contents.item, l_tab_zone, l_orignal_direction)
 				end
-				l_tab_state.set_direction (a_target_zone.state.direction)
+				l_tab_state.set_direction (l_orignal_direction)
 				l_contents.forth
 			end
 			l_tab_state.select_tab (internal_content)
@@ -514,11 +518,16 @@ feature {NONE}  -- Implementation functions.
 				l_split ?= l_tab_state.zone.parent
 				check l_split /= Void end
 				if l_split.full then
+					if l_split.minimum_split_position > l_split_position then
+						l_split_position := l_split.minimum_split_position
+					elseif l_split.maximum_split_position < l_split_position then
+						l_split_position := l_split.maximum_split_position
+					end
 					l_split.set_split_position (l_split_position)
 				end
 			end
 		ensure
-			moved: old a_target_zone.parent.has (tab_zone)
+--			moved: old a_target_zone.parent.has (tab_zone)
 		end
 
 	move_tab_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
@@ -527,14 +536,16 @@ feature {NONE}  -- Implementation functions.
 			a_target_zone_not_void: a_target_zone /= Void
 		local
 			l_tab_state: SD_TAB_STATE
+			l_orignal_direction: INTEGER
 		do
 			tab_zone.disable_on_select_tab
+			l_orignal_direction := a_target_zone.state.direction
 			tab_zone.prune (internal_content)
 			if internal_content.user_widget.parent /= Void then
 				internal_content.user_widget.parent.prune (internal_content.user_widget)
 			end
-			create l_tab_state.make (internal_content, a_target_zone, direction)
-			l_tab_state.set_direction (a_target_zone.state.direction)
+			create l_tab_state.make (internal_content, a_target_zone, l_orignal_direction)
+			l_tab_state.set_direction (l_orignal_direction)
 			change_state (l_tab_state)
 			update_last_content_state
 			tab_zone.enable_on_select_tab
@@ -548,10 +559,12 @@ feature {NONE}  -- Implementation functions.
 			a_target_zone_not_void: a_target_zone /= Void
 		local
 			l_tab_state: SD_TAB_STATE
+			l_orignal_direction: INTEGER
 		do
 			tab_zone.disable_on_select_tab
+			l_orignal_direction := a_target_zone.state.direction
 			tab_zone.prune (internal_content)
-			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, direction)
+			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, l_orignal_direction)
 			change_state (l_tab_state)
 			update_last_content_state
 			tab_zone.enable_on_select_tab

@@ -247,11 +247,13 @@ feature -- Redefine.
 			-- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
+			l_orignal_direction: INTEGER
 		do
 			internal_shared.docking_manager.lock_update
 			internal_shared.docking_manager.prune_zone (zone)
-			create l_tab_state.make (internal_content, a_target_zone, direction)
-			l_tab_state.set_direction (a_target_zone.state.direction)
+			l_orignal_direction := a_target_zone.state.direction
+			create l_tab_state.make (internal_content, a_target_zone, l_orignal_direction)
+			l_tab_state.set_direction (l_orignal_direction)
 			internal_shared.docking_manager.remove_empty_split_area
 			change_state (l_tab_state)
 			internal_shared.docking_manager.unlock_update
@@ -263,11 +265,14 @@ feature -- Redefine.
 			-- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
+			l_orignal_direction: INTEGER
 		do
 			internal_shared.docking_manager.lock_update
 			internal_shared.docking_manager.prune_zone (zone)
-			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, direction)
+			l_orignal_direction := a_target_zone.state.direction
+			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, l_orignal_direction)
 			change_state (l_tab_state)
+			l_tab_state.set_direction (l_orignal_direction)
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
 		ensure then

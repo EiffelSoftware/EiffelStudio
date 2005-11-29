@@ -220,11 +220,9 @@ feature -- Redefine.
 			internal_shared.docking_manager.lock_update
 			internal_shared.docking_manager.remove_auto_hide_zones
 			internal_shared.docking_manager.recover_normal_state
-			if auto_hide_panel.is_content_in_group (internal_content) then
+
 				stick_zones (a_direction)
-			else
-				stick_zone (a_direction)
-			end
+
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
 		ensure then
@@ -393,32 +391,11 @@ feature {NONE} -- Implementation functions.
 
 				l_tab_group.forth
 			end
+			if l_tab_group.count > 1 then
+				l_tab_state.select_tab (internal_content)
+			end
 			auto_hide_panel.tab_groups.start
 			auto_hide_panel.tab_groups.prune (l_tab_group)
-		ensure
-			state_changed: content.state /= Current
-		end
-
-	stick_zone (a_direction: INTEGER) is
-			-- Stick to `a_direction'.
-		require
-			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
-				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
-		local
-			l_docking_state: SD_DOCKING_STATE
-		do
-			auto_hide_panel.tab_stubs.start
-			auto_hide_panel.tab_stubs.prune (internal_tab_stub)
-			-- Change the zone from SD_AUTO_HIDE_ZONE to SD_DOCKING_ZONE
-			internal_shared.docking_manager.prune_zone_by_content (internal_content)
-			-- Change the state.
-			if direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				create l_docking_state.make (internal_content, direction, zone.width - internal_shared.resize_bar_width_height)
-			else
-				create l_docking_state.make (internal_content, direction, zone.height - internal_shared.resize_bar_width_height)
-			end
-			l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
-			change_state (l_docking_state)
 		ensure
 			state_changed: content.state /= Current
 		end

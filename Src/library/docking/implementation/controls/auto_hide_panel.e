@@ -121,6 +121,31 @@ feature -- Command
 			set: contents_tab_group_set (a_contents)
 		end
 
+	select_tab (a_content: SD_CONTENT) is
+			-- Show tab text with `a_content'.
+		require
+			a_content_not_void: a_content /= Void
+			has: has_tab (a_content)
+		local
+			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_tab: SD_TAB_STUB
+		do
+			l_tab := tab_by_content (a_content)
+			l_tab_group := tab_group_internal (l_tab)
+			from
+				l_tab_group.start
+			until
+				l_tab_group.after
+			loop
+				if l_tab_group.item = l_tab then
+					l_tab_group.item.set_show_text (True)
+				else
+					l_tab_group.item.set_show_text (False)
+				end
+				l_tab_group.forth
+			end
+		end
+
 	tab_group (a_tab: SD_TAB_STUB):like internal_tab_group  is
 			-- Get the group contain `a_tab'.
 		require

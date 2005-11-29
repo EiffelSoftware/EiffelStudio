@@ -236,15 +236,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pointer_diff (a_ptr1, a_ptr2: POINTER): INTEGER is
-			-- Difference between two pointers
-			--| FIXME Remove when pointer arithmetic is added to POINTER_REF
-		external
-			"C inline"
-		alias
-			"(EIF_INTEGER) ((rt_int_ptr) $a_ptr2 - (rt_int_ptr) $a_ptr1)"
-		end
-
 	dispose is
 			-- Dispose `Current'.
 		do

@@ -8,8 +8,6 @@ class BIN_DIV_B
 inherit
 
 	NUM_BINARY_B
-		rename
-			il_div as il_operator_constant
 		redefine
 			generate_operator, is_simple,
 			generate_simple, is_built_in

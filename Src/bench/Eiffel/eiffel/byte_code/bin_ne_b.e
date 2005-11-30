@@ -2,13 +2,10 @@ class BIN_NE_B
 
 inherit
 	BIN_EQUAL_B
-		rename
-			il_ne as il_operator_constant
 		redefine
 			generate_equal,
 			generate_operator, enlarged,
-			generate_bit_equal,
-			generate_il_modifier_opcode
+			generate_bit_equal
 		end;
 
 feature -- Visitor
@@ -74,20 +71,6 @@ feature
 			else
 				create {BIN_NE_BL} Result.make (left, right)
 			end
-		end
-
-feature -- IL code generation
-
-	generate_il_boolean_constant is
-			-- Generate IL True constant
-		do
-			il_generator.put_boolean_constant (True)
-		end
-
-	generate_il_modifier_opcode is
-			-- Generate `not' operator.
-		do
-			il_generator.generate_unary_operator (Il_not)
 		end
 
 end

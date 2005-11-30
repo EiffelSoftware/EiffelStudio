@@ -15,7 +15,7 @@ inherit
 			has_call, allocates_memory,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code,
-			generate_il, is_simple_expr
+			is_simple_expr
 		end
 
 	IL_CONST
@@ -266,70 +266,6 @@ feature -- C code generation
 	generate_operator is
 			-- Generate operator in C
 		do
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for binary expression.
-		do
-			if is_built_in then
-				generate_standard_il
-			else
-				nested_b.generate_il
-			end
-		end
-
-	generate_standard_il is
-			-- Generate standard IL code for binary expression.
-		do
-			left.generate_il_value
-			right.generate_il_value
-			il_generator.generate_binary_operator (il_operator_constant)
-		end
-
-	generate_converted_standard_il is
-			-- Generate standard IL code for binary expression that cast either
-			-- left hand side or right hand side to heaviest type before performing
-			-- binary operator.
-		local
-			l_left_type, l_right_type: TYPE_I
-			l_type: TYPE_I
-			l_same_type: BOOLEAN
-		do
-			l_left_type := left.type
-			l_right_type := right.type
-			l_same_type := l_left_type.same_as (l_right_type)
-			if not l_same_type then
-				l_type := l_left_type.heaviest (l_right_type)
-			end
-
-			left.generate_il
-			if not l_same_type and then l_type = l_right_type then
-					-- FIXME: Manu 1/29/2002: When evaluating inherited assertions where
-					-- type is formal, type is not properly computed and therefore we do
-					-- not get a basic type, but a formal one instead.
-					-- When this bug will be fixed, we can remove the if statement for
-					-- a basic type and replace it by a check statement.
-				if l_type.is_basic then
-					il_generator.convert_to (l_type)
-				end
-			end
-			right.generate_il
-			if not l_same_type and then l_type = l_left_type then
-					-- FIXME: See above fixme.
-				if l_type.is_basic then
-					il_generator.convert_to (l_type)
-				end
-			end
-
-			il_generator.generate_binary_operator (il_operator_constant)
-		end
-
-	il_operator_constant: INTEGER is
-			-- Byte code constant associated to current binary
-			-- operation
-		deferred
 		end
 
 feature -- Array optimization

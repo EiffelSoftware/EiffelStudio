@@ -8,8 +8,6 @@ class BIN_MINUS_B
 inherit
 
 	NUM_BINARY_B
-		rename
-			il_minus as il_operator_constant
 		redefine
 			generate_operator, is_simple,
 			generate_simple, generate_plus_plus,

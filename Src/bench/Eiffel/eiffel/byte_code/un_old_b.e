@@ -3,13 +3,10 @@ class UN_OLD_B
 inherit
 
 	UNARY_B
-		rename
-			Il_old as il_operator_constant
 		redefine
 			type, enlarged,
 			is_unsafe, optimized_byte_node,
-			pre_inlined_code, inlined_byte_code,
-			generate_il
+			pre_inlined_code, inlined_byte_code
 		end;
 
 feature -- Visitor
@@ -54,21 +51,6 @@ feature
 			old_expr := Context.byte_code.old_expressions;
 			old_expr.extend (Result);
 		end;
-
-feature -- IL code generation
-
-	generate_il_init is
-			-- Generate IL code for `old' expression.
-		do
-			expr.generate_il
-			il_generator.generate_local_assignment (position)
-		end
-
-	generate_il is
-			-- Generate IL code for `old' expression.
-		do
-			il_generator.generate_local (position)
-		end
 
 feature -- Array optimization
 

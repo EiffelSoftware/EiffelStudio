@@ -31,6 +31,7 @@ feature -- Visitor
 			-- Visitor feature.
 		require
 			v_not_void: v /= Void
+			v_valid: v.is_valid
 		deferred
 		end
 
@@ -65,29 +66,6 @@ feature -- Eiffel source line information
 				l_buffer.put_character (' ')
 				l_buffer.put_indivisible_string_literal (Context.associated_class.lace_class.base_name)
 				l_buffer.put_new_line
-			end
-		end
-
-	generate_il_line_info (breakable_for_studio_dbg: BOOLEAN) is
-			-- Generate source line information in IL code.
-		do
-			if (System.line_generation or context.workbench_mode) and then line_number > 0 then
-				if breakable_for_studio_dbg then
-					il_generator.put_line_info (line_number)
-				else
-					il_generator.put_silent_line_info (line_number)
-				end
-			end
-		end
-
-	generate_ghost_debug_infos (n: INTEGER) is
-			-- Generate `a_nb' ghost debug informations,
-			-- this is to deal, for instance, with the not generated debug clauses
-		do
-			if (System.line_generation or context.workbench_mode) then
-				if system.is_precompile_finalized then
-					il_generator.put_ghost_debug_infos (line_number, n)
-				end
 			end
 		end
 
@@ -186,34 +164,6 @@ feature -- Eiffel source line information
 			end
 		end
 
-	generate_melted_debugger_hook (ba: BYTE_ARRAY) is
-			-- Record breakable point (standard)
-		require
-			melting: not context.final_mode
-		local
-			lnr: INTEGER
-		do
-			lnr := context.get_next_breakpoint_slot
-			check
-				lnr > 0
-			end
-			ba.generate_melted_debugger_hook (lnr)
-		end
-
-	generate_melted_debugger_hook_nested (ba: BYTE_ARRAY) is
-			-- Record breakable point for nested call
-		local
-			l_line: INTEGER
-		do
-			l_line := context.get_breakpoint_slot
-			if l_line > 0 then
-					-- Generate a hook when there is really need for one.
-					-- (E.g. we do not need a hook for the code generation
-					-- of an invariant).
-				ba.generate_melted_debugger_hook_nested (l_line)
-			end
-		end
-
 	generate_melted_end_debugger_hook (ba: BYTE_ARRAY) is
 			-- Record the breakable point corresponding to the end of the feature.
 		do
@@ -271,13 +221,6 @@ feature
 
 	generate is
 			-- Generate C code in `buffer'
-		do
-		end
-
-	generate_il is
-			-- Generate IL byte code
-		require
-			il_generation: System.il_generation
 		do
 		end
 

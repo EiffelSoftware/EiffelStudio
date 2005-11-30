@@ -6,8 +6,8 @@ inherit
 
 	ACCESS_B
 		redefine
-			enlarged, is_current, generate_il_call_access,
-			register_name, pre_inlined_code, print_register, generate_il_address, generate_il_value,
+			enlarged, is_current,
+			register_name, pre_inlined_code, print_register,
 			is_fast_as_local
 		end
 
@@ -66,35 +66,6 @@ feature -- IL code generation
 
 	is_fast_as_local: BOOLEAN is true
 			-- Is expression calculation as fast as loading a local?
-
-	generate_il_call_access (is_target_of_call: BOOLEAN) is
-			-- Generate IL code for an access to Current
-		do
-			if is_target_of_call then
-				il_generator.generate_current
-			else
-				generate_il_value
-			end
-		end
-
-	generate_il_address is
-			-- Generate address of Current.
-		do
-			il_generator.generate_current_address
-		end
-
-	generate_il_value is
-			-- Generate code that evaluates expression and puts its value
-			-- (rather than a pointer to it) to the evaluation stack.
-		local
-			type_i: TYPE_I
-		do
-			il_generator.generate_current
-			type_i := real_type (type)
-			if type_i.is_expanded then
-				il_generator.generate_load_from_address (type_i)
-			end
-		end
 
 feature -- Inlining
 

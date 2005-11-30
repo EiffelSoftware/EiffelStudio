@@ -2,11 +2,8 @@ class BIN_POWER_B
 
 inherit
 	NUM_BINARY_B
-		rename
-			il_power as il_operator_constant
 		redefine
-			print_register,
-			generate_standard_il
+			print_register
 		end
 
 	SHARED_INCLUDE
@@ -25,48 +22,6 @@ feature -- Visitor
 			-- Process current element.
 		do
 			v.process_bin_power_b (Current)
-		end
-
-feature -- IL code generation
-
-	generate_standard_il is
-			-- Generate standard IL code for binary expression.
-		local
-			l_power_nb: REAL_CONST_B
-			l_power_value: DOUBLE
-		do
-				-- Generate value to be elevated to a given power.
-			left.generate_il
-			il_generator.convert_to_real_64
-
-			l_power_nb ?= right
-			if l_power_nb /= Void then
-				l_power_value := l_power_nb.value.to_double
-
-				if l_power_value = 0.0 then
-						-- Removed value, since not needed.
-					il_generator.pop
-					il_generator.put_real_64_constant (1.0)
-				elseif l_power_value = 1.0 then
-						-- Nothing to be done
-				elseif l_power_value = 2.0 then
-					il_generator.duplicate_top
-					il_generator.generate_binary_operator (il_star)
-				elseif l_power_value = 3.0 then
-					il_generator.duplicate_top
-					il_generator.duplicate_top
-					il_generator.generate_binary_operator (il_star)
-					il_generator.generate_binary_operator (il_star)
-				else
-					right.generate_il
-					il_generator.convert_to_real_64
-					il_generator.generate_binary_operator (il_operator_constant)
-				end
-			else
-				right.generate_il
-				il_generator.convert_to_real_64
-				il_generator.generate_binary_operator (il_operator_constant)
-			end
 		end
 
 feature -- C code generation

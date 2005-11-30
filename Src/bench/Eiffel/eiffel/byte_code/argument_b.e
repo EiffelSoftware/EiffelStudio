@@ -8,8 +8,7 @@ inherit
 		redefine
 			enlarged, type, is_argument, is_local, is_creatable,
 			register_name, array_descriptor,
-			pre_inlined_code, print_register, generate_il_call_access,
-			generate_il_address,
+			pre_inlined_code, print_register,
 			is_fast_as_local, is_predefined
 		end;
 
@@ -97,22 +96,6 @@ feature -- IL code generation
 
 	is_fast_as_local: BOOLEAN is true
 			-- Is expression calculation as fast as loading a local?
-
-	generate_il_call_access (is_target_of_call: BOOLEAN) is
-			-- Generate IL code for an access to an argument
-		do
-			if need_address (is_target_of_call) then
-				il_generator.generate_argument_address (position)
-			else
-				il_generator.generate_argument (position)
-			end
-		end
-
-	generate_il_address is
-			-- Generate address of argument.
-		do
-			il_generator.generate_argument_address (position)
-		end
 
 feature -- Array optimization
 

@@ -29,7 +29,7 @@ inherit
 			{NONE} byte_real_type, byte_generate, byte_size
 		redefine
 			print_register,
-			is_simple_expr, is_predefined, generate_il,
+			is_simple_expr, is_predefined,
 			is_fast_as_local, is_constant_expression,
 			evaluate
 		end;

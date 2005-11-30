@@ -11,7 +11,7 @@ class
 inherit
 	EXPR_B
 		redefine
-			generate_il, analyze, unanalyze, register,
+			analyze, unanalyze, register,
 			set_register, print_register, generate, enlarged,
 			pre_inlined_code
 		end
@@ -64,33 +64,6 @@ feature -- Status report
 			Result := expr.used (r)
 		ensure then
 			not_used: not Result
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for Void value.
-		local
-			l_type: TYPE_I
-			l_expr_type: TYPE_I
-		do
-				-- Generate expression
-			expr.generate_il
-
-				-- Check if conversion expanded -> reference is needed in
-				-- case we assign an expression whose type is a formal generic
-				-- parameter of the current class to a reference type whose
-				-- formal's constraint conforms to.
-			l_type := context.real_type (type)
-			l_expr_type := context.real_type (expr.type)
-
-			if is_conversion_needed (l_expr_type, l_type) then
-				if is_boxing or else not l_expr_type.is_basic then
-					il_generator.generate_metamorphose (l_expr_type)
-				else
-					generate_il_eiffel_metamorphose (l_expr_type)
-				end
-			end
 		end
 
 feature -- C code generation

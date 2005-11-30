@@ -9,7 +9,8 @@ class
 inherit
 	TYPED_INTERVAL_VAL_B [INTEGER_64]
 		redefine
-			is_allowed_unique_value
+			is_allowed_unique_value,
+			is_signed
 		end
 
 create
@@ -36,6 +37,9 @@ feature -- Comparison
 		do
 			Result := value > 0
 		end
+
+	is_signed: BOOLEAN is True
+			-- Current requires signed comparison.
 
 feature -- Measurement
 
@@ -87,19 +91,6 @@ feature -- Iteration
 		end
 
 feature -- IL code generation
-
-	generate_il_branch_on_greater (is_included: BOOLEAN; label: IL_LABEL; instruction: INSPECT_B) is
-			-- Generate branch to `label' if value on IL stack it greater than this value.
-			-- Assume that current value is included in lower interval if `is_included' is true.
-		do
-			instruction.generate_il_load_value
-			il_load_value
-			if is_included then
-				il_generator.branch_on_condition ({MD_OPCODES}.bgt, label)
-			else
-				il_generator.branch_on_condition ({MD_OPCODES}.bge, label)
-			end
-		end
 
 	generate_il_subtract (is_included: BOOLEAN) is
 			-- Generate code to subtract this value if `is_included' is true or

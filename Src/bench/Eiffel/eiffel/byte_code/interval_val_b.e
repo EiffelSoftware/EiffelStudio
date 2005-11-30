@@ -10,7 +10,7 @@ inherit
 		undefine
 			is_equal
 		end
-	
+
 	COMPARABLE
 
 feature -- Error reporting
@@ -30,12 +30,17 @@ feature -- Comparison
 			same_type: same_type (other)
 		deferred
 		end
-		
+
 	is_allowed_unique_value: BOOLEAN is
 			-- Does `Current' represent an allowed unique value?
 			-- (This is now true for positive integers.)
 		do
 			-- False by default.
+		end
+
+	is_signed: BOOLEAN is
+			-- Is current using a signed comparison?
+		do
 		end
 
 feature -- Measurement
@@ -82,15 +87,6 @@ feature -- Evaluation
 
 feature -- IL code generation
 
-	generate_il_branch_on_greater (is_included: BOOLEAN; label: IL_LABEL; instruction: INSPECT_B) is
-			-- Generate branch to `label' if value on IL stack it greater than this value.
-			-- Assume that current value is included in lower interval if `is_included' is true.
-		require
-			label_not_void: label /= Void
-			instruction_not_void: instruction /= Void
-		deferred
-		end
-
 	generate_il_subtract (is_included: BOOLEAN) is
 			-- Generate code to subtract this value if `is_included' is true or
 			-- next value if `is_included' is false from top of IL stack.
@@ -109,7 +105,7 @@ feature {INTERVAL_B} -- C code generation
 		deferred
 		end
 
-feature {INTERVAL_B} -- IL code generation
+feature {INTERVAL_B, IL_NODE_GENERATOR} -- IL code generation
 
 	il_load_value is
 			-- Load value to IL stack.

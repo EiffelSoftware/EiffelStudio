@@ -3,8 +3,6 @@ class BIN_GE_B
 inherit
 
 	COMP_BINARY_B
-		rename
-			il_ge as il_operator_constant
 		redefine
 			generate_operator
 		end;

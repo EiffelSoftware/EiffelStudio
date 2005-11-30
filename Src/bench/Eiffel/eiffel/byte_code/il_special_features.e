@@ -20,7 +20,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_HASH_CODE
 		export
 			{NONE} all
@@ -52,7 +52,7 @@ feature -- Access
 			Result := (target_type.is_basic and not target_type.is_bit) or else target_type.is_enum
 
 			if Result then
-				inspect 
+				inspect
 					type_of (target_type)
 				when
 					boolean_type, character_type, integer_type, real_32_type,
@@ -60,7 +60,7 @@ feature -- Access
 				then
 					Result := basic_type_table.has (feat.feature_name_id)
 					function_type := basic_type_table.found_item
-					
+
 				else
 					if target_type.is_enum then
 						Result := True
@@ -102,9 +102,11 @@ feature -- Status
 
 feature -- IL code generation
 
-	generate_il (feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_il (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence that will be used with basic types.
 		require
+			a_generator_not_void: a_generator /= Void
+			a_generator_valid: a_generator.is_valid
 			feat_not_void: feat /= Void
 			valid_function_type: valid_function_type (function_type)
 			type_not_void: type /= Void
@@ -122,13 +124,13 @@ feature -- IL code generation
 				bit_shift_right_type
 			then
 				if parameters /= Void then
-					parameters.generate_il
+					parameters.process (a_generator)
 				end
 				generate_il_operation_code (f_type)
 
 			when bit_shift_left_type then
 				if parameters /= Void then
-					parameters.generate_il
+					parameters.process (a_generator)
 				end
 				generate_il_operation_code (bit_shift_left_type)
 				long ?= feat.real_type (feat.type)
@@ -144,7 +146,7 @@ feature -- IL code generation
 					valid_type: type.is_integer or type.is_natural
 				end
 				il_generator.put_numeric_integer_constant (type, 1)
-				parameters.i_th (1).generate_il
+				parameters.i_th (1).process (a_generator)
 				generate_il_operation_code (bit_shift_left_type)
 				generate_il_operation_code (bit_and_type)
 				il_generator.put_default_value (type)
@@ -156,7 +158,7 @@ feature -- IL code generation
 					valid_count: parameters.count = 2
 					valid_type: type.is_integer or type.is_natural
 				end
-				generate_set_bit (type, parameters)
+				generate_set_bit (a_generator, type, parameters)
 
 			when set_bit_with_mask_type then
 				check
@@ -164,13 +166,13 @@ feature -- IL code generation
 					valid_count: parameters.count = 2
 					valid_type: type.is_integer or type.is_natural
 				end
-				generate_set_bit_with_mask (type, parameters)
+				generate_set_bit_with_mask (a_generator, type, parameters)
 
 			when is_equal_type then
 				check
 					parameters_not_void: parameters /= Void
 				end
-				parameters.generate_il
+				parameters.process (a_generator)
 				il_generator.generate_binary_operator (il_eq)
 
 			when zero_type, default_type then
@@ -214,7 +216,7 @@ feature -- IL code generation
 					parameters_not_void: parameters /= Void
 					valid_count: parameters.count = 1
 				end
-				parameters.generate_il
+				parameters.process (a_generator)
 				il_generator.generate_min (type)
 
 			when max_type then
@@ -222,7 +224,7 @@ feature -- IL code generation
 					parameters_not_void: parameters /= Void
 					valid_count: parameters.count = 1
 				end
-				parameters.generate_il
+				parameters.process (a_generator)
 				il_generator.generate_max (type)
 
 			when three_way_comparison_type then
@@ -230,21 +232,21 @@ feature -- IL code generation
 					parameters_not_void: parameters /= Void
 					valid_count: parameters.count = 1
 				end
-				generate_three_way_comparison (type, parameters.i_th (1))
+				generate_three_way_comparison (a_generator, type, parameters.i_th (1))
 
 			when offset_type then
 				check
 					parameters_not_void: parameters /= Void
 				end
-				parameters.generate_il
+				parameters.process (a_generator)
 				il_generator.generate_binary_operator (il_plus)
-				
+
 			when to_real_32_type then
 				il_generator.convert_to_real_32
 
 			when to_real_64_type then
 				il_generator.convert_to_real_64
-			
+
 			when out_type then
 				il_generator.generate_out (type)
 
@@ -265,39 +267,39 @@ feature -- IL code generation
 					-- Argument value becomes the enum value, we discard
 					-- original value of enum.
 				il_generator.pop
-				parameters.generate_il
+				parameters.process (a_generator)
 
 			when from_enum_to_integer_type then
 					-- Nothing to do, as enums are basically integers.
 
 			when set_item_type then
-				generate_set_item (feat, type, parameters)
+				generate_set_item (a_generator, feat, type, parameters)
 
 			when is_digit_type then
 				il_generator.generate_is_query_on_character ("IsDigit")
-				
+
 			when is_lower_type then
 				il_generator.generate_is_query_on_character ("IsLower")
-				
+
 			when is_upper_type then
 				il_generator.generate_is_query_on_character ("IsUpper")
 
 			when lower_type then
 				il_generator.generate_upper_lower (False)
-				
+
 			when upper_type then
 				il_generator.generate_upper_lower (True)
-				
+
 			when twin_type then
 					-- Nothing to do, top of the stack has correct value
-				
+
 			else
 
 			end
 		end
 
 feature {NONE} -- C and Byte code corresponding Eiffel function calls
-		
+
 	basic_type_table: HASH_TABLE [INTEGER, INTEGER] is
 		once
 			create Result.make (100)
@@ -467,7 +469,7 @@ feature {NONE} -- IL code generation
 					-- and put `1' instead.
 				il_generator.pop
 				il_generator.put_integer_32_constant (1)
-				
+
 			else
 					-- Convert type on stack to an integer and applies
 					-- proper computation to get a positive hash-code.
@@ -475,10 +477,12 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_three_way_comparison (a_type: CL_TYPE_I; a_expr: EXPR_B) is
+	generate_three_way_comparison (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_I; a_expr: EXPR_B) is
 			-- Generate three_way_comparison computation for basic type objects
 			-- at top of evaluation stack.
 		require
+			a_generator_not_void: a_generator /= Void
+			a_generator_valid: a_generator.is_valid
 			a_type_not_void: a_type /= Void
 			a_expr_not_void: a_expr /= Void
 		local
@@ -493,7 +497,7 @@ feature {NONE} -- IL code generation
 				-- else
 				--   Result := 0
 				-- end
-				
+
 				-- Label for branching		
 			l_elseif_label := il_generator.create_label
 			l_else_label := il_generator.create_label
@@ -503,7 +507,7 @@ feature {NONE} -- IL code generation
 			il_generator.duplicate_top
 
 				-- Generate parameter and store it in a local variable
-			a_expr.generate_il
+			a_expr.process (a_generator)
 			il_generator.duplicate_top
 			context.add_local (a_type)
 			l_local := context.local_list.count
@@ -518,7 +522,7 @@ feature {NONE} -- IL code generation
 			il_generator.pop
 			il_generator.put_integer_32_constant (-1)
 			il_generator.branch_to (l_end_label)
-			
+
 				-- Generate: elseif x < Current then Result := 1
 			il_generator.mark_label (l_elseif_label)
 			il_generator.generate_local (l_local)
@@ -526,17 +530,19 @@ feature {NONE} -- IL code generation
 			il_generator.branch_on_false (l_else_label)
 			il_generator.put_integer_32_constant (1)
 			il_generator.branch_to (l_end_label)
-			
+
 				-- Generate: else Result := 0
 			il_generator.mark_label (l_else_label)
 			il_generator.put_integer_32_constant (0)
-			
+
 			il_generator.mark_label (l_end_label)
 		end
 
-	generate_set_item (feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_item (a_generator: IL_NODE_GENERATOR; feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence that will be used with basic types.
 		require
+			a_generator_not_void: a_generator /= Void
+			a_generator_valid: a_generator.is_valid
 			feat_not_void: feat /= Void
 			valid_function_type: function_type = set_item_type
 			type_not_void: type /= Void
@@ -551,23 +557,25 @@ feature {NONE} -- IL code generation
 				l_access := l_parent.target
 				if l_access.is_local or l_access.is_result then
 					il_generator.pop
-					parameters.generate_il
-					l_access.generate_il_assignment (type)
+					parameters.process (a_generator)
+					a_generator.generate_il_assignment (l_access, type)
 				elseif l_access.is_attribute then
 						-- This is an expression of type `my_attribute.copy (a)'.
 						-- Top of the stack is properly initialized in ATTRIBYUTE_B.generate_il_call
 						-- so that object where `l_access' attribute belongs to is on
 						-- top of the evaluation stack.
-					parameters.generate_il
-					l_access.generate_il_assignment (type)
+					parameters.process (a_generator)
+					a_generator.generate_il_assignment (l_access, type)
 				end
 
 			end
 		end
 
-	generate_set_bit (a_type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_bit (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence for `set_bit'
 		require
+			a_generator_not_void: a_generator /= Void
+			a_generator_valid: a_generator.is_valid
 			valid_function_type: function_type = set_bit_type
 			type_not_void: a_type /= Void
 			type_valid: a_type.is_integer or a_type.is_natural
@@ -592,14 +600,14 @@ feature {NONE} -- IL code generation
 			l_end := il_label_factory.new_label
 
 				-- Generate boolean value.
-			parameters.i_th (1).generate_il
+			parameters.i_th (1).process (a_generator)
 
 				-- Generate case where boolean value is True:
 				-- `item | (a_type) 1 << n'
 			il_generator.branch_on_false (l_else)
 			il_generator.generate_local (l_target)
 			il_generator.put_numeric_integer_constant (a_type, 1)
-			parameters.i_th (2).generate_il
+			parameters.i_th (2).process (a_generator)
 			il_generator.generate_binary_operator (il_shl)
 			il_generator.generate_binary_operator (il_or)
 			il_generator.generate_local_assignment (l_result)
@@ -611,19 +619,21 @@ feature {NONE} -- IL code generation
 			il_generator.mark_label (l_else)
 			il_generator.generate_local (l_target)
 			il_generator.put_numeric_integer_constant (a_type, 1)
-			parameters.i_th (2).generate_il
+			parameters.i_th (2).process (a_generator)
 			il_generator.generate_binary_operator (il_shl)
 			il_generator.generate_unary_operator (il_bitwise_not)
 			il_generator.generate_binary_operator (il_and)
-			il_generator.generate_local_assignment (l_result)			
+			il_generator.generate_local_assignment (l_result)
 
 			il_generator.mark_label (l_end)
 			il_generator.generate_local (l_result)
 		end
 
-	generate_set_bit_with_mask (a_type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_set_bit_with_mask (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence for `set_bit'
 		require
+			a_generator_not_void: a_generator /= Void
+			a_generator_valid: a_generator.is_valid
 			valid_function_type: function_type = set_bit_with_mask_type
 			type_not_void: a_type /= Void
 			type_valid: a_type.is_integer or a_type.is_natural
@@ -648,13 +658,13 @@ feature {NONE} -- IL code generation
 			l_end := il_label_factory.new_label
 
 				-- Generate boolean value.
-			parameters.i_th (1).generate_il
+			parameters.i_th (1).process (a_generator)
 
 				-- Generate case where boolean value is True:
 				-- `item | (a_type) 1 << n'
 			il_generator.branch_on_false (l_else)
 			il_generator.generate_local (l_target)
-			parameters.i_th (2).generate_il
+			parameters.i_th (2).process (a_generator)
 			il_generator.generate_binary_operator (il_or)
 			il_generator.generate_local_assignment (l_result)
 			il_generator.branch_to (l_end)
@@ -664,7 +674,7 @@ feature {NONE} -- IL code generation
 				-- `item & ~(a_type) 1 << n'
 			il_generator.mark_label (l_else)
 			il_generator.generate_local (l_target)
-			parameters.i_th (2).generate_il
+			parameters.i_th (2).process (a_generator)
 			il_generator.generate_unary_operator (il_bitwise_not)
 			il_generator.generate_binary_operator (il_and)
 			il_generator.generate_local_assignment (l_result)
@@ -708,14 +718,14 @@ feature {NONE} -- Type information
 			then
 				Result := integer_type
 				is_signed_integer := True
-	
+
 			when
 				natural_8_code, natural_16_code,
 				natural_32_code, natural_64_code
 			then
 				Result := integer_type
 				is_signed_integer := False
-		
+
 			when Real_32_code then	Result := real_32_type
 			when Real_64_code then Result := real_64_type
 			when Pointer_code then Result := pointer_type
@@ -729,7 +739,7 @@ feature {NONE} -- Type information
 		ensure
 			valid_type: Result = boolean_type or else Result = character_type or else
 						Result = integer_type or else Result = pointer_type or else
-						Result = real_32_type or else Result = real_64_type or else 
+						Result = real_32_type or else Result = real_64_type or else
 						Result = any_type or else Result = unknown_type
 		end
 

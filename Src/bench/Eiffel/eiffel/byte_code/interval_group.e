@@ -9,7 +9,7 @@ class
 inherit
 	INTERVAL_SPAN
 	SHARED_IL_CODE_GENERATOR
-	
+
 create
 	make
 
@@ -44,7 +44,7 @@ feature -- Access
 
 	upper: like lower
 			-- Upper bound of a group
-			
+
 	is_lower_included: BOOLEAN
 			-- Is `lower' included in the range?
 
@@ -90,7 +90,7 @@ feature -- Element change
 			-- Set `is_extended' to true if interval is included in group and to false otherwise.
 		require
 			interval_not_void: interval /= Void
-			interval_outside_group: 
+			interval_outside_group:
 				interval.item.upper < lower or else not is_lower_included and then interval.item.upper = lower or else
 				upper < interval.item.lower or else not is_upper_included and then upper = interval.item.lower
 		do
@@ -111,7 +111,7 @@ feature -- Element change
 				is_extended and then interval.item.upper <= lower implies
 				(is_lower_included and then lower = interval.item.lower and then lower_interval = interval)
 			added_as_upper:
-				is_extended and then upper <= interval.item.lower implies 
+				is_extended and then upper <= interval.item.lower implies
 				(is_upper_included and then upper = interval.item.upper and then upper_interval = interval)
 			enlarged_at_lower:
 				not is_extended and count > old count and then interval.item.upper <= lower implies
@@ -120,17 +120,17 @@ feature -- Element change
 				not is_extended and count > old count and then upper <= interval.item.lower implies
 				(not is_upper_included and then upper = interval.item.lower)
 			count_incremented_by_1_if_extended:
-				is_extended and then 
+				is_extended and then
 				(interval.item.upper.is_next (old lower) or else (old upper).is_next (interval.item.lower)) implies
 				count = old count + 1
 			count_incremented_by_2_if_extended:
-				is_extended and then 
+				is_extended and then
 				not interval.item.upper.is_next (old lower) and then not (old upper).is_next (interval.item.lower) implies
 				count = old count + 2
 			count_incremented_by_1_if_not_extended:
 				not is_extended and then count > old count implies count = old count + 1
 		end
-		
+
 	extend_with_lower_gap (value: like lower; is_value_included: BOOLEAN) is
 			-- Extend current group by adding a gap `value'..`lower'
 			-- to it unless density becomes smaller than `density'.
@@ -165,7 +165,7 @@ feature -- Element change
 			count_incremented_implies_lower_set: count > old count implies lower = value
 			count_incremented_implies_is_lower_included_set: count > old count implies is_lower_included = is_value_included
 		end
-		
+
 	extend_with_upper_gap (value: like lower; is_value_included: BOOLEAN) is
 			-- Extend current group by adding a gap `upper'..`value'
 			-- to it unless density becomes smaller than `density'.
@@ -200,14 +200,14 @@ feature -- Element change
 			count_incremented_implies_upper_set: count > old count implies upper = value
 			count_incremented_implies_is_upper_included_set: count > old count implies is_upper_included = is_value_included
 		end
-		
+
 	extend_with_group (group: INTERVAL_GROUP) is
 			-- Extend current group by adding `group' or a gap to it.
 			-- unless density becomes smaller than `density'.
 			-- Set `is_extended' to true if `group' is merged with current one and to false otherwise.
 		require
 			group_not_void: group /= Void
-			group_is_outside: 
+			group_is_outside:
 				group.upper < lower or else (is_lower_included /= group.is_upper_included) and then group.upper = lower or else
 				upper < group.lower or else (is_upper_included /= group.is_lower_included) and then upper = group.lower
 		do
@@ -221,7 +221,7 @@ feature -- Element change
 
 feature -- IL code generation
 
-	generate_il (min, max: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+	generate_il (a_generator: IL_NODE_GENERATOR; min, max: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
 			-- Generate code for group of intervals in `instruction' assuming that inspect value is in range `min'..`max'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
@@ -241,7 +241,7 @@ feature -- IL code generation
 				i := lower
 				is_included := is_lower_included
 				interval := lower_interval
-				instruction.generate_il_load_value
+				a_generator.generate_il_load_value (instruction)
 				i.generate_il_subtract (is_included)
 				switch_count := i.distance (upper).truncated_to_integer - 1
 				if is_included then
@@ -292,7 +292,7 @@ feature -- IL code generation
 			until
 				cases.after
 			loop
-				instruction.generate_il_when_part (cases.item, labels)
+				a_generator.generate_il_when_part (instruction, cases.item, labels)
 				cases.forth
 			end
 		end
@@ -306,7 +306,7 @@ feature {NONE} -- Status report
 			-- If calculated density is higher than some value (0.5 for average IL code), switch instruction is shorter,
 			-- so it does not make sense to set `density' above this value, switch instruction is better both in speed and memory in this case
 			-- and 1/2 of this value will only double the table size
-	
+
 feature {NONE} -- Element change
 
 	extend (lb, ub: like lower; is_lb_included, is_ub_included: like is_lower_included; li, ui: like lower_interval; c: like count) is

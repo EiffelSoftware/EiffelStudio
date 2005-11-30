@@ -9,7 +9,7 @@ inherit
 	EXPR_B
 		redefine
 			print_register, evaluate,
-			is_simple_expr, is_predefined, generate_il,
+			is_simple_expr, is_predefined,
 			is_fast_as_local, is_constant_expression
 		end
 
@@ -108,16 +108,6 @@ feature -- IL code generation
 
 	is_fast_as_local: BOOLEAN is True
 			-- Is expression calculation as fast as loading a local?
-
-	generate_il is
-			-- Generate IL code for double constant.
-		do
-			if real_size = 64 then
-				il_generator.put_real_64_constant (value.to_double)
-			else
-				il_generator.put_real_32_constant (value.to_real)
-			end
-		end
 
 invariant
 	value_not_void: value /= Void

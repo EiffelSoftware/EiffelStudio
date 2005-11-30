@@ -5,7 +5,7 @@ class STRIP_B
 inherit
 	EXPR_B
 		redefine
-			enlarged, size, generate_il
+			enlarged, size
 		end
 
 	SHARED_INSTANTIATOR
@@ -70,14 +70,6 @@ feature
 				feature_ids.forth;
 			end;
 		end;
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for strip expression.
-		do
-			check False end
-		end
 
 feature -- Inlining
 

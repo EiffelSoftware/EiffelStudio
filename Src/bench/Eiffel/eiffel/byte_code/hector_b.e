@@ -12,7 +12,7 @@ inherit
 			calls_special_features, is_unsafe, optimized_byte_node,
 			pre_inlined_code, inlined_byte_code,
 			analyze, print_register,
-			generate, generate_il, size
+			generate, size
 		end
 
 create
@@ -112,19 +112,6 @@ feature -- Code generation
 			if expr.is_result and then (not is_pointer or else real_type (expr.type).is_basic) then
 				context.mark_result_used
 			end
-		end
-
-feature -- IL code generation
-
-	il_operator_constant: INTEGER is
-		do
-			check False end
-		end
-
-	generate_il is
-			-- Generate IL code for unprotected external call argument.
-		do
-			expr.generate_il_address
 		end
 
 feature -- C code generation

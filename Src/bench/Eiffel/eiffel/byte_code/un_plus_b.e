@@ -2,8 +2,6 @@ class UN_PLUS_B
 
 inherit
 	UNARY_B
-		rename
-			Il_uplus as il_operator_constant
 		redefine
 			generate_operator, is_built_in
 		end;

@@ -10,7 +10,7 @@ inherit
 			need_invariant, set_need_invariant,
 			is_unsafe, calls_special_features, optimized_byte_node,
 			is_special_feature, size, pre_inlined_code,
-			inlined_byte_code, generate_il, need_target
+			inlined_byte_code, need_target
 		end
 
 feature -- Visitor
@@ -101,98 +101,6 @@ feature -- IL code generation
 			-- E.g. not (a constant or a static external)
 		do
 			Result := target.need_target
-		end
-
-	generate_il is
-			-- Generate IL code for a nested call.
-		local
-			can_discard_target: BOOLEAN
-			is_target_generated: BOOLEAN
-			l_call_access: CALL_ACCESS_B
-			l_attr: ATTRIBUTE_B
-			l_cl_type: CL_TYPE_I
-			local_number: INTEGER
-			l_type: TYPE_I
-			l_need_attribute_to_be_assigned_back: BOOLEAN
-			l_external: EXTERNAL_B
-		do
-			can_discard_target := not message.need_target
-
-			if can_discard_target then
-					-- If we have a constant or a static external call,
-					-- we can forget about the generation of `target' only
-					-- if it is not a routine call. If the generation
-					-- of `target' occurred, we need to pop from
-					-- execution stack the value returned by `target'
-					-- because it is not needed to perform the call to `message'.
-				is_target_generated := (not target.is_predefined and
-					(parent /= Void or not target.is_attribute))
-			else
-				is_target_generated := True
-			end
-
-			if is_target_generated then
-					-- We pass `True' to force a special treatment on
-					-- generation of `target' if it is an expanded object.
-					-- Namely if `target' is predefined we will load
-					-- the address of `target' instead of `target' itself.
-					-- `message' will manage the boxing operation if needed.
-				target.generate_il_call_access (True)
-					-- In case of attributes which requires their address to be loaded
-					-- to perform the call, we check wether or not the value needs to be
-					-- assigned back to the attribute or not, that is to say if they
-					-- are first in the call chain.
-					-- If it does then its address was loaded in previous call to `target', so
-					-- we need to duplicate it.
-				l_attr ?= target
-				if l_attr /= Void then
-					l_need_attribute_to_be_assigned_back :=  l_attr.need_address (True) and then
-						l_attr.is_first and then not context.associated_class.is_single
-					if l_need_attribute_to_be_assigned_back then
-						il_generator.duplicate_top
-					end
-				end
-			end
-
-			l_call_access ?= message
-
-			if can_discard_target and is_target_generated then
-				il_generator.pop
-				l_external ?= l_call_access
-				if l_external /= Void then
-						-- Modify call so that we do it as if it was a static call.
-						-- This is ok because eventhough the code looks like:
-						-- f.static_external (args) where f is of type A
-						-- it should have been written as:
-						-- {A}.static_external (args)
-					l_external.enable_static_call
-					l_external.set_parent (Void)
-				end
-			end
-
-				-- Generate call
-			if l_call_access /= Void then
-				l_call_access.generate_il_call (True)
-			else
-				message.generate_il
-			end
-			if l_need_attribute_to_be_assigned_back then
-				l_type := Context.real_type (message.type)
-				if not l_type.is_void then
-					context.add_local (l_type)
-					local_number := context.local_list.count
-					il_generator.put_dummy_local_info (l_type, local_number)
-					il_generator.generate_local_assignment (local_number)
-				end
-				l_cl_type ?= l_attr.context_type
-				il_generator.generate_expanded_attribute_assignment (
-					il_generator.implemented_type (l_attr.written_in, l_cl_type),
-					Context.real_type (l_attr.type),
-					l_attr.attribute_id)
-				if not l_type.is_void then
-					il_generator.generate_local (local_number)
-				end
-			end
 		end
 
 feature -- Array optimization

@@ -11,7 +11,7 @@ inherit
 			analyze, generate, unanalyze, enlarged,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code,
-			generate_il, line_number, set_line_number
+			line_number, set_line_number
 		end
 
 	ASSERT_TYPE
@@ -163,37 +163,6 @@ feature -- Line number setting
 				Result := Current
 			end
 		end;
-
-feature -- IL Code generation
-
-	generate_il is
-			-- Generate IL code for an assertion which is not a precondition
-		do
-			check
-				expr_exists: expr /= Void
-				not_in_precondition: context.assertion_type /= In_precondition
-			end
-
-			generate_il_line_info (True)
-
-			expr.generate_il
-
-			if tag = Void then
-				il_generator.generate_assertion_check (context.assertion_type, "")
-			else
-				il_generator.generate_assertion_check (context.assertion_type, tag)
-			end
-		end
-
-	generate_il_precondition (failure_block: IL_LABEL) is
-			-- Generate IL code for a precondition checking
-		require
-			in_precondition: context.assertion_type = In_precondition
-		do
-			generate_il_line_info (True)
-			expr.generate_il
-			il_generator.generate_precondition_check (tag, failure_block)
-		end
 
 feature -- Array optimization
 

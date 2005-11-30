@@ -10,7 +10,7 @@ class
 inherit
 	INSTR_B
 		redefine
-			analyze, generate, generate_il, size, pre_inlined_code, inlined_byte_code,
+			analyze, generate, size, pre_inlined_code, inlined_byte_code,
 			assigns_to, calls_special_features, is_unsafe,
 			optimized_byte_node, enlarge_tree
 		end
@@ -58,14 +58,6 @@ feature -- C generation
 			-- Loop over `list' and generate each item
 		do
 			compound.generate
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Loop over `list' and generate IL code for each item
-		do
-			compound.generate_il
 		end
 
 feature -- Tree enlargment

@@ -9,7 +9,7 @@ inherit
 			need_enlarging, enlarged,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, inlined_byte_code,
-			pre_inlined_code, generate_il
+			pre_inlined_code
 		end;
 
 feature -- Visitor
@@ -48,24 +48,6 @@ feature
 		do
 			create Result.make (Current)
 		end;
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for an assignment.
-		do
-			generate_il_line_info (True)
-
-				-- Code that needs to be generated when performing
-				-- assignment to an attribute.
-			target.generate_il_start_assignment
-
-				-- Generate expression byte code
-			source.generate_il_for_type (context.real_type (target.type))
-
-				-- Generate assignment
-			target.generate_il_assignment (context.real_type (source.type))
-		end
 
 feature -- Array optimization
 

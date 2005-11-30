@@ -540,6 +540,7 @@ feature {NONE} -- Visitors
 						l_call.set_parent (l_nested)
 						is_in_creation_call := True
 						l_call.process (Current)
+						is_in_creation_call := False
 						l_call.set_parent (Void)
 					end
 				end

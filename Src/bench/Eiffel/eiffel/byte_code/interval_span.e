@@ -17,7 +17,7 @@ feature -- Access
 			-- Upper bound of a span
 		deferred
 		end
-			
+
 	is_lower_included: BOOLEAN is
 			-- Is `lower' included in a span?
 		deferred
@@ -37,11 +37,12 @@ feature -- Measurement
 
 feature -- IL code generation
 
-	generate_il (min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
 			-- Generate code for span in `instruction' assuming that inspect value is in range `min'..`max'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
 		require
+			a_generator_not_void: a_generator /= Void
 			min_value_not_void: min_value /= Void
 			max_value_not_void: max_value /= Void
 			labels_not_void: labels /= Void

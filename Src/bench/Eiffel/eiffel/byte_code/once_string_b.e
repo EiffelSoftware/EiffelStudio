@@ -10,7 +10,7 @@ class
 inherit
 	EXPR_B
 		redefine
-			enlarged, generate_il,
+			enlarged,
 			is_simple_expr, allocates_memory, size
 		end
 
@@ -99,14 +99,6 @@ feature -- Settings
 			is_dotnet_string := v
 		ensure
 			is_dotnet_string_set: is_dotnet_string = v
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for a once manifest string.
-		do
-			il_generator.generate_once_string (number - 1, value, is_dotnet_string)
 		end
 
 feature {NONE} -- Implementation: types

@@ -9,8 +9,7 @@ inherit
 			enlarged, read_only, is_result, is_creatable,
 			register_name,
 			assign_code, expanded_assign_code, reverse_code,
-			assigns_to, pre_inlined_code, generate_il_call_access,
-			generate_il_address,
+			assigns_to, pre_inlined_code,
 			is_fast_as_local, is_predefined
 		end
 
@@ -71,22 +70,6 @@ feature -- IL code generation
 	is_fast_as_local: BOOLEAN is true
 			-- Is expression calculation as fast as loading a local?
 			-- (This is not true for once functions, but there is not enough information to figure it out.)
-
-	generate_il_call_access (is_target_of_call: BOOLEAN) is
-			-- Generate IL code for an access to Result.
-		do
-			if need_address (is_target_of_call) then
-				il_generator.generate_result_address
-			else
-				il_generator.generate_result
-			end
-		end
-
-	generate_il_address is
-			-- Generate address of Result.
-		do
-			il_generator.generate_result_address
-		end
 
 feature -- Byte code generation
 

@@ -8,8 +8,7 @@ class STRING_B
 inherit
 	EXPR_B
 		redefine
-			enlarged, generate_il,
-			is_simple_expr, allocates_memory, is_constant_expression
+			enlarged, is_simple_expr, allocates_memory, is_constant_expression
 		end
 
 create
@@ -83,18 +82,6 @@ feature -- Settings
 			is_dotnet_string := v
 		ensure
 			is_dotnet_string_set: is_dotnet_string = v
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for a manifest string.
-		do
-			if is_dotnet_string then
-				il_generator.put_system_string (value)
-			else
-				il_generator.put_manifest_string (value)
-			end
 		end
 
 feature {NONE} -- Implementation: types

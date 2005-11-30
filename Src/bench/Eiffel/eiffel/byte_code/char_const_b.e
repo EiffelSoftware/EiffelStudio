@@ -9,7 +9,7 @@ inherit
 	EXPR_B
 		redefine
 			print_register, evaluate,
-			is_simple_expr, is_predefined, generate_il,
+			is_simple_expr, is_predefined,
 			is_fast_as_local, is_constant_expression
 		end
 
@@ -86,11 +86,5 @@ feature -- IL code generation
 
 	is_fast_as_local: BOOLEAN is true
 			-- Is expression calculation as fast as loading a local?
-
-	generate_il is
-			-- Generate IL code for character constant
-		do
-			il_generator.put_character_constant (value)
-		end
 
 end -- class CHAR_CONST_B

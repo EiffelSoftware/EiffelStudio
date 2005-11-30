@@ -183,21 +183,23 @@ feature {NONE} -- Implementation
 		local
 			l_item : MSR_TEXT_ITEM
 			l_offset : INTEGER
+			l_actual_replacement: STRING
 		do
 			l_item ?= replace_items.item
 			if l_item /= Void then
-			 	l_item.source_text.replace_substring (actual_replacement (l_item),
+				l_actual_replacement := actual_replacement (l_item)
+			 	l_item.source_text.replace_substring (l_actual_replacement,
 			 													l_item.start_index,
 			 													l_item.end_index)
-				l_item.context_text.replace_substring (actual_replacement (l_item),
+				l_item.context_text.replace_substring (l_actual_replacement,
 																l_item.start_index_in_context_text,
 																l_item.text.count + l_item.start_index_in_context_text - 1)
-				l_offset := actual_replacement (l_item).count - l_item.text.count
+				l_offset := l_actual_replacement.count - l_item.text.count
 				l_item.set_end_index (l_item.end_index + l_offset)
-			 	refresh_item_capture_positions
+			 	refresh_item_capture_positions (l_offset)
 			 		-- refresh_item_capture_positions counts on old finding context,
 			 		-- so set_text later than refresh_item_capture_positions
-			 	l_item.set_text (actual_replacement (l_item))
+			 	l_item.set_text (l_actual_replacement)
 			 	if refresh_finding then
 			 		refresh_item_text
 			 	end
@@ -268,21 +270,16 @@ feature {NONE} -- Implementation
 
 	last_item: MSR_TEXT_ITEM
 
-	refresh_item_capture_positions is
+	refresh_item_capture_positions (a_offset: INTEGER) is
 			-- Calculate new positions and refresh the rest items' start and end index.
 		require
 			replace_items_set: is_replace_items_set
 			replace_string_set : is_replace_string_set
 		local
-			l_offset: INTEGER
 			l_text_item: MSR_TEXT_ITEM
 			l_stop: BOOLEAN
 			l_cursor: CURSOR
 		do
-			l_text_item ?= replace_items.item
-			if l_text_item /= Void then
-				l_offset := replace_string.count - l_text_item.text.count
-			end
 			l_cursor := replace_items.cursor
 			from
 				replace_items.forth
@@ -292,8 +289,8 @@ feature {NONE} -- Implementation
 			loop
 				l_text_item ?= replace_items.item
 				if l_text_item /= Void then
-					l_text_item.set_end_index (l_text_item.end_index + l_offset)
-					l_text_item.set_start_index (l_text_item.start_index + l_offset)
+					l_text_item.set_end_index (l_text_item.end_index + a_offset)
+					l_text_item.set_start_index (l_text_item.start_index + a_offset)
 				else
 					l_stop := True
 				end

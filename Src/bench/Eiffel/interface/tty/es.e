@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"Batch compiler without invoking the -loop. This is the root%
 		%class for the personal version (which does allow c compilation)."
 	date: "$Date$"
@@ -97,7 +97,7 @@ feature -- Initialization
 								project_is_new and then
 								compilation = Void and then ewb_loop = Void
 							then
-								create {EWB_QUICK_MELT} compilation		
+								create {EWB_QUICK_MELT} compilation
 								compilation.execute
 								if system.successful then
 									command.execute
@@ -139,11 +139,11 @@ feature -- Properties
 			-- Window where the output is displayed
 
 	file_error: BOOLEAN
-			-- Has an error been encountered in opening the 
+			-- Has an error been encountered in opening the
 			-- file for redirection?
 
 	option_error: BOOLEAN
-			-- Has an error been encountered in the 
+			-- Has an error been encountered in the
 			-- command line options?
 
 	current_option: INTEGER
@@ -168,7 +168,7 @@ feature -- Properties
 	is_finish_freezing_called: BOOLEAN
 			-- Should a freeze or a finalize call `finish_freezing' after generating
 			-- C code
-			
+
 	is_precompiling: BOOLEAN
 			-- Should compilation actual precompile?
 
@@ -202,7 +202,7 @@ feature -- Properties
 		end
 
 	loop_cmd: EWB_LOOP is
-			-- Loop command 
+			-- Loop command
 		do
 			create Result
 		end
@@ -245,9 +245,9 @@ feature -- Output
 
 	print_option_error is
 			-- Print the correct usage of ewb.
-		do	
+		do
 			io.put_string (argument (0))
-			io.put_string (": incorrect options%N"); 
+			io.put_string (": incorrect options%N");
 			print_usage
 		end
 
@@ -294,7 +294,7 @@ feature -- Output
 			cmd_name: STRING
 		do
 			print_usage
-			io.put_string ("%NOptions:%N"); 
+			io.put_string ("%NOptions:%N");
 			io.put_string ("%Tdefault (no option): recompile the system.%N%N")
 
 			create command_list.make
@@ -352,7 +352,7 @@ feature -- Update
 				current_option := 1
 			until
 				(current_option > argument_count) or else
-				option_error	
+				option_error
 			loop
 				analyze_one_option
 			end
@@ -377,7 +377,7 @@ feature -- Update
 			ewb_senders: EWB_SENDERS
 		do
 			filter_name := ""
-			option := argument (current_option);	
+			option := argument (current_option);
 
 			if option.is_equal ("-help") then
 				help_only := True
@@ -391,9 +391,9 @@ feature -- Update
 				version_only := True
 			elseif option.is_equal ("-quick_melt") then
 				if command = Void then
-					create {EWB_QUICK_MELT} command 
+					create {EWB_QUICK_MELT} command
 				else
-					option_error := True	
+					option_error := True
 				end
 			elseif has_documentation_generation and then option.is_equal ("-implementers") then
 				if current_option < argument_count then
@@ -862,7 +862,7 @@ feature -- Update
 					else
 						create {EWB_FINALIZE} command.make (keep)
 					end
-					
+
 				end
 			else
 				option_error := True

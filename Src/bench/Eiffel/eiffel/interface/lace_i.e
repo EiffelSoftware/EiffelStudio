@@ -719,7 +719,7 @@ feature {NONE} -- Implementation
 				end
 
 				create l_assembly.initialize (
-					l_factory.new_id_sd ("system", True),
+					l_factory.new_id_sd ("system_", True),
 					l_factory.new_id_sd ("$ISE_DOTNET_FRAMEWORK\System.dll", True),
 					l_factory.new_id_sd ("system_dll_", False), Void, Void, Void)
 				if not l_assemblies.has (l_assembly) then

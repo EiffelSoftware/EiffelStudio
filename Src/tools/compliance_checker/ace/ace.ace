@@ -37,14 +37,14 @@ cluster
 
 	all dotnet_resolver:		"${EIFFEL_SRC}\dotnet\helpers\assembly_resolver"
 		exclude
-			"CVS"; "example"; 
+			".svn"; "example"; 
 		default
 			namespace ("EiffelSoftware.Resolver")
 		end
 
 	all base:		"${EIFFEL_SRC}\library\base"
 		exclude
-			"table_eiffel3"; "desc"; "classic"; 
+			"table_eiffel3"; "desc"; "classic"; ".svn"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -53,7 +53,7 @@ cluster
 
 	all base_net:		"${EIFFEL_SRC}\library.net\base"
 		exclude
-			"table_eiffel3"; "desc"; 
+			"table_eiffel3"; "desc"; ".svn"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -62,7 +62,7 @@ cluster
 
 	all thread:		"${EIFFEL_SRC}\library\thread"
 		exclude
-			"CVS"; "clib"; "classic"; 
+			".svn"; "clib"; "classic"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -71,7 +71,7 @@ cluster
 
 	all thread_net:		"${EIFFEL_SRC}\library.net\thread"
 		exclude
-			"CVS"; 
+			".svn"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -80,7 +80,7 @@ cluster
 
 	all wel:		"${EIFFEL_SRC}\library\wel"
 		exclude
-			"classic"; 
+			"classic"; ".svn"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -88,6 +88,8 @@ cluster
 		end
 
 	all wel_net:		"${EIFFEL_SRC}\library.net\wel"
+		exclude
+			".svn";
 		default
 			assertion (no)
 			assertion (require)
@@ -96,7 +98,7 @@ cluster
 
 	all vision2:		"${EIFFEL_SRC}\library\vision2"
 		exclude
-			"gtk"; "classic"; "ev_pixmap_imp_loader.e"; 
+			"gtk"; "classic"; "ev_pixmap_imp_loader.e"; ".svn";
 		default
 			assertion (no)
 			assertion (require)
@@ -104,6 +106,8 @@ cluster
 		end
 
 	all vision2_net:		"${EIFFEL_SRC}\library.net\vision2"
+		exclude
+			".svn";
 		default
 			assertion (no)
 			assertion (require)

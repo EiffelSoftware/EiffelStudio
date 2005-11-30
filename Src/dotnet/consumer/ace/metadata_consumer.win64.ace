@@ -43,26 +43,26 @@ default
 cluster
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table_eiffel3"; "desc"; "classic"; "CVS"; 
+			"table_eiffel3"; "desc"; "classic"; ".svn"; 
 		default
 			namespace ("Base")
 		end
 
 	all base_net:		"$EIFFEL_SRC\library.net\base"
 		exclude
-			"CVS"; 
+			".svn"; 
 		default
 			namespace ("Base")
 		end
 
 	all emitter:		"$EIFFEL_SRC\dotnet\consumer"
 		exclude
-			"CVS"; "EIFGEN"; "interop"; 
+			".svn"; "EIFGEN"; "interop"; 
 		end
 
 	all interop:		"$EIFFEL_SRC\dotnet\consumer\support\interop"
 		exclude
-			"CVS"; "EIFGEN"; "interop"; 
+			".svn"; "EIFGEN"; "interop"; 
 		default
 			namespace ("Interop")
 		visible
@@ -72,12 +72,12 @@ cluster
 
 	all helpers:		"$EIFFEL_SRC\dotnet\helpers"
 		exclude
-			"CVS"; "example"; "classic";
+			".svn"; "example"; "classic";
 		end
 		
 	all compliance_checker:		"$EIFFEL_SRC\tools\compliance_checker\engine"
 		exclude
-			"CVS"; "reporting";
+			".svn"; "reporting";
 		default
 			namespace ("ComplianceChecker")
 		end

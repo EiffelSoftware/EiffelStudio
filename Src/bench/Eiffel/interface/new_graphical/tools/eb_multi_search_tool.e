@@ -924,8 +924,6 @@ feature {NONE} -- Actions handler
 	key_pressed (k: EV_KEY; search_only: BOOLEAN) is
 			-- Key `k' was pressed in the interface.
 			-- If k is Enter then launch the search, if it is Esc then hide the search interface.
-		local
-			meta_keys: ARRAY [BOOLEAN]
 		do
 			if k /= Void then
 				if k.code = Key_enter then
@@ -1680,7 +1678,8 @@ feature {NONE} -- Search report
 				else
 					l_editor := editor
 				end
-				if old_editor /= editor implies (not is_item_source_changed (l_text_item)) then
+--				if old_editor /= editor implies (not is_item_source_changed (l_text_item)) then
+				if (not is_item_source_changed (l_text_item)) then
 					if l_text_item.end_index_in_unix_text + 1 > l_text_item.start_index_in_unix_text then
 						if l_editor.text_is_fully_loaded then
 							l_editor.select_region (l_text_item.start_index_in_unix_text, l_text_item.end_index_in_unix_text + 1)

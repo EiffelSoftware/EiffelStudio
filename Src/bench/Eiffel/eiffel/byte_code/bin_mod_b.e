@@ -3,8 +3,6 @@ class BIN_MOD_B
 inherit
 
 	NUM_BINARY_B
-		rename
-			il_mod as il_operator_constant
 		redefine
 			generate_operator, is_simple,
 			generate_simple, is_built_in

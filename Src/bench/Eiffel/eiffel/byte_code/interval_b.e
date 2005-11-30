@@ -7,8 +7,6 @@ deferred class INTERVAL_B
 
 inherit
 	BYTE_NODE
-		rename
-			generate_il as old_generate_il
 		redefine
 			generate,
 			is_equal
@@ -160,7 +158,7 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il (min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
+	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [IL_LABEL]; instruction: INSPECT_B) is
 			-- Generate code for single interval of `instruction' assuming that inspect value is in range `min_value'..`max_value'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
@@ -181,7 +179,7 @@ feature -- IL code generation
 					else_label := label
 				else
 						-- Test upper bound
-					instruction.generate_il_load_value
+					a_generator.generate_il_load_value (instruction)
 					upper.il_load_value
 					if label = Void then
 						il_generator.branch_on_condition ({MD_OPCODES}.bgt, else_label)
@@ -192,7 +190,7 @@ feature -- IL code generation
 			elseif is_max_equal_upper then
 					-- No need to test upper bound
 					-- Test lower bound
-				instruction.generate_il_load_value
+				a_generator.generate_il_load_value (instruction)
 				lower.il_load_value
 				if label = Void then
 					il_generator.branch_on_condition ({MD_OPCODES}.blt, else_label)
@@ -202,7 +200,7 @@ feature -- IL code generation
 			elseif lower.is_equal (upper) then
 					-- This is a single value
 					-- Test for equality
-				instruction.generate_il_load_value
+				a_generator.generate_il_load_value (instruction)
 				lower.il_load_value
 				if label = Void then
 					il_generator.branch_on_condition ({MD_OPCODES}.bne_un, else_label)
@@ -213,7 +211,7 @@ feature -- IL code generation
 					-- General case
 					-- Generate unsigned test `val - lower <= upper - lower' which is equivalent to
 					-- signed test `lower <= val and val <= upper'.
-				instruction.generate_il_load_value
+				a_generator.generate_il_load_value (instruction)
 				lower.il_load_value
 				il_generator.generate_binary_operator (il_minus)
 				upper.il_load_difference (lower)
@@ -224,7 +222,7 @@ feature -- IL code generation
 				end
 			end
 			if label = Void then
-				instruction.generate_il_when_part (case_index, labels)
+				a_generator.generate_il_when_part (instruction, case_index, labels)
 			else
 				il_generator.branch_to (else_label)
 			end

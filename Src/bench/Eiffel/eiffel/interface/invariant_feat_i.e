@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_IL_CODE_GENERATOR
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -40,7 +45,7 @@ feature -- IL code generation
 			byte_code := Inv_byte_server.item (written_in)
 			byte_context.set_byte_code (create {STD_BYTE_CODE})
 			byte_context.set_current_feature (Current)
-			byte_code.generate_il
+			cil_node_generator.generate_il_node (il_generator, byte_code)
 			byte_context.clear_feature_data
 		end
 

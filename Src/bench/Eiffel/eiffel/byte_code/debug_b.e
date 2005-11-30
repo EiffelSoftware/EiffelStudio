@@ -11,8 +11,7 @@ inherit
 			enlarge_tree, analyze, generate,
 			assigns_to, is_unsafe,
 			optimized_byte_node, calls_special_features,
-			size, inlined_byte_code, pre_inlined_code,
-			generate_il
+			size, inlined_byte_code, pre_inlined_code
 		end
 
 feature -- Visitor
@@ -153,25 +152,6 @@ feature -- C Code generation
 					buf.exdent
 					buf.put_character ('}')
 					buf.put_new_line
-				end
-			end
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for debug clause
-		do
-			if compound /= Void then
-				if is_debug_clause_enabled then
-					generate_il_line_info (True)
-					compound.generate_il
-					check
-						end_location_not_void: end_location /= Void
-					end
-					il_generator.put_silent_debug_info (end_location)
-				else
-					il_generator.put_ghost_debug_infos (line_number, compound.count)
 				end
 			end
 		end

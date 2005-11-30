@@ -3,8 +3,6 @@ class BIN_LT_B
 inherit
 
 	COMP_BINARY_B
-		rename
-			il_lt as il_operator_constant
 		redefine
 			generate_operator
 		end;

@@ -11,7 +11,7 @@ inherit
 			stored_register, is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			allocates_memory, generate_il
+			allocates_memory
 		end;
 
 feature -- Visitor
@@ -95,14 +95,6 @@ feature
 			create Result;
 			Result.fill_from (Current);
 		end;
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for `expression'
-		do
-			expression.generate_il_for_type (context.real_type (attachment_type))
-		end
 
 feature -- Array optimization
 

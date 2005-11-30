@@ -9,7 +9,7 @@ inherit
 	REVERSE_B
 		undefine
 			find_assign_result, mark_last_instruction,
-			last_all_in_result, analyze, generate_il, generate
+			last_all_in_result, analyze, generate
 		end
 
 	ASSIGN_BL

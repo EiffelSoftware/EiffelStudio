@@ -8,9 +8,6 @@ deferred class
 
 inherit
 	ACCESS_B
-		redefine
-			generate_il
-		end
 
 	SHARED_NAMES_HEAP
 		export
@@ -61,92 +58,6 @@ feature -- Setting
 			precursor_type := p_type
 		ensure
 			precursor_set : precursor_type = p_type
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for feature call.
-		do
-			generate_il_call (False)
-		end
-
-	generate_il_call (invariant_checked: BOOLEAN) is
-			-- Generate IL code for feature call.
-			-- If `invariant_checked' generates invariant check
-			-- before call.
-		require
-			il_generation: System.il_generation
-		deferred
-		end
-
-	generate_il_call_invariant (cl_type: CL_TYPE_I) is
-			-- Generate IL code for calling invariant feature on class type `cl_type'.
-		require
-			cl_type_not_void: cl_type /= Void
-		do
-			if cl_type.is_true_expanded then
-					-- Box object before checking its class invariant
-				il_generator.generate_load_from_address (cl_type)
-				il_generator.generate_metamorphose (cl_type)
-			end
-			il_generator.generate_invariant_checking (cl_type)
-		end
-
-	generate_il_call_invariant_leading (cl_type: CL_TYPE_I; is_checked_before_call: BOOLEAN) is
-			-- Generate IL code for calling invariant feature on class type `cl_type'
-			-- before associated feature call if `is_checked_before_call' is true.
-			-- Object on which a class invariant has
-			-- to be checked has to be on the evaluation stack.
-			-- It is preserved for the subsequent invariant check after feature call.
-		require
-			cl_type_not_void: cl_type /= Void
-		do
-				-- Need two copies of current object in stack
-				-- to perform invariant check before and after
-				-- feature call.
-			il_generator.duplicate_top
-			if is_checked_before_call then
-				il_generator.duplicate_top
-				generate_il_call_invariant (cl_type)
-			end
-		end
-
-	generate_il_call_invariant_trailing (cl_type: CL_TYPE_I; return_type: TYPE_I) is
-			-- Generate IL code for calling invariant feature on class type `cl_type'
-			-- after associated feature call with result type `return_type'.
-			-- It is assumed that `generate_il_call_invariant_leading' is called
-			-- before feature call to make necessary bookkeeping.
-		require
-			cl_type_not_void: cl_type /= Void
-			return_type_not_void: return_type /= Void
-		local
-			local_number: INTEGER
-		do
-			if return_type.is_void then
-				generate_il_call_invariant (cl_type)
-			else
-					-- It is a function and we need to save the result onto
-					-- a local variable.
-				context.add_local (return_type)
-				local_number := context.local_list.count
-				il_generator.put_dummy_local_info (return_type, local_number)
-				il_generator.generate_local_assignment (local_number)
-				generate_il_call_invariant (cl_type)
-				il_generator.generate_local (local_number)
-			end
-		end
-
-	need_real_metamorphose (a_type: CL_TYPE_I): BOOLEAN is
-			-- Does call originate from a reference type?
-		require
-			a_type_not_void: a_type /= Void
-			a_type_has_associated_class: a_type.base_class /= Void
-		local
-			class_c: CLASS_C
-		do
-			class_c := a_type.base_class
-			Result := written_in /= class_c.class_id
 		end
 
 feature -- Byte code generation

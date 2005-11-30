@@ -6,7 +6,7 @@ inherit
 			register as left_register,
 			set_register as set_left_register
 		redefine
-			free_register, unanalyze, generate_il,
+			free_register, unanalyze,
 			is_commutative, print_register, type,
 			generate, analyze, is_unsafe, optimized_byte_node,
 			calls_special_features, pre_inlined_code, inlined_byte_code
@@ -207,118 +207,6 @@ feature
 				buf.put_character (')')
 			end;
 		end;
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate byte code for equality test
-		local
-			left_type: TYPE_I
-			right_type: TYPE_I
-			comparison_type: TYPE_I
-			continue_label: IL_LABEL
-			end_label: IL_LABEL
-		do
-			left_type := context.real_type (left.type)
-			right_type := context.real_type (right.type)
-
-			if
-				(left_type.is_none and right_type.is_expanded) or
-				(left_type.is_expanded and right_type.is_none)
-			then
-					-- Simple type can never be Void, so we simply evaluate
-					-- expressions and then remove them from the stack to insert
-					-- the expected value
-				left.generate_il
-				right.generate_il
-				il_generator.pop
-				il_generator.pop
-				generate_il_boolean_constant
-			else
-				if
-					(left_type.is_expanded or else right_type.is_expanded) and then
-					not (left_type.is_basic and then right_type.is_basic)
-				then
-						-- Object (value) equality.
-
-						-- Select reference type to which expanded types will be converted
-						-- for comparison that expects arguments of type System.Object.
-					if left_type.is_expanded then
-						comparison_type := right_type
-						if comparison_type.is_expanded then
-								-- Both type are expanded. If either of them is external
-								-- but not basic, the comparison type is System.Object.
-								-- Otherwise it is ANY.
-							if
-								left_type.is_external and then not left_type.is_basic or else
-								right_type.is_external and then not right_type.is_basic
-							then
-								create {CL_TYPE_I} comparison_type.make (system.system_object_id)
-							else
-								create {CL_TYPE_I} comparison_type.make (system.any_id)
-							end
-						end
-					else
-						comparison_type := left_type
-					end
-
-						-- Generate left operand.
-					left.generate_il_for_type (comparison_type)
-					if left_type.is_reference then
-							-- Check for voidness.
-						continue_label := il_generator.create_label
-						end_label := il_generator.create_label
-						il_generator.duplicate_top
-						il_generator.branch_on_true (continue_label)
-						il_generator.pop
-						il_generator.put_boolean_constant (false)
-						il_generator.branch_to (end_label)
-						il_generator.mark_label (continue_label)
-					end
-
-						-- Generate right operand.
-					right.generate_il_for_type (comparison_type)
-					if right_type.is_reference then
-							-- Check for voidness.
-						continue_label := il_generator.create_label
-						end_label := il_generator.create_label
-						il_generator.duplicate_top
-						il_generator.branch_on_true (continue_label)
-							-- Remove left operand as well.
-						il_generator.pop
-						il_generator.pop
-						il_generator.put_boolean_constant (false)
-						il_generator.branch_to (end_label)
-						il_generator.mark_label (continue_label)
-					end
-
-						-- Call "is_equal".
-					il_generator.generate_object_equality_test
-						-- Negate result if required.
-					generate_il_modifier_opcode
-
-						-- Mark end of equality expression (if required).
-					if end_label /= Void then
-						il_generator.mark_label (end_label)
-					end
-				else
-						-- Reference or basic type equality.
-					generate_converted_standard_il
-				end
-			end
-		end
-
-	generate_il_boolean_constant is
-			-- Put `True' or `False' on stack depending if we generate
-			-- an equality or an inequality operator.
-		deferred
-		end
-
-	generate_il_modifier_opcode is
-			-- Generate a `not' opcode in case of BIN_NE_B
-		do
-			-- Do nothing by default.
-		end
 
 feature -- Array optimization
 

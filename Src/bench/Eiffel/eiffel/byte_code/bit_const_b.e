@@ -9,7 +9,7 @@ class
 inherit
 	EXPR_B
 		redefine
-			enlarged, generate_il, is_simple_expr, allocates_memory,
+			enlarged, is_simple_expr, allocates_memory,
 			is_constant_expression
 		end
 
@@ -66,14 +66,5 @@ feature -- Status report
             -- Is register `r' used in local or forthcomming dot calls ?
         do
         end;
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for bit constant.
-			--| Not applicable
-		do
-			check False end
-		end
 
 end

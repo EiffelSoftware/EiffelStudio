@@ -8,7 +8,7 @@ inherit
 		redefine
 			enlarge_tree, analyze, generate,
 			is_unsafe, optimized_byte_node, calls_special_features,
-			size, inlined_byte_code, pre_inlined_code, generate_il
+			size, inlined_byte_code, pre_inlined_code
 		end
 
 create
@@ -61,15 +61,6 @@ feature
 			generate_frozen_debugger_hook
 			call.generate;
 		end;
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for an intruction call
-		do
-			generate_il_line_info (True)
-			call.generate_il
-		end
 
 feature -- Array optimization
 

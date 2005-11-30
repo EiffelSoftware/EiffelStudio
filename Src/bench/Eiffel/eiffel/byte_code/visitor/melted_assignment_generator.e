@@ -7,7 +7,7 @@ class
 	MELTED_ASSIGNMENT_GENERATOR
 
 inherit
-	BYTE_NODE_NULL_VISITOR
+	ASSIGNMENT_GENERATOR
 		redefine
 			process_local_b, process_attribute_b, process_result_b
 		end
@@ -27,6 +27,7 @@ feature -- Byte code generation
 	generate_assignment (a_ba: BYTE_ARRAY; a_node: BYTE_NODE) is
 			-- Generate assignment on `a_node'.
 		require
+			is_valid: is_valid
 			a_ba_not_void: a_ba /= Void
 			a_node_not_void: a_node /= Void
 			a_node_valid: is_node_valid (a_node)
@@ -40,17 +41,6 @@ feature -- Access
 
 	ba: BYTE_ARRAY
 			-- Byte array where melted code is stored.
-
-feature -- Status
-
-	is_node_valid (a_node: BYTE_NODE): BOOLEAN is
-			-- Is `a_node' valid for current visitor?
-		local
-			l_access: ACCESS_B
-		do
-			l_access ?= a_node
-			Result := l_access /= Void and then not l_access.read_only
-		end
 
 feature {NONE} -- Implementation
 

@@ -3,8 +3,6 @@ class BIN_GT_B
 inherit
 
 	COMP_BINARY_B
-		rename
-			il_gt as il_operator_constant
 		redefine
 			generate_operator
 		end;

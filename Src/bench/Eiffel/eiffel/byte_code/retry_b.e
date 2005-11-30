@@ -8,7 +8,7 @@ inherit
 		rename
 			set_line_number as make
 		redefine
-			generate, generate_il
+			generate
 		end
 
 create
@@ -51,15 +51,6 @@ feature -- C code generation
 
 			buf.put_string ("RTER;")
 			buf.put_new_line
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for retry instruction.
-		do
-			il_generator.put_line_info (line_number)
-			il_generator.generate_leave_to (il_label_factory.retry_label)
 		end
 
 end

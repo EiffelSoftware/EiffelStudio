@@ -17,7 +17,7 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			generate_il, is_simple_expr
+			is_simple_expr
 		end
 
 	IL_CONST
@@ -187,28 +187,6 @@ feature -- C code generation
 			check
 				False
 			end
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for an unary expression
-		do
-			if is_built_in then
-					-- Polish notation
-				expr.generate_il
-
-					-- Write unary operator
-				il_generator.generate_unary_operator (il_operator_constant)
-			else
-				nested_b.generate_il
-			end
-		end
-
-	il_operator_constant: INTEGER is
-			-- Byte code constant associated to current binary
-			-- operation
-		deferred
 		end
 
 feature -- Array optimization

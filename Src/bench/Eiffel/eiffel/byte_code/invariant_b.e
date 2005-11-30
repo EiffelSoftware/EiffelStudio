@@ -6,9 +6,6 @@ inherit
 	ASSERT_TYPE
 
 	BYTE_NODE
-		redefine
-			generate_il
-		end
 
 	IDABLE
 		rename
@@ -146,35 +143,6 @@ feature
 			buf.exdent;
 			buf.put_string ("}%N%N");
 		end;
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for a class invariant clause.
-		local
-			end_of_invariant: IL_LABEL
-			body_index: INTEGER
-		do
-			context.local_list.wipe_out
-			context.set_assertion_type (In_invariant)
-
-			body_index := associated_class.invariant_feature.body_index
-			context.set_original_body_index (body_index)
-
-				-- Allocate memory for once manifest strings if required
-			if once_manifest_string_count > 0 then
-				il_generator.generate_once_string_allocation (once_manifest_string_count)
-			end
-
-			end_of_invariant := il_label_factory.new_label
-
-			il_generator.generate_invariant_checked_for (end_of_invariant)
-			byte_list.generate_il
-			il_generator.generate_inherited_invariants
-
-			il_generator.mark_label (end_of_invariant)
-			il_generator.generate_return (False)
-		end
 
 invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0

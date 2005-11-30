@@ -252,9 +252,10 @@ feature -- Inherited precondition
 			Result := precondition_types.has (ct)
 		end
 
-	generate_il_precondition is
+	generate_il_precondition (a_generator: IL_NODE_GENERATOR) is
 			-- Make IL code for inherited preconditions.
 		require
+			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_prec_count
 			has_precondition: has_precondition
 		local
@@ -282,7 +283,7 @@ feature -- Inherited precondition
 					check
 						assert_b_not_void: assert_b /= Void
 					end
-					assert_b.generate_il_precondition (failure_block)
+					a_generator.generate_il_precondition_node (assert_b, failure_block)
 					l_prec.forth
 				end
 				il_generator.branch_to (success_block)
@@ -303,6 +304,7 @@ feature -- Inherited precondition
 	make_precondition_byte_code (a_generator: MELTED_GENERATOR; ba: BYTE_ARRAY) is
 			-- Make byte code for inherited precondition.
 		require
+			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_prec_count
 			has_precondition: has_precondition
 		do
@@ -558,9 +560,10 @@ feature -- inherited postcondition
 			context_restored: restored
 		end
 
-	generate_il_postcondition is
+	generate_il_postcondition (a_generator: IL_NODE_GENERATOR) is
 			-- Generate IL code for inherited postcondition
 		require
+			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
 		do
 			from
@@ -570,16 +573,17 @@ feature -- inherited postcondition
 			loop
 				postcondition_context_init
 				il_generator.generate_once_string_allocation (postcondition_oms_counts.item)
-				postcondition_list.item.generate_il
+				a_generator.generate_il_node (il_generator, postcondition_list.item)
 				Il_generator.flush_sequence_points (context.class_type)
 				postcondition_forth
 			end
 			restore_current_context
 		end
 
-	generate_il_old_exp_init is
+	generate_il_old_exp_init (a_generator: IL_NODE_GENERATOR) is
 			-- Make byte code for inherited old expressions.
 		require
+			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
 		local
 			old_expressions: LINKED_LIST [UN_OLD_B]
@@ -599,7 +603,7 @@ feature -- inherited postcondition
 					until
 						old_expressions.after
 					loop
-						old_expressions.item.generate_il_init
+						a_generator.generate_il_old_init (old_expressions.item)
 						old_expressions.forth
 					end
 				end
@@ -613,6 +617,7 @@ feature -- inherited postcondition
 	make_postcondition_byte_code (a_generator: MELTED_GENERATOR; ba: BYTE_ARRAY) is
 			-- Make byte code for inherited postcondition.
 		require
+			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
 		do
 			from
@@ -669,6 +674,7 @@ feature -- inherited postcondition
 	make_old_exp_byte_code (a_generator: MELTED_GENERATOR; ba: BYTE_ARRAY) is
 			-- Make byte code for inherited old expressions.
 		require
+			a_generator_not_void: a_generator /= Void
 			types_and_assert_count_same: valid_post_count
 		local
 			old_expressions: LINKED_LIST [UN_OLD_B]

@@ -8,8 +8,7 @@ inherit
 			append_once_mark,
 			is_once, is_global_once,
 			pre_inlined_code, inlined_byte_code, generate_once_declaration,
-			generate_once_data, generate_once_prologue, generate_once_epilogue,
-			generate_il_return
+			generate_once_data, generate_once_prologue, generate_once_epilogue
 		end
 
 	REFACTORING_HELPER
@@ -38,14 +37,6 @@ feature -- Setting
 			internal_is_global_once := v
 		ensure
 			internal_is_global_once_set: internal_is_global_once = v
-		end
-
-feature {NONE} -- IL code generation
-
-	generate_il_return is
-			-- Generate IL final return statement.
-		do
-			il_generator.generate_once_epilogue
 		end
 
 feature -- Byte code generation

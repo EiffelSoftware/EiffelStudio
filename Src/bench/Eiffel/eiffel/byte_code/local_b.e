@@ -15,8 +15,7 @@ inherit
 			print_register,
 			assign_code, expanded_assign_code, reverse_code,
 			bit_assign_code, assigns_to, array_descriptor,
-			pre_inlined_code, generate_il_call_access,
-			generate_il_address,
+			pre_inlined_code,
 			is_fast_as_local, is_predefined
 		end
 
@@ -95,23 +94,6 @@ feature -- IL code generation
 
 	is_fast_as_local: BOOLEAN is true
 			-- Is expression calculation as fast as loading a local?
-
-	generate_il_call_access (is_target_of_call: BOOLEAN) is
-			-- Generate IL code for an access to a local variable.
-		do
-			if need_address (is_target_of_call) then
-				il_generator.generate_local_address (position)
-			else
-				il_generator.generate_local (position)
-			end
-		end
-
-	generate_il_address is
-			-- Generate address of current local.
-		do
-			il_generator.generate_local_address (position)
-		end
-
 
 feature -- Byte code generation
 

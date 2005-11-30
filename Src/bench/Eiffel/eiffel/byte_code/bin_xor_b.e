@@ -3,8 +3,6 @@ class BIN_XOR_B
 inherit
 
 	BOOL_BINARY_B
-		rename
-			il_xor as il_operator_constant
 		redefine
 			is_commutative, print_register, built_in_enlarged
 		end;

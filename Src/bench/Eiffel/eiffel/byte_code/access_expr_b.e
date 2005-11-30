@@ -16,7 +16,7 @@ inherit
 			optimized_byte_node, size,
 			pre_inlined_code,
 			is_temporary, is_predefined,
-			register_name, generate_il,
+			register_name,
 			is_hector
 		end;
 
@@ -142,14 +142,6 @@ feature -- Status
 				expr.print_register;
 			end;
 		end;
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for an expression access.
-		do
-			expr.generate_il
-		end
 
 feature -- Array optimization
 

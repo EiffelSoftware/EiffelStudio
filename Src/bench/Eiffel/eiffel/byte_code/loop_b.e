@@ -11,7 +11,7 @@ inherit
 			need_enlarging, enlarged,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, inlined_byte_code,
-			pre_inlined_code, generate_il
+			pre_inlined_code
 		end
 
 	ASSERT_TYPE
@@ -97,104 +97,6 @@ feature -- Setting
 		do
 			create Result
 			Result.fill_from (Current)
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for Eiffel loop.
-		local
-			test_label, end_label, l_label: IL_LABEL
-			local_list: LINKED_LIST [TYPE_I]
-			variant_local_number: INTEGER
-			check_assertion: BOOLEAN
-		do
-			check_assertion := context.workbench_mode or
-				Context.class_type.associated_class.assertion_level.check_loop
-
-			if from_part /= Void then
-					-- Generate IL code for the from part
-				from_part.generate_il
-			end
-
-			if check_assertion and then variant_part /= Void then
-					-- Initialization of the variant control variable
-				local_list := context.local_list
-				context.add_local (int32_c_type)
-				variant_local_number := local_list.count
-				il_generator.put_dummy_local_info (variant_part.type, variant_local_number)
-			end
-
-			if check_assertion and then (invariant_part /= Void or else variant_part /= Void) then
-				l_label := il_label_factory.new_label
-				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_loop)
-				il_generator.branch_on_false (l_label)
-				il_generator.put_boolean_constant (True)
-				il_generator.generate_set_assertion_status
-				if invariant_part /= Void then
-					context.set_assertion_type (In_loop_invariant)
-					invariant_part.generate_il
-				end
-					-- Variant loop byte code
-				if variant_part /= Void then
-					context.set_assertion_type (In_loop_variant)
-					variant_part.generate_il_variant_init (variant_local_number)
-				end
-				il_generator.put_boolean_constant (False)
-				il_generator.generate_set_assertion_status
-				il_generator.mark_label (l_label)
-			end
-
-				-- Loop labels
-			test_label := il_label_factory.new_label
-			end_label := il_label_factory.new_label
-
-
-			generate_il_line_info (True)
-
-				-- Generate byte code for exit expression
-			il_generator.mark_label (test_label)
-
-			stop.generate_il
-
-				-- Generate a test
-			il_generator.branch_on_true (end_label)
-
-			if compound /= Void then
-				compound.generate_il
-			end
-
-			if check_assertion and then (invariant_part /= Void or else variant_part /= Void) then
-				l_label := il_label_factory.new_label
-				il_generator.generate_is_assertion_checked ({ASSERTION_I}.Ck_loop)
-				il_generator.branch_on_false (l_label)
-				il_generator.put_boolean_constant (True)
-				il_generator.generate_set_assertion_status
-
-					-- Invariant loop byte code
-				if invariant_part /= Void then
-					context.set_assertion_type (In_loop_invariant)
-					invariant_part.generate_il
-				end
-
-					-- Variant loop byte code
-				if variant_part /= Void then
-					context.set_assertion_type (In_loop_variant)
-					variant_part.generate_il_variant_check (variant_local_number)
-				end
-				il_generator.put_boolean_constant (False)
-				il_generator.generate_set_assertion_status
-				il_generator.mark_label (l_label)
-			end
-
-			il_generator.branch_to (test_label)
-
-			il_generator.mark_label (end_label)
-			check
-				end_location_not_void: end_location /= Void
-			end
-
-			il_generator.put_silent_debug_info (end_location)
 		end
 
 feature -- Array optimization

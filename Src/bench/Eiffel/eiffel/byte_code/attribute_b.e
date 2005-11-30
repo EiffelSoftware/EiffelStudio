@@ -15,8 +15,8 @@ inherit
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
 			enlarged, is_creatable, is_attribute, read_only,
-			assigns_to, pre_inlined_code, generate_il_call_access,
-			need_target, generate_il_address
+			assigns_to, pre_inlined_code,
+			need_target
 		end
 
 feature -- Visitor
@@ -100,135 +100,6 @@ feature
 			end
 			attr_bl.fill_from (Current)
 			Result := attr_bl
-		end
-
-feature -- IL code generation
-
-	generate_il_address is
-			-- Generate address of current attribute.
-		local
-			cl_type: CL_TYPE_I
-		do
-			cl_type ?= context_type
-			il_generator.generate_current
-			il_generator.generate_attribute_address (
-				il_generator.implemented_type (written_in, cl_type),
-				Context.real_type (type),
-				attribute_id)
-		end
-
-	generate_il_call_access (is_target_of_call: BOOLEAN) is
-			-- Generate IL code for an access to an attribute variable.
-		local
-			l_need_address: BOOLEAN
-		do
-			l_need_address := need_address (is_target_of_call)
-			generate_il_call_attribute (True, l_need_address)
-		end
-
-	generate_il_call (invariant_checked: BOOLEAN) is
-		do
-			generate_il_call_attribute (invariant_checked, False)
-		end
-
-	generate_il_call_attribute (invariant_checked, address_required: BOOLEAN) is
-			-- Generate IL code for feature call.
-			-- If `invariant_checked' generates invariant check
-			-- before call.
-		require
-			il_generation: system.il_generation
-		local
-			r_type: TYPE_I
-			cl_type: CL_TYPE_I
-			target_type: TYPE_I
-			target_attribute_id: INTEGER
-			l_feature_call: FEATURE_B
-			l_cancel_attribute_generation: BOOLEAN
-		do
-				-- Type of attribute in current context
-			r_type := Context.real_type (type)
-
-			if r_type.is_none then
-					-- Accessing Void attribute from ANY
-				il_generator.put_default_value (r_type)
-			else
-					-- Type of class which defines current attribute.
-				cl_type ?= context_type
-				if cl_type.is_expanded and then not cl_type.is_external then
-						-- Access attribute directly.
-					target_type := cl_type
-					target_attribute_id := cl_type.base_class.feature_of_rout_id (routine_id).feature_id
-				else
-					target_type := il_generator.implemented_type (written_in, cl_type)
-					target_attribute_id := attribute_id
-				end
-
-				check
-					valid_type: cl_type /= Void
-				end
-
-				if is_first and need_target then
-						-- Accessing attribute written in current analyzed class.
-					if address_required and not context.associated_class.is_single then
-							-- We need current target which will be used later on in
-							-- NESTED_B.generate_il to assign back the new value of the attribute.
-						il_generator.generate_current
-					end
-					il_generator.generate_current
-				elseif cl_type.is_basic then
-						-- A metamorphose is required to perform call.
-					generate_il_metamorphose (cl_type, target_type, need_real_metamorphose (cl_type))
-				end
-
-					-- Let's try to prepare call to `XXX.attribute.copy' in
-					-- case of `attribute' is a basic type.
-				if parent /= Void and r_type.is_basic then
-					l_feature_call ?= parent.message
-						-- It is safe to use `cl_type' because previous value is not used
-						-- after this point.
-					cl_type ?= r_type
-					if
-						l_feature_call /= Void and then
-						l_feature_call.is_il_feature_special (cl_type) and then
-						l_feature_call.Il_special_routines.function_type =
-							{IL_SPECIAL_FEATURES}.set_item_type
-					then
-							-- Since we do not need to load attribute value onto the stack,
-							-- we cancel the attribute generation.
-							-- IL_SPECIAL_FEATURES.generate_set_item will know that Object
-							-- where Current belongs is on top of the stack.
-						l_cancel_attribute_generation := True
-					end
-				end
-
-				if not l_cancel_attribute_generation then
-						-- We push code to access Current attribute.
-					if address_required then
-						il_generator.generate_attribute_address (target_type,
-							r_type, target_attribute_id)
-					else
-						if target_type.is_generated_as_single_type then
-							il_generator.generate_attribute (need_target, target_type, target_attribute_id)
-						else
-							il_generator.generate_feature_access (target_type,
-								target_attribute_id, 0, True, True)
-						end
-
-							-- Generate cast if we have to generate verifiable code
-							-- since attribute might have been redefined and in this
-							-- case its type for IL generation is the one from the
-							-- parent not the redefined one. Doing the cast enable
-							-- the verifier to find out that what we are doing is
-							-- correct.
-						if
-							system.il_verifiable and then not r_type.is_expanded
-							and then not r_type.is_none
-						then
-							il_generator.generate_check_cast (Void, r_type)
-						end
-					end
-				end
-			end
 		end
 
 feature -- Byte code generation

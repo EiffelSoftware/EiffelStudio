@@ -10,7 +10,6 @@ inherit
 		redefine
 			register, set_register, analyze, generate,
 			propagate, print_register, unanalyze,
-			generate_il,
 			is_simple_expr, allocates_memory, is_constant_expression
 		end
 
@@ -93,23 +92,6 @@ feature -- Settings
 			is_dotnet_type := v
 		ensure
 			is_dotnet_type_set: is_dotnet_type = v
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for a manifest type.
-		local
-			l_type_creator: CREATE_TYPE
-		do
-			if is_dotnet_type then
-				il_generator.put_type_instance (
-					context.real_type (type_data.true_generics.item (1)))
-			else
-				fixme ("Instance should be unique.")
-				create l_type_creator.make (context.real_type (type_data))
-				l_type_creator.generate_il
-			end
 		end
 
 feature -- Code analyzis

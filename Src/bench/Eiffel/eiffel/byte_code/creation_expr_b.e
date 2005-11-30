@@ -11,7 +11,7 @@ inherit
 		redefine
 			analyze, unanalyze,
 			generate, register, get_register,
-			enlarged, size, generate_il, is_simple_expr, is_single,
+			enlarged, size, is_simple_expr, is_single,
 			line_number, set_line_number, has_call, allocates_memory
 		end
 
@@ -184,55 +184,6 @@ feature -- Settings
 			type := t
 		ensure
 			type_set: type = t
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for creation instruction
-		local
-			ext_call: EXTERNAL_B
-			creation_type: TYPE_I
-		do
-			creation_type := real_type (type)
-			if creation_type.is_basic then
-				il_generator.put_default_value (creation_type)
-			elseif creation_type.is_external then
-					-- Creation call on external class.
-				if call /= Void then
-					call.set_parent (nested_b)
-					ext_call ?= call
-					if ext_call /= Void then
-						ext_call.generate_il_creation
-					else
-							-- External class with a standard Eiffel feature can
-							-- only be a NATIVE_ARRAY.
-						call.generate_il_call (False)
-					end
-					call.set_parent (Void)
-				else
-						-- We called `default_create' on an external class.
-					info.generate_il
-				end
-			else
-					-- Standard creation call
-				info.generate_il
-				if call /= Void then
-					if creation_type.is_expanded then
-							-- Box expanded object and take its address.
-						il_generator.generate_metamorphose (creation_type)
-						il_generator.generate_load_address (creation_type)
-					end
-					il_generator.duplicate_top
-					call.set_parent (nested_b)
-					call.generate_il_call (False)
-					call.set_parent (Void)
-					if creation_type.is_expanded then
-							-- Load expanded object.
-						il_generator.generate_load_from_address (creation_type)
-					end
-				end
-			end
 		end
 
 feature -- Comparisons

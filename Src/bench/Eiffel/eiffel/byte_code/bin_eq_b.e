@@ -2,8 +2,6 @@ class BIN_EQ_B
 
 inherit
 	BIN_EQUAL_B
-		rename
-			il_eq as il_operator_constant
 		redefine
 			enlarged, generate_operator
 		end
@@ -58,13 +56,5 @@ feature
 				create {BIN_EQ_BL} Result.make (left, right)
 			end
 		end;
-
-feature -- IL code generation
-
-	generate_il_boolean_constant is
-			-- Generate IL True constant
-		do
-			il_generator.put_boolean_constant (False)
-		end
 
 end

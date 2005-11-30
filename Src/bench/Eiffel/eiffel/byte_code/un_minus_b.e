@@ -3,8 +3,6 @@ class UN_MINUS_B
 inherit
 
 	UNARY_B
-		rename
-			Il_uminus as il_operator_constant
 		redefine
 			generate_operator, is_built_in
 		end

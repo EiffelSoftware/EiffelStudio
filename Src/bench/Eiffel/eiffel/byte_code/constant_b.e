@@ -10,7 +10,7 @@ inherit
 			has_gcable_variable, is_single, enlarged, is_constant,
 			propagate, print_register, free_register,
 			unanalyze, analyze, analyze_on, generate, generate_on,
-			allocates_memory, generate_il, need_target,
+			allocates_memory, need_target,
 			evaluate, is_constant_expression
 		end
 
@@ -203,14 +203,6 @@ feature -- Comparison
 	allocates_memory: BOOLEAN is
 		do
 			Result := value.is_string or else value.is_bit
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate byte code for a call to a constant.
-		do
-			value.generate_il
 		end
 
 end

@@ -3,12 +3,9 @@ class BIN_SLASH_B
 inherit
 
 	NUM_BINARY_B
-		rename
-			il_slash as il_operator_constant
 		redefine
 			generate_operator, is_simple,
-			generate_simple, print_register,
-			generate_standard_il
+			generate_simple, print_register
 		end;
 
 feature -- Visitor
@@ -26,18 +23,6 @@ feature -- Access
 		do
 			Result := is_built_in;
 		end;
-
-feature -- IL code generation
-
-	generate_standard_il is
-			-- Generate standard IL code for binary expression.
-		do
-			left.generate_il
-			il_generator.convert_to_real_64
-			right.generate_il
-			il_generator.convert_to_real_64
-			il_generator.generate_binary_operator (il_operator_constant)
-		end
 
 feature -- C code generation
 

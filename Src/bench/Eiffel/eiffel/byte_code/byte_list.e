@@ -8,7 +8,7 @@ inherit
 		undefine
 			copy, is_equal
 		redefine
-			enlarge_tree, analyze, generate, generate_il,
+			enlarge_tree, analyze, generate,
 			assigns_to, is_unsafe, optimized_byte_node,
 			calls_special_features, size, pre_inlined_code,
 			inlined_byte_code
@@ -64,25 +64,6 @@ feature -- C generation
 				i = nb
 			loop
 				l_area.item (i).generate
-				i := i + 1
-			end
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Loop over `list' and generate IL code for each item
-		local
-			l_area: SPECIAL [T]
-			i, nb: INTEGER
-		do
-			from
-				l_area := area
-				nb := count
-			until
-				i = nb
-			loop
-				l_area.item (i).generate_il
 				i := i + 1
 			end
 		end

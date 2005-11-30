@@ -2,8 +2,6 @@ class UN_NOT_B
 
 inherit
 	UNARY_B
-		rename
-			Il_not as il_operator_constant
 		redefine
 			generate_operator, is_built_in, print_register,
 			enlarged

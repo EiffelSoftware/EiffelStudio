@@ -82,6 +82,11 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_BN_STATELESS_VISITOR
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -1671,7 +1676,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 				end
 
 				start_new_body (l_meth_token)
-				l_code.generate_il
+				cil_node_generator.generate_il_node (Current, l_code)
 				generate_return (False)
 				method_writer.write_current_body
 			end

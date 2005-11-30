@@ -5,7 +5,7 @@ class REVERSE_B
 inherit
 	ASSIGN_B
 		redefine
-			enlarged, generate_il, process
+			enlarged, process
 		end
 
 feature -- Visitor
@@ -41,76 +41,5 @@ feature -- Enlarging
 		do
 			create Result.make (Current)
 		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for a reverse assignment.
-		local
-			target_type, source_type: TYPE_I
-			success_label, failure_label: IL_LABEL
-		do
-			generate_il_line_info (True)
-
-				-- Code that needs to be generated when performing
-				-- assignment to an attribute.
-			target.generate_il_start_assignment
-
-				-- Get types
-			target_type := context.creation_type (target.type)
-			source_type := context.real_type (source.type)
-			check
-				target_type_not_void: target_type /= Void
-				source_type_not_void: source_type /= Void
-			end
-
-				-- FIXME: At the moment we don't know how to
-				-- find out the real type of the generic
-				-- parameter, so we cheat.
-			target_type := real_type (target_type)
-
-				-- Generate expression byte code
-			source.generate_il_value
-
-			if source_type.is_expanded then
-				if target_type.is_expanded then
-					source.generate_il_metamorphose (source_type, Void, True)
-				else
-					source.generate_il_metamorphose (source_type, target_type, False)
-				end
-			end
-
-				-- Generate Test on type
-			il_generator.generate_is_instance_of (target_type)
-
-			if target_type.is_expanded then
-				il_generator.duplicate_top
-
-				success_label := il_label_factory.new_label
-				il_generator.branch_on_true (success_label)
-
-					-- Assignment attempt failed.
-					-- Remove duplicate obtained from call to `isinst'.
-				il_generator.pop
-					-- Assignment attempt failed, we simply load previous
-					-- value of `target'. It is ok to regenerate `target' as
-					-- it can only be a creatable entity: local, attribute, result.
-				target.generate_il
-
-				failure_label := il_label_factory.new_label
-				il_generator.branch_to (failure_label)
-
-				il_generator.mark_label (success_label)
-
-				il_generator.generate_unmetamorphose (target_type)
-
-				il_generator.mark_label (failure_label)
-			end
-
-				-- Generate assignment header depending of the type
-				-- of the target (local, attribute or result).
-			target.generate_il_reverse_assignment (source_type)
-		end
-
 
 end

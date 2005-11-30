@@ -8,7 +8,7 @@ class ADDRESS_B
 inherit
 	EXPR_B
 		redefine
-			print_register, generate_il
+			print_register
 		end
 
 	SHARED_C_LEVEL
@@ -162,26 +162,6 @@ feature -- C code generation
 					end
 				end
 			end
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for function pointer address.
-		local
-			target_type: CL_TYPE_I
-			target_feature_id: like feature_id
-		do
-			target_type := context.current_type
-			if target_type.is_expanded then
-				target_feature_id := target_type.base_class.feature_of_rout_id (
-					system.class_of_id (class_id).feature_of_feature_id (feature_id).rout_id_set.first
-				).feature_id
-			else
-				target_type := il_generator.implemented_type (class_id, target_type)
-				target_feature_id := feature_id
-			end
-			il_generator.generate_routine_address (target_type, target_feature_id)
 		end
 
 feature {NONE} -- Implementation: access

@@ -8,7 +8,7 @@ class ROUTINE_CREATION_B
 inherit
 	EXPR_B
 		redefine
-			enlarged, generate_il,
+			enlarged,
 			has_gcable_variable, has_call, size,
 			allocates_memory
 		end
@@ -162,47 +162,6 @@ feature -- Status report
 				Result.set_ids (class_type, rout_id, feature_id, type,
 								Void, omap_enl)
 			end
-		end
-
-feature -- IL code generation
-
-	generate_il is
-			-- Generate IL code for routine creation.
-		local
-			set_rout_disp_feat: FEATURE_I
-			real_ty: GEN_TYPE_I
-			l_decl_type, l_cl_type: CL_TYPE_I
-			cl_type: like class_type
-		do
-			real_ty ?= context.real_type (type)
-			(create {CREATE_TYPE}.make (real_ty)).generate_il
-			il_generator.duplicate_top
-
-			set_rout_disp_feat := real_ty.base_class.feature_table.
-				item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id)
-			l_decl_type := il_generator.implemented_type (set_rout_disp_feat.origin_class_id,
-				real_ty)
-
-			l_cl_type ?= context.real_type (class_type)
-			cl_type := il_generator.implemented_type (class_id, l_cl_type)
-			il_generator.put_method_token (cl_type, feature_id)
-
-				-- Arguments
-			if arguments /= Void then
-				arguments.generate_il
-			else
-				il_generator.put_void
-			end
-
-				-- Open map
-			if open_positions /= Void then
-				open_positions.generate_il
-			else
-				il_generator.put_void
-			end
-
-			il_generator.generate_feature_access (l_decl_type, set_rout_disp_feat.origin_feature_id,
-				set_rout_disp_feat.argument_count, set_rout_disp_feat.has_return_value, True)
 		end
 
 feature -- Inlining

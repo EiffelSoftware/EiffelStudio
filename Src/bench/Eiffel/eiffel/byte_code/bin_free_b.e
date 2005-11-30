@@ -1,7 +1,6 @@
 class BIN_FREE_B
 
 inherit
-
 	BINARY_B
 
 feature -- Visitor
@@ -18,15 +17,6 @@ feature -- Status
 			-- Is the current binary operator a built-in one ?
 		do
 			-- Do nothing
-		end
-
-feature -- IL code generation
-
-	il_operator_constant: INTEGER is
-			-- IL code constant associated to current binary
-			-- operation
-		do
-			check False end
 		end
 
 end

@@ -15,7 +15,6 @@ default
 	disabled_debug ("anchored_features")
 	disabled_debug ("assertion")
 	disabled_debug ("assertions")
-	disabled_debug ("byte_code")
 	disabled_debug ("c_debugger")
 	disabled_debug ("cache")
 	disabled_debug ("cache_compiler")
@@ -36,7 +35,6 @@ default
 	disabled_debug ("debbugger_hook")
 	disabled_debug ("debug_recv")
 	disabled_debug ("debugger")
-	disabled_debug ("debugger_bp_trace")
 	disabled_debug ("debugger_caching")
 	disabled_debug ("debugger_eifnet_data")
 	disabled_debug ("debugger_eifnet_data_extra")
@@ -79,6 +77,7 @@ default
 	disabled_debug ("gelex")
 	disabled_debug ("genericity")
 	disabled_debug ("geyacc")
+	disabled_debug ("grid_layout")
 	disabled_debug ("has_calls")
 	disabled_debug ("hector")
 	disabled_debug ("il_info_trace")
@@ -133,7 +132,7 @@ cluster
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table"; "desc"; "CVS"; 
+			"table"; "desc"; ".svn"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -143,7 +142,7 @@ cluster
 
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			"CVS"; 
+			".svn"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -151,7 +150,7 @@ cluster
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk2"; "gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
+			"gtk2"; "gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; ".svn"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -159,26 +158,26 @@ cluster
 
 	all net:		"$EIFFEL_SRC\library\net"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all time:		"$EIFFEL_SRC\library\time"
 		exclude
-			"CVS"; "french"; "german"; 
+			".svn"; "french"; "german"; 
 		end
 
 	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
 
 	all editor:		"$EIFFEL_SRC\library\editor"
 		exclude
-			"CVS"; "eiffel"; "text_formatter.e"; "structured_text.e"; 
+			".svn"; "eiffel"; "text_formatter.e"; "structured_text.e"; 
 		end
 
 	all compiler_support:		"$EIFFEL_SRC\Eiffel\support"
 
 	all common:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
-			"CVS"; "external"; "compiler_override"; "types"; "error"; 
+			".svn"; "external"; "compiler_override"; "types"; "error"; 
 		end
 
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
@@ -187,7 +186,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other"; "free_elks";
+			"hact"; "se"; "ve"; "base"; ".svn"; "other"; "free_elks"; 
 		default
 			assertion (no)
 			assertion (require)
@@ -195,27 +194,27 @@ cluster
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all lace:		"$EIFFEL_SRC\Eiffel\lace"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
 		exclude
-			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
+			".svn"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
 		end
 
 	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
-			"CVS"; "xml_implementation"; 
+			".svn"; "xml_implementation"; 
 		end
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
@@ -228,7 +227,7 @@ cluster
 
 	all status (communications):		"$\status"
 		exclude
-			"no_dotnet"; "CVS"; 
+			"no_dotnet"; ".svn"; 
 		end
 
 	ipc (communications):		"$\ipc"
@@ -243,7 +242,7 @@ cluster
 
 	all interface:		"$EIFFEL_SRC\Eiffel\interface"
 		exclude
-			"CVS"; "graphical"; "gtk"; "Not_in_System"; "tty"; "xml_implementation"; "preferences"; "no_dotnet"; 
+			".svn"; "graphical"; "gtk"; "Not_in_System"; "tty"; "xml_implementation"; "preferences"; "no_dotnet"; 
 		end
 
 	all tty:		"$EIFFEL_SRC\Eiffel\interface\tty"
@@ -270,17 +269,17 @@ cluster
 
 	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
 		exclude
-			"free"; "command_line"; "CVS"; "unix"; 
+			"free"; "command_line"; ".svn"; "unix"; 
 		end
 
 	all keygen:		"$EIFFEL_SRC\library\keygen"
 		exclude
-			"eiffel_envision_10"; "unix"; "CVS"; "EIFGEN"; 
+			"eiffel_envision_10"; "unix"; ".svn"; "EIFGEN"; 
 		end
 
 	all graph:		"$EIFFEL_SRC\library\graph"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all memory_analyzer:		"$EIFFEL_SRC\library\memory_analyzer"

@@ -23,14 +23,14 @@ cluster
 
 	all base:		"$EIFFEL_SRC/library/base"
 		exclude
-			"table"; "CVS"; 
+			"table"; ".svn"; 
 		end
 
 	table_eiffel_3:		"$EIFFEL_SRC/library/obsolete/base/table_eiffel3"
 
 	all time:		"$EIFFEL_SRC/library/time"
 		exclude
-			"CVS"; "french"; "german"; 
+			".svn"; "french"; "german"; 
 		end
 
 	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
@@ -39,44 +39,44 @@ cluster
 
 	all common:             "$EIFFEL_SRC/Eiffel/common"
          exclude
-                 "CVS"; "external"; "compiler_override"; "error"; "types";
+                 ".svn"; "external"; "compiler_override"; "error"; "types";
          end
 
 	flat_short_b:		"$EIFFEL_SRC/Eiffel/flat_short/bench"
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other";
+			"hact"; "se"; "ve"; "base"; ".svn"; "other";
 		end
 
 	all documentation:		"$EIFFEL_SRC/Eiffel/case/documentation"
 		exclude
-			"CVS"
+			".svn"
 		end
 
 	all lace:		"$EIFFEL_SRC/Eiffel/lace"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
-			"CVS"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel"; "windows";
+			".svn"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel"; "windows";
 		end
 
 	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
 		exclude
-			"CVS"; "structured_text";
+			".svn"; "structured_text";
 		end
 
 	all eiffel_structured_text:	"$EIFFEL_SRC/Eiffel/API/structured_text"
 		exclude
-			"CVS"; "common"
+			".svn"; "common"
 		end
 
 	all common_structured_text:	"$EIFFEL_SRC/library/editor/text_window/text/structure/structured_text/common"
 		exclude
-			"CVS"; "text_formatter.e"; "structured_text.e";
+			".svn"; "text_formatter.e"; "structured_text.e";
 		end
 
 	switch:		"$EIFFEL_SRC/Eiffel/switch"
@@ -116,12 +116,12 @@ cluster
 
 	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
 		exclude
-			"enterprise"; "free"; "CVS"; 
+			"enterprise"; "free"; ".svn"; 
 		end
 
 	all keygen:		"$EIFFEL_SRC/library/keygen"
 		exclude
-			"eiffel_envision_10"; "windows"; "CVS"; "EIFGEN"; 
+			"eiffel_envision_10"; "windows"; ".svn"; "EIFGEN"; 
 		end
 
 	all preferences:	"$EIFFEL_SRC/library/preferences"

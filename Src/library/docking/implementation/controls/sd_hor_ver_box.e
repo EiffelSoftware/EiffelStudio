@@ -24,7 +24,10 @@ inherit
 			linear_representation as linear_representation_vertical_box,
 			off as off_vertical_box,
 			remove as remove_vertical_box,
-			prune_all as prune_all_vertical_box
+			prune_all as prune_all_vertical_box,
+			set_background_color as set_background_color_vertical_box,
+			background_color as background_color_vertical_box,
+			set_border_width as set_border_width_vertical_box
 		end
 
 feature {NONE} -- Initlization
@@ -236,12 +239,42 @@ feature -- Redefine
 		end
 
 	prune_all (a_item: EV_WIDGET) is
-			-- Redefine
+			-- Redefine.
 		do
 			if internal_vertical_style then
 				prune_all_vertical_box (a_item)
 			else
 				horizontal_box.prune_all (a_item)
+			end
+		end
+
+	set_background_color (a_color: EV_COLOR) is
+			-- Redefine.
+		do
+			if internal_vertical_style then
+				set_background_color_vertical_box (a_color)
+			else
+				horizontal_box.set_background_color (a_color)
+			end
+		end
+
+	background_color: EV_COLOR is
+			-- Redefine.
+		do
+			if internal_vertical_style then
+				Result := background_color_vertical_box
+			else
+				Result := horizontal_box.background_color
+			end
+		end
+
+	set_border_width (a_width: INTEGER) is
+			-- Redefine.
+		do
+			if internal_vertical_style then
+				set_border_width_vertical_box (a_width)
+			else
+				horizontal_box.set_border_width (a_width)
 			end
 		end
 

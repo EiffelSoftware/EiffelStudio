@@ -16,7 +16,9 @@ inherit
 			move_to_tab_zone,
 			restore,
 			zone,
-			change_title
+			change_title,
+			show,
+			hide
 		end
 
 create
@@ -31,7 +33,6 @@ feature {NONE}-- Initlization
 			a_content_not_void: a_content /= Void
 		do
 			create internal_shared
---			normal_max_able := True
 			direction := a_direction
 			width_height := a_width_height
 			internal_content := a_content
@@ -133,36 +134,11 @@ feature -- Redefine.
 				l_new_container.set_first (zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_second (l_old_stuff)
-
-					debug ("larry")
-						io.put_string ("%N SD_DOCKING_STATE dock_at_top_level l_new_container.minimum_width " + l_new_container.minimum_width.out + " l_new_container.maximum_split_position " + l_new_container.maximum_split_position.out)
-						io.put_string ("%N                  width_height " + width_height.out)
-						-- FIXIT: l_new_container.minimum_width not correct here? It's always bigger then actual.
-					end
---					if width_height > 0 and width_height <= l_new_container.maximum_split_position then
---						l_new_container.set_split_position (width_height)
---					else
---						if direction = {SD_DOCKING_MANAGER}.dock_left then
---							l_new_container.set_split_position ((l_new_container.maximum_split_position * internal_shared.default_docking_width_rate).ceiling)
---						else
---							l_new_container.set_split_position ((l_new_container.maximum_split_position * internal_shared.default_docking_height_rate).ceiling)
---						end
---					end
 				end
 			else
 				l_new_container.set_second (zone)
 				if l_old_stuff /= Void then
 					l_new_container.set_first (l_old_stuff)
-
---					if width_height > 0 and width_height <= l_new_container.maximum_split_position then
---						l_new_container.set_split_position (l_new_container.maximum_split_position - width_height)
---					else
---						if direction = {SD_DOCKING_MANAGER}.dock_right then
---							l_new_container.set_split_position ((l_new_container.maximum_split_position * (1 - internal_shared.default_docking_width_rate)).ceiling)
---						else
---							l_new_container.set_split_position ((l_new_container.maximum_split_position * (1 - internal_shared.default_docking_height_rate)).ceiling)
---						end
---					end
 				end
 			end
 			if l_new_container.full then
@@ -184,6 +160,7 @@ feature -- Redefine.
 			l_width_height: INTEGER
 		do
 			internal_shared.docking_manager.lock_update
+			Precursor {SD_STATE} (a_direction)
 			-- Change current content's zone to a SD_AUTO_HIDE_ZONE.
 			internal_shared.docking_manager.prune_zone (zone)
 
@@ -203,7 +180,6 @@ feature -- Redefine.
 			l_floating_state: SD_FLOATING_STATE
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-
 			l_orignal_multi_dock_area := internal_shared.docking_manager.inner_container (zone)
 			if l_orignal_multi_dock_area.has (zone) and l_orignal_multi_dock_area.parent_floating_zone /= Void then
 				l_orignal_multi_dock_area.parent_floating_zone.set_position (a_x, a_y)
@@ -216,7 +192,6 @@ feature -- Redefine.
 				internal_shared.docking_manager.remove_empty_split_area
 				internal_shared.docking_manager.unlock_update
 			end
-
 		ensure then
 --			floated: old zone.parent /= zone.parent
 		end
@@ -277,6 +252,32 @@ feature -- Redefine.
 			internal_shared.docking_manager.unlock_update
 		ensure then
 			state_changed: content.state /= Current
+		end
+
+	show is
+			-- Redefine.
+		local
+			l_multi_dock_area: SD_MULTI_DOCK_AREA
+		do
+			l_multi_dock_area := internal_shared.docking_manager.inner_container (zone)
+			if l_multi_dock_area /= Void and then not internal_shared.docking_manager.is_main_inner_container (l_multi_dock_area) then
+				l_multi_dock_area.parent_floating_zone.show
+				zone.show
+				l_multi_dock_area.update_title_bar
+			end
+
+		end
+
+	hide is
+			-- Redefine.
+		local
+			l_multi_dock_area: SD_MULTI_DOCK_AREA
+		do
+			zone.hide
+			l_multi_dock_area := internal_shared.docking_manager.inner_container (zone)
+			if l_multi_dock_area /= Void and then not internal_shared.docking_manager.is_main_inner_container (l_multi_dock_area) then
+				l_multi_dock_area.update_title_bar
+			end
 		end
 
 	zone: SD_DOCKING_ZONE

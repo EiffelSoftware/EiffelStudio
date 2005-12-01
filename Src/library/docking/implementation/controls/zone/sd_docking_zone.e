@@ -94,24 +94,25 @@ feature {SD_DOCKING_STATE} -- Initlization
 feature {SD_CONTENT}
 
 	on_focus_in (a_content: SD_CONTENT) is
-		-- Redefine.
+			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
-			internal_shared.docking_manager.disable_all_zones_focus_color
 			internal_shared.docking_manager.remove_auto_hide_zones
 			window.title_bar.enable_focus_color
 		end
 
 feature -- Command
 
-	set_show_stick_min_max (a_show: BOOLEAN) is
-			-- Set whether to show title bar?
+	set_show_min_max (a_show: BOOLEAN) is
+			-- Redefine.
 		do
-			if a_show then
-				window.set_show_stick_min_max (a_show)
-			else
-				window.set_show_stick_min_max (a_show)
-			end
+			window.set_show_min_max (a_show)
+		end
+
+	set_show_stick (a_show: BOOLEAN) is
+			-- Redefine.
+		do
+			window.set_show_stick (a_show)
 		end
 
 	set_title (a_title: STRING) is
@@ -124,6 +125,21 @@ feature -- Command
 			-- Redefine.
 		do
 			window.title_bar.set_max (a_max)
+		end
+
+	stick is
+			-- Stick window.
+		do
+			internal_content.state.stick ({SD_DOCKING_MANAGER}.dock_left)
+		end
+
+	close is
+			-- Redefine
+		do
+			internal_shared.docking_manager.lock_update
+			Precursor {SD_SINGLE_CONTENT_ZONE}
+			internal_shared.docking_manager.prune_zone (Current)
+			internal_shared.docking_manager.unlock_update
 		end
 
 feature -- Query
@@ -199,29 +215,6 @@ feature {NONE} -- For redocker.
 			-- Mediator perform dock.	
 
 feature {NONE} -- Implementation
-
-	stick is
-			-- Stick window.
-		do
-			internal_content.state.stick ({SD_DOCKING_MANAGER}.dock_left)
-		end
-
---	on_title_bar_double_press is
---			-- Min max widow if is allowed.
---		do
---			if window.title_bar.is_show_normal_max then
---				on_normal_max_window
---			end
---		end
-
-	close is
-			-- Redefine
-		do
-			internal_shared.docking_manager.lock_update
-			Precursor {SD_SINGLE_CONTENT_ZONE}
-			internal_shared.docking_manager.prune_zone (Current)
-			internal_shared.docking_manager.unlock_update
-		end
 
 	resize_bar: SD_RESIZE_BAR
 			-- Resize bar at the side.

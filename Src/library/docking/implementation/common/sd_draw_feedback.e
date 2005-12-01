@@ -79,10 +79,21 @@ feature -- Basic operations
 
 	internal_blue_pixmap: EV_PIXMAP is
 			-- Feedback pixmap when user dragging a SD_ZONE.
+		local
+			l_grid: EV_GRID
+			l_file: FILE_NAME
 		do
 			if internal_blue_pixmap_cell.item = Void then
 				create Result
 				Result.set_with_named_file ("D:\Projects\NewDocking\images\blue.png")
+--				create l_grid
+--				Result.set_foreground_color (l_grid.focused_selection_color)
+--				Result.fill_rectangle (0, 0, Result.width, Result.height)
+--				create l_file.make_from_string ("temp.png")
+--				Result.save_to_named_file (create {EV_PNG_FORMAT}, l_file)
+--
+--				create Result
+--				Result.set_with_named_file ("temp.png")
 				internal_blue_pixmap_cell.put (Result)
 			else
 				Result := internal_blue_pixmap_cell.item

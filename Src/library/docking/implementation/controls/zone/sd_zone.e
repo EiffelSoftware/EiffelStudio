@@ -131,6 +131,12 @@ feature -- Query
 		deferred
 		end
 
+	is_maximized: BOOLEAN is
+			-- If current maximized?
+		do
+			Result := False
+		end
+
 feature {SD_CONFIG_MEDIATOR} -- Save config.
 
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
@@ -144,7 +150,13 @@ feature {SD_DOCKING_MANAGER} -- Focus out
 
 	on_focus_out is
 			-- Handle focus out.
+		local
+			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
+			l_multi_dock_area := internal_shared.docking_manager.inner_container (Current)
+			if not internal_shared.docking_manager.is_main_inner_container (l_multi_dock_area) then
+				l_multi_dock_area.parent_floating_zone.set_title_focus (False)
+			end
 			content.focus_out_actions.call ([])
 		end
 
@@ -154,7 +166,14 @@ feature {SD_DOCKING_MANAGER, SD_CONTENT}  -- Focus in
 			-- Handle focus in.
 		require
 			has: a_content /= Void implies has (a_content)
+		local
+			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
+			internal_shared.docking_manager.disable_all_zones_focus_color
+			l_multi_dock_area := internal_shared.docking_manager.inner_container (Current)
+			if not internal_shared.docking_manager.is_main_inner_container (l_multi_dock_area) then
+				l_multi_dock_area.parent_floating_zone.set_title_focus (True)
+			end
 			content.focus_in_actions.call ([])
 		end
 
@@ -178,12 +197,6 @@ feature {NONE} -- Implementation
 			-- Handle close request actions.
 		do
 			content.close_request_actions.call ([])
-		end
-
-	is_maximized: BOOLEAN is
-			-- If current maximized?
-		do
-			Result := False
 		end
 
 	internal_shared: SD_SHARED

@@ -22,7 +22,9 @@ inherit
 			prune_vertical_box,
 			wipe_out_vertical_box,
 			cl_put,
-			prune_all
+			prune_all,
+			set_background_color,
+			background_color
 		end
 
 	SD_SINGLE_CONTENT_ZONE
@@ -33,7 +35,9 @@ inherit
 		undefine
 			on_focus_in,
 			on_focus_out,
-			pointer_enter_actions
+			pointer_enter_actions,
+			set_background_color,
+			background_color
 		end
 
 	SD_RESIZE_SOURCE
@@ -156,7 +160,6 @@ feature {NONE} -- For user docking
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
-			internal_shared.docking_manager.disable_all_zones_focus_color
 			window.title_bar.enable_focus_color
 		end
 

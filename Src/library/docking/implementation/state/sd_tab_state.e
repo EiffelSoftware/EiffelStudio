@@ -20,7 +20,9 @@ inherit
 			change_pixmap,
 			close,
 			content_count_valid,
-			is_dock_at_top
+			is_dock_at_top,
+			show,
+			hide
 		end
 create
 	make,
@@ -166,6 +168,7 @@ feature -- Redefine
 			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
 		do
 			internal_shared.docking_manager.lock_update
+			Precursor {SD_STATE} (a_direction)
 			internal_shared.docking_manager.prune_zone (tab_zone)
 			l_contents := tab_zone.contents
 			from
@@ -181,7 +184,7 @@ feature -- Redefine
 			end
 			l_auto_hide_panel:= internal_shared.docking_manager.auto_hide_panel (direction)
 			l_auto_hide_panel.set_tab_group (l_contents)
-			l_auto_hide_panel.select_tab (internal_content)
+			l_auto_hide_panel.select_tab_by_content (internal_content)
 			internal_shared.docking_manager.unlock_update
 		ensure then
 			pruned: not internal_shared.docking_manager.has_zone (tab_zone)
@@ -341,9 +344,7 @@ feature -- States report
 				check
 					all_zone_is_widget: l_widget /= Void
 				end
---				if l_container /= Void then
-					Result := l_container.has (l_widget)
---				end
+				Result := l_container.has (l_widget)
 			else
 				l_docking_zone ?= l_container.first
 				if l_docking_zone /= Void then
@@ -356,6 +357,22 @@ feature -- States report
 					end
 				end
 			end
+		end
+
+	show is
+			-- Redefine.
+		do
+		end
+
+	hide is
+			-- Redefine.
+		local
+			l_state: SD_STATE_VOID
+		do
+			close
+			create l_state.make (internal_content)
+			l_state.set_relative (zone.contents.last)
+			change_state (l_state)
 		end
 
 feature -- Command

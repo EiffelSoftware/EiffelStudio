@@ -32,42 +32,61 @@ feature {NONE}-- Initialization
 
 				-- Create all widgets.
 			create l_ev_horizontal_box_1
-			create l_ev_cell_1
+			create left_top
 			create top_bar
-			create l_ev_cell_2
+			create right_top
 			create l_ev_horizontal_box_2
 			create left_bar
 			create center_area
 			create right_bar
 			create l_ev_horizontal_box_3
-			create l_ev_cell_3
+			create left_bottom
 			create bottom_bar
-			create l_ev_cell_4
+			create right_bottom
+
+			create {EV_HORIZONTAL_BOX} gap_area_top
+			create {EV_HORIZONTAL_BOX} gap_area_bottom
+			create {EV_HORIZONTAL_BOX} gap_area_left
+			create {EV_HORIZONTAL_BOX} gap_area_right
 
 				-- Build_widget_structure.
 			extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_cell_1)
-			l_ev_horizontal_box_1.extend (top_bar)
-			l_ev_horizontal_box_1.extend (l_ev_cell_2)
+			l_ev_horizontal_box_1.extend (left_top)
+			create gap_area_holder
+			l_ev_horizontal_box_1.extend (gap_area_holder)
+			gap_area_holder.extend (top_bar)
+			gap_area_holder.extend (gap_area_top)
+			gap_area_holder.disable_item_expand (gap_area_top)
+			l_ev_horizontal_box_1.extend (right_top)
+
 			extend (l_ev_horizontal_box_2)
 			l_ev_horizontal_box_2.extend (left_bar)
+			l_ev_horizontal_box_2.extend (gap_area_left)
+			l_ev_horizontal_box_2.disable_item_expand (gap_area_left)
 			l_ev_horizontal_box_2.extend (center_area)
+			l_ev_horizontal_box_2.extend (gap_area_right)
+			l_ev_horizontal_box_2.disable_item_expand (gap_area_right)
 			l_ev_horizontal_box_2.extend (right_bar)
-			extend (l_ev_horizontal_box_3)
-			l_ev_horizontal_box_3.extend (l_ev_cell_3)
-			l_ev_horizontal_box_3.extend (bottom_bar)
-			l_ev_horizontal_box_3.extend (l_ev_cell_4)
 
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_1)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_cell_2)
-			l_ev_cell_1.set_minimum_width (auto_hide_bar_width)
-			l_ev_cell_2.set_minimum_width (auto_hide_bar_width)
+			extend (l_ev_horizontal_box_3)
+			l_ev_horizontal_box_3.extend (left_bottom)
+			create gap_area_holder
+			l_ev_horizontal_box_3.extend (gap_area_holder)
+			gap_area_holder.extend (gap_area_bottom)
+			gap_area_holder.disable_item_expand (gap_area_bottom)
+			gap_area_holder.extend (bottom_bar)
+			l_ev_horizontal_box_3.extend (right_bottom)
+
+			l_ev_horizontal_box_1.disable_item_expand (left_top)
+			l_ev_horizontal_box_1.disable_item_expand (right_top)
+--			left_top.set_minimum_width (auto_hide_bar_width)
+--			right_top.set_minimum_width (auto_hide_bar_width)
 			l_ev_horizontal_box_2.disable_item_expand (left_bar)
 			l_ev_horizontal_box_2.disable_item_expand (right_bar)
-			l_ev_horizontal_box_3.disable_item_expand (l_ev_cell_3)
-			l_ev_horizontal_box_3.disable_item_expand (l_ev_cell_4)
-			l_ev_cell_3.set_minimum_width (auto_hide_bar_width)
-			l_ev_cell_4.set_minimum_width (auto_hide_bar_width)
+			l_ev_horizontal_box_3.disable_item_expand (left_bottom)
+			l_ev_horizontal_box_3.disable_item_expand (right_bottom)
+--			left_bottom.set_minimum_width (auto_hide_bar_width)
+--			right_bottom.set_minimum_width (auto_hide_bar_width)
 			disable_item_expand (l_ev_horizontal_box_1)
 			disable_item_expand (l_ev_horizontal_box_3)
 
@@ -85,9 +104,12 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	l_ev_cell_1, l_ev_cell_2, l_ev_cell_3, l_ev_cell_4: EV_CELL
+	left_top, right_top, left_bottom, right_bottom: EV_CELL
 	l_ev_horizontal_box_1, l_ev_horizontal_box_2,
 	l_ev_horizontal_box_3: EV_HORIZONTAL_BOX
+
+	gap_area_holder: EV_VERTICAL_BOX
+	gap_area_top, gap_area_bottom, gap_area_left, gap_area_right: EV_BOX
 
 feature {NONE} -- Implementation
 

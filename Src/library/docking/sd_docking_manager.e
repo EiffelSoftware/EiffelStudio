@@ -30,19 +30,19 @@ feature {NONE} -- Initialization
 			create menu_container
 			internal_viewport.extend (menu_container)
 			menu_container.set_minimum_size (0, 0)
-			create internal_main_container
-			menu_container.center.extend (internal_main_container)
+			create main_container
+			menu_container.center.extend (main_container)
 			create fixed_area
-			internal_main_container.center_area.extend (fixed_area)
+			main_container.center_area.extend (fixed_area)
 			-- Insert auto hide panels.
-			create internal_auto_hide_panel_left.make (True)
-			create internal_auto_hide_panel_right.make (True)
-			create internal_auto_hide_panel_top.make (False)
-			create internal_auto_hide_panel_bottom.make (False)
-			internal_main_container.left_bar.extend (internal_auto_hide_panel_left)
-			internal_main_container.right_bar.extend (internal_auto_hide_panel_right)
-			internal_main_container.top_bar.extend (internal_auto_hide_panel_top)
-			internal_main_container.bottom_bar.extend (internal_auto_hide_panel_bottom)
+			create internal_auto_hide_panel_left.make (dock_left)
+			create internal_auto_hide_panel_right.make (dock_right)
+			create internal_auto_hide_panel_top.make (dock_top)
+			create internal_auto_hide_panel_bottom.make (dock_bottom)
+			main_container.left_bar.extend (internal_auto_hide_panel_left)
+			main_container.right_bar.extend (internal_auto_hide_panel_right)
+			main_container.top_bar.extend (internal_auto_hide_panel_top)
+			main_container.bottom_bar.extend (internal_auto_hide_panel_bottom)
 			create contents
 			create zones
 			zones.add_actions.extend (agent on_added_zone)
@@ -161,7 +161,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 				zones.after or
 				Result
 			loop
-				Result := zones.item.content = a_content
+				Result := zones.item.has (a_content)
 				zones.forth
 			end
 		end
@@ -248,10 +248,19 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 			has_zone: has_zone (a_zone)
 		local
 			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
+			l_width, l_height: INTEGER
 		do
+			l_width := a_width
+			l_height := a_height
 			l_auto_hide_zone ?= a_zone
 			if l_auto_hide_zone /= Void then
-				fixed_area.set_item_size (l_auto_hide_zone, a_width, a_height)
+				if l_width < a_zone.minimum_width then
+					l_width := a_zone.minimum_width
+				end
+				if l_height < a_zone.minimum_height then
+					l_height := a_zone.minimum_height
+				end
+				fixed_area.set_item_size (l_auto_hide_zone, l_width, l_height)
 			end
 		ensure
 			-- FIXIT: a_zone should inherit from EV_WIDGET
@@ -323,17 +332,19 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 			until
 				inner_containers.after or Result /= Void
 			loop
-
-				if inner_containers.item.has_zone (a_zone) then
+				if inner_containers.item.has_recursive (a_zone) then
 					Result := inner_containers.item
 				end
 				inner_containers.forth
+			end
+			if Result = Void then
+				Result := inner_container_main
 			end
 		ensure
 			not_void: Result /= Void
 		end
 
-	container_first_one (a_area: SD_MULTI_DOCK_AREA): BOOLEAN is
+	is_main_inner_container (a_area: SD_MULTI_DOCK_AREA): BOOLEAN is
 			-- Contract support. If a_area is first one in `inner_containers'.
 		require
 			a_area_not_void: a_area /= Void
@@ -360,7 +371,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	container_rectangle: EV_RECTANGLE is
 			-- Rectangle area of the `fixed_area'.
 		do
-			create Result.make (internal_main_container.center_area.x_position, internal_main_container.center_area.y_position + internal_auto_hide_panel_top.height, internal_main_container.center_area.width, internal_main_container.center_area.height)
+			create Result.make (main_container.center_area.x_position, main_container.center_area.y_position + internal_auto_hide_panel_top.height, main_container.center_area.width, main_container.center_area.height)
 		ensure
 			not_void: Result /= Void
 		end
@@ -368,7 +379,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	container_rectangle_screen: EV_RECTANGLE is
 			-- Rectangle area of the `fixed_area' base on screen.
 		do
-			create Result.make (internal_main_container.center_area.screen_x, internal_main_container.center_area.screen_y, internal_main_container.center_area.width, internal_main_container.center_area.height)
+			create Result.make (main_container.center_area.screen_x, main_container.center_area.screen_y, main_container.center_area.width, main_container.center_area.height)
 		ensure
 			not_void: Result /= Void
 		end
@@ -415,7 +426,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 			-- Prune `a_area'.
 		require
 			a_area_not_void: a_area /= Void
-			a_area_not_first_one: not container_first_one (a_area)
+			a_area_not_first_one: not is_main_inner_container (a_area)
 		do
 			inner_containers.start
 			inner_containers.prune (a_area)
@@ -473,9 +484,26 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 			end
 		end
 
+	update_title_bar is
+			-- Update all title bar.
+		do
+			from
+				inner_containers.start
+			until
+				inner_containers.after
+			loop
+				if inner_containers.item /= Void then
+					inner_containers.item.update_title_bar
+				end
+				if not inner_containers.after then
+					inner_containers.forth
+				end
+			end
+		end
+
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
 	 SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW, SD_MENU_DOCKER_MEDIATOR,
-	 SD_MENU_MANAGER} -- Library internal attributes.
+	 SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL} -- Library internal attributes.
 
 	main_window: EV_WINDOW
 			-- Client programmer's window.
@@ -492,28 +520,28 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKE
 	inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 			-- All containers.
 
+	main_container: SD_MAIN_CONTAINER
+			-- Container has four tab stub areas in four side and main area in center.
+
 feature {NONE}  -- Agents
 
 	on_widget_pointer_press (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER) is
 			-- Handle EV_APPLICATION's pointer button press actions.
 		local
-			l_container: EV_CONTAINER
 			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
+			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
+
+			l_zones := zones.twin
 			from
-				zones.start
+				l_zones.start
 			until
-				zones.after
+				l_zones.after
 			loop
-				l_container ?= zones.item
-				check l_container /= Void end
-				if l_container.has_recursive (a_widget) then
-					if internal_last_focus_zone /= zones.item then
-						internal_last_focus_zone := zones.item
-						zones.item.on_focus_in (Void)
-						debug ("larry")
-							io.put_string ("%N on focus in")
-						end
+				if l_zones.item.has_recursive (a_widget) then
+					if internal_last_focus_zone /= l_zones.item then
+						internal_last_focus_zone := l_zones.item
+						l_zones.item.on_focus_in (Void)
 					else
 						l_auto_hide_zone ?= internal_last_focus_zone
 						if l_auto_hide_zone = Void then
@@ -521,9 +549,7 @@ feature {NONE}  -- Agents
 						end
 					end
 				end
-				if not zones.after then -- FIXIT: Why should check? ACTIVE LIST's bug?
-					zones.forth
-				end
+				l_zones.forth
 			end
 		end
 
@@ -574,23 +600,6 @@ feature -- Enumeration
 
 feature {NONE} -- Implementation
 
-	update_title_bar is
-			-- Update all title bar.
-		do
-			from
-				inner_containers.start
-			until
-				inner_containers.after
-			loop
-				if inner_containers.item /= Void then
-					inner_containers.item.update_title_bar
-				end
-				if not inner_containers.after then
-					inner_containers.forth
-				end
-			end
-		end
-
 	internal_viewport: EV_VIEWPORT
 			-- The viewport which contain `fixed_area'.
 
@@ -602,9 +611,6 @@ feature {NONE} -- Implementation
 
 	lock_call_time: INTEGER
 			-- Used for remember how many times client call `lock_update'.
-
-	internal_main_container: SD_MAIN_CONTAINER
-			-- 	Container has four tab stub areas in four side and main area in center.
 
 	internal_auto_hide_panel_left, internal_auto_hide_panel_right, internal_auto_hide_panel_top, internal_auto_hide_panel_bottom: SD_AUTO_HIDE_PANEL
 			-- Auto hide panels
@@ -646,7 +652,7 @@ invariant
 
 	internal_viewport_not_void: internal_viewport /= Void
 	internal_fixed_not_void: fixed_area /= Void
-	internal_main_container_not_void: internal_main_container /= Void
+	internal_main_container_not_void: main_container /= Void
 	internal_inner_container_not_void: inner_containers /= Void and inner_containers.count >= 1
 	internal_contents_not_void: contents /= Void
 	zones_not_void: zones /= Void

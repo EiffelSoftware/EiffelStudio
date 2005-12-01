@@ -106,11 +106,20 @@ feature {NONE} -- Two widgets
 
 feature -- Basic operation
 
-	set_show_stick_min_max (a_show: BOOLEAN) is
-			-- Set show or not show `internal_title_bar'.
+	set_show_min_max (a_show: BOOLEAN) is
+			-- Set show or not show normal\max button.
+		do
+			internal_title_bar.set_show_normal_max (a_show)
+		ensure
+			set: a_show = internal_title_bar.is_show_normal_max
+		end
+
+	set_show_stick (a_show: BOOLEAN) is
+			-- Set show or not show stick button.
 		do
 			internal_title_bar.set_show_stick (a_show)
-			internal_title_bar.set_show_normal_max (a_show)
+		ensure
+			set: a_show = internal_title_bar.is_show_stick
 		end
 
 feature -- Actions

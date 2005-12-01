@@ -131,8 +131,14 @@ feature -- Contract Support
 
 feature -- Constants
 
-	Auto_hide_panel_width: INTEGER is 25
+	Auto_hide_panel_lightness: REAL is 0.5
+			-- Auto hide panel lightness value. Used by SD_AUTO_HIDE_PANEL.			
+
+	Auto_hide_panel_size: INTEGER is 18
 			-- Width of auto hide panel.
+
+	Auto_hide_panel_gap_size: INTEGER is 4
+			-- Auto hide panel's Gap size.
 
 	Line_width: INTEGER is 5
 			-- Width of feedback line.

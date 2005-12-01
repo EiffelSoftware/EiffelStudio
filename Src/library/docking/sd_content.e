@@ -251,9 +251,21 @@ feature -- Actions
 feature -- Command
 
 	close is
-			-- Destroy `Current' from docking library if `is_default_destroy', otherwise hide.
+			-- Destroy `Current', only destroy zone. SD_CONTENT still in Docking Library.
 		do
 			state.close
+		end
+
+	hide is
+			-- Hide zone which has `Current'.
+		do
+			state.hide
+		end
+
+	show is
+			-- Show zone which has `Current'.
+		do
+			state.show
 		end
 
 feature -- States report

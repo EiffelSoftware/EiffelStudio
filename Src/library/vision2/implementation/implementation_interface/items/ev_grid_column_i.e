@@ -8,7 +8,7 @@ class
 
 inherit
 	REFACTORING_HELPER
-	
+
 	EV_DESELECTABLE_I
 		redefine
 			interface,
@@ -20,7 +20,7 @@ inherit
 			{EV_GRID_I}
 				deselect_actions_internal
 		end
-	
+
 create
 	make
 
@@ -126,7 +126,7 @@ feature -- Access
 				Result := parent_i.interface
 			end
 		end
-		
+
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
 		require
@@ -150,7 +150,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	width: INTEGER is
 			-- `Result' is width of `Current'.		
 		require
@@ -170,7 +170,7 @@ feature -- Access
 		ensure
 			Result_non_negative: Result >= 0
 		end
-		
+
 	virtual_x_position: INTEGER is
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -221,7 +221,7 @@ feature -- Status setting
 		ensure
 			is_displayed: is_displayed
 		end
-		
+
 	ensure_visible is
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
@@ -239,8 +239,8 @@ feature -- Status setting
 				-- is to be displayed.
 			parent_i.recompute_horizontal_scroll_bar
 			parent_i.recompute_vertical_scroll_bar
-			
-			virtual_x := virtual_x_position			
+
+			virtual_x := virtual_x_position
 			l_width := width
 			if virtual_x < parent_i.virtual_x_position then
 				parent_i.set_virtual_position (virtual_x, parent_i.virtual_y_position)
@@ -331,7 +331,7 @@ feature -- Status report
 		ensure
 			count_not_negative: count >= 0
 		end
-		
+
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected?
 		local
@@ -371,7 +371,7 @@ feature -- Status report
 		do
 			Result := parent_i /= Void
 		end
-			
+
 feature -- Element change
 
 	set_item (i: INTEGER; a_item: EV_GRID_ITEM) is
@@ -420,7 +420,7 @@ feature -- Element change
 		ensure
 			foreground_color_set: foreground_color = a_color
 		end
-		
+
 	set_width (a_width: INTEGER) is
 			-- Assign `a_width' to `width'.
 		require
@@ -471,10 +471,11 @@ feature -- Element change
 			-- Remove image displayed on `Current'.
 		do
 			pixmap := Void
+			header_item.remove_pixmap
 		ensure
 			pixmap_removed: pixmap = Void
 		end
-		
+
 	redraw is
 			-- Force all items within `Current' to be re-drawn when next idle.
 		require
@@ -501,7 +502,7 @@ feature {EV_GRID_I} -- Implementation
 	enable_select is
 			-- Select `Current' in `parent_i'.
 		do
-			internal_update_selection (True)		
+			internal_update_selection (True)
 			set_internal_is_selected (True)
 			if parent_i /= Void then
 				parent_i.redraw_column (Current)
@@ -562,7 +563,7 @@ feature {NONE} -- Implementation
 						a_item.enable_select_internal
 					else
 						a_item.disable_select_internal
-					end		
+					end
 				end
 				i := i + 1
 			end
@@ -575,7 +576,7 @@ feature {NONE} -- Implementation
 feature {EV_GRID_I} -- Implementation
 
 	call_selection_events (a_selection_state: BOOLEAN) is
-			-- Call the selection events of `Current' for selection state `a_selection_state'. 
+			-- Call the selection events of `Current' for selection state `a_selection_state'.
 		do
 			if a_selection_state then
 				if parent_i.column_select_actions_internal /= Void then
@@ -591,7 +592,7 @@ feature {EV_GRID_I} -- Implementation
 				if deselect_actions_internal /= Void then
 					deselect_actions_internal.call (Void)
 				end
-			end			
+			end
 		end
 
 feature {EV_GRID_I} -- Implementation
@@ -613,7 +614,7 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_
 		ensure
 			internal_is_selected_set: internal_is_selected = a_selected
 		end
-		
+
 	set_index (a_index: INTEGER) is
 			-- Set the internal index of row
 		require
@@ -631,16 +632,16 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_COLUMN, EV_GRID_COLUMN_I, EV_GRID_
 
 	parent_i: EV_GRID_I
 		-- Grid that `Current' resides in.
-		
+
 	header_item: EV_GRID_HEADER_ITEM
 		-- Header item associated with `Current'.
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GRID_COLUMN
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'.
-			
+
 invariant
 	header_item_not_void: is_initialized implies header_item /= Void
 	physical_index_set: parent /= Void implies physical_index >= 0

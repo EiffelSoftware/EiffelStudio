@@ -17,17 +17,32 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_vertical_style: BOOLEAN) is
+	make (a_direction: INTEGER) is
 			-- Creation method. If not vertical style, it'll be horizontal style.
+		require
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+		local
+			l_helper: SD_COLOR_HELPER
 		do
 			create internal_shared
-			init (a_vertical_style)
+			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+				init (True)
+			else
+				init (False)
+			end
+			internal_direction := a_direction
 			create internal_tab_stubs
 			internal_tab_stubs.compare_objects
 			set_minimum_size (0, 0)
 			internal_tab_stubs.add_actions.extend (agent on_add_tab_stub)
 			internal_tab_stubs.remove_actions.extend (agent on_pruned_tab_stub)
 			create tab_groups
+
+			create l_helper
+			set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
+		ensure
+			set: internal_direction = a_direction
 		end
 
 feature -- Query
@@ -88,6 +103,47 @@ feature -- Query
 			end
 		end
 
+	tab_by_content (a_content: SD_CONTENT): SD_TAB_STUB is
+			-- SD_TAB_STUB which represent `a_content'.
+		require
+			a_content_not_void: a_content /= Void
+			has_tab: has_tab (a_content)
+		do
+			from
+				internal_tab_stubs.start
+			until
+				internal_tab_stubs.after or Result /= Void
+			loop
+				if internal_tab_stubs.item.text.is_equal (a_content.title) then
+					Result := internal_tab_stubs.item
+				end
+				internal_tab_stubs.forth
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
+	content_by_tab (a_tab: SD_TAB_STUB): SD_CONTENT is
+			-- SD_CONTENT which represent by `a_tab'.
+		require
+			a_tab_not_void: a_tab /= Void
+			has: has (a_tab)
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			l_contents := internal_shared.docking_manager.contents
+			from
+				l_contents.start
+			until
+				l_contents.after or Result /= Void
+			loop
+				if l_contents.item.title.is_equal (a_tab.text) then
+					Result := l_contents.item
+				end
+				l_contents.forth
+			end
+		end
+
 feature -- Command
 
 	set_tab_group (a_contents: ARRAYED_LIST [SD_CONTENT]) is
@@ -112,7 +168,6 @@ feature -- Command
 					tab_groups.start
 					tab_groups.prune (l_tab_group_prune)
 					l_tab_group.extend (l_tab)
-					l_tab.set_tab_group (l_tab_group)
 				end
 				a_contents.forth
 			end
@@ -121,23 +176,30 @@ feature -- Command
 			set: contents_tab_group_set (a_contents)
 		end
 
-	select_tab (a_content: SD_CONTENT) is
-			-- Show tab text with `a_content'.
+	select_tab_by_content (a_content: SD_CONTENT) is
+			-- `select_tab' by `a_content'.
 		require
 			a_content_not_void: a_content /= Void
 			has: has_tab (a_content)
+		do
+			select_tab (tab_by_content (a_content))
+		end
+
+	select_tab (a_tab: SD_TAB_STUB) is
+			-- Show tab text with `a_content'.
+		require
+			a_tab_not_void: a_tab /= Void
+			has: has (a_tab)
 		local
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
-			l_tab: SD_TAB_STUB
 		do
-			l_tab := tab_by_content (a_content)
-			l_tab_group := tab_group_internal (l_tab)
+			l_tab_group := tab_group_internal (a_tab)
 			from
 				l_tab_group.start
 			until
 				l_tab_group.after
 			loop
-				if l_tab_group.item = l_tab then
+				if l_tab_group.item = a_tab then
 					l_tab_group.item.set_show_text (True)
 				else
 					l_tab_group.item.set_show_text (False)
@@ -150,7 +212,7 @@ feature -- Command
 			-- Get the group contain `a_tab'.
 		require
 			a_tab_not_void: a_tab /= Void
-			has_tab: has (a_tab)
+			has: has (a_tab)
 		do
 			from
 				tab_groups.start
@@ -163,9 +225,41 @@ feature -- Command
 				end
 				tab_groups.forth
 			end
-
 		ensure
 			not_void: Result /= Void
+		end
+
+	set_tab_with_friend (a_tab: SD_TAB_STUB; a_friend: SD_CONTENT) is
+			-- Set tab with friend, so they show in a group.
+		require
+			a_tab_not_void: a_tab /= Void and a_friend /= Void
+			has: has (a_tab) and has_tab (a_friend)
+		local
+			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_friend: SD_TAB_STUB
+		do
+			l_friend := tab_by_content (a_friend)
+			l_tab_group := tab_group_internal (l_friend)
+			if not l_tab_group.has (a_tab) then
+				tab_stubs.start
+				tab_stubs.prune (a_tab)
+
+				start
+				search (l_friend)
+				put_right (a_tab)
+				disable_item_expand (a_tab)
+				l_tab_group.extend (a_tab)
+				select_tab (a_tab)
+				update_tab_group
+
+				internal_ignore_added_action := True
+--				tab_stubs.start
+--				tab_stubs.search (l_friend)
+--				tab_stubs.put_right (a_tab)
+				tab_stubs.extend (a_tab)
+				internal_ignore_added_action := False
+
+			end
 		end
 
 feature -- States report
@@ -282,26 +376,6 @@ feature {NONE} -- Implementation functions.
 			end
 		end
 
-	tab_by_content (a_content: SD_CONTENT): SD_TAB_STUB is
-			-- SD_TAB_STUB which represent `a_content'.
-		require
-			a_content_not_void: a_content /= Void
-			has_tab: has_tab (a_content)
-		do
-			from
-				internal_tab_stubs.start
-			until
-				internal_tab_stubs.after or Result /= Void
-			loop
-				if internal_tab_stubs.item.text.is_equal (a_content.title) then
-					Result := internal_tab_stubs.item
-				end
-				internal_tab_stubs.forth
-			end
-		ensure
-			not_void: Result /= Void
-		end
-
 	on_add_tab_stub (a_stub: SD_TAB_STUB) is
 			-- Handle insert a tab stub event.
 		require
@@ -309,30 +383,36 @@ feature {NONE} -- Implementation functions.
 		local
 			l_spacer: SD_AUTO_HIDE_SEPERATOR
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
+			l_helper: SD_COLOR_HELPER
 		do
-			extend (a_stub)
-			disable_item_expand (a_stub)
-			create l_tab_group.make (1)
-			l_tab_group.extend (a_stub)
-			a_stub.set_tab_group (l_tab_group)
-			tab_groups.extend (l_tab_group)
+			if not internal_ignore_added_action then
+				a_stub.set_auto_hide_panel (Current)
+				extend (a_stub)
+				disable_item_expand (a_stub)
+				create l_tab_group.make (1)
+				l_tab_group.extend (a_stub)
+				tab_groups.extend (l_tab_group)
 
-			-- Add spacer.
-			create l_spacer
-			l_spacer.set_minimum_size (spacer_size, spacer_size)
-			extend (l_spacer)
-			disable_item_expand (l_spacer)
+				-- Add spacer.
+				create l_spacer
+				l_spacer.set_minimum_size (spacer_size, spacer_size)
+				create l_helper
+				l_spacer.set_background_color (background_color)
+				extend (l_spacer)
+				disable_item_expand (l_spacer)
 
-			if count /= 0 then
-				if internal_vertical_style then
-					set_minimum_width (internal_shared.auto_hide_panel_width)
-				else
-					set_minimum_height (internal_shared.auto_hide_panel_width)
+				if count /= 0 then
+					if internal_vertical_style then
+						set_minimum_width (internal_shared.auto_hide_panel_size)
+					else
+						set_minimum_height (internal_shared.auto_hide_panel_size)
+					end
+					internal_shared.docking_manager.main_container.set_gap (internal_direction, True)
+					internal_shared.docking_manager.resize
 				end
-			internal_shared.docking_manager.resize
 			end
 		ensure
-			added_stub_and_space: old count = count - 2 and has (a_stub)
+			added_stub_and_space: not internal_ignore_added_action implies old count = count - 2 and has (a_stub)
 		end
 
 	on_pruned_tab_stub (a_stub: SD_TAB_STUB) is
@@ -352,15 +432,21 @@ feature {NONE} -- Implementation functions.
 			if l_tab_group.count = 0 then
 				tab_groups.start
 				tab_groups.prune (l_tab_group)
+			else
+				if not l_tab_group.valid_index (l_tab_group.index) then
+					l_tab_group.back
+				end
+				select_tab (l_tab_group.item)
 			end
 
 			start
 			search (a_stub)
 			check not off end
---			forth
 			-- Remove spacer.
 			if not off then
 				remove
+			end
+			if l_tab_group.count = 0 then
 				check a_spacer_or_a_tab_behind: not after end
 				l_seperator ?= item
 				if l_seperator /= Void then
@@ -374,6 +460,7 @@ feature {NONE} -- Implementation functions.
 				else
 					set_minimum_height (0)
 				end
+				internal_shared.docking_manager.main_container.set_gap (internal_direction, False)
 				internal_shared.docking_manager.resize
 			end
 
@@ -418,12 +505,17 @@ feature {NONE} -- Impelementation attributes.
 			-- All singletons
 
 	internal_tab_group: ARRAYED_LIST [SD_TAB_STUB] is
-		-- Tab group which stay together without seperator. This is used for type signature.
+			-- Tab group which stay together without seperator. This is used for type signature.
 		require
 			False
 		do
 		end
 
+	internal_direction: INTEGER
+			-- Direction.
+
+	internal_ignore_added_action: BOOLEAN
+			-- Ignore add action?
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

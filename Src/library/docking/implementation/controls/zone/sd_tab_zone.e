@@ -123,13 +123,20 @@ feature -- Command
 			end
 		end
 
-	set_show_stick_min_max (a_show: BOOLEAN) is
+	set_show_min_max (a_show: BOOLEAN) is
 			-- Redefine.
 		do
 			internal_title_bar.set_show_normal_max (a_show)
-			internal_title_bar.set_show_stick (a_show)
 		ensure then
 			set: a_show = internal_title_bar.is_show_normal_max
+
+		end
+
+	set_show_stick (a_show: BOOLEAN) is
+			-- Redefine.
+		do
+			internal_title_bar.set_show_stick (a_show)
+		ensure then
 			set: a_show = internal_title_bar.is_show_stick
 		end
 
@@ -194,7 +201,6 @@ feature {NONE} -- Agents for user
 			-- Redefine.
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
-			internal_shared.docking_manager.disable_all_zones_focus_color
 			internal_shared.docking_manager.remove_auto_hide_zones
 			internal_title_bar.enable_focus_color
 

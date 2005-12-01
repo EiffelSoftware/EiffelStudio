@@ -194,9 +194,7 @@ feature {NONE} -- Implementation
 			if l_target_split /= Void then
 				l_target_split_position := l_target_split.split_position
 			end
-
 			l_container.prune_all (l_widget)
-
 			inner_container.wipe_out
 
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
@@ -215,6 +213,11 @@ feature {NONE} -- Implementation
 
 			l_container.extend (l_spliter)
 			if l_target_split /= Void then
+				if l_target_split.minimum_split_position > l_target_split_position  then
+					l_target_split_position := l_target_split.minimum_split_position
+				elseif l_target_split.maximum_split_position  < l_target_split_position then
+					l_target_split_position := l_target_split.maximum_split_position
+				end
 				l_target_split.set_split_position (l_target_split_position)
 			end
 			l_spliter.set_proportion (0.5)

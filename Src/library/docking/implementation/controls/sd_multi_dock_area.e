@@ -26,7 +26,8 @@ feature -- Command
 		do
 			if parent_floating_zone /= Void then
 				parent_floating_zone.update_title_bar
-			elseif readable then
+			end
+			if readable then
 				set_all_title_bar (item)
 			end
 		end
@@ -118,7 +119,18 @@ feature {NONE} -- Implementation
 			end
 			l_zone ?= a_widget
 			if l_zone /= Void then
-				l_zone.set_show_stick_min_max (True)
+				if parent_floating_zone = Void  then
+--					l_zone.set_show_min_max (False)
+--				else
+					l_zone.set_show_min_max (True)
+				end
+
+
+				if parent_floating_zone = Void then
+					l_zone.set_show_stick (True)
+				else
+					l_zone.set_show_stick (False)
+				end
 			end
 	 	end
 

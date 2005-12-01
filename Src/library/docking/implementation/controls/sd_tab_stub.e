@@ -22,8 +22,8 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 			init (a_vertical)
-			set_background_color ((create {EV_STOCK_COLORS}).grey)
-			set_border_width (1)
+--			set_background_color ((create {EV_STOCK_COLORS}).black)
+--			set_border_width (1)
 
 			internal_pixmap := a_pixmap
 
@@ -94,32 +94,36 @@ feature -- Command
 			end
 		end
 
-	set_tab_group (a_tab_group: ARRAYED_LIST [SD_TAB_STUB]) is
-			-- Set `tab_group'.
+	set_auto_hide_panel (a_panel: SD_AUTO_HIDE_PANEL) is
+			--
 		require
-			a_tab_group_not_void: a_tab_group /= Void
-			a_tab_group_valid: a_tab_group.has (Current)
+			a_panel_not_void: a_panel /= Void
 		do
-			tab_group := a_tab_group
+			auto_hide_panel := a_panel
+		ensure
+			set: auto_hide_panel = a_panel
 		end
 
 feature {NONE} -- Agents
 
 	on_pointer_enter is
 			-- Handle pointer enter.
+		local
+			l_tab_group: like tab_group
 		do
+			l_tab_group := tab_group
 			internal_shared.docking_manager.lock_update
 			from
-				tab_group.start
+				l_tab_group.start
 			until
-				tab_group.after
+				l_tab_group.after
 			loop
-				if tab_group.item = Current then
-					tab_group.item.set_show_text (True)
+				if l_tab_group.item = Current then
+					l_tab_group.item.set_show_text (True)
 				else
-					tab_group.item.set_show_text (False)
+					l_tab_group.item.set_show_text (False)
 				end
-				tab_group.forth
+				l_tab_group.forth
 			end
 			internal_shared.docking_manager.unlock_update
 			pointer_enter_actions.call ([])
@@ -134,8 +138,14 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
-	tab_group: ARRAYED_LIST [SD_TAB_STUB]
+	tab_group: ARRAYED_LIST [SD_TAB_STUB] is
 			-- Tab group `Current' belong to.
+		do
+			Result := auto_hide_panel.tab_group (Current)
+		end
+
+	auto_hide_panel: SD_AUTO_HIDE_PANEL
+			-- Panel current is in.
 
 	internal_pixmap: EV_PIXMAP
 			-- Pixmap on `Current'.

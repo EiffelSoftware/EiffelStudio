@@ -78,39 +78,44 @@ feature -- Command
 	update_title_bar is
 			-- Remove/add title bar if `Current' content count changed.
 		local
-			l_zone: SD_ZONE
 			l_title_zone: SD_TITLE_BAR_REMOVEABLE
 			l_split_area: EV_SPLIT_AREA
 		do
 			if internal_inner_container.readable then
-				l_zone ?= internal_inner_container.item
-				if l_zone /= Void then
-
-					--  l_zone should not have min\max stick button.
-					l_title_zone ?= l_zone
+				count_zone_displayed
+				if zone_display_count = 1 then
+					l_title_zone ?= only_one_zone_displayed
 					check l_title_zone /= Void end
-					l_title_zone.set_show_stick_min_max (False)
-					if internal_vertical_box.has (internal_title_bar) then
-						internal_vertical_box.prune_all (internal_title_bar)
+					--  l_zone should not have stick button.
+					l_title_zone.set_show_stick (False)
+
+					if only_one_zone_displayed.is_maximized then
+						l_title_zone.set_show_min_max (True)
+						extend_title_bar
+					else
+						l_title_zone.set_show_min_max (False)
+						if internal_vertical_box.has (internal_title_bar) then
+							internal_vertical_box.prune_all (internal_title_bar)
+						end
 					end
-				else
-					if not internal_vertical_box.has (internal_title_bar) then
-						internal_vertical_box.start
-						internal_vertical_box.put_left (internal_title_bar)
-						internal_vertical_box.disable_item_expand (internal_title_bar)
-					end
+				elseif zone_display_count > 1 then
+					extend_title_bar
 					--  l_zone should have title bar
 					l_split_area ?= internal_inner_container.item
 					check l_split_area /= Void end
 					l_title_zone ?= l_split_area.first
 					if l_title_zone /= Void then
-						l_title_zone.set_show_stick_min_max (True)
+						l_title_zone.set_show_min_max (True)
+						l_title_zone.set_show_stick (True)
 						l_title_zone := Void
 					end
 					l_title_zone ?= l_split_area.second
 					if l_title_zone /= Void then
-						l_title_zone.set_show_stick_min_max (True)
+						l_title_zone.set_show_min_max (True)
+						l_title_zone.set_show_stick (True)
 					end
+				elseif zone_display_count < 1 then
+					hide
 				end
 			else
 				-- No widget in `Current'.
@@ -130,6 +135,27 @@ feature -- Command
 			end
 		ensure then
 			showed: is_displayed
+		end
+
+	set_title_focus (a_focus: BOOLEAN) is
+			-- Set title focus color?
+		do
+			if a_focus then
+				internal_title_bar.enable_focus_color
+			else
+				internal_title_bar.disable_focus_color
+			end
+		end
+
+	extend (a_content: SD_CONTENT) is
+			-- Redefine.
+		do
+		end
+
+	has (a_content: SD_CONTENT): BOOLEAN is
+			-- Redefine.
+		do
+			Result := has_recursive (a_content.user_widget)
 		end
 
 feature -- Properties
@@ -172,15 +198,25 @@ feature -- Properties
 			end
 		end
 
-	extend (a_content: SD_CONTENT) is
-			-- Redefine.
+	count_zone_displayed is
+			-- If more than one zone displayed?
+		require
+			readable: inner_container_readable
+		local
+			l_container: EV_CONTAINER
 		do
+			l_container ?= internal_inner_container.item
+			if l_container /= Void then
+				zone_display_count := 0
+				only_one_zone_displayed := Void
+				count_zone_display (l_container)
+			end
 		end
 
-	has (a_content: SD_CONTENT): BOOLEAN is
-			-- Redefine.
+	inner_container_readable: BOOLEAN is
+			-- If `internal_inner_container' readable?
 		do
-			Result := has_recursive (a_content.user_widget)
+			Result := internal_inner_container.readable
 		end
 
 feature {NONE} -- Implementation
@@ -223,6 +259,50 @@ feature {NONE} -- Implementation
 				all_zones_in_current (l_split_area.second, a_zones)
 			end
 		end
+
+	extend_title_bar is
+			-- Extend title bar.
+		do
+			if not internal_vertical_box.has (internal_title_bar) then
+				internal_vertical_box.start
+				internal_vertical_box.put_left (internal_title_bar)
+				internal_vertical_box.disable_item_expand (internal_title_bar)
+				internal_title_bar.enable_focus_color
+			end
+		end
+
+	count_zone_display (a_container: EV_CONTAINER) is
+			-- Count zone which is displayed.
+		require
+			a_container_not_void: a_container /= Void
+		local
+			l_zone: SD_ZONE
+			l_split: EV_SPLIT_AREA
+			l_container: EV_CONTAINER
+		do
+			l_zone ?= a_container
+			if l_zone /= Void then
+				if l_zone.is_displayed then
+					only_one_zone_displayed := l_zone
+					zone_display_count := zone_display_count + 1
+				end
+			else
+				l_split ?= a_container
+				check must_zone_or_split: l_split /= Void end
+				l_container ?= l_split.first
+				count_zone_display (l_container)
+				l_container := Void
+
+				l_container ?= l_split.second
+				count_zone_display (l_container)
+			end
+		end
+
+	zone_display_count: INTEGER
+			-- How many zones are displayed?
+
+	only_one_zone_displayed: SD_ZONE
+			-- Zone which is only one displayed.
 
 feature {NONE} -- Agents
 

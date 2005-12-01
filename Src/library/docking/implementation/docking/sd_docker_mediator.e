@@ -206,7 +206,7 @@ feature {NONE} -- Implementation functions
 			loop
 				l_hot_zone_source ?= a_list.item
 				-- Ingore the classes we don't care.
-				if l_hot_zone_source /= Void then
+				if l_hot_zone_source /= Void and a_list.item.is_displayed then
 					l_mutli_zone ?= a_list.item
 					if l_mutli_zone /= Void and then not l_mutli_zone.is_drag_title_bar then
 						add_hot_zone_on_type (a_list.item, l_hot_zone_source)

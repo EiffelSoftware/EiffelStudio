@@ -1,5 +1,5 @@
 indexing
-	description: "SD_STATE when a content initialized, wait for change to other SD_STATE."
+	description: "SD_STATE when a content initialized, wait for change to other SD_STATE. Or when client programmer called hide, this state remember state"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +15,8 @@ inherit
 		stick,
 		float,
 		move_to_tab_zone,
-		move_to_docking_zone
+		move_to_docking_zone,
+		show
 	end
 
 create
@@ -119,7 +120,7 @@ feature -- Redefine.
 			l_tab_state: SD_TAB_STATE
 		do
 			internal_shared.docking_manager.lock_update
-			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, direction)
+			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, a_target_zone.state.direction)
 			change_state (l_tab_state)
 			internal_shared.docking_manager.unlock_update
 		ensure then
@@ -132,12 +133,58 @@ feature -- Redefine.
 			l_tab_state: SD_TAB_STATE
 		do
 			internal_shared.docking_manager.lock_update
-			create l_tab_state.make (internal_content, a_target_zone, direction)
-			l_tab_state.set_direction (a_target_zone.state.direction)
+			create l_tab_state.make (internal_content, a_target_zone, a_target_zone.state.direction)
 			change_state (l_tab_state)
 			internal_shared.docking_manager.unlock_update
 		ensure then
 			state_changed: internal_content.state /= Current
+		end
+
+	show is
+			-- Redefine
+		local
+			l_tab_zone: SD_TAB_ZONE
+			l_docking_zone: SD_DOCKING_ZONE
+			l_auto_hide_state, l_new_state: SD_AUTO_HIDE_STATE
+		do
+			if relative /= Void then
+				l_tab_zone ?= relative.state.zone
+				l_docking_zone ?= relative.state.zone
+				if l_tab_zone /= Void then
+					move_to_tab_zone (l_tab_zone)
+				elseif l_docking_zone /= Void then
+					move_to_docking_zone (l_docking_zone)
+				end
+				l_auto_hide_state ?= relative.state
+				if l_auto_hide_state /= Void then
+					create l_new_state.make_with_friend (internal_content, relative)
+					change_state (l_new_state)
+				end
+			end
+		end
+
+feature -- Hide/Show issues when Tab
+
+	set_relative (a_content: SD_CONTENT) is
+			-- Set `relative'.
+		require
+			a_content_not_void: a_content /= Void
+			a_content_valid: content_valid (a_content)
+		do
+			relative := a_content
+		ensure
+			set: relative = a_content
+		end
+
+	relative: SD_CONTENT
+			-- When hide, who is group.
+
+feature -- Contract support
+
+	content_valid (a_content: SD_CONTENT): BOOLEAN is
+			-- If content valid?
+		do
+			Result := internal_shared.docking_manager.has_content (a_content)
 		end
 
 invariant

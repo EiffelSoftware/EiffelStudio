@@ -78,6 +78,8 @@ feature -- Save/Open inner container data.
 			open_menu_datas (l_config_data.menu_datas)
 
 			l_file.close
+
+			internal_shared.docking_manager.resize
 			internal_shared.docking_manager.unlock_update
 		end
 

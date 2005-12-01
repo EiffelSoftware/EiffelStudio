@@ -8,7 +8,13 @@ deferred class
 
 feature -- Basic operation
 
-	set_show_stick_min_max (a_show: BOOLEAN) is
+	set_show_min_max (a_show: BOOLEAN) is
+			-- Show min\max button if `a_show' True.
+		deferred
+		end
+
+	set_show_stick (a_show: BOOLEAN) is
+			-- Show stick button if `a_show' True.
 		deferred
 		end
 

@@ -90,23 +90,33 @@ feature -- Commands
 		end
 
 	show is
-			-- Handle show window.
+			-- Handle show zone.
+		do
+		end
+
+	hide is
+			-- Handle hide zone.
 		do
 		end
 
 	close is
-			-- Handle close window.
+			-- Handle close zone.
+		local
+			l_state: SD_STATE_VOID
 		do
 			internal_shared.docking_manager.lock_update
 			zone.close
 			internal_shared.docking_manager.prune_zone_by_content (internal_content)
 			internal_shared.docking_manager.remove_empty_split_area
 			internal_shared.docking_manager.unlock_update
+			create l_state.make (internal_content)
+			change_state (l_state)
 		end
 
 	stick (a_direction: INTEGER) is
-			-- Stick/Unstick a window.
+			-- Stick/Unstick a zone.
 		do
+			internal_shared.docking_manager.recover_normal_state
 		end
 
 	float (a_x, a_y: INTEGER) is
@@ -136,7 +146,7 @@ feature -- Commands
 		end
 
 	on_normal_max_window is
-			-- Handle normal\max window.
+			-- Handle normal\max zone.
 		do
 		end
 

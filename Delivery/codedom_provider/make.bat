@@ -15,7 +15,7 @@ SET ISE_C_COMPILER=msc
 SET INIT_PATH=%PATH%;
 
 REM Change these between releases:
-SET RELEASE=Eiffel_56
+SET RELEASE=branches/Eiffel_56
 ECHO RELEASE=%RELEASE%
 SET COMPILER_RELEASE=%2
 ECHO COMPILER_RELEASE=%COMPILER_RELEASE%
@@ -31,6 +31,8 @@ SET GOBO=%CD%\checkout\library\gobo
 ECHO GOBO=%GOBO%
 SET ECLOP=%CD%\checkout\eclop
 ECHO ECLOP=%ECLOP%
+SET SVNURL=svn://raphaels@svn.ise:3690/ise_svn
+ECHO SVNURL=%SVNURL%
 ECHO ***********************************
 
 ECHO Setting up folders
@@ -77,9 +79,9 @@ GOTO END
 :USAGE
 ECHO Usage: build.bat BRANCH COMP_BRANCH $ISE_EIFFEL DESTINATION
 ECHO --
-ECHO BRANCH: CVS branch for codedom sources (e.g. HEAD)
-ECHO COMP_BRANCH: CVS branch of delivery compiler (e.g. Eiffel_55_new_consumer)
-ECHO $ISE_EIFFEL: ES Installation used to build delivery (e.g. C:\Eiffel55)
+ECHO BRANCH: SVN branch for codedom sources (e.g. trunk)
+ECHO COMP_BRANCH: SVN branch of delivery compiler (e.g. branches/Eiffel_56_new_consumer)
+ECHO $ISE_EIFFEL: ES Installation used to build delivery (e.g. C:\Eiffel56)
 ECHO DESTINATION: Folder where to generate installation (current folder by default)
 
 :END

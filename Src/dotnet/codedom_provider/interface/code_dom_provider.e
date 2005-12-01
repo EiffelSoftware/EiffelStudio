@@ -49,6 +49,7 @@ feature -- Basic Operations
 	create_generator: CODE_GENERATOR is
 			-- Create an instance of the Eiffel for .NET code code_generator.
 		do
+			load_assemblies
 			create Result
 		end
 
@@ -57,6 +58,7 @@ feature -- Basic Operations
 		require else
 			non_void_output: output /= Void		
 		do
+			load_assemblies
 			create Result.make_with_text_writer (output)
 		ensure then
 			non_void_result: Result /= Void
@@ -68,6 +70,7 @@ feature -- Basic Operations
 			non_void_file_name: file_name /= Void
 			not_empty_file_name: file_name.length > 0
 		do
+			load_assemblies
 			create Result.make_with_filename (file_name)
 		ensure then
 			non_void_result: Result /= Void
@@ -76,6 +79,7 @@ feature -- Basic Operations
 	create_compiler: CODE_COMPILER is
 			-- Create an instance of the Eiffel for .NET code compiler.
 		do
+			load_assemblies
 			create Result
 		ensure then
 			non_void_result: Result /= Void
@@ -84,6 +88,7 @@ feature -- Basic Operations
 	create_parser: CODE_PARSER is
 			-- Create a new code parser.
 		do
+			load_assemblies
 			create Result
 		end
 
@@ -94,6 +99,27 @@ feature {NONE} -- Implementation
 			--| Referenced here so that it is in system
 		do
 			create Result
+		end
+
+	load_assemblies is
+			-- Force loading of base, cache browser and codedom in internal
+			-- to workaround .NET bug where an assembly might not be returned
+			-- by {APP_DOMAIN}.GetAssemblies
+		local
+			l_int: INTERNAL
+			l_object: SYSTEM_OBJECT
+			l_string: STRING
+			l_metadata_access: CODE_SHARED_METADATA_ACCESS
+		once
+			create l_int
+			create l_string.make_empty
+			l_object := l_string
+			l_int.load_eiffel_types_from_assembly (l_object.get_type.assembly)
+			create l_metadata_access
+			l_object := l_metadata_access
+			l_int.load_eiffel_types_from_assembly (l_object.get_type.assembly)
+			l_object := Current
+			l_int.load_eiffel_types_from_assembly (l_object.get_type.assembly)
 		end
 
 end -- class CODE_DOM_PROVIDER

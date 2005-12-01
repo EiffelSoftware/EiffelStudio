@@ -7,33 +7,34 @@ ECHO Checking out source files...
 CD checkout
 REM in checkout
 ECHO Exporting library.net (%CODEDOM_RELEASE%) in checkout...
-cvs -z3 -Q export -r%CODEDOM_RELEASE% -d library.net Src/library.net
+svn export %SVNURL%/%CODEDOM_RELEASE%/Src/library.net library.net
 ECHO Exporting eclop (HEAD) in checkout...
-cvs -z3 -Q export -rHEAD -d eclop free_add_ons/eclop
+svn export %SVNURL%/trunk/free_add_ons/eclop eclop
 ECHO Exporting Eiffel (%CODEDOM_RELEASE%) in checkout...
-cvs -z3 -Q export -r%CODEDOM_RELEASE% Eiffel
+svn co %SVNURL%/%CODEDOM_RELEASE%/Src/bench/Eiffel Eiffel
+svn co %SVNURL%/%CODEDOM_RELEASE%/Src/common Eiffel/common
 CD Eiffel
 ECHO Exporting serialization classes (%COMPILER_RELEASE%) in override
-CVS -z3 -Q export -r%COMPILER_RELEASE% -d override Src/dotnet/consumer/serialization
+svn export %SVNURL%/%COMPILER_RELEASE% -d override Src/dotnet/consumer/serialization
 CD ..
 ECHO Exporting runtime (%RELEASE%) in checkout...
-cvs -z3 -Q export -r%RELEASE% runtime
+svn export %SVNURL%/%RELEASE%/Src/bench/C C
 ECHO Exporting studio (%RELEASE%) in checkout...
-cvs -z3 -Q export -r%RELEASE% -d compiler_delivery Delivery/studio
+svn export %SVNURL%/%RELEASE%/Delivery/studio compiler_delivery 
 ECHO Exporting eifinit (%RELEASE%) in checkout...
-cvs -z3 -Q export -r%RELEASE% -d eifinit_delivery Delivery/eifinit
+svn export %SVNURL%/%RELEASE%/Delivery/eifinit eifinit_delivery 
 ECHO Exporting precomp (%RELEASE%) in checkout...
-cvs -z3 -Q export -r%RELEASE% -d precomp_delivery Delivery/precomp
+svn export %SVNURL%/%RELEASE%/Delivery/precomp precomp_delivery 
 
 MKDIR tools
 CD tools
 REM in checkout\tools
 ECHO Exporting silent_launcher (%CODEDOM_RELEASE%) in checkout\tools...
-cvs -z3 -Q export -r%CODEDOM_RELEASE% -d silent_launcher Src/tools/silent_launcher
+svn export %SVNURL%/%CODEDOM_RELEASE%/Src/tools/silent_launcher silent_launcher 
 ECHO Exporting compliance_checker (%RELEASE%) in checkout\tools...
-cvs -z3 -Q export -r%COMPILER_RELEASE% -d compliance_checker Src/tools/compliance_checker
+svn export %SVNURL%/%COMPILER_RELEASE%/Src/tools/compliance_checker compliance_checker
 ECHO Exporting doc_builder (%RELEASE%) in checkout\tools...
-cvs -z3 -Q export -r%RELEASE% -d doc_builder Src/tools/doc_builder
+svn export %SVNURL%/%RELEASE%/Src/tools/doc_builder doc_builder
 CD ..
 REM in checkout
 
@@ -41,9 +42,9 @@ MKDIR C_library
 CD C_library
 REM in checkout\C_library
 ECHO Exporting libpng (%RELEASE%) in checkout\C_library...
-cvs -z3 -Q export -r%RELEASE% -d libpng Src/C_library/libpng
+svn export %SVNURL%/%RELEASE%/Src/C_library/libpng libpng
 ECHO Exporting zlib (%RELEASE%) in checkout\C_library...
-cvs -z3 -Q export -r%RELEASE% -d zlib Src/C_library/zlib
+svn export %SVNURL%/%RELEASE%/Src/C_library/zlib zlib 
 
 CD ..\
 REM in checkout
@@ -53,27 +54,27 @@ REM in checkout\library
 ECHO Copying GOBO
 XCOPY /Q /S %GOBO_SRC% gobo\
 ECHO Exporting base (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d base Src/library/base
+svn export %SVNURL%/%RELEASE%/Src/library/base base
 ECHO Exporting wel (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d wel Src/library/wel
+svn export %SVNURL%/%RELEASE%/Src/library/wel wel
 ECHO Exporting vision2 (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d vision2 Src/library/vision2
+svn export %SVNURL%/%RELEASE%/Src/library/vision2 vision2
 ECHO Exporting vision2_extension (%COMPILER_RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d vision2_extension Src/library/vision2_extension
+svn export %SVNURL%/%RELEASE%/Src/library/vision2_extension vision2_extension 
 ECHO Exporting thread (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d thread Src/library/thread
+svn export %SVNURL%/%RELEASE%/Src/library/thread thread 
 ECHO Exporting helpers (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d helpers Src/library/helpers
+svn export %SVNURL%/%RELEASE%/Src/library/helpers helpers
 ECHO Exporting time (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d time Src/library/time
+svn export %SVNURL%/%RELEASE%/Src/library/time time
 ECHO Exporting keygen (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d keygen Src/library/keygen
+svn export %SVNURL%/%RELEASE%/Src/library/keygen keygen
 ECHO Exporting preferences (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d preferences Src/library/preferences
+svn export %SVNURL%/%RELEASE%/Src/library/preferences preferences
 ECHO Exporting editor (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d editor Src/library/editor
+svn export %SVNURL%/%RELEASE%/Src/library/editor editor
 ECHO Exporting pattern (%RELEASE%) in checkout\library...
-cvs -z3 -Q export -r%RELEASE% -d patterns Src/library/patterns
+svn export %SVNURL%/%RELEASE%/Src/library/patterns patterns
 CD ..
 REM in checkout
 
@@ -81,19 +82,19 @@ MKDIR dotnet
 CD dotnet
 REM in checkout\dotnet
 ECHO Exporting consumer (%CODEDOM_RELEASE%) in checkout\dotnet...
-cvs -z3 -Q export -r%CODEDOM_RELEASE% -d consumer Src/dotnet/consumer
+svn export %SVNURL%/%CODEDOM_RELEASE%/Src/dotnet/consumer consumer
 ECHO Exporting helpers (%COMPILER_RELEASE%) in checkout\dotnet...
-cvs -z3 -Q export -r%COMPILER_RELEASE% -d helpers Src/dotnet/helpers
+svn export %SVNURL%/%COMPILER_RELEASE%/Src/dotnet/helpers helpers
 ECHO Exporting eac_browser (%RELEASE%) in checkout\dotnet...
-cvs -z3 -Q export -r%RELEASE% -d eac_browser Src/dotnet/eac_browser
+svn export %SVNURL%/%RELEASE%/Src/dotnet/eac_browser eac_browser
 ECHO Exporting codedom_provider (%CODEDOM_RELEASE%) in checkout\dotnet...
-cvs -z3 -Q export -r%CODEDOM_RELEASE% -d codedom_provider Src/dotnet/codedom_provider
+svn export %SVNURL%/%CODEDOM_RELEASE%/Src/dotnet/codedom_provider codedom_provider
 
 CD ..\
 REM in checkout
 MKDIR docs
 CD docs
 REM in checkout\docs
-cvs -z3 -Q export -r%RELEASE% -d xmldoc Delivery/xmldoc
+svn export %SVNURL%/%RELEASE%/Delivery/xmldoc xmldoc
 
 CD ..\..

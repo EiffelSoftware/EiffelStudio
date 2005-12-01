@@ -4025,25 +4025,26 @@ feature -- Implementation
 				l_vwbe2.set_type (last_type)
 				l_vwbe2.set_location (l_as.expr.end_location)
 				error_handler.insert_error (l_vwbe2)
-			elseif l_needs_byte_node then
-				l_expr ?= last_byte_node
-				create l_elsif
-				l_elsif.set_expr (l_expr)
-			end
-
-				-- Type check on compound
-			if l_as.compound /= Void then
-				l_as.compound.process (Current)
+			else
 				if l_needs_byte_node then
-					l_list ?= last_byte_node
-					l_elsif.set_compound (l_list)
+					l_expr ?= last_byte_node
+					create l_elsif
+					l_elsif.set_expr (l_expr)
 				end
-			end
 
-			if l_needs_byte_node and l_elsif /= Void then
-					-- `l_elsif' can be Void if a VWBE2 error was found.
-				l_elsif.set_line_number (l_as.expr.start_location.line)
-				last_byte_node := l_elsif
+					-- Type check on compound
+				if l_as.compound /= Void then
+					l_as.compound.process (Current)
+					if l_needs_byte_node then
+						l_list ?= last_byte_node
+						l_elsif.set_compound (l_list)
+					end
+				end
+
+				if l_needs_byte_node then
+					l_elsif.set_line_number (l_as.expr.start_location.line)
+					last_byte_node := l_elsif
+				end
 			end
 		end
 

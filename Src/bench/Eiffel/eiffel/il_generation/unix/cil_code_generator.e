@@ -227,6 +227,11 @@ feature -- Addresses
 		do
 		end
 
+	generate_load_address (type_i: TYPE_I) is
+			-- Generate code that takes address of a boxed value object of type `type_i'.
+		do
+		end
+
 	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate address of routine of `a_feature_id' in class `type_i'.
 		do

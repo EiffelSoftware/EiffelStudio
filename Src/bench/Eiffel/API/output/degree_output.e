@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Degree messages output during compilation. %
 		%By default, all output is redirected to `io'.";
 	date: "$Date$";
@@ -87,12 +87,12 @@ feature -- Start output features
 		do
 			if not is_output_quiet then
 				display_message (once "Processing options");
-				display_new_line				
+				display_new_line
 			end
 		end;
 
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
-			-- Put message indicating the start of a degree 
+			-- Put message indicating the start of a degree
 			-- with `total_nbr' passes to be done.
 		require
 			valid_degree_nbr: degree_nbr >= -5 and then degree_nbr <= 6
@@ -144,7 +144,7 @@ feature -- Start output features
 				Result.append (Degree_output_string + a_degree.out + ": ")
 			end
 			Result.append (l_degree_str)
-		ensure	
+		ensure
 			result_not_void: Result /= Void
 		end
 
@@ -155,10 +155,12 @@ feature -- Start output features
 		end;
 
 	put_melting_changes_message  is
-			-- Put message indicating that melting changes is ocurring.
+			-- Put message indicating that melting changes is occurring.
 		do
-			display_message (melting_changes_message);
-			display_new_line
+			if not is_output_quiet then
+				display_message (melting_changes_message);
+				display_new_line
+			end
 		end;
 
 	put_freezing_message is
@@ -213,7 +215,7 @@ feature -- Start output features
 		end
 
 	put_resynchronizing_breakpoints_message is
-			-- Put a message to indicate that the 
+			-- Put a message to indicate that the
 			-- breakpoints are being resynchronized.
 		do
 		end
@@ -238,7 +240,7 @@ feature -- Output on per class
 
 	put_degree_6 (a_name: STRING; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_name' is being
-			-- compiled during degree six' clusters to go. 
+			-- compiled during degree six' clusters to go.
 		require
 			a_name_not_void: a_name /= Void
 			positive_nbr_to_go: nbr_to_go >= 0
@@ -248,7 +250,7 @@ feature -- Output on per class
 			display_degree (degree_message (6), nbr_to_go, a_name)
 			processed := processed + 1
 		end
-	
+
 	put_recursive_degree_6 (a_cluster: CLUSTER_I; a_path: STRING) is
 			-- Put message to indicate that `a_cluster' is being compiled
 			-- during degree six and that it is a recursive cluster so we have
@@ -262,7 +264,7 @@ feature -- Output on per class
 
 	put_degree_5 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree five with `nbr_to_go' 
+			-- compiled during degree five with `nbr_to_go'
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void
@@ -276,7 +278,7 @@ feature -- Output on per class
 
 	put_degree_4 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree four with `nbr_to_go' 
+			-- compiled during degree four with `nbr_to_go'
 			-- classes to go out of `total_nbr'..
 		require
 			class_not_void: a_class /= Void
@@ -290,20 +292,20 @@ feature -- Output on per class
 
 	put_degree_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree three with `nbr_to_go' 
+			-- compiled during degree three with `nbr_to_go'
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void;
 			positive_nbr_to_go: nbr_to_go >= 0
 			in_degree_3: current_degree = 3
 		do
-			processed := processed + 1 -- Used when error ocurrs
+			processed := processed + 1 -- Used when error occurs
 			display_degree (degree_message(3), nbr_to_go, a_class.name)
 		end
 
 	put_degree_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree two with `nbr_to_go' 
+			-- compiled during degree two with `nbr_to_go'
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void;
@@ -315,7 +317,7 @@ feature -- Output on per class
 
 	put_degree_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree one with `nbr_to_go' 
+			-- compiled during degree one with `nbr_to_go'
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void;
@@ -327,7 +329,7 @@ feature -- Output on per class
 
 	put_degree_minus_1 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree minus one with `nbr_to_go' 
+			-- compiled during degree minus one with `nbr_to_go'
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void;
@@ -339,7 +341,7 @@ feature -- Output on per class
 
 	put_degree_minus_2 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree minus four with `nbr_to_go' 
+			-- compiled during degree minus four with `nbr_to_go'
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void
@@ -351,7 +353,7 @@ feature -- Output on per class
 
 	put_degree_minus_3 (a_class: CLASS_C; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
-			-- compiled during degree minus five with `nbr_to_go' 
+			-- compiled during degree minus five with `nbr_to_go'
 			-- classes to go.
 		require
 			class_not_void: a_class /= Void
@@ -370,6 +372,7 @@ feature -- Output on per class
 			display_message (once "%TFeatures to go: ")
 			display_message (nbr_to_go.out)
 			display_new_line
+			flush_output
 		end
 
 	put_case_cluster_message (a_name: STRING) is
@@ -377,9 +380,9 @@ feature -- Output on per class
 			-- analyzed.
 		require
 			name_not_void: a_name /= Void
-		local	
+		local
 			str: STRING
-		do	
+		do
 			str := a_name.as_lower
 			display_message (case_cluster_message)
 			display_message (str)
@@ -392,7 +395,7 @@ feature -- Output on per class
 		require
 			class_not_void: a_class /= Void
 		do
-			display_degree (case_class_message, 
+			display_degree (case_class_message,
 					total_number - processed, a_class.name)
 			processed := processed + 1;
 		end
@@ -403,7 +406,7 @@ feature -- Output on per class
 		require
 			class_not_void: a_class /= Void
 		do
-			display_degree (document_class_message, 
+			display_degree (document_class_message,
 					total_number - processed, a_class.name)
 			processed := processed + 1;
 		end
@@ -419,7 +422,7 @@ feature -- Output on per class
 		do
 			-- By default do nothing
 		end
-		
+
 feature -- Element Change
 
 	user_has_requested_cancellation is
@@ -430,7 +433,7 @@ feature -- Element Change
 
 feature {NONE} -- Implementation
 
-	degree_message (a_degree: INTEGER): STRING is 
+	degree_message (a_degree: INTEGER): STRING is
 			-- Display the message corresponding to degree `a_degree'.
 		do
 			create Result.make (30)
@@ -482,7 +485,7 @@ feature {NONE} -- Display implementation for redefinition by descendants.
 			-- Return percentage based on `nbr_to_go' and
 			-- `total_number'
 		require
-			positive_total_nbr: total_number > 0 
+			positive_total_nbr: total_number > 0
 		local
 			nbr_spaces, perc: INTEGER;
 			to_go_out, total_nbr_out: STRING
@@ -500,7 +503,7 @@ feature {NONE} -- Display implementation for redefinition by descendants.
 			Result.append_string (once "%% - ");
 			to_go_out := nbr_to_go.out;
 			nbr_spaces := total_nbr_out.count - to_go_out.count;
-			inspect nbr_spaces 
+			inspect nbr_spaces
 			when 1 then
 				Result.extend (' ')
 			when 2 then
@@ -520,7 +523,7 @@ feature {NONE} -- Display implementation for redefinition by descendants.
 			Result := 100 - (100 * to_go) // total_number;
 			if Result = 100 and then to_go /= 0 then
 				Result := 99
-			end	
+			end
 		end
 
 	display_message (a_message: STRING) is

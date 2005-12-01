@@ -147,7 +147,7 @@ cluster
 
 	all base:	 "$EIFFEL_SRC\library\base"
 		exclude
-			"table"; "desc"; "CVS"; 
+			"table"; "desc"; ".svn"; 
 		visible
 			integer_ref
 				end
@@ -246,32 +246,32 @@ cluster
 
 	all gobo:	 "$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS";	"EiffelBase"; "EiffelTime"
+			"hact"; "se"; "ve"; "base"; ".svn";	"EiffelBase"; "EiffelTime"
 		end
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all lace:	 "$EIFFEL_SRC\Eiffel\lace"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all compiler:	 "$EIFFEL_SRC\Eiffel\eiffel"
 		exclude
-			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
+			".svn"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
 		end
 
 	all compiler_api:	 "$EIFFEL_SRC\Eiffel\API"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	all helpers:		"$EIFFEL_SRC/library/helpers"
 		exclude
-			"CVS"; 
+			".svn"; 
 		end
 
 	switch:	 "$EIFFEL_SRC\Eiffel\switch"
@@ -307,12 +307,12 @@ cluster
 
 	all activation_checker:	 "$EIFFEL_SRC\Eiffel\library\activation"
 		exclude
-			"enterprise"; "command_line"; "unix"; "CVS"; 
+			"enterprise"; "command_line"; "unix"; ".svn"; 
 		end
 
 	all keygen:	 "$EIFFEL_SRC\library\keygen"
 		exclude
-			"eiffel_studio_52"; "unix"; "CVS"; 
+			"eiffel_studio_52"; "unix"; ".svn"; 
 		end
 
 	all assembly_info:		"$EIFFEL_SRC\dotnet\eac_browser\src"
@@ -328,7 +328,21 @@ cluster
 		exclude
 			"Include"; "Clib"; 
 		visible
-			idm_dictionary_impl_proxy
+			IDM_DICTIONARY_IMPL_PROXY
+				end
+			IDM_ENUM_EXCEPTION_DESCRIPTION_IMPL_PROXY
+				end
+			IDM_ENUM_PARAMETER_DESCRIPTION_IMPL_PROXY
+				end
+			IDM_ENUM_PERMISSION_DESCRIPTION_IMPL_PROXY
+				end
+			IDM_EXCEPTION_DESCRIPTION_IMPL_PROXY
+				end
+			IDM_FEATURE_DESCRIPTION_IMPL_PROXY
+				end
+			IDM_PARAMETER_DESCRIPTION_IMPL_PROXY
+				end
+			IDM_PERMISSION_DESCRIPTION_IMPL_PROXY
 				end
 		end
 

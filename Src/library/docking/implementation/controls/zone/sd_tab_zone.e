@@ -89,7 +89,8 @@ feature {NONE} -- Initlization
 
 			internal_notebook.pointer_button_press_actions.extend (agent on_notebook_pointer_press)
 			internal_notebook.pointer_button_release_actions.extend (agent on_notebook_pointer_release)
-			internal_notebook.pointer_motion_actions.extend (agent on_notebook_notebook_pointer_motion)
+			internal_notebook.pointer_motion_actions.extend (agent on_notebook_pointer_motion)
+			internal_notebook.pointer_enter_actions.extend (agent on_notebook_pointer_enter)
 		end
 
 feature -- Query
@@ -320,7 +321,7 @@ feature {NONE} -- Agents for docker
 			set: internal_notebook_pressed = True
 		end
 
-	on_notebook_notebook_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+	on_notebook_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			--	Handle notebook pointer motion.
 		local
 			l_tab_state: SD_TAB_STATE
@@ -338,6 +339,12 @@ feature {NONE} -- Agents for docker
 		ensure
 			docker_mediator_created: internal_notebook_pressed implies internal_docker_mediator /= Void
 			docker_mediator_start: internal_notebook_pressed implies internal_docker_mediator.is_tracing_pointer
+		end
+
+	on_notebook_pointer_enter is
+			-- Handle notebook pointer enter.
+		do
+			internal_notebook_pressed := False
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is

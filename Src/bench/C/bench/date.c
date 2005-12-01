@@ -14,7 +14,9 @@
 #include "eif_macros.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef I_SYS_TIMEB
 #include <sys/timeb.h>
+#endif
 #include <time.h>
 
 #ifdef EIF_WINDOWS

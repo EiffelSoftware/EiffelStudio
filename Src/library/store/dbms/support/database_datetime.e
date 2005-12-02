@@ -19,7 +19,7 @@ feature -- Status report
 		do
 			Result := db_spec.sql_name_datetime
 		end
-	
+
 	eiffel_ref: DATE_TIME is
 			-- Shared absolute date reference 
 		once

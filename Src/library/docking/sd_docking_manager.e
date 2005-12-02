@@ -384,7 +384,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	golbal_accelerators: SEQUENCE [EV_ACCELERATOR] is
 			-- Golbal accelerators.
 		local
@@ -392,10 +392,10 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 		do
 			l_titled_window ?= main_window
 			if l_titled_window /= Void then
-				Result := l_titled_window.accelerators	
+				Result := l_titled_window.accelerators
 			end
 		end
-		
+
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW,
 	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_MENU_ZONE, SD_TAB_STUB} -- Library internals commands.
@@ -512,7 +512,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 				end
 			end
 		end
-			
+
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
 	 SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW, SD_MENU_DOCKER_MEDIATOR,
 	 SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL} -- Library internal attributes.
@@ -551,11 +551,14 @@ feature {NONE}  -- Agents
 				l_zones.after
 			loop
 				if l_zones.item.has_recursive (a_widget) then
-					if internal_last_focus_zone /= l_zones.item then
-						internal_last_focus_zone := l_zones.item
+					if internal_shared.last_focus_zone /= l_zones.item then
+						internal_shared.set_last_focus_zone (l_zones.item)
 						l_zones.item.on_focus_in (Void)
+						if l_zones.item.content.focus_in_actions /= Void then
+							l_zones.item.content.focus_in_actions.call ([])
+						end
 					else
-						l_auto_hide_zone ?= internal_last_focus_zone
+						l_auto_hide_zone ?= internal_shared.last_focus_zone
 						if l_auto_hide_zone = Void then
 							remove_auto_hide_zones
 						end
@@ -617,9 +620,6 @@ feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons
-
-	internal_last_focus_zone: SD_ZONE
-			-- Last focused zone.
 
 	lock_call_time: INTEGER
 			-- Used for remember how many times client call `lock_update'.

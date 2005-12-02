@@ -108,7 +108,7 @@ feature -- Access
 		do
 			Result := allow_window_to_back_cell.item
 		end
-	
+
 	non_focused_color: EV_COLOR is
 			-- Non focuse color. Used by SD_TITLE_BAR...
 		local
@@ -119,9 +119,9 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
-	
+
 	focused_color: EV_COLOR is
-			-- focuse color. Used by SD_TITLE_BAR... 
+			-- focuse color. Used by SD_TITLE_BAR...
 		local
 			l_grid: EV_GRID
 		once
@@ -129,8 +129,20 @@ feature -- Access
 			Result := l_grid.focused_selection_color
 		ensure
 			not_void: Result /= Void
-		end	
-	
+		end
+
+	last_focus_zone: SD_ZONE is
+			-- Last focused zone.
+		do
+			Result := last_focus_zone_cell.item
+		end
+
+	set_last_focus_zone (a_zone: SD_ZONE) is
+			--
+		do
+			last_focus_zone_cell.put (a_zone)
+		end
+
 feature -- Contract Support
 
 	docking_manager_set: BOOLEAN is
@@ -194,7 +206,7 @@ feature -- Constants
 
 	Auto_hide_delay: INTEGER is 2000
 			-- When SD_AUTO_HIDE_ZONE show but no focused, time to hide SD_AUTO_HIDE_ZONE.
-	
+
 	Focuse_border_width: INTEGER is 2
 			-- Border width of a zone. This is width show focus color surround a zone.
 
@@ -205,5 +217,11 @@ feature {NONE} -- Implementation
 
 	internal_icons: SD_ICONS_SINGLETON
 			-- Icons.
+
+	last_focus_zone_cell: CELL [SD_ZONE] is
+			-- `last_focus_zone_cell' singleton cell.
+		once
+			create Result
+		end
 
 end

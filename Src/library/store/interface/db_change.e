@@ -55,7 +55,7 @@ feature -- Basic operations
 			if not is_ok and then is_tracing then
 				trace_output.putstring (error_message)
 				trace_output.new_line
-			end			
+			end
 		ensure
 			last_query_changed: last_query = request
 		end
@@ -78,9 +78,11 @@ feature {NONE} -- Initialization
 		do
 			implementation := handle.database.db_change
 			create ht.make (name_table_size)
+			create ht_order.make (name_table_size)
 			implementation.set_ht (ht)
+			implementation.set_ht_order (ht_order)
 		end
-	
+
 end -- class DB_CHANGE
 
 
@@ -89,7 +91,7 @@ end -- class DB_CHANGE
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

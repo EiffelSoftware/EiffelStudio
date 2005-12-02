@@ -47,7 +47,7 @@ feature -- Status report
 						seq > row_number
 					loop	
        					private_selection.set_map_name (seq , "seq")
-     					private_selection.query (Select_text)
+     					private_selection.query (Select_text (name))
      					private_selection.load_result
      					private_selection.unset_map_name ("seq")
      					create tuple.copy (private_selection.cursor)
@@ -57,7 +57,7 @@ feature -- Status report
 					end
  
 				else
-					private_selection.query (Select_text)
+					private_selection.query (Select_text (name))
 					private_selection.load_result
 					create tuple.copy (private_selection.cursor)
 					tmp_text ?= tuple.item (1)
@@ -66,7 +66,7 @@ feature -- Status report
 				Result := tmp_text
 				private_selection.terminate
 			else
-			Result := db_spec.text_not_supported
+				Result := db_spec.text_not_supported
 			end
 		end
 
@@ -130,13 +130,10 @@ feature -- Basic operations
 				private_string.append (db_spec.sql_execution)
 				private_string.append (proc_name)
 				
-			--	if destination.ht.count > 0 then
-			--		append_in_args_value (private_string, destination)
-			--	end
 				if arguments_set then
 					append_in_args_value (private_string)
 				end
-				private_string.append (db_spec.sql_after_exec)
+				private_string.append (db_spec.sql_after_exec)							
 				destination.set_query (private_string)
 				if (handle.execution_type.immediate_execution) then
 					destination.execute_query
@@ -248,6 +245,7 @@ feature {NONE} -- Implementation
 		local
 			temp_int: INTEGER_REF
 			temp_dble: DOUBLE_REF
+			temp_string: STRING
 			tuple: DB_TUPLE
 		do
 			if (db_spec.support_proc > 0) then
@@ -272,7 +270,10 @@ feature {NONE} -- Implementation
 								row_number := temp_dble.item.truncated_to_integer
 							end
 						else
-							p_exists := False
+								-- Added for ODBC, should really be abstracted
+							temp_string ?= tuple.item (3)
+							p_exists := temp_string /= Void and then not temp_string.is_empty
+							
 						end
 					end
 				else
@@ -287,35 +288,26 @@ feature {NONE} -- Implementation
 			-- Value is effective after `set_p_exists'
 			-- execution.
 
-	append_in_args_value (s: STRING) is --; d: DB_EXPRESSION) is
+	append_in_args_value (s: STRING) is
 			-- Append map variables name from `d' in `s'.
 			-- Map variables are used for set input arguments.
 		require
 			s_not_void: s /= Void
-			--d_not_void: d /= Void
-			--arguments_mapped: not d.ht.is_empty
 		local
 			i: INTEGER
 		do
 			s.append (db_spec.map_var_before)
 			from
-			--	d.ht.start
 				i := arguments_name.lower
 			until
-			--	d.ht.off
 				i > arguments_name.upper
 			loop
 				if db_spec.proc_args then
 					s.append (db_spec.map_var_between)
-				--	s.append (d.ht.key_for_iteration)
 					s.append (arguments_name.item (i))
 					s.append (" = ")
 				end
-				s.append (":")
-			--	s.append (d.ht.key_for_iteration)
-				s.append (arguments_name.item (i))
-			--	d.ht.forth
-			--	if not d.ht.off then
+				s.append (db_spec.map_var_name (arguments_name.item (i)))
 				i := i + 1
 				if i <= arguments_name.upper then
 					s.extend (',')
@@ -424,10 +416,10 @@ feature {NONE} -- Status report
 			result_not_void: Result /= Void
 		end
 
-	Select_text: STRING is
+	Select_text (a_proc_name: STRING): STRING is
 			-- SQL query to get procedure text.
 		do
-			Result := db_spec.Select_text
+			Result := db_spec.Select_text (a_proc_name)
 		end
 
 	Select_exists: STRING is

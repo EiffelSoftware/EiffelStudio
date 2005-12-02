@@ -3,7 +3,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_CHANGE [G -> DATABASE create default_create end]
 
 inherit
@@ -22,11 +22,6 @@ inherit
 		end
 
 	SQL_SCAN
-
-	HANDLE_SPEC [G]
-		undefine
-			is_equal, out, copy
-		end
 
 create -- Creation procedure
 
@@ -60,10 +55,10 @@ feature -- Element change
 			end
 			if not db_spec.normal_parse then
 			--	handle.execution_type.set_immediate
-				parsed := db_spec.parse (temp_descriptor, ht, handle, sql)
+				parsed := db_spec.parse (temp_descriptor, ht, ht_order, handle, sql)
 				tmp_string := sql
 			end
-			
+
 			if not parsed then
 				tmp_string := parse (sql)
 				if immediate_execution then
@@ -86,7 +81,7 @@ feature -- Element change
 							handle.status.set (db_spec.results_order (temp_descriptor))
 						end
 					end
-					db_spec.terminate_order (temp_descriptor)						
+					db_spec.terminate_order (temp_descriptor)
 				end
 			end
 			handle.execution_type.unset_immediate
@@ -105,6 +100,17 @@ feature -- Status setting
 			ht = table
 		end
 
+	set_ht_order (list: ARRAYED_LIST [STRING]) is
+			-- Pass map `list' to current.
+			-- Set `ht_order' with `list'.
+		require else
+			list_exists: list /= Void
+		do
+			ht_order := list
+		ensure then
+			ht_order = list
+		end
+
 end -- class DATABASE_CHANGE
 
 
@@ -112,7 +118,7 @@ end -- class DATABASE_CHANGE
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

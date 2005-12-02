@@ -48,7 +48,7 @@ feature
 
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then
-				parsed := db_spec.parse (descriptor, ht, handle, s)	
+				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)	
 			end
 			if not parsed then
 				parsed_s := s
@@ -64,15 +64,6 @@ feature
 		ensure
 			prepared_statement: is_prepared
 			prepared_statement: not is_executed
-		end
-
-	bind_parameter is
-			-- Bind of the prarameters of the sql statement 
-		require
-			prepared_statement: is_prepared
-		do
-			setup_parameters
-			db_spec.bind_parameter (parameters_value, parameters, descriptor, "")	
 		end
 
 	execute is

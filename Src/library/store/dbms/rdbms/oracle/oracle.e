@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	ORACLE
 
 inherit
@@ -12,7 +12,6 @@ inherit
 			normal_parse,
 			parse,
 			update_map_table_error,
-			bind_parameter,
 			convert_string_type
 		end
 
@@ -38,7 +37,7 @@ feature -- For DATABASE_STATUS
 			ora_clear_error
 		end
 
-feature -- For DATABASE_CHANGE 
+feature -- For DATABASE_CHANGE
 
 	descriptor_is_available: BOOLEAN is
 		do
@@ -46,7 +45,7 @@ feature -- For DATABASE_CHANGE
 		end
 
 feature -- For DATABASE_FORMAT
-	
+
 	date_to_str (object: DATE_TIME): STRING is
 			-- String representation in SQL of `object'
 		do
@@ -55,7 +54,7 @@ feature -- For DATABASE_FORMAT
 			Result.append (object.formatted_out ("[0]mm/[0]dd/yyyy [0]hh:mi:ss"))
 			Result.append ("','MM/DD/YYYY HH24:MI:SS')")
 		end
-	
+
 	string_format (object: STRING): STRING is
 			-- String representation in SQL of `object'.
 			-- WARNING: use "IS NULL" if object is empty instead of
@@ -80,17 +79,17 @@ feature -- For DATABASE_FORMAT
 
 feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
-	normal_parse: BOOLEAN is 
+	normal_parse: BOOLEAN is
 		do
 			if is_proc then
 				Result := False
 				is_proc := False
-			else	
+			else
 				Result := True
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
+	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
 		do
 			if uhandle.execution_type.immediate_execution then
 				Result := True
@@ -124,7 +123,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			-- Append map variables name from to `s'.
 			-- Map variables are used for set input arguments.
 			-- `uht' can be empty (for stored procedures).
-		local 
+		local
 			tmp_c, tmp_c2, c_temp: C_STRING
 		do
 			create c_temp.make (sql)
@@ -143,16 +142,22 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 
 feature -- For DATABASE_STORE
 
-	update_map_table_error (uhandle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is 
+	update_map_table_error (uhandle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is
 		do
 			map_table.put (0, ind)
 		end
 
 feature -- DATABASE_STRING
 
-	sql_name_string: STRING is 
+	sql_name_string: STRING is
 		do
 			Result := "VARCHAR2"
+		end
+
+	map_var_name (a_para: STRING): STRING is
+		do
+		 	create Result.make_from_string (":")
+			Result.append (a_para)
 		end
 
 feature -- DATABASE_REAL
@@ -165,7 +170,7 @@ feature -- DATABASE_DATETIME
 
 feature -- DATABASE_DOUBLE
 
-	sql_name_double: STRING is "FLOAT" 
+	sql_name_double: STRING is "FLOAT"
 
 feature -- DATABASE_CHARACTER
 
@@ -235,7 +240,7 @@ feature -- For DATABASE_PROC
 
 	support_sql_of_proc: BOOLEAN is True
 
-	support_stored_proc: BOOLEAN is 
+	support_stored_proc: BOOLEAN is
 		do
 			Result := True
 			is_proc := True
@@ -257,11 +262,14 @@ feature -- For DATABASE_PROC
 
 	map_var_between: STRING is ""
 
-	Select_text: STRING is "select text from all_source %
+	Select_text (proc_name: STRING): STRING is
+		do
+			Result := "select text from all_source %
 			%where Name = :name and %
 			%Type = 'PROCEDURE'"
+		end
 
-	Select_exists (name: STRING): STRING is 
+	Select_exists (name: STRING): STRING is
 		do
 			Result := "select count (*) from all_objects %
 			%where (object_type = 'PROCEDURE') and %
@@ -270,7 +278,7 @@ feature -- For DATABASE_PROC
 
 feature -- For DATABASE_REPOSITORY
 
-	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING is 
+	Selection_string (rep_qualifier, rep_owner, rep_name: STRING): STRING is
 		do
 			repository_name := rep_name
 					-- This query request all the Tables of the database
@@ -279,7 +287,7 @@ feature -- For DATABASE_REPOSITORY
 					-- By default we should use this query.
 			Result := "SELECT * FROM USER_TAB_COLUMNS WHERE Table_Name =:rep order by Column_ID"
 		end
-	
+
 	sql_string: STRING is "VARCHAR2 ("
 
 	sql_string2 (int: INTEGER): STRING is
@@ -406,7 +414,7 @@ feature -- External features
 			end
 		end
 
-	conv_type (indicator: INTEGER; index: INTEGER): INTEGER is 
+	conv_type (indicator: INTEGER; index: INTEGER): INTEGER is
 		do
 			Result := ora_conv_type (index)
 		end
@@ -452,7 +460,7 @@ feature -- External features
 		end
 
 	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
-			-- is last retrieved data null? 
+			-- is last retrieved data null?
 		do
 			Result := ora_is_null_data (no_descriptor, ind)
 		end
@@ -516,32 +524,32 @@ feature -- External features
 			Result := tmp_strg.to_integer
 		end
 
-	c_string_type: INTEGER is 
+	c_string_type: INTEGER is
 		do
 			Result := ora_c_string_type
 		end
 
-	c_character_type: INTEGER is 
+	c_character_type: INTEGER is
 		do
 			Result := ora_c_character_type
 		end
 
-	c_integer_type: INTEGER is 
+	c_integer_type: INTEGER is
 		do
 			Result := ora_c_integer_type
 		end
 
-	c_float_type: INTEGER is 
+	c_float_type: INTEGER is
 		do
 			Result := ora_c_float_type
 		end
 
-   	c_real_type: INTEGER is 
+   	c_real_type: INTEGER is
 		do
 			Result := ora_c_real_type
 		end
 
-	c_boolean_type: INTEGER is 
+	c_boolean_type: INTEGER is
 		do
 			Result := ora_c_boolean_type
 		end
@@ -559,7 +567,7 @@ feature -- External features
 	connect (user_name, user_passwd, data_source, application, hostname, roleId, rolePassWd, groupId: STRING) is
         local
 			c_temp1, c_temp2: C_STRING
-		do      
+		do
 			create c_temp1.make (user_name)
 			create c_temp2.make (user_passwd)
 			ora_connect (c_temp1.item, c_temp2.item)
@@ -703,7 +711,7 @@ feature {NONE} -- External features
 	ora_is_null_data (no_descriptor:INTEGER; ind: INTEGER): BOOLEAN is
 		external
 			"C | %"oracle.h%""
-		end	
+		end
 
 	ora_get_date_data (desc: INTEGER; index: INTEGER): INTEGER is
 		external
@@ -875,7 +883,7 @@ end -- class ORACLE
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

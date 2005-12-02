@@ -92,6 +92,12 @@ feature -- Access (table description)
 			--| 1 in general.
 		deferred
 		end
+		
+	identity_column: INTEGER is
+			-- Column ID for IDENTITY column of table (0 if there is no IDENTITY column, default)
+		do
+			Result := 0
+		end		
 
 	No_id: INTEGER is 0
 			-- `Id_code' value when no ID exists or ID constraint is not
@@ -151,7 +157,7 @@ feature -- Access (table row values)
 
 	attribute_list: ARRAYED_LIST [ANY] is
 			-- Table row attribute values.
-		do
+		do			
 			create Result.make (Attribute_number)
 			from
 				attribute_code_list.start
@@ -220,7 +226,7 @@ feature -- Access (table row values)
 	mapped_list (action: FUNCTION [ANY, TUPLE [STRING], STRING]): ARRAYED_LIST [STRING] is
 			-- Feature list mapped with `action'.
 			-- This can be useful to create tags or parameter names.
-		do
+		do			
 			create Result.make (Attribute_number)
 			from
 				description_list.start
@@ -230,7 +236,7 @@ feature -- Access (table row values)
 				action.call ([description_list.item.twin])
 				Result.extend (action.last_result)
 				description_list.forth
-			end
+			end		
 		end
 
 feature -- Status report

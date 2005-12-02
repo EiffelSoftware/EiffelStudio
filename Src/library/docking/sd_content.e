@@ -90,9 +90,6 @@ feature -- Access
 			Result := internal_type
 		end
 
-	is_default_destroy: BOOLEAN
-			-- If user click 'X' button, close `Current' or hide `Current'?
-
 feature -- Set
 
 	set_title (a_title: like internal_title) is
@@ -133,14 +130,6 @@ feature -- Set
 			a_type_valid: a_type = {SD_SHARED}.type_normal or a_type = {SD_SHARED}.type_editor
 		do
 			internal_type := a_type
-		end
-
-	set_close_behavior (a_destroy: BOOLEAN) is
-			-- Set `is_default_destroy'.
-		do
-			is_default_destroy := a_destroy
-		ensure
-			a_destroy_set: is_default_destroy = a_destroy
 		end
 
 	set_focus is

@@ -2451,6 +2451,9 @@ rt_private void read_header(char rt_type)
 	char vis_name[512];
 	char * temp_buf;
 	jmp_buf exenv;
+#ifdef ISE_GC
+	volatile char g_status = rt_g_data.status;
+#endif
 	RTXD;
 
 	errno = 0;
@@ -2459,6 +2462,11 @@ rt_private void read_header(char rt_type)
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
+#ifdef ISE_GC
+		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
+										 * code below, we need to make sure to restore the status
+										 * to what it originally was. */
+#endif
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 	r_buffer = (char*) eif_rt_xmalloc (bsize * sizeof (char), C_T, GC_OFF);
@@ -2604,6 +2612,9 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	char att_name[512];
 	int * volatile attrib_order = NULL;
 	jmp_buf exenv;
+#ifdef ISE_GC
+	volatile char g_status = rt_g_data.status;
+#endif
 	RTXD;
 
 	errno = 0;
@@ -2612,6 +2623,11 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	if (setjmp(exenv)) {
 		rt_clean();				/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
+#ifdef ISE_GC
+		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
+										 * code below, we need to make sure to restore the status
+										 * to what it originally was. */
+#endif
 		ereturn(MTC_NOARG);				/* Propagate exception */
 	}
 
@@ -3265,6 +3281,9 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	int old_count, nb_lines, i;
 	int bsize = 1024;
 	jmp_buf exenv;
+#ifdef ISE_GC
+	volatile char g_status = rt_g_data.status;
+#endif
 	RTXD;
 
 	errno = 0;
@@ -3273,6 +3292,11 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	if (setjmp (exenv)) {
 		rt_clean ();			/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
+#ifdef ISE_GC
+		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
+										 * code below, we need to make sure to restore the status
+										 * to what it originally was. */
+#endif
 		ereturn (MTC_NOARG);	/* Propagate exception */
 	}
 
@@ -3589,8 +3613,7 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 			conv->new_type = ginfo->dynamic_type;
 			result = 1;
 		}
-	}
-	else if (ginfo == NULL) {
+	} else if (ginfo == NULL) {
 		if (strchr (name, '[') != NULL) {
 			int16 new_id = eif_type_id (name);
 			if (new_id == -1)
@@ -3599,8 +3622,11 @@ rt_private int map_type (type_descriptor *conv, int *unresolved)
 				conv->new_dftype = new_id;
 				conv->new_type = Deif_bid (new_id);
 			}
-			result = 1;
+		} else {
+				/* If we are here type was not found in current system. */
+			conv->new_type = TYPE_NOT_PRESENT;
 		}
+		result = 1;
 	} else {
 		conv->new_type = TYPE_NOT_PRESENT;
 		result = 1;
@@ -3840,6 +3866,9 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	int16 ohead, old_max_types, type_count, i;
 	jmp_buf exenv;
+#ifdef ISE_GC
+	volatile char g_status = rt_g_data.status;
+#endif
 	RTXD;
 
 	errno = 0;
@@ -3848,6 +3877,11 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 	if (setjmp (exenv)) {
 		rt_clean ();			/* Clean data structure */
 		RTXSC;					/* Restore stack contexts */
+#ifdef ISE_GC
+		rt_g_data.status = g_status;		/* If a crash occurs, since we may disable the GC in the
+										 * code below, we need to make sure to restore the status
+										 * to what it originally was. */
+#endif
 		ereturn (MTC_NOARG);	/* Propagate exception */
 	}
 
@@ -4429,7 +4463,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 	attribute_detail *attributes = conv->attributes;
 	uint32 num_attrib = conv->attribute_count;
 	uint32 new_type = conv->new_type;
-	uint32 new_num_attrib = System (new_type).cn_nbattr;
+	uint32 new_num_attrib;
 	int mismatched = object != NULL && conv->mismatched;
 	int i;
 
@@ -4447,6 +4481,14 @@ rt_private EIF_REFERENCE object_rread_attributes (
 	if (expanded_offset > 0)
 		print_object_summary ("      ", object, expanded_offset, old_flags);
 #endif
+
+	if (conv->new_type >= 0) {
+		new_num_attrib = System (new_type).cn_nbattr;
+	} else {
+			/* Old type is not found in current system, so it is
+			 * as if there were no attributes. */
+		new_num_attrib = 0;
+	}
 
 	RT_GC_PROTECT(object);
 	if (mismatched) {

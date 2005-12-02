@@ -150,7 +150,7 @@ feature -- Set
 				state.zone.on_focus_in (Current)
 				internal_shared.set_last_focus_zone (state.zone)
 			end
-			if internal_focus_in_actions /= Void then
+			if internal_focus_in_actions /= Void and internal_shared.last_focus_zone /= state.zone then
 				internal_focus_in_actions.call ([])
 			end
 		end

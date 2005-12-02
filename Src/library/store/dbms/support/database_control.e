@@ -3,7 +3,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_CONTROL [G -> DATABASE create default_create end]
 
 inherit
@@ -37,7 +37,7 @@ feature -- Status setting and report
 		end
 
 	disconnect is
-			-- Disconnection from database 
+			-- Disconnection from database
 		require
 			connection_exists: is_connected
 		do
@@ -83,7 +83,7 @@ end -- class DATABASE_CONTROL
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

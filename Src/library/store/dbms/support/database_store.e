@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_STORE [reference G -> DATABASE create default_create end]
 
 inherit
@@ -26,11 +26,6 @@ inherit
 			start, next_index
 		end
 
-	HANDLE_SPEC [G]
-		undefine
-			is_equal, out, copy
-		end
-
 create -- Creation procedure
 
 	make
@@ -43,6 +38,7 @@ feature -- Initialization
 	make (size: INTEGER) is
 		do
 			create ht.make (1)
+			create ht_order.make (1)
 			create map_table.make (1, 10)
 			scan_make (size)
 		end
@@ -112,7 +108,7 @@ feature -- Basic operations
 			sql_string.append(quoter)
 			sql_string.append (repository.repository_name)
 			sql_string.append(quoter)
-			sql_string.append(db_spec.put_column_name(repository, map_table))
+			sql_string.append(db_spec.put_column_name(repository, map_table, object))
 			sql_string.append (" VALUES ( :XZ7Hj0sb5UU )")
 			set_map_name (object, "XZ7Hj0sb5UU")
 			tmp_string := parse (sql_string)
@@ -177,16 +173,24 @@ feature {NONE} -- Status setting
 			not_void_object: object /= Void
 			not_void_repository: repository /= Void
 		local
-			f, g, ind, idx: INTEGER
+			f, g, ind, idx, colind: INTEGER
 			searched_name: STRING
+			l_table: DB_TABLE
 		do
+			l_table ?= object
+			f := repository.dimension
+			g := field_count  (object)
+--			if l_table /= Void and then l_table.table_description.identity_column > 0 then
+--				colind := l_table.table_description.identity_column			
+--				f := f - 1
+--				g := g - 1
+--			end
+
 			if
-				previous_type = 0 or else 
+				previous_type = 0 or else
 				previous_type /= dynamic_type (object)
 			then
 				previous_type := dynamic_type (object)
-				f := repository.dimension
-				g := field_count  (object)
 				map_table.clear_all
 				if db_spec.dim_rep_diff (f, g) then
 					make_default_table (g)
@@ -199,23 +203,27 @@ feature {NONE} -- Status setting
 					until
 						ind > f
 					loop
-						searched_name := repository.column_name (ind)
-						searched_name.to_lower
-						from
-							idx := 1
-						until
-							idx > g or else 
-							field_name (idx, object).is_equal (searched_name)
-						loop
-							idx := idx + 1
-						end
-						if idx > g then
-							db_spec.update_map_table_error (handle, map_table, ind)
-							ind := f + 1
-						else
-							map_table.put (idx, ind)
-							ind := ind + 1
-						end
+--						if not (ind = colind) then	
+							searched_name := repository.column_name (ind)
+							searched_name.to_lower
+							from
+								idx := 1
+							until
+								idx > g or else
+								field_name (idx, object).is_equal (searched_name)
+							loop
+								idx := idx + 1
+							end
+							if idx > g then
+								db_spec.update_map_table_error (handle, map_table, ind)
+								ind := f + 1
+							else
+								map_table.put (idx, ind)
+								ind := ind + 1
+							end
+--						else
+--							ind := ind + 1
+--						end
 					end
 				end
 			end
@@ -261,7 +269,7 @@ end -- class DATABASE_STORE
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

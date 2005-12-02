@@ -131,16 +131,20 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	last_focus_zone: SD_ZONE is
+	last_focus_content: SD_CONTENT is
 			-- Last focused zone.
 		do
-			Result := last_focus_zone_cell.item
+			Result := last_focus_content_cell.item
 		end
 
-	set_last_focus_zone (a_zone: SD_ZONE) is
-			--
+	set_last_focus_content (a_content: SD_CONTENT) is
+			-- Set `last_focus_content'.
+		require
+			a_content_not_void: a_content /= Void
 		do
-			last_focus_zone_cell.put (a_zone)
+			last_focus_content_cell.put (a_content)
+		ensure
+			set: last_focus_content_cell.item = a_content
 		end
 
 feature -- Contract Support
@@ -218,7 +222,7 @@ feature {NONE} -- Implementation
 	internal_icons: SD_ICONS_SINGLETON
 			-- Icons.
 
-	last_focus_zone_cell: CELL [SD_ZONE] is
+	last_focus_content_cell: CELL [SD_CONTENT] is
 			-- `last_focus_zone_cell' singleton cell.
 		once
 			create Result

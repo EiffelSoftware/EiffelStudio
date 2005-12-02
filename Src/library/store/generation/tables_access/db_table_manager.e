@@ -548,11 +548,14 @@ feature {NONE} -- Update implementation
 			code: INTEGER
 			parameter_list: ARRAYED_LIST [STRING]
 			attribute_list: ARRAYED_LIST [STRING]
+			l_has_id,
+			l_do_append: BOOLEAN
 		do
 			code := td.Table_code
 			Result := "update " + tables.name_list.i_th (code) + " set "
 			parameter_list := update_parameters (code)
 			attribute_list := td.description_list
+			l_has_id := td.id_code /= td.no_id
 			check
 				count_matches: parameter_list.count = attribute_list.count
 			end
@@ -562,10 +565,14 @@ feature {NONE} -- Update implementation
 			until
 				parameter_list.after
 			loop
-				Result.append (attribute_list.item + " = :" + parameter_list.item)
+					-- Do not insert the table primary key into the insert statement, this produces and sql error
+				l_do_append := l_has_id and then parameter_list.index /= td.id_code
+				if l_do_append then			
+					Result.append (attribute_list.item + " = :" + parameter_list.item)					
+				end
 				parameter_list.forth
 				attribute_list.forth
-				if not parameter_list.after then
+				if l_do_append and then not parameter_list.after then
 					Result.append (Values_separator)
 				end
 			end
@@ -611,7 +618,7 @@ feature {NONE} -- Creation implementation
 					error_message.append (No_repository)
 				end
 			else
-				database_manager.insert_with_repository (an_obj, rep)
+				database_manager.insert_with_repository (an_obj, rep)				
 				if database_manager.has_error then
 					has_error := True
 					error_message := Creation_failed + database_manager.error_message

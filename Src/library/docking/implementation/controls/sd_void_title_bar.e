@@ -12,7 +12,6 @@ inherit
 			make as make_title_bar
 		redefine
 			set_title,
---			set_stick,
 			enable_focus_color,
 			disable_focus_color,
 			set_show_normal_max,
@@ -38,11 +37,6 @@ feature -- Redefine
 			-- Do nothing.
 		do
 		end
-
---	set_stick (a_bool: BOOLEAN) is
---			-- Do nothing.
---		do
---		end
 
 	enable_focus_color is
 			-- Do nothing.

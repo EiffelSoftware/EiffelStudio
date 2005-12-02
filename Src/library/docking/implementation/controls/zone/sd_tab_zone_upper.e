@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 
 feature {NONE}
 
-	notebook: SD_NOTEBOOK
+	notebook: SD_NOTEBOOK_DECORATOR
 			-- Notebook which tabs at top.
 
 invariant

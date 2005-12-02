@@ -108,7 +108,29 @@ feature -- Access
 		do
 			Result := allow_window_to_back_cell.item
 		end
-
+	
+	non_focused_color: EV_COLOR is
+			-- Non focuse color. Used by SD_TITLE_BAR...
+		local
+			l_grid: EV_GRID
+		once
+			create l_grid
+			Result := l_grid.non_focused_selection_color
+		ensure
+			not_void: Result /= Void
+		end
+	
+	focused_color: EV_COLOR is
+			-- focuse color. Used by SD_TITLE_BAR... 
+		local
+			l_grid: EV_GRID
+		once
+			create l_grid
+			Result := l_grid.focused_selection_color
+		ensure
+			not_void: Result /= Void
+		end	
+	
 feature -- Contract Support
 
 	docking_manager_set: BOOLEAN is
@@ -172,6 +194,9 @@ feature -- Constants
 
 	Auto_hide_delay: INTEGER is 2000
 			-- When SD_AUTO_HIDE_ZONE show but no focused, time to hide SD_AUTO_HIDE_ZONE.
+	
+	Focuse_border_width: INTEGER is 2
+			-- Border width of a zone. This is width show focus color surround a zone.
 
 feature {NONE} -- Implementation
 

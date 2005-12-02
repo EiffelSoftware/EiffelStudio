@@ -64,6 +64,7 @@ feature {NONE} -- Initlization
 			create internal_inner_container.make
 			internal_vertical_box.extend (internal_inner_container)
 			internal_inner_container.set_parent_floating_zone (Current)
+			accelerators.append (internal_shared.docking_manager.golbal_accelerators)
 		end
 
 feature {SD_CONFIG_MEDIATOR} -- Save config

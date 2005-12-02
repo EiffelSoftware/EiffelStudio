@@ -45,7 +45,7 @@ feature -- Save/Open inner container data.
 
 			create l_writer.make (l_file)
 			create l_facility
-			l_facility.basic_store (l_config_data, l_writer, True)
+			l_facility.independent_store (l_config_data, l_writer, True)
 			l_file.close
 		end
 

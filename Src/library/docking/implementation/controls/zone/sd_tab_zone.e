@@ -91,6 +91,8 @@ feature {NONE} -- Initlization
 			internal_notebook.pointer_button_release_actions.extend (agent on_notebook_pointer_release)
 			internal_notebook.pointer_motion_actions.extend (agent on_notebook_pointer_motion)
 			internal_notebook.pointer_enter_actions.extend (agent on_notebook_pointer_enter)
+
+			internal_notebook.drop_actions.extend (agent on_notebook_drop)
 		end
 
 feature -- Query
@@ -355,6 +357,12 @@ feature {NONE} -- Agents for docker
 			end
 		ensure
 			pointer_motion_forwarded: internal_docker_mediator /= Void implies internal_docker_mediator.screen_x = a_screen_x and internal_docker_mediator.screen_y = a_screen_y
+		end
+
+	on_notebook_drop (a_any: ANY) is
+			-- Handle pointer drop.
+		do
+
 		end
 
 feature {NONE} -- Implementation

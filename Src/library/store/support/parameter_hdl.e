@@ -32,6 +32,7 @@ feature
 			end
 --			set_parameter (n, key)
 			ht.put (n, key)
+			ht_order.extend (key)
 		end
 
 	unset_map_name (key: STRING) is
@@ -43,6 +44,7 @@ feature
 			end
 --			set_parameter (Void, key)
 			ht.remove (key)
+			ht_order.prune (key)
 		end
 
 	clear_all is

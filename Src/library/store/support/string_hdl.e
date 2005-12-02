@@ -16,6 +16,7 @@ feature -- Status setting
 			ht_not_void: ht /= Void
 		do
 			ht.clear_all
+			ht_order.wipe_out
 		end
 
 	set_map_name (n: ANY; key: STRING) is
@@ -27,6 +28,7 @@ feature -- Status setting
 			not_key_in_table: not is_mapped (key)
 		do
 			ht.put (n, key)
+			ht_order.extend (key)
 		ensure
 			ht.count = old ht.count + 1
 		end
@@ -39,6 +41,7 @@ feature -- Status setting
 			item_exists: is_mapped (key)
 		do
 			ht.remove(key)
+			ht_order.prune (key)
 		ensure
 			ht.count = old ht.count - 1
 		end
@@ -71,6 +74,9 @@ feature -- Status report
 	ht: HASH_TABLE [ANY, STRING]
 		-- Correspondence table between object references
 		-- and mapped keys
+
+	ht_order: ARRAYED_LIST [STRING]
+		-- Keys of `ht' in order of mapping
 
 end -- class STRING_HDL
 

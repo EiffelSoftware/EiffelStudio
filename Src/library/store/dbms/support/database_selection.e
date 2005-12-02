@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DATABASE_SELECTION [G -> DATABASE create default_create end]
 
 inherit
@@ -20,14 +20,9 @@ inherit
 	DB_EXEC_USE
 		undefine
 			is_equal, out, copy
-		end 
+		end
 
 	SQL_SCAN
-
-	HANDLE_SPEC [G]
-		undefine
-			is_equal, out, copy
-		end
 
 create -- Creation procedure
 
@@ -56,7 +51,7 @@ feature -- Basic operations
 		do
 			descriptor := db_spec.new_descriptor
 			if not db_spec.normal_parse then
-				parsed := db_spec.parse (descriptor, ht, handle, s)	
+				parsed := db_spec.parse (descriptor, ht, ht_order, handle, s)
 			end
 			if not parsed then
 				parsed_s := parse (s)
@@ -72,7 +67,7 @@ feature -- Basic operations
 			next
 		end
 
-	next is			
+	next is
 			-- Move to next row matching execute clause.
 
 		require else
@@ -167,7 +162,7 @@ end -- class DATABASE_SELECTION
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

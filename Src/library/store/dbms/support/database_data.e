@@ -148,25 +148,25 @@ feature -- Element change
 
 				f_any := value.item (ind)
 
-				-- STRING type: Void value is coded by empty string.
-				if value_type.item (ind) = String_type_database then
-					database_string.get_value (no_descriptor, ind)
-					if value_size.item (ind) = value_max_size.item (ind) then
-						database_string.right_adjust
-					end
-					f_string ?= f_any
-					if f_string = Void then
-						create f_string.make (1)
+				if not db_spec.is_null_data (no_descriptor, ind) then
+					
+					-- STRING TYPE
+					if value_type.item (ind) = String_type_database then
+						database_string.get_value (no_descriptor, ind)
+						if value_size.item (ind) = value_max_size.item (ind) then
+							database_string.right_adjust
+						end
+						f_string ?= f_any
+						if f_string = Void then
+							create f_string.make_empty
+						else
+							f_string.wipe_out
+						end
+						f_string.append (database_string)
 						value.put (f_string, ind)
-					else
-						f_string.wipe_out
-					end
-					f_string.append (database_string)
-
-				elseif not db_spec.is_null_data (no_descriptor, ind) then
 
 					-- INTEGER type
-					if value_type.item (ind) = Integer_type_database then		
+					elseif value_type.item (ind) = Integer_type_database then		
 						if f_any = Void then
 							create f_integer
 							value.put (f_integer, ind)

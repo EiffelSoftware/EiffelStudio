@@ -16,7 +16,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	SD_NOTEBOOK
+	SD_NOTEBOOK_DECORATOR
 
 inherit
 	EV_FIXED
@@ -119,7 +119,7 @@ feature {NONE} -- Agents
 feature {NONE} -- Implementation
 
 	notebook: EV_NOTEBOOK
-			-- EV_NOTEBOOK.
+			-- NOTEBOOK.
 
 	close_button_bar: EV_TOOL_BAR
 			-- Close button bar hold `close_button'.

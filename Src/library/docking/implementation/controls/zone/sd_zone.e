@@ -35,7 +35,6 @@ feature -- Command
 		do
 			internal_shared.docking_manager.lock_update
 			main_area := internal_shared.docking_manager.inner_container (Current)
-
 			if not is_maximized then
 				main_area_widget := main_area.item
 				internal_parent := parent
@@ -174,7 +173,6 @@ feature {SD_DOCKING_MANAGER, SD_CONTENT}  -- Focus in
 			if not internal_shared.docking_manager.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.set_title_focus (True)
 			end
-			content.focus_in_actions.call ([])
 		end
 
 feature {SD_TAB_STATE} -- Maximum issues.

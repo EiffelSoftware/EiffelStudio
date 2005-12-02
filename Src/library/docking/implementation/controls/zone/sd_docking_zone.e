@@ -98,7 +98,7 @@ feature {SD_CONTENT}
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
 			internal_shared.docking_manager.remove_auto_hide_zones
-			window.title_bar.enable_focus_color
+			window.set_focus_color (True)
 		end
 
 feature -- Command
@@ -226,7 +226,7 @@ feature {NONE} -- Implementation
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
-			window.title_bar.disable_focus_color
+			window.set_focus_color (False)
 		end
 
 invariant

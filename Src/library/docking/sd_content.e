@@ -149,6 +149,9 @@ feature -- Set
 			if state.zone /= Void then
 				state.zone.on_focus_in (Current)
 			end
+			if internal_focus_in_actions /= Void then
+				internal_focus_in_actions.call ([])
+			end
 		end
 
 feature -- Set Position

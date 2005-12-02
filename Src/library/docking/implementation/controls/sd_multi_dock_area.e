@@ -23,12 +23,20 @@ feature -- Command
 
 	update_title_bar is
 			-- If `Current' parent is a SD_FLOATING_ZONE, update title bar.
+		local
+			l_zone_title: SD_TITLE_BAR_REMOVEABLE
+			l_zone: SD_ZONE
 		do
 			if parent_floating_zone /= Void then
 				parent_floating_zone.update_title_bar
 			end
 			if readable then
 				set_all_title_bar (item)
+				l_zone_title ?= item
+				l_zone ?= item
+				if l_zone_title /= Void and not l_zone.is_maximized then
+					l_zone_title.set_show_min_max (False)
+				end
 			end
 		end
 

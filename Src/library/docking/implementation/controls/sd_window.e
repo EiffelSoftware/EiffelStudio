@@ -34,7 +34,6 @@ feature {NONE} -- Initlization
 			internal_title_bar.normal_max_actions.extend (agent on_normal_max_window)
 			internal_title_bar.drag_actions.extend (agent drag_window)
 			internal_title_bar.pointer_button_release_actions.extend (agent pointer_release)
---			internal_title_bar.pointer_double_press_actions.extend (agent on_pointer_double_press)
 			pointer_button_release_actions.extend (agent pointer_release)
 			pointer_motion_actions.extend (agent pointer_motion)
 
@@ -42,7 +41,6 @@ feature {NONE} -- Initlization
 			internal_vertical_box.disable_item_expand (internal_title_bar)
 
 			extend (internal_vertical_box)
-
 			set_minimum_size (internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
 		ensure
 			extended: has (internal_vertical_box)
@@ -121,7 +119,17 @@ feature -- Basic operation
 		ensure
 			set: a_show = internal_title_bar.is_show_stick
 		end
-
+	
+	set_focus_color (a_focus: BOOLEAN) is
+			-- Set focus color of title bar and surround focus color.
+		do
+			if a_focus then
+				title_bar.enable_focus_color
+			else
+				title_bar.disable_focus_color
+			end
+		end
+		
 feature -- Actions
 
 	close_request_actions: like internal_close_request_actions is

@@ -20,20 +20,16 @@ feature {NONE} -- Initlization
 	make is
 			-- Creation method.
 		local
---			temp_cell: EV_CELL
 			frame: EV_FRAME
 			main_box, vertical_box: EV_VERTICAL_BOX
 			minimum_size_cell: EV_CELL
---			l_label: EV_LABEL
 			l_zero_size_container: EV_HORIZONTAL_BOX
-			l_grid: EV_GRID
 		do
 			create internal_shared
 			default_create
-
-			create l_grid
-			hightlight_color := l_grid.focused_selection_color
-			hightlight_gray_color := l_grid.non_focused_selection_color
+			
+			hightlight_color := internal_shared.focused_color
+			hightlight_gray_color := internal_shared.non_focused_color
 
 			create main_box
 			extend (main_box)
@@ -240,7 +236,6 @@ feature -- Access
 
 			internal_title.set_background_color (hightlight_color)
 			on_expose
-
 			if hightlight_color.lightness > 0.5 then
 				create l_text_color.make_with_rgb (0, 0, 0)
 			else

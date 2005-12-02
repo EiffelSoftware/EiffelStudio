@@ -60,7 +60,7 @@ feature {NONE}-- Initlization
 feature {SD_TAB_STATE} -- Initlization
 
 	set_widget_main_area (a_widget: EV_WIDGET; a_main_area: SD_MULTI_DOCK_AREA; a_parent: EV_CONTAINER; a_split_position: INTEGER) is
-			-- Set widget and main area which used for normal window.
+			-- Set widget and main area which used by normal window.
 		require
 			a_widget_not_void: a_widget /= Void
 			a_main_area_not_void: a_main_area /= Void

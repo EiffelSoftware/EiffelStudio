@@ -37,6 +37,11 @@ inherit
 			is_equal, copy, out
 		end
 
+	HANDLE_SPEC [DATABASE]
+		undefine
+			is_equal, copy, out
+		end
+
 create -- Creation procedure
 	make
 
@@ -55,7 +60,7 @@ feature -- Initialization
 feature -- Basic operations
 
 	parse (s: STRING): STRING is
-			-- Parse string `s' by replacing each pattern ":<name>" 
+			-- Parse string `s' by replacing each pattern ":<name>"
 			-- with the Eiffel object description whose name
 			-- also matches "<name>".
 		do
@@ -82,27 +87,30 @@ feature -- Basic operations
 			r_bool: BOOLEAN_REF
 			r_double: DOUBLE_REF
 		do
-			if is_void (obj) then
-				str.append (Null_string)
-			else
+				-- TO DO: Arbitrarily inserting NULL for void or uninitialized objects is not a good idea
+				-- since columns may require non-NULL values and the insert will crash.  Need to check column
+				-- for nullability before attempting to do this.
+--			if is_void (obj) then
+--				str.append (Null_string)
+--			else
 				if is_integer (obj) then
 					r_int ?= obj
 					if r_int.item = numeric_null_value.truncated_to_integer then
-						str.append (Null_string)
+						str.append ("0")
 					else
 						str.append (r_int.out)
 					end
 				elseif is_double (obj) then
 					r_double ?= obj
 					if r_double.item = numeric_null_value then
-						str.append (Null_string)
+						str.append ("0.0")
 					else
 						str.append (r_double.out)
 					end
 				elseif is_real (obj) then
 					r_real ?= obj
 					if r_real.item = numeric_null_value.truncated_to_real then
-						str.append (Null_string)
+						str.append ("0.0")
 					else
 						str.append (r_real.out)
 					end
@@ -117,7 +125,7 @@ feature -- Basic operations
 						buffer.copy (r_string)
 						str.append (string_format (buffer))
 					else
-						str.append (Null_string)
+						str.append ("''")
 					end
 				elseif is_boolean (obj) then
 					r_bool ?= obj
@@ -128,7 +136,7 @@ feature -- Basic operations
 				else
 					get_complex_value (obj, str)
 				end
-			end
+--			end
 		end
 
 	get_complex_value (obj: ANY; str: STRING) is
@@ -145,7 +153,9 @@ feature -- Basic operations
 			r_character: CHARACTER
 			i_obj_field: ANY
 			ind: INTEGER
+			table: DB_TABLE
 		do
+			table ?= obj
 			from
 				start (obj)
 				ind := 1
@@ -153,29 +163,33 @@ feature -- Basic operations
 				ind > max_index
 			loop
 				i := next_index (ind)
-				i_obj_type := field_type (i, obj) 
-				if i_obj_type = Integer_type then
-					r_int := integer_field (i, obj)
-					get_value (r_int, str)
-				elseif i_obj_type = Real_type then
-					r_real := real_field (i, obj)
-					get_value (r_real, str)
-				elseif i_obj_type = Character_type then
-					r_character := character_field (i, obj)
-					get_value (r_character, str)
-				elseif i_obj_type = Boolean_type then
-					r_bool := boolean_field (i, obj)
-					get_value (r_bool, str)
-				elseif i_obj_type = Double_type then
-					r_double := double_field (i, obj)
-					get_value (r_double, str)
+				if not db_spec.insert_auto_identity_column and then table /= Void and then not (table.table_description.identity_column = i) then
+					i_obj_type := field_type (i, obj)
+					if i_obj_type = Integer_type then
+						r_int := integer_field (i, obj)
+						get_value (r_int, str)
+					elseif i_obj_type = Real_type then
+						r_real := real_field (i, obj)
+						get_value (r_real, str)
+					elseif i_obj_type = Character_type then
+						r_character := character_field (i, obj)
+						get_value (r_character, str)
+					elseif i_obj_type = Boolean_type then
+						r_bool := boolean_field (i, obj)
+						get_value (r_bool, str)
+					elseif i_obj_type = Double_type then
+						r_double := double_field (i, obj)
+						get_value (r_double, str)
+					else
+						i_obj_field := field (i, obj)
+						get_value (i_obj_field, str)
+					end
+					ind := ind + 1
+					if ind <= max_index then
+						str.extend (',')
+					end
 				else
-					i_obj_field := field (i, obj)
-					get_value (i_obj_field, str)
-				end
-				ind := ind + 1
-				if ind <= max_index then
-					str.extend (',')
+					ind := ind + 1
 				end
 			end
 		end
@@ -210,8 +224,7 @@ feature -- Basic operations
 						old_index := index
 						index := index + 1
 						go_after_identifier
-						replacement_string (substring (old_index + 1, 
-							index - 1), l_new_string)
+						replacement_string (substring (old_index + 1, index - 1), l_new_string)
 						old_index := index
 					elseif index < count then
 						index := index_of (c, index + 1)
@@ -220,7 +233,7 @@ feature -- Basic operations
 					else
 						index := index + 1
 					end
-				end	
+				end
 			end
 			if l_new_string /= Void then
 				if old_index <= count then
@@ -231,19 +244,6 @@ feature -- Basic operations
 			end
 		end
 
-	append_substring (s: STRING; n1, n2: INTEGER) is
-			-- Append substring `s.substring (n1, n2)' to `Current'.
-		obsolete
-			"Use append (s.substring (n1, n2)) instead"
-		require
-			string_exists: s /= Void
-			meaningful_origin: 1 <= n1
-			meaningful_interval: n1 <= n2
-			meaningful_end: n2 <= s.count
-		do
-			append (s.substring (n1, n2))
-		end
-
 feature {NONE} -- Status report
 
 	max_index: INTEGER
@@ -251,7 +251,7 @@ feature {NONE} -- Status report
 
 	index: INTEGER
 			-- Internal counter
-	
+
 	Null_string: STRING is "NULL"
 			-- SQL null value constant
 
@@ -279,7 +279,7 @@ feature {NONE} -- Status setting
 			max_index := field_count (obj)
 -- FIXME: Jacques, comments removed according to matisse library			
 		ensure
--- Davids: You don't need to force the user to map exactly the same number of Attributes in the 
+-- Davids: You don't need to force the user to map exactly the same number of Attributes in the
 --			Table and in the corresponding class
 --			max_index = field_count (obj)
 --			
@@ -309,12 +309,12 @@ feature {NONE} -- Status setting
 			end
 			index := i
 		ensure
-			index > count or 
+			index > count or
 			else item (index) = ':' or
 			else item (index) = '%'' or
 			else item (index) = '"'
 		end
-		
+
 	go_after_identifier is
 			-- Move cursor to next character not allowed in identifier
 		local
@@ -325,7 +325,7 @@ feature {NONE} -- Status setting
 				i := index
 				l_count := count
 				inspect item (i)
-				when 'A'..'Z', 'a'..'z', '0'..'9', '_' then 
+				when 'A'..'Z', 'a'..'z', '0'..'9', '_' then
 				else
 					found := True
 				end
@@ -337,7 +337,7 @@ feature {NONE} -- Status setting
 					found := True
 				else
 					inspect item (i)
-						when 'A'..'Z', 'a'..'z', '0'..'9', '_' then 
+						when 'A'..'Z', 'a'..'z', '0'..'9', '_' then
 						else
 							found := True
 						end
@@ -345,7 +345,7 @@ feature {NONE} -- Status setting
 			end
 			index := i
 		end
-		
+
 	replacement_string (key, destination: STRING) is
 			-- Replace object associated with `key' in `destination'.
 		require
@@ -370,7 +370,7 @@ end -- class SQL_SCAN
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

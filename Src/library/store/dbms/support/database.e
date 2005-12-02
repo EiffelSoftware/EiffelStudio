@@ -32,14 +32,19 @@ feature -- For DATABASE_STATUS
 		deferred
 		end
 
-feature -- For DATABASE_CHANGE 
+	insert_auto_identity_column: BOOLEAN is
+			-- For INSERTs and UPDATEs should table auto-increment identity columns be explicitly included in the statement?
+		deferred
+		end
+
+feature -- For DATABASE_CHANGE
 
 	descriptor_is_available: BOOLEAN is
 			-- Is a new descritor available?
 		deferred
 		end
 
-	results_order (no_descriptor: INTEGER): INTEGER is 
+	results_order (no_descriptor: INTEGER): INTEGER is
 			-- Fetch all the rows resulting from the sql query
 			-- Default value zero
 			-- Only for Sybase
@@ -63,13 +68,13 @@ feature -- For DATABASE_CHANGE
 		end
 
 feature -- For DATABASE_FORMAT
-	
+
 	date_to_str (object: DATE_TIME): STRING is
 			-- String representation in SQL of `object'
 			-- For ODBC, ORACLE
 		deferred
 		end
-	
+
 	string_format (object: STRING): STRING is
 			-- String representation in SQL of `object'
 		deferred
@@ -93,7 +98,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		deferred
 		end
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
+	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
 			-- Prepare string `sql' by appending map
 			-- variables name from to `sql'. Map variables are used
 			-- for set input arguments
@@ -108,17 +113,9 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 		do
 		end
 
-	bind_parameter (value: ARRAY [ANY]; parameters: ARRAY [ANY]; descriptor: INTEGER; sql: STRING) is
-			-- Bind the parameters from the `parameters' array with
-			-- the values from the `value' array. It has been implemented
-			-- for the use of dynamic sql
-			-- Only	for ODBC and Oracle, it has to be done for Sybase and Ingres
-		do
-		end
-
 feature -- For DATABASE_STORE
 
-	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]): STRING is
+	put_column_name (repository: DATABASE_REPOSITORY [like Current]; map_table: ARRAY [INTEGER]; obj: ANY): STRING is
 			-- Add the columns names to sql_string in the feature put
 			-- Redefined for ODBC
 		do
@@ -133,7 +130,7 @@ feature -- For DATABASE_STORE
 		do
 		end
 
-	update_map_table_error (db_handle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is 
+	update_map_table_error (db_handle: HANDLE; map_table: ARRAY [INTEGER]; ind: INTEGER) is
 			-- Set error number as 200
 			-- Except for ODBC and for Oracle
 		do
@@ -193,7 +190,7 @@ feature -- LOGIN and DATABASE_APPL only for password_ok
 
 	user_name_ok (uname: STRING): BOOLEAN is
 			-- Can the user name be Void?
-			-- Yes only for ODBC 
+			-- Yes only for ODBC
 		do
 			Result := uname /= Void
 		end
@@ -218,7 +215,7 @@ feature -- For DATABASE_PROC
 			Result := 1
 		end
 
-	has_row_number: BOOLEAN is 
+	has_row_number: BOOLEAN is
 			-- May the database store the text of a stored procedure in more than one
 			-- row?
 			-- Default value False
@@ -236,7 +233,7 @@ feature -- For DATABASE_PROC
 		deferred
 		end
 
-	sql_adapt_db (sql: STRING): STRING is 
+	sql_adapt_db (sql: STRING): STRING is
 			-- Adapt the SQL string for the database
 			-- Only for Sybase and ODBC
 		do
@@ -293,7 +290,7 @@ feature -- For DATABASE_PROC
 			-- Equal type
 			-- Only for Ingres
 		do
-			Result := " " 
+			Result := " "
 		end
 
 	map_var_after: STRING is
@@ -302,7 +299,12 @@ feature -- For DATABASE_PROC
 			Result := ")"
 		end
 
-	Select_text: STRING is
+	map_var_name (par_name: STRING): STRING is
+			-- Redefined for Sybase
+		deferred
+		end
+
+	Select_text (proc_name: STRING): STRING is
 			-- SQL query to get stored procedure text
 		deferred
 		end
@@ -326,14 +328,14 @@ feature -- For DATABASE_PROC
 		do
 		end
 
-	text_not_supported: STRING is	
+	text_not_supported: STRING is
 			-- Display the text saying that the database
 			-- does not support stored procedure text retrieving
 			-- Redefined for ODBC
 		do
 		end
 
-	exec_proc_not_supported is	
+	exec_proc_not_supported is
 			-- Display the text saying that the database
 			-- does not support stored procedure executing
 			-- Redefined for ODBC
@@ -362,7 +364,7 @@ feature -- For DATABASE_REPOSITORY
 		do
 			Result := 256
 		end
-	
+
 	sql_string: STRING is
 			-- Database type of a string
 			-- with a size less than Max_char_size
@@ -419,7 +421,7 @@ feature -- External features
 	new_descriptor: INTEGER is
 			-- A descriptor is used to store a row fetched by FETCH command
 			-- Whenever perform a SELECT statement, allocate a new descriptor
-			-- by int_new_descriptor(), the descriptor is freed 
+			-- by int_new_descriptor(), the descriptor is freed
 			-- when the SELECT statement terminates.
 		deferred
 		end
@@ -427,19 +429,19 @@ feature -- External features
 	init_order (no_descriptor: INTEGER; command: STRING) is
 			-- In DYNAMICALLY EXECUTE mode perform the SQL statement
 			-- But this routine only get things ready for dynamic execution:
-			-- 1. get the SQL statement PREPAREd; and check if there are 
-			-- warning message for the SQL statement;                 
-			-- 2. DESCRIBE the SQL statement and get enough information to 
-			-- allocate enough memory space for the corresponding descriptor.                                                
+			-- 1. get the SQL statement PREPAREd; and check if there are
+			-- warning message for the SQL statement;
+			-- 2. DESCRIBE the SQL statement and get enough information to
+			-- allocate enough memory space for the corresponding descriptor.
 		deferred
 		end
 
 	start_order (no_descriptor: INTEGER) is
 			-- Finish execution of a SQL statement in DYNAMICLLY EXECUTION mode:                                                         */
-			-- 1. if the PREPAREd SQL statement is a NON_SELECT statement, 
-			-- just EXECUTE it; otherwise, DEFINE a CURSOR for it and 
+			-- 1. if the PREPAREd SQL statement is a NON_SELECT statement,
+			-- just EXECUTE it; otherwise, DEFINE a CURSOR for it and
 			-- OPEN the CURSOR. In the process, if error occurs, do some
-			-- clearence;                                              
+			-- clearence;
 		deferred
 		end
 
@@ -452,26 +454,26 @@ feature -- External features
 
 	terminate_order (no_descriptor: INTEGER) is
 			-- A SQL has been performed in DYNAMIC EXECUTION mode,
-			-- so the routine is to do some clearence:                             
-			-- 1. if the DYNAMICALLY EXECUTED SQL statement is a NON_SELECT 
-			-- statement, just free the memory for ODBCSQLDA and clear 
+			-- so the routine is to do some clearence:
+			-- 1. if the DYNAMICALLY EXECUTED SQL statement is a NON_SELECT
+			-- statement, just free the memory for ODBCSQLDA and clear
 			-- the cell in 'descriptor' to NULL; otherwise, CLOSE the CURSOR
-			-- and then do the same clearence.               
+			-- and then do the same clearence.
 			-- 2. return error number.
 		deferred
 		end
 
 	close_cursor (no_descriptor: INTEGER) is
 			-- A SQL has been performed in DYNAMIC EXECUTION mode,
-			-- Then if the DYNAMICALLY EXECUTED SQL statement is a SELECT 
+			-- Then if the DYNAMICALLY EXECUTED SQL statement is a SELECT
 			-- statement, then the cursor is closed.
 			-- Then one can do an other selection on the previous cursor.
 		deferred
 		end
 
 	exec_immediate (no_descriptor: INTEGER; command: STRING) is
-			-- In IMMEDIATE EXECUTE mode perform the SQL statement, 
-			-- and then check if there is warning message for the execution,    
+			-- In IMMEDIATE EXECUTE mode perform the SQL statement,
+			-- and then check if there is warning message for the execution,
 		deferred
 		end
 
@@ -485,7 +487,7 @@ feature -- External features
 		deferred
 		end
 
-	sensitive_mixed: BOOLEAN is 
+	sensitive_mixed: BOOLEAN is
 			-- Is the database sensitive to lower or
 			-- upper case?
 			-- Only for ODBC, Ingres
@@ -495,9 +497,9 @@ feature -- External features
 
 	identifier_quoter: STRING is
 			-- Return the string used to quote identifiers in SQL command,
-			-- for example, if the quoter is `, and we want to select on 
-			-- table "my table", we should express the query as:  
-			-- select * from `My table` 
+			-- for example, if the quoter is `, and we want to select on
+			-- table "my table", we should express the query as:
+			-- select * from `My table`
 			-- Only for ODBC
 		do
 			Result := ""
@@ -514,7 +516,7 @@ feature -- External features
 
 	conv_type (indicator: INTEGER; index: INTEGER): INTEGER is
 			-- Function used to get data from structure SQLDA filled  by FETCH clause.
-		deferred	
+		deferred
 		end
 
 	get_count (no_descriptor: INTEGER): INTEGER is
@@ -558,7 +560,7 @@ feature -- External features
 		end
 
 	is_null_data (no_descriptor: INTEGER; ind: INTEGER): BOOLEAN is
-			-- Is last retrieved data null? 
+			-- Is last retrieved data null?
 		deferred
 		end
 
@@ -633,7 +635,7 @@ feature -- External features
 		end
 
 	database_make (i: INTEGER) is
-			-- Initialize database c-module 
+			-- Initialize database c-module
 		deferred
 		end
 
@@ -674,7 +676,7 @@ end -- class DATABASE
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

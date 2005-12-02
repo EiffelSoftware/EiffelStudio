@@ -5,13 +5,13 @@ indexing
 	Revision: "$Revision$"
 	Product: EiffelStore
 	Database: ODBC
-				
+
 class
 
 	DB_PARA_ODBC
 
 create
-	
+
 	make
 
 feature -- Initialization
@@ -28,46 +28,43 @@ feature -- Status Setting
 		require
 			array_exist: ptr /= Void
 		do
-			ptr.conservative_resize(1, size)
+			ptr.conservative_resize (1, size)
 			count := size
-		end	
+		end
 
-	set (val: POINTER; pos: INTEGER) is
+	set (val: MANAGED_POINTER; pos: INTEGER) is
 		do
 			ptr.put(val, pos)
 		end
 
 	get (pos: INTEGER): POINTER is
 		do
-			Result := ptr @ pos
+			Result := (ptr @ pos).item
 		end
 
 	release is
-		local 
+		local
 			i: INTEGER
 		do
-			from 	
+			from
 				i := 1
-			until 
+			until
 				i > count
 			loop
-				if ptr.item(i)  /= default_pointer then
-					odbc_c_free (ptr @ i)
-				end
-				ptr.put (default_pointer, i)
+				ptr.put (Void, i)
 				i := i + 1
-			end		
+			end
 			count := 0
 		end
 
 
 feature  -- Status
-	
-	count: INTEGER
-	
-	ptr: ARRAY[POINTER]
 
-	
+	count: INTEGER
+
+	ptr: ARRAY[MANAGED_POINTER]
+
+
 feature { NONE} -- External Features
 
 	odbc_c_free (p: POINTER) is
@@ -85,7 +82,7 @@ end -- class DB_PARA_ODBC
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

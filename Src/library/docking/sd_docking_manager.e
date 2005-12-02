@@ -551,14 +551,14 @@ feature {NONE}  -- Agents
 				l_zones.after
 			loop
 				if l_zones.item.has_recursive (a_widget) then
-					if internal_shared.last_focus_zone /= l_zones.item then
-						internal_shared.set_last_focus_zone (l_zones.item)
+					if internal_shared.last_focus_content /= l_zones.item.content then
+						internal_shared.set_last_focus_content (l_zones.item.content)
 						l_zones.item.on_focus_in (Void)
 						if l_zones.item.content.focus_in_actions /= Void then
 							l_zones.item.content.focus_in_actions.call ([])
 						end
 					else
-						l_auto_hide_zone ?= internal_shared.last_focus_zone
+						l_auto_hide_zone ?= internal_shared.last_focus_content
 						if l_auto_hide_zone = Void then
 							remove_auto_hide_zones
 						end

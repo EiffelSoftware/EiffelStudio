@@ -541,14 +541,14 @@ feature -- Pick and Drop
 			a_tuple: TUPLE [EV_GRID_ITEM, ANY]
 			a_action: like item_drop_actions
 		do
-			if item_drop_actions_internal /= Void then
+			if a_item /= Void and then item_drop_actions_internal /= Void then
 				from
 					a_action := item_drop_actions_internal
 					cur := a_action.cursor
 					a_tuple := [a_item, a_pebble]
 					a_action.start
 				until
-					a_action.after or Result
+					Result or else a_action.after
 				loop
 					Result := a_action.item.valid_operands (a_tuple)
 					if
@@ -556,7 +556,7 @@ feature -- Pick and Drop
 						item_veto_pebble_function /= Void and then
 						item_veto_pebble_function.valid_operands (a_tuple)
 					then
-						Result := Result and then item_veto_pebble_function.item (a_tuple)
+						Result := item_veto_pebble_function.item (a_tuple)
 					end
 					a_action.forth
 				end
@@ -663,7 +663,7 @@ feature -- Pick and Drop
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
 		do
-				-- Call Precursor so that post-condiition passes even though the cursor itself is never used.
+				-- Call Precursor so that post-condition passes even though the cursor itself is never used.
 			Precursor {EV_CELL_I} (a_cursor)
 				-- Set actual cursor on the drawable as this is the widget used for PND.
 			drawable.set_accept_cursor (a_cursor)
@@ -673,7 +673,7 @@ feature -- Pick and Drop
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that doesn't accept `pebble' during pick and drop.
 		do
-				-- Call Precursor so that post-condiition passes even though the cursor itself is never used.
+				-- Call Precursor so that post-condition passes even though the cursor itself is never used.
 			Precursor {EV_CELL_I} (a_cursor)
 				-- Set actual cursor on the drawable as this is the widget used for PND.
 			drawable.set_deny_cursor (a_cursor)

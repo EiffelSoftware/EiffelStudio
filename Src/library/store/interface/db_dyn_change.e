@@ -59,14 +59,6 @@ feature -- Element change
 			prepared_statement: is_prepared
 		end
 
-	bind_parameter is
-			-- Bind of the prarameters of the sql statement 
-		require
-			prepared_statement: is_prepared
-		do
-			implementation.bind_parameter
-		end
-
 	execute is
 			-- Execute the sql statement
 		require

@@ -743,26 +743,39 @@ rt_private void correct_object_mismatch (
 		EIF_REFERENCE object, EIF_REFERENCE values, type_table *conversions)
 {
 	EIF_GET_CONTEXT
-	EIF_BOOLEAN asserting;
-	EIF_BOOLEAN collecting;
+#ifdef ISE_GC
+	volatile EIF_BOOLEAN collecting = gc_ison ();
+	volatile EIF_BOOLEAN asserting = c_check_assert (EIF_FALSE);
+#endif
+	jmp_buf exenv;
 
 	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
 
 	RT_GC_PROTECT(object);
 	RT_GC_PROTECT(values);
-	set_mismatch_information (object, values, conversions);
-#ifdef RECOVERABLE_DEBUG
-	printf ("  calling correct_mismatch on %s [%p]\n", EIF_OBJECT_TYPE (object), object);
-#endif
-	asserting = c_check_assert (EIF_FALSE);
-	collecting = gc_ison ();
-	gc_stop ();
-	egc_correct_mismatch (object);
-	if (collecting)
-		gc_run ();
-	c_check_assert (asserting);
 
-	RT_GC_WEAN_N(2);
+	excatch(&exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+			/* Restore assertion and GC status, and wean protected variable. */
+		c_check_assert (asserting);
+		if (collecting) {
+			gc_run ();
+		}
+		RT_GC_WEAN_N(2);
+		ereturn ();
+	} else {
+		set_mismatch_information (object, values, conversions);
+#ifdef RECOVERABLE_DEBUG
+		printf ("  calling correct_mismatch on %s [%p]\n", EIF_OBJECT_TYPE (object), object);
+#endif
+		gc_stop ();
+		egc_correct_mismatch (object);
+		if (collecting)
+			gc_run ();
+		c_check_assert (asserting);
+		RT_GC_WEAN_N(2);
+		expop(&eif_stack);
+	}
 }
 
 rt_private void correct_one_mismatch (
@@ -771,81 +784,112 @@ rt_private void correct_one_mismatch (
 	EIF_GET_CONTEXT
 	uint32 flags = HEADER (object)->ov_flags;
 	EIF_INTEGER count = RT_SPECIAL_COUNT (values);
+	jmp_buf exenv;
+
+	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
 
 	RT_GC_PROTECT(object);
 	RT_GC_PROTECT(values);
 
+	excatch(&exenv);
+	if (setjmp(exenv)) {
+			/* Wean protected variable.*/
+		RT_GC_WEAN_N(2);
+		ereturn ();
+	} else {
 #ifdef RECOVERABLE_DEBUG
-	printf ("Correcting %s [%p]\n", EIF_OBJECT_TYPE (object),
-			object);
+		printf ("Correcting %s [%p]\n", EIF_OBJECT_TYPE (object),
+				object);
 #endif
-	REQUIRE ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
-	if (flags & EO_TUPLE) {
-		correct_object_mismatch (object, values, conversions);
-	} else if (flags & EO_SPEC) {
-		EIF_INTEGER i;
-		EIF_INTEGER ocount = RT_SPECIAL_COUNT (object);
-		EIF_INTEGER oelem_size = RT_SPECIAL_ELEM_SIZE (object);
-		CHECK ("Consistent length", ocount == count);
-		for (i=0; i<ocount; i++) {
-			EIF_REFERENCE ref = (EIF_REFERENCE) (
-					(char *) object + OVERHEAD + (i * oelem_size));
-			EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[i];
-			correct_object_mismatch (ref, vals, conversions);
-		}
-	}
-	else if (flags & EO_COMP) {
-		uint32 dtype = flags & EO_TYPE;
-		long num_attr = System (dtype).cn_nbattr;
-		long i;
-		CHECK ("Not too short", count == num_attr || count == num_attr + 1);
-		for (i=0; i<num_attr; i++) {
-			EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[i];
-			if (vals != NULL) {
-				long attrib_offset;
-				EIF_REFERENCE ref;
-				CHECK ("Expanded attribute", (System (dtype).cn_types[i] & SK_HEAD) == SK_EXP);
-				attrib_offset = get_offset (dtype, i);
-				ref = (char *) object + attrib_offset;
+		if (flags & EO_TUPLE) {
+			correct_object_mismatch (object, values, conversions);
+		} else if (flags & EO_SPEC) {
+			EIF_INTEGER i;
+			EIF_INTEGER ocount = RT_SPECIAL_COUNT (object);
+			EIF_INTEGER oelem_size = RT_SPECIAL_ELEM_SIZE (object);
+			CHECK ("Consistent length", ocount == count);
+			for (i=0; i<ocount; i++) {
+				EIF_REFERENCE ref = (EIF_REFERENCE) (
+						(char *) object + OVERHEAD + (i * oelem_size));
+				EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[i];
 				correct_object_mismatch (ref, vals, conversions);
 			}
 		}
-		if (count == num_attr + 1) {
-			EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[num_attr];
-			correct_object_mismatch (object, vals, conversions);
+		else if (flags & EO_COMP) {
+			uint32 dtype = flags & EO_TYPE;
+			long num_attr = System (dtype).cn_nbattr;
+			long i;
+			CHECK ("Not too short", count == num_attr || count == num_attr + 1);
+			for (i=0; i<num_attr; i++) {
+				EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[i];
+				if (vals != NULL) {
+					long attrib_offset;
+					EIF_REFERENCE ref;
+					CHECK ("Expanded attribute", (System (dtype).cn_types[i] & SK_HEAD) == SK_EXP);
+					attrib_offset = get_offset (dtype, i);
+					ref = (char *) object + attrib_offset;
+					correct_object_mismatch (ref, vals, conversions);
+				}
+			}
+			if (count == num_attr + 1) {
+				EIF_REFERENCE vals = ((EIF_REFERENCE *) values)[num_attr];
+				correct_object_mismatch (object, vals, conversions);
+			}
+		} else {
+			correct_object_mismatch (object, values, conversions);
 		}
-	} else {
-		correct_object_mismatch (object, values, conversions);
+		RT_GC_WEAN_N(2);
+		expop(&eif_stack);
 	}
-	RT_GC_WEAN_N(2);
 }
 
-/* Calls `correct_mismatch' on all objects contained in `mm'.
- * Returns non-zero if corrections were attempted on one or more mismatches.
+/* Calls `correct_mismatch' on all objects contained in `mismatches'.
+ * Free `retrieved_i' when done and return new address of the object
+ * which could have changed since calls to Eiffel may trigger GC
+ * cycle and thus move the object. This is why we get the protected
+ * object as argument.
  */
-rt_private int correct_mismatches (mismatch_table *mm, type_table *conversions)
+rt_private EIF_REFERENCE correct_mismatches (EIF_OBJECT retrieved_i)
 {
 	RT_GET_CONTEXT
-	int result = 0;
+	EIF_GET_CONTEXT
+	int corrected = 0;
 	uint32 i;
+	mismatch_table *mm = mismatches;
+	type_table *conversions = type_conversions;
+	jmp_buf exenv;
+	RTXD;
+
+	REQUIRE ("retrieved_i_not_null", retrieved_i);
 
 	if (mismatch_information_object == NULL  ||
 		mismatch_information_initialize == NULL  ||
 		mismatch_information_add == NULL)
-		return 0;
-
-#ifdef RECOVERABLE_DEBUG
-	if (mm->count > 0)
-		printf ("-- Performing mismatch correction\n");
-#endif
-	for (i=0; i < mm->count; i++) {
-		EIF_REFERENCE object = ((EIF_REFERENCE *) eif_access (mm->objects))[i];
-		EIF_REFERENCE values = ((EIF_REFERENCE *) eif_access (mm->values))[i];
-		CHECK ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
-		correct_one_mismatch (object, values, conversions);
-		result = 1;
+	{
+		return eif_wean (retrieved_i);
 	}
-	return result;
+
+	excatch(&exenv);	/* Record pseudo execution vector */
+	if (setjmp(exenv)) {
+		eif_wean (retrieved_i);
+		rt_clean();				/* Clean data structure */
+		RTXSC;					/* Restore stack contexts */
+		ereturn(MTC_NOARG);				/* Propagate exception */
+		return NULL;	/* Not reached */
+	} else {
+		for (i=0; i < mm->count; i++) {
+			EIF_REFERENCE object = ((EIF_REFERENCE *) eif_access (mm->objects))[i];
+			EIF_REFERENCE values = ((EIF_REFERENCE *) eif_access (mm->values))[i];
+			CHECK ("Values in special", HEADER (values)->ov_flags & EO_SPEC);
+			correct_one_mismatch (object, values, conversions);
+		}
+		free_mismatch_table (mm);
+		mismatches = NULL;
+		free_type_conversion_table (conversions);
+		type_conversions = NULL;
+		expop(&eif_stack);
+		return eif_wean (retrieved_i);
+	}
 }
 
 rt_public EIF_REFERENCE eretrieve(EIF_INTEGER file_desc)
@@ -1018,9 +1062,11 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 
 	if (rt_kind) {
 		eif_rt_xfree((char *) dtypes);					/* Free the correspondance table */
+		dtypes = NULL;
 	}
 	if ((rt_kind == INDEPENDENT_STORE) || (rt_kind == RECOVERABLE_STORE)) {
 		eif_rt_xfree((char *) spec_elm_size);					/* Free the element size table */
+		spec_elm_size = NULL;
 	}
 
 	ht_free(rt_table);					/* Free hash table descriptor */
@@ -1028,6 +1074,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 #ifdef ISE_GC
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 #endif
+	nb_recorded = 0;
 	switch (rt_type) {
 		case GENERAL_STORE_4_0: 
 			free_sorted_attributes();
@@ -1051,26 +1098,11 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 #endif
 	if (recoverable_tables)
 	{
-		int corrected;
-		type_table *conversions = type_conversions;
-		mismatch_table *mm = mismatches;
-		type_conversions = NULL;
-		mismatches = NULL;
-
-		/* Global variables are freed at this point, allowing safe call-back
-		 * into the run-time (another retrieve?) by the application, which
-		 * is called into by correct_mismatches().
-		 */
-		corrected = correct_mismatches (mm, conversions);
-		free_mismatch_table (mm);
-		free_type_conversion_table (conversions);
-		retrieved = eif_wean (retrieved_i);
-#ifdef PRINT_OBJECT
-		if (corrected) {
-			printf ("Corrected object:\n");
-			print_object (retrieved);
-		}
-#endif
+			/* Global variables are freed at this point, allowing safe call-back
+			 * into the run-time (another retrieve?) by the application, which
+			 * is called into by correct_mismatches().
+			 */
+		retrieved = correct_mismatches (retrieved_i);
 	}
 #ifdef RECOVERABLE_DEBUG
 	fflush (stdout);
@@ -1124,6 +1156,7 @@ rt_shared EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a
 #ifdef ISE_GC
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 #endif
+	nb_recorded = 0;
 	rt_reset_retrieve();
 	return retrieved;
 }
@@ -2154,6 +2187,7 @@ rt_private void rt_clean(void)
 #ifdef ISE_GC
 	epop(&hec_stack, nb_recorded);				/* Pop hector records */
 #endif
+	nb_recorded = 0;
 	if (rt_kind == INDEPENDENT_STORE || rt_kind == RECOVERABLE_STORE) {
 		independent_retrieve_reset ();
 	}

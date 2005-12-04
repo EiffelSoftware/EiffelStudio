@@ -23,7 +23,7 @@ remtrace --------------------------------------------------------
 cdd %DOCUMENT_DIR
 if isdir xmldoc fullrd xmldoc
 if exist xmldoc fullrd xmldoc
-exprt -r %DEFAULT_CVS_TAG -d xmldoc Delivery/xmldoc 
+co %DEFAULT_CVS_TAG/Delivery/xmldoc xmldoc
 
 
 remtrace ---------------------------------------------
@@ -31,7 +31,7 @@ remtrace Checkout and compile the Documentation tool |
 remtrace ---------------------------------------------
 
 cdd %EIFFEL_SRC\tools
-exprt -r %DEFAULT_CVS_TAG -d doc_builder Src/tools/doc_builder
+co %DEFAULT_CVS_TAG/Src/tools/doc_builder doc_builder
 cd %EIFFEL_SRC\tools\doc_builder
 clean_project
 finalize docbuilder.mswin.ace

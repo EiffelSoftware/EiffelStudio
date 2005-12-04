@@ -1,7 +1,7 @@
 remtrace Compiling EiffelBuild
 REM Should be called by `make_exes.btm'
 cdd %EIFFEL_SRC
-exprt -r %DEFAULT_CVS_TAG -d build2 Src/build2
+co %DEFAULT_CVS_TAG/Src/build2 build2
 
 cdd %EIFFEL_SRC/build2
 clean_project

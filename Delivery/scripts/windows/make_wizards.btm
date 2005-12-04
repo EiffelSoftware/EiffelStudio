@@ -3,11 +3,11 @@ remtrace The wizards...
 cdd %EIFFEL_SRC
 safe_md help
 cd help
-exprt -r %DEFAULT_CVS_TAG -d wizards "Src/help/wizards"
+co %DEFAULT_CVS_TAG/Src/help/wizards wizards
 
 remtrace ...and the libraries
 cd %EIFFEL_SRC\library
-exprt -r %DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
+co %DEFAULT_CVS_TAG/Src/library/wizard wizard
 
 cd %EIFFEL_SRC\help\wizards
 set DELIVERY=%INSTALL_DIR

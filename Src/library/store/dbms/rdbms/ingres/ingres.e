@@ -37,6 +37,16 @@ feature -- For DATABASE_STATUS
 		do
 		end
 
+	insert_auto_identity_column: BOOLEAN is
+			-- For INSERTs and UPDATEs should table auto-increment identity columns be explicitly included in the statement?
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
+feature -- For DATABASE_CHANGE
+
 
 feature -- For DATABASE_CHANGE 
 
@@ -76,7 +86,7 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE, DATABASE_PROC
 			end
 		end
 
-	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
+	parse (descriptor: INTEGER; uht: HASH_TABLE [ANY, STRING]; ht_order: ARRAYED_LIST [STRING]; uhandle: HANDLE; sql: STRING): BOOLEAN is
 		do
 			Result := true
 		end
@@ -194,11 +204,18 @@ feature -- For DATABASE_PROC
 
 	map_var_between: STRING is ""
 
+	map_var_name (a_para: STRING): STRING is
+		do
+		 	create Result.make_from_string (":")
+			Result.append (a_para)
+		end
+
 	map_var_between_2: STRING is " = "
 
-	Select_text: STRING is "select text_segment %
-		%from iiprocedures where %
-		%procedure_name = :name and  text_sequence = :seq"
+	Select_text (proc_name: STRING): STRING is
+		do
+			Result := "select text_segment from iiprocedures where procedure_name = :name and  text_sequence = :seq"
+		end
 
 	Select_exists (name: STRING): STRING is
 		do

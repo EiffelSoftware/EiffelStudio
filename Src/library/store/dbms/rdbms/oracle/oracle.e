@@ -37,6 +37,9 @@ feature -- For DATABASE_STATUS
 			ora_clear_error
 		end
 
+	insert_auto_identity_column: BOOLEAN is True
+			-- For INSERTs and UPDATEs should table auto-increment identity columns be explicitly included in the statement?
+
 feature -- For DATABASE_CHANGE
 
 	descriptor_is_available: BOOLEAN is

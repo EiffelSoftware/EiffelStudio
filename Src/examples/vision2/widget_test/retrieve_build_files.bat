@@ -1,26 +1,26 @@
 if .%1. == .. goto no_command_line
 
 REM Check out Build source.
-cvs co -r %1 Src/build2
+svn co %1/Src/build2 Src\build2
 
 REM Check out bitmaps from Build delivery
-cvs co -r %1 Delivery/build/bitmaps
+svn co %1/Delivery/build/bitmaps Delivery\build\bitmaps
 
 REM Check out files from vision2_tour
-cvs co -r %1 Delivery/vision2_tour
+svn co %1/Delivery/vision2_tour Delivery/vision2_tour
 
 GOTO files_checked_out
 
 :no_command_line
 
 REM Check out Build source.
-cvs co Src/build2
+svn co svn://anon@svn.ise/ise_svn/trunk/Src/build2 Src\build2
 
 REM Check out bitmaps from Build delivery
-cvs co Delivery/build/bitmaps
+svn co svn://anon@svn.ise/ise_svn/trunk/Delivery/build/bitmaps Delivery\build\bitmaps
 
 REM Check out files from vision2_tour
-cvs co Delivery/vision2_tour
+svn co svn://anon@svn.ise/ise_svn/trunk/Delivery/vision2_tour Delivery\vision2_tour
 
 :files_checked_out
 REM Copy template files
@@ -90,5 +90,5 @@ ren default_vision2_icon.ico vision2_tour.ico
 
 
 REM Remove all temporary checked out files.
-rm -r Src
-rm -r Delivery
+rm -rf Src
+rm -rf Delivery

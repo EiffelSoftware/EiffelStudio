@@ -7,7 +7,7 @@ set FINALIZATION_DIR=c:\work\57dev_deliv
 REM NB: The following directory must contain document.exe
 set DOCUMENT_DIR=c:\work\Deliv_57
 REM Tag to export files in CVS
-set DEFAULT_CVS_TAG=HEAD
+set DEFAULT_CVS_TAG=svn://%USERNAME%@svn.ise/ise_svn/trunk
 REM NB: The following directory will be erased!
 set TMP_EIFFEL_SRC=c:\work\tmpdev
 REM Where the new delivery is set up. Warning: if it exists, the directory will be erased!
@@ -42,22 +42,10 @@ alias give_time_to `remtrace time used to %$: & remtrace %@TIMER[1] & TIMER ON /
 REM Clean exit
 alias cancel `echo Exiting... & echo Total time used: & echo %@TIMER[2] & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & endiff & *cancel`
 
-REM CVS Commands: up, checkout, export
-alias up `call cvs -z 9 -q up -Pd %$ >>& %INSTALL_LOG`
-alias co `call cvs -z 9 -q co -P %$ >>& %INSTALL_LOG`
-alias exprt `call cvs -z 9 -q export %$ >>& %INSTALL_LOG`
-REM Tries to update or check out. %1: CVS path %2: local path
-alias safe_up `iff not isdir %2 then & ^
-iff exist %2 then & fullrf %2 & endiff & ^
-co -d %2 %1 & ^
-else & ^
-up %2 & ^
-iff %? != 0 then & ^
-echo Couldnt update %2... Checking out instead & ^
-fullrd %2 & ^
-co -d %2 %1 & ^
-endiff & ^
-endiff`
+REM CVS Commands: checkout, export
+alias co `call svn co %$ >>& %INSTALL_LOG`
+alias exprt `call svn export %$ >>& %INSTALL_LOG`
+alias exprtfile `call svn cat %$` 
 
 REM C Compilation
 alias default_make `if exist make_msc.bat (save_path & call make_msc.bat >>& %INSTALL_LOG & cd %TMP_PATH)`

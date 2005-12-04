@@ -69,7 +69,7 @@ endiff
 md %INSTALL_DIR
 cdd %INSTALL_DIR
 remtrace studio
-exprt -r %DEFAULT_CVS_TAG -d studio Delivery/studio
+exprt %DEFAULT_CVS_TAG/Delivery/studio studio
 fullrd studio\help\defaults\unix
 fullrd studio\spec\unix
 cdd %INSTALL_DIR\studio\config
@@ -78,15 +78,15 @@ cdd %INSTALL_DIR\studio\help\defaults
 if not "windows"=="%ISE_PLATFORM" move windows %ISE_PLATFORM
 cdd %INSTALL_DIR
 remtrace build
-exprt -r %DEFAULT_CVS_TAG -d build Delivery/build
+exprt %DEFAULT_CVS_TAG/Delivery/build build
 remtrace vision2 tour
-exprt -r %DEFAULT_CVS_TAG -d vision2_tour Delivery/vision2_tour
+exprt %DEFAULT_CVS_TAG/Delivery/vision2_tour vision2_tour
 remtrace eifinit
-exprt -r %DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
+exprt %DEFAULT_CVS_TAG/Delivery/eifinit eifinit
 remtrace .NET libraries
-exprt -r %DEFAULT_CVS_TAG -d library.net Src/library.net
+exprt %DEFAULT_CVS_TAG/Src/library.net library.net
 remtrace examples
-exprt -r %DEFAULT_CVS_TAG -d examples Src/examples
+exprt %DEFAULT_CVS_TAG/Src/examples examples
 cd examples
 fullrd eiffeltest
 fullrd math
@@ -125,22 +125,22 @@ remtrace precomp
 safe_md %INSTALL_DIR\precomp
 safe_md %INSTALL_DIR\precomp\spec
 cd %INSTALL_DIR\precomp\spec
-exprt -r %DEFAULT_CVS_TAG -d %ISE_PLATFORM Delivery/precomp/spec/windows
-exprt -r %DEFAULT_CVS_TAG -d dotnet Delivery/precomp/spec/dotnet
+exprt %DEFAULT_CVS_TAG/Delivery/precomp/spec/windows %ISE_PLATFORM
+exprt %DEFAULT_CVS_TAG/Delivery/precomp/spec/dotnet dotnet
 cdd %INSTALL_DIR
 remtrace wizards
-exprt -r %DEFAULT_CVS_TAG -d wizards Delivery/wizards
+exprt %DEFAULT_CVS_TAG/Delivery/wizards wizards
 fullrf %INSTALL_DIR\studio\wizards\new_projects\wizard.dsc
 fullrd %INSTALL_DIR\studio\wizards\new_projects\wizard
 remtrace C_library
-exprt -r %DEFAULT_CVS_TAG -d C_library Src/C_library
+exprt %DEFAULT_CVS_TAG/Src/C_library C_library
 fullrd C_library\.libs
 remtrace Free add ons
-exprt -r %DEFAULT_CVS_TAG -d free_add_ons free_add_ons
+exprt %DEFAULT_CVS_TAG/free_add_ons free_add_ons
 remtrace .NET assemblies
-exprt -r %DEFAULT_CVS_TAG -d dotnet Delivery/dotnet
+exprt %DEFAULT_CVS_TAG/Delivery/dotnet dotnet
 remtrace root
-exprt -l -r %DEFAULT_CVS_TAG Delivery/
+exprt -N %DEFAULT_CVS_TAG/Delivery Delivery
 move Delivery\*.* . >>& %INSTALL_LOG
 fullrd Delivery >>& %INSTALL_LOG
 fullrf INSTALL README make_install compile_libraries

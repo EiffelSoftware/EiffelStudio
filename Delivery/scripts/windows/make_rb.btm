@@ -1,6 +1,6 @@
 remtrace Update the source files
 REM cdd %EIFFEL_SRC
-REM exprt -r %DEFAULT_CVS_TAG -d resource_bench "Src/resource_bench"
+REM co %DEFAULT_CVS_TAG/Src/resource_bench resource_bench
 
 remtrace Recompile Resource Bench
 REM cdd %EIFFEL_SRC\resource_bench
@@ -14,5 +14,5 @@ quick_move rb\bin\rb.exe
 
 remtrace Retrieve the example
 cdd %INSTALL_DIR\rb
-exprt -r %DEFAULT_CVS_TAG -d example Src/resource_bench/RB_documentation/examples
+exprt %DEFAULT_CVS_TAG/Src/resource_bench/RB_documentation/examples example
 

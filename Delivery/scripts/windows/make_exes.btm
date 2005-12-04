@@ -2,10 +2,11 @@ REM Clean up the files
 remtrace Update all source files.
 cdd %EIFFEL_SRC
 mkdir tools
-exprt -r %DEFAULT_CVS_TAG -d Eiffel Eiffel
-exprt -r %DEFAULT_CVS_TAG -d dotnet "Src/dotnet"
+co %DEFAULT_CVS_TAG/Src/bench/Eiffel Eiffel
+co %DEFAULT_CVS_TAG/Src/common Eiffel\common
+co %DEFAULT_CVS_TAG/Src/dotnet dotnet
 cd tools
-exprt -r %DEFAULT_CVS_TAG -d compliance_checker "Src/tools/compliance_checker"
+co %DEFAULT_CVS_TAG/Src/tools/compliance_checker compliance_checker
 cdd %EIFFEL_SRC
 
 remtrace Compile C code of the libraries
@@ -27,7 +28,7 @@ remtrace Compile the commercial run-times
 iff not defined WIN64 then
 	remtrace Compile a run-time for Borland
 	fullrd C
-	exprt -r %DEFAULT_CVS_TAG -d C runtime
+	co %DEFAULT_CVS_TAG/Src/bench/C C
 	cd C
 	call configure win32 b >>& %INSTALL_LOG
 	cd %EIFFEL_SRC
@@ -39,7 +40,7 @@ endiff
 
 remtrace Compile a dynamic run-time for Microsoft
 fullrd C
-exprt -r %DEFAULT_CVS_TAG -d C runtime
+co %DEFAULT_CVS_TAG/Src/bench/C C
 cd %EIFFEL_SRC\C/CONFIGS
 iff not defined WIN64 then
 	sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-W3/g" windows-msc-x86 >> new_windows-msc-x86
@@ -69,7 +70,7 @@ cd %EIFFEL_SRC
 
 remtrace Compile a run-time for Microsoft
 fullrd C
-exprt -r %DEFAULT_CVS_TAG -d C runtime
+co %DEFAULT_CVS_TAG/Src/bench/C C
 cd C
 iff defined WIN64 then
 call configure win64 m >>& %INSTALL_LOG
@@ -281,7 +282,7 @@ move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 remtrace Recompile Custom actions for installation program
 cdd %EIFFEL_SRC
 cd tools
-exprt -r %DEFAULT_CVS_TAG -d setup "Src/tools/setup"
+co %DEFAULT_CVS_TAG/Src/tools/setup setup
 cd %EIFFEL_SRC\tools\setup\studio
 clean_project
 finalize ace.ace
@@ -303,7 +304,7 @@ call make_vision2_tour.btm
 
 remtrace Recompile Legacy++
 cdd %EIFFEL_SRC
-exprt -r %DEFAULT_CVS_TAG -d legacy "Src/tools/legacy"
+co %DEFAULT_CVS_TAG/Src/tools/legacy legacy
 cd %EIFFEL_SRC\legacy\PCCTS
 safe_md bin
 nmake /f makefile.win

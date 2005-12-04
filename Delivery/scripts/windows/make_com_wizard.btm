@@ -1,16 +1,6 @@
 remtrace Retrieve all source files
 cdd %EIFFEL_SRC
-iff isdir com_wizard then
-	up com_wizard
-	iff %? != 0 then
-		echo Couldn't update com_wizard... checking out instead
-		fullrd com_wizard
-		co -r %DEFAULT_CVS_TAG -d com_wizard "Src/com_wizard"
-	endiff
-else
-	if exist com_wizard fullrf com_wizard
-	co -r %DEFAULT_CVS_TAG -d com_wizard "Src/com_wizard"
-endiff
+co %DEFAULT_CVS_TAG/Src/com_wizard com_wizard
 
 mkdir %INSTALL_DIR\wizards\com\resources
 copy %EIFFEL_SRC\com_wizard\root\resources\*.* %INSTALL_DIR\wizards\com\resources

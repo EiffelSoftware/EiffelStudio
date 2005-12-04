@@ -3,19 +3,19 @@
 # Check out the appropriate tag depending on arguments
 if [ $# -eq 0 ]  
 then
-	cvstag="HEAD"
+	svntag="svn://anon@svn.ise/ise_svn/trunk"
 else
-	cvstag=$1
+	svntag=$1
 fi
 
 # Check out Build source.
-cvs co -r $cvstag Src/build2
+svn co $svntag/Src/build2 Src/build2
 
 # Check out bitmaps from Build delivery
-cvs co -r $cvstag Delivery/build/bitmaps
+svn co $svntag/Delivery/build/bitmaps Delivery/build/bitmaps
 
 # Check out files from vision2_tour
-cvs co -r $cvstag Delivery/vision2_tour
+svn co $svntag/Delivery/vision2_tour Delivery/vision2_tour
 
 # Copy template files
 cp -r Delivery/vision2_tour/templates/ ./
@@ -80,5 +80,5 @@ cp ./Src/build2/interface/properties/gb_ev_textable_editor_constructor.e ./inter
 cp ./Src/build2/interface/properties/gb_ev_tooltipable_editor_constructor.e ./interface/
 
 # Remove all temporary checked out files.
-rm -r Src
-rm -r Delivery
+rm -rf Src
+rm -rf Delivery

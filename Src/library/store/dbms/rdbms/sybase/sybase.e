@@ -39,6 +39,13 @@ feature -- For DATABASE_STATUS
 		do
 		end
 
+	insert_auto_identity_column: BOOLEAN is
+			-- For INSERTs and UPDATEs should table auto-increment identity columns be explicitly included in the statement?
+		do
+			check
+				to_be_implemented: False
+			end
+		end
 
 feature -- For DATABASE_CHANGE 
 
@@ -209,11 +216,20 @@ feature -- For DATABASE_PROC
 
 	map_var_between: STRING is " @"
 
+	map_var_name (par_name: STRING): STRING is
+			-- Map variable string for late bound stored procedure execution
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
 	map_var_after: STRING is ""
 
-	Select_text: STRING is "select a.text from %
-		%syscomments a, sysobjects b where %
-		%b.name = :name and b.id = a.id"
+	Select_text (proc_name: STRING): STRING is
+		do
+			Result := "select a.text from syscomments a, sysobjects b where b.name = :name and b.id = a.id"
+		end
 
 	Select_exists (name: STRING): STRING is 
 		do

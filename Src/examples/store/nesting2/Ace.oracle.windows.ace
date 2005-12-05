@@ -30,6 +30,7 @@ cluster
 	estore_interface:	"$ISE_EIFFEL\library\store\interface";
 	estore_db_support:	"$ISE_EIFFEL\library\store\dbms\support";
 	estore_oracle:		"$ISE_EIFFEL\library\store\dbms\rdbms\oracle";
+	all generation:		"$ISE_EIFFEL\library\store\generation";
 
 -- EiffelTime
 

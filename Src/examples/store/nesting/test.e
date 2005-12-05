@@ -15,7 +15,7 @@ feature
 	session: DB_CONTROL
 
 	selection: DB_SELECTION
-        
+
 	make is
 		local
 			tmp_string: STRING
@@ -25,7 +25,7 @@ feature
 			io.putstring ("Database user authentication:%N")
 			io.putstring ("Name: ")
 			io.readline
-			tmp_string := clone (io.laststring)
+			tmp_string := io.laststring.twin
 			io.putstring ("Password: ")
 			io.readline
 			login (tmp_string, io.laststring)
@@ -63,7 +63,7 @@ end -- class TEST
 --| EiffelStore: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
+--| May be used only with ISE Eiffel, under terms of user license.
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.

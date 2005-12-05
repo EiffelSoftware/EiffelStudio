@@ -82,11 +82,9 @@ feature -- Processing
 				a_class := classes.item (i)
 				if a_class /= Void and then a_class.degree_2_needed then
 					if a_class.changed and then a_class.generics = Void then
-						if a_class.types.is_empty then
-								-- For non generic classes, standard initialization
-								-- of their attribute `types'.
-							a_class.init_types
-						end
+							-- For non generic classes, standard initialization
+							-- of their attribute `types'.
+						a_class.init_types
 					end
 					nb := nb - 1
 				end

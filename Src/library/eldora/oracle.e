@@ -12,7 +12,6 @@ inherit
 			normal_parse,
 			parse,
 			update_map_table_error,
---			bind_parameter,
 			convert_string_type
 		end
 

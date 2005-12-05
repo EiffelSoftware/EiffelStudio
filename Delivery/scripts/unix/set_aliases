@@ -14,7 +14,7 @@ DOCUMENT_DIR=`pwd`
 # Where all.tar.gz files should be stored
 EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
-DEFAULT_CVS_TAG=HEAD
+DEFAULT_CVS_TAG=svn://$LOGNAME@svn.ise/ise_svn/trunk
 # Version of GTK
 GTK_DIR=gtk2
 
@@ -105,34 +105,15 @@ cancel ()
 CANCEL
 }
  
-# CVS Commands: up, checkout, export
-up ()
-{
-cvs -z9 -q up -Pd $* >> $INSTALL_LOG
-}
+# SVN Commands: checkout, export
 co ()
 {
-cvs -z9 -q co -P $* >> $INSTALL_LOG
+svn co $* >> $INSTALL_LOG
 }
 exprt ()
 {
-cvs -z9 -q export $* >> $INSTALL_LOG
+svn export $* >> $INSTALL_LOG
 }
-# Tries to update or check out. $1: CVS path $2: local path
-safe_up ()
-{
-if [ ! -d $2 ]; then
-if [ -f $2 ]; then fullrf $2; fi
-co -d $2 $1
-else
-up $2
-if $? != 0; then
-echo Couldnt update $2... Checking out instead
-fullrd $2
-co -d $2 $1
-fi
-fi
-}                                                                             
 
 # C Compilation
 default_make ()

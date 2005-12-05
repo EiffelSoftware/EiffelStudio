@@ -5,7 +5,7 @@ remtrace The wizards
 cd $EIFFEL_SRC
 safe_md help
 cd help
-exprt -r $DEFAULT_CVS_TAG -d wizards "Src/help/wizards"
+exprt $DEFAULT_CVS_TAG/Src/help/wizards wizards
 
 cd $EIFFEL_SRC/help/wizards
 DELIVERY=$INSTALL_DIR

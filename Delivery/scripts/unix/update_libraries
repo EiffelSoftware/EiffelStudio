@@ -9,54 +9,60 @@ cd $EIFFEL_SRC
 md library
 cd library
 remtrace base
-exprt -r $DEFAULT_CVS_TAG -d base "Src/library/base"
+co $DEFAULT_CVS_TAG/Src/library/base base
 remtrace encryption
-exprt -r $DEFAULT_CVS_TAG -d encryption "Src/library/encryption"
+co $DEFAULT_CVS_TAG/Src/library/encryption encryption
 remtrace editor
-exprt -r $DEFAULT_CVS_TAG -d editor "Src/library/editor"
+co $DEFAULT_CVS_TAG/Src/library/editor editor
 remtrace event
-exprt -r $DEFAULT_CVS_TAG -d event "Src/library/event"
+co $DEFAULT_CVS_TAG/Src/library/event event
 remtrace gobo
-exprt -r $DEFAULT_CVS_TAG -d free_add_ons free_add_ons/gobo
+co $DEFAULT_CVS_TAG/free_add_ons/gobo free_add_ons
 gunzip -c free_add_ons/gobo_34_unix.tgz | tar -xf -
 fullrd free_add_ons
 remtrace graph
-exprt -r $DEFAULT_CVS_TAG -d graph "Src/library/graph"
+co $DEFAULT_CVS_TAG/Src/library/graph graph
 remtrace graph
-exprt -r $DEFAULT_CVS_TAG -d helpers "Src/library/helpers"
+co $DEFAULT_CVS_TAG/Src/library/helpers helpers
 remtrace keygen
-exprt -r $DEFAULT_CVS_TAG -d keygen "Src/library/keygen"
+co $DEFAULT_CVS_TAG/Src/library/keygen keygen
 remtrace lex
-exprt -r $DEFAULT_CVS_TAG -d lex "Src/library/lex"
+co $DEFAULT_CVS_TAG/Src/library/lex lex
+remtrace memory_analyzer
+co $DEFAULT_CVS_TAG/Src/library/memory_analyzer memory_analyzer
 remtrace net
-exprt -r $DEFAULT_CVS_TAG -d net "Src/library/net"
+co $DEFAULT_CVS_TAG/Src/library/net net
 remtrace obsolete
-exprt -r $DEFAULT_CVS_TAG -d obsolete "Src/library/obsolete"
+co $DEFAULT_CVS_TAG/Src/library/obsolete obsolete
 remtrace parse
-exprt -r $DEFAULT_CVS_TAG -d parse "Src/library/parse"
+co $DEFAULT_CVS_TAG/Src/library/parse parse
 remtrace patterns
-exprt -r $DEFAULT_CVS_TAG -d patterns "Src/library/patterns"
+co $DEFAULT_CVS_TAG/Src/library/patterns patterns
 remtrace preferences
-exprt -r $DEFAULT_CVS_TAG -d preferences "Src/library/preferences"
+co $DEFAULT_CVS_TAG/Src/library/preferences preferences
+remtrace process
+co $DEFAULT_CVS_TAG/Src/library/process process
 remtrace time
-exprt -r $DEFAULT_CVS_TAG -d time "Src/library/time"
+co $DEFAULT_CVS_TAG/Src/library/time time
 remtrace vision2
-exprt -r $DEFAULT_CVS_TAG -d vision2 "Src/library/vision2"
+co $DEFAULT_CVS_TAG/Src/library/vision2 vision2
 if [ "$1" == "gtk" ]; then
 	# TODO
 	# Copy GTK 1.2 implementation over gtk directory
 	echo ""
 fi
+remtrace vision2_extension
+co $DEFAULT_CVS_TAG/Src/library/vision2_extension vision2_extension
 remtrace wizard
-exprt -r $DEFAULT_CVS_TAG -d wizard "Src/library/wizard"
+co $DEFAULT_CVS_TAG/Src/library/wizard wizard
 
 remtrace Additional libraries for producing documentation
-exprt -r $DEFAULT_CVS_TAG -d com "Src/library/com"
-exprt -r $DEFAULT_CVS_TAG -d Eiffel2Java "Src/library/Eiffel2Java"
-exprt -r $DEFAULT_CVS_TAG -d store "Src/library/store"
-exprt -r $DEFAULT_CVS_TAG -d thread "Src/library/thread"
-exprt -r $DEFAULT_CVS_TAG -d web "Src/library/web"
-exprt -r $DEFAULT_CVS_TAG -d wel "Src/library/wel"
+co $DEFAULT_CVS_TAG/Src/library/com com
+co $DEFAULT_CVS_TAG/Src/library/Eiffel2Java Eiffel2Java
+co $DEFAULT_CVS_TAG/Src/library/store store
+co $DEFAULT_CVS_TAG/Src/library/thread thread
+co $DEFAULT_CVS_TAG/Src/library/web web
+co $DEFAULT_CVS_TAG/Src/library/wel wel
 
 remtrace Compiling additional libraries
 cd vision2/Clib

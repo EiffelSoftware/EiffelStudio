@@ -12,19 +12,20 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_title: STRING; a_pixmap: EV_PIXMAP) is
+	make_with_widget_title_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP; a_unique_title: STRING) is
 			-- Creation method.
 		require
 			a_widget_not_void: a_widget /= Void
 			a_widget_valid: user_widget_valid (a_widget)
-			a_title_not_void: a_title /= Void
 			a_pixmap_not_void: a_pixmap /= Void
+			a_unique_title_not_void: a_unique_title /= Void
+			title_unique: title_unique (a_unique_title)
 		local
 			l_state: SD_STATE_VOID
 		do
 			create internal_shared
 			internal_user_widget := a_widget
-			internal_title := a_title
+			internal_unique_title := a_unique_title
 			internal_pixmap := a_pixmap
 
 			create l_state.make (Current)
@@ -32,12 +33,13 @@ feature {NONE} -- Initialization
 			internal_type := {SD_SHARED}.type_normal
 		ensure
 			a_widget_set: a_widget = internal_user_widget
-			a_title_set: a_title = internal_title
+			a_title_set: internal_unique_title /= Void
 			a_pixmap_set: a_pixmap = internal_pixmap
 			state_not_void: internal_state /= Void
+			a_unique_title_set: a_unique_title = internal_unique_title
 		end
 
-	make_with_widget (a_widget: EV_WIDGET) is
+	make_with_widget (a_widget: EV_WIDGET; a_unique_title: STRING) is
 			-- Creation method.
 		require
 			a_widget_not_void: a_widget /= Void
@@ -47,7 +49,7 @@ feature {NONE} -- Initialization
 			create internal_shared
 			l_icon := internal_shared.icons.default_icon.twin
 			l_icon.set_minimum_size (20, 20)
-			make_with_widget_title_pixmap (a_widget, "Untitled", l_icon)
+			make_with_widget_title_pixmap (a_widget, l_icon, a_unique_title)
 		end
 
 feature -- Access
@@ -60,13 +62,19 @@ feature -- Access
 			result_valid: Result = internal_user_widget
 		end
 
-	title: like internal_title is
-			-- Client programmer's widget's title.
+	unique_title: like internal_unique_title is
+			-- Client programmer's widget's unique_title.
 		do
-			Result := internal_title
+			Result := internal_unique_title
 		ensure
-			result_valid: Result = internal_title
+			result_valid: Result = internal_unique_title
 		end
+
+	long_title: STRING
+			-- Client programmer's widget's long title. Which is shown at SD_TITLE_BAR.
+
+	short_title: STRING
+			-- Client programmer's widget's short title. Which is shown at SD_TAB_STUB.		
 
 	pixmap: like internal_pixmap is
 			-- Client programmer's widget's pixmap.
@@ -92,19 +100,30 @@ feature -- Access
 
 feature -- Set
 
-	set_title (a_title: like internal_title) is
-			-- Set the widget's title
+	set_long_title (a_long_title: STRING) is
+			-- Set `long_title'.
 		require
-			a_title_not_void: a_title /= Void
+			a_long_title_not_void: a_long_title /= Void
 		do
-			internal_title := a_title
-			internal_state.change_title (a_title, Current)
+			long_title := a_long_title
+			internal_state.change_title (a_long_title, Current)
 		ensure
-			a_title_set: a_title = internal_title
+			set: a_long_title = long_title
+		end
+
+	set_short_title (a_short_title: STRING)	is
+			-- Set `short_title'.
+		require
+			a_short_title_not_void: a_short_title /= Void
+		do
+			short_title := a_short_title
+			internal_state.change_title (a_short_title, Current)
+		ensure
+			set: a_short_title = short_title
 		end
 
 	set_pixmap (a_pixmap: like internal_pixmap) is
-			-- Set the pixmap which shown on title bar.
+			-- Set the pixmap which shown on unique_title bar.
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
@@ -244,9 +263,10 @@ feature -- Actions
 feature -- Command
 
 	close is
-			-- Destroy `Current', only destroy zone. SD_CONTENT still in Docking Library.
+			-- Destroy `Current', only destroy zone. Prune Current from SD_DOCKING_MANAGER.
 		do
 			state.close
+			internal_shared.docking_manager.contents.prune (Current)
 		end
 
 	hide is
@@ -313,6 +333,28 @@ feature -- States report
 			Result := a_target_content.state.zone.parent /= Void
 		end
 
+	title_unique (a_unique_title: STRING): BOOLEAN is
+			-- If `a_unique_title' really unique?
+		require
+			a_unique_title_not_void: a_unique_title /= Void
+		local
+			l_contents: ARRAYED_LIST [SD_CONTENT]
+		do
+			Result := True
+			if internal_shared = Void then
+				create internal_shared
+			end
+			l_contents := internal_shared.docking_manager.contents
+			from
+				l_contents.start
+			until
+				l_contents.after or not Result
+			loop
+				Result := not l_contents.item.unique_title.is_equal (a_unique_title)
+				l_contents.forth
+			end
+		end
+
 feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR} -- State
 
 	state: like internal_state is
@@ -344,16 +386,25 @@ feature {SD_STATE, SD_DOCKING_MANAGER} -- Change the SD_STATE base on the states
 			internal_state := a_state
 		end
 
-feature {NONE}  -- Implemention attributes.
+feature {NONE}  -- Implemention.
+
+--	new_unique_title: STRING is
+--			-- Generatr unique title.
+--		do
+--			Result := "SD_CONTENT_" + internal_shared.docking_manager.contents.count.out
+--		ensure
+--			not_void: Result /= Void
+--			title_unique: title_unique (Result)
+--		end
 
 	internal_user_widget: EV_WIDGET
 			-- Client programmer's widget.
 
-	internal_title: STRING
-			-- The internal_user_widget's internal_title.
+	internal_unique_title: STRING
+			-- The internal_user_widget's internal_unique_title.
 
 	internal_pixmap: EV_PIXMAP
-			-- The internal_pixmap at the head of internal_title.
+			-- The internal_pixmap at the head of internal_unique_title.
 
 	internal_mini_toolbar: EV_TOOL_BAR
 			-- Mini toolbar at the titlt bar.

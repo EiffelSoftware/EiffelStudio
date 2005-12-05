@@ -40,9 +40,9 @@ feature {NONE} -- Initlization
 			end
 			auto_hide_panel := internal_shared.docking_manager.auto_hide_panel (a_direction)
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-				create internal_tab_stub.make (internal_content.title, internal_content.pixmap, True)
+				create internal_tab_stub.make (internal_content, True)
 			elseif direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom then
-				create internal_tab_stub.make (internal_content.title, internal_content.pixmap, False)
+				create internal_tab_stub.make (internal_content, False)
 			end
 			debug ("larry")
 				io.put_string ("%N ************************** SD_AUTO_HIDE_STATE: insert tab stubs.")
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation functions.
 				auto_hide_panel.tab_stubs.start
 				auto_hide_panel.tab_stubs.prune (l_tab_stub)
 
-				l_content := internal_shared.docking_manager.content_by_title (l_tab_stub.text)
+				l_content := l_tab_stub.content
 				if l_tab_group.index = 1 then
 					create l_docking_state.make (l_content, direction, width_height)
 					l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)

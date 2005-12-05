@@ -115,7 +115,7 @@ feature -- Command
 				a_content.user_widget.parent.prune (a_content.user_widget)
 			end
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
-			internal_title_bar.set_title (a_content.title)
+			internal_title_bar.set_title (a_content.long_title)
 			if a_content.mini_toolbar /= Void then
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
@@ -126,7 +126,7 @@ feature -- Command
 			end
 		end
 
-	set_show_min_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN) is
 			-- Redefine.
 		do
 			internal_title_bar.set_show_normal_max (a_show)
@@ -257,7 +257,7 @@ feature {NONE} -- Agents for docker
 		do
 			if not internal_diable_on_select_tab then
 				l_content := contents.i_th (internal_notebook.selected_item_index)
-				internal_title_bar.set_title (l_content.title)
+				internal_title_bar.set_title (l_content.long_title)
 				if l_content.mini_toolbar /= Void then
 					internal_title_bar.custom_area.extend (l_content.mini_toolbar)
 				else
@@ -268,7 +268,7 @@ feature {NONE} -- Agents for docker
 				end
 			end
 		ensure
-			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).title)
+			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).long_title)
 --			mini_tool_bar_added: not internal_diable_on_select_tab implies (contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies
 --				internal_title_bar.custom_area.item = contents.i_th (internal_notebook.selected_item_index).mini_toolbar)
 		end

@@ -35,7 +35,7 @@ feature {SD_CONFIG_MEDIATOR} -- Save config.
 	save_content_title (a_config_data: SD_INNER_CONTAINER_DATA) is
 			-- Redefine.
 		do
-			a_config_data.add_title (internal_content.title)
+			a_config_data.add_title (internal_content.unique_title)
 		end
 
 feature {NONE} -- Implementation

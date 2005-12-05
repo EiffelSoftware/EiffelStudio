@@ -73,7 +73,7 @@ feature -- Query
 			until
 				tab_stubs.after or Result
 			loop
-				Result := tab_stubs.item.text.is_equal (a_content.title)
+				Result := tab_stubs.item.content = a_content
 				tab_stubs.forth
 			end
 		end
@@ -96,7 +96,7 @@ feature -- Query
 				until
 					l_group.after or Result
 				loop
-					Result := l_group.item.text.is_equal (a_content.title)
+					Result := l_group.item.content = a_content
 					l_group.forth
 				end
 				tab_groups.forth
@@ -114,7 +114,7 @@ feature -- Query
 			until
 				internal_tab_stubs.after or Result /= Void
 			loop
-				if internal_tab_stubs.item.text.is_equal (a_content.title) then
+				if internal_tab_stubs.item.content = a_content then
 					Result := internal_tab_stubs.item
 				end
 				internal_tab_stubs.forth
@@ -137,7 +137,7 @@ feature -- Query
 			until
 				l_contents.after or Result /= Void
 			loop
-				if l_contents.item.title.is_equal (a_tab.text) then
+				if l_contents.item = a_tab.content then
 					Result := l_contents.item
 				end
 				l_contents.forth

@@ -67,7 +67,7 @@ feature	{NONE} -- Initlization
 			create window.make (a_content.type, Current)
 			internal_content := a_content
 			window.set_user_widget (internal_content.user_widget)
-			window.title_bar.set_title (internal_content.title)
+			window.title_bar.set_title (internal_content.long_title)
 			window.title_bar.set_show_normal_max (False)
 			window.close_request_actions.extend (agent on_close_request)
 			window.stick_actions.extend (agent stick)

@@ -57,7 +57,7 @@ feature -- Command
 			disable_on_select_tab
 			contents.extend (a_content)
 			internal_notebook.extend (a_content.user_widget)
-			internal_notebook.set_item_text (a_content.user_widget, a_content.title)
+			internal_notebook.set_item_text (a_content.user_widget, a_content.short_title)
 			internal_notebook.item_tab (a_content.user_widget).set_pixmap (a_content.pixmap)
 			internal_notebook.item_tab (a_content.user_widget).enable_select
 			enable_on_select_tab
@@ -92,7 +92,7 @@ feature {SD_CONFIG_MEDIATOR} -- Save config
 			until
 				contents.after
 			loop
-				a_config_data.add_title (contents.item.title)
+				a_config_data.add_title (contents.item.unique_title)
 				contents.forth
 			end
 		end

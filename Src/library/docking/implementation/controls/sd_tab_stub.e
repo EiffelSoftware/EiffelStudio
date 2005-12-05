@@ -14,31 +14,26 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_title: STRING; a_pixmap: EV_PIXMAP; a_vertical: BOOLEAN) is
+	make (a_content: SD_CONTENT; a_vertical: BOOLEAN) is
 			-- Creation method. If a_vertical True then vertical style otherwise horizontal style.
 		require
-			a_title_not_void: a_title /= Void
-			a_pixmap_not_void: a_pixmap /= Void
+			a_content_not_void: a_content /= Void
 		do
 			create internal_shared
 			init (a_vertical)
---			set_background_color ((create {EV_STOCK_COLORS}).black)
---			set_border_width (1)
-
-			internal_pixmap := a_pixmap
-
+			content := a_content
 			create internal_drawing_area
 			internal_drawing_area.expose_actions.extend (agent on_redraw)
-			internal_drawing_area.set_minimum_size (internal_pixmap.minimum_width, internal_pixmap.minimum_height)
+			internal_drawing_area.set_minimum_size (a_content.pixmap.minimum_width, a_content.pixmap.minimum_height)
 			extend (internal_drawing_area)
-			create internal_label.make_with_text (a_title)
+			create internal_label.make_with_text (a_content.short_title)
 			extend (internal_label)
 
 			internal_label.pointer_enter_actions.extend (agent on_pointer_enter)
 			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
 		ensure
-			set: internal_pixmap = a_pixmap
-			set: internal_label.text.is_equal (a_title)
+			set: content = a_content
+			set: internal_label.text.is_equal (a_content.short_title)
 			actions_added: internal_label.pointer_enter_actions.count = 1 and internal_drawing_area.pointer_enter_actions.count = 1
 			label_added: has (internal_label)
 			drawing_area_added: has (internal_drawing_area)
@@ -57,6 +52,9 @@ feature -- Query
 		do
 			Result := internal_label.minimum_width
 		end
+
+	content: SD_CONTENT
+			-- Which content current is represent.
 
 feature -- Command
 
@@ -133,7 +131,7 @@ feature {NONE} -- Agents
 			-- Handle redraw.
 		do
 			internal_drawing_area.clear
-			internal_drawing_area.draw_pixmap (0, 0, internal_pixmap)
+			internal_drawing_area.draw_pixmap (0, 0, content.pixmap)
 		end
 
 feature {NONE} -- Implementation
@@ -146,9 +144,6 @@ feature {NONE} -- Implementation
 
 	auto_hide_panel: SD_AUTO_HIDE_PANEL
 			-- Panel current is in.
-
-	internal_pixmap: EV_PIXMAP
-			-- Pixmap on `Current'.
 
 	internal_drawing_area: EV_DRAWING_AREA
 			-- Drawing area draw `internal_pixmap'.

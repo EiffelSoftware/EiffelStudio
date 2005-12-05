@@ -106,7 +106,7 @@ feature {NONE} -- Implementation for save config.
 				a_config_data.set_direction (l_zone.content.state.direction)
 				debug ("larry")
 					io.put_string ("%N SD_DOCKING_MANAGER zone")
-					io.put_string ("%N  zone: " + l_zone.content.title)
+					io.put_string ("%N  zone: " + l_zone.content.unique_title)
 				end
 			end
 		end
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation for save config.
 			until
 				a_stubs.after
 			loop
-				l_title := a_stubs.item.text
+				l_title := a_stubs.item.content.unique_title
 				-- Find out zone's width/height.
 				l_zones := internal_shared.docking_manager.zones
 				from
@@ -185,7 +185,7 @@ feature {NONE} -- Implementation for save config.
 				loop
 					l_auto_hide ?= l_zones.item
 					if l_auto_hide /= Void then
-						if l_auto_hide.content.title.is_equal (l_title) then
+						if l_auto_hide.content.unique_title.is_equal (l_title) then
 							if a_horizontal then
 								l_width_height := l_auto_hide.content.user_widget.width
 							else

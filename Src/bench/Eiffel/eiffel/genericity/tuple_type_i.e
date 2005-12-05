@@ -21,12 +21,12 @@ inherit
 
 create
 	make
-	
+
 feature
 
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
-			-- NOTE: any two TUPLES are considered to be 
+			-- NOTE: any two TUPLES are considered to be
 			-- the same except for `expandedness'.
 		local
 			tuple_type_i: TUPLE_TYPE_I
@@ -38,7 +38,6 @@ feature
 		end
 
 	type_a: TUPLE_TYPE_A is
-
 		local
 			i: INTEGER
 			array: ARRAY [TYPE_A]
@@ -52,9 +51,8 @@ feature
 				array.put (meta_generic.item (i).type_a, i)
 				i := i - 1
 			end
-
 			create Result.make (class_id, array)
-			Result.set_is_expanded (is_expanded)
+			Result.set_mark (declaration_mark)
 		end
 
 	il_type_name (a_prefix: STRING): STRING is
@@ -117,7 +115,7 @@ feature -- Generic conformance
 			i, up : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-				-- It's an ancored type 
+				-- It's an ancored type
 				cr_info.generate_cid (buffer, final_mode)
 			else
 				buffer.put_integer (Tuple_type)
@@ -126,7 +124,7 @@ feature -- Generic conformance
 				buffer.put_character (',')
 				buffer.put_integer (generated_id (final_mode))
 				buffer.put_character (',')
-	
+
 				from
 					i  := true_generics.lower
 					up := true_generics.upper
@@ -145,13 +143,13 @@ feature -- Generic conformance
 			i, up : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-				-- It's an ancored type 
+				-- It's an ancored type
 				cr_info.make_gen_type_byte_code (ba)
 			else
 				ba.append_short_integer (Tuple_type)
 				ba.append_short_integer (true_generics.count)
 				ba.append_short_integer (generated_id (False))
-	
+
 				from
 					i  := true_generics.lower
 					up := true_generics.upper
@@ -164,13 +162,13 @@ feature -- Generic conformance
 			end
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER; 
+	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			i, up, dummy : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-					-- It's an anchored type 
+					-- It's an anchored type
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
 				buffer.put_integer (Tuple_type)
@@ -179,46 +177,46 @@ feature -- Generic conformance
 				buffer.put_character (',')
 				buffer.put_integer (generated_id (final_mode))
 				buffer.put_character (',')
-	
+
 					-- Increment counter by 3
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next
-	
+
 				from
 					i  := true_generics.lower
 					up := true_generics.upper
 				until
 					i > up
 				loop
-					true_generics.item (i).generate_cid_array (buffer, 
+					true_generics.item (i).generate_cid_array (buffer,
 													final_mode, use_info, idx_cnt)
 					i := i + 1
 				end
 			end
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; 
+	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			i, up, dummy : INTEGER
 		do
 			if use_info and then (cr_info /= Void) then
-					-- It's an anchored type 
+					-- It's an anchored type
 				cr_info.generate_cid_init (buffer, final_mode, idx_cnt)
 			else
 					-- Increment counter by 3
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next
 				dummy := idx_cnt.next
-	
+
 				from
 					i  := true_generics.lower
 					up := true_generics.upper
 				until
 					i > up
 				loop
-					true_generics.item (i).generate_cid_init (buffer, 
+					true_generics.item (i).generate_cid_init (buffer,
 													final_mode, use_info, idx_cnt)
 					i := i + 1
 				end

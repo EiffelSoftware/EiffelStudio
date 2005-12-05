@@ -2378,7 +2378,7 @@ feature -- Parent checking
 						l_parent_type := l_parent_c.parent_type
 						if l_parent_type.is_expanded then
 							l_parent_type := l_parent_type.duplicate
-							l_parent_type.set_is_expanded (False)
+							l_parent_type.set_reference_mark
 						end
 						parents.extend (l_parent_type)
 
@@ -3137,7 +3137,6 @@ feature -- Actual class type
 					actual_generic.put (constraint (i), i)
 					i := i + 1
 				end
-				Result.set_is_expanded (is_expanded)
 			end
 		ensure
 			constraint_actual_type_not_void: Result /= Void
@@ -3168,7 +3167,6 @@ feature -- Actual class type
 					i := i + 1
 				end
 			end
-			Result.set_is_expanded (is_expanded)
 		ensure
 			actual_type_not_void: Result /= Void
 		end
@@ -3190,7 +3188,14 @@ feature {CLASS_TYPE_AS, AST_TYPE_CHECKER} -- Actual class type
 			else
 				create Result.make (class_id)
 			end
-			Result.set_is_expanded (is_exp or is_expanded)
+			if is_exp then
+				Result.set_expanded_mark
+			elseif is_sep then
+				Result.set_separate_mark
+			end
+			if is_expanded then
+				Result.set_expanded_class_mark
+			end
 		ensure
 			actual_type_not_void: Result /= Void
 		end
@@ -3234,7 +3239,6 @@ end
 			parent_type: CL_TYPE_A
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
-			l_old_expanded_status: BOOLEAN
 		do
 			from
 				l_area := parents.area
@@ -3246,10 +3250,11 @@ end
 					-- Because inheritance clause does not care about expanded
 					-- status, we remove it in case parent class is by default
 					-- expanded.
-				l_old_expanded_status := parent_type.is_expanded
-				parent_type.set_is_expanded (False)
+				if parent_type.is_expanded then
+					parent_type := parent_type.duplicate
+					parent_type.set_reference_mark
+				end
 				Instantiator.dispatch (parent_type, Current)
-				parent_type.set_is_expanded (l_old_expanded_status)
 				i := i + 1
 			end
 		end
@@ -3259,12 +3264,8 @@ end
 			-- generic classes.
 		require
 			no_generic: not is_generic
-		local
-			class_type: CLASS_TYPE
 		do
-			class_type := new_type (actual_type.type_i)
-			types.extend (class_type)
-			System.insert_class_type (class_type)
+			update_types (actual_type.type_i)
 		end
 
 	update_types (data: CL_TYPE_I) is
@@ -3275,7 +3276,6 @@ end
 			good_context: data.base_class.lace_class /= system.native_array_class implies not data.has_formal
 		local
 			filter: CL_TYPE_I
-			l_gen_type: GEN_TYPE_I
 			new_class_type: CLASS_TYPE
 			l_cursor: CURSOR
 		do
@@ -3317,18 +3317,13 @@ end
 					-- Clean the filters. Some of the filters can be obsolete
 					-- if the base class has been removed from the system
 				filters.clean
-				l_gen_type ?= data
 				from
 					filters.start
 				until
 					filters.after
 				loop
 						-- Instantiation of the filter with `data'
-					if l_gen_type /= Void then
-						filter := filters.item.instantiation_in (new_class_type)
-					else
-						filter := filters.item
-					end
+					filter := filters.item.instantiation_in (new_class_type)
 debug ("GENERICITY")
 	io.error.put_string ("Propagation of ")
 	filter.trace
@@ -3359,17 +3354,11 @@ end
 			-- New class type for current class
 		local
 			c: CL_TYPE_I
-			g: GEN_TYPE_I
 		do
 			if data.is_true_expanded and then not data.is_external then
 					-- Add reference counterpart.
-				g ?= data
-				if g = Void then
-					c := data.twin
-				else
-					c := g.duplicate
-				end
-				c.set_is_expanded (False)
+				c := data.duplicate
+				c.set_reference_mark
 				update_types (c)
 			end
 			create Result.make (data)
@@ -3422,14 +3411,12 @@ feature -- Meta-type
 		local
 			actual_class_type, written_actual_type: CL_TYPE_A
 		do
-			if generics = Void then
+			if class_type.type.class_id = class_id then
+					-- Use supplied `class_type' to preserve expandedness status, generic parameters, etc.
+				Result := class_type
+			elseif generics = Void then
 					-- No instantiation for non-generic class
-				if class_type.type.class_id = class_id then
-						-- Use supplied `class_type' to preserve expandedness status
-					Result := class_type
-				else
-					Result := types.first
-				end
+				Result := types.first
 			else
 				actual_class_type := class_type.associated_class.actual_type
 					-- General instantiation of the actual class type where
@@ -3437,6 +3424,11 @@ feature -- Meta-type
 					-- type of the base class of `class_type'.
 				written_actual_type ?= actual_type.instantiation_in
 											(actual_class_type, class_id)
+				if written_actual_type.is_expanded then
+						-- Ancestors are always reference types.
+					written_actual_type := written_actual_type.duplicate
+					written_actual_type.set_reference_mark
+				end
 					-- Ask for the meta-type
 				Result := written_actual_type.type_i.instantiation_in (class_type).associated_class_type
 			end

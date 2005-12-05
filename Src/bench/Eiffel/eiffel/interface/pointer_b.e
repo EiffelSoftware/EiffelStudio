@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class POINTER_B 
+class POINTER_B
 
 inherit
 	CLASS_B
@@ -43,7 +43,7 @@ feature -- Access
 				Result := Pointer_type
 			end
 		end
-		
+
 	is_typed_pointer: BOOLEAN
 			-- Is current representing TYPED_POINTER?
 
@@ -62,8 +62,6 @@ feature {CLASS_TYPE_AS} -- Actual class type
 				else
 					create Result.make (class_id)
 				end
-					-- Basic types are expanded by default
-				Result.set_is_expanded (True)
 			else
 				Result := Precursor {CLASS_B} (gen, is_exp, is_sep)
 			end
@@ -102,7 +100,7 @@ feature -- Validity
 						Error_handler.insert_error (special_error)
 					end
 				end
-				
+
 					-- Check for a procedure `set_item'.
 				l_feat ?= feature_table.item_id (names_heap.set_item_name_id)
 				if

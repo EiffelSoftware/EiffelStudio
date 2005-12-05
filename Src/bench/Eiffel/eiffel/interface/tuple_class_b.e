@@ -33,7 +33,6 @@ feature -- types
 			type_i: TUPLE_TYPE_I
 		do
 			create type_i.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
-			type_i.set_is_expanded (is_expanded)
 			class_type := new_type (type_i)
 			types.extend (class_type)
 			System.insert_class_type (class_type)
@@ -52,14 +51,19 @@ feature -- types
 			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
 				derivations.insert_derivation (class_id, data)
-				
+
 				if types.has_type (data) then
 					l_class_type := types.found_item
 				else
 						-- Found a new type for the class
 					create type_i.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
-					type_i.set_is_expanded (data.is_expanded)
-					type_i.set_is_separate (data.is_separate)
+					if data.has_expanded_mark then
+						type_i.set_expanded_mark
+					elseif data.has_reference_mark then
+						type_i.set_reference_mark
+					elseif data.has_separate_mark then
+						type_i.set_separate_mark
+					end
 					l_class_type := new_type (type_i)
 
 						-- If the $ operator is used in the class,
@@ -142,7 +146,14 @@ feature {CLASS_TYPE_AS} -- Actual class type
 				create {TUPLE_TYPE_A} Result.make (class_id, create {ARRAY [TYPE_A]}.make (1, 0))
 			end
 				-- Note that TUPLE is not expanded by default.
-			Result.set_is_expanded (is_exp)
+			if is_exp then
+				Result.set_expanded_mark
+			elseif is_sep then
+				Result.set_separate_mark
+			end
+			if is_expanded then
+				Result.set_expanded_class_mark
+			end
 		end
 
 invariant

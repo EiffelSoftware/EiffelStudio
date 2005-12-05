@@ -13,6 +13,7 @@ inherit
 		redefine
 			description,
 			dump,
+			duplicate,
 			generate_cid_array,
 			generate_cid_init,
 			generate_gen_type_il,
@@ -70,7 +71,7 @@ feature -- Access
 		local
 			gen_desc: GENERIC_DESC
 		do
-			if has_formal then
+			if has_formal or else is_anchored then
 				create gen_desc
 				gen_desc.set_type_i (Current)
 				Result := gen_desc
@@ -398,7 +399,7 @@ feature -- Status Report
 				i := i - 1
 			end
 			create Result.make (class_id, array)
-			Result.set_is_expanded (is_expanded)
+			Result.set_mark (declaration_mark)
 		end
 
 feature -- Generic conformance

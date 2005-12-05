@@ -104,7 +104,7 @@ feature {NONE} -- Two widgets
 
 feature -- Basic operation
 
-	set_show_min_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN) is
 			-- Set show or not show normal\max button.
 		do
 			internal_title_bar.set_show_normal_max (a_show)

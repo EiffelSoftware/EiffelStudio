@@ -314,7 +314,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 			until
 				contents.after or Result /= Void
 			loop
-				if contents.item.title.is_equal (a_title) then
+				if contents.item.unique_title.is_equal (a_title) then
 					Result := contents.item
 				end
 				contents.forth
@@ -558,7 +558,7 @@ feature {NONE}  -- Agents
 							l_zones.item.content.focus_in_actions.call ([])
 						end
 					else
-						l_auto_hide_zone ?= internal_shared.last_focus_content
+						l_auto_hide_zone ?= internal_shared.last_focus_content.state.zone
 						if l_auto_hide_zone = Void then
 							remove_auto_hide_zones
 						end
@@ -645,7 +645,7 @@ feature {MAIN_WINDOW} -- For debug.
 		do
 			l_docking_zone ?= a_container
 			if l_docking_zone /= Void then
-				io.put_string ("%N " + a_indent + a_container.generating_type + " " + l_docking_zone.content.title)
+				io.put_string ("%N " + a_indent + a_container.generating_type + " " + l_docking_zone.content.unique_title)
 			else
 				if a_container /= Void then
 					io.put_string ("%N " + a_indent + a_container.generating_type)

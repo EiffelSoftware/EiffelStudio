@@ -8,8 +8,8 @@ deferred class
 
 feature -- Basic operation
 
-	set_show_min_max (a_show: BOOLEAN) is
-			-- Show min\max button if `a_show' True.
+	set_show_normal_max (a_show: BOOLEAN) is
+			-- Show normal\max button if `a_show' True.
 		deferred
 		end
 

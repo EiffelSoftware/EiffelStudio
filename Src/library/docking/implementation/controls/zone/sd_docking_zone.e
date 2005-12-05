@@ -54,7 +54,7 @@ feature	{NONE} -- Initlization
 			create window.make (a_content.type, Current)
 			internal_content := a_content
 			window.set_user_widget (internal_content.user_widget)
-			window.title_bar.set_title (internal_content.title)
+			window.title_bar.set_title (internal_content.long_title)
 			if a_content.mini_toolbar /= Void then
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
@@ -103,10 +103,10 @@ feature {SD_CONTENT}
 
 feature -- Command
 
-	set_show_min_max (a_show: BOOLEAN) is
+	set_show_normal_max (a_show: BOOLEAN) is
 			-- Redefine.
 		do
-			window.set_show_min_max (a_show)
+			window.set_show_normal_max (a_show)
 		end
 
 	set_show_stick (a_show: BOOLEAN) is

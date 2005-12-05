@@ -27,7 +27,7 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 			default_create
-			
+
 			hightlight_color := internal_shared.focused_color
 			hightlight_gray_color := internal_shared.non_focused_color
 
@@ -56,9 +56,10 @@ feature {NONE} -- Initlization
 			l_zero_size_container.extend (internal_highlight_area_before)
 			l_zero_size_container.disable_item_expand (internal_highlight_area_before)
 
-			create internal_title.make_with_text ("        ")
-			l_zero_size_container.extend (internal_title)
-			l_zero_size_container.disable_item_expand (internal_title)
+			internal_title := "          "
+			create internal_drawing_area
+			internal_drawing_area.expose_actions.force_extend (agent on_expose)
+			l_zero_size_container.extend (internal_drawing_area)
 
 			create internal_highlight_area_after
 			internal_highlight_area_after.set_minimum_width (30)
@@ -68,6 +69,7 @@ feature {NONE} -- Initlization
 
 			create custom_area
 			l_zero_size_container.extend (custom_area)
+			l_zero_size_container.disable_item_expand (custom_area)
 
 			l_zero_size_container.set_minimum_width (0)
 
@@ -110,11 +112,11 @@ feature {NONE} -- Initlization
 			internal_highlight_area_before.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_highlight_area_before.pointer_double_press_actions.force_extend (agent on_normal_max)
 
-			internal_title.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_title.pointer_button_release_actions.force_extend (agent on_pointer_release)
-			internal_title.pointer_leave_actions.force_extend (agent on_pointer_leave)
-			internal_title.pointer_motion_actions.extend (agent on_pointer_motion)
-			internal_title.pointer_double_press_actions.force_extend (agent on_normal_max)
+			internal_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
+			internal_drawing_area.pointer_button_release_actions.force_extend (agent on_pointer_release)
+			internal_drawing_area.pointer_leave_actions.force_extend (agent on_pointer_leave)
+			internal_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
+			internal_drawing_area.pointer_double_press_actions.force_extend (agent on_normal_max)
 
 			internal_highlight_area_after.pointer_button_press_actions.force_extend (agent on_pointer_press)
 			internal_highlight_area_after.pointer_button_release_actions.force_extend (agent on_pointer_release)
@@ -131,15 +133,15 @@ feature -- Access
 		require
 			a_title_not_void: a_title /= Void
 		do
-			internal_title.set_text (a_title)
+			internal_title := a_title
 		ensure
-			set: internal_title.text.is_equal (a_title)
+			set: internal_title = a_title
 		end
 
 	title: STRING is
 			-- Title.
 		do
-			Result := internal_title.text
+			Result := internal_title
 		ensure
 			not_void: Result /= Void
 		end
@@ -234,14 +236,14 @@ feature -- Access
 		do
 			is_focus_color_enable := True
 
-			internal_title.set_background_color (hightlight_color)
-			on_expose
+			internal_drawing_area.set_background_color (hightlight_color)
 			if hightlight_color.lightness > 0.5 then
 				create l_text_color.make_with_rgb (0, 0, 0)
 			else
 				create l_text_color.make_with_rgb (1, 1, 1)
 			end
-			internal_title.set_foreground_color (l_text_color)
+			internal_drawing_area.set_foreground_color (l_text_color)
+			on_expose
 		ensure
 			is_focus_color_enable_set: is_focus_color_enable
 		end
@@ -252,15 +254,15 @@ feature -- Access
 			l_text_color: EV_COLOR
 		do
 			is_focus_color_enable := False
-			internal_title.set_background_color (hightlight_gray_color)
-			on_expose
-
+			internal_drawing_area.set_background_color (hightlight_gray_color)
 			if hightlight_gray_color.lightness > 0.5 then
 				create l_text_color.make_with_rgb (0, 0, 0)
 			else
 				create l_text_color.make_with_rgb (1, 1, 1)
 			end
-			internal_title.set_foreground_color (l_text_color)
+			internal_drawing_area.set_foreground_color (l_text_color)
+
+			on_expose
 		ensure
 			is_focus_color_enable_set: not is_focus_color_enable
 		end
@@ -374,7 +376,7 @@ feature {NONE} -- Agents
 		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; tile_a, tile_b, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Hanle pointer motion.
+			-- Handle pointer motion.
 		do
 			if pressed then
 				drag_actions.call ([a_x, a_y, tile_a, tile_b, a_pressure, a_screen_x, a_screen_y])
@@ -382,7 +384,7 @@ feature {NONE} -- Agents
 		end
 
 	on_expose is
-			--
+			-- Handle expose actions.
 		local
 			l_helper: SD_COLOR_HELPER
 		do
@@ -391,9 +393,13 @@ feature {NONE} -- Agents
 				l_helper.draw_color_change_gradually (internal_highlight_area_after, hightlight_color)
 				internal_highlight_area_before.set_foreground_color (hightlight_color)
 				internal_highlight_area_before.fill_rectangle (0, 0, internal_highlight_area_before.width, internal_highlight_area_before.height)
+				internal_drawing_area.clear
+				internal_drawing_area.draw_ellipsed_text_top_left (0, 2, internal_title, internal_drawing_area.width)
 			else
 				internal_highlight_area_before.clear
 				internal_highlight_area_after.clear
+				internal_drawing_area.clear
+				internal_drawing_area.draw_ellipsed_text_top_left (0, 2, internal_title, internal_drawing_area.width)
 			end
 		end
 
@@ -429,8 +435,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	internal_title: EV_LABEL
+	internal_title: STRING
 			-- Internal_title
+
+	internal_drawing_area: EV_DRAWING_AREA
+			-- Drawing area which draw `internal_title'.
 
 	internal_tool_bar: EV_TOOL_BAR
 			-- Tool bar which hold `stick', `normal_max', `close' buttons.

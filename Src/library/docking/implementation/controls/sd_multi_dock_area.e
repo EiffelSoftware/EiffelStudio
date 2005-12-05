@@ -35,7 +35,7 @@ feature -- Command
 				l_zone_title ?= item
 				l_zone ?= item
 				if l_zone_title /= Void and not l_zone.is_maximized then
-					l_zone_title.set_show_min_max (False)
+					l_zone_title.set_show_normal_max (False)
 				end
 			end
 		end
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 				if parent_floating_zone = Void  then
 --					l_zone.set_show_min_max (False)
 --				else
-					l_zone.set_show_min_max (True)
+					l_zone.set_show_normal_max (True)
 				end
 
 

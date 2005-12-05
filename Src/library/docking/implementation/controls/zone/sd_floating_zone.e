@@ -80,7 +80,6 @@ feature -- Command
 			-- Remove/add title bar if `Current' content count changed.
 		local
 			l_title_zone: SD_TITLE_BAR_REMOVEABLE
-			l_split_area: EV_SPLIT_AREA
 		do
 			if internal_inner_container.readable then
 				count_zone_displayed
@@ -91,30 +90,17 @@ feature -- Command
 					l_title_zone.set_show_stick (False)
 
 					if only_one_zone_displayed.is_maximized then
-						l_title_zone.set_show_min_max (True)
+						l_title_zone.set_show_normal_max (True)
 						extend_title_bar
 					else
-						l_title_zone.set_show_min_max (False)
+						l_title_zone.set_show_normal_max (False)
 						if internal_vertical_box.has (internal_title_bar) then
 							internal_vertical_box.prune_all (internal_title_bar)
 						end
 					end
 				elseif zone_display_count > 1 then
 					extend_title_bar
-					--  l_zone should have title bar
-					l_split_area ?= internal_inner_container.item
-					check l_split_area /= Void end
-					l_title_zone ?= l_split_area.first
-					if l_title_zone /= Void then
-						l_title_zone.set_show_min_max (True)
-						l_title_zone.set_show_stick (True)
-						l_title_zone := Void
-					end
-					l_title_zone ?= l_split_area.second
-					if l_title_zone /= Void then
-						l_title_zone.set_show_min_max (True)
-						l_title_zone.set_show_stick (True)
-					end
+					set_all_title_bar (internal_inner_container.item)
 				elseif zone_display_count < 1 then
 					hide
 				end
@@ -298,7 +284,25 @@ feature {NONE} -- Implementation
 				count_zone_display (l_container)
 			end
 		end
-
+	
+	set_all_title_bar (a_widget: EV_WIDGET) is
+			-- Set all zones' title bar in `Current' show normal\max.
+		require
+			a_widget_not_void: a_widget /= Void
+		local
+			l_split: EV_SPLIT_AREA
+			l_zone: SD_TITLE_BAR_REMOVEABLE
+		do
+			l_split ?= a_widget
+			l_zone ?= a_widget
+			if l_split /= Void then
+				set_all_title_bar (l_split.first)
+				set_all_title_bar (l_split.second)
+			elseif l_zone /= Void then
+				l_zone.set_show_normal_max (True)
+			end
+		end
+		
 	zone_display_count: INTEGER
 			-- How many zones are displayed?
 

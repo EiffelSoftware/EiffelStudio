@@ -5,35 +5,39 @@ cd $INSTALL_DIR
 md library
 cd library
 remtrace base
-exprt -r $DEFAULT_CVS_TAG -d base Src/library/base
+exprt $DEFAULT_CVS_TAG/Src/library/base base 
 remtrace Eiffel2Java
-exprt -r $DEFAULT_CVS_TAG -d Eiffel2Java Src/library/Eiffel2Java
+exprt $DEFAULT_CVS_TAG/Src/library/Eiffel2Java Eiffel2Java 
 remtrace event
-exprt -r $DEFAULT_CVS_TAG -d event Src/library/event
+exprt $DEFAULT_CVS_TAG/Src/library/event event 
 remtrace graph
-exprt -r $DEFAULT_CVS_TAG -d graph Src/library/graph
+exprt $DEFAULT_CVS_TAG/Src/library/graph graph 
 remtrace lex
-exprt -r $DEFAULT_CVS_TAG -d lex Src/library/lex
+exprt $DEFAULT_CVS_TAG/Src/library/lex lex 
 remtrace mel
-exprt -r $DEFAULT_CVS_TAG -d mel Src/library/mel
+exprt $DEFAULT_CVS_TAG/Src/library/mel mel 
+remtrace memory_analyzer
+exprt $DEFAULT_CVS_TAG/Src/library/memory_analyzer memory_analyzer 
 remtrace net
-exprt -r $DEFAULT_CVS_TAG -d net Src/library/net
+exprt $DEFAULT_CVS_TAG/Src/library/net net 
 remtrace obsolete
-exprt -r $DEFAULT_CVS_TAG -d obsolete Src/library/obsolete
+exprt $DEFAULT_CVS_TAG/Src/library/obsolete obsolete 
 remtrace parse
-exprt -r $DEFAULT_CVS_TAG -d parse Src/library/parse
+exprt $DEFAULT_CVS_TAG/Src/library/parse parse 
 remtrace preferences
-exprt -r $DEFAULT_CVS_TAG -d preferences Src/library/preferences
+exprt $DEFAULT_CVS_TAG/Src/library/preferences preferences 
+remtrace process
+exprt $DEFAULT_CVS_TAG/Src/library/process process 
 remtrace store
-exprt -r $DEFAULT_CVS_TAG -d store Src/library/store
+exprt $DEFAULT_CVS_TAG/Src/library/store store 
 remtrace thread
-exprt -r $DEFAULT_CVS_TAG -d thread Src/library/thread
+exprt $DEFAULT_CVS_TAG/Src/library/thread thread 
 remtrace time
-exprt -r $DEFAULT_CVS_TAG -d time Src/library/time
+exprt $DEFAULT_CVS_TAG/Src/library/time time 
 remtrace vision
-exprt -r $DEFAULT_CVS_TAG -d vision Src/library/vision
+exprt $DEFAULT_CVS_TAG/Src/library/vision vision 
 remtrace vision2
-exprt -r $DEFAULT_CVS_TAG -d vision2 Src/library/vision2
+exprt $DEFAULT_CVS_TAG/Src/library/vision2 vision2 
 fullrd vision2/implementation/mswin
 if [ "$1" == "gtk" ]; then
 	# TODO
@@ -41,7 +45,7 @@ if [ "$1" == "gtk" ]; then
 	echo ""
 fi
 remtrace web
-exprt -r $DEFAULT_CVS_TAG -d web Src/library/web
+exprt $DEFAULT_CVS_TAG/Src/library/web web 
 
 cd ../..
 
@@ -50,35 +54,35 @@ cd $INSTALL_DIR
 md examples
 cd examples
 remtrace base
-exprt -r $DEFAULT_CVS_TAG -d base Src/examples/base
+exprt $DEFAULT_CVS_TAG/Src/examples/base base 
 remtrace Eiffel2Java
-exprt -r $DEFAULT_CVS_TAG -d Eiffel2Java Src/examples/Eiffel2Java
+exprt $DEFAULT_CVS_TAG/Src/examples/Eiffel2Java Eiffel2Java 
 remtrace cecil
-exprt -r $DEFAULT_CVS_TAG -d cecil Src/examples/cecil
+exprt $DEFAULT_CVS_TAG/Src/examples/cecil cecil 
 remtrace cpp
-exprt -r $DEFAULT_CVS_TAG -d cpp Src/examples/cpp
+exprt $DEFAULT_CVS_TAG/Src/examples/cpp cpp 
 remtrace lex
-exprt -r $DEFAULT_CVS_TAG -d lex Src/examples/lex
+exprt $DEFAULT_CVS_TAG/Src/examples/lex lex 
 remtrace net
-exprt -r $DEFAULT_CVS_TAG -d net Src/examples/net
+exprt $DEFAULT_CVS_TAG/Src/examples/net net 
 remtrace parse
-exprt -r $DEFAULT_CVS_TAG -d parse Src/examples/parse
+exprt $DEFAULT_CVS_TAG/Src/examples/parse parse 
 remtrace preferences
-exprt -r $DEFAULT_CVS_TAG -d preferences Src/examples/preferences
+exprt $DEFAULT_CVS_TAG/Src/examples/preferences preferences 
 remtrace store
-exprt -r $DEFAULT_CVS_TAG -d store Src/examples/store
+exprt $DEFAULT_CVS_TAG/Src/examples/store store 
 fullrd store/matisse
 remtrace thread
-exprt -r $DEFAULT_CVS_TAG -d thread Src/examples/thread
+exprt $DEFAULT_CVS_TAG/Src/examples/thread thread 
 cd thread
 fullrd fancy
 cd ..
 remtrace time
-exprt -r $DEFAULT_CVS_TAG -d time Src/examples/time
+exprt $DEFAULT_CVS_TAG/Src/examples/time time 
 remtrace vision
-exprt -r $DEFAULT_CVS_TAG -d vision Src/examples/vision
+exprt $DEFAULT_CVS_TAG/Src/examples/vision vision 
 remtrace vision2
-exprt -r $DEFAULT_CVS_TAG -d vision2 Src/examples/vision2
+exprt $DEFAULT_CVS_TAG/Src/examples/vision2 vision2 
 cd vision2
 fullrd Boxes
 fullrd drawing_area
@@ -98,8 +102,8 @@ fullrd tests
 fullrd tutorial
 cd ..
 remtrace web
-exprt -r $DEFAULT_CVS_TAG -d web Src/examples/web
+exprt $DEFAULT_CVS_TAG/Src/examples/web web 
 remtrace studio
-exprt -r $DEFAULT_CVS_TAG -d studio Src/examples/studio
+exprt $DEFAULT_CVS_TAG/Src/examples/studio studio 
 
 cd ../..

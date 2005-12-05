@@ -2,28 +2,34 @@ class BIT_I
 
 inherit
 	BASIC_I
+		rename
+			make as basic_make
 		redefine
 			is_bit, is_external, same_as,
 			description, sk_value, hash_code,
-			is_pointer, 
+			is_pointer,
 			metamorphose,
 			generate_cid, make_gen_type_byte_code,
 			generate_cid_array, generate_cid_init,
 			generate_default_value, generate_expanded_creation,
-			generate_expanded_initialization, default_create,
+			generate_expanded_initialization,
 			tuple_code, name, has_associated_class_type,
 			associated_class_type
 		end
 
 create
-	default_create
+	make
 
 feature {NONE} -- Initialization
 
-	default_create is
-			-- Initialize new instance of BOOLEAN_I
+	make (count: like size) is
+			-- Initialize new instance of BIT_I with `count' bits
 		do
-			make (system.bit_class.compiled_class.class_id)
+			basic_make (system.bit_class.compiled_class.class_id)
+			size := count
+				-- Set expanded mark explicitly because
+				-- associated class BIT_REF is reference.
+			set_expanded_mark
 		end
 
 feature -- Status report
@@ -65,12 +71,6 @@ feature
 	size: INTEGER
 			-- Bit size
 
-	set_size (i: INTEGER) is
-			-- Assign `i' to `size'.
-		do
-			size := i
-		end
-
 	is_bit: BOOLEAN is True
 			-- Is the type a long type ?
 
@@ -105,7 +105,7 @@ feature
 
 	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
-		
+
 	union_tag : STRING is "rarg"
 
 	hash_code: INTEGER is
@@ -124,7 +124,7 @@ feature
 	(reg, value: REGISTRABLE; buffer: GENERATION_BUFFER; workbench_mode: BOOLEAN) is
 			-- Generate the metamorphism from simple type to reference and
 			-- put result in register `reg'. The value of the basic type is
-			-- held in `value'. 
+			-- held in `value'.
 		do
 			reg.print_register
 			buffer.put_string (" = ")
@@ -171,7 +171,7 @@ feature -- Generic conformance
 			ba.append_short_integer (size)
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER; 
+	generate_cid_array (buffer : GENERATION_BUFFER;
 						final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER
@@ -183,7 +183,7 @@ feature -- Generic conformance
 			dummy := idx_cnt.next
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER; 
+	generate_cid_init (buffer : GENERATION_BUFFER;
 					   final_mode, use_info : BOOLEAN; idx_cnt : COUNTER) is
 		local
 			dummy : INTEGER
@@ -194,7 +194,7 @@ feature -- Generic conformance
 		end
 
 feature
-	
+
 	generate_default_value (buffer : GENERATION_BUFFER) is
 			-- Generate default value associated to current basic type.
 		do
@@ -202,14 +202,14 @@ feature
 			buffer.put_integer (size)
 			buffer.put_character (')')
 		end
-	
+
 	make_default_byte_code (ba: BYTE_ARRAY) is
 			-- Generate default value of basic type on stack.
 		do
 			ba.append (Bc_create)
 			ba.append (Bc_bit)
 			ba.append_integer (size)
-		end 
+		end
 
 	generate_expanded_creation (buffer: GENERATION_BUFFER; target_name: STRING) is
 			-- Generate object associated to current.
@@ -226,5 +226,5 @@ feature
 			-- (from CL_TYPE_I)
 		do
 		end
-		
+
 end

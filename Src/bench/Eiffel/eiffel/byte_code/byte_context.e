@@ -821,11 +821,7 @@ feature -- Access
 			good_argument: type /= Void
 			valid_class_type: class_type /= Void
 		do
-			if type.has_true_formal then
-				Result := type.complete_instantiation_in (class_type)
-			else
-				Result := type
-			end
+			Result := type.complete_instantiation_in (class_type)
 		end
 
 	set_byte_code (bc: BYTE_CODE) is

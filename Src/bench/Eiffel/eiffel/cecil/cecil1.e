@@ -3,11 +3,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CECIL_ROUTINE_TABLE 
+class CECIL_ROUTINE_TABLE
 
 inherit
 	CECIL_TABLE [FEATURE_I]
-	
+
 	SHARED_DECLARATIONS
 		undefine
 			copy, is_equal
@@ -24,12 +24,8 @@ feature -- C code generation
 			i, nb: INTEGER;
 			routine_name: STRING;
 			feat: FEATURE_I;
-			c_type: TYPE_C;
 			written_class: CLASS_C;
 			written_type: CLASS_TYPE;
-			actual_type: TYPE_A;
-			formal_type: FORMAL_A
-			gen_type_a: GEN_TYPE_A
 			l_values: like values
 		do
 			buffer.put_string ("static char *(*cr");
@@ -70,20 +66,10 @@ end;
 					buffer.put_string (routine_name);
 
 						-- Remember extern declarations
-					actual_type := feat.type.actual_type;
-					if actual_type.is_formal then
-							-- If `actual_type' is a formal parameter, it means that the
-							-- current class declaration is a generic class and therefore
-							-- `gen_type_a' cannot be Void (enforced by a check statement).
-						formal_type ?= actual_type
-						gen_type_a ?= a_class_type.type.type_a
-						check
-							gen_type_a_exists: gen_type_a /= Void
-						end
-						actual_type := gen_type_a.generics.item (formal_type.position)
-					end; 
-					c_type := actual_type.type_i.c_type;
-					Extern_declarations.add_routine (c_type, routine_name);
+					Extern_declarations.add_routine (
+						feat.type.actual_type.type_i.instantiation_in (a_class_type).c_type,
+						routine_name
+					)
 				end;
 				buffer.put_string (",%N");
 				i := i + 1;

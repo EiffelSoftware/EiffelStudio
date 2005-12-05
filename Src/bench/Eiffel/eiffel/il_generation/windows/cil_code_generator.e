@@ -5821,13 +5821,11 @@ feature {NONE} -- Implementation: generation
 
 				-- We are now evaluation `l_type_i' in the context of current CLASS_TYPE
 				-- generation.
-			if l_type_i.has_true_formal then
-				check
-						-- If we have some formals, we are clearly in a generic class.
-					is_generic_type: current_class_type.is_generic
-				end
-				l_type_i := l_type_i.complete_instantiation_in (current_class_type)
+			check
+					-- If we have some formals, we are clearly in a generic class.
+				is_generic_type: l_type_i.has_true_formal implies current_class_type.is_generic
 			end
+			l_type_i := l_type_i.complete_instantiation_in (current_class_type)
 
 			if l_type_i.is_formal then
 				l_formal_type ?= l_type_i

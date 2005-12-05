@@ -138,6 +138,12 @@ b!f:\.c=.o: !f
 
 -expand
 
+|expand f!$(OTHER)!
+MTb!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
+
+-expand
+
 |expand f!$(WADD)!
 !f:\.c=.o: !f
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@

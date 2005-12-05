@@ -16,7 +16,6 @@ inherit
 		redefine
 			make,
 			build_interface,
-			build_options_box,
 			search,
 			replace_current,
 			switch_mode,
@@ -29,7 +28,8 @@ inherit
 			enable_disable_search_button,
 			on_text_edited,
 			on_text_reset,
-			on_text_fully_loaded
+			on_text_fully_loaded,
+			set_focus
 		end
 
 	MSR_FORMATTER
@@ -82,8 +82,11 @@ feature {NONE} -- Initialization
 			frame: EV_FRAME
 			hbox: EV_HORIZONTAL_BOX
 			cell: EV_CELL
+			option_and_replace_all_box: EV_HORIZONTAL_BOX
+			option_frame: EV_FRAME
 		do
-			create label_search.make_with_text (Interface_names.l_Search_for)
+					-- Search box
+			create label_search.make_with_text (Interface_names.l_Search_for + " ")
 			label_search.align_text_left
 			size := label_search.minimum_width
 
@@ -94,9 +97,8 @@ feature {NONE} -- Initialization
 			keyword_field.drop_actions.extend (agent display_stone_signature (keyword_field, ?))
 
 			create search_box
-			search_box.set_padding (3)
+			search_box.set_padding (1)
 			create hbox
-			hbox.set_padding_width (3)
 			search_box.extend (hbox)
 			hbox.extend (label_search)
 			hbox.disable_item_expand (label_search)
@@ -112,6 +114,7 @@ feature {NONE} -- Initialization
 			hbox.extend (search_button)
 			hbox.disable_item_expand (search_button)
 
+					-- Replace box
 			create replace_combo_box
 			replace_combo_box.key_press_actions.extend (agent key_pressed (?, False))
 			replace_combo_box.set_minimum_width (Layout_constants.Dialog_unit_to_pixels (290))
@@ -120,17 +123,17 @@ feature {NONE} -- Initialization
 			create replace_check_button.make_with_text (Interface_names.l_Replace_with)
 			replace_check_button.select_actions.extend (agent switch_mode)
 			replace_check_button.key_press_actions.extend (agent key_pressed (?, True ))
-			size := size.max (replace_check_button.minimum_width)
+
+
+			create replace_button.make_with_text_and_action (interface_names.b_replace, agent replace_current)
 
 			create replace_text.make (0)
 
 			create replace_box
-			replace_box.set_padding (3)
 			create hbox
-			hbox.set_padding_width (3)
 			replace_box.extend (hbox)
 			replace_box.disable_item_expand (hbox)
-			create label.make_with_text (interface_names.l_replace_with)
+			create label.make_with_text (interface_names.l_replace_with + " ")
 
 			hbox.extend (label)
 			hbox.disable_item_expand (label)
@@ -142,25 +145,91 @@ feature {NONE} -- Initialization
 			hbox.disable_item_expand (replace_check_button)
 			hbox.extend (replace_combo_box)
 			hbox.disable_item_expand (replace_combo_box)
+			size := label.width + replace_combo_box.width
 
 			create cell
 			cell.set_minimum_width (3)
 			hbox.extend (cell)
 			hbox.disable_item_expand (cell)
 
-			create replace_button.make_with_text_and_action (interface_names.b_replace, agent replace_current)
-			create replace_all_click_button.make_with_text_and_action (interface_names.b_replace_all, agent confirm_and_replace_all)
 			hbox.extend (replace_button)
 			hbox.disable_item_expand (replace_button)
-			replace_button.set_minimum_width (replace_all_click_button.width)
-			hbox.extend (replace_all_click_button)
-			replace_button.set_minimum_width (replace_all_click_button.width)
-			search_button.set_minimum_width (replace_all_click_button.width)
-			hbox.disable_item_expand (replace_all_click_button)
+
+					-- Options and replace all
+			create option_and_replace_all_box
+			create option_frame.make_with_text (interface_names.l_Options)
+			option_frame.set_minimum_width (size)
+			option_and_replace_all_box.extend (option_frame)
+			option_and_replace_all_box.disable_item_expand (option_frame)
+			create hbox
+			create cell
+			cell.set_minimum_width (10)
+			hbox.extend (cell)
+			hbox.disable_item_expand (cell)
+			option_frame.extend (hbox)
+				-- Option "Match case"
+			create case_sensitive_button.make_with_text (Interface_names.l_Match_case)
+			case_sensitive_button.key_press_actions.extend (agent key_pressed (?, True))
+			case_sensitive_button.select_actions.extend (agent force_new_search)
+
+				-- Option "Whole word"
+			create whole_word_button.make_with_text (Interface_names.l_Whole_word)
+			whole_word_button.key_press_actions.extend (agent key_pressed (?, True))
+			whole_word_button.select_actions.extend (agent force_new_search)
+
+				-- Option "Use regular expression"
+			create use_regular_expression_button.make_with_text (Interface_names.l_Use_regular_expression)
+			use_regular_expression_button.key_press_actions.extend (agent key_pressed (?, True))
+			use_regular_expression_button.select_actions.extend (agent force_new_search)
+			use_regular_expression_button.enable_select
+
+				-- Option "Search backward"
+			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
+			search_backward_button.key_press_actions.extend (agent key_pressed (?, True))
+
+			create vbox
+			hbox.extend (vbox)
+			hbox.disable_item_expand (vbox)
+			vbox.extend (case_sensitive_button)
+			vbox.disable_item_expand (case_sensitive_button)
+			vbox.extend (whole_word_button)
+			vbox.disable_item_expand (whole_word_button)
+
+			create cell
+			cell.set_minimum_width (80)
+			hbox.extend (cell)
+			hbox.disable_item_expand (cell)
+
+			create vbox
+			hbox.extend (vbox)
+			hbox.disable_item_expand (vbox)
+			vbox.extend (use_regular_expression_button)
+			vbox.disable_item_expand (use_regular_expression_button)
+			vbox.extend (search_backward_button)
+			vbox.disable_item_expand (search_backward_button)
+
+			create replace_all_click_button.make_with_text_and_action (interface_names.b_replace_all, agent confirm_and_replace_all)
+			create vbox
+			vbox.extend (replace_all_click_button)
+			vbox.disable_item_expand (replace_all_click_button)
+			vbox.extend (create {EV_CELL})
+
+			create cell
+			cell.set_minimum_width (3)
+			option_and_replace_all_box.extend (cell)
+			option_and_replace_all_box.disable_item_expand (cell)
+
+			option_and_replace_all_box.extend (vbox)
+			option_and_replace_all_box.disable_item_expand (vbox)
+
+			replace_button.set_minimum_width (layout_constants.default_button_width)
+			replace_button.set_minimum_width (layout_constants.default_button_width)
+			search_button.set_minimum_width (layout_constants.default_button_width)
+
 			replace_button.disable_sensitive
 			replace_all_click_button.disable_sensitive
 
-			options_box := build_options_box
+			options_box := build_scope_box
 			report_box := build_report_box
 
 			if not preferences.development_window_data.show_search_options then
@@ -174,10 +243,27 @@ feature {NONE} -- Initialization
 			vbox.disable_item_expand (search_box)
 			vbox.extend (replace_box)
 			vbox.disable_item_expand (replace_box)
-			vbox.extend (options_box)
-			vbox.disable_item_expand (options_box)
-			vbox.extend (report_box)
+			vbox.extend (option_and_replace_all_box)
+			vbox.disable_item_expand (option_and_replace_all_box)
 
+			create notebook
+			notebook.drop_actions.set_veto_pebble_function (agent notebook_veto_pebble)
+			notebook.drop_actions.extend (agent on_drop_notebook)
+			notebook.selection_actions.extend (agent on_notebook_selected)
+			notebook.set_tab_position (notebook.tab_top)
+			notebook.extend (vbox)
+			notebook.extend (options_box)
+			notebook.item_tab (vbox).set_text (interface_names.t_search_tool)
+			notebook.item_tab (options_box).set_text (interface_names.l_scope)
+
+			current_editor_button.enable_select
+			toggle_scope_detail (current_editor_button)
+
+			create vbox
+			vbox.extend (notebook)
+			vbox.disable_item_expand (notebook)
+
+			vbox.extend (report_box)
 			create frame
 			frame.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_raised)
 			frame.extend (vbox)
@@ -189,6 +275,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	grid_head_class: STRING is				"Class"
+	grid_head_line_number: STRING is 		"Line"
 	grid_head_found: STRING is				"Found"
 	grid_head_context: STRING is			"Context"
 	grid_head_file_location: STRING is		"File location"
@@ -198,10 +285,10 @@ feature -- Access
 			-- List of header width.
 		once
 			create Result.make (4)
-			Result.extend (label_font.string_width (grid_head_class) + column_border_space)
-			Result.extend (label_font.string_width (grid_head_found) + column_border_space)
-			Result.extend (label_font.string_width (grid_head_context) + column_border_space)
-			Result.extend (label_font.string_width (grid_head_file_location) + column_border_space)
+			Result.extend (label_font.string_width (grid_head_class) + column_border_space + column_border_space)
+			Result.extend (label_font.string_width (grid_head_found) + column_border_space + column_border_space)
+			Result.extend (label_font.string_width (grid_head_context) + column_border_space + column_border_space)
+			Result.extend (label_font.string_width (grid_head_file_location) + column_border_space + column_border_space)
 		end
 
 	surrounding_text_number: INTEGER is 	20
@@ -260,6 +347,9 @@ feature -- Access
 
 	replace_combo_box: EV_COMBO_BOX
 			-- Replacment combo box
+
+	notebook: EV_NOTEBOOK
+			-- Notebook, one tab for basic search, one for scopes.
 
 feature -- Status report
 
@@ -362,6 +452,15 @@ feature -- Status setting
 			-- Disable increamental search	
 		do
 			incremental_search_button.disable_select
+		end
+
+	set_focus is
+			-- give the focus to the pattern field
+		do
+			if notebook.selected_item_index /= 1 then
+				notebook.select_item (notebook.i_th (1))
+			end
+			keyword_field.set_focus
 		end
 
 feature -- Action
@@ -530,7 +629,7 @@ feature {MSR_REPLACE_IN_ESTUDIO_STRATEGY, EB_CLICKABLE_EDITOR} -- Implementation
 
 feature {NONE} -- Build interface
 
-	build_options_box: EV_VERTICAL_BOX is
+	build_scope_box: EV_VERTICAL_BOX is
 			-- Create and return a box containing the search options
 		local
 			vbox: EV_VERTICAL_BOX
@@ -538,27 +637,8 @@ feature {NONE} -- Build interface
 			options_toolbar: EV_TOOL_BAR
 			cell: EV_CELL
 			hbox: EV_HORIZONTAL_BOX
+			l_hbox: EV_HORIZONTAL_BOX
 		do
-				-- Option "Match case"
-			create case_sensitive_button.make_with_text (Interface_names.l_Match_case)
-			case_sensitive_button.key_press_actions.extend (agent key_pressed (?, True))
-			case_sensitive_button.select_actions.extend (agent force_new_search)
-
-				-- Option "Whole word"
-			create whole_word_button.make_with_text (Interface_names.l_Whole_word)
-			whole_word_button.key_press_actions.extend (agent key_pressed (?, True))
-			whole_word_button.select_actions.extend (agent force_new_search)
-
-				-- Option "Use regular expression"
-			create use_regular_expression_button.make_with_text (Interface_names.l_Use_regular_expression)
-			use_regular_expression_button.key_press_actions.extend (agent key_pressed (?, True))
-			use_regular_expression_button.select_actions.extend (agent force_new_search)
-			use_regular_expression_button.enable_select
-
-				-- Option "Search backward"
-			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
-			search_backward_button.key_press_actions.extend (agent key_pressed (?, True))
-
 				-- Option "Incremental search"
 			create incremental_search_button.make_with_text ("Have not added to search panel")
 			incremental_search_button.enable_select
@@ -566,19 +646,19 @@ feature {NONE} -- Build interface
 				-- Option "Current Editor"		
 			create current_editor_button.make_with_text (Interface_names.l_Current_editor)
 			current_editor_button.key_press_actions.extend (agent key_pressed (?, True))
-			current_editor_button.select_actions.extend (agent toggle_scope_detail)
+			current_editor_button.select_actions.extend (agent toggle_scope_detail (current_editor_button))
 			current_editor_button.select_actions.extend (agent force_new_search)
 
 				-- Option "Whole Project"
 			create whole_project_button.make_with_text (Interface_names.l_Whole_project)
 			whole_project_button.key_press_actions.extend (agent key_pressed (?, True))
-			whole_project_button.select_actions.extend (agent toggle_scope_detail)
+			whole_project_button.select_actions.extend (agent toggle_scope_detail (whole_project_button))
 			whole_project_button.select_actions.extend (agent force_new_search)
 
 				-- Option "Scope"
-			create scope_button.make_with_text (Interface_names.l_Scope)
+			create scope_button.make_with_text (Interface_names.l_Custom)
 			scope_button.key_press_actions.extend (agent key_pressed (?, True))
-			scope_button.select_actions.extend (agent toggle_scope_detail)
+			scope_button.select_actions.extend (agent toggle_scope_detail (scope_button))
 			scope_button.select_actions.extend (agent force_new_search)
 			scope_button.drop_actions.extend (agent on_drop_scope_button (?))
 
@@ -602,29 +682,22 @@ feature {NONE} -- Build interface
 
 				-- Add button
 			create add_button.make_with_text (interface_names.b_Add)
+			add_button.set_minimum_width (layout_constants.default_button_width)
 			add_button.select_actions.extend (agent add_scope)
 			add_button.drop_actions.extend (agent on_drop_add (?))
 
 				-- Remove button
 			create remove_button.make_with_text (interface_names.b_Remove)
+			remove_button.set_minimum_width (layout_constants.default_button_width)
 			remove_button.select_actions.extend (agent remove_scope)
 			remove_button.drop_actions.extend (agent on_drop_remove (?))
 
 				-- Remove all button
 			create remove_all_button.make_with_text (interface_names.b_Remove_all)
+			remove_all_button.set_minimum_width (layout_constants.default_button_width)
 			remove_all_button.select_actions.extend (agent remove_all)
 
 			create vbox
-			vbox.set_border_width (5)
-			vbox.set_padding_width (2)
-			vbox.extend (case_sensitive_button)
-			vbox.extend (whole_word_button)
-			vbox.extend (use_regular_expression_button)
-			vbox.extend (search_backward_button)
-			vbox.disable_item_expand (case_sensitive_button)
-			vbox.disable_item_expand (whole_word_button)
-			vbox.disable_item_expand (use_regular_expression_button)
-			vbox.disable_item_expand (search_backward_button)
 
 			create options_button.make_with_text (Interface_names.l_Search_options_hide)
 			options_button.select_actions.extend (agent toggle_options)
@@ -639,18 +712,18 @@ feature {NONE} -- Build interface
 			frm.extend (cell)
 			cell.extend (options_toolbar)
 			create Result
-			Result.extend (frm)
-			Result.disable_item_expand (frm)
 
 			create hbox
+			hbox.set_border_width (Layout_constants.Small_border_size)
 
-			hbox.extend (vbox)
-			hbox.disable_item_expand (vbox)
+			create cell
+			cell.set_minimum_width (5)
+			hbox.extend (cell)
+			hbox.disable_item_expand (cell)
 
 			create scope
 			create vbox
-			vbox.set_border_width (5)
-			vbox.set_padding_width (2)
+			vbox.set_padding_width (layout_constants.small_border_size )
 			vbox.extend (current_editor_button)
 			vbox.extend (whole_project_button)
 			vbox.extend (scope_button)
@@ -664,22 +737,38 @@ feature {NONE} -- Build interface
 
 
 			create vbox
-			vbox.set_border_width (5)
 			vbox.extend (scope_list)
-			scope_list.set_minimum_width (150)
+			scope_list.set_minimum_width (142 + layout_constants.default_button_width)
 
 			scope.extend (vbox)
 			scope.disable_item_expand (vbox)
 
-			create vbox
-			vbox.set_border_width (5)
-			vbox.set_padding_width (2)
+			create cell
+			cell.set_minimum_width (3)
+			scope.extend (cell)
+			scope.disable_item_expand (cell)
 
-			vbox.extend (add_button)
-			vbox.disable_item_expand (add_button)
-			vbox.extend (remove_button)
-			vbox.extend (remove_all_button)
-			vbox.disable_item_expand (remove_button)
+			create vbox
+			vbox.set_padding_width (layout_constants.small_border_size)
+
+			create l_hbox
+			vbox.extend (l_hbox)
+			vbox.disable_item_expand (l_hbox)
+			l_hbox.extend (add_button)
+			l_hbox.disable_item_expand (add_button)
+
+			create l_hbox
+			vbox.extend (l_hbox)
+			vbox.disable_item_expand (l_hbox)
+			l_hbox.extend (remove_button)
+			l_hbox.disable_item_expand (remove_button)
+
+			create l_hbox
+			vbox.extend (l_hbox)
+			vbox.disable_item_expand (l_hbox)
+			l_hbox.extend (remove_all_button)
+			l_hbox.disable_item_expand (remove_all_button)
+
 			vbox.extend (search_subcluster_button)
 			vbox.disable_item_expand (search_subcluster_button)
 			scope.extend (vbox)
@@ -690,9 +779,8 @@ feature {NONE} -- Build interface
 			create options
 			options.extend (hbox)
 			Result.extend (options)
-
-			current_editor_button.enable_select
-			toggle_scope_detail
+			Result.disable_item_expand (options)
+			Result.set_border_width (layout_constants.small_border_size)
 		end
 
 	report : EV_FRAME
@@ -965,7 +1053,7 @@ feature {NONE} -- Actions handler
 			end
 		end
 
-	toggle_scope_detail is
+	toggle_scope_detail (a_button: EV_RADIO_BUTTON) is
 			-- Show and hide the scope detail according to the scope box's selection.
 		do
 			if is_scoped then
@@ -978,6 +1066,15 @@ feature {NONE} -- Actions handler
 			else
 				search_compiled_class_button.disable_sensitive
 			end
+			if notebook /= Void then
+				if a_button = current_editor_button then
+					if widget /= Void and then is_visible then
+						set_focus
+					end
+				end
+				notebook.item_tab (notebook.i_th (2)).set_text (interface_names.l_scope + ": " + a_button.text)
+			end
+
 		end
 
 	add_scope is
@@ -1064,18 +1161,23 @@ feature {NONE} -- Actions handler
 
 	enable_disable_search_button is
 			-- disable the search buton if the search field is empty, incremental search if it is possible.
+		local
+			l_editor: like old_editor
 		do
 			if search_is_possible then
 				search_button.enable_sensitive
 				replace_button.enable_sensitive
 				replace_all_click_button.enable_sensitive
 				if not editor.is_empty and then is_incremental_search then
+					l_editor := old_editor
+					old_editor := editor
 					incremental_search (keyword_field.text)
 					if not multi_search_performer.off then
 						select_in_current_editor
 					else
 						editor.deselect_all
 					end
+					old_editor := l_editor
 				end
 			else
 				editor.deselect_all
@@ -1085,6 +1187,54 @@ feature {NONE} -- Actions handler
 			end
 			if old_search_key_value /= Void and then not old_search_key_value.is_equal (keyword_field.text) then
 				force_new_search
+			end
+		end
+
+	on_drop_notebook (a_stone: STONE) is
+			-- When dropping on tabs of notebook.
+		local
+			l_filed_stone: FILED_STONE
+		do
+			inspect notebook.pointed_tab_index
+			when 1 then
+				notebook.select_item (notebook.i_th (1))
+				l_filed_stone ?= a_stone
+				if l_filed_stone /= Void then
+					display_stone_signature (keyword_field, l_filed_stone)
+				end
+			when 2 then
+				notebook.select_item (notebook.i_th (2))
+				on_drop_scope_button (a_stone)
+			else
+			end
+		end
+
+	notebook_veto_pebble (a_stone: STONE) : BOOLEAN is
+			-- Notebook veto pebble
+		local
+			l_classc_stone: CLASSC_STONE
+			l_cluster_stone: CLUSTER_STONE
+		do
+			inspect notebook.pointed_tab_index
+			when 1 then
+				Result := true
+			when 2 then
+				l_classc_stone ?= a_stone
+				l_cluster_stone ?= a_stone
+				if l_classc_stone /= Void or else l_cluster_stone /= Void then
+					Result := true
+				end
+			else
+			end
+		end
+
+	on_notebook_selected is
+			-- On notebook selected.
+		do
+			if notebook.pointed_tab_index = 1 then
+				if widget /= Void and is_visible then
+					set_focus
+				end
 			end
 		end
 
@@ -1132,6 +1282,7 @@ feature {NONE} -- Search perform
 			class_i: CLASS_I
 			file_name: FILE_NAME
 			class_name: STRING
+			l_editor: like old_editor
 		do
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if not editor.is_empty then
@@ -1464,6 +1615,14 @@ feature {NONE} -- Search report
 			l_new_row: EV_GRID_ROW
 		do
 			if multi_search_performer.is_search_launched then
+				if not multi_search_performer.is_empty then
+					l_class_item ?= multi_search_performer.item_matched.first
+					if l_class_item /= Void then
+						search_report_grid.column (1).set_title (grid_head_class)
+					else
+						search_report_grid.column (1).set_title (grid_head_line_number)
+					end
+				end
 				search_report_grid.remove_and_clear_all_rows
 				report_summary_string := "   " +
 										multi_search_performer.text_found_count.out +
@@ -1634,7 +1793,7 @@ feature {NONE} -- Search report
 					if l_width > temp_width then
 						l_width := temp_width
 					end
-					l_width := l_width + column_border_space
+					l_width := l_width-- + column_border_space
 					col.set_width (l_width)
 					i := i + 1
 				end

@@ -11,7 +11,7 @@ inherit
 		redefine
 			type_i
 		end
-		
+
 create
 	make
 
@@ -21,11 +21,11 @@ feature -- Access
 			-- Meta generic interpretation of the generic type
 		do
 			create Result.make (class_id, generics.item (1))
-			Result.set_is_expanded (is_expanded)
+			Result.set_mark (declaration_mark)
 		end
 
 invariant
 	il_generation: System.il_generation
 	count_set: generics.count = 1
 
-end -- class NATIVE_ARRAY_TYPE_A
+end

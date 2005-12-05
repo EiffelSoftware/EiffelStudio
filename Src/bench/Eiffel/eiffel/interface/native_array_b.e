@@ -12,10 +12,10 @@ inherit
 		end
 
 	SPECIAL_CONST
-		
+
 create
 	make
-	
+
 feature -- Validity
 
 	check_validity is
@@ -34,7 +34,7 @@ feature -- Validity
 				Error_handler.insert_error (special_error)
 			end
 
-				-- Second, check if there is only one creation procedure 
+				-- Second, check if there is only one creation procedure
 				-- having only one integer argument
 			error := creators = Void
 			if not error then
@@ -70,7 +70,7 @@ feature -- Validity
 				create special_error.make (native_array_case_3, Current)
 				Error_handler.insert_error (special_error)
 			end
-			
+
 			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.infix_at_name_id)
 			if
 				l_feat = Void
@@ -80,7 +80,7 @@ feature -- Validity
 				create special_error.make (native_array_case_4, Current)
 				Error_handler.insert_error (special_error)
 			end
-	
+
 				-- Fourth, check if class has a feature put (Generic #1, INTEGER)
 			l_feat := l_feat_tbl.item_id ({PREDEFINED_NAMES}.put_name_id)
 			if
@@ -150,7 +150,6 @@ feature -- Actual class type
 				end
 			end
 				-- Note that NATIVE_ARRAY is not expanded by default
-			Result.set_is_expanded (is_expanded)
 		end
 
 feature {CLASS_TYPE_AS} -- Actual class type
@@ -168,9 +167,16 @@ feature {CLASS_TYPE_AS} -- Actual class type
 				create Result.make (class_id)
 			end
 				-- Note that NATIVE_ARRAY is not expanded by default
-			Result.set_is_expanded (is_exp)
+			if is_exp then
+				Result.set_expanded_mark
+			elseif is_sep then
+				Result.set_separate_mark
+			end
+			if is_expanded then
+				Result.set_expanded_class_mark
+			end
 		end
-		
+
 feature -- Status report
 
 	is_native_array: BOOLEAN is True

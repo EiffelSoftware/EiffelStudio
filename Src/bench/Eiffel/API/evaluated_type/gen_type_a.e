@@ -329,8 +329,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 
 			create Result.make (class_id, meta_generic, true_generics)
-			Result.set_is_expanded (is_expanded)
-			Result.set_is_separate (is_separate)
+			Result.set_mark (declaration_mark)
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): like Current is
@@ -355,7 +354,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := i + 1
 				end
 				create Result.make (class_id, new_generics)
-				Result.set_is_expanded (is_expanded)
+				Result.set_mark (declaration_mark)
 			end
 		end
 
@@ -383,7 +382,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 	actual_argument_type (a_arg_types: ARRAY [TYPE_A]): like Current is
-
 		local
 			i, count: INTEGER
 			new_generics: like generics
@@ -402,7 +400,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					i := i + 1
 				end
 				create Result.make (class_id, new_generics)
-				Result.set_is_expanded (is_expanded)
+				Result.set_mark (declaration_mark)
 			end
 		end
 

@@ -3,14 +3,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CLASS_B 
+class CLASS_B
 
 inherit
 	CLASS_C
 		redefine
 			is_basic, partial_actual_type, check_validity
 		end
-		
+
 	SPECIAL_CONST
 		export
 			{NONE} all
@@ -18,8 +18,8 @@ inherit
 
 create
 	make
-	
-feature 
+
+feature
 
 	is_basic: BOOLEAN is True
 			-- Is the current class a basic class ?
@@ -38,8 +38,6 @@ feature {CLASS_TYPE_AS} -- Actual class type
 			else
 				Result := actual_type
 			end
-				-- Basic types are expanded by default
-			Result.set_is_expanded (True)
 		end
 
 feature -- Validity
@@ -57,7 +55,7 @@ feature -- Validity
 				create special_error.make (basic_case_1, Current)
 				Error_handler.insert_error (special_error)
 			end
-			
+
 				-- Check for `item' attribute
 			skelet := types.first.skeleton
 			if
@@ -74,7 +72,7 @@ feature -- Validity
 					Error_handler.insert_error (special_error)
 				end
 			end
-			
+
 				-- Check for a procedure `set_item'.
 			l_feat ?= feature_table.item_id (Names_heap.set_item_name_id)
 			if

@@ -3,7 +3,7 @@ indexing
 		Find all types in system. It includes reference class types and
 		expanded class types, as well as all generic derivations of a given
 		class.
-		
+
 		Call to routine `dispatch' are done in second pass for treating generic
 		types in inheritance clause, at the end of second pass for types in
 		feature arguments or result and during third pass while evaluating local types.
@@ -11,7 +11,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class INSTANTIATOR 
+class INSTANTIATOR
 
 inherit
 	FILTER_LIST
@@ -33,10 +33,10 @@ inherit
 
 create
 	make
-	
+
 create {INSTANTIATOR}
 	make_filled
-	
+
 feature -- Attributes
 
 	dispatch (a_type: TYPE_A; a_class: CLASS_C) is
@@ -60,12 +60,12 @@ feature -- Attributes
 				-- as we only need the one from BIT_REF.
 			if type_i /= Void and then not type_i.is_bit then
 					-- Check if it is a data or a filter
-				if type_i.has_formal then
+				if type_i.has_formal or else type_i.is_anchored then
 						-- It is a filter: the insertion list is the filter
 						-- list of `a_class'
 					insertion_list := a_class.filters
 					check
-						class_has_generics: a_class.generics /= Void
+						class_has_generics: type_i.has_formal implies a_class.generics /= Void
 					end;
 				else
 						-- it is a data: the insertion list is the Current one
@@ -260,7 +260,6 @@ feature
 			generics.put (any_type, 1)
 
 			create Result.make (System.array_id, generics)
-			Result.set_is_expanded (False)
 		end;
 
 	Tuple_type_a: TUPLE_TYPE_A is
@@ -273,7 +272,6 @@ feature
 				-- Not once because tuple_id can change
 			create generics.make (1, 0)
 			create Result.make (System.tuple_id, generics)
-			Result.set_is_expanded (False)
 		end;
 
 	Function_type_a: GEN_TYPE_A is
@@ -295,7 +293,6 @@ feature
 			generics.put (any_type, 3)
 
 			create Result.make (System.function_class_id, generics)
-			Result.set_is_expanded (False)
 		end
 
 	Procedure_type_a: GEN_TYPE_A is
@@ -316,7 +313,6 @@ feature
 			generics.put (Tuple_type_a, 2)
 
 			create Result.make (System.procedure_class_id, generics)
-			Result.set_is_expanded (False)
 		end
 
 feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}

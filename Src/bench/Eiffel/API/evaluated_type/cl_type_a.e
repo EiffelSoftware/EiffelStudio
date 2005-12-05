@@ -8,7 +8,7 @@ class CL_TYPE_A
 inherit
 	NAMED_TYPE_A
 		redefine
-			is_expanded, is_separate, instantiation_in, valid_generic,
+			is_expanded, is_reference, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, is_valid, format, convert_to,
 			is_full_named_type, is_external, is_conformant_to
@@ -26,19 +26,61 @@ feature {NONE} -- Initialization
 			valid_class_id: a_class_id > 0
 		do
 			class_id := a_class_id
-			is_expanded := is_basic
 		ensure
 			class_id_set: class_id = a_class_id
-			is_expanded_set: is_basic implies is_expanded
 		end
 
 feature -- Properties
 
-	is_expanded: BOOLEAN
-			-- Is the type expanded ?
+	has_no_mark: BOOLEAN is
+			-- Has class type no explicit mark?
+		do
+			Result := declaration_mark = no_mark
+		ensure
+			definition: Result = (declaration_mark = no_mark)
+		end
 
-	is_separate: BOOLEAN
-			-- Is the current actual type a separate one ?
+	has_expanded_mark: BOOLEAN is
+			-- Is class type explicitly marked as expanded?
+		do
+			Result := declaration_mark = expanded_mark
+		ensure
+			definition: Result = (declaration_mark = expanded_mark)
+		end
+
+	has_reference_mark: BOOLEAN is
+			-- Is class type explicitly marked as reference?
+		do
+			Result := declaration_mark = reference_mark
+		ensure
+			definition: Result = (declaration_mark = reference_mark)
+		end
+
+	has_separate_mark: BOOLEAN is
+			-- Is class type explicitly marked as reference?
+		do
+			Result := declaration_mark = separate_mark
+		ensure
+			definition: Result = (declaration_mark = separate_mark)
+		end
+
+	is_expanded: BOOLEAN is
+			-- Is the type expanded?
+		do
+			Result := has_expanded_mark or else has_no_mark and then associated_class.is_expanded
+		end
+
+	is_reference: BOOLEAN is
+			-- Is the type a reference type?
+		do
+			Result := has_reference_mark or else has_no_mark and then not associated_class.is_expanded
+		end
+
+	is_separate: BOOLEAN is
+			-- Is the type separate?
+		do
+			Result := has_separate_mark
+		end
 
 	is_valid: BOOLEAN is
 			-- Is Current still valid?
@@ -81,8 +123,8 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := is_expanded = other.is_expanded and then
-				is_separate = other.is_separate and then
+			Result := declaration_mark = other.declaration_mark and then
+				class_declaration_mark = other.class_declaration_mark and then
 				class_id = other.class_id
 		end
 
@@ -118,13 +160,13 @@ feature -- Output
 
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			if is_expanded and not associated_class.is_expanded then
+			if has_expanded_mark then
 				st.add (ti_expanded_keyword)
 				st.add_space
-			elseif not is_expanded and associated_class.is_expanded then
+			elseif has_reference_mark then
 				st.add (ti_reference_keyword)
 				st.add_space
-			elseif is_separate then
+			elseif has_separate_mark then
 				st.add (ti_separate_keyword)
 				st.add_space
 			end
@@ -137,10 +179,13 @@ feature -- Output
 			class_name: STRING
 		do
 			class_name := associated_class.name_in_upper
-			if is_expanded and not associated_class.is_expanded then
+			if has_expanded_mark then
 				create Result.make (class_name.count + 9)
 				Result.append ("expanded ")
-			elseif is_separate then
+			elseif has_reference_mark then
+				create Result.make (class_name.count + 10)
+				Result.append ("reference ")
+			elseif has_separate_mark then
 				create Result.make (class_name.count + 9)
 				Result.append ("separate ")
 			else
@@ -151,28 +196,43 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Settings
 
-	set_is_expanded (b: BOOLEAN) is
-			-- Assign `b' to `is_expanded'.
+	set_expanded_class_mark is
+			-- Mark class declaration as expanded.
 		do
-			is_expanded := b
+			class_declaration_mark := expanded_mark
 		ensure
-			is_expanded_set: is_expanded = b
+			has_expanded_class_mark: class_declaration_mark = expanded_mark
 		end
 
-	set_is_separate (b: BOOLEAN) is
-			-- Assign `b' to `is_separate'.
+	set_expanded_mark is
+			-- Set class type declaration as expanded.
 		do
-			is_separate := b
+			declaration_mark := expanded_mark
 		ensure
-			is_separate_set: is_separate = b
+			has_expanded_mark: has_expanded_mark
+		end
+
+	set_reference_mark is
+			-- Set class type declaration as reference.
+		do
+			declaration_mark := reference_mark
+		ensure
+			has_reference_mark: has_reference_mark
+		end
+
+	set_separate_mark is
+			-- Set class type declaration as separate.
+		do
+			declaration_mark := separate_mark
+		ensure
+			has_separate_mark: has_separate_mark
 		end
 
 	type_i: CL_TYPE_I is
 			-- C type
 		do
 			create Result.make (class_id)
-			Result.set_is_expanded (is_expanded)
-			Result.set_is_separate (is_separate)
+			Result.set_mark (declaration_mark)
 		end
 
 	meta_type: TYPE_I is
@@ -256,6 +316,8 @@ feature {COMPILER_EXPORTER} -- Conformance
 		local
 			l_is_exp, l_other_is_exp: BOOLEAN
 			l_other_class_type: CL_TYPE_A
+			current_mark: like declaration_mark
+			other_mark: like declaration_mark
 		do
 			l_other_class_type ?= other.actual_type
 			if l_other_class_type /= Void then
@@ -265,19 +327,21 @@ feature {COMPILER_EXPORTER} -- Conformance
 				l_is_exp := is_expanded
 				l_other_is_exp := l_other_class_type.is_expanded
 				if l_is_exp then
-					set_is_expanded (False)
+					current_mark := declaration_mark
+					set_reference_mark
 				end
 				if l_other_is_exp then
-					l_other_class_type.set_is_expanded (False)
+					other_mark := l_other_class_type.declaration_mark
+					l_other_class_type.set_reference_mark
 				end
 
 				Result := conform_to (other)
 
 				if l_is_exp then
-					set_is_expanded (True)
+					set_mark (current_mark)
 				end
 				if l_other_is_exp then
-					l_other_class_type.set_is_expanded (True)
+					l_other_class_type.set_mark (other_mark)
 				end
 			end
 		end
@@ -443,7 +507,46 @@ feature -- Debugging
 			end
 		end
 
+feature {CL_TYPE_A, CL_TYPE_I} -- Implementation: class type declaration marks
+
+	declaration_mark: NATURAL_8
+			-- Declaration mark associated with a class type (if any)
+
+	class_declaration_mark: NATURAL_8
+			-- Declaration mark associated with class
+
+	set_mark (mark: like declaration_mark) is
+			-- Set `declaration_mark' to the given value `mark'.
+		require
+			valid_declaration_mark:
+				mark = no_mark or mark = expanded_mark or
+				mark = reference_mark or mark = separate_mark
+		do
+			declaration_mark := mark
+		ensure
+			declaration_mark_set: declaration_mark = mark
+		end
+
+	no_mark: NATURAL_8 is 0
+			-- Empty declaration mark
+
+	expanded_mark: NATURAL_8 is 1
+			-- Expanded declaration mark
+
+	reference_mark: NATURAL_8 is 2
+			-- Reference declaration mark
+
+	separate_mark: NATURAL_8 is 3
+			-- Separate declaration mark
+
 invariant
 	class_id_positive: class_id > 0
+	valid_declaration_mark: declaration_mark = no_mark or declaration_mark = expanded_mark or
+		declaration_mark = reference_mark or declaration_mark = separate_mark
+	valid_class_declaration_mark:
+		class_declaration_mark = no_mark or
+		class_declaration_mark = expanded_mark or
+		class_declaration_mark = reference_mark or
+		class_declaration_mark = separate_mark
 
-end -- class CL_TYPE_A
+end

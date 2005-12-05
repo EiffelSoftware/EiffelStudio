@@ -1219,7 +1219,7 @@ feature -- Metadata description
 						if class_type.is_expanded then
 								-- For expanded types we use interface of the reference counterpart.
 							reference_type_a := class_type.type.type_a
-							reference_type_a.set_is_expanded (False)
+							reference_type_a.set_reference_mark
 							check
 								has_reference_class_type: class_c.types.has_type (reference_type_a.type_i)
 							end
@@ -1257,7 +1257,7 @@ feature -- Metadata description
 					if class_type.is_expanded then
 							-- For expanded types we use interface of the reference counterpart.
 						reference_type_a := class_type.type.type_a
-						reference_type_a.set_is_expanded (False)
+						reference_type_a.set_reference_mark
 						check
 							has_reference_class_type: class_c.types.has_type (reference_type_a.type_i)
 						end

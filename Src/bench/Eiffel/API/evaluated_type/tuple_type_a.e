@@ -76,7 +76,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 
 			create Result.make (class_id, meta_generic, true_generics)
-			Result.set_is_expanded (is_expanded)
+			Result.set_mark (declaration_mark)
 		end
 
 	good_generics: BOOLEAN is
@@ -85,7 +85,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 		do
 			-- Any number of generic parameters is allowed.
-			-- Therefore we only check the gen. parameters. 
+			-- Therefore we only check the gen. parameters.
 			from
 				Result := True
 				count := generics.count
@@ -104,7 +104,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			i, count: INTEGER
 		do
 			-- Any number of generic parameters is allowed.
-			-- Therefore we only check the gen. parameters. 
+			-- Therefore we only check the gen. parameters.
 			from
 				count := generics.count
 				i := 1
@@ -125,7 +125,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			gen_param: TYPE_A
 		do
 				-- There are no constraints in a TUPLE type.
-				-- Therefore we only check the gen. parameters. 
+				-- Therefore we only check the gen. parameters.
 			from
 				i := 1
 				count := generics.count

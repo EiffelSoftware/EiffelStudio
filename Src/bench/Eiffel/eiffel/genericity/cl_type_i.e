@@ -58,10 +58,6 @@ feature {NONE} -- Initialization
 			valid_id: id > 0
 		do
 			class_id := id
-			if is_basic then
-					-- We know for sure that it is expanded then.
-				is_expanded := True
-			end
 		ensure
 			class_id_set: class_id = id
 		end
@@ -104,14 +100,19 @@ feature -- Access
 	type_a: CL_TYPE_A is
 		do
 			create Result.make (class_id)
-			Result.set_is_expanded (is_expanded)
-			Result.set_is_separate (is_separate)
+			Result.set_mark (declaration_mark)
 		end
 
 	name: STRING is
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := base_name
+		end
+
+	duplicate: like Current is
+			-- Duplication
+		do
+			Result := twin
 		end
 
 	instantiation_in (other: CLASS_TYPE): CL_TYPE_I is
@@ -239,11 +240,55 @@ feature -- Status
 			Result := {SHARED_GEN_CONF_LEVEL}.reference_tuple_code
 		end
 
-	is_expanded: BOOLEAN
-			-- Is the type expanded?
+	has_no_mark: BOOLEAN is
+			-- Has class type no explicit mark?
+		do
+			Result := declaration_mark = {CL_TYPE_A}.no_mark
+		ensure
+			definition: Result = (declaration_mark = {CL_TYPE_A}.no_mark)
+		end
 
-	is_separate: BOOLEAN
+	has_expanded_mark: BOOLEAN is
+			-- Is class type explicitly marked as expanded?
+		do
+			Result := declaration_mark = {CL_TYPE_A}.expanded_mark
+		ensure
+			definition: Result = (declaration_mark = {CL_TYPE_A}.expanded_mark)
+		end
+
+	has_reference_mark: BOOLEAN is
+			-- Is class type explicitly marked as reference?
+		do
+			Result := declaration_mark = {CL_TYPE_A}.reference_mark
+		ensure
+			definition: Result = (declaration_mark = {CL_TYPE_A}.reference_mark)
+		end
+
+	has_separate_mark: BOOLEAN is
+			-- Is class type explicitly marked as reference?
+		do
+			Result := declaration_mark = {CL_TYPE_A}.separate_mark
+		ensure
+			definition: Result = (declaration_mark = {CL_TYPE_A}.separate_mark)
+		end
+
+	is_expanded: BOOLEAN is
+			-- Is the type expanded?
+		do
+			Result := has_expanded_mark or else has_no_mark and then base_class.is_expanded
+		end
+
+	is_reference: BOOLEAN is
+			-- Is the type a reference type?
+		do
+			Result := has_reference_mark or else has_no_mark and then not base_class.is_expanded
+		end
+
+	is_separate: BOOLEAN is
 			-- Is the type separate?
+		do
+			Result := has_separate_mark
+		end
 
 	is_enum: BOOLEAN is
 			-- Is current type an IL enum type?
@@ -288,12 +333,6 @@ feature -- Status
 			Result := l_base_class /= Void and then (l_base_class.generics = Void)
 		end
 
-	is_reference: BOOLEAN is
-			-- Is the type a reference type?
-		do
-			Result := not is_expanded
-		end
-
 	is_explicit: BOOLEAN is
 			-- Is Current type fixed at compile time?
 		do
@@ -326,20 +365,28 @@ feature -- Status
 
 feature -- Setting
 
-	set_is_expanded (b: BOOLEAN) is
-			-- Assign `b' to `is_expanded'.
+	set_expanded_mark is
+			-- Set class type declaration as expanded.
 		do
-			is_expanded := b
+			declaration_mark := {CL_TYPE_A}.expanded_mark
 		ensure
-			is_expanded_set: is_expanded = b
+			has_expanded_mark: has_expanded_mark
 		end
 
-	set_is_separate (b: BOOLEAN) is
-			-- Assign `b' to `is_separate'.
+	set_reference_mark is
+			-- Set class type declaration as reference.
 		do
-			is_separate := b
+			declaration_mark := {CL_TYPE_A}.reference_mark
 		ensure
-			is_separate_set: is_separate = b
+			has_reference_mark: has_reference_mark
+		end
+
+	set_separate_mark is
+			-- Set class type declaration as separate.
+		do
+			declaration_mark := {CL_TYPE_A}.separate_mark
+		ensure
+			has_separate_mark: has_separate_mark
 		end
 
 	set_cr_info (cinfo : CREATE_INFO) is
@@ -495,6 +542,8 @@ feature {NONE} -- Implementation
 			l_base_class := base_class
 			if is_expanded and not l_base_class.is_expanded then
 				Result.append ("expanded ")
+			elseif is_reference and l_base_class.is_expanded then
+				Result.append ("reference ")
 			elseif is_separate then
 				Result.append ("separate ")
 			end
@@ -530,7 +579,29 @@ feature {NONE} -- Implementation
 			internal_il_type_name_not_empty: not Result.is_empty
 		end
 
+feature {CL_TYPE_A} -- Implementation: class type declaration marks
+
+	declaration_mark: NATURAL_8
+			-- Declaration mark associated with a class type (if any)
+
+	set_mark (mark: like declaration_mark) is
+			-- Set `declaration_mark' to the given value `mark'.
+		require
+			valid_declaration_mark:
+				mark = {CL_TYPE_A}.no_mark or mark = {CL_TYPE_A}.expanded_mark or
+				mark = {CL_TYPE_A}.reference_mark or mark = {CL_TYPE_A}.separate_mark
+		do
+			declaration_mark := mark
+		ensure
+			declaration_mark_set: declaration_mark = mark
+		end
+
 invariant
 	class_id_positive: class_id > 0
+	valid_declaration_mark:
+		declaration_mark = {CL_TYPE_A}.no_mark or
+		declaration_mark = {CL_TYPE_A}.expanded_mark or
+		declaration_mark = {CL_TYPE_A}.reference_mark or
+		declaration_mark = {CL_TYPE_A}.separate_mark
 
 end

@@ -13,7 +13,7 @@ inherit
 			is_equal, generate_cid, il_type_name, generate_cid_array,
 			generate_cid_init, is_anchored, is_explicit, is_valid,
 			has_true_formal, is_identical, generate_gen_type_il,
-			has_formal, same_as, make_gen_type_byte_code,
+			has_formal, same_as, make_gen_type_byte_code, duplicate,
 			instantiation_in, meta_generic, true_generics, hash_code, base_class,
 			debug_output, complete_instantiation_in, generic_derivation
 		redefine

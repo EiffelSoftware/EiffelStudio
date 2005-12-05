@@ -29,6 +29,7 @@ cluster
 	estore_sybase:		"$ISE_EIFFEL\library\store\dbms\rdbms\sybase";
 	estore_db_support:	"$ISE_EIFFEL\library\store\dbms\support";
 	estore_converter:	"$ISE_EIFFEL\library\store\converter";
+	all generation:		"$ISE_EIFFEL\library\store\generation";
 
 -- EiffelTime
 	

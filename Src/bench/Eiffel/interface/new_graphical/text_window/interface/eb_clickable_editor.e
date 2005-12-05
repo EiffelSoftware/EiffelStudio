@@ -669,12 +669,18 @@ feature {NONE} -- Implementation
 
 	prepare_search_tool is
 			-- Show and give focus to search panel.
+		local
+			l_search_tool: EB_MULTI_SEARCH_TOOL
 		do
 			if search_tool.is_visible then
 				search_tool.set_focus
 			else
 				if search_tool.explorer_bar_item.is_minimized then
 					search_tool.explorer_bar_item.restore
+				end
+				l_search_tool ?= search_tool
+				if l_search_tool /= Void and then l_search_tool.notebook.selected_item_index /= 1 then
+					l_search_tool.notebook.select_item (l_search_tool.notebook.i_th (1))
 				end
 				search_tool.show_and_set_focus
 			end

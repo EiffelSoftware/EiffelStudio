@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class BITS_DESC 
+class BITS_DESC
 
 inherit
 	ATTR_DESC
@@ -12,7 +12,7 @@ inherit
 		redefine
 			is_bits, same_as
 		end
-	
+
 feature -- Access
 
 	value: INTEGER
@@ -20,12 +20,8 @@ feature -- Access
 
 	type_i: TYPE_I is
 			-- Correspdonding instance of BIT type.
-		local
-			l_bit: BIT_I
 		do
-			create l_bit
-			l_bit.set_size (value)
-			Result := l_bit
+			create {BIT_I} Result.make (value)
 		end
 
 	sk_value: INTEGER is
@@ -35,7 +31,7 @@ feature -- Access
 		end
 
 feature -- Status report
-	
+
 	is_bits: BOOLEAN is True
 			-- Is the attribute a bits one ?
 

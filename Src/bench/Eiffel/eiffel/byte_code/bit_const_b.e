@@ -50,11 +50,10 @@ feature -- Status report
 			-- A bit constant is constant
 
 	type: BIT_I is
-			-- Integer type
+			-- Bit type
 		do
-			create Result;
-			Result.set_size (value.count);
-		end;
+			create Result.make (value.count)
+		end
 
 	enlarged: BIT_CONST_BL is
 			-- Enlarged node

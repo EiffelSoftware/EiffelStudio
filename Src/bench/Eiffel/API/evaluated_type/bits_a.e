@@ -28,6 +28,9 @@ feature {NONE} -- Initialization
 		do
 			bit_count := c
 			cl_make (associated_class.class_id)
+				-- Set expanded mark explicitly because
+				-- associated class BIT_REF is reference.
+			set_expanded_mark
 		ensure
 			bit_count_set: bit_count = c
 		end
@@ -100,8 +103,7 @@ feature {COMPILER_EXPORTER}
 	type_i: BIT_I is
 			-- C type
 		do
-			create Result
-			Result.set_size (bit_count)
+			create Result.make (bit_count)
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is

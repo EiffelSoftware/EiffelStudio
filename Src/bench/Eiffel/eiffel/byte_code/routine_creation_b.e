@@ -23,7 +23,7 @@ feature -- Visitor
 
 feature  -- Initialization
 
-	init (cl_type: CL_TYPE_I; cl_id: INTEGER; f: FEATURE_I;
+	init (cl_type: like class_type; cl_id: INTEGER; f: FEATURE_I;
 		  r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
 		  omap: ARRAY_CONST_B) is
 			-- Initialization
@@ -48,7 +48,7 @@ feature  -- Initialization
 			record_feature (cl_id, feature_id)
 		end
 
-	set_ids (cl_type : CL_TYPE_I; r_id: INTEGER; f_id: INTEGER;
+	set_ids (cl_type : like class_type; r_id: INTEGER; f_id: INTEGER;
 			 r_type : GEN_TYPE_I; args : TUPLE_CONST_B;
 			 omap: ARRAY_CONST_B) is
 			-- Set ids and type
@@ -67,8 +67,9 @@ feature  -- Initialization
 
 feature -- Attributes
 
-	class_type: CL_TYPE_I
+	class_type: TYPE_I
 			-- Type of the class where feature comes from
+			-- (It conforms either to CL_TYPE_I or to LIKE_CURRENT_I.)
 
 	feature_id: INTEGER
 			-- Feature id of the addressed feature

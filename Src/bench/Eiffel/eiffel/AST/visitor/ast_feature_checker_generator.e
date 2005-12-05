@@ -5138,7 +5138,6 @@ feature {NONE} -- Agents
 			l_array_of_opens: ARRAY_CONST_B
 			l_void: VOID_B
 			l_operand_node: OPERAND_B
-			l_cl_type: CL_TYPE_I
 			l_actual_target_type: TYPE_A
 		do
 
@@ -5362,11 +5361,7 @@ feature {NONE} -- Agents
 				end
 
 					-- Initialize ROUTINE_CREATION_B instance
-				l_cl_type ?= a_target_type.type_i
-				check
-					l_cl_type_not_void: l_cl_type /= Void
-				end
-				l_routine_creation.init (l_cl_type, a_target_type.associated_class.class_id,
+				l_routine_creation.init (a_target_type.type_i, a_target_type.associated_class.class_id,
 					a_feature, l_result_type.type_i, l_tuple_node, l_array_of_opens)
 				last_byte_node := l_routine_creation
 			end

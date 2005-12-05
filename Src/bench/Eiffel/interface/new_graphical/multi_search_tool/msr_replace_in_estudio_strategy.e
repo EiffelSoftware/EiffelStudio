@@ -111,6 +111,7 @@ feature -- Basic operation
 								search_tool.set_changed_by_replace (true)
 							end
 						end
+						editor.redraw_current_line
 						replace_current_item (true)
 						search_tool.force_not_changed
 					end

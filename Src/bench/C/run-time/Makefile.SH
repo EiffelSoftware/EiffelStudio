@@ -815,6 +815,13 @@ bexcept.o: except.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
 
 
+MTbmain.o: main.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
+
+MTbexcept.o: except.c
+	       $(CC) -c $(JMTCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
+
+
 debug.o: debug.c
 	       $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 

@@ -180,23 +180,14 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 	type_i: TYPE_I is
 			-- C type.
-		local
-			cl_type : CL_TYPE_I
-		do
-			Result := conformance_type.type_i
-			cl_type ?= Result
-
-			if cl_type /= Void and then not cl_type.is_expanded then
-					-- Remember that it's an anchored type, not needed
-					-- when handling expanded types.
-				cl_type.set_cr_info (create_info)
-			end
+		once
+			create {LIKE_CURRENT_I} Result
 		end
 
 	meta_type: TYPE_I is
 			-- Meta type.
 		do
-			Result := conformance_type.meta_type
+			Result := type_i
 		end
 
 end

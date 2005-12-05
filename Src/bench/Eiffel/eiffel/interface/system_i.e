@@ -1476,11 +1476,11 @@ end
 				root_class.compiled_class.init_types
 			end
 
-				-- Compute the types.
-			Instantiator.process
-
 				-- Initialize types of non-generic classes which haven't been initialized yet.
 			Degree_2.initialize_non_generic_types
+
+				-- Compute the types.
+			Instantiator.process
 
 				-- If first compilation, re-order dynamic types
 			if old_value = 0 then

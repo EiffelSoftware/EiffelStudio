@@ -64,7 +64,7 @@ feature {NONE} -- Initlization
 			create contents.make (1)
 			create internal_notebook.make
 			internal_notebook.set_minimum_size (0, 0)
---			internal_notebook.set_tab_position ({EV_NOTEBOOK}.tab_bottom)
+			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_bottom)
 
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_content.type, Current)
 			internal_title_bar.set_stick (True)
@@ -85,12 +85,8 @@ feature {NONE} -- Initlization
 			disable_item_expand (internal_title_bar)
 
 			internal_notebook.selection_actions.extend (agent on_select_tab)
+			internal_notebook.tab_drag_actions.extend (agent on_notebook_drag)			
 			extend_widget (internal_notebook)
-
-			internal_notebook.pointer_button_press_actions.extend (agent on_notebook_pointer_press)
-			internal_notebook.pointer_button_release_actions.extend (agent on_notebook_pointer_release)
-			internal_notebook.pointer_motion_actions.extend (agent on_notebook_pointer_motion)
-			internal_notebook.pointer_enter_actions.extend (agent on_notebook_pointer_enter)
 
 			internal_notebook.drop_actions.extend (agent on_notebook_drop)
 		end
@@ -259,6 +255,9 @@ feature {NONE} -- Agents for docker
 				l_content := contents.i_th (internal_notebook.selected_item_index)
 				internal_title_bar.set_title (l_content.long_title)
 				if l_content.mini_toolbar /= Void then
+					if l_content.mini_toolbar.parent /= Void then
+						l_content.mini_toolbar.parent.prune (l_content.mini_toolbar)
+					end
 					internal_title_bar.custom_area.extend (l_content.mini_toolbar)
 				else
 					internal_title_bar.custom_area.wipe_out
@@ -296,7 +295,7 @@ feature {NONE} -- Agents for docker
 				debug ("larry")
 					io.put_string ("%N SD_TAB_ZONE Handle pointer release.")
 				end
-				internal_notebook_pressed := False
+--				internal_notebook_pressed := False
 				disable_capture
 
 				internal_docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
@@ -307,47 +306,33 @@ feature {NONE} -- Agents for docker
 			internal_docker_mediator_stop: old internal_docker_mediator /= Void implies internal_docker_mediator = Void
 		end
 
-	on_notebook_pointer_release (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Handle notebook pointer release.
+	on_notebook_drag (a_widget: EV_WIDGET; a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+			-- Handle notebook drag actions.
 		do
-			internal_notebook_pressed := False
-		ensure
-			set: internal_notebook_pressed = False
+			create internal_docker_mediator.make (Current)
+			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
+			enable_capture			
 		end
-
-	on_notebook_pointer_press (a_x, a_y, a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			-- Handle notebook pointer press.
-		do
-			internal_notebook_pressed := True
-		ensure
-			set: internal_notebook_pressed = True
-		end
-
-	on_notebook_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
-			--	Handle notebook pointer motion.
-		local
-			l_tab_state: SD_TAB_STATE
-		do
-			debug ("larry")
-				io.put_string ("%N SD_TAB_ZONE internal_notebook_pressed: " + internal_notebook_pressed.out)
-			end
-			if internal_notebook_pressed then
-				create internal_docker_mediator.make (Current)
-				internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
-				enable_capture
-				l_tab_state ?= content.state
-				check l_tab_state /= Void end
-			end
-		ensure
-			docker_mediator_created: internal_notebook_pressed implies internal_docker_mediator /= Void
-			docker_mediator_start: internal_notebook_pressed implies internal_docker_mediator.is_tracing_pointer
-		end
-
-	on_notebook_pointer_enter is
-			-- Handle notebook pointer enter.
-		do
-			internal_notebook_pressed := False
-		end
+		
+--	on_notebook_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+--			--	Handle notebook pointer motion.
+--		local
+--			l_tab_state: SD_TAB_STATE
+--		do
+--			debug ("larry")
+--				io.put_string ("%N SD_TAB_ZONE internal_notebook_pressed: " + internal_notebook_pressed.out)
+--			end
+--			if internal_notebook_pressed then
+--				create internal_docker_mediator.make (Current)
+--				internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
+--				enable_capture
+--				l_tab_state ?= content.state
+--				check l_tab_state /= Void end
+--			end
+--		ensure
+--			docker_mediator_created: internal_notebook_pressed implies internal_docker_mediator /= Void
+--			docker_mediator_start: internal_notebook_pressed implies internal_docker_mediator.is_tracing_pointer
+--		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer motion.
@@ -372,9 +357,6 @@ feature {NONE} -- Implementation
 
 	internal_docker_mediator: SD_DOCKER_MEDIATOR
 			-- Docker mediator.
-
-	internal_notebook_pressed: BOOLEAN
-			-- If user clicked notebook? Used for detect whether clicked notebook tabs.
 
 invariant
 

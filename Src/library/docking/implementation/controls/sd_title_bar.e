@@ -134,6 +134,7 @@ feature -- Access
 			a_title_not_void: a_title /= Void
 		do
 			internal_title := a_title
+			on_expose
 		ensure
 			set: internal_title = a_title
 		end

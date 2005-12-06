@@ -884,11 +884,13 @@ feature -- Status setting
 			-- Must be `True' to perform any tree structure functions on `Current'.
 			-- Use `enable_tree' and `disable_tree' to set this state.
 		do
-			is_tree_enabled := True
-				-- The row offsets must always be computed when
-				-- in tree mode so when enabling it, recompute.
-			set_vertical_computation_required (1)
-			redraw_client_area
+			if not is_tree_enabled then
+				is_tree_enabled := True
+					-- The row offsets must always be computed when
+					-- in tree mode so when enabling it, recompute.
+				set_vertical_computation_required (1)
+				redraw_client_area
+			end
 		ensure
 			tree_enabled: is_tree_enabled
 		end
@@ -901,24 +903,26 @@ feature -- Status setting
 			current_row: EV_GRID_ROW_I
 			cursor: CURSOR
 		do
-			is_tree_enabled := False
-			adjust_hidden_node_count (- hidden_node_count)
-			set_vertical_computation_required (1)
-			redraw_client_area
-				-- Now reset all rows.
-			from
-				rows.start
-				cursor := rows.cursor
-			until
-				rows.off
-			loop
-				current_row := rows.item
-				if current_row /= Void then
-					current_row.reset_tree_structure
+			if is_tree_enabled then
+				is_tree_enabled := False
+				adjust_hidden_node_count (- hidden_node_count)
+				set_vertical_computation_required (1)
+				redraw_client_area
+					-- Now reset all rows.
+				from
+					rows.start
+					cursor := rows.cursor
+				until
+					rows.off
+				loop
+					current_row := rows.item
+					if current_row /= Void then
+						current_row.reset_tree_structure
+					end
+					rows.forth
 				end
-				rows.forth
+				rows.go_to (cursor)
 			end
-			rows.go_to (cursor)
 		ensure
 			tree_disabled: not is_tree_enabled
 		end

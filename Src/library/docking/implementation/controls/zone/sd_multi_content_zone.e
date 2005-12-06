@@ -58,13 +58,13 @@ feature -- Command
 			contents.extend (a_content)
 			internal_notebook.extend (a_content.user_widget)
 			internal_notebook.set_item_text (a_content.user_widget, a_content.short_title)
-			internal_notebook.item_tab (a_content.user_widget).set_pixmap (a_content.pixmap)
-			internal_notebook.item_tab (a_content.user_widget).enable_select
+--			internal_notebook.item_tab (a_content.user_widget).set_pixmap (a_content.pixmap)
+--			internal_notebook.item_tab (a_content.user_widget).enable_select
 			enable_on_select_tab
 		ensure then
 			extended: contents.has (a_content)
 			internal_notebook.has (a_content.user_widget)
-			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget, 1)
+			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget)
 		end
 
 	prune (a_content: SD_CONTENT) is
@@ -75,7 +75,7 @@ feature -- Command
 		do
 			disable_on_select_tab
 			contents.prune_all (a_content)
-			internal_notebook.prune_all (a_content.user_widget)
+			internal_notebook.prune (a_content.user_widget)
 			enable_on_select_tab
 		ensure
 			pruned: not has (a_content)
@@ -130,18 +130,17 @@ feature -- States report
 			Result := contents.count = 1
 		end
 
-	index_of (a_content: SD_CONTENT; i: INTEGER): INTEGER is
+	index_of (a_content: SD_CONTENT): INTEGER is
 			-- Index of `i'th occurrence of `a_content'.
 		require
 			a_content_not_void: a_content /= Void
-			positive_occurrences: i > 0
 		do
-			Result := internal_notebook.index_of (a_content.user_widget, i)
+			Result := internal_notebook.index_of (a_content.user_widget)
 		end
 
 feature {NONE} -- Implementation
 
-	internal_notebook: EV_NOTEBOOK
+	internal_notebook: SD_NOTEBOOK
 			-- Container which `Current' in.
 
 	internal_diable_on_select_tab: BOOLEAN

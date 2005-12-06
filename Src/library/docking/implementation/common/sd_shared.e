@@ -214,6 +214,9 @@ feature -- Constants
 	Focuse_border_width: INTEGER is 2
 			-- Border width of a zone. This is width show focus color surround a zone.
 
+	Highlight_tail_width: INTEGER is 30
+			-- Tilte highlight area width which shown color chang gradually.
+
 feature {NONE} -- Implementation
 
 	internal_docking_manager: SD_DOCKING_MANAGER

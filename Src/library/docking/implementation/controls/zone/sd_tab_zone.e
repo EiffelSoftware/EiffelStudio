@@ -62,9 +62,9 @@ feature {NONE} -- Initlization
 			create internal_shared_not_used
 			default_create
 			create contents.make (1)
-			create internal_notebook
+			create internal_notebook.make
 			internal_notebook.set_minimum_size (0, 0)
-			internal_notebook.set_tab_position ({EV_NOTEBOOK}.tab_bottom)
+--			internal_notebook.set_tab_position ({EV_NOTEBOOK}.tab_bottom)
 
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_content.type, Current)
 			internal_title_bar.set_stick (True)
@@ -151,12 +151,12 @@ feature -- Command
 			has_content: has (a_content)
 		do
 			internal_notebook.set_item_text (a_content.user_widget, a_title)
-			if internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget, 1) then
+			if internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget) then
 				internal_title_bar.set_title (a_title)
 			end
 		ensure
 			set: internal_notebook.item_text (a_content.user_widget) = a_title
-			set_title_bar: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget, 1)
+			set_title_bar: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget)
 				implies internal_title_bar.title = a_title
 		end
 
@@ -167,9 +167,9 @@ feature -- Command
 			a_content_not_void: a_content /= Void
 			has_content: has (a_content)
 		do
-			internal_notebook.item_tab (a_content.user_widget).set_pixmap (a_pixmap)
+			internal_notebook.set_item_pixmap (a_content.user_widget, a_pixmap)
 		ensure
-			set: internal_notebook.item_tab (a_content.user_widget).pixmap = a_pixmap
+			set: internal_notebook.item_pixmap (a_content.user_widget) = a_pixmap
 		end
 
 	set_max (a_max: BOOLEAN) is
@@ -194,7 +194,7 @@ feature {SD_TAB_STATE} -- Internal issues.
 		do
 			internal_notebook.select_item (a_content.user_widget)
 		ensure
-			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget, 1)
+			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget)
 		end
 
 
@@ -212,7 +212,7 @@ feature {NONE} -- Agents for user
 			end
 		ensure then
 			title_bar_focus: internal_title_bar.is_focus_color_enable
-			content_set: a_content /= Void implies internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget, 1)
+			content_set: a_content /= Void implies internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget)
 		end
 
 	on_focus_out is

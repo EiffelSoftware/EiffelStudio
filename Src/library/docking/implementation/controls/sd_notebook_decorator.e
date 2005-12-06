@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_notebook: EV_NOTEBOOK)is
+	make (a_notebook: EV_NOTEBOOK) is
 			-- Creation method
 		require
 			a_notebook_not_void: a_notebook /= Void

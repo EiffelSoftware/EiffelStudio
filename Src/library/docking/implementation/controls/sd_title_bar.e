@@ -62,7 +62,7 @@ feature {NONE} -- Initlization
 			l_zero_size_container.extend (internal_drawing_area)
 
 			create internal_highlight_area_after
-			internal_highlight_area_after.set_minimum_width (30)
+			internal_highlight_area_after.set_minimum_width (internal_shared.highlight_tail_width)
 			internal_highlight_area_after.expose_actions.force_extend (agent on_expose)
 			l_zero_size_container.extend (internal_highlight_area_after)
 			l_zero_size_container.disable_item_expand (internal_highlight_area_after)

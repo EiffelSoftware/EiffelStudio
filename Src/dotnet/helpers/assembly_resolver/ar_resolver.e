@@ -10,7 +10,7 @@ indexing
 
 class
 	AR_RESOLVER
-	
+
 create
 	make,
 	make_with_name
@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 		ensure
 			friendly_name_set: friendly_name = a_name
 		end
-		
+
 	common_initialization is
 			-- Additional initialization.
 		do
@@ -54,7 +54,7 @@ feature -- Access
 			result_not_void: Result /= Void
 			result_compares_objects: Result.object_comparison
 		end
-		
+
 	friendly_name: STRING
 			-- Resolver friendly name
 
@@ -79,16 +79,16 @@ feature {NONE} -- Resolution
 			check
 				l_domain_not_void: l_domain /= Void
 			end
-			
+
 				-- Split assembly name to be resolved into relivent chunks
 			l_parts := split_assembly_name (a_args.name)
-			
+
 				-- Attempt to resolve assembly dependency
 			Result := resolve_by_name (l_domain, l_parts @ 1, l_parts @ 2, l_parts @ 3, l_parts @ 4)
 		end
 
 feature -- Resolution
-		
+
 	resolve_by_name (a_domain: APP_DOMAIN; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): ASSEMBLY is
 			-- Resolve an assembly in app domain `a_domain' where name of assembly comprises of assembly name `a_name'
 			-- and optionally version `a_version', culture `a_culture' and public key token `a_key'
@@ -108,17 +108,17 @@ feature -- Resolution
 				feature {SYSTEM_DLL_TRACE}.write_string (" '" + friendly_name + "'")
 			end
 			feature {SYSTEM_DLL_TRACE}.write_line_string (".")
-			
+
 			l_paths := resolve_paths
 			l_cursor := l_paths.cursor
-			
+
 			from
-				l_paths.start	
+				l_paths.start
 			until
 				l_paths.after or Result /= Void
 			loop
 				feature {SYSTEM_DLL_TRACE}.write_line_string ("Looking in '" + l_paths.item + "'.")
-				
+
 				from
 					assembly_extensions.start
 				until
@@ -128,10 +128,11 @@ feature -- Resolution
 					l_file_name.set_file_name (a_name + assembly_extensions.item)
 					feature {SYSTEM_DLL_TRACE}.write_line_string ("Looking for '" + l_file_name + "'.")
 					if (create {RAW_FILE}.make (l_file_name)).exists then
-						feature {SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_name + "'.")
+						feature {SYSTEM_DLL_TRACE}.write_line_string ("Matching '" + l_file_name + "'.")
 						l_name := get_assembly_name (l_file_name)
 						if l_name /= Void then
 							if does_name_match (l_name, a_name, a_version, a_culture, a_key) then
+								feature {SYSTEM_DLL_TRACE}.write_line_string ("Attempting to load '" + l_file_name + "'.")
 								Result := load_assembly (l_file_name)
 							end
 						end
@@ -141,12 +142,12 @@ feature -- Resolution
 
 				l_paths.forth
 			end
-			
+
 			l_paths.go_to (l_cursor)
 		ensure
 			not_resolve_paths_moved: resolve_paths.cursor.is_equal (old resolve_paths.cursor)
 		end
-		
+
 feature -- Query
 
 	does_name_match (a_asm_name: ASSEMBLY_NAME; a_name: STRING; a_version: STRING; a_culture: STRING; a_key: STRING): BOOLEAN is
@@ -169,13 +170,13 @@ feature -- Query
 			if Result and then a_key /= Void then
 				l_key := a_asm_name.get_public_key_token
 				if a_key.is_empty then
-					Result := l_key = Void or else l_key.length > 0
+					Result := l_key = Void or else l_key.length = 0
 				else
 					Result := encoded_key (l_key).as_lower.is_equal (a_key.as_lower)
 				end
 			end
-		end	
-		
+		end
+
 	is_near_version_match (a_version: STRING; a_match_version: STRING): BOOLEAN is
 			-- Is `a_match_version' a near enough match for `a_version'?
 		require
@@ -191,11 +192,11 @@ feature -- Query
 			l_b: STRING
 			i: INTEGER
 		do
-			
+
 			l_parts_a := a_version.split ('.')
 			l_parts_b := a_match_version.split ('.')
 			l_count := l_parts_a.count.min (l_parts_b.count)
-				
+
 				-- Must have major and minor version numbers
 			Result := l_count > 2
 			from
@@ -205,7 +206,7 @@ feature -- Query
 			loop
 				l_a :=  l_parts_a[i]
 				l_b :=  l_parts_b[i]
-				
+
 					-- Remove leading zeros (should not be there but you never know)
 				l_a.prune_all_leading ('0')
 				l_b.prune_all_leading ('0')
@@ -215,14 +216,14 @@ feature -- Query
 				if l_b.is_empty then
 					l_b.append_character ('0')
 				end
-				
+
 				Result := l_a.is_equal (l_b)
-				
+
 				i := i + 1
 			end
 		end
-		
-		
+
+
 feature -- Extending
 
 	add_resolve_path (a_path: STRING) is
@@ -236,7 +237,7 @@ feature -- Extending
 		ensure
 			a_path_added: resolve_paths.has (normalize_path (a_path))
 		end
-		
+
 	add_resolve_path_from_file_name (a_file_name: STRING) is
 			-- Adds `a_file_name' location to list `resolve_paths'
 		require
@@ -247,7 +248,7 @@ feature -- Extending
 		ensure
 			a_path_added: resolve_paths.has (normalize_path (resolver_path_from_file_name (a_file_name)))
 		end
-		
+
 feature -- Removal
 
 	remove_resolve_path (a_path: STRING) is
@@ -264,7 +265,7 @@ feature -- Removal
 		ensure
 			a_path_remove: not resolve_paths.has (normalize_path (a_path))
 		end
-		
+
 	remove_resolve_path_from_file_name (a_file_name: STRING) is
 			-- Removes `a_file_name' location to list `'resolve_paths'
 		require
@@ -278,7 +279,7 @@ feature -- Removal
 		ensure
 			a_path_remove: not resolve_paths.has (normalize_path (resolver_path_from_file_name (a_file_name)))
 		end
-		
+
 feature -- Formatting
 
 	normalize_path (a_path: STRING): STRING is
@@ -298,16 +299,16 @@ feature -- Formatting
 			if a_path.count > 2 then
 				l_unc_path := a_path.substring (1, 2).is_equal ("\\")
 			end
-			
+
 			if l_unc_path then
 				i := 3
 				l_res.append ("\\")
 			else
 				i := 1
 			end
-			
+
 			l_forget_next_ds := True
-			
+
 			from
 			until
 				i > a_path.count
@@ -322,13 +323,13 @@ feature -- Formatting
 				end
 				i := i + 1
 			end
-			
+
 			Result := l_res
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
-		
+
 feature {NONE} -- Implementation
 
 	resolver_path_from_file_name (a_file_name: STRING): STRING is
@@ -441,7 +442,7 @@ feature {NONE} -- Implementation
 			item_1_not_void: Result @ 1 /= Void
 			not_item_1_is_empty: not (Result @ 1).is_empty
 		end
-		
+
 	load_assembly (a_path: STRING): ASSEMBLY is
 			-- Attempts to load assembly from `a_path'
 		require
@@ -458,7 +459,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 	get_assembly_name (a_path: STRING): ASSEMBLY_NAME is
 			-- Retrieve an assembly name from `a_path'
 		require
@@ -485,7 +486,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (a_key.count * 2)
 			from
-				i := 0	
+				i := 0
 			until
 				i >= a_key.count
 			loop
@@ -507,10 +508,10 @@ feature {NONE} -- Implementation
 			create l_file.make (l_type.assembly.location)
 			add_resolve_path (l_file.directory_name)
 		end
-			
+
 	internal_resolve_paths: ARRAYED_LIST [STRING]
 			-- List of resolver paths to be used when attempting to resolve a dependency.
-			
+
 	assembly_extensions: LIST [STRING] is
 			-- List of possible assembly extensions
 		local
@@ -529,5 +530,5 @@ invariant
 	internal_resolve_paths_not_void: internal_resolve_paths /= Void
 	internal_resolve_paths_compares_objects: internal_resolve_paths.object_comparison
 	resolve_event_handler_not_void: resolve_event_handler /= Void
-	
+
 end -- class AR_RESOLVER

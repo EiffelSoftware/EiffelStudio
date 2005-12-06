@@ -66,6 +66,7 @@ feature -- Command
 			has: has (a_widget)
 			a_text_not_void: a_text /= Void
 		do
+			internal_widgets.start
 			internal_widgets.search (a_widget)
 			internal_tabs.go_i_th (internal_widgets.index)
 			internal_tabs.item.set_text (a_text)
@@ -79,6 +80,7 @@ feature -- Command
 			has: has (a_widget)
 			a_pixmap_not_void: a_pixmap /= Void
 		do
+			internal_widgets.start
 			internal_widgets.search (a_widget)
 			internal_tabs.go_i_th (internal_widgets.index)
 			internal_tabs.item.set_pixmap (a_pixmap)
@@ -133,7 +135,7 @@ feature -- Command
 		ensure
 			pruned: not has (a_widget)
 		end
-	
+
 	set_tab_position (a_position: INTEGER) is
 			-- Set tab position base on `a_position' which is one of top_top, top_bottom. See at bottom of class.
 		require
@@ -155,7 +157,7 @@ feature -- Command
 				end
 			end
 		end
-		
+
 feature -- Query
 
 	index_of (a_widget: EV_WIDGET): INTEGER is
@@ -180,7 +182,7 @@ feature -- Query
 			-- Index of `selected_item'.
 		do
 			if internal_cell.readable then
-				Result := internal_widgets.index_of (internal_cell.item, 1)				
+				Result := internal_widgets.index_of (internal_cell.item, 1)
 			end
 		end
 
@@ -210,18 +212,18 @@ feature -- Query
 
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Selection actions.
-	
+
 	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Tab drag actions. In tuple, 1st is dragged tab, 2nd is x, 3rd is y, 4th is screen_x, 5th is screen_y.
 
 feature {NONE}  -- Implementation
-	
+
 	on_tab_dragging (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; a_tab: SD_NOTEBOOK_TAB) is
 			-- Handle tab dragging.
 		do
 			tab_drag_actions.call ([widget_by_tab (a_tab), a_x, a_y, a_screen_x, a_screen_y])
 		end
-		
+
 	on_tab_selected (a_tab: SD_NOTEBOOK_TAB) is
 			-- Handle notebook tab selected.
 		do
@@ -272,12 +274,12 @@ feature {NONE}  -- Implementation
 			-- All singletons.
 
 feature -- Emumeration
-	
+
 	tab_top: INTEGER is 1
 			-- Tab shown at top.
 	tab_bottom: INTEGER is 2
 			-- Tab shown at bottom.
-		
+
 invariant
 
 	tab_drag_actions_not_void: tab_drag_actions /= Void

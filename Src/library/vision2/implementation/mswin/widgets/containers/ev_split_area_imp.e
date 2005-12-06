@@ -35,7 +35,7 @@ inherit
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
 			make as ev_wel_control_container_make
-		redefine	
+		redefine
 			top_level_window_imp
 		end
 
@@ -61,9 +61,6 @@ feature {NONE} -- Initialization
 			Precursor {EV_CONTAINER_IMP}
 			first_expandable := True
 			second_expandable := True
-				-- The splitter is not displayed until `Current' contains
-				-- two widgets, so setting the width to 0 hides it.
-			internal_splitter_width := 0
 		end
 
 feature {EV_ANY_I} -- Status Setting
@@ -91,7 +88,7 @@ feature {EV_ANY_I} -- Status Setting
 			end
 			Precursor {EV_CONTAINER_IMP}
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	update_for_pick_and_drop (starting: BOOLEAN) is
@@ -137,15 +134,15 @@ feature {NONE} -- Implementation
 					first := Void
 					second_expandable := True
 					first_expandable := True
-						-- Hide the splitter as `Current' only 
-					internal_splitter_width := 0
+						-- Hide the splitter as `Current' only
+					--internal_splitter_width := 0
 					set_split_position (0)
 				elseif v = second then
 					v_imp := second_imp
 					second := Void
 					first_expandable := True
 					second_expandable := True
-					internal_splitter_width := 0 
+					--internal_splitter_width := 0
 					set_split_position (maximum_split_position)
 				end
 					-- If `v_imp' not Void (meaning `v' is being removed).
@@ -168,7 +165,7 @@ feature {NONE} -- Implementation
 		do
 			split_position := a_position
 			layout_widgets (True)
-		end	
+		end
 
 	disable_item_expand (v: like item) is
 			-- When `Current' is resized, do not resize `v'.
@@ -189,7 +186,7 @@ feature {NONE} -- Implementation
 				second_expandable := True
 			end
 		end
-	
+
 	minimum_split_position: INTEGER is
 			-- Minimum position in pixels allowed for the splitter.
 		deferred
@@ -208,7 +205,7 @@ feature {NONE} -- Implementation
 			-- Assign coordinate relative to click position on splitter to
 			-- `click_relative_position'.
 		deferred
-		end	
+		end
 
 	is_child (v: EV_WIDGET_IMP): BOOLEAN is
 			-- Is `v' a child of `Current'?
@@ -263,7 +260,7 @@ feature {NONE} -- Implementation
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
 			wel_window := wel_point.window_at
-			our_window ?= Current				
+			our_window ?= Current
 			if our_window = wel_window then
 				class_cursor.set
 				set_message_return_value (to_lresult (1))
@@ -325,27 +322,13 @@ feature {NONE} -- Implementation
 		-- For a vertical split_area, this contains the last
 		-- height of `Current'.
 
-	internal_splitter_width: INTEGER
-			-- Current width of splitter in pixels.
-			-- Should be either `normal_separator_width',
-			-- `flat_separator_width' or 0 if splitter is hidden.
-
-	splitter_width: INTEGER is
-			-- `Result' is width the visible separator should occupy.
-			-- if `flat_separator' then `Result' is `flat_separator_width'.
-			-- if not `flat_separator' then `Result' is
-			-- `normal_separator_width'.
-		do
-			Result := normal_separator_width
-		end
-
-	normal_separator_width: INTEGER is 4
-		-- Width of normal separator.
+	splitter_width: INTEGER is 4
+			-- `Result' is space in pixels the visible separator should occupy.
 
 	click_relative_position: INTEGER
 		-- Mouse coordinate relative to start of splitter when splitter
 		-- is clicked on.
-				
+
 	index_of_child (child: EV_WIDGET_IMP): INTEGER is
 			-- `Result' is 1 based index of `child' within `Current'.
 		do
@@ -355,7 +338,7 @@ feature {NONE} -- Implementation
 				Result := 2
 			end
 		end
-			
+
 	next_tabstop_widget (start_widget: EV_WIDGET; search_pos: INTEGER; forwards: BOOLEAN): EV_WIDGET_IMP is
 			-- Return the next widget that may by tabbed to as a result of pressing the tab key from `start_widget'.
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
@@ -366,7 +349,7 @@ feature {NONE} -- Implementation
 		local
 			w: EV_WIDGET_IMP
 			container: EV_CONTAINER
-		do	
+		do
 			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
 			if Result = Void and is_sensitive then
 					-- Otherwise iterate through children and search each but only if
@@ -432,7 +415,7 @@ feature {NONE} -- Implementation
 				i := 1
 			until
 				i > 16
-			loop	
+			loop
 				Result.put ((0x000000AA).to_character, i)
 				Result.put ((0x00000055).to_character, i + 2)
 				i := i + 4
@@ -440,7 +423,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	splitter_brush: WEL_BRUSH
 		-- Brush used to redraw the splitter while it is moving.
 		-- Created and destroyed at the start and end of splitter resizing.

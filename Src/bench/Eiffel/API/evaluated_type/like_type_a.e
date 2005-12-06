@@ -9,12 +9,22 @@ deferred class
 inherit
 	TYPE_A
 		undefine
-			same_as, solved_type, instantiation_in
+			instantiation_in, same_as, solved_type
 		redefine
-			actual_type, has_like, is_loose, is_like, is_external,
-			is_basic, instantiated_in, meta_type,
+			actual_type,
+			conformance_type,
+			convert_to,
 			has_associated_class,
-			is_reference, is_expanded, is_none, convert_to
+			has_like,
+			instantiated_in,
+			is_basic,
+			is_expanded,
+			is_external,
+			is_like,
+			is_loose,
+			is_none,
+			is_reference,
+			meta_type
 		end
 
 	SHARED_LIKE_CONTROLER
@@ -23,6 +33,14 @@ feature -- Properties
 
 	actual_type: TYPE_A
 			-- Actual type of the anchored type in a given class
+
+	conformance_type: TYPE_A is
+			-- Type which is used to check conformance
+		do
+				-- `conformance_type' has to be called because
+				-- `actual_type' may yield yet another anchored type.
+			Result := actual_type.conformance_type
+		end
 
 	is_like: BOOLEAN is True
 			-- Is the type anchored one ?

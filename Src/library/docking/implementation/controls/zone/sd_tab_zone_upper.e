@@ -20,11 +20,11 @@ feature {NONE} -- Initlization
 	make (a_content: SD_CONTENT; a_target_zone: SD_DOCKING_ZONE) is
 			-- Redefine.
 		do
-			Precursor {SD_TAB_ZONE} (a_content, a_target_zone)
-			prune_widget (internal_notebook)
-			create notebook.make (internal_notebook)
-			extend_widget (notebook)
-			notebook.close_request_actions.extend (agent on_close_request)
+--			Precursor {SD_TAB_ZONE} (a_content, a_target_zone)
+--			prune_widget (internal_notebook)
+--			create notebook.make (internal_notebook)
+--			extend_widget (notebook)
+--			notebook.close_request_actions.extend (agent on_close_request)
 		ensure then
 			notebook_added: has_widget (notebook)
 		end

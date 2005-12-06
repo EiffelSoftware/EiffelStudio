@@ -28,7 +28,7 @@ feature {NONE} -- Initlization
 			create internal_vertical_box
 
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_style, a_zone)
-			internal_title_bar.set_minimum_height (18)
+			internal_title_bar.set_minimum_height (internal_shared.title_bar_height)
 			internal_title_bar.close_request_actions.extend (agent close)
 			internal_title_bar.stick_select_actions.extend (agent stick)
 			internal_title_bar.normal_max_actions.extend (agent on_normal_max_window)
@@ -119,7 +119,7 @@ feature -- Basic operation
 		ensure
 			set: a_show = internal_title_bar.is_show_stick
 		end
-	
+
 	set_focus_color (a_focus: BOOLEAN) is
 			-- Set focus color of title bar and surround focus color.
 		do
@@ -129,7 +129,7 @@ feature -- Basic operation
 				title_bar.disable_focus_color
 			end
 		end
-		
+
 feature -- Actions
 
 	close_request_actions: like internal_close_request_actions is

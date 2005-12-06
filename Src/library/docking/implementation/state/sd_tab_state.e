@@ -384,7 +384,7 @@ feature -- Command
 		do
 			tab_zone.select_item (a_content)
 		ensure
-			selected: tab_zone.selected_item_index = tab_zone.index_of (a_content, 1)
+			selected: tab_zone.selected_item_index = tab_zone.index_of (a_content)
 		end
 
 feature -- Properties redefine.

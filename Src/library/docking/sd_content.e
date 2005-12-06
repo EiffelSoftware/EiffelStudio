@@ -31,12 +31,17 @@ feature {NONE} -- Initialization
 			create l_state.make (Current)
 			internal_state := l_state
 			internal_type := {SD_SHARED}.type_normal
+
+			long_title := ""
+			short_title := ""
 		ensure
 			a_widget_set: a_widget = internal_user_widget
 			a_title_set: internal_unique_title /= Void
 			a_pixmap_set: a_pixmap = internal_pixmap
 			state_not_void: internal_state /= Void
 			a_unique_title_set: a_unique_title = internal_unique_title
+			long_title_not_void: long_title /= Void
+			short_title_not_void: short_title /= Void
 		end
 
 	make_with_widget (a_widget: EV_WIDGET; a_unique_title: STRING) is

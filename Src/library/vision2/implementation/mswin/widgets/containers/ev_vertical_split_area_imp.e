@@ -9,7 +9,7 @@ class
 	EV_VERTICAL_SPLIT_AREA_IMP
 
 inherit
-	
+
 	EV_VERTICAL_SPLIT_AREA_I
 		redefine
 			interface
@@ -39,7 +39,6 @@ feature {NONE} -- Status Setting
 			disable_item_expand (first)
 			first_imp.set_parent (interface)
 			if second_visible then
-				internal_splitter_width := splitter_width
 				set_split_position (minimum_split_position)
 			else
 				set_split_position (maximum_split_position)
@@ -56,9 +55,8 @@ feature {NONE} -- Status Setting
 			second_imp.set_parent (interface)
 			notify_change (Nc_minsize, Current)
 			if first_visible then
-				internal_splitter_width := splitter_width
-				set_split_position (height - internal_splitter_width - second.minimum_height.min
-					(height - minimum_split_position - internal_splitter_width))
+				set_split_position (height - splitter_width - second.minimum_height.min
+					(height - minimum_split_position - splitter_width))
 			else
 				set_split_position (0)
 			end
@@ -84,15 +82,16 @@ feature {NONE} -- Implementation
 	compute_minimum_size is
 			-- Recompute the minimum_size of `Current'.
 		local
-			mh, mw: INTEGER
+			mh, mw, sep_wid: INTEGER
 		do
 			if first_visible then
 				mw := first.minimum_width
 				mh := first.minimum_height
+				sep_wid := splitter_width
 			end
 			if second_visible then
 				mw := mw.max (second.minimum_width)
-				mh := mh + second.minimum_height + internal_splitter_width
+				mh := mh + second.minimum_height + sep_wid
 			end
 			ev_set_minimum_size (mw, mh)
 		end
@@ -100,13 +99,14 @@ feature {NONE} -- Implementation
 	compute_minimum_height is
 			-- Recompute the minimum_height of `Current'.
 		local
-			mh: INTEGER
+			mh, sep_wid: INTEGER
 		do
 			if first_visible then
 				mh := first.minimum_height
+				sep_wid := splitter_width
 			end
 			if second_visible then
-				mh := mh + second.minimum_height + internal_splitter_width
+				mh := mh + second.minimum_height + sep_wid
 			end
 			ev_set_minimum_height (mh)
 		end
@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 					first_imp.ev_apply_new_size (0, 0, width, height, True)
 				end
 			end
-		
+
 			if second_visible and not first_visible then
 				if originator then
 					second_imp.set_move_and_size (0, 0, width, height)
@@ -164,22 +164,22 @@ feature {NONE} -- Implementation
 				if originator then
 					first_imp.set_move_and_size (0, 0, width, split_position)
 					second_imp.set_move_and_size (0, split_position +
-						internal_splitter_width, width, height - split_position -
-						internal_splitter_width)
+						splitter_width, width, height - split_position -
+						splitter_width)
 				else
 					first_imp.ev_apply_new_size (0, 0, width, split_position,
 						True)
 					second_imp.ev_apply_new_size (0, split_position +
-						internal_splitter_width, width, height - split_position -
-						internal_splitter_width, True)
+						splitter_width, width, height - split_position -
+						splitter_width, True)
 				end
 			end
 
 				-- Invalidate separator.
 			create rect.make (0, split_position, width,
-				split_position + internal_splitter_width)
+				split_position + splitter_width)
 			invalidate_rect (rect, True)
-		end	
+		end
 
 	split_area_resizing (a_height: INTEGER; originator: BOOLEAN) is
 			-- Wm_size message
@@ -204,14 +204,14 @@ feature {NONE} -- Implementation
 						splitter_movement_factor := 0.0
 					end
 				end
-	
+
 					-- Store the number of pixels `Current' has increased
 					-- by (negative for a reduction).
 				size_change := height - last_dimension
 
 					-- Store the current size as `last_split_position'.
 				last_dimension:= a_height
-			
+
 					-- Assign the correct movement to `movement', determined
 					-- by `splitter_movement_factor' and `size_change'.
 				movement := (size_change * splitter_movement_factor).rounded
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 			-- Invert the split on `a_dc'.
 		do
 			invert_rectangle (a_dc, -1, split_position, width, split_position +
-				internal_splitter_width)
+				splitter_width)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 				Precursor {EV_SPLIT_AREA_IMP} (keys, x_pos, y_pos)
 			end
 		end
-		
+
 	position_is_over_splitter (y_pos: INTEGER): BOOLEAN is
 			-- Does `y_position' fall within the splitter?
 		require
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 		do
 			Result := y_pos - (split_position + 1) <= splitter_width
 		end
-		
+
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttondown message handling.
 		local
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 		do
 			paint_dc.select_pen (a_pen)
 			paint_dc.line (0, a_y, wel_width, a_y)
-			paint_dc.unselect_pen			
+			paint_dc.unselect_pen
 		end
 
 feature {NONE} -- WEL internal
@@ -365,7 +365,7 @@ feature {NONE} -- WEL internal
 		do
 				-- If `Current' is empty then we should use the standard arrow cursor.
 			if first = Void and second = Void then
-				create Result.make_by_predefined_id (Wel_idc_constants.Idc_arrow)			
+				create Result.make_by_predefined_id (Wel_idc_constants.Idc_arrow)
 			else
 				create Result.make_by_predefined_id (Wel_idc_constants.Idc_sizens)
 			end

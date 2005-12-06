@@ -58,8 +58,8 @@ feature -- Command
 			contents.extend (a_content)
 			internal_notebook.extend (a_content.user_widget)
 			internal_notebook.set_item_text (a_content.user_widget, a_content.short_title)
---			internal_notebook.item_tab (a_content.user_widget).set_pixmap (a_content.pixmap)
---			internal_notebook.item_tab (a_content.user_widget).enable_select
+			internal_notebook.set_item_pixmap (a_content.user_widget, a_content.pixmap)
+			internal_notebook.select_item (a_content.user_widget)
 			enable_on_select_tab
 		ensure then
 			extended: contents.has (a_content)

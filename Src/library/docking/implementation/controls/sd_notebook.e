@@ -128,8 +128,9 @@ feature -- Command
 		do
 			internal_widgets.search (a_widget)
 			internal_tabs.go_i_th (selected_item_index)
+			internal_tabs.item.destroy
 			internal_tabs.remove
-			-- FIXTI: Should prune l_tab select and dragging actions here? Will it automatic collected?
+			
 			internal_widgets.start
 			internal_widgets.prune (a_widget)
 		ensure
@@ -152,7 +153,7 @@ feature -- Command
 			when tab_bottom then
 				search (internal_tab_box)
 				if index /= 2 then
-					swap (1)
+					swap (2)
 					disable_item_expand (internal_tab_box)
 				end
 			end

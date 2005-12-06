@@ -8,7 +8,10 @@ class
 
 inherit
 	EV_HORIZONTAL_BOX
-
+		redefine
+			destroy	
+		end
+		
 create
 	make
 
@@ -16,6 +19,8 @@ feature {NONE}  -- Initlization
 
 	make is
 			-- Creation method.
+		local
+			l_env: EV_ENVIRONMENT
 		do
 			default_create
 			create internal_shared
@@ -34,6 +39,7 @@ feature {NONE}  -- Initlization
 			extend (internal_tail_drawing_area)
 			disable_item_expand (internal_tail_drawing_area)
 			internal_tail_drawing_area.set_minimum_width (internal_shared.highlight_tail_width)
+			internal_tail_drawing_area.pointer_button_release_actions.force_extend (agent on_selected)
 
 			set_minimum_height (internal_shared.title_bar_height)
 
@@ -45,27 +51,41 @@ feature {NONE}  -- Initlization
 			create drag_actions
 
 			init_actions
+			
+			create l_env
+			golbal_pointer_release_action := agent on_pointer_release
+			l_env.application.pointer_button_release_actions.extend (golbal_pointer_release_action)
+			
 		end
-
+		
 	init_actions is
 			-- Initialize actions.
 		do
 			internal_pixmap_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_pixmap_drawing_area.pointer_button_release_actions.force_extend (agent on_pointer_release)
 			internal_pixmap_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 
 			internal_text_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_text_drawing_area.pointer_button_release_actions.force_extend (agent on_pointer_release)
 			internal_text_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 
 			internal_tail_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_tail_drawing_area.pointer_button_release_actions.force_extend (agent on_pointer_release)
 			internal_tail_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 
 		end
 
+feature -- Command
+	
+	destroy is
+			-- Redefine.
+		local
+			l_env: EV_ENVIRONMENT
+		do
+			Precursor {EV_HORIZONTAL_BOX}
+			create l_env
+			l_env.application.pointer_button_release_actions.prune_all (golbal_pointer_release_action)
+		end
+		
 feature -- Properties
-
+	
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions.
 
@@ -149,7 +169,7 @@ feature {NONE}  -- Implmentation for drag action
 			internal_pointer_pressed := True
 		end
 
-	on_pointer_release is
+	on_pointer_release (a_widget: EV_WIDGET; a_button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
 			-- Handle pointer release.
 		do
 			internal_pointer_pressed := False
@@ -201,6 +221,9 @@ feature {NONE}  -- Implementation
 	internal_tail_drawing_area: EV_DRAWING_AREA
 			-- Tail area which show color change gradually.
 
+	golbal_pointer_release_action: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
+			-- Application level pointer release actions.
+			
 	internal_shared: SD_SHARED
 			-- All singletons.
 
@@ -213,5 +236,7 @@ invariant
 	internal_pixmap_drawing_area_not_void: internal_pixmap_drawing_area /= Void
 	internal_text_drawing_area_not_void: internal_text_drawing_area /= Void
 	internal_tail_drawing_area_not_void: internal_tail_drawing_area /= Void
+	
+	golbal_pointer_release_action_not_void: golbal_pointer_release_action /= Void
 
 end

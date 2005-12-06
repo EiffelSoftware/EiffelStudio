@@ -85,7 +85,7 @@ feature {NONE} -- Initlization
 			disable_item_expand (internal_title_bar)
 
 			internal_notebook.selection_actions.extend (agent on_select_tab)
-			internal_notebook.tab_drag_actions.extend (agent on_notebook_drag)			
+			internal_notebook.tab_drag_actions.extend (agent on_notebook_drag)
 			extend_widget (internal_notebook)
 
 			internal_notebook.drop_actions.extend (agent on_notebook_drop)
@@ -265,6 +265,7 @@ feature {NONE} -- Agents for docker
 				if l_content.internal_focus_in_actions /= Void then
 					l_content.internal_focus_in_actions.call ([])
 				end
+				internal_shared.set_last_focus_content (l_content)
 			end
 		ensure
 			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).long_title)
@@ -311,9 +312,9 @@ feature {NONE} -- Agents for docker
 		do
 			create internal_docker_mediator.make (Current)
 			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
-			enable_capture			
+			enable_capture
 		end
-		
+
 --	on_notebook_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 --			--	Handle notebook pointer motion.
 --		local

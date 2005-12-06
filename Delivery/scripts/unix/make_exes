@@ -6,7 +6,7 @@ cd $EIFFEL_SRC
 co $DEFAULT_CVS_TAG/Src/bench/Eiffel Eiffel 
 co $DEFAULT_CVS_TAG/Src/common Eiffel/common
 co $DEFAULT_CVS_TAG/Src/build2 build2 
-co $DEFAULT_CVS_TAG/Src/examples/vision2/widget_test vision2_tour 
+exprt $DEFAULT_CVS_TAG/Src/examples/vision2/widget_test vision2_tour 
 co $DEFAULT_CVS_TAG/Src/bench/C C
 co $DEFAULT_CVS_TAG/Src/dotnet dotnet 
 co $DEFAULT_CVS_TAG/Src/C_library C_library 

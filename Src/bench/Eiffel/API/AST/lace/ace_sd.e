@@ -16,7 +16,7 @@ inherit
 	EIFFEL_ENV
 
 	SHARED_EIFFEL_PROJECT
-	
+
 	SHARED_IL_EMITTER
 		export
 			{NONE} all
@@ -72,7 +72,7 @@ feature -- Properties
 
 	clusters: LACE_LIST [CLUSTER_SD];
 			-- Description of cluster clauses
-			
+
 	assemblies: LACE_LIST [ASSEMBLY_SD]
 			-- Description of assemblies
 
@@ -96,7 +96,7 @@ feature -- Status report
 		do
 			d_options := defaults
 			if d_options /= Void then
-				from 
+				from
 					d_options.start
 				until
 					d_options.after
@@ -105,7 +105,7 @@ feature -- Status report
 						fopt ?= d_options.item.option
 						if fopt.code = {FREE_OPTION_SD}.msil_generation then
 							Result := d_options.item.value.is_yes
-						end	
+						end
 					end
 					d_options.forth
 				end
@@ -219,7 +219,7 @@ feature -- Saving
 			st.put_new_line
 
 			if defaults /= Void then
-				st.put_string ("default")	
+				st.put_string ("default")
 				st.put_new_line
 				st.indent
 				defaults.save_with_new_line (st)
@@ -240,7 +240,7 @@ feature -- Saving
 					comment_list.forth
 				end
 			end
-	
+
 			st.put_new_line
 			st.put_string ("cluster")
 			st.put_new_line
@@ -257,7 +257,7 @@ feature -- Saving
 				assemblies.save_with_new_line (st)
 				st.exdent
 			end
-			
+
 			if externals /= Void then
 				st.put_string ("external")
 				st.put_new_line
@@ -304,13 +304,16 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			Use_properties.clear_all;
 			Eiffel_system.wipe_out_sub_clusters;
 
+				-- Initialize $ISE_LIBRARY environment
+			set_ise_library_path
+
 				-- First re-insert the precompiled clusters into the
 				-- universe.
 			build_precompiled
 
 				-- Initialize override_cluster_name if any
 			set_override_cluster
-			
+
 				-- Initialize CLR runtime version
 			set_clr_runtime_version
 
@@ -483,21 +486,21 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 						assemblies.count - assemblies.index + 1)
 					create l_compiled_assembly.make_from_ast (l_assembly)
 					Error_handler.checksum
-					
+
 					l_old_assembly ?= Lace.old_universe.
 						cluster_of_name (l_compiled_assembly.cluster_name)
-					
+
 					l_cluster_of_name := lace.Universe.cluster_of_name (
 						l_compiled_assembly.cluster_name)
-					
+
 					if l_compiled_assembly.path /= Void then
 						l_cluster_of_path := lace.Universe.cluster_of_path (
 							l_compiled_assembly.path)
-					end	
-					
+					end
+
 					if l_cluster_of_name /= Void then
 						if l_cluster_of_name.is_precompiled then
-							if 
+							if
 								(l_cluster_of_path /= Void) and then
 								l_cluster_of_path /= l_cluster_of_name
 							then
@@ -544,7 +547,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					end
 					assemblies.forth
 				end
-				
+
 					-- Import data for newly introduced assemblies.
 					-- FIXME: Manu 05/03/2002: we should do something here so that
 					-- we take care of possible incremental changes in XML files.
@@ -580,7 +583,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		end
 
 	build_clusters is
-			-- Analysis of AS description of SDF in order to 
+			-- Analysis of AS description of SDF in order to
 			-- build clusters.
 		local
 			clus: CLUSTER_SD
@@ -598,6 +601,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					-- has been created with only one override_cluster in mind. As a consequence
 					-- I (Manu) kept the previous implementation of `all' specification in
 					-- CLUSTER_I, where all classes belong to the top cluster.
+				clusters
 				Degree_output.put_start_degree_6 (clusters_count);
 				from
 					clusters.start
@@ -613,7 +617,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 						clus.expand_recursive_clusters (clusters)
 					end
 					Degree_output.put_degree_6 (clus.cluster_name,
-						clusters_count - clusters.index + 1)
+						clusters_count - l_clusters.index + 1)
 					clus.build
 					clusters.forth
 				end
@@ -744,7 +748,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				until
 					clusters.after
 				loop
-					
+
 					clusters.item.process_options;
 					clusters.forth;
 				end;
@@ -790,7 +794,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				old_cluster := old_clusters.item;
 				if not Universe.has_cluster_of_path (old_cluster.path) then
 						-- Defensive programming test. The old cluster
-						-- should never be precompiled at this stage. 
+						-- should never be precompiled at this stage.
 					if not old_cluster.is_precompiled then
 						old_cluster.remove_cluster;
 					end;
@@ -835,6 +839,23 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					end
 					defaults.forth
 				end
+			end
+		end
+
+	set_ise_library_path is
+			-- Initialize with correct value for ISE_LIBRARY environment variable.
+			-- Use ISE_EIFFEL value if not user defined.
+		local
+			l_lib_env,
+			l_ise_env: STRING
+		do
+			l_lib_env := execution_environment.get (once "ISE_LIBRARY")
+			if l_lib_env = Void or l_lib_env.is_empty then
+				l_ise_env := execution_environment.get (once "ISE_EIFFEL")
+				system.set_ise_library_path (l_ise_env)
+				execution_environment.put (l_ise_env, once "ISE_LIBRARY")
+			else
+				system.set_ise_library_path (l_lib_env)
 			end
 		end
 
@@ -883,7 +904,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			create l_il_env.make (system.clr_runtime_version)
 			l_il_env.register_environment_variable
 		end
-		
+
 	set_metadata_cache_path is
 			-- Initialize `Universe' with metadata_cache_path found in Ace file
 			-- if any. This name can be invalid in which case it does not matter,
@@ -921,7 +942,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		end
 
 feature {NONE} -- Incrementality
-	
+
 	clusters_count: INTEGER is
 			-- Number of cluster and assemblies.
 		do
@@ -970,15 +991,15 @@ feature {NONE} -- Incrementality
 			valid_clusters: equal (new_cluster.cluster_name,
 								old_cluster.cluster_name)
 		local
-			parent_cluster: CLUSTER_I	
+			parent_cluster: CLUSTER_I
 		do
 			parent_cluster := old_cluster.parent_cluster;
 			if parent_cluster = Void then
 				Eiffel_system.add_sub_cluster (new_cluster)
 			else
 					-- Get the real parent.
-				parent_cluster := 
-					Universe.cluster_of_name 
+				parent_cluster :=
+					Universe.cluster_of_name
 							(parent_cluster.cluster_name);
 				if parent_cluster = Void then
 					-- This implies that the parent is different in the

@@ -16,7 +16,7 @@ default
 	use_cluster_name_as_namespace (yes)
 	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
-	version ("1.1020.0.0")
+	version ("1.1207.0.0")
 	company ("Eiffel Software")
 	product ("Eiffel for .NET Compliance Checker")
 	copyright ("2005 Eiffel Software. All Rights Reserved")

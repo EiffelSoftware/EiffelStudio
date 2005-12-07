@@ -125,7 +125,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
  */
 
 /*
-doc:	<attribute name="m_data" return_type="struct emallinfo" export="shared">
+doc:	<attribute name="rt_m_data" return_type="struct emallinfo" export="shared">
 doc:		<summary>This structure records some general information about the memory, the number of chunck, etc... These informations are available via the meminfo() routine. Only used by current and garcol.c</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
@@ -133,7 +133,7 @@ doc:		<synchronization>Through `eif_free_list_mutex' or GC synchronization.</syn
 doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
 doc:	</attribute>
 */
-rt_shared struct emallinfo m_data = {
+rt_shared struct emallinfo rt_m_data = {
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -141,7 +141,7 @@ rt_shared struct emallinfo m_data = {
 };	
 
 /*
-doc:	<attribute name="c_data" return_type="struct emallinfo" export="shared">
+doc:	<attribute name="rt_c_data" return_type="struct emallinfo" export="shared">
 doc:		<summary>For C memory, we keep track of general informations too. This enables us to pilot the garbage collector correctly or to call coalescing over the memory only if it is has a chance to succeed. Only used by current and garcol.c</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
@@ -149,7 +149,7 @@ doc:		<synchronization>Through `eif_free_list_mutex' or GC synchronization.</syn
 doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
 doc:	</attribute>
 */
-rt_shared struct emallinfo c_data = { /* Informations on C memory */
+rt_shared struct emallinfo rt_c_data = { /* Informations on C memory */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -157,16 +157,16 @@ rt_shared struct emallinfo c_data = { /* Informations on C memory */
 };
 
 /*
-doc:	<attribute name="e_data" return_type="struct emallinfo" export="shared">
+doc:	<attribute name="rt_e_data" return_type="struct emallinfo" export="shared">
 doc:		<summary>For Eiffel memory, we keep track of general informations too. This enables us to pilot the garbage collector correctly or to call coalescing over the memory only if it is has a chance to succeed. Only used by current and garcol.c</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Through `eif_free_list_mutex' or GC synchronization.</synchronization>
 doc:		<eiffel_classes>MEM_INFO</eiffel_classes>
-doc:		<fixme>Unsafe access to `e_data' from `acollect' when compiled with `-DEIF_CONDITIONAL_COLLECT' option.</fixme>
+doc:		<fixme>Unsafe access to `rt_e_data' from `acollect' when compiled with `-DEIF_CONDITIONAL_COLLECT' option.</fixme>
 doc:	</attribute>
 */
-rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */
+rt_shared struct emallinfo rt_e_data = { /* Informations on Eiffel memory */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -1673,9 +1673,9 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 
 	GC_THREAD_PROTECT(EIF_FREE_LIST_MUTEX_LOCK);
 	if (type == C_T) {
-		estimated_free_space = (unsigned int) (c_data.ml_total - c_data.ml_used);
+		estimated_free_space = (unsigned int) (rt_c_data.ml_total - rt_c_data.ml_used);
 	} else {
-		estimated_free_space = (unsigned int) (e_data.ml_total - e_data.ml_used);
+		estimated_free_space = (unsigned int) (rt_e_data.ml_total - rt_e_data.ml_used);
 	}
 
 	if ((nbytes <= estimated_free_space) && (nbytes < (unsigned int) full_coalesc_unsafe (type))) {
@@ -1916,9 +1916,9 @@ rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 	}
 
 	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
-		CHECK("Consistent", bytes_available == (e_data.ml_total - e_data.ml_over - e_data.ml_used));
+		CHECK("Consistent", bytes_available == (rt_e_data.ml_total - rt_e_data.ml_over - rt_e_data.ml_used));
 	} else {
-		CHECK("Consistent", bytes_available == (c_data.ml_total - c_data.ml_over - c_data.ml_used));
+		CHECK("Consistent", bytes_available == (rt_c_data.ml_total - rt_c_data.ml_over - rt_c_data.ml_used));
 	}
 
 #ifdef DEBUG
@@ -1928,10 +1928,10 @@ rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 	fprintf(stderr, "Total available bytes is %d\n", bytes_available);
 	if (CHUNK_TYPE(hlist) == EIFFEL_T) {
 		fprintf(stderr, "Eiffel free list has %d bytes allocated, %d used and %d free.\n",
-			e_data.ml_total, e_data.ml_used, e_data.ml_total - e_data.ml_used - e_data.ml_over); 
+			rt_e_data.ml_total, rt_e_data.ml_used, rt_e_data.ml_total - rt_e_data.ml_used - rt_e_data.ml_over); 
 	} else {
 		fprintf(stderr, "C free list has %d bytes allocated, %d used and %d free.\n",
-			c_data.ml_total, c_data.ml_used, c_data.ml_total - c_data.ml_used - c_data.ml_over); 
+			rt_c_data.ml_total, rt_c_data.ml_used, rt_c_data.ml_total - rt_c_data.ml_used - rt_c_data.ml_over); 
 	}
 	flush;
 #endif
@@ -2107,7 +2107,7 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 		 */
 
 		if (eif_max_mem > 0)
-			if (m_data.ml_total + asked > eif_max_mem) {
+			if (rt_m_data.ml_total + asked > eif_max_mem) {
 				print_err_msg (stderr, "Cannot allocate memory: too much in comparison with maximum allowed!\n");
 				return (union overhead *) 0;
 			}
@@ -2169,26 +2169,26 @@ rt_private union overhead *add_core(size_t nbytes, int type)
 	SIGBLOCK;			/* Critical section starts */
 
 	/* Accounting informations */
-	m_data.ml_chunk++;
-	m_data.ml_total += asked;				/* Counts overhead */
-	m_data.ml_over += sizeof(struct chunk) + OVERHEAD;
+	rt_m_data.ml_chunk++;
+	rt_m_data.ml_total += asked;				/* Counts overhead */
+	rt_m_data.ml_over += sizeof(struct chunk) + OVERHEAD;
 
 	/* Accounting is also done for each type of memory (C/Eiffel) */
 	if (type == EIFFEL_T) {
-		e_data.ml_chunk++;
-		e_data.ml_total += asked;
+		rt_e_data.ml_chunk++;
+		rt_e_data.ml_total += asked;
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used, %ld total (+%ld) (add_core)\n",
-			e_data.ml_used, e_data.ml_total, asked);
+			rt_e_data.ml_used, rt_e_data.ml_total, asked);
 #endif
-		e_data.ml_over += sizeof(struct chunk) + OVERHEAD;
+		rt_e_data.ml_over += sizeof(struct chunk) + OVERHEAD;
 	} else {
-		c_data.ml_chunk++;
-		c_data.ml_total += asked;
-		c_data.ml_over += sizeof(struct chunk) + OVERHEAD;
+		rt_c_data.ml_chunk++;
+		rt_c_data.ml_total += asked;
+		rt_c_data.ml_over += sizeof(struct chunk) + OVERHEAD;
 #ifdef MEM_STAT
 		printf ("C: %ld used, %ld total (+%ld) (add_core)\n",
-			c_data.ml_used, c_data.ml_total, asked);
+			rt_c_data.ml_used, rt_c_data.ml_total, asked);
 #endif
 	}
 
@@ -2419,9 +2419,9 @@ rt_private int free_last_chunk(void)
 	 * internal data structure which keep track of the memory status.
 	 */
 
-	m_data.ml_chunk--;
-	m_data.ml_total -= nbytes;			/* Counts overhead */
-	m_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
+	rt_m_data.ml_chunk--;
+	rt_m_data.ml_total -= nbytes;			/* Counts overhead */
+	rt_m_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
 
 	/* The garbage collectors counts the amount of allocated 'to' zones. A limit
 	 * is fixed to avoid a nasty memory leak when all the zones used would be
@@ -2433,16 +2433,16 @@ rt_private int free_last_chunk(void)
 		rt_g_data.gc_to--;					/* Decrease number of allocated 'to' */
 
 	if (last_chk == cklst.eck_tail) {	/* Chunk was an Eiffel one */
-		e_data.ml_chunk--;
-		e_data.ml_total -= nbytes;	
-		e_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
+		rt_e_data.ml_chunk--;
+		rt_e_data.ml_total -= nbytes;	
+		rt_e_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
 		cklst.eck_tail = last_desc.ck_lprev;
 		if (last_desc.ck_lprev == (struct chunk *) 0)
 			cklst.eck_head = (struct chunk *) 0;
 	} else {							/* Chunk was a C one */
-		c_data.ml_chunk--;
-		c_data.ml_total -= nbytes;	
-		c_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
+		rt_c_data.ml_chunk--;
+		rt_c_data.ml_total -= nbytes;	
+		rt_c_data.ml_over -= sizeof(struct chunk) + OVERHEAD;
 		cklst.cck_tail = last_desc.ck_lprev;
 		if (last_desc.ck_lprev == (struct chunk *) 0)
 			cklst.cck_head = (struct chunk *) 0;
@@ -2540,14 +2540,14 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, size_t nbytes
 
 	selected->ov_size = r | B_NEW;
 	i = r & B_SIZE;						/* Keep only true size */
-	m_data.ml_used += i;				/* Account for memory used */
+	rt_m_data.ml_used += i;				/* Account for memory used */
 	if (r & B_CTYPE)
-		c_data.ml_used += i;
+		rt_c_data.ml_used += i;
 	else {
-		e_data.ml_used += i;
+		rt_e_data.ml_used += i;
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used (+%ld) %ld total (set_up)\n",
-			e_data.ml_used, i, e_data.ml_total);
+			rt_e_data.ml_used, i, rt_e_data.ml_total);
 #endif
 	}
 
@@ -2606,14 +2606,14 @@ rt_public void eif_rt_xfree(register void * ptr)
 
 	/* Memory accounting */
 	i = r & B_SIZE;				/* Amount of memory released */
-	m_data.ml_used -= i;		/* At least this is free */
+	rt_m_data.ml_used -= i;		/* At least this is free */
 	if (r & B_CTYPE) {
-		c_data.ml_used -= i;
+		rt_c_data.ml_used -= i;
 	} else {
-		e_data.ml_used -= i;
+		rt_e_data.ml_used -= i;
 #ifdef MEM_STAT
 	printf ("Eiffel: %ld used (-%ld), %ld total (eif_rt_xfree)\n",
-		e_data.ml_used, i, e_data.ml_total);
+		rt_e_data.ml_used, i, rt_e_data.ml_total);
 #endif
 	}
 
@@ -2830,15 +2830,15 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 			return ptr;					/* Leave block unchanged */
 		}
 		
-		m_data.ml_used -= r + OVERHEAD;	/* Data we lose in realloc */
+		rt_m_data.ml_used -= r + OVERHEAD;	/* Data we lose in realloc */
 		if (zone->ov_size & B_CTYPE)
-			c_data.ml_used -= r + OVERHEAD;
+			rt_c_data.ml_used -= r + OVERHEAD;
 		else {
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used (-%ld), %ld total (xrealloc)\n",
-			e_data.ml_used, r + OVERHEAD, e_data.ml_total);
+			rt_e_data.ml_used, r + OVERHEAD, rt_e_data.ml_total);
 #endif
-			e_data.ml_used -= r + OVERHEAD;
+			rt_e_data.ml_used -= r + OVERHEAD;
 		}
 
 #ifdef DEBUG
@@ -2866,11 +2866,11 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	}
 		/* Update memory statistic. No need to handle the overheads,
 		 * it was already done in `coalesc'. */
-	m_data.ml_used += size_gain;
+	rt_m_data.ml_used += size_gain;
 	if (zone->ov_size & B_CTYPE) {
-		c_data.ml_used += size_gain;
+		rt_c_data.ml_used += size_gain;
 	} else {
-		e_data.ml_used += size_gain;
+		rt_e_data.ml_used += size_gain;
 	}
 #endif	/* EIF_MALLOC_OPTIMIZATION */
 
@@ -2919,11 +2919,11 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 			return ptr;					/* Leave block unsplit */
 		} else {
 				/* Split occurred, return unused part and overhead as free for memory accounting. */
-			m_data.ml_used -= i + OVERHEAD;
+			rt_m_data.ml_used -= i + OVERHEAD;
 			if (zone->ov_size & B_CTYPE) {
-				c_data.ml_used -= i + OVERHEAD;
+				rt_c_data.ml_used -= i + OVERHEAD;
 			} else {
-				e_data.ml_used -= i + OVERHEAD;
+				rt_e_data.ml_used -= i + OVERHEAD;
 			}
 
 #ifdef DEBUG
@@ -2946,7 +2946,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 	 * malloc are (union overhead *) cast to (EIF_REFERENCE) and also
 	 * because I do not want to declare another register variable.
 	 *
-	 * There is no need to update the m_data accounting variables,
+	 * There is no need to update the rt_m_data accounting variables,
 	 * because malloc and free will do that for us. We allocate the
 	 * block from the correct free list, if at all possible.
 	 */
@@ -3002,7 +3002,7 @@ rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, size_t nbytes, int 
 #ifdef ISE_GC
 /*
 doc:	<routine name="meminfo" return_type="struct emallinfo *" export="public">
-doc:		<summary>Return the pointer to the static data held in m_data. The user must not corrupt these data. It will be harmless to malloc, however, but may fool the garbage collector. Type selects the kind of information wanted.</summary>
+doc:		<summary>Return the pointer to the static data held in rt_m_data. The user must not corrupt these data. It will be harmless to malloc, however, but may fool the garbage collector. Type selects the kind of information wanted.</summary>
 doc:		<param name="type" type="int">Type of memory (M_C or M_EIFFEL or M_ALL) to get info from.</param>
 doc:		<return>Pointer to an internal structure used by `malloc.c'.</return>
 doc:		<thread_safety>Not Safe</thread_safety>
@@ -3014,12 +3014,12 @@ rt_public struct emallinfo *meminfo(int type)
 {
 	switch(type) {
 	case M_C:
-		return &c_data;		/* Pointer to static data */
+		return &rt_c_data;		/* Pointer to static data */
 	case M_EIFFEL:
-		return &e_data;		/* Pointer to static data */
+		return &rt_e_data;		/* Pointer to static data */
 	}
 	
-	return &m_data;		/* Pointer to static data */
+	return &rt_m_data;		/* Pointer to static data */
 }
 
 /*
@@ -3062,11 +3062,11 @@ rt_shared rt_uint_ptr eif_rt_split_block(register union overhead *selected, regi
 
 	r -= OVERHEAD;					/* This is the overhead for split block */
 	selected->ov_size = r;			/* Set the size of new block */
-	m_data.ml_over += OVERHEAD;		/* Added overhead */
+	rt_m_data.ml_over += OVERHEAD;		/* Added overhead */
 	if (i & B_CTYPE)				/* Holds flags (without B_LAST) */
-		c_data.ml_over += OVERHEAD;
+		rt_c_data.ml_over += OVERHEAD;
 	else
-		e_data.ml_over += OVERHEAD;
+		rt_e_data.ml_over += OVERHEAD;
 
 	/* Compute hash index */
 	i = HLIST_INDEX(r);
@@ -3122,11 +3122,11 @@ rt_private rt_uint_ptr coalesc(register union overhead *zone)
 
 	r = next->ov_size & B_SIZE;			/* Fetch its size */
 	zone->ov_size = i + r + OVERHEAD;	/* Update size (no overflow possible) */
-	m_data.ml_over -= OVERHEAD;			/* Overhead freed */
+	rt_m_data.ml_over -= OVERHEAD;			/* Overhead freed */
 	if (i & B_CTYPE) {
-		c_data.ml_over -= OVERHEAD;
+		rt_c_data.ml_over -= OVERHEAD;
 	} else {
-		e_data.ml_over -= OVERHEAD;
+		rt_e_data.ml_over -= OVERHEAD;
 	}
 			
 #ifdef DEBUG
@@ -3820,14 +3820,14 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	 * added (it considered it was a single block).
 	 */
 
-	m_data.ml_used -= new_objects_overhead;
-	m_data.ml_over += new_objects_overhead;
+	rt_m_data.ml_used -= new_objects_overhead;
+	rt_m_data.ml_over += new_objects_overhead;
 	if (size & B_CTYPE) {					/* Scavenge zone in a C chunk */
-		c_data.ml_used -= new_objects_overhead;
-		c_data.ml_over += new_objects_overhead;
+		rt_c_data.ml_used -= new_objects_overhead;
+		rt_c_data.ml_over += new_objects_overhead;
 	} else {								/* Scavenge zone in an Eiffel chunk */
-		e_data.ml_used -= new_objects_overhead;
-		e_data.ml_over += new_objects_overhead;
+		rt_e_data.ml_used -= new_objects_overhead;
+		rt_e_data.ml_over += new_objects_overhead;
 	}
 
 	SIGRESUME;							/* End of critical section */

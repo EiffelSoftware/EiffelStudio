@@ -117,9 +117,9 @@ extern int	eif_stack_chunk;				/* Size of local stack chunk. */
 extern size_t	eif_chunk_size;					/* Size of chunk. */
 
 #ifdef ISE_GC
-extern struct emallinfo m_data;		/* Accounting info from malloc */
-extern struct emallinfo c_data;		/* Accounting info from malloc for C */
-extern struct emallinfo e_data;		/* Accounting info from malloc for Eiffel */
+extern struct emallinfo rt_m_data;		/* Accounting info from malloc */
+extern struct emallinfo rt_c_data;		/* Accounting info from malloc for C */
+extern struct emallinfo rt_e_data;		/* Accounting info from malloc for Eiffel */
 extern struct ck_list cklst;		/* Head and tail of chunck list */
 extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
 extern struct sc_zone sc_to;		/* Scavenging 'to' zone */

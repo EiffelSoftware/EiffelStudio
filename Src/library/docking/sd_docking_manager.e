@@ -463,21 +463,21 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 			-- Remove all auto hide zones in `zones'.
 		local
 			l_auto_hide_zone: SD_AUTO_HIDE_ZONE
+			l_zones_snapshot: like zones
 		do
+			l_zones_snapshot := zones.twin
 			from
-				zones.start
+				l_zones_snapshot.start
 			until
-				zones.after
+				l_zones_snapshot.after
 			loop
-				l_auto_hide_zone ?= zones.item
+				l_auto_hide_zone ?= l_zones_snapshot.item
 				if l_auto_hide_zone /= Void then
 					zones.prune (l_auto_hide_zone)
 					l_auto_hide_zone.content.state.record_state
 					fixed_area.prune (l_auto_hide_zone)
 				end
-				if not zones.after then
-					zones.forth
-				end
+				l_zones_snapshot.forth
 			end
 		ensure
 			no_auto_hide_zone_left: fixed_area.count = 1
@@ -562,6 +562,8 @@ feature {NONE}  -- Agents
 						l_auto_hide_zone ?= internal_shared.last_focus_content.state.zone
 						if l_auto_hide_zone = Void then
 							remove_auto_hide_zones
+						else
+							l_auto_hide_zone.set_title_bar_focus_color (True)
 						end
 					end
 				end

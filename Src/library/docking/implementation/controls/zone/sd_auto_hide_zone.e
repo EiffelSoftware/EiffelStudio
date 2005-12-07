@@ -38,6 +38,8 @@ inherit
 			pointer_enter_actions,
 			set_background_color,
 			background_color
+		redefine
+			set_title_bar_focus_color
 		end
 
 	SD_RESIZE_SOURCE
@@ -153,7 +155,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
+			
 feature {NONE} -- For user docking
 
 	on_focus_in (a_content: SD_CONTENT)is
@@ -178,6 +180,18 @@ feature -- Query
 			Result := window.title_bar.is_focus_color_enable
 		end
 
+feature -- Command
+
+	set_title_bar_focus_color (a_focus: BOOLEAN) is
+			-- Redefine.
+		do
+			if a_focus then
+				window.title_bar.enable_focus_color
+			else
+				window.title_bar.disable_focus_color
+			end
+		end
+		
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

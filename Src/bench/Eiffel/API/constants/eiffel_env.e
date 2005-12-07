@@ -1,6 +1,6 @@
 indexing
 
-	description: 
+	description:
 		"Environment for bitmaps, help, binaries, scripts...."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,7 @@ feature -- Status
 				io.error.put_string (": the environment variable $ISE_PLATFORM is not set%N")
 				(create {EXCEPTIONS}).die (-1)
 			end
-			
+
 			if Platform_constants.is_windows then
 				temp := Eiffel_c_compiler
 				if (temp = Void) or else temp.is_empty then
@@ -74,7 +74,7 @@ feature -- Access: environment variable
 		once
 			Result := Execution_environment.get ("ISE_C_COMPILER")
 		end
-		
+
 	Eiffel_platform: STRING is
 			-- ISE_PLATFORM name.
 		once
@@ -113,7 +113,7 @@ feature -- Access: environment variable
 			-- Short version of EiffelStudio name.
 
 feature -- Access: file name
-	
+
 	Eiffel_preferences: STRING is
 			-- Preferences location
 		local
@@ -147,14 +147,14 @@ feature -- Access: file name
 		ensure
 			generation_templates_path_not_void: Result /= Void and not Result.is_empty
 		end
-		
+
 	Assemblies_path: FILE_NAME is
 			-- Location of Eiffel Assembly Cache.
 		once
 			create Result.make_from_string ("$ISE_EIFFEL")
 			Result.extend_from_array (<<"dotnet", "assemblies">>)
 		end
-		
+
 	Default_class_file: FILE_NAME is
 		once
 			Result := Templates_path.twin
@@ -194,7 +194,7 @@ feature -- Access: file name
 
 	Bin_path: FILE_NAME is
 			-- Partial file name that points to bin directory of Eiffel installation.
-			-- Therefore it is not a once function since we need to create 
+			-- Therefore it is not a once function since we need to create
 			-- a new instance each time it is called so that caller can then
 			-- calls `set_file_name' on returned object.
 		do
@@ -310,7 +310,7 @@ feature -- Access: file name
 			create Result.make
 			Result.set_directory ("tmp")
 		end
-		
+
 	Ise_eac_browser_name: FILE_NAME is
 			-- Filename of EAC Browser application
 		once
@@ -318,7 +318,7 @@ feature -- Access: file name
 			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
 			Result.set_file_name (Eac_browser_file)
 		end
-		
+
 	eiffelsoftware_runtime_path: STRING is
 			-- Path to EiffelSoftware.Runtime.dll
 		local
@@ -398,7 +398,7 @@ feature -- Version limitation
 
 	has_dll_generation: BOOLEAN is True
 			-- Does this version have the DLL generation?
-			
+
 	has_signable_generation: BOOLEAN is True
 			-- Does this version allow the signing of .NET assemblies
 

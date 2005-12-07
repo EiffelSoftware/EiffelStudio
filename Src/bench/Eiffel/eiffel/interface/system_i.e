@@ -926,7 +926,7 @@ feature -- Recompilation
 		end
 
 	do_recompilation is
-			-- Incremetal recompilation of the system.
+			-- Incremental recompilation of the system.
 		local
 			root_class_c: CLASS_C
 			d1, d2: DATE_TIME

@@ -18,7 +18,7 @@ inherit
 		end
 
 feature -- Access {EC_CHECKED_MEMBER}
-		
+
 	member: METHOD_BASE
 			-- Member that was examined.
 
@@ -45,7 +45,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 				internal_is_marked := True
 			end
 		end
-		
+
 	check_eiffel_compliance is
 			-- Checks entity to see if it is Eiffel-compliant.
 		local
@@ -66,7 +66,7 @@ feature {NONE} -- Basic Operations {EC_CHECKED_MEMBER}
 		end
 
 feature -- Access
-			
+
 	checked_parameter_types: ARRAY [EC_CHECKED_TYPE] is
 			-- `member' method checked parameter types.
 		local
@@ -90,7 +90,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	are_parameters_compliant (a_check_eiffel: BOOLEAN): BOOLEAN is
@@ -98,24 +98,37 @@ feature {NONE} -- Implementation
 			-- If `a_check_eiffel' then parameters are checked for Eiffel compliance.
 		local
 			l_params: like checked_parameter_types
+			l_item: EC_CHECKED_TYPE
+			l_ab_type: EC_CHECKED_ABSTRACT_TYPE
 			i: INTEGER
 		do
 			l_params := checked_parameter_types
 			i := l_params.count
 			Result := True
 			if i > 0 then
-				from				
+				from
 				until
 					i = 0 or not Result
 				loop
+					l_item := l_params.item (i)
 					if a_check_eiffel then
-						Result := l_params.item (i).is_eiffel_compliant
+						Result := l_item.is_eiffel_compliant
 					else
-						Result := l_params.item (i).is_compliant
-					end	
+						Result := l_item.is_compliant
+					end
+					if Result then
+						l_ab_type ?= l_item
+						if l_ab_type /= Void and then not l_ab_type.is_being_checked then
+							if a_check_eiffel then
+								Result := l_ab_type.is_eiffel_compliant_interface
+							else
+								Result := l_ab_type.is_compliant_interface
+							end
+						end
+					end
 					i := i - 1
 				end
 			end
 		end
-			
+
 end -- class EC_CHECKED_MEMBER_METHOD_BASE

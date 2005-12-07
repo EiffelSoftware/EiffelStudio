@@ -30,34 +30,49 @@ feature -- Access
 			-- Is `assembly' CLS-compliant?
 		indexing
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
+		require
+			not_is_being_checked: has_been_checked or not is_being_checked
 		do
 			if not has_been_checked then
 				check_compliance
 			end
 			Result := internal_is_compliant
+		ensure
+			not_is_being_checked: has_been_checked or not is_being_checked
 		end
 		
 	is_eiffel_compliant: like internal_is_eiffel_compliant is
 			-- Is `assembly' Eiffel-compliant?
 		indexing
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
+		require
+			not_is_being_checked: has_been_checked or not is_being_checked
 		do
 			if not has_been_checked then
 				check_compliance
 			end
 			Result := internal_is_eiffel_compliant
+		ensure
+			not_is_being_checked: has_been_checked or not is_being_checked
 		end
 	
 	is_marked: like internal_is_marked is
 			-- Is `assembly' marked with a `CLS_COMPLIANT_ATTRIBUTE'?
 		indexing
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
+		require
+			not_is_being_checked: has_been_checked or not is_being_checked
 		do
 			if not has_been_checked then
 				check_compliance
 			end
 			Result := internal_is_marked
+		ensure
+			not_is_being_checked: has_been_checked or not is_being_checked
 		end
+		
+	is_being_checked: BOOLEAN
+		-- Is entity in the process of being checked?
 			
 	non_compliant_reason: STRING
 			-- Reason why entity is non-CLS-compliant
@@ -88,16 +103,20 @@ feature {NONE} -- Basic Operations
 			metadata: create {SYNCHRONIZATION_ATTRIBUTE}.make end
 		require
 			not_has_been_checked: not has_been_checked
+			not_is_being_checked: not is_being_checked
 		local
 			l_provider: like custom_attribute_provider
 		do
+			is_being_checked := True
 			l_provider := custom_attribute_provider
 			examine_attributes (l_provider)
 			check_extended_compliance
 			check_eiffel_compliance
 			has_been_checked := True
+			is_being_checked := False
 		ensure
 			has_been_checked_set: has_been_checked
+			not_is_being_checked: not is_being_checked
 			reason_set: not internal_is_compliant implies non_compliant_reason /= Void
 			eiffel_reason_set: not internal_is_eiffel_compliant implies non_eiffel_compliant_reason /= Void
 		end

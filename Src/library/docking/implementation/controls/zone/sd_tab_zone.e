@@ -14,7 +14,8 @@ inherit
 			on_focus_out,
 			on_normal_max_window,
 			is_maximized,
-			set_max
+			set_max,
+			set_title_bar_focus_color
 		end
 
 	SD_TITLE_BAR_REMOVEABLE
@@ -174,6 +175,24 @@ feature -- Command
 			internal_title_bar.set_max (a_max)
 		end
 
+	set_title_bar_focus_color (a_focus: BOOLEAN) is
+			-- Redefine.
+		do
+			if a_focus then
+				internal_title_bar.enable_focus_color
+			else	
+				internal_title_bar.disable_focus_color
+			end
+		end	
+		
+--	destroy is
+--			-- Redefine.
+--		do
+---- FIXIT: can't redefine destroy?
+--			internal_notebook.destroy
+--			Precursor {EV_VERTICAL_BOX}
+--		end
+		
 feature {SD_TAB_STATE} -- Internal issues.
 
 	selected_item_index: INTEGER is
@@ -236,14 +255,6 @@ feature {NONE} -- Agents for user
 			end
 		end
 
---	on_close is
---			-- Handle user click close button.
---		do
---
---			content.state.close
---			close
---		end
-
 feature {NONE} -- Agents for docker
 
 	on_select_tab is
@@ -262,7 +273,7 @@ feature {NONE} -- Agents for docker
 				else
 					internal_title_bar.custom_area.wipe_out
 				end
-				if l_content.internal_focus_in_actions /= Void then
+				if l_content.internal_focus_in_actions /= Void and then internal_shared.last_focus_content /= l_content then
 					l_content.internal_focus_in_actions.call ([])
 				end
 				internal_shared.set_last_focus_content (l_content)
@@ -296,7 +307,6 @@ feature {NONE} -- Agents for docker
 				debug ("larry")
 					io.put_string ("%N SD_TAB_ZONE Handle pointer release.")
 				end
---				internal_notebook_pressed := False
 				disable_capture
 
 				internal_docker_mediator.end_tracing_pointer (a_screen_x, a_screen_y)
@@ -314,26 +324,6 @@ feature {NONE} -- Agents for docker
 			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
 			enable_capture
 		end
-
---	on_notebook_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
---			--	Handle notebook pointer motion.
---		local
---			l_tab_state: SD_TAB_STATE
---		do
---			debug ("larry")
---				io.put_string ("%N SD_TAB_ZONE internal_notebook_pressed: " + internal_notebook_pressed.out)
---			end
---			if internal_notebook_pressed then
---				create internal_docker_mediator.make (Current)
---				internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
---				enable_capture
---				l_tab_state ?= content.state
---				check l_tab_state /= Void end
---			end
---		ensure
---			docker_mediator_created: internal_notebook_pressed implies internal_docker_mediator /= Void
---			docker_mediator_start: internal_notebook_pressed implies internal_docker_mediator.is_tracing_pointer
---		end
 
 	on_pointer_motion (a_x, a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer motion.

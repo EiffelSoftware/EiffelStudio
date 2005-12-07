@@ -1,17 +1,5 @@
 indexing
-	description:
-		"[
-			A EV_NOTEBOOK with a min tool bar area and a close button.
-		]"
-	appearance:
-		"[
-			  _______  _______  _______     _______________    _
-			_/ tab_1 \/_tab_2_\/_tab_3_\___|_mini tool bar_|__|X|
-			|                              						|
-			|         selected_item          					|
-			|                                					|
-			----------------------------------------------------
-		]"
+	description: "A EV_NOTEBOOK with it's own tabs, not use native Windows tab control."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,6 +14,8 @@ inherit
 			prune as prune_vertical_box,
 			index_of as index_of_vertical_box,
 			has as has_vertical_box
+		redefine
+			destroy
 		end
 
 create
@@ -42,6 +32,7 @@ feature {NONE}  -- Initlization
 			create internal_shared
 
 			create selection_actions
+			create tab_double_click_actions
 			create tab_drag_actions
 
 			create internal_widgets.make (1)
@@ -56,6 +47,9 @@ feature {NONE}  -- Initlization
 
 			create internal_cell
 			extend_vertical_box (internal_cell)
+			
+			pointer_motion_actions.extend (agent on_pointer_motion)
+			pointer_button_release_actions.extend (agent on_pointer_release)
 		end
 
 feature -- Command
@@ -99,6 +93,8 @@ feature -- Command
 				end
 				internal_cell.replace (a_widget)
 			end
+			disable_all_tab_selection
+			tab_by_widget (a_widget).set_selected (True)
 		ensure
 			selectd: selected_item = a_widget
 		end
@@ -133,6 +129,11 @@ feature -- Command
 			
 			internal_widgets.start
 			internal_widgets.prune (a_widget)
+			
+			if internal_widgets.after then
+				internal_widgets.back
+			end	
+			select_item (internal_widgets.item)
 		ensure
 			pruned: not has (a_widget)
 		end
@@ -142,23 +143,37 @@ feature -- Command
 		require
 			a_position_valid: a_position = tab_top or a_position = tab_bottom
 		do
+			start
+			search (internal_tab_box)
 			inspect
 				a_position
 			when tab_top then
-				search (internal_tab_box)
 				if index /= 1 then
 					swap (1)
 					disable_item_expand (internal_tab_box)
 				end
 			when tab_bottom then
-				search (internal_tab_box)
 				if index /= 2 then
 					swap (2)
 					disable_item_expand (internal_tab_box)
 				end
 			end
 		end
-
+	
+	destroy is
+			-- Redefine.
+		do
+			from
+				internal_tabs.start
+			until
+				internal_tabs.after
+			loop
+				internal_tabs.item.destroy
+				internal_tabs.forth
+			end
+			Precursor {EV_VERTICAL_BOX}
+		end
+		
 feature -- Query
 
 	index_of (a_widget: EV_WIDGET): INTEGER is
@@ -213,18 +228,66 @@ feature -- Query
 
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Selection actions.
+	
+	tab_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Tab double click actions.
 
 	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Tab drag actions. In tuple, 1st is dragged tab, 2nd is x, 3rd is y, 4th is screen_x, 5th is screen_y.
-
+		
 feature {NONE}  -- Implementation
 
 	on_tab_dragging (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; a_tab: SD_NOTEBOOK_TAB) is
 			-- Handle tab dragging.
-		do
-			tab_drag_actions.call ([widget_by_tab (a_tab), a_x, a_y, a_screen_x, a_screen_y])
-		end
 
+		do
+			dragging_tab := a_tab
+			enable_capture
+		end
+	
+	dragging_tab: SD_NOTEBOOK_TAB
+			-- Tab which is dragging.
+	
+	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Handle pointer release.
+		do
+			disable_capture
+		end
+		
+	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Handle pointer motion.
+		local
+			l_in_tabs: BOOLEAN
+			l_target_tab: SD_NOTEBOOK_TAB
+		do
+			from
+				internal_tabs.start
+			until
+				internal_tabs.after or l_in_tabs
+			loop
+				if internal_tabs.item /= dragging_tab then
+					if tab_has_x_y (internal_tabs.item, a_screen_x, a_screen_y)  then
+						l_in_tabs := True
+						internal_tab_box.start
+						internal_tab_box.search (internal_tabs.item)
+						l_target_tab := internal_tabs.item
+						internal_tab_box.swap (internal_tab_box.index_of (dragging_tab, 1))
+						internal_tab_box.disable_item_expand (dragging_tab)
+						internal_tab_box.disable_item_expand (l_target_tab)
+					end	
+				else
+					if tab_has_x_y (dragging_tab, a_screen_x, a_screen_y) then
+						l_in_tabs := True
+					end
+				end
+				internal_tabs.forth
+			end
+			if not l_in_tabs then
+				disable_capture
+				tab_drag_actions.call ([widget_by_tab (dragging_tab), a_x, a_y, a_screen_x, a_screen_y])
+			end			
+		end
+		
 	on_tab_selected (a_tab: SD_NOTEBOOK_TAB) is
 			-- Handle notebook tab selected.
 		do
@@ -233,9 +296,9 @@ feature {NONE}  -- Implementation
 			a_tab.set_selected (True)
 			selection_actions.call ([])
 		end
-
+			
 	widget_by_tab (a_tab: SD_NOTEBOOK_TAB): EV_WIDGET is
-			-- Widget which represent `a_tab'.
+			-- Widget which associate with `a_tab'.
 		require
 			has: has_tab (a_tab)
 		do
@@ -245,7 +308,19 @@ feature {NONE}  -- Implementation
 		ensure
 			not_void: Result /= Void
 		end
-
+	
+	tab_by_widget (a_widget: EV_WIDGET): SD_NOTEBOOK_TAB is
+			-- Tab which associate with `a_widget'. 
+		require
+			has: has (a_widget)
+		do
+			internal_widgets.start
+			internal_widgets.search (a_widget)
+			Result := internal_tabs.i_th (internal_widgets.index)
+		ensure
+			not_void: Result /= Void
+		end
+		
 	disable_all_tab_selection is
 			-- Disable all tabs selection.
 		do
@@ -258,22 +333,31 @@ feature {NONE}  -- Implementation
 				internal_tabs.forth
 			end
 		end
-
+	
+	tab_has_x_y (a_tab: SD_NOTEBOOK_TAB; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- If `a_tab' has `a_screen_x', `a_screen_y'?
+		local
+			l_rect: EV_RECTANGLE
+		do
+			create l_rect.make (a_tab.screen_x, a_tab.screen_y, a_tab.width, a_tab.height)
+			Result := l_rect.has_x_y (a_screen_x, a_screen_y)
+		end
+		
 	internal_widgets: ARRAYED_LIST [EV_WIDGET]
 			-- All widgets in Current.
 
 	internal_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 			-- All tabs in Current.
-
+		
 	internal_tab_box: EV_HORIZONTAL_BOX
 			-- Horizontal box which hold tabs and mini tool bar and close buttons..
 
 	internal_cell: EV_CELL
 			-- Cell which hold notebook selected content.
-
+	
 	internal_shared: SD_SHARED
 			-- All singletons.
-
+	
 feature -- Emumeration
 
 	tab_top: INTEGER is 1

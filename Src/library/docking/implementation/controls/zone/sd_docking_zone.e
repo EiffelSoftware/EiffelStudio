@@ -26,7 +26,8 @@ inherit
 			close
 		redefine
 			set_max,
-			is_maximized
+			is_maximized,
+			set_title_bar_focus_color
 		end
 
 	SD_DOCKER_SOURCE
@@ -70,6 +71,7 @@ feature	{NONE} -- Initlization
 			pointer_button_release_actions.extend (agent on_pointer_release)
 			window.set_stick (True)
 			extend_cell (window)
+			
 		ensure
 			added: has_cell (window)
 		end
@@ -125,6 +127,16 @@ feature -- Command
 			-- Redefine.
 		do
 			window.title_bar.set_max (a_max)
+		end
+
+	set_title_bar_focus_color (a_focus: BOOLEAN) is
+			-- Redefine.
+		do
+			if a_focus then
+				window.title_bar.enable_focus_color
+			else	
+				window.title_bar.disable_focus_color
+			end
 		end
 
 	stick is

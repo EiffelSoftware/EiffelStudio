@@ -32,7 +32,7 @@ feature -- Access
 
 	address_expression_allowed: BOOLEAN
 			-- Does system accept such statement as $(a.to_c)?
-	
+
 	line_generation: BOOLEAN
 			-- Does the system generate the line number in the C-code?
 
@@ -69,7 +69,7 @@ feature -- Access
 
 	external_runtime: STRING
 			-- Name of run-time to use for linking.
-			
+
 	uses_ise_gc_runtime: BOOLEAN is
 			-- Does current use the ISE GC runtime?
 		do
@@ -89,7 +89,7 @@ feature -- Access: IL code generation
 			-- given namespace in Ace file as namespace.
 			-- `use_all_cluster_as_namespace' is identical to `use_cluster_as_namespace'
 			-- but adds implicit clusters created by `all' qualifier in Ace file.
-			
+
 	java_generation: BOOLEAN
 			-- Does system generate Java byte code?
 
@@ -102,6 +102,9 @@ feature -- Access: IL code generation
 	clr_runtime_version: STRING
 			-- Version of IL runtime available.
 
+	ise_library_path: STRING
+			-- Path to $ISE_LIBRARY
+
 	metadata_cache_path: STRING
 			-- Alternative EAC metadata path
 
@@ -110,7 +113,7 @@ feature -- Access: IL code generation
 
 	msil_culture: STRING
 			-- Culture of current assembly.
-			
+
 	msil_classes_per_module: INTEGER is
 			-- Number of classes per generated module in IL code generation
 		do
@@ -141,7 +144,7 @@ feature -- Access: IL code generation
 
 	il_quick_finalization: BOOLEAN
 			-- Should finalization skip generation of single class modules?
-			
+
 	msil_use_optimized_precompile: BOOLEAN
 			-- Should compiler take optimized precompile assembly?
 
@@ -163,7 +166,7 @@ feature -- Update
 		ensure
 			use_cluster_as_namespace_set: use_cluster_as_namespace = v
 		end
-		
+
 	set_use_all_cluster_as_namespace (v: BOOLEAN) is
 			-- Set `use_all_cluster_as_namespace' to `v'.
 		do
@@ -171,7 +174,7 @@ feature -- Update
 		ensure
 			use_all_cluster_as_namespace_set: use_all_cluster_as_namespace = v
 		end
-		
+
 	set_java_generation (v: BOOLEAN) is
 			-- Set `java_generation' to `v' if project is not already compiled.
 		do
@@ -214,7 +217,22 @@ feature -- Update
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
 				clr_runtime_version = version
 		end
-		
+
+	set_ise_library_path (path: like ise_library_path) is
+			-- Set `ise_library' to `path'.
+		require
+			path_not_void: path /= Void
+			path_not_empty: not path.is_empty
+		do
+			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
+				ise_library_path := path
+			end
+		ensure
+			ise_library_path_set:
+				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
+				ise_library_path = path
+		end
+
 	set_metadata_cache_path (s: STRING) is
 			-- Set `metadata_cache_path' to `s'
 		require
@@ -227,7 +245,7 @@ feature -- Update
 		ensure
 			metadata_cache_path_set: (create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else s.is_equal (metadata_cache_path)
 		end
-		
+
 	set_msil_generation_type (s: STRING) is
 			-- Set `msil_generation_type' to `s'
 		require
@@ -423,7 +441,7 @@ feature -- Update
 		ensure
 			has_syntax_warning_set: has_syntax_warning = b
 		end
-	
+
 	set_has_old_verbatim_strings (b: BOOLEAN) is
 			-- Set `has_old_verbatim_strings' to `b'.
 		do
@@ -435,7 +453,7 @@ feature -- Update
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
 				has_old_verbatim_strings = b
 		end
-	
+
 	set_has_old_verbatim_strings_warning (b: BOOLEAN) is
 			-- Set `has_old_verbatim_strings_warning' to `b'.
 		do
@@ -447,14 +465,14 @@ feature -- Update
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
 				has_old_verbatim_strings_warning = b
 		end
-	
+
 	set_console_application (b: BOOLEAN) is
 			-- Set `is_console_application' to `b'
 		do
 			if is_console_application /= b then
 				set_freeze
 			end
-			is_console_application := b	
+			is_console_application := b
 		ensure
 			is_console_application_set: is_console_application = b
 		end
@@ -465,7 +483,7 @@ feature -- Update
 			if has_dynamic_runtime /= b then
 				set_freeze
 			end
-			has_dynamic_runtime := b	
+			has_dynamic_runtime := b
 		ensure
 			has_dynamic_runtime: has_dynamic_runtime = b
 		end
@@ -513,7 +531,7 @@ feature -- Update
 		ensure
 			il_quick_finalization_set: il_quick_finalization
 		end
-		
+
 	set_msil_use_optimized_precompile (b: BOOLEAN) is
 			-- Take optimized version of precompile assembly from F_code
 		do
@@ -521,7 +539,7 @@ feature -- Update
 		ensure
 			msil_use_optimized_precompile_set: msil_use_optimized_precompile = b
 		end
-		
+
 feature {SYSTEM_I} -- Implementation
 
 	internal_msil_classes_per_module: INTEGER

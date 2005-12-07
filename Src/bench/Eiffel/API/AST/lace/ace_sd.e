@@ -601,7 +601,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					-- has been created with only one override_cluster in mind. As a consequence
 					-- I (Manu) kept the previous implementation of `all' specification in
 					-- CLUSTER_I, where all classes belong to the top cluster.
-				clusters
 				Degree_output.put_start_degree_6 (clusters_count);
 				from
 					clusters.start
@@ -617,7 +616,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 						clus.expand_recursive_clusters (clusters)
 					end
 					Degree_output.put_degree_6 (clus.cluster_name,
-						clusters_count - l_clusters.index + 1)
+						clusters_count - clusters.index + 1)
 					clus.build
 					clusters.forth
 				end

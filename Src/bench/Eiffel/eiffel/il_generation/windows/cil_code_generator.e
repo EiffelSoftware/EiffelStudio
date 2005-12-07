@@ -1246,6 +1246,7 @@ feature -- Class info
 			l_cl_type: CL_TYPE_I
 			l_class_type: CLASS_TYPE
 			l_ext_class: EXTERNAL_CLASS_C
+			l_feature: FEATURE_I
 		do
 			l_class_token := actual_class_type_token (class_type.implementation_id)
 			l_class_name := class_type.associated_class.name_in_upper
@@ -1453,9 +1454,14 @@ feature -- Class info
 				generate_current
 				generate_argument (1)
 				if class_type.is_expanded then
+					l_feature := class_type.associated_class.feature_of_rout_id (copy_rout_id)
+					l_type := argument_actual_type (l_feature.arguments.first.actual_type.type_i)
+					if l_type.is_expanded then
+							-- Unbox a value object.
+						generate_unmetamorphose (l_type)
+					end
 					internal_generate_feature_access (class_type.implementation_id,
-						class_type.associated_class.feature_with_rout_id (copy_rout_id).feature_id,
-						1, False, False)
+						l_feature.feature_id, 1, False, False)
 				else
 					internal_generate_feature_access (any_type_id, copy_feat_id, 1, False, True)
 				end
@@ -1477,10 +1483,14 @@ feature -- Class info
 				generate_current
 				generate_argument (1)
 				if class_type.is_expanded then
+					l_feature := class_type.associated_class.feature_of_rout_id (is_equal_rout_id)
+					l_type := argument_actual_type (l_feature.arguments.first.actual_type.type_i)
+					if l_type.is_expanded then
+							-- Unbox a value object.
+						generate_unmetamorphose (l_type)
+					end
 					internal_generate_feature_access (class_type.implementation_id,
-						class_type.associated_class.
-							feature_with_rout_id (is_equal_rout_id).feature_id,
-						1, True, False)
+						l_feature.feature_id, 1, True, False)
 				else
 					internal_generate_feature_access (any_type_id, is_equal_feat_id, 1, True, True)
 				end
@@ -1572,6 +1582,7 @@ feature {NONE} -- SYSTEM_OBJECT features
 			feature_i: FEATURE_I
 			class_c: CLASS_C
 			type_i: TYPE_I
+			arg_type: TYPE_I
 		do
 			class_c := system.any_class.compiled_class
 			feature_i := class_c.feature_table.item_id ({PREDEFINED_NAMES}.is_equal_name_id)
@@ -1612,20 +1623,26 @@ feature {NONE} -- SYSTEM_OBJECT features
 				generate_argument (1)
 				generate_is_instance_of (class_type.type)
 				duplicate_top
+
 				l_label := create_label
 				l_end_label := create_label
-
 				branch_on_false (l_label)
-				generate_feature_access (type_i, feature_i.feature_id, 1, True, True)
-				branch_to (l_end_label)
 
+				arg_type := argument_actual_type (feature_i.arguments.first.actual_type.type_i)
+				if arg_type.is_expanded then
+						-- Load value of the value object to the stack.
+					generate_unmetamorphose (arg_type)
+				end
+				generate_feature_access (type_i, feature_i.feature_id, 1, True, True)
+
+				branch_to (l_end_label)
 				mark_label (l_label)
 					-- We need to pop both Current and argument
 				pop
 				pop
 				put_boolean_constant (False)
-
 				mark_label (l_end_label)
+
 				generate_return (True)
 				method_writer.write_current_body
 			end
@@ -1887,7 +1904,10 @@ feature -- Features info
 			proc: PROCEDURE_I
 		do
 			if inherited_feature /= Void then
-				if is_method_impl_needed (local_feature, inherited_feature, class_type) then
+				if
+					is_method_impl_needed (local_feature, inherited_feature, class_type) or else
+					is_local_signature_changed (local_feature)
+				then
 					generate_feature (local_feature, False, False, False)
 				else
 						-- Generate local definition signature using the parent
@@ -3011,10 +3031,17 @@ feature -- IL Generation
 				-- If `current_class_type' is expanded, cloning is done by compiler.
 			type_i := current_class_type.type
 			if type_i.is_expanded then
-					-- Stack contains a pointer to value type object
-					-- It has to be converted to a boxed value
+					-- Stack contains a pointer to value type object.
+					-- Load a value of the object.
 				generate_load_from_address (type_i)
-				generate_metamorphose (type_i)
+					-- Now it has to be converted to a ... (see below)
+				if result_type (feat).is_expanded then
+						-- ... unboxed value.
+						-- (Already done.)
+				else
+						-- ... boxed value.
+					generate_metamorphose (type_i)
+				end
 			else
 				method_body.put_call ({MD_OPCODES}.Call,
 					current_module.memberwise_clone_token, 0, True)
@@ -3117,6 +3144,8 @@ feature -- IL Generation
 			l_name: STRING
 			l_return_type: TYPE_I
 			l_token: like last_non_recorded_feature_token
+			l_args: FEAT_ARG
+			l_type_i: like argument_actual_type
 		do
 			l_parent_type_id := parent_type.static_type_id
 			l_cur_sig := signatures (current_type_id, cur_feat.feature_id)
@@ -3154,18 +3183,28 @@ feature -- IL Generation
 				l_token := last_non_recorded_feature_token
 				start_new_body (l_token)
 				generate_current
-				from
-					i := 1
-					nb := cur_feat.argument_count
-				until
-					i > nb
-				loop
-					generate_argument (i)
-					if is_verifiable and l_cur_sig.item (i) /= l_inh_sig.item (i) then
-						method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
-							mapped_class_type_token (l_cur_sig.item (i)))
+				nb := cur_feat.argument_count
+				if nb > 0 then
+					from
+						i := 1
+						l_args := cur_feat.arguments
+						l_args.start
+					until
+						i > nb
+					loop
+						generate_argument (i)
+						if l_cur_sig.item (i) /= l_inh_sig.item (i) then
+							l_type_i := argument_actual_type (l_args.item.actual_type.type_i)
+							if l_type_i.is_expanded then
+								generate_unmetamorphose (l_type_i)
+							elseif is_verifiable then
+								method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
+									mapped_class_type_token (l_cur_sig.item (i)))
+							end
+						end
+						l_args.forth
+						i := i + 1
 					end
-					i := i + 1
 				end
 
 				if cur_feat.is_attribute and is_single_class then
@@ -3184,9 +3223,14 @@ feature -- IL Generation
 				end
 
 				if cur_feat.has_return_value then
-					if is_verifiable and l_cur_sig.item (0) /= l_inh_sig.item (0) then
-						method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
-							mapped_class_type_token (l_inh_sig.item (0)))
+					if l_cur_sig.item (0) /= l_inh_sig.item (0) then
+						l_type_i := result_type (cur_feat)
+						if l_type_i.is_expanded then
+							generate_metamorphose (l_type_i)
+						elseif is_verifiable then
+							method_body.put_opcode_mdtoken ({MD_OPCODES}.Castclass,
+								mapped_class_type_token (l_inh_sig.item (0)))
+						end
 					end
 				end
 				generate_return (cur_feat.has_return_value)
@@ -3444,6 +3488,33 @@ feature -- IL Generation
 		end
 
 feature {NONE} -- Implementation
+
+	is_local_signature_changed (local_feature: FEATURE_I): BOOLEAN is
+			-- Is signature of a local feature `local_feature' changed
+			-- from the one of the associated interface?
+		local
+			arguments: FEAT_ARG
+		do
+			if current_class_type.is_expanded then
+					-- Take into account signature changes due to "like Current" type
+				if local_feature.type.actual_type.type_i.is_anchored then
+					Result := True
+				elseif local_feature.arguments /= Void then
+					from
+						arguments := local_feature.arguments
+						arguments.start
+					until
+						arguments.after
+					loop
+						if arguments.item.actual_type.type_i.is_anchored then
+							Result := True
+							arguments.finish
+						end
+						arguments.forth
+					end
+				end
+			end
+		end
 
 	set_type_in_signature (a_sig: MD_SIGNATURE; a_type_name: STRING) is
 			-- Set `a_type_name' into `a_sig'. It properly analyzes `a_type_name'

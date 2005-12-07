@@ -14,10 +14,10 @@ inherit
 		redefine
 			make
 		end
-		
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make is
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			create processed_tbl.make (20)
 			create rout_ids_tbl.make (50)
 		end
-		
+
 feature {NONE} -- Access
 
 	is_single_inheritance_implementation: BOOLEAN is False
@@ -35,8 +35,8 @@ feature {NONE} -- Access
 
 	rout_ids_tbl: HASH_TABLE [FEATURE_I, INTEGER]
 			-- Table of FEATURE_I indexed by routine IDs, to quickly find out
-			-- if a FEATURE_I with a given routine ID has already been generated 
-			-- in `currrent_class_type'. If so, a MethodImpl is defined on 
+			-- if a FEATURE_I with a given routine ID has already been generated
+			-- in `currrent_class_type'. If so, a MethodImpl is defined on
 			-- generated routine. Otherwise, we have to traverse `current_select_tbl'
 			-- to find associated FEATURE_I and generate a new feature.
 
@@ -62,7 +62,7 @@ feature -- IL Generation
 				-- Reset data
 			rout_ids_tbl.wipe_out
 			processed_tbl.wipe_out
-			
+
 				-- Initialize implementation.
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := actual_class_type_token (current_type_id)
@@ -76,7 +76,7 @@ feature -- IL Generation
 				-- Generate current features implement locally in `current_class_type'
 				-- and traverse parents to define inherited features.
 			class_interface := class_type.class_interface
-			generate_il_implementation_local (class_interface, class_c, class_type, 
+			generate_il_implementation_local (class_interface, class_c, class_type,
 				local_feature_processor, inherited_feature_processor)
 			generate_il_implementation_parents (class_interface, implemented_feature_processor,
 				local_feature_processor, inherited_feature_processor)
@@ -98,7 +98,7 @@ feature -- IL Generation
 
 				-- Generate features.
 			generate_il_features (class_c, class_type,
-				agent generate_method_impl, 
+				agent generate_method_impl,
 				agent generate_local_feature,
 				agent generate_inherited_feature,
 				agent generate_type_feature)
@@ -112,7 +112,7 @@ feature -- IL Generation
 		end
 
 	generate_il_type_features (class_c: CLASS_C; class_type: CLASS_TYPE;
-			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]]) 
+			type_features: HASH_TABLE [TYPE_FEATURE_I, INTEGER]; type_feature_processor: PROCEDURE [ANY, TUPLE [TYPE_FEATURE_I]])
 		is
 			-- Generate IL code for feature that represents type information of `class_c'.
 		require
@@ -157,9 +157,9 @@ feature -- IL Generation
 
 				if not processed_tbl.has (l_cl_type.static_type_id) then
 					processed_tbl.put (l_cl_type.static_type_id)
-					generate_il_implementation_inherited (l_interface, l_interface.associated_class, l_cl_type, 
+					generate_il_implementation_inherited (l_interface, l_interface.associated_class, l_cl_type,
 						implemented_feature_processor, local_feature_processor, inherited_feature_processor)
-					generate_il_implementation_parents (l_interface, 
+					generate_il_implementation_parents (l_interface,
 						implemented_feature_processor, local_feature_processor, inherited_feature_processor)
 				end
 				parents.forth
@@ -273,7 +273,7 @@ feature -- IL Generation
 								-- 30/40% at execution time because .NET GC really slows down
 								-- when you define `Finalize' in a descendant of SYSTEM_OBJECT.
 							if
-								not feat.rout_id_set.has (System.object_finalize_id) 
+								not feat.rout_id_set.has (System.object_finalize_id)
 								or else System.disposable_descendants.has (current_class)
 							then
 								inherited_feature_processor.call ([feat, inh_feat, class_type])
@@ -290,7 +290,7 @@ feature -- IL Generation
 									inh_feat.is_il_external or else
 									(feat = Void or else feat.is_il_external)
 						end
-					end						
+					end
 				end
 				features.forth
 			end
@@ -305,11 +305,16 @@ feature -- IL Generation
 		local
 			l_is_method_impl_generated: BOOLEAN
 			is_expanded: BOOLEAN
+			impl_feat: FEATURE_I
+			impl_type: CL_TYPE_I
+			impl_class_type: CLASS_TYPE
 		do
 			is_expanded := current_class_type.is_expanded
 			if feat.body_index = standard_twin_body_index then
 				generate_feature_standard_twin (feat)
 			else
+				impl_feat := inh_feat
+				impl_class_type := class_type
 				if not is_single_class then
 						-- Generate static definition of a routine `feat' if the class type is not expanded.
 					if not is_replicated or else feat.is_once then
@@ -343,11 +348,17 @@ feature -- IL Generation
 							feat.written_feature_id)
 					end
 				else
-					if inh_feat /= Void then
-						l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type) or else
-							not signatures (current_type_id, feat.feature_id).is_equal (
-								signatures (class_type.static_type_id, inh_feat.feature_id))
+					if is_expanded then
+						impl_feat := feat
+						impl_type := current_class_type.type.duplicate
+						impl_type.set_reference_mark
+						impl_class_type := impl_type.associated_class_type
  					end
+					if impl_feat /= Void then
+						l_is_method_impl_generated := is_method_impl_needed (feat, impl_feat, impl_class_type) or else
+							not signatures (current_type_id, feat.feature_id).is_equal (
+								signatures (impl_class_type.static_type_id, impl_feat.feature_id))
+					end
 					if feat.is_c_external then
 						if not is_replicated then
 							generate_feature (feat, False, True, True)
@@ -369,7 +380,7 @@ feature -- IL Generation
 				if l_is_method_impl_generated then
 						-- We need a MethodImpl here for mapping
 						-- inherited method to current defined one.
-					generate_method_impl (feat, class_type, inh_feat)
+					generate_method_impl (feat, impl_class_type, impl_feat)
 				end
 			end
 		end
@@ -388,7 +399,7 @@ feature -- IL Generation
 		do
 			if not is_single_class or inh_feat /= Void then
 				if inh_feat /= Void then
-					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type)
+					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat, class_type) or else is_local_signature_changed (feat)
 				end
 
 				if feat.body_index = standard_twin_body_index then

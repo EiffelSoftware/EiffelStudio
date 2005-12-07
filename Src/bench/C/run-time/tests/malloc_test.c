@@ -493,17 +493,17 @@ rt_private void output_table(FILE *f)
 
 	fprintf(f, "memck: current state of memory (total, Eiffel, C):\n");
 	fprintf(f, "memck: chunks       : %d, %d, %d\n",
-		m_data.ml_chunk, e_data.ml_chunk, c_data.ml_chunk);
+		rt_m_data.ml_chunk, rt_e_data.ml_chunk, rt_c_data.ml_chunk);
 	fprintf(f, "memck: total memory : %ld, %ld, %ld\n",
-		m_data.ml_total, e_data.ml_total, c_data.ml_total);
+		rt_m_data.ml_total, rt_e_data.ml_total, rt_c_data.ml_total);
 	fprintf(f, "memck: overhead     : %ld, %ld, %ld\n",
-		m_data.ml_over, e_data.ml_over, c_data.ml_over);
+		rt_m_data.ml_over, rt_e_data.ml_over, rt_c_data.ml_over);
 	fprintf(f, "memck: memory used  : %ld, %ld, %ld\n",
-		m_data.ml_used, e_data.ml_used, c_data.ml_used);
+		rt_m_data.ml_used, rt_e_data.ml_used, rt_c_data.ml_used);
 	fprintf(f, "memck: memory free  : %ld, %ld, %ld\n",
-		m_data.ml_total - m_data.ml_used - m_data.ml_over,
-		e_data.ml_total - e_data.ml_used - e_data.ml_over,
-		c_data.ml_total - c_data.ml_used - c_data.ml_over);
+		rt_m_data.ml_total - rt_m_data.ml_used - rt_m_data.ml_over,
+		rt_e_data.ml_total - rt_e_data.ml_used - rt_e_data.ml_over,
+		rt_c_data.ml_total - rt_c_data.ml_used - rt_c_data.ml_over);
 
 	fflush(f);
 }
@@ -933,24 +933,24 @@ rt_private void mem_status(void)
 	/* Prints memory status */
 
 	printf(">>>> Current state of memory\n");
-	printf(">>>>> chunks       : %d\n", m_data.ml_chunk);
-	printf(">>>>> total memory : %ld\n", m_data.ml_total);
-	printf(">>>>> overhead     : %ld\n", m_data.ml_over);
-	printf(">>>>> memory used  : %ld\n", m_data.ml_used);
+	printf(">>>>> chunks       : %d\n", rt_m_data.ml_chunk);
+	printf(">>>>> total memory : %ld\n", rt_m_data.ml_total);
+	printf(">>>>> overhead     : %ld\n", rt_m_data.ml_over);
+	printf(">>>>> memory used  : %ld\n", rt_m_data.ml_used);
 	printf(">>>>> memory free  : %ld\n",
-		m_data.ml_total - m_data.ml_used - m_data.ml_over);
-	printf(">>>>> C chunks       : %d\n", c_data.ml_chunk);
-	printf(">>>>> C total memory : %ld\n", c_data.ml_total);
-	printf(">>>>> C overhead     : %ld\n", c_data.ml_over);
-	printf(">>>>> C memory used  : %ld\n", c_data.ml_used);
+		rt_m_data.ml_total - rt_m_data.ml_used - rt_m_data.ml_over);
+	printf(">>>>> C chunks       : %d\n", rt_c_data.ml_chunk);
+	printf(">>>>> C total memory : %ld\n", rt_c_data.ml_total);
+	printf(">>>>> C overhead     : %ld\n", rt_c_data.ml_over);
+	printf(">>>>> C memory used  : %ld\n", rt_c_data.ml_used);
 	printf(">>>>> C memory free  : %ld\n",
-		c_data.ml_total - c_data.ml_used - c_data.ml_over);
-	printf(">>>>> Eiffel chunks       : %d\n", e_data.ml_chunk);
-	printf(">>>>> Eiffel total memory : %ld\n", e_data.ml_total);
-	printf(">>>>> Eiffel overhead     : %ld\n", e_data.ml_over);
-	printf(">>>>> Eiffel memory used  : %ld\n", e_data.ml_used);
+		rt_c_data.ml_total - rt_c_data.ml_used - rt_c_data.ml_over);
+	printf(">>>>> Eiffel chunks       : %d\n", rt_e_data.ml_chunk);
+	printf(">>>>> Eiffel total memory : %ld\n", rt_e_data.ml_total);
+	printf(">>>>> Eiffel overhead     : %ld\n", rt_e_data.ml_over);
+	printf(">>>>> Eiffel memory used  : %ld\n", rt_e_data.ml_used);
 	printf(">>>>> Eiffel memory free  : %ld\n",
-		e_data.ml_total - e_data.ml_used - e_data.ml_over);
+		rt_e_data.ml_total - rt_e_data.ml_used - rt_e_data.ml_over);
 }
 
 rt_private void mem_reset(void)
@@ -969,12 +969,12 @@ rt_private void mem_reset(void)
 		c_hlist[i] = (union overhead *) 0;
 		e_hlist[i] = (union overhead *) 0;
 	}
-	m_data.ml_chunk = m_data.ml_total = 0;
-	m_data.ml_over = m_data.ml_used = 0;
-	c_data.ml_chunk = c_data.ml_total = 0;
-	c_data.ml_over = c_data.ml_used = 0;
-	e_data.ml_chunk = e_data.ml_total = 0;
-	e_data.ml_over = e_data.ml_used = 0;
+	rt_m_data.ml_chunk = rt_m_data.ml_total = 0;
+	rt_m_data.ml_over = rt_m_data.ml_used = 0;
+	rt_c_data.ml_chunk = rt_c_data.ml_total = 0;
+	rt_c_data.ml_over = rt_c_data.ml_used = 0;
+	rt_e_data.ml_chunk = rt_e_data.ml_total = 0;
+	rt_e_data.ml_over = rt_e_data.ml_used = 0;
 	cklst.ck_head = cklst.ck_tail = 0;
 	cklst.cck_head = cklst.cck_tail = 0;
 	cklst.eck_head = cklst.eck_tail = 0;

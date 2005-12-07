@@ -807,10 +807,10 @@ rt_shared int acollect(void)
 	 */
 
 #ifdef EIF_CONDITIONAL_COLLECT
-	freemem = e_data.ml_total - e_data.ml_used - e_data.ml_over;
+	freemem = rt_e_data.ml_total - rt_e_data.ml_used - rt_e_data.ml_over;
 	tau = plsc_per * th_alloc;
 	half_tau = tau >> 1;
-	allocated = e_data.ml_total - eif_total;
+	allocated = rt_e_data.ml_total - eif_total;
 
 	if (allocated < tau && freemem > half_tau && freemem < (tau + half_tau)) {
 
@@ -840,7 +840,7 @@ rt_shared int acollect(void)
 				 * which happens between `0' and `plsc_per', we still wait `plsc_per'
 				 * calls before launching the next full collection. */
 			nb_calls = 0;
-			eif_total = e_data.ml_total;
+			eif_total = rt_e_data.ml_total;
 		} else							/* Generation-base collector */
 			status = collect();
 	} else {						/* Generation-base collector called, since
@@ -894,8 +894,8 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	DISCARD_BREAKPOINTS;
 
 	nb_full = rt_g_data.nb_full;
-	mem_used = m_data.ml_used + m_data.ml_over;		/* Count overhead */
-	e_mem_used_before = e_data.ml_used + e_data.ml_over;
+	mem_used = rt_m_data.ml_used + rt_m_data.ml_over;		/* Count overhead */
+	e_mem_used_before = rt_e_data.ml_used + rt_e_data.ml_over;
 	nbstat = ++nb_stats[i];							/* One more computation */
 
 	/* Reset scavenging-related figures, since those will be updated by the
@@ -951,7 +951,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	 * partial scavenging where a scavenge zone is allocated.
 	 */
 
-	rt_g_data.mem_used = m_data.ml_used + m_data.ml_over;	/* Total mem used */
+	rt_g_data.mem_used = rt_m_data.ml_used + rt_m_data.ml_over;	/* Total mem used */
 	gstat->mem_used = rt_g_data.mem_used;
 		/* Sometimes during a collection we can have increased our memory
 		 * pool because for example we moved objects outside the scavenge zone
@@ -972,7 +972,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 			 * We only increase its value if the ratio freed memory
 			 * used memory is less than 1/3, betwen 1/3 and 2/3 we do not change
 			 * anything, and above 2/3 we decrease its value. */
-		rt_uint_ptr partial_used_memory = (e_data.ml_used + e_data.ml_over) / 3;
+		rt_uint_ptr partial_used_memory = (rt_e_data.ml_used + rt_e_data.ml_over) / 3;
 		rt_uint_ptr freed_memory;
 		if (mem_used > rt_g_data.mem_used) {
 			freed_memory = mem_used - rt_g_data.mem_used;
@@ -1032,7 +1032,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 			}
 		}
 	} else {
-		e_mem_used_after = e_data.ml_used + e_data.ml_over;
+		e_mem_used_after = rt_e_data.ml_used + rt_e_data.ml_over;
 		if (e_mem_used_before > e_mem_used_after) {
 				// Some memory of free list was freed, so we should update `eiffel_usage'
 				// accordingly.
@@ -1099,9 +1099,9 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 		i == GST_PART ? "partial scavenging" : "generation collection");
 	dprintf(1)("scollect: # of full collects: %ld\n", rt_g_data.nb_full);
 	dprintf(1)("scollect: # of partial collects: %ld\n", rt_g_data.nb_partial);
-	dprintf(1)("scollect: Total mem allocated: %ld bytes\n", m_data.ml_total);
-	dprintf(1)("scollect: Total mem used: %ld bytes\n", m_data.ml_used);
-	dprintf(1)("scollect: Total overhead: %ld bytes\n", m_data.ml_over);
+	dprintf(1)("scollect: Total mem allocated: %ld bytes\n", rt_m_data.ml_total);
+	dprintf(1)("scollect: Total mem used: %ld bytes\n", rt_m_data.ml_used);
+	dprintf(1)("scollect: Total overhead: %ld bytes\n", rt_m_data.ml_over);
 	dprintf(1)("scollect: Collected: %ld bytes\n", gstat->mem_collect);
 	dprintf(1)("scollect: (Scavenging collect: %ld bytes)\n",
 		rt_g_data.mem_copied - rt_g_data.mem_move);
@@ -2783,14 +2783,14 @@ rt_private void split_to_block(void)
 
 		size = ps_to.sc_end - ps_to.sc_top;		/* Memory unused (freed) */
 
-		m_data.ml_used -= size;
+		rt_m_data.ml_used -= size;
 		if (ps_to.sc_flgs & B_CTYPE) {
-			c_data.ml_used -= size;
+			rt_c_data.ml_used -= size;
 		} else {
-			e_data.ml_used -= size;
+			rt_e_data.ml_used -= size;
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used (-%ld), %ld total (split_to_block)\n",
-			e_data.ml_used, size, e_data.ml_total);
+			rt_e_data.ml_used, size, rt_e_data.ml_total);
 #endif
 		}
 
@@ -2921,11 +2921,11 @@ rt_private int sweep_from_space(void)
 			}
 		} else {
 			lxtract(zone);			/* Extract it from free list */
-			m_data.ml_used += size;	/* Memory accounting */
+			rt_m_data.ml_used += size;	/* Memory accounting */
 			if (flags & B_CTYPE) {	/* Bloc is in a C chunk */
-				c_data.ml_used += size;
+				rt_c_data.ml_used += size;
 			} else {
-				e_data.ml_used += size;
+				rt_e_data.ml_used += size;
 			}
 		}
 
@@ -2997,33 +2997,33 @@ rt_private int sweep_from_space(void)
 					CHECK ("Cannot be in object ID stack",
 						!has_object (&object_id_stack, (EIF_REFERENCE) next + 1));
 
-					m_data.ml_over -= OVERHEAD;		/* Memory accounting */
-					m_data.ml_used += OVERHEAD;		/* Overhead is used */
+					rt_m_data.ml_over -= OVERHEAD;		/* Memory accounting */
+					rt_m_data.ml_used += OVERHEAD;		/* Overhead is used */
 					if (flags & B_CTYPE) {
-						c_data.ml_over -= OVERHEAD;	/* Overhead is decreasing */
-						c_data.ml_used += OVERHEAD;
+						rt_c_data.ml_over -= OVERHEAD;	/* Overhead is decreasing */
+						rt_c_data.ml_used += OVERHEAD;
 					} else {
-						e_data.ml_over -= OVERHEAD;	/* Block in Eiffel chunk */
-						e_data.ml_used += OVERHEAD;
+						rt_e_data.ml_over -= OVERHEAD;	/* Block in Eiffel chunk */
+						rt_e_data.ml_used += OVERHEAD;
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used (+%ld), %ld total (sweep_from_space)\n",
-			e_data.ml_used, OVERHEAD, e_data.ml_total);
+			rt_e_data.ml_used, OVERHEAD, rt_e_data.ml_total);
 #endif
 					}
 				}
 			} else {
 				lxtract(next);					/* Remove it from free list */
-				m_data.ml_over -= OVERHEAD;		/* Memory accounting */
-				m_data.ml_used += OVERHEAD + size;
+				rt_m_data.ml_over -= OVERHEAD;		/* Memory accounting */
+				rt_m_data.ml_used += OVERHEAD + size;
 				if (flags & B_CTYPE) {			/* Bloc is in a C chunk */
-					c_data.ml_over -= OVERHEAD;	/* Overhead is decreasing */
-					c_data.ml_used += OVERHEAD + size;
+					rt_c_data.ml_over -= OVERHEAD;	/* Overhead is decreasing */
+					rt_c_data.ml_used += OVERHEAD + size;
 				} else {
-					e_data.ml_over -= OVERHEAD;	/* Block in Eiffel chunk */
-					e_data.ml_used += OVERHEAD + size;
+					rt_e_data.ml_over -= OVERHEAD;	/* Block in Eiffel chunk */
+					rt_e_data.ml_used += OVERHEAD + size;
 #ifdef MEM_STAT
 		printf ("Eiffel: %ld used (+%ld), %ld total (sweep_from_space)\n",
-			e_data.ml_used, OVERHEAD + size, e_data.ml_total);
+			rt_e_data.ml_used, OVERHEAD + size, rt_e_data.ml_total);
 #endif
 				}
 			}
@@ -3158,7 +3158,7 @@ rt_private int find_scavenge_spaces(void)
 	 * 'to' zones decreases accordingly.
 	 */
 
-	if (rt_g_data.gc_to >= TO_MAX || e_data.ml_chunk < CHUNK_MIN)
+	if (rt_g_data.gc_to >= TO_MAX || rt_e_data.ml_chunk < CHUNK_MIN)
 		return -1;						/* Cannot allocate a 'to' space */
 
 	/* Find a 'to' space.
@@ -3301,11 +3301,11 @@ rt_private void find_to_space(struct sc_zone *to)
 
 	lxtract((union overhead *) arena);	/* Extract block from free list */
 
-	m_data.ml_used += (flags & B_SIZE) + OVERHEAD;
+	rt_m_data.ml_used += (flags & B_SIZE) + OVERHEAD;
 	if (flags & B_CTYPE) {
-		c_data.ml_used += (flags & B_SIZE) + OVERHEAD;
+		rt_c_data.ml_used += (flags & B_SIZE) + OVERHEAD;
 	} else {
-		e_data.ml_used += (flags & B_SIZE) + OVERHEAD;
+		rt_e_data.ml_used += (flags & B_SIZE) + OVERHEAD;
 	}
 
 #ifdef DEBUG

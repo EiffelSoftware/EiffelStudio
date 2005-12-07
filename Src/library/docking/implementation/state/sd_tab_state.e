@@ -673,7 +673,6 @@ feature {NONE}  -- Implementation functions.
 				end
 
 				tab_zone.last_content.change_state (l_docking_state)
-				tab_zone.last_content.notify_focus_in
 
 				if l_split_area /= Void then
 					l_widget ?= l_docking_state.zone
@@ -684,6 +683,7 @@ feature {NONE}  -- Implementation functions.
 						l_split_area.set_split_position (l_split_position)
 					end
 				end
+				zone.destroy
 			end
 		ensure
 			updated: tab_zone.count = 1 implies tab_zone.last_content.state /= Current

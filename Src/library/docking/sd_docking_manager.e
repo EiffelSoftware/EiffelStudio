@@ -498,18 +498,19 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 
 	update_title_bar is
 			-- Update all title bar.
+		local
+			l_inner_container_snapshot: like inner_containers
 		do
+			l_inner_container_snapshot := inner_containers.twin
 			from
-				inner_containers.start
+				l_inner_container_snapshot.start
 			until
-				inner_containers.after
+				l_inner_container_snapshot.after
 			loop
-				if inner_containers.item /= Void then
-					inner_containers.item.update_title_bar
+				if l_inner_container_snapshot.item /= Void then
+					l_inner_container_snapshot.item.update_title_bar
 				end
-				if not inner_containers.after then
-					inner_containers.forth
-				end
+					l_inner_container_snapshot.forth
 			end
 		end
 

@@ -17,6 +17,7 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		do
 			default_create
+			create internal_shared
 		end
 
 feature -- Command
@@ -117,29 +118,37 @@ feature {NONE} -- Implementation
 	 	require
 	 		a_widget_not_void: a_widget /= Void
 	 	local
-	 		l_zone: SD_TITLE_BAR_REMOVEABLE
+	 		l_title_bar_removeable: SD_TITLE_BAR_REMOVEABLE
 	 		l_split_area: EV_SPLIT_AREA
+	 		l_zone: SD_ZONE
 	 	do
 			l_split_area ?= a_widget
 			if l_split_area /= Void then
 				set_all_title_bar (l_split_area.first)
 				set_all_title_bar (l_split_area.second)
 			end
-			l_zone ?= a_widget
-			if l_zone /= Void then
+			l_title_bar_removeable ?= a_widget
+			if l_title_bar_removeable /= Void then
 				if parent_floating_zone = Void  then
---					l_zone.set_show_min_max (False)
---				else
-					l_zone.set_show_normal_max (True)
+					l_title_bar_removeable.set_show_normal_max (True)
 				end
-
 
 				if parent_floating_zone = Void then
-					l_zone.set_show_stick (True)
+					l_title_bar_removeable.set_show_stick (True)
 				else
-					l_zone.set_show_stick (False)
+					l_title_bar_removeable.set_show_stick (False)
 				end
 			end
+			
+			l_zone ?= a_widget
+			if l_zone /= Void then
+				if internal_shared.last_focus_content /= Void and then l_zone.has (internal_shared.last_focus_content) then
+					l_zone.set_title_bar_focus_color (True)
+				else
+					l_zone.set_title_bar_focus_color (False)
+				end					
+			end
+		
 	 	end
 
 	remove_empty_split_area_imp (a_split_area: EV_SPLIT_AREA) is
@@ -304,7 +313,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Implementation attributes
+
 	spliters: ARRAYED_LIST [TUPLE [EV_SPLIT_AREA, INTEGER]]
 			-- Split areas used for save/restore spliter positions.
 
+	internal_shared: SD_SHARED
+			-- All singletons.
+	
 end

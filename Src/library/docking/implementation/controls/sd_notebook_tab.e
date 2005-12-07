@@ -63,12 +63,15 @@ feature {NONE}  -- Initlization
 		do
 			internal_pixmap_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
 			internal_pixmap_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
+			internal_pixmap_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
 
 			internal_text_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
 			internal_text_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
+			internal_text_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
 
 			internal_tail_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
 			internal_tail_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
+			internal_tail_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
 
 		end
 
@@ -180,6 +183,7 @@ feature {NONE}  -- Implmentation for drag action
 		do
 			if internal_pointer_pressed then
 				drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+				internal_pointer_pressed := False
 			end
 		end
 
@@ -188,6 +192,12 @@ feature {NONE}  -- Implmentation for drag action
 
 feature {NONE}  -- Implementation
 
+	on_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
+			-- Handle pointer double clicked actions.
+		do
+			pointer_double_press_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+		end
+		
 	on_selected is
 			-- Handle select actions.
 		do
@@ -202,14 +212,15 @@ feature {NONE}  -- Implementation
 			internal_pixmap_drawing_area.clear
 			internal_text_drawing_area.clear
 			internal_tail_drawing_area.clear
-			if selected then
-				create l_helper
-				l_helper.draw_color_change_gradually (internal_tail_drawing_area, internal_shared.focused_color)
-			end
+
 			if pixmap /= Void then
 				internal_pixmap_drawing_area.draw_pixmap (0, 2, pixmap)
 			end
 			internal_text_drawing_area.draw_ellipsed_text_top_left (0, 2, text, internal_text_drawing_area.width)
+			if selected then
+				create l_helper
+				l_helper.draw_color_change_gradually (internal_tail_drawing_area, internal_shared.focused_color)
+			end			
 		end
 
 	internal_pixmap_drawing_area: EV_DRAWING_AREA

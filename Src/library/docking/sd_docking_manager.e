@@ -17,6 +17,8 @@ feature {NONE} -- Initialization
 			a_container_not_void: a_container /= Void
 			a_container_not_destroy: not a_container.is_destroyed
 			a_container_not_full: not a_container.full
+			a_widnow_valid: window_valid (a_window)
+			a_container_valid: container_valid (a_container, a_window)
 		local
 			l_inner_container: SD_MULTI_DOCK_AREA
 			l_app: EV_ENVIRONMENT
@@ -25,8 +27,9 @@ feature {NONE} -- Initialization
 			top_container := a_container
 			main_window := a_window
 			create internal_viewport
-			internal_viewport.resize_actions.extend (agent on_resize)
 			top_container.extend (internal_viewport)
+			internal_viewport.resize_actions.extend (agent on_resize)
+			
 			create menu_container
 			internal_viewport.extend (menu_container)
 			menu_container.set_minimum_size (0, 0)
@@ -35,19 +38,20 @@ feature {NONE} -- Initialization
 			create fixed_area
 			main_container.center_area.extend (fixed_area)
 			-- Insert auto hide panels.
-			create internal_auto_hide_panel_left.make (dock_left)
-			create internal_auto_hide_panel_right.make (dock_right)
-			create internal_auto_hide_panel_top.make (dock_top)
-			create internal_auto_hide_panel_bottom.make (dock_bottom)
+			create internal_auto_hide_panel_left.make (dock_left, Current)
+			create internal_auto_hide_panel_right.make (dock_right, Current)
+			create internal_auto_hide_panel_top.make (dock_top, Current)
+			create internal_auto_hide_panel_bottom.make (dock_bottom, Current)
 			main_container.left_bar.extend (internal_auto_hide_panel_left)
 			main_container.right_bar.extend (internal_auto_hide_panel_right)
 			main_container.top_bar.extend (internal_auto_hide_panel_top)
 			main_container.bottom_bar.extend (internal_auto_hide_panel_bottom)
 			create contents
+			contents.add_actions.extend (agent on_added_content)
 			create zones
 			zones.add_actions.extend (agent on_added_zone)
 			zones.remove_actions.extend (agent on_pruned_zone)
-			internal_shared.set_docking_manager (Current)
+			internal_shared.add_docking_manager (Current)
 			-- Insert inner contianer
 			create l_inner_container.make
 			fixed_area.extend (l_inner_container)
@@ -55,7 +59,7 @@ feature {NONE} -- Initialization
 			create inner_containers.make (1)
 			inner_containers.extend (l_inner_container)
 			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_TRIANGLE_FACTORY})
-			create menu_manager.make
+			create menu_manager.make (Current)
 			create l_app
 			l_app.application.pointer_button_press_actions.extend (agent on_widget_pointer_press)
 		ensure
@@ -65,7 +69,7 @@ feature {NONE} -- Initialization
 feature -- Query
 
 	contents: ACTIVE_LIST [SD_CONTENT]
-			-- Client programmer's contents managed by docking library.
+			-- Client programmer's contents managed by Current.
 
 	has_content (a_content: SD_CONTENT): BOOLEAN is
 			-- If contents has a_content?
@@ -95,7 +99,7 @@ feature -- Command
 		local
 			l_config: SD_CONFIG_MEDIATOR
 		do
-			create l_config.make
+			create l_config.make (Current)
 			l_config.save_config (a_file)
 		end
 
@@ -107,7 +111,7 @@ feature -- Command
 		local
 			l_config: SD_CONFIG_MEDIATOR
 		do
-			create l_config.make
+			create l_config.make (Current)
 			l_config.open_config (a_file)
 		end
 
@@ -122,13 +126,94 @@ feature -- Contract support
 			Result := l_file.exists
 		end
 
+	user_widget_valid (a_content: SD_CONTENT): BOOLEAN is
+			-- Dose a_widget alreay in docking library?
+		local
+			l_container: EV_CONTAINER
+			l_found: BOOLEAN
+			l_contents: like contents
+		do
+			l_contents := contents.twin
+			l_contents.start
+			l_contents.prune (a_content)
+			create internal_shared
+			from
+				l_contents.start
+			until
+				l_contents.after or l_found
+			loop
+				l_container ?= l_contents.item.user_widget
+				if l_container /= Void then
+					if l_container.has_recursive (a_content.user_widget) then
+						l_found := True
+					end
+				end
+				
+				if a_content.user_widget = l_contents.item.user_widget then
+					l_found := True
+				end
+				
+				l_contents.forth
+			end
+			Result := not l_found
+		end
+
+	title_unique (a_content: SD_CONTENT): BOOLEAN is
+			-- If `a_unique_title' really unique?
+		require
+			a_content_not_void: a_content /= Void
+		local
+			l_contents: like contents
+		do
+			l_contents := contents.twin
+			l_contents.start
+			l_contents.prune (a_content)
+			Result := True
+
+			from
+				l_contents.start
+			until
+				l_contents.after or not Result
+			loop
+				Result := not l_contents.item.unique_title.is_equal (a_content.unique_title)
+				l_contents.forth
+			end
+		end		
+	
+	window_valid (a_window: EV_WINDOW): BOOLEAN is
+			-- If `a_widnow' already managed?
+		local
+			l_list: ARRAYED_LIST [SD_DOCKING_MANAGER]
+		do
+			Result := True
+			create internal_shared
+			l_list := internal_shared.docking_manager_list
+			from
+				l_list.start	
+			until
+				l_list.after or not Result
+			loop
+				if l_list.item.main_window = a_window then
+					Result := False
+				end
+				l_list.forth
+			end
+			
+		end
+	
+	container_valid (a_container: EV_CONTAINER; a_window: EV_WINDOW): BOOLEAN is
+			-- If `a_container' is `a_window' or `a_container' in `a_window'?
+		do
+			Result := a_window.has_recursive (a_container) or a_container = a_window
+		end
+		
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW,
-	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER} -- Library internals zone issues.
+	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_SHARED} -- Library internals zone issues.
 -- FIXIT: export to MAIN_WINDOW is for debug, remove it in future.
 
 	zones: ACTIVE_LIST [SD_ZONE]
-			-- All the SD_ZONE in current system.
+			-- All SD_ZONE in current system.
 
 	zone_by_content (a_content: SD_CONTENT): SD_ZONE is
 			-- If main container has zone with a_content?
@@ -151,7 +236,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 		do
 			Result := zones.has (a_zone)
 		end
-
+	
 	has_zone_by_content (a_content: SD_CONTENT): BOOLEAN is
 			-- If the main container has zone with a_content?
 		do
@@ -516,8 +601,11 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKER_MEDIATOR,
 	 SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW, SD_MENU_DOCKER_MEDIATOR,
-	 SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL} -- Library internal attributes.
+	 SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_DOCKING_MANAGER} -- Library internal attributes.
 
+	menu_container: SD_MENU_CONTAINER
+			-- Container for menus on four sides.
+			
 	main_window: EV_WINDOW
 			-- Client programmer's window.
 
@@ -526,9 +614,6 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE, SD_DOCKE
 
 	top_container: EV_CONTAINER
 			-- Topest level container. It contains EV_VIWEPORT which contains fixed_area.	
-
-	menu_container: SD_MENU_CONTAINER
-			-- Container for menus on four sides.
 
 	inner_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 			-- All containers.
@@ -608,7 +693,18 @@ feature {NONE}  -- Agents
 				l_floating_zone.destroy
 			end
 		end
-
+	
+	on_added_content (a_content: SD_CONTENT) is
+			--  Handle added a content to contents.
+		require
+			a_content_widget_valid: user_widget_valid (a_content)
+			title_unique: title_unique (a_content)
+		do
+			a_content.set_docking_manager (Current)
+		ensure
+			set: a_content.docking_manager = Current
+		end
+		
 feature -- Enumeration
 
 	Dock_top: INTEGER is 1
@@ -617,7 +713,7 @@ feature -- Enumeration
 	Dock_right: INTEGER is 4
 
 feature {NONE} -- Implementation
-
+		
 	internal_viewport: EV_VIEWPORT
 			-- The viewport which contain `fixed_area'.
 

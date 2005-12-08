@@ -61,6 +61,7 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 			create internal_shared_not_used
+			internal_docking_manager := a_content.docking_manager
 			default_create
 			create contents.make (1)
 			create internal_notebook.make
@@ -219,7 +220,7 @@ feature {NONE} -- Agents for user
 			-- Redefine.
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
-			internal_shared.docking_manager.remove_auto_hide_zones
+			internal_docking_manager.remove_auto_hide_zones
 			internal_title_bar.enable_focus_color
 
 			if a_content /= Void then
@@ -290,7 +291,7 @@ feature {NONE} -- Agents for docker
 			l_tab_state: SD_TAB_STATE
 		do
 			is_drag_title_bar := True
-			create internal_docker_mediator.make (Current)
+			create internal_docker_mediator.make (Current, internal_docking_manager)
 			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 			enable_capture
 			l_tab_state ?= content.state
@@ -320,7 +321,7 @@ feature {NONE} -- Agents for docker
 	on_notebook_drag (a_widget: EV_WIDGET; a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Handle notebook drag actions.
 		do
-			create internal_docker_mediator.make (Current)
+			create internal_docker_mediator.make (Current, internal_docking_manager)
 			internal_docker_mediator.start_tracing_pointer (a_screen_x - screen_x, screen_y + height - a_screen_y)
 			enable_capture
 		end

@@ -16,10 +16,8 @@ feature {NONE} -- Initialization
 			-- Creation method.
 		require
 			a_widget_not_void: a_widget /= Void
-			a_widget_valid: user_widget_valid (a_widget)
 			a_pixmap_not_void: a_pixmap /= Void
 			a_unique_title_not_void: a_unique_title /= Void
-			title_unique: title_unique (a_unique_title)
 		local
 			l_state: SD_STATE_VOID
 		do
@@ -188,7 +186,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 		do
-			state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+			state.dock_at_top_level (docking_manager.inner_container_main)
 			set_focus
 		end
 
@@ -271,7 +269,7 @@ feature -- Command
 			-- Destroy `Current', only destroy zone. Prune Current from SD_DOCKING_MANAGER.
 		do
 			state.close
-			internal_shared.docking_manager.contents.prune (Current)
+			docking_manager.contents.prune (Current)
 		end
 
 	hide is
@@ -288,41 +286,12 @@ feature -- Command
 
 feature -- States report
 
-	user_widget_valid (a_widget: EV_WIDGET): BOOLEAN is
-			-- Dose a_widget alreay in docking library?
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-			l_container: EV_CONTAINER
-			l_found: BOOLEAN
-		do
-			create internal_shared
-			l_contents := internal_shared.docking_manager.contents
-			from
-				l_contents.start
-			until
-				l_contents.after or l_found
-			loop
-				l_container ?= l_contents.item.user_widget
-				if l_container /= Void then
-					if l_container.has_recursive (a_widget) then
-						l_found := True
-					end
-				else
-					if a_widget = l_contents.item.user_widget then
-						l_found := True
-					end
-				end
-				l_contents.forth
-			end
-			Result := not l_found
-		end
-
 	manager_has_content (a_content: SD_CONTENT): BOOLEAN is
 			-- If docking manager has `a_content'.
 		require
 			a_content_not_void: a_content /= Void
 		do
-			Result := internal_shared.docking_manager.has_content (a_content)
+			Result := docking_manager.has_content (a_content)
 		end
 
 	four_direction (a_direction: INTEGER): BOOLEAN is
@@ -338,34 +307,33 @@ feature -- States report
 			Result := a_target_content.state.zone.parent /= Void
 		end
 
-	title_unique (a_unique_title: STRING): BOOLEAN is
-			-- If `a_unique_title' really unique?
-		require
-			a_unique_title_not_void: a_unique_title /= Void
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
-		do
-			Result := True
-			if internal_shared = Void then
-				create internal_shared
-			end
-			l_contents := internal_shared.docking_manager.contents
-			from
-				l_contents.start
-			until
-				l_contents.after or not Result
-			loop
-				Result := not l_contents.item.unique_title.is_equal (a_unique_title)
-				l_contents.forth
-			end
-		end
-
-feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR} -- State
+feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR, SD_TAB_STUB} -- State
 
 	state: like internal_state is
 			-- Current state
 		do
 			Result := internal_state
+		end
+	
+	docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+			
+feature {SD_DOCKING_MANAGER}
+	
+	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Set docking manager
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
+		local
+			l_state_void: SD_STATE_VOID
+		do
+			docking_manager := a_docking_manager
+			l_state_void ?= state
+			if l_state_void /= Void then
+				l_state_void.set_docking_manager (docking_manager)
+			end
+		ensure
+			set: docking_manager = a_docking_manager
 		end
 
 feature {SD_STATE} -- implementation
@@ -392,16 +360,7 @@ feature {SD_STATE, SD_DOCKING_MANAGER} -- Change the SD_STATE base on the states
 		end
 
 feature {NONE}  -- Implemention.
-
---	new_unique_title: STRING is
---			-- Generatr unique title.
---		do
---			Result := "SD_CONTENT_" + internal_shared.docking_manager.contents.count.out
---		ensure
---			not_void: Result /= Void
---			title_unique: title_unique (Result)
---		end
-
+			
 	internal_user_widget: EV_WIDGET
 			-- Client programmer's widget.
 

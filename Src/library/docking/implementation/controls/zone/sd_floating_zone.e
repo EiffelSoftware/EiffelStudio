@@ -47,6 +47,7 @@ feature {NONE} -- Initlization
 			a_floating_state_not_void: a_floating_state /= Void
 		do
 			internal_floating_state := a_floating_state
+			internal_docking_manager := a_floating_state.docking_manager
 			create internal_shared
 			create internal_shared_zone
 			default_create
@@ -64,7 +65,7 @@ feature {NONE} -- Initlization
 			create internal_inner_container.make
 			internal_vertical_box.extend (internal_inner_container)
 			internal_inner_container.set_parent_floating_zone (Current)
-			accelerators.append (internal_shared.docking_manager.golbal_accelerators)
+			accelerators.append (internal_floating_state.docking_manager.golbal_accelerators)
 		end
 
 feature {SD_CONFIG_MEDIATOR} -- Save config
@@ -106,8 +107,8 @@ feature -- Command
 				end
 			else
 				-- No widget in `Current'.
-				internal_shared.docking_manager.inner_containers.prune_all (internal_inner_container)
-				internal_shared.docking_manager.zones.prune (Current)
+				internal_floating_state.docking_manager.inner_containers.prune_all (internal_inner_container)
+				internal_floating_state.docking_manager.zones.prune (Current)
 				destroy
 			end
 		end
@@ -118,7 +119,7 @@ feature -- Command
 			if internal_shared.allow_window_to_back then
 				show_allow_to_back
 			else
-				show_relative_to_window (internal_shared.docking_manager.main_window)
+				show_relative_to_window (internal_floating_state.docking_manager.main_window)
 			end
 		ensure then
 			showed: is_displayed
@@ -150,7 +151,7 @@ feature -- Properties
 	type: INTEGER is
 			-- Redefine.
 		do
-			Result := internal_shared.hot_zone_factory.hot_zone_main.type
+			Result := internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type
 		end
 
 	state: SD_STATE is
@@ -356,7 +357,7 @@ feature {NONE} -- Agents
 				pointer_press_offset_x := a_screen_x - screen_x
 				pointer_press_offset_y := a_screen_y - screen_y
 				enable_capture
-				create docker_mediator.make (Current)
+				create docker_mediator.make (Current, internal_docking_manager)
 				docker_mediator.start_tracing_pointer (pointer_press_offset_x, pointer_press_offset_y)
 		end
 

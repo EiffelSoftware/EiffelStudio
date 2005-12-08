@@ -32,13 +32,14 @@ feature {NONE} -- Initlization
 		do
 			create internal_shared
 			internal_content := a_content
+			internal_docking_manager := a_content.docking_manager
 			direction := a_direction
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
-				width_height := (internal_shared.docking_manager.fixed_area.width * internal_shared.default_docking_width_rate).ceiling
+				width_height := (internal_docking_manager.fixed_area.width * internal_shared.default_docking_width_rate).ceiling
 			else
-				width_height := (internal_shared.docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
+				width_height := (internal_docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
 			end
-			auto_hide_panel := internal_shared.docking_manager.auto_hide_panel (a_direction)
+			auto_hide_panel := internal_docking_manager.auto_hide_panel (a_direction)
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
 				create internal_tab_stub.make (internal_content, True)
 			elseif direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom then
@@ -109,7 +110,7 @@ feature {NONE} -- Auto hide functions.
 			if internal_close_timer /= Void then
 				internal_close_timer.actions.wipe_out
 				internal_close_timer := Void
-				internal_shared.docking_manager.prune_zone (zone)
+				internal_docking_manager.prune_zone (zone)
 				create l_env
 				l_env.application.pointer_motion_actions.start
 				l_env.application.pointer_motion_actions.prune (internal_motion_procudure)
@@ -149,30 +150,30 @@ feature {NONE} -- Auto hide functions.
 			when {SD_DOCKING_MANAGER}.dock_left then
 				if zone.x_position + show_step >= final_position then
 					remove_moving_timer
-					internal_shared.docking_manager.fixed_area.set_item_x_position (zone, final_position)
+					internal_docking_manager.fixed_area.set_item_x_position (zone, final_position)
 				else
-					internal_shared.docking_manager.fixed_area.set_item_x_position (zone, zone.x_position + show_step)
+					internal_docking_manager.fixed_area.set_item_x_position (zone, zone.x_position + show_step)
 				end
 			when {SD_DOCKING_MANAGER}.dock_right then
 				if zone.x_position - show_step <= final_position then
 					remove_moving_timer
-					internal_shared.docking_manager.fixed_area.set_item_x_position (zone, final_position)
+					internal_docking_manager.fixed_area.set_item_x_position (zone, final_position)
 				else
-					internal_shared.docking_manager.fixed_area.set_item_x_position (zone, zone.x_position - show_step)
+					internal_docking_manager.fixed_area.set_item_x_position (zone, zone.x_position - show_step)
 				end
 			when {SD_DOCKING_MANAGER}.dock_top then
 				if zone.y_position + show_step >= final_position then
 					remove_moving_timer
-					internal_shared.docking_manager.fixed_area.set_item_y_position (zone, final_position)
+					internal_docking_manager.fixed_area.set_item_y_position (zone, final_position)
 				else
-					internal_shared.docking_manager.fixed_area.set_item_y_position (zone, zone.y_position + show_step)
+					internal_docking_manager.fixed_area.set_item_y_position (zone, zone.y_position + show_step)
 				end
 			when {SD_DOCKING_MANAGER}.dock_bottom then
 				if zone.y_position - show_step <= final_position then
 					remove_moving_timer
-					internal_shared.docking_manager.fixed_area.set_item_y_position (zone, final_position)
+					internal_docking_manager.fixed_area.set_item_y_position (zone, final_position)
 				else
-					internal_shared.docking_manager.fixed_area.set_item_y_position (zone, zone.y_position - show_step)
+					internal_docking_manager.fixed_area.set_item_y_position (zone, zone.y_position - show_step)
 				end
 			end
 		ensure
@@ -214,14 +215,14 @@ feature -- Redefine.
 	stick (a_direction: INTEGER) is
 			-- Redefine. `a_direction' is useless, it's only used for SD_DOCKING_STATE.
 		do
-			internal_shared.docking_manager.lock_update
-			internal_shared.docking_manager.remove_auto_hide_zones
-			internal_shared.docking_manager.recover_normal_state
+			internal_docking_manager.lock_update
+			internal_docking_manager.remove_auto_hide_zones
+			internal_docking_manager.recover_normal_state
 
 			stick_zones (a_direction)
 
-			internal_shared.docking_manager.remove_empty_split_area
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.remove_empty_split_area
+			internal_docking_manager.unlock_update
 		ensure then
 			tab_stubs_pruned: auto_hide_panel.tab_stubs.count < old auto_hide_panel.tab_stubs.count
 		end
@@ -268,14 +269,14 @@ feature -- Redefine.
 	show is
 			-- Redefine.
 		do
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 			if is_hide then
 				auto_hide_panel.tab_stubs.extend (internal_tab_stub)
 			end
 			show_internal
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.unlock_update
 		ensure then
-			show: internal_shared.docking_manager.has_zone_by_content (internal_content)
+			show: internal_docking_manager.has_zone_by_content (internal_content)
 		end
 
 	hide is
@@ -285,7 +286,7 @@ feature -- Redefine.
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 			if not is_hide then
-				internal_shared.docking_manager.remove_auto_hide_zones
+				internal_docking_manager.remove_auto_hide_zones
 				-- Change to SD_STATE_VOID.... wait for user call show.... then back to speciall state.
 				create l_state.make (internal_content)
 				l_tab_group := auto_hide_panel.tab_group (internal_tab_stub)
@@ -335,7 +336,7 @@ feature {NONE} -- Implementation functions.
 				l_content := l_tab_stub.content
 				if l_tab_group.index = 1 then
 					create l_docking_state.make (l_content, direction, width_height)
-					l_docking_state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+					l_docking_state.dock_at_top_level (internal_docking_manager.inner_container_main)
 					l_content.change_state (l_docking_state)
 				else
 					if l_content.user_widget.parent /= Void then
@@ -389,56 +390,56 @@ feature {NONE} -- Implementation functions.
 			l_rect: EV_RECTANGLE
 			l_env: EV_ENVIRONMENT
 		do
-			if not internal_shared.docking_manager.has_zone_by_content (internal_content) then
+			if not internal_docking_manager.has_zone_by_content (internal_content) then
 				create zone.make (internal_content, direction)
 				-- Before add the zone to the fixed area, first clear the other zones in the area except the main_container.
-				internal_shared.docking_manager.remove_auto_hide_zones
+				internal_docking_manager.remove_auto_hide_zones
 
-				internal_shared.docking_manager.add_zone (zone)
+				internal_docking_manager.add_zone (zone)
 				create internal_close_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
 				internal_close_timer.actions.extend (agent on_timer_for_close)
 				create l_env
 				l_env.application.pointer_motion_actions.extend (agent on_pointer_motion)
 				internal_motion_procudure := l_env.application.pointer_motion_actions.last
 				-- First, put the zone in a fixed, make a animation here.
-				internal_shared.docking_manager.fixed_area.extend (zone)
+				internal_docking_manager.fixed_area.extend (zone)
 
 				create internal_moving_timer
 				internal_moving_timer.actions.extend (agent on_timer_for_moving)
 				internal_moving_timer.set_interval (10)
 
-				create l_rect.make (internal_shared.docking_manager.fixed_area.x_position, internal_shared.docking_manager.fixed_area.y_position,
-				internal_shared.docking_manager.fixed_area.width, internal_shared.docking_manager.fixed_area.height)
+				create l_rect.make (internal_docking_manager.fixed_area.x_position, internal_docking_manager.fixed_area.y_position,
+				internal_docking_manager.fixed_area.width, internal_docking_manager.fixed_area.height)
 
 				if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
 					if width_height > zone.minimum_width then
-						internal_shared.docking_manager.fixed_area.set_item_width (zone, width_height)
+						internal_docking_manager.fixed_area.set_item_width (zone, width_height)
 					end
 					if l_rect.height > zone.minimum_height then
-						internal_shared.docking_manager.fixed_area.set_item_height (zone, l_rect.height)
+						internal_docking_manager.fixed_area.set_item_height (zone, l_rect.height)
 					end
 				else
 					if l_rect.width > zone.minimum_width then
-						internal_shared.docking_manager.fixed_area.set_item_width (zone, l_rect.width)
+						internal_docking_manager.fixed_area.set_item_width (zone, l_rect.width)
 					end
 					if width_height > zone.minimum_height then
-						internal_shared.docking_manager.fixed_area.set_item_height (zone, width_height)
+						internal_docking_manager.fixed_area.set_item_height (zone, width_height)
 						debug ("larry")
 							io.put_string ("%N SD_AUTO_HIDE_STATE show width_height " + width_height.out)
 						end
 					end
 				end
 				if direction = {SD_DOCKING_MANAGER}.dock_left then
-					internal_shared.docking_manager.fixed_area.set_item_position (zone, l_rect.left - zone.width, l_rect.top)
+					internal_docking_manager.fixed_area.set_item_position (zone, l_rect.left - zone.width, l_rect.top)
 					final_position := l_rect.left
 				elseif direction = {SD_DOCKING_MANAGER}.dock_right then
-					internal_shared.docking_manager.fixed_area.set_item_position (zone, l_rect.right, l_rect.top)
+					internal_docking_manager.fixed_area.set_item_position (zone, l_rect.right, l_rect.top)
 					final_position := l_rect.right - zone.width
 				elseif direction = {SD_DOCKING_MANAGER}.dock_top then
-					internal_shared.docking_manager.fixed_area.set_item_position (zone, l_rect.left, l_rect.top - zone.height)
+					internal_docking_manager.fixed_area.set_item_position (zone, l_rect.left, l_rect.top - zone.height)
 					final_position := l_rect.top
 				elseif direction = {SD_DOCKING_MANAGER}.dock_bottom then
-					internal_shared.docking_manager.fixed_area.set_item_position (zone, l_rect.left, l_rect.bottom)
+					internal_docking_manager.fixed_area.set_item_position (zone, l_rect.left, l_rect.bottom)
 					final_position := l_rect.bottom - zone.height
 				end
 			end

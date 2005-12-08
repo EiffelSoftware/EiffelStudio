@@ -11,18 +11,20 @@ create
 
 feature -- Initlization
 
-	make (a_caller: like internal_caller) is
+	make (a_caller: like internal_caller; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method
 		require
 			a_caller_not_void: a_caller /= Void
 		do
 			create internal_shared
-			internal_shared.docking_manager.recover_normal_state
+			internal_docking_manager := a_docking_manager
+			internal_docking_manager.recover_normal_state
 			internal_shared.hot_zone_factory.set_docker_mediator (Current)
 			create hot_zones
 			internal_caller := a_caller
 		ensure
 			set: internal_caller = a_caller
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Query
@@ -147,15 +149,15 @@ feature {NONE} -- Implementation functions
 		local
 			l_zone_list: ARRAYED_LIST [SD_ZONE]
 		do
-			l_zone_list := internal_shared.docking_manager.zones
+			l_zone_list := internal_docking_manager.zones
 
 			create hot_zones
 			generate_hot_zones_imp (l_zone_list)
 			debug ("larry")
-				io.put_string ("%N SD_DOCKER_MEDIATOR hot_zone_main.type." + internal_shared.hot_zone_factory.hot_zone_main.type.out + " internal_caller.type " + internal_caller.type.out)
+				io.put_string ("%N SD_DOCKER_MEDIATOR hot_zone_main.type." + internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type.out + " internal_caller.type " + internal_caller.type.out)
 			end
-			if internal_shared.hot_zone_factory.hot_zone_main.type = internal_caller.type  then
-				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main)
+			if internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type = internal_caller.type  then
+				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager))
 				debug ("larry")
 					io.put_string ("%N SD_DOCKER_MEDIATOR hot zone main added.")
 				end
@@ -278,6 +280,9 @@ feature {NONE} -- Implementation attributes
 
 	last_hot_zone: SD_HOT_ZONE
 			-- When moving cursor, last SD_HOT_ZONE where pointer in.
+
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
 
 invariant
 

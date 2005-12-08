@@ -18,6 +18,7 @@ feature {NONE} -- Initialization
 			a_menu_dock_mediator_not_void: a_menu_dock_mediator /= Void
 		do
 			create internal_shared
+			internal_docking_manager := a_menu_dock_mediator.docking_manager
 			internal_box := a_menu_box
 			internal_vertical := a_vertical
 			internal_menu_dock_mediator := a_menu_dock_mediator
@@ -49,6 +50,16 @@ feature -- Status report
 
 feature -- Basic operation
 
+	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Set docking manager
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
+		do
+			internal_docking_manager := a_docking_manager
+		ensure
+			set: internal_docking_manager = a_docking_manager
+		end
+			
 	on_pointer_motion (a_screen_y_or_x: INTEGER): BOOLEAN is
 			-- Handle pointer motion.
 		do
@@ -116,7 +127,7 @@ feature {NONE} -- Implementation functions.
 	move_out (a_screen_y_or_x: INTEGER): BOOLEAN is
 			-- Handle pointer in
 		do
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 			if not caller_in_current_area or not caller_in_single_row then
 				if internal_menu_dock_mediator.caller.is_floating then
 					internal_menu_dock_mediator.caller.dock
@@ -124,7 +135,7 @@ feature {NONE} -- Implementation functions.
 				create_new_row_by_position (a_screen_y_or_x)
 				Result := True
 			end
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.unlock_update
 		end
 
 	create_new_row_by_position (a_screen_y_or_x: INTEGER) is
@@ -154,7 +165,7 @@ feature {NONE} -- Implementation functions.
 				internal_box.extend (l_new_row)
 			end
 			l_new_row.extend (internal_menu_dock_mediator.caller)
-			internal_shared.docking_manager.resize
+			internal_docking_manager.resize
 			debug ("larry")
 				io.put_string ("%N SD_MENU_HOT_ZONE new row created, and zone inserted.")
 			end
@@ -168,7 +179,7 @@ feature {NONE} -- Implementation functions.
 			if internal_menu_dock_mediator.caller.row /= Void then
 				if caller_in_single_row then
 					internal_menu_dock_mediator.caller.row.parent.prune (internal_menu_dock_mediator.caller.row)
-					internal_shared.docking_manager.resize
+					internal_docking_manager.resize
 				end
 				internal_menu_dock_mediator.caller.row.prune (internal_menu_dock_mediator.caller)
 			end
@@ -219,6 +230,9 @@ feature {NONE} -- Implementation arrtibutes
 	internal_shared: SD_SHARED
 			-- All singletons.
 
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+	
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

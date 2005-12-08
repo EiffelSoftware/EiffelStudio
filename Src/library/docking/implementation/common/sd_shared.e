@@ -38,29 +38,6 @@ feature -- Access
 			not_void: Result /= Void
 		end
 
-	docking_manager: SD_DOCKING_MANAGER is
-			-- SD_DOCKING_MANAGER instance.
-		once
-			Result := internal_docking_manager
-		ensure
-			not_void: Result /= Void
-		end
-
-	set_docking_manager (a_manager: like internal_docking_manager) is
-			-- Set `internal_docking_manager'.
-		require
-			a_manager_not_void: a_manager /= Void
-			docking_manager_not_set: not docking_manager_set
-		local
-			l_dummy: like internal_docking_manager
-		do
-			internal_docking_manager := a_manager
-			-- Init the once function
-			l_dummy := docking_manager
-		ensure
-			set: a_manager = internal_docking_manager
-		end
-
 	hot_zone_factory: SD_HOT_ZONE_ABSTRACT_FACTORY is
 			-- Factory for different style hot zones.
 		do
@@ -147,13 +124,27 @@ feature -- Access
 			set: last_focus_content_cell.item = a_content
 		end
 
-feature -- Contract Support
-
-	docking_manager_set: BOOLEAN is
-			-- Is `internal_docking_manager' setted?
+feature {SD_DOCKING_MANAGER}
+	
+	add_docking_manager (a_manager: SD_DOCKING_MANAGER) is
+			-- Set `internal_docking_manager'.
+		require
+			a_manager_not_void: a_manager /= Void
 		do
-			Result := internal_docking_manager /= Void
+			docking_manager_list.extend (a_manager)
+		ensure
+			added: docking_manager_list.has (a_manager)
 		end
+
+	docking_manager_list: ARRAYED_LIST [SD_DOCKING_MANAGER] is
+			-- All docking managers.
+		once
+			create Result.make (1)
+		ensure
+			not_void: Result /= Void
+		end
+		
+feature -- Contract Support
 
 	icons_set: BOOLEAN is
 			-- Is `icons' setted?
@@ -218,9 +209,6 @@ feature -- Constants
 			-- Tilte highlight area width which shown color chang gradually.
 
 feature {NONE} -- Implementation
-
-	internal_docking_manager: SD_DOCKING_MANAGER
-			-- Docking manager.
 
 	internal_icons: SD_ICONS_SINGLETON
 			-- Icons.

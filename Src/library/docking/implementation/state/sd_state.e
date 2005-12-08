@@ -7,7 +7,13 @@ deferred class
 	SD_STATE
 
 feature -- Properties
-
+	
+	docking_manager: SD_DOCKING_MANAGER is
+			-- `internal_docking_manager'.
+		do
+			Result := internal_docking_manager	
+		end
+		
 	content: like internal_content is
 			-- `internal_content'.
 		do
@@ -60,8 +66,18 @@ feature -- Properties
 			not_void: Result /= Void
 		end
 
-feature {SD_CONFIG_MEDIATOR}  -- Restore
-
+feature {SD_CONFIG_MEDIATOR, SD_CONTENT}  -- Restore
+	
+	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
+			-- Set `internal_docking_manager'.
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
+		do
+			internal_docking_manager := a_docking_manager
+		ensure
+			set: internal_docking_manager = a_docking_manager
+		end
+		
 	restore (a_titles: ARRAYED_LIST [STRING]; a_container: EV_CONTAINER; a_direction: INTEGER) is
 			-- `titles' is content name. `a_container' is zone parent.
 		require
@@ -104,11 +120,11 @@ feature -- Commands
 		local
 			l_state: SD_STATE_VOID
 		do
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 			zone.close
-			internal_shared.docking_manager.prune_zone_by_content (internal_content)
-			internal_shared.docking_manager.remove_empty_split_area
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.prune_zone_by_content (internal_content)
+			internal_docking_manager.remove_empty_split_area
+			internal_docking_manager.unlock_update
 			create l_state.make (internal_content)
 			change_state (l_state)
 		end
@@ -116,7 +132,7 @@ feature -- Commands
 	stick (a_direction: INTEGER) is
 			-- Stick/Unstick a zone.
 		do
-			internal_shared.docking_manager.recover_normal_state
+			internal_docking_manager.recover_normal_state
 		end
 
 	float (a_x, a_y: INTEGER) is
@@ -219,7 +235,7 @@ feature {NONE} -- Implementation
 			l_main_rect: EV_RECTANGLE
 		do
 
-			l_main_rect := internal_shared.docking_manager.container_rectangle
+			l_main_rect := internal_docking_manager.container_rectangle
 			inspect
 				a_direction
 			when {SD_DOCKING_MANAGER}.dock_top then
@@ -281,7 +297,10 @@ feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons.
-
+			
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+			
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

@@ -11,9 +11,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
 		do
+			internal_docking_manager := a_docking_manager
 			create internal_shared
 			create menu_contents
 			menu_contents.add_actions.extend (agent on_add_menu_content)
@@ -21,6 +24,7 @@ feature {NONE} -- Initialization
 			create floating_menus.make (1)
 		ensure
 			action_added: menu_contents.add_actions.count = 1 and menu_contents.remove_actions.count = 1
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Access
@@ -30,7 +34,7 @@ feature -- Access
 
 	menu_contents: ACTIVE_LIST [SD_MENU_CONTENT]
 			-- All menu contents.
-
+	
 	menus: ARRAYED_LIST [SD_MENU_ZONE]
 			-- All SD_MENU_ZONEs in system
 
@@ -43,13 +47,13 @@ feature -- Access
 			inspect
 				a_direction
 			when {SD_DOCKING_MANAGER}.dock_top then
-				Result := internal_shared.docking_manager.menu_container.top
+				Result := internal_docking_manager.menu_container.top
 			when {SD_DOCKING_MANAGER}.dock_bottom then
-				Result := internal_shared.docking_manager.menu_container.bottom
+				Result := internal_docking_manager.menu_container.bottom
 			when {SD_DOCKING_MANAGER}.dock_left then
-				Result := internal_shared.docking_manager.menu_container.left
+				Result := internal_docking_manager.menu_container.left
 			when {SD_DOCKING_MANAGER}.dock_right then
-				Result := internal_shared.docking_manager.menu_container.right
+				Result := internal_docking_manager.menu_container.right
 			end
 		ensure
 			not_void: Result /= Void
@@ -72,6 +76,14 @@ feature -- Access
 			end
 		end
 
+feature -- Command
+	
+	add_menu (a_menu: SD_MENU_CONTENT) is
+			-- Add `a_menu' to menus.
+		do
+			
+		end
+		
 feature {NONE} -- Agents
 
 	on_add_menu_content (a_menu_item: SD_MENU_CONTENT) is
@@ -82,14 +94,14 @@ feature {NONE} -- Agents
 			l_menu_zone: SD_MENU_ZONE
 			l_menu_row: SD_MENU_ROW
 		do
-			create l_menu_zone.make (False)
+			create l_menu_zone.make (False, internal_docking_manager)
 			l_menu_zone.extend (a_menu_item)
 			create l_menu_row.make (False)
 			l_menu_row.extend (l_menu_zone)
-			internal_shared.docking_manager.menu_container.top.extend (l_menu_row)
+			internal_docking_manager.menu_container.top.extend (l_menu_row)
 		ensure
-			top_added_new_menu: old internal_shared.docking_manager.menu_container.top.count + 1
-				= internal_shared.docking_manager.menu_container.top.count
+			top_added_new_menu: old internal_docking_manager.menu_container.top.count + 1
+				= internal_docking_manager.menu_container.top.count
 		end
 
 	on_remove_menu_content (a_menu_item: SD_MENU_CONTENT) is
@@ -101,7 +113,10 @@ feature {NONE} -- Agents
 		end
 
 feature {NONE} -- Implementation
-
+	
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager Current belong to.
+	
 	internal_shared: SD_SHARED
 			-- All singletons.
 

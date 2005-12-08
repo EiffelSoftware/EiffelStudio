@@ -123,7 +123,7 @@ feature -- Command
 			has: has (a_widget)
 		do
 			internal_widgets.search (a_widget)
-			internal_tabs.go_i_th (selected_item_index)
+			internal_tabs.go_i_th (internal_widgets.index)
 			internal_tabs.item.destroy
 			internal_tabs.remove
 			

@@ -30,10 +30,10 @@ feature -- Factory method
 			Result.set_type (a_zone.content.type)
 		end
 
-	hot_zone_main: SD_HOT_ZONE is
+	hot_zone_main (a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
 			-- Redefine.
 		do
-			Result := create {SD_HOT_ZONE_MAIN}.make (docker_mediator)
+			Result := create {SD_HOT_ZONE_MAIN}.make (docker_mediator, a_docking_manager)
 		end
 
 feature {NONE}-- Implementation

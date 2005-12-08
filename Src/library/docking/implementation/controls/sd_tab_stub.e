@@ -31,12 +31,15 @@ feature {NONE} -- Initlization
 
 			internal_label.pointer_enter_actions.extend (agent on_pointer_enter)
 			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
+			
+			internal_docking_manager := a_content.docking_manager
 		ensure
 			set: content = a_content
 			set: internal_label.text.is_equal (a_content.short_title)
 			actions_added: internal_label.pointer_enter_actions.count = 1 and internal_drawing_area.pointer_enter_actions.count = 1
 			label_added: has (internal_label)
 			drawing_area_added: has (internal_drawing_area)
+			set: internal_docking_manager = a_content.docking_manager
 		end
 
 feature -- Query
@@ -110,7 +113,7 @@ feature {NONE} -- Agents
 			l_tab_group: like tab_group
 		do
 			l_tab_group := tab_group
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 			from
 				l_tab_group.start
 			until
@@ -123,7 +126,7 @@ feature {NONE} -- Agents
 				end
 				l_tab_group.forth
 			end
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.unlock_update
 			pointer_enter_actions.call ([])
 		end
 
@@ -153,6 +156,10 @@ feature {NONE} -- Implementation
 
 	internal_shared: SD_SHARED
 			-- All singletons.
+
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+			
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

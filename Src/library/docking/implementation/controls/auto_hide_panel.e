@@ -17,15 +17,17 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_direction: INTEGER) is
+	make (a_direction: INTEGER; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method. If not vertical style, it'll be horizontal style.
 		require
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+			a_docking_manager_not_void: a_docking_manager /= Void
 		local
 			l_helper: SD_COLOR_HELPER
 		do
 			create internal_shared
+			internal_docking_manager := a_docking_manager
 			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
 				init (True)
 			else
@@ -43,6 +45,7 @@ feature {NONE} -- Initlization
 			set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.Auto_hide_panel_lightness))
 		ensure
 			set: internal_direction = a_direction
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Query
@@ -131,7 +134,7 @@ feature -- Query
 		local
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_contents := internal_shared.docking_manager.contents
+			l_contents := internal_docking_manager.contents
 			from
 				l_contents.start
 			until
@@ -407,8 +410,8 @@ feature {NONE} -- Implementation functions.
 					else
 						set_minimum_height (internal_shared.auto_hide_panel_size)
 					end
-					internal_shared.docking_manager.main_container.set_gap (internal_direction, True)
-					internal_shared.docking_manager.resize
+					internal_docking_manager.main_container.set_gap (internal_direction, True)
+					internal_docking_manager.resize
 				end
 			end
 		ensure
@@ -460,8 +463,8 @@ feature {NONE} -- Implementation functions.
 				else
 					set_minimum_height (0)
 				end
-				internal_shared.docking_manager.main_container.set_gap (internal_direction, False)
-				internal_shared.docking_manager.resize
+				internal_docking_manager.main_container.set_gap (internal_direction, False)
+				internal_docking_manager.resize
 			end
 
 		ensure
@@ -516,6 +519,10 @@ feature {NONE} -- Impelementation attributes.
 
 	internal_ignore_added_action: BOOLEAN
 			-- Ignore add action?
+
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+			
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

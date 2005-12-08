@@ -33,8 +33,8 @@ feature -- Command
 		local
 			l_split_area: EV_SPLIT_AREA
 		do
-			internal_shared.docking_manager.lock_update
-			main_area := internal_shared.docking_manager.inner_container (Current)
+			internal_docking_manager.lock_update
+			main_area := internal_docking_manager.inner_container (Current)
 			if not is_maximized then
 				main_area_widget := main_area.item
 				internal_parent := parent
@@ -49,20 +49,20 @@ feature -- Command
 			else
 				recover_to_normal_state
 			end
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.unlock_update
 		end
 
 	close is
 			-- Close window.
 		do
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 			if is_maximized then
 				main_area.wipe_out
 				main_area.extend (main_area_widget)
 				main_area := Void
 			end
 
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.unlock_update
 		end
 
 	recover_to_normal_state is
@@ -71,7 +71,7 @@ feature -- Command
 			l_split_area: EV_SPLIT_AREA
 		do
 			if is_maximized then
-				internal_shared.docking_manager.lock_update
+				internal_docking_manager.lock_update
 				main_area.wipe_out
 				internal_parent.extend (Current)
 				main_area.extend (main_area_widget)
@@ -84,7 +84,7 @@ feature -- Command
 				main_area_widget := Void
 				internal_parent := Void
 				set_max (False)
-				internal_shared.docking_manager.unlock_update
+				internal_docking_manager.unlock_update
 			end
 		end
 
@@ -157,8 +157,8 @@ feature {SD_DOCKING_MANAGER} -- Focus out
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			l_multi_dock_area := internal_shared.docking_manager.inner_container (Current)
-			if not internal_shared.docking_manager.is_main_inner_container (l_multi_dock_area) then
+			l_multi_dock_area := internal_docking_manager.inner_container (Current)
+			if not internal_docking_manager.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.set_title_focus (False)
 			end
 			content.focus_out_actions.call ([])
@@ -173,9 +173,9 @@ feature {SD_DOCKING_MANAGER, SD_CONTENT}  -- Focus in
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			internal_shared.docking_manager.disable_all_zones_focus_color
-			l_multi_dock_area := internal_shared.docking_manager.inner_container (Current)
-			if not internal_shared.docking_manager.is_main_inner_container (l_multi_dock_area) then
+			internal_docking_manager.disable_all_zones_focus_color
+			l_multi_dock_area := internal_docking_manager.inner_container (Current)
+			if not internal_docking_manager.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.set_title_focus (True)
 			end
 		end
@@ -202,6 +202,9 @@ feature {NONE} -- Implementation
 			content.close_request_actions.call ([])
 		end
 		
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+					
 	internal_shared: SD_SHARED
 			-- All singletons.
 

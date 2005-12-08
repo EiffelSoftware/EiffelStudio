@@ -17,16 +17,18 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_docker_mediator: SD_DOCKER_MEDIATOR)  is
+	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_docking_manager: SD_DOCKING_MANAGER)  is
 			-- Creation method.
 		require
 			a_docker_mediator_not_void: a_docker_mediator /= Void
+			a_docking_manager_not_void: a_docking_manager /= Void
 		local
 			l_area: EV_RECTANGLE
 		do
+			internal_docking_manager := a_docking_manager
 			internal_mediator := a_docker_mediator
 			create internal_shared
-			l_area := internal_shared.docking_manager.container_rectangle_screen
+			l_area := internal_docking_manager.container_rectangle_screen
 			create top_rectangle.make (l_area.left + l_area.width // 2 - internal_shared.icons.arrow_indicator_up.width // 2, l_area.top, internal_shared.icons.arrow_indicator_up.width, internal_shared.icons.arrow_indicator_up.height)
 			create bottom_rectangle.make (l_area.left + l_area.width // 2 - internal_shared.icons.arrow_indicator_down.width // 2, l_area.bottom - internal_shared.icons.arrow_indicator_down.height, internal_shared.icons.arrow_indicator_down.width, internal_shared.icons.arrow_indicator_down.height)
 			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - internal_shared.icons.arrow_indicator_left.height // 2, internal_shared.icons.arrow_indicator_left.width, internal_shared.icons.arrow_indicator_left.height)
@@ -34,6 +36,7 @@ feature {NONE} -- Initlization
 			type := {SD_SHARED}.type_normal
 		ensure
 			set: a_docker_mediator = internal_mediator
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature  -- Redefine
@@ -61,7 +64,7 @@ feature  -- Redefine
 			end
 
 			if Result then
-				caller.state.dock_at_top_level (internal_shared.docking_manager.inner_container_main)
+				caller.state.dock_at_top_level (internal_docking_manager.inner_container_main)
 			end
 
 			l_floating_zone ?= caller
@@ -119,7 +122,7 @@ feature {NONE} -- Implementation
 			l_rect: EV_RECTANGLE
 		do
 			if a_rect.has_x_y (pointer_x, pointer_y) then
-				l_rect := internal_shared.docking_manager.container_rectangle_screen
+				l_rect := internal_docking_manager.container_rectangle_screen
 
 				if a_rect = top_rectangle then
 					-- |
@@ -195,6 +198,10 @@ feature {NONE} -- Implementation
 
 	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
 			-- Areas which contain four indicator.
+
+
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
 
 invariant
 

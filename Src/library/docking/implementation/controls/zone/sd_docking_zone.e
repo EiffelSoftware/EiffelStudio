@@ -51,6 +51,7 @@ feature	{NONE} -- Initlization
 		do
 			create internal_shared_not_used
 			create internal_shared
+			internal_docking_manager := a_content.docking_manager
 			default_create
 			create window.make (a_content.type, Current)
 			internal_content := a_content
@@ -73,6 +74,7 @@ feature	{NONE} -- Initlization
 			extend_cell (window)
 			
 		ensure
+			set: internal_docking_manager = a_content.docking_manager
 			added: has_cell (window)
 		end
 
@@ -99,7 +101,7 @@ feature {SD_CONTENT}
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
-			internal_shared.docking_manager.remove_auto_hide_zones
+			internal_docking_manager.remove_auto_hide_zones
 			window.set_focus_color (True)
 		end
 
@@ -148,10 +150,10 @@ feature -- Command
 	close is
 			-- Redefine
 		do
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 			Precursor {SD_SINGLE_CONTENT_ZONE}
-			internal_shared.docking_manager.prune_zone (Current)
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.prune_zone (Current)
+			internal_docking_manager.unlock_update
 		end
 
 feature -- Query
@@ -196,7 +198,7 @@ feature {NONE} -- For redocker.
 			debug ("larry")
 				io.put_string ("%N ******** draging window in SD_DOCKING_ZONE " + a_screen_x.out + " " + a_screen_y.out + "and window width height is: " + width.out + " " + height.out)
 			end
-			create docker_mediator.make (Current)
+			create docker_mediator.make (Current, internal_docking_manager)
 			docker_mediator.start_tracing_pointer (a_screen_x - screen_x, a_screen_y - screen_y)
 
 			enable_capture

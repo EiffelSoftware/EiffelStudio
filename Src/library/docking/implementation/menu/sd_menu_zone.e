@@ -18,10 +18,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_vertical: BOOLEAN) is
+	make (a_vertical: BOOLEAN; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void		
 		do
 			create internal_shared
+			internal_docking_manager := a_docking_manager
 			init (a_vertical)
 			is_vertical := a_vertical
 			create internal_tool_bar_items.make (1)
@@ -53,6 +56,7 @@ feature {NONE} -- Initialization
 				and pointer_motion_actions.count = 1 and pointer_button_release_actions.count = 1
 			pointer_style_set: internal_drag_area.pointer_style = default_pixmaps.sizeall_cursor
 			extended: has (internal_horizontal_bar)
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Basic operation
@@ -92,7 +96,7 @@ feature -- Basic operation
 				row.prune (Current)
 				if row.count = 0 then
 					row.parent.prune (row)
-					internal_shared.docking_manager.resize
+					internal_docking_manager.resize
 				end
 			end
 
@@ -100,10 +104,10 @@ feature -- Basic operation
 				change_direction
 			end
 
-			create internal_floating_menu.make
+			create internal_floating_menu.make (internal_docking_manager)
 			internal_floating_menu.extend (Current)
 			internal_floating_menu.show
-			internal_shared.docking_manager.menu_manager.floating_menus.extend (internal_floating_menu)
+			internal_docking_manager.menu_manager.floating_menus.extend (internal_floating_menu)
 		ensure
 			pruned: not row.has (Current)
 			extended: internal_floating_menu.has (Current)
@@ -114,7 +118,7 @@ feature -- Basic operation
 		require
 			is_floating: is_floating
 		do
-			internal_shared.docking_manager.menu_manager.floating_menus.prune_all (internal_floating_menu)
+			internal_docking_manager.menu_manager.floating_menus.prune_all (internal_floating_menu)
 			internal_floating_menu.prune (Current)
 			internal_floating_menu.destroy
 			internal_floating_menu := Void
@@ -247,7 +251,7 @@ feature {NONE} -- Agents
 		do
 			if internal_pointer_pressed then
 				enable_capture
-				create internal_docker_mediator.make (Current)
+				create internal_docker_mediator.make (Current, internal_docking_manager)
 			end
 		ensure
 			capture_enable: internal_pointer_pressed implies has_capture and internal_docker_mediator /= Void
@@ -325,6 +329,9 @@ feature {NONE} -- Implmentation
 	internal_floating_menu: SD_FLOATING_MENU_ZONE
 			-- Floating menu zone which contain `Current' when floating.
 
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+			
 feature {NONE} -- Drawing.
 
 	init_a_dot is

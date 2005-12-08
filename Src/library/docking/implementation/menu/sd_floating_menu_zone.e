@@ -17,12 +17,17 @@ create
 
 feature {NONE} -- Initlization
 
-	make is
+	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			default_create
+			internal_docking_manager := a_docking_manager
 			create internal_shared
 			disable_user_resize
+		ensure
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Basic operation
@@ -33,7 +38,7 @@ feature -- Basic operation
 			if internal_shared.allow_window_to_back then
 				show_allow_to_back
 			else
-				show_relative_to_window (internal_shared.docking_manager.main_window)
+				show_relative_to_window (internal_docking_manager.main_window)
 			end
 		ensure
 			shown: is_displayed
@@ -60,6 +65,9 @@ feature -- States report
 
 feature {NONE} -- Implementation
 
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+			
 	internal_shared: SD_SHARED
 			-- All singletons.
 

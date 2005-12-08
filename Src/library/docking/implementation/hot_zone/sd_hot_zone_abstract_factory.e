@@ -17,8 +17,10 @@ feature -- Factory Methods
 			not_void: Result /= Void
 		end
 
-	hot_zone_main: SD_HOT_ZONE is
+	hot_zone_main (a_docking_manager: SD_DOCKING_MANAGER): SD_HOT_ZONE is
 			-- Hot zone for SD_MULTI_DOCK_AREA.
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
 		deferred
 		ensure
 			not_void: Result /= Void

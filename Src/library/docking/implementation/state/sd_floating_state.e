@@ -21,15 +21,20 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_screen_x, a_screen_y: INTEGER) is
+	make (a_screen_x, a_screen_y: INTEGER; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			create internal_shared
+			internal_docking_manager := a_docking_manager
 			create internal_zone.make (Current)
 			internal_zone.show
 			internal_zone.set_size (internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
 			internal_zone.set_position (a_screen_x, a_screen_y)
-			internal_shared.docking_manager.add_inner_container (internal_zone.inner_container)
+			internal_docking_manager.add_inner_container (internal_zone.inner_container)
+		ensure
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Redefine.
@@ -47,7 +52,7 @@ feature -- Redefine.
 			l_split_area: EV_SPLIT_AREA
 			l_main_container_widget: EV_WIDGET
 		do
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 
 			l_widget := internal_zone.inner_container.item
 			internal_zone.inner_container.wipe_out
@@ -59,10 +64,10 @@ feature -- Redefine.
 				l_width_height := (a_multi_dock_area.height * internal_shared.default_docking_height_rate).ceiling
 				l_split_area := create {EV_VERTICAL_SPLIT_AREA}
 			end
-			l_main_container_widget := internal_shared.docking_manager.inner_container_main.item
-			internal_shared.docking_manager.inner_container_main.save_spliter_position (l_main_container_widget)
-			internal_shared.docking_manager.inner_container_main.wipe_out
-			internal_shared.docking_manager.inner_container_main.extend (l_split_area)
+			l_main_container_widget := internal_docking_manager.inner_container_main.item
+			internal_docking_manager.inner_container_main.save_spliter_position (l_main_container_widget)
+			internal_docking_manager.inner_container_main.wipe_out
+			internal_docking_manager.inner_container_main.extend (l_split_area)
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_top then
 				l_split_area.set_first (l_widget)
 				l_split_area.set_second (l_main_container_widget)
@@ -73,8 +78,8 @@ feature -- Redefine.
 			if l_split_area.full then
 				l_split_area.set_split_position (top_split_position (direction, l_split_area))
 			end
-			internal_shared.docking_manager.inner_container_main.restore_spliter_position (l_main_container_widget)
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.inner_container_main.restore_spliter_position (l_main_container_widget)
+			internal_docking_manager.unlock_update
 		end
 
 	record_state is
@@ -110,7 +115,7 @@ feature -- Redefine.
 		local
 			l_zone: SD_ZONE
 		do
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 			internal_zone.destroy
 
 			l_zone ?= inner_container.item
@@ -118,7 +123,7 @@ feature -- Redefine.
 				l_zone.state.move_to_docking_zone (a_target_zone)
 			end
 
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.unlock_update
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
@@ -126,12 +131,12 @@ feature -- Redefine.
 		local
 			l_tab_state: SD_TAB_STATE
 		do
-			internal_shared.docking_manager.lock_update
+			internal_docking_manager.lock_update
 
 			internal_zone.destroy
 			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, direction)
 			change_state (l_tab_state)
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.unlock_update
 		end
 
 	content_void: BOOLEAN is

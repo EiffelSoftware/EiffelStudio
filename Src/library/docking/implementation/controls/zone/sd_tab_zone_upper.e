@@ -52,8 +52,8 @@ feature {NONE} -- Implementation
 		local
 			l_split_area: EV_SPLIT_AREA
 		do
-			internal_shared.docking_manager.lock_update
-			main_area := internal_shared.docking_manager.inner_container (Current)
+			internal_docking_manager.lock_update
+			main_area := internal_docking_manager.inner_container (Current)
 			if not is_maximized then
 				main_area_widget := main_area.item
 				internal_parent := parent
@@ -68,7 +68,7 @@ feature {NONE} -- Implementation
 			else
 				recover_to_normal_state
 			end
-			internal_shared.docking_manager.unlock_update
+			internal_docking_manager.unlock_update
 		end
 		
 	recover_to_normal_state is

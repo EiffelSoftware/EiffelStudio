@@ -11,20 +11,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_caller: SD_MENU_ZONE) is
+	make (a_caller: SD_MENU_ZONE; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method
 		require
 			a_caller_not_void: a_caller /= Void
 		do
 			create internal_shared
-			internal_menus := internal_shared.docking_manager.menu_manager.menus
+			docking_manager := a_docking_manager
+
+			internal_menus := docking_manager.menu_manager.menus
 
 			caller := a_caller
 
-			create internal_top_hot_zone.make (internal_shared.docking_manager.menu_container.top, False, Current)
-			create internal_bottom_hot_zone.make (internal_shared.docking_manager.menu_container.bottom, False, Current)
-			create internal_left_hot_zone.make (internal_shared.docking_manager.menu_container.left, True, Current)
-			create internal_right_hot_zone.make (internal_shared.docking_manager.menu_container.right, True, Current)
+			create internal_top_hot_zone.make (docking_manager.menu_container.top, False, Current)
+			create internal_bottom_hot_zone.make (docking_manager.menu_container.bottom, False, Current)
+			create internal_left_hot_zone.make (docking_manager.menu_container.left, True, Current)
+			create internal_right_hot_zone.make (docking_manager.menu_container.right, True, Current)
 
 			internal_top_hot_zone.start_drag
 			internal_bottom_hot_zone.start_drag
@@ -34,7 +36,10 @@ feature {NONE} -- Initialization
 			if a_caller.is_floating then
 				internal_last_floating := True
 			end
+			
+			
 		ensure
+			set: docking_manager = a_docking_manager
 			a_caller_set: a_caller = caller
 		end
 
@@ -51,9 +56,9 @@ feature -- Docking issues.
 			if not l_in_four_side then
 
 				if not internal_last_floating then
-					internal_shared.docking_manager.lock_update
+					docking_manager.lock_update
 					caller.float
-					internal_shared.docking_manager.unlock_update
+					docking_manager.unlock_update
 				end
 
 				internal_last_floating := True
@@ -67,11 +72,14 @@ feature -- Docking issues.
 
 	apply_change (a_screen_x, a_screen_y: INTEGER) is
 			-- Apply change.
+		local
+			l_docking_manager: SD_DOCKING_MANAGER
 		do
-			notify_row (internal_shared.docking_manager.menu_container.top)
-			notify_row (internal_shared.docking_manager.menu_container.bottom)
-			notify_row (internal_shared.docking_manager.menu_container.left)
-			notify_row (internal_shared.docking_manager.menu_container.right)
+			l_docking_manager := docking_manager 
+			notify_row (l_docking_manager.menu_container.top)
+			notify_row (l_docking_manager.menu_container.bottom)
+			notify_row (l_docking_manager.menu_container.left)
+			notify_row (l_docking_manager.menu_container.right)
 		end
 
 feature -- Access
@@ -79,6 +87,9 @@ feature -- Access
 	caller: SD_MENU_ZONE
 			-- Caller.
 
+	docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager manage Current.
+			
 feature {NONE} -- Implementation
 
 	on_motion_in_four_side (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
@@ -146,7 +157,7 @@ feature {NONE} -- Implementation
 
 	internal_top_hot_zone, internal_bottom_hot_zone, internal_left_hot_zone, internal_right_hot_zone: SD_MENU_HOT_ZONE
 			-- Four area hot zone.
-
+			
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

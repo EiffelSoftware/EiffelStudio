@@ -139,6 +139,12 @@ feature	-- Control
 			retry
 		end
 
+	terminate_tree is
+		do
+			terminate_subprocesses
+			terminate
+		end
+
 	launch is
 		local
 			retried:BOOLEAN
@@ -189,6 +195,7 @@ feature	-- Control
 				launched := last_operation_successful
 
 				if launched then
+					id := prc_launcher.process_id
 					-- start a output listening thread is necessory
 					if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
 					   create out_thread.make (Current)
@@ -367,6 +374,16 @@ feature {NONE} -- Implementation
 					sleep (initial_time_interval)
 				end
 			end
+		end
+
+	terminate_subprocesses is
+			--
+		require
+			process_running: is_running
+		local
+			succ: BOOLEAN
+		do
+			succ := prc_launcher.terminate_tree (id, False)
 		end
 
 invariant

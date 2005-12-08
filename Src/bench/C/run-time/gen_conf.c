@@ -594,10 +594,11 @@ rt_shared void eif_gen_conf_init (int max_dtype)
 	cid_array [1] = 0;  /* id */
 	cid_array [2] = TERMINATOR; /* Terminator */
 
-		// Initialize `non_generic_type_names' for root thread now that `first_gen_id' is
-		// properly computed. Indeed the first call to `eif_gen_conf_thread_init' is done
-		// before `first_gen_id' is initialized and therefore does not allocate anything
-		// since `first_gen_id' is zero. The second call will do things properly.
+		/* Initialize `non_generic_type_names' for root thread now that `first_gen_id' is
+		 * properly computed. Indeed the first call to `eif_gen_conf_thread_init' is done
+		 * before `first_gen_id' is initialized and therefore does not allocate anything
+		 * since `first_gen_id' is zero. The second call will do things properly.
+		 */
 	eif_gen_conf_thread_init();
 }
 

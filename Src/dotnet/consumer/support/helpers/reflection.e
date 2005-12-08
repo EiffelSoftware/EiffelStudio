@@ -5,7 +5,7 @@ indexing
 
 class
 	REFLECTION
-	
+
 inherit
 	EC_CHECKED_ENTITY_FACTORY
 		export
@@ -37,7 +37,7 @@ feature -- Status Report
 			-- Is `m' a public/family CLS compliant method?
 		require
 			m_not_void: m /= Void
-		do			
+		do
 			if (m.is_public or m.is_family or m.is_family_or_assembly) then
 					-- check that member is fully cls compliant
 				Result := is_eiffel_compliant_member (m)
@@ -52,13 +52,13 @@ feature -- Status Report
 			if (f.is_public or f.is_family or f.is_family_or_assembly) then
 					-- check that field is fully cls compliant
 				Result := is_eiffel_compliant_member (f)
-				
+
 				if Result and then f.is_literal then
 					Result := is_valid_literal_field (f)
 				end
 			end
 		end
-		
+
 	is_valid_literal_field (f: FIELD_INFO): BOOLEAN is
 			-- Is `f' a valid literal field?
 		require
@@ -67,7 +67,7 @@ feature -- Status Report
 		do
 			Result := f.get_value (Void) /= Void
 		end
-		
+
 	is_cls_generic_type (a_type: SYSTEM_TYPE): BOOLEAN is
 			--
 		local
@@ -90,14 +90,8 @@ feature -- Status Report
 		do
 			l_type := checked_type (a_type)
 			Result := l_type.is_eiffel_compliant
-			if Result then
-				l_ab_type ?= l_type
-				if l_ab_type /= Void then
-					Result := l_ab_type.is_eiffel_compliant_interface
-				end
-			end
 		end
-		
+
 	is_eiffel_compliant_member (member: MEMBER_INFO): BOOLEAN is
 			-- 	Is `member' Eiffel-compliant?
 		local
@@ -116,7 +110,7 @@ feature -- Status Report
 		do
 			Result := a_field.is_public and not a_field.is_literal
 		end
-		
+
 	is_init_only_field (a_field: FIELD_INFO): BOOLEAN is
 			-- Is `a_field' a initonly field?
 		do

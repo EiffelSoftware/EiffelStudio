@@ -17,7 +17,7 @@ feature -- Basic operations
 			screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
 		end
 
-	draw_pixmap_by_colors (a_screen_x, a_screen_y: INTEGER; a_colors: ARRAYED_LIST [TUPLE]) is
+	draw_pixmap_by_colors (a_screen_x, a_screen_y: INTEGER; a_colors: SPECIAL [TUPLE]) is
 			-- Draw a pixmap on desktop by colors, black is discarded.
 		require
 			a_pixmap_not_void: a_colors /= Void
@@ -32,17 +32,17 @@ feature -- Basic operations
 			k: INTEGER
 			first_draw_stop_point: ARRAYED_LIST [INTEGER]
 		do
-			if not a_colors.is_empty then
-				l_width := a_colors.first.count // 3
+			if a_colors.count /= 0 then
+				l_width := a_colors.item (0).count // 3
 				screen.set_copy_mode
 				l_pixmap := screen.sub_pixmap (create {EV_RECTANGLE}.make (a_screen_x, a_screen_y, l_width, a_colors.count))
 				from
-					j := 1
+					j := 0
 					j_count := a_colors.count
 				until
-					j = j_count
+					j >= j_count
 				loop
-					l_item := a_colors.i_th (j)
+					l_item := a_colors.item (j)
 					if l_item /= Void then
 							-- Draw forwards
 						from
@@ -62,7 +62,7 @@ feature -- Basic operations
 									if l_color.lightness <= edge_lightness then
 										l_pixmap.set_copy_mode
 										l_pixmap.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
-										l_pixmap.draw_point (i - 1, j - 1)
+										l_pixmap.draw_point (i - 1, j)
 										l_edge_found := true
 										first_draw_stop_point.extend (i)
 									else
@@ -71,7 +71,7 @@ feature -- Basic operations
 	--										g := (g * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).green_8_bit * (1 - color_percentage)).floor
 	--										b := (b * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).blue_8_bit * (1 - color_percentage)).floor
 										l_pixmap.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
-										l_pixmap.draw_point (i - 1, j - 1)
+										l_pixmap.draw_point (i - 1, j)
 									end
 								end
 							else
@@ -104,7 +104,7 @@ feature -- Basic operations
 									if l_color.lightness <= edge_lightness or l_edge_found then
 										l_pixmap.set_copy_mode
 										l_pixmap.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
-										l_pixmap.draw_point (i - 1, j - 1)
+										l_pixmap.draw_point (i - 1, j)
 										l_edge_found := true
 									else
 										l_pixmap.set_and_mode
@@ -112,7 +112,7 @@ feature -- Basic operations
 --											g := (g * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).green_8_bit * (1 - color_percentage)).floor
 --											b := (b * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).blue_8_bit * (1 - color_percentage)).floor
 										l_pixmap.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
-										l_pixmap.draw_point (i - 1, j - 1)
+										l_pixmap.draw_point (i - 1, j)
 									end
 								end
 							else

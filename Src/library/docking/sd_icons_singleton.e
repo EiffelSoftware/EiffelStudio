@@ -65,14 +65,14 @@ feature -- Icons
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_up_colors: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_up_colors: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_up_colors_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_up_colors_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
@@ -86,14 +86,14 @@ feature -- Icons
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_down_colors: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_down_colors: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_down_colors_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_down_colors_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
@@ -107,14 +107,14 @@ feature -- Icons
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_left_colors: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_left_colors: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_left_colors_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_left_colors_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
@@ -128,14 +128,14 @@ feature -- Icons
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_right_colors: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_right_colors: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_right_colors_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_right_colors_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
@@ -149,42 +149,42 @@ feature -- Icons
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_center_colors: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_center_colors: SPECIAL [TUPLE] is
 				-- Center indicator draw on the screen when user dragging a window.
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_center_colors_up_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_center_colors_up_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_center_colors_left_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_center_colors_left_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_center_colors_right_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_center_colors_right_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_center_colors_bottom_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_center_colors_bottom_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure
 				not_void: Result /= Void
 			end
 
-	arrow_indicator_center_colors_center_lighten: ARRAYED_LIST [TUPLE] is
+	arrow_indicator_center_colors_center_lighten: SPECIAL [TUPLE] is
 				--
 			deferred
 			ensure

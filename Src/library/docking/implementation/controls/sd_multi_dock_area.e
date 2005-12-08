@@ -112,7 +112,35 @@ feature -- Query
 			check l_widget /= Void end
 			Result := has_recursive (l_widget)
 		end
-
+	
+	zones: ARRAYED_LIST [SD_ZONE] is
+			-- All zones in Current.
+		do
+			create Result.make (1)
+			if readable	then
+				zones_recursive (item, Result)
+			end
+		end
+	
+	zones_recursive (a_widget: EV_WIDGET; a_list: like zones) is
+			-- Add all zones in `a_widget' to `a_list'.
+		require
+			a_widget_not_void: a_widget /= Void
+			a_list_not_void: a_list /= Void
+		local
+			l_zone: SD_ZONE
+			l_container: EV_SPLIT_AREA
+		do
+			l_zone ?= a_widget
+			l_container ?= a_widget
+			if l_zone /= Void then
+				a_list.extend (l_zone)
+			elseif l_container /= Void then
+				zones_recursive (l_container.first, a_list)
+				zones_recursive (l_container.second, a_list)
+			end
+		end
+		
 	parent_floating_zone: SD_FLOATING_ZONE
 			-- If `Current' is in a SD_FLOATING_ZONE, this is parent. Otherwise it should be Void.
 

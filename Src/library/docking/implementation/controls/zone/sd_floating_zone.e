@@ -82,35 +82,38 @@ feature -- Command
 		local
 			l_title_zone: SD_TITLE_BAR_REMOVEABLE
 		do
-			if internal_inner_container.readable then
-				count_zone_displayed
-				if zone_display_count = 1 then
-					l_title_zone ?= only_one_zone_displayed
-					check l_title_zone /= Void end
-					--  l_zone should not have stick button.
-					l_title_zone.set_show_stick (False)
-
-					if only_one_zone_displayed.is_maximized then
-						l_title_zone.set_show_normal_max (True)
-						extend_title_bar
-					else
-						l_title_zone.set_show_normal_max (False)
-						if internal_vertical_box.has (internal_title_bar) then
-							internal_vertical_box.prune_all (internal_title_bar)
+			if not is_destroyed then
+				if internal_inner_container.readable then
+					count_zone_displayed
+					if zone_display_count = 1 then
+						l_title_zone ?= only_one_zone_displayed
+						check l_title_zone /= Void end
+						--  l_zone should not have stick button.
+						l_title_zone.set_show_stick (False)
+	
+						if only_one_zone_displayed.is_maximized then
+							l_title_zone.set_show_normal_max (True)
+							extend_title_bar
+						else
+							l_title_zone.set_show_normal_max (False)
+							if internal_vertical_box.has (internal_title_bar) then
+								internal_vertical_box.prune_all (internal_title_bar)
+							end
 						end
+					elseif zone_display_count > 1 then
+						extend_title_bar
+						set_all_title_bar (internal_inner_container.item)
+					elseif zone_display_count < 1 then
+						hide
 					end
-				elseif zone_display_count > 1 then
-					extend_title_bar
-					set_all_title_bar (internal_inner_container.item)
-				elseif zone_display_count < 1 then
-					hide
-				end
-			else
-				-- No widget in `Current'.
-				internal_floating_state.docking_manager.inner_containers.prune_all (internal_inner_container)
-				internal_floating_state.docking_manager.zones.prune (Current)
-				destroy
+				else
+					-- No widget in `Current'.
+					internal_floating_state.docking_manager.inner_containers.prune_all (internal_inner_container)
+					internal_floating_state.docking_manager.zones.prune (Current)
+					destroy
+				end				
 			end
+
 		end
 
 	show is
@@ -193,11 +196,13 @@ feature -- Properties
 		local
 			l_container: EV_CONTAINER
 		do
-			l_container ?= internal_inner_container.item
-			if l_container /= Void then
-				zone_display_count := 0
-				only_one_zone_displayed := Void
-				count_zone_display (l_container)
+			zone_display_count := 0			
+			if internal_inner_container.readable then
+				l_container ?= internal_inner_container.item
+				if l_container /= Void then
+					only_one_zone_displayed := Void
+					count_zone_display (l_container)
+				end				
 			end
 		end
 

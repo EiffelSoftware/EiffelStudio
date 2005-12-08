@@ -10,7 +10,9 @@ inherit
 	CLASS_C
 		redefine
 			actual_type,
-			init_types, update_types, is_tuple, partial_actual_type
+			is_tuple,
+			normalized_type_i,
+			partial_actual_type
 		end
 
 create
@@ -21,87 +23,13 @@ feature -- Status report
 	is_tuple: BOOLEAN is True
 			-- Current class is TUPLE.
 
-feature -- types
+feature {NONE} -- Implementation
 
-	init_types is
-			-- Standard initialization of attribute `types'
-			-- Special treatment for TUPLEs
-		require else
-			True
-		local
-			class_type: CLASS_TYPE
-			type_i: TUPLE_TYPE_I
+	normalized_type_i (data: CL_TYPE_I): TUPLE_TYPE_I is
+			-- Class type `data' normalized in terms of the current class.
 		do
-			create type_i.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
-			class_type := new_type (type_i)
-			types.extend (class_type)
-			System.insert_class_type (class_type)
-		end
-
-	update_types (data: CL_TYPE_I) is
-			-- Update `types' with `data'.
-			-- For TUPLE we make sure that only one type is
-			-- inserted.
-		local
-			filter: CL_TYPE_I
-			l_gen_type: GEN_TYPE_I
-			l_class_type: CLASS_TYPE
-			type_i: TUPLE_TYPE_I
-		do
-			if not derivations.has_derivation (class_id, data) then
-					-- The recursive update is done only once
-				derivations.insert_derivation (class_id, data)
-
-				if types.has_type (data) then
-					l_class_type := types.found_item
-				else
-						-- Found a new type for the class
-					create type_i.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
-					if data.has_expanded_mark then
-						type_i.set_expanded_mark
-					elseif data.has_reference_mark then
-						type_i.set_reference_mark
-					elseif data.has_separate_mark then
-						type_i.set_separate_mark
-					end
-					l_class_type := new_type (type_i)
-
-						-- If the $ operator is used in the class,
-						-- an encapsulation of the feature must be generated
-
-					if System.address_table.class_has_dollar_operator (class_id) then
-						System.set_freeze
-					end
-
-						-- Mark the class `changed4' because there is a new
-						-- type
-					changed4 := True
-					Degree_2.insert_new_class (Current)
-						-- Insertion of the new class type
-					types.extend (l_class_type)
-					System.insert_class_type (l_class_type)
-				end
-
-					-- Propagation along the filters since we have a new type
-					-- Clean the filters. Some of the filters can be obsolete
-					-- if the base class has been removed from the system
-				filters.clean
-				l_gen_type ?= data
-				from
-					filters.start
-				until
-					filters.after
-				loop
-						-- Instantiation of the filter with `data'
-					if l_gen_type /= Void then
-						filter := filters.item.instantiation_in (l_class_type)
-					else
-						filter := filters.item
-					end
-					filter.base_class.update_types (filter)
-					filters.forth
-				end
-			end
+			create Result.make (class_id, create {META_GENERIC}.make (0), create {ARRAY [TYPE_I]}.make (1, 0))
+			Result.set_mark (data.declaration_mark)
 		end
 
 feature -- Actual class type
@@ -159,5 +87,4 @@ feature {CLASS_TYPE_AS} -- Actual class type
 invariant
 	types_has_only_one_element: types /= Void implies types.count <= 1
 
-end -- class TUPLE_CLASS_B
-
+end

@@ -17,21 +17,21 @@ default
 
 cluster
 
-	root_cluster:		"$ISE_EIFFEL/examples/thread/race"
+	root_cluster:		"$ISE_LIBRARY/examples/thread/race"
 
-	all base:		"$ISE_EIFFEL/library/base"
+	all base:		"$ISE_LIBRARY/library/base"
 		exclude
 			"classic"; 
 		end
 
-	all base_net:		"$ISE_EIFFEL/library.net/base"
+	all base_net:		"$ISE_LIBRARY/library.net/base"
 
-	all thread:		"$ISE_EIFFEL/library/thread"
+	all thread:		"$ISE_LIBRARY/library/thread"
 		exclude
 			"classic"
 		end
 
-	all thread_net:	"$ISE_EIFFEL/library.net/thread"
+	all thread_net:	"$ISE_LIBRARY/library.net/thread"
 
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"

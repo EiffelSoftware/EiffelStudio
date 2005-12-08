@@ -23,18 +23,18 @@ default
 
 cluster 
 		-- Root cluster
-	root_cluster:		"$ISE_EIFFEL/examples/vision2/drawing_area"
+	root_cluster:		"$ISE_LIBRARY/examples/vision2/drawing_area"
 
 		-- EiffelBase
-	all base: 			"$ISE_EIFFEL/library/base"
+	all base: 			"$ISE_LIBRARY/library/base"
 		exclude
 			"table_eiffel3"
 		end
 
 		-- Vision2
-	event:				"$ISE_EIFFEL/library/event"
+	event:				"$ISE_LIBRARY/library/event"
 
-	all vision2:		"$ISE_EIFFEL/library/vision2"
+	all vision2:		"$ISE_LIBRARY/library/vision2"
 		exclude 
 			"mswin"
 			"EIFGEN"
@@ -46,10 +46,10 @@ cluster
 
 external
 	include_path:
-			"\$(ISE_EIFFEL)/library/event/Clib",
-			"\$(ISE_EIFFEL)/library/vision2/spec/include",
-			"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
+			"\$(ISE_LIBRARY)/library/event/Clib",
+			"\$(ISE_LIBRARY)/library/vision2/spec/include",
+			"\$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib `$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
 	object:
-			"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
+			"$(ISE_LIBRARY)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o `$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
 
 end -- drawing_area_test

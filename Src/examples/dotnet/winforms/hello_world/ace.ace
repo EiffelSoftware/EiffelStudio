@@ -17,15 +17,15 @@ default
 
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\hello_world"
+	root_cluster:		"$ISE_LIBRARY\examples\dotnet\winforms\hello_world"
 
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		end
 
-	all base_net:		"$ISE_EIFFEL\library.net\base"
+	all base_net:		"$ISE_LIBRARY\library.net\base"
 
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"

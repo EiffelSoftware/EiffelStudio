@@ -23,14 +23,14 @@ cluster
 			assertion (all)
 		end
 
-	all base: "${ISE_EIFFEL}\library\base"
+	all base: "${ISE_LIBRARY}\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		default
 			namespace ("EiffelSoftware.Library.Base")
 		end
 
-	all base_net: "${ISE_EIFFEL}\library.net\base"
+	all base_net: "${ISE_LIBRARY}\library.net\base"
 		default
 			namespace ("EiffelSoftware.Library.Base")
 		end
@@ -71,7 +71,7 @@ assembly
 
 	"Skybound.Autocomplete": "..\..\..\Skybound.AutoComplete.dll"
 
-	"EiffelSoftware.Runtime": "$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"
+	"EiffelSoftware.Runtime": "$ISE_LIBRARY\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"
 
 external
 

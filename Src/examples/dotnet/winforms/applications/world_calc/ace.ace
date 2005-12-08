@@ -16,20 +16,20 @@ default
 	console_application (no)
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc"
+	root_cluster:		"$ISE_LIBRARY\examples\dotnet\winforms\applications\world_calc"
 
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		end
 
-	all base_net:		"$ISE_EIFFEL\library.net\base"
+	all base_net:		"$ISE_LIBRARY\library.net\base"
 
 assembly
-	math:	"$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc\math.dll"
+	math:	"$ISE_LIBRARY\examples\dotnet\winforms\applications\world_calc\math.dll"
 
-	parser_util:	"$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc\parserutils.dll"
+	parser_util:	"$ISE_LIBRARY\examples\dotnet\winforms\applications\world_calc\parserutils.dll"
 		prefix
 			"parser_"
 		end

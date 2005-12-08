@@ -23,21 +23,21 @@ default
 
 cluster 
 		-- Root cluster
-	root_cluster:		"$ISE_EIFFEL\examples\vision2\ev_list"
+	root_cluster:		"$ISE_LIBRARY\examples\vision2\ev_list"
 
 		-- EiffelBase
-	all base: 			"$ISE_EIFFEL\library\base"
+	all base: 			"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"
 		end
 
 		-- WEL
-	all wel:			"$ISE_EIFFEL\library\wel"
+	all wel:			"$ISE_LIBRARY\library\wel"
 
 		-- Vision2
-	event:				"$ISE_EIFFEL\library\event"
+	event:				"$ISE_LIBRARY\library\event"
 
-	all vision2:		"$ISE_EIFFEL\library\vision2"
+	all vision2:		"$ISE_LIBRARY\library\vision2"
 		exclude 
 			"gtk"
 			"EIFGEN"
@@ -49,12 +49,12 @@ cluster
 		end
 
 external
-	include_path:		"$(ISE_EIFFEL)\library\vision2\spec\include",
-						"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	include_path:		"$(ISE_LIBRARY)\library\vision2\spec\include",
+						"$(ISE_LIBRARY)\library\wel\spec\windows\include"
 
-	object: 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
-			 			"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
-						"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+	object: 			"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+			 			"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+			 			"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+						"$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- ev_list_example

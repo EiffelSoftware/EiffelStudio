@@ -16,28 +16,28 @@ default
 	console_application (no)
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\vision2\rich_text"
+	root_cluster:		"$ISE_LIBRARY\examples\vision2\rich_text"
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		end
 
-	all base_net:		"$ISE_EIFFEL\library.net\base"
+	all base_net:		"$ISE_LIBRARY\library.net\base"
 
-	all wel:		"$ISE_EIFFEL\library\wel"
+	all wel:		"$ISE_LIBRARY\library\wel"
 		exclude
 			"spec"; "clib"; "classic"; 
 		end
 
-	all wel_net:		"$ISE_EIFFEL\library.net\wel"
+	all wel_net:		"$ISE_LIBRARY\library.net\wel"
 
-	all vision2:		"$ISE_EIFFEL\library\vision2"
+	all vision2:		"$ISE_LIBRARY\library\vision2"
 		exclude
 			"gtk"; "Clib"; "gtk"; "assign_attempt.e"; "ev_pixmap_imp_loader.e";
 		end
 		
-	all vision2_net:	"$ISE_EIFFEL\library.net\vision2"	
+	all vision2_net:	"$ISE_LIBRARY\library.net\vision2"	
 
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
@@ -55,13 +55,13 @@ assembly
 external
 
 	include_path:
-		"$(ISE_EIFFEL)\library\vision2\spec\include",
-		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+		"$(ISE_LIBRARY)\library\vision2\spec\include",
+		"$(ISE_LIBRARY)\library\wel\spec\windows\include"
 
 	object:
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
-		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
+		"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\ilvision2.lib",
+		"$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib",
+		"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
+		"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib"
 
 end

@@ -7,7 +7,7 @@ root
 default
 	il_verifiable (no)
 	msil_generation_type ("exe")
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
+	precompiled ("$ISE_LIBRARY\precomp\spec\$ISE_PLATFORM\base")
 	assertion (check)
 	assertion (require)
 	assertion (ensure)
@@ -26,12 +26,12 @@ default
 
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\net\transport\smtp"
+	root_cluster:		"$ISE_LIBRARY\examples\net\transport\smtp"
 
 
-	all net:		"$ISE_EIFFEL\library\net"
+	all net:		"$ISE_LIBRARY\library\net"
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"desc"; "table_eiffel3"; 
 		end
@@ -39,6 +39,6 @@ cluster
 external
 
 	object:
-		"$(ISE_EIFFEL)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib"
+		"$(ISE_LIBRARY)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib"
 
 end

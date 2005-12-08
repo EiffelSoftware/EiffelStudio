@@ -11,11 +11,11 @@ default
 
 cluster
 
-	ROOT_CLUSTER: 		"$ISE_EIFFEL/examples/cecil/Eiffel2C/string";
+	ROOT_CLUSTER: 		"$ISE_LIBRARY/examples/cecil/Eiffel2C/string";
 
 		-- EiffelBase
 
-	all base:           "$ISE_EIFFEL/library/base"
+	all base:           "$ISE_LIBRARY/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end

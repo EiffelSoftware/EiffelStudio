@@ -12,7 +12,7 @@ default
 
 		-- Check all assertions
 
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
+	precompiled ("$ISE_LIBRARY/precomp/spec/$ISE_PLATFORM/base")
 
 		-- Use precompiled base library
 
@@ -26,44 +26,44 @@ cluster
 
 	-- EiffelBase
 
-	access:             "$ISE_EIFFEL/library/base/structures/access";
-	cursors:            "$ISE_EIFFEL/library/base/structures/cursors";
-	cursor_tree:        "$ISE_EIFFEL/library/base/structures/cursor_tree";
-	dispenser:          "$ISE_EIFFEL/library/base/structures/dispenser";
-	iteration:          "$ISE_EIFFEL/library/base/structures/iteration";
-	kernel:             "$ISE_EIFFEL/library/base/kernel";
-	list:               "$ISE_EIFFEL/library/base/structures/list";
-	--obsolete:           "$ISE_EIFFEL/library/base/structures/obsolete";
-	set:                "$ISE_EIFFEL/library/base/structures/set";
-	sort:               "$ISE_EIFFEL/library/base/structures/sort";
-	storage:            "$ISE_EIFFEL/library/base/structures/storage";
-	support:            "$ISE_EIFFEL/library/base/support";
-	table:              "$ISE_EIFFEL/library/base/structures/table";
-	traversing:         "$ISE_EIFFEL/library/base/structures/traversing";
-	tree:               "$ISE_EIFFEL/library/base/structures/tree";
+	access:             "$ISE_LIBRARY/library/base/structures/access";
+	cursors:            "$ISE_LIBRARY/library/base/structures/cursors";
+	cursor_tree:        "$ISE_LIBRARY/library/base/structures/cursor_tree";
+	dispenser:          "$ISE_LIBRARY/library/base/structures/dispenser";
+	iteration:          "$ISE_LIBRARY/library/base/structures/iteration";
+	kernel:             "$ISE_LIBRARY/library/base/kernel";
+	list:               "$ISE_LIBRARY/library/base/structures/list";
+	--obsolete:           "$ISE_LIBRARY/library/base/structures/obsolete";
+	set:                "$ISE_LIBRARY/library/base/structures/set";
+	sort:               "$ISE_LIBRARY/library/base/structures/sort";
+	storage:            "$ISE_LIBRARY/library/base/structures/storage";
+	support:            "$ISE_LIBRARY/library/base/support";
+	table:              "$ISE_LIBRARY/library/base/structures/table";
+	traversing:         "$ISE_LIBRARY/library/base/structures/traversing";
+	tree:               "$ISE_LIBRARY/library/base/structures/tree";
 
 
 	-- EiffelStore
 
-	estore_support:		"$ISE_EIFFEL/library/matisse/support";
-	estore_interface:	"$ISE_EIFFEL/library/matisse/interface";
-	estore_date:		"$ISE_EIFFEL/library/matisse/date_and_time";
-	estore_db_support:	"$ISE_EIFFEL/library/matisse/dbms/support";
+	estore_support:		"$ISE_LIBRARY/library/matisse/support";
+	estore_interface:	"$ISE_LIBRARY/library/matisse/interface";
+	estore_date:		"$ISE_LIBRARY/library/matisse/date_and_time";
+	estore_db_support:	"$ISE_LIBRARY/library/matisse/dbms/support";
 
 	-- Matisse for EiffelStore
 
-    matisse_interface : "$ISE_EIFFEL/library/matisse/dbms/oodbms/matisse/matisse_interface";
-    matisse_entities : "$ISE_EIFFEL/library/matisse/dbms/oodbms/matisse/matisse_entities";
-    matisse_entities_externals : "$ISE_EIFFEL/library/matisse/dbms/oodbms/matisse/matisse_entities/externals";
-    matisse_entities_streams : "$ISE_EIFFEL/library/matisse/dbms/oodbms/matisse/matisse_entities/streams";
+    matisse_interface : "$ISE_LIBRARY/library/matisse/dbms/oodbms/matisse/matisse_interface";
+    matisse_entities : "$ISE_LIBRARY/library/matisse/dbms/oodbms/matisse/matisse_entities";
+    matisse_entities_externals : "$ISE_LIBRARY/library/matisse/dbms/oodbms/matisse/matisse_entities/externals";
+    matisse_entities_streams : "$ISE_LIBRARY/library/matisse/dbms/oodbms/matisse/matisse_entities/streams";
 
 external
 
-	object:	"-L$(ISE_EIFFEL)/library/matisse/spec/$(ISE_PLATFORM)",
+	object:	"-L$(ISE_LIBRARY)/library/matisse/spec/$(ISE_PLATFORM)",
 		"-lsupport",
 		"-lsys_time",
-		"$(ISE_EIFFEL)/library/matisse/dbms/oodbms/matisse/Clib/mt_support.o",
-		"$(ISE_EIFFEL)/library/matisse/lib/csupport.o",
-		"$(ISE_EIFFEL)/library/matisse/lib/libmatisseDE.a"
+		"$(ISE_LIBRARY)/library/matisse/dbms/oodbms/matisse/Clib/mt_support.o",
+		"$(ISE_LIBRARY)/library/matisse/lib/csupport.o",
+		"$(ISE_LIBRARY)/library/matisse/lib/libmatisseDE.a"
 
 end

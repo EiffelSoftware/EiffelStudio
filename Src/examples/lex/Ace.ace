@@ -5,21 +5,21 @@ root
 	EIFFEL_SCAN (root_cluster): make
 
 default
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
+	precompiled ("$ISE_LIBRARY/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
-	root_cluster:		"$ISE_EIFFEL/examples/lex"
+	root_cluster:		"$ISE_LIBRARY/examples/lex"
 		-- If you intend to modify any of the examples,
-		-- copy all the files of $ISE_EIFFEL/examples/parse
+		-- copy all the files of $ISE_LIBRARY/examples/parse
 		-- into one of your directories, and replace
-		-- $ISE_EIFFEL/examples/parse by the name of that directory
+		-- $ISE_LIBRARY/examples/parse by the name of that directory
 		-- on the above line.
 
 		-- EiffelLex 
-	lex:			"$ISE_EIFFEL/library/lex"
+	lex:			"$ISE_LIBRARY/library/lex"
 
 		-- EiffelBase
-	all base:		"$ISE_EIFFEL/library/base"
+	all base:		"$ISE_LIBRARY/library/base"
 		exclude
 			"desc"; "table_eiffel3"
 		end

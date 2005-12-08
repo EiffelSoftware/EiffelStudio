@@ -6,17 +6,17 @@ root
 
 default
 	assertion (all)
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
+	precompiled ("$ISE_LIBRARY\precomp\spec\$ISE_PLATFORM\base")
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\time\calculator"
+	root_cluster:		"$ISE_LIBRARY\examples\time\calculator"
 
 
-	eiffel_time:		"$ISE_EIFFEL\library\time"
-	localizer:		"$ISE_EIFFEL\library\time\format"
-	language:		"$ISE_EIFFEL\library\time\format\english"
+	eiffel_time:		"$ISE_LIBRARY\library\time"
+	localizer:		"$ISE_LIBRARY\library\time\format"
+	language:		"$ISE_LIBRARY\library\time\format\english"
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"desc"; "table_eiffel3"; 
 		end

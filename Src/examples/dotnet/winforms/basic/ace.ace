@@ -16,15 +16,15 @@ default
 	console_application (no)
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\basic"
+	root_cluster:		"$ISE_LIBRARY\examples\dotnet\winforms\basic"
 
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		end
 
-	all base_net:		"$ISE_EIFFEL\library.net\base"
+	all base_net:		"$ISE_LIBRARY\library.net\base"
 
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"

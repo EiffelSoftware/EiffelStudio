@@ -19,7 +19,7 @@ cluster
 
 	root_cluster:				"."
 
-	all base:					"$ISE_EIFFEL\library\base"
+	all base:					"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"
 		end

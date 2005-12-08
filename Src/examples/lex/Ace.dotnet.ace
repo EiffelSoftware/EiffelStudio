@@ -33,17 +33,17 @@ default
 
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\examples\lex"
+	root_cluster:		"$ISE_LIBRARY\examples\lex"
 
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		end
 
-	all base_net:		"$ISE_EIFFEL\library.net\base"
+	all base_net:		"$ISE_LIBRARY\library.net\base"
 
-	lex:		"$ISE_EIFFEL/library/lex"
+	lex:		"$ISE_LIBRARY/library/lex"
 
 assembly
 	"mscorlib":	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"

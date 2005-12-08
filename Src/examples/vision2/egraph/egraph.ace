@@ -52,26 +52,26 @@ cluster
 	root_cluster:		"."
 
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"; "desc"; 
 		end
 
-	all wel:		"$ISE_EIFFEL\library\wel"
+	all wel:		"$ISE_LIBRARY\library\wel"
 
-	all vision2:		"$ISE_EIFFEL\library\vision2"
+	all vision2:		"$ISE_LIBRARY\library\vision2"
 		exclude
 			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; "gtk2"; 
 		end
 
-	all time:		"$ISE_EIFFEL\library\time"
+	all time:		"$ISE_LIBRARY\library\time"
 		exclude
 			"CVS"; "french"; "german"; 
 		end
 
-	all graph:		"$ISE_EIFFEL\library\graph"
+	all graph:		"$ISE_LIBRARY\library\graph"
 
-	all gobo:		"$ISE_EIFFEL\library\gobo\library"
+	all gobo:		"$ISE_LIBRARY\library\gobo\library"
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; "other"; 
 		end
@@ -83,13 +83,13 @@ cluster
 external
 
 	include_path:
-		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
-		"$(ISE_EIFFEL)\library\vision2\spec\include"
+		"$(ISE_LIBRARY)\library\wel\spec\windows\include",
+		"$(ISE_LIBRARY)\library\vision2\spec\include"
 
 	object:
-		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
+		"$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+		"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
+		"$(ISE_LIBRARY)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib"
 
 end

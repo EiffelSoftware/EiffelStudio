@@ -5,24 +5,24 @@ root
 	demo: "make"
 
 default
---	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision")
+--	precompiled ("$ISE_LIBRARY/precomp/spec/$ISE_PLATFORM/vision")
 	assertion (all);
 
 cluster
-	root_cluster: "$ISE_EIFFEL/examples/vision/test_all_widgets"
+	root_cluster: "$ISE_LIBRARY/examples/vision/test_all_widgets"
 
 		-- EiffelBase:
-	all base: 		"$ISE_EIFFEL/library/base"
+	all base: 		"$ISE_LIBRARY/library/base"
 		exclude
 			"table_eiffel3";
 			"desc"
 		end
 
 		-- MEL
-    all mel:                            "$ISE_EIFFEL/library/mel/";
+    all mel:                            "$ISE_LIBRARY/library/mel/";
                         
 		-- EiffelVision
-    vision:                 	"$ISE_EIFFEL/library/vision";
+    vision:                 	"$ISE_LIBRARY/library/vision";
 	vision_kernel (vision):         "$/oui/kernel";
 	vision_widgets (vision):        "$/oui/widgets";
 	vision_context_data (vision):	"$/oui/context_data";
@@ -56,10 +56,10 @@ cluster
 -- uncomment the `external' clause below. 
 
 external
-        include_path: "\$(ISE_EIFFEL)/library/mel/Clib";
+        include_path: "\$(ISE_LIBRARY)/library/mel/Clib";
         object:
-			"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
-                "$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
+			"$(ISE_LIBRARY)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
+                "$(ISE_LIBRARY)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
                 "-lXm -lXt -lX11 -lXext -lXp"
 
 end

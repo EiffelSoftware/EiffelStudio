@@ -22,7 +22,7 @@ all vision2(dev):				"$\vision2"
 		"gtk" "obsolete" "EIFGEN" "tmp"
 	end
 
-all base(dev):					"$ISE_EIFFEL\library\base"
+all base(dev):					"$ISE_LIBRARY\library\base"
 	exclude
 		"table_eiffel3"
 	end

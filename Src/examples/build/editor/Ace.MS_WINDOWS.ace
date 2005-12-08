@@ -8,12 +8,12 @@ root
 default
 
 	assertion (require);
---	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision");
+--	precompiled ("$ISE_LIBRARY\precomp\spec\$ISE_PLATFORM\vision");
 
 cluster
 
 -- EiffelBuild Library
-	build_library:			"$ISE_EIFFEL\build\library";
+	build_library:			"$ISE_LIBRARY\build\library";
 	eb_command(build_library):	"$\command";
 	eb_control(build_library):	"$\control";
 	eb_widget(build_library):	"$\widget";
@@ -32,7 +32,7 @@ cluster
 
 
 -- EiffelBase:
-	base:                           "$ISE_EIFFEL\library\base";
+	base:                           "$ISE_LIBRARY\library\base";
 	structures(base):               "$\structures";
 	
 	kernel(base):           	"$\kernel";
@@ -50,19 +50,19 @@ cluster
 	tree(structures):   		"$\tree";
 
 -- WEL
-	wel_constants:		"$ISE_EIFFEL\library\wel\consts";
-	wel_controls:		"$ISE_EIFFEL\library\wel\controls";
-	wel_gdi:		"$ISE_EIFFEL\library\wel\gdi";
-	wel_gdi_stocks: 	"$ISE_EIFFEL\library\wel\gdistock";
-	wel_messages:		"$ISE_EIFFEL\library\wel\messages";
-	wel_standard_dialogs:	"$ISE_EIFFEL\library\wel\stddlgs";
-	wel_structures: 	"$ISE_EIFFEL\library\wel\structs";
-	wel_support:		"$ISE_EIFFEL\library\wel\support";
-	wel_windows:		"$ISE_EIFFEL\library\wel\windows";
+	wel_constants:		"$ISE_LIBRARY\library\wel\consts";
+	wel_controls:		"$ISE_LIBRARY\library\wel\controls";
+	wel_gdi:		"$ISE_LIBRARY\library\wel\gdi";
+	wel_gdi_stocks: 	"$ISE_LIBRARY\library\wel\gdistock";
+	wel_messages:		"$ISE_LIBRARY\library\wel\messages";
+	wel_standard_dialogs:	"$ISE_LIBRARY\library\wel\stddlgs";
+	wel_structures: 	"$ISE_LIBRARY\library\wel\structs";
+	wel_support:		"$ISE_LIBRARY\library\wel\support";
+	wel_windows:		"$ISE_LIBRARY\library\wel\windows";
 
 
 -- Eiffelvision
-	vision:                        	"$ISE_EIFFEL\library\vision";
+	vision:                        	"$ISE_LIBRARY\library\vision";
 	vision_kernel (vision):   			"$\oui\kernel";
 	vision_widgets (vision):			"$\oui\widgets";
 	vision_context_data (vision):   	"$\oui\context_data";
@@ -87,7 +87,7 @@ cluster
 
 
 external
-	include_path:		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
-	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+	include_path:		"$(ISE_LIBRARY)\library\wel\spec\windows\include";
+	object: 		"$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end

@@ -42,7 +42,7 @@ cluster
 	root_cluster:		"D:\Projects\memory_analyzer_demo"
 
 
-	library base:		"$ISE_EIFFEL\library\base"
+	library base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"; "desc"; 
 		end

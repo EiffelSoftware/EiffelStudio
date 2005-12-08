@@ -19,26 +19,26 @@ cluster
 	root_cluster:	"."
 
 
-	all base:	"$ISE_EIFFEL/library/base"
+	all base:	"$ISE_LIBRARY/library/base"
 		exclude
 			"table"; "desc"; "CVS"; 
 		end
 
-	all vision2_interface:  "$ISE_EIFFEL/library/vision2/interface" 
+	all vision2_interface:  "$ISE_LIBRARY/library/vision2/interface" 
 
-	all vision2_implementation:	"$ISE_EIFFEL/library/vision2/implementation"
+	all vision2_implementation:	"$ISE_LIBRARY/library/vision2/implementation"
 		exclude
 			"mswin"; "components"; "obsolete"; 
 		end
 
-        all time:               "$ISE_EIFFEL/library/time"
+        all time:               "$ISE_LIBRARY/library/time"
                 exclude
                         "CVS"; "french"; "german";
                 end
 
-        all graph:              "$ISE_EIFFEL/library/graph"
+        all graph:              "$ISE_LIBRARY/library/graph"
 
-        all gobo:               "$ISE_EIFFEL/library/gobo/library"
+        all gobo:               "$ISE_LIBRARY/library/gobo/library"
                 exclude
                         "hact"; "se"; "ve"; "base"; "CVS"; "other";
                 end
@@ -49,11 +49,11 @@ cluster
 
 external
 	include_path:
-			"\$(ISE_EIFFEL)/library/event/Clib",
-			"\$(ISE_EIFFEL)/library/vision2/spec/include",
-			"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
+			"\$(ISE_LIBRARY)/library/event/Clib",
+			"\$(ISE_LIBRARY)/library/vision2/spec/include",
+			"\$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib `$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
 	object:
-			"`$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
+			"`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
 end
 --!----------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.

@@ -17,31 +17,31 @@ default
 
 cluster
 
-	root_cluster:		"$ISE_EIFFEL\examples\store\nesting";
-	estore_examples:	"$ISE_EIFFEL\examples\store\Utilities";
-	rdbms_handle:		"$ISE_EIFFEL\examples\store\Utilities\odbc";
+	root_cluster:		"$ISE_LIBRARY\examples\store\nesting";
+	estore_examples:	"$ISE_LIBRARY\examples\store\Utilities";
+	rdbms_handle:		"$ISE_LIBRARY\examples\store\Utilities\odbc";
 
 -- EiffelBase
 
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"table_eiffel3"; "desc"; "classic"; 
 		end
-	all base_net:		"$ISE_EIFFEL\library.net\base"
+	all base_net:		"$ISE_LIBRARY\library.net\base"
 
 -- EiffelStore
 
-	estore_support:		"$ISE_EIFFEL\library\store\support";
-	estore_interface:	"$ISE_EIFFEL\library\store\interface";
-	estore_odbc:		"$ISE_EIFFEL\library\store\dbms\rdbms\odbc";
-	estore_db_support:	"$ISE_EIFFEL\library\store\dbms\support";
-	all generation:		"$ISE_EIFFEL\library\store\generation";
+	estore_support:		"$ISE_LIBRARY\library\store\support";
+	estore_interface:	"$ISE_LIBRARY\library\store\interface";
+	estore_odbc:		"$ISE_LIBRARY\library\store\dbms\rdbms\odbc";
+	estore_db_support:	"$ISE_LIBRARY\library\store\dbms\support";
+	all generation:		"$ISE_LIBRARY\library\store\generation";
 
 -- EiffelTime
 
-	time:				"$ISE_EIFFEL\library\time";
-	time_format:		"$ISE_EIFFEL\library\time\format";
-	time_english:		"$ISE_EIFFEL\library\time\format\english";
+	time:				"$ISE_LIBRARY\library\time";
+	time_format:		"$ISE_LIBRARY\library\time\format";
+	time_english:		"$ISE_LIBRARY\library\time\format\english";
 
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
@@ -58,9 +58,9 @@ assembly
 
 external
 	include_path:
-		"$(ISE_EIFFEL)\library\store\dbms\rdbms\odbc\Clib"
+		"$(ISE_LIBRARY)\library\store\dbms\rdbms\odbc\Clib"
 
 	object:
-		"$(ISE_EIFFEL)\library\store\spec\$(ISE_C_COMPILER)\lib\il_odbc_store.lib",
+		"$(ISE_LIBRARY)\library\store\spec\$(ISE_C_COMPILER)\lib\il_odbc_store.lib",
 		"odbc32.lib" -- Specify the correct path
 end

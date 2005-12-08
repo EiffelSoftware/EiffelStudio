@@ -17,6 +17,116 @@ feature -- Basic operations
 			screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
 		end
 
+	draw_pixmap_by_colors (a_screen_x, a_screen_y: INTEGER; a_colors: ARRAYED_LIST [TUPLE]) is
+			-- Draw a pixmap on desktop by colors, black is discarded.
+		require
+			a_pixmap_not_void: a_colors /= Void
+		local
+			i, j, j_count, t_count: INTEGER
+			l_item: TUPLE
+			r, g, b: INTEGER
+			l_pixmap: EV_PIXMAP
+			l_width: INTEGER
+			l_color: EV_COLOR
+			l_edge_found, draw_back_end, l_white_found: BOOLEAN
+			k: INTEGER
+			first_draw_stop_point: ARRAYED_LIST [INTEGER]
+		do
+			if not a_colors.is_empty then
+				l_width := a_colors.first.count // 3
+				screen.set_copy_mode
+				l_pixmap := screen.sub_pixmap (create {EV_RECTANGLE}.make (a_screen_x, a_screen_y, l_width, a_colors.count))
+				from
+					j := 1
+					j_count := a_colors.count
+				until
+					j = j_count
+				loop
+					l_item := a_colors.i_th (j)
+					if l_item /= Void then
+							-- Draw forwards
+						from
+							i := 1
+							t_count := l_item.count // 3
+							l_edge_found := false
+							create first_draw_stop_point.make (10)
+						until
+							i > t_count
+						loop
+							r := l_item.integer_32_item (3 * (i - 1) + 1)
+							g := l_item.integer_32_item (3 * (i - 1) + 2)
+							b := l_item.integer_32_item (3 * (i - 1) + 3)
+							if r /= 255 or g /= 255 or b /= 255 then
+								create l_color.make_with_8_bit_rgb (r, g, b)
+								if not l_edge_found then
+									if l_color.lightness <= edge_lightness then
+										l_pixmap.set_copy_mode
+										l_pixmap.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
+										l_pixmap.draw_point (i - 1, j - 1)
+										l_edge_found := true
+										first_draw_stop_point.extend (i)
+									else
+										l_pixmap.set_and_mode
+	--										r := (r * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).red_8_bit * (1 - color_percentage)).floor
+	--										g := (g * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).green_8_bit * (1 - color_percentage)).floor
+	--										b := (b * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).blue_8_bit * (1 - color_percentage)).floor
+										l_pixmap.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
+										l_pixmap.draw_point (i - 1, j - 1)
+									end
+								end
+							else
+								l_edge_found := false
+							end
+							i := i + 1
+						end
+							-- Draw backwards
+						from
+							i := t_count
+							l_white_found := true
+							first_draw_stop_point.finish
+							l_edge_found := false
+						until
+							i < 1 or first_draw_stop_point.is_empty
+						loop
+							r := l_item.integer_32_item (3 * (i - 1) + 1)
+							g := l_item.integer_32_item (3 * (i - 1) + 2)
+							b := l_item.integer_32_item (3 * (i - 1) + 3)
+							if r /= 255 or g /= 255 or b /= 255 then
+								if first_draw_stop_point.off or first_draw_stop_point.item.is_equal (i) then
+									l_white_found := false
+									l_edge_found := false
+									if not first_draw_stop_point.off then
+										first_draw_stop_point.back
+									end
+								end
+								if l_white_found then
+									create l_color.make_with_8_bit_rgb (r, g, b)
+									if l_color.lightness <= edge_lightness or l_edge_found then
+										l_pixmap.set_copy_mode
+										l_pixmap.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
+										l_pixmap.draw_point (i - 1, j - 1)
+										l_edge_found := true
+									else
+										l_pixmap.set_and_mode
+--											r := (r * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).red_8_bit * (1 - color_percentage)).floor
+--											g := (g * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).green_8_bit * (1 - color_percentage)).floor
+--											b := (b * color_percentage + l_pixmap.implementation.raw_image_data.pixel (i - 1, j - 1).blue_8_bit * (1 - color_percentage)).floor
+										l_pixmap.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (r, g, b))
+										l_pixmap.draw_point (i - 1, j - 1)
+									end
+								end
+							else
+								l_white_found := true
+							end
+							i := i - 1
+						end
+					end
+					j := j + 1
+				end
+				screen.draw_pixmap (a_screen_x, a_screen_y, l_pixmap)
+			end
+		end
+
 	draw_shadow_rectangle (a_start_x, a_start_y, a_width, a_height: INTEGER) is
 			-- Draw a vertical line on the screen.
 		do
@@ -85,7 +195,7 @@ feature -- Basic operations
 		do
 			if internal_blue_pixmap_cell.item = Void then
 				create Result
-				Result.set_with_named_file ("D:\Projects\NewDocking\images\blue.png")
+				Result.set_with_named_file ("E:\tabbededitor_57dev\Eiffel\Ace\docking_images\blue.png")
 --				create l_grid
 --				Result.set_foreground_color (l_grid.focused_selection_color)
 --				Result.fill_rectangle (0, 0, Result.width, Result.height)
@@ -111,6 +221,9 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	edge_lightness: REAL is 0.65
+			-- Lightness to to identify edge of icon.
 
 	screen: EV_SCREEN is
 			-- Utility to draw things on screen.

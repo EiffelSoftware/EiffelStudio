@@ -244,6 +244,14 @@ feature -- Control
 			process_exited: has_exited
 		end
 
+	terminate_tree is
+			-- Terminate process tree starting from current launched process.
+		require
+			process_launched: launched
+			process_not_terminated: not force_terminated
+		deferred
+		end
+
 	wait_for_exit is
 			-- Wait until process has exited.
 		require
@@ -382,7 +390,6 @@ feature {NONE} -- Actions
 			if on_start_handler /= Void then
 				on_start_handler.call ([])
 			end
-
 		end
 
 	on_terminate is
@@ -419,6 +426,9 @@ feature {NONE} -- Actions
 		end
 
 feature -- Status report
+
+	id: INTEGER
+			-- Process identifier of last launched process.
 
 	launched: BOOLEAN
 			-- Has the process been launched?

@@ -19,6 +19,13 @@ inherit
 			startup_info
 		end
 
+	WEL_TOOLHELP
+		undefine
+			cwin_close_handle
+		end
+
+	THREAD_CONTROL
+
 create
 	make
 
@@ -132,8 +139,9 @@ feature -- Control
 
 			last_operation_successful := last_operation_successful
 			launched := last_operation_successful
-		rescue
-
+			if process_info /= Void then
+				process_id := process_info.process_id
+			end
 		end
 
 	wait_for_exit is
@@ -296,18 +304,69 @@ feature -- Control
 			-- Terminate independent process
 		local
 			a_boolean: BOOLEAN
-			terminated: BOOLEAN
+			l_terminated: BOOLEAN
 		do
 			close
 			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
 			if a_boolean then
 				if last_process_result = cwin_still_active then
-					terminated := cwin_terminate_process (process_info.process_handle, 0)
+					l_terminated := cwin_terminate_process (process_info.process_handle, 0)
 				end
 				cwin_close_handle (process_info.thread_handle)
 				cwin_close_handle (process_info.process_handle)
 			end
 			suspended := False
+		end
+
+	terminate_tree (prc_id: INTEGER; is_self: BOOLEAN): BOOLEAN is
+			-- Terminate all subprocesses whose parent process is indicated by id `prc_id'.
+			-- If `is_self' is True, terminate process `prc_id' after all its sub-processes
+			-- have been terminated.
+		local
+			child_prc_list: LIST [INTEGER]
+			bad_prc_list: LINKED_LIST [INTEGER]
+		do
+			child_prc_list := direct_subprocess_list (prc_id)
+			if child_prc_list /= Void and then not child_prc_list.is_empty then
+				create bad_prc_list.make
+				from
+
+				until
+					child_prc_list.is_empty
+				loop
+					from
+						child_prc_list.start
+					until
+						child_prc_list.after
+					loop
+						if not terminate_tree (child_prc_list.item, True) then
+							bad_prc_list.extend (child_prc_list.item)
+							child_prc_list.remove
+						else
+							child_prc_list.forth
+						end
+					end
+					child_prc_list := direct_subprocess_list (prc_id)
+					if child_prc_list /= Void and then not child_prc_list.is_empty then
+						from
+							child_prc_list.start
+						until
+							child_prc_list.after
+						loop
+							if bad_prc_list.has (child_prc_list.item) then
+								child_prc_list.remove
+							else
+								child_prc_list.forth
+							end
+						end
+					end
+				end
+			end
+			if is_self then
+				Result := terminate_process_by_id (prc_id)
+			else
+				Result := True
+			end
 		end
 
 	set_has_console (b: BOOLEAN) is
@@ -318,8 +377,10 @@ feature -- Control
 			has_console_set: has_console = b
 		end
 
-
 feature -- Status reporting
+
+	process_id: INTEGER
+			-- Process identifier of last launched process
 
 	input_direction: INTEGER
 			-- Direction of input of process
@@ -377,11 +438,10 @@ feature -- Status reporting
 			last_operation_successful := cwin_exit_code_process (process_info.process_handle,$last_process_result)
 		end
 
-
-
-
-
 feature {NONE} -- Implementation
+
+	sleep_time: INTEGER is 1000000
+			-- Time to sleep after terminate sub-process tree
 
 	input_pipe_needed: BOOLEAN
 			-- Is a pipe needed to write input from current process?
@@ -436,8 +496,6 @@ feature {NONE} -- Implementation
 	has_console: BOOLEAN
 			-- Will process be launched with a console?
 			-- Only has effects on Windows
-
-
 
 	startup_info: WEL_STARTUP_INFO is
 			-- Process startup information
@@ -551,6 +609,106 @@ feature {NONE} -- Implementation
 			"C inline use <windows.h>"
 		alias
 			"GetStdHandle (STD_ERROR_HANDLE)"
+		end
+
+	terminate_process_by_id (pid: INTEGER): BOOLEAN is
+			-- Terminate process indicated by identifier `pid'.
+		require
+			pid_not_negative: pid >= 0
+		local
+			handle: POINTER
+			l_boolean: BOOLEAN
+			l_last_result: INTEGER
+		do
+			handle := cwin_open_process (cwin_process_all_access, False, pid)
+			if handle /= default_pointer then
+				l_boolean := cwin_exit_code_process (handle, $l_last_result)
+				if l_boolean then
+					if l_last_result = cwin_still_active then
+						l_boolean := cwin_terminate_process (handle, 0)
+					end
+					cwin_close_handle (handle)
+				end
+				Result := True
+			else
+				Result := False
+			end
+		end
+
+--	subprocess_list (parent_pid: INTEGER): LINKED_LIST [INTEGER] is
+--			-- Sub process id tree of Process whose pid is `parent_pid'.
+--			-- If process structure is
+--			-- 1 -> 2 -> 3 -> 4
+--			--      |
+--			--      + -> 5
+--			--      |
+--			--      + -> 6
+--			-- then the list is : [1 2 3 5 6 4]
+--		local
+--			p_tbl: LINKED_LIST [ WEL_PROCESS_ID_PAIR ]
+--			cur_pid: INTEGER
+--			done: BOOLEAN
+--		do
+--			p_tbl := process_id_pair_list
+--			from
+--				p_tbl.start
+--			until
+--				p_tbl.after or done
+--			loop
+--				if p_tbl.item.id = parent_pid then
+--					p_tbl.remove
+--					done := True
+--				else
+--					p_tbl.forth
+--				end
+--			end
+--			if done then
+--				create Result.make
+--				Result.extend (parent_pid)
+--				from
+--					Result.start
+--				until
+--					Result.after
+--				loop
+--					cur_pid := Result.item
+--					from
+--						p_tbl.start
+--					until
+--						p_tbl.after
+--					loop
+--						if p_tbl.item.parent_id = cur_pid then
+--							Result.extend (p_tbl.item.id)
+--							p_tbl.remove
+--						else
+--							p_tbl.forth
+--						end
+--					end
+--					Result.forth
+--				end
+--			end
+--		end
+
+	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER] is
+			-- List of direct subprocess ids of process indicated by id `parent_id'.
+		local
+			p_tbl: LINKED_LIST [ WEL_PROCESS_ID_PAIR ]
+			cur_pid: INTEGER
+			done: BOOLEAN
+		do
+			p_tbl := process_id_pair_list
+			if p_tbl /= Void then
+				create {LINKED_LIST [INTEGER]}Result.make
+				from
+					p_tbl.start
+				until
+					p_tbl.after
+				loop
+					if p_tbl.item.parent_id = parent_id then
+						Result.extend (p_tbl.item.id)
+					end
+					p_tbl.forth
+				end
+			end
 		end
 
 end

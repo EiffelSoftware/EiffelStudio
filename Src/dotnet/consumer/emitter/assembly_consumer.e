@@ -12,11 +12,11 @@ class
 
 inherit
 	ASSEMBLY_CONSUMPTION_ERRORS
-		
+
 	REFLECTION
 
 	CALLBACK_INTERFACE
-		
+
 	COMMON_PATH
 		export
 			{NONE} all
@@ -26,7 +26,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	NAME_FORMATTER
 		export
 			{NONE} all
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			cache_writer := a_writer
 		ensure
 			cache_writer_set: cache_writer = a_writer
-		end		
+		end
 
 feature -- Basic Operations
 
@@ -74,9 +74,9 @@ feature -- Basic Operations
 			assembly_mapping.compare_objects
 			build_referenced_assemblies (ass)
 			prepare_consumed_types (ass)
-			serialize_consumed_types			
+			serialize_consumed_types
 		end
-	
+
 feature -- Access
 
 	file_name (i: INTEGER): STRING is
@@ -85,13 +85,13 @@ feature -- Access
 			i_is_positive: i > 0
 		do
 			create Result.make (10)
-			Result.append_integer (i) 
+			Result.append_integer (i)
 			Result.append_string (once ".info")
 		end
-		
+
 	destination_path: STRING
 			-- Path where XML files are generated
-			
+
 	cache_writer: CACHE_WRITER
 			-- Cache writer used to write consumed assembly information to cache
 
@@ -107,7 +107,7 @@ feature -- Element Settings
 		ensure
 			destination_path_set: destination_path = path
 		end
-		
+
 feature {NONE} -- Implementation
 
 	last_index: INTEGER
@@ -282,12 +282,12 @@ feature {NONE} -- Implementation
 			l_file_position: INTEGER
 		do
 			create_consumed_assembly_folders
-			
+
 			create serializer
-			create types.make (type_consumers.count)			
+			create types.make (type_consumers.count)
 			l_string_tuple := string_tuple
 			l_empty_tuple := empty_tuple
-			
+
 			from
 				type_consumers.start
 			until
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 						-- Notice the problem on this specific type and try the next type.
 					if type_consumer.consumed_type.dotnet_name /= Void then
 						set_error (Type_initialization_error, "One of the features of " + type_consumer.consumed_type.dotnet_name +" is invalid.")
-					else	
+					else
 						set_error (Type_initialization_error, "")
 					end
 				else
@@ -309,7 +309,7 @@ feature {NONE} -- Implementation
 					parent := type.parent
 					if parent /= Void then
 						l_is_value_type := parent.name.is_equal ("System.ValueType")
-						l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")					
+						l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")
 					end
 						-- do not add base types in types.xml
 					if not is_base_type (type.dotnet_name) then
@@ -339,26 +339,25 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-			end		
+			end
 			create mapping.make (assembly_ids)
 			serializer.serialize (types, destination_path + Assembly_types_file_name, False)
 			serializer.serialize (mapping, destination_path + Assembly_mapping_file_name, False)
 		end
-		
+
 	create_consumed_assembly_folders is
 			-- creates consumed assembly folders
 		require
 			non_void_destination_path: destination_path /= Void
 			valid_destination_path: not destination_path.is_empty
-			destination_path_not_exists: not (create {RAW_FILE}.make (destination_path)).exists
 		local
 			l_dir: DIRECTORY
 		do
 			create l_dir.make (destination_path)
 			if not l_dir.exists then
-				l_dir.create_dir	
+				l_dir.create_dir
 			end
-		end		
+		end
 
 	type_consumers: HASH_TABLE [TYPE_CONSUMER, STRING]
 			-- Assembly type consumers
@@ -410,5 +409,5 @@ feature {NONE} -- Constants
 			Result.put ("EiffelSoftware.Runtime.ANY", 15)
 			Result.compare_objects
 		end
-		
+
 end -- class ASSEMBLY_CONSUMER

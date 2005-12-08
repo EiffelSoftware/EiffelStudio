@@ -196,6 +196,28 @@ feature -- Access
 	is_used_as_expanded: BOOLEAN
 			-- Is `Current' used as an expanded class ?
 
+	is_special: BOOLEAN is
+			-- Is class SPECIAL?
+		do
+			-- Do nothing
+		end
+
+	is_tuple: BOOLEAN is
+			-- Is class TUPLE?
+		do
+
+		end
+
+	is_typed_pointer: BOOLEAN is
+			-- Is class TYPED_POINTER?
+		do
+		end
+
+	is_native_array: BOOLEAN is
+			-- Is class a NATIVE_ARRAY class?
+		do
+		end
+
 	conformance_table: PACKED_BOOLEANS
 			-- Conformance table of the class: once a class has changed
 			-- it must be reprocessed and the conformance table of the
@@ -3264,8 +3286,17 @@ end
 			-- generic classes.
 		require
 			no_generic: not is_generic
+		local
+			data: CL_TYPE_I
 		do
-			update_types (actual_type.type_i)
+			data := actual_type.type_i
+			register_type (data).do_nothing
+			if data.is_true_expanded and then not data.is_external then
+					-- Process reference counterpart.
+				data := data.duplicate
+				data.set_reference_mark
+				register_type (data).do_nothing
+			end
 		end
 
 	update_types (data: CL_TYPE_I) is
@@ -3278,6 +3309,7 @@ end
 			filter: CL_TYPE_I
 			new_class_type: CLASS_TYPE
 			l_cursor: CURSOR
+			c: CL_TYPE_I
 		do
 			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
@@ -3288,29 +3320,13 @@ debug ("GENERICITY")
 	io.error.put_string (name)
 	data.trace
 end
-				if not types.has_type (data) then
-					-- Found a new type for the class
-debug ("GENERICITY")
-	io.error.put_string ("new type%N")
-end
-					new_class_type := new_type (data)
+				new_class_type := register_type (data)
 
-						-- If the $ operator is used in the class,
-						-- an encapsulation of the feature must be generated
-
-					if System.address_table.class_has_dollar_operator (class_id) then
-						System.set_freeze
-					end
-
-						-- Mark the class `changed4' because there is a new
-						-- type
-					changed4 := True
-					Degree_2.insert_new_class (Current)
-						-- Insertion of the new class type
-					types.extend (new_class_type)
-					System.insert_class_type (new_class_type)
-				else
-					new_class_type := types.found_item
+				if data.is_true_expanded and then not data.is_external then
+						-- Process reference counterpart.
+					c := data.duplicate
+					c.set_reference_mark
+					update_types (c)
 				end
 
 					-- Propagation along the filters since we have a new type
@@ -3343,6 +3359,8 @@ end
 			end
 		end
 
+feature {NONE} -- Incrementality
+
 	derivations: DERIVATIONS is
 		once
 			Result := instantiator.derivations
@@ -3350,17 +3368,51 @@ end
 			derivations_not_void: Result /= Void
 		end
 
+	register_type (data: CL_TYPE_I): CLASS_TYPE is
+			-- Ensure that `data' has an associated class type by creating
+			-- a new class type descriptor if it is not already created;
+			-- return the associated class type.
+		require
+			data_not_void: data /= Void
+		do
+			if types.has_type (data) then
+				Result := types.found_item
+			else
+					-- Found a new type for the class
+debug ("GENERICITY")
+	io.error.put_string ("new type%N")
+end
+				Result := new_type (normalized_type_i (data))
+					-- If the $ operator is used in the class,
+					-- an encapsulation of the feature must be generated
+				if System.address_table.class_has_dollar_operator (class_id) then
+					System.set_freeze
+				end
+					-- Mark the class `changed4' because there is a new type
+				changed4 := True
+				Degree_2.insert_new_class (Current)
+					-- Insertion of the new class type
+				types.extend (Result)
+				System.insert_class_type (Result)
+			end
+		ensure
+			result_not_void: Result /= Void
+			data_is_registered: types.has_type (data)
+		end
+
+	normalized_type_i (data: CL_TYPE_I): CL_TYPE_I is
+			-- Class type `data' normalized in terms of the current class.
+		require
+			data_not_void: data /= Void
+		do
+			Result := data
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	new_type (data: CL_TYPE_I): CLASS_TYPE is
 			-- New class type for current class
-		local
-			c: CL_TYPE_I
 		do
-			if data.is_true_expanded and then not data.is_external then
-					-- Add reference counterpart.
-				c := data.duplicate
-				c.set_reference_mark
-				update_types (c)
-			end
 			create Result.make (data)
 			if has_externals then
 					-- When a new generic derivation of a class that
@@ -3376,28 +3428,6 @@ end
 			end
 		ensure
 			new_type_not_void: Result /= Void
-		end
-
-	is_special: BOOLEAN is
-			-- Is class SPECIAL?
-		do
-			-- Do nothing
-		end
-
-	is_tuple: BOOLEAN is
-			-- Is class TUPLE?
-		do
-
-		end
-
-	is_typed_pointer: BOOLEAN is
-			-- Is class TYPED_POINTER?
-		do
-		end
-
-	is_native_array: BOOLEAN is
-			-- Is class a NATIVE_ARRAY class?
-		do
 		end
 
 feature -- Meta-type

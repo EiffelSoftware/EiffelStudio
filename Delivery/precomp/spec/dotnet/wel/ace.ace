@@ -15,20 +15,20 @@ default
  	check_vape (yes)
  
 cluster 
- 	all base_net:		"$ISE_EIFFEL\library.net\base"
+ 	all base_net:		"$ISE_LIBRARY\library.net\base"
  
- 	all base:		"$ISE_EIFFEL\library\base"
+ 	all base:		"$ISE_LIBRARY\library\base"
  		exclude
  			"classic";
  		end
  
 		-- WEL
-	all wel:		"$ISE_EIFFEL\library\wel"
+	all wel:		"$ISE_LIBRARY\library\wel"
 		exclude
 			"spec"; "clib"; "classic";
 		end
 
-	all wel_net:		"$ISE_EIFFEL\library.net\wel"
+	all wel_net:		"$ISE_LIBRARY\library.net\wel"
 
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"
@@ -104,7 +104,7 @@ assembly
 		end
 
 external
-	include_path:		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
-	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib"
+	include_path:		"$(ISE_LIBRARY)\library\wel\spec\windows\include";
+	object: 		"$(ISE_LIBRARY)\library\wel\spec\$(ISE_C_COMPILER)\lib\ilwel.lib"
 
 end -- system wel

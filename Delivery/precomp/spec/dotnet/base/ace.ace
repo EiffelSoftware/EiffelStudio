@@ -15,12 +15,12 @@ default
 	check_vape (yes)
  
 cluster 
- 	all base:		"$ISE_EIFFEL\library\base"
+ 	all base:		"$ISE_LIBRARY\library\base"
  		exclude
  			"classic";
  		end
 
- 	all base_net:		"$ISE_EIFFEL\library.net\base"
+ 	all base_net:		"$ISE_LIBRARY\library.net\base"
  
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"

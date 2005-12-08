@@ -30,31 +30,31 @@ cluster
 	src (root_cluster): "$\src"
 
 		-- EiffelBase
-	all base:				"$ISE_EIFFEL\library\base"
+	all base:				"$ISE_LIBRARY\library\base"
 
 		-- EiffelVision2
-	all vision2: 			"$ISE_EIFFEL\library\vision2"
+	all vision2: 			"$ISE_LIBRARY\library\vision2"
 		exclude
 			"gtk"
 		end
 
 		-- WEL library
-	all wel: 				"$ISE_EIFFEL\library\wel"
+	all wel: 				"$ISE_LIBRARY\library\wel"
 
 		-- Wizard library
-	all wizard_library:		"$ISE_EIFFEL\library\wizard"
+	all wizard_library:		"$ISE_LIBRARY\library\wizard"
 		exclude
 			"unix"
 		end
 
 external
 	include_path:	
-			"$ISE_EIFFEL\library\wel\spec\windows\include",
-			"$ISE_EIFFEL\library\vision2\spec\include"
+			"$ISE_LIBRARY\library\wel\spec\windows\include",
+			"$ISE_LIBRARY\library\vision2\spec\include"
 
 	object:
-			"$ISE_EIFFEL\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-			"$ISE_EIFFEL\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-			"$(ISE_EIFFEL)\C_library\zlib\zlib.lib",
-			"$(ISE_EIFFEL)\C_library\libpng\libpng.lib"
+			"$ISE_LIBRARY\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+			"$ISE_LIBRARY\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
+			"$(ISE_LIBRARY)\C_library\zlib\zlib.lib",
+			"$(ISE_LIBRARY)\C_library\libpng\libpng.lib"
 end

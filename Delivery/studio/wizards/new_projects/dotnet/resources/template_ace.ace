@@ -20,13 +20,13 @@ cluster
 	root_cluster: "<FL_LOCATION>"
 
 		-- Eiffel base
-	all base:		"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_LIBRARY\library\base"
 		exclude
 			"classic";
 		end
 
 		-- EiffelBase.NET
-	all base_net: "$ISE_EIFFEL\library.net\base"
+	all base_net: "$ISE_LIBRARY\library.net\base"
 
 assembly
 	mscorlib:	"$ISE_DOTNET_FRAMEWORK\mscorlib.dll"

@@ -25,18 +25,18 @@ default
 	trace(no)
 
 cluster
-	all base:	"$ISE_EIFFEL/library/base"
+	all base:	"$ISE_LIBRARY/library/base"
 
-	all vision2:	"$ISE_EIFFEL/library/vision2"
+	all vision2:	"$ISE_LIBRARY/library/vision2"
 		exclude
 			"mswin"
 		end
 
 external
 	include_path:
-			"\$(ISE_EIFFEL)/library/event/Clib",
-			"\$(ISE_EIFFEL)/library/vision2/spec/include",
-			"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `$ISE_EIFFEL/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
+			"\$(ISE_LIBRARY)/library/event/Clib",
+			"\$(ISE_LIBRARY)/library/vision2/spec/include",
+			"\$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib `$ISE_LIBRARY/library/vision2/implementation/gtk/Clib/vision2-gtk-config --include_path`"
 	object:
-			"`$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
+			"`$(ISE_LIBRARY)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --object`"
 end

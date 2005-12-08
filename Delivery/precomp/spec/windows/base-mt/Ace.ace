@@ -11,9 +11,9 @@ default
 cluster 
 
 		-- EiffelBase
-	all base: 		"$ISE_EIFFEL\library\base"
+	all base: 		"$ISE_LIBRARY\library\base"
 		
 		-- EiffelThread
-	all thread:			"$ISE_EIFFEL\library\thread"
+	all thread:			"$ISE_LIBRARY\library\thread"
 
 end -- system base

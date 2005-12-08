@@ -165,14 +165,14 @@ feature {NONE} -- For user docking
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
-			window.title_bar.enable_focus_color
+			window.set_focus_color (True)
 		end
 
 	on_focus_out is
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE}
-			window.title_bar.disable_focus_color
+			window.set_focus_color (False)
 		end
 
 feature -- Query

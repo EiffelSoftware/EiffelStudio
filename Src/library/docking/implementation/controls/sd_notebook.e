@@ -44,16 +44,30 @@ feature {NONE}  -- Initlization
 			internal_tab_box.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.auto_hide_panel_lightness))
 			extend_vertical_box (internal_tab_box)
 			disable_item_expand (internal_tab_box)
-
+	
+			create {EV_HORIZONTAL_BOX} internal_border_box
+			internal_border_box.set_border_width (internal_shared.focuse_border_width)
+			extend_vertical_box (internal_border_box)
+			
 			create internal_cell
-			extend_vertical_box (internal_cell)
+			internal_border_box.extend (internal_cell)
 			
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 		end
 
 feature -- Command
-
+	
+	set_focus_color (a_focus: BOOLEAN) is
+			-- Set border focus color base on `a_focus'.
+		do
+			if a_focus then
+				internal_border_box.set_background_color (internal_shared.focused_color)
+			else
+				internal_border_box.set_background_color (internal_shared.non_focused_color)
+			end
+		end
+		
 	set_item_text (a_widget: EV_WIDGET; a_text: STRING) is
 			-- Assign `a_text' to label of `an_item'.
 		require
@@ -351,9 +365,12 @@ feature {NONE}  -- Implementation
 		
 	internal_tab_box: EV_HORIZONTAL_BOX
 			-- Horizontal box which hold tabs and mini tool bar and close buttons..
-
+	
 	internal_cell: EV_CELL
 			-- Cell which hold notebook selected content.
+	
+	internal_border_box: EV_BOX
+			-- Box used for highlight border.
 	
 	internal_shared: SD_SHARED
 			-- All singletons.

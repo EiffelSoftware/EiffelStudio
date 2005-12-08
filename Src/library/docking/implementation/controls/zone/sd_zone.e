@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that used to hold SD_CONTENT's user widgets."
+	description: "Objects that hold SD_CONTENT's user widgets."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -207,16 +207,6 @@ feature {NONE} -- Implementation
 					
 	internal_shared: SD_SHARED
 			-- All singletons.
-
-feature {SD_HOT_ZONE} -- Redraw
-
-	invalidate is
-			-- Redraw current.
-		local
-
-		do
-
-		end
 
 invariant
 

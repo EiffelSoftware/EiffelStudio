@@ -1949,7 +1949,7 @@ rt_private void widr_type_generics (int16 dtype)
 				}
 #endif
 				widr_multi_int32 (patterns, nb_gen);
-				break;	// Jump out of loop
+				break;	/* Jump out of loop */
 			}
 		}
 	}

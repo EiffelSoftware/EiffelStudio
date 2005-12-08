@@ -62,7 +62,7 @@ feature {NONE} -- Initlization
 			internal_title_bar.set_show_stick (False)
 			pointer_button_release_actions.extend (agent on_pointer_button_release)
 			pointer_motion_actions.extend (agent on_pointer_motion)
-			create internal_inner_container.make
+			create internal_inner_container.make (internal_docking_manager)
 			internal_vertical_box.extend (internal_inner_container)
 			internal_inner_container.set_parent_floating_zone (Current)
 			accelerators.append (internal_floating_state.docking_manager.golbal_accelerators)

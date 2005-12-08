@@ -157,11 +157,11 @@ feature -- Set
 	set_focus is
 			-- Set focus to `Current'.
 		do
-			if internal_focus_in_actions /= Void and internal_shared.last_focus_content /= Current then
+			if internal_focus_in_actions /= Void and docking_manager.last_focus_content /= Current then
 				internal_focus_in_actions.call ([])
 				if state.zone /= Void then
 					state.zone.on_focus_in (Current)
-					internal_shared.set_last_focus_content (Current)
+					docking_manager.set_last_focus_content (Current)
 				end
 			end
 		end

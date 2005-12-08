@@ -13,11 +13,16 @@ create
 	make
 
 feature {NONE} -- Initlization
-	make is
+	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			default_create
+			internal_docking_manager := a_docking_manager
 			create internal_shared
+		ensure
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Command
@@ -142,7 +147,7 @@ feature {NONE} -- Implementation
 			
 			l_zone ?= a_widget
 			if l_zone /= Void then
-				if internal_shared.last_focus_content /= Void and then l_zone.has (internal_shared.last_focus_content) then
+				if internal_docking_manager.last_focus_content /= Void and then l_zone.has (internal_docking_manager.last_focus_content) then
 					l_zone.set_title_bar_focus_color (True)
 				else
 					l_zone.set_title_bar_focus_color (False)
@@ -321,4 +326,6 @@ feature {NONE} -- Implementation attributes
 	internal_shared: SD_SHARED
 			-- All singletons.
 	
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager which Current belong to.
 end

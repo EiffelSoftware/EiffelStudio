@@ -579,7 +579,7 @@ feature {NONE} -- Implementation
 			internal_il_type_name_not_empty: not Result.is_empty
 		end
 
-feature {CL_TYPE_A} -- Implementation: class type declaration marks
+feature {CL_TYPE_A, TUPLE_CLASS_B} -- Implementation: class type declaration marks
 
 	declaration_mark: NATURAL_8
 			-- Declaration mark associated with a class type (if any)

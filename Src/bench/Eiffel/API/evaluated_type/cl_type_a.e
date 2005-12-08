@@ -507,7 +507,7 @@ feature -- Debugging
 			end
 		end
 
-feature {CL_TYPE_A, CL_TYPE_I} -- Implementation: class type declaration marks
+feature {CL_TYPE_A, CL_TYPE_I, TUPLE_CLASS_B} -- Implementation: class type declaration marks
 
 	declaration_mark: NATURAL_8
 			-- Declaration mark associated with a class type (if any)

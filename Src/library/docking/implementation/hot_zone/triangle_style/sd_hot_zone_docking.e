@@ -96,7 +96,6 @@ feature {NONE} -- Implementation functions.
 		require
 			a_rect_not_void: a_rect /= Void
 		local
-			x, y: INTEGER
 			l_shared: like internal_shared
 			l_icons: SD_ICONS_SINGLETON
 			l_rect: like internal_rectangle
@@ -104,8 +103,6 @@ feature {NONE} -- Implementation functions.
 			l_rect := a_rect
 			l_shared := internal_shared
 			l_icons := l_shared.icons
-			x := l_rect.left + l_rect.width // 2 - l_icons.arrow_indicator_center.width // 2
-			y := l_rect.top + l_rect.height // 2 - l_icons.arrow_indicator_center.height // 2
 
 			if a_rect.has_x_y (a_screen_x, a_screen_y) then
 				if a_rect = internal_rectangle_left then
@@ -122,7 +119,6 @@ feature {NONE} -- Implementation functions.
 						internal_pointer_last_in_area := internal_pointer_in_left_area
 					end
 					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_left_lighten)
-
 				elseif a_rect = internal_rectangle_right then
 					-- -
 --					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
@@ -137,7 +133,6 @@ feature {NONE} -- Implementation functions.
 						internal_pointer_last_in_area := internal_pointer_in_right_area
 					end
 					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_right_lighten)
-
 				elseif a_rect = internal_rectangle_top then
 					-- |
 --					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
@@ -152,7 +147,6 @@ feature {NONE} -- Implementation functions.
 						internal_pointer_last_in_area := internal_pointer_in_top_area
 					end
 					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_up_lighten)
-
 				elseif a_rect = internal_rectangle_bottom then
 					-- |
 --					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
@@ -195,10 +189,11 @@ feature {NONE} -- Implementation functions.
 			draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors)
 		end
 
-	draw_drag_window_indicator_by_colors (a_colors: ARRAYED_LIST [TUPLE]) is
+	draw_drag_window_indicator_by_colors (a_colors: SPECIAL [TUPLE]) is
 			-- Draw dragged window feedback which represent window position.
 		require
 			a_colors_attached: a_colors /= Void
+			a_colors_not_empty: a_colors.count /= 0
 		local
 			x, y: INTEGER
 			l_shared: like internal_shared
@@ -206,7 +201,7 @@ feature {NONE} -- Implementation functions.
 		do
 			l_shared := internal_shared
 			l_rect := internal_rectangle
-			x := l_rect.left + l_rect.width // 2 - a_colors.count // 2
+			x := l_rect.left + l_rect.width // 2 - a_colors.item (0).count // 3 // 2
 			y := l_rect.top + l_rect.height // 2 - a_colors.count // 2
 			l_shared.feedback.draw_pixmap_by_colors (x, y, a_colors)
 		end

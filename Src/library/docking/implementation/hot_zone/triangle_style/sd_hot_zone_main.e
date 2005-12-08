@@ -25,19 +25,33 @@ feature {NONE} -- Initlization
 		local
 			l_area: EV_RECTANGLE
 			l_up_width, l_left_width, l_right_width, l_bottom_width: INTEGER
+			l_up_height, l_left_height, l_right_height, l_bottom_height: INTEGER
 		do
 			internal_docking_manager := a_docking_manager
 			internal_mediator := a_docker_mediator
 			create internal_shared
+			check
+				internal_shared.icons.arrow_indicator_up_colors.count /= 0
+				internal_shared.icons.arrow_indicator_down_colors.count /= 0
+				internal_shared.icons.arrow_indicator_left_colors.count /= 0
+				internal_shared.icons.arrow_indicator_right_colors.count /= 0
+			end
+
 			l_area := internal_docking_manager.container_rectangle_screen
-			l_up_width := internal_shared.icons.arrow_indicator_up_colors.count
-			l_bottom_width := internal_shared.icons.arrow_indicator_down_colors.count
-			l_left_width := internal_shared.icons.arrow_indicator_left_colors.count
-			l_right_width := internal_shared.icons.arrow_indicator_right_colors.count
-			create top_rectangle.make (l_area.left + l_area.width // 2 - l_up_width // 2, l_area.top, l_up_width, l_up_width)
-			create bottom_rectangle.make (l_area.left + l_area.width // 2 - l_bottom_width // 2, l_area.bottom - l_bottom_width, l_bottom_width, l_bottom_width)
-			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - l_left_width // 2, l_left_width, l_left_width)
-			create right_rectangle.make (l_area.right - l_right_width, l_area.top + l_area.height // 2 - l_right_width // 2, l_right_width, l_right_width)
+			l_up_width := internal_shared.icons.arrow_indicator_up_colors.item (0).count // 3
+			l_bottom_width := internal_shared.icons.arrow_indicator_down_colors.item (0).count // 3
+			l_left_width := internal_shared.icons.arrow_indicator_left_colors.item (0).count // 3
+			l_right_width := internal_shared.icons.arrow_indicator_right_colors.item (0).count // 3
+
+			l_up_height := internal_shared.icons.arrow_indicator_up_colors.count
+			l_bottom_height := internal_shared.icons.arrow_indicator_down_colors.count
+			l_left_height := internal_shared.icons.arrow_indicator_left_colors.count
+			l_right_height := internal_shared.icons.arrow_indicator_right_colors.count
+
+			create top_rectangle.make (l_area.left + l_area.width // 2 - l_up_width // 2, l_area.top, l_up_width, l_up_height)
+			create bottom_rectangle.make (l_area.left + l_area.width // 2 - l_bottom_width // 2, l_area.bottom - l_bottom_height, l_bottom_width, l_bottom_height)
+			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - l_left_height // 2, l_left_width, l_left_height)
+			create right_rectangle.make (l_area.right - l_right_width, l_area.top + l_area.height // 2 - l_right_height // 2, l_right_width, l_right_height)
 			type := {SD_SHARED}.type_normal
 		ensure
 			set: a_docker_mediator = internal_mediator
@@ -121,7 +135,7 @@ feature  -- Redefine
 
 feature {NONE} -- Implementation
 
-	update_indicator_area (a_rect: like top_rectangle; a_pixmap: ARRAYED_LIST [TUPLE]): BOOLEAN is
+	update_indicator_area (a_rect: like top_rectangle; a_pixmap: SPECIAL [TUPLE]): BOOLEAN is
 			-- Update feedback area when pointer in `a_rect'.
 		local
 			l_rect: EV_RECTANGLE

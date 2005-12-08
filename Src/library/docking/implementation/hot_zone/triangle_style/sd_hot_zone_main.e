@@ -24,15 +24,20 @@ feature {NONE} -- Initlization
 			a_docking_manager_not_void: a_docking_manager /= Void
 		local
 			l_area: EV_RECTANGLE
+			l_up_width, l_left_width, l_right_width, l_bottom_width: INTEGER
 		do
 			internal_docking_manager := a_docking_manager
 			internal_mediator := a_docker_mediator
 			create internal_shared
 			l_area := internal_docking_manager.container_rectangle_screen
-			create top_rectangle.make (l_area.left + l_area.width // 2 - internal_shared.icons.arrow_indicator_up.width // 2, l_area.top, internal_shared.icons.arrow_indicator_up.width, internal_shared.icons.arrow_indicator_up.height)
-			create bottom_rectangle.make (l_area.left + l_area.width // 2 - internal_shared.icons.arrow_indicator_down.width // 2, l_area.bottom - internal_shared.icons.arrow_indicator_down.height, internal_shared.icons.arrow_indicator_down.width, internal_shared.icons.arrow_indicator_down.height)
-			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - internal_shared.icons.arrow_indicator_left.height // 2, internal_shared.icons.arrow_indicator_left.width, internal_shared.icons.arrow_indicator_left.height)
-			create right_rectangle.make (l_area.right - internal_shared.icons.arrow_indicator_right.width, l_area.top + l_area.height // 2 - internal_shared.icons.arrow_indicator_right.height // 2, internal_shared.icons.arrow_indicator_right.width, internal_shared.icons.arrow_indicator_right.height)
+			l_up_width := internal_shared.icons.arrow_indicator_up_colors.count
+			l_bottom_width := internal_shared.icons.arrow_indicator_down_colors.count
+			l_left_width := internal_shared.icons.arrow_indicator_left_colors.count
+			l_right_width := internal_shared.icons.arrow_indicator_right_colors.count
+			create top_rectangle.make (l_area.left + l_area.width // 2 - l_up_width // 2, l_area.top, l_up_width, l_up_width)
+			create bottom_rectangle.make (l_area.left + l_area.width // 2 - l_bottom_width // 2, l_area.bottom - l_bottom_width, l_bottom_width, l_bottom_width)
+			create left_rectangle.make (l_area.left, l_area.top + l_area.height // 2 - l_left_width // 2, l_left_width, l_left_width)
+			create right_rectangle.make (l_area.right - l_right_width, l_area.top + l_area.height // 2 - l_right_width // 2, l_right_width, l_right_width)
 			type := {SD_SHARED}.type_normal
 		ensure
 			set: a_docker_mediator = internal_mediator
@@ -88,15 +93,15 @@ feature  -- Redefine
 			-- Draw top one.
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
-			l_drawn := update_indicator_area (top_rectangle, internal_shared.icons.arrow_indicator_up)
+			l_drawn := update_indicator_area (top_rectangle, internal_shared.icons.arrow_indicator_up_colors)
 			if not l_drawn then
-				l_drawn := update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down)
+				l_drawn := update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down_colors)
 			end
 			if not l_drawn then
-				l_drawn := update_indicator_area (left_rectangle, internal_shared.icons.arrow_indicator_left)
+				l_drawn := update_indicator_area (left_rectangle, internal_shared.icons.arrow_indicator_left_colors)
 			end
 			if not l_drawn then
-				l_drawn := update_indicator_area (right_rectangle, internal_shared.icons.arrow_indicator_right)
+				l_drawn := update_indicator_area (right_rectangle, internal_shared.icons.arrow_indicator_right_colors)
 			end
 			if not l_drawn then
 				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - a_mediator.offset_x, a_screen_y - a_mediator.offset_y, internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
@@ -116,7 +121,7 @@ feature  -- Redefine
 
 feature {NONE} -- Implementation
 
-	update_indicator_area (a_rect: like top_rectangle; a_pixmap: EV_PIXMAP): BOOLEAN is
+	update_indicator_area (a_rect: like top_rectangle; a_pixmap: ARRAYED_LIST [TUPLE]): BOOLEAN is
 			-- Update feedback area when pointer in `a_rect'.
 		local
 			l_rect: EV_RECTANGLE
@@ -125,68 +130,68 @@ feature {NONE} -- Implementation
 				l_rect := internal_docking_manager.container_rectangle_screen
 
 				if a_rect = top_rectangle then
-					-- |
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
-					--  -
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
-					--   |
-					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
+--					-- |
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
+--					--  -
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
+--					--   |
+--					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
 
 					if internal_pointer_last_in_area /= internal_pointer_in_top_area then
 						internal_shared.feedback.clear_screen
 						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
 						internal_pointer_last_in_area := internal_pointer_in_top_area
 					end
-
+					internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, internal_shared.icons.arrow_indicator_up_colors_lighten)
 					Result := True
 				elseif a_rect = bottom_rectangle then
-					-- |
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
-					--  _
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.bottom, a_rect.right, a_rect.bottom)
-					--   |
-					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
+--					-- |
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
+--					--  _
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.bottom, a_rect.right, a_rect.bottom)
+--					--   |
+--					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
 
 					if internal_pointer_last_in_area /= internal_pointer_in_bottom_area then
 						internal_shared.feedback.clear_screen
 						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.bottom - (l_rect.height * internal_shared.default_docking_height_rate).ceiling, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
 						internal_pointer_last_in_area := internal_pointer_in_bottom_area
 					end
-
+					internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, internal_shared.icons.arrow_indicator_down_colors_lighten)
 					Result := True
 				elseif a_rect = left_rectangle then
-					--  -
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
-					-- |
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.top + a_rect.height)
-					--  _
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
+--					--  -
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
+--					-- |
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.top + a_rect.height)
+--					--  _
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
 
 					if internal_pointer_last_in_area /= internal_pointer_in_left_area then
 						internal_shared.feedback.clear_screen
 						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
 						internal_pointer_last_in_area := internal_pointer_in_left_area
 					end
-
+					internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, internal_shared.icons.arrow_indicator_left_colors_lighten)
 					Result := True
 				elseif a_rect = right_rectangle then
-					-- -
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
-					--  |
-					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.top + a_rect.height)
-					-- _
-					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
+--					-- -
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
+--					--  |
+--					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.top + a_rect.height)
+--					-- _
+--					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
 
 					if internal_pointer_last_in_area /= internal_pointer_in_right_area then
 						internal_shared.feedback.clear_screen
 						internal_shared.feedback.draw_transparency_rectangle (l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
 						internal_pointer_last_in_area := internal_pointer_in_right_area
 					end
-
+					internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, internal_shared.icons.arrow_indicator_right_colors_lighten)
 					Result := True
 				end
 			else
-				internal_shared.feedback.draw_pixmap (a_rect.left, a_rect.top, a_pixmap)
+				internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, a_pixmap)
 			end
 		ensure
 			must_process:

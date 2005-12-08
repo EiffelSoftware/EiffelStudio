@@ -116,16 +116,6 @@ feature {NONE} -- Implementation
 					else
 						Result := l_item.is_compliant
 					end
-					if Result then
-						l_ab_type ?= l_item
-						if l_ab_type /= Void and then not l_ab_type.is_being_checked then
-							if a_check_eiffel then
-								Result := l_ab_type.is_eiffel_compliant_interface
-							else
-								Result := l_ab_type.is_compliant_interface
-							end
-						end
-					end
 					i := i - 1
 				end
 			end

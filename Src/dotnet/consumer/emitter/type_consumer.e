@@ -14,10 +14,15 @@ inherit
 	SHARED_ASSEMBLY_MAPPING
 
 	NAME_SOLVER
-	
+
 	METHOD_RETRIEVER
 
 	ARGUMENT_SOLVER
+
+	EC_CHECKED_ENTITY_FACTORY
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -39,12 +44,14 @@ feature {NONE} -- Initialization
 			i, nb, count: INTEGER
 			parent_type: SYSTEM_TYPE
 			l_is_nested: BOOLEAN
+			l_ab_type: EC_CHECKED_ABSTRACT_TYPE
+			l_force_sealed: BOOLEAN
 		do
 			create dotnet_name.make_from_cil (t.full_name)
 			parent_type := t.base_type
 			if parent_type /= Void and then is_consumed_type (parent_type) then
 				parent := referenced_type_from_type (parent_type)
-			end 
+			end
 			from
 				inter := t.get_interfaces
 				i := 0
@@ -71,16 +78,27 @@ feature {NONE} -- Initialization
 				parent_type := t.assembly.get_type_string (parent_name)
 				l_is_nested := parent_type /= Void and then parent_type.is_public
 			end
-			
+
+			l_force_sealed := t.is_sealed
+			if not l_force_sealed and then (t.is_interface or t.is_abstract) then
+					-- For non-Eiffel compliant interfaces we need to force them to be frozen
+					-- so they cannot be descended, which would result in an incomplete interface
+					-- implementation, because of the non-compliant members
+				l_ab_type ?= checked_type (t)
+				if l_ab_type /= Void then
+					l_force_sealed := not l_ab_type.is_eiffel_compliant_interface
+				end
+			end
+
 			if l_is_nested then
 					-- `parent_type' contains enclosing type of current nested type.
 				create {CONSUMED_NESTED_TYPE} consumed_type.make (
 					dotnet_name, en, t.is_interface, t.is_abstract,
-					t.is_sealed, t.is_value_type, t.is_enum, parent, interfaces,
+					l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces,
 					referenced_type_from_type (parent_type))
-			else	
+			else
 				create consumed_type.make (dotnet_name, en, t.is_interface, t.is_abstract,
-					t.is_sealed, t.is_value_type, t.is_enum, parent, interfaces)
+					l_force_sealed, t.is_value_type, t.is_enum, parent, interfaces)
 			end
 
 			if t.is_interface then
@@ -98,13 +116,13 @@ feature {NONE} -- Initialization
 						feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public|
 						feature {BINDING_FLAGS}.static)
 			end
-			
+
 			internal_constructors := t.get_constructors_binding_flags (
 				feature {BINDING_FLAGS}.instance | feature {BINDING_FLAGS}.public |
 				feature {BINDING_FLAGS}.non_public)
 
 			internal_referenced_type := referenced_type_from_type (t)
-			
+
 			create properties_and_events.make
 		ensure
 			non_void_consumed_type: consumed_type /= Void
@@ -117,7 +135,7 @@ feature {NONE} -- Initialization
 			non_void_internal_events: internal_events /= Void
 			non_void_internal_referenced_type: internal_referenced_type /= Void
 		end
-		
+
 feature -- Access
 
 	consumed_type: CONSUMED_TYPE
@@ -157,7 +175,7 @@ feature -- Basic Operation
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]
 			l_events: ARRAYED_LIST [CONSUMED_EVENT]
 			l_properties: ARRAYED_LIST [CONSUMED_PROPERTY]
-			
+
 			cp_function: CONSUMED_FUNCTION
 			cp_procedure: CONSUMED_PROCEDURE
 			cp_property: CONSUMED_PROPERTY
@@ -179,7 +197,7 @@ feature -- Basic Operation
 				create l_properties.make (0)
 				create l_events.make (0)
 				create reserved_names.make (100)
-	
+
 					-- Add constructors.
 				from
 					i := 0
@@ -189,17 +207,17 @@ feature -- Basic Operation
 				loop
 					cons := internal_constructors.item (i)
 					if is_consumed_method (cons) then
-						tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))					
+						tc.extend (create {CONSTRUCTOR_SOLVER}.make (cons))
 					end
 					i := i + 1
 				end
-				
+
 					-- Initialize overload solver.
 				initialize_overload_solver
 					-- Resolve oveload conflicts.
 				overload_solver.set_reserved_names (reserved_names)
 				overload_solver.solve
-				
+
 					-- Add methods and fields.
 				from
 					i := 0
@@ -246,7 +264,7 @@ feature -- Basic Operation
 						end
 						cp_property := consumed_property (l_property)
 						if cp_property /= Void then
-							l_properties.extend (cp_property)	
+							l_properties.extend (cp_property)
 						end
 					elseif l_member.member_type = feature {MEMBER_TYPES}.event then
 						l_event ?= l_member
@@ -255,7 +273,7 @@ feature -- Basic Operation
 						end
 						cp_event := consumed_event (l_event)
 						if cp_event /= Void then
-							l_events.extend (cp_event)	
+							l_events.extend (cp_event)
 						end
 					end
 					i := i + 1
@@ -282,7 +300,7 @@ feature -- Basic Operation
 					l_functions.extend (from_integer_feature (internal_referenced_type))
 					l_functions.extend (to_integer_feature (internal_referenced_type))
 				end
-				consumed_type.set_functions (l_functions)			
+				consumed_type.set_functions (l_functions)
 				initialized := True
 			else
 				initialized := False
@@ -343,7 +361,7 @@ feature -- Basic Operation
 				add_event (l_event)
 				overload_solver.add_event (l_event)
 				i := i + 1
-			end				
+			end
 
 				-- Add methods (procedures, functions) in overload_solver
 			from
@@ -398,7 +416,7 @@ feature {NONE} -- Implementation
 					info.is_static,
 					info.is_public,
 					literal_field_value (l_value),
-					referenced_type_from_type (l_type))	
+					referenced_type_from_type (l_type))
 			else
 				create Result.make (
 					unique_feature_name (dotnet_name),
@@ -440,7 +458,7 @@ feature {NONE} -- Implementation
 					referenced_type_from_type (info.declaring_type))
 			end
 		end
-	
+
 	consumed_function (info: METHOD_INFO; property_or_event: BOOLEAN): CONSUMED_FUNCTION is
 			-- Consumed function.
 		require
@@ -546,7 +564,7 @@ feature {NONE} -- Implementation
 					)
 			end
 		end
-		
+
 	solved_constructors (
 			tc: SORTED_TWO_WAY_LIST [CONSTRUCTOR_SOLVER]): ARRAYED_LIST [CONSUMED_CONSTRUCTOR]
 		is
@@ -605,7 +623,7 @@ feature {NONE} -- Implementation
 						j := j + 1
 						tc.forth
 					end
-					
+
 					from
 					until
 						tc.after
@@ -637,7 +655,7 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_constructors: Result /= Void
 		end
-		
+
 	internal_members: NATIVE_ARRAY [MEMBER_INFO]
 			-- Type members used to initialize `features'
 
@@ -655,9 +673,9 @@ feature {NONE} -- Implementation
 
 	internal_constructors: NATIVE_ARRAY [CONSTRUCTOR_INFO]
 			-- Constructors of .NET type
-			
+
 	internal_referenced_type: CONSUMED_REFERENCED_TYPE
-			-- Representation of Current if it was used 
+			-- Representation of Current if it was used
 			-- for CONSUMED_REFERENCED_TYPE.
 
 --	Default_creation_routine_name: STRING is "make"
@@ -665,7 +683,7 @@ feature {NONE} -- Implementation
 
 --	Argument_prefix: STRING is "arg_"
 --			-- Argument names prefix
-	
+
 	Constructor_overload_resolution: INTEGER is 3
 			-- Number of arguments in a constructor for which we always expand
 			-- their name definition.
@@ -734,7 +752,7 @@ feature {NONE} -- Status Setting.
 			l_adder := event_adder (info)
 			l_remover := event_remover (info)
 			l_raiser := event_raiser (info)
-			
+
 			if l_adder /= Void then
 				add_properties_or_events (l_adder)
 			end
@@ -822,7 +840,7 @@ feature {NONE} -- Status Setting.
 		do
 			Result := not info.return_type.equals_type (Void_type)
 		end
-		
+
 	Void_type: SYSTEM_TYPE is
 			-- Void .NET type
 		once
@@ -856,7 +874,7 @@ feature {NONE} -- Status Setting.
 feature {NONE} -- Added features of System.Object to Interfaces
 
 	update_interface_members (t: SYSTEM_TYPE) is
-			-- 
+			--
 		local
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
 			l_method, l_obj_method: METHOD_INFO
@@ -872,7 +890,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			create internal_members.make (0)
 			create internal_properties.make (0)
 			create internal_events.make (0)
-			
+
 			internal_update_interface_members (t, l_processed)
 
 			from
@@ -913,9 +931,9 @@ feature {NONE} -- Added features of System.Object to Interfaces
 				end
 				i := i + 1
 			end
-			
+
 			create l_members.make (internal_members.count + l_object_methods.count)
- 			feature {SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)			
+ 			feature {SYSTEM_ARRAY}.copy (internal_members, l_members, internal_members.count)
 
 			from
 				l_object_methods.start
@@ -944,7 +962,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			l_interface: SYSTEM_TYPE
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
 --			l_methods: NATIVE_ARRAY [METHOD_INFO]
-			l_properties: NATIVE_ARRAY [PROPERTY_INFO] 
+			l_properties: NATIVE_ARRAY [PROPERTY_INFO]
 			l_events: NATIVE_ARRAY [EVENT_INFO]
 		do
 			l_members := t.get_members_binding_flags (feature {BINDING_FLAGS}.instance |
@@ -959,7 +977,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			l_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
 					feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
 					feature {BINDING_FLAGS}.static)
-			
+
 
 				-- merge members.
 			create l_merged_members.make (internal_members.count + l_members.count)
@@ -1023,7 +1041,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 		ensure
 			object_methods: Result /= Void
 		end
-		
+
 feature {NONE} -- Added features for ENUM types.
 
 	Additional_enum_features: INTEGER is 3
@@ -1050,7 +1068,7 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_virtual
 				False,	-- is_property_or_event
 				enum_type)
-			Result.set_is_artificially_added (True)				
+			Result.set_is_artificially_added (True)
 		end
 
 	infix_or_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
@@ -1074,7 +1092,7 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_virtual
 				False,	-- is_property_or_event
 				enum_type)
-			Result.set_is_artificially_added (True)				
+			Result.set_is_artificially_added (True)
 		end
 
 	from_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
@@ -1120,7 +1138,7 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_virtual
 				False,	-- is_property_or_event
 				enum_type)
-			Result.set_is_artificially_added (True)				
+			Result.set_is_artificially_added (True)
 		end
 
 	attribute_setter_feature (a_field: FIELD_INFO; a_field_name: STRING): CONSUMED_PROCEDURE is
@@ -1132,7 +1150,7 @@ feature {NONE} -- Added features for ENUM types.
 		local
 			l_eiffel_name: STRING
 			l_arg: CONSUMED_ARGUMENT
-		do		
+		do
 			l_eiffel_name := "set_" + a_field_name + "_field"
 			create l_arg.make ("a_value", "a_value", referenced_type_from_type (a_field.field_type))
 			create Result.make_attribute_setter (l_eiffel_name, a_field.name,

@@ -26,7 +26,7 @@ feature {NONE} -- Initlization
 			default_create
 			create internal_shared
 			create internal_vertical_box
-
+				
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_style, a_zone)
 			internal_title_bar.set_minimum_height (internal_shared.title_bar_height)
 			internal_title_bar.close_request_actions.extend (agent close)
@@ -39,7 +39,11 @@ feature {NONE} -- Initlization
 
 			internal_vertical_box.extend (internal_title_bar)
 			internal_vertical_box.disable_item_expand (internal_title_bar)
-
+		
+			create {EV_HORIZONTAL_BOX} internal_border_box
+			internal_border_box.set_border_width (internal_shared.focuse_border_width)
+			internal_vertical_box.extend (internal_border_box)
+			
 			extend (internal_vertical_box)
 			set_minimum_size (internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
 		ensure
@@ -81,17 +85,15 @@ feature   -- Access
 			a_widget_not_void: a_widget /= Void
 		do
 			internal_user_widget := a_widget
-			if internal_vertical_box.count = 2 then
-				internal_vertical_box.prune (internal_vertical_box [2])
-			end
+			internal_border_box.wipe_out
 			if a_widget.parent /= Void then
 				a_widget.parent.prune (a_widget)
 			end
-			internal_vertical_box.extend (a_widget)
+			internal_border_box.extend (a_widget)
 
 		ensure
-			contain_right_number_widget: internal_vertical_box.count = 2
-			contain_user_wiget: internal_vertical_box.has (a_widget)
+			contain_right_number_widget: internal_border_box.count = 1
+			contain_user_wiget: internal_border_box.has (a_widget)
 		end
 
 feature {NONE} -- Two widgets
@@ -125,8 +127,10 @@ feature -- Basic operation
 		do
 			if a_focus then
 				title_bar.enable_focus_color
+				internal_border_box.set_background_color (internal_shared.focused_color)
 			else
 				title_bar.disable_focus_color
+				internal_border_box.set_background_color (internal_shared.non_focused_color)
 			end
 		end
 
@@ -248,12 +252,12 @@ feature {NONE} -- Implementation
 	internal_normal_max_action: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions perfromed when min/max window.
 
---	internal_pointer_double_press_title_bar_actions: EV_NOTIFY_ACTION_SEQUENCE
---			-- Actions perfromed when pointer double pressed `internal_title_bar'.
-
 	internal_vertical_box: EV_VERTICAL_BOX
 			-- Vertical box to hold SD_TITLE_BAR and user_widget.
-
+	
+	internal_border_box: EV_BOX
+			-- Box for border highlight.
+	
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

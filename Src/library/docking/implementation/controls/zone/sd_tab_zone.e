@@ -222,6 +222,7 @@ feature {NONE} -- Agents for user
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
 			internal_docking_manager.remove_auto_hide_zones
 			internal_title_bar.enable_focus_color
+			internal_notebook.set_focus_color (True)
 
 			if a_content /= Void then
 				internal_notebook.select_item (a_content.user_widget)
@@ -236,6 +237,7 @@ feature {NONE} -- Agents for user
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE}
 			internal_title_bar.disable_focus_color
+			internal_notebook.set_focus_color (False)
 		ensure then
 			title_bar_not_focus: not internal_title_bar.is_focus_color_enable
 		end

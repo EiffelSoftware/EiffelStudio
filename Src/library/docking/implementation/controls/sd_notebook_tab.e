@@ -39,12 +39,13 @@ feature {NONE}  -- Initlization
 			extend (internal_tail_drawing_area)
 			disable_item_expand (internal_tail_drawing_area)
 			internal_tail_drawing_area.set_minimum_width (internal_shared.highlight_tail_width)
-			internal_tail_drawing_area.pointer_button_release_actions.force_extend (agent on_selected)
+			internal_tail_drawing_area.pointer_button_press_actions.force_extend (agent on_selected)
 
 			set_minimum_height (internal_shared.title_bar_height)
 
 			internal_tail_drawing_area.expose_actions.force_extend (agent on_expose)
 			internal_text_drawing_area.expose_actions.force_extend (agent on_expose)
+			internal_pixmap_drawing_area.expose_actions.force_extend (agent on_expose)
 			text := ""
 
 			create select_actions
@@ -218,8 +219,12 @@ feature {NONE}  -- Implementation
 			end
 			internal_text_drawing_area.draw_ellipsed_text_top_left (0, 2, text, internal_text_drawing_area.width)
 			if selected then
+--				internal_tail_drawing_area.set_minimum_width (internal_shared.highlight_tail_width)
 				create l_helper
+				internal_tail_drawing_area.set_background_color (internal_shared.non_focused_color)
 				l_helper.draw_color_change_gradually (internal_tail_drawing_area, internal_shared.focused_color)
+			else
+--				internal_tail_drawing_area.set_minimum_width (0)
 			end			
 		end
 

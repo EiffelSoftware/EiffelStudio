@@ -10,6 +10,6 @@ default
 cluster 
 
 		-- EiffelBase
-	all base: 		"$ISE_EIFFEL\library\base"
+	all base: 		"$ISE_LIBRARY\library\base"
 		
 end -- system base

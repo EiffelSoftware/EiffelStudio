@@ -5,9 +5,9 @@ root
 
 default
 	assertion (require)
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
+	precompiled ("$ISE_LIBRARY/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
-	lex: "$ISE_EIFFEL/library/lex";
+	lex: "$ISE_LIBRARY/library/lex";
 
 end

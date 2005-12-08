@@ -30,7 +30,7 @@ default
 cluster
 	all eiffel_compliant_check:		"${EIFFEL_SRC}\tools\compliance_checker"
 		exclude
-			"ec_checker_application.e"; "ace"; 
+			".svn"; "ec_checker_application.e"; "ace"; 
 		default
 			namespace ("EiffelSoftware.ComplianceChecker")
 		end

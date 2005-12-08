@@ -116,7 +116,7 @@ rt_shared void eif_run_idr_thread_init (void)
 	REQUIRE ("idr_temp_buf_null", idr_temp_buf == NULL);
 	REQUIRE ("amount_read_is_zero", amount_read == 0);
 	REQUIRE ("idrf_buffer_size_is_zero", idrf_buffer_size == 0);
-//	REQUIRE ("idrf_zeroed", ??? );
+/*	REQUIRE ("idrf_zeroed", ??? ); */
 	REQUIRE ("run_idr_read_func_null", run_idr_read_func == NULL);
 
 	idrf_buffer_size = 262144L;
@@ -124,7 +124,7 @@ rt_shared void eif_run_idr_thread_init (void)
 	ENSURE ("idr_temp_buf_null", idr_temp_buf == NULL);
 	ENSURE ("amount_read_is_zero", amount_read == 0);
 	ENSURE ("idrf_buffer_size_is_zero", idrf_buffer_size == 262144L);
-//	ENSURE ("idrf_zeroed", ??? );
+/*	ENSURE ("idrf_zeroed", ??? ); */
 	ENSURE ("run_idr_read_func_null", run_idr_read_func == NULL);
 }
 #endif

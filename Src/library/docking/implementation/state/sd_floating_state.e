@@ -113,30 +113,51 @@ feature -- Redefine.
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
 			-- Redefine.
 		local
-			l_zone: SD_ZONE
+			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_tab_zone: SD_TAB_ZONE
 		do
 			internal_docking_manager.lock_update
-			internal_zone.destroy
-
-			l_zone ?= inner_container.item
-			if l_zone /= Void then
-				l_zone.state.move_to_docking_zone (a_target_zone)
+			
+			l_zones := inner_container.zones
+			from
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				if l_tab_zone = Void then
+					l_zones.item.state.move_to_docking_zone (a_target_zone)
+					l_tab_zone ?= a_target_zone.content.state.zone
+					check l_tab_zone /= Void end
+				else
+					l_zones.item.state.move_to_tab_zone (l_tab_zone)
+				end
+				l_zones.forth
 			end
 
+			internal_zone.destroy
 			internal_docking_manager.unlock_update
 		end
 
 	move_to_tab_zone (a_target_zone: SD_TAB_ZONE) is
 			-- Redefine.
 		local
-			l_tab_state: SD_TAB_STATE
+			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
 			internal_docking_manager.lock_update
+			l_zones := inner_container.zones
+			from
+				l_zones.start
+			until
+				l_zones.after
+			loop
+				l_zones.item.state.move_to_tab_zone (a_target_zone)
+				l_zones.forth
+			end
 
-			internal_zone.destroy
-			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, direction)
-			change_state (l_tab_state)
+			internal_zone.destroy			
+
 			internal_docking_manager.unlock_update
+			
 		end
 
 	content_void: BOOLEAN is
@@ -228,5 +249,5 @@ feature {NONE} -- Implementation
 			l_spliter.set_proportion (0.5)
 			inner_container.restore_spliter_position (l_current_item)
 		end
-
+			
 end

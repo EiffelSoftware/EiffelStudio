@@ -36,6 +36,7 @@ feature {NONE} -- Initlization
 			a_content_not_void: a_content /= Void
 			a_content_parent_void: a_content.user_widget.parent = Void
 			a_target_zone_not_void: a_target_zone /= Void
+			a_target_zone_parent_not_void: a_target_zone.parent /= Void
 			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
 				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
 		local

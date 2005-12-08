@@ -1034,8 +1034,7 @@ rt_shared int scollect(int (*gc_func) (void), int i)
 	} else {
 		e_mem_used_after = rt_e_data.ml_used + rt_e_data.ml_over;
 		if (e_mem_used_before > e_mem_used_after) {
-				// Some memory of free list was freed, so we should update `eiffel_usage'
-				// accordingly.
+				/* Some memory of free list was freed, so we should update `eiffel_usage' accordingly. */
 			e_mem_used_before -= e_mem_used_after;
 			if (eiffel_usage > e_mem_used_before) {
 				eiffel_usage -= e_mem_used_before;

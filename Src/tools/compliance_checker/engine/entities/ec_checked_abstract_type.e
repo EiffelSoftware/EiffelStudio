@@ -163,46 +163,10 @@ feature {NONE} -- Implementation
 			a_member_not_void: a_member /= Void
 		local
 			l_method: METHOD_INFO
-			l_property: PROPERTY_INFO
-			l_ctor: CONSTRUCTOR_INFO
-			l_event: EVENT_INFO
-			l_field: FIELD_INFO
-			l_type: SYSTEM_TYPE
 		do
 			l_method ?= a_member
-			if l_method /= Void then
+			if l_method /= Void and not l_method.is_constructor then
 				Result := l_method.is_abstract and (l_method.is_public or l_method.is_family or l_method.is_family_or_assembly)
-			else
-				l_property ?= a_member
-				if l_property /= Void then
-						-- No need to check properties as associated methods will be checked later.
-					Result := False
-				else
-					l_ctor ?= a_member
-					if l_ctor /= Void then
-						Result := l_ctor.is_public or l_ctor.is_family or l_ctor.is_family_or_assembly
-					else
-						l_event ?= a_member
-						if l_event /= Void then
-								-- No need to check events as associated methods will be checked later.
-							Result := False
-						else
-							l_field ?= a_member
-							if l_field /= Void then
-								Result := True
-							else
-								l_type ?= a_member
-								if l_type /= Void then
-									Result := False
-								else
-									check
-										False
-									end
-								end
-							end
-						end
-					end
-				end
 			end
 		end
 

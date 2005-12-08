@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			zones.remove_actions.extend (agent on_pruned_zone)
 			internal_shared.add_docking_manager (Current)
 			-- Insert inner contianer
-			create l_inner_container.make
+			create l_inner_container.make (Current)
 			fixed_area.extend (l_inner_container)
 			l_inner_container.set_minimum_size (0, 0)
 			create inner_containers.make (1)
@@ -368,7 +368,7 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW,
 	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_MENU_ZONE,
-	  SD_TAB_STUB} -- Library internals querys.
+	  SD_TAB_STUB, SD_MULTI_DOCK_AREA} -- Library internals querys.
 
 	auto_hide_panel (a_direction: INTEGER): SD_AUTO_HIDE_PANEL is
 			-- Auto hide panel at `a_direction'.
@@ -480,11 +480,24 @@ feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 				Result := l_titled_window.accelerators
 			end
 		end
-
+	
+	last_focus_content: SD_CONTENT
+			-- Last focused zone.
+			
 feature {SD_MENU_HOT_ZONE, SD_FLOATING_MENU_ZONE, SD_CONTENT, SD_STATE,
 	SD_DOCKER_MEDIATOR, SD_CONFIG_MEDIATOR, SD_HOT_ZONE, SD_ZONE, MAIN_WINDOW,
 	 SD_MENU_DOCKER_MEDIATOR, SD_MENU_MANAGER, SD_AUTO_HIDE_PANEL, SD_MENU_ZONE, SD_TAB_STUB} -- Library internals commands.
 
+	set_last_focus_content (a_content: SD_CONTENT) is
+			-- Set `last_focus_content'.
+		require
+			a_content_not_void: a_content /= Void
+		do
+			last_focus_content := a_content
+		ensure
+			set: last_focus_content = a_content
+		end
+		
 	resize is
 			--
 		do
@@ -637,14 +650,14 @@ feature {NONE}  -- Agents
 				l_zones.after
 			loop
 				if l_zones.item.has_recursive (a_widget) then
-					if internal_shared.last_focus_content /= l_zones.item.content then
-						internal_shared.set_last_focus_content (l_zones.item.content)
+					if last_focus_content /= l_zones.item.content then
+						set_last_focus_content (l_zones.item.content)
 						l_zones.item.on_focus_in (Void)
 						if l_zones.item.content.focus_in_actions /= Void then
 							l_zones.item.content.focus_in_actions.call ([])
 						end
 					else
-						l_auto_hide_zone ?= internal_shared.last_focus_content.state.zone
+						l_auto_hide_zone ?= last_focus_content.state.zone
 						if l_auto_hide_zone = Void then
 							remove_auto_hide_zones
 						else

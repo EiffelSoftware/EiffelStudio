@@ -404,32 +404,36 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): GEN_TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
 			-- of `class_type'.
 		local
-			i, count: INTEGER
+			i: INTEGER
+			old_generics: like generics
 			new_generics: like generics
-			class_type: CL_TYPE_A
+			old_type: TYPE_A
+			new_type: TYPE_A
 		do
-			class_type ?= type
-			if class_type /= Void then
-					-- Same code as in CL_TYPE_A
-				Result := class_type.instantiation_of (Current, written_id)
-			else
-				from
-					Result := duplicate
-					i := 1
-					count := generics.count
-					new_generics := Result.generics
-				until
-					i > count
-				loop
-					new_generics.put
-						(generics.item (i).instantiation_in (type, written_id), i)
-					i := i + 1
+			Result := Current
+			from
+				old_generics := Result.generics
+				i := old_generics.count
+			until
+				i <= 0
+			loop
+				old_type := old_generics.item (i)
+				new_type := old_type.instantiation_in (type, written_id)
+				if new_type /= old_type then
+						-- Record a new type of a generic parameter.
+					if new_generics = Void then
+							-- Avoid modifying original type descriptor.
+						Result := Result.duplicate
+						new_generics := Result.generics
+					end
+					new_generics.put (new_type, i)
 				end
+				i := i - 1
 			end
 		end
 

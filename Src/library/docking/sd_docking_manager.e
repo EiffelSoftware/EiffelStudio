@@ -29,14 +29,14 @@ feature {NONE} -- Initialization
 			main_window := a_window
 
 			init_widget_structure
-			
 			init_auto_hide_panel
 
 			create contents
+			
 			contents.add_actions.extend (agent agents.on_added_content)
-
 			zones.zones.add_actions.extend (agent agents.on_added_zone)
 			zones.zones.remove_actions.extend (agent agents.on_pruned_zone)
+			
 			internal_shared.add_docking_manager (Current)
 
 			init_inner_container
@@ -138,7 +138,17 @@ feature -- Command
 			create l_config.make (Current)
 			l_config.open_config (a_file)
 		end
-
+	
+	set_main_area_background_color (a_color: EV_COLOR) is
+			-- Set main area background color.
+		require
+			a_color_not_void: a_color /= Void
+		do
+			 query.inner_container_main.set_background_color (a_color)
+		ensure
+			set: query.inner_container_main.background_color.is_equal (a_color)
+		end	
+	
 feature -- Contract support
 
 	file_exist (a_file_name: STRING): BOOLEAN is

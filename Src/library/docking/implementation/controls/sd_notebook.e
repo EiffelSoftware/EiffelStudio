@@ -23,22 +23,25 @@ create
 
 feature {NONE}  -- Initlization
 
-	make is
+	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
+		require
+			a_docking_manager_not_void: a_docking_manager /= Void
 		local
 			l_helper: SD_COLOR_HELPER
 		do
 			default_create
 			create internal_shared
+			internal_docking_manager := a_docking_manager
 
 			create selection_actions
 			create tab_double_click_actions
 			create tab_drag_actions
 
-			create internal_widgets.make (1)
+			create internal_contents.make (1)
 			create internal_tabs.make (1)
 
-			create internal_tab_box
+			create internal_tab_box.make (Current, internal_docking_manager)
 			create l_helper
 
 			internal_tab_box.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.auto_hide_panel_lightness))
@@ -54,6 +57,8 @@ feature {NONE}  -- Initlization
 			
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
+		ensure
+			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Command
@@ -68,88 +73,89 @@ feature -- Command
 			end
 		end
 		
-	set_item_text (a_widget: EV_WIDGET; a_text: STRING) is
+	set_item_text (a_content: SD_CONTENT; a_text: STRING) is
 			-- Assign `a_text' to label of `an_item'.
 		require
-			has: has (a_widget)
-			a_text_not_void: a_text /= Void
+			has: has (a_content)
+			a_content_not_void: a_content /= Void
 		do
-			internal_widgets.start
-			internal_widgets.search (a_widget)
-			internal_tabs.go_i_th (internal_widgets.index)
+			internal_contents.start
+			internal_contents.search (a_content)
+			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_text (a_text)
 		ensure
 			set:
 		end
 
-	set_item_pixmap (a_widget: EV_WIDGET; a_pixmap: EV_PIXMAP) is
+	set_item_pixmap (a_content: SD_CONTENT; a_pixmap: EV_PIXMAP) is
 			--
 		require
-			has: has (a_widget)
+			has: has (a_content)
 			a_pixmap_not_void: a_pixmap /= Void
 		do
-			internal_widgets.start
-			internal_widgets.search (a_widget)
-			internal_tabs.go_i_th (internal_widgets.index)
+			internal_contents.start
+			internal_contents.search (a_content)
+			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.set_pixmap (a_pixmap)
 		ensure
 			set:
 		end
 
-	select_item (a_widget: EV_WIDGET) is
+	select_item (a_content: SD_CONTENT) is
 			-- Select `a_widget' and show it.
 		require
-			has: has (a_widget)
+			has: has (a_content)
 		do
-			if selected_item /= a_widget then
-				if a_widget.parent /= Void then
-					a_widget.parent.prune (a_widget)
+			if selected_item /= a_content then
+				if a_content.user_widget.parent /= Void then
+					a_content.user_widget.parent.prune (a_content.user_widget)
 				end
-				internal_cell.replace (a_widget)
+				internal_cell.replace (a_content.user_widget)
 			end
 			disable_all_tab_selection
-			tab_by_widget (a_widget).set_selected (True)
+			tab_by_content (a_content).set_selected (True)
 		ensure
-			selectd: selected_item = a_widget
+			selectd: selected_item = a_content
 		end
 
-	extend (a_widget: EV_WIDGET) is
-			-- Extend `a_widget'.
+	extend (a_content: SD_CONTENT) is
+			-- Extend `a_content'.
 		require
-			a_widget_not_void: a_widget /= Void
-			not_has: not has (a_widget)
+			a_content_not_void: a_content /= Void
+			not_has: not has (a_content)
 		local
 			l_tab: SD_NOTEBOOK_TAB
 		do
-			internal_widgets.extend (a_widget)
+			internal_contents.extend (a_content)
 			create l_tab.make
 			internal_tabs.extend (l_tab)
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
 			l_tab.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, l_tab))
 			internal_tab_box.extend (l_tab)
 			internal_tab_box.disable_item_expand (l_tab)
-			select_item (a_widget)
+			select_item (a_content)
 		end
 
-	prune (a_widget: EV_WIDGET) is
+	prune (a_content: SD_CONTENT) is
 			-- Prune `a_widget'.
 		require
-			has: has (a_widget)
+			has: has (a_content)
 		do
-			internal_widgets.search (a_widget)
-			internal_tabs.go_i_th (internal_widgets.index)
+			internal_contents.start
+			internal_contents.search (a_content)
+			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.destroy
 			internal_tabs.remove
 			
-			internal_widgets.start
-			internal_widgets.prune (a_widget)
+			internal_contents.start
+			internal_contents.prune (a_content)
 			
-			if internal_widgets.after then
-				internal_widgets.back
+			if internal_contents.after then
+				internal_contents.back
 			end	
-			select_item (internal_widgets.item)
+			select_item (internal_contents.item)
 		ensure
-			pruned: not has (a_widget)
+			pruned: not has (a_content)
 		end
 
 	set_tab_position (a_position: INTEGER) is
@@ -190,16 +196,16 @@ feature -- Command
 		
 feature -- Query
 
-	index_of (a_widget: EV_WIDGET): INTEGER is
+	index_of (a_content: SD_CONTENT): INTEGER is
 			-- Index of `a_widget'
 		do
-			Result := internal_widgets.index_of (a_widget, 1)
+			Result := internal_contents.index_of (a_content, 1)
 		end
 
-	has (a_widget: EV_WIDGET): BOOLEAN is
+	has (a_content: SD_CONTENT): BOOLEAN is
 			-- If Current has `a_widget'?
 		do
-			Result := internal_widgets.has (a_widget)
+			Result := internal_contents.has (a_content)
 		end
 
 	has_tab (a_tab: SD_NOTEBOOK_TAB): BOOLEAN is
@@ -210,32 +216,44 @@ feature -- Query
 
 	selected_item_index: INTEGER is
 			-- Index of `selected_item'.
+		local
+			l_found: BOOLEAN
 		do
 			if internal_cell.readable then
-				Result := internal_widgets.index_of (internal_cell.item, 1)
+				from
+					internal_contents.start
+				until
+					internal_contents.after or l_found
+				loop
+					if internal_contents.item.user_widget = internal_cell.item then
+						l_found := True	
+					end
+					Result := Result + 1
+					internal_contents.forth
+				end
 			end
 		end
 
-	selected_item: EV_WIDGET is
+	selected_item: SD_CONTENT is
 			-- Selected item.
 		do
 			if internal_cell.readable then
-				Result := internal_cell.item
+				Result := internal_contents.i_th (selected_item_index)
 			end
 		end
 
-	item_pixmap (a_widget: EV_WIDGET): EV_PIXMAP is
-			-- `a_widget''s pixmap.
+	item_pixmap (a_content: SD_CONTENT): EV_PIXMAP is
+			-- `a_content''s pixmap.
 		require
-			has: has (a_widget)
+			has: has (a_content)
 		do
 
 		end
 
-	item_text (a_widget: EV_WIDGET): STRING is
-			-- `a_widget''s pixmap.
+	item_text (a_content: SD_CONTENT): STRING is
+			-- `a_content''s pixmap.
 		require
-			has: has (a_widget)
+			has: has (a_content)
 		do
 
 		end
@@ -246,7 +264,7 @@ feature -- Query
 	tab_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Tab double click actions.
 
-	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER, INTEGER]]
+	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [SD_CONTENT, INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Tab drag actions. In tuple, 1st is dragged tab, 2nd is x, 3rd is y, 4th is screen_x, 5th is screen_y.
 		
 feature {NONE}  -- Implementation
@@ -298,39 +316,39 @@ feature {NONE}  -- Implementation
 			end
 			if not l_in_tabs then
 				disable_capture
-				tab_drag_actions.call ([widget_by_tab (dragging_tab), a_x, a_y, a_screen_x, a_screen_y])
+				tab_drag_actions.call ([content_by_tab (dragging_tab), a_x, a_y, a_screen_x, a_screen_y])
 			end			
 		end
 		
 	on_tab_selected (a_tab: SD_NOTEBOOK_TAB) is
 			-- Handle notebook tab selected.
 		do
-			select_item (widget_by_tab (a_tab))
+			select_item (content_by_tab (a_tab))
 			disable_all_tab_selection
 			a_tab.set_selected (True)
 			selection_actions.call ([])
 		end
 			
-	widget_by_tab (a_tab: SD_NOTEBOOK_TAB): EV_WIDGET is
+	content_by_tab (a_tab: SD_NOTEBOOK_TAB): SD_CONTENT is
 			-- Widget which associate with `a_tab'.
 		require
 			has: has_tab (a_tab)
 		do
 			internal_tabs.start
 			internal_tabs.search (a_tab)
-			Result := internal_widgets.i_th (internal_tabs.index)
+			Result := internal_contents.i_th (internal_tabs.index)
 		ensure
 			not_void: Result /= Void
 		end
 	
-	tab_by_widget (a_widget: EV_WIDGET): SD_NOTEBOOK_TAB is
+	tab_by_content (a_content: SD_CONTENT): SD_NOTEBOOK_TAB is
 			-- Tab which associate with `a_widget'. 
 		require
-			has: has (a_widget)
+			has: has (a_content)
 		do
-			internal_widgets.start
-			internal_widgets.search (a_widget)
-			Result := internal_tabs.i_th (internal_widgets.index)
+			internal_contents.start
+			internal_contents.search (a_content)
+			Result := internal_tabs.i_th (internal_contents.index)
 		ensure
 			not_void: Result /= Void
 		end
@@ -357,13 +375,13 @@ feature {NONE}  -- Implementation
 			Result := l_rect.has_x_y (a_screen_x, a_screen_y)
 		end
 		
-	internal_widgets: ARRAYED_LIST [EV_WIDGET]
+	internal_contents: ARRAYED_LIST [SD_CONTENT]
 			-- All widgets in Current.
 
 	internal_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 			-- All tabs in Current.
 		
-	internal_tab_box: EV_HORIZONTAL_BOX
+	internal_tab_box: SD_NOTEBOOK_TAB_AREA
 			-- Horizontal box which hold tabs and mini tool bar and close buttons..
 	
 	internal_cell: EV_CELL
@@ -375,6 +393,9 @@ feature {NONE}  -- Implementation
 	internal_shared: SD_SHARED
 			-- All singletons.
 	
+	internal_docking_manager: SD_DOCKING_MANAGER
+			-- Docking manager which Current belong to.
+	
 feature -- Emumeration
 
 	tab_top: INTEGER is 1
@@ -385,8 +406,8 @@ feature -- Emumeration
 invariant
 
 	tab_drag_actions_not_void: tab_drag_actions /= Void
-	internal_widgets_not_void: internal_widgets /= Void
+	internal_contents_not_void: internal_contents /= Void
 	internal_tabs_no_void: internal_tabs /= Void
-	internal_widgets_internal_tabs_count_equal: internal_tabs.count = internal_widgets.count
+	internal_contents_internal_tabs_count_equal: internal_tabs.count = internal_contents.count
 
 end

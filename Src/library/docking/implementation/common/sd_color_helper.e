@@ -48,15 +48,22 @@ feature -- Saturation
 			-- Draw color changed gradually on `a_drawing_area'.
 		local
 			l_count: INTEGER
+			l_pixmap: EV_PIXMAP
+			l_color: EV_COLOR
 		do
-			from
-				a_drawing_area.clear
-			until
-				l_count > a_drawing_area.width
-			loop
-				a_drawing_area.set_foreground_color (color_mix (a_color, a_drawing_area.background_color, (1 - l_count / a_drawing_area.width)))
-				a_drawing_area.draw_segment (l_count, 0, l_count, a_drawing_area.height)
-				l_count := l_count + 1
+			if a_drawing_area.width >0 and a_drawing_area.height > 0 then
+				from
+					create l_pixmap.make_with_size (a_drawing_area.width, a_drawing_area.height)
+					l_color := a_drawing_area.background_color
+					a_drawing_area.clear
+				until
+					l_count > a_drawing_area.width
+				loop
+					l_pixmap.set_foreground_color (color_mix (a_color, l_color, (1 - l_count / l_pixmap.width)))
+					l_pixmap.draw_segment (l_count, 0, l_count, l_pixmap.height)
+					l_count := l_count + 1
+				end
+				a_drawing_area.draw_pixmap (0, 0, l_pixmap)				
 			end
 		end
 

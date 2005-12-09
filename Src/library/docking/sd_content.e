@@ -262,7 +262,10 @@ feature -- Actions
 			end
 			Result := internal_close_request_actions
 		end
-
+	
+	drop_actions: EV_PND_ACTION_SEQUENCE
+			-- Drop actions.
+	
 feature -- Command
 
 	close is

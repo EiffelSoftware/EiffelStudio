@@ -29,10 +29,10 @@ create
 
 feature {NONE} -- Initlization
 	
-	make is
+	make (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
 		do
-			Precursor {SD_NOTEBOOK}	
+			Precursor {SD_NOTEBOOK}	(a_docking_manager)
 			
 			create internal_top_box
 			prune_vertical_box (internal_tab_box)
@@ -122,12 +122,12 @@ feature -- Command
 			is_maximized := a_show_normal
 		end
 	
-	extend (a_widget: EV_WIDGET) is
+	extend (a_content: SD_CONTENT) is
 			-- Redefine.
 		local
 			l_tab: SD_NOTEBOOK_TAB
 		do
-			Precursor {SD_NOTEBOOK} (a_widget)
+			Precursor {SD_NOTEBOOK} (a_content)
 			l_tab := internal_tabs.last
 			l_tab.pointer_double_press_actions.force_extend (agent on_normal_max_window)
 		end
@@ -164,7 +164,7 @@ feature {NONE}  -- Implementation
 	
 	internal_close_button: EV_TOOL_BAR_BUTTON
 			-- Close button.
-
+	
 invariant
 
 	internal_tool_bar_not_void: internal_tool_bar /= Void

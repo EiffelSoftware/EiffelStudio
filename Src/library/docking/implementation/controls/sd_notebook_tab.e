@@ -149,6 +149,7 @@ feature -- Properties
 					create l_text_color.make_with_rgb (1, 1, 1)
 				end
 				internal_text_drawing_area.set_foreground_color (l_text_color)
+				internal_tail_drawing_area.set_minimum_width (internal_shared.highlight_tail_width)
 			else
 				internal_pixmap_drawing_area.set_background_color (internal_shared.non_focused_color)
 				internal_text_drawing_area.set_background_color (internal_shared.non_focused_color)
@@ -159,6 +160,7 @@ feature -- Properties
 					create l_text_color.make_with_rgb (1, 1, 1)
 				end
 				internal_text_drawing_area.set_foreground_color (l_text_color)
+				internal_tail_drawing_area.set_minimum_width (1)
 			end
 			on_expose
 		ensure
@@ -176,6 +178,9 @@ feature {NONE}  -- Implmentation for drag action
 	on_pointer_release (a_widget: EV_WIDGET; a_button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
 			-- Handle pointer release.
 		do
+			debug ("larry")
+				io.put_string ("%N SD_NOTEBOOK_TAB on_pointer_release")
+			end
 			internal_pointer_pressed := False
 		end
 
@@ -219,12 +224,9 @@ feature {NONE}  -- Implementation
 			end
 			internal_text_drawing_area.draw_ellipsed_text_top_left (0, 2, text, internal_text_drawing_area.width)
 			if selected then
---				internal_tail_drawing_area.set_minimum_width (internal_shared.highlight_tail_width)
 				create l_helper
 				internal_tail_drawing_area.set_background_color (internal_shared.non_focused_color)
 				l_helper.draw_color_change_gradually (internal_tail_drawing_area, internal_shared.focused_color)
-			else
---				internal_tail_drawing_area.set_minimum_width (0)
 			end			
 		end
 

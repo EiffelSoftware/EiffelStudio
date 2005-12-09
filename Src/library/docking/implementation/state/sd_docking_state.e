@@ -260,13 +260,12 @@ feature -- Redefine.
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
+			zone.show			
 			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
 			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.show
-				zone.show
 				l_multi_dock_area.update_title_bar
 			end
-
 		end
 
 	hide is

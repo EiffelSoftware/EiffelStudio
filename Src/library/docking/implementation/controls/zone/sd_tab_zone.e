@@ -64,7 +64,7 @@ feature {NONE} -- Initlization
 			internal_docking_manager := a_content.docking_manager
 			default_create
 			create contents.make (1)
-			create internal_notebook.make
+			create internal_notebook.make (internal_docking_manager)
 			internal_notebook.set_minimum_size (0, 0)
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_bottom)
 
@@ -114,6 +114,7 @@ feature -- Command
 			end
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
 			internal_title_bar.set_title (a_content.long_title)
+			internal_notebook.set_focus_color (True)
 			if a_content.mini_toolbar /= Void then
 				if a_content.mini_toolbar.parent /= Void then
 					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
@@ -148,13 +149,13 @@ feature -- Command
 			a_content_not_void: a_content /= Void
 			has_content: has (a_content)
 		do
-			internal_notebook.set_item_text (a_content.user_widget, a_title)
-			if internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget) then
+			internal_notebook.set_item_text (a_content, a_title)
+			if internal_notebook.selected_item_index = internal_notebook.index_of (a_content) then
 				internal_title_bar.set_title (a_title)
 			end
 		ensure
-			set: internal_notebook.item_text (a_content.user_widget) = a_title
-			set_title_bar: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget)
+			set: internal_notebook.item_text (a_content) = a_title
+			set_title_bar: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 				implies internal_title_bar.title = a_title
 		end
 
@@ -165,9 +166,9 @@ feature -- Command
 			a_content_not_void: a_content /= Void
 			has_content: has (a_content)
 		do
-			internal_notebook.set_item_pixmap (a_content.user_widget, a_pixmap)
+			internal_notebook.set_item_pixmap (a_content, a_pixmap)
 		ensure
-			set: internal_notebook.item_pixmap (a_content.user_widget) = a_pixmap
+			set: internal_notebook.item_pixmap (a_content) = a_pixmap
 		end
 
 	set_max (a_max: BOOLEAN) is
@@ -208,9 +209,9 @@ feature {SD_TAB_STATE} -- Internal issues.
 			a_content_not_void: a_content /= Void
 			has (a_content)
 		do
-			internal_notebook.select_item (a_content.user_widget)
+			internal_notebook.select_item (a_content)
 		ensure
-			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget)
+			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
 
 
@@ -225,11 +226,11 @@ feature {NONE} -- Agents for user
 			internal_notebook.set_focus_color (True)
 
 			if a_content /= Void then
-				internal_notebook.select_item (a_content.user_widget)
+				internal_notebook.select_item (a_content)
 			end
 		ensure then
 			title_bar_focus: internal_title_bar.is_focus_color_enable
-			content_set: a_content /= Void implies internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget)
+			content_set: a_content /= Void implies internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
 
 	on_focus_out is
@@ -320,7 +321,7 @@ feature {NONE} -- Agents for docker
 			internal_docker_mediator_stop: old internal_docker_mediator /= Void implies internal_docker_mediator = Void
 		end
 
-	on_notebook_drag (a_widget: EV_WIDGET; a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+	on_notebook_drag (a_content: SD_CONTENT; a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
 			-- Handle notebook drag actions.
 		do
 			create internal_docker_mediator.make (Current, internal_docking_manager)

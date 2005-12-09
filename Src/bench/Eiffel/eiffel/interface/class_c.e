@@ -3291,11 +3291,13 @@ end
 		do
 			data := actual_type.type_i
 			register_type (data).do_nothing
+			instantiator.dispatch (data.type_a, Current)
 			if data.is_true_expanded and then not data.is_external then
 					-- Process reference counterpart.
 				data := data.duplicate
 				data.set_reference_mark
 				register_type (data).do_nothing
+				instantiator.dispatch (data.type_a, Current)
 			end
 		end
 

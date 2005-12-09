@@ -119,17 +119,17 @@ feature {NONE} -- Implementation
 		do
 			-- Set the area which allow user to resize the window.
 			if internal_direction = {SD_DOCKING_MANAGER}.dock_left then
-				a_screen_boundary.set_right (internal_docking_manager.container_rectangle_screen.right)
+				a_screen_boundary.set_right (internal_docking_manager.query.container_rectangle_screen.right)
 				a_screen_boundary.set_left (window.screen_x + minimum_width)
 			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_right then
 				a_screen_boundary.set_right (window.screen_x + window.width - minimum_width)
-				a_screen_boundary.set_left (internal_docking_manager.container_rectangle_screen.left)
+				a_screen_boundary.set_left (internal_docking_manager.query.container_rectangle_screen.left)
 			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_top then
-				a_screen_boundary.set_bottom (internal_docking_manager.container_rectangle_screen.bottom)
+				a_screen_boundary.set_bottom (internal_docking_manager.query.container_rectangle_screen.bottom)
 				a_screen_boundary.set_top (window.screen_y + minimum_height)
 			elseif internal_direction = {SD_DOCKING_MANAGER}.dock_bottom then
 				a_screen_boundary.set_bottom ((window.screen_y + window.height) - minimum_height)
-				a_screen_boundary.set_top (internal_docking_manager.container_rectangle_screen.top)
+				a_screen_boundary.set_top (internal_docking_manager.query.container_rectangle_screen.top)
 			end
 			debug ("larry")
 				io.put_string ("%N allow resize area is: " + a_screen_boundary.out)
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 		do
 			disable_item_expand (resize_bar)
 			if internal_direction = {SD_DOCKING_MANAGER}.dock_left or internal_direction = {SD_DOCKING_MANAGER}.dock_right then
-				internal_docking_manager.set_zone_size (Current, width + a_delta, height)
+				internal_docking_manager.zones.set_zone_size (Current, width + a_delta, height)
 				if a_bar.direction = {SD_DOCKING_MANAGER}.dock_right then
 					internal_docking_manager.fixed_area.set_item_position (Current, x_position - a_delta, y_position)
 				end
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 				debug ("larry")
 					io.put_string ("%N SD_AUTO_HIDE_ZONE before set zone height: " + height.out + " " + ($Current).out)
 				end
-				internal_docking_manager.set_zone_size (Current, width, height + a_delta)
+				internal_docking_manager.zones.set_zone_size (Current, width, height + a_delta)
 				debug ("larry")
 					io.put_string ("%N SD_AUTO_HIDE_ZONE after set zone height: " + height.out)
 				end

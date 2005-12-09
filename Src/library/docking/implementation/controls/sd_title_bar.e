@@ -56,7 +56,7 @@ feature {NONE} -- Initlization
 			l_zero_size_container.extend (internal_highlight_area_before)
 			l_zero_size_container.disable_item_expand (internal_highlight_area_before)
 
-			internal_title := "          "
+			internal_title := ""
 			create internal_drawing_area
 			internal_drawing_area.expose_actions.force_extend (agent on_expose)
 			l_zero_size_container.extend (internal_drawing_area)

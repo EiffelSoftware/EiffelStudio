@@ -56,9 +56,9 @@ feature -- Docking issues.
 			if not l_in_four_side then
 
 				if not internal_last_floating then
-					docking_manager.lock_update
+					docking_manager.command.lock_update
 					caller.float
-					docking_manager.unlock_update
+					docking_manager.command.unlock_update
 				end
 
 				internal_last_floating := True

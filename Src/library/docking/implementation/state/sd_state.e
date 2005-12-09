@@ -120,11 +120,11 @@ feature -- Commands
 		local
 			l_state: SD_STATE_VOID
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			zone.close
-			internal_docking_manager.prune_zone_by_content (internal_content)
-			internal_docking_manager.remove_empty_split_area
-			internal_docking_manager.unlock_update
+			internal_docking_manager.zones.prune_zone_by_content (internal_content)
+			internal_docking_manager.command.remove_empty_split_area
+			internal_docking_manager.command.unlock_update
 			create l_state.make (internal_content)
 			change_state (l_state)
 		end
@@ -132,7 +132,7 @@ feature -- Commands
 	stick (a_direction: INTEGER) is
 			-- Stick/Unstick a zone.
 		do
-			internal_docking_manager.recover_normal_state
+			internal_docking_manager.command.recover_normal_state
 		end
 
 	float (a_x, a_y: INTEGER) is
@@ -235,7 +235,7 @@ feature {NONE} -- Implementation
 			l_main_rect: EV_RECTANGLE
 		do
 
-			l_main_rect := internal_docking_manager.container_rectangle
+			l_main_rect := internal_docking_manager.query.container_rectangle
 			inspect
 				a_direction
 			when {SD_DOCKING_MANAGER}.dock_top then

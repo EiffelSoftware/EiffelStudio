@@ -39,7 +39,7 @@ feature {NONE} -- Initlization
 			else
 				width_height := (internal_docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
 			end
-			auto_hide_panel := internal_docking_manager.auto_hide_panel (a_direction)
+			auto_hide_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
 			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
 				create internal_tab_stub.make (internal_content, True)
 			elseif direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom then
@@ -110,7 +110,7 @@ feature {NONE} -- Auto hide functions.
 			if internal_close_timer /= Void then
 				internal_close_timer.actions.wipe_out
 				internal_close_timer := Void
-				internal_docking_manager.prune_zone (zone)
+				internal_docking_manager.zones.prune_zone (zone)
 				create l_env
 				l_env.application.pointer_motion_actions.start
 				l_env.application.pointer_motion_actions.prune (internal_motion_procudure)
@@ -215,14 +215,14 @@ feature -- Redefine.
 	stick (a_direction: INTEGER) is
 			-- Redefine. `a_direction' is useless, it's only used for SD_DOCKING_STATE.
 		do
-			internal_docking_manager.lock_update
-			internal_docking_manager.remove_auto_hide_zones
-			internal_docking_manager.recover_normal_state
+			internal_docking_manager.command.lock_update
+			internal_docking_manager.command.remove_auto_hide_zones
+			internal_docking_manager.command.recover_normal_state
 
 			stick_zones (a_direction)
 
-			internal_docking_manager.remove_empty_split_area
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.remove_empty_split_area
+			internal_docking_manager.command.unlock_update
 		ensure then
 			tab_stubs_pruned: auto_hide_panel.tab_stubs.count < old auto_hide_panel.tab_stubs.count
 		end
@@ -269,14 +269,14 @@ feature -- Redefine.
 	show is
 			-- Redefine.
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			if is_hide then
 				auto_hide_panel.tab_stubs.extend (internal_tab_stub)
 			end
 			show_internal
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.unlock_update
 		ensure then
-			show: internal_docking_manager.has_zone_by_content (internal_content)
+			show: internal_docking_manager.zones.has_zone_by_content (internal_content)
 		end
 
 	hide is
@@ -286,7 +286,7 @@ feature -- Redefine.
 			l_tab_group: ARRAYED_LIST [SD_TAB_STUB]
 		do
 			if not is_hide then
-				internal_docking_manager.remove_auto_hide_zones
+				internal_docking_manager.command.remove_auto_hide_zones
 				-- Change to SD_STATE_VOID.... wait for user call show.... then back to speciall state.
 				create l_state.make (internal_content)
 				l_tab_group := auto_hide_panel.tab_group (internal_tab_stub)
@@ -336,7 +336,7 @@ feature {NONE} -- Implementation functions.
 				l_content := l_tab_stub.content
 				if l_tab_group.index = 1 then
 					create l_docking_state.make (l_content, direction, width_height)
-					l_docking_state.dock_at_top_level (internal_docking_manager.inner_container_main)
+					l_docking_state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
 					l_content.change_state (l_docking_state)
 				else
 					if l_content.user_widget.parent /= Void then
@@ -390,12 +390,12 @@ feature {NONE} -- Implementation functions.
 			l_rect: EV_RECTANGLE
 			l_env: EV_ENVIRONMENT
 		do
-			if not internal_docking_manager.has_zone_by_content (internal_content) then
+			if not internal_docking_manager.zones.has_zone_by_content (internal_content) then
 				create zone.make (internal_content, direction)
 				-- Before add the zone to the fixed area, first clear the other zones in the area except the main_container.
-				internal_docking_manager.remove_auto_hide_zones
+				internal_docking_manager.command.remove_auto_hide_zones
 
-				internal_docking_manager.add_zone (zone)
+				internal_docking_manager.zones.add_zone (zone)
 				create internal_close_timer.make_with_interval ({SD_SHARED}.Auto_hide_delay)
 				internal_close_timer.actions.extend (agent on_timer_for_close)
 				create l_env

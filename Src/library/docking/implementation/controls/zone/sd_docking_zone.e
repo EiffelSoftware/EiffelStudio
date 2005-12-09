@@ -101,7 +101,7 @@ feature {SD_CONTENT}
 			-- Redefine.
 		do
 			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
-			internal_docking_manager.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones
 			window.set_focus_color (True)
 		end
 
@@ -150,10 +150,10 @@ feature -- Command
 	close is
 			-- Redefine
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			Precursor {SD_SINGLE_CONTENT_ZONE}
-			internal_docking_manager.prune_zone (Current)
-			internal_docking_manager.unlock_update
+			internal_docking_manager.zones.prune_zone (Current)
+			internal_docking_manager.command.unlock_update
 		end
 
 feature -- Query

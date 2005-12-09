@@ -220,7 +220,7 @@ feature {NONE} -- Agents for user
 			-- Redefine.
 		do
 			Precursor {SD_MULTI_CONTENT_ZONE} (a_content)
-			internal_docking_manager.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones
 			internal_title_bar.enable_focus_color
 			internal_notebook.set_focus_color (True)
 
@@ -276,10 +276,10 @@ feature {NONE} -- Agents for docker
 				else
 					internal_title_bar.custom_area.wipe_out
 				end
-				if l_content.internal_focus_in_actions /= Void and then internal_docking_manager.last_focus_content /= l_content then
+				if l_content.internal_focus_in_actions /= Void and then internal_docking_manager.property.last_focus_content /= l_content then
 					l_content.internal_focus_in_actions.call ([])
 				end
-				internal_docking_manager.set_last_focus_content (l_content)
+				internal_docking_manager.property.set_last_focus_content (l_content)
 			end
 		ensure
 			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).long_title)

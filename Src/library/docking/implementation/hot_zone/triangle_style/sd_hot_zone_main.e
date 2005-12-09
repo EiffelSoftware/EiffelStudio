@@ -37,7 +37,7 @@ feature {NONE} -- Initlization
 				internal_shared.icons.arrow_indicator_right_colors.count /= 0
 			end
 
-			l_area := internal_docking_manager.container_rectangle_screen
+			l_area := internal_docking_manager.query.container_rectangle_screen
 			l_up_width := internal_shared.icons.arrow_indicator_up_colors.item (0).count // 3
 			l_bottom_width := internal_shared.icons.arrow_indicator_down_colors.item (0).count // 3
 			l_left_width := internal_shared.icons.arrow_indicator_left_colors.item (0).count // 3
@@ -83,7 +83,7 @@ feature  -- Redefine
 			end
 
 			if Result then
-				caller.state.dock_at_top_level (internal_docking_manager.inner_container_main)
+				caller.state.dock_at_top_level (internal_docking_manager.query.inner_container_main)
 			end
 
 			l_floating_zone ?= caller
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 			l_rect: EV_RECTANGLE
 		do
 			if a_rect.has_x_y (pointer_x, pointer_y) then
-				l_rect := internal_docking_manager.container_rectangle_screen
+				l_rect := internal_docking_manager.query.container_rectangle_screen
 
 				if a_rect = top_rectangle then
 --					-- |

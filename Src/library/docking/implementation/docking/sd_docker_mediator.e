@@ -18,7 +18,7 @@ feature -- Initlization
 		do
 			create internal_shared
 			internal_docking_manager := a_docking_manager
-			internal_docking_manager.recover_normal_state
+			internal_docking_manager.command.recover_normal_state
 			internal_shared.hot_zone_factory.set_docker_mediator (Current)
 			create hot_zones
 			internal_caller := a_caller
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation functions
 		local
 			l_zone_list: ARRAYED_LIST [SD_ZONE]
 		do
-			l_zone_list := internal_docking_manager.zones
+			l_zone_list := internal_docking_manager.zones.zones
 
 			create hot_zones
 			generate_hot_zones_imp (l_zone_list)

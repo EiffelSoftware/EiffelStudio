@@ -37,10 +37,11 @@
 					<paragraph><bold>Solution</bold>: To manually patch the Visual Studio .NET bug please read <link><url>international_bug.xml</url><label>International Windows XP Patch</label></link>.
 					</paragraph></item>
         <item>
-					The Eiffel editor installed with EiffelEnvision shows a syntax error when a class only contains the most basic 
-					inheritance clause for a class, with no features.
-					<paragraph><bold>Solution</bold>: Ignore syntax error or add the <code><keyword>end</keyword></code> after the inherited class name declaration.
-					</paragraph></item>
+					User/Custom controls cannot be added to a Windows form that is in the same project.
+		</item>
+        <item>
+					The displayed tooltips for a local declaration's class type shows the information related to the feature where the local is declared.
+		</item>
         <item>
 					Accessing the Examples Directory from the Welcome page shown after installation fails to 
 					link to the correct examples and does not display correctly when using Mozilla Firefox or similar Web browsers.

@@ -166,6 +166,9 @@ feature {NONE} -- Implementation
 				if feature_table.found then
 					l_feature_i := feature_table.found_item
 					if a_ignore_call_type or is_listed (l_feature_i, class_i, l_class_i) then
+						if l_feature_i.written_class /= Void then
+							l_class_i := l_feature_i.written_class.lace_class
+						end
 						if a_fetch_description then
 							extract_description (l_feature_i, l_class_i, a_name)
 						else

@@ -199,7 +199,6 @@ feature {NONE}
 			array_cl := System.array_class.compiled_class;
 			dispatch (Array_type_a, array_cl);
 			array_t := Array_type;
-			--array_cl.update_types (Array_type);
 		end;
 
 	check_tuple_class is

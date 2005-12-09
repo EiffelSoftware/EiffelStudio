@@ -53,9 +53,9 @@ feature {NONE} -- Initlization
 				l_old_parent_split := True
 			end
 			l_parent := a_target_zone.parent
-			internal_docking_manager.prune_zone (a_target_zone)
+			internal_docking_manager.zones.prune_zone (a_target_zone)
 			tab_zone := internal_shared.widget_factory.tab_zone (a_content, a_target_zone)
-			internal_docking_manager.add_zone (tab_zone)
+			internal_docking_manager.zones.add_zone (tab_zone)
 			internal_content := a_content
 			direction := a_direction
 
@@ -121,7 +121,7 @@ feature -- Redefine
 			until
 				a_titles.after
 			loop
-				l_content := internal_docking_manager.content_by_title (a_titles.item)
+				l_content := internal_docking_manager.query.content_by_title (a_titles.item)
 				if l_first_tab then
 					create l_docking_state.make_for_tab_zone (l_content, a_container, a_direction)
 					l_content.change_state (l_docking_state)
@@ -146,14 +146,14 @@ feature -- Redefine
 	dock_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
 			-- Redefine.
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			if zone.is_drag_title_bar then
 				dock_whole_at_top_level (a_multi_dock_area)
 			else
 				dock_tab_at_top_level (a_multi_dock_area)
 			end
-			internal_docking_manager.remove_empty_split_area
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.remove_empty_split_area
+			internal_docking_manager.command.unlock_update
 		ensure then
 			is_dock_at_top: old a_multi_dock_area.full implies is_dock_at_top (a_multi_dock_area)
 		end
@@ -170,9 +170,9 @@ feature -- Redefine
 			l_contents: ARRAYED_LIST [SD_CONTENT]
 			l_auto_hide_panel: SD_AUTO_HIDE_PANEL
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			Precursor {SD_STATE} (a_direction)
-			internal_docking_manager.prune_zone (tab_zone)
+			internal_docking_manager.zones.prune_zone (tab_zone)
 			l_contents := tab_zone.contents
 			from
 				l_contents.start
@@ -185,22 +185,22 @@ feature -- Redefine
 				l_contents.item.change_state (l_auto_hide_state)
 				l_contents.forth
 			end
-			l_auto_hide_panel:= internal_docking_manager.auto_hide_panel (direction)
+			l_auto_hide_panel:= internal_docking_manager.query.auto_hide_panel (direction)
 			l_auto_hide_panel.set_tab_group (l_contents)
 			l_auto_hide_panel.select_tab_by_content (internal_content)
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.unlock_update
 		ensure then
-			pruned: not internal_docking_manager.has_zone (tab_zone)
+			pruned: not internal_docking_manager.zones.has_zone (tab_zone)
 		end
 
 	close is
 			-- Redefine.
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			tab_zone.prune (internal_content)
 			update_last_content_state
-			internal_docking_manager.remove_empty_split_area
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.remove_empty_split_area
+			internal_docking_manager.command.unlock_update
 		end
 
 	change_zone_split_area (a_target_zone: SD_ZONE; a_direction: INTEGER) is
@@ -209,7 +209,7 @@ feature -- Redefine
 			l_docking_state: SD_DOCKING_STATE
 			l_docking_zone: SD_DOCKING_ZONE
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			if not zone.is_drag_title_bar then
 				tab_zone.disable_on_select_tab
 				tab_zone.prune (internal_content)
@@ -224,7 +224,7 @@ feature -- Redefine
 					change_zone_split_area_to_docking_zone (l_docking_zone, a_direction)
 				end
 			end
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.unlock_update
 		ensure then
 			parent_changed:
 		end
@@ -234,7 +234,7 @@ feature -- Redefine
 		local
 			l_orignal_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			l_orignal_multi_dock_area := internal_docking_manager.inner_container (zone)
+			l_orignal_multi_dock_area := internal_docking_manager.query.inner_container (zone)
 			if l_orignal_multi_dock_area.has (zone) and l_orignal_multi_dock_area.parent_floating_zone /= Void
 				and zone.is_drag_title_bar then
 				l_orignal_multi_dock_area.parent_floating_zone.set_position (a_x, a_y)
@@ -252,10 +252,10 @@ feature -- Redefine
 			l_tab_state: SD_TAB_STATE
 			l_orignal_direction: INTEGER
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			tab_zone.disable_on_select_tab
 			if zone.is_drag_title_bar then
-				internal_docking_manager.prune_zone (tab_zone)
+				internal_docking_manager.zones.prune_zone (tab_zone)
 				l_orignal_direction := a_target_zone.state.direction
 				l_contents := tab_zone.contents
 				from
@@ -275,7 +275,7 @@ feature -- Redefine
 				move_tab_to_tab_zone (a_target_zone)
 			end
 			tab_zone.enable_on_select_tab
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.unlock_update
 		ensure then
 			moved:
 		end
@@ -283,13 +283,13 @@ feature -- Redefine
 	move_to_docking_zone (a_target_zone: SD_DOCKING_ZONE) is
 			-- Redefine.
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			if zone.is_drag_title_bar then
 				move_whole_to_docking_zone (a_target_zone)
 			else
 				move_tab_to_docking_zone (a_target_zone)
 			end
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.unlock_update
 		ensure then
 			moved:
 		end
@@ -417,7 +417,7 @@ feature {NONE}  -- Implementation functions.
 			l_docking_state: SD_DOCKING_STATE
 			l_content: SD_CONTENT
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			create l_floating_state.make (a_x, a_y, internal_docking_manager)
 
 			if zone.is_drag_title_bar then
@@ -432,8 +432,8 @@ feature {NONE}  -- Implementation functions.
 
 				update_last_content_state
 			end
-			internal_docking_manager.remove_empty_split_area
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.remove_empty_split_area
+			internal_docking_manager.command.unlock_update
 		end
 
 	change_zone_split_area_to_docking_zone (a_target_zone: SD_DOCKING_ZONE; a_direction: INTEGER) is
@@ -487,7 +487,7 @@ feature {NONE}  -- Implementation functions.
 						l_target_zone_parent_spliter.set_split_position (l_target_zone_parent_split_position)
 				end
 			end
-			internal_docking_manager.inner_container (tab_zone).remove_empty_split_area
+			internal_docking_manager.query.inner_container (tab_zone).remove_empty_split_area
 		ensure
 			changed: a_target_zone.parent.has (tab_zone)
 		end
@@ -505,7 +505,7 @@ feature {NONE}  -- Implementation functions.
 			l_split: EV_SPLIT_AREA
 			l_orignal_direction: INTEGER
 		do
-			internal_docking_manager.prune_zone (zone)
+			internal_docking_manager.zones.prune_zone (zone)
 			l_orignal_direction := a_target_zone.state.direction
 			if a_target_zone.is_parent_split then
 				l_is_split := True
@@ -669,7 +669,7 @@ feature {NONE}  -- Implementation functions.
 					l_split_position := l_split_area.split_position
 				end
 				l_parent := tab_zone.parent
-				internal_docking_manager.prune_zone (tab_zone)
+				internal_docking_manager.zones.prune_zone (tab_zone)
 				create l_docking_state.make_for_tab_zone (tab_zone.last_content, l_parent, direction)
 				if zone.is_maximized then
 					l_docking_state.set_widget_main_area (zone.main_area_widget , zone.main_area, zone.internal_parent, zone.internal_parent_split_position)

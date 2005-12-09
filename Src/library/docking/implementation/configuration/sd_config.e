@@ -71,10 +71,10 @@ feature -- Save/Open inner container data.
 			create l_facility
 			l_config_data ?=  l_facility.retrieved (l_reader, True)
 			check l_config_data /= Void end
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			-- First clear all areas.
 			clear_up_containers
-			check not internal_docking_manager.inner_container_main.full end
+			check not internal_docking_manager.query.inner_container_main.full end
 			open_all_inner_containers_data (l_config_data)
 
 			-- Restore auto hide zone.
@@ -84,8 +84,8 @@ feature -- Save/Open inner container data.
 
 			l_file.close
 
-			internal_docking_manager.resize
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.resize
+			internal_docking_manager.command.unlock_update
 		end
 
 feature {NONE} -- Implementation for save config.
@@ -158,10 +158,10 @@ feature {NONE} -- Implementation for save config.
 		require
 			a_data_not_void: a_data /= Void
 		do
-			save_one_auto_hide_panel_data (internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).tab_stubs, a_data.zone_bottom, True)
-			save_one_auto_hide_panel_data (internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).tab_stubs, a_data.zone_left, False)
-			save_one_auto_hide_panel_data (internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).tab_stubs, a_data.zone_right, False)
-			save_one_auto_hide_panel_data (internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).tab_stubs, a_data.zone_top, True)
+			save_one_auto_hide_panel_data (internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).tab_stubs, a_data.zone_bottom, True)
+			save_one_auto_hide_panel_data (internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).tab_stubs, a_data.zone_left, False)
+			save_one_auto_hide_panel_data (internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).tab_stubs, a_data.zone_right, False)
+			save_one_auto_hide_panel_data (internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).tab_stubs, a_data.zone_top, True)
 		end
 
 	save_one_auto_hide_panel_data (a_stubs: ARRAYED_LIST [SD_TAB_STUB]; a_target: ARRAYED_LIST [TUPLE [STRING, INTEGER]]; a_horizontal: BOOLEAN) is
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation for save config.
 			loop
 				l_title := a_stubs.item.content.unique_title
 				-- Find out zone's width/height.
-				l_zones := internal_docking_manager.zones
+				l_zones := internal_docking_manager.zones.zones
 				from
 					l_zones.start
 				until
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation for open config.
 			-- Open all SD_MULTI_DOCK_AREA datas, include main dock area in main window and floating zones.
 		require
 			a_config_data: a_config_data /= Void
-			container_not_full: not internal_docking_manager.inner_container_main.full
+			container_not_full: not internal_docking_manager.query.inner_container_main.full
 		local
 			l_datas: ARRAYED_LIST [SD_INNER_CONTAINER_DATA]
 			l_split: EV_SPLIT_AREA
@@ -312,8 +312,8 @@ feature {NONE} -- Implementation for open config.
 				l_datas.after
 			loop
 				if l_datas.index = 1 then
-					open_inner_container_data (l_datas.item, internal_docking_manager.inner_container_main)
-					l_multi_dock_area := internal_docking_manager.inner_container_main
+					open_inner_container_data (l_datas.item, internal_docking_manager.query.inner_container_main)
+					l_multi_dock_area := internal_docking_manager.query.inner_container_main
 				else
 					create l_floating_state.make (l_datas.item.screen_x, l_datas.item.screen_y, internal_docking_manager)
 					open_inner_container_data (l_datas.item, l_floating_state.inner_container)
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation for open config.
 			l_all_contents: ARRAYED_LIST [SD_CONTENT]
 			l_floating_menu_zones: ARRAYED_LIST [SD_FLOATING_MENU_ZONE]
 		do
-			internal_docking_manager.remove_auto_hide_zones
+			internal_docking_manager.command.remove_auto_hide_zones
 			l_all_main_containers := internal_docking_manager.inner_containers
 			from
 				l_all_main_containers.start
@@ -376,19 +376,19 @@ feature {NONE} -- Implementation for open config.
 				l_all_main_containers.forth
 			end
 			-- Remove auto hide panel widgets.
---			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).wipe_out
-			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).tab_stubs.wipe_out
-			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).set_minimum_height (0)
---			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).wipe_out
-			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).tab_stubs.wipe_out
-			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).set_minimum_height (0)
---			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).wipe_out
-			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).tab_stubs.wipe_out
-			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).set_minimum_width (0)
---			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).wipe_out
-			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).tab_stubs.wipe_out
-			internal_docking_manager.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).set_minimum_width (0)
-			internal_docking_manager.zones.wipe_out
+
+			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).tab_stubs.wipe_out
+			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_top).set_minimum_height (0)
+
+			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).tab_stubs.wipe_out
+			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_bottom).set_minimum_height (0)
+
+			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).tab_stubs.wipe_out
+			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_left).set_minimum_width (0)
+
+			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).tab_stubs.wipe_out
+			internal_docking_manager.query.auto_hide_panel ({SD_DOCKING_MANAGER}.dock_right).set_minimum_width (0)
+			internal_docking_manager.zones.zones.wipe_out
 			-- Remove menu containers
 			internal_docking_manager.menu_container.top.wipe_out
 			internal_docking_manager.menu_container.bottom.wipe_out
@@ -418,7 +418,7 @@ feature {NONE} -- Implementation for open config.
 				l_all_contents.forth
 			end
 		ensure
-			cleared: not internal_docking_manager.inner_container_main.full
+			cleared: not internal_docking_manager.query.inner_container_main.full
 		end
 
 	open_inner_container_data (a_config_data: SD_INNER_CONTAINER_DATA; a_container: EV_CONTAINER) is
@@ -509,13 +509,13 @@ feature {NONE} -- Implementation for open config.
 			l_panel: SD_AUTO_HIDE_PANEL
 			l_list: ARRAYED_LIST [STRING]
 		do
-			l_panel := internal_docking_manager.auto_hide_panel (a_direction)
+			l_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
 			from
 				a_data.start
 			until
 				a_data.after
 			loop
-				l_content := internal_docking_manager.content_by_title ((a_data.item[1]).out)
+				l_content := internal_docking_manager.query.content_by_title ((a_data.item[1]).out)
 				create l_auto_hide_state.make (l_content, a_direction)
 				create l_list.make (1)
 				l_list.extend ((a_data.item[1]).out)

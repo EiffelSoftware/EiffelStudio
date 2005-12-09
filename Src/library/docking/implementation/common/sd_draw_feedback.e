@@ -28,8 +28,7 @@ feature -- Basic operations
 			l_pixmap: EV_PIXMAP
 			l_width: INTEGER
 			l_color: EV_COLOR
-			l_edge_found, draw_back_end, l_white_found: BOOLEAN
-			k: INTEGER
+			l_edge_found, l_white_found: BOOLEAN
 			first_draw_stop_point: ARRAYED_LIST [INTEGER]
 		do
 			if a_colors.count /= 0 then
@@ -190,12 +189,12 @@ feature -- Basic operations
 	internal_blue_pixmap: EV_PIXMAP is
 			-- Feedback pixmap when user dragging a SD_ZONE.
 		local
-			l_grid: EV_GRID
-			l_file: FILE_NAME
+--			l_grid: EV_GRID
+--			l_file: FILE_NAME
 		do
 			if internal_blue_pixmap_cell.item = Void then
 				create Result
-				Result.set_with_named_file ("E:\tabbededitor_57dev\Eiffel\Ace\docking_images\blue.png")
+				Result.set_with_named_file ("D:\Projects\NewDocking\images\blue.png")
 --				create l_grid
 --				Result.set_foreground_color (l_grid.focused_selection_color)
 --				Result.fill_rectangle (0, 0, Result.width, Result.height)

@@ -113,7 +113,7 @@ feature {NONE} -- Agents
 			l_tab_group: like tab_group
 		do
 			l_tab_group := tab_group
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			from
 				l_tab_group.start
 			until
@@ -126,7 +126,7 @@ feature {NONE} -- Agents
 				end
 				l_tab_group.forth
 			end
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.unlock_update
 			pointer_enter_actions.call ([])
 		end
 

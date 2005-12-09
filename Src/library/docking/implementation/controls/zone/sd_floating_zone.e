@@ -65,7 +65,7 @@ feature {NONE} -- Initlization
 			create internal_inner_container.make (internal_docking_manager)
 			internal_vertical_box.extend (internal_inner_container)
 			internal_inner_container.set_parent_floating_zone (Current)
-			accelerators.append (internal_floating_state.docking_manager.golbal_accelerators)
+			accelerators.append (internal_floating_state.docking_manager.query.golbal_accelerators)
 		end
 
 feature {SD_CONFIG_MEDIATOR} -- Save config
@@ -109,7 +109,7 @@ feature -- Command
 				else
 					-- No widget in `Current'.
 					internal_floating_state.docking_manager.inner_containers.prune_all (internal_inner_container)
-					internal_floating_state.docking_manager.zones.prune (Current)
+					internal_floating_state.docking_manager.zones.zones.prune (Current)
 					destroy
 				end				
 			end

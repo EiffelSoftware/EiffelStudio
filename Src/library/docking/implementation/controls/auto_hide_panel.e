@@ -411,7 +411,7 @@ feature {NONE} -- Implementation functions.
 						set_minimum_height (internal_shared.auto_hide_panel_size)
 					end
 					internal_docking_manager.main_container.set_gap (internal_direction, True)
-					internal_docking_manager.resize
+					internal_docking_manager.command.resize
 				end
 			end
 		ensure
@@ -464,7 +464,7 @@ feature {NONE} -- Implementation functions.
 					set_minimum_height (0)
 				end
 				internal_docking_manager.main_container.set_gap (internal_direction, False)
-				internal_docking_manager.resize
+				internal_docking_manager.command.resize
 			end
 
 		ensure

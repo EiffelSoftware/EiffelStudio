@@ -157,11 +157,11 @@ feature -- Set
 	set_focus is
 			-- Set focus to `Current'.
 		do
-			if internal_focus_in_actions /= Void and docking_manager.last_focus_content /= Current then
+			if internal_focus_in_actions /= Void and docking_manager.property.last_focus_content /= Current then
 				internal_focus_in_actions.call ([])
 				if state.zone /= Void then
 					state.zone.on_focus_in (Current)
-					docking_manager.set_last_focus_content (Current)
+					docking_manager.property.set_last_focus_content (Current)
 				end
 			end
 		end
@@ -186,7 +186,7 @@ feature -- Set Position
 			manager_has_content: manager_has_content (Current)
 			a_direction_valid: four_direction (a_direction)
 		do
-			state.dock_at_top_level (docking_manager.inner_container_main)
+			state.dock_at_top_level (docking_manager.query.inner_container_main)
 			set_focus
 		end
 
@@ -307,7 +307,9 @@ feature -- States report
 			Result := a_target_content.state.zone.parent /= Void
 		end
 
-feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER, SD_CONTENT, SD_DOCKER_MEDIATOR, SD_TAB_STUB} -- State
+feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER,
+		 SD_CONTENT, SD_DOCKER_MEDIATOR, SD_TAB_STUB, SD_DOCKING_MANAGER_AGENTS,
+		 SD_DOCKING_MANAGER_COMMAND} -- State
 
 	state: like internal_state is
 			-- Current state
@@ -318,7 +320,7 @@ feature {SD_STATE, SD_HOT_ZONE, SD_CONFIG_MEDIATOR, SD_ZONE, SD_DOCKING_MANAGER,
 	docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
 			
-feature {SD_DOCKING_MANAGER}
+feature {SD_DOCKING_MANAGER_AGENTS}
 	
 	set_docking_manager (a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Set docking manager

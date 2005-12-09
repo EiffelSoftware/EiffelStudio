@@ -127,7 +127,7 @@ feature {NONE} -- Implementation functions.
 	move_out (a_screen_y_or_x: INTEGER): BOOLEAN is
 			-- Handle pointer in
 		do
-			internal_docking_manager.lock_update
+			internal_docking_manager.command.lock_update
 			if not caller_in_current_area or not caller_in_single_row then
 				if internal_menu_dock_mediator.caller.is_floating then
 					internal_menu_dock_mediator.caller.dock
@@ -135,7 +135,7 @@ feature {NONE} -- Implementation functions.
 				create_new_row_by_position (a_screen_y_or_x)
 				Result := True
 			end
-			internal_docking_manager.unlock_update
+			internal_docking_manager.command.unlock_update
 		end
 
 	create_new_row_by_position (a_screen_y_or_x: INTEGER) is
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation functions.
 				internal_box.extend (l_new_row)
 			end
 			l_new_row.extend (internal_menu_dock_mediator.caller)
-			internal_docking_manager.resize
+			internal_docking_manager.command.resize
 			debug ("larry")
 				io.put_string ("%N SD_MENU_HOT_ZONE new row created, and zone inserted.")
 			end
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation functions.
 			if internal_menu_dock_mediator.caller.row /= Void then
 				if caller_in_single_row then
 					internal_menu_dock_mediator.caller.row.parent.prune (internal_menu_dock_mediator.caller.row)
-					internal_docking_manager.resize
+					internal_docking_manager.command.resize
 				end
 				internal_menu_dock_mediator.caller.row.prune (internal_menu_dock_mediator.caller)
 			end

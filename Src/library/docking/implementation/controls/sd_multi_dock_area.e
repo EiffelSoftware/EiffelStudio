@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			
 			l_zone ?= a_widget
 			if l_zone /= Void then
-				if internal_docking_manager.last_focus_content /= Void and then l_zone.has (internal_docking_manager.last_focus_content) then
+				if internal_docking_manager.property.last_focus_content /= Void and then l_zone.has (internal_docking_manager.property.last_focus_content) then
 					l_zone.set_title_bar_focus_color (True)
 				else
 					l_zone.set_title_bar_focus_color (False)

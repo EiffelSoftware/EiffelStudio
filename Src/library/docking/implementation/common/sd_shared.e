@@ -109,7 +109,7 @@ feature -- Access
 		end
 
 feature {SD_DOCKING_MANAGER}
-	
+
 	add_docking_manager (a_manager: SD_DOCKING_MANAGER) is
 			-- Set `internal_docking_manager'.
 		require
@@ -127,7 +127,7 @@ feature {SD_DOCKING_MANAGER}
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 feature -- Contract Support
 
 	icons_set: BOOLEAN is
@@ -186,7 +186,7 @@ feature -- Constants
 	Auto_hide_delay: INTEGER is 2000
 			-- When SD_AUTO_HIDE_ZONE show but no focused, time to hide SD_AUTO_HIDE_ZONE.
 
-	Focuse_border_width: INTEGER is 2
+	Focuse_border_width: INTEGER is 1
 			-- Border width of a zone. This is width show focus color surround a zone.
 
 	Highlight_tail_width: INTEGER is 30

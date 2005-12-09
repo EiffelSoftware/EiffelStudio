@@ -135,7 +135,7 @@ feature  -- Redefine
 
 feature {NONE} -- Implementation
 
-	update_indicator_area (a_rect: like top_rectangle; a_pixmap: SPECIAL [TUPLE]): BOOLEAN is
+	update_indicator_area (a_rect: like top_rectangle; a_pixmap: SPECIAL [SPECIAL [INTEGER]]): BOOLEAN is
 			-- Update feedback area when pointer in `a_rect'.
 		local
 			l_rect: EV_RECTANGLE

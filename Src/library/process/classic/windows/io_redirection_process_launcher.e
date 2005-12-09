@@ -692,8 +692,6 @@ feature {NONE} -- Implementation
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
 		local
 			p_tbl: LINKED_LIST [ WEL_PROCESS_ID_PAIR ]
-			cur_pid: INTEGER
-			done: BOOLEAN
 		do
 			p_tbl := process_id_pair_list
 			if p_tbl /= Void then

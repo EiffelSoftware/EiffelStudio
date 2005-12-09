@@ -189,7 +189,7 @@ feature {NONE} -- Implementation functions.
 			draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors)
 		end
 
-	draw_drag_window_indicator_by_colors (a_colors: SPECIAL [TUPLE]) is
+	draw_drag_window_indicator_by_colors (a_colors: SPECIAL [SPECIAL [INTEGER]]) is
 			-- Draw dragged window feedback which represent window position.
 		require
 			a_colors_attached: a_colors /= Void

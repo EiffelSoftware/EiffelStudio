@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 			l_app: EV_ENVIRONMENT
 		do
 			create internal_shared
+			create tab_drop_actions
 			init_managers
 			
 			top_container := a_container
@@ -113,7 +114,10 @@ feature -- Query
 
 	menu_manager: SD_MENU_MANAGER
 			-- Manager control all menus.
-
+	
+	tab_drop_actions: SD_PND_ACTION_SEQUENCE
+			-- Drop action when drop on a blank tab area.
+	
 feature -- Command
 
 	save_config (a_file: STRING) is

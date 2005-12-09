@@ -56,15 +56,15 @@ feature -- Command
 		do
 			disable_on_select_tab
 			contents.extend (a_content)
-			internal_notebook.extend (a_content.user_widget)
-			internal_notebook.set_item_text (a_content.user_widget, a_content.short_title)
-			internal_notebook.set_item_pixmap (a_content.user_widget, a_content.pixmap)
-			internal_notebook.select_item (a_content.user_widget)
+			internal_notebook.extend (a_content)
+			internal_notebook.set_item_text (a_content, a_content.short_title)
+			internal_notebook.set_item_pixmap (a_content, a_content.pixmap)
+			internal_notebook.select_item (a_content)
 			enable_on_select_tab
 		ensure then
 			extended: contents.has (a_content)
-			internal_notebook.has (a_content.user_widget)
-			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content.user_widget)
+			internal_notebook.has (a_content)
+			selected: internal_notebook.selected_item_index = internal_notebook.index_of (a_content)
 		end
 
 	prune (a_content: SD_CONTENT) is
@@ -75,11 +75,11 @@ feature -- Command
 		do
 			disable_on_select_tab
 			contents.prune_all (a_content)
-			internal_notebook.prune (a_content.user_widget)
+			internal_notebook.prune (a_content)
 			enable_on_select_tab
 		ensure
 			pruned: not has (a_content)
-			pruned: not internal_notebook.has (a_content.user_widget)
+			pruned: not internal_notebook.has (a_content)
 		end
 
 feature {SD_CONFIG_MEDIATOR} -- Save config
@@ -135,7 +135,7 @@ feature -- States report
 		require
 			a_content_not_void: a_content /= Void
 		do
-			Result := internal_notebook.index_of (a_content.user_widget)
+			Result := internal_notebook.index_of (a_content)
 		end
 
 feature {NONE} -- Implementation

@@ -102,9 +102,6 @@ feature -- Access: IL code generation
 	clr_runtime_version: STRING
 			-- Version of IL runtime available.
 
-	ise_library_path: STRING
-			-- Path to $ISE_LIBRARY
-
 	metadata_cache_path: STRING
 			-- Alternative EAC metadata path
 
@@ -216,21 +213,6 @@ feature -- Update
 			clr_runtime_version_set:
 				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
 				clr_runtime_version = version
-		end
-
-	set_ise_library_path (path: like ise_library_path) is
-			-- Set `ise_library' to `path'.
-		require
-			path_not_void: path /= Void
-			path_not_empty: not path.is_empty
-		do
-			if not (create {SHARED_WORKBENCH}).Workbench.has_compilation_started then
-				ise_library_path := path
-			end
-		ensure
-			ise_library_path_set:
-				(create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else
-				ise_library_path = path
 		end
 
 	set_metadata_cache_path (s: STRING) is

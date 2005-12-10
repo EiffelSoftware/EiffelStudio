@@ -851,10 +851,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 			l_lib_env := execution_environment.get (once "ISE_LIBRARY")
 			if l_lib_env = Void or l_lib_env.is_empty then
 				l_ise_env := execution_environment.get (once "ISE_EIFFEL")
-				system.set_ise_library_path (l_ise_env)
 				execution_environment.put (l_ise_env, once "ISE_LIBRARY")
-			else
-				system.set_ise_library_path (l_lib_env)
 			end
 		end
 

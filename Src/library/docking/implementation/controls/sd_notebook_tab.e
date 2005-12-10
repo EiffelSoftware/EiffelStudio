@@ -73,7 +73,7 @@ feature {NONE}  -- Initlization
 			internal_tail_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
 			internal_tail_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_tail_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
-
+			
 		end
 
 feature -- Command
@@ -86,6 +86,25 @@ feature -- Command
 			Precursor {EV_HORIZONTAL_BOX}
 			create l_env
 			l_env.application.pointer_button_release_actions.prune_all (golbal_pointer_release_action)
+		end
+	
+	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE) is
+			-- Set drop actions to Current.
+		require
+			a_actions_not_void: a_actions /= Void
+		do
+			internal_pixmap_drawing_area.drop_actions.wipe_out
+			internal_pixmap_drawing_area.drop_actions.append (a_actions)
+			
+			internal_text_drawing_area.drop_actions.wipe_out
+			internal_text_drawing_area.drop_actions.append (a_actions)
+			
+			internal_tail_drawing_area.drop_actions.wipe_out
+			internal_tail_drawing_area.drop_actions.append (a_actions)
+		ensure
+			set: internal_pixmap_drawing_area.drop_actions.is_equal (a_actions)
+			set: internal_text_drawing_area.drop_actions.is_equal (a_actions)
+			set: internal_tail_drawing_area.drop_actions.is_equal (a_actions)
 		end
 		
 feature -- Properties

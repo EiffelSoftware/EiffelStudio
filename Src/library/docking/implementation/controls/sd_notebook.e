@@ -129,6 +129,7 @@ feature -- Command
 			internal_contents.extend (a_content)
 			create l_tab.make
 			internal_tabs.extend (l_tab)
+			l_tab.set_drop_actions (a_content.drop_actions)
 			l_tab.select_actions.extend (agent on_tab_selected (l_tab))
 			l_tab.drag_actions.extend (agent on_tab_dragging (?, ?, ?, ?, ?, ?, ?, l_tab))
 			internal_tab_box.extend (l_tab)

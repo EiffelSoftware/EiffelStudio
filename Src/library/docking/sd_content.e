@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			l_state: SD_STATE_VOID
 		do
 			create internal_shared
+			create drop_actions
 			internal_user_widget := a_widget
 			internal_unique_title := a_unique_title
 			internal_pixmap := a_pixmap

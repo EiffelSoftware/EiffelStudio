@@ -61,7 +61,9 @@ feature {NONE} -- Initialization
 			create output_view.make (development_window, Current)
 			create external_output_view.make (development_window, Current)
 			create c_compilation_output_view.make (development_window, Current)
-		
+			create error_output_view.make (development_window, Current)
+			create warning_output_view.make (development_window, Current)
+
 			if has_metrics then
 				create metrics.make (development_window, Current)
 			end
@@ -97,10 +99,14 @@ feature {NONE} -- Initialization
 			end
 			notebook.extend (external_output_view.widget)
 			notebook.extend (c_compilation_output_view.widget)
+			notebook.extend (error_output_view.widget)
+			notebook.extend (warning_output_view.widget)
 			notebook.set_item_text (output_view.widget, interface_names.l_Tab_output)
 			notebook.set_item_text (external_output_view.widget, interface_names.l_Tab_external_output)
 			notebook.set_item_text (c_compilation_output_view.widget, "C output")
-			
+			notebook.set_item_text (error_output_view.widget,	"Errors")
+			notebook.set_item_text (warning_output_view.widget,	"Warnings")
+
 			if has_case then
 				notebook.set_item_text (editor.widget, interface_names.l_Tab_diagram)
 			end
@@ -118,6 +124,9 @@ feature {NONE} -- Initialization
 			output_view.set_parent_notebook (notebook)
 			external_output_view.set_parent_notebook (notebook)
 			c_compilation_output_view.set_parent_notebook (notebook)
+			error_output_view.set_parent_notebook (notebook)
+			warning_output_view.set_parent_notebook (notebook)
+			error_output_view.set_parent_notebook (notebook)
 			notebook.drop_actions.extend (agent on_tab_dropped)
 			notebook.drop_actions.set_veto_pebble_function (agent on_tab_droppable)
 		end
@@ -153,6 +162,8 @@ feature {NONE} -- Initialization
 			output_view.set_parent (explorer_bar_item)
 			external_output_view.set_parent (explorer_bar_item)
 			c_compilation_output_view.set_parent (explorer_bar_item)
+			error_output_view.set_parent (explorer_bar_item)
+			warning_output_view.set_parent (explorer_bar_item)
 		end
 
 feature -- Access
@@ -174,15 +185,21 @@ feature -- Access
 
 	output_view: EB_OUTPUT_TOOL
 			-- Displays the compiler messages.
-			
+
 	external_output_view: EB_EXTERNAL_OUTPUT_TOOL
 			-- External command output display.
-			
+
 	c_compilation_output_view: EB_C_COMPILATION_OUTPUT_TOOL
 			-- C compilation output display.
-			
+
+	warning_output_view: EB_WARNING_OUTPUT_TOOL
+			-- Compilation warning output display.
+
+	error_output_view: EB_ERROR_OUTPUT_TOOL
+			-- Compilation warning output display.
+
 	metrics: EB_METRIC_TOOL
-			-- 
+			--
 
 	address_manager: EB_ADDRESS_MANAGER
 			-- Manager for the header info.
@@ -193,7 +210,7 @@ feature -- Access
 			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
 			conv_dev ?= manager
-			if conv_dev /= Void then	
+			if conv_dev /= Void then
 				Result := conv_dev.window
 			else
 				create Result
@@ -203,7 +220,7 @@ feature -- Access
 	notebook: EV_NOTEBOOK
 			-- Container of `output_view', `external_output_view', `c_compilation_output_view', `editor', `class_view', `feature_view' and `metric'.
 
-	title: STRING is 
+	title: STRING is
 			-- Title of the tool
 		do
 			Result := Interface_names.t_Context_tool
@@ -278,6 +295,8 @@ feature -- Status setting
 			class_view.quick_refresh_editor
 			feature_view.quick_refresh_editor
 			address_manager.refresh
+			error_output_view.quick_refresh_editor
+			warning_output_view.quick_refresh_editor
 		end
 
 	quick_refresh_margins is
@@ -285,10 +304,12 @@ feature -- Status setting
 		do
 			output_view.quick_refresh_margin
 			external_output_view.quick_refresh_margin
-			c_compilation_output_view.quick_refresh_margin			
+			c_compilation_output_view.quick_refresh_margin
 			class_view.quick_refresh_margin
 			feature_view.quick_refresh_margin
 			address_manager.refresh
+			error_output_view.quick_refresh_margin
+			warning_output_view.quick_refresh_margin
 		end
 
 	cut_from_development_window is
@@ -331,19 +352,23 @@ feature -- Status setting
 			sit: EV_WIDGET
 		do
 			sit := notebook.selected_item
-			
+
 			if sit = output_view.widget and then output_view.widget.is_displayed then
 				output_view.set_focus
 			elseif sit = external_output_view.widget and then external_output_view.widget.is_displayed then
 				external_output_view.set_focus
 			elseif sit = c_compilation_output_view.widget and then c_compilation_output_view.widget.is_displayed then
-				c_compilation_output_view.set_focus				
+				c_compilation_output_view.set_focus
 			elseif has_case and then sit = editor.widget and then editor.widget.is_displayed then
 				editor.set_focus
 			elseif sit = class_view.widget and then class_view.widget.is_displayed then
 				class_view.set_focus
 			elseif sit = feature_view.widget and then feature_view.widget.is_displayed then
 				feature_view.set_focus
+			elseif sit = error_output_view.widget and then error_output_view.widget.is_displayed then
+				error_output_view.set_focus
+			elseif sit = warning_output_view.widget and then warning_output_view.widget.is_displayed then
+				warning_output_view.set_focus
 			elseif has_metrics and then sit = metrics.widget and then metrics.widget.is_displayed then
 				metrics.set_focus
 			end
@@ -367,6 +392,8 @@ feature -- Memory management
 			c_compilation_output_view.recycle
 			class_view.recycle
 			feature_view.recycle
+			error_output_view.recycle
+			warning_output_view.recycle
 			if has_case then
 					-- Save the diagram
 				editor.store
@@ -467,8 +494,8 @@ feature {NONE} -- Implementation
 		do
 			if has_case and then notebook.selected_item = editor.widget then
 				output_view.on_deselect
-				external_output_view.on_deselect	
-				c_compilation_output_view.on_deselect			
+				external_output_view.on_deselect
+				c_compilation_output_view.on_deselect
 				is_diagram_selected := True
 				editor.on_select
 				class_view.on_deselect
@@ -479,7 +506,7 @@ feature {NONE} -- Implementation
 			elseif notebook.selected_item = class_view.widget then
 				output_view.on_deselect
 				external_output_view.on_deselect
-				c_compilation_output_view.on_deselect								
+				c_compilation_output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_select
 				feature_view.on_deselect
@@ -489,7 +516,7 @@ feature {NONE} -- Implementation
 			elseif notebook.selected_item = feature_view.widget then
 				output_view.on_deselect
 				external_output_view.on_deselect
-				c_compilation_output_view.on_deselect								
+				c_compilation_output_view.on_deselect
 				is_diagram_selected := False
 				feature_view.on_select
 				class_view.on_deselect
@@ -499,7 +526,7 @@ feature {NONE} -- Implementation
 			elseif has_metrics and then notebook.selected_item = metrics.widget then
 				output_view.on_deselect
 				external_output_view.on_deselect
-				c_compilation_output_view.on_deselect								
+				c_compilation_output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
@@ -507,7 +534,7 @@ feature {NONE} -- Implementation
 			elseif notebook.selected_item = output_view.widget then
 				output_view.on_select
 				external_output_view.on_deselect
-				c_compilation_output_view.on_deselect				
+				c_compilation_output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
@@ -516,28 +543,48 @@ feature {NONE} -- Implementation
 				end
 			elseif notebook.selected_item = external_output_view.widget then
 				external_output_view.on_select
-				c_compilation_output_view.on_deselect				
+				c_compilation_output_view.on_deselect
 				output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
 				if has_metrics then
 					metrics.on_deselect
-				end				
+				end
 			elseif notebook.selected_item = c_compilation_output_view.widget then
 				c_compilation_output_view.on_select
-				external_output_view.on_deselect				
+				external_output_view.on_deselect
 				output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
 				if has_metrics then
 					metrics.on_deselect
-				end					
+				end
+			elseif notebook.selected_item = error_output_view.widget then
+				error_output_view.on_select
+				external_output_view.on_deselect
+				output_view.on_deselect
+				is_diagram_selected := False
+				class_view.on_deselect
+				feature_view.on_deselect
+				if has_metrics then
+					metrics.on_deselect
+				end
+			elseif notebook.selected_item = warning_output_view.widget then
+				warning_output_view.on_select
+				external_output_view.on_deselect
+				output_view.on_deselect
+				is_diagram_selected := False
+				class_view.on_deselect
+				feature_view.on_deselect
+				if has_metrics then
+					metrics.on_deselect
+				end
 			else
 				output_view.on_deselect
 				external_output_view.on_deselect
-				c_compilation_output_view.on_deselect				
+				c_compilation_output_view.on_deselect
 				is_diagram_selected := False
 				class_view.on_deselect
 				feature_view.on_deselect
@@ -549,8 +596,8 @@ feature {NONE} -- Implementation
 
 	on_tab_droppable (a_pebble: ANY): BOOLEAN is
 			-- Can be data be dropped on `notebook' for a particular notebook item?
-			-- Will be true for all tab items except `output_view', `c_compilation_output_view' and `external_output_view' when `a_pebble' is
-			-- of type `STONE'.
+			-- Will be true for all tab items except `output_view', `c_compilation_output_view',
+			-- `warning_output_view', `error_output_view' and `external_output_view' when `a_pebble' is of type `STONE'.
 		require
 			notebook_not_void: notebook /= Void
 			notebook_not_destroyed: not notebook.is_destroyed
@@ -562,7 +609,8 @@ feature {NONE} -- Implementation
 			if l_stone /= Void then
 				l_tab_index := notebook.pointed_tab_index
 				Result := l_tab_index > 0 and then (notebook.i_th (l_tab_index) /= output_view.widget and notebook.i_th (l_tab_index) /= external_output_view.widget
-						  and notebook.i_th (l_tab_index) /= c_compilation_output_view.widget	
+						  and notebook.i_th (l_tab_index) /= c_compilation_output_view.widget and notebook.i_th (l_tab_index) /= error_output_view.widget
+						  and notebook.i_th (l_tab_index) /= warning_output_view.widget
 				)
 			end
 		end
@@ -577,6 +625,8 @@ feature {NONE} -- Implementation
 			not_output_view: notebook.i_th (notebook.pointed_tab_index) /= output_view.widget
 			not_external_output_wiew: notebook.i_th (notebook.pointed_tab_index) /= external_output_view.widget
 			not_c_compilation_output_wiew: notebook.i_th (notebook.pointed_tab_index) /= c_compilation_output_view.widget
+			not_error_output_wiew: notebook.i_th (notebook.pointed_tab_index) /= error_output_view.widget
+			not_warningn_output_wiew: notebook.i_th (notebook.pointed_tab_index) /= warning_output_view.widget
 		local
 			l_tab_index: INTEGER
 			l_stone: STONE

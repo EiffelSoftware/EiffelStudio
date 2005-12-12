@@ -11,9 +11,9 @@ inherit
 		export
 			{ANY} all
 		end
-		
+
 	SHARED_CACHE_MUTEX_GUARD
-		export 
+		export
 			{NONE} all
 		end
 
@@ -34,7 +34,7 @@ feature -- Access
 				until
 					l_assemblies.after
 				loop
-					if not l_assemblies.item.is_consumed then
+					if l_assemblies.item /= Void and then not l_assemblies.item.is_consumed then
 						l_assemblies.remove
 					else
 						l_assemblies.forth
@@ -60,11 +60,13 @@ feature -- Access
 			until
 				i > l_consumed_assemblies.count or Result /= Void
 			loop
-				if l_path = Void then
-					l_path := l_consumed_assemblies.item (i).format_path (a_path)
-				end
-				if l_consumed_assemblies.item (i).has_same_ready_formatted_path (l_path) then
-					Result := l_consumed_assemblies.item (i)
+				if l_consumed_assemblies.item (i) /= Void then
+					if l_path = Void then
+						l_path := l_consumed_assemblies.item (i).format_path (a_path)
+					end
+					if l_consumed_assemblies.item (i).has_same_ready_formatted_path (l_path) then
+						Result := l_consumed_assemblies.item (i)
+					end
 				end
 				i := i + 1
 			end
@@ -84,7 +86,7 @@ feature -- Access
 		ensure
 			non_void_info: Result /= Void
 		end
-		
+
 	consumed_type_from_dotnet_type_name (a_assembly: CONSUMED_ASSEMBLY; a_type: STRING): CONSUMED_TYPE is
 			-- Type information from type `type' contained in `ca'
 		require
@@ -100,14 +102,14 @@ feature -- Access
 			l_pos := type_position_from_type_name (a_assembly, a_type)
 			if l_pos >= 0 then
 				create l_des
-				l_type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_file_name			
+				l_type_path := absolute_assembly_path_from_consumed_assembly (a_assembly) + classes_file_name
 				l_des.deserialize (l_type_path, l_pos)
 				Result ?= l_des.deserialized_object
 			end
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 	consumed_type_from_consumed_referenced_type (a_assembly: CONSUMED_ASSEMBLY; a_crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE is
 			-- Type information from consumed referenced type `crt'.
 		require
@@ -119,19 +121,19 @@ feature -- Access
 			l_name: STRING
 		do
 			l_ca_mapping := assembly_mapping_from_consumed_assembly (a_assembly)
-			
+
 			if a_crt.is_by_ref then
 				l_name := a_crt.name.twin
 				l_name.keep_head (l_name.count - 1)
 			else
 				l_name := a_crt.name
 			end
-			
+
 			Result := consumed_type_from_dotnet_type_name (l_ca_mapping.assemblies @ a_crt.assembly_id, l_name)
 		ensure
 			non_void_info: Result /= Void
 		end
-		
+
 	assembly_mapping_from_consumed_assembly (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_MAPPING is
 			-- Assembly information from EAC for `a_assembly'.
 		require
@@ -146,7 +148,7 @@ feature -- Access
 		ensure
 			non_void_info: Result /= Void
 		end
-		
+
 	consumed_type (a_type: SYSTEM_TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `a_type'.
 		require
@@ -163,8 +165,8 @@ feature -- Access
 				if l_ca /= Void then
 					create l_des
 					l_des.deserialize (absolute_type_path (l_ca), l_pos)
-					Result ?= l_des.deserialized_object					
-				end				
+					Result ?= l_des.deserialized_object
+				end
 			end
 		ensure
 			non_void_consumed_type: Result /= Void
@@ -187,15 +189,17 @@ feature -- Access
 			until
 				i > l_assemblies.count
 			loop
-				l_referenced_assemblies := assembly_mapping_from_consumed_assembly (l_assemblies.item (i))
-				if l_referenced_assemblies.assemblies.has (a_assembly) then
-					l_client_assemblies.extend (l_assemblies.item (i))
+				if l_assemblies.item (i) /= Void then
+					l_referenced_assemblies := assembly_mapping_from_consumed_assembly (l_assemblies.item (i))
+					if l_referenced_assemblies.assemblies.has (a_assembly) then
+						l_client_assemblies.extend (l_assemblies.item (i))
+					end
 				end
 				i := i + 1
 			end
 			Result := l_client_assemblies
 		end
-		
+
 feature -- Status Report
 
 	is_initialized: BOOLEAN is
@@ -215,7 +219,7 @@ feature -- Status Report
 			l_ca := consumed_assembly_from_path (a_path)
 			Result := l_ca /= Void and (not a_consumed or l_ca.is_consumed)
 		end
-	
+
 	is_type_in_cache (a_type: SYSTEM_TYPE): BOOLEAN is
 			-- Is `a_type' in EAC?
 		require
@@ -223,7 +227,7 @@ feature -- Status Report
 		local
 			l_ca: CONSUMED_ASSEMBLY
 			l_type_path: STRING
-			l_pos: INTEGER			
+			l_pos: INTEGER
 		do
 			l_pos := type_position_from_type (a_type)
 			if l_pos >= 0 then
@@ -231,12 +235,12 @@ feature -- Status Report
 				if l_ca /= Void then
 					l_type_path := absolute_type_path (l_ca)
 					if l_type_path /= Void and not l_type_path.is_empty then
-						Result := (create {RAW_FILE}.make (l_type_path)).exists	
-					end			
-				end				
+						Result := (create {RAW_FILE}.make (l_type_path)).exists
+					end
+				end
 			end
 		end
-		
+
 feature {CACHE_WRITER} -- Implementation
 
 	info: CACHE_INFO is
@@ -270,7 +274,7 @@ feature {CACHE_WRITER} -- Implementation
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_info: CELL [CACHE_INFO] is

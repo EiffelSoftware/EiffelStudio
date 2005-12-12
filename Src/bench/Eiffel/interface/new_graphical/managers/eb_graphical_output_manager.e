@@ -35,6 +35,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_TEXT_OUTPUT_FACTORY
+		export
+			{NONE} all
+		end
+
 feature -- Basic Operations / Generic purpose
 
 	force_display is
@@ -85,6 +90,32 @@ feature -- Basic Operations / Generic purpose
 				managed_output_tools.after
 			loop
 				managed_output_tools.item.process_text (st)
+				managed_output_tools.forth
+			end
+		end
+
+	process_errors (errors: LINKED_LIST [ERROR]) is
+			-- Print `errors' on all output tools.
+		do
+			from
+				managed_output_tools.start
+			until
+				managed_output_tools.after
+			loop
+				managed_output_tools.item.process_errors (errors)
+				managed_output_tools.forth
+			end
+		end
+
+	process_warnings (warnings: LINKED_LIST [WARNING]) is
+			-- Print `warnings' on all output tools.
+		do
+			from
+				managed_output_tools.start
+			until
+				managed_output_tools.after
+			loop
+				managed_output_tools.item.process_warnings (warnings)
 				managed_output_tools.forth
 			end
 		end
@@ -204,66 +235,14 @@ feature -- Basic Operations / Compiler messages
 
 	trace_warnings (handler: ERROR_HANDLER) is
 			-- Display warnings messages from `handler'.
-		local
-			st: STRUCTURED_TEXT
-			retried_count: INTEGER
 		do
-			if retried_count = 0 then
-				create st.make
-				display_error_list (st, handler.warning_list)
-				if handler.error_list.is_empty then
-						-- There is no error in the list
-						-- put a separation before the next message
-					display_separation_line (st)
-				end
-				process_text (st)
-			else
-				if retried_count = 1 then
-						-- Most likely a failure in `display_error_list'.
-					display_error_error (st)
-					process_text (st)
-				else
-						-- Here most likely a failure in `process_text', so
-						-- we clear its content and only display the error message.
-					create st.make
-					display_error_error (st)
-					clear_and_process_text (st)
-				end
-			end
-		rescue
-			retried_count := retried_count + 1
-			retry
+			process_warnings (handler.warning_list)
 		end
 
 	trace_errors (handler: ERROR_HANDLER) is
 			-- Display error messages from `handler'.
-		local
-			st: STRUCTURED_TEXT
-			retried_count: INTEGER
 		do
-			if retried_count = 0 then
-				create st.make
-				display_error_list (st, handler.error_list)
-				display_separation_line (st)
-				display_additional_info (st)
-				process_text (st)
-			else
-				if retried_count = 1 then
-						-- Most likely a failure in `display_error_list'.
-					display_error_error (st)
-					process_text (st)
-				else
-						-- Here most likely a failure in `process_text', so
-						-- we clear its content and only display the error message.
-					create st.make
-					display_error_error (st)
-					clear_and_process_text (st)
-				end
-			end
-			scroll_to_end
-		rescue
-			retried_count := retried_count + 1
-			retry
+			process_errors (handler.error_list)
 		end
 
 feature -- Element change
@@ -282,90 +261,6 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-
-	display_error_error (st: STRUCTURED_TEXT) is
-			-- Display a message telling that an error occurred while displaying
-			-- the errors.
-		do
-			st.add_string ("Exception occurred while displaying error message.")
-			st.add_new_line
-			st.add_string ("Please contact ISE to report this bug.")
-			st.add_new_line
-		end
-
-	display_error_list (st: STRUCTURED_TEXT; error_list: LINKED_LIST [ERROR]) is
-			-- Display the content of `error_list' in `st'.
-		do
-				from
-					error_list.start
-				until
-					error_list.after
-				loop
-					display_separation_line (st)
-					st.add_new_line
-					error_list.item.trace (st)
-					st.add_new_line
-
-						-- prepare next iterations.
-					error_list.forth
-				end
-		end
-
-	display_separation_line (st: STRUCTURED_TEXT) is
-		do
-			st.add_string ("-------------------------------------------------------------------------------")
-			st.add_new_line
-		end
-
-	display_additional_info (st: STRUCTURED_TEXT) is
-			-- Add additional information to `st'.
-		local
-			degree_nbr: INTEGER
-			to_go: INTEGER
-		do
-			degree_nbr := Degree_output.current_degree
-			if degree_nbr > 0 then
-					-- Case has degree_number equal to 0
-				st.add_string ("Degree: ")
-				st.add_string (degree_nbr.out)
-			end;
-			st.add_string (" Processed: ")
-			st.add_string (Degree_output.processed.out)
-			st.add_string (" To go: ")
-			to_go := Degree_output.total_number - Degree_output.processed
-			st.add_string (to_go.out)
-			st.add_string (" Total: ")
-			st.add_string (Degree_output.total_number.out)
-			st.add_new_line
-		end
-
-
-feature {NONE} -- Implementation
-
-	welcome_info: STRUCTURED_TEXT is
-			-- Information text on how to launch $EiffelGraphicalCompiler$.
-		local
-		do
-			create Result.make
-			Result.add_new_line
-			Result.add_string ("To create or open a project using")
-			Result.add_new_line
-			Result.add_string (Interface_names.WorkBench_name+": On the File menu,")
-			Result.add_new_line
-			Result.add_string ("click %"New...%" or %"Open...%".")
-			Result.add_new_line
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	structured_system_info: STRUCTURED_TEXT is
-			-- Information text about current project.
-		do
-			if Eiffel_project.system /= Void then
-				create Result.make
-				append_system_info (Result)
-			end
-		end
 
 	display_filtered_breakpoints (st: STRUCTURED_TEXT; routine_list: LIST [E_FEATURE]; display_enabled:BOOLEAN) is
 			-- Display either the list of routines whose stop points are

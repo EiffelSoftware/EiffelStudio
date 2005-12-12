@@ -10,32 +10,32 @@ inherit
 	CALLBACK_INTERFACE
 
 	CACHE_ERRORS
-	
+
 	CACHE_SETTINGS
 		export
 			{NONE} all
 		end
-	
+
 	SHARED_CACHE_MUTEX_GUARD
-		export 
+		export
 			{NONE} all
 		end
-		
+
 	SAFE_ASSEMBLY_LOADER
 		export
 			{ANY} all
 		end
-		
+
 	KEY_ENCODER
 		export
 			{NONE} all
 		end
-		
+
 	ARGUMENTS
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_CLR_VERSION
 		export
 			{NONE} all
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 		do
 			create cache_reader
 		end
-	
+
 feature -- Basic Operations
 
 	add_assembly (a_path: STRING) is
@@ -66,7 +66,7 @@ feature -- Basic Operations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 			path_exists: (create {RAW_FILE}.make (a_path)).exists
-		local		
+		local
 			l_string_tuple: TUPLE [STRING]
 			l_assembly_folder: STRING
 			l_ca: CONSUMED_ASSEMBLY
@@ -94,25 +94,25 @@ feature -- Basic Operations
 				else
 					l_lower_path := l_ca.location
 				end
-				
+
 				l_assembly := load_from_gac_or_path (l_lower_path)
-			
+
 				create l_consumer.make (Current)
 				if l_assembly /= Void then
 					l_assembly_path := l_assembly.location.to_lower
-					
+
 					if l_ca = Void then
 							-- This case presents itself either when the assembly has never been consumed,
 							-- or when an assembly has been consumed as a referenced assembly, which means
 							-- it, at present, only has a GAC path.
 						l_ca := l_reader.consumed_assembly_from_path (l_assembly_path)
 					end
-					
+
 					if l_ca /= Void and then l_ca.is_consumed then
 						feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("'{0}' has already been consumed. Checking...", a_path))
 
 							-- Examine existing data and modify
-						if l_assembly.global_assembly_cache then	
+						if l_assembly.global_assembly_cache then
 							if not l_ca.gac_path.is_equal (l_assembly_path) then
 								l_ca.set_gac_path (l_assembly_path)
 								l_ca.set_is_in_gac (True)
@@ -134,21 +134,21 @@ feature -- Basic Operations
 								-- Plus it should be preserved for future look ups, just because a GAC assembly in no longer
 								-- present doesn't mean that we cannot still look at it's consumed metadata
 						end
-						
+
 						if l_assembly_info_updated then
 								-- The assembly information requires updating
 							feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Storing changed assembly information for '{0}'.", a_path))
 							l_info := l_reader.info
 							l_info.update_assembly (l_ca)
 							update_info (l_info)
-							update_client_assembly_mappings (l_ca)	
+							update_client_assembly_mappings (l_ca)
 						end
 						l_info := Void
 					end
 				end
-					
+
 					-- only consume `assembly' if assembly has not already been consumed,
-					-- corresponding assembly has been modified or if consumer tool has been 
+					-- corresponding assembly has been modified or if consumer tool has been
 					-- modified.
 				if l_ca /= Void and then l_ca.is_consumed and then is_assembly_stale (l_lower_path) then
 						-- unconsume stale assembly
@@ -158,10 +158,10 @@ feature -- Basic Operations
 					l_ca.set_version (l_name.version.to_string)
 					l_ca.set_key (public_key_token_from_array (l_name.get_public_key_token))
 				end
-					
+
 					-- Reset update (for optimizations)
 				l_assembly_info_updated := False
-				
+
 				if l_ca /= Void and then l_ca.is_consumed then
 					feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Assembly '{0}' is not being consumed because it is up-to-date.", a_path))
 					if status_printer /= Void then
@@ -187,11 +187,11 @@ feature -- Basic Operations
 						l_consumer.set_error_printer (error_printer)
 					end
 					if status_querier /= Void then
-						l_consumer.set_status_querier (status_querier)	
+						l_consumer.set_status_querier (status_querier)
 					end
 					l_consumer.set_destination_path (l_dir.name)
 					l_consumer.consume (l_assembly)
-					
+
 					if not l_consumer.successful then
 						set_error (Consume_error, a_path)
 					else
@@ -200,9 +200,9 @@ feature -- Basic Operations
 						l_ca.set_is_consumed (True)
 		 				l_info.update_assembly (l_ca)
 						update_info (l_info)
-					end					
+					end
 				end
-				
+
 				if l_consumer.successful then
 					feature {SYSTEM_DLL_TRACE}.write_line_string ("Processing assembly dependencies.")
 
@@ -221,9 +221,9 @@ feature -- Basic Operations
 						i := i + 1
 					end
 					if l_assembly_info_updated then
-						update_assembly_mappings (l_ca)	
+						update_assembly_mappings (l_ca)
 					end
-					
+
 				end
 			else
 				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Failed to consume assembly '{0}'.", a_path))
@@ -285,7 +285,7 @@ feature -- Basic Operations
 					end
 					l_ca.set_is_consumed (False)
 					l_info.update_assembly (l_ca)
-					update_info (l_info)					
+					update_info (l_info)
 				end
 			else
 				set_error (Update_error, a_path)
@@ -299,7 +299,7 @@ feature -- Basic Operations
 			l_retried := True
 			retry
 		end
-	
+
 	remove_recursive_assembly (a_path: STRING) is
 			-- Remove assembly identified by `a_path' and its clients from cache.
 		require
@@ -324,8 +324,8 @@ feature -- Basic Operations
 				until
 					i > l_assemblies.count
 				loop
-					if l_reader.is_assembly_in_cache (l_assemblies.item (i).gac_path, False) then
-						remove_recursive_assembly (l_assemblies.item (i).gac_path)					
+					if l_assemblies.item (i) /= Void and then l_reader.is_assembly_in_cache (l_assemblies.item (i).gac_path, False) then
+						remove_recursive_assembly (l_assemblies.item (i).gac_path)
 					end
 					i := i + 1
 				end
@@ -340,7 +340,7 @@ feature -- Basic Operations
 			l_retried := True
 			retry
 		end
-		
+
 	clean_cache is
 			-- cleans up cache and removes all incomplete consumed assembly metadata
 		local
@@ -353,17 +353,17 @@ feature -- Basic Operations
 			i: INTEGER
 		do
 			guard.lock
-			if not l_retried then								
+			if not l_retried then
 				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("Cleaning EAC '{0}'.", cache_reader.eac_path))
 
 				create l_cache_folder.make (cache_reader.eiffel_assembly_cache_path)
 				if l_cache_folder.exists then
 					l_assemblies := cache_reader.info.assemblies
-					
+
 					l_directories := l_cache_folder.linear_representation
 					if l_directories.count > 2 then
 						from
-							l_directories.start	
+							l_directories.start
 						until
 							l_directories.after
 						loop
@@ -373,7 +373,7 @@ feature -- Basic Operations
 							until
 								l_match or i > l_assemblies.count
 							loop
-								if l_assemblies.item (i).folder_name.is_equal (l_directories.item) then
+								if l_assemblies.item (i) /= Void and then l_assemblies.item (i).folder_name.is_equal (l_directories.item) then
 									if not l_assemblies.item (i).is_consumed then
 											-- there is no entry in cache info so lets remove it
 										l_assembly_path := cache_reader.eiffel_assembly_cache_path.twin
@@ -389,9 +389,9 @@ feature -- Basic Operations
 								i := i + 1
 							end
 							l_directories.forth
-						end	
+						end
 					end
-				end	
+				end
 			end
 			guard.unlock
 		rescue
@@ -400,8 +400,8 @@ feature -- Basic Operations
 			end
 			l_retried := True
 			retry
-		end		
-		
+		end
+
 	compact_cache_info is
 			-- comapcts cache info by removing all CONSUMED_ASSEMBLYs that are marked as being unconsumed
 		local
@@ -421,7 +421,7 @@ feature -- Basic Operations
 			until
 				i > l_assemblies.count
 			loop
-				if not l_assemblies.item (i).is_consumed then
+				if l_assemblies.item (i) /= Void and then not l_assemblies.item (i).is_consumed then
 					l_info.remove_assembly (l_assemblies.item (i))
 					l_removed := True
 				end
@@ -431,8 +431,8 @@ feature -- Basic Operations
 				update_info (l_info)
 			end
 			guard.unlock
-		end		
-		
+		end
+
 	consumed_assembly_from_path (a_path: STRING): CONSUMED_ASSEMBLY is
 			-- retrieve a consumed assembly for `a_path' and store in cache info for retrieval
 		require
@@ -457,7 +457,7 @@ feature -- Basic Operations
 			end
 			guard.unlock
 		end
-		
+
 	update_info (a_info: CACHE_INFO) is
 			-- Update EAC information file with `info'.
 		require
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 			debug ("assemblies_are_never_stale")
 				Result := False
 			end
-			
+
 			if Result then
 				check
 					l_reason_not_void: l_reason /= Void
@@ -534,7 +534,7 @@ feature {NONE} -- Implementation
 				feature {SYSTEM_DLL_TRACE}.write_line_string ({SYSTEM_STRING}.format ("%TReason: {0}.", l_reason))
 			end
 		end
-		
+
 	remove_assembly_internal (a_path: STRING) is
 			-- Remove assembly identified by `a_path' and its clients from cache.
 		require
@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			l_retried := True
 			retry
 		end
-		
+
 	create_consumed_assembly_from_path (a_id: STRING; a_path: STRING): CONSUMED_ASSEMBLY is
 			-- Creates a new CONSUMED_ASSEMBLY
 		require
@@ -598,22 +598,22 @@ feature {NONE} -- Implementation
 				if not l_is_in_gac and then is_mscorlib (l_assembly) then
 					l_is_in_gac := True
 				end
-				
+
 				if conservative_mode then
 					folder_name := a_id.twin
 				else
 					create folder_name.make (l_name.name.length + a_id.count + 1)
 					folder_name.append (l_name.name)
 					folder_name.append_character ('!')
-					folder_name.append (a_id)				
+					folder_name.append (a_id)
 				end
-				
+
 				create Result.make (a_id, folder_name, l_name.name, l_name.version.to_string, l_culture, l_key, a_path, l_assembly.location, l_is_in_gac)
 			end
 		ensure
 			non_void_result: Result /= Void
 		end
-		
+
 	update_assembly_mappings (a_assembly: CONSUMED_ASSEMBLY) is
 			-- updates serialized assembly mappings and sets consumed status based on contents of EAC.
 		require
@@ -637,11 +637,13 @@ feature {NONE} -- Implementation
 			until
 				i > l_mappings.assemblies.count
 			loop
-				l_ref_ca := consumed_assembly_from_path (l_mappings.assemblies.item (i).location)
-				if l_ref_ca /= Void then
-					l_mappings.assemblies.put (l_ref_ca, i)
-				else
-					l_mappings.assemblies.item (i).set_is_consumed (False)
+				if l_mappings.assemblies.item (i) /= Void then
+					l_ref_ca := consumed_assembly_from_path (l_mappings.assemblies.item (i).location)
+					if l_ref_ca /= Void then
+						l_mappings.assemblies.put (l_ref_ca, i)
+					else
+						l_mappings.assemblies.item (i).set_is_consumed (False)
+					end
 				end
 				i := i + 1
 			end
@@ -668,15 +670,17 @@ feature {NONE} -- Implementation
 			until
 				i > l_clients.count
 			loop
-				update_assembly_mappings (l_clients.item (i))
+				if l_clients.item (i) /= Void then
+					update_assembly_mappings (l_clients.item (i))
+				end
 				i := i + 1
 			end
 			guard.unlock
 		end
-		
+
 	cache_reader: CACHE_READER
 			-- associated cache reader
-			
+
  	culture_from_info (a_info: CULTURE_INFO): STRING is
  			-- Returns culture string from `a_info'
  		require
@@ -690,10 +694,10 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
  		end
-			
+
 	neutral_culture: STRING is "neutral"
 			-- neutral culture
-			
+
  	public_key_token_from_array (a_array: NATIVE_ARRAY [NATURAL_8]): STRING is
  			-- Returns culture string from `a_info'
  		do
@@ -706,7 +710,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
  		end
-			
+
 	null_public_key_token: STRING is "null"
 			-- Null public key tokens
 

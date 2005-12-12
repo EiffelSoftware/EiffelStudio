@@ -15,7 +15,7 @@ inherit
 
 create
 	make
-	
+
 feature {NONE} -- Initalization
 
 	make is
@@ -32,7 +32,7 @@ feature {NONE} -- Initalization
 		ensure
 			non_void_assemblies: assemblies /= Void
 		end
-		
+
 feature -- Access
 
 	assemblies: ARRAY [CONSUMED_ASSEMBLY] is
@@ -46,7 +46,7 @@ feature -- Access
 		ensure
 			assemblies_not_void: Result /= Void
 		end
-		
+
 feature -- Status report
 
 	is_dirty: BOOLEAN
@@ -65,9 +65,9 @@ feature -- Status report
 				end
 			end
 		end
-		
+
 feature {CACHE_WRITER} -- Element Settings
-	
+
 	add_assembly (ass: CONSUMED_ASSEMBLY) is
 			-- Add `ass' to `assemblies'.
 		require
@@ -80,7 +80,7 @@ feature {CACHE_WRITER} -- Element Settings
 			internal_assemblies.force (ass, internal_assemblies.count + 1)
 			set_is_dirty (True)
 		end
-		
+
 	update_assembly (a_assembly: CONSUMED_ASSEMBLY) is
 			-- Updates `a_assembly' in `assemblies'
 		require
@@ -92,13 +92,13 @@ feature {CACHE_WRITER} -- Element Settings
 			l_assemblies: like internal_assemblies
 		do
 			l_assemblies := internal_assemblies
-			from 
+			from
 				i := 1
 				nb := l_assemblies.count
 			until
 				l_done or i > nb
 			loop
-				if l_assemblies.item (i).is_equal (a_assembly) then
+				if l_assemblies.item (i) /= Void and then l_assemblies.item (i).is_equal (a_assembly) then
 					l_assemblies.put (a_assembly, i)
 					set_is_dirty (True)
 					l_done := True
@@ -130,7 +130,7 @@ feature {CACHE_WRITER} -- Element Settings
 			until
 				i > nb
 			loop
-				if not l_assemblies.item (i).is_equal (ass) then
+				if l_assemblies.item (i) /= Void and then not l_assemblies.item (i).is_equal (ass) then
 					new.put (l_assemblies.item (i), j)
 					set_is_dirty (True)
 					j := j + 1
@@ -149,7 +149,7 @@ feature {CACHE_WRITER} -- Element Settings
 		ensure
 			is_dirty_set: is_dirty = a_dirty
 		end
-		
+
 feature {NONE} -- Implementation
 
 	internal_assemblies: ARRAY [CONSUMED_ASSEMBLY]
@@ -157,5 +157,5 @@ feature {NONE} -- Implementation
 
 invariant
 	non_void_assemblies: assemblies /= Void
-	
+
 end -- class CACHE_INFO

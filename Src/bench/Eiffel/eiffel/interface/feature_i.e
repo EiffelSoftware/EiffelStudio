@@ -703,6 +703,7 @@ feature -- Incrementality
 				and then has_precondition = other.has_precondition
 				and then has_postcondition = other.has_postcondition
 				and then is_once = other.is_once
+				and then is_process_relative = other.is_process_relative
 				and then is_constant = other.is_constant
 				and then alias_name_id = other.alias_name_id
 				and then has_convert_mark = other.has_convert_mark

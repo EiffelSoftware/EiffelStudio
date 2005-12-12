@@ -185,6 +185,7 @@ feature -- Settings
 			until
 				local_onces.after
 			loop
+				buffer.put_new_line
 				buffer.put_string (local_once_prefix)
 				if local_onces.item_for_iteration.is_void then
 					buffer.put_string ("P(")

@@ -157,7 +157,6 @@ feature -- C code generation
 					buf.put_integer (body_index)
 					buf.put_character (')')
 					buf.put_new_line
-					buf.put_new_line
 				end
 			end
 		end

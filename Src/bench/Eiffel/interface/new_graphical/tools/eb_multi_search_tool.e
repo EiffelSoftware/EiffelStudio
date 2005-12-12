@@ -29,7 +29,8 @@ inherit
 			on_text_edited,
 			on_text_reset,
 			on_text_fully_loaded,
-			set_focus
+			set_focus,
+			recycle
 		end
 
 	MSR_FORMATTER
@@ -50,6 +51,8 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+
+	EB_SHARED_PREFERENCES
 
 create
 	make
@@ -140,7 +143,6 @@ feature {NONE} -- Initialization
 			label_search.set_minimum_width (label.width)
 
 			hbox.extend (replace_check_button)
-			replace_check_button.enable_select
 			replace_check_button.hide
 			hbox.disable_item_expand (replace_check_button)
 			hbox.extend (replace_combo_box)
@@ -181,7 +183,7 @@ feature {NONE} -- Initialization
 			create use_regular_expression_button.make_with_text (Interface_names.l_Use_regular_expression)
 			use_regular_expression_button.key_press_actions.extend (agent key_pressed (?, True))
 			use_regular_expression_button.select_actions.extend (agent force_new_search)
-			use_regular_expression_button.enable_select
+
 
 				-- Option "Search backward"
 			create search_backward_button.make_with_text (Interface_names.l_Search_backward)
@@ -256,9 +258,6 @@ feature {NONE} -- Initialization
 			notebook.item_tab (vbox).set_text (interface_names.t_search_tool)
 			notebook.item_tab (options_box).set_text (interface_names.l_scope)
 
-			current_editor_button.enable_select
-			toggle_scope_detail (current_editor_button)
-
 			create vbox
 			vbox.extend (notebook)
 			vbox.disable_item_expand (notebook)
@@ -267,6 +266,8 @@ feature {NONE} -- Initialization
 			create frame
 			frame.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_raised)
 			frame.extend (vbox)
+
+			prepare_interface
 
 			switch_mode
 			widget := frame
@@ -327,7 +328,7 @@ feature -- Access
 	whole_project_button: EV_RADIO_BUTTON
 			-- Button to search in whole project
 
-	scope_button: EV_RADIO_BUTTON
+	custom_button: EV_RADIO_BUTTON
 			-- Button to search in a specific scope
 
 	search_subcluster_button: EV_CHECK_BUTTON
@@ -365,10 +366,10 @@ feature -- Status report
 			Result := whole_project_button.is_selected
 		end
 
-	is_scoped : BOOLEAN is
+	is_customized : BOOLEAN is
 			-- Is search scoped?
 		do
-			Result := scope_button.is_selected
+			Result := custom_button.is_selected
 		end
 
 	is_case_sensitive: BOOLEAN is
@@ -641,7 +642,6 @@ feature {NONE} -- Build interface
 		do
 				-- Option "Incremental search"
 			create incremental_search_button.make_with_text ("Have not added to search panel")
-			incremental_search_button.enable_select
 
 				-- Option "Current Editor"		
 			create current_editor_button.make_with_text (Interface_names.l_Current_editor)
@@ -656,16 +656,15 @@ feature {NONE} -- Build interface
 			whole_project_button.select_actions.extend (agent force_new_search)
 
 				-- Option "Scope"
-			create scope_button.make_with_text (Interface_names.l_Custom)
-			scope_button.key_press_actions.extend (agent key_pressed (?, True))
-			scope_button.select_actions.extend (agent toggle_scope_detail (scope_button))
-			scope_button.select_actions.extend (agent force_new_search)
-			scope_button.drop_actions.extend (agent on_drop_scope_button (?))
+			create custom_button.make_with_text (Interface_names.l_Custom)
+			custom_button.key_press_actions.extend (agent key_pressed (?, True))
+			custom_button.select_actions.extend (agent toggle_scope_detail (custom_button))
+			custom_button.select_actions.extend (agent force_new_search)
+			custom_button.drop_actions.extend (agent on_drop_custom_button (?))
 
 				-- Option "Subcluster"
 			create search_subcluster_button.make_with_text (Interface_names.l_Sub_clusters)
 			search_subcluster_button.key_press_actions.extend (agent key_pressed (?, True))
-			search_subcluster_button.enable_select
 			search_subcluster_button.select_actions.extend (agent force_new_search)
 
 				-- Option "Compiled class"
@@ -726,11 +725,11 @@ feature {NONE} -- Build interface
 			vbox.set_padding_width (layout_constants.small_border_size )
 			vbox.extend (current_editor_button)
 			vbox.extend (whole_project_button)
-			vbox.extend (scope_button)
+			vbox.extend (custom_button)
 			vbox.extend (search_compiled_class_button)
 			vbox.disable_item_expand (current_editor_button)
 			vbox.disable_item_expand (whole_project_button)
-			vbox.disable_item_expand (scope_button)
+			vbox.disable_item_expand (custom_button)
 			vbox.disable_item_expand (search_compiled_class_button)
 			hbox.extend (vbox)
 			hbox.disable_item_expand (vbox)
@@ -889,6 +888,58 @@ feature {NONE} -- Build interface
 
 	choose_dialog: EB_CHOOSE_MULTI_CLUSTER_N_CLASS_DIALOG
 			-- Dialog used to add classes or clusters to scope
+
+	prepare_interface is
+			-- Initialize options' status.
+		local
+			l_pre : EB_SEARCH_TOOL_DATA
+			l_scope: STRING
+		do
+			l_pre := preferences.search_tool_data
+			if l_pre.init_incremental then
+				incremental_search_button.enable_select
+			else
+				incremental_search_button.disable_select
+			end
+			if l_pre.init_match_case then
+				case_sensitive_button.enable_select
+			else
+				case_sensitive_button.disable_select
+			end
+			if l_pre.init_only_compiled_classes then
+				search_compiled_class_button.enable_select
+			else
+				search_compiled_class_button.disable_select
+			end
+			if l_pre.init_search_backwards then
+				search_backward_button.enable_select
+			else
+				search_backward_button.disable_select
+			end
+			if l_pre.init_subclusters then
+				search_subcluster_button.enable_select
+			else
+				search_subcluster_button.disable_select
+			end
+			if l_pre.init_use_regular_expression then
+				use_regular_expression_button.enable_select
+			else
+				use_regular_expression_button.disable_select
+			end
+			if l_pre.init_whole_word then
+				whole_word_button.enable_select
+			else
+				whole_word_button.disable_select
+			end
+			l_scope := l_pre.init_scope
+			if l_scope.is_equal ("Current Editor") then
+				current_editor_button.enable_select
+			elseif l_scope.is_equal ("Whole Project") then
+				whole_project_button.enable_select
+			elseif l_scope.is_equal ("Custom") then
+				custom_button.enable_select
+			end
+		end
 
 feature {NONE} -- Shortcut button actions
 
@@ -1056,12 +1107,12 @@ feature {NONE} -- Actions handler
 	toggle_scope_detail (a_button: EV_RADIO_BUTTON) is
 			-- Show and hide the scope detail according to the scope box's selection.
 		do
-			if is_scoped then
+			if is_customized then
 				scope.enable_sensitive
 			else
 				scope.disable_sensitive
 			end
-			if is_whole_project_searched or is_scoped then
+			if is_whole_project_searched or is_customized then
 				search_compiled_class_button.enable_sensitive
 			else
 				search_compiled_class_button.disable_sensitive
@@ -1090,10 +1141,10 @@ feature {NONE} -- Actions handler
 			choose_dialog.set_focus
 		end
 
-	on_drop_scope_button (a_any: ANY) is
+	on_drop_custom_button (a_any: ANY) is
 			-- Invoke hen dropping on the scope check button.
 		do
-			scope_button.enable_select
+			custom_button.enable_select
 			on_drop_add (a_any)
 		end
 
@@ -1204,7 +1255,7 @@ feature {NONE} -- Actions handler
 				end
 			when 2 then
 				notebook.select_item (notebook.i_th (2))
-				on_drop_scope_button (a_stone)
+				on_drop_custom_button (a_stone)
 			else
 			end
 		end
@@ -1255,7 +1306,7 @@ feature {NONE} -- Search perform
 		do
 			if is_whole_project_searched then
 				search_whole_project
-			elseif is_scoped then
+			elseif is_customized then
 				search_in_scope
 			else
 				if shown then
@@ -1282,7 +1333,6 @@ feature {NONE} -- Search perform
 			class_i: CLASS_I
 			file_name: FILE_NAME
 			class_name: STRING
-			l_editor: like old_editor
 		do
 			manager.window.set_pointer_style (default_pixmaps.wait_cursor)
 			if not editor.is_empty then
@@ -1957,6 +2007,52 @@ feature {NONE} -- Replacement Implementation
 			manager.window.set_pointer_style (default_pixmaps.standard_cursor)
 		end
 
+feature {NONE} -- Destroy behavior.
+
+	save_preferences is
+			-- Save preferences. All options' status.
+		local
+			l_pre : EB_SEARCH_TOOL_DATA
+		do
+			l_pre := preferences.search_tool_data
+			l_pre.init_incremental_preference.set_value (is_incremental_search)
+			preferences.preferences.save_resource (l_pre.init_incremental_preference)
+
+			l_pre.init_match_case_preference.set_value (is_case_sensitive)
+			preferences.preferences.save_resource (l_pre.init_match_case_preference)
+
+			l_pre.init_only_compiled_classes_preference.set_value (only_compiled_class_searched)
+			preferences.preferences.save_resource (l_pre.init_only_compiled_classes_preference)
+
+			l_pre.init_search_backwards_preference.set_value (search_backward_button.is_selected)
+			preferences.preferences.save_resource (l_pre.init_search_backwards_preference)
+
+			l_pre.init_subclusters_preference.set_value (is_sub_cluster_searched)
+			preferences.preferences.save_resource (l_pre.init_subclusters_preference)
+
+			l_pre.init_use_regular_expression_preference.set_value (is_regular_expression_used)
+			preferences.preferences.save_resource (l_pre.init_use_regular_expression_preference)
+
+			l_pre.init_whole_word_preference.set_value (is_whole_word_matched)
+			preferences.preferences.save_resource (l_pre.init_whole_word_preference)
+
+			if is_current_editor_searched then
+				l_pre.init_scope_preference.set_selected_index (1)
+			elseif is_whole_project_searched then
+				l_pre.init_scope_preference.set_selected_index (2)
+			elseif is_customized then
+				l_pre.init_scope_preference.set_selected_index (3)
+			end
+			preferences.preferences.save_resource (l_pre.init_scope_preference)
+		end
+
+	recycle is
+			-- Recycle
+		do
+			save_preferences
+			Precursor {EB_SEARCH_TOOL}
+		end
+
 feature {NONE} -- Implementation
 
 	go_to_next_found_perform (b: BOOLEAN) is
@@ -2398,7 +2494,7 @@ feature {NONE} -- Implementation
 			search_backward_button.key_press_actions.block
 			current_editor_button.key_press_actions.block
 			whole_project_button.key_press_actions.block
-			scope_button.key_press_actions.block
+			custom_button.key_press_actions.block
 			search_subcluster_button.key_press_actions.block
 			search_compiled_class_button.key_press_actions.block
 			scope_list.key_press_actions.block
@@ -2419,7 +2515,7 @@ feature {NONE} -- Implementation
 			search_backward_button.key_press_actions.resume
 			current_editor_button.key_press_actions.resume
 			whole_project_button.key_press_actions.resume
-			scope_button.key_press_actions.resume
+			custom_button.key_press_actions.resume
 			search_subcluster_button.key_press_actions.resume
 			search_compiled_class_button.key_press_actions.resume
 			scope_list.key_press_actions.resume

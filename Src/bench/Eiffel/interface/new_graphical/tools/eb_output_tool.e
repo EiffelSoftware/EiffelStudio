@@ -11,12 +11,14 @@ inherit
 	EB_SHARED_MANAGERS
 
 	EB_RECYCLABLE
-	
+
 	EB_CONSTANTS
 
 	SHARED_APPLICATION_EXECUTION
-	
+
 	EB_SHARED_DEBUG_TOOLS
+
+	EB_TEXT_OUTPUT_FACTORY
 
 create
 	make
@@ -39,11 +41,12 @@ feature {NONE} -- Initialization
 			widget := f
 			graphical_output_manager.extend (Current)
 			owner := a_tool
-			
+
 			stone_manager := m
 
 				-- Output text is not editable
 			text_area.set_read_only (True)
+			create output_display_factory
 		end
 
 feature -- Clean up
@@ -150,6 +153,8 @@ feature -- Access
 			Result := Interface_names.m_Output
 		end
 
+	output_display_factory: EB_TEXT_OUTPUT_FACTORY
+
 feature -- Basic operation
 
 	quick_refresh_editor is
@@ -185,14 +190,30 @@ feature -- Basic operation
 			end
 		end
 
+	process_errors (errors: LINKED_LIST [ERROR]) is
+			-- Display contextual error information from `errors'.
+		do
+			if not errors.is_empty then
+				process_text (error_summary (errors.count))
+			end
+		end
+
+	process_warnings (warnings: LINKED_LIST [ERROR]) is
+			-- Display contextual error information from `warnings'.
+		do
+			if not warnings.is_empty then
+				process_text (warning_summary (warnings.count))
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	visible: BOOLEAN
 			-- Are we displayed by `parent_notebook'.
-	
+
 	owner: EB_DEVELOPMENT_WINDOW
 			-- Window `Current' is in.
-	
+
 	stone_manager: EB_CONTEXT_TOOL
 			-- Stone manager for `Current'.
 
@@ -214,7 +235,7 @@ feature {NONE} -- Implementation
 			end
 			debugger_manager.notify_breakpoints_changes
 		end
-		
+
 	drop_class (st: CLASSI_STONE) is
 			-- Drop `st' in the context tool and pop the `class info' tab.
 		require

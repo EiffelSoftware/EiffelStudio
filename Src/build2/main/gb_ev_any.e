@@ -453,10 +453,18 @@ feature {NONE} -- Implementation
 			if element_info /= Void then
 				if element_info.is_constant then
 					string_constant ?= components.constants.all_constants.item (element_info.data)
-					create constant_context.make_with_context (string_constant, object, type, a_type_name)
-					string_constant.add_referer (constant_context)
-					object.add_constant_context (constant_context)
-					Result := string_constant.value
+					if string_constant /= Void then
+						create constant_context.make_with_context (string_constant, object, type, a_type_name)
+						string_constant.add_referer (constant_context)
+						object.add_constant_context (constant_context)
+						Result := string_constant.value
+					else
+						--| FIXME IEK There is an error in the generated XML where a constant is referenced but not defined.
+						--| The reason how the XML can be put into an invalid state is unknown.
+						--| For now, return a valid error message constant so that project may still be used.
+						Result := "*** Error - Constant for " + a_type_name + " not found ****"
+					end
+
 				else
 					Result := element_info.data
 				end

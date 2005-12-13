@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 				or not
 				(src[start_src]).is_equal(dst[start_dst])
 			loop
-				all_matches.extend (start_dst, start_src)
+				all_matches.put (start_dst, start_src)
 				start_src := start_src + 1
 				start_dst := start_dst + 1
 			end
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 				or not
 				(src[end_src]).is_equal(dst[end_dst])
 			loop
-				all_matches.extend (end_dst, end_src)
+				all_matches.put (end_dst, end_src)
 				end_src := end_src - 1
 				end_dst := end_dst - 1
 			end
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 				else
 					create matches.make (1)
 					matches.extend (i)
-					hash_dst.extend (matches, dst[i])
+					hash_dst.put (matches, dst[i])
 				end
 				i := i + 1
 			end
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 					link := links[links.count]
 					-- check if the values themselves are also equal (above we worked with hashes)
 					if (src[link.index_src]).is_equal(dst[link.index_dst]) then
-						all_matches.force (link.index_dst, link.index_src)
+						all_matches.put (link.index_dst, link.index_src)
 					end
 				until
 					link.next = void
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 					link := link.next
 					-- check if the values themselves are also equal (above we worked with hashes)
 					if (src[link.index_src]).is_equal(dst[link.index_dst]) then
-						all_matches.force (link.index_dst, link.index_src)
+						all_matches.put (link.index_dst, link.index_src)
 					end
 				end
 			end

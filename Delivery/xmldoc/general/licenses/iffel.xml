@@ -120,7 +120,7 @@
 					<anchor>valid_eiffel</anchor>
 					Ensure that the text remains valid Eiffel. Note that this license does not authorize you to distribute versions of the Library restated in other programming, analysis or design languages, except if mechanically translated from the source form by an Eiffel compiler, in which case they fall under "object form". For any non-mechanical adaptation to other languages you must obtain authorization from Eiffel Software. "Valid Eiffel" includes the language described in the latest edition or printing of the book 
 					<link>
-						<url>http://www.eiffel.com/doc/page.xml</url><anchor_name>etl</anchor_name>
+						<url>http://www.eiffel.com/services/traning/books.html</url><anchor_name>etl</anchor_name>
 						<label>
 							<italic>Eiffel: The Language</italic>
 						</label>

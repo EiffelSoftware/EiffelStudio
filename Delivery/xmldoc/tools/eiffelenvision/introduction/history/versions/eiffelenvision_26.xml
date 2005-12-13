@@ -70,7 +70,9 @@
      		<item>Added completion for bracketed creation expressions - (create {OPERATING_ENVIRONMENT}).di...</item>
      		<item>Uncompiled features in a compiled class now show up in the completion list.</item>
      		<item>Optimized editor refreshing to speed up edition, caret scrolling and selection.</item>
-     		<item>Update feature list and completion icons, and added more icons to represent features more specifically.</item>
+		<item>Update feature list and completion icons, and added more icons to represent features more specifically.</item>
+		<item>Fixed highlighting of Intellisense Method Tip arguments after selecting the corrected overloaded feature related to what is being edited.</item>
+		<item>Intellisense Method Tips now close when deleting an opening paranthesis, for overloaded features.</item>
       </list>
     </paragraph>
     <anchor>object_browser</anchor>

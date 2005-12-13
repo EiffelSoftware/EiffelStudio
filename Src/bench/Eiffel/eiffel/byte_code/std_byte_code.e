@@ -382,11 +382,12 @@ feature -- Analyzis
 				-- Generate termination for once routine
 			generate_once_epilogue (generated_c_feature_name)
 
-				-- Remove the GC hooks we've been generated.
-			finish_compound
-
+			if compound = Void or else not compound.last.last_all_in_result then
+					-- Remove the GC hooks we've been generated.
+				finish_compound
 				-- Generate final "return Result", if required
-			generate_return_exp
+				generate_return_exp
+			end
 
 			buf.exdent
 

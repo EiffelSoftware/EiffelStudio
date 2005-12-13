@@ -55,7 +55,7 @@ feature -- Access
 						block_line_diff := block_line_diff + 1
 						block.append ("+")
 						block.append (dst[hunks.item.item.dst])
-						block.append ("%N")
+						block.append_character (line_delimiter)
 					else
 						if ss > hunks.item.item.src then
 							ss := hunks.item.item.src
@@ -66,7 +66,7 @@ feature -- Access
 						block_line_diff := block_line_diff - 1
 						block.append ("-")
 						block.append (src[hunks.item.item.src])
-						block.append ("%N")
+						block.append_character (line_delimiter)
 					end
 					hunks.item.forth
 				end
@@ -93,22 +93,14 @@ feature -- Access
 					Result.append (",")
 					Result.append_integer (de-ds+1)
 				end
-				Result.append (" @@%N")
+				Result.append (" @@")
+				Result.append_character (line_delimiter)
 				Result.append (block)
 
 				line_diff := line_diff + block_line_diff
 				hunks.forth
 			end
 		end
-
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
 
 feature -- Element change
 
@@ -119,7 +111,7 @@ feature -- Element change
 			i: INTEGER
 		do
 			-- convert it into an array because it is faster to access
-			tmp_lst := a_src_text.split (' ')
+			tmp_lst := a_src_text.split (line_delimiter)
 			create src.make(0, tmp_lst.count-1)
 			from
 				tmp_lst.start
@@ -132,7 +124,7 @@ feature -- Element change
 				i := i + 1
 			end
 
-			tmp_lst := a_dst_text.split (' ')
+			tmp_lst := a_dst_text.split (line_delimiter)
 			create dst.make(0, tmp_lst.count-1)
 			from
 				tmp_lst.start
@@ -166,7 +158,7 @@ feature -- Element change
 			unified_header.append ("--- ")
 			unified_header.append (a_src_file)
 
-			unified_header.append ("%N")
+			unified_header.append_character (line_delimiter)
 			from
 				i := 0
 			until
@@ -182,7 +174,7 @@ feature -- Element change
 			create dst.make (0, 0)
 			unified_header.append ("+++ ")
 			unified_header.append (a_dst_file)
-			unified_header.append ("%N")
+			unified_header.append_character (line_delimiter)
 			from
 				i := 0
 			until
@@ -199,32 +191,97 @@ feature -- Element change
 			values_set
 		end
 
-
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
 feature -- Basic operations
 
-feature -- Obsolete
+	patch (a_text:STRING; a_patch: STRING; reversed: BOOLEAN): STRING is
+			-- Apply `a_patch' (in unified patch format) to `a_text'. If the patch was created from destination to source set `reversed'.
+		require
+			a_text_not_void: a_text /= void
+			a_patch_not_void: a_patch /= void
+		local
+			commands: LIST [STRING]
+			lines: LIST [STRING]
+			tmp: STRING
+			add_char, del_char, match_char: CHARACTER
+		do
+			match_char := ' '
+			if reversed then
+				add_char := '-'
+				del_char := '+'
+			else
+				add_char := '+'
+				del_char := '-'
+			end
 
-feature -- Inapplicable
+			create Result.make_empty
+			commands := a_patch.split (line_delimiter)
+			lines := a_text.split (line_delimiter)
+
+			from
+				commands.start
+				lines.start
+			until
+				commands.after
+				and
+				lines.after
+			loop
+				if not commands.after then
+					-- block header?
+					if commands.item.count > 4 and then ("@@ ").is_equal(commands.item.substring (1, 3)) then
+						if reversed then
+							tmp := commands.item.substring (commands.item.index_of (' ', 6)+2, commands.item.count-3)
+						else
+							tmp := commands.item.substring (5, commands.item.index_of (' ', 6)-1)
+						end
+						if tmp.index_of (',', 1) > 0 then
+							tmp := tmp.substring (1, tmp.index_of (',', 1)-1)
+						end
+						from
+						until
+							lines.index >= tmp.to_integer
+						loop
+							Result.append (lines.item)
+
+							lines.forth
+							if not lines.after then
+								Result.append_character (line_delimiter)
+							end
+						end
+					-- block data
+					elseif commands.item.count > 0 then
+						if commands.item.item (1) = add_char then
+							Result.append (commands.item.substring (2, commands.item.count))
+							Result.append_character (line_delimiter)
+						elseif commands.item.item (1) = del_char then
+							lines.forth
+						elseif commands.item.item (1) = match_char then
+							Result.append (lines.item)
+							lines.forth
+							if not lines.after then
+								Result.append_character (line_delimiter)
+							end
+						end
+					end
+					commands.forth
+				else
+					Result.append (lines.item)
+					lines.forth
+					if not lines.after then
+						Result.append_character (line_delimiter)
+					end
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 
+	line_delimiter: CHARACTER is
+			-- The line delimiter to use
+		do
+			Result := '%N'
+		end
+
+
 	unified_header: STRING
 			-- The header for the unified diff.
-
-invariant
-	invariant_clause: True -- Your invariant here
-
 end

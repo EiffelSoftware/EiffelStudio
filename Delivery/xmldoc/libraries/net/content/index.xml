@@ -1,5 +1,12 @@
-<document output="studio" title="EiffelNet">
-	<meta_data/>
+<document title="EiffelNet">
+	<meta_data>
+		<help>
+			<toc>
+				
+				<envision_title>Content</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<list ordered="false">
 			<item>
@@ -17,7 +24,7 @@
 			<item>
 				<link>
 					<url>20_overview.xml</url>
-					<label>An overview of EiffelNet         mechanisms</label>
+					<label>An overview of EiffelNet mechanisms</label>
 				</link>
 			</item>
 			<item>
@@ -26,22 +33,24 @@
 					<label>The predefined level</label>
 				</link>
 			</item>
+			<output output="studio">
 			<item>
 				<link>
 					<url>40_examples.xml</url>
 					<label>Introduction to the examples</label>
 				</link>
 			</item>
+			</output>
 			<item>
 				<link>
 					<url>50_working_at_predefined_level.xml</url>
-					<label>Working at the         predefined level</label>
+					<label>Working at the predefined level</label>
 				</link>
 			</item>
 			<item>
 				<link>
 					<url>60_finer_control_degree.xml</url>
-					<label>Obtaining a finer         degree of control</label>
+					<label>Obtaining a finer degree of control</label>
 				</link>
 			</item>
 			<item>
@@ -53,7 +62,7 @@
 			<item>
 				<link>
 					<url>80_event_driven_cmd.xml</url>
-					<label>Event-driven command         execution</label>
+					<label>Event-driven command execution</label>
 				</link>
 			</item>
 			<item>

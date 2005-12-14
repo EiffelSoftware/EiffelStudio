@@ -1,5 +1,12 @@
-<document output="studio" title="What is EiffelNet">
-	<meta_data></meta_data>
+<document title="What is EiffelNet">
+	<meta_data>
+		<help>
+			<toc>
+				
+				<envision_pseudo_name>05</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<heading>
 			<size>3</size>What is EiffelNet?

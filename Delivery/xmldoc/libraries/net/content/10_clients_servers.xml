@@ -1,5 +1,13 @@
-<document output="studio" title="Clients and servers">
-	<meta_data/>
+<document title="Clients and servers">
+	<meta_data>
+		<help>
+			<toc>
+				
+				<envision_pseudo_name>10</envision_pseudo_name>
+				<envision_title>Clients and Servers</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>In the client-server model of computing, a number of software    systems, the clients, may require general-purpose services provided by    other systems, the servers. Clients and servers run concurrently, on the    same machine or, more generally, on different machines connected through    a network.</paragraph>
 		<paragraph>Typically, the clients are systems, for example systems that provide    useful facilities for human users; the servers take care of operations    that clients could not perform on their own (or would perform less    efficiently), and of operations that are common to several clients.    Example of servers include:

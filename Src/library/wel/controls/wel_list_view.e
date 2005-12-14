@@ -23,8 +23,8 @@ inherit
 	WEL_LIST_VIEW_CONSTANTS
 		export
 			{NONE} all
-			{ANY} valid_lvcfmt_constant, 
-				  is_valid_list_view_flag, 
+			{ANY} valid_lvcfmt_constant,
+				  is_valid_list_view_flag,
 				  valid_lvis_constants
 		end
 
@@ -84,7 +84,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, 
+			Result := cwin_send_message_result_integer (item,
 						Lvm_getselectedcount, to_wparam (0), to_lparam (0))
 		end
 
@@ -93,7 +93,7 @@ feature -- Status report
 		require
 			exists
 		do
-			Result := cwin_send_message_result_integer (item, 
+			Result := cwin_send_message_result_integer (item,
 						Lvm_gettopindex, to_wparam (0), to_lparam (0)).max(0)
 		ensure
 			result_large_enough: Result >= 0
@@ -106,7 +106,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result_integer (item, 
+			Result := cwin_send_message_result_integer (item,
 						Lvm_getnextitem, to_wparam (-1), to_lparam (Lvni_focused))
 		ensure
 			result_large_enough: Result >= -1
@@ -165,7 +165,7 @@ feature -- Status report
 				to_wparam (0), to_lparam (0))
 			create Result.make_by_color (color_int)
 		end
-		
+
 	get_text_background_color: WEL_COLOR_REF is
 			-- `Result' is background color of item text.
 		local
@@ -175,7 +175,7 @@ feature -- Status report
 				to_wparam (0), to_lparam (0))
 			create Result.make_by_color (color_int)
 		end
-		
+
 	get_text_foreground_color: WEL_COLOR_REF is
 			-- `Result' is foreground color for item text.
 		local
@@ -211,7 +211,7 @@ feature -- Status report
 		end
 
 	get_item_position (index: INTEGER): WEL_POINT is
-			-- Retrieves the position of the zero-based `index'-th item. 
+			-- Retrieves the position of the zero-based `index'-th item.
 		require
 			exists: exists
 			index_large_enough: index >= 0
@@ -241,17 +241,30 @@ feature -- Status report
 			iitem_small_enough: iitem < count
 			isub_item_small_enough: isub_item < column_count
 		local
-			an_item: WEL_LIST_VIEW_ITEM
-			buffer: STRING
+			l_item: WEL_LIST_VIEW_ITEM
+			buffer: WEL_STRING
+			internal_buffer_size, l_count: INTEGER
 		do
-			create an_item.make
-			create buffer.make (buffer_size)
-			buffer.fill_blank
-			an_item.set_isubitem (isub_item)
-			an_item.set_text (buffer)
-			an_item.set_cchtextmax (buffer_size)
-			cwin_send_message (item, Lvm_getitemtext, to_wparam (iitem), an_item.item)
-			Result := an_item.text			
+			create l_item.make
+			create buffer.make_empty (buffer_size)
+			l_item.set_text_with_wel_string (buffer)
+			l_item.set_isubitem (isub_item)
+				-- We do it in a loop in case the text is larger
+				-- than the default `buffer_size'
+			l_count := cwin_send_message_result_integer (item, Lvm_getitemtext, to_wparam (iitem), l_item.item)
+			if l_count = buffer_size then
+				from
+					internal_buffer_size := buffer_size
+				until
+					l_count < internal_buffer_size
+				loop
+					internal_buffer_size := internal_buffer_size * 2
+					buffer.set_count (internal_buffer_size)
+					l_item.set_text_with_wel_string (buffer)
+					l_count := cwin_send_message_result_integer (item, Lvm_getitemtext, to_wparam (iitem), l_item.item)
+				end
+			end
+			Result := l_item.text
 		end
 
 	get_item (index, subitem: INTEGER): WEL_LIST_VIEW_ITEM is
@@ -264,22 +277,39 @@ feature -- Status report
 			subitem_large_enough: subitem >= 0
 			subitem_small_enough: subitem < column_count
 		local
-			buffer: STRING
+			buffer: WEL_STRING
+			l_count: INTEGER
+			internal_buffer_size: INTEGER
 		do
+				-- First we retrieve the item without its text.
 			create Result.make
-			Result.set_mask (Lvif_text + Lvif_state + Lvif_image + Lvif_param)
+			Result.set_mask (Lvif_state + Lvif_image + Lvif_param)
 			Result.set_iitem (index)
 			Result.set_isubitem (subitem)
-			create buffer.make (buffer_size)
-			buffer.fill_blank
-			Result.set_text (buffer)
-			Result.set_cchtextmax (buffer_size)
 			Result.set_statemask (Lvis_cut + Lvis_drophilited + Lvis_focused + Lvis_selected)
 			cwin_send_message (item, Lvm_getitem, to_wparam (0), Result.item)
+
+				-- Then we retrieve the text. We do it in a loop in case the text is larger
+				-- than the default `buffer_size'.
+			create buffer.make_empty (buffer_size)
+			Result.set_text_with_wel_string (buffer)
+			l_count := cwin_send_message_result_integer (item, Lvm_getitemtext, to_wparam (0), Result.item)
+			if l_count = buffer_size then
+				from
+					internal_buffer_size := buffer_size
+				until
+					l_count < internal_buffer_size
+				loop
+					internal_buffer_size := internal_buffer_size * 2
+					buffer.set_count (internal_buffer_size)
+					Result.set_text_with_wel_string (buffer)
+					l_count := cwin_send_message_result_integer (item, Lvm_getitemtext, to_wparam (0), Result.item)
+				end
+			end
 		end
 
 	get_extended_view_style: INTEGER is
-			-- Gets extended styles in list view controls. 
+			-- Gets extended styles in list view controls.
 		require
 			function_supported: comctl32_version >= version_470
 		do
@@ -311,7 +341,7 @@ feature -- Status setting
 		end
 
 	set_extended_view_style (a_new_style: INTEGER) is
-			-- Sets extended styles in list view controls. 
+			-- Sets extended styles in list view controls.
 		require
 			function_supported: comctl32_version >= version_470
 		do
@@ -336,7 +366,7 @@ feature -- Status setting
 			index_small_enough: index < count
 		do
 			cwin_send_message (item, Lvm_update, to_wparam (index), to_lparam (0))
-		end	
+		end
 
 	set_item_state (index, state: INTEGER) is
 			-- Set state of item at `index' with `state'.
@@ -362,7 +392,7 @@ feature -- Status setting
 			value_big_enough: value >= 0
 		do
 			cwin_send_message (item, Lvm_setitemcount, to_wparam (value), to_lparam (0))
-		end	
+		end
 
 	set_cell_text (isub_item, iitem: INTEGER; txt: STRING) is
 			-- Set the label of the cell with coordinates `isub_item', `item'
@@ -439,13 +469,13 @@ feature -- Status setting
 		do
 			cwin_send_message (item, Lvm_setbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
-		
+
 	set_text_background_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to background color of item text.
 		do
 			cwin_send_message (item, Lvm_settextbkcolor, to_wparam (0), to_lparam (a_color.item))
 		end
-		
+
 	set_text_foreground_color (a_color: WEL_COLOR_REF) is
 			-- Assign `a_color' to foreground color for item text.
 		do
@@ -517,7 +547,7 @@ feature -- Element change
 
 	replace_item (an_item: WEL_LIST_VIEW_ITEM) is
 			-- Set the properties of `an_item'.
-			-- The zero-based position of the item is given by the 
+			-- The zero-based position of the item is given by the
 			-- `iitem' attribute of the item.
 		require
 			exists: exists
@@ -559,7 +589,7 @@ feature -- Basic Operations
 		require
 			non_void_search_info: a_search_info /= Void
 			valid_search_info: a_search_info.exists
-			valid_starting_index: a_starting_index >= -1 and a_starting_index < count 
+			valid_starting_index: a_starting_index >= -1 and a_starting_index < count
 		do
 			Result := cwin_send_message_result_integer (item, Lvm_finditem,
 				to_wparam (a_starting_index), a_search_info.item)

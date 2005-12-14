@@ -1,5 +1,12 @@
-<document output="studio" title="Lexical analysis: the Lex library">
-	<meta_data></meta_data>
+<document title="Lexical analysis: the Lex library">
+	<meta_data>
+		<help>
+			<toc>
+				
+				<envision_title>Lexical Analysis: The Lex library</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>OVERVIEW

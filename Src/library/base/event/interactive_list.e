@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			make (4)
 		end
 		
-	make_from_array (a: ARRAY [G]) is
+	make_from_array (a: ARRAY [like item]) is
 			-- Create list from array `a'.
 		local
 			l_index: INTEGER
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Miscellaneous
 		
-	on_item_added_at (an_item: G; item_index: INTEGER) is
+	on_item_added_at (an_item: like item; item_index: INTEGER) is
 			-- `an_item' has just been added at index `item_index'.
 		require
 			an_item_not_void: an_item /= Void
@@ -65,7 +65,7 @@ feature -- Miscellaneous
 		do
 		end
 		
-	on_item_removed_at (an_item: G; item_index: INTEGER) is
+	on_item_removed_at (an_item: like item; item_index: INTEGER) is
 			-- `an_item' has just been removed from index `item_index'.
 		require
 			an_item_not_void: an_item /= Void
@@ -86,7 +86,7 @@ feature -- Element Change
 			added_item (v, 1)
 		end
 
-	append (s: SEQUENCE [G]) is
+	append (s: SEQUENCE [like item]) is
 			-- Append a copy of `s'.
 		local
 			i: INTEGER
@@ -130,7 +130,7 @@ feature -- Element Change
 	put_i_th (v: like i_th; i: INTEGER) is
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		local
-			original_item: G
+			original_item: like item
 		do
 			original_item := i_th (i)
 			in_operation := True
@@ -146,7 +146,7 @@ feature -- Element Change
 			-- Replace current item by `v'.
 		local
 			original_index: INTEGER
-			original_item: G
+			original_item: like item
 		do
 			original_index := index
 			original_item := item
@@ -164,7 +164,7 @@ feature -- Element Change
 			-- (or `after' if no right neighbor).
 		local
 			original_index: INTEGER
-			original_item: G
+			original_item: like item
 		do
 			original_index := index
 			original_item := item
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 	in_operation: BOOLEAN
 			-- Are we executing an operation from ARRAYED_LIST?
 
-	added_item (an_item: G; item_index: INTEGER) is
+	added_item (an_item: like item; item_index: INTEGER) is
 			-- `an_item' is has been added.
 		do
 			if not in_operation then
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	removed_item (an_item: G; item_index: INTEGER) is
+	removed_item (an_item: like item; item_index: INTEGER) is
 			-- `an_item' has been removed.
 		do
 			if not in_operation then

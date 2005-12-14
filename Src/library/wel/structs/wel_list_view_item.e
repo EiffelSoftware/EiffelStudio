@@ -170,6 +170,18 @@ feature -- Element change
 		ensure
 			text_set: text.is_equal (a_text)
 		end
+		
+	set_text_with_wel_string (a_text: WEL_STRING) is
+			-- Set `text' directly with `a_text'.
+			-- Faster than calling `set_text' as string conversion
+			-- is not required internally.
+		require
+			a_text_not_void: a_text /= Void
+		do
+			str_text := a_text
+			cwel_lv_item_set_psztext (item, a_text.item)
+			cwel_lv_item_set_cchtextmax (item, a_text.capacity)
+		end
 
 	set_image (image_normal: INTEGER) is
 			-- Set the image for the list item to `image_normal'.

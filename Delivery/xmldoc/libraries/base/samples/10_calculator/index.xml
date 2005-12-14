@@ -2,8 +2,7 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples/Eiffel Class Library Samples</envision_location>
-				<envision_pseudo_name>10</envision_pseudo_name>
+				<envision_location>EiffelEnvision\Examples\EiffelBase</envision_location>
 			</toc>
 		</help>
 	</meta_data>

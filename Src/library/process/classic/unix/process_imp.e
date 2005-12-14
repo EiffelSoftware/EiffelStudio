@@ -21,37 +21,9 @@ feature {NONE} -- Initialization
 
 	make (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
 		do
-			create arguments.make
-				-- make up a command_line
-			create command_line.make_from_string (a_exec_name)
-			create executable.make_from_string (a_exec_name)
-			if args /= Void then
-				from
-					args.start
-				until
-					args.after
-				loop
-					command_line.append (" ")
-					command_line.append (args.item)
-					arguments.extend (args.item)
-					args.forth
-				end
-			end
-			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			buffer_size := initial_buffer_size
-			last_operation_successful := True
-			if a_working_directory = Void then
-				working_directory := ""
-			else
-				create working_directory.make_from_string (a_working_directory)
-			end
-			hidden := False
-			has_console := True
-			last_error := Void
-			last_output := Void
-			create prc_launcher.make (executable, arguments, working_directory)
+			setup_defaults
+			setup_command (a_exec_name, args, a_working_directory)
+			create_child_process_manager
 		end
 
 	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
@@ -74,9 +46,65 @@ feature {NONE} -- Initialization
 					args.extend (ls.item)
 					ls.forth
 				end
-			else
 			end
 			make (p_name, args, a_working_directory)
+		end
+
+feature  -- Control
+
+	launch is
+		do
+			on_start
+			prepare_for_launch
+				-- Process launch.
+			child_process.spawn_nowait
+
+			id := child_process.process_id
+			last_operation_successful := (id /= -1)
+			launched := last_operation_successful
+
+			if launched then
+				on_launch_successed
+				set_internal_process_terminated (False)
+				set_internal_all_finished (False)
+				setup_process_listeners
+			else
+				on_launch_failed
+			end
+		end
+
+	terminate is
+		do
+			internal_terminate (False)
+		end
+
+	terminate_tree is
+			-- Terminate process tree starting from current launched process.
+		do
+			internal_terminate (True)
+		end
+
+	wait_for_exit is
+		do
+			destroy_timer
+			wait_for_all_finished
+		end
+
+	put_string (s: STRING) is
+		do
+			child_process.put_string (s)
+		end
+
+feature -- Status reporting
+
+	has_exited: BOOLEAN is
+		do
+			Result := all_finished
+		end
+
+	exit_code: INTEGER is
+		do
+			Result := child_process.exit_code_from_status (child_process.status)
 		end
 
 feature {PROCESS_TIMER}  -- Status checking
@@ -84,214 +112,7 @@ feature {PROCESS_TIMER}  -- Status checking
 	check_exit is
 			-- Check whether process has exited.
 		do
-			if (launched and then has_process_exited)
-			then
-				if out_thread /= Void then
-					out_thread.set_exit_signal
-				end
-				if err_thread /= Void then
-					err_thread.set_exit_signal
-				end
-				wait_for_threads_to_exit
-				prc_launcher.close
-				if timer /= Void then
-					timer.destroy
-				end
-				prc_launcher.set_child_process_to_void
-				on_exit
-			end
-		end
-
-feature  -- Control
-
-	terminate is
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				if timer /= Void then
-					timer.destroy
-				end
-				wait_for_timer_to_be_destroyed
-				from
-
-				until
-					prc_launcher.has_process_exited = True
-				loop
-					prc_launcher.terminate
-				end
-				if out_thread /= Void then
-					out_thread.set_exit_signal
-				end
-				if err_thread /= Void then
-					err_thread.set_exit_signal
-				end
-				wait_for_threads_to_exit
-				prc_launcher.close
-				force_terminated := True
-				last_operation_successful := True
-				prc_launcher.set_child_process_to_void
-				on_terminate
-			end
-		rescue
-			retried := True
-			last_operation_successful := False
-			force_terminated := False
-			if timer /= Void and then timer.destroyed then
-				timer.start
-			end
-			retry
-		end
-
-	terminate_tree is
-			-- 
-		do
-		end
-
-	launch is
-		local
-			retried:BOOLEAN
-			l_in_fname: STRING
-			l_out_fname: STRING
-			l_err_fname: STRING
-		do
-			if not retried then
-				if timer /= Void then
-					wait_for_timer_to_be_destroyed
-				end
-
-				on_start
-				launched := False
-				force_terminated := False
-
-				if input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
-					l_in_fname := ""
-				else
-					l_in_fname := input_file_name
-				end
-
-				if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
-					l_out_fname := ""
-				else
-					l_out_fname := output_file_name
-				end
-
-				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection then
-					l_err_fname := ""
-				else
-					l_err_fname := error_file_name
-				end
-				create prc_launcher.make (executable, arguments, working_directory)
-				prc_launcher.set_input_direction (input_direction)
-				prc_launcher.set_output_direction (output_direction)
-				prc_launcher.set_error_direction (error_direction)
-				prc_launcher.set_buffer_size (buffer_size)
-				prc_launcher.launch (l_in_fname, l_out_fname, l_err_fname)
-				last_operation_successful := True
-				launched := last_operation_successful
-
-				if launched then
-						-- start  output listening thread is necessory
-					if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-						create out_thread.make (Current)
-					   out_thread.launch
-					else
-						out_thread := Void
-					end
-						-- start a error listening thread is necessory	
-					if (error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output)  then
-						if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
-							create err_thread.make (Current)
-							err_thread.launch
-						else
-							err_thread := Void
-						end
-					end
-					on_launch_successed
-					if timer /= Void then
-						timer.start
-					else
-						create {PROCESS_THREAD_TIMER}timer.make (initial_time_interval // 1000)
-						timer.set_process_launcher (Current)
-						timer.start
-					end
-				else
-					on_launch_failed
-				end
-			end
-		rescue
-			retried := True
-			if launched = True then
-				if timer /= Void then
-					timer.destroy
-				end
-				wait_for_timer_to_be_destroyed
-				prc_launcher.terminate
-
-				if out_thread /= Void then
-					out_thread.set_exit_signal
-				end
-
-				if err_thread /= Void then
-					err_thread.set_exit_signal
-				end
-
-				wait_for_threads_to_exit
-
-				prc_launcher.close
-				prc_launcher.set_child_process_to_void
-				on_launch_failed
-			end
-			launched := False
-			last_operation_successful := False
-			retry
-		end
-
-	wait_for_exit is
-		do
-			prc_launcher.wait_for_exit
-			wait_for_threads_to_exit
-			wait_for_timer_to_be_destroyed
-		end
-
-	put_string (s: STRING) is
-		local
-			retried: BOOLEAN
-		do
-			if not retried then
-				if not prc_launcher.has_process_exited and then not s.is_empty then
-					prc_launcher.put_string (s)
-					last_operation_successful := True
-				end
-			end
-		rescue
-			retried := True
-			last_operation_successful := False
-			retry
-		end
-
-feature -- Status reporting
-
-	has_exited: BOOLEAN is
-		do
-			Result := prc_launcher.has_process_exited
-			if  Result then
-				Result :=(((out_thread /= Void) implies (out_thread.terminated)) and ((err_thread /= Void) implies (err_thread.terminated)))
-			end
-		end
-
-	exit_code: INTEGER is
-		local
-			retried: BOOLEAN
-		do
-			if not retried  then
-				Result := exit_code_from_status (prc_launcher.process_status)
-				last_operation_successful := True
-			end
-		rescue
-			retried := True
-			last_operation_successful := False
-			retry
+			clean_up
 		end
 
 feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
@@ -300,16 +121,16 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 			-- Read output data from process.
 			-- May block.
 		do
-			prc_launcher.read_output_stream
-			last_output := prc_launcher.last_output
+			child_process.read_output_stream (buffer_size)
+			last_output := child_process.last_output
 		end
 
 	read_error_stream is
 			-- Read error data from process.
 			-- May block.
 		do
-			prc_launcher.read_error_stream
-			last_error := prc_launcher.last_error
+			child_process.read_error_stream (buffer_size)
+			last_error := child_process.last_error
 		end
 
 	last_output: STRING
@@ -318,33 +139,136 @@ feature {PROCESS_IO_LISTENER_THREAD} -- Interprocess data transmit
 	last_error: STRING
 			-- Last error received from process
 
+feature{NONE} -- Status reporting
+
+	has_process_terminated: BOOLEAN is
+			-- Has process terminated?
+		do
+			if not process_terminated then
+				child_process.wait_for_process (id, False)
+				set_internal_process_terminated (child_process.status_available)
+			end
+			Result := process_terminated
+		end
+
+	all_finished: BOOLEAN is
+			-- Have all launched-process-related operation finished?
+		do
+			mutex.lock
+			Result := internal_all_finished
+			mutex.unlock
+		end
+
+	output_thread_terminated: BOOLEAN is
+			-- Has output listening thread terminated?
+		do
+			Result := (out_thread /= Void) implies out_thread.terminated
+		end
+
+	error_thread_terminated: BOOLEAN is
+			-- Has error listening thread terminated?
+		do
+			Result := (err_thread /= Void) implies err_thread.terminated
+		end
+
+	listening_threads_terminated: BOOLEAN is
+			-- Have output and error listening threads terminated?
+		do
+			Result := output_thread_terminated and error_thread_terminated
+		end
+
+	process_terminated: BOOLEAN is
+			-- Has launched process terminated?
+		do
+			Result := internal_process_terminated
+		end
+
 feature {NONE}  -- Implementation
 
-	exit_code_from_status (status: INTEGER): INTEGER is
-			-- Exit code evaluated from status returned by process
-		external
-			"C inline use <sys/wait.h>"
-		alias
-			"WEXITSTATUS($status)"
+	internal_terminate (is_tree: BOOLEAN) is
+			-- Terminate current launched process.
+			-- If `is_tree' is True, terminate whole process group.
+		require
+			process_launched: launched
+		do
+			child_process.terminate_hard (is_tree)
+			force_terminated := True
+			last_operation_successful := True
+			wait_for_exit
+		ensure
+			process_terminated: has_exited
 		end
 
-	wait_for_threads_to_exit is
-			-- Wait for listening threads to exit.
+	set_internal_all_finished (b: BOOLEAN) is
+			-- Set `internal_all_finished' with `b'.
 		do
-			from
-			until
-				((out_thread /= Void) implies out_thread.terminated) and ((err_thread /= Void) implies err_thread.terminated)
-			loop
-				sleep (initial_time_interval)
-			end
+			mutex.lock
+			internal_all_finished := b
+			mutex.unlock
+		ensure
+			internal_all_finished_set: internal_all_finished = b
+		end
+
+	set_internal_process_terminated (b: BOOLEAN) is
+			-- Set `internal_process_terminated' with `b'.
+		do
+			internal_process_terminated := b
+		ensure
+			internal_process_terminated_set: internal_process_terminated = b
+		end
+
+	prepare_for_launch is
+			-- Prepare for launch.
+		do
+			launched := False
+			force_terminated := False
+			create_child_process_manager
+			child_process.set_input_file_name (input_file_name)
+			child_process.set_output_file_name (output_file_name)
 			out_thread := Void
 			err_thread := Void
+			if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output then
+				child_process.set_error_same_as_output
+			else
+				child_process.set_error_file_name (error_file_name)
+			end
+		ensure
+			launched_set: not launched
+			force_terminated_set: not force_terminated
+			out_thread_set: out_thread = Void
+			err_thread_set: err_thread = Void
 		end
 
-	wait_for_timer_to_be_destroyed is
-			-- Wait for timer to be destroyed.
+	setup_process_listeners is
+			-- Setup listeners for process output/error and for process status acquiring.
+		do
+				-- Start  output listening thread is necessory
+			if output_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
+				create out_thread.make (Current)
+			   	out_thread.launch
+			end
+				-- Start a error listening thread is necessory	
+			if (error_direction /= {PROCESS_REDIRECTION_CONSTANTS}.to_same_as_output)  then
+				if error_direction = {PROCESS_REDIRECTION_CONSTANTS}.to_agent then
+					create err_thread.make (Current)
+					err_thread.launch
+				end
+			end
+					-- Start a timer for process status acquiring.
+			if timer /= Void then
+				timer.start
+			else
+				create {PROCESS_THREAD_TIMER}timer.make (initial_time_interval // 1000)
+				timer.set_process_launcher (Current)
+				timer.start
+			end
+		end
+
+	destroy_timer is
+			-- Destroy `timer' and (if necessary) wait for it to exit.
 		do
 			if timer /= Void then
+				timer.destroy
 				from
 
 				until
@@ -353,21 +277,135 @@ feature {NONE}  -- Implementation
 					sleep (initial_time_interval)
 				end
 			end
+		ensure
+			timer_destroyed: (timer /= Void) implies timer.destroyed
 		end
 
-	has_process_exited: BOOLEAN is
-			-- Has process exited?
+	wait_for_all_finished is
+			-- Wait until `has_exited' is True.
 		do
-			Result := prc_launcher.has_process_exited
+			from
+
+			until
+				has_exited
+			loop
+				clean_up
+				sleep (initial_time_interval)
+			end
+		ensure
+			all_process_related_operations_finished: has_exited
+		end
+
+	clean_up is
+			-- Clean up threads, timer, pipes if process has exited and we have read all its output and error.
+		do
+			if not all_finished and then
+			   listening_threads_terminated and then
+			   has_process_terminated
+			then
+				if timer /= Void then
+					timer.destroy
+				end
+				child_process.close_pipes
+				set_internal_all_finished (True)
+				if force_terminated then
+					on_terminate
+				else
+					on_exit
+				end
+			end
+		end
+
+feature{NONE} -- Initialization
+
+	setup_defaults is
+			-- Setup defaults.
+		do
+			create mutex.default_create
+			out_thread := Void
+			err_thread := Void
+			hidden := False
+			has_console := True
+			last_error := Void
+			last_output := Void
+			buffer_size := initial_buffer_size
+
+			cancel_input_redirection
+			cancel_output_redirection
+			cancel_error_redirection
+
+			set_internal_process_terminated (True)
+			set_internal_all_finished (True)
+
+			last_operation_successful := True
+			launched := False
+		ensure
+			out_thread_set: out_thread = Void
+			err_thread_set: err_thread = Void
+			hidden_set: hidden = False
+			has_console_set: has_console = True
+			last_error_set: last_error = Void
+			last_output_set: last_output = Void
+			buffer_size_set: buffer_size = initial_buffer_size
+			input_redirection_set: input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			output_redirection_set: output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			error_redirection_set: error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+		end
+
+	setup_command (a_exec_name: STRING; args: LIST[STRING]; a_working_directory: STRING) is
+			-- Setup command line.
+		require
+			a_exec_name_not_void: a_exec_name /= Void
+			a_exec_name_not_empty: not a_exec_name.is_empty
+		do
+			create command_line.make_from_string (a_exec_name)
+			create executable.make_from_string (a_exec_name)
+			if a_working_directory = Void then
+				working_directory := Void
+			else
+				create working_directory.make_from_string (a_working_directory)
+			end
+
+			if args /= Void then
+				create arguments.make
+				from
+					args.start
+				until
+					args.after
+				loop
+					command_line.append_character (' ')
+					command_line.append (args.item)
+					arguments.extend (args.item)
+					args.forth
+				end
+			end
+		ensure
+			command_line_not_void: command_line /= Void
+			command_line_not_empty: not command_line.is_empty
+			executable_not_void: executable /= Void
+			executable_not_empty: not executable.is_empty
+			working_directory_set:
+					((a_working_directory /= Void) implies working_directory.is_equal (a_working_directory)) and
+					((a_working_directory = Void) implies working_directory = Void)
+			arguments_set:
+					(args /= Void implies (arguments /= Void and then arguments.count = args.count)) and
+					(args = Void implies arguments = Void)
+		end
+
+	create_child_process_manager is
+			-- Create child process manager
+		require
+			executable_not_void: executable /= Void
+			executable_not_empty: not executable.is_empty
+		do
+			create child_process.make (executable, arguments, working_directory)
+			child_process.set_close_nonstandard_files (True)
 		end
 
 feature {NONE} -- Implementation
 
 	executable: STRING
 			-- Program which will be launched
-
-	prc_launcher: IO_REDIRECTION_PROCESS_LAUNCHER
-			-- Process launcher
 
 	out_thread: PROCESS_OUTPUT_LISTENER_THREAD
 	err_thread: PROCESS_ERROR_LISTENER_THREAD
@@ -379,7 +417,19 @@ feature {NONE} -- Implementation
 	initial_time_interval: INTEGER is 10000
 			-- Initial time interval in nanoseconds used to check process status
 
+	mutex: MUTEX
+			-- Internal mutex
+
+	child_process: PROCESS_UNIX_PROCESS_MANAGER
+
+	internal_process_terminated: BOOLEAN
+			-- Launched process termination indicator
+
+	internal_all_finished: BOOLEAN
+			-- Internal indicator to show if launched process has exited and also its listeners have exited.
+
 invariant
-	eweasel_process_launcher_not_null: prc_launcher /= Void
+	child_process_not_void: child_process /= Void
+	mutex_not_void: mutex /= Void
 
 end

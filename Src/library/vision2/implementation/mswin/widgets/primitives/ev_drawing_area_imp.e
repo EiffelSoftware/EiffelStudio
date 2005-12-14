@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	EV_DRAWING_AREA_IMP
 
 inherit
@@ -25,7 +25,7 @@ inherit
 			background_color,
 			foreground_color
 		redefine
-			interface, initialize, on_left_button_down, 
+			interface, initialize, on_left_button_down,
 			on_middle_button_down, on_right_button_down,
 			destroy,
 			process_tab_key,
@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			Precursor {EV_DRAWABLE_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			is_tabable_from := False
-		end	
+		end
 
 feature -- Access
 
@@ -126,14 +126,14 @@ feature {NONE} -- Implementation
 					else
 						internal_paint_dc.select_pen (empty_pen)
 					end
-	
+
 					if internal_brush /= Void then
 						internal_paint_dc.select_brush (internal_brush)
 					else
 						internal_paint_dc.select_brush (empty_brush)
 					end
 					if valid_rop2_constant (wel_drawing_mode) then
-						internal_paint_dc.set_rop2 (wel_drawing_mode)	
+						internal_paint_dc.set_rop2 (wel_drawing_mode)
 					end
 				end
 			end
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 					-- Switch the dc from screen_dc to paint_dc.
 				internal_paint_dc := paint_dc
 				in_paint := True
-				
+
 					-- Initialise the device for painting.
 				dc.set_background_transparent
 				internal_initialized_pen := False
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 					-- Switch back the dc from paint_dc to screen_dc.
 				internal_paint_dc := screen_dc
 				in_paint := False
-				
+
 					-- Without disabling it looks like we will not be getting all
 					-- the WM_PAINT messages we expected to receive (leaving some
 					-- unrefresh part on the drawing area).
@@ -294,15 +294,15 @@ feature {NONE} -- Implementation
    			-- Can be redefined to return a user-defined style.
    			-- (from WEL_FRAME_WINDOW).
    		once
-			Result := 
-				cs_hredraw + 
-				cs_vredraw + 
-				cs_dblclks + 
-				Cs_owndc + 
+			Result :=
+				cs_hredraw +
+				cs_vredraw +
+				cs_dblclks +
+				Cs_owndc +
 				Cs_savebits
  		end
- 
- 	enable_tabable_to is	
+
+ 	enable_tabable_to is
  			-- Ensure `is_tabable_to' is `True'.
  		do
 		 	set_style (style | ws_tabstop | ws_group)
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 			set_style (l_style)
 		end
 
-	enable_tabable_from is	
+	enable_tabable_from is
  			-- Ensure `is_tabable_from' is `True'.
  		do
  			is_tabable_from := True
@@ -347,7 +347,7 @@ feature -- Commands.
 			-- control needs to process this kind of keys.
 		do
 			fixme (once "EV_DRAWING_AREA_IMP.process_tab_key - refactor all tab handling code in this class")
-			if virtual_key = ({WEL_INPUT_CONSTANTS}.Vk_tab) and then 
+			if virtual_key = ({WEL_INPUT_CONSTANTS}.Vk_tab) and then
 				flag_set (style, {WEL_WINDOW_CONSTANTS}.Ws_tabstop)
 			then
 				tab_action (not key_down ({WEL_INPUT_CONSTANTS}.Vk_shift))

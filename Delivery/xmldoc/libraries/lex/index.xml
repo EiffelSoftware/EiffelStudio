@@ -1,5 +1,6 @@
-<document output="studio" title="EiffelLex">
-	<meta_data/>
+<document title="EiffelLex">
+	<meta_data>
+	</meta_data>
 	<paragraph>
 		<paragraph> Type: Library
 			<line_break/> Platform: Any

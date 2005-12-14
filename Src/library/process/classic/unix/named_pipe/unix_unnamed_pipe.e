@@ -1,19 +1,19 @@
 indexing
 	description: "[
 		Ojbect that manipulates a UNIX unnamed pipe.
-		All the read_xxx features except read_stream_non_block in this class are block features. 
+		All the read_xxx features except read_stream_non_block in this class are block features.
 		In other words, they will block until requested number of bytes have been read.
 		While read_stream_non_block will read as much as requested bytes of data and will return with
 		acturally read data if no other data is in the pipe.
 		All the put_xxx features are block features.
 		Note: Always check last_read_successful after a read_xxx feature and check last_write_successful
 				   after a write_xxx feature.
-			   
+
 	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	UNIX_UNNAMED_PIPE
 
 inherit
@@ -31,7 +31,9 @@ inherit
 			dispose
 		end
 
-create 
+	THREAD_CONTROL
+
+create
 	make
 
 feature {NONE} -- Initialization
@@ -44,7 +46,6 @@ feature {NONE} -- Initialization
 			Precursor (read_fd, write_fd)
 			is_read_descriptor_open := True
 			is_write_descriptor_open := True
-			create current_platform
 			create shared_mptr.make (initial_buffer_size)
 		ensure then
 			read_descriptor_set: read_descriptor = read_fd
@@ -52,7 +53,7 @@ feature {NONE} -- Initialization
 			write_descriptor_set: write_descriptor = write_fd
 			write_descriptor_open: is_write_descriptor_open
 		end
-	
+
 feature -- Access
 
 	name: STRING is
@@ -75,7 +76,7 @@ feature -- Access
 		do
 			Result := False
 		end
-	
+
 feature -- Removal
 
 	dispose is
@@ -88,7 +89,7 @@ feature -- Removal
 			close_read_descriptor
 			close_write_descriptor
 		end
-	
+
 feature -- Status report
 
 	is_closed: BOOLEAN is
@@ -140,7 +141,7 @@ feature -- Status report
 		do
 			Result := True
 		end
-	
+
 feature -- Status setting
 
 	close_read_descriptor is
@@ -170,7 +171,7 @@ feature -- Status setting
 			is_write_descriptor_open := False
 			retry
 		end
-	
+
 feature -- Element change
 
 	general_store (object: ANY) is
@@ -187,40 +188,23 @@ feature -- Element change
 		do
 			c_basic_store (write_descriptor, $object)
 		end
-	
+
 feature -- Input
 
-	read_real is
+	readreal, read_real is
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `readreal'.
 		do
 			read_block (read_descriptor, shared_mptr.item, current_platform.real_bytes)
 			if last_read_successful then
-				last_real := shared_mptr.read_real (0)
+				last_real := shared_mptr.read_real_32 (0)
 			end
 		end
 
-	readreal is
-			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `read_real'.
-		do
-			read_block (read_descriptor, shared_mptr.item, current_platform.real_bytes)
-			if last_read_successful then
-				last_real := shared_mptr.read_real (0)
-			end
-		end
-
-	read_double is
+	read_double, readdouble is
 		do
 			read_block (read_descriptor, shared_mptr.item, current_platform.double_bytes)
 			if last_read_successful then
-				last_double := shared_mptr.read_double (0)
-			end
-		end
-
-	readdouble is
-		do
-			read_block (read_descriptor, shared_mptr.item, current_platform.double_bytes)
-			if last_read_successful then
-				last_double := shared_mptr.read_double (0)
+				last_double := shared_mptr.read_real_64 (0)
 			end
 		end
 
@@ -271,14 +255,14 @@ feature -- Input
 				last_integer_64 := shared_mptr.read_integer_64 (0)
 			end
 		end
-		
+
 	read_natural_8 is
 		do
 			read_block (read_descriptor, shared_mptr.item, current_platform.natural_8_bytes)
 			if last_read_successful then
 				last_natural_8 := shared_mptr.read_natural_8 (0)
 			end
-		end		
+		end
 
 	read_natural_16 is
 		do
@@ -286,28 +270,27 @@ feature -- Input
 			if last_read_successful then
 				last_natural_16 := shared_mptr.read_natural_16 (0)
 			end
-		end	
-		
+		end
+
 	read_natural, read_natural_32 is
 		do
 			read_block (read_descriptor, shared_mptr.item, current_platform.natural_32_bytes)
 			if last_read_successful then
 				last_natural := shared_mptr.read_natural_32 (0)
 			end
-		end	
-		
+		end
+
 	read_natural_64 is
 		do
 			read_block (read_descriptor, shared_mptr.item, current_platform.natural_64_bytes)
 			if last_read_successful then
 				last_natural_64 := shared_mptr.read_natural_64 (0)
 			end
-		end								
+		end
 
 	read_stream (nb_char: INTEGER) is
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `readstream'.
 		local
-			count: INTEGER
 			mp: MANAGED_POINTER
 			i: INTEGER
 		do
@@ -329,7 +312,6 @@ feature -- Input
 	readstream (nb_char: INTEGER) is
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `read_stream'.
 		local
-			count: INTEGER
 			mp: MANAGED_POINTER
 			i: INTEGER
 		do
@@ -359,16 +341,25 @@ feature -- Input
 			create mp.make (nb_char)
 			count := read (read_descriptor, mp.item, nb_char)
 			if count > 0 then
-				from
-					create last_string.make (count)
-					i := 0
-				until
-					i = count
-				loop
-					cc := mp.read_natural_8 (i)
-					last_string.append_character (cc.to_character)
-					i := i + 1
-				end
+				create last_string.make_from_c (mp.item)
+--				from
+--					create last_string.make (count)
+--					if last_string = Void then
+--						create last_string.make (count)
+--					else
+--						last_string.clear_all
+--						if last_string.capacity < count then
+--							last_string.resize (count)
+--						end
+--					end
+--					i := 0
+--				until
+--					i = count
+--				loop
+--					cc := mp.read_natural_8 (i)
+--					last_string.append_character (cc.to_character)
+--					i := i + 1
+--				end
 			else
 				last_string := Void
 				if count = -1 then
@@ -382,7 +373,6 @@ feature -- Input
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `readline'.
 		local
 			done: BOOLEAN
-			count: INTEGER
 			char: CHARACTER
 		do
 			from
@@ -408,7 +398,6 @@ feature -- Input
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `read_line'.
 		local
 			done: BOOLEAN
-			count: INTEGER
 			char: CHARACTER
 		do
 			from
@@ -434,7 +423,7 @@ feature -- Input
 		do
 			read_block (read_descriptor, p.item + start_pos, nb_bytes)
 		end
-	
+
 feature -- Output
 
 	put_new_line is
@@ -499,15 +488,9 @@ feature -- Output
 			write_block (write_descriptor, mp.item, s.count)
 		end
 
-	put_real (r: REAL) is
+	putreal, put_real (r: REAL) is
 		do
-			shared_mptr.put_real (r, 0)
-			write_block (write_descriptor, shared_mptr.item, current_platform.real_bytes)
-		end
-
-	putreal (r: REAL) is
-		do
-			shared_mptr.put_real (r, 0)
+			shared_mptr.put_real_32 (r, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.real_bytes)
 		end
 
@@ -516,7 +499,7 @@ feature -- Output
 			shared_mptr.put_integer_32 (i, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.integer_32_bytes)
 		end
-		
+
 	put_integer_64 (i: INTEGER_64) is
 		do
 			shared_mptr.put_integer_64 (i, 0)
@@ -534,31 +517,31 @@ feature -- Output
 			shared_mptr.put_integer_8 (i, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.integer_8_bytes)
 		end
-		
+
 	put_natural_8 (i: NATURAL_8) is
 		do
 			shared_mptr.put_natural_8 (i, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.natural_8_bytes)
-		end		
-		
+		end
+
 	put_natural_16 (i: NATURAL_16) is
 		do
 			shared_mptr.put_natural_16 (i, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.natural_16_bytes)
-		end		
-		
+		end
+
 	put_natural, put_natural_32 (i: NATURAL_32) is
 		do
 			shared_mptr.put_natural_32 (i, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.natural_32_bytes)
-		end	
-		
+		end
+
 	put_natural_64 (i: NATURAL_64) is
 		do
 			shared_mptr.put_natural_64 (i, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.natural_64_bytes)
-		end		
-			
+		end
+
 	put_boolean (b: BOOLEAN) is
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `putbool'.
 		do
@@ -573,17 +556,10 @@ feature -- Output
 			write_block (write_descriptor, shared_mptr.item, current_platform.boolean_bytes)
 		end
 
-	put_double (d: DOUBLE) is
+	putdouble, put_double (d: DOUBLE) is
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `putdouble'.
 		do
-			shared_mptr.put_double (d, 0)
-			write_block (write_descriptor, shared_mptr.item, current_platform.double_bytes)
-		end
-
-	putdouble (d: DOUBLE) is
-			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `put_double'.
-		do
-			shared_mptr.put_double (d, 0)
+			shared_mptr.put_real_64 (d, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.double_bytes)
 		end
 
@@ -591,7 +567,7 @@ feature -- Output
 		do
 			write_block (write_descriptor, p.item + start_pos, nb_bytes)
 		end
-	
+
 feature -- Input
 
 	read_block (fildes: INTEGER; buf: POINTER; size: INTEGER) is
@@ -709,7 +685,7 @@ feature -- Input
 		alias
 			"eretrieve"
 		end
-	
+
 feature  -- Status reporting
 
 	last_read_successful: BOOLEAN
@@ -717,7 +693,7 @@ feature  -- Status reporting
 
 	last_write_successful: BOOLEAN
 			-- Is last write operation successful?
-	
+
 feature {NONE} -- Implementation
 
 	is_read_descriptor_open: BOOLEAN
@@ -726,8 +702,11 @@ feature {NONE} -- Implementation
 	is_write_descriptor_open: BOOLEAN
 			-- Is write end of pipe open?
 
-	current_platform: PLATFORM
+	current_platform: PLATFORM is
 			-- Platform indicator
+		once
+			create Result
+		end
 
 	shared_mptr: MANAGED_POINTER
 			-- Shared memory area
@@ -737,7 +716,7 @@ feature {NONE} -- Implementation
 
 	Initial_buffer_size: INTEGER is 128
 			-- Initial size of buffer used by `shared_mptr'	
-	
+
 invariant
 	shared_pointer_not_void: shared_mptr /= Void
 	current_platform_not_void: current_platform /= Void

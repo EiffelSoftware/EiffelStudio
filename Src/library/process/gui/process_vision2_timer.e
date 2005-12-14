@@ -8,63 +8,59 @@ class
 
 inherit
 	PROCESS_TIMER
-
 create
 	make
-	
+
 feature{NONE} -- Implementation
-	
-	make (interval: INTEGER) is
+
+	make (interval: INTEGER_64) is
 			-- Set time interval which this timer will be triggered with `interval'.
 			-- Unit of `interval' is milliseconds.
 		require
-			interval_positive: interval > 0		
+			interval_positive: interval > 0
 		do
-			time_interval := interval 
-			timer := Void
-			destroyed := True
-			create mutex
+			time_interval := interval
+			create timer.default_create
 		ensure
-			timer_set_to_null: timer = Void
 			time_interval_set: time_interval = interval
 			destroyed_set: destroyed = True
 		end
-		
+
 feature -- Control
 
 	start is
-			-- 
+			--
 		local
 			prc_imp: PROCESS_IMP
 		do
 			prc_imp ?= process_launcher
-			if prc_imp /= Void then
-				mutex.lock
-				destroyed := False
-				mutex.unlock
-				create timer.make_with_interval (time_interval)
-				timer.actions.extend (agent prc_imp.check_exit)				
+			check
+				prc_imp /= Void
 			end
+			create timer.make_with_interval (time_interval.to_integer)
+			timer.actions.extend (agent prc_imp.check_exit)
 		end
-		
+
 	destroy is
-			-- 
+			--
 		do
 			if timer /= Void then
 				timer.destroy
-				mutex.lock
-				destroyed := True
-				mutex.unlock
 			end
 		end
 
-feature{NONE} -- Implementation
-	
-	timer: EV_TIMEOUT
-	
-	mutex: MUTEX
+	destroyed: BOOLEAN is
+			--
+		do
+			Result := timer.is_destroyed
+		end
 
-invariant	
-	mutex_not_void: mutex /= Void
+feature{NONE} -- Implementation
+
+	timer: EV_TIMEOUT
+
+invariant
+
+	timer_not_void: timer /= Void
 
 end

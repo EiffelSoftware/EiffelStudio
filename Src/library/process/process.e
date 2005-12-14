@@ -93,10 +93,11 @@ feature -- IO redirection
 			process_not_running: not is_running
 		do
 			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			input_file_name := Void
+			input_file_name := ""
 		ensure
 			input_redirection_canceled:
 				input_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			input_file_name_set: input_file_name.is_equal ("")
 		end
 
 	redirect_output_to_file (a_file_name: STRING) is
@@ -144,12 +145,12 @@ feature -- IO redirection
 			process_not_running: not is_running
 		do
 			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_file_name := Void
+			output_file_name := ""
 			output_handler := Void
 		ensure
 			output_redirection_canceled:
 				output_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_file_name_set: output_file_name = Void
+			output_file_name_set: output_file_name.is_equal ("")
 			output_handler_set: output_handler = Void
 		end
 
@@ -213,12 +214,12 @@ feature -- IO redirection
 			process_not_running: not is_running
 		do
 			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_file_name := Void
+			error_file_name := ""
 			error_handler := Void
 		ensure
 			error_redirection_canceled:
 				error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_file_name_set: error_file_name = Void
+			error_file_name_set: error_file_name.is_equal ("")
 			error_handler_set: error_handler = Void
 		end
 
@@ -590,9 +591,9 @@ feature {NONE} -- Implementation
 				(error_direction = {PROCESS_REDIRECTION_CONSTANTS}.no_redirection) and
 				(output_handler = Void) and
 				(error_handler = Void) and
-				(input_file_name = Void) and
-				(output_file_name = Void) and
-				(error_file_name = Void) and
+				(input_file_name.is_equal ("")) and
+				(output_file_name.is_equal ("")) and
+				(error_file_name.is_equal ("")) and
 				(timer = Void)
 		end
 

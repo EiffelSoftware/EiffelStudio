@@ -143,8 +143,8 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
 /* Groups_t:
  *	This symbol holds the type used for the second argument to
  *	getgroups().  Usually, this is the same of gidtype, but
- *	sometimes it isn't.  It can be int, ushort, uid_t, etc... 
- *	It may be necessary to include <sys/types.h> to get any 
+ *	sometimes it isn't.  It can be int, ushort, uid_t, etc...
+ *	It may be necessary to include <sys/types.h> to get any
  *	typedef'ed information.  This is only required if you have
  *	getgroups().
  */
@@ -523,7 +523,7 @@ sed <<!GROK!THIS! >eif_config.h -e 's!^#undef\(.*\)/\*!/\*#define \1 \*/ /\*!' -
 /* Select_fd_set_t:
  *	This symbol holds the type used for the 2nd, 3rd, and 4th
  *	arguments to select.  Usually, this is 'fd_set *', if HAS_FD_SET
- *	is defined, and 'int *' otherwise.  This is only useful if you 
+ *	is defined, and 'int *' otherwise.  This is only useful if you
  *	have select(), of course.
  */
 #define Select_fd_set_t 	$selecttype	/* NC */

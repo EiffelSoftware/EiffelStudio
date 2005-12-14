@@ -72,6 +72,14 @@
 			<link><url>../../../technologies/dotnet/eiffel_dotnet_language/20_language/85_eiffel_compliance.xml</url><label>Eiffel-compliance</label></link>. The tool can be used by both a consumer of a assembly and by those developers wishing to ensure that their
 			classes and their interfaces can successfully be used from Eiffel for .NET.
 		</paragraph>
+    <anchor>libraries</anchor>
+    <heading>
+      <size>2</size>
+      <content>Libraries and Samples</content>
+    </heading>
+    <paragraph>
+	    EiffelEnvision 2.6 comes complete with new Graph and Preferences library intorduced into the Eiffel 5.6 library set. With the addition of the libraries three new examples have been added; edraw, egraph and an example to show off the preferences library.
+    </paragraph>
     <anchor>more</anchor>
     <heading>
       <size>2</size>

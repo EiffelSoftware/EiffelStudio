@@ -734,7 +734,7 @@ feature -- Status report
 					l_area.item (4).lower = 'e'
 			end
 		ensure
-			is_boolean: Result = (as_lower.has_substring (true_constant) or as_lower.has_substring (false_constant))
+			is_boolean: Result = (true_constant.same_string (as_lower) or false_constant.same_string (as_lower))
 		end
 
 	is_integer_8: BOOLEAN is
@@ -2026,8 +2026,8 @@ feature -- Conversion
 				Result := True
 			end
 		ensure
-			to_boolean: (Result = same_string (true_constant)) or
-				(not Result = same_string (false_constant))
+			to_boolean: (Result = true_constant.same_string (as_lower)) or
+				(not Result = false_constant.same_string (as_lower))
 		end
 
 	linear_representation: LINEAR [CHARACTER] is

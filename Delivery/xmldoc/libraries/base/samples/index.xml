@@ -1,8 +1,18 @@
-<document output="studio" title="EiffelBase Samples">
-	<meta_data/>
+<document title="EiffelBase Samples">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\Examples</envision_location>
+				<envision_title>EiffelBase</envision_title>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
-		<paragraph> Version: 5.4</paragraph>
-		<paragraph> Availability: Basic Package.</paragraph>
+		<output output="studio">
+			<paragraph> Version: 5.6</paragraph>
+			<paragraph> Availability: Basic Package.</paragraph>
+		</output>
 		<list ordered="false">
 			<item><link><url>10_calculator/index.xml</url><label>Calculator</label></link></item>
 		</list>

@@ -1,5 +1,12 @@
 <document title="Preferences Sample">
-	<meta_data/>
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\Examples\Preferences</envision_location>
+				<envision_title></envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>		
 		<line_break/>
 		<line_break/>

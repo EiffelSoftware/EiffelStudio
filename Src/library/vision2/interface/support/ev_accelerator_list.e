@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature {NONE} -- Status Setting
 
-	enable_item_parented (an_item: EV_ACCELERATOR) is
+	enable_item_parented (an_item: like item) is
 			-- Assign True to `parented' for `an_item'.
 		require
 			an_item_not_void: an_item /= Void
@@ -44,7 +44,7 @@ feature {NONE} -- Status Setting
 			accelerator_imp.enable_parented
 		end
 
-	disable_item_parented (an_item: EV_ACCELERATOR) is
+	disable_item_parented (an_item: like item) is
 			-- Assign False to `parented' for `an_item'.
 		require
 			an_item_not_void: an_item /= Void
@@ -57,7 +57,7 @@ feature {NONE} -- Status Setting
 
 feature {NONE} -- Contract support
 
-	key_combination_exists (new_accelerator: EV_ACCELERATOR): BOOLEAN is
+	key_combination_exists (new_accelerator: like item): BOOLEAN is
 			-- Does `Current' contain an accelerator with an identical key
 			-- combination to `new_accelerator'?
 		local

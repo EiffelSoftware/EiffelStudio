@@ -135,7 +135,18 @@
         <item>Added Eiffel for .NET Compliance Checker tool for checking third party assemblies for Eiffel/CLS compliance.</item>
         <item>Update class generation of the EiffelStudio to EiffelEnvision project conversion tool so it does not generated obsolete syntax.</item>
       </list>
-    </paragraph>    
+    </paragraph>  
+    <anchor>libraries_and_samples</anchor>
+    <heading>
+	    <size>2</size>
+	    Libraries and Samples:
+    </heading>
+    <paragraph>
+      <list ordered="false">
+	      <item>Added Graph and Preference Eiffel Source libraries.</item>
+	      <item>Added Examples for graph and preference libraries.</item>
+      </list>
+    </paragraph
     <anchor>misc</anchor>
     <heading>
       <size>2</size>

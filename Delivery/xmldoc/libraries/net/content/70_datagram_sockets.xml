@@ -1,5 +1,13 @@
-<document output="studio" title="Using datagram sockets">
-	<meta_data/>
+<document title="Using datagram sockets">
+	<meta_data>
+		<help>
+			<toc>
+				
+				<envision_pseudo_name>70</envision_pseudo_name>
+				<envision_title>Using Datagram Sockets</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<table><border>1</border>
 			<row>
@@ -41,7 +49,7 @@
 				<label>PACKET</label>
 			</link>,    itself an heir of 
 			<link>
-				<url>../../base/reference/kernel/array_chart.xml</url>
+				<url>../../base/reference/kernel/classic/array_chart.xml</url>
 				<label>ARRAY</label>
 			</link> [ 
 			<link>

@@ -1,5 +1,13 @@
-<document output="studio" title="A more complex example">
-	<meta_data/>
+<document title="A more complex example">
+	<meta_data>
+		<help>
+			<toc>
+				
+				<envision_pseudo_name>90</envision_pseudo_name>
+				<envision_title>A More Complex Example</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<table><border>1</border>
 			<row>
@@ -9,8 +17,12 @@
 			</row>
 		</table>
 		<paragraph>The last example exercises most of EiffelNet's major facilities. It    consists of a server that allows an arbitrary number of clients to    connect to it. Each time the user of one of the client systems types a    line on the keyboard, the client sends this character to the server,    which then broadcasts it to all the clients (including the original    sender). This scheme allows several people to talk together, hence the    names chosen: the server class is called 
-			<class_name>CHAT</class_name>, and the client is    called 
-			<class_name>JOIN</class_name>.
+			<code>
+				<class_name>CHAT</class_name>
+			</code>, and the client is    called 
+			<code>
+				<class_name>JOIN</class_name>
+			</code>.
 		</paragraph>
 		<paragraph>The example uses the network mode of communication, based on the 
 			<link>
@@ -25,18 +37,22 @@
 				<url>../reference/polling/abstract/medium_poller_chart.xml</url>
 				<label>MEDIUM_POLLER</label>
 			</link>    as in the previous example; the relevant command is given by class    
-			<class_name>CONNECTION</class_name>, an heir of 
+			<code>
+				<class_name>CONNECTION</class_name>
+			</code>, an heir of 
 			<link>
 				<url>../reference/polling/abstract/poll_command_chart.xml</url>
 				<label>POLL_COMMAND</label>
 			</link>.    The information exchanged between the server and its clients is    described by class 
-			<class_name>MESSAGE</class_name>, an heir of 
+			<code>
+				<class_name>MESSAGE</class_name>
+			</code>, an heir of 
 			<link>
 				<url>../../base/reference/structures/list/linked_list_chart.xml</url>
 				<label>LINKED_LIST</label>
 			</link>    [ 
 			<link>
-				<url>../../base/reference/kernel/string_chart.xml</url>
+				<url>../../base/reference/kernel/classic/string_chart.xml</url>
 				<label>STRING</label>
 			</link>]    similar to the earlier examples' OUR_MESSAGE
 			<italic/> (see 

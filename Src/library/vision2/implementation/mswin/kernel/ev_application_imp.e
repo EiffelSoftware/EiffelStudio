@@ -7,7 +7,7 @@ indexing
 
 class
 	EV_APPLICATION_IMP
-	
+
 inherit
 	EV_APPLICATION_I
 
@@ -32,21 +32,21 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	WEL_TOOLTIP_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 	WEL_WORD_OPERATIONS
 		export
 			{NONE} all
 		end
-	
+
 	EV_APPLICATION_ACTION_SEQUENCES_IMP
 
 	WEL_VK_CONSTANTS
-	
+
 	WEL_WINDOWS_VERSION
 		export
 			{NONE} all
@@ -66,11 +66,11 @@ feature {NONE} -- Initialization
 			set_application (Current)
 			create_dispatcher
 			create blocking_windows_stack.make (5)
-			create all_tooltips.make (2) 
+			create all_tooltips.make (2)
 			init_instance
 			init_application
 			tooltip_delay := no_tooltip_delay_assigned
-			
+
 				-- This is a hack to ensure that `silly_main_window' exists before
 				-- we create any widgets. If this is not the case, then `themes_active' fails
 				-- during creation of the widgets, and those widgets created before a window
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			update_theme_drawer
 			dispatcher.set_exception_callback (agent on_exception_action)
 		end
-		
+
 	launch  is
 			-- Start the event loop.
 		do
@@ -134,14 +134,14 @@ feature -- Access
 		do
 			Result := key_pressed (vk_control)
 		end
-		
+
 	alt_pressed: BOOLEAN is
 			-- Is alt key currently pressed?
 		do
 			Result := key_pressed (vk_lmenu) or
 				key_pressed (vk_rmenu)
 		end
-		
+
 	shift_pressed: BOOLEAN is
 			-- Is shift key currently pressed?
 		do
@@ -215,7 +215,7 @@ feature -- Element change
 				from
 					Application_windows_id.start
 				until
-					Application_windows_id.after or else 
+					Application_windows_id.after or else
 					is_window (Application_windows_id.item)
 				loop
 					Application_windows_id.forth
@@ -233,7 +233,7 @@ feature -- Element change
 
 	window_with_focus: EV_TITLED_WINDOW_IMP
 			-- `Result' is EV_TITLED_WINDOW with current focus.
-		
+
 	set_window_with_focus (a_window: EV_TITLED_WINDOW) is
 			-- Assign implementation of `a_window' to `window_with_focus'.
 		local
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
 
 	tooltip_delay: INTEGER
@@ -298,13 +298,13 @@ feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
 				end
 			end
 		end
-		
+
 feature {EV_BUTTON_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_CONTAINER_IMP} -- Theme drawing
 
 	theme_drawer: EV_THEME_DRAWER_IMP
 			-- `Result' is object suitable for drawing using the
 			-- currently selected themes.
-			
+
 	update_theme_drawer is
 			-- Updated `theme_drawer' to use current Windows settings.
 		do
@@ -324,13 +324,13 @@ feature {EV_BUTTON_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_CONTA
 		ensure
 			drawer_set: theme_drawer = drawer
 		end
-		
+
 	themes_active: BOOLEAN is
 			-- Are themes currently active?
 		do
 			Result := uxtheme_dll_available and then cwin_is_theme_active and then cwin_is_app_themed and then comctl32_version >= version_600
 		end
-		
+
 	uxtheme_dll_available: BOOLEAN is
 			-- Is the "uxtheme.dll" required for theme support available on the current platform?
 		local
@@ -339,7 +339,7 @@ feature {EV_BUTTON_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_CONTA
 			create dll.make ("uxtheme.dll")
 			Result := dll.exists
 		end
-		
+
 feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Status Report
 
 	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
@@ -347,10 +347,10 @@ feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Sta
 		--| If `Void' then no pick and drop is currently executing.
 		--| This allows us to globally check whether a pick and drop
 		--| is executing, and if so, the source.
-		
+
 	drop_actions_executing: BOOLEAN
 		-- Are the `drop_actions' for a pick and dropable object currently executing?
-		
+
 	dockable_source: EV_DOCKABLE_SOURCE_IMP
 		-- The current dockable source if a dock is executing.
 
@@ -363,7 +363,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 		ensure
 			drop_actions_executing: drop_actions_executing
 		end
-		
+
 	disable_drop_actions_executing is
 			-- Assign `False' to `drop_actions_executing'.
 		do
@@ -381,7 +381,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 		ensure
 			source_set: dockable_source = source
 		end
-		
+
 	dock_ended is
 			-- Ensure `dockable_source' is Void.
 		do
@@ -437,7 +437,7 @@ feature {EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -- Status Report
 
 	set_transport_just_ended is
 			-- Assign `True' to `transport_just_ended'.
-		do	
+		do
 			transport_just_ended := True
 		end
 
@@ -476,7 +476,7 @@ feature -- Status setting
 		do
 			tooltip_delay := a_delay
 				-- Iterate through all tooltips within application and
-				-- call set_initial_delay_time with `a_delay'. 
+				-- call set_initial_delay_time with `a_delay'.
 			from
 				all_tooltips.start
 			until
@@ -569,7 +569,7 @@ feature {NONE} -- Implementation
 					if not internal_idle_actions.is_empty then
 						internal_idle_actions.call (Void)
 					elseif idle_actions_internal /= Void and then
-						not idle_actions_internal.is_empty then 
+						not idle_actions_internal.is_empty then
 						idle_actions_internal.call (Void)
 					else
 						msg.wait
@@ -599,7 +599,7 @@ feature {NONE} -- Implementation
 					then
 							-- It is a dialog window
 						msg.process_dialog_message (focused_window.wel_item)
-						if msg.last_boolean_result then
+						if not msg.last_boolean_result then
 							if focused_window.accelerators /= Void then
 								msg.translate_accelerator (focused_window,
 									focused_window.accelerators)
@@ -607,10 +607,10 @@ feature {NONE} -- Implementation
 									msg.translate
 									msg.dispatch
 								end
+							else
+								msg.translate
+								msg.dispatch
 							end
-						else
-							msg.translate
-							msg.dispatch
 						end
 					else
 							-- It is a normal window
@@ -633,7 +633,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	process_events_until_stopped is
 			-- Process all events until 'stop_processing' is called.
 		local
@@ -651,7 +651,7 @@ feature {NONE} -- Implementation
 					if not internal_idle_actions.is_empty then
 						internal_idle_actions.call (Void)
 					elseif idle_actions_internal /= Void and then
-						not idle_actions_internal.is_empty then 
+						not idle_actions_internal.is_empty then
 						idle_actions_internal.call (Void)
 					else
 						msg.wait
@@ -660,7 +660,7 @@ feature {NONE} -- Implementation
 				msg.peek_all
 			end
 		end
-		
+
 	stop_processing is
 			--  Exit `process_events_until_stopped'.
 		do
@@ -673,17 +673,17 @@ feature {NONE} -- Implementation
 					default_pointer, default_pointer)
 			end
 		end
-		
+
 	stop_processing_requested_msg: INTEGER
 		-- Custom message sent by `stop_processing'.
-		
+
 	ev_stop_processing_requested: WEL_STRING is
 			-- `Result' is string used to register custom stop processing
 			-- message with Windows.
 		once
 			create Result.make ("ev_stop_processing_requested")
 		end
-		
+
 feature {NONE} -- Externals
 
 	cwin_disable_xp_ghosting is
@@ -704,7 +704,7 @@ feature {NONE} -- Externals
 			}
 			]"
 		end
-	
+
 	cwin_register_window_message (message_name: POINTER): INTEGER is
 			-- Register a custom window message named `message_name'.
 			-- `Result' is id of new message.
@@ -737,7 +737,7 @@ feature {NONE} -- Externals
 		alias
 			"GetKeyState"
 		end
-		
+
 	cwin_send_message (hwnd: POINTER; msg: INTEGER; wparam, lparam: POINTER) is
 			-- SDK SendMessage (without the result)
 		external
@@ -759,7 +759,7 @@ feature {NONE} -- Externals
 		external
 			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
 		end
-		
+
 	cwin_is_theme_active: BOOLEAN is
 			-- SDK's Open
 		external
@@ -767,7 +767,7 @@ feature {NONE} -- Externals
 		alias
 			"IsThemeActive"
 		end
-		
+
 	cwin_is_app_themed: BOOLEAN is
 			-- SDK's Open
 		external

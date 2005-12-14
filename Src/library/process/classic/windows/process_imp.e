@@ -37,9 +37,10 @@ feature {NONE} -- Initialization
 					args.forth
 				end
 			end
-			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			cancel_input_redirection
+			cancel_output_redirection
+			cancel_error_redirection
+
 			buffer_size := initial_buffer_size
 			last_operation_successful := True
 			if a_working_directory /= Void then
@@ -58,9 +59,9 @@ feature {NONE} -- Initialization
 	make_with_command_line (cmd_line: STRING; a_working_directory: STRING) is
 		do
 			create command_line.make_from_string (cmd_line)
-			input_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			output_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
-			error_direction := {PROCESS_REDIRECTION_CONSTANTS}.no_redirection
+			cancel_input_redirection
+			cancel_output_redirection
+			cancel_error_redirection
 			buffer_size := initial_buffer_size
 			last_operation_successful := True
 			if a_working_directory /= Void then

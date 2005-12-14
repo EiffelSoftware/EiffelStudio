@@ -5,82 +5,86 @@ indexing
 
 class
 	PROCESS_THREAD_TIMER
-	
+
 inherit
 	PROCESS_TIMER
-	
-	PROCESS_IO_LISTENER_THREAD
-		rename
-			process_launcher as old_process_launcher
-		export
-			{NONE} all
-		end
+
+	THREAD
 
 create
 	make
-	
+
 feature {NONE} -- Implementation
-	
+
 	make (interval: INTEGER) is
 			-- Set time interval which this timer will be triggered with `interval'.
 			-- Unit of `interval' is milliseconds.
 		require
 			interval_positive: interval > 0
 		do
-			should_exit_signal:= False
-			time_interval := interval * 1000000
-			create mutex		
-			destroyed := True
+			time_interval := interval.to_integer_64 * 1000000
+			create mutex
+			has_started := False
 		ensure
-			should_exit_signal_set_to_false: not should_exit_signal	
-			time_interval_set: time_interval = interval * 1000000
+			time_interval_set: time_interval = interval.to_integer_64 * 1000000
 			destroyed_set: destroyed = True
 		end
-		
+
 feature -- Control
-		
+
 	destroy is
-			-- 
 		do
-			set_exit_signal
+			should_destroy := True
 		end
-	
+
 	start is
-			-- 
+		do
+			launch
+			has_started := True
+			should_destroy := False
+		end
+
+	destroyed: BOOLEAN is
+			--
 		do
 			mutex.lock
-			destroyed := False
-			should_exit_signal := False			
+			Result := (not has_started) or (has_started and then terminated)
 			mutex.unlock
+		end
 
-			launch
-		end		
-		
+
 feature {NONE} -- Implementation
-	
+
 	execute is
 		local
-			prc_imp: PROCESS_IMP		
+			prc_imp: PROCESS_IMP
 		do
 			prc_imp ?= process_launcher
-			if prc_imp.platform.is_dotnet then
-				
-			end
-			if prc_imp /= Void then
-				from		
-					
-				until
-					should_thread_exit
-				loop
-					prc_imp.check_exit
-					if not should_exit_signal then
-						sleep (time_interval)						
-					end
+			from
+
+			until
+				should_destroy
+			loop
+				prc_imp.check_exit
+				if not should_destroy then
+					sleep (time_interval)
 				end
 			end
-			mutex.lock
-			destroyed := True
-			mutex.unlock
 		end
+
+feature{NONE} -- Implementation
+
+	has_started: BOOLEAN
+			-- Has this timer started yet?
+
+	should_destroy: BOOLEAN
+			-- Should this timer be destroyed?
+
+	mutex: MUTEX
+			-- Internal mutex
+
+invariant
+
+	mutex_not_void: mutex /= Void
 
 end

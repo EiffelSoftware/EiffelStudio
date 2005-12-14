@@ -21,6 +21,7 @@ feature{NONE} -- Implementation
 		do
 			time_interval := interval
 			create timer.default_create
+			timer.destroy
 		ensure
 			time_interval_set: time_interval = interval
 			destroyed_set: destroyed = True

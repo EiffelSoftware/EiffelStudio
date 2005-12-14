@@ -73,13 +73,13 @@ feature {EV_ANY_I} -- Implementation
 			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make (Current)
 		end
 		
-	on_item_added_at (an_item: STRING; item_index: INTEGER) is
+	on_item_added_at (an_item: like item; item_index: INTEGER) is
 			-- `an_item' is about to be added.
 		do
 			implementation.on_item_added_at (an_item, item_index)
 		end
 
-	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
+	on_item_removed_at (an_item: like item; item_index: INTEGER) is
 			-- `an_item' is about to be removed.
 		do
 			implementation.on_item_removed_at (an_item, item_index)

@@ -32,6 +32,7 @@
 							<Registry Id='Registry4' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' />
 							<Registry Id='Registry5' Root='HKLM' Key='SOFTWARE\ISE\Eiffel CodeDom Provider\5.6\Setup' Name='InstallDir' Type='string' Value='[INSTALLDIR]' />
 							<Registry Id='Registry6' Root='HKLM' Key='Software\ISE\Eiffel CodeDom Provider\5.6\Configurations' Type='string' Value='[INSTALLDIR]Codedom\configs\default.ecd' />
+							<Registry Id='Registry7' Root='HKLM' Key='SOFTWARE\ISE\Eiffel56\ecdpc' Name='ISE_CODEDOM' Type='string' Value='[INSTALLDIR]' />
 						</Component>
 
 						<Directory Id='AssembliesDir' Name='Asm' LongName='Assemblies' >
@@ -81,6 +82,7 @@
 								<Shortcut Id='eSplitterShortcut' Directory='StartMenuDir' WorkingDirectory='BinDir' Name='Espliter' LongName='eSplitter' Target='[INSTALLDIR]Codedom\bin\esplitter.exe' Description='Generate Eiffel source files from multi-class Eiffel files' Icon='generic.exe' IconIndex='0' Show='normal' />
 								<Shortcut Id='NameMapperShortcut' Directory='StartMenuDir' WorkingDirectory='BinDir' Name='Mapper' LongName='Name Mapper' Target='[INSTALLDIR]Codedom\bin\nmap.exe' Description='.NET to Eiffel types and members names mapper' Icon='generic.exe' IconIndex='0' Show='normal' />
 								<Shortcut Id='DocumentationShortcut' Directory='StartMenuDir' Name='Docs' LongName='Documentation' Target='[INSTALLDIR]Documentation\Eiffel for ASP.NET.chm' Description='Eiffel for ASP.NET Documentation' Show='normal' />
+								<Shortcut Id='SamplesShortcut' Directory='StartMenuDir' Name='Samples' Target='http://localhost/EiffelSample/show_sample.aspx' Description='Eiffel for ASP.NET Samples' Show='normal' />
 							</Component>
 						</Directory>
 					</Directory>

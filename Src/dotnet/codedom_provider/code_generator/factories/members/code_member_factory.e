@@ -92,6 +92,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					current_type.set_snippet_inherit_clause (l_text)
 					set_last_feature (Empty_snippet_feature)
 				elseif l_text.as_lower.substring (1, 8).is_equal ("indexing") and not l_text.item (9).is_alpha_numeric and not (l_text.item (9) = '_') then
+					l_text.keep_tail (l_text.count - 9)
 					from
 						i := 1
 						l_in_tag := True
@@ -123,12 +124,12 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 								else
 									l_desc.append_character (c)
 								end
+							else
+								l_in_quote := c = '"' and l_text.item (i - 1) /= '%%'
 							end
-							l_in_quote := c /= '"' or l_text.item (i - 1) = '%%'
 						end
 						i := i + 1
-					end
-							
+					end						
 					set_last_feature (Empty_snippet_feature)
 				else
 					l_name := "snippet"

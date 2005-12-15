@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	SD_DOCKING_ZONE
 
 inherit
@@ -20,14 +20,8 @@ inherit
 			internal_shared as internal_shared_not_used,
 			extend_widget as extend_cell,
 			has_widget as has_cell
-		undefine
-			on_focus_in,
-			on_focus_out,
-			close
 		redefine
-			set_max,
-			is_maximized,
-			set_title_bar_focus_color
+			close
 		end
 
 	SD_DOCKER_SOURCE
@@ -39,43 +33,45 @@ inherit
 		undefine
 			copy, is_equal, default_create
 		end
-create
-	make
 
-feature	{NONE} -- Initlization
+feature -- Command
+	set_title (a_title: STRING) is
+			--
+		deferred
+		end
 
-	make (a_content: SD_CONTENT) is
-			-- Creation method.
-		require
-			a_content_not_void: a_content /= Void
+	close is
+			-- Redefine
 		do
-			create internal_shared_not_used
-			create internal_shared
-			internal_docking_manager := a_content.docking_manager
-			default_create
-			create window.make (a_content.type, Current)
-			internal_content := a_content
-			window.set_user_widget (internal_content.user_widget)
-			window.title_bar.set_title (internal_content.long_title)
-			if a_content.mini_toolbar /= Void then
-				if a_content.mini_toolbar.parent /= Void then
-					a_content.mini_toolbar.parent.prune (a_content.mini_toolbar)
-				end
-				window.title_bar.custom_area.extend (a_content.mini_toolbar)
-			end
-			window.close_request_actions.extend (agent on_close_request)
-			window.stick_actions.extend (agent stick)
-			window.drag_actions.extend (agent on_drag_started)
-			window.normal_max_action.extend (agent on_normal_max_window)
+			internal_docking_manager.command.lock_update
+			Precursor {SD_SINGLE_CONTENT_ZONE}
+			internal_docking_manager.zones.prune_zone (Current)
+			internal_docking_manager.command.unlock_update
+		end
 
-			pointer_motion_actions.extend (agent on_pointer_motion)
-			pointer_button_release_actions.extend (agent on_pointer_release)
-			window.set_stick (True)
-			extend_cell (window)
-			
-		ensure
-			set: internal_docking_manager = a_content.docking_manager
-			added: has_cell (window)
+feature -- Query
+
+	title: STRING is
+			--
+		deferred
+		end
+
+	is_parent_split: BOOLEAN is
+			-- Is parent a split area?
+		local
+			l_split_area: EV_SPLIT_AREA
+		do
+			l_split_area ?= parent
+			Result := l_split_area /= Void
+		end
+
+	parent_split_position: INTEGER is
+			-- If parent is split area, get split position.
+		local
+			l_split_area: EV_SPLIT_AREA
+		do
+			l_split_area ?= parent
+			Result := l_split_area.split_position
 		end
 
 feature {SD_DOCKING_STATE} -- Initlization
@@ -93,101 +89,6 @@ feature {SD_DOCKING_STATE} -- Initlization
 			internal_parent_split_position := a_split_position
 		ensure
 			set: main_area_widget = a_widget and main_area = a_main_area and internal_parent = a_parent and internal_parent_split_position = a_split_position
-		end
-
-feature {SD_CONTENT}
-
-	on_focus_in (a_content: SD_CONTENT) is
-			-- Redefine.
-		do
-			Precursor {SD_SINGLE_CONTENT_ZONE} (a_content)
-			internal_docking_manager.command.remove_auto_hide_zones
-			window.set_focus_color (True)
-		end
-
-feature -- Command
-
-	set_show_normal_max (a_show: BOOLEAN) is
-			-- Redefine.
-		do
-			window.set_show_normal_max (a_show)
-		end
-
-	set_show_stick (a_show: BOOLEAN) is
-			-- Redefine.
-		do
-			window.set_show_stick (a_show)
-		end
-
-	set_title (a_title: STRING) is
-			-- Set title.
-		do
-			window.title_bar.set_title (a_title)
-		end
-
-	set_max (a_max: BOOLEAN) is
-			-- Redefine.
-		do
-			window.title_bar.set_max (a_max)
-		end
-
-	set_title_bar_focus_color (a_focus: BOOLEAN) is
-			-- Redefine.
-		do
-			if a_focus then
-				window.title_bar.enable_focus_color
-			else	
-				window.title_bar.disable_focus_color
-			end
-		end
-
-	stick is
-			-- Stick window.
-		do
-			internal_content.state.stick ({SD_DOCKING_MANAGER}.dock_left)
-		end
-
-	close is
-			-- Redefine
-		do
-			internal_docking_manager.command.lock_update
-			Precursor {SD_SINGLE_CONTENT_ZONE}
-			internal_docking_manager.zones.prune_zone (Current)
-			internal_docking_manager.command.unlock_update
-		end
-
-feature -- Query
-
-	title: STRING is
-			-- Title.
-		do
-			Result := window.title_bar.title
-		end
-
-	is_parent_split: BOOLEAN is
-			-- Is parent a split area?
-		local
-			l_split_area: EV_SPLIT_AREA
-		do
-			l_split_area ?= parent
-			Result := l_split_area /= Void
-		end
-
-	parent_split_position: INTEGER is
-			-- If parent is split area, get split position.
-		require
-			parent_is_split_area: is_parent_split
-		local
-			l_split_area: EV_SPLIT_AREA
-		do
-			l_split_area ?= parent
-			Result := l_split_area.split_position
-		end
-
-	is_maximized: BOOLEAN is
-			-- Redefine.
-		do
-			Result := window.title_bar.is_max
 		end
 
 feature {NONE} -- For redocker.
@@ -227,25 +128,5 @@ feature {NONE} -- For redocker.
 
 	docker_mediator: SD_DOCKER_MEDIATOR
 			-- Mediator perform dock.	
-
-feature {NONE} -- Implementation
-
-	resize_bar: SD_RESIZE_BAR
-			-- Resize bar at the side.
-
-	window: SD_WINDOW
-			-- Window.
-
-	on_focus_out is
-			-- Redefine.
-		do
-			Precursor {SD_SINGLE_CONTENT_ZONE}
-			window.set_focus_color (False)
-		end
-
-invariant
-
-	internal_shared_not_void: internal_shared /= Void
-	window_not_void: window /= Void
 
 end

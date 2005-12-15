@@ -92,12 +92,12 @@ feature -- Command
 			-- Set if current is maximized.
 		do
 		end
-	
+
 	set_title_bar_focus_color (a_focus: BOOLEAN) is
 			-- Set title bar focuse color.
-		do	
+		do
 		end
-		
+
 feature -- Query
 
 	state: SD_STATE is
@@ -201,10 +201,10 @@ feature {NONE} -- Implementation
 		do
 			content.close_request_actions.call ([])
 		end
-		
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
-					
+
 	internal_shared: SD_SHARED
 			-- All singletons.
 

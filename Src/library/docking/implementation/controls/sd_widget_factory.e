@@ -74,6 +74,20 @@ feature -- Factory method.
 			not_void: Result /= Void
 		end
 
+	docking_zone (a_content: SD_CONTENT): SD_DOCKING_ZONE is
+			-- Docking zone.
+		do
+			if internal_style = style_all_same then
+				create {SD_DOCKING_ZONE_NORMAL} Result.make (a_content)
+			elseif internal_style = style_different then
+				if a_content.type = {SD_SHARED}.type_normal then
+					create {SD_DOCKING_ZONE_NORMAL} Result.make (a_content)
+				elseif a_content.type = {SD_SHARED}.type_editor then
+					Result := create {SD_DOCKING_ZONE_UPPER}.make (a_content)
+				end
+			end
+		end
+
 	tab_zone (a_content: SD_CONTENT; a_target_zone: SD_DOCKING_ZONE): SD_TAB_ZONE is
 			-- Tab zone.
 		require

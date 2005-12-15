@@ -93,12 +93,13 @@ feature -- Access
 		once
 			create l_grid
 			Result := l_grid.non_focused_selection_color
+			
 		ensure
 			not_void: Result /= Void
 		end
 
 	focused_color: EV_COLOR is
-			-- focuse color. Used by SD_TITLE_BAR...
+			-- Focused color. Used by SD_TITLE_BAR...
 		local
 			l_grid: EV_GRID
 		once
@@ -107,6 +108,11 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
+	
+--	border_color: EV_COLOR is
+			-- Border color, used by SD_TAB_STUB, SD_NOTEBOOK_TAB...
+--		local
+			
 
 feature {SD_DOCKING_MANAGER}
 

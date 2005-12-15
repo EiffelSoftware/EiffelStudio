@@ -32,10 +32,12 @@ feature {NONE}  -- Initlization
 			direction := {SD_DOCKING_MANAGER}.dock_left
 			internal_content := a_content
 			create internal_shared
+			internal_docking_manager := a_content.docking_manager
 		ensure
 			set: a_content = internal_content
+			set: internal_docking_manager = a_content.docking_manager
 		end
-		
+
 feature -- Redefine.
 
 	zone: SD_ZONE is

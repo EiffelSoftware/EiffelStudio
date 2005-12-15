@@ -37,7 +37,7 @@ feature {NONE}-- Initlization
 			direction := a_direction
 			width_height := a_width_height
 			internal_content := a_content
-			create zone.make (a_content)
+			zone := internal_shared.widget_factory.docking_zone (a_content)
 			internal_docking_manager.zones.add_zone (zone)
 		ensure
 			set: internal_content = a_content
@@ -260,7 +260,7 @@ feature -- Redefine.
 		local
 			l_multi_dock_area: SD_MULTI_DOCK_AREA
 		do
-			zone.show			
+			zone.show
 			l_multi_dock_area := internal_docking_manager.query.inner_container (zone)
 			if l_multi_dock_area /= Void and then not internal_docking_manager.query.is_main_inner_container (l_multi_dock_area) then
 				l_multi_dock_area.parent_floating_zone.show

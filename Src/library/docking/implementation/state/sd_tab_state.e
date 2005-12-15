@@ -211,13 +211,13 @@ feature -- Redefine
 		do
 			internal_docking_manager.command.lock_update
 			if not zone.is_drag_title_bar then
-				tab_zone.disable_on_select_tab
+--				tab_zone.disable_on_select_tab
 				tab_zone.prune (internal_content)
 				create l_docking_state.make (internal_content, a_direction, tab_zone.width)
 				l_docking_state.change_zone_split_area (a_target_zone, a_direction)
 				change_state (l_docking_state)
 				update_last_content_state
-				tab_zone.enable_on_select_tab
+--				tab_zone.enable_on_select_tab
 			else
 				l_docking_zone ?= a_target_zone
 				if l_docking_zone /= Void then
@@ -253,7 +253,7 @@ feature -- Redefine
 			l_orignal_direction: INTEGER
 		do
 			internal_docking_manager.command.lock_update
-			tab_zone.disable_on_select_tab
+--			tab_zone.disable_on_select_tab
 			if zone.is_drag_title_bar then
 				internal_docking_manager.zones.prune_zone (tab_zone)
 				l_orignal_direction := a_target_zone.state.direction
@@ -274,7 +274,7 @@ feature -- Redefine
 			else
 				move_tab_to_tab_zone (a_target_zone)
 			end
-			tab_zone.enable_on_select_tab
+--			tab_zone.enable_on_select_tab
 			internal_docking_manager.command.unlock_update
 		ensure then
 			moved:
@@ -558,7 +558,7 @@ feature {NONE}  -- Implementation functions.
 			l_tab_state: SD_TAB_STATE
 			l_orignal_direction: INTEGER
 		do
-			tab_zone.disable_on_select_tab
+--			tab_zone.disable_on_select_tab
 			l_orignal_direction := a_target_zone.state.direction
 			tab_zone.prune (internal_content)
 			if internal_content.user_widget.parent /= Void then
@@ -568,7 +568,7 @@ feature {NONE}  -- Implementation functions.
 			l_tab_state.set_direction (l_orignal_direction)
 			change_state (l_tab_state)
 			update_last_content_state
-			tab_zone.enable_on_select_tab
+--			tab_zone.enable_on_select_tab
 		ensure
 --			moved: a_target_zone.parent.has (internal_content.state.zone)
 		end
@@ -581,13 +581,13 @@ feature {NONE}  -- Implementation functions.
 			l_tab_state: SD_TAB_STATE
 			l_orignal_direction: INTEGER
 		do
-			tab_zone.disable_on_select_tab
+--			tab_zone.disable_on_select_tab
 			l_orignal_direction := a_target_zone.state.direction
 			tab_zone.prune (internal_content)
 			create l_tab_state.make_with_tab_zone (internal_content, a_target_zone, l_orignal_direction)
 			change_state (l_tab_state)
 			update_last_content_state
-			tab_zone.enable_on_select_tab
+--			tab_zone.enable_on_select_tab
 		end
 
 	dock_whole_at_top_level (a_multi_dock_area: SD_MULTI_DOCK_AREA) is
@@ -641,7 +641,7 @@ feature {NONE}  -- Implementation functions.
 		local
 			l_docking_state: SD_DOCKING_STATE
 		do
-			tab_zone.disable_on_select_tab
+--			tab_zone.disable_on_select_tab
 
 			tab_zone.prune (internal_content)
 			create l_docking_state.make (internal_content, direction, width_height)
@@ -649,7 +649,7 @@ feature {NONE}  -- Implementation functions.
 			change_state (l_docking_state)
 
 			update_last_content_state
-			tab_zone.enable_on_select_tab
+--			tab_zone.enable_on_select_tab
 		ensure
 			docked:
 		end

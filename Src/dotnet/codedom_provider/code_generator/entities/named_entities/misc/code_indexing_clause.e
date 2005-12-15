@@ -9,7 +9,8 @@ class
 inherit
 	CODE_NAMED_ENTITY
 		rename
-			name as tag
+			name as tag,
+			set_name as set_tag
 		end
 
 create

@@ -1,5 +1,11 @@
-<document output="studio" title="Duration">
-	<meta_data/>
+<document title="Duration">
+	<meta_data>
+		<help>
+			<toc>				
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>
 			<class_name>TIME_DURATION</class_name>, 

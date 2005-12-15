@@ -1,5 +1,12 @@
-<document output="studio" title="More precision">
-	<meta_data/>
+<document title="More precision">
+	<meta_data>
+		<help>
+			<toc>				
+				<envision_pseudo_name>50</envision_pseudo_name>
+				<envision_title>More Precision</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>
 			<class_name>TIME</class_name> and 

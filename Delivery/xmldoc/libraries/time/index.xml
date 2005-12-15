@@ -1,9 +1,8 @@
-<document output="studio" title="EiffelTime">
-	<meta_data/>
+<document title="EiffelTime">
 	<paragraph>
 		<paragraph> Type: Library
 			<line_break/> Platform: Any
-			<line_break/> Version: 5.5
+			<line_break/> Version: 5.6
 			<line_break/>
 		</paragraph>
 		<paragraph> See: 

@@ -35,15 +35,18 @@ feature {NONE} -- Initialization
 			non_void_directory: a_directory /= Void
 			valid_ace_file_name: not a_ace_file_name.is_empty
 			valid_directory: not a_directory.is_empty
+		local
+			l_interp: CODE_ENV_INTERP
 		do
-			ace_file_name := a_ace_file_name
-			root_directory := a_directory
+			create l_interp
+			ace_file_name := l_interp.interpreted_string (a_ace_file_name)
+			root_directory := l_interp.interpreted_string (a_directory)
 			if a_directory.item (a_directory.count) = Directory_separator then
 				root_directory.keep_head (root_directory.count - 1)
 			end
 		ensure
-			ace_file_name_set: ace_file_name = a_ace_file_name
-			root_directory_set: root_directory = a_directory
+			ace_file_name_set: ace_file_name.is_equal ((create {ENV_INTERP}).interpreted_string (a_ace_file_name))
+			root_directory_set: root_directory /= Void
 		end
 
 feature -- Access

@@ -1,5 +1,11 @@
 <document title="Preference Library">
-	<meta_data></meta_data>
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Content</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>The preference library is a platform independent library that can be used to add preference and configuration settings to your application.  Briefly, the library provides support for creating fully configurable preference values, on per application or per user basis.  It also provides a graphical interface for manipulation of these values, and a easily extendible design for you to add your own custom preference types.</paragraph>
 		<list ordered="false">

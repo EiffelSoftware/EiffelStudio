@@ -14,7 +14,7 @@ inherit
 
 create
 	make
-	
+
 create {INDEXING_CLAUSE_AS}
 	make_filled
 
@@ -36,6 +36,21 @@ feature -- Visitor
 			v.process_indexing_clause_as (Current)
 		end
 
+feature -- Roundtrip
+
+	indexing_keyword: KEYWORD_AS
+	end_keyword: KEYWORD_AS
+		-- keyword(s) that can appear in this structure.
+
+	set_indexing_keyword (k_as: KEYWORD_AS) is
+			-- Set `indexing_keyword' with `k_as'.
+		do
+			indexing_keyword := k_as
+		ensure
+			indexing_keyword_set: indexing_keyword = k_as
+		end
+
+
 feature -- Access
 
 	description: STRING is
@@ -43,7 +58,7 @@ feature -- Access
 		do
 			Result := string_value (Description_header)
 		end
-	
+
 	assembly_name: ARRAY [STRING] is
 			-- Assembly name (for external classes only)
 			-- Name, Version, Culture and Public key in that order
@@ -53,7 +68,7 @@ feature -- Access
 			a_string: STRING_AS
 		do
 			i := find_index_as (Assembly_header)
-			
+
 			if i /= Void then
 				list := i.index_list
 				from
@@ -68,9 +83,9 @@ feature -- Access
 					end
 					list.forth
 				end
-			end			
+			end
 		end
-		
+
 	external_name: STRING is
 			-- Name of entity holding current indexing clause as seen from
 			-- external world.
@@ -125,7 +140,7 @@ feature -- Access
 				Result := internal_custom_attributes (Interface_attribute_header)
 			end
 		end
-		
+
 	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Expression representing custom attributes for an assembly
 		local
@@ -170,7 +185,7 @@ feature -- Access
 						list.forth
 					end
 				end
-			end			
+			end
 		end
 
 	enum_type: STRING is
@@ -198,7 +213,7 @@ feature -- Access
 						list.forth
 					end
 				end
-			end			
+			end
 		end
 
 feature -- Element change
@@ -218,7 +233,7 @@ feature -- Element change
 					l_index := lookup_table.found_item
 					l_index.index_list.append (v.index_list)
 				else
-					create l_index.initialize (v.tag, v.index_list.twin)
+					create l_index.initialize (v.tag, v.index_list.twin, Void)
 					lookup_table.put (l_index, l_index.tag)
 				end
 --				if obsolete_tags.has (v.tag) then
@@ -244,7 +259,7 @@ feature {NONE} -- Constants
 
 	Interface_metadata_header: STRING is "interface_metadata"
 			-- Index name which holds custom attributes applied to associated interface only.
-			
+
 	Assembly_metadata_header: STRING is "assembly_metadata"
 			-- Index name which holds custom attributes applied to associated assembly.
 			-- They are only taken into account for the root_class.
@@ -258,11 +273,11 @@ feature {NONE} -- Constants
 
 	Interface_attribute_header: STRING is "interface_attribute"
 			-- Index name which holds custom attributes applied to associated interface only.
-			
+
 	Assembly_attribute_header: STRING is "assembly_attribute"
 			-- Index name which holds custom attributes applied to associated assembly.
 			-- They are only taken into account for the root_class.
-			
+
 	Description_header: STRING is "description"
 			-- Index name which holds class/feature desciption.
 
@@ -274,7 +289,7 @@ feature {NONE} -- Constants
 
 	Enum_type_header: STRING is "enum_type"
 			-- Type of enum elements.
-	
+
 	global_value: STRING is "global"
 			-- Value name of `Once_status_header'.
 
@@ -301,7 +316,7 @@ feature {NONE} -- Implementation
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
 			i := find_index_as (tag)
-			
+
 			if i /= Void then
 					-- Do not care if more than one element has been added
 					-- to current INDEX_AS list, we take the first one and
@@ -321,7 +336,7 @@ feature {NONE} -- Implementation
 						list.forth
 					end
 				end
-			end			
+			end
 		end
 
 	lookup_table: HASH_TABLE [INDEX_AS, STRING]
@@ -348,7 +363,7 @@ feature {NONE} -- Implementation
 			s: STRING_AS
 		do
 			i := find_index_as (tag)
-			
+
 			if i /= Void then
 				list := i.index_list
 				create Result.make (20)
@@ -365,8 +380,8 @@ feature {NONE} -- Implementation
 					if not list.after and s /= Void then
 						Result.append (", ")
 					end
-				end				
+				end
 			end
 		end
-		
+
 end -- class FEATURE_LIST_AS

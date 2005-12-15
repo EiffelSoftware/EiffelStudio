@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class UNARY_AS
-	
+
 inherit
 	EXPR_AS
 
@@ -15,15 +15,22 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (e: like expr) is
+	initialize (e: like expr; o: like operator) is
 			-- Create a new UNARY AST node.
 		require
 			e_not_void: e /= Void
 		do
 			expr := e
+			operator := o
 		ensure
 			expr_set: expr = e
+			operator_set: operator = o
 		end
+
+feature -- Roundtrip
+
+	operator: AST_EIFFEL
+			-- Unary operation AST node.
 
 feature -- Attributes
 
@@ -37,13 +44,13 @@ feature -- Location
 		do
 			Result := expr.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- End location of Current
 		do
 			Result := expr.end_location
 		end
-		
+
 	operator_location: LOCATION_AS is
 			-- Location of operator
 		do
@@ -62,7 +69,7 @@ feature -- Properties
 	operator_name: STRING is
 		deferred
 		end
-		
+
 	is_minus: BOOLEAN is
 			-- Is Current prefix "-"?
 		do

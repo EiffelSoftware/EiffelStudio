@@ -2,7 +2,7 @@ indexing
 	description: "Representation of an export clause"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class CLIENT_AS
 
 inherit
@@ -47,7 +47,7 @@ feature -- Location
 		do
 			Result := clients.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -82,7 +82,7 @@ feature -- Comparison
 						from
 							found := False
 							other_clients.start
-						until 
+						until
 							other_clients.after or else found
 						loop
 							found := clients.item.is_equal (other_clients.item)

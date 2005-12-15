@@ -9,7 +9,7 @@ class TYPE_DEC_AS
 
 inherit
 	AST_EIFFEL
-		redefine 
+		redefine
 			is_equivalent
 		end
 
@@ -20,7 +20,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list; t: like type) is
+	initialize (i: like id_list; t: like type; c_as, s_as: SYMBOL_AS) is
 			-- Create a new TYPE_DEC AST node.
 		require
 			i_not_void: i /= Void
@@ -28,9 +28,13 @@ feature {NONE} -- Initialization
 		do
 			id_list := i
 			type := t
+			colon_symbol := c_as
+			semicolon_symbol := s_as
 		ensure
 			id_list_set: id_list = i
 			type_set: type = t
+			colon_symbol_set: colon_symbol = c_as
+			semicolon_symbol_set: semicolon_symbol = s_as
 		end
 
 feature -- Visitor
@@ -41,6 +45,14 @@ feature -- Visitor
 			v.process_type_dec_as (Current)
 		end
 
+feature -- Roundtrip
+
+	colon_symbol: SYMBOL_AS
+		-- Symbol colon associated with this structure
+
+	semicolon_symbol: SYMBOL_AS
+		-- Symbol semicolon associated with this structure
+
 feature -- Access
 
 	id_list: CONSTRUCT_LIST [INTEGER]
@@ -48,7 +60,7 @@ feature -- Access
 
 	type: TYPE_AS
 			-- Type
-			
+
 	item_name (i: INTEGER): STRING is
 			-- Name of `id' at position `i'.
 		require
@@ -67,7 +79,7 @@ feature -- Location
 		do
 			Result := type.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -90,14 +102,14 @@ feature {TYPE_DEC_AS, LOCALS_MERGER} -- Replication
 			valid_t: t /= Void
 		do
 			type := t
-		end; 
+		end;
 
 	set_id_list (id: like id_list) is
 		require
 			valid_t: id /= Void
 		do
 			id_list := id
-		end; 
+		end;
 
 invariant
 	type_not_void: type /= Void

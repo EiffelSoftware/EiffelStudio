@@ -16,7 +16,18 @@ inherit
 		end
 
 create
-	initialize
+	make
+
+feature{NONE} -- Initialization
+
+	make (f: like feature_name; p: like parameters; s_as: like dot_symbol) is
+			-- Create a new FEATURE_ACCESS AST node.
+		do
+			initialize (f, p)
+			dot_symbol := s_as
+		ensure
+			dot_symbol_set: dot_symbol = s_as
+		end
 
 feature -- Visitor
 
@@ -25,5 +36,11 @@ feature -- Visitor
 		do
 			v.process_access_inv_as (Current)
 		end
+
+feature -- Roundtrip
+
+	dot_symbol: SYMBOL_AS
+			-- Symbol "." associated with this structure
+
 
 end -- class ACCESS_INV_AS

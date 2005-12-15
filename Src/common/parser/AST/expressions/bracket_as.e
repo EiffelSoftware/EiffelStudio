@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Creation
 
-	make (t: like target; o: like operands) is
+	make (t: like target; o: like operands; l_as, r_as: like lbracket_symbol) is
 			-- Create bracket expression with target `t' and operands `o'.
 		require
 			t_not_void: t /= Void
@@ -26,10 +26,19 @@ feature {NONE} -- Creation
 		do
 			target := t
 			operands :=  o
+			lbracket_symbol := l_as
+			rbracket_symbol := r_as
 		ensure
 			target_set: target = t
 			operands_set: operands = o
+			lbracket_symbol_set: lbracket_symbol = l_as
+			rbracket_symbol_set: rbracket_symbol = r_as
 		end
+
+feature -- Roundtrip
+
+	lbracket_symbol, rbracket_symbol: SYMBOL_AS
+			-- Symbol "[" and "]" associated with this structure
 
 feature -- Access
 

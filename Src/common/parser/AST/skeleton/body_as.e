@@ -16,18 +16,26 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like arguments; t: like type; r: like assigner c: like content) is
+	initialize (a: like arguments; t: like type; r: like assigner c: like content; c_as: SYMBOL_AS; k_as, a_as: KEYWORD_AS; i_as: like indexing_clause) is
 			-- Create a new BODY AST node.
 		do
-			arguments := a
+			internal_arguments := a
 			type := t
 			assigner := r
 			content := c
+			colon_symbol := c_as
+			is_keyword := k_as
+			assign_keyword := a_as
+			indexing_clause := i_as
 		ensure
-			arguments_set: arguments = a
+			internal_arguments_set: internal_arguments = a
 			type_set: type = t
 			assigner_set: assigner = r
 			content_set: content = c
+			colon_symbol_set: colon_symbol = c_as
+			is_keyword_set: is_keyword = k_as
+			assign_keyword_set: assign_keyword = a_as
+			indexing_clause_set: indexing_clause = i_as
 		end
 
 feature -- Visitor
@@ -38,10 +46,28 @@ feature -- Visitor
 			v.process_body_as (Current)
 		end
 
+feature -- Roundtrip
+
+	colon_symbol: SYMBOL_AS
+			-- Symbol colon associated with this structure
+
+	is_keyword: KEYWORD_AS
+			-- Keyword "is" associated with this structure
+
+	assign_keyword: KEYWORD_AS
+			-- Keyword "assign" associated with this structure
+
 feature -- Attributes
 
-	arguments: EIFFEL_LIST [TYPE_DEC_AS]
+	arguments: EIFFEL_LIST [TYPE_DEC_AS] is
 			-- List (of list) of arguments
+		do
+			if internal_arguments = Void or else internal_arguments.is_empty then
+				Result := Void
+			else
+				Result := internal_arguments
+			end
+		end
 
 	type: TYPE_AS
 			-- Type if any
@@ -51,6 +77,14 @@ feature -- Attributes
 
 	content: CONTENT_AS
 			-- Content of the body: constant or regular body
+
+feature -- Roundtrip
+
+	internal_arguments: EIFFEL_LIST [TYPE_DEC_AS]
+			-- Internal list (of list) of arguments
+
+	indexing_clause: INDEXING_CLAUSE_AS
+			-- Indexing clause in this structure
 
 feature -- Location
 
@@ -67,7 +101,7 @@ feature -- Location
 				Result := null_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -169,9 +203,9 @@ feature -- Type check, byte code and dead code removal
 		end
 
 feature -- New feature description
-	
+
 	is_body_equiv (other: like Current): BOOLEAN is
-			-- Is the body of current feature equivalent to 
+			-- Is the body of current feature equivalent to
 			-- body of `other' ?
 		do
 			Result := equivalent (type, other.type) and then
@@ -189,17 +223,17 @@ feature -- New feature description
 				end
 			end
 		end
- 
+
 	is_assertion_equiv (other: like Current): BOOLEAN is
-			-- Is the assertion of Current feature equivalent to 
+			-- Is the assertion of Current feature equivalent to
 			-- assertion of `other' ?
 			--|Note: This test is valid since assertions are generated
 			--|along with the body code. The assertions will be re-generated
 			--|whenever the body has changed. Therefore it is not necessary to
-			--|consider the cases in which one of the contents is a ROUTINE_AS 
+			--|consider the cases in which one of the contents is a ROUTINE_AS
 			--|and the other a CONSTANT_AS (The True value is actually returned
 			--|but we don't care.
-			--|Non-constant attributes have a Void content. In any case 
+			--|Non-constant attributes have a Void content. In any case
 			--|involving at least on attribute, the True value is retuned:
 			--|   . If they are both attributes, the assertions are equivalent
 			--|   . If only on is an attribute, we don't care since the bodies will
@@ -210,7 +244,7 @@ feature -- New feature description
 		local
 			r1, r2: ROUTINE_AS
 		do
-			r1 ?= content; 
+			r1 ?= content;
 			r2 ?= other.content
 			if (r1 /= Void) and then (r2 /= Void) then
 				Result := r1.is_assertion_equiv (r2)
@@ -223,7 +257,7 @@ feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
 
 	set_arguments (a: like arguments) is
 		do
-			arguments := a
+			internal_arguments := a
 		end
 
 	set_type (t: like type) is
@@ -235,5 +269,5 @@ feature {BODY_AS, FEATURE_AS, BODY_MERGER, USER_CMD, CMD} -- Replication
 		do
 			content := c
 		end
-		
+
 end -- class BODY_AS

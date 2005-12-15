@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_iniialized' to false.
 		require
-			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
+--			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
 			s_not_void: s /= Void
 		do
 			constant_type := a_type
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			-- Set `is_initialized' to true if the string denotes a value that is
 			-- within allowed integer bounds. Otherwise set `is_initialized' to false.
 		require
-			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
+--			valid_type: a_type /= Void implies (a_type.actual_type.is_integer or a_type.actual_type.is_natural)
 			valid_sign: ("%U+-").has (sign)
 			s_not_void: s /= Void
 			s_long_enough: s.count >= 3
@@ -79,6 +79,19 @@ feature {NONE} -- Initialization
 			read_hexadecimal_value (sign, s)
 		ensure
 			constant_type_set: constant_type = a_type
+		end
+
+feature -- Roundtrip
+
+	sign_symbol: SYMBOL_AS
+			-- Symbol "+" or "-" associated with this structure
+
+	set_sign_symbol (s_as: SYMBOL_AS) is
+			-- Set `sign_symbol' with `s_as'.
+		do
+			sign_symbol := s_as
+		ensure
+			sign_symbol_set: sign_symbol = s_as
 		end
 
 feature -- Access
@@ -271,7 +284,7 @@ feature {NONE} -- Types
 	type_mask (t: TYPE_A): like default_type is
 			-- Bit mask for the given type `t'
 		require
-			valid_type: t.is_integer or t.is_natural
+--			valid_type: t.is_integer or t.is_natural
 		do
 			fixme ("We should do something here as otherwise we only consider %
 				%INTEGER_32 constants.")

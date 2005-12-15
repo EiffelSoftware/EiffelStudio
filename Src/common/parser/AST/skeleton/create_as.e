@@ -11,14 +11,16 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like clients; f: like feature_list) is
+	initialize (c: like clients; f: like feature_list; c_as: like create_creation_keyword) is
 			-- Create a new CREATION clause AST node.
 		do
 			clients := c
 			feature_list := f
+			create_creation_keyword := c_as
 		ensure
 			clients_set: clients = c
 			feature_list_set: feature_list = f
+			create_creation_keyword_set: create_creation_keyword = c_as
 		end
 
 feature -- Visitor
@@ -28,6 +30,11 @@ feature -- Visitor
 		do
 			v.process_create_as (Current)
 		end
+
+feature -- Roundtrip
+
+	create_creation_keyword: KEYWORD_AS
+			-- Keyword "create" or "creation" associated with this structure
 
 feature -- Attributes
 
@@ -50,7 +57,7 @@ feature -- Location
 				Result := null_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -80,7 +87,7 @@ feature -- Access
 			cur: CURSOR
 		do
 			cur := feature_list.cursor
-			
+
 			from
 				feature_list.start
 			until

@@ -21,6 +21,11 @@ inherit
 			make, make_filled
 		end
 
+	PRE_POST_AS
+		undefine
+			copy, is_equal
+		end
+
 create
 	make, make_filled
 
@@ -40,6 +45,23 @@ feature {NONE} -- Initialization
 			compare_objects
 		end
 
+feature -- Roundtrip
+
+	separator_list: CONSTRUCT_LIST [AST_EIFFEL]
+		-- List to store terminals that appear in between every 2 items of this list
+
+	reverse_extend_separator (l_as: AST_EIFFEL) is
+			-- Add `l_as' into `separator_list'.
+		do
+			if separator_list = Void then
+				if capacity >= 2 then
+					create separator_list.make (capacity - 1)
+				end
+			end
+			separator_list.reverse_extend (l_as)
+		end
+
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -51,7 +73,7 @@ feature -- Visitor
 feature -- Access
 
 	start_location: LOCATION_AS is
-			-- 
+			--
 		do
 			if not is_empty then
 				Result := area.item (0).start_location
@@ -59,9 +81,9 @@ feature -- Access
 				Result := null_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
-			-- 
+			--
 		do
 			if not is_empty then
 				Result := area.item (count - 1).end_location
@@ -102,7 +124,7 @@ feature -- Element change
 			from
 				l_area := area
 				i := p
-				max := p + other.count 
+				max := p + other.count
 				cur := other.cursor
 				other.start
 			until

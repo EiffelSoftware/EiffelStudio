@@ -12,7 +12,21 @@ inherit
 	PREFIX_INFIX_NAMES
 
 create
-	initialize
+	initialize,
+	make
+
+feature -- Initialization
+
+	make (l: like left; r: like right; k_as, s_as: KEYWORD_AS) is
+			--
+		local
+			l_op: EIFFEL_LIST [KEYWORD_AS]
+		do
+			create l_op.make (2)
+			l_op.extend (k_as)
+			l_op.extend (s_as)
+			initialize (l, r, l_op)
+		end
 
 feature -- Properties
 

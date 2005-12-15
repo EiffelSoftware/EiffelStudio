@@ -16,14 +16,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (exp: like expressions) is
+	initialize (exp: like expressions; l_as, r_as: like lbracket) is
 			-- Create a new Manifest TUPLE AST node.
 		require
 			exp_not_void: exp /= Void
 		do
 			expressions := exp
+			lbracket:= l_as
+			rbracket := r_as
 		ensure
 			expressions_set: expressions = exp
+			lbracket_set: lbracket = l_as
+			rbracket_set: rbracket = r_as
 		end
 
 feature -- Attributes
@@ -38,7 +42,7 @@ feature -- Location
 		do
 			Result := expressions.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -52,6 +56,13 @@ feature -- Visitor
 		do
 			v.process_tuple_as (Current)
 		end
+
+feature -- Roundtrip
+
+feature -- Roundtrip
+
+	lbracket, rbracket: SYMBOL_AS
+			-- Symbol "[" and "]" associated with this structure
 
 feature -- Comparison
 

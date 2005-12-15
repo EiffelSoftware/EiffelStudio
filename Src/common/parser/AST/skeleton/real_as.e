@@ -11,7 +11,7 @@ inherit
 		redefine
 			is_equivalent
 		end
-		
+
 	LEAF_AS
 
 create
@@ -42,6 +42,19 @@ feature -- Visitor
 			-- process current element.
 		do
 			v.process_real_as (Current)
+		end
+
+feature -- Roundtrip
+
+	sign_symbol: SYMBOL_AS
+			-- Symbol "+" or "-" associated with this structure
+
+	set_sign_symbol (s_as: SYMBOL_AS) is
+			-- Set `sign_symbol' with `s_as'.
+		do
+			sign_symbol := s_as
+		ensure
+			sign_symbol_set: sign_symbol = s_as
 		end
 
 feature -- Access

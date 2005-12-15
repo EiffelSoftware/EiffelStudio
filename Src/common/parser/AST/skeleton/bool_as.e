@@ -10,8 +10,13 @@ inherit
 		redefine
 			is_equivalent
 		end
-		
-	LEAF_AS
+
+	KEYWORD_AS
+		undefine
+			number_of_breakpoint_slots,
+			is_equivalent,
+			process
+		end
 
 create
 	initialize

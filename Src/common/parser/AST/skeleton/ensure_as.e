@@ -7,12 +7,28 @@ class ENSURE_AS
 
 inherit
 	ASSERT_LIST_AS
-		redefine 
+		redefine
 			process
 		end
 
 create
-	initialize
+	make
+
+feature -- Initialization
+
+	make (a: like assertions; k_as: KEYWORD_AS) is
+			-- Create new REQUIRE AST node.
+		do
+			initialize (a)
+			ensure_keyword := k_as
+		ensure
+			ensure_keyword_set: ensure_keyword = k_as
+		end
+
+feature -- Roundtrip
+
+	ensure_keyword: KEYWORD_AS
+		-- Keyword "rensure" accosiated with this structure.
 
 feature -- Visitor
 

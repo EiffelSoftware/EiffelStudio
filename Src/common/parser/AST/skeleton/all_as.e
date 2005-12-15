@@ -13,10 +13,13 @@ create
 
 feature {NONE} -- Initialization
 
-	 initialize is
+	 initialize (a_as: KEYWORD_AS) is
 			-- Create a new ALL AST node.
 		do
 			-- Do nothing.
+			all_keyword := a_as
+		ensure
+			all_keyword_set: all_keyword = a_as
 		end
 
 feature -- Visitor
@@ -26,6 +29,11 @@ feature -- Visitor
 		do
 			v.process_all_as (Current)
 		end
+
+feature -- Roundtrip
+
+	all_keyword: KEYWORD_AS
+		-- Keyword "all" assoicated with this structure
 
 feature -- Comparison
 
@@ -42,7 +50,7 @@ feature -- Location
 		do
 			Result := null_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

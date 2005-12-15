@@ -19,16 +19,20 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (e: like expr; c: like compound) is
+	initialize (e: like expr; c: like compound; l_as, t_as: like elseif_keyword) is
 			-- Create a new ELSIF AST node.
 		require
 			e_not_void: e /= Void
 		do
 			expr := e
 			compound := c
+			elseif_keyword := l_as
+			then_keyword := t_as
 		ensure
 			expr_set: expr = e
 			compound_set: compound = c
+			elseif_keyword_set: elseif_keyword = l_as
+			then_keyword_set: then_keyword = t_as
 		end
 
 feature -- Visitor
@@ -38,6 +42,14 @@ feature -- Visitor
 		do
 			v.process_elseif_as (Current)
 		end
+
+feature -- Roundtrip
+
+	elseif_keyword: KEYWORD_AS
+			-- Keyword "elseif" associated with this structure
+
+	then_keyword: KEYWORD_AS
+			-- Keyword "then" associated with this structure			
 
 feature -- Attributes
 
@@ -54,7 +66,7 @@ feature -- Location
 		do
 			Result := expr.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

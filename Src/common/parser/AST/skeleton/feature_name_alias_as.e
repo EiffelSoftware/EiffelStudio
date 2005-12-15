@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	FEATURE_NAME_ALIAS_AS
 
 inherit
@@ -24,12 +24,12 @@ inherit
 			set_is_unary
 		end
 
-create 
+create
 	initialize
 
 feature {NONE} -- Creation
 
-	initialize (feature_id: ID_AS; alias_id: STRING_AS; convert_status: BOOLEAN) is
+	initialize (feature_id: ID_AS; alias_id: STRING_AS; convert_status: BOOLEAN; a_as, c_as: KEYWORD_AS) is
 			-- Create feature name object with given characteristics.
 		require
 			feature_id_not_void: feature_id /= Void
@@ -51,10 +51,14 @@ feature {NONE} -- Creation
 					set_is_binary
 				end
 			end
+			alias_keyword := a_as
+			convert_keyword := c_as
 		ensure
 			feature_name_set: feature_name = feature_id
 			alias_name_set: alias_name = alias_id
 			has_convert_mark_set: has_convert_mark = convert_status
+			alias_keyword_set: alias_keyword = a_as
+			convert_keyword_set: convert_keyword = c_as
 		end
 
 feature -- Visitor
@@ -64,6 +68,14 @@ feature -- Visitor
 		do
 			v.process_feature_name_alias_as (Current)
 		end
+
+feature -- Roundtrip
+
+	alias_keyword: KEYWORD_AS
+		-- Keyword "alias" associated with this structure.
+
+	convert_keyword: KEYWORD_AS
+		-- Keyword "convert" associated with this structure.
 
 feature -- Access
 
@@ -103,7 +115,7 @@ feature -- Status report
 		do
 			Result := not is_bracket and not internal_is_binary
 		end
-	
+
 feature -- Status setting
 
 	set_is_binary is
@@ -117,7 +129,7 @@ feature -- Status setting
 		do
 			internal_is_binary := False
 		end
-	
+
 feature -- Location
 
 	end_location: LOCATION_AS is
@@ -134,15 +146,15 @@ feature -- Comparison
 				-- There is no need to check whether both alias names are Bracket,
 				-- because there is a check that they have the same alias name
 			Result :=
-				Precursor (other) and then equivalent (alias_name, other.alias_name) and then 
+				Precursor (other) and then equivalent (alias_name, other.alias_name) and then
 				other.has_convert_mark = has_convert_mark and then other.is_binary = is_binary
 		end
-	
+
 feature {NONE} -- Status
 
 	internal_is_binary: BOOLEAN
 			-- Is operator binary (unless it is bracket)?
-	
+
 invariant
 
 	alias_name_not_void: alias_name /= Void

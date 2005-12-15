@@ -8,7 +8,89 @@ class
 
 inherit
 	AST_VISITOR
-	
+
+feature -- Roundtrip
+
+	process_class_header_mark_as (l_as: CLASS_HEADER_MARK_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_none_id_as (l_as: NONE_ID_AS) is
+			-- Process `l_as'.
+		do
+			process_id_as (l_as)
+		end
+
+	process_typed_char_as (l_as: TYPED_CHAR_AS) is
+			-- Process `l_as'.
+		do
+			process_char_as (l_as)
+		end
+
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_routine_creation_as (l_as)
+		end
+
+	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_routine_creation_as (l_as)
+		end
+
+	process_create_creation_as (l_as: CREATE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_creation_as (l_as)
+		end
+
+	process_bang_creation_as (l_as: BANG_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_creation_as (l_as)
+		end
+
+	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS) is
+			-- Process `l_as'.
+		do
+			l_as.creation_expr_process (Current)
+		end
+
+	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
+			-- Process `l_as'.
+		do
+			l_as.creation_expr_process (Current)
+		end
+
+feature -- Roundtrip
+
+	process_keyword_as (l_as: KEYWORD_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_symbol_as (l_as: SYMBOL_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_separator_as (l_as: SEPARATOR_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_new_line_as (l_as: NEW_LINE_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_comment_as (l_as: COMMENT_AS) is
+			-- Process `l_as'.
+		do
+		end
+
 feature {NONE} -- Implementation
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
@@ -658,7 +740,7 @@ feature {NONE} -- Implementation
 			l_as.feature_name.process (Current)
 			l_as.conversion_types.process (Current)
 		end
-		
+
 	process_use_list_as (l_as: USE_LIST_AS) is
 		do
 				-- Nothing to be done

@@ -13,19 +13,21 @@ inherit
 
 create
 	initialize
-	
+
 feature {NONE} -- Initialization
 
-	initialize (c: like creation_expr; t: like tuple) is
+	initialize (c: like creation_expr; t: like tuple; k_as: KEYWORD_AS) is
 			-- Create a new UNIQUE AST node.
 		require
 			c_not_void: c /= Void
 		do
 			creation_expr := c
 			tuple := t
+			end_keyword := k_as
 		ensure
 			creation_expr_set: creation_expr = c
 			tuple_set: tuple = t
+			end_keyword_set: end_keyword = k_as
 		end
 
 feature -- Visitor
@@ -36,11 +38,15 @@ feature -- Visitor
 			v.process_custom_attribute_as (Current)
 		end
 
+feature -- Roundtrip
+
+	end_keyword: KEYWORD_AS
+
 feature -- Access
 
 	creation_expr: CREATION_EXPR_AS
 			-- Creation of Custom attribute.
-			
+
 	tuple: TUPLE_AS
 			-- Tuple for addition custom attribute settings.
 
@@ -51,7 +57,7 @@ feature -- Location
 		do
 			Result := creation_expr.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

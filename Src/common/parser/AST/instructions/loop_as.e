@@ -12,6 +12,8 @@ inherit
 			number_of_breakpoint_slots
 		end
 
+	ASSERTION_FILTER
+
 create
 	initialize
 
@@ -19,25 +21,34 @@ feature {NONE} -- Initialization
 
 	initialize (f: like from_part; i: like invariant_part;
 		v: like variant_part; s: like stop;
-		c: like compound; e: like end_keyword) is
+		c: like compound; e, f_as, i_as, u_as, l_as: like end_keyword) is
 			-- Create a new LOOP AST node.
 		require
 			s_not_void: s /= Void
 			e_not_void: e /= Void
 		do
 			from_part := f
-			invariant_part := i
+			full_invariant_list := i
+			invariant_part := filter_tagged_list (full_invariant_list)
 			variant_part := v
 			stop := s
 			compound := c
 			end_keyword := e
+			from_keyword := f_as
+			invariant_keyword := i_as
+			until_keyword := u_as
+			loop_keyword := l_as
 		ensure
 			from_part_set: from_part = f
-			invariant_part_set: invariant_part = i
+			full_invariant_list_set: full_invariant_list = i
 			variant_part_set: variant_part = v
 			stop_set: stop = s
 			compound_set: compound = c
 			end_keyword_set: end_keyword = e
+			from_keyword_set: from_keyword = f_as
+			invariant_keyword_set: invariant_keyword = i_as
+			until_keyword_set: until_keyword = u_as
+			loop_keyword_set: loop_keyword = l_as
 		end
 
 feature -- Visitor
@@ -47,6 +58,15 @@ feature -- Visitor
 		do
 			v.process_loop_as (Current)
 		end
+
+feature -- Roundtrip
+
+	full_invariant_list: like invariant_part
+			-- Invariant assertion list that contains both complete and incomplete assertions.
+			-- e.g. "tag:expr", "tag:", "expr"
+
+	from_keyword, invariant_keyword, until_keyword, loop_keyword: KEYWORD_AS
+			-- Keyword "from", "invariant", "until" and "loop" associated with this structure
 
 feature -- Attributes
 
@@ -65,7 +85,7 @@ feature -- Attributes
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Loop compound
 
-	end_keyword: LOCATION_AS
+	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located
 
 feature -- Location
@@ -83,7 +103,7 @@ feature -- Location
 				Result := stop.start_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -131,6 +151,6 @@ feature -- Comparison
 		end
 
 invariant
-	stop_not_void: stop /= Void 
-			
+	stop_not_void: stop /= Void
+
 end -- class LOOP_AS

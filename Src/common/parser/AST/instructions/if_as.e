@@ -18,7 +18,7 @@ create
 feature {NONE} -- Initialization
 
 	initialize (cnd: like condition; cmp: like compound;
-		ei: like elsif_list; e: like else_part; el: like end_keyword) is
+		ei: like elsif_list; e: like else_part; el: like end_keyword; i_as, t_as, e_as: like if_keyword) is
 			-- Create a new IF AST node.
 		require
 			cnd_not_void: cnd /= Void
@@ -29,12 +29,18 @@ feature {NONE} -- Initialization
 			elsif_list := ei
 			else_part := e
 			end_keyword := el
+			if_keyword := i_as
+			then_keyword := t_as
+			else_keyword := e_as
 		ensure
 			condition_set: condition = cnd
 			compound_set: compound = cmp
 			elsif_list_set: elsif_list = ei
 			else_part_set: else_part = e
 			end_keyword_set: end_keyword = el
+			if_keyword_set: if_keyword = i_as
+			then_keyword_set: then_keyword = t_as
+			else_keyword_set: else_keyword = e_as
 		end
 
 feature -- Visitor
@@ -44,6 +50,11 @@ feature -- Visitor
 		do
 			v.process_if_as (Current)
 		end
+
+feature -- Roundtrip
+
+	if_keyword, then_keyword, else_keyword: KEYWORD_AS
+			-- Keyword "if", "else" and "then" assoicated with this structure
 
 feature -- Attributes
 
@@ -59,7 +70,7 @@ feature -- Attributes
 	else_part: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
 
-	end_keyword: LOCATION_AS
+	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located
 
 feature -- Location
@@ -69,7 +80,7 @@ feature -- Location
 		do
 			Result := condition.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -93,7 +104,7 @@ feature -- Access
 			end
 		end
 
-feature -- Comparison 
+feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?

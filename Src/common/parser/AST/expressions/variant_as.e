@@ -12,7 +12,23 @@ inherit
 		end
 
 create
-	initialize
+	make
+
+feature -- Initialization
+
+	make (t: like tag; e: like expr; v_as: like variant_keyword; c_as: like colon_symbol) is
+			-- Create new VARIANT AST node.
+		do
+			initialize (t, e, c_as)
+			variant_keyword := v_as
+		ensure
+			variant_keyword_set: variant_keyword = v_as
+		end
+
+feature -- Roundtrip
+
+	variant_keyword: KEYWORD_AS
+		-- Keyword "variant" associated with this structure
 
 feature -- Visitor
 

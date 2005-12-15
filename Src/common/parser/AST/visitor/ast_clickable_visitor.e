@@ -20,7 +20,7 @@ inherit
 			process_client_as,
 			process_convert_feat_as
 		end
-	
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 			create l_click_ast.initialize (l_as.class_name, l_as)
 			internal_click_list.extend (l_click_ast)
 			safe_process (l_as.generics)
-			
+
 			safe_process (l_as.parents)
 			safe_process (l_as.creators)
 			safe_process (l_as.convertors)
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 				-- to do that.
 			create l_click_ast.initialize (l_as.old_name, l_as.new_name)
 			internal_click_list.extend (l_click_ast)
-			
+
 			create l_click_ast.initialize (l_as.new_name, l_as.new_name)
 			internal_click_list.extend (l_click_ast)
 		end
@@ -158,7 +158,7 @@ feature {NONE} -- Implementation
 				l_clients.after
 			loop
 				create l_click_ast.initialize (l_clients.item,
-					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void, False, False))
+					create {CLASS_TYPE_AS}.initialize (l_clients.item, Void, False, False, Void, Void))
 				internal_click_list.extend (l_click_ast)
 				l_clients.forth
 			end
@@ -172,5 +172,5 @@ feature {NONE} -- Implementation
 			internal_click_list.extend (l_click_ast)
 			l_as.conversion_types.process (Current)
 		end
-		
+
 end

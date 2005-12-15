@@ -16,7 +16,7 @@ inherit
 		redefine
 			process, is_equivalent
 		end
-		
+
 	ATOMIC_AS
 
 create
@@ -24,7 +24,7 @@ create
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (c: like class_type; f: like feature_name; p: like parameters) is
+	initialize (c: like class_type; f: like feature_name; p: like parameters; f_as: like feature_keyword; d_as: like dot_symbol) is
 			-- Create a new STATIC_ACCESS_AS AST node.
 		require
 			c_not_void: c /= Void
@@ -32,14 +32,18 @@ feature {AST_FACTORY} -- Initialization
 		do
 			class_type := c
 			feature_name := f
-			parameters := p
-			if p /= Void then
-				p.start
+			internal_parameters := p
+			if parameters /= Void then
+				parameters.start
 			end
+			feature_keyword := f_as
+			dot_symbol := d_as
 		ensure
 			class_type_set: class_type = c
 			feature_name_set: feature_name = f
-			parameters_set: parameters = p
+			internal_parameters_set: internal_parameters = p
+			feature_keyword_set: feature_keyword = f_as
+			dot_symbol_set: dot_symbol = d_as
 		end
 
 feature -- Visitor
@@ -49,6 +53,14 @@ feature -- Visitor
 		do
 			v.process_static_access_as (Current)
 		end
+
+feature -- Roundtrip
+
+	feature_keyword: KEYWORD_AS
+			-- Keyword "feature" associated with this structure
+
+	dot_symbol: SYMBOL_AS
+			-- Symbol "." associated with this structure
 
 feature -- Attributes
 

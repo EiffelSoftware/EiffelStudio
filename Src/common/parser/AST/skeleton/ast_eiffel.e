@@ -60,7 +60,7 @@ feature -- Location
 		ensure
 			start_location_not_void: Result /= Void
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		deferred
@@ -83,7 +83,7 @@ feature -- Location
 		ensure
 			end_position_non_negative: Result >= 0
 		end
-		
+
 feature {NONE} -- Constants
 
 	null_location: LOCATION_AS is
@@ -93,5 +93,5 @@ feature {NONE} -- Constants
 		ensure
 			null_location_not_void: Result /= Void and then Result.is_null
 		end
-		
+
 end

@@ -10,8 +10,13 @@ class RETRY_AS
 
 inherit
 	INSTRUCTION_AS
-		
-	LEAF_AS
+
+	KEYWORD_AS
+		undefine
+			number_of_breakpoint_slots,
+			is_equivalent,
+			process
+		end
 
 create
 	make_with_location
@@ -25,7 +30,7 @@ feature -- Visitor
 		end
 
 feature -- Comparison
-		
+
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do

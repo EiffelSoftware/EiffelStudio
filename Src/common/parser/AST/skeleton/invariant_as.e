@@ -15,21 +15,26 @@ inherit
 			set_id as set_class_id
 		end
 
+	ASSERTION_FILTER
+
 create
 	initialize
 
 feature {NONE} -- Initialization
 
-	initialize (a: like assertion_list; oms_count: like once_manifest_string_count) is
+	initialize (a: like assertion_list; oms_count: like once_manifest_string_count; i_as: like invariant_keyword) is
 			-- Create a new INVARIANT AST node.
 		require
 			valid_oms_count: oms_count >= 0
 		do
-			assertion_list := a
+			full_assertion_list := a
+			assertion_list := filter_tagged_list (full_assertion_list)
 			once_manifest_string_count := oms_count
+			invariant_keyword := i_as
 		ensure
-			assertion_list_set: assertion_list = a
+			full_assertion_list_set: full_assertion_list = a
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
+			invariant_keyword_set: invariant_keyword = i_as
 		end
 
 feature -- Visitor
@@ -39,6 +44,15 @@ feature -- Visitor
 		do
 			v.process_invariant_as (Current)
 		end
+
+feature -- Roundtrip
+
+	full_assertion_list: like assertion_list
+			-- Assertion list that contains both complete and incomplete assertions.
+			-- e.g. "tag:expr", "tag:", "expr"
+
+	invariant_keyword: KEYWORD_AS
+			-- Keyword "invariant" associated with this structure
 
 feature -- Attribute
 
@@ -59,7 +73,7 @@ feature -- Location
 				Result := null_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -83,7 +97,8 @@ feature {COMPILER_EXPORTER}
 
 	set_assertion_list (a: like assertion_list) is
 		do
-			assertion_list := a
+			full_assertion_list := a
+			assertion_list := filter_tagged_list (full_assertion_list)
 		end
 
 end -- class INVARIANT_AS

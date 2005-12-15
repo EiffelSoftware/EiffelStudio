@@ -16,14 +16,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (exp: like expressions) is
+	initialize (exp: like expressions; l_as, r_as: like larray) is
 			-- Create a new Manifest ARRAY AST node.
 		require
 			exp_not_void: exp /= Void
 		do
 			expressions := exp
+			larray := l_as
+			rarray := r_as
 		ensure
 			expressions_set: expressions = exp
+			larray_set: larray = l_as
+			rarray_set: rarray = r_as
 		end
 
 feature -- Visitor
@@ -33,6 +37,11 @@ feature -- Visitor
 		do
 			v.process_array_as (Current)
 		end
+
+feature -- Roundtrip
+
+	larray, rarray: SYMBOL_AS
+			-- Symbol "<<" and ">>" associated with this structure
 
 feature -- Attributes
 
@@ -46,7 +55,7 @@ feature -- Location
 		do
 			Result := expressions.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

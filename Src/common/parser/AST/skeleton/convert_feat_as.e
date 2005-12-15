@@ -14,10 +14,10 @@ inherit
 
 create
 	initialize
-	
+
 feature {NONE} -- Initialization
 
-	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS) is
+	initialize (cr: BOOLEAN; fn: FEATURE_NAME; t: TYPE_LIST_AS; l_as, r_as, c_as: SYMBOL_AS) is
 			-- Create a new CONVERT_FEAT_AS clause AST node.
 		require
 			fn_not_void: fn /= Void
@@ -27,10 +27,16 @@ feature {NONE} -- Initialization
 			is_creation_procedure := cr
 			feature_name := fn
 			conversion_types := t
+			lparan_symbol := l_as
+			rparan_symbol := r_as
+			colon_symbol := c_as
 		ensure
 			is_creation_procedure_set: is_creation_procedure = cr
 			feature_name_set: feature_name = fn
 			conversion_types_set: conversion_types = t
+			lparan_symbol_set: lparan_symbol = l_as
+			rparan_symbol_set: rparan_symbol = r_as
+			colon_symbol_set: colon_symbol = c_as
 		end
 
 feature -- Visitor
@@ -41,14 +47,25 @@ feature -- Visitor
 			v.process_convert_feat_as (Current)
 		end
 
+feature -- Roundtrip
+
+	lparan_symbol: SYMBOL_AS
+		-- Symbol "(" associated with this structure
+
+	rparan_symbol: SYMBOL_AS
+		-- Symbol ")" associated with this structure
+
+	colon_symbol: SYMBOL_AS
+		-- Symbol colon associated with this structure
+
 feature -- Access
 
 	is_creation_procedure: BOOLEAN
 			-- Is current conversion feature specified as a creation procedure?
-			
+
 	feature_name: FEATURE_NAME
 			-- Name of conversion feature.
-			
+
 	conversion_types: TYPE_LIST_AS
 			-- Types to which we can either convert to or from.
 
@@ -59,7 +76,7 @@ feature -- Location
 		do
 			Result := feature_name.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

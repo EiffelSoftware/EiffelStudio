@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	CREATION_EXPR_AS
 
 inherit
@@ -12,8 +12,8 @@ inherit
 			is_equivalent, start_location, end_location
 		end
 
-create
-	initialize
+--create
+--	initialize
 
 feature {NONE} -- Initialization
 

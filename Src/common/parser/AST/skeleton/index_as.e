@@ -16,16 +16,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like tag; i: like index_list) is
+	initialize (t: like tag; i: like index_list; c_as: SYMBOL_AS) is
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void
 		do
 			tag := t
 			index_list := i
+			colon_symbol := c_as
 		ensure
 			tag_set: tag = t
 			index_list_set: index_list = i
+			colon_symbol_set: colon_symbol = c_as
 		end
 
 feature -- Visitor
@@ -35,6 +37,11 @@ feature -- Visitor
 		do
 			v.process_index_as (Current)
 		end
+
+feature -- Roundtrip
+
+	colon_symbol: SYMBOL_AS
+			-- Colon symbol associated with this structure.
 
 feature -- Attributes
 
@@ -51,13 +58,13 @@ feature -- Location
 		do
 			Result := tag.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
 			Result := index_list.end_location
 		end
-			
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

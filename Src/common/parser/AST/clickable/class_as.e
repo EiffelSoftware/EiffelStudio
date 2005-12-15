@@ -13,7 +13,7 @@ inherit
 		redefine
 			is_class
 		end
-		
+
 	IDABLE
 		rename
 			id as class_id,
@@ -55,10 +55,10 @@ feature {NONE} -- Initialization
 			is_separate := is_s
 			is_frozen := is_fc
 			is_external := is_ex
-			top_indexes := top_ind
-			bottom_indexes := bottom_ind
-			generics := g
-			parents := p
+			internal_top_indexes := top_ind
+			internal_bottom_indexes := bottom_ind
+			internal_generics := g
+			internal_parents := p
 			creators := c
 			convertors := co
 			features := f
@@ -85,10 +85,10 @@ feature {NONE} -- Initialization
 			is_separate_set: is_separate = is_s
 			is_frozen_set: is_frozen = is_fc
 			is_external_set: is_external = is_ex
-			top_indexes_set: top_indexes = top_ind
-			bottom_indexes_set: bottom_indexes = bottom_ind
-			generics_set: generics = g
-			parents_set: parents = p
+			internal_top_indexes_set: internal_top_indexes = top_ind
+			internal_bottom_indexes_set: internal_bottom_indexes = bottom_ind
+			internal_generics_set: internal_generics = g
+			internal_parents_set: internal_parents = p
 			creators_set: creators = c
 			convertors_set: convertors = co
 			features_set: features = f
@@ -108,6 +108,78 @@ feature -- Visitor
 			v.process_class_as (Current)
 		end
 
+feature -- Roundtrip
+
+	match_list: LEAF_AS_LIST
+			-- List where all terminals of this class are stored
+
+	set_match_list (a_list: LEAF_AS_LIST) is
+			-- Set `match_list' with `a_list'.
+		do
+			match_list := a_list
+		ensure
+			match_list_set: match_list = a_list
+		end
+
+	alias_keyword: KEYWORD_AS
+			-- keyword "alias" associated with this class
+
+	class_keyword: KEYWORD_AS
+			-- keyword "class" associated with this class
+
+	obsolete_keyword: KEYWORD_AS
+			-- keyword "obsolete" associated with this class	
+
+	header_mark: CLASS_HEADER_MARK_AS
+			-- Header mark of this class
+
+	set_header_mark (k_as: CLASS_HEADER_MARK_AS) is
+			-- Set `header_mark' with `k_as'.
+		do
+			header_mark := k_as
+		ensure
+			header_mark_set: header_mark = k_as
+		end
+
+	set_class_keyword (k_as: KEYWORD_AS) is
+			-- Set `class_keyword' with `k_as'.
+		do
+			class_keyword := k_as
+		ensure
+			class_keyword_set: class_keyword = k_as
+		end
+
+
+	set_alias_keyword (k_as: KEYWORD_AS) is
+			-- Set `alias_keyword' with `k_as'.
+		do
+			alias_keyword := k_as
+		ensure
+			alias_keyword_set: alias_keyword = k_as
+		end
+
+	set_obsolete_keyword (k_as: KEYWORD_AS) is
+			-- Set `obsolete_keyword' with `k_as'.
+		do
+			obsolete_keyword := k_as
+		ensure
+			obsolete_keyword_set: obsolete_keyword = k_as
+		end
+
+feature -- Roundtrip
+
+	internal_bottom_indexes: INDEXING_CLAUSE_AS
+			-- Internal indexing clause at bottom of class.
+
+	internal_top_indexes: INDEXING_CLAUSE_AS
+			-- Internal indexing clause at top of class.
+
+	internal_parents: EIFFEL_LIST [PARENT_AS]
+			-- Internal inheritance clause
+
+	internal_generics: EIFFEL_LIST [FORMAL_DEC_AS]
+			-- Internal formal generic parameter list
+
 feature -- Attributes
 
 	class_name: ID_AS
@@ -117,20 +189,48 @@ feature -- Attributes
 			-- External_name of class if `is_external'.
 
 	obsolete_message: STRING_AS
-			-- Obsolete message clause 
+			-- Obsolete message clause
 			-- (Void if was not present)
 
-	top_indexes: INDEXING_CLAUSE_AS
+	top_indexes: INDEXING_CLAUSE_AS is
 			-- Indexing clause at top of class.
+		do
+			if internal_top_indexes = Void or else internal_top_indexes.is_empty then
+				Result := Void
+			else
+				Result := internal_top_indexes
+			end
+		end
 
-	bottom_indexes: INDEXING_CLAUSE_AS
+	bottom_indexes: INDEXING_CLAUSE_AS is
 			-- Indexing clause at bottom of class.
+		do
+			if internal_bottom_indexes = Void or else internal_bottom_indexes.is_empty then
+				Result := Void
+			else
+				Result := internal_bottom_indexes
+			end
+		end
 
-	generics: EIFFEL_LIST [FORMAL_DEC_AS]
-			-- Formal generic parameter list
-
-	parents: EIFFEL_LIST [PARENT_AS]
+	parents: EIFFEL_LIST [PARENT_AS] is
 			-- Inheritance clause
+		do
+			if internal_parents = Void or else internal_parents.is_empty then
+				Result := Void
+			else
+				Result := internal_parents
+			end
+		end
+
+	generics: EIFFEL_LIST [FORMAL_DEC_AS] is
+			-- Formal generic parameter list
+		do
+			if internal_generics = Void or else internal_generics.is_empty then
+				Result := Void
+			else
+				Result := internal_generics
+			end
+		end
 
 	creators: EIFFEL_LIST [CREATE_AS]
 			-- Creators
@@ -177,7 +277,7 @@ feature -- Attributes
 	internal_click_list: CLICK_LIST
 			-- Clickable AST items for current class.
 
-	end_keyword: LOCATION_AS
+	end_keyword: KEYWORD_AS
 			-- Position of last end keyword
 
 	feature_clause_insert_position: INTEGER
@@ -207,7 +307,7 @@ feature -- Attributes
 
 	has_empty_invariant: BOOLEAN
 			-- Does class have an empty invariant clause?
-			
+
 	has_externals: BOOLEAN
 			-- Does current class have an external declaration?
 
@@ -227,7 +327,7 @@ feature -- Location
 				Result := class_name.start_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -368,7 +468,7 @@ feature -- Access
 				Result := top_indexes.interface_custom_attributes
 			end
 		end
-		
+
 	assembly_custom_attributes: EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS] is
 			-- Custom attributes of current class if any.
 		do
@@ -393,7 +493,7 @@ feature -- Comparison
 				equivalent (features, other.features) and then
 				is_deferred = other.is_deferred and then
 				is_expanded = other.is_expanded and then
-				is_separate = other.is_separate 
+				is_separate = other.is_separate
 		end
 
 feature {CLASS_C} -- Update
@@ -417,7 +517,7 @@ feature {COMPILER_EXPORTER} -- Setting
 
 	set_top_indexes (i: like top_indexes) is
 		do
-			top_indexes := i
+			internal_top_indexes := i
 		end
 
 invariant

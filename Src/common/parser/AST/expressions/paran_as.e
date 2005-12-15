@@ -16,14 +16,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (e: like expr) is
+	initialize (e: like expr; l_as, r_as: like lparan_symbol) is
 			-- Create a new PARAN AST node.
 		require
 			e_not_void: e /= Void
 		do
 			expr := e
+			lparan_symbol := l_as
+			rparan_symbol := r_as
 		ensure
 			expr_set: expr = e
+			lparan_symbol_set: lparan_symbol = l_as
+			rparan_symbol_set: rparan_symbol = r_as
 		end
 
 feature -- Visitor
@@ -33,6 +37,11 @@ feature -- Visitor
 		do
 			v.process_paran_as (Current)
 		end
+
+feature -- Roundtrip
+
+	lparan_symbol, rparan_symbol: SYMBOL_AS
+			-- Symbol "(" and ")" associated with this structure
 
 feature -- Attributes
 
@@ -46,7 +55,7 @@ feature -- Location
 		do
 			Result := expr.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

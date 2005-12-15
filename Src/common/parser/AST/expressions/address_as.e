@@ -1,5 +1,5 @@
 indexing
-	description: 
+	description:
 		"AST representation of an Eiffel function pointer."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,16 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: like feature_name) is
+	initialize (f: like feature_name; a_as: like address_symbol) is
 			-- Create a new ADDRESS AST node.
 		require
 			f_not_void: f /= Void
 		do
 			feature_name := f
+			address_symbol := a_as
 		ensure
 			feature_name_set: feature_name = f
+			address_symbol_set: address_symbol = a_as
 		end
 
 feature -- Visitor
@@ -32,6 +34,11 @@ feature -- Visitor
 		do
 			v.process_address_as (Current)
 		end
+
+feature -- Roundtrip
+
+	address_symbol: SYMBOL_AS
+			-- Symbol "$" associated with this structure
 
 feature -- Attribute
 
@@ -45,7 +52,7 @@ feature -- Location
 		do
 			Result := feature_name.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

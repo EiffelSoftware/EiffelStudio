@@ -53,6 +53,19 @@ feature -- Visitor
 			v.process_id_as (Current)
 		end
 
+feature -- Roundtrip
+
+	is_class_name: BOOLEAN
+			-- Is this identifier a class name?
+
+	set_is_class_name (b: BOOLEAN) is
+			-- Set `is_class_name' with `b'.
+		do
+			is_class_name := b
+		ensure
+			is_class_name_set: is_class_name = b
+		end
+
 feature -- Properties
 
 	is_id: BOOLEAN is True

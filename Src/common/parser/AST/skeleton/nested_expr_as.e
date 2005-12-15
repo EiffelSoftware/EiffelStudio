@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like target; m: like message) is
+	initialize (t: like target; m: like message; d_as, l_as, r_as: like dot_symbol) is
 			-- Create a new NESTED CALL AST node.
 		require
 			t_not_void: t /= Void
@@ -26,9 +26,15 @@ feature {NONE} -- Initialization
 		do
 			target := t
 			message := m
+			dot_symbol := d_as
+			lparan_symbol := l_as
+			rparan_symbol := r_as
 		ensure
 			target_set: target = t
 			message_set: message = m
+			dot_symbol_set: dot_symbol = d_as
+			lparan_symbol_set: lparan_symbol = l_as
+			rparan_symbol_set: rparan_symbol = r_as
 		end
 
 feature -- Visitor
@@ -38,6 +44,14 @@ feature -- Visitor
 		do
 			v.process_nested_expr_as (Current)
 		end
+
+feature -- Roundtrip
+
+	dot_symbol: SYMBOL_AS
+			-- Symbol "." associated with this structure
+
+	lparan_symbol, rparan_symbol: SYMBOL_AS
+			-- Symbol "(" and ")" associated with this structure
 
 feature -- Attributes
 

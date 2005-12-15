@@ -4,14 +4,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	ROUTINE_CREATION_AS
 
 inherit
 	EXPR_AS
 
-create
-	initialize
+--create
+--	initialize
 
 feature {NONE} -- Initialization
 
@@ -23,12 +23,12 @@ feature {NONE} -- Initialization
 		do
 			target := t
 			feature_name := f
-			operands := o
+			internal_operands := o
 			has_target := ht
 		ensure
 			target_set: target = t
 			feature_name_set: feature_name = f
-			operands_set: operands = o
+			internal_operands_set: internal_operands = o
 			has_target_set: has_target = ht
 		end
 
@@ -40,6 +40,27 @@ feature -- Visitor
 			v.process_routine_creation_as (Current)
 		end
 
+feature -- Roundtrip
+
+	lparan_symbol, rparan_symbol: SYMBOL_AS
+			-- Symbol "(" and ")" associated with this structure
+
+	set_lparan_symbol (s_as: SYMBOL_AS) is
+			-- Set `lparan_symbol' with `s_as'.
+		do
+			lparan_symbol := s_as
+		ensure
+			lparan_symbol_set: lparan_symbol = s_as
+		end
+
+	set_rparan_symbol (s_as: SYMBOL_AS) is
+			-- Set `rparan_symbol' with `s_as'.
+		do
+			rparan_symbol := s_as
+		ensure
+			rparan_symbol_set: rparan_symbol = s_as
+		end
+
 feature -- Attributes
 
 	target: OPERAND_AS
@@ -48,11 +69,23 @@ feature -- Attributes
 	feature_name: ID_AS
 			-- Feature name.
 
-	operands : EIFFEL_LIST [OPERAND_AS]
+	operands : EIFFEL_LIST [OPERAND_AS] is
 			-- List of operands used by the feature when called.
+		do
+			if internal_operands = Void or else internal_operands.is_empty then
+				Result := Void
+			else
+				Result := internal_operands
+			end
+		end
 
 	has_target: BOOLEAN
 			-- Does Current has a target?
+
+feature -- Roundtrip
+
+	internal_operands : EIFFEL_LIST [OPERAND_AS]
+			-- Internal list of operands used by the feature when called.
 
 feature -- Location
 
@@ -66,7 +99,7 @@ feature -- Location
 				Result := feature_name.start_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

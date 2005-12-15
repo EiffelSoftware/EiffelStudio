@@ -25,13 +25,13 @@ feature {NONE} -- Initialization
 			f_not_void: f /= Void
 		do
 			feature_name := f
-			parameters := p
-			if p /= Void then
-				p.start
+			internal_parameters := p
+			if parameters /= Void then
+				parameters.start
 			end
 		ensure
 			feature_name_set: feature_name = f
-			parameters_set: parameters = p
+			internal_parameters_set: internal_parameters = p
 		end
 
 feature -- Visitor
@@ -47,8 +47,15 @@ feature -- Attributes
 	feature_name: ID_AS
 			-- Name of the feature called
 
-	parameters: EIFFEL_LIST [EXPR_AS]
+	parameters: EIFFEL_LIST [EXPR_AS] is
 			-- List of parameters
+		do
+			if internal_parameters = Void or else internal_parameters.is_empty then
+				Result := Void
+			else
+				Result := internal_parameters
+			end
+		end
 
 	parameter_count: INTEGER is
 			-- Count of parameters
@@ -62,6 +69,11 @@ feature -- Attributes
 		do
 			Result := feature_name
 		end
+
+feature -- Roundtrip
+
+	internal_parameters: EIFFEL_LIST [EXPR_AS]
+			-- Internal list of parameters
 
 feature -- Location
 
@@ -110,7 +122,7 @@ feature -- Setting
 
 	set_parameters (p: like parameters) is
 		do
-			parameters := p
+			internal_parameters := p
 		end
 
 end -- class ACCESS_FEAT_AS

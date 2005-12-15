@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 		do
 			precursor_keyword := pk
 			parent_base_class := n
-			parameters := p
+			internal_parameters := p
 			if parameters /= Void then
 				parameters.start
 			end
 		ensure
 			precursor_keyword_set: precursor_keyword = pk
 			parent_base_class_set: parent_base_class = n
-			parameters_set: parameters = p
+			internal_parameters_set: internal_parameters = p
 		end
 
 feature -- Visitor
@@ -51,14 +51,21 @@ feature -- Visitor
 
 feature -- Attributes
 
-	precursor_keyword: LOCATION_AS
+	precursor_keyword: KEYWORD_AS
 			-- Position of Precursor keyword
 
 	parent_base_class: CLASS_TYPE_AS
 			-- Optional name of the parent
 
-	parameters: EIFFEL_LIST [EXPR_AS]
+	parameters: EIFFEL_LIST [EXPR_AS] is
 			-- List of parameters
+		do
+			if internal_parameters = Void or else internal_parameters.is_empty then
+				Result := Void
+			else
+				Result := internal_parameters
+			end
+		end
 
 	parameter_count: INTEGER is
 			-- Number of parameters
@@ -77,6 +84,11 @@ feature -- Attributes
 	is_precursor: BOOLEAN is True
 			-- Precursor makes reference to a class
 
+feature -- Roundtrip
+
+	internal_parameters: EIFFEL_LIST [EXPR_AS]
+			-- Internal list of parameters			
+
 feature -- Location
 
 	start_location: LOCATION_AS is
@@ -84,7 +96,7 @@ feature -- Location
 		do
 			Result := precursor_keyword
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

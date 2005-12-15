@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (o: like old_name; n: like new_name) is
+	initialize (o: like old_name; n: like new_name; k_as: KEYWORD_AS) is
 			-- Create a new RENAME_PAIR AST node.
 		require
 			o_not_void: o /= Void
@@ -25,9 +25,11 @@ feature {NONE} -- Initialization
 		do
 			old_name := o
 			new_name := n
+			as_keyword := k_as
 		ensure
 			old_name_set: old_name = o
 			new_name_set: new_name = n
+			as_keyword_set: as_keyword = k_as
 		end
 
 feature -- Visitor
@@ -37,6 +39,11 @@ feature -- Visitor
 		do
 			v.process_rename_as (Current)
 		end
+
+feature -- Roundtrip
+
+	as_keyword: KEYWORD_AS
+		-- Keyword "as" associated with this structure.
 
 feature -- Attributes
 
@@ -53,7 +60,7 @@ feature -- Location
 		do
 			Result := old_name.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

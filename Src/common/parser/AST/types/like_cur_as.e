@@ -10,11 +10,27 @@ inherit
 		redefine
 			has_like, is_loose
 		end
-		
+
 	LEAF_AS
 
 create
-	make_from_other
+--	make_from_other,
+	make
+
+feature{NONE} -- Initialization
+
+	make (other: LOCATION_AS; c_as: KEYWORD_AS) is
+			-- Create new LIKE_CURRENT AST node.
+		local
+			k_as: KEYWORD_AS
+		do
+			make_from_other (other)
+			k_as ?= other
+			like_keyword := k_as
+			current_keyword := c_as
+		ensure
+			current_keyword_set: current_keyword = c_as
+		end
 
 feature -- Visitor
 
@@ -23,6 +39,14 @@ feature -- Visitor
 		do
 			v.process_like_cur_as (Current)
 		end
+
+feature -- Roundtrip
+
+	like_keyword: KEYWORD_AS
+		-- Keyword "like" associated with this structure		
+
+	current_keyword: KEYWORD_AS
+		-- Keyword "current" associated with this structure		
 
 feature -- Comparison
 

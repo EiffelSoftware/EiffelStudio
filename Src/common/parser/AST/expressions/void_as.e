@@ -5,12 +5,17 @@ indexing
 
 class
 	VOID_AS
-	
+
 inherit
 	EXPR_AS
-		
-	LEAF_AS
-		
+
+	KEYWORD_AS
+		undefine
+			number_of_breakpoint_slots,
+			is_equivalent,
+			process
+		end
+
 create
 	make_with_location
 

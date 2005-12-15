@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (v: like bits_value) is
+	initialize (v: like bits_value; b_as: KEYWORD_AS) is
 			-- Create a new BITS AST node.
 		require
 			v_not_void: v /= Void
@@ -33,8 +33,10 @@ feature {NONE} -- Initialization
 					-- Cannot go on here
 				Error_handler.raise_error
 			end
+			bit_keyword := b_as
 		ensure
 			bits_value_set: bits_value = v
+			bit_keyword_set: bit_keyword = b_as
 		end
 
 feature -- Visitor
@@ -44,6 +46,11 @@ feature -- Visitor
 		do
 			v.process_bits_as (Current)
 		end
+
+feature -- Roundtrip
+
+	bit_keyword: KEYWORD_AS
+		-- Keyword "bit" associated with this structure
 
 feature -- Attributes
 
@@ -57,7 +64,7 @@ feature -- Location
 		do
 			Result := bits_value.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

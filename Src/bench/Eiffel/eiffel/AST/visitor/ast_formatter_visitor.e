@@ -11,7 +11,7 @@ inherit
 		redefine
 			process_type_a
 		end
-	
+
 	COMPILER_EXPORTER
 		export
 			{NONE} all
@@ -21,12 +21,12 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			is_simple_formatting := a_ctxt.is_for_case
 			create export_status_generator
 		end
-		
+
 feature -- Formatting
 
 	format (a_node: AST_EIFFEL) is
@@ -76,12 +76,94 @@ feature {NONE} -- Implementation: Access
 
 	ctxt: FORMAT_CONTEXT
 			-- Context in which formatting is done
-			
+
 	is_simple_formatting: BOOLEAN
 			-- Is `simple' formatting enabled?
-	
+
 	export_status_generator: AST_EXPORT_STATUS_GENERATOR
 			-- To generate EXPORT_I instance for CLIENT_AS nodes
+
+feature -- Roundtrip
+
+	process_class_header_mark_as (l_as: CLASS_HEADER_MARK_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_none_id_as (l_as: NONE_ID_AS) is
+			-- Process `l_as'.
+		do
+			process_id_as (l_as)
+		end
+
+	process_typed_char_as (l_as: TYPED_CHAR_AS) is
+			-- Process `l_as'.
+		do
+			process_char_as (l_as)
+		end
+
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_routine_creation_as (l_as)
+		end
+
+	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_routine_creation_as (l_as)
+		end
+
+	process_create_creation_as (l_as: CREATE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_creation_as (l_as)
+		end
+
+	process_bang_creation_as (l_as: BANG_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_creation_as (l_as)
+		end
+
+	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS) is
+			-- Process `l_as'.
+		do
+			l_as.creation_expr_process (Current)
+		end
+
+	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
+			-- Process `l_as'.
+		do
+			l_as.creation_expr_process (Current)
+		end
+
+feature -- Roundtrip
+
+	process_keyword_as (l_as: KEYWORD_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_symbol_as (l_as: SYMBOL_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_separator_as (l_as: SEPARATOR_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_new_line_as (l_as: NEW_LINE_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_comment_as (l_as: COMMENT_AS) is
+			-- Process `l_as'.
+		do
+		end
 
 feature {NONE} -- Implementation
 
@@ -115,7 +197,7 @@ feature {NONE} -- Implementation
 			ctxt.put_text_item (ti_l_curly)
 			l_as.class_type.process (Current)
 			ctxt.put_text_item (ti_r_curly)
-			
+
 			ctxt.put_text_item (ti_dot)
 			ctxt.prepare_for_creation_expression_or_static_access (l_as.class_type, l_as.feature_name, l_as.parameters)
 			ctxt.put_current_feature
@@ -170,7 +252,7 @@ feature {NONE} -- Implementation
 			from
 				i := 1
 				l_count := f.count
-				if l_count > 0 then		
+				if l_count > 0 then
 					feat := f.i_th (1)
 				end
 			until
@@ -652,7 +734,7 @@ feature {NONE} -- Implementation
 					ctxt.commit
 					i := i + 1
 				end
-				ctxt.commit				
+				ctxt.commit
 			else
 				ctxt.begin
 				must_abort := ctxt.must_abort_on_failure
@@ -926,7 +1008,7 @@ feature {NONE} -- Implementation
 					ctxt.commit
 				else
 					ctxt.rollback
-				end				
+				end
 			end
 		end
 
@@ -1313,7 +1395,7 @@ feature {NONE} -- Implementation
 			if l_as.call /= Void then
 				ctxt.need_dot
 				l_as.call.process (Current)
-			end			
+			end
 		end
 
 	process_debug_as (l_as: DEBUG_AS) is
@@ -1587,7 +1669,7 @@ feature {NONE} -- Implementation
 						create l_features.make (1)
 						l_features.extend (create {FEAT_NAME_ID_AS}.initialize (
 							create {ID_AS}.initialize (l_feat.feature_name)))
-						create l_create.initialize (Void, l_features)
+						create l_create.initialize (Void, l_features, Void)
 						l_creators.extend (l_create)
 					end
 				end
@@ -1650,7 +1732,7 @@ feature {NONE} -- Implementation
 						create l_features.make (1)
 						l_features.extend (create {FEAT_NAME_ID_AS}.initialize (
 							create {ID_AS}.initialize (l_feat.feature_name)))
-						create l_create.initialize (Void, l_features)
+						create l_create.initialize (Void, l_features, Void)
 						l_creators.extend (l_create)
 					end
 				end
@@ -1712,7 +1794,7 @@ feature {NONE} -- Implementation
 				ctxt.put_new_line
 				ctxt.put_text_item (ti_end_keyword)
 				ctxt.exdent
-			end			
+			end
 		end
 
 	process_like_id_as (l_as: LIKE_ID_AS) is
@@ -1870,7 +1952,7 @@ feature {NONE} -- Implementation
 					ctxt.put_new_line
 					ctxt.put_new_line
 				end
-				ctxt.exdent				
+				ctxt.exdent
 			else
 				ctxt.continue_on_failure
 				ctxt.set_new_line_between_tokens
@@ -1952,7 +2034,7 @@ feature {NONE} -- Implementation
 					ctxt.set_new_line_between_tokens
 					l_as.feature_list.process (Current)
 					ctxt.put_new_line
-				end	
+				end
 			else
 				ctxt.begin
 				ctxt.put_text_item (ti_create_keyword)
@@ -2047,7 +2129,7 @@ feature {NONE} -- Implementation
 			ctxt.put_text_item (ti_when_keyword)
 			ctxt.put_space
 			ctxt.set_separator (ti_comma)
-			ctxt.set_space_between_tokens			
+			ctxt.set_space_between_tokens
 			l_as.interval.process (Current)
 			ctxt.put_space
 			ctxt.put_text_item_without_tabs (ti_then_keyword)
@@ -2098,12 +2180,12 @@ feature {NONE} -- Implementation
 				ctxt.put_text_item (ti_r_parenthesis)
 			end
 		end
-		
+
 	process_use_list_as (l_as: USE_LIST_AS) is
 		do
 			process_eiffel_list (l_as)
 		end
-		
+
 	process_void_as (l_as: VOID_AS) is
 		do
 			ctxt.put_text_item (ti_void)
@@ -2273,7 +2355,7 @@ feature {NONE} -- Implementation: helpers
 				end
 			end
 		end
-		
+
 	format_convert_clause (l_as: EIFFEL_LIST [CONVERT_FEAT_AS]) is
 			-- Format convert clause.
 		do
@@ -2338,7 +2420,7 @@ feature {NONE} -- Implementation: helpers
 			end
 			ctxt.commit
 		end
-		
+
 	format_clause (a_keyword: KEYWORD_TEXT; a_clause: EIFFEL_LIST [AST_EIFFEL]; has_separator: BOOLEAN) is
 			-- Format one of rename, export, undefine, redefine or select clauses.
 		require
@@ -2360,7 +2442,7 @@ feature {NONE} -- Implementation: helpers
 			ctxt.exdent
 			ctxt.exdent
 		end
-	
+
 	format_tagged_as (l_as: TAGGED_AS; hide_breakable_marks: BOOLEAN) is
 			-- Display `l_as' with breakpoints depending on `hide_breakable_marks'.
 		require
@@ -2592,7 +2674,7 @@ feature {NONE} -- Implementation: helpers
 				i := 1
 				l_count := a_list.count
 			until
-				i > l_count 
+				i > l_count
 			loop
 				item := a_list.i_th (i)
 				feat_adapter := creators.item (item.internal_name)

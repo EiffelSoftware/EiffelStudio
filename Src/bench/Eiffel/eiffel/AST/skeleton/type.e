@@ -17,6 +17,28 @@ inherit
 
 	COMPILER_EXPORTER
 
+feature -- Roundtrip
+
+	lcurly_symbol, rcurly_symbol: SYMBOL_AS
+			-- Left and/or right curly symbol(s) associated with this structure
+			-- Maybe none of them, or maybe only left curly appears.
+
+	set_lcurly_symbol (s_as: SYMBOL_AS) is
+			-- Set `lcurly_symbol' with `s_as'.
+		do
+			lcurly_symbol := s_as
+		ensure
+			lcurly_symbol_set: lcurly_symbol = s_as
+		end
+
+	set_rcurly_symbol (s_as: SYMBOL_AS) is
+			-- Set `rcurly_symbol' with `s_as'.
+		do
+			rcurly_symbol := s_as
+		ensure
+			rcurly_symbol_set: rcurly_symbol = s_as
+		end
+
 feature -- Properties
 
 	has_like: BOOLEAN is
@@ -87,7 +109,7 @@ feature {NONE} -- Comparison
 			end
 			Result := is_equivalent (l_other)
 		end
-	
+
 feature -- Output
 
 	dump: STRING is

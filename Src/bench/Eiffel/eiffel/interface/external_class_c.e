@@ -99,7 +99,7 @@ feature -- Initialization
 					create {SUPPLIERS_AS}.make,	-- suppliers
 					Void,	-- obsolete_message
 					True,	-- has_externals
-					create {LOCATION_AS}.make_null
+					create {KEYWORD_AS}.make_null
 					)
 				l_ast.set_class_id (class_id)
 

@@ -41,13 +41,13 @@ inherit
 
 feature -- Access
 
-	new_bits_as (v: INTEGER_AS): BITS_AS is
+	new_bits_as (v: INTEGER_AS; b_as: KEYWORD_AS): BITS_AS is
 			-- New BITS AST node
 		local
 			l_vtbt: VTBT_SIMPLE
 		do
 			if v /= Void then
-				create Result.initialize (v)
+				create Result.initialize (v, b_as)
 				if (v.integer_32_value <= 0) then
 					create l_vtbt
 					l_vtbt.set_class (system.current_class)
@@ -58,8 +58,8 @@ feature -- Access
 					Error_handler.raise_error
 				end
 			end
-		end	
-		
+		end
+
 	new_class_as (n: ID_AS; ext_name: STRING;
 			is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
 			top_ind, bottom_ind: INDEXING_CLAUSE_AS;
@@ -71,7 +71,7 @@ feature -- Access
 			inv: INVARIANT_AS;
 			s: SUPPLIERS_AS;
 			o: STRING_AS;
-			he: BOOLEAN; ed: LOCATION_AS): CLASS_AS
+			he: BOOLEAN; ed: KEYWORD_AS): CLASS_AS
 		is
 			-- New CLASS AST node
 		do
@@ -87,10 +87,10 @@ feature -- Access
 			end
 		end
 
-	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; is_exp: BOOLEAN; is_sep: BOOLEAN): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: TYPE_LIST_AS; is_exp: BOOLEAN; is_sep: BOOLEAN; e_as, s_as: KEYWORD_AS): CLASS_TYPE_AS is
 		do
 			if n /= Void then
-				create Result.initialize (n, g, is_exp, is_sep)
+				create Result.initialize (n, g, is_exp, is_sep, e_as, s_as)
 				if is_exp then
 					system.set_has_expanded
 					check
@@ -100,13 +100,13 @@ feature -- Access
 				end
 			end
 		end
-		
-	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; e: LOCATION_AS): DEBUG_AS is
+
+	new_debug_as (k: EIFFEL_LIST [STRING_AS]; c: EIFFEL_LIST [INSTRUCTION_AS]; d_as, e: KEYWORD_AS): DEBUG_AS is
 		local
 			l_str: STRING
 		do
 			if e /= Void then
-				create Result.initialize (k, c, e)
+				create Result.initialize (k, c, d_as, e)
 				if k /= Void then
 					from
 							-- Debug keys are not case sensitive
@@ -122,14 +122,14 @@ feature -- Access
 				end
 			end
 		end
-		
-	new_expr_address_as (e: EXPR_AS): EXPR_ADDRESS_AS is
+
+	new_expr_address_as (e: EXPR_AS; a_as, l_as, r_as: SYMBOL_AS): EXPR_ADDRESS_AS is
 		do
 			if not system.address_expression_allowed then
 				error_handler.insert_error (create {SYNTAX_ERROR}.init)
 				error_handler.raise_error
 			elseif e /= Void then
-				create Result.initialize (e)
+				create Result.initialize (e, a_as, l_as, r_as)
 			end
 		end
 
@@ -225,16 +225,20 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING): INTEGER_CONSTANT is
+	new_integer_as (t: TYPE_AS; s: BOOLEAN; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
+		require else
+			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
 			end
 		end
 
-	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING): INTEGER_CONSTANT is
+	new_integer_hexa_as (t: TYPE_AS; s: CHARACTER; v: STRING; buf: STRING; s_as: SYMBOL_AS): INTEGER_CONSTANT is
 			-- New INTEGER_AS node
+		require else
+			valid_type: t /= Void implies (t.actual_type.is_integer or t.actual_type.is_natural)
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)

@@ -18,7 +18,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_TEXT_ITEMS
 		export
 			{NONE} all
@@ -29,7 +29,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (f: FORMAL_AS; c: like constraint; cf: like creation_feature_list) is
+	initialize (f: FORMAL_AS; c: like constraint; cf: like creation_feature_list; c_as: like constrain_symbol) is
 			-- Create a new FORMAL_DECLARATION AST node.
 		require
 			f_not_void: f /= Void
@@ -40,6 +40,8 @@ feature {NONE} -- Initialization
 			position := f.position
 			is_reference := f.is_reference
 			is_expanded := f.is_expanded
+			constrain_symbol := c_as
+			formal_para := f
 		ensure
 			name_set: name = f.name
 			constraint_set: constraint = c
@@ -47,6 +49,8 @@ feature {NONE} -- Initialization
 			position_set: position = f.position
 			is_reference_set: is_reference = f.is_reference
 			is_expanded_set: is_expanded = f.is_expanded
+			constrain_symbol_set: constrain_symbol = c_as
+			formal_para_set: formal_para = f
 		end
 
 feature -- Visitor
@@ -57,11 +61,19 @@ feature -- Visitor
 			v.process_formal_dec_as (Current)
 		end
 
+feature -- Roundtrip
+
+	constrain_symbol: SYMBOL_AS
+			-- Symbol "->" associated with this structure
+
+	formal_para: FORMAL_AS
+			-- Formal generic parameter associated with this structure
+
 feature -- Attributes
 
 	constraint: TYPE_AS
 			-- Constraint of the formal generic
-	
+
 	creation_feature_list: EIFFEL_LIST [FEATURE_NAME]
 			-- Constraint on the creation routines of the constraint
 
@@ -256,7 +268,7 @@ feature -- creation feature check
 				if class_i /= Void then
 						-- Here we assume that the class is correct (cad `check_constraint_type'
 						-- from CLASS_TYPE_AS did not add any error items to `Error_handler'.
-	
+
 						-- Here we will just check that the feature listed in the creation
 						-- constraint part are effectively features of the constraint.
 					from

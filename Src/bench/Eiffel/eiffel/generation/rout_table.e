@@ -52,7 +52,7 @@ feature -- Status report
 		require
 			--| goto_implemented (type_id) called before
 		do
-			Result := position <= max_position 
+			Result := position <= max_position
 		end
 
 	feature_name: STRING is
@@ -73,7 +73,6 @@ feature -- Status report
 			first_body_index: INTEGER;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
-			cl_type: CLASS_TYPE
 			first_type: CLASS_TYPE
 			found, is_deferred: BOOLEAN;
 			i, nb, old_position: INTEGER
@@ -98,19 +97,13 @@ feature -- Status report
 
 					-- We never compute the value for this entry, so we need to do it
 				from
-					is_deferred := True
 					first_type := system_i.class_type_of_id (type_id)
 				until
 					Result or else i > nb
 				loop
 					entry := array_item (i)
 					if entry.used then
-						second_type_id := entry.type_id
-						if second_type_id = type_id then
-							is_deferred := False
-						end
-						cl_type := system_i.class_type_of_id (second_type_id)
-						if cl_type.conform_to (first_type) then
+						if system_i.class_type_of_id (entry.type_id).conform_to (first_type) then
 							if found then
 								Result := not (entry.body_index = first_body_index)
 							else
@@ -176,7 +169,7 @@ feature -- Code generation
 			l_rout_id: INTEGER
 			l_min_used: INTEGER
 			l_table_name: STRING
-		do	
+		do
 			if max_position = 0 then
 				l_table_name := Encoder.table_name (real_rout_id)
 				buffer.put_string ("char *(*");
@@ -335,7 +328,7 @@ feature {NONE} -- Implementation
 						l_routine_name := l_rout_entry.routine_name
 						generate_loop_initialization (buffer, l_table_name, l_routine_name,
 							l_start, l_end)
-				
+
 							-- Remember external routine declaration
 						Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
 						l_rout_entry := entry
@@ -350,7 +343,7 @@ feature {NONE} -- Implementation
 				l_routine_name := l_rout_entry.routine_name
 				generate_loop_initialization (buffer, l_table_name, l_routine_name,
 					l_start, l_end)
-		
+
 					-- Remember external routine declaration
 				Extern_declarations.add_routine (l_rout_entry.type.c_type, l_routine_name)
 			end

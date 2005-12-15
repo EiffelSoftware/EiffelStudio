@@ -664,7 +664,7 @@ feature -- Actions on all windows
 			end
 		end
 
-	for_all_development_windows (p: PROCEDURE [EB_DEVELOPMENT_WINDOW, TUPLE]) is
+	for_all_development_windows (p: PROCEDURE [ANY, TUPLE [EB_DEVELOPMENT_WINDOW]]) is
 			-- Call `p' on all development windows.
 		local
 			cv_dev: EB_DEVELOPMENT_WINDOW

@@ -297,6 +297,8 @@ cluster
 
 	all roundtrip:		"$EIFFEL_SRC\Eiffel\roundtrip"
 
+	all diff:	"$EIFFEL_SRC\library\diff"
+
 external
 
 	include_path:

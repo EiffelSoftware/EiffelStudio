@@ -1,4 +1,4 @@
-<document output="codedom" title="eSplitter" output="studio">
+<document output="codedom" title="eSplitter">
 	<meta_data/>
 	<paragraph>
 		This tool comes in two flavors: a command line only utility <italic>esplit.exe</italic> and a graphical 

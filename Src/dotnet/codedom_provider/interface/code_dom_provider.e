@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			-- to workaround .NET bug where an assembly might not be returned
 			-- by {APP_DOMAIN}.GetAssemblies
 		local
-			l_int: INTERNAL
+			l_int: CODE_INTERNAL
 			l_object: SYSTEM_OBJECT
 			l_string: STRING
 			l_metadata_access: CODE_SHARED_METADATA_ACCESS

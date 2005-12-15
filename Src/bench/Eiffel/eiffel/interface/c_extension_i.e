@@ -83,6 +83,7 @@ feature {NONE} -- Implementation
 					a_ret_type.c_type.generate (l_header)
 				end
 
+				l_header.put_character (' ')
 				l_header.put_string (external_name)
 				l_header.put_character ('(')
 				from

@@ -53,7 +53,7 @@
 
 		<note>
 			<bold>Note:</bold> Only one class per compile unit should define a path to the precompiled library ACE file. If 
-			more than one class contain a <bold>precompile_definition_file</bol> indexing clause then there is no guarentee 
+			more than one class contain a <bold>precompile_definition_file</bold> indexing clause then there is no guarentee 
 			on which one the Eiffel CodeDom Compiler will use.
 		</note>
 		

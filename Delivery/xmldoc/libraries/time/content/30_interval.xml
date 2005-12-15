@@ -1,5 +1,11 @@
-<document output="studio" title="Interval">
-	<meta_data/>
+<document title="Interval">
+	<meta_data>
+		<help>
+			<toc>				
+				<envision_pseudo_name>30</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>Class <class_name>INTERVAL</class_name> deals with intervals between two instances of the same class which conform to<class_name> ABSOLUTE</class_name> (
 			<class_name>DATE</class_name>, 

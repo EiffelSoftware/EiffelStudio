@@ -1,5 +1,12 @@
-<document output="studio" title="DATE / TIME to STRING Conversion">
-	<meta_data></meta_data>
+<document title="DATE / TIME to STRING Conversion">
+	<meta_data>
+		<help>
+			<toc>				
+				<envision_pseudo_name>40</envision_pseudo_name>
+				<envision_title>DATE/TIME to STRING Conversion</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>The following table lists format conversion codes.
 			<table>

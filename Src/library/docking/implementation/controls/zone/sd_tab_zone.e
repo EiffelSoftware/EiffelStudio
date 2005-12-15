@@ -182,11 +182,11 @@ feature -- Command
 		do
 			if a_focus then
 				internal_title_bar.enable_focus_color
-			else	
+			else
 				internal_title_bar.disable_focus_color
 			end
-		end	
-		
+		end
+
 --	destroy is
 --			-- Redefine.
 --		do
@@ -194,7 +194,7 @@ feature -- Command
 --			internal_notebook.destroy
 --			Precursor {EV_VERTICAL_BOX}
 --		end
-		
+
 feature {SD_TAB_STATE} -- Internal issues.
 
 	selected_item_index: INTEGER is
@@ -266,7 +266,7 @@ feature {NONE} -- Agents for docker
 		local
 			l_content: SD_CONTENT
 		do
-			if not internal_diable_on_select_tab then
+--			if not internal_diable_on_select_tab then
 				l_content := contents.i_th (internal_notebook.selected_item_index)
 				internal_title_bar.set_title (l_content.long_title)
 				if l_content.mini_toolbar /= Void then
@@ -281,9 +281,9 @@ feature {NONE} -- Agents for docker
 					l_content.internal_focus_in_actions.call ([])
 				end
 				internal_docking_manager.property.set_last_focus_content (l_content)
-			end
+--			end
 		ensure
-			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).long_title)
+--			title_bar_content_right: not internal_diable_on_select_tab implies internal_title_bar.title.is_equal (contents.i_th (internal_notebook.selected_item_index).long_title)
 --			mini_tool_bar_added: not internal_diable_on_select_tab implies (contents.i_th (internal_notebook.selected_item_index).mini_toolbar /= Void implies
 --				internal_title_bar.custom_area.item = contents.i_th (internal_notebook.selected_item_index).mini_toolbar)
 		end

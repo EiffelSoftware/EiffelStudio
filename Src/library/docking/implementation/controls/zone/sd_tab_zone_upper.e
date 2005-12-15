@@ -27,8 +27,9 @@ feature {NONE} -- Initlization
 			internal_notebook.set_tab_position ({SD_NOTEBOOK}.tab_top)
 			internal_notebook.close_request_actions.extend (agent on_close_request)
 			internal_notebook.normal_max_actions.extend (agent on_normal_max_window)
-			
+
 			internal_notebook.tab_double_click_actions.extend (agent on_normal_max_window)
+
 		end
 
 feature {NONE} -- Implementation
@@ -38,15 +39,15 @@ feature {NONE} -- Implementation
 		local
 			l_content: SD_CONTENT
 		do
-			if not internal_diable_on_select_tab then
+--			if not internal_diable_on_select_tab then
 				Precursor {SD_TAB_ZONE}
 				l_content := contents.i_th (internal_notebook.selected_item_index)
 				if l_content.mini_toolbar /= Void then
 					internal_notebook.set_mini_tool_bar (l_content.mini_toolbar)
 				end
-			end
+--			end
 		end
-	
+
 	on_normal_max_window is
 			-- Redefine. (Just copy from SD_ZONE version)
 		local
@@ -64,20 +65,20 @@ feature {NONE} -- Implementation
 				internal_parent.prune (Current)
 				main_area.wipe_out
 				main_area.extend (Current)
-				set_max (True)
+				internal_notebook.set_show_maximized (True)
 			else
 				recover_to_normal_state
 			end
 			internal_docking_manager.command.unlock_update
 		end
-		
+
 	recover_to_normal_state is
 			-- Redefine.
 		do
-			internal_notebook.set_normal_max_pixmap (False)
+			internal_notebook.set_show_maximized (False)
 			Precursor {SD_TAB_ZONE}
 		end
-		
+
 feature {NONE}
 
 	internal_notebook: SD_NOTEBOOK_UPPER

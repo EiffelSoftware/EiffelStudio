@@ -54,13 +54,13 @@ feature -- Command
 	extend (a_content: SD_CONTENT) is
 			-- Redefine
 		do
-			disable_on_select_tab
+--			disable_on_select_tab
 			contents.extend (a_content)
 			internal_notebook.extend (a_content)
 			internal_notebook.set_item_text (a_content, a_content.short_title)
 			internal_notebook.set_item_pixmap (a_content, a_content.pixmap)
 			internal_notebook.select_item (a_content)
-			enable_on_select_tab
+--			enable_on_select_tab
 		ensure then
 			extended: contents.has (a_content)
 			internal_notebook.has (a_content)
@@ -73,10 +73,10 @@ feature -- Command
 			a_content_not_void: a_content /= Void
 			has_content: has (a_content)
 		do
-			disable_on_select_tab
+--			disable_on_select_tab
 			contents.prune_all (a_content)
 			internal_notebook.prune (a_content)
-			enable_on_select_tab
+--			enable_on_select_tab
 		ensure
 			pruned: not has (a_content)
 			pruned: not internal_notebook.has (a_content)
@@ -99,21 +99,21 @@ feature {SD_CONFIG_MEDIATOR} -- Save config
 
 feature {SD_STATE} -- Handle select tab.
 
-	disable_on_select_tab is
-			-- If `Current' pruning a zone, disable handle select tab events.
-		do
-			internal_diable_on_select_tab := True
-		ensure
-			set: internal_diable_on_select_tab = True
-		end
+--	disable_on_select_tab is
+--			-- If `Current' pruning a zone, disable handle select tab events.
+--		do
+--			internal_diable_on_select_tab := True
+--		ensure
+--			set: internal_diable_on_select_tab = True
+--		end
 
-	enable_on_select_tab is
-			--If `Current' not pruning a zone, enable handle select tab events.
-		do
-			internal_diable_on_select_tab := False
-		ensure
-			set: internal_diable_on_select_tab = False
-		end
+--	enable_on_select_tab is
+--			--If `Current' not pruning a zone, enable handle select tab events.
+--		do
+--			internal_diable_on_select_tab := False
+--		ensure
+--			set: internal_diable_on_select_tab = False
+--		end
 
 feature -- States report
 
@@ -143,6 +143,6 @@ feature {NONE} -- Implementation
 	internal_notebook: SD_NOTEBOOK
 			-- Container which `Current' in.
 
-	internal_diable_on_select_tab: BOOLEAN
-			-- If `Current' pruning a zone?
+--	internal_diable_on_select_tab: BOOLEAN
+--			-- If `Current' pruning a zone?
 end

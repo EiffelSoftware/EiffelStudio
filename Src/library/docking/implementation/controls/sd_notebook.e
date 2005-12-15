@@ -47,14 +47,14 @@ feature {NONE}  -- Initlization
 			internal_tab_box.set_background_color (l_helper.build_color_with_lightness (background_color, internal_shared.auto_hide_panel_lightness))
 			extend_vertical_box (internal_tab_box)
 			disable_item_expand (internal_tab_box)
-	
+
 			create {EV_HORIZONTAL_BOX} internal_border_box
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
 			extend_vertical_box (internal_border_box)
-			
+
 			create internal_cell
 			internal_border_box.extend (internal_cell)
-			
+
 			pointer_motion_actions.extend (agent on_pointer_motion)
 			pointer_button_release_actions.extend (agent on_pointer_release)
 		ensure
@@ -62,7 +62,7 @@ feature {NONE}  -- Initlization
 		end
 
 feature -- Command
-	
+
 	set_focus_color (a_focus: BOOLEAN) is
 			-- Set border focus color base on `a_focus'.
 		do
@@ -72,7 +72,7 @@ feature -- Command
 				internal_border_box.set_background_color (internal_shared.non_focused_color)
 			end
 		end
-		
+
 	set_item_text (a_content: SD_CONTENT; a_text: STRING) is
 			-- Assign `a_text' to label of `an_item'.
 		require
@@ -147,14 +147,16 @@ feature -- Command
 			internal_tabs.go_i_th (internal_contents.index)
 			internal_tabs.item.destroy
 			internal_tabs.remove
-			
+
 			internal_contents.start
 			internal_contents.prune (a_content)
-			
+
 			if internal_contents.after then
 				internal_contents.back
-			end	
+			end
+
 			select_item (internal_contents.item)
+			selection_actions.call ([])
 		ensure
 			pruned: not has (a_content)
 		end
@@ -180,7 +182,7 @@ feature -- Command
 				end
 			end
 		end
-	
+
 	destroy is
 			-- Redefine.
 		do
@@ -194,7 +196,7 @@ feature -- Command
 			end
 			Precursor {EV_VERTICAL_BOX}
 		end
-		
+
 feature -- Query
 
 	index_of (a_content: SD_CONTENT): INTEGER is
@@ -227,19 +229,25 @@ feature -- Query
 					internal_contents.after or l_found
 				loop
 					if internal_contents.item.user_widget = internal_cell.item then
-						l_found := True	
+						l_found := True
 					end
 					Result := Result + 1
 					internal_contents.forth
 				end
 			end
+			if not l_found then
+				Result := 0
+			end
 		end
 
 	selected_item: SD_CONTENT is
 			-- Selected item.
+		local
+			l_index: INTEGER
 		do
-			if internal_cell.readable then
-				Result := internal_contents.i_th (selected_item_index)
+			l_index := selected_item_index
+			if internal_cell.readable and l_index /= 0 then
+				Result := internal_contents.i_th (l_index)
 			end
 		end
 
@@ -261,13 +269,13 @@ feature -- Query
 
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Selection actions.
-	
+
 	tab_double_click_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Tab double click actions.
 
 	tab_drag_actions: ACTION_SEQUENCE [ TUPLE [SD_CONTENT, INTEGER, INTEGER, INTEGER, INTEGER]]
 			-- Tab drag actions. In tuple, 1st is dragged tab, 2nd is x, 3rd is y, 4th is screen_x, 5th is screen_y.
-		
+
 feature {NONE}  -- Implementation
 
 	on_tab_dragging (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER; a_tab: SD_NOTEBOOK_TAB) is
@@ -277,16 +285,16 @@ feature {NONE}  -- Implementation
 			dragging_tab := a_tab
 			enable_capture
 		end
-	
+
 	dragging_tab: SD_NOTEBOOK_TAB
 			-- Tab which is dragging.
-	
+
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release.
 		do
 			disable_capture
 		end
-		
+
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer motion.
 		local
@@ -307,7 +315,7 @@ feature {NONE}  -- Implementation
 						internal_tab_box.swap (internal_tab_box.index_of (dragging_tab, 1))
 						internal_tab_box.disable_item_expand (dragging_tab)
 						internal_tab_box.disable_item_expand (l_target_tab)
-					end	
+					end
 				else
 					if tab_has_x_y (dragging_tab, a_screen_x, a_screen_y) then
 						l_in_tabs := True
@@ -318,9 +326,9 @@ feature {NONE}  -- Implementation
 			if not l_in_tabs then
 				disable_capture
 				tab_drag_actions.call ([content_by_tab (dragging_tab), a_x, a_y, a_screen_x, a_screen_y])
-			end			
+			end
 		end
-		
+
 	on_tab_selected (a_tab: SD_NOTEBOOK_TAB) is
 			-- Handle notebook tab selected.
 		do
@@ -329,7 +337,7 @@ feature {NONE}  -- Implementation
 			a_tab.set_selected (True)
 			selection_actions.call ([])
 		end
-			
+
 	content_by_tab (a_tab: SD_NOTEBOOK_TAB): SD_CONTENT is
 			-- Widget which associate with `a_tab'.
 		require
@@ -341,9 +349,9 @@ feature {NONE}  -- Implementation
 		ensure
 			not_void: Result /= Void
 		end
-	
+
 	tab_by_content (a_content: SD_CONTENT): SD_NOTEBOOK_TAB is
-			-- Tab which associate with `a_widget'. 
+			-- Tab which associate with `a_widget'.
 		require
 			has: has (a_content)
 		do
@@ -353,7 +361,7 @@ feature {NONE}  -- Implementation
 		ensure
 			not_void: Result /= Void
 		end
-		
+
 	disable_all_tab_selection is
 			-- Disable all tabs selection.
 		do
@@ -366,7 +374,7 @@ feature {NONE}  -- Implementation
 				internal_tabs.forth
 			end
 		end
-	
+
 	tab_has_x_y (a_tab: SD_NOTEBOOK_TAB; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- If `a_tab' has `a_screen_x', `a_screen_y'?
 		local
@@ -375,28 +383,28 @@ feature {NONE}  -- Implementation
 			create l_rect.make (a_tab.screen_x, a_tab.screen_y, a_tab.width, a_tab.height)
 			Result := l_rect.has_x_y (a_screen_x, a_screen_y)
 		end
-		
+
 	internal_contents: ARRAYED_LIST [SD_CONTENT]
 			-- All widgets in Current.
 
 	internal_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
 			-- All tabs in Current.
-		
+
 	internal_tab_box: SD_NOTEBOOK_TAB_AREA
 			-- Horizontal box which hold tabs and mini tool bar and close buttons..
-	
+
 	internal_cell: EV_CELL
 			-- Cell which hold notebook selected content.
-	
+
 	internal_border_box: EV_BOX
 			-- Box used for highlight border.
-	
+
 	internal_shared: SD_SHARED
 			-- All singletons.
-	
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
-	
+
 feature -- Emumeration
 
 	tab_top: INTEGER is 1

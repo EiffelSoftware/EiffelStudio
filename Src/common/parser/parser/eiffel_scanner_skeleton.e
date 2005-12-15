@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			ast_factory := a_factory
 			make_with_buffer (Empty_buffer)
 			create token_buffer.make (Initial_buffer_size)
+			create token_buffer2.make (Initial_buffer_size)
 			create verbatim_marker.make (Initial_verbatim_marker_size)
 			filename := ""
 		ensure
@@ -68,11 +69,28 @@ feature -- Initialization
 			verbatim_marker.clear_all
 		end
 
+feature -- Roundtrip
+
+	initial_match_list_size: INTEGER is 1000
+			-- Initial size of `match_list'.
+
+	token_buffer2: STRING
+			-- Buffer for verbatim string tokens
+
+	l_line, l_column: INTEGER
+	l_position: INTEGER
+	l_i, l_j: INTEGER
+	l_verbatim_start_position: INTEGER
+	l_string_start_position: INTEGER
+	is_matching_comment: BOOLEAN
+	l_c: CHARACTER
+	l_temp: STRING
+
 feature -- Access
 
 	ast_factory: AST_FACTORY
 			-- Abstract Syntax Tree factory
-	
+
 	filename: STRING
 			-- Name of file being parsed
 
@@ -127,7 +145,7 @@ feature -- Settings
 		ensure
 			has_syntax_warning_set: has_syntax_warning = b
 		end
-		
+
 	set_has_old_verbatim_strings (b: BOOLEAN) is
 			-- Set `has_old_verbatim_strings' to `b'
 		do
@@ -135,7 +153,7 @@ feature -- Settings
 		ensure
 			has_old_verbatim_strings_set: has_old_verbatim_strings = b
 		end
-		
+
 	set_has_old_verbatim_strings_warning (b: BOOLEAN) is
 			-- Set `has_old_verbatim_strings_warning' to `b'.
 		do
@@ -143,7 +161,7 @@ feature -- Settings
 		ensure
 			has_old_verbatim_strings_warning_set: has_old_verbatim_strings_warning = b
 		end
-	
+
 feature {NONE} -- Error handling
 
 	fatal_error (a_message: STRING) is
@@ -295,6 +313,40 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_character_code (code: INTEGER) is
+			-- Check whether `code' is a valid character code
+			-- and set `last_token' accordingly.
+		require
+			code_positive: code >= 0
+		do
+			if code > Maximum_character_code then
+					-- Bad character code.
+				report_character_invalid_code_error (code)
+			else
+				token_buffer.clear_all
+				token_buffer.append_character (charconv (code))
+				last_token := TE_CHAR
+				ast_factory.set_buffer (token_buffer2, Current)
+			end
+		end
+
+	process_string_character_code (code: INTEGER) is
+			-- Check whether `code' is a valid character code
+			-- in a string and set `last_token' accordingly.
+		require
+			code_positive: code >= 0
+		do
+			if code > Maximum_character_code then
+					-- Bad character code.
+				set_start_condition (0)
+				report_string_invalid_code_error (code)
+			else
+				token_buffer.append_character (charconv (code))
+			end
+		end
+
+feature {NONE} -- Implementation
+
 	is_verbatim_string_closer: BOOLEAN is
 			-- Is `text' a valid Verbatim_string_closer?
 		require
@@ -330,7 +382,7 @@ feature {NONE} -- Implementation
 		end
 
 	align_left (s: STRING) is
-			-- Align multiline string `s' to the left so that 
+			-- Align multiline string `s' to the left so that
 			-- the same white space in front of every line is removed.
 		require
 			s_not_void: s /= Void
@@ -381,37 +433,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
-	process_character_code (code: INTEGER) is
-			-- Check whether `code' is a valid character code
-			-- and set `last_token' accordingly.
-		require
-			code_positive: code >= 0
-		do
-			if code > Maximum_character_code then
-					-- Bad character code.
-				report_character_invalid_code_error (code)
-			else
-				token_buffer.clear_all
-				token_buffer.append_character (charconv (code))
-				last_token := TE_CHAR
-			end
-		end
-
-	process_string_character_code (code: INTEGER) is
-			-- Check whether `code' is a valid character code
-			-- in a string and set `last_token' accordingly.
-		require
-			code_positive: code >= 0
-		do
-			if code > Maximum_character_code then
-					-- Bad character code.
-				set_start_condition (0)
-				report_string_invalid_code_error (code)
-			else
-				token_buffer.append_character (charconv (code))
-			end
-		end
 
 	cloned_string (a_string: STRING): STRING is
 			-- Clone of `a_string'
@@ -443,6 +464,19 @@ feature {NONE} -- Implementation
 			less_memory: Result.capacity <= a_string.capacity
 		end
 
+feature -- Case Mode
+
+	Case_sensitive: BOOLEAN
+			-- Is code case sensitive?
+
+	set_case_sensitive (b: BOOLEAN) is
+			-- Set `Case_sensitive' with `b'.
+		do
+			Case_sensitive := b
+		ensure
+			Case_sensitive_set: Case_sensitive = b
+		end
+
 feature {NONE} -- Constants
 
 	Initial_buffer_size: INTEGER is 5120
@@ -451,9 +485,6 @@ feature {NONE} -- Constants
 
 	Initial_verbatim_marker_size: INTEGER is 3
 			-- Initial size for `verbatim_marker'
-
-	Case_sensitive: BOOLEAN is False
-			-- Is code case sensitive?
 
 invariant
 	ast_factory_not_void: ast_factory /= Void

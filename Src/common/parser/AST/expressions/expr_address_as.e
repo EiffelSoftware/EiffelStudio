@@ -16,14 +16,20 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (e: like expr) is
+	initialize (e: like expr; a_as, l_as, r_as: like address_symbol) is
 			-- Create a new EXPR_ADDRESS AST node.
 		require
 			e_not_void: e /= Void
 		do
 			expr := e
+			address_symbol := a_as
+			lparan_symbol := l_as
+			rparan_symbol := r_as
 		ensure
 			expr_set: expr = e
+			address_symbol_set: address_symbol = a_as
+			lparan_symbol_set: lparan_symbol = l_as
+			rparan_symbol_set: rparan_symbol = r_as
 		end
 
 feature -- Visitor
@@ -33,6 +39,14 @@ feature -- Visitor
 		do
 			v.process_expr_address_as (Current)
 		end
+
+feature -- Roundtrip
+
+	address_symbol: SYMBOL_AS
+			-- Symbol "$" associated with this structure
+
+	lparan_symbol, rparan_symbol: SYMBOL_AS
+			-- Symbol "(" and ")" associated with this structure
 
 feature -- Properties
 
@@ -46,7 +60,7 @@ feature -- Location
 		do
 			Result := expr.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -60,7 +74,7 @@ feature -- Comparison
 		do
 			Result := equivalent (expr, other.expr)
 		end
-		
+
 invariant
 	expr_not_void: expr /= Void
 

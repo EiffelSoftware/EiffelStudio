@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 	initialize (o: like obsolete_message; pr: like precondition;
 		l: like locals; b: like routine_body; po: like postcondition;
 		r: like rescue_clause; ek: like end_keyword;
-		oms_count: like once_manifest_string_count; a_pos: like body_start_position) is
+		oms_count: like once_manifest_string_count; a_pos: like body_start_position; k_as, r_as: like obsolete_keyword) is
 			-- Create a new ROUTINE AST node.
 		require
 			b_not_void: b /= Void
@@ -42,6 +42,8 @@ feature {NONE} -- Initialization
 			end_keyword := ek
 			once_manifest_string_count := oms_count
 			body_start_position := a_pos
+			obsolete_keyword := k_as
+			rescue_keyword := r_as
 		ensure
 			obsolete_message_set: obsolete_message = o
 			precondition_set: precondition = pr
@@ -52,6 +54,8 @@ feature {NONE} -- Initialization
 			end_keyword_set: end_keyword = ek
 			once_manifest_string_count_set: once_manifest_string_count = oms_count
 			body_start_position_set: body_start_position = a_pos
+			obsolete_keyword_set: obsolete_keyword = k_as
+			rescue_keyword_set: rescue_keyword = r_as
 		end
 
 feature -- Visitor
@@ -61,6 +65,11 @@ feature -- Visitor
 		do
 			v.process_routine_as (Current)
 		end
+
+feature -- Roundtrip
+
+	obsolete_keyword, rescue_keyword: KEYWORD_AS
+			-- keyword "obsolete" and "rescue" associated with this class	
 
 feature -- Attributes
 
@@ -87,7 +96,7 @@ feature -- Attributes
 			-- Number of once manifest strings in precondition,
 			-- body, postcondition and rescue clause
 
-	end_keyword: LOCATION_AS
+	end_keyword: KEYWORD_AS
 			-- Location for `end' keyword
 
 feature -- Location
@@ -111,7 +120,7 @@ feature -- Location
 				Result := end_keyword
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -120,13 +129,13 @@ feature -- Location
 
 	body_start_position: INTEGER
 			-- Position at the start of the main body (after the comments and obsolete clause)
-		
+
 feature -- Properties
 
 	is_require_else: BOOLEAN is
 			-- Is the precondition block of the content preceeded by
 			-- `require else' ?
-			--|Note: It is valid to not include a precondition in 
+			--|Note: It is valid to not include a precondition in
 			--|a redefined feature (it is equivalent to "require else False")
 		do
 			Result := precondition = Void or else precondition.is_else
@@ -135,7 +144,7 @@ feature -- Properties
 	is_ensure_then: BOOLEAN is
 			-- Is the postcondition block of the content preceeded by
 			-- `ensure then' ?
-			--|Note: It is valid to not include a postcondition in 
+			--|Note: It is valid to not include a postcondition in
 			--|a redefined feature (it is equivalent to "ensure then True"
 		do
 			Result := postcondition = Void or else postcondition.is_then
@@ -190,7 +199,7 @@ feature -- Access
 		do
 				-- At least one stoppoint, the one corresponding
 				-- to the feature end.
-			Result := 1 
+			Result := 1
 
 				-- Add the body stop points
 			if routine_body /= Void then
@@ -232,7 +241,7 @@ feature -- Access
 
 	index_of_instruction (i: INSTRUCTION_AS): INTEGER is
 			-- Index of `i' in this routine.
-		do	
+		do
 			Result := routine_body.index_of_instruction (i)
 		end
 
@@ -252,7 +261,7 @@ feature -- Comparison
 				equivalent (rescue_clause, other.rescue_clause) and then
 				equivalent (obsolete_message, other.obsolete_message)
 		end
- 
+
 	is_assertion_equiv (other: like Current): BOOLEAN is
 			-- Is the current feature equivalent to `other' ?
 		require else
@@ -280,8 +289,8 @@ feature -- default rescue
 			if rescue_clause = Void and then
 			   not (routine_body.is_deferred or routine_body.is_external) then
 				create def_resc_id.initialize (def_resc_name)
-				def_resc_id.set_position (end_keyword.line, end_keyword.column, 
-					end_keyword.position, end_keyword.location_count)				
+				def_resc_id.set_position (end_keyword.line, end_keyword.column,
+					end_keyword.position, end_keyword.location_count)
 				create def_resc_call.initialize (def_resc_id, Void)
 				create def_resc_instr.initialize (def_resc_call)
 				create rescue_clause.make (1)

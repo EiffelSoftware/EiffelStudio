@@ -17,16 +17,20 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like interval; c: like compound) is
+	initialize (i: like interval; c: like compound; w_as, t_as: like when_keyword) is
 			-- Create a new WHEN AST node.
 		require
 			i_not_void: i /= Void
 		do
 			interval := i
 			compound := c
+			when_keyword := w_as
+			then_keyword := t_as
 		ensure
 			interval_set: interval = i
 			compound_set: compound = c
+			when_keyword_set: when_keyword = w_as
+			then_keyword_set: then_keyword = t_as
 		end
 
 feature -- Visitor
@@ -36,6 +40,11 @@ feature -- Visitor
 		do
 			v.process_case_as (Current)
 		end
+
+feature -- Roundtrip
+
+	when_keyword, then_keyword: KEYWORD_AS
+			-- Keyword "when" and "then" associated with this structure
 
 feature -- Attributes
 
@@ -52,7 +61,7 @@ feature -- Location
 		do
 			Result := interval.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

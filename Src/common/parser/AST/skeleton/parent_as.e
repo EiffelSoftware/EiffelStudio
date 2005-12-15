@@ -24,19 +24,19 @@ feature {NONE} -- Initialization
 			t_not_void: t /= Void
 		do
 			type := t
-			renaming := rn
-			exports := e
-			undefining := u
-			redefining := rd
-			selecting := s
+			internal_renaming := rn
+			internal_exports := e
+			internal_undefining := u
+			internal_redefining := rd
+			internal_selecting := s
 			end_keyword := ek
 		ensure
 			type_set: type = t
-			renaming_set: renaming = rn
-			exports_set: exports = e
-			undefining_set: undefining = u
-			redefining_set: redefining = rd
-			selecting_set: selecting = s
+			internal_renaming_set: internal_renaming = rn
+			internal_exports_set: internal_exports = e
+			internal_undefining_set: internal_undefining = u
+			internal_redefining_set: internal_redefining = rd
+			internal_selecting_set: internal_selecting = s
 			end_keyword_set: end_keyword = ek
 		end
 
@@ -53,24 +53,77 @@ feature -- Attributes
 	type: CLASS_TYPE_AS
 			-- Parent type
 
-	renaming: EIFFEL_LIST [RENAME_AS]
+	renaming: EIFFEL_LIST [RENAME_AS] is
 			-- Rename clause
+		do
+			if internal_renaming = Void or else internal_renaming.is_empty then
+				Result := Void
+			else
+				Result := internal_renaming
+			end
+		end
 
-	exports: EIFFEL_LIST [EXPORT_ITEM_AS]
+	exports: EIFFEL_LIST [EXPORT_ITEM_AS] is
 			-- Exports for parent
+		do
+			if internal_exports = Void or else internal_exports.is_empty then
+				Result := Void
+			else
+				Result := internal_exports
+			end
+		end
 
-	redefining: EIFFEL_LIST [FEATURE_NAME]
+	redefining: EIFFEL_LIST [FEATURE_NAME] is
 			-- Redefining clause
+		do
+			if internal_redefining = Void or else internal_redefining.is_empty then
+				Result := Void
+			else
+				Result := internal_redefining
+			end
+		end
 
-	undefining: EIFFEL_LIST [FEATURE_NAME]
+	undefining: EIFFEL_LIST [FEATURE_NAME] is
 			-- Undefine clause
+		do
+			if internal_undefining = Void or else internal_undefining.is_empty then
+				Result := Void
+			else
+				Result := internal_undefining
+			end
+		end
 
-	selecting: EIFFEL_LIST [FEATURE_NAME]
+	selecting: EIFFEL_LIST [FEATURE_NAME] is
 			-- Select clause
+		do
+			if internal_selecting = Void or else internal_selecting.is_empty then
+				Result := Void
+			else
+				Result := internal_selecting
+			end
+		end
 
-	end_keyword: LOCATION_AS
+	end_keyword: KEYWORD_AS
 			-- End of clause if any of the `rename', `export', `redefine', `undefine'
 			-- and `select' is present
+
+feature -- Roundtrip
+
+	internal_exports: EIFFEL_LIST [EXPORT_ITEM_AS]
+			-- Internal exports for parent
+
+	internal_renaming: EIFFEL_LIST [RENAME_AS]
+			-- Internal rename clause
+
+	internal_redefining: EIFFEL_LIST [FEATURE_NAME]
+			-- Internal redefining clause
+
+	internal_undefining: EIFFEL_LIST [FEATURE_NAME]
+			-- Internal undefine clause
+
+	internal_selecting: EIFFEL_LIST [FEATURE_NAME]
+			-- Internal select clause
+
 
 feature -- Location
 
@@ -79,7 +132,7 @@ feature -- Location
 		do
 			Result := type.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -88,8 +141,8 @@ feature -- Location
 			else
 				Result := type.end_location
 			end
-		end		
-		
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

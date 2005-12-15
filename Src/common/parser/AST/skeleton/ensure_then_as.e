@@ -7,13 +7,31 @@ class ENSURE_THEN_AS
 
 inherit
 	ENSURE_AS
+		rename
+			make as ensure_make
 		redefine
 			process,
 			is_then
 		end
 
 create
-	initialize
+	make
+
+feature -- Initialization
+
+	make (a: like assertions; k_as, l_as: KEYWORD_AS) is
+			-- Create new REQUIRE AST node.
+		do
+			ensure_make (a, k_as)
+			then_keyword := l_as
+		ensure
+			then_keyword_set: then_keyword = l_as
+		end
+
+feature -- Roundtrip
+
+	then_keyword: KEYWORD_AS
+			-- Keyword "then" associated with this structure
 
 feature -- Visitor
 

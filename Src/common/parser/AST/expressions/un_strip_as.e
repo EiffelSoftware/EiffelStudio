@@ -19,15 +19,22 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (i: like id_list) is
+	initialize (i: like id_list; o: AST_EIFFEL) is
 			-- Create a new UN_STRIP AST node.
 		require
 			i_not_void: i /= Void
 		do
 			id_list := i
+			operator := o
 		ensure
 			id_list_set: id_list = i
+			operator_set: operator = o
 		end
+
+feature -- Roundtrip
+
+	operator: AST_EIFFEL
+			-- Operator node.
 
 feature -- Visitor
 
@@ -49,7 +56,7 @@ feature -- Location
 		do
 			Result := null_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

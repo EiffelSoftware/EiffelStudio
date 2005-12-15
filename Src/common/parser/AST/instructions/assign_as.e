@@ -13,7 +13,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (t: like target; s: like source) is
+	initialize (t: like target; s: like source; a_as: like assignment_symbol) is
 			-- Create a new ASSIGN AST node.
 		require
 			t_not_void: t /= Void
@@ -21,9 +21,11 @@ feature {NONE} -- Initialization
 		do
 			target := t
 			source := s
+			assignment_symbol := a_as
 		ensure
 			target_set: target = t
 			source_set: source = s
+			assignment_symbol_set: assignment_symbol = a_as
 		end
 
 feature -- Visitor
@@ -33,6 +35,12 @@ feature -- Visitor
 		do
 			v.process_assign_as (Current)
 		end
+
+feature -- Roundtrip
+
+	assignment_symbol: SYMBOL_AS
+			-- Symbol ":=" or "?=" associated with this structure
+
 
 feature -- Attributes
 
@@ -49,7 +57,7 @@ feature -- Location
 		do
 			Result := target.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -66,7 +74,7 @@ feature -- Comparison
 		end
 
 feature {ASSIGN_AS}	-- Replication
-		
+
 	set_target (t: like target) is
 		require
 			valid_arg: t /= Void

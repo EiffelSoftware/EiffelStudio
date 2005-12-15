@@ -22,21 +22,25 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: like class_name; g: like generics; a_is_exp, a_is_sep: BOOLEAN) is
+	initialize (n: like class_name; g: like generics; a_is_exp, a_is_sep: BOOLEAN; e_as, s_as: KEYWORD_AS) is
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
 		do
 			class_name := n
-			class_name.to_upper
-			generics := g
+--			class_name.to_upper
+			internal_generics := g
 			is_expanded := a_is_exp
 			is_separate := a_is_sep
+			expanded_keyword := e_as
+			separate_keyword := s_as
 		ensure
 			class_name_set: class_name.is_equal (n.as_upper)
 			generics_set: generics = g
 			is_expanded_set: is_expanded = a_is_exp
 			is_separate_st: is_separate = a_is_sep
+			expanded_keyword_set: expanded_keyword = e_as
+			separate_keyword_set: separate_keyword = s_as
 		end
 
 feature -- Visitor
@@ -52,17 +56,37 @@ feature -- Attributes
 	class_name: ID_AS
 			-- Class type name
 
-	generics: TYPE_LIST_AS
+	generics: TYPE_LIST_AS is
 			-- Possible generical parameters
+		do
+			if internal_generics = Void or else internal_generics.is_empty then
+				Result := Void
+			else
+				Result := internal_generics
+			end
+		end
 
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
 
 	is_expanded: BOOLEAN
 			-- Is current type used with `expanded' keyword?
-			
+
 	is_separate: BOOLEAN
 			-- Is current type used with `separate' keyword?
+
+feature -- Roundtrip
+
+	expanded_keyword: KEYWORD_AS
+			-- Keyword "expanded" associated with this structure.
+
+	separate_keyword: KEYWORD_AS
+			-- Keyword "separate" associated with this structure.	
+
+feature -- Roundtrip
+
+	internal_generics: TYPE_LIST_AS
+			-- Internal possible generical parameters
 
 feature -- Location
 
@@ -153,7 +177,7 @@ feature {COMPILER_EXPORTER} -- Conveniences
 	set_generics (g: like generics) is
 			-- Assign `g' to `generics'.
 		do
-			generics := g
+			internal_generics := g
 		end
 
 	dump: STRING is
@@ -163,7 +187,7 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			Result.append (class_name)
 			if generics /= Void then
 				from
-					generics.start; 
+					generics.start;
 					Result.append (" [")
 				until
 					generics.after

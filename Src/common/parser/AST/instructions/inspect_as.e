@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: like switch; c: like case_list; e: like else_part; el: like end_keyword) is
+	initialize (s: like switch; c: like case_list; e: like else_part; el, i_as, e_as: like end_keyword) is
 			-- Create a new INSPECT AST node.
 		require
 			s_not_void: s /= Void
@@ -27,11 +27,15 @@ feature {NONE} -- Initialization
 			case_list := c
 			else_part := e
 			end_keyword := el
+			inspect_keyword := i_as
+			else_keyword := e_as
 		ensure
 			switch_set: switch = s
 			case_list_set: case_list = c
 			else_part_set: else_part = e
 			end_keyword_set: end_keyword = el
+			inspect_keyword_set: inspect_keyword = i_as
+			else_keyword_set: else_keyword = e_as
 		end
 
 feature -- Visitor
@@ -41,6 +45,11 @@ feature -- Visitor
 		do
 			v.process_inspect_as (Current)
 		end
+
+feature -- Roundtrip
+
+	inspect_keyword, else_keyword: KEYWORD_AS
+			-- Keyword "inspect" and "else" associated with this structure
 
 feature -- Attributes
 
@@ -53,7 +62,7 @@ feature -- Attributes
 	else_part: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Else part
 
-	end_keyword: LOCATION_AS
+	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located
 
 feature -- Location
@@ -63,7 +72,7 @@ feature -- Location
 		do
 			Result := switch.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -96,6 +105,6 @@ feature -- Comparison
 
 invariant
 	switch_not_void: switch /= Void
-	end_keyword_not_void: end_keyword /= Void	
+	end_keyword_not_void: end_keyword /= Void
 
 end -- class INSPECT_AS

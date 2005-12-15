@@ -11,9 +11,9 @@ inherit
 		redefine
 			is_equivalent
 		end
-	
+
 	LEAF_AS
-	
+
 	CHARACTER_ROUTINES
 
 create
@@ -48,7 +48,7 @@ feature -- Properties
 
 	value: STRING
 			-- Real string value.
-			
+
 	is_once_string: BOOLEAN
 			-- Is current preceded by `once' keyword?
 
@@ -86,6 +86,30 @@ feature {INFIX_PREFIX_AS, DOCUMENTATION_ROUTINES} -- Status setting
 	set_value (s: STRING) is
 		do
 			value := s
+		end
+
+feature -- Roundtrip
+
+	once_string_keyword: KEYWORD_AS
+			-- Once string keyword.
+
+	set_once_string_keyword (k_as: KEYWORD_AS) is
+			-- Set `once_keyword' with `k_as'.
+		do
+			once_string_keyword := k_as
+		ensure
+			once_string_keyword_set: once_string_keyword = k_as
+		end
+
+	type: TYPE_AS
+			-- Type that associated with this string.
+
+	set_type (t_as: TYPE_AS) is
+			-- Set `type' with `t_as'.
+		do
+			type := t_as
+		ensure
+			type_set: type = t_as
 		end
 
 invariant

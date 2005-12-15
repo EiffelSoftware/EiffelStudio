@@ -48,7 +48,7 @@ feature -- Location
 		do
 			Result := value.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -101,7 +101,7 @@ feature {CONSTANT_AS} -- Replication
 		do
 			value := v
 		end
-		
+
 invariant
 	value_not_void: value /= Void
 

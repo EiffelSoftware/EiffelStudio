@@ -47,7 +47,7 @@ feature -- Location
 		do
 			Result := value.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

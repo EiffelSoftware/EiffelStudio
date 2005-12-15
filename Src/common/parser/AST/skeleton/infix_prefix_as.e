@@ -11,10 +11,13 @@ inherit
 			internal_alias_name as internal_name,
 			is_binary as is_infix,
 			is_unary as is_prefix
+		export
+			{AST_VISITOR} frozen_location
 		redefine
 			alias_name,
 			is_equivalent,
 			is_infix, is_prefix, visual_name
+
 		end
 
 create
@@ -32,6 +35,7 @@ feature {NONE} -- Initialization
 			alias_name := op
 			create internal_name.initialize (get_internal_alias_name)
 			internal_name.set_position (l.line, l.column, l.position, op.position - l.position + op.location_count)
+			infix_prefix_keyword ?= l
 		end
 
 feature -- Visitor
@@ -41,6 +45,11 @@ feature -- Visitor
 		do
 			v.process_infix_prefix_as (Current)
 		end
+
+feature -- Roundtrip
+
+	infix_prefix_keyword: KEYWORD_AS
+		-- Keyword "infix" or "prefix" associated with this structure.
 
 feature -- Properties
 

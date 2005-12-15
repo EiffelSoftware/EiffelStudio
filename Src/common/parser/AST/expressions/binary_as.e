@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize (l: like left; r: like right) is
+	initialize (l: like left; r: like right; o: like operator) is
 			-- Create a new BINARY AST node.
 		require
 			l_not_void: l /= Void
@@ -21,9 +21,11 @@ feature {NONE} -- Initialization
 		do
 			left := l
 			right := r
+			operator := o
 		ensure
 			left_set: left = l
 			right_set: right = r
+			operator_set: operator = o
 		end
 
 feature -- Attributes
@@ -33,6 +35,11 @@ feature -- Attributes
 
 	right: EXPR_AS
 			-- Right opernad
+
+feature -- Roundtrip
+
+	operator: AST_EIFFEL
+			-- Binary operation AST node.
 
 feature -- Location
 
@@ -47,7 +54,7 @@ feature -- Location
 		do
 			Result := right.end_location
 		end
-		
+
 	operator_location: LOCATION_AS is
 			-- Location of operator
 		do

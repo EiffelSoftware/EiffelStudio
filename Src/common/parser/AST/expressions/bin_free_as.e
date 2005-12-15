@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			left := l
 			op_name := op
 			right := r
+			operator := op
 		ensure
 			left_set: left = l
 			op_name_set: op_name = op

@@ -75,7 +75,7 @@ feature -- Parser type setting
 			type_parser: type_parser
 			parsing_type_set: has_parsing_type
 		end
-		
+
 	set_expression_parser is
 			-- Create a new Eiffel expression parser.
 		require
@@ -144,13 +144,13 @@ feature -- Status report
 
 	expression_parser: BOOLEAN
 			-- Is current Eiffel parser an expression parser ?
-			
+
 	indexing_parser: BOOLEAN
 			-- Is current Eiffel parser an indexing clause parser ?
-	
+
 	entity_declaration_parser: BOOLEAN
 			-- Is current Eiffel parser a entity declaration parser ?
-			
+
 	has_externals: BOOLEAN
 			-- Did last parse find external declarations?
 
@@ -169,7 +169,12 @@ feature -- Parsing
 			input_buffer := File_buffer
 			yy_load_input_buffer
 			filename := a_file.name
+			ast_factory.new_internal_match_list (initial_match_list_size)
 			yyparse
+			if root_node /= Void then
+				root_node.set_match_list (ast_factory.internal_match_list)
+			end
+			ast_factory.clear_internal_match_list
 			reset
 		rescue
 			reset
@@ -185,7 +190,12 @@ feature -- Parsing
 			reset_nodes
 			create input_buffer.make (a_string)
 			yy_load_input_buffer
+			ast_factory.new_internal_match_list (initial_match_list_size)
 			yyparse
+			if root_node /= Void then
+				root_node.set_match_list (ast_factory.internal_match_list)
+			end
+			ast_factory.clear_internal_match_list
 			reset
 		rescue
 			reset
@@ -198,7 +208,7 @@ feature -- Access: result nodes
 
 	type_node: TYPE_AS
 			-- Type node of AST
-			
+
 	expression_node: EXPR_AS
 			-- Expression node of AST
 
@@ -305,7 +315,7 @@ feature {NONE} -- Implementation
 			-- To memorize the beginning of a feature clause
 
 	fbody_pos: INTEGER
-			-- To memorize the beginning of a feature body 
+			-- To memorize the beginning of a feature body
 
 	feature_indexes: INDEXING_CLAUSE_AS
 			-- Indexing clause for an Eiffel feature.
@@ -367,7 +377,7 @@ feature {NONE} -- Actions
 		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
 		p: EIFFEL_LIST [PARENT_AS]; c: EIFFEL_LIST [CREATE_AS]; co: EIFFEL_LIST [CONVERT_FEAT_AS];
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
-		s: SUPPLIERS_AS; o: STRING_AS; ed: LOCATION_AS): CLASS_AS is
+		s: SUPPLIERS_AS; o: STRING_AS; ed: KEYWORD_AS): CLASS_AS is
 			-- New CLASS AST node;
 			-- Update the clickable list.
 		local
@@ -387,143 +397,143 @@ feature {NONE} -- Actions
 
 feature {NONE} -- ID factory
 
-	new_none_id: ID_AS is
+	new_none_id: NONE_ID_AS is
 			-- New ID AST node for "NONE"
 		do
-			Result := ast_factory.new_filled_id_as (line, column, position, None_classname.count)
+			Result := ast_factory.new_filled_none_id_as (line, column, position, None_classname.count)
 			if Result /= Void then
 				Result.append (None_classname)
 			end
 		end
 
-feature {NONE} -- String factory
-
-	new_string (v: STRING): STRING_AS is
-			-- New string AST node for `v' which is a regular string.
-		require
-			v_not_void: v /= Void
-		do
-				-- Take into account surrounding quotes.
-			Result := ast_factory.new_string_as (v, line, column, position, v.count + 2)
-		end
-
-	new_lt_string: STRING_AS is
-			-- New string AST node for "<"
-		do
-			Result := new_string ("<")
-		end
-
-	new_le_string: STRING_AS is
-			-- New string AST node for "<="
-		do
-			Result := new_string ("<=")
-		end
-
-	new_gt_string: STRING_AS is
-			-- New string AST node for ">"
-		do
-			Result := new_string (">")
-		end
-
-	new_ge_string: STRING_AS is
-			-- New string AST node for ">="
-		do
-			Result := new_string (">=")
-		end
-
-	new_minus_string: STRING_AS is
-			-- New string AST node for "-"
-		do
-			Result := new_string ("-")
-		end
-
-	new_plus_string: STRING_AS is
-			-- New string AST node for "+"
-		do
-			Result := new_string ("+")
-		end
-
-	new_star_string: STRING_AS is
-			-- New string AST node for "*"
-		do
-			Result := new_string ("*")
-		end
-
-	new_slash_string: STRING_AS is
-			-- New string AST node for "/"
-		do
-			Result := new_string ("/")
-		end
-
-	new_power_string: STRING_AS is
-			-- New string AST node for "^"
-		do
-			Result := new_string ("^")
-		end
-
-	new_div_string: STRING_AS is
-			-- New string AST node for "//"
-		do
-			Result := new_string ("//")
-		end
-
-	new_mod_string: STRING_AS is
-			-- New string AST node for "\\"
-		do
-			Result := new_string ("\\")
-		end
-
-	new_bracket_string: STRING_AS is
-			-- New string AST node for "[]"
-		do
-			Result := new_string ("[]")
-		end
-
-	new_and_string: STRING_AS is
-			-- New string AST node for "and"
-		do
-			Result := new_string ("and")
-		end
-
-	new_and_then_string: STRING_AS is
-			-- New string AST node for "and then"
-		do
-			Result := new_string ("and then")
-		end
-
-	new_implies_string: STRING_AS is
-			-- New string AST node for "implies"
-		do
-			Result := new_string ("implies")
-		end
-
-	new_or_string: STRING_AS is
-			-- New string AST node for "or"
-		do
-			Result := new_string ("or")
-		end
-
-	new_or_else_string: STRING_AS is
-			-- New string AST node for "or else"
-		do
-			Result := new_string ("or else")
-		end
-
-	new_xor_string: STRING_AS is
-			-- New string AST node for "xor"
-		do
-			Result := new_string ("xor")
-		end
-
-	new_not_string: STRING_AS is
-			-- New string AST node for "not"
-		do
-			Result := new_string ("not")
-		end
+--feature {NONE} -- String factory
+--
+--	new_string (v: STRING): STRING_AS is
+--			-- New string AST node for `v' which is a regular string.
+--		require
+--			v_not_void: v /= Void
+--		do
+--				-- Take into account surrounding quotes.
+--			Result := ast_factory.new_string_as (v, line, column, position, v.count + 2, token_buffer2)
+--		end
+--
+--	new_lt_string: STRING_AS is
+--			-- New string AST node for "<"
+--		do
+--			Result := new_string ("<")
+--		end
+--
+--	new_le_string: STRING_AS is
+--			-- New string AST node for "<="
+--		do
+--			Result := new_string ("<=")
+--		end
+--
+--	new_gt_string: STRING_AS is
+--			-- New string AST node for ">"
+--		do
+--			Result := new_string (">")
+--		end
+--
+--	new_ge_string: STRING_AS is
+--			-- New string AST node for ">="
+--		do
+--			Result := new_string (">=")
+--		end
+--
+--	new_minus_string: STRING_AS is
+--			-- New string AST node for "-"
+--		do
+--			Result := new_string ("-")
+--		end
+--
+--	new_plus_string: STRING_AS is
+--			-- New string AST node for "+"
+--		do
+--			Result := new_string ("+")
+--		end
+--
+--	new_star_string: STRING_AS is
+--			-- New string AST node for "*"
+--		do
+--			Result := new_string ("*")
+--		end
+--
+--	new_slash_string: STRING_AS is
+--			-- New string AST node for "/"
+--		do
+--			Result := new_string ("/")
+--		end
+--
+--	new_power_string: STRING_AS is
+--			-- New string AST node for "^"
+--		do
+--			Result := new_string ("^")
+--		end
+--
+--	new_div_string: STRING_AS is
+--			-- New string AST node for "//"
+--		do
+--			Result := new_string ("//")
+--		end
+--
+--	new_mod_string: STRING_AS is
+--			-- New string AST node for "\\"
+--		do
+--			Result := new_string ("\\")
+--		end
+--
+--	new_bracket_string: STRING_AS is
+--			-- New string AST node for "[]"
+--		do
+--			Result := new_string ("[]")
+--		end
+--
+--	new_and_string: STRING_AS is
+--			-- New string AST node for "and"
+--		do
+--			Result := new_string ("and")
+--		end
+--
+--	new_and_then_string: STRING_AS is
+--			-- New string AST node for "and then"
+--		do
+--			Result := new_string ("and then")
+--		end
+--
+--	new_implies_string: STRING_AS is
+--			-- New string AST node for "implies"
+--		do
+--			Result := new_string ("implies")
+--		end
+--
+--	new_or_string: STRING_AS is
+--			-- New string AST node for "or"
+--		do
+--			Result := new_string ("or")
+--		end
+--
+--	new_or_else_string: STRING_AS is
+--			-- New string AST node for "or else"
+--		do
+--			Result := new_string ("or else")
+--		end
+--
+--	new_xor_string: STRING_AS is
+--			-- New string AST node for "xor"
+--		do
+--			Result := new_string ("xor")
+--		end
+--
+--	new_not_string: STRING_AS is
+--			-- New string AST node for "not"
+--		do
+--			Result := new_string ("not")
+--		end
 
 feature {NONE} -- Type factory
 
-	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS; is_exp, is_sep: BOOLEAN): TYPE_AS is
+	new_class_type (an_id: ID_AS; generics: TYPE_LIST_AS; is_exp, is_sep: BOOLEAN; e_as, s_as: KEYWORD_AS): TYPE_AS is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.
@@ -534,11 +544,12 @@ feature {NONE} -- Type factory
 		do
 			if an_id /= Void then
 				class_name := an_id
-				if none_classname.is_equal (class_name) then
+
+				if none_classname.is_case_insensitive_equal (class_name) then
 					if generics /= Void then
 						report_basic_generic_type_error
 					end
-					Result := ast_factory.new_none_type_as
+					Result := ast_factory.new_none_type_as (an_id)
 				else
 					if generics = Void then
 						from
@@ -551,7 +562,7 @@ feature {NONE} -- Type factory
 									-- Shouldn't we just remove the formal type
 									-- name from the clickable list instead? (ericb)
 								l_new_formal := ast_factory.new_formal_as (an_id, formal_type.is_reference,
-									formal_type.is_expanded)
+									formal_type.is_expanded, Void)
 								l_new_formal.set_position (formal_type.position)
 								Result := l_new_formal
 									-- Jump out of the loop.
@@ -562,7 +573,7 @@ feature {NONE} -- Type factory
 					end
 					if Result = Void then
 							-- It is a common class type.
-						class_type := ast_factory.new_class_type_as (class_name, generics, is_exp, is_sep)
+						class_type := ast_factory.new_class_type_as (class_name, generics, is_exp, is_sep, e_as, s_as)
 							-- Put the supplier in `suppliers'.
 						suppliers.insert_supplier_id (class_name)
 						Result := class_type
@@ -573,80 +584,84 @@ feature {NONE} -- Type factory
 
 feature {NONE} -- Basic type factory
 
-	new_integer_value (sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): INTEGER_AS is
-			-- Create a new integer constant value
-		require
-			buffer_not_void: buffer /= Void
-			valid_sign: ("%U+-").has (sign_symbol)
-		local
-			l_type: TYPE_A
-			token_value: STRING
-		do
-			if a_type /= Void then
-				l_type := a_type.actual_type
-			end
-			if l_type /= Void then
-				if not l_type.is_integer and not l_type.is_natural then
-					report_invalid_type_for_integer_error (a_type, buffer)
-				end
-			elseif a_type /= Void then
-					-- A type was specified but did not result in a valid type
-				report_invalid_type_for_integer_error (a_type, buffer)
-			end
-				-- Remember original token
-			token_value := buffer
-				-- Remove underscores (if any) without breaking
-				-- original token
-			if token_value.has ('_') then
-				token_value := token_value.twin
-				token_value.prune_all ('_')
-			end
-			if token_value.is_number_sequence then
-				Result := ast_factory.new_integer_as (a_type, sign_symbol = '-', token_value)
-			elseif
-				token_value.item (1) = '0' and then
-				token_value.item (2).lower = 'x'
-			then
-				Result := ast_factory.new_integer_hexa_as (a_type, sign_symbol, token_value)
-			end
-			if Result = Void or else not Result.is_initialized then
-				if sign_symbol = '-' then
-						-- Add `-' for a better reporting.
-					buffer.precede ('-')
-					report_integer_too_small_error (buffer)
-				else
-					report_integer_too_large_error (buffer)
-				end
-					-- Dummy code (for error recovery) follows:
-				Result := ast_factory.new_integer_as (a_type, False, "0")
-			end
-			Result.set_position (line, column, position, buffer.count)
-		end
-
-	new_real_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING): REAL_AS is
-			-- Create a new real constant value.
-		require
-			buffer_not_void: buffer /= Void
-		local
-			l_type: TYPE_A
-		do
-			if a_type /= Void then
-				l_type := a_type.actual_type
-			end
-			if l_type /= Void then
-				if not l_type.is_real_32 and not l_type.is_real_64 then
-					report_invalid_type_for_real_error (a_type, buffer)
-				end
-			elseif a_type /= Void then
-					-- A type was specified but did not result in a valid type
-				report_invalid_type_for_real_error (a_type, buffer)				
-			end
-			if is_signed and sign_symbol = '-' then
-				buffer.precede ('-')
-			end
-			Result := ast_factory.new_real_as (a_type, buffer)
-			Result.set_position (line, column, position, buffer.count)
-		end
+--	new_integer_value (sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): INTEGER_AS is
+--			-- Create a new integer constant value
+--		require
+--			buffer_not_void: buffer /= Void
+--			valid_sign: ("%U+-").has (sign_symbol)
+--		local
+--			l_type: TYPE_A
+--			token_value: STRING
+--		do
+--			if a_type /= Void then
+--				l_type := a_type.actual_type
+--			end
+--			if l_type /= Void then
+--				if not l_type.is_integer and not l_type.is_natural then
+--					report_invalid_type_for_integer_error (a_type, buffer)
+--				end
+--			elseif a_type /= Void then
+--					-- A type was specified but did not result in a valid type
+--				report_invalid_type_for_integer_error (a_type, buffer)
+--			end
+--				-- Remember original token
+--			token_value := buffer
+--				-- Remove underscores (if any) without breaking
+--				-- original token
+--			if token_value.has ('_') then
+--				token_value := token_value.twin
+--				token_value.prune_all ('_')
+--			end
+--			if token_value.is_number_sequence then
+--				Result := ast_factory.new_integer_as (a_type, sign_symbol = '-', token_value, buffer, s_as)
+--			elseif
+--				token_value.item (1) = '0' and then
+--				token_value.item (2).lower = 'x'
+--			then
+--				Result := ast_factory.new_integer_hexa_as (a_type, sign_symbol, token_value, buffer, s_as)
+--			end
+--			if Result = Void or else not Result.is_initialized then
+--				if sign_symbol = '-' then
+--						-- Add `-' for a better reporting.
+--					buffer.precede ('-')
+--					report_integer_too_small_error (buffer)
+--				else
+--					report_integer_too_large_error (buffer)
+--				end
+--					-- Dummy code (for error recovery) follows:
+--				Result := ast_factory.new_integer_as (a_type, False, "0", Void, s_as)
+--			end
+--			Result.set_position (line, column, position, buffer.count)
+--		end
+--
+--	new_real_value (is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: TYPE_AS; buffer: STRING; s_as: SYMBOL_AS): REAL_AS is
+--			-- Create a new real constant value.
+--		require
+--			buffer_not_void: buffer /= Void
+--		local
+--			l_type: TYPE_A
+--			l_buffer: STRING
+--		do
+--			if a_type /= Void then
+--				l_type := a_type.actual_type
+--			end
+--			if l_type /= Void then
+--				if not l_type.is_real_32 and not l_type.is_real_64 then
+--					report_invalid_type_for_real_error (a_type, buffer)
+--				end
+--			elseif a_type /= Void then
+--					-- A type was specified but did not result in a valid type
+--				report_invalid_type_for_real_error (a_type, buffer)
+--			end
+--			if is_signed and sign_symbol = '-' then
+--				l_buffer := buffer.twin
+--				buffer.precede ('-')
+--			else
+--				l_buffer := buffer
+--			end
+--			Result := ast_factory.new_real_as (a_type, buffer, l_buffer, s_as)
+--			Result.set_position (line, column, position, buffer.count)
+--		end
 
 feature {NONE} -- Instruction factory
 
@@ -681,7 +696,7 @@ feature {NONE} -- Instruction factory
 			end
 		end
 
-feature {NONE} -- Error handling
+feature {AST_FACTORY} -- Error handling
 
 	report_basic_generic_type_error is
 			-- Basic types cannot have generic devivation.
@@ -761,6 +776,16 @@ feature {NONE} -- Error handling
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
+
+feature{NONE} -- Roundtrip
+
+	temp_string_as1: STRING_AS
+	temp_string_as2: STRING_AS
+	temp_keyword_as: KEYWORD_AS
+	temp_class_type_as: CLASS_TYPE_AS
+	temp_operand_as: OPERAND_AS
+	temp_address_current_as: ADDRESS_CURRENT_AS
+	temp_address_result_as: ADDRESS_RESULT_AS
 
 feature {NONE} -- Constants
 

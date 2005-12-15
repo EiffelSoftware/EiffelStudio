@@ -1,7 +1,7 @@
 indexing
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.3"
+	generator: "geyacc version 3.4"
 
 class EIFFEL_TOKENS
 
@@ -12,14 +12,16 @@ inherit
 feature -- Last values
 
 	last_any_value: ANY
+	last_symbol_as_value: SYMBOL_AS
+	last_keyword_as_value: KEYWORD_AS
 	last_id_as_value: ID_AS
-	last_location_as_value: LOCATION_AS
+	last_char_as_value: CHAR_AS
 	last_bool_as_value: BOOL_AS
-	last_current_as_value: CURRENT_AS
-	last_deferred_as_value: DEFERRED_AS
 	last_result_as_value: RESULT_AS
 	last_retry_as_value: RETRY_AS
 	last_unique_as_value: UNIQUE_AS
+	last_current_as_value: CURRENT_AS
+	last_deferred_as_value: DEFERRED_AS
 	last_void_as_value: VOID_AS
 
 feature -- Access
@@ -82,38 +84,26 @@ feature -- Access
 				Result := "TE_DOT"
 			when TE_LPARAN then
 				Result := "TE_LPARAN"
-			when TE_ALIAS then
-				Result := "TE_ALIAS"
-			when TE_ALL then
-				Result := "TE_ALL"
-			when TE_INTEGER then
-				Result := "TE_INTEGER"
-			when TE_CHAR then
-				Result := "TE_CHAR"
-			when TE_REAL then
-				Result := "TE_REAL"
-			when TE_STRING then
-				Result := "TE_STRING"
 			when TE_ID then
 				Result := "TE_ID"
 			when TE_A_BIT then
 				Result := "TE_A_BIT"
-			when TE_BANG then
-				Result := "TE_BANG"
-			when TE_BIT then
-				Result := "TE_BIT"
-			when TE_SEMICOLON then
-				Result := "TE_SEMICOLON"
-			when TE_TILDE then
-				Result := "TE_TILDE"
-			when TE_COLON then
-				Result := "TE_COLON"
-			when TE_COMMA then
-				Result := "TE_COMMA"
-			when TE_CREATE then
-				Result := "TE_CREATE"
-			when TE_CREATION then
-				Result := "TE_CREATION"
+			when TE_INTEGER then
+				Result := "TE_INTEGER"
+			when TE_REAL then
+				Result := "TE_REAL"
+			when TE_CHAR then
+				Result := "TE_CHAR"
+			when TE_LSQURE then
+				Result := "TE_LSQURE"
+			when TE_RSQURE then
+				Result := "TE_RSQURE"
+			when TE_ACCEPT then
+				Result := "TE_ACCEPT"
+			when TE_ADDRESS then
+				Result := "TE_ADDRESS"
+			when TE_CURLYTILDE then
+				Result := "TE_CURLYTILDE"
 			when TE_LARRAY then
 				Result := "TE_LARRAY"
 			when TE_RARRAY then
@@ -124,44 +114,78 @@ feature -- Access
 				Result := "TE_LCURLY"
 			when TE_RCURLY then
 				Result := "TE_RCURLY"
-			when TE_LSQURE then
-				Result := "TE_LSQURE"
-			when TE_RSQURE then
-				Result := "TE_RSQURE"
+			when TE_BANG then
+				Result := "TE_BANG"
+			when TE_SEMICOLON then
+				Result := "TE_SEMICOLON"
+			when TE_COLON then
+				Result := "TE_COLON"
+			when TE_COMMA then
+				Result := "TE_COMMA"
 			when TE_CONSTRAIN then
 				Result := "TE_CONSTRAIN"
+			when TE_QUESTION then
+				Result := "TE_QUESTION"
+			when TE_TILDE then
+				Result := "TE_TILDE"
 			when TE_FALSE then
 				Result := "TE_FALSE"
 			when TE_TRUE then
 				Result := "TE_TRUE"
-			when TE_ACCEPT then
-				Result := "TE_ACCEPT"
-			when TE_ADDRESS then
-				Result := "TE_ADDRESS"
+			when TE_RESULT then
+				Result := "TE_RESULT"
+			when TE_RETRY then
+				Result := "TE_RETRY"
+			when TE_UNIQUE then
+				Result := "TE_UNIQUE"
+			when TE_CURRENT then
+				Result := "TE_CURRENT"
+			when TE_DEFERRED then
+				Result := "TE_DEFERRED"
+			when TE_VOID then
+				Result := "TE_VOID"
+			when TE_END then
+				Result := "TE_END"
+			when TE_FROZEN then
+				Result := "TE_FROZEN"
+			when TE_INFIX then
+				Result := "TE_INFIX"
+			when TE_CREATION then
+				Result := "TE_CREATION"
+			when TE_PRECURSOR then
+				Result := "TE_PRECURSOR"
+			when TE_PREFIX then
+				Result := "TE_PREFIX"
+			when TE_IS then
+				Result := "TE_IS"
+			when TE_AGENT then
+				Result := "TE_AGENT"
+			when TE_ALIAS then
+				Result := "TE_ALIAS"
+			when TE_ALL then
+				Result := "TE_ALL"
 			when TE_AS then
 				Result := "TE_AS"
 			when TE_ASSIGN then
 				Result := "TE_ASSIGN"
+			when TE_BIT then
+				Result := "TE_BIT"
 			when TE_CHECK then
 				Result := "TE_CHECK"
 			when TE_CLASS then
 				Result := "TE_CLASS"
 			when TE_CONVERT then
 				Result := "TE_CONVERT"
-			when TE_CURRENT then
-				Result := "TE_CURRENT"
+			when TE_CREATE then
+				Result := "TE_CREATE"
 			when TE_DEBUG then
 				Result := "TE_DEBUG"
-			when TE_DEFERRED then
-				Result := "TE_DEFERRED"
 			when TE_DO then
 				Result := "TE_DO"
 			when TE_ELSE then
 				Result := "TE_ELSE"
 			when TE_ELSEIF then
 				Result := "TE_ELSEIF"
-			when TE_END then
-				Result := "TE_END"
 			when TE_ENSURE then
 				Result := "TE_ENSURE"
 			when TE_EXPANDED then
@@ -174,22 +198,16 @@ feature -- Access
 				Result := "TE_FEATURE"
 			when TE_FROM then
 				Result := "TE_FROM"
-			when TE_FROZEN then
-				Result := "TE_FROZEN"
 			when TE_IF then
 				Result := "TE_IF"
 			when TE_INDEXING then
 				Result := "TE_INDEXING"
-			when TE_INFIX then
-				Result := "TE_INFIX"
 			when TE_INHERIT then
 				Result := "TE_INHERIT"
 			when TE_INSPECT then
 				Result := "TE_INSPECT"
 			when TE_INVARIANT then
 				Result := "TE_INVARIANT"
-			when TE_IS then
-				Result := "TE_IS"
 			when TE_LIKE then
 				Result := "TE_LIKE"
 			when TE_LOCAL then
@@ -202,12 +220,6 @@ feature -- Access
 				Result := "TE_ONCE"
 			when TE_ONCE_STRING then
 				Result := "TE_ONCE_STRING"
-			when TE_PRECURSOR then
-				Result := "TE_PRECURSOR"
-			when TE_AGENT then
-				Result := "TE_AGENT"
-			when TE_PREFIX then
-				Result := "TE_PREFIX"
 			when TE_REDEFINE then
 				Result := "TE_REDEFINE"
 			when TE_REFERENCE then
@@ -218,10 +230,6 @@ feature -- Access
 				Result := "TE_REQUIRE"
 			when TE_RESCUE then
 				Result := "TE_RESCUE"
-			when TE_RESULT then
-				Result := "TE_RESULT"
-			when TE_RETRY then
-				Result := "TE_RETRY"
 			when TE_SELECT then
 				Result := "TE_SELECT"
 			when TE_SEPARATE then
@@ -230,26 +238,20 @@ feature -- Access
 				Result := "TE_THEN"
 			when TE_UNDEFINE then
 				Result := "TE_UNDEFINE"
-			when TE_UNIQUE then
-				Result := "TE_UNIQUE"
 			when TE_UNTIL then
 				Result := "TE_UNTIL"
 			when TE_VARIANT then
 				Result := "TE_VARIANT"
 			when TE_WHEN then
 				Result := "TE_WHEN"
-			when TE_QUESTION then
-				Result := "TE_QUESTION"
-			when TE_CURLYTILDE then
-				Result := "TE_CURLYTILDE"
+			when TE_STRING then
+				Result := "TE_STRING"
 			when TE_EMPTY_STRING then
 				Result := "TE_EMPTY_STRING"
 			when TE_VERBATIM_STRING then
 				Result := "TE_VERBATIM_STRING"
 			when TE_EMPTY_VERBATIM_STRING then
 				Result := "TE_EMPTY_VERBATIM_STRING"
-			when TE_VOID then
-				Result := "TE_VOID"
 			when TE_STR_LT then
 				Result := "TE_STR_LT"
 			when TE_STR_LE then
@@ -322,90 +324,90 @@ feature -- Token codes
 	TE_OLD: INTEGER is 280
 	TE_DOT: INTEGER is 281
 	TE_LPARAN: INTEGER is 282
-	TE_ALIAS: INTEGER is 283
-	TE_ALL: INTEGER is 284
+	TE_ID: INTEGER is 283
+	TE_A_BIT: INTEGER is 284
 	TE_INTEGER: INTEGER is 285
-	TE_CHAR: INTEGER is 286
-	TE_REAL: INTEGER is 287
-	TE_STRING: INTEGER is 288
-	TE_ID: INTEGER is 289
-	TE_A_BIT: INTEGER is 290
-	TE_BANG: INTEGER is 291
-	TE_BIT: INTEGER is 292
-	TE_SEMICOLON: INTEGER is 293
-	TE_TILDE: INTEGER is 294
-	TE_COLON: INTEGER is 295
-	TE_COMMA: INTEGER is 296
-	TE_CREATE: INTEGER is 297
-	TE_CREATION: INTEGER is 298
-	TE_LARRAY: INTEGER is 299
-	TE_RARRAY: INTEGER is 300
-	TE_RPARAN: INTEGER is 301
-	TE_LCURLY: INTEGER is 302
-	TE_RCURLY: INTEGER is 303
-	TE_LSQURE: INTEGER is 304
-	TE_RSQURE: INTEGER is 305
-	TE_CONSTRAIN: INTEGER is 306
-	TE_FALSE: INTEGER is 307
-	TE_TRUE: INTEGER is 308
-	TE_ACCEPT: INTEGER is 309
-	TE_ADDRESS: INTEGER is 310
-	TE_AS: INTEGER is 311
-	TE_ASSIGN: INTEGER is 312
-	TE_CHECK: INTEGER is 313
-	TE_CLASS: INTEGER is 314
-	TE_CONVERT: INTEGER is 315
-	TE_CURRENT: INTEGER is 316
-	TE_DEBUG: INTEGER is 317
-	TE_DEFERRED: INTEGER is 318
-	TE_DO: INTEGER is 319
-	TE_ELSE: INTEGER is 320
-	TE_ELSEIF: INTEGER is 321
-	TE_END: INTEGER is 322
-	TE_ENSURE: INTEGER is 323
-	TE_EXPANDED: INTEGER is 324
-	TE_EXPORT: INTEGER is 325
-	TE_EXTERNAL: INTEGER is 326
-	TE_FEATURE: INTEGER is 327
-	TE_FROM: INTEGER is 328
-	TE_FROZEN: INTEGER is 329
-	TE_IF: INTEGER is 330
-	TE_INDEXING: INTEGER is 331
-	TE_INFIX: INTEGER is 332
-	TE_INHERIT: INTEGER is 333
-	TE_INSPECT: INTEGER is 334
-	TE_INVARIANT: INTEGER is 335
-	TE_IS: INTEGER is 336
-	TE_LIKE: INTEGER is 337
-	TE_LOCAL: INTEGER is 338
-	TE_LOOP: INTEGER is 339
-	TE_OBSOLETE: INTEGER is 340
-	TE_ONCE: INTEGER is 341
-	TE_ONCE_STRING: INTEGER is 342
-	TE_PRECURSOR: INTEGER is 343
-	TE_AGENT: INTEGER is 344
-	TE_PREFIX: INTEGER is 345
-	TE_REDEFINE: INTEGER is 346
-	TE_REFERENCE: INTEGER is 347
-	TE_RENAME: INTEGER is 348
-	TE_REQUIRE: INTEGER is 349
-	TE_RESCUE: INTEGER is 350
-	TE_RESULT: INTEGER is 351
-	TE_RETRY: INTEGER is 352
-	TE_SELECT: INTEGER is 353
-	TE_SEPARATE: INTEGER is 354
-	TE_THEN: INTEGER is 355
-	TE_UNDEFINE: INTEGER is 356
-	TE_UNIQUE: INTEGER is 357
-	TE_UNTIL: INTEGER is 358
-	TE_VARIANT: INTEGER is 359
-	TE_WHEN: INTEGER is 360
-	TE_QUESTION: INTEGER is 361
-	TE_CURLYTILDE: INTEGER is 362
-	TE_EMPTY_STRING: INTEGER is 363
-	TE_VERBATIM_STRING: INTEGER is 364
-	TE_EMPTY_VERBATIM_STRING: INTEGER is 365
-	TE_VOID: INTEGER is 366
+	TE_REAL: INTEGER is 286
+	TE_CHAR: INTEGER is 287
+	TE_LSQURE: INTEGER is 288
+	TE_RSQURE: INTEGER is 289
+	TE_ACCEPT: INTEGER is 290
+	TE_ADDRESS: INTEGER is 291
+	TE_CURLYTILDE: INTEGER is 292
+	TE_LARRAY: INTEGER is 293
+	TE_RARRAY: INTEGER is 294
+	TE_RPARAN: INTEGER is 295
+	TE_LCURLY: INTEGER is 296
+	TE_RCURLY: INTEGER is 297
+	TE_BANG: INTEGER is 298
+	TE_SEMICOLON: INTEGER is 299
+	TE_COLON: INTEGER is 300
+	TE_COMMA: INTEGER is 301
+	TE_CONSTRAIN: INTEGER is 302
+	TE_QUESTION: INTEGER is 303
+	TE_TILDE: INTEGER is 304
+	TE_FALSE: INTEGER is 305
+	TE_TRUE: INTEGER is 306
+	TE_RESULT: INTEGER is 307
+	TE_RETRY: INTEGER is 308
+	TE_UNIQUE: INTEGER is 309
+	TE_CURRENT: INTEGER is 310
+	TE_DEFERRED: INTEGER is 311
+	TE_VOID: INTEGER is 312
+	TE_END: INTEGER is 313
+	TE_FROZEN: INTEGER is 314
+	TE_INFIX: INTEGER is 315
+	TE_CREATION: INTEGER is 316
+	TE_PRECURSOR: INTEGER is 317
+	TE_PREFIX: INTEGER is 318
+	TE_IS: INTEGER is 319
+	TE_AGENT: INTEGER is 320
+	TE_ALIAS: INTEGER is 321
+	TE_ALL: INTEGER is 322
+	TE_AS: INTEGER is 323
+	TE_ASSIGN: INTEGER is 324
+	TE_BIT: INTEGER is 325
+	TE_CHECK: INTEGER is 326
+	TE_CLASS: INTEGER is 327
+	TE_CONVERT: INTEGER is 328
+	TE_CREATE: INTEGER is 329
+	TE_DEBUG: INTEGER is 330
+	TE_DO: INTEGER is 331
+	TE_ELSE: INTEGER is 332
+	TE_ELSEIF: INTEGER is 333
+	TE_ENSURE: INTEGER is 334
+	TE_EXPANDED: INTEGER is 335
+	TE_EXPORT: INTEGER is 336
+	TE_EXTERNAL: INTEGER is 337
+	TE_FEATURE: INTEGER is 338
+	TE_FROM: INTEGER is 339
+	TE_IF: INTEGER is 340
+	TE_INDEXING: INTEGER is 341
+	TE_INHERIT: INTEGER is 342
+	TE_INSPECT: INTEGER is 343
+	TE_INVARIANT: INTEGER is 344
+	TE_LIKE: INTEGER is 345
+	TE_LOCAL: INTEGER is 346
+	TE_LOOP: INTEGER is 347
+	TE_OBSOLETE: INTEGER is 348
+	TE_ONCE: INTEGER is 349
+	TE_ONCE_STRING: INTEGER is 350
+	TE_REDEFINE: INTEGER is 351
+	TE_REFERENCE: INTEGER is 352
+	TE_RENAME: INTEGER is 353
+	TE_REQUIRE: INTEGER is 354
+	TE_RESCUE: INTEGER is 355
+	TE_SELECT: INTEGER is 356
+	TE_SEPARATE: INTEGER is 357
+	TE_THEN: INTEGER is 358
+	TE_UNDEFINE: INTEGER is 359
+	TE_UNTIL: INTEGER is 360
+	TE_VARIANT: INTEGER is 361
+	TE_WHEN: INTEGER is 362
+	TE_STRING: INTEGER is 363
+	TE_EMPTY_STRING: INTEGER is 364
+	TE_VERBATIM_STRING: INTEGER is 365
+	TE_EMPTY_VERBATIM_STRING: INTEGER is 366
 	TE_STR_LT: INTEGER is 367
 	TE_STR_LE: INTEGER is 368
 	TE_STR_GT: INTEGER is 369

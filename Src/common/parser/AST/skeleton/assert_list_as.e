@@ -12,14 +12,17 @@ inherit
 			number_of_breakpoint_slots
 		end
 
+	ASSERTION_FILTER
+
 feature {NONE} -- Initialization
 
 	initialize (a: like assertions) is
 			-- Create a new ASSERTION_LIST AST node.
 		do
-			assertions := a
+			full_assertion_list := a
+			assertions := filter_tagged_list (full_assertion_list)
 		ensure
-			assertions_set: assertions = a
+			full_assertion_list_set: full_assertion_list = a
 		end
 
 feature -- Access
@@ -35,7 +38,14 @@ feature -- Access
 feature -- Attributes
 
 	assertions: EIFFEL_LIST [TAGGED_AS]
-			-- Assertion list
+			-- Assertion list (only complete assertions are included)
+			-- e.g. "tag:expr", "expr"
+
+feature -- Roundtrip
+
+	full_assertion_list: like assertions
+			-- Assertion list that contains both complete and incomplete assertions.
+			-- e.g. "tag:expr", "tag:", "expr"
 
 feature -- Location
 
@@ -48,7 +58,7 @@ feature -- Location
 				Result := null_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -75,8 +85,8 @@ feature -- Access
 			cur: CURSOR
 		do
 			cur := assertions.cursor
-	
-			from 
+
+			from
 				assertions.start
 			until
 				assertions.after or else Result
@@ -92,7 +102,8 @@ feature {ASSERT_LIST_AS} -- Replication
 
 	set_assertions (l: like assertions) is
 		do
-			assertions := l
+			full_assertion_list := l
+			assertions := filter_tagged_list (full_assertion_list)
 		end
-	
+
 end -- class ASSERT_LIST_AS

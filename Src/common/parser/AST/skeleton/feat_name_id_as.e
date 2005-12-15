@@ -9,6 +9,8 @@ inherit
 	FEATURE_NAME
 		rename
 			internal_name as feature_name
+		export
+			{AST_VISITOR}frozen_location
 		end
 
 create

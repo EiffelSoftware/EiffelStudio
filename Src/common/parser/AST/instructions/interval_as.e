@@ -19,16 +19,18 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (l: like lower; u: like upper) is
+	initialize (l: like lower; u: like upper; d_as: like dotdot_symbol) is
 			-- Create a new INTERVAL AST node.
 		require
 			l_not_void: l /= Void
 		do
 			lower := l
 			upper := u
+			dotdot_symbol := d_as
 		ensure
 			lower_set: lower = l
 			upper_set: upper = u
+			dotdot_symbol_set: dotdot_symbol = d_as
 		end
 
 feature -- Visitor
@@ -38,6 +40,11 @@ feature -- Visitor
 		do
 			v.process_interval_as (Current)
 		end
+
+feature -- Roundtrip
+
+	dotdot_symbol: SYMBOL_AS
+			-- Symbol ".." associated with this structure
 
 feature -- Attributes
 
@@ -55,7 +62,7 @@ feature -- Location
 		do
 			Result := lower.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -65,7 +72,7 @@ feature -- Location
 				Result := lower.end_location
 			end
 		end
-			
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

@@ -35,6 +35,19 @@ feature -- Visitor
 			v.process_operand_as (Current)
 		end
 
+feature -- Roundtrip
+
+	question_mark_symbol: SYMBOL_AS
+			-- Symbol "?" associated with thie structure
+
+	set_question_mark_symbol (s_as: SYMBOL_AS) is
+			-- Set `question_mark_symbol' with `s_as'.
+		do
+			question_mark_symbol := s_as
+		ensure
+			question_mark_symbol_set: question_mark_symbol = s_as
+		end
+
 feature -- Attributes
 
 	class_type: TYPE_AS
@@ -61,7 +74,7 @@ feature -- Location
 				Result := null_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

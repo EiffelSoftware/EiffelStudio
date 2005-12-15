@@ -12,21 +12,26 @@ inherit
 			number_of_breakpoint_slots
 		end
 
+	ASSERTION_FILTER
+
 create
 	initialize
 
 feature {NONE} -- Initialization
 
-	initialize (c: like check_list; e: like end_keyword) is
+	initialize (c: like check_list; c_as, e: like end_keyword) is
 			-- Create a new CHECK AST node.
 		require
 			e_not_void: e /= Void
 		do
-			check_list := c
+			full_assertion_list := c
+			check_list := filter_tagged_list (full_assertion_list)
 			end_keyword := e
+			check_keyword := c_as
 		ensure
-			check_list_set: check_list = c
+			full_assertion_list_set: full_assertion_list = c
 			end_keyword_set: end_keyword = e
+			check_keyword_set: check_keyword = c_as
 		end
 
 feature -- Visitor
@@ -37,14 +42,29 @@ feature -- Visitor
 			v.process_check_as (Current)
 		end
 
+feature -- Roundtrip
+
+	check_keyword: KEYWORD_AS
+			-- Keyword "check" associated with this structure
+
 feature -- Attributes
 
 	check_list: EIFFEL_LIST [TAGGED_AS]
 			-- List of tagged boolean expression
+			-- (only complete assertions are included)
+			-- e.g. "tag:expr", "expr"
 
-	end_keyword: LOCATION_AS
+	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located
-			
+
+
+feature -- Roundtrip
+
+	full_assertion_list: like check_list
+			-- Assertion list that contains both complete and incomplete assertions.
+			-- e.g. "tag:expr", "tag:", "expr"
+
+
 feature -- Location
 
 	start_location: LOCATION_AS is
@@ -56,7 +76,7 @@ feature -- Location
 				Result := end_keyword
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -73,7 +93,7 @@ feature -- Access
 			end
 		end
 
-feature -- Comparison 
+feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?

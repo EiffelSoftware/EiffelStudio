@@ -3,13 +3,13 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class CREATION_AS
+deferred class CREATION_AS
 
 inherit
 	INSTRUCTION_AS
 
-create
-	initialize
+--create
+--	initialize
 
 feature {NONE} -- Initialization
 
@@ -59,7 +59,7 @@ feature -- Location
 				Result := target.start_location
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

@@ -16,18 +16,20 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (k: like keys; c: like compound; e: like end_keyword) is
+	initialize (k: like keys; c: like compound; d_as, e: like end_keyword) is
 			-- Create a new DEBUG AST node.
 		require
 			e_not_void: e /= Void
 		do
-			keys := k
+			internal_keys := k
 			compound := c
 			end_keyword := e
+			debug_keyword := d_as
 		ensure
-			keys_set: keys = k
+			internal_keys_set: internal_keys = k
 			compound_set: compound = c
 			end_keyword_set: end_keyword = e
+			ddebug_keyword_set: debug_keyword = d_as
 		end
 
 feature -- Visitor
@@ -38,16 +40,33 @@ feature -- Visitor
 			v.process_debug_as (Current)
 		end
 
+feature -- Roundtrip
+
+	debug_keyword: KEYWORD_AS
+			-- Keyword "debug" associated with this structure
+
 feature -- Attributes
 
 	compound: EIFFEL_LIST [INSTRUCTION_AS]
 			-- Compound to debug
 
-	keys: EIFFEL_LIST [STRING_AS]
+	keys: EIFFEL_LIST [STRING_AS] is
 			-- Debug keys
+		do
+			if internal_keys = Void or else internal_keys.is_empty then
+				Result := Void
+			else
+				Result := internal_keys
+			end
+		end
 
-	end_keyword: LOCATION_AS
+	end_keyword: KEYWORD_AS
 			-- Line number where `end' keyword is located
+
+feature -- Roundtrip
+
+	internal_keys: EIFFEL_LIST [STRING_AS]
+			-- Internal debug keys			
 
 feature -- Location
 
@@ -62,7 +81,7 @@ feature -- Location
 				Result := end_keyword
 			end
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

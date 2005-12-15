@@ -12,7 +12,18 @@ inherit
 		end
 
 create
-	initialize
+	make
+
+feature{NONE} -- Initialization
+
+	make (c: like compound; l_as: KEYWORD_AS) is
+			-- Create new DO AST node.
+		do
+			initialize (c)
+			once_keyword := l_as
+		ensure
+			once_keyword_set: once_keyword = l_as
+		end
 
 feature -- Visitor
 
@@ -21,6 +32,11 @@ feature -- Visitor
 		do
 			v.process_once_as (Current)
 		end
+
+feature -- Roundtrip
+
+	once_keyword: KEYWORD_AS
+			-- Keyword "once" associated with this structure
 
 feature -- Properties
 

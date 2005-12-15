@@ -121,7 +121,7 @@ feature {NONE} -- Type generation
 		do
 			-- Retrieve type comments.
 			create l_indexing_clause.make
-			l_indexing_clause.set_name ("description")
+			l_indexing_clause.set_tag ("description")
 			l_comments := a_source.comments
 			create l_text.make (32)
 			if l_comments /= Void then

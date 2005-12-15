@@ -40,7 +40,7 @@ feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is Current adaptation less than `other'?
-		do	
+		do
 			Result := ast < other.ast
 		end
 
@@ -105,7 +105,7 @@ feature -- Element change
 					until
 						list.after
 					loop
-						t_feat := list.item;	
+						t_feat := list.item;
 						new_feature_as := feature_as.twin
 						create adapter;
 						f_name := names.first.twin
@@ -124,7 +124,7 @@ feature -- Element change
 								create {ID_AS}.initialize (source_feature.feature_name),
 								create {STRING_AS}.initialize (
 									extract_alias_name (source_feature.alias_name), 0, 0, 0, 0),
-								source_feature.has_convert_mark)
+								source_feature.has_convert_mark, Void, Void)
 							if source_feature.is_binary then
 								f_name.set_is_binary
 							elseif source_feature.is_unary then
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 				if not others.after then
 					if others.islast then
 						Result.append (" and ")
-					else 
+					else
 						Result.append (", ")
 					end
 				end
@@ -206,7 +206,7 @@ feature -- Output
 			format_reg := ctxt.format_registration;
 			if target_feature /= Void then
 				format_reg.assert_server.update_current_assertion (Current);
-				ctxt.init_feature_context (source_feature, 
+				ctxt.init_feature_context (source_feature,
 							target_feature, ast);
 			else
 				format_reg.assert_server.reset_current_assertion;
@@ -235,7 +235,7 @@ feature {FEATURE_ADAPTER} -- Implementation
 		end;
 
 feature {NONE} -- Implementation
-			
+
 	adapt (old_name: FEATURE_NAME; format_reg: FORMAT_REGISTRATION) is
 			-- Adaptation for feature defined in current class being analyzed.
 		require
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			t_feat, s_feat: FEATURE_I;
 			rout_id: INTEGER;
 			select_table: SELECT_TABLE;
-		do	
+		do
 			select_table := format_reg.target_feature_table.origin_table;
 			s_feat := format_reg.current_feature_table.item
 						(old_name.internal_name);
@@ -291,9 +291,9 @@ feature {NONE} -- Implementation
 				format_reg.assert_server.register_adapter (Current);
 				register_feature (feat, False, format_reg);
 			end;
-		end;				
+		end;
 
-	register_feature (feat: FEATURE_I; 
+	register_feature (feat: FEATURE_I;
 				is_replicated: BOOLEAN;
 				format_reg: FORMAT_REGISTRATION) is
 			-- Register feature `feat'.
@@ -302,8 +302,8 @@ feature {NONE} -- Implementation
 			valid_format_reg: format_reg /= Void
 		do
 			comments := format_reg.feature_comments (ast)
-			if format_reg.client = void or else 
-				feat.is_exported_for (format_reg.client) 
+			if format_reg.client = void or else
+				feat.is_exported_for (format_reg.client)
 			then
 					--| for renaming (sorting within feature clause)
 					--| features such as _infix_ _prefix_
@@ -341,7 +341,7 @@ feature {FEATURE_ADAPTER} -- Element change
 			valid_comment: comment /= Void
 		do
 			if comments = Void then
-				create comments.make 
+				create comments.make
 			elseif is_precompiled then
 					-- Duplicate the result since it could be referencing
 					-- the same comments of other synonym precompiled feature asts.
@@ -357,11 +357,11 @@ feature {FORMAT_REGISTRATION} -- Element chage
 			-- Register feature adapter only for the purpose of retrieving
 			-- chained assertions if `source_feature' is redefined in descendant.
 		require
-			valid_s_feature: s_feature /= Void 
+			valid_s_feature: s_feature /= Void
 		do
 			source_feature := s_feature;
-			ast := s_feature.body;	
+			ast := s_feature.body;
 			body_index := s_feature.body_index;
 		end;
-			
+
 end -- class FEATURE_ADAPTER

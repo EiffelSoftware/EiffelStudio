@@ -958,6 +958,12 @@ feature -- Warning messages
 	w_Exiting_stops_compilation: STRING is "It is not possible to exit EiffelStudio%N%
 											%while the project is being compiled."
 
+	w_Exiting_stops_c_compilation: STRING is "It is not possible to exit EiffelStudio%N%
+											%while c compilation is running."
+
+	w_Exiting_stops_external: STRING is "It is not possible to exit EiffelStudio%N%
+											%while an external command is running."
+
 	w_Save_before_closing: STRING is "Do you want to save your changes%N%
 									%before closing the window?"
 

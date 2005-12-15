@@ -406,7 +406,7 @@ feature -- Status setting
 			-- A compilation is over. Make all run* commands sensitive.
 		do
 			if
-				not (freezing_launcher.is_running or finalizing_launcher.is_running)
+				process_manager.is_c_compilation_running
 			then
 				if is_msil_dll_system then
 					disable_debugging_commands (True)

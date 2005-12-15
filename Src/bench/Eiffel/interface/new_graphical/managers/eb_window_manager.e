@@ -557,7 +557,7 @@ feature -- Actions on all windows
 
 				-- Update the state of some commands.
 			if
-				freezing_launcher.is_running or finalizing_launcher.is_running
+				process_manager.is_c_compilation_running
 			then
 				melt_project_cmd.disable_sensitive
 				Quick_melt_project_cmd.disable_sensitive
@@ -725,6 +725,14 @@ feature {NONE} -- Exit implementation
 				Exit_application_cmd.set_already_confirmed (True)
 				create wd.make_with_text (Warning_messages.W_exiting_stops_compilation)
 				wd.show_modal_to_window (last_focused_development_window.window)
+			elseif process_manager.is_c_compilation_running then
+				Exit_application_cmd.set_already_confirmed (True)
+				create wd.make_with_text (Warning_messages.w_Exiting_stops_c_compilation)
+				wd.show_modal_to_window (window_manager.last_focused_window.window)
+			elseif process_manager.is_external_command_running then
+				Exit_application_cmd.set_already_confirmed (True)
+				create wd.make_with_text (Warning_messages.w_Exiting_stops_external)
+				wd.show_modal_to_window (window_manager.last_focused_window.window)
 			elseif has_modified_windows then
 				Exit_application_cmd.set_already_confirmed (True)
 				create qd.make_with_text (Interface_names.L_exit_warning)

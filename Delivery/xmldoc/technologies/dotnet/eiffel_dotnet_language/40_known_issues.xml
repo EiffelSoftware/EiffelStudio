@@ -1,5 +1,13 @@
-<document title="Known issues" output="studio">
-	<meta_data/>
+<document title="Known issues">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Known Issues</envision_title>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\The Eiffel for .NET Language</envision_location>
+				<envision_pseudo_name>40</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>Eiffel issues
@@ -12,7 +20,9 @@
 				</link>. 
 			</item>
 			<item>The root creation routine of the root class must not take any arguments. You can access the command line given to the application via the class 
-				<class_name>ARGUMENTS. </class_name>
+				<code>
+					<class_name>ARGUMENTS. </class_name>
+				</code>
 			</item>
 		</list>
 	</paragraph></document>

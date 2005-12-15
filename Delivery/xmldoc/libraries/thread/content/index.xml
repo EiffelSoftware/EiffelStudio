@@ -1,5 +1,11 @@
-<document output="studio" title="EiffelThread Content">
-	<meta_data/>
+<document title="EiffelThread Content">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_title>Content</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph> The EiffelThread library includes the main components needed to build multithreaded systems.
 			<line_break/> See:    

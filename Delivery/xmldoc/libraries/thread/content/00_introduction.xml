@@ -1,5 +1,12 @@
-<document output="studio" title="EiffelThread Content">
-	<meta_data></meta_data>
+<document title="EiffelThread Content">
+	<meta_data>
+		<help>
+			<toc>				
+				<envision_pseudo_name>00</envision_pseudo_name>
+				<envision_title>Introduction</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>Multithreaded applications provide a flexible, exciting way of utilizing the power of modern computer systems. EiffelThread supports a powerful multithreaded model, fast and easy to use.</paragraph>
 		<paragraph>The 

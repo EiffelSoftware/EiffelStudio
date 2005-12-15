@@ -1,5 +1,11 @@
-<document output="studio" title="Multithread FAQ">
-	<meta_data/>
+<document title="Multithread FAQ">
+	<meta_data>
+		<help>
+			<toc>				
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<heading>
 			<size>3</size>I've launched several threads and they do not seem to be executed:

@@ -2,7 +2,8 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples/Eiffel Class Library Samples/WEL Samples/Tutorial</envision_location>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)\Tutorial</envision_location>
+				<envision_title></envision_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -27,7 +28,7 @@
 				<list ordered="true">
 					<item>Start Visual Studio .NET</item>
 					<item>Choose Open Project from the File menu.</item>
-					<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\wel\step6\</italic> and select <italic>tutorial_step6.eifp</italic></item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\step6\</italic> and select <italic>tutorial_step6.eifp</italic></item>
 					<item>Clicking open loads the selected project</item>
 				</list>
 			</output>
@@ -49,15 +50,15 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This system uses a redefined on_paint to re-draw the contents of the window. A <class_name>LINKED_LIST</class_name> of <class_name>LINES</class_name> is used to store all the lines that have been drawn and during <feature_name>on_paint</feature_name>, this list is traversed in order to re-draw each line. 
+		<paragraph>This system uses a redefined on_paint to re-draw the contents of the window. A <code><class_name>LINKED_LIST</class_name></code> of <code><class_name>LINES</class_name></code> is used to store all the lines that have been drawn and during <code><feature_name>on_paint</feature_name></code>, this list is traversed in order to re-draw each line. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item><class_name>TUTORIAL_STEP6</class_name></item>
-					<item><class_name>MAIN_WINDOW</class_name></item>
-					<item><class_name>LINE_THICKNESS_DIALOG_CHART</class_name></item>
-					<item><class_name>APPLICATION_IDS</class_name></item>
-					<item><class_name>POINT</class_name></item>
-					<item><class_name>LINE</class_name></item>
+					<item><code><class_name>TUTORIAL_STEP6</class_name></code></item>
+					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+					<item><code><class_name>LINE_THICKNESS_DIALOG_CHART</class_name></code></item>
+					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+					<item><code><class_name>POINT</class_name></code></item>
+					<item><code><class_name>LINE</class_name></code></item>
 				</list>
 			</paragraph>
 		</paragraph>

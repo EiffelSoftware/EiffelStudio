@@ -1,5 +1,12 @@
-<document output="studio" title="Split Area">
-	<meta_data/>
+<document title="Split Area">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)</envision_location>
+				<envision_title></envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<image> 
 			<url>splitarea.png</url> 
@@ -11,35 +18,45 @@
 			<size>2</size>Compiling
 		</heading>
 		<paragraph> To compile the example: </paragraph>
-		<list ordered="false">
-			<item>Launch EiffelStudio. </item>
-			<item>Select 
-				<bold>Use existing Ace (control file)</bold> and click 
-				<bold>OK</bold>. 
-			</item>
-			<item>Browse to 
-				<italic>$ISE_EIFFEL\examples\wel\splitarea\</italic>. 
-			</item>
-			<item>Choose 
-				<italic>Ace.ace</italic>
-			</item>
-			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
-			<item>Click 
-				<bold>OK</bold>.
-			</item>
-		</list>
+			<output output="envision">
+				<list ordered="true">
+					<item>Start Visual Studio .NET</item>
+					<item>Choose Open Project from the File menu.</item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\splitarea\</italic> and select <italic>split_area_demo.eifp</italic></item>
+					<item>Clicking open loads the selected project</item>
+				</list>
+			</output>
+			<output output="studio">
+				<list ordered="false">
+					<item>Launch EiffelStudio. </item>
+					<item>Select 
+						<bold>Use existing Ace (control file)</bold> and click 
+						<bold>OK</bold>. 
+					</item>
+					<item>Browse to 
+						<italic>$ISE_EIFFEL\examples\wel\splitarea\</italic>. 
+					</item>
+					<item>Choose 
+						<italic>Ace.ace</italic>
+					</item>
+					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+					<item>Click 
+						<bold>OK</bold>.
+					</item>
+				</list>
+			</output>
 		<heading>
 			<size>2</size>Running
 		</heading> After launching the program, a window will be displayed containing a pair of <link><url>../../reference/controls/wel_rich_edit_chart.xml</url><label>WEL_RICH_EDIT</label></link> in a split area. Clicking the mouse on the split area (between the two rich edits) and dragging the mouse, will adjust the split area and its content accordingly. 
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph> There is no split area class provided with WEL, but <class_name>WEL_SPLIT_AREA</class_name> was created for this sample to illustrate how new controls can be built when required. Redefining some of the `on_' features inherited from <link><url>../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> in <class_name>WEL_SPLIT_AREA</class_name> shows how the control over the contents of the split area is achieved.</paragraph>
+		<paragraph> There is no split area class provided with WEL, but <code><class_name>WEL_SPLIT_AREA</class_name></code> was created for this sample to illustrate how new controls can be built when required. Redefining some of the `on_' features inherited from <link><url>../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> in <code><class_name>WEL_SPLIT_AREA</class_name></code> shows how the control over the contents of the split area is achieved.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><class_name>APPLICATION</class_name></item>
-				<item><class_name>SPLIT_AREA_DEMO</class_name></item>
-				<item><class_name>WEL_SPLIT_AREA</class_name></item>
+				<item><code><class_name>APPLICATION</class_name></code></item>
+				<item><code><class_name>SPLIT_AREA_DEMO</class_name></code></item>
+				<item><code><class_name>WEL_SPLIT_AREA</class_name></code></item>
 			</list>
 		</paragraph>
 		<seealso>

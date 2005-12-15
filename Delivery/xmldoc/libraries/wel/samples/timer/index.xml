@@ -1,5 +1,12 @@
-<document output="studio" title="Timer">
-	<meta_data/>
+<document title="Timer">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)</envision_location>
+				<envision_title></envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<image> 
 			<url>timer.png</url> 
@@ -11,34 +18,44 @@
 			<size>2</size>Compiling
 		</heading>
 		<paragraph> To compile the example: </paragraph>
-		<list ordered="false">
-			<item>Launch EiffelStudio. </item>
-			<item>Select 
-				<bold>Use existing Ace (control file)</bold> and click 
-				<bold>OK</bold>. 
-			</item>
-			<item>Browse to 
-				<italic>$ISE_EIFFEL\examples\wel\timer\</italic>. 
-			</item>
-			<item>Choose 
-				<italic>Ace.ace</italic>
-			</item>
-			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace              file. If              you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
-			<item>Click 
-				<bold>OK</bold>.
-			</item>
-		</list>
+			<output output="envision">
+				<list ordered="true">
+					<item>Start Visual Studio .NET</item>
+					<item>Choose Open Project from the File menu.</item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\timer\</italic> and select <italic>timer_demo.eifp</italic></item>
+					<item>Clicking open loads the selected project</item>
+				</list>
+			</output>
+			<output output="studio">
+				<list ordered="false">
+					<item>Launch EiffelStudio. </item>
+					<item>Select 
+						<bold>Use existing Ace (control file)</bold> and click 
+						<bold>OK</bold>. 
+					</item>
+					<item>Browse to 
+						<italic>$ISE_EIFFEL\examples\wel\timer\</italic>. 
+					</item>
+					<item>Choose 
+						<italic>Ace.ace</italic>
+					</item>
+					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace              file. If              you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+					<item>Click 
+						<bold>OK</bold>.
+					</item>
+				</list>
+			</output>
 		<heading>
 			<size>2</size>Running
 		</heading> After launching the program, a window will be displayed as illustrated above. Clicking on any of the push buttons marked "Start Timer" will start a timer running, and the hatched area immediately above the push button will change its appearance to reflect the interval of the timer. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading> A <link><url>../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> supports multiple timers, set by set_timer which takes a unique id for each timer. The <feature_name>on_timer</feature_name> feature is called every time a timer interval is reached with an argument corresponding to the <feature_name>id</feature_name> of the timer. Within <class_name>MAIN_WINDOW</class_name>, <feature_name>on_timer</feature_name> has been redefined to update the appearance of the hatched areas. 
+		</heading> A <link><url>../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> supports multiple timers, set by set_timer which takes a unique id for each timer. The <code><feature_name>on_timer</feature_name></code> feature is called every time a timer interval is reached with an argument corresponding to the <code><feature_name>id</feature_name></code> of the timer. Within <code><class_name>MAIN_WINDOW</class_name></code>, <code><feature_name>on_timer</feature_name></code> has been redefined to update the appearance of the hatched areas. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><class_name>APPLICATION_IDS</class_name></item>
-				<item><class_name>MAIN_WINDOW</class_name></item>
-				<item><class_name>TIMER</class_name></item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>TIMER</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

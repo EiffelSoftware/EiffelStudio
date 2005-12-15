@@ -1,5 +1,12 @@
-<document output="studio" title="Standard Dialogs">
-	<meta_data/>
+<document title="Standard Dialogs">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)</envision_location>
+				<envision_title></envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<image> 
 			<url>stddlgs.png</url> 
@@ -11,34 +18,44 @@
 			<size>2</size>Compiling
 		</heading>
 		<paragraph> To compile the example: </paragraph>
-		<list ordered="false">
-			<item>Launch EiffelStudio. </item>
-			<item>Select 
-				<bold>Use existing Ace (control file)</bold> and click 
-				<bold>OK</bold>. 
-			</item>
-			<item>Browse to 
-				<italic>$ISE_EIFFEL\examples\wel\stddlgs\</italic>. 
-			</item>
-			<item>Choose 
-				<italic>Ace.ace</italic>
-			</item>
-			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
-			<item>Click 
-				<bold>OK</bold>.
-			</item>
-		</list>
+			<output output="envision">
+				<list ordered="true">
+					<item>Start Visual Studio .NET</item>
+					<item>Choose Open Project from the File menu.</item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\stddlg\</italic> and select <italic>stddlg_demo.eifp</italic></item>
+					<item>Clicking open loads the selected project</item>
+				</list>
+			</output>
+			<output output="studio">
+				<list ordered="false">
+					<item>Launch EiffelStudio. </item>
+					<item>Select 
+						<bold>Use existing Ace (control file)</bold> and click 
+						<bold>OK</bold>. 
+					</item>
+					<item>Browse to 
+						<italic>$ISE_EIFFEL\examples\wel\stddlgs\</italic>. 
+					</item>
+					<item>Choose 
+						<italic>Ace.ace</italic>
+					</item>
+					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+					<item>Click 
+						<bold>OK</bold>.
+					</item>
+				</list>
+			</output>
 		<heading>
 			<size>2</size>Running
 		</heading> After launching the program, a window will displayed with a menu allowing you to select some of the standard dialogs provided by WEL. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading><feature_name>on_menu_command</feature_name> has been redefined in <class_name>MAIN_WINDOW</class_name> to display a different standard dialog when each of the menu items is selected. 
+		</heading><code><feature_name>on_menu_command</feature_name></code> has been redefined in <code><class_name>MAIN_WINDOW</class_name></code> to display a different standard dialog when each of the menu items is selected. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><class_name>APPLICATION_IDS</class_name></item>
-				<item><class_name>MAIN_WINDOW</class_name></item>
-				<item><class_name>STDDLG_DEMO</class_name></item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>STDDLG_DEMO</class_name></code></item>
 			</list>
 			<seealso>
 				<bold>See Also</bold>

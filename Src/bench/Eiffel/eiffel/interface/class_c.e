@@ -3308,9 +3308,7 @@ end
 			consistency: data.base_class = Current
 			good_context: data.base_class.lace_class /= system.native_array_class implies not data.has_formal
 		local
-			filter: CL_TYPE_I
 			new_class_type: CLASS_TYPE
-			l_cursor: CURSOR
 			c: CL_TYPE_I
 		do
 			if not derivations.has_derivation (class_id, data) then
@@ -3332,31 +3330,19 @@ end
 				end
 
 					-- Propagation along the filters since we have a new type
-					-- Clean the filters. Some of the filters can be obsolete
-					-- if the base class has been removed from the system
-				filters.clean
-				from
-					filters.start
-				until
-					filters.after
-				loop
-						-- Instantiation of the filter with `data'
-					filter := filters.item.instantiation_in (new_class_type)
-debug ("GENERICITY")
-	io.error.put_string ("Propagation of ")
-	filter.trace
-	io.error.put_string ("propagation to ")
-	io.error.put_string (filter.base_class.name)
-	io.error.put_new_line
-end
-						-- We need to store cursor position because when you
-						-- have an expanded class used as a reference or vice versa
-						-- and that this class has some `like Current' then
-						-- we are going to traverse recursively the `filters' list.
-					l_cursor := filters.cursor
-					filter.base_class.update_types (filter)
-					filters.go_to (l_cursor)
-					filters.forth
+				update_filter_types (new_class_type, filters)
+				if new_class_type.is_expanded then
+						-- Propagate to all parent filters to ensure that
+						-- all the required class types are registered
+						-- for generating this expanded class type
+					from
+						parents_classes.start
+					until
+						parents_classes.after
+					loop
+						update_filter_types (new_class_type, parents_classes.item.filters)
+						parents_classes.forth
+					end
 				end
 			end
 		end
@@ -3430,6 +3416,44 @@ end
 			end
 		ensure
 			new_type_not_void: Result /= Void
+		end
+
+	update_filter_types (new_class_type: CLASS_TYPE; class_filters: like filters) is
+			-- Update all types associated with `class_filters' using `new_class_type'.
+		require
+			new_class_type_not_void: new_class_type /= Void
+			class_filters_not_void: class_filters /= Void
+		local
+			filter: CL_TYPE_I
+			class_filters_cursor: CURSOR
+		do
+				-- Propagation along the filters since we have a new type
+				-- Clean the filters. Some of the filters can be obsolete
+				-- if the base class has been removed from the system
+			class_filters.clean
+			from
+				class_filters.start
+			until
+				class_filters.after
+			loop
+					-- We need to store cursor position because when you
+					-- have an expanded class used as a reference or vice versa
+					-- and that this class has some `like Current' then
+					-- we are going to traverse recursively the `filters' list.
+				class_filters_cursor := class_filters.cursor
+					-- Instantiation of the filter with `data'
+				filter := class_filters.item.instantiation_in (new_class_type)
+debug ("GENERICITY")
+	io.error.put_string ("Propagation of ")
+	filter.trace
+	io.error.put_string ("propagation to ")
+	io.error.put_string (filter.base_class.name)
+	io.error.put_new_line
+end
+				filter.base_class.update_types (filter)
+				class_filters.go_to (class_filters_cursor)
+				class_filters.forth
+			end
 		end
 
 feature -- Meta-type

@@ -452,6 +452,88 @@ feature -- Settings
 			is_in_assignment_set: is_in_assignment = b
 		end
 
+feature -- Roundtrip
+
+	process_class_header_mark_as (l_as: CLASS_HEADER_MARK_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+feature -- Roundtrip
+
+	process_keyword_as (l_as: KEYWORD_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_symbol_as (l_as: SYMBOL_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_separator_as (l_as: SEPARATOR_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_new_line_as (l_as: NEW_LINE_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_comment_as (l_as: COMMENT_AS) is
+			-- Process `l_as'.
+		do
+		end
+
+	process_none_id_as (l_as: NONE_ID_AS) is
+			-- Process `l_as'.
+		do
+			process_id_as (l_as)
+		end
+
+	process_typed_char_as (l_as: TYPED_CHAR_AS) is
+			-- Process `l_as'.
+		do
+			process_char_as (l_as)
+		end
+
+	process_agent_routine_creation_as (l_as: AGENT_ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_routine_creation_as (l_as)
+		end
+
+	process_tilda_routine_creation_as (l_as: TILDA_ROUTINE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_routine_creation_as (l_as)
+		end
+
+	process_create_creation_as (l_as: CREATE_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_creation_as (l_as)
+		end
+
+	process_bang_creation_as (l_as: BANG_CREATION_AS) is
+			-- Process `l_as'.
+		do
+			process_creation_as (l_as)
+		end
+
+	process_create_creation_expr_as (l_as: CREATE_CREATION_EXPR_AS) is
+			-- Process `l_as'.
+		do
+			l_as.creation_expr_process (Current)
+		end
+
+	process_bang_creation_expr_as (l_as: BANG_CREATION_EXPR_AS) is
+			-- Process `l_as'.
+		do
+			l_as.creation_expr_process (Current)
+		end
+
 feature -- Implementation
 
 	process_custom_attribute_as (l_as: CUSTOM_ATTRIBUTE_AS) is
@@ -3295,8 +3377,8 @@ feature -- Implementation
 				l_dcr_feat := l_creation_class.default_create_feature
 
 					-- Use default_create
-				create {ACCESS_INV_AS} l_call.initialize (
-					create {ID_AS}.initialize (l_dcr_feat.feature_name), Void)
+				create {ACCESS_INV_AS} l_call.make (
+					create {ID_AS}.initialize (l_dcr_feat.feature_name), Void, Void)
 					-- For better error reporting as we insert a dummy call for type checking.
 				l_call.feature_name.set_position (a_location.line, a_location.column,
 					a_location.position, a_location.location_count)

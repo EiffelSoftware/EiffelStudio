@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (l: like language_name; a: STRING_AS) is
+	initialize (l: like language_name; a: STRING_AS; e_as, a_as: KEYWORD_AS) is
 			-- Create a new EXTERNAL AST node.
 		require
 			l_not_void: l /= Void
@@ -33,8 +33,14 @@ feature {NONE} -- Initialization
 				Names_heap.put (a.value)
 				alias_name_id := Names_heap.found_item
 			end
+			external_keyword := e_as
+			alias_keyword := a_as
+			alias_name_literal := a
 		ensure
 			language_name_set: language_name = l
+			alias_keyword_set: alias_keyword = a_as
+			external_keyword_set: external_keyword = e_as
+			alias_name_literal_set: alias_name_literal = a
 		end
 
 feature -- Visitor
@@ -44,6 +50,17 @@ feature -- Visitor
 		do
 			v.process_external_as (Current)
 		end
+
+feature -- Roundtrip
+
+	alias_keyword: KEYWORD_AS
+			-- keyword "alias" associated with this class
+
+	external_keyword: KEYWORD_AS
+			-- keyword "external" associated with this class
+
+	alias_name_literal: STRING_AS
+			-- String literal of alias name in this structure
 
 feature -- Attributes
 
@@ -61,7 +78,7 @@ feature -- Location
 		do
 			Result := language_name.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

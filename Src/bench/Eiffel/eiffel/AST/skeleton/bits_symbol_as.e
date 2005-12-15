@@ -16,14 +16,16 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (s: like bits_symbol) is
+	initialize (s: like bits_symbol; b_as: KEYWORD_AS) is
 			-- Create a new BITS_SYMBOL AST node.
 		require
 			s_not_void: s /= Void
 		do
 			bits_symbol := s
+			bit_keyword := b_as
 		ensure
 			bits_symbol_set: bits_symbol = s
+			bit_keyword_set: bit_keyword = b_as
 		end
 
 feature -- Visitor
@@ -33,6 +35,11 @@ feature -- Visitor
 		do
 			v.process_bits_symbol_as (Current)
 		end
+
+feature -- Roundtrip
+
+	bit_keyword: KEYWORD_AS
+		-- Keyword "bit" associated with this structure
 
 feature -- Attributes
 
@@ -46,7 +53,7 @@ feature -- Location
 		do
 			Result := bits_symbol.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -77,7 +84,7 @@ feature
 				-- create something, even if it is wrong, to emphasize, we cannot
 				-- set `bit_count' to `-1', because of a precondition of `BITS_A.make',
 				-- so we set it to 1.
-				-- But that's ok, since the result will never been used except for 
+				-- But that's ok, since the result will never been used except for
 				-- displaying an error.
 			create Result.make (1)
 		end

@@ -17,7 +17,7 @@ feature -- Access
 				Result := pure_eiffel_parser
 			end
 		end
-		
+
 	Eiffel_validating_parser: EIFFEL_PARSER is
 		do
 			if il_parsing then
@@ -32,7 +32,7 @@ feature -- Access
 		do
 			Result := il_parsing_cell.item
 		end
-		
+
 	entity_declaration_parser: EIFFEL_PARSER is
 			-- Entity declaration parser.
 		once
@@ -53,7 +53,7 @@ feature -- Access
 			create Result.make_with_factory (create {AST_COMPILER_FACTORY})
 			Result.set_expression_parser
 		end
-		
+
 feature -- Setting
 
 	set_il_parsing (v: BOOLEAN) is

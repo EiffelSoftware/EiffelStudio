@@ -19,14 +19,16 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like anchor) is
+	initialize (a: like anchor; l_as: like like_keyword) is
 			-- Create a new LIKE_ID AST node.
 		require
 			a_not_void: a /= Void
 		do
 			anchor := a
+			like_keyword := l_as
 		ensure
 			anchor_set: anchor = a
+			like_keyword_set: like_keyword = l_as
 		end
 
 feature -- Visitor
@@ -36,6 +38,11 @@ feature -- Visitor
 		do
 			v.process_like_id_as (Current)
 		end
+
+feature -- Roundtrip
+
+	like_keyword: KEYWORD_AS
+		-- Keyword "like" associated with this structure
 
 feature -- Attributes
 
@@ -49,7 +56,7 @@ feature -- Location
 		do
 			Result := anchor.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

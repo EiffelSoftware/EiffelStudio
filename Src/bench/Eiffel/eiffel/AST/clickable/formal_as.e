@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN) is
+	initialize (n: ID_AS; is_ref, is_exp: BOOLEAN; r_as: like reference_expanded_keyword) is
 			-- Create a new FORMAL AST node.
 		require
 			n_not_void: n /= Void
@@ -26,10 +26,12 @@ feature {NONE} -- Initialization
 			name := n
 			is_reference := is_ref
 			is_expanded := is_exp
+			reference_expanded_keyword := r_as
 		ensure
 			name_set: name = n
 			is_reference_set: is_reference = is_ref
 			is_expanded_set: is_expanded = is_exp
+			reference_expanded_keyword_set: reference_expanded_keyword = r_as
 		end
 
 feature -- Visitor
@@ -40,6 +42,11 @@ feature -- Visitor
 			v.process_formal_as (Current)
 		end
 
+feature -- Roundtrip
+
+	reference_expanded_keyword: KEYWORD_AS
+			-- Keyword "reference" or "expanded" associated with this structure
+
 feature -- Properties
 
 	name: ID_AS
@@ -48,10 +55,10 @@ feature -- Properties
 	position: INTEGER
 			-- Position of the formal parameter in the declaration
 			-- array
-			
+
 	is_reference: BOOLEAN
 			-- Is Current formal to be always instantiated as a reference type?
-			
+
 	is_expanded: BOOLEAN
 			-- Is Current formal to be always instantiated as an expanded type?
 
@@ -68,7 +75,7 @@ feature -- Location
 		do
 			Result := name.start_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do

@@ -16,10 +16,13 @@ create
 
 feature {NONE} -- Initialize
 
-	initialize is
+	initialize (c: like class_name_literal) is
 		do
+			class_name_literal := c
+		ensure
+			class_name_literal_set: class_name_literal = c
 		end
-		
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -28,6 +31,11 @@ feature -- Visitor
 			v.process_none_type_as (Current)
 		end
 
+feature -- Roundtrip
+
+	class_name_literal: ID_AS
+			-- Class name literal
+
 feature -- Location
 
 	start_location: LOCATION_AS is
@@ -35,7 +43,7 @@ feature -- Location
 		do
 			Result := null_location
 		end
-		
+
 	end_location: LOCATION_AS is
 			-- Ending point for current construct.
 		do
@@ -48,7 +56,7 @@ feature -- Comparison
 		do
 			Result := True
 		end
-		
+
 feature
 
 	append_to (st: STRUCTURED_TEXT) is

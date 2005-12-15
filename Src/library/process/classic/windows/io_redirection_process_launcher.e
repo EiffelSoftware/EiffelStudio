@@ -635,59 +635,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
---	subprocess_list (parent_pid: INTEGER): LINKED_LIST [INTEGER] is
---			-- Sub process id tree of Process whose pid is `parent_pid'.
---			-- If process structure is
---			-- 1 -> 2 -> 3 -> 4
---			--      |
---			--      + -> 5
---			--      |
---			--      + -> 6
---			-- then the list is : [1 2 3 5 6 4]
---		local
---			p_tbl: LINKED_LIST [ WEL_PROCESS_ID_PAIR ]
---			cur_pid: INTEGER
---			done: BOOLEAN
---		do
---			p_tbl := process_id_pair_list
---			from
---				p_tbl.start
---			until
---				p_tbl.after or done
---			loop
---				if p_tbl.item.id = parent_pid then
---					p_tbl.remove
---					done := True
---				else
---					p_tbl.forth
---				end
---			end
---			if done then
---				create Result.make
---				Result.extend (parent_pid)
---				from
---					Result.start
---				until
---					Result.after
---				loop
---					cur_pid := Result.item
---					from
---						p_tbl.start
---					until
---						p_tbl.after
---					loop
---						if p_tbl.item.parent_id = cur_pid then
---							Result.extend (p_tbl.item.id)
---							p_tbl.remove
---						else
---							p_tbl.forth
---						end
---					end
---					Result.forth
---				end
---			end
---		end
-
 	direct_subprocess_list (parent_id: INTEGER): LIST [INTEGER] is
 			-- List of direct subprocess ids of process indicated by id `parent_id'.
 		local

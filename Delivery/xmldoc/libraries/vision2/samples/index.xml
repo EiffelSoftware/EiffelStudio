@@ -2,8 +2,9 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples/Eiffel Class Library Samples</envision_location>
-				<envision_pseudo_name>20</envision_pseudo_name>
+				<envision_location>EiffelEnvision\Examples</envision_location>
+				<envision_title>EiffelVision 2</envision_title>
+				<envision_pseudo_name>40</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>

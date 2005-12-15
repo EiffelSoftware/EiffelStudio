@@ -2,7 +2,8 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples/Eiffel Class Library Samples/EiffelVision 2 Samples</envision_location>
+				<envision_location>EiffelEnvision\Examples\EiffelVision 2</envision_location>
+				<envision_title>Gauges</envision_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -23,7 +24,7 @@
 				<list ordered="true">
 					<item>Start Visual Studio .NET</item>
 					<item>Choose Open Project from the File menu.</item>
-					<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\vision2\gauges\</italic> and select <italic>gauges.eifp</italic></item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\vision2\gauges\</italic> and select <italic>gauges.eifp</italic></item>
 					<item>Clicking open loads the selected project</item>
 				</list>
 			</output>

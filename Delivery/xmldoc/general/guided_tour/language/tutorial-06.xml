@@ -2,7 +2,7 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Eiffel\Getting Started</envision_location>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\An Eiffel Tutorial</envision_location>
 				<envision_pseudo_name>50</envision_pseudo_name>
 				<envision_title>The Static Picture: System Organization</envision_title>
 				<studio_location/>
@@ -244,17 +244,17 @@
 			</code>. 
 			<code>
 				<class_name>ANY</class_name>
-			</code> introduces a number of general-purpose features useful everywhere, such as copying, cloning and equality testing operations (
+			</code> introduces a number of general-purpose features useful everywhere, such as copying, cloning and equality testing operations (page 
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>12485</anchor_name>
-				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
+				<label>28</label>
 			</link>) and default input-output.  The procedure 
 			<code>
 				<string>print</string>
-			</code> used in the first version of our "Hello World" (
+			</code> used in the first version of our "Hello World" (page 
 			<link>
 				<url>tutorial-05.xml</url><anchor_name>80381</anchor_name>
-				<label>Chapter 4, "Hello World"</label>
+				<label>11</label>
 			</link>) comes from 
 			<code>
 				<class_name>ANY</class_name>

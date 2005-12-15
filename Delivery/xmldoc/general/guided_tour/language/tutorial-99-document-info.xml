@@ -1,6 +1,12 @@
-<document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
+<document title="MANUAL IDENTIFICATION AND COPYRIGHT">
 	<meta_data>
-		<help></help>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\An Eiffel Tutorial</envision_location>
+				<envision_pseudo_name>99</envision_pseudo_name>
+				<envision_title>Manual Indentification and Copyright</envision_title>
+			</toc>
+		</help>
 	</meta_data>
 	<paragraph>
 		<heading>
@@ -17,7 +23,7 @@
 		<paragraph>See acknowledgments in book 
 			<span>
 				<link>
-					<url>http://www.eiffel.com/services/training/books.html</url><anchor_name>etl</anchor_name>
+					<url>http://www.eiffel.com/doc/page.html</url><anchor_name>etl</anchor_name>
 					<label>Eiffel: The Language</label>
 				</link>
 			</span>.  

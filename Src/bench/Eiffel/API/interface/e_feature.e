@@ -52,7 +52,7 @@ feature -- Initialization
 			has_convert_mark := c
 			feature_id := i
 		ensure
-			name_set: name = n 
+			name_set: name = n
 			alias_name_set: alias_name = a
 			feature_id_set: feature_id = i
 		end
@@ -160,10 +160,10 @@ feature -- Properties
 		do
 			-- Do nothing
 		end;
-		
+
 	is_il_external: BOOLEAN
 			-- Is current feature an IL external one?
-		
+
 	is_obsolete: BOOLEAN is
 			-- Is Current feature obsolete?
 		do
@@ -240,7 +240,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	ancestor_version (an_ancestor: CLASS_C): E_FEATURE is
 			-- Feature in `an_ancestor' of which `Current' is derived.
 			-- `Void' if not present in that class.
@@ -316,7 +316,7 @@ feature -- Access
 				written_class.is_debuggable
 		ensure
 			debuggable_if: Result implies
-				(body_index /= 0) and then 
+				(body_index /= 0) and then
 				(not is_external) and then
 				(not is_attribute) and then
 				(not is_constant) and then
@@ -333,7 +333,7 @@ feature -- Access
 			start_position, end_position: INTEGER;
 			body_as: FEATURE_AS;
 			rout_as: ROUTINE_AS
-			c: like written_class;	
+			c: like written_class;
 		do
 			c := written_class;
 			class_text := c.text;
@@ -358,7 +358,7 @@ feature -- Access
 					class_text.count >= end_position and
 					start_position < end_position
 				then
-					class_text := class_text.substring 
+					class_text := class_text.substring
 								(start_position, end_position);
 					Result.add_feature (Current, class_text)
 				end;
@@ -427,7 +427,7 @@ feature -- Access
 				if is_frozen then
 					l_feature_names.last.set_frozen_location (create {LOCATION_AS}.make_null)
 				end
-				create Result.initialize (l_feature_names, create {BODY_AS}.initialize (Void, Void, Void, Void), Void, 0, 0)
+				create Result.initialize (l_feature_names, create {BODY_AS}.initialize (Void, Void, Void, Void, Void, Void, Void, Void), Void, 0, 0)
 			end
 		end;
 
@@ -527,7 +527,7 @@ feature -- Access
 			end
 			Result := f.number_of_breakpoint_slots
 		end
-		
+
 	number_of_all_precondition_slots: INTEGER is
 			-- Number of preconditions
 			-- (including inherited assertions)
@@ -539,7 +539,7 @@ feature -- Access
 				feature_upto_date: f /= Void
 			end
 			Result := f.number_of_all_precondition_slots
-		end		
+		end
 
 feature -- Comparison
 
@@ -547,7 +547,7 @@ feature -- Comparison
 		do
 			Result := name < other.name
 		end
-		
+
 	same_as (other: E_FEATURE): BOOLEAN is
 		require
 			other_not_void: other /= Void
@@ -817,14 +817,14 @@ feature {FEATURE_I} -- Setting
 		ensure
 			is_il_external_set: is_il_external = v
 		end
-		
+
 	set_written_feature_id (v: like written_feature_id) is
 			-- Set `written_feature_id' with `v'.
 		require
 			v_non_negative: v >= 0
 		do
 			written_feature_id := v
-		ensure	
+		ensure
 			written_feature_id_set: written_feature_id = v
 		end
 

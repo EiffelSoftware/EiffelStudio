@@ -2,9 +2,8 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples\.NET Framework Samples\Windows Forms\MDI</envision_location>
+				<envision_location>EiffelEnvision\Examples\.NET Framework\Windows Forms\MDI</envision_location>
 				<envision_title>Using MDI</envision_title>
-				<envision_location>Samples\Windows Forms\MDI</envision_location>
 			</toc>
 		</help>
 	</meta_data>

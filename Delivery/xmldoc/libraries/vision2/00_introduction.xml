@@ -1,11 +1,4 @@
 <document title="EiffelVision Introduction">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_location>Class Libraries\EiffelVision 2</envision_location>
-			</toc>
-		</help>
-	</meta_data>
 	<paragraph>
 		<paragraph>   The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called 
 			<link>

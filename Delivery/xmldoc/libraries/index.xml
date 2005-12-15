@@ -7,7 +7,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-
 		<paragraph> Eiffel is all about reuse. Thousands of reusable components help you develop your applications by standing on the shoulders of previous developers. Here is the documentation on the principal libraries: 
 			<output output="studio">
 			<list ordered="false">
@@ -94,7 +93,33 @@
 								<url>base/index.xml</url>
 								<label>EiffelBase</label>
 							</link>: Eiffel Software's acclaimed open-source library covering the fundamental algorithms and data structures of computing science.
-						</item>				
+						</item>
+						<item>
+							<link>
+								<url>lex/index.xml</url>
+								<label>Lex &amp; Parse</label>
+
+							</link>: lexical analysis and parsing libraries.
+						</item>
+						<item>
+							<link>
+								<url>net/index.xml</url>
+								<label>Net</label>
+							</link>: the client-server library for exchanging object structures across the network, between identical or different machine architectures.
+						</item>
+						<item>
+							<link>
+								<url>thread/index.xml</url>
+
+								<label>Thread</label>
+							</link>: multi-threading library.
+						</item>
+						<item>
+							<link>
+								<url>time/index.xml</url>
+								<label>Time</label>
+							</link>: time and date library.
+						</item>
 						<item>
 							<link>
 								<url>vision2/index.xml</url>

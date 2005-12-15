@@ -49,7 +49,7 @@ feature -- Command termination
 		do
 			if launched and then (not has_exited) then
 					-- If process is still running, terminate it.
-				prc.terminate
+				prc.terminate_tree
 			else
 					-- If process has exited, but some of its output has not been printed,
 					-- discard this output.

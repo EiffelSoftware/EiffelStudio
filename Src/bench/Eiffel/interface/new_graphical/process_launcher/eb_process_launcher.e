@@ -276,7 +276,7 @@ feature -- Control
 			-- Terminate child process.
 		do
 			if launched and then (not has_exited) then
-				prc.terminate
+				prc.terminate_tree
 			end
 		ensure
 			process_terminated: launched implies has_exited

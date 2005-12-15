@@ -12,10 +12,10 @@ inherit
 	PROJECT_CONTEXT
 		export {NONE} all end
 
-	SHARED_APPLICATION_EXECUTION 
+	SHARED_APPLICATION_EXECUTION
 		export {NONE} all end
 
-	EB_SHARED_MANAGERS 
+	EB_SHARED_MANAGERS
 		export {NONE} all end
 
 	EB_CONSTANTS
@@ -26,10 +26,10 @@ inherit
 
 	SHARED_ERROR_HANDLER
 		export {NONE} all end
-		
+
 	EV_SHARED_APPLICATION
 		export {NONE} all end
-		
+
 	EB_SHARED_PREFERENCES
 		export {NONE} all end
 
@@ -42,12 +42,22 @@ feature -- Basic operations
 			wd: EV_WARNING_DIALOG
 		do
 			already_confirmed := False
-			if Workbench.is_compiling then
+			if process_manager.is_c_compilation_running then
 				already_confirmed := True
-				create wd.make_with_text (Warning_messages.w_Exiting_stops_compilation)
+				create wd.make_with_text (Warning_messages.w_Exiting_stops_c_compilation)
+				wd.show_modal_to_window (window_manager.last_focused_window.window)
+			elseif process_manager.is_external_command_running then
+				already_confirmed := True
+				create wd.make_with_text (Warning_messages.w_Exiting_stops_external)
 				wd.show_modal_to_window (window_manager.last_focused_window.window)
 			else
-				confirm_stop_debug
+				if Workbench.is_compiling then
+					already_confirmed := True
+					create wd.make_with_text (Warning_messages.w_Exiting_stops_compilation)
+					wd.show_modal_to_window (window_manager.last_focused_window.window)
+				else
+					confirm_stop_debug
+				end
 			end
 		end
 

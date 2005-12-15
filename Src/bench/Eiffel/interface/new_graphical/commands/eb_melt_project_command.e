@@ -154,7 +154,7 @@ feature {NONE} -- Compilation implementation
 			if Workbench.successful then
 				window_manager.display_message (Interface_names.E_compilation_succeeded)
 
-				if freezing_launcher.is_running or finalizing_launcher.is_running then
+				if process_manager.is_c_compilation_running then
 					window_manager.display_message (Interface_names.e_C_compilation_running)
 				else
 					if not eiffel_project.freezing_occurred then

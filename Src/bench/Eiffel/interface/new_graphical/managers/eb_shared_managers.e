@@ -16,6 +16,12 @@ inherit
 
 feature -- Status report
 
+	process_manager: EB_PROCESS_MANAGER is
+			--
+		once
+			create Result.make (freezing_launcher, finalizing_launcher, external_launcher)
+		end
+
 	external_launcher: EB_EXTERNAL_LAUNCHER is
 			--
 		once
@@ -51,7 +57,6 @@ feature -- Status report
 		do
 			Result := c_compilation_output_manager_cell.item
 		end
-
 
 	output_manager: EB_OUTPUT_MANAGER is
 			-- Output manager for all output messages.

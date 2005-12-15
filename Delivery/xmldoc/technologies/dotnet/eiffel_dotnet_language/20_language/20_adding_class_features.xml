@@ -2,16 +2,23 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Eiffel\Eiffel for .NET</envision_location>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\The Eiffel for .NET Language\Eiffel for .NET</envision_location>
 				<envision_pseudo_name>20</envision_pseudo_name>
-				<envision_title>Adding Class Features</envision_title>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>The features of a class make it useful. They are the things that objects which are instances of the class have and can do.
+		<paragraph>The 
+			<link>
+				<url></url>
+				<label>features</label>
+			</link> of a class make it useful. They are the things that objects which are instances of the class have and can do.
 		</paragraph>
-		<paragraph>It is during the process of adding class features that we relate a class we are producing to other classes via the >client/supplier relationship.
+		<paragraph>It is during the process of adding class features that we relate a class we are producing to other classes via the 
+			<link>
+				<url></url>
+				<label>client/supplier relationship</label>
+			</link>.
 		</paragraph>
 		<paragraph>It is when we add features to a class that we can build the executable code that makes things happen.</paragraph>
 		<heading>
@@ -81,18 +88,30 @@
 </code_block>
 		</paragraph>
 		<paragraph>The example shows three of the features ( 
-			<feature_name>make</feature_name>, 
-			<feature_name>item</feature_name>, and 
-			<feature_name>first</feature_name>) coded directly in the class. These features (and the ones omitted from the example in the interest of brevity) may not be the only features of the class 
-			<class_name>OLD_FASHIONED_LIST</class_name>. In fact we can just about guarantee that there are other features of this class. Remember the inheritance part of the class:
+			<code>
+				<feature_name>make</feature_name>
+			</code>, 
+			<code>
+				<feature_name>item</feature_name>
+			</code>, and 
+			<code>
+				<feature_name>first</feature_name>
+			</code>) coded directly in the class. These features (and the ones omitted from the example in the interest of brevity) may not be the only features of the class 
+			<code>
+				<class_name>OLD_FASHIONED_LIST</class_name>
+			</code>. In fact we can just about guarantee that there are other features of this class. Remember the inheritance part of the class:
 		</paragraph>
 		<code_block>
 	<keyword>inherit</keyword>
 		<class_name>DYNAMIC_LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
 </code_block>
 		<paragraph>This means that every feature in 
-			<class_name>DYNAMIC_LIST</class_name> will be a feature of 
-			<class_name>OLD_FASHIONED_LIST</class_name>. So one way we can think of features is by their source.
+			<code>
+				<class_name>DYNAMIC_LIST</class_name>
+			</code> will be a feature of 
+			<code>
+				<class_name>OLD_FASHIONED_LIST</class_name>
+			</code>. So one way we can think of features is by their source.
 		</paragraph>
 		<list ordered="false">
 			<item>Immediate features are those that are introduced by a class itself.</item>
@@ -107,19 +126,45 @@
 		<heading>
 			<size>3</size>Implementation Type
 		</heading>
-		<paragraph>Whenever we are building a class in Eiffel, we are potential reuse producers. As such, we can categorize the features of a class based on the three types of feature implementation:
+		<paragraph>Whenever we are building a class in Eiffel, we are potential 
+			<link>
+				<url></url>
+				<label>reuse producers</label>
+			</link>. As such, we can categorize the features of a class based on the three types of feature implementation:
 		</paragraph>
 		<list ordered="false">
 			<item>
-				Attribute
+				<link>
+					<url></url>
+					<label>Attribute</label>
+				</link>
 			</item>
-			<item>Function
+			<item>
+				<link>
+					<url></url>
+					<label>Function</label>
+				</link>
 			</item>
-			<item>Procedure
+			<item>
+				<link>
+					<url></url>
+					<label>Procedure</label>
+				</link>
 			</item>
 		</list>
-		<paragraph>Attributes are those features which occupy storage in an instance. When you code an attribute in a class that you are producing, that class becomes a client to the class of the attribute. This is the most common way to establish a 
-			client/supplier relationship between the classses. Client/supplier is one of the two relationships that can exist between classes.
+		<paragraph>Attributes are those features which occupy storage in an instance. When you code an attribute in a class that you are producing, that class becomes a 
+			<link>
+				<url></url>
+				<label>client</label>
+			</link> to the class of the attribute. This is the most common way to establish a 
+			<link>
+				<url></url>
+				<label>client/supplier relationship</label>
+			</link> between the classses. Client/supplier is one of the two 
+			<link>
+				<url></url>
+				<label>relationships</label>
+			</link> that can exist between classes.
 		</paragraph>
 		<paragraph>Functions and procedures are the computation features, that is they are features that involve executable code. Functions and procedures together are themselves categorized as routines.</paragraph>
 		<paragraph>Also, from the producer standpoint we may view features as whether they work from memory or through computation:</paragraph>
@@ -137,27 +182,43 @@
 			</item>
 		</list>
 		<paragraph>This view can be valuable when a producer is considering performance issues. For example, if there is some class function called 
-			<feature_name>count</feature_name>, a producer might investigate whether it is better to leave 
-			<feature_name>count</feature_name> as a function, computing it each time the feature is applied, or to change it to an attribute and compute it less often.
+			<code>
+				<feature_name>count</feature_name>
+			</code>, a producer might investigate whether it is better to leave 
+			<code>
+				<feature_name>count</feature_name>
+			</code> as a function, computing it each time the feature is applied, or to change it to an attribute and compute it less often.
 		</paragraph>
 		<heading>
 			<size>3</size>Usage
 		</heading>
 		<paragraph>A times we find it appropriate to categorize features by how we use them. Specifically, as:</paragraph>
 		<list ordered="false">
-			<item>Query
+			<item>
+				<link>
+					<url></url>
+					<label>Query</label>
+				</link>
 				<list ordered="false">
 					<item>Attribute</item>
 					<item>Function</item>
 				</list>
 			</item>
-			<item>Command
+			<item>
+				<link>
+					<url></url>
+					<label>Command</label>
+				</link>
 				<list ordered="false">
 					<item>Procedure</item>
 				</list>
 			</item>
 		</list>
-		<paragraph>Queries are features that, when applied to an instance, provide a value in response. Commands instruct an intance to take some action, but do not return a value. Seeing features as either queries or commands is of primary interest to reuse consumers. But as producers there are important reasons for ensuring that when we implement a feature, we implement it as a query or as a command, but not both. We will see more about this in 
+		<paragraph>Queries are features that, when applied to an instance, provide a value in response. Commands instruct an intance to take some action, but do not return a value. Seeing features as either queries or commands is of primary interest to 
+			<link>
+				<url></url>
+				<label>reuse consumers</label>
+			</link>. But as producers there are important reasons for ensuring that when we implement a feature, we implement it as a query or as a command, but not both. We will see more about this in 
 			<link>
 				<url>50_design_by_contract.xml</url>
 				<label>Design by Contract and Assertions</label>
@@ -279,49 +340,42 @@
 				<link>
 					<anchor_name>Header Comment</anchor_name>
 					<label>Header Comment</label>
-					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>obsolete</anchor_name>
 					<label>Obsolete</label>
-					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Precondition</anchor_name>
 					<label>Precondition</label>
-					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Local Declarations</anchor_name>
 					<label>Local Declarations</label>
-					<url>20_adding_class_features.xml</url>
-				</link>				
+				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Routine Body</anchor_name>
 					<label>Routine Body</label>
-					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Postcondition</anchor_name>
 					<label>Postcondition</label>
-					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 			<item>
 				<link>
 					<anchor_name>Rescue</anchor_name>
 					<label>Rescue</label>
-					<url>20_adding_class_features.xml</url>
 				</link>
 			</item>
 		</list>
@@ -356,13 +410,23 @@
 			<comment>-- Insert a text item to the header control</comment>
 			<comment>--     after the `insert_item_item_no' item.</comment>
 </code_block>
-		<paragraph>Although the feature's header comment is optional, most Eiffel programmers and their technical  managers feel that it should never be omitted. Header comments are included by some language processing tools in specialized views of classes. Header comments are almost always short, usually no more than a few lines. Header comments serve to provide a natural language description of what the feature will do (in the case of features that are commands) or what information it provides (in the case of queries).
+		<paragraph>Although the feature's header comment is optional, most Eiffel programmers and their technical  managers feel that it should never be omitted. Header comments are included by some language processing tools in specialized views of classes. Header comments are almost always short, usually no more than a few lines. Header comments serve to provide a natural language description of what the feature will do (in the case of features that are 
+			<link>
+				<url></url>
+				<label>commands</label>
+			</link>) or what information it provides (in the case of 
+			<link>
+				<url></url>
+				<label>queries</label>
+			</link>).
 		</paragraph>
 		<heading>
 			<size>3</size>Obsolete
 		</heading>
 		<paragraph>The feature 
-			<feature_name>insert_text_header_item</feature_name> is not obsolete ... but if it were it would include an 
+			<code>
+				<feature_name>insert_text_header_item</feature_name>
+			</code> is not obsolete ... but if it were it would include an 
 			<code>
 				<keyword>obsolete</keyword>
 			</code> clause. This works much like the obsolete part for classes that we saw in 
@@ -403,8 +467,12 @@
 			<code>
 				<indexing_tag>hd_item</indexing_tag>
 			</code> is available as type 
-			<class_name>WEL_HD_ITEM</class_name> during the computation of feature 
-			<feature_name>insert_text_header_item</feature_name>.
+			<code>
+				<class_name>WEL_HD_ITEM</class_name>
+			</code> during the computation of feature 
+			<code>
+				<feature_name>insert_text_header_item</feature_name>
+			</code>.
 		</paragraph>
 		<note>
 			<bold>Note:</bold> A local entity name must not be the same as any feature of the class in which its feature occurs or the same as any argument name of the feature in which it occurs.
@@ -597,9 +665,15 @@
 	<keyword>feature</keyword><symbol> {</symbol><class_name>ANY</class_name><symbol>}</symbol> -- <comment>Basic Operations</comment>
 </code_block>
 		<paragraph>which means that the following features are available to clients which conform to class 
-			<class_name>ANY</class_name>. And in Eiffel, 
-			<class_name>ANY</class_name> is the class from which all other classes inherit. As a consequence all classes conform to 
-			<class_name>ANY</class_name>.
+			<code>
+				<class_name>ANY</class_name>
+			</code>. And in Eiffel, 
+			<code>
+				<class_name>ANY</class_name>
+			</code> is the class from which all other classes inherit. As a consequence all classes conform to 
+			<code>
+				<class_name>ANY</class_name>
+			</code>.
 		</paragraph>
 		<paragraph>Inside the braces is a list of classes which are eligible as clients.</paragraph>
 		<code_block>
@@ -609,14 +683,18 @@
 			<code>
 				<keyword>STRING</keyword>
 			</code> will be available to client class 
-			<class_name>STRING_HANDLER</class_name> and all its proper descendants.
+			<code>
+				<class_name>STRING_HANDLER</class_name>
+			</code> and all its proper descendants.
 		</paragraph>
 		<paragraph>As stated above, you can put a list of class names in the braces:</paragraph>
 		<code_block>
 	<keyword>feature</keyword> <symbol>{</symbol><class_name>CLASS_A</class_name>, <class_name>CLASS_B</class_name>, <class_name>CLASS_C</class_name><symbol>}</symbol> <comment>-- Semi-private features</comment>
 </code_block>
 		<paragraph>Often features which are solely for implementation should not be seen or used by clients of any type. You can ensure this by exporting to class 
-			<class_name>NONE</class_name>, the class from which no other class can inherit:
+			<code>
+				<class_name>NONE</class_name>
+			</code>, the class from which no other class can inherit:
 		</paragraph>
 		<code_block>
 	<keyword>feature</keyword> <symbol>{</symbol><class_name>NONE</class_name><symbol>}</symbol> <comment>-- Implementation</comment>
@@ -651,70 +729,140 @@
 			<size>3</size>Assignment
 		</heading>
 		<paragraph>In Eiffel, assignment syntax is simple. But depending upon the types involved, what actually happens may need some explanation. Assume here that 
-			<feature_name>is_open_read</feature_name> is an attribute declared as type 
-			<class_name>BOOLEAN</class_name>:
+			<code>
+				<feature_name>is_open_read</feature_name>
+			</code> is an attribute declared as type 
+			<code>
+				<class_name>BOOLEAN</class_name>
+			</code>:
 		</paragraph>
 		<code_block>
 	<feature_name>is_open_read</feature_name> <symbol>:=</symbol> False
 </code_block>
 		<paragraph>In this instruction, an attribute of type 
-			<class_name>BOOLEAN</class_name> named 
-			<feature_name>is_open_read</feature_name> is being assigned the value of the manifest boolean " 
+			<code>
+				<class_name>BOOLEAN</class_name>
+			</code> named 
+			<code>
+				<feature_name>is_open_read</feature_name>
+			</code> is being assigned the value of the manifest boolean " 
 			<code>
 				<keyword>False</keyword>
 			</code>". The attribute 
-			<feature_name>is_open_read</feature_name> is based on an expanded class 
-			<class_name>BOOLEAN</class_name>, so that means that the value for 
+			<code>
+				<feature_name>is_open_read</feature_name>
+			</code> is based on an expanded class 
+			<code>
+				<class_name>BOOLEAN</class_name>
+			</code>, so that means that the value for 
 			<code>
 				<keyword>False</keyword>
 			</code> is held in the field for 
-			<feature_name>is_open_read</feature_name>. This is in contrast to what happens with reference types.
+			<code>
+				<feature_name>is_open_read</feature_name>
+			</code>. This is in contrast to what happens with reference types.
 		</paragraph>
 		<code_block>
 	<feature_name>my_string</feature_name> <symbol>:=</symbol> <feature_name>some_other_string</feature_name>
 </code_block>
 		<paragraph>In this assignment, we will assume that both entities are type 
-			<class_name>STRING</class_name>. Because 
-			<class_name>STRING</class_name> is a reference type, the field for 
-			<feature_name>my_string</feature_name> will hold either a reference to an instance of 
-			<class_name>STRING</class_name>, or it will be 
+			<code>
+				<class_name>STRING</class_name>
+			</code>. Because 
+			<code>
+				<class_name>STRING</class_name>
+			</code> is a reference type, the field for 
+			<code>
+				<feature_name>my_string</feature_name>
+			</code> will hold either a reference to an instance of 
+			<code>
+				<class_name>STRING</class_name>
+			</code>, or it will be 
 			<code>
 				<keyword>Void</keyword>
 			</code>. When the assignment above executes, then whatever was in the field for 
-			<feature_name>my_string</feature_name> is replaced with a reference to the same object that 
-			<feature_name>some_other_string</feature_name> refers to.
+			<code>
+				<feature_name>my_string</feature_name>
+			</code> is replaced with a reference to the same object that 
+			<code>
+				<feature_name>some_other_string</feature_name>
+			</code> refers to.
 		</paragraph>
 		<paragraph>In summary, for objects based on expanded classes, assignment means assignment of value. For objects based on reference classes, assignment means assignment of reference.</paragraph>
 		<heading>
 			<size>4</size>Conformance
 		</heading>
 		<paragraph>There is an important rule about assignment in Eiffel. The rule exists to ensure type safety. Consider the following assignment which we would read as " 
-			<feature_name>x</feature_name>receives 
-			<feature_name>y</feature_name>" or " 
-			<feature_name>x</feature_name>gets 
-			<feature_name>y</feature_name>".
+			<code>
+				<feature_name>x</feature_name>
+			</code>receives 
+			<code>
+				<feature_name>y</feature_name>
+			</code>" or " 
+			<code>
+				<feature_name>x</feature_name>
+			</code>gets 
+			<code>
+				<feature_name>y</feature_name>
+			</code>".
 		</paragraph>
 		<code_block>
 	<feature_name>x</feature_name> <symbol>:=</symbol> <feature_name>y</feature_name>
 </code_block>
 		<paragraph>then the rule says that this assignment is valid only if the type of 
-			<feature_name>y</feature_name> conforms to the type of 
-			<feature_name>x</feature_name>.
+			<code>
+				<feature_name>y</feature_name>
+			</code> conforms to the type of 
+			<code>
+				<feature_name>x</feature_name>
+			</code>.
 		</paragraph>
-		<paragraph>The rule is clear enough ... if you know what "conform" means. In the presence of mechanisms like expanded types, inheritance, and genericity, a precise definition of conformance is lengthy.
+		<paragraph>The rule is clear enough ... if you know what "conform" means. In the presence of mechanisms like 
+			<link>
+				<url></url>
+				<label>expanded types</label>
+			</link>, 
+			<link>
+				<url></url>
+				<label>inheritance</label>
+			</link>, and 
+			<link>
+				<url></url>
+				<label>genericity</label>
+			</link>, a precise definition of conformance is lengthy.
 		</paragraph>
 		<paragraph>But we can get by for a while with much less. For now let us be satisfied with this:</paragraph>
 		<paragraph>Consider the classes in the declarations for 
-			<feature_name>x</feature_name> and 
-			<feature_name>y</feature_name>.
+			<code>
+				<feature_name>x</feature_name>
+			</code> and 
+			<code>
+				<feature_name>y</feature_name>
+			</code>.
 		</paragraph>
 		<paragraph>You might be tempted to say that to achieve "conformance", the classes would have to be the same. And for the case in which the declarations for 
-			<feature_name>x</feature_name> and 
-			<feature_name>y</feature_name> are expanded classes, you'd be correct. They conform only if they are the same class.
+			<code>
+				<feature_name>x</feature_name>
+			</code> and 
+			<code>
+				<feature_name>y</feature_name>
+			</code> are 
+			<link>
+				<url></url>
+				<label>expanded classes</label>
+			</link>, you'd be correct. They conform only if they are the same class.
 		</paragraph>
-		<paragraph>But for reference types, that constraint is unnecessarily restrictive. So, for reference types, the class of 
-			<feature_name>y</feature_name> conforms to that 
-			<feature_name>x</feature_name> if it is the same class or a proper descendant of that class. This facilitates a powerful idea known as polymorphic attachment that we will see more closely in the section on 
+		<paragraph>But for 
+			<link>
+				<url></url>
+				<label>reference types</label>
+			</link>, that constraint is unnecessarily restrictive. So, for reference types, the class of 
+			<code>
+				<feature_name>y</feature_name>
+			</code> conforms to that 
+			<code>
+				<feature_name>x</feature_name>
+			</code> if it is the same class or a proper descendant of that class. This facilitates a powerful idea known as polymorphic attachment that we will see more closely in the section on 
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/30_inheritance.xml</url>
 				<label>Inheritance</label>

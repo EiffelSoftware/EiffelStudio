@@ -1,5 +1,12 @@
-<document title="Eiffel for .NET" output="studio">
-	<meta_data/>
+<document title="Eiffel for .NET">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\The Eiffel for .NET Language</envision_location>
+				<envision_pseudo_name>10</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph/>
 		<list ordered="false">

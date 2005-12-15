@@ -2,9 +2,9 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_title>Eiffel Terminolgy</envision_title>
+				<envision_title>Naming Conventions</envision_title>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\The Eiffel for .NET Language\Conventions</envision_location>
 				<envision_pseudo_name>10</envision_pseudo_name>
-				<envision_location>Eiffel\Eiffel for .NET\Conventions</envision_location>
 			</toc>
 		</help>
 	</meta_data>

@@ -2,7 +2,7 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Eiffel\Getting Started</envision_location>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\An Eiffel Tutorial</envision_location>
 				<envision_pseudo_name>91</envision_pseudo_name>
 				<envision_title>Other Mechanisms</envision_title>
 				<studio_location/>
@@ -271,7 +271,11 @@
 			</code>, all different, and <italic>inst0</italic>, <italic>inst1</italic>, <italic>inst2</italic>,  ... are sequences of zero or more instructions. In the integer case, it is often convenient to use 
 			<code>
 				<keyword>unique</keyword>
-			</code> values for the <italic>vi</italic>
+			</code> values (
+			<link>
+				<url>tutorial-11.xml</url><anchor_name>94304</anchor_name>
+				<label>"Constant and unique attributes", page 83</label>
+			</link>) for the <italic>vi</italic>
 		</paragraph>
 		<paragraph>The effect of such a multi-branch instruction, if the value of 
 			<code>
@@ -310,12 +314,12 @@
 		<code_block>
 <keyword>from</keyword>
 	<italic>initialization</italic>
+<keyword>until</keyword>
+	<italic>exit</italic>
 <keyword>invariant</keyword>
 	<italic>inv</italic>
 <keyword>variant</keyword>
 	<italic>var</italic>
-<keyword>until</keyword>
-	<italic>exit</italic>
 <keyword>loop</keyword>
 	<italic>body</italic>
 <keyword>end</keyword>
@@ -357,7 +361,7 @@
 				<keyword>no</keyword>
 			</code>, or an explicit debug key. The <italic>instructions</italic>will be executed if and only if the corresponding option is on. The obvious use is for instructions that should be part of the system but executed only in some circumstances, for example to provide extra debugging information.
 		</paragraph>
-		<paragraph>The final instruction is connected with Design by Contract&#153;. The instruction 
+		<paragraph>The final instruction is connected with Design by Contract&amp;#153;. The instruction 
 			<code>
 				<keyword>check</keyword>
 			</code> <italic>Assertion</italic> 
@@ -476,10 +480,10 @@
 			<size>2</size>
 			<content>Creation variants</content>
 		</heading>
-		<paragraph>The basic forms of creation instruction, and the one most commonly used, are the two illustrated earlier (see 
+		<paragraph>The basic forms of creation instruction, and the one most commonly used, are the two illustrated earlier (
 			<link>
 				<url>tutorial-07.xml</url><anchor_name>59651</anchor_name>
-				<label>Chapter 6, "The Dynamic Structure: Execution Model"</label>
+				<label>"Creating and initializing objects", page 20</label>
 			</link>):
 		</paragraph>
 <code_block>

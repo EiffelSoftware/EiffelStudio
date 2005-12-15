@@ -1,5 +1,13 @@
-<document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
-	<meta_data></meta_data>
+<document title="MANUAL IDENTIFICATION AND COPYRIGHT">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\Invitation to Eiffel</envision_location>
+				<envision_pseudo_name>99</envision_pseudo_name>
+				<envision_title>Manual Indentification and Copyright</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>Title: 
 			Invitation to Eiffel,  Eiffel Software  Technical Report TR-EI-67/IV.  
@@ -18,7 +26,7 @@
 			<content>Software Credits</content>
 		</heading>See acknowledgments in book 
 			<link>
-				<url>http://www.eiffel.com/services/traning/books.html</url><anchor_name>etl</anchor_name>
+				<url>http://www.eiffel.com/doc/page.html</url><anchor_name>etl</anchor_name>
 				<label>Eiffel: The Language</label>
 			</link>.
 		<heading>

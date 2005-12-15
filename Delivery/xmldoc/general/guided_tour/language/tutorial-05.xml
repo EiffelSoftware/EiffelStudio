@@ -2,7 +2,7 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Eiffel\Getting Started</envision_location>
+				<envision_location>EiffelEnvision\A Guide to Eiffel for .NET\An Eiffel Tutorial</envision_location>
 				<envision_pseudo_name>40</envision_pseudo_name>
 				<envision_title>Hello World</envision_title>
 				<studio_location/>
@@ -106,7 +106,7 @@
 			</code>.  As will be seen in 
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>78482</anchor_name>
-				<label>"The contract form of a class", Chapter 8, "Design by Contract, Assertions and Exceptions"</label>
+				<label>"The contract form of a class", page 44</label>
 			</link>, the tools of EiffelStudio know about this convention and use it to include the header comment in the automatically generated class documentation.  
 		</paragraph>
 		<paragraph>The body of the feature is introduced by the 

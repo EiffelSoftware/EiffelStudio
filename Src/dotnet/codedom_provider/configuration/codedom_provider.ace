@@ -73,6 +73,18 @@ cluster
 			namespace ("EiffelSoftware.CodeDom")
 		end
 
+	env_interp:		"$EIFFEL_SRC\eiffel\lace\env"
+		default
+			namespace ("EiffelSoftware.CodeDom.Support")
+		end
+
+	shared_env:		"$EIFFEL_SRC\eiffel\eiffel\shared"
+		exclude
+			".svn"; "shared_names_heap.e"
+		default
+			namespace ("EiffelSoftware.CodeDom.Support")
+		end
+
 	support:		"$EIFFEL_SRC\library"
 		default
 			namespace ("EiffelSoftware.CodeDom.Support")

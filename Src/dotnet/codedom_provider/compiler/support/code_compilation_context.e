@@ -14,6 +14,9 @@ feature -- Access
 	root_creation_routine_name: STRING
 			-- Name of root creation routine
 
+	precompile_file: STRING
+			-- Path to precompile definition file
+
 feature -- Element Settings
 
 	set_root_class_name (a_name: like root_class_name) is
@@ -37,7 +40,15 @@ feature -- Element Settings
 		ensure
 			root_creation_routine_name_set: root_creation_routine_name = a_name
 		end
-		
+	
+	set_precompile_file (a_file: like precompile_file) is
+			-- Set `precompile_file' with `a_file'.
+		do
+			precompile_file := a_file
+		ensure
+			precompile_file_set: precompile_file = a_file
+		end
+
 end -- class CODE_COMPILATION_CONTEXT
 
 --+--------------------------------------------------------------------

@@ -1,9 +1,9 @@
-<document title="Console Samples" output="studio">
+<document title="Console Samples">
 	<meta_data>
 		<help>
 			<toc>
 				<envision_title>Console Applications</envision_title>
-				<envision_location>Samples</envision_location>
+				<envision_location>EiffelEnvision\Examples\.NET Framework</envision_location>
 			</toc>
 		</help>
 	</meta_data>

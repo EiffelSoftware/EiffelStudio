@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>30</envision_pseudo_name>
-				<envision_location>Samples\.NET Framework Samples\Windows Forms</envision_location>
+				<envision_location>EiffelEnvision\Examples\.NET Framework\Windows Forms</envision_location>
 			</toc>
 		</help>
 	</meta_data>
@@ -30,7 +30,7 @@
 				<list ordered="true">
 					<item>Start Visual Studio .NET</item>
 					<item>Choose Open Project from the File menu.</item>
-					<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\winforms\date_time_picker\</italic> and select <italic>date_time_picker.eifp</italic></item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\compiler\examples\(.net version)\winforms\date_time_picker\</italic> and select <italic>date_time_picker.eifp</italic></item>
 					<item>Clicking open loads the selected project</item>
 				</list>
 			</output>

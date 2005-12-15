@@ -2,8 +2,9 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples</envision_location>
-				<envision_pseudo_name>30</envision_pseudo_name>
+				<envision_location>EiffelEnvision\Examples</envision_location>
+				<envision_title>.NET Framework</envision_title>
+				<envision_pseudo_name>00</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>

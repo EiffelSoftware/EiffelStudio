@@ -1,9 +1,9 @@
-<document output="studio" title="ADO .NET Samples">
+<document title="ADO .NET Samples">
 	<meta_data>
 		<help>
 			<toc>
 				<envision_title>ADO.NET</envision_title>
-				<envision_location>Samples</envision_location>
+				<envision_location>EiffelEnvision\Examples\.NET Framework</envision_location>
 			</toc>
 		</help>
 	</meta_data>

@@ -257,7 +257,7 @@ cluster
 
 	all thread:		"$EIFFEL_SRC/library/thread"
 
-	all roundtrip:		"$EIFFEL_SRC\Eiffel\roundtrip"
+	all roundtrip:		"$EIFFEL_SRC/Eiffel/roundtrip"
 
 external
 

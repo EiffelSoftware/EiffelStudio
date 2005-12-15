@@ -15,8 +15,13 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
+	EB_SAVE_FILE
 		export
 			{NONE} all
 		end
@@ -69,7 +74,7 @@ feature -- Access
 					Result := unchanged_editor.text
 				else
 					Result := a_class.text
-				end					
+				end
 			else
 				Result := a_class.text
 			end
@@ -100,41 +105,14 @@ feature -- Element change
 				end
 				l.forth
 			end
+
 			if not in_tool then
-				save_class_text (a_class, a_text)
+				save (a_class.file_name, a_text)
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	save_class_text (a_class: CLASS_I; a_text: STRING) is
-			-- Overwrite file with class text of `a_class' with `a_text'.
-		require
-			a_class_not_void: a_class /= Void
-			a_text_not_void: a_text /= Void
-		local
-			a_file: RAW_FILE
-			platform: PLATFORM_CONSTANTS
-		do
-			create a_file.make (a_class.file_name)
-			if a_file.exists and then a_file.is_writable then
-				a_file.open_write
-				a_text.prune_all ('%R')
-				create platform
-				if platform.is_unix then
-					a_file.put_string (a_text)
-					if a_text.item (a_text.count) /= '%N' then
-							-- Add a carriage return like `vi' if there's none at the end 
-						a_file.put_new_line
-					end
-				else
-					a_text.replace_substring_all ("%N", "%R%N")
-					a_file.put_string (a_text)
-				end
-				a_file.close
-			end
-		end
-		
 	default_pixmaps: EV_STOCK_PIXMAPS is
 			-- Default pixmaps and cursors.
 		once

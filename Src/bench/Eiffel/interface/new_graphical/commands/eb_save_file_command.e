@@ -29,9 +29,14 @@ inherit
 		end
 
 	SHARED_WORKBENCH
-		
+
 
 	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		end
+
+	EB_SAVE_FILE
 		export
 			{NONE} all
 		end
@@ -56,12 +61,8 @@ feature -- Execution
 
 	execute is
 			-- Save a file with the chosen name.
-		local   
-			new_file, tmp_file: RAW_FILE	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
-			to_write: STRING
-			aok, create_backup, compileok: BOOLEAN
-			save_as_cmd: EB_SAVE_FILE_AS_COMMAND
-			tmp_name: STRING
+		local
+			compileok: BOOLEAN
 			wd: EV_WARNING_DIALOG
 		do
 				-- FIXME XR: We add a test `is_sensitive' to prevent calls from the accelerator.
@@ -82,72 +83,10 @@ feature -- Execution
 					target.check_passed and then
 					compileok
 				then
-					create new_file.make (target.file_name)
-					if new_file.exists then 
-						aok := True
-						if --(new_file.exists) and then 
-							(not new_file.is_plain)
-						then
-							aok := False
-							create wd.make_with_text (Warning_messages.w_Not_a_plain_file (new_file.name))
-							wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-						elseif --new_file.exists and then 
-							(not new_file.is_writable)
-						then
-							aok := False
-							create wd.make_with_text (Warning_messages.w_Not_writable (new_file.name))
-							wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-						end
-		
-							-- Create a backup of the file in case there will be a problem during the savings.
-						tmp_name := target.file_name.twin
-						tmp_name.append (".swp")
-						create tmp_file.make (tmp_name)
-						create_backup := not tmp_file.exists and then tmp_file.is_creatable
-		
-						if not create_backup then
-							tmp_file := new_file
-						end
-	
-						if aok then
-							to_write := target.text
-							tmp_file.open_write
-							if not to_write.is_empty then
-								to_write.prune_all ('%R')
-								if to_write.item (to_write.count) /= '%N' then 
-										-- Add a carriage return like `vi' if there's none at the end 
-									to_write.extend ('%N')
-								end
-								if preferences.misc_data.text_mode_is_windows then
-									to_write.replace_substring_all ("%N", "%R%N")
-								end
-								tmp_file.put_string (to_write)
-							end
-							tmp_file.close
-		
-							if create_backup then
-									-- We need to copy the backup file to the original file and then
-									-- delete the backup file
-								new_file.delete
-								tmp_file.change_name (target.file_name)
-							end
-							target.set_last_saving_date (tmp_file.date)
-							target.on_text_saved
-						end
-					else
-						if --(not new_file.exists) and then 
-							(not new_file.is_creatable)
-						then
-							aok := False
-							create wd.make_with_text (Warning_messages.w_Not_creatable (new_file.name))
-							wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-						else
-							create save_as_cmd.make (target)
-							save_as_cmd.execute_with_filename (target.file_name)
-						end
-					end
+					save (target.file_name, target.text)
+					target.set_last_saving_date (last_saving_date)
+					target.on_text_saved
 					target.update_save_symbol
-					--manager.on_text_opened
 				end
 			end
 		end

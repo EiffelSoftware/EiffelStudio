@@ -74,7 +74,7 @@ feature -- Status report
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
 			first_type: CLASS_TYPE
-			found, is_deferred: BOOLEAN;
+			found: BOOLEAN;
 			i, nb, old_position: INTEGER
 			system_i: SYSTEM_I
 		do
@@ -114,11 +114,6 @@ feature -- Status report
 					end
 					i := i + 1
 				end
-
-				if not Result then
-					Result := is_deferred and then found
-				end
-
 				position := old_position
 			else
 					-- It is the case of a routine alone in its table. It is possibly a routine

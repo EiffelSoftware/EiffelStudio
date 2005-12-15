@@ -1,5 +1,12 @@
-<document output="studio" title="Thread library overview">
-	<meta_data/>
+<document title="Thread library overview">
+	<meta_data>
+		<help>
+			<toc>				
+				<envision_pseudo_name>10</envision_pseudo_name>
+				<envision_title>Overview</envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<paragraph>This is only a quick overview of the 
 			<link>

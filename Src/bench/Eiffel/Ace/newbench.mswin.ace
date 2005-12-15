@@ -129,7 +129,6 @@ default
 cluster
 	override:		"$EIFFEL_SRC\Eiffel\override"
 
-
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "desc"; ".svn"; 
@@ -295,6 +294,8 @@ cluster
 		end
 
 	all thread:		"$EIFFEL_SRC\library\thread"
+
+	all roundtrip:		"$EIFFEL_SRC\Eiffel\roundtrip"
 
 external
 

@@ -98,29 +98,37 @@ feature  -- Redefine
 --			must_process: Result = True
 		end
 
-	update_for_pointer_position (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		local
-			l_drawn: BOOLEAN
+			l_rect: EV_RECTANGLE
 		do
---			internal_shared.feedback.clear_screen
-			-- Draw top one.
+			l_rect := internal_docking_manager.query.container_rectangle_screen
+			if top_rectangle.has_x_y (a_screen_x, a_screen_y) then
+				internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
+			elseif bottom_rectangle.has_x_y (a_screen_x, a_screen_y)  then
+				internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.bottom - (l_rect.height * internal_shared.default_docking_height_rate).ceiling, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
+			elseif left_rectangle.has_x_y (a_screen_x, a_screen_y) then
+				internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
+			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) then
+				internal_shared.feedback.draw_transparency_rectangle (l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
+			else
+				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - a_mediator.offset_x, a_screen_y - a_mediator.offset_y, internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
+			end
+
+		ensure then
+			must_process:
+		end
+
+	update_for_pointer_position_indicator (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- Redefine.
+		do
 			pointer_x := a_screen_x
 			pointer_y := a_screen_y
-			l_drawn := update_indicator_area (top_rectangle, internal_shared.icons.arrow_indicator_up_colors)
-			if not l_drawn then
-				l_drawn := update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down_colors)
-			end
-			if not l_drawn then
-				l_drawn := update_indicator_area (left_rectangle, internal_shared.icons.arrow_indicator_left_colors)
-			end
-			if not l_drawn then
-				l_drawn := update_indicator_area (right_rectangle, internal_shared.icons.arrow_indicator_right_colors)
-			end
-			if not l_drawn then
-				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - a_mediator.offset_x, a_screen_y - a_mediator.offset_y, internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
-				internal_pointer_last_in_area := internal_pointer_in_main_area
-			end
+			update_indicator_area (top_rectangle, internal_shared.icons.arrow_indicator_up_colors)
+			update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down_colors)
+			update_indicator_area (left_rectangle, internal_shared.icons.arrow_indicator_left_colors)
+			update_indicator_area (right_rectangle, internal_shared.icons.arrow_indicator_right_colors)
 		ensure then
 			must_process:
 		end
@@ -135,78 +143,10 @@ feature  -- Redefine
 
 feature {NONE} -- Implementation
 
-	update_indicator_area (a_rect: like top_rectangle; a_pixmap: SPECIAL [SPECIAL [INTEGER]]): BOOLEAN is
+	update_indicator_area (a_rect: like top_rectangle; a_pixmap: SPECIAL [SPECIAL [INTEGER]]) is
 			-- Update feedback area when pointer in `a_rect'.
-		local
-			l_rect: EV_RECTANGLE
 		do
-			if a_rect.has_x_y (pointer_x, pointer_y) then
-				l_rect := internal_docking_manager.query.container_rectangle_screen
-
-				if a_rect = top_rectangle then
---					-- |
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
---					--  -
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
---					--   |
---					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
-
-					if internal_pointer_last_in_area /= internal_pointer_in_top_area then
-						internal_shared.feedback.clear_screen
-						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
-						internal_pointer_last_in_area := internal_pointer_in_top_area
-					end
-					internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, internal_shared.icons.arrow_indicator_up_colors_lighten)
-					Result := True
-				elseif a_rect = bottom_rectangle then
---					-- |
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
---					--  _
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.bottom, a_rect.right, a_rect.bottom)
---					--   |
---					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
-
-					if internal_pointer_last_in_area /= internal_pointer_in_bottom_area then
-						internal_shared.feedback.clear_screen
-						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.bottom - (l_rect.height * internal_shared.default_docking_height_rate).ceiling, l_rect.width, (l_rect.height * internal_shared.default_docking_height_rate).ceiling)
-						internal_pointer_last_in_area := internal_pointer_in_bottom_area
-					end
-					internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, internal_shared.icons.arrow_indicator_down_colors_lighten)
-					Result := True
-				elseif a_rect = left_rectangle then
---					--  -
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
---					-- |
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.top + a_rect.height)
---					--  _
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
-
-					if internal_pointer_last_in_area /= internal_pointer_in_left_area then
-						internal_shared.feedback.clear_screen
-						internal_shared.feedback.draw_transparency_rectangle (l_rect.left, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
-						internal_pointer_last_in_area := internal_pointer_in_left_area
-					end
-					internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, internal_shared.icons.arrow_indicator_left_colors_lighten)
-					Result := True
-				elseif a_rect = right_rectangle then
---					-- -
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
---					--  |
---					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.top + a_rect.height)
---					-- _
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
-
-					if internal_pointer_last_in_area /= internal_pointer_in_right_area then
-						internal_shared.feedback.clear_screen
-						internal_shared.feedback.draw_transparency_rectangle (l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
-						internal_pointer_last_in_area := internal_pointer_in_right_area
-					end
-					internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, internal_shared.icons.arrow_indicator_right_colors_lighten)
-					Result := True
-				end
-			else
-				internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, a_pixmap)
-			end
+			internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, a_pixmap)
 		ensure
 			must_process:
 		end
@@ -214,10 +154,8 @@ feature {NONE} -- Implementation
 	pointer_x, pointer_y: INTEGER
 			-- Pointer position.
 
-
 	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
 			-- Areas which contain four indicator.
-
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.

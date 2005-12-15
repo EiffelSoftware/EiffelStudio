@@ -33,7 +33,7 @@ feature -- Access
 	feedback: SD_FEEDBACK_DRAWER is
 			-- SD_DRAW_FEEDBACK instance which is draw things on the desktop.
 		once
-			create Result
+			create Result.make
 		ensure
 			not_void: Result /= Void
 		end

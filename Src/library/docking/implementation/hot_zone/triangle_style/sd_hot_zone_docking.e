@@ -10,8 +10,7 @@ inherit
 	SD_HOT_ZONE
 		redefine
 			has_x_y,
-			internal_zone,
-			pointer_out
+			internal_zone
 		end
 
 create
@@ -52,38 +51,35 @@ feature -- Redefine
 			end
 		end
 
-	pointer_out is
+	update_for_pointer_position_feedback (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		do
-			Precursor {SD_HOT_ZONE}
-			internal_mouse_in := False
-		ensure then
-			mouse_not_in: internal_mouse_in = False
+			if internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
+
+				update_feedback (a_screen_x, a_screen_y, internal_rectangle_left)
+				Result := True
+			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
+				update_feedback (a_screen_x, a_screen_y, internal_rectangle_right)
+				Result := True
+			elseif internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
+				update_feedback (a_screen_x, a_screen_y, internal_rectangle_top)
+				Result := True
+			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
+				update_feedback (a_screen_x, a_screen_y, internal_rectangle_bottom)
+				Result := True
+			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+
+				update_feedback (a_screen_x, a_screen_y, internal_rectangle_center)
+				Result := True
+			end
 		end
 
-	update_for_pointer_position (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_indicator (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
-		local
-			l_x, l_y, l_width, l_height: INTEGER
 		do
-			drawn := False
 			if internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				if not internal_mouse_in then
-					draw_drag_window_indicator
-					internal_mouse_in := True
-				end
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_left)
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_right)
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_top)
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_bottom)
-				update_feedback (a_screen_x, a_screen_y, internal_rectangle_center)
 
-				if not drawn then
-					l_x := a_screen_x + a_mediator.offset_x
-					l_y := a_screen_y + a_mediator.offset_y
-					l_width := a_mediator.drag_window_width
-					l_height := a_mediator.drag_window_height
-				end
+				draw_drag_window_indicator
 
 				Result := True
 			end
@@ -106,76 +102,29 @@ feature {NONE} -- Implementation functions.
 
 			if a_rect.has_x_y (a_screen_x, a_screen_y) then
 				if a_rect = internal_rectangle_left then
---					--  -
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
---					-- |
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.top + a_rect.height)
---					--  _
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
---
-					if internal_pointer_last_in_area /= internal_pointer_in_left_area then
-						internal_shared.feedback.clear_screen
-						internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
-						internal_pointer_last_in_area := internal_pointer_in_left_area
-					end
+
+					internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
+
 					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_left_lighten)
 				elseif a_rect = internal_rectangle_right then
-					-- -
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
---					--  |
---					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.top + a_rect.height)
---					-- _
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top + a_rect.height, a_rect.left + a_rect.height, a_rect.top + a_rect.height)
 
-					if internal_pointer_last_in_area /= internal_pointer_in_right_area then
-						internal_shared.feedback.clear_screen
-						internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.right - (internal_rectangle.width * 0.5).ceiling, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
-						internal_pointer_last_in_area := internal_pointer_in_right_area
-					end
+					internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.right - (internal_rectangle.width * 0.5).ceiling, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
+
 					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_right_lighten)
 				elseif a_rect = internal_rectangle_top then
-					-- |
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
---					--  -
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
---					--   |
---					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
 
-					if internal_pointer_last_in_area /= internal_pointer_in_top_area then
-						internal_shared.feedback.clear_screen
-						internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
-						internal_pointer_last_in_area := internal_pointer_in_top_area
-					end
+					internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
+
 					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_up_lighten)
 				elseif a_rect = internal_rectangle_bottom then
-					-- |
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
---					--  _
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.bottom, a_rect.right, a_rect.bottom)
---					--   |
---					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
+					internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
 
-					if internal_pointer_last_in_area /= internal_pointer_in_bottom_area then
-						internal_shared.feedback.clear_screen
-						internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
-						internal_pointer_last_in_area := internal_pointer_in_bottom_area
-					end
 					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_bottom_lighten)
 				elseif a_rect = internal_rectangle_center then
-					-- |
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.left, a_rect.bottom)
---					--  -
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.top, a_rect.right, a_rect.top)
---					--   |
---					internal_shared.feedback.draw_line (a_rect.right, a_rect.top, a_rect.right, a_rect.bottom)
---					--  _
---					internal_shared.feedback.draw_line (a_rect.left, a_rect.bottom, a_rect.right, a_rect.bottom)
+
 					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_center_lighten)
 				end
-				drawn := True
 			end
-		ensure
-			drawn: a_rect.has_x_y (a_screen_x, a_screen_y) implies drawn = True
 		end
 
 	draw_drag_window_indicator is
@@ -234,12 +183,6 @@ feature {NONE} -- Implementation functions.
 		end
 
 feature {NONE} -- Implementation attributes.
-
-	drawn: BOOLEAN
-			-- If alreay drawn the feedback rectangle which represent the window area?
-
-	internal_mouse_in: BOOLEAN
-			-- Whether mouse pointer is in `Current' hot zone.
 
 	internal_zone: SD_DOCKING_ZONE
 			-- Dokcing zone `Current' belong to.

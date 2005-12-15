@@ -18,18 +18,18 @@ feature -- Commands
 		deferred
 		end
 
-	update_for_pointer_position (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
-			-- Update feedback when user move pointer.
+	update_for_pointer_position_feedback (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- Update feedback rectangle when user move pointer.
 		require
 			a_mediator_not_void: a_mediator /= Void
 		deferred
 		end
 
-	pointer_out is
-			-- Handle pointer outside `Current'.
-		do
-			internal_shared.feedback.clear_screen
-			internal_pointer_last_in_area := internal_pointer_outside
+	update_for_pointer_position_indicator (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+			-- Update feedback indicator when user move pointer.
+		require
+			a_mediator_not_void: a_mediator /= Void
+		deferred
 		end
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
@@ -59,24 +59,6 @@ feature {NONE}
 			-- SD_ZONE which `Current' belong to.
 
 	internal_mediator: SD_DOCKER_MEDIATOR
-
-feature {NONE} -- Implementation for draw feedback
-
-	internal_pointer_last_in_area: INTEGER
-			-- Pointer in which area last time?
-
-	internal_pointer_outside: INTEGER is 0
-			-- Pointer is outside.
-	internal_pointer_in_top_area: INTEGER is 1
-			-- Pointer is in top area.
-	internal_pointer_in_bottom_area: INTEGER is 2
-			-- Pointer is in bottom area.
-	internal_pointer_in_left_area: INTEGER is 3
-			-- Pointer is in left area.
-	internal_pointer_in_right_area: INTEGER is 4
-			-- Pointer is in right area.
-	internal_pointer_in_main_area: INTEGER is 5
-			-- Pointer is in main area.
 
 invariant
 

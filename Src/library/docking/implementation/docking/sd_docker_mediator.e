@@ -62,7 +62,6 @@ feature -- Hanlde pointer events
 			changed: BOOLEAN
 			l_floating_zone: SD_FLOATING_ZONE
 		do
---			feedback.clear_screen
 			tracing := False
 			from
 				hot_zones.start
@@ -80,7 +79,7 @@ feature -- Hanlde pointer events
 					io.put_string ("%N SD_DOCKER_MEDIATOR not changed and set floating position")
 				end
 			end
-			internal_shared.feedback.clear_screen
+			internal_shared.feedback.clear
 		ensure
 			not_tracing: tracing = False
 		end
@@ -98,15 +97,29 @@ feature -- Hanlde pointer events
 		do
 			screen_x := a_screen_x
 			screen_y := a_screen_y
---			feedback.clear_screen
-			notify_outside_pointer_zone (a_screen_x, a_screen_y)
 			from
 				hot_zones.start
 			until
 				hot_zones.after or l_drawed
 			loop
-				l_drawed := hot_zones.item.update_for_pointer_position (Current, a_screen_x, a_screen_y)
+				l_drawed := hot_zones.item.update_for_pointer_position_indicator (Current, a_screen_x, a_screen_y)
 
+				hot_zones.forth
+			end
+
+			debug ("larry")
+				print ("%N%N SD_DOCKER_MEDIATOR on_pointer_motion feedback  ********************")
+			end
+			l_drawed := False
+			from
+				hot_zones.start
+			until
+				hot_zones.after or l_drawed
+			loop
+				l_drawed := hot_zones.item.update_for_pointer_position_feedback (Current, a_screen_x, a_screen_y)
+				debug ("larry")
+					print ("%N SD_DOCKER_MEDIATOR on_pointer_motion feedback  HOT ZONE is: " + hot_zones.item.generator )
+				end
 				hot_zones.forth
 			end
 		end
@@ -233,34 +246,6 @@ feature {NONE} -- Implementation functions
 				if a_zone.type = internal_caller.type then
 					a_source.add_hot_zones (Current, hot_zones)
 				end
-			end
-		end
-
-	notify_outside_pointer_zone (a_screen_x, a_screen_y: INTEGER) is
-			-- Notify all zones in `hot_zones' except `a_zone' has pointer position.
-		local
-			l_hot_zone_in: SD_HOT_ZONE
-		do
-			from
-				hot_zones.start
-			until
-				hot_zones.after or l_hot_zone_in /= Void
-			loop
-				if hot_zones.item.has_x_y (a_screen_x, a_screen_y) then
-					l_hot_zone_in := hot_zones.item
-				end
-				hot_zones.forth
-			end
-
-			from
-				hot_zones.start
-			until
-				hot_zones.after
-			loop
-				if hot_zones.item /= l_hot_zone_in then
-					hot_zones.item.pointer_out
-				end
-				hot_zones.forth
 			end
 		end
 

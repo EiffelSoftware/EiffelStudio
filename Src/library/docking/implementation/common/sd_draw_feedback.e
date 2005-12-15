@@ -6,6 +6,20 @@ indexing
 class
 	SD_FEEDBACK_DRAWER
 
+create
+	make
+
+feature
+	make is
+			-- Creation method
+		local
+
+		do
+			create internal_shared
+			create feedback_rect.make
+			feedback_rect.set_color (internal_shared.focused_color)
+		end
+
 feature -- Basic operations
 
 	draw_pixmap (a_screen_x, a_screen_y: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -138,9 +152,10 @@ feature -- Basic operations
 			screen.draw_segment (a_x_1, a_y_1, a_x_2, a_y_2)
 		end
 
-	clear_screen is
-			-- Maximum amount of bytes the run-time can allocate.
+	clear is
+			-- Clear feedback rectangle.
 		do
+			feedback_rect.clear
 		end
 
 	draw_red_rectangle (left, top, width, height: INTEGER) is
@@ -167,43 +182,18 @@ feature -- Basic operations
 
 	draw_transparency_rectangle (a_left, a_top, a_width, a_height: INTEGER) is
 			-- Draw transparency rectangle.
-		local
-			l_pixmap: EV_PIXMAP
 		do
-			l_pixmap := internal_blue_pixmap
-			l_pixmap.stretch (a_width, a_height)
+			feedback_rect.show
+
+			feedback_rect.set_size (a_width, a_height)
+			feedback_rect.set_position (a_left, a_top)
 
 			debug ("larry")
-				io.put_string ("SD_FEEDBACK_DRAWER: draw_transparency_rectangle " + a_width.out + " " + a_height.out)
+				print ("%NSD_FEEDBACK_DRAWER draw_transparency_rectangle")
 			end
-			screen.set_and_mode
-			screen.draw_pixmap (a_left, a_top, l_pixmap)
 		end
 
-	internal_blue_pixmap: EV_PIXMAP is
-			-- Feedback pixmap when user dragging a SD_ZONE.
-		local
---			l_grid: EV_GRID
---			l_file: FILE_NAME
-		do
-			if internal_blue_pixmap_cell.item = Void then
-				create Result
-				Result.set_with_named_file ("E:\tabbededitor_57dev\Eiffel\Ace\docking_images\blue.png")
---				create l_grid
---				Result.set_foreground_color (l_grid.focused_selection_color)
---				Result.fill_rectangle (0, 0, Result.width, Result.height)
---				create l_file.make_from_string ("temp.png")
---				Result.save_to_named_file (create {EV_PNG_FORMAT}, l_file)
---
---				create Result
---				Result.set_with_named_file ("temp.png")
-				internal_blue_pixmap_cell.put (Result)
-			else
-				Result := internal_blue_pixmap_cell.item
-			end
-		ensure
-			not_void: Result /= Void
-		end
+	feedback_rect: SD_FEEDBACK_RECT
 
 	internal_blue_pixmap_cell: CELL [EV_PIXMAP] is
 			-- Singleton cell of internal blue pixmap
@@ -269,6 +259,10 @@ feature {NONE} -- Implementation
 
 	last_half_tone_pixmap: EV_PIXMAP
 			-- Half tone pixmap last time drawn.
+
+	internal_shared: SD_SHARED
+			-- All singletons.
+
 invariant
 
 

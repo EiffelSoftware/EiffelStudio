@@ -1,5 +1,12 @@
-<document output="studio" title="Minimal">
-	<meta_data/>
+<document title="Minimal">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)</envision_location>
+				<envision_title></envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<image> 
 			<url>minimal.png</url> 
@@ -11,31 +18,41 @@
 			<size>2</size>Compiling
 		</heading>
 		<paragraph> To compile the example: </paragraph>
-		<list ordered="false">
-			<item>Launch EiffelStudio. </item>
-			<item>Select 
-				<bold>Use existing Ace (control file)</bold> and click 
-				<bold>OK</bold>. 
-			</item>
-			<item>Browse to 
-				<italic>$ISE_EIFFEL\examples\wel\minimal\</italic>. 
-			</item>
-			<item>Choose 
-				<italic>Ace.ace</italic>
-			</item>
-			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
-			<item>Click 
-				<bold>OK</bold>.
-			</item>
-		</list>
+			<output output="envision">
+				<list ordered="true">
+					<item>Start Visual Studio .NET</item>
+					<item>Choose Open Project from the File menu.</item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\minimal\</italic> and select <italic>minimal_demo.eifp</italic></item>
+					<item>Clicking open loads the selected project</item>
+				</list>
+			</output>
+			<output output="studio">
+				<list ordered="false">
+					<item>Launch EiffelStudio. </item>
+					<item>Select 
+						<bold>Use existing Ace (control file)</bold> and click 
+						<bold>OK</bold>. 
+					</item>
+					<item>Browse to 
+						<italic>$ISE_EIFFEL\examples\wel\minimal\</italic>. 
+					</item>
+					<item>Choose 
+						<italic>Ace.ace</italic>
+					</item>
+					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+					<item>Click 
+						<bold>OK</bold>.
+					</item>
+				</list>
+			</output>
 		<heading>
 			<size>2</size>Running
 		</heading> After launching the program, a window will be displayed as illustrated above. There is no other functionality, but clicking on the close icon (Cross in top right hand corner), will close the window. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading><class_name>MINIMAL_DEMO</class_name> inherits <link><url>../../reference/support/wel_application_chart.xml</url><label>WEL_APPLICATION</label></link> and redefines <feature_name>main_window</feature_name> in order to display a <link><url>../../reference/windows/wel_frame_window_chart.xml</url><label>WEL_FRAME_WINDOW</label></link>. 
+		</heading><code><class_name>MINIMAL_DEMO</class_name></code> inherits <link><url>../../reference/support/wel_application_chart.xml</url><label>WEL_APPLICATION</label></link> and redefines <code><feature_name>main_window</feature_name></code> in order to display a <link><url>../../reference/windows/wel_frame_window_chart.xml</url><label>WEL_FRAME_WINDOW</label></link>. 
 		<paragraph>This sample contains only one class: 
-			<list ordered="false"><item><class_name>MINIMAL_DEMO</class_name></item></list>
+			<list ordered="false"><item><code><class_name>MINIMAL_DEMO</class_name></code></item></list>
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>

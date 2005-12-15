@@ -2,7 +2,8 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples/Eiffel Class Library Samples/WEL Samples/Tutorial</envision_location>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)\Tutorial</envision_location>
+				<envision_title></envision_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -27,7 +28,7 @@
 				<list ordered="true">
 					<item>Start Visual Studio .NET</item>
 					<item>Choose Open Project from the File menu.</item>
-					<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\wel\step5\</italic> and select <italic>tutorial_step5.eifp</italic></item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\step5\</italic> and select <italic>tutorial_step5.eifp</italic></item>
 					<item>Clicking open loads the selected project</item>
 				</list>
 			</output>
@@ -53,13 +54,13 @@
 			<link>
 				<url>/libraries/wel/samples/tutorial/step4/index.xml</url>
 				<label>step 4</label>
-			</link> by adding a <link><url>../../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link>. The class <class_name>LINE_THICKNESS_DIALOG</class_name> inherits <link><url>../../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> and uses a WEL_SINGLE_LINE_EDIT to input the desired line width. 
+			</link> by adding a <link><url>../../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link>. The class <code><class_name>LINE_THICKNESS_DIALOG</class_name></code> inherits <link><url>../../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> and uses a WEL_SINGLE_LINE_EDIT to input the desired line width. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item><class_name>TUTORIAL_STEP5</class_name></item>
-					<item><class_name>MAIN_WINDOW</class_name></item>
-					<item><class_name>LINE_THICKNESS_DIALOG</class_name></item>
-					<item><class_name>APPLICATION_IDS</class_name></item>
+					<item><code><class_name>TUTORIAL_STEP5</class_name></code></item>
+					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+					<item><code><class_name>LINE_THICKNESS_DIALOG</class_name></code></item>
+					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
 				</list>
 			</paragraph>
 		</paragraph>

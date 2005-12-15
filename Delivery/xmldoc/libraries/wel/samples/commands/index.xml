@@ -1,5 +1,12 @@
-<document output="studio" title="Commands">
-	<meta_data/>
+<document title="Commands">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)</envision_location>
+				<envision_title></envision_title>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<image> 
 			<url>commands.png</url> 
@@ -11,40 +18,50 @@
 			<size>2</size>Compiling
 		</heading>
 		<paragraph> To compile the example: </paragraph>
-		<list ordered="false">
-			<item>Launch EiffelStudio. </item>
-			<item>Select 
-				<bold>Use existing Ace (control file)</bold> and click 
-				<bold>OK</bold>. 
-			</item>
-			<item>Browse to 
-				<italic>$ISE_EIFFEL\examples\wel\commands\</italic>. 
-			</item>
-			<item>Choose 
-				<italic>Ace.ace</italic>
-			</item>
-			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons              (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
-			<item>Click 
-				<bold>OK</bold>.
-			</item>
-		</list>
+			<output output="envision">
+				<list ordered="true">
+					<item>Start Visual Studio .NET</item>
+					<item>Choose Open Project from the File menu.</item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\commands\</italic> and select <italic>commands_demo.eifp</italic></item>
+					<item>Clicking open loads the selected project</item>
+				</list>
+			</output>
+			<output output="studio">
+				<list ordered="false">
+					<item>Launch EiffelStudio. </item>
+					<item>Select 
+						<bold>Use existing Ace (control file)</bold> and click 
+						<bold>OK</bold>. 
+					</item>
+					<item>Browse to 
+						<italic>$ISE_EIFFEL\examples\wel\commands\</italic>. 
+					</item>
+					<item>Choose 
+						<italic>Ace.ace</italic>
+					</item>
+					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.              If you select another directory than the default one, please copy icons              (*.ico) and resource files (*.rc) from the              default directory (the one containing the Ace file) to the new              one. </item>
+					<item>Click 
+						<bold>OK</bold>.
+					</item>
+				</list>
+			</output>
 		<heading>
 			<size>2</size>Running
 		</heading> After launching the program, you will see a window displayed with a similar appearance to the one illustrated above. Please follow the instructions displayed in the window. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading><class_name>MAIN_DIALOG</class_name> inherits <link><url>../../reference/windows/wel_main_dialog_chart.xml</url><label>WEL_MAIN_DIALOG</label></link> which provides the feature put_command, used to associate a <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link> to a Windows message received by the window. A <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link> contains a deferred feature, execute which is executed when the command is fired. <class_name>SHOW_COMMAND_INFORMATION</class_name>, <class_name>SHOW_MOUSE_BUTTON_INFORMATION</class_name> and <class_name>SHOW_MOVE_INFORMATION</class_name> all inherit <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link>. 
+		</heading><code><class_name>MAIN_DIALOG</class_name></code> inherits <link><url>../../reference/windows/wel_main_dialog_chart.xml</url><label>WEL_MAIN_DIALOG</label></link> which provides the feature put_command, used to associate a <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link> to a Windows message received by the window. A <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link> contains a deferred feature, execute which is executed when the command is fired. <code><class_name>SHOW_COMMAND_INFORMATION</class_name></code>, <code><class_name>SHOW_MOUSE_BUTTON_INFORMATION</class_name></code> and <code><class_name>SHOW_MOVE_INFORMATION</class_name></code> all inherit <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link>. 
 		<note>
-			<bold>Note </bold>execute has an argument of type <class_name>ANY</class_name>  which is used to pass any additional information required.        
+			<bold>Note </bold>execute has an argument of type <code><class_name>ANY</class_name></code>  which is used to pass any additional information required.        
 		</note>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><class_name>APPLICATION_IDS</class_name></item>
-				<item><class_name>COMMANDS_DEMO</class_name></item>
-				<item><class_name>MAIN_DIALOG</class_name></item>
-				<item><class_name>SHOW_COMMAND_INFORMATION</class_name></item>
-				<item><class_name>SHOW_MOUSE_BUTTON_INFORMATION</class_name></item>
-				<item><class_name>SHOW_MOVE_INFORMATION</class_name></item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>COMMANDS_DEMO</class_name></code></item>
+				<item><code><class_name>MAIN_DIALOG</class_name></code></item>
+				<item><code><class_name>SHOW_COMMAND_INFORMATION</class_name></code></item>
+				<item><code><class_name>SHOW_MOUSE_BUTTON_INFORMATION</class_name></code></item>
+				<item><code><class_name>SHOW_MOVE_INFORMATION</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

@@ -1,11 +1,4 @@
-<document output="studio" title="WEL Introduction">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_location>Class Libraries\WEL</envision_location>
-			</toc>
-		</help>
-	</meta_data>
+<document title="WEL Introduction">
 	<paragraph>
 		<paragraph>    WEL is an encapsulation of the Win32 Application Programming  Interface (API), and provides users with a powerful means of creating  Win32 Applications. </paragraph>
 		<list ordered="false">

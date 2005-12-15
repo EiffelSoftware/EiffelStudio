@@ -2,7 +2,8 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples/Eiffel Class Library Samples/WEL Samples/Tutorial</envision_location>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)\Tutorial</envision_location>
+				<envision_title></envision_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -22,7 +23,7 @@
 				<list ordered="true">
 					<item>Start Visual Studio .NET</item>
 					<item>Choose Open Project from the File menu.</item>
-					<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\wel\step2\</italic> and select <italic>tutorial_step2.eifp</italic></item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\step2\</italic> and select <italic>tutorial_step2.eifp</italic></item>
 					<item>Clicking open loads the selected project</item>
 				</list>
 			</output>
@@ -50,11 +51,11 @@
 				<label>Common message hooks</label>
 			</link> for more information. In this example, on_left_button_down has been redefined from <link><url>../../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> to display a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> containing notification of the event occurring. 
 		</paragraph>
-		<paragraph>If you look at closeable from <class_name>MAIN_WINDOW</class_name>, you will see that it has been redefined to display a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> and the result from this message box is used to generate the return value of closeable. If this Result is True, the window will be closed. 
+		<paragraph>If you look at closeable from <code><class_name>MAIN_WINDOW</class_name></code>, you will see that it has been redefined to display a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> and the result from this message box is used to generate the return value of closeable. If this Result is True, the window will be closed. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item><class_name>TUTORIAL_STEP2</class_name></item>
-					<item><class_name>MAIN_WINDOW</class_name></item>
+					<item><code><class_name>TUTORIAL_STEP2</class_name></code></item>
+					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
 				</list>
 			</paragraph>
 			<seealso>

@@ -2,7 +2,8 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples/Eiffel Class Library Samples/WEL Samples</envision_location>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)</envision_location>
+				<envision_pseudo_name>ZZ</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>

@@ -2,7 +2,8 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples/Eiffel Class Library Samples/WEL Samples/Tutorial</envision_location>
+				<envision_location>EiffelEnvision\Examples\Windows Eiffel Library (WEL)\Tutorial</envision_location>
+				<envision_title></envision_title>
 			</toc>
 		</help>
 	</meta_data>
@@ -27,7 +28,7 @@
 				<list ordered="true">
 					<item>Start Visual Studio .NET</item>
 					<item>Choose Open Project from the File menu.</item>
-					<item>Navigate to <italic>&lt;Eiffel_ENViSioN!_installation_path&gt;\compiler\examples\(.net version)\wel\step7\</italic> and select <italic>tutorial_step7.eifp</italic></item>
+					<item>Navigate to <italic>&lt;EiffelEnvision_installation_path&gt;\envision\examples\wel\step7\</italic> and select <italic>tutorial_step7.eifp</italic></item>
 					<item>Clicking open loads the selected project</item>
 				</list>
 			</output>
@@ -49,15 +50,15 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>During the creation of <class_name>MAIN_WINDOW</class_name>, the menu is assigned to the window and <feature_name>on_menu_command</feature_name> is redefined to allow processing of the menu selections. </paragraph>
+		<paragraph>During the creation of <code><class_name>MAIN_WINDOW</class_name></code>, the menu is assigned to the window and <code><feature_name>on_menu_command</feature_name></code> is redefined to allow processing of the menu selections. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><class_name>TUTORIAL_STEP7</class_name></item>
-				<item><class_name>MAIN_WINDOW</class_name></item>
-				<item><class_name>LINE_THICKNESS_DIALOG_CHART</class_name></item>
-				<item><class_name>APPLICATION_IDS</class_name></item>
-				<item><class_name>POINT</class_name></item>
-				<item><class_name>LINE</class_name></item>
+				<item><code><class_name>TUTORIAL_STEP7</class_name></code></item>
+				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><code><class_name>LINE_THICKNESS_DIALOG_CHART</class_name></code></item>
+				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+				<item><code><class_name>POINT</class_name></code></item>
+				<item><code><class_name>LINE</class_name></code></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

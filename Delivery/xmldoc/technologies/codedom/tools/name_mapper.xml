@@ -1,4 +1,4 @@
-<document output="codedom" title="Name Mapper" output="studio">
+<document output="codedom" title="Name Mapper">
 	<meta_data/>
 	<paragraph>
 		The Name Mapper utility allows retrieving the Eiffel identifier corresponding to a .NET type name or 

@@ -15,10 +15,10 @@ inherit
 
 feature -- Access
 
-	match: ARRAYED_LIST [DIFF_LINE_MATCH]
+	match: LINKED_LIST [DIFF_LINE_MATCH]
 			-- The indices of the elements that match in source and destination.
 
-	hunks: ARRAYED_LIST [ARRAYED_LIST [DIFF_LINE]]
+	hunks: LINKED_LIST [LIST [DIFF_LINE]]
 			-- The list of hunks.
 
 feature -- Status report
@@ -43,12 +43,12 @@ feature -- Change elements
 			-- Compute the diff between `src' and `dst'
 		local
 			i, si, di: INTEGER
-			hunk: ARRAYED_LIST [DIFF_LINE]
+			hunk: LINKED_LIST [DIFF_LINE]
 		do
 			compute_lcs
-			create match.make (0)
-			create hunks.make (0)
-			create hunk.make (0)
+			create match.make
+			create hunks.make
+			create hunk.make
 
 			from
 				si := 0
@@ -70,7 +70,7 @@ feature -- Change elements
 					match.extend (create {DIFF_LINE_MATCH}.make (si, di))
 					if hunk.count > 0 then
 						hunks.extend (hunk)
-						create hunk.make (0)
+						create hunk.make
 					end
 					i := i + 1
 					di := di + 1
@@ -123,9 +123,9 @@ feature {NONE} -- Implementation
 			values_set: values_set
 		local
 			start_src, end_src, start_dst, end_dst: INTEGER
-			hash_dst: HASH_TABLE [ARRAYED_LIST [INTEGER], G]
+			hash_dst: HASH_TABLE [LINKED_LIST [INTEGER], G]
 			i, h, m, si, di: INTEGER
-			matches: ARRAYED_LIST [INTEGER]
+			matches: LINKED_LIST [INTEGER]
 			links: ARRAYED_LIST [DIFF_INDEX_LINK]
 			link: DIFF_INDEX_LINK
 			work: ARRAYED_LIST [INTEGER]
@@ -177,14 +177,14 @@ feature {NONE} -- Implementation
 				if hash_dst.has (dst[i]) then
 					hash_dst.item (dst[i]).extend (i)
 				else
-					create matches.make (1)
+					create matches.make
 					matches.extend (i)
 					hash_dst.put (matches, dst[i])
 				end
 				i := i + 1
 			end
 
-			create work.make (0)
+			create work.make (100)
 			create links.make (100)
 
 			-- loop trough the source

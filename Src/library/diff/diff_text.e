@@ -281,7 +281,6 @@ feature {NONE} -- Implementation
 			Result := '%N'
 		end
 
-
 	unified_header: STRING
 			-- The header for the unified diff.
 end

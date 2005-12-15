@@ -1,8 +1,8 @@
 <project>
 	<project_name>docs</project_name>
-	<root_directory>E:/delivery/xmldoc</root_directory>
-	<schema>E:/tools/doc_builder/resources/xml/schema/document.xsd</schema>
-	<html_css>E:/delivery/xmldoc/default.css</html_css>
+	<root_directory>E:/development56/delivery/xmldoc</root_directory>
+	<schema>E:/development56/tools/doc_builder/resources/xml/schema/document.xsd</schema>
+	<html_css>E:/development56/delivery/xmldoc/default.css</html_css>
 	<header_override>True</header_override>
 	<use_header_from_file>False</use_header_from_file>
 	<footer_override>True</footer_override>
@@ -26,26 +26,25 @@
 		<tag>studio</tag>
 	</filter>
 	<filter>
-		<filter_description>EiffelStudio</filter_description>
-		<filter_highlight_color_red>0.701961</filter_highlight_color_red>
-		<filter_highlight_color_green>0.85098</filter_highlight_color_green>
-		<filter_highlight_color_blue>1</filter_highlight_color_blue>
-		<filter_highlight_on>True</filter_highlight_on>
-		<filter_primary_flag>studio</filter_primary_flag>
+		<filter_description>EiffelStudio for Windows</filter_description>
+		<filter_highlight_color_red>0.937255</filter_highlight_color_red>
+		<filter_highlight_color_green>0.937255</filter_highlight_color_green>
+		<filter_highlight_color_blue>0.937255</filter_highlight_color_blue>
+		<filter_highlight_on>False</filter_highlight_on>
+		<filter_primary_flag>studio_win</filter_primary_flag>
 		<tag>all</tag>
-		<tag>studio</tag>
 		<tag>studio_win</tag>
-		<tag>studio_lin</tag>
-		<tag>studio_mac</tag>
+		<tag>studio</tag>
 	</filter>
 	<filter>
-		<filter_description>EiffelEnvision</filter_description>
+		<filter_description>ENViSioN!</filter_description>
 		<filter_highlight_color_red>1</filter_highlight_color_red>
 		<filter_highlight_color_green>0.811765</filter_highlight_color_green>
 		<filter_highlight_color_blue>0.623529</filter_highlight_color_blue>
 		<filter_highlight_on>False</filter_highlight_on>
 		<filter_primary_flag>envision</filter_primary_flag>
 		<tag>all</tag>
+		<tag>compliance_checker</tag>
 		<tag>envision</tag>
 	</filter>
 	<filter>
@@ -60,15 +59,17 @@
 		<tag>studio</tag>
 	</filter>
 	<filter>
-		<filter_description>EiffelStudio for Windows</filter_description>
-		<filter_highlight_color_red>0.937255</filter_highlight_color_red>
-		<filter_highlight_color_green>0.937255</filter_highlight_color_green>
-		<filter_highlight_color_blue>0.937255</filter_highlight_color_blue>
-		<filter_highlight_on>False</filter_highlight_on>
-		<filter_primary_flag>studio_win</filter_primary_flag>
+		<filter_description>EiffelStudio</filter_description>
+		<filter_highlight_color_red>0.701961</filter_highlight_color_red>
+		<filter_highlight_color_green>0.85098</filter_highlight_color_green>
+		<filter_highlight_color_blue>1</filter_highlight_color_blue>
+		<filter_highlight_on>True</filter_highlight_on>
+		<filter_primary_flag>studio</filter_primary_flag>
 		<tag>all</tag>
-		<tag>studio_win</tag>
 		<tag>studio</tag>
+		<tag>studio_win</tag>
+		<tag>studio_lin</tag>
+		<tag>studio_mac</tag>
 	</filter>
 	<shortcut>
 		<shortcut_key>75</shortcut_key>
@@ -88,7 +89,7 @@
 	</shortcut>
 	<shortcut>
 		<shortcut_key>82</shortcut_key>
-		<shortcut_value>&lt;output output=""&gt;[tag]&lt;/output&gt;</shortcut_value>
+		<shortcut_value>&lt;output output=&quot;&quot;&gt;[tag]&lt;/output&gt;</shortcut_value>
 	</shortcut>
 	<shortcut>
 		<shortcut_key>83</shortcut_key>

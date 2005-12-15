@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 			non_void_options: a_options /= Void
 		local
 			l_temp_dir, l_root_class, l_system_name, l_resource_file,
-				l_path, l_assembly_file_name, l_creation_routine: STRING
+				l_path, l_assembly_file_name, l_creation_routine, l_precompile_file: STRING
 			l_res: DIRECTORY_INFO
 			l_retried: BOOLEAN
 			l_assemblies: SYSTEM_DLL_STRING_COLLECTION
@@ -376,14 +376,20 @@ feature {NONE} -- Implementation
 				l_ace_file.set_target_clr_version (Clr_version)
 				
 				-- Setup Precompile
-				if precompile_ace_file /= Void then
-					create l_precompiler.make (precompile_ace_file, precompile_cache)
+				l_precompile_file := Compilation_context.precompile_file
+					-- Was there a snippet defined precompile file?
+				if l_precompile_file = Void then
+					l_precompile_file := precompile_ace_file
+						-- Otherwise use configuration precompile file 
+				end
+				if l_precompile_file /= Void then
+					create l_precompiler.make (l_precompile_file, precompile_cache)
 					l_precompiler.precompile
 					if l_precompiler.successful then
 						l_ace_file.set_precompile (l_precompiler.precompile_path)
 						precompile_files := l_precompiler.precompile_files
 					else
-						Event_manager.raise_event ({CODE_EVENTS_IDS}.Precompile_failed, [precompile_ace_file, precompile_cache])
+						Event_manager.raise_event ({CODE_EVENTS_IDS}.Precompile_failed, [l_precompile_file, precompile_cache])
 					end
 				end
 

@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_zone: SD_DOCKING_ZONE; a_rect: EV_RECTANGLE) is
+	make (a_docker_mediator: SD_DOCKER_MEDIATOR; a_zone: SD_DOCKING_ZONE; a_rect: EV_RECTANGLE) is
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
@@ -26,6 +26,10 @@ feature {NONE} -- Initlization
 			create internal_shared
 			internal_zone := a_zone
 			set_rectangle (a_rect)
+			internal_docker_mediator := a_docker_mediator
+		ensure
+			set: internal_zone = a_zone
+			set: internal_docker_mediator = a_docker_mediator
 		end
 
 feature -- Redefine
@@ -51,11 +55,10 @@ feature -- Redefine
 			end
 		end
 
-	update_for_pointer_position_feedback (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		do
 			if internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
-
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_left)
 				Result := True
 			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
@@ -68,20 +71,40 @@ feature -- Redefine
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_bottom)
 				Result := True
 			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
-
 				update_feedback (a_screen_x, a_screen_y, internal_rectangle_center)
 				Result := True
 			end
 		end
 
-	update_for_pointer_position_indicator (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		do
 			if internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
-
 				draw_drag_window_indicator
-
 				Result := True
+			end
+		end
+
+	update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+			-- Redefine
+		do
+			if not internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
+				clear_indicator
+			elseif internal_rectangle.has_x_y (a_screen_x, a_screen_y)  then
+				need_clear := True
+			end
+		end
+
+	clear_indicator is
+			-- Clear indicators.
+		do
+			if need_clear then
+				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_top)
+				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_bottom)
+				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_left)
+				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_right)
+				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_center)
+				need_clear := False
 			end
 		end
 
@@ -100,31 +123,18 @@ feature {NONE} -- Implementation functions.
 			l_shared := internal_shared
 			l_icons := l_shared.icons
 
-			if a_rect.has_x_y (a_screen_x, a_screen_y) then
-				if a_rect = internal_rectangle_left then
-
-					internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
-
-					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_left_lighten)
-				elseif a_rect = internal_rectangle_right then
-
-					internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.right - (internal_rectangle.width * 0.5).ceiling, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
-
-					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_right_lighten)
-				elseif a_rect = internal_rectangle_top then
-
-					internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
-
-					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_up_lighten)
-				elseif a_rect = internal_rectangle_bottom then
-					internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
-
-					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_bottom_lighten)
-				elseif a_rect = internal_rectangle_center then
-
-					draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors_center_lighten)
-				end
+			if a_rect = internal_rectangle_left then
+				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
+			elseif a_rect = internal_rectangle_right then
+				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.right - (internal_rectangle.width * 0.5).ceiling, internal_rectangle.top, (internal_rectangle.width* 0.5).ceiling, internal_rectangle.height )
+			elseif a_rect = internal_rectangle_top then
+				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.top, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
+			elseif a_rect = internal_rectangle_bottom then
+				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
+			elseif a_rect = internal_rectangle_center then
+				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height)
 			end
+
 		end
 
 	draw_drag_window_indicator is
@@ -184,6 +194,9 @@ feature {NONE} -- Implementation functions.
 
 feature {NONE} -- Implementation attributes.
 
+	internal_docker_mediator: SD_DOCKER_MEDIATOR
+			-- Docker mediator which Current is managed by.
+
 	internal_zone: SD_DOCKING_ZONE
 			-- Dokcing zone `Current' belong to.
 
@@ -201,6 +214,7 @@ feature {NONE} -- Implementation attributes.
 
 invariant
 
+	internal_docker_mediator_not_void: internal_docker_mediator /= Void
 	internal_shared_not_void: internal_shared /= Void
 	internal_zone_not_void: internal_zone /= Void
 	internal_rectangle_not_void: internal_rectangle /= Void

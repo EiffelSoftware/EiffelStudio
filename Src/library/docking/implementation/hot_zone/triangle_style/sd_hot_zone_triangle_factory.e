@@ -43,7 +43,7 @@ feature {NONE}-- Implementation
 		require
 			a_zone_not_void: a_zone /= Void
 		do
-			create Result.make (a_zone, create {EV_RECTANGLE}.make (a_zone.screen_x, a_zone.screen_y, a_zone.width, a_zone.height))
+			create Result.make (docker_mediator, a_zone, create {EV_RECTANGLE}.make (a_zone.screen_x, a_zone.screen_y, a_zone.width, a_zone.height))
 		ensure
 			not_void: Result /= Void
 		end
@@ -53,7 +53,7 @@ feature {NONE}-- Implementation
 		require
 			a_zone_not_void: a_zone /= Void
 		do
-			create Result.make (a_zone, create {EV_RECTANGLE}.make (a_zone.screen_x, a_zone.screen_y, a_zone.width, a_zone.height))
+			create Result.make (a_zone, create {EV_RECTANGLE}.make (a_zone.screen_x, a_zone.screen_y, a_zone.width, a_zone.height), docker_mediator)
 		ensure
 			not_void: Result /= Void
 		end

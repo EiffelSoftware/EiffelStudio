@@ -93,7 +93,7 @@ feature -- Access
 		once
 			create l_grid
 			Result := l_grid.non_focused_selection_color
-			
+
 		ensure
 			not_void: Result /= Void
 		end
@@ -108,11 +108,20 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
-	
---	border_color: EV_COLOR is
+
+	border_color: EV_COLOR is
 			-- Border color, used by SD_TAB_STUB, SD_NOTEBOOK_TAB...
---		local
-			
+		local
+			l_sys_color: SD_SYSTEM_COLOR
+		once
+			create l_sys_color
+			Result := l_sys_color.mdi_back_ground_color
+		ensure
+			not_void: Result /= Void
+		end
+
+	border_width: INTEGER is 1
+			-- Border widht, used by SD_TITLE_BARs, SD_TAB_STUBs, SD_NOTEBOOK_TABs....
 
 feature {SD_DOCKING_MANAGER}
 
@@ -153,7 +162,7 @@ feature -- Constants
 	Auto_hide_panel_lightness: REAL is 0.5
 			-- Auto hide panel lightness value. Used by SD_AUTO_HIDE_PANEL.			
 
-	Auto_hide_panel_size: INTEGER is 18
+	Auto_hide_panel_size: INTEGER is 20
 			-- Width of auto hide panel.
 
 	Auto_hide_panel_gap_size: INTEGER is 4
@@ -171,7 +180,7 @@ feature -- Constants
 	Type_editor: INTEGER is 2
 			-- Editor hot zones which editor zones have.
 
-	Title_bar_height: INTEGER is 18
+	Title_bar_height: INTEGER is 16
 			-- Size of zone's title bar.
 
 	Menu_size: INTEGER is 23

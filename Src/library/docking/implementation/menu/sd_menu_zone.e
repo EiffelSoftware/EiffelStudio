@@ -10,7 +10,8 @@ inherit
 	SD_HOR_VER_BOX
 		rename
 			extend as extend_hor_ver_box,
-			change_direction as change_direction_hor_ver_box
+			change_direction as change_direction_hor_ver_box,
+			is_vertical as is_vertical_hor_ver_box
 		end
 
 create
@@ -21,7 +22,7 @@ feature {NONE} -- Initialization
 	make (a_vertical: BOOLEAN; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method.
 		require
-			a_docking_manager_not_void: a_docking_manager /= Void		
+			a_docking_manager_not_void: a_docking_manager /= Void
 		do
 			create internal_shared
 			internal_docking_manager := a_docking_manager
@@ -331,7 +332,7 @@ feature {NONE} -- Implmentation
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
-			
+
 feature {NONE} -- Drawing.
 
 	init_a_dot is

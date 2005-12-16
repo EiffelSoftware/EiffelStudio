@@ -20,7 +20,6 @@ feature {NONE} -- Initlization
 	make is
 			-- Creation method.
 		local
-			frame: EV_FRAME
 			main_box, vertical_box: EV_VERTICAL_BOX
 			minimum_size_cell: EV_CELL
 			l_zero_size_container: EV_HORIZONTAL_BOX
@@ -37,15 +36,18 @@ feature {NONE} -- Initlization
 			extend (minimum_size_cell)
 			disable_item_expand (minimum_size_cell)
 			create container
-			create frame
-			frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
-			main_box.extend (frame)
+
+			create internal_border.make
+			internal_border.set_border_width (internal_shared.border_width)
+			internal_border.set_border_color (internal_shared.border_color)
+			internal_border.set_border_style ({SD_DOCKING_MANAGER}.dock_bottom)
+
+			main_box.extend (internal_border)
+
 			create vertical_box
-			frame.extend (vertical_box)
-			create frame
-			frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_raised)
-			vertical_box.extend (frame)
-			frame.extend (container)
+			internal_border.extend (vertical_box)
+
+			vertical_box.extend (container)
 
 			create l_zero_size_container
 			container.extend (l_zero_size_container)
@@ -244,7 +246,10 @@ feature -- Access
 				create l_text_color.make_with_rgb (1, 1, 1)
 			end
 			internal_drawing_area.set_foreground_color (l_text_color)
+			internal_border.set_border_color (hightlight_color)
+			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, False)
 			on_expose
+
 		ensure
 			is_focus_color_enable_set: is_focus_color_enable
 		end
@@ -262,7 +267,8 @@ feature -- Access
 				create l_text_color.make_with_rgb (1, 1, 1)
 			end
 			internal_drawing_area.set_foreground_color (l_text_color)
-
+			internal_border.set_border_color (internal_shared.border_color)
+			internal_border.set_show_border ({SD_DOCKING_MANAGER}.dock_bottom, True)
 			on_expose
 		ensure
 			is_focus_color_enable_set: not is_focus_color_enable
@@ -405,6 +411,9 @@ feature {NONE} -- Agents
 		end
 
 feature {NONE} -- Implementation
+
+	internal_border: SD_CELL_WITH_BORDER
+			-- Internal border
 
 	internal_highlight_area_before, internal_highlight_area_after: EV_DRAWING_AREA
 			-- Hightlight area at beginning and end.

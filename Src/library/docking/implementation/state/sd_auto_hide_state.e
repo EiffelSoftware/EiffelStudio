@@ -40,11 +40,9 @@ feature {NONE} -- Initlization
 				width_height := (internal_docking_manager.fixed_area.height * internal_shared.default_docking_height_rate).ceiling
 			end
 			auto_hide_panel := internal_docking_manager.query.auto_hide_panel (a_direction)
-			if direction = {SD_DOCKING_MANAGER}.dock_left or direction = {SD_DOCKING_MANAGER}.dock_right then
-				create internal_tab_stub.make (internal_content, True)
-			elseif direction = {SD_DOCKING_MANAGER}.dock_top or direction = {SD_DOCKING_MANAGER}.dock_bottom then
-				create internal_tab_stub.make (internal_content, False)
-			end
+
+			create internal_tab_stub.make (internal_content, a_direction)
+	
 			debug ("larry")
 				io.put_string ("%N ************************** SD_AUTO_HIDE_STATE: insert tab stubs.")
 			end

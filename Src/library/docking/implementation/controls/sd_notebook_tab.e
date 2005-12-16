@@ -9,9 +9,9 @@ class
 inherit
 	EV_HORIZONTAL_BOX
 		redefine
-			destroy	
+			destroy
 		end
-		
+
 create
 	make
 
@@ -52,13 +52,13 @@ feature {NONE}  -- Initlization
 			create drag_actions
 
 			init_actions
-			
+
 			create l_env
 			golbal_pointer_release_action := agent on_pointer_release
 			l_env.application.pointer_button_release_actions.extend (golbal_pointer_release_action)
-			
+
 		end
-		
+
 	init_actions is
 			-- Initialize actions.
 		do
@@ -73,11 +73,11 @@ feature {NONE}  -- Initlization
 			internal_tail_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
 			internal_tail_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_tail_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
-			
+
 		end
 
 feature -- Command
-	
+
 	destroy is
 			-- Redefine.
 		local
@@ -87,7 +87,7 @@ feature -- Command
 			create l_env
 			l_env.application.pointer_button_release_actions.prune_all (golbal_pointer_release_action)
 		end
-	
+
 	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE) is
 			-- Set drop actions to Current.
 		require
@@ -95,10 +95,10 @@ feature -- Command
 		do
 			internal_pixmap_drawing_area.drop_actions.wipe_out
 			internal_pixmap_drawing_area.drop_actions.append (a_actions)
-			
+
 			internal_text_drawing_area.drop_actions.wipe_out
 			internal_text_drawing_area.drop_actions.append (a_actions)
-			
+
 			internal_tail_drawing_area.drop_actions.wipe_out
 			internal_tail_drawing_area.drop_actions.append (a_actions)
 		ensure
@@ -106,9 +106,9 @@ feature -- Command
 			set: internal_text_drawing_area.drop_actions.is_equal (a_actions)
 			set: internal_tail_drawing_area.drop_actions.is_equal (a_actions)
 		end
-		
+
 feature -- Properties
-	
+
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Select actions.
 
@@ -141,7 +141,7 @@ feature -- Properties
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		do
-			pixmap := a_pixmap 
+			pixmap := a_pixmap
 			internal_pixmap_drawing_area.set_minimum_width (a_pixmap.width)
 			on_expose
 		ensure
@@ -222,7 +222,7 @@ feature {NONE}  -- Implementation
 		do
 			pointer_double_press_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 		end
-		
+
 	on_selected is
 			-- Handle select actions.
 		do
@@ -246,7 +246,7 @@ feature {NONE}  -- Implementation
 				create l_helper
 				internal_tail_drawing_area.set_background_color (internal_shared.non_focused_color)
 				l_helper.draw_color_change_gradually (internal_tail_drawing_area, internal_shared.focused_color)
-			end			
+			end
 		end
 
 	internal_pixmap_drawing_area: EV_DRAWING_AREA
@@ -260,7 +260,13 @@ feature {NONE}  -- Implementation
 
 	golbal_pointer_release_action: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
 			-- Application level pointer release actions.
-			
+
+	internal_horizontal_box: EV_HORIZONTAL_BOX
+			-- Horizontal box which contain `internal_pixmap_drawing
+
+	internal_border: SD_CELL_WITH_BORDER
+			-- Border.
+
 	internal_shared: SD_SHARED
 			-- All singletons.
 
@@ -273,7 +279,7 @@ invariant
 	internal_pixmap_drawing_area_not_void: internal_pixmap_drawing_area /= Void
 	internal_text_drawing_area_not_void: internal_text_drawing_area /= Void
 	internal_tail_drawing_area_not_void: internal_tail_drawing_area /= Void
-	
+
 	golbal_pointer_release_action_not_void: golbal_pointer_release_action /= Void
 
 end

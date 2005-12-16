@@ -86,7 +86,8 @@ MKDIR studio
 MKDIR precomp
 CD precomp
 REM in "delivery\compiler\precomp"
-COPY ..\..\..\checkout\precomp_delivery\spec\dotnet\base\ace.ace .
+COPY ..\..\..\files\ace10.ace .
+COPY ..\..\..\files\ace11.ace .
 CD ..\studio
 REM in "delivery\compiler\studio"
 MKDIR "help\errors"

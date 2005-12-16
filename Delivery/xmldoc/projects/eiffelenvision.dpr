@@ -26,15 +26,17 @@
 		<tag>studio</tag>
 	</filter>
 	<filter>
-		<filter_description>EiffelStudio for Windows</filter_description>
-		<filter_highlight_color_red>0.937255</filter_highlight_color_red>
-		<filter_highlight_color_green>0.937255</filter_highlight_color_green>
-		<filter_highlight_color_blue>0.937255</filter_highlight_color_blue>
-		<filter_highlight_on>False</filter_highlight_on>
-		<filter_primary_flag>studio_win</filter_primary_flag>
+		<filter_description>EiffelStudio</filter_description>
+		<filter_highlight_color_red>0.701961</filter_highlight_color_red>
+		<filter_highlight_color_green>0.85098</filter_highlight_color_green>
+		<filter_highlight_color_blue>1</filter_highlight_color_blue>
+		<filter_highlight_on>True</filter_highlight_on>
+		<filter_primary_flag>studio</filter_primary_flag>
 		<tag>all</tag>
-		<tag>studio_win</tag>
 		<tag>studio</tag>
+		<tag>studio_win</tag>
+		<tag>studio_lin</tag>
+		<tag>studio_mac</tag>
 	</filter>
 	<filter>
 		<filter_description>ENViSioN!</filter_description>
@@ -59,17 +61,15 @@
 		<tag>studio</tag>
 	</filter>
 	<filter>
-		<filter_description>EiffelStudio</filter_description>
-		<filter_highlight_color_red>0.701961</filter_highlight_color_red>
-		<filter_highlight_color_green>0.85098</filter_highlight_color_green>
-		<filter_highlight_color_blue>1</filter_highlight_color_blue>
-		<filter_highlight_on>True</filter_highlight_on>
-		<filter_primary_flag>studio</filter_primary_flag>
+		<filter_description>EiffelStudio for Windows</filter_description>
+		<filter_highlight_color_red>0.937255</filter_highlight_color_red>
+		<filter_highlight_color_green>0.937255</filter_highlight_color_green>
+		<filter_highlight_color_blue>0.937255</filter_highlight_color_blue>
+		<filter_highlight_on>False</filter_highlight_on>
+		<filter_primary_flag>studio_win</filter_primary_flag>
 		<tag>all</tag>
-		<tag>studio</tag>
 		<tag>studio_win</tag>
-		<tag>studio_lin</tag>
-		<tag>studio_mac</tag>
+		<tag>studio</tag>
 	</filter>
 	<shortcut>
 		<shortcut_key>75</shortcut_key>

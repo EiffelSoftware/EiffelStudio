@@ -11,28 +11,36 @@ create
 
 feature -- Initlization
 
-	make (a_caller: like internal_caller; a_docking_manager: SD_DOCKING_MANAGER) is
+	make (a_caller: like caller; a_docking_manager: SD_DOCKING_MANAGER) is
 			-- Creation method
 		require
 			a_caller_not_void: a_caller /= Void
+		local
+			l_screen: SD_SCREEN
 		do
 			create internal_shared
 			internal_docking_manager := a_docking_manager
 			internal_docking_manager.command.recover_normal_state
 			internal_shared.hot_zone_factory.set_docker_mediator (Current)
 			create hot_zones
-			internal_caller := a_caller
+			caller := a_caller
+			create l_screen
+
+			orignal_screen := l_screen.sub_pixmap (create {EV_RECTANGLE}.make (l_screen.virtual_left, l_screen.virtual_top, l_screen.width, l_screen.height))
 		ensure
-			set: internal_caller = a_caller
+			set: caller = a_caller
 			set: internal_docking_manager = a_docking_manager
 		end
 
 feature -- Query
 
+	orignal_screen: EV_PIXMAP
+			-- Orignal screen used for clear indicator.
+
 	content: SD_CONTENT is
 			-- Content which is dragged by user.
 		do
-			Result := internal_caller.content
+			Result := caller.content
 		ensure
 			not_void: Result /= Void
 		end
@@ -42,6 +50,9 @@ feature -- Query
 		do
 			Result := tracing
 		end
+
+	caller: SD_ZONE
+			-- Zone which call this mediator.
 
 feature -- Hanlde pointer events
 
@@ -63,23 +74,27 @@ feature -- Hanlde pointer events
 			l_floating_zone: SD_FLOATING_ZONE
 		do
 			tracing := False
+			clear_all_indicator (a_screen_x, a_screen_y)
+			internal_shared.feedback.clear
+
+
 			from
 				hot_zones.start
 			until
 				hot_zones.after or changed
 			loop
-				changed := hot_zones.item.apply_change (a_screen_x, a_screen_y, internal_caller)
+				changed := hot_zones.item.apply_change (a_screen_x, a_screen_y, caller)
 				hot_zones.forth
 			end
 
-			l_floating_zone ?= internal_caller
+			l_floating_zone ?= caller
 			if not changed and l_floating_zone /= Void then
 				l_floating_zone.set_position (a_screen_x - offset_x, a_screen_y - offset_y)
 				debug ("larry")
 					io.put_string ("%N SD_DOCKER_MEDIATOR not changed and set floating position")
 				end
 			end
-			internal_shared.feedback.clear
+
 		ensure
 			not_tracing: tracing = False
 		end
@@ -102,24 +117,43 @@ feature -- Hanlde pointer events
 			until
 				hot_zones.after or l_drawed
 			loop
-				l_drawed := hot_zones.item.update_for_pointer_position_indicator (Current, a_screen_x, a_screen_y)
-
+				l_drawed := hot_zones.item.update_for_pointer_position_feedback (a_screen_x, a_screen_y)
 				hot_zones.forth
 			end
 
-			debug ("larry")
-				print ("%N%N SD_DOCKER_MEDIATOR on_pointer_motion feedback  ********************")
-			end
-			l_drawed := False
+			on_pointer_motion_for_indicator (a_screen_x, a_screen_y)
+			on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y)
+		end
+
+	on_pointer_motion_for_indicator (a_screen_x, a_screen_y: INTEGER) is
+			--
+		local
+			l_drawed: BOOLEAN
+		do
 			from
 				hot_zones.start
 			until
 				hot_zones.after or l_drawed
 			loop
-				l_drawed := hot_zones.item.update_for_pointer_position_feedback (Current, a_screen_x, a_screen_y)
-				debug ("larry")
-					print ("%N SD_DOCKER_MEDIATOR on_pointer_motion feedback  HOT ZONE is: " + hot_zones.item.generator )
-				end
+				l_drawed := hot_zones.item.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
+
+				hot_zones.forth
+			end
+
+			if not hot_zones.after then
+				l_drawed := hot_zones.last.update_for_pointer_position_indicator (a_screen_x, a_screen_y)
+			end
+		end
+
+	on_pointer_motion_for_clear_indicator (a_screen_x, a_screen_y: INTEGER) is
+			--
+		do
+			from
+				hot_zones.start
+			until
+				hot_zones.after
+			loop
+				hot_zones.item.update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y)
 				hot_zones.forth
 			end
 		end
@@ -134,7 +168,7 @@ feature {SD_HOT_ZONE} -- Hot zone infos.
 		local
 			l_widget: EV_WIDGET
 		do
-			l_widget ?= internal_caller
+			l_widget ?= caller
 			check caller_is_widget: l_widget /= Void end
 			Result := l_widget.width
 		end
@@ -144,18 +178,31 @@ feature {SD_HOT_ZONE} -- Hot zone infos.
 		local
 			l_widget: EV_WIDGET
 		do
-			l_widget ?= internal_caller
+			l_widget ?= caller
 			check caller_is_widget: l_widget /= Void end
 			Result := l_widget.height
 		end
 
 	offset_x: INTEGER
-			-- Offset x of `internal_caller' when user start dragging.
+			-- Offset x of `caller' when user start dragging.
 
 	offset_y: INTEGER
-			-- Offset y of `internal_caller' when user start dragging.
+			-- Offset y of `caller' when user start dragging.
 
 feature {NONE} -- Implementation functions
+
+	clear_all_indicator (a_screen_x, a_screen_y: INTEGER) is
+			-- Clear all indicators.
+		do
+			from
+				hot_zones.start
+			until
+				hot_zones.after
+			loop
+				hot_zones.item.clear_indicator
+				hot_zones.forth
+			end
+		end
 
 	generate_hot_zones is
 			-- Generate all hot zones which allow user to dock.
@@ -167,9 +214,9 @@ feature {NONE} -- Implementation functions
 			create hot_zones
 			generate_hot_zones_imp (l_zone_list)
 			debug ("larry")
-				io.put_string ("%N SD_DOCKER_MEDIATOR hot_zone_main.type." + internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type.out + " internal_caller.type " + internal_caller.type.out)
+				io.put_string ("%N SD_DOCKER_MEDIATOR hot_zone_main.type." + internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type.out + " caller.type " + caller.type.out)
 			end
-			if internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type = internal_caller.type  then
+			if internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager).type = caller.type  then
 				hot_zones.extend (internal_shared.hot_zone_factory.hot_zone_main (internal_docking_manager))
 				debug ("larry")
 					io.put_string ("%N SD_DOCKER_MEDIATOR hot zone main added.")
@@ -188,7 +235,7 @@ feature {NONE} -- Implementation functions
 			l_zones_filted: like a_list
 		do
 			l_zones_filted := a_list.twin
-			l_floating_zone ?= internal_caller
+			l_floating_zone ?= caller
 			if l_floating_zone /= Void then
 				from
 					a_list.start
@@ -225,7 +272,7 @@ feature {NONE} -- Implementation functions
 					l_mutli_zone ?= a_list.item
 					if l_mutli_zone /= Void and then not l_mutli_zone.is_drag_title_bar then
 						add_hot_zone_on_type (a_list.item, l_hot_zone_source)
-					elseif a_list.item /= internal_caller then
+					elseif a_list.item /= caller then
 						add_hot_zone_on_type (a_list.item, l_hot_zone_source)
 					end
 				end
@@ -243,7 +290,7 @@ feature {NONE} -- Implementation functions
 		do
 			l_floating_zone ?= a_zone
 			if l_floating_zone = Void then
-				if a_zone.type = internal_caller.type then
+				if a_zone.type = caller.type then
 					a_source.add_hot_zones (Current, hot_zones)
 				end
 			end
@@ -253,9 +300,6 @@ feature {NONE} -- Implementation attributes
 
 	tracing: BOOLEAN
 			-- Whether is tracing pointer events.
-
-	internal_caller: SD_ZONE
-			-- Zone which call this mediator.
 
 	hot_zones: ACTIVE_LIST [SD_HOT_ZONE]
 			-- Hot zones.

@@ -20,15 +20,19 @@ create
 
 feature {NONE} -- Initlization
 
-	make (a_zone: SD_TAB_ZONE; a_rect: EV_RECTANGLE) is
+	make (a_zone: SD_TAB_ZONE; a_rect: EV_RECTANGLE; a_docker_mediator: SD_DOCKER_MEDIATOR) is
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
 			a_rect_not_void: a_rect /= Void
+			a_docker_mediator_not_void: a_docker_mediator /= Void
 		do
 			create internal_shared
+			internal_docker_mediator := a_docker_mediator
 			internal_zone := a_zone
 			set_rectangle (a_rect)
+		ensure
+			set: internal_docker_mediator =  a_docker_mediator
 		end
 
 feature -- Redefine

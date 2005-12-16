@@ -98,7 +98,7 @@ feature  -- Redefine
 --			must_process: Result = True
 		end
 
-	update_for_pointer_position_feedback (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_feedback (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		local
 			l_rect: EV_RECTANGLE
@@ -113,24 +113,49 @@ feature  -- Redefine
 			elseif right_rectangle.has_x_y (a_screen_x, a_screen_y) then
 				internal_shared.feedback.draw_transparency_rectangle (l_rect.right - (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.top, (l_rect.width * internal_shared.default_docking_width_rate).ceiling, l_rect.height)
 			else
-				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - a_mediator.offset_x, a_screen_y - a_mediator.offset_y, internal_shared.default_floating_window_width, internal_shared.default_floating_window_height)
+				internal_shared.feedback.draw_transparency_rectangle (a_screen_x - internal_mediator.offset_x, a_screen_y - internal_mediator.offset_y, internal_mediator.caller.width, internal_mediator.caller.height)
 			end
 
 		ensure then
 			must_process:
 		end
 
-	update_for_pointer_position_indicator (a_mediator: SD_DOCKER_MEDIATOR; a_screen_x, a_screen_y: INTEGER): BOOLEAN is
+	update_for_pointer_position_indicator (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
 			-- Redefine.
 		do
-			pointer_x := a_screen_x
-			pointer_y := a_screen_y
-			update_indicator_area (top_rectangle, internal_shared.icons.arrow_indicator_up_colors)
-			update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down_colors)
-			update_indicator_area (left_rectangle, internal_shared.icons.arrow_indicator_left_colors)
-			update_indicator_area (right_rectangle, internal_shared.icons.arrow_indicator_right_colors)
+			if internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y) then
+				update_indicator_area (top_rectangle, internal_shared.icons.arrow_indicator_up_colors)
+				update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down_colors)
+				update_indicator_area (left_rectangle, internal_shared.icons.arrow_indicator_left_colors)
+				update_indicator_area (right_rectangle, internal_shared.icons.arrow_indicator_right_colors)
+			else
+				-- Clear indicator
+			end
+
 		ensure then
 			must_process:
+		end
+
+	update_for_pointer_position_indicator_clear (a_screen_x, a_screen_y: INTEGER) is
+			-- Redefine
+		do
+			if not internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y)  then
+				clear_indicator
+			elseif internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y)  then
+				need_clear := True
+			end
+		end
+
+	clear_indicator is
+			-- Redefine
+		do
+			if need_clear then
+				clear_rect (internal_mediator.orignal_screen, top_rectangle)
+				clear_rect (internal_mediator.orignal_screen, bottom_rectangle)
+				clear_rect (internal_mediator.orignal_screen, left_rectangle)
+				clear_rect (internal_mediator.orignal_screen, right_rectangle)
+				need_clear := False
+			end
 		end
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
@@ -150,9 +175,6 @@ feature {NONE} -- Implementation
 		ensure
 			must_process:
 		end
-
-	pointer_x, pointer_y: INTEGER
-			-- Pointer position.
 
 	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
 			-- Areas which contain four indicator.

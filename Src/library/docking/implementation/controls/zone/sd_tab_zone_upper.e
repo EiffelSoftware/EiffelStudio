@@ -13,7 +13,9 @@ inherit
 			on_select_tab,
 			internal_notebook,
 			on_normal_max_window,
-			recover_to_normal_state
+			recover_to_normal_state,
+			is_maximized,
+			set_max
 		end
 create
 	make
@@ -32,6 +34,22 @@ feature {NONE} -- Initlization
 
 		end
 
+feature -- Query
+
+	is_maximized: BOOLEAN is
+			-- Redefine.
+		do
+			Result := internal_notebook.is_maximized
+		end
+
+feature -- Command
+
+	set_max (a_max: BOOLEAN) is
+			-- Redefine.
+		do
+			 internal_notebook.set_show_maximized (a_max)
+		end
+		
 feature {NONE} -- Implementation
 
 	on_select_tab is
@@ -75,7 +93,7 @@ feature {NONE} -- Implementation
 	recover_to_normal_state is
 			-- Redefine.
 		do
-			internal_notebook.set_show_maximized (False)
+--			internal_notebook.set_show_maximized (False)
 			Precursor {SD_TAB_ZONE}
 		end
 

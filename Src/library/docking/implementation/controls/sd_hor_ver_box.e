@@ -30,6 +30,10 @@ inherit
 			set_border_width as set_border_width_vertical_box
 		end
 
+create
+
+	init
+
 feature {NONE} -- Initlization
 
 	init (a_vertical_style: BOOLEAN)is
@@ -94,6 +98,14 @@ feature -- Basic operations
 feature -- Actions
 
 	pointer_enter_actions: EV_NOTIFY_ACTION_SEQUENCE
+
+feature -- Query
+
+	is_vertical: BOOLEAN is
+			-- If Current vertical style?
+		do
+			Result := internal_vertical_style
+		end
 
 feature -- Redefine
 

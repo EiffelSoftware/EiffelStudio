@@ -7,38 +7,60 @@ class
 	SD_TAB_STUB
 
 inherit
-	SD_HOR_VER_BOX
+	EV_CELL
 
 create
 	make
 
 feature {NONE} -- Initlization
 
-	make (a_content: SD_CONTENT; a_vertical: BOOLEAN) is
+	make (a_content: SD_CONTENT; a_direction: INTEGER) is
 			-- Creation method. If a_vertical True then vertical style otherwise horizontal style.
 		require
 			a_content_not_void: a_content /= Void
+			a_direction_valid: a_direction = {SD_DOCKING_MANAGER}.dock_top or a_direction = {SD_DOCKING_MANAGER}.dock_bottom
+				or a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right
+		local
+
 		do
 			create internal_shared
-			init (a_vertical)
+			default_create
+
+			if a_direction = {SD_DOCKING_MANAGER}.dock_left or a_direction = {SD_DOCKING_MANAGER}.dock_right then
+				create internal_box.init (True)
+			else
+				create internal_box.init (False)
+			end
+
 			content := a_content
 			create internal_drawing_area
 			internal_drawing_area.expose_actions.extend (agent on_redraw)
 			internal_drawing_area.set_minimum_size (a_content.pixmap.minimum_width, a_content.pixmap.minimum_height)
-			extend (internal_drawing_area)
+
 			create internal_label.make_with_text (a_content.short_title)
-			extend (internal_label)
+
+			create internal_border.make
+			internal_border.set_border_style (a_direction)
+			internal_border.set_border_color (internal_shared.border_color)
+			internal_border.set_border_width (internal_shared.border_width)
+			extend (internal_border)
+
+			internal_border.extend (internal_box)
+
+			internal_box.extend (internal_drawing_area)
+			internal_box.disable_item_expand (internal_drawing_area)
+			internal_box.extend (internal_label)
 
 			internal_label.pointer_enter_actions.extend (agent on_pointer_enter)
 			internal_drawing_area.pointer_enter_actions.extend (agent on_pointer_enter)
-			
+
 			internal_docking_manager := a_content.docking_manager
 		ensure
 			set: content = a_content
 			set: internal_label.text.is_equal (a_content.short_title)
 			actions_added: internal_label.pointer_enter_actions.count = 1 and internal_drawing_area.pointer_enter_actions.count = 1
-			label_added: has (internal_label)
-			drawing_area_added: has (internal_drawing_area)
+			label_added: internal_box.has (internal_label)
+			drawing_area_added: internal_box.has (internal_drawing_area)
 			set: internal_docking_manager = a_content.docking_manager
 		end
 
@@ -65,14 +87,14 @@ feature -- Command
 			-- If `a_show' True, show title. Vice visa.
 		do
 			if a_show then
-				start
-				if not has (internal_label) then
-					extend (internal_label)
+				internal_box.start
+				if not internal_box.has (internal_label) then
+					internal_box.extend (internal_label)
 				end
 			else
-				start
-				if has (internal_label) then
-					prune_all (internal_label)
+				internal_box.start
+				if internal_box.has (internal_label) then
+					internal_box.prune_all (internal_label)
 				end
 			end
 		end
@@ -88,7 +110,7 @@ feature -- Command
 		require
 			a_size_valid: a_size > 0
 		do
-			if internal_vertical_style then
+			if internal_box.is_vertical then
 				internal_label.set_minimum_height (a_size)
 			else
 				internal_label.set_minimum_width (a_size)
@@ -139,6 +161,12 @@ feature {NONE} -- Agents
 
 feature {NONE} -- Implementation
 
+	internal_box: SD_HOR_VER_BOX
+			-- Box contain `internal_drawing_area' and `internal_label'.
+
+	internal_border: SD_CELL_WITH_BORDER
+			-- Border
+
 	tab_group: ARRAYED_LIST [SD_TAB_STUB] is
 			-- Tab group `Current' belong to.
 		do
@@ -159,7 +187,7 @@ feature {NONE} -- Implementation
 
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager manage Current.
-			
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

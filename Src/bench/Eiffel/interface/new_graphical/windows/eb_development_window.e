@@ -2943,6 +2943,11 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
+					if managed_main_formatters.first.selected then
+						editor_tool.text_area.set_read_only (false)
+					else
+						editor_tool.text_area.set_read_only (true)
+					end
 				else
 						-- not a class text : cannot be edited
 					editor_tool.text_area.set_read_only (True)

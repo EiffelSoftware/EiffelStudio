@@ -57,11 +57,11 @@ feature -- Change elements
 			until
 				i > all_matches.count-1
 			loop
-				if all_matches.has (si) then
+				if all_matches.has (si+1) then
 					-- loop through all the lines that have to be added till we reach the match
 					from
 					until
-						di = all_matches.item (si)
+						di = all_matches.item (si+1)-1
 					loop
 						hunk.extend (create {DIFF_LINE_ADD}.make (si, di))
 						di := di + 1
@@ -148,7 +148,7 @@ feature {NONE} -- Implementation
 				or not
 				(src[start_src]).is_equal(dst[start_dst])
 			loop
-				all_matches.put (start_dst, start_src)
+				all_matches.put (start_dst+1, start_src+1)
 				start_src := start_src + 1
 				start_dst := start_dst + 1
 			end
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 				or not
 				(src[end_src]).is_equal(dst[end_dst])
 			loop
-				all_matches.put (end_dst, end_src)
+				all_matches.put (end_dst+1, end_src+1)
 				end_src := end_src - 1
 				end_dst := end_dst - 1
 			end
@@ -268,7 +268,7 @@ feature {NONE} -- Implementation
 					link := links[links.count]
 					-- check if the values themselves are also equal (above we worked with hashes)
 					if (src[link.index_src]).is_equal(dst[link.index_dst]) then
-						all_matches.put (link.index_dst, link.index_src)
+						all_matches.put (link.index_dst+1, link.index_src+1)
 					end
 				until
 					link.next = void
@@ -276,7 +276,7 @@ feature {NONE} -- Implementation
 					link := link.next
 					-- check if the values themselves are also equal (above we worked with hashes)
 					if (src[link.index_src]).is_equal(dst[link.index_dst]) then
-						all_matches.put (link.index_dst, link.index_src)
+						all_matches.put (link.index_dst+1, link.index_src+1)
 					end
 				end
 			end

@@ -17,5 +17,5 @@ feature -- Parser
 		ensure
 			eiffel_parser_not_void: Result /= Void
 		end
-
+	
 end

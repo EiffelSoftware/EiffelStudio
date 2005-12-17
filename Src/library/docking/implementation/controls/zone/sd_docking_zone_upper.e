@@ -11,7 +11,6 @@ inherit
 		redefine
 			on_focus_in,
 			on_focus_out,
-			close,
 			is_maximized,
 			set_max
 		end
@@ -67,7 +66,7 @@ feature -- Redefine
 	set_title (a_title: STRING) is
 			-- Redefine
 		do
---			internal_notebook.
+			internal_notebook.set_item_text (internal_content, a_title)
 		end
 
 	set_show_normal_max (a_show: BOOLEAN) is
@@ -93,16 +92,10 @@ feature -- Redefine
 			Result := internal_notebook.is_maximized
 		end
 
-	close is
-			-- Redefine
-		do
-
-		end
-
 	title: STRING is
 			-- Redefine
-
 		do
+			Result := internal_notebook.item_text (internal_content)
 		end
 
 feature {NONE} -- Implementation

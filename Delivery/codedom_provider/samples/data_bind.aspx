@@ -1,15 +1,26 @@
-<HTML>
-	<HEAD>
-		<!-- Inheritance clause snippet, must start with "inherit"-->
-		<SCRIPT RUNAT="server">
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en" >
+<%@ page language="Eiffel"%>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="default.css">
+		<title>Data Binding Sample</title>
+
+		<script runat="server">
+			indexing
+				description: "Shows data binding in Eiffel for ASP.NET"
+				precompile_definition_file: "$ISE_CODEDOM\Samples\code_behind\ace.ace"
+		</script>
+
+		<script runat="server">
 			inherit
 				WEB_PAGE
 					redefine
 						on_load
 					end
-		</SCRIPT>
+		</script>
 
-		<SCRIPT LANGUAGE="Eiffel" RUNAT="server">
+		<script runat="server">
 			on_load (e: EVENT_ARGS) is
 					-- Initialize values used for data binding.
 				local
@@ -30,7 +41,7 @@
 					end
 				end
 
-			even_or_odd (a_number: SYSTEM_OBJECT): SYSTEM_STRING is
+			even_or_odd (a_number: SYSTEM_OBJECT): STRING is
 					-- "Even" if `a_number' is even, "Odd" otherwise
 				local
 					l_number: INTEGER
@@ -42,21 +53,39 @@
 						Result := "Even"
 					end
 				ensure
-					valid_result: Result.equals (("Odd").to_cil) or Result.equals (("Even").to_cil)
+					valid_result: Result.is_equal ("Odd") or Result.is_equal ("Even")
 				end
-		</SCRIPT>
-	</HEAD>
-	<BODY>
-		<H3><FONT FACE="Verdana">Databinding to Methods and Expressions</FONT></H3>
+		</script>
+	</head>
+	<body>
+		<h3>Databinding to Methods and Expressions</h3>
 
-		<FORM RUNAT=server>
-			<ASP:DataList Id="data_list" RUNAT="server" BorderColor="black" BorderWidth="1" GridLines="Both" CellPadding="3" CellSpacing="0">
+		<form runat=server>
+			<asp:DataList runat="server"
+				BorderColor="black" 
+				BorderWidth="1" 
+				GridLines="Both" 
+				CellPadding="3" 
+				CellSpacing="0"
+				ID="data_list"
+			>
 				<ItemTemplate>
 					Number Value: <%# container.data_item %>
-					Even/Odd: <%# even_or_odd (container.data_item) %>
+					Even/Odd: <%# (even_or_odd (container.data_item)).to_cil %>
 				</ItemTemplate>
-			</ASP:DataList>
-		</FORM>
-	</BODY>
-</HTML>
 
+			</asp:DataList>
+		</form>
+	</body>
+</html>
+
+<!--
+--+--------------------------------------------------------------------
+--| Eiffel for ASP.NET 5.6
+--| Copyright (c) 2005-2006 Eiffel Software
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------
+-->

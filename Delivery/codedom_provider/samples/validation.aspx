@@ -1,6 +1,18 @@
-<HTML>
-	<HEAD>
-		<SCRIPT LANGUAGE="Eiffel" RUNAT="server">
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en" >
+<%@ page language="Eiffel"%>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="default.css">
+		<title>Validation Sample</title>
+
+		<script runat="server">
+			indexing
+				description: "Uses both client-side and server-side ASP.NET validator controls"
+				precompile_definition_file: "$ISE_CODEDOM\Samples\code_behind\ace.ace"
+		</script>
+
+		<script runat="server">
 			validate_button_click (sender: SYSTEM_OBJECT; e: EVENT_ARGS) is
 					-- Check whether page is valid and display corresponding message.
 				do
@@ -14,52 +26,60 @@
 			server_validate (sender: SYSTEM_OBJECT; value: WEB_SERVER_VALIDATE_EVENT_ARGS) is
 					-- Validate page content.
 				local
-					l_num: INTEGER
-					l_retried: BOOLEAN
+					l_value: STRING
 				do
-						-- Only execute if no exception was raised
-					if not l_retried then
-							-- We use .NET System.Int32's `Parse' function.
-							-- We could also store `value.value' in an Eiffel string and then
-							-- use `{STRING}.to_integer' (after checking `{STRING}.is_integer')
-						l_num := feature {DOTNET_INTEGER}.from_string (value.value)
-						value.set_is_valid (l_num \\ 2 = 0)
+					l_value := value.value
+					if l_value.is_integer then
+						value.set_is_valid (l_value.to_integer \\ 2 = 0)
 					end
-				rescue
-						-- We need the rescue clause because `{DOTNET_INTEGER}.from_string'
-						-- will raise an exception if the argument does not correspond to
-						-- an integer value.
-					l_retried := True
-					value.set_is_valid (False)
-					retry
 				end
-		</SCRIPT>
-	</HEAD>
-	<BODY>
-		<H3><FONT FACE="Verdana">Validation</FONT></H3>
-		<FORM RUNAT="server">
-			<ASP:Label Id=output_label RUNAT="server" Text="Enter an even number:" Font-Name="Verdana" Font-Size="10pt" /><br>
-			<P>	
-				<ASP:TextBox ID=text_box RUNAT="server" />
+		</script>
+	</head>
+	<body>
+		<h3>Validation</h3>
+		<form runat="server" ID="main_form">
+			<p>
+				<asp:Label runat="server"
+					Text="Enter an even number:"
+					ID="output_label"
+				/>
+			</p>
+			<p>	
+				<asp:TextBox runat="server" ID="text_box" />
 				
-				<ASP:RequiredFieldValidator Id="required_field_validator" RUNAT="server"
+				<asp:RequiredFieldValidator runat="server"
 					ControlToValidate="text_box"
 					ErrorMessage="Please enter a number"
 					Display="Dynamic"
-					Font-Name="verdana" Font-Size="10pt">
-				</ASP:RequiredFieldValidator>
+					ID="required_field_validator"
+				/>
 
-				<ASP:CustomValidator Id="custom_validator" RUNAT="server"
+				<asp:CustomValidator runat="server"
 					ControlToValidate="text_box"
 					OnServerValidate="server_validate"
 					Display="Static"
-					Font-Name="verdana" Font-Size="10pt">
-					Not an even number!
-				</ASP:CustomValidator>
-			</P>
-			<P>
-				<ASP:Button text="Validate" onclick="validate_button_click" RUNAT="server" />
-			</P>
-		</FORM>
-	</BODY>
-</HTML>
+					Text="Not an even number!"
+					ID="custom_validator"
+				/>
+			</p>
+			<p>
+				<asp:Button runat="server"
+					Text="Validate" 
+					OnClick="validate_button_click"  
+					ID="validate_button"
+				/>
+			</p>
+		</form>
+	</body>
+</html>
+
+<!--
+--+--------------------------------------------------------------------
+--| Eiffel for ASP.NET 5.6
+--| Copyright (c) 2005-2006 Eiffel Software
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------
+-->

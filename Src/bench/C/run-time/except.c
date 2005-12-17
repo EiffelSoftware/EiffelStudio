@@ -929,7 +929,7 @@ rt_public void exfail(void)
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct ex_vect *vector;			/* The stack vector entry at the top */
-//	unsigned char code;						/* Exception code */
+/*	unsigned char code;				*//* Exception code */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
 
@@ -953,25 +953,25 @@ rt_public void exfail(void)
 
 	vector = extop(&eif_stack);		/* Top level vector */
 
-// TODO: review this code to allow for processing of routine failure
-//       as specified in the forthcoming standard
-//
-//	code = xcode(vector);			/* Failure yields a specific code */
-//
-//	if (code < EN_NEX && ex_ign[code]) {	/* Exception to be ignored */
-//		expop(&eif_stack);					/* Remove the faulty vector */
-//		return;
-//	}
-//
-//
-//	/* Set up 'echtg' to be the tag of the current exception, if one can be
-//	 * computed, otherwise it is a null pointer. This will be used by the
-//	 * debugger in its stop notification request.
-//	 */
-//
-//	echval = code;		/* Keep track of the last exception code */
-//	echtg = vector->ex_name;			/* Record exception tag, if any */
+/* TODO: review this code to allow for processing of routine failure */
+/*       as specified in the forthcoming standard */
 
+/*	code = xcode(vector);			*//* Failure yields a specific code */
+
+/*	if (code < EN_NEX && ex_ign[code]) {	*//* Exception to be ignored */
+/*		expop(&eif_stack);					*//* Remove the faulty vector */
+/*		return;*/
+/*	}*/
+/**/
+/**/
+	/* Set up 'echtg' to be the tag of the current exception, if one can be
+	 * computed, otherwise it is a null pointer. This will be used by the
+	 * debugger in its stop notification request.
+	 */
+/**/
+/*	echval = code;		*//* Keep track of the last exception code */
+/*	echtg = vector->ex_name;			*//* Record exception tag, if any */
+/**/
 	echval = EN_FAIL;
 
 	/* Maintain the notion of original exception at this level, despite any

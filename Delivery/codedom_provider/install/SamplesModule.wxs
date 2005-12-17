@@ -7,13 +7,42 @@
 			<Directory Id='MergeRedirectFolder'>
 				<Component Id='SamplesFiles' Guid='02C848A4-FCEA-40d2-B5B5-15BA59F07063'>
 					<File Id='DataBindAspx' Name='databind.asp' LongName='data_bind.aspx'/>
-					<File Id='DefaultAspx' Name='default.asp' LongName='default.aspx'/>
+					<File Id='DefaultHtm' Name='default.htm' LongName='default.htm'/>
 					<File Id='DefaultCss' Name='default.css' LongName='default.css'/>
-					<File Id='SamplesHtm' Name='samples.htm' LongName='samples.htm'/>
+					<File Id='ShowSampleAspx' Name='ssample.asp' LongName='show_sample.aspx'/>
 					<File Id='SummaryAspx' Name='summary.asp' LongName='summary.aspx'/>
 					<File Id='ValidationAspx' Name='valid.asp' LongName='validation.aspx'/>
 				</Component>
 
+				<Directory Id='CodeBehind' Name='code_behind'>
+					<Component Id='CodeBehindFiles' Guid='{6C49E7AC-8F5B-4700-AF62-7EC172FF013E}'>
+						<File Id='Ace' Name='ace.ace' />
+						<File Id='EfaParser' Name='efa_pa.e' LongName='efa_parser.e' />
+					</Component>
+				</Directory>
+				<Directory Id='Images' Name='images'>
+					<Component Id='ImagesFiles' Guid='{0AD63E64-160D-4cc7-B992-296FA7692BBD}'>
+						<File Id='AtbGif' Name='atb.gif' />
+						<File Id='BotLeftGif' Name='bot_lef.gif' />
+						<File Id='BotMidGif' Name='bot_mid.gif' />
+						<File Id='BotRigGif' Name='bot_rig.gif' />
+						<File Id='CenLefGif' Name='cen_lef.gif' />
+						<File Id='CenRigGif' Name='cen_rig.gif' />
+						<File Id='CenLineGif' Name='center_line.gif' />
+						<File Id='MinuGif' Name='minus.gif' />
+						<File Id='PlusGif' Name='plus.gif' />
+						<File Id='TopLefGif' Name='top_lef.gif' />
+						<File Id='TopMidGif' Name='top_mid.gif' />
+						<File Id='TopRigGif' Name='top_rig.gif' />
+					</Component>
+				</Directory>
+				<Directory Id='Scripts' Name='scripts'>
+					<Component Id='ScriptsFiles' Guid='{3F57D834-3690-4711-83CF-A7D0BB4EB699}'>
+						<File Id='Collapse' Name='colla.js' LongName='collapse_box.js' />
+						<File Id='Load' Name='load.js' LongName='load_content.js' />
+					</Component>
+				</Directory>
+		
 				<Component Id='WebVirtualDirComponent' Guid='898BC72C-6C55-492a-B7C1-B7BAB793A096'>
 					<CreateFolder />
 					<RemoveFolder Id='MergeRedirectFolder' On='uninstall'/>

@@ -56,7 +56,7 @@ doc:<file name="main.c" header="eif_main.h" version="$Id$" summary="Initializati
 #endif
 
 #ifndef WORKBENCH
-// NON_COMMERCIAL is defined when compiling a non-commercial version of the run-time
+/* NON_COMMERCIAL is defined when compiling a non-commercial version of the run-time */
 #ifdef NON_COMMERCIAL
 #ifdef EIF_WINDOWS
 #include "splashcom.x"
@@ -86,7 +86,7 @@ doc:	</attribute>
 */
 #if defined VXWORKS
 	/* when eif_malloc() fails, the system dies otherwise !!! */
-	/* FIXME?? */
+	/* FIXME? */
 rt_public int cc_for_speed = 0;			/* Save memory. */
 #else	/* VXWORKS */
 #ifdef EIF_NO_SCAVENGING

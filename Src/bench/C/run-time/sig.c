@@ -145,8 +145,8 @@ doc:	<routine name="eiffel_signal_handler" export="private">
 doc:		<summary>Catch all the signals that can be caught. If we are in a critical section we record the signal and it will be raised later. Otherwise we raise an exception corresponding to the signal. If `is_fpe' we handle it as if it was a floating point exception.</summary>
 doc:		<param name="sig" type="int">Signal number being caught.</param>
 doc:		<param name="is_fpe" type="int">Are we handling a floating point exception signal?</param>
-doc:		<thread_safety>???</thread_safety>
-doc:		<synchronization>???</synchronization>
+doc:		<thread_safety>FIXME</thread_safety>
+doc:		<synchronization>FIXME</synchronization>
 doc:	</routine>
 */
 
@@ -252,8 +252,8 @@ rt_private Signal_t eiffel_signal_handler(int sig, int is_fpe)
 doc:	<routine name="ehandler" export="private">
 doc:		<summary>Small wrapper around `eiffel_signal_handler' to catch all signals but floating point exception.</summary>
 doc:		<param name="sig" type="int">Signal number being caught.</param>
-doc:		<thread_safety>???</thread_safety>
-doc:		<synchronization>???</synchronization>
+doc:		<thread_safety>FIXME</thread_safety>
+doc:		<synchronization>FIXME</synchronization>
 doc:	</routine>
 */
 
@@ -266,8 +266,8 @@ rt_shared Signal_t ehandler(int sig) {
 doc:	<routine name="exfpe" export="private">
 doc:		<summary>Small wrapper around `eiffel_signal_handler' to only catch floating point exception.</summary>
 doc:		<param name="sig" type="int">Signal number being caught.</param>
-doc:		<thread_safety>???</thread_safety>
-doc:		<synchronization>???</synchronization>
+doc:		<thread_safety>FIXME</thread_safety>
+doc:		<synchronization>FIXME</synchronization>
 doc:	</routine>
 */
 

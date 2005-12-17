@@ -1702,7 +1702,7 @@ rt_private EIF_REFERENCE malloc_free_list (size_t nbytes, union overhead **hlist
 #ifdef HAS_SMART_MMAP
 /*
 doc:	<routine name="free_unused" export="private">
-doc:		<summary>???</summary>
+doc:		<summary>FIXME</summary>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
@@ -1726,8 +1726,8 @@ rt_private void free_unused (void)
 
 /*
 doc:	<routine name="chunk_free" return_type="int" export="private">
-doc:		<summary>???</summary>
-doc:		<param name="ck" type="struct chunk *">??</param>
+doc:		<summary>FIXME</summary>
+doc:		<param name="ck" type="struct chunk *">FIXME<param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</routine>
 */

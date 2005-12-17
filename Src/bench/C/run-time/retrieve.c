@@ -853,7 +853,6 @@ rt_private EIF_REFERENCE correct_mismatches (EIF_OBJECT retrieved_i)
 {
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	int corrected = 0;
 	uint32 i;
 	mismatch_table *mm = mismatches;
 	type_table *conversions = type_conversions;

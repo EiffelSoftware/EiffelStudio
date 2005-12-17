@@ -1531,7 +1531,6 @@ rt_public void drecord_bc(BODY_INDEX old_body_id, BODY_INDEX body_id, unsigned c
             		/* ID of byte code (index in melt table) */
            			/* Address where byte code is stored */
 {
-	EIF_GET_CONTEXT
 	/* Update the melting table by introducing the new debuggable byte
 	 * code into the system. We know the byte code has to be recorded
 	 * in the melting table.

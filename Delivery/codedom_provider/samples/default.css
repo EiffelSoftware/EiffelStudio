@@ -1,122 +1,76 @@
+/*
+--+--------------------------------------------------------------------
+-- Eiffel for ASP.NET 5.6 samples styles
+--+--------------------------------------------------------------------
+*/
+
 body 
 {
 	font-family: verdana;
-	margin: 10px 10px 10px 10px;
-	width: 100%;
-	font-size: 70%;
-}
-
-table 
-{
-	margin: 15px 0px 15px 0px;
-	padding: 0px 0px 0px 0px;
-	font-size: 100%; /* that's 100% of 70% */
-}
-
-table.footer 
-{
-	border-top-width: 1px;
-	border-top-style: solid;
-	border-color: #9999aa;
-	width: 100%;
-	margin 0px 0px 0px 0px;
-}
-
-table.header
-{	
-	width: 100%;
-	margin: 0px 0px 0px 0px;
-}
-
-table.navigation 
-{
-	border-bottom-style: solid;
-	border-bottom-width: 1px;
-	border-color: black;
-	width: 100%;
-	margin: 5px 0px 0px 0px;
-}
-
-table.header_filler
-{	
-	width: 100%;
-	background-color: #6699cc;
-	height: 20px;
-	margin: 0px 0px 0px 0px;
-}
-
-table.product_type
-{
-	width: 100%;
-}
-
-td 
-{
-	padding-bottom:0.4mm; 
-	background:#eeedde;	
-}
-
-td.header_filler
-{	
-	text-align: right;
-	background-color: #6699cc;
-	color: white:	
-}
-
-td.bordered_cell
-{	
-	text-align: right;
-	background-color: #6699cc;
-	color: white:	
-}
-
-td.footer
-{	
-	background:white;
-}
-
-td.content_style
-{	
-	background:white;
-}
-
-
-td.navigation 
-{	
-	text-align: left;
-	padding-left: 15px;
-	margin: 0px 0px 0px 0px;
-	background:white;
-}
-
-td.product_type
-{
-	text-align: right;
-	font: italic;
-	background:white;
-}
-
-td.title_style
-{
-	padding-left: 20px;	
-	background: white;
+	font-size: 75%;
 }
 
 a 
 {
-	color: #3333cc;
+	color: #18649B;;
 	text-decoration: none;
 }
 
 a:hover 
 {
 	color: red;
+	text-decoration: underline;
+}
+
+div.description
+{
+	border-bottom: 2px solid #58A4DB;
+	padding-bottom: 10px;
+}
+
+div.link a
+{
+	font-weight: bold;
+}
+
+div.title
+{
+	border-bottom: 1px solid #58A4DB;
+	margin-bottom: 10px;
+	background-color: #a0a0a0;
+	color: white;
+	font-family: courier new;
+	padding-left: 5px;
+	font-size: 150%;
+	color: #f0f0f0;
+}
+
+div.sample
+{
+	margin-top: 10px;
+	white-space: nowrap;
+}
+
+div.sample h1
+{
+	margin-bottom: 10px;
+	padding-left: 5px;
+	font-size: 150%;
+	color: #606060;
+	margin-top: 0px;
+}
+
+form
+{
+	margin: 0px;
+	padding: 0px;
 }
 
 h1 
 {
-	font-size: 160%;
+	font-size: 130%;
 	font-weight: bold;
+	margin-bottom: 0px;
 }
 
 h2 
@@ -132,337 +86,148 @@ h3
 	font-weight: bold;
 }
 
-h4
+img
 {
-	font-size: 100%;
-	font-style: italic;
+	border: 0;
+}
+
+img.toggle
+{
+	vertical-align:bottom;
+}
+
+li
+{
+	padding: 2px;
+}
+
+p
+{
+	margin-bottom: 0px;
+	margin-top: 0px;
+}
+
+span.up
+{
+	font-size: 150%;
 	font-weight: bold;
 }
 
-h5
+table
 {
 	font-size: 100%;
-	font-style: italic;
-	font-weight: bold;
 }
 
-h6 
+table.frame td
 {
-	font-size: 100%;
-	font-style: italic;
-	font-weight: bold;
+	padding: 0px;
+	white-space: "nowrap";
 }
 
-pre, code, .code 
+table.modulehead
 {
-	font: courier new, courier, mono;
-	margin: 20px 25px 20px 35px;	
+	width: 100%;
+}
+
+table.modulehead td
+{
+	padding: 0px 0px 3px 0px;
+	border-bottom: 1px solid #58A4DB;
+	vertical-align: top;
+	font-size: 120%;
+}
+
+ul
+{
+	margin-bottom: 5px;
+	margin-top: 5px;
+}
+
+.code 
+{
+	font-family: courier new;
 	padding-left: .5em;
 	padding-right: .5em;
 	padding-top: .5em;
 	padding-bottom: .5em;
-	background: #efeedf;
-	width: 90%;
 }
 
-span, div 
+.comments
 {
-	padding-bottom: 0.4mm; 
+	color: #a0a0a0;
 }
 
-div 
+.eclass
 {
-	padding-bottom: 0.4mm; 
+    color: #0000aa;
 }
 
-img 
+.eiffel_1
 {
-	border: none; 
-	margin: 2px 2px 2px 2px;
-}
-
-.content_style
-{
-	margin: 0px 0px 0px 20px;
-	width: 90%;	
-}
-
-.heading_text
-{
-	color: white;
-	text-decoration: none;
-}
-
-a.class, .class, .class_name 
-{
-    	color: #0000aa;
-	font-family: verdana;
-	text-decoration: none;
-}
-
-a.class:hover
-{
-	color: #0000aa;
-	font-family: verdana;
-	text-decoration:underline;
-}
-
-.keyword, .reserved_word 
-{
-    	color: navy;
-	font-family: verdana;
+    color: navy;
 	font-weight: bold;
 }
 
-a.symbol, .symbol {
-    	color: navy;
-	font-family: verdana;
-	text-decoration:none;
+.eiffel_2
+{
+   	color: #a0522d;
+   	font-weight: bold;
 }
 
-a.symbol:hover
+.eiffel_3
 {
-    	color: navy;
-	font-family: verdana;
-	text-decoration: underline;
+   	color: #a0522d;
 }
 
-.contract_tag, .indexing_tag 
+.ecomment 
 {
-    	color: #a0522d;
-	font-family: verdana;
+    color: #990000;
 }
 
-.string 
+.econstant
 {
-    	color: #4b0082;
-	font-family: verdana;
-}
-.char, .character 
-{
-    	color: #4b0082;
-	font-family: verdana;
+   	color: #4b0082;
 }
 
-.number 
+.equote
 {
-    	color: #4b0082;
-	font-family: verdana;
+   	color: #006400;
+   	font-style: italic;
 }
 
-.tag 
+.html_1
 {
-	color: #a0522d;
-	font-family: verdana;
-}
-a.feature, .feature_name 
-{
-    	color: #006400;
-	font-family: verdana;
-	text-decoration:none;
+	color: blue;
 }
 
-a.feature:hover
+.html_2
 {
-    	color: #006400;
-	font-family: verdana;
-	text-decoration:underline;
+	color: #82004b;
 }
 
-.comment 
+.html_3
 {
-    	color: #990000;
-	font-family: verdana;
-}
-
-.equoted, .quoted
-{
-    	color: #006400;
-    	font-style: italic;
-	font-family: verdana;
-}
-
-.local_variable, .local_variable_quoted 
-{
-	font-family: verdana;
-	color: #006400;
-	font-style: italic;
-}
-
-.generic, .generics 
-{
-    	color: #1e90ff;
-	font-family: verdana;
-}
-
-.cluster, .cluster_name 
-{
-    	color: maroon;
-    	font-family: verdana;
-}
-
-.compiler_error
-{
-    	color: red;
-	font-family: verdana;
-	text-decoration: none;
-}
-
-<!-- code blocks -->
-
-a.block_class_name, .block_class_name 
-{
-    	color: #0000aa;
-	font-family: courier new, courier, mono;
-	text-decoration: none;
-}
-
-a.block_class_name:hover
-{
-	color: #0000aa;
-	font-family: courier new, courier, mono;
-	text-decoration:underline;
-}
-
-.block_keyword, .block_reserved_word 
-{
-    	color: navy;
-	font-family: courier new, courier, mono;
+	color: #522da0;
 	font-weight: bold;
 }
 
-a.block_symbol, .block_symbol {
-    	color: navy;
-	font-family: courier new, courier, mono;
-	text-decoration:none;
+.html_4
+{
+	color: #522da0;
 }
 
-a.block_symbol:hover
+.quote
 {
-    	color: navy;
-	font-family: courier new, courier, mono;
-	text-decoration: underline;
+   	color: #006400;
 }
 
-.block_contract_tag, .block_indexing_tag 
-{
-    	color: #a0522d;
-	font-family: courier new, courier, mono;
-}
-
-.block_string 
-{
-    	color: #4b0082;
-	font-family: courier new, courier, mono;
-}
-.block_char, .block_character 
-{
-    	color: #4b0082;
-	font-family: courier new, courier, mono;
-}
-
-.block_number 
-{
-    	color: #4b0082;
-	font-family: courier new, courier, mono;
-}
-
-.block_tag 
-{
-	color: #a0522d;
-	font-family: courier new, courier, mono;
-}
-a.block_feature, .block_feature_name 
-{
-    	color: #006400;
-	font-family: courier new, courier, mono;
-	text-decoration:none;
-}
-
-a.block_feature:hover
-{
-    	color: #006400;
-	font-family: courier new, courier, mono;
-	text-decoration:underline;
-}
-
-.block_comment 
-{
-    	color: #990000;
-	font-family: courier new, courier, mono;
-}
-
-.block_quoted
-{
-    	color: #006400;
-    	font-style: italic;
-	font-family: courier new, courier, mono;
-}
-
-.block_local_variable, .block_local_variable_quoted 
-{
-	font-family: courier new, courier, mono;
-	color: #006400;
-	font-style: italic;
-}
-
-.block_generic, .block_generics 
-{
-    	color: #1e90ff;
-	font-family: courier new, courier, mono;
-}
-
-.block_cluster, .block_cluster_name 
-{
-    	color: maroon;
-    	font-family: courier new, courier, mono;
-    	font-variant: small-caps;
-}
-
-.block_compiler_error
-{
-    	color: red;
-	font-family: courier new, courier, mono;
-	text-decoration: none;
-}
-
-
-.warning, .note, .info, .seealso, .tip, .sample
-{
-	margin-top: 1em;
-	margin-left: 1em;
-	margin-right: 1em;
-	background-color: #ffecef;
-	border-width: 1px;
-	border-style: solid;
-	border-color: black;
-	padding: 4px 8px;
-	width: 90%;
-}
-
-.tagged_text_top
-{
-	background-color: white;
-	border-top: solid black 2px;
-	border-left: solid black 2px;
-	border-bottom: none;
-	border-right: none;
-	padding: 4px 8px;
-}
-
-.tagged_text_bottom
-{
-	background-color: white;
-	border-top: none;
-	border-left: non;
-	border-bottom: solid black 2px;
-	border-right: solid black 2px;
-	padding: 4px 8px;
-}
-
-.navigation
-{
-	text-decoration:none;
-	text-align: right;
-	color: #0000aa;
-}
+/*
+--+--------------------------------------------------------------------
+--| Eiffel for ASP.NET 5.6
+--| Copyright (c) 2005-2006 Eiffel Software
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+--------------------------------------------------------------------
+*/

@@ -149,6 +149,8 @@ feature {NONE} -- Implementation for save config.
 			save_inner_container_data (a_split_area.second, l_temp)
 			if a_split_area.full then
 				a_config_data.set_split_position (a_split_area.split_position)
+			else
+				check all_split_area_should_full: False end
 			end
 		end
 
@@ -469,7 +471,7 @@ feature {NONE} -- Implementation for open config.
 			l_split, l_split_2: EV_SPLIT_AREA
 		do
 			if a_config_data.is_split_area then
-				if a_split.minimum_split_position < a_config_data.split_position and a_split.maximum_split_position > a_config_data.split_position then
+				if a_split.minimum_split_position <= a_config_data.split_position and a_split.maximum_split_position >= a_config_data.split_position then
 					a_split.set_split_position (a_config_data.split_position)
 				end
 
@@ -608,10 +610,10 @@ feature {NONE} -- Implementation for open config.
 		end
 
 feature {NONE} -- Internals.
-	
+
 	internal_docking_manager: SD_DOCKING_MANAGER
 			-- Docking manager which Current belong to.
-			
+
 	internal_shared: SD_SHARED
 			-- All singletons.
 end

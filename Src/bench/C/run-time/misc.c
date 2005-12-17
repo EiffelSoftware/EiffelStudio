@@ -161,7 +161,7 @@ rt_public void eif_system_asynchronous (char *cmd)
 
 #else
 
-#ifndef EIF_VMS	/* VMS needs a higher level abstraction for async system() */
+#if !defined(EIF_VMS) && !defined(VXWORKS)	/* VMS needs a higher level abstraction for async system() */
 	switch (fork()) {
 	case -1:				/* Cannot fork */
 		return;
@@ -173,7 +173,8 @@ rt_public void eif_system_asynchronous (char *cmd)
 #endif /* not VMS (skip fork/parent code if VMS) */
 
 /* child (except on VMS, where this code runs in the parent) */
-	meltpath = (char *) (strdup (cmd));
+	meltpath = (char *) malloc (strlen(cmd) + 1);
+	meltpath = strcpy (meltpath, cmd);
 	if (!meltpath)
 		return;
 
@@ -221,7 +222,11 @@ rt_public void eif_system_asynchronous (char *cmd)
 	return;		/* skip send ack packet, Fred says not done anymore */
 #else /* not VMS */
 
+#ifdef VXWORKS
+	exit(0);
+#else
 	_exit(0);							/* Child is exiting properly */
+#endif
 #endif /* EIF_VMS */
 #endif /* EIF_WINDOWS */
 	/* NOTREACHED */
@@ -503,6 +508,8 @@ rt_public void eif_free_dlls(void)
 rt_public pid_t eiffel_fork(void) {
 #ifdef EIF_THREADS
 	return eif_thread_fork();
+#elif defined (VXWORKS)
+	return 0;
 #else
 	return fork();
 #endif

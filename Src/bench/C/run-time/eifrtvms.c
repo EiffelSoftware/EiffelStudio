@@ -88,7 +88,7 @@ const char* eifrt_vms_imagename (char* buf, size_t bufsiz)
 	if (VMS_SUCCESS (st)) {
 	    imagename[retlen] = '\0';	/* null terminate returned string */
 	    result = imagename;
-	} else	/* getjpi failed??? */
+	} else	/* getjpi failed?? */
 	    result = NULL;
     } else { /* been here, done this; return the previous result */
 	result = imagename;

@@ -626,8 +626,6 @@ doc:	</routine>
 
 rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), int result_type)
 {
-	RT_GET_CONTEXT
-	EIF_GET_CONTEXT
 	int i = 0;
 	struct obj_array l_found, l_marked;
 	union overhead *zone;

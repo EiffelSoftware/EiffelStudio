@@ -16,6 +16,8 @@ remtrace base
 co %DEFAULT_CVS_TAG/Src/library/base base
 remtrace com 
 co %DEFAULT_CVS_TAG/Src/library/com com
+remtrace diff 
+co %DEFAULT_CVS_TAG/Src/library/diff diff
 remtrace Eiffel2Java
 co %DEFAULT_CVS_TAG/Src/library/Eiffel2Java Eiffel2Java
 remtrace encryption

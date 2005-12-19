@@ -111,6 +111,7 @@ feature -- Command
 					a_content.user_widget.parent.prune (a_content.user_widget)
 				end
 				internal_cell.replace (a_content.user_widget)
+
 			end
 			disable_all_tab_selection
 			tab_by_content (a_content).set_selected (True)
@@ -256,7 +257,10 @@ feature -- Query
 		require
 			has: has (a_content)
 		do
-
+			internal_contents.start
+			internal_contents.search (a_content)
+			internal_tabs.go_i_th (internal_contents.index)
+			Result := internal_tabs.item.pixmap
 		end
 
 	item_text (a_content: SD_CONTENT): STRING is
@@ -264,7 +268,10 @@ feature -- Query
 		require
 			has: has (a_content)
 		do
-
+			internal_contents.start
+			internal_contents.search (a_content)
+			internal_tabs.go_i_th (internal_contents.index)
+			Result := internal_tabs.item.text
 		end
 
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE

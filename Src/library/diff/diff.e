@@ -23,24 +23,30 @@ feature -- Access
 
 feature -- Status report
 
-	values_set: BOOLEAN
+	values_set: BOOLEAN is
 			-- Are the values to compare set?
+		do
+			Result := src /= Void and dst /= Void
+		end
 
 feature -- Change elements
 
 	set (a_src: ARRAY[G]; a_dst: ARRAY[G]) is
 			-- Set the source array `a_src' and the destination `a_dst'.
+		require
+			a_src_not_void: a_src /= Void
+			a_dst_not_void: a_dst /= Void
 		do
 			src := a_src
 			dst := a_dst
-
-			values_set := true
 		ensure
 			values_set: values_set
 		end
 
 	compute_diff is
 			-- Compute the diff between `src' and `dst'
+		require
+			values_set: values_set
 		local
 			i, si, di: INTEGER
 			hunk: LINKED_LIST [DIFF_LINE]
@@ -58,7 +64,7 @@ feature -- Change elements
 				i > all_matches.count-1
 			loop
 				if all_matches.has (si+1) then
-					-- loop through all the lines that have to be added till we reach the match
+						-- loop through all the lines that have to be added till we reach the match
 					from
 					until
 						di = all_matches.item (si+1)-1
@@ -79,7 +85,7 @@ feature -- Change elements
 				end
 				si := si + 1
 			end
-			-- now we are at the last match and have to handle the differences up to the file end
+				-- now we are at the last match and have to handle the differences up to the file end
 			from
 			until
 				si > src.count-1
@@ -96,10 +102,13 @@ feature -- Change elements
 				end
 			end
 
-			-- if needed, add last hunk
+				-- if needed, add last hunk
 			if hunk.count > 0 then
 				hunks.extend (hunk)
 			end
+		ensure
+			match_not_void: match /= Void
+			hunks_not_void: hunks /= Void
 		end
 
 
@@ -130,8 +139,8 @@ feature {NONE} -- Implementation
 			link: DIFF_INDEX_LINK
 			work: ARRAYED_LIST [INTEGER]
 		do
-			-- This uses the algorithm described in
-			-- A Fast Algorithm for Computing Longest Common Subsequences, CACM, vol.20, no.5, pp.350-353, May 1977
+				-- This uses the algorithm described in
+				-- A Fast Algorithm for Computing Longest Common Subsequences, CACM, vol.20, no.5, pp.350-353, May 1977
 			start_src := 0
 			start_dst := 0
 			end_src := src.count - 1
@@ -139,7 +148,7 @@ feature {NONE} -- Implementation
 
 			create all_matches.make (src.count)
 
-			-- prune same lines at the beginning
+				-- prune same lines at the beginning
 			from
 			until
 				start_src > end_src
@@ -153,7 +162,7 @@ feature {NONE} -- Implementation
 				start_dst := start_dst + 1
 			end
 
-			-- prune same lines at the end
+				-- prune same lines at the end
 			from
 			until
 				start_src > end_src
@@ -167,7 +176,7 @@ feature {NONE} -- Implementation
 				end_dst := end_dst - 1
 			end
 
-			-- build hashtable which maps the contents in dst to their lines
+				-- build hashtable which maps the contents in dst to their lines
 			create hash_dst.make (end_dst - start_dst)
 			from
 				i := start_dst
@@ -187,18 +196,18 @@ feature {NONE} -- Implementation
 			create work.make (100)
 			create links.make (100)
 
-			-- loop trough the source
+				-- loop trough the source
 			from
 				si := start_src
 			until
 				si > end_src
 			loop
-				-- do we have matches in dst?
+					-- do we have matches in dst?
 				if hash_dst.has (src[si]) then
 					matches := hash_dst.item (src[si])
 					i := 0
 
-					-- for each match
+						-- for each match
 					from
 						matches.finish
 					until
@@ -206,16 +215,16 @@ feature {NONE} -- Implementation
 					loop
 						di := matches.item
 
-						-- OPTIMIZATION: in most cases the further matches replace the last match, so we make a shortcut for this here
+							-- OPTIMIZATION: in most cases the further matches replace the last match, so we make a shortcut for this here
 						if i > 1 and work[i] > di and work[i-1] < di then
 							work[i] := di
 						else
-							-- add the element into the work list
-							-- if the element is already in the list, do nothing and set i to -1
-							-- if the place where the element belongs is filled with something else, replace it and set i to the position
-							-- if there is no place, add it at the end and set i to the position
+								-- add the element into the work list
+								-- if the element is already in the list, do nothing and set i to -1
+								-- if the place where the element belongs is filled with something else, replace it and set i to the position
+								-- if there is no place, add it at the end and set i to the position
 
-							-- OPTIMIZATION: shortcut for the cases that the entry has to be added at the end
+								-- OPTIMIZATION: shortcut for the cases that the entry has to be added at the end
 							if work.is_empty or else work.last < di then
 								work.extend (di)
 								i := work.count
@@ -241,7 +250,7 @@ feature {NONE} -- Implementation
 							end
 						end
 
-						-- now if we added the element to the work list, add it as a match into our links list
+							-- now if we added the element to the work list, add it as a match into our links list
 						if i /= -1 then
 							if i > 1 then
 								create link.make (links[i-1], si, di)
@@ -262,11 +271,11 @@ feature {NONE} -- Implementation
 				si := si + 1
 			end
 
-			-- store the matches
+				-- store the matches
 			if links.count > 0 then
 				from
 					link := links[links.count]
-					-- check if the values themselves are also equal (above we worked with hashes)
+						-- check if the values themselves are also equal (above we worked with hashes)
 					if (src[link.index_src]).is_equal(dst[link.index_dst]) then
 						all_matches.put (link.index_dst+1, link.index_src+1)
 					end
@@ -274,7 +283,7 @@ feature {NONE} -- Implementation
 					link.next = void
 				loop
 					link := link.next
-					-- check if the values themselves are also equal (above we worked with hashes)
+						-- check if the values themselves are also equal (above we worked with hashes)
 					if (src[link.index_src]).is_equal(dst[link.index_dst]) then
 						all_matches.put (link.index_dst+1, link.index_src+1)
 					end

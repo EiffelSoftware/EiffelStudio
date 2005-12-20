@@ -76,7 +76,7 @@ feature -- Access
 		ensure
 			non_void_name: Result /= Void
 		end
-		
+
 	full_formatted_type_name (name: STRING): STRING is
 			-- Format .NET type name `name' to Eiffel class name.
 		require
@@ -133,7 +133,7 @@ feature -- Access
 		ensure
 			non_void_name: Result /= Void
 		end
-	
+
 	formatted_feature_name (name: STRING): STRING is
 			-- Format `name' to Eiffel conventions
 		require
@@ -158,7 +158,7 @@ feature -- Access
 			Result := Result.twin
 		ensure
 			non_void_result: Result /= Void
-		end	
+		end
 
 	formatted_argument_name (name: STRING; pos: INTEGER): STRING is
 			-- Format argument at position `pos'.
@@ -181,7 +181,7 @@ feature -- Access
 		ensure
 			formatted_argument_name_not_void: Result /= Void
 		end
-		
+
 	formatted_variable_name (name: STRING): STRING is
 			-- Format `name' to Eiffel conventions
 		require
@@ -350,7 +350,7 @@ feature -- Access
 				i := i + 1
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	escaped_character (a_character: CHARACTER): STRING is
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 			Result.append_character ('x')
 			Result.append (a_character.code.out)
 		end
-			
+
 	trim_end_digits (s: STRING) is
 			-- Remove end digits from `s' and append `_' if needed.
 		require
@@ -401,14 +401,14 @@ feature {NONE} -- Implementation
 			nb, i: INTEGER
 			put_us: BOOLEAN
 		do
-			create Result.make (s.count + (s.count // 2)) 
+			create Result.make (s.count + (s.count // 2))
 				-- Allocate an extra 1/3 to avoid unecessary resizing
 			Result.append_character (s.item (1).lower)
 			if s.count >= 2 then
 				from
 					i := 2
-					p := s.item (i - 1) 
-					c := s.item (i) 
+					p := s.item (i - 1)
+					c := s.item (i)
 					nb := s.count
 				until
 					i >= nb
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 							if a_class_format then
 									-- allows IInterfaceName = IINTERFACE_NAME, CClassName = CCLASS_NAME but FBar = F_BAR as per other rules, but allows UICues = UI_CUES
 								put_us := ((i = 2) implies (p /= 'I' and p /= 'C')) or i > 2
-							else	
+							else
 									-- allows IUnknown = iunknown, SetIUnknown = set_iunknown and SetFBar = set_f_bar
 								if i >= 3 then
 									put_us := (not s.item (i - 2).is_upper) implies (p /= 'I')
@@ -442,25 +442,25 @@ feature {NONE} -- Implementation
 						end
 					else
 						put_us := False
-					end	
-	
+					end
+
 					if put_us then
-						Result.append_character ('_')				
-					end					
+						Result.append_character ('_')
+					end
 					Result.append_character (c.lower)
 					i := i + 1
-					
+
 					p := c
 					c := n
 				end
-				
+
 				if (p.is_alpha and p.is_lower and c.is_digit) or (p.is_lower and c.is_upper) then
 					Result.append_character ('_')
 				end
 				Result.append_character (c.lower)
 			end
 		end
-		
+
 	type_mapping_table: HASH_TABLE [STRING, STRING] is
 			-- Special types
 		local
@@ -482,7 +482,7 @@ feature {NONE} -- Implementation
 				full_name_type_mapping_table.forth
 			end
 		end
-		
+
 	full_name_type_mapping_table: HASH_TABLE [STRING, STRING] is
 			-- Special types indexed by .NET full name (including namespace)
 		once
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_VOID", "System.Void")
 			Result.put ("SYSTEM_ATTRIBUTE", "System.Attribute")
 			Result.put ("NATIVE_EXCEPTION", "System.Exception")
-			
+
 				-- Threading conflicts
 			Result.put ("SYSTEM_THREAD", "System.Threading.Thread")
 			Result.put ("SYSTEM_MUTEX", "System.Threading.Mutex")
@@ -604,8 +604,8 @@ feature {NONE} -- Implementation
 			Result.put ("variant_", "variant")
 			Result.put ("void_", "void")
 			Result.put ("when_", "when")
-			Result.put ("xor_", "xor")			
-		end 
+			Result.put ("xor_", "xor")
+		end
 
 	argument_mapping_table: HASH_TABLE [STRING, STRING] is
 			-- Mapping for type when used in feature name to distinguish between
@@ -627,12 +627,11 @@ feature {NONE} -- Implementation
 			Result.put ("real", "Single")
 		end
 
-	operators: HASH_TABLE [STRING, STRING] is
-			-- Operator symbols table
+	unary_operators: HASH_TABLE [STRING, STRING] is
+			-- Unary known operators table.
 		once
-			create Result.make (200)
-			
-			-- Unary operators
+			create Result.make (11)
+
 			Result.put ("#--", "op_Decrement")
 			Result.put ("#++", "op_Increment")
 			Result.put ("-", "op_UnaryNegation")
@@ -643,8 +642,15 @@ feature {NONE} -- Implementation
 			Result.put ("&", "op_AddressOf")
 			Result.put ("#~", "op_OnesComplement")
 			Result.put ("*", "op_PointerDereference")
-			
-			-- Binary operators
+		ensure
+			result_attached: Result /= Void
+		end
+
+	binary_operators: HASH_TABLE [STRING, STRING] is
+			-- binary known operators table.
+		once
+			create Result.make (37)
+
 			Result.put ("+", "op_Addition" )
 			Result.put ("-", "op_Subtraction")
 			Result.put ( "*", "op_Multiply")
@@ -680,11 +686,21 @@ feature {NONE} -- Implementation
 			Result.put ("#|=", "op_BitwiseOrAssignment")
 			Result.put ("#,", "op_Comma")
 			Result.put ("#/=", "op_DivisionAssignment")
-			
-			-- Constructor
+		ensure
+			result_attached: Result /= Void
+		end
+
+	operators: HASH_TABLE [STRING, STRING] is
+			-- Operator symbols table
+		once
+			create Result.make (unary_operators.count + binary_operators.count + 1)
+			Result.merge (unary_operators)
+			Result.merge (binary_operators)
+
+				-- Constructor
 			Result.put ("make", ".ctor")
 		end
-	
+
 feature {NONE} -- Constants
 
 	single_dot_string: STRING is "."

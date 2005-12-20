@@ -522,5 +522,5 @@ feature {COMPILER_EXPORTER} -- Setting
 
 invariant
 	convertors_valid: convertors /= Void implies not convertors.is_empty
-
+	
 end -- class CLASS_AS

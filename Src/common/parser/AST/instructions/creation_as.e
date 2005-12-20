@@ -8,9 +8,6 @@ deferred class CREATION_AS
 inherit
 	INSTRUCTION_AS
 
---create
---	initialize
-
 feature {NONE} -- Initialization
 
 	initialize (tp: like type; tg: like target; c: like call) is

@@ -24,7 +24,7 @@ feature {NONE} -- Initlization
 			set_transparent (255 // 5 * 3)
 		end
 
-feature
+feature {NONE} -- Implementation
 
 	set_transparent (a_alpha: INTEGER)is
 			-- Set transparent. a_alpha is a value from 0-255.

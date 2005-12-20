@@ -2057,6 +2057,7 @@ feature -- Freeezing
 		require
 			root_class.is_compiled
 		do
+			Eiffel_project.terminate_freezing
 			freezing_occurred := True
 
 				-- We are freezing our project, we need to reset `melted_file_name'
@@ -2191,6 +2192,7 @@ feature -- Final mode generation
 			retried: BOOLEAN
 			d1, d2: DATE_TIME
 		do
+			eiffel_project.terminate_finalizing
 			if not retried and is_finalization_needed then
 					-- Reset `disposable_descendants' since they can have changed
 					--| Note: That is important to recompute it, as this is a once

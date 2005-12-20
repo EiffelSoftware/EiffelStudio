@@ -187,6 +187,7 @@ feature -- Redefine.
 			else
 				internal_docking_manager.command.lock_update
 				create l_floating_state.make (a_x, a_y, internal_docking_manager)
+				l_floating_state.set_size (zone.width, zone.height)
 				dock_at_top_level (l_floating_state.inner_container)
 				l_floating_state.update_title_bar
 				l_orignal_multi_dock_area.update_title_bar

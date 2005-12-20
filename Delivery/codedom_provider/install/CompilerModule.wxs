@@ -3,6 +3,7 @@
 	<Module Id='CompilerModule' Guid='7CB4249B-E5C5-4b0f-847C-D68A48A81C0B' Language='1033' Version='5.6'>
 		<Package Id='37BF50AB-6464-46d2-AB23-C93B34DE0678' Description='Eiffel for ASP.NET Compiler Merge Module' Comments='Compiler files.' Manufacturer='Eiffel Software' InstallerVersion='200' Compressed='yes' />
 		<Property Id='FRAMEWORKVERSION'>empty<RegistrySearch Id='AppReg2' Root='HKLM' Key='SOFTWARE\Microsoft\.NETFramework\policy\v1.1' Name='4322' Type='raw' /></Property>
+		<Property Id='CODEDOM_DELIVERY'>$(env.CODEDOM_DELIVERY)</Property>
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
 			<Directory Id='MergeRedirectFolder'>
@@ -25,11 +26,11 @@
 				<Directory Id='PrecompDir' Name='precomp'>
 					<Component Id='PrecompDirFiles10' Guid='228D563A-43CF-4473-A48E-5C0843A82F8A'>
 						<Condition><![CDATA[FRAMEWORKVERSION = "empty"]]></Condition>
-						<File Id='precomp_ace' Name='ace.ace' Src='ace10.ace'/>
+						<File Id='precomp_ace' Name='ace.ace' Src='[CODEDOM_DELIVERY]\ace10.ace'/>
 					</Component>
 					<Component Id='PrecompDirFiles11' Guid='8252EA78-DD95-4ad3-91B2-4B46939734B3'>
 						<Condition><![CDATA[FRAMEWORKVERSION <> "empty"]]></Condition>
-						<File Id='precomp_ace' Name='ace.ace' Src='ace11.ace'/>
+						<File Id='precomp_ace' Name='ace.ace' Src='[CODEDOM_DELIVERY]\ace11.ace'/>
 					</Component>
 				</Directory>
 				<Directory Id='StudioDir' Name='studio'>

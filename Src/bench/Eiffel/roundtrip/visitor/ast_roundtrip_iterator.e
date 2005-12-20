@@ -295,9 +295,9 @@ feature
 			-- Process `l_as'.
 		do
 			if l_as.target /= Void then
-				process_symbol_as (l_as.lparan_symbol)
+				safe_process (l_as.lparan_symbol)
 				l_as.target.process (Current)
-				process_symbol_as (l_as.rparan_symbol)
+				safe_process (l_as.rparan_symbol)
 			end
 			safe_process (l_as.tilda_symbol)
 			safe_process (l_as.feature_name)

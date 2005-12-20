@@ -13,7 +13,8 @@ inherit
 			is_maximized,
 			set_title_bar_focus_color,
 			on_focus_in,
-			on_focus_out
+			on_focus_out,
+			on_normal_max_window
 		end
 create
 	make
@@ -133,6 +134,15 @@ feature {NONE} -- Implementation
 		do
 			Precursor {SD_DOCKING_ZONE}
 			window.set_focus_color (False)
+		end
+
+	on_normal_max_window is
+			-- Redefine
+		do
+			if window.is_show_normal_max then
+				Precursor {SD_DOCKING_ZONE}
+			end
+
 		end
 
 invariant

@@ -30,23 +30,17 @@ feature {NONE} -- Initlization
 			internal_docking_manager := a_docking_manager
 			internal_mediator := a_docker_mediator
 			create internal_shared
-			check
-				internal_shared.icons.arrow_indicator_up_colors.count /= 0
-				internal_shared.icons.arrow_indicator_down_colors.count /= 0
-				internal_shared.icons.arrow_indicator_left_colors.count /= 0
-				internal_shared.icons.arrow_indicator_right_colors.count /= 0
-			end
 
 			l_area := internal_docking_manager.query.container_rectangle_screen
-			l_up_width := internal_shared.icons.arrow_indicator_up_colors.item (0).count // 3
-			l_bottom_width := internal_shared.icons.arrow_indicator_down_colors.item (0).count // 3
-			l_left_width := internal_shared.icons.arrow_indicator_left_colors.item (0).count // 3
-			l_right_width := internal_shared.icons.arrow_indicator_right_colors.item (0).count // 3
+			l_up_width := internal_shared.icons.arrow_indicator_up.width
+			l_bottom_width := internal_shared.icons.arrow_indicator_down.width
+			l_left_width := internal_shared.icons.arrow_indicator_left.width
+			l_right_width := internal_shared.icons.arrow_indicator_right.width
 
-			l_up_height := internal_shared.icons.arrow_indicator_up_colors.count
-			l_bottom_height := internal_shared.icons.arrow_indicator_down_colors.count
-			l_left_height := internal_shared.icons.arrow_indicator_left_colors.count
-			l_right_height := internal_shared.icons.arrow_indicator_right_colors.count
+			l_up_height := internal_shared.icons.arrow_indicator_up.height
+			l_bottom_height := internal_shared.icons.arrow_indicator_down.height
+			l_left_height := internal_shared.icons.arrow_indicator_left.height
+			l_right_height := internal_shared.icons.arrow_indicator_right.height
 
 			create top_rectangle.make (l_area.left + l_area.width // 2 - l_up_width // 2, l_area.top, l_up_width, l_up_height)
 			create bottom_rectangle.make (l_area.left + l_area.width // 2 - l_bottom_width // 2, l_area.bottom - l_bottom_height, l_bottom_width, l_bottom_height)
@@ -124,10 +118,10 @@ feature  -- Redefine
 			-- Redefine.
 		do
 			if internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y) then
-				update_indicator_area (top_rectangle, internal_shared.icons.arrow_indicator_up_colors)
-				update_indicator_area (bottom_rectangle, internal_shared.icons.arrow_indicator_down_colors)
-				update_indicator_area (left_rectangle, internal_shared.icons.arrow_indicator_left_colors)
-				update_indicator_area (right_rectangle, internal_shared.icons.arrow_indicator_right_colors)
+				internal_shared.feedback.draw_pixmap_with_mask (top_rectangle.left, top_rectangle.top, internal_shared.icons.arrow_indicator_up, internal_shared.icons.arrow_indicator_up_mask)
+				internal_shared.feedback.draw_pixmap_with_mask (bottom_rectangle.left, bottom_rectangle.top, internal_shared.icons.arrow_indicator_down, internal_shared.icons.arrow_indicator_down_mask)
+				internal_shared.feedback.draw_pixmap_with_mask (left_rectangle.left, left_rectangle.top, internal_shared.icons.arrow_indicator_left, internal_shared.icons.arrow_indicator_left_mask)
+				internal_shared.feedback.draw_pixmap_with_mask (right_rectangle.left, right_rectangle.top, internal_shared.icons.arrow_indicator_right, internal_shared.icons.arrow_indicator_right_mask)
 			else
 				-- Clear indicator
 			end
@@ -167,14 +161,6 @@ feature  -- Redefine
 		end
 
 feature {NONE} -- Implementation
-
-	update_indicator_area (a_rect: like top_rectangle; a_pixmap: SPECIAL [SPECIAL [INTEGER]]) is
-			-- Update feedback area when pointer in `a_rect'.
-		do
-			internal_shared.feedback.draw_pixmap_by_colors (a_rect.left, a_rect.top, a_pixmap)
-		ensure
-			must_process:
-		end
 
 	top_rectangle, bottom_rectangle, left_rectangle, right_rectangle: EV_RECTANGLE
 			-- Areas which contain four indicator.

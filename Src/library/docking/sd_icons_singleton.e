@@ -59,135 +59,92 @@ feature -- Icons
 			end
 
 	arrow_indicator_up: EV_PIXMAP is
-				-- Indicator draw on the screen when user dragging a window.
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_up_colors: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_up_colors_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
+			-- Feedback indicator which is at top.
+		local
+			l_temp: SD_SIDE_INDICATOR
+		once
+			create l_temp.make_top_to_bottom (Void)
+			Result :=  l_temp
+		end
 
 	arrow_indicator_down: EV_PIXMAP is
-				-- Indicator draw on the screen when user dragging a window.
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_down_colors: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_down_colors_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
+			-- Feedback indicator which is at down.
+		local
+			l_temp: SD_SIDE_INDICATOR
+		once
+			create l_temp.make_bottom_to_top (Void)
+			Result :=  l_temp
+		end
 
 	arrow_indicator_left: EV_PIXMAP is
-				-- Indicator draw on the screen when user dragging a window.
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_left_colors: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_left_colors_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
+			-- Feedback indicator which is at left.
+		local
+			l_temp: SD_SIDE_INDICATOR
+		once
+			create l_temp.make_left_to_right (Void)
+			Result :=  l_temp
+		end
 
 	arrow_indicator_right: EV_PIXMAP is
-				-- Indicator draw on the screen when user dragging a window.
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
+			-- Feedback indicator which is at right.
+		local
+			l_temp: SD_SIDE_INDICATOR
+		once
+			create l_temp.make_right_to_left (Void)
+			Result :=  l_temp
+		end
 
-	arrow_indicator_right_colors: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
+	arrow_indicator_up_mask: EV_PIXMAP is
+			-- Mask of `arrow_indicator_up'.
+		local
+			l_temp: SD_SIDE_MASK
+		once
+			create l_temp.make_top_to_bottom (Void)
+			Result := l_temp
+		end
 
-	arrow_indicator_right_colors_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
+	arrow_indicator_down_mask: EV_PIXMAP is
+			-- Mask of `arrow_indicator_down'.
+		local
+			l_temp: SD_SIDE_MASK
+		once
+			create l_temp.make_bottom_to_top (Void)
+			Result := l_temp
+		end
+
+	arrow_indicator_left_mask: EV_PIXMAP is
+			-- Mask of `arrow_indicator_left'.
+		local
+			l_temp: SD_SIDE_MASK
+		once
+			create l_temp.make_left_to_right (Void)
+			Result := l_temp
+		end
+
+	arrow_indicator_right_mask: EV_PIXMAP is
+			-- Mask of `arrow_indicator_right'.
+		local
+			l_temp: SD_SIDE_MASK
+		once
+			create l_temp.make_right_to_left (Void)
+			Result := l_temp
+		end
 
 	arrow_indicator_center: EV_PIXMAP is
-				-- Center indicator draw on the screen when user dragging a window.
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
+			-- Feedback indicator which is at center.
+		local
+			l_temp: SD_CENTER_INDICATOR
+		once
+			create l_temp.make_top_to_bottom (Void)
+			Result :=  l_temp
+		end
 
-	arrow_indicator_center_colors: SPECIAL [SPECIAL [INTEGER]] is
-				-- Center indicator draw on the screen when user dragging a window.
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_center_colors_up_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_center_colors_left_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_center_colors_right_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_center_colors_bottom_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
-
-	arrow_indicator_center_colors_center_lighten: SPECIAL [SPECIAL [INTEGER]] is
-				--
-			deferred
-			ensure
-				not_void: Result /= Void
-			end
+	arrow_indicator_center_mask: EV_PIXMAP is
+			-- Mask of `arrow_indicator_center'.
+		local
+			l_temp: SD_CENTER_MASK
+		once
+			create l_temp.make_top_to_bottom (Void)
+			Result := l_temp
+		end
 end

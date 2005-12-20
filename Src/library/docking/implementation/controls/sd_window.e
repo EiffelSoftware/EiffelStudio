@@ -26,7 +26,7 @@ feature {NONE} -- Initlization
 			default_create
 			create internal_shared
 			create internal_vertical_box
-				
+
 			internal_title_bar := internal_shared.widget_factory.title_bar (a_style, a_zone)
 			internal_title_bar.set_minimum_height (internal_shared.title_bar_height)
 			internal_title_bar.close_request_actions.extend (agent close)
@@ -39,11 +39,11 @@ feature {NONE} -- Initlization
 
 			internal_vertical_box.extend (internal_title_bar)
 			internal_vertical_box.disable_item_expand (internal_title_bar)
-		
+
 			create {EV_HORIZONTAL_BOX} internal_border_box
 			internal_border_box.set_border_width (internal_shared.focuse_border_width)
 			internal_vertical_box.extend (internal_border_box)
-			
+
 			extend (internal_vertical_box)
 			set_minimum_size (internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
 		ensure
@@ -112,6 +112,12 @@ feature -- Basic operation
 			internal_title_bar.set_show_normal_max (a_show)
 		ensure
 			set: a_show = internal_title_bar.is_show_normal_max
+		end
+
+	is_show_normal_max: BOOLEAN is
+			-- If titile bar show normal max button?
+		do
+			Result := internal_title_bar.is_show_normal_max
 		end
 
 	set_show_stick (a_show: BOOLEAN) is
@@ -254,10 +260,10 @@ feature {NONE} -- Implementation
 
 	internal_vertical_box: EV_VERTICAL_BOX
 			-- Vertical box to hold SD_TITLE_BAR and user_widget.
-	
+
 	internal_border_box: EV_BOX
 			-- Box for border highlight.
-	
+
 invariant
 
 	internal_shared_not_void: internal_shared /= Void

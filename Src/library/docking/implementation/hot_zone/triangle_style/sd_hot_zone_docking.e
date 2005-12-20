@@ -142,27 +142,13 @@ feature {NONE} -- Implementation functions.
 		local
 			l_shared: like internal_shared
 			l_icons: SD_ICONS_SINGLETON
+			l_x, l_y: INTEGER
 		do
 			l_shared := internal_shared
 			l_icons := l_shared.icons
-			draw_drag_window_indicator_by_colors (l_icons.arrow_indicator_center_colors)
-		end
-
-	draw_drag_window_indicator_by_colors (a_colors: SPECIAL [SPECIAL [INTEGER]]) is
-			-- Draw dragged window feedback which represent window position.
-		require
-			a_colors_attached: a_colors /= Void
-			a_colors_not_empty: a_colors.count /= 0
-		local
-			x, y: INTEGER
-			l_shared: like internal_shared
-			l_rect: like internal_rectangle
-		do
-			l_shared := internal_shared
-			l_rect := internal_rectangle
-			x := l_rect.left + l_rect.width // 2 - a_colors.item (0).count // 3 // 2
-			y := l_rect.top + l_rect.height // 2 - a_colors.count // 2
-			l_shared.feedback.draw_pixmap_by_colors (x, y, a_colors)
+			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_shared.icons.arrow_indicator_center.width // 2
+			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_shared.icons.arrow_indicator_center.height // 2
+			l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center, internal_shared.icons.arrow_indicator_center_mask)
 		end
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is

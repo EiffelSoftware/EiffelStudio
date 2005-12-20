@@ -31,6 +31,17 @@ feature -- Basic operations
 			screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
 		end
 
+	draw_pixmap_with_mask (a_screen_x, a_screen_y: INTEGER; a_target_pixmap, a_mask: EV_PIXMAP) is
+			-- Draw a_target_pixmap whit mask which is a_mask.
+		do
+			screen.set_invert_mode
+			screen.draw_pixmap (a_screen_x, a_screen_y, a_target_pixmap)
+			screen.set_and_mode
+			screen.draw_pixmap (a_screen_x, a_screen_y, a_mask)
+			screen.set_invert_mode
+			screen.draw_pixmap (a_screen_x, a_screen_y, a_target_pixmap)
+		end
+
 	draw_pixmap_by_colors (a_screen_x, a_screen_y: INTEGER; a_colors: SPECIAL [SPECIAL [INTEGER]]) is
 			-- Draw a pixmap on desktop by colors, black is discarded.
 		require

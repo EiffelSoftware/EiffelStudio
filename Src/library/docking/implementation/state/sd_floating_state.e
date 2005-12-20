@@ -117,7 +117,7 @@ feature -- Redefine.
 			l_tab_zone: SD_TAB_ZONE
 		do
 			internal_docking_manager.command.lock_update
-			
+
 			l_zones := inner_container.zones
 			from
 				l_zones.start
@@ -154,10 +154,10 @@ feature -- Redefine.
 				l_zones.forth
 			end
 
-			internal_zone.destroy			
+			internal_zone.destroy
 
 			internal_docking_manager.command.unlock_update
-			
+
 		end
 
 	content_void: BOOLEAN is
@@ -180,6 +180,12 @@ feature -- Command
 			-- Update title bar.
 		do
 			internal_zone.update_title_bar
+		end
+
+	set_size (a_width, a_height: INTEGER) is
+			-- Set flaoting zone size.
+		do
+			internal_zone.set_size (a_width, a_height)
 		end
 
 feature -- Query
@@ -249,5 +255,5 @@ feature {NONE} -- Implementation
 			l_spliter.set_proportion (0.5)
 			inner_container.restore_spliter_position (l_current_item)
 		end
-			
+
 end

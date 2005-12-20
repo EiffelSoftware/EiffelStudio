@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		ensure
 			mini_toolbar_exists: mini_toolbar /= Void
 		end
-		
+
 	build_explorer_bar_item (explorer_bar: EB_EXPLORER_BAR) is
 			-- Build the associated explorer bar item and
 			-- Add it to `explorer_bar'
@@ -137,7 +137,7 @@ feature -- Element change
 			classc_stone: CLASSC_STONE
 			external_classc: EXTERNAL_CLASS_C
 			feature_clauses: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			new_class: like current_class		
+			new_class: like current_class
 			conv_cst: CLASSI_STONE
 		do
 			conv_cst ?= c
@@ -157,7 +157,7 @@ feature -- Element change
 						if classc_stone.e_class /= current_compiled_class then
 							widget.wipe_out
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
-							new_class := classc_stone.e_class.ast				
+							new_class := classc_stone.e_class.ast
 							feature_clauses := new_class.features
 									-- Build the tree
 							--| FIXME
@@ -170,7 +170,7 @@ feature -- Element change
 							if feature_clauses /= Void then
 								tree.build_tree (feature_clauses)
 							else
-								tree.extend (create {EV_TREE_ITEM}.make_with_text 
+								tree.extend (create {EV_TREE_ITEM}.make_with_text
 									(Warning_messages.W_no_feature_to_display))
 							end
 							Eiffel_system.System.set_current_class (Void)
@@ -220,7 +220,9 @@ feature {EB_FEATURES_TREE} -- Status setting
 --			if current_compiled_class /= Void and then current_compiled_class.has_feature_table then
 --				ef := current_compiled_class.feature_with_name (a_feature.feature_name)
 				create feature_stone.make (a_feature)
+				development_window.set_feature_locating (true)
 				development_window.set_stone (feature_stone)
+				development_window.set_feature_locating (false)
 --			end
 		end
 

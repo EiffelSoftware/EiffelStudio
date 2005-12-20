@@ -2627,6 +2627,12 @@ feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, DOTNET_CLASS_CONTE
 			feature_clauses.put (a_features, a_type)
 		end
 
+	set_feature_locating (a_locating: BOOLEAN) is
+			-- Set `feature_locating' with `a_locating'.
+		do
+			feature_locating := a_locating
+		end
+
 	get_feature_clauses (a_type: STRING): ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]] is
 			-- Get list of feature clauses relevant to .NET type with name 'a_type'.
 		require
@@ -2643,6 +2649,9 @@ feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, DOTNET_CLASS_CONTE
 
 	feature_positions: HASH_TABLE [INTEGER, E_FEATURE]
 			-- Features indexed by line position in class text (for .NET features).
+
+	feature_locating: BOOLEAN
+			-- Is feature tool locating a feature?
 
 feature {EB_WINDOW_MANAGER} -- Window management / Implementation
 
@@ -3404,7 +3413,12 @@ feature {NONE} -- Implementation
 				create context_refreshing_timer.make_with_interval (100)
 				context_refreshing_timer.actions.extend (agent refresh_context_info)
 			end
-			context_refreshing_timer.set_interval (100)
+			if feature_locating then
+				context_refreshing_timer.set_interval (0)
+			else
+				context_refreshing_timer.set_interval (100)
+			end
+
 		end
 
 	on_text_fully_loaded is

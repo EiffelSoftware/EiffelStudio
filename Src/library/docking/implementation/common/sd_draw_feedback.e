@@ -31,15 +31,24 @@ feature -- Basic operations
 			screen.draw_pixmap (a_screen_x, a_screen_y, a_pixmap)
 		end
 
-	draw_pixmap_with_mask (a_screen_x, a_screen_y: INTEGER; a_target_pixmap, a_mask: EV_PIXMAP) is
+	draw_pixmap_with_mask (a_screen_x, a_screen_y: INTEGER; a_target_pixmap, a_mask, orignal_screen: EV_PIXMAP) is
 			-- Draw a_target_pixmap whit mask which is a_mask.
+		local
+			l_buffer: EV_PIXMAP
+			l_rect: EV_RECTANGLE
 		do
-			screen.set_invert_mode
-			screen.draw_pixmap (a_screen_x, a_screen_y, a_target_pixmap)
-			screen.set_and_mode
-			screen.draw_pixmap (a_screen_x, a_screen_y, a_mask)
-			screen.set_invert_mode
-			screen.draw_pixmap (a_screen_x, a_screen_y, a_target_pixmap)
+			create l_rect.make (a_screen_x, a_screen_y, a_target_pixmap.width, a_target_pixmap.height)
+			l_buffer := orignal_screen.sub_pixmap (l_rect)
+
+			l_buffer.set_invert_mode
+			l_buffer.draw_pixmap (0, 0, a_target_pixmap)
+			l_buffer.set_and_mode
+			l_buffer.draw_pixmap (0, 0, a_mask)
+			l_buffer.set_invert_mode
+			l_buffer.draw_pixmap (0, 0, a_target_pixmap)
+
+			screen.set_copy_mode
+			screen.draw_pixmap (a_screen_x, a_screen_y, l_buffer)
 		end
 
 	draw_pixmap_by_colors (a_screen_x, a_screen_y: INTEGER; a_colors: SPECIAL [SPECIAL [INTEGER]]) is

@@ -28,11 +28,11 @@ feature {NONE} -- Initlization
 			a_docker_mediator_not_void: a_docker_mediator /= Void
 		do
 			create internal_shared
-			internal_docker_mediator := a_docker_mediator
+			internal_mediator := a_docker_mediator
 			internal_zone := a_zone
 			set_rectangle (a_rect)
 		ensure
-			set: internal_docker_mediator =  a_docker_mediator
+			set: internal_mediator =  a_docker_mediator
 		end
 
 feature -- Redefine

@@ -15,7 +15,7 @@ svn co %SVNURL%/%CODEDOM_RELEASE%/Src/bench/Eiffel Eiffel
 svn co %SVNURL%/%CODEDOM_RELEASE%/Src/common Eiffel/common
 CD Eiffel
 ECHO Exporting serialization classes (%COMPILER_RELEASE%) in override
-svn export %SVNURL%/%COMPILER_RELEASE% -d override Src/dotnet/consumer/serialization
+svn export %SVNURL%/%COMPILER_RELEASE%/Src/dotnet/consumer/serialization override
 CD ..
 ECHO Exporting runtime (%RELEASE%) in checkout...
 svn export %SVNURL%/%RELEASE%/Src/bench/C C

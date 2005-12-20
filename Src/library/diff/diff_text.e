@@ -43,7 +43,7 @@ feature -- Access
 				until
 					hunks.item.after
 				loop
-					-- What kind of line is it (add or remove)
+						-- What kind of line is it (add or remove)
 					line_add ?= hunks.item.item
 					if line_add /= void then
 						if ds > hunks.item.item.dst then
@@ -71,8 +71,8 @@ feature -- Access
 					hunks.item.forth
 				end
 
-				-- if we had only adds or dels in this block the other start/end position
-				-- is not filled and has to be computed with line_diff
+					-- if we had only adds or dels in this block the other start/end position
+					-- is not filled and has to be computed with line_diff
 				if se = -1 then
 					ss := ds-line_diff-1
 					se := ss-1
@@ -100,17 +100,22 @@ feature -- Access
 				line_diff := line_diff + block_line_diff
 				hunks.forth
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature -- Element change
 
 	set_text (a_src_text: STRING; a_dst_text: STRING) is
 			-- Set the two texts to compare line by line.
+		require
+			a_src_text_not_void: a_src_text /= Void
+			a_dst_text_not_void: a_dst_text /= Void
 		local
 			tmp_lst: LIST [STRING]
 			i: INTEGER
 		do
-			-- convert it into an array because it is faster to access
+				-- convert it into an array because it is faster to access
 			tmp_lst := a_src_text.split (line_delimiter)
 			create src.make(0, tmp_lst.count-1)
 			from
@@ -138,7 +143,6 @@ feature -- Element change
 			end
 
 			create unified_header.make_empty
-			values_set := true
 		ensure
 			values_set: values_set
 		end
@@ -147,7 +151,9 @@ feature -- Element change
 			-- Set the two files to compare line by line.
 		require
 			a_src_file_not_void: a_src_file /= void
+			a_src_file_not_empty: not a_src_file.is_empty
 			a_dst_file_not_void: a_dst_file /= void
+			a_dst_file_not_empty: not a_dst_file.is_empty
 		local
 			file_src, file_dst: PLAIN_TEXT_FILE
 			i: INTEGER
@@ -185,8 +191,6 @@ feature -- Element change
 				i := i + 1
 			end
 			file_dst.close
-
-			values_set := true
 		ensure
 			values_set
 		end
@@ -226,7 +230,7 @@ feature -- Basic operations
 				lines.after
 			loop
 				if not commands.after then
-					-- block header?
+						-- block header?
 					if commands.item.count > 4 and then ("@@ ").is_equal(commands.item.substring (1, 3)) then
 						if reversed then
 							tmp := commands.item.substring (commands.item.index_of (' ', 6)+2, commands.item.count-3)
@@ -247,7 +251,7 @@ feature -- Basic operations
 								Result.append_character (line_delimiter)
 							end
 						end
-					-- block data
+						-- block data
 					elseif commands.item.count > 0 then
 						if commands.item.item (1) = add_char then
 							Result.append (commands.item.substring (2, commands.item.count))
@@ -271,6 +275,8 @@ feature -- Basic operations
 					end
 				end
 			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

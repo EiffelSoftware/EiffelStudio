@@ -118,10 +118,10 @@ feature  -- Redefine
 			-- Redefine.
 		do
 			if internal_docking_manager.query.container_rectangle_screen.has_x_y (a_screen_x, a_screen_y) then
-				internal_shared.feedback.draw_pixmap_with_mask (top_rectangle.left, top_rectangle.top, internal_shared.icons.arrow_indicator_up, internal_shared.icons.arrow_indicator_up_mask)
-				internal_shared.feedback.draw_pixmap_with_mask (bottom_rectangle.left, bottom_rectangle.top, internal_shared.icons.arrow_indicator_down, internal_shared.icons.arrow_indicator_down_mask)
-				internal_shared.feedback.draw_pixmap_with_mask (left_rectangle.left, left_rectangle.top, internal_shared.icons.arrow_indicator_left, internal_shared.icons.arrow_indicator_left_mask)
-				internal_shared.feedback.draw_pixmap_with_mask (right_rectangle.left, right_rectangle.top, internal_shared.icons.arrow_indicator_right, internal_shared.icons.arrow_indicator_right_mask)
+				internal_shared.feedback.draw_pixmap_with_mask (top_rectangle.left, top_rectangle.top, internal_shared.icons.arrow_indicator_up, internal_shared.icons.arrow_indicator_up_mask, internal_mediator.orignal_screen)
+				internal_shared.feedback.draw_pixmap_with_mask (bottom_rectangle.left, bottom_rectangle.top, internal_shared.icons.arrow_indicator_down, internal_shared.icons.arrow_indicator_down_mask, internal_mediator.orignal_screen)
+				internal_shared.feedback.draw_pixmap_with_mask (left_rectangle.left, left_rectangle.top, internal_shared.icons.arrow_indicator_left, internal_shared.icons.arrow_indicator_left_mask, internal_mediator.orignal_screen)
+				internal_shared.feedback.draw_pixmap_with_mask (right_rectangle.left, right_rectangle.top, internal_shared.icons.arrow_indicator_right, internal_shared.icons.arrow_indicator_right_mask, internal_mediator.orignal_screen)
 			else
 				-- Clear indicator
 			end

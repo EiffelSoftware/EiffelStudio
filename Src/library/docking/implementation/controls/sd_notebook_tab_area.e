@@ -38,10 +38,33 @@ feature {NONE}  -- Implementation
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Handle resize actions.
 		local
-			l_tabs: ARRAYED_LIST [SD_NOTEBOOK_TAB]
+			l_tabs: ARRAYED_LIST [EV_WIDGET]
 		do
-			l_tabs := all_tabs
-			
+			updates_tabs_not_shown (a_width)
+			l_tabs := internal_tabs_not_shown.twin
+			from
+				l_tabs.start
+			until
+				l_tabs.after
+			loop
+				l_tabs.item.hide
+				l_tabs.forth	
+	
+			end
+			from
+				start
+			until
+				after
+			loop
+				if not l_tabs.has (item) then
+					item.show
+				end
+				
+				if not after then
+					forth
+				end
+				
+			end
 		end
 
 	on_drop_actions (a_any: ANY) is
@@ -69,7 +92,48 @@ feature {NONE}  -- Implementation
 
 		end
 
+	updates_tabs_not_shown (a_width: INTEGER) is
+			--
+		local
+			l_total_width: INTEGER
+			l_enough: BOOLEAN
+			l_current: SD_NOTEBOOK_TAB
+		do
+			create internal_tabs_not_shown.make (1)
+			if not is_empty then
+				from
+					start
+				until
+					after
+				loop
+					l_total_width := l_total_width + item.width
+					forth
+				end
+				from
+					finish
+				until
+					before or l_enough
+				loop
+					l_current ?= item
+					check only_contain_tabs: l_current /= Void end
+					if not l_current.is_selected then
+						if l_total_width > a_width then
+							internal_tabs_not_shown.extend (item)
+							l_total_width := l_total_width - item.width
+						else
+							l_enough := True
+						end
+					end
+					back
+				end				
+			end
+
+		end
+
 feature {NONE}  -- Implementation
+
+	internal_tabs_not_shown: ARRAYED_LIST [EV_WIDGET]
+			-- Tabs not shown which be not shown.
 
 	internal_notebook: SD_NOTEBOOK
 			-- Notebook which Current belong to.

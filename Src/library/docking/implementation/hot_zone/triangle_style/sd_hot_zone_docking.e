@@ -22,14 +22,15 @@ feature {NONE} -- Initlization
 			-- Creation method.
 		require
 			a_zone_not_void: a_zone /= Void
+			a_docker_mediator_not_void: a_docker_mediator /= Void
 		do
 			create internal_shared
 			internal_zone := a_zone
 			set_rectangle (a_rect)
-			internal_docker_mediator := a_docker_mediator
+			internal_mediator := a_docker_mediator
 		ensure
 			set: internal_zone = a_zone
-			set: internal_docker_mediator = a_docker_mediator
+			set: internal_mediator = a_docker_mediator
 		end
 
 feature -- Redefine
@@ -99,11 +100,11 @@ feature -- Redefine
 			-- Clear indicators.
 		do
 			if need_clear then
-				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_top)
-				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_bottom)
-				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_left)
-				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_right)
-				clear_rect (internal_docker_mediator.orignal_screen, internal_rectangle_center)
+				clear_rect (internal_mediator.orignal_screen, internal_rectangle_top)
+				clear_rect (internal_mediator.orignal_screen, internal_rectangle_bottom)
+				clear_rect (internal_mediator.orignal_screen, internal_rectangle_left)
+				clear_rect (internal_mediator.orignal_screen, internal_rectangle_right)
+				clear_rect (internal_mediator.orignal_screen, internal_rectangle_center)
 				need_clear := False
 			end
 		end
@@ -148,7 +149,7 @@ feature {NONE} -- Implementation functions.
 			l_icons := l_shared.icons
 			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_shared.icons.arrow_indicator_center.width // 2
 			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_shared.icons.arrow_indicator_center.height // 2
-			l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center, internal_shared.icons.arrow_indicator_center_mask)
+			l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
 		end
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is
@@ -180,9 +181,6 @@ feature {NONE} -- Implementation functions.
 
 feature {NONE} -- Implementation attributes.
 
-	internal_docker_mediator: SD_DOCKER_MEDIATOR
-			-- Docker mediator which Current is managed by.
-
 	internal_zone: SD_DOCKING_ZONE
 			-- Dokcing zone `Current' belong to.
 
@@ -200,7 +198,7 @@ feature {NONE} -- Implementation attributes.
 
 invariant
 
-	internal_docker_mediator_not_void: internal_docker_mediator /= Void
+	internal_docker_mediator_not_void: internal_mediator /= Void
 	internal_shared_not_void: internal_shared /= Void
 	internal_zone_not_void: internal_zone /= Void
 	internal_rectangle_not_void: internal_rectangle /= Void

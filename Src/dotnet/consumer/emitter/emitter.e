@@ -3,7 +3,7 @@ indexing
 	assembly_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (False) end,
 		create {ASSEMBLY_COMPANY_ATTRIBUTE}.make ("Eiffel Software") end,
-		create {ASSEMBLY_COPYRIGHT_ATTRIBUTE}.make ("Copyright Eiffel Software 1985-2003") end
+		create {ASSEMBLY_COPYRIGHT_ATTRIBUTE}.make ("Copyright Eiffel Software 1985-2006") end
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,26 +16,21 @@ inherit
 			make as parser_make
 		end
 
-	SHARED_XML_OUTPUT
-		export
-			{NONE} all
-		end
-
 	CACHE_PATH
 		export
 			{NONE} all
 		end
-		
+
 	SAFE_ASSEMBLY_LOADER
 		export
 			{NONE} all
 		end
-		
+
 	AR_SHARED_SUBSCRIBER
 		export
 			{NONE} all
 		end
-		
+
 	SHARED_LOGGER
 		export
 			{NONE} all
@@ -50,24 +45,24 @@ feature {NONE} -- Initialization
 			-- Creation procedure.
 		do
 			exec_from_cli := True
-			parser_make (<<help_switch, help_spelled_switch, no_logo_switch, list_assemblies_switch, 
+			parser_make (<<help_switch, help_spelled_switch, no_logo_switch, list_assemblies_switch,
 						list_assemblies_short, verbose_switch, verbose_short, add_switch, add_short,
-						remove_switch, remove_short, compact_switch, nice_switch, nice_short, fullname_switch,
+						remove_switch, remove_short, compact_switch, fullname_switch,
 						fullname_short, out_switch, out_short>>)
 			parse
-		
+
 			if not successful then
 				process_error (error_message)
 			else
 				complete_initialization
 				start
 			end
-			debug ("press_enter_to_exit")
+			--debug ("press_enter_to_exit")
 				io.put_string ("Press Enter to exit the application...")
 				io.read_line
-			end
+		--	end
 		end
-		
+
 	complete_initialization is
 			-- Completes initialization of instance given it current state
 		require
@@ -77,8 +72,8 @@ feature {NONE} -- Initialization
 			create cache_writer.make
 			create cache_reader
 			if verbose_output then
-				cache_writer.set_status_printer (agent display_status)	
-			end		
+				cache_writer.set_status_printer (agent display_status)
+			end
 			cache_writer.set_error_printer (agent process_error)
 		ensure
 			non_void_cache_writer: cache_writer /= Void
@@ -88,7 +83,7 @@ feature -- Access
 
 	help_switch: STRING is "?"
 			-- Switch used to display usage
-	
+
 	help_spelled_switch: STRING is "help"
 			-- Switch used to display usage
 
@@ -109,34 +104,28 @@ feature -- Access
 
 	add_switch: STRING is "add"
 			-- Switch used to put assembly in EAC
-	
+
 	add_short: STRING is "a"
 			-- Shortcut equivalent of `add_switch'
 
 	remove_switch: STRING is "remove"
 			-- Switch used to remove and assembly from EAC
-	
+
 	remove_short: STRING is "r"
 			-- Shortcut equivalent of `remove_switch'
-			
+
 	compact_switch: STRING is "compact"
 			-- Switch used to clean and compact EAC
 
-	nice_switch: STRING is "nice"
-			-- Switch used to create indented xml
-			
-	nice_short: STRING is "n"
-			-- Shortcut equivalent of `nice_switch'
-			
 	fullname_switch: STRING is "fullname"
 			-- Switch to indicate that assembly path is actually a display name
-			
+
 	fullname_short: STRING is "full"
 			-- Shortcut equivaleent of `fullname_switch'
-			
+
 	out_switch: STRING is "out"
 			-- Switch to specify alternative path to generate XML to.
-			
+
 	out_short: STRING is "o"
 			-- Shortcut equivalent of `out_short'
 
@@ -156,16 +145,16 @@ feature -- Status report
 
 	add_to_eac: BOOLEAN
 			-- Should assembly be put in EAC?
-	
+
 	remove_from_eac: BOOLEAN
 			-- Should assembly be removed from EAC?
-			
+
 	path_is_full_name: BOOLEAN
 			-- Is assembly path actually a display name?
-			
+
 	compact_cache: BOOLEAN
 			-- Should EAC be compacted?
-			
+
 feature {NONE} -- Implementation
 
 	start is
@@ -177,7 +166,7 @@ feature {NONE} -- Implementation
 			l_resolver: AR_RESOLVER
 		do
 			if not no_copyright_display then
-				display_copyright		
+				display_copyright
 			end
 			if list_assemblies then
 				display_assemblies_list
@@ -202,15 +191,15 @@ feature {NONE} -- Implementation
 					create l_resolver.make
 					resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 					l_resolver.add_resolve_path_from_file_name (l_assembly.location)
-					
+
 					if add_to_eac then
-						add_assembly_to_eac (l_assembly.location)						
+						add_assembly_to_eac (l_assembly.location)
 					elseif remove_from_eac then
 						remove_assembly_from_eac (l_assembly.location)
 					end
-					
+
 					resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
-					
+
 					if cache_writer /= Void and then not cache_writer.successful then
 						process_error (cache_writer.error_message)
 					end
@@ -245,8 +234,6 @@ feature {NONE} -- Implementation
 				remove_from_eac := True
 			elseif switch.is_equal (compact_switch) then
 				compact_cache := True
-			elseif switch.is_equal (nice_short) or switch.is_equal (nice_switch) then
-				has_indented_output.set_item (True)
 			elseif switch.is_equal (fullname_short) or switch.is_equal (fullname_switch) then
 				path_is_full_name := True
 			elseif switch.is_equal (out_short) or switch.is_equal (out_switch) then
@@ -272,7 +259,7 @@ feature {NONE} -- Implementation
 					set_error (no_operation, Void)
 				end
 			end
-			
+
 			if list_assemblies or display_usage_help then
 				verbose_output := True
 			end
@@ -288,7 +275,7 @@ feature {NONE} -- Implementation
 			io.put_string ("%NCopyright (C) EiffelSoftware. All rights reserved.")
 			io.put_string ("%N%N")
 		end
-		
+
 	display_usage is
 			-- Display tool usage
 		require
@@ -300,23 +287,22 @@ feature {NONE} -- Implementation
 			io.put_string ("  " + System_name + " /l <assembly> [/full] [/o:<path>] [/nologo]%N")
 			io.put_string ("  " + System_name + " /compact [/o:<path>] [/nologo]%N%N")
 			io.put_string ("Options:%N%N")
-			
+
 			io.put_string ("  /a[dd]        - Put assembly in Eiffel Assembly Cache.%N")
 			io.put_string ("  /r[emove]     - Remove assembly from Eiffel Assembly Cache.%N")
 			io.put_string ("  /o[ut]:<path> - Alternative path for Eiffel assembly cache.%N")
 			io.put_string ("  /full[name]   - Indicates that <assembly> is a full or part display name.%N")
 			io.put_string ("  /l[ist]       - List assemblies in EAC.%N")
 			io.put_string ("  /compact      - Cleans and compacts cache.%N")
-			io.put_string ("  /n[ice]       - Writes indented XML for each assemblies consumed metadata.%N")
 			io.put_string ("  /v[erbose]    - Display all information when consuming an assembly.%N")
-			io.put_string ("  /nologo       - Prevent display of copyright notice.%N")
+			io.put_string ("  /nologo       - Supresses display of copyright notice.%N")
 			io.put_string ("  /?            - Display's this usage guide.%N%N")
-			
+
 			io.put_string ("Arguments:%N%N")
 			io.put_string ("  <assembly>    - Name or path for assembly to generate XML metadata for.%N")
 			io.put_string ("  <path>        - A path to an existing folder on disk or UNC path.%N%N")
 		end
-	
+
 	display_status (s: STRING) is
 			-- Display progress status.
 		require
@@ -345,7 +331,7 @@ feature {NONE} -- Implementation
 		do
 			if exec_from_cli then
 				display_status ("Consuming '" + a_path + "' and all of it's dependencies.")
-			end	
+			end
 			cache_writer.add_assembly (a_path)
 		rescue
 			debug ("log_exceptions")
@@ -363,8 +349,8 @@ feature {NONE} -- Implementation
 			non_void_cache_writer: cache_writer /= Void
 		do
 			if exec_from_cli then
-				display_status ("Removing '" + a_path + "' and all dependents.")	
-			end		
+				display_status ("Removing '" + a_path + "' and all dependents.")
+			end
 			cache_writer.remove_recursive_assembly (a_path)
 		rescue
 			debug ("log_exceptions")
@@ -372,7 +358,7 @@ feature {NONE} -- Implementation
 			end
 			cache_writer.clean_cache
 		end
-		
+
 	display_assemblies_list is
 			-- Displays list of assemblies in EAC
 		local
@@ -387,8 +373,8 @@ feature {NONE} -- Implementation
 		do
 			if target_path /= Void and then not target_path.is_empty then
 				l_target_name := target_path.as_lower
-			end			
-			
+			end
+
 			l_assemblies := cache_reader.consumed_assemblies
 			if l_assemblies /= Void and then not l_assemblies.is_empty then
 				display_status ("The Eiffel Assembly Cache contains the following entries")
@@ -398,7 +384,7 @@ feature {NONE} -- Implementation
 					i > l_assemblies.count
 				loop
 					l_assembly_desc := l_assemblies.item (i).out
-					
+
 					if l_target_name /= Void then
 						if path_is_full_name then
 							l_show := l_target_name.is_equal (l_assembly_desc.substring (1, l_target_name.count.min (l_assembly_desc.count)).as_lower)
@@ -430,18 +416,18 @@ feature {NONE} -- Implementation
 				display_status ("The Eiffel Assembly Cache is empty.")
 			end
 		end
-		
+
 	compact_and_clean_cache is
 			-- compacts and cleans cache info
 		do
 			cache_writer.clean_cache
 			cache_writer.compact_cache_info
 		end
-	
+
 	target_path: STRING
 			-- Path of executing assembly
-			
-	System_name: STRING is 
+
+	System_name: STRING is
 			-- Name of executable
 		local
 			l_file_info: FILE_INFO
@@ -461,7 +447,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
 		end
-		
+
 	is_path_relative (a_path: STRING): BOOLEAN is
 			-- is `a_path' a relative path?
 		require
@@ -483,18 +469,18 @@ feature {NONE} -- Implementation
 				Result := a_path.index_of (':', 1) = 0
 			end
 		end
-	
+
 	cache_writer: CACHE_WRITER
 			-- cache writer to manipulate contents of specified EAC.
 
 	cache_reader: CACHE_REFLECTION
 			-- Cache reflection to read contents of specified EAC
-			
+
 	exec_from_cli: BOOLEAN
 			-- Is consumer being executed from a command line interface?
-	
+
 invariant
 	non_void_cache_writer: cache_writer /= Void
 	non_void_cache_reader: cache_reader /= Void
-	
+
 end -- class EMITTER

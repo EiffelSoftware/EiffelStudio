@@ -5,6 +5,8 @@
 SET EFLAGS=-finalize -keep
 IF "%ISE_EIFFEL%" == "" ECHO ISE_EIFFEL is not defined !!
 IF "%ISE_EIFFEL%" == "" GOTO END
+IF "%ISE_PLATFORM%" == "" ECHO ISE_PLATFORM is not defined !!
+IF "%ISE_PLATFORM%" == "" GOTO END
 SET PATH=%PATH%;%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin
 
 IF "%1"=="/release" GOTO CDREL

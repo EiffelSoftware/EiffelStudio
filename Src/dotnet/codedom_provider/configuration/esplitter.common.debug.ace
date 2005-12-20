@@ -25,14 +25,14 @@ default
 cluster
 	all thread:		"$EIFFEL_SRC\library\thread"
 		exclude
-			"classic"; "CVS"; 
+			"classic"; ".svn"; 
 		default
 			namespace ("EiffelSoftware.Library.Thread")
 		end
 
 	all thread_net:		"$EIFFEL_SRC\library.net\thread"
 		exclude
-			"CVS"; 
+			".svn"; 
 		default
 			namespace ("EiffelSoftware.Library.ThreadNet")
 		visible
@@ -54,7 +54,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC\library\gobo\library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "other";
+			"hact"; "se"; "ve"; "base"; ".svn"; "other";
 		default
 			namespace ("Gobo")
 		visible
@@ -64,7 +64,7 @@ cluster
 
 	all ast:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
-			"CVS";
+			".svn";
 		default
 			namespace ("EiffelSoftware.Compiler.Parser")
 		end

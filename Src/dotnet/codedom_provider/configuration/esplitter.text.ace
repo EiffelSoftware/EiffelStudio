@@ -25,7 +25,7 @@ default
 cluster
 	all root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\tools\splitter"
 		exclude
-			"CVS"; "bin"; "gui";
+			".svn"; "bin"; "gui";
 		default
 			namespace ("EiffelSoftware.Esplit")
 		end

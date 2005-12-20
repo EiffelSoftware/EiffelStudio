@@ -25,14 +25,14 @@ default
 cluster
 	all interface:		"$EIFFEL_SRC\dotnet\codedom_provider\interface"
 		exclude
-			"CVS"; 
+			".svn"; 
 		default
 			namespace ("EiffelSoftware.CodeDom")
 		end
 
 	all compiler:		"$EIFFEL_SRC\dotnet\codedom_provider\compiler"
 		exclude
-			"CVS"; "interface"; 
+			".svn"; "interface"; 
 		default
 			namespace ("EiffelSoftware.CodeDom.Compiler")
 		end
@@ -44,7 +44,7 @@ cluster
 
 	all code_generator:		"$EIFFEL_SRC\dotnet\codedom_provider\code_generator"
 		exclude
-			"CVS"; "interface"; 
+			".svn"; "interface"; 
 		default
 			namespace ("EiffelSoftware.CodeDom.CodeGenerator")
 		end
@@ -56,14 +56,14 @@ cluster
 
 	all parser:		"$EIFFEL_SRC\dotnet\codedom_provider\parser"
 		exclude
-			"CVS"; "interface"; 
+			".svn"; "interface"; 
 		default
 			namespace ("EiffelSoftware.CodeDom.Parser")
 		end
 
 	eiffel_parser_addons:	"$EIFFEL_SRC\Eiffel\API\error\common"
 		exclude
-			"CVS"; "error_handler.e"; "syntax_error.e"; 
+			".svn"; "error_handler.e"; "syntax_error.e"; 
 		default
 			namespace ("EiffelSoftware.CodeDom.Parser")
 		end
@@ -92,7 +92,7 @@ cluster
 
 	library gobo:		"$GOBO\library"
 		exclude
-			"hact"; "other"; "se"; "ve"; "expat"; "CVS"; 
+			"hact"; "other"; "se"; "ve"; "expat"; ".svn"; 
 		default
 			namespace ("EiffelSoftware.Library.Gobo")
 		end

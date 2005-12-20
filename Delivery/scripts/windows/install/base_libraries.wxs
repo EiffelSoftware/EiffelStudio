@@ -1191,9 +1191,11 @@
 								<Component Id="component2" Guid="7a80c241-625c-48bb-a36d-cc2614ad4b6f" >
 									<File Id="build_project_bpr" LongName="build_project.bpr" Name="BUILD_~1.BPR" />
 									<File Id="multi_column_list_row_string_comparator_e" LongName="multi_column_list_row_string_comparator.e" Name="MULTI_~1.E" />
+									<File Id="preferences_grid_e" LongName="preferences_grid.e" Name="PREFER~4.E" />
+									<File Id="preferences_grid_imp_e" LongName="preferences_grid_imp.e" Name="PR2CF0~1.E" />
 									<File Id="preferences_window_e" LongName="preferences_window.e" Name="PREFER~3.E" />
-									<File Id="preferences_window_imp_e" LongName="preferences_window_imp.e" Name="PREFER~4.E" />
-									<File Id="preference_constants_e" LongName="preference_constants.e" Name="PREFER~1.E" />
+									<File Id="preferences_window_imp_e" LongName="preferences_window_imp.e" Name="PREFER~1.E" />
+									<File Id="preference_constants_e" LongName="preference_constants.e" Name="PR7E47~1.E" />
 									<File Id="preference_constants_imp_e" LongName="preference_constants_imp.e" Name="PREFER~2.E" />
 									<File Id="system_interface_xml" LongName="system_interface.xml" Name="SYSTEM~1.XML" />
 								</Component>
@@ -1204,6 +1206,7 @@
 									<File Id="color_resource_widget_e" LongName="color_resource_widget.e" Name="COLOR_~1.E" />
 									<File Id="font_resource_widget_e" LongName="font_resource_widget.e" Name="FONT_R~1.E" />
 									<File Id="graphical_preference_factory_e" LongName="graphical_preference_factory.e" Name="GRAPHI~1.E" />
+									<File Id="shortcut_preference_widget_e" LongName="shortcut_preference_widget.e" Name="SHORTC~1.E" />
 								</Component>
 								<Directory Id="directory3" Name="dialogs">
 									<Component Id="component4" Guid="4fd420b9-9b36-4e05-b394-2b171cd0b526" >
@@ -1232,6 +1235,7 @@
 								<Component Id="component7" Guid="96085214-5d96-428b-830f-cc031180ce0d" >
 									<File Id="color_resource_e" LongName="color_resource.e" Name="COLOR_~1.E" />
 									<File Id="font_resource_e" LongName="font_resource.e" Name="FONT_R~1.E" />
+									<File Id="shortcut_preference_e" LongName="shortcut_preference.e" Name="SHORTC~1.E" />
 								</Component>
 							</Directory>
 						</Directory>

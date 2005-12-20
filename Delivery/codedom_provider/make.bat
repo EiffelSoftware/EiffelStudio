@@ -13,7 +13,7 @@ ECHO Building with following settings:
 SET ISE_PLATFORM=windows
 SET ISE_C_COMPILER=msc
 SET INIT_PATH=%PATH%;
-SET CODEDOM_DELIVERY=%PATH%;
+SET CODEDOM_DELIVERY=%CD%;
 
 REM Change these between releases:
 SET RELEASE=branches/Eiffel_56

@@ -24,49 +24,49 @@ cluster
 		-- WEL
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			"spec"; "clib"; "classic"; "CVS";
+			"spec"; "clib"; "classic"; ".svn";
  		default
  			namespace ("EiffelSoftware.Library.WEL")
 		end
 
 	all wel_net:		"$EIFFEL_SRC\library.net\wel"
  		exclude
-			"CVS";
+			".svn";
 		default
  			namespace ("EiffelSoftware.Library.WELNet")
 		end
 
 	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_delegate.e"; "ev_pixmap_imp_loader.e"; "CVS";
+			"Clib"; "gtk"; "gtk2"; "assign_attempt.e"; "ev_pixmap_imp_delegate.e"; "ev_pixmap_imp_loader.e"; ".svn";
  		default
  			namespace ("EiffelSoftware.Library.Vision2")
 		end
 
 	all vision2_net:		"$EIFFEL_SRC\library.net\vision2"
 		exclude
-			"CVS";
+			".svn";
  		default
  			namespace ("EiffelSoftware.Library.Vision2Net")
 		end
 
 	all vision2_extensions:		"$EIFFEL_SRC\library\vision2_extension"
 		exclude
-			"CVS"; "gtk"; "gtk2";
+			".svn"; "gtk"; "gtk2";
  		default
  			namespace ("EiffelSoftware.Library.Vision2Extension")
 		end
 
 	all thread:			"$EIFFEL_SRC\library\thread"
 		exclude
-			"classic"; "CVS";
+			"classic"; ".svn";
  		default
  			namespace ("EiffelSoftware.Library.Thread")
 		end
 		
 	all thread_net:			"$EIFFEL_SRC\library.net\thread"
  		exclude
-			"CVS";
+			".svn";
 		default
  			namespace ("EiffelSoftware.Library.ThreadNet")
 		end

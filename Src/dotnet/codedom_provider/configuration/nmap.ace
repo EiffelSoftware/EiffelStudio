@@ -25,7 +25,7 @@ default
 cluster
 	root_cluster:		"$EIFFEL_SRC\dotnet\codedom_provider\tools\name_mapper"
 		exclude
-			"CVS"; "bin"; "text"; 
+			".svn"; "bin"; "text"; 
 		default
 			namespace ("EiffelSoftware.NameMapper")
 		end
@@ -37,14 +37,14 @@ cluster
 
 	all thread: "$EIFFEL_SRC\library\thread"
 		exclude
-			"CVS"; "classic"
+			".svn"; "classic"
 		default
 			namespace ("EiffelSoftware.Library.Thread")
 		end
 
 	all thread_net: "$EIFFEL_SRC\library.net\thread"
 		exclude
-			"CVS";
+			".svn";
 		default
 			namespace ("EiffelSoftware.Library.ThreadNet")
 		end

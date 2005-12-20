@@ -20,8 +20,6 @@ feature {NONE} -- Initialization
 
 	initialize (t: like tag; e: like expr; s_as: like colon_symbol) is
 			-- Create a new TAGGED AST node.
---		require
---			e_not_void: e /= Void
 		do
 			tag := t
 			expr := e
@@ -103,9 +101,6 @@ feature -- Comparison
 		do
 			Result := equivalent (tag, other.tag) and then equivalent (expr, other.expr)
 		end;
-
---invariant
---	expr_not_void: expr /= Void
 
 invariant
 	not_both_tag_and_expr_void: not (tag = Void and expr = Void)

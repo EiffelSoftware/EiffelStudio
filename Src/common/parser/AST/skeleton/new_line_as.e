@@ -20,8 +20,8 @@ feature -- Initialization
 		require
 			a_scn_not_void: a_scn /= Void
 		do
-			set_shared_text (a_scn)
-			make_with_location (a_scn.line, a_scn.column, a_scn.position, text.count)
+			set_text (new_line_text)
+			make_with_location (a_scn.line, a_scn.column, a_scn.position, 1)
 		end
 
 	make_with_data (a_text: STRING; l, c, p, s: INTEGER) is
@@ -58,6 +58,12 @@ feature -- Comparison
 feature{NONE} -- Implementation
 
 	code: INTEGER
-		-- Symbol code		
+		-- Symbol code	
+
+	new_line_text: STRING is
+			-- Text of new-line.
+		once
+			Result := "%N"
+		end
 
 end

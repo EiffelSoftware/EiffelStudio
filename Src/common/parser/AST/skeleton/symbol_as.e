@@ -20,13 +20,10 @@ feature -- Initialization
 		require
 			a_code_valid: symbol_valid (a_code)
 			a_scn_not_void: a_scn /= Void
-		local
-			l_str: STRING
 		do
-			l_str := a_scn.text
-			set_shared_text (a_scn)
+			set_text (symbol_text.item (a_code))
 			code := a_code
-			make_with_location (a_scn.line, a_scn.column, a_scn.position, l_str.count)
+			make_with_location (a_scn.line, a_scn.column, a_scn.position, symbol_count.item (a_code))
 		end
 
 	make_with_data (a_code: INTEGER; l, c, p, s: INTEGER) is
@@ -41,8 +38,9 @@ feature -- Initialization
 			p_non_negative: p >= 0
 			s_non_negative: s >= 0
 		do
-			--code := a_code
+			code := a_code
 			make_with_location (l, c, p, s)
+			set_text (symbol_text.item (a_code))
 		end
 
 feature -- Access
@@ -277,6 +275,89 @@ feature -- Comparison
 		do
 			Result := is_equal (other)
 		end
+
+feature
+	symbol_text: HASH_TABLE [STRING, INTEGER] is
+			-- Hashtable for storing text of every symbol in Eiffel.
+		once
+			create Result.make (34)
+			Result.put (";", {EIFFEL_TOKENS}.te_semicolon)
+			Result.put (":", {EIFFEL_TOKENS}.te_colon)
+			Result.put (",", {EIFFEL_TOKENS}.te_comma)
+			Result.put ("..", {EIFFEL_TOKENS}.te_dotdot)
+			Result.put ("?",  {EIFFEL_TOKENS}.te_question)
+			Result.put ("~",  {EIFFEL_TOKENS}.te_tilde)
+			Result.put ("}~", {EIFFEL_TOKENS}.te_curlytilde)
+			Result.put (".", {EIFFEL_TOKENS}.te_dot)
+			Result.put ("$", {EIFFEL_TOKENS}.te_address)
+			Result.put (":=", {EIFFEL_TOKENS}.te_assignment)
+			Result.put ("?=", {EIFFEL_TOKENS}.te_accept)
+			Result.put ("=", {EIFFEL_TOKENS}.te_eq)
+			Result.put ("<", {EIFFEL_TOKENS}.te_lt)
+			Result.put (">", {EIFFEL_TOKENS}.te_gt)
+			Result.put ("<=", {EIFFEL_TOKENS}.te_le)
+			Result.put (">=", {EIFFEL_TOKENS}.te_ge)
+			Result.put ("/=",  {EIFFEL_TOKENS}.te_ne)
+			Result.put ("(",  {EIFFEL_TOKENS}.te_lparan)
+			Result.put (")",  {EIFFEL_TOKENS}.te_rparan)
+			Result.put ("{",  {EIFFEL_TOKENS}.te_lcurly)
+			Result.put ("}",  {EIFFEL_TOKENS}.te_rcurly)
+			Result.put ("[",  {EIFFEL_TOKENS}.te_lsqure)
+			Result.put ("]",  {EIFFEL_TOKENS}.te_rsqure)
+			Result.put ("+",  {EIFFEL_TOKENS}.te_plus)
+			Result.put ("-",  {EIFFEL_TOKENS}.te_minus)
+			Result.put ("*", {EIFFEL_TOKENS}.te_star)
+			Result.put ("/",  {EIFFEL_TOKENS}.te_slash)
+			Result.put ("^",  {EIFFEL_TOKENS}.te_power)
+			Result.put ("->",  {EIFFEL_TOKENS}.te_constrain)
+			Result.put ("!",  {EIFFEL_TOKENS}.te_bang)
+			Result.put ("<<",  {EIFFEL_TOKENS}.te_larray)
+			Result.put (">>",  {EIFFEL_TOKENS}.te_rarray)
+			Result.put ("//",  {EIFFEL_TOKENS}.te_div)
+			Result.put ("\\",  {EIFFEL_TOKENS}.te_mod)
+		end
+
+	symbol_count: HASH_TABLE [INTEGER, INTEGER] is
+			-- Hashtable for stoing text count of every symbol in Eiffel.
+		once
+			create Result.make (34)
+			Result.put (1, {EIFFEL_TOKENS}.te_semicolon)
+			Result.put (1, {EIFFEL_TOKENS}.te_colon)
+			Result.put (1, {EIFFEL_TOKENS}.te_comma)
+			Result.put (2, {EIFFEL_TOKENS}.te_dotdot)
+			Result.put (1,  {EIFFEL_TOKENS}.te_question)
+			Result.put (1,  {EIFFEL_TOKENS}.te_tilde)
+			Result.put (2, {EIFFEL_TOKENS}.te_curlytilde)
+			Result.put (1, {EIFFEL_TOKENS}.te_dot)
+			Result.put (1, {EIFFEL_TOKENS}.te_address)
+			Result.put (2, {EIFFEL_TOKENS}.te_assignment)
+			Result.put (2, {EIFFEL_TOKENS}.te_accept)
+			Result.put (1, {EIFFEL_TOKENS}.te_eq)
+			Result.put (1, {EIFFEL_TOKENS}.te_lt)
+			Result.put (1, {EIFFEL_TOKENS}.te_gt)
+			Result.put (2, {EIFFEL_TOKENS}.te_le)
+			Result.put (2, {EIFFEL_TOKENS}.te_ge)
+			Result.put (2,  {EIFFEL_TOKENS}.te_ne)
+			Result.put (1,  {EIFFEL_TOKENS}.te_lparan)
+			Result.put (1,  {EIFFEL_TOKENS}.te_rparan)
+			Result.put (1,  {EIFFEL_TOKENS}.te_lcurly)
+			Result.put (1,  {EIFFEL_TOKENS}.te_rcurly)
+			Result.put (1,  {EIFFEL_TOKENS}.te_lsqure)
+			Result.put (1,  {EIFFEL_TOKENS}.te_rsqure)
+			Result.put (1,  {EIFFEL_TOKENS}.te_plus)
+			Result.put (1,  {EIFFEL_TOKENS}.te_minus)
+			Result.put (1, {EIFFEL_TOKENS}.te_star)
+			Result.put (1,  {EIFFEL_TOKENS}.te_slash)
+			Result.put (1,  {EIFFEL_TOKENS}.te_power)
+			Result.put (2,  {EIFFEL_TOKENS}.te_constrain)
+			Result.put (1,  {EIFFEL_TOKENS}.te_bang)
+			Result.put (2,  {EIFFEL_TOKENS}.te_larray)
+			Result.put (2,  {EIFFEL_TOKENS}.te_rarray)
+			Result.put (2,  {EIFFEL_TOKENS}.te_div)
+			Result.put (2,  {EIFFEL_TOKENS}.te_mod)
+		end
+
+
 
 feature{NONE} -- Implementation
 

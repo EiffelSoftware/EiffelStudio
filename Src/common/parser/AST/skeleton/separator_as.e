@@ -58,6 +58,6 @@ feature -- Comparison
 feature{NONE} -- Implementation
 
 	code: INTEGER
-		-- Symbol code		
+		-- Symbol code	
 
 end

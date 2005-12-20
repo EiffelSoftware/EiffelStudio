@@ -27,6 +27,9 @@ inherit
 		end
 
 	EB_CONSTANTS
+
+	SHARED_ROUNDTRIP_PARSER
+
 create
 	make
 
@@ -216,6 +219,7 @@ feature -- Basic operation
 			hidden_btn.disable_sensitive
 			cmd_lst.disable_sensitive
 			del_cmd_btn.disable_sensitive
+			owner.Edit_external_commands_cmd.disable_sensitive
 
 			if external_output_manager.target_development_window /= Void then
 				if owner = external_output_manager.target_development_window then
@@ -247,12 +251,15 @@ feature -- Basic operation
 			edit_cmd_detail_btn.enable_sensitive
 			hidden_btn.enable_sensitive
 			cmd_lst.enable_sensitive
+			owner.Edit_external_commands_cmd.disable_sensitive
 
 			input_field.disable_sensitive
 			send_input_btn.disable_sensitive
 			terminate_btn.disable_sensitive
-			if cmd_lst.is_displayed then
-				cmd_lst.set_focus
+			if owner_development_window = external_output_manager.target_development_window then
+				if cmd_lst.is_displayed then
+					cmd_lst.set_focus
+				end
 			end
 			del_cmd_btn.enable_sensitive
 			synchronize_command_list (corresponding_external_command)
@@ -374,21 +381,25 @@ feature -- Basic operation
 	drop_breakable (st: BREAKABLE_STONE) is
 			-- Inform `Current's manager that a stone concerning breakpoints has been dropped.
 		do
+			Precursor (st)
 		end
 
 	drop_class (st: CLASSI_STONE) is
 			-- Drop `st' in the context tool and pop the `class info' tab.
 		do
+			Precursor (st)
 		end
 
 	drop_feature (st: FEATURE_STONE) is
 			-- Drop `st' in the context tool and pop the `feature info' tab.
 		do
+			Precursor (st)
 		end
 
 	drop_cluster (st: CLUSTER_STONE) is
 			-- Drop `st' in the context tool.
 		do
+			Precursor (st)
 		end
 
 feature{NONE} -- Actions
@@ -562,7 +573,11 @@ feature{NONE} -- Actions
 		local
 			save_tool: EB_SAVE_STRING_TOOL
 		do
-			create save_tool.make_and_save (console.text, owner.window)
+			if process_manager.is_external_command_running then
+				show_warning_dialog (Warning_messages.w_cannot_save_when_external_running, owner.window)
+			else
+				create save_tool.make_and_save (console.text, owner.window)
+			end
 		end
 
 	on_clear_output_window is
@@ -632,13 +647,6 @@ feature -- Status reporting
 			end
 		end
 
-	text_fully_loaded: BOOLEAN is
-			-- Has text been fully loaded, only then,
-			-- we can print new data into `console'	
-		do
-			Result := True
-		end
-
 feature -- State setting
 
 	display_state (s: STRING; warning: BOOLEAN) is
@@ -651,9 +659,22 @@ feature -- State setting
 			else
 				state_label.set_foreground_color (black_color)
 			end
-
 			state_label.set_text (s)
-			state_label.set_tooltip (s)
+		end
+
+feature{NONE}
+
+	show_warning_dialog (msg: STRING; a_window: EV_WINDOW) is
+			-- Show a warning dialog containing message `msg' in `a_window'.
+		require
+			msg_not_void: msg /= Void
+			msg_not_empty: not msg.is_empty
+			a_window_not_void: a_window /= Void
+		local
+			wd: EV_WARNING_DIALOG
+		do
+			create wd.make_with_text (msg)
+			wd.show_modal_to_window (a_window)
 		end
 
 feature{NONE} -- Implementation

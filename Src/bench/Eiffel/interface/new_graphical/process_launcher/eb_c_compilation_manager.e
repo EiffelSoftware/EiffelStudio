@@ -78,27 +78,32 @@ feature{NONE} -- Agents
 
 feature{NONE}  -- Actions
 
+	state_message_timer: EV_TIMEOUT is
+			-- Timer used to display c compilation status.
+		once
+			create Result.default_create
+			Result.actions.extend (agent window_manager.display_c_compilation_progress (Interface_names.e_C_compilation_running))
+		end
+
 	synchronize_on_c_compilation_start is
 			-- Synchronize before launch c compiler.
 		do
 			data_storage.reset_output_byte_count
 			data_storage.reset_error_byte_count
 			debugger_manager.on_compile_start
-
-			terminate_c_compilation_cmd.enable_sensitive
-			notify_development_windows_on_c_compilation_start
+			window_manager.on_c_compilation_start
 			c_compilation_output_manager.clear
 			c_compilation_output_manager.force_display
+			state_message_timer.set_interval (initial_time_interval)
 		end
 
 	synchronize_on_c_compilation_exit is
 			-- Synchronize when c compiler exits.
 		do
 			debugger_manager.on_compile_stop
-			terminate_c_compilation_cmd.disable_sensitive
-			window_manager.synchronize_all
-			notify_development_windows_on_c_compilation_stop
+			window_manager.on_c_compilation_stop
 			data_storage.extend_block (create {EB_PROCESS_IO_STRING_BLOCK}.make ("", False, True))
+			state_message_timer.set_interval (0)
 		end
 
 	on_start is
@@ -124,13 +129,11 @@ feature{NONE}  -- Actions
 	on_launch_successed is
 			-- Handler called when c compiler launch successed
 		do
-			set_last_c_compiler_launch_successful (True)
 		end
 
 	on_launch_failed is
 			-- Handler called when c compiler launch failed
 		do
-			set_last_c_compiler_launch_successful (False)
 			synchronize_on_c_compilation_exit
 			window_manager.display_message (Interface_names.e_C_compilation_launch_failed)
 			show_compiler_launch_fail_dialog (window_manager.last_created_window.window)
@@ -157,58 +160,6 @@ feature{NONE} -- Implementation
 	do_not_open_console is
 			-- Empty agent.
 		do
-		end
-
-	notify_development_windows_on_c_compilation_start is
-			-- Notify every development window to disable
-			-- "Compile Workbench C Code" item and
-			-- "Compile Finalized C Code" item in
-			-- Project menu.
-		local
-			a_dev: EB_DEVELOPMENT_WINDOW
-			cur: CURSOR
-		do
-			from
-				cur := window_manager.managed_windows.cursor
-				window_manager.managed_windows.start
-			until
-				window_manager.managed_windows.after
-			loop
-				a_dev ?= window_manager.managed_windows.item
-				if a_dev /= Void then
-					a_dev.c_workbench_compilation_cmd.disable_sensitive
-					a_dev.c_finalized_compilation_cmd.disable_sensitive
-				end
-				window_manager.managed_windows.forth
-			end
-			window_manager.managed_windows.go_to (cur)
-			Run_finalized_cmd.disable_sensitive
-		end
-
-	notify_development_windows_on_c_compilation_stop is
-			-- Notify every development window to enable
-			-- "Compile Workbench C Code" item and
-			-- "Compile Finalized C Code" item in
-			-- Project menu.
-		local
-			a_dev: EB_DEVELOPMENT_WINDOW
-			cur: CURSOR
-		do
-			from
-				cur := window_manager.managed_windows.cursor
-				window_manager.managed_windows.start
-			until
-				window_manager.managed_windows.after
-			loop
-				a_dev ?= window_manager.managed_windows.item
-				if a_dev /= Void then
-					a_dev.c_workbench_compilation_cmd.enable_sensitive
-					a_dev.c_finalized_compilation_cmd.enable_sensitive
-				end
-				window_manager.managed_windows.forth
-			end
-			window_manager.managed_windows.go_to (cur)
-			Run_finalized_cmd.enable_sensitive
 		end
 
 	show_compilation_error_dialog is

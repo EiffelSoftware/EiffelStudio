@@ -42,22 +42,12 @@ feature -- Basic operations
 			wd: EV_WARNING_DIALOG
 		do
 			already_confirmed := False
-			if process_manager.is_c_compilation_running then
+			if Workbench.is_compiling then
 				already_confirmed := True
-				create wd.make_with_text (Warning_messages.w_Exiting_stops_c_compilation)
-				wd.show_modal_to_window (window_manager.last_focused_window.window)
-			elseif process_manager.is_external_command_running then
-				already_confirmed := True
-				create wd.make_with_text (Warning_messages.w_Exiting_stops_external)
+				create wd.make_with_text (Warning_messages.w_Exiting_stops_compilation)
 				wd.show_modal_to_window (window_manager.last_focused_window.window)
 			else
-				if Workbench.is_compiling then
-					already_confirmed := True
-					create wd.make_with_text (Warning_messages.w_Exiting_stops_compilation)
-					wd.show_modal_to_window (window_manager.last_focused_window.window)
-				else
-					confirm_stop_debug
-				end
+				confirm_stop_debug
 			end
 		end
 

@@ -131,12 +131,12 @@ feature -- Commands
 		end
 
 	Terminate_c_compilation_cmd: EB_TERMINATE_C_COMPILATION_CMD is
-			-- 
+			--
 		once
 			create Result.make
 			Result.disable_sensitive
 		end
-		
+
 	Estudio_debug_cmd: ESTUDIO_DEBUG_CMD is
 			-- Show/Hide EiffelStudio self debug menu.
 		once

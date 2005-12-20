@@ -152,17 +152,12 @@ feature {NONE} -- Compilation implementation
 			window_manager.synchronize_all
 			create output_text.make
 			if Workbench.successful then
-				window_manager.display_message (Interface_names.E_compilation_succeeded)
 
-				if process_manager.is_c_compilation_running then
-					window_manager.display_message (Interface_names.e_C_compilation_running)
-				else
-					if not eiffel_project.freezing_occurred then
-						output_text.add_string (Interface_names.E_compilation_succeeded)
-					end
+				if not eiffel_project.freezing_occurred then
+					output_text.add_string (Interface_names.E_compilation_succeeded)
 				end
-				if not last_c_compiler_launch_successful then
-					window_manager.display_message (Interface_names.e_c_compilation_launch_failed)
+				if not process_manager.is_c_compilation_running then
+					window_manager.display_message (Interface_names.E_compilation_succeeded)
 				end
 			else
 				window_manager.display_message (Interface_names.E_compilation_failed)
@@ -251,11 +246,25 @@ feature -- Execution
 			-- Recompile the project, start C compilation if necessarry.
 		do
 			if is_sensitive then
-				output_manager.clear
-				output_manager.force_display
-				execute_with_c_compilation_flag (True)
+				if process_manager.is_c_compilation_running then
+					process_manager.confirm_process_termination (agent go_on_compile, Void, window_manager.last_focused_development_window.window)
+				else
+					go_on_compile
+				end
 			end
+		end
 
+	go_on_compile is
+			-- Kill c compilation and go on running Eiffel compilation.
+		do
+			output_manager.clear
+			output_manager.force_display
+			execute_with_c_compilation_flag (True)
+		end
+
+	give_up_comiple	is
+			-- Give up Eiffel compilation.
+		do
 		end
 
 	execute_without_c_compilation is

@@ -443,8 +443,8 @@ feature {NONE} -- Implementation
 	on_successful_launch_handler: ROUTINE [ANY, TUPLE]
 			-- Different agent handlers
 
-	initial_time_interval: INTEGER is 10
-	initial_buffer_size: INTEGER is 50
+	initial_time_interval: INTEGER is 100
+	initial_buffer_size: INTEGER is 128
 
 invariant
 	data_storage_not_void: data_storage /= Void

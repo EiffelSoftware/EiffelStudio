@@ -2298,6 +2298,20 @@ feature -- Resource Update
 			end
 		end
 
+	on_c_compilation_starts is
+			-- Enable commands when freezing or finalizing starts.
+		do
+			c_workbench_compilation_cmd.disable_sensitive
+			c_finalized_compilation_cmd.disable_sensitive
+		end
+
+	on_c_compilation_stops is
+			-- Disable commands when freezing or finalizing stops.
+		do
+			c_workbench_compilation_cmd.enable_sensitive
+			c_finalized_compilation_cmd.enable_sensitive
+		end
+
 	save_before_compiling is
 			-- save the text but do not update clickable positions
 		do
@@ -3554,25 +3568,38 @@ feature {NONE} -- Implementation
 		local
 			dialog_w: EV_WARNING_DIALOG
 		do
-			if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
-				if Window_manager.development_windows_count > 1 then
-					create dialog_w.make_with_text (Warning_messages.w_save_before_closing)
-					dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
-					dialog_w.set_default_push_button (dialog_w.button("Yes"))
-					dialog_w.set_default_cancel_button (dialog_w.button("Cancel"))
-					dialog_w.show_modal_to_window (window)
-				else
-						-- We let the window manager handle the saving, along with other windows
-						-- (not development windows)
-					force_destroy
-				end
+			if Window_manager.development_windows_count > 1 and then process_manager.is_external_command_running and then Current = external_output_manager.target_development_window then
+				process_manager.confirm_external_command_termination (agent terminate_external_command_and_destroy, agent do_nothing, window)
 			else
-				Precursor {EB_TOOL_MANAGER}
-				if context_refreshing_timer /= Void then
-					context_refreshing_timer.destroy
-					context_refreshing_timer := Void
+				if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
+					if Window_manager.development_windows_count > 1 then
+						create dialog_w.make_with_text (Warning_messages.w_save_before_closing)
+						dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<agent save_and_destroy, agent force_destroy, agent do_nothing>>)
+						dialog_w.set_default_push_button (dialog_w.button("Yes"))
+						dialog_w.set_default_cancel_button (dialog_w.button("Cancel"))
+						dialog_w.show_modal_to_window (window)
+					else
+							-- We let the window manager handle the saving, along with other windows
+							-- (not development windows)
+						force_destroy
+					end
+				else
+					Precursor {EB_TOOL_MANAGER}
+					if context_refreshing_timer /= Void then
+						context_refreshing_timer.destroy
+						context_refreshing_timer := Void
+					end
 				end
 			end
+		end
+
+	terminate_external_command_and_destroy is
+			-- Terminate running external command and destroy.
+		do
+			process_manager.terminate_external_command
+			destroy
+		ensure
+			external_command_not_running: not process_manager.is_external_command_running
 		end
 
 	save_and_destroy is
@@ -3838,11 +3865,11 @@ feature {EB_TOOL} -- Implementation / Commands
 	melt_cmd: EB_MELT_PROJECT_COMMAND
 			-- Command to start compilation.
 
-	freeze_cmd: EB_FREEZE_PROJECT_COMMAND
-			-- Command to Freeze the project.
-
-	finalize_cmd: EB_FINALIZE_PROJECT_COMMAND
-			-- Command to Finalize the project.
+--	freeze_cmd: EB_FREEZE_PROJECT_COMMAND
+--			-- Command to Freeze the project.
+--
+--	finalize_cmd: EB_FINALIZE_PROJECT_COMMAND
+--			-- Command to Finalize the project.
 
 feature{EB_TOOL, EB_C_COMPILER_LAUNCHER}
 

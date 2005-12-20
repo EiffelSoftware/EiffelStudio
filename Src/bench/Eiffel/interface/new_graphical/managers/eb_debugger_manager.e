@@ -405,12 +405,10 @@ feature -- Status setting
 	on_compile_stop is
 			-- A compilation is over. Make all run* commands sensitive.
 		do
-			if
-				process_manager.is_c_compilation_running
-			then
-				if is_msil_dll_system then
-					disable_debugging_commands (True)
-				else
+			if is_msil_dll_system then
+				disable_debugging_commands (True)
+			else
+				if not process_manager.is_freezing_running then
 					step_cmd.enable_sensitive
 					into_cmd.enable_sensitive
 					no_stop_cmd.enable_sensitive

@@ -556,30 +556,25 @@ feature -- Actions on all windows
 			favorites.refresh
 
 				-- Update the state of some commands.
-			if
-				process_manager.is_c_compilation_running
-			then
-				melt_project_cmd.disable_sensitive
-				Quick_melt_project_cmd.disable_sensitive
-				freeze_project_cmd.disable_sensitive
+
+			if not Eiffel_project.compilation_modes.is_precompiling then
+				freeze_project_cmd.enable_sensitive
 				precompilation_cmd.disable_sensitive
-				Finalize_project_cmd.disable_sensitive
-				terminate_c_compilation_cmd.enable_sensitive
+				Finalize_project_cmd.enable_sensitive
 			else
-				if not Eiffel_project.compilation_modes.is_precompiling then
-					freeze_project_cmd.enable_sensitive
-					precompilation_cmd.disable_sensitive
-					Finalize_project_cmd.enable_sensitive
-				else
-					freeze_project_cmd.disable_sensitive
-					precompilation_cmd.enable_sensitive
-					Finalize_project_cmd.disable_sensitive
-				end
-				melt_project_cmd.enable_sensitive
-				Quick_melt_project_cmd.enable_sensitive
-				terminate_c_compilation_cmd.disable_sensitive
+				freeze_project_cmd.disable_sensitive
+				precompilation_cmd.enable_sensitive
+				Finalize_project_cmd.disable_sensitive
 			end
+			for_all (agent c_compilation_start_action)
+			melt_project_cmd.enable_sensitive
+			Quick_melt_project_cmd.enable_sensitive
+			terminate_c_compilation_cmd.disable_sensitive
+
 			project_cancel_cmd.disable_sensitive
+			if process_manager.is_c_compilation_running then
+				on_c_compilation_start
+			end
 			for_all (agent synchronize_action)
 		end
 
@@ -664,6 +659,34 @@ feature -- Actions on all windows
 			end
 		end
 
+	display_c_compilation_progress (mess: STRING) is
+			-- Display `mess' in status bars of all development windows.
+		require
+			mess_not_void: mess /= Void
+			mess_not_empty: not mess.is_empty
+		local
+			l_managed_windows: like managed_windows
+			cv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			from
+					-- Make a twin of the list incase window is destroyed during
+					-- indirect call to status bar `process_events_and_idle' which
+					-- is needed to update the label and progress bar display.
+				l_managed_windows := managed_windows.twin
+				l_managed_windows.start
+			until
+				l_managed_windows.after
+			loop
+				cv_dev ?= l_managed_windows.item
+				if cv_dev /= Void and then not cv_dev.destroyed then
+					if cv_dev.status_bar.message.is_empty then
+						cv_dev.status_bar.display_message (mess)
+					end
+				end
+				l_managed_windows.forth
+			end
+		end
+
 	for_all_development_windows (p: PROCEDURE [ANY, TUPLE [EB_DEVELOPMENT_WINDOW]]) is
 			-- Call `p' on all development windows.
 		local
@@ -725,14 +748,6 @@ feature {NONE} -- Exit implementation
 				Exit_application_cmd.set_already_confirmed (True)
 				create wd.make_with_text (Warning_messages.W_exiting_stops_compilation)
 				wd.show_modal_to_window (last_focused_development_window.window)
-			elseif process_manager.is_c_compilation_running then
-				Exit_application_cmd.set_already_confirmed (True)
-				create wd.make_with_text (Warning_messages.w_Exiting_stops_c_compilation)
-				wd.show_modal_to_window (window_manager.last_focused_window.window)
-			elseif process_manager.is_external_command_running then
-				Exit_application_cmd.set_already_confirmed (True)
-				create wd.make_with_text (Warning_messages.w_Exiting_stops_external)
-				wd.show_modal_to_window (window_manager.last_focused_window.window)
 			elseif has_modified_windows then
 				Exit_application_cmd.set_already_confirmed (True)
 				create qd.make_with_text (Interface_names.L_exit_warning)
@@ -743,6 +758,14 @@ feature {NONE} -- Exit implementation
 			else
 				quit
 			end
+
+		end
+
+	kill_process_and_confirm_quit is
+			-- Kill running c compilation and external command, if any and then quit.
+		do
+			process_manager.terminate_process
+			quit
 		end
 
 	save_and_quit is
@@ -759,7 +782,12 @@ feature {NONE} -- Exit implementation
 	quit is
 			-- Destroy the last development window.
 		do
-			Exit_application_cmd.ask_confirmation
+			if process_manager.is_c_compilation_running then
+				process_manager.confirm_process_termination_for_quiting (agent kill_process_and_confirm_quit, Void, last_focused_development_window.window)
+			else
+				Exit_application_cmd.ask_confirmation
+			end
+
 		end
 
 feature -- Events
@@ -917,6 +945,32 @@ feature -- Events
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
 			Project_cancel_cmd.enable_sensitive
+			for_all (agent c_compilation_start_action)
+		end
+
+	on_c_compilation_start is
+			-- Freezing or finalizing has been launched.
+			-- Update the display accordingly, ie gray out all forbidden commands.
+		do
+			Freeze_project_cmd.disable_sensitive
+			Finalize_project_cmd.disable_sensitive
+			terminate_c_compilation_cmd.enable_sensitive
+			for_all (agent c_compilation_start_action)
+			if process_manager.is_finalizing_running then
+				run_finalized_cmd.disable_sensitive
+			end
+		end
+
+	on_c_compilation_stop is
+			-- Freezing or finalizing has finished.
+			-- Update the display accordingly.
+		do
+			Freeze_project_cmd.enable_sensitive
+			Finalize_project_cmd.enable_sensitive
+			terminate_c_compilation_cmd.disable_sensitive
+			run_finalized_cmd.enable_sensitive
+			for_all (agent c_compilation_stop_action)
+			run_finalized_cmd.enable_sensitive
 		end
 
 	on_project_created is
@@ -1225,6 +1279,29 @@ feature {NONE} -- Implementation
 				a_dev_window.on_project_unloaded
 			end
 		end
+
+	c_compilation_start_action (a_window: EB_WINDOW) is
+			-- Action to be performed on `a_window' when freezing or finalizing starts.
+		local
+			a_dev_window: EB_DEVELOPMENT_WINDOW
+		do
+			a_dev_window ?= a_window
+			if a_dev_window /= Void then
+				a_dev_window.on_c_compilation_starts
+			end
+		end
+
+	c_compilation_stop_action (a_window: EB_WINDOW) is
+			-- Action to be performed on `a_window' when freezing or finalizing stops.
+		local
+			a_dev_window: EB_DEVELOPMENT_WINDOW
+		do
+			a_dev_window ?= a_window
+			if a_dev_window /= Void then
+				a_dev_window.on_c_compilation_stops
+			end
+		end
+
 
 	for_all (action: PROCEDURE [ANY, TUPLE]) is
 			-- Iterate `action' on every managed window.

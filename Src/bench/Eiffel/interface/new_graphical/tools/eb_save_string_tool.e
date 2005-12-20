@@ -6,21 +6,21 @@ indexing
 
 class
 	EB_SAVE_STRING_TOOL
-	
+
 inherit
 	EB_CONSTANTS
-	
+
 create
 	make_and_save
 
 feature{NONE} -- Initialization
 
-	make_and_save (str: STRING; win: EV_WINDOW) is 
-			-- Save `str' to a file. 
+	make_and_save (str: STRING; win: EV_WINDOW) is
+			-- Save `str' to a file.
 			-- Display warning dialog in `win' if necessary.
 		require
 			str_not_void: str /= Void
-			win_not_void: win /= Void			
+			win_not_void: win /= Void
 		do
 			text := str
 			owner_window := win
@@ -29,38 +29,38 @@ feature{NONE} -- Initialization
 			text_set: text = str
 			owner_window_set: owner_window = win
 		end
-		
+
 feature{NONE} -- Implementation
 
 	warning_dialog: EV_WARNING_DIALOG
 		-- Warning to display message	
-	
+
 	owner_window: EV_WINDOW
 		-- Onwer window
-		
+
 	text: STRING
 		-- Text to be saved
-		
+
 	save_file_dlg: EV_FILE_SAVE_DIALOG
 			-- File dialog to let user choose a file.
-		
+
 feature -- Save
 	save  is
 			-- Save `text' to file.
 		do
 			if text.is_empty then
-				create warning_dialog.make_with_text ("No output data.")
+				create warning_dialog.make_with_text ("No text to save.")
 				warning_dialog.show_modal_to_window (owner_window)
-			else	
+			else
 				select_file_and_save
 			end
 		end
 
 	select_file_and_save is
 			-- Called when user press Save output button.
-		do 
+		do
 			create save_file_dlg.make_with_title ("Save output to file")
-			save_file_dlg.filters.extend (["*.txt", "Text files (*.txt)"])				
+			save_file_dlg.filters.extend (["*.txt", "Text files (*.txt)"])
 			save_file_dlg.save_actions.extend (agent on_save_file_selected)
 			save_file_dlg.show_modal_to_window (owner_window)
 			save_file_dlg.destroy
@@ -75,6 +75,7 @@ feature -- Save
 			str: STRING
 			con_dlg: EV_CONFIRMATION_DIALOG
 			filter_str: STRING
+			l_count, l_count2: INTEGER
 		do
 			if not retried then
 				if save_file_dlg /= Void then
@@ -85,7 +86,15 @@ feature -- Save
 						if filter_str.item (1) = '*' then
 							filter_str.remove (1)
 						end
-						str.append (filter_str)
+						l_count := filter_str.count
+						l_count2 := str.count
+						if l_count2 > l_count then
+							if not str.substring (l_count2 - l_count + 1, str.count).is_case_insensitive_equal (filter_str) then
+								str.append (filter_str)
+							end
+						else
+							str.append (filter_str)
+						end
 					end
 					save_file_dlg.destroy
 					if f.exists then
@@ -96,7 +105,7 @@ feature -- Save
 						con_dlg.destroy
 					else
 						on_overwrite_file (str)
-					end					
+					end
 				end
 
 			end
@@ -125,6 +134,6 @@ feature -- Save
 			warning_dialog.show_modal_to_window (owner_window)
 			warning_dialog.destroy
 			retry
-		end		
+		end
 
 end

@@ -148,7 +148,7 @@ feature -- Properties
 			set: pixmap = a_pixmap
 		end
 
-	selected: BOOLEAN
+	is_selected: BOOLEAN
 			-- If Current tab selected?
 
 	set_selected (a_selected: BOOLEAN) is
@@ -156,7 +156,7 @@ feature -- Properties
 		local
 			l_text_color: EV_COLOR
 		do
-			selected := a_selected
+			is_selected := a_selected
 			if a_selected then
 				internal_pixmap_drawing_area.set_background_color (internal_shared.focused_color)
 				internal_text_drawing_area.set_background_color (internal_shared.focused_color)
@@ -183,7 +183,7 @@ feature -- Properties
 			end
 			on_expose
 		ensure
-			set: selected = a_selected
+			set: is_selected = a_selected
 		end
 
 feature {NONE}  -- Implmentation for drag action
@@ -242,7 +242,7 @@ feature {NONE}  -- Implementation
 				internal_pixmap_drawing_area.draw_pixmap (0, 2, pixmap)
 			end
 			internal_text_drawing_area.draw_ellipsed_text_top_left (0, 2, text, internal_text_drawing_area.width)
-			if selected then
+			if is_selected then
 				create l_helper
 				internal_tail_drawing_area.set_background_color (internal_shared.non_focused_color)
 				l_helper.draw_color_change_gradually (internal_tail_drawing_area, internal_shared.focused_color)

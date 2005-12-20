@@ -9,9 +9,9 @@ inherit
 	SHARED_STATUS
 
 	SHARED_EXEC_ENVIRONMENT
-	
+
 	EB_SHARED_MANAGERS
-	
+
 	EB_SHARED_FLAGS
 
 feature -- Command Execution
@@ -23,7 +23,7 @@ feature -- Command Execution
 		do
 			Execution_environment.launch (command)
 		end
-		
+
 	execute_with_args (appl_name, args: STRING) is
 			-- Execute external command `appl_name' with following arguments.
 		require
@@ -38,7 +38,7 @@ feature -- Command Execution
 			command.append (args)
 			Execution_environment.launch (command)
 		end
-		
+
 feature -- $EiffelGraphicalCompiler$ specific calls
 
 	link_eiffel_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: STRING) is
@@ -46,8 +46,8 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 			-- the eiffel project.
 		do
 			if server_mode then
-				eif_gr_link_driver (request, c_code_dir.to_c, 
-					system_name.to_c, prelink_cmd_name.to_c, 
+				eif_gr_link_driver (request, c_code_dir.to_c,
+					system_name.to_c, prelink_cmd_name.to_c,
 					driver_name.to_c)
 			else
 				eif_link_driver (c_code_dir.to_c, system_name.to_c,
@@ -65,7 +65,7 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 			cwd := Execution_environment.current_working_directory
 			create f_cmd.make_from_string (freeze_command)
 			f_cmd.append (" -silent")
-			
+
 			Execution_environment.change_working_directory (c_code_dir)
 
 			if is_gui then
@@ -90,17 +90,29 @@ feature -- $EiffelGraphicalCompiler$ specific calls
 						finalizing_launcher.set_hidden (True)
 						finalizing_launcher.launch (is_gui, False)
 						finalizing_launcher.wait_for_exit
-					end								
-				end				
+					end
+				end
 			else
 				if asynchronous then
 					Execution_environment.launch (freeze_command)
 				else
 					Execution_environment.system (freeze_command)
-				end					
-			end		
+				end
+			end
 			Execution_environment.change_working_directory (cwd)
-		end	
+		end
+
+	terminate_freezing is
+			-- Terminate running freezing, if any.
+		do
+			process_manager.terminate_freezing
+		end
+
+	terminate_finalizing is
+			-- Terminate running finalizing, if any.
+		do
+			process_manager.terminate_finalizing
+		end
 
 feature {NONE} -- Shell
 
@@ -108,7 +120,7 @@ feature {NONE} -- Shell
 		once
 			create Result
 			Result.pass_address
-		end; 
+		end;
 
 feature {NONE} -- Externals
 

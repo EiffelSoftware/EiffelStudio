@@ -22,7 +22,6 @@
 				</Directory>
 				<Directory Id='Images' Name='images'>
 					<Component Id='ImagesFiles' Guid='{0AD63E64-160D-4cc7-B992-296FA7692BBD}'>
-						<File Id='AtbGif' Name='atb.gif' />
 						<File Id='BotLeftGif' Name='bot_lef.gif' />
 						<File Id='BotMidGif' Name='bot_mid.gif' />
 						<File Id='BotRigGif' Name='bot_rig.gif' />

@@ -64,22 +64,10 @@ ECHO -
 ECHO COMPILING CodeDom.Vision2
 ECHO -
 ec -ace ace.ace -precompile %EFLAGS% -c_compile
-IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll GOTO SPLITDLL
+IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll GOTO MANAGER
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.Vision2.dll was generated in build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code)
 GOTO ENDCD
 
-:SPLITDLL
-CD ..
-CD EiffelSoftware.CodeDom.Splitter
-IF EXIST EIFGEN RD /Q /S EIFGEN
-IF EXIST *.epr DEL /Q /F *.epr
-ECHO -
-ECHO COMPILING CodeDom.Splitter
-ECHO -
-ec -ace ace.ace -precompile %EFLAGS%
-IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll GOTO MANAGER
-ECHO Compilation failed !! (no EiffelSoftware.CodeDom.Splitter.dll was generated in build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code)
-GOTO ENDCD
 
 :MANAGER
 CD ..

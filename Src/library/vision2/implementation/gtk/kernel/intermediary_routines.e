@@ -9,7 +9,7 @@ class
 
 inherit
 	EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES
-	
+
 feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 
 	on_timeout_intermediary (a_object_id: INTEGER) is
@@ -23,7 +23,7 @@ feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 				a_timeout_imp.call_timeout_actions
 			end
 		end
-		
+
 	on_timeout_kamikaze_intermediary (a_object_id: INTEGER) is
 			-- Kamikaze Timeout has occurred.
 		local
@@ -57,7 +57,7 @@ feature {EV_ANY_IMP} -- Drawing Area intermediary agent routines
 			a_drawing_area_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			inspect
 				a_event_number
-			when 1 then		
+			when 1 then
 				a_drawing_area_imp.set_focus
 			when 2 then
 				a_drawing_area_imp.lose_focus
@@ -83,7 +83,7 @@ feature {EV_ANY_IMP} -- Gauge intermediary agent routines
 			a_gauge_imp: EV_GAUGE_IMP
 		do
 			a_gauge_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_gauge_imp.value_changed_handler			
+			a_gauge_imp.value_changed_handler
 		end
 
 feature {EV_ANY_IMP} -- Key Event intermediary agent routines
@@ -99,7 +99,7 @@ feature {EV_ANY_IMP} -- Key Event intermediary agent routines
 			end
 		end
 
-	mcl_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is	
+	mcl_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Intermediary agent for a multi column list pnd transport event
 		local
 			mcl_imp: EV_MULTI_COLUMN_LIST_IMP
@@ -118,7 +118,7 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			a_widget ?= eif_id_object (a_object_id)
 			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_size_allocate (a_x, a_y, a_width, a_height)
-			end	
+			end
 		end
 
 	widget_focus_in_intermediary (a_c_object: POINTER) is
@@ -131,7 +131,7 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 				a_widget.on_focus_changed (True)
 			end
 		end
-		
+
 	widget_focus_out_intermediary (a_c_object: POINTER) is
 			-- Focus out
 		local
@@ -141,10 +141,10 @@ feature {EV_ANY_IMP} -- Widget intermediary agent routines
 			if a_widget /= Void and then not a_widget.is_destroyed then
 				a_widget.on_focus_changed (False)
 			end
-		end	
+		end
 
 feature {EV_ANY_IMP} -- Text component intermediary agent routines
-		
+
 	text_component_change_intermediary (a_c_object: POINTER) is
 			-- Changed
 		local
@@ -153,7 +153,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			a_text_component_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_text_component_imp.on_change_actions
 		end
-		
+
 	text_field_return_intermediary (a_c_object: POINTER) is
 			-- Return
 		local
@@ -161,10 +161,10 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 		do
 			a_text_field_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_text_field_imp.return_actions_internal.call (Void)
-		end	 	
-		
+		end
+
 feature {EV_ANY_IMP} -- Button intermediary agent routines	
-		
+
 	button_select_intermediary (a_c_object: POINTER) is
 			-- Selected
 		local
@@ -179,16 +179,16 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 				a_button_imp.select_actions_internal.call (Void)
 			end
 		end
-		
+
 	connect_button_press_switch_intermediary (a_c_object: POINTER) is
-			-- Connect button switch 
+			-- Connect button switch
 		local
 			a_widget: EV_PICK_AND_DROPABLE_IMP
 		do
 			a_widget ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_widget.connect_button_press_switch
-		end	
-		
+		end
+
 	button_press_switch_intermediary (a_c_object: POINTER; a_type: INTEGER;	a_x, a_y, a_button: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
 			a_screen_x, a_screen_y: INTEGER) is
@@ -202,12 +202,12 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 						-- We don't want button press events from gtk is PND is enabled as these are handled via PND implementation
 				else
 					a_widget.button_press_switch (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-				end				
+				end
 			end
 		end
 
 feature {EV_ANY_IMP} -- Window intermediary agent routines
-		
+
 	on_window_close_request (a_c_object: POINTER) is
 			-- Close requested
 		local
@@ -219,7 +219,7 @@ feature {EV_ANY_IMP} -- Window intermediary agent routines
 			end
 			a_window_imp.call_close_request_actions
 		end
-		
+
 	on_widget_show (a_c_object: POINTER) is
 			-- Widget has been shown
 		local
@@ -230,7 +230,7 @@ feature {EV_ANY_IMP} -- Window intermediary agent routines
 				a_widget_imp.on_widget_mapped
 			end
 		end
-	
+
 feature {EV_ANY_IMP} -- Tree intermediary agent routines	
 
 	tree_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE;	a_screen_x, a_screen_y: INTEGER) is
@@ -240,7 +240,7 @@ feature {EV_ANY_IMP} -- Tree intermediary agent routines
 		do
 			tree_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			tree_imp.start_transport_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
-		end	
+		end
 
 feature {EV_ANY_IMP} -- Menu intermediary agent routines
 
@@ -283,7 +283,7 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_pick_and_dropable_imp.end_transport_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
-		
+
 	end_transport_intermediary (a_c_object: POINTER ;a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- End pick and drop transport
 		local
@@ -292,7 +292,7 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_pick_and_dropable_imp.end_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
-		
+
 	execute_intermediary (a_c_object: POINTER; a_x, a_y: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Executed when pebble is being moved
 		local
@@ -301,9 +301,9 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_pick_and_dropable_imp.execute (a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 		end
-		
+
 	signal_emit_stop_intermediary (a_object_id: INTEGER; a_c_object: POINTER; signal: STRING) is
-			-- Emit stop signal 
+			-- Emit stop signal
 		local
 			a_cs: EV_GTK_C_STRING
 			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
@@ -333,8 +333,19 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 		do
 			widget ?= eif_id_object (a_object_id)
 			if widget /= Void then
-				widget.pointer_motion_actions_internal.call 
-					([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+				if
+					widget.gdk_events_mask.bit_and ({EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum) = {EV_GTK_EXTERNALS}.gdk_pointer_motion_hint_mask_enum
+					or else widget.gtk_widget_imp_at_pointer_position = widget
+					or else widget.has_capture
+						-- Gtk will propagate motion events for ALL gtk widgets directly underneath the mouse pointer
+						-- We only want the one directly beneath the mouse pointer
+						-- We need to test for motion hint widgets so that the mouse pointer is not queried, at present
+						-- this is only gtk drawing area
+				then
+					widget.pointer_motion_actions_internal.call
+						([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+				end
+
 			end
 				-- We have motion hinting so we call get pointer to request our next motion event if any, this means we only get motion events when
 				-- the application can handle them
@@ -352,7 +363,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 				widget.on_button_release (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
 			end
 		end
-		
+
 	pointer_enter_actions_intermediary (a_c_object: POINTER) is
 			-- Pointer entered
 		local
@@ -374,9 +385,9 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 				widget.on_pointer_enter_leave (False)
 			end
 		end
-		
+
 feature {EV_ANY_IMP} -- Dialog intermediary agent routines			
-		
+
 	color_dialog_on_ok_intermediary (a_c_object: POINTER) is
 			-- Color dialog ok
 		local
@@ -385,7 +396,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_color_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_color_dialog_imp.on_ok
 		end
-		
+
 	color_dialog_on_cancel_intermediary (a_c_object: POINTER) is
 			-- Color dialog cancel
 		local
@@ -394,7 +405,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 			a_color_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_color_dialog_imp.on_cancel
 		end
-	
+
 	directory_dialog_on_ok_intermediary (a_c_object: POINTER) is
 			-- Directory dialog ok
 		local
@@ -402,8 +413,8 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		do
 			a_directory_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_directory_dialog_imp.on_ok
-		end	
-		
+		end
+
 	directory_dialog_on_cancel_intermediary (a_c_object: POINTER) is
 			-- Directory dialog cancel
 		local
@@ -411,8 +422,8 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		do
 			a_directory_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_directory_dialog_imp.on_cancel
-		end	
-		
+		end
+
 	file_dialog_on_ok_intermediary (a_c_object: POINTER) is
 			-- File dialog ok
 		local
@@ -420,8 +431,8 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		do
 			a_file_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_file_dialog_imp.on_ok
-		end	
-		
+		end
+
 	file_dialog_on_cancel_intermediary (a_c_object: POINTER) is
 			-- File dialog cancel
 		local
@@ -429,8 +440,8 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		do
 			a_file_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_file_dialog_imp.on_cancel
-		end	
-	
+		end
+
 	font_dialog_on_ok_intermediary (a_c_object: POINTER) is
 			-- Font dialog ok
 		local
@@ -438,8 +449,8 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		do
 			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_font_dialog_imp.on_ok
-		end	
-	
+		end
+
 	font_dialog_on_cancel_intermediary (a_c_object: POINTER) is
 			-- Font dialog cancel
 		local
@@ -447,7 +458,7 @@ feature {EV_ANY_IMP} -- Dialog intermediary agent routines
 		do
 			a_font_dialog_imp ?= c_get_eif_reference_from_object_id (a_c_object)
 			a_font_dialog_imp.on_cancel
-		end	
+		end
 
 feature {EV_ANY_IMP} -- Accelerator intermediary agent routines
 

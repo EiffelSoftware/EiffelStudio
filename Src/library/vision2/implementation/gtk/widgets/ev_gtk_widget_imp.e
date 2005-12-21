@@ -26,7 +26,7 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 		end
 
-feature {NONE} -- Implementation
+feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	is_parentable: BOOLEAN is
 			-- May Current be parented?
@@ -49,6 +49,8 @@ feature {NONE} -- Implementation
 			{EV_GTK_EXTERNALS}.GDK_VISIBILITY_NOTIFY_MASK_ENUM
 		end
 
+feature {NONE} -- Implementation
+
 	initialize is
 			-- Initialize `c_object'
 		do
@@ -61,16 +63,16 @@ feature {NONE} -- Implementation
 			set_is_initialized (True)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	width_request_string: EV_GTK_C_STRING is
-			-- 
+			-- Once string to pass to gtk.
 		once
 			Result := "width-request"
 		end
 
 	height_request_string: EV_GTK_C_STRING is
-			-- 
+			-- Once string to pass to gtk.
 		once
 			Result := "height-request"
 		end
@@ -80,30 +82,36 @@ feature {EV_ANY_I} -- Implementation
 		local
 			gr: POINTER
 			a_cs: EV_GTK_C_STRING
-		do	
+		do
 			if not is_destroyed then
 				a_cs := width_request_string
 				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, a_cs.item, $Result)
 				if Result = -1 then
-					update_request_size
-					gr := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
+					gr := reusable_requisition_struct.item
+					{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, gr)
 					Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_width (gr)
 				end
 			end
 		end
-		
+
+	reusable_requisition_struct: MANAGED_POINTER is
+			-- Reusable GtkRequisition struct.
+		once
+			create Result.make ({EV_GTK_EXTERNALS}.c_gtk_requisition_struct_size)
+		end
+
 	minimum_height, real_minimum_height: INTEGER is
 			-- Minimum width that the widget may occupy.
 		local
 			gr: POINTER
 			a_cs: EV_GTK_C_STRING
-		do	
+		do
 			if not is_destroyed then
 				a_cs := height_request_string
 				{EV_GTK_EXTERNALS}.g_object_get_integer (c_object, a_cs.item, $Result)
 				if Result = -1 then
-					update_request_size
-					gr := {EV_GTK_EXTERNALS}.gtk_widget_struct_requisition (c_object)
+					gr := reusable_requisition_struct.item
+					{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, gr)
 					Result := {EV_GTK_EXTERNALS}.gtk_requisition_struct_height (gr)
 				end
 			end
@@ -135,10 +143,10 @@ feature {EV_ANY_I} -- Implementation
 				Result /= Void or else gtkwid = NULL
 			loop
 					Result := eif_object_from_c (gtkwid)
-					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)				
+					gtkwid := {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 			end
 		end
-		
+
 	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP is
 			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
@@ -168,7 +176,7 @@ feature {EV_ANY_I} -- Implementation
 		do
 			if a_cursor /= pointer_style then
 				pointer_style := a_cursor
-				internal_set_pointer_style (a_cursor)				
+				internal_set_pointer_style (a_cursor)
 			end
 		end
 
@@ -235,19 +243,13 @@ feature {EV_ANY_I} -- Implementation
 			a_toplevel := {EV_GTK_EXTERNALS}.gtk_widget_get_toplevel (c_object)
 			if a_toplevel /= default_pointer and then has_struct_flag (a_toplevel, {EV_GTK_ENUMS}.gtk_toplevel_enum) and then a_toplevel /= c_object then
 				{EV_GTK_EXTERNALS}.gtk_container_check_resize ({EV_GTK_EXTERNALS}.gtk_widget_struct_parent (c_object))
-			end					
+			end
 		end
-		
+
 	height: INTEGER is
 			-- Vertical size measured in pixels.
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_allocation_struct_height ({EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (c_object)).max (real_minimum_height)
-		end
-
-	update_request_size is
-			-- Force the requisition struct to be updated.
-		do
-			{EV_GTK_EXTERNALS}.gtk_widget_size_request (c_object, default_pointer)
 		end
 
 	aux_info_struct: POINTER is

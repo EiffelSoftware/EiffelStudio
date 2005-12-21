@@ -3,32 +3,29 @@ indexing
 	date       : "$Date$"
 	revision   : "$Revision$"
 
-class 
+class
 	EB_SHARED_PIXMAPS_12
 
 inherit
+	EB_SHARED_PIXMAP_FACTORY
+
 	EIFFEL_ENV
 		export
 			{NONE} all
-		end	
-		
-	EB_SHARED_PIXMAP_FACTORY
-		export
-			{NONE} all
 		end
-	
+
 feature -- Breakpoint Icons
 
 	icon_bp_arrow: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_bp_arrow")
 		end
-		
+
 	icon_bp_slot: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_bp_slot")
 		end
-		
+
 	icon_bp_enabled: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_bp_enabled")
@@ -78,9 +75,9 @@ feature -- Breakpoint Icons
 		once
 			Result := pixmap_file_content ("icon_bp_disabled_condition")
 		end
-		
+
 feature -- Logical Icon Groups
-	
+
 	icon_group_bp_slot: ARRAY [EV_PIXMAP] is
 			-- Regular (no modifiers) breakpoint icon group.
 		once
@@ -88,7 +85,7 @@ feature -- Logical Icon Groups
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	icon_group_bp_enabled: ARRAY [EV_PIXMAP] is
 			-- Enabled breakpoint icon group.
 		once
@@ -96,15 +93,15 @@ feature -- Logical Icon Groups
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	icon_group_bp_disabled: ARRAY [EV_PIXMAP] is
 			-- Disabled breakpoint icon group.
 		once
 			Result := <<icon_bp_disabled, icon_bp_disabled_arrow, icon_bp_disabled_stopped>>
 		ensure
 			result_not_void: Result /= Void
-		end	
-		
+		end
+
 	icon_group_bp_enabled_condition: ARRAY [EV_PIXMAP] is
 			-- Conditional, enabled breakpoint icon group.
 		once
@@ -112,20 +109,20 @@ feature -- Logical Icon Groups
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	icon_group_bp_disabled_condition: ARRAY [EV_PIXMAP] is
 			-- Conditional, disabled breakpoint icon group.
 		once
 			Result := <<icon_bp_disabled_condition, icon_bp_disabled_arrow, icon_bp_disabled_stopped>>
 		ensure
 			result_not_void: Result /= Void
-		end	
-		
+		end
+
 feature {NONE} -- {EB_SHARED_PIXMAP_FACTORY} Implementation
 
 	pixmap_width: INTEGER is 12
 		-- Width in pixels of generated factory image
-		
+
 	pixmap_height: INTEGER is 12
 		-- Height in pixels of generated factory image
 

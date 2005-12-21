@@ -33,20 +33,31 @@ feature -- Access
 	y_position: INTEGER
 		-- y_positon on the screen
 
+feature -- Status report
+
+	is_displayed: BOOLEAN
+			-- Is displayed?		
+
 feature -- Drawing
 
 	show is
 			-- Show.
 		do
-			screen.set_invert_mode
-			screen.draw_rectangle (x_position, y_position, width, height)
+			if not is_displayed then
+				screen.set_invert_mode
+				screen.draw_rectangle (x_position, y_position, width, height)
+				is_displayed := true
+			end
 		end
 
 	clear is
 			-- Clear.
 		do
-			screen.set_invert_mode
-			screen.draw_rectangle (x_position, y_position, width, height)
+			if is_displayed then
+				screen.set_invert_mode
+				screen.draw_rectangle (x_position, y_position, width, height)
+				is_displayed := false
+			end
 		end
 
 feature -- Element change.

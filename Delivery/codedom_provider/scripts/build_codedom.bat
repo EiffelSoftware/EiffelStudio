@@ -43,7 +43,6 @@ COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\libEiffelSoftware.CodeDom.Base.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\libEiffelSoftware.CodeDom.Vision2.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplitter\EIFGEN\F_code\esplitter.exe bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\esplit\EIFGEN\F_code\esplit.exe bin\

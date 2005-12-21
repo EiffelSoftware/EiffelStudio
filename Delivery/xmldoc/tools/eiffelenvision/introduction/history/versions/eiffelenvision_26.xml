@@ -32,6 +32,7 @@
       <list ordered="false">
 			<item>Removed obsolete Eiffel syntax from the EiffelEnvision new project and new project items templates.</item>
 			<item>Fix precompiled project wizard not adding EiffelBase clusters when only EiffelBase is selected.</item>
+			<item>Adding new WEL or EiffelVision2 items, to projects not containing the respective clusters, will now make the project compile the unmanaged code portion.</item>
       </list>
     </paragraph>
     <anchor>project_configuration</anchor>
@@ -48,6 +49,7 @@
         <item>Renamed Build property page to Building.</item>
         <item>Some very minor cosmetical changes in property descriptions and names.</item>
         <item>Include Subdirectories on the project cluster now correctly respects the associated property in the project configuration file.</item>
+        <item>New projects and projects converted, using the EiffelStudio Project to EiffelEnvision Project Conversion Tool, are now created with the IL Verifiable configuration property set to <bold>No</bold>.</item>
       </list>
     </paragraph>
     <anchor>eiffel_editor</anchor>

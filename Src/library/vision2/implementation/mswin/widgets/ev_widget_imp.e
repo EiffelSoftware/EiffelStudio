@@ -1024,6 +1024,9 @@ feature {NONE} -- Implementation, focus event
 				application_imp.set_window_with_focus (top_level_titled_window)
 			end
 			Focus_on_widget.put (Current)
+			if application_imp.focus_in_actions /= Void then
+				application_imp.focus_in_actions.call ([interface])
+			end
 			if focus_in_actions_internal /= Void then
 				focus_in_actions_internal.call (Void)
 			end
@@ -1039,6 +1042,9 @@ feature {NONE} -- Implementation, focus event
 	on_kill_focus is
 			-- Called when a `Wm_killfocus' message is recieved.
 		do
+			if application_imp.focus_out_actions /= Void then
+				application_imp.focus_out_actions.call ([interface])
+			end
 			if focus_out_actions_internal /= Void then
 				focus_out_actions_internal.call (Void)
 			end

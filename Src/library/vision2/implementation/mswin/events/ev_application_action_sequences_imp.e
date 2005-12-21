@@ -98,6 +98,18 @@ feature -- Event handling
 			create Result
 		end
 
+	create_focus_in_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+			-- Create a focus_in action sequence.
+		do
+			create Result
+		end
+
+	create_focus_out_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+			-- Create a focus_out action sequence.
+		do
+			create Result
+		end
+
 end
 
 --|----------------------------------------------------------------

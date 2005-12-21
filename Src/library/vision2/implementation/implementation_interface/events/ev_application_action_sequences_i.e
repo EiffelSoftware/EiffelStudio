@@ -370,6 +370,54 @@ feature {EV_ANY_I} -- Implementation
 	key_release_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET, EV_KEY]]
 			-- Implementation of once per object `key_release_actions'.
 
+feature -- Event handling
+
+	focus_in_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+			-- Actions to be performed when getting focus.
+		do
+			if focus_in_actions_internal = Void then
+				focus_in_actions_internal :=
+					 create_focus_in_actions
+			end
+			Result := focus_in_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_focus_in_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+			-- Create a focus_in action sequence.
+		deferred
+		end
+
+	focus_in_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
+			-- Implementation of once per object `focus_in_actions'.
+
+feature -- Event handling
+
+	focus_out_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+			-- Actions to be performed when losing focus.
+		do
+			if focus_out_actions_internal = Void then
+				focus_out_actions_internal :=
+					 create_focus_out_actions
+			end
+			Result := focus_out_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	create_focus_out_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+			-- Create a focus_out action sequence.
+		deferred
+		end
+
+	focus_out_actions_internal: ACTION_SEQUENCE [TUPLE [EV_WIDGET]]
+			-- Implementation of once per object `focus_out_actions'.
+
 end
 
 --|----------------------------------------------------------------

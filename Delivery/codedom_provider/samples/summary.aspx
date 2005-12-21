@@ -71,43 +71,50 @@
 	</head>
 	
 	<body>
-		<h1>Eiffel for ASP.NET Installtion Summary</h1>
-		<p>
+		<div class="title">
+			<h1>Eiffel for ASP.NET Samples</h1>
+		</div>
+		<div class="description">
+			<p>
+				<%if samples_path_found then%>
+
+					The installation of <b>Eiffel for ASP.NET</b> terminated successfully.
+					</p><p>
+					This page was written in Eiffel, the source for it can be found in 
+					<%=samples_path.to_cil%>\default.aspx.
+
+				<%elseif error_message /= Void then%>
+
+					There seems to be a problem with your installation, the path to your installation could
+					not be retrieved, the following error occured: <%=error_message.to_cil%>
+
+				<%else%>
+
+					There seems to be a problem with your installation, the path to your installation could
+					not be retrieved...
+
+				<%end%>
+			</p>
 			<%if samples_path_found then%>
-
-				The installation of <b>Eiffel for ASP.NET</b> terminated successfully.<br>
-				This page was written in Eiffel, the source for it can be found in 
-				<%=samples_path.to_cil%>\default.aspx.
-
-			<%elseif error_message /= Void then%>
-
-				There seems to be a problem with your installation, the path to your installation could
-				not be retrieved, the following error occured: <%=error_message.to_cil%>
-
-			<%else%>
-
-				There seems to be a problem with your installation, the path to your installation could
-				not be retrieved...
-
+				<p>
+					The documentation can be found in
+					<%=install_path.to_cil%>\Documentation\Eiffel for ASP.NET.chm.
+				</p>
+				<p>
+					Samples and their source code can be viewed from <a href="show_sample.aspx">this page</a>.
+				</p>
+				<p>
+					The sources for the samples are available in <%=samples_path.to_cil%>\Samples.
+				</p>
+				<p>
+					Enjoy Eiffel for ASP.NET!
+				</p>
+				<p>
+					--<br />
+					The Eiffel for ASP.NET Team.
+				</p>
 			<%end%>
-		</p>
-		<%if samples_path_found then%>
-			<p>
-				The documentation can be found in
-				<%=install_path.to_cil%>\Documentation\Eiffel for ASP.NET.chm.
-			</p>
-			<p>
-				Samples and their source code can be viewed from <a href="show_sample.aspx">this page</a>.<br />
-				The sources for the samples are available in <%=samples_path.to_cil%>\Samples.
-			</p>
-			<p>
-				Enjoy Eiffel for ASP.NET!
-			</p>
-			<p>
-				--<br />
-				The Eiffel for ASP.NET Team.
-			</p>
-		<%end%>		
+		</div>
 	</body>
 </html>
 

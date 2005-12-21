@@ -7,6 +7,8 @@ class
 	AST_CONTEXT
 
 inherit
+	ANY
+
 	SHARED_SERVER
 		export
 			{NONE} all

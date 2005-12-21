@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	CLASS_COMMENTS_SERVER 
+	CLASS_COMMENTS_SERVER
 
 inherit
 	COMPILER_SERVER [CLASS_COMMENTS]
@@ -20,13 +20,13 @@ feature -- Access
 			Result := t.class_id
 		end
 
-feature {NONE} -- Implementation
-
 	Cache: CACHE [CLASS_COMMENTS] is
-			-- No caching machanism 
+			-- No caching machanism
 			-- (Returns void)
 		do
-		end;
+		end
+
+feature {NONE} -- Implementation
 
 	Size_limit: INTEGER is 200
 			-- Size of the CLASS_COMMENTS_SERVER file (200 Ko)

@@ -1,11 +1,11 @@
 indexing
 
-	description: 
+	description:
 		"Error object sent by the compiler to the workbench.";
 	date: "$Date$";
 	revision: "$Revision $"
 
-deferred class EIFFEL_ERROR 
+deferred class EIFFEL_ERROR
 
 inherit
 
@@ -24,7 +24,7 @@ feature -- Properties
 		do
 			Result := class_c.file_name
 		end
-		
+
 	has_associated_file: BOOLEAN is
 			-- Error is relative to a file/class
 		do
@@ -66,7 +66,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER}
 
-	set_class (c: CLASS_C) is
+	set_class (c: like class_c) is
 			-- Assign `c' to `class_c'.
 		require
 			valid_c: c /= Void

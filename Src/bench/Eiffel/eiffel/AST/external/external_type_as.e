@@ -8,6 +8,8 @@ class
 	EXTERNAL_TYPE_AS
 
 inherit
+	ANY
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -42,7 +44,7 @@ feature {EXTERNAL_FACTORY} -- Initialization
 					i > nb_pointer
 				loop
 					value.append_character (star_text)
-					i := i + 1				
+					i := i + 1
 				end
 			end
 
@@ -93,7 +95,7 @@ feature {NONE} -- Not exported because should never be used.
 				False
 			end
 		end
-	
+
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconsitute text according to context.
 			-- Not valid in current context

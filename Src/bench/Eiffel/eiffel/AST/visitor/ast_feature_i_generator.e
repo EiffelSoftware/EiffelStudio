@@ -7,6 +7,8 @@ class
 	AST_FEATURE_I_GENERATOR
 
 inherit
+	ANY
+
 	SHARED_NAMES_HEAP
 		export
 			{NONE} all
@@ -71,7 +73,7 @@ feature {NONE} -- Implementation
 			l_extern_func: EXTERNAL_FUNC_I
 			l_external_body: EXTERNAL_AS
 				-- Hack Hack Hack
-				-- A litteral numeric value is interpreted as 
+				-- A litteral numeric value is interpreted as
 				-- a DOUBLE. In the case of a constant REAL
 				-- declaration that wont do!
 			l_extension: EXTERNAL_EXT_I
@@ -125,7 +127,7 @@ feature {NONE} -- Implementation
 						-- Once procedure
 					create {ONCE_PROC_I} l_proc
 				elseif l_routine.is_external then
-					
+
 						-- External procedure
 					l_external_body ?= l_routine.routine_body
 					l_extension := l_external_body.language_name.extension_i
@@ -178,7 +180,7 @@ feature {NONE} -- Implementation
 					l_once_func.set_type (l_as.type, l_assigner_name_id)
 					l_func := l_once_func
 				elseif l_routine.is_external then
-				
+
 						-- External procedure
 					l_external_body ?= l_routine.routine_body
 					l_extension := l_external_body.language_name.extension_i
@@ -193,7 +195,7 @@ feature {NONE} -- Implementation
 						l_is_attribute_external := l_il_ext /= Void and then
 							(l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Field_type or
 							l_il_ext.type = (create {SHARED_IL_CONSTANTS}).Static_field_type)
-							
+
 					end
 					if not l_is_deferred_external and not l_is_attribute_external then
 						create l_extern_func.make (l_extension)
@@ -247,5 +249,5 @@ feature {NONE} -- Implementation
 			end
 			last_feature := l_result
 		end
-		
+
 end

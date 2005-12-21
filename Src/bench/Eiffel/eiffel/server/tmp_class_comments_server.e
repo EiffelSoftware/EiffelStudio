@@ -3,7 +3,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class TMP_CLASS_COMMENTS_SERVER 
+class TMP_CLASS_COMMENTS_SERVER
 
 inherit
 	COMPILER_SERVER [CLASS_COMMENTS]
@@ -44,14 +44,14 @@ feature -- Access
 		do
 			Result := t.class_id
 		end
-	
-feature {NONE} -- Implementation
 
 	Cache: CACHE [CLASS_COMMENTS] is
 			-- No caching machanism
 			-- (Returns void)
 		do
 		end
+
+feature {NONE} -- Implementation
 
 	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items

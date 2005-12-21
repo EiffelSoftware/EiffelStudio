@@ -5,10 +5,10 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
-	EV_WIDGET_IMP 
-        
+	EV_WIDGET_IMP
+
 inherit
 	EV_WIDGET_I
 		redefine
@@ -40,7 +40,7 @@ inherit
 
 	EV_WIDGET_ACTION_SEQUENCES_IMP
 		export
-			{EV_INTERMEDIARY_ROUTINES} 
+			{EV_INTERMEDIARY_ROUTINES}
 				focus_in_actions_internal,
 				focus_out_actions_internal,
 				pointer_motion_actions_internal,
@@ -51,7 +51,7 @@ inherit
 		redefine
 			interface
 		end
-		
+
 	EV_DOCKABLE_SOURCE_IMP
 		redefine
 			interface
@@ -75,25 +75,25 @@ feature {NONE} -- Initialization
 			l_gtk_marshal := app_imp.gtk_marshal
 			a_event_widget := event_widget
 			a_c_object := c_object
-			
+
 				-- Reset the initial internal sizes, once set they should not be reset to -1
 			internal_minimum_width := -1
 			internal_minimum_height := -1
-	
+
 				-- Key events are handled by EV_WINDOW_IMP and propagated to the appropriate widget.
-				
+
 			signal_connect (a_event_widget, app_imp.focus_in_event_string, agent (l_gtk_marshal).widget_focus_in_intermediary (a_c_object), Void, True)
 			signal_connect (a_event_widget, app_imp.focus_out_event_string, agent (l_gtk_marshal).widget_focus_out_intermediary (a_c_object), Void, True)
-				
+
 			connect_button_press_switch_agent := agent (l_gtk_marshal).connect_button_press_switch_intermediary (a_c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then
 				connect_button_press_switch
-			end			
+			end
 			set_is_initialized (True)
 		end
-			
+
 feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
 	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -116,7 +116,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 						-- We are definitely in PND so we set a_capture_widget_imp for start_transport to be executed on it
 					a_capture_widget_imp ?= App_implementation.captured_widget.implementation
 				end
-			end	
+			end
 			if a_capture_widget_imp /= Void then
 				a_capture_widget_imp.end_transport (0, 0, 0, 0, 0 ,0 ,0 ,0)
 			elseif has_focus or else has_capture then
@@ -172,7 +172,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 				end
 			end
 		end
-		
+
 	on_focus_changed (a_has_focus: BOOLEAN) is
 			-- Called from focus intermediary agents when focus for `Current' has changed.
 			-- if `a_has_focus' then `Current' has just received focus.
@@ -185,7 +185,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 				if focus_out_actions_internal /= Void then
 					focus_out_actions_internal.call (Void)
 				end
-			end				
+			end
 		end
 
 	on_pointer_enter_leave (a_pointer_enter: BOOLEAN) is
@@ -245,7 +245,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
 				end
 			end
-			
+
 			if a_button >= 1 and then a_button <= 3 then
 				if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 					if pointer_button_press_actions_internal /= Void then
@@ -255,7 +255,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					if pointer_double_press_actions_internal /= Void then
 						pointer_double_press_actions_internal.call (t)
 					end
-				end			
+				end
 			end
        end
 
@@ -288,13 +288,13 @@ feature -- Access
 feature {EV_WIDGET_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retrieval
 
 	screen_x: INTEGER is
-			-- Horizontal position of the client area on screen, 
+			-- Horizontal position of the client area on screen,
 		local
 			a_x: INTEGER
 			a_aux_info: POINTER
 			i: INTEGER
 		do
-			if is_displayed then	
+			if is_displayed then
 					i := {EV_GTK_EXTERNALS}.gdk_window_get_origin (
 						{EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
 				    	$a_x, NULL)
@@ -306,9 +306,9 @@ feature {EV_WIDGET_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retr
 				end
 			end
 		end
-		
+
 	screen_y: INTEGER is
-			-- Vertical position of the client area on screen, 
+			-- Vertical position of the client area on screen,
 		local
 			a_y: INTEGER
 			a_aux_info: POINTER
@@ -347,11 +347,11 @@ feature -- Status setting
 			--| Used by pick and drop.
 		do
 			App_implementation.set_captured_widget (Void)
-			Precursor {EV_PICK_AND_DROPABLE_IMP}				
+			Precursor {EV_PICK_AND_DROPABLE_IMP}
 		end
 
 feature -- Element change
-	
+
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
@@ -372,7 +372,7 @@ feature -- Element change
 		end
 
 feature -- Measurement
-	
+
 	x_position: INTEGER is
 			-- Horizontal offset relative to parent `x_position'.
 			-- Unit of measurement: screen pixels.
@@ -419,18 +419,18 @@ feature -- Measurement
 				end
 				Result := Result.max (0)
 			end
-		end	
-		
+		end
+
 	minimum_width: INTEGER is
 			-- Minimum width that the widget may occupy.
-		do	
+		do
 			if internal_minimum_width /= -1 then
 				Result := internal_minimum_width
 			else
 				Result := Precursor {EV_PICK_AND_DROPABLE_IMP}
 			end
 		end
-		
+
 	minimum_height: INTEGER is
 			-- Minimum width that the widget may occupy.
 		do
@@ -460,17 +460,17 @@ feature {EV_ANY_I} -- Implementation
 				)
 			end
 		end
-		
+
 feature {EV_FIXED_IMP, EV_VIEWPORT_IMP} -- Implementation
 
 	store_minimum_size is
 			-- Called when size is explicitly set, ie: from fixed or viewport
 		do
 			internal_minimum_width := minimum_width
-			internal_minimum_height := minimum_height		
+			internal_minimum_height := minimum_height
 		end
 
-	internal_minimum_width: INTEGER	
+	internal_minimum_width: INTEGER
 			-- Minimum width for the widget.
 
 	internal_minimum_height: INTEGER
@@ -491,7 +491,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		do
 			parent_imp := a_container_imp
 		end
-		
+
 feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	destroy is
@@ -506,9 +506,9 @@ feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 	parent_imp: EV_CONTAINER_IMP
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
-		
+
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
-		
+
 	top_level_window_imp: EV_WINDOW_IMP is
 			-- Window implementation that `Current' is contained within (if any)
 		local
@@ -519,7 +519,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 				Result ?= eif_object_from_c (wind_ptr)
 			end
 		end
-		
+
 	top_level_window: EV_WINDOW is
 			-- Window the current is contained within (if any)
 		local
@@ -551,7 +551,6 @@ feature {NONE} -- Implementation
 				internal_minimum_height := a_minimum_height
 			end
 			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_minimum_size (c_object, internal_minimum_width, internal_minimum_height)
-			update_request_size
 		end
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
@@ -565,7 +564,7 @@ feature {NONE} -- Implementation
 			if {EV_GTK_EXTERNALS}.gtk_is_container (a_c_object) then
 				from
 					fg := a_color
-					a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_c_object) 
+					a_child_list := {EV_GTK_EXTERNALS}.gtk_container_children (a_c_object)
 					l := a_child_list
 				until
 					l = NULL
@@ -575,14 +574,14 @@ feature {NONE} -- Implementation
 					if {EV_GTK_EXTERNALS}.gtk_is_container (child) then
 						propagate_foreground_color_internal (fg, child)
 					end
-					l := {EV_GTK_EXTERNALS}.glist_struct_next (l) 
+					l := {EV_GTK_EXTERNALS}.glist_struct_next (l)
 				end
 				{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			else
 				real_set_foreground_color (a_c_object, fg)
 			end
 		end
-		
+
 	propagate_background_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
 			-- Propagate `a_color' to the background color of `a_c_object's children.
 		local
@@ -606,14 +605,14 @@ feature {NONE} -- Implementation
 					if {EV_GTK_EXTERNALS}.gtk_is_container (child) then
 						propagate_background_color_internal (bg, child)
 					end
-					l := {EV_GTK_EXTERNALS}.glist_struct_next (l) 
+					l := {EV_GTK_EXTERNALS}.glist_struct_next (l)
 				end
 				{EV_GTK_EXTERNALS}.g_list_free (a_child_list)
 			else
 				real_set_background_color (a_c_object, bg)
 			end
 		end
-		
+
 	last_width, last_height: INTEGER
 			-- Dimenions during last "size-allocate".
 

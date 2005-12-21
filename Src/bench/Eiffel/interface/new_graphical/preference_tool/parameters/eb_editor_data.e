@@ -16,15 +16,10 @@ inherit
 		end
 
 	EB_SHARED_MANAGERS
-		undefine
-			default_create
-		end
 
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
-		redefine
-			default_create
 		end
 
 create

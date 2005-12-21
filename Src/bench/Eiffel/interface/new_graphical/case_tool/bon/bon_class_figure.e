@@ -22,8 +22,7 @@ inherit
 			xml_element,
 			set_with_xml_element,
 			set_is_fixed,
-			recycle,
-			is_storable
+			recycle
 		end
 		
 	BON_FIGURE

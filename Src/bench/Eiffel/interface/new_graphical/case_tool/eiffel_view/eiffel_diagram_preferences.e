@@ -10,14 +10,9 @@ inherit
 	DATA_OBSERVER
 		rename
 			make as make_data_observer
-		redefine
-			default_create
 		end
 		
 	OBSERVER
-		undefine
-			default_create
-		end
 		
 	EV_SHARED_SCALE_FACTORY
 	

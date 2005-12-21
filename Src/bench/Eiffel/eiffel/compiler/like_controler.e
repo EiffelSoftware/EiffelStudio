@@ -4,9 +4,11 @@ indexing
 	revision: "$Revision$"
 
 class
-	LIKE_CONTROLER  
+	LIKE_CONTROLER
 
 inherit
+	ANY
+
 	EXCEPTIONS
 		export
 			{NONE} all
@@ -39,7 +41,7 @@ feature -- Status report
 		do
 			Result := arguments.has (a_position)
 		end
-		
+
 	has_routine_id (a_routine_id: INTEGER): BOOLEAN is
 			-- Does current have an anchor on `a_routine_id'?
 		do

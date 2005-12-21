@@ -15,6 +15,9 @@ inherit
 create
 	make
 
+create {FILTER_LIST}
+	make_filled
+
 feature -- Initialization
 
 	make is

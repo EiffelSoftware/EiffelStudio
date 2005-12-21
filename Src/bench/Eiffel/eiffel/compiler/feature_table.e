@@ -26,11 +26,13 @@ inherit
 			search as search_id
 		export
 			{NONE} all
+			{FEATURE_TABLE} keys, content, deleted_marks
 			{ANY}
 				after, conflict, count, cursor, forth, found,
 				found_item, go_to, has_id, item_for_iteration,
 				item_id, key_for_iteration, linear_representation,
-				put, remove, replace, search_id, start
+				put, remove, replace, search_id, start, valid_key, off,
+				valid_cursor
 		redefine
 			make, put, remove, replace
 		end

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		ensure
 			class_c_set: class_c = a_class
 		end
-		
+
 feature -- Access
 
 	class_c: EXTERNAL_CLASS_C
@@ -36,7 +36,7 @@ feature -- Properties
 
 	code: STRING is "VIIC"
 		-- Error code
-	
+
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is

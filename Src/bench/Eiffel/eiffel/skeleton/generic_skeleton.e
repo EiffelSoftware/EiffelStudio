@@ -3,13 +3,16 @@ indexing
 	date: "$date: $"
 	revision: "$revision: $"
 
-class GENERIC_SKELETON 
+class GENERIC_SKELETON
 
 inherit
 	ARRAYED_LIST [ATTR_DESC]
 
 create
 	make
+
+create {GENERIC_SKELETON}
+	make_filled
 
 feature -- Creation of CLASS_TYPE skeleton
 

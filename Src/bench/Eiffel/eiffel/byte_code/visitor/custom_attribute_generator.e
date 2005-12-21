@@ -1,9 +1,9 @@
 indexing
 	description: "[
 		Generator for custom attributes (CA) in CIL code generation.
-		
+
 		It follows the description of the ECMA standard for CLI Partition II-23.3.
-		
+
 		There is a difference between fixed argument, i.e. argument set because the
 		CA's constructor needs them, and named argument which corresponds to public
 		field or property with a setter.
@@ -40,7 +40,7 @@ inherit
 		export
 			{NONE} all
 		end
-		
+
 	COMPILER_EXPORTER
 		export
 			{NONE} all
@@ -110,11 +110,11 @@ feature -- Code generation
 				-- Generate name argument
 			if l_tuple_const /= Void then
 				ca_blob.put_integer_16 (l_tuple_const.count.to_integer_16)
-				
+
 				from
 					l_tuple_const.start
 				until
-					l_tuple_const.after					
+					l_tuple_const.after
 				loop
 					add_named_argument (l_creation_class, l_tuple_const.item)
 					l_tuple_const.forth
@@ -125,21 +125,21 @@ feature -- Code generation
 
 				-- Assign `ca_blob' to `a_owner_token'.
 			cil_generator.define_custom_attribute (a_owner_token, l_ctor_token, ca_blob)
-			
+
 				-- Reset current
 			cil_generator := Void
 			target_type := Void
 			ca_blob := Void
 		end
-		
+
 feature {NONE} -- Access
 
 	target_type: TYPE_I
 			-- Actual expected type of custom attribute argument or optional argument.
-			
+
 	cil_generator: CIL_CODE_GENERATOR
 			-- Back-end of custom attribute code generator.
-		
+
 	ca_blob: MD_CUSTOM_ATTRIBUTE
 			-- Blob used for storing custom attribute.
 
@@ -152,7 +152,7 @@ feature {NONE} -- Setting
 		ensure
 			target_type_set: target_type = a_type
 		end
-		
+
 feature {BYTE_NODE} -- Visitors
 
 	process_array_const_b (a_node: ARRAY_CONST_B) is
@@ -166,18 +166,18 @@ feature {BYTE_NODE} -- Visitors
 			check is_constant_expression: a_node.is_constant_expression end
 			l_expressions := a_node.expressions
 			l_type := a_node.type.true_generics [1]
-			
+
 			if is_target_object then
 					-- Mark the fact it is an array when not a fixed argument
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_szarray)
-				
+
 					-- Mark the type of elements.
 				insert_field_or_prop_type (l_type)
 			end
 
 				-- Put number of elements in array.
 			ca_blob.put_natural_32 (l_expressions.count.to_natural_32)
-			
+
 				-- Process elements.
 			from
 					-- Store context.
@@ -234,9 +234,9 @@ feature {BYTE_NODE} -- Visitors
 			if is_target_object and l_type.is_basic then
 				ca_blob.put_integer_8 (l_type.element_type)
 			end
-			
+
 			l_value := a_node.value
-			
+
 			if l_value.is_integer then
 				l_int ?= l_value
 				check l_int_not_void: l_int /= Void end
@@ -279,7 +279,7 @@ feature {BYTE_NODE} -- Visitors
 				end
 			else
 				check not_supported: False end
-			end				
+			end
 		end
 
 	process_external_b (a_node: EXTERNAL_B) is
@@ -306,7 +306,7 @@ feature {BYTE_NODE} -- Visitors
 			-- Process `a_node'.
 		do
 			check is_constant_expression: a_node.is_constant_expression end
-			
+
 			if is_target_object then
 				ca_blob.put_integer_8 (a_node.type.element_type)
 			end
@@ -327,7 +327,7 @@ feature {BYTE_NODE} -- Visitors
 			if is_target_object then
 				ca_blob.put_integer_8 (a_node.type.element_type)
 			end
-			
+
 			if target_type.is_real_32 then
 				ca_blob.put_real_32 (a_node.value.to_real)
 			elseif target_type.is_real_64 then
@@ -367,10 +367,10 @@ feature {BYTE_NODE} -- Visitors
 			if is_target_object then
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_type)
 			end
-			
+
 			if a_node.is_dotnet_type then
-				l_class_type := a_node.type.associated_class_type		
-			else						
+				l_class_type := a_node.type.associated_class_type
+			else
 				l_gen_type ?= a_node.type
 				check
 					l_gen_type_not_void: l_gen_type /= Void
@@ -452,7 +452,7 @@ feature {NONE} -- Implemention
 				has_expression: l_expr_b /= Void
 			end
 			l_feat_name := l_string_b.value.as_lower
-			
+
 			l_feat := a_class.feature_table.item (l_feat_name)
 				-- Not Void because it must have passed the type checking.
 			check has_feature: l_feat /= Void end
@@ -466,7 +466,7 @@ feature {NONE} -- Implemention
 
 			l_type := l_feat.type.actual_type.type_i
 			insert_field_or_prop_type (l_type)
-	
+
 				-- Put name of attribute or property.
 			if l_feat.written_class.is_external then
 				l_extension ?= l_feat.extension
@@ -486,7 +486,7 @@ feature {NONE} -- Implemention
 			set_target_type (l_type)
 			l_expr_b.process (Current)
 		end
-	
+
 	insert_integer_constant (a_int: INTEGER_CONSTANT) is
 			-- Simply insert `a_int' into `ca_blob'. Depending on `target_type'
 			-- it might requires to actually put any of the NATURAL_XX/INTEGER_XX
@@ -500,9 +500,9 @@ feature {NONE} -- Implemention
 			else
 				l_element_type := target_type.element_type
 			end
-			
+
 			inspect l_element_type
-			
+
 			when {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
 				ca_blob.put_integer_8 (a_int.integer_8_value)
 			when {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
@@ -519,11 +519,11 @@ feature {NONE} -- Implemention
 				ca_blob.put_natural_32 (a_int.natural_32_value)
 			when {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
 				ca_blob.put_natural_64 (a_int.natural_64_value)
-				
-				
+
+
 			when {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
 				inspect a_int.il_element_type
-				when 
+				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_i1,
 					{MD_SIGNATURE_CONSTANTS}.element_type_i2,
 					{MD_SIGNATURE_CONSTANTS}.element_type_i4,
@@ -531,7 +531,7 @@ feature {NONE} -- Implemention
 				then
 					ca_blob.put_real_32 (a_int.integer_64_value.to_real)
 
-				when 
+				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_u1,
 					{MD_SIGNATURE_CONSTANTS}.element_type_u2,
 					{MD_SIGNATURE_CONSTANTS}.element_type_u4,
@@ -543,7 +543,7 @@ feature {NONE} -- Implemention
 
 			when {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
 				inspect a_int.il_element_type
-				when 
+				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_i1,
 					{MD_SIGNATURE_CONSTANTS}.element_type_i2,
 					{MD_SIGNATURE_CONSTANTS}.element_type_i4,
@@ -551,7 +551,7 @@ feature {NONE} -- Implemention
 				then
 					ca_blob.put_real_64 (a_int.integer_64_value.to_double)
 
-				when 
+				when
 					{MD_SIGNATURE_CONSTANTS}.element_type_u1,
 					{MD_SIGNATURE_CONSTANTS}.element_type_u2,
 					{MD_SIGNATURE_CONSTANTS}.element_type_u4,
@@ -563,7 +563,7 @@ feature {NONE} -- Implemention
 				check not_reached: False end
 			end
 		end
-		
+
 	insert_field_or_prop_type (a_type: TYPE_I) is
 			-- Fill `FieldOrPropType' in `ca_blob'.
 		require
@@ -585,17 +585,17 @@ feature {NONE} -- Implemention
 			elseif l_cl_type.class_id = system.native_array_id then
 					-- Mark the fact it is an array
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_szarray)
-				check 
+				check
 					has_generics: l_cl_type.true_generics /= Void and then
 						l_cl_type.true_generics.count = 1
 				end
 					-- Mark the type of elements.
-				insert_field_or_prop_type (l_cl_type.true_generics [1])
+				insert_field_or_prop_type (l_cl_type.true_generics.item (1))
 			else
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boxed)
 			end
 		end
-	
+
 	insert_enum_type (a_cl_type: CL_TYPE_I) is
 			-- Insert enum specification in `ca_blob'.
 		require
@@ -613,7 +613,7 @@ feature {NONE} -- Implemention
 			l_type_name.append (l_ext_class.assembly.full_name)
 			ca_blob.put_string (l_type_name)
 		end
-	
+
 invariant
 	is_dotnet_compilation: system.il_generation
 

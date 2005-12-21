@@ -292,6 +292,8 @@ feature -- Inlining
 			cl_type: CL_TYPE_I
 			bc: STD_BYTE_CODE
 			old_c_t: CLASS_TYPE
+			l_rout_table: ROUT_TABLE
+			l_body_index: INTEGER
 		do
 			if not is_once then
 				type_i := context_type
@@ -299,8 +301,14 @@ feature -- Inlining
 					cl_type ?= type_i -- Cannot fail
 						-- Inline only if it is not polymorphic and if it can be inlined.
 					if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id, True) = -1 then
-						inliner := System.remover.inliner
-						inline := inliner.inline (type, body_index)
+						l_rout_table ?= eiffel_table.poly_table (routine_id)
+						l_rout_table.goto_implemented (cl_type.type_id)
+							-- Only if it is implemented that we can inline it.
+						if l_rout_table.is_implemented then
+							inliner := System.remover.inliner
+							l_body_index := l_rout_table.item.body_index
+							inline := inliner.inline (type, l_body_index)
+						end
 					end
 				end
 			end
@@ -315,7 +323,7 @@ feature -- Inlining
 					create inlined_feat_b
 				end
 				inlined_feat_b.fill_from (Current)
-				bc ?= Byte_server.disk_item (body_index)
+				bc ?= Byte_server.disk_item (l_body_index)
 
 				old_c_t := Context.class_type
 				Context.set_class_type (current_class_type)

@@ -19,7 +19,7 @@ default
 	console_application (no)
 	msil_use_optimized_precompile (yes)
   	version ("5.6.1102.0")
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Splitter")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.Vision2")
  	msil_clr_version ("v1.1.4322")
 
 cluster

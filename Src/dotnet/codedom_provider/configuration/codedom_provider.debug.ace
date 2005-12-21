@@ -38,6 +38,8 @@ cluster
 		end
 
 	compiler_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\compiler\interface"
+		exclude
+			".svn";
 		default
 			namespace ("EiffelSoftware.CodeDom")
 		end
@@ -50,6 +52,8 @@ cluster
 		end
 
 	code_generator_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\code_generator\interface"
+		exclude
+			".svn";
 		default
 			namespace ("EiffelSoftware.CodeDom")
 		end
@@ -61,31 +65,30 @@ cluster
 			namespace ("EiffelSoftware.CodeDom.Parser")
 		end
 
-	eiffel_parser_addons:	"$EIFFEL_SRC\Eiffel\API\error\common"
-		exclude
-			".svn"; "error_handler.e"; "syntax_error.e"; 
-		default
-			namespace ("EiffelSoftware.CodeDom.Parser")
-		end
-
 	parser_interface:		"$EIFFEL_SRC\dotnet\codedom_provider\parser\interface"
+		exclude
+			".svn";
 		default
 			namespace ("EiffelSoftware.CodeDom")
 		end
 
 	env_interp:		"$EIFFEL_SRC\eiffel\lace\env"
+		exclude
+			".svn";
 		default
 			namespace ("EiffelSoftware.CodeDom.Support")
 		end
 
 	shared_env:		"$EIFFEL_SRC\eiffel\eiffel\shared"
 		exclude
-			".svn"; "shared_names_heap.e"
+			".svn"; "shared_names_heap.e"; "shared_error_handler.e";
 		default
 			namespace ("EiffelSoftware.CodeDom.Support")
 		end
 
 	support:		"$EIFFEL_SRC\library"
+		exclude
+			".svn";
 		default
 			namespace ("EiffelSoftware.CodeDom.Support")
 		end
@@ -98,6 +101,18 @@ cluster
 		end
 
 	all ast:		"$EIFFEL_SRC\Eiffel\common"
+		exclude
+			".svn";
+		default
+			namespace ("EiffelSoftware.CodeDom.Support")
+		end
+
+	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\common"
+		exclude
+			"error_handler.e"; "syntax_error.e"; ".svn"
+		default
+			namespace ("EiffelSoftware.CodeDom.Support")
+		end
 
 end -- system EiffelSoftware.CodeDom
 

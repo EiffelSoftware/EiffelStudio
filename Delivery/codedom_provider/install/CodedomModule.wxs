@@ -42,9 +42,6 @@
 					<Component Id='EiffelSoftware_CodeDom' Guid='C93D25B9-9E68-4372-A6B1-1AF61DB8F25A'>
 						<File Id='EiffelSoftware_CodeDom_dll' Name='Codedom.dll' LongName='EiffelSoftware.CodeDom.dll' />
 					</Component>
-					<Component Id='EiffelSoftware_CodeDom_Splitter' Guid='F2435D8F-9504-4a57-B80B-E65FD56A14FC'>
-						<File Id='EiffelSoftware_CodeDom_Splitter_dll' Name='Splitter.dll' LongName='EiffelSoftware.CodeDom.Splitter.dll'/>
-					</Component>
 					<Component Id='EiffelSoftware_CodeDom_Vision2' Guid='F5247055-25A0-4a89-8A5D-9E8F99C213BE'>
 						<File Id='EiffelSoftware_CodeDom_Vision2_dll' Name='Vision2.dll' LongName='EiffelSoftware.CodeDom.Vision2.dll'/>
 					</Component>

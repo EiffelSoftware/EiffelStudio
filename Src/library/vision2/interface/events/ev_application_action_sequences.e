@@ -162,6 +162,24 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+	focus_in_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+			-- Actions to be performed when getting focus with open arguments
+			-- widget: EV_WIDGET
+		do
+			Result := implementation.focus_in_actions
+		ensure
+			not_void: Result /= Void
+		end
+
+	focus_out_actions: ACTION_SEQUENCE [TUPLE [EV_WIDGET]] is
+			-- Actions to be performed when losing focus with open arguments
+			-- widget: EV_WIDGET
+		do
+			Result := implementation.focus_out_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 end
 
 --|----------------------------------------------------------------

@@ -14,6 +14,7 @@
 		<Media Id='1' Cabinet='Sample.cab' EmbedCab='yes' DiskPrompt='CD-ROM #1' />
 		<Property Id='DiskPrompt' Value='Eiffel for ASP.NET 5.6 Installation [1]' />
 		<Property Id='FRAMEWORKPATH'>empty<RegistrySearch Id='AppReg1' Root='HKLM' Key='SOFTWARE\Microsoft\.NETFramework' Name='InstallRoot' Type='raw' /></Property>
+		<Property Id='CmdPath'>$(env.COMSPEC)</Property>
 
 		<Directory Id='TARGETDIR' Name='SourceDir'>
 			<Directory Id='ProgramFilesFolder' Name='PFiles'>
@@ -123,6 +124,8 @@
 		</Feature>
 
 		<CustomAction Id='InstallAction' FileKey='InstallerExe' ExeCommand='-s 1 -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>
+		<CustomAction Id='CleanupAction' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe' Execute='deferred' Return='ignore'/>
+		<CustomAction Id='CleanupAction2' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe.config' Execute='deferred' Return='ignore'/>
 		<CustomAction Id='StartIEAction' FileKey='InstallerExe' ExeCommand='-s 2 -i C:\' Execute='commit' Return='asyncNoWait'/>
 		<CustomAction Id='UninstallAction' FileKey='InstallerExe' ExeCommand='-u -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>
 	
@@ -1148,6 +1151,7 @@ If you do not wish to use the .NET facilities, you can continue this installatio
 			<LaunchConditions After='AppSearch' />
 			<Custom Action='UninstallAction' After='UnregisterTypeLibraries'>REMOVE="ALL"</Custom>
 			<Custom Action='InstallAction' After='StartServices'>NOT Installed</Custom>
+			<Custom Action='CleanupAction' After='InstallAction'>NOT Installed</Custom>
 			<Custom Action='StartIEAction' Before='InstallFinalize'>NOT Installed</Custom>
 			<RemoveExistingProducts After='InstallFinalize' />
 		</InstallExecuteSequence>

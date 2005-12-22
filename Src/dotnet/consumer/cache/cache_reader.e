@@ -274,6 +274,18 @@ feature {CACHE_WRITER} -- Implementation
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
 		end
+		
+feature -- Reset
+
+	reset_info is
+			-- Causes `info' to be reevaluated.
+			-- WARNING: Use this with caution. `reset_info' should not be called
+			-- when in the middle of a batch operation.
+		do
+			internal_info.put (Void)
+		ensure
+			internal_info_item_not_attached: internal_info.item = Void
+		end
 
 feature {NONE} -- Implementation
 

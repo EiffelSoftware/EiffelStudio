@@ -401,12 +401,12 @@ feature {NONE} -- Agents
 				internal_highlight_area_before.set_foreground_color (hightlight_color)
 				internal_highlight_area_before.fill_rectangle (0, 0, internal_highlight_area_before.width, internal_highlight_area_before.height)
 				internal_drawing_area.clear
-				internal_drawing_area.draw_ellipsed_text_top_left (0, 2, internal_title, internal_drawing_area.width)
+				internal_drawing_area.draw_ellipsed_text_top_left (internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, internal_title, internal_drawing_area.width)
 			else
 				internal_highlight_area_before.clear
 				internal_highlight_area_after.clear
 				internal_drawing_area.clear
-				internal_drawing_area.draw_ellipsed_text_top_left (0, 2, internal_title, internal_drawing_area.width)
+				internal_drawing_area.draw_ellipsed_text_top_left (internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, internal_title, internal_drawing_area.width)
 			end
 		end
 

@@ -91,6 +91,8 @@ feature {NONE} -- Initlization
 			extend_widget (internal_notebook)
 
 			internal_notebook.drop_actions.extend (agent on_notebook_drop)
+
+			resize_actions.extend (agent internal_notebook.on_resize)
 		end
 
 feature -- Query

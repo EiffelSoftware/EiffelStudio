@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			internal_shared.set_hot_zone_factory (create {SD_HOT_ZONE_TRIANGLE_FACTORY})
 			create menu_manager.make (Current)
 			create l_app
+--			l_app.application.focus_in_actions.extend (agent agents.on_widget_pointer_press)
 			l_app.application.pointer_button_press_actions.extend (agent agents.on_widget_pointer_press)
 		ensure
 			a_container_filled: a_container.has (internal_viewport)

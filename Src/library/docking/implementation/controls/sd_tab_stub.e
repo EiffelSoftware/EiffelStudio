@@ -156,7 +156,7 @@ feature {NONE} -- Agents
 			-- Handle redraw.
 		do
 			internal_drawing_area.clear
-			internal_drawing_area.draw_pixmap (0, 0, content.pixmap)
+			internal_drawing_area.draw_pixmap (internal_shared.drawing_area_icons_start_x, internal_shared.drawing_area_icons_start_y, content.pixmap)
 		end
 
 feature {NONE} -- Implementation

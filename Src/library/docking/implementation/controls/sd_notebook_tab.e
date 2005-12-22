@@ -54,38 +54,31 @@ feature {NONE}  -- Initlization
 			init_actions
 
 			create l_env
-			golbal_pointer_release_action := agent on_pointer_release
-			l_env.application.pointer_button_release_actions.extend (golbal_pointer_release_action)
-
+			resize_actions.extend (agent on_resize)
 		end
 
 	init_actions is
 			-- Initialize actions.
 		do
 			internal_pixmap_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_pixmap_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_pixmap_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
 
 			internal_text_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_text_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_text_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
 
 			internal_tail_drawing_area.pointer_button_press_actions.force_extend (agent on_pointer_press)
-			internal_tail_drawing_area.pointer_motion_actions.extend (agent on_pointer_motion)
 			internal_tail_drawing_area.pointer_double_press_actions.extend (agent on_double_press)
 
+			pointer_button_release_actions.extend (agent on_pointer_release)
+			pointer_motion_actions.extend (agent on_pointer_motion)
 		end
 
 feature -- Command
 
 	destroy is
 			-- Redefine.
-		local
-			l_env: EV_ENVIRONMENT
 		do
 			Precursor {EV_HORIZONTAL_BOX}
-			create l_env
-			l_env.application.pointer_button_release_actions.prune_all (golbal_pointer_release_action)
 		end
 
 	set_drop_actions (a_actions: EV_PND_ACTION_SEQUENCE) is
@@ -105,6 +98,35 @@ feature -- Command
 			set: internal_pixmap_drawing_area.drop_actions.is_equal (a_actions)
 			set: internal_text_drawing_area.drop_actions.is_equal (a_actions)
 			set: internal_tail_drawing_area.drop_actions.is_equal (a_actions)
+		end
+
+	set_width (a_width: INTEGER) is
+			-- Set current width.
+		require
+			a_width_valid: a_width >= 0
+		do
+			if a_width - internal_pixmap_drawing_area.minimum_width >= 0 then
+				on_expose_with_width (a_width - internal_pixmap_drawing_area.minimum_width)
+			end
+
+		end
+
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+			-- Handle resize actions.
+		do
+			on_expose
+		end
+
+feature -- Query
+
+	prefered_size: INTEGER is
+			-- If current is displayed, size should take.
+		do
+			Result := internal_pixmap_drawing_area.minimum_width
+			Result := Result + internal_text_drawing_area.minimum_width
+			if is_selected then
+				Result := Result + internal_tail_drawing_area.minimum_width
+			end
 		end
 
 feature -- Properties
@@ -192,30 +214,37 @@ feature {NONE}  -- Implmentation for drag action
 			-- Handle pointer press.
 		do
 			internal_pointer_pressed := True
+			enable_capture
 		end
 
-	on_pointer_release (a_widget: EV_WIDGET; a_button: INTEGER; a_screen_x, a_screen_y: INTEGER) is
+	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer release.
 		do
 			debug ("larry")
 				io.put_string ("%N SD_NOTEBOOK_TAB on_pointer_release")
 			end
 			internal_pointer_pressed := False
+			disable_capture
 		end
 
 	on_pointer_motion (a_x: INTEGER; a_y: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Hanlde pointer motion.
 		do
 			if internal_pointer_pressed then
-				drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 				internal_pointer_pressed := False
+				disable_capture
+				debug ("larry")
+					print ("%N SD_NOTEBOOK_TAB on_pointer motion, after disable capture")
+				end
+				drag_actions.call ([a_x, a_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 			end
+
 		end
 
 	internal_pointer_pressed: BOOLEAN
 			-- If pointer button pressed?
 
-feature {NONE}  -- Implementation
+feature {NONE}  -- Implementation agents
 
 	on_double_press (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- Handle pointer double clicked actions.
@@ -231,6 +260,15 @@ feature {NONE}  -- Implementation
 
 	on_expose is
 			-- Handle expose actions.
+
+		do
+			on_expose_with_width (internal_text_drawing_area.width)
+		end
+
+	on_expose_with_width (a_width: INTEGER) is
+			-- Handle expose with a_width.
+		require
+			a_width_valid: a_width >= 0
 		local
 			l_helper: SD_COLOR_HELPER
 		do
@@ -241,13 +279,15 @@ feature {NONE}  -- Implementation
 			if pixmap /= Void then
 				internal_pixmap_drawing_area.draw_pixmap (0, 2, pixmap)
 			end
-			internal_text_drawing_area.draw_ellipsed_text_top_left (0, 2, text, internal_text_drawing_area.width)
+			internal_text_drawing_area.draw_ellipsed_text_top_left (0, 2, text, a_width)
 			if is_selected then
 				create l_helper
 				internal_tail_drawing_area.set_background_color (internal_shared.non_focused_color)
 				l_helper.draw_color_change_gradually (internal_tail_drawing_area, internal_shared.focused_color)
 			end
 		end
+
+feature {NONE}  -- Implementation attributes
 
 	internal_pixmap_drawing_area: EV_DRAWING_AREA
 			-- Drawing area for pixmap.
@@ -258,8 +298,8 @@ feature {NONE}  -- Implementation
 	internal_tail_drawing_area: EV_DRAWING_AREA
 			-- Tail area which show color change gradually.
 
-	golbal_pointer_release_action: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
-			-- Application level pointer release actions.
+--	golbal_pointer_release_action: PROCEDURE [ANY, TUPLE [EV_WIDGET, INTEGER, INTEGER, INTEGER]]
+--			-- Application level pointer release actions.
 
 	internal_horizontal_box: EV_HORIZONTAL_BOX
 			-- Horizontal box which contain `internal_pixmap_drawing
@@ -280,6 +320,6 @@ invariant
 	internal_text_drawing_area_not_void: internal_text_drawing_area /= Void
 	internal_tail_drawing_area_not_void: internal_tail_drawing_area /= Void
 
-	golbal_pointer_release_action_not_void: golbal_pointer_release_action /= Void
+--	golbal_pointer_release_action_not_void: golbal_pointer_release_action /= Void
 
 end

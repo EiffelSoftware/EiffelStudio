@@ -419,6 +419,7 @@ feature {NONE}  -- Implementation functions.
 		do
 			internal_docking_manager.command.lock_update
 			create l_floating_state.make (a_x, a_y, internal_docking_manager)
+			l_floating_state.set_size (zone.width, zone.height)
 
 			if zone.is_drag_title_bar then
 				dock_at_top_level (l_floating_state.inner_container)

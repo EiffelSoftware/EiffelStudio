@@ -17,7 +17,6 @@ feature
 		do
 			create internal_shared
 			create feedback_rect.make
-			feedback_rect.set_color (internal_shared.focused_color)
 		end
 
 feature -- Basic operations
@@ -205,8 +204,18 @@ feature -- Basic operations
 		do
 			feedback_rect.show
 
-			feedback_rect.set_size (a_width, a_height)
-			feedback_rect.set_position (a_left, a_top)
+			feedback_rect.set_area (create {EV_RECTANGLE}.make (a_left, a_top, a_width, a_height))
+
+			debug ("larry")
+				print ("%NSD_FEEDBACK_DRAWER draw_transparency_rectangle")
+			end
+		end
+
+	draw_transparency_rectangle_for_tab (a_top_rect, a_bottom_rect: EV_RECTANGLE) is
+			-- Draw transparency rectangle for tab indicator.
+		do
+			feedback_rect.show
+			feedback_rect.set_tab_area (a_top_rect, a_bottom_rect)
 
 			debug ("larry")
 				print ("%NSD_FEEDBACK_DRAWER draw_transparency_rectangle")

@@ -81,7 +81,7 @@ feature -- Redefine
 			-- Redefine.
 		do
 			if internal_rectangle.has_x_y (a_screen_x, a_screen_y) then
-				draw_drag_window_indicator
+				draw_drag_window_indicator (a_screen_x, a_screen_y)
 				Result := True
 			end
 		end
@@ -119,6 +119,7 @@ feature {NONE} -- Implementation functions.
 			l_shared: like internal_shared
 			l_icons: SD_ICONS_SINGLETON
 			l_rect: like internal_rectangle
+			l_top_rect, l_bottom_rect: EV_RECTANGLE
 		do
 			l_rect := a_rect
 			l_shared := internal_shared
@@ -133,12 +134,14 @@ feature {NONE} -- Implementation functions.
 			elseif a_rect = internal_rectangle_bottom then
 				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle .left, internal_rectangle.bottom - (internal_rectangle.height * 0.5).ceiling, internal_rectangle.width, (internal_rectangle.height * 0.5).ceiling)
 			elseif a_rect = internal_rectangle_center then
-				internal_shared.feedback.draw_transparency_rectangle (internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height)
+				create l_top_rect.make (internal_rectangle.left, internal_rectangle.top, internal_rectangle.width, internal_rectangle.height - internal_shared.title_bar_height)
+				create l_bottom_rect.make (internal_rectangle.left + internal_shared.title_bar_height, internal_rectangle.bottom - internal_shared.title_bar_height, internal_shared.title_bar_height * 3, internal_shared.title_bar_height)
+				internal_shared.feedback.draw_transparency_rectangle_for_tab (l_top_rect, l_bottom_rect)
 			end
 
 		end
 
-	draw_drag_window_indicator is
+	draw_drag_window_indicator (a_screen_x, a_screen_y: INTEGER) is
 			-- Draw dragged window feedback which represent window position.
 		local
 			l_shared: like internal_shared
@@ -149,7 +152,19 @@ feature {NONE} -- Implementation functions.
 			l_icons := l_shared.icons
 			l_x := internal_rectangle.left + internal_rectangle.width // 2 - internal_shared.icons.arrow_indicator_center.width // 2
 			l_y := internal_rectangle.top + internal_rectangle.height // 2 - internal_shared.icons.arrow_indicator_center.height // 2
-			l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+			if internal_rectangle_top.has_x_y (a_screen_x, a_screen_y) then
+				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_up, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+			elseif internal_rectangle_bottom.has_x_y (a_screen_x, a_screen_y) then
+				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_down, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+			elseif internal_rectangle_left.has_x_y (a_screen_x, a_screen_y) then
+				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_left, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+			elseif internal_rectangle_right.has_x_y (a_screen_x, a_screen_y) then
+				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_right, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+			elseif internal_rectangle_center.has_x_y (a_screen_x, a_screen_y) then
+				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center_lightening_center, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+			else
+				l_shared.feedback.draw_pixmap_with_mask (l_x, l_y, internal_shared.icons.arrow_indicator_center, internal_shared.icons.arrow_indicator_center_mask, internal_mediator.orignal_screen)
+			end
 		end
 
 	has_x_y (a_screen_x, a_screen_y: INTEGER): BOOLEAN is

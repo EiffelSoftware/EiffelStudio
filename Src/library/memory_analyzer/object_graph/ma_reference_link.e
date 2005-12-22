@@ -6,16 +6,19 @@ indexing
 class
 	MA_REFERENCE_LINK
 
-inherit 
+inherit
 	EG_LINK_FIGURE
 		redefine
 			default_create,
 			xml_node_name
 		end
-	
+
 create
 	make_with_model
-	
+
+create {MA_REFERENCE_LINK}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -24,7 +27,7 @@ feature {NONE} -- Initialization
 			Precursor {EG_LINK_FIGURE}
 			create line
 			extend (line)
-	
+
 			create reflexive.make_with_positions (0, 0, 10, 10)
 		end
 
@@ -44,15 +47,15 @@ feature {NONE} -- Initialization
 				prune_all (line)
 				extend (reflexive)
 			end
-		
-			
+
+
 			disable_moving
 			disable_scaling
 			disable_rotating
 
 			update
 		end
-		
+
 feature -- Access
 
 	set_color is
@@ -60,25 +63,25 @@ feature -- Access
 		do
 			line.set_foreground_color ((create{EV_STOCK_COLORS}).red)
 		end
-	
+
 	set_color_back is
 			-- Set the color of the reference line to the orignal color.
 		do
-			line.set_foreground_color ((create{EV_STOCK_COLORS}).black)		
+			line.set_foreground_color ((create{EV_STOCK_COLORS}).black)
 		end
-		
+
 	xml_node_name: STRING is
 			-- Name of `xml_element'.
 		do
 			Result := "EG_SIMPLE_LINK"
 		end
-		
+
 	arrow_size: INTEGER is
 			-- Size of the arrow.
 		do
 			Result := line.arrow_size
 		end
-	
+
 feature -- Element change
 
 	set_arrow_size (i: INTEGER) is
@@ -104,10 +107,10 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 				if source /= Void and then target /= Void then
 					p1 := line.point_array.item (0)
 					p2 := line.point_array.item (1)
-					
+
 					p1.set (source.port_x, source.port_y)
 					p2.set (target.port_x, target.port_y)
-					
+
 					an_angle := line_angle (p1.x_precise, p1.y_precise, p2.x_precise, p2.y_precise)
 					source.update_edge_point (p1, an_angle)
 					an_angle := pi + an_angle
@@ -121,7 +124,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 					p2.set (target.port_x, target.port_y)
 					target.update_edge_point (p2, 0)
 				end
-				
+
 				line.invalidate
 				line.center_invalidate
 				if is_label_shown then
@@ -138,7 +141,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			end
 			is_update_required := False
 		end
-	
+
 feature {NONE} -- Implementation
 
 	set_is_selected (an_is_selected: like is_selected) is
@@ -146,16 +149,16 @@ feature {NONE} -- Implementation
 		do
 			is_selected := an_is_selected
 		end
-			
+
 	line: EV_MODEL_LINE
 			-- The rectangle representing the link.
-			
+
 	text: EV_MODEL_TEXT
 			-- The text for test. Del it in future.
-			
+
 	reflexive: EV_MODEL_ELLIPSE
 			-- The ellipse used when link `is_reflexive'.
-			
+
 	on_is_directed_change is
 			-- `model'.`is_directed' changed.
 		do
@@ -167,8 +170,16 @@ feature {NONE} -- Implementation
 			line.invalidate
 			line.center_invalidate
 		end
-		
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+
 invariant
 	line_not_void: line /= Void
-			
+
 end

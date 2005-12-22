@@ -8,10 +8,12 @@ class
 	VIEWER_CONTENT
 
 inherit
-	B_345_TREE [VIEWER_LINE]
+	B_345_TREE
 		rename
 			first_data as first_line,
 			last_data as last_line
+		redefine
+			first_line
 		end
 
 create
@@ -23,10 +25,12 @@ feature -- Initialization
 		do
 			make
 			--| FIXME: Not yet implemented.
-		end	
+		end
 
 feature -- Access
 
+	first_line: VIEWER_LINE
+	
 	first_displayed_line: like current_line
 
 	last_displayed_line: like current_line
@@ -42,7 +46,7 @@ feature -- Search status
 	found_string_character_position: INTEGER
 			-- Position of the first character within the line of the last string.
 			-- Valid only if `successful_search' is set.
-	
+
 	successful_search: BOOLEAN
 			-- Was the last call to `search_string' successful?
 
@@ -81,7 +85,7 @@ feature -- Basic operations
 	search_string(searched_string: STRING) is
 			-- Search the text for the string `searched_string'.
 			-- If the search was successful, `successful_search' is
-			-- set to True and `found_string_line' & 
+			-- set to True and `found_string_line' &
 			-- `found_string_character_position' are set.
 		local
 			line_string	: STRING

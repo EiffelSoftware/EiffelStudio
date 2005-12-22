@@ -15,12 +15,12 @@ inherit
 	EV_MODEL_DRAWER
 
 	EV_MODEL_PROJECTION_ROUTINES
-	
+
 	EV_SHARED_APPLICATION
 
 feature {NONE} -- Initialization
 
-	make_with_drawable_widget (a_world: EV_MODEL_WORLD; a_drawable: EV_DRAWABLE; a_widget: EV_WIDGET) is
+	make_with_drawable_widget (a_world: like world; a_drawable: EV_DRAWABLE; a_widget: like widget) is
 			-- Create with `a_world' and `a_drawable' (= `a_widget').
 		require
 			a_world_not_void: a_world /= Void
@@ -44,10 +44,10 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_drawable_widget_and_buffer (
-		a_world: EV_MODEL_WORLD;
+		a_world: like world;
 		a_drawable: EV_DRAWABLE;
 		a_buffer: EV_PIXMAP;
-		a_widget: EV_WIDGET) is
+		a_widget: like widget) is
 			-- Create with `a_world', `a_drawable' (= `a_widget') and `a_buffer'.
 		require
 			a_world_not_void: a_world /= Void
@@ -80,12 +80,12 @@ feature -- Status report
 		do
 			Result := area /= Void
 		end
-		
+
 	is_figure_selected: BOOLEAN
 			-- Was button pointer pressed on a figure?
 
 feature -- Element change
-	
+
 	change_area_position (a_x, a_y: INTEGER) is
 			-- `area' has moved to (`a_x', `a_y') of `drawable'.
 		local
@@ -106,7 +106,7 @@ feature -- Basic operations
 		do
 			if not is_projecting then
 				is_projecting := True
-			
+
 				if world.is_redraw_needed then
 					full_project
 					world.full_redraw_performed
@@ -262,10 +262,10 @@ feature {NONE} -- Event implementation
 					closed_figure ?= Result
 					if closed_figure /= Void and then closed_figure.background_color = Void then
 						-- is a not closed_figure under it?
-						Result := Void	
-						if found_closed_figure = Void then		
+						Result := Void
+						if found_closed_figure = Void then
 							-- if not take the first closed_figure found.
-							found_closed_figure := closed_figure	
+							found_closed_figure := closed_figure
 						end
 					end
 					i := i - 1
@@ -289,7 +289,7 @@ feature {NONE} -- Event implementation
 			w_y := y + area_y
 			from
 				event_fig := figure_on_position (world, w_x, w_y)
-				
+
 				if event_fig = Void then
 					event_fig := world
 					is_figure_selected := False
@@ -537,7 +537,7 @@ feature {NONE} -- Event implementation
 			--| the projection.
 		local
 			fig: EV_MODEL
-		do	
+		do
 			mouse_move (a_x, a_y, 0.0, 0.0, 0.0, 0, 0)
 			fig := current_figure
 			if fig = Void or else ev_application.ctrl_pressed then
@@ -595,7 +595,7 @@ feature {NONE} -- Implementation
 
 	axle_length: INTEGER is 15
 			-- Length of x and y axles when points are displayed.
-			
+
 	draw_points (figure: EV_MODEL) is
 			-- Draw representation of all points in `figure' to canvas.
 		require
@@ -606,15 +606,15 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			bbox: EV_RECTANGLE
 			l_item: EV_COORDINATE
-		do			
+		do
 			bbox := figure.bounding_box
 
 			drawable.set_foreground_color (default_colors.red)
 			drawable.fill_ellipse (figure.x-5 + offset_x, figure.y-5 + offset_y, 11, 11)
-			
+
 			drawable.set_foreground_color (default_colors.black)
 			drawable.draw_rectangle (bbox.left + offset_x, bbox.top + offset_y, bbox.width, bbox.height)
-			
+
 			group ?= figure
 			if group = Void then
 				l_points := figure.point_array
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 end -- class EV_MODEL_WIDGET_PROJECTOR
 
 --|----------------------------------------------------------------

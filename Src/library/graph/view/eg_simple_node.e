@@ -6,7 +6,7 @@ indexing
 
 class
 	EG_SIMPLE_NODE
-	
+
 inherit
 	EG_LINKABLE_FIGURE
 		redefine
@@ -15,10 +15,13 @@ inherit
 			xml_node_name,
 			model
 		end
-	
+
 create
 	make_with_model
-	
+
+create {EG_SIMPLE_NODE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -41,7 +44,7 @@ feature {NONE} -- Initialization
 			initialize
 			update
 		end
-		
+
 feature -- Access
 
 	model: EG_NODE
@@ -52,13 +55,13 @@ feature -- Access
 		do
 			Result := point_x
 		end
-		
+
 	port_y: INTEGER is
 			-- y position where links are starting.
 		do
 			Result := point_y
 		end
-		
+
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
 		do
@@ -70,13 +73,13 @@ feature -- Access
 		do
 			Result := node_figure.radius2 * 2
 		end
-		
+
 	width: INTEGER is
 			-- Width in pixels.
 		do
 			Result := node_figure.radius1 * 2
 		end
-		
+
 	xml_node_name: STRING is
 			-- Name of `xml_element'.
 		do
@@ -116,12 +119,12 @@ feature -- Element change
 			else
 				ax := (a * b) / sqrt (b^2 + l^2 * a^2)
 				ay := l * ax
-				
+
 				if cosine (an_angle) < 0 then
 						-- When we are in ]pi/2, 3*pi/2[, then we need to reverse
 						-- the coordinates. It looks strange like that, but don't forget
 						-- that although `ax' is always positive, `ay' might be negative depending
-						-- on the sign of `l'. This is why we need to reverse both coordinates, 
+						-- on the sign of `l'. This is why we need to reverse both coordinates,
 						-- but because we also need to reverse the `ay' value because in a figure world
 						-- the `ay' coordinates go down and not up, the effect is null, thus no operation
 						-- on `ay'.
@@ -134,7 +137,7 @@ feature -- Element change
 			end
 			p.set_precise (port_x + ax, port_y - ay)
 		end
-		
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 	update is
@@ -145,7 +148,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			end
 			is_update_required := False
 		end
-		
+
 feature {NONE} -- Implementation
 
 	set_is_selected (an_is_selected: like is_selected) is
@@ -166,7 +169,7 @@ feature {NONE} -- Implementation
 		do
 			Result := 20
 		end
-			
+
 	color: EV_COLOR is
 			-- color of figure.
 		once
@@ -174,16 +177,24 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	node_figure: EV_MODEL_ELLIPSE
 			-- The figure visualizing `Current'.
-			
+
 	number_of_figures: INTEGER is 2
 			-- Number of figures used to visualize `Current'.
 			-- (`name_label' and `node_figure')
 
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+
 invariant
-	node_figure_not_void: node_figure /= Void 
+	node_figure_not_void: node_figure /= Void
 
 end -- class EG_SIMPLE_NODE
 

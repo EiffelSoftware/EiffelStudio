@@ -66,7 +66,7 @@ feature -- Access
 	  	  	Result := editor_preferences.blinking_cursor
 	  	end
 
-	copy_cut_cursor: TEXT_CURSOR
+	copy_cut_cursor: like cursor_type
 
 feature -- Content change
 
@@ -194,7 +194,7 @@ feature -- Private Status
 	overwrite_mode: BOOLEAN
 			-- Do inserted characters overwrite existing ones?
 
-feature
+feature -- Access
 
 	text_displayed: EDITABLE_TEXT
 			-- Text displayed in the editor.
@@ -490,7 +490,7 @@ feature -- Text status report
 			-- Draw the cursor block defined by the rectangle associated with the current cursor at `y' and on `media'.		
 		local
 			width_cursor: INTEGER
-			l_cursor: TEXT_CURSOR
+			l_cursor: like cursor_type
 		do
 			l_cursor := text_displayed.cursor
 
@@ -686,7 +686,7 @@ feature {NONE} -- Mouse copy cut
 
 	on_mouse_button_up (x_pos, y_pos, button: INTEGER; unused1, unused2, unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER) is
 		local
-			cur: TEXT_CURSOR
+			cur: like cursor_type
 			perform_changes: BOOLEAN
 			x_cur, y_cur, l_y_pos: INTEGER
 		do

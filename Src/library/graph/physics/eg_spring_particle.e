@@ -14,33 +14,36 @@ class
 
 inherit
 	EG_PARTICLE_SIMULATION_BH [EG_VECTOR2D [DOUBLE]]
-	
+		redefine
+			particle_type
+		end
+
 	EV_MODEL_DOUBLE_MATH
 		undefine
 			default_create
 		end
-		
+
 	EG_FORCE_DIRECTED_PHYSICS_PROPERTIES
 		undefine
 			default_create
 		end
-		
+
 create
 	make_with_particles
-	
+
 feature {NONE} -- Implementation
 
 	px, py: INTEGER
 			-- Position of a particle.
 
-	external_force (a_node: EG_LINKABLE_FIGURE): EG_VECTOR2D [DOUBLE] is
+	external_force (a_node: like particle_type): EG_VECTOR2D [DOUBLE] is
 			-- External force for `a_node'. (attraction to center of universe).
 		local
 			l_distance: DOUBLE
 			l_force: DOUBLE
 		do
-			px := a_node.port_x 
-			py := a_node.port_y 
+			px := a_node.port_x
+			py := a_node.port_y
 
 			l_distance := distance (center_x, center_y, px, py)
 			if l_distance > 0.1 then
@@ -50,8 +53,8 @@ feature {NONE} -- Implementation
 				create Result
 			end
 		end
-		
-	nearest_neighbor_force (a_node: EG_LINKABLE_FIGURE): EG_VECTOR2D [DOUBLE] is
+
+	nearest_neighbor_force (a_node: like particle_type): EG_VECTOR2D [DOUBLE] is
 			-- Get the spring force between all of `a_node's adjacent nodes.
 		local
 			i, nb: INTEGER
@@ -69,7 +72,7 @@ feature {NONE} -- Implementation
 				i > nb
 			loop
 				l_item := l_links.i_th (i)
-				
+
 				if l_item.is_show_requested then
 					if a_node = l_item.source then
 						l_other := l_item.target
@@ -79,12 +82,12 @@ feature {NONE} -- Implementation
 					if l_other.is_show_requested then
 						l_weight := stiffness * link_stiffness (l_item)
 						Result.set (Result.x - l_weight * (px - l_other.port_x), Result.y - l_weight * (py - l_other.port_y))
-					end			
+					end
 				end
 				i := i + 1
 			end
 		end
-		
+
 	n_body_force (a_node, an_other: EG_PARTICLE): EG_VECTOR2D [DOUBLE] is
 			-- Get the electrical repulsion between all nodes, including those that are not adjacent.
 		local
@@ -101,6 +104,13 @@ feature {NONE} -- Implementation
 			else
 				create Result
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	particle_type: EG_LINKABLE_FIGURE is
+			-- Type of particle
+		do
 		end
 
 end -- class EG_SPRING_PARTICLE

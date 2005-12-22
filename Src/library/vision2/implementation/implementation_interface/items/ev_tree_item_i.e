@@ -19,7 +19,7 @@ inherit
 			interface
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM
 

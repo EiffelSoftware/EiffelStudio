@@ -5,32 +5,29 @@ indexing
 
 deferred class
 	EV_HEADER_I
-	
+
 inherit
 	EV_PRIMITIVE_I
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_LIST_I [EV_HEADER_ITEM]
 		redefine
 			interface
 		end
-		
+
 	EV_FONTABLE_I
 		redefine
 			interface
 		end
-		
+
 	EV_ITEM_PIXMAP_SCALER_I
 		redefine
 			interface
 		end
-		
+
 	EV_HEADER_ACTION_SEQUENCES_I
-		export
-			{NONE} all
-		end
 
 feature -- Access
 
@@ -57,7 +54,7 @@ feature -- Access
 			result_non_negative: Result >= 0
 			index_not_changed: index = old index
 		end
-		
+
 	pointed_divider_index: INTEGER is
 			-- Index of divider currently beneath the mouse pointer, or
 			-- 0 if none.

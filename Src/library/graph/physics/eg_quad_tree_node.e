@@ -1,11 +1,11 @@
 indexing
 	description: "[
 			In a EG_QUAD_TREE a `region' is splited into fore equaly sized parts:
-			
+
 						nw|ne
 						--+--
 						sw|se
-						
+
 			If the the tree has no childrens, meaning it is a leaf, then `particle' is element
 			of `region' otherwise the particles in the childrens are element of the childrens
 			regions.
@@ -16,10 +16,10 @@ indexing
 
 class
 	EG_QUAD_TREE
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
 
 	make (a_region: like region; a_particle: like particle) is
@@ -35,12 +35,12 @@ feature {NONE} -- Initialization
 			set: region = a_region and particle = a_particle
 			is_leaf: is_leaf
 		end
-		
+
 feature -- Status report
 
 	is_leaf: BOOLEAN
 			-- Is node a leaf?
-	
+
 	valid_tree: BOOLEAN is
 			-- Are all particles in `Current' element `region'?
 		do
@@ -64,28 +64,28 @@ feature -- Status report
 		end
 
 feature -- Access
-	
+
 	region: EV_RECTANGLE
 			-- All particles element of `Current' Tree are element of `region'.
 
 	particle: EG_PARTICLE
 			-- Particle in the node.
-	
+
 	childe_sw: EG_QUAD_TREE
 			-- Root node for particles in the south west part of `region'.
-	
+
 	childe_se: EG_QUAD_TREE
 			-- Root node for particles in the south east part of `region'.
-	
+
 	childe_ne: EG_QUAD_TREE
 			-- Root node for particles in the north east part of `region'.
-	
+
 	childe_nw: EG_QUAD_TREE
 			-- Root node for particles int the north west part of `region'.
 
 	center_of_mass_particle: EG_PARTICLE
 			-- The average particle of all the children particles or particle if `is_leaf'.
-	
+
 feature -- Element change
 
 	build_center_of_mass is
@@ -145,6 +145,7 @@ feature -- Element change
 		local
 			hh, hw: INTEGER
 			px, py: INTEGER
+			l_null_particle: EG_PARTICLE
 		do
 			hw := (region.width / 2).ceiling
 			hh := (region.height / 2).ceiling
@@ -166,7 +167,7 @@ feature -- Element change
 					end
 				end
 					-- Ensure invariant.
-				particle := Void
+				particle := l_null_particle
 			end
 			check
 				particle_pushed_down: particle = Void
@@ -206,7 +207,7 @@ feature -- Element change
 		ensure
 			inserted: has (a_particle)
 		end
-	
+
 	has (a_particle: EG_PARTICLE): BOOLEAN is
 			-- Is a particle equal to `a_particle' element of `Current' tree?
 		require
@@ -267,7 +268,7 @@ feature -- Element change
 invariant
 	leaf_has_particle_inner_nodes_do_not: is_leaf = (particle /= Void)
 	is_leaf_implies_has_particle: is_leaf implies region.has_x_y (particle.x, particle.y)
-		
+
 end -- class EG_QUAD_TREE
 
 --|----------------------------------------------------------------

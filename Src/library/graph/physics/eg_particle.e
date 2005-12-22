@@ -9,12 +9,12 @@ indexing
 
 class
 	EG_PARTICLE
-	
+
 create
 	make
-	
+
 feature {NONE} -- Initialization
-	
+
 	make (ax, ay: INTEGER; a_mass: like mass) is
 			-- Make a particle with `a_mass' at position (`ax', `ay').
 		do
@@ -32,7 +32,7 @@ feature -- Access
 		do
 			Result := internal_x
 		end
-	
+
 	y: INTEGER is
 			-- y position of particle.
 		do
@@ -44,13 +44,13 @@ feature -- Access
 
 	dx: DOUBLE
 			-- Delta to x direction.
-			
+
 	dy: DOUBLE
 			-- Delta to y direction.
-	
+
 	dt: DOUBLE
 			-- Delta time.
-			
+
 feature -- Element change
 
 	set_delta (a_dx, a_dy: DOUBLE) is
@@ -61,7 +61,7 @@ feature -- Element change
 		ensure
 			set: dx = a_dx and dy = a_dy
 		end
-	
+
 	set_dt (a_dt: DOUBLE) is
 			-- Set `dt' to `a_dt'
 		do
@@ -74,10 +74,10 @@ feature {NONE} -- Implementation
 
 	internal_x: INTEGER
 			-- internal `x' position.
-			
+
 	internal_y: INTEGER
 			-- internal `y' position.
-		
+
 end -- class EG_PARTICLE
 
 --|----------------------------------------------------------------

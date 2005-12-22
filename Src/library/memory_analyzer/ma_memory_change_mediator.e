@@ -5,8 +5,10 @@ indexing
 
 class
 	MA_MEMORY_CHANGE_MEDIATOR
-	
+
 inherit
+	ANY
+
 	MA_SINGLETON_FACTORY
 		export
 			{NONE} all
@@ -25,7 +27,7 @@ feature {NONE} -- Initialization
 			grid_from_state.enable_single_row_selection
 			grid_to_state.enable_single_row_selection
 			grid_changed := main_window.increased_object_result
-			
+
 			create grid_data.make_default
 			init_grid
 			grid_changed.set_item_pebble_function (agent handle_pick_item)
@@ -34,7 +36,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Command
-	
+
 	states_open_from_file is
 			-- Open states from disk.
 		local
@@ -43,7 +45,7 @@ feature -- Command
 		do
 			states.open_states
 			l_list := states.states
-			from 
+			from
 				l_list.start
 				grid_data.wipe_out
 			until
@@ -57,33 +59,33 @@ feature -- Command
 		ensure
 			grid_data_set: states.states.count = grid_data.count
 		end
-		
+
 	states_save_to_file is
 			-- Save states to a disk file.
 		do
 			states.save_states
 		end
-	
+
 	adjust_widgets_layout is
 			-- Adjust the split, 2 grids' positon and size to make it nice looking.
 		do
 			adjust_split_vertical
 			adjust_split_horizontal
 		end
-		
+
 	adjust_split_vertical is
 			-- Adjust the split area (which ia at the top area)'s position.
 		do
 			main_window.split_incre.set_split_position ((main_window.split_incre.width / 2).ceiling)
 		end
-	
+
 	adjust_split_horizontal is
 			-- Adjust the split area (which ia at the bottom area)'s position.
 		do
-			main_window.split_incre_horizontal.set_split_position (main_window.split_incre_horizontal.minimum_split_position 
+			main_window.split_incre_horizontal.set_split_position (main_window.split_incre_horizontal.minimum_split_position
 				+ main_window.memory_spot_1.row_count * main_window.memory_spot_1.row_height + main_window.memory_spot_1.header.height)
 		end
-	
+
 	adjust_column_width (a_column_index: INTEGER; a_grid: EV_GRID) is
 			-- Adjust a column width to fix the max width of the item its contain.
 		do
@@ -91,7 +93,7 @@ feature -- Command
 				a_grid.column (a_column_index).set_width (a_grid.column (a_column_index).required_width_of_item_span (1, a_grid.row_count))
 			end
 		end
-		
+
 	add_current_state is
 			-- Save current memory state, show them in grid.
 		local
@@ -106,7 +108,7 @@ feature -- Command
 		ensure
 			states_add_one: states.count = old states.count + 1
 		end
-		
+
 	show_object_count_changed is
 			-- Show the object increased objects information in the result grid.
 		local
@@ -123,20 +125,20 @@ feature -- Command
 				else
 					create l_info_dlg.make_with_text ("Please select a To State from the right grid.")
 					l_info_dlg.show_relative_to_window (main_window)
-				end	
+				end
 			else
 				create l_info_dlg.make_with_text ("Please select a From State from the left grid.")
 				l_info_dlg.show_relative_to_window (main_window)
 			end
 		end
-			
+
 	update_grid_content is
 			-- Fill grid_from_state, grid_to_state using grid data.
 		local
 			l_item: EV_GRID_LABEL_ITEM
 			l_i: INTEGER
 		do
-			from 
+			from
 				grid_data.start
 				grid_util.grid_remove_and_clear_all_rows (grid_from_state)
 				grid_util.grid_remove_and_clear_all_rows (grid_to_state)
@@ -150,20 +152,20 @@ feature -- Command
 				grid_from_state.set_item (1, l_i, l_item.deep_twin)
 				l_item.set_pixmap (icons.pixmap_file_content (icons.icon_system_state_to))
 				grid_to_state.set_item (1, l_i, l_item)
-				-- set object count 
+				-- set object count
 				create l_item.make_with_text (grid_data.item (l_i).item (2).out)
 				grid_from_state.set_item (2, l_i, l_item.deep_twin)
-				grid_to_state.set_item (2, l_i, l_item)	
+				grid_to_state.set_item (2, l_i, l_item)
 
 				-- set eiffel memory used
 				create l_item.make_with_text (grid_data.item (l_i).item (3).out)
-				grid_from_state.set_item (3,	l_i, l_item.deep_twin)	
+				grid_from_state.set_item (3,	l_i, l_item.deep_twin)
 				grid_to_state.set_item (3,	l_i, l_item)
 				-- set c memory used
 				create l_item.make_with_text (grid_data.item (l_i).item (4).out)
-				grid_from_state.set_item (4,	l_i, l_item.deep_twin)	
+				grid_from_state.set_item (4,	l_i, l_item.deep_twin)
 				grid_to_state.set_item (4,	l_i, l_item)
-							
+
 				grid_data.forth
 				l_i := l_i + 1
 			end
@@ -172,7 +174,7 @@ feature -- Command
 		end
 
 feature {NONE} -- Implemention
-	
+
 	update_grid_increased_content  is
 			-- Show the increased objects in the bottom result grid.
 		local
@@ -180,7 +182,7 @@ feature {NONE} -- Implemention
 			l_item: EV_GRID_LABEL_ITEM
 			l_i: INTEGER
 		do
-			from 
+			from
 				grid_data_increased.start
 			until
 				grid_data_increased.after
@@ -197,7 +199,7 @@ feature {NONE} -- Implemention
 					else
 						l_item.set_foreground_color (decreased_color)
 					end
-					grid_changed.set_item (2, l_i, l_item)					
+					grid_changed.set_item (2, l_i, l_item)
 				end
 				grid_data_increased.forth
 			end
@@ -210,36 +212,36 @@ feature {NONE} -- Implemention
 			grid_from_state.insert_new_column (2)
 			grid_from_state.insert_new_column (3)
 			grid_from_state.insert_new_column (4)
-			grid_from_state.column (1).set_title ("From state")			
+			grid_from_state.column (1).set_title ("From state")
 			grid_from_state.column (2).set_title ("Objects count")
 			grid_from_state.column (3).set_title ("Effel memory used")
 			grid_from_state.column (4).set_title ("C memory used")
-			grid_from_state.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_from_state))			
-			grid_from_state.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_from_state))						
-			grid_from_state.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3, grid_from_state))			
-			grid_from_state.column (4).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (4, grid_from_state))			
-					
+			grid_from_state.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_from_state))
+			grid_from_state.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_from_state))
+			grid_from_state.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3, grid_from_state))
+			grid_from_state.column (4).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (4, grid_from_state))
+
 			grid_to_state.insert_new_column (1)
 			grid_to_state.insert_new_column (2)
 			grid_to_state.insert_new_column (3)
 			grid_to_state.insert_new_column (4)
-			grid_to_state.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_to_state))			
-			grid_to_state.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_to_state))						
-			grid_to_state.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3, grid_to_state))			
-			grid_to_state.column (4).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (4, grid_to_state))			
+			grid_to_state.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_to_state))
+			grid_to_state.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_to_state))
+			grid_to_state.column (3).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (3, grid_to_state))
+			grid_to_state.column (4).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (4, grid_to_state))
 			grid_to_state.column (1).set_title ("To state")
 			grid_to_state.column (2).set_title ("Objects count")
 			grid_to_state.column (3).set_title ("Effel memory used")
 			grid_to_state.column (4).set_title ("C memory used")
-			
+
 			grid_changed.insert_new_column (1)
 			grid_changed.insert_new_column (2)
 			grid_changed.column (1).set_title ("Object type")
 			grid_changed.column (2).set_title ("Delta")
 			grid_changed.column (1).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (1))
 			grid_changed.column (2).header_item.pointer_button_press_actions.force_extend (agent on_grid_header_click (2))
-			grid_changed.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_changed))			
-			grid_changed.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_changed))						
+			grid_changed.column (1).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (1, grid_changed))
+			grid_changed.column (2).header_item.pointer_double_press_actions.force_extend (agent adjust_column_width (2, grid_changed))
 		ensure
 			grid_from_state_column_set: grid_from_state.column_count = 4
 			grid_to_state_column_set: grid_to_state.column_count = 4
@@ -266,22 +268,22 @@ feature {NONE} -- Implemention
 				end
 			end
 		end
-	
+
 	handle_pick_item (a_item: EV_GRID_LABEL_ITEM): MA_CLASS_STONE is
 			-- User pick a item from grid to filter.
 		do
 			if a_item /= Void and a_item.column.index = 1 then
-				Result := create {MA_CLASS_STONE}.make (a_item.text)				
+				Result := create {MA_CLASS_STONE}.make (a_item.text)
 			end
 		end
-		
+
 	sort_data is
 			-- Sort `grid_data' according to `sorted_column' and `sorting_order'.
 		local
 			l_sorter: DS_QUICK_SORTER [like grid_data_increased_row]
 			l_agent_sorter: AGENT_BASED_EQUALITY_TESTER [like grid_data_increased_row]
 		do
-			inspect 
+			inspect
 				sorted_column
 			when 1 then create l_agent_sorter.make (agent sort_on_type_name)
 			when 2 then create l_agent_sorter.make (agent sort_on_count)
@@ -289,13 +291,13 @@ feature {NONE} -- Implemention
 			create l_sorter.make (l_agent_sorter)
 			l_sorter.sort (grid_data_increased)
 		end
-		
+
 	sorting_order: BOOLEAN
 			-- If True, sorted from the smaller to the bigger.
-			
+
 	sorted_column: INTEGER
 			-- Column on which sorting is done.
-			
+
 	sort_on_type_name (u, v: like grid_data_increased_row): BOOLEAN is
 			-- Compare u, v.
 		require
@@ -328,28 +330,28 @@ feature {NONE} -- Implemention
 			False
 		do
 		end
-		
+
 
 	grid_data_increased: DS_ARRAYED_LIST [like grid_data_increased_row]
 			-- the objects increased, first INTEGER is increased object count, second INTEGER is the increased objects type id
-	
+
 	grid_data: DS_ARRAYED_LIST [like row_data]
 			-- Data used to fill grid.
 
 	row_data: TUPLE [STRING, INTEGER, INTEGER, INTEGER]
 			-- Type for the data inserted in grid
 			-- It is [Object Type Name, Effel Memory Used, C Memory Used, TypeId].
-	
+
 	grid_from_state, grid_to_state: EV_GRID -- Two grid show states.
-	
-	grid_changed: EV_GRID 
+
+	grid_changed: EV_GRID
 			-- The grid to show objects increased.
 
 	states: MA_MEMORY_STATE_MANAGER
-	
+
 	grid_state_prefix: STRING is "States: "
 			-- The states grid prefix of first column.
-	
+
 invariant
 	states_not_void: states /= Void
 	grid_1_not_void: grid_from_state /= Void

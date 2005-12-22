@@ -14,10 +14,13 @@ inherit
 			update,
 			xml_node_name
 		end
-	
+
 create
 	make_with_model
-	
+
+create {EG_SIMPLE_CLUSTER}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -37,13 +40,13 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			
+
 			disable_rotating
 			disable_scaling
-			
+
 			update
 		end
-		
+
 feature -- Access
 
 	port_x: INTEGER is
@@ -51,37 +54,37 @@ feature -- Access
 		do
 			Result := rectangle.x
 		end
-		
+
 	port_y: INTEGER is
 			-- y position where links are starting.
 		do
 			Result := rectangle.y
 		end
-		
+
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
 		do
 			Result := rectangle.bounding_box
 		end
-		
+
 	height: INTEGER is
 			-- Height in pixels.
 		do
 			Result := rectangle.height
 		end
-		
+
 	width: INTEGER is
 			-- Width in pixels.
 		do
 			Result := rectangle.width
 		end
-		
+
 	xml_node_name: STRING is
 			-- Name of `xml_element'.
 		do
 			Result := "EG_SIMPLE_CLUSTER"
 		end
-		
+
 
 feature -- Element change
 
@@ -144,7 +147,7 @@ feature -- Element change
 			end
 			p.set_precise (new_x, new_y)
 		end
-		
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 	update is
@@ -178,11 +181,19 @@ feature {NONE} -- Implementation
 
 	rectangle: EV_MODEL_RECTANGLE
 			-- The rectangle visualising the border of `Current'.
-			
+
 	number_of_figures: INTEGER is 2
 			-- number of figures used to visialize `Current'.
 			-- (`name_label' and `rectangle')
-			
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+
 invariant
 	rectangle_not_void: rectangle /= Void
 

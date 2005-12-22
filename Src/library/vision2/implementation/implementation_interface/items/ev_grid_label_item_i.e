@@ -5,7 +5,7 @@ indexing
 
 class
 	EV_GRID_LABEL_ITEM_I
-	
+
 inherit
 	EV_GRID_ITEM_I
 		redefine
@@ -17,8 +17,8 @@ inherit
 
 create
 	make
-	
-feature {NONE} -- Initialization
+
+feature {EV_ANY} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
@@ -36,10 +36,10 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 		do
 			recompute_text_dimensions
 			Result := internal_text_width
-		ensure		
+		ensure
 			result_non_negative: result >= 0
 		end
-		
+
 	text_height: INTEGER is
 			-- `Result' is height required to fully display `text' in `pixels'.
 			-- This function is optimized internally by `Current' and is therefore
@@ -47,17 +47,17 @@ feature {EV_GRID_LABEL_ITEM} -- Status Report
 		do
 			recompute_text_dimensions
 			Result := internal_text_height
-		ensure		
+		ensure
 			result_non_negative: result >= 0
 		end
-		
+
 	required_width: INTEGER is
 			-- Width in pixels required to fully display contents, based
 			-- on current settings.
 			-- Note that in some descendents such as EV_GRID_DRAWABLE_ITEM, this
 			-- returns 0. For such items, `set_required_width' is available.
 		do
-			Result := interface.left_border + text_width + interface.right_border 
+			Result := interface.left_border + text_width + interface.right_border
 			if interface.pixmap /= Void then
 				Result := Result + interface.pixmap.width + interface.spacing
 			end
@@ -105,10 +105,10 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				internal_text_height := text_dimensions.integer_item (2)
 			end
 			must_recompute_text_dimensions := False
-		ensure	
+		ensure
 			dimensions_recomputed: must_recompute_text_dimensions = False
 		end
-		
+
 	text_dimensions: TUPLE [INTEGER, INTEGER] is
 			-- A once tuple for use within `recompute_text_dimensions' to
 			-- prevent the need for always creating new tuples.
@@ -117,7 +117,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_PIXMAP) is
 			-- Redraw `Current'.
 		local
@@ -160,28 +160,28 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 				text_y := grid_label_item_layout.text_y
 				pixmap_x := grid_label_item_layout.pixmap_x
 				pixmap_y := grid_label_item_layout.pixmap_y
-				
+
 				space_remaining_for_text := grid_label_item_layout.grid_label_item.width - text_x
 				space_remaining_for_text_vertical := grid_label_item_layout.grid_label_item.height - text_y
 			else
 					-- Retrieve properties from interface.
 				l_pixmap := interface.pixmap
 				spacing_used := interface.spacing
-	
+
 					-- Now calculate the area to be used for displaying the text and pixmap
 					-- by subtracting the borders from the complete area.
 				client_x := an_x + left_border
 				client_y := a_y + top_border
 				client_width := a_width - left_border - right_border
 				client_height := a_height - top_border - bottom_border
-	
+
 				if l_pixmap /= Void then
 					pixmap_width := l_pixmap.width
 					pixmap_height := l_pixmap.height
 				else
 					spacing_used := 0
 				end
-	
+
 				space_remaining_for_text := client_width - pixmap_width - spacing_used
 				space_remaining_for_text_vertical := client_height
 
@@ -238,7 +238,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 					selection_x := 0
 					selection_width := a_width
 					selection_y := 0
-					selection_height := a_height					
+					selection_height := a_height
 				else
 					selection_x := text_x
 					selection_width := text_width + 2
@@ -285,7 +285,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 		once
 			create Result
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_GRID_LABEL_ITEM

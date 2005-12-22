@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	B_345_TREE [G->TREE_ITEM]
+	B_345_TREE
 
 inherit
 	ANY
@@ -27,7 +27,7 @@ feature -- Access
 			Result := root_node.keys_plus_one - 1
 		end
 
-	first_data: G
+	first_data: TREE_ITEM
 
 	last_data: like first_data
 
@@ -105,13 +105,13 @@ feature -- Removal
 		wipe_out is
 				-- Erase data.
 			local
-				l_default: G
+				l_default: like first_data
 			do
 				set_first_data (l_default)
 				set_last_data (l_default)
 				create root_node.make
 			end
-			
+
 
 feature {NONE} -- Implementation
 

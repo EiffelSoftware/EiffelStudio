@@ -9,7 +9,7 @@ indexing
 
 class
 	EV_MODEL_WORLD
-	
+
 inherit
 	EV_MODEL_GROUP
 		redefine
@@ -20,6 +20,9 @@ inherit
 
 create
 	default_create
+
+create {EV_MODEL_WORLD}
+	make_filled
 
 feature {NONE} -- Initialization
 

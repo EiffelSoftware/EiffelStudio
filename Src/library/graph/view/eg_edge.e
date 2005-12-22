@@ -6,16 +6,19 @@ indexing
 
 class
 	EG_EDGE
-	
+
 inherit
 	EV_MODEL_MOVE_HANDLE
 		export
 			{EG_POLYLINE_LINK_FIGURE} on_start_resizing
 		end
-	
+
 create
 	make
-	
+
+create {EG_EDGE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	make (owner: like corresponding_line) is
@@ -34,15 +37,15 @@ feature {NONE} -- Initialization
 			corresponding_line := owner
 			set_center
 		end
-		
+
 feature -- Access
 
 	corresponding_point: EV_COORDINATE
 			-- Point on line `Current' is an edge handler for.
-			
+
 	corresponding_line: EG_POLYLINE_LINK_FIGURE
 			-- Line `Current' is part of.
-	
+
 feature {EG_POLYLINE_LINK_FIGURE} -- Element change
 
 	set_corresponding_point (a_corresponding_point: like corresponding_point) is

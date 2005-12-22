@@ -27,7 +27,9 @@ feature {NONE} -- Initialize
 		do
 			base_make (an_interface)
 		end
-		
+	
+feature {EV_ANY} -- Initialization
+
 	initialize is
 			-- Initialize `Current'.
 		do

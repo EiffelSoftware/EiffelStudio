@@ -16,7 +16,7 @@ inherit
 		undefine
 			copy, default_create
 		end
-	
+
 	EV_DESELECTABLE_I
 		redefine
 			interface,
@@ -37,6 +37,8 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 		end
+
+feature {EV_ANY} -- Initialization
 
 	initialize is
 			-- Initialize `Current'.
@@ -74,7 +76,7 @@ feature -- Access
 		ensure
 			row_not_void: Result /= Void
 		end
-		
+
 	virtual_x_position: INTEGER is
 			-- Horizontal offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -88,7 +90,7 @@ feature -- Access
 		ensure
 			valid_result: parent /= Void implies Result >= 0 and Result <= parent.virtual_width - column.width + horizontal_indent
 		end
-		
+
 	virtual_y_position: INTEGER is
 			-- Vertical offset of `Current' in relation to the
 			-- the virtual area of `parent' grid in pixels.
@@ -100,7 +102,7 @@ feature -- Access
 			valid_result_when_parent_row_height_fixed: parent /= Void and then parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - parent.row_height
 			valid_result_when_parent_row_height_not_fixed: parent /= Void and then not parent.is_row_height_fixed implies Result >= 0 and Result <= parent.virtual_height - row.height
 		end
-		
+
 	horizontal_indent: INTEGER is
 			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
 			-- This may not be set, but the value is determined by the current tree structure
@@ -133,7 +135,7 @@ feature -- Access
 		do
 			if parent_i.is_row_height_fixed then
 				Result := parent_i.row_height
-			else						
+			else
 				Result := row_i.height
 			end
 		ensure
@@ -192,7 +194,7 @@ feature -- Status setting
 			l_row := row
 			l_column := column
 			enable_select_internal
-			
+
 			if not l_selected then
 				if
 					not l_parent_i.is_row_selection_enabled and then
@@ -213,7 +215,7 @@ feature -- Status setting
 					l_parent_i.column_select_actions_internal.call ([l_column])
 				end
 			end
-			
+
 				-- Request that `Current' be redrawn
 			if parent_i /= Void then
 				parent_i.redraw_item (Current)
@@ -233,7 +235,7 @@ feature -- Status setting
 			l_parent_i := parent_i
 			l_row := row
 			l_column := column
-			
+
 			if l_selected then
 					-- Check if row deselect actions need calling
 				if
@@ -251,9 +253,9 @@ feature -- Status setting
 						l_call_column_actions := True
 				end
 			end
-	
+
 			disable_select_internal
-			
+
 			if l_call_row_actions then
 				l_parent_i.row_deselect_actions_internal.call ([l_row])
 			end
@@ -266,7 +268,7 @@ feature -- Status setting
 				parent_i.redraw_item (Current)
 			end
 		end
-		
+
 	ensure_visible is
 			-- Ensure `Current' is visible in viewable area of `parent'.
 		require
@@ -283,7 +285,7 @@ feature -- Status setting
 				-- is to be displayed.
 			parent_i.recompute_horizontal_scroll_bar
 			parent_i.recompute_vertical_scroll_bar
-			
+
 				-- We can simply call `ensure_visible' on the row first, as the item
 				-- always matches the row offsets. However for the column it is not so simple
 				-- as we must take into account the indent of the item.
@@ -344,7 +346,7 @@ feature -- Status report
 		do
 			Result := parent_i /= Void
 		end
-		
+
 	is_selected: BOOLEAN is
 			-- Is `Current' selected?
 		do
@@ -387,7 +389,7 @@ feature -- Element change
 			-- Assign `a_tooltip' to `tooltip'.
 			-- pass `Void' to remove the tooltip.
 		do
-			tooltip := a_tooltip			
+			tooltip := a_tooltip
 		ensure
 			tooltip_assigned: a_tooltip = tooltip
 		end
@@ -411,7 +413,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 					if select_actions_internal /= Void then
 						select_actions_internal.call (Void)
 					end
-				end				
+				end
 			end
 		end
 
@@ -432,7 +434,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implemen
 					if deselect_actions_internal /= Void then
 						deselect_actions_internal.call (Void)
 					end
-				end				
+				end
 			end
 		end
 
@@ -475,9 +477,9 @@ feature {EV_GRID_I} -- Implementation
 		ensure
 			parent_i_unset: parent_i = Void
 			column_i_unset: column_i = Void
-			row_i_unset: row_i = Void			
-		end	
-		
+			row_i_unset: row_i = Void
+		end
+
 feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_ITEM_I} -- Implementation
 
 	hash_code: INTEGER
@@ -492,7 +494,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 
 	row_i: EV_GRID_ROW_I
 		-- Grid row that `Current' resides in if any.
-		
+
 feature {EV_GRID_I} -- Implementation
 
 	unparent is
@@ -502,7 +504,7 @@ feature {EV_GRID_I} -- Implementation
 		ensure
 			parent_void: parent = Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	destroy is
@@ -513,7 +515,7 @@ feature {NONE} -- Implementation
 			end
 			set_is_destroyed (True)
 		end
-		
+
 	internal_rectangle: EV_RECTANGLE is
 			-- Once access to a rectangle object used by the drawer.
 			-- This is re-used to prevent repeatedly creating new objects.
@@ -522,7 +524,7 @@ feature {NONE} -- Implementation
 		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
-		
+
 	perform_redraw (an_x, a_y, a_width, a_height, an_indent: INTEGER; drawable: EV_DRAWABLE) is
 			-- Redraw `Current'.
 		require
@@ -542,7 +544,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 				else
 					drawable.set_foreground_color (parent_i.non_focused_selection_color)
 				end
-		
+
 				drawable.fill_rectangle (0 + an_indent, 0, a_width, a_height)
 				if focused then
 					drawable.set_foreground_color (parent_i.focused_selection_text_color)
@@ -551,7 +553,7 @@ feature {EV_GRID_DRAWER_I, EV_GRID_ITEM} -- Implementation
 				end
 			else
 				drawable.set_foreground_color (displayed_foreground_color)
-			end					
+			end
 			drawable.set_copy_mode
 		end
 

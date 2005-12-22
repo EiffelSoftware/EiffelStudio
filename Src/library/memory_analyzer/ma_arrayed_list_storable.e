@@ -9,15 +9,18 @@ class
 inherit
 	ARRAYED_LIST [G]
 		redefine
-			make	
+			make
 		end
 	STORABLE
 		undefine
-			copy, is_equal	
+			copy, is_equal
 		end
 
 create
 	make
+
+create {MA_ARRAYED_LIST_STORABLE}
+	make_filled
 
 feature {NONE} -- Initlization
 
@@ -26,6 +29,6 @@ feature {NONE} -- Initlization
 		do
 			Precursor {ARRAYED_LIST} (n)
 		end
-		
+
 
 end

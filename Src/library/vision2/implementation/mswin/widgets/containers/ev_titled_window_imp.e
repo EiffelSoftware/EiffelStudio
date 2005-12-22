@@ -3,7 +3,7 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 class
 	EV_TITLED_WINDOW_IMP
 
@@ -39,7 +39,7 @@ inherit
 			execute_resize_actions,
 			has_title_bar
 		end
-		
+
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
 
 	EV_ID_IMP
@@ -140,7 +140,7 @@ feature -- Status setting
 		do
 			hwnd := {WEL_C_EXTERNALS}.set_active_window (wel_item)
 		end
-		
+
 	lower is
 			-- Lower `Current'. ie: put the window on the back
 			-- of the screen.
@@ -153,7 +153,7 @@ feature -- Status setting
 			-- in case it was set insensitive by the child.
 		do
 			Precursor {EV_WINDOW_IMP}
-			
+
 				-- Destroy the icon
 			if current_icon_pixmap /= Void then
 				current_icon_pixmap.decrement_reference
@@ -179,7 +179,7 @@ feature -- Status setting
 feature -- Element change
 
 	set_title (txt: STRING) is
-			-- Make `txt' the title of `Current'.            
+			-- Make `txt' the title of `Current'.
 		do
 			internal_title := txt.twin
 			if not is_minimized then
@@ -194,7 +194,7 @@ feature -- Element change
 			if is_minimized then
 				set_text (txt)
 			end
-		end	
+		end
 
 	set_icon_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Make `pixmap' the new icon pixmap.
@@ -225,7 +225,7 @@ feature -- Element change
 				previous_icon_pixmap.decrement_reference
 				previous_icon_pixmap := Void
 			end
-			
+
 				-- Forget the icon we have just built.
 			if built_icon /= Void then
 				built_icon.decrement_reference
@@ -241,7 +241,7 @@ feature -- Standard window class values
 		do
 			Result := internal_class_name
 		end
-	
+
 feature {EV_ANY_I} -- Implementation
 
 	current_icon_pixmap: WEL_ICON
@@ -429,7 +429,7 @@ feature {NONE} -- WEL Implementation
 			Result := Ws_overlapped + Ws_dlgframe + Ws_thickframe
 					+ Ws_clipchildren + Ws_clipsiblings
 					+ Ws_minimizebox + Ws_maximizebox
-					+ Ws_border + Ws_sysmenu 
+					+ Ws_border + Ws_sysmenu
 		end
 
 	on_show is
@@ -496,8 +496,8 @@ feature {NONE} -- WEL Implementation
 
 				 -- We now set our internal flag, as it must be set after we
 				 -- call `execute_resize_actions'.
-					
-			if size_type = Wel_window_constants.Size_minimized or 
+
+			if size_type = Wel_window_constants.Size_minimized or
 			size_type = Wel_window_constants.Size_maximized then
 					-- If we are now maximized or minimized then we
 					-- must assign True to `fire_restore_actions', so that
@@ -505,7 +505,7 @@ feature {NONE} -- WEL Implementation
 				fire_restore_actions := True
 			end
 		end
-		
+
 	execute_resize_actions (a_width, a_height: INTEGER) is
 			-- execute `resize_actions_internal' if not Void.
 		do
@@ -522,12 +522,12 @@ feature {NONE} -- WEL Implementation
 				fire_restore_actions := False
 			end
 		end
-	
-	fire_restore_actions: BOOLEAN	
+
+	fire_restore_actions: BOOLEAN
 		-- If `True' then restore_actions must be fired.
 		-- We have to have this flag, as Windows does not provide a message
 		-- which distinguishes between a normal resize or a restore.
-		
+
 	copy_box_attributes (original_box, new_box: EV_BOX) is
 			-- Copy all widgets from `original_box' to `new_box'
 			-- and set attributes.
@@ -565,7 +565,7 @@ feature {NONE} -- WEL Implementation
 			original_box_empty: original_box.is_empty
 		end
 
-feature {EV_WINDOW_IMP} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_TITLED_WINDOW
 

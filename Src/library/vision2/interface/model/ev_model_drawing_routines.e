@@ -2,7 +2,7 @@ indexing
 	description:
 		"Abstract class for drawing figures."
 	status: "See notice at end of class"
-	keywords: "figure, primitives, drawing" 
+	keywords: "figure, primitives, drawing"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,6 +10,8 @@ deferred class
 	EV_MODEL_DRAWING_ROUTINES
 
 inherit
+	ANY
+
 	EV_MODEL_MATH
 		export
 			{NONE} all
@@ -23,7 +25,7 @@ feature -- Figure drawing
 			arc_not_void: arc /= Void
 		deferred
 		end
-		
+
 	draw_figure_rotated_arc (arc: EV_MODEL_ROTATED_ARC) is
 			-- Draw standard representation of `arc' to canvas.
 		require
@@ -45,14 +47,14 @@ feature -- Figure drawing
 			ellipse_not_void: ellipse /= Void
 		deferred
 		end
-		
+
 	draw_figure_rotated_ellipse (ellipse: EV_MODEL_ROTATED_ELLIPSE) is
 			-- Draw standard representation of `ellipse' to canvas.
 		require
 			ellipse_not_void: ellipse /= Void
 		deferred
 		end
-		
+
 	draw_figure_equilateral (eql: EV_MODEL_EQUILATERAL) is
 			-- Draw standard representation of `eql' to canvas.
 		require
@@ -129,21 +131,21 @@ feature -- Figure drawing
 			text_figure_not_void: text_figure /= Void
 		deferred
 		end
-		
+
 	draw_figure_parallelogram (parallelogram: EV_MODEL_PARALLELOGRAM) is
 			-- Draw standard representation of `parallelogram' to canvas.
 		require
 			parallelogram_not_void: parallelogram /= Void
 		deferred
 		end
-		
+
 	draw_figure_rounded_parallelogram (parallelogram: EV_MODEL_ROUNDED_PARALLELOGRAM) is
 			-- Draw standard representation of `parallelogram' to canvas.
 		require
 			parallelogram_not_void: parallelogram /= Void
 		deferred
 		end
-		
+
 
 end -- class EV_MODEL_DRAWING_ROUTINES
 

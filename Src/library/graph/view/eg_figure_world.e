@@ -14,23 +14,26 @@ inherit
 			scale,
 			wipe_out
 		end
-		
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	EG_XML_STORABLE
 		undefine
 			default_create
 		end
-	
+
 create
 	make_with_model_and_factory,
 	make_with_model
-	
+
+create {EG_FIGURE_WORLD}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -77,7 +80,7 @@ feature {NONE} -- Initialization
 			set_factory (a_factory)
 			default_create
 			-- create all views in model
-			
+
 			if a_model.clusters.is_empty then
 				from
 					a_model.nodes.start
@@ -113,7 +116,7 @@ feature {NONE} -- Initialization
 			model.node_add_actions.extend (agent add_node)
 			model.link_add_actions.extend (agent add_link)
 			model.cluster_add_actions.extend (agent add_cluster)
-		
+
 			model.link_remove_actions.extend (agent remove_link)
 			model.node_remove_actions.extend (agent remove_node)
 			model.cluster_remove_actions.extend (agent remove_cluster)
@@ -121,7 +124,7 @@ feature {NONE} -- Initialization
 			model_set: model = a_model
 			factory_set: factory = a_factory
 		end
-	
+
 feature -- Status Report
 
 	has_linkable_figure (a_linkable: EG_LINKABLE): BOOLEAN is
@@ -134,7 +137,7 @@ feature -- Status Report
 			a_linkable_figure ?= items_to_figure_lookup_table.item (a_linkable)
 			Result := a_linkable_figure /= Void
 		end
-		
+
 	has_node_figure (a_node: EG_NODE): BOOLEAN is
 			-- Does `a_node' have a view in `Current'?
 		require
@@ -142,7 +145,7 @@ feature -- Status Report
 		do
 			Result := has_linkable_figure (a_node)
 		end
-		
+
 	has_link_figure (a_link: EG_LINK): BOOLEAN is
 			-- Does `a_link' have a view in `Current'?
 		require
@@ -153,7 +156,7 @@ feature -- Status Report
 			a_link_figure ?= items_to_figure_lookup_table.item (a_link)
 			Result := a_link_figure /= Void
 		end
-		
+
 	has_cluster_figure (a_cluster: EG_CLUSTER): BOOLEAN is
 			-- Does `a_cluster' have a view in `Current'?
 		require
@@ -164,10 +167,10 @@ feature -- Status Report
 			a_cluster_figure ?= items_to_figure_lookup_table.item (a_cluster)
 			Result := a_cluster_figure /= Void
 		end
-		
+
 	is_multiple_selection_enabled: BOOLEAN
 			-- Can the user select multiple figures with a rectangle?
-			
+
 	selected_figures_in_world: BOOLEAN is
 			-- Are all figures in `selected_figures' part of `Current'?
 		do
@@ -181,7 +184,7 @@ feature -- Status Report
 				selected_figures.forth
 			end
 		end
-		
+
 feature -- Access
 
 	figure_from_model (an_item: EG_ITEM): EG_FIGURE is
@@ -191,13 +194,13 @@ feature -- Access
 		do
 			Result := items_to_figure_lookup_table.item (an_item)
 		end
-			
+
 	model: EG_GRAPH
 			-- Model for `Current'.
-	
+
 	factory: EG_FIGURE_FACTORY
 			-- Factory used to create new figures.
-			
+
 	flat_links: like links is
 			-- All links in the view.
 		do
@@ -205,7 +208,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	flat_nodes: like nodes is
 			-- All nodes in the view.
 		do
@@ -213,7 +216,7 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	flat_clusters: like clusters is
 			-- All clusters in the view.
 		do
@@ -221,13 +224,13 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	selected_figures: ARRAYED_LIST [EG_FIGURE]
 			-- All currently selected figures.
-	
+
 	scale_factor: DOUBLE
 			-- `Current' has been scaled for `scale_factor'.
-			
+
 	root_clusters: ARRAYED_LIST [EG_CLUSTER_FIGURE] is
 			-- All clusters in `Current' not having a parent.
 		local
@@ -250,7 +253,7 @@ feature -- Access
 		ensure
 			Result_not_Void: Result /= Void
 		end
-		
+
 	smallest_common_supercluster (fig1, fig2: EG_LINKABLE_FIGURE): EG_CLUSTER_FIGURE is
 			-- Smallest common supercluster of `fig1' and `fig2'.
 		require
@@ -283,13 +286,13 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	figure_change_start_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- A figure will be moved or changed by the user.
-			
+
 	figure_change_end_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- A figure is not moved or changed anymore by user.
-			
+
 feature -- Status settings
 
 	disable_multiple_selection is
@@ -299,7 +302,7 @@ feature -- Status settings
 		ensure
 			set: not is_multiple_selection_enabled
 		end
-		
+
 	enable_multiple_selection is
 			-- Set `is_multiple_selection_enabled' to True.
 		do
@@ -307,7 +310,7 @@ feature -- Status settings
 		ensure
 			set: is_multiple_selection_enabled
 		end
-		
+
 feature -- List change
 
 	wipe_out is
@@ -338,34 +341,34 @@ feature -- List change
 				clusters.item.recycle
 				clusters.forth
 			end
-			
+
 			nodes.wipe_out
 			clusters.wipe_out
 			links.wipe_out
 			selected_figures.wipe_out
 			root_cluster.wipe_out
 		end
-			
+
 feature -- Element change
 
 	recycle is
 			-- Free `Current's resources and leave it in an unstable state.
 		do
 			wipe_out
-			
+
 			pointer_button_press_actions.prune_all (agent on_pointer_button_press_on_world)
 			pointer_button_release_actions.prune_all (agent on_pointer_button_release_on_world)
 			pointer_motion_actions.prune_all (agent on_pointer_motion_on_world)
-			
+
 			model.node_add_actions.prune_all (agent add_node)
 			model.link_add_actions.prune_all (agent add_link)
 			model.cluster_add_actions.prune_all (agent add_cluster)
-		
+
 			model.link_remove_actions.prune_all (agent remove_link)
 			model.node_remove_actions.prune_all (agent remove_node)
 			model.cluster_remove_actions.prune_all (agent remove_cluster)
 		end
-		
+
 
 	set_factory (a_factory: like factory) is
 			-- Set `factory' to `a_factory'.
@@ -377,7 +380,7 @@ feature -- Element change
 		ensure
 			set: factory = a_factory
 		end
-		
+
 	deselect_all is
 			-- Deselect all Figures.
 		do
@@ -394,7 +397,7 @@ feature -- Element change
 			selected_figures_is_empty: selected_figures.is_empty
 		end
 
-	add_node (a_node: EG_NODE) is
+	add_node (a_node: like node_type) is
 			-- `a_node' was added to the model.
 		require
 			a_node_not_void: a_node /= Void
@@ -408,13 +411,13 @@ feature -- Element change
 			root_cluster.extend (node_figure)
 			nodes.extend (node_figure)
 			linkable_add (node_figure)
-			
+
 			items_to_figure_lookup_table.put (node_figure, a_node)
 			figure_added (node_figure)
 		ensure
 			has_node_figure: has_node_figure (a_node)
 		end
-		
+
 	add_link (a_link: EG_LINK) is
 			-- `a_link' was added to the model.
 		require
@@ -436,17 +439,17 @@ feature -- Element change
 			source ?= items_to_figure_lookup_table.item (a_link.source)
 			link_figure.set_source (source)
 			source.add_link (link_figure)
-			
+
 			target ?= items_to_figure_lookup_table.item (a_link.target)
 			link_figure.set_target (target)
 			target.add_link (link_figure)
-			
+
 			items_to_figure_lookup_table.put (link_figure, a_link)
 			figure_added (link_figure)
 		ensure
 			has_a_link: has_link_figure (a_link)
 		end
-		
+
 	add_cluster (a_cluster: EG_CLUSTER) is
 			-- `a_cluster' was added to the model.
 		require
@@ -462,7 +465,7 @@ feature -- Element change
 			root_cluster.extend (cluster_figure)
 			linkable_add (cluster_figure)
 			clusters.extend (cluster_figure)
-			
+
 			from
 				a_cluster.linkables.start
 			until
@@ -471,15 +474,15 @@ feature -- Element change
 				cluster_figure.model.linkable_add_actions.call ([a_cluster.linkables.item])
 				a_cluster.linkables.forth
 			end
-		
+
 			cluster_figure.request_update
-			
+
 			items_to_figure_lookup_table.put (cluster_figure, a_cluster)
 			figure_added (cluster_figure)
 		ensure
 			has_cluster: has_cluster_figure (a_cluster)
 		end
-		
+
 	remove_link (a_link: EG_LINK) is
 			-- Remove `a_link' from view.
 		require
@@ -514,7 +517,7 @@ feature -- Element change
 			not_has_a_link: not has_link_figure (a_link)
 			selected_figures_in_world: selected_figures_in_world
 		end
-		
+
 	remove_node (a_node: EG_NODE) is
 			-- Remove `a_node' from view and all its links.
 		require
@@ -560,7 +563,7 @@ feature -- Element change
 			not_has_a_node: not has_node_figure (a_node)
 			selected_figures_in_world: selected_figures_in_world
 		end
-		
+
 	remove_cluster (a_cluster: EG_CLUSTER) is
 			-- Remove `a_cluster' from view and elements in it and all links.
 		require
@@ -583,7 +586,7 @@ feature -- Element change
 				linkables := a_cluster.linkables.twin
 				linkables.start
 			until
-				linkables.after	
+				linkables.after
 			loop
 				l_item := linkables.item
 				if l_item /= Void then
@@ -630,7 +633,7 @@ feature -- Element change
 			not_has_cluster: not has_cluster_figure (a_cluster)
 			selected_figures_in_world: selected_figures_in_world
 		end
-		
+
 	update is
 			-- Update all figures with `is_update_required' in `Current'.
 		local
@@ -667,12 +670,12 @@ feature -- Element change
 			loop
 				l_link := l_links.i_th (i)
 				if l_link.is_update_required then
-					l_link.update	
+					l_link.update
 				end
 				i := i + 1
 			end
 		end
-		
+
 	scale (a_scale: DOUBLE) is
 			-- Scale to x and y direction for `a_scale'.
 		do
@@ -689,7 +692,7 @@ feature -- Element change
 		ensure then
 			new_scale_factor: scale_factor = old scale_factor * a_scale
 		end
-		
+
 feature -- Save/Restore
 
 	store (ptf: RAW_FILE) is
@@ -702,13 +705,13 @@ feature -- Save/Restore
 			root: XM_ELEMENT
 		do
 			create diagram_output.make_with_root_named (xml_node_name, create {XM_NAMESPACE}.make_default)
-	
+
 			create root.make_root (create {XM_DOCUMENT}.make, "VIEW", xml_namespace)
 			view_output := xml_element (root)
 			diagram_output.root_element.force_first (view_output)
 			Xml_routines.save_xml_document (ptf.name, diagram_output)
 		end
-		
+
 	retrieve (f: RAW_FILE) is
 			-- Reload former state of `Current'.
 		require
@@ -758,7 +761,7 @@ feature -- Save/Restore
 				l_item := l_root_cluster.item
 				if l_item.is_storable then
 					create fig.make (root_elements, l_item.xml_node_name, xml_namespace)
-					root_elements.put_last (l_item.xml_element (fig))					
+					root_elements.put_last (l_item.xml_element (fig))
 				end
 				l_root_cluster.forth
 			end
@@ -771,12 +774,12 @@ feature -- Save/Restore
 				l_item := l_links.item
 				if l_item.is_storable then
 					create fig.make (root_elements, l_item.xml_node_name, xml_namespace)
-					root_elements.put_last (l_item.xml_element (fig))					
+					root_elements.put_last (l_item.xml_element (fig))
 				end
 				l_links.forth
 			end
 			node.put_last (root_elements)
-			
+
 			Result := node
 		end
 
@@ -791,7 +794,7 @@ feature -- Save/Restore
 			eg_cluster: EG_CLUSTER
 			eg_link: EG_LINK
 			eg_fig: EG_FIGURE
-			
+
 			l_nodes: like nodes
 			l_node: EG_LINKABLE_FIGURE
 			l_links: like links
@@ -892,16 +895,16 @@ feature {EG_FIGURE, EG_LAYOUT} -- Implementation
 
 	items_to_figure_lookup_table: HASH_TABLE [EG_FIGURE, EG_ITEM]
 			-- The table maps EG_ITEM objects to EG_FIGURE objects (model to view).
-			
+
 	root_cluster: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 			-- All linkables not beeing part of a cluster.
-			
+
 	nodes: ARRAYED_LIST [EG_LINKABLE_FIGURE]
 			-- All nodes in `Current'.
-			
+
 	clusters: ARRAYED_LIST [EG_CLUSTER_FIGURE]
 			-- All clusters in `Current'.
-			
+
 	links: ARRAYED_LIST [EG_LINK_FIGURE]
 			-- All links in `Current'.
 
@@ -909,7 +912,7 @@ feature {NONE} -- Implementation
 
 	real_grid_x: REAL
 			-- Real grid width in x direction.
-			
+
 	real_grid_y: REAL
 			-- Real grid width in y direction.
 
@@ -921,7 +924,7 @@ feature {NONE} -- Implementation
 			non_linkable_allready_part_of_view: not a_cluster.flat_linkables.there_exists (agent has_linkable_figure)
 		local
 			cur_cluster: EG_CLUSTER
-			cur_node: EG_NODE
+			cur_node: like node_type
 		do
 			from
 				a_cluster.linkables.start
@@ -945,7 +948,7 @@ feature {NONE} -- Implementation
 			has_cluster: has_cluster_figure (a_cluster)
 			all_linkables_part_of_view: a_cluster.flat_linkables.for_all (agent has_linkable_figure)
 		end
-		
+
 	linkable_add (a_linkable: EG_LINKABLE_FIGURE) is
 			-- `a_linkable' was added to `Current'.
 		require
@@ -954,7 +957,7 @@ feature {NONE} -- Implementation
 			a_linkable.pointer_button_press_actions.extend (agent on_pointer_button_press (a_linkable, ?, ?, ?, ?, ?, ?, ?, ?))
 			a_linkable.move_actions.extend (agent on_linkable_move (a_linkable, ?, ?, ?, ?, ?, ?, ?))
 		end
-		
+
 	selected_figure: EV_MODEL
 			-- The figure the user clicked on. (Void if none)
 
@@ -988,7 +991,7 @@ feature {NONE} -- Implementation
 			end
 			selected_figure := figure
 		end
-	
+
 	on_linkable_move (figure: EG_LINKABLE_FIGURE; ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- `figure' was moved for `ax' `ay'.
 			-- | Move all `selected_figures' as well.
@@ -1025,10 +1028,10 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	figure_was_selected: BOOLEAN
 			-- Was a figure allready selected?
-			
+
 	is_figure_moved: BOOLEAN
 			-- Is a figure moved?
 
@@ -1050,10 +1053,10 @@ feature {NONE} -- Implementation
 			elseif button = 1 and then selected_figure /= Void then
 				is_figure_moved := True
 				figure_change_start_actions.call (Void)
-			end	
+			end
 			figure_was_selected := False
 		end
-		
+
 	on_pointer_motion_on_world (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Pointer was moved in world.
 		local
@@ -1076,7 +1079,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_pointer_button_release_on_world (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Pointer was released over world.
 		do
@@ -1092,13 +1095,13 @@ feature {NONE} -- Implementation
 			end
 			selected_figure := Void
 		end
-			
+
 	multi_select_rectangle: EV_MODEL_RECTANGLE
 			-- Rectangle used to multiselect nodes.
-			
+
 	is_multiselection_mode: BOOLEAN
 			-- Is `Current' in multiselction mode?
-			
+
 	figure_added (a_figure: EG_FIGURE) is
 			-- `a_figure' was added to the world. Redefine this to do your
 			-- own initialisation.
@@ -1112,7 +1115,7 @@ feature {NONE} -- Implementation
 		ensure
 			a_figure_not_removed: items_to_figure_lookup_table.has_item (a_figure)
 		end
-		
+
 	figure_removed (a_figure: EG_FIGURE) is
 			-- `a_figure' was removed from the world.
 		require
@@ -1122,7 +1125,7 @@ feature {NONE} -- Implementation
 		ensure
 			a_figure_not_added: not items_to_figure_lookup_table.has_item (a_figure)
 		end
-		
+
 	update_cluster (cluster: EG_CLUSTER_FIGURE) is
 			-- Update all figures with `is_update_required' in `cluster'.
 		require
@@ -1151,6 +1154,13 @@ feature {NONE} -- Implementation
 				end
 				i := i - 1
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	node_type: EG_NODE is
+			-- Type for nodes.
+		do
 		end
 
 invariant

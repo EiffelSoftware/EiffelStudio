@@ -2,7 +2,7 @@ indexing
 	description:
 		"Adapters for EV_DRAWABLE that allows drawing of figures."
 	status: "See notice at end of class"
-	keywords: "figure, primitives, drawing" 
+	keywords: "figure, primitives, drawing"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +14,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make_with_drawable (a_drawable: EV_DRAWABLE) is
+	make_with_drawable (a_drawable: like drawable) is
 			-- Initialize.
 		require
 			a_drawable_not_void: a_drawable /= Void
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		ensure
 			assigned: drawable = a_drawable
 		end
-		
+
 feature -- Access
 
 	offset_x: INTEGER is
@@ -31,7 +31,7 @@ feature -- Access
 		do
 			Result := 0
 		end
-		
+
 	offset_y: INTEGER is
 			-- Everyting is drawen offest_y pixels to bottom.
 		do
@@ -79,17 +79,17 @@ feature -- Access
 	drawable: EV_DRAWABLE
 			-- Drawable surface (screen, drawing area or pixmap).
 
-	world: EV_MODEL_WORLD is 
+	world: EV_MODEL_WORLD is
 		deferred
 		end
 
 	Default_colors: EV_STOCK_COLORS is
 		deferred
 		end
-	
+
 feature -- Element Change
 
-	set_drawable (a_drawable: EV_DRAWABLE) is
+	set_drawable (a_drawable: like drawable) is
 			-- Set `drawable' to `a_drawable'.
 		require
 			a_drawable_not_void: a_drawable /= Void
@@ -113,20 +113,20 @@ feature -- Figure drawing
 			l_point_array := arc.point_array
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
-			
+
 			p0x := p0.x
 			p0y := p0.y
-			
+
 			p1x := p1.x
 			p1y := p1.y
-			
+
 			min_x := p0x.min (p1x)
 			max_x := p0x.max (p1x)
-			
+
 			min_y := p0y.min (p1y)
 			max_y := p0y.max (p1y)
-			
-			
+
+
 			d := drawable
 			if arc.dashed_line_style then
 				d.enable_dashed_line_style
@@ -139,7 +139,7 @@ feature -- Figure drawing
 				d.disable_dashed_line_style
 			end
 		end
-		
+
 	draw_figure_rotated_arc  (arc: EV_MODEL_ROTATED_ARC) is
 			-- Draw standard representation of `arc' to canvas.
 		local
@@ -148,23 +148,23 @@ feature -- Figure drawing
 			p0, p1, p2, p3: EV_COORDINATE
 			cx, cy: INTEGER
 			r1, r2: INTEGER
-			l_angle: DOUBLE	
+			l_angle: DOUBLE
 			l_offset_x, l_offset_y: INTEGER
 		do
 			l_point_array := arc.point_array
-			
+
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
-			
+
 			r1 := arc.radius1
 			r2 := arc.radius2
-			
+
 			d := drawable
-			
+
 			l_offset_x := offset_x
 			l_offset_y := offset_y
-			
+
 			if r1 = 0 or else r2 = 0 then
 				d.set_foreground_color (arc.foreground_color)
 				d.set_line_width (arc.line_width)
@@ -172,22 +172,22 @@ feature -- Figure drawing
 					d.enable_dashed_line_style
 				end
 				if r1 = 0 then
-					p3 := l_point_array.item (2) 
+					p3 := l_point_array.item (2)
 					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p3.x + l_offset_x, p3.y + l_offset_y)
 				else
 					p1 := l_point_array.item (1)
-					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p1.x + l_offset_x, p1.y + l_offset_y)				
+					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p1.x + l_offset_x, p1.y + l_offset_y)
 				end
 				if arc.dashed_line_style then
 					d.disable_dashed_line_style
 				end
 			else
-				
+
 				p2 := l_point_array.item (2)
-				
+
 				cx := ((p0.x_precise + p2.x_precise) / 2).truncated_to_integer
 				cy := ((p0.y_precise + p2.y_precise) / 2).truncated_to_integer
-				
+
 				l_angle := arc.angle
 
 				d.set_foreground_color (arc.foreground_color)
@@ -217,9 +217,9 @@ feature -- Figure drawing
 
 			lw := dot.line_width
 			lwh := lw // 2
-			
+
 			ce := dot.point_array.item (0)
-			
+
 			d.fill_ellipse (ce.x - lwh + offset_x, ce.y - lwh + offset_y, lw, lw)
 			if dot.dashed_line_style then
 				d.disable_dashed_line_style
@@ -240,31 +240,31 @@ feature -- Figure drawing
 			l_point_array := ellipse.point_array
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
-			
+
 			p0x := p0.x
 			p0y := p0.y
-			
+
 			p1x := p1.x
 			p1y := p1.y
-			
+
 			min_x := p0x.min (p1x)
 			max_x := p0x.max (p1x)
-			
+
 			min_y := p0y.min (p1y)
 			max_y := p0y.max (p1y)
-			
-			
+
+
 			d := drawable
 			if ellipse.dashed_line_style then
 				d.enable_dashed_line_style
 			end
 			d.set_line_width (ellipse.line_width)
-			
+
 			bg := ellipse.background_color
-			
+
 			l_offset_x := offset_x
 			l_offset_y := offset_y
-			
+
 			if bg /= Void then
 				d.set_foreground_color (bg)
 				d.fill_ellipse (min_x + l_offset_x, min_y + l_offset_y, max_x - min_x, max_y - min_y)
@@ -276,7 +276,7 @@ feature -- Figure drawing
 				d.disable_dashed_line_style
 			end
 		end
-		
+
 	draw_figure_rotated_ellipse (ellipse: EV_MODEL_ROTATED_ELLIPSE) is
 			-- Draw standard representation of `ellipse' to canvas.
 		local
@@ -290,19 +290,19 @@ feature -- Figure drawing
 			l_offset_x, l_offset_y: INTEGER
 		do
 			l_point_array := ellipse.point_array
-			
+
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
-			
+
 			r1 := ellipse.radius1
 			r2 := ellipse.radius2
-			
+
 			d := drawable
-			
+
 			l_offset_x := offset_x
 			l_offset_y := offset_y
-			
+
 			if r1 = 0 or else r2 = 0 then
 				d.set_foreground_color (ellipse.foreground_color)
 				d.set_line_width (ellipse.line_width)
@@ -310,26 +310,26 @@ feature -- Figure drawing
 					d.enable_dashed_line_style
 				end
 				if r1 = 0 then
-					p3 := l_point_array.item (2) 
+					p3 := l_point_array.item (2)
 					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p3.x + l_offset_x, p3.y + l_offset_y)
 				else
 					p1 := l_point_array.item (1)
-					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p1.x + l_offset_x, p1.y + l_offset_y)				
+					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p1.x + l_offset_x, p1.y + l_offset_y)
 				end
 				if ellipse.dashed_line_style then
 					d.disable_dashed_line_style
 				end
 			else
-				
+
 				bg := ellipse.background_color
-				
+
 				p2 := l_point_array.item (2)
-				
+
 				cx := ((p0.x_precise + p2.x_precise) / 2).truncated_to_integer
 				cy := ((p0.y_precise + p2.y_precise) / 2).truncated_to_integer
-				
+
 				l_angle := ellipse.angle
-				
+
 				if bg /= Void then
 					d.set_foreground_color (bg)
 					fill_rotated_ellipse (cx + l_offset_x, cy + l_offset_y, r1, r2, -l_angle)
@@ -450,29 +450,29 @@ feature -- Figure drawing
 			l_point_array := slice.point_array
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
-			
+
 			p0x := p0.x
 			p0y := p0.y
-			
+
 			p1x := p1.x
 			p1y := p1.y
-			
+
 			min_x := p0x.min (p1x)
 			max_x := p0x.max (p1x)
-			
+
 			min_y := p0y.min (p1y)
 			max_y := p0y.max (p1y)
-			
-			
+
+
 			d := drawable
 			if slice.dashed_line_style then
 				d.enable_dashed_line_style
 			end
 			d.set_line_width (slice.line_width)
-			
+
 			l_offset_x := offset_x
 			l_offset_y := offset_y
-			
+
 			bg := slice.background_color
 			if bg /= Void then
 				d.set_foreground_color (bg)
@@ -499,19 +499,19 @@ feature -- Figure drawing
 			l_offset_x, l_offset_y: INTEGER
 		do
 			l_point_array := slice.point_array
-			
+
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
 			p2 := l_point_array.item (2)
-			
+
 			r1 := slice.radius1
 			r2 := slice.radius2
-			
+
 			l_offset_x := offset_x
 			l_offset_y := offset_y
-			
+
 			d := drawable
-			
+
 			if r1 = 0 or else r2 = 0 then
 				d.set_foreground_color (slice.foreground_color)
 				d.set_line_width (slice.line_width)
@@ -519,26 +519,26 @@ feature -- Figure drawing
 					d.enable_dashed_line_style
 				end
 				if r1 = 0 then
-					p3 := l_point_array.item (2) 
+					p3 := l_point_array.item (2)
 					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p3.x + l_offset_x, p3.y + l_offset_y)
 				else
 					p1 := l_point_array.item (1)
-					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p1.x + l_offset_x, p1.y + l_offset_y)				
+					d.draw_segment (p0.x + l_offset_x, p0.y + l_offset_y, p1.x + l_offset_x, p1.y + l_offset_y)
 				end
 				if slice.dashed_line_style then
 					d.disable_dashed_line_style
 				end
 			else
-				
+
 				bg := slice.background_color
-				
+
 				p2 := l_point_array.item (2)
-				
+
 				cx := ((p0.x_precise + p2.x_precise) / 2).truncated_to_integer
 				cy := ((p0.y_precise + p2.y_precise) / 2).truncated_to_integer
-				
+
 				l_angle := slice.angle
-				
+
 				if bg /= Void then
 					d.set_foreground_color (bg)
 					fill_rotated_pie_slice (cx + l_offset_x, cy + l_offset_y, r1, r2, -l_angle, slice.start_angle, slice.aperture)
@@ -614,7 +614,7 @@ feature -- Figure drawing
 						d.fill_polygon (poly)
 						deoffset_coordinates (poly)
 					else
-						d.fill_polygon (poly)	
+						d.fill_polygon (poly)
 					end
 					a1 := p.point_array.item (1)
 					a2 := p.point_array.item (2)
@@ -661,7 +661,7 @@ feature -- Figure drawing
 				d.disable_dashed_line_style
 			end
 		end
-		
+
 	draw_figure_parallelogram (parallelogram: EV_MODEL_PARALLELOGRAM) is
 			-- Draw standad representation of `parallelogram' to canvas.
 		local
@@ -683,20 +683,20 @@ feature -- Figure drawing
 
 			d.set_line_width (parallelogram.line_width)
 			bg := parallelogram.background_color
-			
+
 			point_area := parallelogram.point_array
 			p1 := point_area.item (0)
 			p1x := p1.x
 			p1y := p1.y
 			p2 := point_area.item (1)
 			p4 := point_area.item (3)
-			
+
 			if p1y = p2.y and then p1x = p4.x then
 				min_x := p1x
 				max_x := min_x
 				min_y := p1y
 				max_y := min_y
-				
+
 				p2x := p2.x
 				min_x := min_x.min (p2x)
 				max_x := max_x.max (p2x)
@@ -704,7 +704,7 @@ feature -- Figure drawing
 				p4y := p4.y
 				min_y := min_y.min (p4y)
 				max_y := max_y.max (p4y)
-				
+
 				width := max_x - min_x
 				height := max_y - min_y
 				min_x := min_x + offset_x
@@ -740,7 +740,7 @@ feature -- Figure drawing
 				d.disable_dashed_line_style
 			end
 		end
-		
+
 	draw_figure_rectangle (rectangle: EV_MODEL_RECTANGLE) is
 			-- Draw standard representation of `rectangle' to canvas.
 		local
@@ -753,26 +753,26 @@ feature -- Figure drawing
 			l_point_array := rectangle.point_array
 			p0 := l_point_array.item (0)
 			p1 := l_point_array.item (1)
-			
+
 			p0x := p0.x
 			p0y := p0.y
 			p1x := p1.x
 			p1y := p1.y
-			
+
 			width := (p0x - p1x).abs
 			height := (p0y - p1y).abs
-			
+
 			min_x := p0x.min (p1x) + offset_x
 			min_y := p0y.min (p1y) + offset_y
-			
+
 			d := drawable
 			if rectangle.dashed_line_style then
 				d.enable_dashed_line_style
 			end
 
 			d.set_line_width (rectangle.line_width)
-			
-			
+
+
 			bg := rectangle.background_color
 			if bg /= Void then
 				d.set_foreground_color (bg)
@@ -784,7 +784,7 @@ feature -- Figure drawing
 				d.disable_dashed_line_style
 			end
 		end
-		
+
 	draw_figure_rounded_parallelogram (f: EV_MODEL_ROUNDED_PARALLELOGRAM) is
 			-- Draw standart representation of `f' to canvas.
 		local
@@ -820,7 +820,7 @@ feature -- Figure drawing
 			if f.dashed_line_style then
 				d.disable_dashed_line_style
 			end
-			
+
 		end
 
 	draw_figure_rounded_rectangle (f: EV_MODEL_ROUNDED_RECTANGLE) is
@@ -844,7 +844,7 @@ feature -- Figure drawing
 
 			l_offset_x := offset_x
 			l_offset_y := offset_y
-			
+
 			p0x := p0.x + l_offset_x
 			p0y := p0.y + l_offset_y
 			p1x := p1.x + l_offset_x
@@ -857,7 +857,7 @@ feature -- Figure drawing
 			p4y := p4.y + l_offset_y
 			p5x := p5.x + l_offset_x
 			p5y := p5.y + l_offset_y
-			
+
 			d := drawable
 			if f.dashed_line_style then
 				d.enable_dashed_line_style
@@ -877,12 +877,12 @@ feature -- Figure drawing
 				if p1x > p3x and then p4y > p3y then
 					d.fill_rectangle (p3x, p3y, p1x - p3x, p4y - p3y)
 				end
-				
+
 				d.fill_ellipse (p0x, p0y, (p2x - p0x) * 2, (p2y - p0y) * 2)
 				d.fill_ellipse (p1x - (p1x - p3x) * 2, p0y, (p1x - p3x) * 2, (p3y - p0y) * 2)
 				d.fill_ellipse (p1x - (p1x - p4x) * 2 + 1, p1y - (p1y - p4y) * 2 + 1, (p1x - p4x) * 2, (p1y - p4y) * 2)
 				d.fill_ellipse (p0x, p1y - (p1y - p5y) * 2 + 1, (p5x - p0x) * 2, (p1y - p5y) * 2)
-				
+
 			end
 			d.set_foreground_color (f.foreground_color)
 
@@ -890,14 +890,14 @@ feature -- Figure drawing
 			d.draw_segment (p1x, p3y, p1x, p4y)
 			d.draw_segment (p5x - 1, p1y, p4x, p1y)
 			d.draw_segment (p0x, p2y - 1, p0x, p5y)
-			
+
 			pi2 := pi / 2
-			
+
 			d.draw_arc (p0x, p0y, (p2x - p0x) * 2, (p2y - p0y) * 2, pi2, pi2)
 			d.draw_arc (p1x - (p1x - p3x) * 2, p0y, (p1x - p3x) * 2, (p3y - p0y) * 2, 0, pi2)
 			d.draw_arc (p1x - (p1x - p4x) * 2 + 1, p1y - (p1y - p4y) * 2 + 1, (p1x - p4x) * 2, (p1y - p4y) * 2, 3* pi2, pi2)
 			d.draw_arc (p0x, p1y - (p1y - p5y) * 2 + 1, (p5x - p0x) * 2, (p1y - p5y) * 2, pi, pi2)
-			
+
 			if f.dashed_line_style then
 				d.disable_dashed_line_style
 			end
@@ -924,10 +924,10 @@ feature -- Figure drawing
 			cy := l_point_area.item (0).y
 			l_offset_x := offset_x
 			l_offset_y := offset_y
-			from 
+			from
 				i := 1
 				nb := l_point_area.count - 1
-			until 
+			until
 				i > nb
 			loop
 				c := l_point_area.item (i)
@@ -947,15 +947,15 @@ feature -- Figure drawing
 		do
 			if text_figure.height > 2 then
 				p0 := text_figure.point_array.item (0)
-	
+
 				d := drawable
 				d.set_font (text_figure.scaled_font)
 				d.set_foreground_color (text_figure.foreground_color)
-				
+
 				d.draw_text_top_left (p0.x + offset_x - text_figure.left_offset, p0.y + offset_y, text_figure.text)
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	offset_coordinates (coordinates: ARRAY [EV_COORDINATE]) is
@@ -975,7 +975,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	deoffset_coordinates (coordinates: ARRAY [EV_COORDINATE]) is
 			-- Subtract `offset_x' `offset_y' from all points in `coordinates'.
 		local
@@ -993,7 +993,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-			
+
 	fill_rotated_ellipse (xcen, ycen, a, b: INTEGER; phi: DOUBLE) is
 			 -- Draw a filled ellipse with center (`xcen',`ycen'), radius1 `a',
 			 -- radius2 `b' and rotation `phi' counter clockwise.
@@ -1033,7 +1033,7 @@ feature {NONE} -- Implementation
 			 --        NOTE -  some of the above equation can be precomputed, eg,
 			 --
 			 --              i = COS(phi)/a        and        j = SIN(phi)/b
-			 --       
+			 --
 			 --        NOTE -  y is constant for each line so,
 			 --
 			 --              m = -yk*SIN(phi)/a    and     n = yk*COS(phi)/b
@@ -1044,32 +1044,32 @@ feature {NONE} -- Implementation
 			 --              (i*x + m)^2 + (j*x + n)^2 = 1
 			 --
 			 --        Thus for any particular line, y, there is two corresponding x
-			 --      values. These are the roots of the quadratic. To get the roots, 
-			 --      the above equation can be rearranged using the standard method, 
+			 --      values. These are the roots of the quadratic. To get the roots,
+			 --      the above equation can be rearranged using the standard method,
 			 --
 			 --          -(i*m + j*n) +- sqrt[i^2 + j^2 - (i*n -j*m)^2]
 			 --      x = ----------------------------------------------
-			 --                           i^2 + j^2 
+			 --                           i^2 + j^2
 			 --
 			 --        NOTE -  again much of this equation can be precomputed.
-			 --     
-			 --           c1 = i^2 + j^2 
+			 --
+			 --           c1 = i^2 + j^2
 			 --           c2 = [COS(phi)*SIN(phi)*(a-b)]
 			 --           c3 = [b*b*(COS(phi)^2) + a*a*(SIN(phi)^2)]
 			 --           c4 = a*b/c3
-			 -- 
+			 --
 			 --      x = c2*y +- c4*sqrt(c3 - y*y),    where +- must be evaluated once
-			 --                                      for plus, and once for minus. 
+			 --                                      for plus, and once for minus.
 			 --
 			 --        We also need to know how large the ellipse is. This condition
 			 --      arises when the sqrt of the above equation evaluates to zero.
-			 --      Thus the height of the ellipse is give by 
-			 -- 
+			 --      Thus the height of the ellipse is give by
+			 --
 			 --              sqrt[ b*b*(COS(phi)^2) + a*a*(SIN(phi)^2) ]
 			 --
 			 --       which just happens to be equal to sqrt(c3).
 			 --
-			 --         It is now possible to create a routine that will scan convert 
+			 --         It is now possible to create a routine that will scan convert
 			 --       the ellipse on the screen.
 			 --
 			 -- Please also consider the copyright notice from the xfig project:
@@ -1098,7 +1098,7 @@ feature {NONE} -- Implementation
 			 sphisqr := sphi * sphi
 			 asqr := a * a
 			 bsqr := b * b
-			 
+
 			 c1 := (cphisqr / asqr) + (sphisqr / bsqr)
 			 c2 := ((cphi * sphi / asqr) - (cphi * sphi / bsqr)) / c1
 			 c3 := (bsqr * cphisqr) + (asqr * sphisqr)
@@ -1107,7 +1107,7 @@ feature {NONE} -- Implementation
 			 v1 := c4 * c4
 			 c6 := 2 * v1
 			 c3 := c3 * v1 - v1
-			 
+
 			 from
 			 	l_drawable := drawable
 			 	l_drawable.set_line_width (2)
@@ -1119,10 +1119,10 @@ feature {NONE} -- Implementation
 				d := sqrt (c3)
 				xleft := (c5 - d).truncated_to_integer
 				xright := (c5 + d).truncated_to_integer
-				
+
 				l_drawable.draw_segment (xcen + xleft + 1, y_top, xcen + xright, y_top)
 				l_drawable.draw_segment (xcen - xleft, y_bottom + 1, xcen - xright + 1, y_bottom + 1)
-			  	
+
 				c5 := c5 + c2
 				v1 := v1 + c6
 				c3 := c3 - v1
@@ -1130,7 +1130,7 @@ feature {NONE} -- Implementation
 			 	y_bottom := y_bottom - 1
 		 	end
 		end
-		
+
 	draw_rotated_ellipse (xcen, ycen, a, b: INTEGER; phi: DOUBLE) is
 			-- Draw a ellipse border with center (`xcen',`ycen'), radius1 `a',
 			-- radius2 `b' and rotation `phi' counter clockwise.
@@ -1153,7 +1153,7 @@ feature {NONE} -- Implementation
 			 sphisqr := sphi * sphi
 			 asqr := a * a
 			 bsqr := b * b
-			 
+
 			 c1 := (cphisqr / asqr) + (sphisqr / bsqr)
 			 c2 := ((cphi * sphi / asqr) - (cphi * sphi / bsqr)) / c1
 			 c3 := (bsqr * cphisqr) + (asqr * sphisqr)
@@ -1162,7 +1162,7 @@ feature {NONE} -- Implementation
 			 v1 := c4 * c4
 			 c6 := 2 * v1
 			 c3 := c3 * v1 - v1
-			 
+
 			 from
 			 	l_drawable := drawable
 			 	lw := l_drawable.line_width
@@ -1181,7 +1181,7 @@ feature {NONE} -- Implementation
 				d := sqrt (c3)
 				xleft := (c5 - d).truncated_to_integer
 				xright := (c5 + d).truncated_to_integer
-				
+
 				if lw > 0 then
 					if dashed then
 						from
@@ -1211,7 +1211,7 @@ feature {NONE} -- Implementation
 							x := x + 1
 						end
 					else
-						l_drawable.draw_segment (xcen + oldxleft, y_top - 1, xcen + xleft, y_top)			  	
+						l_drawable.draw_segment (xcen + oldxleft, y_top - 1, xcen + xleft, y_top)
 				  		l_drawable.draw_segment (xcen + oldxright, y_top - 1, xcen + xright, y_top)
 					  	l_drawable.draw_segment (xcen - oldxleft, y_bottom + 1, xcen - xleft, y_bottom)
 					  	l_drawable.draw_segment (xcen - oldxright, y_bottom + 1, xcen - xright, y_bottom)
@@ -1231,7 +1231,7 @@ feature {NONE} -- Implementation
 			 	l_drawable.draw_segment (xcen - xleft, y_bottom + 1, xcen - xright, y_bottom + 1)
 		 	end
 		end
-		
+
 	draw_rotated_arc (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE) is
 			-- Draw a ellipse border from `start_angle' to `start_angle' + `aperture'.
 			-- with center (`xcen',`ycen'), radius1 `a',
@@ -1258,7 +1258,7 @@ feature {NONE} -- Implementation
 				 sphisqr := sphi * sphi
 				 asqr := a * a
 				 bsqr := b * b
-				 
+
 				 c1 := (cphisqr / asqr) + (sphisqr / bsqr)
 				 c2 := ((cphi * sphi / asqr) - (cphi * sphi / bsqr)) / c1
 				 c3 := (bsqr * cphisqr) + (asqr * sphisqr)
@@ -1267,10 +1267,10 @@ feature {NONE} -- Implementation
 				 v1 := c4 * c4
 				 c6 := 2 * v1
 				 c3 := c3 * v1 - v1
-				 
-				 a_start_angle :=  phi + start_angle 
+
+				 a_start_angle :=  phi + start_angle
 				 a_start_angle := modulo (a_start_angle, 2 * pi)
-	
+
 				 an_end_angle := a_start_angle + aperture
 				 an_end_angle := modulo (an_end_angle, 2 * pi)
 				 from
@@ -1288,7 +1288,7 @@ feature {NONE} -- Implementation
 				 	d := sqrt (c3)
 				 	oldxleft := (c5 - d).truncated_to_integer
 				 	oldxright := (c5 + d).truncated_to_integer
-				 	
+
 				 	c5 := c5 + c2
 					v1 := v1 + c6
 					c3 := c3 - v1
@@ -1300,7 +1300,7 @@ feature {NONE} -- Implementation
 					d := sqrt (c3)
 					xleft := (c5 - d).truncated_to_integer
 					xright := (c5 + d).truncated_to_integer
-					
+
 					from
 						x := oldxleft.min (xleft)
 						xnb := oldxleft.max (xleft)
@@ -1323,7 +1323,7 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
-					
+
 						pix1_count := pix1_count + 1
 						x := x + 1
 					end
@@ -1352,7 +1352,7 @@ feature {NONE} -- Implementation
 						pix2_count := pix2_count + 1
 						x := x + 1
 					end
-	
+
 					c5 := c5 + c2
 					v1 := v1 + c6
 					c3 := c3 - v1
@@ -1361,7 +1361,7 @@ feature {NONE} -- Implementation
 				 	oldxleft := xleft
 				 	oldxright := xright
 			 	end
-			 	
+
 			 	from
 					x := xright.min (xleft)
 					xnb := xright.max (xleft)
@@ -1389,7 +1389,7 @@ feature {NONE} -- Implementation
 				end
 		 	end
 		end
-		
+
 	draw_rotated_pie_slice (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE) is
 			-- Draw a pie slice border from `start_angle' to `start_angle' + `aperture'.
 			-- with center (`xcen',`ycen'), radius1 `a',
@@ -1403,48 +1403,48 @@ feature {NONE} -- Implementation
 			a_start_angle, an_end_angle: DOUBLE
 			cphi, sphi, cos, sin: DOUBLE
 			start_x, start_y, end_x, end_y: INTEGER
-			
+
 			val_x, val_y, r: DOUBLE
 		do
 			if drawable.line_width > 0 then
 				draw_rotated_arc (xcen, ycen, a, b, phi, start_angle, aperture)
-	
-				a_start_angle :=  phi + start_angle 
+
+				a_start_angle :=  phi + start_angle
 				a_start_angle := modulo (a_start_angle, 2 * pi)
-	
+
 				cos := cosine (start_angle)
 				sin := sine (start_angle)
-	
+
 				r := sqrt ((b ^ 2 * a ^ 2) / (b ^ 2 * cos ^ 2 + a ^ 2 * sin ^ 2))
-	
+
 			 	val_x := r * cos
 			 	val_y := r * sin
-				 	 
+
 				cphi := cosine (phi)
 				sphi := sine (phi)
-				
+
 				start_x := xcen + (val_x * cphi - val_y * sphi).truncated_to_integer
 				start_y := ycen - (val_x * sphi + val_y * cphi).truncated_to_integer
-				 
+
 				an_end_angle := a_start_angle + aperture
 				an_end_angle := modulo (an_end_angle, 2 * pi)
-				
+
 				cos := cosine (start_angle + aperture)
 				sin := sine (start_angle + aperture)
-				
+
 				r := sqrt ((b ^ 2 * a ^ 2) / (b ^ 2 * cos ^ 2 + a ^ 2 * sin ^ 2))
-				 
+
 				val_x := r * cos
 				val_y := r * sin
-				
+
 				end_x := xcen + (val_x * cphi - val_y * sphi).truncated_to_integer
 				end_y := ycen - (val_x * sphi + val_y * cphi).truncated_to_integer
-	
+
 				drawable.draw_segment (xcen, ycen, start_x, start_y)
 				drawable.draw_segment (xcen, ycen, end_x, end_y)
 			end
 		end
-		
+
 	fill_rotated_pie_slice (xcen, ycen, a, b: INTEGER; phi, start_angle, aperture: DOUBLE) is
 			-- Draw a pie slice from `start_angle' to `start_angle' + `aperture'.
 			-- with center (`xcen',`ycen'), radius1 `a',
@@ -1458,19 +1458,19 @@ feature {NONE} -- Implementation
 			a_start_angle, an_end_angle: DOUBLE
 			cos, sin: DOUBLE
 			start_x, start_y, end_x, end_y: INTEGER
-			
+
 			val_x, val_y, r: DOUBLE
-			
+
 			c1, c2, c3, c4, c5, c6, v1, cphi, sphi, cphisqr, sphisqr: DOUBLE
  			d, asqr, bsqr: DOUBLE
  			xleft, xright: INTEGER
 			y_top, y_bottom: INTEGER
 			l_drawable: like drawable
-			
+
 			start_line_x, end_line_x: DOUBLE
 			start_line_y, end_line_y: INTEGER
 			end_y_inc, start_y_inc: INTEGER
-			
+
 			dx, dy: INTEGER
 			m_start_inv: BOOLEAN
 			m_start: DOUBLE
@@ -1478,7 +1478,7 @@ feature {NONE} -- Implementation
 			m_end: DOUBLE
 			bs, be, s, e: INTEGER
 		do
-			a_start_angle :=  phi + start_angle 
+			a_start_angle :=  phi + start_angle
 			a_start_angle := modulo (a_start_angle, 2 * pi)
 
 			cos := cosine (start_angle)
@@ -1488,32 +1488,32 @@ feature {NONE} -- Implementation
 
 		 	val_x := r * cos
 		 	val_y := r * sin
-			 	 
+
 			cphi := cosine (phi)
 			sphi := sine (phi)
-			
+
 			start_x := xcen + (val_x * cphi - val_y * sphi).truncated_to_integer
 			start_y := ycen - (val_x * sphi + val_y * cphi).truncated_to_integer
-			 
+
 			an_end_angle := a_start_angle + aperture
 			an_end_angle := modulo (an_end_angle, 2 * pi)
-			
+
 			cos := cosine (start_angle + aperture)
 			sin := sine (start_angle + aperture)
-			
+
 			r := sqrt ((b ^ 2 * a ^ 2) / (b ^ 2 * cos ^ 2 + a ^ 2 * sin ^ 2))
-			 
+
 			val_x := r * cos
 			val_y := r * sin
-			
+
 			end_x := xcen + (val_x * cphi - val_y * sphi).truncated_to_integer
 			end_y := ycen - (val_x * sphi + val_y * cphi).truncated_to_integer
-			
+
 			cphisqr := cphi * cphi
 			sphisqr := sphi * sphi
 			asqr := a * a
 			bsqr := b * b
-			 
+
 			c1 := (cphisqr / asqr) + (sphisqr / bsqr)
 			c2 := ((cphi * sphi / asqr) - (cphi * sphi / bsqr)) / c1
 			c3 := (bsqr * cphisqr) + (asqr * sphisqr)
@@ -1522,7 +1522,7 @@ feature {NONE} -- Implementation
 			v1 := c4 * c4
 			c6 := 2 * v1
 			c3 := c3 * v1 - v1
-			
+
 			dx := start_x - xcen
 			dy := start_y - ycen
 			if dy < 0 then
@@ -1536,7 +1536,7 @@ feature {NONE} -- Implementation
 				m_start := dx / dy * start_y_inc
 				m_start_inv := False
 			end
-			
+
 			dx := end_x - xcen
 			dy := end_y - ycen
 			if dy < 0 then
@@ -1550,7 +1550,7 @@ feature {NONE} -- Implementation
 				m_end := dx / dy * end_y_inc
 				m_end_inv := False
 			end
-			 
+
 			from
 				l_drawable := drawable
 			 	l_drawable.set_line_width (2)
@@ -1620,7 +1620,7 @@ feature {NONE} -- Implementation
 					-- draw bs -> be
 					l_drawable.draw_segment (bs, y_top, be, y_top)
 				end
-			
+
 				-- top fill line
 				bs := xcen - xright + 1
 				be := xcen - xleft
@@ -1675,31 +1675,31 @@ feature {NONE} -- Implementation
 					-- draw bs -> be
 					l_drawable.draw_segment (bs, y_bottom, be, y_bottom)
 				end
-			  	
+
 				c5 := c5 + c2
 				v1 := v1 + c6
 				c3 := c3 - v1
 			 	y_top := y_top + 1
 			 	y_bottom := y_bottom - 1
-			 	
+
 			 	if not m_start_inv then
 					start_line_y := start_line_y + start_y_inc
 					start_line_x := start_line_x + m_start
 				end
-				
+
 				if not m_end_inv then
 					end_line_y := end_line_y + end_y_inc
 					end_line_x := end_line_x + m_end
 				end
-				
+
 				check
 					not m_start_inv implies (y_top = start_line_y or y_bottom = start_line_y)
 					not m_end_inv implies (y_top = end_line_y or y_bottom = end_line_y)
 				end
 		 	end
-		 	
+
 		end
-		
+
 	inside (x, y: INTEGER start_angle, end_angle: DOUBLE): BOOLEAN is
 			-- Does the line (0,0) - (`x', `y') lie between `start_angle' and `end_angle'?
 		local
@@ -1712,7 +1712,7 @@ feature {NONE} -- Implementation
 				Result := an_angle >= start_angle or an_angle <= end_angle
 			end
 		end
-		
+
 
 invariant
 	drawable_not_void: drawable /= Void

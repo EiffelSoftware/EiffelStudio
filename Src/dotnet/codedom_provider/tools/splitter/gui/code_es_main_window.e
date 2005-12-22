@@ -194,6 +194,7 @@ feature {NONE} -- Events Handling
 	on_help is
 			-- Called by `select_actions' of `help_menu_item'.
 		do
+			(create {EV_ENVIRONMENT}).application.display_help_for_widget (Current)
 		end
 
 	on_about is

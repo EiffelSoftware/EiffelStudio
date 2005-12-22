@@ -842,6 +842,11 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- This is called by the WEL_TRACK_MOUSE_EVENT instantiated
 			-- in on_mouse_move.
 		do
+				-- Reset `last_x' and `last_y' to negative value, so that the code
+				-- using them in `on_mouse_move' will cause the `pointer_motion_actions'
+				-- to be called when coming back to the widget.
+			last_x := -1
+			last_y := -1
 			if pointer_leave_actions_internal /= Void then
 				pointer_leave_actions_internal.call (Void)
 			end

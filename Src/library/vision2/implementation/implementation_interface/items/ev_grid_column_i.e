@@ -32,6 +32,8 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 		end
 
+feature {EV_GRID_COLUMN} -- Initialization
+
 	initialize is
 			-- Initialize `Current'.
 		do

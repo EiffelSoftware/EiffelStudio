@@ -14,7 +14,7 @@ inherit
 		export
 			{NONE}
 				arrayed_list_make
-			{EV_GRID_DRAWER_I, EV_GRID_I, EV_GRID_ROW_I}
+			{EV_GRID_ARRAYED_LIST, EV_GRID_DRAWER_I, EV_GRID_I, EV_GRID_ROW_I}
 				area
 		redefine
 			grow,
@@ -23,6 +23,9 @@ inherit
 
 create
 	default_create
+
+create {EV_GRID_ARRAYED_LIST}
+	make_filled
 
 feature {NONE} -- Initialization
 
@@ -65,7 +68,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			if index < a_count then
 				subcopy (Current, index + 1, a_count, index + a_duplicate.count + 1)
 			end
-			subcopy (a_duplicate, 1, a_duplicate.count, index + 1) 
+			subcopy (a_duplicate, 1, a_duplicate.count, index + 1)
 		end
 
 	move_items (i, j, n: INTEGER) is
@@ -89,20 +92,20 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 				-- Remove duplicated entries resulting from move and reset count.
 			a_count := a_count - n
 			area.fill_with (l_default, a_count, upper - 1)
-	
+
 				-- Calculate insertion index to insert before index `j'
 			if j > (i + n - 1) then
 				index := j - n - 1
 			else
 				index := j - 1
 			end
-			
+
 			if index < a_count then
 				subcopy (Current, index + 1, a_count, index + a_duplicate.count + 1)
 			end
-			subcopy (a_duplicate, 1, a_duplicate.count, index + 1) 
+			subcopy (a_duplicate, 1, a_duplicate.count, index + 1)
 		end
-		
+
 	resize (new_capacity: INTEGER) is
 			-- Resize list so that it can contain
 			-- at least `n' items. Lose items if `new_capacity' is less than `capacity'
@@ -128,7 +131,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 				-- Now always set the `count' to `new_capacity' although
 				-- the actual area allocated may not equal `new_capacity'.
 			count := new_capacity
-			
+
 				-- Ensure index is now valid if it was previously in the
 				-- items that were removed.
 			index := index.min (new_capacity + 1)

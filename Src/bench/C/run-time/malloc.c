@@ -80,13 +80,29 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #endif
 
 #ifdef ISE_GC
+/*
+doc:	<description>
+doc:	The handling of the free list has changed over time. Initially, insertions to the free list through `connect_free_list' guaranteed that the blocks were inserted in increasing order of their address. It was thought that although this costs in case of insertions, it can drastically improve performances, because as the malloc routine uses a first fit in the free list, the objects won't get sparsed in the whole memory, and this should limit swapping overhead and enable the process to give memory back to the kernel. You get this behavior by defining EIF_SORTED_FREE_LIST. And removals of a block had to traverse the list to find the right block to remove.
+doc:
+doc:	We found that it you have a lot of allocated memory and that the free list are quite full, this would kill the performance of the GC. This is why if EIF_SORTED_FREE_LIST is not defined we do not perform any sorting, thus `connect_free_list' always insert in first position in the free list. And the need for buffer cache is useless, and are not defined in that mode.
+doc:
+doc:	Last remain the cost of removal in `disconnect_free_list'. We had the idea for blocks whose size is larger than the size of a pointer to allocate a pointer given us the location of the previous element. Making our free list a two way list. This only works for i > 0, for i == 0 we still have to do a linear search and hopefully this is rare to have 0-sized block.
+doc:
+doc:	In the case EIF_SORTED_FREE_LIST is defined, the above two way list is also available, but we thought that by having the previous element we could make insertion possibly faster by going backwards from the buffer cache, rather than going from the beginning when the element we try to insert is less than the buffer cache. Our experiment on the compiler shows that it is actually a degradation. In case you want this behavior, simply define EIF_SORTED_FREE_LIST_BACKWARD_TRAVERSAL.
+doc:	</description>
+*/
+
 /* Give the type of an hlist, by doing pointer comparaison (classic).
  * Also give the address of the hlist of a given type and the address of
  * the buffer related to a free list.
  */
 #define CHUNK_TYPE(c)		(((c) == c_hlist)? C_T : EIFFEL_T)
 #define FREE_LIST(t)		((t)? c_hlist : e_hlist)
+#ifdef EIF_SORTED_FREE_LIST
 #define BUFFER(c)			(((c) == c_hlist)? c_buffer : e_buffer)
+#endif
+#define NEXT(zone)			(zone)->ov_next
+#define PREVIOUS(zone)		(*(union overhead **) (zone + 1))
 
 /* Fast access to `hlist'. All sizes between `0' and HLIST_SIZE_LIMIT
  * with their own padding which is a multiple of ALIGNMAX
@@ -214,6 +230,7 @@ doc:	</attribute>
 */
 rt_private union overhead *e_hlist[NBLOCKS];
 
+#ifdef EIF_SORTED_FREE_LIST
 /*
 doc:	<attribute name="c_buffer" return_type="union overhead * [NBLOCKS]" export="private">
 doc:		<summary>The following arrays act as a buffer cache for every operation in the C free list. They simply record the address of the last access. Whenever we wish to insert/find an element in the list, we first look at the buffer cache value to see if we can start the traversing from that point.</summary>
@@ -235,6 +252,7 @@ doc:		<synchronization>Through `eif_free_list_mutex'.</synchronization>
 doc:	</attribute>
 */
 rt_private union overhead *e_buffer[NBLOCKS];
+#endif
 
 /*
 doc:	<attribute name="sc_from" return_type="struct sc_zone" export="shared">
@@ -1755,6 +1773,9 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 	RT_GET_CONTEXT
 	size_t i;					/* Index in hlist */
 	union overhead *selected;
+#ifndef EIF_SORTED_FREE_LIST
+	union overhead *n;
+#endif
 	EIF_REFERENCE result;
 
 #ifdef DEBUG
@@ -1785,15 +1806,22 @@ rt_private EIF_REFERENCE allocate_free_list(size_t nbytes, register union overhe
 			 * go through all other blocks to find the first one available. */
 		selected = hlist[i];
 	  	if (selected) {
-			hlist[i] = selected->ov_next;		/* remove block from list */
-			if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
-			  	BUFFER(hlist)[i] = hlist[i];	/* update cache */
+#ifdef EIF_SORTED_FREE_LIST
+			disconnect_free_list (selected, i);
+#else
+				/* Remove `selected' from `hlist'. */
+			n = NEXT(selected);
+			hlist[i] = n;
+			if (n && (i != 0)) {
+				PREVIOUS(n) = NULL;
+			}
+#endif
 		} else {
 			i++;
 			selected = allocate_free_list_helper (i, nbytes, hlist);
 		}
 	}
-		
+
 	SIGRESUME;				/* End of critical section */
 
 	/* Now, either 'i' is NBLOCKS and 'selected' still holds a null
@@ -1840,9 +1868,16 @@ rt_private union overhead * allocate_free_list_helper(size_t i, size_t nbytes, r
 		if ((selected = hlist[i]) == NULL)
 			continue;
 		else if ((selected->ov_size & B_SIZE) >= nbytes) {
-			hlist[i] = selected->ov_next;		/* Remove block from list */
-			if (BUFFER(hlist)[i] == selected)	/* Selected was cached */
-				BUFFER(hlist)[i] = hlist[i];	/* Update cache */
+#ifdef EIF_SORTED_FREE_LIST
+			disconnect_free_list (selected, i);
+#else
+				/* Remove `selected' from `hlist'. */
+			p = NEXT(selected);
+			hlist[i] = p;
+			if (p && (i != 0)) {
+				PREVIOUS(p) = NULL;
+			}
+#endif
 			return selected;				/* Found it, selected points to it */
 		} else {
 			/* Walk through list, until we find a good block. This
@@ -1850,14 +1885,12 @@ rt_private union overhead * allocate_free_list_helper(size_t i, size_t nbytes, r
 			 * first item will fit, or we'll have to report failure.
 			 */
 			for (
-				p = selected, selected = p->ov_next;
+				p = selected, selected = NEXT(p);
 				selected != NULL;
-				p = selected, selected = p->ov_next
+				p = selected, selected = NEXT(p)
 			) {
 				if ((selected->ov_size & B_SIZE) >= nbytes) {
-					p->ov_next = selected->ov_next;	/* Remove from list */
-					if (BUFFER(hlist)[i] == selected)	/* Selected cached? */
-						BUFFER(hlist)[i] = p->ov_next;	/* Update cache */
+					disconnect_free_list (selected, i);
 					return selected;		/* Found it, selected points to it */
 				}
 			}
@@ -1893,13 +1926,15 @@ rt_private void check_free_list (size_t nbytes, register union overhead **hlist)
 	for (j = 0; j < NBLOCKS; j++) {
 		selected = hlist [j];
 		if (selected) {
-			uint32 count = 0;
-			uint32 list_bytes = 0;
+			size_t count = 0;
+			size_t list_bytes = 0;
 			for (
 				p = selected;
 				selected != NULL;
-				p = selected, selected = p->ov_next
+				p = selected, selected = NEXT(p)
 			) {
+				CHECK("valid_previous", (j== 0) || ((p == selected) || (p == PREVIOUS(selected))));
+
 				if ((selected->ov_size & B_SIZE) >= nbytes) {
 					found++;
 				}
@@ -3164,7 +3199,7 @@ rt_private rt_uint_ptr coalesc(register union overhead *zone)
 		
 /*
 doc:	<routine name="connect_free_list" export="private">
-doc:		<summary>The block 'zone' is inserted in the free list #i. This list is sorted by increasing addresses. Although this costs in case of insertions, it can drastically improve performances, because as the malloc routine uses a frist fit in the free list, the objects won't get sparsed in the whole memory. This should limit swapping overhead and enable the process to give memory back to the kernel. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
+doc:		<summary>The block 'zone' is inserted in the free list #i. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
 doc:		<param name="zone" type="union overhead *">Block to insert in free list #`i'.</param>
 doc:		<param name="i" type="rt_uint_ptr">Free list index to insert `zone'.</param>
 doc:		<thread_safety>Not safe</thread_safety>
@@ -3174,156 +3209,240 @@ doc:	</routine>
 
 rt_private void connect_free_list(register union overhead *zone, register rt_uint_ptr i)
 {
-	union overhead *last;		/* Pointer to last block */
-	union overhead *p;		/* To walk along free list */
-	union overhead **hlist;	/* The free list */
-	union overhead **blist;	/* Buffer cache associated with list */
+#ifndef EIF_SORTED_FREE_LIST
+	union overhead *p;	/* To walk along free list */
+	union overhead **hlist;		/* The free list */
 
-	/* As each block carries its type, we are able to determine which
-	 * free list it belongs. This is completely hidden by the interface
-	 * with the outside world, isn't that nice? :-)--RAM.
-	 */
+	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union overhead *)));
+
 	hlist = FREE_LIST(zone->ov_size & B_CTYPE);		/* Get right list ptr */
-	blist = BUFFER(hlist);							/* And the right cache */
+	p = hlist[i];
+	hlist[i] = zone;
+	NEXT(zone) = p;
 
-#ifdef DEBUG
-	dprintf(64)("connect_free_list: bloc 0x%lx, %d bytes in %s list #%d\n",
-		zone, zone->ov_size & B_SIZE,
-		zone->ov_size & B_CTYPE ? "C" : "Eiffel", i);
-	flush;
-#endif
+	if (i != 0) {
+		PREVIOUS(zone) = NULL;
+		if (p) {
+			PREVIOUS(p) = zone;
+		}
+	}
+#else
+	union overhead *p, *last;	/* To walk along free list */
+	union overhead **hlist;		/* The free list */
+	union overhead **blist;		/* Associated buffer cache. */
 
-	/* Special checks for the head of the list. I know that k&R forbid
-	 * comparaisons between pointers that are not in the same array.
-	 * This means a large memory model would have to be chosen on a small
-	 * machine.
-	 */
+	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union overhead *)));
+
+	hlist = FREE_LIST(zone->ov_size & B_CTYPE);		/* Get right list ptr */
+	blist = BUFFER(hlist);							/* And associated cache. */
 
 	p = hlist[i];		/* Head of list */
 
-	if (!p) {
-		zone->ov_next = NULL;	/* First element */
+		/* If list is empty or if first element of list is greater than `zone',
+		 * we simply need to add `zone' as first element. */
+	if ((!p) || (zone < p)) {
 		hlist[i] = zone;
-		blist[i] = zone;						/* Update buffer cache */
+		blist[i] = zone;
+		NEXT(zone) = p;
+		if (i != 0) {
+			PREVIOUS(zone) = NULL;
+			if (p) {
+				PREVIOUS(p) = zone;
+			}
+		}
 		return;
 	}
 
-	if (zone < p) {
-		zone->ov_next = p;			/* Old head */
-		hlist[i] = zone;			/* New head */
-		blist[i] = zone;			/* Update buffer cache */
-		return;
+	CHECK("p not null", p);
+
+		/* We have to scan the list to find the right place for inserting our block. 
+		 * With the help of the buffer cache, we may not have to scan all the list. */
+#ifndef EIF_SORTED_FREE_LIST_BACKWARD_TRAVERSAL
+	p = blist [i];
+	if (!p || (zone < p)) {
+			/* We have to start from beginning. We are not doing any backward traversing. */
+		p = hlist [i];
 	}
-
-	/* General case: we have to scan the list to find the right place for
-	 * inserting our block. With the help of the buffer cache, we may not
-	 * have to scan all the list, hopefully--RAM.
-	 */
-
-	if (zone > blist[i]) {			/* We can consider starting from here */
-		p = blist[i];
-		if (p == (union overhead *) 0)
-			p = hlist[i];			/* But not if it is a null pointer */
-	}
-
-	for (last = p, p = p->ov_next; p; last = p, p = p->ov_next)
+	for (last = p, p = NEXT(p); p ; last = p, p = NEXT(p)) {
 		if (zone < p) {
-			zone->ov_next = p;				/* 'zone' is before 'p' */
-			last->ov_next = zone;			/* and after 'last' */
-			blist[i] = zone;				/* Record insertion point */
+			NEXT(zone) = p;
+			NEXT(last) = zone;
+			if (i != 0) {
+				PREVIOUS(zone) = last;
+				PREVIOUS(p) = zone;
+			}
+			blist[i] = zone;
 			return;
 		}
-
-	/* If we come here, then we reached the end of the list without
-	 * being able to insert the element. Thus, insertion takes place
-	 * at the tail. */
-	
-	last->ov_next = zone;
-	zone->ov_next = (union overhead *) 0;	/* Last element in list */
-
-	blist[i] = zone;						/* Record last insertion point */
+	}
+		/* We reached the last element, simply extend.
+		 * Do not change buffer location. */
+	NEXT(last) = zone;
+	NEXT(zone) = NULL;
+	if (i != 0) {
+		PREVIOUS(zone) = last;
+	}
+#else
+		/* Now perform forward traversal or backward traversal depending on position of `zone' to `blist [i]'.
+		 * `zone' cannot be inserted at the beginning of the list since it is already taken care of above. */
+	p = blist [i];
+	if ((zone > p) || (i == 0)) {
+		if (i == 0) {
+				/* It means that `zone < p' and thus we need to start
+				 * from the beginning. */
+			p = hlist [i];
+		}
+		for (last = p, p = NEXT(p); p ; last = p, p = NEXT(p)) {
+			if (zone < p) {
+				NEXT(zone) = p;
+				NEXT(last) = zone;
+				if (i != 0) {
+					PREVIOUS(zone) = last;
+					PREVIOUS(p) = zone;
+				}
+				blist[i] = zone;
+				return;
+			}
+		}
+			/* We reached the last element, simply extend.
+			 * Do not change buffer location. */
+		NEXT(last) = zone;
+		NEXT(zone) = NULL;
+		if (i != 0) {
+			PREVIOUS(zone) = last;
+		}
+	} else {
+			/* It looks like an infinite loop, but it is not because
+			 * the above code guarantees that `zone' cannot be inserted at
+			 * the beginning of the list. */
+		for (last = p, p = PREVIOUS(p); ; last = p, p = PREVIOUS(p)) {
+			if (zone > p) {
+				NEXT(zone) = last;
+				PREVIOUS(zone) = p;
+				NEXT(p) = zone;
+				PREVIOUS(last) = zone;
+				blist[i] = zone;
+				return;
+			}
+		}
+	}
+#endif
+#endif
 }
 
 /*
 doc:	<routine name="disconnect_free_list" export="private">
-doc:		<summary>Removes block pointed to by 'next' from free list #i. Note that we do not take advantage of the sorting of the free list, because the block has to be found. If it is not, then the free list has been corrupted. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
-doc:		<param name="next" type="union overhead *">Block to remove from free list #`i'.</param>
-doc:		<param name="i" type="rt_uint_ptr">Free list index to remove `next'.</param>
+doc:		<summary>Removes block pointed to by 'zone' from free list #i. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
+doc:		<param name="zone" type="union overhead *">Block to remove from free list #`i'.</param>
+doc:		<param name="i" type="rt_uint_ptr">Free list index to remove `zone'.</param>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe if caller holds `eif_free_list_mutex' or is under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
-rt_private void disconnect_free_list(register union overhead *next, register rt_uint_ptr i)
+rt_private void disconnect_free_list(register union overhead *zone, register rt_uint_ptr i)
 {
-	union overhead *p;		/* To walk along free list */
-	union overhead **hlist;	/* The free list */
-	union overhead **blist;	/* Associated buffer cache */
+#ifndef EIF_SORTED_FREE_LIST
+	union overhead *p, *n;		/* To walk along free list */
 
-	/* As each block carries its type, we are able to determine which free
-	 * list it belongs. This is completely hidden by the interface with
-	 * the outside world, and, as mentionned before, I love it :-)--RAM.
-	 */
-	hlist = FREE_LIST(next->ov_size & B_CTYPE);		/* Get right list ptr */
-	blist = BUFFER(hlist);							/* And associated cache */
+	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union oveyrhead *)));
 
-#ifdef DEBUG
-	dprintf(64)("disconnect_free_list: bloc 0x%lx, %d bytes in %s list #%d\n",
-		next, next->ov_size & B_SIZE,
-		next->ov_size & B_CTYPE ? "C" : "Eiffel", i);
-	flush;
-#endif
-
-	/* To avoid the cost of an extra variable, look whether it is in hlist[i]
-	 * first. That way, we will be able to test only for the next field in the
-	 * loop and still have a pointer on current, so that we can update the list.
-	 */
-	if (next != hlist[i]) {
-		p = blist[i];				/* Cached value = location of last op */
-		if ((!p) || (next <=p))		/* Is it ok ? */
-			p = hlist[i];			/* No, it is before the cached location */
-		for (; p; p = p->ov_next) {
-			if (p->ov_next == next) {			/* Next block is ok */
-				p->ov_next = next->ov_next;		/* Remove from free list */
-				blist[i] = p;					/* Last operation */
-				break;							/* Exit from loop */
-			}
+	if (i != 0) {
+			/* Get previous element of the list. */
+		p = PREVIOUS(zone);
+		n = NEXT(zone);
+		if (p) {
+			NEXT(p) = n;
+		} else {
+				/* There is no previous elements, so we need to update the head of the list. */
+			FREE_LIST(zone->ov_size & B_CTYPE)[i] = n;
 		}
-
-			/* Consistency check: we MUST have found the block.
-			 * Otherwise, it is a fatal error. */
-		CHECK ("p not null", p != NULL);
-#ifdef DEBUG
-		printf("Uh-Oh... Item 0x%lx not found in %s list #%d\n",
-			next, next->ov_size & B_CTYPE ? "C" : "Eiffel", i);
-		printf("Dumping of list:\n");
-		for (p = hlist[i]; p; p = p->ov_next)
-			printf("\t0x%lx\n", p);
-#endif
-
+		if (n) {
+			PREVIOUS(n) = p;
+		}
 	} else {
-		hlist[i] = hlist[i]->ov_next;
-		blist[i] = hlist[i];		/* Record last operation on free list */
+		union overhead **hlist;	/* The free list */
+			/* We have to perform a linear search because we do not
+			 * have enough space to store the back pointer. */
+		hlist = FREE_LIST(zone->ov_size & B_CTYPE);		/* Get right list ptr */
+		p = hlist[i];
+		if (zone != p) {
+			for (; p; p = NEXT(p)) {
+				if (NEXT(p) == zone) {			/* Next block is ok */
+					NEXT(p) = NEXT(zone);		/* Remove from free list */
+					return;						/* Exit */
+				}
+			}
+		} else {
+			hlist[i] = NEXT(p);
+		}
 	}
+#else
+	union overhead *p, *n;		/* To walk along free list */
+	union overhead **hlist;	/* The free list */
+	union overhead **blist;	/* Associated buffer cache. */
+
+	REQUIRE("enough space", (i == 0) || (zone->ov_size > sizeof(union oveyrhead *)));
+
+	hlist = FREE_LIST(zone->ov_size & B_CTYPE);		/* Get right list ptr */
+	blist = BUFFER(hlist);							/* And associated cache. */
+
+	if (i != 0) {
+			/* Get previous element of the list. */
+		p = PREVIOUS(zone);
+		n = NEXT(zone);
+		if (p) {
+			NEXT(p) = n;
+			blist[i] = p;
+		} else {
+				/* There is no previous elements, so we need to update the head of the list. */
+			hlist [i] = n;
+			blist[i] = n;
+		}
+		if (n) {
+			PREVIOUS(n) = p;
+		}
+	} else {
+			/* We have to perform a linear search because we do not
+			 * have enough space to store the back pointer. */
+		if (zone != hlist[i]) {
+			p = blist[i];				/* Cached value = location of last op */
+			if ((!p) || (zone <=p)) {		/* Is it ok ? */
+				p = hlist[i];			/* No, it is before the cached location */
+			}
+			for (; p; p = NEXT(p)) {
+				if (NEXT(p) == zone) {			/* Next block is ok */
+					NEXT(p) = NEXT(zone);		/* Remove from free list */
+					blist[i] = p;					/* Last operation */
+					break;							/* Exit from loop */
+				}
+			}
+		} else {
+			hlist[i] = NEXT(hlist[i]);
+			blist[i] = hlist[i];
+		}
+	}
+#endif
 }
+
 
 /*
 doc:	<routine name="lxtract" export="shared">
-doc:		<summary>Remove 'next' from the free list. This routine is used by the garbage collector, and thus it is visible from the outside world, hence the cryptic name for portability--RAM. Note that the garbage collector performs with signal exceptions blocked.</summary>
-doc:		<param name="next" type="union overhead *">Block to remove from free list.</param>
+doc:		<summary>Remove 'zone' from the free list. This routine is used by the garbage collector, and thus it is visible from the outside world, hence the cryptic name for portability--RAM. Note that the garbage collector performs with signal exceptions blocked.</summary>
+doc:		<param name="zone" type="union overhead *">Block to remove from free list.</param>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<synchronization>Safe under GC synchronization.</synchronization>
 doc:	</routine>
 */
 
-rt_shared void lxtract(union overhead *next)
+rt_shared void lxtract(union overhead *zone)
 {
 	rt_uint_ptr r;				/* For shifting purposes */
 	rt_uint_ptr i;				/* Index in H-list (free list) */
 
-	r = next->ov_size & B_SIZE;		/* Pure size of block */
+	r = zone->ov_size & B_SIZE;		/* Pure size of block */
 	i = HLIST_INDEX(r);				/* Compute hash index */
-	disconnect_free_list(next, i);	/* Remove from free list */
+	disconnect_free_list(zone, i);	/* Remove from free list */
 }
 
 /*

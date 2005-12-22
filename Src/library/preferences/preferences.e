@@ -46,6 +46,8 @@ class
 	PREFERENCES
 
 inherit
+	ANY
+
 	XM_CALLBACKS_FILTER_FACTORY
 		export
 			{NONE} all

@@ -56,7 +56,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				end
 			end
 		end
-		
+
 	escape_pnd is
 			-- Escape the pick and drop.
 		do
@@ -83,6 +83,9 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		do
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
 			pt := client_to_screen (x_pos, y_pos)
+			if application_imp.pointer_button_press_actions_internal /= Void then
+				application_imp.pointer_button_press_actions_internal.call ([interface, 2, pt.x, pt.y])
+			end
 			if pointer_button_press_actions_internal /= Void then
 				pointer_button_press_actions_internal.call
 					([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -90,7 +93,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		end
 
 	press_actions_called: BOOLEAN
-		-- Have `pointer_button_press_actions' been called on `Current'? 
+		-- Have `pointer_button_press_actions' been called on `Current'?
 
 	item_is_pnd_source_at_entry: BOOLEAN
 		-- Is an item the source of a pick/drag and drop?
@@ -105,7 +108,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				end
 				if pnd_item_source.is_dnd_in_transport then
 					Result := True
-				end								
+				end
 			end
 		end
 
@@ -121,7 +124,11 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			if (not item_is_pnd_source and not is_pnd_in_transport
 				and not is_dnd_in_transport) or (item_is_pnd_source and not
 				pnd_item_source.is_pnd_in_transport and not
-				pnd_item_source.is_dnd_in_transport) then
+				pnd_item_source.is_dnd_in_transport)
+			then
+				if application_imp.pointer_button_press_actions_internal /= Void then
+					application_imp.pointer_button_press_actions_internal.call ([interface, 3, pt.x, pt.y])
+				end
 				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call
 						([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -152,7 +159,10 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			if not (item_is_pnd_source and not is_pnd_in_transport and not
 				is_dnd_in_transport) or (item_is_pnd_source and not
 				pnd_item_source.is_pnd_in_transport and not
-				pnd_item_source.is_dnd_in_transport) then 
+				pnd_item_source.is_dnd_in_transport) then
+					if application_imp.pointer_button_press_actions_internal /= Void then
+						application_imp.pointer_button_press_actions_internal.call ([interface, 1, pt.x, pt.y])
+					end
 					if pointer_button_press_actions_internal /= Void then
 							-- The above `if' statement was added as an extra at a later date
 							-- and is not incorporated into the main if to avoid the
@@ -183,15 +193,18 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			if item_is_dockable_source then
 				tool_bar ?= Current
 				if tool_bar /= Void then
-					tool_bar.end_dragable (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y)	
-				end	
-			elseif item_is_pnd_source then 
+					tool_bar.end_dragable (x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y)
+				end
+			elseif item_is_pnd_source then
 				pnd_item_source.check_drag_and_drop_release (x_pos, y_pos)
 			elseif parent_is_pnd_source then
 				check_drag_and_drop_release (x_pos, y_pos)
-				parent_is_pnd_source := False	
+				parent_is_pnd_source := False
 			else
 				check_dragable_release (x_pos, y_pos)
+			end
+			if application_imp.pointer_button_release_actions_internal /= Void then
+				application_imp.pointer_button_release_actions_internal.call ([interface, 1, pt.x, pt.y])
 			end
 			if pointer_button_release_actions_internal /= Void then
 				pointer_button_release_actions_internal.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -227,6 +240,9 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				-- Propagate the double click event to the appropriate item.
 			internal_propagate_pointer_double_press
 				(keys, x_pos, y_pos, a_button)
+			if application_imp.pointer_double_press_actions_internal /= Void then
+				application_imp.pointer_double_press_actions_internal.call ([interface, a_button, pt.x, pt.y])
+			end
 			if pointer_double_press_actions_internal /= Void then
 					-- Call pointer_double_press_actions on `Current'.
 				pointer_double_press_actions_internal.call
@@ -261,13 +277,13 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			-- Vertical offset of `Current' relative to screen.
 		deferred
 		end
-		
+
 	dragable_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			-- Process `a_button' to start/stop the drag/pick and
 			-- drop mechanism.
 		deferred
 		end
-		
+
 	check_dragable_release (x_pos, y_pos: INTEGER) is
 			-- End transport if in drag and drop.
 		deferred
@@ -276,7 +292,7 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 	interface: EV_WIDGET
 
 feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
-	
+
 	call_press_event: BOOLEAN
 			-- Should we call the press event or ignore it due to the
 			-- pick and drop?
@@ -284,7 +300,7 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 			--| the mouse over an item and cancel the pick and drop with the
 			--| left button, we do not want the pointer_button_press_actions
 			--| to be called for that item as we are not pressing the item but
-			--| cancelling the PND instead. 
+			--| cancelling the PND instead.
 
 	discard_press_event is
 			-- Assign `True' to `call_press_event'.
@@ -297,7 +313,7 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 		do
 			call_press_event := True
 		end
-		
+
 	parent_is_pnd_source : BOOLEAN
 			-- PND started in the widget.
 
@@ -306,7 +322,7 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 
 	item_is_pnd_source: BOOLEAN
 		-- PND started in an item.
-		
+
 	item_is_dockable_source: BOOLEAN
 
 	set_item_source (source: EV_PICK_AND_DROPABLE_ITEM_IMP) is
@@ -378,17 +394,17 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Deferred
 			-- Works on all windows threads.
 		deferred
 		end
-		
+
 	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Implementation of once per object `pointer_button_press_actions'.
 		deferred
 		end
-		
+
 	pointer_button_release_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Implementation of once per object `pointer_button_release_actions'.
 		deferred
 		end
-		
+
 	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
 			-- Implementation of once per object `pointer_double_press_actions'. is
 		deferred

@@ -21,7 +21,6 @@ IF NOT EXIST build_studio\EiffelSoftware.Codedom\EIFGEN\F_code\EiffelSoftware.Co
 IF NOT EXIST build_studio\EiffelSoftware.CodeDom.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CodeDom.CacheBrowser.dll GOTO END
 IF NOT EXIST build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code\EiffelSoftware.CodeDom.Base.dll GOTO END
 IF NOT EXIST build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll GOTO END
-IF NOT EXIST build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll GOTO END
 IF NOT EXIST build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe GOTO END
 IF NOT EXIST build_studio\esplitter\EIFGEN\F_code\esplitter.exe GOTO END
 IF NOT EXIST build_studio\esplit\EIFGEN\F_code\esplit.exe GOTO END

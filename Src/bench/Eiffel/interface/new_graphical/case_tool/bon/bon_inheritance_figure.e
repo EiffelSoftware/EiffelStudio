@@ -20,7 +20,7 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 	BON_FIGURE
 		undefine
 			default_create
@@ -32,16 +32,19 @@ inherit
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
 		end
-		
+
 create
 	make_with_model,
 	default_create
-	
+
+create {BON_INHERITANCE_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	make_with_model (a_model: ES_INHERITANCE_LINK) is
@@ -53,13 +56,13 @@ feature {NONE} -- Initialization
 			initialize
 
 			preferences.diagram_tool_data.add_observer (Current)
-			
+
 			retrieve_preferences
-			
+
 			real_arrow_head_size := 10
 			request_update
 		end
-	
+
 feature -- Access
 
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
@@ -78,7 +81,7 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
 			Result.put_last (l_xml_routines.xml_node (Result, real_line_width_string, (real_line_width * 100).rounded.out))
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		do
@@ -95,13 +98,13 @@ feature -- Access
 				line.set_line_width (real_line_width.rounded.max (1))
 			end
 		end
-		
+
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := once "BON_INHERITANCE_FIGURE"
 		end
-		
+
 feature -- Element change
 
 	set_line_width (a_line_width: like line_width) is
@@ -110,16 +113,16 @@ feature -- Element change
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (a_line_width)
 			real_line_width := a_line_width
 		end
-		
+
 	recycle is
 			-- Free `Current's resources.
 		do
 			Precursor {EIFFEL_INHERITANCE_FIGURE}
 			preferences.diagram_tool_data.remove_observer (Current)
 		end
-		
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
-		
+
 	update is
 			-- Some properties of `Current' may have changed.
 		local
@@ -133,7 +136,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 				l_point_array := low_quality_line.point_array
 				p0 := l_point_array.item (0)
 				p1 := l_point_array.item (1)
-				
+
 				if descendant /= Void then
 					p0.set_position (descendant.port_x, descendant.port_y)
 				end
@@ -152,7 +155,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			end
 			is_update_required := False
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Transformation
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -176,20 +179,20 @@ feature {EV_MODEL_GROUP} -- Transformation
 				request_update
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	real_line_width: REAL
 			-- Real line width.
 
 	real_line_width_string: STRING is "REAL_LINE_WIDTH"
-			
+
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.
 
 	low_quality_line: EV_MODEL_LINE
 			-- line used if `is_low_quality' is True.
-			
+
 	set_is_high_quality (a_high_quality: like is_high_quality) is
 			-- Set `is_high_quality' to `a_high_quality'.
 		do
@@ -229,7 +232,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	retrieve_preferences is
 			-- Retrive preferences from shared resources.
 		do

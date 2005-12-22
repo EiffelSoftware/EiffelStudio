@@ -22,7 +22,7 @@ inherit
 		end
 
 	EIFNET_EXPORTER
-	
+
 	ICOR_EXPORTER
 
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
@@ -40,9 +40,9 @@ feature -- Concrete initialization
 			eifnet_evaluator := eifnet_debugger.eifnet_dbg_evaluator
 		end
 
-feature -- Interface
+feature {DBG_EVALUATOR} -- Interface
 
-	effective_evaluate_function (addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
+	effective_evaluate_function (addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE;
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
 			-- Evaluate dotnet function
 		local
@@ -69,7 +69,7 @@ feature -- Interface
 
 				--| Get the real adapted class_type
 			l_ctype := adapted_class_type (ctype, f.associated_feature_i)
-			
+
 				--| Get the target object : `l_icdv_obj'
 			l_icdv_obj := target_icor_debug_value (addr, a_target)
 
@@ -100,7 +100,7 @@ feature -- Interface
 		end
 
 	effective_evaluate_function_with_name (a_addr: STRING; a_target: DUMP_VALUE;
-				a_feature_name, a_external_name: STRING; 
+				a_feature_name, a_external_name: STRING;
 				params: LIST [DUMP_VALUE]) is
 		local
 			l_params: ARRAY [DUMP_VALUE]
@@ -114,7 +114,7 @@ feature -- Interface
 				if a_addr /= Void then
 					print (" on 0x" + a_addr)
 				elseif a_target.address /= Void then
-					
+
 					print (" on 0x" + a_target.address )
 				end
 				print ("%N")
@@ -125,7 +125,7 @@ feature -- Interface
 				prepare_parameters (a_target.dynamic_class_type, Void, params)
 				l_params := dotnet_parameters
 				parameters_reset
-			end			
+			end
 
 				--| Get the target object : `l_icdv_obj'
 			l_icdv_obj := target_icor_debug_value (a_addr, a_target)
@@ -147,7 +147,7 @@ feature -- Interface
 					last_result_value := dotnet_evaluate_icd_function (l_icdv_obj, l_icd_function, l_params)
 				end
 			end
-			
+
 			if last_result_value = Void then
 				if a_addr = Void then
 					notify_error (cst_error_occurred, "Unable to evaluate : " + a_external_name)
@@ -170,7 +170,7 @@ feature -- Interface
 						-- to a reference and therefore get a reference.
 					last_result_value := last_result_value.to_basic
 				end
-			end			
+			end
 		end
 
 	effective_evaluate_static_function (f: FEATURE_I; ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
@@ -193,7 +193,7 @@ feature -- Interface
 				print (ctype.associated_class.name_in_upper + "." + f.feature_name)
 				print ("%N")
 			end
-			
+
 			if params /= Void and then not params.is_empty then
 				prepare_parameters (ctype, f.e_feature, params)
 				l_params := dotnet_parameters
@@ -206,7 +206,7 @@ feature -- Interface
 
 			l_icdm := Eifnet_debugger.runtime_module
 				--| FIXME jfiat: here we are only dealing with EiffelSoftware runtime ... classes
-			
+
 			l_cl_tok := l_icdm.md_class_token_by_type_name (l_ctype.full_il_type_name)
 			l_f_tok := l_icdm.md_feature_token (l_cl_tok, f.external_name)
 			l_icd_fun := l_icdm.get_function_from_token (l_f_tok)
@@ -216,7 +216,7 @@ feature -- Interface
 						-- In case `associated_frame' is not set
 					l_icd_frame := new_active_icd_frame
 				end
-				
+
 				l_result := eifnet_evaluator.function_evaluation (l_icd_frame, l_icd_fun, l_icdv_args)
 
 				if eifnet_evaluator.last_eval_aborted then
@@ -257,7 +257,7 @@ feature -- Interface
 				--| FIXME: JFIAT: 2004-01-05 : Does not support once evalution on generic
 				--| this is related to dialog and issue to provide derivation selection
 
-				
+
 			l_icd_value := eifnet_debugger.once_function_value (Void, l_class_c, f)
 
 			if l_icd_value /= Void then
@@ -269,7 +269,7 @@ feature -- Interface
 					create err_dv.make_with_name (f.name)
 					err_dv.set_message ("Once feature [" + f.name + "]: not yet called")
 					last_result_value := err_dv.dump_value
-					
+
 					notify_error (cst_error_occurred, "Once feature [" + f.name + "]: not yet called")
 				elseif last_once_failed then
 					create exc_dv.make_with_name (f.name)
@@ -405,7 +405,7 @@ feature {NONE} -- Parameters operation
 				if with_first_empty_element then
 					create Result.make (1, 1)
 				else
-					Result := << >>					
+					Result := << >>
 				end
 			end
 		ensure
@@ -431,16 +431,16 @@ feature {NONE} -- Bridge
 		do
 			Result := eifnet_debugger.last_once_available
 		end
-		
+
 	last_once_failed: BOOLEAN is
 		do
 			Result := eifnet_debugger.last_once_failed
 		end
-		
+
 	last_once_already_called: BOOLEAN is
 		do
 			Result := eifnet_debugger.last_once_already_called
-		end		
+		end
 
 	current_icor_debug_frame: ICOR_DEBUG_FRAME is
 			-- Current shared ICorDebugFrame encapsulated instance
@@ -452,7 +452,7 @@ feature {NONE} -- Bridge
 			-- Default ICorDebugFrame which is the active frame
 		do
 			Result := eifnet_debugger.new_active_frame
-		end		
+		end
 feature {NONE} -- Error code id
 
 	Cst_error_unable_to_get_icd_function: INTEGER is 0x20
@@ -462,7 +462,7 @@ feature {NONE} -- Error code id
 			Result := Precursor
 			Result.force ("Unable to get ICorDebugFunction", Cst_error_unable_to_get_icd_function)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	dotnet_metamorphose_basic_to_reference_value (dmp: DUMP_VALUE): DUMP_VALUE is
@@ -499,8 +499,8 @@ feature {NONE} -- Implementation
 		ensure
 			Result /= Void
 		end
-		
-	dotnet_evaluate_icd_function (target_icdv: ICOR_DEBUG_VALUE; func: ICOR_DEBUG_FUNCTION; 
+
+	dotnet_evaluate_icd_function (target_icdv: ICOR_DEBUG_VALUE; func: ICOR_DEBUG_FUNCTION;
 					a_params: ARRAY [DUMP_VALUE]): DUMP_VALUE is
 		require
 			target_icdv /= Void
@@ -522,7 +522,7 @@ feature {NONE} -- Implementation
 					print (generating_type + ".dotnet_evaluate_icd_function: target ... %N")
 					display_info_on_object (target_icdv)
 				end
-				
+
 				l_icdv_args.put (target_icdv, 1) -- First arg is the obj on which the evaluation is done.
 				l_icd_frame := current_icor_debug_frame
 				if l_icd_frame = Void then
@@ -539,7 +539,7 @@ feature {NONE} -- Implementation
 --					l_result := Void
 					l_adv := debug_value_from_icdv (l_result, Void)
 					Result := l_adv.dump_value
-					
+
 					notify_error (Cst_error_exception_during_evaluation, Void)
 				elseif not eifnet_evaluator.last_call_succeed then
 					notify_error (Cst_error_occurred, Void)
@@ -554,7 +554,7 @@ feature {NONE} -- Implementation
 					print (generating_type + ".dotnet_evaluate_icd_function: result ... %N")
 					display_info_on_object (l_result)
 				end
-			end			
+			end
 		end
 
 	target_icor_debug_value (addr: STRING; dvalue: DUMP_VALUE): ICOR_DEBUG_VALUE is
@@ -587,7 +587,7 @@ feature {NONE} -- Implementation
 			if Result = Void then
 					--| This means this value has been created by eStudioDbg
 					--| We need to build the corresponding ICorDebugValue object.
-				inspect dmv.type 
+				inspect dmv.type
 				when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
 					Result := eifnet_evaluator.new_i4_evaluation (new_active_icd_frame, dmv.value_integer_32)
 				when {DUMP_VALUE_CONSTANTS}.type_boolean then
@@ -596,7 +596,7 @@ feature {NONE} -- Implementation
 					Result := eifnet_evaluator.new_char_evaluation (new_active_icd_frame, dmv.value_character )
 				when {DUMP_VALUE_CONSTANTS}.type_string then
 					Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
-				else					
+				else
 				end
 
 				if not eifnet_evaluator.last_call_succeed then
@@ -608,34 +608,34 @@ feature {NONE} -- Implementation
 	dump_value_to_reference_icdv (dmv: DUMP_VALUE): ICOR_DEBUG_VALUE is
 			-- DUMP_VALUE converted into ICOR_DEBUG_VALUE for reference TYPE Objects
 		do
-			Result := dmv.value_dotnet	
-		
+			Result := dmv.value_dotnet
+
 			if dmv.is_basic or dmv.is_type_string then
 				if Result /= Void then
 						--| we have a basic type as dotnet value
-						
+
 						--| typically result of previous expression
-					inspect dmv.type 
+					inspect dmv.type
 					when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
 						Result := eifnet_evaluator.icdv_reference_integer_32_from_icdv_integer_32 (new_active_icd_frame, Result)
 					when {DUMP_VALUE_CONSTANTS}.type_real_32 then
-						Result := eifnet_evaluator.icdv_reference_real_from_icdv_real (new_active_icd_frame, Result)							
+						Result := eifnet_evaluator.icdv_reference_real_from_icdv_real (new_active_icd_frame, Result)
 					when {DUMP_VALUE_CONSTANTS}.type_real_64 then
-						Result := eifnet_evaluator.icdv_reference_double_from_icdv_double (new_active_icd_frame, Result)	
+						Result := eifnet_evaluator.icdv_reference_double_from_icdv_double (new_active_icd_frame, Result)
 					when {DUMP_VALUE_CONSTANTS}.type_boolean then
 						Result := eifnet_evaluator.icdv_reference_boolean_from_icdv_boolean (new_active_icd_frame, Result)
 					when {DUMP_VALUE_CONSTANTS}.type_character then
 						Result := eifnet_evaluator.icdv_reference_character_from_icdv_character (new_active_icd_frame, Result)
 					when {DUMP_VALUE_CONSTANTS}.type_string then
 						Result := eifnet_evaluator.icdv_string_from_icdv_system_string (new_active_icd_frame, Result)
-					else					
+					else
 					end
 				else
 						--| we have manifest value
-						
+
 						--| This means this value has been created by eStudioDbg
 						--| We need to build the corresponding ICorDebugValue object.
-					inspect dmv.type 
+					inspect dmv.type
 					when {DUMP_VALUE_CONSTANTS}.type_integer_32 then
 						Result := eifnet_evaluator.new_reference_i4_evaluation (new_active_icd_frame, dmv.value_integer_32)
 					when {DUMP_VALUE_CONSTANTS}.type_real_32 then
@@ -648,7 +648,7 @@ feature {NONE} -- Implementation
 						Result := eifnet_evaluator.new_reference_character_evaluation (new_active_icd_frame, dmv.value_character )
 					when {DUMP_VALUE_CONSTANTS}.type_string then
 						Result := eifnet_evaluator.new_eiffel_string_evaluation (new_active_icd_frame, dmv.value_string )
-					else					
+					else
 					end
 				end
 				if not eifnet_evaluator.last_call_succeed then
@@ -703,10 +703,10 @@ feature {NONE} -- Debug purpose only
 					print (generating_type + " : Fct evaluation : " + mdi.get_method_props (icd_f.get_token) + "%N")
 					l_class := icd_f.get_class
 					print (generating_type + " :      on class : " + mdi.get_typedef_props (l_class.get_token) + "%N")
-				end			
+				end
 			end
 		end
-		
+
 	display_info_on_object (icdv: ICOR_DEBUG_VALUE) is
 			-- Display information related to object `icdv'
 			-- debug purpose only
@@ -733,5 +733,5 @@ feature {NONE} -- Debug purpose only
 			retried := True
 			retry
 		end
-		
+
 end

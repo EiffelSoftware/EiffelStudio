@@ -9,6 +9,7 @@ class
 	DEBUGGING_UPDATE_ON_IDLE
 
 inherit
+	ANY
 
 	SHARED_APPLICATION_EXECUTION
 		export
@@ -65,15 +66,15 @@ feature {NONE} -- Implementation
 			-- Call `real_update' on idle action
 		do
 			real_update_on_idle_called_on_stopped := a_dbg_stopped
-			ev_application.idle_actions.extend (update_on_idle_agent)			
+			ev_application.idle_actions.extend (update_on_idle_agent)
 		end
-	
+
 	cancel_process_real_update_on_idle is
 			-- cancel any calls to `real_update' on idle action	
 		do
 			real_update_on_idle_called_on_stopped := False
-			ev_application.idle_actions.prune_all (update_on_idle_agent)			
-		end	
+			ev_application.idle_actions.prune_all (update_on_idle_agent)
+		end
 
 	update_on_idle_agent: PROCEDURE [ANY, TUPLE] --TUPLE [BOOLEAN]]
 			-- Procedure used in the update on idle mecanism

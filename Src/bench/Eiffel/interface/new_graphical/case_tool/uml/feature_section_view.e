@@ -6,37 +6,37 @@ indexing
 
 class
 	FEATURE_SECTION_VIEW
-	
+
 inherit
 	EV_MODEL_GROUP
 		redefine
 			world
 		end
-	
+
 	FEATURE_NAME_EXTRACTOR
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	UML_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	EB_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as retrieve_preferences
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
@@ -44,7 +44,10 @@ inherit
 
 create
 	make
-	
+
+create {FEATURE_SECTION_VIEW}
+	make_filled
+
 feature {NONE} -- Initialize
 
 	make (a_fs: like feature_section; a_container: like container) is
@@ -64,9 +67,9 @@ feature {NONE} -- Initialize
 			f_names: EIFFEL_LIST [FEATURE_NAME]
 		do
 			default_create
-			
+
 			create feature_group
-			
+
 			attr_height := 0
 			create section_text.make_with_text (" <<" + a_fs.name + ">>")
 			section_text.set_pointer_style (default_pixmaps.standard_cursor)
@@ -84,7 +87,7 @@ feature {NONE} -- Initialize
 			else
 				visibility := "- "
 			end
-			
+
 			from
 				l_features := a_fs.features
 				l_features.start
@@ -92,11 +95,11 @@ feature {NONE} -- Initialize
 				l_features.after
 			loop
 				l_feature := l_features.item
-				
+
 				e_feature := a_fs.class_c.feature_with_name (l_feature.feature_name)
-				
+
 				signature := full_signature_compiled (e_feature)
-				
+
 				from
 					f_names := e_feature.ast.feature_names
 					f_names.start
@@ -122,7 +125,7 @@ feature {NONE} -- Initialize
 				l_features.forth
 			end
 			extend (feature_group)
-			
+
 			section_text.set_text ("+" + features_count.out + section_text.text)
 			feature_section := a_fs
 			container := a_container
@@ -132,7 +135,7 @@ feature {NONE} -- Initialize
 
 			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
-			
+
 		ensure
 			set: feature_section = a_fs and container = a_container
 			collabsed: not is_expanded
@@ -142,19 +145,19 @@ feature -- Access
 
 	feature_section: FEATURE_SECTION
 			-- Model `Current' is a View for.
-	
+
 	container: UML_CLASS_FIGURE
 			-- container containing `Current'
-	
+
 	is_expanded: BOOLEAN
 			-- Is section expanded?
-			
+
 	world: EG_FIGURE_WORLD is
 			-- World `Current' is part of.
 		do
 			Result ?= Precursor {EV_MODEL_GROUP}
 		end
-			
+
 feature -- Element change
 
 	expand is
@@ -172,7 +175,7 @@ feature -- Element change
 		ensure
 			is_expanded: is_expanded
 		end
-		
+
 	collabse is
 			-- Collabse feature section.
 		require
@@ -191,7 +194,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	features_count: INTEGER 
+	features_count: INTEGER
 			-- Number of features in section.
 
 	set_features_text_properties (txt: EV_MODEL_TEXT) is
@@ -200,18 +203,18 @@ feature {NONE} -- Implementation
 			txt.set_identified_font (uml_class_features_font)
 			txt.set_foreground_color (uml_class_features_color)
 		end
-		
+
 	set_section_text_properties (txt: EV_MODEL_TEXT) is
 			-- Set properties of `txt' according to standarts.
 		do
 			txt.set_identified_font (uml_class_feature_section_font)
 			txt.set_foreground_color (uml_class_feature_section_color)
 		end
-		
+
 	section_text: EV_MODEL_TEXT
-		
+
 	feature_group: EV_MODEL_GROUP
-	
+
 	on_section_press (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- User pressed on section name.
 		do
@@ -221,7 +224,7 @@ feature {NONE} -- Implementation
 				expand
 			end
 		end
-		
+
 	disable_pick_and_drop is
 			-- Disable pick and drop of features.
 		do
@@ -234,7 +237,7 @@ feature {NONE} -- Implementation
 				feature_group.forth
 			end
 		end
-		
+
 	enable_pick_and_drop is
 			-- Enable pick and drop of features.
 		do
@@ -247,7 +250,7 @@ feature {NONE} -- Implementation
 				feature_group.forth
 			end
 		end
-		
+
 	retrieve_preferences is
 			-- Retrieve properties from preference.
 		local
@@ -262,7 +265,7 @@ feature {NONE} -- Implementation
 				feature_group.after
 			loop
 				txt ?= feature_group.item
-				if txt /= Void then		
+				if txt /= Void then
 					set_features_text_properties (txt)
 					last_txt := txt
 				else
@@ -281,7 +284,7 @@ feature {NONE} -- Implementation
 			end
 			container.request_update
 		end
-		
+
 	on_double_press is
 			-- Do nothing, but block the delegation to `container'.
 		do

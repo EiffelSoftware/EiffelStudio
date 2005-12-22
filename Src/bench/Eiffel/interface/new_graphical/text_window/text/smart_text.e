@@ -25,7 +25,7 @@ inherit
 			stone_at,
 			make
 		end
-		
+
 	REFACTORING_HELPER
 		export
 			{NONE} all
@@ -92,7 +92,7 @@ feature -- Status report
 
 	no_error, syntax_error, class_name_changed: INTEGER is unique
 			-- `click_tool_status' possible values.
-			
+
 	current_feature_containing : FEATURE_AS is
 			-- Feature containg current cursor.
 			-- Void if not exists.
@@ -175,7 +175,7 @@ feature -- Basic Operations
 
 			history.record_move
 			cursor.go_left_char
-				
+
 			insert_string (indent + keyword)
 			history.record_move
 			from
@@ -216,12 +216,12 @@ feature -- Basic Operations
 					tok := tok.next
 					blnk ?= tok
 				end
-				check 
+				check
 					tok /= Void
 				end
 				pos := tok.position
 			until
-				ln = Void or else ln = end_cursor.line 
+				ln = Void or else ln = end_cursor.line
 			loop
 				tok := ln.first_token
 				blnk ?= tok
@@ -233,7 +233,7 @@ feature -- Basic Operations
 						tok := tok.next
 						blnk ?= tok
 					end
-					check 
+					check
 						tok /= Void
 					end
 					if pos = 0 or else (tok.position < pos and then tok /= ln.eol_token) then
@@ -245,7 +245,7 @@ feature -- Basic Operations
 			end
 			Result := r_ln.indentation
 		end
-			
+
 feature -- Search
 
 	find_feature_named (a_name: STRING) is
@@ -291,9 +291,9 @@ feature -- Search
 					end
 				end
 			end
-		end	
+		end
 
-	found_feature: BOOLEAN	
+	found_feature: BOOLEAN
 			-- Was the last searched feature found?
 
 	reset_text is
@@ -409,23 +409,23 @@ feature -- Completion-clickable initialization / update
 						l_image := l_token.image
 						if l_image.count > 1 and then cursor.pos_in_token > 1 then
 								-- Will prevent completion of '`.' or '..'
-							l_do_not_complete := is_completable_separator (l_image.item (cursor.pos_in_token - 1).out)	
+							l_do_not_complete := is_completable_separator (l_image.item (cursor.pos_in_token - 1).out)
 						end
 					end
-					
+
 					l_token := l_token.previous
-					
+
 					if l_token /= Void then
 						l_comment ?= l_token
 						if l_comment /= Void then
 								-- Previous token is a comment so we cannot complete.
 								-- Happens when completing -- A Comment `.|
-							l_do_not_complete := True	
+							l_do_not_complete := True
 						elseif l_token.is_text then
 								-- Will prevent completion of '22|'
 							l_number ?= l_token
 							l_do_not_complete := l_number /= Void
-							
+
 							if not l_do_not_complete then
 								l_image := l_token.image
 								if l_image.count > 1 then
@@ -443,27 +443,27 @@ feature -- Completion-clickable initialization / update
 					end
 				end
 			end
-			
+
 			if not l_do_not_complete and not cursor.line.part_of_verbatim_string then
-				click_tool.build_completion_list (cursor)	
+				click_tool.build_completion_list (cursor)
 			end
 			if not l_do_not_complete and click_tool.completion_possibilities /= Void then
-				
+
 				auto_complete_possible := True
 			elseif add_point then
 					-- We should have added a point.
 					-- Let's remove any clue in the undo redo stack.
 				undo
-				history.remove_last_redo							
+				history.remove_last_redo
 			end
 		end
-		
+
 	prepare_class_name_complete is
 			-- Use `click_tool' to determine whether there is some
 			-- name to be completed at `cursor' position.
 			-- If it is, strings that can possibly be used for completion
 			-- are available in `class_completion_possibilities'.
-		do			
+		do
 			history.record_move
 			auto_complete_possible := False
 			click_tool.build_class_completion_list (cursor)
@@ -539,10 +539,10 @@ feature -- Completion-clickable initialization / update
 			if appended_character /= '%U' then
 				insert_char (appended_character)
 			end
- 
+
 			if is_feature_signature and then completed.last_index_of (')',completed.count) = completed.count then
 				selection_cursor := cursor.twin
-	
+
 				cursor.set_y_in_lines (y)
 				cursor.set_x_in_characters (x)
 			end
@@ -553,7 +553,7 @@ feature -- Syntax completion
 	complete_syntax (keyword: STRING; keyword_already_present, newline: BOOLEAN) is
 			-- Complete syntax after `keyword' according to what is specified in
 			-- the preferences. If `keyword_already_present', completion will use
-			-- preferences for keyword that were not typed immediatly before 
+			-- preferences for keyword that were not typed immediatly before
 			-- completion was triggered. If `newline', the preference for Return will
 			-- be used, the one for Space otherwise.
 			-- If feature modified `Current', then `syntax_completed' is set to True.
@@ -654,12 +654,12 @@ feature -- Syntax completion
 				et := end_line_tokens
 				if char_nb > 0 then
 					to_be_inserted.prepend (ln.image.substring (1, char_nb))
-					
+
 					from
 						i := 1
 					until
 						i > char_nb
-					loop 
+					loop
 						i := i + 1
 						back_delete_char
 					end
@@ -698,7 +698,7 @@ feature -- Syntax completion
 				history.record_move
 			end
 		end
-			
+
 feature {NONE}-- click information update
 
 	restore_tokens_properties (begin_line, end_line: like line) is
@@ -750,7 +750,7 @@ feature {NONE}-- click information update
 				if end_line_tokens.item.image.is_equal (tok.image) then
 					tc ?= tok
 						-- skip token if commented
-					if tc = Void then 
+					if tc = Void then
 						if end_line_tokens.item.is_feature_start then
 							tfs ?= end_line_tokens.item.twin
 							tfs.set_next_token (Void)
@@ -801,7 +801,7 @@ feature {NONE} -- Implementation
 				click_tool.setup_line (Result)
 			end
 		end
-		
+
 	analyzer: EB_CLASS_INFO_ANALYZER is
 			-- Class infor analyzer
 		once
@@ -810,7 +810,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	is_completable_separator (a_str: STRING): BOOLEAN is
 			-- Is `a_str' a completable string separator?
 		local
@@ -824,7 +824,7 @@ feature {NONE} -- Implementation
 				until
 					Result or i > l_seps.upper
 				loop
-					if (l_seps[i]).is_equal (a_str) then
+					if (l_seps.item (i)).is_equal (a_str) then
 						Result := True
 					else
 						i := i + 1

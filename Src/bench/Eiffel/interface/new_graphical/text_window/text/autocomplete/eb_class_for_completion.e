@@ -15,10 +15,12 @@ inherit
 			is_class,
 			full_insert_name
 		end
-			
 
 create
 	make
+
+create {EB_CLASS_FOR_COMPLETION}
+	make_string
 
 feature {NONE} -- Initialization
 
@@ -40,18 +42,18 @@ feature -- Access
 		do
 			Result := True
 		end
-		
+
 	full_insert_name: STRING is
 			-- Full name to insert in editor
-		do			
+		do
 			Result := associated_class.name
-		end	
+		end
 
 	icon: EV_PIXMAP is
 			-- Associated icon based on data
 		do
 			Result := pixmap_from_class_i (associated_class)
-		end		
+		end
 
 	tooltip_text: STRING is
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
@@ -64,5 +66,5 @@ feature {NONE} -- Implementation
 
 	associated_class: CLASS_I
 			-- Corresponding class
-			
+
 end -- class EB_CLASS_FOR_COMPLETION

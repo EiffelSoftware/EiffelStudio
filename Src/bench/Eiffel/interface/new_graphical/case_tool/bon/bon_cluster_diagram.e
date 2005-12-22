@@ -6,19 +6,22 @@ indexing
 
 class
 	BON_CLUSTER_DIAGRAM
-	
+
 inherit
 	EIFFEL_CLUSTER_DIAGRAM
 		redefine
 			default_view_name
 		end
-	
+
 create
 	make,
 	make_without_interactions
-		
+
+create {BON_CLUSTER_DIAGRAM}
+	make_filled
+
 feature {NONE} -- Initialization
-		
+
 	make (a_graph: like model; a_tool: like context_editor) is
 			-- Initialize as context in `a_tool' showing `a_graph'.
 		require
@@ -29,7 +32,7 @@ feature {NONE} -- Initialization
 			make_with_model_and_factory (a_graph, create {BON_FACTORY})
 			context_editor := a_tool
 		end
-		
+
 feature {EB_DIAGRAM_HTML_GENERATOR} -- Initialization
 
 	make_without_interactions (a_graph: like model) is
@@ -39,7 +42,7 @@ feature {EB_DIAGRAM_HTML_GENERATOR} -- Initialization
 		do
 			make_with_model_and_factory (a_graph, create {BON_FACTORY})
 		end
-		
+
 feature -- Access
 
 	default_view_name: STRING is

@@ -24,33 +24,36 @@ inherit
 			set_is_fixed,
 			recycle
 		end
-		
+
 	BON_FIGURE
 		undefine
 			default_create
 		end
-		
+
 	DEBUG_OUTPUT
 		undefine
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as preferences_changed
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
 		end
-	
+
 create
 	default_create,
 	make_with_model
-	
+
+create {BON_CLASS_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -58,14 +61,14 @@ feature {NONE} -- Initialization
 		local
 			anchor_pix: EV_MODEL_PICTURE
 			circl: EV_MODEL_ELLIPSE
-			
+
 		do
 			Precursor {EIFFEL_CLASS_FIGURE}
 			prune_all (name_label)
-			
+
 			create ellipse
 			extend (ellipse)
-			
+
 			create anchor
 			create circl.make_with_positions (-2, -2, 18, 18)
 			circl.set_foreground_color (default_colors.black)
@@ -77,26 +80,26 @@ feature {NONE} -- Initialization
 			anchor.disable_sensitive
 			is_anchor_shown := False
 			extend (anchor)
-				
+
 			create name_labels
 			extend (name_labels)
-			
+
 			create icon_figures
 			extend (icon_figures)
-			
+
 			create generics_label
 			extend (generics_label)
-			
+
 			is_high_quality := True
 			disable_rotating
 			disable_scaling
-			
+
 			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
-			
+
 			is_default_background_color_used := True
 		end
-		
+
 	make_with_model (a_model: ES_CLASS) is
 			-- Create a BON_CLASS_FIGURE using the `model' `a_model'.
 		require
@@ -105,14 +108,14 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			
 
-			set_bon_icons			
+
+			set_bon_icons
 			model.properties_changed_actions.extend (agent set_bon_icons)
-			
+
 			set_generics
 			model.generics_changed_actions.extend (agent set_generics)
-			
+
 			request_update
 		end
 
@@ -120,7 +123,7 @@ feature -- Status report
 
 	is_anchor_shown: BOOLEAN
 			-- Is anchor indicating `is_fixed' shown?
-		
+
 feature -- Access
 
 	world: EIFFEL_WORLD is
@@ -134,13 +137,13 @@ feature -- Access
 		do
 			Result := point_x
 		end
-		
+
 	port_y: INTEGER is
 			-- y position where links are starting.
 		do
 			Result := point_y
 		end
-		
+
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
 		local
@@ -150,34 +153,34 @@ feature -- Access
 			pay := ellipse.point_a_y
 			create Result.make (pax, pay, ellipse.point_b_x - pax, ellipse.point_b_y - pay)
 		end
-		
+
 	height: INTEGER is
 			-- Height in pixels.
 		do
 			Result := ellipse.radius2 * 2
 		end
-		
+
 	width: INTEGER is
 			-- Width in pixels.
 		do
 			Result := ellipse.radius1 * 2
 		end
-			
+
 	background_color: EV_COLOR
 			-- Background color for the ellipse.
 
 	class_name_color: EV_COLOR
 			-- Color for the class name.
-			
+
 	generics_color: EV_COLOR
 			-- Color for generics.
-			
+
 	debug_output: STRING is
 			-- String that should be displayed in debugger to represent `Current'.
 		do
 			Result := model.name
 		end
-		
+
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
 		do
@@ -189,7 +192,7 @@ feature -- Access
 	background_color_string: STRING is "BACKGROUND_COLOR"
 	generics_color_string: STRING is "GENERICS_COLOR"
 	class_name_color_string: STRING is "CLASS_NAME_COLOR"
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml element representing `Current's state.
 		local
@@ -206,24 +209,24 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, is_default_bg_color_used_string, boolean_representation (is_default_background_color_used)))
 			if not is_default_background_color_used then
 				l_color := background_color
-				Result.put_last (l_xml_routines.xml_node (Result, background_color_string, 
+				Result.put_last (l_xml_routines.xml_node (Result, background_color_string,
 					l_color.red_8_bit.out + colon_string +
 					l_color.green_8_bit.out + colon_string +
 					l_color.blue_8_bit.out))
 				l_color := generics_color
-				Result.put_last (l_xml_routines.xml_node (Result, generics_color_string, 
+				Result.put_last (l_xml_routines.xml_node (Result, generics_color_string,
 					l_color.red_8_bit.out + colon_string +
 					l_color.green_8_bit.out + colon_string +
 					l_color.blue_8_bit.out))
 				l_color := class_name_color
-				Result.put_last (l_xml_routines.xml_node (Result, class_name_color_string, 
+				Result.put_last (l_xml_routines.xml_node (Result, class_name_color_string,
 					l_color.red_8_bit.out + colon_string +
 					l_color.green_8_bit.out + colon_string +
 					l_color.blue_8_bit.out))
 			end
 			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		local
@@ -254,7 +257,7 @@ feature -- Access
 				model.disable_needed_on_diagram
 			end
 		end
-		
+
 feature -- Status settings
 
 	show_anchor is
@@ -269,7 +272,7 @@ feature -- Status settings
 		ensure
 			fixed_implies_show: is_fixed implies is_anchor_shown
 		end
-		
+
 	hide_anchor is
 			-- Hide anchor.
 		do
@@ -281,7 +284,7 @@ feature -- Status settings
 		ensure
 			anchor_hidden: not is_anchor_shown
 		end
-		
+
 	set_is_fixed (b: BOOLEAN) is
 			-- Set `is_fixed' to `b'.
 		do
@@ -298,7 +301,7 @@ feature -- Element change
 	recycle is
 			-- Free `Current's resources.
 		do
-			Precursor {EIFFEL_CLASS_FIGURE}			
+			Precursor {EIFFEL_CLASS_FIGURE}
 			if model /= Void then
 				model.properties_changed_actions.prune_all (agent set_bon_icons)
 				model.generics_changed_actions.prune_all (agent set_generics)
@@ -315,7 +318,7 @@ feature -- Element change
 		ensure
 			set: background_color = a_color
 		end
-		
+
 	set_generics_color (a_color: EV_COLOR) is
 			-- Set `generics_color' to `a_color'.
 		require
@@ -393,7 +396,7 @@ feature -- Element change
 			val2 := p1.x_precise
 			a := (val1 - val2) / 2
 			cx := (val1 + val2) / 2
-			
+
 			val1 := p0.y_precise
 			val2 := p1.y_precise
 			b := (val1 - val2) / 2
@@ -404,12 +407,12 @@ feature -- Element change
 			else
 				ax := (a * b) / sqrt (b^2 + l^2 * a^2)
 				ay := l * ax
-				
+
 				if cosine (an_angle) < 0 then
 						-- When we are in ]pi/2, 3*pi/2[, then we need to reverse
 						-- the coordinates. It looks strange like that, but don't forget
 						-- that although `ax' is always positive, `ay' might be negative depending
-						-- on the sign of `l'. This is why we need to reverse both coordinates, 
+						-- on the sign of `l'. This is why we need to reverse both coordinates,
 						-- but because we also need to reverse the `ay' value because in a figure world
 						-- the `ay' coordinates go down and not up, the effect is null, thus no operation
 						-- on `ay'.
@@ -422,7 +425,7 @@ feature -- Element change
 			end
 			p.set_precise (cx + ax, cy - ay)
 		end
-		
+
 	fade_out is
 			-- Fade out `Current'.
 		do
@@ -431,7 +434,7 @@ feature -- Element change
 			end
 			is_faded := True
 		end
-		
+
 	fade_in is
 			-- Fade in `Current'.
 		do
@@ -440,15 +443,15 @@ feature -- Element change
 			end
 			is_faded := False
 		end
-		
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
-		
+
 	update is
 			-- Some properties of `Current' may have changed.
 		do
 			is_update_required := False
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Figure group
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -470,9 +473,9 @@ feature {EV_MODEL_GROUP} -- Figure group
 				ellipse.set_radius2 (i_radius)
 			end
 		end
-		
+
 feature {EIFFEL_PROJECTOR} -- Ellipse
-		
+
 	ellipse: EV_MODEL_ELLIPSE
 			-- The BON ellipse.
 
@@ -493,32 +496,32 @@ feature {NONE} -- Implementation
 
 	is_default_background_color_used: BOOLEAN
 			-- Was background color not changed by client?
-			
+
 	ellipse_radius_1: DOUBLE
 			-- Horizontal radius of `ellipse'.
-	
+
 	ellipse_radius_2: DOUBLE
 			-- Vertical radius of `ellipse'.
 
 	number_of_figures: INTEGER is 2
 			-- Number of figures used to visualize `Current'.
 			-- (`ellipse', `anchor')
-	
+
 	icon_figures: EV_MODEL_GROUP
 			-- Optional icon for class types deferred, effective, persistent, interfaced.
-			
+
 	icon_spacing: INTEGER is 2
 			-- Space in pixel between icons in `icon_figures'.
-	
+
 	name_labels: EV_MODEL_GROUP
 			-- All the part of the name of the class.
-			
+
 	generics_label: EV_MODEL_GROUP
 			-- All parts of `model'.`generics' name.
 
 	anchor: EV_MODEL_GROUP
 			-- Anchor indicating that `Current' `is_fixed'.
-			
+
 	set_bon_icons is
 			-- Examine the properties of the class and add `icon_figures'.
 		require
@@ -632,7 +635,7 @@ feature {NONE} -- Implementation
 			end
 			update_information_positions
 		end
-			
+
 	set_generics is
 			-- Set text in `generics_label'.
 			-- | With line wrap at `max_generics_name_length'.
@@ -644,7 +647,7 @@ feature {NONE} -- Implementation
 			l_max_generics_name_length: INTEGER
 		do
 			a_text := model.generics
-			
+
 			if a_text /= Void then
 				generics_label.show
 				generics_label.wipe_out
@@ -706,8 +709,8 @@ feature {NONE} -- Implementation
 							generics_label.extend (part_text)
 						end
 					end
-					
-					s := rest			
+
+					s := rest
 					create part_text.make_with_text (s)
 					assign_generics_properties_to_text (part_text)
 					if world /= Void then
@@ -731,7 +734,7 @@ feature {NONE} -- Implementation
 			end
 			request_update
 		end
-		
+
 	update_information_positions is
 			-- Set positions of `name_labels', `bon_icons' and `generics_label'.
 		local
@@ -743,43 +746,43 @@ feature {NONE} -- Implementation
 				ibbox := icon_figures.bounding_box
 				nbbox := name_labels.bounding_box
 				gbbox := generics_label.bounding_box
-				
+
 				if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then
 					-- on one line
 					h := ibbox.height + nbbox.height
-					
+
 					cur_pos := port_y - as_integer (h / 2)
-					
+
 					icon_figures.set_point_position (port_x, cur_pos)
 					cur_pos := cur_pos + ibbox.height
-					
+
 					w := as_integer (gbbox.width / 2)
-					
+
 					cur_y_pos := port_x - w
-					
+
 					name_labels.set_point_position (cur_y_pos, cur_pos)
 					cur_y_pos := cur_y_pos + as_integer (nbbox.width / 2) + w
 					generics_label.set_point_position (cur_y_pos, cur_pos)
 				else
 					h := ibbox.height + nbbox.height + gbbox.height
-					
+
 					cur_pos := port_y - as_integer (h / 2)
-					
+
 					icon_figures.set_point_position (port_x, cur_pos)
 					cur_pos := cur_pos + ibbox.height
-					
+
 					name_labels.set_point_position (port_x, cur_pos)
 					cur_pos := cur_pos + nbbox.height
-					
-					generics_label.set_point_position (port_x, cur_pos)	
+
+					generics_label.set_point_position (port_x, cur_pos)
 				end
 			else
 				name_labels.set_x_y (port_x, port_y)
 			end
-			
+
 			update_radius
 		end
-		
+
 	update_radius is
 			-- Update `ellipse_radius_1' and `ellipse_radius_2'.
 		local
@@ -788,9 +791,9 @@ feature {NONE} -- Implementation
 			r, omega: DOUBLE
 		do
 			if is_high_quality then
-				if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then				
+				if model.generics /= Void and then model.generics.count + model.name.count <= max_class_name_length  then
 					l_min_size := minimum_size
-				
+
 					w := l_min_size.width
 					h := l_min_size.height
 					if icon_figures.bounding_box.height = 0 then
@@ -798,7 +801,7 @@ feature {NONE} -- Implementation
 					end
 				else
 					l_min_size := minimum_size
-				
+
 					w := l_min_size.width
 					h := l_min_size.height
 					if icon_figures.bounding_box.height = 0 and then generics_label.bounding_box.height = 0 and then name_labels.count = 1 then
@@ -807,7 +810,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				l_min_size := name_labels.bounding_box
-				
+
 				w := l_min_size.width
 				h := l_min_size.height
 				if name_labels.count = 1 then
@@ -815,11 +818,11 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			r := distance (l_min_size.left, l_min_size.top, l_min_size.left + w / 2, l_min_size.top + h / 2)			
+			r := distance (l_min_size.left, l_min_size.top, l_min_size.left + w / 2, l_min_size.top + h / 2)
 			omega := line_angle (l_min_size.left + w / 2, l_min_size.top + h / 2, l_min_size.left + w, l_min_size.top)
 			ellipse_radius_2 := sqrt (r^2*sine(omega)^2*(1 + (cosine(omega)^2/(sine(omega)^2*(w^2/h^2)))))
 			ellipse_radius_1 := w * ellipse_radius_2 / h
-			
+
 			if ellipse.radius1 /= as_integer (ellipse_radius_1) then
 				ellipse.set_radius1 (as_integer (ellipse_radius_1))
 			end
@@ -827,7 +830,7 @@ feature {NONE} -- Implementation
 				ellipse.set_radius2 (as_integer (ellipse_radius_2))
 			end
 		end
-		
+
 
 	set_ellipse_properties is
 			-- Set properties of ellipse.
@@ -850,7 +853,7 @@ feature {NONE} -- Implementation
 				ellipse.set_line_width (bon_class_line_width)
 			end
 		end
-		
+
 	set_generics_properties is
 			-- Set properties of `generics_label' according to generics properties.
 		local
@@ -875,7 +878,7 @@ feature {NONE} -- Implementation
 			a_text.set_identified_font (bon_generics_font)
 			a_text.set_foreground_color (generics_color)
 		end
-		
+
 	set_class_name_properties is
 			-- Set properties of `name_labels' according to name properties.
 		local
@@ -900,7 +903,7 @@ feature {NONE} -- Implementation
 			a_text.set_identified_font (bon_class_name_font)
 			a_text.set_foreground_color (class_name_color)
 		end
-		
+
 	low_quality_fill_color: EV_COLOR is
 			-- Fill color for low quality ellipse.
 		once
@@ -908,7 +911,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	set_is_high_quality (a_high_quality: like is_high_quality) is
 			-- Set `is_high_quality' to `a_high_quality'.
 		do
@@ -927,17 +930,17 @@ feature {NONE} -- Implementation
 				request_update
 			end
 		end
-		
+
 	preferences_changed is
 			-- User changed values of interest in preferences.
 		do
-			retrieve_preferences			
+			retrieve_preferences
 			set_ellipse_properties
 			set_class_name_properties
 			set_generics_properties
 			request_update
 		end
-	
+
 	retrieve_preferences is
 			-- Retrive preferences from shared resources.
 		do
@@ -953,6 +956,14 @@ feature {NONE} -- Implementation
 			set_class_name_properties
 			set_generics_properties
 			request_update
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 invariant

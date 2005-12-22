@@ -18,26 +18,26 @@ inherit
 		undefine
 			default_create, copy
 		end
-	
+
 	EB_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create, copy
-		end		
-		
+		end
+
 create
 	make
 
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		do
 			create choice_list
 			choice_list.enable_single_row_selection
-			choice_list.key_press_string_actions.extend (agent on_char)	
+			choice_list.key_press_string_actions.extend (agent on_char)
 			choice_list.key_press_actions.extend (agent on_key_down)
 			choice_list.key_release_actions.extend (agent on_key_released)
 			choice_list.pointer_double_press_actions.extend (agent mouse_selection)
@@ -63,9 +63,9 @@ feature {NONE} -- Initialization
 			extend (vbox)
 			choice_list.focus_out_actions.extend (agent on_lose_focus)
 			choice_list.mouse_wheel_actions.extend (agent on_mouse_wheel)
-			focus_out_actions.extend (agent on_lose_focus)			
+			focus_out_actions.extend (agent on_lose_focus)
 			resize_actions.force_extend (agent resize_column_to_window_width)
-		end		
+		end
 
 feature -- Initialization
 
@@ -99,13 +99,13 @@ feature -- Initialization
 			-- Initialize fields common to class and feature choice window.		
 		do
 			if before_complete /= Void then
-				buffered_input := before_complete.twin	
+				buffered_input := before_complete.twin
 			else
 				create buffered_input.make_empty
-			end			
+			end
 			sorted_names.compare_objects
 			is_closing := False
-			
+
 			build_displayed_list (before_complete)
 			is_first_show := True
 
@@ -113,10 +113,10 @@ feature -- Initialization
 					-- If there is only one possibility, we insert it without displaying the window
 				determine_show_needed
 				if not show_needed then
-					if choice_list.row_count > 0 then					
+					if choice_list.row_count > 0 then
 						select_closest_match
 					end
-					close_and_complete					
+					close_and_complete
 				end
 			end
 		end
@@ -137,7 +137,7 @@ feature -- Access
 
 	remainder: INTEGER
 			-- Number chars to remove on completion
-			
+
 feature -- Status report
 
 	show_needed: BOOLEAN
@@ -162,7 +162,7 @@ feature -- Status Setting
 			choice_list.set_focus
 			resize_column_to_window_width
 			select_closest_match
-		end		
+		end
 
 feature -- Query
 
@@ -172,15 +172,15 @@ feature -- Query
 			if rebuild_list_during_matching then
 				Result := not matches_based_on_name (buffered_input).is_empty
 			else
-				Result := not sorted_names.is_empty				
+				Result := not sorted_names.is_empty
 			end
-		end			
-		
+		end
+
 	default_font: EV_FONT is
 			-- Default font
 		once
-			create Result	
-		end		
+			create Result
+		end
 
 	should_show: BOOLEAN is
 			-- Should show in current state?
@@ -194,13 +194,13 @@ feature {NONE} -- Events handling
 			-- process mouse click in the list
 		do
 			if button = 1 and not choice_list.selected_items.is_empty then
-				close_and_complete				
+				close_and_complete
 			end
 		end
 
 	on_key_released (ev_key: EV_KEY) is
 			-- process user input in `choice_list'
-		do			
+		do
 			if ev_key /= Void then
 				inspect
 					ev_key.code
@@ -208,16 +208,16 @@ feature {NONE} -- Events handling
 					close_and_complete
 				when Key_escape then
 					exit
-					editor.set_focus	
+					editor.set_focus
 				when key_back_space, key_delete then
 					if ev_application.ctrl_pressed then
 						editor.handle_extended_ctrled_key (ev_key)
-					else	
+					else
 						editor.handle_extended_key (ev_key)
 					end
-					if not buffered_input.is_empty then	
+					if not buffered_input.is_empty then
 						if ev_key.code = key_back_space then
-							if ev_application.ctrl_pressed then			
+							if ev_application.ctrl_pressed then
 								buffered_input.wipe_out
 							else
 								buffered_input := buffered_input.substring (1, buffered_input.count - 1)
@@ -231,25 +231,25 @@ feature {NONE} -- Events handling
 					if ev_application.ctrl_pressed then
 						editor.handle_extended_ctrled_key (ev_key)
 						buffered_input.append (ev_application.clipboard.text)
-					else	
+					else
 						editor.handle_extended_key (ev_key)
 					end
-					select_closest_match					
+					select_closest_match
 				else
 					-- Do nothing
 				end
-				
-			end			
+
+			end
 		end
-		
+
 	on_key_down (ev_key: EV_KEY) is
 			-- process user input in `choice_list'	
 		local
 			ix: INTEGER
-		do			
+		do
 			if ev_key /= Void then
 				inspect
-					ev_key.code				
+					ev_key.code
 				when Key_page_up then
 						-- Go up `nb_items_to_scroll' items
 					if choice_list.row_count > 0 then
@@ -262,15 +262,15 @@ feature {NONE} -- Events handling
 								else
 									choice_list.remove_selection
 									choice_list.row (1).enable_select
-								end								
+								end
 							else
 								choice_list.remove_selection
 								choice_list.row (ix - nb_items_to_scroll).enable_select
 							end
 						end
-						
+
 						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible	
+							choice_list.selected_rows.first.ensure_visible
 						end
 					end
 				when Key_page_down then
@@ -286,7 +286,7 @@ feature {NONE} -- Events handling
 									choice_list.remove_selection
 									choice_list.row (choice_list.row_count).enable_select
 									choice_list.row (choice_list.row_count).ensure_visible
-								end								
+								end
 							else
 								choice_list.remove_selection
 								choice_list.row (ix + nb_items_to_scroll).enable_select
@@ -294,22 +294,22 @@ feature {NONE} -- Events handling
 							end
 						end
 						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible	
-						end	
-					end	
-				when Key_up then					
+							choice_list.selected_rows.first.ensure_visible
+						end
+					end
+				when Key_up then
 					if choice_list.row_count > 0 then
 						if not choice_list.selected_items.is_empty then
 							ix := choice_list.selected_rows.first.index
 							choice_list.remove_selection
-							if ix = 1 then							
-								choice_list.row (choice_list.row_count).enable_select														
-							else					
+							if ix = 1 then
+								choice_list.row (choice_list.row_count).enable_select
+							else
 								choice_list.row (ix - 1).enable_select
 							end
-						end	
+						end
 						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible	
+							choice_list.selected_rows.first.ensure_visible
 						end
 					end
 				when Key_down then
@@ -317,23 +317,23 @@ feature {NONE} -- Events handling
 						if not choice_list.selected_items.is_empty then
 							ix := choice_list.selected_rows.first.index
 							choice_list.remove_selection
-							if ix = choice_list.row_count then								
+							if ix = choice_list.row_count then
 								choice_list.row (1).enable_select
-							else					
+							else
 								choice_list.row (ix + 1).enable_select
-							end		
+							end
 						end
 						if not choice_list.selected_rows.is_empty then
 							choice_list.selected_rows.first.ensure_visible
 						end
-					end							
+					end
 				when key_home then
 					if ev_application.ctrl_pressed and then choice_list.row_count > 0 then
 							-- Go to top
 						choice_list.remove_selection
 						choice_list.select_row (1)
 						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible	
+							choice_list.selected_rows.first.ensure_visible
 						end
 					end
 				when key_end then
@@ -342,15 +342,15 @@ feature {NONE} -- Events handling
 						choice_list.remove_selection
 						choice_list.select_row (choice_list.row_count)
 						if not choice_list.selected_rows.is_empty then
-							choice_list.selected_rows.first.ensure_visible	
+							choice_list.selected_rows.first.ensure_visible
 						end
-					end					
+					end
 				else
 					-- Do nothing
 				end
-			end			
+			end
 		end
-		
+
 	on_char (character_string: STRING) is
    			-- Process displayable character key press event.
    		local
@@ -358,12 +358,12 @@ feature {NONE} -- Events handling
 			c_name: EB_NAME_FOR_COMPLETION
    		do
 			if character_string.count = 1 then
-				c := character_string.item (1)											
+				c := character_string.item (1)
 				if c.is_alpha or c.is_digit or c = '_' then
-					buffered_input.append_character (c)					
-					editor.handle_character (c)					
+					buffered_input.append_character (c)
+					editor.handle_character (c)
 					create c_name.make_with_name (buffered_input)
-					select_closest_match					
+					select_closest_match
 				elseif c = ' ' and ev_application.ctrl_pressed then
 						-- Do nothing, we don't want to close the completion window when CTRL+SPACE is pressed
 				elseif not editor.unwanted_characters.item (c.code) then
@@ -372,16 +372,16 @@ feature {NONE} -- Events handling
 							-- Don't want to add character over first argument			
 						editor.handle_character (c)
 					end
-					exit									
-				end				
-			end		
+					exit
+				end
+			end
 		end
-		
+
 	on_lose_focus is
 			-- close window
 		do
 			if (not (is_destroyed or else has_focus or else choice_list.has_focus)) and is_displayed then
-				exit					
+				exit
 			end
 		end
 
@@ -398,11 +398,11 @@ feature {NONE} -- Events handling
 				else
 					choice_list.set_virtual_position (
 						choice_list.virtual_x_position,
-						((choice_list.virtual_y_position + (choice_list.row_height * -a * 
+						((choice_list.virtual_y_position + (choice_list.row_height * -a *
 						preferences.editor_data.mouse_wheel_scroll_size)).max (0)).min (choice_list.maximum_virtual_y_position))
 				end
 			end
-		end		
+		end
 
 feature {NONE} -- Implementation
 
@@ -412,22 +412,22 @@ feature {NONE} -- Implementation
 	character_to_append: CHARACTER
 			-- Character that should be appended after the completed feature in the editor.
 			-- '%U' if none.
-				
+
 	index_offset: INTEGER
 			-- Index in `sorted_names' of the first element in `choice_list'
-				
+
 	rebuild_list_during_matching: BOOLEAN is
 			-- Should the list be rebuilt according to current match?
 		do
 		    Result := preferences.editor_data.filter_completion_list
 		end
-		
+
 	automatically_complete_words: BOOLEAN is
 			-- Should completion list automatically complete words.
 		do
 			Result := preferences.editor_data.auto_complete_words
 		end
-	
+
 	build_displayed_list (name: STRING) is
 			-- Build the list based on matches with `name'
 		require
@@ -437,20 +437,20 @@ feature {NONE} -- Implementation
 			matches: ARRAY [EB_NAME_FOR_COMPLETION]
 			list_row: EV_GRID_LABEL_ITEM
 			match_item: EB_NAME_FOR_COMPLETION
-			row_index: INTEGER		
+			row_index: INTEGER
 			l_upper: INTEGER
-		do			
+		do
 			choice_list.wipe_out
-			
+
 			if rebuild_list_during_matching then
 				matches := matches_based_on_name (name)
 			else
-				matches := sorted_names.subarray (1, sorted_names.count)				
+				matches := sorted_names.subarray (1, sorted_names.count)
 			end
-			
-			
+
+
 			if matches.is_empty then
-				current_index := 0	
+				current_index := 0
 			else
 				current_index := 1
 			end
@@ -467,11 +467,11 @@ feature {NONE} -- Implementation
 					list_row.set_pixmap (match_item.icon)
 					if not match_item.show_signature or not match_item.show_type then
 						list_row.set_tooltip (match_item.tooltip_text)
-								-- TODO: neilc.  auto activating the tooltip works but only based on mouse x/y, 
+								-- TODO: neilc.  auto activating the tooltip works but only based on mouse x/y,
 								-- whereas we need selected_item x/y.
 							--list_row.select_actions.extend (agent activate_tooltip)								
 					end
-					choice_list.set_item (1, row_index, list_row)				
+					choice_list.set_item (1, row_index, list_row)
 				end
 				l_count := l_count + 1
 				row_index := row_index + 1
@@ -484,8 +484,8 @@ feature {NONE} -- Implementation
 			if not choice_list.selected_rows.is_empty then
 					-- Delete current token so it is later replaced by the completion text
 				if not buffered_input.is_empty then
-					remove_characters_entered_since_display					
-				end											
+					remove_characters_entered_since_display
+				end
 				if feature_mode then
 					complete_feature
 				else
@@ -511,9 +511,9 @@ feature {NONE} -- Implementation
 				if rebuild_list_during_matching then
 					if not choice_list.selected_rows.is_empty then
 						ix := choice_list.selected_rows.first.index + index_offset
-					else	
+					else
 						ix := index_offset
-					end					
+					end
 				else
 					if not choice_list.selected_rows.is_empty then
 						ix := choice_list.selected_rows.first.index
@@ -529,9 +529,9 @@ feature {NONE} -- Implementation
 				l_feature ?= sorted_names.item (ix)
 				if l_feature /= Void then
 					last_completed_feature_had_arguments := l_feature.has_arguments
-				else	
+				else
 					last_completed_feature_had_arguments := False
-				end				
+				end
 			end
 		end
 
@@ -558,7 +558,7 @@ feature {NONE} -- Implementation
 			-- Cancel autocomplete
 		do
 			if not is_closing then
-				is_closing := True				
+				is_closing := True
 				show_needed := False
 				if has_capture then
 					disable_capture
@@ -567,25 +567,25 @@ feature {NONE} -- Implementation
 					preferences.development_window_data.save_completion_list_size (width, height)
 				end
 				hide
-				if not last_completed_feature_had_arguments then	 
-					editor.exit_complete_mode	 
+				if not last_completed_feature_had_arguments then
+					editor.exit_complete_mode
 				end
 			end
 		end
-  
+
 	is_closing: BOOLEAN
 			-- Is the window being closed?
 
 	current_meta_keys: ARRAY [BOOLEAN] is
 		do
 			Result := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
-		end		
+		end
 
 	activate_tooltip is
 			-- Activate selected item tooltip in list
 		do
 --			choice_list.selected_items.first. selected_item.pointer_motion_actions.call ([1,1,1.0,1.0,1.0,1,1])
-		end				
+		end
 
 	remove_characters_entered_since_display is
 			-- Remove characters entered so we may put them back
@@ -602,7 +602,7 @@ feature {NONE} -- Implementation
 				editor.text_displayed.back_delete_char
 				l_index := l_index + 1
 			end
-		end		
+		end
 
 	last_completed_feature_had_arguments: BOOLEAN
 			-- Did the last inserted completed feature name contain arguments?
@@ -615,14 +615,14 @@ feature {NONE} -- Implementation
 		do
 			if choice_list.column_count > 0 then
 				l_sb_wid := choice_list.width - choice_list.viewable_width
-				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3	
+				i := choice_list.column (1).required_width_of_item_span (1, choice_list.row_count) + 3
 				i := i.max (choice_list.viewable_width.max (choice_list.width - l_sb_wid))
 				choice_list.column (1).set_width (i)
 			end
-		end		
+		end
 
 	is_first_show: BOOLEAN
-	
+
 	determine_show_needed is
 			-- Determins if completion window needs to be show to user.
 			-- `show_needed' is set as a result of calling this routine.
@@ -631,7 +631,7 @@ feature {NONE} -- Implementation
 			choice_list_not_void: choice_list /= Void
 		local
 			l_matches: INTEGER
-		do		
+		do
 				-- Show if completion is performed on no text (completing after the period '.')
 			if rebuild_list_during_matching then
 					-- Show if there are mulitple items left to show
@@ -657,14 +657,14 @@ feature {NONE} -- Implementation
 					else
 							-- Completion list is being shown automatically
 						check
-							non_completion_term: before_complete.is_empty	
+							non_completion_term: before_complete.is_empty
 						end
 						show_needed := True
 					end
 				end
 			else
 				l_matches := matches_based_on_name (before_complete).count
-			
+
 				if l_matches = 0 then
 						-- Only show if the completion term is empty
 					show_needed := not before_complete.is_empty
@@ -708,13 +708,13 @@ feature {NONE} -- String matching
 				Result := up
 			end
 		ensure
-			table.item (table.lower) >= a_name 
+			table.item (table.lower) >= a_name
 				or else
-			table.item (table.upper) <= a_name 
+			table.item (table.upper) <= a_name
 				or else
 			(	table.item (Result - 1) < a_name and
 				table.item (Result) >= a_name)
-		end			
+		end
 
 	current_index: INTEGER
 			-- Index of selected item in `choice_list' (if any)
@@ -722,7 +722,7 @@ feature {NONE} -- String matching
 	index_of_closest_match: INTEGER is
 			-- The index of the closest name match to `buffered_input' in `sorted_names'.  If there is no part or full
 			-- match return -1.
-		local			
+		local
 			l_input: like buffered_input
 			l_input_count: INTEGER
 			l_names: like sorted_names
@@ -732,10 +732,10 @@ feature {NONE} -- String matching
 			l_last_match: INTEGER
 			l_stop: BOOLEAN
 			c: CHARACTER
-			i: INTEGER		
+			i: INTEGER
 		do
 			if not buffered_input.is_empty then
-				l_input := buffered_input.as_lower			
+				l_input := buffered_input.as_lower
 				l_input_count := l_input.count
 				l_names := sorted_names
 				l_names_count := l_names.count
@@ -745,8 +745,8 @@ feature {NONE} -- String matching
 				until
 					i > l_names_count or l_stop
 				loop
-					l_item := (l_names[i]).name
-					
+					l_item := (l_names.item (i)).name
+
 					l_match_index := match_names_until_done (l_item, l_input)
 					if l_match_index = l_input_count then
 							-- Exact match
@@ -770,7 +770,7 @@ feature {NONE} -- String matching
 					elseif i > 1 and l_match_index = l_last_match and l_match_index < l_input_count then
 							-- This match was the same as the last
 						if l_item.item (l_match_index + 1) > l_input.item (l_match_index + 1) then
-							l_item := (l_names[i - 1]).name
+							l_item := (l_names.item (i - 1)).name
 							if l_item.item (l_match_index + 1) < l_input.item (l_match_index + 1) then
 									-- Ensures `deep_twin' is chosen over `deep_equals' if l_input is `deep_f'
 									-- and ensures `deep_copy' is *NOT* chosen over `deep_clone' when l_input is `deef'
@@ -779,19 +779,19 @@ feature {NONE} -- String matching
 							end
 						end
 					end
-					
+
 					i := i + 1
 				end
 			else
 				Result := 0
 			end
 			if Result > l_names_count then
-				Result := l_names_count	
+				Result := l_names_count
 			end
 		ensure
 			result_greater_than_zero: Result >= 0
 			result_too_big: Result <= sorted_names.count
-		end		
+		end
 
 	select_closest_match is
 			-- Select the closest match in the list
@@ -799,28 +799,28 @@ feature {NONE} -- String matching
 			if not is_first_show then
 				if rebuild_list_during_matching then
 					build_displayed_list (buffered_input)
-					resize_column_to_window_width		
+					resize_column_to_window_width
 				end
 			end
-			
+
 			if rebuild_list_during_matching then
 				current_index := 1
-			else				
+			else
 				current_index := index_of_closest_match
 				if current_index <= 0 then
 					current_index := 1
 				end
 			end
-			
+
 			if choice_list.row_count > 0 then
 				choice_list.remove_selection
 				choice_list.row (current_index).enable_select
 				if is_displayed then
-					choice_list.selected_rows.first.ensure_visible	
+					choice_list.selected_rows.first.ensure_visible
 				end
 			end
 			is_first_show := False
-		end	
+		end
 
 	match_names_until_done (a_name, a_name2: STRING): INTEGER is
 			-- Match the characters of `a_name2' against `a_name' from the start of `a_name2' until no match is
@@ -877,8 +877,8 @@ feature {NONE} -- String matching
 				loop
 					cnt := cnt + 1
 				end
-				if cnt > 0 then				   
-					Result := sorted_names.subarray (l_index_offset + 1, l_index_offset + cnt) 
+				if cnt > 0 then
+					Result := sorted_names.subarray (l_index_offset + 1, l_index_offset + cnt)
 				end
 				index_offset := l_index_offset
 			else
@@ -888,7 +888,7 @@ feature {NONE} -- String matching
 			end
 		ensure
 			has_result: Result /= Void
-		end	
+		end
 
 	nb_items_to_scroll: INTEGER is
 			-- Number of items that will be scrolled when doing a page up or down operation.

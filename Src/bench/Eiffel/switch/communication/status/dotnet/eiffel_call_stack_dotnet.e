@@ -15,7 +15,7 @@ inherit
 		rename
 			make as list_make
 		export
-			{NONE} list_make			
+			{NONE} list_make
 		end
 	SHARED_CONFIGURE_RESOURCES
 		export
@@ -32,7 +32,7 @@ inherit
 		undefine
 			is_equal, copy
 		end
-		
+
 	ICOR_EXPORTER
 		undefine
 			is_equal, copy
@@ -42,30 +42,33 @@ inherit
 		export
 			{NONE} all
 		undefine
-			is_equal, copy			
+			is_equal, copy
 		end
-		
+
 	SHARED_EIFNET_DEBUGGER
 		export
 			{NONE} all
 		undefine
-			is_equal, copy			
-		end			
-		
+			is_equal, copy
+		end
+
 	SHARED_EIFNET_DEBUG_VALUE_FACTORY
 		export
 			{NONE} all
 		undefine
-			is_equal, copy			
-		end			
+			is_equal, copy
+		end
 
-create {RUN_INFO, APPLICATION_STATUS_DOTNET}
+create {APPLICATION_STATUS_DOTNET}
 	make
+
+create {EIFFEL_CALL_STACK_DOTNET}
+	list_make, make_sublist
 
 feature -- Properties
 
 	stack_depth: INTEGER is
-			-- 
+			--
 		do
 			-- FIXME jfiat: this is count for now ... but fix this !
 			Result := count
@@ -226,7 +229,7 @@ feature {NONE} -- Initialization
 											check
 												stack_object_not_void: l_stack_object /= Void
 											end
-	
+
 											if il_debug_info_recorder.has_info_about_module (l_module_name) then
 												l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
 												l_feature_i := Il_debug_info_recorder.feature_i_by_module_feature_token (l_module_name, l_feature_token)
@@ -239,9 +242,9 @@ feature {NONE} -- Initialization
 														--| but this seems to be fixed by doing in the good way
 														--| the JITdebugging settings
 														--| Nota: we leave this comment, just in case this occurs again...
-														
+
 														--| Here we have a valid Eiffel callstack point
-													
+
 														--| Compute data to get address and co ...
 													l_line_number := Il_debug_info_recorder.feature_eiffel_breakable_line_for_il_offset (l_class_type, l_feature_i, l_il_offset)
 													l_stack_adv := debug_value_from_icdv (l_stack_object, l_class_type.associated_class)
@@ -276,7 +279,7 @@ feature {NONE} -- Initialization
 													eiffel_cse := Void
 													l_stack_adv := Void
 													l_stack_drv := Void
-													
+
 												end
 											end
 											if call = Void then
@@ -352,7 +355,7 @@ feature -- cleaning
 					end
 					forth
 				end
-			end	
+			end
 		end
 
 end -- class EIFFEL_CALL_STACK_DOTNET

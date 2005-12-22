@@ -6,19 +6,24 @@ indexing
 
 class
 	FEATURE_SECTION
-	
+
 inherit
+	ANY
+		redefine
+			is_equal
+		end
+
 	FEATURE_NAME_EXTRACTOR
 		export
 			{NONE} all
-		undefine
+		redefine
 			is_equal
 		end
-		
+
 create
 	make,
 	make_empty
-	
+
 feature {NONE} -- Implementation
 
 	make_empty (a_name: like name; a_compiled_class: like class_c) is
@@ -57,16 +62,16 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Access
-	
+
 	name: STRING
 			-- Name of the section.
-			
+
 	features: LIST [FEATURE_AS]
 			-- Features of the section.
 
 	class_c: CLASS_C
 			-- Class `features' are part of.
-			
+
 	first_feature_name: STRING is
 			-- Name of first feature in `features'.
 		require
@@ -74,18 +79,18 @@ feature -- Access
 		do
 			Result := feature_name (features.first)
 		end
-		
+
 feature -- Status report
 
 	is_none: BOOLEAN
 			-- Are `features' exported to NONE?
-		
+
 	is_some: BOOLEAN
 			-- Are `features' exported to friends?
-			
+
 	is_any: BOOLEAN
 			-- Are `features' exported to ANY?
-			
+
 	is_equal (other: like Current): BOOLEAN is
 			-- Is `other' equal `Current'?
 		do
@@ -107,7 +112,7 @@ feature -- Status setting
 		ensure
 			set: is_none and not is_some and not is_any
 		end
-		
+
 	enable_is_some is
 			-- Set `is_some' to True.
 		do
@@ -117,7 +122,7 @@ feature -- Status setting
 		ensure
 			set: is_some and not is_any and not is_none
 		end
-		
+
 	enable_is_any is
 			-- Set `is_any' to True.
 		do

@@ -18,7 +18,13 @@ inherit
 			model,
 			recycle
 		end
-		
+
+create
+	default_create
+
+create {EIFFEL_INHERITANCE_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -29,7 +35,7 @@ feature {NONE} -- Initialization
 			set_accept_cursor (cursors.cur_inherit_link)
 			set_deny_cursor (cursors.cur_x_inherit_link)
 		end
-		
+
 	initialize is
 			-- Initialize `Current' with `model'.
 		do
@@ -43,7 +49,7 @@ feature -- Access
 			-- Model for `Current'.
 
 feature -- Element change
-	
+
 	recycle is
 			-- Free `Current's resources.
 		do
@@ -52,7 +58,7 @@ feature -- Element change
 				model.needed_on_diagram_changed_actions.prune_all (agent on_needed_on_diagram_changed)
 			end
 		end
-			
+
 feature {NONE} -- Implementation
 
 	on_needed_on_diagram_changed is

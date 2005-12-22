@@ -15,7 +15,7 @@ inherit
 		rename
 			make as list_make
 		export
-			{NONE} list_make			
+			{NONE} list_make
 		end
 	SHARED_CONFIGURE_RESOURCES
 		export
@@ -28,8 +28,11 @@ inherit
 			is_equal, copy
 		end
 
-create {RUN_INFO, APPLICATION_STATUS_CLASSIC}
+create {APPLICATION_STATUS_CLASSIC}
 	make, dummy_make
+
+create {EIFFEL_CALL_STACK_CLASSIC}
+	list_make, make_sublist
 
 feature -- Properties
 
@@ -37,7 +40,7 @@ feature -- Properties
 			-- FIXME jfiat: this is count for now .. but fix this !!
 		do
 			Result := count
-		end		
+		end
 
 	error_occurred: BOOLEAN;
 			-- Did an error occurred when retrieving the eiffel stack?
@@ -110,7 +113,7 @@ feature {NONE} -- Initialization
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Creating Eiffel Stack%N"); end
 			error_occurred := False
 			list_make
-	
+
 			from
 				request_dump (n)
 				level := 1			-- we start from the top of the call stack.
@@ -132,13 +135,13 @@ feature {NONE} -- Initialization
 				io.error.put_string ("%TEIFFEL_CALL_STACK: Finished creating Eiffel Stack%N");
 				io.error.put_string ("%TEIFFEL_CALL_STACK: Adopting callstack objects%N");
 			end
-			
+
 				-- Now we adopt each object situated on the callstack
 			from start until after loop
 				item.set_hector_addr_for_current_object
 				forth
 			end
-						
+
 			debug ("DEBUGGER_TRACE"); io.error.put_string ("%TEIFFEL_CALL_STACK: Finished Adopting callstack objects%N"); end
 		end
 
@@ -153,7 +156,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Externals
 
 	request_dump (n: INTEGER) is
-		external 
+		external
 			"C"
 		end
 

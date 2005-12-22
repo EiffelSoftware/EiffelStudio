@@ -6,7 +6,7 @@ indexing
 
 class
 	BON_CLIENT_SUPPLIER_FIGURE
-	
+
 inherit
 	EIFFEL_CLIENT_SUPPLIER_FIGURE
 		undefine
@@ -34,7 +34,7 @@ inherit
 			set_with_xml_element,
 			xml_element
 		end
-	
+
 	EG_POLYLINE_LABEL
 		rename
 			update as update_label_position,
@@ -45,28 +45,31 @@ inherit
 		redefine
 			set_label_position_on_line
 		end
-		
+
 	BON_FIGURE
 		undefine
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as retrieve_preferences
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
 		end
-		
+
 create
 	make_with_model,
 	default_create
-	
+
+create {BON_CLIENT_SUPPLIER_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -75,7 +78,7 @@ feature {NONE} -- Initialization
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
 			default_create_label
 			is_high_quality := True
-			
+
 				-- Create `aggregate_figure' before doing any manipulation
 				-- as otherwise we can be called back and we would violate our invariant.
 			create aggregate_figure
@@ -85,15 +88,15 @@ feature {NONE} -- Initialization
 
 			extend (aggregate_figure)
 			aggregate_figure.set_line_width (2)
-			
+
 			real_arrow_head_size := 10.0
 			real_reflexive_radius := reflexive_radius
-			
+
 			label_move_handle.set_pointer_style (default_pixmaps.sizeall_cursor)
-			
+
 			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
-			
+
 			is_label_shown := True
 		end
 
@@ -103,25 +106,25 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			
+
 			name_label.set_accept_cursor (cursors.cur_feature)
 			name_label.set_deny_cursor (cursors.cur_x_feature)
 			label_group.pointer_double_press_actions.extend (agent on_label_group_double_clicked)
-			
+
 			if not model.is_aggregated then
 				aggregate_figure.hide
 			end
 			model.is_aggregated_changed.extend (agent on_is_aggregated_change)
-			
+
 			position_on_line := 0.5
 			request_update
 		end
-		
+
 feature -- Status report
 
 	is_label_shown: BOOLEAN
 			-- Is label shown?
-			
+
 	is_label_expanded: BOOLEAN
 			-- Is name label expanded?
 
@@ -149,13 +152,13 @@ feature -- Access
 			Result.put_last (l_xml_routines.xml_node (Result, once "IS_LABEL_EXPANDED", boolean_representation (is_label_expanded)))
 			Result.put_last (l_xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (l_model.is_needed_on_diagram)))
 			Result.put_last (l_xml_routines.xml_node (Result, once "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
-			
+
 			Result := polyline_label_xml_element (Result)
 			if was_low then
 				disable_high_quality
 			end
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		local
@@ -186,19 +189,19 @@ feature -- Access
 			if real_line_width.rounded.max (1) /= line_width then
 				line.set_line_width (real_line_width.rounded.max (1))
 			end
-			
+
 			polyline_label_set_with_xml_element (node)
 			if was_low then
 				disable_high_quality
 			end
 		end
-		
+
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "BON_CLIENT_SUPPLIER_FIGURE"
 		end
-			
+
 feature -- Element change
 
 	recycle is
@@ -225,7 +228,7 @@ feature -- Element change
 			is_label_shown := False
 			request_update
 		end
-		
+
 	show_label is
 			-- Show label.
 		do
@@ -264,7 +267,7 @@ feature -- Element change
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (i, j)
 			set_label_line_start_and_end
 		end
-		
+
 	remove_i_th_point (i: INTEGER) is
 			-- Remove `i'-th point.
 		do
@@ -272,7 +275,7 @@ feature -- Element change
 			set_label_line_start_and_end
 			request_update
 		end
-		
+
 	retrieve_edges (retrieved_edges: LIST [EG_EDGE]) is
 			-- Add lines corresponding to the points in `retrieved_edges'.
 		do
@@ -280,17 +283,17 @@ feature -- Element change
 			set_label_line_start_and_end
 			request_update
 		end
-		
+
 	reset is
-			-- 
+			--
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
 			set_label_line_start_and_end
 		end
-		
-		
+
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
-		
+
 	update is
 			-- Some properties of `Current' may have changed.
 		local
@@ -312,7 +315,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 					l_point_array := low_quality_line.point_array
 					p0 := l_point_array.item (0)
 					p1 := l_point_array.item (1)
-					
+
 					if source /= Void then
 						p0.set_position (source.port_x, source.port_y)
 					end
@@ -333,7 +336,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			end
 			is_update_required := False
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Transformation
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -362,7 +365,7 @@ feature {EV_MODEL_GROUP} -- Transformation
 				request_update
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	real_reflexive_radius: REAL
@@ -370,10 +373,10 @@ feature {NONE} -- Implementation
 
 	real_line_width: REAL
 			-- Real line width.
-			
+
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.
-		
+
 	polyline_points: SPECIAL [EV_COORDINATE] is
 			-- Points defining the line.
 			-- | For EG_POLYLINE_LABEL.
@@ -383,13 +386,13 @@ feature {NONE} -- Implementation
 
 	low_quality_line: EV_MODEL_LINE
 			-- line used to visualize `Current' if `is_high_quality' is False.
-			
+
 	low_quality_circle: EV_MODEL_ELLIPSE
 			-- Circle used to visualize `Current' if not `is_high_quality' and `is_reflexive'.
-	
+
 	aggregate_figure: EV_MODEL_LINE
 			-- Figure indicating that `Current' `is_aggregated'.
-			
+
 	aggregate_figure_distance: INTEGER is
 			-- Distance in pixel `aggregate_figure' has from `end_point'
 		do
@@ -397,7 +400,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_positive: Result >= 0
 		end
-			
+
 	aggregate_figure_length: INTEGER is
 			-- Length of aggregate figure.
 		do
@@ -405,7 +408,7 @@ feature {NONE} -- Implementation
 		ensure
 			Result_positive: Result >= 0
 		end
-			
+
 	set_aggregate_figure_position (a_distance: INTEGER) is
 			-- Set `aggregate_figure' `a_distance' away from `end_point'.
 		local
@@ -418,23 +421,23 @@ feature {NONE} -- Implementation
 			a_point := line.point_array.item (line.point_count - 1)
 			b_point := line.point_array.item (line.point_count - 2)
 			an_angle := line_angle (a_point.x_precise, a_point.y_precise, b_point.x_precise, b_point.y_precise)
-			
+
 			s := aggregate_figure_length + line_width
-			
+
 			cos := cosine (an_angle)
 			sin := sine (an_angle)
 			dcos := a_distance * cos
 			dsin := a_distance * sin
 			hssin := -s / 2 * sin
 			hscos := -s / 2 * cos
-			
+
 			px := a_point.x
 			py := a_point.y
-			
+
 			aggregate_figure.set_point_a_position (px + as_integer (dcos - hssin), py + as_integer (dsin + hscos))
-			aggregate_figure.set_point_b_position (px + as_integer (dcos + hssin), py + as_integer (dsin - hscos))	
+			aggregate_figure.set_point_b_position (px + as_integer (dcos + hssin), py + as_integer (dsin - hscos))
 		end
-		
+
 	on_is_aggregated_change is
 			-- `model'.`is_aggregated' was changed.
 		do
@@ -444,7 +447,7 @@ feature {NONE} -- Implementation
 				aggregate_figure.hide
 			end
 		end
-		
+
 	set_label_position_on_line (nearest_start, nearest_end: EV_COORDINATE) is
 			-- Set the `label_move_handle' position such that its point is
 			-- on the segment from `nearest_start' to `nearest_end'.
@@ -453,7 +456,7 @@ feature {NONE} -- Implementation
 			other_bbox, label_bbox: EV_RECTANGLE
 		do
 			Precursor {EG_POLYLINE_LABEL} (nearest_start, nearest_end)
-			
+
 			if source /= Void and then target /= Void then
 				-- do not intersect with start or target figure
 				l_point_array := point_array
@@ -469,7 +472,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	set_label_move_handle_position_out_of_intersection (label_bbox, other_bbox: EV_RECTANGLE; p, q: EV_COORDINATE) is
 			-- Set position of `label_move_handle' such that `label_bbox' does not intersect with `other_bbox'
 			-- and `point' position of `label_move_handle' is on the line from `p' to `q'.
@@ -515,7 +518,7 @@ feature {NONE} -- Implementation
 				end
 				if d_y > 0 then
 					through_y := label_bbox.top
-				else		
+				else
 					through_y := label_bbox.bottom
 				end
 				if d_x > 0 then
@@ -571,14 +574,14 @@ feature {NONE} -- Implementation
 			end
 			label_move_handle.set_point_position (as_integer (nx), as_integer (ny))
 		end
-		
+
 	on_label_group_double_clicked (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- User doubleclicked on `label_group'.
 		do
 			is_label_expanded := not is_label_expanded
 			on_name_change
 		end
-		
+
 	set_name_label_text (a_text: STRING) is
 			-- Set `name_label'.`text' to `a_text'.
 		local
@@ -599,13 +602,13 @@ feature {NONE} -- Implementation
 				name_label.enable_sensitive
 				name_label.set_point_position (label_group.point_x + 5, label_group.point_y)
 				label_group.extend (name_label)
-				
+
 				l_features := model.features
 				if l_features.is_empty then
 					name_label.remove_pebble
 				else
 					l_item := l_features.first
-					
+
 					e_feature := e_feature_from_abstract (l_item)
 					if e_feature /= Void then
 						name_label.set_pebble (create {FEATURE_STONE}.make (e_feature))
@@ -652,7 +655,7 @@ feature {NONE} -- Implementation
 						txt.set_accept_cursor (cursors.cur_feature)
 						txt.set_deny_cursor (cursors.cur_x_feature)
 						sorted_names.extend (txt)
-						
+
 						l_feature_names.forth
 						l_features.forth
 					end
@@ -674,7 +677,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	set_is_high_quality (an_is_high_quality: like is_high_quality) is
 			-- Set `is_high_quality' to `an_is_high_quality'.
 		local
@@ -735,7 +738,7 @@ feature {NONE} -- Implementation
 						l_mh.disable_sensitive
 						edge_move_handlers.forth
 					end
-					
+
 					if is_reflexive then
 						create low_quality_circle.make_with_positions (0, 0, reflexive_radius, reflexive_radius)
 						low_quality_circle.set_foreground_color (foreground_color)

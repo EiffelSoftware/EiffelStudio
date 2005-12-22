@@ -29,22 +29,23 @@ inherit
 
 	EDITABLE_TEXT
 		redefine
-			make, 			
-			reset_text, 
+			make,
+			reset_text,
 			on_text_loaded,
 			load_string,
 			editor_preferences,
 			abort_idle_processing,
 			after_reading_idle_action,
 			new_line_from_lexer,
-			first_line
+			first_line,
+			cursor
 		end
 
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
@@ -68,6 +69,8 @@ feature -- Access
 
 	first_line: EIFFEL_EDITOR_LINE
 
+	cursor: EIFFEL_EDITOR_CURSOR
+
 	structured_text: STRUCTURED_TEXT is
 			-- Structured text that corresponds to `Current'
 		local
@@ -88,7 +91,7 @@ feature -- Access
 					until
 						tok = Void
 					loop
-						tok.process (visitor)						
+						tok.process (visitor)
 						Result.extend (visitor.last_structured_text_item)
 						tok := tok.next
 					end
@@ -128,7 +131,7 @@ feature -- Feature click tool
 
 	feature_click_tool: EB_CLICK_FEATURE_TOOL
 			-- tool that makes feature basic text clickable
-	
+
 feature -- Pick and drop
 
 	stone_at (cursr: like cursor): STONE is
@@ -165,7 +168,7 @@ feature -- Load Text handling
 			-- Actions to be performed before a new text is processed.
 		do
 			current_text := Void
-			
+
 				-- First abort our previous actions.
 			Precursor {EDITABLE_TEXT}
 		end
@@ -187,7 +190,7 @@ feature -- Initialization
 			structured_text_not_void: str_text /= Void
 			text_has_been_reinitialized: is_empty
 		do
-			load_type := from_text			
+			load_type := from_text
 			current_text := str_text
 			start_reading_text
 		ensure then
@@ -335,7 +338,7 @@ feature {NONE} -- Implementation
 		once
 			Result := preferences.editor_data
 		end
-		
+
 	finish_reading_text_agent: PROCEDURE [like Current, TUPLE]
 			-- Agent for function `finish_reading_text'
 

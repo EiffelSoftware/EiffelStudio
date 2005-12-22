@@ -6,7 +6,7 @@ indexing
 
 class
 	UML_CLIENT_SUPPLIER_FIGURE
-	
+
 inherit
 	EIFFEL_CLIENT_SUPPLIER_FIGURE
 		redefine
@@ -28,23 +28,26 @@ inherit
 		undefine
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as retrieve_preferences
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
 		end
-		
+
 create
 	make_with_model,
 	default_create
-	
+
+create {UML_CLIENT_SUPPLIER_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -64,10 +67,10 @@ feature {NONE} -- Initialization
 			create aggregate_group
 			aggregate_group.extend (aggregate_figure)
 			extend (aggregate_group)
-			
+
 			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
-			
+
 			create name_group
 			name_group.extend (name_label)
 			extend (name_group)
@@ -81,27 +84,27 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			
+
 			name_label.set_accept_cursor (cursors.cur_feature)
 			name_label.set_deny_cursor (cursors.cur_x_feature)
-			
+
 			if not model.is_aggregated then
 				aggregate_figure.hide
 			end
 			model.is_aggregated_changed.extend (agent on_is_aggregated_change)
-			
-			
+
+
 			line.disable_end_arrow
 			line.disable_start_arrow
-			
+
 			request_update
 		end
-		
+
 feature -- Status report
 
 	is_label_shown: BOOLEAN
 			-- Is label shown?
-			
+
 feature -- Access
 
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
@@ -114,7 +117,7 @@ feature -- Access
 			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
 			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		do
@@ -131,13 +134,13 @@ feature -- Access
 				line.set_line_width (real_line_width.rounded.max (1))
 			end
 		end
-		
+
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "UML_CLIENT_SUPPLIER_FIGURE"
 		end
-			
+
 feature -- Element change
 
 	hide_label is
@@ -147,7 +150,7 @@ feature -- Element change
 			is_label_shown := False
 			request_update
 		end
-		
+
 	show_label is
 			-- Show label.
 		do
@@ -170,9 +173,9 @@ feature -- Element change
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_color)
 			aggregate_figure.set_foreground_color (a_color)
 		end
-		
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
-		
+
 	update is
 			-- Some properties of `Current' may have changed.
 		local
@@ -181,24 +184,24 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			lbbox, obbox: EV_RECTANGLE
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE}
-			
+
 			pc := line.point_count
 			create p1.make (line.i_th_point_x (pc -1), line.i_th_point_y (pc - 1))
 			create p2.make (line.i_th_point_x (pc), line.i_th_point_y (pc))
 			px := p2.x
 			py := p2.y
-			
+
 			name_group.set_point_position (px, py)
 			lbbox := name_label.bounding_box
 			obbox := target.bounding_box
-			
+
 			if lbbox.intersects (obbox) then
 				set_name_group_position_out_of_intersection (lbbox, obbox, p2, p1)
 			end
 			set_aggregate_figure_position
 			is_update_required := False
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Transformation
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -218,27 +221,27 @@ feature {EV_MODEL_GROUP} -- Transformation
 				request_update
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	real_line_width: REAL
 			-- Real line width.
-			
+
 	real_reflexive_radius: REAL
 			-- Real radius of reflexive line.
-	
+
 	aggregate_figure: EV_MODEL_POLYGON
 			-- Figure indicating that `Current' `is_aggregated'.
-			
+
 	aggregate_group: EV_MODEL_GROUP
 			-- Group containing `aggregate_figure'.
-			
+
 	old_angle: DOUBLE
-		
+
 	multiplicity: EV_MODEL_TEXT
-	
+
 	name_group: EV_MODEL_GROUP
-			
+
 	set_aggregate_figure_position is
 			-- Set `aggregate_figure' `a_distance' away from `end_point'.
 		local
@@ -251,10 +254,10 @@ feature {NONE} -- Implementation
 
 			aggregate_group.rotate_around (an_angle - old_angle, aggregate_group.point_x, aggregate_group.point_y)
 			aggregate_group.set_point_position (b_point.x, b_point.y)
-			
+
 			old_angle := an_angle
 		end
-		
+
 	on_is_aggregated_change is
 			-- `model'.`is_aggregated' was changed.
 		do
@@ -264,7 +267,7 @@ feature {NONE} -- Implementation
 				aggregate_figure.hide
 			end
 		end
-		
+
 	set_name_group_position_out_of_intersection (label_bbox, other_bbox: EV_RECTANGLE; p, q: EV_COORDINATE) is
 			-- Set position of `name_label' such that `label_bbox' does not intersect with `other_bbox'
 			-- and `point' position of `name_group' is on the line from `p' to `q'.
@@ -310,7 +313,7 @@ feature {NONE} -- Implementation
 				end
 				if d_y > 0 then
 					through_y := label_bbox.top
-				else		
+				else
 					through_y := label_bbox.bottom
 				end
 				if d_x > 0 then
@@ -367,7 +370,7 @@ feature {NONE} -- Implementation
 			end
 			name_group.set_point_position (as_integer (nx) + 5, as_integer (ny))
 		end
-		
+
 	retrieve_preferences is
 			-- Retrieve preferences when changed.
 		do
@@ -376,7 +379,7 @@ feature {NONE} -- Implementation
 			set_foreground_color (uml_client_color)
 			set_line_width (uml_client_line_width)
 		end
-		
+
 	set_name_label_text (a_text: STRING) is
 			-- Set `name_label'.`text' to `a_text'.
 		local
@@ -390,9 +393,9 @@ feature {NONE} -- Implementation
 				name_label.remove_pebble
 			else
 				l_item := l_features.first
-				
+
 				e_feature := e_feature_from_abstract (l_item)
-				
+
 				if e_feature /= Void then
 					name_label.set_pebble (create {FEATURE_STONE}.make (e_feature))
 				else

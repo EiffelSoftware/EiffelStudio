@@ -6,7 +6,7 @@ indexing
 
 class
 	BON_CLASS_DIAGRAM
-	
+
 inherit
 	EIFFEL_CLASS_DIAGRAM
 		redefine
@@ -15,6 +15,9 @@ inherit
 
 create
 	make
+
+create {BON_CLASS_DIAGRAM}
+	make_filled
 
 feature {NONE} -- Initialization
 
@@ -28,7 +31,7 @@ feature {NONE} -- Initialization
 			make_with_model_and_factory (a_graph, create {BON_FACTORY})
 			context_editor := a_tool
 		end
-		
+
 feature -- Access
 
 	default_view_name: STRING is

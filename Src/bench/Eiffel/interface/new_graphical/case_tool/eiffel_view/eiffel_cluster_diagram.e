@@ -17,19 +17,19 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 	SHARED_ERROR_HANDLER
 		undefine
 			default_create
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	EB_CLUSTER_MANAGER_OBSERVER
 		undefine
 			default_create
@@ -37,7 +37,13 @@ inherit
 			on_class_added,
 			on_cluster_added
 		end
-		
+
+create
+	default_create
+
+create {EIFFEL_CLUSTER_DIAGRAM}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -54,7 +60,7 @@ feature -- Access
 
 	model: ES_CLUSTER_GRAPH
 			-- Model for `Current'.
-			
+
 feature -- Store/Retrive
 
 	xml_node_name: STRING is
@@ -62,7 +68,7 @@ feature -- Store/Retrive
 		do
 			Result := "EIFFEL_CLUSTER_DIAGRAM"
 		end
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
 		do
@@ -72,7 +78,7 @@ feature -- Store/Retrive
 			node.put_last (xml_routines.xml_node (node, "CENTER_CLUSTER_NAME", model.center_cluster.cluster_i.cluster_name))
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		local
@@ -85,7 +91,7 @@ feature -- Store/Retrive
 			model.set_supercluster_depth (xml_routines.xml_integer (node, "SUPERCLUSTER_DEPTH"))
 			ccn := xml_routines.xml_string (node, "CENTER_CLUSTER_NAME")
 			Precursor {EIFFEL_WORLD} (node)
-			
+
 			c := universe.cluster_of_name (ccn)
 			esc := model.cluster_from_interface (c)
 			check
@@ -93,7 +99,7 @@ feature -- Store/Retrive
 			end
 			model.set_center_cluster (esc)
 		end
-		
+
 feature -- Element change
 
 	recycle is
@@ -105,9 +111,9 @@ feature -- Element change
 			drop_actions.prune_all (agent on_new_class_drop)
 			manager.remove_observer (Current)
 		end
-		
+
 feature {EB_DIAGRAM_HTML_GENERATOR} -- Load view
-		
+
 	change_view (view_name: STRING; file_name: STRING) is
 			-- Change view to `view_name' load from `file_name' without saving `Current'.
 		local
@@ -141,30 +147,30 @@ feature {NONE} -- Implementation
 			is_retry: BOOLEAN
 			remove_links: LIST [ES_ITEM]
 			remove_classes: LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]]
-		do	
+		do
 			context_editor.development_window.window.set_pointer_style (Default_pixmaps.Wait_cursor)
-			
+
 			if not is_retry then
-				
+
 				drop_x := context_editor.pointer_position.x
 				drop_y := context_editor.pointer_position.y
-				
+
 				new_cluster := model.cluster_from_interface (a_stone.cluster_i)
-				
+
 				if new_cluster = Void or else not new_cluster.is_needed_on_diagram then
-					
+
 					l_classes := a_stone.cluster_i.classes.linear_representation
-					
+
 					context_editor.projector.disable_painting
 					context_editor.disable_resize
 					context_editor.update_excluded_class_figures
-	
+
 					l_status_bar := context_editor.development_window.status_bar
 					nr_of_items := l_classes.count
 					l_status_bar.progress_bar.reset_with_range (0 |..| nr_of_items)
 					l_status_bar.progress_bar.set_value (0)
 					l_status_bar.display_message ("Including Cluster: Adding Classes into Cluster")
-					
+
 					if new_cluster = Void then
 						create new_cluster.make (a_stone.cluster_i)
 						model.add_cluster (new_cluster)
@@ -229,10 +235,10 @@ feature {NONE} -- Implementation
 
 					update
 					context_editor.layout.layout_cluster (fig, 1)
-					
+
 					model.add_children_relations (new_cluster)
 					model.add_parent_relations (new_cluster)
-					
+
 					remove_links := new_cluster.needed_links
 					remove_classes := classes_to_remove_in_cluster (new_cluster)
 					from
@@ -244,7 +250,7 @@ feature {NONE} -- Implementation
 						remove_links.append (class_fig.model.needed_links)
 						remove_classes.forth
 					end
-					
+
 					update
 					fig.set_port_position (drop_x, drop_y)
 
@@ -252,7 +258,7 @@ feature {NONE} -- Implementation
 						interface_names.t_diagram_include_cluster_cmd (new_cluster.name),
 						agent reinclude_cluster (fig, remove_links, remove_classes),
 						agent remove_cluster_virtual (fig, remove_links, remove_classes))
-						
+
 				else
 					-- only a move
 					fig ?= figure_from_model (new_cluster)
@@ -279,13 +285,13 @@ feature {NONE} -- Implementation
 			error_handler.error_list.wipe_out
 			retry
 		end
-		
+
 	on_class_drop (a_stone: CLASSI_STONE) is
 			-- `a_stone' was dropped on `Current'
 		do
 			add_to_diagram (a_stone.class_i, context_editor.pointer_position.x, context_editor.pointer_position.y)
 		end
-		
+
 	on_class_added (a_class: CLASS_I) is
 			-- `a_class' was added to the system.
 		local
@@ -306,7 +312,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_cluster_added (a_cluster: EB_SORTED_CLUSTER) is
 			-- `a_cluster' was added to the system.
 		local
@@ -403,9 +409,9 @@ feature {NONE} -- Implementation
 						remove_links.append (fig.model.needed_links)
 						remove_classes.forth
 					end
-					
+
 					update_cluster_legend
-					
+
 					context_editor.history.register_named_undoable (
 						interface_names.t_diagram_include_class_cmd (new_class.name),
 						[<<agent reinclude_cluster (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>],
@@ -422,7 +428,7 @@ feature {NONE} -- Implementation
 						model.add_parent_relations (parent)
 						fig ?= figure_from_model (new_class)
 						fig.set_port_position (drop_x, drop_y)
-						
+
 						remove_links := parent.needed_links
 						remove_classes := classes_to_remove_in_cluster (parent)
 						from
@@ -434,9 +440,9 @@ feature {NONE} -- Implementation
 							remove_links.append (fig.model.needed_links)
 							remove_classes.forth
 						end
-						
+
 						update_cluster_legend
-						
+
 						context_editor.history.register_named_undoable (
 							interface_names.t_diagram_include_class_cmd (new_class.name),
 							[<<agent reinclude_cluster (new_cluster_figure, remove_links, remove_classes), agent update_cluster_legend>>],
@@ -487,18 +493,18 @@ feature {NONE} -- Implementation
 				new_cluster_i := new_cluster.cluster_i
 				old_cluster_i := new_class.class_i.cluster
 				old_cluster := new_class.cluster
-				
+
 				new_cluster.extend (new_class)
-				
+
 				l_manager := model.manager
 				l_manager.move_class (new_class.class_i, old_cluster_i, new_cluster_i)
-				
+
 				if new_cluster.cluster_i.classes.has (new_class.class_i.name) then
-					if not class_was_inserted and then not class_was_reincluded then				
-						
+					if not class_was_inserted and then not class_was_reincluded then
+
 						context_editor.history.register_named_undoable (
 							interface_names.t_diagram_move_class_cmd (new_class.name),
-							[<<agent fig.set_port_position (drop_x, drop_y), agent new_cluster.extend (new_class), 
+							[<<agent fig.set_port_position (drop_x, drop_y), agent new_cluster.extend (new_class),
 							   agent l_manager.move_class (new_class.class_i, old_cluster.cluster_i, new_cluster.cluster_i)>>],
 							[<<agent fig.set_port_position (saved_x, saved_y), agent old_cluster.extend (new_class),
 							   agent l_manager.move_class (new_class.class_i, new_cluster.cluster_i, old_cluster.cluster_i)>>])
@@ -540,7 +546,7 @@ feature {NONE} -- Implementation
 				apply_right_angles
 			end
 		end
-		
+
 	classes_to_remove_in_cluster (a_cluster: ES_CLUSTER): LIST [TUPLE [EIFFEL_CLASS_FIGURE, INTEGER, INTEGER]] is
 			-- All class figures in `a_cluster' that are needed on diagram plus ther positions.
 		local
@@ -585,10 +591,10 @@ feature {NONE} -- Implementation
 			include_new_dropped_class (dial, drop_x, drop_y)
 			is_dropped_on_diagram := False
 		end
-		
+
 	is_dropped_on_diagram: BOOLEAN
 			-- Is a class added to a cluster dropped on diagram by user?
-		
+
 	include_new_dropped_class (a_create_class_dialog: EB_CREATE_CLASS_DIALOG; a_x, a_y: INTEGER) is
 			-- Add `a_class' to the diagram if not already present.
 		require
@@ -626,7 +632,7 @@ feature {NONE} -- Implementation
 					check cf_not_void: cf /= Void end
 					es_cluster := model.cluster_from_interface (a_class.cluster)
 					if es_cluster = Void or else not es_cluster.is_needed_on_diagram then
-					
+
 						if es_cluster = Void then
 							create es_cluster.make (a_class.cluster)
 							model.insert_cluster (es_cluster)
@@ -638,7 +644,7 @@ feature {NONE} -- Implementation
 						end
 						es_cluster.extend (es_class)
 						cf.set_port_position (a_x, a_y)
-						
+
 						remove_links := es_cluster.needed_links
 						remove_classes := classes_to_remove_in_cluster (es_cluster)
 						from
@@ -650,16 +656,16 @@ feature {NONE} -- Implementation
 							remove_links.append (cf.model.needed_links)
 							remove_classes.forth
 						end
-						
+
 						cluster_fig ?= figure_from_model (es_cluster)
-						
+
 						update_cluster_legend
-						
+
 						context_editor.history.register_named_undoable (
 							interface_names.t_diagram_include_class_cmd (es_class.name),
 							[<<agent reinclude_cluster (cluster_fig, remove_links, remove_classes), agent update_cluster_legend>>],
 							[<<agent remove_cluster_virtual (cluster_fig, remove_links, remove_classes), agent update_cluster_legend>>])
-						
+
 					else
 						es_cluster.extend (es_class)
 						update_cluster_legend
@@ -676,7 +682,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	top_cluster_at (a_group: EV_MODEL_GROUP; ax, ay: INTEGER): EIFFEL_CLUSTER_FIGURE is
 			-- Top cluster at `ax', `ay'. Void if none.
 		local
@@ -690,9 +696,9 @@ feature {NONE} -- Implementation
 				l_item ?= a_group.item
 				if l_item /= Void and then l_item.model.is_needed_on_diagram
 						and then
-				   (ax >= l_item.left and then ax <= l_item.right) 
+				   (ax >= l_item.left and then ax <= l_item.right)
 						and then
-				   (ay >= l_item.top and then ay <= l_item.bottom)	
+				   (ay >= l_item.top and then ay <= l_item.bottom)
 				then
 					Result := top_cluster_at (l_item, ax, ay)
 					if Result = Void then

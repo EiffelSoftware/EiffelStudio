@@ -17,7 +17,7 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -31,7 +31,13 @@ inherit
 		redefine
 			on_class_added
 		end
-	
+
+create
+	default_create
+
+create {EIFFEL_CLASS_DIAGRAM}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -42,12 +48,12 @@ feature {NONE} -- Initialization
 			drop_actions.extend (agent on_new_class_drop)
 			manager.add_observer (Current)
 		end
-		
+
 feature -- Access
 
 	model: ES_CLASS_GRAPH
 			-- Model for current view.
-			
+
 feature -- Element change
 
 	recycle is
@@ -58,7 +64,7 @@ feature -- Element change
 			drop_actions.prune_all (agent on_new_class_drop)
 			manager.remove_observer (Current)
 		end
-			
+
 feature {EB_CONTEXT_EDITOR} -- Save/Restore
 
 	xml_node_name: STRING is
@@ -82,7 +88,7 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 
 			Result := Precursor {EIFFEL_WORLD} (node)
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		local
@@ -100,9 +106,9 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 			model.set_include_only_classes_of_cluster (xml_routines.xml_boolean (node, "ONLY_CLASSES_IN_CLUSTER"))
 			ccn := xml_routines.xml_string (node, "CENTER_CLASS_NAME")
 			cccn := xml_routines.xml_string (node, "CENTER_CLASS_CLUSTER_NAME")
-			
+
 			Precursor {EIFFEL_WORLD} (node)
-			
+
 				-- Check if cluster still exists
 			cl := universe.cluster_of_name (cccn)
 			if cl /= Void then
@@ -118,7 +124,7 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	on_class_drop (a_stone: CLASSI_STONE) is
@@ -180,7 +186,7 @@ feature {NONE} -- Implementation
 					apply_right_angles
 				end
 			end
-		end		
+		end
 
 	on_new_class_drop (a_stone: CREATE_CLASS_STONE) is
 			-- `a_stone' was dropped on `Current'
@@ -200,10 +206,10 @@ feature {NONE} -- Implementation
 			end
 			is_new_dropped := False
 		end
-		
+
 	is_new_dropped: BOOLEAN
 			-- Is new added class to system dropped by user onto the diagram tool?
-		
+
 	include_new_class (a_class: CLASS_I; a_x, a_y: INTEGER) is
 			-- Add `a_class' to the diagram if not already present.
 		require
@@ -242,7 +248,7 @@ feature {NONE} -- Implementation
 				apply_right_angles
 			end
 		end
-		
+
 	on_class_added (a_class: CLASS_I) is
 			-- `a_class' was added to the system.
 		local

@@ -6,8 +6,10 @@ indexing
 
 class
 	EB_QUERY_PARSER
-	
+
 inherit
+	ANY
+
 	E_PROFILER_CONSTANTS
 		export
 			{NONE} all
@@ -16,7 +18,7 @@ inherit
 feature -- Parsing
 
 	parse (str: STRING; sqv: SHARED_QUERY_VALUES): BOOLEAN is
-			-- Parse `str', put results in `sqv' and 
+			-- Parse `str', put results in `sqv' and
 			-- return true if the query has a good syntax.
 		require
 			string_not_void: str /= Void
@@ -54,7 +56,7 @@ feature {NONE} -- Implementation
 					if index = 1 then
 							-- This is an error to find "EOQ" the first time the loop is executed.
 							-- It means the query is not valid.
-						error := True 
+						error := True
 					end
 					end_of_query := True
 				else
@@ -67,13 +69,13 @@ feature {NONE} -- Implementation
 						index := index + operator.count
 						index := index + white_space_length (str, index)
 						if index <= str.count then
-							end_index := stricly_positive_min (str.substring_index (profiler_spaced_and, index), str.substring_index (profiler_spaced_or, index), str.count) 
+							end_index := stricly_positive_min (str.substring_index (profiler_spaced_and, index), str.substring_index (profiler_spaced_or, index), str.count)
 							value := value_str (str, index, end_index)
 							index := end_index
 						else
 							value := void
 						end
-						
+
 						if value = Void then
 							error := True
 						else
@@ -155,16 +157,16 @@ feature {NONE} -- Implementation
 			create operator.make (0)
 			create Result.make (0)
 			operator := str.substring (idx, idx + 1)
-			
-			if operator.is_equal (profiler_less_than_or_equal) 
-			   or else operator.is_equal (profiler_greater_than_or_equal) 
-			   or else operator.is_equal (profiler_not_equal) 
+
+			if operator.is_equal (profiler_less_than_or_equal)
+			   or else operator.is_equal (profiler_greater_than_or_equal)
+			   or else operator.is_equal (profiler_not_equal)
 			then
 				Result := operator
 				expects_bounded := false
-				
-			elseif operator.item (1).is_equal ('>') 
-					or else operator.item (1).is_equal ('<') 
+
+			elseif operator.item (1).is_equal ('>')
+					or else operator.item (1).is_equal ('<')
 					or else operator.item (1).is_equal ('=') then
 				Result.extend (operator.item (1))
 				expects_bounded := false
@@ -200,7 +202,7 @@ feature {NONE} -- Implementation
 					or else (expects_real and value.is_real) or else (expects_real and is_computed_value (value))
 					or else (expects_string and not value.has (' ')) or else (expects_bounded and is_bounded (value))
 		end
-			
+
 	is_computed_value (value: STRING) : BOOLEAN is
 		do
 			if value.is_equal (profiler_max) or else value.is_equal (profiler_min) or else value.is_equal (profiler_avg) then
@@ -209,7 +211,7 @@ feature {NONE} -- Implementation
 				Result := false
 			end
 		end
-		
+
 	is_bounded (value: STRING) : BOOLEAN is
 		local
 			range_position : INTEGER
@@ -234,7 +236,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end  --| Guillaume - 09/18/97
-	
+
 	boolean_operator (str: STRING; idx: INTEGER): STRING is
 			-- Get boolean operator in `str' at `idx'.
 		do
@@ -275,7 +277,7 @@ feature {NONE} -- Implementation
 		do
 			Result := str @ idx = '-'
 		end
-		
+
 	stricly_positive_min (a, b, c : INTEGER): INTEGER is
 			-- The min of a, b and c that is not zero
 			-- a < c and b < c
@@ -298,8 +300,8 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-					
-		
+
+
 feature {NONE} -- Externals
 
 	chis_space (c: CHARACTER): BOOLEAN is
@@ -313,13 +315,13 @@ feature {NONE} -- Attributes
 
 	expects_int,
 		-- The expected type of the subquery 'value' is a integer
-		
+
 	expects_real,
 		-- The expected type of the subquery 'value' is a real
-	
+
 	expects_string,
 		-- The expected type of the subquery 'value' is a string
-	
+
 	expects_bounded: BOOLEAN
 		-- The expected type of the subquery 'value' is a bounded value
 end -- EB_QUERY_PARSER

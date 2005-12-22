@@ -24,25 +24,28 @@ inherit
 create
 	make
 
+create {EB_FEATURE_FOR_COMPLETION}
+	make_string
+
 feature {NONE} -- Initialization
-		
+
 	make (a_feature: E_FEATURE) is
 			-- Create and initialize a new completion feature using `a_feature'
 		require
 			a_feature_not_void: a_feature /= Void
 		do
 			if a_feature.is_infix then
-				make_with_name (extract_symbol_from_infix(a_feature.name))	
+				make_with_name (extract_symbol_from_infix(a_feature.name))
 			else
 				make_with_name (a_feature.name)
 			end
-			
+
 			associated_feature := a_feature
 			return_type := a_feature.type
-					
-			if show_signature then				
-				append (feature_signature)				
-			end			
+
+			if show_signature then
+				append (feature_signature)
+			end
 			if show_type then
 				append (completion_type)
 			end
@@ -58,36 +61,36 @@ feature -- Access
 
 	full_insert_name: STRING is
 			-- Full name to insert in editor
-		do			
+		do
 			create Result.make (associated_feature.name.count + feature_signature.count)
 			Result.append (associated_feature.name)
 			Result.append (feature_signature)
-		end	
+		end
 
 	icon: EV_PIXMAP is
 			-- Associated icon based on data
 		do
 			Result := pixmap_from_e_feature (associated_feature)
-		end		
+		end
 
 	tooltip_text: STRING is
 			-- Text for tooltip of Current.  The tooltip shall display information which is not included in the
 			-- actual output of Current.
 		do
-			create Result.make (Current.count + feature_signature.count + completion_type.count)		
+			create Result.make (Current.count + feature_signature.count + completion_type.count)
 			Result.append (Current)
 			Result.append (feature_signature)
 			Result.append (completion_type)
-		end	
-		
+		end
+
 feature -- Query
-	
+
 	has_arguments: BOOLEAN is
 			-- Does `associated_feature' have arguments?
 		do
 			Result := associated_feature.has_arguments
 		end
-		
+
 feature {NONE} -- Implementation
 
 	associated_feature: E_FEATURE
@@ -101,7 +104,7 @@ feature {NONE} -- Implementation
 			if internal_feature_signature = Void then
 				if associated_feature.has_arguments then
 					create Result.make (110)
-					associated_feature.append_arguments_to (Result)	
+					associated_feature.append_arguments_to (Result)
 				else
 					create Result.make_empty
 				end
@@ -112,7 +115,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	internal_feature_signature: STRING
 			-- cache `feature_signature'
 

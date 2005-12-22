@@ -11,7 +11,7 @@ inherit
 		redefine
 			grid
 		end
-		
+
 	EB_CONSTANTS
 		export
 			{NONE} all
@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 			grid.column (1).set_title ("Action")
 			grid.column (2).set_title ("Name")
 			grid.column (1).set_width (60)
-			grid.column (2).set_width (400)	
+			grid.column (2).set_width (400)
 			grid.row_select_actions.extend (agent row_selected)
 			grid.row_deselect_actions.extend (agent row_deselected)
-			
+
 			handling_checkbox.set_text ("Exceptions handling enabled ?")
 			handling_checkbox.select_actions.extend (agent on_handling_changed)
 
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 feature -- Properties
 
 	grid: ES_GRID
-	
+
 feature -- Access
 
 	exception_handler: DBG_EXCEPTION_HANDLER
@@ -64,7 +64,7 @@ feature -- Access
 				exceptions_handling := eh.exceptions_handling
 				exceptions_handling.start
 			until
-				exceptions_handling.after				
+				exceptions_handling.after
 			loop
 				s := exceptions_handling.item
 				if s.count > 0 then
@@ -74,8 +74,8 @@ feature -- Access
 			end
 			if exception_handler.exception_handling_enabled then
 				handling_checkbox.enable_select
-			else				
-				handling_checkbox.disable_select				
+			else
+				handling_checkbox.disable_select
 			end
 			if exception_handler.ignoring_external_exception then
 				handling_external_checking.enable_select
@@ -88,7 +88,7 @@ feature -- Access
 				handling_external_checking.disable_select
 			end
 		end
-		
+
 	add_row_from_data (pat: STRING) is
 		require
 			pat /= Void and then pat.count > 0
@@ -107,14 +107,14 @@ feature -- Access
 			cell_combo.set_item_strings (Status_id)
 			if s.item (1) = {DBG_EXCEPTION_HANDLER}.Prefix_stop then
 				s := s.substring (2, s.count)
-				cell_combo.set_text (Status_id[1])
+				cell_combo.set_text (Status_id.item (1))
 			elseif s.item (1) = {DBG_EXCEPTION_HANDLER}.Prefix_continue then
 				s := s.substring (2, s.count)
-				cell_combo.set_text (Status_id[2])
+				cell_combo.set_text (Status_id.item (2))
 			elseif s.item (1) = {DBG_EXCEPTION_HANDLER}.Prefix_disabled then
 				s := s.substring (2, s.count)
-				cell_combo.set_text (Status_id[3])
-			else 
+				cell_combo.set_text (Status_id.item (3))
+			else
 				check False end
 			end
 			cell_combo.activate_actions.extend (agent activate_combo (cell_combo, ?))
@@ -124,7 +124,7 @@ feature -- Access
 			create cell_lab.make_with_text (s)
 			row.set_item (2, cell_lab)
 		end
-		
+
 	activate_combo (ci: EV_GRID_COMBO_ITEM; a_dlg: EV_POPUP_WINDOW) is
 		local
 			t: STRING
@@ -148,7 +148,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	Status_id: ARRAY [STRING] is
 		once
 			Result := <<"Catch", "Ignore", "Disabled">>
@@ -165,17 +165,17 @@ feature {NONE} -- Implementation
 			s := selected_data.substring (2, selected_data.count)
 			tf_pattern.set_text (s)
 		end
-		
+
 	row_deselected (r: EV_GRID_ROW) is
 		do
 			selected_row := Void
 			selected_data := Void
-		end		
+		end
 
 	selected_row: EV_GRID_ROW
-		
+
 	selected_data: STRING
-	
+
 	on_del is
 		do
 			if selected_row /= Void and selected_data /= Void then
@@ -184,7 +184,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	on_add is
 		do
 			add_row_from_data ({DBG_EXCEPTION_HANDLER}.Prefix_disabled.out + tf_pattern.text)
@@ -195,7 +195,7 @@ feature {NONE} -- Implementation
 		do
 			destroy
 		end
-		
+
 	on_apply is
 			-- Called by `select_actions' of `apply_button'.
 		local
@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 		do
 			exception_handler.wipe_out
 			if grid.row_count > 1 then
-				from 
+				from
 					r := 1
 				until
 					r > grid.row_count
@@ -215,14 +215,14 @@ feature {NONE} -- Implementation
 					row := grid.row (r)
 					cell ?= row.item (2)
 					l_pat := cell.text
-					
+
 					cell ?= row.item (1)
 					l_st := cell.text
-					if l_st.is_equal (status_id[1]) then
+					if l_st.is_equal (status_id.item (1)) then
 						exception_handler.catch_exception (l_pat)
-					elseif l_st.is_equal (status_id[2]) then
+					elseif l_st.is_equal (status_id.item (2)) then
 						exception_handler.ignore_exception (l_pat)
-					elseif l_st.is_equal (status_id[3]) then
+					elseif l_st.is_equal (status_id.item (3)) then
 						exception_handler.disable_exception (l_pat)
 					end
 					r := r + 1
@@ -231,18 +231,18 @@ feature {NONE} -- Implementation
 			if handling_checkbox.is_selected then
 				exception_handler.enable_exception_handling
 			else
-				exception_handler.disable_exception_handling				
+				exception_handler.disable_exception_handling
 			end
-			exception_handler.ignore_external_exceptions (handling_external_checking.is_selected)			
-		end			
-	
+			exception_handler.ignore_external_exceptions (handling_external_checking.is_selected)
+		end
+
 	on_ok is
 			-- Called by `select_actions' of `ok_button'.
 		do
 			on_apply
 			destroy
-		end	
-		
+		end
+
 	on_handling_changed is
 		do
 			if handling_checkbox.is_selected then
@@ -251,12 +251,12 @@ feature {NONE} -- Implementation
 			else
 				main_frame.disable_sensitive
 				grid.set_background_color ((create {EV_STOCK_COLORS}).Color_read_only)
-				grid.set_foreground_color ((create {EV_STOCK_COLORS}).Color_3d_shadow )				
+				grid.set_foreground_color ((create {EV_STOCK_COLORS}).Color_3d_shadow )
 			end
 		end
-		
+
 	on_external_handling_changed is
 		do
-		end		
+		end
 
 end -- class ES_EXCEPTION_HANDLER_DIALOG

@@ -124,7 +124,7 @@
 		</Feature>
 
 		<CustomAction Id='InstallAction' FileKey='InstallerExe' ExeCommand='-s 1 -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>
-		<CustomAction Id='StartIEAction' FileKey='InstallerExe' ExeCommand='-s 2 -i C:\' Execute='commit' Return='asyncNoWait'/>
+		<CustomAction Id='StartIEAction' FileKey='InstallerExe' ExeCommand='-s 2 -i C:\' Execute='commit' Return='ignore'/>
 		<CustomAction Id='CleanupAction' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe' Execute='commit' Return='asyncNoWait'/>
 		<CustomAction Id='CleanupAction2' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe.config' Execute='commit' Return='asyncNoWait'/>
 		<CustomAction Id='UninstallAction' FileKey='InstallerExe' ExeCommand='-u -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>

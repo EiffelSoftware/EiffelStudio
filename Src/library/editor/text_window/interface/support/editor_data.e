@@ -8,16 +8,10 @@ class
 
 inherit
 	EV_FONT_CONSTANTS
-		redefine
-		    default_create
-		end
 		
 	DOCUMENT_TYPE_MANAGER
 
 	SHARED_EDITOR_FONT
-		redefine
-			default_create
-		end
 		
 	SHARED_EDITOR_DATA
 

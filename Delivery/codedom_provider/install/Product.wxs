@@ -19,7 +19,7 @@
 		<Directory Id='TARGETDIR' Name='SourceDir'>
 			<Directory Id='ProgramFilesFolder' Name='PFiles'>
 				<Directory Id='ES' Name='ES' LongName='Eiffel Software'>
-					<Directory Id='INSTALLDIR' Name='EfA' LongName='Eiffel for ASP.NET 5.6'>
+					<Directory Id='INSTALLDIR' Name='EfA' LongName='Eiffel for ASP.NET 5.6'>						
 						<Component Id='InstallerFiles' Guid='CC1838C5-12CD-460d-BD4B-716EBCFFE08B'>
 							<File Id='InstallerExe' Name='install.exe' LongName='Installer.exe' src='..\files\installer.exe' DiskId='1'/>
 							<File Id='InstallerConf' Name='install.con' LongName='Installer.exe.config' src='..\files\installer.exe.config' DiskId='1' />							<File Id='XCACLSvbs' Name='XCACLS.vbs' src='..\files\XCACLS.vbs' DiskId='1'/>
@@ -125,8 +125,7 @@
 
 		<CustomAction Id='InstallAction' FileKey='InstallerExe' ExeCommand='-s 1 -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>
 		<CustomAction Id='StartIEAction' FileKey='InstallerExe' ExeCommand='-s 2 -i C:\' Execute='commit' Return='ignore'/>
-		<CustomAction Id='CleanupAction' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe' Execute='commit' Return='asyncNoWait'/>
-		<CustomAction Id='CleanupAction2' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe.config' Execute='commit' Return='asyncNoWait'/>
+		<CustomAction Id='CleanupAction' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Codedom\bin\*.InstallState' Execute='commit' Return='asyncNoWait'/>
 		<CustomAction Id='UninstallAction' FileKey='InstallerExe' ExeCommand='-u -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>
 	
 		<Icon Id='generic.exe' src='..\files\ecdp.ico'/>
@@ -1151,9 +1150,8 @@ If you do not wish to use the .NET facilities, you can continue this installatio
 			<LaunchConditions After='AppSearch' />
 			<Custom Action='UninstallAction' After='UnregisterTypeLibraries'>REMOVE="ALL"</Custom>
 			<Custom Action='InstallAction' After='StartServices'>NOT Installed</Custom>
-			<Custom Action='StartIEAction' Before='InstallFinalize'>NOT Installed</Custom>
 			<Custom Action='CleanupAction' After='InstallAction'>NOT Installed</Custom>
-			<Custom Action='CleanupAction2' After='CleanupAction'>NOT Installed</Custom>
+			<Custom Action='StartIEAction' Before='InstallFinalize'>NOT Installed</Custom>
 			<RemoveExistingProducts After='InstallFinalize' />
 		</InstallExecuteSequence>
 

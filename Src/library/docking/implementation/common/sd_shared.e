@@ -207,6 +207,15 @@ feature -- Constants
 	Highlight_tail_width: INTEGER is 30
 			-- Tilte highlight area width which shown color chang gradually.
 
+	Hide_tab_indicator_size: INTEGER is 20
+			-- Hide tab indicator size. Hide tabs are tabs in SD_NOTEBOOK_TAB_AREA.
+
+	drawing_area_icons_start_x: INTEGER is 0
+			-- When drawing area draw a icon, start x position.
+
+	drawing_area_icons_start_y: INTEGER is 2
+			-- When drawing area draw a icon, start y position.
+
 feature {NONE} -- Implementation
 
 	internal_icons: SD_ICONS_SINGLETON

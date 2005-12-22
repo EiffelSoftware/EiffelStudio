@@ -20,7 +20,8 @@ inherit
 		redefine
 			make,
 			set_tab_position,
-			extend
+			extend,
+			on_resize
 		end
 create
 	make
@@ -130,6 +131,12 @@ feature -- Command
 			Precursor {SD_NOTEBOOK} (a_content)
 			l_tab := internal_tabs.last
 			l_tab.pointer_double_press_actions.force_extend (agent on_normal_max_window)
+		end
+
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+			-- Redefine.
+		do
+			internal_tab_box.on_resize (a_x, a_y, a_width - internal_tool_bar.width, a_height)
 		end
 
 feature {NONE}  -- Agents

@@ -7,10 +7,12 @@ class
 	SD_FEEDBACK_RECT
 
 inherit
-	EV_UNTITLED_DIALOG
+	EV_POPUP_WINDOW
 		rename
 			set_background_color as set_color,
 			hide as clear
+		redefine
+			clear
 		end
 create
 	make
@@ -21,15 +23,59 @@ feature {NONE} -- Initlization
 			-- Creation method
 		do
 			default_create
+			create internal_shared
 			set_transparent (255 // 5 * 3)
+			disable_user_resize
+			set_color (internal_shared.focused_color)
+		end
+
+feature -- Command
+
+	clear is
+			-- Clear
+		do
+			Precursor {EV_POPUP_WINDOW}
+			destroy_extra_area
+		end
+
+	set_area (a_tect: EV_RECTANGLE) is
+			-- Set feedback area.
+		do
+			set_position (a_tect.left, a_tect.top)
+			set_size (a_tect.width, a_tect.height)
+			destroy_extra_area
+		end
+
+	set_tab_area (a_top_rect, a_bottom_rect: EV_RECTANGLE) is
+			-- Set size for tab feedback.
+		require
+			a_top_rect_not_void: a_top_rect /= Void
+			a_bottom_rect_not_void: a_bottom_rect /= Void
+		do
+			set_area (a_top_rect)
+
+			if internal_extra_rect = Void then
+				create internal_extra_rect.make
+			end
+
+			internal_extra_rect.set_area (a_bottom_rect)
+			internal_extra_rect.show
 		end
 
 feature {NONE} -- Implementation
 
+	destroy_extra_area is
+			-- Destroy extra area.
+		do
+			if internal_extra_rect /= Void and then internal_extra_rect.is_displayed then
+				internal_extra_rect.clear
+			end
+		end
+
 	set_transparent (a_alpha: INTEGER)is
 			-- Set transparent. a_alpha is a value from 0-255.
 		local
-			l_imp: EV_TITLED_WINDOW_IMP
+			l_imp: EV_POPUP_WINDOW_IMP
 			l_result: INTEGER
 			l_error: WEL_ERROR
 		do
@@ -42,8 +88,6 @@ feature {NONE} -- Implementation
 				l_error.display_last_error
 			end
 		end
-
-feature {NONE}  -- Implementation
 
 	set_transparency (a_wnd: POINTER; a_alpha: INTEGER; a_result: TYPED_POINTER [INTEGER]) is
 			-- Set layered window properties on Windows 2000 and later.
@@ -67,4 +111,9 @@ feature {NONE}  -- Implementation
 			]"
 		end
 
+	internal_extra_rect: SD_FEEDBACK_RECT
+			-- Extra rect feedback which used by draw tab feedback.
+
+	internal_shared: SD_SHARED
+			-- All singletons.
 end

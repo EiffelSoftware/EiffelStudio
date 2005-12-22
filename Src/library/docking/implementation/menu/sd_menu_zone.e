@@ -110,7 +110,7 @@ feature -- Basic operation
 			internal_floating_menu.show
 			internal_docking_manager.menu_manager.floating_menus.extend (internal_floating_menu)
 		ensure
-			pruned: not row.has (Current)
+			pruned: row /= Void implies not row.has (Current)
 			extended: internal_floating_menu.has (Current)
 		end
 

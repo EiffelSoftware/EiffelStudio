@@ -113,8 +113,8 @@ feature -- Command
 				internal_cell.replace (a_content.user_widget)
 
 			end
-			disable_all_tab_selection
-			tab_by_content (a_content).set_selected (True)
+			notify_tab (tab_by_content (a_content))
+			internal_tab_box.hide_show_tabs (internal_tab_box.width)
 		ensure
 			selectd: selected_item = a_content
 		end
@@ -198,6 +198,12 @@ feature -- Command
 			Precursor {EV_VERTICAL_BOX}
 		end
 
+	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+			-- Handle resize actions.
+		do
+			internal_tab_box.on_resize (a_x, a_y, a_width, a_height)
+		end
+
 feature -- Query
 
 	index_of (a_content: SD_CONTENT): INTEGER is
@@ -274,6 +280,18 @@ feature -- Query
 			Result := internal_tabs.item.text
 		end
 
+	content_by_tab (a_tab: SD_NOTEBOOK_TAB): SD_CONTENT is
+			-- Widget which associate with `a_tab'.
+		require
+			has: has_tab (a_tab)
+		do
+			internal_tabs.start
+			internal_tabs.search (a_tab)
+			Result := internal_contents.i_th (internal_tabs.index)
+		ensure
+			not_void: Result /= Void
+		end
+
 	selection_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Selection actions.
 
@@ -340,21 +358,8 @@ feature {NONE}  -- Implementation
 			-- Handle notebook tab selected.
 		do
 			select_item (content_by_tab (a_tab))
-			disable_all_tab_selection
-			a_tab.set_selected (True)
+			notify_tab (a_tab)
 			selection_actions.call ([])
-		end
-
-	content_by_tab (a_tab: SD_NOTEBOOK_TAB): SD_CONTENT is
-			-- Widget which associate with `a_tab'.
-		require
-			has: has_tab (a_tab)
-		do
-			internal_tabs.start
-			internal_tabs.search (a_tab)
-			Result := internal_contents.i_th (internal_tabs.index)
-		ensure
-			not_void: Result /= Void
 		end
 
 	tab_by_content (a_content: SD_CONTENT): SD_NOTEBOOK_TAB is
@@ -369,15 +374,20 @@ feature {NONE}  -- Implementation
 			not_void: Result /= Void
 		end
 
-	disable_all_tab_selection is
-			-- Disable all tabs selection.
+	notify_tab (a_except: SD_NOTEBOOK_TAB) is
+			-- Disable all tabs selection except a_except. Select a_except.
 		do
 			from
 				internal_tabs.start
 			until
 				internal_tabs.after
 			loop
-				internal_tabs.item.set_selected (False)
+				if internal_tabs.item = a_except then
+					internal_tabs.item.set_selected (True)
+				else
+					internal_tabs.item.set_selected (False)
+				end
+
 				internal_tabs.forth
 			end
 		end

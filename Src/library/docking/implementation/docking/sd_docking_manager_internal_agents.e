@@ -23,6 +23,7 @@ feature {NONE}  -- Initlization
 
 feature  -- Agents
 
+--	on_widget_pointer_press (a_widget: EV_WIDGET) is
 	on_widget_pointer_press (a_widget: EV_WIDGET; a_button, a_x, a_y: INTEGER) is
 			-- Handle EV_APPLICATION's pointer button press actions.
 		local

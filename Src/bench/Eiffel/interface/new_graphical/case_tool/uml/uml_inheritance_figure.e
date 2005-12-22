@@ -15,19 +15,19 @@ inherit
 			xml_node_name,
 			set_with_xml_element
 		end
-		
+
 	UML_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as retrieve_preferences
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
@@ -36,7 +36,10 @@ inherit
 create
 	make_with_model,
 	default_create
-	
+
+create {UML_INHERITANCE_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	make_with_model (a_model: ES_INHERITANCE_LINK) is
@@ -51,7 +54,7 @@ feature {NONE} -- Initialization
 			line.set_arrow_size (20)
 			request_update
 		end
-	
+
 feature -- Access
 
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
@@ -63,7 +66,7 @@ feature -- Access
 			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
 			Result.put_last (xml_routines.xml_node (Result, "REAL_LINE_WIDTH", (real_line_width * 100).rounded.out))
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		do
@@ -80,13 +83,13 @@ feature -- Access
 				line.set_line_width (real_line_width.rounded.max (1))
 			end
 		end
-		
+
 	xml_node_name: STRING is
 			-- Name of the node returned by `xml_element'.
 		do
 			Result := "UML_INHERITANCE_FIGURE"
 		end
-		
+
 feature -- Element change
 
 	set_line_width (a_line_width: like line_width) is
@@ -95,7 +98,7 @@ feature -- Element change
 			Precursor {EIFFEL_INHERITANCE_FIGURE} (a_line_width)
 			real_line_width := a_line_width
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Transformation
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -115,15 +118,15 @@ feature {EV_MODEL_GROUP} -- Transformation
 				request_update
 			end
 		end
-	
+
 feature {NONE} -- Implementation
 
 	real_line_width: REAL
 			-- Real line width.
-			
+
 	real_arrow_head_size: REAL
 			-- Real size of arrow head.
-			
+
 	retrieve_preferences is
 			-- Retrieve preferences.
 		do

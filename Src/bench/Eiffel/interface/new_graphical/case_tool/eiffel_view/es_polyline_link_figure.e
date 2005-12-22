@@ -16,11 +16,17 @@ inherit
 			pointer_button_pressed_on_a_line,
 			request_update
 		end
-	
+
 	EB_CONSTANTS
 		undefine
 			default_create
 		end
+
+create
+	default_create
+
+create {EIFFEL_LINK_FIGURE}
+	make_filled
 
 feature -- Access
 
@@ -29,7 +35,7 @@ feature -- Access
 		do
 			Result ?= Precursor {EG_POLYLINE_LINK_FIGURE}
 		end
-		
+
 	edges: LIST [EG_EDGE] is
 			-- Edges of `Current'.
 		do
@@ -59,9 +65,9 @@ feature -- Element change
 			figure_right, figure_left: EG_LINKABLE_FIGURE
 		do
 			if not is_reflexive then
-				if 
-					source.port_x /= target.port_x and 
-					source.port_y /= target.port_y 
+				if
+					source.port_x /= target.port_x and
+					source.port_y /= target.port_y
 				then
 					if source.port_x < target.port_y then
 						figure_left := source
@@ -87,9 +93,9 @@ feature -- Element change
 			figure_right, figure_left: EG_LINKABLE_FIGURE
 		do
 			if not is_reflexive then
-				if 
-					source.port_x /= target.port_x and 
-					source.port_y /= target.port_y 
+				if
+					source.port_x /= target.port_x and
+					source.port_y /= target.port_y
 				then
 					if source.port_x < target.port_x then
 						figure_left := source
@@ -114,19 +120,19 @@ feature -- Element change
 			source_x, source_y, target_x, target_y, min_x, min_y, dist_x, dist_y: INTEGER
 		do
 			if not is_reflexive then
-				if source.port_x /= target.port_x and 
+				if source.port_x /= target.port_x and
 					source.port_y /= target.port_y then
-						
+
 					source_x := source.port_x
 					source_y := source.port_y
 					target_x := target.port_x
 					target_y := target.port_y
-					
+
 					min_x := source_x.min (target_x)
-					min_y := source_y.min (target_y) 
+					min_y := source_y.min (target_y)
 					dist_x := (source_x - target_x).abs
 					dist_y := (source_y - target_y).abs
-		
+
 					reset
 					add_point_between (1, 2)
 					add_point_between (1, 2)
@@ -156,19 +162,19 @@ feature -- Element change
 			source_x, source_y, target_x, target_y, min_x, min_y, dist_x, dist_y: INTEGER
 		do
 			if not is_reflexive then
-				if source.port_x /= target.port_x and 
+				if source.port_x /= target.port_x and
 					source.port_y /= target.port_y then
-						
+
 					source_x := source.port_x
 					source_y := source.port_y
 					target_x := target.port_x
 					target_y := target.port_y
-					
+
 					min_x := source_x.min (target_x)
 					min_y := source_y.min (target_y)
 					dist_x := (source_x - target_x).abs
 					dist_y := (source_y - target_y).abs
-		
+
 					reset
 					add_point_between (1, 2)
 					add_point_between (1, 2)
@@ -191,7 +197,7 @@ feature -- Element change
 				request_update
 			end
 		end
-		
+
 	retrieve_edges (retrieved_edges: LIST [EG_EDGE]) is
 			-- Add lines corresponding to the points in `retrieved_edges'.
 		require
@@ -211,10 +217,10 @@ feature -- Element change
 				loop
 					l_edge := retrieved_edges.item
 					line.extend_point (l_edge.corresponding_point)
-						
+
 					line.point_array.put (l_edge.corresponding_point, line.point_array.count - 1)
 						-- a little hack since extend_point twins the corresponding_point.
-						
+
 					edge_move_handlers.extend (l_edge)
 					extend (l_edge)
 					retrieved_edges.forth
@@ -224,7 +230,7 @@ feature -- Element change
 				request_update
 			end
 		end
-		
+
 	apply_right_angles is
 			-- Make `Current' use right angles.
 		local
@@ -254,7 +260,7 @@ feature -- Element change
 						add_point_between (1, 2)
 						add_point_between (1, 2)
 					end
-					if 
+					if
 						(source_y < target_y and then target_top - source_bottom < min_dist) or else
 						(source_y > target_y and then source_top - target_bottom < min_dist)
 					then
@@ -281,14 +287,14 @@ feature -- Element change
 					else
 						-- vertical
 						dist := (source_y - target_y) // 2
-						
+
 						set_i_th_point_position (3, target_x, source_y - dist)
 						set_i_th_point_position (2, source_x, source_y - dist)
 					end
 				end
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	edge_start (an_edge: EG_EDGE) is
@@ -297,10 +303,10 @@ feature {NONE} -- Implementation
 			saved_x := an_edge.point_x
 			saved_y := an_edge.point_y
 		end
-		
+
 	saved_x, saved_y: INTEGER
 			-- Position of edge at move start.
-		
+
 	edge_end (an_edge: EG_EDGE) is
 			-- User ends to move `an_edge'.
 		local
@@ -324,15 +330,15 @@ feature {NONE} -- Implementation
 				is_history_update_needed := False
 			end
 		end
-	
+
 	point_added_i, point_added_j: INTEGER
 			-- Position wher a point was inserted if `is_edge_added'.
 
 	is_edge_added: BOOLEAN
 			-- Was an edge added.
-			
+
 	is_history_update_needed: BOOLEAN
-	
+
 	pointer_button_pressed_on_a_line (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- User pressed on `line'.
 		local

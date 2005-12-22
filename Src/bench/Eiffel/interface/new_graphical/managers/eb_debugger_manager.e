@@ -189,7 +189,7 @@ feature -- Access
 						if l_tool /= Void then
 							create mit.make_with_text (l_tool.menu_name)
 							if l_tool.pixmap /= Void and then not l_tool.pixmap.is_empty then
-								mit.set_pixmap (l_tool.pixmap [l_tool.pixmap.lower] )
+								mit.set_pixmap (l_tool.pixmap.item (l_tool.pixmap.lower))
 							end
 							mit.select_actions.extend (agent show_hide_debugging_tools (mit))
 							m.extend (mit)

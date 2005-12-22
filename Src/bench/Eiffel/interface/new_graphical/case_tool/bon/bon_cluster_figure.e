@@ -27,7 +27,7 @@ inherit
 			set_with_xml_element,
 			xml_element
 		end
-		
+
 	EG_POLYLINE_LABEL
 		rename
 			default_create as default_create_label,
@@ -39,34 +39,37 @@ inherit
 			on_label_move,
 			set_label_group_position_on_line
 		end
-		
+
 	BON_FIGURE
 		undefine
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as retrieve_preferences
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
 		end
-		
+
 create
 	make_with_model
-		
+
+create {BON_CLUSTER_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
 			-- Create a BON_CLUSTER_FIGURE.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE}
-			
+
 			-- create the cluster rectangle
 			create rectangle
 			real_rectangle_radius := 20.0
@@ -75,13 +78,13 @@ feature {NONE} -- Initialization
 			set_pointer_style (default_pixmaps.sizeall_cursor)
 			extend (rectangle)
 			send_to_back (rectangle)
-			
+
 			-- create the label rectangle
 			create label_rectangle
 			label_rectangle.enable_dashed_line_style
 			label_rectangle.set_radius (3)
-			
-			-- create the label 
+
+			-- create the label
 			default_create_label
 			label_line_start_point := polyline_points.item (2)
 			label_line_end_point := polyline_points.item (3)
@@ -94,20 +97,20 @@ feature {NONE} -- Initialization
 			label_move_handle.disable_scaling
 			label_move_handle.disable_rotating
 			set_left (True)
-			
+
 			number_of_figures := 6
 			is_high_quality := True
 			real_rectangle_border := 5.0
 			real_label_rectangle_border := 5.0
-			
+
 			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
-			
-			name_label.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)		
-			
+
+			name_label.set_point_position (label_group.point_x + label_rectangle_border, label_group.point_y + label_rectangle_border)
+
 			is_shown := True
 		end
-		
+
 	make_with_model (a_model: like model) is
 			-- Create a BON_CLUSTER_FIGURE with `a_model'.
 		require
@@ -116,10 +119,10 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			
+
 			disable_rotating
 			disable_scaling
-			
+
 			request_update
 		end
 
@@ -130,13 +133,13 @@ feature -- Access
 		do
 			Result := rectangle.point_a_x
 		end
-		
+
 	top: INTEGER is
 			-- Top most position
 		do
 			Result := rectangle.point_a_y
 		end
-		
+
 	right: INTEGER is
 			-- Right most position.
 		do
@@ -148,13 +151,13 @@ feature -- Access
 		do
 			Result := rectangle.point_b_y
 		end
-		
+
 	port_x: INTEGER is
 			-- x position where links are starting.
 		do
 			Result := rectangle.x
 		end
-		
+
 	port_y: INTEGER is
 			-- y position where links are starting.
 		do
@@ -170,13 +173,13 @@ feature -- Access
 			pay := rectangle.point_a_y
 			create Result.make (pax, pay, rectangle.point_b_x - pax, rectangle.point_b_y - pay)
 		end
-		
+
 	height: INTEGER is
 			-- Height in pixels.
 		do
 			Result := rectangle.height
 		end
-		
+
 	width: INTEGER is
 			-- Width in pixels.
 		do
@@ -241,7 +244,7 @@ feature -- Access
 				end
 			end
 		end
-			
+
 	xml_node_name: STRING is
 			-- Name of the xml node returned by `xml_element'.
 		do
@@ -250,17 +253,17 @@ feature -- Access
 
 	is_iconified_string: STRING is "IS_ICONIFIED"
 		-- Xml string constant.
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml element representing `Current's state.
 		do
 			Result := Precursor {EIFFEL_CLUSTER_FIGURE} (node)
 			Result.put_last (Xml_routines.xml_node (Result, is_iconified_string, boolean_representation (is_iconified)))
 			Result.put_last (Xml_routines.xml_node (Result, is_needed_on_diagram_string, boolean_representation (model.is_needed_on_diagram)))
-			
+
 			Result := polyline_label_xml_element (node)
 		end
-	
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		do
@@ -291,7 +294,7 @@ feature -- Access
 			else
 				model.disable_needed_on_diagram
 			end
-			
+
 			polyline_label_set_with_xml_element (node)
 		end
 
@@ -362,28 +365,28 @@ feature -- Element change
 		end
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
-		
+
 	update is
 			-- Some properties of current may have changed.
 		local
 			l_min_size: like minimum_size
 		do
-			
+
 			if is_shown then
 				l_min_size := minimum_size
 				if user_size /= Void and then not is_iconified then
 					rectangle.set_point_a_position ((l_min_size.left - rectangle_border).min (user_size.left), (l_min_size.top - rectangle_border).min (user_size.top))
-					rectangle.set_point_b_position ((l_min_size.right + rectangle_border).max (user_size.right), (l_min_size.bottom + rectangle_border).max (user_size.bottom))		
+					rectangle.set_point_b_position ((l_min_size.right + rectangle_border).max (user_size.right), (l_min_size.bottom + rectangle_border).max (user_size.bottom))
 				else
 					rectangle.set_point_a_position ((l_min_size.left - rectangle_border), (l_min_size.top - rectangle_border))
-					rectangle.set_point_b_position ((l_min_size.right + rectangle_border), (l_min_size.bottom + rectangle_border))		
+					rectangle.set_point_b_position ((l_min_size.right + rectangle_border), (l_min_size.bottom + rectangle_border))
 				end
-				
+
 				if is_label_shown then
 					label_rectangle.set_point_a_position (label_group.point_x, label_group.point_y)
 					label_rectangle.set_point_b_position (label_group.point_x + name_label.width + 2*label_rectangle_border,
 														  label_group.point_y + name_label.height + 2*label_rectangle_border)
-														  
+
 					if is_high_quality then
 						update_label
 					else
@@ -394,9 +397,9 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			end
 			is_update_required := False
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Transformation
-		
+
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
@@ -407,7 +410,7 @@ feature {EV_MODEL_GROUP} -- Transformation
 			Precursor {EIFFEL_CLUSTER_FIGURE} (a_transformation)
 			real_rectangle_radius := real_rectangle_radius * a_transformation.item (1, 1)
 			if rectangle_radius.max (1) /= rectangle.radius then
-				rectangle.set_radius (rectangle_radius)	
+				rectangle.set_radius (rectangle_radius)
 			end
 			real_rectangle_border := real_rectangle_border * a_transformation.item (1, 1)
 			real_label_rectangle_border := real_label_rectangle_border * a_transformation.item (1, 1)
@@ -420,7 +423,7 @@ feature {EV_MODEL_GROUP} -- Transformation
 			end
 			request_update
 		end
-		
+
 feature {EG_LAYOUT} -- Layouting
 
 	set_to_minimum_size is
@@ -434,7 +437,7 @@ feature {EG_LAYOUT} -- Layouting
 			rectangle.set_point_b_position (l_min_size.right + rectangle_border, l_min_size.bottom + rectangle_border)
 			request_update
 		end
-		
+
 feature {EIFFEL_WORLD} -- Show/Hide
 
 	disable_shown is
@@ -452,7 +455,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 			request_update
 			is_shown := False
 		end
-		
+
 	enable_shown is
 			-- Show `Current'.
 		do
@@ -468,7 +471,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 			request_update
 			is_shown := True
 		end
-	
+
 feature {NONE} -- Implementation
 
 	line_width: INTEGER is
@@ -497,25 +500,25 @@ feature {NONE} -- Implementation
 		do
 			Result := real_label_rectangle_border.truncated_to_integer
 		end
-			
+
 	real_label_rectangle_border: REAL
 			-- Real value for `label_rectangle_border'.
-			
+
 	rectangle_border: INTEGER is
 			-- Minimum border between elements and `rectangle' border.
 		do
 			Result := real_rectangle_border.truncated_to_integer
 		end
-			
+
 	real_rectangle_border: REAL
 			-- Real value for `rectangle_border'.
-			
+
 	rectangle_radius: INTEGER is
 			-- Radius for `rectangle'
 		do
 			Result := real_rectangle_radius.truncated_to_integer
 		end
-		
+
 	real_rectangle_radius: REAL
 			-- Real value for `rectangle_radius'.
 
@@ -529,7 +532,7 @@ feature {NONE} -- Implementation
 		do
 			rectangle.set_point_a_position (ax, ay)
 		end
-		
+
 	set_bottom_right_position (ax, ay: INTEGER) is
 			-- Set position of bottom right corner to (`ax', `ay').
 		do
@@ -538,7 +541,7 @@ feature {NONE} -- Implementation
 
 	rectangle: BON_CLUSTER_RECTANGLE
 			-- The rectangle.
-			
+
 	label_rectangle: EV_MODEL_ROUNDED_RECTANGLE
 			-- The rectangle for the label.
 
@@ -547,7 +550,7 @@ feature {NONE} -- Implementation
 		do
 			Result := rectangle.polyline_points
 		end
-		
+
 	on_label_move (ax, ay: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- `label_move_handler' was moved for `ax' `ay'.
 			-- | Redefined because `is_left' must stay True.
@@ -556,7 +559,7 @@ feature {NONE} -- Implementation
 			set_label_position_on_line (label_line_start_point, label_line_end_point)
 			request_update
 		end
-		
+
 	set_label_group_position_on_line (new_x, new_y: DOUBLE; p, q: EV_COORDINATE) is
 			--
 		local
@@ -579,7 +582,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	set_name_label_text (a_text: STRING) is
 			-- Set `name_label'.`text' to `a_text'.
 		local
@@ -606,13 +609,13 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				s := s + rest			
+				s := s + rest
 				name_label.set_text (s)
 			else
 				name_label.set_text (a_text)
 			end
 		end
-		
+
 	on_label_double_press (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Iconify or deiconify `Current'.
 		local
@@ -639,7 +642,7 @@ feature {NONE} -- Implementation
 			toggle_is_iconified
 			request_update
 		end
-		
+
 	toggle_is_iconified is
 			-- Toggle value of `is_iconified'.
 		do
@@ -658,7 +661,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	set_is_high_quality (an_is_high_quality: like is_high_quality) is
 			-- Set `is_high_quality' to `an_is_high_quality'.
 		do
@@ -694,7 +697,7 @@ feature {NONE} -- Implementation
 							rectangle.remove_background_color
 						end
 					end
-					
+
 					number_of_figures := 6
 				else
 					prune_all (resizer_top_left)
@@ -717,13 +720,13 @@ feature {NONE} -- Implementation
 				request_update
 			end
 		end
-		
+
 	retrieve_preferences is
 			-- Retrieve preferences from shared resources.
 		do
 			name_label.set_identified_font (bon_cluster_name_font)
 			name_label.set_foreground_color (bon_cluster_name_color)
-			
+
 			rectangle.set_foreground_color (bon_cluster_line_color)
 			if is_iconified then
 				if bon_cluster_iconified_fill_color /= Void then
@@ -739,12 +742,20 @@ feature {NONE} -- Implementation
 				end
 			end
 			rectangle.set_line_width (bon_cluster_line_width)
-			
+
 			label_rectangle.set_foreground_color (bon_cluster_line_color)
 			if bon_cluster_name_area_color /= Void then
 				label_rectangle.set_background_color (bon_cluster_name_area_color)
 			end
 			request_update
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class BON_CLUSTER_FIGURE

@@ -13,11 +13,12 @@ inherit
 			text_panel,
 			line_numbers_visible,
 			user_initialization,
-			width
+			width,
+			text_displayed_type
 		end
 
 feature -- Initialization
-	
+
 	user_initialization is
 			-- Build margin drawable area
 		do
@@ -51,17 +52,17 @@ feature -- Access
 			-- Width in pixels calculated based on which tokens should be displayed
 		local
 			l_bptok: EDITOR_TOKEN_BREAKPOINT
-		do	
+		do
 		    Result := Precursor
-			if not hidden_breakpoints then					
+			if not hidden_breakpoints then
 				create l_bptok.make
 				Result := Result + l_bptok.width + separator_width
 			end
 		end
-		
+
 	hidden_breakpoints: BOOLEAN
 			-- Are breakpoints hidden? (Default: True)	
-		
+
 feature -- Query
 
 	line_numbers_visible: BOOLEAN is
@@ -69,7 +70,7 @@ feature -- Query
 		do
 		    Result := Precursor
 		end
-		
+
 feature {NONE} -- Implementation
 
 	draw_line_to_screen (x, y: INTEGER; a_line: EIFFEL_EDITOR_LINE; xline: INTEGER) is
@@ -80,20 +81,20 @@ feature {NONE} -- Implementation
  			bp_token: EDITOR_TOKEN_BREAKPOINT
  			spacer_text: STRING
  			max_chars: INTEGER
- 		do 	 				
- 			if text_panel.text_displayed.number_of_lines > 99999 then 				
-	 			max_chars := text_panel.number_of_lines.out.count		
- 			else 				
+ 		do
+ 			if text_panel.text_displayed.number_of_lines > 99999 then
+	 			max_chars := text_panel.number_of_lines.out.count
+ 			else
 	 			max_chars := default_width
  			end
  			create spacer_text.make_filled ('0', max_chars - xline.out.count)
- 			
+
  				-- Set the correct image for line number
  			line_token ?= a_line.number_token
 			if line_token /= Void then
 				line_token.set_internal_image (spacer_text + xline.out)
 			end
- 			
+
   			from
 					-- Display the first applicable token in the margin
 				a_line.start
@@ -101,7 +102,7 @@ feature {NONE} -- Implementation
 				margin_area.set_background_color (editor_preferences.margin_background_color)
 				debug ("editor")
 					draw_flash (x, y, width, text_panel.line_height, False)
-				end	
+				end
 				margin_area.clear_rectangle (
 						x,
 						y,
@@ -110,7 +111,7 @@ feature {NONE} -- Implementation
 					)
  			until
  				a_line.after or else not curr_token.is_margin_token
- 			loop 						
+ 			loop
 				if curr_token.is_margin_token then
 					bp_token ?= curr_token
 					if bp_token /= Void and then not hidden_breakpoints then
@@ -122,22 +123,22 @@ feature {NONE} -- Implementation
 						if line_token /= Void and then line_numbers_visible then
 							if not hidden_breakpoints then
 								line_token.display_with_offset (a_line.breakpoint_token.width, y, margin_area, text_panel)
-							else	
-								line_token.display (y, margin_area, text_panel)	
-							end							
+							else
+								line_token.display (y, margin_area, text_panel)
+							end
 						elseif line_token /= Void then
 							line_token.hide
 						end
-					end					
+					end
 				end
-				a_line.forth 				
+				a_line.forth
 				curr_token := a_line.item
-			end			
+			end
 			margin_area.set_background_color (separator_color)
 			margin_area.clear_rectangle (width - separator_width, y, separator_width, editor_preferences.line_height)
 			margin_area.set_background_color (editor_preferences.margin_background_color)
 		end
-		
+
 feature {NONE} -- Events
 
 	on_mouse_button_down (abs_x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
@@ -147,9 +148,9 @@ feature {NONE} -- Events
 			l_number: INTEGER
 			bkstn: BREAKABLE_STONE
 		do
-			if button = 1 then				
+			if button = 1 then
 				l_number := (y_pos - margin_viewport.y_offset + (first_line_displayed * text_panel.line_height)) // text_panel.line_height
-				
+
 				if l_number <= text_panel.number_of_lines then
 					ln ?= text_panel.text_displayed.line (l_number)
 					bkstn ?= ln.real_first_token.pebble
@@ -163,6 +164,13 @@ feature {NONE} -- Events
 					text_panel.on_click_in_text (abs_x_pos - width, y_pos, 3, a_screen_x, a_screen_y)
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	text_displayed_type: CLICKABLE_TEXT is
+			-- Type of `text_panel.text_displayed'.
+		do
 		end
 
 end -- class EB_CLICKABLE_MARGIN

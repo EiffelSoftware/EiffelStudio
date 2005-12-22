@@ -20,10 +20,6 @@ class
 
 inherit
 	ICOR_OBJECT
-		export
-			{EIFNET_DEBUGGER_SYNCHRO} item
-		end
-	
 
 	EIFNET_ICOR_ELEMENT_TYPES_CONSTANTS
 		export
@@ -33,14 +29,14 @@ inherit
 			out
 		end
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	call_function (a_func: ICOR_DEBUG_FUNCTION; a_args: ARRAY [ICOR_DEBUG_VALUE]) is
 			 -- CallFunction sets up a function call.  Note that the given function
-			 -- is called directly; there is no virtual dispatch.  
+			 -- is called directly; there is no virtual dispatch.
 			 -- (Use ICorDebugObjectValue::GetVirtualMethod to do virtual dispatch.)
 		require
 			func_not_void: a_func /= Void
@@ -64,7 +60,7 @@ feature {ICOR_EXPORTER} -- Access
 					l_arg := create_void_reference
 				end
 				l_arg_pointer := l_arg.item
-			
+
 				l_mp_args.put_pointer (l_arg_pointer, (i - a_args.lower) * l_pointer_size)
 				i := i + 1
 			end
@@ -102,7 +98,7 @@ feature {ICOR_EXPORTER} -- Access
 	get_result: ICOR_DEBUG_VALUE is
 			-- GetResult returns the result of the evaluation.  This is only
 			-- valid after the evaluation is completed.
-			--                                                                 
+			--
 			-- If the evaluation completes normally, the result will be the
 			-- return value.  If it terminates with an exception, the result
 			-- is the exception thrown. If the evaluation was for a new object,
@@ -145,7 +141,7 @@ feature {ICOR_EXPORTER} -- Access
 			if p /= default_pointer then
 				create Result.make_value_by_pointer (p)
 			end
-		end		
+		end
 
 	new_string (str: STRING) is
 			-- NewString allocates a string object with the given contents.
@@ -174,10 +170,10 @@ feature {ICOR_EXPORTER} -- Access
 				l_item := a_args @ i
 				if l_item = Void then
 					l_item := create_void_reference
-				end				
+				end
 				l_mp_args.put_pointer (l_item.item, (i - a_args.lower)*l_size)
 				i := i + 1
-			end		
+			end
 			last_call_success := cpp_new_object (item, a_func.item, a_args.count, l_mp_args.item)
 		end
 
@@ -187,7 +183,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_new_object_no_constructor (item, a_icd_class.item)
 		end
-		
+
 feature {ICOR_EXPORTER} -- Enhanced Access
 
 	create_void_reference: ICOR_DEBUG_VALUE is
@@ -200,82 +196,82 @@ feature {NONE} -- Implementation
 	cpp_call_function (obj: POINTER; a_p_function: POINTER; a_nb: INTEGER; a_pp_args: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugEval signature(ICorDebugFunction*, ULONG32, ICorDebugValue**): EIF_INTEGER 
+				C++ ICorDebugEval signature(ICorDebugFunction*, ULONG32, ICorDebugValue**): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
 			"CallFunction"
-		end		
+		end
 
 	cpp_is_active (obj: POINTER; a_pb_active: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugEval signature(BOOL*): EIF_INTEGER 
+				C++ ICorDebugEval signature(BOOL*): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
 			"IsActive"
-		end		
+		end
 
 	cpp_abort (obj: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugEval signature(): EIF_INTEGER 
+				C++ ICorDebugEval signature(): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
 			"Abort"
-		end		
+		end
 
 	cpp_get_result (obj: POINTER; a_p: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugEval signature(ICorDebugValue**): EIF_INTEGER 
+				C++ ICorDebugEval signature(ICorDebugValue**): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
 			"GetResult"
-		end		
-    
+		end
+
 	cpp_create_value (obj: POINTER; a_cor_elt_type: INTEGER; a_class_p: POINTER; a_p: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugEval signature(CorElementType, ICorDebugClass*, ICorDebugValue**): EIF_INTEGER 
+				C++ ICorDebugEval signature(CorElementType, ICorDebugClass*, ICorDebugValue**): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
 			"CreateValue"
-		end	
-		
+		end
+
 	cpp_new_string (obj: POINTER; a_p_string: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugEval signature(LPCWSTR): EIF_INTEGER 
+				C++ ICorDebugEval signature(LPCWSTR): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
 			"NewString"
-		end			
+		end
 
 	cpp_new_object (obj: POINTER; a_p_function: POINTER; a_nb_args: INTEGER; a_p_args: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugEval signature(ICorDebugFunction*,ULONG32, ICorDebugValue**): EIF_INTEGER 
+				C++ ICorDebugEval signature(ICorDebugFunction*,ULONG32, ICorDebugValue**): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
 			"NewObject"
-		end			
+		end
 
 	cpp_new_object_no_constructor (obj: POINTER; a_p_class: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugEval signature(ICorDebugClass*): EIF_INTEGER 
+				C++ ICorDebugEval signature(ICorDebugClass*): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
 			"NewObjectNoConstructor"
-		end			
+		end
 
 end -- class ICOR_DEBUG_EVAL
 

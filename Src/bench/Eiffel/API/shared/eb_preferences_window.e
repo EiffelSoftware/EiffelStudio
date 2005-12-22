@@ -58,7 +58,7 @@ feature -- Access
 		do
 			l_id_font ?= l_resource
 			if l_id_font /= Void then
-				create l_font_widget.make_with_resource (l_resource)
+				create l_font_widget.make_with_resource (l_id_font)
 				l_font_widget.set_caller (Current)
 				l_font_widget.change_actions.extend (agent on_preference_changed (l_resource))
 				a_row.set_item (4, l_font_widget.change_item_widget)

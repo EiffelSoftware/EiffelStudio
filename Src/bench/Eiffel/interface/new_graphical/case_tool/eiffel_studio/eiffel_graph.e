@@ -14,19 +14,20 @@ inherit
 			remove_node,
 			add_link,
 			remove_link,
-			default_create
+			default_create,
+			node_type
 		end
-		
+
 	SHARED_ERROR_HANDLER
 		undefine
 			default_create
 		end
-		
+
 	EV_STOCK_PIXMAPS
 		undefine
 			default_create
 		end
-		
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -47,7 +48,7 @@ feature -- Access
 	context_editor: EB_CONTEXT_EDITOR
 			-- Container of `Current'.
 			-- Used to access surface on which `Current' is displayed.
-			
+
 	class_from_interface (class_i: CLASS_I): ES_CLASS is
 			-- Representation of `class_i', Void if none exists.
 		require
@@ -76,7 +77,7 @@ feature -- Access
 				end
 			end
 		end
-		
+
 	cluster_from_interface (cluster_i: CLUSTER_I): ES_CLUSTER is
 			-- Representation of `cluster_i', Void if none exists.
 		require
@@ -115,7 +116,7 @@ feature -- Access
 				Result := inheritance_links_lookup.found_item
 			end
 		end
-		
+
 	client_supplier_link_connecting (a_client, a_supplier: EG_LINKABLE): ES_CLIENT_SUPPLIER_LINK is
 			-- Client supplier link connecting `a_client' with `a_supplier' if any.
 		require
@@ -130,7 +131,7 @@ feature -- Access
 				Result := client_supplier_links_lookup.found_item
 			end
 		end
-		
+
 feature -- Element change
 
 	add_node (a_node: ES_CLASS) is
@@ -145,14 +146,14 @@ feature -- Element change
 			end
 			class_name_to_node_lookup.put (a_node, a_node.class_i.name)
 		end
-		
+
 	remove_node (a_node: ES_CLASS) is
 			-- Remove `a_node' from the model.
 		do
 			Precursor {EG_GRAPH} (a_node)
 			class_name_to_node_lookup.remove (a_node.class_i.name)
 		end
-		
+
 	add_link (a_link: EG_LINK) is
 			-- Add `a_link' to the model.
 		local
@@ -169,7 +170,7 @@ feature -- Element change
 				client_supplier_links_lookup.force (ecsl, [ecsl.client, ecsl.supplier])
 			end
 		end
-		
+
 	remove_link (a_link: EG_LINK) is
 			-- Remove `a_link' from the model.
 		local
@@ -186,7 +187,7 @@ feature -- Element change
 				client_supplier_links_lookup.remove ([ecsl.client, ecsl.supplier])
 			end
 		end
-		
+
 	insert_cluster (a_cluster: ES_CLUSTER) is
 			-- Add `a_cluster' to the model and add all childrens in the graph
 			-- and put it into its parent (if any in the graph).
@@ -210,21 +211,21 @@ feature {EB_CONTEXT_EDITOR} -- Synchronization
 			context_editor.development_window.window.set_pointer_style (wait_cursor)
 			if not is_cancelled then
 				l_status_bar := context_editor.development_window.status_bar
-				
+
 				nr_of_items := 1 + nodes.count + clusters.count + links.count + 1 + 1
 				l_status_bar.reset_progress_bar_with_range (0 |..| nr_of_items)
 				l_status_bar.display_progress_value (0)
 				l_status_bar.display_message ("Synchronizing diagram tool: Removing unneeded items")
 				remove_unneeded_items
-				
+
 				l_status_bar.display_progress_value (1)
-				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing clusters")	
+				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing clusters")
 				synchronize_clusters (l_progress_bar)
 
 				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing classes")
 				synchronize_classes (l_progress_bar)
 
-				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing links")			
+				l_status_bar.display_message ("Synchronizing diagram tool: Synchronizing links")
 				synchronize_links (l_progress_bar)
 
 				l_status_bar.display_progress_value (nr_of_items - 1)
@@ -272,7 +273,7 @@ feature {EIFFEL_WORLD} -- Insert
 				i := i + 1
 			end
 		end
-		
+
 	add_clusters_relations is
 			-- Add relation between clusters in `Current'.
 		local
@@ -319,7 +320,7 @@ feature {EIFFEL_WORLD} -- Insert
 				l_clusters.forth
 			end
 		end
-		
+
 	add_parent_relations (a_cluster: ES_CLUSTER) is
 			-- Add `a_cluster' to the parent of `a_cluster' if any and if in graph.
 		require
@@ -370,7 +371,7 @@ feature {EIFFEL_WORLD} -- Insert
 				end
 			end
 		end
-		
+
 	add_descendant_relations (a_class: ES_CLASS) is
 			-- Add links to descendants of `a_class' in the graph.
 		require
@@ -402,7 +403,7 @@ feature {EIFFEL_WORLD} -- Insert
 				end
 			end
 		end
-		
+
 	add_client_relations (a_class: ES_CLASS) is
 			-- Add links to classes in the graph that are clients of `a_class'
 		require
@@ -432,7 +433,7 @@ feature {EIFFEL_WORLD} -- Insert
 				l_nodes.forth
 			end
 		end
-		
+
 	add_supplier_relations (a_class: ES_CLASS) is
 			-- Add links to classes in the graph that are suppliers of `a_class'.
 		local
@@ -459,9 +460,9 @@ feature {EIFFEL_WORLD} -- Insert
 				l_nodes.forth
 			end
 		end
-		
+
 feature {CLASS_TEXT_MODIFIER} -- Status report
-	
+
 	next_feature_name_number: INTEGER is
 			-- Number to append to next created feature.
 		do
@@ -471,7 +472,7 @@ feature {CLASS_TEXT_MODIFIER} -- Status report
 			feature_name_number_incremented:
 				feature_name_number = old feature_name_number + 1
 		end
-		
+
 feature {NONE} -- Implementation
 
 	remove_unneeded_items is
@@ -538,7 +539,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	synchronize_clusters (a_progress_bar: EB_PERCENT_PROGRESS_BAR) is
 			-- Synchronize all clusters in `Current'.
 		local
@@ -559,9 +560,9 @@ feature {NONE} -- Implementation
 				if a_progress_bar /= Void then
 					a_progress_bar.set_value (a_progress_bar.value + 1)
 				end
-			end	
+			end
 		end
-		
+
 	synchronize_classes (a_progress_bar: EB_PERCENT_PROGRESS_BAR) is
 			-- Synchronize all classes in `Current'.
 		local
@@ -584,7 +585,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	synchronize_links (a_progress_bar: EB_PERCENT_PROGRESS_BAR) is
 			-- Synchronize all links in `Current'.
 		local
@@ -607,7 +608,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	explore_relations is
 			-- Explore relations.
 		deferred
@@ -618,10 +619,10 @@ feature {NONE} -- Implementation
 
 	class_name_to_node_lookup: HASH_TABLE [ES_CLASS, STRING]
 			-- Lookup tables to speed up `class_from_interface'.
-			
+
 	inheritance_links_lookup: DS_HASH_TABLE [ES_INHERITANCE_LINK, like link_type]
 			-- Lookup tables to speed up `inheritance_link_connecting'.
-			
+
 	client_supplier_links_lookup: DS_HASH_TABLE [ES_CLIENT_SUPPLIER_LINK, like link_type]
 			-- Lookup tables to speed up `client_supplier_link_connecting'.
 
@@ -634,12 +635,17 @@ feature {NONE} -- Implementation
 		do
 			Result := (u.item (1) = v.item (1)) and (u.item (2) = v.item (2))
 		end
-		
-	link_type: TUPLE [EG_LINKABLE, EG_LINKABLE] is 
+
+	link_type: TUPLE [EG_LINKABLE, EG_LINKABLE] is
 			-- For typing purposes only
 		do
 		end
-			
+
+	node_type: ES_CLASS is
+			-- Type of nodes in `nodes'.
+		do
+		end
+
 invariant
 	context_editor_not_void: context_editor /= Void
 	class_name_to_node_lookup_not_void: class_name_to_node_lookup /= Void

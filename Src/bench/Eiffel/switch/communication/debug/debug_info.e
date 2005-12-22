@@ -8,6 +8,8 @@ indexing
 class DEBUG_INFO
 
 inherit
+	ANY
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
@@ -46,7 +48,7 @@ feature -- global
 					-- Reset information about the application
 					-- contained in the breakpoints.
 				restore
-				
+
 				from
 					breakpoints.start
 				until
@@ -94,7 +96,7 @@ feature -- global
 					breakpoints ?= raw_file.retrieved
 					raw_file.close
 				end
-			
+
 				if breakpoints /= Void then
 						-- Reset information about the application
 						-- contained in the breakpoints (if any).
@@ -134,7 +136,7 @@ feature -- global
 			end
 			update
 		end
-	
+
 	update is
 			-- remove breakpoint that no more usefull from the hash_table
 			-- see BREAKPOINT/is_not_usefull for further comments
@@ -156,7 +158,7 @@ feature -- global
 				end
 			end
 		end
-		
+
 	has_breakpoints: BOOLEAN is
 			-- Does the program have a breakpoint (enabled or disabled) ?
 		local
@@ -175,7 +177,7 @@ feature -- global
 				breakpoints.forth
 			end
 		end
-	
+
 	has_enabled_breakpoints: BOOLEAN is
 			-- Does the program have a breakpoint set?
 		local
@@ -193,7 +195,7 @@ feature -- global
 				breakpoints.forth
 			end
 		end
-	
+
 	has_disabled_breakpoints: BOOLEAN is
 			-- Does the program have an enabled breakpoint?
 		local
@@ -310,7 +312,7 @@ feature -- changing breakpoints for a feature
 			error_in_bkpts := False
 			if not retried then
 				f_real_body_id := f.real_body_id
-	
+
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
 				from
@@ -342,7 +344,7 @@ feature -- changing breakpoints for a feature
 			error_in_bkpts := False
 			if not retried then
 				f_real_body_id := f.real_body_id
-	
+
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
 				from
@@ -374,7 +376,7 @@ feature -- changing breakpoints for a feature
 			error_in_bkpts := False
 			if not retried then
 				f_real_body_id := f.real_body_id
-	
+
 				-- search in the list of all_breakpoints
 				-- all breakpoint set for feature 'f'
 				from
@@ -461,7 +463,7 @@ feature -- getting breakpoints status for a feature
 			create {LINKED_SET [INTEGER]} Result.make
 			if not retried then
 				f_real_body_id := f.real_body_id
-	
+
 					-- search in the list of all_breakpoints for
 					-- at leat one breakpoint set in this feature
 				from
@@ -498,7 +500,7 @@ feature -- getting breakpoints status for a feature
 			retried := True
 			retry
 		end
-			
+
 	breakpoints_disabled_for (f: E_FEATURE): LIST [INTEGER] is
 			-- Breakpoints set for feature `f' and disabled
 		require
@@ -510,7 +512,7 @@ feature -- getting breakpoints status for a feature
 		do
 			error_in_bkpts := False
 			create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make
-			if not retried then 
+			if not retried then
 				f_real_body_id := f.real_body_id
 
 					-- search in the list of all_breakpoints for
@@ -549,7 +551,7 @@ feature -- getting breakpoints status for a feature
 			retried := True
 			retry
 		end
-			
+
 	breakpoints_enabled_for (f: E_FEATURE): LIST [INTEGER] is
 			-- Breakpoints set for feature `f' and enabled
 		require
@@ -922,7 +924,7 @@ feature -- getting the status of a specified breakpoint
 	breakpoint_condition_set: INTEGER is 2
 	breakpoint_condition_disabled: INTEGER is -2
 			-- Possible value for `breakpoint_status'.
-	
+
 	breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER is
 			-- Returns `breakpoint_not_set' if breakpoint is not set,
 			--         `breakpoint_set' if breakpoint is set,
@@ -969,7 +971,7 @@ feature -- Debug
 			io.put_string ("============ class DEBUG INFO ===========%N%N");
 			from
 				breakpoints.start
-			until	
+			until
 				breakpoints.after
 			loop
 				breakpoints.item_for_iteration.trace
@@ -990,7 +992,7 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 				-- update every breakpoint
 			from
 				breakpoints.start
-			until	
+			until
 				breakpoints.after
 			loop
 				breakpoints.item_for_iteration.synchronize
@@ -1033,9 +1035,9 @@ feature {APPLICATION_EXECUTION, FAILURE_HDLR}
 		do
 			error_in_bkpts := False
 			create {LINKED_LIST[E_FEATURE]} Result.make
-			create known_features.make(5) 
+			create known_features.make(5)
 
-			from 
+			from
 				breakpoints.start
 			until
 				breakpoints.after

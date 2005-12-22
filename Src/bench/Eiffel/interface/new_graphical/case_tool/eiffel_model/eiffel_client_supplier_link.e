@@ -6,19 +6,20 @@ indexing
 
 class
 	EM_CLIENT_SUPPLIER_LINK
-	
+
 inherit
 	EG_LINK
 		rename
 			source as client,
 			target as supplier
 		redefine
-			default_create
+			default_create,
+			client, supplier
 		end
-	
+
 create
 	make_with_classes_and_name
-	
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -28,7 +29,7 @@ feature {NONE} -- Initialization
 			create is_aggregated_changed
 		end
 
-	make_with_classes_and_name (a_client, a_supplier: EM_CLASS; a_name: like name) is
+	make_with_classes_and_name (a_client, a_supplier: like client; a_name: like name) is
 			-- Create a EIFFEL_CLIENT_SUPPLIER_LINK with `a_name'.
 		require
 			a_client_not_void: a_client /= Void
@@ -44,15 +45,23 @@ feature {NONE} -- Initialization
 			set: client = a_client and supplier = a_supplier
 			name_set: name = a_name
 		end
-		
+
+feature -- Access
+
+	client: EM_CLASS
+			-- Client of the link.
+
+	supplier: EM_CLASS
+			-- Supplier of the link.
+
 feature -- Status report
 
 	is_aggregated: BOOLEAN
 			-- Is `Current' an aggregated link (`supplier' is expanded)?.
-			
+
 	is_aggregated_changed: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when `is_aggregated' is changed.
-			
+
 feature -- Status settings
 
 	set_is_aggregated (b: BOOLEAN) is
@@ -65,7 +74,7 @@ feature -- Status settings
 		ensure
 			set: is_aggregated = b
 		end
-		
+
 invariant
 	is_aggregated_changed_not_void: is_aggregated_changed /= Void
 

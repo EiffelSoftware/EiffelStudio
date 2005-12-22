@@ -27,7 +27,9 @@ inherit
 			copy_selection,
 			recycle,
 			margin,
-			has_margin
+			has_margin,
+			cursor_type,
+			line_type
 		end
 
 	EB_FORMATTED_TEXT
@@ -243,7 +245,7 @@ feature -- Possibly delayed operations
 			-- scroll to position `pos' in characters
 			-- does not need the text to be fully loaded
 		local
-			cursor: EDITOR_CURSOR
+			cursor: like cursor_type
 		do
 			if text_is_fully_loaded then
 				cursor := text_displayed.cursor
@@ -420,10 +422,10 @@ feature {EB_CLICKABLE_MARGIN}-- Process Vision2 Events
 			-- `a_screen_x' and `a_screen_y' are the mouse pointer absolute coordinates on the screen.
 		local
 			l_number: INTEGER
-			ln: EIFFEL_EDITOR_LINE
+			ln: like line_type
 			stone: STONE
 			bkstn: BREAKABLE_STONE
-			cur: EDITOR_CURSOR
+			cur: like cursor_type
 		do
 			if button = 1 then
 				Precursor {EB_EDITOR} (x_pos, y_pos, button, a_screen_x, a_screen_y)
@@ -493,7 +495,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 	pebble_from_x_y (x_pos_with_margin, abs_y_pos: INTEGER): STONE is
 			-- Stone on (`x_pos', `y_pos').
 		local
-			cur			: EDITOR_CURSOR
+			cur			: like cursor_type
 			l_number	: INTEGER
 			x_pos,
 			y_pos		: INTEGER
@@ -625,7 +627,7 @@ feature {EB_EDITOR_TOOL} -- Update
 			end
 		end
 
-feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_SEARCH_PERFORMER, EB_CLICKABLE_MARGIN} -- Access
+feature -- Access
 
 	text_displayed: CLICKABLE_TEXT
 			-- Text displayed in the editor.
@@ -648,7 +650,7 @@ feature {NONE} -- Implementation
 			l_shortcut: SHORTCUT_PREFERENCE
 			l_shortcuts: HASH_TABLE [SHORTCUT_PREFERENCE, STRING]
 		do
-			create Result.make
+			create Result
 			l_shortcuts := preferences.editor_data.shortcuts
 			from
 				l_shortcuts.start
@@ -696,7 +698,7 @@ feature {NONE} -- Implementation
 			bp_number_is_valid: bp_number > 0
 			text_completely_loaded: text_is_fully_loaded
 		local
-			ln: EIFFEL_EDITOR_LINE
+			ln: like line_type
 			bp_count, line_index: INTEGER
 			bp_token: EDITOR_TOKEN_BREAKPOINT
 		do
@@ -752,9 +754,9 @@ feature {NONE} -- Implementation
 			check
 				l_search_tool /= Void
 			end
-			l_search_tool.set_check_class_succeed (true)
+			l_search_tool.set_check_class_succeed (True)
 			if text_displayed.has_selection then
-				if l_search_tool.currently_searched = Void or else (not l_search_tool.item_selected (current)) then
+				if l_search_tool.currently_searched = Void or else (not l_search_tool.item_selected (Current)) then
 					l_search_tool.force_new_search
 					l_incremental_search := l_search_tool.is_incremental_search
 					l_search_tool.disable_incremental_search
@@ -780,6 +782,18 @@ feature -- Memory management
 				after_reading_text_actions.wipe_out
 				after_reading_text_actions := Void
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	line_type: EIFFEL_EDITOR_LINE is
+			-- Type of line.
+		do
+		end
+
+	cursor_type: EIFFEL_EDITOR_CURSOR is
+			-- Type of cursor.
+		do
 		end
 
 end -- class EB_CLICKABLE_EDITOR

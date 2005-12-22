@@ -192,7 +192,7 @@ feature {NONE} -- Initialization
 					context_tool.address_manager.execute_with_cluster
 				end
 					-- Set the appropriate notebook tab
-				context_tool.notebook.select_item (context_tool.notebook [a_session_data.context_tab_index])
+				context_tool.notebook.select_item (context_tool.notebook.i_th (a_session_data.context_tab_index))
 			end
 		end
 

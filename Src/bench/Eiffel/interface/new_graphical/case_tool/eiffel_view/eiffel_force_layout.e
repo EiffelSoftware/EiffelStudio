@@ -14,10 +14,10 @@ inherit
 			new_spring_energy_solver,
 			new_spring_particle_solver
 		end
-	
+
 create
 	make_with_world
-	
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -32,10 +32,10 @@ feature -- Access
 
 	inheritance_stiffness: INTEGER
 			-- Stiffness for inheritance links.
-	
+
 	client_supplier_stiffness: INTEGER
 			-- Stiffness for client supplier links.
-	
+
 feature -- Element change
 
 	set_inheritance_stiffness (a_value: INTEGER) is
@@ -47,7 +47,7 @@ feature -- Element change
 		ensure
 			set: inheritance_stiffness = a_value
 		end
-		
+
 	set_client_supplier_stiffness (a_value: INTEGER) is
 			-- Set `client_supplier_stiffness' to `a_value'.
 		require
@@ -57,10 +57,10 @@ feature -- Element change
 		ensure
 			set: client_supplier_stiffness = a_value
 		end
-	
+
 feature {NONE} -- Implementation
 
-	new_spring_particle_solver (particles: LIST [EG_PARTICLE]): EIFFEL_SPRING_PARTICLE is
+	new_spring_particle_solver (particles: LIST [EG_LINKABLE_FIGURE]): EIFFEL_SPRING_PARTICLE is
 			-- Create a new spring particle solver for `particles' and initialize it.
 		local
 			l_center_attraction, l_stiffness, l_electrical_repulsion: DOUBLE
@@ -77,8 +77,8 @@ feature {NONE} -- Implementation
 			Result.set_inheritance_stiffness ((inheritance_stiffness / 10) + 0.001)
 			Result.set_client_stiffness ((client_supplier_stiffness / 10) + 0.001)
 		end
-		
-	new_spring_energy_solver (particles: LIST [EG_PARTICLE]): EIFFEL_SPRING_ENERGY is
+
+	new_spring_energy_solver (particles: LIST [EG_LINKABLE_FIGURE]): EIFFEL_SPRING_ENERGY is
 			-- Create a new spring energy solver for `particles' and initialize it.
 		local
 			l_center_attraction, l_stiffness, l_electrical_repulsion: DOUBLE

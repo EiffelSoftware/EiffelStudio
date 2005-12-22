@@ -15,7 +15,13 @@ inherit
 			model,
 			recycle
 		end
-		
+
+create
+	default_create
+
+create {EIFFEL_CLIENT_SUPPLIER_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -26,19 +32,19 @@ feature {NONE} -- Initialization
 			set_accept_cursor (cursors.cur_client_link)
 			set_deny_cursor (cursors.cur_x_client_link)
 		end
-		
+
 	initialize is
 			-- Initialize `Current' with `model'.
 		do
 			Precursor {EIFFEL_LINK_FIGURE}
 			model.needed_on_diagram_changed_actions.extend (agent on_needed_on_diagram_changed)
 		end
-			
+
 feature -- Access
 
 	model: ES_CLIENT_SUPPLIER_LINK
 			-- The model for `Current'.
-			
+
 	feature_names: ARRAYED_LIST [STRING] is
 			-- List of names of all features.
 		local
@@ -57,9 +63,9 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 feature -- Element change
-	
+
 	recycle is
 			-- Free `Current's resources.
 		do
@@ -70,7 +76,7 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
-		
+
 	on_needed_on_diagram_changed is
 			-- `model'.`is_needed_on_diagram' changed.
 		do
@@ -85,7 +91,7 @@ feature {NONE} -- Implementation
 			end
 			request_update
 		end
-		
+
 	e_feature_from_abstract (a_feature: FEATURE_AS): E_FEATURE is
 			-- compiled version of `a_feature' if any.
 		require
@@ -98,5 +104,5 @@ feature {NONE} -- Implementation
 				Result := l_class.feature_with_name (a_feature.feature_name)
 			end
 		end
-		
+
 end -- class EIFFEL_CLIENT_SUPPLIER_FIGURE

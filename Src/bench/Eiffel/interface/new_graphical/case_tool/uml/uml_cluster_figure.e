@@ -6,7 +6,7 @@ indexing
 
 class
 	UML_CLUSTER_FIGURE
-	
+
 inherit
 	EIFFEL_CLUSTER_FIGURE
 		redefine
@@ -21,40 +21,43 @@ inherit
 			set_with_xml_element,
 			recycle
 		end
-		
+
 	UML_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as retrieve_preferences
 		undefine
 			default_create
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		undefine
 			default_create
 		end
-		
+
 create
 	make_with_model
-		
+
+create {UML_CLUSTER_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
 			-- Create a UML_CLUSTER_FIGURE.
 		do
 			Precursor {EIFFEL_CLUSTER_FIGURE}
-			
+
 			-- create the cluster rectangle
 			create rectangle
 			set_pointer_style (default_pixmaps.sizeall_cursor)
 			extend (rectangle)
 			send_to_back (rectangle)
-			
+
 			-- create the label rectangle
 			create label_rectangle
 			label_rectangle.pointer_double_press_actions.extend (agent on_label_double_press)
@@ -64,12 +67,12 @@ feature {NONE} -- Initialization
 
 			real_rectangle_border := 5.0
 			real_label_rectangle_border := 5.0
-			
+
 			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 			is_shown := True
 		end
-		
+
 	make_with_model (a_model: like model) is
 			-- Create a UML_CLUSTER_FIGURE with `a_model'.
 		require
@@ -78,13 +81,13 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			
+
 			disable_rotating
 			disable_scaling
-			
+
 			request_update
 		end
-		
+
 feature -- Access
 
 	left: INTEGER is
@@ -92,13 +95,13 @@ feature -- Access
 		do
 			Result := rectangle.point_a_x
 		end
-		
+
 	top: INTEGER is
 			-- Top most position
 		do
 			Result := rectangle.point_a_y
 		end
-		
+
 	right: INTEGER is
 			-- Right most position.
 		do
@@ -110,13 +113,13 @@ feature -- Access
 		do
 			Result := rectangle.point_b_y
 		end
-		
+
 	port_x: INTEGER is
 			-- x position where links are starting.
 		do
 			Result := rectangle.x
 		end
-		
+
 	port_y: INTEGER is
 			-- y position where links are starting.
 		do
@@ -128,13 +131,13 @@ feature -- Access
 		do
 			create Result.make (rectangle.point_a_x, rectangle.point_a_y, rectangle.width, rectangle.height)
 		end
-		
+
 	height: INTEGER is
 			-- Height in pixels.
 		do
 			Result := rectangle.height
 		end
-		
+
 	width: INTEGER is
 			-- Width in pixels.
 		do
@@ -196,7 +199,7 @@ feature -- Access
 		do
 			Result := "UML_CLUSTER_FIGURE"
 		end
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml element representing `Current's state.
 		do
@@ -204,7 +207,7 @@ feature -- Access
 			Result.put_last (Xml_routines.xml_node (Result, "IS_ICONIFIED", is_iconified.out))
 			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
 		end
-	
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		do
@@ -293,7 +296,7 @@ feature -- Element change
 		end
 
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
-		
+
 	update is
 			-- Some properties of current may have changed.
 		local
@@ -301,7 +304,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 			w, h, rb, lrb, l_left, l_top, l_right, l_bottom: INTEGER
 			px, py, pax, pay: INTEGER
 		do
-			
+
 			if is_shown then
 				if is_iconified then
 					rb := rectangle_border
@@ -311,19 +314,19 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 					py := port_y
 					l_left := px - as_integer (w / 2)
 					l_top := py - as_integer (h / 2)
-					
+
 					pax := l_left - rb
 					pay := l_top - rb
-					
+
 					rectangle.set_point_a_position (pax, pay)
 					rectangle.set_point_b_position (l_left + w + rb, l_top + h + rb)
-					
+
 					name_label.set_x_y (px, py)
-					
+
 					lrb := label_rectangle_border * 2
 					label_rectangle.set_point_a_position (pax, pay - lrb)
 					label_rectangle.set_point_b_position (pax + 2 * lrb, pay)
-					
+
 				else
 					l_min_size := minimum_size
 					rb := rectangle_border
@@ -331,7 +334,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 						l_left := (l_min_size.left - rb).min (user_size.left)
 						l_top := (l_min_size.top - rb).min (user_size.top)
 						l_right := (l_min_size.right + rb).max (user_size.right)
-						l_bottom := (l_min_size.bottom + rb).max (user_size.bottom)	
+						l_bottom := (l_min_size.bottom + rb).max (user_size.bottom)
 					else
 						l_left := l_min_size.left - rb
 						l_top := l_min_size.top - rb
@@ -339,21 +342,21 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 						l_bottom := l_min_size.bottom + rb
 					end
 					rectangle.set_point_a_position (l_left, l_top)
-					rectangle.set_point_b_position (l_right, l_bottom)	
-					
+					rectangle.set_point_b_position (l_right, l_bottom)
+
 					lrb := label_rectangle_border
 					label_rectangle.set_point_a_position (l_left, l_top - 2 * lrb - name_label.height)
 					label_rectangle.set_point_b_position (l_left + name_label.width + 2 * lrb, l_top)
-													
+
 					name_label.set_point_position (l_left + lrb, label_rectangle.point_a_y + lrb)
 				end
 				Precursor {EIFFEL_CLUSTER_FIGURE}
 			end
 			is_update_required := False
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Transformation
-		
+
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
 			-- Same as transform but without precondition
 			-- is_transformable and without invalidating
@@ -373,7 +376,7 @@ feature {EV_MODEL_GROUP} -- Transformation
 			end
 			request_update
 		end
-		
+
 feature {EG_LAYOUT} -- Layouting
 
 	set_to_minimum_size is
@@ -387,7 +390,7 @@ feature {EG_LAYOUT} -- Layouting
 			rectangle.set_point_b_position (l_min_size.right + rectangle_border, l_min_size.bottom + rectangle_border)
 			request_update
 		end
-		
+
 feature {EIFFEL_WORLD} -- Show/Hide
 
 	disable_shown is
@@ -405,7 +408,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 			request_update
 			is_shown := False
 		end
-		
+
 	enable_shown is
 			-- Show `Current'.
 		do
@@ -421,7 +424,7 @@ feature {EIFFEL_WORLD} -- Show/Hide
 			request_update
 			is_shown := True
 		end
-	
+
 feature {NONE} -- Implementation
 
 	set_is_selected (an_is_selected: like is_selected) is
@@ -444,16 +447,16 @@ feature {NONE} -- Implementation
 		do
 			Result := real_label_rectangle_border.truncated_to_integer
 		end
-			
+
 	real_label_rectangle_border: REAL
 			-- Real value for `label_rectangle_border'.
-			
+
 	rectangle_border: INTEGER is
 			-- Minimum border between elements and `rectangle' border.
 		do
 			Result := real_rectangle_border.truncated_to_integer
 		end
-			
+
 	real_rectangle_border: REAL
 			-- Real value for `rectangle_border'.
 
@@ -466,7 +469,7 @@ feature {NONE} -- Implementation
 		do
 			rectangle.set_point_a_position (ax, ay)
 		end
-		
+
 	set_bottom_right_position (ax, ay: INTEGER) is
 			-- Set position of bottom right corner to (`ax', `ay').
 		do
@@ -475,10 +478,10 @@ feature {NONE} -- Implementation
 
 	rectangle: EV_MODEL_RECTANGLE
 			-- The rectangle.
-			
+
 	label_rectangle: EV_MODEL_RECTANGLE
 			-- The rectangle for the label.
-		
+
 	set_name_label_text (a_text: STRING) is
 			-- Set `name_label'.`text' to `a_text'.
 		local
@@ -505,13 +508,13 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-				s := s + rest			
+				s := s + rest
 				name_label.set_text (s)
 			else
 				name_label.set_text (a_text)
 			end
 		end
-		
+
 	on_label_double_press (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- Iconify or deiconify `Current'.
 		local
@@ -538,7 +541,7 @@ feature {NONE} -- Implementation
 			toggle_is_iconified
 			request_update
 		end
-		
+
 	toggle_is_iconified is
 			-- Toggle value of `is_iconified'.
 		do
@@ -557,13 +560,13 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	retrieve_preferences is
 			-- Retrieve properties from preferences.
 		do
 			name_label.set_identified_font (uml_cluster_name_font)
 			name_label.set_foreground_color (uml_cluster_name_color)
-			
+
 			rectangle.set_foreground_color (uml_cluster_line_color)
 			if is_iconified then
 				if uml_cluster_iconified_fill_color /= Void then
@@ -583,7 +586,7 @@ feature {NONE} -- Implementation
 			else
 				rectangle.set_line_width (uml_cluster_line_width)
 			end
-			
+
 			label_rectangle.set_foreground_color (uml_cluster_line_color)
 			if uml_cluster_name_area_color /= Void then
 				label_rectangle.set_background_color (uml_cluster_name_area_color)
@@ -591,8 +594,16 @@ feature {NONE} -- Implementation
 			if is_selected then
 				label_rectangle.set_line_width (uml_cluster_line_width * 2)
 			else
-				label_rectangle.set_line_width (uml_cluster_line_width)			
+				label_rectangle.set_line_width (uml_cluster_line_width)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
 		end
 
 end -- class UML_CLUSTER_FIGURE

@@ -6,36 +6,39 @@ indexing
 
 class
 	EIFFEL_CLUSTER_LEGEND
-	
+
 inherit
 	EV_MODEL_MOVE_HANDLE
 		redefine
 			default_create
 		end
-	
+
 	SHARED_WORKBENCH
 		undefine
 			default_create
 		end
-		
+
 	EB_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	BON_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	EV_SHARED_SCALE_FACTORY
 		undefine
 			default_create
 		end
-	
+
 create
 	make_with_world
-	
+
+create {EIFFEL_CLUSTER_LEGEND}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -47,19 +50,19 @@ feature {NONE} -- Initialization
 			create border
 			border.set_background_color (default_colors.white)
 			border.set_line_width (2)
-			
+
 			id_pixmap := pixmap_factory.registered_pixmap (pixmaps.icon_pin_legend_open)
 			create open_pin
 			open_pin.set_identified_pixmap (id_pixmap)
-			
+
 			id_pixmap := pixmap_factory.registered_pixmap (pixmaps.icon_pin_legend_closed)
 			create closed_pin
 			closed_pin.set_identified_pixmap (id_pixmap)
-			
+
 			create pin_button
 			open_pin.set_point_position (pin_button.point_x, pin_button.point_y)
 			pin_button.extend (closed_pin)
-				
+
 			extend (border)
 			pin_button.pointer_button_press_actions.extend (agent on_pin)
 			pin_button.set_pointer_style (default_pixmaps.standard_cursor)
@@ -78,7 +81,7 @@ feature {NONE} -- Initialization
 			disable_rotating
 			disable_scaling
 			start_actions.extend (agent on_start_move)
-			
+
 			build_table
 			build_legend
 			update_position
@@ -88,20 +91,20 @@ feature {NONE} -- Initialization
 		ensure
 			set: display_world = a_world
 		end
-		
+
 feature -- Status report
 
 	is_pined: BOOLEAN
 			-- Is `Current' pined.
-		
+
 feature -- Access
 
 	display_world: EIFFEL_WORLD
 			-- World of wich clusters are displayed.
-			
+
 	pin_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when `Current' is pined.
-			
+
 feature -- Element change
 
 	update is
@@ -109,22 +112,22 @@ feature -- Element change
 		do
 			wipe_out
 			cluster_color_table.wipe_out
-			
+
 			extend (border)
-			
+
 			border.set_point_a_position (point_x, point_y)
 			border.set_point_b_position (point_x, point_y)
-			
+
 			build_table
 			build_legend
-			
+
 			update_position
-			
+
 			extend (colorize_button)
 			extend (pin_button)
 		end
 
-		
+
 feature {NONE} -- Implementation
 
 	build_table is
@@ -146,7 +149,7 @@ feature {NONE} -- Implementation
 				l_nodes.forth
 			end
 		end
-		
+
 	build_legend is
 			-- Build legend from `cluster_color_table'.
 		local
@@ -181,7 +184,7 @@ feature {NONE} -- Implementation
 						colors.forth
 					end
 				end
-				
+
 				create l_cluster_entry
 					create rec.make_with_positions (0, 2, 30, 18)
 					rec.set_background_color (l_color)
@@ -194,12 +197,12 @@ feature {NONE} -- Implementation
 				l_cluster_entry.set_accept_cursor (cursors.cur_cluster)
 				l_cluster_entry.set_deny_cursor (cursors.cur_x_cluster)
 				extend (l_cluster_entry)
-				
+
 				cluster_color_table.forth
 				i := i + 1
 			end
 		end
-		
+
 	include_bon_class (a_class: BON_CLASS_FIGURE) is
 			-- Include color of `a_class' into `cluster_color_table'.
 		require
@@ -218,7 +221,7 @@ feature {NONE} -- Implementation
 				add_color (colors, a_class.background_color)
 			end
 		end
-		
+
 	add_color (a_colors: ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]]; a_color: EV_COLOR) is
 			-- Add `a_color' to `a_colors'.
 		require
@@ -253,7 +256,7 @@ feature {NONE} -- Implementation
 				a_colors.extend ([a_color, 1])
 			end
 		end
-	
+
 	update_position is
 			-- Update position of `border' and `colorize_button'.
 		local
@@ -265,7 +268,7 @@ feature {NONE} -- Implementation
 			colorize_button.set_point_position (border.point_b_x - 23, border.point_a_y + 1)
 			pin_button.set_point_position (border.point_b_x - 43, border.point_a_y + 1)
 		end
-	
+
 	cluster_pebble (cluster_name: STRING): CLUSTER_STONE is
 			-- Return stone for cluster with `cluster_name' if any.
 		local
@@ -276,13 +279,13 @@ feature {NONE} -- Implementation
 				create Result.make (cluster_i)
 			end
 		end
-		
+
 	on_start_move is
 			-- User started to move `Current'.
 		do
 			display_world.bring_to_front (Current)
 		end
-		
+
 	on_colorize (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is
 			-- User pressed `colorize_button'.
 		local
@@ -365,11 +368,11 @@ feature {NONE} -- Implementation
 				end
 				classes.forth
 			end
-			
+
 			update
 			display_world.context_editor.projector.project
 		end
-		
+
 	change_font (cf: BON_CLASS_FIGURE; a_color: EV_COLOR) is
 			-- Change color of class figure names in order to
 			-- keep them readable.
@@ -396,7 +399,7 @@ feature {NONE} -- Implementation
 				cf.set_generics_color (default_colors.black)
 			end
 		end
-		
+
 	color_with_number (a_nb: INTEGER): EV_COLOR is
 			-- Return color with `a_nb'.
 		require
@@ -441,18 +444,18 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 		end
-		
+
 	random: RANGED_RANDOM is
 		once
 			create Result.make
 		end
-		
+
 	random_color_table: HASH_TABLE [EV_COLOR, INTEGER] is
 			-- Table of numbers and colors.
 		once
 			create Result.make (10)
 		end
-		
+
 	colorize_button: EV_MODEL_GROUP is
 			-- Button to colorize all classes at once.
 		local
@@ -478,7 +481,7 @@ feature {NONE} -- Implementation
 						create color_rec.make_with_positions (1 + i * 5, 1 + j * 5, 1 + (i + 1) * 5, 1 + (j + 1) * 5)
 						color_rec.set_line_width (0)
 						color_rec.set_background_color (color_with_number (nb))
-						
+
 						Result.extend (color_rec)
 						nb := nb + 1
 						j := j + 1
@@ -495,14 +498,14 @@ feature {NONE} -- Implementation
 			Result_not_Void: Result /= Void
 			Result_equal_implementation: internal_colorize_button = Result
 		end
-		
+
 	internal_colorize_button: like colorize_button
 			-- Implementation of `colorize_button'.
 
 	cluster_color_table: HASH_TABLE [ARRAYED_LIST [TUPLE [EV_COLOR, INTEGER]], STRING]
 			-- Table of cluster names and list of colors of classes of cluster with cluster
 			-- name and how many classes in the cluster have this color.
-	
+
 	border: EV_MODEL_RECTANGLE
 			-- Border of the legend
 
@@ -510,7 +513,7 @@ feature {NONE} -- Implementation pin
 
 	pin_button: EV_MODEL_GROUP
 			-- Button to select if `Current' is pined.
-			
+
 	open_pin: EV_MODEL_PICTURE
 
 	closed_pin: EV_MODEL_PICTURE

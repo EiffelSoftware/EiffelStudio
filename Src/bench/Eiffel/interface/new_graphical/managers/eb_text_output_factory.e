@@ -8,6 +8,8 @@ class
 	EB_TEXT_OUTPUT_FACTORY
 
 inherit
+	ANY
+
 	EB_CONSTANTS
 		export
 			{NONE} all

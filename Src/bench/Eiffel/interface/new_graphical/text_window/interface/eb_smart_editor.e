@@ -282,7 +282,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- Process Vision2 Events
 			look_for_keyword: BOOLEAN
 			insert: CHARACTER
 			syntax_completed: BOOLEAN
-			cur: EDITOR_CURSOR
+			cur: like cursor_type
  		do
 			switch_auto_point := auto_point
 			if is_editable then
@@ -457,7 +457,7 @@ feature {NONE} -- Handle keystrokes
 			completion_mode := completion_bckp
 		end
 
-	basic_cursor_move (action: PROCEDURE[EDITOR_CURSOR,TUPLE]) is
+	basic_cursor_move (action: PROCEDURE[like cursor_type,TUPLE]) is
 			-- Perform a basic cursor move such as go_left,
 			-- go_right, ... an example of agent `action' is
 			-- cursor~go_left_char.
@@ -472,7 +472,7 @@ feature {NONE} -- Handle keystrokes
 			text_displayed_not_void: text_displayed /= Void
 		local
 			x,y: INTEGER
-			cursor: EDITOR_CURSOR
+			cursor: like cursor_type
 		do
 			from
 				cursor := text_displayed.cursor
@@ -621,7 +621,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 		local
 			screen: EB_STUDIO_SCREEN
 			tok: EDITOR_TOKEN
-			cursor: EDITOR_CURSOR
+			cursor: like cursor_type
 			right_space,
 			list_width: INTEGER
 		do
@@ -654,7 +654,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 	calculate_completion_list_y_position: INTEGER is
 			-- Determine the y position to display the completion list
 		local
-			cursor: EDITOR_CURSOR
+			cursor: like cursor_type
 			screen: EB_STUDIO_SCREEN
 			preferred_height,
 			upper_space,
@@ -719,7 +719,7 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			lower_space,
 			y_pos: INTEGER
 			screen: EB_STUDIO_SCREEN
-			cursor: EDITOR_CURSOR
+			cursor: like cursor_type
 			show_below: BOOLEAN
 			tok: EDITOR_TOKEN
 		do

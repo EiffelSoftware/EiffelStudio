@@ -18,31 +18,31 @@ inherit
 			recursive_transform,
 			recycle
 		end
-		
+
 	EXCEPTIONS
 		export
 			{NONE} all
 		undefine
 			default_create
 		end
-		
+
 	UML_CONSTANTS
 		undefine
 			default_create
 		end
-		
+
 	OBSERVER
 		rename
 			update as retrieve_preferences
 		undefine
 			default_create
 		end
-		
+
 	SHARED_EIFFEL_PROJECT
 		undefine
 			default_create
 		end
-		
+
 	SHARED_STATELESS_VISITOR
 		export
 			{NONE} all
@@ -54,10 +54,13 @@ inherit
 		undefine
 			default_create
 		end
-	
+
 create
 	make_with_model
-		
+
+create {UML_CLASS_FIGURE}
+	make_filled
+
 feature {NONE} -- Initialization
 
 	default_create is
@@ -74,7 +77,7 @@ feature {NONE} -- Initialization
 			extend (queries)
 			create commands
 			extend (commands)
-			
+
 			create names
 			create generics
 			create properties
@@ -84,16 +87,16 @@ feature {NONE} -- Initialization
 			names.extend (properties)
 			generics.hide
 			names.extend (generics)
-			
+
 			extend (names)
 			real_border := 10
 			disable_scaling
 			disable_rotating
-			
+
 			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 		end
-		
+
 	initialize is
 			-- Initialize `Current' with model.
 		do
@@ -105,7 +108,7 @@ feature {NONE} -- Initialization
 			set_properties
 			model.properties_changed_actions.extend (agent set_properties)
 		end
-		
+
 	make_with_model (a_model: ES_CLASS) is
 			-- Create a UML_CLASS_FIGURE using the `model' `a_model'.
 		require
@@ -115,7 +118,7 @@ feature {NONE} -- Initialization
 			model := a_model
 			initialize
 		end
-		
+
 feature -- Access
 
 	port_x: INTEGER is
@@ -123,43 +126,43 @@ feature -- Access
 		do
 			Result := point_x--rectangle.x
 		end
-		
+
 	port_y: INTEGER is
 			-- y position where links starting.
 		do
 			Result := point_y--rectangle.y
 		end
-		
+
 	size: EV_RECTANGLE is
 			-- Size of `Current'.
 		do
 			create Result.make (rectangle.point_a_x, rectangle.point_a_y, rectangle.width, rectangle.height)
 		end
-		
+
 	height: INTEGER is
 			-- height of `Current'.
 		do
 			Result := rectangle.height
 		end
-		
+
 	width: INTEGER is
 			-- width of `Current'.
 		do
 			Result := rectangle.width
 		end
-		
+
 	left: INTEGER is
 			-- Left most position.
 		do
 			Result := rectangle.point_a_x
 		end
-		
+
 	top: INTEGER is
 			-- Top most position
 		do
 			Result := rectangle.point_a_y
 		end
-		
+
 	right: INTEGER is
 			-- Right most position.
 		do
@@ -171,7 +174,7 @@ feature -- Access
 		do
 			Result := rectangle.point_b_y
 		end
-		
+
 feature -- Element change
 
 	recycle is
@@ -184,7 +187,7 @@ feature -- Element change
 				model.properties_changed_actions.prune_all (agent set_properties)
 			end
 		end
-	
+
 	update_edge_point (p: EV_COORDINATE; an_angle: DOUBLE) is
 			-- Set `p' position such that it is on a point on the edge of `Current'.
 		local
@@ -239,7 +242,7 @@ feature -- Element change
 			end
 			p.set_precise (new_x, new_y)
 		end
-		
+
 	fade_in is
 			-- Fade out `Current'.
 		do
@@ -248,7 +251,7 @@ feature -- Element change
 			end
 			is_faded := False
 		end
-		
+
 	fade_out is
 			-- Fade in `Current'.
 		do
@@ -257,7 +260,7 @@ feature -- Element change
 			end
 			is_faded := True
 		end
-		
+
 feature -- Store/Retrive
 
 	xml_node_name: STRING is
@@ -265,7 +268,7 @@ feature -- Store/Retrive
 		do
 			Result := "UML_CLASS_FIGURE"
 		end
-		
+
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml element representing `Current's state.
 		local
@@ -309,13 +312,13 @@ feature -- Store/Retrive
 				end
 				i := i + 1
 			end
-			
+
 			Result := Precursor {EIFFEL_CLASS_FIGURE} (node)
 			Result.add_attribute ("CLUSTER_NAME", xml_namespace, model.class_i.cluster.cluster_name)
 			Result.put_last (Xml_routines.xml_node (Result, "IS_NEEDED_ON_DIAGRAM", model.is_needed_on_diagram.out))
 			Result.put_last (xqueries)
 			Result.put_last (xcommands)
-			
+
 			from
 				l_expanded_sections.start
 			until
@@ -325,7 +328,7 @@ feature -- Store/Retrive
 				l_expanded_sections.forth
 			end
 		end
-		
+
 	set_with_xml_element (node: XM_ELEMENT) is
 			-- Retrive state from `node'.
 		local
@@ -341,7 +344,7 @@ feature -- Store/Retrive
 			else
 				model.disable_needed_on_diagram
 			end
-			
+
 			xqueries ?= node.item_for_iteration
 			node.forth
 			from
@@ -358,7 +361,7 @@ feature -- Store/Retrive
 				end
 				l_cursor.forth
 			end
-			
+
 			xcommands ?= node.item_for_iteration
 			node.forth
 			from
@@ -378,7 +381,7 @@ feature -- Store/Retrive
 			update_positions
 			request_update
 		end
-		
+
 feature {EV_MODEL_GROUP} -- Figure group
 
 	recursive_transform (a_transformation: EV_MODEL_TRANSFORMATION) is
@@ -390,7 +393,7 @@ feature {EV_MODEL_GROUP} -- Figure group
 			real_border := real_border * a_transformation.item (1, 1)
 			update_border
 		end
-		
+
 feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 
 	update is
@@ -398,7 +401,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 		do
 			is_update_required := False
 		end
-		
+
 feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 
 	update_size (fsv: FEATURE_SECTION_VIEW) is
@@ -413,7 +416,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 			queries.start
 			queries.search (fsv)
 			if not queries.after then
-				from	
+				from
 					l_item ?= queries.item
 					pos := l_item.point_y + l_item.bounding_box.height
 					queries.forth
@@ -458,7 +461,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 				world.apply_right_angles
 			end
 		end
-		
+
 	has_section (fsv: FEATURE_SECTION_VIEW): BOOLEAN is
 			-- Is `fsv' a section of the class?
 		require
@@ -466,7 +469,7 @@ feature {FEATURE_SECTION_VIEW} -- Expand/Collapse section
 		do
 			Result := queries.has (fsv) or else commands.has (fsv)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	border: INTEGER is
@@ -474,40 +477,40 @@ feature {NONE} -- Implementation
 		do
 			Result := real_border.truncated_to_integer.max (0)
 		end
-		
+
 	real_border: REAL
 			-- Real border for `rectangle'
 
 	number_of_figures: INTEGER is 3
 			-- `rectangle', `queries_line', `commands_line'.
-			
+
 	rectangle: EV_MODEL_RECTANGLE
 			-- Rectangle around the UML class.
-	
+
 	queries_line: EV_MODEL_LINE
 			-- Line separating class name from query section.
-			
+
 	commands_line: EV_MODEL_LINE
 			-- Line separating query section from command section.
-			
+
 	queries: EV_MODEL_GROUP
 			-- Group of queries name.
-			
+
 	commands: EV_MODEL_GROUP
 			-- Group of operations.
-			
+
 	names: EV_MODEL_GROUP
 			-- Group of `properties', `name_lable', `generics'.
-			
+
 	generics: EV_MODEL_TEXT
 			-- Generics text.
-			
+
 	properties: EV_MODEL_TEXT
 			-- Text for properties of class.
-			
+
 	expanded_sections: ARRAYED_LIST [FEATURE_SECTION]
 			-- Expanded sections.
-			
+
 	query_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW is
 			-- Return feature section view with first feature name `a_name' if any.
 		local
@@ -525,7 +528,7 @@ feature {NONE} -- Implementation
 				queries.forth
 			end
 		end
-		
+
 	command_section_view_with_first_feature_name (a_name: STRING): FEATURE_SECTION_VIEW is
 			-- Return feature section view with name `a_name' if any.
 		local
@@ -593,7 +596,7 @@ feature {NONE} -- Implementation
 			queries.set_point_position (0, 0)
 			fill_group_with_features (queries, queries_list)
 		end
-		
+
 	set_commands is
 			-- Set names `commands' according to `model'.`queries'.
 		require
@@ -614,9 +617,9 @@ feature {NONE} -- Implementation
 				else
 					rectangle.set_line_width (1)
 				end
-			end	
+			end
 		end
-	
+
 	fill_group_with_features (a_group: EV_MODEL_GROUP; feature_sections: LIST [FEATURE_SECTION]) is
 			-- Fill `a_group' with features in `feature_sections'.
 		require
@@ -635,7 +638,7 @@ feature {NONE} -- Implementation
 				feature_sections.after
 			loop
 				l_item := feature_sections.item
-				
+
 				create l_fsv.make (l_item, Current)
 				l_fsv.set_point_position (a_group.point_x, a_group.point_y + attr_height)
 				if expanded_sections.has (l_item) then
@@ -649,10 +652,10 @@ feature {NONE} -- Implementation
 
 	queries_list: ARRAYED_LIST [FEATURE_SECTION]
 			-- List of features sections for queries.
-			
+
 	commands_list: ARRAYED_LIST [FEATURE_SECTION]
 			-- List of features sections for commands.
-	
+
 	build_queries_commands_list is
 			-- Build `queries_list' and `features_list'.
 		require
@@ -670,7 +673,7 @@ feature {NONE} -- Implementation
 				create queries_list.make (0)
 				create commands_list.make (0)
 			else
-				l_features_list := features_list (model.class_c) 
+				l_features_list := features_list (model.class_c)
 				from
 					create queries_list.make (0)
 					create commands_list.make (0)
@@ -718,7 +721,7 @@ feature {NONE} -- Implementation
 			is_retried := True
 			retry
 		end
-		
+
 	features_list (compiled_class: CLASS_C): LIST [FEATURE_SECTION] is
 			-- List of features ordered by section name and export status corresponding to `compiled_class'.
 		require
@@ -745,7 +748,7 @@ feature {NONE} -- Implementation
 					end
 					if class_text /= Void then
 							--| Features
-						from 
+						from
 							fcl.start
 						until
 							fcl.after
@@ -773,7 +776,7 @@ feature {NONE} -- Implementation
 							fcl.forth
 						end
 					elseif compiled_class.cluster.is_precompiled then
-						from 
+						from
 							fcl.start
 						until
 							fcl.after
@@ -805,7 +808,7 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
+
 	set_generics is
 			-- Extend class name with `model'.`generics' if any.
 		require
@@ -831,7 +834,7 @@ feature {NONE} -- Implementation
 			end
 			update_positions
 		end
-		
+
 	set_properties is
 			-- Set porperties of class according to `model'.
 		require
@@ -889,17 +892,17 @@ feature {NONE} -- Implementation
 			end
 			update_positions
 		end
-		
+
 	set_properties_text_properties (a_text: EV_MODEL_TEXT) is
 			-- Set properties of `a_text'
 		do
-			a_text.set_identified_font (uml_class_properties_font)	
+			a_text.set_identified_font (uml_class_properties_font)
 			a_text.set_foreground_color (uml_class_properties_color)
 			if world /= Void and then world.scale_factor /= 1.0 then
 				a_text.scale (world.scale_factor)
 			end
 		end
-		
+
 	update_positions is
 			-- Set positions for `root_text', `properties_text', `queries', `commands' such that port position is the center.
 		local
@@ -908,7 +911,7 @@ feature {NONE} -- Implementation
 			l_border: like border
 		do
 			-- Align elements in `names'
-			
+
 			if properties.is_show_requested then
 				h := properties.height
 			end
@@ -916,7 +919,7 @@ feature {NONE} -- Implementation
 			if generics.is_show_requested then
 				h := h + generics.height
 			end
-			
+
 			cur_y := names.point_y - as_integer (h / 2)
 			properties.set_point_position (names.point_x - as_integer (properties.width / 2), cur_y)
 			if properties.is_show_requested then
@@ -925,9 +928,9 @@ feature {NONE} -- Implementation
 			name_label.set_point_position (names.point_x - as_integer (name_label.width / 2), cur_y)
 			cur_y := cur_y + name_label.height
 			generics.set_point_position (names.point_x - as_integer (generics.width / 2), cur_y)
-			
+
 			-- Align `names', `queries' and `commands'
-			
+
 			l_border := border
 			nbbox := names.bounding_box
 			f_pos := point_x - as_integer (nbbox.width / 2)
@@ -947,11 +950,11 @@ feature {NONE} -- Implementation
 				r_pos := r_pos.max (f_pos + cbbox.width)
 				h := h + cbbox.height
 			end
-			
+
 			cur_y := point_y - as_integer (h / 2)
-			
+
 			rectangle.set_point_a_position (f_pos - border, cur_y - border)
-			
+
 			names.set_point_position (point_x, cur_y + as_integer (nbbox.height / 2))
 			cur_y := cur_y + nbbox.height + l_border
 			queries_line.set_point_a_position (f_pos - border, cur_y - l_border // 2)
@@ -967,12 +970,12 @@ feature {NONE} -- Implementation
 				commands.set_point_position (f_pos, cur_y)
 				cur_y := cur_y + cbbox.height
 			end
-			
+
 			rectangle.set_point_b_position (r_pos + border, cur_y + border)
 
 			request_update
 		end
-		
+
 	update_border is
 			-- Update border position (required because text is not scaled smoothley)
 		local
@@ -985,17 +988,17 @@ feature {NONE} -- Implementation
 			if queries.is_show_requested then
 				l_right := l_right.max (queries.bounding_box.right)
 			end
-			if 
+			if
 				rectangle.point_b_x < l_right or else
 				rectangle.point_b_x > l_right + border
 			then
 				update_positions
 			end
 		end
-		
+
 	retrieve_preferences is
 			-- Retrieve properties from preference.
-		do	
+		do
 			if uml_class_fill_color /= Void then
 				rectangle.set_background_color (uml_class_fill_color)
 			else
@@ -1019,7 +1022,15 @@ feature {NONE} -- Implementation
 			end
 			request_update
 		end
-		
+
+feature {NONE} -- Implementation
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		do
+			create Result.make_filled (n)
+		end
+
 invariant
 	rectangle_not_void: rectangle /= Void
 	queries_line_not_void: queries_line /= Void

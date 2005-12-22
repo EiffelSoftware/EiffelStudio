@@ -9,14 +9,13 @@ class
 inherit
 	PREFERENCE_WIDGET
 		redefine
-			resource, 
-			set_resource,
+			resource,
 			change_item_widget,
 			update_changes
 		end
-		
+
 	EV_SHARED_SCALE_FACTORY
-		undefine	
+		undefine
 			default_create
 		end
 
@@ -24,21 +23,13 @@ create
 	make,
 	make_with_resource
 
-feature -- Status Setting
-	
-	set_resource (new_resource: like resource) is
-			-- Set the resource.
-		do
-			Precursor (new_resource)
-		end
-
 feature -- Access
 
 	graphical_type: STRING is
 			-- Graphical type identifier.
 		do
 			Result := "IDENTIFIED_FONT"
-		end	
+		end
 
 	resource: IDENTIFIED_FONT_PREFERENCE
 			-- Actual resource.
@@ -69,14 +60,14 @@ feature {PREFERENCE_VIEW} -- Commands
 
 			font_tool.ok_actions.extend (agent update_changes)
 			font_tool.show_modal_to_window (caller.parent_window)
-		end 
+		end
 
 feature {NONE} -- Commands
 
 	update_changes is
 			-- Commit the result of Font Tool.
 		do
-			last_selected_value := font_factory.registered_font (font_tool.font)		
+			last_selected_value := font_factory.registered_font (font_tool.font)
 			if last_selected_value /= Void then
 				resource.set_value (last_selected_value)
 				change_item_widget.set_font (last_selected_value.font)
@@ -84,14 +75,14 @@ feature {NONE} -- Commands
 			end
 			Precursor {PREFERENCE_WIDGET}
 		end
-		
+
 	update_resource is
-			-- 
+			--
 		do
 			if last_selected_value /= Void then
-				resource.set_value (last_selected_value)				
+				resource.set_value (last_selected_value)
 			end
-		end	
+		end
 
 feature {NONE} -- Implementation
 
@@ -106,13 +97,13 @@ feature {NONE} -- Implementation
 		end
 
 	show_change_item_widget is
-			-- 
+			--
 		do
 			change
 			if last_selected_value /= Void then
 				resource.set_value (last_selected_value)
 			end
-		end		
+		end
 
 	font_tool: EV_FONT_DIALOG
 			-- Dialog from which we can select a font.

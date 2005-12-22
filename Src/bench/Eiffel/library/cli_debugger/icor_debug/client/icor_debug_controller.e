@@ -9,19 +9,16 @@ class
 
 inherit
 	ICOR_OBJECT
-		export
-			{EIFNET_DEBUGGER_SYNCHRO} item
-		end
 
-create 
+create
 	make_by_pointer
-	
+
 feature {ICOR_EXPORTER} -- Access
 
 	stop (a_timeout: INTEGER) is
 			-- Stop performs a cooperative stop on all threads running managed
 			-- code in the process.  Threads running unmanaged code are
-			-- suspended .  If the cooperative stop fails due to a deadlock, all 
+			-- suspended .  If the cooperative stop fails due to a deadlock, all
 			-- threads are suspended (and E_TIMEOUT is returned)
 			--
 			-- NOTE: This function is the one function in the debugging API
@@ -47,7 +44,7 @@ feature {ICOR_EXPORTER} -- Access
 			debug ("debugger_eifnet_data")
 				io.error.put_string ("[>] ICOR_DEBUG_CONTROLLER.continue ("+a_f_is_out_of_band.out+")%N")
 			end
-			
+
 			if not retried then
 				last_call_success := cpp_continue (item, a_f_is_out_of_band.to_integer)
 			end
@@ -70,16 +67,16 @@ feature {ICOR_EXPORTER} -- Access
 		ensure
 			success: last_call_success = 0
 		end
-		
+
 	has_queued_callbacks (a_icd_th: ICOR_DEBUG_THREAD): BOOLEAN is
 			-- HasQueuedCallbacks returns TRUE if there are currently managed
 			-- callbacks which are queued up for the given thread.  These
 			-- callbacks will be dispatched one at a time, each time Continue
 			-- is called.
 			--
-			-- The debugger can check this flag if it wishes to report multiple 
+			-- The debugger can check this flag if it wishes to report multiple
 			-- debugging events which occur simultaneously.
-			-- 
+			--
 			-- If NULL is given for the pThread parameter, HasQueuedCallbacks
 			-- will return TRUE if there are currently managed callbacks
 			-- queued for any thread.
@@ -139,7 +136,7 @@ feature {ICOR_EXPORTER} -- Access
 
 	terminate (a_exitcode: INTEGER) is
 			-- Terminate terminates the process (with extreme prejudice, I might add).
-			
+
 			-- NOTE: If the process or appdomain is stopped when Terminate is called,
 			-- the process or appdomain should be continued using Continue so that the
 			-- ExitProcess or ExitAppDomain callback is received.
@@ -152,7 +149,7 @@ feature {NONE} -- Implementation
 	cpp_continue (obj: POINTER; a_f_is_out_of_band: INTEGER): INTEGER is
 		external
 			"[
-				C++ ICorDebugController signature(BOOL): EIF_INTEGER 
+				C++ ICorDebugController signature(BOOL): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
@@ -162,7 +159,7 @@ feature {NONE} -- Implementation
 	cpp_detach (obj: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugController signature(): EIF_INTEGER 
+				C++ ICorDebugController signature(): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
@@ -173,7 +170,7 @@ feature {NONE} -- Implementation
 			-- Call `ICorDebugController->Stop'.
 		external
 			"[
-				C++ ICorDebugController signature(DWORD): EIF_INTEGER 
+				C++ ICorDebugController signature(DWORD): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
@@ -185,7 +182,7 @@ feature {NONE} -- Implementation
 			-- IsRunning returns TRUE if the threads in the process are running freely
 		external
 			"[
-				C++ ICorDebugController signature(BOOL*): EIF_INTEGER 
+				C++ ICorDebugController signature(BOOL*): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
@@ -196,7 +193,7 @@ feature {NONE} -- Implementation
 			-- Call `ICorDebugController->HasQueuedCallbacks'.
 		external
 			"[
-				C++ ICorDebugController signature(ICorDebugThread*, BOOL*): EIF_INTEGER 
+				C++ ICorDebugController signature(ICorDebugThread*, BOOL*): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
@@ -207,7 +204,7 @@ feature {NONE} -- Implementation
 			-- Call `ICorDebugController->Terminate'.
 		external
 			"[
-				C++ ICorDebugController signature(UINT): EIF_INTEGER 
+				C++ ICorDebugController signature(UINT): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
@@ -217,7 +214,7 @@ feature {NONE} -- Implementation
 	cpp_enumerate_threads (obj: POINTER; a_p: POINTER): INTEGER is
 		external
 			"[
-				C++ ICorDebugController signature(ICorDebugThreadEnum **): EIF_INTEGER 
+				C++ ICorDebugController signature(ICorDebugThreadEnum **): EIF_INTEGER
 				use "cli_headers.h"
 			]"
 		alias
@@ -227,7 +224,7 @@ feature {NONE} -- Implementation
 --	cpp_set_all_threads_debug_state (obj: POINTER; a_state: INTEGER; a_p_except_thread: POINTER): INTEGER is
 --		external
 --			"[
---				C++ ICorDebugController signature(CorDebugThreadState, ICorDebugThread*): EIF_INTEGER 
+--				C++ ICorDebugController signature(CorDebugThreadState, ICorDebugThread*): EIF_INTEGER
 --				use "cli_headers.h"
 --			]"
 --		alias
@@ -241,7 +238,7 @@ feature {EIFNET_DEBUGGER} -- Query
 			"C++ inline use %"cli_debugger_utils.h%""
 		alias
 			"((ICorDebugController *) $obj)->QueryInterface (IID_ICorDebugController, (void **) $a_p)"
-		end	
-		
+		end
+
 end -- class ICOR_DEBUG_CONTROLLER
 

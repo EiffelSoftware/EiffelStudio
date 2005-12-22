@@ -12,7 +12,7 @@ inherit
 		redefine
 			init
 		end
-		
+
 	RECV_VALUE
 		rename
 			error as recv_error
@@ -41,9 +41,9 @@ feature -- Concrete initialization
 			Precursor
 		end
 
-feature -- Interface
+feature {DBG_EVALUATOR} -- Interface
 
-	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE; 
+	effective_evaluate_function (a_addr: STRING; a_target: DUMP_VALUE; f, realf: E_FEATURE;
 			ctype: CLASS_TYPE; params: LIST [DUMP_VALUE]) is
 		local
 			dmp: DUMP_VALUE
@@ -53,10 +53,10 @@ feature -- Interface
 				-- Initialize the communication.
 			Init_recv_c
 
-			if 
-				a_target /= Void 
+			if
+				a_target /= Void
 				and then not a_target.dynamic_class.is_basic
-				and then a_target.dynamic_class.is_expanded 
+				and then a_target.dynamic_class.is_expanded
 			then
 				fixme ("must change the runtime to allow expression evaluation on expanded object !")
 				notify_error_evaluation ("Current restriction: unable to evaluate expression on expanded object")
@@ -79,7 +79,7 @@ feature -- Interface
 				if f.is_external then
 					par := par + 1
 				end
-				
+
 				if f.written_class.is_precompiled then
 					par := par + 2
 					rout_info := System.rout_info_table.item (f.rout_id_set.first)
@@ -106,7 +106,7 @@ feature -- Interface
 			if once_r.already_called (f) then
 				if a_addr /= Void or a_target /= Void then
 					evaluate_function (a_addr, a_target, Void, f, params)
-				else							
+				else
 fixme ("Complete once evaluation implementation changes (cf: jfiat + alexk)")
 					last_result_value := once_r.once_result (f).dump_value
 					last_result_static_type := f.type.associated_class
@@ -116,7 +116,7 @@ fixme ("Complete once evaluation implementation changes (cf: jfiat + alexk)")
 				end
 			else
 				notify_error (cst_error_occurred, "Once feature " + f.name + ": not yet called")
-			end				
+			end
 		end
 
 	associated_reference_basic_class_type (cl: CLASS_C): CLASS_TYPE is

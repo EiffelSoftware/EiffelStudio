@@ -37,28 +37,28 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
+
 	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-			
+
 	EV_KEY_CONSTANTS
 		export
 			{NONE} all
 		undefine
 			default_create, copy
 		end
-		
+
 	E_PROFILER_CONSTANTS
 		export
 			{NONE} all
@@ -85,20 +85,20 @@ feature {NONE} -- Initialization
 			build_interface
 			resize_actions.extend (agent resize_columns)
 		end
-		
+
 	init_commands is
 		do
 			create run_query_cmd.make (Current)
 			create save_result_cmd.make (Current)
 		end
-		
+
 	resize_columns (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is
 			-- Resize the columns for the active & inactive query lists
 		do
 			active_query_window.set_column_width (active_query_window.width, 1)
 			inactive_subqueries_window.set_column_width (inactive_subqueries_window.width, 1)
 		end
-		
+
 	build_interface is
 			-- Build the user interfac			-- Initialize the commands
 		local
@@ -121,7 +121,7 @@ feature {NONE} -- Initialization
 			inactivate_button: EV_BUTTON		-- Button to inactivate one or more subqueries
 		do
 			close_request_actions.extend (agent close)
-			
+
 				--| Create the Active & Inactive list
 			create active_query_window
 			active_query_window.enable_multiple_selection
@@ -153,7 +153,7 @@ feature {NONE} -- Initialization
 
 				--| Subquery frame
 			create add_and_operator_button.make_with_text_and_action (Interface_names.b_And, agent add_subquery (profiler_and))
-			create add_or_operator_button.make_with_text_and_action (Interface_names.b_Or, agent add_subquery (profiler_or)) 
+			create add_or_operator_button.make_with_text_and_action (Interface_names.b_Or, agent add_subquery (profiler_or))
 			create subquery_text
 
 			create subquery_box
@@ -175,12 +175,12 @@ feature {NONE} -- Initialization
 			output_grid.pointer_button_press_item_actions.extend (agent item_pressed)
 			output_grid.key_press_actions.extend (agent key_pressed)
 			output_grid.mouse_wheel_actions.extend (agent mouse_wheel_received)
-			
+
 			create grid_border
 			grid_border.set_border_width (1)
 			grid_border.set_background_color (gray)
 			grid_border.extend (output_grid)
-			
+
 			create tree_nodes_enabled_button.make_with_text ("Nest Output?")
 			tree_nodes_enabled_button.select_actions.extend (agent tree_node_state_toggled)
 
@@ -216,17 +216,17 @@ feature {NONE} -- Initialization
 
 				--| Sizing
 			set_window_size
-			
+
 				-- Retrieve colors from the preferences
 			handle_color_change
-			
+
 				-- Connect agents to the preferences so we can update the display as required.
 			colors_changed_agent := agent handle_color_change
 			preferences.editor_data.feature_text_color_preference.change_actions.extend (colors_changed_agent)
 			preferences.editor_data.cluster_text_color_preference.change_actions.extend (colors_changed_agent)
 			preferences.editor_data.class_text_color_preference.change_actions.extend (colors_changed_agent)
-			
-		end		
+
+		end
 
 feature {EB_SAVE_RESULT_CMD} -- Save commands
 
@@ -297,8 +297,8 @@ feature -- Status Setting
 			i := 1
 				-- Feature name is always shown.
 			show_feature_name := True
-			i := i + 1 
-			
+			i := i + 1
+
 				-- Now assign information from `profiler_options' to BOOLEAN
 				-- attributes for speed and ease of use when querying.
 			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).is_equal (profiler_calls) then
@@ -331,7 +331,7 @@ feature -- Status Setting
 						profiler_query.subquery_operators.forth
 					end
 				until
-					profiler_query.subqueries.after 
+					profiler_query.subqueries.after
 				loop
 					all_subqueries.extend (profiler_query.subqueries.item)
 					profiler_query.subqueries.forth
@@ -347,7 +347,7 @@ feature -- Status Setting
 			output_grid.wipe_out
 			profile_set := pi.profile_data
 			profile_set_count := profile_set.c_profiling_list.count + profile_set.cycle_profiling_list.count + profile_set.eiffel_profiling_list.count
-			
+
 				-- Store the flat profile information.
 			create profile_array.make (1, profile_set_count)
 			from
@@ -369,18 +369,18 @@ feature -- Status Setting
 						-- feature, class and cluster texts individually.
 					query_grid_item.set_cluster_class_feature_text (current_eiffel_profile_data.function.class_c.cluster.cluster_name + full_stop, eiffel_system.class_of_id (current_eiffel_profile_data.function.class_id).name + full_stop, current_eiffel_profile_data.function.displayed_feature_name)
 				end
-				query_grid_item.set_values (current_profile_data.calls, current_profile_data.self, current_profile_data.descendants, current_profile_data.total, current_profile_data.percentage)				
+				query_grid_item.set_values (current_profile_data.calls, current_profile_data.self, current_profile_data.descendants, current_profile_data.total, current_profile_data.percentage)
 				profile_array.put (query_grid_item, i)
 				i := i + 1
 				profile_set.forth
 			end
-			
+
 				-- Perform a sort to ensure that all data is in order before
 				-- building the tree info.
 			create equality_tester.make (agent compare_profile_query_grid_rows (?, ?, 1, True))
 			create quick_sorter.make (equality_tester)
 			quick_sorter.sort (profile_array)
-			
+
 				-- Store the tree profile information needed for the tree mode.
 			from
 				create cluster_array.make (1, 0)
@@ -399,7 +399,7 @@ feature -- Status Setting
 			until
 				i > profile_array.count
 			loop
-				current_eiffel_profile_data ?= (profile_array [i]).profile_data
+				current_eiffel_profile_data ?= (profile_array.item (i)).profile_data
 				if current_eiffel_profile_data /= Void then
 					function := current_eiffel_profile_data.function
 					current_cluster_string := function.class_c.cluster.cluster_name
@@ -420,22 +420,22 @@ feature -- Status Setting
 						class_array.force (query_grid_item, class_array.upper + 1)
 						cluster_lower := cluster_lower + 1
 						last_class := query_grid_item
-						
+
 					end
 					create query_grid_item.make_node (function.displayed_feature_name, current_eiffel_profile_data, 1)
 					query_grid_item.set_values (current_eiffel_profile_data.calls, current_eiffel_profile_data.self, current_eiffel_profile_data.descendants, current_eiffel_profile_data.total, current_eiffel_profile_data.percentage)
 					feature_array.force (query_grid_item, feature_array.upper + 1)
-					
+
 						-- Now update totals for classes and clusters.
 					if last_class /= Void then
 						last_class.increase_values (current_eiffel_profile_data.calls, current_eiffel_profile_data.self, current_eiffel_profile_data.descendants, current_eiffel_profile_data.total, current_eiffel_profile_data.percentage)
 					end
-					
+
 					last_cluster_string := current_cluster_string
 					last_class_id := current_class_id
 					class_lower := class_lower + 1
 				else
-					current_profile_data := (profile_array [i]).profile_data
+					current_profile_data := (profile_array.item (i)).profile_data
 					current_c_profile_data ?= current_profile_data
 					if current_c_profile_data /= Void then
 						create query_grid_item.make_node (current_c_profile_data.function.name, current_c_profile_data, 5)
@@ -450,11 +450,11 @@ feature -- Status Setting
 						query_grid_item.set_values (current_cycle_profile_data.calls, current_cycle_profile_data.self, current_cycle_profile_data.descendants, current_cycle_profile_data.total, current_cycle_profile_data.percentage)
 						cyclic_functions_array.force (query_grid_item, cyclic_functions_array.upper + 1)
 					end
-							
+
 				end
 				i := i + 1
 			end
-			
+
 				-- The loop does not handle the upper of the final items, so
 				-- set them explicitly here.
 			if not cluster_array.is_empty then
@@ -465,14 +465,14 @@ feature -- Status Setting
 				query_grid_item := class_array.item (class_array.upper)
 				query_grid_item.set_upper (feature_array.upper)
 			end
-			
+
 					-- Now build the root nodes for Eiffel queries.
 			if feature_array.count >= 1 then
 				create query_grid_item.make_node (Profiler_eiffel_features, Void, 5)
 				query_grid_item.set_display_agent (agent build_eiffel_functions)
 				root_nodes_array.force (query_grid_item, root_nodes_array.upper + 1)
-			end	
-			
+			end
+
 				-- Now sum cluster totals.
 			from
 				i := 1
@@ -494,12 +494,12 @@ feature -- Status Setting
 				query_grid_item.increase_values (last_cluster.calls, last_cluster.self, last_cluster.descendents, last_cluster.total, last_cluster.percentage)
 				i := i + 1
 			end
-			
+
 			if c_functions_array.count >= 1 then
 				create query_grid_item.make_node (profiler_c_functions, Void, 5)
 				query_grid_item.set_display_agent (agent build_c_functions)
 				root_nodes_array.force (query_grid_item, root_nodes_array.upper + 1)
-				
+
 					-- Now Sum c_function totals.
 				from
 					i := 1
@@ -510,7 +510,7 @@ feature -- Status Setting
 					query_grid_item.increase_values (row.calls, row.self, row.descendents, row.total, row.percentage)
 					i := i + 1
 				end
-			end	
+			end
 			if cyclic_functions_array.count >= 1 then
 				create query_grid_item.make_node (profiler_cyclic_functions, Void, 5)
 				query_grid_item.set_display_agent (agent build_cyclic_functions)
@@ -525,8 +525,8 @@ feature -- Status Setting
 					query_grid_item.increase_values (row.calls, row.self, row.descendents, row.total, row.percentage)
 					i := i + 1
 				end
-			end	
-				
+			end
+
 			create displayed_column_indexes.make (1, 6)
 				-- Build the column headers
 				-- Note that "Function" is always displayed.
@@ -539,7 +539,7 @@ feature -- Status Setting
 			sorted_tuple.put_boolean (True, 1)
 			sorted_tuple.put_boolean (True, 2)
 			output_grid.column (1).set_data (sorted_tuple)
-			
+
 			if show_calls then
 				i := output_grid.column_count + 1
 				output_grid.insert_new_column (i)
@@ -600,20 +600,20 @@ feature -- Status Setting
 				sorted_tuple.put_boolean (True, 2)
 				output_grid.column (i).set_data (sorted_tuple)
 			end
-			
+
 			rebuild_grid
 		end
-		
+
 feature {NONE} -- Implementation
 
 	displayed_column_indexes: ARRAY [INTEGER]
 		-- Mapping of logical column index (1-6) to
 		-- physical column index as displayed in `Current'.
 		-- If a column is not shown, its entry is zero.
-	
+
 	profile_array: ARRAY [EB_PROFILE_QUERY_GRID_ROW]
 		-- All grid rows used in the flat list mode.
-	
+
 	cluster_array: ARRAY [EB_PROFILE_QUERY_GRID_ROW]
 	class_array: ARRAY [EB_PROFILE_QUERY_GRID_ROW]
 	feature_array: ARRAY [EB_PROFILE_QUERY_GRID_ROW]
@@ -621,23 +621,23 @@ feature {NONE} -- Implementation
 	cyclic_functions_array: ARRAY [EB_PROFILE_QUERY_GRID_ROW]
 		-- Arrays to hold all grid rows used in the tree structure
 		-- mode. Grouped accordingly.
-	
+
 	root_nodes_array: ARRAY [EB_PROFILE_QUERY_GRID_ROW]
 		-- All root nodes to be shown in `output_grid'.
 		-- Eiffel, C or Cyclic nodes. Only used in the
 		-- tree structure mode.
-		
+
 	calls, self, descendants, total, percentage: REAL
 	cluster_calls, cluster_self, cluster_descendants, cluster_total, cluster_percentage: REAL
 	class_calls, class_self, class_descendants, class_total, class_percentage: REAL
 		-- Attributes to hold information totals during building of the structured tree mode.
 		-- They are not defined as locals within `rebuild_grid' as this permits functions to
 		-- be implemented which deal with them, thereby reducing repeated code.
-		
+
 	show_feature_name, show_calls, show_self, show_descendents, show_total, show_percentage: BOOLEAN
 		-- Attributes to hold which columns of data are to be displayed. These
 		-- are set from `profiler_options.output_names' so they can be quickly queried.
-						
+
 	fill_grid_row (query_grid_row: EB_PROFILE_QUERY_GRID_ROW; row_index: INTEGER) is
 			-- Fill `output_grid' row `row_index' with data from `query_grid_row'.
 		require
@@ -668,7 +668,7 @@ feature {NONE} -- Implementation
 				end
 				query_grid_row.set_grid_items (feature_grid_item, calls_grid_item, self_grid_item, descendents_grid_item, total_grid_item, percentage_grid_item)
 			end
-			
+
 			output_grid.set_item (1, row_index, query_grid_row.feature_grid_item)
 			i := 2
 			if show_calls then
@@ -697,7 +697,7 @@ feature {NONE} -- Implementation
 			output_grid.row (row_index).set_data (query_grid_row)
 			query_grid_row.set_row (output_grid.row (row_index))
 		end
-			
+
 	rebuild_grid is
 			-- Perform a complete rebuild of `output_grid' based on current settings.
 		local
@@ -708,7 +708,7 @@ feature {NONE} -- Implementation
 				-- as we do not want to loose the columns.
 			if output_grid.row_count > 0 then
 				output_grid.remove_rows (1, output_grid.row_count)
-			end			
+			end
 			if not tree_structure_enabled then
 				output_grid.disable_tree
 				from
@@ -727,11 +727,11 @@ feature {NONE} -- Implementation
 				until
 					i > root_nodes_array.count
 				loop
-					(root_nodes_array [i]).display_agent.call ([root_nodes_array [i]])
+					(root_nodes_array.item (i)).display_agent.call ([root_nodes_array.item (i)])
 					i := i + 1
 				end
 			end
-			
+
 				-- Now update the expanded state of all rows contained.
 				-- Only if tree structure enabled.		
 			if tree_structure_enabled then
@@ -748,7 +748,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	build_eiffel_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW) is
 			-- Build all Eiffel functions into `output_grid' as child rows
 			-- of `query_grid_row'.
@@ -803,7 +803,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	build_c_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW) is
 			-- Build all c functions into `output_grid' as child rows
 			-- of `query_grid_row'.
@@ -829,7 +829,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	build_cyclic_functions (query_grid_row: EB_PROFILE_QUERY_GRID_ROW) is
 			-- Build all cyclic functions into `output_grid' as child rows
 			-- of `query_grid_row'.
@@ -838,7 +838,7 @@ feature {NONE} -- Implementation
 		local
 			i, k, cyclic_node_index: INTEGER
 			cyclic_function_query_grid_row: EB_PROFILE_QUERY_GRID_ROW
-		do	
+		do
 			if cyclic_functions_array.count >= 1 then
 				cyclic_node_index := output_grid.row_count + 1
 				fill_grid_row (query_grid_row, cyclic_node_index)
@@ -855,7 +855,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	draw_grid_item (drawable: EV_DRAWABLE; query_grid_row: EB_PROFILE_QUERY_GRID_ROW) is
 			-- Draw feature grid item of `query_grid_row' into `drawable'.
 		require
@@ -866,7 +866,7 @@ feature {NONE} -- Implementation
 			font: EV_FONT
 			row_selected, focused: BOOLEAN
 			adjusted_column_width: INTEGER
-		do	
+		do
 			row_selected := query_grid_row.row.is_selected
 			focused := output_grid.has_focus
 			if row_selected then
@@ -882,7 +882,7 @@ feature {NONE} -- Implementation
 				-- selected state of the row by drawing in the correct selection color
 				-- if selected.
 			drawable.fill_rectangle (0, 0, drawable.width, drawable.height)
-			
+
 				-- Calculate the width of the first column less the current horizontal indent
 				-- of the item being drawn. This is required to draw the ellipsing correctly.
 			adjusted_column_width := output_grid.column (1).width - query_grid_row.row.item (1).horizontal_indent
@@ -899,21 +899,21 @@ feature {NONE} -- Implementation
 				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, adjusted_column_width - left_border)
 			elseif query_grid_row.type = 2 then
 				if row_selected and has_focus then
-					drawable.set_foreground_color (white)		
+					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (class_text_color)
 				end
 				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, adjusted_column_width - left_border)
 			elseif query_grid_row.type = 3 then
 				if row_selected and has_focus then
-					drawable.set_foreground_color (white)		
+					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (cluster_text_color)
 				end
 				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, adjusted_column_width - left_border)
 			elseif query_grid_row.type = 4 then
 				if row_selected and has_focus then
-					drawable.set_foreground_color (white)		
+					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (cluster_text_color)
 				end
@@ -921,7 +921,7 @@ feature {NONE} -- Implementation
 				drawable.draw_ellipsed_text_top_left (offset, 1, query_grid_row.cluster_text, adjusted_column_width - offset)
 				offset := offset + query_grid_row.cluster_text_width
 				if row_selected and has_focus then
-					drawable.set_foreground_color (white)		
+					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (class_text_color)
 				end
@@ -937,14 +937,14 @@ feature {NONE} -- Implementation
 				drawable.draw_ellipsed_text_top_left (offset, 1, query_grid_row.feature_text, adjusted_column_width - offset)
 			elseif query_grid_row.type = 5 then
 				if row_selected and has_focus then
-					drawable.set_foreground_color (white)		
+					drawable.set_foreground_color (white)
 				else
 					drawable.set_foreground_color (black)
 				end
 				drawable.draw_ellipsed_text_top_left (left_border, 1, query_grid_row.text, adjusted_column_width - left_border)
 			end
 		end
-		
+
 	left_border: INTEGER is 3
 		-- Pixel position from left edge of first item in row
 		-- where the text of the item begins.
@@ -952,19 +952,19 @@ feature {NONE} -- Implementation
 	last_sorted_column_agent: FUNCTION [ANY, TUPLE [EB_PROFILE_QUERY_GRID_ROW, EB_PROFILE_QUERY_GRID_ROW], BOOLEAN]
 		-- The last agent used to perform a full sort on `output_grid'. We need access to
 		-- this for implementing sorts within sorts.
-	
+
 	last_equal_column_agent: FUNCTION [ANY, TUPLE [EB_PROFILE_QUERY_GRID_ROW, EB_PROFILE_QUERY_GRID_ROW], BOOLEAN]
 		-- An agent used to determine if two profile query grid rows are equal based on the same
 		-- seach criteria as `last_sorted_column_agent'. We need access to
 		-- this for implementing sorts within sorts.
-	
+
 	sort_within_last: BOOLEAN
 		-- Should the current sort be performed within the last sort?
-	
+
 	tree_structure_enabled: BOOLEAN
 		-- Is `output_grid' to display its contents in
 		-- a nested tree structure?
-	
+
 	tree_node_state_toggled is
 			-- The tree structured enabled button has been toggled
 			-- so updated display in `output_grid' to reflect this.
@@ -972,7 +972,7 @@ feature {NONE} -- Implementation
 			tree_structure_enabled := tree_nodes_enabled_button.is_selected
 			sort_column (1)
 		end
-		
+
 	sort_column (column_index: INTEGER) is
 			-- Sort logical column `column_index'.
 		require
@@ -982,11 +982,11 @@ feature {NONE} -- Implementation
 			sorted_tuple: TUPLE [BOOLEAN, BOOLEAN]
 		do
 			if output_grid.header.pointed_divider_index = 0 then
-				
+
 					-- Should sorting be performed within the last sort?
 				sort_within_last := ev_application.ctrl_pressed
 
-								
+
 				sorted_tuple ?= output_grid.column (displayed_column_indexes.item (column_index)).data
 				check
 					sorted_tuple_not_void: sorted_tuple /= Void
@@ -994,31 +994,31 @@ feature {NONE} -- Implementation
 				if not ev_application.ctrl_pressed then
 						-- Determine the direction for the sort.
 					ascending := sorted_tuple.boolean_item (1)
-					
+
 						-- Now store the new direction for the column state.
 					sorted_tuple.put_boolean (not ascending, 1)
 				else
 					ascending := sorted_tuple.boolean_item (2)
 					sorted_tuple.put_boolean (not ascending, 2)
 				end
-				
-				
+
+
 					-- Now perform actual sort on data.
 				if tree_structure_enabled then
 					sort_tree_structure (column_index, ascending)
 				else
 					sort_flat_structure (column_index, ascending)
 				end
-				
+
 				rebuild_grid
-				
+
 				if not ev_application.ctrl_pressed then
 					last_equal_column_agent := agent profile_equal (?, ?, column_index)
 					last_sorted_column_agent := agent compare_profile_query_grid_rows (?, ?, column_index, ascending)
-				end			
+				end
 			end
 		end
-		
+
 	sort_flat_structure (column_index: INTEGER; ascending: BOOLEAN) is
 			-- Perform sorting within flat structure for column `column_index' with
 			-- direction based on `ascending'.
@@ -1033,7 +1033,7 @@ feature {NONE} -- Implementation
 			create quick_sorter.make (equality_tester)
 			quick_sorter.sort (profile_array)
 		end
-		
+
 	sort_tree_structure (column_index: INTEGER; ascending: BOOLEAN) is
 			-- Perform sorting within tree structure for column `column_index' with
 			-- direction based on `ascending'.
@@ -1053,7 +1053,7 @@ feature {NONE} -- Implementation
 			until
 				i > cluster_array.upper
 			loop
-				quick_sorter.subsort (class_array, (cluster_array [i]).child_node_lower_index, (cluster_array [i]).child_node_upper_index)
+				quick_sorter.subsort (class_array, (cluster_array.item (i)).child_node_lower_index, (cluster_array.item (i)).child_node_upper_index)
 				i := i + 1
 			end
 			from
@@ -1061,12 +1061,12 @@ feature {NONE} -- Implementation
 			until
 				i > class_array.upper
 			loop
-				quick_sorter.subsort (feature_array, (class_array [i]).child_node_lower_index, (class_array [i]).child_node_upper_index)
+				quick_sorter.subsort (feature_array, (class_array.item (i)).child_node_lower_index, (class_array.item (i)).child_node_upper_index)
 				i := i + 1
 			end
 			quick_sorter.sort (root_nodes_array)
 		end
-		
+
 	compare_profile_query_grid_rows (query_grid_row1, query_grid_row2: EB_PROFILE_QUERY_GRID_ROW; column_index: INTEGER; ascending: BOOLEAN): BOOLEAN is
 			-- Is `query_grid_row1' less than `query_grid_row2' with search criteria based on logical column `column_index' and direction
 			-- `ascending'.
@@ -1170,7 +1170,7 @@ feature {NONE} -- Implementation
 								-- we also add on the indent of the first item.
 							required_width := required_width.max (query_grid_row.text_width + (left_border * 2) + grid_row.item (1).horizontal_indent)
 						end
-						
+
 							-- We now ignore all rows that are not expanded.
 						if grid_row.subrow_count > 0 and not grid_row.is_expanded then
 							i := i + grid_row.subrow_count_recursive
@@ -1181,7 +1181,7 @@ feature {NONE} -- Implementation
 				output_grid.column (a_column).set_width (required_width)
 			end
 		end
-		
+
 	profile_equal (query_grid_row1, query_grid_row2: EB_PROFILE_QUERY_GRID_ROW; column_index: INTEGER): BOOLEAN is
 			-- Are `query_grid_row1' and `query_grid_row2' considered equal for property defined by `column_index'?
 		require
@@ -1190,7 +1190,7 @@ feature {NONE} -- Implementation
 		do
 			inspect column_index
 			when 1 then
-				Result := query_grid_row1.text.is_equal (query_grid_row2.text)	
+				Result := query_grid_row1.text.is_equal (query_grid_row2.text)
 			when 2 then
 				Result := query_grid_row1.calls = query_grid_row2.calls
 			when 3 then
@@ -1207,7 +1207,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	retrieve_pebble (an_item: EV_GRID_ITEM): STONE is
 			-- Retrieve a pebble from `an_item' if it represents
 			-- a pickable object. May return an instance of
@@ -1256,7 +1256,7 @@ feature {NONE} -- Implementation
 						if last_x > left_border then
 							-- We ensure that no pick is performed from within the border at the
 							-- left edge of the item.
-							
+
 							total_offset := left_border + query_grid_row.cluster_text_width
 							if last_x < total_offset then
 								eiffel_profile_data ?= query_grid_row.profile_data
@@ -1292,7 +1292,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	key_pressed (a_key: EV_KEY) is
 			-- Respond to `a_key' being pressed in `output_grid'.
 		require
@@ -1340,13 +1340,13 @@ feature {NONE} -- Implementation
 				scroll_output_grid (lines_to_move_in_per_page_scrolling)
 			end
 		end
-		
+
 	lines_to_move_in_per_page_scrolling: INTEGER is
 			-- Number of lines to be moved in per page scrolling mode.
 		do
 			Result := output_grid.last_visible_row.index - output_grid.first_visible_row.index - preferences.editor_data.scrolling_common_line_count
 		end
-		
+
 	mouse_wheel_received (a_delta: INTEGER) is
 			-- Respond to movement of mouse wheel by `delta' on `output_grid'.
 		local
@@ -1360,17 +1360,17 @@ feature {NONE} -- Implementation
 			else
 				lines_to_move := - a_delta * preferences.editor_data.mouse_wheel_scroll_size
 			end
-			scroll_output_grid (lines_to_move)	
+			scroll_output_grid (lines_to_move)
 		end
-		
+
 	scroll_output_grid (line_count: INTEGER) is
 			-- Scroll `output_grid' by `line_count' lines,
 			-- restricted to maximum positions permitted by grid.
 		do
 			output_grid.set_virtual_position (output_grid.virtual_x_position,
-				(output_grid.virtual_y_position + (output_grid.row_height * line_count)).min (output_grid.maximum_virtual_y_position).max (0))			
+				(output_grid.virtual_y_position + (output_grid.row_height * line_count)).min (output_grid.maximum_virtual_y_position).max (0))
 		end
-		
+
 	append_row_to_string (a_row: EV_GRID_ROW; a_string: STRING) is
 			-- Append output version of `a_row' to `string'.
 		require
@@ -1401,7 +1401,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		end
-		
+
 	full_feature_path (query_grid_row: EB_PROFILE_QUERY_GRID_ROW): STRING is
 			-- `Result' is expanded version of the the name a associated
 			-- with `query_grid_row'. For Eiffel features, this is the full cluster,
@@ -1441,7 +1441,7 @@ feature {NONE} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	item_pressed (an_x, a_y, a_button: INTEGER; an_item: EV_GRID_ITEM) is
 			-- Respond to a press of button `a_button' at virtual position `an_x', `a_y'
 			-- within `output_grid'.
@@ -1470,9 +1470,9 @@ feature {NONE} -- Implementation
 					menu.extend (menu_item)
 					menu.show
 				end
-			end				
+			end
 		end
-		
+
 	expand_all (a_row: EV_GRID_ROW) is
 			-- Expand `a_row' and all subrows recursively.
 		require
@@ -1498,7 +1498,7 @@ feature {NONE} -- Implementation
 			row_expanded: a_row.is_expanded
 			--subrows_expanded_recursively
 		end
-		
+
 	collapse_all (a_row: EV_GRID_ROW) is
 			-- Collapse `a_row' and all subrows recursively.
 		require
@@ -1524,22 +1524,22 @@ feature {NONE} -- Implementation
 			row_not_expanded: not a_row.is_expanded
 			--subrows_not_expanded_recursively
 		end
-		
+
 	drawing_font: EV_FONT is
 			-- Font used for drawing in `output_grid'.
 		once
 			Result := (create {EV_LABEL}).font
 		end
-		
+
 	record_mouse_relative_to_item (an_x, a_y: INTEGER; grid_item: EV_GRID_ITEM) is
 			-- Store the last position of the mouse relative to an item.
 		local
-			query_grid_row: EB_PROFILE_QUERY_GRID_ROW	
+			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
 		do
 			if grid_item /= Void then
 				last_x := an_x - grid_item.virtual_x_position
 				last_y := a_y - grid_item.virtual_y_position
-			
+
 				if grid_item.column.index = 1 then
 					query_grid_row ?= grid_item.row.data
 					check
@@ -1548,12 +1548,12 @@ feature {NONE} -- Implementation
 					output_grid.set_tooltip (full_feature_path (query_grid_row))
 				else
 					output_grid.remove_tooltip
-				end	
+				end
 			else
 				output_grid.remove_tooltip
 			end
 		end
-		
+
 	row_expanded (a_row: EV_GRID_ROW) is
 			-- Row `a_row' has been expanded so update
 			-- the associated `query_grid_row' to reflect this.
@@ -1568,7 +1568,7 @@ feature {NONE} -- Implementation
 			end
 			query_grid_row.set_is_expanded (True)
 		end
-		
+
 	row_collapsed (a_row: EV_GRID_ROW) is
 			-- Row `a_row' has been collapsed so update
 			-- the associated `query_grid_row' to reflect this.
@@ -1583,12 +1583,12 @@ feature {NONE} -- Implementation
 			end
 			query_grid_row.set_is_expanded (False)
 		end
-		
-		
+
+
 	last_x, last_y: INTEGER
 		-- Last x and y position relative to an item within `output_grid'.
-		
-		
+
+
 feature -- Update
 
 	update_graphical_resources is
@@ -1638,7 +1638,7 @@ feature -- Update
 						all_subqueries.forth
 						all_operators.forth
 						i := i + 1
-					end							
+					end
 				end
 			end
 		end
@@ -1657,7 +1657,7 @@ feature {NONE} -- Attributes
 
 	active_subqueries: INTEGER
 			-- Number of active subqueries in all_subqueries
-	
+
 	tree_nodes_enabled_button: EV_CHECK_BUTTON
 
 feature {EB_CHANGE_OPERATOR_CMD} -- Attributes
@@ -1700,7 +1700,7 @@ feature {EB_CLOSE_QUERY_WINDOW_CMD} -- User Interface
 			preferences.editor_data.feature_text_color_preference.change_actions.prune_all (colors_changed_agent)
 			preferences.editor_data.cluster_text_color_preference.change_actions.prune_all (colors_changed_agent)
 			preferences.editor_data.class_text_color_preference.change_actions.prune_alL (colors_changed_agent)
-			
+
 			destroy
 		end
 
@@ -1726,7 +1726,7 @@ feature {NONE} -- Implementation
 		-- Colors retreived from the preferences. They must be set each time
 		-- that the window is displayed or the preferences change, and are not onces as a user
 		-- may change the colors.
-		
+
 	colors_changed_agent: PROCEDURE [ANY, TUPLE []]
 		-- Agent connected to the color change events from EiffelStudio.
 
@@ -1745,7 +1745,7 @@ feature {NONE} -- Implementation
 				all_subqueries.forth
 			end
 		end
-	
+
 	inactivate is
 			-- Copy all the selected subqueries from `active_query_window'
 			-- into `inactive_subqueries_window', inactivate the corresponding subqueries
@@ -1762,7 +1762,7 @@ feature {NONE} -- Implementation
 				selected_subqueries.after
 			loop
 				selected_subquery ?= selected_subqueries.item
-				i := selected_subquery.number			
+				i := selected_subquery.number
 					--| inactivate the subquery in 'all_subqueries'
 				all_subqueries.go_i_th (i)
 				all_subqueries.item.inactivate
@@ -1770,15 +1770,15 @@ feature {NONE} -- Implementation
 				if i > 1 then
 					all_operators.go_i_th (i-1)
 					all_operators.item.inactivate
-				end					
+				end
 				selected_subqueries.forth
 			end
 			if active_query_window.count > 0 then
 				selected_subquery ?= active_query_window.first
-				i := selected_subquery.number			
+				i := selected_subquery.number
 				if i > 1 then
 					all_operators.go_i_th (i-1)
-					all_operators.item.inactivate					
+					all_operators.item.inactivate
 				end
 			end
 			profiler_query.set_subqueries ( all_subqueries )
@@ -1811,7 +1811,7 @@ feature {NONE} -- Implementation
 				loop
 					selected_subquery ?= selected_subqueries.item
 
-					i := selected_subquery.number			
+					i := selected_subquery.number
 						--| inactivate the subquery in 'all_subqueries'
 					all_subqueries.go_i_th (i)
 					all_subqueries.item.activate
@@ -1846,7 +1846,7 @@ feature {NONE} -- execution
 			error_dialog: EV_WARNING_DIALOG
 		do
 			txt := subquery
-			if txt /= Void and then not txt.is_empty then 
+			if txt /= Void and then not txt.is_empty then
 				clear_values
 				create parser
 				if parser.parse (txt, Current) then
@@ -1899,7 +1899,7 @@ feature {NONE} -- execution
 					selected_subquery ?= selected_subqueries.item
 					check
 						valid_entry: selected_subquery /= Void
-					end	
+					end
 					if selected_subquery.number > 1 then
 						all_operators.go_i_th (selected_subquery.number - 1)
 						all_operators.item.change_operator (string_arg)
@@ -1910,37 +1910,37 @@ feature {NONE} -- execution
 
 			update_query_frame
 		end
-		
+
 feature {NONE} -- Implementation
 
 	handle_color_change is
 			-- Respond to a color change occurring from the preferences.
 		do
-			cluster_text_color := preferences.editor_data.cluster_text_color	
+			cluster_text_color := preferences.editor_data.cluster_text_color
 			class_text_color :=  preferences.editor_data.class_text_color
 			feature_text_color := preferences.editor_data.feature_text_color
 				-- Now redraw the contents of `output_grid'.
 			output_grid.redraw
 		end
-		
+
 	tab: STRING is "%T"
-	
+
 	new_line: STRING is "%N"
-	
+
 	full_stop: STRING is "."
-	
+
 	black: EV_COLOR is
 			-- Once access to black EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end
-	
+
 	gray: EV_COLOR is
 			-- Once access to gray EV_COLOR.
 		once
 			Result := (create {EV_STOCK_COLORS}).gray
 		end
-		
+
 	white: EV_COLOR is
 			-- Once access to white EV_COLOR.
 		once

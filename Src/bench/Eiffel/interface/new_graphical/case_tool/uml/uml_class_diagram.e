@@ -6,7 +6,7 @@ indexing
 
 class
 	UML_CLASS_DIAGRAM
-	
+
 inherit
 	EIFFEL_CLASS_DIAGRAM
 		redefine
@@ -16,6 +16,9 @@ inherit
 
 create
 	make
+
+create {UML_CLASS_DIAGRAM}
+	make_filled
 
 feature {NONE} -- Initialization
 
@@ -39,7 +42,7 @@ feature {NONE} -- Initialization
 			context_editor := a_tool
 			is_client_supplier_links_shown := False
 		end
-		
+
 feature -- Access
 
 	default_view_name: STRING is

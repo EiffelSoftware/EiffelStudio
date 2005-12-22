@@ -895,7 +895,7 @@ feature -- Events
 						until
 							i > window_count
 						loop
-							create_window_from_session_data (l_session.window_session_data [i])
+							create_window_from_session_data (l_session.window_session_data.i_th (i))
 							i := i + 1
 						end
 					end

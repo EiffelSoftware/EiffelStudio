@@ -16,18 +16,17 @@ inherit
 	SELECTABLE_TEXT_PANEL
 		redefine
 			text_displayed,
-			user_initialization, 
+			user_initialization,
 			handle_extended_key,
 			handle_extended_ctrled_key,
 			reset, clear_window,
-			on_line_removed, 
-			on_line_inserted, 
+			on_line_removed,
+			on_line_inserted,
 			on_line_modified,
 			on_block_removed,
 			on_text_loaded,
 			lose_focus,
 			show_vertical_scrollbar,
-			maximum_top_line_index,
 			process_left_click,
 			on_mouse_button_up,
 			on_mouse_move,
@@ -40,7 +39,7 @@ inherit
 			draw_cursor,
 			internal_draw_cursor
 		end
-	
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -48,8 +47,8 @@ feature {NONE} -- Initialization
 		do
 				-- Set default mode
 			overwrite_mode := False
-			enable_editable			
-			
+			enable_editable
+
 			Precursor {SELECTABLE_TEXT_PANEL}
 			editor_drawing_area.key_press_string_actions.extend (agent on_char)
 			basic_pointer := editor_drawing_area.pointer_style
@@ -60,12 +59,12 @@ feature -- Access
 	not_editable_warning_message: STRING
 			-- Warning message indicating text is not editable.
 			-- If Void, default message will be used.
-		
+
 	blinking_cursor: BOOLEAN is
 	        -- Is blinking cursor on?
 	  	do
-	  	  	Result := editor_preferences.blinking_cursor 
-	  	end		
+	  	  	Result := editor_preferences.blinking_cursor
+	  	end
 
 	copy_cut_cursor: TEXT_CURSOR
 
@@ -77,7 +76,7 @@ feature -- Content change
 			disable_editable
 			Precursor {SELECTABLE_TEXT_PANEL}
 		end
-		
+
 	display_message (message: STRING) is
 			-- Display `message' in the editor.
 		do
@@ -113,16 +112,16 @@ feature -- Status setting
 	set_read_only (a_flag: BOOLEAN) is
 			-- Set `is_read_only' to `a_flag'.
 		do
-			is_read_only := a_flag	
+			is_read_only := a_flag
 			allow_edition := not a_flag
-		end		
+		end
 
 	enable_editable is
 			-- Allow text edition.
 		do
 			if not is_read_only then
-				allow_edition := True	
-			end			
+				allow_edition := True
+			end
 		end
 
 	disable_editable is
@@ -137,7 +136,7 @@ feature -- Status setting
 			text_exists: not is_empty
 		do
 			text_displayed.set_changed (val, True)
-		end	
+		end
 
 	set_first_line_displayed (fld: INTEGER; refresh_if_necessary: BOOLEAN) is
 		do
@@ -195,7 +194,7 @@ feature -- Private Status
 	overwrite_mode: BOOLEAN
 			-- Do inserted characters overwrite existing ones?
 
-feature 
+feature
 
 	text_displayed: EDITABLE_TEXT
 			-- Text displayed in the editor.
@@ -261,20 +260,20 @@ feature {NONE} -- Handle keystokes
 				scroll_to_cursor := False
 			when Key_v then
 					-- Ctrl-V (paste)
-				run_if_editable (agent paste)				
+				run_if_editable (agent paste)
 			when Key_a then
 					-- Ctrl-A (select all)
 				select_all
-				scroll_to_cursor := False		
+				scroll_to_cursor := False
 			when key_y then
 					-- Ctrl-Y (Redo)
 				if text_displayed.redo_is_possible then
-					redo	
-				end				
+					redo
+				end
 			when key_z then
 					-- Ctrl-L (Undo)
-				if text_displayed.undo_is_possible then					
-					undo	
+				if text_displayed.undo_is_possible then
+					undo
 				end
 			when Key_insert then
 					-- Ctrl-Insert = Ctrl-C
@@ -283,7 +282,7 @@ feature {NONE} -- Handle keystokes
 					-- Ctrl-Delete = Ctrl-X or delete word
 				if is_editable then
 					if has_selection then
-						cut_selection						
+						cut_selection
 					else
 					l_num := number_of_lines
 					text_displayed.delete_word (False)
@@ -292,7 +291,7 @@ feature {NONE} -- Handle keystokes
 					else
 						refresh_now
 					end
-					check_cursor_position	
+					check_cursor_position
 					end
 				else
 					display_not_editable_warning_message
@@ -411,7 +410,7 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 	on_line_modified (line_number: INTEGER) is
 			-- Update `Current' when line number `line_number' has been modified.
 		local
-			wdth: INTEGER 
+			wdth: INTEGER
 		do
 			wdth := text_displayed.line (line_number).width + left_margin_width + 50
 			if editor_width < wdth then
@@ -427,18 +426,18 @@ feature {EDITOR_CURSOR} -- Handle text modifications
 				update_vertical_scrollbar
 			end
 		end
-		
+
 	on_block_removed is
 			-- Update current when a block of text has been removed
 		do
 			set_first_line_displayed (first_line_displayed.min (maximum_top_line_index), True)
 			update_vertical_scrollbar
 		end
-		
+
 	on_line_inserted (line_number: INTEGER) is
 			-- Update `Current' when line number `line_number' has been inserted.
 		local
-			wdth: INTEGER 
+			wdth: INTEGER
 		do
 			wdth := text_displayed.line (line_number).width + left_margin_width + 50
 			if editor_width < wdth then
@@ -494,17 +493,17 @@ feature -- Text status report
 			l_cursor: TEXT_CURSOR
 		do
 			l_cursor := text_displayed.cursor
-			
+
 				-- Compute the width of the current character (used to display plain cursor)
 			width_cursor := l_cursor.token.get_substring_width (l_cursor.pos_in_token) - l_cursor.token.get_substring_width (l_cursor.pos_in_token - 1)
 			width_cursor := width_cursor.max (cursor_width)
-					
+
 						-- Draw the cursor
 			if overwrite_mode then
 				Precursor (buffered_line, x, y, width_cursor)
     		else
     			Precursor (buffered_line, x, y, width)
-			end			
+			end
  		end
 
 	draw_copy_cut_cursor (media: EV_DRAWABLE; x, y, width: INTEGER) is
@@ -514,28 +513,28 @@ feature -- Text status report
 		local
 			width_cursor: INTEGER
 			y_pos: INTEGER
-		do			
+		do
 				-- Compute the width of the current character (used to display plain cursor)
 			width_cursor := copy_cut_cursor.token.get_substring_width (copy_cut_cursor.pos_in_token) - copy_cut_cursor.token.get_substring_width (copy_cut_cursor.pos_in_token - 1)
 			width_cursor := width_cursor.max (cursor_width)
 			y_pos := y + editor_viewport.y_offset
 			media.set_xor_mode
-			media.set_foreground_color (editor_preferences.plain_white)			
+			media.set_foreground_color (editor_preferences.plain_white)
 			media.fill_rectangle (x, y_pos, width, line_height)
 			media.set_copy_mode
  		end
 
 	internal_draw_cursor (media: EV_DRAWABLE; x, y, width_cursor, ln_height: INTEGER; do_show: BOOLEAN) is
 			-- Internal cursor drawing.  Draws cursor on `media' at position `x' and `y'.
-		do		
+		do
 			if not mouse_copy_cut then
 				Precursor (media, x, y, width_cursor, ln_height, do_show)
 			else
 				media.set_xor_mode
 				media.set_foreground_color (editor_preferences.plain_white)
-				media.fill_rectangle (x, y, width_cursor, ln_height)			
-				media.set_copy_mode	
-			end					
+				media.fill_rectangle (x, y, width_cursor, ln_height)
+				media.set_copy_mode
+			end
 		end
 
 feature -- Edition Operations on text
@@ -589,7 +588,7 @@ feature -- Edition Operations on text
 			check_cursor_position
 			refresh_now
 		end
-	
+
 	redo is
 			-- Redo last command.
 		require
@@ -650,11 +649,11 @@ feature -- Edition Operations on text
 			wm: STRING
 		do
 			wm := "Current text is not editable"
-			if text_displayed /= Void then				
+			if text_displayed /= Void then
 				if is_read_only then
 					if not_editable_warning_message /= Void and not not_editable_warning_message.is_empty then
 						wm := not_editable_warning_message
-					end	
+					end
 					show_warning_message (wm)
 				else
 					show_warning_message (wm)
@@ -669,7 +668,7 @@ feature {NONE} -- Mouse copy cut
 			if is_editable and then has_selection and then position_is_in_selection (x_pos, y_pos, False) and then click_count = 0 then
 				if not editor_drawing_area.has_capture then
 					editor_drawing_area.enable_capture
-				end			
+				end
 				former_y := y_pos
 				former_mouse_y := a_screen_y
 				mouse_copy_cut := True
@@ -694,7 +693,7 @@ feature {NONE} -- Mouse copy cut
 			if mouse_copy_cut then
 				if button = 1 then
 					mouse_copy_cut := False
-					editor_drawing_area.set_pointer_style (basic_pointer)				
+					editor_drawing_area.set_pointer_style (basic_pointer)
 					x_cur := (x_pos - left_margin_width) .max (1)
 					l_y_pos := y_pos - editor_viewport.y_offset
 					perform_changes :=  is_in_editor_panel (a_screen_x, a_screen_y) and then not position_is_in_selection (x_cur, l_y_pos, True)
@@ -715,7 +714,7 @@ feature {NONE} -- Mouse copy cut
 					end
 				elseif button = 3 then
 					cancel_mouse_copy_cut
-				end			
+				end
 			end
 			if button = 1 then
 				forget_mouse_moves := False
@@ -729,7 +728,7 @@ feature {NONE} -- Mouse copy cut
 	on_mouse_move (abs_x_pos, abs_y_pos: INTEGER; unused1,unused2,unused3: DOUBLE; a_screen_x, a_screen_y:INTEGER) is
 		local
 			x_cur, y_cur: INTEGER
-			tok: EDITOR_TOKEN					
+			tok: EDITOR_TOKEN
 		do
 			if mouse_left_button_down and then mouse_copy_cut then
 					-- Position the temporary copy/cut cursor at the best location based on mouse co-ordinates
@@ -739,13 +738,13 @@ feature {NONE} -- Mouse copy cut
 				create copy_cut_cursor.make_from_integer (1, text_displayed)
 				position_cursor (copy_cut_cursor, x_cur, y_cur)
 				Precursor (abs_x_pos, abs_y_pos, unused1,unused2,unused3, a_screen_x, a_screen_y)
-				if not cursor_is_in_selection (copy_cut_cursor) then						
+				if not cursor_is_in_selection (copy_cut_cursor) then
 					tok := copy_cut_cursor.token
 					if prev_x_cur > 0 and prev_x_cur > x_cur then
 						x_cur := tok.position + tok.get_substring_width (copy_cut_cursor.pos_in_token)
 					else
 						x_cur := tok.position + tok.get_substring_width (copy_cut_cursor.pos_in_token - 1)
-					end					
+					end
 					y_cur := copy_cut_cursor.y_in_lines
 					if prev_x_cur /= x_cur or else prev_y_cur /= y_cur then
 						if prev_x_cur /= 0 or else prev_y_cur /= 0 then
@@ -766,7 +765,7 @@ feature {NONE} -- Mouse copy cut
 				Precursor (abs_x_pos, abs_y_pos, unused1,unused2,unused3, a_screen_x, a_screen_y)
 			end
 		end
-	
+
 	cancel_mouse_copy_cut is
 			-- stop mouse copy/cut.
 		do
@@ -788,8 +787,8 @@ feature {NONE} -- Mouse copy cut
 				editor_drawing_area.disable_capture
 				mouse_left_button_down := False
 			end
-		end		
-		
+		end
+
 	ignore_keyboard_input: BOOLEAN is
 			-- Should key event be ignored?
 		do
@@ -812,7 +811,7 @@ feature {NONE} -- Mouse copy cut
 			-- Should mouse pointer moves be ignored?
 
 	set_offset (an_offset: INTEGER) is
-			-- 
+			--
 		do
 			if prev_x_cur /= 0 or else prev_y_cur /= 0 then
 				if position_is_displayed (prev_x_cur, prev_y_cur) and then prev_y_cur < first_line_displayed + number_of_lines_displayed then
@@ -824,14 +823,14 @@ feature {NONE} -- Mouse copy cut
 			end
 			Precursor (an_offset)
 		end
-		
+
 	wipe_copy_cut_cursor_out is
 			-- Wipe copy cut cursor out from then editor.
 		local
 			x_p, y_p: INTEGER
 		do
 			y_p := (prev_y_cur - first_line_displayed) * line_height + editor_viewport.y_offset
-			if y_p >= 0 and then y_p < editor_drawing_area.height then				
+			if y_p >= 0 and then y_p < editor_drawing_area.height then
 					-- Wipe the cursor out if it is at a position that is still on screen.
 				x_p := prev_x_cur - offset + left_margin_width
 				debug ("editor")
@@ -844,13 +843,13 @@ feature {NONE} -- Mouse copy cut
 			prev_y_cur := 0
 			copy_cut_cursor := Void
 		end
-		
+
 	on_key_down (ev_key: EV_KEY) is
 		do
 			if mouse_copy_cut and then ev_key /= Void then
 				if ev_key.code = Key_Ctrl then
 					if Cursors /= Void then
-						editor_drawing_area.set_pointer_style (cursors.cur_copy_selection)	
+						editor_drawing_area.set_pointer_style (cursors.cur_copy_selection)
 					end
 				elseif ev_key.code = Key_escape then
 					cancel_mouse_copy_cut
@@ -864,10 +863,10 @@ feature {NONE} -- Mouse copy cut
 			Precursor {SELECTABLE_TEXT_PANEL} (ev_key)
 			if mouse_copy_cut and then ev_key /= Void and then ev_key.code = Key_Ctrl then
 				if Cursors /= Void then
-					editor_drawing_area.set_pointer_style (cursors.cur_cut_selection)	
+					editor_drawing_area.set_pointer_style (cursors.cur_cut_selection)
 				end
 			end
-		end		
+		end
 
 	scroll_only: BOOLEAN is
 		do
@@ -877,7 +876,7 @@ feature {NONE} -- Mouse copy cut
 	position_is_displayed (x_pos, y_pos: INTEGER): BOOLEAN is
 			-- Is point with coordinates `x_pos', `y_pos' visible?
 		do
-			Result := 
+			Result :=
 					x_pos > offset
 						and then
 					x_pos < editor_width + offset
@@ -886,13 +885,13 @@ feature {NONE} -- Mouse copy cut
 						and then
 					y_pos <= first_line_displayed + number_of_lines_displayed
 		end
-		
+
 feature {NONE} -- Text Loading
 
 	reset is
 			-- Reinitialize `Current' so that it can receive a new content.
 		do
-			Precursor {SELECTABLE_TEXT_PANEL}		
+			Precursor {SELECTABLE_TEXT_PANEL}
 			date_of_file_when_loaded := 0
 			file_name := Void
 		end
@@ -923,17 +922,6 @@ feature {NONE} -- retrieving backup
 
 feature {NONE} -- Implementation
 
-	maximum_top_line_index: INTEGER is
-			-- Number of the last possible line that can be displayed
-			-- at the top of the editor window.
-		do
-			if not is_read_only and then allow_edition then
-				Result := (text_displayed.number_of_lines - (number_of_lines_displayed // 2)).max (1)
-			else
-				Result := Precursor {SELECTABLE_TEXT_PANEL}
-			end
-		end
-
 	show_vertical_scrollbar: BOOLEAN is
 			-- Is it necessary to show the vertical scroll bar ?
 		do
@@ -942,12 +930,12 @@ feature {NONE} -- Implementation
 			else
 				Result := Precursor {SELECTABLE_TEXT_PANEL}
 			end
-		end 
+		end
 
 feature {NONE} -- Private Constants
 
 	unwanted_characters: SPECIAL [BOOLEAN] is
-			-- Unwanted characters: backspace, tabulation, carriage return and escape. 
+			-- Unwanted characters: backspace, tabulation, carriage return and escape.
 		local
 			c: CHARACTER
 			i: INTEGER
@@ -965,7 +953,7 @@ feature {NONE} -- Private Constants
 		end
 
 	meta_key_codes: ARRAY [INTEGER] is
-			-- Codes of meta keys. 
+			-- Codes of meta keys.
 		once
 			Result := <<Key_ctrl, Key_caps_lock, Key_right_meta, Key_left_meta, Key_scroll_lock, Key_num_lock, Key_shift>>
 		end

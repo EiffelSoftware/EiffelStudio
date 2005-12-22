@@ -89,11 +89,10 @@ feature -- Access
 	non_focused_color: EV_COLOR is
 			-- Non focuse color. Used by SD_TITLE_BAR...
 		local
-			l_grid: EV_GRID
+			l_system_color: SD_SYSTEM_COLOR
 		once
-			create l_grid
-			Result := l_grid.non_focused_selection_color
-
+			create l_system_color
+			Result := l_system_color.non_focused_selection_color
 		ensure
 			not_void: Result /= Void
 		end
@@ -101,10 +100,10 @@ feature -- Access
 	focused_color: EV_COLOR is
 			-- Focused color. Used by SD_TITLE_BAR...
 		local
-			l_grid: EV_GRID
+			l_system_color: SD_SYSTEM_COLOR
 		once
-			create l_grid
-			Result := l_grid.focused_selection_color
+			create l_system_color
+			Result := l_system_color.focused_selection_color
 		ensure
 			not_void: Result /= Void
 		end

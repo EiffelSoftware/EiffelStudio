@@ -21,11 +21,19 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			create main_window.make
+			main_window.set_help_context (agent help_context)
+			set_help_engine (create {CODE_HELP_ENGINE})
 			main_window.show
 			launch
 		end
 		
 feature {NONE} -- Implementation
+
+	help_context: CODE_HELP_CONTEXT is
+			-- Help context
+		do
+			create Result.make_from_string ("tools/esplitter.html")
+		end
 
 	main_window: CODE_ES_MAIN_WINDOW
 		-- Main window of `Current'.

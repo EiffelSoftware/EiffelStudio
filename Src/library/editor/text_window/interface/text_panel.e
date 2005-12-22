@@ -698,7 +698,7 @@ feature {MARGIN_WIDGET} -- Private properties of the text window
 			-- Number of the last possible line that can be displayed
 			-- at the top of the editor window.
 		do
-			Result := (text_displayed.number_of_lines - number_of_lines_displayed_from_text + 1).max (1)
+			Result := (text_displayed.number_of_lines - (number_of_lines_displayed // 2)).max (1)
 		end
 
 	show_vertical_scrollbar: BOOLEAN is
@@ -739,6 +739,7 @@ feature -- Status Setting
 		require
 			fld_large_enough: fld > 0
 			fld_small_enough: fld <= text_displayed.number_of_lines.max (1)
+			fld_in_range: fld <= vertical_scrollbar.value_range.upper
 		do
 			first_line_displayed := fld
 			vertical_scrollbar.set_value (fld)

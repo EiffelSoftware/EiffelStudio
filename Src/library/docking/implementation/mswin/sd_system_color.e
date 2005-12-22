@@ -23,6 +23,25 @@ feature
 			create Result.make_with_8_bit_rgb (l_r, l_g, l_b)
 		end
 
+	focused_selection_color: EV_COLOR is
+			-- Focused selection color for title bar.
+		local
+			l_grid: EV_GRID
+		do
+			create l_grid
+			Result := l_grid.focused_selection_color
+		end
+
+	non_focused_selection_color: EV_COLOR is
+			--Non focused selection color for title bar.
+		local
+			l_grid: EV_GRID
+		do
+			create l_grid
+			Result := l_grid.non_focused_selection_color
+		end
+
+
 feature {NONE}  -- Implementation
 
 	sys_color (a_color_index: INTEGER; a_result: TYPED_POINTER [INTEGER]) is

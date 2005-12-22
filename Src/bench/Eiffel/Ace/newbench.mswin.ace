@@ -129,6 +129,7 @@ default
 cluster
 	override:		"$EIFFEL_SRC\Eiffel\override"
 
+
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "desc"; ".svn"; 
@@ -173,6 +174,9 @@ cluster
 		end
 
 	all compiler_support:		"$EIFFEL_SRC\Eiffel\support"
+		exclude
+			".svn"; 
+		end
 
 	all common:		"$EIFFEL_SRC\Eiffel\common"
 		exclude
@@ -238,6 +242,9 @@ cluster
 	io_watcher (communications):		"$\spec\mswin"
 
 	all lex:		"$EIFFEL_SRC\library\lex"
+		exclude
+			".svn"; 
+		end
 
 	all interface:		"$EIFFEL_SRC\Eiffel\interface"
 		exclude
@@ -251,18 +258,27 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 		exclude
-			"clib"; "spec"; 
+			".svn"; "clib"; "spec"; 
 		end
 
 	all cli_debugger:		"$EIFFEL_SRC\Eiffel\library\cli_debugger"
+		exclude
+			".svn"; 
+		end
 
 	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
 
 	dotnet_logger:		"$EIFFEL_SRC\dotnet\helpers\logger\classic"
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
+		exclude
+			".svn"; 
+		end
 
 	all eac_serialization:		"$EIFFEL_SRC\dotnet\consumer\serialization"
+		exclude
+			".svn"; 
+		end
 
 	eac_documentation:		"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
 
@@ -282,22 +298,34 @@ cluster
 		end
 
 	all memory_analyzer:		"$EIFFEL_SRC\library\memory_analyzer"
+		exclude
+			".svn"; 
+		end
 
 	all process:		"$EIFFEL_SRC\library\process"
 		exclude
-			"dotnet"; "unix"; 
+			".svn"; "dotnet"; "unix"; 
 		end
 
 	all vision2_extension:		"$EIFFEL_SRC\library\vision2_extension\independent"
 		exclude
-			"gtk"; 
+			".svn"; "gtk"; 
 		end
 
 	all thread:		"$EIFFEL_SRC\library\thread"
+		exclude
+			".svn"; 
+		end
 
 	all roundtrip:		"$EIFFEL_SRC\Eiffel\roundtrip"
+		exclude
+			".svn"; 
+		end
 
-	all diff:	"$EIFFEL_SRC\library\diff"
+	all diff:		"$EIFFEL_SRC\library\diff"
+		exclude
+			".svn"; 
+		end
 
 external
 

@@ -96,6 +96,9 @@ cluster
 	interface_shared (interface):		"$/shared"
 
 	all tty (interface):		"$/tty"
+		exclude
+			".svn"; 
+		end
 
 	preference_tool (interface):		"$/graphical/preference_tool"
 
@@ -103,7 +106,7 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
 		exclude
-			"md_strong_name.e"; "md_public_key.e"
+			".svn"; "md_strong_name.e"; "md_public_key.e"
 		end
 
 	dotnet_helpers:			"$EIFFEL_SRC/dotnet/helpers"
@@ -111,8 +114,14 @@ cluster
 	dotnet_logger:		"$EIFFEL_SRC/dotnet/helpers/logger/classic"
 
 	all eac_components:		"$EIFFEL_SRC/dotnet/consumer/components"
+		exclude
+			".svn"; 
+		end
 
 	all eac_serialization:		"$EIFFEL_SRC/dotnet/consumer/serialization"
+		exclude
+			".svn"; 
+		end
 
 	all activation_checker:		"$EIFFEL_SRC/Eiffel/library/activation"
 		exclude
@@ -126,7 +135,7 @@ cluster
 
 	all preferences:	"$EIFFEL_SRC/library/preferences"
 		exclude
-			"registry_implementation"; "graphical";
+			".svn"; "registry_implementation"; "graphical";
 		end		
 
 external

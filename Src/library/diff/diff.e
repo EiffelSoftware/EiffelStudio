@@ -113,7 +113,7 @@ feature -- Change elements
 
 
 
-feature {DIFF} -- Implementation
+feature {NONE} -- Implementation
 
 	src: ARRAY[G]
 			-- The source array.
@@ -123,8 +123,6 @@ feature {DIFF} -- Implementation
 
 	all_matches: HASH_TABLE[INTEGER, INTEGER]
 			-- All the matches.
-
-feature {NONE} -- Implementation
 
 	compute_lcs is
 			-- Compute the longest common subsequence.

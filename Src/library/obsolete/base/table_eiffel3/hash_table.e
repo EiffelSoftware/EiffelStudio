@@ -287,11 +287,11 @@ feature -- Status report
 			if found then
 				found_item := content.item (position)
 			else
-				found_item := default_value 
+				found_item := default_value
 			end
 		ensure
 			found_or_not_found: found or not found
-			item_if_found: found implies (found_item = content.item (position)) 
+			item_if_found: found implies (found_item = content.item (position))
 		end
 
 	valid_cursor (c: CURSOR): BOOLEAN is
@@ -477,7 +477,7 @@ feature -- Element change
 		ensure
 			inserted: other.current_keys.linear_representation.for_all (agent has)
 		end
-		
+
 feature -- Removal
 
 	remove (key: H) is

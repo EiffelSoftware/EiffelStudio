@@ -99,8 +99,11 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Used for pointer button release events
 		do
-			if a_button >= 1 and a_button <= 3 and then pointer_button_release_actions /= Void then
-				pointer_button_release_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+			if a_button >= 1 and a_button <= 3 then
+				app_implementation.pointer_button_release_actions.call ([interface, a_button, a_screen_x, a_screen_y])
+				if pointer_button_release_actions /= Void then
+					pointer_button_release_actions.call ([a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
+				end
 			end
 		end
 
@@ -123,6 +126,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 					-- We make sure that only the widget with either the focus or the keyboard capture receives key events
 				if a_key_press then
 						-- The event is a key press event.
+					app_implementation.key_press_actions.call ([interface, a_key])
 					if a_key /= Void and then key_press_actions_internal /= Void then
 						key_press_actions_internal.call ([a_key])
 					end
@@ -146,13 +150,17 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 							end
 						end
 						if temp_key_string /= Void then
+							app_implementation.key_press_string_actions.call ([interface, temp_key_string])
 							key_press_string_actions_internal.call ([temp_key_string])
 						end
 					end
 				else
 						-- The event is a key release event.
-					if a_key /= Void and then key_release_actions_internal /= Void then
-						key_release_actions_internal.call ([a_key])
+					if a_key /= Void then
+						app_implementation.key_release_actions.call ([interface, a_key])
+						if key_release_actions_internal /= Void then
+							key_release_actions_internal.call ([a_key])
+						end
 					end
 				end
 			end
@@ -178,10 +186,12 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 			-- if `a_has_focus' then `Current' has just received focus.
 		do
 			if a_has_focus then
+				app_implementation.focus_in_actions.call ([interface])
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.call (Void)
 				end
 			else
+				app_implementation.focus_out_actions.call ([interface])
 				if focus_out_actions_internal /= Void then
 					focus_out_actions_internal.call (Void)
 				end
@@ -236,11 +246,13 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			if a_button = 4 and mouse_wheel_delta > 0 then
 					-- This is for scrolling up
+				app_implementation.mouse_wheel_actions.call ([interface, mouse_wheel_delta])
 				if mouse_wheel_actions_internal /= Void then
 					mouse_wheel_actions_internal.call ([mouse_wheel_delta])
 				end
 			elseif a_button = 5 and mouse_wheel_delta > 0 then
 					-- This is for scrolling down
+				app_implementation.mouse_wheel_actions.call ([interface, - mouse_wheel_delta])
 				if mouse_wheel_actions_internal /= Void then
 					mouse_wheel_actions_internal.call ([- mouse_wheel_delta])
 				end
@@ -248,10 +260,12 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 			if a_button >= 1 and then a_button <= 3 then
 				if a_type = {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
+					app_implementation.pointer_button_press_actions.call ([interface, t.integer_item (3), t.integer_item (7), t.integer_item (8)])
 					if pointer_button_press_actions_internal /= Void then
 						pointer_button_press_actions_internal.call (t)
 					end
 				elseif a_type = {EV_GTK_EXTERNALS}.GDK_2BUTTON_PRESS_ENUM then
+					app_implementation.pointer_double_press_actions.call ([interface, t.integer_item (3), t.integer_item (7), t.integer_item (8)])
 					if pointer_double_press_actions_internal /= Void then
 						pointer_double_press_actions_internal.call (t)
 					end

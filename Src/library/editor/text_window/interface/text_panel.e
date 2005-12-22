@@ -53,8 +53,6 @@ inherit
 			copy,
 			is_equal,
 			default_create
-		redefine
-			is_equal
 		end
 
 feature -- Initialization

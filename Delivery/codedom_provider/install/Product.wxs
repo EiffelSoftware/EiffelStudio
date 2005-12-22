@@ -83,7 +83,7 @@
 								<Shortcut Id='eSplitterShortcut' Directory='StartMenuDir' WorkingDirectory='BinDir' Name='Espliter' LongName='eSplitter' Target='[INSTALLDIR]Codedom\bin\esplitter.exe' Description='Generate Eiffel source files from multi-class Eiffel files' Icon='generic.exe' IconIndex='0' Show='normal' />
 								<Shortcut Id='NameMapperShortcut' Directory='StartMenuDir' WorkingDirectory='BinDir' Name='Mapper' LongName='Name Mapper' Target='[INSTALLDIR]Codedom\bin\nmap.exe' Description='.NET to Eiffel types and members names mapper' Icon='generic.exe' IconIndex='0' Show='normal' />
 								<Shortcut Id='DocumentationShortcut' Directory='StartMenuDir' Name='Docs' LongName='Documentation' Target='[INSTALLDIR]Documentation\Eiffel for ASP.NET.chm' Description='Eiffel for ASP.NET Documentation' Show='normal' />
-								<Shortcut Id='SamplesShortcut' Directory='StartMenuDir' Name='Samples' Target='http://localhost/EiffelSample/show_sample.aspx' Description='Eiffel for ASP.NET Samples' Show='normal' />
+								<Shortcut Id='SamplesShortcut' Directory='StartMenuDir' Name='Samples' Target="http://localhost/EiffelSample/show_sample.aspx" Description='Eiffel for ASP.NET Samples' Show='normal' />
 							</Component>
 						</Directory>
 					</Directory>
@@ -124,9 +124,9 @@
 		</Feature>
 
 		<CustomAction Id='InstallAction' FileKey='InstallerExe' ExeCommand='-s 1 -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>
-		<CustomAction Id='CleanupAction' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe' Execute='deferred' Return='ignore'/>
-		<CustomAction Id='CleanupAction2' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe.config' Execute='deferred' Return='ignore'/>
 		<CustomAction Id='StartIEAction' FileKey='InstallerExe' ExeCommand='-s 2 -i C:\' Execute='commit' Return='asyncNoWait'/>
+		<CustomAction Id='CleanupAction' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe' Execute='commit' Return='asyncNoWait'/>
+		<CustomAction Id='CleanupAction2' Property='CmdPath' ExeCommand='/c del "[INSTALLDIR]\Installer.exe.config' Execute='commit' Return='asyncNoWait'/>
 		<CustomAction Id='UninstallAction' FileKey='InstallerExe' ExeCommand='-u -i "[INSTALLDIR]' Execute='deferred' Return='ignore'/>
 	
 		<Icon Id='generic.exe' src='..\files\ecdp.ico'/>
@@ -1151,8 +1151,9 @@ If you do not wish to use the .NET facilities, you can continue this installatio
 			<LaunchConditions After='AppSearch' />
 			<Custom Action='UninstallAction' After='UnregisterTypeLibraries'>REMOVE="ALL"</Custom>
 			<Custom Action='InstallAction' After='StartServices'>NOT Installed</Custom>
-			<Custom Action='CleanupAction' After='InstallAction'>NOT Installed</Custom>
 			<Custom Action='StartIEAction' Before='InstallFinalize'>NOT Installed</Custom>
+			<Custom Action='CleanupAction' After='InstallAction'>NOT Installed</Custom>
+			<Custom Action='CleanupAction2' After='CleanupAction'>NOT Installed</Custom>
 			<RemoveExistingProducts After='InstallFinalize' />
 		</InstallExecuteSequence>
 
